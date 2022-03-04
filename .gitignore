@@ -24,6 +24,8 @@ datascience/.python-version
 
 # IDEs
 .vscode
+.idea
+*.iml
 
 # Doc
 docs/redmine_wiki/*
