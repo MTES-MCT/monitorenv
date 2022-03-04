@@ -13,12 +13,16 @@
  import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
  import org.springframework.boot.test.mock.mockito.MockBean
  import org.springframework.context.annotation.Import
+ import org.springframework.http.MediaType
  import org.springframework.test.context.junit.jupiter.SpringExtension
  import org.springframework.test.web.servlet.MockMvc
  import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
  import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
  import java.time.ZonedDateTime
  import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+ import com.fasterxml.jackson.databind.ObjectMapper
+ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.UpdateOperationDataInput
+ import org.mockito.BDDMockito.any
 
  @Import(MeterRegistryConfiguration::class)
  @ExtendWith(SpringExtension::class)
@@ -32,10 +36,13 @@
      private lateinit var getOperations: GetOperations
 
      @MockBean
-     private lateinit var getOperation: GetOperationById
+     private lateinit var getOperationById: GetOperationById
 
      @MockBean
      private lateinit var updateOperation: UpdateOperation
+
+     @Autowired
+     private lateinit var objectMapper: ObjectMapper
 
      @Test
      fun `Should get all operations`() {
@@ -62,7 +69,7 @@
      fun `Should get specific operation when requested by Id` () {
          // Given
          val firstOperation = OperationEntity(0,"SEA", 	"CLOSED", "Outre-Mer","CONTROLE", ZonedDateTime.parse("2022-01-15T04:50:09Z"),ZonedDateTime.parse("2022-01-23T20:29:03Z"),110.126782000000006,	-50.373736000000001	)
-         given(this.getOperation.execute(0)).willReturn(firstOperation)
+         given(this.getOperationById.execute(0)).willReturn(firstOperation)
 
          // When
          mockMvc.perform(get("/bff/v1/operations/0"))
@@ -77,5 +84,30 @@
              .andExpect(jsonPath("$.inputEndDatetimeUtc", equalTo(firstOperation.inputEndDatetimeUtc.toString())))
              .andExpect(jsonPath("$.latitude", equalTo(firstOperation.latitude)))
              .andExpect(jsonPath("$.longitude", equalTo(firstOperation.longitude)))
+     }
+     @Test
+     fun `Should update operation` () {
+         // Given
+         val firstOperation = OperationEntity(0,"SEA", 	"CLOSED", "Outre-Mer","CONTROLE", ZonedDateTime.parse("2022-01-15T04:50:09Z"),ZonedDateTime.parse("2022-01-23T20:29:03Z"),110.126782000000006,	-50.373736000000001	)
+         val expectedUpdatedOperation = OperationEntity(0,"LAND", 	"CLOSED", "Outre-Mer","CONTROLE", ZonedDateTime.parse("2022-01-15T04:50:09Z"),ZonedDateTime.parse("2022-01-23T20:29:03Z"),110.126782000000006,	-50.373736000000001	)
+         val requestBody = UpdateOperationDataInput(0,"LAND", 	"CLOSED", "Outre-Mer","CONTROLE", ZonedDateTime.parse("2022-01-15T04:50:09Z"),ZonedDateTime.parse("2022-01-23T20:29:03Z"),110.126782000000006,	-50.373736000000001	)
+         given(this.updateOperation.execute(any())).willReturn(expectedUpdatedOperation)
+         println(objectMapper.writeValueAsString(requestBody))
+        // When
+         mockMvc.perform(put("/bff/v1/operations/0")
+             .content(objectMapper.writeValueAsString(requestBody))
+             .contentType(MediaType.APPLICATION_JSON))
+             // Then
+             .andExpect(status().isOk)
+//             .andExpect(jsonPath("$.id", equalTo(expectedUpdatedOperation.id)))
+//             .andExpect(jsonPath("$.typeOperation", equalTo(expectedUpdatedOperation.typeOperation)))
+//             .andExpect(jsonPath("$.statutOperation", equalTo(expectedUpdatedOperation.statutOperation)))
+//             .andExpect(jsonPath("$.facade", equalTo(expectedUpdatedOperation.facade)))
+//             .andExpect(jsonPath("$.thematique", equalTo(expectedUpdatedOperation.thematique)))
+//             .andExpect(jsonPath("$.inputStartDatetimeUtc", equalTo(expectedUpdatedOperation.inputStartDatetimeUtc.toString())))
+//             .andExpect(jsonPath("$.inputEndDatetimeUtc", equalTo(expectedUpdatedOperation.inputEndDatetimeUtc.toString())))
+//             .andExpect(jsonPath("$.latitude", equalTo(expectedUpdatedOperation.latitude)))
+//             .andExpect(jsonPath("$.longitude", equalTo(expectedUpdatedOperation.longitude)))
+         // Mockito.verify()
      }
  }

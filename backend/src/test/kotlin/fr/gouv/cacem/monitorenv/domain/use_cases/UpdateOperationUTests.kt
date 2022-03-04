@@ -18,14 +18,11 @@
      @MockBean
      private lateinit var operationRepository: IOperationRepository
 
-     @MockBean
-     private lateinit var getOperationById: GetOperationById
-
      @Test
      fun `execute Should throw an exception When no field to update is given`() {
          // When
          val throwable = catchThrowable {
-             UpdateOperation(operationRepository, getOperationById)
+             UpdateOperation(operationRepository)
                      .execute(null)
          }
 
@@ -41,13 +38,11 @@
          val firstOperation = OperationEntity(0,"SEA", 	"CLOSED", "Outre-Mer","CONTROLE", ZonedDateTime.parse("2022-01-15T04:50:09Z"),ZonedDateTime.parse("2022-01-23T20:29:03Z"),110.126782000000006,	-50.373736000000001	)
          val expectedUpdatedOperation = OperationEntity(0,"LAND", 	"CLOSED", "Outre-Mer","CONTROLE", ZonedDateTime.parse("2022-01-15T04:50:09Z"),ZonedDateTime.parse("2022-01-23T20:29:03Z"),110.126782000000006,	-50.373736000000001	)
          given(operationRepository.findOperationById(0)).willReturn(
-             firstOperation
+             expectedUpdatedOperation
          )
-         given(getOperationById.execute(0))
-                 .willReturn(expectedUpdatedOperation)
 
          // When
-         val updatedOperation = UpdateOperation(operationRepository, getOperationById)
+         val updatedOperation = UpdateOperation(operationRepository)
                  .execute(expectedUpdatedOperation)
 
          // Then

@@ -20,8 +20,8 @@ run-front-dev:
 back-config:
 	docker-compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.dev.yml config
 
-.PHONY: run-back-dev
-run-back-dev: erase-db run-infra clean-target-env run-back
+.PHONY: run-back-with-infra
+run-back-with-infra: erase-db run-infra clean-target-env run-back
 
 .PHONY: run-back
 run-back:

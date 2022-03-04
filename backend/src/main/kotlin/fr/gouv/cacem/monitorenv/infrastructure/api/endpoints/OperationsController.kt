@@ -21,14 +21,14 @@ class OperationsController(
 
     @GetMapping("")
     @ApiOperation("Get operations")
-    fun getOperations(): List<OperationDataOutput> {
+    fun getOperationsController(): List<OperationDataOutput> {
         val operations = getOperations.execute()
 
         return operations.map { OperationDataOutput.fromOperation(it) }
     }
     @GetMapping("/{operationId}")
     @ApiOperation("Get operation by Id")
-    fun getOperationById(@PathParam("Operation id")
+    fun getOperationByIdController(@PathParam("Operation id")
                         @PathVariable(name = "operationId")
                         operationId: Int): OperationDataOutput {
         val operation = getOperationById.execute(operationId = operationId)
@@ -37,13 +37,13 @@ class OperationsController(
     }
     @PutMapping(value = ["/{operationId}"], consumes = ["application/json"])
     @ApiOperation("Update an operation")
-    fun updateOperation(@PathParam("Operation id")
+    fun updateOperationController(@PathParam("Operation id")
                                @PathVariable(name = "operationId")
                                operationId: Int,
                                @RequestBody
                                updateOperationDataInput: UpdateOperationDataInput): OperationDataOutput {
         return updateOperation.execute(
-                operation = updateOperationDataInput.operation).let {
+                operation = updateOperationDataInput.toOperationEntity()).let {
                     OperationDataOutput.fromOperation(it)
         }
     }
