@@ -8,13 +8,12 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.OperationModel
 
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
-import java.time.ZonedDateTime
 
 @Repository
 class JpaOperationRepository(private val dbOperationRepository: IDBOperationRepository) : IOperationRepository {
 
     override fun findOperations(): OperationsListEntity {
-        return dbOperationRepository.findAll().map { it.toOperation() }
+        return dbOperationRepository.findAllByOrderByIdAsc().map { it.toOperation() }
     }
     override fun findOperationById(operationId: Int): OperationEntity {
         return dbOperationRepository.findById(operationId).get().toOperation()

@@ -1,6 +1,5 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints
 
-import fr.gouv.cacem.monitorenv.domain.entities.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.*
@@ -8,43 +7,35 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.*
 import io.micrometer.core.instrument.MeterRegistry
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
-import io.swagger.annotations.ApiParam
-import kotlinx.coroutines.runBlocking
-import org.springframework.format.annotation.DateTimeFormat
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.time.ZonedDateTime
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicInteger
 import javax.websocket.server.PathParam
 
 @RestController
-@RequestMapping("/bff")
-@Api(description = "API for UI frontend")
-class BffController(
-        private val getOperations: GetOperations,
-        private val getOperation: GetOperation,
-        private val updateOperation: UpdateOperation,
-        meterRegistry: MeterRegistry) {
+@RequestMapping("/bff/v1/operations")
+@Api(description = "API operations")
+class OperationsController(
+    private val getOperations: GetOperations,
+    private val getOperationById: GetOperationById,
+    private val updateOperation: UpdateOperation,
+    meterRegistry: MeterRegistry) {
 
-    @GetMapping("/v1/operations")
+    @GetMapping("")
     @ApiOperation("Get operations")
-    fun getOperations(): OperationsDataOutput {
+    fun getOperations(): List<OperationDataOutput> {
         val operations = getOperations.execute()
 
-        return OperationsDataOutput.fromOperations(operations)
+        return operations.map { OperationDataOutput.fromOperation(it) }
     }
-    @GetMapping("/v1/operation/{id}")
-    @ApiOperation("Get operation")
-    fun getOperation(@PathParam("Operation id")
+    @GetMapping("/{operationId}")
+    @ApiOperation("Get operation by Id")
+    fun getOperationById(@PathParam("Operation id")
                         @PathVariable(name = "operationId")
                         operationId: Int): OperationDataOutput {
-        val operation = getOperation.execute(operationId = operationId)
+        val operation = getOperationById.execute(operationId = operationId)
 
         return OperationDataOutput.fromOperation(operation)
     }
-    @PutMapping(value = ["/v1/operation/{operationId}"], consumes = ["application/json"])
+    @PutMapping(value = ["/{operationId}"], consumes = ["application/json"])
     @ApiOperation("Update an operation")
     fun updateOperation(@PathParam("Operation id")
                                @PathVariable(name = "operationId")

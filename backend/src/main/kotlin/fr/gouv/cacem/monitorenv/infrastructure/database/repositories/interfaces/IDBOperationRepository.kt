@@ -4,8 +4,8 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.OperationModel
 
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
-import java.time.Instant
-import java.time.ZonedDateTime
 
 interface IDBOperationRepository : CrudRepository<OperationModel, Int> {
+    @Query
+    fun findAllByOrderByIdAsc(): List<OperationModel>
 }
