@@ -1,7 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getLocalStorageState } from '../../utils/utils'
-
-const selectedRegulatoryZonesLocalStorageKey = 'selectedRegulatoryZones'
 
 /* eslint-disable */
 /** @namespace RegulatoryReducer */
@@ -31,7 +28,7 @@ const regulatorySlice = createSlice({
   initialState: {
     isReadyToShowRegulatoryLayers: false,
     /** @type {Object.<string, RegulatoryZone[]>} selectedRegulatoryLayers */
-    selectedRegulatoryLayers: reOrderOldObjectHierarchyIfFound(getLocalStorageState({}, selectedRegulatoryZonesLocalStorageKey)),
+    selectedRegulatoryLayers: {},
     regulatoryZoneMetadata: null,
     /** @type RegulatoryLawTypes regulatoryLayers */
     regulatoryLayers: [],
@@ -75,7 +72,6 @@ const regulatorySlice = createSlice({
       })
 
       state.selectedRegulatoryLayers = myRegulatoryLayers
-      window.localStorage.setItem(selectedRegulatoryZonesLocalStorageKey, JSON.stringify(state.selectedRegulatoryLayers))
     },
     /**
      * Remove regulatory zone(s) from "My Zones" regulatory selection, by providing a topic name to remove multiple zones
@@ -102,7 +98,6 @@ const regulatorySlice = createSlice({
         delete state.selectedRegulatoryLayers[action.payload.topic]
       }
 
-      window.localStorage.setItem(selectedRegulatoryZonesLocalStorageKey, JSON.stringify(state.selectedRegulatoryLayers))
     },
     setIsReadyToShowRegulatoryZones (state) {
       state.isReadyToShowRegulatoryLayers = true

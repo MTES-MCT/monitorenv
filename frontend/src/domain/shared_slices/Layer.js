@@ -1,7 +1,5 @@
 import Layers, { getLayerNameNormalized } from '../entities/layers'
-import { createGenericSlice, getLocalStorageState } from '../../utils/utils'
-
-const layersShowedOnMapLocalStorageKey = 'layersShowedOnMap'
+import { createGenericSlice } from '../../utils/utils'
 
 const initialState = {
   lastShowedFeatures: [],
@@ -10,22 +8,10 @@ const initialState = {
   layersSidebarOpenedLayer: ''
 }
 
-const reOrderOldObjectHierarchyIfFound = zones => {
-  return zones.map(zone => {
-    if (zone && zone.layerName) {
-      return {
-        topic: zone.layerName,
-        ...zone
-      }
-    }
-
-    return zone
-  })
-}
 
 const homepageInitialState = {
   ...initialState,
-  showedLayers: reOrderOldObjectHierarchyIfFound(getLocalStorageState([], `homepage${layersShowedOnMapLocalStorageKey}`))
+  showedLayers: []
 }
 
 const reducers = {
@@ -69,7 +55,6 @@ const reducers = {
       type,
       topic,
       zone,
-      namespace
     } = action.payload
 
 
@@ -88,7 +73,6 @@ const reducers = {
     } else {
       state.showedLayers = state.showedLayers.filter(layer => !(layer.type === type && layer.zone === zone))
     }
-    window.localStorage.setItem(`${namespace}${layersShowedOnMapLocalStorageKey}`, JSON.stringify(state.showedLayers))
   },
   /**
    * Store layer to feature and simplified feature - To show simplified features if the zoom is low

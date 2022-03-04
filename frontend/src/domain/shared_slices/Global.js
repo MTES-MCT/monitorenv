@@ -1,12 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getLocalStorageState } from '../../utils/utils'
 
 /* eslint-disable */
 /** @namespace GlobalReducer */
 const GlobalReducer = null
 /* eslint-enable */
-
-const lastSearchedVesselsLocalStorageKey = 'lastSearchedVessels'
 
 const globalSlice = createSlice({
   name: 'global',
@@ -21,7 +18,7 @@ const globalSlice = createSlice({
     previewFilteredVesselsMode: undefined,
     openedSideWindowTab: null,
     sideWindowIsOpen: false,
-    lastSearchedVessels: getLocalStorageState([], lastSearchedVesselsLocalStorageKey)
+    lastSearchedVessels: []
   },
   reducers: {
     expandRightMenu (state) {

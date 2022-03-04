@@ -1,11 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { getLocalStorageState } from '../../utils/utils'
 import { baseLayers } from '../entities/layers'
 import { CoordinatesFormat } from '../entities/map'
 
-const baseLayerLocalStorageKey = 'baseLayer'
-const coordinatesFormatLocalStorageKey = 'coordinatesFormat'
 
 const mapSlice = createSlice({
   name: 'map',
@@ -15,8 +12,8 @@ const mapSlice = createSlice({
     doNotAnimate: false,
     animateToRegulatoryLayer: null,
     interaction: null,
-    selectedBaseLayer: getLocalStorageState(baseLayers.LIGHT.code, baseLayerLocalStorageKey),
-    coordinatesFormat: getLocalStorageState(CoordinatesFormat.DEGREES_MINUTES_SECONDS, coordinatesFormatLocalStorageKey)
+    selectedBaseLayer: baseLayers.LIGHT.code,
+    coordinatesFormat: CoordinatesFormat.DEGREES_MINUTES_SECONDS
   },
   reducers: {
     doNotAnimate (state, action) {
@@ -52,7 +49,6 @@ const mapSlice = createSlice({
       state.animateToRegulatoryLayer = null
     },
     selectBaseLayer (state, action) {
-      window.localStorage.setItem(baseLayerLocalStorageKey, JSON.stringify(action.payload))
       state.selectedBaseLayer = action.payload
     },
     /**
@@ -80,7 +76,6 @@ const mapSlice = createSlice({
      * payload: CoordinatesFormat}} action - The coordinate format
      */
     setCoordinatesFormat (state, action) {
-      window.localStorage.setItem(coordinatesFormatLocalStorageKey, JSON.stringify(action.payload))
       state.coordinatesFormat = action.payload
     }
   }

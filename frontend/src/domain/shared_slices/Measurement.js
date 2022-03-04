@@ -1,8 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { getLocalStorageState } from '../../utils/utils'
-
-const measurementsLocalStorageKey = 'measurements'
 
 const measurementSlice = createSlice({
   name: 'measurement',
@@ -10,7 +7,7 @@ const measurementSlice = createSlice({
     measurementTypeToAdd: null,
     circleMeasurementToAdd: null,
     circleMeasurementInDrawing: null,
-    measurementsDrawed: getLocalStorageState([], measurementsLocalStorageKey)
+    measurementsDrawed: []
   },
   reducers: {
     setMeasurementTypeToAdd (state, action) {
@@ -22,7 +19,6 @@ const measurementSlice = createSlice({
     addMeasurementDrawed (state, action) {
       const nextMeasurementsDrawed = state.measurementsDrawed.concat(action.payload)
 
-      window.localStorage.setItem(measurementsLocalStorageKey, JSON.stringify(nextMeasurementsDrawed))
       state.measurementsDrawed = nextMeasurementsDrawed
     },
     removeMeasurementDrawed (state, action) {
@@ -30,7 +26,6 @@ const measurementSlice = createSlice({
         return measurement.feature.id !== action.payload
       })
 
-      window.localStorage.setItem(measurementsLocalStorageKey, JSON.stringify(nextMeasurementsDrawed))
       state.measurementsDrawed = nextMeasurementsDrawed
     },
     /**

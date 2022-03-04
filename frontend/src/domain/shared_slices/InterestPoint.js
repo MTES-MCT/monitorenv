@@ -1,12 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getLocalStorageState } from '../../utils/utils'
 
 /* eslint-disable */
 /** @namespace InterestPointReducer */
 const InterestPointReducer = null
 /* eslint-enable */
 
-const interestPointsLocalStorageKey = 'interestPoints'
 
 const interestPointSlice = createSlice({
   name: 'interestPoint',
@@ -16,7 +14,7 @@ const interestPointSlice = createSlice({
     /** @type {InterestPoint | null} interestPointBeingDrawed */
     interestPointBeingDrawed: null,
     /** @type {InterestPoint[]} interestPoints */
-    interestPoints: getLocalStorageState([], interestPointsLocalStorageKey),
+    interestPoints: [],
     triggerInterestPointFeatureDeletion: null
   },
   reducers: {
@@ -52,7 +50,6 @@ const interestPointSlice = createSlice({
       }
       state.isDrawing = false
       state.interestPointBeingDrawed = null
-      window.localStorage.setItem(interestPointsLocalStorageKey, JSON.stringify(state.interestPoints))
     },
     /**
      * Delete an existing interest point
@@ -66,7 +63,6 @@ const interestPointSlice = createSlice({
     removeInterestPoint (state, action) {
       state.interestPoints = state.interestPoints.filter(interestPoint => interestPoint.uuid !== action.payload)
       state.isEditing = false
-      window.localStorage.setItem(interestPointsLocalStorageKey, JSON.stringify(state.interestPoints))
     },
     /**
      * Edit an existing interest point
