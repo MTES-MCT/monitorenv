@@ -45,22 +45,18 @@ const reducers = {
       namespace,
       gears
     } = action.payload
+    const searchedLayerName = getLayerNameNormalized({ type, topic, zone })
+    const found = !!state.showedLayers
+      .find(layer => getLayerNameNormalized(layer) === searchedLayerName)
 
-    if (type !== Layers.VESSELS.code) {
-      const searchedLayerName = getLayerNameNormalized({ type, topic, zone })
-      const found = !!state.showedLayers
-        .find(layer => getLayerNameNormalized(layer) === searchedLayerName)
-
-      if (!found) {
-        state.showedLayers = state.showedLayers.concat({
-          type,
-          topic,
-          zone,
-          namespace,
-          gears
-        })
-        window.localStorage.setItem(`${namespace}${layersShowedOnMapLocalStorageKey}`, JSON.stringify(state.showedLayers))
-      }
+    if (!found) {
+      state.showedLayers = state.showedLayers.concat({
+        type,
+        topic,
+        zone,
+        namespace,
+        gears
+      })
     }
   },
   /**

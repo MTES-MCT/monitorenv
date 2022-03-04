@@ -45,7 +45,7 @@ function getIrretrievableRegulatoryZoneError (e, regulatoryZone) {
 }
 
 export const GEOSERVER_URL = process.env.REACT_APP_GEOSERVER_REMOTE_URL
-
+export const GEOSERVER_NAMESPACE = process.env.REACT_APP_GEOSERVER_NAMESPACE
 export const GEOSERVER_BACKOFFICE_URL = process.env.REACT_APP_GEOSERVER_LOCAL_URL
 
 /**
@@ -184,7 +184,7 @@ function searchVesselsFromAPI (searched) {
 function getAllRegulatoryLayersFromAPI (fromBackoffice) {
   const geoserverURL = fromBackoffice ? GEOSERVER_BACKOFFICE_URL : GEOSERVER_URL
 
-  return fetch(`${geoserverURL}/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typename=monitorfish:` +
+  return fetch(`${geoserverURL}/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typename=${GEOSERVER_NAMESPACE}:` +
     `${Layers.REGULATORY.code}&outputFormat=application/json&propertyName=id,law_type,layer_name,engins,engins_interdits,especes,especes_interdites,references_reglementaires,zones,region,geometry`)
     .then(response => {
       if (response.status === OK) {
@@ -213,7 +213,7 @@ function getAllGeometryWithoutProperty (fromBackoffice) {
   const geoserverURL = fromBackoffice ? GEOSERVER_BACKOFFICE_URL : GEOSERVER_URL
 
   const filter = 'references_reglementaires IS NULL AND zones IS NULL AND region IS NULL AND law_type IS NULL AND layer_name IS NULL'
-  const REQUEST = `${geoserverURL}/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typename=monitorfish:` +
+  const REQUEST = `${geoserverURL}/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typename=${GEOSERVER_NAMESPACE}:` +
   `${Layers.REGULATORY.code}&outputFormat=application/json&propertyName=geometry,id&CQL_FILTER=` + filter.replace(/'/g, '%27').replace(/ /g, '%20')
   return fetch(REQUEST)
     .then(response => {
@@ -289,7 +289,7 @@ function getAdministrativeZoneURL (type, extent, subZone, geoserverURL) {
 
   return (
     `${geoserverURL}/geoserver/wfs?service=WFS&` +
-    `version=1.1.0&request=GetFeature&typename=monitorfish:${type}&` +
+    `version=1.1.0&request=GetFeature&typename=${GEOSERVER_NAMESPACE}:${type}&` +
     `outputFormat=application/json&srsname=${WSG84_PROJECTION}` + extentFilter + subZoneFilter
   )
 }
@@ -330,7 +330,7 @@ function getRegulatoryZoneURL (type, regulatoryZone, geoserverURL) {
   const filter = `layer_name='${encodeURIComponent(regulatoryZone.topic).replace(/'/g, '\'\'')}' AND zones='${encodeURIComponent(regulatoryZone.zone).replace(/'/g, '\'\'')}'`
   return (
     `${geoserverURL}/geoserver/wfs?service=WFS` +
-    `&version=1.1.0&request=GetFeature&typename=monitorfish:${type}` +
+    `&version=1.1.0&request=GetFeature&typename=${GEOSERVER_NAMESPACE}:${type}` +
     '&outputFormat=application/json&CQL_FILTER=' +
     filter.replace(/'/g, '%27').replace(/ /g, '%20')
   )
@@ -349,7 +349,7 @@ export function getRegulatoryZonesInExtentFromAPI (extent, fromBackoffice) {
     const geoserverURL = fromBackoffice ? GEOSERVER_BACKOFFICE_URL : GEOSERVER_URL
 
     return fetch(`${geoserverURL}/geoserver/wfs?service=WFS` +
-      `&version=1.1.0&request=GetFeature&typename=monitorfish:${Layers.REGULATORY.code}` +
+      `&version=1.1.0&request=GetFeature&typename=${GEOSERVER_NAMESPACE}:${Layers.REGULATORY.code}` +
       `&outputFormat=application/json&srsname=${WSG84_PROJECTION}` +
       `&bbox=${extent.join(',')},${OPENLAYERS_PROJECTION}` +
       `&propertyName=law_type,layer_name,engins,engins_interdits,especes,especes_interdites,references_reglementaires,zones,facade,region`
@@ -529,12 +529,12 @@ function getAdministrativeSubZonesFromAPI (type, fromBackoffice) {
     const filter = 'f_level=\'DIVISION\''
 
     query = `${geoserverURL}/geoserver/wfs?service=WFS&` +
-      `version=1.1.0&request=GetFeature&typename=monitorfish:${type}&` +
+      `version=1.1.0&request=GetFeature&typename=${GEOSERVER_NAMESPACE}:${type}&` +
       `outputFormat=application/json&srsname=${WSG84_PROJECTION}&CQL_FILTER=` +
       filter.replace(/'/g, '%27').replace(/ /g, '%20')
   } else {
     query = `${geoserverURL}/geoserver/wfs?service=WFS&` +
-      `version=1.1.0&request=GetFeature&typename=monitorfish:${type}&` +
+      `version=1.1.0&request=GetFeature&typename=${GEOSERVER_NAMESPACE}:${type}&` +
       `outputFormat=application/json&srsname=${WSG84_PROJECTION}`
   }
 
@@ -674,8 +674,8 @@ function updateControlObjectiveFromAPI (id, updatedFields) {
 function sendRegulationTransaction (feature, actionType) {
   const formatWFS = new WFS()
   const formatGML = new GML({
-    featureNS: 'monitorfish',
-    featureType: 'monitorfish:regulatory_areas_write',
+    featureNS: GEOSERVER_NAMESPACE,
+    featureType: `${GEOSERVER_NAMESPACE}:regulatory_areas_write`,
     srsName: 'EPSG:4326'
   })
 
