@@ -9,6 +9,8 @@ import regulatory from './Regulatory'
 import gear from './Gear'
 import species from './Species'
 
+import { api } from '../../api/operationsApi'
+
 import regulatoryLayerSearch from '../../features/layers/regulatory/search/RegulatoryLayerSearch.slice'
 
 
@@ -23,7 +25,10 @@ const commonReducerList = {
 
 export const homeReducers = combineReducers({
   ...commonReducerList,
+  [api.reducerPath]: api.reducer,
   layer: layer.homepage.reducer,
   interestPoint,
   measurement
 })
+
+export const homeMiddlewares = getDefaultMiddleware => getDefaultMiddleware().concat(api.middleware)
