@@ -1,0 +1,30 @@
+# Env variables
+.env
+github_token.txt
+
+# Notebooks
+/datascience/notebooks
+/datascience/.local
+/datascience/.ipython
+/datascience/.cache
+.ipynb_checkpoints/
+.jupyter/
+
+# Coverage reports
+datascience/htmlcov/
+datascience/.coverage
+frontend/cypress/videos/
+
+# Local data
+/datascience/data
+
+# Python
+*.pyc
+datascience/.python-version
+
+# IDEs
+.vscode
+
+# Doc
+docs/redmine_wiki/*
+datascience/docs/build

@@ -1,5 +1,10 @@
-INFRA_FOLDER="$(shell pwd)/infra/"
-BACKEND_CONFIGURATION_FOLDER="$(shell pwd)/infra/configurations/backend/"
+INFRA_FOLDER=$(shell pwd)/infra/
+BACKEND_CONFIGURATION_FOLDER=$(shell pwd)/infra/configurations/backend/
+
+ifneq (,$(wildcard ./infra/.env))
+		include ./infra/.env
+		export
+endif
 
 
 # DEV commands
