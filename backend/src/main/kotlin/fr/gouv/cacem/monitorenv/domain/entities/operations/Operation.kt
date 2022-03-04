@@ -3,15 +3,15 @@ import java.time.ZonedDateTime
 
 
 data class OperationEntity(
-        var id: Int,
-        var typeOperation: String? = null,
-        var statutOperation: String? = null,
-        var facade: String? = null,
-        var thematique: String? = null,
-        var inputStartDatetimeUtc: ZonedDateTime? = null,
-        var inputEndDatetimeUtc: ZonedDateTime? = null,
-        var longitude: Double? = null,
-        var latitude: Double? = null,
+        val id: Int,
+        val typeOperation: String? = null,
+        val statutOperation: String? = null,
+        val facade: String? = null,
+        val thematique: String? = null,
+        val inputStartDatetimeUtc: ZonedDateTime? = null,
+        val inputEndDatetimeUtc: ZonedDateTime? = null,
+        val longitude: Double? = null,
+        val latitude: Double? = null,
         )
 
 typealias OperationsListEntity = List<OperationEntity>

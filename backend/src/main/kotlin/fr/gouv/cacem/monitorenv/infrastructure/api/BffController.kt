@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api
 import fr.gouv.cacem.monitorenv.domain.entities.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.*
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.*
 
 import io.micrometer.core.instrument.MeterRegistry
 import io.swagger.annotations.Api
@@ -23,20 +24,36 @@ import javax.websocket.server.PathParam
 @Api(description = "API for UI frontend")
 class BffController(
         private val getOperations: GetOperations,
+        private val getOperation: GetOperation,
+        private val updateOperation: UpdateOperation,
         meterRegistry: MeterRegistry) {
-    companion object {
-        const val zoneDateTimePattern = "yyyy-MM-dd'T'HH:mm:ss.000X"
-    }
 
     @GetMapping("/v1/operations")
     @ApiOperation("Get operations")
-    fun getOperations(
-                          @ApiParam("Operations after date time")
-                          @RequestParam(name = "afterDateTime")
-                          @DateTimeFormat(pattern = zoneDateTimePattern)
-                          afterDateTime: ZonedDateTime): OperationsDataOutput {
-        val operations = getOperations.execute(afterDateTime)
+    fun getOperations(): OperationsDataOutput {
+        val operations = getOperations.execute()
 
         return OperationsDataOutput.fromOperations(operations)
+    }
+    @GetMapping("/v1/operation/{id}")
+    @ApiOperation("Get operation")
+    fun getOperation(@PathParam("Operation id")
+                        @PathVariable(name = "operationId")
+                        operationId: Int): OperationDataOutput {
+        val operation = getOperation.execute(operationId = operationId)
+
+        return OperationDataOutput.fromOperation(operation)
+    }
+    @PutMapping(value = ["/v1/operation/{operationId}"], consumes = ["application/json"])
+    @ApiOperation("Update an operation")
+    fun updateOperation(@PathParam("Operation id")
+                               @PathVariable(name = "operationId")
+                               operationId: Int,
+                               @RequestBody
+                               updateOperationDataInput: UpdateOperationDataInput): OperationDataOutput {
+        return updateOperation.execute(
+                operation = updateOperationDataInput.operation).let {
+                    OperationDataOutput.fromOperation(it)
+        }
     }
 }

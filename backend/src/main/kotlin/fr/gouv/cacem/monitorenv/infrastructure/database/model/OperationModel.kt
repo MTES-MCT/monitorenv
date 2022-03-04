@@ -53,4 +53,17 @@ data class OperationModel(
             latitude = latitude,
             thematique = thematique
     )
+    companion object {
+        fun fromOperationEntity(operation: OperationEntity) = OperationModel(
+                id = operation.id,
+                typeOperation = operation.typeOperation,
+                statutOperation = operation.statutOperation,
+                inputStartDatetimeUtc = operation.inputStartDatetimeUtc?.toInstant(),
+                inputEndDatetimeUtc = operation.inputEndDatetimeUtc?.toInstant(),
+                facade = operation.facade,
+                longitude = operation.longitude,
+                latitude = operation.latitude,
+                thematique = operation.thematique
+        )
+}
 }
