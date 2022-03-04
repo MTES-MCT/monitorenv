@@ -1,39 +1,24 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import RegulatoryLayerSearchResultZone from './RegulatoryLayerSearchResultZone'
-import { useSelector } from 'react-redux'
 
 const RegulatoryLayerSearchResultZones = props => {
   const {
-    regulatoryLayerLawType,
-    regulatoryLayerTopic,
+    result,
     toggleSelectRegulatoryLayer,
     zonesAreOpen
   } = props
 
-  const {
-    regulatoryLayersSearchResult
-  } = useSelector(state => state.regulatoryLayerSearch)
-
-  const getRegulatoryZones = useCallback(() => {
-    if (regulatoryLayersSearchResult && regulatoryLayerLawType && regulatoryLayerTopic) {
-      return regulatoryLayersSearchResult[regulatoryLayerLawType][regulatoryLayerTopic]
-    }
-
-    return []
-  }, [regulatoryLayersSearchResult, regulatoryLayerLawType, regulatoryLayerTopic])
 
   return (
-    <RegulatoryZones length={getRegulatoryZones().length} isOpen={zonesAreOpen}>
+    <RegulatoryZones length={result?.length} isOpen={zonesAreOpen}>
       {
-        getRegulatoryZones().map(regulatoryZone => {
+        result?.map(regulatoryZone => {
           return <RegulatoryLayerSearchResultZone
-            key={regulatoryZone && regulatoryZone.zone}
+            key={regulatoryZone.id}
             regulatoryZone={regulatoryZone}
             toggleSelectRegulatoryLayer={toggleSelectRegulatoryLayer}
             isOpen={zonesAreOpen}
-            regulatoryLayerLawType={regulatoryLayerLawType}
-            regulatoryLayerTopic={regulatoryLayerTopic}
           />
         })
       }

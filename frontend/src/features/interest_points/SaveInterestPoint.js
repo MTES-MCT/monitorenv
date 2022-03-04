@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled, { css } from 'styled-components'
-import Radio from 'rsuite/lib/Radio'
-import RadioGroup from 'rsuite/lib/RadioGroup'
+import Radio from 'rsuite/Radio'
+import RadioGroup from 'rsuite/RadioGroup'
 import { transform } from 'ol/proj'
 
 import { CoordinatesFormat, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map'

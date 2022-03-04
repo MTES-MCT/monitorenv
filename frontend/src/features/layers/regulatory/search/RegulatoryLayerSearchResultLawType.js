@@ -1,21 +1,22 @@
 import React from 'react'
+import _ from 'lodash'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
 import RegulatoryLayerSearchResultTopic from './RegulatoryLayerSearchResultTopic'
 
-const RegulatoryLayerSearchResultLawType = ({ regulatoryLayerLawType, topic }) => {
+const RegulatoryLayerSearchResultLawType = ({ categoryName, results }) => {
+  const groupedResults = _.groupBy(results, r => r?.doc?.properties?.layer_name)
   return (
     <Wrapper>
       <LayerLawType >
-        {regulatoryLayerLawType}
+        {categoryName}
       </LayerLawType>
-      {Object.keys(topic).length > 0 && Object.entries(topic).map(([regulatoryLayerTopic, topicDetails]) => {
+      {groupedResults && Object.entries(groupedResults).map(([title, groupedResult]) => {
         return <RegulatoryLayerSearchResultTopic
-          key={regulatoryLayerTopic}
-          regulatoryLayerLawType={regulatoryLayerLawType}
-          regulatoryLayerTopic={regulatoryLayerTopic}
-          topicDetails={topicDetails}
+          key={title}
+          title={title}
+          result={groupedResult}
         />
       })}
     </Wrapper>

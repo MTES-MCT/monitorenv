@@ -1,29 +1,30 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
+import _ from 'lodash'
 import styled from 'styled-components'
+
 import RegulatoryLayerSearchResultLawType from './RegulatoryLayerSearchResultLawType'
 import { COLORS } from '../../../../constants/constants'
-import { useSelector } from 'react-redux'
 
-const RegulatoryLayerSearchResultList = () => {
+
+const RegulatoryLayerSearchResultList = ({results}) => {
   const {
-    regulatoryLayersSearchResult,
     advancedSearchIsOpen
   } = useSelector(state => state.regulatoryLayerSearch)
 
+  const groupedResults = _.groupBy(results, r => r?.doc?.properties?.facade)
   return (
     <List $advancedSearchIsOpen={advancedSearchIsOpen}>
       {
-        regulatoryLayersSearchResult && Object.keys(regulatoryLayersSearchResult).length > 0
-          ? Object.entries(regulatoryLayersSearchResult)?.map(([lawType, topic]) => {
+        groupedResults && Object.entries(groupedResults).map(([categoryName, groupedResult]) => {
             return (
               <RegulatoryLayerSearchResultLawType
-                key={lawType}
-                regulatoryLayerLawType={lawType}
-                topic={topic}
+                key={categoryName}
+                categoryName={categoryName}
+                results={groupedResult}
               />
             )
           })
-          : null
       }
     </List>
   )

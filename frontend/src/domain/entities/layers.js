@@ -72,6 +72,17 @@ const Layers = {
     subZoneFieldKey: null,
     isIntersectable: false
   },
+  REGULATORY_ENV: {
+    code: 'environment_regulatory_areas',
+    name: '',
+    group: null,
+    type: layersType.REGULATORY,
+    containsMultipleZones: false,
+    showMultipleZonesInAdministrativeZones: false,
+    subZoneFieldKey: null,
+    isIntersectable: false,
+    zIndex: 1500
+  },
   EEZ: {
     code: 'eez_areas',
     name: 'Zones ZEE',

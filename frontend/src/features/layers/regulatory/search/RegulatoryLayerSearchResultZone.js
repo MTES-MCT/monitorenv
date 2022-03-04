@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled, { css } from 'styled-components'
-import CheckboxGroup from 'rsuite/lib/CheckboxGroup'
-import Checkbox from 'rsuite/lib/Checkbox'
+import CheckboxGroup from 'rsuite/CheckboxGroup'
+import Checkbox from 'rsuite/Checkbox'
 
-import Layers, { getGearCategory } from '../../../../domain/entities/layers'
+import Layers from '../../../../domain/entities/layers'
 import showRegulatoryZoneMetadata from '../../../../domain/use_cases/showRegulatoryZoneMetadata'
 import closeRegulatoryZoneMetadata from '../../../../domain/use_cases/closeRegulatoryZoneMetadata'
 import { setRegulatoryGeometriesToPreview, resetRegulatoryGeometriesToPreview } from '../../../../domain/shared_slices/Regulatory'
@@ -15,20 +15,14 @@ import { showOrHideMetadataIcon } from '../RegulatoryLayerZone'
 import { getAdministrativeAndRegulatoryLayersStyle } from '../../../../layers/styles/administrativeAndRegulatoryLayers.style'
 import { REGPaperDarkIcon, REGPaperIcon } from '../../../commonStyles/icons/REGPaperIcon.style'
 import { COLORS } from '../../../../constants/constants'
-import { getHash } from '../../../../utils/utils'
 
 const RegulatoryLayerSearchResultZone = props => {
   const {
     regulatoryZone,
-    isOpen,
-    regulatoryLayerTopic,
-    regulatoryLayerLawType
+    isOpen
   } = props
   const dispatch = useDispatch()
 
-  const {
-    gears
-  } = useSelector(state => state.gear)
   const {
     regulatoryZoneMetadata
   } = useSelector(state => state.regulatory)
@@ -63,7 +57,7 @@ const RegulatoryLayerSearchResultZone = props => {
   }, [zoneSelectionList])
 
   useEffect(() => {
-    if (!regulatoryZonesChecked || !regulatoryLayerTopic || !regulatoryLayerLawType) {
+    if (!regulatoryZonesChecked ) {
       return
     }
 
@@ -78,18 +72,15 @@ const RegulatoryLayerSearchResultZone = props => {
         setZoneSelectionList([])
       }
     }
-  }, [regulatoryZonesChecked, regulatoryLayerTopic, regulatoryLayerLawType])
+  }, [regulatoryZonesChecked])
 
   useEffect(() => {
     if (!isOpen) {
       return
     }
 
-    if (regulatoryZone.zone && regulatoryZone.topic && gears) {
-      const hash = getHash(`${regulatoryZone.topic}:${regulatoryZone.zone}`)
-      const gearCategory = getGearCategory(regulatoryZone.gears, gears)
-
-      setZoneStyle(getAdministrativeAndRegulatoryLayersStyle(Layers.REGULATORY.code)(null, hash, gearCategory))
+    if (regulatoryZone) {
+      setZoneStyle(getAdministrativeAndRegulatoryLayersStyle(Layers.REGULATORY_ENV.code)(regulatoryZone?.doc?.properties?.thematique))
     }
   }, [regulatoryZone, isOpen])
 
@@ -109,7 +100,7 @@ const RegulatoryLayerSearchResultZone = props => {
         ? setZoneSelectionList([])
         : setZoneSelectionList([regulatoryZone])}
       >
-        {regulatoryZone?.zone ? regulatoryZone.zone.replace(/[_]/g, ' ') : 'AUCUN NOM'}
+        {regulatoryZone?.doc?.properties?.entity_name || 'AUCUN NOM'}
       </Name>
 
       {

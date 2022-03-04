@@ -1,80 +1,77 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
-import Checkbox from 'rsuite/lib/Checkbox'
-import CheckboxGroup from 'rsuite/lib/CheckboxGroup'
+import Checkbox from 'rsuite/Checkbox'
+import CheckboxGroup from 'rsuite/CheckboxGroup'
 
 import { setRegulatoryGeometriesToPreview, resetRegulatoryGeometriesToPreview } from '../../../../domain/shared_slices/Regulatory'
 import RegulatoryLayerSearchResultZones from './RegulatoryLayerSearchResultZones'
-import { checkRegulatoryZones, uncheckRegulatoryZones } from './RegulatoryLayerSearch.slice'
+// import { checkRegulatoryZones, uncheckRegulatoryZones } from './RegulatoryLayerSearch.slice'
 import { COLORS } from '../../../../constants/constants'
 
-const RegulatoryLayerSearchResultTopic = ({ regulatoryLayerLawType, regulatoryLayerTopic, topicDetails }) => {
+const NumberOfZones = ({numberOfZones}) => {
+  return (
+    <ZonesNumber>
+      {`${numberOfZones} zone${numberOfZones > 1 ? 's' : ''}`}
+    </ZonesNumber>
+  )
+}
+const RegulatoryLayerSearchResultTopic = ({ title, result }) => {
   const dispatch = useDispatch()
 
-  const {
-    regulatoryLayersSearchResult,
-    regulatoryZonesChecked
-  } = useSelector(state => state.regulatoryLayerSearch)
+  // const {
+  //   regulatoryLayersSearchResult,
+  //   regulatoryZonesChecked
+  // } = useSelector(state => state.regulatoryLayerSearch)
 
   const [topicSelection, setTopicSelection] = useState([])
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
+  // const allTopicZonesAreChecked = false
+  // const allTopicZonesAreChecked = useCallback(() => {
+  //   if (!regulatoryZonesChecked || !regulatoryLayerTopic) {
+  //     return false
+  //   }
 
-  const allTopicZonesAreChecked = useCallback(() => {
-    if (!regulatoryZonesChecked || !regulatoryLayerTopic) {
-      return false
-    }
+  //   const zonesCheckedLength = regulatoryZonesChecked
+  //     .filter(zone => zone.topic === regulatoryLayerTopic).length
+  //   const allZonesLength = topicDetails.length
+  //   if (!zonesCheckedLength || !allZonesLength) {
+  //     return false
+  //   }
 
-    const zonesCheckedLength = regulatoryZonesChecked
-      .filter(zone => zone.topic === regulatoryLayerTopic).length
-    const allZonesLength = topicDetails.length
-    if (!zonesCheckedLength || !allZonesLength) {
-      return false
-    }
+  //   if (zonesCheckedLength === allZonesLength) {
+  //     return true
+  //   }
+  // }, [regulatoryZonesChecked, topicDetails])
 
-    if (zonesCheckedLength === allZonesLength) {
-      return true
-    }
-  }, [regulatoryZonesChecked, topicDetails])
+  // useEffect(() => {
+  //   if (allTopicZonesAreChecked) {
+  //     if (topicSelection && !topicSelection.length) {
+  //       setTopicSelection([regulatoryLayerTopic])
+  //     }
+  //   } else {
+  //     if (topicSelection && topicSelection.length) {
+  //       setTopicSelection([])
+  //     }
+  //   }
+  // }, [regulatoryZonesChecked, regulatoryLayersSearchResult])
 
-  useEffect(() => {
-    if (allTopicZonesAreChecked()) {
-      if (topicSelection && !topicSelection.length) {
-        setTopicSelection([regulatoryLayerTopic])
-      }
-    } else {
-      if (topicSelection && topicSelection.length) {
-        setTopicSelection([])
-      }
-    }
-  }, [regulatoryZonesChecked, regulatoryLayersSearchResult])
-
-  const displayNumberOfZones = () => {
-    const zoneNumber = topicDetails.length
-    return (
-      <ZonesNumber>
-        {`${zoneNumber} zone${zoneNumber > 1 ? 's' : ''}`}
-      </ZonesNumber>
-    )
-  }
+  
 
   const handleCheckAllZones = () => {
-    if (!regulatoryLayersSearchResult || !regulatoryLayerLawType || !regulatoryLayerTopic) {
-      return
-    }
-
-    if (topicSelection?.length) {
-      dispatch(uncheckRegulatoryZones(topicDetails))
-      setTopicSelection([])
+    console.log('checkall')
+    if (topicSelection.length > 0) {
+      setTopicSelection(result?.map(r => r.id))
     } else {
-      dispatch(checkRegulatoryZones(topicDetails))
-      setTopicSelection([regulatoryLayerTopic])
+      setTopicSelection([])
     }
   }
 
   const handleMouseOver = () => {
-    if (topicDetails.length > 0) {
-      const features = topicDetails.map(topic => topic.geometry)
+    if (result.length > 0) {
+      console.log(result)
+      const features = result.map(topic => topic?.doc?.geometry)
+      console.log(features)
       dispatch(setRegulatoryGeometriesToPreview(features))
     }
   }
@@ -87,11 +84,11 @@ const RegulatoryLayerSearchResultTopic = ({ regulatoryLayerLawType, regulatoryLa
       <LayerTopic onClick={() => setZonesAreOpen(!zonesAreOpen)} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
         <TopicName
           data-cy={'regulatory-layer-topic'}
-          title={regulatoryLayerTopic.replace(/[_]/g, ' ')}
+          title={title}
         >
-          {regulatoryLayerTopic.replace(/[_]/g, ' ')}
+          {title}
         </TopicName>
-        {displayNumberOfZones()}
+         <NumberOfZones numberOfZones={result.length} />
         <CheckboxGroup
           onClick={e => e.stopPropagation()}
           inline
@@ -100,12 +97,11 @@ const RegulatoryLayerSearchResultTopic = ({ regulatoryLayerLawType, regulatoryLa
           onChange={handleCheckAllZones}
           style={{ marginLeft: 0, height: 20 }}
         >
-          <Checkbox value={regulatoryLayerTopic}/>
+          <Checkbox value={title}/>
         </CheckboxGroup>
       </LayerTopic>
       <RegulatoryLayerSearchResultZones
-        regulatoryLayerLawType={regulatoryLayerLawType}
-        regulatoryLayerTopic={regulatoryLayerTopic}
+        result={result}
         zonesAreOpen={zonesAreOpen}
       />
     </>

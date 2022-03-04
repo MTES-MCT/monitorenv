@@ -181,8 +181,8 @@ const regulatorySlice = createSlice({
      *  }
      * }
      */
-    setRegulatoryLayers (state, action) {
-      state.regulatoryLayers = action.payload
+    setRegulatoryLayers (state, { payload: { features } }) {
+      state.regulatoryLayers = features
     },
     setRegulatoryTopics (state, action) {
       state.regulatoryTopics = action.payload

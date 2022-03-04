@@ -9,6 +9,7 @@ import { homeStore } from './../Store'
 import Healthcheck from '../features/healthcheck/Healthcheck'
 // import ErrorToastNotification from '../features/commonComponents/ErrorToastNotification'
 import Map from '../features/map/Map'
+import APIWorker from '../api/APIWorker'
 import LayersSidebar from '../features/layers/LayersSidebar'
 // import Measurement from '../features/measurements/Measurement'
 // import InterestPoint from '../features/interest_points/InterestPoint'
@@ -22,6 +23,7 @@ export const HomePage = () => {
         <Route exact path="/">
           <Healthcheck/>
           <Wrapper>
+            <APIWorker/>
             <Map/>
             <LayersSidebar/> 
             {/* <Measurement/>

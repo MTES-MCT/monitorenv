@@ -136,6 +136,17 @@ export const getAdministrativeAndRegulatoryLayersStyle = type => {
           stroke: new Stroke({ color: 'rgba(255,255,255,0.4)', width: 2 })
         })
       })
+    case Layers.REGULATORY_ENV.code:
+      return (thematique, metadataIsShowed) => {
+        switch (thematique) {
+          case 'Mouillage': {
+            return getStyle(getColorWithAlpha('#FFB199', 0.60), metadataIsShowed)
+          }
+          default: {
+            return getStyle(getColorWithAlpha('#FFD3C7', 0.60), metadataIsShowed)
+          }
+        } 
+      }
     case Layers.REGULATORY.code:
       return (feature, hash, gearCategory) => {
         const lastNumber = hash.toString().slice(-1)

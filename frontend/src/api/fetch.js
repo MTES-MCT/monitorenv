@@ -1,7 +1,5 @@
-/* eslint-disable */
 /** @namespace API */
 const API = null // eslint-disable-line
-/* eslint-disable */
 
 import Layers from '../domain/entities/layers'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../domain/entities/map'
@@ -185,7 +183,7 @@ function getAllRegulatoryLayersFromAPI (fromBackoffice) {
   const geoserverURL = fromBackoffice ? GEOSERVER_BACKOFFICE_URL : GEOSERVER_URL
 
   return fetch(`${geoserverURL}/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typename=${GEOSERVER_NAMESPACE}:` +
-    `${Layers.REGULATORY.code}&outputFormat=application/json&propertyName=id,law_type,layer_name,engins,engins_interdits,especes,especes_interdites,references_reglementaires,zones,region,geometry`)
+    `${Layers.REGULATORY_ENV.code}&outputFormat=application/json&propertyName=entity_name,url,layer_name,facade,ref_reg,observation,thematique,echelle,date,duree_validite,date_fin,temporalite,action,objet,type,signataire,geom`)
     .then(response => {
       if (response.status === OK) {
         return response.json()
