@@ -7,9 +7,13 @@ import Layers from '../../domain/entities/layers'
 import { metadataIsShowedPropertyName } from '../RegulatoryLayers'
 import { getColorWithAlpha } from '../../utils/utils'
 import { COLORS } from '../../constants/constants'
-
-export const getAdministrativeAndRegulatoryLayersStyle = type => {
-  switch (type) {
+/**
+ * 
+ * @param {string} code 
+ * @returns 
+ */
+export const getAdministrativeAndRegulatoryLayersStyle = code => {
+  switch (code) {
     case Layers.EEZ.code:
       return feature => new Style({
         stroke: new Stroke({
@@ -137,15 +141,9 @@ export const getAdministrativeAndRegulatoryLayersStyle = type => {
         })
       })
     case Layers.REGULATORY_ENV.code:
-      return (thematique, metadataIsShowed) => {
-        switch (thematique) {
-          case 'Mouillage': {
-            return getStyle(getColorWithAlpha('#FFB199', 0.60), metadataIsShowed)
-          }
-          default: {
-            return getStyle(getColorWithAlpha('#FFD3C7', 0.60), metadataIsShowed)
-          }
-        } 
+      return feature => {
+        const colorWithAlpha = getRegulatoryEnvColorWithAlpha(feature.get('thematique'))
+        return getStyle(colorWithAlpha, feature?.get('metadataIsShowed'))
       }
     case Layers.REGULATORY.code:
       return (feature, hash, gearCategory) => {
@@ -325,3 +323,19 @@ const getStyle = (color, metadataIsShowed) => new Style({
     color: color
   })
 })
+
+/**
+ * 
+ * @param {string} thematique 
+ * @returns 
+ */
+export const getRegulatoryEnvColorWithAlpha = thematique => {
+  switch (thematique) {
+    case 'Mouillage': {
+      return getColorWithAlpha('#FFB199', 0.60)
+    }
+    default: {
+      return getColorWithAlpha('#FFD3C7', 0.60)
+    }
+  } 
+}

@@ -2,20 +2,20 @@ import React from 'react'
 import _ from 'lodash'
 import styled from 'styled-components'
 
+import { RegulatoryLayerSearchResultGroupSecondLevel } from './RegulatoryLayerSearchResultGroupSecondLevel'
 import { COLORS } from '../../../../constants/constants'
-import RegulatoryLayerSearchResultTopic from './RegulatoryLayerSearchResultTopic'
 
-const RegulatoryLayerSearchResultLawType = ({ categoryName, results }) => {
+export const RegulatoryLayerSearchResultGroupFirstLevel = ({ groupName, results }) => {
   const groupedResults = _.groupBy(results, r => r?.doc?.properties?.layer_name)
   return (
     <Wrapper>
-      <LayerLawType >
-        {categoryName}
-      </LayerLawType>
-      {groupedResults && Object.entries(groupedResults).map(([title, groupedResult]) => {
-        return <RegulatoryLayerSearchResultTopic
-          key={title}
-          title={title}
+      <GroupName >
+        {groupName}
+      </GroupName>
+      {groupedResults && Object.entries(groupedResults).map(([subgroupName, groupedResult]) => {
+        return <RegulatoryLayerSearchResultGroupSecondLevel
+          key={subgroupName}
+          groupName={subgroupName}
           result={groupedResult}
         />
       })}
@@ -38,7 +38,7 @@ const Wrapper = styled.li`
   line-height: 1.9em;
 `
 
-const LayerLawType = styled.span`
+const GroupName = styled.span`
   user-select: none;
   text-overflow: ellipsis;
   overflow-x: hidden !important;
@@ -49,5 +49,3 @@ const LayerLawType = styled.span`
   padding-left: 18px;
   color: ${COLORS.gunMetal};
 `
-
-export default RegulatoryLayerSearchResultLawType

@@ -1,4 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
+import _ from 'lodash'
+
+const NOT_FOUND = -1
 
 const regulatoryLayerSearchSlice = createSlice({
   name: 'regulatoryLayerSearch',
@@ -11,15 +14,26 @@ const regulatoryLayerSearchSlice = createSlice({
     zoneSelected: null
   },
   reducers: {
+     /**
+     * Add zone to regulatory zones selection in progress to add to "My Zones"
+     * @param {Object=} state
+     * @param {RegulatoryZone[]} action - The regulatory zones
+     */
+    toggleRegulatoryZone (state, action) {
+      const regulatoryZoneIndex = state.regulatoryZonesChecked.indexOf(action.payload)
+      if (regulatoryZoneIndex === NOT_FOUND) {
+        state.regulatoryZonesChecked.push(action.payload)
+      } else {
+        state.regulatoryZonesChecked.splice(regulatoryZoneIndex, 1)
+      }
+    },
     /**
      * Add zones to regulatory zones selection in progress to add to "My Zones"
      * @param {Object=} state
      * @param {RegulatoryZone[]} action - The regulatory zones
      */
     checkRegulatoryZones (state, action) {
-      state.regulatoryZonesChecked = state.regulatoryZonesChecked.concat(action.payload)
-        // remove duplicates
-        .filter((v, i, a) => a.findIndex(t => (t.zone === v.zone && t.topic === v.topic)) === i)
+      return {...state, regulatoryZonesChecked : _.union(state.regulatoryZonesChecked, action.payload)}
     },
     /**
      * Remove zones from regulatory zones selection in progress to add to "My Zones"
@@ -30,8 +44,7 @@ const regulatoryLayerSearchSlice = createSlice({
      * }[]} action - The regulatory zones and topic
      */
     uncheckRegulatoryZones (state, action) {
-      state.regulatoryZonesChecked = state.regulatoryZonesChecked
-        .filter(zone => !action.payload.some(layer => layer.zone === zone.zone && layer.topic === zone.topic))
+      return {...state, regulatoryZonesChecked: _.difference(state.regulatoryZonesChecked, action.payload)}
     },
     /**
      * Reset regulatory zones selection
@@ -83,6 +96,7 @@ const regulatoryLayerSearchSlice = createSlice({
 })
 
 export const {
+  toggleRegulatoryZone,
   checkRegulatoryZones,
   uncheckRegulatoryZones,
   resetRegulatoryZonesChecked,

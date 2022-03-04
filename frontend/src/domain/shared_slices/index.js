@@ -1,6 +1,9 @@
 import { combineReducers } from '@reduxjs/toolkit'
+import thunk from 'redux-thunk'
 
 import global from './Global'
+import administrative from './Administrative'
+import layerSidebar from './LayerSidebar'
 import map from './Map'
 import layer from './Layer'
 import measurement from './Measurement'
@@ -20,7 +23,9 @@ const commonReducerList = {
   regulatory,
   regulatoryLayerSearch,
   gear,
-  species
+  species,
+  administrative,
+  layerSidebar
 }
 
 export const homeReducers = combineReducers({
@@ -31,4 +36,5 @@ export const homeReducers = combineReducers({
   measurement
 })
 
-export const homeMiddlewares = getDefaultMiddleware => getDefaultMiddleware().concat(api.middleware)
+// export const homeMiddlewares = getDefaultMiddleware => getDefaultMiddleware().concat(api.middleware)
+export const homeMiddlewares = [thunk, api.middleware]

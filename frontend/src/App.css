@@ -345,8 +345,16 @@ a:hover, a:focus {
     border-color: #707785;
     background-color: #E5E5EB;
 }
-
 .rs-checkbox-indeterminate .rs-checkbox-wrapper .rs-checkbox-inner::after {
+    border-color: #282F3E;
+    border-width: 0 0 2px;
+    -webkit-transform: rotate(0deg) scale(1);
+    transform: rotate(0deg) scale(1);
+    width: 8px;
+    margin-top: 0px;
+    margin-left: 6px;
+}
+.rs-checkbox-wrapper .rs-checkbox-inner::after {
     border: solid #CCCFD6;
     border-width: 0 0 2px;
     -webkit-transform: rotate(0deg) scale(1);
@@ -378,7 +386,7 @@ a:hover, a:focus {
     border-radius: 1px !important;
 }
 
-.rs-checkbox-checked .rs-checkbox-wrapper .rs-checkbox-inner::after, .rs-checkbox-indeterminate .rs-checkbox-wrapper .rs-checkbox-inner::after {
+.rs-checkbox-checked .rs-checkbox-wrapper .rs-checkbox-inner::after {
     margin-top: 3px !important;
     margin-left: 6px !important;
 }

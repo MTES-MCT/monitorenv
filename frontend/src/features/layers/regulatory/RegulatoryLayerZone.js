@@ -1,190 +1,89 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
-import {
-  useRouteMatch,
-  useHistory
-} from 'react-router-dom'
-import { useDispatch, useSelector, batch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { COLORS } from '../../../constants/constants'
-import LayersEnum from '../../../domain/entities/layers'
 
+import { showRegulatoryLayer, hideRegulatoryLayer} from "../../../domain/shared_slices/Regulatory";
 import showRegulatoryZoneMetadata from '../../../domain/use_cases/showRegulatoryZoneMetadata'
-import showRegulationToEdit from '../../../domain/use_cases/showRegulationToEdit'
 import closeRegulatoryZoneMetadata from '../../../domain/use_cases/closeRegulatoryZoneMetadata'
 import zoomInLayer from '../../../domain/use_cases/zoomInLayer'
-import hideLayer from '../../../domain/use_cases/hideLayer'
-import showRegulatoryLayer from '../../../domain/use_cases/showRegulatoryLayer'
 
 import { CloseIcon } from '../../commonStyles/icons/CloseIcon.style'
 import { ShowIcon } from '../../commonStyles/icons/ShowIcon.style'
 import { HideIcon } from '../../commonStyles/icons/HideIcon.style'
 import { REGPaperDarkIcon, REGPaperIcon } from '../../commonStyles/icons/REGPaperIcon.style'
-import { EditIcon } from '../../commonStyles/icons/EditIcon.style'
-import {
-  addRegulatoryTopicOpened,
-  removeRegulatoryTopicOpened,
-  closeRegulatoryZoneMetadataPanel
-} from '../../../domain/shared_slices/Regulatory'
+import { COLORS } from '../../../constants/constants'
 
-export function showOrHideMetadataIcon (regulatoryZoneMetadata, regulatoryZone, setMetadataIsShown) {
-  if (regulatoryZoneMetadata && regulatoryZone &&
-    (regulatoryZone.topic !== regulatoryZoneMetadata.topic ||
-      regulatoryZone.zone !== regulatoryZoneMetadata.zone)) {
-    setMetadataIsShown(false)
-  } else if (regulatoryZoneMetadata && regulatoryZone &&
-    (regulatoryZone.topic === regulatoryZoneMetadata.topic &&
-      regulatoryZone.zone === regulatoryZoneMetadata.zone)) {
-    setMetadataIsShown(true)
-  } else if (!regulatoryZoneMetadata && regulatoryZone) {
-    setMetadataIsShown(false)
-  }
-}
-
-const RegulatoryLayerZone = props => {
+const RegulatoryLayerZone = ({
+                               regulatoryZone,
+                               vectorLayerStyle,
+                               isLast,
+                             }) => {
   const dispatch = useDispatch()
-  const match = useRouteMatch()
-  const history = useHistory()
-  const ref = useRef()
-  const {
-    callRemoveRegulatoryZoneFromMySelection,
-    regulatoryZone,
-    showWholeLayer,
-    zoneIsShown,
-    allowRemoveZone,
-    namespace,
-    vectorLayerStyle,
-    isLast,
-    isEditable,
-    regulatoryTopic
-  } = props
+  const { showedRegulatoryLayerIds } = useSelector(state => state.regulatory)
 
-  const {
-    isReadyToShowRegulatoryLayers,
-    regulatoryZoneMetadata
-  } = useSelector(state => state.regulatory)
-
-  const [showRegulatoryZone, setShowRegulatoryZone] = useState(undefined)
-  const [metadataIsShown, setMetadataIsShown] = useState(false)
+  const metadataIsShown = false
   const [isOver, setIsOver] = useState(false)
 
-  const callShowRegulatoryZoneMetadata = zone => {
+  const toggleMetadata = () => {
     if (!metadataIsShown) {
-      dispatch(showRegulatoryZoneMetadata(zone))
-      setMetadataIsShown(true)
+      dispatch(showRegulatoryZoneMetadata(regulatoryZone.id))
     } else {
       dispatch(closeRegulatoryZoneMetadata())
-      setMetadataIsShown(false)
     }
   }
-
-  useEffect(() => {
-    showOrHideMetadataIcon(regulatoryZoneMetadata, regulatoryZone, setMetadataIsShown)
-  }, [regulatoryZoneMetadata, regulatoryZone])
-
-  useEffect(() => {
-    if (showWholeLayer) {
-      if (!zoneIsShown && showWholeLayer.show) {
-        setShowRegulatoryZone(true)
-      } else if (zoneIsShown && !showWholeLayer.show) {
-        setShowRegulatoryZone(false)
-      }
-    }
-  }, [showWholeLayer, zoneIsShown])
-
-  useEffect(() => {
-    if (zoneIsShown) {
-      setShowRegulatoryZone(zoneIsShown)
-    }
-  }, [zoneIsShown])
-
-  useEffect(() => {
-    if (showRegulatoryZone && isReadyToShowRegulatoryLayers) {
-      dispatch(showRegulatoryLayer({
-        type: LayersEnum.REGULATORY.code,
-        ...regulatoryZone,
-        namespace
-      }))
-    } else {
-      dispatch(hideLayer({
-        type: LayersEnum.REGULATORY.code,
-        ...regulatoryZone,
-        namespace
-      }))
-    }
-  }, [showRegulatoryZone, isReadyToShowRegulatoryLayers, namespace, regulatoryZone, dispatch])
-
-  const onEditRegulationClick = () => {
-    history.push(`${match.path}/edit`)
-    batch(() => {
-      dispatch(showRegulationToEdit(regulatoryZone))
-      dispatch(removeRegulatoryTopicOpened(regulatoryTopic))
-      dispatch(addRegulatoryTopicOpened(regulatoryTopic))
-      dispatch(closeRegulatoryZoneMetadataPanel())
-    })
-  }
-
+  const regulatoryZoneIsShowed = showedRegulatoryLayerIds.includes(regulatoryZone.id)
   const onMouseOver = () => !isOver && setIsOver(true)
   const onMouseOut = () => isOver && setIsOver(false)
-
+  const toggleLayerDisplay = () => regulatoryZoneIsShowed ? dispatch(hideRegulatoryLayer(regulatoryZone.id)) : dispatch(showRegulatoryLayer(regulatoryZone.id))
+  const zoomToLayerExtent = () => dispatch(zoomInLayer({ topicAndZone: regulatoryZone }))
+  const handleRemoveLayer = () => console.log("remove")
+  const displayedName = regulatoryZone?.properties?.entity_name.replace(/[_]/g, ' ') || 'AUNCUN NOM'
   return (
     <Zone
-      ref={ref}
       data-cy="regulatory-layer-zone"
       isLast={isLast}
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut}>
-      <Rectangle onClick={() => dispatch(zoomInLayer({ topicAndZone: regulatoryZone }))} vectorLayerStyle={vectorLayerStyle}/>
+      <Rectangle onClick={zoomToLayerExtent} vectorLayerStyle={vectorLayerStyle}/>
       <ZoneText
         data-cy={'regulatory-layers-my-zones-zone'}
-        title={regulatoryZone.zone
-          ? regulatoryZone.zone.replace(/[_]/g, ' ')
-          : 'AUCUN NOM'}
-        onClick={() => setShowRegulatoryZone(!showRegulatoryZone)}
+        title={ displayedName }
+        onClick={toggleLayerDisplay}
       >
-        {
-          regulatoryZone.zone
-            ? regulatoryZone.zone.replace(/[_]/g, ' ')
-            : 'AUCUN NOM'
-        }
+        { displayedName }
       </ZoneText>
       <Icons>
-
-        { isEditable &&
-          <EditIcon
-            data-cy="regulatory-layer-zone-edit"
-            $isOver={isOver}
-            title="Editer la réglementation"
-            onClick={onEditRegulationClick}/>
-        }
         {
           metadataIsShown
             ? <REGPaperDarkIcon
               title="Fermer la réglementation"
-              onClick={() => callShowRegulatoryZoneMetadata(regulatoryZone)}
+              onClick={toggleMetadata}
             />
             : <REGPaperIcon
               data-cy={'regulatory-layers-show-metadata'}
               title="Afficher la réglementation"
-              onClick={() => callShowRegulatoryZoneMetadata(regulatoryZone)}
+              onClick={toggleMetadata}
             />
         }
         {
-          showRegulatoryZone
+          regulatoryZoneIsShowed
             ? <ShowIcon
               data-cy={'regulatory-layers-my-zones-zone-hide'}
               title="Cacher la zone"
-              onClick={() => setShowRegulatoryZone(!showRegulatoryZone)}
+              onClick={toggleLayerDisplay}
             />
             : <HideIcon
               data-cy={'regulatory-layers-my-zones-zone-show'}
               title="Afficher la zone"
-              onClick={() => setShowRegulatoryZone(!showRegulatoryZone)}
+              onClick={toggleLayerDisplay}
             />
         }
-        {allowRemoveZone && <CloseIcon title="Supprimer la zone de ma sélection"
-                                       data-cy={'regulatory-layers-my-zones-zone-delete'}
-                                       onClick={() => callRemoveRegulatoryZoneFromMySelection(regulatoryZone, 1)}/>}
+        <CloseIcon
+          title="Supprimer la zone de ma sélection"
+          data-cy={'regulatory-layers-my-zones-zone-delete'}
+          onClick={handleRemoveLayer}
+        />
       </Icons>
     </Zone>
   )

@@ -16,9 +16,7 @@ import { MapButtonStyle } from '../commonStyles/MapButton.style'
 
 const LayersSidebar = () => {
   const dispatch = useDispatch()
-  const {
-    regulatoryZoneMetadataPanelIsOpen
-  } = useSelector(state => state.regulatory)
+  const { regulatoryZoneMetadataPanelIsOpen } = useSelector(state => state.regulatory)
   const {
     healthcheckTextWarning,
     previewFilteredVesselsMode
@@ -26,10 +24,10 @@ const LayersSidebar = () => {
 
   const [layersSidebarIsOpen, setLayersSidebarIsOpen] = useState(false)
   const [numberOfRegulatoryLayersSaved, setNumberOfRegulatoryLayersSaved] = useState(0)
-  const [hideLayersListWhenSearching, setHideLayersListWhenSearching] = useState(false)
 
   useEffect(() => {
-    if (!layersSidebarIsOpen) {
+    if ((!layersSidebarIsOpen) && regulatoryZoneMetadataPanelIsOpen) {
+      console.log('closeregulator metadata dispatched')
       dispatch(closeRegulatoryZoneMetadata())
     }
   }, [layersSidebarIsOpen])
@@ -58,7 +56,6 @@ const LayersSidebar = () => {
                 numberOfRegulatoryLayersSaved={numberOfRegulatoryLayersSaved}
                 setNumberOfRegulatoryLayersSaved={setNumberOfRegulatoryLayersSaved}
                 layersSidebarIsOpen={layersSidebarIsOpen}
-                setHideLayersListWhenSearching={setHideLayersListWhenSearching}
                 namespace={namespace}
               />
               <Layers
@@ -66,13 +63,9 @@ const LayersSidebar = () => {
               >
                 <RegulatoryLayers
                   regulatoryLayersAddedToMySelection={numberOfRegulatoryLayersSaved}
-                  hideLayersListWhenSearching={hideLayersListWhenSearching}
                   namespace={namespace}
                 />
-                <AdministrativeLayers
-                  hideLayersListWhenSearching={hideLayersListWhenSearching}
-                  namespace={namespace}
-                />
+                <AdministrativeLayers />
                 <BaseLayers namespace={namespace}/>
               </Layers>
               <RegulatoryZoneMetadataShifter

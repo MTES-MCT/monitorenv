@@ -449,24 +449,6 @@ export function getMergedRegulatoryLayers (previousFoundRegulatoryLayers, nextFo
 }
 
 /**
- * Remove the Territory part of the regulatory layer object (see `setRegulatoryLayers` method within the `Regulatory` reducer)
- * @param {Object} layersTopicsByRegTerritory - The regulatory object
- * @return {Object} The regulatory object without Territory
- */
-export const getRegulatoryLayersWithoutTerritory = layersTopicsByRegTerritory => {
-  let nextRegulatoryLayersWithoutTerritory = {}
-
-  Object.keys(layersTopicsByRegTerritory).forEach(territory => {
-    nextRegulatoryLayersWithoutTerritory = {
-      ...nextRegulatoryLayersWithoutTerritory,
-      ...layersTopicsByRegTerritory[territory]
-    }
-  })
-
-  return nextRegulatoryLayersWithoutTerritory
-}
-
-/**
  * Convert an array of word to a sentence.
  * Each word or separated with a coma,
  * exept the second last word is fellowed by 'et'
@@ -611,30 +593,6 @@ export const fishingPeriodToString = fishingPeriod => {
   return null
 }
 
-/**
- * sortLayersTopicsByRegTerritory
- * Sort the layer topics group by regulatory territory
- * respecting a particular order.
- * @param {Map<string, RegulatoryTopics} layersTopicsByRegTerritory
- * @returns {Map<string, RegulatoryTopics}
- */
-export const sortLayersTopicsByRegTerritory = (layersTopicsByRegTerritory) => {
-  const UEObject = { ...layersTopicsByRegTerritory[UE] }
-
-  const FRObject = { ...layersTopicsByRegTerritory[FRANCE] }
-  const newFRObject = {
-    [REG_MEMN]: FRObject[REG_MEMN],
-    [REG_NAMO]: FRObject[REG_NAMO],
-    [REG_SA]: FRObject[REG_SA],
-    [REG_MED]: FRObject[REG_MED],
-    [REG_OUTRE_MER]: FRObject[REG_OUTRE_MER]
-  }
-
-  return {
-    [UE]: UEObject.sort(),
-    [FRANCE]: newFRObject
-  }
-}
 
 /**
  *

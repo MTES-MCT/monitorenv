@@ -1,14 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
-import RegulatoryLayerSearchResultZone from './RegulatoryLayerSearchResultZone'
+import RegulatoryLayerZone from './RegulatoryLayerZone'
 
-const RegulatoryLayerSearchResultZones = ({result, toggleSelectRegulatoryLayer, zonesAreOpen}) => {
+const RegulatoryLayerZones = ({result, toggleSelectRegulatoryLayer, zonesAreOpen}) => {
 
   return (
     <RegulatoryZones $length={result?.length} $isOpen={zonesAreOpen}>
       {
         result?.map(regulatoryZone => {
-          return <RegulatoryLayerSearchResultZone
+          return <RegulatoryLayerZone
             key={regulatoryZone.id}
             regulatoryZone={regulatoryZone}
             toggleSelectRegulatoryLayer={toggleSelectRegulatoryLayer}
@@ -25,4 +25,4 @@ const RegulatoryZones = styled.div`
   transition: 0.5s all;
 `
 
-export default RegulatoryLayerSearchResultZones
+export default RegulatoryLayerZones

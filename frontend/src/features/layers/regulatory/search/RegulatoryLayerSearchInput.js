@@ -49,7 +49,7 @@ const SearchBoxInput = styled.input`
   color: ${COLORS.gunMetal};
   font-size: 13px;
   height: 40px;
-  width: 310px;
+  width: 290px;
   padding: 0 5px 0 10px;
   flex: 3;
   background-image: url(${SearchIconSVG});

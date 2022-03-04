@@ -3,32 +3,45 @@ import { useSelector } from 'react-redux'
 import _ from 'lodash'
 import styled from 'styled-components'
 
-import { RegulatoryLayerSearchResultGroupFirstLevel } from './RegulatoryLayerSearchResultGroupFirstLevel'
 import { COLORS } from '../../../../constants/constants'
+import {RegulatoryLayerGroupSecondLevel} from "./RegulatoryLayerGroupSecondLevel";
 
 
 const RegulatoryLayerSearchResultList = ({results}) => {
   const {
-    advancedSearchIsOpen
+      advancedSearchIsOpen
   } = useSelector(state => state.regulatoryLayerSearch)
+  
+  if (_.isEmpty(results)) {
+      return (
+      <List $advancedSearchIsOpen={advancedSearchIsOpen}> 
+        <NoLayerSelected>Aucune zone sélectionnée</NoLayerSelected>
+      </List>)
+  }
 
-  const groupedResults = _.groupBy(results, r => r?.doc?.properties?.facade)
+  const groupedResults = _.groupBy(results, r => r?.properties?.layer_name)
   return (
     <List $advancedSearchIsOpen={advancedSearchIsOpen}>
       {
         groupedResults && Object.entries(groupedResults).map(([groupName, groupedResult]) => {
-            return (
-              <RegulatoryLayerSearchResultGroupFirstLevel
-                key={groupName}
-                groupName={groupName}
-                results={groupedResult}
-              />
-            )
-          })
+          return (
+            <RegulatoryLayerGroupSecondLevel
+              key={groupName}
+              groupName={groupName}
+              result={groupedResult}
+            />
+          )
+        })
       }
     </List>
   )
 }
+
+const NoLayerSelected = styled.div`
+  color: ${COLORS.grayDarkerTwo};
+  margin: 10px;
+  font-size: 13px;
+  `
 
 const List = styled.ul`
   margin: 0;

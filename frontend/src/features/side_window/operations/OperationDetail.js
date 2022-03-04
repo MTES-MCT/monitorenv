@@ -3,15 +3,14 @@ import { useGetOperationsQuery, useUpdateOperationMutation } from '../../../api/
 import { useFormik } from 'formik';
  
 export const OperationDetail = ({ id })  => {
-  // Will select the post with the given id, and will only rerender if the given posts data changes
-  const {operation} = useGetOperationsQuery(undefined, {
+  const { operation } = useGetOperationsQuery(undefined, {
     selectFromResult: ({ data }) =>  ({
-      operation: data?.operations?.find(op => op.id === id),
+      operation: data?.find(op => op.id === id),
     }),
   })
   const [
-    updateOperation, // This is the mutation trigger
-    { isLoading: isUpdating }, // This is the destructured mutation result
+    updateOperation,
+    { isLoading: isUpdating },
   ] = useUpdateOperationMutation()
 
   const formik = useFormik({
@@ -22,8 +21,8 @@ export const OperationDetail = ({ id })  => {
       statutOperation: operation?.statutOperation,
       facade: operation?.facade,
       thematique: operation?.thematique,
-      inputStartDatetimeUtc: operation?.inputStartDatetimeUtc,
-      inputEndDatetimeUtc: operation?.inputEndDatetimeUtc
+      inputStartDatetimeUtc: operation?.inputStartDatetimeUtc || '',
+      inputEndDatetimeUtc: operation?.inputEndDatetimeUtc || ''
     },
     onSubmit: values => {
       updateOperation(values)
@@ -63,13 +62,13 @@ export const OperationDetail = ({ id })  => {
        <label htmlFor="inputStartDatetimeUtc">Début</label>
        <input
          id="inputStartDatetimeUtc"
-         type="text"
+         type="datetime-local"
          {...formik.getFieldProps('inputStartDatetimeUtc')}
-       />
+         />
        <label htmlFor="inputEndDatetimeUtc">Fin</label>
        <input
          id="inputEndDatetimeUtc"
-         type="text"
+         type="datetime-local"
          {...formik.getFieldProps('inputEndDatetimeUtc')}
        />
  

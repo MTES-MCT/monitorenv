@@ -1,66 +1,38 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
+
+import { hideAdministrativeLayer, showAdministrativeLayer } from '../../../domain/shared_slices/Administrative'
+
 import { ShowIcon } from '../../commonStyles/icons/ShowIcon.style'
 import { HideIcon } from '../../commonStyles/icons/HideIcon.style'
 import { COLORS } from '../../../constants/constants'
 
-const AdministrativeLayer = props => {
-  const {
-    isShownOnInit,
-    layer,
-    callShowAdministrativeZone,
-    callHideAdministrativeZone,
-    isGrouped,
-    isFirst
-  } = props
+const AdministrativeLayer = ({ layer, isGrouped, isFirst}) => {
+  const dispatch = useDispatch()
+  const { showedAdministrativeLayerIds } = useSelector(state=> state.administrative)
 
-  const [showLayer_, setShowLayer] = useState(undefined)
+  const isLayerVisible = showedAdministrativeLayerIds.includes(layer.code)
 
-  useEffect(() => {
-    if (showLayer_ === undefined) {
-      setShowLayer(props.isShownOnInit)
-    }
-  }, [isShownOnInit, showLayer_])
-
-  useEffect(() => {
-    if (showLayer_) {
-      if (layer.showMultipleZonesInAdministrativeZones) {
-        callShowAdministrativeZone(layer.groupCode, layer.code)
-      } else {
-        callShowAdministrativeZone(layer.code)
-      }
+  const toggleLayer = () => {
+    if (isLayerVisible) {
+      dispatch(hideAdministrativeLayer(layer.code))
     } else {
-      if (layer.showMultipleZonesInAdministrativeZones) {
-        callHideAdministrativeZone(layer.groupCode, layer.code)
-      } else {
-        callHideAdministrativeZone(layer.code)
-      }
+      dispatch(showAdministrativeLayer(layer.code))
     }
-  }, [showLayer_])
+  }
 
-  return <>
-    {
-      props.layer
-        ? <Row
-          isFirst={isFirst}
-          isGrouped={isGrouped}
-          onClick={() => setShowLayer(!showLayer_)}
-          data-cy={'administrative-layer-toggle'}
-        >
-          <LayerName
-            title={layer.name}
-          >
-            {layer.name}
-          </LayerName>
-          {
-            showLayer_
-              ? <ShowIcon/>
-              : <HideIcon/>
-          }
-        </Row>
-        : null
-    }
-  </>
+  return <Row
+      isFirst={isFirst}
+      isGrouped={isGrouped}
+      onClick={toggleLayer}
+      data-cy={'administrative-layer-toggle'}
+    >
+      <LayerName title={layer.name} >
+        {layer.name}
+      </LayerName>
+      { isLayerVisible ? <ShowIcon/> : <HideIcon/> }
+    </Row>
 }
 
 const LayerName = styled.span`

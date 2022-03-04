@@ -17,7 +17,7 @@ export const OperationsList = ({setOperation}) => {
           <h3>Operations</h3>
           <Table
             height={400}
-            data={data?.operations}
+            data={data}
             onRowClick={data => {
               setOperation(data.id)
             }}

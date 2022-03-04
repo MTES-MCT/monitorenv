@@ -1,17 +1,17 @@
-import { batch } from 'react-redux'
+import _ from 'lodash'
 import VectorSource from 'ol/source/Vector'
 import GeoJSON from 'ol/format/GeoJSON'
 import VectorImageLayer from 'ol/layer/VectorImage'
-import { all, bbox as bboxStrategy } from 'ol/loadingstrategy'
+import { bbox as bboxStrategy } from 'ol/loadingstrategy'
 
-import layer from '../shared_slices/Layer'
-import { getAdministrativeZoneFromAPI } from '../../api/fetch'
+import { layersType } from '../entities/layers'
+import { administrativeLayers } from '../entities/administrativeLayers'
+import { getAdministrativeZoneFromAPI } from '../../api/administrativeLayersAPI'
 import { getAdministrativeAndRegulatoryLayersStyle } from '../../layers/styles/administrativeAndRegulatoryLayers.style'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../entities/map'
 
 const IRRETRIEVABLE_FEATURES_EVENT = 'IRRETRIEVABLE_FEATURES'
 
-let currentNamespace = 'homepage'
 
 const setIrretrievableFeaturesEvent = error => {
   return {
@@ -19,84 +19,39 @@ const setIrretrievableFeaturesEvent = error => {
     error: error
   }
 }
-/**
- *
- * @param {Object} layerToShow
- * @param {string} layerToShow.type
- * @param {string} layerToShow.zone
- * @returns
- */
-const showAdministrativeLayer = layerToShow => dispatch => {
-  currentNamespace = layerToShow.namespace
-  const {
-    addShowedLayer
-  } = layer[currentNamespace].actions
 
-  batch(() => {
-    dispatch(addShowedLayer(layerToShow))
-  })
-}
-
-export const getVectorLayer = (type, zone, inBackofficeMode) => {
-  let name
-  if (zone) {
-    name = `${type}:${zone}`
-  } else {
-    name = type
-  }
+export const getAdministrativeVectorLayer = (layerId) => {
+  const layerDefinition = _.find(_.flatten(administrativeLayers), l => l.code === layerId)
+  const code = layerDefinition?.groupCode || layerDefinition?.code
+  const zone = layerDefinition?.groupCode ? layerDefinition?.code : undefined
   const layer = new VectorImageLayer({
-    source: getAdministrativeVectorSource(type, zone, inBackofficeMode),
+    source: getAdministrativeVectorSourceBBOXStrategy(code, zone),
     className: 'administrative',
     updateWhileAnimating: true,
     updateWhileInteracting: true,
-    style: feature => {
-      return [getAdministrativeAndRegulatoryLayersStyle(type)(feature)]
-    },
+    style: getAdministrativeAndRegulatoryLayersStyle(code),
     declutter: true
   })
-  layer.name = name
+  layer.name = layerId
+  layer.type = layersType.ADMINISTRATIVE
 
   return layer
 }
 
-const getAdministrativeVectorSource = (type, subZone, inBackofficeMode) => {
-  if (subZone) {
-    return showWholeVectorIfSubZone(type, subZone, inBackofficeMode)
-  } else {
-    return showBboxIfBigZone(type, subZone, inBackofficeMode)
-  }
-}
-
-function showWholeVectorIfSubZone (type, subZone, inBackofficeMode) {
-  const vectorSource = new VectorSource({
-    format: new GeoJSON({
-      dataProjection: WSG84_PROJECTION,
-      featureProjection: OPENLAYERS_PROJECTION
-    }),
-    strategy: all
-  })
-
-  getAdministrativeZoneFromAPI(type, null, subZone, inBackofficeMode).then(administrativeZoneFeature => {
-    vectorSource.addFeatures(vectorSource.getFormat().readFeatures(administrativeZoneFeature))
-  }).catch(e => {
-    vectorSource.dispatchEvent(setIrretrievableFeaturesEvent(e))
-  })
-
-  vectorSource.once(IRRETRIEVABLE_FEATURES_EVENT, event => {
-    console.warn(event.error)
-  })
-
-  return vectorSource
-}
-
-function showBboxIfBigZone (type, subZone, inBackofficeMode) {
+/**
+ * 
+ * @param {string} code 
+ * @param {string} subZone 
+ * @returns 
+ */
+function getAdministrativeVectorSourceBBOXStrategy (code, subZone) {
   const vectorSource = new VectorSource({
     format: new GeoJSON({
       dataProjection: WSG84_PROJECTION,
       featureProjection: OPENLAYERS_PROJECTION
     }),
     loader: extent => {
-      getAdministrativeZoneFromAPI(type, extent, subZone, inBackofficeMode).then(administrativeZone => {
+      getAdministrativeZoneFromAPI(code, extent, subZone).then(administrativeZone => {
         vectorSource.clear(true)
         vectorSource.addFeatures(vectorSource.getFormat().readFeatures(administrativeZone))
       }).catch(e => {
@@ -113,5 +68,3 @@ function showBboxIfBigZone (type, subZone, inBackofficeMode) {
 
   return vectorSource
 }
-
-export default showAdministrativeLayer

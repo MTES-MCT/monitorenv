@@ -1,46 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit'
+import _ from "lodash";
 
 /* eslint-disable */
 /** @namespace RegulatoryReducer */
 const RegulatoryReducer = null
 /* eslint-enable */
 
-export const reOrderOldObjectHierarchyIfFound = layers => {
-  Object.keys(layers)
-    .forEach(layer => {
-      layers[layer] = layers[layer].map(zone => {
-        if (zone && zone.layerName) {
-          return {
-            topic: zone.layerName,
-            ...zone
-          }
-        }
-
-        return zone
-      })
-    })
-
-  return layers
-}
 
 const regulatorySlice = createSlice({
   name: 'regulatory',
   initialState: {
     isReadyToShowRegulatoryLayers: false,
     /** @type {Object.<string, RegulatoryZone[]>} selectedRegulatoryLayers */
-    selectedRegulatoryLayers: {},
-    regulatoryZoneMetadata: null,
     /** @type RegulatoryLawTypes regulatoryLayers */
     regulatoryLayers: [],
+    selectedRegulatoryLayerIds: [],
+    showedRegulatoryLayerIds:[],
+    regulatoryZoneMetadata: null,
     loadingRegulatoryZoneMetadata: false,
     regulatoryZoneMetadataPanelIsOpen: false,
-    lawTypeOpened: null,
-    regulatoryTopicsOpened: [],
-    regulatoryTopics: [],
-    layersTopicsByRegTerritory: {},
     /** @type ol.geom.Geometry[] */
     regulatoryGeometriesToPreview: null,
-    simplifiedGeometries: true,
     regulationSearchedZoneExtent: []
   },
   reducers: {
@@ -54,50 +34,41 @@ const regulatorySlice = createSlice({
      * Add regulatory zones to "My Zones" regulatory selection
      * @memberOf RegulatoryReducer
      * @param {Object=} state
-     * @param {RegulatoryZone[]} action - The regulatory zones
+     * @param {RegulatoryZone[]} action.payload - The regulatory zones
      */
     addRegulatoryZonesToMyLayers (state, action) {
-      const myRegulatoryLayers = { ...state.selectedRegulatoryLayers }
-
-      action.payload.forEach(regulatoryZone => {
-        if (!myRegulatoryLayers[regulatoryZone.topic] || !myRegulatoryLayers[regulatoryZone.topic].length) {
-          myRegulatoryLayers[regulatoryZone.topic] = [regulatoryZone]
-        } else {
-          if (!myRegulatoryLayers[regulatoryZone.topic].some(zone =>
-            zone.topic === regulatoryZone.topic &&
-            zone.zone === regulatoryZone.zone)) {
-            myRegulatoryLayers[regulatoryZone.topic] = myRegulatoryLayers[regulatoryZone.topic].concat(regulatoryZone)
-          }
-        }
-      })
-
-      state.selectedRegulatoryLayers = myRegulatoryLayers
+      return {...state, selectedRegulatoryLayerIds : _.union(state.selectedRegulatoryLayerIds, action.payload)}
     },
     /**
      * Remove regulatory zone(s) from "My Zones" regulatory selection, by providing a topic name to remove multiple zones
      * or simply the zone name to remove a specified zone
      * @memberOf RegulatoryReducer
      * @param {Object=} state
-     * @param {{
-     *          topic: string=,
-     *          zone: string=
-     *          }} action - The regulatory zone(s) to remove
+     * @param {layerId[]} action - The regulatory zones to remove
      */
     removeRegulatoryZonesFromMyLayers (state, action) {
-      if (action.payload.zone && action.payload.topic) {
-        state.selectedRegulatoryLayers[action.payload.topic] = state.selectedRegulatoryLayers[action.payload.topic].filter(subZone => {
-          return !(subZone.topic === action.payload.topic && subZone.zone === action.payload.zone)
-        })
-      } else if (action.payload.topic) {
-        state.selectedRegulatoryLayers[action.payload.topic] = state.selectedRegulatoryLayers[action.payload.topic].filter(subZone => {
-          return !(subZone.topic === action.payload.topic)
-        })
+      return {...state, 
+        selectedRegulatoryLayerIds: _.difference(state.selectedRegulatoryLayerIds, action.payload),
+        showedRegulatoryLayerIds: _.difference(state.showedRegulatoryLayerIds, action.payload)
       }
-
-      if (!state.selectedRegulatoryLayers[action.payload.topic].length) {
-        delete state.selectedRegulatoryLayers[action.payload.topic]
-      }
-
+    },/**
+     * show RegulatoryLayer
+     * @memberOf RegulatoryReducer
+     * @param {Object=} state
+     * @param {RegulatoryZone} action.payload - The regulatory zone
+     */
+    showRegulatoryLayer (state, action) {
+      state.showedRegulatoryLayerIds = _.uniq(_.concat(state.showedRegulatoryLayerIds, action.payload))
+      // return {...state, showedRegulatoryLayerIds : _.union(state.showedRegulatoryLayerIds, action.payload)}
+    },
+    /**
+     * hide RegulatoryLayer
+     * @memberOf RegulatoryReducer
+     * @param {Object=} state
+     * @param {RegulatoryZone} action.payload - The regulatory zone
+     */
+    hideRegulatoryLayer (state, action) {
+      state.showedRegulatoryLayerIds = _.without(state.showedRegulatoryLayerIds, action.payload)
     },
     setIsReadyToShowRegulatoryZones (state) {
       state.isReadyToShowRegulatoryLayers = true
@@ -117,18 +88,6 @@ const regulatorySlice = createSlice({
     closeRegulatoryZoneMetadataPanel (state) {
       state.regulatoryZoneMetadataPanelIsOpen = false
       state.regulatoryZoneMetadata = null
-    },
-    setLawTypeOpened (state, action) {
-      state.lawTypeOpened = action.payload
-    },
-    setRegulatoryTopicsOpened (state, action) {
-      state.regulatoryTopicsOpened = action.payload
-    },
-    addRegulatoryTopicOpened (state, action) {
-      state.regulatoryTopicsOpened.push(action.payload)
-    },
-    removeRegulatoryTopicOpened (state, action) {
-      state.regulatoryTopicsOpened = state.regulatoryTopicsOpened.filter(e => e !== action.payload)
     },
     /**
      * Set regulatory data structured as
@@ -184,18 +143,6 @@ const regulatorySlice = createSlice({
     setRegulatoryLayers (state, { payload: { features } }) {
       state.regulatoryLayers = features
     },
-    setRegulatoryTopics (state, action) {
-      state.regulatoryTopics = action.payload
-    },
-    setLayersTopicsByRegTerritory (state, action) {
-      state.layersTopicsByRegTerritory = action.payload
-    },
-    showSimplifiedGeometries (state) {
-      state.simplifiedGeometries = true
-    },
-    showWholeGeometries (state) {
-      state.simplifiedGeometries = false
-    },
     /**
      * Set the regulation searched zone extent - used to fit the extent into the OpenLayers view
      * @function setRegulationSearchedZoneExtent
@@ -212,23 +159,23 @@ const regulatorySlice = createSlice({
 export const {
   addRegulatoryZonesToMyLayers,
   removeRegulatoryZonesFromMyLayers,
+  showRegulatoryLayer,
+  hideRegulatoryLayer,
   setIsReadyToShowRegulatoryZones,
   setLoadingRegulatoryZoneMetadata,
   resetLoadingRegulatoryZoneMetadata,
   setRegulatoryZoneMetadata,
   closeRegulatoryZoneMetadataPanel,
   setRegulatoryLayers,
-  setLawTypeOpened,
-  addRegulatoryTopicOpened,
-  removeRegulatoryTopicOpened,
-  setRegulatoryTopicsOpened,
-  setRegulatoryTopics,
-  setLayersTopicsByRegTerritory,
   setRegulatoryGeometriesToPreview,
   resetRegulatoryGeometriesToPreview,
-  showSimplifiedGeometries,
-  showWholeGeometries,
   setRegulationSearchedZoneExtent
 } = regulatorySlice.actions
 
 export default regulatorySlice.reducer
+
+
+export const regulatoryActionSanitizer = (action) => (
+  action.type === 'regulatory/setRegulatoryLayers' && action.payload ?
+{...action, payload: '<<REGULATORY FEATURES>>'} : action
+)
