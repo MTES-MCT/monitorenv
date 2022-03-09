@@ -91,32 +91,6 @@ EOF
 curl -v -u ${GEOSERVER_ADMIN_USER}:${GEOSERVER_ADMIN_PASSWORD} -X POST http://${GEOSERVER_HOST}:${GEOSERVER_PORT}/geoserver/rest/workspaces/monitorenv/datastores/monitorenv_postgis/featuretypes -H  "accept: text/html" -H  "content-type: application/json" -d @- << EOF
 {
   "featureType": {
-    "name": "regulatory_areas",
-    "nativeName": "reglementation_peche_view",
-    "title": "Regulatory Areas",
-    "nativeCRS": "EPSG:4326",
-    "srs": "EPSG:4326",
-    "enabled": true,
-  }
-}
-EOF
-
-curl -v -u ${GEOSERVER_ADMIN_USER}:${GEOSERVER_ADMIN_PASSWORD} -X POST http://${GEOSERVER_HOST}:${GEOSERVER_PORT}/geoserver/rest/workspaces/monitorenv/datastores/monitorenv_postgis/featuretypes -H  "accept: text/html" -H  "content-type: application/json" -d @- << EOF
-{
-  "featureType": {
-    "name": "regulatory_areas_write",
-    "nativeName": "reglementation_peche",
-    "title": "Regulatory Areas for write operation",
-    "nativeCRS": "EPSG:4326",
-    "srs": "EPSG:4326",
-    "enabled": true,
-  }
-}
-EOF
-
-curl -v -u ${GEOSERVER_ADMIN_USER}:${GEOSERVER_ADMIN_PASSWORD} -X POST http://${GEOSERVER_HOST}:${GEOSERVER_PORT}/geoserver/rest/workspaces/monitorenv/datastores/monitorenv_postgis/featuretypes -H  "accept: text/html" -H  "content-type: application/json" -d @- << EOF
-{
-  "featureType": {
     "name": "1241_eaux_occidentales_australes_areas",
     "nativeName": "1241_eaux_occidentales_australes_areas",
     "title": "1241 eaux occidentales australes areas",
@@ -352,7 +326,7 @@ curl -v -u ${GEOSERVER_ADMIN_USER}:${GEOSERVER_ADMIN_PASSWORD} -X POST http://${
 {
   "featureType": {
     "name": "environment_regulatory_areas",
-    "nativeName": "reglementation_env",
+    "nativeName": "regulations_cacem",
     "title": "Environment Regulatory Areas",
     "nativeCRS": "EPSG:4326",
     "srs": "EPSG:4326",

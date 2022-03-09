@@ -13,8 +13,6 @@ PGCLIENTENCODING=UTF-8 psql -h 0.0.0.0 -d ${DB_NAME} -U ${DB_USER} -f data/layer
 PGCLIENTENCODING=UTF-8 psql -h 0.0.0.0 -d ${DB_NAME} -U ${DB_USER} -f data/layersdata/Insert_6_miles_areas.sql
 PGCLIENTENCODING=UTF-8 psql -h 0.0.0.0 -d ${DB_NAME} -U ${DB_USER} -f data/layersdata/Insert_12_miles_areas.sql
 
-PGCLIENTENCODING=UTF-8 psql -h 0.0.0.0 -d ${DB_NAME} -U ${DB_USER} -f data/layersdata/Insert_regulatory_areas.sql
-
 PGCLIENTENCODING=UTF-8 psql -h 0.0.0.0 -d ${DB_NAME} -U ${DB_USER} -f data/layersdata/1241_eaux_occidentales_australes_areas.sql
 PGCLIENTENCODING=UTF-8 psql -h 0.0.0.0 -d ${DB_NAME} -U ${DB_USER} -f data/layersdata/1241_eaux_occidentales_septentrionales.sql
 PGCLIENTENCODING=UTF-8 psql -h 0.0.0.0 -d ${DB_NAME} -U ${DB_USER} -f data/layersdata/1241_eaux_union_dans_oi_et_atl_ouest_areas.sql
@@ -39,4 +37,4 @@ PGCLIENTENCODING=UTF-8 psql -h 0.0.0.0 -d ${DB_NAME} -U ${DB_USER} -f data/layer
 PGCLIENTENCODING=UTF-8 psql -h 0.0.0.0 -d ${DB_NAME} -U ${DB_USER} -f data/layersdata/situation_memn_areas.sql
 PGCLIENTENCODING=UTF-8 psql -h 0.0.0.0 -d ${DB_NAME} -U ${DB_USER} -f data/layersdata/situation_outre_mer_areas.sql
 
-PGCLIENTENCODING=UTF-8 psql -h 0.0.0.0 -d ${DB_NAME} -U ${DB_USER} -f data/layersdata/reglementation_env.sql
+PGCLIENTENCODING=UTF-8 psql -h 0.0.0.0 -d ${DB_NAME} -U ${DB_USER} -f data/layersdata/regulations_cacem.sql

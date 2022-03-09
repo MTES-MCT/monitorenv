@@ -19,10 +19,10 @@ SET row_security = off;
 SET default_tablespace = '';
 
 --
--- Name: reglementation_env; Type: TABLE; Schema: public; Owner: postgres
+-- Name: regulations_cacem; Type: TABLE; Schema: public; Owner: postgres
 --
-DROP TABLE IF EXISTS public.reglementation_env;
-CREATE TABLE public.reglementation_env (
+DROP TABLE IF EXISTS public.regulations_cacem;
+CREATE TABLE public.regulations_cacem (
     id character varying NOT NULL,
     geom public.geometry(MultiPolygon,4326),
     entity_name character varying,
@@ -47,21 +47,21 @@ CREATE TABLE public.reglementation_env (
 );
 
 
-ALTER TABLE public.reglementation_env OWNER TO postgres;
+ALTER TABLE public.regulations_cacem OWNER TO postgres;
 
 --
--- Name: reglementation_env reglementation_env_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: regulations_cacem regulations_cacem_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.reglementation_env
-    ADD CONSTRAINT reglementation_env_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.regulations_cacem
+    ADD CONSTRAINT regulations_cacem_pkey PRIMARY KEY (id);
 
 
 --
--- Name: reglementation_env_sidx; Type: INDEX; Schema: public; Owner: postgres
+-- Name: regulations_cacem_sidx; Type: INDEX; Schema: public; Owner: postgres
 --
 
-CREATE INDEX reglementation_env_sidx ON public.reglementation_env USING gist (geom);
+CREATE INDEX regulations_cacem_sidx ON public.regulations_cacem USING gist (geom);
 
 
 --
