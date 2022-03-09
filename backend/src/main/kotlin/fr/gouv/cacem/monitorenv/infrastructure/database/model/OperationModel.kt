@@ -26,8 +26,8 @@ data class OperationModel(
         var id: Int,
         @Column(name = "type_operation")
         var typeOperation: String? = null,
-        @Column(name = "statut_operation")
-        var statutOperation: String? = null,
+        @Column(name = "status_operation")
+        var statusOperation: String? = null,
         @Column(name = "input_start_datetime_utc")
         var inputStartDatetimeUtc: Instant? = null,
         @Column(name = "input_end_datetime_utc")
@@ -38,32 +38,32 @@ data class OperationModel(
         var longitude: Double? = null,
         @Column(name = "latitude")
         var latitude: Double? = null,
-        @Column(name = "thematique")
-        var thematique: String? = null
+        @Column(name = "theme")
+        var theme: String? = null
         ) {
         
     fun toOperation() = OperationEntity(
             id = id,
             typeOperation = typeOperation,
-            statutOperation = statutOperation,
+            statusOperation = statusOperation,
             inputStartDatetimeUtc = inputStartDatetimeUtc?.atZone(UTC),
             inputEndDatetimeUtc = inputEndDatetimeUtc?.atZone(UTC),
             facade = facade,
             longitude = longitude,
             latitude = latitude,
-            thematique = thematique
+            theme = theme
     )
     companion object {
         fun fromOperationEntity(operation: OperationEntity) = OperationModel(
                 id = operation.id,
                 typeOperation = operation.typeOperation,
-                statutOperation = operation.statutOperation,
+                statusOperation = operation.statusOperation,
                 inputStartDatetimeUtc = operation.inputStartDatetimeUtc?.toInstant(),
                 inputEndDatetimeUtc = operation.inputEndDatetimeUtc?.toInstant(),
                 facade = operation.facade,
                 longitude = operation.longitude,
                 latitude = operation.latitude,
-                thematique = operation.thematique
+                theme = operation.theme
         )
 }
 }

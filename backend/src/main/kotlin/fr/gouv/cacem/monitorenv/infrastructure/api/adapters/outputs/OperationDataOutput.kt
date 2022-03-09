@@ -7,9 +7,9 @@ import java.time.ZonedDateTime
 data class OperationDataOutput(
     val id: Int,
     val typeOperation: String? = null,
-    val statutOperation: String? = null,
+    val statusOperation: String? = null,
     val facade: String? = null,
-    val thematique: String? = null,
+    val theme: String? = null,
     val inputStartDatetimeUtc: ZonedDateTime? = null,
     val inputEndDatetimeUtc: ZonedDateTime? = null,
     val longitude: Double? = null,
@@ -18,9 +18,9 @@ data class OperationDataOutput(
         fun fromOperation(operation: OperationEntity) = OperationDataOutput(
             id = operation.id,
             typeOperation = operation.typeOperation,
-            statutOperation = operation.statutOperation,
+            statusOperation = operation.statusOperation,
             facade = operation.facade,
-            thematique = operation.thematique,
+            theme = operation.theme,
             inputStartDatetimeUtc = operation.inputStartDatetimeUtc,
             inputEndDatetimeUtc = operation.inputEndDatetimeUtc,
             longitude = operation.longitude,

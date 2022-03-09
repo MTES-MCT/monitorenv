@@ -1,47 +1,10 @@
---
--- PostgreSQL database dump
---
 
--- Dumped from database version 11.9
--- Dumped by pg_dump version 14.1
-
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
-SET check_function_bodies = false;
-SET xmloption = content;
-SET client_min_messages = warning;
-SET row_security = off;
-
-SET default_tablespace = '';
-
---
--- Name: operations; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE IF NOT EXISTS public.operations (
-    id integer NOT NULL,
-    type_operation text,
-    statut_operation character varying(100),
-    input_start_datetime_utc timestamp without time zone,
-    input_end_datetime_utc timestamp without time zone,
-    facade character varying(100),
-    longitude double precision,
-    latitude double precision,
-    thematique text
-);
-
-
-ALTER TABLE public.operations OWNER TO postgres;
 
 --
 -- Data for Name: operations; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.operations (id, type_operation, statut_operation, input_start_datetime_utc, input_end_datetime_utc, facade, longitude, latitude, thematique) FROM stdin;
+COPY public.operations (id, type_operation, status_operation, input_start_datetime_utc, input_end_datetime_utc, facade, longitude, latitude, theme) FROM stdin;
 0	SEA	CLOSED	2022-01-15 04:50:09	2022-01-23 20:29:03	Outre-Mer	110.126782000000006	-50.373736000000001	CONTROLE
 4	LAND	ABORTED	2022-01-15 04:50:09	2022-01-20 22:19:58	MED	98.1084869999999967	-32.2827295000000021	INF
 5	SEA	ABORTED	2022-01-15 04:50:09	2022-02-01 19:19:06	MEMN	106.024474999999995	8.14049149999999955	CONTROLE
@@ -93,31 +56,3 @@ COPY public.operations (id, type_operation, statut_operation, input_start_dateti
 3	\N	qd	2022-01-15 04:50:09	2022-02-05 12:56:44	NAMO	\N	\N	CONTROLE
 2	\N	ABORD	2022-01-15 04:50:09	2022-02-14 22:37:29	MED	\N	\N	INF
 \.
-
-
---
--- Name: operations operations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
---
--- ALTER TABLE ONLY public.operations
---     ADD CONSTRAINT operations_pkey PRIMARY KEY (id);
---
---
--- --
--- -- Name: operations_id_idx; Type: INDEX; Schema: public; Owner: postgres
--- --
---
--- CREATE INDEX operations_id_idx ON public.operations USING btree (id);
---
---
--- --
--- -- Name: operations_input_start_datetime_utc_idx; Type: INDEX; Schema: public; Owner: postgres
--- --
---
--- CREATE INDEX operations_input_start_datetime_utc_idx ON public.operations USING btree (input_start_datetime_utc DESC);
---
-
---
--- PostgreSQL database dump complete
---
-
