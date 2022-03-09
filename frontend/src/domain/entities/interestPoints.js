@@ -1,7 +1,6 @@
 export const interestPointType = {
   CONTROL_ENTITY: 'CONTROL_ENTITY',
   FISHING_VESSEL: 'FISHING_VESSEL',
-  FISHING_GEAR: 'FISHING_GEAR',
   OTHER: 'OTHER'
 }
 

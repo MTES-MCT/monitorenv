@@ -1,52 +1,17 @@
 /* eslint-disable camelcase */
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
-import Layers, { getGearCategory } from '../../../domain/entities/layers'
-import { getAdministrativeAndRegulatoryLayersStyle } from '../../../layers/styles/administrativeAndRegulatoryLayers.style'
-import { getHash } from '../../../utils/utils'
 import { COLORS } from '../../../constants/constants'
 
-const LayerDetailsBox = props => {
-  const {
-    feature,
-    gears
-  } = props
-
-  const [vectorLayerStyle, setVectorLayerStyle] = useState(null)
-  const [regulatoryFeatureToShowOnCard, setRegulatoryFeatureToShowOnCard] = useState(null)
+const LayerDetailsBox = () => {
 
 
+const regulatoryFeatureToShowOnCard = false
+const vectorLayerStyle = false
 
-  useEffect(() => {
-    if (feature?.getId()?.toString()?.includes(`${Layers.REGULATORY.code}`)) {
-      setRegulatoryFeatureToShowOnCard(feature)
-    } else {
-      setRegulatoryFeatureToShowOnCard(null)
-    }
-  }, [feature, setRegulatoryFeatureToShowOnCard])
-
-  useEffect(() => {
-    if (regulatoryFeatureToShowOnCard) {
-      const {
-        zones,
-        layer_name,
-        engins
-      } = regulatoryFeatureToShowOnCard.getProperties()
-
-      if (zones && layer_name && gears) {
-        const hash = getHash(`${layer_name}:${zones}`)
-        const gearCategory = getGearCategory(engins, gears)
-        setVectorLayerStyle(getAdministrativeAndRegulatoryLayersStyle(Layers.REGULATORY.code)(null, hash, gearCategory))
-      } else {
-        setVectorLayerStyle(null)
-      }
-    }
-  }, [regulatoryFeatureToShowOnCard, gears, setVectorLayerStyle])
 
   return (regulatoryFeatureToShowOnCard && <Details>
-    {
-      regulatoryFeatureToShowOnCard && <>
         <Rectangle vectorLayerStyle={vectorLayerStyle}/>
         <Text>
           {regulatoryFeatureToShowOnCard.getProperties().layer_name.replace(/[_]/g, ' ')}
@@ -56,8 +21,6 @@ const LayerDetailsBox = props => {
               : null
           }
         </Text>
-      </>
-    }
   </Details>)
 }
 

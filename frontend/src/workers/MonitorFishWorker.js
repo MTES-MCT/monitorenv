@@ -72,15 +72,12 @@ class MonitorFishWorker {
    *           bycatch: undefined,
    *           closingDate: undefined,
    *           deposit: undefined,
-   *           gears: "DRB",
    *           lawType: "Reg locale",
    *           mandatoryDocuments: undefined,
    *           obligations: undefined,
    *           openingDate: undefined,
    *           period: undefined,
    *           permissions: undefined,
-   *           prohibitedGears: null,
-   *           prohibitedSpecies: null,
    *           prohibitions: undefined,
    *           quantity: undefined,
    *           region: "Bretagne",
@@ -89,7 +86,6 @@ class MonitorFishWorker {
    *             \"reference\": \"ArrÃªtÃ© PrÃ©fectoral R53-2020-04-24-002 - dÃ©lib 2020-004 / NAMO\"}, {\"url\": \"\", \"reference\": \"126-2020\"}]",
    *           rejections: undefined,
    *           size: undefined,
-   *           species: "SCE",
    *           state: undefined,
    *           technicalMeasurements: undefined,
    *           topic: "Armor_CSJ_Dragues",
@@ -148,41 +144,8 @@ class MonitorFishWorker {
     return layersTopicsByRegulatoryTerritory
   }
 
-  getUniqueSpeciesAndDistricts (vessels) {
-    const species = vessels
-      .map(vessel => vessel.speciesOnboard)
-      .flat()
-      .reduce((acc, _species) => {
-        if (acc.indexOf(_species?.species) < 0) {
-          acc.push(_species?.species)
-        }
 
-        return acc
-      }, [])
-      .filter(_species => _species)
-
-    const districts = vessels
-      .map(vessel => {
-        return {
-          district: vessel.district,
-          districtCode: vessel.districtCode
-        }
-      })
-      .reduce((acc, district) => {
-        const found = acc.find(item => item.district === district.district)
-
-        if (!found) {
-          return acc.concat([district])
-        } else {
-          return acc
-        }
-      }, [])
-
-    return { species, districts }
-  }
-
-
-  searchLayers (searchFields, regulatoryLayers, gears) {
+  searchLayers (searchFields, regulatoryLayers) {
     let foundRegulatoryLayers = {}
 
     Object.keys(searchFields).forEach(searchProperty => {
@@ -190,8 +153,7 @@ class MonitorFishWorker {
         const searchResultByLawType = searchByLawType(
           regulatoryLayers,
           searchFields[searchProperty].properties,
-          searchFields[searchProperty].searchText,
-          gears)
+          searchFields[searchProperty].searchText)
 
         if (foundRegulatoryLayers && Object.keys(foundRegulatoryLayers).length === 0) {
           foundRegulatoryLayers = searchResultByLawType

@@ -15,7 +15,6 @@ import SetCoordinates from '../coordinates/SetCoordinates'
 import { MapComponentStyle } from '../commonStyles/MapComponent.style'
 import { COLORS } from '../../constants/constants'
 
-import { ReactComponent as GearSVG } from '../icons/Label_engin_de_peche.svg'
 import { ReactComponent as ControlSVG } from '../icons/Label_controle.svg'
 import { ReactComponent as VesselSVG } from '../icons/Label_segment_de_flotte.svg'
 import { ReactComponent as OtherSVG } from '../icons/Point_interet_autre.svg'
@@ -161,12 +160,6 @@ const SaveInterestPoint = ({ healthcheckTextWarning, isOpen, close }) => {
             >
               <Vessel/>
               Navire de pêche
-            </Radio>
-            <Radio
-              value={interestPointType.FISHING_GEAR}
-            >
-              <Gear/>
-              Engin de pêche
             </Radio>
             <Radio
               data-cy={'interest-point-type-radio-input'}
@@ -324,10 +317,6 @@ const iconStyle = css`
   width: 14px;
   margin-left: 3px;
   margin-right: 7px;
-`
-
-const Gear = styled(GearSVG)`
-  ${iconStyle}
 `
 
 const Control = styled(ControlSVG)`

@@ -361,39 +361,4 @@ export const baseLayers = {
   }
 }
 
-function removeMiscellaneousGears (layerGearsArray) {
-  return layerGearsArray
-    .filter(gearCode => gearCode !== 'MIS')
-    .map(gearCode => gearCode)
-}
-
-function removeVariousLonglineGears (layerGearsArray) {
-  return layerGearsArray
-    .filter(gearCode => gearCode !== 'LL')
-    .map(gearCode => gearCode)
-}
-
-export function getGearCategory (layerGears, gears) {
-  let gear = null
-  if (layerGears) {
-    let layerGearsArray = layerGears.replace(/ /g, '').split(',')
-    if (layerGearsArray.length > 1) {
-      layerGearsArray = removeMiscellaneousGears(layerGearsArray)
-    }
-    if (layerGearsArray.length > 1) {
-      layerGearsArray = removeVariousLonglineGears(layerGearsArray)
-    }
-
-    gear = gears
-      .find(gear => {
-        return layerGearsArray
-          .some(gearCode => {
-            return gearCode === gear.code
-          })
-      })
-  }
-
-  return gear ? gear.category : null
-}
-
 export default Layers

@@ -51,10 +51,13 @@ export const getInterestPointStyle = (feature, resolution) => {
 
 const getFilename = type => {
   switch (type) {
-    case interestPointType.CONTROL_ENTITY: return 'Point_interet_feature_moyen.png'
-    case interestPointType.FISHING_GEAR: return 'Point_interet_feature_engin.png'
-    case interestPointType.FISHING_VESSEL: return 'Point_interet_feature_navire.png'
-    case interestPointType.OTHER: return 'Point_interet_feature_autre.png'
+    case interestPointType.CONTROL_ENTITY: 
+      return 'Point_interet_feature_moyen.png'
+    case interestPointType.FISHING_VESSEL: 
+      return 'Point_interet_feature_navire.png'
+    case interestPointType.OTHER:
+    default:
+      return 'Point_interet_feature_autre.png'
   }
 }
 

@@ -1,8 +1,9 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
+
 import { COLORS } from '../../../../constants/constants'
 import { Key, Value, Fields, Field } from './RegulatoryMetadata.style'
-import { useSelector } from 'react-redux'
 
 const Identification = () => {
   const { lawType, topic, region } = useSelector(state => state.regulatory.regulatoryZoneMetadata)

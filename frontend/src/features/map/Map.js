@@ -9,6 +9,7 @@ import AdministrativeLayers from '../../layers/AdministrativeLayers'
 import ShowRegulatoryMetadata from './ShowRegulatoryMetadata'
 import RegulatoryPreviewLayer from '../../layers/RegulatoryPreviewLayer'
 import MeasurementLayer from '../../layers/MeasurementLayer'
+import LayerDetailsBox from '../map/controls/LayerDetailsBox'
 // import MapHistory from './MapHistory'
 // import InterestPointLayer from '../../layers/InterestPointLayer'
 
@@ -53,8 +54,8 @@ const Map = () => {
       /> */}
       <MeasurementLayer/>
       {/* <DrawLayer/> */}
-      {/*<LayerDetailsBox gears={gears} feature={currentFeature}/>
-      <InterestPointLayer mapMovingAndZoomEvent={mapMovingAndZoomEvent}/>*/}
+      <LayerDetailsBox />
+      {/*<InterestPointLayer mapMovingAndZoomEvent={mapMovingAndZoomEvent}/>*/}
       <RegulatoryPreviewLayer /> 
     </BaseMap>
   )

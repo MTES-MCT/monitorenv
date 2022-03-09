@@ -9,8 +9,6 @@ import layer from './Layer'
 import measurement from './Measurement'
 import interestPoint from './InterestPoint'
 import regulatory from './Regulatory'
-import gear from './Gear'
-import species from './Species'
 
 import { api } from '../../api/operationsApi'
 
@@ -22,8 +20,6 @@ const commonReducerList = {
   global,
   regulatory,
   regulatoryLayerSearch,
-  gear,
-  species,
   administrative,
   layerSidebar
 }

@@ -7,16 +7,9 @@ export const mapToRegulatoryZone = ({ properties, geometry, id }) => {
     geometry: geometry,
     lawType: properties.law_type,
     topic: properties.layer_name,
-    prohibitedGears: properties.engins_interdits,
-    gears: properties.engins,
     zone: decodeURI(properties.zones),
-    species: properties.especes,
-    prohibitedSpecies: properties.especes_interdites,
-    regulatoryGears: parseRegulatoryGears(properties.gears),
-    regulatorySpecies: parseRegulatorySpecies(properties.species),
     regulatoryReferences: parseRegulatoryReferences(properties.references_reglementaires),
     upcomingRegulatoryReferences: parseUpcomingRegulatoryReferences(properties.references_reglementaires_a_venir),
-    fishingPeriod: parseFishingPeriod(properties.fishing_period),
     permissions: properties.autorisations,
     bycatch: properties.captures_accessoires,
     openingDate: properties.date_ouverture,
@@ -35,17 +28,6 @@ export const mapToRegulatoryZone = ({ properties, geometry, id }) => {
   }
 }
 
-function parseRegulatoryGears (gears) {
-  return gears
-    ? parseJSON(gears)
-    : initialRegulatoryGearsValues
-}
-
-function parseRegulatorySpecies (species) {
-  return species
-    ? parseJSON(species)
-    : initialRegulatorySpeciesValues
-}
 
 const parseUpcomingRegulatoryReferences = upcomingRegulatoryReferences =>
   upcomingRegulatoryReferences && upcomingRegulatoryReferences !== {}
@@ -75,53 +57,6 @@ const parseJSON = text => typeof text === 'string'
   ? JSON.parse(text)
   : text
 
-export const parseFishingPeriod = fishingPeriod => {
-  if (fishingPeriod) {
-    const {
-      authorized,
-      annualRecurrence,
-      dateRanges,
-      dates,
-      weekdays,
-      holidays,
-      daytime,
-      timeIntervals,
-      otherInfo
-    } = JSON.parse(fishingPeriod)
-
-    const newDateRanges = dateRanges?.map(({ startDate, endDate }) => {
-      return {
-        startDate: startDate ? new Date(startDate) : undefined,
-        endDate: endDate ? new Date(endDate) : undefined
-      }
-    })
-
-    const newDates = dates?.map(date => {
-      return date ? new Date(date) : undefined
-    })
-
-    const newTimeIntervals = timeIntervals?.map(({ from, to }) => {
-      return {
-        from: from ? new Date(from) : undefined,
-        to: to ? new Date(to) : undefined
-      }
-    })
-
-    return {
-      authorized,
-      annualRecurrence,
-      dateRanges: newDateRanges,
-      dates: newDates,
-      weekdays,
-      holidays,
-      daytime,
-      timeIntervals: newTimeIntervals,
-      otherInfo
-    }
-  }
-
-  return initialFishingPeriodValues
-}
 
 export const mapToRegulatoryFeatureObject = properties => {
   const {
@@ -131,9 +66,6 @@ export const mapToRegulatoryFeatureObject = properties => {
     region,
     regulatoryReferences,
     upcomingRegulatoryReferences,
-    fishingPeriod,
-    regulatorySpecies,
-    regulatoryGears
   } = properties
 
   return {
@@ -143,9 +75,6 @@ export const mapToRegulatoryFeatureObject = properties => {
     region,
     references_reglementaires: JSON.stringify(regulatoryReferences),
     references_reglementaires_a_venir: JSON.stringify(upcomingRegulatoryReferences),
-    fishing_period: JSON.stringify(fishingPeriod),
-    species: JSON.stringify(regulatorySpecies),
-    gears: JSON.stringify(regulatoryGears)
   }
 }
 
@@ -195,8 +124,6 @@ export const REGULATORY_SEARCH_PROPERTIES = {
   TOPIC: 'topic',
   ZONE: 'zone',
   REGION: 'region',
-  GEARS: 'gears',
-  SPECIES: 'species',
   REGULATORY_REFERENCES: 'regulatoryReferences'
 }
 
@@ -249,47 +176,6 @@ export const DEFAULT_DATE_RANGE = {
   endDate: undefined
 }
 
-/** @type {FishingPeriod} */
-export const initialFishingPeriodValues = {
-  authorized: undefined,
-  annualRecurrence: undefined,
-  dateRanges: [],
-  dates: [],
-  weekdays: [],
-  holidays: undefined,
-  daytime: undefined,
-  timeIntervals: []
-}
-
-/** @type {RegulatorySpecies} */
-export const initialRegulatorySpeciesValues = {
-  authorized: undefined,
-  allSpecies: undefined,
-  otherInfo: undefined,
-  species: [],
-  speciesGroups: []
-}
-
-/** @type {RegulatoryGears} */
-export const initialRegulatoryGearsValues = {
-  authorized: undefined,
-  allGears: undefined,
-  allTowedGears: undefined,
-  allPassiveGears: undefined,
-  regulatedGearCategories: {},
-  regulatedGears: {},
-  selectedCategoriesAndGears: [],
-  derogation: undefined
-}
-
-export const GEARS_CATEGORES_WITH_MESH = [
-  'Chaluts',
-  'Sennes traînantes',
-  'Filets tournants',
-  'Filets soulevés',
-  'Filets maillants et filets emmêlants'
-]
-
 export const WEEKDAYS = {
   lundi: 'L',
   mardi: 'M',
@@ -308,27 +194,6 @@ export function findIfSearchStringIncludedInProperty (zone, propertiesToSearch, 
     : false
 }
 
-export function findIfSearchStringIncludedInArrayProperty (zone, propertiesToSearch, searchText) {
-  return zone[propertiesToSearch]?.length && searchText
-    ? zone[propertiesToSearch].find(text => getTextForSearch(JSON.stringify(text)).includes(getTextForSearch(searchText)))
-    : false
-}
-
-export function searchByLawType (lawTypes, properties, searchText, gears) {
-  const searchResultByLawType = {}
-
-  Object.keys(lawTypes).forEach(lawType => {
-    const regulatoryZone = Object.assign({}, lawTypes[lawType])
-    const foundRegulatoryZones = search(searchText, properties, regulatoryZone, gears)
-
-    if (foundRegulatoryZones && Object.keys(foundRegulatoryZones).length !== 0) {
-      searchResultByLawType[lawType] = foundRegulatoryZones
-    }
-  })
-
-  return searchResultByLawType
-}
-
 export function searchResultIncludeZone (searchResult, { lawType, topic, zone }) {
   const territorySearchResult = searchResult[LAWTYPES_TO_TERRITORY[lawType]]
   if (territorySearchResult) {
@@ -339,26 +204,11 @@ export function searchResultIncludeZone (searchResult, { lawType, topic, zone })
   return false
 }
 
-export function findIfStringIsIncludedInZoneGears (zone, searchText, uniqueGearCodes) {
-  const gears = zone.gears
-  if (gears) {
-    const gearsArray = gears.replace(/ /g, '').split(',')
-    const found = gearCodeIsFoundInRegulatoryZone(gearsArray, uniqueGearCodes)
 
-    return found || gears.toLowerCase().includes(searchText.toLowerCase())
-  } else {
-    return false
-  }
-}
-
-export function search (searchText, propertiesToSearch, regulatoryZones, gears) {
+export function search (searchText, propertiesToSearch, regulatoryZones) {
   if (regulatoryZones) {
     const foundRegulatoryZones = { ...regulatoryZones }
 
-    let uniqueGearCodes = null
-    if (propertiesToSearch.includes(REGULATORY_SEARCH_PROPERTIES.GEARS)) {
-      uniqueGearCodes = getUniqueGearCodesFromSearch(searchText, gears)
-    }
 
     Object.keys(foundRegulatoryZones)
       .forEach(key => {
@@ -366,15 +216,8 @@ export function search (searchText, propertiesToSearch, regulatoryZones, gears) 
           .filter(zone => {
             let searchStringIncludedInProperty = false
             propertiesToSearch.forEach(property => {
-              if (property === REGULATORY_SEARCH_PROPERTIES.GEARS) {
-                searchStringIncludedInProperty = findIfStringIsIncludedInZoneGears(zone, searchText, uniqueGearCodes)
-              } else if (property === REGULATORY_SEARCH_PROPERTIES.REGULATORY_REFERENCES) {
-                searchStringIncludedInProperty =
-                  searchStringIncludedInProperty || findIfSearchStringIncludedInArrayProperty(zone, property, searchText)
-              } else {
                 searchStringIncludedInProperty =
                   searchStringIncludedInProperty || findIfSearchStringIncludedInProperty(zone, property, searchText)
-              }
             })
             return searchStringIncludedInProperty
           })
@@ -387,18 +230,7 @@ export function search (searchText, propertiesToSearch, regulatoryZones, gears) 
   }
 }
 
-export function getUniqueGearCodesFromSearch (searchText, gears) {
-  const foundGearCodes = gears
-    .filter(gear => gear.name.toLowerCase().includes(searchText.toLowerCase()))
-    .map(gear => gear.code)
-  return [...new Set(foundGearCodes)]
-}
 
-export function gearCodeIsFoundInRegulatoryZone (gears, uniqueGearCodes) {
-  return gears.some(gearCodeFromREG => {
-    return !!uniqueGearCodes.some(foundGearCode => foundGearCode === gearCodeFromREG)
-  })
-}
 
 export function orderByAlphabeticalLayer (foundRegulatoryLayers) {
   if (foundRegulatoryLayers) {
@@ -448,41 +280,6 @@ export function getMergedRegulatoryLayers (previousFoundRegulatoryLayers, nextFo
   return mergedRegulatoryLayers
 }
 
-/**
- * Convert an array of word to a sentence.
- * Each word or separated with a coma,
- * exept the second last word is fellowed by 'et'
- * and the last word with nothing
- * @param {string[]} array
- * @returns {string}
- */
-const toArrayString = (array) => {
-  if (array?.length) {
-    if (array.length === 1) {
-      return array[0]
-    } else if (array.length === 2) {
-      return array.join(' et ')
-    } else {
-      return array.slice(0, -1).join(', ').concat(' et ').concat(array.slice(-1))
-    }
-  }
-}
-
-/**
- * dateToString
- * Convert date to string
- * if annualRecurrence, the year is added, then nothing
- * @param {Date} date
- * @param {boolean} annualRecurrence
- * @returns
- */
-const dateToString = (date, annualRecurrence) => {
-  const options = { day: 'numeric', month: 'long' }
-  if (!annualRecurrence) {
-    options.year = 'numeric'
-  }
-  return date.toLocaleDateString('fr-FR', options)
-}
 
 const getHoursValues = () => {
   const hours = [...Array(24).keys()]
@@ -512,129 +309,6 @@ export const convertTimeToString = (date) => {
   }
 }
 
-/**
- * fishingPeriodToString
- * Convert a fishing period object to a sentence understandable by a human
- * @param {FishingPeriod} fishingPeriod
- * @returns {string} - fishing period convert to string
- */
-export const fishingPeriodToString = fishingPeriod => {
-  const {
-    dateRanges,
-    annualRecurrence,
-    dates,
-    weekdays,
-    holidays,
-    timeIntervals,
-    daytime,
-    authorized
-  } = fishingPeriod
-
-  const textArray = []
-  if (dateRanges?.length) {
-    let array = toArrayString(
-      dateRanges.map(({ startDate, endDate }) => {
-        if (startDate && endDate) {
-          return `du ${dateToString(startDate, annualRecurrence)} au ${dateToString(endDate, annualRecurrence)}`
-        }
-
-        return undefined
-      }).filter(e => e))
-
-    if (array?.length) {
-      if (annualRecurrence) {
-        array = 'tous les ans '.concat(array)
-      }
-      textArray.push(array)
-    }
-  }
-
-  if (dates?.length) {
-    const array = toArrayString(dates.map((date) => {
-      if (date) {
-        return `le ${dateToString(date)}`
-      }
-
-      return undefined
-    }).filter(e => e))
-
-    if (array?.length) {
-      textArray.push(array)
-    }
-  }
-
-  if (weekdays?.length) {
-    textArray.push(`le${weekdays.length > 1 ? 's' : ''} ${toArrayString(weekdays)}`)
-  }
-
-  if (holidays) {
-    textArray.push('les jours fériés')
-  }
-
-  if (timeIntervals?.length) {
-    const array = toArrayString(timeIntervals.map(({ from, to }) => {
-      if (from && to) {
-        return `de ${convertTimeToString(from)} à ${convertTimeToString(to)}`
-      }
-      return undefined
-    }).filter(e => e))
-
-    if (array?.length) {
-      textArray.push(array)
-    }
-  } else if (daytime) {
-    textArray.push('du lever au coucher du soleil')
-  }
-
-  if (textArray?.length) {
-    return `Pêche ${authorized ? 'autorisée' : 'interdite'} `.concat(textArray.join(', '))
-  }
-
-  return null
-}
-
-
-/**
- *
- * @param {Object.<string, Gear[]>} categoriesToGears
- * @returns
- */
-export const prepareCategoriesAndGearsToDisplay = (categoriesToGears) => {
-  const SORTED_CATEGORY_LIST = [
-    'Chaluts', 'Sennes traînantes', 'Dragues', 'Sennes tournantes coulissantes',
-    'Filets tournants', 'Filets maillants et filets emmêlants', 'Filets soulevés',
-    'Lignes et hameçons', 'Pièges', 'Engins de récolte', 'Engins divers'
-  ]
-  const CATEGORIES_TO_HIDE = ['engins inconnus', 'pas d\'engin', 'engins de pêche récréative']
-
-  return SORTED_CATEGORY_LIST.map(category => {
-    if (!CATEGORIES_TO_HIDE.includes(category) && categoriesToGears[category]) {
-      const categoryGearList = [...categoriesToGears[category]]
-      const gears = categoryGearList
-        .sort((gearA, gearB) => {
-          if (gearA.name < gearB.name) {
-            return -1
-          }
-          if (gearA.name > gearB.name) {
-            return 1
-          }
-          return 0
-        })
-        .map((gear) => {
-          return {
-            label: `${gear.code} - ${gear.name}`,
-            value: gear.code
-          }
-        })
-      return {
-        label: category,
-        value: category,
-        children: gears
-      }
-    }
-    return null
-  }).filter(gears => gears)
-}
 
 export const getTitle = regulatory => regulatory
   ? `${regulatory.topic.replace(/[_]/g, ' ')} - ${regulatory.zone.replace(/[_]/g, ' ')}`
