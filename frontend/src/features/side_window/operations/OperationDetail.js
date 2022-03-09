@@ -18,9 +18,9 @@ export const OperationDetail = ({ id })  => {
     initialValues: {
       id: operation?.id,
       typeOperation: operation?.typeOperation,
-      statutOperation: operation?.statutOperation,
+      statusOperation: operation?.statusOperation,
       facade: operation?.facade,
-      thematique: operation?.thematique,
+      theme: operation?.theme,
       inputStartDatetimeUtc: operation?.inputStartDatetimeUtc || '',
       inputEndDatetimeUtc: operation?.inputEndDatetimeUtc || ''
     },
@@ -41,11 +41,11 @@ export const OperationDetail = ({ id })  => {
          type="text"
          {...formik.getFieldProps('typeOperation')}
        />
-       <label htmlFor="statutOperation">Statut Opération</label>
+       <label htmlFor="statusOperation">Statut Opération</label>
        <input
-         id="statutOperation"
+         id="statusOperation"
          type="text"
-         {...formik.getFieldProps('statutOperation')}
+         {...formik.getFieldProps('statusOperation')}
        />
        <label htmlFor="facade">Façade</label>
        <input
@@ -53,11 +53,11 @@ export const OperationDetail = ({ id })  => {
          type="text"
          {...formik.getFieldProps('facade')}
        />
-       <label htmlFor="thematique">Thematique</label>
+       <label htmlFor="theme">theme</label>
        <input
-         id="thematique"
+         id="theme"
          type="text"
-         {...formik.getFieldProps('thematique')}
+         {...formik.getFieldProps('theme')}
        />
        <label htmlFor="inputStartDatetimeUtc">Début</label>
        <input

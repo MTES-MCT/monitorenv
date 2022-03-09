@@ -34,7 +34,7 @@ export const OperationsList = ({setOperation}) => {
 
             <Table.Column width={200}>
               <Table.HeaderCell>Statut</Table.HeaderCell>
-              <Table.Cell dataKey="statutOperation" />
+              <Table.Cell dataKey="statusOperation" />
             </Table.Column>
 
             <Table.Column width={200}>
@@ -43,8 +43,8 @@ export const OperationsList = ({setOperation}) => {
             </Table.Column>
 
             <Table.Column width={200}>
-              <Table.HeaderCell>Thematique</Table.HeaderCell>
-              <Table.Cell dataKey="thematique" />
+              <Table.HeaderCell>theme</Table.HeaderCell>
+              <Table.Cell dataKey="theme" />
             </Table.Column>
             <Table.Column width={200}>
               <Table.HeaderCell>Début</Table.HeaderCell>
