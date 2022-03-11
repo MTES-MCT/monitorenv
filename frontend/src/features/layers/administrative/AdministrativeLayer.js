@@ -8,7 +8,7 @@ import { ShowIcon } from '../../commonStyles/icons/ShowIcon.style'
 import { HideIcon } from '../../commonStyles/icons/HideIcon.style'
 import { COLORS } from '../../../constants/constants'
 
-const AdministrativeLayer = ({ layer, isGrouped, isFirst}) => {
+const AdministrativeLayer = ({ layer, isGrouped}) => {
   const dispatch = useDispatch()
   const { showedAdministrativeLayerIds } = useSelector(state=> state.administrative)
 
@@ -23,8 +23,7 @@ const AdministrativeLayer = ({ layer, isGrouped, isFirst}) => {
   }
 
   return <Row
-      isFirst={isFirst}
-      isGrouped={isGrouped}
+      $isGrouped={isGrouped}
       onClick={toggleLayer}
       data-cy={'administrative-layer-toggle'}
     >
@@ -43,9 +42,9 @@ const LayerName = styled.span`
 `
 
 const Row = styled.span`
-  margin-top: ${props => props.isFirst ? 5 : 0}px;
-  padding: ${props => props.isGrouped ? '4px 0 3px 20px' : '4px 0 4px 20px'};
-  padding-left: ${props => props.isGrouped ? '38px' : '20px'};
+  margin-top: 0px;
+  padding: ${props => props.$isGrouped ? '4px 0 3px 20px' : '4px 0 4px 20px'};
+  padding-left: ${props => props.$isGrouped ? '38px' : '20px'};
   line-height: 18px;
   display: block;
   user-select: none;

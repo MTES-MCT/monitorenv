@@ -9,16 +9,11 @@ const globalSlice = createSlice({
   name: 'global',
   initialState: {
     error: null,
-    isUpdatingVessels: false,
-    blockVesselsUpdate: false,
     rightMenuIsOpen: false,
-    vesselListModalIsOpen: false,
     /** @type {string | null} healthcheckTextWarning */
     healthcheckTextWarning: null,
-    previewFilteredVesselsMode: undefined,
     openedSideWindowTab: null,
     sideWindowIsOpen: false,
-    lastSearchedVessels: []
   },
   reducers: {
     expandRightMenu (state) {
@@ -26,18 +21,6 @@ const globalSlice = createSlice({
     },
     contractRightMenu (state) {
       state.rightMenuIsOpen = false
-    },
-    setIsUpdatingVessels (state) {
-      state.isUpdatingVessels = true
-    },
-    openVesselListModal (state) {
-      state.vesselListModalIsOpen = true
-    },
-    closeVesselListModal (state) {
-      state.vesselListModalIsOpen = false
-    },
-    resetIsUpdatingVessels (state) {
-      state.isUpdatingVessels = false
     },
     setError (state, action) {
       state.error = action.payload
@@ -82,35 +65,18 @@ const globalSlice = createSlice({
     setHealthcheckTextWarning (state, action) {
       state.healthcheckTextWarning = action.payload
     },
-    /**
-     * Block or not the vessel update cron - The vessel update is blocked when the
-     * vessel list table is opened or when vessels filters are previewed
-     * @param {Object=} state
-     * @param {{payload: boolean}} action - blocked when true
-     */
-    setBlockVesselsUpdate (state, action) {
-      state.blockVesselsUpdate = action.payload
-    }
   }
 })
 
 export const {
   setError,
   removeError,
-  setIsUpdatingVessels,
-  resetIsUpdatingVessels,
   expandRightMenu,
   contractRightMenu,
-  openVesselListModal,
-  closeVesselListModal,
   setHealthcheckTextWarning,
-  setPreviewFilteredVesselsMode,
-  setBlockVesselsUpdate,
   openSideWindowTab,
   setSideWindowAsOpen,
   closeSideWindow,
-  setUserType,
-  addSearchedVessel
 } = globalSlice.actions
 
 export default globalSlice.reducer

@@ -8,7 +8,6 @@ import regulatoryLayerSearch from '../../features/layers/regulatory/search/Regul
 import {administrativeSlicePersistedReducer} from './Administrative'
 import layerSidebar from './LayerSidebar'
 import { operationsApi } from '../../api/operationsApi'
-import layer from './Layer'
 import { measurementSlicePersistedReducer } from './Measurement'
 import { interestPointSlicePersistedReducer } from './InterestPoint'
 
@@ -23,7 +22,6 @@ export const homeReducers = combineReducers({
   regulatoryLayerSearch,
   layerSidebar,
   [operationsApi.reducerPath]: operationsApi.reducer,
-  layer: layer.homepage.reducer,
   interestPoint: interestPointSlicePersistedReducer,
   measurement: measurementSlicePersistedReducer
 })

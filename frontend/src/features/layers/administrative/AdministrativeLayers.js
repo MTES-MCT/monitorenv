@@ -14,7 +14,6 @@ import { COLORS } from '../../../constants/constants'
 const AdministrativeLayers = () => {
 
   const dispatch = useDispatch()
-  const showedLayers = useSelector(state => state.layer.showedLayers)
   const { administrativeZonesIsOpen } = useSelector(state => state.layerSidebar)
 
   const onSectionTitleClicked = () => {
@@ -38,7 +37,6 @@ const AdministrativeLayers = () => {
                 return <ListItem key={layers[0].code}>
                   <AdministrativeLayer
                     key={layers[0].code}
-                    isShownOnInit={showedLayers.some(layer_ => layer_.type === layers[0].code)}
                     layer={layers[0]}
                   />
                 </ListItem>
@@ -47,7 +45,6 @@ const AdministrativeLayers = () => {
                   <AdministrativeLayerGroup
                     isLastItem={administrativeLayers.length === index + 1}
                     layers={layers}
-                    showedLayers={showedLayers}
                   />
                 </ListItem>
               }

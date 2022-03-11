@@ -14,22 +14,10 @@ export const metadataIsShowedPropertyName = 'metadataIsShowed'
 const RegulatoryLayers = ({ map }) => {
 
   const {
-    lastShowedFeatures,
-    layersToFeatures
-  } = useSelector(state => state.layer)
-
-  const {
     regulatoryLayers,
     showedRegulatoryLayerIds,
-    regulatoryZoneMetadata,
   } = useSelector(state => state.regulatory)
 
-
-  useEffect(() => {
-    if (map) {
-      sortRegulatoryLayersFromAreas(layersToFeatures, map.getLayers().getArray())
-    }
-  }, [map, layersToFeatures])
 
   useEffect(() => {
     if (map && showedRegulatoryLayerIds) {
@@ -70,62 +58,9 @@ const RegulatoryLayers = ({ map }) => {
     }
   }, [map, regulatoryLayers, showedRegulatoryLayerIds])
 
-  useEffect(() => {
-    function addOrRemoveMetadataIsShowedPropertyToShowedRegulatoryLayers () {
-      if (map) {
-        const regulatoryLayers = map.getLayers().getArray().filter(layer => layer?.name?.includes(Layers.REGULATORY.code))
-        if (regulatoryZoneMetadata) {
-          const layerToAddProperty = regulatoryLayers.find(layer => {
-            return layer?.name === `${Layers.REGULATORY.code}:${regulatoryZoneMetadata.topic}:${regulatoryZoneMetadata.zone}`
-          })
-
-          if (layerToAddProperty) {
-            addMetadataIsShowedProperty(lastShowedFeatures, layerToAddProperty)
-          }
-        } else {
-          removeMetadataIsShowedProperty(regulatoryLayers)
-        }
-      }
-    }
-
-    addOrRemoveMetadataIsShowedPropertyToShowedRegulatoryLayers()
-  }, [map, regulatoryZoneMetadata, lastShowedFeatures])
 
 
   return null
 }
-
-function sortRegulatoryLayersFromAreas (layersToFeatures, olLayers) {
-  const sortedLayersToArea = [...layersToFeatures].sort((a, b) => a.area - b.area).reverse()
-
-  sortedLayersToArea.forEach((layerAndArea, index) => {
-    index = index + 1
-    const layer = olLayers.find(layer => layer?.name === layerAndArea.name)
-
-    if (layer) {
-      layer.setZIndex(index)
-    }
-  })
-}
-
-
-function addMetadataIsShowedProperty (lastShowedFeatures, layerToAddProperty) {
-  const features = layerToAddProperty.getSource().getFeatures()
-  if (features?.length) {
-    features.forEach(feature => feature.set(metadataIsShowedPropertyName, true))
-  } else if (lastShowedFeatures?.length) {
-    lastShowedFeatures
-      .forEach(feature => feature.set(metadataIsShowedPropertyName, true))
-  }
-}
-
-function removeMetadataIsShowedProperty (regulatoryLayers) {
-  regulatoryLayers.forEach(layer => {
-    layer.getSource().getFeatures()
-      .filter(feature => feature.get(metadataIsShowedPropertyName))
-      .forEach(feature => feature.set(metadataIsShowedPropertyName, false))
-  })
-}
-
 
 export default RegulatoryLayers
