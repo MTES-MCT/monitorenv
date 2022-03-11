@@ -28,8 +28,6 @@ const BaseMap = ({ children, showAttributions }) => {
   const [mapClickEvent, setMapClickEvent] = useState(null)
 
   const mapElement = useRef()
-  const mapRef = useRef()
-  mapRef.current = map
 
   const handleMapClick = (event, map) => {
     if (event && map) {
