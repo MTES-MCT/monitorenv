@@ -1,6 +1,9 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 import { Provider } from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react';
+import { persistStore } from 'redux-persist';
+
 import styled from 'styled-components'
 
 import { NamespaceContext } from '../domain/context/NamespaceContext'
@@ -17,31 +20,33 @@ import OperationsMapButton from '../features/side_window/operations/OperationsMa
 // import Measurement from '../features/measurements/Measurement'
 // import InterestPoint from '../features/interest_points/InterestPoint'
 
-
+const persistor = persistStore(homeStore);
 
 export const HomePage = () => {
   return <Provider store={homeStore}>
-    <NamespaceContext.Provider value={'homepage'}>
-      <Switch>
-       <Route exact path="/side_window">
-          <SideWindow />
-        </Route>
-        <Route exact path="/">
-          <Healthcheck/>
-          <Wrapper>
-            <APIWorker/>
-            <Map/>
-            <LayersSidebar/> 
-            <OperationsMapButton />
-            {/* <Measurement/>
-            <InterestPoint/> */}
-            {/* <APIWorker/> */}
-            {/* <ErrorToastNotification/> */}
-            <SideWindowLauncher/>
-          </Wrapper>
-        </Route>
-      </Switch>
-    </NamespaceContext.Provider>
+    <PersistGate loading={null} persistor={persistor}>
+      <NamespaceContext.Provider value={'homepage'}>
+        <Switch>
+        <Route exact path="/side_window">
+            <SideWindow />
+          </Route>
+          <Route exact path="/">
+            <Healthcheck/>
+            <Wrapper>
+              <APIWorker/>
+              <Map/>
+              <LayersSidebar/> 
+              <OperationsMapButton />
+              {/* <Measurement/>
+              <InterestPoint/> */}
+              {/* <APIWorker/> */}
+              {/* <ErrorToastNotification/> */}
+              <SideWindowLauncher/>
+            </Wrapper>
+          </Route>
+        </Switch>
+      </NamespaceContext.Provider>
+    </PersistGate>
   </Provider>
 }
 

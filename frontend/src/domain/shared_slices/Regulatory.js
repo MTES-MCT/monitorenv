@@ -1,4 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import _ from "lodash";
 
 /* eslint-disable */
@@ -7,10 +9,15 @@ const RegulatoryReducer = null
 /* eslint-enable */
 
 
+const persistConfig = {
+  key: 'regulatory',
+  storage,
+  whitelist: ['selectedRegulatoryLayerIds', 'showedRegulatoryLayerIds']
+};
+
 const regulatorySlice = createSlice({
   name: 'regulatory',
   initialState: {
-    isReadyToShowRegulatoryLayers: false,
     /** @type {Object.<string, RegulatoryZone[]>} selectedRegulatoryLayers */
     /** @type RegulatoryLawTypes regulatoryLayers */
     regulatoryLayers: [],
@@ -69,9 +76,6 @@ const regulatorySlice = createSlice({
      */
     hideRegulatoryLayer (state, action) {
       state.showedRegulatoryLayerIds = _.without(state.showedRegulatoryLayerIds, action.payload)
-    },
-    setIsReadyToShowRegulatoryZones (state) {
-      state.isReadyToShowRegulatoryLayers = true
     },
     setLoadingRegulatoryZoneMetadata (state) {
       state.loadingRegulatoryZoneMetadata = true
@@ -168,7 +172,9 @@ export const {
   setRegulationSearchedZoneExtent
 } = regulatorySlice.actions
 
-export default regulatorySlice.reducer
+
+
+export const regulatorySlicePersistedReducer = persistReducer(persistConfig, regulatorySlice.reducer);
 
 
 export const regulatoryActionSanitizer = (action) => (

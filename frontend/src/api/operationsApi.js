@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-export const api = createApi({
+export const operationsApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8880/bff/v1' }),
   reducerPath: 'operations',
   endpoints: (build) => ({
@@ -16,7 +16,7 @@ export const api = createApi({
               ...result.map(({ id }) => ({ type: 'Operations', id })),
               { type: 'Operations', id: 'LIST' },
             ]
-          : // an error occurred, but we still want to refetch this query when `{ type: 'Posts', id: 'LIST' }` is invalidated
+          : // an error occurred, but we still want to refetch this query when `{ type: 'Operations', id: 'LIST' }` is invalidated
             [{ type: 'Operations', id: 'LIST' }]
     }),
     updateOperation: build.mutation({
@@ -31,7 +31,7 @@ export const api = createApi({
       // The 2nd parameter is the destructured `MutationLifecycleApi`
       async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
         const patchResult = dispatch(
-          api.util.updateQueryData('getOperation', id, (draft) => {
+          operationsApi.util.updateQueryData('getOperation', id, (draft) => {
             Object.assign(draft, patch)
           })
         )
@@ -46,4 +46,4 @@ export const api = createApi({
   }),
 })
 
-export const { useGetOperationsQuery, useUpdateOperationMutation } = api
+export const { useGetOperationsQuery, useUpdateOperationMutation } = operationsApi

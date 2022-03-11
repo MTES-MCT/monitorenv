@@ -1,4 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import _ from "lodash";
 
 /* eslint-disable */
@@ -6,17 +8,18 @@ import _ from "lodash";
 const AdministrativeReducer = null
 /* eslint-enable */
 
+const persistConfig = {
+  key: 'administrative',
+  storage,
+};
+
 
 const administrativeSlice = createSlice({
   name: 'administrative',
   initialState: {
-    administrativeLayers: [],
     showedAdministrativeLayerIds:[],
   },
   reducers: {
-    setAdministrativeLayers (state, action) {
-      state.administrativeLayers = action.payload
-    },
     /**
      * show AdministrativeLayer
      * @memberOf AdministrativeReducer
@@ -44,4 +47,4 @@ export const {
   setAdministrativeLayers,
 } = administrativeSlice.actions
 
-export default administrativeSlice.reducer
+export const administrativeSlicePersistedReducer = persistReducer(persistConfig, administrativeSlice.reducer);
