@@ -11,7 +11,7 @@ import RegulatoryPreviewLayer from '../../layers/RegulatoryPreviewLayer'
 import MeasurementLayer from '../../layers/MeasurementLayer'
 import InterestPointLayer from '../../layers/InterestPointLayer'
 import LayerDetailsBox from '../map/controls/LayerDetailsBox'
-// import MapHistory from './MapHistory'
+import { MapExtentController } from './MapExtentController'
 
 const Map = () => {
 
@@ -47,11 +47,7 @@ const Map = () => {
       <RegulatoryLayers/>
       <AdministrativeLayers />
       <ShowRegulatoryMetadata />
-      {/* <MapHistory
-        shouldUpdateView={shouldUpdateView}
-        setShouldUpdateView={setShouldUpdateView}
-        historyMoveTrigger={historyMoveTrigger}
-      /> */}
+      <MapExtentController />
       <MeasurementLayer/>
       {/* <DrawLayer/> */}
       <LayerDetailsBox />

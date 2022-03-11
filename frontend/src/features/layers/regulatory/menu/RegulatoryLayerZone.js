@@ -1,7 +1,10 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import styled, { css } from 'styled-components'
+import Projection from 'ol/proj/Projection';
+import {transformExtent} from 'ol/proj';
 
+import { setFitToExtent } from '../../../../domain/shared_slices/Map'
 import { getRegulatoryEnvColorWithAlpha } from '../../../../layers/styles/administrativeAndRegulatoryLayers.style'
 import { REGPaperDarkIcon, REGPaperIcon } from '../../../commonStyles/icons/REGPaperIcon.style'
 import { ShowIcon } from '../../../commonStyles/icons/ShowIcon.style'
@@ -9,6 +12,7 @@ import { HideIcon } from '../../../commonStyles/icons/HideIcon.style'
 import { CloseIcon } from "../../../commonStyles/icons/CloseIcon.style";
 import { COLORS } from '../../../../constants/constants'
 import {hideRegulatoryLayer, removeRegulatoryZonesFromMyLayers, showRegulatoryLayer} from "../../../../domain/shared_slices/Regulatory";
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map';
 
 const RegulatoryLayerZone = ({regulatoryZone}) => {
   const dispatch = useDispatch()
@@ -22,13 +26,18 @@ const RegulatoryLayerZone = ({regulatoryZone}) => {
 
   const toggleLayerDisplay = () => regulatoryZoneIsShowed ? dispatch(hideRegulatoryLayer(regulatoryZone.id)) : dispatch(showRegulatoryLayer(regulatoryZone.id))
   const handleRemoveZone = () =>  dispatch(removeRegulatoryZonesFromMyLayers([regulatoryZone.id]))
+  const zoomToLayerExtent = () => {
+    const extent = transformExtent(regulatoryZone.bbox, new Projection({code: WSG84_PROJECTION}), new Projection({code: OPENLAYERS_PROJECTION}) )
+    !regulatoryZoneIsShowed && dispatch(showRegulatoryLayer(regulatoryZone.id))
+    dispatch(setFitToExtent({extent}))
+  }
 
   const displayedName = regulatoryZone?.properties?.entity_name.replace(/[_]/g, ' ') || 'AUNCUN NOM'
 
   const toggleRegulatoryZoneMetadata = () => console.log('togglemetadata')
   return (
     <Zone $selected={isZoneSelected}>
-      <Rectangle $vectorLayerColor={getRegulatoryEnvColorWithAlpha(regulatoryZone?.doc?.properties?.thematique)}/>
+      <Rectangle onClick={zoomToLayerExtent} $vectorLayerColor={getRegulatoryEnvColorWithAlpha(regulatoryZone?.doc?.properties?.thematique)}/>
       <Name onClick={toggleLayerDisplay} title={displayedName} >
         {displayedName}
       </Name>

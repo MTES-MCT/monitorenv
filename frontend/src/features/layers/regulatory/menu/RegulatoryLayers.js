@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
-import { COLORS } from '../../../constants/constants'
+import { COLORS } from '../../../../constants/constants'
 import { useDispatch, useSelector } from 'react-redux'
-import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
-import RegulatoryLayerList from "./menu/RegulatoryLayerList";
-import { toggleMyRegulatoryZones } from '../../../domain/shared_slices/LayerSidebar'
+import { ChevronIcon } from '../../../commonStyles/icons/ChevronIcon.style'
+import RegulatoryLayerList from "./RegulatoryLayerList";
+import { toggleMyRegulatoryZones } from '../../../../domain/shared_slices/LayerSidebar'
 
 const RegulatoryLayers = ({regulatoryLayersAddedToMySelection}) => {
   const dispatch = useDispatch()

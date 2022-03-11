@@ -5,8 +5,8 @@ import { Vector } from 'ol/layer'
 import VectorSource from 'ol/source/Vector'
 import Layers from '../domain/entities/layers'
 import { OPENLAYERS_PROJECTION } from '../domain/entities/map'
-import zoomInLayer from '../domain/use_cases/zoomInLayer'
 import { regulatoryPreviewStyle } from './styles/regulatoryPreview.style'
+import { setFitToExtent } from '../domain/shared_slices/Map'
 
 const RegulatoryPreviewLayer = ({ map }) => {
   const dispatch = useDispatch()
@@ -37,13 +37,13 @@ const RegulatoryPreviewLayer = ({ map }) => {
   useEffect(() => {
     if (map) {
       getVectorSource().clear()
-
       if (regulatoryGeometriesToPreview) {
         const features = regulatoryGeometriesToPreview.map(regulatorylayer => new GeoJSON({
           featureProjection: OPENLAYERS_PROJECTION
         }).readFeature(regulatorylayer))
         getVectorSource().addFeatures(features)
-        dispatch(zoomInLayer({ feature: features[0] }))
+        const extent = features[0]?.getGeometry()?.getExtent()
+        dispatch(setFitToExtent({extent}))
       }
     }
   }, [map, regulatoryGeometriesToPreview])

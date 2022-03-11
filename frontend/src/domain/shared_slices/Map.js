@@ -7,46 +7,14 @@ import { CoordinatesFormat } from '../entities/map'
 const mapSlice = createSlice({
   name: 'map',
   initialState: {
-    animateToCoordinates: null,
-    animateToExtent: null,
-    doNotAnimate: false,
-    animateToRegulatoryLayer: null,
+    fitToExtent: null,
     interaction: null,
     selectedBaseLayer: baseLayers.LIGHT.code,
     coordinatesFormat: CoordinatesFormat.DEGREES_MINUTES_SECONDS
   },
   reducers: {
-    doNotAnimate (state, action) {
-      state.doNotAnimate = action.payload
-    },
-    /**
-     * Animate map to the specified OpenLayers coordinates
-     * @param {Object=} state
-     * @param {{
-     * payload: String[]
-     * }} action - The OpenLayers internal [longitude, latitude] coordinates
-     */
-    animateToCoordinates (state, action) {
-      state.animateToCoordinates = action.payload
-    },
-    resetAnimateToCoordinates (state) {
-      state.animateToCoordinates = null
-    },
-    /**
-     * Animate map to the vessel track extent stored in the Vessel reduced
-     * @param {Object=} state
-     */
-    animateToExtent (state) {
-      state.animateToExtent = true
-    },
-    resetAnimateToExtent (state) {
-      state.animateToExtent = null
-    },
-    animateToRegulatoryLayer (state, action) {
-      state.animateToRegulatoryLayer = action.payload
-    },
-    resetAnimateToRegulatoryLayer (state) {
-      state.animateToRegulatoryLayer = null
+    setFitToExtent (state, action) {
+      state.fitToExtent = action.payload?.extent
     },
     selectBaseLayer (state, action) {
       state.selectedBaseLayer = action.payload
@@ -82,24 +50,11 @@ const mapSlice = createSlice({
 })
 
 export const {
-  animateToCoordinates,
-  resetAnimateToCoordinates,
-  animateToExtent,
-  resetAnimateToExtent,
-  animateToRegulatoryLayer,
-  resetAnimateToRegulatoryLayer,
-  setVesselLabelsShowedOnMap,
-  setVesselsLastPositionVisibility,
-  setVesselTrackDepth,
-  setVesselLabel,
+  setFitToExtent,
   selectBaseLayer,
   setInteraction,
   resetInteraction,
-  showVesselsEstimatedPositions,
-  doNotAnimate,
   setCoordinatesFormat,
-  setRiskFactorShowedOnMap,
-  setHideVesselsAtPort
 } = mapSlice.actions
 
 export default mapSlice.reducer
