@@ -1,15 +1,21 @@
 import React from 'react'
 import styled from 'styled-components'
-import {  useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
+import { resetRegulatoryGeometriesToPreview } from '../../../../domain/shared_slices/Regulatory'
 import { COLORS } from '../../../../constants/constants'
-import SearchIconSVG from '../../../icons/Loupe_dark.svg'
+import { ReactComponent as SearchIconSVG } from '../../../icons/Loupe_dark.svg'
+import { ReactComponent as CloseIconSVG } from '../../../icons/Croix_grise.svg'
 
 const RegulatoryLayerSearchInput = ({globalSearchText, setGlobalSearchText}) => {
 
-  const {
-    advancedSearchIsOpen,
-  } = useSelector(state => state.regulatoryLayerSearch)
+  const { advancedSearchIsOpen } = useSelector(state => state.regulatoryLayerSearch)
+  const dispatch = useDispatch()
+  
+  const handleResetSearch = () => {
+    setGlobalSearchText('')
+    dispatch(resetRegulatoryGeometriesToPreview())
+  }
 
   return (
     <>
@@ -20,6 +26,11 @@ const RegulatoryLayerSearchInput = ({globalSearchText, setGlobalSearchText}) => 
           type="text"
           value={globalSearchText}
           onChange={e => setGlobalSearchText(e.target.value)}/>
+          {
+          globalSearchText === ''
+            ? <SearchIcon/>
+            : <CloseIcon onClick={handleResetSearch }/>
+        }
         <AdvancedSearch
           data-cy={'regulatory-layers-advanced-search'}
           advancedSearchIsOpen={advancedSearchIsOpen}
@@ -39,29 +50,40 @@ const PrincipalSearchInput = styled.div`
   height: 40px;
   width: 100%;
 `
-
 const SearchBoxInput = styled.input`
   margin: 0;
   background-color: white;
   border: none;
-  border-bottom: 1px ${COLORS.lightGray} solid;
   border-radius: 0;
   color: ${COLORS.gunMetal};
   font-size: 13px;
   height: 40px;
-  width: 290px;
+  width: 250px;
+  flex: 1;
   padding: 0 5px 0 10px;
-  flex: 3;
-  background-image: url(${SearchIconSVG});
-  background-size: 30px;
-  background-position: bottom 3px right 5px;
-  background-repeat: no-repeat;
-  
+  border-bottom: 1px ${COLORS.lightGray} solid;
   :hover, :focus {
     border-bottom: 1px ${COLORS.lightGray} solid;
   }
 `
+const SearchIcon = styled(SearchIconSVG)`
+  width: 25px;
+  height: 25px;
+  padding: 9px 11px 6px 9px;
+  background: ${COLORS.background};
+  vertical-align: top;
+  border-bottom: 1px ${COLORS.lightGray} solid;
+`
 
+const CloseIcon = styled(CloseIconSVG)`
+  width: 20px;
+  height: 17px;
+  padding: 13px 11px 10px 9px;
+  background: ${COLORS.background};
+  vertical-align: top;
+  border-bottom: 1px ${COLORS.lightGray} solid;
+  cursor: pointer;
+`
 
 const AdvancedSearch = styled.div`
   width: 40px;

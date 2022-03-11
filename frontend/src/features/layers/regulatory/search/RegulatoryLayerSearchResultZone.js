@@ -5,12 +5,13 @@ import Checkbox from 'rsuite/Checkbox'
 
 // import showRegulatoryZoneMetadata from '../../../../domain/use_cases/showRegulatoryZoneMetadata'
 // import closeRegulatoryZoneMetadata from '../../../../domain/use_cases/closeRegulatoryZoneMetadata'
-import { setRegulatoryGeometriesToPreview, resetRegulatoryGeometriesToPreview } from '../../../../domain/shared_slices/Regulatory'
+import { setRegulatoryGeometriesToPreview } from '../../../../domain/shared_slices/Regulatory'
 
 import { toggleRegulatoryZone } from './RegulatoryLayerSearch.slice'
 // import { showOrHideMetadataIcon } from '../RegulatoryLayerZone'
 
 import { getRegulatoryEnvColorWithAlpha } from '../../../../layers/styles/administrativeAndRegulatoryLayers.style'
+import { ReactComponent as ZoomIconSVG } from '../../../icons/target.svg'
 import { REGPaperDarkIcon, REGPaperIcon } from '../../../commonStyles/icons/REGPaperIcon.style'
 import { COLORS } from '../../../../constants/constants'
 
@@ -22,13 +23,10 @@ const RegulatoryLayerSearchResultZone = ({regulatoryZone}) => {
   const metadataIsShown = false
 
 
-  const handleMouseOver = () => {
-    if (regulatoryZone.geometry) {
-      dispatch(setRegulatoryGeometriesToPreview([regulatoryZone.geometry]))
+  const handleZoomToZones = () => {
+    if (regulatoryZone?.doc?.geometry) {
+      dispatch(setRegulatoryGeometriesToPreview([regulatoryZone?.doc?.geometry]))
     }
-  }
-  const handleMouseOut = () => {
-    dispatch(resetRegulatoryGeometriesToPreview())
   }
 
   const handleSelectRegulatoryZone = () => dispatch(toggleRegulatoryZone(regulatoryZone.id))
@@ -38,12 +36,13 @@ const RegulatoryLayerSearchResultZone = ({regulatoryZone}) => {
   // ? setZoneSelectionList([regulatoryZone])
   // : setZoneSelectionList([])
   return (
-    <Zone onMouseOver={handleMouseOver} onMouseOut={handleMouseOut} $selected={isZoneSelected}>
+    <Zone  $selected={isZoneSelected}>
       <Rectangle $vectorLayerColor={getRegulatoryEnvColorWithAlpha(regulatoryZone?.doc?.properties?.thematique)}/>
       <Name onClick={handleSelectRegulatoryZone}
       >
         {regulatoryZone?.doc?.properties?.entity_name || 'AUCUN NOM'}
       </Name>
+      <ZoomIcon onClick={handleZoomToZones}></ZoomIcon>
         {
           metadataIsShown
             ? <CustomREGPaperDarkIcon title="Fermer la réglementation" onClick={toggleRegulatoryZoneMetadata}/>
@@ -98,6 +97,12 @@ const CustomPaperStyle = css`
   padding-top: 7px;
   width: 21px;
   height: 23px
+`
+
+const ZoomIcon = styled(ZoomIconSVG)`
+  padding-top: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
 `
 
 const CustomREGPaperIcon = styled(REGPaperIcon)`

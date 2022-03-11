@@ -5,8 +5,9 @@ import styled from 'styled-components'
 import Checkbox from 'rsuite/Checkbox'
 
 import {checkRegulatoryZones, uncheckRegulatoryZones} from "./RegulatoryLayerSearch.slice";
-import { setRegulatoryGeometriesToPreview, resetRegulatoryGeometriesToPreview } from '../../../../domain/shared_slices/Regulatory'
+import { setRegulatoryGeometriesToPreview } from '../../../../domain/shared_slices/Regulatory'
 import RegulatoryLayerSearchResultZones from './RegulatoryLayerSearchResultZones'
+import { ReactComponent as ZoomIconSVG } from '../../../icons/target.svg'
 import { COLORS } from '../../../../constants/constants'
 
 const NumberOfZones = ({numberOfZones}) => {
@@ -35,19 +36,17 @@ export const RegulatoryLayerSearchResultGroupSecondLevel = ({ groupName, result 
     }
   }
 
-  const handleMouseOver = () => {
+  const handleZoomToZones = () => {
     if (result.length > 0) {
       const features = result.map(topic => topic?.doc?.geometry)
       dispatch(setRegulatoryGeometriesToPreview(features))
     }
   }
-  const handleMouseOut = () => {
-    dispatch(resetRegulatoryGeometriesToPreview())
-  }
+  
 
   return (
     <>
-      <LayerTopic onClick={() => setZonesAreOpen(!zonesAreOpen)} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
+      <LayerTopic onClick={() => setZonesAreOpen(!zonesAreOpen)} >
         <TopicName
         data-cy={'regulatory-layer-topic'}
         title={groupName}
@@ -55,6 +54,7 @@ export const RegulatoryLayerSearchResultGroupSecondLevel = ({ groupName, result 
           {groupName}
         </TopicName>
         <NumberOfZones numberOfZones={result.length} />
+        <ZoomIcon onClick={handleZoomToZones}></ZoomIcon>
         <Checkbox
             onClick={(e)=> e.stopPropagation()}
             indeterminate={ zonesSelected.length > 0 && !allTopicZonesAreChecked }
@@ -116,4 +116,8 @@ const LayerTopic = styled.div`
   .rs-checkbox {
     margin-left: 0;
   }
+`
+const ZoomIcon = styled(ZoomIconSVG)`
+  padding-top: 10px;
+  padding-left: 10px;
 `
