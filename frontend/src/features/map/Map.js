@@ -12,6 +12,7 @@ import MeasurementLayer from '../../layers/MeasurementLayer'
 import InterestPointLayer from '../../layers/InterestPointLayer'
 import LayerDetailsBox from '../map/controls/LayerDetailsBox'
 import { MapExtentController } from './MapExtentController'
+import MapHistory from './MapHistory'
 
 const Map = () => {
 
@@ -48,6 +49,7 @@ const Map = () => {
       <AdministrativeLayers />
       <ShowRegulatoryMetadata />
       <MapExtentController />
+      <MapHistory />
       <MeasurementLayer/>
       {/* <DrawLayer/> */}
       <LayerDetailsBox />
