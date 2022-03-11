@@ -5,7 +5,7 @@ import { useToasts } from 'react-toast-notifications'
 import { errorType } from '../../domain/entities/errors'
 
 const ErrorToastNotification = () => {
-  const error = useSelector(state => state.global.error)
+  const { error } = useSelector(state => state.global)
   const { addToast } = useToasts()
 
   useEffect(() => {
@@ -28,7 +28,7 @@ const ErrorToastNotification = () => {
         })
       }
     }
-  }, [error])
+  }, [error, addToast])
 
   return null
 }

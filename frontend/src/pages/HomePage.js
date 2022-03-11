@@ -12,7 +12,7 @@ import { homeStore } from './../Store'
 import SideWindow from '../features/side_window/SideWindow'
 import SideWindowLauncher from '../features/side_window/SideWindowLauncher'
 import Healthcheck from '../features/healthcheck/Healthcheck'
-// import ErrorToastNotification from '../features/commonComponents/ErrorToastNotification'
+import ErrorToastNotification from '../features/commonComponents/ErrorToastNotification'
 import Map from '../features/map/Map'
 import APIWorker from '../api/APIWorker'
 import LayersSidebar from '../features/layers/LayersSidebar'
@@ -40,7 +40,7 @@ export const HomePage = () => {
               <Measurement/>
               <InterestPoint/>
               {/* <APIWorker/> */}
-              {/* <ErrorToastNotification/> */}
+              <ErrorToastNotification/>
               <SideWindowLauncher/>
             </Wrapper>
           </Route>
