@@ -17,8 +17,8 @@ import Map from '../features/map/Map'
 import APIWorker from '../api/APIWorker'
 import LayersSidebar from '../features/layers/LayersSidebar'
 import OperationsMapButton from '../features/side_window/operations/OperationsMapButton'
-// import Measurement from '../features/measurements/Measurement'
-// import InterestPoint from '../features/interest_points/InterestPoint'
+import Measurement from '../features/measurements/Measurement'
+import InterestPoint from '../features/interest_points/InterestPoint'
 
 const persistor = persistStore(homeStore);
 
@@ -37,8 +37,8 @@ export const HomePage = () => {
               <Map/>
               <LayersSidebar/> 
               <OperationsMapButton />
-              {/* <Measurement/>
-              <InterestPoint/> */}
+              <Measurement/>
+              <InterestPoint/>
               {/* <APIWorker/> */}
               {/* <ErrorToastNotification/> */}
               <SideWindowLauncher/>

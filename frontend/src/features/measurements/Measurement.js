@@ -22,17 +22,21 @@ import { ReactComponent as MultiLineSVG } from '../icons/Mesure_ligne_brisee.svg
 import { ReactComponent as CircleRangeSVG } from '../icons/Mesure_rayon_action.svg'
 import { COLORS } from '../../constants/constants'
 
+const MeasurementIconSelector = ({measurementType, rightMenuIsOpen}) => {
+  switch (measurementType) {
+    case MeasurementTypes.MULTILINE:
+      return <MultiLineIcon/>
+    case MeasurementTypes.CIRCLE_RANGE:
+      return <CircleRangeIcon/>
+    default:
+      return <MeasurementIcon $rightMenuIsOpen={rightMenuIsOpen} />
+  }
+}
+
 const Measurement = () => {
   const dispatch = useDispatch()
-  const selectedVessel = undefined
-  const rightMenuIsOpen = useSelector(state => state.global.rightMenuIsOpen)
-  const {
-    measurementTypeToAdd
-  } = useSelector(state => state.measurement)
-  const {
-    healthcheckTextWarning,
-    previewFilteredVesselsMode
-  } = useSelector(state => state.global)
+  const {  measurementTypeToAdd } = useSelector(state => state.measurement)
+  const {  rightMenuIsOpen } = useSelector(state => state.global)
 
   const [measurementIsOpen, setMeasurementIsOpen] = useState(false)
   const [circleCoordinatesToAdd, setCircleCoordinatesToAdd] = useState([])
@@ -59,21 +63,12 @@ const Measurement = () => {
     }
   }, [escapeFromKeyboard])
 
-  const makeMeasurement = measurementTypeToAdd => {
-    dispatch(setMeasurementTypeToAdd(measurementTypeToAdd))
+  const makeMeasurement = measurementType => {
+    dispatch(setMeasurementTypeToAdd(measurementType))
     setMeasurementIsOpen(false)
   }
 
-  const getMeasurementIcon = measurementTypeToAdd => {
-    switch (measurementTypeToAdd) {
-      case MeasurementTypes.MULTILINE:
-        return <MultiLineIcon/>
-      case MeasurementTypes.CIRCLE_RANGE:
-        return <CircleRangeIcon/>
-      default:
-        return <MeasurementIcon $rightMenuIsOpen={rightMenuIsOpen} $selectedVessel={selectedVessel}/>
-    }
-  }
+  
 
   function openOrCloseMeasurement () {
     if (measurementTypeToAdd) {
@@ -105,20 +100,14 @@ const Measurement = () => {
     <Wrapper ref={wrapperRef}>
       <MeasurementWrapper
         data-cy={'measurement'}
-        isHidden={previewFilteredVesselsMode}
-        healthcheckTextWarning={healthcheckTextWarning}
         isOpen={measurementIsOpen || measurementTypeToAdd}
         rightMenuIsOpen={rightMenuIsOpen}
-        selectedVessel={selectedVessel}
         onMouseEnter={() => dispatch(expandRightMenu())}
         title={'Mesurer une distance'}
         onClick={openOrCloseMeasurement}>
-        {
-          getMeasurementIcon(measurementTypeToAdd)
-        }
+        <MeasurementIconSelector measurementType={measurementTypeToAdd} rightMenuIsOpen={rightMenuIsOpen} />
       </MeasurementWrapper>
       <MeasurementOptions
-        healthcheckTextWarning={healthcheckTextWarning}
         measurementBoxIsOpen={measurementIsOpen}>
         <MeasurementItem
           data-cy={'measurement-multiline'}
@@ -135,7 +124,6 @@ const Measurement = () => {
       </MeasurementOptions>
       <CustomCircleRange
         measurementIsOpen={measurementIsOpen}
-        healthcheckTextWarning={healthcheckTextWarning}
         measurementTypeToAdd={measurementTypeToAdd}
         circleCoordinatesToAdd={circleCoordinatesToAdd}
         circleRadiusToAdd={circleRadiusToAdd}
@@ -197,9 +185,9 @@ const MeasurementWrapper = styled(MapButtonStyle)`
   top: 249px;
   z-index: 99;
   height: 40px;
-  width: ${props => props.selectedVessel && !props.rightMenuIsOpen ? '5px' : '40px'};
-  border-radius: ${props => props.selectedVessel && !props.rightMenuIsOpen ? '1px' : '2px'};
-  right: ${props => props.selectedVessel && !props.rightMenuIsOpen ? '0' : '10px'};
+  width: ${props => !props.rightMenuIsOpen ? '5px' : '40px'};
+  border-radius: ${props => !props.rightMenuIsOpen ? '1px' : '2px'};
+  right: ${props => !props.rightMenuIsOpen ? '0' : '10px'};
   transition: all 0.3s;
   background: ${props => props.isOpen ? COLORS.shadowBlue : COLORS.charcoal};
   

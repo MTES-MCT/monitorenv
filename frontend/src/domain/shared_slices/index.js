@@ -9,8 +9,8 @@ import {administrativeSlicePersistedReducer} from './Administrative'
 import layerSidebar from './LayerSidebar'
 import { operationsApi } from '../../api/operationsApi'
 import layer from './Layer'
-import measurement from './Measurement'
-import interestPoint from './InterestPoint'
+import { measurementSlicePersistedReducer } from './Measurement'
+import { interestPointSlicePersistedReducer } from './InterestPoint'
 
 
 
@@ -24,8 +24,8 @@ export const homeReducers = combineReducers({
   layerSidebar,
   [operationsApi.reducerPath]: operationsApi.reducer,
   layer: layer.homepage.reducer,
-  interestPoint,
-  measurement
+  interestPoint: interestPointSlicePersistedReducer,
+  measurement: measurementSlicePersistedReducer
 })
 
 // export const homeMiddlewares = getDefaultMiddleware => getDefaultMiddleware().concat(api.middleware)

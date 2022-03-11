@@ -1,5 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
+
+const persistConfig = {
+  key: 'measurement',
+  storage,
+  whitelist: ['measurementsDrawed']
+};
 
 const measurementSlice = createSlice({
   name: 'measurement',
@@ -75,4 +83,4 @@ export const {
   resetCircleMeasurementInDrawing
 } = measurementSlice.actions
 
-export default measurementSlice.reducer
+export const measurementSlicePersistedReducer = persistReducer(persistConfig, measurementSlice.reducer);

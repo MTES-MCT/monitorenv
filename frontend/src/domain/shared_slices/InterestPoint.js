@@ -1,10 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
 /* eslint-disable */
 /** @namespace InterestPointReducer */
 const InterestPointReducer = null
 /* eslint-enable */
 
+
+const persistConfig = {
+  key: 'interestPoint',
+  storage,
+  whitelist: ['interestPoints']
+};
 
 const interestPointSlice = createSlice({
   name: 'interestPoint',
@@ -152,4 +160,5 @@ export const {
   resetInterestPointFeatureDeletion
 } = interestPointSlice.actions
 
-export default interestPointSlice.reducer
+export const interestPointSlicePersistedReducer = persistReducer(persistConfig, interestPointSlice.reducer);
+

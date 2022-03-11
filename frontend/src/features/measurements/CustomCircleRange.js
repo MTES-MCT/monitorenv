@@ -17,8 +17,6 @@ const CustomCircleRange = ({
   setCircleRadiusToAdd,
   cancelAddCircleRange,
   addCustomCircleRange,
-  healthcheckTextWarning,
-  measurementIsOpen
 }) => {
   const {
     circleMeasurementInDrawing
@@ -59,7 +57,6 @@ const CustomCircleRange = ({
 
   return (
     <Wrapper
-      healthcheckTextWarning={healthcheckTextWarning}
       isOpen={measurementTypeToAdd === MeasurementTypes.CIRCLE_RANGE}>
       <Header>
         Définir une valeur

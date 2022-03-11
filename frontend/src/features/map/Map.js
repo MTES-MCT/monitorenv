@@ -9,9 +9,9 @@ import AdministrativeLayers from '../../layers/AdministrativeLayers'
 import ShowRegulatoryMetadata from './ShowRegulatoryMetadata'
 import RegulatoryPreviewLayer from '../../layers/RegulatoryPreviewLayer'
 import MeasurementLayer from '../../layers/MeasurementLayer'
+import InterestPointLayer from '../../layers/InterestPointLayer'
 import LayerDetailsBox from '../map/controls/LayerDetailsBox'
 // import MapHistory from './MapHistory'
-// import InterestPointLayer from '../../layers/InterestPointLayer'
 
 const Map = () => {
 
@@ -55,7 +55,7 @@ const Map = () => {
       <MeasurementLayer/>
       {/* <DrawLayer/> */}
       <LayerDetailsBox />
-      {/*<InterestPointLayer mapMovingAndZoomEvent={mapMovingAndZoomEvent}/>*/}
+      <InterestPointLayer/>
       <RegulatoryPreviewLayer /> 
     </BaseMap>
   )

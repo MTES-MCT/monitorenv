@@ -18,13 +18,8 @@ const lineStyle = new Style({
 
 export const getInterestPointStyle = (feature, resolution) => {
   const type = feature.get(InterestPointLine.typeProperty)
-  const isHiddenByZoom = feature.get(InterestPointLine.isHiddenByZoomProperty)
 
   if (feature?.getId()?.toString()?.includes('line')) {
-    if (isHiddenByZoom) {
-      return []
-    }
-
     return [lineStyle]
   }
 

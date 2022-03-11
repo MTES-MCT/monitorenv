@@ -7,7 +7,6 @@ import { getLength } from 'ol/sphere'
 
 import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map'
 import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
-import { useMoveOverlayWhenZooming } from '../../../hooks/useMoveOverlayWhenZooming'
 import { usePrevious } from '../../../hooks/usePrevious'
 
 import { getCoordinates } from '../../../utils/coordinates'
@@ -19,21 +18,18 @@ import { COLORS } from '../../../constants/constants'
 const X = 0
 const Y = 1
 export const initialOffsetValue = [-90, 10]
-const MIN_ZOOM = 7
 
-const InterestPointOverlay = props => {
-  const {
-    map,
-    coordinates,
-    uuid,
-    observations,
-    name,
-    featureIsShowed,
-    moveLine,
-    zoomHasChanged,
-    deleteInterestPoint,
-    modifyInterestPoint
-  } = props
+const InterestPointOverlay = ({
+  map,
+  coordinates,
+  uuid,
+  observations,
+  name,
+  featureIsShowed,
+  moveLine,
+  deleteInterestPoint,
+  modifyInterestPoint
+}) => {
 
   const { coordinatesFormat } = useSelector(state => state.map)
 
@@ -43,14 +39,19 @@ const InterestPointOverlay = props => {
   const interestPointCoordinates = useRef(coordinates)
   const isThrottled = useRef(false)
   const [showed, setShowed] = useState(false)
-  const [hiddenByZoom, setHiddenByZoom] = useState(false)
-  const [overlay] = useState(new Overlay({
-    element: ref.current,
-    position: coordinates,
-    offset: currentOffset.current,
-    autoPan: false,
-    positioning: 'left-center'
-  }))
+  const overlayRef = useRef(null)
+  const setOverlayRef = () => {
+    if (overlayRef.current === null ) {
+      overlayRef.current = new Overlay({
+        element: ref.current,
+        position: coordinates,
+        offset: currentOffset.current,
+        autoPan: false,
+        positioning: 'left-center'
+      })
+    }
+  }
+  setOverlayRef()
 
   const moveInterestPointWithThrottle = useCallback((target, delay) => {
     if (isThrottled.current) {
@@ -76,8 +77,7 @@ const InterestPointOverlay = props => {
     }, delay)
   }, [interestPointCoordinates.current])
 
-  useMoveOverlayWhenDragging(overlay, map, currentOffset, moveInterestPointWithThrottle, showed)
-  useMoveOverlayWhenZooming(overlay, initialOffsetValue, zoomHasChanged, currentOffset, moveInterestPointWithThrottle)
+  useMoveOverlayWhenDragging(overlayRef.current, map, currentOffset, moveInterestPointWithThrottle, showed)
   const previousCoordinates = usePrevious(coordinates)
 
   function coordinatesAreModified (coordinates, previousCoordinates) {
@@ -102,40 +102,32 @@ const InterestPointOverlay = props => {
 
       if (distance > 10) {
         currentOffset.current = initialOffsetValue
-        overlay.setOffset(initialOffsetValue)
+        overlayRef.current.setOffset(initialOffsetValue)
       }
     }
   }, [coordinates])
 
   useEffect(() => {
     if (map) {
-      overlay.setPosition(coordinates)
-      overlay.setElement(ref.current)
+      overlayRef.current.setPosition(coordinates)
+      overlayRef.current.setElement(ref.current)
 
-      map.addOverlay(overlay)
+      map.addOverlay(overlayRef.current)
       if (featureIsShowed) {
         setShowed(true)
       }
 
       return () => {
-        map.removeOverlay(overlay)
+        map.removeOverlay(overlayRef.current)
       }
     }
-  }, [overlay, coordinates, map])
-
-  useEffect(() => {
-    if (zoomHasChanged < MIN_ZOOM) {
-      setHiddenByZoom(true)
-    } else {
-      setHiddenByZoom(false)
-    }
-  }, [zoomHasChanged])
+  }, [overlayRef.current, coordinates, map])
 
   return (
     <WrapperToBeKeptForDOMManagement>
       <div ref={ref}>
         {
-          showed && !hiddenByZoom
+          showed
             ? <InterestPointOverlayElement>
               <Header>
                 <Name data-cy={'interest-point-name'} title={name || 'Aucun Libellé'}>
