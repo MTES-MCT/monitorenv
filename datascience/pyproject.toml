@@ -1,0 +1,112 @@
+[tool.poetry]
+name = "monitorenv"
+version = "0.1.0"
+description = ""
+authors = ["Thomas Brosset <thomas.brosset@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+# Project-Specific
+python-dotenv = "^0.19.2"
+click = "^8.0.3"
+
+# Jupyter Notebook
+jupyter = "^1.0.0"
+matplotlib = "^3.5.1"
+jupytext = "^1.13.6"
+
+pandas = "^1.4.0"
+openpyxl = "^3.0.9"
+Scrapy = "^2.5.1"
+SQLAlchemy = "^1.4.31"
+
+
+Sphinx = "^4.4.0"
+sphinx-click = "^3.1.0"
+sphinx-rtd-theme = "^1.0.0"
+sphinxcontrib-apidoc = "^0.3.0"
+sphinx-autodoc-typehints = "^1.16.0"
+importlib-metadata = "^4.10.1"
+myst-parser = "^0.16.1"
+Pygments = "^2.11.2"
+psycopg2 = "^2.9.3"
+progressbar = "^2.5"
+geopandas = "^0.10.2"
+Faker = "^12.3.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+# Linting
+## Type Checking and Data Validation
+mypy = "^0.931"
+## Code formatting
+black = "^22.1.0"
+## Code quality
+isort = "^5.10.1"
+pylint = "^2.12.2"
+## Automation and management
+pre-commit = "^2.17.0"
+
+
+[tool.poetry.scripts]
+cli = "bin.cli:cli"
+
+#################################################################################
+# Tooling configs                                                               #
+#################################################################################
+[tool.black]
+line-length = 79
+
+[tool.coverage.run]
+branch = true
+concurrency = ["multiprocessing"]
+parallel = true
+source = ["artificialisation"]
+
+[tool.coverage.report]
+exclude_lines =[
+    "pragma: no cover",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
+fail_under = 70
+show_missing = true
+skip_covered = true
+
+[tool.isort]
+profile = "black"
+atomic = "true"
+combine_as_imports = "true"
+line_length = 79
+
+[tool.pylint.basic]
+good-names-rgxs = ["^Test_.*$", "logger"]
+
+[tool.pylint.messages_control]
+disable = [
+  # Explicitly document only as needed
+  "missing-module-docstring",
+  "missing-class-docstring",
+  "missing-function-docstring",
+  # Black & Flake8 purview
+  "line-too-long",
+  "bad-continuation",
+  "c-extension-no-member",
+  # Ignore errors resulting from Jupyter notebook-style programming
+  "invalid-name",
+  "redefined-outer-name",
+  "reimported",
+  "ungrouped-imports",
+  "wrong-import-order",
+  "wrong-import-position",
+]
+
+[tool.pylint.similarities]
+# Ignore imports when computing similarities.
+ignore-imports = "yes"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
