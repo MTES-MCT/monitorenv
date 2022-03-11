@@ -8,16 +8,14 @@ import ScaleLine from 'ol/control/ScaleLine'
 import Zoom from 'ol/control/Zoom'
 
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map'
-import MapCoordinatesBox from './controls/MapCoordinatesBox'
+
 import MapAttributionsBox from './controls/MapAttributionsBox'
 import { HIT_PIXEL_TO_TOLERANCE } from '../../constants/constants'
 import { platformModifierKeyOnly } from 'ol/events/condition'
 
-let lastEventForPointerMove, timeoutForPointerMove, timeoutForMove
 
-const BaseMap = ({ handleMovingAndZoom, handlePointerMove, children, showCoordinates, setCurrentFeature, showAttributions }) => {
 
-  const { selectedBaseLayer } = useSelector(state => state.map)
+const BaseMap = ({ children, showAttributions }) => {
 
   const {
     healthcheckTextWarning,
@@ -25,7 +23,7 @@ const BaseMap = ({ handleMovingAndZoom, handlePointerMove, children, showCoordin
   } = useSelector(state => state.global)
 
   const [map, setMap] = useState()
-  const [cursorCoordinates, setCursorCoordinates] = useState('')
+  
   /** @type {MapClickEvent} mapClickEvent */
   const [mapClickEvent, setMapClickEvent] = useState(null)
 
@@ -41,45 +39,6 @@ const BaseMap = ({ handleMovingAndZoom, handlePointerMove, children, showCoordin
     }
   }
 
-  function allowClickOnMapFeaturesOverlayArePositionedOnTop () {
-    for (const s of document.querySelectorAll('.overlay-active')) {
-      s.style.pointerEvents = 'none'
-    }
-  }
-
-  function resetOverlayPointerStyle () {
-    const elements = document.querySelectorAll('.overlay-active')
-    if (elements?.length && elements[0].style.pointerEvents !== 'auto') {
-      for (const s of elements) {
-        s.style.pointerEvents = 'auto'
-      }
-    }
-  }
-
-  const handleBasePointerMove = (event, map) => {
-    if (event && map) {
-      const pixel = map.getEventPixel(event.originalEvent)
-      const feature = map.forEachFeatureAtPixel(pixel, feature => feature, { hitTolerance: HIT_PIXEL_TO_TOLERANCE })
-
-      if (feature?.getId()) {
-        if (setCurrentFeature) {
-          setCurrentFeature(feature)
-        }
-        map.getTarget().style.cursor = 'pointer'
-        allowClickOnMapFeaturesOverlayArePositionedOnTop()
-      } else if (map.getTarget().style) {
-        if (setCurrentFeature) {
-          setCurrentFeature(null)
-        }
-        map.getTarget().style.cursor = ''
-        resetOverlayPointerStyle()
-      }
-
-      if (handlePointerMove) {
-        handlePointerMove(event)
-      }
-    }
-  }
 
   useEffect(() => {
     if (!map) {
@@ -104,52 +63,16 @@ const BaseMap = ({ handleMovingAndZoom, handlePointerMove, children, showCoordin
       })
 
       initialMap.on('click', event => handleMapClick(event, initialMap))
-      initialMap.on('pointermove', event => throttleAndHandlePointerMove(event, initialMap))
-      initialMap.on('movestart', () => throttleAndHandleMovingAndZoom(initialMap))
-      initialMap.on('moveend', () => throttleAndHandleMovingAndZoom(initialMap))
 
       setMap(initialMap)
     }
-  }, [map, selectedBaseLayer])
+  }, [map])
 
 
-  function throttleAndHandleMovingAndZoom (initialMap) {
-    if (timeoutForMove) {
-      return
-    }
 
-    timeoutForMove = setTimeout(() => {
-      timeoutForMove = null
-      if (handleMovingAndZoom) {
-        handleMovingAndZoom(initialMap)
-      }
-    }, 100)
-  }
+  
 
-  function throttleAndHandlePointerMove (event, map) {
-    if (event.dragging || timeoutForPointerMove) {
-      if (timeoutForPointerMove) {
-        lastEventForPointerMove = event
-      }
-      return
-    }
-
-    timeoutForPointerMove = setTimeout(() => {
-      timeoutForPointerMove = null
-      handleBasePointerMove(lastEventForPointerMove, map)
-
-      if (showCoordinates) {
-        saveCoordinates(lastEventForPointerMove)
-      }
-    }, 50)
-  }
-
-  function saveCoordinates (event) {
-    if (event) {
-      const clickedCoordinates = mapRef.current.getCoordinateFromPixel(event.pixel)
-      setCursorCoordinates(clickedCoordinates)
-    }
-  }
+  
 
   return (
     <MapWrapper>
@@ -158,7 +81,6 @@ const BaseMap = ({ handleMovingAndZoom, handlePointerMove, children, showCoordin
         healthcheckTextWarning={healthcheckTextWarning}
         previewFilteredVesselsMode={previewFilteredVesselsMode}
       />
-      {showCoordinates && <MapCoordinatesBox coordinates={cursorCoordinates}/>}
       {showAttributions && <MapAttributionsBox/>}
       {map && Children.map(children, (child) => (
         child && cloneElement(child, { map, mapClickEvent })

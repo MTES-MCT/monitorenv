@@ -3,6 +3,7 @@ import React from 'react'
 
 import BaseMap from './BaseMap'
 import BaseLayer from '../../layers/BaseLayer'
+import MapCoordinatesBox from './controls/MapCoordinatesBox'
 // import DrawLayer from '../../layers/DrawLayer'
 import RegulatoryLayers from '../../layers/RegulatoryLayers'
 import AdministrativeLayers from '../../layers/AdministrativeLayers'
@@ -40,10 +41,10 @@ const Map = () => {
       // BaseMap forwards map & mapClickEvent as props to children
       // handleMovingAndZoom={handleMovingAndZoom}
       // handlePointerMove={handlePointerMove}
-      showCoordinates={true}
       showAttributions={true}
       container={'map'}
     >
+      <MapCoordinatesBox/>
       <BaseLayer />
       <RegulatoryLayers/>
       <AdministrativeLayers />

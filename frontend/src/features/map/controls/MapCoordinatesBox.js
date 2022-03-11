@@ -6,23 +6,49 @@ import { Radio, RadioGroup } from 'rsuite'
 import { CoordinatesFormat, OPENLAYERS_PROJECTION } from '../../../domain/entities/map'
 import { setCoordinatesFormat } from '../../../domain/shared_slices/Map'
 import { getCoordinates } from '../../../utils/coordinates'
-import { useClickOutsideComponent } from '../../../hooks/useClickOutside'
+import {  useTriggerOnClickOutsideComponent } from '../../../hooks/useClickOutside'
 
 import { COLORS } from '../../../constants/constants'
 
-const MapCoordinatesBox = ({ coordinates }) => {
-  const wrapperRef = useRef(null)
+let lastEventForPointerMove, timeoutForPointerMove
 
+const MapCoordinatesBox = ({ map }) => {
+
+  const wrapperRef = useRef(null)
+  
   const dispatch = useDispatch()
   const { coordinatesFormat } = useSelector(state => state.map)
-  const clickedOutsideComponent = useClickOutsideComponent(wrapperRef)
+  const [cursorCoordinates, setCursorCoordinates] = useState('')
   const [coordinatesSelectionIsOpen, setCoordinatesSelectionIsOpen] = useState(false)
-
-  useEffect(() => {
-    if (clickedOutsideComponent) {
-      setCoordinatesSelectionIsOpen(false)
+  useTriggerOnClickOutsideComponent(wrapperRef, ()=> { setCoordinatesSelectionIsOpen(false)})
+  
+  useEffect(()=> {
+    function saveCoordinates (event) {
+      if (event) {
+        const clickedCoordinates = map.getCoordinateFromPixel(event.pixel)
+        setCursorCoordinates(clickedCoordinates)
+      }
     }
-  }, [clickedOutsideComponent])
+
+    function throttleAndHandlePointerMove (event) {
+      if (event.dragging || timeoutForPointerMove) {
+        if (timeoutForPointerMove) {
+          lastEventForPointerMove = event
+        }
+        return
+      }
+  
+      timeoutForPointerMove = setTimeout(() => {
+        timeoutForPointerMove = null
+        saveCoordinates(lastEventForPointerMove)
+      }, 50)
+    }
+
+    map.on('pointermove', throttleAndHandlePointerMove)
+    
+    return ()=>map.un('pointermove', throttleAndHandlePointerMove)
+  }, [map])
+
 
   const getShowedCoordinates = coordinates => {
     const transformedCoordinates = getCoordinates(coordinates, OPENLAYERS_PROJECTION, coordinatesFormat)
@@ -74,7 +100,7 @@ const MapCoordinatesBox = ({ coordinates }) => {
       </RadioWrapper>
     </CoordinatesTypeSelection>
     <Coordinates onClick={() => setCoordinatesSelectionIsOpen(!coordinatesSelectionIsOpen)}>
-      {getShowedCoordinates(coordinates)} ({coordinatesFormat})
+      {getShowedCoordinates(cursorCoordinates)} ({coordinatesFormat})
     </Coordinates>
     </div>)
 }
