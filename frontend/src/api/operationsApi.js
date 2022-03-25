@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-export const operationsApi = createApi({
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8880/bff/v1' }),
+export const operationsAPI = createApi({
+  baseQuery: fetchBaseQuery({ baseUrl: '/bff/v1' }),
   reducerPath: 'operations',
   endpoints: (build) => ({
     getOperation: build.query({
@@ -31,7 +31,7 @@ export const operationsApi = createApi({
       // The 2nd parameter is the destructured `MutationLifecycleApi`
       async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
         const patchResult = dispatch(
-          operationsApi.util.updateQueryData('getOperation', id, (draft) => {
+          operationsAPI.util.updateQueryData('getOperation', id, (draft) => {
             Object.assign(draft, patch)
           })
         )
@@ -46,4 +46,4 @@ export const operationsApi = createApi({
   }),
 })
 
-export const { useGetOperationsQuery, useUpdateOperationMutation } = operationsApi
+export const { useGetOperationsQuery, useUpdateOperationMutation } = operationsAPI

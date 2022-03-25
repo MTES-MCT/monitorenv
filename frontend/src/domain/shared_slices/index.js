@@ -4,10 +4,12 @@ import thunk from 'redux-thunk'
 import map from './Map'
 import global from './Global'
 import { regulatorySlicePersistedReducer } from './Regulatory'
+import { regulatoryMetadataSliceReducer } from './RegulatoryMetadata'
 import regulatoryLayerSearch from '../../features/layers/regulatory/search/RegulatoryLayerSearch.slice'
 import {administrativeSlicePersistedReducer} from './Administrative'
 import layerSidebar from './LayerSidebar'
-import { operationsApi } from '../../api/operationsApi'
+import { operationsAPI } from '../../api/operationsAPI'
+import { regulatoryLayersAPI } from '../../api/regulatoryLayersAPI'
 import { measurementSlicePersistedReducer } from './Measurement'
 import { interestPointSlicePersistedReducer } from './InterestPoint'
 
@@ -19,12 +21,14 @@ export const homeReducers = combineReducers({
   global,
   administrative: administrativeSlicePersistedReducer,
   regulatory: regulatorySlicePersistedReducer,
+  regulatoryMetadata: regulatoryMetadataSliceReducer,
   regulatoryLayerSearch,
   layerSidebar,
-  [operationsApi.reducerPath]: operationsApi.reducer,
+  [regulatoryLayersAPI.reducerPath]: regulatoryLayersAPI.reducer,
+  [operationsAPI.reducerPath]: operationsAPI.reducer,
   interestPoint: interestPointSlicePersistedReducer,
   measurement: measurementSlicePersistedReducer
 })
 
 // export const homeMiddlewares = getDefaultMiddleware => getDefaultMiddleware().concat(api.middleware)
-export const homeMiddlewares = [thunk, operationsApi.middleware]
+export const homeMiddlewares = [thunk, operationsAPI.middleware, regulatoryLayersAPI.middleware]

@@ -1,22 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
-import { useDispatch, useSelector } from 'react-redux'
+import {  useSelector } from 'react-redux'
 
 import { ReactComponent as LayersSVG } from '../icons/Couches.svg'
 import RegulatoryLayerSearch from './regulatory/search/RegulatoryLayerSearch'
 import AdministrativeLayers from './administrative/AdministrativeLayers'
 import RegulatoryLayers from './regulatory/menu/RegulatoryLayers'
 import { COLORS } from '../../constants/constants'
-import closeRegulatoryZoneMetadata from '../../domain/use_cases/closeRegulatoryZoneMetadata'
-import RegulatoryLayerZoneMetadata from './regulatory/RegulatoryLayerZoneMetadata'
+import RegulatoryLayerZoneMetadata from './regulatory/metadata/RegulatoryLayerZoneMetadata'
 import BaseLayers from './base/BaseLayers'
 import { MapComponentStyle } from '../commonStyles/MapComponent.style'
 import { NamespaceContext } from '../../domain/context/NamespaceContext'
 import { MapButtonStyle } from '../commonStyles/MapButton.style'
 
 const LayersSidebar = () => {
-  const dispatch = useDispatch()
-  const { regulatoryZoneMetadataPanelIsOpen } = useSelector(state => state.regulatory)
+  const { regulatoryMetadataPanelIsOpen } = useSelector(state => state.regulatoryMetadata)
   const {
     healthcheckTextWarning,
     previewFilteredVesselsMode
@@ -25,12 +23,6 @@ const LayersSidebar = () => {
   const [layersSidebarIsOpen, setLayersSidebarIsOpen] = useState(false)
   const [numberOfRegulatoryLayersSaved, setNumberOfRegulatoryLayersSaved] = useState(0)
 
-  useEffect(() => {
-    if ((!layersSidebarIsOpen) && regulatoryZoneMetadataPanelIsOpen) {
-      console.log('closeregulator metadata dispatched')
-      dispatch(closeRegulatoryZoneMetadata())
-    }
-  }, [layersSidebarIsOpen])
 
   return (
     <NamespaceContext.Consumer>
@@ -40,8 +32,8 @@ const LayersSidebar = () => {
             <SidebarLayersIcon
               data-cy={'layers-sidebar'}
               title={'Couches réglementaires'}
-              isVisible={layersSidebarIsOpen || regulatoryZoneMetadataPanelIsOpen}
-              regulatoryZoneMetadataPanelIsOpen={regulatoryZoneMetadataPanelIsOpen}
+              isVisible={layersSidebarIsOpen || regulatoryMetadataPanelIsOpen}
+              regulatoryMetadataPanelIsOpen={regulatoryMetadataPanelIsOpen}
               healthcheckTextWarning={healthcheckTextWarning}
               isHidden={previewFilteredVesselsMode}
               onClick={() => setLayersSidebarIsOpen(!layersSidebarIsOpen)}>
@@ -50,7 +42,7 @@ const LayersSidebar = () => {
             <Sidebar
               healthcheckTextWarning={healthcheckTextWarning}
               layersSidebarIsOpen={layersSidebarIsOpen}
-              isVisible={layersSidebarIsOpen || regulatoryZoneMetadataPanelIsOpen}
+              isVisible={layersSidebarIsOpen || regulatoryMetadataPanelIsOpen}
             >
               <RegulatoryLayerSearch
                 numberOfRegulatoryLayersSaved={numberOfRegulatoryLayersSaved}
@@ -69,7 +61,7 @@ const LayersSidebar = () => {
                 <BaseLayers namespace={namespace}/>
               </Layers>
               <RegulatoryZoneMetadataShifter
-                regulatoryZoneMetadataPanelIsOpen={regulatoryZoneMetadataPanelIsOpen}
+                regulatoryMetadataPanelIsOpen={regulatoryMetadataPanelIsOpen}
               >
                 <RegulatoryLayerZoneMetadata/>
               </RegulatoryZoneMetadataShifter>
@@ -82,10 +74,10 @@ const LayersSidebar = () => {
 
 const RegulatoryZoneMetadataShifter = styled.div`
   position: absolute;
-  margin-left: ${props => props.regulatoryZoneMetadataPanelIsOpen ? 355 : -455}px;
+  margin-left: ${props => props.regulatoryMetadataPanelIsOpen ? 355 : -455}px;
   margin-top: 45px;
   top: 0px;
-  opacity: ${props => props.regulatoryZoneMetadataPanelIsOpen ? 1 : 0};
+  opacity: ${props => props.regulatoryMetadataPanelIsOpen ? 1 : 0};
   background: ${COLORS.gainsboro};
   z-index: -1;
   transition: 0.5s all;

@@ -3,24 +3,24 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { FingerprintSpinner } from 'react-epic-spinners'
 
-import { COLORS } from '../../../constants/constants'
-import { ReactComponent as REGPaperSVG } from '../../icons/reg_paper_dark.svg'
-import { ReactComponent as AlertSVG } from '../../icons/Picto_alerte.svg'
-import closeRegulatoryZoneMetadata from '../../../domain/use_cases/closeRegulatoryZoneMetadata'
-import { CloseIcon } from '../../commonStyles/icons/CloseIcon.style'
-import { getTitle } from '../../../domain/entities/regulatory'
-import Identification from './metadata/Identification'
-import MetadataRegulatoryReferences from './metadata/MetadataRegulatoryReferences'
+import { COLORS } from '../../../../constants/constants'
+import { ReactComponent as REGPaperSVG } from '../../../icons/reg_paper_dark.svg'
+import { ReactComponent as AlertSVG } from '../../../icons/Picto_alerte.svg'
+import closeRegulatoryZoneMetadata from '../../../../domain/use_cases/closeRegulatoryZoneMetadata'
+import { CloseIcon } from '../../../commonStyles/icons/CloseIcon.style'
+import { getTitle } from '../../../../domain/entities/regulatory'
+import Identification from './Identification'
+import MetadataRegulatoryReferences from './MetadataRegulatoryReferences'
+import { useGetRegulatoryLayerQuery } from '../../../../api/regulatoryLayersAPI'
 
 const RegulatoryLayerZoneMetadata = () => {
   const dispatch = useDispatch()
-
   const {
-    regulatoryZoneMetadata,
-    regulatoryZoneMetadataPanelIsOpen
-  } = useSelector(state => state.regulatory)
-
-  const { healthcheckTextWarning } = useSelector(state => state.global)
+    regulatoryMetadataPanelIsOpen,
+    regulatoryMetadataLayerId
+  } = useSelector(state => state.regulatoryMetadata)
+  const { currentData } = useGetRegulatoryLayerQuery({id: regulatoryMetadataLayerId})
+  const regulatoryMetadata = currentData?.properties
 
   const onCloseIconClicked = useCallback(() => {
     dispatch(closeRegulatoryZoneMetadata())
@@ -28,14 +28,13 @@ const RegulatoryLayerZoneMetadata = () => {
 
   return (
     <Wrapper
-      healthcheckTextWarning={healthcheckTextWarning}
-      regulatoryZoneMetadataPanelIsOpen={regulatoryZoneMetadataPanelIsOpen}>
+      $regulatoryMetadataPanelIsOpen={regulatoryMetadataPanelIsOpen}>
       {
-        regulatoryZoneMetadata
+        regulatoryMetadata
           ? <><Header>
               <REGPaperIcon/>
-              <RegulatoryZoneName title={getTitle(regulatoryZoneMetadata)}>
-                {getTitle(regulatoryZoneMetadata)}
+              <RegulatoryZoneName title={getTitle(regulatoryMetadata?.layer_name)}>
+                {getTitle(regulatoryMetadata?.layer_name)}
               </RegulatoryZoneName>
               <CloseIcon
                 data-cy={'regulatory-layers-metadata-close'}
@@ -47,8 +46,8 @@ const RegulatoryLayerZoneMetadata = () => {
               Travail en cours, bien vérifier dans Légipêche la validité de la référence et des infos réglementaires
             </Warning>
             <Content>
-              <Identification />
-              <MetadataRegulatoryReferences />
+              <Identification thematique={regulatoryMetadata?.thematique} type={regulatoryMetadata?.type} facade={regulatoryMetadata?.facade} />
+              <MetadataRegulatoryReferences regulatoryReference={regulatoryMetadata?.ref_reg} type={regulatoryMetadata?.type} url={regulatoryMetadata?.url} />
             </Content></>
           // eslint-disable-next-line react/forbid-component-props
           : <FingerprintSpinner color={COLORS.background} className={'radar'} size={100}/>
@@ -62,7 +61,7 @@ const Wrapper = styled.div`
   width: 400px;
   display: block;
   color: ${COLORS.charcoal};
-  opacity: ${props => props.regulatoryZoneMetadataPanelIsOpen ? 1 : 0};
+  opacity: ${props => props.$regulatoryMetadataPanelIsOpen ? 1 : 0};
   z-index: -1;
   padding: 0;
   transition: all 0.5s;

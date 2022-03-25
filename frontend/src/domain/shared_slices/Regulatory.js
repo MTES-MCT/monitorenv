@@ -25,7 +25,6 @@ const regulatorySlice = createSlice({
     showedRegulatoryLayerIds:[],
     regulatoryZoneMetadata: null,
     loadingRegulatoryZoneMetadata: false,
-    regulatoryZoneMetadataPanelIsOpen: false,
     /** @type ol.geom.Geometry[] */
     regulatoryGeometriesToPreview: null,
     regulationSearchedZoneExtent: []
@@ -76,22 +75,6 @@ const regulatorySlice = createSlice({
      */
     hideRegulatoryLayer (state, action) {
       state.showedRegulatoryLayerIds = _.without(state.showedRegulatoryLayerIds, action.payload)
-    },
-    setLoadingRegulatoryZoneMetadata (state) {
-      state.loadingRegulatoryZoneMetadata = true
-      state.regulatoryZoneMetadata = null
-      state.regulatoryZoneMetadataPanelIsOpen = true
-    },
-    resetLoadingRegulatoryZoneMetadata (state) {
-      state.loadingRegulatoryZoneMetadata = false
-    },
-    setRegulatoryZoneMetadata (state, action) {
-      state.loadingRegulatoryZoneMetadata = false
-      state.regulatoryZoneMetadata = action.payload
-    },
-    closeRegulatoryZoneMetadataPanel (state) {
-      state.regulatoryZoneMetadataPanelIsOpen = false
-      state.regulatoryZoneMetadata = null
     },
     /**
      * Set regulatory data structured as
@@ -161,11 +144,6 @@ export const {
   removeRegulatoryZonesFromMyLayers,
   showRegulatoryLayer,
   hideRegulatoryLayer,
-  setIsReadyToShowRegulatoryZones,
-  setLoadingRegulatoryZoneMetadata,
-  resetLoadingRegulatoryZoneMetadata,
-  setRegulatoryZoneMetadata,
-  closeRegulatoryZoneMetadataPanel,
   setRegulatoryLayers,
   setRegulatoryGeometriesToPreview,
   resetRegulatoryGeometriesToPreview,

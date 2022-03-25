@@ -310,9 +310,7 @@ export const convertTimeToString = (date) => {
 }
 
 
-export const getTitle = regulatory => regulatory
-  ? `${regulatory.topic.replace(/[_]/g, ' ')} - ${regulatory.zone.replace(/[_]/g, ' ')}`
-  : ''
+export const getTitle = topic => topic ? `${topic?.replace(/[_]/g, ' ')}` : ''
 
 /**
  * @function checkUrl

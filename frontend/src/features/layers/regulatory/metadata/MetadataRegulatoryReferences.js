@@ -1,27 +1,20 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useSelector } from 'react-redux'
 import { SectionTitle, Section, List, Label } from './RegulatoryMetadata.style'
 import { Link } from '../../../commonStyles/Link.style'
 import { getRegulatoryZoneTextTypeAsText } from '../../../../domain/entities/regulatory'
 
-const MetadataRegulatoryReferences = () => {
-  const { regulatoryReferences } = useSelector(state => state.regulatory.regulatoryZoneMetadata)
-  return <>{regulatoryReferences && <Section>
+const MetadataRegulatoryReferences = ({regulatoryReference, type, url}) => {
+  
+  return regulatoryReference && <Section>
     <SectionTitle>Références réglementaires</SectionTitle>
     <List>
-    {regulatoryReferences.map(regulatoryReference => {
-      return <Reference
-          key={regulatoryReference}
-          data-cy="regulatory-layers-metadata-references"
-        >
-        {regulatoryReference.textType &&
-          <Label>{getRegulatoryZoneTextTypeAsText(regulatoryReference.textType)}</Label>}
-        <Link href={regulatoryReference.url}>{regulatoryReference.reference}</Link>
+      <Reference data-cy="regulatory-layers-metadata-references">
+        <Label>{getRegulatoryZoneTextTypeAsText(type)}</Label>
+        <Link href={url}>{regulatoryReference}</Link>
       </Reference>
-    })}
     </List>
-  </Section>}</>
+  </Section>
 }
 
 const Reference = styled.li`

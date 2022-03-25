@@ -15,7 +15,7 @@ const RegulatoryLayers = ({regulatoryLayersAddedToMySelection}) => {
   } = useSelector(state => state.regulatory)
   const { myRegulatoryZonesIsOpen } = useSelector(state => state.layerSidebar)
 
-  const selectedRegulatoryLayers = regulatoryLayers.filter(layer => selectedRegulatoryLayerIds.includes(layer.id))
+  const selectedRegulatoryLayers = regulatoryLayers?.filter(layer => selectedRegulatoryLayerIds.includes(layer.id))
 
 
   const onTitleClicked = () => {

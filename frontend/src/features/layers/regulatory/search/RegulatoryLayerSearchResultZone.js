@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled, { css } from 'styled-components'
 import Checkbox from 'rsuite/Checkbox'
 
-// import showRegulatoryZoneMetadata from '../../../../domain/use_cases/showRegulatoryZoneMetadata'
-// import closeRegulatoryZoneMetadata from '../../../../domain/use_cases/closeRegulatoryZoneMetadata'
+import showRegulatoryZoneMetadata from '../../../../domain/use_cases/showRegulatoryZoneMetadata'
+import closeRegulatoryZoneMetadata from '../../../../domain/use_cases/closeRegulatoryZoneMetadata'
 import { setRegulatoryGeometriesToPreview } from '../../../../domain/shared_slices/Regulatory'
 
 import { toggleRegulatoryZone } from './RegulatoryLayerSearch.slice'
@@ -19,6 +19,7 @@ const RegulatoryLayerSearchResultZone = ({regulatoryZone}) => {
   const dispatch = useDispatch()
 
   const { regulatoryZonesChecked } = useSelector(state => state.regulatoryLayerSearch)
+  const { regulatoryMetadataPanelIsOpen } = useSelector(state => state.regulatoryMetadata)
   const isZoneSelected = regulatoryZonesChecked.includes(regulatoryZone.id)
   const metadataIsShown = false
 
@@ -31,7 +32,9 @@ const RegulatoryLayerSearchResultZone = ({regulatoryZone}) => {
 
   const handleSelectRegulatoryZone = () => dispatch(toggleRegulatoryZone(regulatoryZone.id))
 
-  const toggleRegulatoryZoneMetadata = () => console.log('togglemetadata')
+  const toggleRegulatoryZoneMetadata = () => {
+    regulatoryMetadataPanelIsOpen ? dispatch(closeRegulatoryZoneMetadata()) : dispatch(showRegulatoryZoneMetadata(regulatoryZone.id))
+  }
   // value => value?.length
   // ? setZoneSelectionList([regulatoryZone])
   // : setZoneSelectionList([])

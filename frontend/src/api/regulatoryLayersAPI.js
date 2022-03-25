@@ -1,6 +1,7 @@
 
-import Layers from '../domain/entities/layers'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
+import Layers from '../domain/entities/layers'
 
 export const GEOSERVER_BACKOFFICE_URL = process.env.REACT_APP_GEOSERVER_LOCAL_URL
 export const GEOSERVER_NAMESPACE = process.env.REACT_APP_GEOSERVER_NAMESPACE
@@ -13,7 +14,7 @@ export function getAllRegulatoryLayersFromAPI (fromBackoffice) {
   const geoserverURL = fromBackoffice ? GEOSERVER_BACKOFFICE_URL : GEOSERVER_URL
 
   return fetch(`${geoserverURL}/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typename=${GEOSERVER_NAMESPACE}:` +
-    `${Layers.REGULATORY_ENV.code}&outputFormat=application/json&propertyName=entity_name,url,layer_name,facade,ref_reg,observation,thematique,echelle,date,duree_validite,date_fin,temporalite,action,objet,type,signataire,geom`)
+    `${Layers.REGULATORY_ENV.code}&format_options=id_policy:id&outputFormat=application/json&propertyName=entity_name,layer_name,facade,ref_reg,geom`)
     .then(response => {
       if (response.status === OK) {
         return response.json()
@@ -29,3 +30,32 @@ export function getAllRegulatoryLayersFromAPI (fromBackoffice) {
       throw Error(REGULATORY_ZONES_ERROR_MESSAGE)
     })
 }
+
+export const regulatoryLayersAPI = createApi({
+  baseQuery: fetchBaseQuery({ baseUrl: `${GEOSERVER_URL}/geoserver/` }),
+  reducerPath: 'regulatoryLayers',
+  endpoints: (build) => ({
+    getRegulatoryLayer: build.query({
+      query: ({id}) => ({
+        url: "wfs",
+        params: {
+          'featureID': id,
+          'service': 'WFS',
+          'version': '1.1.0',
+          'request': 'GetFeature',
+          'typename': `${GEOSERVER_NAMESPACE}:${Layers.REGULATORY_ENV.code}`,
+          'format_options': 'id_policy:id',
+          'outputFormat': 'application/json'
+        }
+      }),
+      transformResponse: (response) => {
+        return response?.features[0]
+      }
+    }),
+    getRegulatoryLayers: build.query({
+      query: () => `&propertyName=entity_name,url,layer_name,facade,ref_reg,observation,thematique,echelle,date,duree_validite,date_fin,temporalite,action,objet,type,signataire,geom`
+    })
+  }),
+})
+
+export const { useGetRegulatoryLayerQuery, useGetRegulatoryLayersQuery } = regulatoryLayersAPI

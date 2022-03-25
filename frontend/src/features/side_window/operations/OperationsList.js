@@ -1,7 +1,7 @@
 import React from 'react'
 import { Table } from 'rsuite';
 
-import { useGetOperationsQuery } from '../../../api/operationsApi'
+import { useGetOperationsQuery } from '../../../api/operationsAPI'
 
 export const OperationsList = ({setOperation}) => {
   const { data, isError, isLoading } = useGetOperationsQuery()
@@ -18,9 +18,7 @@ export const OperationsList = ({setOperation}) => {
           <Table
             height={400}
             data={data}
-            onRowClick={data => {
-              setOperation(data.id)
-            }}
+            onRowClick={data => {setOperation(data.id)}}
           >
             <Table.Column width={70} align="center" fixed>
               <Table.HeaderCell>Id</Table.HeaderCell>

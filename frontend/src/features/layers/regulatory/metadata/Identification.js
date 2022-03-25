@@ -1,31 +1,30 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
 import { Key, Value, Fields, Field } from './RegulatoryMetadata.style'
 
-const Identification = () => {
-  const { lawType, topic, region } = useSelector(state => state.regulatory.regulatoryZoneMetadata)
+const Identification = ({thematique, type, facade}) => {
+  
   return <Zone>
     <Fields>
       <Body>
         <Field>
           <Key>Ensemble reg.</Key>
           <Value data-cy={'regulatory-layers-metadata-lawtype'}>
-            {lawType || <NoValue>-</NoValue>}
+            {type || <NoValue>-</NoValue>}
           </Value>
         </Field>
         <Field>
           <Key>Thématique</Key>
           <Value data-cy={'regulatory-layers-metadata-topic'}>
-            {`${topic.replace(/[_]/g, ' ')}` || <NoValue>-</NoValue>}
+            {thematique || <NoValue>-</NoValue>}
           </Value>
         </Field>
         <Field>
-          <Key>Région</Key>
+          <Key>Façade</Key>
           <Value data-cy={'regulatory-layers-metadata-region'}>
-            {region || <NoValue>-</NoValue>}
+            {facade || <NoValue>-</NoValue>}
           </Value>
         </Field>
       </Body>

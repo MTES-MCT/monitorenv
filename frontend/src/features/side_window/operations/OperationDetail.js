@@ -1,5 +1,5 @@
 import React from 'react'
-import { useGetOperationsQuery, useUpdateOperationMutation } from '../../../api/operationsApi'
+import { useGetOperationsQuery, useUpdateOperationMutation } from '../../../api/operationsAPI'
 import { useFormik } from 'formik';
  
 export const OperationDetail = ({ id })  => {

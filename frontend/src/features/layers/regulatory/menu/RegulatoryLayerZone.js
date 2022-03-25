@@ -4,23 +4,27 @@ import styled, { css } from 'styled-components'
 import Projection from 'ol/proj/Projection';
 import {transformExtent} from 'ol/proj';
 
+import {hideRegulatoryLayer, removeRegulatoryZonesFromMyLayers, showRegulatoryLayer} from "../../../../domain/shared_slices/Regulatory";
 import { setFitToExtent } from '../../../../domain/shared_slices/Map'
+import showRegulatoryZoneMetadata from '../../../../domain/use_cases/showRegulatoryZoneMetadata'
+import closeRegulatoryZoneMetadata from '../../../../domain/use_cases/closeRegulatoryZoneMetadata'
+
 import { getRegulatoryEnvColorWithAlpha } from '../../../../layers/styles/administrativeAndRegulatoryLayers.style'
 import { REGPaperDarkIcon, REGPaperIcon } from '../../../commonStyles/icons/REGPaperIcon.style'
 import { ShowIcon } from '../../../commonStyles/icons/ShowIcon.style'
 import { HideIcon } from '../../../commonStyles/icons/HideIcon.style'
 import { CloseIcon } from "../../../commonStyles/icons/CloseIcon.style";
 import { COLORS } from '../../../../constants/constants'
-import {hideRegulatoryLayer, removeRegulatoryZonesFromMyLayers, showRegulatoryLayer} from "../../../../domain/shared_slices/Regulatory";
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map';
 
 const RegulatoryLayerZone = ({regulatoryZone}) => {
   const dispatch = useDispatch()
   const { showedRegulatoryLayerIds } = useSelector(state => state.regulatory)
   const { regulatoryZonesChecked } = useSelector(state => state.regulatoryLayerSearch)
+  const { regulatoryMetadataPanelIsOpen, regulatoryMetadataLayerId } = useSelector(state => state.regulatoryMetadata)
   const regulatoryZoneIsShowed = showedRegulatoryLayerIds.includes(regulatoryZone.id)
   const isZoneSelected = regulatoryZonesChecked.includes(regulatoryZone.id)
-  const metadataIsShown = false
+  const metadataIsShown = regulatoryMetadataPanelIsOpen && regulatoryZone.id === regulatoryMetadataLayerId
 
 
 
@@ -34,7 +38,10 @@ const RegulatoryLayerZone = ({regulatoryZone}) => {
 
   const displayedName = regulatoryZone?.properties?.entity_name.replace(/[_]/g, ' ') || 'AUNCUN NOM'
 
-  const toggleRegulatoryZoneMetadata = () => console.log('togglemetadata')
+  const toggleRegulatoryZoneMetadata = () => {
+    metadataIsShown ? dispatch(closeRegulatoryZoneMetadata()) : dispatch(showRegulatoryZoneMetadata(regulatoryZone.id))
+  }
+
   return (
     <Zone $selected={isZoneSelected}>
       <Rectangle onClick={zoomToLayerExtent} $vectorLayerColor={getRegulatoryEnvColorWithAlpha(regulatoryZone?.doc?.properties?.thematique)}/>
@@ -104,10 +111,11 @@ const Zone = styled.span`
 `
 
 const CustomPaperStyle = css`
-  margin-right: -2px;
-  padding-top: 7px;
-  width: 21px;
-  height: 23px
+  width: 23px;
+  float: right;
+  flex-shrink: 0;
+  height: 30px;
+  cursor: pointer;
 `
 
 const CustomREGPaperIcon = styled(REGPaperIcon)`
@@ -121,6 +129,7 @@ const Icons = styled.span`
   float: right;
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   flex: 1;
 `
 
