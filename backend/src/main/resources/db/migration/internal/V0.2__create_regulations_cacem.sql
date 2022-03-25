@@ -23,8 +23,9 @@ SET default_tablespace = '';
 --
 DROP TABLE IF EXISTS public.regulations_cacem;
 CREATE TABLE public.regulations_cacem (
-    id character varying NOT NULL,
-    geom public.geometry(MultiPolygon,4326),
+    id serial,
+    geom public.geometry(point,4326),
+    -- geom public.geometry(MultiPolygon,4326),
     entity_name character varying,
     url character varying,
     layer_name character varying,

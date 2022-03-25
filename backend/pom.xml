@@ -16,7 +16,7 @@
 
 	<properties>
 		<java.version>11</java.version>
-		<spring.version>2.3.3.RELEASE</spring.version>
+		<spring.version>2.6.5</spring.version>
 		<kotlin.version>1.4.10</kotlin.version>
 		<testcontainers.version>1.15.1</testcontainers.version>
 		<commit.hash>COMMIT_TO_CHANGE</commit.hash>
@@ -66,10 +66,44 @@
 			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>5.2.18.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-spatial</artifactId>
+			<version>5.2.18.Final</version>
+		</dependency>
+		<dependency>
 			<groupId>com.fasterxml.jackson.module</groupId>
 			<artifactId>jackson-module-kotlin</artifactId>
 			<version>2.11.2</version>
 		</dependency>
+		<dependency>
+			<groupId>org.n52.jackson</groupId>
+			<artifactId>jackson-datatype-jts</artifactId>
+			<version>1.2.9</version>
+    	</dependency>
+		<dependency>
+			<groupId>org.locationtech.jts</groupId>
+			<artifactId>jts</artifactId>
+			<version>1.18.2</version>
+			<type>pom</type>
+		</dependency>
+
+
+		<!-- <dependency>
+			<groupId>com.github.mayconbordin</groupId>
+			<artifactId>postgis-geojson</artifactId>
+			<version>1.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.postgresql</groupId>
+					<artifactId>postgresql</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency> -->
 		<dependency>
 			<groupId>com.nhaarman.mockitokotlin2</groupId>
 			<artifactId>mockito-kotlin</artifactId>

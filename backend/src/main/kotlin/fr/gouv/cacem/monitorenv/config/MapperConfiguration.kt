@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
 import java.util.*
+import org.n52.jackson.datatype.jts.JtsModule
 
 @Configuration
 class MapperConfiguration {
@@ -18,14 +19,11 @@ class MapperConfiguration {
 
         // needed to handle java.time.ZonedDateTime serialization
         mapper.registerModule(JavaTimeModule())
+        mapper.registerModule(JtsModule())
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
         mapper.propertyNamingStrategy = PropertyNamingStrategy.LOWER_CAMEL_CASE
 
-
         return mapper
     }
-
-
-
 
 }

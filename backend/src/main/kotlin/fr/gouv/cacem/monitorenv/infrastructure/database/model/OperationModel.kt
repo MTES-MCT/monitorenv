@@ -12,6 +12,7 @@ import java.time.Instant
 import java.time.ZoneOffset.UTC
 import javax.persistence.*
 
+
 @Entity
 @TypeDefs(
         TypeDef(name = "jsonb",
