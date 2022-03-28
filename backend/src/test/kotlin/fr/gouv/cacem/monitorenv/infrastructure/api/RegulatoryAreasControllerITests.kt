@@ -84,24 +84,48 @@
                  .andExpect(jsonPath("$[0].duree_validite", equalTo(regulaotyrArea.duree_validite)))
      }
 
-//     @Test
-//     fun `Should get specific operation when requested by Id` () {
-//         // Given
-//         val regulaotyrArea = OperationEntity(0,"SEA", 	"CLOSED", "Outre-Mer","CONTROLE", ZonedDateTime.parse("2022-01-15T04:50:09Z"),ZonedDateTime.parse("2022-01-23T20:29:03Z"),110.126782000000006,	-50.373736000000001	)
-//         given(this.getRegulatoryAreaById.execute(0)).willReturn(regulaotyrArea)
-//
-//         // When
-//         mockMvc.perform(get("/bff/v1/regulatory/17"))
-//             // Then
-//             .andExpect(status().isOk)
-//             .andExpect(jsonPath("$.id", equalTo(regulaotyrArea.id)))
-//             .andExpect(jsonPath("$.typeOperation", equalTo(regulaotyrArea.typeOperation)))
-//             .andExpect(jsonPath("$.statusOperation", equalTo(regulaotyrArea.statusOperation)))
-//             .andExpect(jsonPath("$.facade", equalTo(regulaotyrArea.facade)))
-//             .andExpect(jsonPath("$.theme", equalTo(regulaotyrArea.theme)))
-//             .andExpect(jsonPath("$.inputStartDatetimeUtc", equalTo(regulaotyrArea.inputStartDatetimeUtc.toString())))
-//             .andExpect(jsonPath("$.inputEndDatetimeUtc", equalTo(regulaotyrArea.inputEndDatetimeUtc.toString())))
-//             .andExpect(jsonPath("$.latitude", equalTo(regulaotyrArea.latitude)))
-//             .andExpect(jsonPath("$.longitude", equalTo(regulaotyrArea.longitude)))
-//     }
+     @Test
+     fun `Should get specific operation when requested by Id` () {
+         // Given
+       val WKTreader = WKTReader()
+       val multipolygonString="MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
+       val Polygon = WKTreader.read(multipolygonString) as MultiPolygon
+       val regulaotryArea = RegulatoryAreaEntity(
+         id = 17,
+         geom = Polygon,
+         entity_name = "Zone au sud de la cale",
+         url = "http://extranet.legicem.metier.developpement-durable.gouv.fr/zmel-roscanvel-a3474.html?id_rub=1098",
+         layer_name = "ZMEL_Cale_Querlen",
+         facade = "NAMO",
+         ref_reg = "Arrêté inter-préfectoral N°2020118-0003 autorisant l'occupation temporaire du domaine public maritime par une zone de mouillages et d'équipements légers au lit-dit \"Cale de Quérlen\" sur le littoral de la commune de Roscanvel ",
+         edition = "2021-11-02",
+         editeur = "Alexis Pré",
+         source = "",
+         observation = "",
+         thematique = "Mouillage",
+         echelle = "1:1000",
+         date = "2020-07-01",
+         duree_validite = "15 ans",
+         date_fin = "2035-07-01",
+         temporalite = "temporaire",
+         objet = "",
+         signataire = ""
+       )
+
+         given(this.getRegulatoryAreaById.execute(17)).willReturn(regulaotryArea)
+
+         // When
+         mockMvc.perform(get("/bff/v1/regulatory/17"))
+             // Then
+             .andExpect(status().isOk)
+             .andExpect(jsonPath("$.id", equalTo(regulaotryArea.id)))
+             .andExpect(jsonPath("$.entity_name", equalTo(regulaotryArea.entity_name)))
+             .andExpect(jsonPath("$.url", equalTo(regulaotryArea.url)))
+             .andExpect(jsonPath("$.facade", equalTo(regulaotryArea.facade)))
+             .andExpect(jsonPath("$.thematique", equalTo(regulaotryArea.thematique)))
+             .andExpect(jsonPath("$.layer_name", equalTo(regulaotryArea.layer_name)))
+             .andExpect(jsonPath("$.ref_reg", equalTo(regulaotryArea.ref_reg)))
+             .andExpect(jsonPath("$.date", equalTo(regulaotryArea.date)))
+             .andExpect(jsonPath("$.temporalite", equalTo(regulaotryArea.temporalite)))
+     }
  }

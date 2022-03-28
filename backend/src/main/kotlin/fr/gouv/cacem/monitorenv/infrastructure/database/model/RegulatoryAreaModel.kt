@@ -2,7 +2,11 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryAreas.RegulatoryAreaEntity
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.locationtech.jts.geom.MultiPolygon
+import org.n52.jackson.datatype.jts.GeometryDeserializer
+import org.n52.jackson.datatype.jts.GeometrySerializer
 import javax.persistence.*
 
 @Entity
@@ -11,6 +15,8 @@ data class RegulatoryAreaModel(
     @Id
     @Column(name = "id")
     var id: Int,
+    @JsonSerialize(using = GeometrySerializer::class)
+    @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
     var geom: MultiPolygon?,
     @Column(name ="entity_name")
