@@ -7,14 +7,14 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.*
 
 import io.micrometer.core.instrument.MeterRegistry
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*
 import javax.websocket.server.PathParam
 
 @RestController
 @RequestMapping("/bff/v1/operations")
-@Api(description = "API operations")
+@Tag(description = "API Opérations", name = "Opérations" )
 class OperationsController(
   private val getOperations: GetOperations,
   private val getOperationById: GetOperationById,
@@ -22,14 +22,14 @@ class OperationsController(
   meterRegistry: MeterRegistry) {
 
     @GetMapping("")
-    @ApiOperation("Get operations")
+    @Operation(summary = "Get operations")
     fun getOperationsController(): List<OperationDataOutput> {
         val operations = getOperations.execute()
 
         return operations.map { OperationDataOutput.fromOperation(it) }
     }
     @GetMapping("/{operationId}")
-    @ApiOperation("Get operation by Id")
+    @Operation(summary = "Get operation by Id")
     fun getOperationByIdController(@PathParam("Operation id")
                         @PathVariable(name = "operationId")
                         operationId: Int): OperationDataOutput {
@@ -38,7 +38,7 @@ class OperationsController(
         return OperationDataOutput.fromOperation(operation)
     }
     @PutMapping(value = ["/{operationId}"], consumes = ["application/json"])
-    @ApiOperation("Update an operation")
+    @Operation(summary = "Update an operation")
     fun updateOperationController(@PathParam("Operation id")
                                @PathVariable(name = "operationId")
                                operationId: Int,
