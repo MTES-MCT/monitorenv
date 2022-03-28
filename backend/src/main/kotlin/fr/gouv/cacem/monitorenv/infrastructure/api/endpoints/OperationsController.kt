@@ -1,6 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints
 
-import fr.gouv.cacem.monitorenv.domain.use_cases.*
+import fr.gouv.cacem.monitorenv.domain.use_cases.crud.operations.GetOperationById
+import fr.gouv.cacem.monitorenv.domain.use_cases.crud.operations.GetOperations
+import fr.gouv.cacem.monitorenv.domain.use_cases.crud.operations.UpdateOperation
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.*
 
@@ -14,10 +16,10 @@ import javax.websocket.server.PathParam
 @RequestMapping("/bff/v1/operations")
 @Api(description = "API operations")
 class OperationsController(
-    private val getOperations: GetOperations,
-    private val getOperationById: GetOperationById,
-    private val updateOperation: UpdateOperation,
-    meterRegistry: MeterRegistry) {
+  private val getOperations: GetOperations,
+  private val getOperationById: GetOperationById,
+  private val updateOperation: UpdateOperation,
+  meterRegistry: MeterRegistry) {
 
     @GetMapping("")
     @ApiOperation("Get operations")

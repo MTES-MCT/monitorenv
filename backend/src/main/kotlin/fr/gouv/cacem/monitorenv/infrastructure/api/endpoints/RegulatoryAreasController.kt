@@ -1,8 +1,9 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints
 
-import fr.gouv.cacem.monitorenv.domain.use_cases.*
+import fr.gouv.cacem.monitorenv.domain.use_cases.crud.regulatoryAreas.GetRegulatoryAreaById
+import fr.gouv.cacem.monitorenv.domain.use_cases.crud.regulatoryAreas.GetRegulatoryAreas
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.*
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.*
+
 
 import io.micrometer.core.instrument.MeterRegistry
 import io.swagger.annotations.Api
@@ -14,37 +15,24 @@ import javax.websocket.server.PathParam
 @RequestMapping("/bff/v1/regulatory")
 @Api(description = "API regulatory layers")
 class RegulatoryAreasController(
-    private val getOperations: GetOperations,
-    private val getOperationById: GetOperationById,
-    private val updateOperation: UpdateOperation,
-    meterRegistry: MeterRegistry) {
+  private val getRegulatoryAreas: GetRegulatoryAreas,
+  private val getRegulatoryAreaById: GetRegulatoryAreaById,
+  meterRegistry: MeterRegistry) {
 
     @GetMapping("")
-    @ApiOperation("Get operations")
-    fun getOperationsController(): List<OperationDataOutput> {
-        val operations = getOperations.execute()
+    @ApiOperation("Get regulatory Areas")
+    fun getRegulatoryAreasController(): List<RegulatoryAreaDataOutput> {
+        val regulatoryAreas = getRegulatoryAreas.execute()
 
-        return operations.map { OperationDataOutput.fromOperation(it) }
+        return regulatoryAreas.map { RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(it) }
     }
-    @GetMapping("/{operationId}")
+    @GetMapping("/{regulatoryAreaId}")
     @ApiOperation("Get operation by Id")
-    fun getOperationByIdController(@PathParam("Operation id")
-                        @PathVariable(name = "operationId")
-                        operationId: Int): OperationDataOutput {
-        val operation = getOperationById.execute(operationId = operationId)
+    fun getRegulatoryAreaByIdController(@PathParam("regulatoryArea id")
+                        @PathVariable(name = "regulatoryAreaId")
+                                        regulatoryAreaId: Int): RegulatoryAreaDataOutput {
+        val regulatoryArea = getRegulatoryAreaById.execute(regulatoryAreaId = regulatoryAreaId)
 
-        return OperationDataOutput.fromOperation(operation)
-    }
-    @PutMapping(value = ["/{operationId}"], consumes = ["application/json"])
-    @ApiOperation("Update an operation")
-    fun updateOperationController(@PathParam("Operation id")
-                               @PathVariable(name = "operationId")
-                               operationId: Int,
-                               @RequestBody
-                               updateOperationDataInput: UpdateOperationDataInput): OperationDataOutput {
-        return updateOperation.execute(
-                operation = updateOperationDataInput.toOperationEntity()).let {
-                    OperationDataOutput.fromOperation(it)
-        }
+        return RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(regulatoryArea)
     }
 }

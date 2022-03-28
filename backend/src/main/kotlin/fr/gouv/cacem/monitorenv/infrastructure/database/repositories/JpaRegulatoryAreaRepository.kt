@@ -18,9 +18,6 @@ class JpaRegulatoryAreaRepository(private val dbRegulatoryAreaRepository: IDBReg
     override fun findRegulatoryAreas(): List<RegulatoryAreaEntity> {
         return dbRegulatoryAreaRepository.findAll().map { it.toRegulatoryArea() }
     }
-    override fun findTest(): List<RegulatoryAreaEntity> {
-        return dbRegulatoryAreaRepository.findTest().map { it.toRegulatoryArea() }
-    }
 
     override fun findRegulatoryAreaById(id: Int): RegulatoryAreaEntity {
         return dbRegulatoryAreaRepository.findById(id).get().toRegulatoryArea()

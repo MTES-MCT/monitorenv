@@ -5,5 +5,4 @@ import fr.gouv.cacem.monitorenv.domain.entities.regulatoryAreas.RegulatoryAreaEn
 interface IRegulatoryAreaRepository {
     fun findRegulatoryAreaById(id: Int): RegulatoryAreaEntity
     fun findRegulatoryAreas(): List<RegulatoryAreaEntity>
-    fun findTest(): List<RegulatoryAreaEntity>
 }

@@ -4,6 +4,7 @@
 
  import com.nhaarman.mockitokotlin2.given
  import fr.gouv.cacem.monitorenv.domain.entities.operations.OperationEntity
+ import fr.gouv.cacem.monitorenv.domain.use_cases.crud.operations.UpdateOperation
  import org.assertj.core.api.Assertions.assertThat
  import org.assertj.core.api.Assertions.catchThrowable
  import org.junit.jupiter.api.Test

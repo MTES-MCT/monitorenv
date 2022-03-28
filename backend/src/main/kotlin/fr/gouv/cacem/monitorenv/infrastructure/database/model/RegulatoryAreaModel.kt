@@ -1,29 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryAreas.RegulatoryAreaEntity
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-//import com.bedatadriven.jackson.datatype.jts.serialization.GeometryDeserializer;
-//import com.bedatadriven.jackson.datatype.jts.serialization.GeometrySerializer;
 
-
-import com.vladmihalcea.hibernate.type.array.ListArrayType
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType
-
-import org.hibernate.annotations.TypeDef
-import org.hibernate.annotations.TypeDefs
-import org.hibernate.annotations.Type
-
-//import org.springframework.data.geo.Point
-//import org.geolatte.geom.C2D
-//import org.geolatte.geom.Point
-// import com.vividsolutions.jts.geom.Point;
-import org.locationtech.jts.geom.Point
-//import org.postgis.MultiPolygon
-//import com.vividsolutions.jts.geom.MultiPolygon
-// import org.hibernate.spatial.GeolatteGeometryType
-// import org.hibernate.spatial.JTSGeometryType
+import org.locationtech.jts.geom.MultiPolygon
 import javax.persistence.*
 
 @Entity
@@ -32,15 +11,8 @@ data class RegulatoryAreaModel(
     @Id
     @Column(name = "id")
     var id: Int,
-//    @Type(type="point")
-//    @JsonSerialize(using = GeometrySerializer.class)
-//    @JsonDeserialize(using = GeometryDeserializer.class)
-    @Column(name = "geom", columnDefinition = "Geometry(Point,4326)")
-    //@Column(name = "geom", columnDefinition = "Point")
-    //@Type(type="org.hibernate.spatial.JTSGeometryType")
-    //@Column(name = "geom")
-    //var geom: Point<C2D>?,
-    var geom: Point,
+    @Column(name = "geom")
+    var geom: MultiPolygon?,
     @Column(name ="entity_name")
     var entity_name: String?,
     @Column(name ="url")
@@ -76,16 +48,9 @@ data class RegulatoryAreaModel(
     @Column(name ="signataire")
     var signataire: String?
 ) {
-    fun toRegulatoryArea(): RegulatoryAreaEntity {
-      println("-------ID-------")
-      println(id)
-      println(geom)
-
-      println("-------ID-------")
-      return RegulatoryAreaEntity(
+    fun toRegulatoryArea() = RegulatoryAreaEntity(
         id = id,
-        //geom = geom,
-        //geom = null,
+        geom = geom,
         entity_name = entity_name,
         url = url,
         layer_name = layer_name,
@@ -104,5 +69,27 @@ data class RegulatoryAreaModel(
         objet = objet,
         signataire = signataire
       )
-    }
+  companion object {
+    fun fromRegulatoryAreaEntity(regulatoryArea: RegulatoryAreaEntity) = RegulatoryAreaModel(
+      id = regulatoryArea.id,
+      geom = regulatoryArea.geom,
+      entity_name = regulatoryArea.entity_name,
+      url = regulatoryArea.url,
+      layer_name = regulatoryArea.layer_name,
+      facade = regulatoryArea.facade,
+      ref_reg = regulatoryArea.ref_reg,
+      edition = regulatoryArea.edition,
+      editeur = regulatoryArea.editeur,
+      source = regulatoryArea.source,
+      observation = regulatoryArea.observation,
+      thematique = regulatoryArea.thematique,
+      echelle = regulatoryArea.echelle,
+      date = regulatoryArea.date,
+      duree_validite = regulatoryArea.duree_validite,
+      date_fin = regulatoryArea.date_fin,
+      temporalite = regulatoryArea.temporalite,
+      objet = regulatoryArea.objet,
+      signataire = regulatoryArea.signataire
+    )
+  }
 }

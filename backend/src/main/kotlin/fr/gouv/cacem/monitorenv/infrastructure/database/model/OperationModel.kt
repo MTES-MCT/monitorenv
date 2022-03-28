@@ -66,5 +66,5 @@ data class OperationModel(
                 latitude = operation.latitude,
                 theme = operation.theme
         )
-}
+    }
 }

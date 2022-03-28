@@ -21,11 +21,11 @@ SET default_tablespace = '';
 --
 -- Name: regulations_cacem; Type: TABLE; Schema: public; Owner: postgres
 --
-DROP TABLE IF EXISTS public.regulations_cacem;
+-- DROP TABLE IF EXISTS public.regulations_cacem;
 CREATE TABLE public.regulations_cacem (
     id serial,
-    geom public.geometry(point,4326),
-    -- geom public.geometry(MultiPolygon,4326),
+    --geom public.geometry(point,4326),
+    geom public.geometry(MultiPolygon,4326),
     entity_name character varying,
     url character varying,
     layer_name character varying,

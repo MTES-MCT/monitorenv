@@ -1,9 +1,13 @@
  package fr.gouv.cacem.monitorenv.infrastructure.api
 
  import fr.gouv.cacem.monitorenv.MeterRegistryConfiguration
- import fr.gouv.cacem.monitorenv.domain.use_cases.*
- import fr.gouv.cacem.monitorenv.domain.entities.operations.*
  import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.OperationsController
+ import fr.gouv.cacem.monitorenv.domain.entities.operations.*
+ import fr.gouv.cacem.monitorenv.domain.use_cases.crud.operations.GetOperationById
+ import fr.gouv.cacem.monitorenv.domain.use_cases.crud.operations.GetOperations
+ import fr.gouv.cacem.monitorenv.domain.use_cases.crud.operations.UpdateOperation
+ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.UpdateOperationDataInput
+
 
  import org.hamcrest.Matchers.equalTo
  import org.junit.jupiter.api.Test
@@ -21,7 +25,6 @@
  import java.time.ZonedDateTime
  import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
  import com.fasterxml.jackson.databind.ObjectMapper
- import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.UpdateOperationDataInput
  import org.mockito.BDDMockito.any
 
  @Import(MeterRegistryConfiguration::class)
