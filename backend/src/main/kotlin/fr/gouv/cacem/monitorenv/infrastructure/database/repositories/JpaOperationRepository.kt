@@ -12,14 +12,16 @@ import org.springframework.transaction.annotation.Transactional
 @Repository
 class JpaOperationRepository(private val dbOperationRepository: IDBOperationRepository) : IOperationRepository {
 
-    override fun findOperations(): OperationsListEntity {
-        return dbOperationRepository.findAllByOrderByIdAsc().map { it.toOperation() }
-    }
-    override fun findOperationById(operationId: Int): OperationEntity {
-        return dbOperationRepository.findById(operationId).get().toOperation()
-    }
-    @Transactional
-    override fun save(operation: OperationEntity) {
-        dbOperationRepository.save(OperationModel.fromOperationEntity(operation))
-    }
+  override fun findOperations(): OperationsListEntity {
+    return dbOperationRepository.findAllByOrderByIdAsc().map { it.toOperation() }
+  }
+
+  override fun findOperationById(operationId: Int): OperationEntity {
+    return dbOperationRepository.findById(operationId).get().toOperation()
+  }
+
+  @Transactional
+  override fun save(operation: OperationEntity) {
+    dbOperationRepository.save(OperationModel.fromOperationEntity(operation))
+  }
 }

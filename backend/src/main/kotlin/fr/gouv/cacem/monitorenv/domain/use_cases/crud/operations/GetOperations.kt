@@ -8,12 +8,12 @@ import org.slf4j.LoggerFactory
 
 @UseCase
 class GetOperations(private val operationRepository: IOperationRepository) {
-    private val logger = LoggerFactory.getLogger(GetOperations::class.java)
+  private val logger = LoggerFactory.getLogger(GetOperations::class.java)
 
-    fun execute(): OperationsListEntity {
-        val operations = operationRepository.findOperations()
-        logger.info("Found ${operations.size} operations ")
+  fun execute(): OperationsListEntity {
+    val operations = operationRepository.findOperations()
+    logger.info("Found ${operations.size} operations ")
 
-        return operations
-    }
+    return operations
+  }
 }

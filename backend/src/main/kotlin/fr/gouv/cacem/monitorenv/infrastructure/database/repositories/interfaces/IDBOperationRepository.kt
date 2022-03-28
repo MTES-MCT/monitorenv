@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 
 interface IDBOperationRepository : CrudRepository<OperationModel, Int> {
-    @Query
-    fun findAllByOrderByIdAsc(): List<OperationModel>
+  @Query
+  fun findAllByOrderByIdAsc(): List<OperationModel>
 }

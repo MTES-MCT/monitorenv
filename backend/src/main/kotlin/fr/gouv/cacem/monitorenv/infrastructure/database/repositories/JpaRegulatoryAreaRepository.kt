@@ -13,13 +13,14 @@ import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
 @Repository
-class JpaRegulatoryAreaRepository(private val dbRegulatoryAreaRepository: IDBRegulatoryAreaRepository) : IRegulatoryAreaRepository {
+class JpaRegulatoryAreaRepository(private val dbRegulatoryAreaRepository: IDBRegulatoryAreaRepository) :
+  IRegulatoryAreaRepository {
 
-    override fun findRegulatoryAreas(): List<RegulatoryAreaEntity> {
-        return dbRegulatoryAreaRepository.findAll().map { it.toRegulatoryArea() }
-    }
+  override fun findRegulatoryAreas(): List<RegulatoryAreaEntity> {
+    return dbRegulatoryAreaRepository.findAll().map { it.toRegulatoryArea() }
+  }
 
-    override fun findRegulatoryAreaById(id: Int): RegulatoryAreaEntity {
-        return dbRegulatoryAreaRepository.findById(id).get().toRegulatoryArea()
-    }
+  override fun findRegulatoryAreaById(id: Int): RegulatoryAreaEntity {
+    return dbRegulatoryAreaRepository.findById(id).get().toRegulatoryArea()
+  }
 }

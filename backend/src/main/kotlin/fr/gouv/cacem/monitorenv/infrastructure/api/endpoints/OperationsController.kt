@@ -14,39 +14,47 @@ import javax.websocket.server.PathParam
 
 @RestController
 @RequestMapping("/bff/v1/operations")
-@Tag(description = "API Opérations", name = "Opérations" )
+@Tag(description = "API Opérations", name = "Opérations")
 class OperationsController(
   private val getOperations: GetOperations,
   private val getOperationById: GetOperationById,
   private val updateOperation: UpdateOperation,
-  meterRegistry: MeterRegistry) {
+  meterRegistry: MeterRegistry
+) {
 
-    @GetMapping("")
-    @Operation(summary = "Get operations")
-    fun getOperationsController(): List<OperationDataOutput> {
-        val operations = getOperations.execute()
+  @GetMapping("")
+  @Operation(summary = "Get operations")
+  fun getOperationsController(): List<OperationDataOutput> {
+    val operations = getOperations.execute()
 
-        return operations.map { OperationDataOutput.fromOperation(it) }
-    }
-    @GetMapping("/{operationId}")
-    @Operation(summary = "Get operation by Id")
-    fun getOperationByIdController(@PathParam("Operation id")
-                        @PathVariable(name = "operationId")
-                        operationId: Int): OperationDataOutput {
-        val operation = getOperationById.execute(operationId = operationId)
+    return operations.map { OperationDataOutput.fromOperation(it) }
+  }
 
-        return OperationDataOutput.fromOperation(operation)
+  @GetMapping("/{operationId}")
+  @Operation(summary = "Get operation by Id")
+  fun getOperationByIdController(
+    @PathParam("Operation id")
+    @PathVariable(name = "operationId")
+    operationId: Int
+  ): OperationDataOutput {
+    val operation = getOperationById.execute(operationId = operationId)
+
+    return OperationDataOutput.fromOperation(operation)
+  }
+
+  @PutMapping(value = ["/{operationId}"], consumes = ["application/json"])
+  @Operation(summary = "Update an operation")
+  fun updateOperationController(
+    @PathParam("Operation id")
+    @PathVariable(name = "operationId")
+    operationId: Int,
+    @RequestBody
+    updateOperationDataInput: UpdateOperationDataInput
+  ): OperationDataOutput {
+    return updateOperation.execute(
+      operation = updateOperationDataInput.toOperationEntity()
+    ).let {
+      OperationDataOutput.fromOperation(it)
     }
-    @PutMapping(value = ["/{operationId}"], consumes = ["application/json"])
-    @Operation(summary = "Update an operation")
-    fun updateOperationController(@PathParam("Operation id")
-                               @PathVariable(name = "operationId")
-                               operationId: Int,
-                               @RequestBody
-                               updateOperationDataInput: UpdateOperationDataInput): OperationDataOutput {
-        return updateOperation.execute(
-                operation = updateOperationDataInput.toOperationEntity()).let {
-                    OperationDataOutput.fromOperation(it)
-        }
-    }
+  }
 }

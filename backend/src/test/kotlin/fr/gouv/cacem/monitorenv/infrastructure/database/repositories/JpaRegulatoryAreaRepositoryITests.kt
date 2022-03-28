@@ -31,7 +31,8 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
 
     // Given
     val WKTreader = WKTReader()
-    val multipolygonString="MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
+    val multipolygonString =
+      "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
     val Polygon = WKTreader.read(multipolygonString) as MultiPolygon
     val searchedRegulatoryArea = RegulatoryAreaModel.fromRegulatoryAreaEntity(
       RegulatoryAreaEntity(

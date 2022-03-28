@@ -21,26 +21,29 @@ import javax.websocket.server.PathParam
 class RegulatoryAreasController(
   private val getRegulatoryAreas: GetRegulatoryAreas,
   private val getRegulatoryAreaById: GetRegulatoryAreaById,
-  meterRegistry: MeterRegistry) {
+  meterRegistry: MeterRegistry
+) {
 
-    @GetMapping("")
-    @Operation(summary = "Get regulatory Areas")
-    fun getRegulatoryAreasController(): String {
-        val regulatoryAreas = getRegulatoryAreas.execute()
+  @GetMapping("")
+  @Operation(summary = "Get regulatory Areas")
+  fun getRegulatoryAreasController(): String {
+    val regulatoryAreas = getRegulatoryAreas.execute()
+    val regulatoryAreaEntities = regulatoryAreas.map { RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(it) }
+    val mapper = ObjectMapper()
+    mapper.registerModule(JtsModule())
+    return mapper.writeValueAsString(regulatoryAreaEntities)
+  }
 
-         val regulatoryAreaEntities = regulatoryAreas.map { RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(it) }
-      val mapper = ObjectMapper()
-      mapper.registerModule(JtsModule())
-      return mapper.writeValueAsString(regulatoryAreaEntities)
-    }
-    @GetMapping("/{regulatoryAreaId}")
-    @Operation(summary = "Get operation by Id")
-    fun getRegulatoryAreaByIdController(@PathParam("regulatoryArea id")
-                        @PathVariable(name = "regulatoryAreaId")
-                                        regulatoryAreaId: Int): String {
-        val regulatoryArea = getRegulatoryAreaById.execute(regulatoryAreaId = regulatoryAreaId)
-        val mapper = ObjectMapper()
-        mapper.registerModule(JtsModule())
-        return mapper.writeValueAsString(regulatoryArea)
-    }
+  @GetMapping("/{regulatoryAreaId}")
+  @Operation(summary = "Get operation by Id")
+  fun getRegulatoryAreaByIdController(
+    @PathParam("regulatoryArea id")
+    @PathVariable(name = "regulatoryAreaId")
+    regulatoryAreaId: Int
+  ): String {
+    val regulatoryArea = getRegulatoryAreaById.execute(regulatoryAreaId = regulatoryAreaId)
+    val mapper = ObjectMapper()
+    mapper.registerModule(JtsModule())
+    return mapper.writeValueAsString(regulatoryArea)
+  }
 }

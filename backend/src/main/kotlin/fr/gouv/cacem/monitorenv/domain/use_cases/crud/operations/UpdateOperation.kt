@@ -6,12 +6,12 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IOperationRepository
 
 @UseCase
 class UpdateOperation(private val operationRepository: IOperationRepository) {
-    @Throws(IllegalArgumentException::class)
-    fun execute(operation:OperationEntity?): OperationEntity {
-      require(operation != null ) {
-        "No operation to update"
+  @Throws(IllegalArgumentException::class)
+  fun execute(operation: OperationEntity?): OperationEntity {
+    require(operation != null) {
+      "No operation to update"
     }
-        operationRepository.save(operation)
-        return operationRepository.findOperationById(operation.id)
-    }
+    operationRepository.save(operation)
+    return operationRepository.findOperationById(operation.id)
+  }
 }
