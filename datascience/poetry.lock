@@ -1089,7 +1089,7 @@ python-versions = "*"
 
 [[package]]
 name = "notebook"
-version = "6.4.8"
+version = "6.4.10"
 description = "A web-based notebook environment for interactive computing"
 category = "main"
 optional = false
@@ -1102,7 +1102,7 @@ ipython-genutils = "*"
 jinja2 = "*"
 jupyter-client = ">=5.3.4"
 jupyter-core = ">=4.6.1"
-nbconvert = "*"
+nbconvert = ">=5"
 nbformat = "*"
 nest-asyncio = ">=1.5"
 prometheus-client = "*"
@@ -2002,7 +2002,7 @@ test = ["pytest"]
 
 [[package]]
 name = "twisted"
-version = "22.1.0"
+version = "22.2.0"
 description = "An asynchronous networking framework written in Python"
 category = "main"
 optional = false
@@ -2427,6 +2427,8 @@ filelock = [
 fiona = [
     {file = "Fiona-1.8.21-cp310-cp310-macosx_10_10_x86_64.whl", hash = "sha256:39c656421e25b4d0d73d0b6acdcbf9848e71f3d9b74f44c27d2d516d463409ae"},
     {file = "Fiona-1.8.21-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:43b1d2e45506e56cf3a9f59ba5d6f7981f3f75f4725d1e6cb9a33ba856371ebd"},
+    {file = "Fiona-1.8.21-cp36-cp36m-macosx_10_10_x86_64.whl", hash = "sha256:315e186cb880a8128e110312eb92f5956bbc54d7152af999d3483b463758d6f9"},
+    {file = "Fiona-1.8.21-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:9fb2407623c4f44732a33b3f056f8c58c54152b51f0324bf8f10945e711eb549"},
     {file = "Fiona-1.8.21-cp37-cp37m-macosx_10_10_x86_64.whl", hash = "sha256:b69054ed810eb7339d7effa88589afca48003206d7627d0b0b149715fc3fde41"},
     {file = "Fiona-1.8.21-cp37-cp37m-manylinux2014_x86_64.whl", hash = "sha256:11532ccfda1073d3f5f558e4bb78d45b268e8680fd6e14993a394c564ddbd069"},
     {file = "Fiona-1.8.21-cp38-cp38-macosx_10_10_x86_64.whl", hash = "sha256:3789523c811809a6e2e170cf9c437631f959f4c7a868f024081612d30afab468"},
@@ -2943,8 +2945,8 @@ nodeenv = [
     {file = "nodeenv-1.6.0.tar.gz", hash = "sha256:3ef13ff90291ba2a4a7a4ff9a979b63ffdd00a464dbe04acf0ea6471517a4c2b"},
 ]
 notebook = [
-    {file = "notebook-6.4.8-py3-none-any.whl", hash = "sha256:3e702fcc54b8ae597533c3864793b7a1e971dec9e112f67235828d8a798fd654"},
-    {file = "notebook-6.4.8.tar.gz", hash = "sha256:1e985c9dc6f678bdfffb9dc657306b5469bfa62d73e03f74e8defbf76d284312"},
+    {file = "notebook-6.4.10-py3-none-any.whl", hash = "sha256:49cead814bff0945fcb2ee07579259418672ac175d3dc3d8102a4b0a656ed4df"},
+    {file = "notebook-6.4.10.tar.gz", hash = "sha256:2408a76bc6289283a8eecfca67e298ec83c67db51a4c2e1b713dd180bb39e90e"},
 ]
 numpy = [
     {file = "numpy-1.22.2-cp310-cp310-macosx_10_14_x86_64.whl", hash = "sha256:515a8b6edbb904594685da6e176ac9fbea8f73a5ebae947281de6613e27f1956"},
@@ -3554,8 +3556,8 @@ traitlets = [
     {file = "traitlets-5.1.1.tar.gz", hash = "sha256:059f456c5a7c1c82b98c2e8c799f39c9b8128f6d0d46941ee118daace9eb70c7"},
 ]
 twisted = [
-    {file = "Twisted-22.1.0-py3-none-any.whl", hash = "sha256:ccd638110d9ccfdc003042aa3e1b6d6af272eaca45d36e083359560549e3e848"},
-    {file = "Twisted-22.1.0.tar.gz", hash = "sha256:b7971ec9805b0f80e1dcb1a3721d7bfad636d5f909de687430ce373979d67b61"},
+    {file = "Twisted-22.2.0-py3-none-any.whl", hash = "sha256:5c63c149eb6b8fe1e32a0215b1cef96fabdba04f705d8efb9174b1ccf5b49d49"},
+    {file = "Twisted-22.2.0.tar.gz", hash = "sha256:57f32b1f6838facb8c004c89467840367ad38e9e535f8252091345dba500b4f2"},
 ]
 twisted-iocpsupport = [
     {file = "twisted-iocpsupport-1.0.2.tar.gz", hash = "sha256:72068b206ee809c9c596b57b5287259ea41ddb4774d86725b19f35bf56aa32a9"},
