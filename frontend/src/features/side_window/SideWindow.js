@@ -8,7 +8,7 @@ import {  setSideWindowAsOpen } from '../../domain/shared_slices/Global'
 import SideWindowSubMenu from './SideWindowSubMenu'
 import SideWindowMenu from './SideWindowMenu'
 import { COLORS } from '../../constants/constants'
-import { OperationsWrapper } from './operations/OperationsWrapper'
+import { MissionsWrapper } from '../missions/MissionsWrapper'
 
 const SideWindow = () => {
   const {
@@ -51,7 +51,7 @@ const SideWindow = () => {
             <Text data-cy={'first-loader'}>Chargement...</Text>
           </Loading>
           : 
-            <OperationsWrapper/>
+            <MissionsWrapper/>
       }
     </Wrapper>
     : null

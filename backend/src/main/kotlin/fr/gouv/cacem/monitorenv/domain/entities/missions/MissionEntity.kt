@@ -1,11 +1,11 @@
-package fr.gouv.cacem.monitorenv.domain.entities.operations
+package fr.gouv.cacem.monitorenv.domain.entities.missions
 import java.time.ZonedDateTime
 
 
-data class OperationEntity(
+data class MissionEntity(
         val id: Int,
-        val typeOperation: String? = null,
-        val statusOperation: String? = null,
+        val typeMission: String? = null,
+        val statusMission: String? = null,
         val facade: String? = null,
         val theme: String? = null,
         val inputStartDatetimeUtc: ZonedDateTime? = null,
@@ -14,4 +14,4 @@ data class OperationEntity(
         val latitude: Double? = null,
         )
 
-typealias OperationsListEntity = List<OperationEntity>
+typealias MissionsListEntity = List<MissionEntity>

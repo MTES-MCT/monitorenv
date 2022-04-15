@@ -35,7 +35,7 @@ class RegulatoryAreasController(
   }
 
   @GetMapping("/{regulatoryAreaId}")
-  @Operation(summary = "Get operation by Id")
+  @Operation(summary = "Get regulatory area by Id")
   fun getRegulatoryAreaByIdController(
     @PathParam("regulatoryArea id")
     @PathVariable(name = "regulatoryAreaId")

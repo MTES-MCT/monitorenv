@@ -16,7 +16,7 @@ import ErrorToastNotification from '../features/commonComponents/ErrorToastNotif
 import Map from '../features/map/Map'
 import APIWorker from '../api/APIWorker'
 import LayersSidebar from '../features/layers/LayersSidebar'
-import OperationsMapButton from '../features/side_window/operations/OperationsMapButton'
+import { MissionsMenu } from '../features/missions/MissionsMenu'
 import Measurement from '../features/measurements/Measurement'
 import InterestPoint from '../features/interest_points/InterestPoint'
 
@@ -36,7 +36,7 @@ export const HomePage = () => {
               <APIWorker/>
               <Map/>
               <LayersSidebar/> 
-              <OperationsMapButton />
+              <MissionsMenu />
               <Measurement/>
               <InterestPoint/>
               {/* <APIWorker/> */}

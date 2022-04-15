@@ -1,51 +1,51 @@
 import React from 'react'
-import { useGetOperationsQuery, useUpdateOperationMutation } from '../../../api/operationsAPI'
+import { useGetMissionsQuery, useUpdateMissionMutation } from '../../api/missionsAPI'
 import { useFormik } from 'formik';
  
-export const OperationDetail = ({ id })  => {
-  const { operation } = useGetOperationsQuery(undefined, {
+export const MissionDetail = ({ id })  => {
+  const { mission } = useGetMissionsQuery(undefined, {
     selectFromResult: ({ data }) =>  ({
-      operation: data?.find(op => op.id === id),
+      mission: data?.find(op => op.id === id),
     }),
   })
   const [
-    updateOperation,
+    updateMission,
     { isLoading: isUpdating },
-  ] = useUpdateOperationMutation()
+  ] = useUpdateMissionMutation()
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      id: operation?.id,
-      typeOperation: operation?.typeOperation,
-      statusOperation: operation?.statusOperation,
-      facade: operation?.facade,
-      theme: operation?.theme,
-      inputStartDatetimeUtc: operation?.inputStartDatetimeUtc || '',
-      inputEndDatetimeUtc: operation?.inputEndDatetimeUtc || ''
+      id: mission?.id,
+      typeMission: mission?.typeMission,
+      statusMission: mission?.statusMission,
+      facade: mission?.facade,
+      theme: mission?.theme,
+      inputStartDatetimeUtc: mission?.inputStartDatetimeUtc || '',
+      inputEndDatetimeUtc: mission?.inputEndDatetimeUtc || ''
     },
     onSubmit: values => {
-      updateOperation(values)
+      updateMission(values)
     },
   });
 
   if (id === undefined) {
     return<div style={{flex:1}}>not set yet</div>
   }
-  return <div style={{flex:1}}>{JSON.stringify(operation)}
+  return <div style={{flex:1}}>{JSON.stringify(mission)}
   <div>Is updating ? : {isUpdating}</div>
    <form onSubmit={formik.handleSubmit}>
-       <label htmlFor="typeOperation">Type Opération</label>
+       <label htmlFor="typeMission">Type Opération</label>
        <input
-         id="typeOperation"
+         id="typeMission"
          type="text"
-         {...formik.getFieldProps('typeOperation')}
+         {...formik.getFieldProps('typeMission')}
        />
-       <label htmlFor="statusOperation">Statut Opération</label>
+       <label htmlFor="statusMission">Statut Opération</label>
        <input
-         id="statusOperation"
+         id="statusMission"
          type="text"
-         {...formik.getFieldProps('statusOperation')}
+         {...formik.getFieldProps('statusMission')}
        />
        <label htmlFor="facade">Façade</label>
        <input

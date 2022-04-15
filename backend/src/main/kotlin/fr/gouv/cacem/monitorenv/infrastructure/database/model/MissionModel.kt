@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import fr.gouv.cacem.monitorenv.domain.entities.operations.OperationEntity
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
 
 import com.vladmihalcea.hibernate.type.array.ListArrayType
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType
@@ -22,15 +22,15 @@ import javax.persistence.*
     typeClass = ListArrayType::class
   )
 )
-@Table(name = "operations")
-data class OperationModel(
+@Table(name = "missions")
+data class MissionModel(
   @Id
   @Column(name = "id")
   var id: Int,
-  @Column(name = "type_operation")
-  var typeOperation: String? = null,
-  @Column(name = "status_operation")
-  var statusOperation: String? = null,
+  @Column(name = "type_mission")
+  var typeMission: String? = null,
+  @Column(name = "status_mission")
+  var statusMission: String? = null,
   @Column(name = "input_start_datetime_utc")
   var inputStartDatetimeUtc: Instant? = null,
   @Column(name = "input_end_datetime_utc")
@@ -45,10 +45,10 @@ data class OperationModel(
   var theme: String? = null
 ) {
 
-  fun toOperation() = OperationEntity(
+  fun toMission() = MissionEntity(
     id = id,
-    typeOperation = typeOperation,
-    statusOperation = statusOperation,
+    typeMission = typeMission,
+    statusMission = statusMission,
     inputStartDatetimeUtc = inputStartDatetimeUtc?.atZone(UTC),
     inputEndDatetimeUtc = inputEndDatetimeUtc?.atZone(UTC),
     facade = facade,
@@ -58,16 +58,16 @@ data class OperationModel(
   )
 
   companion object {
-    fun fromOperationEntity(operation: OperationEntity) = OperationModel(
-      id = operation.id,
-      typeOperation = operation.typeOperation,
-      statusOperation = operation.statusOperation,
-      inputStartDatetimeUtc = operation.inputStartDatetimeUtc?.toInstant(),
-      inputEndDatetimeUtc = operation.inputEndDatetimeUtc?.toInstant(),
-      facade = operation.facade,
-      longitude = operation.longitude,
-      latitude = operation.latitude,
-      theme = operation.theme
+    fun fromMissionEntity(mission: MissionEntity) = MissionModel(
+      id = mission.id,
+      typeMission = mission.typeMission,
+      statusMission = mission.statusMission,
+      inputStartDatetimeUtc = mission.inputStartDatetimeUtc?.toInstant(),
+      inputEndDatetimeUtc = mission.inputEndDatetimeUtc?.toInstant(),
+      facade = mission.facade,
+      longitude = mission.longitude,
+      latitude = mission.latitude,
+      theme = mission.theme
     )
   }
 }

@@ -1,10 +1,10 @@
 import React from 'react'
 import { Table } from 'rsuite';
 
-import { useGetOperationsQuery } from '../../../api/operationsAPI'
+import { useGetMissionsQuery } from '../../api/missionsAPI'
 
-export const OperationsList = ({setOperation}) => {
-  const { data, isError, isLoading } = useGetOperationsQuery()
+export const MissionsList = ({setMission}) => {
+  const { data, isError, isLoading } = useGetMissionsQuery()
 
   return (
     <div style={{flex:1}} >
@@ -14,11 +14,11 @@ export const OperationsList = ({setOperation}) => {
         <>Loading...</>
       ) : data ? (
         <div style={{width: "100%"}}>
-          <h3>Operations</h3>
+          <h3>Missions</h3>
           <Table
             height={400}
             data={data}
-            onRowClick={data => {setOperation(data.id)}}
+            onRowClick={data => {setMission(data.id)}}
           >
             <Table.Column width={70} align="center" fixed>
               <Table.HeaderCell>Id</Table.HeaderCell>
@@ -26,13 +26,13 @@ export const OperationsList = ({setOperation}) => {
             </Table.Column>
 
             <Table.Column width={200} fixed>
-              <Table.HeaderCell>typeOperation</Table.HeaderCell>
-              <Table.Cell dataKey="typeOperation" />
+              <Table.HeaderCell>typeMission</Table.HeaderCell>
+              <Table.Cell dataKey="typeMission" />
             </Table.Column>
 
             <Table.Column width={200}>
               <Table.HeaderCell>Statut</Table.HeaderCell>
-              <Table.Cell dataKey="statusOperation" />
+              <Table.Cell dataKey="statusMission" />
             </Table.Column>
 
             <Table.Column width={200}>

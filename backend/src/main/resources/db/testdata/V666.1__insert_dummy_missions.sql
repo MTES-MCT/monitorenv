@@ -1,10 +1,10 @@
 
 
 --
--- Data for Name: operations; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: missions; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.operations (id, type_operation, status_operation, input_start_datetime_utc, input_end_datetime_utc, facade, longitude, latitude, theme) FROM stdin;
+COPY public.missions (id, type_mission, status_mission, input_start_datetime_utc, input_end_datetime_utc, facade, longitude, latitude, theme) FROM stdin;
 0	SEA	CLOSED	2022-01-15 04:50:09	2022-01-23 20:29:03	Outre-Mer	110.126782000000006	-50.373736000000001	CONTROLE
 4	LAND	ABORTED	2022-01-15 04:50:09	2022-01-20 22:19:58	MED	98.1084869999999967	-32.2827295000000021	INF
 5	SEA	ABORTED	2022-01-15 04:50:09	2022-02-01 19:19:06	MEMN	106.024474999999995	8.14049149999999955	CONTROLE

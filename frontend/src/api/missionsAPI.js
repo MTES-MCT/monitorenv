@@ -1,37 +1,37 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-export const operationsAPI = createApi({
+export const missionsAPI = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/bff/v1' }),
-  reducerPath: 'operations',
+  reducerPath: 'missions',
   endpoints: (build) => ({
-    getOperation: build.query({
-      query: ({id}) => `operation/${id}`
+    getMission: build.query({
+      query: ({id}) => `mission/${id}`
     }),
-    getOperations: build.query({
-      query: () => `operations`,
+    getMissions: build.query({
+      query: () => `missions`,
       providesTags: result =>
         result
           ? // successful query
             [
-              ...result.map(({ id }) => ({ type: 'Operations', id })),
-              { type: 'Operations', id: 'LIST' },
+              ...result.map(({ id }) => ({ type: 'Missions', id })),
+              { type: 'Missions', id: 'LIST' },
             ]
-          : // an error occurred, but we still want to refetch this query when `{ type: 'Operations', id: 'LIST' }` is invalidated
-            [{ type: 'Operations', id: 'LIST' }]
+          : // an error occurred, but we still want to refetch this query when `{ type: 'Missions', id: 'LIST' }` is invalidated
+            [{ type: 'Missions', id: 'LIST' }]
     }),
-    updateOperation: build.mutation({
+    updateMission: build.mutation({
       query: ({ id, ...patch }) => ({
-        url: `operations/${id}`,
+        url: `missions/${id}`,
         method: 'PUT',
         body: {id, ...patch},
       }),
       transformResponse: (response,) => response.data,
-      invalidatesTags: ['Operations'],
+      invalidatesTags: ['Missions'],
       // onQueryStarted is useful for optimistic updates
       // The 2nd parameter is the destructured `MutationLifecycleApi`
       async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
         const patchResult = dispatch(
-          operationsAPI.util.updateQueryData('getOperation', id, (draft) => {
+          missionsAPI.util.updateQueryData('getMission', id, (draft) => {
             Object.assign(draft, patch)
           })
         )
@@ -46,4 +46,4 @@ export const operationsAPI = createApi({
   }),
 })
 
-export const { useGetOperationsQuery, useUpdateOperationMutation } = operationsAPI
+export const { useGetMissionsQuery, useUpdateMissionMutation } = missionsAPI

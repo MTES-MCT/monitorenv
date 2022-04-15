@@ -1,32 +1,32 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import fr.gouv.cacem.monitorenv.domain.entities.operations.OperationEntity
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 
-class JpaOperationRepositoryITests : AbstractDBTests() {
+class JpaMissionRepositoryITests : AbstractDBTests() {
 
   @Autowired
-  private lateinit var jpaOperationRepository: JpaOperationRepository
+  private lateinit var jpaMissionRepository: JpaMissionRepository
 
   @Test
   @Transactional
-  fun `findOperations Should return all operations`() {
+  fun `findMissions Should return all missions`() {
     // When
-    val operations = jpaOperationRepository.findOperations()
+    val missions = jpaMissionRepository.findMissions()
 
-    assertThat(operations).hasSize(50)
+    assertThat(missions).hasSize(50)
   }
 
   @Test
   @Transactional
-  fun `save Should update operation`() {
+  fun `save Should update mission`() {
 
     // Given
-    val firstOperation = OperationEntity(
+    val firstMission = MissionEntity(
       0,
       "SEA",
       "CLOSED",
@@ -37,14 +37,14 @@ class JpaOperationRepositoryITests : AbstractDBTests() {
       110.126782000000006,
       -50.373736000000001
     )
-    val expectedUpdatedOperation = OperationEntity(
+    val expectedUpdatedMission = MissionEntity(
       0, "LAND", "CLOSED", "Outre-Mer", "CONTROLE", ZonedDateTime.parse("2022-01-15T04:50:09Z"),
       ZonedDateTime.parse("2022-01-23T20:29:03Z"), 110.126782000000006, -50.373736000000001
     )
     // When
-//        assertThat(jpaOperationRepository.findOperationById(0)).isEqualTo(firstOperation)
-    val operation = jpaOperationRepository.save(expectedUpdatedOperation)
-    assertThat(jpaOperationRepository.findOperationById(0)).isEqualTo(expectedUpdatedOperation)
+//        assertThat(jpaMissionRepository.findMissionById(0)).isEqualTo(firstMission)
+    val mission = jpaMissionRepository.save(expectedUpdatedMission)
+    assertThat(jpaMissionRepository.findMissionById(0)).isEqualTo(expectedUpdatedMission)
 
   }
 

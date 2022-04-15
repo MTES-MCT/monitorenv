@@ -86,7 +86,7 @@ class RegulatoryAreasControllerITests {
   }
 
   @Test
-  fun `Should get specific operation when requested by Id`() {
+  fun `Should get specific regulatory Area when requested by Id`() {
     // Given
     val WKTreader = WKTReader()
     val multipolygonString =

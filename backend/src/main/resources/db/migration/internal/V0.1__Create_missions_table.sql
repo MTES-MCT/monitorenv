@@ -1,9 +1,9 @@
 -- Add controls table
 
-CREATE TABLE IF NOT EXISTS public.operations (
+CREATE TABLE IF NOT EXISTS public.missions (
   id integer PRIMARY KEY,
-  type_operation text,
-  status_operation CHARACTER VARYING(100),
+  type_mission text,
+  status_mission CHARACTER VARYING(100),
   input_start_datetime_utc TIMESTAMP,
   input_end_datetime_utc TIMESTAMP,
   facade CHARACTER VARYING(100),
@@ -14,5 +14,5 @@ CREATE TABLE IF NOT EXISTS public.operations (
 
 
 
-CREATE INDEX ON public.operations (id);
-CREATE INDEX ON public.operations (input_start_datetime_utc DESC);
+CREATE INDEX ON public.missions (id);
+CREATE INDEX ON public.missions (input_start_datetime_utc DESC);
