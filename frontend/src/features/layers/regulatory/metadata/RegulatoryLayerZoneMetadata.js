@@ -43,7 +43,7 @@ const RegulatoryLayerZoneMetadata = () => {
             </Header>
             <Warning>
               <WarningIcon/>
-              Travail en cours, bien vérifier dans Légipêche la validité de la référence et des infos réglementaires
+              Travail en cours, bien vérifier dans Légicem la validité de la référence et des infos réglementaires
             </Warning>
             <Content>
               <Identification thematique={regulatoryMetadata?.thematique} type={regulatoryMetadata?.type} facade={regulatoryMetadata?.facade} />
