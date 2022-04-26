@@ -17,6 +17,7 @@ const CustomCircleRange = ({
   setCircleRadiusToAdd,
   cancelAddCircleRange,
   addCustomCircleRange,
+  positionFromTop
 }) => {
   const {
     circleMeasurementInDrawing
@@ -57,6 +58,7 @@ const CustomCircleRange = ({
 
   return (
     <Wrapper
+      $top={positionFromTop}
       isOpen={measurementTypeToAdd === MeasurementTypes.CIRCLE_RANGE}>
       <Header>
         Définir une valeur
@@ -163,7 +165,7 @@ const Wrapper = styled(MapComponentStyle)`
   background: ${COLORS.background};
   margin-right: ${props => !props.firstUpdate && props.isOpen ? '45px' : '-320px'};
   opacity:  ${props => !props.firstUpdate && props.isOpen ? '1' : '0'};
-  top: 249px;
+  top: ${props=>props.$top}px;
   right: 10px;
   border-radius: 2px;
   position: absolute;

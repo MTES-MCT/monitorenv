@@ -6,6 +6,7 @@ import global from './Global'
 import { regulatorySlicePersistedReducer } from './Regulatory'
 import { regulatoryMetadataSliceReducer } from './RegulatoryMetadata'
 import regulatoryLayerSearch from '../../features/layers/regulatory/search/RegulatoryLayerSearch.slice'
+import { sideWindowRouterReducer } from '../../features/commonComponents/SideWindowRouter/SideWindowRouter.slice'
 import {administrativeSlicePersistedReducer} from './Administrative'
 import layerSidebar from './LayerSidebar'
 import { missionsAPI } from '../../api/missionsAPI'
@@ -23,6 +24,7 @@ export const homeReducers = combineReducers({
   regulatory: regulatorySlicePersistedReducer,
   regulatoryMetadata: regulatoryMetadataSliceReducer,
   regulatoryLayerSearch,
+  sideWindowRouter: sideWindowRouterReducer,
   layerSidebar,
   [regulatoryLayersAPI.reducerPath]: regulatoryLayersAPI.reducer,
   [missionsAPI.reducerPath]: missionsAPI.reducer,

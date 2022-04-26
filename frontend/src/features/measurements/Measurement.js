@@ -5,22 +5,23 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useClickOutsideComponent } from '../../hooks/useClickOutside'
 import { useEscapeFromKeyboard } from '../../hooks/useEscapeFromKeyboard'
 
+import { RightMenuButton } from "../commonComponents/RightMenuButton/RightMenuButton"
 import {
   resetCircleMeasurementInDrawing,
   setCircleMeasurementToAdd,
   setMeasurementTypeToAdd
 } from '../../domain/shared_slices/Measurement'
-import { expandRightMenu } from '../../domain/shared_slices/Global'
 import { MeasurementTypes } from '../../domain/entities/map'
 import CustomCircleRange from './CustomCircleRange'
 
 import { MapComponentStyle } from '../commonStyles/MapComponent.style'
-import { MapButtonStyle } from '../commonStyles/MapButton.style'
 
 import { ReactComponent as MeasurementSVG } from '../icons/Mesure.svg'
 import { ReactComponent as MultiLineSVG } from '../icons/Mesure_ligne_brisee.svg'
 import { ReactComponent as CircleRangeSVG } from '../icons/Mesure_rayon_action.svg'
 import { COLORS } from '../../constants/constants'
+
+const MEASUREMENT_POSITION_FROM_TOP = 100
 
 const MeasurementIconSelector = ({measurementType, rightMenuIsOpen}) => {
   switch (measurementType) {
@@ -97,16 +98,12 @@ const Measurement = () => {
   }
 
   return (
-    <Wrapper ref={wrapperRef}>
-      <MeasurementWrapper
-        data-cy={'measurement'}
-        isOpen={measurementIsOpen || measurementTypeToAdd}
-        rightMenuIsOpen={rightMenuIsOpen}
-        onMouseEnter={() => dispatch(expandRightMenu())}
-        title={'Mesurer une distance'}
-        onClick={openOrCloseMeasurement}>
-        <MeasurementIconSelector measurementType={measurementTypeToAdd} rightMenuIsOpen={rightMenuIsOpen} />
-      </MeasurementWrapper>
+    <RightMenuButton
+      top={MEASUREMENT_POSITION_FROM_TOP}
+      data-cy={'measurement'}
+      onClick={openOrCloseMeasurement}
+      button={<MeasurementIconSelector measurementType={measurementTypeToAdd} rightMenuIsOpen={rightMenuIsOpen} />}
+      >
       <MeasurementOptions
         measurementBoxIsOpen={measurementIsOpen}>
         <MeasurementItem
@@ -123,6 +120,7 @@ const Measurement = () => {
         </MeasurementItem>
       </MeasurementOptions>
       <CustomCircleRange
+        positionFromTop={MEASUREMENT_POSITION_FROM_TOP}
         measurementIsOpen={measurementIsOpen}
         measurementTypeToAdd={measurementTypeToAdd}
         circleCoordinatesToAdd={circleCoordinatesToAdd}
@@ -131,7 +129,7 @@ const Measurement = () => {
         setCircleRadiusToAdd={setCircleRadiusToAdd}
         cancelAddCircleRange={cancelAddCircleRange}
         addCustomCircleRange={addCustomCircleRange}/>
-    </Wrapper>
+    </RightMenuButton>
   )
 }
 
@@ -161,16 +159,11 @@ const CircleRangeIcon = styled(CircleRangeSVG)`
   height: 40px;
 `
 
-const Wrapper = styled.div`
-  transition: all 0.2s;
-  z-index: 1000;
-`
-
 const MeasurementOptions = styled(MapComponentStyle)`
   width: 175px;
   margin-right: ${props => props.measurementBoxIsOpen ? '45px' : '-200px'};
   opacity: ${props => props.measurementBoxIsOpen ? '1' : '0'};
-  top: 249px;
+  top: ${MEASUREMENT_POSITION_FROM_TOP};
   right: 10px;
   border-radius: 2px;
   position: absolute;
@@ -178,23 +171,6 @@ const MeasurementOptions = styled(MapComponentStyle)`
   transition: all 0.5s;
 `
 
-const MeasurementWrapper = styled(MapButtonStyle)`
-  position: absolute;
-  display: inline-block;
-  color: ${COLORS.blue};
-  top: 249px;
-  z-index: 99;
-  height: 40px;
-  width: ${props => !props.rightMenuIsOpen ? '5px' : '40px'};
-  border-radius: ${props => !props.rightMenuIsOpen ? '1px' : '2px'};
-  right: ${props => !props.rightMenuIsOpen ? '0' : '10px'};
-  transition: all 0.3s;
-  background: ${props => props.isOpen ? COLORS.shadowBlue : COLORS.charcoal};
-  
-  :hover, :focus {
-      background: ${props => props.isOpen ? COLORS.shadowBlue : COLORS.charcoal};
-  }
-`
 
 const MeasurementIcon = styled(MeasurementSVG)`
   width: 40px;

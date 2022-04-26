@@ -14,6 +14,8 @@ import {
 import { ReactComponent as InterestPointSVG } from '../icons/Point_interet.svg'
 import { COLORS } from '../../constants/constants'
 
+const INTEREST_POINT_POSITION_FROM_TOP = 145
+
 const InterestPoint = () => {
   const dispatch = useDispatch()
   const selectedVessel = undefined
@@ -85,7 +87,9 @@ const InterestPoint = () => {
         healthcheckTextWarning={healthcheckTextWarning}
         firstUpdate={firstUpdate.current}
         isOpen={interestPointIsOpen}
-        close={() => setInterestPointIsOpen(false)}/>
+        close={() => setInterestPointIsOpen(false)}
+        positionFromTop={INTEREST_POINT_POSITION_FROM_TOP}
+        />
     </Wrapper>
   )
 }
@@ -99,7 +103,7 @@ const InterestPointWrapper = styled(MapButtonStyle)`
   position: absolute;
   display: inline-block;
   background: ${props => props.isOpen ? COLORS.shadowBlue : COLORS.charcoal};
-  top: 291px;
+  top: ${INTEREST_POINT_POSITION_FROM_TOP}px;
   z-index: 99;
   height: 40px;
   width: ${props => props.selectedVessel && !props.rightMenuIsOpen ? '5px' : '40px'};

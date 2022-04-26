@@ -19,7 +19,7 @@ import { ReactComponent as ControlSVG } from '../icons/Label_controle.svg'
 import { ReactComponent as VesselSVG } from '../icons/Label_segment_de_flotte.svg'
 import { ReactComponent as OtherSVG } from '../icons/Point_interet_autre.svg'
 
-const SaveInterestPoint = ({ healthcheckTextWarning, isOpen, close }) => {
+const SaveInterestPoint = ({ healthcheckTextWarning, isOpen, close, positionFromTop }) => {
   const dispatch = useDispatch()
 
   const {
@@ -129,7 +129,9 @@ const SaveInterestPoint = ({ healthcheckTextWarning, isOpen, close }) => {
     <Wrapper
       data-cy={'save-interest-point'}
       healthcheckTextWarning={healthcheckTextWarning}
-      isOpen={isOpen}>
+      isOpen={isOpen}
+      $positionFromTop={positionFromTop}
+      >
       <Header>
         Créer un point d&apos;intérêt
       </Header>
@@ -304,7 +306,7 @@ const Wrapper = styled(MapComponentStyle)`
   background: ${COLORS.background};
   margin-right: ${props => props.isOpen ? '45px' : '-320px'};
   opacity:  ${props => props.isOpen ? '1' : '0'};
-  top: 291px;
+  top: ${props => props.$positionFromTop}px;
   right: 10px;
   border-radius: 2px;
   position: absolute;

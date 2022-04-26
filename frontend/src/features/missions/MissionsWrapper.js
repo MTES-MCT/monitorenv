@@ -1,11 +1,19 @@
-import React, {useState} from 'react'
+import React from 'react'
+
 import { MissionsList } from './MissionsList'
 import { MissionDetail } from './MissionDetail'
+import { SideWindowRoute } from '../commonComponents/SideWindowRouter/SideWindowRoute'
+
+import { sideWindowPaths } from '../../domain/entities/sideWindow'
 
 export const MissionsWrapper = () => {
-  const  [missionId, setMissionId] = useState(null)
+  
   return (<div style={{display: "flex", flexDirection:'column', flex:1}}>
-  <MissionsList setMission={setMissionId}></MissionsList>
-  <MissionDetail id={missionId}></MissionDetail>
+    <SideWindowRoute path={sideWindowPaths.MISSIONS}>
+      <MissionsList ></MissionsList>
+    </SideWindowRoute>
+    <SideWindowRoute path={sideWindowPaths.MISSION}>
+      <MissionDetail></MissionDetail>
+    </SideWindowRoute>
   </div>)
 }

@@ -1,22 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React, { forwardRef, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { FulfillingBouncingCircleSpinner } from 'react-epic-spinners'
 import styled from 'styled-components'
 
 import {  setSideWindowAsOpen } from '../../domain/shared_slices/Global'
 
-import SideWindowSubMenu from './SideWindowSubMenu'
 import SideWindowMenu from './SideWindowMenu'
 import { COLORS } from '../../constants/constants'
 import { MissionsWrapper } from '../missions/MissionsWrapper'
+import { ErrorBoundary } from '../commonComponents/ErrorBoundary'
 
-const SideWindow = () => {
-  const {
-    openedSideWindowTab
-  } = useSelector(state => state.global)
+export const SideWindow = forwardRef(function SideWindowComponent(props, ref) {
+  const { openedSideWindowTab } = useSelector(state => state.global)
   const dispatch = useDispatch()
   const [isPreloading, setIsPreloading] = useState(true)
-  const [selectedSubMenu, setSelectedSubMenu] = useState()
 
   useEffect(() => {
     if (openedSideWindowTab) {
@@ -29,35 +26,27 @@ const SideWindow = () => {
   }, [openedSideWindowTab])
 
 
-
-
   return <>{openedSideWindowTab
-    ? <Wrapper>
-      <SideWindowMenu
-        selectedMenu={openedSideWindowTab}
-      />
-      <SideWindowSubMenu
-        selectedMenu={openedSideWindowTab}
-        selectedSubMenu={selectedSubMenu}
-        setSelectedSubMenu={setSelectedSubMenu}
-      />
-      {
-        isPreloading
-          ? <Loading>
-            <FulfillingBouncingCircleSpinner
-              color={COLORS.grayShadow}
-              className={'update-vessels'}
-              size={100}/>
-            <Text data-cy={'first-loader'}>Chargement...</Text>
-          </Loading>
-          : 
-            <MissionsWrapper/>
-      }
-    </Wrapper>
+    ? <ErrorBoundary>
+        <Wrapper ref={ref}>
+          <SideWindowMenu selectedMenu={openedSideWindowTab} />
+          {
+            isPreloading
+              ? <Loading>
+                <FulfillingBouncingCircleSpinner
+                  color={COLORS.grayShadow}
+                  size={100}/>
+                <Text data-cy={'first-loader'}>Chargement...</Text>
+              </Loading>
+              : 
+                <MissionsWrapper/>
+          }
+        </Wrapper>
+    </ErrorBoundary>
     : null
   }
   </>
-}
+})
 
 
 const Loading = styled.div`
@@ -89,5 +78,3 @@ const Wrapper = styled.div`
     }
   }
 `
-
-export default SideWindow
