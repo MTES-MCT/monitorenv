@@ -2,8 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { useDispatch } from 'react-redux'
 
-import { sideWindowMenu } from '../../domain/entities/sideWindow'
-import { openSideWindowTab } from '../../domain/shared_slices/Global'
+import { sideWindowMenu, sideWindowPaths } from '../../domain/entities/sideWindow'
+import { setSideWindowPath } from '../commonComponents/SideWindowRouter/SideWindowRouter.slice'
 
 import { COLORS } from '../../constants/constants'
 import { ReactComponent as MissionsSVG } from '../icons/Picto_resume.svg'
@@ -15,7 +15,7 @@ const SideWindowMenu = ({ selectedMenu }) => {
     <Link
       title={sideWindowMenu.MISSIONS.name}
       selected={selectedMenu === sideWindowMenu.MISSIONS.code}
-      onClick={() => dispatch(openSideWindowTab(sideWindowMenu.MISSIONS.code))}
+      onClick={() => dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))}
     >
       <MissionsIcon/>
     </Link>
