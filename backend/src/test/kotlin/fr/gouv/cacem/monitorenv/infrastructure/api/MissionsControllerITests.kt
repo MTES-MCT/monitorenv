@@ -3,15 +3,17 @@ package fr.gouv.cacem.monitorenv.infrastructure.api
 import fr.gouv.cacem.monitorenv.MeterRegistryConfiguration
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.MissionsController
 import fr.gouv.cacem.monitorenv.domain.entities.missions.*
+import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.CreateMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.GetMissionById
 import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.GetMissions
 import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.UpdateMission
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.UpdateMissionDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdateMissionDataInput
 
 
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.BDDMockito.any
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -25,7 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.ZonedDateTime
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.mockito.BDDMockito.any
+
 
 @Import(MeterRegistryConfiguration::class)
 @ExtendWith(SpringExtension::class)
@@ -34,6 +36,9 @@ class MissionsControllerITests {
 
   @Autowired
   private lateinit var mockMvc: MockMvc
+
+  @MockBean
+  private lateinit var createMission: CreateMission
 
   @MockBean
   private lateinit var getMissions: GetMissions
@@ -48,18 +53,65 @@ class MissionsControllerITests {
   private lateinit var objectMapper: ObjectMapper
 
   @Test
+  fun `Should create a new mission`() {
+    // Given
+    val newMission = MissionEntity(
+      id = 10,
+      missionType = MissionType.LAND,
+      missionStatus = "CLOSED",
+      facade = "Outre-Mer",
+      theme = "CONTROLE",
+      observations = null,
+      inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+      inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z")
+    )
+    val newMissionRequest = CreateOrUpdateMissionDataInput(
+      id = 10,
+      missionType = MissionType.LAND,
+      missionStatus = "CLOSED",
+      facade = "Outre-Mer",
+      theme = "CONTROLE",
+      observations = null,
+      inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+      inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z")
+    )
+
+    // given(this.createMission.execute(any())).willReturn(newMission)
+    given(this.createMission.execute(any())).willAnswer {
+      println("=======MISSION=============")
+      println("request as text")
+      println(objectMapper.writeValueAsString(newMissionRequest))
+      println("newMissionRequest.toMissionEntity")
+      println(newMissionRequest.toMissionEntity())
+      println("function called with")
+      println(it)
+      // Error parsing dates in tests
+      // 2022-01-15T04:50:09Z[UTC] (it) instead of 2022-01-15T04:50:09Z (requestBody.toMissionEntity())
+      print("====================")
+      return@willAnswer newMission
+    }
+    // When
+    mockMvc.perform(
+      put("/bff/v1/missions")
+      .content(objectMapper.writeValueAsString(newMissionRequest))
+      .contentType(MediaType.APPLICATION_JSON)
+    )
+      // Then
+      .andExpect(status().isOk)
+  }
+
+  @Test
   fun `Should get all missions`() {
     // Given
     val firstMission = MissionEntity(
-      0,
-      "SEA",
+      10,
+      MissionType.SEA,
       "CLOSED",
       "Outre-Mer",
       "CONTROLE",
+      null,
       ZonedDateTime.parse("2022-01-15T04:50:09Z"),
       ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-      110.126782000000006,
-      -50.373736000000001
     )
     given(this.getMissions.execute()).willReturn(listOf(firstMission))
 
@@ -68,14 +120,12 @@ class MissionsControllerITests {
       // Then
       .andExpect(status().isOk)
       .andExpect(jsonPath("$[0].id", equalTo(firstMission.id)))
-      .andExpect(jsonPath("$[0].typeMission", equalTo(firstMission.typeMission)))
-      .andExpect(jsonPath("$[0].statusMission", equalTo(firstMission.statusMission)))
+      .andExpect(jsonPath("$[0].missionType", equalTo(firstMission.missionType.toString())))
+      .andExpect(jsonPath("$[0].missionStatus", equalTo(firstMission.missionStatus)))
       .andExpect(jsonPath("$[0].facade", equalTo(firstMission.facade)))
       .andExpect(jsonPath("$[0].theme", equalTo(firstMission.theme)))
       .andExpect(jsonPath("$[0].inputStartDatetimeUtc", equalTo(firstMission.inputStartDatetimeUtc.toString())))
       .andExpect(jsonPath("$[0].inputEndDatetimeUtc", equalTo(firstMission.inputEndDatetimeUtc.toString())))
-      .andExpect(jsonPath("$[0].latitude", equalTo(firstMission.latitude)))
-      .andExpect(jsonPath("$[0].longitude", equalTo(firstMission.longitude)))
   }
 
   @Test
@@ -83,14 +133,13 @@ class MissionsControllerITests {
     // Given
     val firstMission = MissionEntity(
       0,
-      "SEA",
+      MissionType.SEA,
       "CLOSED",
       "Outre-Mer",
       "CONTROLE",
+      null,
       ZonedDateTime.parse("2022-01-15T04:50:09Z"),
       ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-      110.126782000000006,
-      -50.373736000000001
     )
     given(this.getMissionById.execute(0)).willReturn(firstMission)
 
@@ -99,54 +148,51 @@ class MissionsControllerITests {
       // Then
       .andExpect(status().isOk)
       .andExpect(jsonPath("$.id", equalTo(firstMission.id)))
-      .andExpect(jsonPath("$.typeMission", equalTo(firstMission.typeMission)))
-      .andExpect(jsonPath("$.statusMission", equalTo(firstMission.statusMission)))
+      .andExpect(jsonPath("$.missionType", equalTo(firstMission.missionType.toString())))
+      .andExpect(jsonPath("$.missionStatus", equalTo(firstMission.missionStatus)))
       .andExpect(jsonPath("$.facade", equalTo(firstMission.facade)))
       .andExpect(jsonPath("$.theme", equalTo(firstMission.theme)))
       .andExpect(jsonPath("$.inputStartDatetimeUtc", equalTo(firstMission.inputStartDatetimeUtc.toString())))
       .andExpect(jsonPath("$.inputEndDatetimeUtc", equalTo(firstMission.inputEndDatetimeUtc.toString())))
-      .andExpect(jsonPath("$.latitude", equalTo(firstMission.latitude)))
-      .andExpect(jsonPath("$.longitude", equalTo(firstMission.longitude)))
   }
 
   @Test
   fun `Should update mission`() {
     // Given
-    val firstMission = MissionEntity(
-      0,
-      "SEA",
-      "CLOSED",
-      "Outre-Mer",
-      "CONTROLE",
-      ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-      ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-      110.126782000000006,
-      -50.373736000000001
-    )
     val expectedUpdatedMission = MissionEntity(
-      0,
-      "LAND",
-      "CLOSED",
-      "Outre-Mer",
-      "CONTROLE",
-      ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-      ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-      110.126782000000006,
-      -50.373736000000001
+      id = 10,
+      missionType = MissionType.LAND,
+      missionStatus = "CLOSED",
+      facade = "Outre-Mer",
+      theme = "CONTROLE",
+      observations = null,
+      inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+      inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z")
     )
-    val requestBody = UpdateMissionDataInput(
-      0,
-      "LAND",
-      "CLOSED",
-      "Outre-Mer",
-      "CONTROLE",
-      ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-      ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-      110.126782000000006,
-      -50.373736000000001
+    val requestBody = CreateOrUpdateMissionDataInput(
+      id = 10,
+      missionType = MissionType.LAND,
+      missionStatus = "CLOSED",
+      facade = "Outre-Mer",
+      theme = "CONTROLE",
+      observations = null,
+      inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+      inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z")
     )
-    given(this.updateMission.execute(any())).willReturn(expectedUpdatedMission)
-    println(objectMapper.writeValueAsString(requestBody))
+//    given(this.updateMission.execute(requestBody.toMissionEntity())).willReturn(expectedUpdatedMission)
+    given(this.updateMission.execute(any())).willAnswer {
+      println("=======MISSION=============")
+      println("request as text")
+      println(objectMapper.writeValueAsString(requestBody))
+      println("requestBody.toMissionEntity")
+      println(requestBody.toMissionEntity())
+      println("function called with")
+      println(it)
+      // Error parsing dates in tests
+      // 2022-01-15T04:50:09Z[UTC] (it) instead of 2022-01-15T04:50:09Z (requestBody.toMissionEntity())
+      print("====================")
+       return@willAnswer expectedUpdatedMission
+     }
     // When
     mockMvc.perform(
       put("/bff/v1/missions/0")
@@ -155,15 +201,5 @@ class MissionsControllerITests {
     )
       // Then
       .andExpect(status().isOk)
-//             .andExpect(jsonPath("$.id", equalTo(expectedUpdatedMission.id)))
-//             .andExpect(jsonPath("$.typeMission", equalTo(expectedUpdatedMission.typeMission)))
-//             .andExpect(jsonPath("$.statusMission", equalTo(expectedUpdatedMission.statusMission)))
-//             .andExpect(jsonPath("$.facade", equalTo(expectedUpdatedMission.facade)))
-//             .andExpect(jsonPath("$.theme", equalTo(expectedUpdatedMission.theme)))
-//             .andExpect(jsonPath("$.inputStartDatetimeUtc", equalTo(expectedUpdatedMission.inputStartDatetimeUtc.toString())))
-//             .andExpect(jsonPath("$.inputEndDatetimeUtc", equalTo(expectedUpdatedMission.inputEndDatetimeUtc.toString())))
-//             .andExpect(jsonPath("$.latitude", equalTo(expectedUpdatedMission.latitude)))
-//             .andExpect(jsonPath("$.longitude", equalTo(expectedUpdatedMission.longitude)))
-    // Mockito.verify()
   }
 }

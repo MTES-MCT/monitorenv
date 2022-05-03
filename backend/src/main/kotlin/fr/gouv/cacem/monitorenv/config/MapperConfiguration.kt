@@ -17,9 +17,10 @@ class MapperConfiguration {
     fun objectMapper(): ObjectMapper {
         val mapper = Jackson2ObjectMapperBuilder().build<ObjectMapper>()
 
+        mapper.registerModule(JtsModule())
+
         // needed to handle java.time.ZonedDateTime serialization
         mapper.registerModule(JavaTimeModule())
-        mapper.registerModule(JtsModule())
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
         mapper.propertyNamingStrategy = PropertyNamingStrategy.LOWER_CAMEL_CASE
 

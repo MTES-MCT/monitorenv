@@ -25,7 +25,6 @@ export const missionsAPI = createApi({
         method: 'PUT',
         body: {id, ...patch},
       }),
-      transformResponse: (response,) => response.data,
       invalidatesTags: ['Missions'],
       // onQueryStarted is useful for optimistic updates
       // The 2nd parameter is the destructured `MutationLifecycleApi`

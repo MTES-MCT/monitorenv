@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionType
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,28 +24,41 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
   @Test
   @Transactional
+  fun `findMission Should return specified mission`() {
+    // When
+    val firstMission = MissionEntity(
+      id = 10,
+      missionType= MissionType.SEA,
+      missionStatus = "OPEN",
+      facade = "MED",
+      theme = "CONTROLE",
+      observations = "Offer watch bank activity. During response letter. Indeed allow bill animal.",
+      inputStartDatetimeUtc = ZonedDateTime.parse("2022-03-05T01:34:39Z"),
+      inputEndDatetimeUtc = ZonedDateTime.parse("2022-04-26T22:11:17Z")
+    )
+    val mission = jpaMissionRepository.findMissionById(10)
+
+    assertThat(mission).isEqualTo(firstMission)
+  }
+
+  @Test
+  @Transactional
   fun `save Should update mission`() {
 
     // Given
-    val firstMission = MissionEntity(
-      0,
-      "SEA",
-      "CLOSED",
-      "Outre-Mer",
-      "CONTROLE",
-      ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-      ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-      110.126782000000006,
-      -50.373736000000001
-    )
     val expectedUpdatedMission = MissionEntity(
-      0, "LAND", "CLOSED", "Outre-Mer", "CONTROLE", ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-      ZonedDateTime.parse("2022-01-23T20:29:03Z"), 110.126782000000006, -50.373736000000001
+      id = 10,
+      missionType= MissionType.LAND,
+      missionStatus = "CLOSED",
+      facade = "Outre-Mer",
+      theme = "CONTROLE",
+      observations = null,
+      inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+      inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z")
     )
     // When
-//        assertThat(jpaMissionRepository.findMissionById(0)).isEqualTo(firstMission)
     val mission = jpaMissionRepository.save(expectedUpdatedMission)
-    assertThat(jpaMissionRepository.findMissionById(0)).isEqualTo(expectedUpdatedMission)
+    assertThat(jpaMissionRepository.findMissionById(10)).isEqualTo(expectedUpdatedMission)
 
   }
 

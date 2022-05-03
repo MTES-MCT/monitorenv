@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Formik, FieldArray } from 'formik';
 import { Form } from 'rsuite'
 
@@ -12,13 +12,16 @@ import { PrimaryButton } from '../commonStyles/Buttons.style';
 import styled from 'styled-components';
 import { COLORS } from '../../constants/constants';
 import { GeneralInformationsForm } from './MissionDetails/GeneralInformationsForm';
+import { useDispatch } from 'react-redux';
+import { setSideWindowPath } from '../commonComponents/SideWindowRouter/SideWindowRouter.slice';
+import { sideWindowPaths } from '../../domain/entities/sideWindow';
  
 
 
 
 export const Mission = ({routeParams})  => {
+  const dispatch = useDispatch()
   const id = parseInt(routeParams?.params?.id)
-  console.log('id:', id)
   const { mission } = useGetMissionsQuery(undefined, {
     selectFromResult: ({ data }) =>  ({
       mission: data?.find(op => op.id === id),
@@ -30,7 +33,8 @@ export const Mission = ({routeParams})  => {
   ] = useUpdateMissionMutation()
 
   const [currentActionIndex, setCurrentActionIndex] = useState(null)
-
+  const [errorOnSave, setErrorOnSave ] = useState(false)
+  
   if (id === undefined) {
     return<div style={{flex:1}}>not set yet</div>
   }
@@ -38,10 +42,21 @@ export const Mission = ({routeParams})  => {
   console.log(isUpdating, JSON.stringify(mission))
 
   const handleSetCurrentActionIndex = (index) =>{
-    console.log('actionindex', index)
     setCurrentActionIndex(index)
   }
-  
+
+  const handleSubmitForm = values => {
+    updateMission(values).then((response)=> {
+      const {data, error} = response
+      if (data) {
+        dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))
+        setErrorOnSave(false)
+      } else {
+        setErrorOnSave(true)
+      }
+    })
+  }
+
   return (
     <div style={{flex:1}}>
       <SideWindowHeader title={`Edition de la mission n°${id}`} />
@@ -49,22 +64,16 @@ export const Mission = ({routeParams})  => {
         enableReinitialize={true}
         initialValues={{
           id: mission?.id,
-          typeMission: mission?.typeMission,
-          statusMission: mission?.statusMission,
+          missionType: mission?.missionType,
+          missionStatus: mission?.missionStatus,
           facade: mission?.facade,
           theme: mission?.theme,
+          observations: mission?.observations,
           inputStartDatetimeUtc: mission?.inputStartDatetimeUtc,
           inputEndDatetimeUtc: mission?.inputEndDatetimeUtc || '',
           actions: []
         }}
-        onSubmit={values => {
-          console.log('values', JSON.stringify(values))
-          updateMission(values).then(({data})=> {
-            if (data) {
-              console.log("ok")
-            }
-          })
-        }}
+        onSubmit={handleSubmitForm}
       >
         {(formikProps)=>{
           return (
@@ -85,6 +94,7 @@ export const Mission = ({routeParams})  => {
                 <PrimaryButton type="submit">
                   Enregistrer
                 </PrimaryButton>
+                {errorOnSave && <ErrorOnSave>Oups... Erreur au moment de la sauvegarde</ErrorOnSave>}
               </Form.Group>
             </Form>
           )
@@ -107,4 +117,9 @@ const SecondColumn = styled.div`
 const ThirdColumn = styled.div`
   background: ${COLORS.lightGray};
   flex: 1;
+`
+
+const ErrorOnSave = styled.div`
+  backgound: ${COLORS.orange};
+
 `

@@ -1,8 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionsListEntity
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.missions.NewMissionEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 
@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional
 @Repository
 class JpaMissionRepository(private val dbMissionRepository: IDBMissionRepository) : IMissionRepository {
 
-  override fun findMissions(): MissionsListEntity {
+  override fun findMissions(): List<MissionEntity> {
     return dbMissionRepository.findAllByOrderByIdAsc().map { it.toMission() }
   }
 
@@ -21,7 +21,12 @@ class JpaMissionRepository(private val dbMissionRepository: IDBMissionRepository
   }
 
   @Transactional
-  override fun save(mission: MissionEntity) {
-    dbMissionRepository.save(MissionModel.fromMissionEntity(mission))
+  override fun save(mission: MissionEntity): MissionEntity {
+    return dbMissionRepository.save(MissionModel.fromMissionEntity(mission)).toMission()
+  }
+
+  @Transactional
+  override fun create(mission: MissionEntity): MissionEntity {
+    return dbMissionRepository.save(MissionModel.fromMissionEntity(mission)).toMission()
   }
 }

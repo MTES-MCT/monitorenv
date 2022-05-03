@@ -40,7 +40,7 @@ export const MissionsTable = ({data, isLoading}) => {
             
             <Table.Column width={200}>
               <Table.HeaderCell>Type</Table.HeaderCell>
-              <Table.Cell dataKey="typeMission" />
+              <Table.Cell dataKey="missionType" />
             </Table.Column>
 
             <Table.Column width={100}>
@@ -55,12 +55,12 @@ export const MissionsTable = ({data, isLoading}) => {
 
             <Table.Column width={200}>
               <Table.HeaderCell>Nb Contrôles</Table.HeaderCell>
-              <Table.Cell dataKey="statusMission" />
+              <Table.Cell dataKey="missionStatus" />
             </Table.Column>
 
             <Table.Column width={200}>
               <Table.HeaderCell>Statut</Table.HeaderCell>
-              <Table.Cell dataKey="statusMission" />
+              <Table.Cell dataKey="missionStatus" />
             </Table.Column>
             
             <Table.Column width={200}>

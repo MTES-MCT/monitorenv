@@ -47,7 +47,6 @@ data class RegulatoryAreaDataOutput(
             objet= regulatoryArea.objet,
             signataire= regulatoryArea.signataire,
             geom = regulatoryArea.geom
-//            geom = jacksonObjectMapper().writeValueAsString(regulatoryArea.geom)
         )
     }
 }

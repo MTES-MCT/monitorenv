@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints
 
+import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.CreateMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.GetMissionById
 import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.GetMissions
 import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.UpdateMission
@@ -16,6 +17,7 @@ import javax.websocket.server.PathParam
 @RequestMapping("/bff/v1/missions")
 @Tag(description = "API Missions", name = "Missions")
 class MissionsController(
+  private val createMission: CreateMission,
   private val getMissions: GetMissions,
   private val getMissionById: GetMissionById,
   private val updateMission: UpdateMission,
@@ -28,6 +30,17 @@ class MissionsController(
     val missions = getMissions.execute()
 
     return missions.map { MissionDataOutput.fromMission(it) }
+  }
+
+  @PutMapping("", consumes = ["application/json"])
+  @Operation(summary = "Create a new mission")
+  fun createMissionController(
+    @RequestBody
+    createMissionDataInput: CreateOrUpdateMissionDataInput
+  ): MissionDataOutput {
+    val newMission = createMissionDataInput.toMissionEntity()
+    val createdMission = createMission.execute(mission = newMission)
+    return MissionDataOutput.fromMission(createdMission)
   }
 
   @GetMapping("/{missionId}")
@@ -49,7 +62,7 @@ class MissionsController(
     @PathVariable(name = "missionId")
     missionId: Int,
     @RequestBody
-    updateMissionDataInput: UpdateMissionDataInput
+    updateMissionDataInput: CreateOrUpdateMissionDataInput
   ): MissionDataOutput {
     return updateMission.execute(
       mission = updateMissionDataInput.toMissionEntity()

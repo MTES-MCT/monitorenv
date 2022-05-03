@@ -4,14 +4,24 @@ import java.time.ZonedDateTime
 
 data class MissionEntity(
         val id: Int,
-        val typeMission: String? = null,
-        val statusMission: String? = null,
+        val missionType: MissionType,
+        val missionStatus: String? = null,
         val facade: String? = null,
         val theme: String? = null,
+        val observations: String? = null,
         val inputStartDatetimeUtc: ZonedDateTime? = null,
         val inputEndDatetimeUtc: ZonedDateTime? = null,
-        val longitude: Double? = null,
-        val latitude: Double? = null,
+        val actions: List<ActionEntity>? = null
         )
 
-typealias MissionsListEntity = List<MissionEntity>
+
+data class NewMissionEntity(
+        val missionType: MissionType,
+        val missionStatus: String? = null,
+        val facade: String? = null,
+        val theme: String? = null,
+        val observations: String? = null,
+        val inputStartDatetimeUtc: ZonedDateTime? = null,
+        val inputEndDatetimeUtc: ZonedDateTime? = null,
+        val actions: List<ActionEntity>? = null
+)

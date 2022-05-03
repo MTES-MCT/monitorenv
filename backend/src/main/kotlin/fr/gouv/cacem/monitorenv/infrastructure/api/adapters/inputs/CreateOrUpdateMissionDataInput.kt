@@ -1,30 +1,33 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs
 
+import fr.gouv.cacem.monitorenv.domain.entities.missions.ActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionType
 import java.time.ZonedDateTime
+import java.time.ZoneOffset.UTC
 
-data class UpdateMissionDataInput(
+data class CreateOrUpdateMissionDataInput(
     val id: Int,
-    val typeMission: String? = null,
-    val statusMission: String? = null,
+    val missionType: MissionType,
+    val missionStatus: String? = null,
     val facade: String? = null,
     val theme: String? = null,
+    val observations: String? = null,
     val inputStartDatetimeUtc: ZonedDateTime? = null,
     val inputEndDatetimeUtc: ZonedDateTime? = null,
-    val longitude: Double? = null,
-    val latitude: Double? = null,
+    val actions: List<ActionEntity>? = null,
 ) {
     fun toMissionEntity() :MissionEntity {
         return MissionEntity(
             id= this.id,
-            typeMission = this.typeMission,
-            statusMission = this.statusMission,
+            missionType = this.missionType,
+            missionStatus = this.missionStatus,
             facade = this.facade,
             theme = this.theme,
+            observations = this.observations,
             inputStartDatetimeUtc = this.inputStartDatetimeUtc,
             inputEndDatetimeUtc = this.inputEndDatetimeUtc,
-            longitude = this.longitude,
-            latitude = this.latitude,
+            actions = this.actions
         )
     }
 }
