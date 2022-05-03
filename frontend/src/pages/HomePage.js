@@ -19,6 +19,7 @@ import LayersSidebar from '../features/layers/LayersSidebar'
 import { MissionsMenu } from '../features/missions/MissionsMenu'
 import Measurement from '../features/measurements/Measurement'
 import InterestPoint from '../features/interest_points/InterestPoint'
+import { LocateOnMap } from '../features/locateOnMap/LocateOnMap';
 
 const persistor = persistStore(homeStore);
 
@@ -38,6 +39,7 @@ export const HomePage = () => {
               <LayersSidebar/> 
               <MissionsMenu />
               <Measurement/>
+              <LocateOnMap />
               <InterestPoint/>
               {/* <APIWorker/> */}
               <ErrorToastNotification/>
