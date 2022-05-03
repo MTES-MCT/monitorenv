@@ -28,7 +28,6 @@ module.exports = {
     "eslint:recommended"
   ],
   plugins: [
-    "react",
     "react-hooks"
   ],
   rules: {
