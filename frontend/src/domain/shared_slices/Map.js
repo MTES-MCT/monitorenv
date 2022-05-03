@@ -8,13 +8,22 @@ const mapSlice = createSlice({
   name: 'map',
   initialState: {
     fitToExtent: null,
+    zoomToCenter: null,
     interaction: null,
     selectedBaseLayer: baseLayers.LIGHT.code,
     coordinatesFormat: CoordinatesFormat.DEGREES_MINUTES_SECONDS
   },
   reducers: {
+    /**
+     * 
+     * @param {*} state 
+     * @param {object} action.payload.extent
+     */
     setFitToExtent (state, action) {
       state.fitToExtent = action.payload?.extent
+    },
+    setZoomToCenter (state, action) {
+      state.zoomToCenter = action.payload
     },
     selectBaseLayer (state, action) {
       state.selectedBaseLayer = action.payload
@@ -51,6 +60,7 @@ const mapSlice = createSlice({
 
 export const {
   setFitToExtent,
+  setZoomToCenter,
   selectBaseLayer,
   setInteraction,
   resetInteraction,

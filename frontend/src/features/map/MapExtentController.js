@@ -7,7 +7,7 @@ const MAX_ZOOM_LEVEL = 14
 
 export const MapExtentController = ({map}) => {
 
-  const { fitToExtent } = useSelector(state => state.map)
+  const { fitToExtent, zoomToCenter } = useSelector(state => state.map)
 
   useEffect(()=> {
     if (fitToExtent) {
@@ -19,6 +19,12 @@ export const MapExtentController = ({map}) => {
       map.getView().fit(fitToExtent, options)
     }
   }, [map, fitToExtent])
+
+  useEffect(() => {
+    if (zoomToCenter) {
+      map.getView().animate({center: zoomToCenter})
+    }
+  }, [map, zoomToCenter])
 
 return null
 
