@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.missions.NewMissionEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 
 @UseCase

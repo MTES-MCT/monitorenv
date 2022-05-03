@@ -1,14 +1,19 @@
--- Add controls table
+-- Add missions table
+-- CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE IF NOT EXISTS public.missions (
   id serial PRIMARY KEY,
   mission_type text,
+  unit text,
+  administration text,
   mission_status text,
-  input_start_datetime_utc TIMESTAMP,
-  input_end_datetime_utc TIMESTAMP,
+  author text,
+  observations text,
   facade CHARACTER VARYING(100),
   theme text,
-  observations text
+  input_start_datetime_utc TIMESTAMP,
+  input_end_datetime_utc TIMESTAMP,
+  actions jsonb
 );
 
 

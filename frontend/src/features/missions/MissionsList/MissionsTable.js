@@ -13,7 +13,7 @@ export const MissionsTable = ({data, isLoading}) => {
   const setMission = (id) => dispatch(setSideWindowPath(generatePath(sideWindowPaths.MISSION, {id})))
 
   return (<Table
-            autoHeight
+            fillHeight
             loading={isLoading}
             data={data}
             onRowClick={data => {setMission(data.id)}}
@@ -63,12 +63,12 @@ export const MissionsTable = ({data, isLoading}) => {
               <Table.Cell dataKey="missionStatus" />
             </Table.Column>
             
-            <Table.Column width={200}>
+            <Table.Column align='center'>
               <Table.HeaderCell> - </Table.HeaderCell>
               <CellLocalizeMission />
             </Table.Column>
 
-            <Table.Column width={200}>
+            <Table.Column align='center'>
               <Table.HeaderCell>-</Table.HeaderCell>
               <CellEditMission />
             </Table.Column>

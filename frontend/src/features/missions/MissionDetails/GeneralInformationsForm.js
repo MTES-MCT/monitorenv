@@ -13,16 +13,18 @@ export const    GeneralInformationsForm = () => {
         <FormikDatePicker name="inputStartDatetimeUtc" placeholder={'Début'} oneTap/>
       </Form.Group>
       <Form.Group>
+        <Form.ControlLabel htmlFor="inputEndDatetimeUtc">Date et heure de fin de la mission : </Form.ControlLabel>
+        <FormikDatePicker name="inputEndDatetimeUtc" placeholder={'Début'} oneTap/>
+      </Form.Group>
+      <Form.Group>
+        <Form.ControlLabel htmlFor="unit">Unité : </Form.ControlLabel>
+        <Field name="unit"type="text"/>
+        <Form.ControlLabel htmlFor="administration">Administration : </Form.ControlLabel>
+        <Field name="administration"type="text"/>
+      </Form.Group>
+      <Form.Group>
         <Form.ControlLabel htmlFor="missionType">Type Opération : </Form.ControlLabel>
         <Field name="missionType"type="text"/>
-      </Form.Group>
-      <Form.Group>
-        <Form.ControlLabel htmlFor="missionStatus">Statut Opération : </Form.ControlLabel>
-        <Field name="missionStatus"type="text"/>
-      </Form.Group>
-      <Form.Group>
-        <Form.ControlLabel htmlFor="facade">Façade : </Form.ControlLabel>
-        <Field name="facade"type="text"/>
       </Form.Group>
       <Form.Group>
         <Form.ControlLabel htmlFor="theme">theme : </Form.ControlLabel>

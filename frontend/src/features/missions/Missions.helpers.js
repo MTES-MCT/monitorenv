@@ -5,8 +5,9 @@ export const infractionFactory = () => {
   }
 }
 
-export const actionFactory = () => {
+export const actionFactory = (actionType) => {
   return {
+    actionType,
     actionStartDatetimeUtc: Date.now(),
     actionEndDatetimeUtc: '',
     actionTheme: '',

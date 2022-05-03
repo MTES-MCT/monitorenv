@@ -1,5 +1,8 @@
-import { COLORS, SQUARE_BUTTON_TYPE } from '../../constants/constants'
+import React from 'react'
 import styled, { css } from 'styled-components'
+import { COLORS, SQUARE_BUTTON_TYPE } from '../../constants/constants'
+
+import { ReactComponent as EditIconSVG } from '../icons/Bouton_edition.svg'
 
 export const basePrimaryButton = css`
   background: ${COLORS.charcoal};
@@ -140,3 +143,26 @@ opacity: ${props => props.disabled ? '0.4' : '1'};
   width: 12px;
 }
 `
+
+
+const EditIcon = styled(EditIconSVG)`
+  padding-right: 8px;
+`
+const EditButtonWrapper = styled.button`
+  background: ${COLORS.charcoal};
+  color: ${COLORS.white};
+  display: flex;
+  align-items: center;
+  height: 24px;
+  padding: 8px;
+  cursor: pointer;
+  &:hover {
+    background: ${COLORS.gunMetal};
+  }
+`
+
+export const EditButton = () => {
+  return (<EditButtonWrapper>
+    <EditIcon/>Editer
+  </EditButtonWrapper>)
+}

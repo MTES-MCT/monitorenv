@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Formik, FieldArray } from 'formik';
 import { Form } from 'rsuite'
 
@@ -29,7 +29,7 @@ export const Mission = ({routeParams})  => {
   })
   const [
     updateMission,
-    { isLoading: isUpdating },
+    { isLoading: isUpdating, },
   ] = useUpdateMissionMutation()
 
   const [currentActionIndex, setCurrentActionIndex] = useState(null)
@@ -39,7 +39,7 @@ export const Mission = ({routeParams})  => {
     return<div style={{flex:1}}>not set yet</div>
   }
   
-  console.log(isUpdating, JSON.stringify(mission))
+  
 
   const handleSetCurrentActionIndex = (index) =>{
     setCurrentActionIndex(index)
@@ -52,6 +52,7 @@ export const Mission = ({routeParams})  => {
         dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))
         setErrorOnSave(false)
       } else {
+        console.log(error)
         setErrorOnSave(true)
       }
     })
@@ -59,7 +60,7 @@ export const Mission = ({routeParams})  => {
 
   return (
     <div style={{flex:1}}>
-      <SideWindowHeader title={`Edition de la mission n°${id}`} />
+      <SideWindowHeader title={`Edition de la mission n°${id}${isUpdating && ' - Enregistrement en cours'}`} />
       <Formik
         enableReinitialize={true}
         initialValues={{
@@ -71,7 +72,7 @@ export const Mission = ({routeParams})  => {
           observations: mission?.observations,
           inputStartDatetimeUtc: mission?.inputStartDatetimeUtc,
           inputEndDatetimeUtc: mission?.inputEndDatetimeUtc || '',
-          actions: []
+          actions: mission?.actions
         }}
         onSubmit={handleSubmitForm}
       >

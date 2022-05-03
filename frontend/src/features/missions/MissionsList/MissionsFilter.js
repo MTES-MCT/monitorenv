@@ -7,15 +7,16 @@ export const MissionsFilter = () => {
   return (<>
     <Title>FILTRER LA LISTE</Title>
     <FilterWrapper>
-      <CheckPicker placeholder={'Unité'} data={['A', 'B']} />
-      <CheckPicker placeholder={'Administration'} data={['A', 'B']} />
-      <CheckPicker placeholder={'Façade'} data={['A', 'B']} />
-      <CheckPicker placeholder={'Thématique'} data={['A', 'B']} />
+      
+      <CheckPicker style={tagPickerStyle} placeholder={'Unité'} data={[{label: 'A', value: 'A'}, {label: 'B', value: 'B'}]} />
+      <CheckPicker style={tagPickerStyle} placeholder={'Administration'} data={[{label: 'A', value: 'A'}, {label: 'B', value: 'B'}]} />
+      <CheckPicker style={tagPickerStyle} placeholder={'Façade'} data={[{label: 'A', value: 'A'}, {label: 'B', value: 'B'}]} />
+      <CheckPicker style={tagPickerStyle} placeholder={'Thématique'} data={[{label: 'A', value: 'A'}, {label: 'B', value: 'B'}]} />
       <AdvancedFiltersButton onClick={()=> setDisplayAdvancedFilters(!displayAdvancedFilters)}>{displayAdvancedFilters ? 'Masquer les critères avancés' : 'Voir plus de critères'} </AdvancedFiltersButton>
     </FilterWrapper>
     {displayAdvancedFilters && 
       <AdvancedFiltersWrapper>
-        <CheckPicker placeholder={'Statut'} data={['A', 'B']} />
+        <CheckPicker style={tagPickerStyle} placeholder={'Statut'} data={[{label: 'A', value: 'A'}, {label: 'B', value: 'B'}]} />
       </AdvancedFiltersWrapper>
     }
   </>
@@ -35,3 +36,4 @@ const AdvancedFiltersButton = styled.span`
 const AdvancedFiltersWrapper = styled.div`
 display: flex;
 `
+const tagPickerStyle = { width: 160, margin: '2px 60px 10px 0', verticalAlign: 'top' }

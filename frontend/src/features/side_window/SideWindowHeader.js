@@ -14,10 +14,19 @@ export const SideWindowHeader = ({title, children}) => {
 
 const Wrapper = styled.div`
   background: ${COLORS.charcoal};
+  padding-left: 8px;
+  padding-right: 8px;
   width: 100%;
-`
-
-const Title = styled.h1`
+  height: 50px;
+  display: flex;
+  align-items: center;
+  `
+  
+  const Title = styled.h1`
   display: inline-block;
-  color: ${COLORS.white}
+  color: ${COLORS.white};
+  font-size: 22px;
+  line-height: 50px;
+  margin-left: 8px;
+  margin-right: 8px;
 `

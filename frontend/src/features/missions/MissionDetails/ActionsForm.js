@@ -3,26 +3,32 @@ import styled from 'styled-components'
 
 import { PrimaryButton } from '../../commonStyles/Buttons.style'
 import { actionFactory } from '../Missions.helpers'
-import { COLORS } from '../../../constants/constants'
+import { ActionTypeEnum } from '../../../domain/entities/missions'
+import { ActionCard } from './ActionCard'
 
 export const ActionsForm = ({  push, form, actionIndex, setCurrentActionIndex }) =>  {
-  const handleAddAction = () => push(actionFactory())
+  const handleAddSurveillanceAction = () => push(actionFactory(ActionTypeEnum.SURVEILLANCE))
+  const handleAddControlAction = () => push(actionFactory(ActionTypeEnum.CONTROL))
+  const handleSelectAction = index => () => setCurrentActionIndex(index)
 
   return (<>
     <h3>Actions réalisées en mission</h3>
     <PrimaryButton
       type="button"
-      onClick={handleAddAction}
+      onClick={handleAddControlAction}
     >
-      + Ajouter
+      + Ajouter un contrôle
+    </PrimaryButton>
+    <PrimaryButton
+      type="button"
+      onClick={handleAddSurveillanceAction}
+    >
+      + Ajouter une surveillance
     </PrimaryButton>
     {form?.values.actions.length > 0 ? 
       form?.values.actions.map((action, index) => {
-        console.log('action', action)
         return (
-        <Action selected={index === actionIndex} key={index} onClick={()=>setCurrentActionIndex(index)}>
-          Action {index}
-        </Action>
+        <ActionCard selected={index === actionIndex} key={index} selectAction={handleSelectAction(index)} action={action} />
       )})
     : <NoAction>Aucune action n&apos;est ajoutée pour le moment</NoAction>
   }
@@ -30,9 +36,6 @@ export const ActionsForm = ({  push, form, actionIndex, setCurrentActionIndex })
   </>
 )}
 
-const Action = styled.div`
-  border: ${props => props.selected ? `2px solid ${COLORS.charcoal}` : ''}
-`
 
 const NoAction = styled.div`
   text-align: center;

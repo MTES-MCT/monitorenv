@@ -57,7 +57,7 @@ class MissionsControllerITests {
     // Given
     val newMission = MissionEntity(
       id = 10,
-      missionType = MissionType.LAND,
+      missionType = MissionTypeEnum.LAND,
       missionStatus = "CLOSED",
       facade = "Outre-Mer",
       theme = "CONTROLE",
@@ -67,7 +67,7 @@ class MissionsControllerITests {
     )
     val newMissionRequest = CreateOrUpdateMissionDataInput(
       id = 10,
-      missionType = MissionType.LAND,
+      missionType = MissionTypeEnum.LAND,
       missionStatus = "CLOSED",
       facade = "Outre-Mer",
       theme = "CONTROLE",
@@ -104,14 +104,14 @@ class MissionsControllerITests {
   fun `Should get all missions`() {
     // Given
     val firstMission = MissionEntity(
-      10,
-      MissionType.SEA,
-      "CLOSED",
-      "Outre-Mer",
-      "CONTROLE",
-      null,
-      ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-      ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+      id = 10,
+      missionType = MissionTypeEnum.SEA,
+      missionStatus = "CLOSED",
+      facade = "Outre-Mer",
+      theme = "CONTROLE",
+      observations = null,
+      inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+      inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
     )
     given(this.getMissions.execute()).willReturn(listOf(firstMission))
 
@@ -132,14 +132,14 @@ class MissionsControllerITests {
   fun `Should get specific mission when requested by Id`() {
     // Given
     val firstMission = MissionEntity(
-      0,
-      MissionType.SEA,
-      "CLOSED",
-      "Outre-Mer",
-      "CONTROLE",
-      null,
-      ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-      ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+      id = 10,
+      missionType = MissionTypeEnum.SEA,
+      missionStatus = "CLOSED",
+      facade = "Outre-Mer",
+      theme = "CONTROLE",
+      observations = null,
+      inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+      inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
     )
     given(this.getMissionById.execute(0)).willReturn(firstMission)
 
@@ -161,7 +161,7 @@ class MissionsControllerITests {
     // Given
     val expectedUpdatedMission = MissionEntity(
       id = 10,
-      missionType = MissionType.LAND,
+      missionType = MissionTypeEnum.LAND,
       missionStatus = "CLOSED",
       facade = "Outre-Mer",
       theme = "CONTROLE",
@@ -171,7 +171,7 @@ class MissionsControllerITests {
     )
     val requestBody = CreateOrUpdateMissionDataInput(
       id = 10,
-      missionType = MissionType.LAND,
+      missionType = MissionTypeEnum.LAND,
       missionStatus = "CLOSED",
       facade = "Outre-Mer",
       theme = "CONTROLE",
