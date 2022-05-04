@@ -1,25 +1,25 @@
 import React, { useState } from 'react'
+import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
 import { Formik, FieldArray } from 'formik';
 import { Form } from 'rsuite'
 
 import { useGetMissionsQuery, useUpdateMissionMutation } from '../../api/missionsAPI'
+import { setSideWindowPath } from '../commonComponents/SideWindowRouter/SideWindowRouter.slice';
+import { sideWindowPaths } from '../../domain/entities/sideWindow';
 
 import { SideWindowHeader } from '../side_window/SideWindowHeader';
 import { ActionsForm } from './MissionDetails/ActionsForm'
 import { ActionForm } from './MissionDetails/ActionForm'
+import { GeneralInformationsForm } from './MissionDetails/GeneralInformationsForm';
 
 import { PrimaryButton } from '../commonStyles/Buttons.style';
-import styled from 'styled-components';
 import { COLORS } from '../../constants/constants';
-import { GeneralInformationsForm } from './MissionDetails/GeneralInformationsForm';
-import { useDispatch } from 'react-redux';
-import { setSideWindowPath } from '../commonComponents/SideWindowRouter/SideWindowRouter.slice';
-import { sideWindowPaths } from '../../domain/entities/sideWindow';
  
 
 
 
-export const Mission = ({routeParams})  => {
+export const EditMission = ({routeParams})  => {
   const dispatch = useDispatch()
   const id = parseInt(routeParams?.params?.id)
   const { mission } = useGetMissionsQuery(undefined, {
@@ -59,8 +59,8 @@ export const Mission = ({routeParams})  => {
   }
 
   return (
-    <div style={{flex:1}}>
-      <SideWindowHeader title={`Edition de la mission n°${id}${isUpdating && ' - Enregistrement en cours'}`} />
+    <EditMissionWrapper data-cy={'editMissionWrapper'}>
+      <SideWindowHeader title={`Edition de la mission n°${id}${isUpdating ? ' - Enregistrement en cours' : ''}`} />
       <Formik
         enableReinitialize={true}
         initialValues={{
@@ -101,9 +101,12 @@ export const Mission = ({routeParams})  => {
           )
         }}
       </Formik>
-  </div>)
+  </EditMissionWrapper>)
 }
 
+const EditMissionWrapper = styled.div`
+  flex: 1;
+`
 const Wrapper = styled.div`
   display: flex;
 `

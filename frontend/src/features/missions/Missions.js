@@ -1,6 +1,6 @@
 import React from 'react'
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
 
 import { useGetMissionsQuery } from '../../api/missionsAPI'
 import { setSideWindowPath } from '../commonComponents/SideWindowRouter/SideWindowRouter.slice';
@@ -9,8 +9,8 @@ import { sideWindowPaths } from '../../domain/entities/sideWindow';
 import { SideWindowHeader } from '../side_window/SideWindowHeader';
 import { MissionsTable } from './MissionsList/MissionsTable';
 import { MissionsFilter } from './MissionsList/MissionsFilter';
-import { COLORS } from '../../constants/constants';
 import { PlusIcon } from '../commonStyles/icons/PlusIcon';
+import { COLORS } from '../../constants/constants';
 
 export const Missions = () => {
   const dispatch = useDispatch()
@@ -18,13 +18,13 @@ export const Missions = () => {
 
 
   return (
-    <div style={{flex:1}} >
+    <SideWindowWrapper data-cy={'listMissionWrapper'}>
       {isError ? (
         <>Erreur au chargement des données</>
       ) : isLoading ? (
         <>Chargement en cours...</>
       ) : data ? (
-        <SideWindowWrapper>
+        <>
           <SideWindowHeader title={"Missions et contrôles"}>
             <AddNewMissionButton onClick={() => dispatch(setSideWindowPath(sideWindowPaths.MISSION_NEW))}>
 
@@ -34,18 +34,26 @@ export const Missions = () => {
           <SideWindowContent>
             <MissionsFilter></MissionsFilter>
             <NumberOfDisplayedMissions>{data.length} Mission{data.length > 1 ? 's' : ''}</NumberOfDisplayedMissions>
-            <MissionsTable data={data} isLoading={isLoading} />
+            <TableWrapper>
+              <MissionsTable data={data} isLoading={isLoading} />
+            </TableWrapper>
           </SideWindowContent>
-        </SideWindowWrapper>
+        </>
       ) : null}
-    </div>
+    </SideWindowWrapper>
   )
 }
 
 const SideWindowWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 `
 
 const SideWindowContent = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   padding: 8px;
 `
 
@@ -66,4 +74,8 @@ const AddNewMissionButton = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
+`
+
+const TableWrapper = styled.div`
+  flex: 1;
 `
