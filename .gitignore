@@ -16,6 +16,7 @@ datascience/.coverage
 frontend/cypress/videos/
 
 # Local data
+/data
 /datascience/data
 
 # Python
