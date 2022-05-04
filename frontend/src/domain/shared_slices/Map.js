@@ -7,6 +7,7 @@ import { CoordinatesFormat } from '../entities/map'
 const mapSlice = createSlice({
   name: 'map',
   initialState: {
+    currentMapExtentTracker: null,
     fitToExtent: null,
     zoomToCenter: null,
     interaction: null,
@@ -14,6 +15,15 @@ const mapSlice = createSlice({
     coordinatesFormat: CoordinatesFormat.DEGREES_MINUTES_SECONDS
   },
   reducers: {
+    /**
+     * currentMapExtent tracks the current map extent via MapHistory. 
+     * setCurrentMapExtentTracker can not be used to change map extent
+     * @param {*} state 
+     * @param {{payload: ol.extent}} action 
+     */
+    setCurrentMapExtentTracker (state, action) {
+      state.currentMapExtentTracker = action.payload
+    },
     /**
      * 
      * @param {*} state 
@@ -59,6 +69,7 @@ const mapSlice = createSlice({
 })
 
 export const {
+  setCurrentMapExtentTracker,
   setFitToExtent,
   setZoomToCenter,
   selectBaseLayer,
