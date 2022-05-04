@@ -11,7 +11,8 @@ const regulatoryLayerSearchSlice = createSlice({
     /** @type RegulatoryLawTypes regulatoryLayersSearchResult */
     regulatoryLayersSearchResult: null,
     advancedSearchIsOpen: false,
-    zoneSelected: null
+    zoneSelected: null,
+    filterSearchOnMapExtent: false,
   },
   reducers: {
      /**
@@ -91,7 +92,17 @@ const regulatoryLayerSearchSlice = createSlice({
      */
     resetZoneSelected (state) {
       state.zoneSelected = null
-    }
+    },
+    /**
+     * Set FilterSearchOnMapExtent to true/false
+     * @param {Object=} state
+     * @param {{
+     * payload: boolean
+     * }} action 
+     */
+     setFilterSearchOnMapExtent (state, action) {
+       state.filterSearchOnMapExtent = action.payload
+     }
   }
 })
 
@@ -103,7 +114,8 @@ export const {
   setRegulatoryLayersSearchResult,
   setAdvancedSearchIsOpen,
   setZoneSelected,
-  resetZoneSelected
+  resetZoneSelected,
+  setFilterSearchOnMapExtent
 } = regulatoryLayerSearchSlice.actions
 
 export default regulatoryLayerSearchSlice.reducer

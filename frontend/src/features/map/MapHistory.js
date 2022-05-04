@@ -1,10 +1,13 @@
 import { useEffect, useState, useRef } from 'react'
+import { useDispatch } from 'react-redux'
+import { setCurrentMapExtentTracker } from '../../domain/shared_slices/Map'
 
 /**
  * Handle browser history on map URL - Note that the map parameter is given from
  * the BaseMap component, even if it's not seen in the props passed to MapHistory
  */
 const MapHistory = ({ map }) => {
+  const dispatch = useDispatch()
   const [ useViewFromUrl, setUseViewFromUrl ] = useState(true)
   const shouldStoreUrl = useRef(true)
 
@@ -18,6 +21,8 @@ const MapHistory = ({ map }) => {
         shouldStoreUrl.current = false
         map.getView().setCenter(event.state.center)
         map.getView().setZoom(event.state.zoom)
+        const extent = map.getView().calculateExtent(map.getSize())
+          dispatch(setCurrentMapExtentTracker(extent))
       }
     }
     window.addEventListener('popstate', restoreViewOnBrowserHistoryNavigation)
@@ -40,7 +45,7 @@ const MapHistory = ({ map }) => {
     }
   }, [map, useViewFromUrl])
 
-  // store view in history
+  // store view in history and in redux store
   useEffect(() => {
     const storeViewInHistory = () => {
       if (map && shouldStoreUrl.current) {
@@ -54,6 +59,8 @@ const MapHistory = ({ map }) => {
   
         const url = `#@${center[0].toFixed(2)},${center[1].toFixed(2)},${zoom}`
         window.history.pushState(view, 'map', url)
+        const extent = currentView.calculateExtent(map.getSize())
+        dispatch(setCurrentMapExtentTracker(extent))
       } 
       shouldStoreUrl.current = true
     }

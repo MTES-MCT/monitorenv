@@ -1,19 +1,24 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
+import _ from 'lodash'
+import { transformExtent } from 'ol/proj'
+import { intersects } from 'ol/extent';
 const { Document } = require("flexsearch")
 
 import { resetRegulatoryZonesChecked } from './RegulatoryLayerSearch.slice'
 import { addRegulatoryZonesToMyLayers } from '../../../../domain/shared_slices/Regulatory'
 
 import RegulatoryLayerSearchResultList from './RegulatoryLayerSearchResultList'
-import RegulatoryLayerSearchInput from './RegulatoryLayerSearchInput'
+import { RegulatoryLayerSearchInput } from './RegulatoryLayerSearchInput'
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map'
 
 import { COLORS } from '../../../../constants/constants'
 
 const RegulatoryLayerSearch = () => {
   const { regulatoryLayers } = useSelector(state => state.regulatory)
-  const { regulatoryZonesChecked } = useSelector(state => state.regulatoryLayerSearch)
+  const { regulatoryZonesChecked, filterSearchOnMapExtent } = useSelector(state => state.regulatoryLayerSearch)
+  const { currentMapExtentTracker } = useSelector(state => state.map)
   const dispatch = useDispatch()
 
   const indexRef = useRef(null)
@@ -42,13 +47,32 @@ const RegulatoryLayerSearch = () => {
 
   useEffect(()=> { 
     if (globalSearchText) {
-      const result = GetIndex()?.search(globalSearchText, { limit: 20, pluck: 'properties:layer_name', enrich: true})
-      setResults(result)
+      const searchResults = GetIndex()?.search(globalSearchText, { limit: 20, pluck: 'properties:layer_name', enrich: true})
+      if (currentMapExtentTracker && filterSearchOnMapExtent) {
+        const currentExtent = transformExtent(currentMapExtentTracker,  OPENLAYERS_PROJECTION, WSG84_PROJECTION)
+        const filteredResults = _.filter(searchResults, (result => {
+          return intersects(result?.doc?.bbox, currentExtent)
+      }))
+      setResults(filteredResults)
+      } else {
+        setResults(searchResults)
+      }
     } else {
-      setResults([])
+      if (currentMapExtentTracker && filterSearchOnMapExtent) {
+        const currentExtent = transformExtent(currentMapExtentTracker,  OPENLAYERS_PROJECTION, WSG84_PROJECTION)
+        const filteredResults = _.map(_.filter(regulatoryLayers, (layer => {
+            return intersects(layer.bbox, currentExtent)
+        })), layer => ({
+          id: layer.id,
+          doc: layer
+        }))
+        setResults(filteredResults)
+      } else {
+        setResults([])
+      }
     }
 
-  }, [globalSearchText])
+  }, [globalSearchText, currentMapExtentTracker, filterSearchOnMapExtent, regulatoryLayers])
 
    const [ numberOfRegulatoryLayersSaved, setNumberOfRegulatoryLayersSaved] = useState(0)
   function addRegulatoryLayers () {

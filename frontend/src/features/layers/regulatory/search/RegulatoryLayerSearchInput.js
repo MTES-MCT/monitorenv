@@ -2,21 +2,23 @@ import React from 'react'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { setAdvancedSearchIsOpen, setFilterSearchOnMapExtent } from './RegulatoryLayerSearch.slice'
 import { resetRegulatoryGeometriesToPreview } from '../../../../domain/shared_slices/Regulatory'
 import { COLORS } from '../../../../constants/constants'
 import { ReactComponent as SearchIconSVG } from '../../../icons/Loupe_dark.svg'
 import { ReactComponent as CloseIconSVG } from '../../../icons/Croix_grise.svg'
+import { Checkbox } from 'rsuite'
 
-const RegulatoryLayerSearchInput = ({globalSearchText, setGlobalSearchText}) => {
+export const RegulatoryLayerSearchInput = ({globalSearchText, setGlobalSearchText}) => {
 
-  const { advancedSearchIsOpen } = useSelector(state => state.regulatoryLayerSearch)
+  const { advancedSearchIsOpen, filterSearchOnMapExtent } = useSelector(state => state.regulatoryLayerSearch)
   const dispatch = useDispatch()
   
   const handleResetSearch = () => {
     setGlobalSearchText('')
     dispatch(resetRegulatoryGeometriesToPreview())
   }
-
+  const toggleFilterSearchOnMapExtent = () => dispatch(setFilterSearchOnMapExtent(!filterSearchOnMapExtent))
   return (
     <>
       <PrincipalSearchInput>
@@ -34,6 +36,7 @@ const RegulatoryLayerSearchInput = ({globalSearchText, setGlobalSearchText}) => 
         <AdvancedSearch
           data-cy={'regulatory-layers-advanced-search'}
           advancedSearchIsOpen={advancedSearchIsOpen}
+          onClick={()=>dispatch(setAdvancedSearchIsOpen(!advancedSearchIsOpen))}
         >
           {
             advancedSearchIsOpen
@@ -42,7 +45,11 @@ const RegulatoryLayerSearchInput = ({globalSearchText, setGlobalSearchText}) => 
           }
         </AdvancedSearch>
       </PrincipalSearchInput>
-      
+      {advancedSearchIsOpen && (
+        <AdvancedSearchInput>
+          <Checkbox checked={filterSearchOnMapExtent} onChange={toggleFilterSearchOnMapExtent} >Limiter aux résultats visibles sur la carte</Checkbox>
+        </AdvancedSearchInput>
+      )}
     </>)
 }
 
@@ -97,5 +104,8 @@ const AdvancedSearch = styled.div`
   font-weight: 300;
   transition: 0.5s all;
 `
-
-export default RegulatoryLayerSearchInput
+const AdvancedSearchInput = styled.div`
+  height: 32px;
+  background: white;
+  border-bottom: 1px ${COLORS.lightGray} solid;
+`
