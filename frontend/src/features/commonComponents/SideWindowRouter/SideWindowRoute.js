@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { matchPath } from 'react-router'
+import { matchPath } from 'react-router-dom'
 
 
 // SideWindowRouter doesn't have a switch behavior (i.e. renders all routes that matches)
