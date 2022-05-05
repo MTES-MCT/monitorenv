@@ -9,13 +9,13 @@ on:
     - '**.json'
     - '**.ts'
     - '**.yml'
-    - '.github/workflows/cicd.yml'
-    - 'infra/configurations'
-    - 'infra/docker'
     - '**.sql'
+    - '.github/workflows/cicd.yml'
+    - 'infra/configurations/**'
+    - 'infra/docker/**'
     - 'backend/pom.xml'
     - 'Makefile'
-    - 'frontend'
+    - 'frontend/**'
   schedule:
     - cron: "38 11 */3 * *"
 
@@ -104,7 +104,7 @@ jobs:
         context: .
         load: true
         builder: ${{ steps.buildx.outputs.name }}
-        file: infra/configurations/app/Dockerfile
+        file: infra/docker/app/Dockerfile
         push: false
         tags: monitorfish-app:${{ env.VERSION }}
         cache-from: type=local,src=/tmp/.buildx-cache-app
