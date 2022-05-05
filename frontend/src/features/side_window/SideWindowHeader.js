@@ -5,7 +5,7 @@ import { COLORS } from '../../constants/constants'
 export const SideWindowHeader = ({title, children}) => {
 
   return (<Wrapper>
-    <Title>
+    <Title data-cy={'SideWindowHeader-title'}>
       {title}
     </Title>
     {children}

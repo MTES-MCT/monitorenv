@@ -1,0 +1,24 @@
+{
+  "viewportWidth": 1280,
+  "viewportHeight": 1024,
+  "scrollBehavior": false,
+  "projectId": "s1fr1i",
+  "ignoreTestFiles": [
+    "**/__snapshots__/*",
+    "**/__image_snapshots__/*"
+  ],
+  "retries": {
+    "runMode": 5,
+    "openMode": 0
+  },
+  "updateSnapshots": false,
+  "env": {
+    "cypress-plugin-snapshots": {
+      "imageConfig": {
+        "threshold": 20,
+        "thresholdType": "pixel"
+      },
+      "updateSnapshots": false
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import { getCoordinates } from './coordinates'
-import { CoordinatesFormat, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from './domain/entities/map'
+import { CoordinatesFormat, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../domain/entities/map'
 
 describe('coordinates', () => {
   it('getCoordinates Should get DMS coordinates for a dummy lon/lat', async () => {

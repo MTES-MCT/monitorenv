@@ -10,7 +10,6 @@ import { NamespaceContext } from '../domain/context/NamespaceContext'
 import { homeStore } from './../Store'
 
 import APIWorker from '../api/APIWorker'
-import { SideWindow } from '../features/side_window/SideWindow'
 import SideWindowLauncher from '../features/side_window/SideWindowLauncher'
 import Healthcheck from '../features/healthcheck/Healthcheck'
 import ErrorToastNotification from '../features/commonComponents/ErrorToastNotification'
@@ -20,6 +19,7 @@ import { MissionsMenu } from '../features/missions/MissionsMenu'
 import Measurement from '../features/measurements/Measurement'
 import InterestPoint from '../features/interest_points/InterestPoint'
 import { LocateOnMap } from '../features/locateOnMap/LocateOnMap';
+import { SideWindowTestContainer } from '../features/side_window/SideWindowTestContainer';
 
 const persistor = persistStore(homeStore);
 
@@ -28,9 +28,11 @@ export const HomePage = () => {
     <PersistGate loading={null} persistor={persistor}>
       <NamespaceContext.Provider value={'homepage'}>
         <Switch>
-        <Route exact path="/side_window">
-            <SideWindow />
-          </Route>
+          {(!(process.env.NODE_ENV === 'production')) && 
+            <Route exact path="/side_window">
+              <SideWindowTestContainer />
+            </Route>
+          }
           <Route exact path="/">
             <Healthcheck/>
             <Wrapper>

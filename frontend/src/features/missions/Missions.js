@@ -25,7 +25,7 @@ export const Missions = () => {
         <>Chargement en cours...</>
       ) : data ? (
         <>
-          <SideWindowHeader title={"Missions et contrôles"}>
+          <SideWindowHeader title={'Missions et contrôles'}>
             <AddNewMissionButton onClick={() => dispatch(setSideWindowPath(sideWindowPaths.MISSION_NEW))}>
 
               <PlusIcon /> <span>Ajouter une nouvelle mission</span>
@@ -33,7 +33,7 @@ export const Missions = () => {
           </SideWindowHeader>
           <SideWindowContent>
             <MissionsFilter></MissionsFilter>
-            <NumberOfDisplayedMissions>{data.length} Mission{data.length > 1 ? 's' : ''}</NumberOfDisplayedMissions>
+            <NumberOfDisplayedMissions data-cy={'Missions-numberOfDisplayedMissions'}>{data.length} Mission{data.length > 1 ? 's' : ''}</NumberOfDisplayedMissions>
             <TableWrapper>
               <MissionsTable data={data} isLoading={isLoading} />
             </TableWrapper>
