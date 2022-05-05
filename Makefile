@@ -79,3 +79,16 @@ install-data-pipelines:
 .PHONY: run-notebook
 run-notebook:
 	cd datascience && poetry run jupyter notebook
+
+# CI commands - app
+.PHONY: build-app tag-docker-image push-docker-image run-infra-for-frontend-tests
+
+# used ?
+build-app:
+	docker build --no-cache -f infra/configurations/app/Dockerfile . -t monitorenv-app:$(VERSION) --build-arg VERSION=$(VERSION) --build-arg ENV_PROFILE=$(ENV_PROFILE) --build-arg GITHUB_SHA=$(GITHUB_SHA)
+tag-docker-image:
+	docker tag monitorenv-app:$(VERSION) docker.pkg.github.com/mtes-mct/monitorenv/monitorenv-app:$(VERSION)
+push-docker-image:
+	docker push docker.pkg.github.com/mtes-mct/monitorenv/monitorenv-app:$(VERSION)
+run-infra-for-frontend-tests:
+	export MONITORENV_VERSION=$(VERSION) && docker-compose -f ./infra/docker/docker-compose.test.yml up -d
