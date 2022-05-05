@@ -93,7 +93,7 @@ ENV JAVA_TOOL_OPTIONS "-Dcom.sun.management.jmxremote.ssl=false \
   -Djava.rmi.server.hostname=0.0.0.0"
 
 # Copy files for the back
-COPY --from=buildBack /tmp/target/monitorenv-${VERSION}-exec.jar /home/monitorenv
+COPY --from=buildBack /tmp/target/monitorenv-${VERSION}.jar /home/monitorenv
 COPY infra/configurations /home/monitorenv/configurations/
 
 USER monitorenv
@@ -123,4 +123,4 @@ ENV REACT_APP_GEOSERVER_LOCAL_URL=
 
 ENTRYPOINT ["/home/monitorenv/env.sh"]
 
-CMD exec java -Dspring.config.additional-location="/home/monitorenv/configurations/" -jar "monitorenv-${VERSION}-exec.jar"
+CMD exec java -Dspring.config.additional-location="/home/monitorenv/configurations/" -jar "monitorenv-${VERSION}.jar"
