@@ -28,13 +28,16 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     // When
     val firstMission = MissionEntity(
       id = 10,
-      missionType= MissionTypeEnum.SEA,
+      missionType = MissionTypeEnum.SEA,
+      unit = "Aff Mar 01",
+      administration = "ULAM",
       missionStatus = "OPEN",
-      facade = "MED",
-      theme = "CONTROLE",
-      observations = "Offer watch bank activity. During response letter. Indeed allow bill animal.",
-      inputStartDatetimeUtc = ZonedDateTime.parse("2022-03-05T01:34:39Z"),
-      inputEndDatetimeUtc = ZonedDateTime.parse("2022-04-26T22:11:17Z"),
+      author = "Evan Castro",
+      facade = "MEMN",
+      theme = "ENV",
+      observations = "Air data now. Husband prove born rise his everything order. Range memory control room evidence firm adult.",
+      inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-20T07:41:28Z"),
+      inputEndDatetimeUtc = ZonedDateTime.parse("2022-02-11T11:18:25Z"),
       actions = listOf()
     )
     val mission = jpaMissionRepository.findMissionById(10)

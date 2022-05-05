@@ -12,9 +12,6 @@ class UpdateMission(private val missionRepository: IMissionRepository) {
       "No mission to update"
     }
     missionRepository.save(mission)
-    if (mission.id === null) {
-      throw (IllegalArgumentException("MissionId is missing. Mission was not created"))
-    }
     return missionRepository.findMissionById(mission.id)
   }
 }
