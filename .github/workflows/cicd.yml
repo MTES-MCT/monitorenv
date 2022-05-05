@@ -104,7 +104,7 @@ jobs:
         context: .
         load: true
         builder: ${{ steps.buildx.outputs.name }}
-        file: infra/configuration/app/Dockerfile
+        file: infra/configurations/app/Dockerfile
         push: false
         tags: monitorfish-app:${{ env.VERSION }}
         cache-from: type=local,src=/tmp/.buildx-cache-app
