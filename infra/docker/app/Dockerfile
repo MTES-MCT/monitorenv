@@ -55,7 +55,7 @@ COPY infra/ /tmp/infra/
 WORKDIR /tmp/frontend
 
 # Files are expected to be in /tmp/frontend/dist/monitorfish-frontend
-RUN npm install ci &&\
+RUN npm ci &&\
   npm run build
 
 ######################

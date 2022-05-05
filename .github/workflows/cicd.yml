@@ -168,7 +168,7 @@ jobs:
       with:
         # we have already installed all dependencies above
         install: true
-        install-command: npm i
+        install-command: npm ci
         working-directory: frontend
         record: true
         parallel: true
