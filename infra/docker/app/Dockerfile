@@ -7,7 +7,7 @@ ARG GITHUB_SHA=NO_COMMIT
 ARG VERSION=NO_VERSION
 
 ########################################
-# Build monitorfish backend with maven #
+# Build monitorenv backend with maven #
 ########################################
 FROM maven:3.6.0-jdk-11-slim as buildBack
 
@@ -29,7 +29,7 @@ RUN mvn clean package -DskipTests=true
 ###########################
 # Build frontend with npm #
 ###########################
-FROM ubuntu:18.04 as buildFront
+FROM node:16.15.0-alpine3.15 as buildFront
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -38,23 +38,11 @@ ENV REACT_APP_ENV $ENV_PROFILE
 
 RUN echo ${REACT_APP_ENV}
 
-RUN apt-get update &&\
-  apt-get install  --no-install-recommends -y \
-  curl \
-  zip \
-  unzip \
-  ca-certificates &&\
-  apt-get clean
-USER root
-
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash &&\
-  apt-get install -y nodejs
-
 COPY frontend/ /tmp/frontend/
 COPY infra/ /tmp/infra/
 WORKDIR /tmp/frontend
 
-# Files are expected to be in /tmp/frontend/dist/monitorfish-frontend
+# Files are expected to be in /tmp/frontend/dist/monitorenv-frontend
 RUN npm ci &&\
   npm run build
 
