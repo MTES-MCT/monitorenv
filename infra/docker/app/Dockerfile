@@ -88,7 +88,7 @@ USER monitorenv
 # Copy files for the front
 RUN mkdir /home/monitorenv/public
 COPY --from=buildFront /tmp/frontend/build /home/monitorenv/public/
-COPY --from=buildFront /tmp/infra/docker/env.sh /home/monitorenv/
+COPY --from=buildFront /tmp/infra/docker/app/env.sh /home/monitorenv/
 
 # Add logs folder to be mounted as volume
 RUN mkdir /home/monitorenv/logs
