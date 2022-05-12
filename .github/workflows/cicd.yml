@@ -145,7 +145,7 @@ jobs:
       ACTIONS_ALLOW_UNSECURE_COMMANDS: true 
       REACT_APP_CYPRESS_PORT: 8880
       CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-      CYPRESS_PROJECT_ID: ${{ secrets.PROJECT_ID }}
+      CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       ENV_PROFILE:  ${{needs.version.outputs.ENV_PROFILE}}
       VERSION: ${{needs.version.outputs.VERSION}}
