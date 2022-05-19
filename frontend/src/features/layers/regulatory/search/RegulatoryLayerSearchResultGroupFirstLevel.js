@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { RegulatoryLayerSearchResultGroupSecondLevel } from './RegulatoryLayerSearchResultGroupSecondLevel'
 import { COLORS } from '../../../../constants/constants'
 
-export const RegulatoryLayerSearchResultGroupFirstLevel = ({ groupName, results }) => {
+export const RegulatoryLayerSearchResultGroupFirstLevel = ({ groupName, results, searchedText }) => {
   const groupedResults = _.groupBy(results, r => r?.doc?.properties?.layer_name)
   return (
     <Wrapper>
@@ -17,6 +17,7 @@ export const RegulatoryLayerSearchResultGroupFirstLevel = ({ groupName, results 
           key={subgroupName}
           groupName={subgroupName}
           result={groupedResult}
+          searchedText={searchedText}
         />
       })}
     </Wrapper>

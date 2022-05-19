@@ -46,7 +46,7 @@ const RegulatoryLayerZoneMetadata = () => {
               Travail en cours, bien vérifier dans Légicem la validité de la référence et des infos réglementaires
             </Warning>
             <Content>
-              <Identification thematique={regulatoryMetadata?.thematique} type={regulatoryMetadata?.type} facade={regulatoryMetadata?.facade} />
+              <Identification entity_name={regulatoryMetadata?.entity_name} thematique={regulatoryMetadata?.thematique} type={regulatoryMetadata?.type} facade={regulatoryMetadata?.facade} />
               <MetadataRegulatoryReferences regulatoryReference={regulatoryMetadata?.ref_reg} type={regulatoryMetadata?.type} url={regulatoryMetadata?.url} />
             </Content></>
           // eslint-disable-next-line react/forbid-component-props

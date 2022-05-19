@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import _ from 'lodash'
 import styled from 'styled-components'
 import Checkbox from 'rsuite/Checkbox'
+import Highlighter from 'react-highlight-words'
 
 import {checkRegulatoryZones, uncheckRegulatoryZones} from "./RegulatoryLayerSearch.slice";
 import { setRegulatoryGeometriesToPreview } from '../../../../domain/shared_slices/Regulatory'
@@ -18,7 +19,7 @@ const NumberOfZones = ({numberOfZones}) => {
   )
 }
 
-export const RegulatoryLayerSearchResultGroupSecondLevel = ({ groupName, result }) => {
+export const RegulatoryLayerSearchResultGroupSecondLevel = ({ groupName, result, searchedText }) => {
   const dispatch = useDispatch()
 
   const { regulatoryZonesChecked } = useSelector(state => state.regulatoryLayerSearch)
@@ -51,7 +52,12 @@ export const RegulatoryLayerSearchResultGroupSecondLevel = ({ groupName, result 
         data-cy={'regulatory-layer-topic'}
         title={groupName}
         >
-          {groupName}
+          <Highlighter
+            highlightClassName="highlight"
+            searchWords={(searchedText && searchedText.length > 0) ? searchedText.split(' '):[]}
+            autoEscape={true}
+            textToHighlight={groupName || ''}
+          />
         </TopicName>
         <NumberOfZones numberOfZones={result.length} />
         <ZoomIcon onClick={handleZoomToZones}></ZoomIcon>

@@ -7,7 +7,7 @@ import { RegulatoryLayerSearchResultGroupFirstLevel } from './RegulatoryLayerSea
 import { COLORS } from '../../../../constants/constants'
 
 
-const RegulatoryLayerSearchResultList = ({results}) => {
+const RegulatoryLayerSearchResultList = ({results, searchedText}) => {
   const {
     advancedSearchIsOpen
   } = useSelector(state => state.regulatoryLayerSearch)
@@ -22,6 +22,7 @@ const RegulatoryLayerSearchResultList = ({results}) => {
                 key={groupName}
                 groupName={groupName}
                 results={groupedResult}
+                searchedText={searchedText}
               />
             )
           })

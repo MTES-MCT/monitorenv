@@ -4,11 +4,17 @@ import styled from 'styled-components'
 import { COLORS } from '../../../../constants/constants'
 import { Key, Value, Fields, Field } from './RegulatoryMetadata.style'
 
-const Identification = ({thematique, type, facade}) => {
+const Identification = ({thematique, type, facade, entity_name}) => {
   
   return <Zone>
     <Fields>
       <Body>
+        <Field>
+          <Key>Entité</Key>
+          <Value data-cy={'regulatory-layers-metadata-lawtype'}>
+            {entity_name || <NoValue>-</NoValue>}
+          </Value>
+        </Field>
         <Field>
           <Key>Ensemble reg.</Key>
           <Value data-cy={'regulatory-layers-metadata-lawtype'}>

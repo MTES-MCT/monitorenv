@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import _ from 'lodash'
 import { transformExtent } from 'ol/proj'
 import { intersects } from 'ol/extent';
-const { Document } = require("flexsearch")
+import Document from 'flexsearch/dist/module/document'
 
 import { resetRegulatoryZonesChecked } from './RegulatoryLayerSearch.slice'
 import { addRegulatoryZonesToMyLayers } from '../../../../domain/shared_slices/Regulatory'
@@ -47,7 +47,7 @@ const RegulatoryLayerSearch = () => {
 
   useEffect(()=> { 
     if (globalSearchText) {
-      const searchResults = GetIndex()?.search(globalSearchText, { limit: 20, pluck: 'properties:layer_name', enrich: true})
+      const searchResults = GetIndex()?.search(globalSearchText, { pluck: 'properties:layer_name', enrich: true})
       if (currentMapExtentTracker && filterSearchOnMapExtent) {
         const currentExtent = transformExtent(currentMapExtentTracker,  OPENLAYERS_PROJECTION, WSG84_PROJECTION)
         const filteredResults = _.filter(searchResults, (result => {
@@ -85,7 +85,7 @@ const RegulatoryLayerSearch = () => {
   return (
     <Search>
       <RegulatoryLayerSearchInput setGlobalSearchText={setGlobalSearchText} globalSearchText={globalSearchText} />
-      <RegulatoryLayerSearchResultList results={results}/>
+      <RegulatoryLayerSearchResultList results={results} searchedText={globalSearchText}/>
       <AddRegulatoryLayer
           data-cy={'regulatory-search-add-zones-button'}
           onClick={() => addRegulatoryLayers(regulatoryZonesChecked)}
