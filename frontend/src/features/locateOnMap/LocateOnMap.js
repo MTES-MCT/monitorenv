@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import _ from 'lodash'
 import {transformExtent} from 'ol/proj';
+import { transform } from 'ol/proj'
 
 import { RightMenuButton } from "../commonComponents/RightMenuButton/RightMenuButton"
 import { ReactComponent as ZoomIconSVG } from '../icons/Loupe.svg'
@@ -21,8 +22,17 @@ export const LocateOnMap = () => {
 
   const handleResetSearch = () => setSearchedLocation('')
 
-  const results = usePhotonAPI(searchedLocation)
-  const uniqueResults = _.uniqBy(_.filter(results, location => location?.properties.extent), location => location?.properties?.osm_id)
+  let latlon
+  if (window.location.hash !== '') {
+    const hash = window.location.hash.replace('@', '').replace('#', '')
+    const viewParts = hash.split(',')
+    if (viewParts.length === 3 && !Number.isNaN(viewParts[0]) && !Number.isNaN(viewParts[1]) && !Number.isNaN(viewParts[2])) {
+      latlon = transform([viewParts[1], viewParts[0]], OPENLAYERS_PROJECTION, WSG84_PROJECTION)
+    }
+  }
+  
+  const results = usePhotonAPI(searchedLocation, {latlon})
+  const uniqueResults = _.uniqBy(_.filter(results, location => location?.properties.extent), location => location?.properties?.osm_id).slice(0,10)
 
   const handleSelectLocation = location => () => {
     dispatch(setFitToExtent({extent : transformExtent(location.properties.extent, WSG84_PROJECTION, OPENLAYERS_PROJECTION)}))
@@ -51,7 +61,8 @@ export const LocateOnMap = () => {
         {uniqueResults && uniqueResults?.map((location)=>{
           return (<Location onClick={handleSelectLocation(location)} key={location.properties.osm_id}>
               <Name>{location.properties.name}</Name>
-              <Country>{location.properties.country}</Country>
+              
+              <Country>{[location.properties.city || location.properties.osm_value, location.properties.state, location.properties.country].filter(t=>t).join(', ')}</Country>
             </Location>)
         })}
       </ResultsList>
@@ -103,6 +114,7 @@ const CloseIcon = styled(CloseIconSVG)`
 `
 
 const ResultsList = styled.ul`
+  width: 306px;
   list-style: none;
   padding: 0;
   text-align: left;
@@ -112,16 +124,17 @@ const ResultsList = styled.ul`
 const Location = styled.li`
   padding: 7px;
   display: flex;
+  flex-direction: column;
   :hover, :focus {
     background: ${COLORS.gainsboro};
     cursor: pointer;
   }
 `
-const Name = styled.span`
+const Name = styled.div`
   flex: 1;
 `
 
-const Country = styled.span`
+const Country = styled.div`
   font-style: italic;
   text-align: right;
 `
