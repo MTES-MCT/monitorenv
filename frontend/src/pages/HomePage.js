@@ -21,6 +21,8 @@ import InterestPoint from '../features/interest_points/InterestPoint'
 import { LocateOnMap } from '../features/locateOnMap/LocateOnMap';
 import { SideWindowTestContainer } from '../features/side_window/SideWindowTestContainer';
 
+import { CYPRESS_TEST } from '../env';
+
 const persistor = persistStore(homeStore);
 
 export const HomePage = () => {
@@ -28,7 +30,9 @@ export const HomePage = () => {
     <PersistGate loading={null} persistor={persistor}>
       <NamespaceContext.Provider value={'homepage'}>
         <Switch>
-          {(!(process.env.NODE_ENV === 'production')) && 
+          {
+          // UNSAFE : CYPRESS_TEST is overridable on the client
+          CYPRESS_TEST==='true' && 
             <Route exact path="/side_window">
               <SideWindowTestContainer />
             </Route>

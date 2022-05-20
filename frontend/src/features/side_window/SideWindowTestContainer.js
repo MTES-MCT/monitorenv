@@ -11,5 +11,5 @@ export const SideWindowTestContainer = () => {
     dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))
     dispatch(openSideWindowTab(true))
   })
-  return (<SideWindow></SideWindow>)
+  return (<SideWindow />)
 }

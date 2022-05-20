@@ -12,7 +12,7 @@ import { Integrations } from '@sentry/tracing'
 import App from './App'
 import GlobalFonts from './fonts/fonts'
 
-if (!(process.env.NODE_ENV === 'development')) {
+if (process.env.NODE_ENV !== 'development') {
   Sentry.init({
     dsn: process.env.REACT_APP_SENTRY_DSN,
     integrations: [new Integrations.BrowserTracing({
