@@ -7,6 +7,7 @@ import XYZ from 'ol/source/XYZ'
 import TileWMS from 'ol/source/TileWMS'
 
 import Layers, { baseLayers } from '../domain/entities/layers'
+import { MAPBOX_KEY, SHOM_KEY } from '../env'
 
 const BaseLayer = ({ map }) => {
   let selectedBaseLayer = useSelector(state => state.map.selectedBaseLayer)
@@ -14,7 +15,7 @@ const BaseLayer = ({ map }) => {
   const [baseLayersObjects] = useState({
     LIGHT: () => new MapboxVector({
       styleUrl: 'mapbox://styles/monitorfish/ckrbusml50wgv17nrzy3q374b',
-      accessToken: process.env.REACT_APP_MAPBOX_KEY,
+      accessToken: MAPBOX_KEY,
       className: Layers.BASE_LAYER.code,
       zIndex: 0
     }),
@@ -27,7 +28,7 @@ const BaseLayer = ({ map }) => {
     }),
     SATELLITE: () => new TileLayer({
       source: new XYZ({
-        url: 'https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.jpg90?access_token=' + process.env.REACT_APP_MAPBOX_KEY,
+        url: 'https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.jpg90?access_token=' + MAPBOX_KEY,
         maxZoom: 19
       }),
       className: Layers.BASE_LAYER.code,
@@ -36,14 +37,14 @@ const BaseLayer = ({ map }) => {
     /*
     DARK: () => new MapboxVector({
       styleUrl: 'mapbox://styles/monitorfish/cklv7vc0f1ej817o5ivmkjmrs',
-      accessToken: process.env.REACT_APP_MAPBOX_KEY,
+      accessToken: MAPBOX_KEY,
       className: Layers.BASE_LAYER.code,
       zIndex: 0
     }),
     */
     SHOM: () => new TileLayer({
       source: new TileWMS({
-        url: `https://services.data.shom.fr/${process.env.REACT_APP_SHOM_KEY}/wms/r`,
+        url: `https://services.data.shom.fr/${SHOM_KEY}/wms/r`,
         params: { LAYERS: 'RASTER_MARINE_3857_WMSR', TILED: true },
         serverType: 'geoserver',
         // Countries have transparency, so do not fade tiles:

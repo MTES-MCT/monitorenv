@@ -1,8 +1,6 @@
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../domain/entities/map'
 
-export const GEOSERVER_URL = process.env.REACT_APP_GEOSERVER_REMOTE_URL
-export const GEOSERVER_NAMESPACE = process.env.REACT_APP_GEOSERVER_NAMESPACE
-export const GEOSERVER_BACKOFFICE_URL = process.env.REACT_APP_GEOSERVER_LOCAL_URL
+import { GEOSERVER_REMOTE_URL, GEOSERVER_NAMESPACE } from '../env'
 
 const OK = 200
 
@@ -60,7 +58,7 @@ export function throwIrretrievableAdministrativeZoneError (e, type) {
  * @throws {Error}
  */
  export function getAdministrativeZoneFromAPI (administrativeZone, extent, subZone) {
-  const geoserverURL = GEOSERVER_URL
+  const geoserverURL = GEOSERVER_REMOTE_URL
 
   return fetch(getAdministrativeZoneURL(administrativeZone, extent, subZone, geoserverURL))
     .then(response => {

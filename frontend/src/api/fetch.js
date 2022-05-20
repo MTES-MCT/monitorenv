@@ -3,10 +3,8 @@ const API = null // eslint-disable-line
 
 import Layers from '../domain/entities/layers'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../domain/entities/map'
+import { GEOSERVER_NAMESPACE, GEOSERVER_REMOTE_URL, GEOSERVER_BACKOFFICE_URL } from '../env'
 
-export const GEOSERVER_URL = process.env.REACT_APP_GEOSERVER_REMOTE_URL
-export const GEOSERVER_NAMESPACE = process.env.REACT_APP_GEOSERVER_NAMESPACE
-export const GEOSERVER_BACKOFFICE_URL = process.env.REACT_APP_GEOSERVER_LOCAL_URL
 
 const OK = 200
 // const CREATED = 201
@@ -30,7 +28,7 @@ function throwIrretrievableAdministrativeZoneError (e, type) {
 
 function getRegulatoryZoneFromAPI (type, regulatoryZone, fromBackoffice) {
   try {
-    const geoserverURL = fromBackoffice ? GEOSERVER_BACKOFFICE_URL : GEOSERVER_URL
+    const geoserverURL = fromBackoffice ? GEOSERVER_BACKOFFICE_URL : GEOSERVER_REMOTE_URL
 
     return fetch(getRegulatoryZoneURL(type, regulatoryZone, geoserverURL))
       .then(response => {
@@ -80,7 +78,7 @@ function getRegulatoryZoneURL (type, regulatoryZone, geoserverURL) {
  */
 export function getRegulatoryZonesInExtentFromAPI (extent, fromBackoffice) {
   try {
-    const geoserverURL = fromBackoffice ? GEOSERVER_BACKOFFICE_URL : GEOSERVER_URL
+    const geoserverURL = fromBackoffice ? GEOSERVER_BACKOFFICE_URL : GEOSERVER_REMOTE_URL
 
     return fetch(`${geoserverURL}/geoserver/wfs?service=WFS` +
       `&version=1.1.0&request=GetFeature&typename=${GEOSERVER_NAMESPACE}:${Layers.REGULATORY.code}` +
@@ -129,7 +127,7 @@ function getFirstFeature (response) {
 function getRegulatoryFeatureMetadataFromAPI (regulatorySubZone, fromBackoffice) {
   let url
   try {
-    const geoserverURL = fromBackoffice ? GEOSERVER_BACKOFFICE_URL : GEOSERVER_URL
+    const geoserverURL = fromBackoffice ? GEOSERVER_BACKOFFICE_URL : GEOSERVER_REMOTE_URL
 
     url = getRegulatoryZoneURL(Layers.REGULATORY.code, regulatorySubZone, geoserverURL)
   } catch (e) {
@@ -155,7 +153,7 @@ function getRegulatoryFeatureMetadataFromAPI (regulatorySubZone, fromBackoffice)
 }
 
 function getAdministrativeSubZonesFromAPI (type, fromBackoffice) {
-  const geoserverURL = fromBackoffice ? GEOSERVER_BACKOFFICE_URL : GEOSERVER_URL
+  const geoserverURL = fromBackoffice ? GEOSERVER_BACKOFFICE_URL : GEOSERVER_REMOTE_URL
 
   let query
   if (type === Layers.FAO.code) {

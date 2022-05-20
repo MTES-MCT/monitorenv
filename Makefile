@@ -85,10 +85,12 @@ run-notebook:
 
 # used ?
 build-app:
-	docker build --no-cache -f infra/configurations/app/Dockerfile . -t monitorenv-app:$(VERSION) --build-arg VERSION=$(VERSION) --build-arg ENV_PROFILE=$(ENV_PROFILE) --build-arg GITHUB_SHA=$(GITHUB_SHA)
+	docker build --no-cache -f infra/docker/app/Dockerfile . -t monitorenv-app:$(VERSION) --build-arg VERSION=$(VERSION) --build-arg ENV_PROFILE=$(ENV_PROFILE) --build-arg GITHUB_SHA=$(GITHUB_SHA)
 tag-docker-image:
 	docker tag monitorenv-app:$(VERSION) docker.pkg.github.com/mtes-mct/monitorenv/monitorenv-app:$(VERSION)
 push-docker-image:
 	docker push docker.pkg.github.com/mtes-mct/monitorenv/monitorenv-app:$(VERSION)
+
+# CI - TESTS
 run-infra-for-frontend-tests:
 	export MONITORENV_VERSION=$(VERSION) && docker-compose -f ./infra/docker/docker-compose.test.yml up -d
