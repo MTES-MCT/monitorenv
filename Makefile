@@ -18,7 +18,7 @@ run-front-dev:
 
 .PHONY: back-config
 back-config:
-	docker-compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.dev.yml config
+	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.dev.yml config
 
 .PHONY: run-back-with-infra
 run-back-with-infra: erase-db run-infra clean-target-env run-back
@@ -30,7 +30,7 @@ run-back:
 .PHONY: run-infra
 run-infra:
 	@echo "Preparing database"
-	docker-compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.dev.yml up -d db geoserver
+	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.dev.yml up -d db geoserver
 	@echo "Waiting for TimescaleDB to be ready to accept connections"
 	@while [ -z "$$(docker logs $(PROJECT_NAME)-db-1 2>&1 | grep -o "database system is ready to accept connections")" ]; \
 	do \
@@ -42,7 +42,7 @@ run-infra:
 
 .PHONY: erase-db
 erase-db:
-	docker-compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.dev.yml down db
+	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.dev.yml down db
 	docker volume rm -f $(PROJECT_NAME)_db-data
 
 .PHONY: clean-target-env
@@ -93,4 +93,18 @@ push-docker-image:
 
 # CI - TESTS
 run-infra-for-frontend-tests:
-	export MONITORENV_VERSION=$(VERSION) && docker-compose -f ./infra/docker/docker-compose.test.yml up -d
+	export MONITORENV_VERSION=$(VERSION) && docker compose -f ./infra/docker/docker-compose.test.yml up -d
+
+
+# ENV setup
+create-env-file:
+	cp infra/.env.template infra/.env
+check-config:
+	export MONITORENV_VERSION=$(VERSION) && docker compose --project-name $(PROJECT_NAME) --project-directory $(INFRA_FOLDER)/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml config
+# RUN commands
+restart-app:
+	export MONITORENV_VERSION=$(VERSION) && docker compose --project-name $(PROJECT_NAME) --project-directory $(INFRA_FOLDER)/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml up -d
+
+# MAINTENANCE
+remove-unused-docker-images:
+	docker image prune -a

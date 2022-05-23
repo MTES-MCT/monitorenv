@@ -1,0 +1,64 @@
+version: '3'
+services:
+  app:
+    image: ghcr.io/mtes-mct/monitorenv/monitorenv-app:$MONITORENV_VERSION
+    container_name: monitorenv_backend
+    user: "monitorenv:${MONITORENV_LOGS_AND_BACKUPS_GID}"
+    environment:
+      - ENV_DB_URL=jdbc:postgresql://db:5432/$POSTGRES_DB?user=$POSTGRES_USER&password=$POSTGRES_PASSWORD
+      - REACT_APP_GEOSERVER_REMOTE_URL=https://monitorenv.din.developpement-durable.gouv.fr
+      - REACT_APP_GEOSERVER_LOCAL_URL=https://10.56.205.25:8082
+      - REACT_APP_GEOSERVER_NAMESPACE=monitorenv
+      - SPRING_PROFILES_ACTIVE=prod
+      - HOST_IP=127.0.0.1
+    ports:
+      - 8880:8880
+      - 8000:8000
+      - 5000:5000
+      - 5001:5001
+    volumes:
+      - "${MONITORENV_LOGS_FOLDER}:/home/monitorenv/logs"
+    networks:
+      - backend
+    depends_on:
+      - db
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1024m"
+
+  db:
+    container_name: monitorenv_database
+    user: ":${MONITORENV_LOGS_AND_BACKUPS_GID}"
+    volumes:
+      - "${MONITORENV_BACKUPS_FOLDER}:/opt/monitorenv_backups"
+    ports:
+      - 5432:5432
+    networks:
+      - backend
+    restart: always
+
+  geoserver:
+    container_name: monitorenv_geoserver
+    restart: always
+    environment:
+      - GEOSERVER_ADMIN_PASSWORD=${GEOSERVER_ADMIN_PASSWORD}
+      - GEOSERVER_ADMIN_USER=${GEOSERVER_ADMIN_USER}
+    ports:
+      - ${GEOSERVER_PORT}:8080
+    networks:
+      - backend
+    healthcheck:
+      test: curl --fail -s http://localhost:8080/geoserver/index.html || exit 1
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  backend:
+
+
+volumes:
+  geoserver-data:
+    driver: local

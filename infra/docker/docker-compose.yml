@@ -1,29 +1,34 @@
 version: '3'
 services:
-  app:
-    image: docker.pkg.github.com/mtes-mct/monitorenv/monitorenv-app:$MONITORENV_VERSION
-    container_name: monitorenv_backend
-    user: "monitorenv:${MONITORENV_LOGS_GID}"
+
+  db:
+    image: timescale/timescaledb-postgis:1.7.4-pg11
     environment:
-      - ENV_DB_URL=jdbc:postgresql://db:5432/$POSTGRES_DB?user=$POSTGRES_USER&password=$POSTGRES_PASSWORD
-      - REACT_APP_GEOSERVER_REMOTE_URL=https://monitorenv.din.developpement-durable.gouv.fr
-      - REACT_APP_GEOSERVER_LOCAL_URL=https://10.56.205.25:8082
-      - REACT_APP_GEOSERVER_NAMESPACE=monitorenv
-      - SPRING_PROFILES_ACTIVE=prod
-      - HOST_IP=127.0.0.1
-    ports:
-      - 8880:8880
-      - 8000:8000
-      - 5000:5000
-      - 5001:5001
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     volumes:
-      - "${MONITORENV_LOGS_FOLDER}:/home/monitorenv/logs"
-    networks:
-      - backend
-    depends_on:
-      - db
-    restart: always
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "1024m"
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - ${POSTGRES_PORT}:5432
+
+  geoserver:
+    container_name: monitorenv_geoserver
+    image: kartoza/geoserver:2.20.2
+    environment:
+      - GEOSERVER_ADMIN_PASSWORD=${GEOSERVER_ADMIN_PASSWORD}
+      - GEOSERVER_ADMIN_USER=${GEOSERVER_ADMIN_USER}
+    ports:
+      - ${GEOSERVER_PORT}:8080
+    volumes:
+      - geoserver-data:/opt/geoserver/data_dir
+      - geoserver-settings:/settings
+
+volumes:
+  db-data:
+    driver: local
+
+  geoserver-data:
+    driver: local
+  geoserver-settings:
+    driver: local
