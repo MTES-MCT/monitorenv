@@ -80,30 +80,39 @@ install-data-pipelines:
 run-notebook:
 	cd datascience && poetry run jupyter notebook
 
-# CI commands - app
-.PHONY: build-app tag-docker-image push-docker-image run-infra-for-frontend-tests
 
-# used ?
+# CI commands - app
+.PHONY: build-app docker-tag-app docker-push-app run-infra-for-frontend-tests
 build-app:
 	docker build --no-cache -f infra/docker/app/Dockerfile . -t monitorenv-app:$(VERSION) --build-arg VERSION=$(VERSION) --build-arg ENV_PROFILE=$(ENV_PROFILE) --build-arg GITHUB_SHA=$(GITHUB_SHA)
-tag-docker-image:
-	docker tag monitorenv-app:$(VERSION) docker.pkg.github.com/mtes-mct/monitorenv/monitorenv-app:$(VERSION)
-push-docker-image:
-	docker push docker.pkg.github.com/mtes-mct/monitorenv/monitorenv-app:$(VERSION)
+docker-tag-app:
+	docker tag monitorenv-app:$(VERSION) ghcr.io/mtes-mct/monitorenv/monitorenv-app:$(VERSION)
+docker-push-app:
+	docker push ghcr.io/mtes-mct/monitorenv/monitorenv-app:$(VERSION)
 
-# CI - TESTS
+## CI - TESTS
 run-infra-for-frontend-tests:
 	export MONITORENV_VERSION=$(VERSION) && docker compose -f ./infra/docker/docker-compose.test.yml up -d
 
+# CI commands - pipeline
+.PHONY: docker-build-pipeline docker-test-pipeline docker-tag-pipeline docker-push-pipeline
+docker-build-pipeline:
+	docker build -f "infra/docker/datapipeline/Dockerfile" . -t monitorenv-pipeline:$(VERSION)
+docker-test-pipeline:
+	docker run --network host -v /var/run/docker.sock:/var/run/docker.sock -u monitorenv-pipeline:$(DOCKER_GROUP) --env-file datascience/.env.test monitorenv-pipeline:$(VERSION) coverage run -m pytest --pdb tests
+docker-tag-pipeline:
+	docker tag monitorenv-pipeline:$(VERSION) ghcr.io/mtes-mct/monitorenv/monitorenv-pipeline:$(VERSION)
+docker-push-pipeline:
+	docker push ghcr.io/mtes-mct/monitorenv/monitorenv-pipeline:$(VERSION)
 
 # ENV setup
 create-env-file:
 	cp infra/.env.template infra/.env
 check-config:
-	export MONITORENV_VERSION=$(VERSION) && docker compose --project-name $(PROJECT_NAME) --project-directory $(INFRA_FOLDER)/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml config
+	docker compose --project-name $(PROJECT_NAME) --project-directory $(INFRA_FOLDER)/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml config
 # RUN commands
 restart-app:
-	export MONITORENV_VERSION=$(VERSION) && docker compose --project-name $(PROJECT_NAME) --project-directory $(INFRA_FOLDER)/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml up -d
+	docker compose --project-name $(PROJECT_NAME) --project-directory $(INFRA_FOLDER)/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml up -d
 
 # MAINTENANCE
 remove-unused-docker-images:

@@ -19,7 +19,7 @@ services:
     volumes:
       - "${MONITORENV_LOGS_FOLDER}:/home/monitorenv/logs"
     networks:
-      - backend
+      - backend_network
     depends_on:
       - db
     restart: always
@@ -36,7 +36,7 @@ services:
     ports:
       - 5432:5432
     networks:
-      - backend
+      - backend_network
     restart: always
 
   geoserver:
@@ -48,7 +48,7 @@ services:
     ports:
       - ${GEOSERVER_PORT}:8080
     networks:
-      - backend
+      - backend_network
     healthcheck:
       test: curl --fail -s http://localhost:8080/geoserver/index.html || exit 1
       interval: 1m30s
@@ -56,7 +56,7 @@ services:
       retries: 3
 
 networks:
-  backend:
+  backend_network:
 
 
 volumes:

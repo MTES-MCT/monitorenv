@@ -196,5 +196,5 @@ jobs:
       if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v') || startsWith(github.ref, 'refs/heads/v')
       run: |
         echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${GITHUB_ACTOR} --password-stdin
-        make tag-docker-image
-        make push-docker-image
+        make docker-tag-app
+        make docker-push-app

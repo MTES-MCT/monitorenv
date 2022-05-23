@@ -5,7 +5,7 @@ on:
     paths:
     - 'datascience/**'
     - '.github/workflows/*'
-    - 'infra/docker/Dockerfile.DataPipeline'
+    - 'infra/docker/datapipeline/Dockerfile'
     - 'Makefile'
   schedule:
     - cron: "38 11 */3 * *"
