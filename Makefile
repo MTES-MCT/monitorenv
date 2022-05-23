@@ -73,12 +73,15 @@ init-geoserver:
 
 
 # DATA commands
-.PHONY: install-data-pipelines
-install-data-pipelines:
+.PHONY: install-data-pipelines run-notebook test-pipeline update-python-dependencies
+install-pipeline:
 	cd datascience && poetry install
-.PHONY: run-notebook
 run-notebook:
 	cd datascience && poetry run jupyter notebook
+test-pipeline:
+	cd datascience && poetry run coverage run -m pytest --pdb tests/ && poetry run coverage report && poetry run coverage html
+update-python-dependencies:
+	cd datascience && poetry export --without-hashes -o requirements.txt && poetry export --without-hashes --dev -o requirements-dev.txt
 
 
 # CI commands - app
