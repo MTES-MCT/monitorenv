@@ -8,26 +8,21 @@ endif
 
 
 # DEV commands
-.PHONY: install 
+.PHONY: install run-front-dev run-back-with-infra run-back run-infra erase-db clean-target-env back-config docker-build-app test test-front
 install:
 	cd frontend && npm install
 
-.PHONY: run-front-dev
 run-front-dev:
 	cd frontend && npm start
 
-.PHONY: back-config
 back-config:
 	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.dev.yml config
 
-.PHONY: run-back-with-infra
 run-back-with-infra: erase-db run-infra clean-target-env run-back
 
-.PHONY: run-back
 run-back:
 	cd backend && ./mvnw spring-boot:run -Dspring-boot.run.arguments="--spring.config.additional-location="$(BACKEND_CONFIGURATION_FOLDER)"" -Dspring-boot.run.profiles="dev"
 
-.PHONY: run-infra
 run-infra:
 	@echo "Preparing database"
 	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.dev.yml up -d db geoserver
@@ -40,12 +35,10 @@ run-infra:
   
 	@echo "Database Ready for connections!"
 
-.PHONY: erase-db
 erase-db:
 	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.dev.yml down db
 	docker volume rm -f $(PROJECT_NAME)_db-data
 
-.PHONY: clean-target-env
 clean-target-env:
 	rm -rf $(shell pwd)/backend/target
 
@@ -55,21 +48,24 @@ test:
 test-front:
 	cd frontend && npm test
 
+docker-build-app:
+	docker build --no-cache -f infra/docker/app/Dockerfile . -t monitorenv-app:$(VERSION) --build-arg VERSION=$(VERSION) --build-arg ENV_PROFILE=$(ENV_PROFILE) --build-arg GITHUB_SHA=$(GITHUB_SHA)
+
 # INIT commands
-.PHONY: load-sig-data
+.PHONY: load-sig-data init-geoserver
 load-sig-data:
 	set -a
 	. ./infra/.env
 	set +a
 	echo ${PROJECT_NAME} 
 	./infra/init/postgis_insert_layers.sh 
+
 init-geoserver:
 	set -a
 	. ./infra/.env
 	set +a
 	echo ${PROJECT_NAME} 
 	./infra/init/geoserver_init_layers.sh
-
 
 
 # DATA commands
@@ -85,15 +81,11 @@ update-python-dependencies:
 
 
 # CI commands - app
-.PHONY: build-app docker-tag-app docker-push-app run-infra-for-frontend-tests
-build-app:
-	docker build --no-cache -f infra/docker/app/Dockerfile . -t monitorenv-app:$(VERSION) --build-arg VERSION=$(VERSION) --build-arg ENV_PROFILE=$(ENV_PROFILE) --build-arg GITHUB_SHA=$(GITHUB_SHA)
+.PHONY: docker-tag-app docker-push-app run-infra-for-frontend-tests
 docker-tag-app:
 	docker tag monitorenv-app:$(VERSION) ghcr.io/mtes-mct/monitorenv/monitorenv-app:$(VERSION)
 docker-push-app:
 	docker push ghcr.io/mtes-mct/monitorenv/monitorenv-app:$(VERSION)
-
-## CI - TESTS
 run-infra-for-frontend-tests:
 	export MONITORENV_VERSION=$(VERSION) && docker compose -f ./infra/docker/docker-compose.test.yml up -d
 
@@ -109,14 +101,18 @@ docker-push-pipeline:
 	docker push ghcr.io/mtes-mct/monitorenv/monitorenv-pipeline:$(VERSION)
 
 # ENV setup
+.PHONY: create-env-file check-config
 create-env-file:
 	cp infra/.env.template infra/.env
 check-config:
 	docker compose --project-name $(PROJECT_NAME) --project-directory $(INFRA_FOLDER)/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml config
+
 # RUN commands
+.PHONY: restart-app
 restart-app:
 	docker compose --project-name $(PROJECT_NAME) --project-directory $(INFRA_FOLDER)/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml up -d
 
 # MAINTENANCE
+.PHONY: remove-unused-docker-images
 remove-unused-docker-images:
 	docker image prune -a
