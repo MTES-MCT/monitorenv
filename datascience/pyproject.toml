@@ -17,7 +17,6 @@ matplotlib = "^3.5.1"
 jupytext = "^1.13.6"
 
 pandas = "^1.4.0"
-geopandas = "^0.10.2"
 openpyxl = "^3.0.9"
 Scrapy = "^2.6.0"
 SQLAlchemy = "^1.4.31"
@@ -26,7 +25,6 @@ cx-Oracle = "^8.1.0"
 psycopg2 = "^2.9.3"
 
 simplejson = "^3.17.6"
-Rtree = "^0.9.7"
 h3 = "^3.7.3"
 pytz = "2021.3"
 
@@ -45,6 +43,8 @@ Faker = "^12.3.0"
 
 coverage = "^6.4"
 pytest = "^5.2"
+geopandas = "0.10.2"
+Rtree = "^1.0.0"
 
 [tool.poetry.dev-dependencies]
 # Linting
