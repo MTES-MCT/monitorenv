@@ -69,7 +69,7 @@ init-geoserver:
 
 
 # DATA commands
-.PHONY: install-data-pipelines run-notebook test-pipeline update-python-dependencies
+.PHONY: install-pipelines run-notebook test-pipeline update-python-dependencies
 install-pipeline:
 	cd datascience && poetry install
 run-notebook:
@@ -113,6 +113,12 @@ restart-app:
 	docker compose --project-name $(PROJECT_NAME) --project-directory $(INFRA_FOLDER)/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml up -d
 
 # MAINTENANCE
-.PHONY: remove-unused-docker-images
+.PHONY: remove-unused-docker-images logs-app logs-geoserver logs-db
 remove-unused-docker-images:
 	docker image prune -a
+logs-backend:
+	docker container logs -f monitorenv_backend
+logs-geoserver:
+	docker container logs -f monitorenv_geoserver
+logs-db:
+	docker container logs -f monitorenv_database
