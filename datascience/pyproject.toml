@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "monitorenv"
+name = "src"
 version = "0.1.0"
 description = ""
 authors = ["Thomas Brosset <thomas.brosset@gmail.com>"]
@@ -17,10 +17,20 @@ matplotlib = "^3.5.1"
 jupytext = "^1.13.6"
 
 pandas = "^1.4.0"
+geopandas = "^0.10.2"
 openpyxl = "^3.0.9"
 Scrapy = "^2.6.0"
 SQLAlchemy = "^1.4.31"
+GeoAlchemy2 = "^0.9.4"
+cx-Oracle = "^8.1.0"
+psycopg2 = "^2.9.3"
 
+simplejson = "^3.17.6"
+Rtree = "^0.9.7"
+h3 = "^3.7.3"
+pytz = "2021.3"
+
+prefect = "0.15.11"
 
 Sphinx = "^4.4.0"
 sphinx-click = "^3.1.0"
@@ -30,13 +40,13 @@ sphinx-autodoc-typehints = "^1.16.0"
 importlib-metadata = "^4.10.1"
 myst-parser = "^0.16.1"
 Pygments = "^2.11.2"
-psycopg2 = "^2.9.3"
 progressbar = "^2.5"
-geopandas = "^0.10.2"
 Faker = "^12.3.0"
 
-[tool.poetry.dev-dependencies]
+coverage = "^6.4"
 pytest = "^5.2"
+
+[tool.poetry.dev-dependencies]
 # Linting
 ## Type Checking and Data Validation
 mypy = "^0.931"
