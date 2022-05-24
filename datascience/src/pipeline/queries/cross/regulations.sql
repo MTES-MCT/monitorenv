@@ -1,14 +1,23 @@
-SELECT
-    id,
-    law_type,
-    facade,
-    topic,
-    zone,
-    region,
-    fishing_period,
-    gears,
-    species,
-    regulatory_references,
-    ST_CurveToLine(geometry) AS geometry,
-    geometry_simplified
-FROM prod.regulations
+SELECT 
+id,
+geom,
+entity_name,
+url,
+layer_name,
+"façade" as facade,
+ref_reg,
+"Editeur" as editeur,
+source,
+"Observation" as observation,
+"Thematique" as thematique,
+"Echelle" as echelle,
+duree_validite,
+temporalite,
+"action",
+objet,
+type,
+signataire,
+date,
+date_fin,
+"Edition" as edition
+FROM prod."REG_ENV_V3"
