@@ -47,7 +47,7 @@ def find_table_schema(db: str, table_name: str):
 
     If the table is not found, returns None.
 
-    Possible values for db : 'ocan', 'monitorfish_remote',
+    Possible values for db : 'ocan', 'monitorenv_remote',
                              'fmc', 'monitorfish_local'
     """
     e = create_engine(db)
@@ -66,7 +66,7 @@ def print_schemas_tables(db: str, schemas=None):
     Optionnal argument 'schemas' takes a list of schemas to restrict the scan.
 
     Possible values for db :
-        'ocan', 'monitorfish_remote', 'fmc', 'monitorfish_local'
+        'ocan', 'monitorenv_remote', 'fmc', 'monitorfish_local'
     """
     e = create_engine(db)
     insp = inspect(e)
@@ -88,11 +88,11 @@ def pg_dump_table(
 
       * If ``db`` is ``monitorfish_local``, the ``pg_dump`` command will be run by the
       machine on which the command is run, so postres must be installed.
-      * If ``db`` is ``monitorfish_remote``, the command in run through in the docker
+      * If ``db`` is ``monitorenv_remote``, the command in run through in the docker
       container with ``docker exec monitorfish_database``.
 
     Args:
-        db (str): 'monitorfish_remote' or 'monitorfish_local'
+        db (str): 'monitorenv_remote' or 'monitorfish_local'
         table_name (str): the name of the table to export.
         what (Union[None, str]): ``'data-only'`` ``'schema-only'`` or ``None``. If
           ``None``, output both data and schema definition. Defaults to ``None``.
@@ -103,9 +103,9 @@ def pg_dump_table(
         str: output of ``pg_dump`` command
     """
     try:
-        assert db in ("monitorfish_remote", "monitorfish_local")
+        assert db in ("monitorenv_remote", "monitorfish_local")
     except AssertionError:
-        e = f"'db' must be 'monitorfish_local' or 'monitorfish_remote' , got {db}"
+        e = f"'db' must be 'monitorfish_local' or 'monitorenv_remote' , got {db}"
         raise ValueError(e)
 
     what_options = {
@@ -127,7 +127,7 @@ def pg_dump_table(
     if inserts:
         cmd = cmd + " --column-inserts"
 
-    if db == "monitorfish_remote":
+    if db == "monitorenv_remote":
         cmd = "docker exec monitorfish_database " + cmd
 
     stream = os.popen(cmd)

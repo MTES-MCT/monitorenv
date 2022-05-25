@@ -28,7 +28,7 @@ def extract(
 
     Args:
         db_name (str): name of the database to extract from : "fmc", "ocan",
-            "monitorfish_local" or "monitorfish_remote"
+            "monitorfish_local" or "monitorenv_remote"
         query_filepath (Union[Path, str]): path to .sql file, starting from the saved
             queries folder. example : "ocan/nav_fr_peche.sql"
         dtypes (Union[None, dict], optional): If specified, use {col: dtype, …}, where
@@ -110,7 +110,7 @@ def load(
           - 'upsert' to append the rows to the table, replacing the rows whose id is
             already
         db_name (str, optional): Required if a `connection` is not provided.
-          'monitorfish_remote' or 'monitorfish_local'. Defaults to None.
+          'monitorenv_remote' or 'monitorfish_local'. Defaults to None.
         pg_array_columns (list, optional): columns containing sequences that must be
           serialized before loading into columns with Postgresql `Array` type
         handle_array_conversion_errors (bool): whether to handle or raise upon error
@@ -265,7 +265,7 @@ def delete_rows(
         table_name (str): name of the table
         schema (str): database schema of the table
         db_name (str): name of the database. One of
-          - 'monitorfish_remote'
+          - 'monitorenv_remote'
           - 'monitorfish_local'
         table_id_column (str): name of the id column in the database.
         ids_to_delete (set): the ids of the rows to delete.

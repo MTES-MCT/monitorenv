@@ -24,7 +24,7 @@ db_env = {
         "usr": "ORACLE_FMC_USER",
         "pwd": "ORACLE_FMC_PASSWORD",
     },
-    "monitorfish_remote": {
+    "monitorenv_remote": {
         "client": "MONITORFISH_REMOTE_DB_CLIENT",
         "host": "MONITORFISH_REMOTE_DB_HOST",
         "port": "MONITORFISH_REMOTE_DB_PORT",
@@ -56,7 +56,7 @@ def make_connection_string(db: str) -> str:
 
     Args:
         db (str): Database name. Possible values :
-        'ocan', 'fmc', 'monitorfish_remote', 'monistorfish_local'
+        'ocan', 'fmc', 'monitorenv_remote', 'monistorfish_local'
 
     Returns:
         str: connection string for selected database.
@@ -86,7 +86,7 @@ def create_engine(db: str, **kwargs) -> sa.engine.Engine:
 
     Args:
         db (str): Database name. Possible values :
-            'ocan', 'fmc', 'monitorfish_remote', 'monistorfish_local', 'cacem_local'
+            'ocan', 'fmc', 'monitorenv_remote', 'monistorfish_local', 'cacem_local'
 
     Returns:
         sa.engine.Engine: sqlalchemy engine for selected database.

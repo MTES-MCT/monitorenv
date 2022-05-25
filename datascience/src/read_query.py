@@ -23,7 +23,7 @@ def read_saved_query(
     """Run saved SQLquery on a database. Supported databases :
     - 'ocan' : OCAN database
     - 'fmc': FMC database
-    - 'monitorfish_remote': Monitorfish database
+    - 'monitorenv_remote': Monitorfish database
     - 'monitorfish_local': Monitorfish PostGIS database hosted in CNSP
     - 'cacem_local' : CACEM PostGIS database hosted in CNSP
 
@@ -31,7 +31,7 @@ def read_saved_query(
 
     Args:
         db (str): Database name. Possible values :
-            'ocan', 'fmc', 'monitorfish_remote', 'monitorfish_local'
+            'ocan', 'fmc', 'monitorenv_remote', 'monitorfish_local'
         sql_filepath (str): path to .sql file, starting from the saved queries folder.
             example : "ocan/nav_fr_peche.sql"
         parse_dates (Union[list, dict, None], optional):
@@ -90,7 +90,7 @@ def read_query(
     """Run SQLquery on a database. Supported databases :
     - 'ocan' : OCAN database
     - 'fmc': FMC database
-    - 'monitorfish_remote': Monitorfish database
+    - 'monitorenv_remote': Monitorfish database
     - 'monitorfish_local': Monitorfish PostGIS database hosted in CNSP
     - 'cacem_local' : CACEM PostGIS database hosted in CNSP
 
@@ -98,7 +98,7 @@ def read_query(
 
     Args:
         db (str): Database name. Possible values :
-            'ocan', 'fmc', 'monitorfish_remote', 'monitorfish_local'
+            'ocan', 'fmc', 'monitorenv_remote', 'monitorfish_local'
         query (str): Query string or SQLAlchemy Selectable
         chunksize (Union[None, str], optional): If specified, return an iterator where
             `chunksize` is the number of rows to include in each chunk. Defaults to None.
@@ -142,13 +142,13 @@ def read_table(db: str, schema: str, table_name: str):
     """Loads database table into pandas Dataframe. Supported databases :
     - 'ocan' : OCAN database
     - 'fmc': FMC database
-    - 'monitorfish_remote': Monitorfish database
+    - 'monitorenv_remote': Monitorfish database
     - 'monitorfish_local': Monitorfish PostGIS database hosted in CNSP
     - 'cacem_local' : CACEM PostGIS database hosted in CNSP
 
     Args:
         db (str): Database name. Possible values :
-            'ocan', 'fmc', 'monitorfish_remote', 'monitorfish_local'
+            'ocan', 'fmc', 'monitorenv_remote', 'monitorfish_local'
         schema (str): Schema name
         table_name (str): Table name
 

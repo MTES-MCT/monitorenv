@@ -17,7 +17,7 @@ def extract_facade_areas() -> gpd.GeoDataFrame:
         gpd.GeoDataFrame : GeoDataFrame of facade areas.
     """
     return extract(
-        db_name="monitorfish_remote",
+        db_name="monitorenv_remote",
         query_filepath="monitorfish/facade_areas.sql",
         backend="geopandas",
         geom_col="geometry",
@@ -40,7 +40,7 @@ def get_facades_table() -> Table:
     facades_table = get_table(
         "facade_areas_subdivided",
         schema="public",
-        conn=create_engine("monitorfish_remote"),
+        conn=create_engine("monitorenv_remote"),
         logger=logger,
     )
 

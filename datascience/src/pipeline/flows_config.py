@@ -9,8 +9,8 @@ from config import (
     DOCKER_IMAGE,
     FLOWS_LOCATION,
     LOGBOOK_FILES_GID,
-    MONITORFISH_HOST,
-    MONITORFISH_IP,
+    MONITORENV_HOST,
+    MONITORENV_IP,
     MONITORFISH_VERSION,
     ROOT_DIRECTORY,
 )
@@ -52,7 +52,7 @@ for flow in flows_to_register:
     host_config = {
         "extra_hosts": {
             "host.docker.internal": "host-gateway",
-            MONITORFISH_HOST: MONITORFISH_IP,
+            MONITORENV_HOST: MONITORENV_IP,
         }
     }
     if flow.name == "Logbook":

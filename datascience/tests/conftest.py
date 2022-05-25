@@ -118,7 +118,7 @@ def start_remote_database_container(set_environment_variables, create_docker_cli
 
 @pytest.fixture(scope="session")
 def create_tables(set_environment_variables, start_remote_database_container):
-    e = create_engine("monitorfish_remote")
+    e = create_engine("monitorenv_remote")
     migrations = get_migrations_in_folders(migrations_folders)
     print("Creating tables")
     with e.connect() as connection:
@@ -129,7 +129,7 @@ def create_tables(set_environment_variables, start_remote_database_container):
 
 @pytest.fixture()
 def reset_test_data(create_tables):
-    e = create_engine("monitorfish_remote")
+    e = create_engine("monitorenv_remote")
     test_data_scripts = get_migrations_in_folder(test_data_scripts_folder)
     print("Inserting test data")
     for s in test_data_scripts:
