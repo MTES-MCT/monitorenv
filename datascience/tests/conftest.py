@@ -102,9 +102,9 @@ def start_remote_database_container(set_environment_variables, create_docker_cli
     remote_database_container = client.containers.run(
         "timescale/timescaledb-postgis:1.7.4-pg11",
         environment={
-            "POSTGRES_PASSWORD": os.environ["MONITORFISH_REMOTE_DB_PWD"],
-            "POSTGRES_USER": os.environ["MONITORFISH_REMOTE_DB_USER"],
-            "POSTGRES_DB": os.environ["MONITORFISH_REMOTE_DB_NAME"],
+            "POSTGRES_PASSWORD": os.environ["MONITORENV_REMOTE_DB_PWD"],
+            "POSTGRES_USER": os.environ["MONITORENV_REMOTE_DB_USER"],
+            "POSTGRES_DB": os.environ["MONITORENV_REMOTE_DB_NAME"],
         },
         ports={"5432/tcp": 5434},
         detach=True,

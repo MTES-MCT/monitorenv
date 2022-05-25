@@ -11,7 +11,7 @@ from config import (
     LOGBOOK_FILES_GID,
     MONITORENV_HOST,
     MONITORENV_IP,
-    MONITORFISH_VERSION,
+    MONITORENV_VERSION,
     ROOT_DIRECTORY,
 )
 from src.pipeline.flows import (
@@ -69,7 +69,7 @@ for flow in flows_to_register:
         }
 
     flow.run_config = DockerRun(
-        image=f"{DOCKER_IMAGE}:{MONITORFISH_VERSION}",
+        image=f"{DOCKER_IMAGE}:{MONITORENV_VERSION}",
         host_config=host_config,
         env=dotenv_values(ROOT_DIRECTORY / ".env"),
     )

@@ -25,12 +25,12 @@ db_env = {
         "pwd": "ORACLE_FMC_PASSWORD",
     },
     "monitorenv_remote": {
-        "client": "MONITORFISH_REMOTE_DB_CLIENT",
-        "host": "MONITORFISH_REMOTE_DB_HOST",
-        "port": "MONITORFISH_REMOTE_DB_PORT",
-        "sid": "MONITORFISH_REMOTE_DB_NAME",
-        "usr": "MONITORFISH_REMOTE_DB_USER",
-        "pwd": "MONITORFISH_REMOTE_DB_PWD",
+        "client": "MONITORENV_REMOTE_DB_CLIENT",
+        "host": "MONITORENV_REMOTE_DB_HOST",
+        "port": "MONITORENV_REMOTE_DB_PORT",
+        "sid": "MONITORENV_REMOTE_DB_NAME",
+        "usr": "MONITORENV_REMOTE_DB_USER",
+        "pwd": "MONITORENV_REMOTE_DB_PWD",
     },
     "monitorfish_local": {
         "client": "MONITORFISH_LOCAL_CLIENT",
