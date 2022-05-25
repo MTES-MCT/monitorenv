@@ -42,7 +42,7 @@ progressbar = "^2.5"
 Faker = "^12.3.0"
 
 coverage = "^6.4"
-pytest = "^5.2"
+pytest = "^6.2.5"
 geopandas = "0.10.2"
 Rtree = "^1.0.0"
 
