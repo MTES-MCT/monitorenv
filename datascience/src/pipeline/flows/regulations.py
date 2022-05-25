@@ -17,7 +17,7 @@ def extract_regulations() -> pd.DataFrame:
         pd.DataFrame: GeoDataFrame of regulation 
     """
     return extract(
-        db_name="monitorfish_local",
+        db_name="cacem_local",
         query_filepath="cross/regulations.sql"
     )
 
