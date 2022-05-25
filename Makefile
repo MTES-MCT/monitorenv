@@ -8,22 +8,22 @@ endif
 
 
 # DEV commands
-.PHONY: install run-front-dev run-back-with-infra run-back run-infra erase-db clean-target-env back-config docker-build-app test test-front
-install:
+.PHONY: dev-install dev-run-front dev-run-back-with-infra dev-run-back dev-run-infra dev-erase-db dev-clean-target-env dev-back-config docker-build-app test test-front
+dev-install:
 	cd frontend && npm install
 
-run-front-dev:
+dev-run-front:
 	cd frontend && npm start
 
-back-config:
+dev-back-config:
 	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.dev.yml config
 
-run-back-with-infra: erase-db run-infra clean-target-env run-back
+dev-run-back-with-infra: erase-db run-infra clean-target-env run-back
 
-run-back:
+dev-run-back:
 	cd backend && ./mvnw spring-boot:run -Dspring-boot.run.arguments="--spring.config.additional-location="$(BACKEND_CONFIGURATION_FOLDER)"" -Dspring-boot.run.profiles="dev"
 
-run-infra:
+dev-run-infra:
 	@echo "Preparing database"
 	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.dev.yml up -d db geoserver
 	@echo "Waiting for TimescaleDB to be ready to accept connections"
@@ -35,11 +35,11 @@ run-infra:
   
 	@echo "Database Ready for connections!"
 
-erase-db:
+dev-erase-db:
 	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.dev.yml down db
 	docker volume rm -f $(PROJECT_NAME)_db-data
 
-clean-target-env:
+dev-clean-target-env:
 	rm -rf $(shell pwd)/backend/target
 
 test:
@@ -69,7 +69,7 @@ init-geoserver:
 
 
 # DATA commands
-.PHONY: install-pipelines run-notebook test-pipeline update-python-dependencies
+.PHONY: install-pipeline run-notebook test-pipeline update-python-dependencies
 install-pipeline:
 	cd datascience && poetry install
 run-notebook:
@@ -108,9 +108,11 @@ check-config:
 	docker compose --project-name $(PROJECT_NAME) --project-directory $(INFRA_FOLDER)/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml config
 
 # RUN commands
-.PHONY: restart-app
+.PHONY: restart-app stop-app
 restart-app:
 	docker compose --project-name $(PROJECT_NAME) --project-directory $(INFRA_FOLDER)/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml up -d
+stop-app:
+	docker compose --project-name $(PROJECT_NAME) --project-directory $(INFRA_FOLDER)/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml stop
 
 # MAINTENANCE
 .PHONY: remove-unused-docker-images logs-app logs-geoserver logs-db
