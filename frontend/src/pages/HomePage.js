@@ -23,6 +23,8 @@ import { SideWindowTestContainer } from '../features/side_window/SideWindowTestC
 
 import { CYPRESS_TEST } from '../env';
 
+const FEATURE_FLAG_REPORTING = false
+
 const persistor = persistStore(homeStore);
 
 export const HomePage = () => {
@@ -43,13 +45,13 @@ export const HomePage = () => {
               <APIWorker/>
               <Map/>
               <LayersSidebar/> 
-              <MissionsMenu />
+              {FEATURE_FLAG_REPORTING && <MissionsMenu />}
               <Measurement/>
               <LocateOnMap />
               <InterestPoint/>
               {/* <APIWorker/> */}
               <ErrorToastNotification/>
-              <SideWindowLauncher/>
+              {FEATURE_FLAG_REPORTING && <SideWindowLauncher/> }
             </Wrapper>
           </Route>
         </Switch>
