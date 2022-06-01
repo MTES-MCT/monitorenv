@@ -14,7 +14,7 @@ EMAIL_TEMPLATES_LOCATION = LIBRARY_LOCATION / Path("pipeline/emails/templates")
 EMAIL_STYLESHEETS_LOCATION = LIBRARY_LOCATION / Path("pipeline/emails/stylesheets")
 
 # Flow execution configuration
-DOCKER_IMAGE = "ghcr.io/mtes-mct/monitorenv/monitorfish-pipeline"
+DOCKER_IMAGE = "ghcr.io/mtes-mct/monitorenv/monitorenv-pipeline"
 MONITORENV_VERSION = os.getenv("MONITORENV_VERSION")
 FLOWS_LOCATION = Path("src/pipeline/flows")  # relative to the WORKDIR in the image
 LOGBOOK_FILES_GID = os.getenv("LOGBOOK_FILES_GID")

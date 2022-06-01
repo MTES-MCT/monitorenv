@@ -120,6 +120,16 @@ restart-app:
 stop-app:
 	docker compose --project-name $(PROJECT_NAME) --project-directory $(INFRA_FOLDER)/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml stop
 
+.PHONY: register-pipeline-flows run-pipeline-agent-int run-pipeline-agent-prod
+register-pipeline-flows:
+	docker pull ghcr.io/mtes-mct/monitorenv/monitorenv-pipeline:$(MONITORENV_VERSION) && \
+	infra/data-pipeline/register-flows.sh
+
+run-pipeline-agent-int:
+	cd datascience && poetry run prefect agent docker start --no-pull &
+run-pipeline-agent-prod:
+	cd datascience && source ~/venv/bin/activate && prefect agent docker start --no-pull &
+
 # MAINTENANCE
 .PHONY: remove-unused-docker-images logs-app logs-geoserver logs-db
 remove-unused-docker-images:
