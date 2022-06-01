@@ -101,9 +101,15 @@ docker-push-pipeline:
 	docker push ghcr.io/mtes-mct/monitorenv/monitorenv-pipeline:$(VERSION)
 
 # ENV setup
-.PHONY: create-env-file check-config
-create-env-file:
-	cp infra/.env.template infra/.env
+.PHONY: init-environment check-config
+init-environment:
+ifeq (,$(wildcard ./infra/.env))
+	@echo "Pas de fichier '.env'. Création d'un nouveau fichier."
+	@echo "source ~/monitorenv/infra/init/init_env.sh" >> ~/.bashrc 
+	@cp infra/.env.template infra/.env
+else 
+	@echo "Un fichier .env existe déjà. Editez ou supprimez le fichier existant."
+endif
 check-config:
 	docker compose --project-name $(PROJECT_NAME) --project-directory $(INFRA_FOLDER)/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml config
 
