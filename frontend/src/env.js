@@ -18,10 +18,10 @@ export const GEOSERVER_BACKOFFICE_URL = self?.env?.REACT_APP_GEOSERVER_LOCAL_URL
 ? self.env.REACT_APP_GEOSERVER_LOCAL_URL
 : process.env.REACT_APP_GEOSERVER_LOCAL_URL
 
-/**
- * Env variables overridables set on build time
- */
+export const MAPBOX_KEY = self?.env?.REACT_APP_MAPBOX_KEY !== '__REACT_APP_MAPBOX_KEY__'
+? self.env.REACT_APP_MAPBOX_KEY
+: process.env.REACT_APP_MAPBOX_KEY
 
-export const MAPBOX_KEY = process.env.REACT_APP_MAPBOX_KEY
-
-export const SHOM_KEY = process.env.REACT_APP_SHOM_KEY
+export const SHOM_KEY = self?.env?.REACT_APP_SHOM_KEY !== '__REACT_APP_SHOM_KEY__'
+? self.env.REACT_APP_SHOM_KEY
+: process.env.REACT_APP_SHOM_KEY
