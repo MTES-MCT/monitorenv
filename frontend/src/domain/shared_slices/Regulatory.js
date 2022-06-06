@@ -21,6 +21,7 @@ const regulatorySlice = createSlice({
     /** @type {Object.<string, RegulatoryZone[]>} selectedRegulatoryLayers */
     /** @type RegulatoryLawTypes regulatoryLayers */
     regulatoryLayers: [],
+    regulatoryLayersByLayerName: [],
     selectedRegulatoryLayerIds: [],
     showedRegulatoryLayerIds:[],
     regulatoryZoneMetadata: null,
@@ -125,6 +126,7 @@ const regulatorySlice = createSlice({
      */
     setRegulatoryLayers (state, { payload: { features } }) {
       state.regulatoryLayers = features
+      state.regulatoryLayersByLayerName = _.groupBy(features, f => f.properties.layer_name)
     },
     /**
      * Set the regulation searched zone extent - used to fit the extent into the OpenLayers view

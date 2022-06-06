@@ -11,10 +11,10 @@ import RegulatoryLayerSearchResultZones from './RegulatoryLayerSearchResultZones
 import { ReactComponent as ZoomIconSVG } from '../../../icons/target.svg'
 import { COLORS } from '../../../../constants/constants'
 
-const NumberOfZones = ({numberOfZones}) => {
+const NumberOfZones = ({numberOfZones, totalNumberOfZones}) => {
   return (
     <ZonesNumber>
-      {`${numberOfZones} zone${numberOfZones > 1 ? 's' : ''}`}
+      {`${numberOfZones} / ${totalNumberOfZones} zone${totalNumberOfZones > 1 ? 's' : ''}`}
     </ZonesNumber>
   )
 }
@@ -23,6 +23,7 @@ export const RegulatoryLayerSearchResultGroupSecondLevel = ({ groupName, result,
   const dispatch = useDispatch()
 
   const { regulatoryZonesChecked } = useSelector(state => state.regulatoryLayerSearch)
+  const totalNumberOfZones = useSelector(state => state.regulatory?.regulatoryLayersByLayerName[groupName]?.length)
 
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
   const groupZoneId = _.map(result, 'id')
@@ -59,7 +60,8 @@ export const RegulatoryLayerSearchResultGroupSecondLevel = ({ groupName, result,
             textToHighlight={groupName || ''}
           />
         </TopicName>
-        <NumberOfZones numberOfZones={result.length} />
+        
+        <NumberOfZones numberOfZones={result.length} totalNumberOfZones={totalNumberOfZones} />
         <ZoomIcon onClick={handleZoomToZones}></ZoomIcon>
         <Checkbox
             onClick={(e)=> e.stopPropagation()}
