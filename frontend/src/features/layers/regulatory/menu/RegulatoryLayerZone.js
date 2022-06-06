@@ -28,13 +28,21 @@ const RegulatoryLayerZone = ({regulatoryZone}) => {
 
 
 
-  const toggleLayerDisplay = () => regulatoryZoneIsShowed ? dispatch(hideRegulatoryLayer(regulatoryZone.id)) : dispatch(showRegulatoryLayer(regulatoryZone.id))
   const handleRemoveZone = () =>  dispatch(removeRegulatoryZonesFromMyLayers([regulatoryZone.id]))
   const zoomToLayerExtent = () => {
     const extent = transformExtent(regulatoryZone.bbox, new Projection({code: WSG84_PROJECTION}), new Projection({code: OPENLAYERS_PROJECTION}) )
     !regulatoryZoneIsShowed && dispatch(showRegulatoryLayer(regulatoryZone.id))
     dispatch(setFitToExtent({extent}))
   }
+
+  const toggleLayerDisplay = () => {
+    if(regulatoryZoneIsShowed) {
+      dispatch(hideRegulatoryLayer(regulatoryZone.id))
+    }  else {
+      zoomToLayerExtent()
+      dispatch(showRegulatoryLayer(regulatoryZone.id))
+    }
+   }
 
   const displayedName = regulatoryZone?.properties?.entity_name.replace(/[_]/g, ' ') || 'AUNCUN NOM'
 
@@ -44,7 +52,7 @@ const RegulatoryLayerZone = ({regulatoryZone}) => {
 
   return (
     <Zone $selected={isZoneSelected}>
-      <Rectangle onClick={zoomToLayerExtent} $vectorLayerColor={getRegulatoryEnvColorWithAlpha(regulatoryZone?.doc?.properties?.thematique)}/>
+      <Rectangle $vectorLayerColor={getRegulatoryEnvColorWithAlpha(regulatoryZone?.doc?.properties?.thematique)}/>
       <Name onClick={toggleLayerDisplay} title={displayedName} >
         {displayedName}
       </Name>
