@@ -1,37 +1,10 @@
 import * as Comlink from 'comlink'
 import {
-  getMergedRegulatoryLayers,
   LAWTYPES_TO_TERRITORY,
-  mapToRegulatoryZone,
-  orderByAlphabeticalLayer,
-  searchByLawType,
   FRANCE
 } from '../domain/entities/regulatory'
 
 class MonitorFishWorker {
-  #getLayerTopicList = features => {
-    const featuresWithoutGeometry = features.features.map(feature => {
-      return mapToRegulatoryZone(feature)
-    })
-
-    const uniqueFeaturesWithoutGeometry = featuresWithoutGeometry.reduce((acc, current) => {
-      const found = acc.find(item =>
-        item.topic === current.topic &&
-        item.zone === current.zone)
-      if (!found) {
-        return acc.concat([current])
-      } else {
-        return acc
-      }
-    }, [])
-
-    return uniqueFeaturesWithoutGeometry
-      .map(layer => layer.topic)
-      .map(topic => {
-        return uniqueFeaturesWithoutGeometry.filter(layer => layer.topic === topic)
-      })
-  }
-
   #getGeometryIdFromFeatureId = feature => {
     return feature.vesselProperties?.id || feature.id.split('.')[1]
   }
@@ -145,28 +118,6 @@ class MonitorFishWorker {
   }
 
 
-  searchLayers (searchFields, regulatoryLayers) {
-    let foundRegulatoryLayers = {}
-
-    Object.keys(searchFields).forEach(searchProperty => {
-      if (searchFields[searchProperty].searchText.length > 0) {
-        const searchResultByLawType = searchByLawType(
-          regulatoryLayers,
-          searchFields[searchProperty].properties,
-          searchFields[searchProperty].searchText)
-
-        if (foundRegulatoryLayers && Object.keys(foundRegulatoryLayers).length === 0) {
-          foundRegulatoryLayers = searchResultByLawType
-        } else if (foundRegulatoryLayers) {
-          foundRegulatoryLayers = getMergedRegulatoryLayers(foundRegulatoryLayers, searchResultByLawType)
-        }
-      }
-    })
-
-    orderByAlphabeticalLayer(foundRegulatoryLayers)
-
-    return foundRegulatoryLayers
-  }
 }
 
 Comlink.expose(MonitorFishWorker)
