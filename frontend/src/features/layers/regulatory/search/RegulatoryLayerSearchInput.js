@@ -105,7 +105,7 @@ const AdvancedSearch = styled.div`
   transition: 0.5s all;
 `
 const AdvancedSearchInput = styled.div`
-  height: 32px;
+  height: 40px;
   background: white;
   border-bottom: 1px ${COLORS.lightGray} solid;
 `
