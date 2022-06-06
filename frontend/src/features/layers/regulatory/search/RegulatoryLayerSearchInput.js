@@ -47,7 +47,7 @@ export const RegulatoryLayerSearchInput = ({globalSearchText, setGlobalSearchTex
       </PrincipalSearchInput>
       {advancedSearchIsOpen && (
         <AdvancedSearchInput>
-          <Checkbox checked={filterSearchOnMapExtent} onChange={toggleFilterSearchOnMapExtent} >Limiter aux résultats visibles sur la carte</Checkbox>
+          <Checkbox checked={filterSearchOnMapExtent} onChange={toggleFilterSearchOnMapExtent} >voir la réglementation dans l&apos;affichage actuel de la carte</Checkbox>
         </AdvancedSearchInput>
       )}
     </>)
