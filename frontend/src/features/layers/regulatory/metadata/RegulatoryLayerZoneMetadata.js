@@ -47,7 +47,7 @@ const RegulatoryLayerZoneMetadata = () => {
             </Warning>
             <Content>
               <Identification entity_name={regulatoryMetadata?.entity_name} thematique={regulatoryMetadata?.thematique} type={regulatoryMetadata?.type} facade={regulatoryMetadata?.facade} />
-              <MetadataRegulatoryReferences regulatoryReference={regulatoryMetadata?.ref_reg} type={regulatoryMetadata?.type} url={regulatoryMetadata?.url} />
+              <MetadataRegulatoryReferences regulatoryReference={regulatoryMetadata?.ref_reg} url={regulatoryMetadata?.url} />
             </Content></>
           // eslint-disable-next-line react/forbid-component-props
           : <FingerprintSpinner color={COLORS.background} className={'radar'} size={100}/>

@@ -1,8 +1,6 @@
 import styled from 'styled-components'
 import { COLORS } from '../../../../constants/constants'
 
-export const Label = styled.span``
-
 export const Elem = styled.li``
 
 export const List = styled.ul`

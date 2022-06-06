@@ -1,16 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
-import { SectionTitle, Section, List, Label } from './RegulatoryMetadata.style'
+import { SectionTitle, Section, List } from './RegulatoryMetadata.style'
 import { Link } from '../../../commonStyles/Link.style'
-import { getRegulatoryZoneTextTypeAsText } from '../../../../domain/entities/regulatory'
 
-const MetadataRegulatoryReferences = ({regulatoryReference, type, url}) => {
+const MetadataRegulatoryReferences = ({regulatoryReference, url}) => {
   
   return regulatoryReference && <Section>
     <SectionTitle>Références réglementaires</SectionTitle>
     <List>
-      <Reference data-cy="regulatory-layers-metadata-references">
-        <Label>{getRegulatoryZoneTextTypeAsText(type)}</Label>
+      <Reference data-cy="regulatory-layers-metadata-references"> 
         <Link target={"_blank"} href={url}>{regulatoryReference}</Link>
       </Reference>
     </List>

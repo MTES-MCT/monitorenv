@@ -64,15 +64,6 @@ export const REGULATORY_TEXT_TYPE = {
   REGULATION: 'regulation'
 }
 
-const regulatoryZoneTextType = type =>
-  type === REGULATORY_TEXT_TYPE.CREATION ? 'création' : REGULATORY_TEXT_TYPE.REGULATION ? 'réglementation' : undefined
-
-export const getRegulatoryZoneTextTypeAsText = (textTypeList) => {
-  return `${textTypeList.length === 2
-  ? `${regulatoryZoneTextType(textTypeList[0])} et ${regulatoryZoneTextType(textTypeList[1])}`
-  : `${regulatoryZoneTextType(textTypeList[0])}`} de zone`
-}
-
 export const DEFAULT_REGULATORY_TEXT = {
   url: '',
   reference: '',
