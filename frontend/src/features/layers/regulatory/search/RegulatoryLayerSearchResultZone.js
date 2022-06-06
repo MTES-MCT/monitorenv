@@ -20,9 +20,9 @@ const RegulatoryLayerSearchResultZone = ({regulatoryZone, searchedText}) => {
   const dispatch = useDispatch()
 
   const { regulatoryZonesChecked } = useSelector(state => state.regulatoryLayerSearch)
-  const { regulatoryMetadataPanelIsOpen } = useSelector(state => state.regulatoryMetadata)
+  const { regulatoryMetadataPanelIsOpen, regulatoryMetadataLayerId } = useSelector(state => state.regulatoryMetadata)
   const isZoneSelected = regulatoryZonesChecked.includes(regulatoryZone.id)
-  const metadataIsShown = false
+  const metadataIsShown = regulatoryMetadataPanelIsOpen && regulatoryZone.id === regulatoryMetadataLayerId
 
 
   const handleZoomToZones = () => {
@@ -34,7 +34,7 @@ const RegulatoryLayerSearchResultZone = ({regulatoryZone, searchedText}) => {
   const handleSelectRegulatoryZone = () => dispatch(toggleRegulatoryZone(regulatoryZone.id))
 
   const toggleRegulatoryZoneMetadata = () => {
-    regulatoryMetadataPanelIsOpen ? dispatch(closeRegulatoryZoneMetadata()) : dispatch(showRegulatoryZoneMetadata(regulatoryZone.id))
+    metadataIsShown ? dispatch(closeRegulatoryZoneMetadata()) : dispatch(showRegulatoryZoneMetadata(regulatoryZone.id))
   }
   // value => value?.length
   // ? setZoneSelectionList([regulatoryZone])

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import {  useSelector } from 'react-redux'
+import {  useDispatch, useSelector } from 'react-redux'
 
 import { ReactComponent as LayersSVG } from '../icons/Couches.svg'
 import RegulatoryLayerSearch from './regulatory/search/RegulatoryLayerSearch'
@@ -12,6 +12,7 @@ import BaseLayers from './base/BaseLayers'
 import { MapComponentStyle } from '../commonStyles/MapComponent.style'
 import { NamespaceContext } from '../../domain/context/NamespaceContext'
 import { MapButtonStyle } from '../commonStyles/MapButton.style'
+import closeRegulatoryZoneMetadata from '../../domain/use_cases/closeRegulatoryZoneMetadata'
 
 const LayersSidebar = () => {
   const { regulatoryMetadataPanelIsOpen } = useSelector(state => state.regulatoryMetadata)
@@ -19,10 +20,14 @@ const LayersSidebar = () => {
     healthcheckTextWarning,
     previewFilteredVesselsMode
   } = useSelector(state => state.global)
+  const dispatch = useDispatch()
 
   const [layersSidebarIsOpen, setLayersSidebarIsOpen] = useState(false)
   const [numberOfRegulatoryLayersSaved, setNumberOfRegulatoryLayersSaved] = useState(0)
-
+  const toggleLayerSidebar = () => {
+    layersSidebarIsOpen && dispatch(closeRegulatoryZoneMetadata())
+    setLayersSidebarIsOpen(!layersSidebarIsOpen)
+  }
 
   return (
     <NamespaceContext.Consumer>
@@ -36,7 +41,7 @@ const LayersSidebar = () => {
               regulatoryMetadataPanelIsOpen={regulatoryMetadataPanelIsOpen}
               healthcheckTextWarning={healthcheckTextWarning}
               isHidden={previewFilteredVesselsMode}
-              onClick={() => setLayersSidebarIsOpen(!layersSidebarIsOpen)}>
+              onClick={toggleLayerSidebar}>
               <LayersIcon/>
             </SidebarLayersIcon>
             <Sidebar
