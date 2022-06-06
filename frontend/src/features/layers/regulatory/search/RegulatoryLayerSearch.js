@@ -27,7 +27,7 @@ const RegulatoryLayerSearch = () => {
       indexRef.current = new Document({
         document: {
           id: "id",
-          index: [ "properties:layer_name"],
+          index: [ "properties:layer_name", "properties:entity_name", "properties:ref_reg", "properties:thematique", "properties:type"],
           store: true
         },
         tokenize: 'full',
@@ -47,15 +47,16 @@ const RegulatoryLayerSearch = () => {
 
   useEffect(()=> { 
     if (globalSearchText) {
-      const searchResults = GetIndex()?.search(globalSearchText, { pluck: 'properties:layer_name', enrich: true})
+      const allResults = GetIndex()?.search(globalSearchText, { index: [ "properties:layer_name", "properties:entity_name", "properties:type", "properties:thematique", "properties:ref_reg"], enrich: true})
+      const uniqueResults = _.uniqWith(_.flatMap(allResults, field => field.result), (a,b) => a.id === b.id)
       if (currentMapExtentTracker && filterSearchOnMapExtent) {
         const currentExtent = transformExtent(currentMapExtentTracker,  OPENLAYERS_PROJECTION, WSG84_PROJECTION)
-        const filteredResults = _.filter(searchResults, (result => {
+        const filteredResults = _.filter(uniqueResults, (result => {
           return intersects(result?.doc?.bbox, currentExtent)
       }))
       setResults(filteredResults)
       } else {
-        setResults(searchResults)
+        setResults(uniqueResults)
       }
     } else {
       if (currentMapExtentTracker && filterSearchOnMapExtent) {
@@ -88,7 +89,7 @@ const RegulatoryLayerSearch = () => {
       <RegulatoryLayerSearchResultList results={results} searchedText={globalSearchText}/>
       <AddRegulatoryLayer
           data-cy={'regulatory-search-add-zones-button'}
-          onClick={() => addRegulatoryLayers(regulatoryZonesChecked)}
+          onClick={addRegulatoryLayers}
           $isShown={regulatoryZonesChecked && regulatoryZonesChecked.length}
       >
         {

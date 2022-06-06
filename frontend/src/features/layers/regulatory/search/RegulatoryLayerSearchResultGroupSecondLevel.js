@@ -72,6 +72,7 @@ export const RegulatoryLayerSearchResultGroupSecondLevel = ({ groupName, result,
       </LayerTopic>
       <RegulatoryLayerSearchResultZones
         result={result}
+        searchedText={searchedText}
         zonesAreOpen={zonesAreOpen}
       />
     </>

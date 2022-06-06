@@ -11,7 +11,7 @@ export function getAllRegulatoryLayersFromAPI (fromBackoffice) {
   const geoserverURL = fromBackoffice ? GEOSERVER_BACKOFFICE_URL : GEOSERVER_REMOTE_URL
 
   return fetch(`${geoserverURL}/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typename=${GEOSERVER_NAMESPACE}:` +
-    `${Layers.REGULATORY_ENV.code}&format_options=id_policy:id&outputFormat=application/json&propertyName=entity_name,layer_name,facade,ref_reg,geom`)
+    `${Layers.REGULATORY_ENV.code}&format_options=id_policy:id&outputFormat=application/json&propertyName=entity_name,layer_name,facade,ref_reg,thematique,type,geom`)
     .then(response => {
       if (response.status === OK) {
         return response.json()

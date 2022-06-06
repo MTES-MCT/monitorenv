@@ -2,6 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled, { css } from 'styled-components'
 import Checkbox from 'rsuite/Checkbox'
+import Highlighter from 'react-highlight-words'
 
 import showRegulatoryZoneMetadata from '../../../../domain/use_cases/showRegulatoryZoneMetadata'
 import closeRegulatoryZoneMetadata from '../../../../domain/use_cases/closeRegulatoryZoneMetadata'
@@ -15,7 +16,7 @@ import { ReactComponent as ZoomIconSVG } from '../../../icons/target.svg'
 import { REGPaperDarkIcon, REGPaperIcon } from '../../../commonStyles/icons/REGPaperIcon.style'
 import { COLORS } from '../../../../constants/constants'
 
-const RegulatoryLayerSearchResultZone = ({regulatoryZone}) => {
+const RegulatoryLayerSearchResultZone = ({regulatoryZone, searchedText}) => {
   const dispatch = useDispatch()
 
   const { regulatoryZonesChecked } = useSelector(state => state.regulatoryLayerSearch)
@@ -41,9 +42,17 @@ const RegulatoryLayerSearchResultZone = ({regulatoryZone}) => {
   return (
     <Zone  $selected={isZoneSelected}>
       <Rectangle $vectorLayerColor={getRegulatoryEnvColorWithAlpha(regulatoryZone?.doc?.properties?.thematique)}/>
-      <Name onClick={handleSelectRegulatoryZone}
+      <Name 
+        onClick={handleSelectRegulatoryZone}
+        title={regulatoryZone?.doc?.properties?.entity_name}
       >
-        {regulatoryZone?.doc?.properties?.entity_name || 'AUCUN NOM'}
+        <Highlighter
+            highlightClassName="highlight"
+            searchWords={(searchedText && searchedText.length > 0) ? searchedText.split(' '):[]}
+            autoEscape={true}
+            textToHighlight={regulatoryZone?.doc?.properties?.entity_name || ''}
+          />
+        {!regulatoryZone?.doc?.properties?.entity_name && 'AUCUN NOM'}
       </Name>
       <ZoomIcon onClick={handleZoomToZones}></ZoomIcon>
         {
@@ -52,10 +61,10 @@ const RegulatoryLayerSearchResultZone = ({regulatoryZone}) => {
             : <CustomREGPaperIcon title="Afficher la réglementation" onClick={toggleRegulatoryZoneMetadata}/>
         }
         <Checkbox
-            checked={isZoneSelected}
-            onChange={handleSelectRegulatoryZone}
-            data-cy={'regulatory-zone-check'}
-            value={regulatoryZone.id}
+          checked={isZoneSelected}
+          onChange={handleSelectRegulatoryZone}
+          data-cy={'regulatory-zone-check'}
+          value={regulatoryZone.id}
         />
     </Zone>
   )
