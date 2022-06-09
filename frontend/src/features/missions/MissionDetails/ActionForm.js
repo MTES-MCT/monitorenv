@@ -4,7 +4,7 @@ import { Field, FieldArray } from 'formik'
 import styled from 'styled-components'
 
 import { InfractionsForm } from './InfractionsForm'
-import { FormikDatePicker } from '../../commonComponents/FormikDatePicker';
+import { FormikDatePicker } from '../../commonComponents/CustomFormikFields/FormikDatePicker';
 
 import { SecondaryButton } from '../../commonStyles/Buttons.style'
 import { ReactComponent as TrashSVG } from '../../icons/Suppression_clair.svg'
