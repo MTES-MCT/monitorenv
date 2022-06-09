@@ -58,7 +58,7 @@ export const MissionsTable = ({data, isLoading}) => {
               <Table.Cell dataKey="missionStatus" />
             </Table.Column>
             
-            <Table.Column align='center' width={60}>
+            <Table.Column width={40}>
               <Table.HeaderCell>&nbsp;</Table.HeaderCell>
               <CellLocalizeMission />
             </Table.Column>
