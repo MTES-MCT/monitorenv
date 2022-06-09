@@ -7,6 +7,7 @@ import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setSideWindowPath } from '../../commonComponents/SideWindowRouter/SideWindowRouter.slice'
 import { CellLocalizeMission } from './CellLocalizeMission';
 import { CellEditMission } from './CellEditMission';
+import { DateCell } from '../../commonComponents/Table/Cell/DateCell';
 
 export const MissionsTable = ({data, isLoading}) => {
   const dispatch = useDispatch()
@@ -25,12 +26,12 @@ export const MissionsTable = ({data, isLoading}) => {
 
             <Table.Column width={150}>
               <Table.HeaderCell>Date de début</Table.HeaderCell>
-              <Table.Cell dataKey="inputStartDatetimeUtc" />
+              <DateCell dataKey="inputStartDatetimeUtc" />
             </Table.Column>
 
             <Table.Column width={150}>
               <Table.HeaderCell>Date de fin</Table.HeaderCell>
-              <Table.Cell dataKey="inputEndDatetimeUtc" />
+              <DateCell dataKey="inputEndDatetimeUtc" />
             </Table.Column>
 
             <Table.Column flexGrow={1}>

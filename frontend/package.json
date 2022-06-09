@@ -10,6 +10,7 @@
     "@sentry/tracing": "^6.2.3",
     "@svgr/webpack": "^6.2.1",
     "comlink": "^4.3.0",
+    "date-fns": "^2.28.0",
     "export-to-csv": "^0.2.1",
     "flexsearch": "^0.7.21",
     "formik": "^2.2.9",
