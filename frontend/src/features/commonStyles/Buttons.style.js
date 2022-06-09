@@ -161,8 +161,8 @@ const EditButtonWrapper = styled.button`
   }
 `
 
-export const EditButton = () => {
-  return (<EditButtonWrapper>
+export const EditButton = (props) => {
+  return (<EditButtonWrapper {...props}>
     <EditIcon/>Editer
   </EditButtonWrapper>)
 }

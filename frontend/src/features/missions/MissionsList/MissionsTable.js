@@ -1,35 +1,29 @@
 import React from 'react'
 import { Table } from 'rsuite';
-import { useDispatch } from 'react-redux'
-import { generatePath } from 'react-router'
 
-import { sideWindowPaths } from '../../../domain/entities/sideWindow'
-import { setSideWindowPath } from '../../commonComponents/SideWindowRouter/SideWindowRouter.slice'
 import { CellLocalizeMission } from './CellLocalizeMission';
 import { CellEditMission } from './CellEditMission';
 import { DateCell } from '../../commonComponents/Table/Cell/DateCell';
 
 export const MissionsTable = ({data, isLoading}) => {
-  const dispatch = useDispatch()
-  const setMission = (id) => dispatch(setSideWindowPath(generatePath(sideWindowPaths.MISSION, {id})))
+  
 
   return (<Table
             fillHeight
             loading={isLoading}
             data={data}
-            onRowClick={data => {setMission(data.id)}}
           >
-            <Table.Column width={70}>
+            <Table.Column width={40}>
               <Table.HeaderCell>Id</Table.HeaderCell>
               <Table.Cell dataKey="id" />
             </Table.Column>
 
-            <Table.Column width={150}>
+            <Table.Column width={130}>
               <Table.HeaderCell>Date de début</Table.HeaderCell>
               <DateCell dataKey="inputStartDatetimeUtc" />
             </Table.Column>
 
-            <Table.Column width={150}>
+            <Table.Column width={130}>
               <Table.HeaderCell>Date de fin</Table.HeaderCell>
               <DateCell dataKey="inputEndDatetimeUtc" />
             </Table.Column>
@@ -39,7 +33,7 @@ export const MissionsTable = ({data, isLoading}) => {
               <Table.Cell dataKey="inputEndDatetimeUtc" />
             </Table.Column>
             
-            <Table.Column width={200}>
+            <Table.Column flexGrow={1}>
               <Table.HeaderCell>Type</Table.HeaderCell>
               <Table.Cell dataKey="missionType" />
             </Table.Column>
@@ -54,23 +48,23 @@ export const MissionsTable = ({data, isLoading}) => {
               <Table.Cell dataKey="theme" />
             </Table.Column>
 
-            <Table.Column width={200}>
+            <Table.Column width={120}>
               <Table.HeaderCell>Nb Contrôles</Table.HeaderCell>
               <Table.Cell dataKey="missionStatus" />
             </Table.Column>
 
-            <Table.Column width={200}>
+            <Table.Column width={120}>
               <Table.HeaderCell>Statut</Table.HeaderCell>
               <Table.Cell dataKey="missionStatus" />
             </Table.Column>
             
-            <Table.Column align='center'>
-              <Table.HeaderCell> - </Table.HeaderCell>
+            <Table.Column align='center' width={60}>
+              <Table.HeaderCell>&nbsp;</Table.HeaderCell>
               <CellLocalizeMission />
             </Table.Column>
 
-            <Table.Column align='center'>
-              <Table.HeaderCell>-</Table.HeaderCell>
+            <Table.Column align='center' width={100}>
+              <Table.HeaderCell>&nbsp;</Table.HeaderCell>
               <CellEditMission />
             </Table.Column>
           </Table>
