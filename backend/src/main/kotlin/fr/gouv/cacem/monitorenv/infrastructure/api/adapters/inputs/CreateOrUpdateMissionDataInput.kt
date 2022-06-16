@@ -6,7 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
 import java.time.ZonedDateTime
 
 data class CreateOrUpdateMissionDataInput(
-  val id: Int,
+  val id: Int? = null,
   val missionType: MissionTypeEnum,
   val unit: String? = null,
   val administration: String? = null,

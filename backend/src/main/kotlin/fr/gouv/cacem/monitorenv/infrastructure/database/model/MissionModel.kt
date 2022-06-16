@@ -29,8 +29,9 @@ import javax.persistence.*
 data class MissionModel(
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
-    var id: Int,
+  @Basic(optional = false)
+  @Column(name = "id", unique = true, nullable = false)
+    var id: Int? = null,
   @Column(name = "mission_type")
   @Enumerated(EnumType.STRING)
     var missionType: MissionTypeEnum,

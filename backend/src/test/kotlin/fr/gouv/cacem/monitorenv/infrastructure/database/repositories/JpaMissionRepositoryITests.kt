@@ -12,7 +12,21 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
   @Autowired
   private lateinit var jpaMissionRepository: JpaMissionRepository
+  @Test
+  @Transactional
+  fun `createMission should create a new mission`() {
+    val existingMissions = jpaMissionRepository.findMissions()
+    assertThat(existingMissions).hasSize(50)
+    val newMission = MissionEntity(
+      missionType = MissionTypeEnum.SEA
+    )
+    // When
+    val newMissionReturn = jpaMissionRepository.create(newMission)
+    println(newMissionReturn)
+    val missions = jpaMissionRepository.findMissions()
 
+    assertThat(missions).hasSize(51)
+  }
   @Test
   @Transactional
   fun `findMissions Should return all missions`() {

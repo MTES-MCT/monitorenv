@@ -7,11 +7,10 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 @UseCase
 class CreateMission(private val missionRepository: IMissionRepository) {
   @Throws(IllegalArgumentException::class)
-  fun execute(mission: MissionEntity?): MissionEntity {
+  fun execute(mission: MissionEntity): MissionEntity {
     require(mission != null) {
-      "No mission to update"
+      "No mission to create"
     }
-    val newMission = missionRepository.save(mission)
-    return missionRepository.findMissionById(newMission.id)
+    return missionRepository.create(mission)
   }
 }

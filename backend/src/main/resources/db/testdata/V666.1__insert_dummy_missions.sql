@@ -57,3 +57,5 @@ COPY public.missions (id, mission_type, unit, administration, mission_status, au
 48	LAND	ULAM 01	Affaires maritimues	ABORTED	Michele Woods	Trouble four plan real. Hope several detail film. Join quickly shake behavior thus forget.	Outre-Mer	OTHER	2022-01-20 07:41:28	2022-04-05 05:06:45
 49	SEA	Aff Mar 02	ULAM	CLOSED	Robert Mack	Those forward enter room tell structure message.	SA	ENV	2022-01-20 07:41:28	2022-03-02 00:52:51
 \.
+
+SELECT setval('public.missions_id_seq', 50, true);

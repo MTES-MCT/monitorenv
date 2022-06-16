@@ -13,7 +13,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdat
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.BDDMockito.any
+import com.nhaarman.mockitokotlin2.any
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -66,7 +66,6 @@ class MissionsControllerITests {
       inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z")
     )
     val newMissionRequest = CreateOrUpdateMissionDataInput(
-      id = 10,
       missionType = MissionTypeEnum.LAND,
       missionStatus = "CLOSED",
       facade = "Outre-Mer",
@@ -76,20 +75,7 @@ class MissionsControllerITests {
       inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z")
     )
 
-    // given(this.createMission.execute(any())).willReturn(newMission)
-    given(this.createMission.execute(any())).willAnswer {
-      println("=======MISSION=============")
-      println("request as text")
-      println(objectMapper.writeValueAsString(newMissionRequest))
-      println("newMissionRequest.toMissionEntity")
-      println(newMissionRequest.toMissionEntity())
-      println("function called with")
-      println(it)
-      // Error parsing dates in tests
-      // 2022-01-15T04:50:09Z[UTC] (it) instead of 2022-01-15T04:50:09Z (requestBody.toMissionEntity())
-      print("====================")
-      return@willAnswer newMission
-    }
+    given(this.createMission.execute(mission = any())).willReturn(newMission)
     // When
     mockMvc.perform(
       put("/bff/v1/missions")

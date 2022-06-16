@@ -7,7 +7,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
 import java.time.ZonedDateTime
 
 data class MissionDataOutput(
-    val id: Int,
+    val id: Int? = null,
     val missionType: MissionTypeEnum,
     val unit: String? = null,
     val administration: String? = null,
@@ -21,19 +21,24 @@ data class MissionDataOutput(
     val actions: List<ActionEntity>? = null
 ) {
     companion object {
-        fun fromMission(mission: MissionEntity) = MissionDataOutput(
-            id = mission.id,
-            missionType = mission.missionType,
-            unit = mission.unit,
-            administration = mission.administration,
-            missionStatus = mission.missionStatus,
-            author = mission.author,
-            observations= mission.observations,
-            facade = mission.facade,
-            theme = mission.theme,
-            inputStartDatetimeUtc = mission.inputStartDatetimeUtc,
-            inputEndDatetimeUtc = mission.inputEndDatetimeUtc,
-            actions = mission.actions
-        )
+        fun fromMission(mission: MissionEntity): MissionDataOutput {
+            requireNotNull(mission.id) {
+                "a mission must have an id"
+            }
+            return MissionDataOutput(
+                id = mission.id,
+                missionType = mission.missionType,
+                unit = mission.unit,
+                administration = mission.administration,
+                missionStatus = mission.missionStatus,
+                author = mission.author,
+                observations= mission.observations,
+                facade = mission.facade,
+                theme = mission.theme,
+                inputStartDatetimeUtc = mission.inputStartDatetimeUtc,
+                inputEndDatetimeUtc = mission.inputEndDatetimeUtc,
+                actions = mission.actions
+            )
+        }
     }
 }
