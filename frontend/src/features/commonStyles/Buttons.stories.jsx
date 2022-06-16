@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { PrimaryButton, SecondaryButton, BackofficeSecondaryButton } from './Buttons.style';
+import { PrimaryButton, SecondaryButton, EditButton } from './Buttons.style';
 
 export default {
   title: 'MonitorEnv/Buttons',
@@ -22,9 +22,10 @@ Secondary.args = {
   label: 'Enregistrer',
 };
 
-const TemplateSecondaryBackoffice = ({label, ...args}) => <BackofficeSecondaryButton {...args}>{label}</BackofficeSecondaryButton>;
+const TemplateEditButton = ({label, ...args}) => <EditButton {...args}>{label}</EditButton>;
 
-export const BackofficeSecondary = TemplateSecondaryBackoffice.bind({});
-BackofficeSecondary.args = {
+export const Edit = TemplateEditButton.bind({});
+EditButton.args = {
   label: 'Enregistrer',
 };
+

@@ -1,24 +1,30 @@
 import React from 'react'
 import { Form } from 'rsuite'
 import { Field } from 'formik'
+import styled from 'styled-components';
 
-import { FormikDatePicker } from '../../commonComponents/CustomFormikFields/FormikDatePicker';
 import { missionNatureEnum, missionTypeEnum } from '../../../domain/entities/missions';
-import { FormikRadioGroup } from '../../commonComponents/CustomFormikFields/FormikRadioGroup';
 
-const placeholderDatePicker = '\xa0\xa0\xa0\xa0\xa0\xa0/\xa0\xa0\xa0\xa0\xa0\xa0/\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0:\xa0\xa0\xa0\xa0\xa0\xa0'
+import { FormikDatePicker, placeholderDateTimePicker } from '../../commonComponents/CustomFormikFields/FormikDatePicker';
+import { FormikRadioGroup } from '../../commonComponents/CustomFormikFields/FormikRadioGroup';
+import { FormikTextarea } from '../../commonComponents/CustomFormikFields/FormikTextarea';
+import { FormikInput } from '../../commonComponents/CustomFormikFields/FormikInput';
+
+import { COLORS } from '../../../constants/constants';
+
+
 
 export const    GeneralInformationsForm = () => {
   return (
-    <>
-      <h3>Informations générales</h3>
+    <FormWrapper>
+      <Title>Informations générales</Title>
       <Form.Group>
         <Form.ControlLabel htmlFor="inputStartDatetimeUtc">Date et heure du début de la mission : </Form.ControlLabel>
-        <FormikDatePicker name="inputStartDatetimeUtc" placeholder={placeholderDatePicker} format="dd MMM yyyy, HH:mm" oneTap/>
+        <FormikDatePicker name="inputStartDatetimeUtc" placeholder={placeholderDateTimePicker} format="dd MMM yyyy, HH:mm" oneTap/>
       </Form.Group>
       <Form.Group>
         <Form.ControlLabel htmlFor="inputEndDatetimeUtc">Date et heure de fin de la mission : </Form.ControlLabel>
-        <FormikDatePicker name="inputEndDatetimeUtc" placeholder={placeholderDatePicker} format="dd MMM yyyy, HH:mm" oneTap/>
+        <FormikDatePicker name="inputEndDatetimeUtc" placeholder={placeholderDateTimePicker} format="dd MMM yyyy, HH:mm" oneTap/>
       </Form.Group>
       <Form.Group>
         <Form.ControlLabel htmlFor="administration">Administration : </Form.ControlLabel>
@@ -40,8 +46,24 @@ export const    GeneralInformationsForm = () => {
       </Form.Group>
       <Form.Group>
         <Form.ControlLabel htmlFor="observations">Observations générales : </Form.ControlLabel>
-        <Field name="observations" type="textarea"/>
+        <FormikTextarea name="observations"/>
       </Form.Group>
-    </>
+      <Form.Group>
+        <Form.ControlLabel htmlFor="author">Saisi par : </Form.ControlLabel>
+        <FormikInput name="author"/>
+      </Form.Group>
+    </FormWrapper>
   )
 }
+
+const FormWrapper = styled.div`
+  padding: 32px;
+  color: ${COLORS.slateGray}
+`
+
+const Title = styled.h2`
+  font-size: 16px;
+  line-height: 22px;
+  padding-bottom: 13px;
+  color: ${COLORS.charcoal}
+`

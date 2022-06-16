@@ -32,3 +32,29 @@ export const missionNatureEnum = {
     libelle: 'Autre'
   }
 }
+
+export const infractionTypeEnum = {
+  WITHOUT_REPORT: {
+    code: 'WITHOUT_REPORT',
+    libelle: 'Sans PV'
+  },
+  WITH_REPORT: {
+    code: 'WITH_REPORT',
+    libelle: 'Avec PV'
+  }
+}
+
+export const formalNoticeEnum = {
+  YES: {
+    code: 'YES',
+    libelle: 'Oui'
+  },
+  NO: {
+    code: 'NO',
+    libelle: 'Non'
+  },
+  WAITING: {
+    code: 'WAITING',
+    libelle: 'En attente'
+  }
+}

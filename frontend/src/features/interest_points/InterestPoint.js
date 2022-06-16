@@ -18,16 +18,10 @@ const INTEREST_POINT_POSITION_FROM_TOP = 145
 
 const InterestPoint = () => {
   const dispatch = useDispatch()
-  const selectedVessel = undefined
   const {
     isEditing,
     interestPointBeingDrawed
   } = useSelector(state => state.interestPoint)
-  const {
-    healthcheckTextWarning,
-    rightMenuIsOpen,
-    previewFilteredVesselsMode
-  } = useSelector(state => state.global)
 
   const firstUpdate = useRef(true)
   const [interestPointIsOpen, setInterestPointIsOpen] = useState(false)
@@ -46,7 +40,8 @@ const InterestPoint = () => {
         dispatch(deleteInterestPointBeingDrawed())
       }
     }
-  }, [interestPointIsOpen])
+    return (document.removeEventListener('keydown', escapeFromKeyboard))
+  }, [interestPointIsOpen, isEditing])
 
   useEffect(() => {
     setInterestPointIsOpen(isEditing)
@@ -73,18 +68,13 @@ const InterestPoint = () => {
     <Wrapper ref={wrapperRef}>
       <InterestPointWrapper
         data-cy={'interest-point'}
-        isHidden={previewFilteredVesselsMode}
-        healthcheckTextWarning={healthcheckTextWarning}
         isOpen={interestPointIsOpen}
-        rightMenuIsOpen={rightMenuIsOpen}
-        selectedVessel={selectedVessel}
         onMouseEnter={() => dispatch(expandRightMenu())}
         title={'Créer un point d\'intérêt'}
         onClick={openOrCloseInterestPoint}>
-        <InterestPointIcon $rightMenuIsOpen={rightMenuIsOpen} $selectedVessel={selectedVessel}/>
+        <InterestPointIcon />
       </InterestPointWrapper>
       <SaveInterestPoint
-        healthcheckTextWarning={healthcheckTextWarning}
         firstUpdate={firstUpdate.current}
         isOpen={interestPointIsOpen}
         close={() => setInterestPointIsOpen(false)}

@@ -1,6 +1,14 @@
 export const infractionFactory = () => {
   return {
+    registrationNumber: '',
+    vehicle: '',
+    size: '',
+    owner: '',
     natinf: '',
+    infractionType: '',
+    formalNotice: '',
+    relevantCourt: '',
+    toProcess: '',
     observations: ''
   }
 }
@@ -8,10 +16,12 @@ export const infractionFactory = () => {
 export const actionFactory = (actionType) => {
   return {
     actionType,
-    actionStartDatetimeUtc: Date.now(),
-    actionEndDatetimeUtc: '',
+    actionStartDatetimeUtc: new Date(),
+    actionEndDatetimeUtc: new Date(),
     actionTheme: '',
     actionNumberOfControls: '',
+    actionTargetType: '',
+    actionControlType: '',
     infractions: []
   }
 }

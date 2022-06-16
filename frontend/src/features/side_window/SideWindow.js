@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import {  setSideWindowAsOpen } from '../../domain/shared_slices/Global'
 
-import SideWindowMenu from './SideWindowMenu'
+// import SideWindowMenu from './SideWindowMenu'
 import { COLORS } from '../../constants/constants'
 import { MissionsWrapper } from '../missions/MissionsWrapper'
 import { ErrorBoundary } from '../commonComponents/ErrorBoundary'
@@ -29,7 +29,7 @@ export const SideWindow = forwardRef(function SideWindowComponent(props, ref) {
   return <>{openedSideWindowTab
     ? <ErrorBoundary>
         <Wrapper ref={ref}>
-          <SideWindowMenu selectedMenu={openedSideWindowTab} />
+          {/* <SideWindowMenu selectedMenu={openedSideWindowTab} /> */}
           {
             isPreloading
               ? <Loading>
@@ -63,6 +63,7 @@ const Text = styled.span`
 `
 
 const Wrapper = styled.div`
+  height: 100vh;
   display: flex;
   background: ${COLORS.white};
   
