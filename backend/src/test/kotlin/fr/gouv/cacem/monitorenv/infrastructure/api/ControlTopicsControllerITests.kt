@@ -38,7 +38,7 @@ class ControlTopicsControllerITests {
   private lateinit var objectMapper: ObjectMapper
 
   @Test
-  fun `Should get all regulatory Areas`() {
+  fun `Should get all control topics`() {
     // Given
 
     val controlTopic = ControlTopicEntity(
@@ -60,7 +60,7 @@ class ControlTopicsControllerITests {
   }
 
   @Test
-  fun `Should get specific regulatory Area when requested by Id`() {
+  fun `Should get specific control topic when requested by Id`() {
     // Given
 
     val controlTopic = ControlTopicEntity(
