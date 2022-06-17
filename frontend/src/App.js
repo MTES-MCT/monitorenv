@@ -2,9 +2,12 @@ import React from 'react'
 import { browserName, browserVersion } from 'react-device-detect'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { ToastProvider } from 'react-toast-notifications'
+import { CustomProvider } from 'rsuite';
 
 import { AlertUnsupportedBrowser } from './features/commonComponents/AlertUnsupportedBrowser'
 import { HomePage } from './pages/HomePage'
+
+import frFR from './features/commonComponents/locale_frFR'
 
 const App = () => {
   switch (browserName) {
@@ -28,7 +31,7 @@ const App = () => {
   }
 
   return (
-    <>
+    <CustomProvider locale={frFR}>
       <ToastProvider placement="bottom-right">
         <Router>
           <Switch>
@@ -38,7 +41,7 @@ const App = () => {
           </Switch>
         </Router>
       </ToastProvider>
-    </>
+    </CustomProvider>
   )
 }
 

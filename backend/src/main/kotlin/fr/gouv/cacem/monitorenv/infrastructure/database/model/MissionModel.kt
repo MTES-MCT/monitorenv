@@ -21,7 +21,7 @@ import javax.persistence.*
     typeClass = JsonBinaryType::class
   ),
   TypeDef(
-    name = "integer-array",
+    name = "string-array",
     typeClass = ListArrayType::class
   )
 )
@@ -29,8 +29,9 @@ import javax.persistence.*
 data class MissionModel(
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
-    var id: Int,
+  @Basic(optional = false)
+  @Column(name = "id", unique = true, nullable = false)
+    var id: Int? = null,
   @Column(name = "mission_type")
   @Enumerated(EnumType.STRING)
     var missionType: MissionTypeEnum,
@@ -38,6 +39,9 @@ data class MissionModel(
     var unit: String? = null,
   @Column(name = "administration")
     var administration: String? = null,
+  @Column(name = "resources", columnDefinition = "text[]")
+  @Type(type = "string-array")
+  var resources: List<String>? = listOf(),
   @Column(name = "mission_status")
     var missionStatus: String? = null,
   @Column(name = "author")
@@ -60,8 +64,9 @@ data class MissionModel(
   fun toMissionEntity(mapper: ObjectMapper) = MissionEntity(
     id = id,
     missionType = missionType,
-    unit = unit,
     administration = administration,
+    unit = unit,
+    resources = if (resources === null) listOf() else resources,
     missionStatus = missionStatus,
     author = author,
     observations = observations,
@@ -77,8 +82,9 @@ data class MissionModel(
     fun fromMissionEntity(mission: MissionEntity, mapper: ObjectMapper) = MissionModel(
       id = mission.id,
       missionType = mission.missionType,
-      unit = mission.unit,
       administration = mission.administration,
+      unit = mission.unit,
+      resources = mission.resources,
       missionStatus = mission.missionStatus,
       author = mission.author,
       observations = mission.observations,

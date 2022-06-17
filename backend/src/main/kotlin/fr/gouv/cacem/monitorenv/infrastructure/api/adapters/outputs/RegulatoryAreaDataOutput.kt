@@ -1,10 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryAreas.RegulatoryAreaEntity
 import org.locationtech.jts.geom.MultiPolygon
-
-import java.time.ZonedDateTime
 
 data class RegulatoryAreaDataOutput(
     val id: Int,

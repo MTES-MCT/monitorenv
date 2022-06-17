@@ -1,14 +1,18 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { CheckPicker } from 'rsuite'
 import styled from 'styled-components'
 
 export const MissionsFilter = () => {
   const [displayAdvancedFilters, setDisplayAdvancedFilters] = useState(false)
+
+  const unitPickerRef = useRef()
+
   return (<>
     <Title>FILTRER LA LISTE</Title>
-    <FilterWrapper>
-      
-      <CheckPicker style={tagPickerStyle} placeholder={'Unité'} data={[{label: 'A', value: 'A'}, {label: 'B', value: 'B'}]} />
+    <FilterWrapper ref={unitPickerRef}>
+      <UnitPickerWrapper ref={unitPickerRef}>
+        <CheckPicker container={()=>unitPickerRef.current} style={tagPickerStyle} placeholder={'Unité'} data={[{label: 'A', value: 'A'}, {label: 'B', value: 'B'}]} />
+      </UnitPickerWrapper>
       <CheckPicker style={tagPickerStyle} placeholder={'Administration'} data={[{label: 'A', value: 'A'}, {label: 'B', value: 'B'}]} />
       <CheckPicker style={tagPickerStyle} placeholder={'Façade'} data={[{label: 'A', value: 'A'}, {label: 'B', value: 'B'}]} />
       <CheckPicker style={tagPickerStyle} placeholder={'Thématique'} data={[{label: 'A', value: 'A'}, {label: 'B', value: 'B'}]} />
@@ -29,7 +33,7 @@ const Title = styled.h2`
 const FilterWrapper = styled.div`
   display: flex;
 `
-
+const UnitPickerWrapper = styled.div``
 const AdvancedFiltersButton = styled.span`
   text-decoration: underline;
 `

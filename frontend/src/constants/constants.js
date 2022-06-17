@@ -30,7 +30,8 @@ export const COLORS = {
   trackTransit: '#1C9B7B',
   overlayShadow: '#7077851A',
   yellow: '#F6D012',
-  titleBottomBorder: '#E0E0E0'
+  titleBottomBorder: '#E0E0E0',
+  missingGrey: '#EEEEF1'
 }
 
 export const HIT_PIXEL_TO_TOLERANCE = 3

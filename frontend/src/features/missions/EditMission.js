@@ -13,8 +13,10 @@ import { ActionsForm } from './MissionDetails/ActionsForm'
 import { ActionForm } from './MissionDetails/ActionForm'
 import { GeneralInformationsForm } from './MissionDetails/GeneralInformationsForm';
 
-import { PrimaryButton } from '../commonStyles/Buttons.style';
+// import { PrimaryButton } from '../commonStyles/Buttons.style';
 import { COLORS } from '../../constants/constants';
+import { MissionValidationModal } from './MissionValidationModal';
+import { PrimaryButton, SecondaryButton } from '../commonStyles/Buttons.style';
  
 
 
@@ -34,9 +36,10 @@ export const EditMission = ({routeParams})  => {
 
   const [currentActionIndex, setCurrentActionIndex] = useState(null)
   const [errorOnSave, setErrorOnSave ] = useState(false)
+  const [ confirmationModalIsOpen, setConfirmationModalIsOpen] = useState(false)  
   
   if (id === undefined) {
-    return<div style={{flex:1}}>not set yet</div>
+    return<div style={{flex:1}}>Aucune mission sélectionnée</div>
   }
   
   
@@ -58,8 +61,22 @@ export const EditMission = ({routeParams})  => {
     })
   }
 
+  
+
+  const handleConfirmFormCancelation = () => {
+    setConfirmationModalIsOpen(true)
+  }
+  const handleCancelForm = ()=> {
+    console.log('form canceled', handleConfirmFormCancelation)
+  }
+
+  const handleCancel = () => {
+    dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))
+  }
+
   return (
     <EditMissionWrapper data-cy={'editMissionWrapper'}>
+      <MissionValidationModal open={confirmationModalIsOpen} onClose={handleCancelForm} />
       <SideWindowHeader title={`Edition de la mission n°${id}${isUpdating ? ' - Enregistrement en cours' : ''}`} />
       <Formik
         enableReinitialize={true}
@@ -72,6 +89,9 @@ export const EditMission = ({routeParams})  => {
           observations: mission?.observations,
           inputStartDatetimeUtc: mission?.inputStartDatetimeUtc,
           inputEndDatetimeUtc: mission?.inputEndDatetimeUtc || '',
+          administration: mission?.administration,
+          unit: mission?.unit,
+          resources: mission?.resources,
           actions: mission?.actions
         }}
         onSubmit={handleSubmitForm}
@@ -84,19 +104,19 @@ export const EditMission = ({routeParams})  => {
                   <GeneralInformationsForm />
                 </FirstColumn>
                 <SecondColumn>
-                  <FieldArray name="actions" render={(props)=><ActionsForm {...props} actionIndex={currentActionIndex} setCurrentActionIndex={handleSetCurrentActionIndex} />}  />
+                  <FieldArray name='actions' render={(props)=><ActionsForm {...props} currentActionIndex={currentActionIndex} setCurrentActionIndex={handleSetCurrentActionIndex} />}  />
                 </SecondColumn>
                 <ThirdColumn>
-                  <FieldArray name="actions" render={(props)=><ActionForm {...props} actionIndex={currentActionIndex} setCurrentActionIndex={handleSetCurrentActionIndex} />} />
+                  <FieldArray name='actions' render={(props)=><ActionForm {...props} currentActionIndex={currentActionIndex} setCurrentActionIndex={handleSetCurrentActionIndex} />} />
                 </ThirdColumn>
               </Wrapper>
               
-              <Form.Group>
-                <PrimaryButton type="submit">
-                  Enregistrer
-                </PrimaryButton>
+              <FormActionsWrapper>
+                
+                <SecondaryButton onClick={handleCancel} type='button'>Annuler</SecondaryButton>
+                <PrimaryButton type='submit'>Enregistrer</PrimaryButton>
                 {errorOnSave && <ErrorOnSave>Oups... Erreur au moment de la sauvegarde</ErrorOnSave>}
-              </Form.Group>
+              </FormActionsWrapper>
             </Form>
           )
         }}
@@ -104,26 +124,34 @@ export const EditMission = ({routeParams})  => {
   </EditMissionWrapper>)
 }
 
+
 const EditMissionWrapper = styled.div`
   flex: 1;
 `
 const Wrapper = styled.div`
+  height: calc(100vh - 80px);
   display: flex;
 `
 const FirstColumn = styled.div`
   background: ${COLORS.white};
   flex: 1;
+  display: flex;
   `
 const SecondColumn = styled.div`
-  background: ${COLORS.gainsboro};
+  background: ${COLORS.missingGrey};
   flex: 1;
 `
 const ThirdColumn = styled.div`
-  background: ${COLORS.lightGray};
+  background: ${COLORS.gainsboro};
   flex: 1;
+  overflow: scroll;
 `
 
 const ErrorOnSave = styled.div`
   backgound: ${COLORS.orange};
 
+`
+
+const FormActionsWrapper = styled.div`
+  text-align: right;
 `

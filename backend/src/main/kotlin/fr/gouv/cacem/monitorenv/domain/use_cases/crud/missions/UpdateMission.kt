@@ -11,7 +11,6 @@ class UpdateMission(private val missionRepository: IMissionRepository) {
     require(mission != null) {
       "No mission to update"
     }
-    missionRepository.save(mission)
-    return missionRepository.findMissionById(mission.id)
+    return missionRepository.save(mission)
   }
 }

@@ -1,8 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryAreas.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.crud.regulatoryAreas.GetRegulatoryAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.crud.regulatoryAreas.GetRegulatoryAreas
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.*

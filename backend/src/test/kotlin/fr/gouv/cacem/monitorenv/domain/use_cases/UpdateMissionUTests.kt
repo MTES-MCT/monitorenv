@@ -40,7 +40,7 @@
 
        // Given
        val expectedUpdatedMission = MissionEntity(id = 0, missionType = MissionTypeEnum.LAND, 	missionStatus = "CLOSED", facade = "Outre-Mer", theme = "CONTROLE", inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"), inputEndDatetimeUtc =  ZonedDateTime.parse("2022-01-23T20:29:03Z")	)
-       given(missionRepository.findMissionById(0)).willReturn(
+       given(missionRepository.save(expectedUpdatedMission)).willReturn(
          expectedUpdatedMission
        )
 

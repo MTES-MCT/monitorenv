@@ -1,5 +1,8 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
+import TrashIcon from '@rsuite/icons/Trash';
+import CopyIcon from '@rsuite/icons/Copy';
+
 import { COLORS, SQUARE_BUTTON_TYPE } from '../../constants/constants'
 
 import { ReactComponent as EditIconSVG } from '../icons/Bouton_edition.svg'
@@ -31,15 +34,10 @@ const baseSecondaryButton = css`
 const Button = styled.button`
   font-size: 13px;
   padding: 5px 12px;
-  margin: 20px ${props => props.isLast ? '20px' : '0'} 20px 10px;
+  margin: 2px;
   height: 30px;
 `
 
-const BackofficeButton = styled.button`
-  font-size: 13px;
-  padding: 6px 12px;
-  margin: 15px ${props => props.isLast ? '20px' : '0'} 15px 10px;
-`
 
 export const PrimaryButton = styled(Button)`
   ${basePrimaryButton}
@@ -49,9 +47,6 @@ export const SecondaryButton = styled(Button)`
   ${baseSecondaryButton}
 `
 
-export const BackofficeSecondaryButton = styled(BackofficeButton)`
-  ${baseSecondaryButton}
-`
 
 const baseAddButton = css`
   position: relative;
@@ -161,8 +156,16 @@ const EditButtonWrapper = styled.button`
   }
 `
 
-export const EditButton = () => {
-  return (<EditButtonWrapper>
+export const EditButton = (props) => {
+  return (<EditButtonWrapper {...props}>
     <EditIcon/>Editer
   </EditButtonWrapper>)
+}
+
+export const DeleteButton = ({buttonStyle, ...props}) => {
+  return <button type="button" {...props}><TrashIcon style={{color: 'red', ...buttonStyle}} /></button>
+}
+
+export const DuplicateButton = (props) => {
+  return (<button type="button" {...props}><CopyIcon /></button>)
 }

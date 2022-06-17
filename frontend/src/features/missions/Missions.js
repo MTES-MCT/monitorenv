@@ -32,7 +32,7 @@ export const Missions = () => {
             </AddNewMissionButton>
           </SideWindowHeader>
           <SideWindowContent>
-            <MissionsFilter></MissionsFilter>
+            <MissionsFilter />
             <NumberOfDisplayedMissions data-cy={'Missions-numberOfDisplayedMissions'}>{data.length} Mission{data.length > 1 ? 's' : ''}</NumberOfDisplayedMissions>
             <TableWrapper>
               <MissionsTable data={data} isLoading={isLoading} />
@@ -58,7 +58,7 @@ const SideWindowContent = styled.div`
 `
 
 const NumberOfDisplayedMissions = styled.h3`
-  
+  font-size: 13px;  
 `
 const AddNewMissionButton = styled.div`
   margin-right: 8px;

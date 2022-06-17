@@ -1,75 +1,102 @@
-import React from 'react'
-import { Table } from 'rsuite';
-import { useDispatch } from 'react-redux'
-import { generatePath } from 'react-router'
+import React, {useCallback} from 'react'
+import { Table } from 'rsuite'
 
-import { sideWindowPaths } from '../../../domain/entities/sideWindow'
-import { setSideWindowPath } from '../../commonComponents/SideWindowRouter/SideWindowRouter.slice'
-import { CellLocalizeMission } from './CellLocalizeMission';
-import { CellEditMission } from './CellEditMission';
+import { CellLocalizeMission } from './CellLocalizeMission'
+import { CellEditMission } from './CellEditMission'
+import { DateCell } from '../../commonComponents/Table/Cell/DateCell'
+import {sortMissionsByProperty} from './MissionsTableSort'
+import { CellResources } from './CellResources'
+import { CellMissionType } from './CellMissionType'
+import { CellActionThemes } from './CellActionThemes'
+import { CellNumberOfControls } from './CellNumberOfControls'
+import { CellAlert } from './CellAlert'
+import { CellStatus } from './CellStatus'
 
 export const MissionsTable = ({data, isLoading}) => {
-  const dispatch = useDispatch()
-  const setMission = (id) => dispatch(setSideWindowPath(generatePath(sideWindowPaths.MISSION, {id})))
+
+  const [sortColumn, setSortColumn] = React.useState()
+  const [sortType, setSortType] = React.useState()
+
+  const handleSortColumn = (sortColumn, sortType) => {
+    setSortColumn(sortColumn)
+    setSortType(sortType)
+  }
+
+  const getMissions = useCallback(() => {
+    if (sortColumn && sortType) {
+      return data
+        .slice()
+        .sort((a, b) => sortMissionsByProperty(a, b, sortColumn, sortType))
+    }
+
+    return data
+  }, [sortColumn, sortType, data])
 
   return (<Table
             fillHeight
             loading={isLoading}
-            data={data}
-            onRowClick={data => {setMission(data.id)}}
+            data={getMissions()}
+            sortColumn={sortColumn}
+            sortType={sortType}
+            onSortColumn={handleSortColumn} 
           >
-            <Table.Column width={70}>
+            <Table.Column width={40}>
               <Table.HeaderCell>Id</Table.HeaderCell>
               <Table.Cell dataKey="id" />
             </Table.Column>
 
-            <Table.Column width={150}>
+            <Table.Column sortable width={130}>
               <Table.HeaderCell>Date de début</Table.HeaderCell>
-              <Table.Cell dataKey="inputStartDatetimeUtc" />
+              <DateCell dataKey="inputStartDatetimeUtc" />
             </Table.Column>
 
-            <Table.Column width={150}>
+            <Table.Column sortable width={130}>
               <Table.HeaderCell>Date de fin</Table.HeaderCell>
-              <Table.Cell dataKey="inputEndDatetimeUtc" />
+              <DateCell dataKey="inputEndDatetimeUtc" />
             </Table.Column>
 
             <Table.Column flexGrow={1}>
               <Table.HeaderCell>Unité (Administration)</Table.HeaderCell>
-              <Table.Cell dataKey="inputEndDatetimeUtc" />
+              <CellResources />
             </Table.Column>
             
-            <Table.Column width={200}>
+            <Table.Column width={100}>
               <Table.HeaderCell>Type</Table.HeaderCell>
-              <Table.Cell dataKey="missionType" />
+              <CellMissionType />
             </Table.Column>
 
-            <Table.Column width={100}>
+            <Table.Column sortable width={100}>
               <Table.HeaderCell>Facade</Table.HeaderCell>
               <Table.Cell dataKey="facade" />
             </Table.Column>
 
             <Table.Column flexGrow={1}>
               <Table.HeaderCell>Thématiques</Table.HeaderCell>
-              <Table.Cell dataKey="theme" />
+              <CellActionThemes/>
             </Table.Column>
 
-            <Table.Column width={200}>
+            <Table.Column width={120}>
               <Table.HeaderCell>Nb Contrôles</Table.HeaderCell>
-              <Table.Cell dataKey="missionStatus" />
+              <CellNumberOfControls/>
             </Table.Column>
 
-            <Table.Column width={200}>
+            <Table.Column width={120}>
               <Table.HeaderCell>Statut</Table.HeaderCell>
-              <Table.Cell dataKey="missionStatus" />
+              <CellStatus/>
+            </Table.Column>
+
+            <Table.Column width={120}>
+              <Table.HeaderCell>Alerte</Table.HeaderCell>
+              <CellAlert/>
             </Table.Column>
             
-            <Table.Column align='center'>
-              <Table.HeaderCell> - </Table.HeaderCell>
+            <Table.Column width={40}>
+              <Table.HeaderCell>&nbsp;</Table.HeaderCell>
               <CellLocalizeMission />
             </Table.Column>
 
-            <Table.Column align='center'>
-              <Table.HeaderCell>-</Table.HeaderCell>
+            <Table.Column align='center' width={100}>
+              <Table.HeaderCell>&nbsp;</Table.HeaderCell>
               <CellEditMission />
             </Table.Column>
           </Table>

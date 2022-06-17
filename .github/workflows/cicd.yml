@@ -75,13 +75,13 @@ jobs:
     - uses: actions/checkout@v2
       
     - name: NPM install with caching
-      uses: bahmutov/npm-install@v1.6.0
+      uses: bahmutov/npm-install@v1.8.15
       with:
         # Working directory to specify subfolder in which dependencies are defined
         working-directory: frontend/
         useLockFile: true
         # Custom install command to use
-        install-command: npm install
+        install-command: npm ci --force
             
     - name: Unit test
       run: make test
@@ -168,7 +168,7 @@ jobs:
       with:
         # we have already installed all dependencies above
         install: true
-        install-command: npm ci
+        install-command: npm ci --force
         working-directory: frontend
         record: true
         parallel: true

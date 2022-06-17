@@ -23,7 +23,6 @@ class CreateMissionUTests {
   fun `should create and return a new mission`() {
     // Given
     val expectedCreatedMission = MissionEntity(
-      id = 0,
       missionType = MissionTypeEnum.LAND,
       missionStatus = "CLOSED",
       facade = "Outre-Mer",
@@ -31,14 +30,13 @@ class CreateMissionUTests {
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
       inputEndDatetimeUtc =  ZonedDateTime.parse("2022-01-23T20:29:03Z")
     )
-    given(missionRepository.save(expectedCreatedMission)).willReturn(expectedCreatedMission)
-    given(missionRepository.findMissionById(0)).willReturn(expectedCreatedMission)
+    given(missionRepository.create(expectedCreatedMission)).willReturn(expectedCreatedMission)
 
     // When
     val createdMission = CreateMission(missionRepository).execute(expectedCreatedMission)
 
     // Then
-    verify(missionRepository, times(1)).save(expectedCreatedMission)
+    verify(missionRepository, times(1)).create(expectedCreatedMission)
     assertThat(createdMission).isEqualTo(expectedCreatedMission)
   }
 

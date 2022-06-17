@@ -4,6 +4,7 @@ import { DatePicker } from 'rsuite'
 import { parseISO } from 'rsuite/esm/utils/dateUtils';
 import styled from 'styled-components';
 
+export const placeholderDateTimePicker = '\xa0\xa0\xa0\xa0\xa0\xa0/\xa0\xa0\xa0\xa0\xa0\xa0/\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0:\xa0\xa0\xa0\xa0\xa0\xa0'
 
 export const FormikDatePicker = ({ name, ...props }) => {
   const [field, , helpers] = useField(name);
