@@ -8,8 +8,9 @@ import java.time.ZonedDateTime
 data class CreateOrUpdateMissionDataInput(
   val id: Int? = null,
   val missionType: MissionTypeEnum,
-  val unit: String? = null,
   val administration: String? = null,
+  val unit: String? = null,
+  val resources : List<String>? = listOf(),
   val missionStatus: String? = null,
   val author: String? = null,
   val observations: String? = null,
@@ -23,8 +24,9 @@ data class CreateOrUpdateMissionDataInput(
       return MissionEntity(
         id= this.id,
         missionType = this.missionType,
-        unit = this.unit,
         administration = this.administration,
+        unit = this.unit,
+        resources = this.resources,
         missionStatus = this.missionStatus,
         author = this.author,
         observations = this.observations,

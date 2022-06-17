@@ -9,8 +9,9 @@ import java.time.ZonedDateTime
 data class MissionDataOutput(
     val id: Int? = null,
     val missionType: MissionTypeEnum,
-    val unit: String? = null,
     val administration: String? = null,
+    val unit: String? = null,
+    val resources: List<String>? = null,
     val missionStatus: String? = null,
     val author: String? = null,
     val observations: String? = null,
@@ -28,8 +29,9 @@ data class MissionDataOutput(
             return MissionDataOutput(
                 id = mission.id,
                 missionType = mission.missionType,
-                unit = mission.unit,
                 administration = mission.administration,
+                unit = mission.unit,
+                resources = mission.resources,
                 missionStatus = mission.missionStatus,
                 author = mission.author,
                 observations= mission.observations,
