@@ -5,6 +5,12 @@ import { CellLocalizeMission } from './CellLocalizeMission'
 import { CellEditMission } from './CellEditMission'
 import { DateCell } from '../../commonComponents/Table/Cell/DateCell'
 import {sortMissionsByProperty} from './MissionsTableSort'
+import { CellResources } from './CellResources'
+import { CellMissionType } from './CellMissionType'
+import { CellActionThemes } from './CellActionThemes'
+import { CellNumberOfControls } from './CellNumberOfControls'
+import { CellAlert } from './CellAlert'
+import { CellStatus } from './CellStatus'
 
 export const MissionsTable = ({data, isLoading}) => {
 
@@ -25,7 +31,6 @@ export const MissionsTable = ({data, isLoading}) => {
 
     return data
   }, [sortColumn, sortType, data])
-  
 
   return (<Table
             fillHeight
@@ -50,14 +55,14 @@ export const MissionsTable = ({data, isLoading}) => {
               <DateCell dataKey="inputEndDatetimeUtc" />
             </Table.Column>
 
-            <Table.Column sortable flexGrow={1}>
+            <Table.Column flexGrow={1}>
               <Table.HeaderCell>Unité (Administration)</Table.HeaderCell>
-              <Table.Cell dataKey="inputEndDatetimeUtc" />
+              <CellResources />
             </Table.Column>
             
-            <Table.Column sortable flexGrow={1}>
+            <Table.Column width={100}>
               <Table.HeaderCell>Type</Table.HeaderCell>
-              <Table.Cell dataKey="missionType" />
+              <CellMissionType />
             </Table.Column>
 
             <Table.Column sortable width={100}>
@@ -65,24 +70,24 @@ export const MissionsTable = ({data, isLoading}) => {
               <Table.Cell dataKey="facade" />
             </Table.Column>
 
-            <Table.Column sortable flexGrow={1}>
+            <Table.Column flexGrow={1}>
               <Table.HeaderCell>Thématiques</Table.HeaderCell>
-              <Table.Cell dataKey="theme" />
+              <CellActionThemes/>
             </Table.Column>
 
-            <Table.Column sortable width={120}>
+            <Table.Column width={120}>
               <Table.HeaderCell>Nb Contrôles</Table.HeaderCell>
-              <Table.Cell dataKey="missionStatus" />
+              <CellNumberOfControls/>
             </Table.Column>
 
-            <Table.Column sortable width={120}>
+            <Table.Column width={120}>
               <Table.HeaderCell>Statut</Table.HeaderCell>
-              <Table.Cell dataKey="missionStatus" />
+              <CellStatus/>
             </Table.Column>
 
-            <Table.Column sortable width={120}>
+            <Table.Column width={120}>
               <Table.HeaderCell>Alerte</Table.HeaderCell>
-              <Table.Cell dataKey="missionStatus" />
+              <CellAlert/>
             </Table.Column>
             
             <Table.Column width={40}>

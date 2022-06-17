@@ -34,7 +34,13 @@ export const ControlTopicsCascader = ({ name, ...props }) => {
   }
   return (
     <CascaderWrapper ref={cascaderRef}>
-      <Cascader container={()=>cascaderRef.current} value={value} onChange={setValue} data={controlTopics} menuWidth={320} {...props} />
+      <Cascader
+        container={()=>cascaderRef.current}
+        value={value}
+        onChange={setValue}
+        data={controlTopics}
+        menuWidth={300}
+        {...props} />
     </CascaderWrapper>
   )
 }

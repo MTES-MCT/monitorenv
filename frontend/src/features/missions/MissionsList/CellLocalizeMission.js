@@ -6,7 +6,7 @@ import { ReactComponent as LocalizeIconSVG } from '../../icons/Oeil_apercu_carte
 
 export const CellLocalizeMission = ({rowData, dataKey, ...props}) => {
   return <Table.Cell {...props}>
-    <LocalizeButton onClick={()=>alert(rowData.id)}>
+    <LocalizeButton>
       <LocalizeIcon />
     </LocalizeButton>
   </Table.Cell>
