@@ -3,13 +3,16 @@ import styled from 'styled-components'
 import { Form } from 'rsuite'
 import { Field } from 'formik'
 
-import { infractionTypeEnum, formalNoticeEnum } from '../../../domain/entities/missions';
+import { infractionTypeEnum, formalNoticeEnum } from '../../../domain/entities/missions'
+
+import { FormikRadioGroup } from '../../commonComponents/CustomFormikFields/FormikRadioGroup'
+import { FormikCheckbox } from '../../commonComponents/CustomFormikFields/FormikCheckbox'
+import { FormikTextarea } from '../../commonComponents/CustomFormikFields/FormikTextarea'
+
+import { NatinfSelector } from './NatinfSelector'
 
 import { PrimaryButton } from '../../commonStyles/Buttons.style'
-import { FormikRadioGroup } from '../../commonComponents/CustomFormikFields/FormikRadioGroup'
-import { FormikCheckbox } from '../../commonComponents/CustomFormikFields/FormikCheckbox';
-import { FormikTextarea } from '../../commonComponents/CustomFormikFields/FormikTextarea';
-import { COLORS } from '../../../constants/constants';
+import { COLORS } from '../../../constants/constants'
 
 
 export const InfractionForm = ({ infractionPath, setCurrentInfractionIndex }) =>  {
@@ -45,8 +48,7 @@ export const InfractionForm = ({ infractionPath, setCurrentInfractionIndex }) =>
 
       <Form.Group>
         <FormColumn>
-          <Form.ControlLabel htmlFor={`${infractionPath}.natinf`} >Codes NATINF : </Form.ControlLabel>
-          <Field name={`${infractionPath}.natinf`} />
+          <NatinfSelector infractionPath={infractionPath} />
         </FormColumn>
 
         <FormColumn>

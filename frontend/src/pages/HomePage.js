@@ -23,7 +23,7 @@ import { SideWindowTestContainer } from '../features/side_window/SideWindowTestC
 
 import { CYPRESS_TEST } from '../env';
 
-const FEATURE_FLAG_REPORTING = false
+const FEATURE_FLAG_REPORTING = true
 
 const persistor = persistStore(homeStore);
 

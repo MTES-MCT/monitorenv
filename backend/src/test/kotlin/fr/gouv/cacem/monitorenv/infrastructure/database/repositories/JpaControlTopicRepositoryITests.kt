@@ -9,10 +9,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 
-import org.locationtech.jts.geom.MultiPolygon
-import org.locationtech.jts.io.WKTReader
-
-class JpaControlTopciRepositoryITests : AbstractDBTests() {
+class JpaControlTopicRepositoryITests : AbstractDBTests() {
 
   @Autowired
   private lateinit var jpaControlTopicsRepository: JpaControlTopicRepository
