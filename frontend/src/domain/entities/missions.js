@@ -54,7 +54,7 @@ export const formalNoticeEnum = {
     libelle: 'Non'
   },
   WAITING: {
-    code: 'WAITING',
+    code: 'PENDING',
     libelle: 'En attente'
   }
 }

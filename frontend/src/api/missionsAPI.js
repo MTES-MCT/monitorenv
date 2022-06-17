@@ -42,7 +42,30 @@ export const missionsAPI = createApi({
         }
       },
     }),
+    createMission: build.mutation({
+      query: ({...create}) => ({
+        url: `missions`,
+        method: 'PUT',
+        body: {...create}
+      }),
+      invalidatesTags: ['Missions'],
+      // onQueryStarted is useful for optimistic updates
+      // The 2nd parameter is the destructured `MutationLifecycleApi`
+      async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          missionsAPI.util.updateQueryData('getMission', id, (draft) => {
+            Object.assign(draft, patch)
+          })
+        )
+        try {
+          await queryFulfilled
+        } catch {
+          patchResult.undo()
+
+        }
+      },
+    })
   }),
 })
 
-export const { useGetMissionsQuery, useUpdateMissionMutation } = missionsAPI
+export const { useCreateMissionMutation, useGetMissionsQuery, useUpdateMissionMutation } = missionsAPI

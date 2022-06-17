@@ -1,27 +1,44 @@
+import { formalNoticeEnum, missionTypeEnum } from "../../domain/entities/missions"
+
 export const infractionFactory = () => {
   return {
+    natinf: [],
+    observations: '',
     registrationNumber: '',
     vehicle: '',
     size: '',
     owner: '',
-    natinf: '',
     infractionType: '',
-    formalNotice: '',
+    formalNotice: formalNoticeEnum.NO.code,
     relevantCourt: '',
     toProcess: '',
-    observations: ''
   }
 }
 
 export const actionFactory = (actionType) => {
   return {
     actionType,
+    actionTheme: '',
     actionStartDatetimeUtc: new Date(),
     actionEndDatetimeUtc: new Date(),
-    actionTheme: '',
     actionNumberOfControls: '',
     actionTargetType: '',
     actionControlType: '',
     infractions: []
+  }
+}
+
+export const missionFactory = () => {
+  return {
+    missionType: missionTypeEnum.SEA.code,
+    unit: '',
+    administration: '',
+    author: '',
+    observations: '',
+    theme: '',
+    inputStartDatetimeUtc: '',
+    inputEndDatetimeUtc: '',
+    actions: [],
+    resources: [],
   }
 }

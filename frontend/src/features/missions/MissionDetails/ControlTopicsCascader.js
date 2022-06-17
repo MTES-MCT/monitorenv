@@ -1,10 +1,10 @@
 import React, { useRef } from 'react'
+import styled from 'styled-components';
+import _ from 'lodash'
 import { Cascader } from 'rsuite';
 import {  useField } from 'formik';
-import _ from 'lodash'
 
 import { useGetControlTopicsQuery } from '../../../api/controlTopicsAPI'
-import styled from 'styled-components';
 
 export const ControlTopicsCascader = ({ name, ...props }) => {
   const [field, , helpers] = useField(name);

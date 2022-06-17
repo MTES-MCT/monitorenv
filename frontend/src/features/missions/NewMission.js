@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { Formik, FieldArray } from 'formik';
 import { Form } from 'rsuite'
 
-import { useGetMissionsQuery, useUpdateMissionMutation } from '../../api/missionsAPI'
+import {  useCreateMissionMutation } from '../../api/missionsAPI'
 import { setSideWindowPath } from '../commonComponents/SideWindowRouter/SideWindowRouter.slice';
 import { sideWindowPaths } from '../../domain/entities/sideWindow';
 
@@ -13,43 +13,33 @@ import { ActionsForm } from './MissionDetails/ActionsForm'
 import { ActionForm } from './MissionDetails/ActionForm'
 import { GeneralInformationsForm } from './MissionDetails/GeneralInformationsForm';
 
-// import { PrimaryButton } from '../commonStyles/Buttons.style';
 import { COLORS } from '../../constants/constants';
 import { MissionValidationModal } from './MissionValidationModal';
+import { missionFactory } from './Missions.helpers';
 import { PrimaryButton, SecondaryButton } from '../commonStyles/Buttons.style';
  
 
 
 
-export const EditMission = ({routeParams})  => {
+export const NewMission = ()  => {
   const dispatch = useDispatch()
-  const id = parseInt(routeParams?.params?.id)
-  const { mission } = useGetMissionsQuery(undefined, {
-    selectFromResult: ({ data }) =>  ({
-      mission: data?.find(op => op.id === id),
-    }),
-  })
+  const  mission = missionFactory()
+
   const [
-    updateMission,
+    createMission,
     { isLoading: isUpdating, },
-  ] = useUpdateMissionMutation()
+  ] = useCreateMissionMutation()
 
   const [currentActionIndex, setCurrentActionIndex] = useState(null)
   const [errorOnSave, setErrorOnSave ] = useState(false)
   const [ confirmationModalIsOpen, setConfirmationModalIsOpen] = useState(false)  
-  
-  if (id === undefined) {
-    return<div style={{flex:1}}>Aucune mission sélectionnée</div>
-  }
-  
-  
 
   const handleSetCurrentActionIndex = (index) =>{
     setCurrentActionIndex(index)
   }
 
   const handleSubmitForm = values => {
-    updateMission(values).then((response)=> {
+    createMission(values).then((response)=> {
       const {data, error} = response
       if (data) {
         dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))
@@ -77,7 +67,7 @@ export const EditMission = ({routeParams})  => {
   return (
     <EditMissionWrapper data-cy={'editMissionWrapper'}>
       <MissionValidationModal open={confirmationModalIsOpen} onClose={handleCancelForm} />
-      <SideWindowHeader title={`Edition de la mission n°${id}${isUpdating ? ' - Enregistrement en cours' : ''}`} />
+      <SideWindowHeader title={`Nouvelle mission ${isUpdating ? ' - Enregistrement en cours' : ''}`} />
       <Formik
         enableReinitialize={true}
         initialValues={{
@@ -89,9 +79,6 @@ export const EditMission = ({routeParams})  => {
           observations: mission?.observations,
           inputStartDatetimeUtc: mission?.inputStartDatetimeUtc,
           inputEndDatetimeUtc: mission?.inputEndDatetimeUtc || '',
-          administration: mission?.administration,
-          unit: mission?.unit,
-          resources: mission?.resources,
           actions: mission?.actions
         }}
         onSubmit={handleSubmitForm}
@@ -104,14 +91,15 @@ export const EditMission = ({routeParams})  => {
                   <GeneralInformationsForm />
                 </FirstColumn>
                 <SecondColumn>
-                  <FieldArray name='actions' render={(props)=><ActionsForm {...props} currentActionIndex={currentActionIndex} setCurrentActionIndex={handleSetCurrentActionIndex} />}  />
+                  <FieldArray name="actions" render={(props)=><ActionsForm {...props} currentActionIndex={currentActionIndex} setCurrentActionIndex={handleSetCurrentActionIndex} />}  />
                 </SecondColumn>
                 <ThirdColumn>
-                  <FieldArray name='actions' render={(props)=><ActionForm {...props} currentActionIndex={currentActionIndex} setCurrentActionIndex={handleSetCurrentActionIndex} />} />
+                  <FieldArray name="actions" render={(props)=><ActionForm {...props} currentActionIndex={currentActionIndex} setCurrentActionIndex={handleSetCurrentActionIndex} />} />
                 </ThirdColumn>
               </Wrapper>
               
               <FormActionsWrapper>
+                
                 
                 <SecondaryButton onClick={handleCancel} type='button'>Annuler</SecondaryButton>
                 <PrimaryButton type='submit'>Enregistrer</PrimaryButton>

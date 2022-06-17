@@ -1,6 +1,5 @@
 import React from 'react'
 import { Form } from 'rsuite'
-import { Field } from 'formik'
 import styled from 'styled-components';
 
 import { missionNatureEnum, missionTypeEnum } from '../../../domain/entities/missions';
@@ -11,10 +10,11 @@ import { FormikTextarea } from '../../commonComponents/CustomFormikFields/Formik
 import { FormikInput } from '../../commonComponents/CustomFormikFields/FormikInput';
 
 import { COLORS } from '../../../constants/constants';
+import { ControlResourcesSelector } from './ControlResourcesSelector';
 
 
 
-export const    GeneralInformationsForm = () => {
+export const GeneralInformationsForm = () => {
   return (
     <FormWrapper>
       <Title>Informations générales</Title>
@@ -27,14 +27,7 @@ export const    GeneralInformationsForm = () => {
         <FormikDatePicker name="inputEndDatetimeUtc" placeholder={placeholderDateTimePicker} format="dd MMM yyyy, HH:mm" oneTap/>
       </Form.Group>
       <Form.Group>
-        <Form.ControlLabel htmlFor="administration">Administration : </Form.ControlLabel>
-        <Field name="administration" type="text"/>
-        <Form.ControlLabel htmlFor="unit">Unité : </Form.ControlLabel>
-        <Field name="unit" type="text"/>
-      </Form.Group>
-      <Form.Group>
-        <Form.ControlLabel htmlFor="moyens">Moyens : </Form.ControlLabel>
-        <Field name="moyens" type="text"/>
+        <ControlResourcesSelector />
       </Form.Group>
       <Form.Group>
         <Form.ControlLabel htmlFor="missionType">Type de mission : </Form.ControlLabel>
