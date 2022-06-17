@@ -13,13 +13,15 @@ export const InfractionCard = ({ infractionPath,  setCurrentInfractionIndex, rem
   const [registrationNumber] = useField(`${infractionPath}.registrationNumber`)
   const [infractionType] = useField(`${infractionPath}.infractionType`)
   const [formalNotice] = useField(`${infractionPath}.formalNotice`)
+  const [natinf] = useField(`${infractionPath}.natinf`)
+  console.log(natinf)
 
 
   return (
     <Wrapper>
       <Summary>
-        <VehicleType>{vehicle?.value}</VehicleType>
-        <RegistrationNumber>({registrationNumber?.value})</RegistrationNumber>
+        <VehicleType>{vehicle?.value || 'NR'}</VehicleType>
+        <RegistrationNumber>({registrationNumber?.value || 'sans immatriculation'})</RegistrationNumber>
         <SummaryDetails>
           <Info>
             {infractionType?.value || 'NR'}
@@ -28,7 +30,7 @@ export const InfractionCard = ({ infractionPath,  setCurrentInfractionIndex, rem
             MED : {formalNotice?.value || 'NR'}
           </Info>
           <Info>
-            3 codes NATINF
+            {natinf.value?.length || '0'} codes NATINF
           </Info>
         </SummaryDetails>
       </Summary>

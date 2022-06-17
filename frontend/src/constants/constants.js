@@ -31,7 +31,9 @@ export const COLORS = {
   overlayShadow: '#7077851A',
   yellow: '#F6D012',
   titleBottomBorder: '#E0E0E0',
-  missingGrey: '#EEEEF1'
+  missingGrey: '#EEEEF1',
+  missingGreen: '#33A02C',
+  missingBlue: '#1F78B4'
 }
 
 export const HIT_PIXEL_TO_TOLERANCE = 3
