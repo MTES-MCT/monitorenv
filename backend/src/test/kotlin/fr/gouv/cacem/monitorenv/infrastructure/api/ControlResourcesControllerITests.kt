@@ -52,10 +52,10 @@ class ControlResourcesControllerITests {
         mockMvc.perform(get("/bff/v1/controlresources"))
                 // Then
                 .andExpect(status().isOk)
-                .andExpect(jsonPath("$[3].id", equalTo(controlResource.id)))
-                .andExpect(jsonPath("$[3].facade", equalTo(controlResource.facade)))
-                .andExpect(jsonPath("$[3].administration", equalTo(controlResource.administration)))
-                .andExpect(jsonPath("$[3].name", equalTo(controlResource.name)))
+                .andExpect(jsonPath("$[0].id", equalTo(controlResource.id)))
+                .andExpect(jsonPath("$[0].facade", equalTo(controlResource.facade)))
+                .andExpect(jsonPath("$[0].administration", equalTo(controlResource.administration)))
+                .andExpect(jsonPath("$[0].name", equalTo(controlResource.name)))
     }
 
 }

@@ -43,8 +43,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     val firstMission = MissionEntity(
       id = 10,
       missionType = MissionTypeEnum.SEA,
-      unit = "Aff Mar 01",
       administration = "ULAM",
+      unit = "Aff Mar 01",
+      resources = listOf(),
       missionStatus = "OPEN",
       author = "Evan Castro",
       facade = "MEMN",

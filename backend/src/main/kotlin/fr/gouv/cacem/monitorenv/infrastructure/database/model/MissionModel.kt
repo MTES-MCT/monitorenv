@@ -66,7 +66,7 @@ data class MissionModel(
     missionType = missionType,
     administration = administration,
     unit = unit,
-    resources = resources,
+    resources = if (resources === null) listOf() else resources,
     missionStatus = missionStatus,
     author = author,
     observations = observations,
