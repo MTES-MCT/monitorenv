@@ -81,7 +81,7 @@ jobs:
         working-directory: frontend/
         useLockFile: true
         # Custom install command to use
-        install-command: npm install
+        install-command: npm ci
             
     - name: Unit test
       run: make test
