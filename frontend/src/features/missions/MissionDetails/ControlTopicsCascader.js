@@ -5,6 +5,7 @@ import { Cascader } from 'rsuite';
 import {  useField } from 'formik';
 
 import { useGetControlTopicsQuery } from '../../../api/controlTopicsAPI'
+import { COLORS } from '../../../constants/constants';
 
 export const ControlTopicsCascader = ({ name, ...props }) => {
   const [field, , helpers] = useField(name);
@@ -33,8 +34,10 @@ export const ControlTopicsCascader = ({ name, ...props }) => {
     return ('Chargement')
   }
   return (
-    <CascaderWrapper ref={cascaderRef}>
+    <CascaderWrapper ref={cascaderRef} data-cy={'controlTopicsCascader'}>
       <Cascader
+        block
+        searchable={false}
         container={()=>cascaderRef.current}
         value={value}
         onChange={setValue}
@@ -46,4 +49,15 @@ export const ControlTopicsCascader = ({ name, ...props }) => {
 }
 
 const CascaderWrapper = styled.div`
+  .rs-picker-cascader-menu-item {
+    padding-right: 0;
+  }
+  .rs-picker-menu {
+    position: relative;
+    margin-top: -32px;
+  }
+  .rs-picker-toggle {
+    width: calc(100% - 44px);
+    background: ${COLORS.white} !important;
+  }
 `

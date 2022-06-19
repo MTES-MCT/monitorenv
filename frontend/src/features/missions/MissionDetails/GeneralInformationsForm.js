@@ -22,25 +22,29 @@ export const GeneralInformationsForm = () => {
         <Form.ControlLabel htmlFor="inputStartDatetimeUtc">Date et heure du début de la mission : </Form.ControlLabel>
         <FormikDatePicker name="inputStartDatetimeUtc" placeholder={placeholderDateTimePicker} format="dd MMM yyyy, HH:mm" oneTap/>
       </Form.Group>
+      
       <Form.Group>
         <Form.ControlLabel htmlFor="inputEndDatetimeUtc">Date et heure de fin de la mission : </Form.ControlLabel>
         <FormikDatePicker name="inputEndDatetimeUtc" placeholder={placeholderDateTimePicker} format="dd MMM yyyy, HH:mm" oneTap/>
       </Form.Group>
-      <Form.Group>
-        <ControlResourcesSelector />
-      </Form.Group>
+      
+      <ControlResourcesSelector />
+      
       <Form.Group>
         <Form.ControlLabel htmlFor="missionType">Type de mission : </Form.ControlLabel>
         <FormikRadioGroup name="missionType" radioValues={missionTypeEnum} />
       </Form.Group>
+      
       <Form.Group>
         <Form.ControlLabel htmlFor="theme">Nature de mission : </Form.ControlLabel>
         <FormikRadioGroup name="theme" radioValues={missionNatureEnum} />
       </Form.Group>
+      
       <Form.Group>
         <Form.ControlLabel htmlFor="observations">Observations générales : </Form.ControlLabel>
         <FormikTextarea name="observations"/>
       </Form.Group>
+      
       <Form.Group>
         <Form.ControlLabel htmlFor="author">Saisi par : </Form.ControlLabel>
         <FormikInput name="author"/>

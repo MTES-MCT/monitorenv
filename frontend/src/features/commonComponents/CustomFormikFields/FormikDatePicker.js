@@ -20,12 +20,16 @@ export const FormikDatePicker = ({ name, ...props }) => {
   const valueAsDate = parsedValue.toString() === 'Invalid Date' ? null : parsedValue
   const datepickerRef = useRef()
   return (
-    <DatePickerWrapper ref={datepickerRef}>
-      <DatePicker container={()=>datepickerRef.current} {...props} value={valueAsDate} onChange={setValueAsString} />
+    <DatePickerWrapper ref={datepickerRef} data-cy={'datepicker'}>
+      <DatePicker container={()=>datepickerRef.current} {...props} value={valueAsDate} onChange={setValueAsString}  />
     </DatePickerWrapper>
   );
 }
 
 const DatePickerWrapper = styled.div`
-  width: 250px
+  width: 250px;
+  .rs-picker-date-menu {
+    position: relative;
+    margin-top: -32px;
+  }
 `

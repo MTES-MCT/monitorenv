@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
+import { Dropdown } from 'rsuite';
 
-import { PrimaryButton } from '../../commonStyles/Buttons.style'
 import { actionFactory } from '../Missions.helpers'
 import { ActionTypeEnum } from '../../../domain/entities/missions'
 import { ActionCard } from './ActionCard'
@@ -9,8 +9,9 @@ import { ActionCard } from './ActionCard'
 import { COLORS } from '../../../constants/constants';
 
 export const ActionsForm = ({  push, remove, form, currentActionIndex, setCurrentActionIndex }) =>  {
-  const handleAddSurveillanceAction = () => push(actionFactory(ActionTypeEnum.SURVEILLANCE))
-  const handleAddControlAction = () => push(actionFactory(ActionTypeEnum.CONTROL))
+  const handleAddSurveillanceAction = () => push(actionFactory(ActionTypeEnum.SURVEILLANCE.code))
+  const handleAddControlAction = () => push(actionFactory(ActionTypeEnum.CONTROL.code))
+  const handleAddNoteAction = () => push(actionFactory(ActionTypeEnum.NOTE.code))
   const handleSelectAction = index => () => setCurrentActionIndex(index)
   const handleRemoveAction = index => (e) => {
     e.stopPropagation()
@@ -22,23 +23,22 @@ export const ActionsForm = ({  push, remove, form, currentActionIndex, setCurren
     <TitleWrapper>
       <Title>Actions réalisées en mission</Title>
       <AddActionButtons>
-        <PrimaryButton
-          type="button"
-          onClick={handleAddControlAction}
-        >
-          + Ajouter un contrôle
-        </PrimaryButton>
-        <PrimaryButton
-          type="button"
-          onClick={handleAddSurveillanceAction}
-        >
-          + Ajouter une surveillance
-        </PrimaryButton>
+        <Dropdown title={'+ Ajouter'} noCaret >
+          <Dropdown.Item onClick={handleAddControlAction}>
+            Ajouter des contrôles
+          </Dropdown.Item>
+          <Dropdown.Item onClick={handleAddSurveillanceAction}>
+            Ajouter une surveillance
+          </Dropdown.Item>
+          <Dropdown.Item onClick={handleAddNoteAction}>
+            Ajouter une note libre
+          </Dropdown.Item>
+        </Dropdown>
       </AddActionButtons>
     </TitleWrapper>
     <ActionsTimeline>
     {form?.values.actions.length > 0 ? 
-      form?.values.actions.map((action, index) => {
+      form.values.actions.map((action, index) => {
         return (
         <ActionCard selected={index === currentActionIndex} key={index} selectAction={handleSelectAction(index)} action={action} removeAction={handleRemoveAction(index)}/>
       )})
@@ -49,7 +49,6 @@ export const ActionsForm = ({  push, remove, form, currentActionIndex, setCurren
 )}
 
 
-
 const FormWrapper = styled.div`
   height: calc(100% - 64px);
   display: flex;
@@ -57,19 +56,22 @@ const FormWrapper = styled.div`
   padding-left: 32px;
   padding-top: 32px;
   padding-right: 19px;
-  color: ${COLORS.slateGray}
+  color: ${COLORS.slateGray};
 `
 const TitleWrapper = styled.div`
-  display: flex;
 `
 const Title = styled.h2`
   font-size: 16px;
   line-height: 22px;
-  color: ${COLORS.charcoal}
+  color: ${COLORS.charcoal};
+  display: inline-block;
+  margin-right: 16px;
 `
 const AddActionButtons = styled.div`
-  display: flex;
-  flex-direction: column;
+  display: inline-block;
+  padding: 8px 12px 8px 16px;
+  color: ${COLORS.white};
+  background: ${COLORS.charcoal};
 `
 
 const ActionsTimeline = styled.div`

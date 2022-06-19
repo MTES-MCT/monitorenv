@@ -1,6 +1,16 @@
 export const ActionTypeEnum = {
-  SURVEILLANCE: 'SURVEILLANCE',
-  CONTROL: 'CONTROL'
+  SURVEILLANCE: { 
+    code: 'SURVEILLANCE',
+    libelle: 'Surveillance'
+  },
+  CONTROL: {
+    code: 'CONTROL',
+    libelle: 'Contrôle'
+  },
+  NOTE: {
+    code: 'NOTE',
+    libelle: 'Note'
+  }
 }
 
 export const missionTypeEnum = {
@@ -35,11 +45,11 @@ export const missionNatureEnum = {
 
 export const infractionTypeEnum = {
   WITHOUT_REPORT: {
-    code: 'WITHOUT_REPORT',
+    code: true,
     libelle: 'Sans PV'
   },
   WITH_REPORT: {
-    code: 'WITH_REPORT',
+    code: false,
     libelle: 'Avec PV'
   }
 }

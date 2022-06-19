@@ -1,7 +1,10 @@
 import React from 'react'
+import _ from 'lodash'
+import styled from 'styled-components'
 import { format, isValid } from 'date-fns'
 import { fr } from 'date-fns/locale'
-import styled from 'styled-components'
+
+import { useGetControlTopicsQuery } from '../../../api/controlTopicsAPI'
 
 import { ReactComponent as ControlIconSVG } from '../../icons/Gyrophare_controles_gris.svg'
 import { ReactComponent as SurveillanceIconSVG } from '../../icons/eye.svg'
@@ -12,8 +15,16 @@ import { DeleteButton, DuplicateButton } from '../../commonStyles/Buttons.style'
 
 
 export const ActionCard = ({selected, selectAction, action, removeAction}) => {
-  const parsedActionStartDatetimeUtc = new Date(action.actionStartDatetimeWrapperUtc)
-  const parsedActionEndDatetimeUtc = new Date(action.actionStartDatetimeUtc)
+
+  const { controlTopics } = useGetControlTopicsQuery(undefined, {
+    selectFromResult: ({ data }) => ({
+      controlTopics: _.find(data, r =>  action.actionTheme === r.id),
+    }),
+  })
+  const parsedActionStartDatetimeUtc = new Date(action.actionStartDatetimeUtc)
+  const parsedActionEndDatetimeUtc = new Date(action.actionEndDatetimeUtc)
+
+  
   return (
   <Action onClick={selectAction}>
     <TimeLine>
@@ -36,31 +47,36 @@ export const ActionCard = ({selected, selectAction, action, removeAction}) => {
         }
       </DateTimeWrapper>
     </TimeLine>
-    <ActionSummaryWrapper selected={selected} >
+    <ActionSummaryWrapper selected={selected} type={action.actionType}>
       <ButtonsWrapper>
-        
         
         <Duplicate />
         <DeleteButton onClick={removeAction} />
       
       </ButtonsWrapper>
-      {(action.actionType === ActionTypeEnum.CONTROL) && (<SummaryWrapper>
+      {(action.actionType === ActionTypeEnum.CONTROL.code) && (<SummaryWrapper>
         <ControlIcon />
         <SummaryContent>
-          <Title>Contrôles {action.actionTheme}</Title>
+          <Title>Contrôles {`${controlTopics?.topic_level_1 || 'Non spécifié'} ${controlTopics?.topic_level_2 || ''} ${controlTopics?.topic_level_3 || ''}`}</Title>
           <ControlSummary>
           <Accented>{action.actionNumberOfControls || 0}</Accented>{` contrôles réalisés sur des cibles de type ` }<Accented>{action.actionTargetType|| 'non spécifié'}</Accented>
           </ControlSummary>
           <Tags>
             <Tag>RAS</Tag>
-            <Tag>INFA</Tag>
+            <Tag>INFRA</Tag>
             <Tag>INFRA SANS PV</Tag>
             <Tag>MED</Tag>
           </Tags>
         </SummaryContent>
       </SummaryWrapper>)}
-      {(action.actionType === ActionTypeEnum.SURVEILLANCE) && (<>
-        <SurveillanceIcon /> Surveillance {action.actionTheme}
+      {(action.actionType === ActionTypeEnum.SURVEILLANCE.code) && (<SummaryWrapper>
+        <SurveillanceIcon /> 
+        <SummaryContent>
+          <Title>Surveillance {`${controlTopics?.topic_level_1 || 'Non spécifiée'} ${controlTopics?.topic_level_2 || ''} ${controlTopics?.topic_level_3 || ''}`}</Title>
+          </SummaryContent>
+      </SummaryWrapper>)}
+      {(action.actionType === ActionTypeEnum.NOTE.code) && (<>
+        <SurveillanceIcon /> {action.observations || 'Note libre'} 
       </>)}
       
     </ActionSummaryWrapper>
@@ -90,7 +106,7 @@ const Time = styled.div`
 const ActionSummaryWrapper = styled.div`
   flex: 1;
   border: ${props => props.selected ? `3px solid ${COLORS.charcoal}` : ''};
-  background: ${COLORS.white};
+  background: ${props => props.type === ActionTypeEnum.CONTROL.code ? COLORS.white : props.type === ActionTypeEnum.SURVEILLANCE.code ? COLORS.shadowBlueLittleOpacity : COLORS.missingGrey};
   padding: ${props => props.selected ? `4px` : '7px'};
   margin-left: 32px;
 `

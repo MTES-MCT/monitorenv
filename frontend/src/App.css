@@ -309,12 +309,12 @@ a:focus {
     color: #E5E5EB !important;
 }
 
-.rs-picker-default .rs-btn,
+/* .rs-picker-default .rs-btn,
 .rs-picker-input .rs-btn,
 .rs-picker-default .rs-picker-toggle,
 .rs-picker-input .rs-picker-toggle {
     background: unset !important;
-}
+} */
 
 .rs-picker-tag-wrapper {
     padding-bottom: 0;
@@ -339,10 +339,6 @@ a:focus {
     color: #707785;
     font-size: 13px;
     font-weight: normal;
-}
-
-.rs-picker-tag>.rs-picker-toggle {
-    width: 105px;
 }
 
 .rs-picker-select-menu-item.rs-picker-select-menu-item-active,

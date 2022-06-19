@@ -59,6 +59,9 @@ export const InfractionsForm = ({  push, remove, form, currentActionIndex }) => 
 )}
 
 const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `
 const Title = styled.h3`
   font-size: 13px;
