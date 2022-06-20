@@ -5,6 +5,7 @@ import {  useField } from 'formik';
 
 import { COLORS } from '../../../constants/constants'
 import { EditButton, DeleteButton } from '../../commonStyles/Buttons.style'
+import { formalNoticeEnum, infractionTypeEnum } from '../../../domain/entities/missions';
 
 export const InfractionCard = ({ infractionPath,  setCurrentInfractionIndex, removeInfraction }) => {
   console.log(infractionPath)
@@ -24,10 +25,10 @@ export const InfractionCard = ({ infractionPath,  setCurrentInfractionIndex, rem
         <RegistrationNumber>({registrationNumber?.value || 'sans immatriculation'})</RegistrationNumber>
         <SummaryDetails>
           <Info>
-            {infractionType?.value || 'NR'}
+            {infractionTypeEnum[infractionType?.value]?.libelle || 'NR'}
           </Info>
           <Info>
-            MED : {formalNotice?.value || 'NR'}
+            MED : { formalNoticeEnum[formalNotice?.value]?.libelle || 'NR'}
           </Info>
           <Info>
             {natinf.value?.length || '0'} codes NATINF

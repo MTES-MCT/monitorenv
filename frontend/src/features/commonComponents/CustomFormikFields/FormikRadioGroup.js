@@ -21,7 +21,7 @@ export const FormikRadioGroup = ({ name, radioValues, defaultValue, ...props }) 
     >
       {
         Object.entries(radioValues).map(([key, val])=> {
-          return <Radio key={key} value={key}>{val.libelle}</Radio>
+          return <Radio key={key} value={val.code}>{val.libelle}</Radio>
         })
       }
       

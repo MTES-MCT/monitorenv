@@ -99,8 +99,6 @@ export const NewMission = ()  => {
               </Wrapper>
               
               <FormActionsWrapper>
-                
-                
                 <SecondaryButton onClick={handleCancel} type='button'>Annuler</SecondaryButton>
                 <PrimaryButton type='submit'>Enregistrer</PrimaryButton>
                 {errorOnSave && <ErrorOnSave>Oups... Erreur au moment de la sauvegarde</ErrorOnSave>}
@@ -117,13 +115,13 @@ const EditMissionWrapper = styled.div`
   flex: 1;
 `
 const Wrapper = styled.div`
-  height: calc(100vh - 80px);
+  height: calc(100vh - 118px);
   display: flex;
 `
 const FirstColumn = styled.div`
   background: ${COLORS.white};
   flex: 1;
-  display: flex;
+  overflow: scroll;
   `
 const SecondColumn = styled.div`
   background: ${COLORS.missingGrey};
@@ -142,4 +140,5 @@ const ErrorOnSave = styled.div`
 
 const FormActionsWrapper = styled.div`
   text-align: right;
+  padding: 18px;
 `

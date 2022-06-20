@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import styled from 'styled-components';
-import { Form, CheckPicker } from 'rsuite';
+import { Form, TagPicker } from 'rsuite';
 import {  useField } from 'formik';
 
 import { useGetInfractionsQuery } from '../../../api/infractionsAPI'
@@ -19,9 +19,10 @@ export const NatinfSelector = ({ infractionPath, ...props }) => {
   }
   return (
     <SelectorWrapper ref={selectorRef}>
-      <Form.Group>
         <Form.ControlLabel htmlFor="natinf">Natinf : </Form.ControlLabel>
-        <CheckPicker
+        <TagPicker
+          virtualized
+          block
           container={()=>selectorRef.current}
           value={natinfField.value}
           onChange={natinfHelpers.setValue}
@@ -29,10 +30,14 @@ export const NatinfSelector = ({ infractionPath, ...props }) => {
           labelKey={'natinf_code'}
           valueKey={'natinf_code'}
           {...props} />
-      </Form.Group>
     </SelectorWrapper>
   )
 }
 
 const SelectorWrapper = styled.div`
+  padding-right: 62px;
+  .rs-picker-menu {
+    position: relative;
+    margin-top: -62px;
+  }
 `

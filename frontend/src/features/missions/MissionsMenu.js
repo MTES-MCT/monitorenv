@@ -3,11 +3,10 @@ import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { closeSideWindow, openSideWindowTab } from '../../domain/shared_slices/Global'
-import { sideWindowMenu, sideWindowPaths } from '../../domain/entities/sideWindow'
+import { sideWindowMenu } from '../../domain/entities/sideWindow'
 
 import { RightMenuButton } from "../commonComponents/RightMenuButton/RightMenuButton"
 import { ReactComponent as MissionsSVG } from '../icons/Picto_resume.svg'
-import { setSideWindowPath } from '../commonComponents/SideWindowRouter/SideWindowRouter.slice'
 
 export const MissionsMenu = () => {
   const dispatch = useDispatch()
@@ -18,12 +17,8 @@ export const MissionsMenu = () => {
 
   const toggleMissionsWindow = () => {
     if (!sideWindowIsOpen || (sideWindowIsOpen && openedSideWindowTab !== sideWindowMenu.MISSIONS.code)) {
-      dispatch(openSideWindowTab(sideWindowMenu.MISSIONS.code))
-      dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))
-      return
-    }
-
-    if (sideWindowIsOpen && openedSideWindowTab === sideWindowMenu.MISSIONS.code) {
+      dispatch(openSideWindowTab(sideWindowMenu.MISSIONS.code))      
+    } else if (sideWindowIsOpen && openedSideWindowTab === sideWindowMenu.MISSIONS.code) {
       dispatch(closeSideWindow())
     }
   }

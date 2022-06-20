@@ -46,12 +46,12 @@ export const InfractionForm = ({ infractionPath, setCurrentInfractionIndex }) =>
         <Field name={`${infractionPath}.owner`} />
       </Form.Group>
 
-      <Form.Group>
-        <FormColumn>
+      <Form.Group style={{display: 'flex'}}>
+        <FormColumn flex={1}>
           <NatinfSelector infractionPath={infractionPath} />
         </FormColumn>
 
-        <FormColumn>
+        <FormColumn flex={1}>
           <Form.Group>
             <Form.ControlLabel htmlFor={`${infractionPath}.infractionType`}>Type d&apos;infraction : </Form.ControlLabel>
             <FormikRadioGroup name={`${infractionPath}.infractionType`} radioValues={infractionTypeEnum} />
@@ -71,10 +71,9 @@ export const InfractionForm = ({ infractionPath, setCurrentInfractionIndex }) =>
           <Field name={`${infractionPath}.relevantCourt`} />
         </FormColumn>
 
-        <FormColumn>
-            <Form.ControlLabel htmlFor={`${infractionPath}.toProcess`}>A traiter : </Form.ControlLabel>
-            <FormikCheckbox name={`${infractionPath}.toProcess`} />
-        </FormColumn>
+        <FormColumnWithCheckbox>
+            <FormikCheckbox name={`${infractionPath}.toProcess`} label={'A traiter'} inline/>
+        </FormColumnWithCheckbox>
       </Form.Group>
 
       <Form.Group>
@@ -93,4 +92,10 @@ const FormWrapper = styled.div`
 
 const FormColumn = styled.div`
   display: inline-block;
+  ${props => `flex: ${props.flex};`}
+  `
+const FormColumnWithCheckbox = styled.div`
+  display: inline-block;
+  vertical-align: top;
+  padding-top: 16px;
 `
