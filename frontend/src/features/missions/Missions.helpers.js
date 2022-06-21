@@ -19,11 +19,12 @@ export const actionFactory = (actionType) => {
   return {
     actionType,
     actionTheme: '',
+    protectedSpecies: [],
     actionStartDatetimeUtc: new Date(),
     actionEndDatetimeUtc: new Date(),
     actionNumberOfControls: '',
     actionTargetType: '',
-    actionControlType: '',
+    vehicleType: '',
     infractions: []
   }
 }

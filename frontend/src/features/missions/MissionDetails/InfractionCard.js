@@ -8,20 +8,17 @@ import { EditButton, DeleteButton } from '../../commonStyles/Buttons.style'
 import { formalNoticeEnum, infractionTypeEnum } from '../../../domain/entities/missions';
 
 export const InfractionCard = ({ infractionPath,  setCurrentInfractionIndex, removeInfraction }) => {
-  console.log(infractionPath)
 
   const [vehicle] = useField(`${infractionPath}.vehicle`)
   const [registrationNumber] = useField(`${infractionPath}.registrationNumber`)
   const [infractionType] = useField(`${infractionPath}.infractionType`)
   const [formalNotice] = useField(`${infractionPath}.formalNotice`)
   const [natinf] = useField(`${infractionPath}.natinf`)
-  console.log(natinf)
-
 
   return (
     <Wrapper>
       <Summary>
-        <VehicleType>{vehicle?.value || 'NR'}</VehicleType>
+        <VehicleType>{vehicle?.value || 'Véhicule Non Renseigné'}</VehicleType>
         <RegistrationNumber>({registrationNumber?.value || 'sans immatriculation'})</RegistrationNumber>
         <SummaryDetails>
           <Info>

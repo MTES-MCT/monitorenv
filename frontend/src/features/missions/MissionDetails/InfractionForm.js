@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Form } from 'rsuite'
-import { Field } from 'formik'
+import { Field, useField } from 'formik'
 
-import { infractionTypeEnum, formalNoticeEnum } from '../../../domain/entities/missions'
+import { infractionTypeEnum, formalNoticeEnum, vehicleTypeEnum } from '../../../domain/entities/missions'
 
 import { FormikRadioGroup } from '../../commonComponents/CustomFormikFields/FormikRadioGroup'
 import { FormikCheckbox } from '../../commonComponents/CustomFormikFields/FormikCheckbox'
@@ -13,11 +13,12 @@ import { NatinfSelector } from './NatinfSelector'
 
 import { PrimaryButton } from '../../commonStyles/Buttons.style'
 import { COLORS } from '../../../constants/constants'
+import { VesselSizeSelector } from './VesselSizeSelector'
+import { VehicleTypeSelector } from './VehicleTypeSelector'
 
 
 export const InfractionForm = ({ infractionPath, setCurrentInfractionIndex }) =>  {
-  console.log(infractionPath)
-
+  const [vehicleField] = useField(`${infractionPath}.vehicle`)
   const handleValidate = () => {
     setCurrentInfractionIndex()
   }
@@ -31,13 +32,13 @@ export const InfractionForm = ({ infractionPath, setCurrentInfractionIndex }) =>
         </FormColumn>
      
         <FormColumn>
-          <Form.ControlLabel htmlFor={`${infractionPath}.vehicle`}>Type de navire : </Form.ControlLabel>
-          <Field name={`${infractionPath}.vehicle`} />
+          <VehicleTypeSelector name={`${infractionPath}.vehicle`} />
         </FormColumn>
      
         <FormColumn>
-          <Form.ControlLabel htmlFor={`${infractionPath}.size`}>Taille : </Form.ControlLabel>
-          <Field name={`${infractionPath}.size`} />
+          { vehicleField.value === vehicleTypeEnum.VESSEL.code &&
+            <VesselSizeSelector name={`${infractionPath}.size`} />
+          }
         </FormColumn>
       </Form.Group>
 

@@ -8,11 +8,15 @@ import { InfractionsForm } from './InfractionsForm'
 import { FormikDatePicker, placeholderDateTimePicker } from '../../commonComponents/CustomFormikFields/FormikDatePicker';
 import { COLORS } from '../../../constants/constants'
 import { ControlTopicsCascader } from './ControlTopicsCascader'
-import { ActionTypeEnum } from '../../../domain/entities/missions';
+import { ActionTypeEnum, THEME_REQUIRE_PROTECTED_SPECIES } from '../../../domain/entities/missions';
+import { ProtectedSpeciesSelector } from './ProtectedSpeciesSelector';
+import { ActionTargetSelector } from './ActionTargetSelector';
+import { VehicleTypeSelector } from './VehicleTypeSelector';
 
 
 export const ControlForm = ({ remove, currentActionIndex, setCurrentActionIndex }) => {
   const [ actionTypeField ] = useField(`actions.${currentActionIndex}.actionType`)
+  const [ actionThemeField ] = useField(`actions.${currentActionIndex}.actionTheme`)
 
   const handleRemoveAction = () => {
     setCurrentActionIndex(null)
@@ -24,11 +28,17 @@ export const ControlForm = ({ remove, currentActionIndex, setCurrentActionIndex 
       <Title>{ActionTypeEnum[actionTypeField.value]?.libelle}</Title>
       <Delete type="button" onClick={handleRemoveAction}><TrashIcon />Supprimer</Delete>
     </Header>
+      <Form.Group>
+        <Form.ControlLabel htmlFor={`actions.${currentActionIndex}.actionTheme`}>Thématique du contrôle</Form.ControlLabel>
+        <ControlTopicsCascader name={`actions.${currentActionIndex}.actionTheme`} />
+      </Form.Group>
 
-    <Form.Group>
-      <Form.ControlLabel htmlFor={`actions.${currentActionIndex}.actionTheme`}>Thématique du contrôle</Form.ControlLabel>
-      <ControlTopicsCascader name={`actions.${currentActionIndex}.actionTheme`} />
-    </Form.Group>
+    {
+      THEME_REQUIRE_PROTECTED_SPECIES.includes(actionThemeField?.value) &&
+      <Form.Group>
+        <ProtectedSpeciesSelector name={`actions.${currentActionIndex}.protectedSpecies`} />
+      </Form.Group>
+    }
     
     <Form.Group>
       <Form.ControlLabel htmlFor={`actions[${currentActionIndex}].actionStartDatetimeUtc`} >Date et heure du début du contrôle </Form.ControlLabel>
@@ -44,12 +54,10 @@ export const ControlForm = ({ remove, currentActionIndex, setCurrentActionIndex 
           <Field name={`actions.${currentActionIndex}.actionNumberOfControls`} />
         </ActionFieldWrapper>
         <ActionFieldWrapper>
-          <Form.ControlLabel htmlFor={`actions.${currentActionIndex}.actionTargetType`}>Type de cible</Form.ControlLabel>
-          <Field name={`actions.${currentActionIndex}.actionTargetType`} />
+          <ActionTargetSelector name={`actions.${currentActionIndex}.actionTargetType`} />
         </ActionFieldWrapper>
         <ActionFieldWrapper>
-          <Form.ControlLabel htmlFor={`actions.${currentActionIndex}.actionControlType`}>Contrôle en</Form.ControlLabel>
-          <Field name={`actions.${currentActionIndex}.actionControlType`} />
+          <VehicleTypeSelector name={`actions.${currentActionIndex}.vehicleType`} />
         </ActionFieldWrapper>
       </ActionSummary>
     </Form.Group>
