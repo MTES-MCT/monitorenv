@@ -22,8 +22,7 @@ import { LocateOnMap } from '../features/locateOnMap/LocateOnMap';
 import { SideWindowTestContainer } from '../features/side_window/SideWindowTestContainer';
 
 import { CYPRESS_TEST } from '../env';
-
-const FEATURE_FLAG_REPORTING = true
+import { FEATURE_FLAGS } from '../features';
 
 const persistor = persistStore(homeStore);
 
@@ -45,13 +44,13 @@ export const HomePage = () => {
               <APIWorker/>
               <Map/>
               <LayersSidebar/> 
-              {FEATURE_FLAG_REPORTING && <MissionsMenu />}
+              {FEATURE_FLAGS.REPORTING && <MissionsMenu />}
               <Measurement/>
               <LocateOnMap />
               <InterestPoint/>
               {/* <APIWorker/> */}
               <ErrorToastNotification/>
-              {FEATURE_FLAG_REPORTING && <SideWindowLauncher/> }
+              {FEATURE_FLAGS.REPORTING && <SideWindowLauncher/> }
             </Wrapper>
           </Route>
         </Switch>
