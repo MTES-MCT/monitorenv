@@ -36,7 +36,7 @@ export const COLORS = {
   missingBlue: '#1F78B4'
 }
 
-export const HIT_PIXEL_TO_TOLERANCE = 3
+export const HIT_PIXEL_TO_TOLERANCE = 15
 
 /**
  * @enum {string}

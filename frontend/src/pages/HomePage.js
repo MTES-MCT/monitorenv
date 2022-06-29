@@ -1,13 +1,6 @@
 import React from 'react'
-import { Route, Switch } from 'react-router-dom'
-import { Provider } from 'react-redux'
-import { PersistGate } from 'redux-persist/integration/react';
-import { persistStore } from 'redux-persist';
-
 import styled from 'styled-components'
-
-import { NamespaceContext } from '../domain/context/NamespaceContext'
-import { homeStore } from './../Store'
+import { useSelector } from 'react-redux'
 
 import APIWorker from '../api/APIWorker'
 import SideWindowLauncher from '../features/side_window/SideWindowLauncher'
@@ -19,44 +12,39 @@ import { MissionsMenu } from '../features/missions/MissionsMenu'
 import Measurement from '../features/measurements/Measurement'
 import InterestPoint from '../features/interest_points/InterestPoint'
 import { LocateOnMap } from '../features/locateOnMap/LocateOnMap';
-import { SideWindowTestContainer } from '../features/side_window/SideWindowTestContainer';
+import { DrawLayerModal } from '../features/drawLayer/DrawLayerModal';
 
-import { CYPRESS_TEST } from '../env';
 import { FEATURE_FLAGS } from '../features';
 
-const persistor = persistStore(homeStore);
+
+
 
 export const HomePage = () => {
-  return <Provider store={homeStore}>
-    <PersistGate loading={null} persistor={persistor}>
-      <NamespaceContext.Provider value={'homepage'}>
-        <Switch>
-          {
-          // UNSAFE : CYPRESS_TEST is overridable on the client
-          CYPRESS_TEST==='true' && 
-            <Route exact path="/side_window">
-              <SideWindowTestContainer />
-            </Route>
-          }
-          <Route exact path="/">
-            <Healthcheck/>
-            <Wrapper>
-              <APIWorker/>
-              <Map/>
-              <LayersSidebar/> 
-              {FEATURE_FLAGS.REPORTING && <MissionsMenu />}
-              <Measurement/>
-              <LocateOnMap />
-              <InterestPoint/>
-              {/* <APIWorker/> */}
-              <ErrorToastNotification/>
-              {FEATURE_FLAGS.REPORTING && <SideWindowLauncher/> }
-            </Wrapper>
-          </Route>
-        </Switch>
-      </NamespaceContext.Provider>
-    </PersistGate>
-  </Provider>
+  const { 
+    displayLayersSidebar,
+    displayMissionsMenu,
+    displayMeasurement,
+    displayLocateOnMap,
+    displayInterestPoint,
+    displayDrawLayerModal
+   } = useSelector(state => state.global)
+  return (<>
+      <Healthcheck/>
+      <Wrapper>
+        <APIWorker/>
+        <Map/>
+        {displayLayersSidebar && <LayersSidebar/> }
+        {FEATURE_FLAGS.LOCALIZE_MISSIONS && displayDrawLayerModal && <DrawLayerModal/>}
+        {FEATURE_FLAGS.REPORTING && displayMissionsMenu && <MissionsMenu />}
+        {displayMeasurement && <Measurement/>}
+        {displayLocateOnMap && <LocateOnMap />}
+        {displayInterestPoint && <InterestPoint/>}
+        {/* <APIWorker/> */}
+        <ErrorToastNotification/>
+        {FEATURE_FLAGS.REPORTING && <SideWindowLauncher/> }
+      </Wrapper>
+    </>
+  )
 }
 
 const Wrapper = styled.div`

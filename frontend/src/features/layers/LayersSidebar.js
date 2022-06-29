@@ -10,7 +10,6 @@ import { COLORS } from '../../constants/constants'
 import RegulatoryLayerZoneMetadata from './regulatory/metadata/RegulatoryLayerZoneMetadata'
 import BaseLayers from './base/BaseLayers'
 import { MapComponentStyle } from '../commonStyles/MapComponent.style'
-import { NamespaceContext } from '../../domain/context/NamespaceContext'
 import { MapButtonStyle } from '../commonStyles/MapButton.style'
 import closeRegulatoryZoneMetadata from '../../domain/use_cases/closeRegulatoryZoneMetadata'
 
@@ -30,9 +29,6 @@ const LayersSidebar = () => {
   }
 
   return (
-    <NamespaceContext.Consumer>
-      {
-        namespace => (
           <>
             <SidebarLayersIcon
               data-cy={'layers-sidebar'}
@@ -53,17 +49,15 @@ const LayersSidebar = () => {
                 numberOfRegulatoryLayersSaved={numberOfRegulatoryLayersSaved}
                 setNumberOfRegulatoryLayersSaved={setNumberOfRegulatoryLayersSaved}
                 layersSidebarIsOpen={layersSidebarIsOpen}
-                namespace={namespace}
               />
               <Layers
                 healthcheckTextWarning={healthcheckTextWarning}
               >
                 <RegulatoryLayers
                   regulatoryLayersAddedToMySelection={numberOfRegulatoryLayersSaved}
-                  namespace={namespace}
                 />
                 <AdministrativeLayers />
-                <BaseLayers namespace={namespace}/>
+                <BaseLayers/>
               </Layers>
               <RegulatoryZoneMetadataShifter
                 regulatoryMetadataPanelIsOpen={regulatoryMetadataPanelIsOpen}
@@ -71,10 +65,7 @@ const LayersSidebar = () => {
                 <RegulatoryLayerZoneMetadata/>
               </RegulatoryZoneMetadataShifter>
             </Sidebar>
-          </>
-        )
-      }
-    </NamespaceContext.Consumer>)
+          </>)
 }
 
 const RegulatoryZoneMetadataShifter = styled.div`

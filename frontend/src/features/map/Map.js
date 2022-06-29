@@ -4,7 +4,6 @@ import React from 'react'
 import BaseMap from './BaseMap'
 import BaseLayer from '../../layers/BaseLayer'
 import MapCoordinatesBox from './controls/MapCoordinatesBox'
-// import DrawLayer from '../../layers/DrawLayer'
 import RegulatoryLayers from '../../layers/RegulatoryLayers'
 import AdministrativeLayers from '../../layers/AdministrativeLayers'
 import ShowRegulatoryMetadata from './ShowRegulatoryMetadata'
@@ -14,6 +13,10 @@ import InterestPointLayer from '../../layers/InterestPointLayer'
 import LayerDetailsBox from '../map/controls/LayerDetailsBox'
 import { MapExtentController } from './MapExtentController'
 import MapHistory from './MapHistory'
+import { DrawLayer } from '../drawLayer/DrawLayer';
+
+import { FEATURE_FLAGS } from '../../features';
+import { MissionsLayer } from '../../layers/MissionsLayer'
 
 const Map = () => {
 
@@ -52,7 +55,8 @@ const Map = () => {
       <MapExtentController />
       <MapHistory />
       <MeasurementLayer/>
-      {/* <DrawLayer/> */}
+      {FEATURE_FLAGS.LOCALIZE_MISSIONS && <DrawLayer/>}
+      {FEATURE_FLAGS.LOCALIZE_MISSIONS && <MissionsLayer/>}
       <LayerDetailsBox />
       <InterestPointLayer/>
       <RegulatoryPreviewLayer /> 

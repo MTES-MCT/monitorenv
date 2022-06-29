@@ -1,6 +1,6 @@
 import React from 'react'
-import { Form } from 'rsuite'
 import styled from 'styled-components';
+import { Form } from 'rsuite'
 
 import { missionNatureEnum, missionTypeEnum } from '../../../domain/entities/missions';
 
@@ -9,12 +9,14 @@ import { FormikRadioGroup } from '../../commonComponents/CustomFormikFields/Form
 import { FormikTextarea } from '../../commonComponents/CustomFormikFields/FormikTextarea';
 import { FormikInput } from '../../commonComponents/CustomFormikFields/FormikInput';
 
-import { COLORS } from '../../../constants/constants';
 import { ControlResourcesSelector } from './ControlResourcesSelector';
 
+import { COLORS } from '../../../constants/constants';
+import { MissionZone } from './MissionZone';
 
 
 export const GeneralInformationsForm = () => {
+  
   return (
     <FormWrapper>
       <Title>Informations générales</Title>
@@ -39,7 +41,8 @@ export const GeneralInformationsForm = () => {
         <Form.ControlLabel htmlFor="theme">Nature de mission : </Form.ControlLabel>
         <FormikRadioGroup name="theme" radioValues={missionNatureEnum} />
       </Form.Group>
-      
+
+      <MissionZone name="geom" />
       <Form.Group>
         <Form.ControlLabel htmlFor="observations">Observations générales : </Form.ControlLabel>
         <FormikTextarea name="observations"/>
