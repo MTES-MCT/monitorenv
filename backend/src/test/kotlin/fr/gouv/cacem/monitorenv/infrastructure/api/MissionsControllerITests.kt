@@ -27,9 +27,12 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.ZonedDateTime
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import com.fasterxml.jackson.databind.ObjectMapper
+import fr.gouv.cacem.monitorenv.config.MapperConfiguration
+import org.locationtech.jts.geom.MultiPolygon
+import org.locationtech.jts.io.WKTReader
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 
-
-@Import(MeterRegistryConfiguration::class)
+@Import(MeterRegistryConfiguration::class, MapperConfiguration::class)
 @ExtendWith(SpringExtension::class)
 @WebMvcTest(value = [(MissionsController::class)])
 class MissionsControllerITests {
@@ -54,6 +57,11 @@ class MissionsControllerITests {
 
   @Test
   fun `Should create a new mission`() {
+
+    val WKTreader = WKTReader()
+    val multipolygonString =
+      "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
+    val Polygon = WKTreader.read(multipolygonString) as MultiPolygon
     // Given
     val newMission = MissionEntity(
       id = 10,
@@ -61,6 +69,7 @@ class MissionsControllerITests {
       missionStatus = "CLOSED",
       facade = "Outre-Mer",
       theme = "CONTROLE",
+      geom = Polygon,
       observations = null,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
       inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z")
@@ -70,31 +79,40 @@ class MissionsControllerITests {
       missionStatus = "CLOSED",
       facade = "Outre-Mer",
       theme = "CONTROLE",
+      geom = Polygon,
       observations = null,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
       inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z")
     )
-
+    val requestbody = objectMapper.writeValueAsString(newMissionRequest)
+    println(requestbody)
     given(this.createMission.execute(mission = any())).willReturn(newMission)
     // When
     mockMvc.perform(
       put("/bff/v1/missions")
-      .content(objectMapper.writeValueAsString(newMissionRequest))
+      .content(requestbody)
       .contentType(MediaType.APPLICATION_JSON)
     )
       // Then
+      .andDo(MockMvcResultHandlers.print())
       .andExpect(status().isOk)
   }
 
   @Test
   fun `Should get all missions`() {
     // Given
+    val WKTreader = WKTReader()
+    val multipolygonString =
+      "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
+    val Polygon = WKTreader.read(multipolygonString) as MultiPolygon
+
     val firstMission = MissionEntity(
       id = 10,
       missionType = MissionTypeEnum.SEA,
       missionStatus = "CLOSED",
       facade = "Outre-Mer",
       theme = "CONTROLE",
+      geom = Polygon,
       observations = null,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
       inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
@@ -104,6 +122,7 @@ class MissionsControllerITests {
     // When
     mockMvc.perform(get("/bff/v1/missions"))
       // Then
+      .andDo(MockMvcResultHandlers.print())
       .andExpect(status().isOk)
       .andExpect(jsonPath("$[0].id", equalTo(firstMission.id)))
       .andExpect(jsonPath("$[0].missionType", equalTo(firstMission.missionType.toString())))

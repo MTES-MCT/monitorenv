@@ -1,0 +1,1 @@
+ALTER TABLE public.missions ADD COLUMN closed_by text;

@@ -1,5 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.CreateMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.GetMissionById
 import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.GetMissions
@@ -10,6 +13,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.*
 import io.micrometer.core.instrument.MeterRegistry
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.n52.jackson.datatype.jts.JtsModule
 import org.springframework.web.bind.annotation.*
 import javax.websocket.server.PathParam
 
@@ -21,6 +25,7 @@ class MissionsController(
   private val getMissions: GetMissions,
   private val getMissionById: GetMissionById,
   private val updateMission: UpdateMission,
+  private val objectMapper: ObjectMapper,
   meterRegistry: MeterRegistry
 ) {
 
@@ -28,7 +33,6 @@ class MissionsController(
   @Operation(summary = "Get missions")
   fun getMissionsController(): List<MissionDataOutput> {
     val missions = getMissions.execute()
-
     return missions.map { MissionDataOutput.fromMission(it) }
   }
 

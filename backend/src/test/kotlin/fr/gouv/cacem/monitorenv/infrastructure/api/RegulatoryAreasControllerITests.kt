@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryAreas.RegulatoryAreaEntity
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 
 @Import(MeterRegistryConfiguration::class)
 @ExtendWith(SpringExtension::class)
@@ -72,6 +73,7 @@ class RegulatoryAreasControllerITests {
     // When
     mockMvc.perform(get("/bff/v1/regulatory"))
       // Then
+      .andDo(MockMvcResultHandlers.print())
       .andExpect(status().isOk)
       .andExpect(jsonPath("$[0].id", equalTo(regulatoryArea.id)))
       .andExpect(jsonPath("$[0].entity_name", equalTo(regulatoryArea.entity_name)))
