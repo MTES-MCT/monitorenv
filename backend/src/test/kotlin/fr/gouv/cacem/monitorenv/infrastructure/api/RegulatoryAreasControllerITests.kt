@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryAreas.RegulatoryAreaEntity
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 
 @Import(MeterRegistryConfiguration::class)
 @ExtendWith(SpringExtension::class)
@@ -46,7 +47,7 @@ class RegulatoryAreasControllerITests {
     val multipolygonString =
       "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
     val Polygon = WKTreader.read(multipolygonString) as MultiPolygon
-    val regulaotyrArea = RegulatoryAreaEntity(
+    val regulatoryArea = RegulatoryAreaEntity(
       id = 17,
       geom = Polygon,
       entity_name = "Zone au sud de la cale",
@@ -67,21 +68,22 @@ class RegulatoryAreasControllerITests {
       objet = "",
       signataire = ""
     )
-    given(this.getRegulatoryAreas.execute()).willReturn(listOf(regulaotyrArea))
+    given(this.getRegulatoryAreas.execute()).willReturn(listOf(regulatoryArea))
 
     // When
     mockMvc.perform(get("/bff/v1/regulatory"))
       // Then
+      .andDo(MockMvcResultHandlers.print())
       .andExpect(status().isOk)
-      .andExpect(jsonPath("$[0].id", equalTo(regulaotyrArea.id)))
-      .andExpect(jsonPath("$[0].entity_name", equalTo(regulaotyrArea.entity_name)))
-      .andExpect(jsonPath("$[0].layer_name", equalTo(regulaotyrArea.layer_name)))
-      .andExpect(jsonPath("$[0].facade", equalTo(regulaotyrArea.facade)))
-      .andExpect(jsonPath("$[0].ref_reg", equalTo(regulaotyrArea.ref_reg)))
-      .andExpect(jsonPath("$[0].thematique", equalTo(regulaotyrArea.thematique)))
-      .andExpect(jsonPath("$[0].echelle", equalTo(regulaotyrArea.echelle)))
-      .andExpect(jsonPath("$[0].date", equalTo(regulaotyrArea.date)))
-      .andExpect(jsonPath("$[0].duree_validite", equalTo(regulaotyrArea.duree_validite)))
+      .andExpect(jsonPath("$[0].id", equalTo(regulatoryArea.id)))
+      .andExpect(jsonPath("$[0].entity_name", equalTo(regulatoryArea.entity_name)))
+      .andExpect(jsonPath("$[0].layer_name", equalTo(regulatoryArea.layer_name)))
+      .andExpect(jsonPath("$[0].facade", equalTo(regulatoryArea.facade)))
+      .andExpect(jsonPath("$[0].ref_reg", equalTo(regulatoryArea.ref_reg)))
+      .andExpect(jsonPath("$[0].thematique", equalTo(regulatoryArea.thematique)))
+      .andExpect(jsonPath("$[0].echelle", equalTo(regulatoryArea.echelle)))
+      .andExpect(jsonPath("$[0].date", equalTo(regulatoryArea.date)))
+      .andExpect(jsonPath("$[0].duree_validite", equalTo(regulatoryArea.duree_validite)))
   }
 
   @Test
@@ -91,7 +93,7 @@ class RegulatoryAreasControllerITests {
     val multipolygonString =
       "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
     val Polygon = WKTreader.read(multipolygonString) as MultiPolygon
-    val regulaotryArea = RegulatoryAreaEntity(
+    val regulatoryArea = RegulatoryAreaEntity(
       id = 17,
       geom = Polygon,
       entity_name = "Zone au sud de la cale",
@@ -113,20 +115,20 @@ class RegulatoryAreasControllerITests {
       signataire = ""
     )
 
-    given(this.getRegulatoryAreaById.execute(17)).willReturn(regulaotryArea)
+    given(this.getRegulatoryAreaById.execute(17)).willReturn(regulatoryArea)
 
     // When
     mockMvc.perform(get("/bff/v1/regulatory/17"))
       // Then
       .andExpect(status().isOk)
-      .andExpect(jsonPath("$.id", equalTo(regulaotryArea.id)))
-      .andExpect(jsonPath("$.entity_name", equalTo(regulaotryArea.entity_name)))
-      .andExpect(jsonPath("$.url", equalTo(regulaotryArea.url)))
-      .andExpect(jsonPath("$.facade", equalTo(regulaotryArea.facade)))
-      .andExpect(jsonPath("$.thematique", equalTo(regulaotryArea.thematique)))
-      .andExpect(jsonPath("$.layer_name", equalTo(regulaotryArea.layer_name)))
-      .andExpect(jsonPath("$.ref_reg", equalTo(regulaotryArea.ref_reg)))
-      .andExpect(jsonPath("$.date", equalTo(regulaotryArea.date)))
-      .andExpect(jsonPath("$.temporalite", equalTo(regulaotryArea.temporalite)))
+      .andExpect(jsonPath("$.id", equalTo(regulatoryArea.id)))
+      .andExpect(jsonPath("$.entity_name", equalTo(regulatoryArea.entity_name)))
+      .andExpect(jsonPath("$.url", equalTo(regulatoryArea.url)))
+      .andExpect(jsonPath("$.facade", equalTo(regulatoryArea.facade)))
+      .andExpect(jsonPath("$.thematique", equalTo(regulatoryArea.thematique)))
+      .andExpect(jsonPath("$.layer_name", equalTo(regulatoryArea.layer_name)))
+      .andExpect(jsonPath("$.ref_reg", equalTo(regulatoryArea.ref_reg)))
+      .andExpect(jsonPath("$.date", equalTo(regulatoryArea.date)))
+      .andExpect(jsonPath("$.temporalite", equalTo(regulatoryArea.temporalite)))
   }
 }

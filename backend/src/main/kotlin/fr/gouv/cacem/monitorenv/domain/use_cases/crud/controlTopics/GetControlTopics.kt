@@ -11,9 +11,9 @@ class GetControlTopics(private val controlTopicRepository: IControlTopicReposito
   private val logger = LoggerFactory.getLogger(GetControlTopics::class.java)
 
   fun execute(): List<ControlTopicEntity> {
-    val regulatoryAreas = controlTopicRepository.findControlTopics()
-    logger.info("Found ${regulatoryAreas.size} control topics ")
+    val controlTopics = controlTopicRepository.findControlTopics()
+    logger.info("Found ${controlTopics.size} control topics ")
 
-    return regulatoryAreas
+    return controlTopics
   }
 }

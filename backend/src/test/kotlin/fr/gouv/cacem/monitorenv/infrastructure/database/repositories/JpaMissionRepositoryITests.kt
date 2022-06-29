@@ -4,6 +4,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.locationtech.jts.geom.MultiPolygon
+import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
@@ -22,7 +24,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     )
     // When
     val newMissionReturn = jpaMissionRepository.create(newMission)
-    println(newMissionReturn)
     val missions = jpaMissionRepository.findMissions()
 
     assertThat(missions).hasSize(51)
@@ -65,12 +66,18 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
   fun `save Should update mission`() {
 
     // Given
+    val WKTreader = WKTReader()
+    val multipolygonString =
+      "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
+    val Polygon = WKTreader.read(multipolygonString) as MultiPolygon
+
     val expectedUpdatedMission = MissionEntity(
       id = 10,
       missionType= MissionTypeEnum.LAND,
       missionStatus = "CLOSED",
       facade = "Outre-Mer",
       theme = "CONTROLE",
+      geom = Polygon,
       observations = null,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
       inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),

@@ -14,6 +14,13 @@ const globalSlice = createSlice({
     healthcheckTextWarning: null,
     openedSideWindowTab: null,
     sideWindowIsOpen: false,
+    // state entry for every component displayed on map
+    displayLayersSidebar: true,
+    displayMissionsMenu: true,
+    displayMeasurement: true,
+    displayLocateOnMap: true,
+    displayInterestPoint: true,
+    displayDrawLayerModal: false
   },
   reducers: {
     expandRightMenu (state) {
@@ -65,6 +72,9 @@ const globalSlice = createSlice({
     setHealthcheckTextWarning (state, action) {
       state.healthcheckTextWarning = action.payload
     },
+    setDisplayedItems (state, action) {
+      return  {...state, ...action.payload}
+    }
   }
 })
 
@@ -77,6 +87,7 @@ export const {
   openSideWindowTab,
   setSideWindowAsOpen,
   closeSideWindow,
+  setDisplayedItems
 } = globalSlice.actions
 
 export default globalSlice.reducer

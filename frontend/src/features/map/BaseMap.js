@@ -12,6 +12,7 @@ import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/m
 import MapAttributionsBox from './controls/MapAttributionsBox'
 import { HIT_PIXEL_TO_TOLERANCE } from '../../constants/constants'
 import { platformModifierKeyOnly } from 'ol/events/condition'
+import { SelectableLayers } from '../../domain/entities/layers'
 
 
 
@@ -31,7 +32,9 @@ const BaseMap = ({ children, showAttributions }) => {
 
   const handleMapClick = (event, map) => {
     if (event && map) {
-      const feature = map.forEachFeatureAtPixel(event.pixel, feature => feature, { hitTolerance: HIT_PIXEL_TO_TOLERANCE })
+      const feature = map.forEachFeatureAtPixel(event.pixel, feature => feature, { hitTolerance: HIT_PIXEL_TO_TOLERANCE, layerFilter: (l)=> {
+        return SelectableLayers.includes(l.name)
+      } })
       const isCtrl = platformModifierKeyOnly(event)
       setMapClickEvent({ feature, ctrlKeyPressed: isCtrl })
     }
@@ -59,7 +62,6 @@ const BaseMap = ({ children, showAttributions }) => {
           })
         ]
       })
-
       initialMap.on('click', event => handleMapClick(event, initialMap))
 
       setMap(initialMap)

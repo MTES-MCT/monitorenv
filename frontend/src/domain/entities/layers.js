@@ -48,6 +48,10 @@ const Layers = {
     subZoneFieldKey: null,
     isIntersectable: false
   },
+  MISSIONS : {
+    code: 'missions',
+    zIndex: 1000
+  },
   MEASUREMENT: {
     code: 'measurement',
     name: '',
@@ -360,5 +364,7 @@ export const baseLayers = {
     text: 'Fond de carte sombre'
   }
 }
+
+export const SelectableLayers = [Layers.MISSIONS.code]
 
 export default Layers

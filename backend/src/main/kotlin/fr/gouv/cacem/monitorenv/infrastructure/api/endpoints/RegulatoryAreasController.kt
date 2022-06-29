@@ -19,6 +19,7 @@ import javax.websocket.server.PathParam
 class RegulatoryAreasController(
   private val getRegulatoryAreas: GetRegulatoryAreas,
   private val getRegulatoryAreaById: GetRegulatoryAreaById,
+  private val objectMapper: ObjectMapper,
   meterRegistry: MeterRegistry
 ) {
 

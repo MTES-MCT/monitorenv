@@ -86,6 +86,7 @@ export const EditMission = ({routeParams})  => {
           missionStatus: mission?.missionStatus,
           facade: mission?.facade,
           theme: mission?.theme,
+          geom: mission?.geom,
           observations: mission?.observations,
           inputStartDatetimeUtc: mission?.inputStartDatetimeUtc,
           inputEndDatetimeUtc: mission?.inputEndDatetimeUtc || '',
