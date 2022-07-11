@@ -1,3 +1,4 @@
+/* type selectors */
 body,
 html,
 * {
@@ -19,106 +20,10 @@ html,
     box-sizing: revert;
 }
 
-code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
-}
-
-.noUi-origin {
-    visibility: hidden;
-}
-
-.available-width {
-    width: -webkit-fill-available !important;
-    width: -moz-available !important;
-    width: stretch;
-}
-
-.rs-modal-lg {
-    width: 1300px;
-}
-
-.rs-slider-mark {
+html {
+    overflow-y: hidden;
+    overflow-x: hidden;
     font-size: 13px;
-    color: #707785;
-}
-
-.rs-slider {
-    position: absolute;
-    width: 341px;
-    margin-top: -19px;
-}
-
-.rs-slider-bar {
-    height: 0;
-}
-
-.rs-slider-progress-bar {
-    height: 2px;
-    background: none;
-}
-
-.noUi-target {
-    background: none;
-    border-radius: unset;
-    border: none;
-    box-shadow: none;
-}
-
-.noUi-connects {
-    border-radius: 0;
-    border: none;
-    height: 3px;
-}
-
-.noUi-connect:nth-child(1) {
-    background: #CCCFD6;
-}
-
-.noUi-connect:nth-child(2) {
-    background: #9095A2;
-}
-
-.noUi-connect:nth-child(3) {
-    background: #3B4559;
-}
-
-.rs-slider-graduator>ul>li::before {
-    visibility: hidden;
-}
-
-
-.rs-slider-graduator>ul>li:last-child::after,
-.rs-slider-graduator>ul>li::before {
-    top: -3px;
-    border: none;
-}
-
-.rs-slider-handle::before {
-    background: #CCCFD6;
-    border: unset;
-    top: -6px;
-    margin-left: -5px;
-    width: 16px;
-    height: 16px;
-}
-
-.rs-slider-graduator {
-    margin-left: -5px;
-    margin-top: -10px;
-}
-
-.rs-slider-graduated>div:nth-child(2)::before {
-    background: #9095A2;
-    z-index: 99;
-}
-
-.rs-slider-graduated>div:nth-child(2) {
-    z-index: 9999;
-}
-
-.rs-slider-graduated>div:nth-child(3)::before {
-    background: #3B4559;
-    z-index: 99;
 }
 
 button,
@@ -166,179 +71,73 @@ label[role="button"]:focus,
     border-color: unset;
 }
 
-.rs-radio-wrapper::before {
-    background: #E5E5EB 0% 0% no-repeat padding-box;
-    border: 2px solid #CCCFD6;
-}
-
-.rs-radio-checked .rs-radio-wrapper .rs-radio-inner::before {
-    background: #E5E5EB 0% 0% no-repeat padding-box;
-    border: 2px solid #707785;
-}
-
-.rs-radio-wrapper .rs-radio-inner::after {
-    background: #707785;
-    width: 6px;
-    height: 6px;
-    margin-top: 4px;
-    margin-left: 4px;
-}
-
-.rs-radio-wrapper .rs-radio-inner::before {
-    background: #E5E5EB 0% 0% no-repeat padding-box;
-    border: 2px solid #CCCFD6;
-}
-
-.rs-radio-wrapper::before,
-.rs-radio-wrapper .rs-radio-inner::before,
-.rs-radio-wrapper {
-    width: 10px;
-    height: 10px;
-}
-
-.rs-radio-checker>label {
-    font-size: 13px;
-    color: #3B4559;
-    padding: 0 0 0 2px;
-    font-weight: 500;
-    line-height: 17px;
-}
-
-.rs-radio-checker {
-    padding-top: 2px;
-    padding-bottom: 0;
-    padding-left: 29px;
-    min-height: 0;
-    line-height: 1;
-    position: relative;
-}
-
-.rs-radio-inline>.rs-radio-checker {
-    padding-top: 2px;
-    margin-right: 6px;
-}
-
-.rs-radio-group {
-    text-align: left;
-    margin-right: 0;
-}
-
-.rs-radio-inline {
-    margin: 0;
-}
-
-.rs-radio-group[role="button"] {
-    padding: unset;
-    margin-top: 0;
-}
-
-.rs-checkbox-checker>label {
-    font-size: 13px;
-    color: #282F3E;
-}
-
-.rs-checkbox-checker {
-    padding-bottom: 0;
-    padding-left: 36px;
-    padding-top: 8px;
-    min-height: 0;
-    line-height: 1;
-}
-
-.rs-checkbox-checked .rs-checkbox-wrapper .rs-checkbox-inner::before {
-    border-color: #707785;
-    background-color: #E5E5EB;
-}
-
-.rs-checkbox-checked .rs-checkbox-wrapper .rs-checkbox-inner::after {
-    border: solid #707785;
-    border-width: 0 2px 2px 0;
-}
-
-.rs-radio-wrapper {
-    top: 5px;
+button:hover,
+button:focus {
+    background: inherit;
 }
 
 label {
     padding: unset;
 }
 
-.rs-picker-menu {
-    z-index: 9999 !important;
+table:not(.horizontal) th,
+table:not(.horizontal) td {
+    overflow: unset;
+    flex: unset;
 }
 
-.rs-picker-default:not(.rs-picker-disabled) .rs-btn:hover,
-.rs-picker-default:not(.rs-picker-disabled) .rs-picker-toggle:hover,
-.rs-picker-default:not(.rs-picker-disabled) .rs-btn.active,
-.rs-picker-default:not(.rs-picker-disabled) .rs-picker-toggle.active {
-    border-color: #707785 !important;
+table th,
+table td {
+    padding: unset;
 }
 
-.rs-table:not(.rs-table-column-resizing) .rs-table-cell-header .rs-table-cell:hover~.rs-table-column-resize-spanner,
-.rs-table:not(.rs-table-column-resizing) .rs-table-column-resize-spanner:hover {
-    background-color: #707785;
+table tr {
+    display: table-row
 }
 
-.rs-table-column-resize-spanner::before {
-    border-color: transparent #707785 transparent transparent;
+tbody {
+    display: contents !important;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
 }
 
-.rs-calendar-table-cell-is-today .rs-calendar-table-cell-content {
-    border: 1px solid #707785 !important;
+
+input:not([type]),
+[type="text"],
+[type="email"],
+[type="number"],
+[type="search"],
+[type="password"],
+[type="url"],
+[type="tel"],
+[type="checkbox"],
+[type="radio"],
+textarea,
+select {
+    margin: 0;
+    padding: 0;
 }
 
-.rs-picker-toggle.rs-btn-sm {
-    border-radius: 2px !important;
+
+a:hover,
+a:focus {
+    color: #282F3E;
 }
 
-.rs-calendar,
-.rs-calendar-header,
-.rs-calendar-table-cell-content {
-    box-sizing: border-box !important;
+
+a:focus {
+    outline: none;
 }
 
-.rs-calendar-table-cell-content {
-    border-radius: 2px !important;
+button:focus {
+    outline: none;
 }
 
-.rs-calendar-table-cell-selected .rs-calendar-table-cell-content {
-    color: #F0F0F0;
-    border-color: #3B4559;
-    background-color: #3B4559;
-}
-
-.rs-calendar-table-cell-in-range::before {
-    background-color: #E0E0E0;
-}
-
-.rs-picker-toolbar-right-btn-ok {
-    padding: 5px 10px;
-    font-size: 13px;
-    line-height: 1.42857143;
-    border-radius: 2px;
-    color: #fff;
-    background-color: #3B4559;
-}
-
-.rs-picker-toolbar-right-btn-ok.rs-picker-toolbar-btn-disabled,
-.rs-picker-toolbar-right-btn-ok.rs-picker-toolbar-btn-disabled:hover,
-.rs-picker-toolbar-right-btn-ok.rs-picker-toolbar-btn-disabled:hover:active {
-    background-color: #3B4559;
-}
-
-.rs-picker-toolbar-right-btn-ok:not(.rs-btn-disabled):hover {
-    background-color: #3B4559;
-}
-
-.rs-input-group.rs-input-group-inside .rs-input-group-addon {
-    padding: 8px 13px 8px 11px;
-}
-
-.rs-input {
-    height: 36px;
-    color: #707785;
-}
-
-.rs-modal-body {
-    padding: 20px 25px 0 25px !important;
+input:focus {
+    outline: none;
 }
