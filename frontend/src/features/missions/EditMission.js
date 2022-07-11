@@ -86,7 +86,7 @@ export const EditMission = ({routeParams})  => {
           theme: mission?.theme,
           geom: mission?.geom,
           observations: mission?.observations,
-          author: mission?.author,
+          open_by: mission?.open_by,
           closed_by: mission?.closed_by,
           inputStartDatetimeUtc: mission?.inputStartDatetimeUtc,
           inputEndDatetimeUtc: mission?.inputEndDatetimeUtc || '',

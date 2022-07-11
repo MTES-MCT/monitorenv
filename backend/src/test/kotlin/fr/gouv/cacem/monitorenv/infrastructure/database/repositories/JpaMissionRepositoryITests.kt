@@ -48,7 +48,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
       unit = "Aff Mar 01",
       resources = listOf(),
       missionStatus = "OPEN",
-      author = "Evan Castro",
+      open_by = "Evan Castro",
       facade = "MEMN",
       theme = "ENV",
       observations = "Air data now. Husband prove born rise his everything order. Range memory control room evidence firm adult.",

@@ -49,8 +49,8 @@ data class MissionModel(
   var resources: List<String>? = listOf(),
   @Column(name = "mission_status")
     var missionStatus: String? = null,
-  @Column(name = "author")
-    var author: String? = null,
+  @Column(name = "open_by")
+    var open_by: String? = null,
   @Column(name = "closed_by")
     var closed_by: String? = null,
   @Column(name = "observations")
@@ -79,7 +79,7 @@ data class MissionModel(
     unit = unit,
     resources = if (resources === null) listOf() else resources,
     missionStatus = missionStatus,
-    author = author,
+    open_by = open_by,
     closed_by = closed_by,
     observations = observations,
     facade = facade,
@@ -99,7 +99,7 @@ data class MissionModel(
       unit = mission.unit,
       resources = mission.resources,
       missionStatus = mission.missionStatus,
-      author = mission.author,
+      open_by = mission.open_by,
       closed_by = mission.closed_by,
       observations = mission.observations,
       facade = mission.facade,

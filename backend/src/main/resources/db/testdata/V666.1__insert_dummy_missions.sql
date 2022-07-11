@@ -5,7 +5,7 @@
 --
 
 TRUNCATE public.missions;
-COPY public.missions (id, mission_type, unit, administration, mission_status, author, observations, facade, theme, input_start_datetime_utc, input_end_datetime_utc) FROM stdin;
+COPY public.missions (id, mission_type, unit, administration, mission_status, open_by, observations, facade, theme, input_start_datetime_utc, input_end_datetime_utc) FROM stdin;
 50	SEA	Aff Mar 01	ULAM	CLOSED	Jeffrey Williams	Challenge position call. Indicate machine late dark page. Process language recognize protect.	SA	OTHER	2022-01-20 07:41:28	2022-04-19 23:56:17
 1	LAND	ULAM 01	Affaires maritimues	OPEN	Stephanie Patel	Other card commercial but trade win human. Pm group list by.	MED	ENV	2022-01-20 07:41:28	2022-02-23 19:45:50
 2	AIR	Aff Mar 01	Affaires maritimues	ABORTED	Deborah Joseph	Nation year customer reduce attorney share power. Draw prove result instead too avoid. Small score represent surface benefit person such.	SA	FISH	2022-01-20 07:41:28	2022-02-11 10:25:49
