@@ -53,7 +53,6 @@ export function throwIrretrievableAdministrativeZoneError (e, type) {
  * @param {string} administrativeZone
  * @param {string[]|null} extent
  * @param {string|null} subZone
- * @param {boolean} fromBackoffice - From backoffice
  * @returns {Promise<GeoJSON>} The feature GeoJSON
  * @throws {Error}
  */

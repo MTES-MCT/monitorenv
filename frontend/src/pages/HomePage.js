@@ -39,7 +39,6 @@ export const HomePage = () => {
         {displayMeasurement && <Measurement/>}
         {displayLocateOnMap && <LocateOnMap />}
         {displayInterestPoint && <InterestPoint/>}
-        {/* <APIWorker/> */}
         <ErrorToastNotification/>
         {FEATURE_FLAGS.REPORTING && <SideWindowLauncher/> }
       </Wrapper>

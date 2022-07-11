@@ -17,7 +17,6 @@ const LayersSidebar = () => {
   const { regulatoryMetadataPanelIsOpen } = useSelector(state => state.regulatoryMetadata)
   const {
     healthcheckTextWarning,
-    previewFilteredVesselsMode
   } = useSelector(state => state.global)
   const dispatch = useDispatch()
 
@@ -36,7 +35,6 @@ const LayersSidebar = () => {
               isVisible={layersSidebarIsOpen || regulatoryMetadataPanelIsOpen}
               regulatoryMetadataPanelIsOpen={regulatoryMetadataPanelIsOpen}
               healthcheckTextWarning={healthcheckTextWarning}
-              isHidden={previewFilteredVesselsMode}
               onClick={toggleLayerSidebar}>
               <LayersIcon/>
             </SidebarLayersIcon>

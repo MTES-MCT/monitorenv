@@ -26,7 +26,6 @@ services:
       - ENV_DB_URL=jdbc:postgresql://db:5432/monitorenvdb?user=postgres&password=postgres
       - SPRING_PROFILES_ACTIVE=test
       - HOST_IP=127.0.0.1
-      - REACT_APP_GEOSERVER_LOCAL_URL=http://0.0.0.0:8081
       - REACT_APP_GEOSERVER_REMOTE_URL=http://0.0.0.0:8081
       - REACT_APP_GEOSERVER_NAMESPACE=monitorenv
       - REACT_APP_CYPRESS_TEST=true
