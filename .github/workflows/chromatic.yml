@@ -4,11 +4,12 @@
 name: 'Chromatic Publish'
 
 # Event for the workflow
-on: push
-  paths: 
-    - "frontend/src/**/*.stories.jsx"
-    - "frontend/src/features/commonComponents/**"
-    - "frontend/src/features/commonStyles/**"
+on: 
+  push:
+    paths: 
+      - "frontend/src/**/*.stories.jsx"
+      - "frontend/src/features/commonComponents/**"
+      - "frontend/src/features/commonStyles/**"
 # List of jobs
 jobs:
   test:
