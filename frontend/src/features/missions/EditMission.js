@@ -13,7 +13,6 @@ import { ActionsForm } from './MissionDetails/ActionsForm'
 import { ActionForm } from './MissionDetails/ActionForm'
 import { GeneralInformationsForm } from './MissionDetails/GeneralInformationsForm';
 
-// import { PrimaryButton } from '../commonStyles/Buttons.style';
 import { COLORS } from '../../constants/constants';
 import { MissionValidationModal } from './MissionValidationModal';
 import { PrimaryButton, SecondaryButton } from '../commonStyles/Buttons.style';
@@ -73,7 +72,6 @@ export const EditMission = ({routeParams})  => {
   const handleCancel = () => {
     dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))
   }
-
   return (
     <EditMissionWrapper data-cy={'editMissionWrapper'}>
       <MissionValidationModal open={confirmationModalIsOpen} onClose={handleCancelForm} />
@@ -88,6 +86,8 @@ export const EditMission = ({routeParams})  => {
           theme: mission?.theme,
           geom: mission?.geom,
           observations: mission?.observations,
+          author: mission?.author,
+          closed_by: mission?.closed_by,
           inputStartDatetimeUtc: mission?.inputStartDatetimeUtc,
           inputEndDatetimeUtc: mission?.inputEndDatetimeUtc || '',
           administration: mission?.administration,

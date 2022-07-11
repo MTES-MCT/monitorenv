@@ -1,4 +1,5 @@
 package fr.gouv.cacem.monitorenv.domain.entities.missions
+import org.locationtech.jts.geom.MultiPoint
 import java.time.ZonedDateTime
 
 data class ActionEntity (
@@ -10,5 +11,6 @@ data class ActionEntity (
   val actionNumberOfControls: Int? = null,
   val actionTargetType: String? = null,
   val vehicleType: String? = null,
+  val geom: MultiPoint? = null,
   val infractions: List<InfractionEntity>? = listOf()
 )

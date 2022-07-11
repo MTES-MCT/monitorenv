@@ -12,6 +12,7 @@ import { ActionTypeEnum, THEME_REQUIRE_PROTECTED_SPECIES } from '../../../domain
 import { ProtectedSpeciesSelector } from './ProtectedSpeciesSelector';
 import { ActionTargetSelector } from './ActionTargetSelector';
 import { VehicleTypeSelector } from './VehicleTypeSelector';
+import { ControlPositions } from './ControlPositions';
 
 
 export const ControlForm = ({ remove, currentActionIndex, setCurrentActionIndex }) => {
@@ -40,6 +41,7 @@ export const ControlForm = ({ remove, currentActionIndex, setCurrentActionIndex 
       </Form.Group>
     }
     
+    <ControlPositions name={`actions[${currentActionIndex}].geom`}/>
     <Form.Group>
       <Form.ControlLabel htmlFor={`actions[${currentActionIndex}].actionStartDatetimeUtc`} >Date et heure du début du contrôle </Form.ControlLabel>
       <FormikDatePicker name={`actions[${currentActionIndex}].actionStartDatetimeUtc`} placeholder={placeholderDateTimePicker} format="dd MMM yyyy, HH:mm" oneTap/>

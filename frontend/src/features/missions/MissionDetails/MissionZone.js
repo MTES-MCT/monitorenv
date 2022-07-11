@@ -1,12 +1,14 @@
 import React from 'react'
 import styled from 'styled-components';
+import _ from 'lodash';
 import { useDispatch } from 'react-redux';
+import { Form } from 'rsuite'
 import {  useField } from 'formik';
 
-import { addMissionZone } from '../../../domain/use_cases/missionLocalisation';
+import { addMissionZone } from '../../../domain/use_cases/missionAndControlLocalisation';
 
 import { COLORS } from '../../../constants/constants';
-import _ from 'lodash';
+import { PrimaryButton } from '../../commonStyles/Buttons.style';
 
 export const MissionZone = ({name}) => {
   const [field, , helpers] = useField(name);
@@ -18,21 +20,20 @@ export const MissionZone = ({name}) => {
   }
   
   return (
-    <>
-    <AddMissionZoneButton type={"button"} onClick={handleAddMissionZone}>
-        + Ajouter une zone de mission
-    </AddMissionZoneButton>
-    <ZoneList>
-      {_.map(value?.coordinates, (v,i)=><Zone key={i}>Polygone dessiné {i+1}</Zone>)}
-    </ZoneList>
-    </>
+    <Form.Group>
+      <Form.ControlLabel htmlFor={name}>Zones de mission : </Form.ControlLabel>
+      <AddMissionZoneButton background={COLORS.shadowBlue} color={COLORS.white} onClick={handleAddMissionZone}>
+          + Ajouter une zone de mission
+      </AddMissionZoneButton>
+      <ZoneList>
+        {_.map(value?.coordinates, (v,i)=><Zone key={i}>Polygone dessiné {i+1}</Zone>)}
+      </ZoneList>
+    </Form.Group>
   )
 }
 
-const AddMissionZoneButton = styled.button`
-  background: ${COLORS.shadowBlue};
+const AddMissionZoneButton = styled(PrimaryButton)`
   width: 419px;
-  color: ${COLORS.white};
   line-height: 27px;
   margin-bottom: 16px;
 `

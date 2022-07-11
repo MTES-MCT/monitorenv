@@ -17,6 +17,7 @@ import { DrawLayer } from '../drawLayer/DrawLayer';
 
 import { FEATURE_FLAGS } from '../../features';
 import { MissionsLayer } from '../../layers/MissionsLayer'
+import { SelectedMissionLayer } from '../../layers/SelectedMissionLayer'
 
 const Map = () => {
 
@@ -57,6 +58,7 @@ const Map = () => {
       <MeasurementLayer/>
       {FEATURE_FLAGS.LOCALIZE_MISSIONS && <DrawLayer/>}
       {FEATURE_FLAGS.LOCALIZE_MISSIONS && <MissionsLayer/>}
+      {FEATURE_FLAGS.LOCALIZE_MISSIONS && <SelectedMissionLayer/>}
       <LayerDetailsBox />
       <InterestPointLayer/>
       <RegulatoryPreviewLayer /> 

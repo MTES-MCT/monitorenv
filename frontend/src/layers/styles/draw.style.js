@@ -2,7 +2,9 @@ import { Icon, Style } from 'ol/style'
 import Stroke from 'ol/style/Stroke'
 import Fill from 'ol/style/Fill'
 import Circle from 'ol/style/Circle'
-import MultiPoint from 'ol/geom/MultiPoint';
+import MultiPoint from 'ol/geom/MultiPoint'
+
+import { olGeometryTypes } from '../../../src/domain/entities/drawLayer'
 
 import { COLORS } from '../../constants/constants'
 
@@ -30,8 +32,16 @@ export const editStyle = new Style({
     }),
   }),
   geometry: function (feature) {
-    // return the coordinates of the first ring of the polygon
-    const coordinates = feature.getGeometry().getCoordinates()[0];
-    return new MultiPoint(coordinates);
+    const geometryType = feature.getGeometry()?.getType()
+    switch (geometryType) {
+      case olGeometryTypes.POINT:
+      case olGeometryTypes.MULTIPOINT:    
+        return new MultiPoint(feature.getGeometry().getCoordinates())
+      case olGeometryTypes.POLYGON:
+      case olGeometryTypes.MULTIPOLYGON:
+      default:
+        // return the coordinates of the first ring of the polygon
+        return new MultiPoint(feature.getGeometry().getCoordinates()[0])
+    }
   },
 })

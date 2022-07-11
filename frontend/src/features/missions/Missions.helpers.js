@@ -25,6 +25,7 @@ export const actionFactory = (actionType) => {
     actionNumberOfControls: '',
     actionTargetType: '',
     vehicleType: '',
+    geom: null,
     infractions: []
   }
 }
@@ -37,6 +38,7 @@ export const missionFactory = () => {
     author: '',
     observations: '',
     theme: '',
+    geom: null,
     inputStartDatetimeUtc: '',
     inputEndDatetimeUtc: '',
     actions: [],

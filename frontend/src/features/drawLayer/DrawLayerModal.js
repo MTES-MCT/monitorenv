@@ -8,9 +8,9 @@ import { ReactComponent as SelectorSVG } from '../icons/selector.svg'
 
 import { COLORS } from '../../constants/constants'
 import { useDispatch, useSelector } from 'react-redux'
-import { resetFeatures, setGeometryType } from './DrawLayer.slice'
-import { interactionTypes } from '../../domain/entities/drawLayer'
-import { quitAddLocalisation, validateLocalisation } from '../../domain/use_cases/missionLocalisation'
+import { resetFeatures, setInteractionType } from './DrawLayer.slice'
+import { monitorenvFeatureTypes, interactionTypes } from '../../domain/entities/drawLayer'
+import { quitAddLocalisation, validateLocalisation } from '../../domain/use_cases/missionAndControlLocalisation'
 
 const titlePlaceholder = {
   MISSION_ZONE: 'une zone de mission',
@@ -23,12 +23,12 @@ const validateButtonPlaceholder = {
 
 export const DrawLayerModal = () => {
   const dispatch = useDispatch()
-  const { geometryType, featureType } = useSelector(state => state.drawLayer)
+  const { interactionType, featureType } = useSelector(state => state.drawLayer)
   const handleQuit = () => {
     dispatch(quitAddLocalisation)
   }
-  const handleSelectInteraction = (interactionType) => () => {
-    dispatch(setGeometryType(interactionType))
+  const handleSelectInteraction = (selectedInteraction) => () => {
+    dispatch(setInteractionType(selectedInteraction))
   }
   const handleReset = () => {
     dispatch(resetFeatures())
@@ -47,12 +47,13 @@ export const DrawLayerModal = () => {
       <ValidateButton onClick={handleValidate}>Valider {validateButtonPlaceholder[featureType]}</ValidateButton>
     </ActionWrapper>
     </ContentWrapper>
-    <ButtonsWrapper>
-      <Button selected={geometryType === interactionTypes.POLYGON} onClick={handleSelectInteraction(interactionTypes.POLYGON)}><PolygonIcon /></Button>
-      <Button selected={geometryType === interactionTypes.SQUARE} onClick={handleSelectInteraction(interactionTypes.SQUARE)}><RectangleIcon /></Button>
-      <Button selected={geometryType === interactionTypes.CIRCLE} onClick={handleSelectInteraction(interactionTypes.CIRCLE)}><CircleIcon /></Button>
-      <Button selected={geometryType === interactionTypes.SELECTION}><SelectorIcon /></Button>
-    </ButtonsWrapper>
+    { featureType === monitorenvFeatureTypes.MISSION_ZONE && 
+      <ButtonsWrapper>
+        <Button selected={interactionType === interactionTypes.POLYGON} onClick={handleSelectInteraction(interactionTypes.POLYGON)}><PolygonIcon /></Button>
+        <Button selected={interactionType === interactionTypes.SQUARE} onClick={handleSelectInteraction(interactionTypes.SQUARE)}><RectangleIcon /></Button>
+        <Button selected={interactionType === interactionTypes.CIRCLE} onClick={handleSelectInteraction(interactionTypes.CIRCLE)}><CircleIcon /></Button>
+        <Button selected={interactionType === interactionTypes.SELECTION}><SelectorIcon /></Button>
+      </ButtonsWrapper>}
     
   </Wrapper>)
 }

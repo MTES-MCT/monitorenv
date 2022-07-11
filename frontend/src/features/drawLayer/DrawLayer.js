@@ -11,13 +11,15 @@ import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/m
 import { addFeature } from './DrawLayer.slice'
 
 import { drawStyle, editStyle } from '../../layers/styles/draw.style'
-import { dottedLayerStyle } from '../../layers/styles/dottedLayer.style'
+import { dottedLayerStyle, pointLayerStyle } from '../../layers/styles/dottedLayer.style'
 
 export const DrawLayer = ({ map }) => {
-  const {geometryType, isDrawing, listener, features} = useSelector(state => state.drawLayer)
+  const {interactionType, features} = useSelector(state => state.drawLayer)
   
   const dispatch = useDispatch()
+  // vectorSource & vectorLayer are holding current features (for visualisation + edition)
   const vectorSourceRef = useRef(null)
+  // drawVectorSource & drawVectorLayer are used to draw features, but features are dismissed after being drawned
   const drawVectorSourceRef = useRef(null)
   const GetDrawVectorSource = () => {
     if (drawVectorSourceRef.current === null) {
@@ -50,7 +52,7 @@ export const DrawLayer = ({ map }) => {
           updateWhileAnimating: true,
           updateWhileInteracting: true,
           zIndex: 999,
-          style: [dottedLayerStyle, editStyle]
+          style: [pointLayerStyle, dottedLayerStyle, editStyle]
         })
       }
       return vectorLayerRef.current
@@ -81,16 +83,19 @@ export const DrawLayer = ({ map }) => {
 
   useEffect(() => {
     function drawOnMap () {
-      if (map && isDrawing && geometryType) {
+      if (map && interactionType) {
 
         let type = null
-        switch (geometryType) {
+        switch (interactionType) {
           case drawLayerTypes.SQUARE:
           case drawLayerTypes.CIRCLE:
             type = 'Circle'
             break
           case drawLayerTypes.POLYGON:
             type = 'Polygon'
+            break
+          case drawLayerTypes.POINT:
+            type = 'Point'
             break
           default:
             console.error('No interaction type specified')
@@ -101,7 +106,7 @@ export const DrawLayer = ({ map }) => {
           source: GetDrawVectorSource(),
           type: type,
           style: drawStyle,
-          geometryFunction: geometryType === drawLayerTypes.SQUARE ? createBox() : geometryType === drawLayerTypes.CIRCLE ? createRegularPolygon() : null
+          geometryFunction: interactionType === drawLayerTypes.SQUARE ? createBox() : interactionType === drawLayerTypes.CIRCLE ? createRegularPolygon() : null
         })
         map.addInteraction(draw)
 
@@ -114,7 +119,7 @@ export const DrawLayer = ({ map }) => {
     }
 
     drawOnMap()
-  }, [map, geometryType, listener, isDrawing])
+  }, [map, interactionType])
 
 
   return null

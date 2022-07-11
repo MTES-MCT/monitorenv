@@ -9,10 +9,10 @@ const DrawLayerReducer = null
 const drawLayerReducerSlice = createSlice({
   name: 'drawLayerReducer',
   initialState: {
+    /** Mission or control: see monitorenvFeatureTypesEnum  */
     featureType: null,
-    isDrawing: true,
-    geometryType: null,
-    listener: null,
+    /**  */
+    interactionType: null,
     callback: null,
     features: []
   },
@@ -21,16 +21,15 @@ const drawLayerReducerSlice = createSlice({
      * Start an interaction with the OpenLayers map, hence use the mouse to draw geometries
      * @param {Object=} state
      * @param {{payload: {
-     *   geometryType: (InteractionTypes.SQUARE|InteractionTypes.POLYGON),
-     *   listener: (layersType.REGULATORY)
-     * }}} action - The interaction type (see InteractionTypes enum) and listener (see layersType enum)
+     *   interactionType: (InteractionTypes.SQUARE|InteractionTypes.POLYGON),
+     * }}} action - The interaction type (see InteractionTypes enum)
      */
     setFeatureType (state, action) {
       state.featureType = action.payload?.featureType
       state.callback = action.payload?.callback
     },
-    setGeometryType (state, action) {
-      state.geometryType = action.payload
+    setInteractionType (state, action) {
+      state.interactionType = action.payload
     },
     /**
      * Reset the interaction with the OpenLayers map
@@ -38,9 +37,8 @@ const drawLayerReducerSlice = createSlice({
      */
     resetInteraction (state) {
       state.features = []
-      state.geometryType = null
-      state.listener = null
       state.callback = null
+      state.interactionType = null
     },
     addFeature(state, action) {
       state.features.push(action.payload)
@@ -56,7 +54,7 @@ const drawLayerReducerSlice = createSlice({
 
 export const {
   setFeatureType,
-  setGeometryType,
+  setInteractionType,
   resetInteraction,
   addFeature,
   addFeatures,

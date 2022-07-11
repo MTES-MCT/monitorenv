@@ -3,11 +3,24 @@ import styled, { css } from 'styled-components'
 import TrashIcon from '@rsuite/icons/Trash';
 import CopyIcon from '@rsuite/icons/Copy';
 
-import { COLORS, SQUARE_BUTTON_TYPE } from '../../constants/constants'
+import { COLORS } from '../../constants/constants'
 
 import { ReactComponent as EditIconSVG } from '../icons/Bouton_edition.svg'
 
-export const basePrimaryButton = css`
+const Button = ({color, background, ...props}) => {
+  return (<button type={"button"} {...props}></button>)
+}
+
+const BaseButton = styled(Button)`
+  background: ${props => props.background};
+  color: ${props => props.color};
+  font-size: 13px;
+  padding: 5px 12px;
+  margin: 2px;
+  height: 30px;
+`
+
+const basePrimaryButtonCSS = css`
   background: ${COLORS.charcoal};
   color: ${COLORS.gainsboro};
   ${props => props.width ? `width: ${props.width};` : ''}
@@ -21,7 +34,7 @@ export const basePrimaryButton = css`
   }
 `
 
-const baseSecondaryButton = css`
+const baseSecondaryButtonCSS = css`
   border: 1px solid ${COLORS.charcoal};
   color: ${COLORS.gunMetal};
   ${props => props.width ? `width: ${props.width};` : ''}
@@ -31,64 +44,13 @@ const baseSecondaryButton = css`
   }
 `
 
-const Button = styled.button`
-  font-size: 13px;
-  padding: 5px 12px;
-  margin: 2px;
-  height: 30px;
+
+export const PrimaryButton = styled(BaseButton)`
+  ${basePrimaryButtonCSS}
 `
 
-
-export const PrimaryButton = styled(Button)`
-  ${basePrimaryButton}
-`
-
-export const SecondaryButton = styled(Button)`
-  ${baseSecondaryButton}
-`
-
-
-const baseAddButton = css`
-  position: relative;
-  border: 1px solid ${COLORS.lightGray};
-  border-radius: 2px;
-  color: ${COLORS.lightGray};
-  &:after {
-    content: "";  
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 1.6px;
-    width: 15px;
-  }
-  &:before {
-    content: "";  
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 16px;
-    width: 1.5px;
-  }
-`
-
-export const AddRegulationButton = styled.a`
-  ${baseAddButton}
-  min-width: 40px;
-  min-height: 40px;
-  && {
-    background-color: ${COLORS.charcoal};
-  }
-  &:after {
-    background-color: ${COLORS.white};
-  }
-  &:before {
-    background-color: ${COLORS.white};
-  }
-  cursor: pointer;
+export const SecondaryButton = styled(BaseButton)`
+  ${baseSecondaryButtonCSS}
 `
 
 export const ValidateButton = styled(PrimaryButton)`
@@ -99,45 +61,6 @@ export const CancelButton = styled(SecondaryButton)`
   margin: 0px 10px 0px 0px;
 `
 
-export const SquareButton = styled.a`
-position: relative;
-box-sizing: border-box;
-cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
-width: 34px;
-height: 34px;
-border: 1px solid ${COLORS.lightGray};
-border-radius: 2px;
-color: ${COLORS.lightGray};
-margin-right: 5px;
-opacity: ${props => props.disabled ? '0.4' : '1'};
-&:after {
-  content: "";  
-  display: block;
-  background-color: ${COLORS.lightGray};
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-&:before {
-  content: "";  
-  display: block;
-  background-color: ${COLORS.lightGray};
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-&:before {
-  height: ${props => props.type === SQUARE_BUTTON_TYPE.DELETE ? '1.5px' : '12px'};
-  width: ${props => props.type === SQUARE_BUTTON_TYPE.DELETE ? '12px' : '1.5px'};
-}
-&:after {
-  height: 1.5px;
-  width: 12px;
-}
-`
 
 
 const EditIcon = styled(EditIconSVG)`

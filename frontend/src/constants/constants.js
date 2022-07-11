@@ -37,10 +37,3 @@ export const COLORS = {
 }
 
 export const HIT_PIXEL_TO_TOLERANCE = 15
-
-/**
- * @enum {string}
- */
-export const SQUARE_BUTTON_TYPE = {
-  DELETE: 'delete'
-}

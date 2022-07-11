@@ -1,23 +1,22 @@
-import { useCallback, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import {  useEffect, useRef } from 'react'
+import { useSelector } from 'react-redux'
 import VectorSource from 'ol/source/Vector'
 import VectorLayer from 'ol/layer/Vector'
 
 
 import { useGetMissionsQuery } from '../api/missionsAPI'
-
-import { selectMissionOnMap } from '../domain/use_cases/selectMissionOnMap'
 import Layers from '../domain/entities/layers'
-import { getMissionCentroid } from './missionGeometryHelpers'
-import { missionCentroidStyle } from './styles/missions.style'
+import { missionZoneStyle } from './styles/missions.style'
+import { getMissionZoneFeature } from './missionGeometryHelpers'
 
 
-export const MissionsLayer = ({ map, mapClickEvent }) => {
-  const dispatch = useDispatch()
-  const { data } = useGetMissionsQuery()
-  const getMissionsCentroids = useCallback(()=>{
-    return data?.filter(f=>!!f.geom).map(d => getMissionCentroid(d))
-  }, [data])
+export const SelectedMissionLayer = ({ map }) => {
+  const { selectedMissionId } = useSelector(state => state.missionState)
+  const { mission } = useGetMissionsQuery(undefined, {
+    selectFromResult: ({ data }) =>  ({
+      mission: data?.find(op => op.id === selectedMissionId),
+    }),
+  })
   
   const vectorSourceRef = useRef(null)
   const GetVectorSource = () => {
@@ -36,7 +35,7 @@ export const MissionsLayer = ({ map, mapClickEvent }) => {
       if (vectorLayerRef.current === null) {
         vectorLayerRef.current = new VectorLayer({
           source: GetVectorSource(),
-          style: missionCentroidStyle,
+          style: missionZoneStyle,
           renderBuffer: 7,
           updateWhileAnimating: true,
           updateWhileInteracting: true,
@@ -54,20 +53,10 @@ export const MissionsLayer = ({ map, mapClickEvent }) => {
 
   useEffect(() => {
     GetVectorSource()?.clear(true)
-    if (getMissionsCentroids()) {
-      GetVectorSource()?.addFeatures(getMissionsCentroids())
+    if (mission) {
+      GetVectorSource()?.addFeature(getMissionZoneFeature(mission))
     }
-  }, [getMissionsCentroids])
-
-  useEffect(()=>{
-    if (mapClickEvent?.feature) {
-      const feature = mapClickEvent?.feature
-      if(feature.getId()?.toString()?.includes('mission')) {
-        const missionId = feature.getProperties().missionId
-        dispatch(selectMissionOnMap(missionId))
-      }
-    }
-  }, [mapClickEvent])
+  }, [mission])
 
   return null
 }
