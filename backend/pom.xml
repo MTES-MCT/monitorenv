@@ -146,7 +146,7 @@
 		<dependency>
 			<groupId>org.jetbrains.kotlinx</groupId>
 			<artifactId>kotlinx-coroutines-core</artifactId>
-			<version>1.4.1</version>
+			<version>1.6.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.neovisionaries</groupId>
