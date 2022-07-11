@@ -107,8 +107,6 @@ RUN chown monitorenv /home/monitorenv/env.sh
 RUN chmod +x /home/monitorenv/env.sh
 USER monitorenv
 
-ENV REACT_APP_GEOSERVER_LOCAL_URL=
-
 ENTRYPOINT ["/home/monitorenv/env.sh"]
 
 CMD exec java -Dspring.config.additional-location="/home/monitorenv/configurations/" -jar "monitorenv-${VERSION}.jar"

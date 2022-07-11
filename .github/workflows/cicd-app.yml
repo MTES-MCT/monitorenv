@@ -3,19 +3,11 @@ name: CI/CD Back & Front
 on:
   push:
     paths:
-    - '**.kt'
-    - '**.png'
-    - '**.js'
-    - '**.json'
-    - '**.ts'
-    - '**.yml'
-    - '**.sql'
     - '.github/workflows/cicd.yml'
-    - 'infra/configurations/**'
-    - 'infra/docker/**'
-    - 'backend/pom.xml'
-    - 'Makefile'
+    - 'infra/**'
+    - 'backend/**'
     - 'frontend/**'
+    - 'Makefile'
   schedule:
     - cron: "38 11 */3 * *"
 

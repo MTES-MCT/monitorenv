@@ -3,9 +3,9 @@ name: CI/CD data processing pipeline
 on:
   push:
     paths:
+    - '.github/workflows/cicd-datapipeline.yml'
     - 'datascience/**'
-    - '.github/workflows/*'
-    - 'infra/docker/datapipeline/Dockerfile'
+    - 'infra/**'
     - 'Makefile'
   schedule:
     - cron: "38 11 */3 * *"

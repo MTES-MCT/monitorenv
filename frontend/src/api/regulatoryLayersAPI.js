@@ -2,13 +2,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 import Layers from '../domain/entities/layers'
-import { GEOSERVER_NAMESPACE, GEOSERVER_REMOTE_URL, GEOSERVER_BACKOFFICE_URL } from '../env'
+import { GEOSERVER_NAMESPACE, GEOSERVER_REMOTE_URL } from '../env'
 
 const REGULATORY_ZONES_ERROR_MESSAGE = 'Nous n\'avons pas pu récupérer les zones réglementaires'
 const OK = 200
 
-export function getAllRegulatoryLayersFromAPI (fromBackoffice) {
-  const geoserverURL = fromBackoffice ? GEOSERVER_BACKOFFICE_URL : GEOSERVER_REMOTE_URL
+export function getAllRegulatoryLayersFromAPI () {
+  const geoserverURL = GEOSERVER_REMOTE_URL
 
   return fetch(`${geoserverURL}/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typename=${GEOSERVER_NAMESPACE}:` +
     `${Layers.REGULATORY_ENV.code}&format_options=id_policy:id&outputFormat=application/json&propertyName=entity_name,layer_name,facade,ref_reg,thematique,type,geom`)

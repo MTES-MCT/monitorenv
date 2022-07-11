@@ -1,10 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import 'rsuite/dist/rsuite.min.css'
-import 'nouislider/distribute/nouislider.css'
-import './index.css'
 import 'ol/ol.css'
+
+import './index.css'
 import './App.css'
+import './ol-override.css'
+import './rsuite-override.css'
 
 import * as Sentry from '@sentry/react'
 import { Integrations } from '@sentry/tracing'

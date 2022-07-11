@@ -1,0 +1,35 @@
+# .github/workflows/cicd-chromatic.yml
+
+# Workflow name
+name: 'Chromatic Publish'
+
+# Event for the workflow
+on: 
+  push:
+    paths: 
+      - ".github/workflows/cicd-chromatic.yml"
+      - "frontend/src/**/*.stories.jsx"
+      - "frontend/src/features/commonComponents/**"
+      - "frontend/src/features/commonStyles/**"
+# List of jobs
+jobs:
+  test:
+    # Operating System
+    runs-on: ubuntu-latest
+    # Job steps
+    steps:
+      - uses: actions/checkout@v1
+      - name: NPM install with caching
+        uses: bahmutov/npm-install@v1.8.15
+        with:
+          # Working directory to specify subfolder in which dependencies are defined
+          working-directory: frontend/
+          # Custom install command to use
+          install-command: npm ci --force
+        #👇 Adds Chromatic as a step in the workflow
+      - uses: chromaui/action@v1
+        # Options required for Chromatic's GitHub Action
+        with:
+          workingDir: frontend/
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}

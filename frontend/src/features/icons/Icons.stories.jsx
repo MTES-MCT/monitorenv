@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { COLORS } from '../../constants/constants';
 
 const reqSvgs = require.context('../icons', true, /\.svg$/)
 
@@ -8,12 +9,12 @@ export default {
 };
 
 
-const Template = () => {
+const Template = ({background}) => {
   return <Gallery>
   {
     reqSvgs.keys().map((path)=>{
       return <ImageWrapper key={path}>
-          <Img src={reqSvgs(path)} ></Img>
+          <Img src={reqSvgs(path)} background={background}></Img>
           {path}
           </ImageWrapper>
     }) 
@@ -21,10 +22,15 @@ const Template = () => {
   </Gallery>
  }
  
- export const Primary = Template.bind({});
+ export const NoBackground = Template.bind({});
+ export const WithBackground = Template.bind({});
+ WithBackground.args = {
+  background: COLORS.charcoal
+ }
 
 
  const Img = styled.img`
+  background: ${({background}) => background || COLORS.white};
   width: 50px;
   margin: 3px;
  `
