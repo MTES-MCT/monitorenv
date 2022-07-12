@@ -10,7 +10,7 @@ import { COLORS } from '../../constants/constants'
 import { useDispatch, useSelector } from 'react-redux'
 import { resetFeatures, setInteractionType } from './DrawLayer.slice'
 import { monitorenvFeatureTypes, interactionTypes } from '../../domain/entities/drawLayer'
-import { quitAddLocalisation, validateLocalisation } from '../../domain/use_cases/missionAndControlLocalisation'
+import { quitAddLocalisation, validateLocalisation } from '../../domain/use_cases/missions/missionAndControlLocalisation'
 
 const titlePlaceholder = {
   MISSION_ZONE: 'une zone de mission',

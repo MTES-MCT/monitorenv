@@ -149,4 +149,15 @@ export const protectedSpeciesEnum = {
   }
 }
 
+export const missionStatusEnum = {
+  PENDING: {
+    code: 'PENDING',
+    libelle: 'en cours'
+  },
+  CLOSED: {
+    code: 'CLOSED',
+    libelle: 'cloturée'
+  }
+}
+
 export const THEME_REQUIRE_PROTECTED_SPECIES = [17]

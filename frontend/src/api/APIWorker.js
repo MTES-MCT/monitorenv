@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { batch, useDispatch } from 'react-redux'
 
 // import getHealthcheck from '../domain/use_cases/getHealthcheck'
-import { loadRegulatoryData } from '../domain/use_cases/loadRegulatoryData'
+import { loadRegulatoryData } from '../domain/use_cases/regulatory/loadRegulatoryData'
 
 export const FIVE_MINUTES = 5 * 60 * 1000
 export const THIRTY_SECONDS = 30 * 1000
@@ -27,7 +27,7 @@ const APIWorker = () => {
     return () => {
       clearInterval(interval)
     }
-  })
+  }, [dispatch])
 
 
 

@@ -8,7 +8,7 @@ import { transform } from 'ol/proj'
 import { CoordinatesFormat, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map'
 import { interestPointType } from '../../domain/entities/interestPoints'
 import { addInterestPoint, updateInterestPointKeyBeingDrawed } from '../../domain/shared_slices/InterestPoint'
-import saveInterestPointFeature from '../../domain/use_cases/saveInterestPointFeature'
+import saveInterestPointFeature from '../../domain/use_cases/interestPoint/saveInterestPointFeature'
 import { coordinatesAreDistinct, getCoordinates } from '../../utils/coordinates'
 import SetCoordinates from '../coordinates/SetCoordinates'
 

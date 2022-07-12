@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { Form } from 'rsuite'
 import {  useField } from 'formik';
 
-import { addMissionZone } from '../../../domain/use_cases/missionAndControlLocalisation';
+import { addMissionZone } from '../../../domain/use_cases/missions/missionAndControlLocalisation';
 
 import { COLORS } from '../../../constants/constants';
 import { PrimaryButton } from '../../commonStyles/Buttons.style';

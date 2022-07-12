@@ -1,7 +1,10 @@
-import { formalNoticeEnum, missionTypeEnum } from "../../domain/entities/missions"
+import { v4 as uuidv4 } from 'uuid'
+
+import { formalNoticeEnum, missionStatusEnum, missionTypeEnum } from "../../domain/entities/missions"
 
 export const infractionFactory = () => {
   return {
+    id: uuidv4(),
     natinf: [],
     observations: '',
     registrationNumber: '',
@@ -17,6 +20,7 @@ export const infractionFactory = () => {
 
 export const actionFactory = (actionType) => {
   return {
+    id: uuidv4(),
     actionType,
     actionTheme: '',
     protectedSpecies: [],
@@ -45,4 +49,16 @@ export const missionFactory = () => {
     actions: [],
     resources: [],
   }
+}
+
+export const getMissionStatus = (mission) => {
+  try {
+    if (mission?.inputStartDatetimeUtc > mission?.inputEndDatetimeUtc) {
+      return missionStatusEnum.CLOSED.code
+    }
+  }
+  catch {
+    return missionStatusEnum.PENDING.code
+  }
+  return missionStatusEnum.PENDING.code
 }

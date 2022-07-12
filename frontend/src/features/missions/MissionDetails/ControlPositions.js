@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import {  useField } from 'formik';
 
-import { addControlPositions } from '../../../domain/use_cases/missionAndControlLocalisation';
+import { addControlPositions } from '../../../domain/use_cases/missions/missionAndControlLocalisation';
 
 import { COLORS } from '../../../constants/constants';
 import _ from 'lodash';
