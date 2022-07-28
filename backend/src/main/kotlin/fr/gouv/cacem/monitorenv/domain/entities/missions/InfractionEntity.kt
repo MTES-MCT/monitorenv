@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.entities.missions
 
 data class InfractionEntity(
+  val id: String,
   val natinf: List<String>? = listOf(),
   val observations: String? = null,
   val registrationNumber: String? = null,

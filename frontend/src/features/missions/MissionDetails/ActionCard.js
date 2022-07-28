@@ -57,7 +57,7 @@ export const ActionCard = ({selected, selectAction, action, removeAction}) => {
       {(action.actionType === ActionTypeEnum.CONTROL.code) && (<SummaryWrapper>
         <ControlIcon />
         <SummaryContent>
-          <Title>Contrôles {`${controlTopics?.topic_level_1 || 'Non spécifié'} ${controlTopics?.topic_level_2 || ''} ${controlTopics?.topic_level_3 || ''}`}</Title>
+          <Title>Contrôles {`${controlTopics?.topic_level_1 || 'Non spécifié'} ${controlTopics?.topic_level_2 || ''}`}</Title>
           <ControlSummary>
           <Accented>{action.actionNumberOfControls || 0}</Accented>{` contrôles réalisés sur des cibles de type ` }<Accented>{action.actionTargetType|| 'non spécifié'}</Accented>
           </ControlSummary>
@@ -72,7 +72,7 @@ export const ActionCard = ({selected, selectAction, action, removeAction}) => {
       {(action.actionType === ActionTypeEnum.SURVEILLANCE.code) && (<SummaryWrapper>
         <SurveillanceIcon /> 
         <SummaryContent>
-          <Title>Surveillance {`${controlTopics?.topic_level_1 || 'Non spécifiée'} ${controlTopics?.topic_level_2 || ''} ${controlTopics?.topic_level_3 || ''}`}</Title>
+          <Title>Surveillance {`${controlTopics?.topic_level_1 || 'Non spécifiée'} ${controlTopics?.topic_level_2 || ''}`}</Title>
           </SummaryContent>
       </SummaryWrapper>)}
       {(action.actionType === ActionTypeEnum.NOTE.code) && (<>

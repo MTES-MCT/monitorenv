@@ -3,6 +3,7 @@ import org.locationtech.jts.geom.MultiPoint
 import java.time.ZonedDateTime
 
 data class ActionEntity (
+  val id: String,
   val actionType: ActionTypeEnum,
   val actionTheme: String? = null,
   val actionSubTheme: String? = null,
