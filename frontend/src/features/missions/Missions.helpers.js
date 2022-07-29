@@ -2,39 +2,40 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { formalNoticeEnum, missionStatusEnum, missionTypeEnum } from "../../domain/entities/missions"
 
-export const infractionFactory = () => {
+export const infractionFactory = ({id, ...infraction} = {}) => {
   return {
     id: uuidv4(),
     natinf: [],
     observations: '',
     registrationNumber: '',
-    vehicle: '',
+    vesselType: '',
     size: '',
     owner: '',
     infractionType: '',
     formalNotice: formalNoticeEnum.NO.code,
     relevantCourt: '',
     toProcess: '',
+    ...infraction
   }
 }
 
-export const actionFactory = (actionType) => {
+export const actionFactory = ({id, ...action} = {}) => {
   return {
     id: uuidv4(),
-    actionType,
+    actionType: '',
     actionTheme: '',
     protectedSpecies: [],
     actionStartDatetimeUtc: new Date(),
-    actionEndDatetimeUtc: new Date(),
     actionNumberOfControls: '',
     actionTargetType: '',
     vehicleType: '',
     geom: null,
-    infractions: []
+    infractions: [],
+    ...action
   }
 }
 
-export const missionFactory = () => {
+export const missionFactory = (mission) => {
   return {
     missionType: missionTypeEnum.SEA.code,
     unit: '',
@@ -48,6 +49,7 @@ export const missionFactory = () => {
     inputEndDatetimeUtc: '',
     actions: [],
     resources: [],
+    ...mission
   }
 }
 

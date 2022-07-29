@@ -33,8 +33,6 @@ export const SurveillanceForm = ({ remove, currentActionIndex, setCurrentActionI
     <Form.Group>
       <Form.ControlLabel htmlFor={`actions[${currentActionIndex}].actionStartDatetimeUtc`} >Date et heure du début du contrôle </Form.ControlLabel>
       <FormikDatePicker name={`actions[${currentActionIndex}].actionStartDatetimeUtc`} placeholder={placeholderDateTimePicker} format="dd MMM yyyy, HH:mm" oneTap/>
-      <Form.ControlLabel htmlFor={`actions[${currentActionIndex}].actionEndDatetimeUtc`} >Date et heure de fin du contrôle </Form.ControlLabel>
-      <FormikDatePicker name={`actions[${currentActionIndex}].actionEndDatetimeUtc`} placeholder={placeholderDateTimePicker} format="dd MMM yyyy, HH:mm" oneTap/>
     </Form.Group>
    
     <Form.Group>

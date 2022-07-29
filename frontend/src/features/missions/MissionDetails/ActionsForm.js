@@ -9,15 +9,16 @@ import { ActionCard } from './ActionCard'
 import { COLORS } from '../../../constants/constants';
 
 export const ActionsForm = ({  push, remove, form, currentActionIndex, setCurrentActionIndex }) =>  {
-  const handleAddSurveillanceAction = () => push(actionFactory(ActionTypeEnum.SURVEILLANCE.code))
-  const handleAddControlAction = () => push(actionFactory(ActionTypeEnum.CONTROL.code))
-  const handleAddNoteAction = () => push(actionFactory(ActionTypeEnum.NOTE.code))
+  const handleAddSurveillanceAction = () => push(actionFactory({actionType: ActionTypeEnum.SURVEILLANCE.code}))
+  const handleAddControlAction = () => push(actionFactory({actionType: ActionTypeEnum.CONTROL.code}))
+  const handleAddNoteAction = () => push(actionFactory({actionType: ActionTypeEnum.NOTE.code}))
   const handleSelectAction = index => () => setCurrentActionIndex(index)
   const handleRemoveAction = index => (e) => {
     e.stopPropagation()
     setCurrentActionIndex(null)
     remove(index)
   }
+  const handleDuplicateAction = index => () => push(actionFactory(form.values.actions[index]))
 
   return (<FormWrapper>
     <TitleWrapper>
@@ -40,7 +41,14 @@ export const ActionsForm = ({  push, remove, form, currentActionIndex, setCurren
     {form?.values.actions.length > 0 ? 
       form.values.actions.map((action, index) => {
         return (
-        <ActionCard selected={index === currentActionIndex} key={index} selectAction={handleSelectAction(index)} action={action} removeAction={handleRemoveAction(index)}/>
+        <ActionCard 
+          key={index} 
+          selected={index === currentActionIndex} 
+          selectAction={handleSelectAction(index)} 
+          action={action} 
+          removeAction={handleRemoveAction(index)}
+          duplicateAction={handleDuplicateAction(index)}
+        />
       )})
       : <NoActionWrapper><NoAction>Aucune action n&apos;est ajoutée pour le moment</NoAction></NoActionWrapper>
     }

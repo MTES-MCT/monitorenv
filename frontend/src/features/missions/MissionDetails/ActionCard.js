@@ -14,7 +14,7 @@ import { ActionTypeEnum } from '../../../domain/entities/missions'
 import { DeleteButton, DuplicateButton } from '../../commonStyles/Buttons.style'
 
 
-export const ActionCard = ({selected, selectAction, action, removeAction}) => {
+export const ActionCard = ({selected, selectAction, action, removeAction, duplicateAction}) => {
 
   const { controlTopics } = useGetControlTopicsQuery(undefined, {
     selectFromResult: ({ data }) => ({
@@ -22,7 +22,6 @@ export const ActionCard = ({selected, selectAction, action, removeAction}) => {
     }),
   })
   const parsedActionStartDatetimeUtc = new Date(action.actionStartDatetimeUtc)
-  const parsedActionEndDatetimeUtc = new Date(action.actionEndDatetimeUtc)
 
   
   return (
@@ -37,21 +36,12 @@ export const ActionCard = ({selected, selectAction, action, removeAction}) => {
             </>)
         }
       </DateTimeWrapper>
-      <DateTimeWrapper>
-        {
-          isValid(parsedActionEndDatetimeUtc) &&
-            (<>
-              <DateWrapper>{format(parsedActionEndDatetimeUtc, "dd MMM", {locale: fr})}</DateWrapper>
-              <Time>à {format(parsedActionEndDatetimeUtc, "HH:mm", {locale: fr})}</Time>
-            </>)
-        }
-      </DateTimeWrapper>
     </TimeLine>
     <ActionSummaryWrapper selected={selected} type={action.actionType}>
       <ButtonsWrapper>
         
-        <Duplicate />
-        <DeleteButton onClick={removeAction} />
+        <Duplicate title={"dupliquer"} onClick={duplicateAction} />
+        <DeleteButton title={"supprimer"} onClick={removeAction} />
       
       </ButtonsWrapper>
       {(action.actionType === ActionTypeEnum.CONTROL.code) && (<SummaryWrapper>

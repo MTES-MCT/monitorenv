@@ -42,7 +42,7 @@ export const LocateOnMap = () => {
     setSearchedLocation('')
   }
 
-  return (<RightMenuButton top={10} title={'locate on map'} onClick={handleOnClick} button={<ZoomIcon />}>
+  return (<RightMenuButton top={10} title={'chercher un lieu'} onClick={handleOnClick} button={<ZoomIcon />}>
     <div>
       <div>
         <SearchBoxInput

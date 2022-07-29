@@ -13,8 +13,9 @@ export const InfractionsForm = ({  push, remove, form, currentActionIndex }) => 
   const [ currentInfractionIndex, setCurrentInfractionIndex ] = useState(null)
 
   const handleAddInfraction = () => {
+    const numberOfInfractions = form?.values.actions[currentActionIndex]?.infractions.length
     push(infractionFactory())
-    setCurrentInfractionIndex(0)
+    setCurrentInfractionIndex(numberOfInfractions)
   }
 
   const handleValidate = () => {
@@ -22,12 +23,10 @@ export const InfractionsForm = ({  push, remove, form, currentActionIndex }) => 
   }
 
   const handleEditInfraction = (index) => () => {
-    console.log('index',index)
     setCurrentInfractionIndex(index)
   }
 
   const handleRemoveInfraction = (index) => () => {
-    console.log('remove', index)
     setCurrentInfractionIndex(null)
     remove(index)
   }
@@ -48,8 +47,19 @@ export const InfractionsForm = ({  push, remove, form, currentActionIndex }) => 
       {form?.values.actions[currentActionIndex]?.infractions.map((infraction, index) => {
         return (
           index === currentInfractionIndex ?
-          <InfractionForm key={index} infractionPath={`actions[${currentActionIndex}].infractions[${index}]`} setCurrentInfractionIndex={handleValidate} /> :
-          <InfractionCard key={index} infractionPath={`actions[${currentActionIndex}].infractions[${index}]`} setCurrentInfractionIndex={handleEditInfraction(index)} removeInfraction={handleRemoveInfraction(index)}/>
+          <InfractionForm 
+            key={infraction.id} 
+            infractionPath={`actions[${currentActionIndex}].infractions[${index}]`} 
+            setCurrentInfractionIndex={handleValidate} 
+            currentActionIndex={currentActionIndex} 
+            infractionIndex={index} 
+            /> :
+          <InfractionCard
+            key={infraction.id}
+            infractionPath={`actions[${currentActionIndex}].infractions[${index}]`}
+            setCurrentInfractionIndex={handleEditInfraction(index)}
+            removeInfraction={handleRemoveInfraction(index)}
+            />
       )})}
     </InfractionsWrapper>
     : <NoActionWrapper><NoAction>Aucune infraction engregistrée pour le moment</NoAction></NoActionWrapper>

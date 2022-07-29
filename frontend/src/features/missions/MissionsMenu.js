@@ -27,7 +27,7 @@ export const MissionsMenu = () => {
     <RightMenuButton
       top={55}
       data-cy={'missions-button'}
-      title={'Missions'}
+      title={'voir les missions'}
       onClick={toggleMissionsWindow}
       button={<MissionsIcon/>}
     >

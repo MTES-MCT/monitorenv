@@ -1,11 +1,11 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { Form, SelectPicker } from 'rsuite'
-import {  useField } from 'formik'
+import { useFormikContext, useField } from 'formik'
 
 
 import { COLORS } from '../../../constants/constants'
-import { vehicleTypeEnum } from '../../../domain/entities/missions'
+import { actionTargetTypeEnum, vehicleTypeEnum } from '../../../domain/entities/missions'
 
 const DEFAULT_SELECT_PICKER_STYLE = {
   width: 90,
@@ -21,21 +21,32 @@ const DEFAULT_SELECT_PICKER_MENU_STYLE = {
   textOverflow: 'ellipsis'
 }
 
-export const VehicleTypeSelector = ({name, ...props}) => {
-  const [vehicleTypeField, , vehicleTypeHelpers] = useField(name);
+export const VehicleTypeSelector = ({currentActionIndex, ...props}) => {
+  const { values: { actions }, setFieldValue } = useFormikContext();
+  const [vehicleTypeField, , { setValue }] = useField(`actions.${currentActionIndex}.vehicleType`);
   const vehicleTypeSelectorRef = useRef()
   const vehicleTypeFieldList = Object.values(vehicleTypeEnum)
+  const targetType = actions[currentActionIndex]?.actionTargetType
+
+  useEffect(()=> {
+      if ((targetType !== actionTargetTypeEnum.VEHICLE.code)
+        && (vehicleTypeField.value !== '')) {
+        setFieldValue(`actions.${currentActionIndex}.vehicleType`, '')
+      }
+    
+  }, [currentActionIndex, targetType, setFieldValue, vehicleTypeField.value])
 
   return (
     <SelectorWrapper ref={vehicleTypeSelectorRef}>
       <Form.ControlLabel htmlFor="vehicleTypeField">Type de véhicule : </Form.ControlLabel>
       <SelectPicker 
+        disabled={targetType !== actionTargetTypeEnum.VEHICLE.code}
         style={DEFAULT_SELECT_PICKER_STYLE}
         menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
         searchable={false}
         container={()=>vehicleTypeSelectorRef.current}
         value={vehicleTypeField.value}
-        onChange={vehicleTypeHelpers.setValue}
+        onChange={setValue}
         data={vehicleTypeFieldList}
         labelKey={'libelle'}
         valueKey={'code'}

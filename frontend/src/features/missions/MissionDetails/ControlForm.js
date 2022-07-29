@@ -45,8 +45,6 @@ export const ControlForm = ({ remove, currentActionIndex, setCurrentActionIndex 
     <Form.Group>
       <Form.ControlLabel htmlFor={`actions[${currentActionIndex}].actionStartDatetimeUtc`} >Date et heure du début du contrôle </Form.ControlLabel>
       <FormikDatePicker name={`actions[${currentActionIndex}].actionStartDatetimeUtc`} placeholder={placeholderDateTimePicker} format="dd MMM yyyy, HH:mm" oneTap/>
-      <Form.ControlLabel htmlFor={`actions[${currentActionIndex}].actionEndDatetimeUtc`} >Date et heure de fin du contrôle </Form.ControlLabel>
-      <FormikDatePicker name={`actions[${currentActionIndex}].actionEndDatetimeUtc`} placeholder={placeholderDateTimePicker} format="dd MMM yyyy, HH:mm" oneTap/>
     </Form.Group>
 
     <Form.Group>
@@ -56,10 +54,10 @@ export const ControlForm = ({ remove, currentActionIndex, setCurrentActionIndex 
           <Field name={`actions.${currentActionIndex}.actionNumberOfControls`} />
         </ActionFieldWrapper>
         <ActionFieldWrapper>
-          <ActionTargetSelector name={`actions.${currentActionIndex}.actionTargetType`} />
+          <ActionTargetSelector currentActionIndex={currentActionIndex} />
         </ActionFieldWrapper>
         <ActionFieldWrapper>
-          <VehicleTypeSelector name={`actions.${currentActionIndex}.vehicleType`} />
+          <VehicleTypeSelector currentActionIndex={currentActionIndex} />
         </ActionFieldWrapper>
       </ActionSummary>
     </Form.Group>

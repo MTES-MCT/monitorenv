@@ -10,6 +10,6 @@ data class InfractionEntity(
   val formalNotice: FormalNoticeEnum,
   val toProcess: Boolean,
   val owner: String? = null,
-  val vehicle: String? = null,
+  val vesselType: String? = null,
   val size: String? = null,
 )

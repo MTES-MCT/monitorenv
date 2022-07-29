@@ -100,6 +100,7 @@ const Measurement = () => {
   return (
     <RightMenuButton
       top={MEASUREMENT_POSITION_FROM_TOP}
+      title={'prendre une mesure'}
       data-cy={'measurement'}
       onClick={openOrCloseMeasurement}
       button={<MeasurementIconSelector measurementType={measurementTypeToAdd} rightMenuIsOpen={rightMenuIsOpen} />}

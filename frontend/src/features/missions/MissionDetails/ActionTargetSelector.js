@@ -21,8 +21,8 @@ const DEFAULT_SELECT_PICKER_MENU_STYLE = {
   textOverflow: 'ellipsis'
 }
 
-export const ActionTargetSelector = ({name, ...props}) => {
-  const [actionTargetField, , actionTargetHelpers] = useField(name);
+export const ActionTargetSelector = ({currentActionIndex, ...props}) => {
+  const [actionTargetField, , actionTargetHelpers] = useField(`actions.${currentActionIndex}.actionTargetType`);
   const actionTargetSelectorRef = useRef()
   const actionTargetFieldList = Object.values(actionTargetTypeEnum)
 

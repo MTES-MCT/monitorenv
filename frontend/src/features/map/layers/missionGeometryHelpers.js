@@ -66,7 +66,6 @@ const getActionFeature = (action) => {
     actionNumberOfControls, 
     actionTheme, 
     actionStartDatetimeUtc, 
-    actionEndDatetimeUtc,
     infractions
   } = action
   if (!geom) {
@@ -84,7 +83,6 @@ const getActionFeature = (action) => {
     actionType,
     actionTheme,
     actionStartDatetimeUtc,
-    actionEndDatetimeUtc,
     actionNumberOfControls,
     infractions
   })

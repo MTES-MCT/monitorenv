@@ -1,10 +1,11 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { Form, SelectPicker } from 'rsuite'
 import { useFormikContext, useField } from 'formik'
 
+
 import { COLORS } from '../../../constants/constants'
-import { vehicleTypeEnum, vesselSizeEnum } from '../../../domain/entities/missions'
+import { vesselTypeEnum, vehicleTypeEnum } from '../../../domain/entities/missions'
 
 const DEFAULT_SELECT_PICKER_STYLE = {
   width: 90,
@@ -20,32 +21,32 @@ const DEFAULT_SELECT_PICKER_MENU_STYLE = {
   textOverflow: 'ellipsis'
 }
 
-export const VesselSizeSelector = ({infractionPath, currentActionIndex, ...props}) => {
+export const VesselTypeSelector = ({infractionPath, currentActionIndex, ...props}) => {
   const { values: { actions } } = useFormikContext();
-  const [vesselSizeField, , vesselSizeHelpers] = useField(`${infractionPath}.size`);
-  const vesselSizeSelectorRef = useRef()
-  const vesselSizeFieldList = Object.values(vesselSizeEnum)
+  const [vesselTypeField, , vesselTypeHelpers] = useField(`${infractionPath}.vesselType`);
+  const vesselTypeSelectorRef = useRef()
+  const vesselTypeFieldList = Object.values(vesselTypeEnum)
   const vehicleType = actions[currentActionIndex]?.vehicleType
 
   useEffect(()=> {
     if ((vehicleType !== vehicleTypeEnum.VESSEL.code)
-      && (vesselSizeField.value !== '')) {
-        vesselSizeHelpers.setValue('')
+      && (vesselTypeField.value !== '')) {
+        vesselTypeHelpers.setValue('')
     }
-  }, [currentActionIndex, vehicleType, vesselSizeHelpers, vesselSizeField.value])
+  }, [currentActionIndex, vehicleType, vesselTypeHelpers, vesselTypeField.value])
 
   return (
-    <SelectorWrapper ref={vesselSizeSelectorRef}>
-      <Form.ControlLabel htmlFor="vesselSizeField">Taille du navire: </Form.ControlLabel>
+    <SelectorWrapper ref={vesselTypeSelectorRef}>
+      <Form.ControlLabel htmlFor="vesselTypeField">Type de navire : </Form.ControlLabel>
       <SelectPicker 
         disabled={vehicleType !== vehicleTypeEnum.VESSEL.code}
         style={DEFAULT_SELECT_PICKER_STYLE}
         menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
         searchable={false}
-        container={()=>vesselSizeSelectorRef.current}
-        value={vesselSizeField.value}
-        onChange={vesselSizeHelpers.setValue}
-        data={vesselSizeFieldList}
+        container={()=>vesselTypeSelectorRef.current}
+        value={vesselTypeField.value}
+        onChange={vesselTypeHelpers.setValue}
+        data={vesselTypeFieldList}
         labelKey={'libelle'}
         valueKey={'code'}
         {...props} />

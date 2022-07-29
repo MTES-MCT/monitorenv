@@ -103,6 +103,25 @@ export const vehicleTypeEnum = {
   }
 }
 
+export const vesselTypeEnum = {
+  FISHING: {
+    code: 'FISHING',
+    libelle: 'Pêche'
+  },
+  SAILING: {
+    code: 'SAILING',
+    libelle: 'Voilier'
+  },
+  MOTOR: {
+    code: 'MOTOR',
+    libelle: 'Moteur'
+  },
+  COMMERCIAL: {
+    code: 'COMMERCIAL',
+    libelle: 'Commerce'
+  }
+}
+
 export const vesselSizeEnum = {
   LESS_THAN_12m : {
     code: 'LESS_THAN_12m',
