@@ -18,7 +18,7 @@ jupytext = "^1.13.6"
 
 pandas = "^1.4.0"
 openpyxl = "^3.0.9"
-Scrapy = "^2.6.0"
+Scrapy = "^2.6.2"
 SQLAlchemy = "^1.4.31"
 GeoAlchemy2 = "^0.9.4"
 cx-Oracle = "^8.1.0"
