@@ -1,6 +1,6 @@
-package fr.gouv.cacem.monitorenv.domain.entities.infractions
+package fr.gouv.cacem.monitorenv.domain.entities.natinfs
 
-data class InfractionEntity(
+data class NatinfEntity(
   val id: Int,
   val natinf_code: String,
   val regulation: String?,

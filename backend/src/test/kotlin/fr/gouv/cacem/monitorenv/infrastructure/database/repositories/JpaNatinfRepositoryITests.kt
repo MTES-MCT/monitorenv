@@ -5,16 +5,16 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 
-class JpaInfractionRepositoryITests : AbstractDBTests() {
+class JpaNatinfRepositoryITests : AbstractDBTests() {
 
   @Autowired
-  private lateinit var jpaInfractionsRepository: JpaInfractionRepository
+  private lateinit var jpaNatinfsRepository: JpaNatinfRepository
 
   @Test
   @Transactional
-  fun `findInfractions Should return all control topics`() {
+  fun `findNatinfs Should return all control topics`() {
     // When
-    val infractions = jpaInfractionsRepository.findInfractions()
-    assertThat(infractions).hasSize(1056)
+    val natinfs = jpaNatinfsRepository.findNatinfs()
+    assertThat(natinfs).hasSize(1056)
   }
 }

@@ -1,12 +1,12 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 
-import fr.gouv.cacem.monitorenv.domain.entities.infractions.InfractionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.natinfs.NatinfEntity
 import javax.persistence.*
 
 @Entity
-@Table(name = "infractions")
-data class InfractionModel(
+@Table(name = "natinfs")
+data class NatinfModel(
   @Id
   @Column(name = "id")
   var id: Int,
@@ -19,7 +19,7 @@ data class InfractionModel(
   @Column(name = "infraction")
   var infraction: String?,
 ) {
-  fun toInfraction() = InfractionEntity(
+  fun toNatinf() = NatinfEntity(
     id = id,
     natinf_code = natinf_code,
     regulation = regulation,
@@ -28,12 +28,12 @@ data class InfractionModel(
   )
 
   companion object {
-    fun fromInfractionEntity(infraction: InfractionEntity) = InfractionModel(
-      id = infraction.id,
-      natinf_code = infraction.natinf_code,
-      regulation = infraction.regulation,
-      infraction_category = infraction.infraction_category,
-      infraction = infraction.infraction
+    fun fromNatinfEntity(natinf: NatinfEntity) = NatinfModel(
+      id = natinf.id,
+      natinf_code = natinf.natinf_code,
+      regulation = natinf.regulation,
+      infraction_category = natinf.infraction_category,
+      infraction = natinf.infraction
     )
   }
 }

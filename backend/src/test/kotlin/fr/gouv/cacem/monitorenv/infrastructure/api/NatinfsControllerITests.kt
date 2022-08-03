@@ -1,9 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api
 
 import fr.gouv.cacem.monitorenv.MeterRegistryConfiguration
-import fr.gouv.cacem.monitorenv.domain.entities.infractions.InfractionEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.crud.infractions.*
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.InfractionsController
+import fr.gouv.cacem.monitorenv.domain.entities.natinfs.NatinfEntity
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.NatinfsController
 
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
@@ -19,17 +18,18 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import com.fasterxml.jackson.databind.ObjectMapper
+import fr.gouv.cacem.monitorenv.domain.use_cases.crud.natinfs.GetNatinfs
 
 @Import(MeterRegistryConfiguration::class)
 @ExtendWith(SpringExtension::class)
-@WebMvcTest(value = [(InfractionsController::class)])
-class InfractionsControllerITests {
+@WebMvcTest(value = [(NatinfsController::class)])
+class NatinfsControllerITests {
 
   @Autowired
   private lateinit var mockMvc: MockMvc
 
   @MockBean
-  private lateinit var getInfractions: GetInfractions
+  private lateinit var getNatinfs: GetNatinfs
 
   @Autowired
   private lateinit var objectMapper: ObjectMapper
@@ -37,24 +37,24 @@ class InfractionsControllerITests {
   @Test
   fun `Should get all infractions`() {
     // Given
-    val infraction = InfractionEntity(
+    val natinf = NatinfEntity(
       id=1005,
       natinf_code = "27718",
       regulation = "ART.L.945-4 AL.1, ART.L.945-5 1°, 2°, 3°, 4° C.RUR",
       infraction_category = "Pêche",
       infraction = "Debarquement de produits de la peche maritime et de l'aquaculture marine hors d'un port designe"
     )
-    given(this.getInfractions.execute()).willReturn(listOf(infraction))
+    given(this.getNatinfs.execute()).willReturn(listOf(natinf))
 
     // When
     mockMvc.perform(get("/bff/v1/infractions"))
       // Then
       .andExpect(status().isOk)
-      .andExpect(jsonPath("$[0].id", equalTo(infraction.id)))
-      .andExpect(jsonPath("$[0].natinf_code", equalTo(infraction.natinf_code)))
-      .andExpect(jsonPath("$[0].regulation", equalTo(infraction.regulation)))
-      .andExpect(jsonPath("$[0].infraction_category", equalTo(infraction.infraction_category)))
-      .andExpect(jsonPath("$[0].infraction", equalTo(infraction.infraction)))
+      .andExpect(jsonPath("$[0].id", equalTo(natinf.id)))
+      .andExpect(jsonPath("$[0].natinf_code", equalTo(natinf.natinf_code)))
+      .andExpect(jsonPath("$[0].regulation", equalTo(natinf.regulation)))
+      .andExpect(jsonPath("$[0].infraction_category", equalTo(natinf.infraction_category)))
+      .andExpect(jsonPath("$[0].infraction", equalTo(natinf.infraction)))
   }
 
 }
