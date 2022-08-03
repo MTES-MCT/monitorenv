@@ -1,18 +1,20 @@
 import React from 'react'
-import { Table } from 'rsuite'
+import { IconButton, Table } from 'rsuite'
 import styled from 'styled-components'
 
 import { ReactComponent as LocalizeIconSVG } from '../../icons/Oeil_apercu_carte.svg'
 
 export const CellLocalizeMission = ({rowData, dataKey, ...props}) => {
-  return <Table.Cell {...props}>
-    <LocalizeButton>
-      <LocalizeIcon />
-    </LocalizeButton>
-  </Table.Cell>
+  return <CustomCell {...props}>
+    <IconButton size='sm' icon={<LocalizeIcon className="rs-icon"/>} />
+  </CustomCell>
 }
-const LocalizeButton = styled.button``
 
 const LocalizeIcon = styled(LocalizeIconSVG)`
   width: 20px;
+`
+const CustomCell = styled(Table.Cell)`
+  .rs-table-cell-content {
+    padding-top: 7px;
+  }
 `

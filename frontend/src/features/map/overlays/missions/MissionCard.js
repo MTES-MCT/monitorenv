@@ -3,11 +3,16 @@ import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { format, isValid } from 'date-fns'
 import { fr } from 'date-fns/locale'
+import { IconButton } from 'rsuite'
 
 import { editMissionFromMap } from '../../../../domain/use_cases/missions/editMissionFromMap'
-import { COLORS } from '../../../../constants/constants'
 import { missionTypeEnum } from '../../../../domain/entities/missions'
 import { clearSelectedMissionOnMap } from '../../../../domain/use_cases/missions/selectMissionOnMap'
+import { MissionStatusLabel } from '../../../commonStyles/MissionStatusLabel'
+
+import { ReactComponent as EditIconSVG } from '../../../../features/icons/editer_12px.svg'
+import { ReactComponent as CloseIconSVG } from '../../../../features/icons/croix_10px.svg'
+import { COLORS } from '../../../../constants/constants'
 
 export const MissionCard = ({feature, selected}) => {
   const dispatch = useDispatch()
@@ -30,7 +35,7 @@ export const MissionCard = ({feature, selected}) => {
     dispatch(clearSelectedMissionOnMap())
   }, [dispatch])
 
-  return (<>
+  return (
   <MissionCardHeader>
     <Col1>
       <MissionDate>
@@ -41,40 +46,54 @@ export const MissionCard = ({feature, selected}) => {
       <MissionType>Mission {missionTypeEnum[missionType]?.libelle}</MissionType>
       <MissionReources>{administration} ({unit})</MissionReources>
       <Actions>{numberOfActions} actions réalisées</Actions>
-      <MissionStatus>{missionStatus}</MissionStatus>
-      {selected && <EditMissionButton onClick={handleEditMission}>Editer</EditMissionButton>}
+      <MissionStatusLabel missionStatus={missionStatus}/>
+      {selected && <IconButton 
+        size='sm'
+        appearance='primary' 
+        icon={<EditIconSVG className={"rs-icon"}/>} 
+        onClick={handleEditMission}>
+          Editer
+        </IconButton>}
     </Col2>
-    {selected && <CloseButton onClick={handleCloseOverlay}>X</CloseButton>}
+    <Col3>
+      {selected && <IconButton appearance='link' icon={<CloseIconSVG className={"rs-icon"}/>} size='sm' onClick={handleCloseOverlay} />}
+    </Col3>
   </MissionCardHeader>
-  </>)
+  )
 }
 
 const MissionCardHeader = styled.div`
-background: ${COLORS.white};
-padding: 4px 5px 5px 5px;
-border-top-left-radius: 2px;
-border-top-right-radius: 2px;
-display: flex;
+  background: ${COLORS.white};
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  display: flex;
+  width: 265px;
+  z-index: ${props=> props.selected ? 4900 : 5000}
 `
 
 const MissionDate = styled.div`
+  width: 75px;
+  font-size: 12px;
+  margin-right: 16px;
 `
 
 const MissionType = styled.div`
-font-weight: bold;
+  font-weight: bold;
 `
 
 const MissionReources = styled.div`
+  font-size: 12px;
+  color: ${COLORS.slateGray};
 `
 const Actions = styled.div`
 `
-const MissionStatus = styled.div`
+
+const Col1 = styled.div`
+  padding: 8px 0px 5px 10px;
 `
-
-const Col1 = styled.div``
-const Col2 = styled.div``
-
-const EditMissionButton = styled.button``
-const CloseButton = styled.button`
-  float: right;
+const Col2 = styled.div`
+  padding: 8px 8px 4px 8px;
+`
+const Col3 = styled.div`
+  padding-right: 4px;
 `

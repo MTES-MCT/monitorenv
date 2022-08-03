@@ -5,7 +5,7 @@ import { Icon, Style } from 'ol/style'
 import { getCenter } from 'ol/extent'
 
 import { COLORS } from '../../../../constants/constants'
-import { actionTypeEnum } from '../../../../domain/entities/missions'
+import { actionTypeEnum, missionStatusEnum } from '../../../../domain/entities/missions'
 
 
 
@@ -36,10 +36,14 @@ const missionWithCentroidStyleFactory = (color) => new Style({
 export const missionWithCentroidStyleFn = (feature) => {
   const missionStatus = feature.get('missionStatus')
   switch (missionStatus) {
-    case 'CLOSED':
-      return missionWithCentroidStyleFactory(COLORS.missingGreen)
+    case missionStatusEnum.PENDING.code:
+      return missionWithCentroidStyleFactory(COLORS.mediumSeaGreen)
+    case missionStatusEnum.ENDED.code:
+      return missionWithCentroidStyleFactory(COLORS.charcoal)
+    case missionStatusEnum.CLOSED.code:
+      return missionWithCentroidStyleFactory(COLORS.opal)
     default:
-      return missionWithCentroidStyleFactory(COLORS.red)
+      return missionWithCentroidStyleFactory(COLORS.opal)
   }
 }
 

@@ -4,21 +4,14 @@ import { Form, SelectPicker } from 'rsuite'
 import { useField } from 'formik'
 
 
-import { COLORS } from '../../../constants/constants'
 import { actionTargetTypeEnum } from '../../../domain/entities/missions'
 
 const DEFAULT_SELECT_PICKER_STYLE = {
-  width: 90,
-  margin: '0',
-  borderColor: COLORS.lightGray,
-  boxSizing: 'border-box',
-  textOverflow: 'ellipsis'
+  width: 145,
 }
 
 const DEFAULT_SELECT_PICKER_MENU_STYLE = { 
-  width: 150,
-  overflowY: 'hidden',
-  textOverflow: 'ellipsis'
+  width: 145,
 }
 
 export const ActionTargetSelector = ({currentActionIndex, ...props}) => {
@@ -32,6 +25,8 @@ export const ActionTargetSelector = ({currentActionIndex, ...props}) => {
         Type de cible
       </Form.ControlLabel>
       <SelectPicker
+        className='ghost'
+        size='sm'
         cleanable={false}
         style={DEFAULT_SELECT_PICKER_STYLE}
         menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}

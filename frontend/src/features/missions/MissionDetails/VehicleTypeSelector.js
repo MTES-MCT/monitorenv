@@ -4,21 +4,14 @@ import { Form, SelectPicker } from 'rsuite'
 import { useFormikContext, useField } from 'formik'
 
 
-import { COLORS } from '../../../constants/constants'
 import { actionTargetTypeEnum, vehicleTypeEnum } from '../../../domain/entities/missions'
 
 const DEFAULT_SELECT_PICKER_STYLE = {
-  width: 90,
-  margin: '0',
-  borderColor: COLORS.lightGray,
-  boxSizing: 'border-box',
-  textOverflow: 'ellipsis'
+  width: 150,
 }
 
 const DEFAULT_SELECT_PICKER_MENU_STYLE = { 
   width: 150,
-  overflowY: 'hidden',
-  textOverflow: 'ellipsis'
 }
 
 export const VehicleTypeSelector = ({currentActionIndex, ...props}) => {
@@ -46,6 +39,8 @@ export const VehicleTypeSelector = ({currentActionIndex, ...props}) => {
         Type de véhicule
       </Form.ControlLabel>
       <SelectPicker
+        className='ghost'
+        size='sm'
         cleanable={false}
         disabled={targetType !== actionTargetTypeEnum.VEHICLE.code}
         style={DEFAULT_SELECT_PICKER_STYLE}

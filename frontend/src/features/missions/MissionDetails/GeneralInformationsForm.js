@@ -31,8 +31,6 @@ export const GeneralInformationsForm = () => {
         <FormikDatePicker name="inputEndDatetimeUtc" placeholder={placeholderDateTimePicker} format="dd MMM yyyy, HH:mm" oneTap/>
       </Form.Group>
       
-      <ControlResourcesSelector />
-      
       <Form.Group>
         <Form.ControlLabel htmlFor="missionType">Type de mission</Form.ControlLabel>
         <FormikRadioGroup name="missionType" radioValues={missionTypeEnum} />
@@ -40,8 +38,10 @@ export const GeneralInformationsForm = () => {
       
       <Form.Group>
         <Form.ControlLabel htmlFor="missionNature">Nature de mission</Form.ControlLabel>
-        <FormikCheckboxGroup name="missionNature" checkBoxValues={missionNatureEnum} />
+        <FormikCheckboxGroup inline name="missionNature" checkBoxValues={missionNatureEnum} />
       </Form.Group>
+
+      <ControlResourcesSelector />
 
       <MissionZone name="geom" />
       <Form.Group>

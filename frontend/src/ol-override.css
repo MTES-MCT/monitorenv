@@ -24,6 +24,7 @@
 }
 
 .ol-scale-line {
+  box-sizing: content-box;
   position: absolute;
   bottom: 10px;
   left: 282px;
@@ -44,4 +45,16 @@
   margin: 3px 4px 4px 2px;
   line-height: 11px;
   padding-bottom: 4px;
+}
+
+.ol-control.zoom {
+  bottom: 38px;
+  left: .5em;
+  width: 25px;
+  height: 53px;
+}
+
+.ol-control.zoom>button {
+  width: 25px;
+  height: 25px;
 }

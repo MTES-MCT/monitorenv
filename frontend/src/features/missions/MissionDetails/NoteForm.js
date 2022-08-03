@@ -10,7 +10,7 @@ import { actionTypeEnum } from '../../../domain/entities/missions';
 
 
 export const NoteForm = ({ remove, currentActionIndex, setCurrentActionIndex }) => {
-  const [ actionTypeField ] = useField(`actions.${currentActionIndex}.actionType`)
+  const [ actionTypeField ] = useField(`envActions.${currentActionIndex}.actionType`)
 
   const handleRemoveAction = () => {
     setCurrentActionIndex(null)
@@ -24,8 +24,8 @@ export const NoteForm = ({ remove, currentActionIndex, setCurrentActionIndex }) 
     </Header>
     
     <Form.Group>
-      <Form.ControlLabel htmlFor={`actions.${currentActionIndex}.observations`}>Observations </Form.ControlLabel>
-      <FormikTextarea name={`actions.${currentActionIndex}.observations`} />
+      <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.observations`}>Observations </Form.ControlLabel>
+      <FormikTextarea name={`envActions.${currentActionIndex}.observations`} />
     </Form.Group>
  
       

@@ -14,12 +14,12 @@ import { CellStatus } from './CellStatus'
 
 export const MissionsTable = ({data, isLoading}) => {
 
-  const [sortColumn, setSortColumn] = React.useState()
-  const [sortType, setSortType] = React.useState()
+  const [sortColumn, setSortColumn] = React.useState('inputStartDatetimeUtc')
+  const [sortType, setSortType] = React.useState('desc')
 
-  const handleSortColumn = (sortColumn, sortType) => {
-    setSortColumn(sortColumn)
-    setSortType(sortType)
+  const handleSortColumn = (currSortColumn, currSortType) => {
+    setSortColumn(currSortColumn)
+    setSortType(currSortType)
   }
 
   const getMissions = useCallback(() => {
@@ -40,11 +40,6 @@ export const MissionsTable = ({data, isLoading}) => {
             sortType={sortType}
             onSortColumn={handleSortColumn} 
           >
-            <Table.Column width={40}>
-              <Table.HeaderCell>Id</Table.HeaderCell>
-              <Table.Cell dataKey="id" />
-            </Table.Column>
-
             <Table.Column sortable width={130}>
               <Table.HeaderCell>Date de début</Table.HeaderCell>
               <DateCell dataKey="inputStartDatetimeUtc" />
@@ -90,12 +85,12 @@ export const MissionsTable = ({data, isLoading}) => {
               <CellAlert/>
             </Table.Column>
             
-            <Table.Column width={40}>
+            <Table.Column align='center' width={60}>
               <Table.HeaderCell>&nbsp;</Table.HeaderCell>
               <CellLocalizeMission />
             </Table.Column>
 
-            <Table.Column align='center' width={100}>
+            <Table.Column align='center' width={160}>
               <Table.HeaderCell>&nbsp;</Table.HeaderCell>
               <CellEditMission />
             </Table.Column>

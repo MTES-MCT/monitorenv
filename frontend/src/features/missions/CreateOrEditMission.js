@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { Formik, FieldArray } from 'formik';
-import { Form } from 'rsuite'
+import { Form, Button, IconButton, ButtonToolbar } from 'rsuite'
 import { useGetMissionsQuery, useUpdateMissionMutation, useCreateMissionMutation } from '../../api/missionsAPI'
 import { setSideWindowPath } from '../commonComponents/SideWindowRouter/SideWindowRouter.slice';
 import { sideWindowPaths } from '../../domain/entities/sideWindow';
@@ -14,9 +14,10 @@ import { GeneralInformationsForm } from './MissionDetails/GeneralInformationsFor
 
 import { missionFactory } from './Missions.helpers'
 
-import { COLORS } from '../../constants/constants';
+import { ReactComponent as SaveSVG } from '../icons/enregistrer_16px.svg'
 import { MissionValidationModal } from './MissionValidationModal';
-import { PrimaryButton, SecondaryButton } from '../commonStyles/Buttons.style';
+import { COLORS } from '../../constants/constants';
+
  
 
 
@@ -32,7 +33,6 @@ export const CreateOrEditMission = ({routeParams})  => {
   }
   
   const id = parseInt(routeParams?.params?.id)
-  console.log('current id:', id, routeParams)
 
   const { missionToEdit } = useGetMissionsQuery(undefined, {
     selectFromResult: ({ data }) =>  ({
@@ -53,7 +53,6 @@ export const CreateOrEditMission = ({routeParams})  => {
   const newMission = missionFactory()
   
   const mission = id === undefined ? newMission : missionToEdit
-  console.log(id, missionToEdit)
   const upsertMission = id === undefined ?  createMission : updateMission
 
 
@@ -125,8 +124,8 @@ export const CreateOrEditMission = ({routeParams})  => {
               </Wrapper>
               
               <FormActionsWrapper>
-                <SecondaryButton onClick={handleCancel} type='button'>Annuler</SecondaryButton>
-                <PrimaryButton type='submit'>Enregistrer</PrimaryButton>
+                <Button onClick={handleCancel} type='button' size='sm'>Annuler</Button>
+                <IconButton appearance='ghost' type='submit' size='sm' icon={<SaveSVG className={"rs-icon"}/>}>Enregistrer</IconButton>
                 {errorOnSave && <ErrorOnSave>Oups... Erreur au moment de la sauvegarde</ErrorOnSave>}
               </FormActionsWrapper>
             </Form>
@@ -151,7 +150,7 @@ const FirstColumn = styled.div`
   overflow: scroll;
   `
 const SecondColumn = styled.div`
-  background: ${COLORS.missingGrey};
+  background: ${COLORS.cultured};
   flex: 1;
 `
 const ThirdColumn = styled.div`
@@ -165,7 +164,7 @@ const ErrorOnSave = styled.div`
 
 `
 
-const FormActionsWrapper = styled.div`
+const FormActionsWrapper = styled(ButtonToolbar)`
   border-top: 1px solid ${COLORS.lightGray};
   text-align: right;
   padding: 18px;

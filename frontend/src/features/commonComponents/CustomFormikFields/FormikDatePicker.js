@@ -6,7 +6,7 @@ import styled from 'styled-components';
 
 export const placeholderDateTimePicker = '\xa0\xa0\xa0\xa0\xa0\xa0/\xa0\xa0\xa0\xa0\xa0\xa0/\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0:\xa0\xa0\xa0\xa0\xa0\xa0'
 
-export const FormikDatePicker = ({ name, ...props }) => {
+export const FormikDatePicker = ({ name, ghost, ...props }) => {
   const [field, , helpers] = useField(name);
   const { value } = field;
   const { setValue } = helpers;
@@ -21,7 +21,7 @@ export const FormikDatePicker = ({ name, ...props }) => {
   const datepickerRef = useRef()
   return (
     <DatePickerWrapper ref={datepickerRef} data-cy={'datepicker'}>
-      <DatePicker container={()=>datepickerRef.current} {...props} value={valueAsDate} onChange={setValueAsString}  />
+      <DatePicker container={()=>datepickerRef.current} className={`${ghost && 'ghost'}`} {...props} value={valueAsDate} onChange={setValueAsString}  />
     </DatePickerWrapper>
   );
 }

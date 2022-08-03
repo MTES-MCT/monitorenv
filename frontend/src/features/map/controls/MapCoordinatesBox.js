@@ -141,6 +141,7 @@ const CoordinatesTypeSelection = styled.span`
 `
 
 const Coordinates = styled.span`
+  box-sizing: content-box;
   position: absolute;
   bottom: 11px;
   left: 40px;

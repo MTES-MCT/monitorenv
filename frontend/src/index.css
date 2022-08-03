@@ -9,10 +9,6 @@ html,
     font-size: 13px;
 }
 
-* {
-    -webkit-box-sizing: revert;
-    box-sizing: revert;
-}
 
 *::before,
 *::after {
@@ -26,55 +22,7 @@ html {
     font-size: 13px;
 }
 
-button,
-[type="button"],
-[type="submit"],
-[type="reset"],
-a.button,
-label.button,
-.button,
-a[role="button"],
-label[role="button"],
-[role="button"],
-[role="button"]:hover,
-[role="button"]:focus {
-    background: unset;
-    color: unset;
-    border: unset;
-    text-decoration: unset;
-    border-radius: unset;
-    margin: unset;
-    padding: unset;
-}
 
-button:hover,
-button:focus,
-[type="button"]:hover,
-[type="button"]:focus,
-[type="submit"]:hover,
-[type="submit"]:focus,
-[type="reset"]:hover,
-[type="reset"]:focus,
-a.button:hover,
-a.button:focus,
-label.button:hover,
-label.button:focus,
-.button:hover,
-.button:focus,
-a[role="button"]:hover,
-a[role="button"]:focus,
-label[role="button"]:hover,
-label[role="button"]:focus,
-[role="button"]:hover,
-[role="button"]:focus {
-    background: unset;
-    border-color: unset;
-}
-
-button:hover,
-button:focus {
-    background: inherit;
-}
 
 label {
     padding: unset;
@@ -134,9 +82,6 @@ a:focus {
     outline: none;
 }
 
-button:focus {
-    outline: none;
-}
 
 input:focus {
     outline: none;

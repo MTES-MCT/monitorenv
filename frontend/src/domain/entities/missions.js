@@ -171,15 +171,15 @@ export const protectedSpeciesEnum = {
 export const missionStatusEnum = {
   PENDING: {
     code: 'PENDING',
-    libelle: 'en cours'
+    libelle: 'En cours'
   },
   ENDED: {
     code: 'ENDED',
-    libelle: 'terminée'
+    libelle: 'Terminée'
   },
   CLOSED: {
     code: 'CLOSED',
-    libelle: 'cloturée'
+    libelle: 'Cloturée'
   }
 }
 

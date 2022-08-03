@@ -1,12 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
+import { IconButton } from 'rsuite'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { closeSideWindow, openSideWindowTab } from '../../domain/shared_slices/Global'
 import { sideWindowMenu } from '../../domain/entities/sideWindow'
 
-import { RightMenuButton } from "../commonComponents/RightMenuButton/RightMenuButton"
-import { ReactComponent as MissionsSVG } from '../icons/Picto_resume.svg'
+import { ReactComponent as MissionsSVG } from '../icons/operations.svg'
 
 export const MissionsMenu = () => {
   const dispatch = useDispatch()
@@ -24,19 +24,24 @@ export const MissionsMenu = () => {
   }
 
   return (<>
-    <RightMenuButton
-      top={55}
+    <MissionButton
       data-cy={'missions-button'}
       title={'voir les missions'}
       onClick={toggleMissionsWindow}
-      button={<MissionsIcon/>}
+      icon={<MissionsIcon className={'rs-icon'} />}
+      appearance='primary'
     >
-    </RightMenuButton>
+    </MissionButton>
   </>
   )
 }
 
+const MissionButton = styled(IconButton)`
+  position: absolute;
+  top: 55px;
+  right: 10px;
+`
 const MissionsIcon = styled(MissionsSVG)`
-  margin-top: 5px;
-  width: 20px;
+  width: 16px;
+  height: 16px;
 `

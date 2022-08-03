@@ -2,12 +2,12 @@ import React from 'react'
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import {  useField } from 'formik';
+import _ from 'lodash';
+import { Button } from 'rsuite';
 
 import { addControlPositions } from '../../../domain/use_cases/missions/missionAndControlLocalisation';
 
 import { COLORS } from '../../../constants/constants';
-import _ from 'lodash';
-import { PrimaryButton } from '../../commonStyles/Buttons.style';
 
 export const ControlPositions = ({name}) => {
   const [field, , helpers] = useField(name);
@@ -19,24 +19,22 @@ export const ControlPositions = ({name}) => {
   }
   
   return (
-    <>
-    <AddControlPositionButton background={COLORS.shadowBlue} color={COLORS.white} onClick={handleAddControlPositions}>
+    <ControlPositionsWrapper>
+    <Button appearance='ghost' size='sm' block onClick={handleAddControlPositions}>
         + Ajouter un point de contrôle
-    </AddControlPositionButton>
+    </Button>
     <ZoneList>
       {_.map(value?.coordinates, (v,i)=><Zone key={i}>Point dessiné {i+1}</Zone>)}
     </ZoneList>
-    </>
+    </ControlPositionsWrapper>
   )
 }
 
-const AddControlPositionButton = styled(PrimaryButton)`
-  width: 419px;
-  line-height: 27px;
-  margin-bottom: 16px;
+const ControlPositionsWrapper = styled.div`
+  width: 100%;
 `
 const ZoneList = styled.div`
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 `
 const Zone = styled.div`
   width: 419px;

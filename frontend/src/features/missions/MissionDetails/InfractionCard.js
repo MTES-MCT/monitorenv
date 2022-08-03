@@ -1,11 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
-import {  useField } from 'formik'
+import { useField } from 'formik'
 
+import { vehicleTypeEnum, formalNoticeEnum, infractionTypeEnum, vesselTypeEnum } from '../../../domain/entities/missions'
+import { ReactComponent as EditIconSVG } from '../../icons/Bouton_edition.svg'
+import { ReactComponent as DeleteSVG } from '../../icons/Suppression_clair.svg'
 
 import { COLORS } from '../../../constants/constants'
-import { EditButton, DeleteButton } from '../../commonStyles/Buttons.style'
-import { vehicleTypeEnum, formalNoticeEnum, infractionTypeEnum, vesselTypeEnum } from '../../../domain/entities/missions'
+import { IconButton } from 'rsuite'
 
 export const InfractionCard = ({ currentActionIndex, infractionPath,  setCurrentInfractionIndex, removeInfraction }) => {
   const [vehicleTypeField] = useField(`actions.${currentActionIndex}.vehicleType`)
@@ -33,8 +35,8 @@ export const InfractionCard = ({ currentActionIndex, infractionPath,  setCurrent
         </SummaryDetails>
       </Summary>
       <ButtonsWrapper>
-        <EditButton onClick={setCurrentInfractionIndex} />
-        <Delete onClick={removeInfraction}></Delete>
+        <IconButton icon={<EditIcon/>} onClick={setCurrentInfractionIndex} />
+        <IconButton icon={<DeleteIcon/>} onClick={removeInfraction}></IconButton>
       </ButtonsWrapper>
     </Wrapper>
   )
@@ -64,7 +66,13 @@ const SummaryDetails = styled.div``
 const Info = styled.span`
   margin-right: 20px
 `
-const Delete = styled(DeleteButton)`
-  margin-left: 16px;
-  width: 14px;
+
+const EditIcon = styled(EditIconSVG)``
+
+// const Delete = styled(DeleteButton)`
+//   margin-left: 16px;
+//   width: 14px;
+// `
+const DeleteIcon = styled(DeleteSVG)`
+  color: ${COLORS.maximumRed};
 `

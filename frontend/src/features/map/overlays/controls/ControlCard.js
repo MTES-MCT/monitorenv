@@ -5,6 +5,7 @@ import { fr } from 'date-fns/locale'
 
 import { COLORS } from '../../../../constants/constants'
 import { missionTypeEnum } from '../../../../domain/entities/missions'
+import { MissionStatusLabel } from '../../../commonStyles/MissionStatusLabel'
 
 export const ControlCard = ({feature}) => {
   const { 
@@ -29,7 +30,7 @@ export const ControlCard = ({feature}) => {
       <ControlType>Control {missionTypeEnum[missionType]?.libelle}</ControlType>
       <ControlReources>{administration} ({unit})</ControlReources>
       <Actions>{numberOfActions} actions réalisées</Actions>
-      <ControlStatus>{missionStatus}</ControlStatus>
+      <MissionStatusLabel missionStatus={missionStatus} />
     </Col2>
   </ControlCardHeader>
   </>)
@@ -53,8 +54,6 @@ font-weight: bold;
 const ControlReources = styled.div`
 `
 const Actions = styled.div`
-`
-const ControlStatus = styled.div`
 `
 
 const Col1 = styled.div``

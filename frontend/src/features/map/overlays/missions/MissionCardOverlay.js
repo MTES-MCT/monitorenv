@@ -68,7 +68,7 @@ export const MissionCardOverlay = ({ map, feature, selected }) => {
   
 
   return (
-    <MissionCardOverlayComponent ref={overlayCallback} overlayTopLeftMargin={overlayTopLeftMargin}>
+    <MissionCardOverlayComponent selected={selected} ref={overlayCallback} overlayTopLeftMargin={overlayTopLeftMargin}>
       {
         feature
           ? <MissionCard
@@ -85,9 +85,10 @@ const MissionCardOverlayComponent = styled.div`
   position: absolute;
   top: ${props => props.overlayTopLeftMargin[0]}px;
   left: ${props => props.overlayTopLeftMargin[1]}px;
-  width: 232px;
   text-align: left;
   background-color: ${COLORS.white};
   border-radius: 2px;
-  z-index: 1000;
+  && {
+    z-index: ${props => props.selected ? 1000 : 1010};
+  }
 `

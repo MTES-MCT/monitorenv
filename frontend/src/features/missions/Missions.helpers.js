@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 
-import { actionTargetTypeEnum, formalNoticeEnum, missionStatusEnum, missionTypeEnum } from "../../domain/entities/missions"
+import { actionTargetTypeEnum, actionTypeEnum, formalNoticeEnum, missionStatusEnum, missionTypeEnum } from "../../domain/entities/missions"
 
 export const infractionFactory = ({id, ...infraction} = {}) => {
   return {
@@ -20,48 +20,66 @@ export const infractionFactory = ({id, ...infraction} = {}) => {
   }
 }
 
-export const actionFactory = ({id, ...action} = {}) => {
-  return {
-    id: uuidv4(),
-    actionType: '',
-    actionTheme: '',
-    protectedSpecies: [],
-    actionStartDatetimeUtc: new Date(),
-    actionNumberOfControls: '',
-    actionTargetType: actionTargetTypeEnum.VEHICLE.code,
-    vehicleType: '',
-    geom: null,
-    infractions: [],
-    ...action
+export const actionFactory = ({id, actionType, ...action} = {}) => {
+  switch (actionType) {
+    case actionTypeEnum.CONTROL.code:
+      return {
+        id: uuidv4(),
+        actionType: actionTypeEnum.CONTROL.code,
+        actionTheme: '',
+        protectedSpecies: [],
+        actionStartDatetimeUtc: new Date(),
+        actionNumberOfControls: '',
+        actionTargetType: actionTargetTypeEnum.VEHICLE.code,
+        vehicleType: '',
+        geom: null,
+        infractions: [],
+        ...action
+      }
+      case actionTypeEnum.NOTE.code:
+        return {
+          id: uuidv4(),
+          actionType: actionTypeEnum.NOTE.code,
+          actionStartDatetimeUtc: new Date(),
+          observations: '',
+          ...action
+        }
+      case actionTypeEnum.SURVEILLANCE.code:
+        return {
+          id: uuidv4(),
+          actionType: actionTypeEnum.SURVEILLANCE.code,
+          actionTheme: '',
+          protectedSpecies: [],
+          actionStartDatetimeUtc: new Date(),
+          actionTargetType: actionTargetTypeEnum.VEHICLE.code,
+          geom: null,
+          ...action
+        }
+    default:
+      return {
+        id: uuidv4(),
+        actionType: '',
+        ...action
+      }
   }
+  
 }
 
 export const missionFactory = (mission) => {
   return {
     missionType: missionTypeEnum.SEA.code,
     missionNature: [],
-    unit: '',
     administration: '',
+    unit: '',
+    resources: [],
+    missionStatus: missionStatusEnum.PENDING,
     open_by: '',
     closed_by: '',
     observations: '',
     geom: null,
-    inputStartDatetimeUtc: '',
+    inputStartDatetimeUtc: new Date(),
     inputEndDatetimeUtc: '',
     envActions: [],
-    resources: [],
     ...mission
   }
-}
-
-export const getMissionStatus = (mission) => {
-  try {
-    if (mission?.inputStartDatetimeUtc > mission?.inputEndDatetimeUtc) {
-      return missionStatusEnum.CLOSED.code
-    }
-  }
-  catch {
-    return missionStatusEnum.PENDING.code
-  }
-  return missionStatusEnum.PENDING.code
 }

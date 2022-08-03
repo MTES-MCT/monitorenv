@@ -1,7 +1,6 @@
 import React from 'react'
-import { Modal } from 'rsuite'
+import { Modal, Button } from 'rsuite'
 import styled from 'styled-components'
-import { PrimaryButton, SecondaryButton } from '../commonStyles/Buttons.style'
 
 
 export const MissionValidationModal = ()=>{
@@ -9,8 +8,8 @@ export const MissionValidationModal = ()=>{
     <AlertTitle>Vous êtes en train d&apos;abandonner l&apos;ajout d&apos;une nouvelle mission</AlertTitle>
     <AlertQuestion>Voulez-vous enregistrer les modifications avant de quitter ?</AlertQuestion>
     <ButtonsWrapper>
-      <SecondaryButton>Fermer sans enregistrer</SecondaryButton>
-      <PrimaryButton>Enregistrer et quitter</PrimaryButton>
+      <Button appearance='ghost'>Fermer sans enregistrer</Button>
+      <Button>Enregistrer et quitter</Button>
     </ButtonsWrapper>
   </Modal>)
 }

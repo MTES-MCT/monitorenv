@@ -1,19 +1,13 @@
 import React from 'react'
 import { Table } from 'rsuite'
-import styled from 'styled-components'
-import { COLORS } from '../../../constants/constants'
+
+import { MissionStatusLabel } from '../../commonStyles/MissionStatusLabel'
 
 
 export const CellStatus = ({rowData, dataKey, ...props}) => {
-  return <Table.Cell {...props}>
-    {rowData.inputEndDatetimeUtc ? <Closed>Terminé</Closed> : <Open>En cours</Open>}
+  return (
+  <Table.Cell {...props} >
+    <MissionStatusLabel missionStatus={rowData.missionStatus} />
   </Table.Cell>
+  )
 }
-
-const Open = styled.div`
-  color:${COLORS.missingGreen}
-`
-
-const Closed = styled.div`
-  color: ${COLORS.missingBlue}
-`

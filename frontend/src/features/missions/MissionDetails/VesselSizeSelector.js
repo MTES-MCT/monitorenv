@@ -3,21 +3,14 @@ import styled from 'styled-components'
 import { Form, SelectPicker } from 'rsuite'
 import { useFormikContext, useField } from 'formik'
 
-import { COLORS } from '../../../constants/constants'
 import { vehicleTypeEnum, vesselSizeEnum } from '../../../domain/entities/missions'
 
 const DEFAULT_SELECT_PICKER_STYLE = {
-  width: 90,
-  margin: '0',
-  borderColor: COLORS.lightGray,
-  boxSizing: 'border-box',
-  textOverflow: 'ellipsis'
+  width: 150,
 }
 
 const DEFAULT_SELECT_PICKER_MENU_STYLE = { 
   width: 150,
-  overflowY: 'hidden',
-  textOverflow: 'ellipsis'
 }
 
 export const VesselSizeSelector = ({infractionPath, currentActionIndex, ...props}) => {
@@ -42,6 +35,7 @@ export const VesselSizeSelector = ({infractionPath, currentActionIndex, ...props
     <SelectorWrapper ref={vesselSizeSelectorRef}>
       <Form.ControlLabel htmlFor="vesselSizeField">Taille du navire</Form.ControlLabel>
       <SelectPicker
+        size='sm'
         cleanable={false}
         disabled={vehicleType !== vehicleTypeEnum.VESSEL.code}
         style={DEFAULT_SELECT_PICKER_STYLE}

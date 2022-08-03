@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import { Button } from 'rsuite'
 
-import { PrimaryButton } from '../../commonStyles/Buttons.style'
 import { infractionFactory } from '../Missions.helpers'
 
 import { COLORS } from '../../../constants/constants'
@@ -34,12 +34,13 @@ export const InfractionsForm = ({  push, remove, form, currentActionIndex }) => 
   return (<>
     <Header>
       <Title>Détailler une infraction d&apos;une cible</Title>
-      <PrimaryButton
-        type="button"
+      <Button
+        appearance='ghost'
+        size='sm'
         onClick={handleAddInfraction}
       >
         + Ajouter une nouvelle infraction
-      </PrimaryButton>
+      </Button>
     </Header>
     
     {form?.values.envActions?.length > 0 && form?.values.envActions[currentActionIndex]?.infractions?.length > 0 ? 

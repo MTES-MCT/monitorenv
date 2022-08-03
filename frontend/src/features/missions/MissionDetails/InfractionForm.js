@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Form } from 'rsuite'
+import { Form, Button} from 'rsuite'
 import { Field, useField } from 'formik'
 
 import { infractionTypeEnum, formalNoticeEnum, actionTargetTypeEnum } from '../../../domain/entities/missions'
@@ -11,7 +11,6 @@ import { FormikTextarea } from '../../commonComponents/CustomFormikFields/Formik
 
 import { NatinfSelector } from './NatinfSelector'
 
-import { PrimaryButton, SecondaryButton } from '../../commonStyles/Buttons.style'
 import { COLORS } from '../../../constants/constants'
 import { InfractionFormHeaderVehicle } from './InfractionFormHeaderVehicle'
 import { InfractionFormHeaderCompany } from './InfractionFormHeaderCompany'
@@ -62,8 +61,8 @@ export const InfractionForm = ({ currentActionIndex, infractionPath, validateInf
         <Form.ControlLabel htmlFor="observations">Observations</Form.ControlLabel>
         <FormikTextarea name={`${infractionPath}.observations`} />
       </Form.Group>
-      <SecondaryButton type="button" onClick={removeInfraction}>Supprimer l&apos;infraction</SecondaryButton>
-      <PrimaryButton type="button" onClick={validateInfraction}>Valider l&apos;infraction</PrimaryButton>
+      <Button appearance="ghost" onClick={removeInfraction}>Supprimer l&apos;infraction</Button>
+      <Button onClick={validateInfraction}>Valider l&apos;infraction</Button>
   </FormWrapper>
 
   )
@@ -71,6 +70,7 @@ export const InfractionForm = ({ currentActionIndex, infractionPath, validateInf
     
 const FormWrapper = styled.div`
   background: ${COLORS.white};
+  padding: 32px;
 `
 
 const FormColumn = styled.div`

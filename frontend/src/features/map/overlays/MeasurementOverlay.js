@@ -65,14 +65,14 @@ const TriangleShadow = styled.div`
 const MeasurementOverlayElement = styled.div``
 
 const ZoneText = styled.span`
-  padding-bottom: 5px;
+  margin-bottom: 5px;
   vertical-align: middle;
   height: 30px;
   display: inline-block;
   user-select: none;
 `
 
-const ZoneSelected = styled.span`
+const ZoneSelected = styled.div`
   background: ${COLORS.gainsboro};
   border-radius: 2px;
   color: ${COLORS.slateGray};

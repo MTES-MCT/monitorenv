@@ -6,7 +6,6 @@ import Point from 'ol/geom/Point'
 // import MultiPolygon from 'ol/geom/MultiPolygon'
 
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map'
-import { getMissionStatus } from '../../missions/Missions.helpers'
 import Layers from '../../../domain/entities/layers'
 
 export const getMissionCentroid = (mission, layername) => {
@@ -29,7 +28,7 @@ export const getMissionCentroid = (mission, layername) => {
     unit: mission.unit,
     administration: mission.administration,
     numberOfActions: mission.actions?.length || 0,
-    missionStatus: getMissionStatus(mission)
+    missionStatus: mission.missionStatus
   })
   return  pointFeature
 }
@@ -52,7 +51,7 @@ export const getMissionZoneFeature = (mission, layername) => {
     unit: mission.unit,
     administration: mission.administration,
     numberOfActions: mission.actions?.length || 0,
-    missionStatus: getMissionStatus(mission)
+    missionStatus: mission.missionStatus
   })
   return  feature
 }

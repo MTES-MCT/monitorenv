@@ -55,7 +55,6 @@ export const ControlOverlay = ({ map, currentFeatureOver }) => {
 
     if (overlayRef.current && overlayObjectRef.current) {
       if (currentFeatureOver && currentFeatureOver.getId()?.includes(Layers.ACTIONS.code)) {
-        console.log('currentFeatureOver', currentFeatureOver.getProperties())
         const featureCenter =  getCenter(currentFeatureOver.getGeometry().getExtent())
         overlayObjectRef.current.setPosition(featureCenter)
         const nextOverlayPosition = getNextOverlayPosition(featureCenter)

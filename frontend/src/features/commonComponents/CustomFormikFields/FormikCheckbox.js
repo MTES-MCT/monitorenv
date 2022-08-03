@@ -3,7 +3,7 @@ import {  useField } from 'formik';
 import { Checkbox } from 'rsuite'
 
 
-export const FormikCheckbox = ({ label, name, radioValues, defaultValue, ...props }) => {
+export const FormikCheckbox = ({ label, name, defaultValue, ...props }) => {
   const [field, , helpers] = useField(name);
   const { value } = field;
   const { setValue } = helpers;
