@@ -6,7 +6,7 @@ import TrashIcon from '@rsuite/icons/Trash';
 
 import { FormikTextarea } from '../../commonComponents/CustomFormikFields/FormikTextarea'
 import { COLORS } from '../../../constants/constants'
-import { ActionTypeEnum } from '../../../domain/entities/missions';
+import { actionTypeEnum } from '../../../domain/entities/missions';
 
 
 export const NoteForm = ({ remove, currentActionIndex, setCurrentActionIndex }) => {
@@ -19,7 +19,7 @@ export const NoteForm = ({ remove, currentActionIndex, setCurrentActionIndex }) 
   
   return (<>
     <Header>
-      <Title>{ActionTypeEnum[actionTypeField.value]?.libelle}</Title>
+      <Title>{actionTypeEnum[actionTypeField.value]?.libelle}</Title>
       <Delete type="button" onClick={handleRemoveAction}><TrashIcon />Supprimer</Delete>
     </Header>
     

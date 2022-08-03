@@ -1,1 +1,0 @@
-ALTER TABLE missions RENAME COLUMN author to open_by;

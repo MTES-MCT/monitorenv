@@ -13,7 +13,7 @@ export const InfractionsForm = ({  push, remove, form, currentActionIndex }) => 
   const [ currentInfractionIndex, setCurrentInfractionIndex ] = useState(null)
 
   const handleAddInfraction = () => {
-    const numberOfInfractions = form?.values.actions[currentActionIndex]?.infractions.length
+    const numberOfInfractions = form?.values.envActions[currentActionIndex]?.value?.infractions?.length
     push(infractionFactory())
     setCurrentInfractionIndex(numberOfInfractions)
   }
@@ -42,21 +42,23 @@ export const InfractionsForm = ({  push, remove, form, currentActionIndex }) => 
       </PrimaryButton>
     </Header>
     
-    {form?.values.actions.length > 0 && form?.values.actions[currentActionIndex]?.infractions.length > 0 ? 
+    {form?.values.envActions?.length > 0 && form?.values.envActions[currentActionIndex]?.infractions?.length > 0 ? 
     <InfractionsWrapper>
-      {form?.values.actions[currentActionIndex]?.infractions.map((infraction, index) => {
+      {form?.values.envActions[currentActionIndex]?.infractions?.map((infraction, index) => {
         return (
           index === currentInfractionIndex ?
-          <InfractionForm 
-            key={infraction.id} 
-            infractionPath={`actions[${currentActionIndex}].infractions[${index}]`} 
-            setCurrentInfractionIndex={handleValidate} 
-            currentActionIndex={currentActionIndex} 
-            infractionIndex={index} 
+          <InfractionForm
+            key={infraction.id}
+            infractionPath={`envActions[${currentActionIndex}].infractions[${index}]`}
+            validateInfraction={handleValidate}
+            removeInfraction={handleRemoveInfraction(index)}
+            currentActionIndex={currentActionIndex}
+            infractionIndex={index}
             /> :
           <InfractionCard
             key={infraction.id}
-            infractionPath={`actions[${currentActionIndex}].infractions[${index}]`}
+            currentActionIndex={currentActionIndex}
+            infractionPath={`envActions[${currentActionIndex}].infractions[${index}]`}
             setCurrentInfractionIndex={handleEditInfraction(index)}
             removeInfraction={handleRemoveInfraction(index)}
             />

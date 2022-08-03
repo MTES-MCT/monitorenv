@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import styled from 'styled-components'
 import { Form, SelectPicker } from 'rsuite'
-import {  useField } from 'formik'
+import { useField } from 'formik'
 
 
 import { COLORS } from '../../../constants/constants'
@@ -22,14 +22,17 @@ const DEFAULT_SELECT_PICKER_MENU_STYLE = {
 }
 
 export const ActionTargetSelector = ({currentActionIndex, ...props}) => {
-  const [actionTargetField, , actionTargetHelpers] = useField(`actions.${currentActionIndex}.actionTargetType`);
+  const [actionTargetField, , actionTargetHelpers] = useField(`envActions.${currentActionIndex}.actionTargetType`);
   const actionTargetSelectorRef = useRef()
   const actionTargetFieldList = Object.values(actionTargetTypeEnum)
 
   return (
     <SelectorWrapper ref={actionTargetSelectorRef}>
-      <Form.ControlLabel htmlFor="actionTargetField">Type de cible : </Form.ControlLabel>
-      <SelectPicker 
+      <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionTargetType`}>
+        Type de cible
+      </Form.ControlLabel>
+      <SelectPicker
+        cleanable={false}
         style={DEFAULT_SELECT_PICKER_STYLE}
         menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
         searchable={false}

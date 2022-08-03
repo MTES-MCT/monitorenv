@@ -1,0 +1,3 @@
+INSERT INTO public.env_actions (id, mission_id, action_type, "value") VALUES ( uuid_generate_v4(),14,'CONTROL', ('{"actionType": "CONTROL"}'::jsonb));
+INSERT INTO public.env_actions (id, mission_id, action_type, "value") VALUES ( uuid_generate_v4(),14,'SURVEILLANCE', ('{"actionType": "SURVEILLANCE"}'::jsonb));
+INSERT INTO public.env_actions (id, mission_id, action_type, "value") VALUES ( uuid_generate_v4(),14,'CONTROL', ('{"actionType": "CONTROL"}'::jsonb));

@@ -10,7 +10,7 @@ import { ReactComponent as ControlIconSVG } from '../../icons/Gyrophare_controle
 import { ReactComponent as SurveillanceIconSVG } from '../../icons/eye.svg'
 
 import { COLORS } from '../../../constants/constants'
-import { ActionTypeEnum } from '../../../domain/entities/missions'
+import { actionTargetTypeEnum, actionTypeEnum } from '../../../domain/entities/missions'
 import { DeleteButton, DuplicateButton } from '../../commonStyles/Buttons.style'
 
 
@@ -44,12 +44,12 @@ export const ActionCard = ({selected, selectAction, action, removeAction, duplic
         <DeleteButton title={"supprimer"} onClick={removeAction} />
       
       </ButtonsWrapper>
-      {(action.actionType === ActionTypeEnum.CONTROL.code) && (<SummaryWrapper>
+      {(action.actionType === actionTypeEnum.CONTROL.code) && (<SummaryWrapper>
         <ControlIcon />
         <SummaryContent>
-          <Title>Contrôles {`${controlTopics?.topic_level_1 || 'Non spécifié'} ${controlTopics?.topic_level_2 || ''}`}</Title>
+          <Title>Contrôles <Accented>{`${controlTopics?.topic_level_1 || 'Non spécifié'} ${controlTopics?.topic_level_2 || ''}`}</Accented></Title>
           <ControlSummary>
-          <Accented>{action.actionNumberOfControls || 0}</Accented>{` contrôles réalisés sur des cibles de type ` }<Accented>{action.actionTargetType|| 'non spécifié'}</Accented>
+          <Accented>{action.actionNumberOfControls || 0}</Accented>{` contrôles réalisés sur des cibles de type ` }<Accented>{actionTargetTypeEnum[action.actionTargetType]?.libelle || 'non spécifié'}</Accented>
           </ControlSummary>
           <Tags>
             <Tag>RAS</Tag>
@@ -59,13 +59,13 @@ export const ActionCard = ({selected, selectAction, action, removeAction, duplic
           </Tags>
         </SummaryContent>
       </SummaryWrapper>)}
-      {(action.actionType === ActionTypeEnum.SURVEILLANCE.code) && (<SummaryWrapper>
+      {(action.actionType === actionTypeEnum.SURVEILLANCE.code) && (<SummaryWrapper>
         <SurveillanceIcon /> 
         <SummaryContent>
           <Title>Surveillance {`${controlTopics?.topic_level_1 || 'Non spécifiée'} ${controlTopics?.topic_level_2 || ''}`}</Title>
           </SummaryContent>
       </SummaryWrapper>)}
-      {(action.actionType === ActionTypeEnum.NOTE.code) && (<>
+      {(action.actionType === actionTypeEnum.NOTE.code) && (<>
         <SurveillanceIcon /> {action.observations || 'Note libre'} 
       </>)}
       
@@ -96,7 +96,7 @@ const Time = styled.div`
 const ActionSummaryWrapper = styled.div`
   flex: 1;
   border: ${props => props.selected ? `3px solid ${COLORS.charcoal}` : ''};
-  background: ${props => props.type === ActionTypeEnum.CONTROL.code ? COLORS.white : props.type === ActionTypeEnum.SURVEILLANCE.code ? COLORS.shadowBlueLittleOpacity : COLORS.missingGrey};
+  background: ${props => props.type === actionTypeEnum.CONTROL.code ? COLORS.white : props.type === actionTypeEnum.SURVEILLANCE.code ? COLORS.shadowBlueLittleOpacity : COLORS.missingGrey};
   padding: ${props => props.selected ? `4px` : '7px'};
   margin-left: 32px;
 `

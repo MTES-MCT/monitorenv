@@ -1,13 +1,14 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api
 
 import fr.gouv.cacem.monitorenv.MeterRegistryConfiguration
+import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.MissionsController
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.domain.entities.missions.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.CreateMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.GetMissionById
 import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.GetMissions
 import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.UpdateMission
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdateMissionDataInput
 
 
 import org.hamcrest.Matchers.equalTo
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import com.nhaarman.mockitokotlin2.any
 import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -22,15 +24,14 @@ import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.time.ZonedDateTime
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import java.time.ZonedDateTime
 import com.fasterxml.jackson.databind.ObjectMapper
-import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers
+import java.util.*
 
 @Import(MeterRegistryConfiguration::class, MapperConfiguration::class)
 @ExtendWith(SpringExtension::class)
@@ -66,9 +67,9 @@ class MissionsControllerITests {
     val newMission = MissionEntity(
       id = 10,
       missionType = MissionTypeEnum.LAND,
-      missionStatus = "CLOSED",
+      missionNature = listOf(MissionNatureEnum.ENV),
+      missionStatus = MissionStatusEnum.CLOSED,
       facade = "Outre-Mer",
-      theme = "CONTROLE",
       geom = Polygon,
       observations = null,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
@@ -76,16 +77,15 @@ class MissionsControllerITests {
     )
     val newMissionRequest = CreateOrUpdateMissionDataInput(
       missionType = MissionTypeEnum.LAND,
-      missionStatus = "CLOSED",
+      missionNature = listOf(MissionNatureEnum.ENV),
+      missionStatus = MissionStatusEnum.CLOSED,
       facade = "Outre-Mer",
-      theme = "CONTROLE",
       geom = Polygon,
       observations = null,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
       inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z")
     )
     val requestbody = objectMapper.writeValueAsString(newMissionRequest)
-    println(requestbody)
     given(this.createMission.execute(mission = any())).willReturn(newMission)
     // When
     mockMvc.perform(
@@ -109,9 +109,9 @@ class MissionsControllerITests {
     val firstMission = MissionEntity(
       id = 10,
       missionType = MissionTypeEnum.SEA,
-      missionStatus = "CLOSED",
+      missionStatus = MissionStatusEnum.CLOSED,
+      missionNature = listOf(MissionNatureEnum.ENV),
       facade = "Outre-Mer",
-      theme = "CONTROLE",
       geom = Polygon,
       observations = null,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
@@ -126,9 +126,8 @@ class MissionsControllerITests {
       .andExpect(status().isOk)
       .andExpect(jsonPath("$[0].id", equalTo(firstMission.id)))
       .andExpect(jsonPath("$[0].missionType", equalTo(firstMission.missionType.toString())))
-      .andExpect(jsonPath("$[0].missionStatus", equalTo(firstMission.missionStatus)))
+      .andExpect(jsonPath("$[0].missionStatus", equalTo(firstMission.missionStatus.toString())))
       .andExpect(jsonPath("$[0].facade", equalTo(firstMission.facade)))
-      .andExpect(jsonPath("$[0].theme", equalTo(firstMission.theme)))
       .andExpect(jsonPath("$[0].inputStartDatetimeUtc", equalTo(firstMission.inputStartDatetimeUtc.toString())))
       .andExpect(jsonPath("$[0].inputEndDatetimeUtc", equalTo(firstMission.inputEndDatetimeUtc.toString())))
   }
@@ -136,75 +135,51 @@ class MissionsControllerITests {
   @Test
   fun `Should get specific mission when requested by Id`() {
     // Given
+    val requestedId: Int = 0
     val firstMission = MissionEntity(
       id = 10,
       missionType = MissionTypeEnum.SEA,
-      missionStatus = "CLOSED",
-      facade = "Outre-Mer",
-      theme = "CONTROLE",
-      observations = null,
-      inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-      inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
     )
-    given(this.getMissionById.execute(0)).willReturn(firstMission)
+    // we test only if the route is called with the right arg
+    given(getMissionById.execute(requestedId)).willReturn(firstMission)
 
     // When
-    mockMvc.perform(get("/bff/v1/missions/0"))
+    mockMvc.perform(get("/bff/v1/missions/$requestedId"))
       // Then
       .andExpect(status().isOk)
-      .andExpect(jsonPath("$.id", equalTo(firstMission.id)))
-      .andExpect(jsonPath("$.missionType", equalTo(firstMission.missionType.toString())))
-      .andExpect(jsonPath("$.missionStatus", equalTo(firstMission.missionStatus)))
-      .andExpect(jsonPath("$.facade", equalTo(firstMission.facade)))
-      .andExpect(jsonPath("$.theme", equalTo(firstMission.theme)))
-      .andExpect(jsonPath("$.inputStartDatetimeUtc", equalTo(firstMission.inputStartDatetimeUtc.toString())))
-      .andExpect(jsonPath("$.inputEndDatetimeUtc", equalTo(firstMission.inputEndDatetimeUtc.toString())))
+      .andExpect(jsonPath("$.missionType", equalTo(MissionTypeEnum.SEA.toString())))
+    verify(getMissionById).execute(requestedId)
   }
 
   @Test
-  fun `Should update mission`() {
+  fun `update mission should return updated mission`() {
     // Given
     val expectedUpdatedMission = MissionEntity(
-      id = 10,
-      missionType = MissionTypeEnum.LAND,
-      missionStatus = "CLOSED",
-      facade = "Outre-Mer",
-      theme = "CONTROLE",
-      observations = null,
-      inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-      inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z")
+      id = 14,
+      missionType = MissionTypeEnum.SEA,
+      observations = "updated observations",
+    )
+    val envAction = EnvActionControlEntity(
+      id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
+      actionTargetType = "VEHICLE",
+      vehicleType = "VESSEL",
+      actionNumberOfControls= 4
     )
     val requestBody = CreateOrUpdateMissionDataInput(
-      id = 10,
-      missionType = MissionTypeEnum.LAND,
-      missionStatus = "CLOSED",
-      facade = "Outre-Mer",
-      theme = "CONTROLE",
-      observations = null,
-      inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-      inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z")
+      id = 14,
+      missionType = MissionTypeEnum.SEA,
+      observations = "updated observations",
+      envActions = listOf(envAction)
     )
-//    given(this.updateMission.execute(requestBody.toMissionEntity())).willReturn(expectedUpdatedMission)
-    given(this.updateMission.execute(any())).willAnswer {
-      println("=======MISSION=============")
-      println("request as text")
-      println(objectMapper.writeValueAsString(requestBody))
-      println("requestBody.toMissionEntity")
-      println(requestBody.toMissionEntity())
-      println("function called with")
-      println(it)
-      // Error parsing dates in tests
-      // 2022-01-15T04:50:09Z[UTC] (it) instead of 2022-01-15T04:50:09Z (requestBody.toMissionEntity())
-      print("====================")
-       return@willAnswer expectedUpdatedMission
-     }
+    given(this.updateMission.execute(mission = requestBody.toMissionEntity())).willReturn(expectedUpdatedMission)
     // When
     mockMvc.perform(
-      put("/bff/v1/missions/0")
+      put("/bff/v1/missions/14")
         .content(objectMapper.writeValueAsString(requestBody))
         .contentType(MediaType.APPLICATION_JSON)
     )
       // Then
       .andExpect(status().isOk)
+      .andExpect(jsonPath("$.observations", equalTo(expectedUpdatedMission.observations)))
   }
 }

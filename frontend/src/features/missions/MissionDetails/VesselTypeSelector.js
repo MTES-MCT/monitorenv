@@ -22,23 +22,28 @@ const DEFAULT_SELECT_PICKER_MENU_STYLE = {
 }
 
 export const VesselTypeSelector = ({infractionPath, currentActionIndex, ...props}) => {
-  const { values: { actions } } = useFormikContext();
+  const { values: { envActions } } = useFormikContext();
   const [vesselTypeField, , vesselTypeHelpers] = useField(`${infractionPath}.vesselType`);
   const vesselTypeSelectorRef = useRef()
   const vesselTypeFieldList = Object.values(vesselTypeEnum)
-  const vehicleType = actions[currentActionIndex]?.vehicleType
+  const vehicleType = envActions[currentActionIndex]?.vehicleType
 
   useEffect(()=> {
     if ((vehicleType !== vehicleTypeEnum.VESSEL.code)
       && (vesselTypeField.value !== '')) {
         vesselTypeHelpers.setValue('')
     }
+    if ((vehicleType === vehicleTypeEnum.VESSEL.code)
+      && (vesselTypeField.value === '')) {
+        vesselTypeHelpers.setValue(vesselTypeEnum.FISHING.code)
+    }
   }, [currentActionIndex, vehicleType, vesselTypeHelpers, vesselTypeField.value])
 
   return (
     <SelectorWrapper ref={vesselTypeSelectorRef}>
-      <Form.ControlLabel htmlFor="vesselTypeField">Type de navire : </Form.ControlLabel>
-      <SelectPicker 
+      <Form.ControlLabel htmlFor="vesselTypeField">Type de navire</Form.ControlLabel>
+      <SelectPicker
+        cleanable={false}
         disabled={vehicleType !== vehicleTypeEnum.VESSEL.code}
         style={DEFAULT_SELECT_PICKER_STYLE}
         menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}

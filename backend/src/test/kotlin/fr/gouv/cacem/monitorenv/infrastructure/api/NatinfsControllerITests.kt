@@ -47,7 +47,7 @@ class NatinfsControllerITests {
     given(this.getNatinfs.execute()).willReturn(listOf(natinf))
 
     // When
-    mockMvc.perform(get("/bff/v1/infractions"))
+    mockMvc.perform(get("/bff/v1/natinfs"))
       // Then
       .andExpect(status().isOk)
       .andExpect(jsonPath("$[0].id", equalTo(natinf.id)))

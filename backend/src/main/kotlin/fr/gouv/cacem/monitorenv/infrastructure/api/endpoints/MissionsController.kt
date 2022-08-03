@@ -68,6 +68,9 @@ class MissionsController(
     @RequestBody
     updateMissionDataInput: CreateOrUpdateMissionDataInput
   ): MissionDataOutput {
+    if(missionId !== updateMissionDataInput.id) {
+      throw java.lang.IllegalArgumentException("missionId doesn't match with request param")
+    }
     return updateMission.execute(
       mission = updateMissionDataInput.toMissionEntity()
     ).let {

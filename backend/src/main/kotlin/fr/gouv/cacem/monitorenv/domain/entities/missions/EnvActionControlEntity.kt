@@ -1,17 +1,21 @@
 package fr.gouv.cacem.monitorenv.domain.entities.missions
-import org.locationtech.jts.geom.MultiPoint
-import java.time.ZonedDateTime
 
-data class ActionEntity (
-  val id: String,
-  val actionType: ActionTypeEnum,
+import java.time.ZonedDateTime
+import java.util.*
+
+data class EnvActionControlEntity(
+  override val id: UUID,
+  override val actionStartDatetimeUtc: ZonedDateTime? = null,
   val actionTheme: String? = null,
   val actionSubTheme: String? = null,
   val protectedSpecies: List<String>? = listOf(),
-  val actionStartDatetimeUtc: ZonedDateTime? = null,
   val actionNumberOfControls: Int? = null,
   val actionTargetType: String? = null,
   val vehicleType: String? = null,
-  val geom: MultiPoint? = null,
+// override val actionTargetType: ActionTargetTypeEnum? = null,
+// override val vehicleType: VehicleTypeEnum? = null,
   val infractions: List<InfractionEntity>? = listOf()
+): EnvActionEntity(
+  id = id,
+  actionType = ActionTypeEnum.CONTROL,
 )

@@ -1,15 +1,15 @@
 import React from 'react'
 import styled from 'styled-components'
-import {  useField } from 'formik';
+import {  useField } from 'formik'
 
 
 import { COLORS } from '../../../constants/constants'
 import { EditButton, DeleteButton } from '../../commonStyles/Buttons.style'
-import { formalNoticeEnum, infractionTypeEnum } from '../../../domain/entities/missions';
+import { vehicleTypeEnum, formalNoticeEnum, infractionTypeEnum, vesselTypeEnum } from '../../../domain/entities/missions'
 
-export const InfractionCard = ({ infractionPath,  setCurrentInfractionIndex, removeInfraction }) => {
-
-  const [vehicle] = useField(`${infractionPath}.vehicle`)
+export const InfractionCard = ({ currentActionIndex, infractionPath,  setCurrentInfractionIndex, removeInfraction }) => {
+  const [vehicleTypeField] = useField(`actions.${currentActionIndex}.vehicleType`)
+  const [vesselType] = useField(`${infractionPath}.vesselType`)
   const [registrationNumber] = useField(`${infractionPath}.registrationNumber`)
   const [infractionType] = useField(`${infractionPath}.infractionType`)
   const [formalNotice] = useField(`${infractionPath}.formalNotice`)
@@ -18,7 +18,7 @@ export const InfractionCard = ({ infractionPath,  setCurrentInfractionIndex, rem
   return (
     <Wrapper>
       <Summary>
-        <VehicleType>{vehicle?.value || 'Véhicule Non Renseigné'}</VehicleType>
+        <VehicleType>{vehicleTypeEnum[vehicleTypeField?.value]?.libelle || 'Non Renseigné'} {vesselTypeEnum[vesselType?.value]?.libelle || 'Non Renseigné'}</VehicleType>
         <RegistrationNumber>({registrationNumber?.value || 'sans immatriculation'})</RegistrationNumber>
         <SummaryDetails>
           <Info>

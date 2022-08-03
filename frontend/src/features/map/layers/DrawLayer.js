@@ -22,14 +22,6 @@ export const DrawLayer = ({ map }) => {
   const dispatch = useDispatch()
   // vectorSource & vectorLayer are holding current features (for visualisation + edition)
   const vectorSourceRef = useRef(null)
-  // drawVectorSource & drawVectorLayer are used to draw features, but features are dismissed after being drawned
-  const drawVectorSourceRef = useRef(null)
-  const GetDrawVectorSource = () => {
-    if (drawVectorSourceRef.current === null) {
-      drawVectorSourceRef.current = new VectorSource({ wrapX: false })
-    }
-    return drawVectorSourceRef.current
-  }
   const GetVectorSource = () => {
     if (vectorSourceRef.current === null) {
       vectorSourceRef.current = new VectorSource({
@@ -42,10 +34,17 @@ export const DrawLayer = ({ map }) => {
     }
     return vectorSourceRef.current
   }
+  // drawVectorSource & drawVectorLayer are used to draw features, but features are dismissed after being drawned
+  const drawVectorSourceRef = useRef(null)
+
+  const GetDrawVectorSource = () => {
+    if (drawVectorSourceRef.current === null) {
+      drawVectorSourceRef.current = new VectorSource({ wrapX: false })
+    }
+    return drawVectorSourceRef.current
+  }
 
   const vectorLayerRef = useRef(null)
-  
-
   useEffect(() => {
     const GetVectorLayer = () => {
       if (vectorLayerRef.current === null) {
@@ -61,8 +60,6 @@ export const DrawLayer = ({ map }) => {
       }
       return vectorLayerRef.current
     }
-
-    
 
     if (map) {
       map.getLayers().push(GetVectorLayer())

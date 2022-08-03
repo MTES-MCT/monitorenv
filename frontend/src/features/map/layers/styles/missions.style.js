@@ -5,7 +5,7 @@ import { Icon, Style } from 'ol/style'
 import { getCenter } from 'ol/extent'
 
 import { COLORS } from '../../../../constants/constants'
-import { ActionTypeEnum } from '../../../../domain/entities/missions'
+import { actionTypeEnum } from '../../../../domain/entities/missions'
 
 
 
@@ -45,7 +45,7 @@ export const missionWithCentroidStyleFn = (feature) => {
 
 export const selectedMissionStyleFn = (feature) => {
   const actionType = feature.get('actionType')
-  if (actionType === ActionTypeEnum.CONTROL.code) {
+  if (actionType === actionTypeEnum.CONTROL.code) {
     return new Style({
       image: new Icon({
         src: 'controle_18px.svg',

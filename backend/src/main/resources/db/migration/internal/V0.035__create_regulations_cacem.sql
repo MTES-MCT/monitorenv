@@ -47,9 +47,6 @@ CREATE TABLE public.regulations_cacem (
     signataire character varying
 );
 
-
-ALTER TABLE public.regulations_cacem OWNER TO postgres;
-
 --
 -- Name: regulations_cacem regulations_cacem_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --

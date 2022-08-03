@@ -3,22 +3,22 @@ import styled from 'styled-components'
 import { Dropdown } from 'rsuite';
 
 import { actionFactory } from '../Missions.helpers'
-import { ActionTypeEnum } from '../../../domain/entities/missions'
+import { actionTypeEnum } from '../../../domain/entities/missions'
 import { ActionCard } from './ActionCard'
 
 import { COLORS } from '../../../constants/constants';
 
 export const ActionsForm = ({  push, remove, form, currentActionIndex, setCurrentActionIndex }) =>  {
-  const handleAddSurveillanceAction = () => push(actionFactory({actionType: ActionTypeEnum.SURVEILLANCE.code}))
-  const handleAddControlAction = () => push(actionFactory({actionType: ActionTypeEnum.CONTROL.code}))
-  const handleAddNoteAction = () => push(actionFactory({actionType: ActionTypeEnum.NOTE.code}))
+  const handleAddSurveillanceAction = () => push(actionFactory({actionType: actionTypeEnum.SURVEILLANCE.code}))
+  const handleAddControlAction = () => push(actionFactory({actionType: actionTypeEnum.CONTROL.code}))
+  const handleAddNoteAction = () => push(actionFactory({actionType: actionTypeEnum.NOTE.code}))
   const handleSelectAction = index => () => setCurrentActionIndex(index)
   const handleRemoveAction = index => (e) => {
     e.stopPropagation()
     setCurrentActionIndex(null)
     remove(index)
   }
-  const handleDuplicateAction = index => () => push(actionFactory(form.values.actions[index]))
+  const handleDuplicateAction = index => () => push(actionFactory(form.values.envActions[index]))
 
   return (<FormWrapper>
     <TitleWrapper>
@@ -38,8 +38,8 @@ export const ActionsForm = ({  push, remove, form, currentActionIndex, setCurren
       </AddActionButtons>
     </TitleWrapper>
     <ActionsTimeline>
-    {form?.values.actions.length > 0 ? 
-      form.values.actions.map((action, index) => {
+    {form?.values.envActions?.length > 0 ? 
+      form.values.envActions.map((action, index) => {
         return (
         <ActionCard 
           key={index} 

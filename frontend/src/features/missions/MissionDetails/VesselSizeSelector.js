@@ -21,23 +21,28 @@ const DEFAULT_SELECT_PICKER_MENU_STYLE = {
 }
 
 export const VesselSizeSelector = ({infractionPath, currentActionIndex, ...props}) => {
-  const { values: { actions } } = useFormikContext();
-  const [vesselSizeField, , vesselSizeHelpers] = useField(`${infractionPath}.size`);
+  const { values: { envActions } } = useFormikContext();
+  const [vesselSizeField, , vesselSizeHelpers] = useField(`${infractionPath}.vesselSize`);
   const vesselSizeSelectorRef = useRef()
   const vesselSizeFieldList = Object.values(vesselSizeEnum)
-  const vehicleType = actions[currentActionIndex]?.vehicleType
+  const vehicleType = envActions[currentActionIndex]?.vehicleType
 
   useEffect(()=> {
     if ((vehicleType !== vehicleTypeEnum.VESSEL.code)
       && (vesselSizeField.value !== '')) {
         vesselSizeHelpers.setValue('')
     }
+    if ((vehicleType === vehicleTypeEnum.VESSEL.code)
+      && (vesselSizeField.value === '')) {
+        vesselSizeHelpers.setValue(vesselSizeEnum.FROM_12_TO_24m.code)
+    }
   }, [currentActionIndex, vehicleType, vesselSizeHelpers, vesselSizeField.value])
 
   return (
     <SelectorWrapper ref={vesselSizeSelectorRef}>
-      <Form.ControlLabel htmlFor="vesselSizeField">Taille du navire: </Form.ControlLabel>
-      <SelectPicker 
+      <Form.ControlLabel htmlFor="vesselSizeField">Taille du navire</Form.ControlLabel>
+      <SelectPicker
+        cleanable={false}
         disabled={vehicleType !== vehicleTypeEnum.VESSEL.code}
         style={DEFAULT_SELECT_PICKER_STYLE}
         menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}

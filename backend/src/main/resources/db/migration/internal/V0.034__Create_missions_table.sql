@@ -1,5 +1,4 @@
 -- Add missions table
--- CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE IF NOT EXISTS public.missions (
   id serial PRIMARY KEY,
@@ -15,8 +14,6 @@ CREATE TABLE IF NOT EXISTS public.missions (
   input_end_datetime_utc TIMESTAMP,
   actions jsonb
 );
-
-
 
 CREATE INDEX ON public.missions (id);
 CREATE INDEX ON public.missions (input_start_datetime_utc DESC);

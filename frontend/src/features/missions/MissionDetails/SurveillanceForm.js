@@ -8,7 +8,7 @@ import { FormikDatePicker, placeholderDateTimePicker } from '../../commonCompone
 import { FormikTextarea } from '../../commonComponents/CustomFormikFields/FormikTextarea'
 import { COLORS } from '../../../constants/constants'
 import { ControlTopicsCascader } from './ControlTopicsCascader'
-import { ActionTypeEnum } from '../../../domain/entities/missions';
+import { actionTypeEnum } from '../../../domain/entities/missions';
 
 
 export const SurveillanceForm = ({ remove, currentActionIndex, setCurrentActionIndex }) => {
@@ -21,7 +21,7 @@ export const SurveillanceForm = ({ remove, currentActionIndex, setCurrentActionI
   
   return (<>
     <Header>
-      <Title>{ActionTypeEnum[actionTypeField.value]?.libelle}</Title>
+      <Title>{actionTypeEnum[actionTypeField.value]?.libelle}</Title>
       <Delete type="button" onClick={handleRemoveAction}><TrashIcon />Supprimer</Delete>
     </Header>
 

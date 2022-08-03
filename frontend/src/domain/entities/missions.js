@@ -1,4 +1,4 @@
-export const ActionTypeEnum = {
+export const actionTypeEnum = {
   SURVEILLANCE: { 
     code: 'SURVEILLANCE',
     libelle: 'Surveillance'
@@ -173,6 +173,10 @@ export const missionStatusEnum = {
     code: 'PENDING',
     libelle: 'en cours'
   },
+  ENDED: {
+    code: 'ENDED',
+    libelle: 'terminée'
+  },
   CLOSED: {
     code: 'CLOSED',
     libelle: 'cloturée'
@@ -180,3 +184,22 @@ export const missionStatusEnum = {
 }
 
 export const THEME_REQUIRE_PROTECTED_SPECIES = [17]
+
+export const relevantCourtEnum = {
+  LOCAL_COURT: {
+    code: 'LOCAL_COURT',
+    libelle: 'Parquet Local'
+  },
+  MARITIME_COURT: {
+    code: 'MARITIME_COURT',
+    libelle: 'Tribunal maritime'
+  },
+  JULIS: {
+    code: 'JULIS',
+    libelle: 'Juridictions littorales spécialisées (JULIS)'
+  },
+  PRE: {
+    code: 'PRE',
+    libelle: 'Pôle Régional Environnemental (PRE)'
+  }
+}

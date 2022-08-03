@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 
-import { formalNoticeEnum, missionStatusEnum, missionTypeEnum } from "../../domain/entities/missions"
+import { actionTargetTypeEnum, formalNoticeEnum, missionStatusEnum, missionTypeEnum } from "../../domain/entities/missions"
 
 export const infractionFactory = ({id, ...infraction} = {}) => {
   return {
@@ -8,9 +8,10 @@ export const infractionFactory = ({id, ...infraction} = {}) => {
     natinf: [],
     observations: '',
     registrationNumber: '',
+    companyName: '',
     vesselType: '',
-    size: '',
-    owner: '',
+    vesselSize: '',
+    controlledPersonIdentity: '',
     infractionType: '',
     formalNotice: formalNoticeEnum.NO.code,
     relevantCourt: '',
@@ -27,7 +28,7 @@ export const actionFactory = ({id, ...action} = {}) => {
     protectedSpecies: [],
     actionStartDatetimeUtc: new Date(),
     actionNumberOfControls: '',
-    actionTargetType: '',
+    actionTargetType: actionTargetTypeEnum.VEHICLE.code,
     vehicleType: '',
     geom: null,
     infractions: [],
@@ -38,16 +39,16 @@ export const actionFactory = ({id, ...action} = {}) => {
 export const missionFactory = (mission) => {
   return {
     missionType: missionTypeEnum.SEA.code,
+    missionNature: [],
     unit: '',
     administration: '',
     open_by: '',
     closed_by: '',
     observations: '',
-    theme: '',
     geom: null,
     inputStartDatetimeUtc: '',
     inputEndDatetimeUtc: '',
-    actions: [],
+    envActions: [],
     resources: [],
     ...mission
   }
