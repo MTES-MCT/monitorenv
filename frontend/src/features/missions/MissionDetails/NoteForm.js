@@ -25,7 +25,7 @@ export const NoteForm = ({ remove, currentActionIndex, setCurrentActionIndex }) 
     
     <Form.Group>
       <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.observations`}>Observations </Form.ControlLabel>
-      <FormikTextarea name={`envActions.${currentActionIndex}.observations`} />
+      <FormikTextarea classPrefix='input ghost' name={`envActions.${currentActionIndex}.observations`} />
     </Form.Group>
  
       

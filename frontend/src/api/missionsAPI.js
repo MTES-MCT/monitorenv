@@ -5,7 +5,7 @@ export const missionsAPI = createApi({
   reducerPath: 'missions',
   endpoints: (build) => ({
     getMission: build.query({
-      query: ({id}) => `mission/${id}`
+      query: ({id}) => `missions/${id}`
     }),
     getMissions: build.query({
       query: () => `missions`,
@@ -64,8 +64,15 @@ export const missionsAPI = createApi({
 
         }
       },
-    })
+    }),
+    deleteMission: build.mutation({
+      query: ({id}) => ({
+        url: `missions/${id}`,
+        method: 'DELETE'
+      }),
+      invalidatesTags: ['Missions'],
+    }),
   }),
 })
 
-export const { useCreateMissionMutation, useGetMissionsQuery, useUpdateMissionMutation } = missionsAPI
+export const { useCreateMissionMutation, useGetMissionsQuery, useUpdateMissionMutation, useDeleteMissionMutation } = missionsAPI

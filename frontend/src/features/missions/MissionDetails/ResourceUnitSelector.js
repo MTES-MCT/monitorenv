@@ -1,15 +1,15 @@
 import React, { useRef } from 'react'
 import _ from 'lodash'
 import styled from 'styled-components'
-import { Form, SelectPicker, TagPicker } from 'rsuite'
+import { Form, SelectPicker, TagPicker, IconButton } from 'rsuite'
 import {  useField } from 'formik'
 
-
 import { useGetControlResourcesQuery } from '../../../api/controlResourcesAPI'
+import { ReactComponent as DeleteSVG } from '../../icons/Suppression_clair.svg'
 import { COLORS } from '../../../constants/constants'
 
 const DEFAULT_SELECT_PICKER_STYLE = {
-  width: 130,
+  width: 200,
   margin: '0',
   borderColor: COLORS.lightGray,
   boxSizing: 'border-box',
@@ -17,16 +17,16 @@ const DEFAULT_SELECT_PICKER_STYLE = {
 }
 
 const DEFAULT_SELECT_PICKER_MENU_STYLE = { 
-  width: 190,
+  width: 200,
   overflowY: 'hidden',
   textOverflow: 'ellipsis'
 }
 
 
-export const ControlResourcesSelector = ({ ...props }) => {
-  const [administrationField, , administrationHelpers] = useField("administration");
-  const [unitField, , unitHelpers] = useField("unit");
-  const [resourcesField, , resourcesHelpers] = useField("resources");
+export const ResourceUnitSelector = ({ resourceUnitPath, removeResourceUnit, resourceUnitIndex, ...props }) => {
+  const [administrationField, , administrationHelpers] = useField(`resourceUnits.${resourceUnitIndex}.administration`);
+  const [unitField, , unitHelpers] = useField(`resourceUnits.${resourceUnitIndex}.unit`);
+  const [resourcesField, , resourcesHelpers] = useField(`resourceUnits.${resourceUnitIndex}.resources`);
 
   const administrationSelectorRef = useRef()
   const unitSelectorRef = useRef()
@@ -59,10 +59,13 @@ export const ControlResourcesSelector = ({ ...props }) => {
   }
   return (
     <SelectorWrapper >
+      <DeleteButton size='sm' icon={<DeleteIcon/>} onClick={removeResourceUnit}></DeleteButton>
       <Form.Group>
         <FormColumn ref={administrationSelectorRef}>
           <Form.ControlLabel htmlFor="administration">Administration : </Form.ControlLabel>
           <SelectPicker 
+            className='ghost'
+            size='sm'
             style={DEFAULT_SELECT_PICKER_STYLE}
             menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
             searchable={false}
@@ -77,6 +80,8 @@ export const ControlResourcesSelector = ({ ...props }) => {
         <FormColumn ref={unitSelectorRef}>
           <Form.ControlLabel htmlFor="unit">Unité : </Form.ControlLabel>
           <SelectPicker 
+            className='ghost'
+            size='sm'
             style={DEFAULT_SELECT_PICKER_STYLE}
             menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
             searchable={false}
@@ -95,6 +100,8 @@ export const ControlResourcesSelector = ({ ...props }) => {
           <Form.ControlLabel htmlFor="resources">Moyens : </Form.ControlLabel>
           <TagPicker
             block
+            size='sm'
+            className='ghost'
             cleanable={false}
             container={()=>resourcesRef.current}
             value={resourcesField.value}
@@ -111,6 +118,10 @@ export const ControlResourcesSelector = ({ ...props }) => {
 }
 
 const SelectorWrapper = styled.div`
+  background-color: ${COLORS.gainsboro};
+  width: 100%;
+  padding: 2px;
+  margin-bottom: 4px;
   .rs-picker-select-menu {
     position: relative;
     margin-top: -50px;
@@ -119,7 +130,6 @@ const SelectorWrapper = styled.div`
 
 const FormColumn = styled.div`
   display: inline-block;
-  width: 240px;
   vertical-align: top;
 `
 const RefWrapper = styled.div`
@@ -127,4 +137,10 @@ const RefWrapper = styled.div`
     position: relative;
     margin-top: -60px;
   }
+`
+const DeleteIcon = styled(DeleteSVG)`
+  color: ${COLORS.maximumRed};
+`
+const DeleteButton = styled(IconButton)`
+  float: right;
 `

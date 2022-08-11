@@ -1,13 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useField } from 'formik'
+import { IconButton } from 'rsuite'
 
 import { vehicleTypeEnum, formalNoticeEnum, infractionTypeEnum, vesselTypeEnum } from '../../../domain/entities/missions'
 import { ReactComponent as EditIconSVG } from '../../icons/Bouton_edition.svg'
 import { ReactComponent as DeleteSVG } from '../../icons/Suppression_clair.svg'
 
 import { COLORS } from '../../../constants/constants'
-import { IconButton } from 'rsuite'
 
 export const InfractionCard = ({ currentActionIndex, infractionPath,  setCurrentInfractionIndex, removeInfraction }) => {
   const [vehicleTypeField] = useField(`actions.${currentActionIndex}.vehicleType`)

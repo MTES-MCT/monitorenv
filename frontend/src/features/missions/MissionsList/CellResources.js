@@ -3,6 +3,13 @@ import { Table } from 'rsuite'
 
 export const CellResources = ({rowData, dataKey, ...props}) => {
   return <Table.Cell {...props}>
-    {`${rowData.unit} (${rowData.administration || '-'})`}
+    {
+      rowData.resourceUnits?.map(resourceUnit => {
+        return (
+          `${resourceUnit.unit} (${resourceUnit.administration || '-'})`
+        )
+      })
+    }
+    
   </Table.Cell>
 }

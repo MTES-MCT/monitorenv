@@ -15,7 +15,7 @@ class JpaMissionRepository(private val dbMissionRepository: IDBMissionRepository
 ) : IMissionRepository {
 
   override fun findMissions(): List<MissionEntity> {
-    return dbMissionRepository.findAllByOrderByIdAsc().map { it.toMissionEntity(mapper) }
+    return dbMissionRepository.findAllByOrderByInputStartDatetimeUtcDesc().map { it.toMissionEntity(mapper) }
   }
 
   override fun findMissionById(missionId: Int): MissionEntity {
@@ -30,5 +30,10 @@ class JpaMissionRepository(private val dbMissionRepository: IDBMissionRepository
   @Transactional
   override fun create(mission: MissionEntity): MissionEntity {
     return dbMissionRepository.save(MissionModel.fromMissionEntity(mission,mapper)).toMissionEntity(mapper)
+  }
+
+  @Transactional
+  override fun delete(missionId: Int) {
+    dbMissionRepository.deleteById(missionId)
   }
 }

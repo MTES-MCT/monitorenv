@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import {  useField } from 'formik';
 import _ from 'lodash';
-import { Button } from 'rsuite';
+import { Button, Form } from 'rsuite';
 
 import { addControlPositions } from '../../../domain/use_cases/missions/missionAndControlLocalisation';
 
@@ -20,12 +20,15 @@ export const ControlPositions = ({name}) => {
   
   return (
     <ControlPositionsWrapper>
-    <Button appearance='ghost' size='sm' block onClick={handleAddControlPositions}>
-        + Ajouter un point de contrôle
-    </Button>
-    <ZoneList>
-      {_.map(value?.coordinates, (v,i)=><Zone key={i}>Point dessiné {i+1}</Zone>)}
-    </ZoneList>
+      <Form.ControlLabel>
+        Lieu du contrôle
+      </Form.ControlLabel>
+      <Button appearance='ghost' size='sm' block onClick={handleAddControlPositions}>
+          + Ajouter un point de contrôle
+      </Button>
+      <ZoneList>
+        {_.map(value?.coordinates, (v,i)=><Zone key={i}>Point dessiné {i+1}</Zone>)}
+      </ZoneList>
     </ControlPositionsWrapper>
   )
 }

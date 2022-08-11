@@ -30,12 +30,12 @@ export const SurveillanceForm = ({ remove, currentActionIndex, setCurrentActionI
     </Header>
 
     <Form.Group>
-      <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionTheme`}>Thématique du contrôle</Form.ControlLabel>
+      <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionTheme`}>Thématique</Form.ControlLabel>
       <ControlTopicsCascader name={`envActions.${currentActionIndex}.actionTheme`} />
     </Form.Group>
     
     <Form.Group>
-      <Form.ControlLabel htmlFor={`envActions[${currentActionIndex}].actionStartDatetimeUtc`} >Date et heure du début du contrôle </Form.ControlLabel>
+      <Form.ControlLabel htmlFor={`envActions[${currentActionIndex}].actionStartDatetimeUtc`} >Date et heure de début </Form.ControlLabel>
       <FormikDatePicker name={`envActions[${currentActionIndex}].actionStartDatetimeUtc`} placeholder={placeholderDateTimePicker} format="dd MMM yyyy, HH:mm" oneTap/>
     </Form.Group>
    
@@ -46,7 +46,9 @@ export const SurveillanceForm = ({ remove, currentActionIndex, setCurrentActionI
     
     <Form.Group>
       <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.observations`}>Observations </Form.ControlLabel>
-      <FormikTextarea name={`envActions.${currentActionIndex}.observations`} />
+      <FormikTextarea
+        classPrefix='input ghost'
+       name={`envActions.${currentActionIndex}.observations`} />
     </Form.Group>
  
       

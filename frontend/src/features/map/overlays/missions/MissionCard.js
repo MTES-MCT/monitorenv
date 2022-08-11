@@ -5,7 +5,7 @@ import { format, isValid } from 'date-fns'
 import { fr } from 'date-fns/locale'
 import { IconButton } from 'rsuite'
 
-import { editMissionFromMap } from '../../../../domain/use_cases/missions/editMissionFromMap'
+import { editMission } from '../../../../domain/use_cases/missions/editMission'
 import { missionTypeEnum } from '../../../../domain/entities/missions'
 import { clearSelectedMissionOnMap } from '../../../../domain/use_cases/missions/selectMissionOnMap'
 import { MissionStatusLabel } from '../../../commonStyles/MissionStatusLabel'
@@ -20,15 +20,14 @@ export const MissionCard = ({feature, selected}) => {
     missionId,
     inputStartDatetimeUtc,
     missionType,
-    unit,
-    administration,
     numberOfActions,
     missionStatus,
+    resourceUnits
   } = feature.getProperties()
   const parsedInputStartDatetimeUtc = new Date(inputStartDatetimeUtc)
 
   const handleEditMission = useCallback(() => {
-    dispatch(editMissionFromMap(missionId))
+    dispatch(editMission(missionId))
   }, [dispatch, missionId])
 
   const handleCloseOverlay = useCallback(() => {
@@ -44,7 +43,9 @@ export const MissionCard = ({feature, selected}) => {
     </Col1>
     <Col2>
       <MissionType>Mission {missionTypeEnum[missionType]?.libelle}</MissionType>
-      <MissionReources>{administration} ({unit})</MissionReources>
+      <MissionReources>{resourceUnits?.map(resource => {
+        return `${resource.administration} (${resource.unit})`
+      })}</MissionReources>
       <Actions>{numberOfActions} actions réalisées</Actions>
       <MissionStatusLabel missionStatus={missionStatus}/>
       {selected && <IconButton 

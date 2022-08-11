@@ -54,6 +54,10 @@
   border-radius: 0;
 }
 
+.rs-input.ghost {
+  background-color: var(--white);
+}
+
 /* button */
 .rs-btn {
   border-radius: 0;

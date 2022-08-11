@@ -1,38 +1,39 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { Formik, FieldArray } from 'formik';
 import { Form, Button, IconButton, ButtonToolbar } from 'rsuite'
-import { useGetMissionsQuery, useUpdateMissionMutation, useCreateMissionMutation } from '../../api/missionsAPI'
+
+import { useGetMissionsQuery, useUpdateMissionMutation, useCreateMissionMutation, useDeleteMissionMutation } from '../../api/missionsAPI'
 import { setSideWindowPath } from '../commonComponents/SideWindowRouter/SideWindowRouter.slice';
 import { sideWindowPaths } from '../../domain/entities/sideWindow';
+import { missionStatusEnum } from '../../domain/entities/missions';
 
 import { SideWindowHeader } from '../side_window/SideWindowHeader';
 import { ActionsForm } from './MissionDetails/ActionsForm'
 import { ActionForm } from './MissionDetails/ActionForm'
 import { GeneralInformationsForm } from './MissionDetails/GeneralInformationsForm';
+import { MissionValidationModal } from './MissionValidationModal';
 
 import { missionFactory } from './Missions.helpers'
 
 import { ReactComponent as SaveSVG } from '../icons/enregistrer_16px.svg'
-import { MissionValidationModal } from './MissionValidationModal';
+import { ReactComponent as DeleteSVG } from '../icons/Suppression_clair.svg'
 import { COLORS } from '../../constants/constants';
-
- 
-
-
 
 export const CreateOrEditMission = ({routeParams})  => {
   const dispatch = useDispatch()
   const [currentActionIndex, setCurrentActionIndex] = useState(null)
   const [errorOnSave, setErrorOnSave ] = useState(false)
+  const [errorOnDelete, setErrorOnDelete ] = useState(false)
   const [ confirmationModalIsOpen, setConfirmationModalIsOpen] = useState(false)  
 
   const handleSetCurrentActionIndex = (index) =>{
     setCurrentActionIndex(index)
   }
   
-  const id = parseInt(routeParams?.params?.id)
+  
+  const id = routeParams?.params?.id && parseInt(routeParams?.params?.id)
 
   const { missionToEdit } = useGetMissionsQuery(undefined, {
     selectFromResult: ({ data }) =>  ({
@@ -49,11 +50,15 @@ export const CreateOrEditMission = ({routeParams})  => {
     createMission,
     { isLoading: isLoadingCreateMission, },
   ] = useCreateMissionMutation()
+
+  const [
+    deleteMission
+  ] = useDeleteMissionMutation()
   
-  const newMission = missionFactory()
   
-  const mission = id === undefined ? newMission : missionToEdit
-  const upsertMission = id === undefined ?  createMission : updateMission
+  const mission = useMemo(()=> { return (id === undefined) ? missionFactory() : missionToEdit}, [id, missionToEdit])
+
+  const upsertMission = (id === undefined) ?  createMission : updateMission
 
 
   const handleSubmitForm = values => {
@@ -69,10 +74,20 @@ export const CreateOrEditMission = ({routeParams})  => {
     })
   }
 
-  
-
   const handleConfirmFormCancelation = () => {
     setConfirmationModalIsOpen(true)
+  }
+
+  const handleDelete = () => {
+    deleteMission({id}).then((response)=>{
+      const { error} = response
+      if (error) {
+        console.log(error)
+        setErrorOnDelete(true)
+      } else {
+        dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))
+      }
+    })
   }
   const handleCancelForm = ()=> {
     console.log('form canceled', handleConfirmFormCancelation)
@@ -85,7 +100,7 @@ export const CreateOrEditMission = ({routeParams})  => {
     <EditMissionWrapper data-cy={'editMissionWrapper'}>
       <MissionValidationModal open={confirmationModalIsOpen} onClose={handleCancelForm} />
       <SideWindowHeader 
-        title={`Edition de la mission n°${id}${isLoadingUpdateMission || isLoadingCreateMission ? ' - Enregistrement en cours' : ''}`} 
+        title={`Edition de la mission${isLoadingUpdateMission || isLoadingCreateMission ? ' - Enregistrement en cours' : ''}`} 
         />
       <Formik
         enableReinitialize={true}
@@ -101,14 +116,16 @@ export const CreateOrEditMission = ({routeParams})  => {
           closed_by: mission?.closed_by,
           inputStartDatetimeUtc: mission?.inputStartDatetimeUtc,
           inputEndDatetimeUtc: mission?.inputEndDatetimeUtc || '',
-          administration: mission?.administration,
-          unit: mission?.unit,
-          resources: mission?.resources,
+          resourceUnits: mission?.resourceUnits,
           envActions: mission?.envActions
         }}
         onSubmit={handleSubmitForm}
       >
         {(formikProps)=>{
+          const handleCloseMission = () => {
+            formikProps.setFieldValue('missionStatus', missionStatusEnum.CLOSED.code)
+            formikProps.handleSubmit()
+          }
           return (
             <Form onSubmit={formikProps.handleSubmit} onReset={formikProps.handleReset}>
               <Wrapper>
@@ -123,11 +140,36 @@ export const CreateOrEditMission = ({routeParams})  => {
                 </ThirdColumn>
               </Wrapper>
               
-              <FormActionsWrapper>
-                <Button onClick={handleCancel} type='button' size='sm'>Annuler</Button>
-                <IconButton appearance='ghost' type='submit' size='sm' icon={<SaveSVG className={"rs-icon"}/>}>Enregistrer</IconButton>
+              <Footer>
+                <FormActionsWrapper>
+                  {
+                    // id is undefined if creating a new mission
+                  id && (<IconButton 
+                        appearance='ghost'
+                        onClick={handleDelete}
+                        type='button'
+                        size='sm'
+                        icon={<DeleteIcon className={"rs-icon"}/>} 
+                      >
+                        Supprimer la mission
+                      </IconButton>)
+                  }
+                  <Separator/>
+                  <Button onClick={handleCancel} type='button' size='sm'>Annuler</Button>
+                  <IconButton appearance='ghost' type='submit' size='sm' icon={<SaveSVG className={"rs-icon"}/>}>Enregistrer</IconButton>
+                  <IconButton 
+                    disabled={!(mission.missionStatus === missionStatusEnum.ENDED.code)} 
+                    appearance='primary' 
+                    type='button' 
+                    size='sm' 
+                    onClick={handleCloseMission}
+                    icon={<SaveSVG className={"rs-icon"}/>}>
+                      Enregistrer et clôturer
+                    </IconButton>
+                </FormActionsWrapper>
                 {errorOnSave && <ErrorOnSave>Oups... Erreur au moment de la sauvegarde</ErrorOnSave>}
-              </FormActionsWrapper>
+                {errorOnDelete && <ErrorOnDelete>Oups... Erreur au moment de la suppression</ErrorOnDelete>}
+              </Footer>
             </Form>
           )
         }}
@@ -161,11 +203,21 @@ const ThirdColumn = styled.div`
 
 const ErrorOnSave = styled.div`
   backgound: ${COLORS.orange};
-
-`
-
-const FormActionsWrapper = styled(ButtonToolbar)`
-  border-top: 1px solid ${COLORS.lightGray};
   text-align: right;
-  padding: 18px;
+`
+const ErrorOnDelete = styled.div`
+  backgound: ${COLORS.orange};
+`
+const Separator = styled.div`
+  flex: 1;
+`
+const DeleteIcon = styled(DeleteSVG)`
+  color: ${COLORS.maximumRed};
+`
+const Footer = styled.div`
+border-top: 1px solid ${COLORS.lightGray};
+padding: 18px;
+`
+const FormActionsWrapper = styled(ButtonToolbar)`
+  display: flex;
 `

@@ -4,6 +4,7 @@ import thunk from 'redux-thunk'
 import map from './Map'
 import global from './Global'
 import missionState from './MissionsState'
+import { missionFiltersReducer } from './MissionFilters'
 import { regulatorySlicePersistedReducer } from './Regulatory'
 import { regulatoryMetadataSliceReducer } from './RegulatoryMetadata'
 import regulatoryLayerSearch from '../../features/layersSelector/regulatory/search/RegulatoryLayerSearch.slice'
@@ -28,6 +29,7 @@ export const homeReducers = combineReducers({
   map,
   global,
   missionState,
+  missionFilters: missionFiltersReducer,
   administrative: administrativeSlicePersistedReducer,
   regulatory: regulatorySlicePersistedReducer,
   regulatoryMetadata: regulatoryMetadataSliceReducer,

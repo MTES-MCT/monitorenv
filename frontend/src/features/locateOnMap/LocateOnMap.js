@@ -46,7 +46,6 @@ export const LocateOnMap = () => {
       <InputWrapper>
         <SearchBoxInput
           data-cy={'regulatory-search-input'}
-          ghost
           placeholder={'localiser la carte sur un lieu'}
           type="text"
           value={searchedLocation}
@@ -88,6 +87,7 @@ const InputWrapper = styled.div`
 const SearchBoxInput = styled(Input)`
   display: inline-block;
   background-color: white;
+  padding-left: 4px;
   width: ${props => props.value?.length > 0 ? '300px' :'200px'};
   transition: all 0.5s;
   :focus {

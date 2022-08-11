@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components';
 import { Form } from 'rsuite'
+import { FieldArray } from 'formik';
 
 import { missionNatureEnum, missionTypeEnum } from '../../../domain/entities/missions';
 
@@ -9,11 +10,10 @@ import { FormikRadioGroup } from '../../commonComponents/CustomFormikFields/Form
 import { FormikTextarea } from '../../commonComponents/CustomFormikFields/FormikTextarea';
 import { FormikInput } from '../../commonComponents/CustomFormikFields/FormikInput';
 
-import { ControlResourcesSelector } from './ControlResourcesSelector';
-
 import { COLORS } from '../../../constants/constants';
 import { MissionZone } from './MissionZone';
 import { FormikCheckboxGroup } from '../../commonComponents/CustomFormikFields/FormikCheckboxGroup';
+import { ResourceUnitsForm } from './ResourceUnitsForm';
 
 
 export const GeneralInformationsForm = () => {
@@ -41,7 +41,12 @@ export const GeneralInformationsForm = () => {
         <FormikCheckboxGroup inline name="missionNature" checkBoxValues={missionNatureEnum} />
       </Form.Group>
 
-      <ControlResourcesSelector />
+      <FieldArray 
+        name={`resourceUnits`} 
+        render={(props)=>(<ResourceUnitsForm 
+        {...props} 
+         />
+      )} />
 
       <MissionZone name="geom" />
       <Form.Group>
@@ -61,7 +66,8 @@ export const GeneralInformationsForm = () => {
 
 const FormWrapper = styled.div`
   padding: 32px;
-  color: ${COLORS.slateGray}
+  color: ${COLORS.slateGray};
+  flex: 1;
 `
 
 const Title = styled.h2`

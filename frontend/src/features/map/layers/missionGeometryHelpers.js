@@ -25,8 +25,7 @@ export const getMissionCentroid = (mission, layername) => {
     inputStartDatetimeUtc: mission.inputStartDatetimeUtc, 
     inputEndDatetimeUtc: mission.inputEndDatetimeUtc,
     missionType: mission.missionType,
-    unit: mission.unit,
-    administration: mission.administration,
+    resourceUnits: mission.resourceUnits,
     numberOfActions: mission.actions?.length || 0,
     missionStatus: mission.missionStatus
   })
@@ -48,8 +47,7 @@ export const getMissionZoneFeature = (mission, layername) => {
     inputStartDatetimeUtc: mission.inputStartDatetimeUtc, 
     inputEndDatetimeUtc: mission.inputEndDatetimeUtc,
     missionType: mission.missionType,
-    unit: mission.unit,
-    administration: mission.administration,
+    resourceUnits: mission.resourceUnits,
     numberOfActions: mission.actions?.length || 0,
     missionStatus: mission.missionStatus
   })

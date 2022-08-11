@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux'
+import _ from 'lodash'
 
 import { useGetMissionsQuery } from '../../api/missionsAPI'
 import { setSideWindowPath } from '../commonComponents/SideWindowRouter/SideWindowRouter.slice';
@@ -8,7 +9,7 @@ import { sideWindowPaths } from '../../domain/entities/sideWindow';
 
 import { SideWindowHeader } from '../side_window/SideWindowHeader';
 import { MissionsTable } from './MissionsList/MissionsTable';
-import { MissionsFilter } from './MissionsList/MissionsFilter';
+import { MissionsTableFilters } from './MissionsList/MissionsTableFilters';
 import { PlusIcon } from '../commonStyles/icons/PlusIcon';
 import { COLORS } from '../../constants/constants';
 
@@ -16,7 +17,15 @@ export const Missions = () => {
   const dispatch = useDispatch()
   const { data, isError, isLoading } = useGetMissionsQuery()
 
-
+ 
+  const {missionStatusFilter, missionNatureFilter, missionTypeFilter } = useSelector(state => state.missionFilters)
+  const filteredData = useMemo(()=> {
+    return data?.filter(r=>{
+       return( _.isEmpty(missionStatusFilter) ||  missionStatusFilter.includes(r.missionStatus))
+       && (_.isEmpty(missionNatureFilter) ||  _.intersection(missionNatureFilter,r.missionNature).length > 0)
+       && (_.isEmpty(missionTypeFilter) ||  missionTypeFilter.includes(r.missionType))
+    })
+  })
   return (
     <SideWindowWrapper data-cy={'listMissionWrapper'}>
       {isError ? (
@@ -33,12 +42,12 @@ export const Missions = () => {
             </AddNewMissionButton>
           </SideWindowHeader>
           <SideWindowContent>
-            <MissionsFilter />
+            <MissionsTableFilters />
             <NumberOfDisplayedMissions data-cy={'Missions-numberOfDisplayedMissions'}>
-              {data.length} Mission{data.length > 1 ? 's' : ''}
+              {filteredData.length} Mission{filteredData.length > 1 ? 's' : ''}
             </NumberOfDisplayedMissions>
             <TableWrapper>
-              <MissionsTable data={data} isLoading={isLoading} />
+              <MissionsTable data={filteredData} isLoading={isLoading} />
             </TableWrapper>
           </SideWindowContent>
         </>

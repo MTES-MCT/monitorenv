@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.vladmihalcea.hibernate.type.array.ListArrayType
 import com.vladmihalcea.hibernate.type.array.EnumArrayType
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.TypeDef
 import org.hibernate.annotations.TypeDefs
@@ -27,14 +28,12 @@ import javax.persistence.*
 @Entity
 @TypeDefs(
   TypeDef(
-    name = "string-array",
-    typeClass = ListArrayType::class
-  ),
-  TypeDef(
     name = "enum-array",
     typeClass = ListArrayType::class,
     parameters = [org.hibernate.annotations.Parameter(name=EnumArrayType.SQL_ARRAY_TYPE, value="text")]
-  )
+  ),
+  TypeDef(name = "jsonb",
+    typeClass = JsonBinaryType::class)
 )
 @Table(name = "missions")
 data class MissionModel(
@@ -49,16 +48,12 @@ data class MissionModel(
   @Column(name = "missionNature")
   @Type(type = "enum-array")
     var missionNature: List<MissionNatureEnum>? = listOf(),
-  @Column(name = "unit")
-    var unit: String? = null,
-  @Column(name = "administration")
-    var administration: String? = null,
-  @Column(name = "resources", columnDefinition = "text[]")
-  @Type(type = "string-array")
-    var resources: List<String>? = listOf(),
+  @Column(name = "resource_units", columnDefinition = "jsonb")
+  @Type(type = "jsonb")
+    var resourceUnits: String? = null,
   @Column(name = "mission_status")
   @Enumerated(EnumType.STRING)
-    var missionStatus: MissionStatusEnum? = null,
+    var missionStatus: MissionStatusEnum,
   @Column(name = "open_by")
     var open_by: String? = null,
   @Column(name = "closed_by")
@@ -72,7 +67,7 @@ data class MissionModel(
   @Column(name = "geom")
     var geom: MultiPolygon? = null,
   @Column(name = "input_start_datetime_utc")
-    var inputStartDatetimeUtc: Instant? = null,
+    var inputStartDatetimeUtc: Instant,
   @Column(name = "input_end_datetime_utc")
     var inputEndDatetimeUtc: Instant? = null,
   @OneToMany(fetch = FetchType.EAGER,
@@ -87,16 +82,15 @@ data class MissionModel(
     id = id,
     missionType = missionType,
     missionNature = if (missionNature === null) listOf() else missionNature,
-    administration = administration,
-    unit = unit,
-    resources = if (resources === null) listOf() else resources,
+    resourceUnits = if (resourceUnits === null) listOf() else mapper.readValue(resourceUnits, mapper.typeFactory
+      .constructCollectionType(MutableList::class.java, ResourceUnitEntity::class.java)),
     missionStatus = missionStatus,
     open_by = open_by,
     closed_by = closed_by,
     observations = observations,
     facade = facade,
     geom = geom,
-    inputStartDatetimeUtc = inputStartDatetimeUtc?.atZone(UTC),
+    inputStartDatetimeUtc = inputStartDatetimeUtc.atZone(UTC),
     inputEndDatetimeUtc = inputEndDatetimeUtc?.atZone(UTC),
     envActions = envActions!!.map {it.toActionEntity(mapper)}
   )
@@ -107,16 +101,14 @@ data class MissionModel(
         id = mission.id,
         missionType = mission.missionType,
         missionNature = mission.missionNature,
-        administration = mission.administration,
-        unit = mission.unit,
-        resources = mission.resources,
+        resourceUnits = if (mission.resourceUnits === null) null else mapper.writeValueAsString(mission.resourceUnits),
         missionStatus = mission.missionStatus,
         open_by = mission.open_by,
         closed_by = mission.closed_by,
         observations = mission.observations,
         facade = mission.facade,
         geom = mission.geom,
-        inputStartDatetimeUtc = mission.inputStartDatetimeUtc?.toInstant(),
+        inputStartDatetimeUtc = mission.inputStartDatetimeUtc.toInstant(),
         inputEndDatetimeUtc = mission.inputEndDatetimeUtc?.toInstant(),
       )
       mission.envActions?.map {
@@ -138,6 +130,6 @@ data class MissionModel(
 
   @Override
   override fun toString(): String {
-    return this::class.simpleName + "(id = $id , missionType = $missionType , missionNature = $missionNature , unit = $unit , administration = $administration , resources = $resources , missionStatus = $missionStatus , open_by = $open_by , closed_by = $closed_by , observations = $observations , facade = $facade , geom = $geom , inputStartDatetimeUtc = $inputStartDatetimeUtc , inputEndDatetimeUtc = $inputEndDatetimeUtc )"
+    return this::class.simpleName + "(id = $id , missionType = $missionType , missionNature = $missionNature ,  resourceUnits = $resourceUnits , missionStatus = $missionStatus , open_by = $open_by , closed_by = $closed_by , observations = $observations , facade = $facade , geom = $geom , inputStartDatetimeUtc = $inputStartDatetimeUtc , inputEndDatetimeUtc = $inputEndDatetimeUtc )"
   }
 }

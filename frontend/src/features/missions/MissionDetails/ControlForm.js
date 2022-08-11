@@ -37,20 +37,21 @@ export const ControlForm = ({ remove, currentActionIndex, setCurrentActionIndex 
       <Delete type="button" onClick={handleRemoveAction}><TrashIcon />Supprimer</Delete>
     </Header>
     <Form.Group>
-      <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionTheme`}>Thématique du contrôle</Form.ControlLabel>
+      <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionTheme`}>Thématique de contrôle</Form.ControlLabel>
       <ControlTopicsCascader name={`envActions.${currentActionIndex}.actionTheme`} />
     </Form.Group>
 
     {
       THEME_REQUIRE_PROTECTED_SPECIES.includes(actionThemeField?.value) &&
       <Form.Group>
+        <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.protectedSpecies`}>Sous-thématique de contrôle</Form.ControlLabel>
         <ProtectedSpeciesSelector name={`envActions.${currentActionIndex}.protectedSpecies`} />
       </Form.Group>
     }
     
     <Form.Group>
       <Form.ControlLabel htmlFor={`envActions[${currentActionIndex}].actionStartDatetimeUtc`} >
-        Date et heure du début du contrôle
+        Date et heure du contrôle
       </Form.ControlLabel>
       <FormikDatePicker 
         ghost

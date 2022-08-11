@@ -7,4 +7,5 @@ interface IMissionRepository {
     fun findMissions(): List<MissionEntity>
     fun save(mission: MissionEntity) : MissionEntity
     fun create(mission: MissionEntity) : MissionEntity
+    fun delete(missionId: Int)
 }

@@ -65,14 +65,20 @@ export const actionFactory = ({id, actionType, ...action} = {}) => {
   
 }
 
+export const resourceUnitFactory = ({...resourceUnit} = {}) => {
+  return {
+    administration: '',
+    unit: '',
+    resources : [],
+    ...resourceUnit
+  }
+}
 export const missionFactory = (mission) => {
   return {
     missionType: missionTypeEnum.SEA.code,
     missionNature: [],
-    administration: '',
-    unit: '',
-    resources: [],
-    missionStatus: missionStatusEnum.PENDING,
+    resourceUnits: [],
+    missionStatus: missionStatusEnum.PENDING.code,
     open_by: '',
     closed_by: '',
     observations: '',
