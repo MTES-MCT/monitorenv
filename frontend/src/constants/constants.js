@@ -1,15 +1,31 @@
 export const COLORS = {
   background: '#FFFFFF',
-  white: '#FFFFFF',
-  orange: '#F6D012',
-  gainsboro: '#E5E5EB',
-  lightGray: '#CCCFD6',
+  gunMetal: '#282F3E',
   charcoal: '#3B4559',
   slateGray: '#707785',
+  lightGray: '#CCCFD6',
+  gainsboro: '#E5E5EB',
   cultured: '#F7F7FA',
-  slateGrayLittleOpacity: 'rgba(112, 119, 133, 0.7)',
+  white: '#FFFFFF',
+  steelBlue: '#5E87AD',
+  steelBlue25: '#D6E1EA',
+  blueJeans: '#42A7FF',
+  blueJeans25: '#CFE9FF',
+
   mediumSeaGreen: '#29b361',
-  gunMetal: '#282F3E',
+  goldenPoppy: '#FAC11A',
+  maximumRed: '#E1000F',
+  cadetGrey: '#8E9A9F',
+  grullo: '#B89B8C',
+  copperRed: '#CF6A4E',
+  chineseRed: '#A13112',
+
+  powderBlue: '#9ED7D9',
+  wheat: '#EDD6A4',
+  opal: '#A5BCC0',
+  
+  orange: '#F6D012',
+  slateGrayLittleOpacity: 'rgba(112, 119, 133, 0.7)',
   shadowBlue: '#6B839E',
   shadowBlueLight: '#d6dce3',
   grayShadow: '#969696BF',
@@ -37,10 +53,3 @@ export const COLORS = {
 }
 
 export const HIT_PIXEL_TO_TOLERANCE = 15
-
-/**
- * @enum {string}
- */
-export const SQUARE_BUTTON_TYPE = {
-  DELETE: 'delete'
-}

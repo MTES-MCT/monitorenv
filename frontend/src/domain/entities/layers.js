@@ -39,7 +39,7 @@ export const layersType = {
 
 const Layers = {
   BASE_LAYER: {
-    code: 'ol-layer',
+    code: 'baselayer',
     name: '',
     group: null,
     type: layersType.BASE_LAYER,
@@ -51,6 +51,17 @@ const Layers = {
   MISSIONS : {
     code: 'missions',
     zIndex: 1000
+  },
+  MISSION_SELECTED : {
+    code: 'mission_selected',
+    zIndex: 1100
+  },
+  ACTIONS : {
+    code: 'actions'
+  },
+  DRAW_LAYER : {
+    code: 'draw_layer',
+    zIndex: 1200
   },
   MEASUREMENT: {
     code: 'measurement',
@@ -366,5 +377,6 @@ export const baseLayers = {
 }
 
 export const SelectableLayers = [Layers.MISSIONS.code]
+export const HoverableLayers = [Layers.MISSIONS.code, Layers.MISSION_SELECTED.code]
 
 export default Layers

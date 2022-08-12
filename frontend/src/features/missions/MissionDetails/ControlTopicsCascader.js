@@ -16,7 +16,7 @@ export const ControlTopicsCascader = ({ name, ...props }) => {
   const { data, isError, isLoading } = useGetControlTopicsQuery()
   const controlTopics = _.reduce(data, (acc, val)=> {
       const key = _.findIndex(acc, v => v.value === val.topic_level_1)
-      const label = _.trim(`${val.topic_level_2} ${val.topic_level_3 ||''}`)
+      const label = _.trim(`${val.topic_level_2}`)
       if (key >= 0) {
         acc[key].children.push({value: val.id, label})
       } else {

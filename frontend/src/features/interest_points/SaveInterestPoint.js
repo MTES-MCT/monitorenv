@@ -8,7 +8,7 @@ import { transform } from 'ol/proj'
 import { CoordinatesFormat, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map'
 import { interestPointType } from '../../domain/entities/interestPoints'
 import { addInterestPoint, updateInterestPointKeyBeingDrawed } from '../../domain/shared_slices/InterestPoint'
-import saveInterestPointFeature from '../../domain/use_cases/saveInterestPointFeature'
+import saveInterestPointFeature from '../../domain/use_cases/interestPoint/saveInterestPointFeature'
 import { coordinatesAreDistinct, getCoordinates } from '../../utils/coordinates'
 import SetCoordinates from '../coordinates/SetCoordinates'
 
@@ -19,7 +19,7 @@ import { ReactComponent as ControlSVG } from '../icons/Label_controle.svg'
 import { ReactComponent as VesselSVG } from '../icons/Label_segment_de_flotte.svg'
 import { ReactComponent as OtherSVG } from '../icons/Point_interet_autre.svg'
 
-const SaveInterestPoint = ({ healthcheckTextWarning, isOpen, close, positionFromTop }) => {
+const SaveInterestPoint = ({ isOpen, close }) => {
   const dispatch = useDispatch()
 
   const {
@@ -128,9 +128,7 @@ const SaveInterestPoint = ({ healthcheckTextWarning, isOpen, close, positionFrom
   return (
     <Wrapper
       data-cy={'save-interest-point'}
-      healthcheckTextWarning={healthcheckTextWarning}
-      isOpen={isOpen}
-      $positionFromTop={positionFromTop}
+      $isOpen={isOpen}
       >
       <Header>
         Créer un point d&apos;intérêt
@@ -207,6 +205,19 @@ const SaveInterestPoint = ({ healthcheckTextWarning, isOpen, close, positionFrom
     </Wrapper>
   )
 }
+
+const Wrapper = styled(MapComponentStyle)`
+  width: 306px;
+  background: ${COLORS.background};
+  margin-bottom: ${props => props.$isOpen ? '8px' : '-520px'};
+  opacity:  ${props => props.$isOpen ? '1' : '0'};
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  border-radius: 2px;
+  display: inline-block;
+  transition: all 0.5s;
+`
 
 const Name = styled.input`
   width: 100%;
@@ -299,19 +310,6 @@ const Header = styled.div`
   text-align: left;
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
-`
-
-const Wrapper = styled(MapComponentStyle)`
-  width: 306px;
-  background: ${COLORS.background};
-  margin-right: ${props => props.isOpen ? '45px' : '-320px'};
-  opacity:  ${props => props.isOpen ? '1' : '0'};
-  top: ${props => props.$positionFromTop}px;
-  right: 10px;
-  border-radius: 2px;
-  position: absolute;
-  display: inline-block;
-  transition: all 0.5s;
 `
 
 const iconStyle = css`

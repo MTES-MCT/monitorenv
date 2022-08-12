@@ -29,19 +29,17 @@ class JpaControlTopicRepositoryITests : AbstractDBTests() {
     // Given
     val searchedControlTopic = ControlTopicModel.fromControlTopicEntity(
       ControlTopicEntity(
-        id = 3,
+        id = 1,
         topic_level_1 = "Police des mouillages",
-        topic_level_2 = "mouillage individuel",
-        topic_level_3 = "autre mouillage ayant un impact sur l’environnement"
+        topic_level_2 = "Mouillage individuel"
       )
     )
     // When
-    val requestedControlTopic = jpaControlTopicsRepository.findControlTopicById(3)
+    val requestedControlTopic = jpaControlTopicsRepository.findControlTopicById(1)
     // Then
     assertThat(requestedControlTopic.id).isEqualTo(searchedControlTopic.id)
     assertThat(requestedControlTopic.topic_level_1).isEqualTo(searchedControlTopic.topic_level_1)
     assertThat(requestedControlTopic.topic_level_2).isEqualTo(searchedControlTopic.topic_level_2)
-    assertThat(requestedControlTopic.topic_level_3).isEqualTo(searchedControlTopic.topic_level_3)
   }
 
 }

@@ -2,8 +2,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { expandRightMenu } from '../../domain/shared_slices/Global'
-import { MapButtonStyle } from '../commonStyles/MapButton.style'
 import SaveInterestPoint from './SaveInterestPoint'
 import {
   deleteInterestPointBeingDrawed,
@@ -12,9 +10,9 @@ import {
 } from '../../domain/shared_slices/InterestPoint'
 
 import { ReactComponent as InterestPointSVG } from '../icons/Point_interet.svg'
-import { COLORS } from '../../constants/constants'
+import { IconButton } from 'rsuite'
 
-const INTEREST_POINT_POSITION_FROM_TOP = 145
+const INTEREST_POINT_POSITION_FROM_LEFT = 470
 
 const InterestPoint = () => {
   const dispatch = useDispatch()
@@ -63,57 +61,38 @@ const InterestPoint = () => {
   function openOrCloseInterestPoint () {
     setInterestPointIsOpen(!interestPointIsOpen)
   }
-
   return (
     <Wrapper ref={wrapperRef}>
-      <InterestPointWrapper
+      <IconButton
         data-cy={'interest-point'}
-        isOpen={interestPointIsOpen}
-        onMouseEnter={() => dispatch(expandRightMenu())}
         title={'Créer un point d\'intérêt'}
-        onClick={openOrCloseInterestPoint}>
-        <InterestPointIcon />
-      </InterestPointWrapper>
+        onClick={openOrCloseInterestPoint}
+        appearance='primary'
+        size='sm'
+        icon={<InterestPointIcon className={"rs-icon"} />}
+        
+       />
       <SaveInterestPoint
         firstUpdate={firstUpdate.current}
         isOpen={interestPointIsOpen}
         close={() => setInterestPointIsOpen(false)}
-        positionFromTop={INTEREST_POINT_POSITION_FROM_TOP}
         />
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
+  position: absolute;
+  bottom: 11px;
+  left: ${INTEREST_POINT_POSITION_FROM_LEFT}px;
+  width: 20px;
   transition: all 0.2s;
   z-index: 1000;
 `
 
-const InterestPointWrapper = styled(MapButtonStyle)`
-  position: absolute;
-  display: inline-block;
-  background: ${props => props.isOpen ? COLORS.shadowBlue : COLORS.charcoal};
-  top: ${INTEREST_POINT_POSITION_FROM_TOP}px;
-  z-index: 99;
-  height: 40px;
-  width: ${props => props.selectedVessel && !props.rightMenuIsOpen ? '5px' : '40px'};
-  border-radius: ${props => props.selectedVessel && !props.rightMenuIsOpen ? '1px' : '2px'};
-  right: ${props => props.selectedVessel && !props.rightMenuIsOpen ? '0' : '10px'};
-  transition: all 0.3s;
-
-  :hover {
-      background: ${COLORS.charcoal};
-  }
-  
-  :focus {
-      background: ${COLORS.shadowBlue};
-  }
-`
-
 const InterestPointIcon = styled(InterestPointSVG)`
-  width: 40px;
-  opacity: ${props => props.$selectedVessel && !props.$rightMenuIsOpen ? '0' : '1'};
-  transition: all 0.2s;
+  width: 20px;
+  height: 20px;
 `
 
 export default InterestPoint

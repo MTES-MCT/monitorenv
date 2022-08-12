@@ -12,7 +12,6 @@ export const FormikRadioGroup = ({ name, radioValues, defaultValue, ...props }) 
   return (
     <RadioGroup 
       name={name} 
-      appearance="picker"
       inline
       value={value}
       onChange={setValue}

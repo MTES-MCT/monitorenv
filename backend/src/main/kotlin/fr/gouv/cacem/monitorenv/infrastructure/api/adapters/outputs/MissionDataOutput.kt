@@ -1,28 +1,24 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs
 
-import fr.gouv.cacem.monitorenv.domain.entities.missions.ActionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.missions.*
 import org.locationtech.jts.geom.MultiPolygon
 
 import java.time.ZonedDateTime
 
 data class MissionDataOutput(
-    val id: Int? = null,
+    val id: Int,
     val missionType: MissionTypeEnum,
-    val administration: String? = null,
-    val unit: String? = null,
-    val resources: List<String>? = null,
-    val missionStatus: String? = null,
-    val author: String? = null,
+    val missionNature: List<MissionNatureEnum>? = null,
+    val resourceUnits: List<ResourceUnitEntity>? = null,
+    val missionStatus: MissionStatusEnum,
+    val open_by: String? = null,
     val closed_by: String? = null,
     val observations: String? = null,
     val facade: String? = null,
-    val theme: String? = null,
     val geom: MultiPolygon? = null,
-    val inputStartDatetimeUtc: ZonedDateTime? = null,
+    val inputStartDatetimeUtc: ZonedDateTime,
     val inputEndDatetimeUtc: ZonedDateTime? = null,
-    val actions: List<ActionEntity>? = null
+    val envActions: List<EnvActionEntity>? = null
 ) {
     companion object {
         fun fromMission(mission: MissionEntity): MissionDataOutput {
@@ -32,19 +28,17 @@ data class MissionDataOutput(
             return MissionDataOutput(
                 id = mission.id,
                 missionType = mission.missionType,
-                administration = mission.administration,
-                unit = mission.unit,
-                resources = mission.resources,
+                missionNature = mission.missionNature,
+                resourceUnits = mission.resourceUnits,
                 missionStatus = mission.missionStatus,
-                author = mission.author,
+                open_by = mission.open_by,
                 closed_by = mission.closed_by,
                 observations= mission.observations,
                 facade = mission.facade,
-                theme = mission.theme,
                 geom = mission.geom,
                 inputStartDatetimeUtc = mission.inputStartDatetimeUtc,
                 inputEndDatetimeUtc = mission.inputEndDatetimeUtc,
-                actions = mission.actions
+                envActions = mission.envActions
             )
         }
     }

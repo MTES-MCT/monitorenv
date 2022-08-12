@@ -1,4 +1,4 @@
-export const ActionTypeEnum = {
+export const actionTypeEnum = {
   SURVEILLANCE: { 
     code: 'SURVEILLANCE',
     libelle: 'Surveillance'
@@ -103,6 +103,25 @@ export const vehicleTypeEnum = {
   }
 }
 
+export const vesselTypeEnum = {
+  FISHING: {
+    code: 'FISHING',
+    libelle: 'Pêche'
+  },
+  SAILING: {
+    code: 'SAILING',
+    libelle: 'Voilier'
+  },
+  MOTOR: {
+    code: 'MOTOR',
+    libelle: 'Moteur'
+  },
+  COMMERCIAL: {
+    code: 'COMMERCIAL',
+    libelle: 'Commerce'
+  }
+}
+
 export const vesselSizeEnum = {
   LESS_THAN_12m : {
     code: 'LESS_THAN_12m',
@@ -149,4 +168,38 @@ export const protectedSpeciesEnum = {
   }
 }
 
+export const missionStatusEnum = {
+  PENDING: {
+    code: 'PENDING',
+    libelle: 'En cours'
+  },
+  ENDED: {
+    code: 'ENDED',
+    libelle: 'Terminée'
+  },
+  CLOSED: {
+    code: 'CLOSED',
+    libelle: 'Cloturée'
+  }
+}
+
 export const THEME_REQUIRE_PROTECTED_SPECIES = [17]
+
+export const relevantCourtEnum = {
+  LOCAL_COURT: {
+    code: 'LOCAL_COURT',
+    libelle: 'Parquet Local'
+  },
+  MARITIME_COURT: {
+    code: 'MARITIME_COURT',
+    libelle: 'Tribunal maritime'
+  },
+  JULIS: {
+    code: 'JULIS',
+    libelle: 'Juridictions littorales spécialisées (JULIS)'
+  },
+  PRE: {
+    code: 'PRE',
+    libelle: 'Pôle Régional Environnemental (PRE)'
+  }
+}

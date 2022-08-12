@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components';
 import { Form } from 'rsuite'
+import { FieldArray } from 'formik';
 
 import { missionNatureEnum, missionTypeEnum } from '../../../domain/entities/missions';
 
@@ -9,10 +10,10 @@ import { FormikRadioGroup } from '../../commonComponents/CustomFormikFields/Form
 import { FormikTextarea } from '../../commonComponents/CustomFormikFields/FormikTextarea';
 import { FormikInput } from '../../commonComponents/CustomFormikFields/FormikInput';
 
-import { ControlResourcesSelector } from './ControlResourcesSelector';
-
 import { COLORS } from '../../../constants/constants';
 import { MissionZone } from './MissionZone';
+import { FormikCheckboxGroup } from '../../commonComponents/CustomFormikFields/FormikCheckboxGroup';
+import { ResourceUnitsForm } from './ResourceUnitsForm';
 
 
 export const GeneralInformationsForm = () => {
@@ -21,36 +22,43 @@ export const GeneralInformationsForm = () => {
     <FormWrapper>
       <Title>Informations générales</Title>
       <Form.Group>
-        <Form.ControlLabel htmlFor="inputStartDatetimeUtc">Date et heure du début de la mission : </Form.ControlLabel>
+        <Form.ControlLabel htmlFor="inputStartDatetimeUtc">Début de mission</Form.ControlLabel>
         <FormikDatePicker name="inputStartDatetimeUtc" placeholder={placeholderDateTimePicker} format="dd MMM yyyy, HH:mm" oneTap/>
       </Form.Group>
       
       <Form.Group>
-        <Form.ControlLabel htmlFor="inputEndDatetimeUtc">Date et heure de fin de la mission : </Form.ControlLabel>
+        <Form.ControlLabel htmlFor="inputEndDatetimeUtc">Fin de mission</Form.ControlLabel>
         <FormikDatePicker name="inputEndDatetimeUtc" placeholder={placeholderDateTimePicker} format="dd MMM yyyy, HH:mm" oneTap/>
       </Form.Group>
       
-      <ControlResourcesSelector />
-      
       <Form.Group>
-        <Form.ControlLabel htmlFor="missionType">Type de mission : </Form.ControlLabel>
+        <Form.ControlLabel htmlFor="missionType">Type de mission</Form.ControlLabel>
         <FormikRadioGroup name="missionType" radioValues={missionTypeEnum} />
       </Form.Group>
       
       <Form.Group>
-        <Form.ControlLabel htmlFor="theme">Nature de mission : </Form.ControlLabel>
-        <FormikRadioGroup name="theme" radioValues={missionNatureEnum} />
+        <Form.ControlLabel htmlFor="missionNature">Nature de mission</Form.ControlLabel>
+        <FormikCheckboxGroup inline name="missionNature" checkBoxValues={missionNatureEnum} />
       </Form.Group>
+
+      <FieldArray 
+        name={`resourceUnits`} 
+        render={(props)=>(<ResourceUnitsForm 
+        {...props} 
+         />
+      )} />
 
       <MissionZone name="geom" />
       <Form.Group>
-        <Form.ControlLabel htmlFor="observations">Observations générales : </Form.ControlLabel>
+        <Form.ControlLabel htmlFor="observations">Observations générales (éléments d&apos;ambiance, infos pour la relève...) </Form.ControlLabel>
         <FormikTextarea name="observations"/>
       </Form.Group>
       
       <Form.Group>
-        <Form.ControlLabel htmlFor="author">Saisi par : </Form.ControlLabel>
-        <FormikInput name="author"/>
+        <Form.ControlLabel htmlFor="open_by">Ouvert par</Form.ControlLabel>
+        <FormikInput name="open_by"/>
+        <Form.ControlLabel htmlFor="closed_by">Clôturé par</Form.ControlLabel>
+        <FormikInput name="closed_by"/>
       </Form.Group>
     </FormWrapper>
   )
@@ -58,7 +66,8 @@ export const GeneralInformationsForm = () => {
 
 const FormWrapper = styled.div`
   padding: 32px;
-  color: ${COLORS.slateGray}
+  color: ${COLORS.slateGray};
+  flex: 1;
 `
 
 const Title = styled.h2`

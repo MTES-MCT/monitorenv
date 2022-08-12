@@ -12,7 +12,18 @@ export const interactionTypes = {
   SELECTION: 'SELECTION'
 }
 
-export const featureTypes = {
+/**
+  * @readonly
+  * @enum {string}
+*/
+export const monitorenvFeatureTypes = {
   MISSION_ZONE: 'MISSION_ZONE',
   ACTION_LOCALISATION: 'ACTION_LOCALISATION' 
+}
+
+export const olGeometryTypes = {
+  POINT: 'Point',
+  MULTIPOINT: 'MultiPoint',
+  POLYGON: 'Polygon',
+  MULTIPOLYGON: 'MultiPolygon',
 }

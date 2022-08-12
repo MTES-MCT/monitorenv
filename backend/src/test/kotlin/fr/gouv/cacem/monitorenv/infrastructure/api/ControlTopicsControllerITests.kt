@@ -42,10 +42,9 @@ class ControlTopicsControllerITests {
     // Given
 
     val controlTopic = ControlTopicEntity(
-      id = 3,
+      id = 1,
       topic_level_1 = "Police des mouillages",
-      topic_level_2 = "mouillage individuel",
-      topic_level_3 = "autre mouillage ayant un impact sur l’environnement"
+      topic_level_2 = "Mouillage individuel"
     )
     given(this.getControlTopics.execute()).willReturn(listOf(controlTopic))
 
@@ -56,7 +55,6 @@ class ControlTopicsControllerITests {
       .andExpect(jsonPath("$[0].id", equalTo(controlTopic.id)))
       .andExpect(jsonPath("$[0].topic_level_1", equalTo(controlTopic.topic_level_1)))
       .andExpect(jsonPath("$[0].topic_level_2", equalTo(controlTopic.topic_level_2)))
-      .andExpect(jsonPath("$[0].topic_level_3", equalTo(controlTopic.topic_level_3)))
   }
 
   @Test
@@ -64,10 +62,9 @@ class ControlTopicsControllerITests {
     // Given
 
     val controlTopic = ControlTopicEntity(
-      id = 3,
+      id = 1,
       topic_level_1 = "Police des mouillages",
-      topic_level_2 = "mouillage individuel",
-      topic_level_3 = "autre mouillage ayant un impact sur l’environnement"
+      topic_level_2 = "Mouillage individuel"
     )
 
     given(this.getControlTopicById.execute(3)).willReturn(controlTopic)
@@ -79,6 +76,5 @@ class ControlTopicsControllerITests {
       .andExpect(jsonPath("$.id", equalTo(controlTopic.id)))
       .andExpect(jsonPath("$.topic_level_1", equalTo(controlTopic.topic_level_1)))
       .andExpect(jsonPath("$.topic_level_2", equalTo(controlTopic.topic_level_2)))
-      .andExpect(jsonPath("$.topic_level_3", equalTo(controlTopic.topic_level_3)))
   }
 }

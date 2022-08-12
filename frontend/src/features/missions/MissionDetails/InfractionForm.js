@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Form } from 'rsuite'
+import { Form, Button} from 'rsuite'
 import { Field, useField } from 'formik'
 
-import { infractionTypeEnum, formalNoticeEnum, vehicleTypeEnum } from '../../../domain/entities/missions'
+import { infractionTypeEnum, formalNoticeEnum, actionTargetTypeEnum } from '../../../domain/entities/missions'
 
 import { FormikRadioGroup } from '../../commonComponents/CustomFormikFields/FormikRadioGroup'
 import { FormikCheckbox } from '../../commonComponents/CustomFormikFields/FormikCheckbox'
@@ -11,65 +11,45 @@ import { FormikTextarea } from '../../commonComponents/CustomFormikFields/Formik
 
 import { NatinfSelector } from './NatinfSelector'
 
-import { PrimaryButton } from '../../commonStyles/Buttons.style'
 import { COLORS } from '../../../constants/constants'
-import { VesselSizeSelector } from './VesselSizeSelector'
-import { VehicleTypeSelector } from './VehicleTypeSelector'
+import { InfractionFormHeaderVehicle } from './InfractionFormHeaderVehicle'
+import { InfractionFormHeaderCompany } from './InfractionFormHeaderCompany'
+import { RelevantCourtSelector } from './RelevantCourtSelector'
 
 
-export const InfractionForm = ({ infractionPath, setCurrentInfractionIndex }) =>  {
-  const [vehicleField] = useField(`${infractionPath}.vehicle`)
-  const handleValidate = () => {
-    setCurrentInfractionIndex()
-  }
+export const InfractionForm = ({ currentActionIndex, infractionPath, validateInfraction, removeInfraction }) =>  {
+
+  const [actionTargetField] = useField(`envActions.${currentActionIndex}.actionTargetType`)
 
   return (<FormWrapper>
+      {actionTargetField.value === actionTargetTypeEnum.VEHICLE.code 
+        && <InfractionFormHeaderVehicle currentActionIndex={currentActionIndex} infractionPath={infractionPath} />}
+
+      {actionTargetField.value === actionTargetTypeEnum.COMPANY.code 
+        && <InfractionFormHeaderCompany infractionPath={infractionPath} />}
 
       <Form.Group>
-        <FormColumn>
-          <Form.ControlLabel htmlFor={`${infractionPath}.registrationNumber`}>Immatriculation : </Form.ControlLabel>
-          <Field name={`${infractionPath}.registrationNumber`} />
-        </FormColumn>
-     
-        <FormColumn>
-          <VehicleTypeSelector name={`${infractionPath}.vehicle`} />
-        </FormColumn>
-     
-        <FormColumn>
-          { vehicleField.value === vehicleTypeEnum.VESSEL.code &&
-            <VesselSizeSelector name={`${infractionPath}.size`} />
-          }
-        </FormColumn>
+        <Form.ControlLabel htmlFor={`${infractionPath}.controlledPersonIdentity`}>Identité de la personne controlée</Form.ControlLabel>
+        <Field name={`${infractionPath}.controlledPersonIdentity`} />
       </Form.Group>
 
       <Form.Group>
-        <Form.ControlLabel htmlFor={`${infractionPath}.owner`}>Propriétaire : </Form.ControlLabel>
-        <Field name={`${infractionPath}.owner`} />
+        <Form.ControlLabel htmlFor={`${infractionPath}.infractionType`}>Type d&apos;infraction</Form.ControlLabel>
+        <FormikRadioGroup name={`${infractionPath}.infractionType`} radioValues={infractionTypeEnum} />
       </Form.Group>
 
-      <Form.Group style={{display: 'flex'}}>
-        <FormColumn flex={1}>
-          <NatinfSelector infractionPath={infractionPath} />
-        </FormColumn>
-
-        <FormColumn flex={1}>
-          <Form.Group>
-            <Form.ControlLabel htmlFor={`${infractionPath}.infractionType`}>Type d&apos;infraction : </Form.ControlLabel>
-            <FormikRadioGroup name={`${infractionPath}.infractionType`} radioValues={infractionTypeEnum} />
-          </Form.Group>
-
-          <Form.Group>
-            <Form.ControlLabel htmlFor={`${infractionPath}.formalNotice`}>Mise en demeure : </Form.ControlLabel>
-            <FormikRadioGroup name={`${infractionPath}.formalNotice`} radioValues={formalNoticeEnum} />
-          </Form.Group>
-        </FormColumn>
+      <Form.Group>
+        <Form.ControlLabel htmlFor={`${infractionPath}.formalNotice`}>Mise en demeure</Form.ControlLabel>
+        <FormikRadioGroup name={`${infractionPath}.formalNotice`} radioValues={formalNoticeEnum} />
       </Form.Group>
 
+      <Form.Group>
+        <NatinfSelector infractionPath={infractionPath} />
+      </Form.Group>
 
       <Form.Group>
         <FormColumn>
-          <Form.ControlLabel htmlFor={`${infractionPath}.relevantCourt`}>Tribunal compétent : </Form.ControlLabel>
-          <Field name={`${infractionPath}.relevantCourt`} />
+          <RelevantCourtSelector infractionPath={infractionPath}/>
         </FormColumn>
 
         <FormColumnWithCheckbox>
@@ -78,10 +58,11 @@ export const InfractionForm = ({ infractionPath, setCurrentInfractionIndex }) =>
       </Form.Group>
 
       <Form.Group>
-        <Form.ControlLabel htmlFor="observations">Note libre : </Form.ControlLabel>
+        <Form.ControlLabel htmlFor="observations">Observations</Form.ControlLabel>
         <FormikTextarea name={`${infractionPath}.observations`} />
       </Form.Group>
-      <PrimaryButton type="button" onClick={handleValidate}>Valider l&apos;infraction</PrimaryButton>
+      <Button appearance="ghost" onClick={removeInfraction}>Supprimer l&apos;infraction</Button>
+      <Button onClick={validateInfraction}>Valider l&apos;infraction</Button>
   </FormWrapper>
 
   )
@@ -89,12 +70,13 @@ export const InfractionForm = ({ infractionPath, setCurrentInfractionIndex }) =>
     
 const FormWrapper = styled.div`
   background: ${COLORS.white};
+  padding: 32px;
 `
 
 const FormColumn = styled.div`
   display: inline-block;
   ${props => `flex: ${props.flex};`}
-  `
+`
 const FormColumnWithCheckbox = styled.div`
   display: inline-block;
   vertical-align: top;

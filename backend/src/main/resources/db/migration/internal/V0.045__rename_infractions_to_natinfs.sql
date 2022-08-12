@@ -1,0 +1,1 @@
+ALTER TABLE public.infractions rename to natinfs;

@@ -3,44 +3,54 @@ import styled from 'styled-components'
 import { Dropdown } from 'rsuite';
 
 import { actionFactory } from '../Missions.helpers'
-import { ActionTypeEnum } from '../../../domain/entities/missions'
+import { actionTypeEnum } from '../../../domain/entities/missions'
 import { ActionCard } from './ActionCard'
 
+import { ReactComponent as PlusSVG } from '../../icons/plus.svg'
+import { ReactComponent as ControlSVG } from '../../icons/controles.svg'
+import { ReactComponent as SurveillanceSVG } from '../../icons/surveillance_18px.svg'
+import { ReactComponent as NoteSVG } from '../../icons/note_libre.svg'
 import { COLORS } from '../../../constants/constants';
 
 export const ActionsForm = ({  push, remove, form, currentActionIndex, setCurrentActionIndex }) =>  {
-  const handleAddSurveillanceAction = () => push(actionFactory(ActionTypeEnum.SURVEILLANCE.code))
-  const handleAddControlAction = () => push(actionFactory(ActionTypeEnum.CONTROL.code))
-  const handleAddNoteAction = () => push(actionFactory(ActionTypeEnum.NOTE.code))
+  const handleAddSurveillanceAction = () => push(actionFactory({actionType: actionTypeEnum.SURVEILLANCE.code}))
+  const handleAddControlAction = () => push(actionFactory({actionType: actionTypeEnum.CONTROL.code}))
+  const handleAddNoteAction = () => push(actionFactory({actionType: actionTypeEnum.NOTE.code}))
   const handleSelectAction = index => () => setCurrentActionIndex(index)
   const handleRemoveAction = index => (e) => {
     e.stopPropagation()
     setCurrentActionIndex(null)
     remove(index)
   }
+  const handleDuplicateAction = index => () => push(actionFactory(form.values.envActions[index]))
 
   return (<FormWrapper>
     <TitleWrapper>
       <Title>Actions réalisées en mission</Title>
-      <AddActionButtons>
-        <Dropdown title={'+ Ajouter'} noCaret >
-          <Dropdown.Item onClick={handleAddControlAction}>
+        <Dropdown appearance='primary' size='sm' title={'Ajouter'} noCaret icon={<PlusSVG/>}>
+          <Dropdown.Item icon={<ControlSVGIcon/>} onClick={handleAddControlAction}>
             Ajouter des contrôles
           </Dropdown.Item>
-          <Dropdown.Item onClick={handleAddSurveillanceAction}>
+          <Dropdown.Item icon={<SurveillanceSVGIcon/>} onClick={handleAddSurveillanceAction}>
             Ajouter une surveillance
           </Dropdown.Item>
-          <Dropdown.Item onClick={handleAddNoteAction}>
+          <Dropdown.Item icon={<NoteSVGIcon/>} onClick={handleAddNoteAction}>
             Ajouter une note libre
           </Dropdown.Item>
         </Dropdown>
-      </AddActionButtons>
     </TitleWrapper>
     <ActionsTimeline>
-    {form?.values.actions.length > 0 ? 
-      form.values.actions.map((action, index) => {
+    {form?.values.envActions?.length > 0 ? 
+      form.values.envActions.map((action, index) => {
         return (
-        <ActionCard selected={index === currentActionIndex} key={index} selectAction={handleSelectAction(index)} action={action} removeAction={handleRemoveAction(index)}/>
+        <ActionCard 
+          key={index} 
+          selected={index === currentActionIndex} 
+          selectAction={handleSelectAction(index)} 
+          action={action} 
+          removeAction={handleRemoveAction(index)}
+          duplicateAction={handleDuplicateAction(index)}
+        />
       )})
       : <NoActionWrapper><NoAction>Aucune action n&apos;est ajoutée pour le moment</NoAction></NoActionWrapper>
     }
@@ -67,12 +77,6 @@ const Title = styled.h2`
   display: inline-block;
   margin-right: 16px;
 `
-const AddActionButtons = styled.div`
-  display: inline-block;
-  padding: 8px 12px 8px 16px;
-  color: ${COLORS.white};
-  background: ${COLORS.charcoal};
-`
 
 const ActionsTimeline = styled.div`
   flex: 1;
@@ -88,4 +92,16 @@ const NoActionWrapper = styled.div`
 `
 const NoAction = styled.div`
   text-align: center;
+  font-style: italic;
+`
+const ControlSVGIcon = styled(ControlSVG)`
+    width: 18px;
+    margin-right: 10px;
+    padding: 2px;
+`
+const SurveillanceSVGIcon = styled(SurveillanceSVG)`
+    margin-right: 10px;
+`
+const NoteSVGIcon = styled(NoteSVG)`
+  margin-right: 10px;
 `

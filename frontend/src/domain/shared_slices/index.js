@@ -3,9 +3,11 @@ import thunk from 'redux-thunk'
 
 import map from './Map'
 import global from './Global'
+import missionState from './MissionsState'
+import { missionFiltersReducer } from './MissionFilters'
 import { regulatorySlicePersistedReducer } from './Regulatory'
 import { regulatoryMetadataSliceReducer } from './RegulatoryMetadata'
-import regulatoryLayerSearch from '../../features/layers/regulatory/search/RegulatoryLayerSearch.slice'
+import regulatoryLayerSearch from '../../features/layersSelector/regulatory/search/RegulatoryLayerSearch.slice'
 import { sideWindowRouterReducer } from '../../features/commonComponents/SideWindowRouter/SideWindowRouter.slice'
 import { drawLayerReducer } from '../../features/drawLayer/DrawLayer.slice'
 import {administrativeSlicePersistedReducer} from './Administrative'
@@ -26,6 +28,8 @@ import { interestPointSlicePersistedReducer } from './InterestPoint'
 export const homeReducers = combineReducers({
   map,
   global,
+  missionState,
+  missionFilters: missionFiltersReducer,
   administrative: administrativeSlicePersistedReducer,
   regulatory: regulatorySlicePersistedReducer,
   regulatoryMetadata: regulatoryMetadataSliceReducer,

@@ -3,28 +3,28 @@ import { useField } from 'formik'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import { ActionTypeEnum } from '../../../domain/entities/missions';
+import { actionTypeEnum } from '../../../domain/entities/missions';
 import { ControlForm } from './ControlForm';
 import { SurveillanceForm } from './SurveillanceForm';
 import { NoteForm } from './NoteForm';
 
 export const ActionForm = ({ remove, currentActionIndex, setCurrentActionIndex }) =>  {
-  const [ actionTypeField ] = useField(`actions.${currentActionIndex}.actionType`)
+  const [ actionTypeField ] = useField(`envActions.${currentActionIndex}.actionType`)
 
   if (currentActionIndex === null) {
     return (<NoSelectedAction>Ajouter ou sélectionner une action</NoSelectedAction>)
   }
 
   switch (actionTypeField.value) {
-    case ActionTypeEnum.CONTROL.code:
+    case actionTypeEnum.CONTROL.code:
       return <FormWrapper>
             <ControlForm remove={remove} currentActionIndex={currentActionIndex} setCurrentActionIndex={setCurrentActionIndex} />
           </FormWrapper>
-    case ActionTypeEnum.SURVEILLANCE.code:
+    case actionTypeEnum.SURVEILLANCE.code:
       return <FormWrapper>
             <SurveillanceForm remove={remove} currentActionIndex={currentActionIndex} setCurrentActionIndex={setCurrentActionIndex} />
           </FormWrapper>
-    case ActionTypeEnum.NOTE.code:
+    case actionTypeEnum.NOTE.code:
       return <FormWrapper>
             <NoteForm remove={remove} currentActionIndex={currentActionIndex} setCurrentActionIndex={setCurrentActionIndex} />
           </FormWrapper>

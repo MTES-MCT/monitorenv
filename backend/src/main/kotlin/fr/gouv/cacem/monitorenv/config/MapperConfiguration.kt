@@ -26,5 +26,4 @@ class MapperConfiguration {
 
         return mapper
     }
-
 }

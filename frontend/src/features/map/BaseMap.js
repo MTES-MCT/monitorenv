@@ -1,5 +1,5 @@
-import React, { Children, cloneElement, useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import React, { Children, cloneElement, useCallback, useMemo, useEffect, useRef, useState } from 'react'
+import _ from 'lodash'
 import styled from 'styled-components'
 import OpenLayerMap from 'ol/Map'
 import View from 'ol/View'
@@ -12,34 +12,41 @@ import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/m
 import MapAttributionsBox from './controls/MapAttributionsBox'
 import { HIT_PIXEL_TO_TOLERANCE } from '../../constants/constants'
 import { platformModifierKeyOnly } from 'ol/events/condition'
-import { SelectableLayers } from '../../domain/entities/layers'
+import { SelectableLayers, HoverableLayers } from '../../domain/entities/layers'
 
 
 
 const BaseMap = ({ children, showAttributions }) => {
 
-  const {
-    healthcheckTextWarning,
-    previewFilteredVesselsMode
-  } = useSelector(state => state.global)
-
   const [map, setMap] = useState()
   
   /** @type {MapClickEvent} mapClickEvent */
   const [mapClickEvent, setMapClickEvent] = useState(null)
+  
+  /** @type {currentFeatureOver} feature */
+  const [currentFeatureOver, setCurrentFeatureOver] = useState(null)
 
   const mapElement = useRef()
 
-  const handleMapClick = (event, map) => {
-    if (event && map) {
-      const feature = map.forEachFeatureAtPixel(event.pixel, feature => feature, { hitTolerance: HIT_PIXEL_TO_TOLERANCE, layerFilter: (l)=> {
+  const handleMapClick = useCallback((event, current_map) => {
+    if (event && current_map) {
+      const feature = current_map.forEachFeatureAtPixel(event.pixel, f => f, { hitTolerance: HIT_PIXEL_TO_TOLERANCE, layerFilter: (l)=> {
         return SelectableLayers.includes(l.name)
       } })
       const isCtrl = platformModifierKeyOnly(event)
       setMapClickEvent({ feature, ctrlKeyPressed: isCtrl })
     }
-  }
+  }, [setMapClickEvent])
+  
+  const handleMouseOverFeature = useMemo(() => _.throttle((event, current_map)=> {
+    if (event && current_map) {
+      const feature = current_map.forEachFeatureAtPixel(event.pixel, f => f, { hitTolerance: HIT_PIXEL_TO_TOLERANCE, layerFilter: (l)=> {
+        return HoverableLayers.includes(l.name)
+      } })
+      setCurrentFeatureOver( feature )
+    }
 
+  }, 50), [setCurrentFeatureOver])
 
   useEffect(() => {
     if (!map) {
@@ -63,10 +70,11 @@ const BaseMap = ({ children, showAttributions }) => {
         ]
       })
       initialMap.on('click', event => handleMapClick(event, initialMap))
+      initialMap.on('pointermove', event => handleMouseOverFeature(event, initialMap))
 
       setMap(initialMap)
     }
-  }, [map])
+  }, [map, handleMapClick])
 
 
 
@@ -78,12 +86,10 @@ const BaseMap = ({ children, showAttributions }) => {
     <MapWrapper>
       <MapContainer
         ref={mapElement}
-        healthcheckTextWarning={healthcheckTextWarning}
-        previewFilteredVesselsMode={previewFilteredVesselsMode}
       />
       {showAttributions && <MapAttributionsBox/>}
       {map && Children.map(children, (child) => (
-        child && cloneElement(child, { map, mapClickEvent })
+        child && cloneElement(child, { map, mapClickEvent, currentFeatureOver })
       ))}
     </MapWrapper>
   )
@@ -95,7 +101,7 @@ const MapWrapper = styled.div`
 `
 
 const MapContainer = styled.div`
-  height: ${props => props.healthcheckTextWarning || props.previewFilteredVesselsMode ? 'calc(100vh - 50px)' : '100vh'};
+  height: 100vh;
   width: 100%;
   overflow-y: hidden;
   overflow-x: hidden;

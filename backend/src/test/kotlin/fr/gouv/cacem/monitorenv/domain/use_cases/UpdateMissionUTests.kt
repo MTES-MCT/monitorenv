@@ -6,6 +6,8 @@
  import com.nhaarman.mockitokotlin2.times
  import com.nhaarman.mockitokotlin2.verify
  import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
+ import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionNatureEnum
+ import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionStatusEnum
  import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
  import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.UpdateMission
  import org.assertj.core.api.Assertions.assertThat
@@ -39,7 +41,13 @@
      fun `execute Should return the updated mission When a field to update is given`() {
 
        // Given
-       val expectedUpdatedMission = MissionEntity(id = 0, missionType = MissionTypeEnum.LAND, 	missionStatus = "CLOSED", facade = "Outre-Mer", theme = "CONTROLE", inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"), inputEndDatetimeUtc =  ZonedDateTime.parse("2022-01-23T20:29:03Z")	)
+       val expectedUpdatedMission = MissionEntity(id = 0,
+          missionType = MissionTypeEnum.LAND,
+          missionStatus = MissionStatusEnum.CLOSED,
+          facade = "Outre-Mer",
+          missionNature = listOf(MissionNatureEnum.FISH),
+          inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+          inputEndDatetimeUtc =  ZonedDateTime.parse("2022-01-23T20:29:03Z")	)
        given(missionRepository.save(expectedUpdatedMission)).willReturn(
          expectedUpdatedMission
        )

@@ -1,15 +1,17 @@
 import React from 'react'
 import styled from 'styled-components'
-import {  useField } from 'formik';
+import { useField } from 'formik'
+import { IconButton } from 'rsuite'
 
+import { vehicleTypeEnum, formalNoticeEnum, infractionTypeEnum, vesselTypeEnum } from '../../../domain/entities/missions'
+import { ReactComponent as EditIconSVG } from '../../icons/Bouton_edition.svg'
+import { ReactComponent as DeleteSVG } from '../../icons/Suppression_clair.svg'
 
 import { COLORS } from '../../../constants/constants'
-import { EditButton, DeleteButton } from '../../commonStyles/Buttons.style'
-import { formalNoticeEnum, infractionTypeEnum } from '../../../domain/entities/missions';
 
-export const InfractionCard = ({ infractionPath,  setCurrentInfractionIndex, removeInfraction }) => {
-
-  const [vehicle] = useField(`${infractionPath}.vehicle`)
+export const InfractionCard = ({ currentActionIndex, infractionPath,  setCurrentInfractionIndex, removeInfraction }) => {
+  const [vehicleTypeField] = useField(`actions.${currentActionIndex}.vehicleType`)
+  const [vesselType] = useField(`${infractionPath}.vesselType`)
   const [registrationNumber] = useField(`${infractionPath}.registrationNumber`)
   const [infractionType] = useField(`${infractionPath}.infractionType`)
   const [formalNotice] = useField(`${infractionPath}.formalNotice`)
@@ -18,7 +20,7 @@ export const InfractionCard = ({ infractionPath,  setCurrentInfractionIndex, rem
   return (
     <Wrapper>
       <Summary>
-        <VehicleType>{vehicle?.value || 'Véhicule Non Renseigné'}</VehicleType>
+        <VehicleType>{vehicleTypeEnum[vehicleTypeField?.value]?.libelle || 'Non Renseigné'} {vesselTypeEnum[vesselType?.value]?.libelle || 'Non Renseigné'}</VehicleType>
         <RegistrationNumber>({registrationNumber?.value || 'sans immatriculation'})</RegistrationNumber>
         <SummaryDetails>
           <Info>
@@ -33,8 +35,8 @@ export const InfractionCard = ({ infractionPath,  setCurrentInfractionIndex, rem
         </SummaryDetails>
       </Summary>
       <ButtonsWrapper>
-        <EditButton onClick={setCurrentInfractionIndex} />
-        <Delete onClick={removeInfraction}></Delete>
+        <IconButton icon={<EditIcon/>} onClick={setCurrentInfractionIndex} />
+        <IconButton icon={<DeleteIcon/>} onClick={removeInfraction}></IconButton>
       </ButtonsWrapper>
     </Wrapper>
   )
@@ -64,7 +66,13 @@ const SummaryDetails = styled.div``
 const Info = styled.span`
   margin-right: 20px
 `
-const Delete = styled(DeleteButton)`
-  margin-left: 16px;
-  width: 14px;
+
+const EditIcon = styled(EditIconSVG)``
+
+// const Delete = styled(DeleteButton)`
+//   margin-left: 16px;
+//   width: 14px;
+// `
+const DeleteIcon = styled(DeleteSVG)`
+  color: ${COLORS.maximumRed};
 `

@@ -1,45 +1,91 @@
-import { formalNoticeEnum, missionTypeEnum } from "../../domain/entities/missions"
+import { v4 as uuidv4 } from 'uuid'
 
-export const infractionFactory = () => {
+import { actionTargetTypeEnum, actionTypeEnum, formalNoticeEnum, missionStatusEnum, missionTypeEnum } from "../../domain/entities/missions"
+
+export const infractionFactory = ({id, ...infraction} = {}) => {
   return {
+    id: uuidv4(),
     natinf: [],
     observations: '',
     registrationNumber: '',
-    vehicle: '',
-    size: '',
-    owner: '',
+    companyName: '',
+    vesselType: '',
+    vesselSize: '',
+    controlledPersonIdentity: '',
     infractionType: '',
     formalNotice: formalNoticeEnum.NO.code,
     relevantCourt: '',
     toProcess: '',
+    ...infraction
   }
 }
 
-export const actionFactory = (actionType) => {
+export const actionFactory = ({id, actionType, ...action} = {}) => {
+  switch (actionType) {
+    case actionTypeEnum.CONTROL.code:
+      return {
+        id: uuidv4(),
+        actionType: actionTypeEnum.CONTROL.code,
+        actionTheme: '',
+        protectedSpecies: [],
+        actionStartDatetimeUtc: new Date(),
+        actionNumberOfControls: '',
+        actionTargetType: actionTargetTypeEnum.VEHICLE.code,
+        vehicleType: '',
+        geom: null,
+        infractions: [],
+        ...action
+      }
+      case actionTypeEnum.NOTE.code:
+        return {
+          id: uuidv4(),
+          actionType: actionTypeEnum.NOTE.code,
+          actionStartDatetimeUtc: new Date(),
+          observations: '',
+          ...action
+        }
+      case actionTypeEnum.SURVEILLANCE.code:
+        return {
+          id: uuidv4(),
+          actionType: actionTypeEnum.SURVEILLANCE.code,
+          actionTheme: '',
+          protectedSpecies: [],
+          actionStartDatetimeUtc: new Date(),
+          actionTargetType: actionTargetTypeEnum.VEHICLE.code,
+          geom: null,
+          ...action
+        }
+    default:
+      return {
+        id: uuidv4(),
+        actionType: '',
+        ...action
+      }
+  }
+  
+}
+
+export const resourceUnitFactory = ({...resourceUnit} = {}) => {
   return {
-    actionType,
-    actionTheme: '',
-    protectedSpecies: [],
-    actionStartDatetimeUtc: new Date(),
-    actionEndDatetimeUtc: new Date(),
-    actionNumberOfControls: '',
-    actionTargetType: '',
-    vehicleType: '',
-    infractions: []
+    administration: '',
+    unit: '',
+    resources : [],
+    ...resourceUnit
   }
 }
-
-export const missionFactory = () => {
+export const missionFactory = (mission) => {
   return {
     missionType: missionTypeEnum.SEA.code,
-    unit: '',
-    administration: '',
-    author: '',
+    missionNature: [],
+    resourceUnits: [],
+    missionStatus: missionStatusEnum.PENDING.code,
+    open_by: '',
+    closed_by: '',
     observations: '',
-    theme: '',
-    inputStartDatetimeUtc: '',
+    geom: null,
+    inputStartDatetimeUtc: new Date(),
     inputEndDatetimeUtc: '',
-    actions: [],
-    resources: [],
+    envActions: [],
+    ...mission
   }
 }

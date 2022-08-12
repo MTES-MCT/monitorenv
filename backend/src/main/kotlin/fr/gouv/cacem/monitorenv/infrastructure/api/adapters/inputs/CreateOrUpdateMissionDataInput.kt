@@ -1,45 +1,39 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs
 
-import fr.gouv.cacem.monitorenv.domain.entities.missions.ActionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.missions.*
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
 data class CreateOrUpdateMissionDataInput(
   val id: Int? = null,
   val missionType: MissionTypeEnum,
-  val administration: String? = null,
-  val unit: String? = null,
-  val resources : List<String>? = listOf(),
-  val missionStatus: String? = null,
-  val author: String? = null,
+  val missionStatus: MissionStatusEnum,
+  val missionNature: List<MissionNatureEnum>? = listOf(),
+  val resourceUnits: List<ResourceUnitEntity>? = listOf(),
+  val open_by: String? = null,
   val closed_by: String? = null,
   val observations: String? = null,
   val facade: String? = null,
-  val theme: String? = null,
   val geom: MultiPolygon? = null,
-  val inputStartDatetimeUtc: ZonedDateTime? = null,
+  val inputStartDatetimeUtc: ZonedDateTime,
   val inputEndDatetimeUtc: ZonedDateTime? = null,
-  val actions: List<ActionEntity>? = null,
+  val envActions: List<EnvActionEntity>? = null,
 ) {
     fun toMissionEntity() :MissionEntity {
       return MissionEntity(
         id= this.id,
         missionType = this.missionType,
-        administration = this.administration,
-        unit = this.unit,
-        resources = this.resources,
+        missionNature = this.missionNature,
         missionStatus = this.missionStatus,
-        author = this.author,
-        closed_by = this.author,
+        resourceUnits = this.resourceUnits,
+        open_by = this.open_by,
+        closed_by = this.closed_by,
         observations = this.observations,
         facade = this.facade,
-        theme = this.theme,
         geom = this.geom,
         inputStartDatetimeUtc = this.inputStartDatetimeUtc,
         inputEndDatetimeUtc = this.inputEndDatetimeUtc,
-        actions = this.actions
+        envActions = this.envActions
       )
     }
 }

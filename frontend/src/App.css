@@ -4,26 +4,6 @@
  *
  */
 
-.overlay-active {
-    z-index: 999999999;
-}
-
-.menu-overlay {
-    z-index: 99999999999;
-}
-
-.zoom {
-    bottom: 38px;
-    left: .5em;
-    width: 25px;
-    height: 53px;
-}
-
-.zoom>button {
-    width: 25px;
-    height: 25px;
-}
-
 .hide {
     display: none;
 }

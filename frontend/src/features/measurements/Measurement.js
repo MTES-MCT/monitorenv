@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useClickOutsideComponent } from '../../hooks/useClickOutside'
 import { useEscapeFromKeyboard } from '../../hooks/useEscapeFromKeyboard'
 
-import { RightMenuButton } from "../commonComponents/RightMenuButton/RightMenuButton"
 import {
   resetCircleMeasurementInDrawing,
   setCircleMeasurementToAdd,
@@ -20,24 +19,24 @@ import { ReactComponent as MeasurementSVG } from '../icons/Mesure.svg'
 import { ReactComponent as MultiLineSVG } from '../icons/Mesure_ligne_brisee.svg'
 import { ReactComponent as CircleRangeSVG } from '../icons/Mesure_rayon_action.svg'
 import { COLORS } from '../../constants/constants'
+import { IconButton } from 'rsuite'
 
-const MEASUREMENT_POSITION_FROM_TOP = 100
+const MEASUREMENT_POSITION_FROM_LEFT = 440
 
-const MeasurementIconSelector = ({measurementType, rightMenuIsOpen}) => {
+const MeasurementIconSelector = ({measurementType, small}) => {
   switch (measurementType) {
     case MeasurementTypes.MULTILINE:
-      return <MultiLineIcon/>
+      return <MultiLineIcon style={small && {width: '20px', height: '20px'} } className={'rs-icon'} />
     case MeasurementTypes.CIRCLE_RANGE:
-      return <CircleRangeIcon/>
+      return <CircleRangeIcon className={'rs-icon'} />
     default:
-      return <MeasurementIcon $rightMenuIsOpen={rightMenuIsOpen} />
+      return <MeasurementIcon className={'rs-icon'} />
   }
 }
 
 const Measurement = () => {
   const dispatch = useDispatch()
   const {  measurementTypeToAdd } = useSelector(state => state.measurement)
-  const {  rightMenuIsOpen } = useSelector(state => state.global)
 
   const [measurementIsOpen, setMeasurementIsOpen] = useState(false)
   const [circleCoordinatesToAdd, setCircleCoordinatesToAdd] = useState([])
@@ -98,12 +97,16 @@ const Measurement = () => {
   }
 
   return (
-    <RightMenuButton
-      top={MEASUREMENT_POSITION_FROM_TOP}
-      data-cy={'measurement'}
-      onClick={openOrCloseMeasurement}
-      button={<MeasurementIconSelector measurementType={measurementTypeToAdd} rightMenuIsOpen={rightMenuIsOpen} />}
-      >
+    <MeasurementWrapper>
+      <IconButton
+        title={'prendre une mesure'}
+        data-cy={'measurement'}
+        onClick={openOrCloseMeasurement}
+        appearance='primary'
+        size='sm'
+        icon={<MeasurementIconSelector small measurementType={measurementTypeToAdd} />}
+        >
+      </IconButton>
       <MeasurementOptions
         measurementBoxIsOpen={measurementIsOpen}>
         <MeasurementItem
@@ -120,7 +123,7 @@ const Measurement = () => {
         </MeasurementItem>
       </MeasurementOptions>
       <CustomCircleRange
-        positionFromTop={MEASUREMENT_POSITION_FROM_TOP}
+        positionFromTop={MEASUREMENT_POSITION_FROM_LEFT}
         measurementIsOpen={measurementIsOpen}
         measurementTypeToAdd={measurementTypeToAdd}
         circleCoordinatesToAdd={circleCoordinatesToAdd}
@@ -129,9 +132,16 @@ const Measurement = () => {
         setCircleRadiusToAdd={setCircleRadiusToAdd}
         cancelAddCircleRange={cancelAddCircleRange}
         addCustomCircleRange={addCustomCircleRange}/>
-    </RightMenuButton>
+    </MeasurementWrapper>
   )
 }
+
+const MeasurementWrapper = styled.div`
+  position: absolute;
+  bottom: 11px;
+  left: ${MEASUREMENT_POSITION_FROM_LEFT}px; 
+  width: 20px;
+`
 
 const MeasurementItem = styled.div`
   display: inline-block;
@@ -139,43 +149,35 @@ const MeasurementItem = styled.div`
   background: ${COLORS.shadowBlue};
   padding: 0;
   z-index: 99;
-  right: 0;
-  height: 40px;
-  width: 40px;
-  border-radius: 2px;
   cursor: pointer;
   position: relative;
-  margin-left: 5px;
-  float: right;
+  :not(:first-child){
+    margin-left: 5px;
+  }
 `
 
 const MultiLineIcon = styled(MultiLineSVG)`
-  width: 40px;
-  height: 40px;
 `
 
 const CircleRangeIcon = styled(CircleRangeSVG)`
-  width: 40px;
-  height: 40px;
+`
+
+const MeasurementIcon = styled(MeasurementSVG)`
+  width: 20px;
+  height: 20px;
 `
 
 const MeasurementOptions = styled(MapComponentStyle)`
   width: 175px;
-  margin-right: ${props => props.measurementBoxIsOpen ? '45px' : '-200px'};
+  margin-bottom: ${props => props.measurementBoxIsOpen ? '8px' : '-200px'};
   opacity: ${props => props.measurementBoxIsOpen ? '1' : '0'};
-  top: ${MEASUREMENT_POSITION_FROM_TOP};
-  right: 10px;
-  border-radius: 2px;
   position: absolute;
+  bottom: 20px;
+  left: 0;
+  text-align: left;
+  border-radius: 2px;
   display: inline-block;
   transition: all 0.5s;
-`
-
-
-const MeasurementIcon = styled(MeasurementSVG)`
-  width: 40px;
-  opacity: ${props => props.$selectedVessel && !props.$rightMenuIsOpen ? '0' : '1'};
-  transition: all 0.2s;
 `
 
 export default Measurement

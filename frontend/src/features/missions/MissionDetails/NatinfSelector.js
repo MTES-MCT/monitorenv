@@ -1,12 +1,12 @@
 import React, { useRef } from 'react'
-import styled from 'styled-components';
-import { Form, TagPicker } from 'rsuite';
-import {  useField } from 'formik';
+import styled from 'styled-components'
+import { Form, TagPicker } from 'rsuite'
+import {  useField } from 'formik'
 
 import { useGetInfractionsQuery } from '../../../api/infractionsAPI'
 
 export const NatinfSelector = ({ infractionPath, ...props }) => {
-  const [natinfField, , natinfHelpers] = useField(`${infractionPath}.natinf`);
+  const [natinfField, , natinfHelpers] = useField(`${infractionPath}.natinf`)
   
   const selectorRef = useRef()
   const { data, isError, isLoading } = useGetInfractionsQuery()
@@ -19,7 +19,7 @@ export const NatinfSelector = ({ infractionPath, ...props }) => {
   }
   return (
     <SelectorWrapper ref={selectorRef}>
-        <Form.ControlLabel htmlFor="natinf">Natinf : </Form.ControlLabel>
+        <Form.ControlLabel htmlFor="natinf">NATINF</Form.ControlLabel>
         <TagPicker
           virtualized
           block

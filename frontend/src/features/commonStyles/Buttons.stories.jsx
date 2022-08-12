@@ -1,40 +1,98 @@
 import React from 'react';
+import { ButtonToolbar, Button, IconButton } from 'rsuite';
 
-import { PrimaryButton, SecondaryButton, EditButton } from './Buttons.style';
+import StarIcon from '@rsuite/icons/legacy/Star';
+import { ReactComponent as EditIconSVG } from '../../features/icons/editer_12px.svg'
 
 export default {
   title: 'MonitorEnv/Buttons'
 };
 
-const TemplatePrimary = ({label, ...args}) => <PrimaryButton {...args}>{label}</PrimaryButton>;
+const TemplateButtons = ({label, ...args}) => (
+  <>
+    <ButtonToolbar>
+      <Button appearance="default" {...args} >Default</Button>
+      <Button appearance="primary" {...args} >Primary</Button>
+      <Button appearance="link" {...args} >Link</Button>
+      <Button appearance="subtle" {...args} >Subtle</Button>
+      <Button appearance="ghost" {...args} >Ghost</Button>
+    </ButtonToolbar>
+    <br />
+    <ButtonToolbar>
+      <Button appearance="default" {...args} >{label}</Button>
+      <Button appearance="primary" {...args} >{label}</Button>
+      <Button appearance="link" {...args} >{label}</Button>
+      <Button appearance="subtle" {...args} >{label}</Button>
+      <Button appearance="ghost" {...args} >{label}</Button>
+    </ButtonToolbar>
+    <br />
+    <ButtonToolbar>
+      <IconButton appearance="default" {...args} icon={<EditIconSVG className={"rs-icon"} />} >Default</IconButton>
+      <IconButton appearance="primary" {...args} icon={<EditIconSVG className={"rs-icon"} />} >Primary</IconButton>
+      <IconButton appearance="link" {...args} icon={<EditIconSVG className={"rs-icon"} />} >Link</IconButton>
+      <IconButton appearance="subtle" {...args} icon={<EditIconSVG className={"rs-icon"} />} >Subtle</IconButton>
+      <IconButton appearance="ghost" {...args} icon={<EditIconSVG className={"rs-icon"} />} >Ghost</IconButton>
+    </ButtonToolbar>
+    <br />
+    <ButtonToolbar>
+      <IconButton appearance="default" {...args} icon={<EditIconSVG className={"rs-icon"} />} >{label}</IconButton>
+      <IconButton appearance="primary" {...args} icon={<EditIconSVG className={"rs-icon"} />} >{label}</IconButton>
+      <IconButton appearance="link" {...args} icon={<EditIconSVG className={"rs-icon"} />} >{label}</IconButton>
+      <IconButton appearance="subtle" {...args} icon={<EditIconSVG className={"rs-icon"} />} >{label}</IconButton>
+      <IconButton appearance="ghost" {...args} icon={<EditIconSVG className={"rs-icon"} />} >{label}</IconButton>
+    </ButtonToolbar>
+    <br />
+    <ButtonToolbar>
+      <IconButton appearance="default" {...args} icon={<StarIcon />} >Default</IconButton>
+      <IconButton appearance="primary" {...args} icon={<StarIcon />} >Primary</IconButton>
+      <IconButton appearance="link" {...args} icon={<StarIcon />} >Link</IconButton>
+      <IconButton appearance="subtle" {...args} icon={<StarIcon />} >Subtle</IconButton>
+      <IconButton appearance="ghost" {...args} icon={<StarIcon />} >Ghost</IconButton>
+    </ButtonToolbar>
+    <br />
+    <ButtonToolbar>
+      <IconButton appearance="default" {...args} icon={<StarIcon />} >{label}</IconButton>
+      <IconButton appearance="primary" {...args} icon={<StarIcon />} >{label}</IconButton>
+      <IconButton appearance="link" {...args} icon={<StarIcon />} >{label}</IconButton>
+      <IconButton appearance="subtle" {...args} icon={<StarIcon />} >{label}</IconButton>
+      <IconButton appearance="ghost" {...args} icon={<StarIcon />} >{label}</IconButton>
+    </ButtonToolbar>
+  </>
+  );
 
-export const Primary = TemplatePrimary.bind({});
-Primary.args = {
+
+export const NormalButtons = TemplateButtons.bind({});
+NormalButtons.args = {
   label: 'Enregistrer',
 };
 
-export const PrimaryWidthPx = TemplatePrimary.bind({})
-PrimaryWidthPx.args = {
-  label: 'Enregistrer et quitter',
-  width: '500px'
-}
-export const PrimaryWidthPct = TemplatePrimary.bind({})
-PrimaryWidthPct.args = {
-  label: 'Enregistrer tout sans quitter',
-  width: '50%'
+export const SmallButtons = TemplateButtons.bind({})
+SmallButtons.args = {
+  size: "sm",
+  label: "Editer"
 }
 
-const TemplateSecondary = ({label, ...args}) => <SecondaryButton {...args}>{label}</SecondaryButton>;
+const TemplateIconButtons = ({label, ...args}) => {
+  return (
+    <>
+      <ButtonToolbar>
+        <IconButton appearance="default" {...args} icon={<StarIcon />} />
+        <IconButton appearance="primary" {...args} icon={<StarIcon />} />
+        <IconButton appearance="link" {...args} icon={<StarIcon />} />
+        <IconButton appearance="subtle" {...args} icon={<StarIcon />} />
+        <IconButton appearance="ghost" {...args} icon={<StarIcon />} />
+      </ButtonToolbar>
+      <br/>
+      <ButtonToolbar>
+        <IconButton appearance="default" size={"sm"} {...args} icon={<StarIcon />} />
+        <IconButton appearance="primary" size={"sm"} {...args} icon={<StarIcon />} />
+        <IconButton appearance="link" size={"sm"} {...args} icon={<StarIcon />} />
+        <IconButton appearance="subtle" size={"sm"} {...args} icon={<StarIcon />} />
+        <IconButton appearance="ghost" size={"sm"} {...args} icon={<StarIcon />} />
+      </ButtonToolbar>
+      <br/>
+    </>
 
-export const Secondary = TemplateSecondary.bind({});
-Secondary.args = {
-  label: 'Enregistrer',
-};
-
-const TemplateEditButton = ({label, ...args}) => <EditButton {...args}>{label}</EditButton>;
-
-export const Edit = TemplateEditButton.bind({});
-EditButton.args = {
-  label: 'Editer',
-};
-
+  )
+}
+export const IconButtons = TemplateIconButtons.bind({})
