@@ -1,27 +1,22 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import _ from 'lodash'
 import styled from 'styled-components'
 
-import { RegulatoryLayerSearchResultGroupFirstLevel } from './RegulatoryLayerSearchResultGroupFirstLevel'
+import { RegulatoryLayerSearchResultGroupByLayer } from './RegulatoryLayerSearchResultGroupByLayer'
 import { COLORS } from '../../../../constants/constants'
 
 
 const RegulatoryLayerSearchResultList = ({results, searchedText}) => {
-  const {
-    advancedSearchIsOpen
-  } = useSelector(state => state.regulatoryLayerSearch)
-
-  const groupedResults = _.groupBy(results, r => r?.doc?.properties?.facade)
+  const groupedResults = _.groupBy(results, r => r?.doc?.properties?.layer_name)
   return (
-    <List $advancedSearchIsOpen={advancedSearchIsOpen}>
+    <List>
       {
         groupedResults && Object.entries(groupedResults).map(([groupName, groupedResult]) => {
             return (
-              <RegulatoryLayerSearchResultGroupFirstLevel
+              <RegulatoryLayerSearchResultGroupByLayer
                 key={groupName}
                 groupName={groupName}
-                results={groupedResult}
+                result={groupedResult}
                 searchedText={searchedText}
               />
             )
@@ -36,7 +31,7 @@ const List = styled.ul`
   background: ${COLORS.background};
   border-radius: 0;
   padding: 0;
-  max-height: ${props => props.$advancedSearchIsOpen ? '55vh' : '74vh'};
+  max-height: 50vh;
   overflow-y: auto;
   overflow-x: hidden;
   color: ${COLORS.slateGray};

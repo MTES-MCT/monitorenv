@@ -41,10 +41,13 @@ const regulatorySlice = createSlice({
      * Add regulatory zones to "My Zones" regulatory selection
      * @memberOf RegulatoryReducer
      * @param {Object=} state
-     * @param {RegulatoryZone[]} action.payload - The regulatory zones
+     * @param {layerId[]} action.payload - The regulatory zones
      */
     addRegulatoryZonesToMyLayers (state, action) {
-      return {...state, selectedRegulatoryLayerIds : _.union(state.selectedRegulatoryLayerIds, action.payload)}
+      return {...state, 
+        selectedRegulatoryLayerIds : _.union(state.selectedRegulatoryLayerIds, action.payload),
+        showedRegulatoryLayerIds: _.union(state.showedRegulatoryLayerIds, action.payload)
+      }
     },
     /**
      * Remove regulatory zone(s) from "My Zones" regulatory selection, by providing a topic name to remove multiple zones

@@ -2,9 +2,11 @@ import React from 'react'
 import styled from 'styled-components'
 import { COLORS } from '../../../../constants/constants'
 import { useDispatch, useSelector } from 'react-redux'
+
 import { ChevronIcon } from '../../../commonStyles/icons/ChevronIcon.style'
 import RegulatoryLayerList from "./RegulatoryLayerList";
 import { toggleMyRegulatoryZones } from '../../../../domain/shared_slices/LayerSidebar'
+import { ReactComponent as PinSVG } from '../../../icons/epingle.svg'
 
 const RegulatoryLayers = ({regulatoryLayersAddedToMySelection}) => {
   const dispatch = useDispatch()
@@ -30,16 +32,36 @@ const RegulatoryLayers = ({regulatoryLayersAddedToMySelection}) => {
         regulatoryLayersAddedToMySelection={regulatoryLayersAddedToMySelection}
         showRegulatoryLayers={myRegulatoryZonesIsOpen}
       >
-        Mes zones réglementaires <ChevronIcon $isOpen={myRegulatoryZonesIsOpen}/>
+        <PinSVGIcon />
+        <Title>Mes zones réglementaires</Title>
+        <ChevronIcon $right $isOpen={myRegulatoryZonesIsOpen}/>
       </RegulatoryLayersTitle>
       { myRegulatoryZonesIsOpen && <RegulatoryLayerList results={selectedRegulatoryLayers}></RegulatoryLayerList> }
     </>
   )
 }
 
+const PinSVGIcon = styled(PinSVG)`
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  margin-right: 8px;
+`
+const Title = styled.span`
+  font-size: 16px;
+  line-height: 22px;
+`
+
 const RegulatoryLayersTitle = styled.div`
-  height: 30px;
-  padding-top: 5px;
+  height: 38px;
+  padding-top: 8px;
+  padding-left: 16px;
+  color: ${COLORS.gainsboro};
+  display: flex;
+  
+  cursor: pointer;
+  text-align: left;
+  user-select: none;
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
@@ -70,12 +92,7 @@ const RegulatoryLayersTitle = styled.div`
     }
   }
   
-  color: ${COLORS.gainsboro};
-  font-size: 16px;
-  cursor: pointer;
-  text-align: left;
-  padding-left: 20px;
-  user-select: none;
+  
 `
 
 export default RegulatoryLayers

@@ -26,7 +26,7 @@ const BaseLayers = () => {
   return (
     <>
       <SectionTitle onClick={onSectionTitleClicked} $showBaseLayers={baselayerIsOpen}>
-        Fonds de carte <ChevronIcon $isOpen={baselayerIsOpen}/>
+        Fonds de carte <ChevronIcon $right $isOpen={baselayerIsOpen}/>
       </SectionTitle>
       <RadioGroup onChange={handleSelectBaseLayer} value={selectedBaseLayer}>
         <BaseLayersList $showBaseLayers={baselayerIsOpen} $baseLayersLength={baseLayersKeys.length}>
@@ -45,7 +45,8 @@ const BaseLayers = () => {
 }
 
 const SectionTitle = styled.div`
-  height: 30px;
+  height: 38px;
+  display: flex;
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   background: ${COLORS.charcoal};
   color: ${COLORS.gainsboro};

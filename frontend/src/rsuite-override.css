@@ -41,6 +41,9 @@
   --rs-iconbtn-primary-addon: var(--charcoal);
   --rs-iconbtn-primary-activated-addon: var(--steel-blue);
 
+  --rs-btn-primary-active-bg: var(--steel-blue);
+  --rs-iconbtn-primary-pressed-addon: var(--steel-blue);
+
   /* Checkbox vars */
   --rs-checkbox-disabled-bg: var(--white);
 
@@ -56,6 +59,22 @@
 
 .rs-input.ghost {
   background-color: var(--white);
+}
+
+.rs-input-group,
+.rs-input-group:not(.rs-input-group-inside) .rs-auto-complete:first-child .rs-input,
+.rs-input-group:not(.rs-input-group-inside) .rs-form-control-wrapper:first-child>.rs-input,
+.rs-input-group:not(.rs-input-group-inside) .rs-picker-date:first-child .rs-picker-toggle,
+.rs-input-group:not(.rs-input-group-inside)>:first-child,
+.rs-input-group:not(.rs-input-group-inside) .rs-auto-complete:last-child .rs-input,
+.rs-input-group:not(.rs-input-group-inside) .rs-form-control-wrapper:last-child>.rs-input,
+.rs-input-group:not(.rs-input-group-inside) .rs-picker-date:last-child .rs-picker-toggle,
+.rs-input-group:not(.rs-input-group-inside)>:last-child {
+  border-radius: 0;
+}
+
+.rs-input-group-addon.primary {
+  background-color: var(--rs-btn-primary-bg);
 }
 
 /* button */

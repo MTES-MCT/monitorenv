@@ -90,6 +90,7 @@ const Name = styled.span`
   overflow-x: hidden !important;
   font-size: inherit;
   margin-top: 5px;
+  text-align: left;
 `
 
 const Rectangle = styled.div`

@@ -8,7 +8,6 @@ const LayerSidebarReducer = null
 const layerSidebarSlice = createSlice({
   name: 'layerSidebar',
   initialState: {
-    advancedSearchIsOpen: false,
     myRegulatoryZonesIsOpen: false,
     administrativeZonesIsOpen: false,
     baselayerIsOpen: false,
@@ -18,7 +17,6 @@ const layerSidebarSlice = createSlice({
       if (state.baselayerIsOpen) {
         state.baselayerIsOpen = false
       } else {
-        state.advancedSearchIsOpen = false
         state.myRegulatoryZonesIsOpen = false
         state.administrativeZonesIsOpen = false
         state.baselayerIsOpen = true
@@ -28,7 +26,6 @@ const layerSidebarSlice = createSlice({
       if (state.myRegulatoryZonesIsOpen) {
         state.myRegulatoryZonesIsOpen = false
       } else {
-        state.advancedSearchIsOpen = false
         state.myRegulatoryZonesIsOpen = true
         state.administrativeZonesIsOpen = false
         state.baselayerIsOpen = false
@@ -38,7 +35,6 @@ const layerSidebarSlice = createSlice({
       if (state.administrativeZonesIsOpen) {
         state.administrativeZonesIsOpen = false
       } else {
-        state.advancedSearchIsOpen = false
         state.myRegulatoryZonesIsOpen = false
         state.administrativeZonesIsOpen = true
         state.baselayerIsOpen = false

@@ -96,3 +96,18 @@ const TemplateIconButtons = ({label, ...args}) => {
   )
 }
 export const IconButtons = TemplateIconButtons.bind({})
+
+const TemplateSpecialStates = ({label, ...args}) => {
+  return (
+    <ButtonToolbar>
+      <IconButton active appearance="primary" {...args} icon={<StarIcon />} />
+      <IconButton active appearance="primary" {...args} icon={<StarIcon />} >{label}</IconButton>
+      <Button active appearance="primary" {...args} >Primary Active</Button>
+    </ButtonToolbar>
+  )
+}
+
+export const SpecialButtonStates = TemplateSpecialStates.bind({})
+SpecialButtonStates.args = {
+  label: 'Special active state'
+}

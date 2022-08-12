@@ -1,44 +1,46 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled, { css } from 'styled-components'
-import Checkbox from 'rsuite/Checkbox'
+import { IconButton } from 'rsuite'
 import Highlighter from 'react-highlight-words'
 
 import showRegulatoryZoneMetadata from '../../../../domain/use_cases/regulatory/showRegulatoryZoneMetadata'
 import { closeRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
 import { setRegulatoryGeometriesToPreview } from '../../../../domain/shared_slices/Regulatory'
-
-import { toggleRegulatoryZone } from './RegulatoryLayerSearch.slice'
-// import { showOrHideMetadataIcon } from '../RegulatoryLayerZone'
+import { addRegulatoryZonesToMyLayers, removeRegulatoryZonesFromMyLayers } from '../../../../domain/shared_slices/Regulatory'
 
 import { getRegulatoryEnvColorWithAlpha } from '../../../map/layers/styles/administrativeAndRegulatoryLayers.style'
-import { ReactComponent as ZoomIconSVG } from '../../../icons/target.svg'
 import { REGPaperDarkIcon, REGPaperIcon } from '../../../commonStyles/icons/REGPaperIcon.style'
+import { ReactComponent as PinSVG } from '../../../icons/epingle.svg'
+import { ReactComponent as PinFullSVG } from '../../../icons/epingle_pleine.svg'
+
 import { COLORS } from '../../../../constants/constants'
 
 const RegulatoryLayerSearchResultZone = ({regulatoryZone, searchedText}) => {
   const dispatch = useDispatch()
-
-  const { regulatoryZonesChecked } = useSelector(state => state.regulatoryLayerSearch)
+  const { selectedRegulatoryLayerIds } = useSelector(state => state.regulatory)
   const { regulatoryMetadataPanelIsOpen, regulatoryMetadataLayerId } = useSelector(state => state.regulatoryMetadata)
-  const isZoneSelected = regulatoryZonesChecked.includes(regulatoryZone.id)
+  const isZoneSelected = selectedRegulatoryLayerIds.includes(regulatoryZone.id)
   const metadataIsShown = regulatoryMetadataPanelIsOpen && regulatoryZone.id === regulatoryMetadataLayerId
 
-
-  const handleZoomToZones = () => {
-    if (regulatoryZone?.doc?.geometry) {
-      dispatch(setRegulatoryGeometriesToPreview([regulatoryZone?.doc?.geometry]))
+  const handleSelectRegulatoryZone = () => {
+    if (isZoneSelected) {
+      dispatch(removeRegulatoryZonesFromMyLayers([regulatoryZone.id]))
+    } else {
+      dispatch(addRegulatoryZonesToMyLayers([regulatoryZone.id]))
     }
   }
 
-  const handleSelectRegulatoryZone = () => dispatch(toggleRegulatoryZone(regulatoryZone.id))
-
   const toggleRegulatoryZoneMetadata = () => {
-    metadataIsShown ? dispatch(closeRegulatoryZoneMetadata()) : dispatch(showRegulatoryZoneMetadata(regulatoryZone.id))
+    if (metadataIsShown) {
+      dispatch(closeRegulatoryZoneMetadata())
+    } else {
+      dispatch(showRegulatoryZoneMetadata(regulatoryZone.id))
+      if (regulatoryZone?.doc?.geometry) {
+        dispatch(setRegulatoryGeometriesToPreview([regulatoryZone?.doc?.geometry]))
+      }
+    }
   }
-  // value => value?.length
-  // ? setZoneSelectionList([regulatoryZone])
-  // : setZoneSelectionList([])
   return (
     <Zone  $selected={isZoneSelected}>
       <Rectangle $vectorLayerColor={getRegulatoryEnvColorWithAlpha(regulatoryZone?.doc?.properties?.thematique)}/>
@@ -54,17 +56,16 @@ const RegulatoryLayerSearchResultZone = ({regulatoryZone, searchedText}) => {
           />
         {!regulatoryZone?.doc?.properties?.entity_name && 'AUCUN NOM'}
       </Name>
-      <ZoomIcon onClick={handleZoomToZones}></ZoomIcon>
         {
           metadataIsShown
             ? <CustomREGPaperDarkIcon title="Fermer la réglementation" onClick={toggleRegulatoryZoneMetadata}/>
             : <CustomREGPaperIcon title="Afficher la réglementation" onClick={toggleRegulatoryZoneMetadata}/>
         }
-        <Checkbox
-          checked={isZoneSelected}
-          onChange={handleSelectRegulatoryZone}
+        <IconButton
           data-cy={'regulatory-zone-check'}
-          value={regulatoryZone.id}
+          icon={isZoneSelected ? <PinFullSVGIcon className='rs-icon' /> : <PinSVGIcon className='rs-icon' />}
+          size='sm'
+          onClick={handleSelectRegulatoryZone}
         />
     </Zone>
   )
@@ -76,6 +77,7 @@ const Name = styled.span`
   overflow-x: hidden !important;
   font-size: inherit;
   margin-top: 5px;
+  text-align: left;
 `
 
 const Rectangle = styled.div`
@@ -111,17 +113,26 @@ const CustomPaperStyle = css`
   height: 23px
 `
 
-const ZoomIcon = styled(ZoomIconSVG)`
-  padding-top: 10px;
-  padding-left: 5px;
-  padding-right: 5px;
-`
-
 const CustomREGPaperIcon = styled(REGPaperIcon)`
   ${CustomPaperStyle}
 `
 const CustomREGPaperDarkIcon = styled(REGPaperDarkIcon)`
   ${CustomPaperStyle}
+`
+
+
+const PinSVGIcon = styled(PinSVG)`
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  margin-right: 8px;
+`
+const PinFullSVGIcon = styled(PinFullSVG)`
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  margin-right: 8px;
+  color: ${COLORS.steelBlue};
 `
 
 export default RegulatoryLayerSearchResultZone

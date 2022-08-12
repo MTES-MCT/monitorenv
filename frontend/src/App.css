@@ -29,18 +29,6 @@
     color: rgb(81, 81, 81);
 }
 
-.hover-border:hover {
-    border-bottom: 1px solid rgb(40, 47, 62);
-}
-
-.new-regulation-select-picker a {
-    padding: 8px 0px;
-}
-
-.primary {
-    background: rgba(5, 5, 94, 1);
-}
-
 .collapsed {
     display: none;
 }

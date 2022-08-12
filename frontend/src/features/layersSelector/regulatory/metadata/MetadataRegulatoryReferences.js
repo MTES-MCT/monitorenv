@@ -6,7 +6,7 @@ import { Link } from '../../../commonStyles/Link.style'
 const MetadataRegulatoryReferences = ({regulatoryReference, url}) => {
   
   return regulatoryReference && <Section>
-    <SectionTitle>Références réglementaires</SectionTitle>
+    <SectionTitle>Résumé réglementaire sur Légicem</SectionTitle>
     <List>
       <Reference data-cy="regulatory-layers-metadata-references"> 
         <Link target={"_blank"} href={url}>{regulatoryReference}</Link>

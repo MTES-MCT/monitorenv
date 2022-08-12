@@ -27,7 +27,7 @@ const AdministrativeLayers = () => {
         showZones={administrativeZonesIsOpen}
         data-cy={'administrative-zones-open'}
       >
-        Zones administratives <ChevronIcon $isOpen={administrativeZonesIsOpen}/>
+        Zones administratives <ChevronIcon $right $isOpen={administrativeZonesIsOpen}/>
       </SectionTitle>
       {administrativeLayers && administrativeLayers.length
         ? <ZonesList showZones={administrativeZonesIsOpen} zonesLength={administrativeLayers.length}>
@@ -57,9 +57,10 @@ const AdministrativeLayers = () => {
 }
 
 const SectionTitle = styled.div`
-  height: 30px;
+  height: 38px;
   padding-left: 20px;
   padding-top: 5px;
+  display: flex;
   font-size: 16px;
   cursor: pointer;
   background: ${COLORS.charcoal};

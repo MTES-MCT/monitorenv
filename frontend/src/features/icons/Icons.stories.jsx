@@ -9,12 +9,12 @@ export default {
 };
 
 
-const Template = ({background}) => {
+const Template = ({background, color}) => {
   return <Gallery>
   {
     reqSvgs.keys().map((path)=>{
       return <ImageWrapper key={path}>
-          <Img src={reqSvgs(path)} background={background}></Img>
+          <Img src={reqSvgs(path)} background={background} color={color}></Img>
           {path}
           </ImageWrapper>
     }) 
@@ -25,12 +25,14 @@ const Template = ({background}) => {
  export const NoBackground = Template.bind({});
  export const WithBackground = Template.bind({});
  WithBackground.args = {
-  background: COLORS.charcoal
+  background: COLORS.charcoal,
+  color: 'white'
  }
 
 
  const Img = styled.img`
   background: ${({background}) => background || COLORS.white};
+  color: ${({color}) => color || COLORS.charcoal};
   width: 50px;
   margin: 3px;
  `
