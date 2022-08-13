@@ -2,7 +2,7 @@ import GeoJSON from 'ol/format/GeoJSON'
 import Feature from 'ol/Feature'
 import { MultiPolygon, Polygon, Point, MultiPoint } from 'ol/geom'
 
-import { setFeatureType, resetFeatures, resetInteraction, addFeatures, setInteractionType } from "../../../features/drawLayer/DrawLayer.slice"
+import { setFeatureType, resetInteraction, setFeatures, setInteractionType, resetFeatures } from "../../../features/drawLayer/DrawLayer.slice"
 import { setDisplayedItems } from "../../shared_slices/Global"
 
 import { monitorenvFeatureTypes, interactionTypes, olGeometryTypes } from "../../entities/drawLayer"
@@ -45,7 +45,7 @@ export const addMissionZone = ({callback, geom} ) => (dispatch) => {
       geometry: new Polygon(coord).transform(WSG84_PROJECTION, OPENLAYERS_PROJECTION)
     })
   })
-  features && dispatch(addFeatures(features))
+  features && dispatch(setFeatures(features))
   dispatch(openDrawLayerModal)
   dispatch(setFeatureType({featureType: monitorenvFeatureTypes.MISSION_ZONE, callback}))
   dispatch(setInteractionType(interactionTypes.POLYGON))
@@ -58,7 +58,7 @@ export const addControlPositions = ({callback, geom} ) => (dispatch) => {
       geometry: new Point(coord).transform(WSG84_PROJECTION, OPENLAYERS_PROJECTION)
     })
   })
-  features && dispatch(addFeatures(features))
+  features && dispatch(setFeatures(features))
   dispatch(openDrawLayerModal)
   dispatch(setFeatureType({featureType: monitorenvFeatureTypes.ACTION_LOCALISATION, callback}))
   dispatch(setInteractionType(interactionTypes.POINT))
@@ -67,8 +67,7 @@ export const addControlPositions = ({callback, geom} ) => (dispatch) => {
 
 export const quitAddLocalisation = (dispatch) => {
   dispatch(closeDrawLayerModal)
-  dispatch(setFeatureType(null))
-  dispatch(resetFeatures())
+  dispatch(resetInteraction())
 }
 
 export const validateLocalisation = (dispatch, getState) => {
@@ -96,3 +95,7 @@ export const validateLocalisation = (dispatch, getState) => {
   dispatch(resetInteraction())
 }
 
+export const quitEditMission = (dispatch) => {
+  dispatch(resetFeatures())
+  dispatch(resetInteraction())
+}

@@ -8,6 +8,8 @@ import { getOverlayPosition, getTopLeftMargin } from '../position'
 import { MissionCard } from './MissionCard'
 
 import { COLORS } from '../../../../constants/constants'
+import { actionTypeEnum } from '../../../../domain/entities/missions'
+import { ActionCard } from './ActionCard'
 
 const overlayHeight = 74
 export const marginsWithoutAlert = {
@@ -19,7 +21,8 @@ export const marginsWithoutAlert = {
   yBottom: -153
 }
 
-export const MissionCardOverlay = ({ map, feature, selected }) => {
+export const MissionOverlayWrapper = ({ map, feature, selected }) => {
+  console.log("over", feature, 'selected', selected)
   const overlayRef = useRef(null)
   const overlayObjectRef = useRef(null)
   const [overlayTopLeftMargin, setOverlayTopLeftMargin] = useState([marginsWithoutAlert.yBottom, marginsWithoutAlert.xMiddle])
@@ -65,17 +68,21 @@ export const MissionCardOverlay = ({ map, feature, selected }) => {
     }
   }, [feature, overlayRef, overlayObjectRef, map])
 
-  
-
+  let renderedComponent = null
+  if (feature && feature.get('missionId')) {
+    renderedComponent = (<MissionCard
+      feature={feature}
+      selected={selected}
+    />)
+  } else if (feature && feature.get('actionType') === actionTypeEnum.CONTROL.code ) {
+    renderedComponent = (<ActionCard  feature={feature}
+      selected={selected}
+      />)
+  }
   return (
     <MissionCardOverlayComponent selected={selected} ref={overlayCallback} overlayTopLeftMargin={overlayTopLeftMargin}>
       {
-        feature
-          ? <MissionCard
-            feature={feature}
-            selected={selected}
-          />
-          : null
+        renderedComponent
       }
     </MissionCardOverlayComponent>
   )

@@ -73,24 +73,36 @@ export const DrawLayer = ({ map }) => {
     }
   }, [map])
 
+  useEffect(()=>{
+    if(vectorLayerRef.current !== null) {
+      if (interactionType) {
+        vectorLayerRef.current.setStyle(
+          [pointLayerStyle, dottedLayerStyle, editStyle]
+        )
+      } else {
+        vectorLayerRef.current.setStyle(
+          [pointLayerStyle, dottedLayerStyle]
+        )
+      }
+    }
+  }, [interactionType])
+
   useEffect(() => {
+    const modify = new Modify({source: GetVectorSource()})
     GetVectorSource()?.clear(true)
     GetDrawVectorSource()?.clear(true)
-    const modify = new Modify({source: GetVectorSource()})
-
     if (!_.isEmpty(features)) {
-      map.addInteraction(modify)
       GetVectorSource()?.addFeatures(features)
+      interactionType && map.addInteraction(modify)
     }
     return () => {
       if (map) {
         map.removeInteraction(modify)
       }
     }
-  }, [features, map])
+  }, [features, map, interactionType])
 
   useEffect(() => {
-    function drawOnMap () {
       if (map && interactionType) {
 
         let type = null
@@ -123,10 +135,9 @@ export const DrawLayer = ({ map }) => {
           GetDrawVectorSource()?.clear(true)
           map.removeInteraction(draw)
         })
-      }
-    }
+        return () => map.removeInteraction(draw)
+      } 
 
-    drawOnMap()
   }, [map, interactionType])
 
 

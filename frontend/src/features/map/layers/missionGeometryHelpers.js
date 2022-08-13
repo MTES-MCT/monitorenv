@@ -49,7 +49,8 @@ export const getMissionZoneFeature = (mission, layername) => {
     missionType: mission.missionType,
     resourceUnits: mission.resourceUnits,
     numberOfActions: mission.actions?.length || 0,
-    missionStatus: mission.missionStatus
+    missionStatus: mission.missionStatus,
+    envActions: mission.envActions
   })
   return  feature
 }
@@ -61,6 +62,7 @@ const getActionFeature = (action) => {
     geom, 
     actionType, 
     actionNumberOfControls, 
+    actionTargetType,
     actionTheme, 
     actionStartDatetimeUtc, 
     infractions
@@ -81,15 +83,16 @@ const getActionFeature = (action) => {
     actionTheme,
     actionStartDatetimeUtc,
     actionNumberOfControls,
+    actionTargetType,
     infractions
   })
   return  feature
 }
 
 export const getActionsFeatures = (mission) => {
-  const { actions } = mission
-  if (actions?.length > 0) {
-    return actions.map(getActionFeature).filter(f=>f)
+  const { envActions } = mission
+  if (envActions?.length > 0) {
+    return envActions.map(getActionFeature).filter(f=>f)
   }
   return []
 }

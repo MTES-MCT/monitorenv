@@ -1,6 +1,6 @@
 import React from 'react'
 import { Form } from 'rsuite'
-import { Field, FieldArray, useField } from 'formik'
+import {  FieldArray, useField } from 'formik'
 import styled from 'styled-components'
 import { format, isValid } from 'date-fns'
 import { fr } from 'date-fns/locale'
@@ -14,6 +14,7 @@ import { ProtectedSpeciesSelector } from './ProtectedSpeciesSelector';
 import { ActionTargetSelector } from './ActionTargetSelector';
 import { VehicleTypeSelector } from './VehicleTypeSelector';
 import { ControlPositions } from './ControlPositions';
+import { FormikInput } from '../../commonComponents/CustomFormikFields/FormikInput'
 
 import { ReactComponent as ControlIconSVG } from '../../icons/controles.svg'
 import { COLORS } from '../../../constants/constants'
@@ -71,7 +72,7 @@ export const ControlForm = ({ remove, currentActionIndex, setCurrentActionIndex 
           <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionNumberOfControls`}>
             Nombre total de contrôles
           </Form.ControlLabel>
-          <Field name={`envActions.${currentActionIndex}.actionNumberOfControls`} />
+          <FormikInput name={`envActions.${currentActionIndex}.actionNumberOfControls`} />
         </ActionFieldWrapper>
         <ActionFieldWrapper>
           <ActionTargetSelector currentActionIndex={currentActionIndex} />

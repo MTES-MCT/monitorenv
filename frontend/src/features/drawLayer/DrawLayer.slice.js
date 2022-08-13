@@ -21,7 +21,7 @@ const drawLayerReducerSlice = createSlice({
      * Start an interaction with the OpenLayers map, hence use the mouse to draw geometries
      * @param {Object=} state
      * @param {{payload: {
-     *   interactionType: (InteractionTypes.SQUARE|InteractionTypes.POLYGON),
+     *   interactionType: (InteractionTypes.SQUARE|InteractionTypes.POLYGON|null),
      * }}} action - The interaction type (see InteractionTypes enum)
      */
     setFeatureType (state, action) {
@@ -36,15 +36,15 @@ const drawLayerReducerSlice = createSlice({
      * @param {Object=} state
      */
     resetInteraction (state) {
-      state.features = []
+      state.featureType = null
       state.callback = null
       state.interactionType = null
     },
     addFeature(state, action) {
       state.features.push(action.payload)
     },
-    addFeatures(state, action) {
-      state.features = [...state.features, ...action.payload]
+    setFeatures(state, action) {
+      state.features = [...action.payload]
     },
     resetFeatures(state) {
       state.features = []
@@ -57,7 +57,7 @@ export const {
   setInteractionType,
   resetInteraction,
   addFeature,
-  addFeatures,
+  setFeatures,
   resetFeatures
 } = drawLayerReducerSlice.actions
 

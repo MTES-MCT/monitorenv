@@ -1,10 +1,12 @@
 package fr.gouv.cacem.monitorenv.domain.entities.missions
 
+import org.locationtech.jts.geom.MultiPoint
 import java.time.ZonedDateTime
 import java.util.*
 
 data class EnvActionControlProperties(
   val actionStartDatetimeUtc: ZonedDateTime? = null,
+  val geom: MultiPoint? = null,
   val actionTheme: String? = null,
   val actionSubTheme: String? = null,
   val protectedSpecies: List<String>? = listOf(),
@@ -18,6 +20,7 @@ data class EnvActionControlProperties(
   fun toEnvActionControlEntity(id: UUID) = EnvActionControlEntity(
     id = id,
     actionStartDatetimeUtc = actionStartDatetimeUtc,
+    geom = geom,
     actionTheme = actionTheme,
     actionSubTheme = actionSubTheme,
     protectedSpecies = protectedSpecies,

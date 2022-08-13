@@ -20,6 +20,7 @@ import { missionFactory } from './Missions.helpers'
 import { ReactComponent as SaveSVG } from '../icons/enregistrer_16px.svg'
 import { ReactComponent as DeleteSVG } from '../icons/Suppression_clair.svg'
 import { COLORS } from '../../constants/constants';
+import { quitEditMission } from '../../domain/use_cases/missions/missionAndControlLocalisation';
 
 export const CreateOrEditMission = ({routeParams})  => {
   const dispatch = useDispatch()
@@ -65,6 +66,7 @@ export const CreateOrEditMission = ({routeParams})  => {
     upsertMission(values).then((response)=> {
       const {data, error} = response
       if (data) {
+        dispatch(quitEditMission)
         dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))
         setErrorOnSave(false)
       } else {

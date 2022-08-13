@@ -1,16 +1,16 @@
 import React from 'react'
 import {  useField } from 'formik';
-import { Input } from 'rsuite'
+import {  InputNumber } from 'rsuite'
 
 
-export const FormikInput = ({ name, ...props }) => {
+export const FormikInputNumber = ({ name, ...props }) => {
   const [field, , helpers] = useField(name);
   const { value } = field;
   const { setValue } = helpers;
   
 
   return (
-    <Input value={value || ''} onChange={setValue} {...props} />
+    <InputNumber value={value || ''} onChange={setValue} {...props} />
   );
 }
 
