@@ -8,7 +8,7 @@ import {  setSideWindowAsOpen } from '../../domain/shared_slices/Global'
 // import SideWindowMenu from './SideWindowMenu'
 import { COLORS } from '../../constants/constants'
 import { MissionsWrapper } from '../missions/MissionsWrapper'
-import { ErrorBoundary } from '../commonComponents/ErrorBoundary'
+import { ErrorBoundary } from '../../components/ErrorBoundary'
 
 export const SideWindow = forwardRef(function SideWindowComponent(props, ref) {
   const { openedSideWindowTab } = useSelector(state => state.global)

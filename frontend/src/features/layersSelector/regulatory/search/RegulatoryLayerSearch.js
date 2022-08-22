@@ -11,9 +11,9 @@ import { setFilterSearchOnMapExtent } from './RegulatoryLayerSearch.slice'
 import RegulatoryLayerSearchResultList from './RegulatoryLayerSearchResultList'
 import { RegulatoryLayerSearchInput } from './RegulatoryLayerSearchInput'
 
-import { ReactComponent as ZoomIconSVG } from '../../../icons/affichage_recherche_reg.svg'
-import { ReactComponent as SearchIconSVG } from '../../../icons/Loupe.svg'
-import { ReactComponent as CloseIconSVG } from '../../../icons/Croix_grise.svg'
+import { ReactComponent as ZoomIconSVG } from '../../../../uiMonitor/icons/affichage_recherche_reg.svg'
+import { ReactComponent as SearchIconSVG } from '../../../../uiMonitor/icons/Loupe.svg'
+import { ReactComponent as CloseIconSVG } from '../../../../uiMonitor/icons/Croix_grise.svg'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map'
 
 

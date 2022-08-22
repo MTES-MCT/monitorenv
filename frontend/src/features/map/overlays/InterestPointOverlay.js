@@ -11,8 +11,8 @@ import { usePrevious } from '../../../hooks/usePrevious'
 
 import { getCoordinates } from '../../../utils/coordinates'
 
-import { ReactComponent as EditSVG } from '../../icons/Bouton_edition.svg'
-import { ReactComponent as DeleteSVG } from '../../icons/Suppression.svg'
+import { ReactComponent as EditSVG } from '../../../uiMonitor/icons/Bouton_edition.svg'
+import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression.svg'
 import { COLORS } from '../../../constants/constants'
 
 const X = 0

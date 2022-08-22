@@ -1,11 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Button } from 'rsuite'
+import { IconButton } from 'rsuite'
 
 import { resourceUnitFactory } from '../Missions.helpers'
 
-import { COLORS } from '../../../constants/constants'
 import { ResourceUnitSelector } from './ResourceUnitSelector'
+
+import { ReactComponent as PlusSVG } from '../../../uiMonitor/icons/plus.svg'
+
+import { COLORS } from '../../../constants/constants'
 
 export const ResourceUnitsForm = ({  push, remove, form }) =>  {
 
@@ -32,13 +35,14 @@ export const ResourceUnitsForm = ({  push, remove, form }) =>  {
     : <NoActionWrapper><NoAction>Aucune unité renseignée</NoAction></NoActionWrapper>
   }
 
-    <Button
+    <IconButton
       appearance='ghost'
       size='sm'
+      icon={<PlusSVG className="rs-icon"/>}
       onClick={handleAddResourceUnit}
     >
-      + Ajouter une nouvelle unité
-    </Button>
+      Ajouter une unité
+    </IconButton>
     
   </>
 )}

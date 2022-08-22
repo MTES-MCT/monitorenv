@@ -3,15 +3,18 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { FingerprintSpinner } from 'react-epic-spinners'
 
-import { COLORS } from '../../../../constants/constants'
-import { ReactComponent as REGPaperSVG } from '../../../icons/reg_paper_dark.svg'
-import { ReactComponent as AlertSVG } from '../../../icons/Picto_alerte.svg'
+import { useGetRegulatoryLayerQuery } from '../../../../api/regulatoryLayersAPI'
 import { closeRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
-import { CloseIcon } from '../../../commonStyles/icons/CloseIcon.style'
+
 import { getTitle } from '../../../../domain/entities/regulatory'
 import Identification from './Identification'
 import MetadataRegulatoryReferences from './MetadataRegulatoryReferences'
-import { useGetRegulatoryLayerQuery } from '../../../../api/regulatoryLayersAPI'
+
+import { ReactComponent as REGPaperSVG } from '../../../../uiMonitor/icons/reg_paper_dark.svg'
+import { ReactComponent as AlertSVG } from '../../../../uiMonitor/icons/Picto_alerte.svg'
+import { CloseIcon } from '../../../commonStyles/icons/CloseIcon.style'
+
+import { COLORS } from '../../../../constants/constants'
 
 const RegulatoryLayerZoneMetadata = () => {
   const dispatch = useDispatch()

@@ -11,8 +11,8 @@ import { addRegulatoryZonesToMyLayers, removeRegulatoryZonesFromMyLayers } from 
 
 import { getRegulatoryEnvColorWithAlpha } from '../../../map/layers/styles/administrativeAndRegulatoryLayers.style'
 import { REGPaperDarkIcon, REGPaperIcon } from '../../../commonStyles/icons/REGPaperIcon.style'
-import { ReactComponent as PinSVG } from '../../../icons/epingle.svg'
-import { ReactComponent as PinFullSVG } from '../../../icons/epingle_pleine.svg'
+import { ReactComponent as PinSVG } from '../../../../uiMonitor/icons/epingle.svg'
+import { ReactComponent as PinFullSVG } from '../../../../uiMonitor/icons/epingle_pleine.svg'
 
 import { COLORS } from '../../../../constants/constants'
 

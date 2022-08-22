@@ -63,7 +63,8 @@ const getActionFeature = (action) => {
     actionType, 
     actionNumberOfControls, 
     actionTargetType,
-    actionTheme, 
+    actionTheme,
+    actionSubTheme,
     actionStartDatetimeUtc, 
     infractions
   } = action
@@ -81,6 +82,7 @@ const getActionFeature = (action) => {
   feature.setProperties({
     actionType,
     actionTheme,
+    actionSubTheme,
     actionStartDatetimeUtc,
     actionNumberOfControls,
     actionTargetType,

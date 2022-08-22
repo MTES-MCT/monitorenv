@@ -46,6 +46,7 @@ export const RelevantCourtSelector = ({infractionPath, ...props}) => {
 
 const SelectorWrapper = styled.div`
   width: 280px;
+  height: 58px;
   .rs-picker-menu {
     position: relative;
     margin-top: -50px;

@@ -4,8 +4,9 @@ import { useField } from 'formik'
 import { IconButton } from 'rsuite'
 
 import { vehicleTypeEnum, formalNoticeEnum, infractionTypeEnum, vesselTypeEnum } from '../../../domain/entities/missions'
-import { ReactComponent as EditIconSVG } from '../../icons/Bouton_edition.svg'
-import { ReactComponent as DeleteSVG } from '../../icons/Suppression_clair.svg'
+
+import { ReactComponent as EditIconSVG } from '../../../uiMonitor/icons/Bouton_edition.svg'
+import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression_clair.svg'
 
 import { COLORS } from '../../../constants/constants'
 
@@ -44,6 +45,7 @@ export const InfractionCard = ({ currentActionIndex, infractionPath,  setCurrent
 
 const Wrapper = styled.div`
   background: ${COLORS.white};
+  margin-top: 8px;
   margin-bottom: 8px;
   padding: 12px;
   display:flex;

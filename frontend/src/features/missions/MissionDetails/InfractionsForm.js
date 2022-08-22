@@ -13,7 +13,7 @@ export const InfractionsForm = ({  push, remove, form, currentActionIndex }) => 
   const [ currentInfractionIndex, setCurrentInfractionIndex ] = useState(null)
 
   const handleAddInfraction = () => {
-    const numberOfInfractions = form?.values.envActions[currentActionIndex]?.value?.infractions?.length
+    const numberOfInfractions = form?.values.envActions[currentActionIndex]?.infractions?.length || 0
     push(infractionFactory())
     setCurrentInfractionIndex(numberOfInfractions)
   }
@@ -75,6 +75,7 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 8px;
 `
 const Title = styled.h3`
   font-size: 13px;

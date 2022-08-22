@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import _ from 'lodash'
 
 import { useGetMissionsQuery } from '../../api/missionsAPI'
-import { setSideWindowPath } from '../commonComponents/SideWindowRouter/SideWindowRouter.slice';
+import { setSideWindowPath } from '../../components/SideWindowRouter/SideWindowRouter.slice';
 import { sideWindowPaths } from '../../domain/entities/sideWindow';
 
 import { SideWindowHeader } from '../side_window/SideWindowHeader';

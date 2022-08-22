@@ -6,7 +6,7 @@ import VectorLayer from 'ol/layer/Vector'
 
 import { useGetMissionsQuery } from '../../../api/missionsAPI'
 import Layers from '../../../domain/entities/layers'
-import { selectedMissionStyleFn } from './styles/missions.style'
+import { selectedMissionStyle, selectedMissionActionsStyle } from './styles/missions.style'
 import { getMissionZoneFeature, getActionsFeatures } from './missionGeometryHelpers'
 
 
@@ -18,44 +18,77 @@ export const SelectedMissionLayer = ({ map }) => {
     }),
   })
   
-  const vectorSourceRef = useRef(null)
-  const GetVectorSource = () => {
-    if (vectorSourceRef.current === null) {
-      vectorSourceRef.current = new VectorSource()
+  const selectedMissionVectorSourceRef = useRef(null)
+  const GetSelectedMissionVectorSource = () => {
+    if (selectedMissionVectorSourceRef.current === null) {
+      selectedMissionVectorSourceRef.current = new VectorSource()
        
     }
-    return vectorSourceRef.current
+    return selectedMissionVectorSourceRef.current
   }
 
-  const vectorLayerRef = useRef(null)
+  const selectedMissionActionsVectorSourceRef = useRef(null)
+  const GetSelectedMissionActionsVectorSource = () => {
+    if (selectedMissionActionsVectorSourceRef.current === null) {
+      selectedMissionActionsVectorSourceRef.current = new VectorSource()
+       
+    }
+    return selectedMissionActionsVectorSourceRef.current
+  }
+
+  const selectedMissionVectorLayerRef = useRef(null)
+  const selectedMissionActionsVectorLayerRef = useRef(null)
   
 
   useEffect(() => {
-    const GetVectorLayer = () => {
-      if (vectorLayerRef.current === null) {
-        vectorLayerRef.current = new VectorLayer({
-          source: GetVectorSource(),
-          style: selectedMissionStyleFn,
+    const GetSelectedMissionVectorLayer = () => {
+      if (selectedMissionVectorLayerRef.current === null) {
+        selectedMissionVectorLayerRef.current = new VectorLayer({
+          source: GetSelectedMissionVectorSource(),
+          style: selectedMissionStyle,
           renderBuffer: 7,
           updateWhileAnimating: true,
           updateWhileInteracting: true,
           zIndex: Layers.MISSION_SELECTED.zIndex,
         })
-        vectorLayerRef.current.name = Layers.MISSION_SELECTED.code
+        selectedMissionVectorLayerRef.current.name = Layers.MISSION_SELECTED.code
       }
-      return vectorLayerRef.current
+      return selectedMissionVectorLayerRef.current
+    }
+    const GetSelectedMissionActionsVectorLayer = () => {
+      if (selectedMissionActionsVectorLayerRef.current === null) {
+        selectedMissionActionsVectorLayerRef.current = new VectorLayer({
+          source: GetSelectedMissionActionsVectorSource(),
+          style: selectedMissionActionsStyle,
+          renderBuffer: 7,
+          updateWhileAnimating: true,
+          updateWhileInteracting: true,
+          zIndex: Layers.ACTIONS.zIndex,
+        })
+        selectedMissionActionsVectorLayerRef.current.name = Layers.ACTIONS.code
+      }
+      return selectedMissionActionsVectorLayerRef.current
     }
 
-    map && map.getLayers().push(GetVectorLayer())
+    if (map) {
+      const layersCollection = map.getLayers()
+      layersCollection.push(GetSelectedMissionVectorLayer())
+      layersCollection.push(GetSelectedMissionActionsVectorLayer())
+    }
 
-    return () => map && map.removeLayer(GetVectorLayer())
+    return () => {
+      if (map) {
+        map.removeLayer(GetSelectedMissionVectorLayer())}
+        map.removeLayer(GetSelectedMissionActionsVectorLayer())
+      }
   }, [map])
 
   useEffect(() => {
-    GetVectorSource()?.clear(true)
+    GetSelectedMissionVectorSource()?.clear(true)
+    GetSelectedMissionActionsVectorSource()?.clear(true)
     if (mission) {
-      GetVectorSource()?.addFeature(getMissionZoneFeature(mission, Layers.MISSION_SELECTED.code))
-      GetVectorSource()?.addFeatures(getActionsFeatures(mission, Layers.MISSION_SELECTED.code))
+      GetSelectedMissionVectorSource()?.addFeature(getMissionZoneFeature(mission, Layers.MISSION_SELECTED.code))
+      GetSelectedMissionActionsVectorSource()?.addFeatures(getActionsFeatures(mission))
     }
   }, [mission])
 

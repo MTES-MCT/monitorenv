@@ -1,13 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useDispatch } from 'react-redux'
+import { IconButton, Input, InputGroup } from 'rsuite'
 
 
 import { resetRegulatoryGeometriesToPreview } from '../../../../domain/shared_slices/Regulatory'
-import { ReactComponent as SearchIconSVG } from '../../../icons/Loupe.svg'
-import { ReactComponent as CloseIconSVG } from '../../../icons/Croix_grise.svg'
-import { ReactComponent as FiltreIconSVG } from '../../../icons/filtres.svg'
-import { IconButton, Input, InputGroup } from 'rsuite'
+import { ReactComponent as SearchIconSVG } from '../../../../uiMonitor/icons/Loupe.svg'
+import { ReactComponent as CloseIconSVG } from '../../../../uiMonitor/icons/Croix_grise.svg'
+import { ReactComponent as FiltreIconSVG } from '../../../../uiMonitor/icons/filtres.svg'
 
 export const RegulatoryLayerSearchInput = ({globalSearchText, setGlobalSearchText}) => {
 

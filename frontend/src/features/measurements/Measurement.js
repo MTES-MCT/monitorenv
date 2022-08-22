@@ -15,9 +15,9 @@ import CustomCircleRange from './CustomCircleRange'
 
 import { MapComponentStyle } from '../commonStyles/MapComponent.style'
 
-import { ReactComponent as MeasurementSVG } from '../icons/Mesure.svg'
-import { ReactComponent as MultiLineSVG } from '../icons/Mesure_ligne_brisee.svg'
-import { ReactComponent as CircleRangeSVG } from '../icons/Mesure_rayon_action.svg'
+import { ReactComponent as MeasurementSVG } from '../../uiMonitor/icons/Mesure.svg'
+import { ReactComponent as MultiLineSVG } from '../../uiMonitor/icons/Mesure_ligne_brisee.svg'
+import { ReactComponent as CircleRangeSVG } from '../../uiMonitor/icons/Mesure_rayon_action.svg'
 import { COLORS } from '../../constants/constants'
 import { IconButton } from 'rsuite'
 

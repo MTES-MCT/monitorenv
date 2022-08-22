@@ -1,16 +1,16 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { IconButton } from 'rsuite'
 import _ from 'lodash'
 import styled from 'styled-components'
 import Highlighter from 'react-highlight-words'
 
 import RegulatoryLayerSearchResultZones from './RegulatoryLayerSearchResultZones'
-
-import { ReactComponent as PinSVG } from '../../../icons/epingle.svg'
-import { ReactComponent as PinFullSVG } from '../../../icons/epingle_pleine.svg'
-import { COLORS } from '../../../../constants/constants'
-import { IconButton } from 'rsuite'
 import { addRegulatoryZonesToMyLayers, removeRegulatoryZonesFromMyLayers } from '../../../../domain/shared_slices/Regulatory'
+
+import { ReactComponent as PinSVG } from '../../../../uiMonitor/icons/epingle.svg'
+import { ReactComponent as PinFullSVG } from '../../../../uiMonitor/icons/epingle_pleine.svg'
+import { COLORS } from '../../../../constants/constants'
 
 export const RegulatoryLayerSearchResultGroupByLayer = ({ groupName, result, searchedText }) => {
   const dispatch = useDispatch()

@@ -6,14 +6,14 @@ import { IconButton, Input } from 'rsuite';
 import {transformExtent} from 'ol/proj';
 import { transform } from 'ol/proj'
 
-import { ReactComponent as SearchIconSVG } from '../icons/Loupe.svg'
-import { ReactComponent as CloseIconSVG } from '../icons/Croix_grise.svg'
+import { usePhotonAPI } from '../../api/photonAPI';
 
-
-import { COLORS } from '../../constants/constants'
 import { setFitToExtent } from '../../domain/shared_slices/Map'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map';
-import { usePhotonAPI } from '../../api/photonAPI';
+
+import { ReactComponent as SearchIconSVG } from '../../uiMonitor/icons/Loupe.svg'
+import { ReactComponent as CloseIconSVG } from '../../uiMonitor/icons/Croix_grise.svg'
+import { COLORS } from '../../constants/constants'
 
 export const LocateOnMap = () => {
   const dispatch = useDispatch()

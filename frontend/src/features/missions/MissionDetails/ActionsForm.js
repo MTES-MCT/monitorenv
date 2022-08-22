@@ -6,28 +6,32 @@ import { actionFactory } from '../Missions.helpers'
 import { actionTypeEnum } from '../../../domain/entities/missions'
 import { ActionCard } from './ActionCard'
 
-import { ReactComponent as PlusSVG } from '../../icons/plus.svg'
-import { ReactComponent as ControlSVG } from '../../icons/controles.svg'
-import { ReactComponent as SurveillanceSVG } from '../../icons/surveillance_18px.svg'
-import { ReactComponent as NoteSVG } from '../../icons/note_libre.svg'
+import { ReactComponent as PlusSVG } from '../../../uiMonitor/icons/plus.svg'
+import { ReactComponent as ControlSVG } from '../../../uiMonitor/icons/controles.svg'
+import { ReactComponent as SurveillanceSVG } from '../../../uiMonitor/icons/surveillance_18px.svg'
+import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/note_libre.svg'
 import { COLORS } from '../../../constants/constants';
 
-export const ActionsForm = ({  push, remove, form, currentActionIndex, setCurrentActionIndex }) =>  {
-  const handleAddSurveillanceAction = () => push(actionFactory({actionType: actionTypeEnum.SURVEILLANCE.code}))
-  const handleAddControlAction = () => push(actionFactory({actionType: actionTypeEnum.CONTROL.code}))
-  const handleAddNoteAction = () => push(actionFactory({actionType: actionTypeEnum.NOTE.code}))
+export const ActionsForm = ({  unshift, remove, form, currentActionIndex, setCurrentActionIndex }) =>  {
+  const handleAddSurveillanceAction = () => unshift(actionFactory({actionType: actionTypeEnum.SURVEILLANCE.code}))
+  const handleAddControlAction = () => unshift(actionFactory({actionType: actionTypeEnum.CONTROL.code}))
+  const handleAddNoteAction = () => unshift(actionFactory({actionType: actionTypeEnum.NOTE.code}))
   const handleSelectAction = index => () => setCurrentActionIndex(index)
   const handleRemoveAction = index => (e) => {
     e.stopPropagation()
     setCurrentActionIndex(null)
     remove(index)
   }
-  const handleDuplicateAction = index => () => push(actionFactory(form.values.envActions[index]))
+  const handleDuplicateAction = index => () => {
+    unshift(actionFactory(form.values.envActions[index]))
+    setCurrentActionIndex(0)
+
+  }
 
   return (<FormWrapper>
     <TitleWrapper>
       <Title>Actions réalisées en mission</Title>
-        <Dropdown appearance='primary' size='sm' title={'Ajouter'} noCaret icon={<PlusSVG/>}>
+        <Dropdown appearance='primary' title={'Ajouter'} noCaret icon={<PlusSVG className="rs-icon"/>}>
           <Dropdown.Item icon={<ControlSVGIcon/>} onClick={handleAddControlAction}>
             Ajouter des contrôles
           </Dropdown.Item>
@@ -65,10 +69,11 @@ const FormWrapper = styled.div`
   flex-direction: column;
   padding-left: 32px;
   padding-top: 32px;
-  padding-right: 19px;
+  padding-right: 48px;
   color: ${COLORS.slateGray};
 `
 const TitleWrapper = styled.div`
+  margin-bottom: 30px;
 `
 const Title = styled.h2`
   font-size: 16px;

@@ -1,7 +1,9 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+
+import { OverlayPositionOnCentroid } from '../OverlayPositionOnCentroid'
+import { MissionCard } from './MissionCard'
 import Layers from '../../../../domain/entities/layers'
-import { MissionOverlayWrapper } from './MissionOverlayWrapper'
 
 
 export const MissionOverlays = ({map, currentFeatureOver}) => {
@@ -10,8 +12,12 @@ export const MissionOverlays = ({map, currentFeatureOver}) => {
   const displayHoveredFeature = currentFeatureOver?.getId()?.startsWith(Layers.MISSIONS.code) && currentFeatureOver?.getId() !== `${Layers.MISSIONS.code}:${selectedMissionId}`
   return (
     <>
-      <MissionOverlayWrapper feature={feature} map={map} selected/>
-      <MissionOverlayWrapper feature={displayHoveredFeature && currentFeatureOver} map={map} />
+      <OverlayPositionOnCentroid feature={feature} map={map}>
+        <MissionCard feature={feature} selected />
+      </OverlayPositionOnCentroid>
+      <OverlayPositionOnCentroid feature={displayHoveredFeature && currentFeatureOver} map={map} >
+        <MissionCard feature={currentFeatureOver} />
+      </OverlayPositionOnCentroid>
     </>
     )
 } 

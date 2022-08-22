@@ -9,7 +9,7 @@ import {
   endInterestPointDraw
 } from '../../domain/shared_slices/InterestPoint'
 
-import { ReactComponent as InterestPointSVG } from '../icons/Point_interet.svg'
+import { ReactComponent as InterestPointSVG } from '../../uiMonitor/icons/Point_interet.svg'
 import { IconButton } from 'rsuite'
 
 const INTEREST_POINT_POSITION_FROM_LEFT = 470

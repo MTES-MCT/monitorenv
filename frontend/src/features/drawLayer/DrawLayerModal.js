@@ -1,13 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { ReactComponent as PolygonSVG } from '../icons/polygone.svg'
-import { ReactComponent as RectangleSVG } from '../icons/rectangle.svg'
-import { ReactComponent as CircleSVG } from '../icons/cercle-1.svg'
-import { ReactComponent as SelectorSVG } from '../icons/selector.svg'
+import { ReactComponent as PolygonSVG } from '../../uiMonitor/icons/polygone.svg'
+import { ReactComponent as RectangleSVG } from '../../uiMonitor/icons/rectangle.svg'
+import { ReactComponent as CircleSVG } from '../../uiMonitor/icons/cercle-1.svg'
+import { ReactComponent as SelectorSVG } from '../../uiMonitor/icons/selector.svg'
 
 import { COLORS } from '../../constants/constants'
-import { useDispatch, useSelector } from 'react-redux'
 import { resetFeatures, setInteractionType } from './DrawLayer.slice'
 import { monitorenvFeatureTypes, interactionTypes } from '../../domain/entities/drawLayer'
 import { quitAddLocalisation, validateLocalisation } from '../../domain/use_cases/missions/missionAndControlLocalisation'

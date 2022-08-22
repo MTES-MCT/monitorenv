@@ -1,22 +1,40 @@
-import React from 'react'
-import { Form } from 'rsuite'
-import { Field, useField } from 'formik'
+import React, { useMemo, useEffect } from 'react'
+import { Form, IconButton } from 'rsuite'
+import { useFormikContext } from 'formik'
 import styled from 'styled-components'
-import TrashIcon from '@rsuite/icons/Trash';
+import _ from 'lodash'
 
-import { FormikDatePicker, placeholderDateTimePicker } from '../../commonComponents/CustomFormikFields/FormikDatePicker';
-import { FormikTextarea } from '../../commonComponents/CustomFormikFields/FormikTextarea'
-import { ControlTopicsCascader } from './ControlTopicsCascader'
+import { useGetControlThemesQuery } from '../../../api/controlThemesAPI'
 
-import { actionTypeEnum } from '../../../domain/entities/missions';
+import { usePrevious } from '../../../hooks/usePrevious'
+import { FormikDatePicker, placeholderDateTimePicker } from '../../../uiMonitor/CustomFormikFields/FormikDatePicker';
+import { FormikTextarea } from '../../../uiMonitor/CustomFormikFields/FormikTextarea'
+import { FormikInputGhost } from '../../../uiMonitor/CustomFormikFields/FormikInput'
 
-import { ReactComponent as SurveillanceIconSVG } from '../../icons/surveillance_18px.svg'
+import { ControlThemeSelector } from './ControlThemeSelector'
+
+import { ReactComponent as SurveillanceIconSVG } from '../../../uiMonitor/icons/surveillance_18px.svg'
+import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression_clair.svg'
 import { COLORS } from '../../../constants/constants'
 
 
 export const SurveillanceForm = ({ remove, currentActionIndex, setCurrentActionIndex }) => {
-  const [ actionTypeField ] = useField(`envActions.${currentActionIndex}.actionType`)
+  const { values: { envActions }, setFieldValue } = useFormikContext();
+  
+  const actionTheme = envActions[currentActionIndex]?.actionTheme
+  
+  const { data, isError, isLoading } = useGetControlThemesQuery()
+  const themes = useMemo(()=> _.uniqBy(data, 'topic_level_1'), [data])
+  const subThemes = useMemo(()=>_.filter(data, (t)=> {return t.topic_level_1 === actionTheme}), [data, actionTheme])
 
+  const previousActionTheme = usePrevious(actionTheme)
+  
+  useEffect(()=> {
+    if (previousActionTheme && previousActionTheme !== actionTheme) {
+      setFieldValue(`envActions.${currentActionIndex}.actionSubTheme`, '')
+    }
+  }, [previousActionTheme, actionTheme, currentActionIndex, setFieldValue])
+  
   const handleRemoveAction = () => {
     setCurrentActionIndex(null)
     remove(currentActionIndex)
@@ -25,23 +43,35 @@ export const SurveillanceForm = ({ remove, currentActionIndex, setCurrentActionI
   return (<>
     <Header>
       <SurveillanceIcon/>
-      <Title>{actionTypeEnum[actionTypeField.value]?.libelle}</Title>
-      <Delete type="button" onClick={handleRemoveAction}><TrashIcon />Supprimer</Delete>
+      <Title>Surveillance</Title>
+      <IconButtonRight appearance='ghost' icon={<DeleteIcon className={"rs-icon"}/>} size="sm" title={"supprimer"} onClick={handleRemoveAction} >Supprimer</IconButtonRight>
     </Header>
-
-    <Form.Group>
-      <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionTheme`}>Thématique</Form.ControlLabel>
-      <ControlTopicsCascader name={`envActions.${currentActionIndex}.actionTheme`} />
-    </Form.Group>
+    {
+      !isError && !isLoading && <>
+        <SelectorWrapper>
+          <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionTheme`}>Thématique</Form.ControlLabel>
+          <ControlThemeSelector themes={themes} valueKey={"topic_level_1"} name={`envActions.${currentActionIndex}.actionTheme`} />
+        </SelectorWrapper>
+        <SelectorWrapper>
+          <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionSubTheme`}>Sous-thématique</Form.ControlLabel>
+          <ControlThemeSelector themes={subThemes} valueKey={"topic_level_2"} name={`envActions.${currentActionIndex}.actionSubTheme`} />
+        </SelectorWrapper>
+        </>
+    }
     
-    <Form.Group>
+    <SelectorWrapper>
       <Form.ControlLabel htmlFor={`envActions[${currentActionIndex}].actionStartDatetimeUtc`} >Date et heure de début </Form.ControlLabel>
-      <FormikDatePicker name={`envActions[${currentActionIndex}].actionStartDatetimeUtc`} placeholder={placeholderDateTimePicker} format="dd MMM yyyy, HH:mm" oneTap/>
-    </Form.Group>
+      <FormikDatePicker 
+        ghost
+        name={`envActions[${currentActionIndex}].actionStartDatetimeUtc`} 
+        placeholder={placeholderDateTimePicker} 
+        format="dd MMM yyyy, HH:mm" 
+        oneTap/>
+    </SelectorWrapper>
    
     <Form.Group>
       <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.duration`}>Durée</Form.ControlLabel>
-      <Field name={`envActions.${currentActionIndex}.duration`} />
+      <FormikInputGhost size="sm" name={`envActions.${currentActionIndex}.duration`} />
     </Form.Group>
     
     <Form.Group>
@@ -56,7 +86,10 @@ export const SurveillanceForm = ({ remove, currentActionIndex, setCurrentActionI
 }
 
 
-const Header = styled.div``
+const Header = styled.div`
+  margin-bottom: 32px;
+  display: flex;
+`
 
 const Title = styled.h2`
   font-size: 16px;
@@ -65,11 +98,19 @@ const Title = styled.h2`
   color: ${COLORS.charcoal}
 `
 
-const Delete = styled.button`
-  color: red;
-  float: right;
+const SelectorWrapper = styled(Form.Group)`
+  height: 58px;
 `
+
 const SurveillanceIcon = styled(SurveillanceIconSVG)`
   margin-right: 8px;
+  height: 24px;
   color: ${COLORS.gunMetal};
+`
+const DeleteIcon = styled(DeleteSVG)`
+  color: ${COLORS.maximumRed};
+`
+
+const IconButtonRight = styled(IconButton)`
+  margin-left: auto;
 `

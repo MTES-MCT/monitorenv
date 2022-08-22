@@ -15,9 +15,9 @@ import SetCoordinates from '../coordinates/SetCoordinates'
 import { MapComponentStyle } from '../commonStyles/MapComponent.style'
 import { COLORS } from '../../constants/constants'
 
-import { ReactComponent as ControlSVG } from '../icons/Label_controle.svg'
-import { ReactComponent as VesselSVG } from '../icons/Label_segment_de_flotte.svg'
-import { ReactComponent as OtherSVG } from '../icons/Point_interet_autre.svg'
+import { ReactComponent as ControlSVG } from '../../uiMonitor/icons/Label_controle.svg'
+import { ReactComponent as VesselSVG } from '../../uiMonitor/icons/Label_segment_de_flotte.svg'
+import { ReactComponent as OtherSVG } from '../../uiMonitor/icons/Point_interet_autre.svg'
 
 const SaveInterestPoint = ({ isOpen, close }) => {
   const dispatch = useDispatch()

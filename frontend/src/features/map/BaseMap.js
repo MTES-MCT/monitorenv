@@ -43,7 +43,7 @@ const BaseMap = ({ children, showAttributions }) => {
       const feature = current_map.forEachFeatureAtPixel(event.pixel, f => f, { hitTolerance: HIT_PIXEL_TO_TOLERANCE, layerFilter: (l)=> {
         return HoverableLayers.includes(l.name)
       } })
-      setCurrentFeatureOver( feature )
+      setCurrentFeatureOver(feature)
     }
 
   }, 50), [setCurrentFeatureOver])
