@@ -17,7 +17,7 @@ const ColorSample = styled.div`
 
 
 export default {
-  title: 'MonitorEnv/Colors',
+  title: 'Monitor/Colors',
   component: ColorSample,
 };
 

@@ -5,7 +5,7 @@ import { COLORS } from '../../constants/constants';
 const reqSvgs = require.context('../icons', true, /\.svg$/)
 
 export default {
-  title: 'MonitorEnv/Icons',
+  title: 'Monitor/Icons',
 };
 
 

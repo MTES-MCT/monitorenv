@@ -1,5 +1,5 @@
 import React from 'react'
-import { missionStatusEnum } from '../../domain/entities/missions';
+import { missionStatusEnum } from '../domain/entities/missions';
 import { MissionStatusLabel } from './MissionStatusLabel'
 
 export default {
