@@ -20,7 +20,7 @@ jobs:
         API_TOKEN_GITHUB: ${{ secrets.MONITORFISH_API_TOKEN }}
       with:
         source_folder: 'frontend/src/uiMonitor'
-        destination_repo: 'MTES-MCT/monitorenv'
+        destination_repo: 'MTES-MCT/monitorfish'
         destination_folder: 'frontend/src/monitorUI_GENERATED'
         destination_base_branch: 'master'
         destination_head_branch: 'update-monitor-ui-library'
