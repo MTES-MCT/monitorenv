@@ -1,0 +1,26 @@
+name: Push Monitor UI library to MonitorFish repository
+
+on:
+  push
+    branches:
+      - main
+    paths:
+      - frontend/src/uiMonitor/**
+
+jobs:
+  pull-request:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Create pull request
+      uses: paygoc6/action-pull-request-another-repo@v1.0.1
+      env:
+        API_TOKEN_GITHUB: ${{ secrets.MONITORFISH_API_TOKEN }}
+      with:
+        source_folder: 'frontend/src/uiMonitor'
+        destination_repo: 'MTES-MCT/monitorenv'
+        destination_folder: 'frontend/src/monitorUI_GENERATED'
+        destination_base_branch: 'master'
+        destination_head_branch: 'update-monitor-ui-library'
