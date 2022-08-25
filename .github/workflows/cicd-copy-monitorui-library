@@ -1,7 +1,7 @@
 name: Push Monitor UI library to MonitorFish repository
 
 on:
-  push
+  push:
     branches:
       - main
     paths:
