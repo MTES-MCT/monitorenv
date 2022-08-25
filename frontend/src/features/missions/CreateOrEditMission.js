@@ -187,9 +187,8 @@ const Wrapper = styled.div`
 `
 const FirstColumn = styled.div`
   background: ${COLORS.white};
-  color: ${COLORS.slateGray};
   flex: 1;
-  overflow: scroll;
+  overflow-y: auto;
   padding: 32px;
 `
 

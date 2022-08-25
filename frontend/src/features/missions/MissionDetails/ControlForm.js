@@ -33,8 +33,8 @@ export const ControlForm = ({ remove, currentActionIndex, setCurrentActionIndex 
   const protectedSpecies = envActions[currentActionIndex]?.protectedSpecies
 
   const { data, isError, isLoading } = useGetControlThemesQuery()
-  const themes = useMemo(()=> _.uniqBy(data, 'topic_level_1'), [data])
-  const subThemes = useMemo(()=>_.filter(data, (t)=> {return t.topic_level_1 === actionTheme}), [data, actionTheme])
+  const themes = useMemo(()=> _.uniqBy(data, 'theme_level_1'), [data])
+  const subThemes = useMemo(()=>_.filter(data, (t)=> {return t.theme_level_1 === actionTheme}), [data, actionTheme])
   
   const previousActionTheme = usePrevious(actionTheme)
   
@@ -64,11 +64,11 @@ export const ControlForm = ({ remove, currentActionIndex, setCurrentActionIndex 
     {!isError && !isLoading && <>
       <SelectorWrapper>
         <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionTheme`}>Thématique de contrôle</Form.ControlLabel>
-        <ControlThemeSelector themes={themes} valueKey={"topic_level_1"} name={`envActions.${currentActionIndex}.actionTheme`} />
+        <ControlThemeSelector themes={themes} valueKey={"theme_level_1"} name={`envActions.${currentActionIndex}.actionTheme`} />
       </SelectorWrapper>
       <SelectorWrapper>
         <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionSubTheme`}>Sous-thématique de contrôle</Form.ControlLabel>
-        <ControlThemeSelector themes={subThemes} valueKey={"topic_level_2"} name={`envActions.${currentActionIndex}.actionSubTheme`} />
+        <ControlThemeSelector themes={subThemes} valueKey={"theme_level_2"} name={`envActions.${currentActionIndex}.actionSubTheme`} />
       </SelectorWrapper>
 
       {
