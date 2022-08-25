@@ -3,7 +3,7 @@ import { Table } from 'rsuite'
 
 import { CellLocalizeMission } from './CellLocalizeMission'
 import { CellEditMission } from './CellEditMission'
-import { DateCell } from '../../commonComponents/Table/Cell/DateCell'
+import { DateCell } from '../../../ui/Table/Cell/DateCell'
 import {sortMissionsByProperty} from './MissionsTableSort'
 import { CellResources } from './CellResources'
 import { CellMissionType } from './CellMissionType'

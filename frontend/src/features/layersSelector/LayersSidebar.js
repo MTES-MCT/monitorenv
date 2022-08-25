@@ -2,16 +2,18 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import {  useDispatch, useSelector } from 'react-redux'
 
-import { ReactComponent as LayersSVG } from '../icons/Couches.svg'
+import { closeRegulatoryZoneMetadata } from '../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
+import BaseLayers from './base/BaseLayers'
 import RegulatoryLayerSearch from './regulatory/search/RegulatoryLayerSearch'
 import AdministrativeLayers from './administrative/AdministrativeLayers'
 import RegulatoryLayers from './regulatory/menu/RegulatoryLayers'
-import { COLORS } from '../../constants/constants'
 import RegulatoryLayerZoneMetadata from './regulatory/metadata/RegulatoryLayerZoneMetadata'
-import BaseLayers from './base/BaseLayers'
+
 import { MapComponentStyle } from '../commonStyles/MapComponent.style'
 import { MapButtonStyle } from '../commonStyles/MapButton.style'
-import { closeRegulatoryZoneMetadata } from '../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
+import { ReactComponent as LayersSVG } from '../../uiMonitor/icons/Couches.svg'
+
+import { COLORS } from '../../constants/constants'
 
 const LayersSidebar = () => {
   const { regulatoryMetadataPanelIsOpen } = useSelector(state => state.regulatoryMetadata)

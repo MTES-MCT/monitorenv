@@ -4,17 +4,12 @@ import { format, isValid } from 'date-fns'
 import { fr } from 'date-fns/locale'
 
 import { COLORS } from '../../../../constants/constants'
-import { missionTypeEnum } from '../../../../domain/entities/missions'
-import { MissionStatusLabel } from '../../../commonStyles/MissionStatusLabel'
 
 export const ControlCard = ({feature}) => {
   const { 
     actionStartDatetimeUtc,
-    missionType,
-    unit,
-    administration,
-    numberOfActions,
-    missionStatus,
+    actionTheme,
+    actionNumberOfControls,
   } = feature.getProperties()
   const parsedActionStartDatetimeUtc = new Date(actionStartDatetimeUtc)
 
@@ -23,38 +18,36 @@ export const ControlCard = ({feature}) => {
   <ControlCardHeader>
     <Col1>
       <ControlDate>
-        {isValid(parsedActionStartDatetimeUtc) && format(parsedActionStartDatetimeUtc, "dd MMM yyyy", {locale: fr})}
+        {isValid(parsedActionStartDatetimeUtc) && format(parsedActionStartDatetimeUtc, "dd MMM yyyy à HH:mm", {locale: fr})}
       </ControlDate>
     </Col1>
     <Col2>
-      <ControlType>Control {missionTypeEnum[missionType]?.libelle}</ControlType>
-      <ControlReources>{administration} ({unit})</ControlReources>
-      <Actions>{numberOfActions} actions réalisées</Actions>
-      <MissionStatusLabel missionStatus={missionStatus} />
+      <Theme>{actionTheme}</Theme>
+      <Actions>{actionNumberOfControls} contrôles réalisés</Actions>
     </Col2>
   </ControlCardHeader>
   </>)
 }
 
 const ControlCardHeader = styled.div`
-background: ${COLORS.white};
-padding: 4px 5px 5px 5px;
-border-top-left-radius: 2px;
-border-top-right-radius: 2px;
-display: flex;
+  background: ${COLORS.white};
+  padding: 4px 5px 5px 5px;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  display: flex;
 `
 
 const ControlDate = styled.div`
 `
 
-const ControlType = styled.div`
-font-weight: bold;
-`
-
-const ControlReources = styled.div`
+const Theme = styled.div`
 `
 const Actions = styled.div`
 `
 
-const Col1 = styled.div``
-const Col2 = styled.div``
+const Col1 = styled.div`
+  width: 220px;
+`
+const Col2 = styled.div`
+  width: 120px;
+`

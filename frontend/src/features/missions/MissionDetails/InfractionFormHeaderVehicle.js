@@ -1,18 +1,18 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Form } from 'rsuite'
-import { Field } from 'formik'
 
 import { VesselSizeSelector } from './VesselSizeSelector'
 import { VesselTypeSelector } from './VesselTypeSelector'
+import { FormikInput } from '../../../uiMonitor/CustomFormikFields/FormikInput'
 
 
 export const InfractionFormHeaderVehicle = ({currentActionIndex, infractionPath}) => {
   return (
-    <Form.Group>
+    <FormGroup>
       <FormColumn>
         <Form.ControlLabel htmlFor={`${infractionPath}.registrationNumber`}>Immatriculation</Form.ControlLabel>
-        <Field name={`${infractionPath}.registrationNumber`} />
+        <FormikInput size='sm' name={`${infractionPath}.registrationNumber`} />
       </FormColumn>
     
       <FormColumn>
@@ -22,11 +22,17 @@ export const InfractionFormHeaderVehicle = ({currentActionIndex, infractionPath}
       <FormColumn>
         <VesselSizeSelector infractionPath={infractionPath} currentActionIndex={currentActionIndex}/>
       </FormColumn>
-    </Form.Group>
+    </FormGroup>
   )
 }
 
 const FormColumn = styled.div`
   display: inline-block;
-  ${props => `flex: ${props.flex};`}
+  :not(:last-child) {
+    margin-right: 6px;
+  }
+`
+const FormGroup = styled(Form.Group)`
+  height: 58px;
+  display: flex;
 `

@@ -1,13 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Form, Button} from 'rsuite'
-import { Field, useField } from 'formik'
+import { Form, Button, ButtonToolbar} from 'rsuite'
+import { useField } from 'formik'
 
 import { infractionTypeEnum, formalNoticeEnum, actionTargetTypeEnum } from '../../../domain/entities/missions'
 
-import { FormikRadioGroup } from '../../commonComponents/CustomFormikFields/FormikRadioGroup'
-import { FormikCheckbox } from '../../commonComponents/CustomFormikFields/FormikCheckbox'
-import { FormikTextarea } from '../../commonComponents/CustomFormikFields/FormikTextarea'
+import { FormikRadioGroup } from '../../../uiMonitor/CustomFormikFields/FormikRadioGroup'
+import { FormikCheckbox } from '../../../uiMonitor/CustomFormikFields/FormikCheckbox'
+import { FormikTextarea } from '../../../uiMonitor/CustomFormikFields/FormikTextarea'
 
 import { NatinfSelector } from './NatinfSelector'
 
@@ -15,6 +15,7 @@ import { COLORS } from '../../../constants/constants'
 import { InfractionFormHeaderVehicle } from './InfractionFormHeaderVehicle'
 import { InfractionFormHeaderCompany } from './InfractionFormHeaderCompany'
 import { RelevantCourtSelector } from './RelevantCourtSelector'
+import { FormikInput } from '../../../uiMonitor/CustomFormikFields/FormikInput'
 
 
 export const InfractionForm = ({ currentActionIndex, infractionPath, validateInfraction, removeInfraction }) =>  {
@@ -30,7 +31,7 @@ export const InfractionForm = ({ currentActionIndex, infractionPath, validateInf
 
       <Form.Group>
         <Form.ControlLabel htmlFor={`${infractionPath}.controlledPersonIdentity`}>Identité de la personne controlée</Form.ControlLabel>
-        <Field name={`${infractionPath}.controlledPersonIdentity`} />
+        <FormikInput name={`${infractionPath}.controlledPersonIdentity`} />
       </Form.Group>
 
       <Form.Group>
@@ -43,9 +44,9 @@ export const InfractionForm = ({ currentActionIndex, infractionPath, validateInf
         <FormikRadioGroup name={`${infractionPath}.formalNotice`} radioValues={formalNoticeEnum} />
       </Form.Group>
 
-      <Form.Group>
+      <FormGroupFixedHeight>
         <NatinfSelector infractionPath={infractionPath} />
-      </Form.Group>
+      </FormGroupFixedHeight>
 
       <Form.Group>
         <FormColumn>
@@ -61,8 +62,10 @@ export const InfractionForm = ({ currentActionIndex, infractionPath, validateInf
         <Form.ControlLabel htmlFor="observations">Observations</Form.ControlLabel>
         <FormikTextarea name={`${infractionPath}.observations`} />
       </Form.Group>
-      <Button appearance="ghost" onClick={removeInfraction}>Supprimer l&apos;infraction</Button>
-      <Button onClick={validateInfraction}>Valider l&apos;infraction</Button>
+      <ButtonToolbarRight>
+        <Button onClick={removeInfraction}>Supprimer l&apos;infraction</Button>
+        <Button appearance="primary" onClick={validateInfraction}>Valider l&apos;infraction</Button>
+      </ButtonToolbarRight>
   </FormWrapper>
 
   )
@@ -71,6 +74,9 @@ export const InfractionForm = ({ currentActionIndex, infractionPath, validateInf
 const FormWrapper = styled.div`
   background: ${COLORS.white};
   padding: 32px;
+`
+const FormGroupFixedHeight = styled(Form.Group)`
+  haight: 58px;
 `
 
 const FormColumn = styled.div`
@@ -81,4 +87,8 @@ const FormColumnWithCheckbox = styled.div`
   display: inline-block;
   vertical-align: top;
   padding-top: 16px;
+`
+const ButtonToolbarRight = styled(ButtonToolbar)`
+  display: flex;
+  justify-content: flex-end;
 `

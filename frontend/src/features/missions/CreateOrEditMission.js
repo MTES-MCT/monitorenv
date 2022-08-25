@@ -5,7 +5,7 @@ import { Formik, FieldArray } from 'formik';
 import { Form, Button, IconButton, ButtonToolbar } from 'rsuite'
 
 import { useGetMissionsQuery, useUpdateMissionMutation, useCreateMissionMutation, useDeleteMissionMutation } from '../../api/missionsAPI'
-import { setSideWindowPath } from '../commonComponents/SideWindowRouter/SideWindowRouter.slice';
+import { setSideWindowPath } from '../../components/SideWindowRouter/SideWindowRouter.slice';
 import { sideWindowPaths } from '../../domain/entities/sideWindow';
 import { missionStatusEnum } from '../../domain/entities/missions';
 
@@ -17,8 +17,8 @@ import { MissionValidationModal } from './MissionValidationModal';
 
 import { missionFactory } from './Missions.helpers'
 
-import { ReactComponent as SaveSVG } from '../icons/enregistrer_16px.svg'
-import { ReactComponent as DeleteSVG } from '../icons/Suppression_clair.svg'
+import { ReactComponent as SaveSVG } from '../../uiMonitor/icons/enregistrer_16px.svg'
+import { ReactComponent as DeleteSVG } from '../../uiMonitor/icons/Suppression_clair.svg'
 import { COLORS } from '../../constants/constants';
 import { quitEditMission } from '../../domain/use_cases/missions/missionAndControlLocalisation';
 
@@ -150,20 +150,18 @@ export const CreateOrEditMission = ({routeParams})  => {
                         appearance='ghost'
                         onClick={handleDelete}
                         type='button'
-                        size='sm'
                         icon={<DeleteIcon className={"rs-icon"}/>} 
                       >
                         Supprimer la mission
                       </IconButton>)
                   }
                   <Separator/>
-                  <Button onClick={handleCancel} type='button' size='sm'>Annuler</Button>
-                  <IconButton appearance='ghost' type='submit' size='sm' icon={<SaveSVG className={"rs-icon"}/>}>Enregistrer</IconButton>
+                  <Button onClick={handleCancel} type='button' >Annuler</Button>
+                  <IconButton appearance='ghost' type='submit'  icon={<SaveSVG className={"rs-icon"}/>}>Enregistrer</IconButton>
                   <IconButton 
                     disabled={!(mission.missionStatus === missionStatusEnum.ENDED.code)} 
                     appearance='primary' 
                     type='button' 
-                    size='sm' 
                     onClick={handleCloseMission}
                     icon={<SaveSVG className={"rs-icon"}/>}>
                       Enregistrer et clôturer
@@ -189,18 +187,21 @@ const Wrapper = styled.div`
 `
 const FirstColumn = styled.div`
   background: ${COLORS.white};
+  color: ${COLORS.slateGray};
   flex: 1;
-  display: flex;
   overflow: scroll;
-  `
+  padding: 32px;
+`
+
 const SecondColumn = styled.div`
   background: ${COLORS.cultured};
+  overflow-y: auto;
   flex: 1;
 `
 const ThirdColumn = styled.div`
   background: ${COLORS.gainsboro};
   flex: 1;
-  overflow: scroll;
+  overflow-y: auto;
 `
 
 const ErrorOnSave = styled.div`

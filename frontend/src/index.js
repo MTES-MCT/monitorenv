@@ -5,8 +5,8 @@ import 'ol/ol.css'
 
 import './index.css'
 import './App.css'
-import './ol-override.css'
-import './rsuite-override.css'
+import './uiMonitor/ol-override.css'
+import './uiMonitor/rsuite-override.css'
 
 import * as Sentry from '@sentry/react'
 import { Integrations } from '@sentry/tracing'

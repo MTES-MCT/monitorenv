@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Missions } from './Missions'
 import { CreateOrEditMission } from './CreateOrEditMission'
-import { SideWindowRoute } from '../commonComponents/SideWindowRouter/SideWindowRoute'
+import { SideWindowRoute } from '../../components/SideWindowRouter/SideWindowRoute'
 
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 

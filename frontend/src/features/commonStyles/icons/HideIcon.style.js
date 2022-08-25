@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { ReactComponent as HideIconSVG } from '../../icons/oeil_masque.svg'
+import { ReactComponent as HideIconSVG } from '../../../uiMonitor/icons/oeil_masque.svg'
 
 export const HideIcon = styled(HideIconSVG)`
   width: 23px;

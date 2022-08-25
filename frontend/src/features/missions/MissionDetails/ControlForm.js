@@ -1,54 +1,83 @@
-import React from 'react'
-import { Form } from 'rsuite'
-import {  FieldArray, useField } from 'formik'
+import React, { useEffect, useMemo } from 'react'
+import { Form, IconButton } from 'rsuite'
+import {  FieldArray, useField, useFormikContext } from 'formik'
 import styled from 'styled-components'
 import { format, isValid } from 'date-fns'
 import { fr } from 'date-fns/locale'
-import TrashIcon from '@rsuite/icons/Trash';
+import _ from 'lodash'
+
+import { useGetControlThemesQuery } from '../../../api/controlThemesAPI'
+
+import { usePrevious } from '../../../hooks/usePrevious'
+import { FormikDatePicker, placeholderDateTimePicker } from '../../../uiMonitor/CustomFormikFields/FormikDatePicker';
+import { FormikInputGhost } from '../../../uiMonitor/CustomFormikFields/FormikInput'
 
 import { InfractionsForm } from './InfractionsForm'
-import { FormikDatePicker, placeholderDateTimePicker } from '../../commonComponents/CustomFormikFields/FormikDatePicker';
-import { ControlTopicsCascader } from './ControlTopicsCascader'
-import { actionTypeEnum, THEME_REQUIRE_PROTECTED_SPECIES } from '../../../domain/entities/missions';
+import { ControlThemeSelector } from './ControlThemeSelector'
 import { ProtectedSpeciesSelector } from './ProtectedSpeciesSelector';
 import { ActionTargetSelector } from './ActionTargetSelector';
 import { VehicleTypeSelector } from './VehicleTypeSelector';
 import { ControlPositions } from './ControlPositions';
-import { FormikInput } from '../../commonComponents/CustomFormikFields/FormikInput'
 
-import { ReactComponent as ControlIconSVG } from '../../icons/controles.svg'
+import { THEME_REQUIRE_PROTECTED_SPECIES } from '../../../domain/entities/missions';
+
+import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression_clair.svg'
+import { ReactComponent as ControlIconSVG } from '../../../uiMonitor/icons/controles.svg'
 import { COLORS } from '../../../constants/constants'
 
 export const ControlForm = ({ remove, currentActionIndex, setCurrentActionIndex }) => {
-  const [ actionTypeField ] = useField(`envActions.${currentActionIndex}.actionType`)
-  const [ actionThemeField ] = useField(`envActions.${currentActionIndex}.actionTheme`)
+  const { values: { envActions }, setFieldValue } = useFormikContext();
   const [ actionStartDatetimeUtcField ] = useField(`envActions.${currentActionIndex}.actionStartDatetimeUtc`)
   const parsedActionStartDatetimeUtc = new Date(actionStartDatetimeUtcField.value)
+  const actionTheme = envActions[currentActionIndex]?.actionTheme
+  const protectedSpecies = envActions[currentActionIndex]?.protectedSpecies
 
+  const { data, isError, isLoading } = useGetControlThemesQuery()
+  const themes = useMemo(()=> _.uniqBy(data, 'topic_level_1'), [data])
+  const subThemes = useMemo(()=>_.filter(data, (t)=> {return t.topic_level_1 === actionTheme}), [data, actionTheme])
+  
+  const previousActionTheme = usePrevious(actionTheme)
+  
+  useEffect(()=> {
+    if (previousActionTheme && previousActionTheme !== actionTheme) {
+      setFieldValue(`envActions.${currentActionIndex}.actionSubTheme`, '')
+    }
+    if ((protectedSpecies?.length > 0) && !THEME_REQUIRE_PROTECTED_SPECIES.includes(actionTheme)) {
+      setFieldValue(`envActions.${currentActionIndex}.protectedSpecies`, [])
+    }
+  }, [previousActionTheme, actionTheme, protectedSpecies, currentActionIndex, setFieldValue])
+  
   const handleRemoveAction = () => {
     setCurrentActionIndex(null)
     remove(currentActionIndex)
   }
-  
+
   return (<>
     <Header>
       <ControlIcon/>
-      <Title>{actionTypeEnum[actionTypeField.value]?.libelle}</Title>
+      <Title>Contrôle</Title>
       <SubTitle>&nbsp;({isValid(parsedActionStartDatetimeUtc) && format(parsedActionStartDatetimeUtc, "dd MMM à HH:mm", {locale: fr})})</SubTitle>
-      <Delete type="button" onClick={handleRemoveAction}><TrashIcon />Supprimer</Delete>
+      <IconButtonRight appearance='ghost' icon={<DeleteIcon className={"rs-icon"}/>} size="sm" title={"supprimer"} onClick={handleRemoveAction} >Supprimer</IconButtonRight>
     </Header>
-    <Form.Group>
-      <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionTheme`}>Thématique de contrôle</Form.ControlLabel>
-      <ControlTopicsCascader name={`envActions.${currentActionIndex}.actionTheme`} />
-    </Form.Group>
+    {isError && <Msg>Erreur au chargement des thèmes</Msg>}
+    {isLoading && <Msg>Chargement des thèmes</Msg>}
+    {!isError && !isLoading && <>
+      <SelectorWrapper>
+        <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionTheme`}>Thématique de contrôle</Form.ControlLabel>
+        <ControlThemeSelector themes={themes} valueKey={"topic_level_1"} name={`envActions.${currentActionIndex}.actionTheme`} />
+      </SelectorWrapper>
+      <SelectorWrapper>
+        <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionSubTheme`}>Sous-thématique de contrôle</Form.ControlLabel>
+        <ControlThemeSelector themes={subThemes} valueKey={"topic_level_2"} name={`envActions.${currentActionIndex}.actionSubTheme`} />
+      </SelectorWrapper>
 
-    {
-      THEME_REQUIRE_PROTECTED_SPECIES.includes(actionThemeField?.value) &&
-      <Form.Group>
-        <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.protectedSpecies`}>Sous-thématique de contrôle</Form.ControlLabel>
-        <ProtectedSpeciesSelector name={`envActions.${currentActionIndex}.protectedSpecies`} />
-      </Form.Group>
-    }
+      {
+        THEME_REQUIRE_PROTECTED_SPECIES.includes(actionTheme) &&
+        <SelectorWrapper>
+          <ProtectedSpeciesSelector name={`envActions.${currentActionIndex}.protectedSpecies`} />
+        </SelectorWrapper>
+      }
+    </>}
     
     <Form.Group>
       <Form.ControlLabel htmlFor={`envActions[${currentActionIndex}].actionStartDatetimeUtc`} >
@@ -66,22 +95,20 @@ export const ControlForm = ({ remove, currentActionIndex, setCurrentActionIndex 
 
     <Separator />
 
-    <Form.Group>
-      <ActionSummary>
-        <ActionFieldWrapper>
-          <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionNumberOfControls`}>
-            Nombre total de contrôles
-          </Form.ControlLabel>
-          <FormikInput name={`envActions.${currentActionIndex}.actionNumberOfControls`} />
-        </ActionFieldWrapper>
-        <ActionFieldWrapper>
-          <ActionTargetSelector currentActionIndex={currentActionIndex} />
-        </ActionFieldWrapper>
-        <ActionFieldWrapper>
-          <VehicleTypeSelector currentActionIndex={currentActionIndex} />
-        </ActionFieldWrapper>
-      </ActionSummary>
-    </Form.Group>
+    <ActionSummary>
+      <ActionFieldWrapper>
+        <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionNumberOfControls`}>
+          Nombre total de contrôles
+        </Form.ControlLabel>
+        <FormikInputGhost size="sm" name={`envActions.${currentActionIndex}.actionNumberOfControls`} />
+      </ActionFieldWrapper>
+      <ActionFieldWrapper>
+        <ActionTargetSelector currentActionIndex={currentActionIndex} />
+      </ActionFieldWrapper>
+      <ActionFieldWrapper>
+        <VehicleTypeSelector currentActionIndex={currentActionIndex} />
+      </ActionFieldWrapper>
+    </ActionSummary>
 
     <FieldArray 
       name={`envActions[${currentActionIndex}].infractions`} 
@@ -95,7 +122,10 @@ export const ControlForm = ({ remove, currentActionIndex, setCurrentActionIndex 
 }
 
 
-const Header = styled.div``
+const Header = styled.div`
+  margin-bottom: 32px;
+  display: flex;
+`
 
 const Title = styled.h2`
   font-size: 16px;
@@ -104,14 +134,18 @@ const Title = styled.h2`
   color: ${COLORS.charcoal}
 `
 
-const Separator = styled.hr`
+const Msg = styled.div`
+`
+
+const SelectorWrapper = styled(Form.Group)`
+  height: 58px;
+  `
+  const Separator = styled.hr`
   border-color: ${COLORS.gunMetal};
-`
-const Delete = styled.button`
-  color: red;
-  float: right;
-`
-const ActionSummary = styled.div`
+  `
+  
+  const ActionSummary = styled(Form.Group)`
+  height: 58px;
   display: flex;
 `
 
@@ -130,4 +164,11 @@ const ControlIcon = styled(ControlIconSVG)`
 const SubTitle = styled.div`
   font-size: 16px;
   display: inline-block;
+`
+const DeleteIcon = styled(DeleteSVG)`
+  color: ${COLORS.maximumRed};
+`
+
+const IconButtonRight = styled(IconButton)`
+  margin-left: auto;
 `

@@ -5,7 +5,7 @@ import { Icon, Style } from 'ol/style'
 import { getCenter } from 'ol/extent'
 
 import { COLORS } from '../../../../constants/constants'
-import { actionTypeEnum, missionStatusEnum } from '../../../../domain/entities/missions'
+import { missionStatusEnum } from '../../../../domain/entities/missions'
 
 
 
@@ -23,8 +23,7 @@ const missionWithCentroidStyleFactory = (color) => new Style({
   image: new Icon({
     src: 'marker-flag.svg',
     color: color,
-    offset: [0, 0],
-    imgSize: [30, 79]
+  
   }),
   geometry: (feature) => {
     const extent = feature.getGeometry().getExtent()
@@ -47,23 +46,19 @@ export const missionWithCentroidStyleFn = (feature) => {
   }
 }
 
-export const selectedMissionStyleFn = (feature) => {
-  const actionType = feature.get('actionType')
-  if (actionType === actionTypeEnum.CONTROL.code) {
-    return new Style({
-      image: new Icon({
-        src: 'controle_18px.svg',
-        color: COLORS.red,
-        scale: 1.4
-      })
-    })
-  }
-  return new Style({
-    stroke: new Stroke({
-      color: COLORS.shadowBlue,
-    }),
-    fill: new Fill({
-      color: 'rgba(107,131,158, .2)'
-    })
+export const selectedMissionActionsStyle = new Style({
+  image: new Icon({
+    src: 'controle_18px.svg',
+    color: COLORS.red,
+    scale: 1.4
   })
-}
+})
+
+export const selectedMissionStyle = new Style({
+  stroke: new Stroke({
+    color: COLORS.shadowBlue,
+  }),
+  fill: new Fill({
+    color: 'rgba(107,131,158, .2)'
+  })
+})

@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 
-import { ReactComponent as WarningSVG } from '../icons/Picto_alerte.svg'
+import { ReactComponent as WarningSVG } from '../../uiMonitor/icons/Picto_alerte.svg'
 
 const Healthcheck = () => {
   const {

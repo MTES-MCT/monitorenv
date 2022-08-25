@@ -5,14 +5,6 @@ import { useFormikContext, useField } from 'formik'
 
 import { vehicleTypeEnum, vesselSizeEnum } from '../../../domain/entities/missions'
 
-const DEFAULT_SELECT_PICKER_STYLE = {
-  width: 150,
-}
-
-const DEFAULT_SELECT_PICKER_MENU_STYLE = { 
-  width: 150,
-}
-
 export const VesselSizeSelector = ({infractionPath, currentActionIndex, ...props}) => {
   const { values: { envActions } } = useFormikContext();
   const [vesselSizeField, , vesselSizeHelpers] = useField(`${infractionPath}.vesselSize`);
@@ -36,10 +28,9 @@ export const VesselSizeSelector = ({infractionPath, currentActionIndex, ...props
       <Form.ControlLabel htmlFor="vesselSizeField">Taille du navire</Form.ControlLabel>
       <SelectPicker
         size='sm'
+        block
         cleanable={false}
         disabled={vehicleType !== vehicleTypeEnum.VESSEL.code}
-        style={DEFAULT_SELECT_PICKER_STYLE}
-        menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
         searchable={false}
         container={()=>vesselSizeSelectorRef.current}
         value={vesselSizeField.value}

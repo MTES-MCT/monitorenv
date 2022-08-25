@@ -1,4 +1,5 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import { IconButton, Table } from 'rsuite'
 import styled from 'styled-components'
 import GeoJSON from 'ol/format/GeoJSON'
@@ -6,8 +7,7 @@ import GeoJSON from 'ol/format/GeoJSON'
 import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
 
-import { ReactComponent as LocalizeIconSVG } from '../../icons/Oeil_apercu_carte.svg'
-import { useDispatch } from 'react-redux'
+import { ReactComponent as LocalizeIconSVG } from '../../../uiMonitor/icons/Oeil_apercu_carte.svg'
 
 export const CellLocalizeMission = ({rowData, dataKey, ...props}) => {
   const dispatch = useDispatch()

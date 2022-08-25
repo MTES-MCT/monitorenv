@@ -1,12 +1,15 @@
 import React from 'react'
-import { Form } from 'rsuite'
+import { Form, IconButton } from 'rsuite'
 import { useField } from 'formik'
 import styled from 'styled-components'
-import TrashIcon from '@rsuite/icons/Trash';
 
-import { FormikTextarea } from '../../commonComponents/CustomFormikFields/FormikTextarea'
-import { COLORS } from '../../../constants/constants'
+import { FormikTextarea } from '../../../uiMonitor/CustomFormikFields/FormikTextarea'
+
 import { actionTypeEnum } from '../../../domain/entities/missions';
+
+import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/note_libre.svg'
+import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression_clair.svg'
+import { COLORS } from '../../../constants/constants'
 
 
 export const NoteForm = ({ remove, currentActionIndex, setCurrentActionIndex }) => {
@@ -19,8 +22,9 @@ export const NoteForm = ({ remove, currentActionIndex, setCurrentActionIndex }) 
   
   return (<>
     <Header>
+      <NoteIcon/>
       <Title>{actionTypeEnum[actionTypeField.value]?.libelle}</Title>
-      <Delete type="button" onClick={handleRemoveAction}><TrashIcon />Supprimer</Delete>
+      <IconButtonRight appearance='ghost' icon={<DeleteIcon className={"rs-icon"}/>} size="sm" title={"supprimer"} onClick={handleRemoveAction} >Supprimer</IconButtonRight>
     </Header>
     
     <Form.Group>
@@ -33,7 +37,10 @@ export const NoteForm = ({ remove, currentActionIndex, setCurrentActionIndex }) 
 }
 
 
-const Header = styled.div``
+const Header = styled.div`
+  margin-bottom: 32px;
+  display: flex;
+`
 
 const Title = styled.h2`
   font-size: 16px;
@@ -42,7 +49,16 @@ const Title = styled.h2`
   color: ${COLORS.charcoal}
 `
 
-const Delete = styled.button`
-  color: red;
-  float: right;
+const NoteIcon = styled(NoteSVG)`
+  color: ${COLORS.gunMetal};
+  margin-right: 8px;
+  width: 18px;
+`
+
+const DeleteIcon = styled(DeleteSVG)`
+  color: ${COLORS.maximumRed};
+`
+
+const IconButtonRight = styled(IconButton)`
+  margin-left: auto;
 `

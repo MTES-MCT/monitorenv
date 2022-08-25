@@ -8,10 +8,10 @@ import { IconButton } from 'rsuite'
 import { editMission } from '../../../../domain/use_cases/missions/editMission'
 import { missionTypeEnum } from '../../../../domain/entities/missions'
 import { clearSelectedMissionOnMap } from '../../../../domain/use_cases/missions/selectMissionOnMap'
-import { MissionStatusLabel } from '../../../commonStyles/MissionStatusLabel'
+import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
 
-import { ReactComponent as EditIconSVG } from '../../../../features/icons/editer_12px.svg'
-import { ReactComponent as CloseIconSVG } from '../../../../features/icons/croix_10px.svg'
+import { ReactComponent as EditIconSVG } from '../../../../uiMonitor/icons/editer_12px.svg'
+import { ReactComponent as CloseIconSVG } from '../../../../uiMonitor/icons/croix_10px.svg'
 import { COLORS } from '../../../../constants/constants'
 
 export const MissionCard = ({feature, selected}) => {

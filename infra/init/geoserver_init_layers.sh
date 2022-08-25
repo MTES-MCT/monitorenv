@@ -14,8 +14,8 @@ curl -v -u ${GEOSERVER_ADMIN_USER}:${GEOSERVER_ADMIN_PASSWORD} -X POST http://${
         {"@key":"port","$":"$POSTGRES_PORT"},
         {"@key":"database","$":"$POSTGRES_DB"},
         {"@key":"schema","$":"$POSTGRES_SCHEMA"},
-        {"@key":"user","$":"$POSTGRES_PASSWORD"},
-        {"@key":"passwd","$":"$POSTGRES_USER"},
+        {"@key":"user","$":"$POSTGRES_USER"},
+        {"@key":"passwd","$":"$POSTGRES_PASSWORD"},
         {"@key":"dbtype","$":"postgis"},
         {"@key":"Expose primary keys","$":"true"}
       ]

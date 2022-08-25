@@ -1,28 +1,22 @@
 import React from 'react'
-import _ from 'lodash'
 import styled from 'styled-components'
 import { format, isValid } from 'date-fns'
 import { fr } from 'date-fns/locale'
 import { IconButton } from 'rsuite'
 
-import { useGetControlTopicsQuery } from '../../../api/controlTopicsAPI'
+import { actionTargetTypeEnum, actionTypeEnum } from '../../../domain/entities/missions'
 
-import { ReactComponent as DuplicateSVG } from '../../icons/dupliquer_14px.svg'
-import { ReactComponent as DeleteSVG } from '../../icons/Suppression_clair.svg'
-import { ReactComponent as ControlIconSVG } from '../../icons/controles.svg'
-import { ReactComponent as SurveillanceIconSVG } from '../../icons/surveillance_18px.svg'
-import { ReactComponent as NoteSVG } from '../../icons/note_libre.svg'
+import { ReactComponent as DuplicateSVG } from '../../../uiMonitor/icons/dupliquer_14px.svg'
+import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression_clair.svg'
+import { ReactComponent as ControlIconSVG } from '../../../uiMonitor/icons/controles.svg'
+import { ReactComponent as SurveillanceIconSVG } from '../../../uiMonitor/icons/surveillance_18px.svg'
+import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/note_libre.svg'
 
 import { COLORS } from '../../../constants/constants'
-import { actionTargetTypeEnum, actionTypeEnum } from '../../../domain/entities/missions'
 
 export const ActionCard = ({selected, selectAction, action, removeAction, duplicateAction}) => {
 
-  const { controlTopics } = useGetControlTopicsQuery(undefined, {
-    selectFromResult: ({ data }) => ({
-      controlTopics: _.find(data, r =>  action.actionTheme === r.id),
-    }),
-  })
+ 
   const parsedActionStartDatetimeUtc = new Date(action.actionStartDatetimeUtc)
 
   return (
@@ -38,17 +32,16 @@ export const ActionCard = ({selected, selectAction, action, removeAction, duplic
         }
       </DateTimeWrapper>
     </TimeLine>
-    <ActionSummaryWrapper selected={selected} type={action.actionType}>
-      <ButtonsWrapper>
-        
-        <IconButton icon={<DuplicateSVG/>} size="sm" title={"dupliquer"} onClick={duplicateAction} />
-        <IconButton icon={<DeleteIcon/>} size="sm" title={"supprimer"} onClick={removeAction} />
+    <ActionSummaryWrapper selected={selected} $type={action.actionType}>
       
-      </ButtonsWrapper>
-      {(action.actionType === actionTypeEnum.CONTROL.code) && (<SummaryWrapper>
+      {(action.actionType === actionTypeEnum.CONTROL.code) && (<>
         <ControlIcon />
         <SummaryContent>
-          <Title>Contrôles <Accented>{`${controlTopics?.topic_level_1 || 'Non spécifié'} ${controlTopics?.topic_level_2 || ''}`}</Accented></Title>
+          <Title>
+            Contrôles {action.actionTheme ? 
+              <Accented>{`${action.actionTheme} ${action.actionSubTheme ? ' - ' + action.actionSubTheme : ''}`}</Accented> 
+              : 'à renseigner'}
+          </Title>
           <ControlSummary>
             <Accented>{action.actionNumberOfControls || 0}</Accented>
             {` contrôles réalisés sur des cibles de type ` }
@@ -61,26 +54,39 @@ export const ActionCard = ({selected, selectAction, action, removeAction, duplic
             <Tag>MED</Tag>
           </Tags>
         </SummaryContent>
-      </SummaryWrapper>)}
-      {(action.actionType === actionTypeEnum.SURVEILLANCE.code) && (<SummaryWrapper>
+      </>)}
+      {(action.actionType === actionTypeEnum.SURVEILLANCE.code) && (<>
         <SurveillanceIcon /> 
         <SummaryContent>
-          <Title>Surveillance <Accented>{`${controlTopics?.topic_level_1 || 'Non spécifiée'} ${controlTopics?.topic_level_2 || ''}`}</Accented></Title>
+          <Title>
+            Surveillance {action.actionTheme ? 
+              <Accented>{`${action.actionTheme} ${action.actionSubTheme ? ' - ' + action.actionSubTheme : ''}`}</Accented> 
+              : 'à renseigner'}
+          </Title>
           <ControlSummary>
-            <Accented>{action.duration || 0} heures&nbsp;</Accented>
-            de surveillance
+          {
+          action.duration &&
+            <>
+            <Accented>{action.duration} heures&nbsp;</Accented>
+              de surveillance
+            </>
+          }
           </ControlSummary>
-          </SummaryContent>
-      </SummaryWrapper>)}
+        </SummaryContent>
+      </>)}
       
       {(action.actionType === actionTypeEnum.NOTE.code) && (
-        <SummaryWrapper>
+        <>
           <NoteIcon /> 
           <NoteContent>
-            {action.observations || 'Note libre'} 
+            {action.observations || 'Observation à renseigner'} 
           </NoteContent>
-        </SummaryWrapper>)}
+        </>)}
       
+        <ButtonsWrapper>
+          <IconButton appearance='subtle' icon={<DuplicateSVG className='rs-icon' />} size="sm" title={"dupliquer"} onClick={duplicateAction} />
+          <IconButton appearance='subtle' icon={<DeleteIcon className='rs-icon' />} size="sm" title={"supprimer"} onClick={removeAction} />
+        </ButtonsWrapper>
     </ActionSummaryWrapper>
   </Action>)
 }
@@ -93,11 +99,13 @@ const Action = styled.div`
 const TimeLine = styled.div`
   display: flex;
   align-items: center;
+  width: 50px;
 `
 
 const DateTimeWrapper = styled.div`
   margin-bottom: 4px;
   margin-top: 4px;
+
 `
 const DateWrapper = styled.div`
   font-weight: bold;
@@ -107,13 +115,14 @@ const Time = styled.div`
   font-size: 13px;
 `
 const ActionSummaryWrapper = styled.div`
+  display: flex;
   flex: 1;
-  border: ${props => props.selected ? `3px solid ${COLORS.steelBlue}` : ''};
-  background: ${props => props.type === actionTypeEnum.CONTROL.code ? 
-    COLORS.white : props.type === actionTypeEnum.SURVEILLANCE.code ? 
+  border: ${props => props.selected ? `3px solid ${COLORS.steelBlue}` : `1px solid ${COLORS.lightGray}`};
+  background: ${props => props.$type === actionTypeEnum.CONTROL.code ? 
+    COLORS.white : props.$type === actionTypeEnum.SURVEILLANCE.code ? 
     COLORS.gainsboro : COLORS.steelBlue25};
-  padding: ${props => props.selected ? `4px` : '7px'};
-  margin-left: 32px;
+  padding: ${props => props.selected ? `4px` : '6px'};
+  margin-left: auto;
 `
 
 const Title = styled.span`
@@ -123,12 +132,16 @@ const ControlIcon = styled(ControlIconSVG)`
   color: ${COLORS.gunMetal};
   width: 16px;
   height: 16px;
+  margin-top: 18px;
+  margin-left: 18px;
   margin-right: 8px;
 `
 const SurveillanceIcon = styled(SurveillanceIconSVG)`
   color: ${COLORS.gunMetal};
   width: 16px;
   height: 16px;
+  margin-top: 18px;
+  margin-left: 18px;
   margin-right: 8px;
 `
 
@@ -136,6 +149,8 @@ const NoteIcon = styled(NoteSVG)`
   color: ${COLORS.gunMetal};
   width: 16px;
   height: 16px;
+  margin-top: 18px;
+  margin-left: 18px;
   margin-right: 8px;
   flex: 0 0 18px;
 `
@@ -143,17 +158,26 @@ const ControlSummary = styled.div`
   font: normal normal normal 13px/18px Marianne;
   color: ${COLORS.slateGray};
 `
-const SummaryWrapper = styled.div`
-  display: flex;
-  margin-left: 12px;
-  margin-right: 12px;
-  margin-top: 8px;
-`
+
 const SummaryContent = styled.div`
-  color: ${COLORS.charcoal};
+  margin-top: 18px;
+  margin-bottom: 18px;
+  color: ${COLORS.gunMetal};
 `
+
+const NoteContent = styled.div`
+  margin-top: 18px;
+  margin-bottom: 18px;
+  max-height: 54px;
+  overflow: hidden;
+  font: normal normal normal 14px/20px Marianne;
+  color: ${COLORS.gunMetal};
+`
+
 const ButtonsWrapper = styled.div`
-  float: right;
+    width: 44px;
+    margin-top: 12px;
+    margin-left: auto;
 `
 
 const Accented = styled.span`
@@ -163,7 +187,6 @@ const Accented = styled.span`
 const Tags = styled.div`
   display: flex;
   margin-top: 16px;
-  margin-bottom: 16px;
 `
 
 const Tag = styled.div`
@@ -180,8 +203,4 @@ const Tag = styled.div`
 
 const DeleteIcon = styled(DeleteSVG)`
   color: ${COLORS.maximumRed};
-`
-const NoteContent = styled.div`
-  max-height: 54px;
-  overflow: hidden;
 `

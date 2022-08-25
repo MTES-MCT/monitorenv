@@ -9,12 +9,12 @@ import { ToastProvider } from 'react-toast-notifications'
 
 import { homeStore } from './Store'
 import { SideWindowTestContainer } from './features/side_window/SideWindowTestContainer';
-import { AlertUnsupportedBrowser } from './features/commonComponents/AlertUnsupportedBrowser'
+import { AlertUnsupportedBrowser } from './components/AlertUnsupportedBrowser'
 import { HomePage } from './pages/HomePage'
 
 import { CYPRESS_TEST } from './env';
 
-import frFR from './features/commonComponents/locale_frFR'
+import frFR from './uiMonitor/locale_frFR'
 
 const App = () => {
   switch (browserName) {

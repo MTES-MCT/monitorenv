@@ -55,22 +55,6 @@ tbody {
 }
 
 
-input:not([type]),
-[type="text"],
-[type="email"],
-[type="number"],
-[type="search"],
-[type="password"],
-[type="url"],
-[type="tel"],
-[type="checkbox"],
-[type="radio"],
-textarea,
-select {
-    margin: 0;
-    padding: 0;
-}
-
 
 a:hover,
 a:focus {

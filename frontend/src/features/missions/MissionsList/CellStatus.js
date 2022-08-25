@@ -1,7 +1,7 @@
 import React from 'react'
 import { Table } from 'rsuite'
 
-import { MissionStatusLabel } from '../../commonStyles/MissionStatusLabel'
+import { MissionStatusLabel } from '../../../ui/MissionStatusLabel'
 
 
 export const CellStatus = ({rowData, dataKey, ...props}) => {

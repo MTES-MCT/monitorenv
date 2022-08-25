@@ -5,7 +5,8 @@ import { Form, SelectPicker, TagPicker, IconButton } from 'rsuite'
 import {  useField } from 'formik'
 
 import { useGetControlResourcesQuery } from '../../../api/controlResourcesAPI'
-import { ReactComponent as DeleteSVG } from '../../icons/Suppression_clair.svg'
+
+import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression_clair.svg'
 import { COLORS } from '../../../constants/constants'
 
 const DEFAULT_SELECT_PICKER_STYLE = {
@@ -57,70 +58,76 @@ export const ResourceUnitSelector = ({ resourceUnitPath, removeResourceUnit, res
   if (isLoading) {
     return ('Chargement')
   }
+  const resourceUnitIndexDisplayed = resourceUnitIndex + 1
+
   return (
-    <SelectorWrapper >
-      <DeleteButton size='sm' icon={<DeleteIcon/>} onClick={removeResourceUnit}></DeleteButton>
-      <Form.Group>
-        <FormColumn ref={administrationSelectorRef}>
-          <Form.ControlLabel htmlFor="administration">Administration : </Form.ControlLabel>
-          <SelectPicker 
-            className='ghost'
-            size='sm'
-            style={DEFAULT_SELECT_PICKER_STYLE}
-            menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
-            searchable={false}
-            container={()=>administrationSelectorRef.current}
-            value={administrationField.value}
-            onChange={handleAdministrationChange}
-            data={administrationList}
-            labelKey={'administration'}
-            valueKey={'administration'}
-            {...props} />
-        </FormColumn>
-        <FormColumn ref={unitSelectorRef}>
-          <Form.ControlLabel htmlFor="unit">Unité : </Form.ControlLabel>
-          <SelectPicker 
-            className='ghost'
-            size='sm'
-            style={DEFAULT_SELECT_PICKER_STYLE}
-            menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
-            searchable={false}
-            container={()=>unitSelectorRef.current} 
-            value={unitField.value} 
-            onChange={handleUnitChange} 
-            data={unitList} 
-            labelKey={'unit'}
-            valueKey={'unit'}
-            disabled={_.isEmpty(administrationField.value)}
-            {...props} />
-        </FormColumn>
-      </Form.Group>
-      <Form.Group>
-        <RefWrapper ref={resourcesRef} data-cy={'unit-tag-picker'}>
-          <Form.ControlLabel htmlFor="resources">Moyens : </Form.ControlLabel>
-          <TagPicker
-            block
-            size='sm'
-            className='ghost'
-            cleanable={false}
-            container={()=>resourcesRef.current}
-            value={resourcesField.value}
-            onChange={resourcesHelpers.setValue}
-            data={resourcesList}
-            labelKey={'resource_name'}
-            valueKey={'resource_name'}
-            disabled={_.isEmpty(unitField.value)}
-            {...props} />
-        </RefWrapper>
-      </Form.Group>
-    </SelectorWrapper>
+    <RessourceUnitWrapper>
+      <SelectorWrapper >
+        <FormGroupFixed>
+          <FormColumn ref={administrationSelectorRef}>
+            <Form.ControlLabel htmlFor="administration">Administration {resourceUnitIndexDisplayed}</Form.ControlLabel>
+            <SelectPicker 
+              size='sm'
+              style={DEFAULT_SELECT_PICKER_STYLE}
+              menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
+              searchable={false}
+              container={()=>administrationSelectorRef.current}
+              value={administrationField.value}
+              onChange={handleAdministrationChange}
+              data={administrationList}
+              labelKey={'administration'}
+              valueKey={'administration'}
+              {...props} />
+          </FormColumn>
+          <FormColumn ref={unitSelectorRef}>
+            <Form.ControlLabel htmlFor="unit">Unité {resourceUnitIndexDisplayed}</Form.ControlLabel>
+            <SelectPicker 
+              size='sm'
+              style={DEFAULT_SELECT_PICKER_STYLE}
+              menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
+              searchable={false}
+              container={()=>unitSelectorRef.current} 
+              value={unitField.value} 
+              onChange={handleUnitChange} 
+              data={unitList} 
+              labelKey={'unit'}
+              valueKey={'unit'}
+              disabled={_.isEmpty(administrationField.value)}
+              {...props} />
+          </FormColumn>
+        </FormGroupFixed>
+        <FormGroupFixed>
+          <RefWrapper ref={resourcesRef} data-cy={'unit-tag-picker'}>
+            <Form.ControlLabel htmlFor="resources">Moyen(s) {resourceUnitIndexDisplayed}</Form.ControlLabel>
+            <TagPicker
+              block
+              size='sm'
+              creatable
+              cleanable={false}
+              container={()=>resourcesRef.current}
+              value={resourcesField.value}
+              onChange={resourcesHelpers.setValue}
+              data={resourcesList}
+              labelKey={'resource_name'}
+              valueKey={'resource_name'}
+              disabled={_.isEmpty(unitField.value)}
+              {...props} />
+          </RefWrapper>
+        </FormGroupFixed>
+      </SelectorWrapper>
+      <div>
+        {resourceUnitIndex > 0 && <DeleteButton appearance="ghost" icon={<DeleteSVG className={"rs-icon"} />} onClick={removeResourceUnit}></DeleteButton>}
+      </div>
+    </RessourceUnitWrapper>
   )
 }
 
+const RessourceUnitWrapper = styled.div`
+  display: flex;
+`
 const SelectorWrapper = styled.div`
-  background-color: ${COLORS.gainsboro};
   width: 100%;
-  padding: 2px;
+  max-width: 416px;
   margin-bottom: 4px;
   .rs-picker-select-menu {
     position: relative;
@@ -131,6 +138,12 @@ const SelectorWrapper = styled.div`
 const FormColumn = styled.div`
   display: inline-block;
   vertical-align: top;
+  :not(:last-child) {
+    margin-right: 16px;
+  }
+`
+const FormGroupFixed = styled(Form.Group)`
+  height: 58px;
 `
 const RefWrapper = styled.div`
   .rs-picker-menu {
@@ -138,9 +151,7 @@ const RefWrapper = styled.div`
     margin-top: -60px;
   }
 `
-const DeleteIcon = styled(DeleteSVG)`
-  color: ${COLORS.maximumRed};
-`
 const DeleteButton = styled(IconButton)`
-  float: right;
+  margin-top: 22px;
+  margin-left: 8px;
 `

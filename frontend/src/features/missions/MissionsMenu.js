@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { closeSideWindow, openSideWindowTab } from '../../domain/shared_slices/Global'
 import { sideWindowMenu } from '../../domain/entities/sideWindow'
 
-import { ReactComponent as MissionsSVG } from '../icons/operations.svg'
+import { ReactComponent as MissionsSVG } from '../../uiMonitor/icons/operations.svg'
 
 export const MissionsMenu = () => {
   const dispatch = useDispatch()

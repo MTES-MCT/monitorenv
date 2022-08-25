@@ -57,11 +57,12 @@ const Layers = {
     zIndex: 1100
   },
   ACTIONS : {
-    code: 'actions'
+    code: 'actions',
+    zIndex: 1110
   },
   DRAW_LAYER : {
     code: 'draw_layer',
-    zIndex: 1200
+    zIndex: 1500
   },
   MEASUREMENT: {
     code: 'measurement',
@@ -72,10 +73,10 @@ const Layers = {
     showMultipleZonesInAdministrativeZones: false,
     subZoneFieldKey: null,
     isIntersectable: false,
-    zIndex: 1010
+    zIndex: 1210
   },
   INTEREST_POINT: {
-    zIndex: 1020
+    zIndex: 1220
   },
   REGULATORY: {
     code: 'regulatory_areas',
@@ -377,6 +378,6 @@ export const baseLayers = {
 }
 
 export const SelectableLayers = [Layers.MISSIONS.code]
-export const HoverableLayers = [Layers.MISSIONS.code, Layers.MISSION_SELECTED.code]
+export const HoverableLayers = [Layers.MISSIONS.code, Layers.ACTIONS.code]
 
 export default Layers

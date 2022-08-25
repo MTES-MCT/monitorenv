@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { ReactComponent as ShowIconSVG } from '../../icons/oeil_affiche.svg'
+import { ReactComponent as ShowIconSVG } from '../../../uiMonitor/icons/oeil_affiche.svg'
 
 export const ShowIcon = styled(ShowIconSVG)`
   width: 23px;

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ChevronIcon } from '../../../commonStyles/icons/ChevronIcon.style'
 import RegulatoryLayerList from "./RegulatoryLayerList";
 import { toggleMyRegulatoryZones } from '../../../../domain/shared_slices/LayerSidebar'
-import { ReactComponent as PinSVG } from '../../../icons/epingle.svg'
+import { ReactComponent as PinSVG } from '../../../../uiMonitor/icons/epingle.svg'
 
 const RegulatoryLayers = ({regulatoryLayersAddedToMySelection}) => {
   const dispatch = useDispatch()

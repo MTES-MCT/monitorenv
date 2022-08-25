@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { IconButton, Table } from 'rsuite'
 import { useDispatch } from 'react-redux'
 
-import { ReactComponent as EditIconSVG } from '../../icons/editer_12px.svg'
+import { ReactComponent as EditIconSVG } from '../../../uiMonitor/icons/editer_12px.svg'
 import { editMission } from '../../../domain/use_cases/missions/editMission'
 
 export const CellEditMission = ({rowData, dataKey, ...props}) => {

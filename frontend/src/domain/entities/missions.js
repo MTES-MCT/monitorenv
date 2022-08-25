@@ -183,7 +183,7 @@ export const missionStatusEnum = {
   }
 }
 
-export const THEME_REQUIRE_PROTECTED_SPECIES = [17]
+export const THEME_REQUIRE_PROTECTED_SPECIES = ['Police des espèces protégées et de leurs habitats (faune et flore)']
 
 export const relevantCourtEnum = {
   LOCAL_COURT: {

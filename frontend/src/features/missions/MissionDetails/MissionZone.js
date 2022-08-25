@@ -1,44 +1,54 @@
 import React from 'react'
-import styled from 'styled-components';
-import _ from 'lodash';
-import { useDispatch } from 'react-redux';
-import { Form, Button } from 'rsuite'
-import {  useField } from 'formik';
+import { IconButton } from 'rsuite'
+import styled from 'styled-components'
 
-import { addMissionZone } from '../../../domain/use_cases/missions/missionAndControlLocalisation';
-
+import { ReactComponent as LocalizeIconSVG } from '../../../uiMonitor/icons/centrer.svg'
+import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression.svg'
 import { COLORS } from '../../../constants/constants';
 
-export const MissionZone = ({name}) => {
-  const [field, , helpers] = useField(name);
-  const { value } = field;
-  const { setValue } = helpers;
-  const dispatch = useDispatch()
-  const handleAddMissionZone = () => {
-    dispatch(addMissionZone({callback: setValue, geom: value}))
-  }
-  
-  return (
-    <Form.Group>
-      <Form.ControlLabel htmlFor={name}>Localisations : </Form.ControlLabel>
-      <Button appearance='ghost' block size='sm' onClick={handleAddMissionZone}>
-          + Ajouter une zone de mission
-      </Button>
-      <ZoneList>
-        {_.map(value?.coordinates, (v,i)=><Zone key={i}>Polygone dessiné {i+1}</Zone>)}
-      </ZoneList>
-    </Form.Group>
-  )
+export const MissionZone = ({name, handleDelete, handleCenterOnMap}) => {
+
+  return (<ZoneWrapper>
+    <Zone>
+      {name}
+      <CenterOnMap onClick={handleCenterOnMap}>
+        <LocalizeIcon/>
+        Centrer sur la carte
+      </CenterOnMap>
+    </Zone>
+    <PaddedIconButton onClick={handleDelete} appearance='ghost' icon={<DeleteSVG className='rs-icon'/>} />
+  </ZoneWrapper>)
+
 }
 
-const ZoneList = styled.div`
-  margin-bottom: 16px;
+
+const ZoneWrapper = styled.div`
+  display: flex;
+  max-width: 484px;
+  margin-bottom: 4px;
 `
+
+const PaddedIconButton = styled(IconButton)`
+  margin-left: 4px;
+`
+
 const Zone = styled.div`
   width: 419px;
   line-height: 30px;
-  margin-bottom: 4px;
+  padding-left: 12px;
+  padding-right: 8px;
   background: ${COLORS.gainsboro};
-  color: ${COLORS.charcoal};
-
+  font: normal normal medium 13px/18px Marianne;
+  color: ${COLORS.gunMetal};
+  display: flex;
+`
+const CenterOnMap = styled.div`
+  cursor: pointer;
+  margin-left: auto;
+  color: ${COLORS.slateGray};
+  text-decoration: underline;
+`
+const LocalizeIcon = styled(LocalizeIconSVG)`
+  margin-right: 8px;
+  font-size: 12px;
 `

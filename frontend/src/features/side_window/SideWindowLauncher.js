@@ -19,7 +19,7 @@ const SideWindowLauncher = () => {
           closeOnUnmount
           name={'MonitorEnv'}
           title={'MonitorEnv'}
-          features={{ scrollbars: true, width: '1700px', height: '1200px' }}
+          features={{ scrollbars: true, width: '1800px', height: '1000px' }}
           onUnload={() => {
             dispatch(closeSideWindow())
           }}
