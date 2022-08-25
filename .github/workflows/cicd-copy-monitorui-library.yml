@@ -24,3 +24,5 @@ jobs:
         destination_folder: 'frontend/src/monitorUI_GENERATED'
         destination_base_branch: 'master'
         destination_head_branch: 'update-monitor-ui-library'
+        user_email: 'loup.theron@beta.gouv.fr'
+        user_name: 'louptheron'
