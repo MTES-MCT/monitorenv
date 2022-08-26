@@ -63,7 +63,6 @@ export const DrawLayer = ({ map }) => {
 
     if (map) {
       map.getLayers().push(GetVectorLayer())
-      
     }
 
     return () => {

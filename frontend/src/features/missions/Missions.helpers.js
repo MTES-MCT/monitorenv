@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 
-import { actionTargetTypeEnum, actionTypeEnum, formalNoticeEnum, missionStatusEnum, missionTypeEnum } from "../../domain/entities/missions"
+import { actionTypeEnum, formalNoticeEnum, missionStatusEnum, missionTypeEnum } from "../../domain/entities/missions"
 
 export const infractionFactory = ({id, ...infraction} = {}) => {
   return {
@@ -31,7 +31,7 @@ export const actionFactory = ({id, actionType, ...action} = {}) => {
         protectedSpecies: [],
         actionStartDatetimeUtc: new Date(),
         actionNumberOfControls: '',
-        actionTargetType: actionTargetTypeEnum.VEHICLE.code,
+        actionTargetType: '',
         vehicleType: '',
         geom: null,
         infractions: [],
@@ -53,7 +53,6 @@ export const actionFactory = ({id, actionType, ...action} = {}) => {
           actionSubTheme: '',
           protectedSpecies: [],
           actionStartDatetimeUtc: new Date(),
-          actionTargetType: actionTargetTypeEnum.VEHICLE.code,
           geom: null,
           ...action
         }

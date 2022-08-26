@@ -4,9 +4,14 @@ import _ from 'lodash';
 import { useDispatch } from 'react-redux';
 import { Form, Button } from 'rsuite'
 import {  useField } from 'formik';
+import { boundingExtent } from 'ol/extent';
+import { transformExtent } from 'ol/proj'
+
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map';
 
 import { addMissionZone } from '../../../domain/use_cases/missions/missionAndControlLocalisation';
 import { MissionZone } from './MissionZone';
+import { setFitToExtent } from '../../../domain/shared_slices/Map';
 
 export const MissionZones = ({name}) => {
   const [field, , helpers] = useField(name);
@@ -20,9 +25,12 @@ export const MissionZones = ({name}) => {
   const handleDeleteZone = (index) => () => {
     const newCoordinates = [...value.coordinates]
     newCoordinates.splice(index,1)
-    dispatch(setValue({...value, coordinates: newCoordinates}))
+    setValue({...value, coordinates: newCoordinates})
   }
-
+  const handleCenterOnMap = (coordinates) => () => {
+    const extent = transformExtent(boundingExtent(coordinates[0]), WSG84_PROJECTION, OPENLAYERS_PROJECTION)
+    dispatch(setFitToExtent({extent}))
+  }
   return (
     <FormGroupMission>
       <Form.ControlLabel htmlFor={name}>Localisations : </Form.ControlLabel>
@@ -37,6 +45,7 @@ export const MissionZones = ({name}) => {
             zone={coordinates}
             name={`Polygone dessiné ${i+1}`}
             handleDelete={handleDeleteZone(i)}
+            handleCenterOnMap={handleCenterOnMap(coordinates)}
             />
         )}
         )}

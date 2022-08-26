@@ -58,11 +58,11 @@ export const GeneralInformationsForm = () => {
       <Form.Group>
           <ColWrapper>
               <Form.ControlLabel htmlFor="open_by">Ouvert par</Form.ControlLabel>
-              <FormikInput block name="open_by"/>
+              <FormikInput  name="open_by"/>
           </ColWrapper>
           <ColWrapper>
               <Form.ControlLabel htmlFor="closed_by">Clôturé par</Form.ControlLabel>
-              <FormikInput block name="closed_by"/>
+              <FormikInput  name="closed_by"/>
           </ColWrapper>
       </Form.Group>
     </>

@@ -14,13 +14,17 @@ const globalSlice = createSlice({
     healthcheckTextWarning: null,
     openedSideWindowTab: null,
     sideWindowIsOpen: false,
-    // state entry for every component displayed on map
+    // state entry for every component displayed on map whose visibility should be controlled
     displayLayersSidebar: true,
     displayMissionsMenu: true,
+    displayMissionsOverlay: true,
     displayMeasurement: true,
     displayLocateOnMap: true,
     displayInterestPoint: true,
-    displayDrawLayerModal: false
+    displayDrawLayerModal: false,
+    // state entry for every layer whose visibility should be controlled
+    displayMissionsLayer: true,
+    displaySelectedMissionLayer: true,
   },
   reducers: {
     expandRightMenu (state) {

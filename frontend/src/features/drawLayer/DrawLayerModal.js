@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
+import { matchPath } from 'react-router-dom'
 
 import { ReactComponent as PolygonSVG } from '../../uiMonitor/icons/polygone.svg'
 import { ReactComponent as RectangleSVG } from '../../uiMonitor/icons/rectangle.svg'
@@ -11,6 +12,8 @@ import { COLORS } from '../../constants/constants'
 import { resetFeatures, setInteractionType } from './DrawLayer.slice'
 import { monitorenvFeatureTypes, interactionTypes } from '../../domain/entities/drawLayer'
 import { quitAddLocalisation, validateLocalisation } from '../../domain/use_cases/missions/missionAndControlLocalisation'
+import { sideWindowPaths } from '../../domain/entities/sideWindow'
+import { usePrevious } from '../../hooks/usePrevious'
 
 const titlePlaceholder = {
   MISSION_ZONE: 'une zone de mission',
@@ -24,6 +27,28 @@ const validateButtonPlaceholder = {
 export const DrawLayerModal = () => {
   const dispatch = useDispatch()
   const { interactionType, featureType } = useSelector(state => state.drawLayer)
+  
+  const { sideWindowIsOpen } = useSelector(state => state.global)
+  const { sideWindowPath } = useSelector(state => state.sideWindowRouter)
+
+  const routeParams = matchPath(sideWindowPath, {
+    path: [sideWindowPaths.MISSION, sideWindowPaths.MISSION_NEW],
+    exact: true,
+    strict: true
+  })
+  const previousMissionId = usePrevious(routeParams?.params?.id)
+
+  useEffect(() => {
+    if ( previousMissionId && previousMissionId != routeParams?.params?.id) {
+      dispatch(quitAddLocalisation)
+    }
+  }, [previousMissionId, routeParams])
+  
+  
+  useEffect(() => {
+    !sideWindowIsOpen && dispatch(quitAddLocalisation)
+  }, [sideWindowIsOpen])
+
   const handleQuit = () => {
     dispatch(quitAddLocalisation)
   }

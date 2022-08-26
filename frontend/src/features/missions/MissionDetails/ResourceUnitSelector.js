@@ -36,7 +36,14 @@ export const ResourceUnitSelector = ({ resourceUnitPath, removeResourceUnit, res
 
   const administrationList = _.uniqBy(data, 'administration')
   const unitList = _.uniqBy(_.filter(data, r => r.administration === administrationField.value), 'unit')
-  const resourcesList = _.filter(data, r => r.administration === administrationField.value && r.unit === unitField.value)
+  const resourcesList = _.filter(data, r => r.administration === administrationField.value && r.unit === unitField.value && r.resource_name)
+  
+  // Add any resource from Mission not present in resourceList from API
+  // See: https://github.com/MTES-MCT/monitorenv/issues/103 
+  const existingResourcesOptions = resourcesField?.value?.map(r => ({
+    resource_name: r
+  }))
+  const combinedResourceList = _.uniqBy([...resourcesList, ...existingResourcesOptions], (r)=>r.resource_name)
 
   const handleAdministrationChange = (value) => {
     if (value !== administrationField.value) {
@@ -107,7 +114,7 @@ export const ResourceUnitSelector = ({ resourceUnitPath, removeResourceUnit, res
               container={()=>resourcesRef.current}
               value={resourcesField.value}
               onChange={resourcesHelpers.setValue}
-              data={resourcesList}
+              data={combinedResourceList}
               labelKey={'resource_name'}
               valueKey={'resource_name'}
               disabled={_.isEmpty(unitField.value)}
@@ -125,6 +132,7 @@ export const ResourceUnitSelector = ({ resourceUnitPath, removeResourceUnit, res
 const RessourceUnitWrapper = styled.div`
   display: flex;
 `
+
 const SelectorWrapper = styled.div`
   width: 100%;
   max-width: 416px;
@@ -142,15 +150,18 @@ const FormColumn = styled.div`
     margin-right: 16px;
   }
 `
+
 const FormGroupFixed = styled(Form.Group)`
   height: 58px;
 `
+
 const RefWrapper = styled.div`
   .rs-picker-menu {
     position: relative;
-    margin-top: -60px;
+    margin-top: -50px;
   }
 `
+
 const DeleteButton = styled(IconButton)`
   margin-top: 22px;
   margin-left: 8px;

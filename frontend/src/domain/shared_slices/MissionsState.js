@@ -8,27 +8,28 @@ const MissionStateReducer = null
 const missionStateSlice = createSlice({
   name: 'missionState',
   initialState: {
+    // selectedMissionId on Map
     selectedMissionId: null,
-    missionIdBeingEdited: null,
-    missionBeingEdited: null,
+    missionState: null
   },
   reducers: {
     setSelectedMissionId (state, action) {
       state.selectedMissionId = action.payload
     },
-    setMissionIdBeingEdited (state, action) {
-      state.missionIdBeingEdited = action.payload
+    resetSelectedMission (state) {
+      state.selectedMissionId = null
     },
-    setMissionBeingEdited (state, action) {
-      state.missionBeingEdited = action.payload
-    },
+    setMissionState (state, action) {
+      console.log('state updated', action.payload)
+      state.missionState = action.payload
+    }
   }
 })
 
 export const {
   setSelectedMissionId,
-  setMissionIdBeingEdited,
-  setMissionBeingEdited
+  resetSelectedMission,
+  setMissionState
 } = missionStateSlice.actions
 
 export default missionStateSlice.reducer

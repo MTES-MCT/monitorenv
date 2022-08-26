@@ -21,6 +21,8 @@ import { ReactComponent as SaveSVG } from '../../uiMonitor/icons/enregistrer_16p
 import { ReactComponent as DeleteSVG } from '../../uiMonitor/icons/Suppression_clair.svg'
 import { COLORS } from '../../constants/constants';
 import { quitEditMission } from '../../domain/use_cases/missions/missionAndControlLocalisation';
+import { SyncFormValuesWithRedux } from '../../hooks/useSyncFormValuesWithRedux';
+import { setMissionState } from '../../domain/shared_slices/MissionsState';
 
 export const CreateOrEditMission = ({routeParams})  => {
   const dispatch = useDispatch()
@@ -124,12 +126,16 @@ export const CreateOrEditMission = ({routeParams})  => {
         onSubmit={handleSubmitForm}
       >
         {(formikProps)=>{
+
+          
+
           const handleCloseMission = () => {
             formikProps.setFieldValue('missionStatus', missionStatusEnum.CLOSED.code)
             formikProps.handleSubmit()
           }
           return (
             <Form onSubmit={formikProps.handleSubmit} onReset={formikProps.handleReset}>
+              <SyncFormValuesWithRedux callback={setMissionState}/>
               <Wrapper>
                 <FirstColumn>
                   <GeneralInformationsForm />
