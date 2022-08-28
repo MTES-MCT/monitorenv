@@ -12,7 +12,7 @@ class GetControlThemes(private val controlThemeRepository: IControlThemeReposito
 
   fun execute(): List<ControlThemeEntity> {
     val controlThemes = controlThemeRepository.findControlThemes()
-    logger.info("Found ${controlThemes.size} control topics ")
+    logger.info("Found ${controlThemes.size} control themes ")
 
     return controlThemes
   }

@@ -4,10 +4,16 @@ import { FulfillingBouncingCircleSpinner } from 'react-epic-spinners'
 import styled from 'styled-components'
 
 import {  setSideWindowAsOpen } from '../../domain/shared_slices/Global'
+import { sideWindowPaths } from '../../domain/entities/sideWindow'
+
+import { Missions } from './../missions/Missions'
+import { CreateOrEditMission } from './../missions/CreateOrEditMission'
+import { SideWindowRoute } from '../../components/SideWindowRouter/SideWindowRoute'
 
 // import SideWindowMenu from './SideWindowMenu'
 import { COLORS } from '../../constants/constants'
-import { MissionsWrapper } from '../missions/MissionsWrapper'
+
+
 import { ErrorBoundary } from '../../components/ErrorBoundary'
 
 export const SideWindow = forwardRef(function SideWindowComponent(props, ref) {
@@ -29,7 +35,6 @@ export const SideWindow = forwardRef(function SideWindowComponent(props, ref) {
   return <>{openedSideWindowTab
     ? <ErrorBoundary>
         <Wrapper ref={ref}>
-          {/* <SideWindowMenu selectedMenu={openedSideWindowTab} /> */}
           {
             isPreloading
               ? <Loading>
@@ -39,7 +44,14 @@ export const SideWindow = forwardRef(function SideWindowComponent(props, ref) {
                 <Text data-cy={'first-loader'}>Chargement...</Text>
               </Loading>
               : 
-                <MissionsWrapper/>
+              <>
+                <SideWindowRoute path={sideWindowPaths.MISSIONS}>
+                  <Missions />
+                </SideWindowRoute>
+                <SideWindowRoute path={[sideWindowPaths.MISSION, sideWindowPaths.MISSION_NEW]}>
+                  <CreateOrEditMission />
+                </SideWindowRoute>
+              </>
           }
         </Wrapper>
     </ErrorBoundary>

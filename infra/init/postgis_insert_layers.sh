@@ -5,6 +5,8 @@ export DB_HOST=${POSTGRES_HOST}
 export DB_NAME=${POSTGRES_DB}
 export DB_SCHEMA=public
 export DB_USER=${POSTGRES_USER}
+
+# Administrative layers
 PGCLIENTENCODING=UTF-8 psql -h ${DB_HOST} -d ${DB_NAME} -U ${DB_USER} -f data/layersdata/Insert_fao_areas.sql
 
 PGCLIENTENCODING=UTF-8 psql -h 0.0.0.0 -d ${DB_NAME} -U ${DB_USER} -f data/layersdata/Insert_eez_areas.sql
@@ -37,6 +39,9 @@ PGCLIENTENCODING=UTF-8 psql -h 0.0.0.0 -d ${DB_NAME} -U ${DB_USER} -f data/layer
 PGCLIENTENCODING=UTF-8 psql -h 0.0.0.0 -d ${DB_NAME} -U ${DB_USER} -f data/layersdata/situation_memn_areas.sql
 PGCLIENTENCODING=UTF-8 psql -h 0.0.0.0 -d ${DB_NAME} -U ${DB_USER} -f data/layersdata/situation_outre_mer_areas.sql
 
+# Regulatory layer
 PGCLIENTENCODING=UTF-8 psql -h 0.0.0.0 -d ${DB_NAME} -U ${DB_USER} -f data/layersdata/regulations_cacem.sql
 PGCLIENTENCODING=UTF-8 psql -h 0.0.0.0 -d ${DB_NAME} -U ${DB_USER} -f data/layersdata/regulations_cacem_normalize.sql
-PGCLIENTENCODING=UTF-8 psql -h 0.0.0.0 -d ${DB_NAME} -U ${DB_USER} -f data/internal/control_resources_data.sql
+
+# Control Resources
+PGCLIENTENCODING=UTF-8 psql -h 0.0.0.0 -d ${DB_NAME} -U ${DB_USER} -f data/internal/control_resources_admin_and_units_data.sql

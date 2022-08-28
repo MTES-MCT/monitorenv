@@ -30,16 +30,16 @@ class JpaControlThemeRepositoryITests : AbstractDBTests() {
     val searchedControlTheme = ControlThemeModel.fromControlThemeEntity(
       ControlThemeEntity(
         id = 1,
-        topic_level_1 = "Police des mouillages",
-        topic_level_2 = "Mouillage individuel"
+        theme_level_1 = "Police des mouillages",
+        theme_level_2 = "Mouillage individuel"
       )
     )
     // When
     val requestedControlTheme = jpaControlThemesRepository.findControlThemeById(1)
     // Then
     assertThat(requestedControlTheme.id).isEqualTo(searchedControlTheme.id)
-    assertThat(requestedControlTheme.topic_level_1).isEqualTo(searchedControlTheme.topic_level_1)
-    assertThat(requestedControlTheme.topic_level_2).isEqualTo(searchedControlTheme.topic_level_2)
+    assertThat(requestedControlTheme.theme_level_1).isEqualTo(searchedControlTheme.theme_level_1)
+    assertThat(requestedControlTheme.theme_level_2).isEqualTo(searchedControlTheme.theme_level_2)
   }
 
 }

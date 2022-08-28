@@ -1,12 +1,16 @@
 import GeoJSON from 'ol/format/GeoJSON'
 import Feature from 'ol/Feature'
 import { MultiPolygon, Polygon, Point, MultiPoint } from 'ol/geom'
+import { boundingExtent } from 'ol/extent'
+import { transformExtent } from 'ol/proj'
+import _ from 'lodash'
 
 import { setFeatureType, resetInteraction, setFeatures, setInteractionType, resetFeatures } from "../../../features/drawLayer/DrawLayer.slice"
 import { setDisplayedItems } from "../../shared_slices/Global"
 
 import { monitorenvFeatureTypes, interactionTypes, olGeometryTypes } from "../../entities/drawLayer"
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../entities/map'
+import { setFitToExtent } from '../../shared_slices/Map'
 
 const convertToGeometryObject = (feature) => {
   const format = new GeoJSON()
@@ -24,6 +28,9 @@ const openDrawLayerModal = (dispatch) => {
     displayMeasurement: false,
     displayLocateOnMap: false,
     displayInterestPoint: false,
+    displayMissionsOverlay: false,
+    displayMissionsLayer: false,
+    displaySelectedMissionLayer: false,
     displayDrawLayerModal: true
   }))
 }
@@ -35,6 +42,9 @@ const closeDrawLayerModal = (dispatch) => {
     displayMeasurement: true,
     displayLocateOnMap: true,
     displayInterestPoint: true,
+    displayMissionsOverlay: true,
+    displayMissionsLayer: true,
+    displaySelectedMissionLayer: true,
     displayDrawLayerModal: false
   }))
 }
@@ -46,6 +56,7 @@ export const addMissionZone = ({callback, geom} ) => (dispatch) => {
     })
   })
   features && dispatch(setFeatures(features))
+  geom?.coordinates?.length && dispatch(setFitToExtent({extent: transformExtent(boundingExtent(_.flattenDepth(geom.coordinates,2)), WSG84_PROJECTION, OPENLAYERS_PROJECTION)}))
   dispatch(openDrawLayerModal)
   dispatch(setFeatureType({featureType: monitorenvFeatureTypes.MISSION_ZONE, callback}))
   dispatch(setInteractionType(interactionTypes.POLYGON))
@@ -66,6 +77,7 @@ export const addControlPositions = ({callback, geom} ) => (dispatch) => {
 }
 
 export const quitAddLocalisation = (dispatch) => {
+  dispatch(resetFeatures())
   dispatch(closeDrawLayerModal)
   dispatch(resetInteraction())
 }
@@ -91,6 +103,7 @@ export const validateLocalisation = (dispatch, getState) => {
         break
     }
   }
+  dispatch(resetFeatures())
   dispatch(closeDrawLayerModal)
   dispatch(resetInteraction())
 }

@@ -1,5 +1,5 @@
 import { useMemo, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import VectorSource from 'ol/source/Vector'
 import VectorLayer from 'ol/layer/Vector'
 
@@ -14,6 +14,7 @@ import { missionWithCentroidStyleFn } from './styles/missions.style'
 
 export const MissionsLayer = ({ map, mapClickEvent }) => {
   const dispatch = useDispatch()
+  const { displayMissionsLayer } = useSelector(state => state.global)
   const { data } = useGetMissionsQuery()
 
   const missionsMultiPolygons = useMemo(()=>{
@@ -30,24 +31,22 @@ export const MissionsLayer = ({ map, mapClickEvent }) => {
   }
 
   const vectorLayerRef = useRef(null)
-  
+  const GetVectorLayer = () => {
+    if (vectorLayerRef.current === null) {
+      vectorLayerRef.current = new VectorLayer({
+        source: GetVectorSource(),
+        style: missionWithCentroidStyleFn,
+        renderBuffer: 7,
+        updateWhileAnimating: true,
+        updateWhileInteracting: true,
+        zIndex: Layers.MISSIONS.zIndex,
+      })
+      vectorLayerRef.current.name = Layers.MISSIONS.code
+    }
+    return vectorLayerRef.current
+  }
 
   useEffect(() => {
-    const GetVectorLayer = () => {
-      if (vectorLayerRef.current === null) {
-        vectorLayerRef.current = new VectorLayer({
-          source: GetVectorSource(),
-          style: missionWithCentroidStyleFn,
-          renderBuffer: 7,
-          updateWhileAnimating: true,
-          updateWhileInteracting: true,
-          zIndex: Layers.MISSIONS.zIndex,
-        })
-        vectorLayerRef.current.name = Layers.MISSIONS.code
-      }
-      return vectorLayerRef.current
-    }
-
     map && map.getLayers().push(GetVectorLayer())
 
     return () => map && map.removeLayer(GetVectorLayer())
@@ -59,6 +58,11 @@ export const MissionsLayer = ({ map, mapClickEvent }) => {
       GetVectorSource()?.addFeatures(missionsMultiPolygons)
     }
   }, [missionsMultiPolygons])
+
+  useEffect(() => {
+    GetVectorLayer()?.setVisible(displayMissionsLayer)
+  }, [displayMissionsLayer])
+
 
   useEffect(()=>{
     if (mapClickEvent?.feature) {
