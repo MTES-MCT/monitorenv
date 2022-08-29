@@ -21,15 +21,15 @@ export const GeneralInformationsForm = () => {
   return (
     <>
       <Title>Informations générales</Title>
-      <Form.Group>
+      <FixedFormGroup>
         <Form.ControlLabel htmlFor="inputStartDatetimeUtc">Début de mission</Form.ControlLabel>
         <FormikDatePicker name="inputStartDatetimeUtc" placeholder={placeholderDateTimePicker} format="dd MMM yyyy, HH:mm" oneTap/>
-      </Form.Group>
+      </FixedFormGroup>
       
-      <Form.Group>
+      <FixedFormGroup>
         <Form.ControlLabel htmlFor="inputEndDatetimeUtc">Fin de mission</Form.ControlLabel>
         <FormikDatePicker name="inputEndDatetimeUtc" placeholder={placeholderDateTimePicker} format="dd MMM yyyy, HH:mm" oneTap/>
-      </Form.Group>
+      </FixedFormGroup>
       
       <Form.Group>
         <Form.ControlLabel htmlFor="missionType">Type de mission</Form.ControlLabel>
@@ -74,6 +74,7 @@ const Title = styled.h2`
   padding-bottom: 13px;
   color: ${COLORS.charcoal}
 `
+
 const ColWrapper = styled.div`
   width: 200px;
   display: inline-block;
@@ -81,9 +82,15 @@ const ColWrapper = styled.div`
     margin-right: 16px;
   }
 `
+
+const FixedFormGroup = styled(Form.Group)`
+  height: 58px;
+`
+
 const TypeMissionRadioGroup = styled(FormikRadioGroup)`
   margin-left: -20px;
 `
+
 const NatureMissionCheckboxGroup = styled(FormikCheckboxGroup)`
   margin-left: -20px;
 `
