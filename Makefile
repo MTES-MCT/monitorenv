@@ -8,7 +8,7 @@ endif
 
 
 # DEV commands
-.PHONY: dev-install dev-run-front dev-run-back-with-infra dev-run-back dev-run-infra dev-erase-db dev-clean-target-env dev-back-config docker-build-app test test-front
+.PHONY: dev-install dev-run-front dev-run-back-with-infra dev-run-back dev-run-infra dev-erase-db dev-clean-target-env dev-back-config dev-load-sig-data test test-front
 dev-install:
 	cd frontend && npm install
 
@@ -42,9 +42,17 @@ dev-erase-db:
 dev-clean-target-env:
 	rm -rf $(shell pwd)/backend/target
 
+dev-load-sig-data:
+	set -a
+	. ./infra/.env
+	set +a
+	echo ${PROJECT_NAME} 
+	./infra/init/dev_postgis_insert_layers.sh 
+
 test:
 	cd backend && ./mvnw clean && ./mvnw test
 	cd frontend && CI=true npm test
+
 test-front:
 	cd frontend && npm test
 
@@ -59,6 +67,13 @@ load-sig-data:
 	set +a
 	echo ${PROJECT_NAME} 
 	./infra/init/postgis_insert_layers.sh 
+
+int-load-sig-data:
+	set -a
+	. ./infra/.env
+	set +a
+	echo ${PROJECT_NAME} 
+	./infra/init/integration_postgis_insert_layers.sh 
 
 init-geoserver:
 	set -a
@@ -105,7 +120,9 @@ docker-push-pipeline:
 init-environment:
 ifeq (,$(wildcard ./infra/.env))
 	@echo "Pas de fichier '.env'. Création d'un nouveau fichier."
-	@echo "source ~/monitorenv/infra/init/init_env.sh" >> ~/.bashrc 
+	@echo "## MonitorEnv" >> ~/.bashrc 
+	@echo "cd ~/monitorenv" >> ~/.bashrc 
+	@echo "make log-environment" >> ~/.bashrc 
 	@cp infra/.env.template infra/.env
 else 
 	@echo "Un fichier .env existe déjà. Editez ou supprimez le fichier existant."
@@ -131,7 +148,9 @@ run-pipeline-agent-prod:
 	cd datascience && source ~/venv/bin/activate && prefect agent docker start --no-pull &
 
 # MAINTENANCE
-.PHONY: remove-unused-docker-images logs-app logs-geoserver logs-db
+.PHONY: log-environment remove-unused-docker-images logs-app logs-geoserver logs-db
+log-environment:
+	$(INFRA_FOLDER)/log_environment.sh
 remove-unused-docker-images:
 	docker image prune -a
 logs-backend:
