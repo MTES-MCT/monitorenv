@@ -68,8 +68,9 @@ const MissionCardHeader = styled.div`
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
   display: flex;
-  width: 265px;
-  z-index: ${props=> props.selected ? 4900 : 5000}
+  width: 380px;
+  height: 124px;
+  box-shadow: 0px 3px 6px rgba(0,0,0,.3);
 `
 
 const MissionDate = styled.div`
@@ -85,6 +86,11 @@ const MissionType = styled.div`
 const MissionReources = styled.div`
   font-size: 12px;
   color: ${COLORS.slateGray};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 `
 const Actions = styled.div`
 `
@@ -96,5 +102,6 @@ const Col2 = styled.div`
   padding: 8px 8px 4px 8px;
 `
 const Col3 = styled.div`
+  margin-left: auto;
   padding-right: 4px;
 `

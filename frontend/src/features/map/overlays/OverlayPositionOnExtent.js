@@ -4,24 +4,30 @@ import styled from 'styled-components'
 import Overlay from 'ol/Overlay'
 import { getCenter } from 'ol/extent'
 
-import { getOverlayPositionForCentroid, getTopLeftMargin } from './position'
+import { getOverlayPositionForExtent, getTopLeftMarginForFeature } from './position'
 
 import { COLORS } from '../../../constants/constants'
 
-const OVERLAY_HEIGHT = 74
+const OVERLAY_HEIGHT = 124
+const OVERLAY_WIDTH = 365
 
 const defaultMargins = {
-  xRight: -252,
-  xMiddle: -116,
-  xLeft: 20,
-  yTop: 10,
-  yMiddle: -64,
-  yBottom: -153
+  top: {
+    top: 20,
+    middle: 20,
+    bottom: 20
+  },
+  left: {
+    right: 20,
+    center: 20,
+    left: 20,
+  }
 }
 
-export const OverlayPositionOnCentroid = ({
+export const OverlayPositionOnExtent = ({
   map, 
-  feature, 
+  feature,
+  appClassName, 
   children, 
   options: {
     margins = defaultMargins
@@ -36,6 +42,7 @@ export const OverlayPositionOnCentroid = ({
     if (ref) {
       olOverlayObjectRef.current = new Overlay({
         element: ref,
+        className: `ol-overlay-container ol-selectable ${appClassName}`
       })
     } else {
       olOverlayObjectRef.current = null
@@ -52,19 +59,34 @@ export const OverlayPositionOnCentroid = ({
   }, [map, olOverlayObjectRef])
 
   useEffect(() => {
-    function getNextOverlayPosition (featureCenter) {
-      const [x, y] = featureCenter
-      const extent = map.getView().calculateExtent()
-      const boxSize = map.getView().getResolution() * OVERLAY_HEIGHT
-      return getOverlayPositionForCentroid(boxSize, x, y, extent)
-    }
 
     if (overlayRef.current && olOverlayObjectRef.current) {
       if (feature) {
-        const featureCenter =  getCenter(feature.getGeometry().getExtent())
+        const featureExtent =  feature.getGeometry().getExtent()
+        const featureCenter =  getCenter(featureExtent)
+        const resolution = map.getView().getResolution()
+        const extent = map.getView().calculateExtent()
+
+        const nextOverlayPosition = getOverlayPositionForExtent(
+          featureExtent, 
+          extent,
+          margins,
+          {width: OVERLAY_WIDTH, height: OVERLAY_HEIGHT, resolution}
+          )
+          console.log('position', nextOverlayPosition, featureExtent, 
+          extent,
+          margins,
+          {width: OVERLAY_WIDTH, height: OVERLAY_HEIGHT, resolution})
+        const containerMargins = getTopLeftMarginForFeature(
+           nextOverlayPosition,
+           margins,
+           featureExtent, 
+           featureCenter, 
+           {width: OVERLAY_WIDTH, height: OVERLAY_HEIGHT, resolution}
+           )
+
         olOverlayObjectRef.current.setPosition(featureCenter)
-        const nextOverlayPosition = getNextOverlayPosition(featureCenter)
-        setOverlayTopLeftMargin(getTopLeftMargin(nextOverlayPosition, margins))
+        setOverlayTopLeftMargin(containerMargins)
         overlayRef.current.style.display = 'block'
       } else {
         overlayRef.current.style.display = 'none'
@@ -81,7 +103,7 @@ export const OverlayPositionOnCentroid = ({
 }
 
 const OverlayComponent = styled.div`
-  position: absolute;
+  position: relative;
   top: ${props => props.overlayTopLeftMargin[0]}px;
   left: ${props => props.overlayTopLeftMargin[1]}px;
   text-align: left;
