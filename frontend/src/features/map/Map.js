@@ -11,6 +11,7 @@ import InterestPointLayer from './layers/InterestPointLayer'
 import { DrawLayer } from './layers/DrawLayer';
 import { MissionsLayer } from './layers/MissionsLayer'
 import { SelectedMissionLayer } from './layers/SelectedMissionLayer'
+import { EditingMissionLayer } from './layers/EditingMissionLayer'
 import { HoveredMissionLayer } from './layers/HoveredMissionLayer'
 
 import { MissionOverlays } from './overlays/missions/MissionOverlays'
@@ -67,6 +68,7 @@ const Map = () => {
       {FEATURE_FLAGS.LOCALIZE_MISSIONS && <DrawLayer/>}
       {FEATURE_FLAGS.LOCALIZE_MISSIONS && <MissionsLayer/>}
       {FEATURE_FLAGS.LOCALIZE_MISSIONS && <SelectedMissionLayer/>}
+      {FEATURE_FLAGS.LOCALIZE_MISSIONS && <EditingMissionLayer/>}
       {FEATURE_FLAGS.LOCALIZE_MISSIONS && <HoveredMissionLayer/>}
       {FEATURE_FLAGS.LOCALIZE_MISSIONS && <MissionOverlays/>}
       {FEATURE_FLAGS.LOCALIZE_MISSIONS && <ControlOverlay/>}

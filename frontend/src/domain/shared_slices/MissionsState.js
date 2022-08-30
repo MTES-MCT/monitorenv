@@ -10,6 +10,7 @@ const missionStateSlice = createSlice({
   initialState: {
     // selectedMissionId on Map
     selectedMissionId: null,
+    // state of the mission being edited (synced with form)
     missionState: null
   },
   reducers: {
@@ -20,7 +21,6 @@ const missionStateSlice = createSlice({
       state.selectedMissionId = null
     },
     setMissionState (state, action) {
-      console.log('state updated', action.payload)
       state.missionState = action.payload
     }
   }

@@ -73,10 +73,7 @@ export const OverlayPositionOnExtent = ({
           margins,
           {width: OVERLAY_WIDTH, height: OVERLAY_HEIGHT, resolution}
           )
-          console.log('position', nextOverlayPosition, featureExtent, 
-          extent,
-          margins,
-          {width: OVERLAY_WIDTH, height: OVERLAY_HEIGHT, resolution})
+
         const containerMargins = getTopLeftMarginForFeature(
            nextOverlayPosition,
            margins,

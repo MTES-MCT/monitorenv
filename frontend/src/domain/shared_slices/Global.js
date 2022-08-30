@@ -25,6 +25,7 @@ const globalSlice = createSlice({
     // state entry for every layer whose visibility should be controlled
     displayMissionsLayer: true,
     displaySelectedMissionLayer: true,
+    displayEditingMissionLayer: true,
   },
   reducers: {
     expandRightMenu (state) {

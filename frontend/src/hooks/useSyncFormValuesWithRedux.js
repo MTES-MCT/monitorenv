@@ -15,7 +15,7 @@ export const useSyncFormValuesWithRedux = (setFormValues) =>{
   
   useEffect(() => {
     dispatchFormUpdate(formik.values)
-    return dispatchFormUpdate(null)
+    return () => dispatchFormUpdate(null)
   }, [formik.values, dispatchFormUpdate])
 }
 
