@@ -32,3 +32,15 @@
 .collapsed {
     display: none;
 }
+
+.overlay-mission-hover {
+    z-index: 5000;
+    width: 0;
+    height: 0;
+}
+
+.overlay-mission-selected {
+    z-index: 4000;
+    width: 0;
+    height: 0;
+}

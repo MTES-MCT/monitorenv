@@ -11,7 +11,7 @@ import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppressio
 import { COLORS } from '../../../constants/constants'
 
 export const InfractionCard = ({ currentActionIndex, infractionPath,  setCurrentInfractionIndex, removeInfraction }) => {
-  const [vehicleTypeField] = useField(`actions.${currentActionIndex}.vehicleType`)
+  const [vehicleTypeField] = useField(`envActions.${currentActionIndex}.vehicleType`)
   const [vesselType] = useField(`${infractionPath}.vesselType`)
   const [registrationNumber] = useField(`${infractionPath}.registrationNumber`)
   const [infractionType] = useField(`${infractionPath}.infractionType`)
@@ -21,8 +21,8 @@ export const InfractionCard = ({ currentActionIndex, infractionPath,  setCurrent
   return (
     <Wrapper>
       <Summary>
-        <VehicleType>{vehicleTypeEnum[vehicleTypeField?.value]?.libelle || 'Non Renseigné'} {vesselTypeEnum[vesselType?.value]?.libelle || 'Non Renseigné'}</VehicleType>
-        <RegistrationNumber>({registrationNumber?.value || 'sans immatriculation'})</RegistrationNumber>
+        <VehicleType>{vehicleTypeEnum[vehicleTypeField?.value]?.libelle || 'Non Renseigné'} {vehicleTypeField?.value ===  vehicleTypeEnum.VESSEL.code ? ` – ${vesselTypeEnum[vesselType?.value]?.libelle}` : '' }</VehicleType>
+        <RegistrationNumber> &ndash; {registrationNumber?.value || 'sans immatriculation'}</RegistrationNumber>
         <SummaryDetails>
           <Info>
             {infractionTypeEnum[infractionType?.value]?.libelle || 'NR'}
@@ -31,13 +31,13 @@ export const InfractionCard = ({ currentActionIndex, infractionPath,  setCurrent
             MED : { formalNoticeEnum[formalNotice?.value]?.libelle || 'NR'}
           </Info>
           <Info>
-            {natinf.value?.length || '0'} codes NATINF
+            {natinf.value?.length || '0'} NATINF
           </Info>
         </SummaryDetails>
       </Summary>
       <ButtonsWrapper>
-        <IconButton icon={<EditIcon/>} onClick={setCurrentInfractionIndex} />
-        <IconButton icon={<DeleteIcon/>} onClick={removeInfraction}></IconButton>
+        <IconButton appearance='ghost' icon={<EditIcon className='rs-icon' />} onClick={setCurrentInfractionIndex} >Editer</IconButton>
+        <IconButton appearance='ghost' icon={<DeleteIcon/>} onClick={removeInfraction}></IconButton>
       </ButtonsWrapper>
     </Wrapper>
   )
@@ -52,21 +52,29 @@ const Wrapper = styled.div`
   justify-content: space-between;
 `
 
-const Summary = styled.div``
+const Summary = styled.div`
+  height: 40px;
+`
 
 const ButtonsWrapper = styled.div`
   display: flex;
+  flex: 0 0 142px;
   align-items: center;
+  justify-content: space-between;
 `
 
-const VehicleType = styled.div``
-
-const RegistrationNumber = styled.div``
+const VehicleType = styled.span`
+  font-weight: 800;
+  `
+  
+const RegistrationNumber = styled.span`
+  font-weight: 800;
+`
 
 const SummaryDetails = styled.div``
 
 const Info = styled.span`
-  margin-right: 20px
+  margin-right: 24px
 `
 
 const EditIcon = styled(EditIconSVG)``

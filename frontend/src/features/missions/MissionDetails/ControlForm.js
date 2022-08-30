@@ -139,13 +139,15 @@ const Msg = styled.div`
 
 const SelectorWrapper = styled(Form.Group)`
   height: 58px;
-  `
-  const Separator = styled.hr`
+`
+
+const Separator = styled.hr`
   border-color: ${COLORS.gunMetal};
-  `
+`
   
-  const ActionSummary = styled(Form.Group)`
+const ActionSummary = styled(Form.Group)`
   height: 58px;
+  flex-shrink: 0;
   display: flex;
 `
 
