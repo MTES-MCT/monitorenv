@@ -11,7 +11,7 @@ import { getMissionZoneFeature, getActionsFeatures } from './missionGeometryHelp
 
 
 export const SelectedMissionLayer = ({ map }) => {
-  const { selectedMissionId } = useSelector(state => state.missionState)
+  const { selectedMissionId, missionState: selectedMissionEditedState } = useSelector(state => state.missionState)
   const { displaySelectedMissionLayer } = useSelector(state => state.global)
   const { selectedMission } = useGetMissionsQuery(undefined, {
     selectFromResult: ({ data }) =>  ({
@@ -19,9 +19,8 @@ export const SelectedMissionLayer = ({ map }) => {
     }),
   })
   
-  const selectedMissionEditedState = useSelector(state => state.missionState.missionState)
+  const displaySelectedMission = displaySelectedMissionLayer && selectedMissionId !== selectedMissionEditedState?.id
 
-  const displayedMission = selectedMissionEditedState || selectedMission
 
   const selectedMissionVectorSourceRef = useRef(null)
   const GetSelectedMissionVectorSource = () => {
@@ -89,18 +88,18 @@ export const SelectedMissionLayer = ({ map }) => {
   }, [map])
 
   useEffect(() => {
-    GetSelectedMissionVectorLayer()?.setVisible(displaySelectedMissionLayer)
-    GetSelectedMissionActionsVectorLayer()?.setVisible(displaySelectedMissionLayer)
-  }, [displaySelectedMissionLayer])
+    GetSelectedMissionVectorLayer()?.setVisible(displaySelectedMission)
+    GetSelectedMissionActionsVectorLayer()?.setVisible(displaySelectedMission)
+  }, [displaySelectedMission])
 
   useEffect(() => {
     GetSelectedMissionVectorSource()?.clear(true)
     GetSelectedMissionActionsVectorSource()?.clear(true)
-    if (displayedMission) {
-      GetSelectedMissionVectorSource()?.addFeature(getMissionZoneFeature(displayedMission, Layers.MISSION_SELECTED.code))
-      GetSelectedMissionActionsVectorSource()?.addFeatures(getActionsFeatures(displayedMission))
+    if (selectedMission) {
+      GetSelectedMissionVectorSource()?.addFeature(getMissionZoneFeature(selectedMission, Layers.MISSION_SELECTED.code))
+      GetSelectedMissionActionsVectorSource()?.addFeatures(getActionsFeatures(selectedMission))
     }
-  }, [displayedMission])
+  }, [selectedMission])
 
   return null
 }

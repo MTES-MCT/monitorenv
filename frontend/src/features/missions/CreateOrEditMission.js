@@ -31,11 +31,6 @@ export const CreateOrEditMission = ({routeParams})  => {
   const [errorOnDelete, setErrorOnDelete ] = useState(false)
   const [ confirmationModalIsOpen, setConfirmationModalIsOpen] = useState(false)  
 
-  const handleSetCurrentActionIndex = (index) =>{
-    setCurrentActionIndex(index)
-  }
-  
-  
   const id = routeParams?.params?.id && parseInt(routeParams?.params?.id)
 
   const { missionToEdit } = useGetMissionsQuery(undefined, {
@@ -64,6 +59,10 @@ export const CreateOrEditMission = ({routeParams})  => {
   const upsertMission = (id === undefined) ?  createMission : updateMission
 
 
+  const handleSetCurrentActionIndex = (index) =>{
+    setCurrentActionIndex(index)
+  }
+  
   const handleSubmitForm = values => {
     upsertMission(values).then((response)=> {
       const {data, error} = response
@@ -127,12 +126,11 @@ export const CreateOrEditMission = ({routeParams})  => {
       >
         {(formikProps)=>{
 
-          
-
           const handleCloseMission = () => {
             formikProps.setFieldValue('missionStatus', missionStatusEnum.CLOSED.code)
             formikProps.handleSubmit()
           }
+          
           return (
             <Form onSubmit={formikProps.handleSubmit} onReset={formikProps.handleReset}>
               <SyncFormValuesWithRedux callback={setMissionState}/>

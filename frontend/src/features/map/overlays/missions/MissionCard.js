@@ -44,7 +44,7 @@ export const MissionCard = ({feature, selected}) => {
     <Col2>
       <MissionType>Mission {missionTypeEnum[missionType]?.libelle}</MissionType>
       <MissionReources>{resourceUnits?.map(resource => {
-        return `${resource.administration} (${resource.unit})`
+        return `${resource.administration} ${resource.unit ? `(${resource.unit})`:''}`
       })}</MissionReources>
       <Actions>{numberOfActions} actions réalisées</Actions>
       <MissionStatusLabel missionStatus={missionStatus}/>
