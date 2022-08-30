@@ -15,7 +15,7 @@ jobs:
       uses: actions/checkout@v2
       
     - name: Clean Stories
-    - run: rm -rf $GITHUB_WORKSPACE/frontend/src/uiMonitor/*.stories.jsx
+      run: rm -rf $GITHUB_WORKSPACE/frontend/src/uiMonitor/*.stories.jsx
  
     - name: Create pull request
       uses: paygoc6/action-pull-request-another-repo@v1.0.1
