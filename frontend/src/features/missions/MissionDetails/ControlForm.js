@@ -137,8 +137,9 @@ const Title = styled.h2`
 const Msg = styled.div`
 `
 
-const SelectorWrapper = styled(Form.Group)`
+const SelectorWrapper = styled.div`
   height: 58px;
+  margin-bottom: 16px;
 `
 
 const Separator = styled.hr`

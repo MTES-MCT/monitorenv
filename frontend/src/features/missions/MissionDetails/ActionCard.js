@@ -100,6 +100,7 @@ const TimeLine = styled.div`
   display: flex;
   align-items: center;
   width: 50px;
+  margin-right: 16px;
 `
 
 const DateTimeWrapper = styled.div`

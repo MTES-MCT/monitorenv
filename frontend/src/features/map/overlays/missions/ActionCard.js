@@ -55,7 +55,7 @@ const ActionCardHeader = styled.div`
 `
 
 const ActionDate = styled.div`
-  width: 75px;
+  width: 80px;
   font-size: 12px;
   margin-right: 16px;
 `

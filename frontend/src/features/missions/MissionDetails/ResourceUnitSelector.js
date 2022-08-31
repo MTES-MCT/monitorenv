@@ -122,9 +122,9 @@ export const ResourceUnitSelector = ({ resourceUnitPath, removeResourceUnit, res
           </RefWrapper>
         </FormGroupFixed>
       </SelectorWrapper>
-      <div>
-        {resourceUnitIndex > 0 && <DeleteButton appearance="ghost" icon={<DeleteSVG className={"rs-icon"} />} onClick={removeResourceUnit}></DeleteButton>}
-      </div>
+      
+        {resourceUnitIndex > 0 && <div><DeleteButton appearance="ghost" icon={<DeleteSVG className={"rs-icon"} />} onClick={removeResourceUnit}></DeleteButton></div>}
+      
     </RessourceUnitWrapper>
   )
 }
@@ -136,7 +136,7 @@ const RessourceUnitWrapper = styled.div`
 const SelectorWrapper = styled.div`
   width: 100%;
   max-width: 416px;
-  margin-bottom: 4px;
+  margin-bottom: 16px;
   .rs-picker-select-menu {
     position: relative;
     margin-top: -50px;
@@ -151,8 +151,11 @@ const FormColumn = styled.div`
   }
 `
 
-const FormGroupFixed = styled(Form.Group)`
+const FormGroupFixed = styled.div`
   height: 58px;
+  :not(:last-child) {
+    margin-bottom: 4px;
+  }
 `
 
 const RefWrapper = styled.div`
