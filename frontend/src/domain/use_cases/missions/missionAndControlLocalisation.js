@@ -63,13 +63,14 @@ export const addMissionZone = ({callback, geom} ) => (dispatch) => {
 }
 
 
-export const addControlPositions = ({callback, geom} ) => (dispatch) => {
+export const addControlPositions = ({callback, geom, missionGeom} ) => (dispatch) => {
   const features = geom?.type=== olGeometryTypes.MULTIPOINT &&  geom?.coordinates?.length > 0 && geom.coordinates.map(coord=> {
     return new Feature({
       geometry: new Point(coord).transform(WSG84_PROJECTION, OPENLAYERS_PROJECTION)
     })
   })
   features && dispatch(setFeatures(features))
+  missionGeom?.coordinates?.length && dispatch(setFitToExtent({extent: transformExtent(boundingExtent(_.flattenDepth(missionGeom.coordinates,2)), WSG84_PROJECTION, OPENLAYERS_PROJECTION)}))
   dispatch(openDrawLayerModal)
   dispatch(setFeatureType({featureType: monitorenvFeatureTypes.ACTION_LOCALISATION, callback}))
   dispatch(setInteractionType(interactionTypes.POINT))
