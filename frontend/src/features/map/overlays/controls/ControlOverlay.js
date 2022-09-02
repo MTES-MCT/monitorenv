@@ -8,7 +8,11 @@ import Layers from '../../../../domain/entities/layers'
 export const ControlOverlay = ({ map, currentFeatureOver }) => {
   const displayHoveredFeature = currentFeatureOver?.getId()?.startsWith(Layers.ACTIONS.code)
   return (
-      <OverlayPositionOnCentroid feature={displayHoveredFeature && currentFeatureOver} map={map} >
+      <OverlayPositionOnCentroid 
+        feature={displayHoveredFeature && currentFeatureOver} 
+        map={map}
+        appClassName={'overlay-control-hover'}
+        >
         <ControlCard feature={currentFeatureOver} />
       </OverlayPositionOnCentroid>
     )

@@ -39,7 +39,8 @@ const FormColumn = styled.div`
     margin-right: 6px;
   }
 `
-const FormGroup = styled(Form.Group)`
+const FormGroup = styled.div`
+  margin-bottom: 16px;
   height: 58px;
   display: flex;
 `

@@ -31,18 +31,18 @@ export const InfractionForm = ({ currentActionIndex, infractionPath, validateInf
 
       <Form.Group>
         <Form.ControlLabel htmlFor={`${infractionPath}.controlledPersonIdentity`}>Identité de la personne controlée</Form.ControlLabel>
-        <FormikInput name={`${infractionPath}.controlledPersonIdentity`} />
+        <FormikInput size='sm' name={`${infractionPath}.controlledPersonIdentity`} />
       </Form.Group>
 
-      <Form.Group>
+      <SubGroup>
         <Form.ControlLabel htmlFor={`${infractionPath}.infractionType`}>Type d&apos;infraction</Form.ControlLabel>
         <FormikRadioGroup name={`${infractionPath}.infractionType`} radioValues={infractionTypeEnum} />
-      </Form.Group>
+      </SubGroup>
 
-      <Form.Group>
+      <SubGroup>
         <Form.ControlLabel htmlFor={`${infractionPath}.formalNotice`}>Mise en demeure</Form.ControlLabel>
         <FormikRadioGroup name={`${infractionPath}.formalNotice`} radioValues={formalNoticeEnum} />
-      </Form.Group>
+      </SubGroup>
 
       <FormGroupFixedHeight>
         <NatinfSelector infractionPath={infractionPath} />
@@ -91,4 +91,7 @@ const FormColumnWithCheckbox = styled.div`
 const ButtonToolbarRight = styled(ButtonToolbar)`
   display: flex;
   justify-content: flex-end;
+`
+const SubGroup = styled.div`
+  margin-bottom: 16px;
 `

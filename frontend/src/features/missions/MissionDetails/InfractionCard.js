@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useField } from 'formik'
 import { IconButton } from 'rsuite'
 
-import { vehicleTypeEnum, formalNoticeEnum, infractionTypeEnum, vesselTypeEnum } from '../../../domain/entities/missions'
+import { vehicleTypeEnum, formalNoticeEnum, infractionTypeEnum, vesselTypeEnum, actionTargetTypeEnum } from '../../../domain/entities/missions'
 
 import { ReactComponent as EditIconSVG } from '../../../uiMonitor/icons/Bouton_edition.svg'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression_clair.svg'
@@ -11,9 +11,12 @@ import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppressio
 import { COLORS } from '../../../constants/constants'
 
 export const InfractionCard = ({ currentActionIndex, infractionPath,  setCurrentInfractionIndex, removeInfraction }) => {
+  const [targetTypeField] = useField(`envActions.${currentActionIndex}.actionTargetType`)
   const [vehicleTypeField] = useField(`envActions.${currentActionIndex}.vehicleType`)
   const [vesselType] = useField(`${infractionPath}.vesselType`)
   const [registrationNumber] = useField(`${infractionPath}.registrationNumber`)
+  const [controlledPersonIdentity] = useField(`${infractionPath}.controlledPersonIdentity`)
+  const [companyName] = useField(`${infractionPath}.companyName`)
   const [infractionType] = useField(`${infractionPath}.infractionType`)
   const [formalNotice] = useField(`${infractionPath}.formalNotice`)
   const [natinf] = useField(`${infractionPath}.natinf`)
@@ -21,14 +24,29 @@ export const InfractionCard = ({ currentActionIndex, infractionPath,  setCurrent
   return (
     <Wrapper>
       <Summary>
-        <VehicleType>{vehicleTypeEnum[vehicleTypeField?.value]?.libelle || 'Non Renseigné'} {vehicleTypeField?.value ===  vehicleTypeEnum.VESSEL.code ? ` – ${vesselTypeEnum[vesselType?.value]?.libelle}` : '' }</VehicleType>
-        <RegistrationNumber> &ndash; {registrationNumber?.value || 'sans immatriculation'}</RegistrationNumber>
+        {targetTypeField.value == actionTargetTypeEnum.VEHICLE.code && 
+          <VehicleType>
+            {vehicleTypeEnum[vehicleTypeField?.value]?.libelle 
+            || 'Non Renseigné'} {vehicleTypeField?.value ===  vehicleTypeEnum.VESSEL.code ? 
+            ` – ${vesselTypeEnum[vesselType?.value]?.libelle}` 
+            : '' }
+             &ndash; 
+          </VehicleType>
+        }
+        {targetTypeField.value == actionTargetTypeEnum.VEHICLE.code ?
+          <Identification>{registrationNumber?.value || 'sans immatriculation'}</Identification>
+          : <Identification>{companyName?.value || controlledPersonIdentity?.value || actionTargetTypeEnum[targetTypeField.value]?.libelle }</Identification>
+        }
         <SummaryDetails>
           <Info>
-            {infractionTypeEnum[infractionType?.value]?.libelle || 'NR'}
+            {
+            infractionType?.value === undefined ? 'PV : -' : infractionType.value ? 
+              infractionTypeEnum.WITHOUT_REPORT.libelle 
+              : infractionTypeEnum.WITH_REPORT.libelle
+            }
           </Info>
           <Info>
-            MED : { formalNoticeEnum[formalNotice?.value]?.libelle || 'NR'}
+            MED : { formalNoticeEnum[formalNotice?.value]?.libelle || '-'}
           </Info>
           <Info>
             {natinf.value?.length || '0'} NATINF
@@ -67,7 +85,7 @@ const VehicleType = styled.span`
   font-weight: 800;
   `
   
-const RegistrationNumber = styled.span`
+const Identification = styled.span`
   font-weight: 800;
 `
 
@@ -79,10 +97,6 @@ const Info = styled.span`
 
 const EditIcon = styled(EditIconSVG)``
 
-// const Delete = styled(DeleteButton)`
-//   margin-left: 16px;
-//   width: 14px;
-// `
 const DeleteIcon = styled(DeleteSVG)`
   color: ${COLORS.maximumRed};
 `

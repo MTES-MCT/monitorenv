@@ -1,20 +1,17 @@
 import React from 'react'
-import styled from 'styled-components'
 import { Form } from 'rsuite'
-import { Field } from 'formik'
+import styled from 'styled-components'
+import { FormikInput } from '../../../uiMonitor/CustomFormikFields/FormikInput'
 
 export const InfractionFormHeaderCompany = ({infractionPath}) => {
   return (
-    <Form.Group>
-      <FormColumn>
+    <SubGroup>
         <Form.ControlLabel htmlFor={`${infractionPath}.companyName`}>Nom de la société</Form.ControlLabel>
-        <Field name={`${infractionPath}.companyName`} />
-      </FormColumn>    
-    </Form.Group>
+        <FormikInput size='sm' name={`${infractionPath}.companyName`} />
+    </SubGroup>
   )
 }
 
-const FormColumn = styled.div`
-  display: inline-block;
-  ${props => `flex: ${props.flex};`}
+const SubGroup = styled.div`
+  margin-bottom: 16px;
 `

@@ -45,11 +45,11 @@ export const missionNatureEnum = {
 
 export const infractionTypeEnum = {
   WITHOUT_REPORT: {
-    code: true,
+    code: 'WITHOUT_REPORT',
     libelle: 'Sans PV'
   },
   WITH_REPORT: {
-    code: false,
+    code: 'WITH_REPORT',
     libelle: 'Avec PV'
   }
 }

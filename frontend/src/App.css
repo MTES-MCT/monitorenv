@@ -33,6 +33,9 @@
     display: none;
 }
 
+
+/* classNames added via ol component */
+
 .overlay-mission-hover {
     z-index: 5000;
     width: 0;
@@ -41,6 +44,12 @@
 
 .overlay-mission-selected {
     z-index: 4000;
+    width: 0;
+    height: 0;
+}
+
+.overlay-control-hover {
+    z-index: 5500;
     width: 0;
     height: 0;
 }

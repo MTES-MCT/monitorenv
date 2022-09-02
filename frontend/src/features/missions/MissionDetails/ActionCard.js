@@ -6,6 +6,8 @@ import { IconButton } from 'rsuite'
 
 import { actionTargetTypeEnum, actionTypeEnum } from '../../../domain/entities/missions'
 
+import { ControlInfractionsTags } from '../../../ui/ControlInfractionsTags'
+
 import { ReactComponent as DuplicateSVG } from '../../../uiMonitor/icons/dupliquer_14px.svg'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression_clair.svg'
 import { ReactComponent as ControlIconSVG } from '../../../uiMonitor/icons/controles.svg'
@@ -42,17 +44,12 @@ export const ActionCard = ({selected, selectAction, action, removeAction, duplic
               <Accented>{`${action.actionTheme} ${action.actionSubTheme ? ' - ' + action.actionSubTheme : ''}`}</Accented> 
               : 'à renseigner'}
           </Title>
-          <ControlSummary>
-            <Accented>{action.actionNumberOfControls || 0}</Accented>
+            {action.actionNumberOfControls && <ControlSummary>
+              <Accented>{action.actionNumberOfControls}</Accented>
             {` contrôles réalisés sur des cibles de type ` }
             <Accented>{actionTargetTypeEnum[action.actionTargetType]?.libelle || 'non spécifié'}</Accented>
-          </ControlSummary>
-          <Tags>
-            <Tag>RAS</Tag>
-            <Tag>INFRA</Tag>
-            <Tag>INFRA SANS PV</Tag>
-            <Tag>MED</Tag>
-          </Tags>
+            </ControlSummary>}
+          {action.actionNumberOfControls && <ControlInfractionsTags infractions={action?.infractions} actionNumberOfControls={action.actionNumberOfControls} />}
         </SummaryContent>
       </>)}
       {(action.actionType === actionTypeEnum.SURVEILLANCE.code) && (<>
@@ -63,15 +60,13 @@ export const ActionCard = ({selected, selectAction, action, removeAction, duplic
               <Accented>{`${action.actionTheme} ${action.actionSubTheme ? ' - ' + action.actionSubTheme : ''}`}</Accented> 
               : 'à renseigner'}
           </Title>
-          <ControlSummary>
           {
           action.duration &&
-            <>
-            <Accented>{action.duration} heures&nbsp;</Accented>
+            <DurationWrapper>
+            <Accented>{action.duration} heure(s)&nbsp;</Accented>
               de surveillance
-            </>
+            </DurationWrapper>
           }
-          </ControlSummary>
         </SummaryContent>
       </>)}
       
@@ -158,6 +153,7 @@ const NoteIcon = styled(NoteSVG)`
 const ControlSummary = styled.div`
   font: normal normal normal 13px/18px Marianne;
   color: ${COLORS.slateGray};
+  margin-bottom: 16px;
 `
 
 const SummaryContent = styled.div`
@@ -185,23 +181,10 @@ const Accented = styled.span`
   font-weight: bold;
 `
 
-const Tags = styled.div`
-  display: flex;
-  margin-top: 16px;
-`
-
-const Tag = styled.div`
-  background: ${COLORS.missingGrey};
-  border-radius: 11px;
-  font-weight: 500;
-  font-size: 13px;
-  line-height: 18px;
-  padding: 2px 8px 2px 8px;
-  :not(:first-child) {
-    margin-left: 8px;
-  }
-`
-
 const DeleteIcon = styled(DeleteSVG)`
   color: ${COLORS.maximumRed};
+`
+const DurationWrapper = styled.div` 
+  font: normal normal normal 13px/18px Marianne;
+  color: ${COLORS.slateGray};
 `

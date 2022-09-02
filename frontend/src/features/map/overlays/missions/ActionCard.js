@@ -6,8 +6,9 @@ import { fr } from 'date-fns/locale'
 import { actionTargetTypeEnum } from '../../../../domain/entities/missions'
 
 import { COLORS } from '../../../../constants/constants'
+import { ControlInfractionsTags } from '../../../../ui/ControlInfractionsTags'
 
-export const ActionCard = ({feature, }) => {
+export const ActionCard = ({feature}) => {
   const { 
     // actionType, 
     actionNumberOfControls, 
@@ -33,12 +34,7 @@ export const ActionCard = ({feature, }) => {
         {` contrôles réalisés sur des cibles de type ` }
         <Accented>{actionTargetTypeEnum[actionTargetType]?.libelle || 'non spécifié'}</Accented>
       </ControlSummary>
-      <Tags>
-        <Tag>RAS</Tag>
-        <Tag>INFRA</Tag>
-        <Tag>INFRA SANS PV</Tag>
-        <Tag>MED</Tag>
-      </Tags>
+      <ControlInfractionsTags infractions={infractions} actionNumberOfControls={actionNumberOfControls} />
       <Accented>{infractions || 0}</Accented>infraction(s)
     </Col2>
   </ActionCardHeader>
@@ -67,6 +63,7 @@ const Accented = styled.span`
 const ControlSummary = styled.div`
   font: normal normal normal 13px/18px Marianne;
   color: ${COLORS.slateGray};
+  margin-bottom: 16px;
 `
 
 const Col1 = styled.div`
@@ -74,22 +71,4 @@ const Col1 = styled.div`
 `
 const Col2 = styled.div`
   padding: 8px 8px 4px 8px;
-`
-
-const Tags = styled.div`
-  display: flex;
-  margin-top: 16px;
-  margin-bottom: 16px;
-`
-
-const Tag = styled.div`
-  background: ${COLORS.missingGrey};
-  border-radius: 11px;
-  font-weight: 500;
-  font-size: 13px;
-  line-height: 18px;
-  padding: 2px 8px 2px 8px;
-  :not(:first-child) {
-    margin-left: 8px;
-  }
 `
