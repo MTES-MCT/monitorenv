@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 
-import { actionTypeEnum, formalNoticeEnum, missionStatusEnum, missionTypeEnum } from "../../domain/entities/missions"
+import { actionTypeEnum, formalNoticeEnum, infractionTypeEnum, missionStatusEnum, missionTypeEnum } from "../../domain/entities/missions"
 
 export const infractionFactory = ({id, ...infraction} = {}) => {
   return {
@@ -89,4 +89,13 @@ export const missionFactory = (mission) => {
     envActions: [],
     ...mission
   }
+}
+
+
+export const getControlInfractionsTags = (actionNumberOfControls, infractions) => {
+  const infra = infractions.length || 0
+  const ras = (actionNumberOfControls || 0) - infra
+  const infraSansPV = infractions?.filter(inf => inf.infractionType === infractionTypeEnum.WITHOUT_REPORT.code)?.length || 0
+  const med = infractions?.filter(inf => inf.formalNotice === formalNoticeEnum.YES.code)?.length || 0
+  return {ras, infra, infraSansPV, med}
 }

@@ -3,7 +3,7 @@ import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { ReactComponent as LocalizeIconSVG } from '../../../uiMonitor/icons/centrer.svg'
-import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression.svg'
+import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression_clair.svg'
 import { COLORS } from '../../../constants/constants';
 
 export const MissionZone = ({name, handleDelete, handleCenterOnMap}) => {
@@ -16,7 +16,7 @@ export const MissionZone = ({name, handleDelete, handleCenterOnMap}) => {
         Centrer sur la carte
       </CenterOnMap>
     </Zone>
-    <PaddedIconButton onClick={handleDelete} appearance='ghost' icon={<DeleteSVG className='rs-icon'/>} />
+    <PaddedIconButton  onClick={handleDelete} appearance='ghost' icon={<DeleteSVG className='rs-icon'/>} />
   </ZoneWrapper>)
 
 }

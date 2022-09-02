@@ -21,24 +21,27 @@ export const GeneralInformationsForm = () => {
   return (
     <>
       <Title>Informations générales</Title>
-      <FixedFormGroup>
-        <Form.ControlLabel htmlFor="inputStartDatetimeUtc">Début de mission</Form.ControlLabel>
-        <FormikDatePicker name="inputStartDatetimeUtc" placeholder={placeholderDateTimePicker} format="dd MMM yyyy, HH:mm" oneTap/>
-      </FixedFormGroup>
-      
-      <FixedFormGroup>
-        <Form.ControlLabel htmlFor="inputEndDatetimeUtc">Fin de mission</Form.ControlLabel>
-        <FormikDatePicker name="inputEndDatetimeUtc" placeholder={placeholderDateTimePicker} format="dd MMM yyyy, HH:mm" oneTap/>
-      </FixedFormGroup>
-      
       <Form.Group>
-        <Form.ControlLabel htmlFor="missionType">Type de mission</Form.ControlLabel>
-        <TypeMissionRadioGroup name="missionType" radioValues={missionTypeEnum} />
+        <FixedFormGroup>
+          <Form.ControlLabel htmlFor="inputStartDatetimeUtc">Début de mission</Form.ControlLabel>
+          <FormikDatePicker name="inputStartDatetimeUtc" placeholder={placeholderDateTimePicker} format="dd MMM yyyy, HH:mm" oneTap/>
+        </FixedFormGroup>
+        
+        <FixedFormGroup>
+          <Form.ControlLabel htmlFor="inputEndDatetimeUtc">Fin de mission</Form.ControlLabel>
+          <FormikDatePicker name="inputEndDatetimeUtc" placeholder={placeholderDateTimePicker} format="dd MMM yyyy, HH:mm" oneTap/>
+        </FixedFormGroup>
       </Form.Group>
       
       <Form.Group>
-        <Form.ControlLabel htmlFor="missionNature">Nature de mission</Form.ControlLabel>
-        <NatureMissionCheckboxGroup inline name="missionNature" checkBoxValues={missionNatureEnum} />
+        <SubGroup>
+          <Form.ControlLabel htmlFor="missionType">Type de mission</Form.ControlLabel>
+          <TypeMissionRadioGroup name="missionType" radioValues={missionTypeEnum} />
+        </SubGroup>
+        <SubGroup>
+          <Form.ControlLabel htmlFor="missionNature">Nature de mission</Form.ControlLabel>
+          <NatureMissionCheckboxGroup inline name="missionNature" checkBoxValues={missionNatureEnum} />
+        </SubGroup>
       </Form.Group>
       <Form.Group>
         <FieldArray 
@@ -83,8 +86,12 @@ const ColWrapper = styled.div`
   }
 `
 
-const FixedFormGroup = styled(Form.Group)`
+const FixedFormGroup = styled.div`
   height: 58px;
+  margin-bottom: 16px;
+`
+const SubGroup = styled.div`
+  magin-bottom: 16px;
 `
 
 const TypeMissionRadioGroup = styled(FormikRadioGroup)`

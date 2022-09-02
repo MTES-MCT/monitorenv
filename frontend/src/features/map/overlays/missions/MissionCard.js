@@ -74,7 +74,7 @@ const MissionCardHeader = styled.div`
 `
 
 const MissionDate = styled.div`
-  width: 75px;
+  width: 80px;
   font-size: 12px;
   margin-right: 16px;
 `

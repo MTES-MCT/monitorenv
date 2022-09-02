@@ -4,26 +4,36 @@ import { useDispatch } from 'react-redux';
 import {  useField } from 'formik';
 import _ from 'lodash';
 import { Button, Form, IconButton } from 'rsuite';
+import { transform } from 'ol/proj'
 
+import { setZoomToCenter } from '../../../domain/shared_slices/Map';
 import { addControlPositions } from '../../../domain/use_cases/missions/missionAndControlLocalisation';
-import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression.svg'
+import { ReactComponent as LocalizeIconSVG } from '../../../uiMonitor/icons/centrer.svg'
+import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression_clair.svg'
 
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map';
 import { COLORS } from '../../../constants/constants';
 
 export const ControlPositions = ({name}) => {
+  const [geomField] = useField('geom')
   const [field, , helpers] = useField(name);
   const { value } = field;
   const { setValue } = helpers;
   const dispatch = useDispatch()
   
   const handleAddControlPositions = () => {
-    dispatch(addControlPositions({callback: setValue, geom: value}))
+    dispatch(addControlPositions({callback: setValue, geom: value, missionGeom: geomField?.value}))
   }
   
   const handleDeleteControlPosition = (index) => () => {
     const newCoordinates = [...value.coordinates]
     newCoordinates.splice(index,1)
     dispatch(setValue({...value, coordinates: newCoordinates}))
+  }
+
+  const handleCenterOnMap = (coordinates) => () => {
+    const center = transform(coordinates, WSG84_PROJECTION, OPENLAYERS_PROJECTION)
+    dispatch(setZoomToCenter(center))
   }
 
   return (
@@ -41,6 +51,10 @@ export const ControlPositions = ({name}) => {
             <ZoneRow key={i}>
               <Zone >
                 {`(${v[1]}, ${v[0]})`}
+                <CenterOnMap onClick={handleCenterOnMap(v)}>
+                  <LocalizeIcon/>
+                  Centrer
+                </CenterOnMap>
               </Zone>
               <DeleteIconButton onClick={handleDeleteControlPosition(i)} icon={<DeleteSVGIcon className='rs-icon'/>} />
             </ZoneRow>
@@ -74,7 +88,7 @@ const Zone = styled.div`
   background: ${COLORS.white};
   color: ${COLORS.gunMetal};
   padding-left: 12px;
-  display: inline-block;
+  display: flex;
 `
 const DeleteSVGIcon = styled(DeleteSVG)`
   width: 16px;
@@ -82,4 +96,15 @@ const DeleteSVGIcon = styled(DeleteSVG)`
 `
 const DeleteIconButton = styled(IconButton)`
   margin-left: 6px;
+`
+const CenterOnMap = styled.div`
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: 8px;
+  color: ${COLORS.slateGray};
+  text-decoration: underline;
+`
+const LocalizeIcon = styled(LocalizeIconSVG)`
+  margin-right: 8px;
+  font-size: 12px;
 `

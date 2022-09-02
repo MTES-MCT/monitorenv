@@ -23,16 +23,16 @@ export const MissionsMenu = () => {
     }
   }
 
-  return (<>
+  return (
     <MissionButton
       data-cy={'missions-button'}
       title={'voir les missions'}
       onClick={toggleMissionsWindow}
       icon={<MissionsIcon className={'rs-icon'} />}
       appearance='primary'
+      active={sideWindowIsOpen}
     >
     </MissionButton>
-  </>
   )
 }
 

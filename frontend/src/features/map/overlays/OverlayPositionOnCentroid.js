@@ -22,6 +22,7 @@ const defaultMargins = {
 export const OverlayPositionOnCentroid = ({
   map, 
   feature, 
+  appClassName,
   children, 
   options: {
     margins = defaultMargins
@@ -36,6 +37,7 @@ export const OverlayPositionOnCentroid = ({
     if (ref) {
       olOverlayObjectRef.current = new Overlay({
         element: ref,
+        className: `ol-overlay-container ol-selectable ${appClassName}`
       })
     } else {
       olOverlayObjectRef.current = null
