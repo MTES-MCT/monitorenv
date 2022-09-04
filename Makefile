@@ -36,7 +36,7 @@ dev-run-infra:
 	@echo "Database Ready for connections!"
 
 dev-erase-db:
-	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.dev.yml down db
+	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.yml rm --stop db
 	docker volume rm -f $(PROJECT_NAME)_db-data
 
 dev-clean-target-env:
