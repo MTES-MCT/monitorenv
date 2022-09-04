@@ -74,10 +74,15 @@ const RegulatoryLayerSearchResultZone = ({regulatoryZone, searchedText}) => {
 const Name = styled.span`
   width: 280px;
   text-overflow: ellipsis;
+  white-space: nowrap;
   overflow-x: hidden !important;
   font-size: inherit;
   margin-top: 5px;
   text-align: left;
+  span {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 `
 
 const Rectangle = styled.div`
@@ -94,6 +99,7 @@ const Rectangle = styled.div`
 const Zone = styled.span`
   user-select: none;
   display: flex;
+  text-align: left;
   font-size: 13px;
   padding-left: 20px;
   background: ${props => props.$selected ? COLORS.gray : COLORS.background};
@@ -107,8 +113,6 @@ const Zone = styled.span`
 `
 
 const CustomPaperStyle = css`
-  margin-right: -2px;
-  padding-top: 7px;
   width: 21px;
   height: 23px
 `
@@ -124,14 +128,12 @@ const CustomREGPaperDarkIcon = styled(REGPaperDarkIcon)`
 const PinSVGIcon = styled(PinSVG)`
   width: 18px;
   height: 18px;
-  margin-top: 2px;
-  margin-right: 8px;
+  margin: 2px;
 `
 const PinFullSVGIcon = styled(PinFullSVG)`
   width: 18px;
   height: 18px;
-  margin-top: 2px;
-  margin-right: 8px;
+  margin: 2px;
   color: ${COLORS.steelBlue};
 `
 

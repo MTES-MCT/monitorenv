@@ -40,7 +40,7 @@ export const RegulatoryLayerSearchInput = ({globalSearchText, setGlobalSearchTex
             }
             
         </SearchInputGroup>
-        <IconButton appearance='primary' icon={<FiltreIconSVG className='rs-icon' />} />
+        <FilterIconButton appearance='primary' icon={<FiltreIconSVG className='rs-icon' />} />
         
       </SearchHeader>
       
@@ -66,4 +66,7 @@ const SearchIcon = styled(SearchIconSVG)`
 const CloseIcon = styled(CloseIconSVG)`
   width: 16px;
   height: 16px;
+`
+const FilterIconButton = styled(IconButton)`
+  width: 40px;
 `

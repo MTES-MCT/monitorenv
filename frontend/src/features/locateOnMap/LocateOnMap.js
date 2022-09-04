@@ -45,7 +45,7 @@ export const LocateOnMap = () => {
     <Wrapper>
       <InputWrapper>
         <SearchBoxInput
-          data-cy={'regulatory-search-input'}
+          data-cy={'location-search-input'}
           placeholder={'localiser la carte sur un lieu'}
           type="text"
           value={searchedLocation}

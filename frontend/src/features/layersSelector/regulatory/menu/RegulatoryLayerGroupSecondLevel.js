@@ -46,13 +46,14 @@ const ZonesNumber = styled.span`
 const TopicName = styled.span`
   user-select: none;
   text-overflow: ellipsis;
-  overflow-x: hidden !important;
   display: block;
   font-size: 13px;
   font-weight: 700;
+  text-align: left;
   color: ${COLORS.gunMetal};
   max-width: 300px;
   line-height: 33px;
+  flex: 1;
 `
 
 const LayerTopic = styled.div`

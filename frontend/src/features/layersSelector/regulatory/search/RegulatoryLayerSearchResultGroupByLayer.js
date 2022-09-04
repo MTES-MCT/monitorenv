@@ -52,11 +52,10 @@ export const RegulatoryLayerSearchResultGroupByLayer = ({ groupName, result, sea
         
         <ZonesNumber>{`${result.length} / ${totalNumberOfZones}`}</ZonesNumber>
         
-        <IconButton
-          icon={allTopicZonesAreChecked ? <PinFullSVGIcon className='rs-icon' /> : <PinSVGIcon className='rs-icon' />}
-          size='sm'
-          onClick={handleCheckAllZones}
-        />
+          <IconButton
+            icon={allTopicZonesAreChecked ? <PinFullSVGIcon className='rs-icon' /> : <PinSVGIcon className='rs-icon' />}
+            onClick={handleCheckAllZones}
+          />
       </LayerTopic>
       <RegulatoryLayerSearchResultZones
         result={result}
@@ -73,24 +72,30 @@ const ZonesNumber = styled.span`
   margin-left: auto;
   line-height: 34px;
   font-weight: 400;
+  flex: 1;
+  max-width: 50px;
 `
 
 const TopicName = styled.span`
   user-select: none;
   text-overflow: ellipsis;
+  white-space: nowrap;
   overflow-x: hidden !important;
   display: block;
   font-size: 13px;
   font-weight: 700;
+  text-align: left;
   color: ${COLORS.gunMetal};
   max-width: 300px;
   line-height: 33px;
+  flex: 1;
 `
 
 const LayerTopic = styled.div`
   display: flex;
   user-select: none;
   text-overflow: ellipsis;
+  white-space: nowrap;
   overflow: hidden !important;
   padding-right: 0;
   height: 35px;
@@ -103,20 +108,16 @@ const LayerTopic = styled.div`
   :hover {
     background: ${COLORS.shadowBlueLittleOpacity};
   }
-  
-  
 `
 
 const PinSVGIcon = styled(PinSVG)`
   width: 18px;
   height: 18px;
   margin-top: 2px;
-  margin-right: 8px;
 `
 const PinFullSVGIcon = styled(PinFullSVG)`
   width: 18px;
   height: 18px;
   margin-top: 2px;
-  margin-right: 8px;
   color: ${COLORS.steelBlue};
 `
