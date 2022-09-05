@@ -7,7 +7,7 @@ data class InfractionEntity(
   val registrationNumber: String? = null,
   val companyName: String? = null,
   val relevantCourt: String? = null,
-  val infractionType: Boolean? = null,
+  val infractionType: InfractionTypeEnum,
   val formalNotice: FormalNoticeEnum,
   val toProcess: Boolean,
   val controlledPersonIdentity: String? = null,
