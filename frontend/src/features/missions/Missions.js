@@ -13,9 +13,10 @@ import { MissionsTableFilters } from './MissionsList/MissionsTableFilters';
 import { PlusIcon } from '../commonStyles/icons/PlusIcon';
 import { COLORS } from '../../constants/constants';
 
+const TWO_MINUTES = 2 * 60 * 1000
 export const Missions = () => {
   const dispatch = useDispatch()
-  const { data, isError, isLoading } = useGetMissionsQuery()
+  const { data, isError, isLoading } = useGetMissionsQuery(undefined, {pollingInterval: TWO_MINUTES})
 
  
   const {missionStatusFilter, missionNatureFilter, missionTypeFilter } = useSelector(state => state.missionFilters)

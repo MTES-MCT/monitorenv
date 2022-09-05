@@ -94,7 +94,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
       registrationNumber = "REGISTRATION NUM",
       companyName = "ACME inc.",
       relevantCourt = "MARITIME_COURT",
-      infractionType = false,
+      infractionType = InfractionTypeEnum.WITHOUT_REPORT,
       formalNotice = FormalNoticeEnum.NO,
       toProcess = false,
       controlledPersonIdentity = "Dick Hoover",
