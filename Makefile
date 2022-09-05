@@ -65,7 +65,24 @@ prod-load-sig-data:
 	. ./infra/.env
 	set +a
 	echo ${PROJECT_NAME} 
-	./infra/init/production_postgis_insert_layers.sh 
+	docker compose --project-name $(PROJECT_NAME) --project-directory $(INFRA_FOLDER)/docker --env-file='$(INFRA_FOLDER).env' \
+		-f ./infra/docker/docker-compose.yml \
+		-f ./infra/docker/docker-compose.prod.yml \
+		-f ./infra/docker/docker-compose.override.yml \
+		up -d db
+	docker compose --project-name $(PROJECT_NAME) --project-directory $(INFRA_FOLDER)/docker --env-file='$(INFRA_FOLDER).env' \
+		-f ./infra/docker/docker-compose.yml \
+		-f ./infra/docker/docker-compose.prod.yml \
+		-f ./infra/docker/docker-compose.override.yml \
+		exec db \
+		psql -U $(POSTGRES_USER) -d $(POSTGRES_DB) -f /opt/data/integration.sql
+	docker compose --project-name $(PROJECT_NAME) --project-directory $(INFRA_FOLDER)/docker --env-file='$(INFRA_FOLDER).env' \
+		-f ./infra/docker/docker-compose.yml \
+		-f ./infra/docker/docker-compose.prod.yml \
+		-f ./infra/docker/docker-compose.override.yml \
+		exec db \
+		psql -U $(POSTGRES_USER) -d $(POSTGRES_DB) -f /opt/data/control_resources_admin_and_units_data.sql
+	
 
 init-geoserver:
 	set -a

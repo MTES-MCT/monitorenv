@@ -1,0 +1,5 @@
+version: '3'
+services:
+  db:
+    volumes:
+      - "/home/monitorenv/data:/opt/data"
