@@ -52,13 +52,20 @@ docker-build-app:
 	docker build --no-cache -f infra/docker/app/Dockerfile . -t monitorenv-app:$(VERSION) --build-arg VERSION=$(VERSION) --build-arg ENV_PROFILE=$(ENV_PROFILE) --build-arg GITHUB_SHA=$(GITHUB_SHA)
 
 # INIT commands
-.PHONY: load-sig-data init-geoserver
+.PHONY: load-sig-data prod-load-sig-data init-geoserver
 load-sig-data:
 	set -a
 	. ./infra/.env
 	set +a
 	echo ${PROJECT_NAME} 
 	./infra/init/postgis_insert_layers.sh 
+
+prod-load-sig-data:
+	set -a
+	. ./infra/.env
+	set +a
+	echo ${PROJECT_NAME} 
+	./infra/init/production_postgis_insert_layers.sh 
 
 init-geoserver:
 	set -a
