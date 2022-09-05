@@ -11,11 +11,11 @@ import Layers from '../../../domain/entities/layers'
 import { getMissionZoneFeature } from './missionGeometryHelpers'
 import { missionWithCentroidStyleFn } from './styles/missions.style'
 
-
+const TWO_MINUTES = 2 * 60 * 1000
 export const MissionsLayer = ({ map, mapClickEvent }) => {
   const dispatch = useDispatch()
   const { displayMissionsLayer } = useSelector(state => state.global)
-  const { data } = useGetMissionsQuery()
+  const { data } = useGetMissionsQuery(undefined, {pollingInterval: TWO_MINUTES})
 
   const missionsMultiPolygons = useMemo(()=>{
     return data?.filter(f=>!!f.geom).map(f => getMissionZoneFeature(f, Layers.MISSIONS.code))

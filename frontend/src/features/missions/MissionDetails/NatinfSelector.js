@@ -21,7 +21,7 @@ export const NatinfSelector = ({ infractionPath, ...props }) => {
   return (
     <SelectorWrapper ref={selectorRef}>
         <Form.ControlLabel htmlFor="natinf">NATINF</Form.ControlLabel>
-        <TagPicker
+        <FixedWidthTagPicker
           virtualized
           block
           searchable
@@ -49,4 +49,8 @@ const SelectorWrapper = styled.div`
   position: relative;
   .rs-picker-menu {
   }
+`
+
+const FixedWidthTagPicker = styled(TagPicker)`
+  max-width: 450px;
 `

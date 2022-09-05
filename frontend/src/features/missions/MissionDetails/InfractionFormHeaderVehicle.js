@@ -10,7 +10,6 @@ import { vehicleTypeEnum } from '../../../domain/entities/missions'
 
 export const InfractionFormHeaderVehicle = ({currentActionIndex, infractionPath}) => {
   const [vehicleTypeField] = useField(`envActions.${currentActionIndex}.vehicleType`)
-  console.log(vehicleTypeField?.value)
   return (
     <FormGroup>
       <FormColumn>

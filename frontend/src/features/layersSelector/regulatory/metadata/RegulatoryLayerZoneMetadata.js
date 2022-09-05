@@ -16,13 +16,14 @@ import { CloseIcon } from '../../../commonStyles/icons/CloseIcon.style'
 
 import { COLORS } from '../../../../constants/constants'
 
+const FOUR_HOURS = 4 * 60 * 60 * 1000
 const RegulatoryLayerZoneMetadata = () => {
   const dispatch = useDispatch()
   const {
     regulatoryMetadataPanelIsOpen,
     regulatoryMetadataLayerId
   } = useSelector(state => state.regulatoryMetadata)
-  const { currentData } = useGetRegulatoryLayerQuery({id: regulatoryMetadataLayerId})
+  const { currentData } = useGetRegulatoryLayerQuery({id: regulatoryMetadataLayerId}, {pollingInterval: FOUR_HOURS})
   const regulatoryMetadata = currentData?.properties
 
   const onCloseIconClicked = useCallback(() => {
