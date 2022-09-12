@@ -12,45 +12,37 @@ services:
       - REACT_APP_SHOM_KEY=${REACT_APP_SHOM_KEY}
       - SPRING_PROFILES_ACTIVE=prod
       - HOST_IP=127.0.0.1
-    ports:
-      - ${BACKEND_HTTP_PORT}:8880
-      - 8000:8000
-      - 5000:5000
-      - 5001:5001
     volumes:
       - "${MONITORENV_LOGS_FOLDER}:/home/monitorenv/logs"
     networks:
-      - backend_network
+      - monitorenv_network
     depends_on:
       - db
       - geoserver
+      - reverse-proxy
     restart: always
     logging:
       driver: "json-file"
       options:
         max-size: "1024m"
+    labels:
+      - traefik.enable=true
+      - monitor=monitorenv
+      - traefik.http.routers.app.rule=PathPrefix(`/`)
+      - traefik.http.routers.app.priority=100
+      - traefik.http.routers.app.entrypoints=web
+      - traefik.http.services.app.loadbalancer.server.port=8880
 
   db:
     container_name: monitorenv_database
     user: ":${MONITORENV_LOGS_AND_BACKUPS_GID}"
     volumes:
       - "${MONITORENV_BACKUPS_FOLDER}:/opt/monitorenv_backups"
-    ports:
-      - 5432:5432
-    networks:
-      - backend_network
     restart: always
 
   geoserver:
     container_name: monitorenv_geoserver
     restart: always
-    environment:
-      - GEOSERVER_ADMIN_PASSWORD=${GEOSERVER_ADMIN_PASSWORD}
-      - GEOSERVER_ADMIN_USER=${GEOSERVER_ADMIN_USER}
-    ports:
-      - ${GEOSERVER_PORT}:8080
-    networks:
-      - backend_network
     healthcheck:
       test: curl --fail -s http://localhost:8080/geoserver/index.html || exit 1
       interval: 1m30s
@@ -58,7 +50,7 @@ services:
       retries: 3
 
 networks:
-  backend_network:
+  monitorenv_network:
 
 
 volumes:

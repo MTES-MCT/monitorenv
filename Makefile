@@ -6,26 +6,45 @@ ifneq (,$(wildcard ./infra/.env))
 		export
 endif
 
+# GET_NEW_VERSION ?= $(shell read -r -p "Version: " version; echo $$version)
+
+# update-version:
+# 	@echo $(GET_NEW_VERSION)
+# 	@awk '{gsub(/^export MONITORENV_VERSION=(.*)/,"export MONITORENV_VERSION=$(GET_NEW_VERSION)"); print }' ~/.bashrc > tmp.file && mv tmp.file ~/.bashrc
 
 # DEV commands
-.PHONY: dev-install dev-run-front dev-run-back-with-infra dev-run-back dev-run-infra dev-erase-db dev-clean-target-env dev-back-config docker-build-app test test-front
+.PHONY: dev-install dev-run-front dev-run-back-with-infra dev-run-back dev-run-infra dev-erase-db dev-clean-target-env dev-check-config docker-build-app test test-front
 dev-install:
 	cd frontend && npm install
 
 dev-run-front:
 	cd frontend && npm start
 
-dev-back-config:
-	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.dev.yml config
+dev-check-config:
+	docker compose \
+		--project-name $(PROJECT_NAME) \
+		--project-directory ./infra/docker \
+		--env-file='$(INFRA_FOLDER).env' \
+		-f ./infra/docker/docker-compose.yml \
+		-f ./infra/docker/docker-compose.dev.yml \
+		config
 
-dev-run-back-with-infra: dev-erase-db dev-run-infra dev-clean-target-env dev-run-back
+dev-run-back-with-infra: dev-run-infra dev-clean-target-env dev-run-back
 
 dev-run-back:
-	cd backend && ./mvnw spring-boot:run -Dspring-boot.run.arguments="--spring.config.additional-location="$(BACKEND_CONFIGURATION_FOLDER)"" -Dspring-boot.run.profiles="dev"
+	cd backend && ./mvnw spring-boot:run \
+		-Dspring-boot.run.arguments="--spring.config.additional-location="$(BACKEND_CONFIGURATION_FOLDER)"" \
+		-Dspring-boot.run.profiles="dev"
 
 dev-run-infra:
 	@echo "Preparing database"
-	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.dev.yml up -d db geoserver
+	docker compose \
+		--project-name $(PROJECT_NAME) \
+		--project-directory ./infra/docker \
+		--env-file='$(INFRA_FOLDER).env' \
+		-f ./infra/docker/docker-compose.yml \
+		-f ./infra/docker/docker-compose.dev.yml \
+		up -d db geoserver reverse-proxy
 	@echo "Waiting for TimescaleDB to be ready to accept connections"
 	@while [ -z "$$(docker logs $(PROJECT_NAME)-db-1 2>&1 | grep -o "database system is ready to accept connections")" ]; \
 	do \
@@ -36,7 +55,12 @@ dev-run-infra:
 	@echo "Database Ready for connections!"
 
 dev-erase-db:
-	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.yml rm --stop db
+	docker compose \
+		--project-name $(PROJECT_NAME) \
+		--project-directory ./infra/docker \
+		--env-file='$(INFRA_FOLDER).env' \
+		-f ./infra/docker/docker-compose.yml \
+		rm --stop db
 	docker volume rm -f $(PROJECT_NAME)_db-data
 
 dev-clean-target-env:
@@ -49,7 +73,13 @@ test-front:
 	cd frontend && npm test
 
 docker-build-app:
-	docker build --no-cache -f infra/docker/app/Dockerfile . -t monitorenv-app:$(VERSION) --build-arg VERSION=$(VERSION) --build-arg ENV_PROFILE=$(ENV_PROFILE) --build-arg GITHUB_SHA=$(GITHUB_SHA)
+	docker build --no-cache \
+		-f infra/docker/app/Dockerfile \
+		. \
+		-t monitorenv-app:$(VERSION) \
+		--build-arg VERSION=$(VERSION) \
+		--build-arg ENV_PROFILE=$(ENV_PROFILE) \
+		--build-arg GITHUB_SHA=$(GITHUB_SHA)
 
 # INIT commands
 .PHONY: load-sig-data prod-load-sig-data init-geoserver
@@ -65,18 +95,26 @@ prod-load-sig-data:
 	. ./infra/.env
 	set +a
 	echo ${PROJECT_NAME} 
-	docker compose --project-name $(PROJECT_NAME) --project-directory $(INFRA_FOLDER)/docker --env-file='$(INFRA_FOLDER).env' \
+	docker compose --project-name $(PROJECT_NAME) \
+		--project-directory $(INFRA_FOLDER)/docker \
+		--env-file='$(INFRA_FOLDER).env' \
 		-f ./infra/docker/docker-compose.yml \
 		-f ./infra/docker/docker-compose.prod.yml \
 		-f ./infra/docker/docker-compose.override.yml \
 		up -d db
-	docker compose --project-name $(PROJECT_NAME) --project-directory $(INFRA_FOLDER)/docker --env-file='$(INFRA_FOLDER).env' \
+
+	docker compose --project-name $(PROJECT_NAME) \
+		--project-directory $(INFRA_FOLDER)/docker \
+		--env-file='$(INFRA_FOLDER).env' \
 		-f ./infra/docker/docker-compose.yml \
 		-f ./infra/docker/docker-compose.prod.yml \
 		-f ./infra/docker/docker-compose.override.yml \
 		exec db \
 		psql -U $(POSTGRES_USER) -d $(POSTGRES_DB) -f /opt/data/integration.sql
-	docker compose --project-name $(PROJECT_NAME) --project-directory $(INFRA_FOLDER)/docker --env-file='$(INFRA_FOLDER).env' \
+
+	docker compose --project-name $(PROJECT_NAME) \
+		--project-directory $(INFRA_FOLDER)/docker \
+		--env-file='$(INFRA_FOLDER).env' \
 		-f ./infra/docker/docker-compose.yml \
 		-f ./infra/docker/docker-compose.prod.yml \
 		-f ./infra/docker/docker-compose.override.yml \
@@ -111,14 +149,19 @@ docker-tag-app:
 docker-push-app:
 	docker push ghcr.io/mtes-mct/monitorenv/monitorenv-app:$(VERSION)
 run-infra-for-frontend-tests:
-	export MONITORENV_VERSION=$(VERSION) && docker compose -f ./infra/docker/docker-compose.test.yml up -d
+	export MONITORENV_VERSION=$(VERSION) \
+		&& docker compose -f ./infra/docker/docker-compose.test.yml up -d
 
 # CI commands - pipeline
 .PHONY: docker-build-pipeline docker-test-pipeline docker-tag-pipeline docker-push-pipeline
 docker-build-pipeline:
 	docker build -f "infra/docker/datapipeline/Dockerfile" . -t monitorenv-pipeline:$(VERSION)
 docker-test-pipeline:
-	docker run --network host -v /var/run/docker.sock:/var/run/docker.sock -u monitorenv-pipeline:$(DOCKER_GROUP) --env-file datascience/.env.test monitorenv-pipeline:$(VERSION) coverage run -m pytest --pdb tests
+	docker run --network host -v /var/run/docker.sock:/var/run/docker.sock \
+		-u monitorenv-pipeline:$(DOCKER_GROUP) \
+		--env-file datascience/.env.test \
+		monitorenv-pipeline:$(VERSION) \
+		coverage run -m pytest --pdb tests
 docker-tag-pipeline:
 	docker tag monitorenv-pipeline:$(VERSION) ghcr.io/mtes-mct/monitorenv/monitorenv-pipeline:$(VERSION)
 docker-push-pipeline:
@@ -135,14 +178,44 @@ else
 	@echo "Un fichier .env existe déjà. Editez ou supprimez le fichier existant."
 endif
 check-config:
-	docker compose --project-name $(PROJECT_NAME) --project-directory $(INFRA_FOLDER)/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml config
+	docker compose \
+		--project-name $(PROJECT_NAME) \
+		--project-directory $(INFRA_FOLDER)/docker \
+		--env-file='$(INFRA_FOLDER).env' \
+		-f ./infra/docker/docker-compose.yml \
+		-f ./infra/docker/docker-compose.prod.yml \
+		config
 
 # RUN commands
-.PHONY: restart-app stop-app
+.PHONY: restart-app stop-app restart-app-with-override
 restart-app:
-	docker compose --project-name $(PROJECT_NAME) --project-directory $(INFRA_FOLDER)/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml up -d --build app
+	docker compose \
+		--project-name $(PROJECT_NAME) \
+		--project-directory $(INFRA_FOLDER)/docker \
+		--env-file='$(INFRA_FOLDER).env' \
+		-f ./infra/docker/docker-compose.yml \
+		-f ./infra/docker/docker-compose.prod.yml \
+		up -d \
+		--build app
+
+restart-app-with-override:
+	docker compose \
+		--project-name $(PROJECT_NAME) \
+		--project-directory $(INFRA_FOLDER)/docker \
+		--env-file='$(INFRA_FOLDER).env' \
+		-f ./infra/docker/docker-compose.yml \
+		-f ./infra/docker/docker-compose.prod.yml \
+		-f ./infra/docker/docker-compose.override.yml \
+		up -d \
+		--build app
 stop-app:
-	docker compose --project-name $(PROJECT_NAME) --project-directory $(INFRA_FOLDER)/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml stop
+	docker compose \
+		--project-name $(PROJECT_NAME) \
+		--project-directory $(INFRA_FOLDER)/docker \
+		--env-file='$(INFRA_FOLDER).env' \
+		-f ./infra/docker/docker-compose.yml \
+		-f ./infra/docker/docker-compose.prod.yml \
+		stop
 
 .PHONY: register-pipeline-flows run-pipeline-agent-int run-pipeline-agent-prod
 register-pipeline-flows:

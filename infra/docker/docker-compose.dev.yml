@@ -1,8 +1,17 @@
 version: '3'
 services:
+  reverse-proxy:
+    # Enables the web UI and tells Traefik to listen to docker
+    command: --log --api --api.insecure=true --providers.docker
+    ports:
+      # The Web UI (enabled by --api.insecure=true)
+      - 8090:8080
   geoserver:
     restart: unless-stopped
     links:
       - "db:db"
     depends_on:
       - db
+  db:
+    ports:
+      - ${POSTGRES_PORT}:5432

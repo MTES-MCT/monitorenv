@@ -1,5 +1,30 @@
 version: '3'
 services:
-  db:
-    volumes:
-      - "/home/monitorenv/data:/opt/data"
+  reverse-proxy:
+    # ports:
+    #   - ${PORT_API}:${PORT_API}
+    labels:
+      - traefik.enable=true
+      - kadata=kadata
+      - traefik.docker.network=traefik_external
+      - traefik.http.services.monitorenv-traefik.loadbalancer.server.port=80
+      - traefik.http.routers.monitorenv-traefik.rule=Host(`monitorenv.kadata.fr`)
+      - traefik.http.routers.monitorenv-traefik.entrypoints=websecure
+      - traefik.http.routers.monitorenv-traefik.tls.certresolver=myresolver
+      - traefik.http.routers.monitorenv-traefik.middlewares=auth
+      - traefik.http.middlewares.auth.basicauth.users=${TRAEFIK_MONITORENV_USERS}
+      - traefik.http.middlewares.auth.basicauth.removeheader=true
+    networks:
+      - monitorenv_network
+      - traefik_external_ref
+      ####
+      # db:
+      # volumes:
+      # pour chargement de données via psql
+      # - "/home/monitorenv/data:/opt/data"
+
+
+networks:
+  traefik_external_ref:
+    name: traefik_external
+    external: true
