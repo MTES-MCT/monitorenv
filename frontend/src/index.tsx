@@ -16,18 +16,11 @@ import './uiMonitor/rsuite-override.css'
 const { NODE_ENV, REACT_APP_SENTRY_DSN, REACT_APP_SENTRY_TRACING_ORIGINS } = process.env
 
 if (NODE_ENV === 'production') {
-  if (!REACT_APP_SENTRY_DSN) {
-    throw new Error('`REACT_APP_SENTRY_DSN` is undefined')
-  }
-  if (!REACT_APP_SENTRY_TRACING_ORIGINS) {
-    throw new Error('`REACT_APP_SENTRY_TRACING_ORIGINS` is undefined')
-  }
-
   Sentry.init({
-    dsn: process.env.REACT_APP_SENTRY_DSN,
+    dsn: REACT_APP_SENTRY_DSN || '',
     integrations: [
       new Integrations.BrowserTracing({
-        tracingOrigins: [REACT_APP_SENTRY_TRACING_ORIGINS]
+        tracingOrigins: REACT_APP_SENTRY_TRACING_ORIGINS ? [REACT_APP_SENTRY_TRACING_ORIGINS] : undefined
       })
     ],
 
