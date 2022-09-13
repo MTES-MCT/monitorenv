@@ -33,6 +33,7 @@ module.exports = {
   rules: {
     "react-hooks/exhaustive-deps": "warn",
     "react/prop-types": "off",
+    "react/react-in-jsx-scope": "off",
     "react-hooks/rules-of-hooks": "error",
     "no-shadow": ["warn", { "builtinGlobals": false, "hoist": "functions", "allow": ["resolve", "reject", "done"] }],
     "block-scoped-var": "warn",
