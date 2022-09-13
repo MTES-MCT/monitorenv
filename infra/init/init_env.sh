@@ -2,9 +2,9 @@
 cat << EOT
             ###########################           
            ##                        ###          
-         ###                           ##          MONITORENV VERSION        : $MONITORENV_VERSION
+         ###                           ##          MONITORENV VERSION                : $MONITORENV_VERSION
         ###     ###################     ###       
-      ###     ###                 ##      ##       MONITORENV_LOGS_FOLDER    : $MONITORENV_LOGS_FOLDER
+      ###     ###                 ##      ##       MONITORENV_LOGS_FOLDER_BACKEND    : $MONITORENV_LOGS_FOLDER_BACKEND
      ###     ###                   ###     ###     MONITORENV_BACKUPS_FOLDER : $MONITORENV_BACKUPS_FOLDER
     ##      ##          ###          ##      ##    MONITORENV_LOGS_AND_BACKUPS_GID : $MONITORENV_LOGS_AND_BACKUPS_GID
   ###     ###        ###   ###        ###     ### 
