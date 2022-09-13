@@ -1,9 +1,9 @@
 import React, { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import NewWindow from 'react-new-window'
 import { StyleSheetManager } from 'styled-components' 
  
 import { closeSideWindow } from '../../domain/shared_slices/Global'
+import { NewWindow } from './NewWindow'
 import { SideWindow } from './SideWindow'
 
 const SideWindowLauncher = () => {

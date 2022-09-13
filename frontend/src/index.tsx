@@ -2,16 +2,16 @@ import * as Sentry from '@sentry/react'
 import { Integrations } from '@sentry/tracing'
 import { createRoot } from 'react-dom/client'
 
-import App from './App'
+import { App } from './App'
 import GlobalFonts from './fonts/fonts'
 
 import 'rsuite/dist/rsuite.min.css'
 import 'ol/ol.css'
+import 'react-toastify/dist/ReactToastify.css'
 import './index.css'
 import './App.css'
 import './uiMonitor/ol-override.css'
 import './uiMonitor/rsuite-override.css'
-
 
 const { NODE_ENV, REACT_APP_SENTRY_DSN, REACT_APP_SENTRY_TRACING_ORIGINS } = process.env
 

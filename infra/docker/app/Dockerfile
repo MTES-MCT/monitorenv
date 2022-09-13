@@ -43,8 +43,8 @@ COPY infra/ /tmp/infra/
 WORKDIR /tmp/frontend
 
 # Files are expected to be in /tmp/frontend/dist/monitorenv-frontend
-RUN npm ci --force &&\
-  npm run build
+RUN npm ci
+RUN npm run build
 
 ######################
 # Create final image #
