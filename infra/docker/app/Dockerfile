@@ -32,6 +32,7 @@ RUN mvn clean package -DskipTests=true
 FROM node:18-alpine as buildFront
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV DISABLE_ESLINT_PLUGIN=true
 
 ARG ENV_PROFILE
 ENV REACT_APP_ENV $ENV_PROFILE
