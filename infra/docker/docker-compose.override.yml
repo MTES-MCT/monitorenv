@@ -2,7 +2,7 @@ version: '3'
 services:
   reverse-proxy:
     # ports:
-    #   - ${PORT_API}:${PORT_API}
+    #   - ${MONITORENV_PORT}:${MONITORENV_PORT}
     labels:
       - traefik.enable=true
       - kadata=kadata

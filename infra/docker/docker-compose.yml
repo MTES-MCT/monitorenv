@@ -1,11 +1,12 @@
 version: '3'
 services:
   reverse-proxy:
+    container_name: monitorenv_reverse_proxy
     image: traefik:v2.8
     restart: unless-stopped
     command:
       - "--providers.docker=true"
-      - "--entrypoints.web.address=:${PORT_API}"
+      - "--entrypoints.web.address=:${MONITORENV_PORT}"
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker.constraints=Label(`monitor`,`monitorenv`)"
     volumes:
@@ -14,6 +15,7 @@ services:
       - monitorenv_network
 
   db:
+    container_name: monitorenv_database
     image: timescale/timescaledb-postgis:1.7.4-pg11
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
