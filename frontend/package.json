@@ -2,6 +2,10 @@
   "name": "monitorenv-frontend",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "18",
+    "npm": "8"
+  },
   "dependencies": {
     "@dnd-kit/core": "^4.0.3",
     "@dnd-kit/modifiers": "^4.0.0",
@@ -48,8 +52,8 @@
     "build:local": "REACT_APP_ENV=local npm run build",
     "lint": "eslint src/ --fix",
     "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!@codemirror)/\"",
-    "cypress:open": "cypress open",
-    "cypress:run": "cypress run --browser firefox",
+    "cypress:open": "cypress open --browser firefox --e2e",
+    "cypress:run": "cypress run --browser firefox --e2e",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public"
@@ -82,9 +86,9 @@
     "@testing-library/user-event": "^7.1.2",
     "@types/jest": "^26.0.20",
     "chromatic": "^6.7.0",
-    "cypress": "^9.5.2",
+    "cypress": "10.7.0",
     "cypress-mouse-position": "^1.0.0",
-    "cypress-plugin-snapshots": "^1.4.4",
+    "cypress-plugin-snapshots": "github:ivangabriele/cypress-plugin-snapshots",
     "eslint-plugin-react": "^7.29.4",
     "webpack": "^5.72.0"
   },

@@ -29,7 +29,7 @@ RUN mvn clean package -DskipTests=true
 ###########################
 # Build frontend with npm #
 ###########################
-FROM node:16.15.0-alpine3.15 as buildFront
+FROM node:18-alpine as buildFront
 
 ENV DEBIAN_FRONTEND=noninteractive
 
