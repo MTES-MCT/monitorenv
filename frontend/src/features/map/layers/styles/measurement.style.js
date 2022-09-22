@@ -1,24 +1,25 @@
-import Style from 'ol/style/Style'
+import { getCenter } from 'ol/extent'
+import Point from 'ol/geom/Point'
+import CircleStyle from 'ol/style/Circle'
 import Fill from 'ol/style/Fill'
 import Stroke from 'ol/style/Stroke'
-import CircleStyle from 'ol/style/Circle'
-import Point from 'ol/geom/Point'
-import { getCenter } from 'ol/extent'
+import Style from 'ol/style/Style'
 
 import { COLORS } from '../../../../constants/constants'
 
 export const measurementStyleWithCenter = new Style({
-  image: new CircleStyle({
-    radius: 2,
-    fill: new Fill({
-      color: COLORS.slateGray
-    })
-  }),
-  geometry: (feature) => {
+  geometry: feature => {
     const extent = feature.getGeometry().getExtent()
     const center = getCenter(extent)
+
     return new Point(center)
-  }
+  },
+  image: new CircleStyle({
+    fill: new Fill({
+      color: COLORS.slateGray
+    }),
+    radius: 2
+  })
 })
 
 export const measurementStyle = new Style({

@@ -1,35 +1,28 @@
 import React from 'react'
 // import React, { useState } from 'react'
 
+import { FEATURE_FLAGS } from '../../features'
 import BaseMap from './BaseMap'
-import BaseLayer from './layers/BaseLayer'
-import RegulatoryLayers from './layers/RegulatoryLayers'
+import LayerDetailsBox from './controls/LayerDetailsBox'
+import MapCoordinatesBox from './controls/MapCoordinatesBox'
 import AdministrativeLayers from './layers/AdministrativeLayers'
-import MeasurementLayer from './layers/MeasurementLayer'
-import RegulatoryPreviewLayer from './layers/RegulatoryPreviewLayer'
-import InterestPointLayer from './layers/InterestPointLayer'
-import { DrawLayer } from './layers/DrawLayer';
-import { MissionsLayer } from './layers/MissionsLayer'
-import { SelectedMissionLayer } from './layers/SelectedMissionLayer'
+import BaseLayer from './layers/BaseLayer'
+import { DrawLayer } from './layers/DrawLayer'
 import { EditingMissionLayer } from './layers/EditingMissionLayer'
 import { HoveredMissionLayer } from './layers/HoveredMissionLayer'
-
-import { MissionOverlays } from './overlays/missions/MissionOverlays'
-import { ControlOverlay } from './overlays/controls/ControlOverlay'
-
-import ShowRegulatoryMetadata from './ShowRegulatoryMetadata'
+import InterestPointLayer from './layers/InterestPointLayer'
+import MeasurementLayer from './layers/MeasurementLayer'
+import { MissionsLayer } from './layers/MissionsLayer'
+import RegulatoryLayers from './layers/RegulatoryLayers'
+import RegulatoryPreviewLayer from './layers/RegulatoryPreviewLayer'
+import { SelectedMissionLayer } from './layers/SelectedMissionLayer'
 import { MapExtentController } from './MapExtentController'
 import MapHistory from './MapHistory'
+import { ControlOverlay } from './overlays/controls/ControlOverlay'
+import { MissionOverlays } from './overlays/missions/MissionOverlays'
+import ShowRegulatoryMetadata from './ShowRegulatoryMetadata'
 
-import MapCoordinatesBox from './controls/MapCoordinatesBox'
-import LayerDetailsBox from '../map/controls/LayerDetailsBox'
-
-
-
-import { FEATURE_FLAGS } from '../../features';
-
-const Map = () => {
-
+function Map() {
   // const [shouldUpdateView, setShouldUpdateView] = useState(true)
   // const [historyMoveTrigger, setHistoryMoveTrigger] = useState({})
   // const [mapMovingAndZoomEvent, setMapMovingAndZoomEvent] = useState(null)
@@ -54,27 +47,27 @@ const Map = () => {
       // BaseMap forwards map & mapClickEvent as props to children
       // handleMovingAndZoom={handleMovingAndZoom}
       // handlePointerMove={handlePointerMove}
-      showAttributions={true}
-      container={'map'}
+      container="map"
+      showAttributions
     >
-      <MapCoordinatesBox/>
+      <MapCoordinatesBox />
       <BaseLayer />
-      <RegulatoryLayers/>
+      <RegulatoryLayers />
       <AdministrativeLayers />
-      <MeasurementLayer/>
+      <MeasurementLayer />
       <ShowRegulatoryMetadata />
       <MapExtentController />
       <MapHistory />
-      {FEATURE_FLAGS.LOCALIZE_MISSIONS && <DrawLayer/>}
-      {FEATURE_FLAGS.LOCALIZE_MISSIONS && <MissionsLayer/>}
-      {FEATURE_FLAGS.LOCALIZE_MISSIONS && <SelectedMissionLayer/>}
-      {FEATURE_FLAGS.LOCALIZE_MISSIONS && <EditingMissionLayer/>}
-      {FEATURE_FLAGS.LOCALIZE_MISSIONS && <HoveredMissionLayer/>}
-      {FEATURE_FLAGS.LOCALIZE_MISSIONS && <MissionOverlays/>}
-      {FEATURE_FLAGS.LOCALIZE_MISSIONS && <ControlOverlay/>}
+      {FEATURE_FLAGS.LOCALIZE_MISSIONS && <DrawLayer />}
+      {FEATURE_FLAGS.LOCALIZE_MISSIONS && <MissionsLayer />}
+      {FEATURE_FLAGS.LOCALIZE_MISSIONS && <SelectedMissionLayer />}
+      {FEATURE_FLAGS.LOCALIZE_MISSIONS && <EditingMissionLayer />}
+      {FEATURE_FLAGS.LOCALIZE_MISSIONS && <HoveredMissionLayer />}
+      {FEATURE_FLAGS.LOCALIZE_MISSIONS && <MissionOverlays />}
+      {FEATURE_FLAGS.LOCALIZE_MISSIONS && <ControlOverlay />}
       <LayerDetailsBox />
-      <InterestPointLayer/>
-      <RegulatoryPreviewLayer /> 
+      <InterestPointLayer />
+      <RegulatoryPreviewLayer />
     </BaseMap>
   )
 }

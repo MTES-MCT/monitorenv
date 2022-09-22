@@ -4,69 +4,68 @@ import _ from 'lodash'
 const NOT_FOUND = -1
 
 const regulatoryLayerSearchSlice = createSlice({
-  name: 'regulatoryLayerSearch',
   initialState: {
-    /** @type RegulatoryZone[] regulatoryZonesChecked */
-    regulatoryZonesChecked: [],
+    filterSearchOnMapExtent: false,
+
     /** @type RegulatoryLawTypes regulatoryLayersSearchResult */
     regulatoryLayersSearchResult: null,
-    zoneSelected: null,
-    filterSearchOnMapExtent: false,
+    /** @type RegulatoryZone[] regulatoryZonesChecked */
+    regulatoryZonesChecked: [],
+    zoneSelected: null
   },
+  name: 'regulatoryLayerSearch',
   reducers: {
-     /**
-     * Add zone to regulatory zones selection in progress to add to "My Zones"
-     * @param {Object=} state
-     * @param {RegulatoryZone[]} action - The regulatory zones
-     */
-    toggleRegulatoryZone (state, action) {
-      const regulatoryZoneIndex = state.regulatoryZonesChecked.indexOf(action.payload)
-      if (regulatoryZoneIndex === NOT_FOUND) {
-        state.regulatoryZonesChecked.push(action.payload)
-      } else {
-        state.regulatoryZonesChecked.splice(regulatoryZoneIndex, 1)
-      }
-    },
     /**
      * Add zones to regulatory zones selection in progress to add to "My Zones"
      * @param {Object=} state
      * @param {RegulatoryZone[]} action - The regulatory zones
      */
-    checkRegulatoryZones (state, action) {
-      return {...state, regulatoryZonesChecked : _.union(state.regulatoryZonesChecked, action.payload)}
+    checkRegulatoryZones(state, action) {
+      return { ...state, regulatoryZonesChecked: _.union(state.regulatoryZonesChecked, action.payload) }
     },
-    /**
-     * Remove zones from regulatory zones selection in progress to add to "My Zones"
-     * @param {Object=} state
-     * @param {{
-     *   topic: string,
-     *   zone: string
-     * }[]} action - The regulatory zones and topic
-     */
-    uncheckRegulatoryZones (state, action) {
-      return {...state, regulatoryZonesChecked: _.difference(state.regulatoryZonesChecked, action.payload)}
-    },
+
     /**
      * Reset regulatory zones selection
      * @param {Object=} state
      */
-    resetRegulatoryZonesChecked (state) {
+    resetRegulatoryZonesChecked(state) {
       state.regulatoryZonesChecked = []
     },
+
+    /**
+     * Set the selected zone to filter regulations
+     * @param {Object=} state
+     */
+    resetZoneSelected(state) {
+      state.zoneSelected = null
+    },
+
+    /**
+     * Set FilterSearchOnMapExtent to true/false
+     * @param {Object} state
+     * @param {{
+     * payload: boolean
+     * }} action
+     */
+    setFilterSearchOnMapExtent(state, action) {
+      state.filterSearchOnMapExtent = action.payload
+    },
+
     /**
      * Set regulatory layers search result structured as
      * LawType: {
      *   Topic: Zone[]
      * }
-     * @param {Object=} state
+     * @param {Object} state
      * @param {RegulatoryLawTypes | null} action - The regulatory search result
      */
-    setRegulatoryLayersSearchResult (state, action) {
+    setRegulatoryLayersSearchResult(state, action) {
       state.regulatoryLayersSearchResult = action.payload
     },
+
     /**
      * Set the selected zone to filter regulations
-     * @param {Object=} state
+     * @param {Object} state
      * @param {{
      * payload: {
      *  name: string,
@@ -74,38 +73,47 @@ const regulatoryLayerSearchSlice = createSlice({
      *  feature: GeoJSON
      * }}} action - The zone
      */
-    setZoneSelected (state, action) {
+    setZoneSelected(state, action) {
       state.zoneSelected = action.payload
     },
+
     /**
-     * Set the selected zone to filter regulations
-     * @param {Object=} state
+     * Add zone to regulatory zones selection in progress to add to "My Zones"
+     * @param {Object} state
+     * @param {RegulatoryZone[]} action - The regulatory zones
      */
-    resetZoneSelected (state) {
-      state.zoneSelected = null
+    toggleRegulatoryZone(state, action) {
+      const regulatoryZoneIndex = state.regulatoryZonesChecked.indexOf(action.payload)
+      if (regulatoryZoneIndex === NOT_FOUND) {
+        state.regulatoryZonesChecked.push(action.payload)
+      } else {
+        state.regulatoryZonesChecked.splice(regulatoryZoneIndex, 1)
+      }
     },
+
     /**
-     * Set FilterSearchOnMapExtent to true/false
-     * @param {Object=} state
+     * Remove zones from regulatory zones selection in progress to add to "My Zones"
+     * @param {Object} state
      * @param {{
-     * payload: boolean
-     * }} action 
+     *   topic: string,
+     *   zone: string
+     * }[]} action - The regulatory zones and topic
      */
-     setFilterSearchOnMapExtent (state, action) {
-       state.filterSearchOnMapExtent = action.payload
-     }
+    uncheckRegulatoryZones(state, action) {
+      return { ...state, regulatoryZonesChecked: _.difference(state.regulatoryZonesChecked, action.payload) }
+    }
   }
 })
 
 export const {
-  toggleRegulatoryZone,
   checkRegulatoryZones,
-  uncheckRegulatoryZones,
   resetRegulatoryZonesChecked,
+  resetZoneSelected,
+  setFilterSearchOnMapExtent,
   setRegulatoryLayersSearchResult,
   setZoneSelected,
-  resetZoneSelected,
-  setFilterSearchOnMapExtent
+  toggleRegulatoryZone,
+  uncheckRegulatoryZones
 } = regulatoryLayerSearchSlice.actions
 
 export default regulatoryLayerSearchSlice.reducer

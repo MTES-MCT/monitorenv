@@ -1,50 +1,49 @@
 import React from 'react'
-import styled from 'styled-components'
 import { useDispatch } from 'react-redux'
 import { IconButton, Input, InputGroup } from 'rsuite'
-
+import styled from 'styled-components'
 
 import { resetRegulatoryGeometriesToPreview } from '../../../../domain/shared_slices/Regulatory'
-import { ReactComponent as SearchIconSVG } from '../../../../uiMonitor/icons/Loupe.svg'
 import { ReactComponent as CloseIconSVG } from '../../../../uiMonitor/icons/Croix_grise.svg'
 import { ReactComponent as FiltreIconSVG } from '../../../../uiMonitor/icons/filtres.svg'
+import { ReactComponent as SearchIconSVG } from '../../../../uiMonitor/icons/Loupe.svg'
 
-export const RegulatoryLayerSearchInput = ({globalSearchText, setGlobalSearchText}) => {
-
-  
+export function RegulatoryLayerSearchInput({ globalSearchText, setGlobalSearchText }) {
   const dispatch = useDispatch()
-  
+
   const handleResetSearch = () => {
     setGlobalSearchText('')
     dispatch(resetRegulatoryGeometriesToPreview())
   }
-  const handleSetSearch = (value) => {
+  const handleSetSearch = value => {
     setGlobalSearchText(value)
   }
-  
+
   return (
-    <>
-      <SearchHeader>
-        <SearchInputGroup>
-          <SearchBoxInput
-            data-cy={'regulatory-search-input'}
-            classPrefix="input ghost"
-            placeholder={'Rechercher une zone reg.'}
-            type="text"
-            value={globalSearchText}
-            onChange={handleSetSearch}
-            />
-            
-            {(globalSearchText === '') ? <InputGroup.Addon ><SearchIcon className='rs-icon' /></InputGroup.Addon>
-              : <InputGroup.Button onClick={handleResetSearch} ><CloseIcon className='rs-icon' /></InputGroup.Button>
-            }
-            
-        </SearchInputGroup>
-        <FilterIconButton appearance='primary' icon={<FiltreIconSVG className='rs-icon' />} />
-        
-      </SearchHeader>
-      
-    </>)
+    <SearchHeader>
+      <SearchInputGroup>
+        <SearchBoxInput
+          classPrefix="input ghost"
+          data-cy="regulatory-search-input"
+          onChange={handleSetSearch}
+          placeholder="Rechercher une zone reg."
+          type="text"
+          value={globalSearchText}
+        />
+
+        {globalSearchText === '' ? (
+          <InputGroup.Addon>
+            <SearchIcon className="rs-icon" />
+          </InputGroup.Addon>
+        ) : (
+          <InputGroup.Button onClick={handleResetSearch}>
+            <CloseIcon className="rs-icon" />
+          </InputGroup.Button>
+        )}
+      </SearchInputGroup>
+      <FilterIconButton appearance="primary" icon={<FiltreIconSVG className="rs-icon" />} />
+    </SearchHeader>
+  )
 }
 
 const SearchHeader = styled.div`

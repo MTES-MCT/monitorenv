@@ -2,33 +2,33 @@ import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { CoordinatesFormat, MeasurementTypes, OPENLAYERS_PROJECTION } from '../../domain/entities/map'
-import SetCoordinates from '../coordinates/SetCoordinates'
-import { coordinatesAreDistinct, getCoordinates } from '../../utils/coordinates'
 import { COLORS } from '../../constants/constants'
-
+import { CoordinatesFormat, MeasurementTypes, OPENLAYERS_PROJECTION } from '../../domain/entities/map'
+import { coordinatesAreDistinct, getCoordinates } from '../../utils/coordinates'
 import { MapComponentStyle } from '../commonStyles/MapComponent.style'
+import SetCoordinates from '../coordinates/SetCoordinates'
 
-const CustomCircleRange = ({
-  measurementTypeToAdd,
-  setCircleCoordinatesToAdd,
+function CustomCircleRange({
+  addCustomCircleRange,
+  cancelAddCircleRange,
   circleCoordinatesToAdd,
   circleRadiusToAdd,
-  setCircleRadiusToAdd,
-  cancelAddCircleRange,
-  addCustomCircleRange,
-  positionFromTop
-}) => {
-  const {
-    circleMeasurementInDrawing
-  } = useSelector(state => state.measurement)
+  measurementTypeToAdd,
+  positionFromTop,
+  setCircleCoordinatesToAdd,
+  setCircleRadiusToAdd
+}) {
+  const { circleMeasurementInDrawing } = useSelector(state => state.measurement)
 
   useEffect(() => {
     if (measurementTypeToAdd === MeasurementTypes.CIRCLE_RANGE) {
       if (circleMeasurementInDrawing?.coordinates?.length) {
-        const ddCoordinates = getCoordinates(circleMeasurementInDrawing?.coordinates, OPENLAYERS_PROJECTION, CoordinatesFormat.DECIMAL_DEGREES, false).map(coordinate => {
-          return parseFloat(coordinate.replace(/°/g, ''))
-        })
+        const ddCoordinates = getCoordinates(
+          circleMeasurementInDrawing?.coordinates,
+          OPENLAYERS_PROJECTION,
+          CoordinatesFormat.DECIMAL_DEGREES,
+          false
+        ).map(coordinate => parseFloat(coordinate.replace(/°/g, '')))
         setCircleCoordinatesToAdd(ddCoordinates)
       }
 
@@ -57,37 +57,25 @@ const CustomCircleRange = ({
   }
 
   return (
-    <Wrapper
-      $top={positionFromTop}
-      isOpen={measurementTypeToAdd === MeasurementTypes.CIRCLE_RANGE}>
-      <Header>
-        Définir une valeur
-      </Header>
+    <Wrapper $top={positionFromTop} isOpen={measurementTypeToAdd === MeasurementTypes.CIRCLE_RANGE}>
+      <Header>Définir une valeur</Header>
       <Body>
         <p>Coordonnées</p>
-        <SetCoordinates
-          coordinates={circleCoordinatesToAdd}
-          updateCoordinates={updateCoordinates}
-        />
+        <SetCoordinates coordinates={circleCoordinatesToAdd} updateCoordinates={updateCoordinates} />
         <p>Distance (rayon)</p>
         <input
-          style={{ width: 62 }}
-          data-cy={'measurement-circle-radius-input'}
-          type='text'
+          data-cy="measurement-circle-radius-input"
           onChange={e => setCircleRadiusToAdd(e.target.value)}
+          style={{ width: 62 }}
+          type="text"
           value={circleRadiusToAdd}
         />
-        <span>(Nm)</span><br/>
-        <OkButton
-          data-cy={'measurement-circle-add'}
-          onClick={() => addCustomCircleRange()}
-        >
+        <span>(Nm)</span>
+        <br />
+        <OkButton data-cy="measurement-circle-add" onClick={() => addCustomCircleRange()}>
           OK
         </OkButton>
-        <CancelButton
-          onClick={() => cancelAddCircleRange()}>
-          Annuler
-        </CancelButton>
+        <CancelButton onClick={() => cancelAddCircleRange()}>Annuler</CancelButton>
       </Body>
     </Wrapper>
   )
@@ -100,7 +88,7 @@ const CancelButton = styled.button`
   margin: 15px 0 0 15px;
   font-size: 13px;
   color: ${COLORS.gunMetal};
-  
+
   :disabled {
     border: 1px solid ${COLORS.lightGray};
     color: ${COLORS.lightGray};
@@ -114,8 +102,9 @@ const OkButton = styled.button`
   margin: 15px 0 0;
   font-size: 13px;
   color: ${COLORS.gainsboro};
-  
-  :hover, :focus {
+
+  :hover,
+  :focus {
     background: ${COLORS.charcoal};
   }
 `
@@ -125,21 +114,21 @@ const Body = styled.div`
   text-align: left;
   font-size: 13px;
   color: ${COLORS.slateGray};
-  
+
   p {
     margin: 0;
     font-size: 13px;
   }
-  
+
   p:nth-of-type(2) {
     margin-top: 15px;
     font-size: 13px;
   }
-  
+
   span {
     margin-left: 7px;
   }
-  
+
   input {
     color: ${COLORS.charcoal};
     margin-top: 7px;
@@ -163,9 +152,9 @@ const Header = styled.div`
 const Wrapper = styled(MapComponentStyle)`
   width: 306px;
   background: ${COLORS.background};
-  margin-right: ${props => !props.firstUpdate && props.isOpen ? '45px' : '-320px'};
-  opacity:  ${props => !props.firstUpdate && props.isOpen ? '1' : '0'};
-  top: ${props=>props.$top}px;
+  margin-right: ${props => (!props.firstUpdate && props.isOpen ? '45px' : '-320px')};
+  opacity: ${props => (!props.firstUpdate && props.isOpen ? '1' : '0')};
+  top: ${props => props.$top}px;
   right: 10px;
   border-radius: 2px;
   position: absolute;

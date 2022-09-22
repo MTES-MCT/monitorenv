@@ -1,27 +1,24 @@
-import React from 'react'
 import _ from 'lodash'
+import React from 'react'
 import styled from 'styled-components'
 
-import { RegulatoryLayerSearchResultGroupByLayer } from './RegulatoryLayerSearchResultGroupByLayer'
 import { COLORS } from '../../../../constants/constants'
+import { RegulatoryLayerSearchResultGroupByLayer } from './RegulatoryLayerSearchResultGroupByLayer'
 
-
-const RegulatoryLayerSearchResultList = ({results, searchedText}) => {
+function RegulatoryLayerSearchResultList({ results, searchedText }) {
   const groupedResults = _.groupBy(results, r => r?.doc?.properties?.layer_name)
+
   return (
     <List>
-      {
-        groupedResults && Object.entries(groupedResults).map(([groupName, groupedResult]) => {
-            return (
-              <RegulatoryLayerSearchResultGroupByLayer
-                key={groupName}
-                groupName={groupName}
-                result={groupedResult}
-                searchedText={searchedText}
-              />
-            )
-          })
-      }
+      {groupedResults &&
+        Object.entries(groupedResults).map(([groupName, groupedResult]) => (
+          <RegulatoryLayerSearchResultGroupByLayer
+            key={groupName}
+            groupName={groupName}
+            result={groupedResult}
+            searchedText={searchedText}
+          />
+        ))}
     </List>
   )
 }

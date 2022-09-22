@@ -1,43 +1,40 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import styled from 'styled-components'
 import { RadioGroup } from 'rsuite'
+import styled from 'styled-components'
 
-import BaseLayerItem from './BaseLayerItem'
 import { COLORS } from '../../../constants/constants'
 import { baseLayers } from '../../../domain/entities/layers'
-import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 import { toggleBaseLayer } from '../../../domain/shared_slices/LayerSidebar'
 import { selectBaseLayer } from '../../../domain/shared_slices/Map'
+import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
+import BaseLayerItem from './BaseLayerItem'
 
 const baseLayersKeys = Object.keys(baseLayers).filter(key => key !== baseLayers.DARK.code)
 
-const BaseLayers = () => {
+function BaseLayers() {
   const dispatch = useDispatch()
   const { baselayerIsOpen } = useSelector(state => state.layerSidebar)
-  const {selectedBaseLayer} = useSelector(state => state.map)
+  const { selectedBaseLayer } = useSelector(state => state.map)
   const onSectionTitleClicked = () => {
     dispatch(toggleBaseLayer())
   }
-  const handleSelectBaseLayer = (layercode) => {
+  const handleSelectBaseLayer = layercode => {
     dispatch(selectBaseLayer(layercode))
   }
 
   return (
     <>
-      <SectionTitle onClick={onSectionTitleClicked} $showBaseLayers={baselayerIsOpen}>
-        Fonds de carte <ChevronIcon $right $isOpen={baselayerIsOpen}/>
+      <SectionTitle $showBaseLayers={baselayerIsOpen} onClick={onSectionTitleClicked}>
+        Fonds de carte <ChevronIcon $isOpen={baselayerIsOpen} $right />
       </SectionTitle>
       <RadioGroup onChange={handleSelectBaseLayer} value={selectedBaseLayer}>
-        <BaseLayersList $showBaseLayers={baselayerIsOpen} $baseLayersLength={baseLayersKeys.length}>
-          {
-            baseLayersKeys.map(layer => {
-              return (
-              <ListItem key={layer}>
-                <BaseLayerItem layer={layer} />
-              </ListItem>)
-            })
-          }
+        <BaseLayersList $baseLayersLength={baseLayersKeys.length} $showBaseLayers={baselayerIsOpen}>
+          {baseLayersKeys.map(layer => (
+            <ListItem key={layer}>
+              <BaseLayerItem layer={layer} />
+            </ListItem>
+          ))}
         </BaseLayersList>
       </RadioGroup>
     </>
@@ -58,8 +55,8 @@ const SectionTitle = styled.div`
   user-select: none;
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
-  border-bottom-left-radius: ${props => props.$showBaseLayers ? '0' : '2px'};
-  border-bottom-right-radius: ${props => props.$showBaseLayers ? '0' : '2px'};
+  border-bottom-left-radius: ${props => (props.$showBaseLayers ? '0' : '2px')};
+  border-bottom-right-radius: ${props => (props.$showBaseLayers ? '0' : '2px')};
 `
 
 const BaseLayersList = styled.ul`
@@ -70,19 +67,27 @@ const BaseLayersList = styled.ul`
   overflow-y: hidden;
   overflow-x: hidden;
   background: ${COLORS.background};
-  
-  animation: ${props => props.$showBaseLayers ? 'zones-opening' : 'zones-closing'} 0.5s ease forwards;
+
+  animation: ${props => (props.$showBaseLayers ? 'zones-opening' : 'zones-closing')} 0.5s ease forwards;
 
   @keyframes zones-opening {
-    0%   { height: 0;   }
-    100% { height: ${props => props.$baseLayersLength ? `${34 * props.$baseLayersLength}px` : '175px'}; }
+    0% {
+      height: 0;
+    }
+    100% {
+      height: ${props => (props.$baseLayersLength ? `${34 * props.$baseLayersLength}px` : '175px')};
+    }
   }
 
   @keyframes zones-closing {
-    0%   { height: ${props => props.$baseLayersLength ? `${34 * props.$baseLayersLength}px` : '175px'}; }
-    100% { height: 0;   }
+    0% {
+      height: ${props => (props.$baseLayersLength ? `${34 * props.$baseLayersLength}px` : '175px')};
+    }
+    100% {
+      height: 0;
+    }
   }
-  
+
   border-bottom-left-radius: 2px;
   border-bottom-right-radius: 2px;
 `
@@ -101,7 +106,7 @@ const ListItem = styled.li`
   color: ${COLORS.gunMetal};
   border-bottom: 1px solid ${COLORS.lightGray};
   line-height: 1.9em;
-  
+
   :hover {
     background: ${COLORS.shadowBlueLittleOpacity};
   }

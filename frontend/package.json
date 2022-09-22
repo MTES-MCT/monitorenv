@@ -32,6 +32,7 @@
     "react-imask": "^6.1.0",
     "react-markdown": "^6.0.1",
     "react-redux": "^7.2.2",
+    "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "5.0.1",
     "react-toastify": "9.0.8",
@@ -40,6 +41,7 @@
     "rsuite": "^5.16.6",
     "styled-components": "^5.2.1",
     "timeago.js": "^4.0.2",
+    "uuid": "^9.0.0",
     "worker-loader": "^3.0.6"
   },
   "proxy": "http://localhost:8880",
@@ -55,6 +57,7 @@
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",
     "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!@codemirror)/\"",
+    "lint:fix": "eslint ./src --fix",
     "test:lint": "eslint ./src",
     "test:lint:partial": "eslint --config=./.eslintrc.partial.js ./src",
     "test:type": "tsc",

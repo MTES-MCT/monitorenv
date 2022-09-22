@@ -1,36 +1,25 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-import RegulatoryLayerZones from './RegulatoryLayerZones'
 import { COLORS } from '../../../../constants/constants'
+import RegulatoryLayerZones from './RegulatoryLayerZones'
 
-const NumberOfZones = ({numberOfZones}) => {
-  return (
-    <ZonesNumber>
-      {`${numberOfZones} zone${numberOfZones > 1 ? 's' : ''}`}
-    </ZonesNumber>
-  )
+function NumberOfZones({ numberOfZones }) {
+  return <ZonesNumber>{`${numberOfZones} zone${numberOfZones > 1 ? 's' : ''}`}</ZonesNumber>
 }
 
-export const RegulatoryLayerGroupSecondLevel = ({ groupName, result }) => {
-
+export function RegulatoryLayerGroupSecondLevel({ groupName, result }) {
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
 
   return (
     <>
-      <LayerTopic onClick={() => setZonesAreOpen(!zonesAreOpen)} >
-        <TopicName
-        data-cy={'regulatory-layer-topic'}
-        title={groupName}
-        >
+      <LayerTopic onClick={() => setZonesAreOpen(!zonesAreOpen)}>
+        <TopicName data-cy="regulatory-layer-topic" title={groupName}>
           {groupName}
         </TopicName>
         <NumberOfZones numberOfZones={result.length} />
       </LayerTopic>
-      <RegulatoryLayerZones
-        result={result}
-        zonesAreOpen={zonesAreOpen}
-      />
+      <RegulatoryLayerZones result={result} zonesAreOpen={zonesAreOpen} />
     </>
   )
 }
@@ -68,15 +57,15 @@ const LayerTopic = styled.div`
   font-weight: 700;
   color: ${COLORS.gunMetal};
   border-bottom: 1px solid ${COLORS.lightGray};
- 
+
   :hover {
     background: ${COLORS.shadowBlueLittleOpacity};
   }
-  
+
   .rs-checkbox-checker {
     padding-top: 24px;
   }
-  
+
   .rs-checkbox {
     margin-left: 0;
   }

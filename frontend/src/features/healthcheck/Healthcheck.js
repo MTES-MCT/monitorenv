@@ -1,34 +1,31 @@
 import React from 'react'
-import styled from 'styled-components'
 import { useSelector } from 'react-redux'
+import styled from 'styled-components'
 
 import { ReactComponent as WarningSVG } from '../../uiMonitor/icons/Picto_alerte.svg'
 
-const Healthcheck = () => {
-  const {
-    healthcheckTextWarning,
-    previewFilteredVesselsMode
-  } = useSelector(state => state.global)
+function Healthcheck() {
+  const { healthcheckTextWarning, previewFilteredVesselsMode } = useSelector(state => state.global)
 
-  return (<>
-    {
-      healthcheckTextWarning && !previewFilteredVesselsMode
-        ? <HealthcheckWarnings>
+  return (
+    <>
+      {healthcheckTextWarning && !previewFilteredVesselsMode ? (
+        <HealthcheckWarnings>
           <Warning>
             <WarningIcon />
             {healthcheckTextWarning}
           </Warning>
         </HealthcheckWarnings>
-        : null
-    }
-  </>)
+      ) : null}
+    </>
+  )
 }
 
 const WarningIcon = styled(WarningSVG)`
   width: 20px;
   vertical-align: sub;
   margin-right: 8px;
-  height: 18px
+  height: 18px;
 `
 
 const Warning = styled.div`

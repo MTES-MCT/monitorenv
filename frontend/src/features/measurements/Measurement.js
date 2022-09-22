@@ -1,42 +1,39 @@
 import React, { useEffect, useRef, useState } from 'react'
-import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
+import { IconButton } from 'rsuite'
+import styled from 'styled-components'
 
-import { useClickOutsideComponent } from '../../hooks/useClickOutside'
-import { useEscapeFromKeyboard } from '../../hooks/useEscapeFromKeyboard'
-
+import { COLORS } from '../../constants/constants'
+import { MeasurementTypes } from '../../domain/entities/map'
 import {
   resetCircleMeasurementInDrawing,
   setCircleMeasurementToAdd,
   setMeasurementTypeToAdd
 } from '../../domain/shared_slices/Measurement'
-import { MeasurementTypes } from '../../domain/entities/map'
-import CustomCircleRange from './CustomCircleRange'
-
-import { MapComponentStyle } from '../commonStyles/MapComponent.style'
-
+import { useClickOutsideComponent } from '../../hooks/useClickOutside'
+import { useEscapeFromKeyboard } from '../../hooks/useEscapeFromKeyboard'
 import { ReactComponent as MeasurementSVG } from '../../uiMonitor/icons/Mesure.svg'
 import { ReactComponent as MultiLineSVG } from '../../uiMonitor/icons/Mesure_ligne_brisee.svg'
 import { ReactComponent as CircleRangeSVG } from '../../uiMonitor/icons/Mesure_rayon_action.svg'
-import { COLORS } from '../../constants/constants'
-import { IconButton } from 'rsuite'
+import { MapComponentStyle } from '../commonStyles/MapComponent.style'
+import CustomCircleRange from './CustomCircleRange'
 
 const MEASUREMENT_POSITION_FROM_LEFT = 440
 
-const MeasurementIconSelector = ({measurementType, small}) => {
+function MeasurementIconSelector({ measurementType, small }) {
   switch (measurementType) {
     case MeasurementTypes.MULTILINE:
-      return <MultiLineIcon style={small && {width: '20px', height: '20px'} } className={'rs-icon'} />
+      return <MultiLineIcon className="rs-icon" style={small && { height: '20px', width: '20px' }} />
     case MeasurementTypes.CIRCLE_RANGE:
-      return <CircleRangeIcon className={'rs-icon'} />
+      return <CircleRangeIcon className="rs-icon" />
     default:
-      return <MeasurementIcon className={'rs-icon'} />
+      return <MeasurementIcon className="rs-icon" />
   }
 }
 
-const Measurement = () => {
+function Measurement() {
   const dispatch = useDispatch()
-  const {  measurementTypeToAdd } = useSelector(state => state.measurement)
+  const { measurementTypeToAdd } = useSelector(state => state.measurement)
 
   const [measurementIsOpen, setMeasurementIsOpen] = useState(false)
   const [circleCoordinatesToAdd, setCircleCoordinatesToAdd] = useState([])
@@ -68,9 +65,7 @@ const Measurement = () => {
     setMeasurementIsOpen(false)
   }
 
-  
-
-  function openOrCloseMeasurement () {
+  function openOrCloseMeasurement() {
     if (measurementTypeToAdd) {
       dispatch(setMeasurementTypeToAdd(null))
       setMeasurementIsOpen(false)
@@ -79,18 +74,20 @@ const Measurement = () => {
     }
   }
 
-  function addCustomCircleRange () {
-    dispatch(setCircleMeasurementToAdd({
-      circleCoordinatesToAdd: circleCoordinatesToAdd,
-      circleRadiusToAdd: circleRadiusToAdd
-    }))
+  function addCustomCircleRange() {
+    dispatch(
+      setCircleMeasurementToAdd({
+        circleCoordinatesToAdd,
+        circleRadiusToAdd
+      })
+    )
     setCircleCoordinatesToAdd([])
     setCircleRadiusToAdd('')
     dispatch(setMeasurementTypeToAdd(null))
     setMeasurementIsOpen(false)
   }
 
-  function cancelAddCircleRange () {
+  function cancelAddCircleRange() {
     dispatch(setMeasurementTypeToAdd(null))
     dispatch(resetCircleMeasurementInDrawing())
     setMeasurementIsOpen(false)
@@ -99,39 +96,40 @@ const Measurement = () => {
   return (
     <MeasurementWrapper>
       <IconButton
-        title={'prendre une mesure'}
-        data-cy={'measurement'}
+        appearance="primary"
+        data-cy="measurement"
+        icon={<MeasurementIconSelector measurementType={measurementTypeToAdd} small />}
         onClick={openOrCloseMeasurement}
-        appearance='primary'
-        size='sm'
-        icon={<MeasurementIconSelector small measurementType={measurementTypeToAdd} />}
-        >
-      </IconButton>
-      <MeasurementOptions
-        measurementBoxIsOpen={measurementIsOpen}>
+        size="sm"
+        title="prendre une mesure"
+      />
+      <MeasurementOptions measurementBoxIsOpen={measurementIsOpen}>
         <MeasurementItem
-          data-cy={'measurement-multiline'}
-          title={'Mesure d\'une distance avec lignes brisées'}
-          onClick={() => makeMeasurement(MeasurementTypes.MULTILINE)}>
-          <MultiLineIcon/>
+          data-cy="measurement-multiline"
+          onClick={() => makeMeasurement(MeasurementTypes.MULTILINE)}
+          title={"Mesure d'une distance avec lignes brisées"}
+        >
+          <MultiLineIcon />
         </MeasurementItem>
         <MeasurementItem
-          data-cy={'measurement-circle-range'}
-          title={'Rayon d\'action'}
-          onClick={() => makeMeasurement(MeasurementTypes.CIRCLE_RANGE)}>
-          <CircleRangeIcon/>
+          data-cy="measurement-circle-range"
+          onClick={() => makeMeasurement(MeasurementTypes.CIRCLE_RANGE)}
+          title={"Rayon d'action"}
+        >
+          <CircleRangeIcon />
         </MeasurementItem>
       </MeasurementOptions>
       <CustomCircleRange
-        positionFromTop={MEASUREMENT_POSITION_FROM_LEFT}
-        measurementIsOpen={measurementIsOpen}
-        measurementTypeToAdd={measurementTypeToAdd}
+        addCustomCircleRange={addCustomCircleRange}
+        cancelAddCircleRange={cancelAddCircleRange}
         circleCoordinatesToAdd={circleCoordinatesToAdd}
         circleRadiusToAdd={circleRadiusToAdd}
+        measurementIsOpen={measurementIsOpen}
+        measurementTypeToAdd={measurementTypeToAdd}
+        positionFromTop={MEASUREMENT_POSITION_FROM_LEFT}
         setCircleCoordinatesToAdd={setCircleCoordinatesToAdd}
         setCircleRadiusToAdd={setCircleRadiusToAdd}
-        cancelAddCircleRange={cancelAddCircleRange}
-        addCustomCircleRange={addCustomCircleRange}/>
+      />
     </MeasurementWrapper>
   )
 }
@@ -139,7 +137,7 @@ const Measurement = () => {
 const MeasurementWrapper = styled.div`
   position: absolute;
   bottom: 11px;
-  left: ${MEASUREMENT_POSITION_FROM_LEFT}px; 
+  left: ${MEASUREMENT_POSITION_FROM_LEFT}px;
   width: 20px;
 `
 
@@ -151,16 +149,14 @@ const MeasurementItem = styled.div`
   z-index: 99;
   cursor: pointer;
   position: relative;
-  :not(:first-child){
+  :not(:first-child) {
     margin-left: 5px;
   }
 `
 
-const MultiLineIcon = styled(MultiLineSVG)`
-`
+const MultiLineIcon = styled(MultiLineSVG)``
 
-const CircleRangeIcon = styled(CircleRangeSVG)`
-`
+const CircleRangeIcon = styled(CircleRangeSVG)``
 
 const MeasurementIcon = styled(MeasurementSVG)`
   width: 20px;
@@ -169,8 +165,8 @@ const MeasurementIcon = styled(MeasurementSVG)`
 
 const MeasurementOptions = styled(MapComponentStyle)`
   width: 175px;
-  margin-bottom: ${props => props.measurementBoxIsOpen ? '8px' : '-200px'};
-  opacity: ${props => props.measurementBoxIsOpen ? '1' : '0'};
+  margin-bottom: ${props => (props.measurementBoxIsOpen ? '8px' : '-200px')};
+  opacity: ${props => (props.measurementBoxIsOpen ? '1' : '0')};
   position: absolute;
   bottom: 20px;
   left: 0;

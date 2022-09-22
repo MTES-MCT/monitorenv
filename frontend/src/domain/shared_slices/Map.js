@@ -3,58 +3,56 @@ import { createSlice } from '@reduxjs/toolkit'
 import { baseLayers } from '../entities/layers'
 import { CoordinatesFormat } from '../entities/map'
 
-
 const mapSlice = createSlice({
-  name: 'map',
   initialState: {
+    coordinatesFormat: CoordinatesFormat.DEGREES_MINUTES_SECONDS,
     currentMapExtentTracker: null,
     fitToExtent: null,
-    zoomToCenter: null,
     selectedBaseLayer: baseLayers.LIGHT.code,
-    coordinatesFormat: CoordinatesFormat.DEGREES_MINUTES_SECONDS
+    zoomToCenter: null
   },
+  name: 'map',
   reducers: {
-    /**
-     * currentMapExtent tracks the current map extent via MapHistory. 
-     * setCurrentMapExtentTracker can not be used to change map extent
-     * @param {*} state 
-     * @param {{payload: ol.extent}} action 
-     */
-    setCurrentMapExtentTracker (state, action) {
-      state.currentMapExtentTracker = action.payload
-    },
-    /**
-     * 
-     * @param {*} state 
-     * @param {object} action.payload.extent
-     */
-    setFitToExtent (state, action) {
-      state.fitToExtent = action.payload?.extent
-    },
-    setZoomToCenter (state, action) {
-      state.zoomToCenter = action.payload
-    },
-    selectBaseLayer (state, action) {
+    selectBaseLayer(state, action) {
       state.selectedBaseLayer = action.payload
     },
+
     /**
      * Set the coordinate format in the whole application (as DMS, DMD or DD)
-     * @param {Object=} state
+     * @param {Object} state
      * @param {{
      * payload: CoordinatesFormat}} action - The coordinate format
      */
-    setCoordinatesFormat (state, action) {
+    setCoordinatesFormat(state, action) {
       state.coordinatesFormat = action.payload
+    },
+
+    /**
+     * currentMapExtent tracks the current map extent via MapHistory.
+     * setCurrentMapExtentTracker can not be used to change map extent
+     * @param {*} state
+     * @param {{payload: ol.extent}} action
+     */
+    setCurrentMapExtentTracker(state, action) {
+      state.currentMapExtentTracker = action.payload
+    },
+
+    /**
+     *
+     * @param {*} state
+     * @param {object} action.payload.extent
+     */
+    setFitToExtent(state, action) {
+      state.fitToExtent = action.payload?.extent
+    },
+
+    setZoomToCenter(state, action) {
+      state.zoomToCenter = action.payload
     }
   }
 })
 
-export const {
-  setCurrentMapExtentTracker,
-  setFitToExtent,
-  setZoomToCenter,
-  selectBaseLayer,
-  setCoordinatesFormat,
-} = mapSlice.actions
+export const { selectBaseLayer, setCoordinatesFormat, setCurrentMapExtentTracker, setFitToExtent, setZoomToCenter } =
+  mapSlice.actions
 
 export default mapSlice.reducer

@@ -6,34 +6,30 @@ const MissionFiltersReducer = null
 /* eslint-enable */
 
 const initialState = {
-  missionStatusFilter: [],
   missionNatureFilter: [],
+  missionStatusFilter: [],
   missionTypeFilter: []
 }
 const missionFiltersSlice = createSlice({
+  initialState: { ...initialState },
   name: 'missionFilters',
-  initialState: {...initialState},
   reducers: {
-    setMissionStatusFilter (state, action) {
-      state.missionStatusFilter = action.payload
+    resetMissionFilters() {
+      return { ...initialState }
     },
-    setMissionNatureFilter (state, action) {
+    setMissionNatureFilter(state, action) {
       state.missionNatureFilter = action.payload
     },
-    setMissionTypeFilter (state, action) {
-      state.missionTypeFilter = action.payload
+    setMissionStatusFilter(state, action) {
+      state.missionStatusFilter = action.payload
     },
-    resetMissionFilters () {
-      return {...initialState}
+    setMissionTypeFilter(state, action) {
+      state.missionTypeFilter = action.payload
     }
   }
 })
 
-export const {
-  setMissionStatusFilter,
-  setMissionNatureFilter,
-  setMissionTypeFilter,
-  resetMissionFilters
-} = missionFiltersSlice.actions
+export const { resetMissionFilters, setMissionNatureFilter, setMissionStatusFilter, setMissionTypeFilter } =
+  missionFiltersSlice.actions
 
 export const missionFiltersReducer = missionFiltersSlice.reducer

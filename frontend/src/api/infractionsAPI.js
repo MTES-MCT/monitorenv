@@ -2,21 +2,18 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 export const infractionsAPI = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/bff/v1' }),
-  reducerPath: 'natinfs',
-  endpoints: (build) => ({
+  endpoints: build => ({
     getInfractions: build.query({
-      query: () => `natinfs`,
       providesTags: result =>
         result
           ? // successful query
-            [
-              ...result.map(({ id }) => ({ type: 'Natinfs', id })),
-              { type: 'Natinfs', id: 'LIST' },
-            ]
+            [...result.map(({ id }) => ({ id, type: 'Natinfs' })), { id: 'LIST', type: 'Natinfs' }]
           : // an error occurred, but we still want to refetch this query when `{ type: 'Natinfs', id: 'LIST' }` is invalidated
-            [{ type: 'Natinfs', id: 'LIST' }]
+            [{ id: 'LIST', type: 'Natinfs' }],
+      query: () => `natinfs`
     })
   }),
+  reducerPath: 'natinfs'
 })
 
 export const { useGetInfractionsQuery } = infractionsAPI

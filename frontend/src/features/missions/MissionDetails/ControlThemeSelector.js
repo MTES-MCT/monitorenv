@@ -1,28 +1,29 @@
+import { useField } from 'formik'
 import React, { useRef } from 'react'
-import styled from 'styled-components';
-import { SelectPicker } from 'rsuite';
-import {  useField } from 'formik';
+import { SelectPicker } from 'rsuite'
+import styled from 'styled-components'
 
-import { COLORS } from '../../../constants/constants';
+import { COLORS } from '../../../constants/constants'
 
-export const ControlThemeSelector = ({ name, themes,valueKey, ...props }) => {
-  const [field, , helpers] = useField(name);
-  const { value } = field;
-  const { setValue } = helpers;
+export function ControlThemeSelector({ name, themes, valueKey, ...props }) {
+  const [field, , helpers] = useField(name)
+  const { value } = field
+  const { setValue } = helpers
   const wrapperRef = useRef()
 
   return (
     <Wrapper ref={wrapperRef}>
       <SelectPicker
         block
-        searchable={false}
-        container={()=>wrapperRef.current}
-        value={value}
-        onChange={setValue}
+        container={() => wrapperRef.current}
         data={themes}
         labelKey={valueKey}
+        onChange={setValue}
+        searchable={false}
+        value={value}
         valueKey={valueKey}
-        {...props} />
+        {...props}
+      />
     </Wrapper>
   )
 }

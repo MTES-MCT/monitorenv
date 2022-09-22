@@ -1,3 +1,4 @@
+/* eslint-disable import/order */
 import { createGlobalStyle } from 'styled-components'
 
 import MarianneRegular from './Marianne/Marianne-Regular.woff2'

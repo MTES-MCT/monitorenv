@@ -1,8 +1,4 @@
 export const actionTypeEnum = {
-  SURVEILLANCE: { 
-    code: 'SURVEILLANCE',
-    libelle: 'Surveillance'
-  },
   CONTROL: {
     code: 'CONTROL',
     libelle: 'Contrôle'
@@ -10,21 +6,25 @@ export const actionTypeEnum = {
   NOTE: {
     code: 'NOTE',
     libelle: 'Note'
+  },
+  SURVEILLANCE: {
+    code: 'SURVEILLANCE',
+    libelle: 'Surveillance'
   }
 }
 
 export const missionTypeEnum = {
-  SEA: {
-    code: 'SEA',
-    libelle: 'Mer'
+  AIR: {
+    code: 'AIR',
+    libelle: 'Air'
   },
   LAND: {
     code: 'LAND',
     libelle: 'Terre'
   },
-  AIR: {
-    code: 'AIR',
-    libelle: 'Air'
+  SEA: {
+    code: 'SEA',
+    libelle: 'Mer'
   }
 }
 
@@ -44,21 +44,17 @@ export const missionNatureEnum = {
 }
 
 export const infractionTypeEnum = {
-  WITHOUT_REPORT: {
-    code: 'WITHOUT_REPORT',
-    libelle: 'Sans PV'
-  },
   WITH_REPORT: {
     code: 'WITH_REPORT',
     libelle: 'Avec PV'
+  },
+  WITHOUT_REPORT: {
+    code: 'WITHOUT_REPORT',
+    libelle: 'Sans PV'
   }
 }
 
 export const formalNoticeEnum = {
-  YES: {
-    code: 'YES',
-    libelle: 'Oui'
-  },
   NO: {
     code: 'NO',
     libelle: 'Non'
@@ -66,14 +62,14 @@ export const formalNoticeEnum = {
   WAITING: {
     code: 'PENDING',
     libelle: 'En attente'
+  },
+  YES: {
+    code: 'YES',
+    libelle: 'Oui'
   }
 }
 
 export const actionTargetTypeEnum = {
-  VEHICLE: {
-    code: 'VEHICLE',
-    libelle: 'Véhicule',
-  },
   COMPANY: {
     code: 'COMPANY',
     libelle: 'Société'
@@ -81,52 +77,52 @@ export const actionTargetTypeEnum = {
   INDIVIDUAL: {
     code: 'INDIVIDUAL',
     libelle: 'Personne physique'
+  },
+  VEHICLE: {
+    code: 'VEHICLE',
+    libelle: 'Véhicule'
   }
 }
 
 export const vehicleTypeEnum = {
-  VESSEL: {
-    code: 'VESSEL',
-    libelle: 'Navire'
-  },
   OTHER_SEA: {
     code: 'OTHER_SEA',
     libelle: 'Autre véhicule marin'
+  },
+  VEHICLE_AIR: {
+    code: 'VEHICLE_AIR',
+    libelle: 'Véhicule aérien'
   },
   VEHICLE_LAND: {
     code: 'VEHICLE_LAND',
     libelle: 'Véhicule terrestre'
   },
-  VEHICLE_AIR: {
-    code: 'VEHICLE_AIR',
-    libelle: 'Véhicule aérien'
+  VESSEL: {
+    code: 'VESSEL',
+    libelle: 'Navire'
   }
 }
 
 export const vesselTypeEnum = {
+  COMMERCIAL: {
+    code: 'COMMERCIAL',
+    libelle: 'Commerce'
+  },
   FISHING: {
     code: 'FISHING',
     libelle: 'Pêche'
-  },
-  SAILING: {
-    code: 'SAILING',
-    libelle: 'Voilier'
   },
   MOTOR: {
     code: 'MOTOR',
     libelle: 'Moteur'
   },
-  COMMERCIAL: {
-    code: 'COMMERCIAL',
-    libelle: 'Commerce'
+  SAILING: {
+    code: 'SAILING',
+    libelle: 'Voilier'
   }
 }
 
 export const vesselSizeEnum = {
-  LESS_THAN_12m : {
-    code: 'LESS_THAN_12m',
-    libelle: 'moins de 12 m'
-  },
   FROM_12_TO_24m: {
     code: 'FROM_12_TO_24m',
     libelle: '12 à 24 m'
@@ -135,57 +131,65 @@ export const vesselSizeEnum = {
     code: 'FROM_24_TO_46m',
     libelle: 'plus de 24 m'
   },
-  MORE_THAN_46m:{
+  LESS_THAN_12m: {
+    code: 'LESS_THAN_12m',
+    libelle: 'moins de 12 m'
+  },
+  MORE_THAN_46m: {
     code: 'MORE_THAN_46m',
     libelle: 'plus de 46 m'
   }
 }
 
 export const protectedSpeciesEnum = {
-  MARINE_MAMMALS:{
-    code: 'MARINE_MAMMALS',
-    libelle: 'Mammifères marins',
-    },
-  REPTILES:{
-    code: 'REPTILES',
-    libelle: 'Reptiles',
-    },
-  BIRDS:{
+  BIRDS: {
     code: 'BIRDS',
-    libelle: 'Oiseaux',
-    },
-  FLORA:{
+    libelle: 'Oiseaux'
+  },
+  FLORA: {
     code: 'FLORA',
-    libelle: 'Flore',
-    },
-  HABITAT:{
+    libelle: 'Flore'
+  },
+  HABITAT: {
     code: 'HABITAT',
-    libelle: 'Habitat',
-    },
-  OTHER:{
+    libelle: 'Habitat'
+  },
+  MARINE_MAMMALS: {
+    code: 'MARINE_MAMMALS',
+    libelle: 'Mammifères marins'
+  },
+  OTHER: {
     code: 'OTHER',
-    libelle: 'Autres espèces protégées',
+    libelle: 'Autres espèces protégées'
+  },
+  REPTILES: {
+    code: 'REPTILES',
+    libelle: 'Reptiles'
   }
 }
 
 export const missionStatusEnum = {
-  PENDING: {
-    code: 'PENDING',
-    libelle: 'En cours'
+  CLOSED: {
+    code: 'CLOSED',
+    libelle: 'Cloturée'
   },
   ENDED: {
     code: 'ENDED',
     libelle: 'Terminée'
   },
-  CLOSED: {
-    code: 'CLOSED',
-    libelle: 'Cloturée'
+  PENDING: {
+    code: 'PENDING',
+    libelle: 'En cours'
   }
 }
 
 export const THEME_REQUIRE_PROTECTED_SPECIES = ['Police des espèces protégées et de leurs habitats (faune et flore)']
 
 export const relevantCourtEnum = {
+  JULIS: {
+    code: 'JULIS',
+    libelle: 'Juridictions littorales spécialisées (JULIS)'
+  },
   LOCAL_COURT: {
     code: 'LOCAL_COURT',
     libelle: 'Parquet Local'
@@ -193,10 +197,6 @@ export const relevantCourtEnum = {
   MARITIME_COURT: {
     code: 'MARITIME_COURT',
     libelle: 'Tribunal maritime'
-  },
-  JULIS: {
-    code: 'JULIS',
-    libelle: 'Juridictions littorales spécialisées (JULIS)'
   },
   PRE: {
     code: 'PRE',

@@ -1,28 +1,27 @@
+import { useField } from 'formik'
 import React, { useRef } from 'react'
-import styled from 'styled-components'
 import { Form, SelectPicker } from 'rsuite'
-import {  useField } from 'formik'
-
+import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
 import { relevantCourtEnum } from '../../../domain/entities/missions'
 
 const DEFAULT_SELECT_PICKER_STYLE = {
-  width: 230,
-  margin: '0',
   borderColor: COLORS.lightGray,
   boxSizing: 'border-box',
-  textOverflow: 'ellipsis'
+  margin: '0',
+  textOverflow: 'ellipsis',
+  width: 230
 }
 
-const DEFAULT_SELECT_PICKER_MENU_STYLE = { 
-  width: 280,
+const DEFAULT_SELECT_PICKER_MENU_STYLE = {
   overflowY: 'hidden',
-  textOverflow: 'ellipsis'
+  textOverflow: 'ellipsis',
+  width: 280
 }
 
-export const RelevantCourtSelector = ({infractionPath, ...props}) => {
-  const [relevantCourtField, , relevantCourtHelpers] = useField(`${infractionPath}.relevantCourt`);
+export function RelevantCourtSelector({ infractionPath, ...props }) {
+  const [relevantCourtField, , relevantCourtHelpers] = useField(`${infractionPath}.relevantCourt`)
   const relevantCourtSelectorRef = useRef()
   const relevantCourtFieldList = Object.values(relevantCourtEnum)
 
@@ -30,16 +29,17 @@ export const RelevantCourtSelector = ({infractionPath, ...props}) => {
     <SelectorWrapper ref={relevantCourtSelectorRef}>
       <Form.ControlLabel htmlFor="relevantCourtField">Tribunal compétent </Form.ControlLabel>
       <SelectPicker
-        style={DEFAULT_SELECT_PICKER_STYLE}
-        menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
-        searchable={false}
-        container={()=>relevantCourtSelectorRef.current}
-        value={relevantCourtField.value}
-        onChange={relevantCourtHelpers.setValue}
+        container={() => relevantCourtSelectorRef.current}
         data={relevantCourtFieldList}
-        labelKey={'libelle'}
-        valueKey={'code'}
-        {...props} />
+        labelKey="libelle"
+        menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
+        onChange={relevantCourtHelpers.setValue}
+        searchable={false}
+        style={DEFAULT_SELECT_PICKER_STYLE}
+        value={relevantCourtField.value}
+        valueKey="code"
+        {...props}
+      />
     </SelectorWrapper>
   )
 }

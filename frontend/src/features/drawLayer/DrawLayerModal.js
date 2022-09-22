@@ -1,50 +1,51 @@
 import React, { useEffect } from 'react'
-import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { matchPath } from 'react-router-dom'
-
-import { ReactComponent as PolygonSVG } from '../../uiMonitor/icons/polygone.svg'
-import { ReactComponent as RectangleSVG } from '../../uiMonitor/icons/rectangle.svg'
-import { ReactComponent as CircleSVG } from '../../uiMonitor/icons/cercle-1.svg'
-import { ReactComponent as SelectorSVG } from '../../uiMonitor/icons/selector.svg'
+import styled from 'styled-components'
 
 import { COLORS } from '../../constants/constants'
-import { resetFeatures, setInteractionType } from './DrawLayer.slice'
 import { monitorenvFeatureTypes, interactionTypes } from '../../domain/entities/drawLayer'
-import { quitAddLocalisation, validateLocalisation } from '../../domain/use_cases/missions/missionAndControlLocalisation'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
+import {
+  quitAddLocalisation,
+  validateLocalisation
+} from '../../domain/use_cases/missions/missionAndControlLocalisation'
 import { usePrevious } from '../../hooks/usePrevious'
+import { ReactComponent as CircleSVG } from '../../uiMonitor/icons/cercle-1.svg'
+import { ReactComponent as PolygonSVG } from '../../uiMonitor/icons/polygone.svg'
+import { ReactComponent as RectangleSVG } from '../../uiMonitor/icons/rectangle.svg'
+import { ReactComponent as SelectorSVG } from '../../uiMonitor/icons/selector.svg'
+import { resetFeatures, setInteractionType } from './DrawLayer.slice'
 
 const titlePlaceholder = {
-  MISSION_ZONE: 'une zone de mission',
-  ACTION_LOCALISATION: 'un point de contrôle'
+  ACTION_LOCALISATION: 'un point de contrôle',
+  MISSION_ZONE: 'une zone de mission'
 }
 const validateButtonPlaceholder = {
-  MISSION_ZONE: 'la zone de mission',
-  ACTION_LOCALISATION: 'le point de contrôle'
+  ACTION_LOCALISATION: 'le point de contrôle',
+  MISSION_ZONE: 'la zone de mission'
 }
 
-export const DrawLayerModal = () => {
+export function DrawLayerModal() {
   const dispatch = useDispatch()
-  const { interactionType, featureType } = useSelector(state => state.drawLayer)
-  
+  const { featureType, interactionType } = useSelector(state => state.drawLayer)
+
   const { sideWindowIsOpen } = useSelector(state => state.global)
   const { sideWindowPath } = useSelector(state => state.sideWindowRouter)
 
   const routeParams = matchPath(sideWindowPath, {
-    path: [sideWindowPaths.MISSION, sideWindowPaths.MISSION_NEW],
     exact: true,
+    path: [sideWindowPaths.MISSION, sideWindowPaths.MISSION_NEW],
     strict: true
   })
   const previousMissionId = usePrevious(routeParams?.params?.id)
 
   useEffect(() => {
-    if ( previousMissionId && previousMissionId != routeParams?.params?.id) {
+    if (previousMissionId && previousMissionId != routeParams?.params?.id) {
       dispatch(quitAddLocalisation)
     }
   }, [previousMissionId, routeParams])
-  
-  
+
   useEffect(() => {
     !sideWindowIsOpen && dispatch(quitAddLocalisation)
   }, [sideWindowIsOpen])
@@ -52,7 +53,7 @@ export const DrawLayerModal = () => {
   const handleQuit = () => {
     dispatch(quitAddLocalisation)
   }
-  const handleSelectInteraction = (selectedInteraction) => () => {
+  const handleSelectInteraction = selectedInteraction => () => {
     dispatch(setInteractionType(selectedInteraction))
   }
   const handleReset = () => {
@@ -61,26 +62,48 @@ export const DrawLayerModal = () => {
   const handleValidate = () => {
     dispatch(validateLocalisation)
   }
-  return (<Wrapper>
-    <ContentWrapper>
-      <Header>
-        Vous êtes en train d&apos;ajouter {titlePlaceholder[featureType]}
-        <QuitButton onClick={handleQuit} type={'button'}>Quitter</QuitButton>
-      </Header>
-      <ActionWrapper>
-      <ResetButton onClick={handleReset}>Réinitialiser</ResetButton>
-      <ValidateButton onClick={handleValidate}>Valider {validateButtonPlaceholder[featureType]}</ValidateButton>
-    </ActionWrapper>
-    </ContentWrapper>
-    { featureType === monitorenvFeatureTypes.MISSION_ZONE && 
-      <ButtonsWrapper>
-        <Button selected={interactionType === interactionTypes.POLYGON} onClick={handleSelectInteraction(interactionTypes.POLYGON)}><PolygonIcon /></Button>
-        <Button selected={interactionType === interactionTypes.SQUARE} onClick={handleSelectInteraction(interactionTypes.SQUARE)}><RectangleIcon /></Button>
-        <Button selected={interactionType === interactionTypes.CIRCLE} onClick={handleSelectInteraction(interactionTypes.CIRCLE)}><CircleIcon /></Button>
-        <Button selected={interactionType === interactionTypes.SELECTION}><SelectorIcon /></Button>
-      </ButtonsWrapper>}
-    
-  </Wrapper>)
+
+  return (
+    <Wrapper>
+      <ContentWrapper>
+        <Header>
+          Vous êtes en train d&apos;ajouter {titlePlaceholder[featureType]}
+          <QuitButton onClick={handleQuit} type="button">
+            Quitter
+          </QuitButton>
+        </Header>
+        <ActionWrapper>
+          <ResetButton onClick={handleReset}>Réinitialiser</ResetButton>
+          <ValidateButton onClick={handleValidate}>Valider {validateButtonPlaceholder[featureType]}</ValidateButton>
+        </ActionWrapper>
+      </ContentWrapper>
+      {featureType === monitorenvFeatureTypes.MISSION_ZONE && (
+        <ButtonsWrapper>
+          <Button
+            onClick={handleSelectInteraction(interactionTypes.POLYGON)}
+            selected={interactionType === interactionTypes.POLYGON}
+          >
+            <PolygonIcon />
+          </Button>
+          <Button
+            onClick={handleSelectInteraction(interactionTypes.SQUARE)}
+            selected={interactionType === interactionTypes.SQUARE}
+          >
+            <RectangleIcon />
+          </Button>
+          <Button
+            onClick={handleSelectInteraction(interactionTypes.CIRCLE)}
+            selected={interactionType === interactionTypes.CIRCLE}
+          >
+            <CircleIcon />
+          </Button>
+          <Button selected={interactionType === interactionTypes.SELECTION}>
+            <SelectorIcon />
+          </Button>
+        </ButtonsWrapper>
+      )}
+    </Wrapper>
+  )
 }
 
 const Wrapper = styled.div`
@@ -112,8 +135,9 @@ const Header = styled.h1`
 const Button = styled.button`
   width: 32px;
   height: 32px;
-  background: ${props=> props.selected ? COLORS.shadowBlue : COLORS.charcoal};
-  :hover, :focus {
+  background: ${props => (props.selected ? COLORS.shadowBlue : COLORS.charcoal)};
+  :hover,
+  :focus {
     background: ${COLORS.shadowBlue};
   }
 `

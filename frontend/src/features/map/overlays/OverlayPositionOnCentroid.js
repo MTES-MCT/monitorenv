@@ -1,69 +1,71 @@
-import React, {  useCallback, useEffect, useRef, useState } from 'react'
+import { getCenter } from 'ol/extent'
+import Overlay from 'ol/Overlay'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 // import { useSelector } from 'react-redux'
 import styled from 'styled-components'
-import Overlay from 'ol/Overlay'
-import { getCenter } from 'ol/extent'
-
-import { getOverlayPositionForCentroid, getTopLeftMargin } from './position'
 
 import { COLORS } from '../../../constants/constants'
+import { getOverlayPositionForCentroid, getTopLeftMargin } from './position'
 
 const OVERLAY_HEIGHT = 74
 
 const defaultMargins = {
-  xRight: -252,
-  xMiddle: -116,
   xLeft: 20,
-  yTop: 10,
+  xMiddle: -116,
+  xRight: -252,
+  yBottom: -153,
   yMiddle: -64,
-  yBottom: -153
+  yTop: 10
 }
 
-export const OverlayPositionOnCentroid = ({
-  map, 
-  feature, 
+export function OverlayPositionOnCentroid({
+  map,
+  feature,
   appClassName,
-  children, 
-  options: {
-    margins = defaultMargins
-  } = {}
-}) => {
+  children,
+  options: { margins = defaultMargins } = {}
+}) {
   const overlayRef = useRef(null)
   const olOverlayObjectRef = useRef(null)
   const [overlayTopLeftMargin, setOverlayTopLeftMargin] = useState([margins.yBottom, margins.xMiddle])
 
-  const overlayCallback = useCallback(ref => {
-    overlayRef.current = ref
-    if (ref) {
-      olOverlayObjectRef.current = new Overlay({
-        element: ref,
-        className: `ol-overlay-container ol-selectable ${appClassName}`
-      })
-    } else {
-      olOverlayObjectRef.current = null
-    }
-  }, [overlayRef, olOverlayObjectRef])
+  const overlayCallback = useCallback(
+    ref => {
+      overlayRef.current = ref
+      if (ref) {
+        olOverlayObjectRef.current = new Overlay({
+          className: `ol-overlay-container ol-selectable ${appClassName}`,
+          element: ref
+        })
+      } else {
+        olOverlayObjectRef.current = null
+      }
+    },
+    [overlayRef, olOverlayObjectRef]
+  )
 
   useEffect(() => {
     if (map) {
       map.addOverlay(olOverlayObjectRef.current)
     }
+
     return () => {
       map.removeOverlay(olOverlayObjectRef.current)
     }
   }, [map, olOverlayObjectRef])
 
   useEffect(() => {
-    function getNextOverlayPosition (featureCenter) {
+    function getNextOverlayPosition(featureCenter) {
       const [x, y] = featureCenter
       const extent = map.getView().calculateExtent()
       const boxSize = map.getView().getResolution() * OVERLAY_HEIGHT
+
       return getOverlayPositionForCentroid(boxSize, x, y, extent)
     }
 
     if (overlayRef.current && olOverlayObjectRef.current) {
       if (feature) {
-        const featureCenter =  getCenter(feature.getGeometry().getExtent())
+        const featureCenter = getCenter(feature.getGeometry().getExtent())
         olOverlayObjectRef.current.setPosition(featureCenter)
         const nextOverlayPosition = getNextOverlayPosition(featureCenter)
         setOverlayTopLeftMargin(getTopLeftMargin(nextOverlayPosition, margins))
@@ -74,10 +76,9 @@ export const OverlayPositionOnCentroid = ({
     }
   }, [feature, overlayRef, olOverlayObjectRef, map])
 
-  
   return (
     <OverlayComponent ref={overlayCallback} overlayTopLeftMargin={overlayTopLeftMargin}>
-      { feature && children }
+      {feature && children}
     </OverlayComponent>
   )
 }

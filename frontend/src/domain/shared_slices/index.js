@@ -1,52 +1,52 @@
 import { combineReducers } from '@reduxjs/toolkit'
 import thunk from 'redux-thunk'
 
-import { sideWindowRouterReducer } from '../../components/SideWindowRouter/SideWindowRouter.slice'
-
-import map from './Map'
-import global from './Global'
-import missionState from './MissionsState'
-import { missionFiltersReducer } from './MissionFilters'
-import { regulatorySlicePersistedReducer } from './Regulatory'
-import { regulatoryMetadataSliceReducer } from './RegulatoryMetadata'
-import regulatoryLayerSearch from '../../features/layersSelector/regulatory/search/RegulatoryLayerSearch.slice'
-import { drawLayerReducer } from '../../features/drawLayer/DrawLayer.slice'
-import {administrativeSlicePersistedReducer} from './Administrative'
-import layerSidebar from './LayerSidebar'
-
+import { controlResourcesAPI } from '../../api/controlResourcesAPI'
+import { controlThemesAPI } from '../../api/controlThemesAPI'
+import { infractionsAPI } from '../../api/infractionsAPI'
 import { missionsAPI } from '../../api/missionsAPI'
 import { regulatoryLayersAPI } from '../../api/regulatoryLayersAPI'
-import { controlThemesAPI } from '../../api/controlThemesAPI'
-import { controlResourcesAPI } from '../../api/controlResourcesAPI'
-import { infractionsAPI } from '../../api/infractionsAPI'
-
-import { measurementSlicePersistedReducer } from './Measurement'
+import { sideWindowRouterReducer } from '../../components/SideWindowRouter/SideWindowRouter.slice'
+import { drawLayerReducer } from '../../features/drawLayer/DrawLayer.slice'
+import regulatoryLayerSearch from '../../features/layersSelector/regulatory/search/RegulatoryLayerSearch.slice'
+import { administrativeSlicePersistedReducer } from './Administrative'
+import global from './Global'
 import { interestPointSlicePersistedReducer } from './InterestPoint'
-
-
-
+import layerSidebar from './LayerSidebar'
+import map from './Map'
+import { measurementSlicePersistedReducer } from './Measurement'
+import { missionFiltersReducer } from './MissionFilters'
+import missionState from './MissionsState'
+import { regulatorySlicePersistedReducer } from './Regulatory'
+import { regulatoryMetadataSliceReducer } from './RegulatoryMetadata'
 
 export const homeReducers = combineReducers({
-  map,
-  global,
-  missionState,
-  missionFilters: missionFiltersReducer,
   administrative: administrativeSlicePersistedReducer,
-  regulatory: regulatorySlicePersistedReducer,
-  regulatoryMetadata: regulatoryMetadataSliceReducer,
-  regulatoryLayerSearch,
-  sideWindowRouter: sideWindowRouterReducer,
   drawLayer: drawLayerReducer,
+  global,
+  interestPoint: interestPointSlicePersistedReducer,
   layerSidebar,
+  map,
+  measurement: measurementSlicePersistedReducer,
+  missionFilters: missionFiltersReducer,
+  missionState,
+  regulatory: regulatorySlicePersistedReducer,
+  regulatoryLayerSearch,
   [regulatoryLayersAPI.reducerPath]: regulatoryLayersAPI.reducer,
   [missionsAPI.reducerPath]: missionsAPI.reducer,
   [controlThemesAPI.reducerPath]: controlThemesAPI.reducer,
   [controlResourcesAPI.reducerPath]: controlResourcesAPI.reducer,
   [infractionsAPI.reducerPath]: infractionsAPI.reducer,
-  interestPoint: interestPointSlicePersistedReducer,
-  measurement: measurementSlicePersistedReducer
+  regulatoryMetadata: regulatoryMetadataSliceReducer,
+  sideWindowRouter: sideWindowRouterReducer
 })
 
 // export const homeMiddlewares = getDefaultMiddleware => getDefaultMiddleware().concat(api.middleware)
-export const homeMiddlewares = [thunk, missionsAPI.middleware, regulatoryLayersAPI.middleware, 
-    controlThemesAPI.middleware, controlResourcesAPI.middleware, infractionsAPI.middleware]
+export const homeMiddlewares = [
+  thunk,
+  missionsAPI.middleware,
+  regulatoryLayersAPI.middleware,
+  controlThemesAPI.middleware,
+  controlResourcesAPI.middleware,
+  infractionsAPI.middleware
+]

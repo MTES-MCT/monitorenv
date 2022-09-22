@@ -1,23 +1,22 @@
 import React from 'react'
+import { Dropdown } from 'rsuite'
 import styled from 'styled-components'
-import { Dropdown } from 'rsuite';
 
-import { actionFactory } from '../Missions.helpers'
+import { COLORS } from '../../../constants/constants'
 import { actionTypeEnum } from '../../../domain/entities/missions'
+import { ReactComponent as ControlSVG } from '../../../uiMonitor/icons/controles.svg'
+import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/note_libre.svg'
+import { ReactComponent as PlusSVG } from '../../../uiMonitor/icons/plus.svg'
+import { ReactComponent as SurveillanceSVG } from '../../../uiMonitor/icons/surveillance_18px.svg'
+import { actionFactory } from '../Missions.helpers'
 import { ActionCard } from './ActionCard'
 
-import { ReactComponent as PlusSVG } from '../../../uiMonitor/icons/plus.svg'
-import { ReactComponent as ControlSVG } from '../../../uiMonitor/icons/controles.svg'
-import { ReactComponent as SurveillanceSVG } from '../../../uiMonitor/icons/surveillance_18px.svg'
-import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/note_libre.svg'
-import { COLORS } from '../../../constants/constants';
-
-export const ActionsForm = ({  unshift, remove, form, currentActionIndex, setCurrentActionIndex }) =>  {
-  const handleAddSurveillanceAction = () => unshift(actionFactory({actionType: actionTypeEnum.SURVEILLANCE.code}))
-  const handleAddControlAction = () => unshift(actionFactory({actionType: actionTypeEnum.CONTROL.code}))
-  const handleAddNoteAction = () => unshift(actionFactory({actionType: actionTypeEnum.NOTE.code}))
+export function ActionsForm({ currentActionIndex, form, remove, setCurrentActionIndex, unshift }) {
+  const handleAddSurveillanceAction = () => unshift(actionFactory({ actionType: actionTypeEnum.SURVEILLANCE.code }))
+  const handleAddControlAction = () => unshift(actionFactory({ actionType: actionTypeEnum.CONTROL.code }))
+  const handleAddNoteAction = () => unshift(actionFactory({ actionType: actionTypeEnum.NOTE.code }))
   const handleSelectAction = index => () => setCurrentActionIndex(index)
-  const handleRemoveAction = index => (e) => {
+  const handleRemoveAction = index => e => {
     e.stopPropagation()
     setCurrentActionIndex(null)
     remove(index)
@@ -25,43 +24,45 @@ export const ActionsForm = ({  unshift, remove, form, currentActionIndex, setCur
   const handleDuplicateAction = index => () => {
     unshift(actionFactory(form.values.envActions[index]))
     setCurrentActionIndex(0)
-
   }
 
-  return (<FormWrapper>
-    <TitleWrapper>
-      <Title>Actions réalisées en mission</Title>
-        <Dropdown appearance='primary' title={'Ajouter'} noCaret icon={<PlusSVG className="rs-icon"/>}>
-          <Dropdown.Item icon={<ControlSVGIcon/>} onClick={handleAddControlAction}>
+  return (
+    <FormWrapper>
+      <TitleWrapper>
+        <Title>Actions réalisées en mission</Title>
+        <Dropdown appearance="primary" icon={<PlusSVG className="rs-icon" />} noCaret title="Ajouter">
+          <Dropdown.Item icon={<ControlSVGIcon />} onClick={handleAddControlAction}>
             Ajouter des contrôles
           </Dropdown.Item>
-          <Dropdown.Item icon={<SurveillanceSVGIcon/>} onClick={handleAddSurveillanceAction}>
+          <Dropdown.Item icon={<SurveillanceSVGIcon />} onClick={handleAddSurveillanceAction}>
             Ajouter une surveillance
           </Dropdown.Item>
-          <Dropdown.Item icon={<NoteSVGIcon/>} onClick={handleAddNoteAction}>
+          <Dropdown.Item icon={<NoteSVGIcon />} onClick={handleAddNoteAction}>
             Ajouter une note libre
           </Dropdown.Item>
         </Dropdown>
-    </TitleWrapper>
-    <ActionsTimeline>
-    {form?.values.envActions?.length > 0 ? 
-      form.values.envActions.map((action, index) => {
-        return (
-        <ActionCard 
-          key={index} 
-          selected={index === currentActionIndex} 
-          selectAction={handleSelectAction(index)} 
-          action={action} 
-          removeAction={handleRemoveAction(index)}
-          duplicateAction={handleDuplicateAction(index)}
-        />
-      )})
-      : <NoActionWrapper><NoAction>Aucune action n&apos;est ajoutée pour le moment</NoAction></NoActionWrapper>
-    }
-    </ActionsTimeline>
-  </FormWrapper>
-)}
-
+      </TitleWrapper>
+      <ActionsTimeline>
+        {form?.values.envActions?.length > 0 ? (
+          form.values.envActions.map((action, index) => (
+            <ActionCard
+              key={index}
+              action={action}
+              duplicateAction={handleDuplicateAction(index)}
+              removeAction={handleRemoveAction(index)}
+              selectAction={handleSelectAction(index)}
+              selected={index === currentActionIndex}
+            />
+          ))
+        ) : (
+          <NoActionWrapper>
+            <NoAction>Aucune action n&apos;est ajoutée pour le moment</NoAction>
+          </NoActionWrapper>
+        )}
+      </ActionsTimeline>
+    </FormWrapper>
+  )
+}
 
 const FormWrapper = styled.div`
   height: calc(100% - 64px);
@@ -100,12 +101,12 @@ const NoAction = styled.div`
   font-style: italic;
 `
 const ControlSVGIcon = styled(ControlSVG)`
-    width: 18px;
-    margin-right: 10px;
-    padding: 2px;
+  width: 18px;
+  margin-right: 10px;
+  padding: 2px;
 `
 const SurveillanceSVGIcon = styled(SurveillanceSVG)`
-    margin-right: 10px;
+  margin-right: 10px;
 `
 const NoteSVGIcon = styled(NoteSVG)`
   margin-right: 10px;

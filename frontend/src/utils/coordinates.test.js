@@ -1,5 +1,5 @@
-import { getCoordinates } from './coordinates'
 import { CoordinatesFormat, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../domain/entities/map'
+import { getCoordinates } from './coordinates'
 
 describe('coordinates', () => {
   it('getCoordinates Should get DMS coordinates for a dummy lon/lat', async () => {
@@ -34,7 +34,11 @@ describe('coordinates', () => {
 
   it('getCoordinates Should get DD coordinates for an East longitude', async () => {
     // When
-    const coordinates = getCoordinates([881004.7140361258, 6076231.889001969], OPENLAYERS_PROJECTION, CoordinatesFormat.DECIMAL_DEGREES)
+    const coordinates = getCoordinates(
+      [881004.7140361258, 6076231.889001969],
+      OPENLAYERS_PROJECTION,
+      CoordinatesFormat.DECIMAL_DEGREES
+    )
 
     // Then
     expect(coordinates).not.toBeUndefined()
@@ -44,7 +48,11 @@ describe('coordinates', () => {
 
   it('getCoordinates Should get DD coordinates for a West longitude', async () => {
     // When
-    const coordinates = getCoordinates([-881004.7140361258, 6076231.889001969], OPENLAYERS_PROJECTION, CoordinatesFormat.DECIMAL_DEGREES)
+    const coordinates = getCoordinates(
+      [-881004.7140361258, 6076231.889001969],
+      OPENLAYERS_PROJECTION,
+      CoordinatesFormat.DECIMAL_DEGREES
+    )
 
     // Then
     expect(coordinates).not.toBeUndefined()

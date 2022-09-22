@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+
 import { ReactComponent as CloseIconSVG } from '../../../uiMonitor/icons/Croix_grise.svg'
 
 export const CloseIcon = styled(CloseIconSVG)`

@@ -1,32 +1,31 @@
+import VectorLayer from 'ol/layer/Vector'
+import VectorSource from 'ol/source/Vector'
 import { useMemo, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import VectorSource from 'ol/source/Vector'
-import VectorLayer from 'ol/layer/Vector'
-
 
 import { useGetMissionsQuery } from '../../../api/missionsAPI'
-
-import { selectMissionOnMap } from '../../../domain/use_cases/missions/selectMissionOnMap'
 import Layers from '../../../domain/entities/layers'
+import { selectMissionOnMap } from '../../../domain/use_cases/missions/selectMissionOnMap'
 import { getMissionZoneFeature } from './missionGeometryHelpers'
 import { missionWithCentroidStyleFn } from './styles/missions.style'
 
 const TWO_MINUTES = 2 * 60 * 1000
-export const MissionsLayer = ({ map, mapClickEvent }) => {
+export function MissionsLayer({ map, mapClickEvent }) {
   const dispatch = useDispatch()
   const { displayMissionsLayer } = useSelector(state => state.global)
-  const { data } = useGetMissionsQuery(undefined, {pollingInterval: TWO_MINUTES})
+  const { data } = useGetMissionsQuery(undefined, { pollingInterval: TWO_MINUTES })
 
-  const missionsMultiPolygons = useMemo(()=>{
-    return data?.filter(f=>!!f.geom).map(f => getMissionZoneFeature(f, Layers.MISSIONS.code))
-  }, [data])
-  
+  const missionsMultiPolygons = useMemo(
+    () => data?.filter(f => !!f.geom).map(f => getMissionZoneFeature(f, Layers.MISSIONS.code)),
+    [data]
+  )
+
   const vectorSourceRef = useRef(null)
   const GetVectorSource = () => {
     if (vectorSourceRef.current === null) {
       vectorSourceRef.current = new VectorSource()
-       
     }
+
     return vectorSourceRef.current
   }
 
@@ -34,15 +33,16 @@ export const MissionsLayer = ({ map, mapClickEvent }) => {
   const GetVectorLayer = () => {
     if (vectorLayerRef.current === null) {
       vectorLayerRef.current = new VectorLayer({
+        renderBuffer: 7,
         source: GetVectorSource(),
         style: missionWithCentroidStyleFn,
-        renderBuffer: 7,
         updateWhileAnimating: true,
         updateWhileInteracting: true,
-        zIndex: Layers.MISSIONS.zIndex,
+        zIndex: Layers.MISSIONS.zIndex
       })
       vectorLayerRef.current.name = Layers.MISSIONS.code
     }
+
     return vectorLayerRef.current
   }
 
@@ -63,12 +63,11 @@ export const MissionsLayer = ({ map, mapClickEvent }) => {
     GetVectorLayer()?.setVisible(displayMissionsLayer)
   }, [displayMissionsLayer])
 
-
-  useEffect(()=>{
+  useEffect(() => {
     if (mapClickEvent?.feature) {
       const feature = mapClickEvent?.feature
-      if(feature.getId()?.toString()?.includes(Layers.MISSIONS.code)) {
-        const missionId = feature.getProperties().missionId
+      if (feature.getId()?.toString()?.includes(Layers.MISSIONS.code)) {
+        const { missionId } = feature.getProperties()
         dispatch(selectMissionOnMap(missionId))
       }
     }

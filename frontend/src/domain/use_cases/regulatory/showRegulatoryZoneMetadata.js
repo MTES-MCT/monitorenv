@@ -1,12 +1,8 @@
+import { openRegulatoryMetadataPanel } from '../../shared_slices/RegulatoryMetadata'
 
-import {
-  openRegulatoryMetadataPanel,
-} from '../../shared_slices/RegulatoryMetadata'
-
-const showRegulatoryZoneMetadata = regulatoryMetadataLayerId => (dispatch) => {
+const showRegulatoryZoneMetadata = regulatoryMetadataLayerId => dispatch => {
   if (regulatoryMetadataLayerId) {
     dispatch(openRegulatoryMetadataPanel(regulatoryMetadataLayerId))
-    
   }
 }
 

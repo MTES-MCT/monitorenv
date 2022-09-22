@@ -1,38 +1,39 @@
-import { useEffect, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import GeoJSON from 'ol/format/GeoJSON'
 import { Vector } from 'ol/layer'
 import VectorSource from 'ol/source/Vector'
+import { useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Layers from '../../../domain/entities/layers'
 import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
-
 import { regulatoryPreviewStyle } from './styles/regulatoryPreview.style'
 
-const RegulatoryPreviewLayer = ({ map }) => {
+function RegulatoryPreviewLayer({ map }) {
   const dispatch = useDispatch()
   const { regulatoryGeometriesToPreview } = useSelector(state => state.regulatory)
   const vectorSourceRef = useRef(null)
-  function getVectorSource () {
+  function getVectorSource() {
     if (!vectorSourceRef.current) {
       vectorSourceRef.current = new VectorSource({
         features: []
       })
     }
+
     return vectorSourceRef.current
   }
   const layerRef = useRef(null)
-  function getLayer () {
+  function getLayer() {
     if (!layerRef.current) {
       layerRef.current = new Vector({
         renderBuffer: 4,
         source: getVectorSource(),
+        style: regulatoryPreviewStyle,
         updateWhileAnimating: true,
-        updateWhileInteracting: true,
-        style: regulatoryPreviewStyle
+        updateWhileInteracting: true
       })
     }
+
     return layerRef.current
   }
 
@@ -40,12 +41,14 @@ const RegulatoryPreviewLayer = ({ map }) => {
     if (map) {
       getVectorSource().clear()
       if (regulatoryGeometriesToPreview) {
-        const features = regulatoryGeometriesToPreview.map(regulatorylayer => new GeoJSON({
-          featureProjection: OPENLAYERS_PROJECTION
-        }).readFeature(regulatorylayer))
+        const features = regulatoryGeometriesToPreview.map(regulatorylayer =>
+          new GeoJSON({
+            featureProjection: OPENLAYERS_PROJECTION
+          }).readFeature(regulatorylayer)
+        )
         getVectorSource().addFeatures(features)
         const extent = features[0]?.getGeometry()?.getExtent()
-        dispatch(setFitToExtent({extent}))
+        dispatch(setFitToExtent({ extent }))
       }
     }
   }, [map, regulatoryGeometriesToPreview])

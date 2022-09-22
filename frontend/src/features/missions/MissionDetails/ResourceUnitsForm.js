@@ -1,51 +1,45 @@
 import React from 'react'
-import styled from 'styled-components'
 import { IconButton } from 'rsuite'
-
-import { resourceUnitFactory } from '../Missions.helpers'
-
-import { ResourceUnitSelector } from './ResourceUnitSelector'
-
-import { ReactComponent as PlusSVG } from '../../../uiMonitor/icons/plus.svg'
+import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
+import { ReactComponent as PlusSVG } from '../../../uiMonitor/icons/plus.svg'
+import { resourceUnitFactory } from '../Missions.helpers'
+import { ResourceUnitSelector } from './ResourceUnitSelector'
 
-export const ResourceUnitsForm = ({  push, remove, form }) =>  {
-
+export function ResourceUnitsForm({ form, push, remove }) {
   const handleAddResourceUnit = () => {
     push(resourceUnitFactory())
   }
-  const handleRemoveResourceUnit = (index) => () => {
+  const handleRemoveResourceUnit = index => () => {
     remove(index)
   }
 
-  return (<>
-    {form?.values.resourceUnits?.length > 0  ? 
-    <ResourceUnitsWrapper>
-      {form?.values.resourceUnits?.map((resourceUnit, index) => {
-        return (
-          <ResourceUnitSelector
-            key={index}
-            resourceUnitPath={`resourceUnits[${index}]`}
-            removeResourceUnit={handleRemoveResourceUnit(index)}
-            resourceUnitIndex={index}
-            /> 
-      )})}
-    </ResourceUnitsWrapper>
-    : <NoActionWrapper><NoAction>Aucune unité renseignée</NoAction></NoActionWrapper>
-  }
+  return (
+    <>
+      {form?.values.resourceUnits?.length > 0 ? (
+        <ResourceUnitsWrapper>
+          {form?.values.resourceUnits?.map((resourceUnit, index) => (
+            <ResourceUnitSelector
+              key={index}
+              removeResourceUnit={handleRemoveResourceUnit(index)}
+              resourceUnitIndex={index}
+              resourceUnitPath={`resourceUnits[${index}]`}
+            />
+          ))}
+        </ResourceUnitsWrapper>
+      ) : (
+        <NoActionWrapper>
+          <NoAction>Aucune unité renseignée</NoAction>
+        </NoActionWrapper>
+      )}
 
-    <IconButton
-      appearance='ghost'
-      size='sm'
-      icon={<PlusSVG className="rs-icon"/>}
-      onClick={handleAddResourceUnit}
-    >
-      Ajouter une unité
-    </IconButton>
-    
-  </>
-)}
+      <IconButton appearance="ghost" icon={<PlusSVG className="rs-icon" />} onClick={handleAddResourceUnit} size="sm">
+        Ajouter une unité
+      </IconButton>
+    </>
+  )
+}
 
 const ResourceUnitsWrapper = styled.div`
   flex: 1;

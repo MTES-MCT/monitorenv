@@ -1,35 +1,27 @@
-import React from 'react'
 import _ from 'lodash'
+import React from 'react'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
-import {RegulatoryLayerGroupSecondLevel} from "./RegulatoryLayerGroupSecondLevel";
+import { RegulatoryLayerGroupSecondLevel } from './RegulatoryLayerGroupSecondLevel'
 
-
-const RegulatoryLayerSearchResultList = ({results}) => {
-  
-  
+function RegulatoryLayerSearchResultList({ results }) {
   if (_.isEmpty(results)) {
-      return (
-      <List > 
+    return (
+      <List>
         <NoLayerSelected>Aucune zone sélectionnée</NoLayerSelected>
-      </List>)
+      </List>
+    )
   }
 
   const groupedResults = _.groupBy(results, r => r?.properties?.layer_name)
+
   return (
-    <List >
-      {
-        groupedResults && Object.entries(groupedResults).map(([groupName, groupedResult]) => {
-          return (
-            <RegulatoryLayerGroupSecondLevel
-              key={groupName}
-              groupName={groupName}
-              result={groupedResult}
-            />
-          )
-        })
-      }
+    <List>
+      {groupedResults &&
+        Object.entries(groupedResults).map(([groupName, groupedResult]) => (
+          <RegulatoryLayerGroupSecondLevel key={groupName} groupName={groupName} result={groupedResult} />
+        ))}
     </List>
   )
 }
@@ -38,7 +30,7 @@ const NoLayerSelected = styled.div`
   color: ${COLORS.grayDarkerTwo};
   margin: 10px;
   font-size: 13px;
-  `
+`
 
 const List = styled.ul`
   margin: 0;

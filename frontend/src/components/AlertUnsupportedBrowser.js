@@ -3,18 +3,23 @@ import styled from 'styled-components'
 
 import { ReactComponent as AlertSVG } from '../uiMonitor/icons/Picto_alerte.svg'
 
-export function AlertUnsupportedBrowser () {
-  return <Wrapper>
-    <Alert>
-      <AlertSVG /><br />
-      <Text>
-        <Title>Cette version de votre navigateur est trop ancienne, MonitorEnv ne peut pas fonctionner
-          correctement.</Title><br />
-        Merci d&apos;utiliser une version de Firefox supérieure à la version 62, ou une version de Chrome supérieure à
-        la version 69.
-      </Text>
-    </Alert>
-  </Wrapper>
+export function AlertUnsupportedBrowser() {
+  return (
+    <Wrapper>
+      <Alert>
+        <AlertSVG />
+        <br />
+        <Text>
+          <Title>
+            Cette version de votre navigateur est trop ancienne, MonitorEnv ne peut pas fonctionner correctement.
+          </Title>
+          <br />
+          Merci d&apos;utiliser une version de Firefox supérieure à la version 62, ou une version de Chrome supérieure à
+          la version 69.
+        </Text>
+      </Alert>
+    </Wrapper>
+  )
 }
 
 const Text = styled.span`
@@ -33,8 +38,8 @@ const Alert = styled.div`
   text-align: center;
   font: normal normal medium 22px/31px Marianne;
   letter-spacing: 0px;
-  color: #05065F;
-  background: #CAD2D3 0% 0% no-repeat padding-box;
+  color: #05065f;
+  background: #cad2d3 0% 0% no-repeat padding-box;
   height: 100vh;
   width: 100vw;
   padding-top: 35vh;
@@ -47,4 +52,4 @@ const Wrapper = styled.div`
   width: 100%;
   overflow-y: hidden;
   overflow-x: hidden;
-  `
+`

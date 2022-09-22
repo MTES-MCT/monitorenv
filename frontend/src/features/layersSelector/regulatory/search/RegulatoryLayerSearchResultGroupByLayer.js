@@ -1,18 +1,20 @@
+import _ from 'lodash'
 import React, { useState } from 'react'
+import Highlighter from 'react-highlight-words'
 import { useDispatch, useSelector } from 'react-redux'
 import { IconButton } from 'rsuite'
-import _ from 'lodash'
 import styled from 'styled-components'
-import Highlighter from 'react-highlight-words'
 
-import RegulatoryLayerSearchResultZones from './RegulatoryLayerSearchResultZones'
-import { addRegulatoryZonesToMyLayers, removeRegulatoryZonesFromMyLayers } from '../../../../domain/shared_slices/Regulatory'
-
+import { COLORS } from '../../../../constants/constants'
+import {
+  addRegulatoryZonesToMyLayers,
+  removeRegulatoryZonesFromMyLayers
+} from '../../../../domain/shared_slices/Regulatory'
 import { ReactComponent as PinSVG } from '../../../../uiMonitor/icons/epingle.svg'
 import { ReactComponent as PinFullSVG } from '../../../../uiMonitor/icons/epingle_pleine.svg'
-import { COLORS } from '../../../../constants/constants'
+import RegulatoryLayerSearchResultZones from './RegulatoryLayerSearchResultZones'
 
-export const RegulatoryLayerSearchResultGroupByLayer = ({ groupName, result, searchedText }) => {
+export function RegulatoryLayerSearchResultGroupByLayer({ groupName, result, searchedText }) {
   const dispatch = useDispatch()
 
   const { selectedRegulatoryLayerIds } = useSelector(state => state.regulatory)
@@ -23,7 +25,7 @@ export const RegulatoryLayerSearchResultGroupByLayer = ({ groupName, result, sea
   const zonesSelected = _.intersection(selectedRegulatoryLayerIds, layerIds)
   const allTopicZonesAreChecked = zonesSelected?.length === layerIds?.length
 
-  const handleCheckAllZones = (e) => {
+  const handleCheckAllZones = e => {
     e.stopPropagation()
     if (allTopicZonesAreChecked) {
       dispatch(removeRegulatoryZonesFromMyLayers(layerIds))
@@ -32,36 +34,26 @@ export const RegulatoryLayerSearchResultGroupByLayer = ({ groupName, result, sea
     }
   }
 
-  
-
   return (
     <>
       <LayerTopic onClick={() => setZonesAreOpen(!zonesAreOpen)}>
-        <TopicName
-        
-        data-cy={'regulatory-layer-topic'}
-        title={groupName}
-        >
+        <TopicName data-cy="regulatory-layer-topic" title={groupName}>
           <Highlighter
+            autoEscape
             highlightClassName="highlight"
-            searchWords={(searchedText && searchedText.length > 0) ? searchedText.split(' '):[]}
-            autoEscape={true}
+            searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
             textToHighlight={groupName || ''}
           />
         </TopicName>
-        
+
         <ZonesNumber>{`${result.length} / ${totalNumberOfZones}`}</ZonesNumber>
-        
-          <IconButton
-            icon={allTopicZonesAreChecked ? <PinFullSVGIcon className='rs-icon' /> : <PinSVGIcon className='rs-icon' />}
-            onClick={handleCheckAllZones}
-          />
+
+        <IconButton
+          icon={allTopicZonesAreChecked ? <PinFullSVGIcon className="rs-icon" /> : <PinSVGIcon className="rs-icon" />}
+          onClick={handleCheckAllZones}
+        />
       </LayerTopic>
-      <RegulatoryLayerSearchResultZones
-        result={result}
-        searchedText={searchedText}
-        zonesAreOpen={zonesAreOpen}
-      />
+      <RegulatoryLayerSearchResultZones result={result} searchedText={searchedText} zonesAreOpen={zonesAreOpen} />
     </>
   )
 }
@@ -104,7 +96,7 @@ const LayerTopic = styled.div`
   font-weight: 700;
   color: ${COLORS.gunMetal};
   border-bottom: 1px solid ${COLORS.lightGray};
- 
+
   :hover {
     background: ${COLORS.shadowBlueLittleOpacity};
   }

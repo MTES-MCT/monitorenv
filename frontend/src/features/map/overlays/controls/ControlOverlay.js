@@ -1,21 +1,19 @@
 import React from 'react'
 
+import Layers from '../../../../domain/entities/layers'
 import { OverlayPositionOnCentroid } from '../OverlayPositionOnCentroid'
 import { ControlCard } from './ControlCard'
 
-import Layers from '../../../../domain/entities/layers'
-
-export const ControlOverlay = ({ map, currentFeatureOver }) => {
+export function ControlOverlay({ currentFeatureOver, map }) {
   const displayHoveredFeature = currentFeatureOver?.getId()?.startsWith(Layers.ACTIONS.code)
-  return (
-      <OverlayPositionOnCentroid 
-        feature={displayHoveredFeature && currentFeatureOver} 
-        map={map}
-        appClassName={'overlay-control-hover'}
-        >
-        <ControlCard feature={currentFeatureOver} />
-      </OverlayPositionOnCentroid>
-    )
 
-  
+  return (
+    <OverlayPositionOnCentroid
+      appClassName="overlay-control-hover"
+      feature={displayHoveredFeature && currentFeatureOver}
+      map={map}
+    >
+      <ControlCard feature={currentFeatureOver} />
+    </OverlayPositionOnCentroid>
+  )
 }

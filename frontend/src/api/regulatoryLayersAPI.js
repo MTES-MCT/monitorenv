@@ -1,26 +1,26 @@
-
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 import Layers from '../domain/entities/layers'
 import { GEOSERVER_NAMESPACE, GEOSERVER_REMOTE_URL } from '../env'
 
-const REGULATORY_ZONES_ERROR_MESSAGE = 'Nous n\'avons pas pu récupérer les zones réglementaires'
+const REGULATORY_ZONES_ERROR_MESSAGE = "Nous n'avons pas pu récupérer les zones réglementaires"
 const OK = 200
 
-export function getAllRegulatoryLayersFromAPI () {
+export function getAllRegulatoryLayersFromAPI() {
   const geoserverURL = GEOSERVER_REMOTE_URL
 
-  return fetch(`${geoserverURL}/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typename=${GEOSERVER_NAMESPACE}:` +
-    `${Layers.REGULATORY_ENV.code}&format_options=id_policy:id&outputFormat=application/json&propertyName=entity_name,layer_name,facade,ref_reg,thematique,type,geom`)
+  return fetch(
+    `${geoserverURL}/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typename=${GEOSERVER_NAMESPACE}:` +
+      `${Layers.REGULATORY_ENV.code}&format_options=id_policy:id&outputFormat=application/json&propertyName=entity_name,layer_name,facade,ref_reg,thematique,type,geom`
+  )
     .then(response => {
       if (response.status === OK) {
         return response.json()
-      } else {
-        response.text().then(text => {
-          console.error(text)
-        })
-        throw Error(REGULATORY_ZONES_ERROR_MESSAGE)
       }
+      response.text().then(text => {
+        console.error(text)
+      })
+      throw Error(REGULATORY_ZONES_ERROR_MESSAGE)
     })
     .catch(error => {
       console.error(error)
@@ -30,29 +30,28 @@ export function getAllRegulatoryLayersFromAPI () {
 
 export const regulatoryLayersAPI = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: `${GEOSERVER_REMOTE_URL}/geoserver/` }),
-  reducerPath: 'regulatoryLayers',
-  endpoints: (build) => ({
+  endpoints: build => ({
     getRegulatoryLayer: build.query({
-      query: ({id}) => ({
-        url: "wfs",
+      query: ({ id }) => ({
         params: {
-          'featureID': id,
-          'service': 'WFS',
-          'version': '1.1.0',
-          'request': 'GetFeature',
-          'typename': `${GEOSERVER_NAMESPACE}:${Layers.REGULATORY_ENV.code}`,
-          'format_options': 'id_policy:id',
-          'outputFormat': 'application/json'
-        }
+          featureID: id,
+          format_options: 'id_policy:id',
+          outputFormat: 'application/json',
+          request: 'GetFeature',
+          service: 'WFS',
+          typename: `${GEOSERVER_NAMESPACE}:${Layers.REGULATORY_ENV.code}`,
+          version: '1.1.0'
+        },
+        url: 'wfs'
       }),
-      transformResponse: (response) => {
-        return response?.features[0]
-      }
+      transformResponse: response => response?.features[0]
     }),
     getRegulatoryLayers: build.query({
-      query: () => `&propertyName=entity_name,url,layer_name,facade,ref_reg,observation,thematique,echelle,date,duree_validite,date_fin,temporalite,action,objet,type,signataire,geom`
+      query: () =>
+        `&propertyName=entity_name,url,layer_name,facade,ref_reg,observation,thematique,echelle,date,duree_validite,date_fin,temporalite,action,objet,type,signataire,geom`
     })
   }),
+  reducerPath: 'regulatoryLayers'
 })
 
 export const { useGetRegulatoryLayerQuery, useGetRegulatoryLayersQuery } = regulatoryLayersAPI

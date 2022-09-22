@@ -1,25 +1,26 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import styled, { css } from 'styled-components'
-import { IconButton } from 'rsuite'
 import Highlighter from 'react-highlight-words'
-
-import showRegulatoryZoneMetadata from '../../../../domain/use_cases/regulatory/showRegulatoryZoneMetadata'
-import { closeRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
-import { setRegulatoryGeometriesToPreview } from '../../../../domain/shared_slices/Regulatory'
-import { addRegulatoryZonesToMyLayers, removeRegulatoryZonesFromMyLayers } from '../../../../domain/shared_slices/Regulatory'
-
-import { getRegulatoryEnvColorWithAlpha } from '../../../map/layers/styles/administrativeAndRegulatoryLayers.style'
-import { REGPaperDarkIcon, REGPaperIcon } from '../../../commonStyles/icons/REGPaperIcon.style'
-import { ReactComponent as PinSVG } from '../../../../uiMonitor/icons/epingle.svg'
-import { ReactComponent as PinFullSVG } from '../../../../uiMonitor/icons/epingle_pleine.svg'
+import { useDispatch, useSelector } from 'react-redux'
+import { IconButton } from 'rsuite'
+import styled, { css } from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
+import {
+  setRegulatoryGeometriesToPreview,
+  addRegulatoryZonesToMyLayers,
+  removeRegulatoryZonesFromMyLayers
+} from '../../../../domain/shared_slices/Regulatory'
+import { closeRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
+import showRegulatoryZoneMetadata from '../../../../domain/use_cases/regulatory/showRegulatoryZoneMetadata'
+import { ReactComponent as PinSVG } from '../../../../uiMonitor/icons/epingle.svg'
+import { ReactComponent as PinFullSVG } from '../../../../uiMonitor/icons/epingle_pleine.svg'
+import { REGPaperDarkIcon, REGPaperIcon } from '../../../commonStyles/icons/REGPaperIcon.style'
+import { getRegulatoryEnvColorWithAlpha } from '../../../map/layers/styles/administrativeAndRegulatoryLayers.style'
 
-const RegulatoryLayerSearchResultZone = ({regulatoryZone, searchedText}) => {
+function RegulatoryLayerSearchResultZone({ regulatoryZone, searchedText }) {
   const dispatch = useDispatch()
   const { selectedRegulatoryLayerIds } = useSelector(state => state.regulatory)
-  const { regulatoryMetadataPanelIsOpen, regulatoryMetadataLayerId } = useSelector(state => state.regulatoryMetadata)
+  const { regulatoryMetadataLayerId, regulatoryMetadataPanelIsOpen } = useSelector(state => state.regulatoryMetadata)
   const isZoneSelected = selectedRegulatoryLayerIds.includes(regulatoryZone.id)
   const metadataIsShown = regulatoryMetadataPanelIsOpen && regulatoryZone.id === regulatoryMetadataLayerId
 
@@ -41,32 +42,30 @@ const RegulatoryLayerSearchResultZone = ({regulatoryZone, searchedText}) => {
       }
     }
   }
+
   return (
-    <Zone  $selected={isZoneSelected}>
-      <Rectangle $vectorLayerColor={getRegulatoryEnvColorWithAlpha(regulatoryZone?.doc?.properties?.thematique)}/>
-      <Name 
-        onClick={handleSelectRegulatoryZone}
-        title={regulatoryZone?.doc?.properties?.entity_name}
-      >
+    <Zone $selected={isZoneSelected}>
+      <Rectangle $vectorLayerColor={getRegulatoryEnvColorWithAlpha(regulatoryZone?.doc?.properties?.thematique)} />
+      <Name onClick={handleSelectRegulatoryZone} title={regulatoryZone?.doc?.properties?.entity_name}>
         <Highlighter
-            highlightClassName="highlight"
-            searchWords={(searchedText && searchedText.length > 0) ? searchedText.split(' '):[]}
-            autoEscape={true}
-            textToHighlight={regulatoryZone?.doc?.properties?.entity_name || ''}
-          />
+          autoEscape
+          highlightClassName="highlight"
+          searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
+          textToHighlight={regulatoryZone?.doc?.properties?.entity_name || ''}
+        />
         {!regulatoryZone?.doc?.properties?.entity_name && 'AUCUN NOM'}
       </Name>
-        {
-          metadataIsShown
-            ? <CustomREGPaperDarkIcon title="Fermer la réglementation" onClick={toggleRegulatoryZoneMetadata}/>
-            : <CustomREGPaperIcon title="Afficher la réglementation" onClick={toggleRegulatoryZoneMetadata}/>
-        }
-        <IconButton
-          data-cy={'regulatory-zone-check'}
-          icon={isZoneSelected ? <PinFullSVGIcon className='rs-icon' /> : <PinSVGIcon className='rs-icon' />}
-          size='sm'
-          onClick={handleSelectRegulatoryZone}
-        />
+      {metadataIsShown ? (
+        <CustomREGPaperDarkIcon onClick={toggleRegulatoryZoneMetadata} title="Fermer la réglementation" />
+      ) : (
+        <CustomREGPaperIcon onClick={toggleRegulatoryZoneMetadata} title="Afficher la réglementation" />
+      )}
+      <IconButton
+        data-cy="regulatory-zone-check"
+        icon={isZoneSelected ? <PinFullSVGIcon className="rs-icon" /> : <PinSVGIcon className="rs-icon" />}
+        onClick={handleSelectRegulatoryZone}
+        size="sm"
+      />
     </Zone>
   )
 }
@@ -102,11 +101,11 @@ const Zone = styled.span`
   text-align: left;
   font-size: 13px;
   padding-left: 20px;
-  background: ${props => props.$selected ? COLORS.gray : COLORS.background};
+  background: ${props => (props.$selected ? COLORS.gray : COLORS.background)};
   color: ${COLORS.gunMetal};
   padding-top: 1px;
   padding-bottom: 5px;
-  
+
   :hover {
     background: ${COLORS.shadowBlueLittleOpacity};
   }
@@ -114,7 +113,7 @@ const Zone = styled.span`
 
 const CustomPaperStyle = css`
   width: 21px;
-  height: 23px
+  height: 23px;
 `
 
 const CustomREGPaperIcon = styled(REGPaperIcon)`
@@ -123,7 +122,6 @@ const CustomREGPaperIcon = styled(REGPaperIcon)`
 const CustomREGPaperDarkIcon = styled(REGPaperDarkIcon)`
   ${CustomPaperStyle}
 `
-
 
 const PinSVGIcon = styled(PinSVG)`
   width: 18px;

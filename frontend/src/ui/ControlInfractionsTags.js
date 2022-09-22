@@ -1,11 +1,11 @@
 import React from 'react'
 import { Tag, TagGroup } from 'rsuite'
+
 import { getControlInfractionsTags } from '../features/missions/Missions.helpers'
 
-export const ControlInfractionsTags = ({actionNumberOfControls, infractions}) => {
+export function ControlInfractionsTags({ actionNumberOfControls, infractions }) {
+  const { infra, infraSansPV, med, ras } = getControlInfractionsTags(actionNumberOfControls, infractions)
 
-  const {ras, infra, infraSansPV, med} = getControlInfractionsTags(actionNumberOfControls, infractions)
-  
   return (
     <TagGroup>
       <Tag>{ras} RAS</Tag>

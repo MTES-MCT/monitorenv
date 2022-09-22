@@ -2,17 +2,14 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
+import { COLORS } from '../../../constants/constants'
+import { administrativeLayers } from '../../../domain/entities/administrativeLayers'
+import { toggleAdministrativeZones } from '../../../domain/shared_slices/LayerSidebar'
+import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 import AdministrativeLayer from './AdministrativeLayer'
 import AdministrativeLayerGroup from './AdministrativeLayerGroup'
 
-import { toggleAdministrativeZones } from '../../../domain/shared_slices/LayerSidebar'
-
-import {administrativeLayers} from '../../../domain/entities/administrativeLayers' 
-import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
-import { COLORS } from '../../../constants/constants'
-
-const AdministrativeLayers = () => {
-
+function AdministrativeLayers() {
   const dispatch = useDispatch()
   const { administrativeZonesIsOpen } = useSelector(state => state.layerSidebar)
 
@@ -23,35 +20,31 @@ const AdministrativeLayers = () => {
   return (
     <>
       <SectionTitle
+        data-cy="administrative-zones-open"
         onClick={onSectionTitleClicked}
         showZones={administrativeZonesIsOpen}
-        data-cy={'administrative-zones-open'}
       >
-        Zones administratives <ChevronIcon $right $isOpen={administrativeZonesIsOpen}/>
+        Zones administratives <ChevronIcon $isOpen={administrativeZonesIsOpen} $right />
       </SectionTitle>
-      {administrativeLayers && administrativeLayers.length
-        ? <ZonesList showZones={administrativeZonesIsOpen} zonesLength={administrativeLayers.length}>
-          {
-            administrativeLayers.map((layers, index) => {
-              if (layers.length === 1 && layers[0]) {
-                return <ListItem key={layers[0].code}>
-                  <AdministrativeLayer
-                    key={layers[0].code}
-                    layer={layers[0]}
-                  />
+      {administrativeLayers && administrativeLayers.length ? (
+        <ZonesList showZones={administrativeZonesIsOpen} zonesLength={administrativeLayers.length}>
+          {administrativeLayers.map((layers, index) => {
+            if (layers.length === 1 && layers[0]) {
+              return (
+                <ListItem key={layers[0].code}>
+                  <AdministrativeLayer key={layers[0].code} layer={layers[0]} />
                 </ListItem>
-              } else {
-                return <ListItem key={layers[0].group.code}>
-                  <AdministrativeLayerGroup
-                    isLastItem={administrativeLayers.length === index + 1}
-                    layers={layers}
-                  />
-                </ListItem>
-              }
-            })
-          }
+              )
+            }
+
+            return (
+              <ListItem key={layers[0].group.code}>
+                <AdministrativeLayerGroup isLastItem={administrativeLayers.length === index + 1} layers={layers} />
+              </ListItem>
+            )
+          })}
         </ZonesList>
-        : null}
+      ) : null}
     </>
   )
 }
@@ -70,8 +63,8 @@ const SectionTitle = styled.div`
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
-  border-bottom-left-radius: ${props => props.showZones ? '0' : '2px'};
-  border-bottom-right-radius: ${props => props.showZones ? '0' : '2px'};
+  border-bottom-left-radius: ${props => (props.showZones ? '0' : '2px')};
+  border-bottom-right-radius: ${props => (props.showZones ? '0' : '2px')};
 `
 
 const ZonesList = styled.ul`
@@ -79,7 +72,7 @@ const ZonesList = styled.ul`
   padding: 0;
   overflow-x: hidden;
   max-height: 70vh;
-  height: ${props => props.showZones && props.zonesLength ? 36 * props.zonesLength : 0}px;
+  height: ${props => (props.showZones && props.zonesLength ? 36 * props.zonesLength : 0)}px;
   background: ${COLORS.background};
   transition: 0.5s all;
   border-bottom-left-radius: 2px;

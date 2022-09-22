@@ -1,26 +1,22 @@
-import React from 'react'
 import _ from 'lodash'
+import React from 'react'
 import styled from 'styled-components'
 
-import { RegulatoryLayerGroupSecondLevel } from './RegulatoryLayerGroupSecondLevel'
 import { COLORS } from '../../../../constants/constants'
+import { RegulatoryLayerGroupSecondLevel } from './RegulatoryLayerGroupSecondLevel'
 
-export const RegulatoryLayerGroupFirstLevel = ({ groupName, results }) => {
-    const groupedResults = _.groupBy(results, r => r?.doc?.properties?.layer_name)
-    return (
-        <Wrapper>
-            <GroupName >
-                {groupName}
-            </GroupName>
-            {groupedResults && Object.entries(groupedResults).map(([subgroupName, groupedResult]) => {
-                return <RegulatoryLayerGroupSecondLevel
-                    key={subgroupName}
-                    groupName={subgroupName}
-                    result={groupedResult}
-                />
-            })}
-        </Wrapper>
-    )
+export function RegulatoryLayerGroupFirstLevel({ groupName, results }) {
+  const groupedResults = _.groupBy(results, r => r?.doc?.properties?.layer_name)
+
+  return (
+    <Wrapper>
+      <GroupName>{groupName}</GroupName>
+      {groupedResults &&
+        Object.entries(groupedResults).map(([subgroupName, groupedResult]) => (
+          <RegulatoryLayerGroupSecondLevel key={subgroupName} groupName={subgroupName} result={groupedResult} />
+        ))}
+    </Wrapper>
+  )
 }
 
 const Wrapper = styled.li`

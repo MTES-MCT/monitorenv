@@ -5,16 +5,16 @@ const SortType = {
   DESC: 'desc'
 }
 
-export function sortMissionsByProperty (a, b, sortColumn, sortType) {
-  let x = _.get(a, sortColumn)
-  let y = _.get(b, sortColumn)
+export function sortMissionsByProperty(a, b, sortColumn, sortType) {
+  const x = _.get(a, sortColumn)
+  const y = _.get(b, sortColumn)
 
   if (typeof x === 'string' && typeof y === 'string') {
     if (sortType === SortType.ASC) {
       return x.localeCompare(y)
-    } else {
-      return y.localeCompare(x)
     }
+
+    return y.localeCompare(x)
   }
 
   if (x === '' || x === null) {
@@ -26,7 +26,7 @@ export function sortMissionsByProperty (a, b, sortColumn, sortType) {
 
   if (sortType === SortType.ASC) {
     return x - y
-  } else {
-    return y - x
   }
+
+  return y - x
 }
