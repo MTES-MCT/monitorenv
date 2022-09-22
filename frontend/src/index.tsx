@@ -3,7 +3,7 @@ import { Integrations } from '@sentry/tracing'
 import { createRoot } from 'react-dom/client'
 
 import { App } from './App'
-import GlobalFonts from './fonts/fonts'
+import { GlobalStyle } from './fonts/fonts'
 
 import 'rsuite/dist/rsuite.min.css'
 import 'ol/ol.css'
@@ -39,7 +39,7 @@ const root = createRoot(container)
 
 root.render(
   <>
-    <GlobalFonts />
+    <GlobalStyle />
     <App />
   </>
 )
