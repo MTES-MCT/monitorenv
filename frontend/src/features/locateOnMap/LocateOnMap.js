@@ -1,17 +1,16 @@
 import _ from 'lodash'
-import { transformExtent } from 'ol/proj'
+import { transformExtent, transform } from 'ol/proj'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import styled from 'styled-components'
 import { IconButton, Input } from 'rsuite'
-import { transform } from 'ol/proj'
+import styled from 'styled-components'
 
 import { usePhotonAPI } from '../../api/photonAPI'
+import { COLORS } from '../../constants/constants'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map'
 import { setFitToExtent } from '../../domain/shared_slices/Map'
-import { ReactComponent as SearchIconSVG } from '../../uiMonitor/icons/Loupe.svg'
 import { ReactComponent as CloseIconSVG } from '../../uiMonitor/icons/Croix_grise.svg'
-import { COLORS } from '../../constants/constants'
+import { ReactComponent as SearchIconSVG } from '../../uiMonitor/icons/Loupe.svg'
 
 export function LocateOnMap() {
   const dispatch = useDispatch()
@@ -19,7 +18,6 @@ export function LocateOnMap() {
 
   const handleResetSearch = () => setSearchedLocation('')
   const handleOnchange = value => {
-    console.log('onchange', value)
     setSearchedLocation(value)
   }
 
@@ -53,39 +51,37 @@ export function LocateOnMap() {
     <Wrapper>
       <InputWrapper>
         <SearchBoxInput
-          data-cy={'location-search-input'}
+          data-cy="location-search-input"
           onChange={handleOnchange}
-          placeholder={'localiser la carte sur un lieu'}
+          placeholder="localiser la carte sur un lieu"
           type="text"
-          value={searchedLocation}/>
+          value={searchedLocation}
         />
 
         <IconButton
-          appearance='primary' 
-          icon={searchedLocation === '' ? <SearchIcon className={'rs-icon'} /> : <CloseIcon className={'rs-icon'}/>} 
+          appearance="primary"
+          icon={searchedLocation === '' ? <SearchIcon className="rs-icon" /> : <CloseIcon className="rs-icon" />}
           onClick={handleResetSearch}
-          title={'chercher un lieu'}
+          title="chercher un lieu"
         />
       </InputWrapper>
       <ResultsList>
         {uniqueResults &&
-          uniqueResults?.map(location => {
-            return (
-              <Location key={location.properties.osm_id} onClick={handleSelectLocation(location)}>
-                <Name>{location.properties.name}</Name>
+          uniqueResults?.map(location => (
+            <Location key={location.properties.osm_id} onClick={handleSelectLocation(location)}>
+              <Name>{location.properties.name}</Name>
 
-                <Country>
-                  {[
-                    location.properties.city || location.properties.osm_value,
-                    location.properties.state,
-                    location.properties.country
-                  ]
-                    .filter(t => t)
-                    .join(', ')}
-                </Country>
-              </Location>
-            )
-          })}
+              <Country>
+                {[
+                  location.properties.city || location.properties.osm_value,
+                  location.properties.state,
+                  location.properties.country
+                ]
+                  .filter(t => t)
+                  .join(', ')}
+              </Country>
+            </Location>
+          ))}
       </ResultsList>
     </Wrapper>
   )
