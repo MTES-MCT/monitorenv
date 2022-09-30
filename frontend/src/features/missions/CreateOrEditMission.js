@@ -114,8 +114,12 @@ export function CreateOrEditMission({ routeParams }) {
           missionStatus: mission?.missionStatus,
           missionType: mission?.missionType,
           observations: mission?.observations,
-          open_by: mission?.open_by,
-          resourceUnits: mission?.resourceUnits
+          openBy: mission?.openBy,
+          closedBy: mission?.closedBy,
+          inputStartDatetimeUtc: mission?.inputStartDatetimeUtc,
+          inputEndDatetimeUtc: mission?.inputEndDatetimeUtc || '',
+          resourceUnits: mission?.resourceUnits,
+          envActions: mission?.envActions
         }}
         onSubmit={handleSubmitForm}
       >

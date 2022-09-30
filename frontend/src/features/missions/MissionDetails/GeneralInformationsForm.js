@@ -61,12 +61,12 @@ export function GeneralInformationsForm() {
 
       <Form.Group>
         <ColWrapper>
-          <Form.ControlLabel htmlFor="open_by">Ouvert par</Form.ControlLabel>
-          <FormikInput name="open_by" />
+            <Form.ControlLabel htmlFor="openBy">Ouvert par</Form.ControlLabel>
+            <FormikInput  name="openBy"/>
         </ColWrapper>
         <ColWrapper>
-          <Form.ControlLabel htmlFor="closed_by">Clôturé par</Form.ControlLabel>
-          <FormikInput name="closed_by" />
+            <Form.ControlLabel htmlFor="closedBy">Clôturé par</Form.ControlLabel>
+            <FormikInput  name="closedBy"/>
         </ColWrapper>
       </Form.Group>
     </>

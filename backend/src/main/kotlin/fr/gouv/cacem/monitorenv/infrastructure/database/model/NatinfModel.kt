@@ -15,7 +15,7 @@ data class NatinfModel(
   @Column(name = "regulation")
   var regulation: String?,
   @Column(name = "infraction_category")
-  var infraction_category: String?,
+  var infractionCategory: String?,
   @Column(name = "infraction")
   var infraction: String?,
 ) {
@@ -23,7 +23,7 @@ data class NatinfModel(
     id = id,
     natinf_code = natinf_code,
     regulation = regulation,
-    infraction_category = infraction_category,
+    infractionCategory = infractionCategory,
     infraction = infraction
   )
 
@@ -32,7 +32,7 @@ data class NatinfModel(
       id = natinf.id,
       natinf_code = natinf.natinf_code,
       regulation = natinf.regulation,
-      infraction_category = natinf.infraction_category,
+      infractionCategory = natinf.infractionCategory,
       infraction = natinf.infraction
     )
   }

@@ -1,10 +1,11 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
+import fr.gouv.cacem.monitorenv.domain.mappers.EnvActionMapper
+import fr.gouv.cacem.monitorenv.domain.entities.missions.*
+
 import com.fasterxml.jackson.annotation.*
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType
-import fr.gouv.cacem.monitorenv.domain.entities.missions.*
-import fr.gouv.cacem.monitorenv.domain.mappers.EnvActionMapper
 import org.hibernate.Hibernate
 import org.hibernate.annotations.NaturalId
 import org.hibernate.annotations.Type

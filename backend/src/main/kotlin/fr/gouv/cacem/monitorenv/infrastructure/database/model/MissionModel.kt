@@ -55,9 +55,9 @@ data class MissionModel(
   @Enumerated(EnumType.STRING)
     var missionStatus: MissionStatusEnum,
   @Column(name = "open_by")
-    var open_by: String? = null,
+    var openBy: String? = null,
   @Column(name = "closed_by")
-    var closed_by: String? = null,
+    var closedBy: String? = null,
   @Column(name = "observations")
     var observations: String? = null,
   @Column(name = "facade")
@@ -85,8 +85,8 @@ data class MissionModel(
     resourceUnits = if (resourceUnits === null) listOf() else mapper.readValue(resourceUnits, mapper.typeFactory
       .constructCollectionType(MutableList::class.java, ResourceUnitEntity::class.java)),
     missionStatus = missionStatus,
-    open_by = open_by,
-    closed_by = closed_by,
+    openBy = openBy,
+    closedBy = closedBy,
     observations = observations,
     facade = facade,
     geom = geom,
@@ -103,8 +103,8 @@ data class MissionModel(
         missionNature = mission.missionNature,
         resourceUnits = if (mission.resourceUnits === null) null else mapper.writeValueAsString(mission.resourceUnits),
         missionStatus = mission.missionStatus,
-        open_by = mission.open_by,
-        closed_by = mission.closed_by,
+        openBy = mission.openBy,
+        closedBy = mission.closedBy,
         observations = mission.observations,
         facade = mission.facade,
         geom = mission.geom,
@@ -130,6 +130,6 @@ data class MissionModel(
 
   @Override
   override fun toString(): String {
-    return this::class.simpleName + "(id = $id , missionType = $missionType , missionNature = $missionNature ,  resourceUnits = $resourceUnits , missionStatus = $missionStatus , open_by = $open_by , closed_by = $closed_by , observations = $observations , facade = $facade , geom = $geom , inputStartDatetimeUtc = $inputStartDatetimeUtc , inputEndDatetimeUtc = $inputEndDatetimeUtc )"
+    return this::class.simpleName + "(id = $id , missionType = $missionType , missionNature = $missionNature ,  resourceUnits = $resourceUnits , missionStatus = $missionStatus , openBy = $openBy , closedBy = $closedBy , observations = $observations , facade = $facade , geom = $geom , inputStartDatetimeUtc = $inputStartDatetimeUtc , inputEndDatetimeUtc = $inputEndDatetimeUtc )"
   }
 }

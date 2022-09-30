@@ -67,6 +67,24 @@ export const actionFactory = ({ actionType, id, ...action } = {}) => {
         ...action
       }
   }
+  
+}
+
+export const missionFactory = (mission) => {
+  return {
+    missionType: missionTypeEnum.SEA.code,
+    missionNature: [],
+    resourceUnits: [resourceUnitFactory()],
+    missionStatus: missionStatusEnum.PENDING.code,
+    openBy: '',
+    closedBy: '',
+    observations: '',
+    geom: null,
+    inputStartDatetimeUtc: new Date(),
+    inputEndDatetimeUtc: '',
+    envActions: [],
+    ...mission
+  }
 }
 
 export const resourceUnitFactory = ({ ...resourceUnit } = {}) => ({
@@ -74,20 +92,6 @@ export const resourceUnitFactory = ({ ...resourceUnit } = {}) => ({
   resources: [],
   unit: '',
   ...resourceUnit
-})
-export const missionFactory = mission => ({
-  closed_by: '',
-  envActions: [],
-  geom: null,
-  inputEndDatetimeUtc: '',
-  inputStartDatetimeUtc: new Date(),
-  missionNature: [],
-  missionStatus: missionStatusEnum.PENDING.code,
-  missionType: missionTypeEnum.SEA.code,
-  observations: '',
-  open_by: '',
-  resourceUnits: [resourceUnitFactory()],
-  ...mission
 })
 
 export const getControlInfractionsTags = (actionNumberOfControls, infractions) => {
