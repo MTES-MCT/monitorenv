@@ -1,72 +1,72 @@
-import React from 'react'
+import SearchIcon from '@rsuite/icons/Search'
 import { Input, InputGroup, Grid, Row, Col } from 'rsuite'
-import SearchIcon from '@rsuite/icons/Search';
 
 export default {
   title: 'RsuiteMonitor/Input'
-};
+}
 
 const styles = {
   marginBottom: 10
-};
+}
 
-const CustomInput = ({ ...props }) => <Input {...props} style={styles} />;
+function CustomInput({ ...props }) {
+  return <Input {...props} style={styles} />
+}
 
-const CustomInputGroup = ({ placeholder, ...props }) => (
-  <InputGroup {...props} style={styles}>
-    <Input placeholder={placeholder} />
-    <InputGroup.Addon>
-      <SearchIcon />
-    </InputGroup.Addon>
-  </InputGroup>
-);
+function CustomInputGroup({ placeholder, ...props }) {
+  return (
+    <InputGroup {...props} style={styles}>
+      <Input placeholder={placeholder} />
+      <InputGroup.Addon>
+        <SearchIcon />
+      </InputGroup.Addon>
+    </InputGroup>
+  )
+}
 
-const CustomInputGroupWidthButton = ({ placeholder, ...props }) => (
-  <InputGroup {...props} inside style={styles}>
-    <Input placeholder={placeholder} />
-    <InputGroup.Button>
-      <SearchIcon />
-    </InputGroup.Button>
-  </InputGroup>
-);
+function CustomInputGroupWidthButton({ placeholder, ...props }) {
+  return (
+    <InputGroup {...props} inside style={styles}>
+      <Input placeholder={placeholder} />
+      <InputGroup.Button>
+        <SearchIcon />
+      </InputGroup.Button>
+    </InputGroup>
+  )
+}
 
-
-const TemplateInput = ({classPrefix, style})=> {
+function TemplateInput({ classPrefix, style }) {
   return (
     <Grid fluid style={style}>
       <Row>
-        <Col xs={24} sm={12} md={8}>
-          <CustomInput size="lg" placeholder="Large" classPrefix={classPrefix} />
-          <CustomInput size="md" placeholder="Medium" classPrefix={classPrefix}  />
-          <CustomInput size="sm" placeholder="Small" classPrefix={classPrefix}  />
-          <CustomInput size="xs" placeholder="Xsmall" classPrefix={classPrefix}  />
+        <Col md={8} sm={12} xs={24}>
+          <CustomInput classPrefix={classPrefix} placeholder="Large" size="lg" />
+          <CustomInput classPrefix={classPrefix} placeholder="Medium" size="md" />
+          <CustomInput classPrefix={classPrefix} placeholder="Small" size="sm" />
+          <CustomInput classPrefix={classPrefix} placeholder="Xsmall" size="xs" />
         </Col>
-        <Col xs={24} sm={12} md={8}>
-          <CustomInputGroup size="lg" placeholder="Large" classPrefix={classPrefix}  />
-          <CustomInputGroup size="md" placeholder="Medium" classPrefix={classPrefix}  />
-          <CustomInputGroup size="sm" placeholder="Small" classPrefix={classPrefix}  />
-          <CustomInputGroup size="xs" placeholder="Xsmall" classPrefix={classPrefix}  />
+        <Col md={8} sm={12} xs={24}>
+          <CustomInputGroup classPrefix={classPrefix} placeholder="Large" size="lg" />
+          <CustomInputGroup classPrefix={classPrefix} placeholder="Medium" size="md" />
+          <CustomInputGroup classPrefix={classPrefix} placeholder="Small" size="sm" />
+          <CustomInputGroup classPrefix={classPrefix} placeholder="Xsmall" size="xs" />
         </Col>
-        <Col xs={24} sm={12} md={8}>
-          <CustomInputGroupWidthButton size="lg" placeholder="Large" classPrefix={classPrefix}  />
-          <CustomInputGroupWidthButton size="md" placeholder="Medium" classPrefix={classPrefix}  />
-          <CustomInputGroupWidthButton size="sm" placeholder="Small" classPrefix={classPrefix}  />
-          <CustomInputGroupWidthButton size="xs" placeholder="Xsmall" classPrefix={classPrefix}  />
+        <Col md={8} sm={12} xs={24}>
+          <CustomInputGroupWidthButton classPrefix={classPrefix} placeholder="Large" size="lg" />
+          <CustomInputGroupWidthButton classPrefix={classPrefix} placeholder="Medium" size="md" />
+          <CustomInputGroupWidthButton classPrefix={classPrefix} placeholder="Small" size="sm" />
+          <CustomInputGroupWidthButton classPrefix={classPrefix} placeholder="Xsmall" size="xs" />
         </Col>
       </Row>
     </Grid>
   )
 }
 
-
-
 export const InputSizes = TemplateInput.bind({})
 
-const TemplateTextArea = ({rows}) => (
-  <>
-    <Input as="textarea" rows={rows} placeholder="Textarea" />
-  </>
-);
+function TemplateTextArea({ rows }) {
+  return <Input as="textarea" placeholder="Textarea" rows={rows} />
+}
 
 export const TextArea = TemplateTextArea.bind({})
 TextArea.args = {

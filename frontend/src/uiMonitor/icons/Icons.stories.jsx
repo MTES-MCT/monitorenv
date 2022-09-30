@@ -1,44 +1,42 @@
-import React from 'react';
-import styled from 'styled-components';
-import { COLORS } from '../../constants/constants';
+import styled from 'styled-components'
+
+import { COLORS } from '../../constants/constants'
 
 const reqSvgs = require.context('../icons', true, /\.svg$/)
 
 export default {
-  title: 'Monitor/Icons',
-};
+  title: 'Monitor/Icons'
+}
 
-
-const Template = ({background, color}) => {
-  return <Gallery>
-  {
-    reqSvgs.keys().map((path)=>{
-      return <ImageWrapper key={path}>
-          <Img src={reqSvgs(path)} background={background} color={color}></Img>
+function Template({ background, color }) {
+  return (
+    <Gallery>
+      {reqSvgs.keys().map(path => (
+        <ImageWrapper key={path}>
+          <Img $background={background} color={color} src={reqSvgs(path)} />
           {path}
-          </ImageWrapper>
-    }) 
-  }
-  </Gallery>
- }
- 
- export const NoBackground = Template.bind({});
- export const WithBackground = Template.bind({});
- WithBackground.args = {
+        </ImageWrapper>
+      ))}
+    </Gallery>
+  )
+}
+
+export const NoBackground = Template.bind({})
+export const WithBackground = Template.bind({})
+WithBackground.args = {
   background: COLORS.charcoal,
   color: 'white'
- }
+}
 
-
- const Img = styled.img`
-  background: ${({background}) => background || COLORS.white};
-  color: ${({color}) => color || COLORS.charcoal};
+const Img = styled.img`
+  background: ${({ $background }) => $background || COLORS.white};
+  color: ${({ color }) => color || COLORS.charcoal};
   width: 50px;
   margin: 3px;
- `
+`
 const ImageWrapper = styled.div``
 
 const Gallery = styled.div`
- height: 100%;
- overflow: auto;
+  height: 100%;
+  overflow: auto;
 `

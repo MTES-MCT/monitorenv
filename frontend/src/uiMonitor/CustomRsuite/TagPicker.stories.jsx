@@ -1,28 +1,29 @@
-import React from 'react'
-import { TagPicker as TagPickerComponent } from 'rsuite';
+import { TagPicker as TagPickerComponent } from 'rsuite'
 
-const data = ['Eugenia', 'Bryan', 'Linda', 'Nancy', 'Lloyd', 'Alice', 'Julia', 'Albert'].map(
-  item => ({ label: item, value: item })
-);
+const data = ['Eugenia', 'Bryan', 'Linda', 'Nancy', 'Lloyd', 'Alice', 'Julia', 'Albert'].map(item => ({
+  label: item,
+  value: item
+}))
 
-const styles = { width: 300, display: 'block', marginBottom: 10 };
+const styles = { display: 'block', marginBottom: 10, width: 300 }
 
 export default {
   title: 'RsuiteMonitor/Selecteurs'
-};
+}
 
-const TagPickerTemplate = () => (
-  <>
-    Large 
-    <TagPickerComponent size="lg" placeholder="Large" data={data} style={styles} />
-    Medium
-    <TagPickerComponent size="md" placeholder="Medium" data={data} style={styles} />
-    Small
-    <TagPickerComponent size="sm" placeholder="Small" data={data} style={styles} />
-    XSmall
-    <TagPickerComponent size="xs" placeholder="XSmall" data={data} style={styles} />
-  </>
-);
-
+function TagPickerTemplate() {
+  return (
+    <>
+      Large
+      <TagPickerComponent data={data} placeholder="Large" size="lg" style={styles} />
+      Medium
+      <TagPickerComponent data={data} placeholder="Medium" size="md" style={styles} />
+      Small
+      <TagPickerComponent data={data} placeholder="Small" size="sm" style={styles} />
+      XSmall
+      <TagPickerComponent data={data} placeholder="XSmall" size="xs" style={styles} />
+    </>
+  )
+}
 
 export const TagPicker = TagPickerTemplate.bind({})

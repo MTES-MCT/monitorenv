@@ -1,83 +1,81 @@
-import React, { useState} from 'react';
-import styled from 'styled-components';
-import { Checkbox, CheckboxGroup } from 'rsuite';
+import { useState } from 'react'
+import { Checkbox, CheckboxGroup } from 'rsuite'
+import styled from 'styled-components'
 
-import { COLORS } from '../../constants/constants';
+import { COLORS } from '../../constants/constants'
 
 export default {
   title: 'RsuiteMonitor/Selecteurs'
-};
+}
 
-const options = ['A', 'B', 'C', 'D', 'E'];
+const options = ['A', 'B', 'C', 'D', 'E']
 
-const TemplateCheckboxGrouped = ({...args}) => {
+function TemplateCheckboxGrouped({ ...args }) {
   const [checkboxState, setCheckboxState] = useState({
-    indeterminate: true,
     checkAll: false,
+    indeterminate: true,
     value: ['A', 'C', 'E']
   })
-  console.log(args)
   const handleCheckAll = (value, checked) => {
-    const nextValue = checked ? options : [];
-    console.log(nextValue, 'handleCheckAll');
+    const nextValue = checked ? options : []
+    console.log(nextValue, 'handleCheckAll')
     setCheckboxState({
-      value: nextValue,
+      checkAll: checked,
       indeterminate: false,
-      checkAll: checked
-    });
+      value: nextValue
+    })
   }
-  const handleChange = (value) => {
-    console.log(value, 'handleChange');
+  const handleChange = value => {
+    console.log(value, 'handleChange')
     setCheckboxState({
-      value,
+      checkAll: value.length === options.length,
       indeterminate: value.length > 0 && value.length < options.length,
-      checkAll: value.length === options.length
-    });
+      value
+    })
   }
+
   return (
     <>
       <div>
         <Checkbox
-          indeterminate={checkboxState.indeterminate}
           checked={checkboxState.checkAll}
+          indeterminate={checkboxState.indeterminate}
           onChange={handleCheckAll}
         >
           Check all
         </Checkbox>
         <hr />
-        <CheckboxGroup
-          inline
-          name="checkboxList"
-          value={checkboxState.value}
-          onChange={handleChange}
-        >
+        <CheckboxGroup inline name="checkboxList" onChange={handleChange} value={checkboxState.value}>
           <Checkbox value="A">Item A</Checkbox>
           <Checkbox value="B">Item B</Checkbox>
           <Checkbox value="C">Item C</Checkbox>
-          <Checkbox value="D" disabled>Item D - disabled</Checkbox>
-          <Checkbox value="E" disabled>Item E - disabled</Checkbox>
+          <Checkbox disabled value="D">
+            Item D - disabled
+          </Checkbox>
+          <Checkbox disabled value="E">
+            Item E - disabled
+          </Checkbox>
         </CheckboxGroup>
       </div>
       <GreyContainer>
         <Checkbox
-          indeterminate={checkboxState.indeterminate}
           checked={checkboxState.checkAll}
+          indeterminate={checkboxState.indeterminate}
           onChange={handleCheckAll}
         >
           Check all
         </Checkbox>
         <hr />
-        <CheckboxGroup
-          inline
-          name="checkboxList"
-          value={checkboxState.value}
-          onChange={handleChange}
-        >
+        <CheckboxGroup inline name="checkboxList" onChange={handleChange} value={checkboxState.value}>
           <Checkbox value="A">Item A</Checkbox>
           <Checkbox value="B">Item B</Checkbox>
           <Checkbox value="C">Item C</Checkbox>
-          <Checkbox value="D" disabled>Item D - disabled</Checkbox>
-          <Checkbox value="E" disabled>Item E - disabled</Checkbox>
+          <Checkbox disabled value="D">
+            Item D - disabled
+          </Checkbox>
+          <Checkbox disabled value="E">
+            Item E - disabled
+          </Checkbox>
         </CheckboxGroup>
       </GreyContainer>
     </>
@@ -87,5 +85,5 @@ const TemplateCheckboxGrouped = ({...args}) => {
 export const CheckboxGrouped = TemplateCheckboxGrouped.bind({})
 
 const GreyContainer = styled.div`
-  background: ${COLORS.lightGray}
+  background: ${COLORS.lightGray};
 `
