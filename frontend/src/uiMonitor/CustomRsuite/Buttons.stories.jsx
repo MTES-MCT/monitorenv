@@ -71,6 +71,11 @@ SmallButtons.args = {
   size: "sm",
   label: "Editer"
 }
+export const LargeButtons = TemplateButtons.bind({})
+LargeButtons.args = {
+  size: "lg",
+  label: "Editer"
+}
 
 const TemplateIconButtons = ({label, ...args}) => {
   return (
@@ -89,6 +94,14 @@ const TemplateIconButtons = ({label, ...args}) => {
         <IconButton appearance="link" size={"sm"} {...args} icon={<StarIcon />} />
         <IconButton appearance="subtle" size={"sm"} {...args} icon={<StarIcon />} />
         <IconButton appearance="ghost" size={"sm"} {...args} icon={<StarIcon />} />
+      </ButtonToolbar>
+      <br/>
+      <ButtonToolbar>
+        <IconButton appearance="default" size={"lg"} {...args} icon={<StarIcon />} />
+        <IconButton appearance="primary" size={"lg"} {...args} icon={<StarIcon />} />
+        <IconButton appearance="link" size={"lg"} {...args} icon={<StarIcon />} />
+        <IconButton appearance="subtle" size={"lg"} {...args} icon={<StarIcon />} />
+        <IconButton appearance="ghost" size={"lg"} {...args} icon={<StarIcon />} />
       </ButtonToolbar>
       <br/>
     </>

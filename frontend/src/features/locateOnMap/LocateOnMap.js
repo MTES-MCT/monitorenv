@@ -16,7 +16,7 @@ export function LocateOnMap() {
   const dispatch = useDispatch()
   const [searchedLocation, setSearchedLocation] = useState('')
 
-  const handleResetSearch = () => setSearchedLocation('')
+  // const handleResetSearch = () => setSearchedLocation('')
   const handleOnchange = value => {
     setSearchedLocation(value)
   }
@@ -49,21 +49,17 @@ export function LocateOnMap() {
 
   return (
     <Wrapper>
-      <InputWrapper>
+      <InputWrapper inside>
         <SearchBoxInput
-          data-cy="location-search-input"
-          onChange={handleOnchange}
-          placeholder="localiser la carte sur un lieu"
+          data-cy={'location-search-input'}
+          placeholder={'rechercher un lieu (port, lieu-dit, baie...)'}
           type="text"
           value={searchedLocation}
-        />
-
-        <IconButton
-          appearance="primary"
-          icon={searchedLocation === '' ? <SearchIcon className="rs-icon" /> : <CloseIcon className="rs-icon" />}
-          onClick={handleResetSearch}
-          title="chercher un lieu"
-        />
+          size='lg'
+          onChange={handleOnchange}/>
+        <InputGroup.Addon>
+          <SearchIcon className={'rs-icon'} />
+        </InputGroup.Addon>
       </InputWrapper>
       <ResultsList>
         {uniqueResults &&
@@ -91,32 +87,42 @@ const Wrapper = styled.div`
   position: absolute;
   top: 10px;
   right: 10px;
+  width: 320px;
 `
-const InputWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+const InputWrapper = styled(InputGroup)`
+  border: 0;
+  box-shadow: 0px 3px 6px ${COLORS.slateGray};
+  :focus-within {
+    outline: none !important;
+    border-bottom: 2px solid ${COLORS.blueJeans};
+  }
 `
+
+  // display: flex;
+  // align-items: center;
+  // justify-content: flex-end;
 
 const SearchBoxInput = styled(Input)`
   display: inline-block;
   background-color: white;
-  padding-left: 4px;
-  width: ${props => (props.value?.length > 0 ? '300px' : '200px')};
-  transition: all 0.5s;
+  padding-left: 16px;
+  padding-top: 11px;
+  padding-bottom: 11px;
+  font-size: 13px;
+  line-height: 18px;
   :focus {
-    width: 300px;
+    outline: none !important;
   }
+  .rs-input-group-addon {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  
 `
 
 const SearchIcon = styled(SearchIconSVG)`
-  width: 16px;
-  height: 16px;
-`
-
-const CloseIcon = styled(CloseIconSVG)`
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
 `
 
 const ResultsList = styled.ul`

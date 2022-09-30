@@ -130,6 +130,10 @@ label {
   padding: 2px;
 }
 
+.rs-btn-icon.rs-btn-lg {
+  padding: 10px;
+}
+
 .rs-btn-icon-with-text.rs-btn {
   line-height: 18px;
 }
