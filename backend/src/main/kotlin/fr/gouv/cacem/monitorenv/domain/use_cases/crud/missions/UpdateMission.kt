@@ -3,10 +3,14 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionStatusEnum
+import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 
 @UseCase
-class UpdateMission(private val missionRepository: IMissionRepository) {
+class UpdateMission(
+  private val missionRepository: IMissionRepository,
+  private val facadeAreasRepository: IFacadeAreasRepository
+) {
   @Throws(IllegalArgumentException::class)
   fun execute(mission: MissionEntity?): MissionEntity {
     require(mission != null) {
@@ -27,6 +31,14 @@ class UpdateMission(private val missionRepository: IMissionRepository) {
         val missionToSave = mission.copy(missionStatus = status)
         return missionRepository.save(missionToSave)
     }
+
+    if (mission.geom != null) {
+      val missionToSave = mission.copy(
+        facade = facadeAreasRepository.findFacadeFromMission(mission.geom)
+      )
+      return missionRepository.save(missionToSave)
+    }
+
     return missionRepository.save(mission)
   }
 }

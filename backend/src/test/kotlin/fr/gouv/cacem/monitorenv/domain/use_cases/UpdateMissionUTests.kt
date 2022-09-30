@@ -9,6 +9,7 @@
  import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionNatureEnum
  import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionStatusEnum
  import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
+ import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
  import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.UpdateMission
  import org.assertj.core.api.Assertions.assertThat
  import org.assertj.core.api.Assertions.catchThrowable
@@ -24,11 +25,14 @@
      @MockBean
      private lateinit var missionRepository: IMissionRepository
 
+     @MockBean
+     private lateinit var facadeAreasRepository: IFacadeAreasRepository
+
      @Test
      fun `execute Should throw an exception When no mission to update is given`() {
          // When
          val throwable = catchThrowable {
-             UpdateMission(missionRepository)
+             UpdateMission(missionRepository, facadeAreasRepository)
                      .execute(null)
          }
 
@@ -53,7 +57,7 @@
        )
 
        // When
-       val updatedMission = UpdateMission(missionRepository)
+       val updatedMission = UpdateMission(missionRepository, facadeAreasRepository)
                .execute(expectedUpdatedMission)
 
        // Then
