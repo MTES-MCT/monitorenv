@@ -1,11 +1,10 @@
 import React from 'react'
-// import React, { useState } from 'react'
 
 import { FEATURE_FLAGS } from '../../features'
 import BaseMap from './BaseMap'
 import LayerDetailsBox from './controls/LayerDetailsBox'
 import MapCoordinatesBox from './controls/MapCoordinatesBox'
-import AdministrativeLayers from './layers/AdministrativeLayers'
+import { AdministrativeLayers } from './layers/AdministrativeLayers'
 import BaseLayer from './layers/BaseLayer'
 import { DrawLayer } from './layers/DrawLayer'
 import { EditingMissionLayer } from './layers/EditingMissionLayer'
@@ -20,7 +19,7 @@ import { MapExtentController } from './MapExtentController'
 import MapHistory from './MapHistory'
 import { ControlOverlay } from './overlays/controls/ControlOverlay'
 import { MissionOverlays } from './overlays/missions/MissionOverlays'
-import ShowRegulatoryMetadata from './ShowRegulatoryMetadata'
+import { ShowRegulatoryMetadata } from './ShowRegulatoryMetadata'
 
 function Map() {
   // const [shouldUpdateView, setShouldUpdateView] = useState(true)

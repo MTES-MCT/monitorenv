@@ -11,7 +11,7 @@ import {
   removeRegulatoryZonesFromMyLayers
 } from '../../../../domain/shared_slices/Regulatory'
 import { closeRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
-import showRegulatoryZoneMetadata from '../../../../domain/use_cases/regulatory/showRegulatoryZoneMetadata'
+import { showRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/showRegulatoryZoneMetadata'
 import { ReactComponent as PinSVG } from '../../../../uiMonitor/icons/epingle.svg'
 import { ReactComponent as PinFullSVG } from '../../../../uiMonitor/icons/epingle_pleine.svg'
 import { REGPaperDarkIcon, REGPaperIcon } from '../../../commonStyles/icons/REGPaperIcon.style'

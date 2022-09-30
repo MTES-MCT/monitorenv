@@ -2,10 +2,10 @@ import _ from 'lodash'
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
-import Layers, { layersType } from '../../../domain/entities/layers'
+import { Layers, layersType } from '../../../domain/entities/layers'
 import { getAdministrativeVectorLayer } from '../../../domain/use_cases/administrative/showAdministrativeLayer'
 
-function AdministrativeLayers({ map }) {
+export function AdministrativeLayers({ map }) {
   const { showedAdministrativeLayerIds } = useSelector(state => state.administrative)
 
   useEffect(() => {
@@ -33,5 +33,3 @@ function AdministrativeLayers({ map }) {
 
   return null
 }
-
-export default AdministrativeLayers

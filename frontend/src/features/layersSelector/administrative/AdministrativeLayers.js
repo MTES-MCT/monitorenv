@@ -1,4 +1,3 @@
-import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -9,7 +8,7 @@ import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 import AdministrativeLayer from './AdministrativeLayer'
 import AdministrativeLayerGroup from './AdministrativeLayerGroup'
 
-function AdministrativeLayers() {
+export function AdministrativeLayers() {
   const dispatch = useDispatch()
   const { administrativeZonesIsOpen } = useSelector(state => state.layerSidebar)
 
@@ -90,5 +89,3 @@ const ListItem = styled.li`
   color: ${COLORS.gunMetal};
   border-bottom: 1px solid ${COLORS.lightGray};
 `
-
-export default AdministrativeLayers

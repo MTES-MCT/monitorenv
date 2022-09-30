@@ -4,7 +4,7 @@ import VectorSource from 'ol/source/Vector'
 import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import Layers from '../../../domain/entities/layers'
+import { Layers } from '../../../domain/entities/layers'
 import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import { regulatoryPreviewStyle } from './styles/regulatoryPreview.style'

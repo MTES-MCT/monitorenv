@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-import Layers from '../domain/entities/layers'
+import { Layers } from '../domain/entities/layers'
 import { GEOSERVER_NAMESPACE, GEOSERVER_REMOTE_URL } from '../env'
 
 const REGULATORY_ZONES_ERROR_MESSAGE = "Nous n'avons pas pu récupérer les zones réglementaires"

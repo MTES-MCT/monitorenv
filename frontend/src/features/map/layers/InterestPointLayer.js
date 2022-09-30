@@ -14,7 +14,7 @@ import {
   coordinatesOrTypeAreModified,
   interestPointType
 } from '../../../domain/entities/interestPoints'
-import Layers from '../../../domain/entities/layers'
+import { Layers } from '../../../domain/entities/layers'
 import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map'
 import {
   deleteInterestPointBeingDrawed,

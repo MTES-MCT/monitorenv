@@ -4,7 +4,7 @@ import VectorSource from 'ol/source/Vector'
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
-import Layers from '../../../domain/entities/layers'
+import { Layers } from '../../../domain/entities/layers'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map'
 import { getAdministrativeAndRegulatoryLayersStyle } from './styles/administrativeAndRegulatoryLayers.style.js'
 

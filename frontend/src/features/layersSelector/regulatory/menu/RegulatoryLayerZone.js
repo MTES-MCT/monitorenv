@@ -1,6 +1,5 @@
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
-import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import styled, { css } from 'styled-components'
 
@@ -13,7 +12,7 @@ import {
   showRegulatoryLayer
 } from '../../../../domain/shared_slices/Regulatory'
 import { closeRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
-import showRegulatoryZoneMetadata from '../../../../domain/use_cases/regulatory/showRegulatoryZoneMetadata'
+import { showRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/showRegulatoryZoneMetadata'
 import { CloseIcon } from '../../../commonStyles/icons/CloseIcon.style'
 import { HideIcon } from '../../../commonStyles/icons/HideIcon.style'
 import { REGPaperDarkIcon, REGPaperIcon } from '../../../commonStyles/icons/REGPaperIcon.style'

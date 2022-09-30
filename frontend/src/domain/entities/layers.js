@@ -35,7 +35,7 @@ export const layersType = {
   REGULATORY: 'REGULATORY'
 }
 
-const Layers = {
+export const Layers = {
   ACTIONS: {
     code: 'actions',
     zIndex: 1110
@@ -60,6 +60,16 @@ const Layers = {
     subZoneFieldKey: null,
     type: layersType.BASE_LAYER
   },
+  brexit: {
+    code: 'brexit_areas',
+    containsMultipleZones: true,
+    group: layersGroups.VMS_SITUATION_BREXIT,
+    isIntersectable: true,
+    name: 'Zones pour situation Brexit',
+    showMultipleZonesInAdministrativeZones: true,
+    subZoneFieldKey: 'nom',
+    type: layersType.ADMINISTRATIVE
+  },
   CCAMLR: {
     code: 'fao_ccamlr_areas',
     containsMultipleZones: false,
@@ -70,22 +80,12 @@ const Layers = {
     subZoneFieldKey: null,
     type: layersType.ADMINISTRATIVE
   },
-  brexit: {
-    code: 'brexit_areas',
-    containsMultipleZones: true,
-    group: layersGroups.VMS_SITUATION_BREXIT,
-    name: 'Zones pour situation Brexit',
-    showMultipleZonesInAdministrativeZones: true,
-    isIntersectable: true,
-    type: layersType.ADMINISTRATIVE,
-    subZoneFieldKey: 'nom'
-  },
   cgpm_areas: {
     code: 'cgpm_areas',
     containsMultipleZones: true,
     group: layersGroups.ORGP,
-    name: 'Zones CGPM',
     isIntersectable: true,
+    name: 'Zones CGPM',
     showMultipleZonesInAdministrativeZones: false,
     subZoneFieldKey: 'SMU_CODE',
     type: layersType.ADMINISTRATIVE
@@ -377,7 +377,5 @@ export const baseLayers = {
   }
 }
 
-export const SelectableLayers = [Layers.MISSIONS.code]
+export const SelectableLayers = [Layers.MISSIONS.code, Layers.REGULATORY_PREVIEW.code]
 export const HoverableLayers = [Layers.MISSIONS.code, Layers.ACTIONS.code]
-
-export default Layers

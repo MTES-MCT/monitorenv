@@ -7,7 +7,7 @@ import { closeRegulatoryZoneMetadata } from '../../domain/use_cases/regulatory/c
 import { ReactComponent as LayersSVG } from '../../uiMonitor/icons/Couches.svg'
 import { MapButtonStyle } from '../commonStyles/MapButton.style'
 import { MapComponentStyle } from '../commonStyles/MapComponent.style'
-import AdministrativeLayers from './administrative/AdministrativeLayers'
+import { AdministrativeLayers } from './administrative/AdministrativeLayers'
 import BaseLayers from './base/BaseLayers'
 import RegulatoryLayers from './regulatory/menu/RegulatoryLayers'
 import RegulatoryLayerZoneMetadata from './regulatory/metadata/RegulatoryLayerZoneMetadata'

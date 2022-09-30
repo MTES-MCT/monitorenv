@@ -1,29 +1,22 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
-import LayersEnum from '../../domain/entities/layers'
-import showRegulatoryZoneMetadata from '../../domain/use_cases/regulatory/showRegulatoryZoneMetadata'
+import { Layers } from '../../domain/entities/layers'
+import { showRegulatoryZoneMetadata } from '../../domain/use_cases/regulatory/showRegulatoryZoneMetadata'
 
-function ShowRegulatoryMetadata({ mapClickEvent }) {
+export function ShowRegulatoryMetadata({ mapClickEvent }) {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (mapClickEvent && mapClickEvent.feature) {
-      showRegulatoryZoneMetadataOnClick(mapClickEvent.feature)
-    }
-  }, [mapClickEvent])
-
-  function showRegulatoryZoneMetadataOnClick(feature) {
-    if (feature?.getId()?.toString()?.includes(LayersEnum.REGULATORY.code)) {
-      const zone = {
-        topic: feature.getProperties().layer_name,
-        zone: feature.getProperties().zones
+    if (mapClickEvent?.feature) {
+      const feature = mapClickEvent?.feature
+      console.log('mapClickEvent', feature)
+      if (feature.getId()?.toString()?.includes(Layers.REGULATORY_PREVIEW.code)) {
+        const props = feature.get('layerId')
+        dispatch(showRegulatoryZoneMetadata(props))
       }
-      dispatch(showRegulatoryZoneMetadata(zone))
     }
-  }
+  }, [dispatch, mapClickEvent])
 
   return null
 }
-
-export default ShowRegulatoryMetadata
