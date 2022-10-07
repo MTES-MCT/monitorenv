@@ -41,9 +41,7 @@ export function LocateOnMap() {
   ).slice(0, 10)
 
   const handleSelectLocation = location => () => {
-    dispatch(
-      setFitToExtent({ extent: transformExtent(location.properties.extent, WSG84_PROJECTION, OPENLAYERS_PROJECTION) })
-    )
+    dispatch(setFitToExtent(transformExtent(location.properties.extent, WSG84_PROJECTION, OPENLAYERS_PROJECTION)))
   }
 
   return (
@@ -94,7 +92,7 @@ const InputWrapper = styled(InputGroup)`
   box-shadow: 0px 3px 6px ${COLORS.slateGray};
   :focus-within {
     outline: none !important;
-    border-bottom: 2px solid ${COLORS.blueJeans};
+    border-bottom: 2px solid ${COLORS.blueGray};
   }
 `
 

@@ -1,7 +1,8 @@
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
-import { useSelector, useDispatch } from 'react-redux'
-import styled, { css } from 'styled-components'
+import { useDispatch } from 'react-redux'
+import { IconButton } from 'rsuite'
+import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map'
@@ -13,19 +14,19 @@ import {
 } from '../../../../domain/shared_slices/Regulatory'
 import { closeRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
 import { showRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/showRegulatoryZoneMetadata'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { RegulatoryLayerLegend } from '../../../../ui/RegulatoryLayerLegend'
 import { ReactComponent as CloseSVG } from '../../../../uiMonitor/icons/Close.svg'
 import { ReactComponent as DisplaySVG } from '../../../../uiMonitor/icons/Display.svg'
 import { ReactComponent as HideIconSVG } from '../../../../uiMonitor/icons/Hide.svg'
 import { ReactComponent as SummarySVG } from '../../../../uiMonitor/icons/Summary.svg'
-import { getRegulatoryEnvColorWithAlpha } from '../../../map/layers/styles/administrativeAndRegulatoryLayers.style'
+import { REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT } from '../search/RegulatoryLayerSearchResultZone'
 
-function RegulatoryLayerZone({ regulatoryZone }) {
+export function RegulatoryLayerZone({ regulatoryZone }) {
   const dispatch = useDispatch()
-  const { showedRegulatoryLayerIds } = useSelector(state => state.regulatory)
-  const { regulatoryZonesChecked } = useSelector(state => state.regulatoryLayerSearch)
-  const { regulatoryMetadataLayerId, regulatoryMetadataPanelIsOpen } = useSelector(state => state.regulatoryMetadata)
+  const { showedRegulatoryLayerIds } = useAppSelector(state => state.regulatory)
+  const { regulatoryMetadataLayerId, regulatoryMetadataPanelIsOpen } = useAppSelector(state => state.regulatoryMetadata)
   const regulatoryZoneIsShowed = showedRegulatoryLayerIds.includes(regulatoryZone.id)
-  const isZoneSelected = regulatoryZonesChecked.includes(regulatoryZone.id)
   const metadataIsShown = regulatoryMetadataPanelIsOpen && regulatoryZone.id === regulatoryMetadataLayerId
 
   const handleRemoveZone = () => dispatch(removeRegulatoryZonesFromMyLayers([regulatoryZone.id]))
@@ -35,8 +36,10 @@ function RegulatoryLayerZone({ regulatoryZone }) {
       new Projection({ code: WSG84_PROJECTION }),
       new Projection({ code: OPENLAYERS_PROJECTION })
     )
-    !regulatoryZoneIsShowed && dispatch(showRegulatoryLayer(regulatoryZone.id))
-    dispatch(setFitToExtent({ extent }))
+    if (!regulatoryZoneIsShowed) {
+      dispatch(showRegulatoryLayer(regulatoryZone.id))
+    }
+    dispatch(setFitToExtent(extent))
   }
 
   const toggleLayerDisplay = () => {
@@ -51,39 +54,55 @@ function RegulatoryLayerZone({ regulatoryZone }) {
   const displayedName = regulatoryZone?.properties?.entity_name.replace(/[_]/g, ' ') || 'AUNCUN NOM'
 
   const toggleRegulatoryZoneMetadata = () => {
-    metadataIsShown ? dispatch(closeRegulatoryZoneMetadata()) : dispatch(showRegulatoryZoneMetadata(regulatoryZone.id))
+    if (metadataIsShown) {
+      dispatch(closeRegulatoryZoneMetadata())
+    } else {
+      dispatch(showRegulatoryZoneMetadata(regulatoryZone.id))
+    }
   }
 
   return (
-    <Zone $selected={isZoneSelected}>
-      <Rectangle $vectorLayerColor={getRegulatoryEnvColorWithAlpha(regulatoryZone?.doc?.properties?.thematique)} />
-      <Name onClick={toggleLayerDisplay} title={displayedName}>
-        {displayedName}
-      </Name>
+    <Zone $selected={metadataIsShown}>
+      <RegulatoryLayerLegend
+        entity_name={regulatoryZone?.properties?.entity_name}
+        thematique={regulatoryZone?.properties?.thematique}
+      />
+      <Name title={displayedName}>{displayedName}</Name>
       <Icons>
         {metadataIsShown ? (
-          <CustomREGPaperDarkIcon onClick={toggleRegulatoryZoneMetadata} title="Fermer la réglementation" />
-        ) : (
-          <CustomREGPaperIcon onClick={toggleRegulatoryZoneMetadata} title="Afficher la réglementation" />
-        )}
-        {regulatoryZoneIsShowed ? (
-          <DisplaySVG
-            data-cy="regulatory-layers-my-zones-zone-hide"
-            onClick={toggleLayerDisplay}
-            title="Cacher la zone"
+          <IconButton 
+            onClick={toggleRegulatoryZoneMetadata} 
+            title="Fermer la réglementation" 
+            icon={<CustomREGPaperIcon />}
+            size='sm'
+            active
           />
+      
         ) : (
-          <HideIconSVG
-            data-cy="regulatory-layers-my-zones-zone-show"
-            onClick={toggleLayerDisplay}
-            title="Afficher la zone"
-          />
+          <IconButton
+            onClick={toggleRegulatoryZoneMetadata} 
+            title="Afficher la réglementation" 
+            icon={<CustomREGPaperIcon />}
+            size='sm'
+            />
         )}
-        <CloseSVG
+        
+        <IconButton 
+          data-cy={regulatoryZoneIsShowed ? "regulatory-layers-my-zones-zone-hide" :"regulatory-layers-my-zones-zone-show"}
+          onClick={toggleLayerDisplay}
+          title={regulatoryZoneIsShowed ? "Cacher la zone":"Afficher la zone"}
+          icon={regulatoryZoneIsShowed ? <DisplaySVG /> : <HideIconSVG />}
+          size='sm'
+        />
+
+        <IconButton 
           data-cy="regulatory-layers-my-zones-zone-delete"
           onClick={handleRemoveZone}
           title="Supprimer la zone de ma sélection"
-        />
+          icon={<CloseSVG />}
+          size='sm'
+          />   
+        
       </Icons>
     </Zone>
   )
@@ -92,60 +111,40 @@ function RegulatoryLayerZone({ regulatoryZone }) {
 const Name = styled.span`
   width: 280px;
   text-overflow: ellipsis;
+  white-space: nowrap;
   overflow-x: hidden !important;
   font-size: inherit;
-  margin-top: 5px;
   text-align: left;
+  span {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 `
 
-const Rectangle = styled.div`
-  width: 14px;
-  height: 14px;
-  background: ${props => props.$vectorLayerColor || COLORS.gray};
-  border: 1px solid ${COLORS.grayDarkerTwo};
-  display: inline-block;
-  margin-right: 10px;
-  margin-top: 9px;
-  flex-shrink: 0;
-`
-
-const Zone = styled.span`
+const Zone = styled.span<{$selected: boolean}>`
   user-select: none;
   display: flex;
   font-size: 13px;
   padding-left: 20px;
-  background: ${props => (props.$selected ? COLORS.gray : COLORS.background)};
+  background: ${props => (props.$selected ? COLORS.gainsboro : COLORS.background)};
   color: ${COLORS.gunMetal};
-  padding-top: 1px;
-  padding-bottom: 5px;
+  height: ${REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT}px;
+  align-items: center;
 
   :hover {
-    background: ${COLORS.shadowBlueLittleOpacity};
+    background: ${COLORS.blueYonder25};
   }
 `
 
-const CustomPaperStyle = css`
-  width: 23px;
-  float: right;
-  flex-shrink: 0;
-  height: 30px;
-  cursor: pointer;
-`
 
 const CustomREGPaperIcon = styled(SummarySVG)`
-  ${CustomPaperStyle}
-`
-const CustomREGPaperDarkIcon = styled(SummarySVG)`
-  ${CustomPaperStyle}
-  color: ${COLORS.charcoal};
+  
 `
 
 const Icons = styled.span`
-  float: right;
   display: flex;
   justify-content: flex-end;
   align-items: center;
   flex: 1;
+  margin-right: 4px;
 `
-
-export default RegulatoryLayerZone

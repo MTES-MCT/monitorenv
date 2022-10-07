@@ -1,24 +1,23 @@
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import styled from 'styled-components'
+import { useDispatch } from 'react-redux'
 import { IconButton } from 'rsuite'
+import styled from 'styled-components'
 
 import { COLORS } from '../../constants/constants'
 import { closeRegulatoryZoneMetadata } from '../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
+import { useAppSelector } from '../../hooks/useAppSelector'
 import { ReactComponent as LayersSVG } from '../../uiMonitor/icons/couches_carto.svg'
-import { MapComponentStyle } from '../commonStyles/MapComponent.style'
 import { AdministrativeLayers } from './administrative/AdministrativeLayers'
 import BaseLayers from './base/BaseLayers'
-import RegulatoryLayers from './regulatory/menu/RegulatoryLayers'
-import RegulatoryLayerZoneMetadata from './regulatory/metadata/RegulatoryLayerZoneMetadata'
-import RegulatoryLayerSearch from './regulatory/search/RegulatoryLayerSearch'
+import {RegulatoryLayers} from './regulatory/menu/RegulatoryLayers'
+import { RegulatoryLayerZoneMetadata } from './regulatory/metadata/RegulatoryLayerZoneMetadata'
+import { RegulatoryLayerSearch } from './regulatory/search/RegulatoryLayerSearch'
 
 function LayersSidebar() {
-  const { regulatoryMetadataPanelIsOpen } = useSelector(state => state.regulatoryMetadata)
+  const { regulatoryMetadataPanelIsOpen } = useAppSelector(state => state.regulatoryMetadata)
   const dispatch = useDispatch()
 
   const [layersSidebarIsOpen, setLayersSidebarIsOpen] = useState(false)
-  const [numberOfRegulatoryLayersSaved, setNumberOfRegulatoryLayersSaved] = useState(0)
   const toggleLayerSidebar = () => {
     layersSidebarIsOpen && dispatch(closeRegulatoryZoneMetadata())
     setLayersSidebarIsOpen(!layersSidebarIsOpen)
@@ -31,20 +30,16 @@ function LayersSidebar() {
         data-cy="layers-sidebar"
         icon={<LayersSVG className="rs-icon" />}
         onClick={toggleLayerSidebar}
+        size="lg"
         title="Couches réglementaires"
-        size='lg'
       />
       <Sidebar
         isVisible={layersSidebarIsOpen || regulatoryMetadataPanelIsOpen}
         layersSidebarIsOpen={layersSidebarIsOpen}
       >
-        <RegulatoryLayerSearch
-          layersSidebarIsOpen={layersSidebarIsOpen}
-          numberOfRegulatoryLayersSaved={numberOfRegulatoryLayersSaved}
-          setNumberOfRegulatoryLayersSaved={setNumberOfRegulatoryLayersSaved}
-        />
+        <RegulatoryLayerSearch />
         <Layers>
-          <RegulatoryLayers regulatoryLayersAddedToMySelection={numberOfRegulatoryLayersSaved} />
+          <RegulatoryLayers />
           <AdministrativeLayers />
           <BaseLayers />
         </Layers>
@@ -56,7 +51,7 @@ function LayersSidebar() {
   )
 }
 
-const RegulatoryZoneMetadataShifter = styled.div`
+const RegulatoryZoneMetadataShifter = styled.div<{regulatoryMetadataPanelIsOpen:boolean}>`
   position: absolute;
   margin-left: ${props => (props.regulatoryMetadataPanelIsOpen ? 355 : -455)}px;
   margin-top: 45px;
@@ -67,7 +62,7 @@ const RegulatoryZoneMetadataShifter = styled.div`
   transition: 0.5s all;
 `
 
-const Sidebar = styled(MapComponentStyle)`
+const Sidebar = styled.div<{layersSidebarIsOpen: boolean, isVisible: boolean}>`
   margin-left: ${props => (props.layersSidebarIsOpen ? 0 : '-458px')};
   opacity: ${props => (props.isVisible ? 1 : 0)};
   top: 10px;

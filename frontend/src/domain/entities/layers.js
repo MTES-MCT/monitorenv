@@ -282,18 +282,18 @@ export const Layers = {
     type: layersType.REGULATORY
   },
   REGULATORY_ENV: {
-    code: 'environment_regulatory_areas',
+    code: 'REGULATORY_ENV',
     containsMultipleZones: false,
     group: null,
     isIntersectable: false,
-    name: '',
+    name: 'environment_regulatory_areas',
     showMultipleZonesInAdministrativeZones: false,
     subZoneFieldKey: null,
     type: layersType.REGULATORY,
     zIndex: 1500
   },
-  REGULATORY_PREVIEW: {
-    code: 'regulatory_preview',
+  REGULATORY_ENV_PREVIEW: {
+    code: 'REGULATORY_ENV_PREVIEW',
     containsMultipleZones: false,
     group: null,
     isIntersectable: false,
@@ -377,5 +377,5 @@ export const baseLayers = {
   }
 }
 
-export const SelectableLayers = [Layers.MISSIONS.code, Layers.REGULATORY_PREVIEW.code]
+export const SelectableLayers = [Layers.MISSIONS.code, Layers.REGULATORY_ENV_PREVIEW.code, Layers.REGULATORY_ENV.code]
 export const HoverableLayers = [Layers.MISSIONS.code, Layers.ACTIONS.code]

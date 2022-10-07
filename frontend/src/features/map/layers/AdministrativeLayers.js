@@ -17,13 +17,20 @@ export function AdministrativeLayers({ map }) {
       }
       // remove layers
       olLayersList.forEach(layer => {
-        if (layer.type === layersType.ADMINISTRATIVE && !showedAdministrativeLayerIds.includes(layer.name)) {
+        if (
+          layer.get('type') === layersType.ADMINISTRATIVE &&
+          !showedAdministrativeLayerIds.includes(layer.get('name'))
+        ) {
           olLayers.remove(layer)
         }
       })
       // add layers
       showedAdministrativeLayerIds.forEach(layerId => {
-        if (!olLayersList.some(_layer => _layer.type === Layers.REGULATORY_ENV.code && _layer.name === layerId)) {
+        if (
+          !olLayersList.some(
+            _layer => _layer.get('type') === Layers.REGULATORY_ENV.code && _layer.get('name') === layerId
+          )
+        ) {
           const VectorLayer = getAdministrativeVectorLayer(layerId)
           olLayers.push(VectorLayer)
         }

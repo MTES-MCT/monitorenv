@@ -11,7 +11,7 @@ export function getAllRegulatoryLayersFromAPI() {
 
   return fetch(
     `${geoserverURL}/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typename=${GEOSERVER_NAMESPACE}:` +
-      `${Layers.REGULATORY_ENV.code}&format_options=id_policy:id&outputFormat=application/json&propertyName=entity_name,layer_name,facade,ref_reg,thematique,type,geom`
+      `${Layers.REGULATORY_ENV.name}&format_options=id_policy:id&outputFormat=application/json&propertyName=entity_name,layer_name,facade,ref_reg,thematique,type,geom`
   )
     .then(response => {
       if (response.status === OK) {
@@ -39,7 +39,7 @@ export const regulatoryLayersAPI = createApi({
           outputFormat: 'application/json',
           request: 'GetFeature',
           service: 'WFS',
-          typename: `${GEOSERVER_NAMESPACE}:${Layers.REGULATORY_ENV.code}`,
+          typename: `${GEOSERVER_NAMESPACE}:${Layers.REGULATORY_ENV.name}`,
           version: '1.1.0'
         },
         url: 'wfs'

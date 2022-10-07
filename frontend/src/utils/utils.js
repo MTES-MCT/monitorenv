@@ -1,3 +1,5 @@
+/* eslint-disable no-bitwise */
+
 import { createSlice } from '@reduxjs/toolkit'
 import { asArray, asString } from 'ol/color'
 import GeoJSON from 'ol/format/GeoJSON'
@@ -19,6 +21,156 @@ export const customHexToRGB = (hexColor, defaultColor) => {
   const aRgb = [parseInt(aRgbHex[0], 16), parseInt(aRgbHex[1], 16), parseInt(aRgbHex[2], 16)]
 
   return aRgb
+}
+
+export const colorSet1 = [
+  '#e51c23',
+  '#e91e63',
+  '#9c27b0',
+  '#673ab7',
+  '#3f51b5',
+  '#5677fc',
+  '#03a9f4',
+  '#00bcd4',
+  '#009688',
+  '#259b24',
+  '#8bc34a',
+  '#afb42b',
+  '#ff9800',
+  '#ff5722',
+  '#795548',
+  '#607d8b'
+]
+
+/**
+ * generated from https://colorbrewer2.org/
+ */
+export const colorSet2 = [
+  '#8dd3c7',
+  '#ffffb3',
+  '#bebada',
+  '#fb8072',
+  '#80b1d3',
+  '#fdb462',
+  '#b3de69',
+  '#fccde5',
+  '#d9d9d9',
+  '#bc80bd',
+  '#ccebc5',
+  '#ffed6f'
+]
+
+export const colorSet3 = [
+  '#767AB2',
+  '#FFD3C7',
+  '#FFB199',
+  '#FF8F66',
+  '#FC4C0D',
+  '#C9390D',
+  '#9B2F08',
+  '#721E04',
+  '#F8F8C9',
+  '#EAE89B',
+  '#EBEB60',
+  '#D9D932',
+  '#B3B312',
+  '#969600',
+  '#717100',
+  '#EAD0B2',
+  '#DCB57F',
+  '#CF994F',
+  '#AD6918',
+  '#844F10',
+  '#703F09',
+  '#512A03',
+  '#7B9FCC',
+  '#BBDDC4',
+  '#86C195',
+  '#449C5A',
+  '#087021',
+  '#0B541E',
+  '#073613',
+  '#041B0A',
+  '#DFF7F3',
+  '#C7EAE5',
+  '#91CFC9',
+  '#56B3AB',
+  '#499390',
+  '#36696B',
+  '#294F50'
+]
+
+export const reds = [
+  '#FFD3C7',
+  '#FFB199',
+  '#FFB199',
+  '#FF8F66',
+  '#FF8F66',
+  '#FC4C0D',
+  '#FC4C0D',
+  '#C9390D',
+  '#9B2F08',
+  '#721E04'
+]
+export const yellows = [
+  '#F8F8C9',
+  '#EAE89B',
+  '#EAE89B',
+  '#EBEB60',
+  '#EBEB60',
+  '#D9D932',
+  '#D9D932',
+  '#B3B312',
+  '#969600',
+  '#717100'
+]
+export const browns = [
+  '#EAD0B2',
+  '#DCB57F',
+  '#DCB57F',
+  '#CF994F',
+  '#CF994F',
+  '#AD6918',
+  '#AD6918',
+  '#844F10',
+  '#703F09',
+  '#512A03'
+]
+
+export const greens = [
+  '#BBDDC4',
+  '#86C195',
+  '#86C195',
+  '#449C5A',
+  '#449C5A',
+  '#087021',
+  '#087021',
+  '#0B541E',
+  '#073613',
+  '#041B0A'
+]
+/**
+ * Get a color from palette from string
+ * https://gist.github.com/0x263b/2bdd90886c2036a1ad5bcf06d6e6fb37
+ */
+export function stringToArrayItem(str, arr) {
+  let hash = 0
+  if (str.length === 0) {
+    return arr[hash]
+  }
+  for (let i = 0; i < str.length; i += 1) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash)
+    hash &= hash
+  }
+  hash = ((hash % arr.length) + arr.length) % arr.length
+
+  return arr[hash]
+}
+
+export function stringToColorInGroup(group, name) {
+  const colorSet = stringToArrayItem(group, [reds, yellows, browns, greens])
+
+  return stringToArrayItem(name, colorSet)
 }
 
 export const booleanToInt = boolean => (boolean ? 1 : 0)

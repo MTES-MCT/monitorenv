@@ -1,22 +1,26 @@
-import React, { useCallback } from 'react'
+import  { useCallback } from 'react'
 import { FingerprintSpinner } from 'react-epic-spinners'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { useGetRegulatoryLayerQuery } from '../../../../api/regulatoryLayersAPI'
 import { COLORS } from '../../../../constants/constants'
 import { getTitle } from '../../../../domain/entities/regulatory'
 import { closeRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { RegulatoryLayerLegend } from '../../../../ui/RegulatoryLayerLegend'
 import { ReactComponent as AlertSVG } from '../../../../uiMonitor/icons/Attention_controles.svg'
 import { ReactComponent as CloseSVG } from '../../../../uiMonitor/icons/Close.svg'
-import { ReactComponent as SummarySVG } from '../../../../uiMonitor/icons/Summary.svg'
 import Identification from './Identification'
 import MetadataRegulatoryReferences from './MetadataRegulatoryReferences'
 
 const FOUR_HOURS = 4 * 60 * 60 * 1000
-function RegulatoryLayerZoneMetadata() {
+
+
+export function RegulatoryLayerZoneMetadata() {
   const dispatch = useDispatch()
-  const { regulatoryMetadataLayerId, regulatoryMetadataPanelIsOpen } = useSelector(state => state.regulatoryMetadata)
+  const { regulatoryMetadataLayerId, regulatoryMetadataPanelIsOpen } = useAppSelector(state => state.regulatoryMetadata)
   const { currentData } = useGetRegulatoryLayerQuery({ id: regulatoryMetadataLayerId }, { pollingInterval: FOUR_HOURS })
   const regulatoryMetadata = currentData?.properties
 
@@ -26,41 +30,40 @@ function RegulatoryLayerZoneMetadata() {
 
   return (
     <Wrapper $regulatoryMetadataPanelIsOpen={regulatoryMetadataPanelIsOpen}>
-      {regulatoryMetadata ? (
-        <>
-          <Header>
-            <REGPaperIcon />
-            <RegulatoryZoneName title={getTitle(regulatoryMetadata?.layer_name)}>
-              {getTitle(regulatoryMetadata?.layer_name)}
-            </RegulatoryZoneName>
-            <CloseSVG data-cy="regulatory-layers-metadata-close" onClick={onCloseIconClicked} />
-          </Header>
-          <Warning>
-            <WarningIcon />
-            Travail en cours, bien vérifier dans Légicem la validité de la référence et des infos réglementaires
-          </Warning>
-          <Content>
-            <Identification
-              entity_name={regulatoryMetadata?.entity_name}
-              facade={regulatoryMetadata?.facade}
-              thematique={regulatoryMetadata?.thematique}
-              type={regulatoryMetadata?.type}
-            />
-            <MetadataRegulatoryReferences
-              regulatoryReference={regulatoryMetadata?.ref_reg}
-              url={regulatoryMetadata?.url}
-            />
-          </Content>
-        </>
-      ) : (
-        // eslint-disable-next-line react/forbid-component-props
-        <FingerprintSpinner className="radar" color={COLORS.background} size={100} />
-      )}
+    {regulatoryMetadata ? (
+      <>
+        <Header>
+          <RegulatoryLayerLegend entity_name={regulatoryMetadata?.entity_name} thematique={regulatoryMetadata?.thematique} />
+          <RegulatoryZoneName title={getTitle(regulatoryMetadata?.layer_name)}>
+            {getTitle(regulatoryMetadata?.layer_name)}
+          </RegulatoryZoneName>
+          <PaddedIconButton icon={<CloseSVG />} data-cy="regulatory-layers-metadata-close" onClick={onCloseIconClicked} />
+        </Header>
+        <Warning>
+          <WarningIcon />
+          Travail en cours, bien vérifier dans Légicem la validité de la référence et des infos réglementaires
+        </Warning>
+        <Content>
+          <Identification
+            entity_name={regulatoryMetadata?.entity_name}
+            facade={regulatoryMetadata?.facade}
+            thematique={regulatoryMetadata?.thematique}
+            type={regulatoryMetadata?.type}
+          />
+          <MetadataRegulatoryReferences
+            regulatoryReference={regulatoryMetadata?.ref_reg}
+            url={regulatoryMetadata?.url}
+          />
+        </Content>
+      </>
+    ) : (
+      <CenteredFingerprintSpinner size={100} />
+    )}
     </Wrapper>
   )
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{$regulatoryMetadataPanelIsOpen: boolean}>`
   border-radius: 2px;
   width: 400px;
   display: block;
@@ -105,7 +108,7 @@ const Content = styled.div`
 const Warning = styled.div`
   font-size: 13px;
   color: ${COLORS.gunMetal};
-  background: ${COLORS.orange};
+  background: ${COLORS.goldenPoppy};
   display: flex;
   text-align: left;
   font: normal normal bold 13px/18px Marianne;
@@ -118,10 +121,12 @@ const WarningIcon = styled(AlertSVG)`
   height: 30px;
   margin: 4px 10px 0px 0;
 `
-
-const REGPaperIcon = styled(SummarySVG)`
-  margin-left: 3px;
-  width: 25px;
+const CenteredFingerprintSpinner = styled(FingerprintSpinner)`
+  position: initial !important;
+  display: block;
+  margin-top: 300px;
 `
 
-export default RegulatoryLayerZoneMetadata
+const PaddedIconButton = styled(IconButton)`
+  margin-right: 4px;
+`

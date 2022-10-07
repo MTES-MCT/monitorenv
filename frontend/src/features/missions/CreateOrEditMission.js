@@ -231,11 +231,11 @@ const ThirdColumn = styled.div`
 `
 
 const ErrorOnSave = styled.div`
-  backgound: ${COLORS.orange};
+  backgound: ${COLORS.goldenPoppy};
   text-align: right;
 `
 const ErrorOnDelete = styled.div`
-  backgound: ${COLORS.orange};
+  backgound: ${COLORS.goldenPoppy};
 `
 const Separator = styled.div`
   flex: 1;

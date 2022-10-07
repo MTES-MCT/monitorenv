@@ -1,20 +1,19 @@
 import _ from 'lodash'
-import React from 'react'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
 import { RegulatoryLayerSearchResultGroupByLayer } from './RegulatoryLayerSearchResultGroupByLayer'
 
-function RegulatoryLayerSearchResultList({ results, searchedText }) {
-  const groupedResults = _.groupBy(results, r => r?.doc?.properties?.layer_name)
+export function RegulatoryLayerSearchResultList({ results, searchedText }) {
+  const layersByLayerName = _.groupBy(results, r => r?.doc?.properties?.layer_name)
 
   return (
     <List>
-      {groupedResults &&
-        Object.entries(groupedResults).map(([groupName, groupedResult]) => (
+      {layersByLayerName &&
+        Object.entries(layersByLayerName).map(([layerGroupName, groupedResult]) => (
           <RegulatoryLayerSearchResultGroupByLayer
-            key={groupName}
-            groupName={groupName}
+            key={layerGroupName}
+            groupName={layerGroupName}
             result={groupedResult}
             searchedText={searchedText}
           />
@@ -34,5 +33,3 @@ const List = styled.ul`
   color: ${COLORS.slateGray};
   transition: 0.5s all;
 `
-
-export default RegulatoryLayerSearchResultList

@@ -51,7 +51,7 @@ const Row = styled.span`
   width: stretch;
 
   :hover {
-    background: ${COLORS.shadowBlueLittleOpacity};
+    background: ${COLORS.blueYonder25};
   }
 `
 

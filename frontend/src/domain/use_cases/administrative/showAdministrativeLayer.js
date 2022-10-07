@@ -5,7 +5,7 @@ import { bbox as bboxStrategy } from 'ol/loadingstrategy'
 import VectorSource from 'ol/source/Vector'
 
 import { getAdministrativeZoneFromAPI } from '../../../api/administrativeLayersAPI'
-import { getAdministrativeAndRegulatoryLayersStyle } from '../../../features/map/layers/styles/administrativeAndRegulatoryLayers.style'
+import { getAdministrativeLayersStyle } from '../../../features/map/layers/styles/administrativeAndRegulatoryLayers.style'
 import { administrativeLayers } from '../../entities/administrativeLayers'
 import { layersType } from '../../entities/layers'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../entities/map'
@@ -24,13 +24,15 @@ export const getAdministrativeVectorLayer = layerId => {
   const layer = new VectorImageLayer({
     className: 'administrative',
     declutter: true,
+    properties: {
+      name: layerId,
+      type: layersType.ADMINISTRATIVE
+    },
     source: getAdministrativeVectorSourceBBOXStrategy(code, zone),
-    style: getAdministrativeAndRegulatoryLayersStyle(code),
+    style: getAdministrativeLayersStyle(code),
     updateWhileAnimating: true,
     updateWhileInteracting: true
   })
-  layer.name = layerId
-  layer.type = layersType.ADMINISTRATIVE
 
   return layer
 }

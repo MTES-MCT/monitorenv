@@ -15,7 +15,6 @@ import { useEscapeFromKeyboard } from '../../hooks/useEscapeFromKeyboard'
 import { ReactComponent as MultiLineSVG } from '../../uiMonitor/icons/Measure_broken_line.svg'
 import { ReactComponent as CircleRangeSVG } from '../../uiMonitor/icons/Measure_circle.svg'
 import { ReactComponent as MeasurementSVG } from '../../uiMonitor/icons/Measure_line.svg'
-import { MapComponentStyle } from '../commonStyles/MapComponent.style'
 import CustomCircleRange from './CustomCircleRange'
 
 const MEASUREMENT_POSITION_FROM_LEFT = 440
@@ -143,8 +142,8 @@ const MeasurementWrapper = styled.div`
 
 const MeasurementItem = styled.div`
   display: inline-block;
-  color: ${COLORS.blue};
-  background: ${COLORS.shadowBlue};
+  color: ${COLORS.blueGray};
+  background: ${COLORS.blueYonder};
   padding: 0;
   z-index: 99;
   cursor: pointer;
@@ -171,7 +170,7 @@ const MeasurementIcon = styled(MeasurementSVG)`
   height: 20px;
 `
 
-const MeasurementOptions = styled(MapComponentStyle)`
+const MeasurementOptions = styled.div`
   width: 175px;
   margin-bottom: ${props => (props.measurementBoxIsOpen ? '8px' : '-200px')};
   opacity: ${props => (props.measurementBoxIsOpen ? '1' : '0')};

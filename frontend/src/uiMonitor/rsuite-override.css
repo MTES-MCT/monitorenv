@@ -761,10 +761,7 @@ svg.rs-dropdown-item-menu-icon {
 .rs-table-hover .rs-table-row:not(.rs-table-row-header):hover,
 .rs-table-hover .rs-table-row:hover .rs-table-cell-group,
 .rs-table-hover .rs-table-row:hover .rs-table-cell {
-  /* background: rgba(107, 131, 158, 0.15) !important; */
-  /* shadowBlueLittleOpacity */
-  background: #d6dce3 !important;
-  /* shadowBlueLight */
+  background: var(--blue-yonder-25) !important;
 
 }
 

@@ -3,14 +3,23 @@ import { createSlice } from '@reduxjs/toolkit'
 import { baseLayers } from '../entities/layers'
 import { CoordinatesFormat } from '../entities/map'
 
+type MapSliceStateType = {
+  coordinatesFormat: string
+  currentMapExtentTracker?: number[]
+  fitToExtent?: number[]
+  selectedBaseLayer: string
+  zoomToCenter?: number
+}
+const initialState: MapSliceStateType = {
+  coordinatesFormat: CoordinatesFormat.DEGREES_MINUTES_SECONDS,
+  currentMapExtentTracker: undefined,
+  fitToExtent: undefined,
+  selectedBaseLayer: baseLayers.LIGHT.code,
+  zoomToCenter: undefined
+}
+
 const mapSlice = createSlice({
-  initialState: {
-    coordinatesFormat: CoordinatesFormat.DEGREES_MINUTES_SECONDS,
-    currentMapExtentTracker: null,
-    fitToExtent: null,
-    selectedBaseLayer: baseLayers.LIGHT.code,
-    zoomToCenter: null
-  },
+  initialState,
   name: 'map',
   reducers: {
     selectBaseLayer(state, action) {
@@ -43,7 +52,7 @@ const mapSlice = createSlice({
      * @param {object} action.payload.extent
      */
     setFitToExtent(state, action) {
-      state.fitToExtent = action.payload?.extent
+      state.fitToExtent = action.payload
     },
 
     setZoomToCenter(state, action) {
@@ -55,4 +64,4 @@ const mapSlice = createSlice({
 export const { selectBaseLayer, setCoordinatesFormat, setCurrentMapExtentTracker, setFitToExtent, setZoomToCenter } =
   mapSlice.actions
 
-export default mapSlice.reducer
+export const mapSliceReducer = mapSlice.reducer

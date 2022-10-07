@@ -5,7 +5,6 @@ import styled from 'styled-components'
 import { COLORS } from '../../constants/constants'
 import { CoordinatesFormat, MeasurementTypes, OPENLAYERS_PROJECTION } from '../../domain/entities/map'
 import { coordinatesAreDistinct, getCoordinates } from '../../utils/coordinates'
-import { MapComponentStyle } from '../commonStyles/MapComponent.style'
 import SetCoordinates from '../coordinates/SetCoordinates'
 
 function CustomCircleRange({
@@ -132,7 +131,7 @@ const Body = styled.div`
   input {
     color: ${COLORS.charcoal};
     margin-top: 7px;
-    background: ${COLORS.grayLighter};
+    background: ${COLORS.cultured};
     border: none;
     height: 27px;
     padding-left: 8px;
@@ -149,7 +148,7 @@ const Header = styled.div`
   border-top-right-radius: 2px;
 `
 
-const Wrapper = styled(MapComponentStyle)`
+const Wrapper = styled.div`
   width: 306px;
   background: ${COLORS.background};
   margin-right: ${props => (!props.firstUpdate && props.isOpen ? '45px' : '-320px')};

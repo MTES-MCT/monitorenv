@@ -14,20 +14,20 @@ function RegulatoryLayerSearchResultList({ results }) {
     )
   }
 
-  const groupedResults = _.groupBy(results, r => r?.properties?.layer_name)
+  const layersByLayersName = _.groupBy(results, r => r?.properties?.layer_name)
 
   return (
     <List>
-      {groupedResults &&
-        Object.entries(groupedResults).map(([groupName, groupedResult]) => (
-          <RegulatoryLayerGroupSecondLevel key={groupName} groupName={groupName} result={groupedResult} />
+      {layersByLayersName &&
+        Object.entries(layersByLayersName).map(([layerName, layers]) => (
+          <RegulatoryLayerGroupSecondLevel key={layerName} groupName={layerName} layers={layers} />
         ))}
     </List>
   )
 }
 
 const NoLayerSelected = styled.div`
-  color: ${COLORS.grayDarkerTwo};
+  color: ${COLORS.slateGray};
   margin: 10px;
   font-size: 13px;
 `

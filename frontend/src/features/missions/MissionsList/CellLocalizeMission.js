@@ -20,7 +20,7 @@ export function CellLocalizeMission({ dataKey, rowData, ...props }) {
     }).readFeature(rowData.geom)
 
     const extent = feature?.getGeometry()?.getExtent()
-    dispatch(setFitToExtent({ extent }))
+    dispatch(setFitToExtent(extent))
   }
 
   return (

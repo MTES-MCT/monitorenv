@@ -1,22 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-/* eslint-disable */
-/** @namespace RegulatoryMetadataReducer */
-const RegulatoryMetadataReducer = null
-/* eslint-enable */
-
 const regulatoryMetadataSlice = createSlice({
   initialState: {
     loadingRegulatoryMetadata: false,
-    regulatoryMetadata: null,
-    regulatoryMetadataLayerId: null,
+    regulatoryMetadata: undefined,
+    regulatoryMetadataLayerId: undefined,
     regulatoryMetadataPanelIsOpen: false
   },
   name: 'regulatoryMetadata',
   reducers: {
     closeRegulatoryMetadataPanel(state) {
       state.regulatoryMetadataPanelIsOpen = false
-      state.regulatoryMetadata = null
+      state.regulatoryMetadata = undefined
+      state.regulatoryMetadataLayerId = undefined
     },
     openRegulatoryMetadataPanel(state, action) {
       state.regulatoryMetadataPanelIsOpen = true
@@ -27,7 +23,7 @@ const regulatoryMetadataSlice = createSlice({
     },
     setLoadingRegulatoryMetadata(state) {
       state.loadingRegulatoryMetadata = true
-      state.regulatoryMetadata = null
+      state.regulatoryMetadata = undefined
       state.regulatoryMetadataPanelIsOpen = true
     },
     setRegulatoryMetadata(state, action) {

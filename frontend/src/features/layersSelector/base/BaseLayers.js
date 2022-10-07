@@ -108,7 +108,7 @@ const ListItem = styled.li`
   line-height: 1.9em;
 
   :hover {
-    background: ${COLORS.shadowBlueLittleOpacity};
+    background: ${COLORS.blueYonder25};
   }
 `
 

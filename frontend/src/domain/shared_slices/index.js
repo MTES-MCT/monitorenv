@@ -8,12 +8,12 @@ import { missionsAPI } from '../../api/missionsAPI'
 import { regulatoryLayersAPI } from '../../api/regulatoryLayersAPI'
 import { sideWindowRouterReducer } from '../../components/SideWindowRouter/SideWindowRouter.slice'
 import { drawLayerReducer } from '../../features/drawLayer/DrawLayer.slice'
-import regulatoryLayerSearch from '../../features/layersSelector/regulatory/search/RegulatoryLayerSearch.slice'
+import { regulatoryLayerSearchSliceReducer } from '../../features/layersSelector/regulatory/search/RegulatoryLayerSearch.slice'
 import { administrativeSlicePersistedReducer } from './Administrative'
 import global from './Global'
 import { interestPointSlicePersistedReducer } from './InterestPoint'
 import layerSidebar from './LayerSidebar'
-import map from './Map'
+import { mapSliceReducer } from './Map'
 import { measurementSlicePersistedReducer } from './Measurement'
 import { missionFiltersReducer } from './MissionFilters'
 import missionState from './MissionsState'
@@ -26,12 +26,12 @@ export const homeReducers = combineReducers({
   global,
   interestPoint: interestPointSlicePersistedReducer,
   layerSidebar,
-  map,
+  map: mapSliceReducer,
   measurement: measurementSlicePersistedReducer,
   missionFilters: missionFiltersReducer,
   missionState,
   regulatory: regulatorySlicePersistedReducer,
-  regulatoryLayerSearch,
+  regulatoryLayerSearch: regulatoryLayerSearchSliceReducer,
   [regulatoryLayersAPI.reducerPath]: regulatoryLayersAPI.reducer,
   [missionsAPI.reducerPath]: missionsAPI.reducer,
   [controlThemesAPI.reducerPath]: controlThemesAPI.reducer,

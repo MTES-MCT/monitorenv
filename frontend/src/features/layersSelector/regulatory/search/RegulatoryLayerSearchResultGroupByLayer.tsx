@@ -1,7 +1,7 @@
 import _ from 'lodash'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Highlighter from 'react-highlight-words'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
@@ -10,19 +10,23 @@ import {
   addRegulatoryZonesToMyLayers,
   removeRegulatoryZonesFromMyLayers
 } from '../../../../domain/shared_slices/Regulatory'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReactComponent as PinSVG } from '../../../../uiMonitor/icons/Pin.svg'
 import { ReactComponent as PinFullSVG } from '../../../../uiMonitor/icons/Pin_filled.svg'
-import RegulatoryLayerSearchResultZones from './RegulatoryLayerSearchResultZones'
+import { REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT } from './RegulatoryLayerSearchResultZone'
+import { RegulatoryLayerSearchResultZones } from './RegulatoryLayerSearchResultZones'
 
 export function RegulatoryLayerSearchResultGroupByLayer({ groupName, result, searchedText }) {
   const dispatch = useDispatch()
 
-  const { selectedRegulatoryLayerIds } = useSelector(state => state.regulatory)
-  const totalNumberOfZones = useSelector(state => state.regulatory?.regulatoryLayersByLayerName[groupName]?.length)
+  const { selectedRegulatoryLayerIds } = useAppSelector(state => state.regulatory)
+  const { regulatoryMetadataLayerId } = useAppSelector(state => state.regulatoryMetadata)
+  const totalNumberOfZones = useAppSelector(state => state.regulatory?.regulatoryLayersByLayerName[groupName]?.length)
 
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
   const layerIds = _.map(result, 'id')
   const zonesSelected = _.intersection(selectedRegulatoryLayerIds, layerIds)
+  const forceZonesAreOpen = _.includes(layerIds, regulatoryMetadataLayerId)
   const allTopicZonesAreChecked = zonesSelected?.length === layerIds?.length
 
   const handleCheckAllZones = e => {
@@ -45,15 +49,17 @@ export function RegulatoryLayerSearchResultGroupByLayer({ groupName, result, sea
             textToHighlight={groupName || ''}
           />
         </TopicName>
-
-        <ZonesNumber>{`${result.length} / ${totalNumberOfZones}`}</ZonesNumber>
-
-        <IconButton
-          icon={allTopicZonesAreChecked ? <PinFullSVGIcon className="rs-icon" /> : <PinSVGIcon className="rs-icon" />}
-          onClick={handleCheckAllZones}
-        />
+        <Icons>
+          <ZonesNumber>{`${result.length} / ${totalNumberOfZones}`}</ZonesNumber>
+          <StyledIconButton
+            $allTopicZonesAreChecked={allTopicZonesAreChecked}
+            icon={allTopicZonesAreChecked ? <PinFullSVGIcon className="rs-icon" /> : <PinSVGIcon className="rs-icon" />}
+            onClick={handleCheckAllZones}
+            size='sm'
+          />
+        </Icons>
       </LayerTopic>
-      <RegulatoryLayerSearchResultZones result={result} searchedText={searchedText} zonesAreOpen={zonesAreOpen} />
+      <RegulatoryLayerSearchResultZones result={result} searchedText={searchedText} zonesAreOpen={forceZonesAreOpen || zonesAreOpen} />
     </>
   )
 }
@@ -90,7 +96,7 @@ const LayerTopic = styled.div`
   white-space: nowrap;
   overflow: hidden !important;
   padding-right: 0;
-  height: 35px;
+  height: ${REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT}px;
   font-size: 13px;
   padding-left: 18px;
   font-weight: 700;
@@ -98,18 +104,31 @@ const LayerTopic = styled.div`
   border-bottom: 1px solid ${COLORS.lightGray};
 
   :hover {
-    background: ${COLORS.shadowBlueLittleOpacity};
+    background: ${COLORS.blueYonder25};
   }
 `
 
+const Icons = styled.span`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex: 1;
+  margin-right: 4px;
+  
+`
+const StyledIconButton = styled(IconButton)`
+  :focus {
+    color: ${COLORS.white};
+  }
+  ${props => props.$allTopicZonesAreChecked ? `color: ${COLORS.blueGray}` : ''};
+`
+
 const PinSVGIcon = styled(PinSVG)`
-  width: 18px;
-  height: 18px;
-  margin-top: 2px;
 `
 const PinFullSVGIcon = styled(PinFullSVG)`
-  width: 18px;
-  height: 18px;
-  margin-top: 2px;
-  color: ${COLORS.blueGray};
+  
+  &:hover {
+    color: ${COLORS.white};
+  }
+  
 `

@@ -59,7 +59,7 @@ const Zone = styled.span`
   ${props => (!props.isOpen ? null : `border-bottom: 1px solid ${COLORS.lightGray};`)}
 
   :hover {
-    background: ${COLORS.shadowBlueLittleOpacity};
+    background: ${COLORS.blueYonder25};
   }
 `
 

@@ -135,10 +135,10 @@ const Header = styled.h1`
 const Button = styled.button`
   width: 32px;
   height: 32px;
-  background: ${props => (props.selected ? COLORS.shadowBlue : COLORS.charcoal)};
+  background: ${props => (props.selected ? COLORS.blueYonder : COLORS.charcoal)};
   :hover,
   :focus {
-    background: ${COLORS.shadowBlue};
+    background: ${COLORS.blueYonder};
   }
 `
 const PolygonIcon = styled(PolygonSVG)`
@@ -159,8 +159,8 @@ const SelectorIcon = styled(SelectorSVG)`
 `
 const QuitButton = styled.button`
   display: inline-block;
-  color: ${COLORS.red};
-  background: ${COLORS.grayLighter};
+  color: ${COLORS.maximumRed};
+  background: ${COLORS.cultured};
   padding-right: 18px;
   padding-left: 18px;
   padding-top: 3px;
@@ -168,7 +168,7 @@ const QuitButton = styled.button`
   margin-left: 18px;
 `
 const ResetButton = styled.button`
-  background: ${COLORS.shadowBlue};
+  background: ${COLORS.blueYonder};
   color: ${COLORS.white};
   font-weight: bold;
   font-size: 13px;
@@ -176,7 +176,7 @@ const ResetButton = styled.button`
   padding: 8px;
 `
 const ValidateButton = styled.button`
-  background: ${COLORS.missingGreen};
+  background: ${COLORS.mediumSeaGreen};
   color: ${COLORS.white};
   font-weight: bold;
   line-height: 18px;
