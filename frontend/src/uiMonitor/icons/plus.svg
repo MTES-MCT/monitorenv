@@ -1,4 +1,6 @@
-<svg id="plus" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16">
-  <line x2="16" transform="translate(0 7.75)" stroke="currentColor" stroke-width="1.5" />
-  <line y1="16" transform="translate(7.75)" stroke="currentColor" stroke-width="1.5" />
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  <g id="Plus" transform="translate(120 -82)">
+    <path d="M-102,91h-7V84h-2v7h-7v2h7v7h2V93h7Z" fill="currentColor" />
+    <rect width="20" height="20" transform="translate(-120 82)" fill="none" />
+  </g>
 </svg>

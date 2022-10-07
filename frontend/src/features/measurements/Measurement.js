@@ -12,9 +12,9 @@ import {
 } from '../../domain/shared_slices/Measurement'
 import { useClickOutsideComponent } from '../../hooks/useClickOutside'
 import { useEscapeFromKeyboard } from '../../hooks/useEscapeFromKeyboard'
-import { ReactComponent as MeasurementSVG } from '../../uiMonitor/icons/Mesure.svg'
-import { ReactComponent as MultiLineSVG } from '../../uiMonitor/icons/Mesure_ligne_brisee.svg'
-import { ReactComponent as CircleRangeSVG } from '../../uiMonitor/icons/Mesure_rayon_action.svg'
+import { ReactComponent as MultiLineSVG } from '../../uiMonitor/icons/Measure_broken_line.svg'
+import { ReactComponent as CircleRangeSVG } from '../../uiMonitor/icons/Measure_circle.svg'
+import { ReactComponent as MeasurementSVG } from '../../uiMonitor/icons/Measure_line.svg'
 import { MapComponentStyle } from '../commonStyles/MapComponent.style'
 import CustomCircleRange from './CustomCircleRange'
 
@@ -154,9 +154,17 @@ const MeasurementItem = styled.div`
   }
 `
 
-const MultiLineIcon = styled(MultiLineSVG)``
+const MultiLineIcon = styled(MultiLineSVG)`
+  width: 24px;
+  padding-top: 2px;
+  color: ${COLORS.white};
+`
 
-const CircleRangeIcon = styled(CircleRangeSVG)``
+const CircleRangeIcon = styled(CircleRangeSVG)`
+  width: 24px;
+  padding-top: 2px;
+  color: ${COLORS.white};
+`
 
 const MeasurementIcon = styled(MeasurementSVG)`
   width: 20px;

@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys-fix/sort-keys-fix */
 export const COLORS = {
   background: '#FFFFFF',
   blue: '#0A18DF',
@@ -24,6 +25,10 @@ export const COLORS = {
   maximumRed: '#E1000F',
   mediumSeaGreen: '#29b361',
 
+  blueYonder: '#567A9E',
+  blueYonder25: '#D4DDE7',
+  blueGray: '#5697D2',
+  blueGray25: '#D4E5F4',
   missingBlue: '#1F78B4',
   missingGreen: '#33A02C',
   missingGrey: '#EEEEF1',
@@ -38,8 +43,6 @@ export const COLORS = {
   slateGray: '#707785',
   slateGrayLittleOpacity: 'rgba(112, 119, 133, 0.7)',
   squareBorder: '#E0E0E0',
-  steelBlue: '#5E87AD',
-  steelBlue25: '#D6E1EA',
   textBueGray: '#848DAE',
   textWhite: '#EDEDF5',
   titleBottomBorder: '#E0E0E0',

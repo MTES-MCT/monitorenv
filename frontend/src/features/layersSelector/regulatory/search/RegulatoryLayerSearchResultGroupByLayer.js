@@ -10,8 +10,8 @@ import {
   addRegulatoryZonesToMyLayers,
   removeRegulatoryZonesFromMyLayers
 } from '../../../../domain/shared_slices/Regulatory'
-import { ReactComponent as PinSVG } from '../../../../uiMonitor/icons/epingle.svg'
-import { ReactComponent as PinFullSVG } from '../../../../uiMonitor/icons/epingle_pleine.svg'
+import { ReactComponent as PinSVG } from '../../../../uiMonitor/icons/Pin.svg'
+import { ReactComponent as PinFullSVG } from '../../../../uiMonitor/icons/Pin_filled.svg'
 import RegulatoryLayerSearchResultZones from './RegulatoryLayerSearchResultZones'
 
 export function RegulatoryLayerSearchResultGroupByLayer({ groupName, result, searchedText }) {
@@ -111,5 +111,5 @@ const PinFullSVGIcon = styled(PinFullSVG)`
   width: 18px;
   height: 18px;
   margin-top: 2px;
-  color: ${COLORS.steelBlue};
+  color: ${COLORS.blueGray};
 `

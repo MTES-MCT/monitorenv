@@ -1,13 +1,14 @@
 import _ from 'lodash'
 import React, { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { useGetMissionsQuery } from '../../api/missionsAPI'
 import { setSideWindowPath } from '../../components/SideWindowRouter/SideWindowRouter.slice'
 import { COLORS } from '../../constants/constants'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
-import { PlusIcon } from '../commonStyles/icons/PlusIcon'
+import { ReactComponent as PlusSVG } from '../../uiMonitor/icons/Plus.svg'
 import { SideWindowHeader } from '../side_window/SideWindowHeader'
 import { MissionsTable } from './MissionsList/MissionsTable'
 import { MissionsTableFilters } from './MissionsList/MissionsTableFilters'
@@ -38,8 +39,11 @@ export function Missions() {
       ) : data ? (
         <>
           <SideWindowHeader title="Missions et contrôles">
-            <AddNewMissionButton onClick={() => dispatch(setSideWindowPath(sideWindowPaths.MISSION_NEW))}>
-              <PlusIcon /> <span>Ajouter une nouvelle mission</span>
+            <AddNewMissionButton
+              icon={<PlusSVG className="rs-icon" />}
+              onClick={() => dispatch(setSideWindowPath(sideWindowPaths.MISSION_NEW))}
+            >
+              <span>Ajouter une nouvelle mission</span>
             </AddNewMissionButton>
           </SideWindowHeader>
           <SideWindowContent>
@@ -73,21 +77,7 @@ const SideWindowContent = styled.div`
 const NumberOfDisplayedMissions = styled.h3`
   font-size: 13px;
 `
-const AddNewMissionButton = styled.div`
-  margin-right: 8px;
-  margin-left: 8px;
-  margin-top: 0;
-  margin-bottom: 0;
-  padding-right: 16px;
-  padding-left: 16px;
-  height: 40px;
-  background-color: ${COLORS.grayBackground};
-  color: ${COLORS.charcoal};
-  font-weight: bolder;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-`
+const AddNewMissionButton = styled(IconButton)``
 
 const TableWrapper = styled.div`
   flex: 1;

@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
 import { toggleMyRegulatoryZones } from '../../../../domain/shared_slices/LayerSidebar'
-import { ReactComponent as PinSVG } from '../../../../uiMonitor/icons/epingle.svg'
+import { ReactComponent as PinSVG } from '../../../../uiMonitor/icons/Pin.svg'
 import { ChevronIcon } from '../../../commonStyles/icons/ChevronIcon.style'
 import RegulatoryLayerList from './RegulatoryLayerList'
 

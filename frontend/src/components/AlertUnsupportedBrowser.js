@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { ReactComponent as AlertSVG } from '../uiMonitor/icons/Picto_alerte.svg'
+import { ReactComponent as AlertSVG } from '../uiMonitor/icons/Alert.svg'
 
 export function AlertUnsupportedBrowser() {
   return (

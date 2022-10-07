@@ -34,7 +34,7 @@ export function MissionZones({ name }) {
   return (
     <FormGroupMission>
       <Form.ControlLabel htmlFor={name}>Localisations : </Form.ControlLabel>
-      <SizedButton appearance="ghost" block onClick={handleAddMissionZone} size="sm">
+      <SizedButton appearance="ghost" block onClick={handleAddMissionZone}>
         + Ajouter une zone de mission
       </SizedButton>
       <ZoneList>

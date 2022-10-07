@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
+import { IconButton } from 'rsuite'
 
 import { COLORS } from '../../constants/constants'
 import { closeRegulatoryZoneMetadata } from '../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
-import { ReactComponent as LayersSVG } from '../../uiMonitor/icons/Couches.svg'
-import { MapButtonStyle } from '../commonStyles/MapButton.style'
+import { ReactComponent as LayersSVG } from '../../uiMonitor/icons/couches_carto.svg'
 import { MapComponentStyle } from '../commonStyles/MapComponent.style'
 import { AdministrativeLayers } from './administrative/AdministrativeLayers'
 import BaseLayers from './base/BaseLayers'
@@ -15,7 +15,6 @@ import RegulatoryLayerSearch from './regulatory/search/RegulatoryLayerSearch'
 
 function LayersSidebar() {
   const { regulatoryMetadataPanelIsOpen } = useSelector(state => state.regulatoryMetadata)
-  const { healthcheckTextWarning } = useSelector(state => state.global)
   const dispatch = useDispatch()
 
   const [layersSidebarIsOpen, setLayersSidebarIsOpen] = useState(false)
@@ -28,17 +27,14 @@ function LayersSidebar() {
   return (
     <>
       <SidebarLayersIcon
+        appearance="primary"
         data-cy="layers-sidebar"
-        healthcheckTextWarning={healthcheckTextWarning}
-        isVisible={layersSidebarIsOpen || regulatoryMetadataPanelIsOpen}
+        icon={<LayersSVG className="rs-icon" />}
         onClick={toggleLayerSidebar}
-        regulatoryMetadataPanelIsOpen={regulatoryMetadataPanelIsOpen}
         title="Couches réglementaires"
-      >
-        <LayersIcon />
-      </SidebarLayersIcon>
+        size='lg'
+      />
       <Sidebar
-        healthcheckTextWarning={healthcheckTextWarning}
         isVisible={layersSidebarIsOpen || regulatoryMetadataPanelIsOpen}
         layersSidebarIsOpen={layersSidebarIsOpen}
       >
@@ -47,7 +43,7 @@ function LayersSidebar() {
           numberOfRegulatoryLayersSaved={numberOfRegulatoryLayersSaved}
           setNumberOfRegulatoryLayersSaved={setNumberOfRegulatoryLayersSaved}
         />
-        <Layers healthcheckTextWarning={healthcheckTextWarning}>
+        <Layers>
           <RegulatoryLayers regulatoryLayersAddedToMySelection={numberOfRegulatoryLayersSaved} />
           <AdministrativeLayers />
           <BaseLayers />
@@ -86,30 +82,13 @@ const Sidebar = styled(MapComponentStyle)`
 const Layers = styled.div`
   margin-top: 5px;
   width: 350px;
-  max-height: calc(100vh - ${props => (props.healthcheckTextWarning ? '210px' : '160px')});
+  max-height: calc(100vh - 160px);
 `
 
-const SidebarLayersIcon = styled(MapButtonStyle)`
+const SidebarLayersIcon = styled(IconButton)`
   position: absolute;
-  display: inline-block;
-  color: ${COLORS.blue};
-  background: ${props => (props.isVisible ? COLORS.shadowBlue : COLORS.charcoal)};
-  padding: 2px 2px 2px 2px;
   top: 10px;
   left: 12px;
-  border-radius: 2px;
-  height: 40px;
-  width: 40px;
-
-  :hover,
-  :focus {
-    background: ${props => (props.isVisible ? COLORS.shadowBlue : COLORS.charcoal)};
-  }
-`
-
-const LayersIcon = styled(LayersSVG)`
-  width: 35px;
-  height: 35px;
 `
 
 export default LayersSidebar

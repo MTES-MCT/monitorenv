@@ -17,8 +17,8 @@ import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { setMissionState } from '../../domain/shared_slices/MissionsState'
 import { quitEditMission } from '../../domain/use_cases/missions/missionAndControlLocalisation'
 import { SyncFormValuesWithRedux } from '../../hooks/useSyncFormValuesWithRedux'
-import { ReactComponent as SaveSVG } from '../../uiMonitor/icons/enregistrer_16px.svg'
-import { ReactComponent as DeleteSVG } from '../../uiMonitor/icons/Suppression_clair.svg'
+import { ReactComponent as DeleteSVG } from '../../uiMonitor/icons/Delete.svg'
+import { ReactComponent as SaveSVG } from '../../uiMonitor/icons/Save.svg'
 import { SideWindowHeader } from '../side_window/SideWindowHeader'
 import { ActionForm } from './MissionDetails/ActionForm'
 import { ActionsForm } from './MissionDetails/ActionsForm'
@@ -104,22 +104,22 @@ export function CreateOrEditMission({ routeParams }) {
         enableReinitialize
         initialValues={{
           closed_by: mission?.closed_by,
+          closedBy: mission?.closedBy,
+          envActions: mission?.envActions,
           envActions: mission?.envActions,
           facade: mission?.facade,
           geom: mission?.geom,
           id: mission?.id,
           inputEndDatetimeUtc: mission?.inputEndDatetimeUtc || '',
+          inputEndDatetimeUtc: mission?.inputEndDatetimeUtc || '',
+          inputStartDatetimeUtc: mission?.inputStartDatetimeUtc,
           inputStartDatetimeUtc: mission?.inputStartDatetimeUtc,
           missionNature: mission?.missionNature,
           missionStatus: mission?.missionStatus,
           missionType: mission?.missionType,
           observations: mission?.observations,
           openBy: mission?.openBy,
-          closedBy: mission?.closedBy,
-          inputStartDatetimeUtc: mission?.inputStartDatetimeUtc,
-          inputEndDatetimeUtc: mission?.inputEndDatetimeUtc || '',
-          resourceUnits: mission?.resourceUnits,
-          envActions: mission?.envActions
+          resourceUnits: mission?.resourceUnits
         }}
         onSubmit={handleSubmitForm}
       >

@@ -10,8 +10,8 @@ import { missionTypeEnum } from '../../../../domain/entities/missions'
 import { editMission } from '../../../../domain/use_cases/missions/editMission'
 import { clearSelectedMissionOnMap } from '../../../../domain/use_cases/missions/selectMissionOnMap'
 import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
-import { ReactComponent as CloseIconSVG } from '../../../../uiMonitor/icons/croix_10px.svg'
-import { ReactComponent as EditIconSVG } from '../../../../uiMonitor/icons/editer_12px.svg'
+import { ReactComponent as CloseIconSVG } from '../../../../uiMonitor/icons/Close.svg'
+import { ReactComponent as EditIconSVG } from '../../../../uiMonitor/icons/Edit.svg'
 
 export function MissionCard({ feature, selected }) {
   const dispatch = useDispatch()

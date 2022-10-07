@@ -11,8 +11,8 @@ import {
   vesselTypeEnum,
   actionTargetTypeEnum
 } from '../../../domain/entities/missions'
-import { ReactComponent as EditIconSVG } from '../../../uiMonitor/icons/Bouton_edition.svg'
-import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression_clair.svg'
+import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
+import { ReactComponent as EditIconSVG } from '../../../uiMonitor/icons/Edit.svg'
 
 export function InfractionCard({ currentActionIndex, infractionPath, removeInfraction, setCurrentInfractionIndex }) {
   const [targetTypeField] = useField(`envActions.${currentActionIndex}.actionTargetType`)

@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
-import { ReactComponent as LocalizeIconSVG } from '../../../uiMonitor/icons/Oeil_apercu_carte.svg'
+import { ReactComponent as LocalizeIconSVG } from '../../../uiMonitor/icons/Focus_zones.svg'
 
 export function CellLocalizeMission({ dataKey, rowData, ...props }) {
   const dispatch = useDispatch()

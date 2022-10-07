@@ -1,16 +1,15 @@
 import _ from 'lodash'
 import { transformExtent, transform } from 'ol/proj'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { IconButton, Input } from 'rsuite'
+import { InputGroup, Input } from 'rsuite'
 import styled from 'styled-components'
 
 import { usePhotonAPI } from '../../api/photonAPI'
 import { COLORS } from '../../constants/constants'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map'
 import { setFitToExtent } from '../../domain/shared_slices/Map'
-import { ReactComponent as CloseIconSVG } from '../../uiMonitor/icons/Croix_grise.svg'
-import { ReactComponent as SearchIconSVG } from '../../uiMonitor/icons/Loupe.svg'
+import { ReactComponent as SearchIconSVG } from '../../uiMonitor/icons/Search.svg'
 
 export function LocateOnMap() {
   const dispatch = useDispatch()
@@ -51,14 +50,15 @@ export function LocateOnMap() {
     <Wrapper>
       <InputWrapper inside>
         <SearchBoxInput
-          data-cy={'location-search-input'}
-          placeholder={'rechercher un lieu (port, lieu-dit, baie...)'}
+          data-cy="location-search-input"
+          onChange={handleOnchange}
+          placeholder="rechercher un lieu (port, lieu-dit, baie...)"
+          size="lg"
           type="text"
           value={searchedLocation}
-          size='lg'
-          onChange={handleOnchange}/>
+        />
         <InputGroup.Addon>
-          <SearchIcon className={'rs-icon'} />
+          <SearchIcon className="rs-icon" />
         </InputGroup.Addon>
       </InputWrapper>
       <ResultsList>
@@ -98,10 +98,6 @@ const InputWrapper = styled(InputGroup)`
   }
 `
 
-  // display: flex;
-  // align-items: center;
-  // justify-content: flex-end;
-
 const SearchBoxInput = styled(Input)`
   display: inline-block;
   background-color: white;
@@ -117,7 +113,6 @@ const SearchBoxInput = styled(Input)`
     padding-top: 10px;
     padding-bottom: 10px;
   }
-  
 `
 
 const SearchIcon = styled(SearchIconSVG)`

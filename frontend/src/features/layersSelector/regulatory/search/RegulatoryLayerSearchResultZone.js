@@ -12,9 +12,9 @@ import {
 } from '../../../../domain/shared_slices/Regulatory'
 import { closeRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
 import { showRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/showRegulatoryZoneMetadata'
-import { ReactComponent as PinSVG } from '../../../../uiMonitor/icons/epingle.svg'
-import { ReactComponent as PinFullSVG } from '../../../../uiMonitor/icons/epingle_pleine.svg'
-import { REGPaperDarkIcon, REGPaperIcon } from '../../../commonStyles/icons/REGPaperIcon.style'
+import { ReactComponent as PinSVG } from '../../../../uiMonitor/icons/Pin.svg'
+import { ReactComponent as PinFullSVG } from '../../../../uiMonitor/icons/Pin_filled.svg'
+import { ReactComponent as SummarySVG } from '../../../../uiMonitor/icons/Summary.svg'
 import { getRegulatoryEnvColorWithAlpha } from '../../../map/layers/styles/administrativeAndRegulatoryLayers.style'
 
 function RegulatoryLayerSearchResultZone({ regulatoryZone, searchedText }) {
@@ -24,7 +24,8 @@ function RegulatoryLayerSearchResultZone({ regulatoryZone, searchedText }) {
   const isZoneSelected = selectedRegulatoryLayerIds.includes(regulatoryZone.id)
   const metadataIsShown = regulatoryMetadataPanelIsOpen && regulatoryZone.id === regulatoryMetadataLayerId
 
-  const handleSelectRegulatoryZone = () => {
+  const handleSelectRegulatoryZone = e => {
+    e.stopPropagation()
     if (isZoneSelected) {
       dispatch(removeRegulatoryZonesFromMyLayers([regulatoryZone.id]))
     } else {
@@ -44,9 +45,9 @@ function RegulatoryLayerSearchResultZone({ regulatoryZone, searchedText }) {
   }
 
   return (
-    <Zone $selected={isZoneSelected}>
+    <Zone $selected={isZoneSelected} onClick={toggleRegulatoryZoneMetadata}>
       <Rectangle $vectorLayerColor={getRegulatoryEnvColorWithAlpha(regulatoryZone?.doc?.properties?.thematique)} />
-      <Name onClick={handleSelectRegulatoryZone} title={regulatoryZone?.doc?.properties?.entity_name}>
+      <Name title={regulatoryZone?.doc?.properties?.entity_name}>
         <Highlighter
           autoEscape
           highlightClassName="highlight"
@@ -116,11 +117,12 @@ const CustomPaperStyle = css`
   height: 23px;
 `
 
-const CustomREGPaperIcon = styled(REGPaperIcon)`
+const CustomREGPaperIcon = styled(SummarySVG)`
   ${CustomPaperStyle}
 `
-const CustomREGPaperDarkIcon = styled(REGPaperDarkIcon)`
+const CustomREGPaperDarkIcon = styled(SummarySVG)`
   ${CustomPaperStyle}
+  color: ${COLORS.charcoal};
 `
 
 const PinSVGIcon = styled(PinSVG)`
@@ -132,7 +134,7 @@ const PinFullSVGIcon = styled(PinFullSVG)`
   width: 18px;
   height: 18px;
   margin: 2px;
-  color: ${COLORS.steelBlue};
+  color: ${COLORS.blueGray};
 `
 
 export default RegulatoryLayerSearchResultZone

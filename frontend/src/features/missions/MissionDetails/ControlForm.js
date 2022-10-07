@@ -12,8 +12,8 @@ import { THEME_REQUIRE_PROTECTED_SPECIES } from '../../../domain/entities/missio
 import { usePrevious } from '../../../hooks/usePrevious'
 import { FormikDatePicker, placeholderDateTimePicker } from '../../../uiMonitor/CustomFormikFields/FormikDatePicker'
 import { FormikInputGhost } from '../../../uiMonitor/CustomFormikFields/FormikInput'
-import { ReactComponent as ControlIconSVG } from '../../../uiMonitor/icons/controles.svg'
-import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression_clair.svg'
+import { ReactComponent as ControlIconSVG } from '../../../uiMonitor/icons/Control.svg'
+import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
 import { ActionTargetSelector } from './ActionTargetSelector'
 import { ControlPositions } from './ControlPositions'
 import { ControlThemeSelector } from './ControlThemeSelector'
@@ -32,9 +32,9 @@ export function ControlForm({ currentActionIndex, remove, setCurrentActionIndex 
   const protectedSpecies = envActions[currentActionIndex]?.protectedSpecies
 
   const { data, isError, isLoading } = useGetControlThemesQuery()
-  const themes = useMemo(()=> _.uniqBy(data, 'themeLevel1'), [data])
-  const subThemes = useMemo(()=>_.filter(data, (t)=> {return t.themeLevel1 === actionTheme}), [data, actionTheme])
-  
+  const themes = useMemo(() => _.uniqBy(data, 'themeLevel1'), [data])
+  const subThemes = useMemo(() => _.filter(data, t => t.themeLevel1 === actionTheme), [data, actionTheme])
+
   const previousActionTheme = usePrevious(actionTheme)
 
   useEffect(() => {
@@ -66,7 +66,6 @@ export function ControlForm({ currentActionIndex, remove, setCurrentActionIndex 
           appearance="ghost"
           icon={<DeleteIcon className="rs-icon" />}
           onClick={handleRemoveAction}
-          size="sm"
           title="supprimer"
         >
           Supprimer

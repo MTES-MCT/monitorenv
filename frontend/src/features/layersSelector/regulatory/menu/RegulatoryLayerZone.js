@@ -13,10 +13,10 @@ import {
 } from '../../../../domain/shared_slices/Regulatory'
 import { closeRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
 import { showRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/showRegulatoryZoneMetadata'
-import { CloseIcon } from '../../../commonStyles/icons/CloseIcon.style'
-import { HideIcon } from '../../../commonStyles/icons/HideIcon.style'
-import { REGPaperDarkIcon, REGPaperIcon } from '../../../commonStyles/icons/REGPaperIcon.style'
-import { ShowIcon } from '../../../commonStyles/icons/ShowIcon.style'
+import { ReactComponent as CloseSVG } from '../../../../uiMonitor/icons/Close.svg'
+import { ReactComponent as DisplaySVG } from '../../../../uiMonitor/icons/Display.svg'
+import { ReactComponent as HideIconSVG } from '../../../../uiMonitor/icons/Hide.svg'
+import { ReactComponent as SummarySVG } from '../../../../uiMonitor/icons/Summary.svg'
 import { getRegulatoryEnvColorWithAlpha } from '../../../map/layers/styles/administrativeAndRegulatoryLayers.style'
 
 function RegulatoryLayerZone({ regulatoryZone }) {
@@ -67,19 +67,19 @@ function RegulatoryLayerZone({ regulatoryZone }) {
           <CustomREGPaperIcon onClick={toggleRegulatoryZoneMetadata} title="Afficher la réglementation" />
         )}
         {regulatoryZoneIsShowed ? (
-          <ShowIcon
+          <DisplaySVG
             data-cy="regulatory-layers-my-zones-zone-hide"
             onClick={toggleLayerDisplay}
             title="Cacher la zone"
           />
         ) : (
-          <HideIcon
+          <HideIconSVG
             data-cy="regulatory-layers-my-zones-zone-show"
             onClick={toggleLayerDisplay}
             title="Afficher la zone"
           />
         )}
-        <CloseIcon
+        <CloseSVG
           data-cy="regulatory-layers-my-zones-zone-delete"
           onClick={handleRemoveZone}
           title="Supprimer la zone de ma sélection"
@@ -132,11 +132,12 @@ const CustomPaperStyle = css`
   cursor: pointer;
 `
 
-const CustomREGPaperIcon = styled(REGPaperIcon)`
+const CustomREGPaperIcon = styled(SummarySVG)`
   ${CustomPaperStyle}
 `
-const CustomREGPaperDarkIcon = styled(REGPaperDarkIcon)`
+const CustomREGPaperDarkIcon = styled(SummarySVG)`
   ${CustomPaperStyle}
+  color: ${COLORS.charcoal};
 `
 
 const Icons = styled.span`

@@ -26,8 +26,8 @@ export function MissionsMenu() {
       data-cy="missions-button"
       icon={<MissionsIcon className="rs-icon" />}
       onClick={toggleMissionsWindow}
+      size="lg"
       title="voir les missions"
-      size='lg'
     />
   )
 }
@@ -37,7 +37,4 @@ const MissionButton = styled(IconButton)`
   top: 55px;
   right: 10px;
 `
-const MissionsIcon = styled(MissionsSVG)`
-  width: 20px;
-  height: 20px;
-`
+const MissionsIcon = styled(MissionsSVG)``

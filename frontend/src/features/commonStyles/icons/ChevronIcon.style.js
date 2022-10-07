@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { ReactComponent as ChevronIconSVG } from '../../../uiMonitor/icons/Chevron_simple_gris.svg'
+import { ReactComponent as ChevronIconSVG } from '../../../uiMonitor/icons/Chevron.svg'
 
 export const ChevronIcon = styled(ChevronIconSVG)`
   width: 16px;

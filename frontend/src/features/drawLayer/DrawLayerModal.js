@@ -11,7 +11,7 @@ import {
   validateLocalisation
 } from '../../domain/use_cases/missions/missionAndControlLocalisation'
 import { usePrevious } from '../../hooks/usePrevious'
-import { ReactComponent as CircleSVG } from '../../uiMonitor/icons/cercle-1.svg'
+import { ReactComponent as CircleSVG } from '../../uiMonitor/icons/Info.svg'
 import { ReactComponent as PolygonSVG } from '../../uiMonitor/icons/polygone.svg'
 import { ReactComponent as RectangleSVG } from '../../uiMonitor/icons/rectangle.svg'
 import { ReactComponent as SelectorSVG } from '../../uiMonitor/icons/selector.svg'

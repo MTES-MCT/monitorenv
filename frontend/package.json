@@ -43,7 +43,6 @@
     "ol-mapbox-style": "6.9.0",
     "ramda": "0.28.0",
     "react": "18.2.0",
-    "react-color": "^2.19.3",
     "react-coordinate-input": "^1.0.0-rc.2",
     "react-device-detect": "2.2.2",
     "react-dom": "18.2.0",

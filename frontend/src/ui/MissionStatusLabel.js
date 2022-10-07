@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { COLORS } from '../constants/constants'
 import { missionStatusEnum } from '../domain/entities/missions'
 import { ReactComponent as CercleSVG } from '../uiMonitor/icons/cercle.svg'
-import { ReactComponent as CheckSVG } from '../uiMonitor/icons/check.svg'
+import { ReactComponent as CheckSVG } from '../uiMonitor/icons/Check.svg'
 
 export function MissionStatusLabel({ missionStatus }) {
   switch (missionStatus) {

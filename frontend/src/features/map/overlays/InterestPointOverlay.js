@@ -9,8 +9,8 @@ import { COLORS } from '../../../constants/constants'
 import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map'
 import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
 import { usePrevious } from '../../../hooks/usePrevious'
-import { ReactComponent as EditSVG } from '../../../uiMonitor/icons/Bouton_edition.svg'
-import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression.svg'
+import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
+import { ReactComponent as EditSVG } from '../../../uiMonitor/icons/Edit.svg'
 import { getCoordinates } from '../../../utils/coordinates'
 
 const X = 0
@@ -172,9 +172,9 @@ const Header = styled.div`
 
 const Delete = styled(DeleteSVG)`
   height: 30px;
-  width: 15px;
+  width: 22px;
   border-left: 1px solid ${COLORS.lightGray};
-  padding-left: 7px;
+  padding-left: 6px;
   margin-left: auto;
   margin-right: 8px;
   cursor: pointer;
@@ -182,11 +182,11 @@ const Delete = styled(DeleteSVG)`
 
 const Edit = styled(EditSVG)`
   height: 30px;
-  width: 15px;
+  width: 22px;
   border-left: 1px solid ${COLORS.lightGray};
-  padding-left: 7px;
+  padding-left: 6px;
   margin-left: auto;
-  margin-right: 8px;
+  margin-right: 6px;
   cursor: pointer;
 `
 

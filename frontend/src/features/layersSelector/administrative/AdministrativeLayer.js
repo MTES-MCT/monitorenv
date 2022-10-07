@@ -4,8 +4,8 @@ import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
 import { hideAdministrativeLayer, showAdministrativeLayer } from '../../../domain/shared_slices/Administrative'
-import { HideIcon } from '../../commonStyles/icons/HideIcon.style'
-import { ShowIcon } from '../../commonStyles/icons/ShowIcon.style'
+import { ReactComponent as DisplaySVG } from '../../../uiMonitor/icons/Display.svg'
+import { ReactComponent as HideIconSVG } from '../../../uiMonitor/icons/Hide.svg'
 
 function AdministrativeLayer({ isGrouped, layer }) {
   const dispatch = useDispatch()
@@ -24,7 +24,7 @@ function AdministrativeLayer({ isGrouped, layer }) {
   return (
     <Row $isGrouped={isGrouped} data-cy="administrative-layer-toggle" onClick={toggleLayer}>
       <LayerName title={layer.name}>{layer.name}</LayerName>
-      {isLayerVisible ? <ShowIcon /> : <HideIcon />}
+      {isLayerVisible ? <DisplaySVG /> : <HideIconSVG />}
     </Row>
   )
 }

@@ -5,7 +5,7 @@ import { platformModifierKeyOnly } from 'ol/events/condition'
 import OpenLayerMap from 'ol/Map'
 import { transform } from 'ol/proj'
 import View from 'ol/View'
-import React, { Children, cloneElement, useCallback, useMemo, useEffect, useRef, useState } from 'react'
+import { Children, cloneElement, useCallback, useMemo, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { HIT_PIXEL_TO_TOLERANCE } from '../../constants/constants'

@@ -10,8 +10,8 @@ import { usePrevious } from '../../../hooks/usePrevious'
 import { FormikDatePicker, placeholderDateTimePicker } from '../../../uiMonitor/CustomFormikFields/FormikDatePicker'
 import { FormikInputGhost } from '../../../uiMonitor/CustomFormikFields/FormikInput'
 import { FormikTextarea } from '../../../uiMonitor/CustomFormikFields/FormikTextarea'
-import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression_clair.svg'
-import { ReactComponent as SurveillanceIconSVG } from '../../../uiMonitor/icons/surveillance_18px.svg'
+import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
+import { ReactComponent as SurveillanceIconSVG } from '../../../uiMonitor/icons/Observation.svg'
 import { ControlThemeSelector } from './ControlThemeSelector'
 
 export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionIndex }) {

@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 import { useGetControlResourcesQuery } from '../../../api/controlResourcesAPI'
 import { COLORS } from '../../../constants/constants'
-import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression_clair.svg'
+import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
 
 const DEFAULT_SELECT_PICKER_STYLE = {
   borderColor: COLORS.lightGray,

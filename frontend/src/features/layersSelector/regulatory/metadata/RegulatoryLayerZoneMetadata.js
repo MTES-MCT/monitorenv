@@ -7,9 +7,9 @@ import { useGetRegulatoryLayerQuery } from '../../../../api/regulatoryLayersAPI'
 import { COLORS } from '../../../../constants/constants'
 import { getTitle } from '../../../../domain/entities/regulatory'
 import { closeRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
-import { ReactComponent as AlertSVG } from '../../../../uiMonitor/icons/Picto_alerte.svg'
-import { ReactComponent as REGPaperSVG } from '../../../../uiMonitor/icons/reg_paper_dark.svg'
-import { CloseIcon } from '../../../commonStyles/icons/CloseIcon.style'
+import { ReactComponent as AlertSVG } from '../../../../uiMonitor/icons/Attention_controles.svg'
+import { ReactComponent as CloseSVG } from '../../../../uiMonitor/icons/Close.svg'
+import { ReactComponent as SummarySVG } from '../../../../uiMonitor/icons/Summary.svg'
 import Identification from './Identification'
 import MetadataRegulatoryReferences from './MetadataRegulatoryReferences'
 
@@ -33,7 +33,7 @@ function RegulatoryLayerZoneMetadata() {
             <RegulatoryZoneName title={getTitle(regulatoryMetadata?.layer_name)}>
               {getTitle(regulatoryMetadata?.layer_name)}
             </RegulatoryZoneName>
-            <CloseIcon data-cy="regulatory-layers-metadata-close" onClick={onCloseIconClicked} />
+            <CloseSVG data-cy="regulatory-layers-metadata-close" onClick={onCloseIconClicked} />
           </Header>
           <Warning>
             <WarningIcon />
@@ -119,7 +119,7 @@ const WarningIcon = styled(AlertSVG)`
   margin: 4px 10px 0px 0;
 `
 
-const REGPaperIcon = styled(REGPaperSVG)`
+const REGPaperIcon = styled(SummarySVG)`
   margin-left: 3px;
   width: 25px;
 `

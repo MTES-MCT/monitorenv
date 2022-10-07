@@ -1,22 +1,14 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
 import { IconButton, Input, InputGroup } from 'rsuite'
 import styled from 'styled-components'
 
-import { resetRegulatoryGeometriesToPreview } from '../../../../domain/shared_slices/Regulatory'
-import { ReactComponent as CloseIconSVG } from '../../../../uiMonitor/icons/Croix_grise.svg'
+import { ReactComponent as CloseIconSVG } from '../../../../uiMonitor/icons/Close.svg'
 import { ReactComponent as FiltreIconSVG } from '../../../../uiMonitor/icons/filtres.svg'
-import { ReactComponent as SearchIconSVG } from '../../../../uiMonitor/icons/Loupe.svg'
+import { ReactComponent as SearchIconSVG } from '../../../../uiMonitor/icons/Search.svg'
 
 export function RegulatoryLayerSearchInput({ globalSearchText, setGlobalSearchText }) {
-  const dispatch = useDispatch()
-
   const handleResetSearch = () => {
     setGlobalSearchText('')
-    dispatch(resetRegulatoryGeometriesToPreview())
-  }
-  const handleSetSearch = value => {
-    setGlobalSearchText(value)
   }
 
   return (
@@ -25,7 +17,7 @@ export function RegulatoryLayerSearchInput({ globalSearchText, setGlobalSearchTe
         <SearchBoxInput
           classPrefix="input ghost"
           data-cy="regulatory-search-input"
-          onChange={handleSetSearch}
+          onChange={setGlobalSearchText}
           placeholder="Rechercher une zone reg."
           type="text"
           value={globalSearchText}
