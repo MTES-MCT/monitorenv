@@ -1,0 +1,33 @@
+import { Button } from 'rsuite'
+import styled from 'styled-components'
+
+import { COLORS } from '../../../../constants/constants'
+import { FilterTagPicker } from '../../../../uiMonitor/CustomRsuite/FilterTagPicker'
+
+export function RegulatoryLayerFilters({ filteredRegulatoryThemes, regulatoryThemes, setFilteredRegulatoryThemes }) {
+  const handleResetFilters = () => {
+    setFilteredRegulatoryThemes([])
+  }
+
+  return (
+    <FiltersWrapper>
+      <FilterTagPicker
+        block
+        data={regulatoryThemes}
+        onChange={setFilteredRegulatoryThemes}
+        placeholder="Thématiques de contrôle"
+        value={filteredRegulatoryThemes}
+      />
+      <ResetFilters appearance="link" onClick={handleResetFilters}>
+        Réinitialiser les filtres
+      </ResetFilters>
+    </FiltersWrapper>
+  )
+}
+
+const FiltersWrapper = styled.div`
+  background-color: ${COLORS.white};
+  padding: 16px;
+  text-align: left;
+`
+const ResetFilters = styled(Button)``

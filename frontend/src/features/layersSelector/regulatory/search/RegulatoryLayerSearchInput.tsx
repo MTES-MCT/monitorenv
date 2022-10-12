@@ -6,10 +6,17 @@ import { ReactComponent as CloseIconSVG } from '../../../../uiMonitor/icons/Clos
 import { ReactComponent as FiltreIconSVG } from '../../../../uiMonitor/icons/filtres.svg'
 import { ReactComponent as SearchIconSVG } from '../../../../uiMonitor/icons/Search.svg'
 
-export function RegulatoryLayerSearchInput({ globalSearchText, setGlobalSearchText }) {
+export function RegulatoryLayerSearchInput({
+  displayRegFilters,
+  filteredRegulatoryThemes,
+  globalSearchText,
+  setGlobalSearchText,
+  toggleRegFilters
+}) {
   const handleResetSearch = () => {
     setGlobalSearchText('')
   }
+  const numberOfFilteredRegulatoryThemes = filteredRegulatoryThemes?.length
 
   return (
     <SearchHeader>
@@ -33,7 +40,18 @@ export function RegulatoryLayerSearchInput({ globalSearchText, setGlobalSearchTe
           </InputGroup.Button>
         )}
       </SearchInputGroup>
-      <FilterIconButton appearance="primary" icon={<FiltreIconSVG className="rs-icon" />} />
+      <FilterIcon>
+        {!displayRegFilters && numberOfFilteredRegulatoryThemes > 0 && (
+          <NumberOfFilteredReg>{numberOfFilteredRegulatoryThemes}</NumberOfFilteredReg>
+        )}
+        <FilterIconButton
+          active={displayRegFilters}
+          appearance="primary"
+          icon={<FiltreIconSVG className="rs-icon" />}
+          onClick={toggleRegFilters}
+          size="lg"
+        />
+      </FilterIcon>
     </SearchHeader>
   )
 }
@@ -45,6 +63,7 @@ const SearchHeader = styled.div`
 const SearchInputGroup = styled(InputGroup)`
   width: 310px;
   background: ${COLORS.white};
+  border: 0;
 `
 const SearchBoxInput = styled(Input)`
   padding-left: 12px;
@@ -59,6 +78,21 @@ const CloseIcon = styled(CloseIconSVG)`
   width: 16px;
   height: 16px;
 `
+const FilterIcon = styled.div``
+
 const FilterIconButton = styled(IconButton)`
   width: 40px;
+`
+const NumberOfFilteredReg = styled.span`
+  background: ${COLORS.maximumRed};
+  color: ${COLORS.white};
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  z-index: 100;
+  border-radius: 8px;
+  height: 16px;
+  font-size: 12px;
+  min-width: 16px;
+  line-height: 16px;
 `

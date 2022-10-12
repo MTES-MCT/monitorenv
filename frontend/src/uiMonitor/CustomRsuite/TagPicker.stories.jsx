@@ -1,4 +1,5 @@
-import { TagPicker as TagPickerComponent } from 'rsuite'
+import { useState } from 'react'
+import { TagPicker } from 'rsuite'
 
 const data = ['Eugenia', 'Bryan', 'Linda', 'Nancy', 'Lloyd', 'Alice', 'Julia', 'Albert'].map(item => ({
   label: item,
@@ -11,19 +12,71 @@ export default {
   title: 'RsuiteMonitor/Selecteurs'
 }
 
-function TagPickerTemplate() {
+function TagPickerTemplate({ appearance }) {
+  const [value, setValue] = useState()
+
   return (
     <>
       Large
-      <TagPickerComponent data={data} placeholder="Large" size="lg" style={styles} />
+      <TagPicker
+        appearance={appearance}
+        data={data}
+        onChange={setValue}
+        placeholder="Large"
+        size="lg"
+        style={styles}
+        value={value}
+      />
       Medium
-      <TagPickerComponent data={data} placeholder="Medium" size="md" style={styles} />
+      <TagPicker
+        appearance={appearance}
+        data={data}
+        onChange={setValue}
+        placeholder="Medium"
+        size="md"
+        style={styles}
+        value={value}
+      />
+      Default
+      <TagPicker
+        appearance={appearance}
+        data={data}
+        onChange={setValue}
+        placeholder="Default"
+        style={styles}
+        value={value}
+      />
       Small
-      <TagPickerComponent data={data} placeholder="Small" size="sm" style={styles} />
+      <TagPicker
+        appearance={appearance}
+        data={data}
+        onChange={setValue}
+        placeholder="Small"
+        size="sm"
+        style={styles}
+        value={value}
+      />
       XSmall
-      <TagPickerComponent data={data} placeholder="XSmall" size="xs" style={styles} />
+      <TagPicker
+        appearance={appearance}
+        data={data}
+        onChange={setValue}
+        placeholder="XSmall"
+        size="xs"
+        style={styles}
+        value={value}
+      />
     </>
   )
 }
 
-export const TagPicker = TagPickerTemplate.bind({})
+export const TagPickerSizes = TagPickerTemplate.bind({})
+TagPickerSizes.args = {
+  appearance: 'default'
+}
+TagPickerSizes.argTypes = {
+  appearance: {
+    control: 'select',
+    options: ['default', 'ghost', 'primary']
+  }
+}

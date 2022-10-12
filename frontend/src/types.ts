@@ -1,4 +1,5 @@
 import type { Feature } from 'ol'
+import type { GeoJSONGeometry } from 'ol/format/GeoJSON'
 import type { Geometry } from 'ol/geom'
 import type BaseLayer from 'ol/layer/Base'
 import type VectorImageLayer from 'ol/layer/VectorImage'
@@ -28,4 +29,13 @@ export type RegulatoryAreaProperties = {
   ref_reg: string
   thematique: string
   type: string
+}
+
+export type RegulatoryLayerType = {
+  bbox: number[]
+  geometry: GeoJSONGeometry
+  geometry_name: 'geom'
+  id: number
+  properties: RegulatoryAreaProperties
+  type: 'Feature'
 }

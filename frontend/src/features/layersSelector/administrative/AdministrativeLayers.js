@@ -71,7 +71,7 @@ const ZonesList = styled.ul`
   padding: 0;
   overflow-x: hidden;
   max-height: 70vh;
-  height: ${props => (props.showZones && props.zonesLength ? 36 * props.zonesLength : 0)}px;
+  height: ${props => (props.showZones && props.zonesLength ? 37 * props.zonesLength : 0)}px;
   background: ${COLORS.background};
   transition: 0.5s all;
   border-bottom-left-radius: 2px;
@@ -79,6 +79,7 @@ const ZonesList = styled.ul`
 `
 
 const ListItem = styled.li`
+  min-height: 36px;
   line-height: 18px;
   text-align: left;
   list-style-type: none;

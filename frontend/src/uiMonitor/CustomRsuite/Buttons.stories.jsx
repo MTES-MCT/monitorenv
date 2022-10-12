@@ -191,6 +191,12 @@ function TemplateSpecialStates({ label, ...args }) {
         <Button active appearance="ghost" {...args}>
           Ghost Active
         </Button>
+        <Button active appearance="default" {...args}>
+          Default(tertiary) Active
+        </Button>
+        <Button active appearance="link" {...args}>
+          Link Active
+        </Button>
       </ButtonToolbar>
       <br />
       <ButtonToolbar>
@@ -203,6 +209,12 @@ function TemplateSpecialStates({ label, ...args }) {
         </Button>
         <Button appearance="ghost" disabled {...args}>
           Ghost Disabled
+        </Button>
+        <Button appearance="default" disabled {...args}>
+          Default(tertiary) Disabled
+        </Button>
+        <Button appearance="link" disabled {...args}>
+          Link Disabled
         </Button>
       </ButtonToolbar>
     </>

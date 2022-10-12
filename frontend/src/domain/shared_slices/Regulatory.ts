@@ -3,6 +3,8 @@ import _ from 'lodash'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
+import type { RegulatoryLayerType } from '../../types'
+
 const persistConfig = {
   key: 'regulatory',
   storage,
@@ -12,7 +14,7 @@ const persistConfig = {
 type RegulatorySliceState = {
   loadingRegulatoryZoneMetadata: boolean
   regulationSearchedZoneExtent: []
-  regulatoryLayers: any
+  regulatoryLayers: RegulatoryLayerType[]
   regulatoryLayersByLayerName: object
   regulatoryZoneMetadata: any
   selectedRegulatoryLayerIds: number[]

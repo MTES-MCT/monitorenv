@@ -35,7 +35,9 @@
   --rs-btn-primary-bg: var(--charcoal);
   --rs-btn-default-bg: transparent;
   --rs-btn-primary-hover-bg: var(--blue-yonder);
-  --rs-btn-link-text: var(--charcoal);
+  --rs-btn-link-text: var(--slateGray);
+  --rs-btn-link-hover-text: var(--blue-yonder);
+  --rs-btn-link-active-text: var(--blue-gray);
   --rs-btn-ghost-text: var(--charcoal);
   --rs-btn-ghost-border: var(--charcoal);
   --rs-btn-ghost-hover-border: var(--blue-yonder);
@@ -214,6 +216,22 @@ label {
   width: 24px;
   height: 24px;
   padding: 4px;
+}
+
+
+.rs-btn-link,
+.rs-btn-link.rs-btn-md {
+  font-size: 13px;
+  text-decoration: underline;
+}
+
+.rs-btn-link.rs-btn-disabled,
+.rs-btn-link:disabled {
+  text-decoration: underline;
+}
+
+.rs-btn-link.rs-btn-sm {
+  font-size: 11px;
 }
 
 /* checkbox */

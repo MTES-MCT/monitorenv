@@ -5,7 +5,6 @@ import styled from 'styled-components'
 import { COLORS } from '../../../constants/constants'
 import { hideAdministrativeLayer, showAdministrativeLayer } from '../../../domain/shared_slices/Administrative'
 import { ReactComponent as DisplaySVG } from '../../../uiMonitor/icons/Display.svg'
-import { ReactComponent as HideIconSVG } from '../../../uiMonitor/icons/Hide.svg'
 
 function AdministrativeLayer({ isGrouped, layer }) {
   const dispatch = useDispatch()
@@ -24,7 +23,7 @@ function AdministrativeLayer({ isGrouped, layer }) {
   return (
     <Row $isGrouped={isGrouped} data-cy="administrative-layer-toggle" onClick={toggleLayer}>
       <LayerName title={layer.name}>{layer.name}</LayerName>
-      {isLayerVisible ? <DisplaySVG /> : <HideIconSVG />}
+      {isLayerVisible ? <DisplaySVG /> : <HideIcon />}
     </Row>
   )
 }
@@ -38,10 +37,10 @@ const LayerName = styled.span`
 
 const Row = styled.span`
   margin-top: 0px;
-  padding: ${props => (props.$isGrouped ? '4px 0 3px 20px' : '4px 0 4px 20px')};
+  padding: ${props => (props.$isGrouped ? '4px 16px 3px 20px' : '4px 16px 4px 20px')};
   padding-left: ${props => (props.$isGrouped ? '38px' : '20px')};
   line-height: 18px;
-  display: block;
+  display: flex;
   user-select: none;
   font-size: 13px;
   font-weight: 500;
@@ -49,10 +48,19 @@ const Row = styled.span`
   width: -moz-available;
   width: -webkit-fill-available;
   width: stretch;
+  min-height: 36px;
 
   :hover {
     background: ${COLORS.blueYonder25};
   }
+  & > :last-child {
+    margin-left: auto;
+    margin-top: 4px;
+  }
+`
+
+const HideIcon = styled(DisplaySVG)`
+  color: ${COLORS.lightGray};
 `
 
 export default AdministrativeLayer

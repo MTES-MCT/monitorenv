@@ -8,6 +8,7 @@ import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getRegulatoryLayerStyle } from './styles/administrativeAndRegulatoryLayers.style'
 
+import type { Feature } from 'ol'
 import type OpenLayerMap from 'ol/Map'
 
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
@@ -60,7 +61,7 @@ export function RegulatoryLayers({ map }: { map: OpenLayerMap }) {
     if (map) {
       getVectorSource().clear()
       if (regulatoryLayers.length > 0) {
-        const features = regulatoryLayers.reduce((feats, regulatorylayer) => {
+        const features = regulatoryLayers.reduce((feats: Feature[], regulatorylayer) => {
           if (showedRegulatoryLayerIds.includes(regulatorylayer.id) && regulatorylayer?.geometry) {
             const feature = new GeoJSON({
               featureProjection: OPENLAYERS_PROJECTION
