@@ -1,6 +1,9 @@
 import styled from 'styled-components'
 
-import { RegulatoryLayerSearchResultZone, REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT } from './RegulatoryLayerSearchResultZone'
+import {
+  RegulatoryLayerSearchResultZone,
+  REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT
+} from './RegulatoryLayerSearchResultZone'
 
 export function RegulatoryLayerSearchResultZones({ result, searchedText, zonesAreOpen }) {
   return (
@@ -17,7 +20,8 @@ export function RegulatoryLayerSearchResultZones({ result, searchedText, zonesAr
 }
 
 const RegulatoryZones = styled.div<{ $isOpen: boolean; $length: number }>`
-  height: ${props => (props.$isOpen && props.$length ? props.$length * REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT : 0)}px;
+  height: ${props =>
+    props.$isOpen && props.$length ? props.$length * REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT : 0}px;
   overflow: hidden;
   transition: 0.5s all;
 `

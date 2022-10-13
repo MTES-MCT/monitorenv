@@ -55,11 +55,15 @@ export function RegulatoryLayerSearchResultGroupByLayer({ groupName, result, sea
             $allTopicZonesAreChecked={allTopicZonesAreChecked}
             icon={allTopicZonesAreChecked ? <PinFullSVGIcon className="rs-icon" /> : <PinSVGIcon className="rs-icon" />}
             onClick={handleCheckAllZones}
-            size='sm'
+            size="sm"
           />
         </Icons>
       </LayerTopic>
-      <RegulatoryLayerSearchResultZones result={result} searchedText={searchedText} zonesAreOpen={forceZonesAreOpen || zonesAreOpen} />
+      <RegulatoryLayerSearchResultZones
+        result={result}
+        searchedText={searchedText}
+        zonesAreOpen={forceZonesAreOpen || zonesAreOpen}
+      />
     </>
   )
 }
@@ -114,21 +118,17 @@ const Icons = styled.span`
   align-items: center;
   flex: 1;
   margin-right: 4px;
-  
 `
 const StyledIconButton = styled(IconButton)`
   :focus {
     color: ${COLORS.white};
   }
-  ${props => props.$allTopicZonesAreChecked ? `color: ${COLORS.blueGray}` : ''};
+  ${props => (props.$allTopicZonesAreChecked ? `color: ${COLORS.blueGray}` : '')};
 `
 
-const PinSVGIcon = styled(PinSVG)`
-`
+const PinSVGIcon = styled(PinSVG)``
 const PinFullSVGIcon = styled(PinFullSVG)`
-  
   &:hover {
     color: ${COLORS.white};
   }
-  
 `

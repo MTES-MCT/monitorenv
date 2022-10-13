@@ -10,7 +10,7 @@ export default {
 
 const options = ['A', 'B', 'C', 'D', 'E']
 
-function TemplateCheckboxGrouped({ ...args }) {
+function TemplateCheckboxGrouped() {
   const [checkboxState, setCheckboxState] = useState({
     checkAll: false,
     indeterminate: true,
@@ -18,7 +18,7 @@ function TemplateCheckboxGrouped({ ...args }) {
   })
   const handleCheckAll = (value, checked) => {
     const nextValue = checked ? options : []
-    console.log(nextValue, 'handleCheckAll')
+    console.log(value, nextValue, 'handleCheckAll')
     setCheckboxState({
       checkAll: checked,
       indeterminate: false,

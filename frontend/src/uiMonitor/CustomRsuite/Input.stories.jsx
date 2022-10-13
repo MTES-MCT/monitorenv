@@ -1,5 +1,6 @@
-import SearchIcon from '@rsuite/icons/Search'
 import { Input, InputGroup, Grid, Row, Col } from 'rsuite'
+
+import { ReactComponent as SearchIconSVG } from '../icons/Search.svg'
 
 export default {
   title: 'RsuiteMonitor/Input'
@@ -18,7 +19,7 @@ function CustomInputGroup({ placeholder, ...props }) {
     <InputGroup {...props} style={styles}>
       <Input placeholder={placeholder} />
       <InputGroup.Addon>
-        <SearchIcon />
+        <SearchIconSVG />
       </InputGroup.Addon>
     </InputGroup>
   )
@@ -29,7 +30,7 @@ function CustomInputGroupWidthButton({ placeholder, ...props }) {
     <InputGroup {...props} inside style={styles}>
       <Input placeholder={placeholder} />
       <InputGroup.Button>
-        <SearchIcon />
+        <SearchIconSVG />
       </InputGroup.Button>
     </InputGroup>
   )

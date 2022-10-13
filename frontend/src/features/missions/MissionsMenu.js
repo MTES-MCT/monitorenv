@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import { sideWindowMenu } from '../../domain/entities/sideWindow'
 import { closeSideWindow, openSideWindowTab } from '../../domain/shared_slices/Global'
-import { ReactComponent as MissionsSVG } from '../../uiMonitor/icons/operations.svg'
+import { ReactComponent as MissionsSVG } from '../../uiMonitor/icons/Operations.svg'
 
 export function MissionsMenu() {
   const dispatch = useDispatch()

@@ -9,7 +9,7 @@ import { ControlInfractionsTags } from '../../../ui/ControlInfractionsTags'
 import { ReactComponent as ControlIconSVG } from '../../../uiMonitor/icons/Control.svg'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as DuplicateSVG } from '../../../uiMonitor/icons/Duplicate.svg'
-import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/note_libre.svg'
+import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/Note_libre.svg'
 import { ReactComponent as SurveillanceIconSVG } from '../../../uiMonitor/icons/Observation.svg'
 
 export function ActionCard({ action, duplicateAction, removeAction, selectAction, selected }) {

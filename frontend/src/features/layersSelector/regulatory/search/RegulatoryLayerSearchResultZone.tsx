@@ -1,13 +1,13 @@
+import { transformExtent } from 'ol/proj'
+import Projection from 'ol/proj/Projection'
 import Highlighter from 'react-highlight-words'
 import { useDispatch } from 'react-redux'
 import { IconButton } from 'rsuite'
 import styled from 'styled-components'
-import { transformExtent } from 'ol/proj'
-import Projection from 'ol/proj/Projection'
 
 import { COLORS } from '../../../../constants/constants'
-import { setFitToExtent } from '../../../../domain/shared_slices/Map'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map'
+import { setFitToExtent } from '../../../../domain/shared_slices/Map'
 import {
   addRegulatoryZonesToMyLayers,
   removeRegulatoryZonesFromMyLayers
@@ -60,7 +60,7 @@ export function RegulatoryLayerSearchResultZone({ regulatoryZone, searchedText }
         entity_name={regulatoryZone?.doc?.properties?.entity_name}
         thematique={regulatoryZone?.doc?.properties?.thematique}
       />
-      <Name title={regulatoryZone?.doc?.properties?.entity_name} onClick={fitToRegulatoryLayer}>
+      <Name onClick={fitToRegulatoryLayer} title={regulatoryZone?.doc?.properties?.entity_name}>
         <Highlighter
           autoEscape
           highlightClassName="highlight"
@@ -74,7 +74,7 @@ export function RegulatoryLayerSearchResultZone({ regulatoryZone, searchedText }
           data-cy="regulatory-zone-check"
           icon={isZoneSelected ? <PinFullSVGIcon className="rs-icon" /> : <PinSVGIcon className="rs-icon" />}
           onClick={handleSelectRegulatoryZone}
-          size='sm'
+          size="sm"
         />
       </Icons>
     </Zone>
@@ -118,12 +118,12 @@ const Icons = styled.span`
   margin-right: 4px;
 `
 
-const PinSVGIcon = styled(PinSVG)`
-`
+const PinSVGIcon = styled(PinSVG)``
 const PinFullSVGIcon = styled(PinFullSVG)`
   color: ${COLORS.blueGray};
-  :hover, :focus {
+  :hover,
+  :focus {
     color: ${COLORS.white};
   }
-  :active
+  :active ;
 `

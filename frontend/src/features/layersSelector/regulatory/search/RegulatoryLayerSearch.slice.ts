@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import _ from 'lodash'
 
 type RegulatoryLayerSearchState = {
   regulatoryLayersSearchResult: any

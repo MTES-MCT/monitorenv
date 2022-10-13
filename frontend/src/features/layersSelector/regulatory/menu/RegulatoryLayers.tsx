@@ -23,9 +23,9 @@ export function RegulatoryLayers() {
   return (
     <>
       <RegulatoryLayersTitle
+        $showRegulatoryLayers={myRegulatoryZonesIsOpen}
         data-cy="regulatory-layers-my-zones"
         onClick={onTitleClicked}
-        $showRegulatoryLayers={myRegulatoryZonesIsOpen}
       >
         <PinSVGIcon />
         <Title>Mes zones réglementaires</Title>
@@ -47,7 +47,7 @@ const Title = styled.span`
   line-height: 22px;
 `
 
-const RegulatoryLayersTitle = styled.div<{$showRegulatoryLayers: boolean}>`
+const RegulatoryLayersTitle = styled.div<{ $showRegulatoryLayers: boolean }>`
   height: 38px;
   padding-top: 8px;
   padding-left: 16px;

@@ -13,7 +13,7 @@ export default {
   title: 'RsuiteMonitor/Selecteurs'
 }
 
-function FilterTagPickerTemplate({ placeholder, ...args }) {
+function FilterTagPickerTemplate({ placeholder }) {
   const [value, setValue] = useState()
 
   return (

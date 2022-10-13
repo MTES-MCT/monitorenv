@@ -6,20 +6,22 @@ import styled from 'styled-components'
 import { COLORS } from '../../constants/constants'
 import { closeRegulatoryZoneMetadata } from '../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
 import { useAppSelector } from '../../hooks/useAppSelector'
-import { ReactComponent as LayersSVG } from '../../uiMonitor/icons/couches_carto.svg'
+import { ReactComponent as LayersSVG } from '../../uiMonitor/icons/Couches_carto.svg'
 import { AdministrativeLayers } from './administrative/AdministrativeLayers'
 import BaseLayers from './base/BaseLayers'
-import {RegulatoryLayers} from './regulatory/menu/RegulatoryLayers'
+import { RegulatoryLayers } from './regulatory/menu/RegulatoryLayers'
 import { RegulatoryLayerZoneMetadata } from './regulatory/metadata/RegulatoryLayerZoneMetadata'
 import { RegulatoryLayerSearch } from './regulatory/search/RegulatoryLayerSearch'
 
-function LayersSidebar() {
+export function LayersSidebar() {
   const { regulatoryMetadataPanelIsOpen } = useAppSelector(state => state.regulatoryMetadata)
   const dispatch = useDispatch()
 
   const [layersSidebarIsOpen, setLayersSidebarIsOpen] = useState(false)
   const toggleLayerSidebar = () => {
-    layersSidebarIsOpen && dispatch(closeRegulatoryZoneMetadata())
+    if (layersSidebarIsOpen) {
+      dispatch(closeRegulatoryZoneMetadata())
+    }
     setLayersSidebarIsOpen(!layersSidebarIsOpen)
   }
 
@@ -51,7 +53,7 @@ function LayersSidebar() {
   )
 }
 
-const RegulatoryZoneMetadataShifter = styled.div<{regulatoryMetadataPanelIsOpen:boolean}>`
+const RegulatoryZoneMetadataShifter = styled.div<{ regulatoryMetadataPanelIsOpen: boolean }>`
   position: absolute;
   margin-left: ${props => (props.regulatoryMetadataPanelIsOpen ? 355 : -455)}px;
   margin-top: 45px;
@@ -62,7 +64,7 @@ const RegulatoryZoneMetadataShifter = styled.div<{regulatoryMetadataPanelIsOpen:
   transition: 0.5s all;
 `
 
-const Sidebar = styled.div<{layersSidebarIsOpen: boolean, isVisible: boolean}>`
+const Sidebar = styled.div<{ isVisible: boolean; layersSidebarIsOpen: boolean }>`
   margin-left: ${props => (props.layersSidebarIsOpen ? 0 : '-458px')};
   opacity: ${props => (props.isVisible ? 1 : 0)};
   top: 10px;
@@ -85,5 +87,3 @@ const SidebarLayersIcon = styled(IconButton)`
   top: 10px;
   left: 12px;
 `
-
-export default LayersSidebar

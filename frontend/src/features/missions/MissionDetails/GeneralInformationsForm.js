@@ -1,5 +1,4 @@
 import { FieldArray } from 'formik'
-import React from 'react'
 import { Form } from 'rsuite'
 import styled from 'styled-components'
 
@@ -61,12 +60,12 @@ export function GeneralInformationsForm() {
 
       <Form.Group>
         <ColWrapper>
-            <Form.ControlLabel htmlFor="openBy">Ouvert par</Form.ControlLabel>
-            <FormikInput  name="openBy"/>
+          <Form.ControlLabel htmlFor="openBy">Ouvert par</Form.ControlLabel>
+          <FormikInput name="openBy" />
         </ColWrapper>
         <ColWrapper>
-            <Form.ControlLabel htmlFor="closedBy">Clôturé par</Form.ControlLabel>
-            <FormikInput  name="closedBy"/>
+          <Form.ControlLabel htmlFor="closedBy">Clôturé par</Form.ControlLabel>
+          <FormikInput name="closedBy" />
         </ColWrapper>
       </Form.Group>
     </>

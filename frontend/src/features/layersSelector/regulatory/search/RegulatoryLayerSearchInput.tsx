@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
 import { ReactComponent as CloseIconSVG } from '../../../../uiMonitor/icons/Close.svg'
-import { ReactComponent as FiltreIconSVG } from '../../../../uiMonitor/icons/filtres.svg'
+import { ReactComponent as FiltreIconSVG } from '../../../../uiMonitor/icons/Filtres.svg'
 import { ReactComponent as SearchIconSVG } from '../../../../uiMonitor/icons/Search.svg'
 
 export function RegulatoryLayerSearchInput({

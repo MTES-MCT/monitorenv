@@ -70,39 +70,39 @@ export function RegulatoryLayerZone({ regulatoryZone }) {
       <Name title={displayedName}>{displayedName}</Name>
       <Icons>
         {metadataIsShown ? (
-          <IconButton 
-            onClick={toggleRegulatoryZoneMetadata} 
-            title="Fermer la réglementation" 
-            icon={<CustomREGPaperIcon />}
-            size='sm'
+          <IconButton
             active
+            icon={<CustomREGPaperIcon />}
+            onClick={toggleRegulatoryZoneMetadata}
+            size="sm"
+            title="Fermer la réglementation"
           />
-      
         ) : (
           <IconButton
-            onClick={toggleRegulatoryZoneMetadata} 
-            title="Afficher la réglementation" 
             icon={<CustomREGPaperIcon />}
-            size='sm'
-            />
+            onClick={toggleRegulatoryZoneMetadata}
+            size="sm"
+            title="Afficher la réglementation"
+          />
         )}
-        
-        <IconButton 
-          data-cy={regulatoryZoneIsShowed ? "regulatory-layers-my-zones-zone-hide" :"regulatory-layers-my-zones-zone-show"}
-          onClick={toggleLayerDisplay}
-          title={regulatoryZoneIsShowed ? "Cacher la zone":"Afficher la zone"}
+
+        <IconButton
+          data-cy={
+            regulatoryZoneIsShowed ? 'regulatory-layers-my-zones-zone-hide' : 'regulatory-layers-my-zones-zone-show'
+          }
           icon={regulatoryZoneIsShowed ? <DisplaySVG /> : <HideIconSVG />}
-          size='sm'
+          onClick={toggleLayerDisplay}
+          size="sm"
+          title={regulatoryZoneIsShowed ? 'Cacher la zone' : 'Afficher la zone'}
         />
 
-        <IconButton 
+        <IconButton
           data-cy="regulatory-layers-my-zones-zone-delete"
-          onClick={handleRemoveZone}
-          title="Supprimer la zone de ma sélection"
           icon={<CloseSVG />}
-          size='sm'
-          />   
-        
+          onClick={handleRemoveZone}
+          size="sm"
+          title="Supprimer la zone de ma sélection"
+        />
       </Icons>
     </Zone>
   )
@@ -121,7 +121,7 @@ const Name = styled.span`
   }
 `
 
-const Zone = styled.span<{$selected: boolean}>`
+const Zone = styled.span<{ $selected: boolean }>`
   user-select: none;
   display: flex;
   font-size: 13px;
@@ -136,10 +136,7 @@ const Zone = styled.span<{$selected: boolean}>`
   }
 `
 
-
-const CustomREGPaperIcon = styled(SummarySVG)`
-  
-`
+const CustomREGPaperIcon = styled(SummarySVG)``
 
 const Icons = styled.span`
   display: flex;

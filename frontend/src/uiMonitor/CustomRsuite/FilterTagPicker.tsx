@@ -16,6 +16,7 @@ export function FilterTagPicker({ onChange, value, ...props }) {
         {selectedItems > 0 && <strong> ({selectedItems})</strong>}
       </InputContent>
       <StyledTagPicker
+        // eslint-disable-next-line react/jsx-props-no-spreading
         {...rest}
         $selectedItems={selectedItems}
         cleanable={false}

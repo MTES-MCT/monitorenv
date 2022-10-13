@@ -12,9 +12,9 @@ import {
 } from '../../domain/use_cases/missions/missionAndControlLocalisation'
 import { usePrevious } from '../../hooks/usePrevious'
 import { ReactComponent as CircleSVG } from '../../uiMonitor/icons/Info.svg'
-import { ReactComponent as PolygonSVG } from '../../uiMonitor/icons/polygone.svg'
-import { ReactComponent as RectangleSVG } from '../../uiMonitor/icons/rectangle.svg'
-import { ReactComponent as SelectorSVG } from '../../uiMonitor/icons/selector.svg'
+import { ReactComponent as PolygonSVG } from '../../uiMonitor/icons/Polygone.svg'
+import { ReactComponent as RectangleSVG } from '../../uiMonitor/icons/Rectangle.svg'
+import { ReactComponent as SelectorSVG } from '../../uiMonitor/icons/Selector.svg'
 import { resetFeatures, setInteractionType } from './DrawLayer.slice'
 
 const titlePlaceholder = {

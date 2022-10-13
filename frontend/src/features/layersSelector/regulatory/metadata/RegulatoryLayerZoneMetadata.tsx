@@ -1,4 +1,4 @@
-import  { useCallback } from 'react'
+import { useCallback } from 'react'
 import { FingerprintSpinner } from 'react-epic-spinners'
 import { useDispatch } from 'react-redux'
 import { IconButton } from 'rsuite'
@@ -17,7 +17,6 @@ import MetadataRegulatoryReferences from './MetadataRegulatoryReferences'
 
 const FOUR_HOURS = 4 * 60 * 60 * 1000
 
-
 export function RegulatoryLayerZoneMetadata() {
   const dispatch = useDispatch()
   const { regulatoryMetadataLayerId, regulatoryMetadataPanelIsOpen } = useAppSelector(state => state.regulatoryMetadata)
@@ -30,40 +29,47 @@ export function RegulatoryLayerZoneMetadata() {
 
   return (
     <Wrapper $regulatoryMetadataPanelIsOpen={regulatoryMetadataPanelIsOpen}>
-    {regulatoryMetadata ? (
-      <>
-        <Header>
-          <RegulatoryLayerLegend entity_name={regulatoryMetadata?.entity_name} thematique={regulatoryMetadata?.thematique} />
-          <RegulatoryZoneName title={getTitle(regulatoryMetadata?.layer_name)}>
-            {getTitle(regulatoryMetadata?.layer_name)}
-          </RegulatoryZoneName>
-          <PaddedIconButton icon={<CloseSVG />} data-cy="regulatory-layers-metadata-close" onClick={onCloseIconClicked} />
-        </Header>
-        <Warning>
-          <WarningIcon />
-          Travail en cours, bien vérifier dans Légicem la validité de la référence et des infos réglementaires
-        </Warning>
-        <Content>
-          <Identification
-            entity_name={regulatoryMetadata?.entity_name}
-            facade={regulatoryMetadata?.facade}
-            thematique={regulatoryMetadata?.thematique}
-            type={regulatoryMetadata?.type}
-          />
-          <MetadataRegulatoryReferences
-            regulatoryReference={regulatoryMetadata?.ref_reg}
-            url={regulatoryMetadata?.url}
-          />
-        </Content>
-      </>
-    ) : (
-      <CenteredFingerprintSpinner size={100} />
-    )}
+      {regulatoryMetadata ? (
+        <>
+          <Header>
+            <RegulatoryLayerLegend
+              entity_name={regulatoryMetadata?.entity_name}
+              thematique={regulatoryMetadata?.thematique}
+            />
+            <RegulatoryZoneName title={getTitle(regulatoryMetadata?.layer_name)}>
+              {getTitle(regulatoryMetadata?.layer_name)}
+            </RegulatoryZoneName>
+            <PaddedIconButton
+              data-cy="regulatory-layers-metadata-close"
+              icon={<CloseSVG />}
+              onClick={onCloseIconClicked}
+            />
+          </Header>
+          <Warning>
+            <WarningIcon />
+            Travail en cours, bien vérifier dans Légicem la validité de la référence et des infos réglementaires
+          </Warning>
+          <Content>
+            <Identification
+              entity_name={regulatoryMetadata?.entity_name}
+              facade={regulatoryMetadata?.facade}
+              thematique={regulatoryMetadata?.thematique}
+              type={regulatoryMetadata?.type}
+            />
+            <MetadataRegulatoryReferences
+              regulatoryReference={regulatoryMetadata?.ref_reg}
+              url={regulatoryMetadata?.url}
+            />
+          </Content>
+        </>
+      ) : (
+        <CenteredFingerprintSpinner size={100} />
+      )}
     </Wrapper>
   )
 }
 
-const Wrapper = styled.div<{$regulatoryMetadataPanelIsOpen: boolean}>`
+const Wrapper = styled.div<{ $regulatoryMetadataPanelIsOpen: boolean }>`
   border-radius: 2px;
   width: 400px;
   display: block;

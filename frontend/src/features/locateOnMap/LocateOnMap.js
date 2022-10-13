@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { transformExtent, transform } from 'ol/proj'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { InputGroup, Input } from 'rsuite'
+import { Input, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { usePhotonAPI } from '../../api/photonAPI'
@@ -46,7 +46,7 @@ export function LocateOnMap() {
 
   return (
     <Wrapper>
-      <InputWrapper inside>
+      <InputWrapper>
         <SearchBoxInput
           data-cy="location-search-input"
           onChange={handleOnchange}
@@ -55,9 +55,7 @@ export function LocateOnMap() {
           type="text"
           value={searchedLocation}
         />
-        <InputGroup.Addon>
-          <SearchIcon className="rs-icon" />
-        </InputGroup.Addon>
+        <IconButton appearance="primary" icon={<SearchIcon />} size="lg" />
       </InputWrapper>
       <ResultsList>
         {uniqueResults &&
@@ -85,25 +83,28 @@ const Wrapper = styled.div`
   position: absolute;
   top: 10px;
   right: 10px;
-  width: 320px;
+  width: 365px;
 `
-const InputWrapper = styled(InputGroup)`
+const InputWrapper = styled.div`
   border: 0;
-  box-shadow: 0px 3px 6px ${COLORS.slateGray};
-  :focus-within {
-    outline: none !important;
-    border-bottom: 2px solid ${COLORS.blueGray};
-  }
+  display: flex;
+  width: 365px;
 `
 
 const SearchBoxInput = styled(Input)`
   display: inline-block;
   background-color: white;
+  box-shadow: 0px 3px 6px ${COLORS.slateGray};
+  :focus-within {
+    outline: none !important;
+    border-bottom: 2px solid ${COLORS.blueGray};
+  }
   padding-left: 16px;
   padding-top: 11px;
   padding-bottom: 11px;
   font-size: 13px;
   line-height: 18px;
+  width: 320px;
   :focus {
     outline: none !important;
   }
@@ -111,11 +112,11 @@ const SearchBoxInput = styled(Input)`
     padding-top: 10px;
     padding-bottom: 10px;
   }
+  margin-right: auto;
 `
-
 const SearchIcon = styled(SearchIconSVG)`
-  width: 20px;
-  height: 20px;
+  width: 26px;
+  height: 26px;
 `
 
 const ResultsList = styled.ul`

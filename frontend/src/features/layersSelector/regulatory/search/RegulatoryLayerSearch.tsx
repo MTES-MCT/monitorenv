@@ -2,7 +2,7 @@ import Document from 'flexsearch/dist/module/document'
 import _ from 'lodash'
 import { intersects } from 'ol/extent'
 import { transformExtent } from 'ol/proj'
-import {  useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { IconButton } from 'rsuite'
 import styled from 'styled-components'
@@ -28,7 +28,7 @@ export function RegulatoryLayerSearch() {
   const [filterSearchOnMapExtent, setFilterSearchOnMapExtent] = useState(false)
   const [shouldReloadSearchOnExtent, setShouldReloadSearchOnExtent] = useState(false)
   const [globalSearchText, setGlobalSearchText] = useState('')
-  const [displayRegFilters, setDisplayRegFilters ] = useState(false)
+  const [displayRegFilters, setDisplayRegFilters] = useState(false)
   const [filteredRegulatoryThemes, setFilteredRegulatoryThemes] = useState([])
 
   useEffect(() => {
@@ -39,66 +39,53 @@ export function RegulatoryLayerSearch() {
     }
   }, [filterSearchOnMapExtent, currentMapExtentTracker])
 
-  const searchLayers = useMemo(
-    ()=> {
-      const RegulatoryLayersIndex = new Document({
-        charset: 'latin:extra',
-        document: {
-          id: 'id',
-          tag: 'properties:thematique',
-          index: [
-            'properties:layer_name',
-            'properties:entity_name',
-            'properties:ref_reg',
-            'properties:type'
-          ],
-          store: true
-        },
-        tokenize: 'full'
-      })
+  const searchLayers = useMemo(() => {
+    const RegulatoryLayersIndex = new Document({
+      charset: 'latin:extra',
+      document: {
+        id: 'id',
+        index: ['properties:layer_name', 'properties:entity_name', 'properties:ref_reg', 'properties:type'],
+        store: true,
+        tag: 'properties:thematique'
+      },
+      tokenize: 'full'
+    })
 
-      regulatoryLayers?.forEach(layer => RegulatoryLayersIndex.add(layer))
-      return (searchedText, geofilter, extent, filterOnThemes) => {
-        if (searchedText ||filterOnThemes.length>0) {
-          const allResults = RegulatoryLayersIndex.search(searchedText, {
-            enrich: true,
-            tag: filterOnThemes,
-            index: [
-              'properties:layer_name',
-              'properties:entity_name',
-              'properties:type',
-              'properties:ref_reg'
-            ]
-          })
-          const uniqueResults = _.uniqWith(
-            _.flatMap(allResults, field => field.result),
-            (a, b) => a.id === b.id
-          )
-          if (extent && geofilter) {
-            const currentExtent = transformExtent(extent, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
-            const filteredResults = _.filter(uniqueResults, result => intersects(result?.doc?.bbox, currentExtent))
-            dispatch(setRegulatoryLayersSearchResult(filteredResults))
-          } else {
-            dispatch(setRegulatoryLayersSearchResult(uniqueResults))
-          }
-        } else if (extent && geofilter) {
+    regulatoryLayers?.forEach(layer => RegulatoryLayersIndex.add(layer))
+
+    return (searchedText, geofilter, extent, filterOnThemes) => {
+      if (searchedText || filterOnThemes.length > 0) {
+        const allResults = RegulatoryLayersIndex.search(searchedText, {
+          enrich: true,
+          index: ['properties:layer_name', 'properties:entity_name', 'properties:type', 'properties:ref_reg'],
+          tag: filterOnThemes
+        })
+        const uniqueResults = _.uniqWith(
+          _.flatMap(allResults, field => field.result),
+          (a, b) => a.id === b.id
+        )
+        if (extent && geofilter) {
           const currentExtent = transformExtent(extent, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
-          const filteredResults = _.map(
-            _.filter(regulatoryLayers, layer => intersects(layer.bbox, currentExtent)),
-            layer => ({
-              doc: layer,
-              id: layer.id
-            })
-          )
+          const filteredResults = _.filter(uniqueResults, result => intersects(result?.doc?.bbox, currentExtent))
           dispatch(setRegulatoryLayersSearchResult(filteredResults))
         } else {
-          dispatch(setRegulatoryLayersSearchResult([]))
+          dispatch(setRegulatoryLayersSearchResult(uniqueResults))
         }
+      } else if (extent && geofilter) {
+        const currentExtent = transformExtent(extent, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
+        const filteredResults = _.map(
+          _.filter(regulatoryLayers, layer => intersects(layer.bbox, currentExtent)),
+          layer => ({
+            doc: layer,
+            id: layer.id
+          })
+        )
+        dispatch(setRegulatoryLayersSearchResult(filteredResults))
+      } else {
+        dispatch(setRegulatoryLayersSearchResult([]))
       }
     }
-    ,
-    [dispatch, regulatoryLayers]
-  )
+  }, [dispatch, regulatoryLayers])
 
   const handleReloadSearch = () => {
     setShouldReloadSearchOnExtent(false)
@@ -118,7 +105,7 @@ export function RegulatoryLayerSearch() {
     setGlobalSearchText(searchedText)
     searchLayers(searchedText, filterSearchOnMapExtent, currentMapExtentTracker, filteredRegulatoryThemes)
   }
-  const handleSetFilteredRegulatoryThemes = (filteredThemes) => {
+  const handleSetFilteredRegulatoryThemes = filteredThemes => {
     setFilteredRegulatoryThemes(filteredThemes)
     searchLayers(globalSearchText, filterSearchOnMapExtent, currentMapExtentTracker, filteredThemes)
   }
@@ -139,34 +126,36 @@ export function RegulatoryLayerSearch() {
   const toggleRegFilters = () => {
     setDisplayRegFilters(!displayRegFilters)
   }
-  
-  const regulatoryThemes = useMemo(()=>{
-      return _.chain(regulatoryLayers)
-        .uniqBy(l=>l.properties.thematique)
-        .filter(l=>!!l.properties.thematique)
-        .map(l=>({label: l.properties.thematique, value: l.properties.thematique}))
+
+  const regulatoryThemes = useMemo(
+    () =>
+      _.chain(regulatoryLayers)
+        .uniqBy(l => l.properties.thematique)
+        .filter(l => !!l.properties.thematique)
+        .map(l => ({ label: l.properties.thematique, value: l.properties.thematique }))
         .sortBy('label')
-        .value()
-  }, [regulatoryLayers])
+        .value(),
+    [regulatoryLayers]
+  )
   const allowResetResults = !_.isEmpty(results)
 
   return (
     <>
       <Search>
-        <RegulatoryLayerSearchInput 
-          globalSearchText={globalSearchText} 
-          setGlobalSearchText={handleSearchInputChange} 
-          toggleRegFilters={toggleRegFilters}
+        <RegulatoryLayerSearchInput
           displayRegFilters={displayRegFilters}
-          filteredRegulatoryThemes={filteredRegulatoryThemes} 
+          filteredRegulatoryThemes={filteredRegulatoryThemes}
+          globalSearchText={globalSearchText}
+          setGlobalSearchText={handleSearchInputChange}
+          toggleRegFilters={toggleRegFilters}
         />
-        {
-          displayRegFilters && <RegulatoryLayerFilters 
-            filteredRegulatoryThemes={filteredRegulatoryThemes} 
-            regulatoryThemes={regulatoryThemes}  
+        {displayRegFilters && (
+          <RegulatoryLayerFilters
+            filteredRegulatoryThemes={filteredRegulatoryThemes}
+            regulatoryThemes={regulatoryThemes}
             setFilteredRegulatoryThemes={handleSetFilteredRegulatoryThemes}
           />
-        }
+        )}
         <RegulatoryLayerSearchResultList results={results} searchedText={globalSearchText} />
       </Search>
       <SearchOnExtentButton

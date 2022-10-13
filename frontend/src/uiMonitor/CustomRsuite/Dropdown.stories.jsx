@@ -2,7 +2,7 @@ import { Dropdown } from 'rsuite'
 import styled from 'styled-components'
 
 import { ReactComponent as ControlSVG } from '../icons/Control.svg'
-import { ReactComponent as NoteSVG } from '../icons/note_libre.svg'
+import { ReactComponent as NoteSVG } from '../icons/Note_libre.svg'
 import { ReactComponent as SurveillanceSVG } from '../icons/Observation.svg'
 import { ReactComponent as PlusSVG } from '../icons/Plus.svg'
 
@@ -10,7 +10,7 @@ export default {
   title: 'RsuiteMonitor/Dropdown'
 }
 
-function TemplateDropdown({ label = 'Ajouter', ...args }) {
+function TemplateDropdown({ label = 'Ajouter' }) {
   const handleClick = e => {
     console.log(e)
   }

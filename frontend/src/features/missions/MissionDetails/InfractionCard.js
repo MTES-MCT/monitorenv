@@ -28,7 +28,7 @@ export function InfractionCard({ currentActionIndex, infractionPath, removeInfra
   return (
     <Wrapper>
       <Summary>
-        {targetTypeField.value == actionTargetTypeEnum.VEHICLE.code && (
+        {targetTypeField.value === actionTargetTypeEnum.VEHICLE.code && (
           <VehicleType>
             {vehicleTypeEnum[vehicleTypeField?.value]?.libelle || 'Non Renseigné'}{' '}
             {vehicleTypeField?.value === vehicleTypeEnum.VESSEL.code
@@ -37,7 +37,7 @@ export function InfractionCard({ currentActionIndex, infractionPath, removeInfra
             &ndash;
           </VehicleType>
         )}
-        {targetTypeField.value == actionTargetTypeEnum.VEHICLE.code ? (
+        {targetTypeField.value === actionTargetTypeEnum.VEHICLE.code ? (
           <Identification>{registrationNumber?.value || 'sans immatriculation'}</Identification>
         ) : (
           <Identification>
