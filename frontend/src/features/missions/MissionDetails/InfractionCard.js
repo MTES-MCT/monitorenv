@@ -11,8 +11,8 @@ import {
   vesselTypeEnum,
   actionTargetTypeEnum
 } from '../../../domain/entities/missions'
-import { ReactComponent as EditIconSVG } from '../../../uiMonitor/icons/Bouton_edition.svg'
-import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression_clair.svg'
+import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
+import { ReactComponent as EditIconSVG } from '../../../uiMonitor/icons/Edit.svg'
 
 export function InfractionCard({ currentActionIndex, infractionPath, removeInfraction, setCurrentInfractionIndex }) {
   const [targetTypeField] = useField(`envActions.${currentActionIndex}.actionTargetType`)
@@ -28,7 +28,7 @@ export function InfractionCard({ currentActionIndex, infractionPath, removeInfra
   return (
     <Wrapper>
       <Summary>
-        {targetTypeField.value == actionTargetTypeEnum.VEHICLE.code && (
+        {targetTypeField.value === actionTargetTypeEnum.VEHICLE.code && (
           <VehicleType>
             {vehicleTypeEnum[vehicleTypeField?.value]?.libelle || 'Non Renseigné'}{' '}
             {vehicleTypeField?.value === vehicleTypeEnum.VESSEL.code
@@ -37,7 +37,7 @@ export function InfractionCard({ currentActionIndex, infractionPath, removeInfra
             &ndash;
           </VehicleType>
         )}
-        {targetTypeField.value == actionTargetTypeEnum.VEHICLE.code ? (
+        {targetTypeField.value === actionTargetTypeEnum.VEHICLE.code ? (
           <Identification>{registrationNumber?.value || 'sans immatriculation'}</Identification>
         ) : (
           <Identification>

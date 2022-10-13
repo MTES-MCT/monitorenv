@@ -1,22 +1,21 @@
-import React from 'react'
-import { Link as ALink } from './Link';
+import { Link as ALink } from './Link'
 
 export default {
-  title: 'MonitorEnv/Link',
   component: ALink,
-};
+  title: 'MonitorEnv/Link'
+}
 
-const Template = ({name, ...args}) => {
+function Template({ name }) {
   return (
     <>
-      <ALink  {...args} >{name}</ALink>
-      <br/>
-      <ALink  {...args} tagUrl>{name}</ALink>
+      <ALink>{name}</ALink>
+      <br />
+      <ALink tagUrl>{name}</ALink>
     </>
   )
 }
 
 export const Link = Template.bind({})
 Link.args = {
-  name: "Décret n° 2012-507 du 18 avril 2012 créant le Parc national des Calanques"
+  name: 'Décret n° 2012-507 du 18 avril 2012 créant le Parc national des Calanques'
 }

@@ -8,7 +8,7 @@ import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { drawLayerTypes } from '../../../domain/entities/drawLayer'
-import Layers from '../../../domain/entities/layers'
+import { Layers } from '../../../domain/entities/layers'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map'
 import { addFeature } from '../../drawLayer/DrawLayer.slice'
 import { dottedLayerStyle, pointLayerStyle } from './styles/dottedLayer.style'

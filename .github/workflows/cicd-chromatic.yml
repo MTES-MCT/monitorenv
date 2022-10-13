@@ -15,17 +15,20 @@ on:
 jobs:
   test:
     # Operating System
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     # Job steps
     steps:
       - uses: actions/checkout@v1
-      - name: NPM install with caching
-        uses: bahmutov/npm-install@v1.8.15
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          # Working directory to specify subfolder in which dependencies are defined
-          working-directory: frontend/
-          # Custom install command to use
-          install-command: npm ci --force
+          cache: npm
+          cache-dependency-path: ./frontend/package-lock.json
+          node-version: 18
+
+      - name: Install Node.js dependencies
+        run: npm ci
+        working-directory: ./frontend
         #👇 Adds Chromatic as a step in the workflow
       - uses: chromaui/action@v1
         # Options required for Chromatic's GitHub Action

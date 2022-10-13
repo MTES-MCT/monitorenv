@@ -1,22 +1,21 @@
 import _ from 'lodash'
 import { transformExtent, transform } from 'ol/proj'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { IconButton, Input } from 'rsuite'
+import { Input, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { usePhotonAPI } from '../../api/photonAPI'
 import { COLORS } from '../../constants/constants'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map'
 import { setFitToExtent } from '../../domain/shared_slices/Map'
-import { ReactComponent as CloseIconSVG } from '../../uiMonitor/icons/Croix_grise.svg'
-import { ReactComponent as SearchIconSVG } from '../../uiMonitor/icons/Loupe.svg'
+import { ReactComponent as SearchIconSVG } from '../../uiMonitor/icons/Search.svg'
 
 export function LocateOnMap() {
   const dispatch = useDispatch()
   const [searchedLocation, setSearchedLocation] = useState('')
 
-  const handleResetSearch = () => setSearchedLocation('')
+  // const handleResetSearch = () => setSearchedLocation('')
   const handleOnchange = value => {
     setSearchedLocation(value)
   }
@@ -42,9 +41,7 @@ export function LocateOnMap() {
   ).slice(0, 10)
 
   const handleSelectLocation = location => () => {
-    dispatch(
-      setFitToExtent({ extent: transformExtent(location.properties.extent, WSG84_PROJECTION, OPENLAYERS_PROJECTION) })
-    )
+    dispatch(setFitToExtent(transformExtent(location.properties.extent, WSG84_PROJECTION, OPENLAYERS_PROJECTION)))
   }
 
   return (
@@ -53,17 +50,12 @@ export function LocateOnMap() {
         <SearchBoxInput
           data-cy="location-search-input"
           onChange={handleOnchange}
-          placeholder="localiser la carte sur un lieu"
+          placeholder="rechercher un lieu (port, lieu-dit, baie...)"
+          size="lg"
           type="text"
           value={searchedLocation}
         />
-
-        <IconButton
-          appearance="primary"
-          icon={searchedLocation === '' ? <SearchIcon className="rs-icon" /> : <CloseIcon className="rs-icon" />}
-          onClick={handleResetSearch}
-          title="chercher un lieu"
-        />
+        <IconButton appearance="primary" icon={<SearchIcon />} size="lg" />
       </InputWrapper>
       <ResultsList>
         {uniqueResults &&
@@ -91,32 +83,40 @@ const Wrapper = styled.div`
   position: absolute;
   top: 10px;
   right: 10px;
+  width: 365px;
 `
 const InputWrapper = styled.div`
+  border: 0;
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  width: 365px;
 `
 
 const SearchBoxInput = styled(Input)`
   display: inline-block;
   background-color: white;
-  padding-left: 4px;
-  width: ${props => (props.value?.length > 0 ? '300px' : '200px')};
-  transition: all 0.5s;
-  :focus {
-    width: 300px;
+  box-shadow: 0px 3px 6px ${COLORS.slateGray};
+  :focus-within {
+    outline: none !important;
+    border-bottom: 2px solid ${COLORS.blueGray};
   }
+  padding-left: 16px;
+  padding-top: 11px;
+  padding-bottom: 11px;
+  font-size: 13px;
+  line-height: 18px;
+  width: 320px;
+  :focus {
+    outline: none !important;
+  }
+  .rs-input-group-addon {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  margin-right: auto;
 `
-
 const SearchIcon = styled(SearchIconSVG)`
-  width: 16px;
-  height: 16px;
-`
-
-const CloseIcon = styled(CloseIconSVG)`
-  width: 16px;
-  height: 16px;
+  width: 26px;
+  height: 26px;
 `
 
 const ResultsList = styled.ul`

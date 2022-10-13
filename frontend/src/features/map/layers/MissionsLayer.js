@@ -4,7 +4,7 @@ import { useMemo, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useGetMissionsQuery } from '../../../api/missionsAPI'
-import Layers from '../../../domain/entities/layers'
+import { Layers } from '../../../domain/entities/layers'
 import { selectMissionOnMap } from '../../../domain/use_cases/missions/selectMissionOnMap'
 import { getMissionZoneFeature } from './missionGeometryHelpers'
 import { missionWithCentroidStyleFn } from './styles/missions.style'

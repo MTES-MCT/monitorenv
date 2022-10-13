@@ -8,6 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.CreateMission
 
 import com.nhaarman.mockitokotlin2.*
+import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -20,6 +21,9 @@ class CreateMissionUTests {
 
   @MockBean
   private lateinit var missionRepository: IMissionRepository
+
+  @MockBean
+  private lateinit var facadeAreasRepository: IFacadeAreasRepository
 
   @Test
   fun `should create and return a new mission`() {
@@ -35,7 +39,7 @@ class CreateMissionUTests {
     given(missionRepository.create(expectedCreatedMission)).willReturn(expectedCreatedMission)
 
     // When
-    val createdMission = CreateMission(missionRepository).execute(expectedCreatedMission)
+    val createdMission = CreateMission(missionRepository, facadeAreasRepository).execute(expectedCreatedMission)
 
     // Then
     verify(missionRepository, times(1)).create(expectedCreatedMission)

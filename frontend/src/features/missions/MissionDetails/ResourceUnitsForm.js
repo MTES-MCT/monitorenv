@@ -3,7 +3,7 @@ import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import { ReactComponent as PlusSVG } from '../../../uiMonitor/icons/plus.svg'
+import { ReactComponent as PlusSVG } from '../../../uiMonitor/icons/Plus.svg'
 import { resourceUnitFactory } from '../Missions.helpers'
 import { ResourceUnitSelector } from './ResourceUnitSelector'
 

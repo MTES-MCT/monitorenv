@@ -4,10 +4,10 @@ import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
 import { actionTypeEnum } from '../../../domain/entities/missions'
-import { ReactComponent as ControlSVG } from '../../../uiMonitor/icons/controles.svg'
-import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/note_libre.svg'
-import { ReactComponent as PlusSVG } from '../../../uiMonitor/icons/plus.svg'
-import { ReactComponent as SurveillanceSVG } from '../../../uiMonitor/icons/surveillance_18px.svg'
+import { ReactComponent as ControlSVG } from '../../../uiMonitor/icons/Control.svg'
+import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/Note_libre.svg'
+import { ReactComponent as SurveillanceSVG } from '../../../uiMonitor/icons/Observation.svg'
+import { ReactComponent as PlusSVG } from '../../../uiMonitor/icons/Plus.svg'
 import { actionFactory } from '../Missions.helpers'
 import { ActionCard } from './ActionCard'
 
@@ -31,13 +31,13 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
       <TitleWrapper>
         <Title>Actions réalisées en mission</Title>
         <Dropdown appearance="primary" icon={<PlusSVG className="rs-icon" />} noCaret title="Ajouter">
-          <Dropdown.Item icon={<ControlSVGIcon />} onClick={handleAddControlAction}>
+          <Dropdown.Item icon={<ControlSVG />} onClick={handleAddControlAction}>
             Ajouter des contrôles
           </Dropdown.Item>
-          <Dropdown.Item icon={<SurveillanceSVGIcon />} onClick={handleAddSurveillanceAction}>
+          <Dropdown.Item icon={<SurveillanceSVG />} onClick={handleAddSurveillanceAction}>
             Ajouter une surveillance
           </Dropdown.Item>
-          <Dropdown.Item icon={<NoteSVGIcon />} onClick={handleAddNoteAction}>
+          <Dropdown.Item icon={<NoteSVG />} onClick={handleAddNoteAction}>
             Ajouter une note libre
           </Dropdown.Item>
         </Dropdown>
@@ -99,15 +99,4 @@ const NoActionWrapper = styled.div`
 const NoAction = styled.div`
   text-align: center;
   font-style: italic;
-`
-const ControlSVGIcon = styled(ControlSVG)`
-  width: 18px;
-  margin-right: 10px;
-  padding: 2px;
-`
-const SurveillanceSVGIcon = styled(SurveillanceSVG)`
-  margin-right: 10px;
-`
-const NoteSVGIcon = styled(NoteSVG)`
-  margin-right: 10px;
 `

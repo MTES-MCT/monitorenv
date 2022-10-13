@@ -1,55 +1,37 @@
+/* eslint-disable sort-keys-fix/sort-keys-fix */
 export const COLORS = {
   background: '#FFFFFF',
-  blue: '#0A18DF',
-  blueJeans: '#42A7FF',
-  blueJeans25: '#CFE9FF',
-  cadetGrey: '#8E9A9F',
-  charcoal: '#3B4559',
-  chineseRed: '#A13112',
-  copperRed: '#CF6A4E',
-  cultured: '#F7F7FA',
-  gainsboro: '#E5E5EB',
-  goldenPoppy: '#FAC11A',
-  gray: '#EEEEEE',
 
-  grayBackground: '#D3D5DC',
-  grayDarkerTwo: '#9A9A9A',
-  grayLighter: '#F0F0F0',
-  grayShadow: '#969696BF',
-  grayVesselHidden: '#B2B2B2',
-  grullo: '#B89B8C',
   gunMetal: '#282F3E',
-
+  charcoal: '#3B4559',
+  slateGray: '#707785',
   lightGray: '#CCCFD6',
+  gainsboro: '#E5E5EB',
+  cultured: '#F7F7FA',
+  white: '#FFFFFF',
+
+  blueYonder: '#567A9E',
+  blueYonder25: '#D4DDE7',
+  blueGray: '#5697D2',
+  blueGray25: '#D4E5F4',
+  babyBlueEyes: '#99C9FF',
+
   maximumRed: '#E1000F',
   mediumSeaGreen: '#29b361',
-
-  missingBlue: '#1F78B4',
-  missingGreen: '#33A02C',
-  missingGrey: '#EEEEF1',
   opal: '#A5BCC0',
-  orange: '#F6D012',
-  overlayShadow: '#7077851A',
+
+  cadetGrey: '#8E9A9F',
+  grullo: '#B89B8C',
+  copperRed: '#CF6A4E',
+  chineseRed: '#A13112',
+
   powderBlue: '#9ED7D9',
-  red: '#E1000F',
-  shadowBlue: '#6B839E',
-  shadowBlueLight: '#d6dce3',
-  shadowBlueLittleOpacity: 'rgba(107, 131, 158, 0.15)',
-  slateGray: '#707785',
-  slateGrayLittleOpacity: 'rgba(112, 119, 133, 0.7)',
-  squareBorder: '#E0E0E0',
-  steelBlue: '#5E87AD',
-  steelBlue25: '#D6E1EA',
-  textBueGray: '#848DAE',
-  textWhite: '#EDEDF5',
-  titleBottomBorder: '#E0E0E0',
-  trackFishing: '#2A4670',
-  trackTransit: '#1C9B7B',
-  vesselColor: '#3B4559',
-  vesselLightColor: '#cacce0',
   wheat: '#EDD6A4',
-  white: '#FFFFFF',
-  yellow: '#F6D012'
+  goldenPoppy: '#FAC11A',
+
+  // deprecated
+  grayShadow: '#969696BF',
+  overlayShadow: '#7077851A'
 }
 
 export const HIT_PIXEL_TO_TOLERANCE = 15

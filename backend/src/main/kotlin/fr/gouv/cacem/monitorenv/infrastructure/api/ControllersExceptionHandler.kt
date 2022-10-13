@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.core.Ordered.HIGHEST_PRECEDENCE
 import org.springframework.core.annotation.Order
 import org.springframework.http.HttpStatus
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
@@ -31,4 +32,13 @@ class ControllersExceptionHandler {
         logger.error(e.message, e.cause)
         return MissingParameterApiError("Parameter \"${e.parameterName}\" is missing.")
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HttpMessageNotReadableException::class)
+    fun handleNoParameter(e: HttpMessageNotReadableException): ApiError {
+        logger.error(e.message, e.cause)
+        return ApiError(e)
+    }
+
+
 }

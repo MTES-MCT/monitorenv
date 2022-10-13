@@ -46,7 +46,7 @@ export const missionWithCentroidStyleFn = feature => {
 
 export const selectedMissionActionsStyle = new Style({
   image: new Icon({
-    color: COLORS.red,
+    color: COLORS.maximumRed,
     scale: 1.4,
     src: 'controle_18px.svg'
   })

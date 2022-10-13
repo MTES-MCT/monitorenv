@@ -43,8 +43,8 @@ class ControlThemesControllerITests {
 
     val controlTheme = ControlThemeEntity(
       id = 1,
-      theme_level_1 = "Police des mouillages",
-      theme_level_2 = "Mouillage individuel"
+      themeLevel1 = "Police des mouillages",
+      themeLevel2 = "Mouillage individuel"
     )
     given(this.getControlThemes.execute()).willReturn(listOf(controlTheme))
 
@@ -53,8 +53,8 @@ class ControlThemesControllerITests {
       // Then
       .andExpect(status().isOk)
       .andExpect(jsonPath("$[0].id", equalTo(controlTheme.id)))
-      .andExpect(jsonPath("$[0].theme_level_1", equalTo(controlTheme.theme_level_1)))
-      .andExpect(jsonPath("$[0].theme_level_2", equalTo(controlTheme.theme_level_2)))
+      .andExpect(jsonPath("$[0].themeLevel1", equalTo(controlTheme.themeLevel1)))
+      .andExpect(jsonPath("$[0].themeLevel2", equalTo(controlTheme.themeLevel2)))
   }
 
   @Test
@@ -63,8 +63,8 @@ class ControlThemesControllerITests {
 
     val controlTheme = ControlThemeEntity(
       id = 1,
-      theme_level_1 = "Police des mouillages",
-      theme_level_2 = "Mouillage individuel"
+      themeLevel1 = "Police des mouillages",
+      themeLevel2 = "Mouillage individuel"
     )
 
     given(this.getControlThemeById.execute(3)).willReturn(controlTheme)
@@ -74,7 +74,7 @@ class ControlThemesControllerITests {
       // Then
       .andExpect(status().isOk)
       .andExpect(jsonPath("$.id", equalTo(controlTheme.id)))
-      .andExpect(jsonPath("$.theme_level_1", equalTo(controlTheme.theme_level_1)))
-      .andExpect(jsonPath("$.theme_level_2", equalTo(controlTheme.theme_level_2)))
+      .andExpect(jsonPath("$.themeLevel1", equalTo(controlTheme.themeLevel1)))
+      .andExpect(jsonPath("$.themeLevel2", equalTo(controlTheme.themeLevel2)))
   }
 }

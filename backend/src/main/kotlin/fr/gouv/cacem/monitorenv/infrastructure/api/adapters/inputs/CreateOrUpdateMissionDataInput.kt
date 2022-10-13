@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.missions.*
+
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
@@ -10,8 +11,8 @@ data class CreateOrUpdateMissionDataInput(
   val missionStatus: MissionStatusEnum,
   val missionNature: List<MissionNatureEnum>? = listOf(),
   val resourceUnits: List<ResourceUnitEntity>? = listOf(),
-  val open_by: String? = null,
-  val closed_by: String? = null,
+  val openBy: String? = null,
+  val closedBy: String? = null,
   val observations: String? = null,
   val facade: String? = null,
   val geom: MultiPolygon? = null,
@@ -26,8 +27,8 @@ data class CreateOrUpdateMissionDataInput(
         missionNature = this.missionNature,
         missionStatus = this.missionStatus,
         resourceUnits = this.resourceUnits,
-        open_by = this.open_by,
-        closed_by = this.closed_by,
+        openBy = this.openBy,
+        closedBy = this.closedBy,
         observations = this.observations,
         facade = this.facade,
         geom = this.geom,

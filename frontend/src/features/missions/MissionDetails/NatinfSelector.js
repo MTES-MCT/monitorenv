@@ -23,18 +23,20 @@ export function NatinfSelector({ infractionPath, ...props }) {
       <Form.ControlLabel htmlFor="natinf">NATINF</Form.ControlLabel>
       <FixedWidthTagPicker
         block
-        container={()=>selectorRef.current}
-        labelKey={'natinf_code'}
-        onChange={natinfHelpers.setValue}
-        renderMenuItem={(label, item)=> (<>{`${item.natinf_code} - ${item.infraction}`}</>)}
-        renderValue={(values, items)=> items?.map((tag,index)=> (<Tag key={index}>{`${tag.natinf_code} - ${tag.infraction}`}</Tag>))}
+        container={() => selectorRef.current}
         data={data}
+        labelKey="natinf_code"
+        onChange={natinfHelpers.setValue}
+        renderMenuItem={(label, item) => <>{`${item.natinf_code} - ${item.infraction}`}</>}
+        renderValue={(values, items) =>
+          items?.map((tag, index) => <Tag key={index}>{`${tag.natinf_code} - ${tag.infraction}`}</Tag>)
+        }
         // sort={()=>(a,b) => {
         //   return a?.natinf_code < b?.natinf_code ? -1 : a?.natinf_code > b?.natinf_code ? 1 : 0;
         // }}
         searchable
         value={natinfField.value}
-        valueKey={'natinf_code'}
+        valueKey="natinf_code"
         virtualized
         {...props}
       />

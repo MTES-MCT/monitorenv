@@ -56,10 +56,14 @@ const Zone = styled.span`
   display: flex;
   user-select: none;
   padding-bottom: 2px;
+  padding-right: 8px;
   ${props => (!props.isOpen ? null : `border-bottom: 1px solid ${COLORS.lightGray};`)}
 
   :hover {
-    background: ${COLORS.shadowBlueLittleOpacity};
+    background: ${COLORS.blueYonder25};
+  }
+  & > :last-child {
+    margin-top: 9px;
   }
 `
 

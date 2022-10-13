@@ -1,4 +1,3 @@
-import React from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -8,7 +7,7 @@ import { FEATURE_FLAGS } from '../features'
 import { DrawLayerModal } from '../features/drawLayer/DrawLayerModal'
 import Healthcheck from '../features/healthcheck/Healthcheck'
 import InterestPoint from '../features/interest_points/InterestPoint'
-import LayersSidebar from '../features/layersSelector/LayersSidebar'
+import { LayersSidebar } from '../features/layersSelector/LayersSidebar'
 import { LocateOnMap } from '../features/locateOnMap/LocateOnMap'
 import Map from '../features/map/Map'
 import Measurement from '../features/measurements/Measurement'

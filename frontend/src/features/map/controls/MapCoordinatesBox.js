@@ -107,7 +107,7 @@ const RadioWrapper = styled(RadioGroup)`
 
 const Header = styled.span`
   background-color: ${COLORS.charcoal};
-  color: ${COLORS.grayLighter};
+  color: ${COLORS.cultured};
   padding: 5px 0;
   width: 100%;
   display: inline-block;
@@ -143,7 +143,7 @@ const Coordinates = styled.span`
   left: 40px;
   display: inline-block;
   padding: 2px 0 6px 2px;
-  color: ${COLORS.textWhite};
+  color: ${COLORS.gainsboro};
   font-size: 13px;
   font-weight: 300;
   text-decoration: none;

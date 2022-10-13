@@ -1,0 +1,140 @@
+import { Feature } from 'ol'
+import GeoJSON from 'ol/format/GeoJSON'
+import { fromExtent } from 'ol/geom/Polygon'
+import { Vector } from 'ol/layer'
+import VectorSource from 'ol/source/Vector'
+import { MutableRefObject, useEffect, useRef } from 'react'
+import { useDispatch } from 'react-redux'
+
+import { Layers } from '../../../domain/entities/layers'
+import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+import { getRegulatoryLayerStyle } from './styles/administrativeAndRegulatoryLayers.style'
+import { dottedLayerStyle } from './styles/dottedLayer.style'
+
+export const metadataIsShowedPropertyName = 'metadataIsShowed'
+
+export function RegulatoryPreviewLayer({ map }) {
+  const dispatch = useDispatch()
+  const { regulatoryMetadataLayerId } = useAppSelector(state => state.regulatoryMetadata)
+  const { regulatoryLayersSearchResult, searchExtent } = useAppSelector(state => state.regulatoryLayerSearch)
+
+  const regulatoryLayerRef = useRef() as MutableRefObject<Vector<VectorSource>>
+  const regulatoryVectorSourceRef = useRef() as MutableRefObject<VectorSource>
+  function getRegulatoryVectorSource() {
+    if (!regulatoryVectorSourceRef.current) {
+      regulatoryVectorSourceRef.current = new VectorSource({
+        features: []
+      })
+    }
+
+    return regulatoryVectorSourceRef.current
+  }
+
+  const searchExtentLayerRef = useRef() as MutableRefObject<Vector<VectorSource>>
+  const seachExtentVectorSourceRef = useRef() as MutableRefObject<VectorSource>
+  function getSearchExtentVectorSource() {
+    if (!seachExtentVectorSourceRef.current) {
+      seachExtentVectorSourceRef.current = new VectorSource({
+        features: []
+      })
+    }
+
+    return seachExtentVectorSourceRef.current
+  }
+
+  useEffect(() => {
+    if (map) {
+      const features = getRegulatoryVectorSource().getFeatures()
+      if (features?.length) {
+        features.forEach(f => f.set(metadataIsShowedPropertyName, f.get('layerId') === regulatoryMetadataLayerId))
+      }
+    }
+  }, [map, regulatoryMetadataLayerId])
+
+  useEffect(() => {
+    if (map) {
+      getRegulatoryVectorSource().clear()
+      if (regulatoryLayersSearchResult) {
+        const features = regulatoryLayersSearchResult.map(regulatorylayer => {
+          if (regulatorylayer.doc?.geometry) {
+            const feature = new GeoJSON({
+              featureProjection: OPENLAYERS_PROJECTION
+            }).readFeature(regulatorylayer.doc.geometry)
+            feature.setId(`${Layers.REGULATORY_ENV_PREVIEW.code}:${regulatorylayer.doc.id}`)
+            feature.setProperties({ layerId: regulatorylayer.doc.id, ...regulatorylayer.doc.properties })
+
+            return feature
+          }
+
+          return undefined
+        })
+        getRegulatoryVectorSource().addFeatures(features)
+      }
+    }
+  }, [map, regulatoryLayersSearchResult])
+
+  useEffect(() => {
+    function getLayer() {
+      if (!regulatoryLayerRef.current) {
+        regulatoryLayerRef.current = new Vector({
+          properties: {
+            name: Layers.REGULATORY_ENV_PREVIEW.code
+          },
+          renderBuffer: 4,
+          source: getRegulatoryVectorSource(),
+          style: getRegulatoryLayerStyle,
+          updateWhileAnimating: true,
+          updateWhileInteracting: true
+        })
+      }
+
+      return regulatoryLayerRef.current
+    }
+    if (map) {
+      map.getLayers().push(getLayer())
+    }
+
+    return () => {
+      if (map) {
+        map.removeLayer(getLayer())
+      }
+    }
+  }, [map])
+
+  useEffect(() => {
+    if (map) {
+      getSearchExtentVectorSource().clear()
+      if (searchExtent) {
+        const feature = new Feature(fromExtent(searchExtent))
+        getSearchExtentVectorSource().addFeature(feature)
+      }
+    }
+  }, [dispatch, map, searchExtent])
+
+  useEffect(() => {
+    function getLayer() {
+      if (!searchExtentLayerRef.current) {
+        searchExtentLayerRef.current = new Vector({
+          source: getSearchExtentVectorSource(),
+          style: dottedLayerStyle,
+          updateWhileAnimating: true,
+          updateWhileInteracting: true
+        })
+      }
+
+      return searchExtentLayerRef.current
+    }
+    if (map) {
+      map.getLayers().push(getLayer())
+    }
+
+    return () => {
+      if (map) {
+        map.removeLayer(getLayer())
+      }
+    }
+  }, [map])
+
+  return null
+}

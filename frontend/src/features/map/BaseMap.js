@@ -5,7 +5,7 @@ import { platformModifierKeyOnly } from 'ol/events/condition'
 import OpenLayerMap from 'ol/Map'
 import { transform } from 'ol/proj'
 import View from 'ol/View'
-import React, { Children, cloneElement, useCallback, useMemo, useEffect, useRef, useState } from 'react'
+import { Children, cloneElement, useCallback, useMemo, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { HIT_PIXEL_TO_TOLERANCE } from '../../constants/constants'
@@ -16,8 +16,7 @@ import MapAttributionsBox from './controls/MapAttributionsBox'
 function BaseMap({ children, showAttributions }) {
   const [map, setMap] = useState()
 
-  /** @type {MapClickEvent} mapClickEvent */
-  const [mapClickEvent, setMapClickEvent] = useState(null)
+  const [mapClickEvent, setMapClickEvent] = useState({ ctrlKeyPressed: false, feature: undefined })
 
   /** @type {currentFeatureOver} feature */
   const [currentFeatureOver, setCurrentFeatureOver] = useState(null)
@@ -29,7 +28,11 @@ function BaseMap({ children, showAttributions }) {
       if (event && current_map) {
         const feature = current_map.forEachFeatureAtPixel(event.pixel, f => f, {
           hitTolerance: HIT_PIXEL_TO_TOLERANCE,
-          layerFilter: l => SelectableLayers.includes(l.name)
+          layerFilter: l => {
+            const name = l.name || l.get('name')
+
+            return SelectableLayers.includes(name)
+          }
         })
         const isCtrl = platformModifierKeyOnly(event)
         setMapClickEvent({ ctrlKeyPressed: isCtrl, feature })

@@ -74,13 +74,9 @@ export const addMissionZone =
     features && dispatch(setFeatures(features))
     geom?.coordinates?.length &&
       dispatch(
-        setFitToExtent({
-          extent: transformExtent(
-            boundingExtent(_.flattenDepth(geom.coordinates, 2)),
-            WSG84_PROJECTION,
-            OPENLAYERS_PROJECTION
-          )
-        })
+        setFitToExtent(
+          transformExtent(boundingExtent(_.flattenDepth(geom.coordinates, 2)), WSG84_PROJECTION, OPENLAYERS_PROJECTION)
+        )
       )
     dispatch(openDrawLayerModal)
     dispatch(setFeatureType({ callback, featureType: monitorenvFeatureTypes.MISSION_ZONE }))
@@ -102,13 +98,13 @@ export const addControlPositions =
     features && dispatch(setFeatures(features))
     missionGeom?.coordinates?.length &&
       dispatch(
-        setFitToExtent({
-          extent: transformExtent(
+        setFitToExtent(
+          transformExtent(
             boundingExtent(_.flattenDepth(missionGeom.coordinates, 2)),
             WSG84_PROJECTION,
             OPENLAYERS_PROJECTION
           )
-        })
+        )
       )
     dispatch(openDrawLayerModal)
     dispatch(setFeatureType({ callback, featureType: monitorenvFeatureTypes.ACTION_LOCALISATION }))

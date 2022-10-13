@@ -14,17 +14,19 @@ export const actionTypeEnum = {
 }
 
 export const missionTypeEnum = {
-  AIR: {
-    code: 'AIR',
-    libelle: 'Air'
+  SEA: {
+    code: 'SEA',
+    libelle: 'Mer'
   },
+  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
   LAND: {
     code: 'LAND',
     libelle: 'Terre'
   },
-  SEA: {
-    code: 'SEA',
-    libelle: 'Mer'
+  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
+  AIR: {
+    code: 'AIR',
+    libelle: 'Air'
   }
 }
 

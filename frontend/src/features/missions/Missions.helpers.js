@@ -29,7 +29,7 @@ export const actionFactory = ({ actionType, id, ...action } = {}) => {
     case actionTypeEnum.CONTROL.code:
       return {
         actionNumberOfControls: '',
-        actionStartDatetimeUtc: new Date(),
+        actionStartDatetimeUtc: new Date().toISOString(),
         actionSubTheme: '',
         actionTargetType: '',
         actionTheme: '',
@@ -43,7 +43,7 @@ export const actionFactory = ({ actionType, id, ...action } = {}) => {
       }
     case actionTypeEnum.NOTE.code:
       return {
-        actionStartDatetimeUtc: new Date(),
+        actionStartDatetimeUtc: new Date().toISOString(),
         actionType: actionTypeEnum.NOTE.code,
         id: uuidv4(),
         observations: '',
@@ -51,7 +51,7 @@ export const actionFactory = ({ actionType, id, ...action } = {}) => {
       }
     case actionTypeEnum.SURVEILLANCE.code:
       return {
-        actionStartDatetimeUtc: new Date(),
+        actionStartDatetimeUtc: new Date().toISOString(),
         actionSubTheme: '',
         actionTheme: '',
         actionType: actionTypeEnum.SURVEILLANCE.code,
@@ -69,25 +69,26 @@ export const actionFactory = ({ actionType, id, ...action } = {}) => {
   }
 }
 
+export const missionFactory = mission => ({
+  closedBy: '',
+  envActions: [],
+  geom: null,
+  inputEndDatetimeUtc: '',
+  inputStartDatetimeUtc: new Date().toISOString(),
+  missionNature: [],
+  missionStatus: missionStatusEnum.PENDING.code,
+  missionType: missionTypeEnum.SEA.code,
+  observations: '',
+  openBy: '',
+  resourceUnits: [resourceUnitFactory()],
+  ...mission
+})
+
 export const resourceUnitFactory = ({ ...resourceUnit } = {}) => ({
   administration: '',
   resources: [],
   unit: '',
   ...resourceUnit
-})
-export const missionFactory = mission => ({
-  closed_by: '',
-  envActions: [],
-  geom: null,
-  inputEndDatetimeUtc: '',
-  inputStartDatetimeUtc: new Date(),
-  missionNature: [],
-  missionStatus: missionStatusEnum.PENDING.code,
-  missionType: missionTypeEnum.SEA.code,
-  observations: '',
-  open_by: '',
-  resourceUnits: [resourceUnitFactory()],
-  ...mission
 })
 
 export const getControlInfractionsTags = (actionNumberOfControls, infractions) => {

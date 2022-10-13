@@ -9,10 +9,10 @@
   --cultured: #F7F7FA;
   --white: #ffffff;
 
-  --steel-blue: #5E87AD;
-  --steel-blue-25: #D6E1EA;
-  --blue-jeans: #42A7FF;
-  --blue-jeans-25: #CFE9FF;
+  --blue-yonder: #567A9E;
+  --blue-yonder-25: #D4DDE7;
+  --blue-gray: #5697D2;
+  --blue-gray-25: #D4E5F4;
 
   --mediumSeaGreen: #29b361;
   --golden-poppy: #FAC11A;
@@ -33,18 +33,25 @@
   /* btn vars */
   --rs-btn-primary-text: var(--white);
   --rs-btn-primary-bg: var(--charcoal);
-  --rs-btn-primary-hover-bg: var(--steel-blue);
-  --rs-btn-link-text: var(--charcoal);
+  --rs-btn-default-bg: transparent;
+  --rs-btn-primary-hover-bg: var(--blue-yonder);
+  --rs-btn-link-text: var(--slateGray);
+  --rs-btn-link-hover-text: var(--blue-yonder);
+  --rs-btn-link-active-text: var(--blue-gray);
   --rs-btn-ghost-text: var(--charcoal);
   --rs-btn-ghost-border: var(--charcoal);
-  --rs-btn-ghost-hover-border: var(--steel-blue);
-  --rs-btn-ghost-hover-text: var(--steel-blue);
+  --rs-btn-ghost-hover-border: var(--blue-yonder);
+  --rs-btn-ghost-hover-text: var(--blue-yonder);
+  --rs-iconbtn-addon: transparent;
 
   --rs-iconbtn-primary-addon: var(--charcoal);
-  --rs-iconbtn-primary-activated-addon: var(--steel-blue);
-
-  --rs-btn-primary-active-bg: var(--steel-blue);
-  --rs-iconbtn-primary-pressed-addon: var(--steel-blue);
+  --rs-btn-default-hover-bg: var(--blue-yonder);
+  --rs-iconbtn-activated-addon: var(--blue-yonder);
+  --rs-btn-default-hover-text: var(--white);
+  --rs-iconbtn-primary-activated-addon: var(--blue-yonder);
+  --rs-btn-primary-active-bg: var(--blue-gray);
+  --rs-iconbtn-primary-pressed-addon: var(--blue-gray);
+  --rs-btn-ghost-active-text: var(--blue-gray);
 
   /* Checkbox vars */
   --rs-checkbox-disabled-bg: var(--white);
@@ -52,7 +59,7 @@
   /* input vars */
   --rs-input-bg: var(--gainsboro);
 
-  --rs-menuitem-active-text: var(--steel-blue);
+  --rs-menuitem-active-text: var(--blue-gray);
 
   /* tags */
   --rs-tag-bg: var(--gainsboro);
@@ -107,28 +114,93 @@ label {
 }
 
 .rs-btn-sm {
-  padding-top: 2px;
-  padding-bottom: 2px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  font-size: 15px;
 }
 
+
+.rs-btn-icon-with-text.rs-btn-md.rs-btn-icon-placement-left,
 .rs-btn-icon-with-text.rs-btn.rs-btn-icon-placement-left {
+  padding-left: 32px;
   padding-top: 6px;
   padding-bottom: 6px;
 }
 
 .rs-btn-icon-with-text.rs-btn-sm.rs-btn-icon-placement-left {
-  padding-top: 2px;
-  padding-bottom: 2px;
-  padding-left: 26px;
+  padding-top: 3px;
+  padding-bottom: 3px;
 }
 
-.rs-btn-icon.rs-btn {
-  padding: 7px;
+.rs-btn-ghost:hover {
+  background-color: var(--blue-yonder-25);
+}
+
+.rs-btn-ghost.rs-btn-active,
+.rs-btn-ghost:active {
+  background-color: var(--blue-gray-25);
+  border-color: var(--blue-gray);
+}
+
+.rs-btn-ghost.rs-btn-icon-with-text:hover>.rs-icon {
+  background-color: var(--blue-yonder-25);
+}
+
+.rs-btn-ghost.rs-btn,
+.rs-btn-ghost.rs-btn-md,
+.rs-btn-icon-with-text.rs-btn-md.rs-btn-icon-placement-left.rs-btn-ghost,
+.rs-btn-icon-with-text.rs-btn.rs-btn-icon-placement-left.rs-btn-ghost {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.rs-btn-ghost.rs-btn-sm,
+.rs-btn-icon-with-text.rs-btn-sm.rs-btn-icon-placement-left.rs-btn-ghost {
+  padding-top: 2px;
+  padding-bottom: 2px;
+
+}
+
+
+.rs-btn-icon.rs-btn,
+.rs-btn-icon.rs-btn-md {
+  padding: 5px;
 }
 
 .rs-btn-icon.rs-btn-sm {
   padding: 2px;
 }
+
+.rs-btn-icon.rs-btn-lg {
+  padding: 7px;
+}
+
+.rs-btn-icon.rs-btn-ghost {
+  padding: 4px
+}
+
+.rs-btn-icon.rs-btn-lg.rs-btn-ghost {
+  padding: 6px;
+}
+
+.rs-btn-icon-with-text.rs-btn-sm {
+  padding-top: 5px;
+  padding-bottom: 4px;
+  line-height: 15px;
+  font-size: 11px;
+}
+
+.rs-btn-icon.rs-btn>.rs-icon,
+.rs-btn-icon.rs-btn-md>.rs-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.rs-btn-icon.rs-btn-lg>.rs-icon {
+  width: 26px;
+  height: 26px;
+}
+
 
 .rs-btn-icon-with-text.rs-btn {
   line-height: 18px;
@@ -137,12 +209,29 @@ label {
 .rs-btn-icon-with-text.rs-btn>.rs-icon {
   width: 30px;
   height: 30px;
-  padding: 8px;
+  padding: 5px;
 }
 
 .rs-btn-icon-with-text.rs-btn-sm>.rs-icon {
   width: 24px;
   height: 24px;
+  padding: 4px;
+}
+
+
+.rs-btn-link,
+.rs-btn-link.rs-btn-md {
+  font-size: 13px;
+  text-decoration: underline;
+}
+
+.rs-btn-link.rs-btn-disabled,
+.rs-btn-link:disabled {
+  text-decoration: underline;
+}
+
+.rs-btn-link.rs-btn-sm {
+  font-size: 11px;
 }
 
 /* checkbox */
@@ -205,13 +294,13 @@ label {
 }
 
 label:hover .rs-checkbox-wrapper .rs-checkbox-inner:before {
-  border-color: var(--steel-blue);
-  background: var(--steel-blue-25) 0% 0% no-repeat padding-box;
+  border-color: var(--blue-yonder);
+  background: var(--blue-yonder-25) 0% 0% no-repeat padding-box;
 }
 
 .rs-checkbox-checked label:hover .rs-checkbox-wrapper .rs-checkbox-inner:before {
-  border-color: var(--steel-blue);
-  background: var(--steel-blue) 0% 0% no-repeat padding-box;
+  border-color: var(--blue-yonder);
+  background: var(--blue-yonder) 0% 0% no-repeat padding-box;
 }
 
 .rs-checkbox-checked .rs-checkbox-wrapper .rs-checkbox-inner::after {
@@ -289,12 +378,33 @@ label:hover .rs-checkbox-wrapper .rs-checkbox-inner:before {
   line-height: 38px;
 }
 
-.rs-dropdown-item-with-icon>svg {
-  vertical-align: text-bottom;
+.rs-dropdown .rs-btn {
+  padding-left: 32px;
+}
+
+.rs-dropdown .rs-btn>.rs-dropdown-toggle-icon {
+  width: 30px;
+  height: 30px;
+  padding: 5px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 0;
+}
+
+.rs-dropdown .rs-btn.rs-btn-sm>.rs-dropdown-toggle-icon {
+  width: 24px;
+  height: 24px;
+  padding: 3px;
 }
 
 .rs-dropdown-item:not(:last-child) {
   border-bottom: 1px solid var(--lightGray);
+}
+
+svg.rs-dropdown-item-menu-icon {
+  vertical-align: middle;
+  margin-right: 10px;
 }
 
 /* Tags */
@@ -669,10 +779,7 @@ label:hover .rs-checkbox-wrapper .rs-checkbox-inner:before {
 .rs-table-hover .rs-table-row:not(.rs-table-row-header):hover,
 .rs-table-hover .rs-table-row:hover .rs-table-cell-group,
 .rs-table-hover .rs-table-row:hover .rs-table-cell {
-  /* background: rgba(107, 131, 158, 0.15) !important; */
-  /* shadowBlueLittleOpacity */
-  background: #d6dce3 !important;
-  /* shadowBlueLight */
+  background: var(--blue-yonder-25) !important;
 
 }
 

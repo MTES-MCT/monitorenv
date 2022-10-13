@@ -4,14 +4,14 @@ import Stroke from 'ol/style/Stroke'
 import Text from 'ol/style/Text'
 
 import { COLORS } from '../../../../constants/constants'
-import Layers from '../../../../domain/entities/layers'
-import { getColorWithAlpha } from '../../../../utils/utils'
+import { Layers } from '../../../../domain/entities/layers'
+import { getColorWithAlpha, stringToColorInGroup } from '../../../../utils/utils'
 /**
  *
  * @param {string} code
  * @returns
  */
-export const getAdministrativeAndRegulatoryLayersStyle = code => {
+export const getAdministrativeLayersStyle = code => {
   switch (code) {
     case Layers.EEZ.code:
       return feature =>
@@ -158,12 +158,6 @@ export const getAdministrativeAndRegulatoryLayersStyle = code => {
             }`
           })
         })
-    case Layers.REGULATORY_ENV.code:
-      return feature => {
-        const colorWithAlpha = getRegulatoryEnvColorWithAlpha(feature.get('thematique'))
-
-        return getStyle(colorWithAlpha, feature?.get('metadataIsShowed'))
-      }
     default:
       return () =>
         new Style({
@@ -178,29 +172,28 @@ export const getAdministrativeAndRegulatoryLayersStyle = code => {
   }
 }
 
+export const getRegulatoryLayerStyle = feature => {
+  const colorWithAlpha = getRegulatoryEnvColorWithAlpha(feature.get('thematique'), feature.get('entity_name'))
+
+  return getStyle(colorWithAlpha, feature.get('metadataIsShowed'))
+}
+
 const getStyle = (color, metadataIsShowed) =>
   new Style({
     fill: new Fill({
       color
     }),
     stroke: new Stroke({
-      color: 'rgba(5, 5, 94, 0.7)',
+      color: getColorWithAlpha(COLORS.charcoal, 0.7),
       width: metadataIsShowed ? 3 : 1
     })
   })
 
 /**
  *
- * @param {string} thematique
+ * @param {string} group
+ * @param {string} layername
  * @returns
  */
-export const getRegulatoryEnvColorWithAlpha = thematique => {
-  switch (thematique) {
-    case 'Mouillage': {
-      return getColorWithAlpha('#FFB199', 0.6)
-    }
-    default: {
-      return getColorWithAlpha('#FFD3C7', 0.6)
-    }
-  }
-}
+export const getRegulatoryEnvColorWithAlpha = (group = '', layername = '') =>
+  getColorWithAlpha(stringToColorInGroup(`${group}`, `${layername}`), 0.6)

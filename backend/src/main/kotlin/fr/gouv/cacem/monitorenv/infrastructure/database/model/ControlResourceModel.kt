@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-
 import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlResourceEntity
+
 import javax.persistence.*
 
 @Entity
@@ -15,7 +15,7 @@ data class ControlResourceModel(
   @Column(name = "administration")
   var administration: String?,
   @Column(name = "resource_name")
-  var resource_name: String?,
+  var resourceName: String?,
   @Column(name = "size")
   var size: String?,
   @Column(name = "name")
@@ -25,7 +25,7 @@ data class ControlResourceModel(
   @Column(name = "type")
   var type: String?,
   @Column(name = "intervention_zone")
-  var intervention_zone: String?,
+  var interventionZone: String?,
   @Column(name = "telephone")
   var telephone: String?,
   @Column(name = "mail")
@@ -37,12 +37,12 @@ data class ControlResourceModel(
     id = id,
     facade = facade,
     administration = administration,
-    resource_name = resource_name,
+    resourceName = resourceName,
     size = size,
     name = name,
     city = city,
     type = type,
-    intervention_zone = intervention_zone,
+    interventionZone = interventionZone,
     telephone = telephone,
     mail = mail,
     unit = unit,
@@ -53,12 +53,12 @@ data class ControlResourceModel(
       id = controlResource.id,
       facade = controlResource.facade,
       administration = controlResource.administration,
-      resource_name = controlResource.resource_name,
+      resourceName = controlResource.resourceName,
       size = controlResource.size,
       name = controlResource.name,
       city = controlResource.city,
       type = controlResource.type,
-      intervention_zone = controlResource.intervention_zone,
+      interventionZone = controlResource.interventionZone,
       telephone = controlResource.telephone,
       mail = controlResource.mail,
       unit = controlResource.unit,

@@ -7,12 +7,12 @@ import '../src/uiMonitor/ol-override.css'
 import '../src/uiMonitor/rsuite-override.css'
 
 import './storybook.css'
-import GlobalFonts from '../src/fonts/fonts'
+import { GlobalStyle } from '../src/fonts/fonts'
 
 export const decorators = [
   Story => (
     <>
-      <GlobalFonts />
+      <GlobalStyle />
       <Story />
     </>
   )

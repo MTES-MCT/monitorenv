@@ -10,8 +10,8 @@ import { COLORS } from '../../../constants/constants'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map'
 import { setZoomToCenter } from '../../../domain/shared_slices/Map'
 import { addControlPositions } from '../../../domain/use_cases/missions/missionAndControlLocalisation'
-import { ReactComponent as LocalizeIconSVG } from '../../../uiMonitor/icons/centrer.svg'
-import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression_clair.svg'
+import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
+import { ReactComponent as LocalizeIconSVG } from '../../../uiMonitor/icons/Focus.svg'
 
 export function ControlPositions({ name }) {
   const [geomField] = useField('geom')

@@ -8,7 +8,7 @@ import {
   drawInterestPoint,
   endInterestPointDraw
 } from '../../domain/shared_slices/InterestPoint'
-import { ReactComponent as InterestPointSVG } from '../../uiMonitor/icons/Point_interet.svg'
+import { ReactComponent as InterestPointSVG } from '../../uiMonitor/icons/Landmark.svg'
 import SaveInterestPoint from './SaveInterestPoint'
 
 const INTEREST_POINT_POSITION_FROM_LEFT = 470

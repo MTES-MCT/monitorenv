@@ -28,13 +28,13 @@ export function MissionZones({ name }) {
   }
   const handleCenterOnMap = coordinates => () => {
     const extent = transformExtent(boundingExtent(coordinates[0]), WSG84_PROJECTION, OPENLAYERS_PROJECTION)
-    dispatch(setFitToExtent({ extent }))
+    dispatch(setFitToExtent(extent))
   }
 
   return (
     <FormGroupMission>
       <Form.ControlLabel htmlFor={name}>Localisations : </Form.ControlLabel>
-      <SizedButton appearance="ghost" block onClick={handleAddMissionZone} size="sm">
+      <SizedButton appearance="ghost" block onClick={handleAddMissionZone}>
         + Ajouter une zone de mission
       </SizedButton>
       <ZoneList>

@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useGetMissionsQuery } from '../../../api/missionsAPI'
-import Layers from '../../../domain/entities/layers'
+import { Layers } from '../../../domain/entities/layers'
 import { getMissionZoneFeature, getActionsFeatures } from './missionGeometryHelpers'
 import { selectedMissionStyle, selectedMissionActionsStyle } from './styles/missions.style'
 

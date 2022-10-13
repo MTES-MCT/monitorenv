@@ -1,4 +1,3 @@
-import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -9,7 +8,7 @@ import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 import AdministrativeLayer from './AdministrativeLayer'
 import AdministrativeLayerGroup from './AdministrativeLayerGroup'
 
-function AdministrativeLayers() {
+export function AdministrativeLayers() {
   const dispatch = useDispatch()
   const { administrativeZonesIsOpen } = useSelector(state => state.layerSidebar)
 
@@ -72,7 +71,7 @@ const ZonesList = styled.ul`
   padding: 0;
   overflow-x: hidden;
   max-height: 70vh;
-  height: ${props => (props.showZones && props.zonesLength ? 36 * props.zonesLength : 0)}px;
+  height: ${props => (props.showZones && props.zonesLength ? 37 * props.zonesLength : 0)}px;
   background: ${COLORS.background};
   transition: 0.5s all;
   border-bottom-left-radius: 2px;
@@ -80,6 +79,7 @@ const ZonesList = styled.ul`
 `
 
 const ListItem = styled.li`
+  min-height: 36px;
   line-height: 18px;
   text-align: left;
   list-style-type: none;
@@ -90,5 +90,3 @@ const ListItem = styled.li`
   color: ${COLORS.gunMetal};
   border-bottom: 1px solid ${COLORS.lightGray};
 `
-
-export default AdministrativeLayers

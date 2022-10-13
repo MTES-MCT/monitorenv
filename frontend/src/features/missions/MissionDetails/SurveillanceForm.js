@@ -10,8 +10,8 @@ import { usePrevious } from '../../../hooks/usePrevious'
 import { FormikDatePicker, placeholderDateTimePicker } from '../../../uiMonitor/CustomFormikFields/FormikDatePicker'
 import { FormikInputGhost } from '../../../uiMonitor/CustomFormikFields/FormikInput'
 import { FormikTextarea } from '../../../uiMonitor/CustomFormikFields/FormikTextarea'
-import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression_clair.svg'
-import { ReactComponent as SurveillanceIconSVG } from '../../../uiMonitor/icons/surveillance_18px.svg'
+import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
+import { ReactComponent as SurveillanceIconSVG } from '../../../uiMonitor/icons/Observation.svg'
 import { ControlThemeSelector } from './ControlThemeSelector'
 
 export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionIndex }) {
@@ -23,8 +23,8 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
   const actionTheme = envActions[currentActionIndex]?.actionTheme
 
   const { data, isError, isLoading } = useGetControlThemesQuery()
-  const themes = useMemo(() => _.uniqBy(data, 'theme_level_1'), [data])
-  const subThemes = useMemo(() => _.filter(data, t => t.theme_level_1 === actionTheme), [data, actionTheme])
+  const themes = useMemo(() => _.uniqBy(data, 'themeLevel1'), [data])
+  const subThemes = useMemo(() => _.filter(data, t => t.themeLevel1 === actionTheme), [data, actionTheme])
 
   const previousActionTheme = usePrevious(actionTheme)
 
@@ -61,7 +61,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
             <ControlThemeSelector
               name={`envActions.${currentActionIndex}.actionTheme`}
               themes={themes}
-              valueKey="theme_level_1"
+              valueKey="themeLevel1"
             />
           </SelectorWrapper>
           <SelectorWrapper>
@@ -71,7 +71,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
             <ControlThemeSelector
               name={`envActions.${currentActionIndex}.actionSubTheme`}
               themes={subThemes}
-              valueKey="theme_level_2"
+              valueKey="themeLevel2"
             />
           </SelectorWrapper>
         </>

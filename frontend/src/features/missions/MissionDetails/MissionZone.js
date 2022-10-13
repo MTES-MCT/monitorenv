@@ -3,8 +3,8 @@ import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import { ReactComponent as LocalizeIconSVG } from '../../../uiMonitor/icons/centrer.svg'
-import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression_clair.svg'
+import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
+import { ReactComponent as LocalizeIconSVG } from '../../../uiMonitor/icons/Focus.svg'
 
 export function MissionZone({ handleCenterOnMap, handleDelete, name }) {
   return (

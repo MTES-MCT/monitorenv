@@ -1,17 +1,16 @@
 import { format, isValid } from 'date-fns'
 import { fr } from 'date-fns/locale'
-import React from 'react'
 import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
 import { actionTargetTypeEnum, actionTypeEnum } from '../../../domain/entities/missions'
 import { ControlInfractionsTags } from '../../../ui/ControlInfractionsTags'
-import { ReactComponent as ControlIconSVG } from '../../../uiMonitor/icons/controles.svg'
-import { ReactComponent as DuplicateSVG } from '../../../uiMonitor/icons/dupliquer_14px.svg'
-import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/note_libre.svg'
-import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression_clair.svg'
-import { ReactComponent as SurveillanceIconSVG } from '../../../uiMonitor/icons/surveillance_18px.svg'
+import { ReactComponent as ControlIconSVG } from '../../../uiMonitor/icons/Control.svg'
+import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
+import { ReactComponent as DuplicateSVG } from '../../../uiMonitor/icons/Duplicate.svg'
+import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/Note_libre.svg'
+import { ReactComponent as SurveillanceIconSVG } from '../../../uiMonitor/icons/Observation.svg'
 
 export function ActionCard({ action, duplicateAction, removeAction, selectAction, selected }) {
   const parsedActionStartDatetimeUtc = new Date(action.actionStartDatetimeUtc)
@@ -92,19 +91,12 @@ export function ActionCard({ action, duplicateAction, removeAction, selectAction
 
         <ButtonsWrapper>
           <IconButton
-            appearance="subtle"
             icon={<DuplicateSVG className="rs-icon" />}
             onClick={duplicateAction}
             size="sm"
             title="dupliquer"
           />
-          <IconButton
-            appearance="subtle"
-            icon={<DeleteIcon className="rs-icon" />}
-            onClick={removeAction}
-            size="sm"
-            title="supprimer"
-          />
+          <IconButton icon={<DeleteIcon className="rs-icon" />} onClick={removeAction} size="sm" title="supprimer" />
         </ButtonsWrapper>
       </ActionSummaryWrapper>
     </Action>
@@ -137,13 +129,13 @@ const Time = styled.div`
 const ActionSummaryWrapper = styled.div`
   display: flex;
   flex: 1;
-  border: ${props => (props.selected ? `3px solid ${COLORS.steelBlue}` : `1px solid ${COLORS.lightGray}`)};
+  border: ${props => (props.selected ? `3px solid ${COLORS.blueGray}` : `1px solid ${COLORS.lightGray}`)};
   background: ${props =>
     props.$type === actionTypeEnum.CONTROL.code
       ? COLORS.white
       : props.$type === actionTypeEnum.SURVEILLANCE.code
       ? COLORS.gainsboro
-      : COLORS.steelBlue25};
+      : COLORS.blueGray25};
   padding: ${props => (props.selected ? `4px` : '6px')};
   margin-left: auto;
 `
@@ -153,8 +145,8 @@ const Title = styled.span`
 `
 const ControlIcon = styled(ControlIconSVG)`
   color: ${COLORS.gunMetal};
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   margin-top: 18px;
   margin-left: 18px;
   margin-right: 8px;
@@ -186,6 +178,7 @@ const ControlSummary = styled.div`
 const SummaryContent = styled.div`
   margin-top: 18px;
   margin-bottom: 18px;
+  flex: 1;
   color: ${COLORS.gunMetal};
 `
 
@@ -199,8 +192,8 @@ const NoteContent = styled.div`
 `
 
 const ButtonsWrapper = styled.div`
-  width: 44px;
-  margin-top: 12px;
+  width: 50px;
+  margin-top: 6px;
   margin-left: auto;
 `
 

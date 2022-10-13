@@ -3,7 +3,7 @@ import React, { createRef, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import { ReactComponent as CloseIconSVG } from '../../../uiMonitor/icons/Croix_grise.svg'
+import { ReactComponent as CloseIconSVG } from '../../../uiMonitor/icons/Close.svg'
 
 function MeasurementOverlay({ coordinates, deleteFeature, id, map, measurement }) {
   const ref = createRef()

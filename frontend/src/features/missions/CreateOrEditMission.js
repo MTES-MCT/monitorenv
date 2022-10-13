@@ -17,8 +17,8 @@ import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { setMissionState } from '../../domain/shared_slices/MissionsState'
 import { quitEditMission } from '../../domain/use_cases/missions/missionAndControlLocalisation'
 import { SyncFormValuesWithRedux } from '../../hooks/useSyncFormValuesWithRedux'
-import { ReactComponent as SaveSVG } from '../../uiMonitor/icons/enregistrer_16px.svg'
-import { ReactComponent as DeleteSVG } from '../../uiMonitor/icons/Suppression_clair.svg'
+import { ReactComponent as DeleteSVG } from '../../uiMonitor/icons/Delete.svg'
+import { ReactComponent as SaveSVG } from '../../uiMonitor/icons/Save.svg'
 import { SideWindowHeader } from '../side_window/SideWindowHeader'
 import { ActionForm } from './MissionDetails/ActionForm'
 import { ActionsForm } from './MissionDetails/ActionsForm'
@@ -104,6 +104,7 @@ export function CreateOrEditMission({ routeParams }) {
         enableReinitialize
         initialValues={{
           closed_by: mission?.closed_by,
+          closedBy: mission?.closedBy,
           envActions: mission?.envActions,
           facade: mission?.facade,
           geom: mission?.geom,
@@ -114,7 +115,7 @@ export function CreateOrEditMission({ routeParams }) {
           missionStatus: mission?.missionStatus,
           missionType: mission?.missionType,
           observations: mission?.observations,
-          open_by: mission?.open_by,
+          openBy: mission?.openBy,
           resourceUnits: mission?.resourceUnits
         }}
         onSubmit={handleSubmitForm}
@@ -227,11 +228,11 @@ const ThirdColumn = styled.div`
 `
 
 const ErrorOnSave = styled.div`
-  backgound: ${COLORS.orange};
+  backgound: ${COLORS.goldenPoppy};
   text-align: right;
 `
 const ErrorOnDelete = styled.div`
-  backgound: ${COLORS.orange};
+  backgound: ${COLORS.goldenPoppy};
 `
 const Separator = styled.div`
   flex: 1;

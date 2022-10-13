@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 import { useGetControlResourcesQuery } from '../../../api/controlResourcesAPI'
 import { COLORS } from '../../../constants/constants'
-import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression_clair.svg'
+import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
 
 const DEFAULT_SELECT_PICKER_STYLE = {
   borderColor: COLORS.lightGray,
@@ -39,15 +39,15 @@ export function ResourceUnitSelector({ removeResourceUnit, resourceUnitIndex, re
   )
   const resourcesList = _.filter(
     data,
-    r => r.administration === administrationField.value && r.unit === unitField.value && r.resource_name
+    r => r.administration === administrationField.value && r.unit === unitField.value && r.resourceName
   )
 
   // Add any resource from Mission not present in resourceList from API
   // See: https://github.com/MTES-MCT/monitorenv/issues/103
   const existingResourcesOptions = resourcesField?.value?.map(r => ({
-    resource_name: r
+    resourceName: r
   }))
-  const combinedResourceList = _.uniqBy([...resourcesList, ...existingResourcesOptions], r => r.resource_name)
+  const combinedResourceList = _.uniqBy([...resourcesList, ...existingResourcesOptions], r => r.resourceName)
 
   const handleAdministrationChange = value => {
     if (value !== administrationField.value) {
@@ -119,11 +119,11 @@ export function ResourceUnitSelector({ removeResourceUnit, resourceUnitIndex, re
               creatable
               data={combinedResourceList}
               disabled={_.isEmpty(unitField.value)}
-              labelKey="resource_name"
+              labelKey="resourceName"
               onChange={resourcesHelpers.setValue}
               size="sm"
               value={resourcesField.value}
-              valueKey="resource_name"
+              valueKey="resourceName"
               {...props}
             />
           </RefWrapper>
