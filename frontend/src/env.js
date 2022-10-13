@@ -15,11 +15,6 @@ export const GEOSERVER_NAMESPACE =
     ? self.env.REACT_APP_GEOSERVER_NAMESPACE
     : process.env.REACT_APP_GEOSERVER_NAMESPACE
 
-export const CYPRESS_TEST =
-  self?.env?.REACT_APP_CYPRESS_TEST !== '__REACT_APP_CYPRESS_TEST__'
-    ? self.env.REACT_APP_CYPRESS_TEST
-    : process.env.REACT_APP_CYPRESS_TEST
-
 export const MAPBOX_KEY =
   self?.env?.REACT_APP_MAPBOX_KEY !== '__REACT_APP_MAPBOX_KEY__'
     ? self.env.REACT_APP_MAPBOX_KEY

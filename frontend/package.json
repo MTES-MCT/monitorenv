@@ -133,9 +133,6 @@
       "last 1 safari version"
     ]
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "//": "https://github.com/okonet/lint-staged/issues/825#issuecomment-674575655",
   "lint-staged": {
     "*.{json,md,yaml,yml}": "prettier --write",

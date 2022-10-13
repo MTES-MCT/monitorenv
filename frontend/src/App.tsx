@@ -6,7 +6,6 @@ import { CustomProvider } from 'rsuite'
 
 import { AlertUnsupportedBrowser } from './components/AlertUnsupportedBrowser'
 import { ErrorToastNotification } from './components/ErrorToastNotification'
-import { CYPRESS_TEST } from './env'
 import { SideWindowTestContainer } from './features/side_window/SideWindowTestContainer'
 import { HomePage } from './pages/HomePage'
 import { homeStore } from './Store'
@@ -26,14 +25,9 @@ export function App() {
         <PersistGate loading={undefined} persistor={persistor}>
           <Router>
             <Switch>
-              {
-                // UNSAFE : CYPRESS_TEST is overridable on the client
-                CYPRESS_TEST === 'true' && (
-                  <Route exact path="/side_window">
-                    <SideWindowTestContainer />
-                  </Route>
-                )
-              }
+              <Route exact path="/side_window">
+                <SideWindowTestContainer />
+              </Route>
               <Route path="/">
                 <HomePage />
               </Route>

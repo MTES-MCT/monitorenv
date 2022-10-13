@@ -3,7 +3,7 @@ name: CI/CD Back & Front
 on:
   push:
     paths:
-      - ".github/workflows/cicd.yml"
+      - ".github/workflows/cicd-app.yml"
       - "infra/**"
       - "backend/**"
       - "frontend/**"
@@ -146,8 +146,8 @@ jobs:
         containers: [1, 2, 3, 4]
     env:
       ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-      CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
       CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
+      CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
       ENV_PROFILE: ${{needs.version.outputs.ENV_PROFILE}}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       MONITORENV_VERSION: ${{ needs.version.outputs.VERSION }}
