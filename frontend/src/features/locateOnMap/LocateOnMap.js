@@ -1,77 +1,91 @@
+import _ from 'lodash'
+import { transformExtent, transform } from 'ol/proj'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { IconButton, Input } from 'rsuite'
 import styled from 'styled-components'
-import _ from 'lodash'
-import { IconButton, Input } from 'rsuite';
-import {transformExtent} from 'ol/proj';
-import { transform } from 'ol/proj'
 
-import { usePhotonAPI } from '../../api/photonAPI';
-
-import { setFitToExtent } from '../../domain/shared_slices/Map'
-import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map';
-
-import { ReactComponent as SearchIconSVG } from '../../uiMonitor/icons/Loupe.svg'
-import { ReactComponent as CloseIconSVG } from '../../uiMonitor/icons/Croix_grise.svg'
+import { usePhotonAPI } from '../../api/photonAPI'
 import { COLORS } from '../../constants/constants'
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map'
+import { setFitToExtent } from '../../domain/shared_slices/Map'
+import { ReactComponent as CloseIconSVG } from '../../uiMonitor/icons/Croix_grise.svg'
+import { ReactComponent as SearchIconSVG } from '../../uiMonitor/icons/Loupe.svg'
 
-export const LocateOnMap = () => {
+export function LocateOnMap() {
   const dispatch = useDispatch()
   const [searchedLocation, setSearchedLocation] = useState('')
 
   const handleResetSearch = () => setSearchedLocation('')
   const handleOnchange = value => {
-    console.log("onchange", value)
-    setSearchedLocation(value)}
+    setSearchedLocation(value)
+  }
 
   let latlon
   if (window.location.hash !== '') {
     const hash = window.location.hash.replace('@', '').replace('#', '')
     const viewParts = hash.split(',')
-    if (viewParts.length === 3 && !Number.isNaN(viewParts[0]) && !Number.isNaN(viewParts[1]) && !Number.isNaN(viewParts[2])) {
+    if (
+      viewParts.length === 3 &&
+      !Number.isNaN(viewParts[0]) &&
+      !Number.isNaN(viewParts[1]) &&
+      !Number.isNaN(viewParts[2])
+    ) {
       latlon = transform([viewParts[1], viewParts[0]], OPENLAYERS_PROJECTION, WSG84_PROJECTION)
     }
   }
-  
-  const results = usePhotonAPI(searchedLocation, {latlon})
-  const uniqueResults = _.uniqBy(_.filter(results, location => location?.properties.extent), location => location?.properties?.osm_id).slice(0,10)
+
+  const results = usePhotonAPI(searchedLocation, { latlon })
+  const uniqueResults = _.uniqBy(
+    _.filter(results, location => location?.properties.extent),
+    location => location?.properties?.osm_id
+  ).slice(0, 10)
 
   const handleSelectLocation = location => () => {
-    dispatch(setFitToExtent({extent : transformExtent(location.properties.extent, WSG84_PROJECTION, OPENLAYERS_PROJECTION)}))
+    dispatch(
+      setFitToExtent({ extent: transformExtent(location.properties.extent, WSG84_PROJECTION, OPENLAYERS_PROJECTION) })
+    )
   }
-  
 
   return (
     <Wrapper>
       <InputWrapper>
         <SearchBoxInput
-          data-cy={'location-search-input'}
-          placeholder={'localiser la carte sur un lieu'}
+          data-cy="location-search-input"
+          onChange={handleOnchange}
+          placeholder="localiser la carte sur un lieu"
           type="text"
           value={searchedLocation}
-          onChange={handleOnchange}/>
-          
-        <IconButton 
-          title={'chercher un lieu'} 
-          onClick={handleResetSearch} 
-          icon={searchedLocation === '' ? <SearchIcon className={'rs-icon'} /> : <CloseIcon className={'rs-icon'}/>}
-          appearance='primary'
-          />
+        />
+
+        <IconButton
+          appearance="primary"
+          icon={searchedLocation === '' ? <SearchIcon className="rs-icon" /> : <CloseIcon className="rs-icon" />}
+          onClick={handleResetSearch}
+          title="chercher un lieu"
+        />
       </InputWrapper>
       <ResultsList>
-        {uniqueResults && uniqueResults?.map((location)=>{
-          return (<Location onClick={handleSelectLocation(location)} key={location.properties.osm_id}>
+        {uniqueResults &&
+          uniqueResults?.map(location => (
+            <Location key={location.properties.osm_id} onClick={handleSelectLocation(location)}>
               <Name>{location.properties.name}</Name>
-              
-              <Country>{[location.properties.city || location.properties.osm_value, location.properties.state, location.properties.country].filter(t=>t).join(', ')}</Country>
-            </Location>)
-        })}
-      </ResultsList>
 
-    </Wrapper> 
+              <Country>
+                {[
+                  location.properties.city || location.properties.osm_value,
+                  location.properties.state,
+                  location.properties.country
+                ]
+                  .filter(t => t)
+                  .join(', ')}
+              </Country>
+            </Location>
+          ))}
+      </ResultsList>
+    </Wrapper>
   )
 }
-
 
 const Wrapper = styled.div`
   position: absolute;
@@ -88,7 +102,7 @@ const SearchBoxInput = styled(Input)`
   display: inline-block;
   background-color: white;
   padding-left: 4px;
-  width: ${props => props.value?.length > 0 ? '300px' :'200px'};
+  width: ${props => (props.value?.length > 0 ? '300px' : '200px')};
   transition: all 0.5s;
   :focus {
     width: 300px;
@@ -110,14 +124,15 @@ const ResultsList = styled.ul`
   list-style: none;
   padding: 0;
   text-align: left;
-  background: ${COLORS.background}
+  background: ${COLORS.background};
 `
 
 const Location = styled.li`
   padding: 7px;
   display: flex;
   flex-direction: column;
-  :hover, :focus {
+  :hover,
+  :focus {
     background: ${COLORS.gainsboro};
     cursor: pointer;
   }

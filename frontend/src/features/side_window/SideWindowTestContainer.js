@@ -1,15 +1,17 @@
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
+
+import { setSideWindowPath } from '../../components/SideWindowRouter/SideWindowRouter.slice'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { openSideWindowTab } from '../../domain/shared_slices/Global'
-import { setSideWindowPath } from '../../components/SideWindowRouter/SideWindowRouter.slice'
 import { SideWindow } from './SideWindow'
 
-export const SideWindowTestContainer = () => {
+export function SideWindowTestContainer() {
   const dispatch = useDispatch()
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))
     dispatch(openSideWindowTab(true))
   })
-  return (<SideWindow />)
+
+  return <SideWindow />
 }

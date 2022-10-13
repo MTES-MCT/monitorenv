@@ -1,48 +1,60 @@
+const path = require('path')
+
 module.exports = {
-  env: {
-    "browser": true,
-    "node": true,
-    "es6": true,
-  },
-  settings: {
-    react: {
-      version: "detect",
-    },
-  },
+  extends: '@ivangabriele/eslint-config-typescript-react',
+  parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: 2020,
-    sourceType: "module",
-    "ecmaFeatures": {
-      "jsx": true
-  }
+    ecmaVersion: 2022,
+    project: path.join(__dirname, 'tsconfig.json')
   },
-  globals: {
-    "cy": "readonly",
-    "describe": "readonly",
-    "it": "readonly",
-    "expect": "readonly",
-    "jest": "readonly"
+  ignorePatterns: ['.eslintrc.js', '.eslintrc.partial.js'],
+  env: {
+    browser: true
   },
-  extends: [
-    "plugin:react/recommended",
-    "eslint:recommended"
-  ],
-  plugins: [
-    "react-hooks"
-  ],
   rules: {
-    "react-hooks/exhaustive-deps": "warn",
-    "react/prop-types": "off",
-    "react-hooks/rules-of-hooks": "error",
-    "no-shadow": ["warn", { "builtinGlobals": false, "hoist": "functions", "allow": ["resolve", "reject", "done"] }],
-    "block-scoped-var": "warn",
-    "consistent-return": "warn",
-    "react/forbid-component-props": "warn",
-    "react/forbid-dom-props": "warn",
-    "react/no-access-state-in-setstate": "warn",
-    "react/no-array-index-key": "warn",
-    "react/jsx-no-bind": "warn",
-    "no-inner-declarations": "off",
-    "no-unused-vars": ["error", { "ignoreRestSiblings": true }]
-  }
+    '@typescript/no-use-before-define': 'off',
+    '@typescript-eslint/no-use-before-define': 'off',
+
+    // See https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/default_props/#you-may-not-need-defaultprops
+    'react/require-default-props': 'off',
+    'react/react-in-jsx-scope': 'off'
+  },
+  overrides: [
+    {
+      files: ['src/domain/shared_slices/**/*.ts','src/domain/shared_slices/**/*.js', 'src/**/*.slice.ts', 'src/**/*.slice.js'],
+      rules: {
+        'no-param-reassign': 'off'
+      }
+    },
+    {
+      files: ['src/ui/**/*.tsx'],
+      rules: {
+        'react/jsx-props-no-spreading': 'off'
+      }
+    },
+    {
+      files: ['cypress/**/*.js', 'cypress/**/*.ts', 'cypress.config.ts'],
+      plugins: ['cypress'],
+      rules: {
+        'cypress/no-assigning-return-values': 'error',
+        // TODO Hopefully we'll able to enforce that rule someday.
+        'cypress/no-unnecessary-waiting': 'off',
+        'cypress/assertion-before-screenshot': 'error',
+        // TODO Hopefully we'll able to enforce that rule someday.
+        'cypress/no-force': 'off',
+        'cypress/no-async-tests': 'error',
+        'cypress/no-pause': 'error',
+
+        'import/no-default-export': 'off',
+        'import/no-extraneous-dependencies': 'off'
+      }
+    },
+    // Custom monitorenv rule
+    {
+      files: ['**/*.stories.*'],
+      rules: {
+        'import/no-anonymous-default-export': 'off'
+      }
+    }
+  ]
 }

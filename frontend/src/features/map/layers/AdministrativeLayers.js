@@ -1,12 +1,11 @@
+import _ from 'lodash'
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import _ from 'lodash'
 
-import { getAdministrativeVectorLayer } from '../../../domain/use_cases/administrative/showAdministrativeLayer'
 import Layers, { layersType } from '../../../domain/entities/layers'
+import { getAdministrativeVectorLayer } from '../../../domain/use_cases/administrative/showAdministrativeLayer'
 
-
-const AdministrativeLayers = ({ map }) => {
+function AdministrativeLayers({ map }) {
   const { showedAdministrativeLayerIds } = useSelector(state => state.administrative)
 
   useEffect(() => {
@@ -17,15 +16,14 @@ const AdministrativeLayers = ({ map }) => {
         return
       }
       // remove layers
-      olLayersList.forEach( layer => {
+      olLayersList.forEach(layer => {
         if (layer.type === layersType.ADMINISTRATIVE && !showedAdministrativeLayerIds.includes(layer.name)) {
           olLayers.remove(layer)
         }
       })
       // add layers
       showedAdministrativeLayerIds.forEach(layerId => {
-        if (!(olLayersList.some(_layer => _layer.type === Layers.REGULATORY_ENV.code && _layer.name === layerId))) {
-          
+        if (!olLayersList.some(_layer => _layer.type === Layers.REGULATORY_ENV.code && _layer.name === layerId)) {
           const VectorLayer = getAdministrativeVectorLayer(layerId)
           olLayers.push(VectorLayer)
         }

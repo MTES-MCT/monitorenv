@@ -1,38 +1,36 @@
-import Stroke from 'ol/style/Stroke'
-import Fill from 'ol/style/Fill'
+import { getCenter } from 'ol/extent'
 import Point from 'ol/geom/Point'
 import { Icon, Style } from 'ol/style'
-import { getCenter } from 'ol/extent'
+import Fill from 'ol/style/Fill'
+import Stroke from 'ol/style/Stroke'
 
 import { COLORS } from '../../../../constants/constants'
 import { missionStatusEnum } from '../../../../domain/entities/missions'
 
-
-
 export const missionZoneStyle = new Style({
-  stroke: new Stroke({
-    color: COLORS.shadowBlue,
-  }),
   fill: new Fill({
     color: 'rgba(107,131,158, .2)'
+  }),
+  stroke: new Stroke({
+    color: COLORS.shadowBlue
+  })
+})
+
+const missionWithCentroidStyleFactory = color =>
+  new Style({
+    geometry: feature => {
+      const extent = feature.getGeometry().getExtent()
+      const center = getCenter(extent)
+
+      return new Point(center)
+    },
+    image: new Icon({
+      color,
+      src: 'marker-flag.svg'
+    })
   })
 
-})
-
-const missionWithCentroidStyleFactory = (color) => new Style({
-  image: new Icon({
-    src: 'marker-flag.svg',
-    color: color,
-  
-  }),
-  geometry: (feature) => {
-    const extent = feature.getGeometry().getExtent()
-    const center = getCenter(extent)
-    return new Point(center)
-  }
-})
-
-export const missionWithCentroidStyleFn = (feature) => {
+export const missionWithCentroidStyleFn = feature => {
   const missionStatus = feature.get('missionStatus')
   switch (missionStatus) {
     case missionStatusEnum.PENDING.code:
@@ -48,17 +46,17 @@ export const missionWithCentroidStyleFn = (feature) => {
 
 export const selectedMissionActionsStyle = new Style({
   image: new Icon({
-    src: 'controle_18px.svg',
     color: COLORS.red,
-    scale: 1.4
+    scale: 1.4,
+    src: 'controle_18px.svg'
   })
 })
 
 export const selectedMissionStyle = new Style({
-  stroke: new Stroke({
-    color: COLORS.shadowBlue,
-  }),
   fill: new Fill({
     color: 'rgba(107,131,158, .2)'
+  }),
+  stroke: new Stroke({
+    color: COLORS.shadowBlue
   })
 })

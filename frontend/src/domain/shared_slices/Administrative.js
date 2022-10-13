@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
-import _ from "lodash";
+import _ from 'lodash'
+import { persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
 
 /* eslint-disable */
 /** @namespace AdministrativeReducer */
@@ -10,41 +10,39 @@ const AdministrativeReducer = null
 
 const persistConfig = {
   key: 'administrative',
-  storage,
-};
-
+  storage
+}
 
 const administrativeSlice = createSlice({
-  name: 'administrative',
   initialState: {
-    showedAdministrativeLayerIds:[],
+    showedAdministrativeLayerIds: []
   },
+  name: 'administrative',
   reducers: {
-    /**
-     * show AdministrativeLayer
-     * @memberOf AdministrativeReducer
-     * @param {Object=} state
-     * @param {AdministrativeZone} action.payload - The regulatory zone
-     */
-    showAdministrativeLayer (state, action) {
-      state.showedAdministrativeLayerIds = _.uniq(_.concat(state.showedAdministrativeLayerIds, action.payload))
-    },
     /**
      * hide AdministrativeLayer
      * @memberOf AdministrativeReducer
-     * @param {Object=} state
+     * @param {Object} state
+     * @param {Object} action
      * @param {AdministrativeZone} action.payload - The regulatory zone
      */
-    hideAdministrativeLayer (state, action) {
+    hideAdministrativeLayer(state, action) {
       state.showedAdministrativeLayerIds = _.without(state.showedAdministrativeLayerIds, action.payload)
     },
+
+    /**
+     * show AdministrativeLayer
+     * @memberOf AdministrativeReducer
+     * @param {Object} state
+     * @param {Object} action
+     * @param {AdministrativeZone} action.payload - The regulatory zone
+     */
+    showAdministrativeLayer(state, action) {
+      state.showedAdministrativeLayerIds = _.uniq(_.concat(state.showedAdministrativeLayerIds, action.payload))
+    }
   }
 })
 
-export const {
-  showAdministrativeLayer,
-  hideAdministrativeLayer,
-  setAdministrativeLayers,
-} = administrativeSlice.actions
+export const { hideAdministrativeLayer, showAdministrativeLayer } = administrativeSlice.actions
 
-export const administrativeSlicePersistedReducer = persistReducer(persistConfig, administrativeSlice.reducer);
+export const administrativeSlicePersistedReducer = persistReducer(persistConfig, administrativeSlice.reducer)

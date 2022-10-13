@@ -1,29 +1,30 @@
+import { useField } from 'formik'
 import React, { useRef } from 'react'
-import styled from 'styled-components';
-import { Form, TagPicker } from 'rsuite';
-import {  useField } from 'formik';
+import { Form, TagPicker } from 'rsuite'
+import styled from 'styled-components'
 
-import { protectedSpeciesEnum } from '../../../domain/entities/missions';
+import { protectedSpeciesEnum } from '../../../domain/entities/missions'
 
+export function ProtectedSpeciesSelector({ name, ...props }) {
+  const [protectedSpeciesField, , protectedSpeciesHelpers] = useField(name)
 
-export const ProtectedSpeciesSelector = ({ name, ...props }) => {
-  const [protectedSpeciesField, , protectedSpeciesHelpers] = useField(name);
-  
   const selectorRef = useRef()
   const data = Object.values(protectedSpeciesEnum)
+
   return (
     <SelectorWrapper ref={selectorRef}>
-        <Form.ControlLabel htmlFor={name}>Espèces protégées </Form.ControlLabel>
-        <TagPickerWhite
-          virtualized
-          block
-          container={()=>selectorRef.current}
-          value={protectedSpeciesField.value}
-          onChange={protectedSpeciesHelpers.setValue}
-          data={data}
-          labelKey={'libelle'}
-          valueKey={'code'}
-          {...props} />
+      <Form.ControlLabel htmlFor={name}>Espèces protégées </Form.ControlLabel>
+      <TagPickerWhite
+        block
+        container={() => selectorRef.current}
+        data={data}
+        labelKey="libelle"
+        onChange={protectedSpeciesHelpers.setValue}
+        value={protectedSpeciesField.value}
+        valueKey="code"
+        virtualized
+        {...props}
+      />
     </SelectorWrapper>
   )
 }

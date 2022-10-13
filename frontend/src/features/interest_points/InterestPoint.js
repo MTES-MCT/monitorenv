@@ -1,25 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
-import SaveInterestPoint from './SaveInterestPoint'
 import {
   deleteInterestPointBeingDrawed,
   drawInterestPoint,
   endInterestPointDraw
 } from '../../domain/shared_slices/InterestPoint'
-
 import { ReactComponent as InterestPointSVG } from '../../uiMonitor/icons/Point_interet.svg'
-import { IconButton } from 'rsuite'
+import SaveInterestPoint from './SaveInterestPoint'
 
 const INTEREST_POINT_POSITION_FROM_LEFT = 470
 
-const InterestPoint = () => {
+function InterestPoint() {
   const dispatch = useDispatch()
-  const {
-    isEditing,
-    interestPointBeingDrawed
-  } = useSelector(state => state.interestPoint)
+  const { interestPointBeingDrawed, isEditing } = useSelector(state => state.interestPoint)
 
   const firstUpdate = useRef(true)
   const [interestPointIsOpen, setInterestPointIsOpen] = useState(false)
@@ -38,7 +34,8 @@ const InterestPoint = () => {
         dispatch(deleteInterestPointBeingDrawed())
       }
     }
-    return (document.removeEventListener('keydown', escapeFromKeyboard))
+
+    return document.removeEventListener('keydown', escapeFromKeyboard)
   }, [interestPointIsOpen, isEditing])
 
   useEffect(() => {
@@ -58,25 +55,25 @@ const InterestPoint = () => {
     }
   }
 
-  function openOrCloseInterestPoint () {
+  function openOrCloseInterestPoint() {
     setInterestPointIsOpen(!interestPointIsOpen)
   }
+
   return (
     <Wrapper ref={wrapperRef}>
       <IconButton
-        data-cy={'interest-point'}
-        title={'Créer un point d\'intérêt'}
+        appearance="primary"
+        data-cy="interest-point"
+        icon={<InterestPointIcon className="rs-icon" />}
         onClick={openOrCloseInterestPoint}
-        appearance='primary'
-        size='sm'
-        icon={<InterestPointIcon className={"rs-icon"} />}
-        
-       />
+        size="sm"
+        title={"Créer un point d'intérêt"}
+      />
       <SaveInterestPoint
+        close={() => setInterestPointIsOpen(false)}
         firstUpdate={firstUpdate.current}
         isOpen={interestPointIsOpen}
-        close={() => setInterestPointIsOpen(false)}
-        />
+      />
     </Wrapper>
   )
 }

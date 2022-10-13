@@ -1,38 +1,44 @@
-import React from 'react'
-import styled from 'styled-components'
-import { Form } from 'rsuite'
 import { FieldArray } from 'formik'
+import React from 'react'
+import { Form } from 'rsuite'
+import styled from 'styled-components'
 
+import { COLORS } from '../../../constants/constants'
 import { missionNatureEnum, missionTypeEnum } from '../../../domain/entities/missions'
-
+import { FormikCheckboxGroup } from '../../../uiMonitor/CustomFormikFields/FormikCheckboxGroup'
 import { FormikDatePicker, placeholderDateTimePicker } from '../../../uiMonitor/CustomFormikFields/FormikDatePicker'
+import { FormikInput } from '../../../uiMonitor/CustomFormikFields/FormikInput'
 import { FormikRadioGroup } from '../../../uiMonitor/CustomFormikFields/FormikRadioGroup'
 import { FormikTextarea } from '../../../uiMonitor/CustomFormikFields/FormikTextarea'
-import { FormikInput } from '../../../uiMonitor/CustomFormikFields/FormikInput'
-import { FormikCheckboxGroup } from '../../../uiMonitor/CustomFormikFields/FormikCheckboxGroup'
-
 import { MissionZones } from './MissionZones'
 import { ResourceUnitsForm } from './ResourceUnitsForm'
 
-import { COLORS } from '../../../constants/constants'
-
-export const GeneralInformationsForm = () => {
-  
+export function GeneralInformationsForm() {
   return (
     <>
       <Title>Informations générales</Title>
       <Form.Group>
         <FixedFormGroup>
           <Form.ControlLabel htmlFor="inputStartDatetimeUtc">Début de mission</Form.ControlLabel>
-          <FormikDatePicker name="inputStartDatetimeUtc" placeholder={placeholderDateTimePicker} format="dd MMM yyyy, HH:mm" oneTap/>
+          <FormikDatePicker
+            format="dd MMM yyyy, HH:mm"
+            name="inputStartDatetimeUtc"
+            oneTap
+            placeholder={placeholderDateTimePicker}
+          />
         </FixedFormGroup>
-        
+
         <FixedFormGroup>
           <Form.ControlLabel htmlFor="inputEndDatetimeUtc">Fin de mission</Form.ControlLabel>
-          <FormikDatePicker name="inputEndDatetimeUtc" placeholder={placeholderDateTimePicker} format="dd MMM yyyy, HH:mm" oneTap/>
+          <FormikDatePicker
+            format="dd MMM yyyy, HH:mm"
+            name="inputEndDatetimeUtc"
+            oneTap
+            placeholder={placeholderDateTimePicker}
+          />
         </FixedFormGroup>
       </Form.Group>
-      
+
       <Form.Group>
         <SubGroup>
           <Form.ControlLabel htmlFor="missionType">Type de mission</Form.ControlLabel>
@@ -40,33 +46,28 @@ export const GeneralInformationsForm = () => {
         </SubGroup>
         <SubGroup>
           <Form.ControlLabel htmlFor="missionNature">Nature de mission</Form.ControlLabel>
-          <NatureMissionCheckboxGroup inline name="missionNature" checkBoxValues={missionNatureEnum} />
+          <NatureMissionCheckboxGroup checkBoxValues={missionNatureEnum} inline name="missionNature" />
         </SubGroup>
       </Form.Group>
       <Form.Group>
-        <FieldArray 
-          name={`resourceUnits`} 
-          render={(props)=>(<ResourceUnitsForm 
-          {...props} 
-          />
-        )} />
+        <FieldArray name="resourceUnits" render={props => <ResourceUnitsForm {...props} />} />
       </Form.Group>
 
       <MissionZones name="geom" />
       <Form.Group>
         <Form.ControlLabel htmlFor="observations">Observations générales </Form.ControlLabel>
-        <InputObservations  name="observations"/>
+        <InputObservations name="observations" />
       </Form.Group>
-      
+
       <Form.Group>
-          <ColWrapper>
-              <Form.ControlLabel htmlFor="open_by">Ouvert par</Form.ControlLabel>
-              <FormikInput  name="open_by"/>
-          </ColWrapper>
-          <ColWrapper>
-              <Form.ControlLabel htmlFor="closed_by">Clôturé par</Form.ControlLabel>
-              <FormikInput  name="closed_by"/>
-          </ColWrapper>
+        <ColWrapper>
+          <Form.ControlLabel htmlFor="open_by">Ouvert par</Form.ControlLabel>
+          <FormikInput name="open_by" />
+        </ColWrapper>
+        <ColWrapper>
+          <Form.ControlLabel htmlFor="closed_by">Clôturé par</Form.ControlLabel>
+          <FormikInput name="closed_by" />
+        </ColWrapper>
       </Form.Group>
     </>
   )
@@ -75,13 +76,13 @@ const Title = styled.h2`
   font-size: 16px;
   line-height: 22px;
   padding-bottom: 13px;
-  color: ${COLORS.charcoal}
+  color: ${COLORS.charcoal};
 `
 
 const ColWrapper = styled.div`
   width: 200px;
   display: inline-block;
-  :not(:last-child){
+  :not(:last-child) {
     margin-right: 16px;
   }
 `

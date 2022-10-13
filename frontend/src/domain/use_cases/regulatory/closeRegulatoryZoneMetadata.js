@@ -3,4 +3,3 @@ import { closeRegulatoryMetadataPanel } from '../../shared_slices/RegulatoryMeta
 export const closeRegulatoryZoneMetadata = () => dispatch => {
   dispatch(closeRegulatoryMetadataPanel())
 }
-

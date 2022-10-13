@@ -29,9 +29,10 @@ RUN mvn clean package -DskipTests=true
 ###########################
 # Build frontend with npm #
 ###########################
-FROM node:16.15.0-alpine3.15 as buildFront
+FROM node:18-alpine as buildFront
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV DISABLE_ESLINT_PLUGIN=true
 
 ARG ENV_PROFILE
 ENV REACT_APP_ENV $ENV_PROFILE
@@ -43,8 +44,8 @@ COPY infra/ /tmp/infra/
 WORKDIR /tmp/frontend
 
 # Files are expected to be in /tmp/frontend/dist/monitorenv-frontend
-RUN npm ci --force &&\
-  npm run build
+RUN npm ci
+RUN npm run build
 
 ######################
 # Create final image #

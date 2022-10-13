@@ -1,46 +1,44 @@
 import React from 'react'
-import styled from 'styled-components'
 import { useSelector } from 'react-redux'
+import styled from 'styled-components'
 
-import APIWorker from '../api/APIWorker'
-import SideWindowLauncher from '../features/side_window/SideWindowLauncher'
+import { APIWorker } from '../api/APIWorker'
+import { ErrorToastNotification } from '../components/ErrorToastNotification'
+import { FEATURE_FLAGS } from '../features'
+import { DrawLayerModal } from '../features/drawLayer/DrawLayerModal'
 import Healthcheck from '../features/healthcheck/Healthcheck'
-import ErrorToastNotification from '../components/ErrorToastNotification'
-import Map from '../features/map/Map'
-import LayersSidebar from '../features/layersSelector/LayersSidebar'
-import { MissionsMenu } from '../features/missions/MissionsMenu'
-import Measurement from '../features/measurements/Measurement'
 import InterestPoint from '../features/interest_points/InterestPoint'
-import { LocateOnMap } from '../features/locateOnMap/LocateOnMap';
-import { DrawLayerModal } from '../features/drawLayer/DrawLayerModal';
+import LayersSidebar from '../features/layersSelector/LayersSidebar'
+import { LocateOnMap } from '../features/locateOnMap/LocateOnMap'
+import Map from '../features/map/Map'
+import Measurement from '../features/measurements/Measurement'
+import { MissionsMenu } from '../features/missions/MissionsMenu'
+import SideWindowLauncher from '../features/side_window/SideWindowLauncher'
 
-import { FEATURE_FLAGS } from '../features';
-
-
-
-
-export const HomePage = () => {
-  const { 
-    displayLayersSidebar,
-    displayMissionsMenu,
-    displayMeasurement,
-    displayLocateOnMap,
+export function HomePage() {
+  const {
+    displayDrawLayerModal,
     displayInterestPoint,
-    displayDrawLayerModal
-   } = useSelector(state => state.global)
-  return (<>
-      <Healthcheck/>
+    displayLayersSidebar,
+    displayLocateOnMap,
+    displayMeasurement,
+    displayMissionsMenu
+  } = useSelector(state => state.global)
+
+  return (
+    <>
+      <Healthcheck />
       <Wrapper>
-        <APIWorker/>
-        <Map/>
-        {displayLayersSidebar && <LayersSidebar/> }
-        {FEATURE_FLAGS.LOCALIZE_MISSIONS && displayDrawLayerModal && <DrawLayerModal/>}
+        <APIWorker />
+        <Map />
+        {displayLayersSidebar && <LayersSidebar />}
+        {FEATURE_FLAGS.LOCALIZE_MISSIONS && displayDrawLayerModal && <DrawLayerModal />}
         {FEATURE_FLAGS.REPORTING && displayMissionsMenu && <MissionsMenu />}
-        {displayMeasurement && <Measurement/>}
+        {displayMeasurement && <Measurement />}
         {displayLocateOnMap && <LocateOnMap />}
-        {displayInterestPoint && <InterestPoint/>}
-        <ErrorToastNotification/>
-        {FEATURE_FLAGS.REPORTING && <SideWindowLauncher/> }
+        {displayInterestPoint && <InterestPoint />}
+        <ErrorToastNotification />
+        {FEATURE_FLAGS.REPORTING && <SideWindowLauncher />}
       </Wrapper>
     </>
   )
@@ -53,4 +51,4 @@ const Wrapper = styled.div`
   width: 100%;
   overflow-y: hidden;
   overflow-x: hidden;
-  `
+`

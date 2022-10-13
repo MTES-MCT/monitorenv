@@ -1,23 +1,19 @@
 import React from 'react'
-import styled from 'styled-components'
-import { IconButton } from 'rsuite'
 import { useDispatch, useSelector } from 'react-redux'
+import { IconButton } from 'rsuite'
+import styled from 'styled-components'
 
-import { closeSideWindow, openSideWindowTab } from '../../domain/shared_slices/Global'
 import { sideWindowMenu } from '../../domain/entities/sideWindow'
-
+import { closeSideWindow, openSideWindowTab } from '../../domain/shared_slices/Global'
 import { ReactComponent as MissionsSVG } from '../../uiMonitor/icons/operations.svg'
 
-export const MissionsMenu = () => {
+export function MissionsMenu() {
   const dispatch = useDispatch()
-  const {
-    openedSideWindowTab,
-    sideWindowIsOpen
-  } = useSelector(state => state.global)
+  const { openedSideWindowTab, sideWindowIsOpen } = useSelector(state => state.global)
 
   const toggleMissionsWindow = () => {
     if (!sideWindowIsOpen || (sideWindowIsOpen && openedSideWindowTab !== sideWindowMenu.MISSIONS.code)) {
-      dispatch(openSideWindowTab(sideWindowMenu.MISSIONS.code))      
+      dispatch(openSideWindowTab(sideWindowMenu.MISSIONS.code))
     } else if (sideWindowIsOpen && openedSideWindowTab === sideWindowMenu.MISSIONS.code) {
       dispatch(closeSideWindow())
     }
@@ -25,14 +21,13 @@ export const MissionsMenu = () => {
 
   return (
     <MissionButton
-      data-cy={'missions-button'}
-      title={'voir les missions'}
-      onClick={toggleMissionsWindow}
-      icon={<MissionsIcon className={'rs-icon'} />}
-      appearance='primary'
       active={sideWindowIsOpen}
-    >
-    </MissionButton>
+      appearance="primary"
+      data-cy="missions-button"
+      icon={<MissionsIcon className="rs-icon" />}
+      onClick={toggleMissionsWindow}
+      title="voir les missions"
+    />
   )
 }
 

@@ -1,92 +1,107 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
-import _ from "lodash";
+import _ from 'lodash'
+import { persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
 
 /* eslint-disable */
 /** @namespace RegulatoryReducer */
 const RegulatoryReducer = null
 /* eslint-enable */
 
-
 const persistConfig = {
   key: 'regulatory',
   storage,
   whitelist: ['selectedRegulatoryLayerIds', 'showedRegulatoryLayerIds']
-};
+}
 
 const regulatorySlice = createSlice({
-  name: 'regulatory',
   initialState: {
+    loadingRegulatoryZoneMetadata: false,
+
+    regulationSearchedZoneExtent: [],
+
+    /** @type ol.geom.Geometry[] | null */
+    regulatoryGeometriesToPreview: null,
+
     /** @type {Object.<string, RegulatoryZone[]>} selectedRegulatoryLayers */
     /** @type RegulatoryLawTypes regulatoryLayers */
     regulatoryLayers: [],
+
     regulatoryLayersByLayerName: [],
-    selectedRegulatoryLayerIds: [],
-    showedRegulatoryLayerIds:[],
+
     regulatoryZoneMetadata: null,
-    loadingRegulatoryZoneMetadata: false,
-    /** @type ol.geom.Geometry[] */
-    regulatoryGeometriesToPreview: null,
-    regulationSearchedZoneExtent: []
+
+    selectedRegulatoryLayerIds: [],
+
+    showedRegulatoryLayerIds: []
   },
+  name: 'regulatory',
   reducers: {
-    setRegulatoryGeometriesToPreview (state, action) {
-      state.regulatoryGeometriesToPreview = action.payload
-    },
-    resetRegulatoryGeometriesToPreview (state) {
-      state.regulatoryGeometriesToPreview = null
-    },
     /**
      * Add regulatory zones to "My Zones" regulatory selection
      * @memberOf RegulatoryReducer
-     * @param {Object=} state
+     * @param {Object} state
      * @param {layerId[]} action.payload - The regulatory zones
      */
-    addRegulatoryZonesToMyLayers (state, action) {
-      return {...state, 
-        selectedRegulatoryLayerIds : _.union(state.selectedRegulatoryLayerIds, action.payload),
+    addRegulatoryZonesToMyLayers(state, action) {
+      return {
+        ...state,
+        selectedRegulatoryLayerIds: _.union(state.selectedRegulatoryLayerIds, action.payload),
         showedRegulatoryLayerIds: _.union(state.showedRegulatoryLayerIds, action.payload)
       }
     },
+
+    /**
+     * hide RegulatoryLayer
+     * @memberOf RegulatoryReducer
+     * @param {Object} state
+     * @param {RegulatoryZone} action.payload - The regulatory zone
+     */
+    hideRegulatoryLayer(state, action) {
+      state.showedRegulatoryLayerIds = _.without(state.showedRegulatoryLayerIds, action.payload)
+    },
+
     /**
      * Remove regulatory zone(s) from "My Zones" regulatory selection, by providing a topic name to remove multiple zones
      * or simply the zone name to remove a specified zone
      * @memberOf RegulatoryReducer
-     * @param {Object=} state
+     * @param {Object} state
      * @param {layerId[]} action - The regulatory zones to remove
      */
-    removeRegulatoryZonesFromMyLayers (state, action) {
-      return {...state, 
+    removeRegulatoryZonesFromMyLayers(state, action) {
+      return {
+        ...state,
         selectedRegulatoryLayerIds: _.difference(state.selectedRegulatoryLayerIds, action.payload),
         showedRegulatoryLayerIds: _.difference(state.showedRegulatoryLayerIds, action.payload)
       }
-    },/**
-     * show RegulatoryLayer
-     * @memberOf RegulatoryReducer
-     * @param {Object=} state
-     * @param {RegulatoryZone} action.payload - The regulatory zone
-     */
-    showRegulatoryLayer (state, action) {
-      state.showedRegulatoryLayerIds = _.uniq(_.concat(state.showedRegulatoryLayerIds, action.payload))
-      // return {...state, showedRegulatoryLayerIds : _.union(state.showedRegulatoryLayerIds, action.payload)}
     },
+
+    resetRegulatoryGeometriesToPreview(state) {
+      state.regulatoryGeometriesToPreview = null
+    },
+
     /**
-     * hide RegulatoryLayer
+     * Set the regulation searched zone extent - used to fit the extent into the OpenLayers view
+     * @function setRegulationSearchedZoneExtent
      * @memberOf RegulatoryReducer
-     * @param {Object=} state
-     * @param {RegulatoryZone} action.payload - The regulatory zone
+     * @param {Object} state
+     * @param {{payload: number[]}} action - the extent
      */
-    hideRegulatoryLayer (state, action) {
-      state.showedRegulatoryLayerIds = _.without(state.showedRegulatoryLayerIds, action.payload)
+    setRegulationSearchedZoneExtent(state, action) {
+      state.regulationSearchedZoneExtent = action.payload
     },
+
+    setRegulatoryGeometriesToPreview(state, action) {
+      state.regulatoryGeometriesToPreview = action.payload
+    },
+
     /**
      * Set regulatory data structured as
      * LawType: {
      *   Topic: Zone[]
      * }
      * (see example)
-     * @param {Object=} state
+     * @param {Object} state
      * @param {{payload: RegulatoryLawTypes}} action - The regulatory data
      * @memberOf RegulatoryReducer
      * @example
@@ -127,40 +142,37 @@ const regulatorySlice = createSlice({
      *  }
      * }
      */
-    setRegulatoryLayers (state, { payload: { features } }) {
+    setRegulatoryLayers(state, { payload: { features } }) {
       state.regulatoryLayers = features
       state.regulatoryLayersByLayerName = _.groupBy(features, f => f.properties.layer_name)
     },
     /**
-     * Set the regulation searched zone extent - used to fit the extent into the OpenLayers view
-     * @function setRegulationSearchedZoneExtent
+     * show RegulatoryLayer
      * @memberOf RegulatoryReducer
-     * @param {Object=} state
-     * @param {{payload: number[]}} action - the extent
+     * @param {Object} state
+     * @param {RegulatoryZone} action.payload - The regulatory zone
      */
-    setRegulationSearchedZoneExtent (state, action) {
-      state.regulationSearchedZoneExtent = action.payload
+    showRegulatoryLayer(state, action) {
+      state.showedRegulatoryLayerIds = _.uniq(_.concat(state.showedRegulatoryLayerIds, action.payload))
+      // return {...state, showedRegulatoryLayerIds : _.union(state.showedRegulatoryLayerIds, action.payload)}
     }
   }
 })
 
 export const {
   addRegulatoryZonesToMyLayers,
-  removeRegulatoryZonesFromMyLayers,
-  showRegulatoryLayer,
   hideRegulatoryLayer,
-  setRegulatoryLayers,
-  setRegulatoryGeometriesToPreview,
+  removeRegulatoryZonesFromMyLayers,
   resetRegulatoryGeometriesToPreview,
-  setRegulationSearchedZoneExtent
+  setRegulationSearchedZoneExtent,
+  setRegulatoryGeometriesToPreview,
+  setRegulatoryLayers,
+  showRegulatoryLayer
 } = regulatorySlice.actions
 
+export const regulatorySlicePersistedReducer = persistReducer(persistConfig, regulatorySlice.reducer)
 
-
-export const regulatorySlicePersistedReducer = persistReducer(persistConfig, regulatorySlice.reducer);
-
-
-export const regulatoryActionSanitizer = (action) => (
-  action.type === 'regulatory/setRegulatoryLayers' && action.payload ?
-{...action, payload: '<<REGULATORY FEATURES>>'} : action
-)
+export const regulatoryActionSanitizer = action =>
+  action.type === 'regulatory/setRegulatoryLayers' && action.payload
+    ? { ...action, payload: '<<REGULATORY FEATURES>>' }
+    : action

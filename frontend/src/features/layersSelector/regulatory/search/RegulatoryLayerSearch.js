@@ -1,90 +1,105 @@
+import Document from 'flexsearch/dist/module/document'
+import _ from 'lodash'
+import { intersects } from 'ol/extent'
+import { transformExtent } from 'ol/proj'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import styled from 'styled-components'
-import _ from 'lodash'
 import { IconButton } from 'rsuite'
-import { transformExtent } from 'ol/proj'
-import { intersects } from 'ol/extent';
-import Document from 'flexsearch/dist/module/document'
+import styled from 'styled-components'
 
-import { setFilterSearchOnMapExtent } from './RegulatoryLayerSearch.slice'
-import RegulatoryLayerSearchResultList from './RegulatoryLayerSearchResultList'
-import { RegulatoryLayerSearchInput } from './RegulatoryLayerSearchInput'
-
-import { ReactComponent as ZoomIconSVG } from '../../../../uiMonitor/icons/affichage_recherche_reg.svg'
-import { ReactComponent as SearchIconSVG } from '../../../../uiMonitor/icons/Loupe.svg'
-import { ReactComponent as CloseIconSVG } from '../../../../uiMonitor/icons/Croix_grise.svg'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map'
+import { ReactComponent as ZoomIconSVG } from '../../../../uiMonitor/icons/affichage_recherche_reg.svg'
+import { ReactComponent as CloseIconSVG } from '../../../../uiMonitor/icons/Croix_grise.svg'
+import { ReactComponent as SearchIconSVG } from '../../../../uiMonitor/icons/Loupe.svg'
+import { setFilterSearchOnMapExtent } from './RegulatoryLayerSearch.slice'
+import { RegulatoryLayerSearchInput } from './RegulatoryLayerSearchInput'
+import RegulatoryLayerSearchResultList from './RegulatoryLayerSearchResultList'
 
-
-const RegulatoryLayerSearch = () => {
+function RegulatoryLayerSearch() {
   const dispatch = useDispatch()
   const { regulatoryLayers } = useSelector(state => state.regulatory)
   const { filterSearchOnMapExtent } = useSelector(state => state.regulatoryLayerSearch)
   const { currentMapExtentTracker } = useSelector(state => state.map)
-  const [shouldRunSearchOnExtent, setShouldRunSearchOnExtent] = useState(false) 
+  const [shouldRunSearchOnExtent, setShouldRunSearchOnExtent] = useState(false)
   const [globalSearchText, setGlobalSearchText] = useState('')
-  const [results, setResults ] = useState([])
+  const [results, setResults] = useState([])
 
   const indexRef = useRef(null)
   const GetIndex = () => {
     if (indexRef.current === null) {
       indexRef.current = new Document({
+        charset: 'latin:extra',
         document: {
-          id: "id",
-          index: [ "properties:layer_name", "properties:entity_name", "properties:ref_reg", "properties:thematique", "properties:type"],
+          id: 'id',
+          index: [
+            'properties:layer_name',
+            'properties:entity_name',
+            'properties:ref_reg',
+            'properties:thematique',
+            'properties:type'
+          ],
           store: true
         },
-        tokenize: 'full',
-        charset: 'latin:extra'
+        tokenize: 'full'
       })
     }
+
     return indexRef.current
   }
-  
-  useEffect(()=>{
+
+  useEffect(() => {
     if (filterSearchOnMapExtent) {
       setShouldRunSearchOnExtent(true)
-      
     } else {
       setShouldRunSearchOnExtent(false)
     }
   }, [filterSearchOnMapExtent, currentMapExtentTracker])
 
-  useEffect(()=> {
-    regulatoryLayers?.forEach(layer=> GetIndex().add(layer))
+  useEffect(() => {
+    regulatoryLayers?.forEach(layer => GetIndex().add(layer))
   }, [regulatoryLayers])
 
-  
-  const searchLayers = useCallback((searchedText, geofilter, extent) => {
-    if (searchedText) {
-      const allResults = GetIndex()?.search(searchedText, { index: [ "properties:layer_name", "properties:entity_name", "properties:type", "properties:thematique", "properties:ref_reg"], enrich: true})
-      const uniqueResults = _.uniqWith(_.flatMap(allResults, field => field.result), (a,b) => a.id === b.id)
-      if ( extent && geofilter) {
-        const currentExtent = transformExtent(extent,  OPENLAYERS_PROJECTION, WSG84_PROJECTION)
-        const filteredResults = _.filter(uniqueResults, (result => {
-          return intersects(result?.doc?.bbox, currentExtent)
-      }))
-      setResults(filteredResults)
-      } else {
-        setResults(uniqueResults)
-      }
-    } else {
-      if ( extent && geofilter) {
-        const currentExtent = transformExtent(extent,  OPENLAYERS_PROJECTION, WSG84_PROJECTION)
-        const filteredResults = _.map(_.filter(regulatoryLayers, (layer => {
-            return intersects(layer.bbox, currentExtent)
-        })), layer => ({
-          id: layer.id,
-          doc: layer
-        }))
+  const searchLayers = useCallback(
+    (searchedText, geofilter, extent) => {
+      if (searchedText) {
+        const allResults = GetIndex()?.search(searchedText, {
+          enrich: true,
+          index: [
+            'properties:layer_name',
+            'properties:entity_name',
+            'properties:type',
+            'properties:thematique',
+            'properties:ref_reg'
+          ]
+        })
+        const uniqueResults = _.uniqWith(
+          _.flatMap(allResults, field => field.result),
+          (a, b) => a.id === b.id
+        )
+        if (extent && geofilter) {
+          const currentExtent = transformExtent(extent, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
+          const filteredResults = _.filter(uniqueResults, result => intersects(result?.doc?.bbox, currentExtent))
+          setResults(filteredResults)
+        } else {
+          setResults(uniqueResults)
+        }
+      } else if (extent && geofilter) {
+        const currentExtent = transformExtent(extent, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
+        const filteredResults = _.map(
+          _.filter(regulatoryLayers, layer => intersects(layer.bbox, currentExtent)),
+          layer => ({
+            doc: layer,
+            id: layer.id
+          })
+        )
         setResults(filteredResults)
       } else {
         setResults([])
       }
-    }
-  },[regulatoryLayers])
-  
+    },
+    [regulatoryLayers]
+  )
+
   const handleReloadSearch = () => {
     searchLayers(globalSearchText, filterSearchOnMapExtent, currentMapExtentTracker)
     setShouldRunSearchOnExtent(false)
@@ -96,7 +111,7 @@ const RegulatoryLayerSearch = () => {
   }
   const allowResetResults = !_.isEmpty(results) && filterSearchOnMapExtent
 
-  const handleSearchInputChange = (searchedText) => {
+  const handleSearchInputChange = searchedText => {
     setGlobalSearchText(searchedText)
     searchLayers(globalSearchText, filterSearchOnMapExtent, currentMapExtentTracker)
   }
@@ -104,22 +119,32 @@ const RegulatoryLayerSearch = () => {
   const toggleFilterSearchOnMapExtent = () => {
     dispatch(setFilterSearchOnMapExtent(!filterSearchOnMapExtent))
   }
-  return (<>
-    <Search>
-      <RegulatoryLayerSearchInput setGlobalSearchText={handleSearchInputChange} globalSearchText={globalSearchText} />
-      <RegulatoryLayerSearchResultList results={results} searchedText={globalSearchText}/>
-    </Search>
-    <SearchOnExtentButton
-          title={'Définir la zone de recherche et afficher les tracés'}
-          data-cy={'regulatory-layers-advanced-search'}
-          onClick={toggleFilterSearchOnMapExtent}
-          appearance='primary'
-          active={filterSearchOnMapExtent}
-          icon={<ZoomIcon className={'rs-icon'} />}
-        />
-    {shouldRunSearchOnExtent  && <ReloadSearch onClick={handleReloadSearch} appearance='primary' icon={<SearchIcon className={'rs-icon'}/>}>Relancer la recherche ici</ReloadSearch>}
-    {allowResetResults  && <ResetSearch onClick={handleResetSearch} icon={<ResetIcon className={'rs-icon'}/>}>Effacer les résultats de la recherche</ResetSearch>}
-  </>
+
+  return (
+    <>
+      <Search>
+        <RegulatoryLayerSearchInput globalSearchText={globalSearchText} setGlobalSearchText={handleSearchInputChange} />
+        <RegulatoryLayerSearchResultList results={results} searchedText={globalSearchText} />
+      </Search>
+      <SearchOnExtentButton
+        active={filterSearchOnMapExtent}
+        appearance="primary"
+        data-cy="regulatory-layers-advanced-search"
+        icon={<ZoomIcon className="rs-icon" />}
+        onClick={toggleFilterSearchOnMapExtent}
+        title="Définir la zone de recherche et afficher les tracés"
+      />
+      {shouldRunSearchOnExtent && (
+        <ReloadSearch appearance="primary" icon={<SearchIcon className="rs-icon" />} onClick={handleReloadSearch}>
+          Relancer la recherche ici
+        </ReloadSearch>
+      )}
+      {allowResetResults && (
+        <ResetSearch icon={<ResetIcon className="rs-icon" />} onClick={handleResetSearch}>
+          Effacer les résultats de la recherche
+        </ResetSearch>
+      )}
+    </>
   )
 }
 
@@ -156,7 +181,7 @@ const SearchOnExtentButton = styled(IconButton)`
   left: 410px;
   margin-left: 5px;
   padding: 2px;
-  flex-grow:0;
+  flex-grow: 0;
   flex-shrink: 0;
   transition: 0.5s all;
 `

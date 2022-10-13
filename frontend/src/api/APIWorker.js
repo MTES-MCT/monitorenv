@@ -7,9 +7,8 @@ import { loadRegulatoryData } from '../domain/use_cases/regulatory/loadRegulator
 export const FIVE_MINUTES = 5 * 60 * 1000
 export const THIRTY_SECONDS = 30 * 1000
 
-const APIWorker = () => {
+export function APIWorker() {
   const dispatch = useDispatch()
-
 
   useEffect(() => {
     batch(() => {
@@ -21,7 +20,6 @@ const APIWorker = () => {
       batch(() => {
         // dispatch(getHealthcheck())
       })
-
     }, FIVE_MINUTES)
 
     return () => {
@@ -29,9 +27,5 @@ const APIWorker = () => {
     }
   }, [dispatch])
 
-
-
   return null
 }
-
-export default APIWorker

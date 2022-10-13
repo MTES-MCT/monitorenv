@@ -1,33 +1,30 @@
-import {  useEffect, useRef } from 'react'
-import { useSelector } from 'react-redux'
-import VectorSource from 'ol/source/Vector'
 import VectorLayer from 'ol/layer/Vector'
-
+import VectorSource from 'ol/source/Vector'
+import { useEffect, useRef } from 'react'
+import { useSelector } from 'react-redux'
 
 import { useGetMissionsQuery } from '../../../api/missionsAPI'
 import Layers from '../../../domain/entities/layers'
-import { selectedMissionStyle, selectedMissionActionsStyle } from './styles/missions.style'
 import { getMissionZoneFeature, getActionsFeatures } from './missionGeometryHelpers'
+import { selectedMissionStyle, selectedMissionActionsStyle } from './styles/missions.style'
 
-
-export const SelectedMissionLayer = ({ map }) => {
-  const { selectedMissionId, missionState: selectedMissionEditedState } = useSelector(state => state.missionState)
+export function SelectedMissionLayer({ map }) {
+  const { missionState: selectedMissionEditedState, selectedMissionId } = useSelector(state => state.missionState)
   const { displaySelectedMissionLayer } = useSelector(state => state.global)
   const { selectedMission } = useGetMissionsQuery(undefined, {
-    selectFromResult: ({ data }) =>  ({
-      selectedMission: data?.find(op => op.id === selectedMissionId),
-    }),
+    selectFromResult: ({ data }) => ({
+      selectedMission: data?.find(op => op.id === selectedMissionId)
+    })
   })
-  
-  const displaySelectedMission = displaySelectedMissionLayer && selectedMissionId !== selectedMissionEditedState?.id
 
+  const displaySelectedMission = displaySelectedMissionLayer && selectedMissionId !== selectedMissionEditedState?.id
 
   const selectedMissionVectorSourceRef = useRef(null)
   const GetSelectedMissionVectorSource = () => {
     if (selectedMissionVectorSourceRef.current === null) {
       selectedMissionVectorSourceRef.current = new VectorSource()
-       
     }
+
     return selectedMissionVectorSourceRef.current
   }
 
@@ -35,44 +32,45 @@ export const SelectedMissionLayer = ({ map }) => {
   const GetSelectedMissionActionsVectorSource = () => {
     if (selectedMissionActionsVectorSourceRef.current === null) {
       selectedMissionActionsVectorSourceRef.current = new VectorSource()
-       
     }
+
     return selectedMissionActionsVectorSourceRef.current
   }
 
   const selectedMissionVectorLayerRef = useRef(null)
   const selectedMissionActionsVectorLayerRef = useRef(null)
-  
 
   const GetSelectedMissionVectorLayer = () => {
     if (selectedMissionVectorLayerRef.current === null) {
       selectedMissionVectorLayerRef.current = new VectorLayer({
+        renderBuffer: 7,
         source: GetSelectedMissionVectorSource(),
         style: selectedMissionStyle,
-        renderBuffer: 7,
         updateWhileAnimating: true,
         updateWhileInteracting: true,
-        zIndex: Layers.MISSION_SELECTED.zIndex,
+        zIndex: Layers.MISSION_SELECTED.zIndex
       })
       selectedMissionVectorLayerRef.current.name = Layers.MISSION_SELECTED.code
     }
+
     return selectedMissionVectorLayerRef.current
   }
   const GetSelectedMissionActionsVectorLayer = () => {
     if (selectedMissionActionsVectorLayerRef.current === null) {
       selectedMissionActionsVectorLayerRef.current = new VectorLayer({
+        renderBuffer: 7,
         source: GetSelectedMissionActionsVectorSource(),
         style: selectedMissionActionsStyle,
-        renderBuffer: 7,
         updateWhileAnimating: true,
         updateWhileInteracting: true,
-        zIndex: Layers.ACTIONS.zIndex,
+        zIndex: Layers.ACTIONS.zIndex
       })
       selectedMissionActionsVectorLayerRef.current.name = Layers.ACTIONS.code
     }
+
     return selectedMissionActionsVectorLayerRef.current
   }
-  
+
   useEffect(() => {
     if (map) {
       const layersCollection = map.getLayers()
@@ -82,9 +80,10 @@ export const SelectedMissionLayer = ({ map }) => {
 
     return () => {
       if (map) {
-        map.removeLayer(GetSelectedMissionVectorLayer())}
+        map.removeLayer(GetSelectedMissionVectorLayer())
         map.removeLayer(GetSelectedMissionActionsVectorLayer())
       }
+    }
   }, [map])
 
   useEffect(() => {

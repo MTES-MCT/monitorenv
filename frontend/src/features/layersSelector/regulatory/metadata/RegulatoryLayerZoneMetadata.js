@@ -1,29 +1,23 @@
 import React, { useCallback } from 'react'
+import { FingerprintSpinner } from 'react-epic-spinners'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { FingerprintSpinner } from 'react-epic-spinners'
 
 import { useGetRegulatoryLayerQuery } from '../../../../api/regulatoryLayersAPI'
-import { closeRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
-
+import { COLORS } from '../../../../constants/constants'
 import { getTitle } from '../../../../domain/entities/regulatory'
+import { closeRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
+import { ReactComponent as AlertSVG } from '../../../../uiMonitor/icons/Picto_alerte.svg'
+import { ReactComponent as REGPaperSVG } from '../../../../uiMonitor/icons/reg_paper_dark.svg'
+import { CloseIcon } from '../../../commonStyles/icons/CloseIcon.style'
 import Identification from './Identification'
 import MetadataRegulatoryReferences from './MetadataRegulatoryReferences'
 
-import { ReactComponent as REGPaperSVG } from '../../../../uiMonitor/icons/reg_paper_dark.svg'
-import { ReactComponent as AlertSVG } from '../../../../uiMonitor/icons/Picto_alerte.svg'
-import { CloseIcon } from '../../../commonStyles/icons/CloseIcon.style'
-
-import { COLORS } from '../../../../constants/constants'
-
 const FOUR_HOURS = 4 * 60 * 60 * 1000
-const RegulatoryLayerZoneMetadata = () => {
+function RegulatoryLayerZoneMetadata() {
   const dispatch = useDispatch()
-  const {
-    regulatoryMetadataPanelIsOpen,
-    regulatoryMetadataLayerId
-  } = useSelector(state => state.regulatoryMetadata)
-  const { currentData } = useGetRegulatoryLayerQuery({id: regulatoryMetadataLayerId}, {pollingInterval: FOUR_HOURS})
+  const { regulatoryMetadataLayerId, regulatoryMetadataPanelIsOpen } = useSelector(state => state.regulatoryMetadata)
+  const { currentData } = useGetRegulatoryLayerQuery({ id: regulatoryMetadataLayerId }, { pollingInterval: FOUR_HOURS })
   const regulatoryMetadata = currentData?.properties
 
   const onCloseIconClicked = useCallback(() => {
@@ -31,31 +25,37 @@ const RegulatoryLayerZoneMetadata = () => {
   }, [dispatch])
 
   return (
-    <Wrapper
-      $regulatoryMetadataPanelIsOpen={regulatoryMetadataPanelIsOpen}>
-      {
-        regulatoryMetadata
-          ? <><Header>
-              <REGPaperIcon/>
-              <RegulatoryZoneName title={getTitle(regulatoryMetadata?.layer_name)}>
-                {getTitle(regulatoryMetadata?.layer_name)}
-              </RegulatoryZoneName>
-              <CloseIcon
-                data-cy={'regulatory-layers-metadata-close'}
-                onClick={onCloseIconClicked}
-              />
-            </Header>
-            <Warning>
-              <WarningIcon/>
-              Travail en cours, bien vérifier dans Légicem la validité de la référence et des infos réglementaires
-            </Warning>
-            <Content>
-              <Identification entity_name={regulatoryMetadata?.entity_name} thematique={regulatoryMetadata?.thematique} type={regulatoryMetadata?.type} facade={regulatoryMetadata?.facade} />
-              <MetadataRegulatoryReferences regulatoryReference={regulatoryMetadata?.ref_reg} url={regulatoryMetadata?.url} />
-            </Content></>
-          // eslint-disable-next-line react/forbid-component-props
-          : <FingerprintSpinner color={COLORS.background} className={'radar'} size={100}/>
-      }
+    <Wrapper $regulatoryMetadataPanelIsOpen={regulatoryMetadataPanelIsOpen}>
+      {regulatoryMetadata ? (
+        <>
+          <Header>
+            <REGPaperIcon />
+            <RegulatoryZoneName title={getTitle(regulatoryMetadata?.layer_name)}>
+              {getTitle(regulatoryMetadata?.layer_name)}
+            </RegulatoryZoneName>
+            <CloseIcon data-cy="regulatory-layers-metadata-close" onClick={onCloseIconClicked} />
+          </Header>
+          <Warning>
+            <WarningIcon />
+            Travail en cours, bien vérifier dans Légicem la validité de la référence et des infos réglementaires
+          </Warning>
+          <Content>
+            <Identification
+              entity_name={regulatoryMetadata?.entity_name}
+              facade={regulatoryMetadata?.facade}
+              thematique={regulatoryMetadata?.thematique}
+              type={regulatoryMetadata?.type}
+            />
+            <MetadataRegulatoryReferences
+              regulatoryReference={regulatoryMetadata?.ref_reg}
+              url={regulatoryMetadata?.url}
+            />
+          </Content>
+        </>
+      ) : (
+        // eslint-disable-next-line react/forbid-component-props
+        <FingerprintSpinner className="radar" color={COLORS.background} size={100} />
+      )}
     </Wrapper>
   )
 }
@@ -65,7 +65,7 @@ const Wrapper = styled.div`
   width: 400px;
   display: block;
   color: ${COLORS.charcoal};
-  opacity: ${props => props.$regulatoryMetadataPanelIsOpen ? 1 : 0};
+  opacity: ${props => (props.$regulatoryMetadataPanelIsOpen ? 1 : 0)};
   z-index: -1;
   padding: 0;
   transition: all 0.5s;

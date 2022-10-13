@@ -1,24 +1,20 @@
 import React from 'react'
-import styled from 'styled-components'
-import { COLORS } from '../../../../constants/constants'
 import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
 
-import { ChevronIcon } from '../../../commonStyles/icons/ChevronIcon.style'
-import RegulatoryLayerList from "./RegulatoryLayerList";
+import { COLORS } from '../../../../constants/constants'
 import { toggleMyRegulatoryZones } from '../../../../domain/shared_slices/LayerSidebar'
 import { ReactComponent as PinSVG } from '../../../../uiMonitor/icons/epingle.svg'
+import { ChevronIcon } from '../../../commonStyles/icons/ChevronIcon.style'
+import RegulatoryLayerList from './RegulatoryLayerList'
 
-const RegulatoryLayers = ({regulatoryLayersAddedToMySelection}) => {
+function RegulatoryLayers({ regulatoryLayersAddedToMySelection }) {
   const dispatch = useDispatch()
 
-  const {
-    selectedRegulatoryLayerIds,
-    regulatoryLayers
-  } = useSelector(state => state.regulatory)
+  const { regulatoryLayers, selectedRegulatoryLayerIds } = useSelector(state => state.regulatory)
   const { myRegulatoryZonesIsOpen } = useSelector(state => state.layerSidebar)
 
   const selectedRegulatoryLayers = regulatoryLayers?.filter(layer => selectedRegulatoryLayerIds.includes(layer.id))
-
 
   const onTitleClicked = () => {
     dispatch(toggleMyRegulatoryZones())
@@ -27,16 +23,16 @@ const RegulatoryLayers = ({regulatoryLayersAddedToMySelection}) => {
   return (
     <>
       <RegulatoryLayersTitle
-        data-cy={'regulatory-layers-my-zones'}
+        data-cy="regulatory-layers-my-zones"
         onClick={onTitleClicked}
         regulatoryLayersAddedToMySelection={regulatoryLayersAddedToMySelection}
         showRegulatoryLayers={myRegulatoryZonesIsOpen}
       >
         <PinSVGIcon />
         <Title>Mes zones réglementaires</Title>
-        <ChevronIcon $right $isOpen={myRegulatoryZonesIsOpen}/>
+        <ChevronIcon $isOpen={myRegulatoryZonesIsOpen} $right />
       </RegulatoryLayersTitle>
-      { myRegulatoryZonesIsOpen && <RegulatoryLayerList results={selectedRegulatoryLayers}></RegulatoryLayerList> }
+      {myRegulatoryZonesIsOpen && <RegulatoryLayerList results={selectedRegulatoryLayers} />}
     </>
   )
 }
@@ -58,41 +54,39 @@ const RegulatoryLayersTitle = styled.div`
   padding-left: 16px;
   color: ${COLORS.gainsboro};
   display: flex;
-  
+
   cursor: pointer;
   text-align: left;
   user-select: none;
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
-  border-bottom-left-radius: ${props => props.showRegulatoryLayers ? '0' : '2px'};
-  border-bottom-right-radius: ${props => props.showRegulatoryLayers ? '0' : '2px'};
+  border-bottom-left-radius: ${props => (props.showRegulatoryLayers ? '0' : '2px')};
+  border-bottom-right-radius: ${props => (props.showRegulatoryLayers ? '0' : '2px')};
   background: ${COLORS.charcoal};
-  
-  animation: ${props => props.regulatoryLayersAddedToMySelection ? 'blink' : ''} 0.3s ease forwards;
+
+  animation: ${props => (props.regulatoryLayersAddedToMySelection ? 'blink' : '')} 0.3s ease forwards;
 
   @keyframes blink {
-    0%   {
-        background: ${COLORS.lightGray};
+    0% {
+      background: ${COLORS.lightGray};
     }
-    20%   {
-        background: ${COLORS.charcoal};
+    20% {
+      background: ${COLORS.charcoal};
     }
     40% {
-        background: ${COLORS.charcoal};
+      background: ${COLORS.charcoal};
     }
-    60%   {
-        background: ${COLORS.lightGray};
+    60% {
+      background: ${COLORS.lightGray};
     }
-    80%   {
-        background: ${COLORS.lightGray};
+    80% {
+      background: ${COLORS.lightGray};
     }
     100% {
-        background: ${COLORS.charcoal};
+      background: ${COLORS.charcoal};
     }
   }
-  
-  
 `
 
 export default RegulatoryLayers

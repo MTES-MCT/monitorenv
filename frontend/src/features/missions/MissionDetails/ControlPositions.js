@@ -1,66 +1,60 @@
-import React from 'react'
-import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
-import {  useField } from 'formik';
-import _ from 'lodash';
-import { Button, Form, IconButton } from 'rsuite';
+import { useField } from 'formik'
+import _ from 'lodash'
 import { transform } from 'ol/proj'
+import React from 'react'
+import { useDispatch } from 'react-redux'
+import { Button, Form, IconButton } from 'rsuite'
+import styled from 'styled-components'
 
-import { setZoomToCenter } from '../../../domain/shared_slices/Map';
-import { addControlPositions } from '../../../domain/use_cases/missions/missionAndControlLocalisation';
+import { COLORS } from '../../../constants/constants'
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map'
+import { setZoomToCenter } from '../../../domain/shared_slices/Map'
+import { addControlPositions } from '../../../domain/use_cases/missions/missionAndControlLocalisation'
 import { ReactComponent as LocalizeIconSVG } from '../../../uiMonitor/icons/centrer.svg'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression_clair.svg'
 
-import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map';
-import { COLORS } from '../../../constants/constants';
-
-export const ControlPositions = ({name}) => {
+export function ControlPositions({ name }) {
   const [geomField] = useField('geom')
-  const [field, , helpers] = useField(name);
-  const { value } = field;
-  const { setValue } = helpers;
+  const [field, , helpers] = useField(name)
+  const { value } = field
+  const { setValue } = helpers
   const dispatch = useDispatch()
-  
+
   const handleAddControlPositions = () => {
-    dispatch(addControlPositions({callback: setValue, geom: value, missionGeom: geomField?.value}))
-  }
-  
-  const handleDeleteControlPosition = (index) => () => {
-    const newCoordinates = [...value.coordinates]
-    newCoordinates.splice(index,1)
-    dispatch(setValue({...value, coordinates: newCoordinates}))
+    dispatch(addControlPositions({ callback: setValue, geom: value, missionGeom: geomField?.value }))
   }
 
-  const handleCenterOnMap = (coordinates) => () => {
+  const handleDeleteControlPosition = index => () => {
+    const newCoordinates = [...value.coordinates]
+    newCoordinates.splice(index, 1)
+    dispatch(setValue({ ...value, coordinates: newCoordinates }))
+  }
+
+  const handleCenterOnMap = coordinates => () => {
     const center = transform(coordinates, WSG84_PROJECTION, OPENLAYERS_PROJECTION)
     dispatch(setZoomToCenter(center))
   }
 
   return (
     <ControlPositionsWrapper>
-      <Form.ControlLabel>
-        Lieu du contrôle
-      </Form.ControlLabel>
+      <Form.ControlLabel>Lieu du contrôle</Form.ControlLabel>
 
-      <AddButton appearance='ghost' size='sm' block onClick={handleAddControlPositions}>
-          + Ajouter un point de contrôle
+      <AddButton appearance="ghost" block onClick={handleAddControlPositions} size="sm">
+        + Ajouter un point de contrôle
       </AddButton>
       <ZoneList>
-        {_.map(value?.coordinates, (v,i)=>{
-          return (
-            <ZoneRow key={i}>
-              <Zone >
-                {`(${v[1]}, ${v[0]})`}
-                <CenterOnMap onClick={handleCenterOnMap(v)}>
-                  <LocalizeIcon/>
-                  Centrer
-                </CenterOnMap>
-              </Zone>
-              <DeleteIconButton onClick={handleDeleteControlPosition(i)} icon={<DeleteSVGIcon className='rs-icon'/>} />
-            </ZoneRow>
-            )
-          }
-        )}
+        {_.map(value?.coordinates, (v, i) => (
+          <ZoneRow key={i}>
+            <Zone>
+              {`(${v[1]}, ${v[0]})`}
+              <CenterOnMap onClick={handleCenterOnMap(v)}>
+                <LocalizeIcon />
+                Centrer
+              </CenterOnMap>
+            </Zone>
+            <DeleteIconButton icon={<DeleteSVGIcon className="rs-icon" />} onClick={handleDeleteControlPosition(i)} />
+          </ZoneRow>
+        ))}
       </ZoneList>
     </ControlPositionsWrapper>
   )
@@ -75,7 +69,6 @@ const AddButton = styled(Button)`
 const ZoneList = styled.div`
   margin-top: 8px;
   margin-bottom: 10px;
-
 `
 const ZoneRow = styled.div`
   display: flex;

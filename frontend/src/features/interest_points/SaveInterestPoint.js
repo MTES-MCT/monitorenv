@@ -1,25 +1,23 @@
+import { transform } from 'ol/proj'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import styled, { css } from 'styled-components'
 import Radio from 'rsuite/Radio'
 import RadioGroup from 'rsuite/RadioGroup'
-import { transform } from 'ol/proj'
+import styled, { css } from 'styled-components'
 
-import { CoordinatesFormat, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map'
+import { COLORS } from '../../constants/constants'
 import { interestPointType } from '../../domain/entities/interestPoints'
+import { CoordinatesFormat, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map'
 import { addInterestPoint, updateInterestPointKeyBeingDrawed } from '../../domain/shared_slices/InterestPoint'
 import saveInterestPointFeature from '../../domain/use_cases/interestPoint/saveInterestPointFeature'
-import { coordinatesAreDistinct, getCoordinates } from '../../utils/coordinates'
-import SetCoordinates from '../coordinates/SetCoordinates'
-
-import { MapComponentStyle } from '../commonStyles/MapComponent.style'
-import { COLORS } from '../../constants/constants'
-
 import { ReactComponent as ControlSVG } from '../../uiMonitor/icons/Label_controle.svg'
 import { ReactComponent as VesselSVG } from '../../uiMonitor/icons/Label_segment_de_flotte.svg'
 import { ReactComponent as OtherSVG } from '../../uiMonitor/icons/Point_interet_autre.svg'
+import { coordinatesAreDistinct, getCoordinates } from '../../utils/coordinates'
+import { MapComponentStyle } from '../commonStyles/MapComponent.style'
+import SetCoordinates from '../coordinates/SetCoordinates'
 
-const SaveInterestPoint = ({ isOpen, close }) => {
+function SaveInterestPoint({ close, isOpen }) {
   const dispatch = useDispatch()
 
   const {
@@ -41,6 +39,7 @@ const SaveInterestPoint = ({ isOpen, close }) => {
       setObservations('')
       setType(interestPointType.FISHING_VESSEL)
       setCoordinates([])
+
       return
     }
 
@@ -60,42 +59,51 @@ const SaveInterestPoint = ({ isOpen, close }) => {
     if (isOpen) {
       if (!interestPointBeingDrawed?.coordinates?.length) {
         setCoordinates([])
+
         return
       }
 
-      const ddCoordinates = getCoordinates(interestPointBeingDrawed.coordinates, OPENLAYERS_PROJECTION, CoordinatesFormat.DECIMAL_DEGREES, false)
+      const ddCoordinates = getCoordinates(
+        interestPointBeingDrawed.coordinates,
+        OPENLAYERS_PROJECTION,
+        CoordinatesFormat.DECIMAL_DEGREES,
+        false
+      )
 
-      setCoordinates([
-        parseFloat(ddCoordinates[0].replace(/°/g, '')),
-        parseFloat(ddCoordinates[1].replace(/°/g, ''))
-      ])
+      setCoordinates([parseFloat(ddCoordinates[0].replace(/°/g, '')), parseFloat(ddCoordinates[1].replace(/°/g, ''))])
     }
   }, [interestPointBeingDrawed, isEditing, isOpen])
 
   useEffect(() => {
     if (name && interestPointBeingDrawed?.name !== name && updateInterestPoint) {
-      dispatch(updateInterestPointKeyBeingDrawed({
-        key: 'name',
-        value: name
-      }))
+      dispatch(
+        updateInterestPointKeyBeingDrawed({
+          key: 'name',
+          value: name
+        })
+      )
     }
   }, [name, interestPointBeingDrawed, updateInterestPoint])
 
   useEffect(() => {
     if (observations && interestPointBeingDrawed?.observations !== observations && updateInterestPoint) {
-      dispatch(updateInterestPointKeyBeingDrawed({
-        key: 'observations',
-        value: observations
-      }))
+      dispatch(
+        updateInterestPointKeyBeingDrawed({
+          key: 'observations',
+          value: observations
+        })
+      )
     }
   }, [observations, interestPointBeingDrawed, updateInterestPoint])
 
   useEffect(() => {
     if (type && interestPointBeingDrawed?.type !== type && updateInterestPoint && coordinates?.length) {
-      dispatch(updateInterestPointKeyBeingDrawed({
-        key: 'type',
-        value: type
-      }))
+      dispatch(
+        updateInterestPointKeyBeingDrawed({
+          key: 'type',
+          value: type
+        })
+      )
     }
   }, [type, interestPointBeingDrawed, updateInterestPoint, coordinates])
 
@@ -108,11 +116,17 @@ const SaveInterestPoint = ({ isOpen, close }) => {
     if (nextCoordinates?.length) {
       if (!coordinates?.length || coordinatesAreDistinct(nextCoordinates, coordinates)) {
         // Convert to [longitude, latitude] and OpenLayers projection
-        const updatedCoordinates = transform([nextCoordinates[1], nextCoordinates[0]], WSG84_PROJECTION, OPENLAYERS_PROJECTION)
-        dispatch(updateInterestPointKeyBeingDrawed({
-          key: 'coordinates',
-          value: updatedCoordinates
-        }))
+        const updatedCoordinates = transform(
+          [nextCoordinates[1], nextCoordinates[0]],
+          WSG84_PROJECTION,
+          OPENLAYERS_PROJECTION
+        )
+        dispatch(
+          updateInterestPointKeyBeingDrawed({
+            key: 'coordinates',
+            value: updatedCoordinates
+          })
+        )
       }
     }
   }
@@ -126,79 +140,58 @@ const SaveInterestPoint = ({ isOpen, close }) => {
   }
 
   return (
-    <Wrapper
-      data-cy={'save-interest-point'}
-      $isOpen={isOpen}
-      >
-      <Header>
-        Créer un point d&apos;intérêt
-      </Header>
+    <Wrapper $isOpen={isOpen} data-cy="save-interest-point">
+      <Header>Créer un point d&apos;intérêt</Header>
       <Body>
         <p>Coordonnées</p>
-        <SetCoordinates
-          coordinates={coordinates}
-          updateCoordinates={updateCoordinates}
-        />
+        <SetCoordinates coordinates={coordinates} updateCoordinates={updateCoordinates} />
         <p>Type de point</p>
         <RadioWrapper>
           <RadioGroup
             name="interestTypeRadio"
-            value={type}
             onChange={value => {
               setUpdateInterestPoint(true)
               setType(value)
             }}
+            value={type}
           >
-            <Radio
-              value={interestPointType.CONTROL_ENTITY}
-            >
-              <Control/>
+            <Radio value={interestPointType.CONTROL_ENTITY}>
+              <Control />
               Moyen de contrôle
             </Radio>
-            <Radio
-              value={interestPointType.FISHING_VESSEL}
-            >
-              <Vessel/>
+            <Radio value={interestPointType.FISHING_VESSEL}>
+              <Vessel />
               Navire de pêche
             </Radio>
-            <Radio
-              data-cy={'interest-point-type-radio-input'}
-              value={interestPointType.OTHER}
-            >
-              <Other/>
+            <Radio data-cy="interest-point-type-radio-input" value={interestPointType.OTHER}>
+              <Other />
               Autre point
             </Radio>
           </RadioGroup>
         </RadioWrapper>
         <p>Libellé du point</p>
         <Name
-          data-cy={'interest-point-name-input'}
-          type='text'
+          data-cy="interest-point-name-input"
           onChange={e => {
             setUpdateInterestPoint(true)
             setName(e.target.value)
           }}
+          type="text"
           value={name}
         />
         <p>Observations</p>
         <textarea
-          data-cy={'interest-point-observations-input'}
+          data-cy="interest-point-observations-input"
           onChange={e => {
             setUpdateInterestPoint(true)
             setObservations(e.target.value)
           }}
           value={observations}
         />
-        <OkButton
-          data-cy={'interest-point-save'}
-          onClick={saveInterestPoint}
-        >
+        <OkButton data-cy="interest-point-save" onClick={saveInterestPoint}>
           OK
         </OkButton>
-        <CancelButton
-          disabled={isEditing}
-          onClick={close}
-        >
+        <CancelButton disabled={isEditing} onClick={close}>
           Annuler
         </CancelButton>
       </Body>
@@ -209,8 +202,8 @@ const SaveInterestPoint = ({ isOpen, close }) => {
 const Wrapper = styled(MapComponentStyle)`
   width: 306px;
   background: ${COLORS.background};
-  margin-bottom: ${props => props.$isOpen ? '8px' : '-520px'};
-  opacity:  ${props => props.$isOpen ? '1' : '0'};
+  margin-bottom: ${props => (props.$isOpen ? '8px' : '-520px')};
+  opacity: ${props => (props.$isOpen ? '1' : '0')};
   position: absolute;
   bottom: 20px;
   left: 0;
@@ -234,7 +227,7 @@ const CancelButton = styled.button`
   margin: 15px 0 0 15px;
   font-size: 13px;
   color: ${COLORS.gunMetal};
-  
+
   :disabled {
     border: 1px solid ${COLORS.lightGray};
     color: ${COLORS.slateGray};
@@ -248,8 +241,9 @@ const OkButton = styled.button`
   margin: 15px 0 0;
   font-size: 13px;
   color: ${COLORS.gainsboro};
-  
-  :hover, :focus {
+
+  :hover,
+  :focus {
     background: ${COLORS.charcoal};
   }
 `
@@ -259,27 +253,27 @@ const Body = styled.div`
   font-size: 13px;
   color: ${COLORS.slateGray};
   margin: 10px 15px;
-  
+
   p {
     margin: 0;
     font-size: 13px;
   }
-  
+
   p:nth-of-type(2) {
     margin-top: 15px;
     font-size: 13px;
   }
-  
+
   p:nth-of-type(3) {
     margin-top: 15px;
     font-size: 13px;
   }
-  
+
   p:nth-of-type(4) {
     margin-top: 15px;
     font-size: 13px;
   }
-  
+
   input {
     margin-top: 7px;
     color: ${COLORS.gunMetal};
@@ -288,7 +282,7 @@ const Body = styled.div`
     height: 27px;
     padding-left: 8px;
   }
-  
+
   textarea {
     color: ${COLORS.gunMetal};
     margin-top: 7px;

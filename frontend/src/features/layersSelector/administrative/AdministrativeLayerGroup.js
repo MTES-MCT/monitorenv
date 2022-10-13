@@ -2,47 +2,32 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import AdministrativeLayer from './AdministrativeLayer'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
+import AdministrativeLayer from './AdministrativeLayer'
 
-const AdministrativeLayerGroup = ({layers, isLastItem}) => {
-
+function AdministrativeLayerGroup({ isLastItem, layers }) {
   const [isOpen, setIsOpen] = useState(false)
   const toggleLayerGroup = () => setIsOpen(!isOpen)
-  return <>
-    {
-      layers && layers.length && layers[0]
-        ? <Row>
+
+  return (
+    <>
+      {layers && layers.length && layers[0] ? (
+        <Row>
           <Zone isLastItem={isLastItem} isOpen={isOpen}>
-            <Text
-              title={layers[0].group.name.replace(/[_]/g, ' ')}
-              onClick={toggleLayerGroup}
-            >
+            <Text onClick={toggleLayerGroup} title={layers[0].group.name.replace(/[_]/g, ' ')}>
               {layers[0].group.name.replace(/[_]/g, ' ')}
             </Text>
-            <Chevron
-              $isOpen={isOpen}
-              onClick={toggleLayerGroup}
-            />
+            <Chevron $isOpen={isOpen} onClick={toggleLayerGroup} />
           </Zone>
-          <List
-            isOpen={isOpen}
-            name={layers[0].group.name.replace(/\s/g, '-')}
-            length={layers.length}>
-            {
-              layers.map((layer, index) => {
-                return <AdministrativeLayer
-                  key={layer.code}
-                  layer={layer}
-                  isFirst={index === 0}
-                  isGrouped={true}
-                />
-              })
-            }
+          <List isOpen={isOpen} length={layers.length} name={layers[0].group.name.replace(/\s/g, '-')}>
+            {layers.map((layer, index) => (
+              <AdministrativeLayer key={layer.code} isFirst={index === 0} isGrouped layer={layer} />
+            ))}
           </List>
         </Row>
-        : null
-    }</>
+      ) : null}
+    </>
+  )
 }
 
 const Row = styled.div`
@@ -71,15 +56,15 @@ const Zone = styled.span`
   display: flex;
   user-select: none;
   padding-bottom: 2px;
-  ${props => !props.isOpen ? null : `border-bottom: 1px solid ${COLORS.lightGray};`}
-  
+  ${props => (!props.isOpen ? null : `border-bottom: 1px solid ${COLORS.lightGray};`)}
+
   :hover {
     background: ${COLORS.shadowBlueLittleOpacity};
   }
 `
 
 const List = styled.div`
-  height: ${props => props.isOpen && props.length ? props.length * 34 + 10 : 0}px;
+  height: ${props => (props.isOpen && props.length ? props.length * 34 + 10 : 0)}px;
   overflow: hidden;
   transition: 0.2s all;
 `

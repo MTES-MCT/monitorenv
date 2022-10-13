@@ -1,3 +1,4 @@
+/* eslint-disable import/order */
 import { createGlobalStyle } from 'styled-components'
 
 import MarianneRegular from './Marianne/Marianne-Regular.woff2'
@@ -9,7 +10,7 @@ import MarianneBold from './Marianne/Marianne-Bold.woff2'
 import MarianneBoldItalic from './Marianne/Marianne-Bold_Italic.woff2'
 import MarianneItalic from './Marianne/Marianne-Regular_Italic.woff2'
 
-export default createGlobalStyle`
+export const GlobalStyle = createGlobalStyle`
     @font-face {
       font-family: Marianne;
       src: local('Marianne'), local('Marianne-Regular'), url(${MarianneRegular}) format('woff2');

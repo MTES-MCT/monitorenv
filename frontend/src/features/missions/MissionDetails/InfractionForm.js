@@ -1,37 +1,37 @@
-import React from 'react'
-import styled from 'styled-components'
-import { Form, Button, ButtonToolbar} from 'rsuite'
 import { useField } from 'formik'
-
-import { infractionTypeEnum, formalNoticeEnum, actionTargetTypeEnum } from '../../../domain/entities/missions'
-
-import { FormikRadioGroup } from '../../../uiMonitor/CustomFormikFields/FormikRadioGroup'
-import { FormikCheckbox } from '../../../uiMonitor/CustomFormikFields/FormikCheckbox'
-import { FormikTextarea } from '../../../uiMonitor/CustomFormikFields/FormikTextarea'
-
-import { NatinfSelector } from './NatinfSelector'
+import React from 'react'
+import { Form, Button, ButtonToolbar } from 'rsuite'
+import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import { InfractionFormHeaderVehicle } from './InfractionFormHeaderVehicle'
-import { InfractionFormHeaderCompany } from './InfractionFormHeaderCompany'
-import { RelevantCourtSelector } from './RelevantCourtSelector'
+import { infractionTypeEnum, formalNoticeEnum, actionTargetTypeEnum } from '../../../domain/entities/missions'
+import { FormikCheckbox } from '../../../uiMonitor/CustomFormikFields/FormikCheckbox'
 import { FormikInput } from '../../../uiMonitor/CustomFormikFields/FormikInput'
+import { FormikRadioGroup } from '../../../uiMonitor/CustomFormikFields/FormikRadioGroup'
+import { FormikTextarea } from '../../../uiMonitor/CustomFormikFields/FormikTextarea'
+import { InfractionFormHeaderCompany } from './InfractionFormHeaderCompany'
+import { InfractionFormHeaderVehicle } from './InfractionFormHeaderVehicle'
+import { NatinfSelector } from './NatinfSelector'
+import { RelevantCourtSelector } from './RelevantCourtSelector'
 
-
-export const InfractionForm = ({ currentActionIndex, infractionPath, validateInfraction, removeInfraction }) =>  {
-
+export function InfractionForm({ currentActionIndex, infractionPath, removeInfraction, validateInfraction }) {
   const [actionTargetField] = useField(`envActions.${currentActionIndex}.actionTargetType`)
 
-  return (<FormWrapper>
-      {actionTargetField.value === actionTargetTypeEnum.VEHICLE.code 
-        && <InfractionFormHeaderVehicle currentActionIndex={currentActionIndex} infractionPath={infractionPath} />}
+  return (
+    <FormWrapper>
+      {actionTargetField.value === actionTargetTypeEnum.VEHICLE.code && (
+        <InfractionFormHeaderVehicle currentActionIndex={currentActionIndex} infractionPath={infractionPath} />
+      )}
 
-      {actionTargetField.value === actionTargetTypeEnum.COMPANY.code 
-        && <InfractionFormHeaderCompany infractionPath={infractionPath} />}
+      {actionTargetField.value === actionTargetTypeEnum.COMPANY.code && (
+        <InfractionFormHeaderCompany infractionPath={infractionPath} />
+      )}
 
       <Form.Group>
-        <Form.ControlLabel htmlFor={`${infractionPath}.controlledPersonIdentity`}>Identité de la personne controlée</Form.ControlLabel>
-        <FormikInput size='sm' name={`${infractionPath}.controlledPersonIdentity`} />
+        <Form.ControlLabel htmlFor={`${infractionPath}.controlledPersonIdentity`}>
+          Identité de la personne controlée
+        </Form.ControlLabel>
+        <FormikInput name={`${infractionPath}.controlledPersonIdentity`} size="sm" />
       </Form.Group>
 
       <SubGroup>
@@ -50,11 +50,11 @@ export const InfractionForm = ({ currentActionIndex, infractionPath, validateInf
 
       <Form.Group>
         <FormColumn>
-          <RelevantCourtSelector infractionPath={infractionPath}/>
+          <RelevantCourtSelector infractionPath={infractionPath} />
         </FormColumn>
 
         <FormColumnWithCheckbox>
-            <FormikCheckbox name={`${infractionPath}.toProcess`} label={'A traiter'} inline/>
+          <FormikCheckbox inline label="A traiter" name={`${infractionPath}.toProcess`} />
         </FormColumnWithCheckbox>
       </Form.Group>
 
@@ -64,13 +64,14 @@ export const InfractionForm = ({ currentActionIndex, infractionPath, validateInf
       </Form.Group>
       <ButtonToolbarRight>
         <Button onClick={removeInfraction}>Supprimer l&apos;infraction</Button>
-        <Button appearance="primary" onClick={validateInfraction}>Valider l&apos;infraction</Button>
+        <Button appearance="primary" onClick={validateInfraction}>
+          Valider l&apos;infraction
+        </Button>
       </ButtonToolbarRight>
-  </FormWrapper>
-
+    </FormWrapper>
   )
-  }
-    
+}
+
 const FormWrapper = styled.div`
   background: ${COLORS.white};
   padding: 32px;

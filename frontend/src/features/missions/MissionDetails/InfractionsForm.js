@@ -1,16 +1,14 @@
 import React, { useState } from 'react'
-import styled from 'styled-components'
 import { Button } from 'rsuite'
-
-import { infractionFactory } from '../Missions.helpers'
+import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import { InfractionForm } from './InfractionForm'
+import { infractionFactory } from '../Missions.helpers'
 import { InfractionCard } from './InfractionCard'
+import { InfractionForm } from './InfractionForm'
 
-export const InfractionsForm = ({  push, remove, form, currentActionIndex }) =>  {
-  
-  const [ currentInfractionIndex, setCurrentInfractionIndex ] = useState(null)
+export function InfractionsForm({ currentActionIndex, form, push, remove }) {
+  const [currentInfractionIndex, setCurrentInfractionIndex] = useState(null)
 
   const handleAddInfraction = () => {
     const numberOfInfractions = form?.values.envActions[currentActionIndex]?.infractions?.length || 0
@@ -22,54 +20,55 @@ export const InfractionsForm = ({  push, remove, form, currentActionIndex }) => 
     setCurrentInfractionIndex(null)
   }
 
-  const handleEditInfraction = (index) => () => {
+  const handleEditInfraction = index => () => {
     setCurrentInfractionIndex(index)
   }
 
-  const handleRemoveInfraction = (index) => () => {
+  const handleRemoveInfraction = index => () => {
     setCurrentInfractionIndex(null)
     remove(index)
   }
 
-  return (<>
-    <Header>
-      <Title>Détailler une infraction d&apos;une cible</Title>
-      <Button
-        appearance='ghost'
-        size='sm'
-        onClick={handleAddInfraction}
-      >
-        + Ajouter une nouvelle infraction
-      </Button>
-    </Header>
-    
-    {form?.values.envActions?.length > 0 && form?.values.envActions[currentActionIndex]?.infractions?.length > 0 ? 
-    <InfractionsWrapper>
-      {form?.values.envActions[currentActionIndex]?.infractions?.map((infraction, index) => {
-        return (
-          index === currentInfractionIndex ?
-          <InfractionForm
-            key={infraction.id}
-            infractionPath={`envActions[${currentActionIndex}].infractions[${index}]`}
-            validateInfraction={handleValidate}
-            removeInfraction={handleRemoveInfraction(index)}
-            currentActionIndex={currentActionIndex}
-            infractionIndex={index}
-            /> :
-          <InfractionCard
-            key={infraction.id}
-            currentActionIndex={currentActionIndex}
-            infractionPath={`envActions[${currentActionIndex}].infractions[${index}]`}
-            setCurrentInfractionIndex={handleEditInfraction(index)}
-            removeInfraction={handleRemoveInfraction(index)}
-            />
-      )})}
-    </InfractionsWrapper>
-    : <NoActionWrapper><NoAction>Aucune infraction engregistrée pour le moment</NoAction></NoActionWrapper>
-  }
-    
-  </>
-)}
+  return (
+    <>
+      <Header>
+        <Title>Détailler une infraction d&apos;une cible</Title>
+        <Button appearance="ghost" onClick={handleAddInfraction} size="sm">
+          + Ajouter une nouvelle infraction
+        </Button>
+      </Header>
+
+      {form?.values.envActions?.length > 0 && form?.values.envActions[currentActionIndex]?.infractions?.length > 0 ? (
+        <InfractionsWrapper>
+          {form?.values.envActions[currentActionIndex]?.infractions?.map((infraction, index) =>
+            index === currentInfractionIndex ? (
+              <InfractionForm
+                key={infraction.id}
+                currentActionIndex={currentActionIndex}
+                infractionIndex={index}
+                infractionPath={`envActions[${currentActionIndex}].infractions[${index}]`}
+                removeInfraction={handleRemoveInfraction(index)}
+                validateInfraction={handleValidate}
+              />
+            ) : (
+              <InfractionCard
+                key={infraction.id}
+                currentActionIndex={currentActionIndex}
+                infractionPath={`envActions[${currentActionIndex}].infractions[${index}]`}
+                removeInfraction={handleRemoveInfraction(index)}
+                setCurrentInfractionIndex={handleEditInfraction(index)}
+              />
+            )
+          )}
+        </InfractionsWrapper>
+      ) : (
+        <NoActionWrapper>
+          <NoAction>Aucune infraction engregistrée pour le moment</NoAction>
+        </NoActionWrapper>
+      )}
+    </>
+  )
+}
 
 const Header = styled.div`
   display: flex;
@@ -81,7 +80,7 @@ const Title = styled.h3`
   font-size: 13px;
   line-height: 22px;
   display: inline-block;
-  color: ${COLORS.slateGray}
+  color: ${COLORS.slateGray};
 `
 const InfractionsWrapper = styled.div`
   flex: 1;

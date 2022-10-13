@@ -6,14 +6,23 @@ const LayerSidebarReducer = null
 /* eslint-enable */
 
 const layerSidebarSlice = createSlice({
-  name: 'layerSidebar',
   initialState: {
-    myRegulatoryZonesIsOpen: false,
     administrativeZonesIsOpen: false,
     baselayerIsOpen: false,
+    myRegulatoryZonesIsOpen: false
   },
+  name: 'layerSidebar',
   reducers: {
-    toggleBaseLayer (state) {
+    toggleAdministrativeZones(state) {
+      if (state.administrativeZonesIsOpen) {
+        state.administrativeZonesIsOpen = false
+      } else {
+        state.myRegulatoryZonesIsOpen = false
+        state.administrativeZonesIsOpen = true
+        state.baselayerIsOpen = false
+      }
+    },
+    toggleBaseLayer(state) {
       if (state.baselayerIsOpen) {
         state.baselayerIsOpen = false
       } else {
@@ -22,7 +31,7 @@ const layerSidebarSlice = createSlice({
         state.baselayerIsOpen = true
       }
     },
-    toggleMyRegulatoryZones (state) {
+    toggleMyRegulatoryZones(state) {
       if (state.myRegulatoryZonesIsOpen) {
         state.myRegulatoryZonesIsOpen = false
       } else {
@@ -30,23 +39,10 @@ const layerSidebarSlice = createSlice({
         state.administrativeZonesIsOpen = false
         state.baselayerIsOpen = false
       }
-    },
-    toggleAdministrativeZones (state) {
-      if (state.administrativeZonesIsOpen) {
-        state.administrativeZonesIsOpen = false
-      } else {
-        state.myRegulatoryZonesIsOpen = false
-        state.administrativeZonesIsOpen = true
-        state.baselayerIsOpen = false
-      }
     }
   }
 })
 
-export const {
-  toggleBaseLayer,
-  toggleMyRegulatoryZones,
-  toggleAdministrativeZones
-} = layerSidebarSlice.actions
+export const { toggleAdministrativeZones, toggleBaseLayer, toggleMyRegulatoryZones } = layerSidebarSlice.actions
 
 export default layerSidebarSlice.reducer

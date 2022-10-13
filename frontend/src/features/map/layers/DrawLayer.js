@@ -1,24 +1,22 @@
-import { useEffect, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import _ from 'lodash'
-import VectorSource from 'ol/source/Vector'
+import GeoJSON from 'ol/format/GeoJSON'
 import Draw, { createBox, createRegularPolygon } from 'ol/interaction/Draw'
 import Modify from 'ol/interaction/Modify'
-import GeoJSON from 'ol/format/GeoJSON'
 import VectorLayer from 'ol/layer/Vector'
+import VectorSource from 'ol/source/Vector'
+import { useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-import Layers from '../../../domain/entities/layers'
 import { drawLayerTypes } from '../../../domain/entities/drawLayer'
+import Layers from '../../../domain/entities/layers'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map'
-
-import { addFeature } from '../../../features/drawLayer/DrawLayer.slice'
-
-import { drawStyle, editStyle } from './styles/draw.style'
+import { addFeature } from '../../drawLayer/DrawLayer.slice'
 import { dottedLayerStyle, pointLayerStyle } from './styles/dottedLayer.style'
+import { drawStyle, editStyle } from './styles/draw.style'
 
-export const DrawLayer = ({ map }) => {
-  const {interactionType, features} = useSelector(state => state.drawLayer)
-  
+export function DrawLayer({ map }) {
+  const { features, interactionType } = useSelector(state => state.drawLayer)
+
   const dispatch = useDispatch()
   // vectorSource & vectorLayer are holding current features (for visualisation + edition)
   const vectorSourceRef = useRef(null)
@@ -32,6 +30,7 @@ export const DrawLayer = ({ map }) => {
         projection: OPENLAYERS_PROJECTION
       })
     }
+
     return vectorSourceRef.current
   }
   // drawVectorSource & drawVectorLayer are used to draw features, but features are dismissed after being drawned
@@ -41,6 +40,7 @@ export const DrawLayer = ({ map }) => {
     if (drawVectorSourceRef.current === null) {
       drawVectorSourceRef.current = new VectorSource({ wrapX: false })
     }
+
     return drawVectorSourceRef.current
   }
 
@@ -49,15 +49,16 @@ export const DrawLayer = ({ map }) => {
     const GetVectorLayer = () => {
       if (vectorLayerRef.current === null) {
         vectorLayerRef.current = new VectorLayer({
-          source: GetVectorSource(),
           renderBuffer: 7,
+          source: GetVectorSource(),
+          style: [pointLayerStyle, dottedLayerStyle, editStyle],
           updateWhileAnimating: true,
           updateWhileInteracting: true,
-          zIndex: Layers.DRAW_LAYER.zIndex,
-          style: [pointLayerStyle, dottedLayerStyle, editStyle]
+          zIndex: Layers.DRAW_LAYER.zIndex
         })
         vectorLayerRef.current.name = Layers.DRAW_LAYER.code
       }
+
       return vectorLayerRef.current
     }
 
@@ -72,28 +73,25 @@ export const DrawLayer = ({ map }) => {
     }
   }, [map])
 
-  useEffect(()=>{
-    if(vectorLayerRef.current !== null) {
+  useEffect(() => {
+    if (vectorLayerRef.current !== null) {
       if (interactionType) {
-        vectorLayerRef.current.setStyle(
-          [pointLayerStyle, dottedLayerStyle, editStyle]
-        )
+        vectorLayerRef.current.setStyle([pointLayerStyle, dottedLayerStyle, editStyle])
       } else {
-        vectorLayerRef.current.setStyle(
-          [pointLayerStyle, dottedLayerStyle]
-        )
+        vectorLayerRef.current.setStyle([pointLayerStyle, dottedLayerStyle])
       }
     }
   }, [interactionType])
 
   useEffect(() => {
-    const modify = new Modify({source: GetVectorSource()})
+    const modify = new Modify({ source: GetVectorSource() })
     GetVectorSource()?.clear(true)
     GetDrawVectorSource()?.clear(true)
     if (!_.isEmpty(features)) {
       GetVectorSource()?.addFeatures(features)
       interactionType && map.addInteraction(modify)
     }
+
     return () => {
       if (map) {
         map.removeInteraction(modify)
@@ -102,43 +100,47 @@ export const DrawLayer = ({ map }) => {
   }, [features, map, interactionType])
 
   useEffect(() => {
-      if (map && interactionType) {
+    if (map && interactionType) {
+      let type = null
+      switch (interactionType) {
+        case drawLayerTypes.SQUARE:
+        case drawLayerTypes.CIRCLE:
+          type = 'Circle'
+          break
+        case drawLayerTypes.POLYGON:
+          type = 'Polygon'
+          break
+        case drawLayerTypes.POINT:
+          type = 'Point'
+          break
+        default:
+          console.error('No interaction type specified')
 
-        let type = null
-        switch (interactionType) {
-          case drawLayerTypes.SQUARE:
-          case drawLayerTypes.CIRCLE:
-            type = 'Circle'
-            break
-          case drawLayerTypes.POLYGON:
-            type = 'Polygon'
-            break
-          case drawLayerTypes.POINT:
-            type = 'Point'
-            break
-          default:
-            console.error('No interaction type specified')
-            return
-        }
+          return
+      }
 
-        const draw = new Draw({
-          source: GetDrawVectorSource(),
-          type: type,
-          style: drawStyle,
-          geometryFunction: interactionType === drawLayerTypes.SQUARE ? createBox() : interactionType === drawLayerTypes.CIRCLE ? createRegularPolygon() : null
-        })
-        map.addInteraction(draw)
+      const draw = new Draw({
+        geometryFunction:
+          interactionType === drawLayerTypes.SQUARE
+            ? createBox()
+            : interactionType === drawLayerTypes.CIRCLE
+            ? createRegularPolygon()
+            : null,
+        source: GetDrawVectorSource(),
+        style: drawStyle,
+        type
+      })
+      map.addInteraction(draw)
 
-        draw.on('drawend', event => {
-          dispatch(addFeature(event.feature))
-          GetDrawVectorSource()?.clear(true)
-          map.removeInteraction(draw)
-        })
-        return () => map.removeInteraction(draw)
-      } 
+      draw.on('drawend', event => {
+        dispatch(addFeature(event.feature))
+        GetDrawVectorSource()?.clear(true)
+        map.removeInteraction(draw)
+      })
 
+      return () => map.removeInteraction(draw)
+    }
   }, [map, interactionType])
-
 
   return null
 }

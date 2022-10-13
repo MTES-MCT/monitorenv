@@ -1,33 +1,33 @@
+import { useField } from 'formik'
 import React from 'react'
-import styled from 'styled-components'
 import { Form } from 'rsuite'
-import {  useField } from 'formik'
+import styled from 'styled-components'
+
+import { vehicleTypeEnum } from '../../../domain/entities/missions'
+import { FormikInput } from '../../../uiMonitor/CustomFormikFields/FormikInput'
 import { VesselSizeSelector } from './VesselSizeSelector'
 import { VesselTypeSelector } from './VesselTypeSelector'
-import { FormikInput } from '../../../uiMonitor/CustomFormikFields/FormikInput'
-import { vehicleTypeEnum } from '../../../domain/entities/missions'
 
-
-export const InfractionFormHeaderVehicle = ({currentActionIndex, infractionPath}) => {
+export function InfractionFormHeaderVehicle({ currentActionIndex, infractionPath }) {
   const [vehicleTypeField] = useField(`envActions.${currentActionIndex}.vehicleType`)
+
   return (
     <FormGroup>
       <FormColumn>
         <Form.ControlLabel htmlFor={`${infractionPath}.registrationNumber`}>Immatriculation</Form.ControlLabel>
-        <FormikInput size='sm' name={`${infractionPath}.registrationNumber`} />
+        <FormikInput name={`${infractionPath}.registrationNumber`} size="sm" />
       </FormColumn>
-      {
-        vehicleTypeField?.value === vehicleTypeEnum.VESSEL.code &&
+      {vehicleTypeField?.value === vehicleTypeEnum.VESSEL.code && (
         <>
           <FormColumn>
-            <VesselTypeSelector infractionPath={infractionPath} currentActionIndex={currentActionIndex}/>
+            <VesselTypeSelector currentActionIndex={currentActionIndex} infractionPath={infractionPath} />
           </FormColumn>
-        
+
           <FormColumn>
-            <VesselSizeSelector infractionPath={infractionPath} currentActionIndex={currentActionIndex}/>
+            <VesselSizeSelector currentActionIndex={currentActionIndex} infractionPath={infractionPath} />
           </FormColumn>
         </>
-      }
+      )}
     </FormGroup>
   )
 }

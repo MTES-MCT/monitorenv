@@ -2,25 +2,24 @@ import React from 'react'
 import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
+import { COLORS } from '../../../constants/constants'
 import { ReactComponent as LocalizeIconSVG } from '../../../uiMonitor/icons/centrer.svg'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression_clair.svg'
-import { COLORS } from '../../../constants/constants';
 
-export const MissionZone = ({name, handleDelete, handleCenterOnMap}) => {
-
-  return (<ZoneWrapper>
-    <Zone>
-      {name}
-      <CenterOnMap onClick={handleCenterOnMap}>
-        <LocalizeIcon/>
-        Centrer sur la carte
-      </CenterOnMap>
-    </Zone>
-    <PaddedIconButton  onClick={handleDelete} appearance='ghost' icon={<DeleteSVG className='rs-icon'/>} />
-  </ZoneWrapper>)
-
+export function MissionZone({ handleCenterOnMap, handleDelete, name }) {
+  return (
+    <ZoneWrapper>
+      <Zone>
+        {name}
+        <CenterOnMap onClick={handleCenterOnMap}>
+          <LocalizeIcon />
+          Centrer sur la carte
+        </CenterOnMap>
+      </Zone>
+      <PaddedIconButton appearance="ghost" icon={<DeleteSVG className="rs-icon" />} onClick={handleDelete} />
+    </ZoneWrapper>
+  )
 }
-
 
 const ZoneWrapper = styled.div`
   display: flex;

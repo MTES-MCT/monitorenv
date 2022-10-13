@@ -1,29 +1,22 @@
-import React, { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
-import styled from 'styled-components'
 import { format, isValid } from 'date-fns'
 import { fr } from 'date-fns/locale'
+import React, { useCallback } from 'react'
+import { useDispatch } from 'react-redux'
 import { IconButton } from 'rsuite'
+import styled from 'styled-components'
 
-import { editMission } from '../../../../domain/use_cases/missions/editMission'
+import { COLORS } from '../../../../constants/constants'
 import { missionTypeEnum } from '../../../../domain/entities/missions'
+import { editMission } from '../../../../domain/use_cases/missions/editMission'
 import { clearSelectedMissionOnMap } from '../../../../domain/use_cases/missions/selectMissionOnMap'
 import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
-
-import { ReactComponent as EditIconSVG } from '../../../../uiMonitor/icons/editer_12px.svg'
 import { ReactComponent as CloseIconSVG } from '../../../../uiMonitor/icons/croix_10px.svg'
-import { COLORS } from '../../../../constants/constants'
+import { ReactComponent as EditIconSVG } from '../../../../uiMonitor/icons/editer_12px.svg'
 
-export const MissionCard = ({feature, selected}) => {
+export function MissionCard({ feature, selected }) {
   const dispatch = useDispatch()
-  const { 
-    missionId,
-    inputStartDatetimeUtc,
-    missionType,
-    numberOfActions,
-    missionStatus,
-    resourceUnits
-  } = feature.getProperties()
+  const { inputStartDatetimeUtc, missionId, missionStatus, missionType, numberOfActions, resourceUnits } =
+    feature.getProperties()
   const parsedInputStartDatetimeUtc = new Date(inputStartDatetimeUtc)
 
   const handleEditMission = useCallback(() => {
@@ -35,31 +28,41 @@ export const MissionCard = ({feature, selected}) => {
   }, [dispatch])
 
   return (
-  <MissionCardHeader>
-    <Col1>
-      <MissionDate>
-        {isValid(parsedInputStartDatetimeUtc) && format(parsedInputStartDatetimeUtc, "dd MMM yyyy", {locale: fr})}
-      </MissionDate>
-    </Col1>
-    <Col2>
-      <MissionType>Mission {missionTypeEnum[missionType]?.libelle}</MissionType>
-      <MissionReources>{resourceUnits?.map(resource => {
-        return `${resource.administration} ${resource.unit ? `(${resource.unit})`:''}`
-      })}</MissionReources>
-      <Actions>{numberOfActions} actions réalisées</Actions>
-      <MissionStatusLabel missionStatus={missionStatus}/>
-      {selected && <IconButton 
-        size='sm'
-        appearance='primary' 
-        icon={<EditIconSVG className={"rs-icon"}/>} 
-        onClick={handleEditMission}>
-          Editer
-        </IconButton>}
-    </Col2>
-    <Col3>
-      {selected && <IconButton appearance='link' icon={<CloseIconSVG className={"rs-icon"}/>} size='sm' onClick={handleCloseOverlay} />}
-    </Col3>
-  </MissionCardHeader>
+    <MissionCardHeader>
+      <Col1>
+        <MissionDate>
+          {isValid(parsedInputStartDatetimeUtc) && format(parsedInputStartDatetimeUtc, 'dd MMM yyyy', { locale: fr })}
+        </MissionDate>
+      </Col1>
+      <Col2>
+        <MissionType>Mission {missionTypeEnum[missionType]?.libelle}</MissionType>
+        <MissionReources>
+          {resourceUnits?.map(resource => `${resource.administration} ${resource.unit ? `(${resource.unit})` : ''}`)}
+        </MissionReources>
+        <Actions>{numberOfActions} actions réalisées</Actions>
+        <MissionStatusLabel missionStatus={missionStatus} />
+        {selected && (
+          <IconButton
+            appearance="primary"
+            icon={<EditIconSVG className="rs-icon" />}
+            onClick={handleEditMission}
+            size="sm"
+          >
+            Editer
+          </IconButton>
+        )}
+      </Col2>
+      <Col3>
+        {selected && (
+          <IconButton
+            appearance="link"
+            icon={<CloseIconSVG className="rs-icon" />}
+            onClick={handleCloseOverlay}
+            size="sm"
+          />
+        )}
+      </Col3>
+    </MissionCardHeader>
   )
 }
 
@@ -70,7 +73,7 @@ const MissionCardHeader = styled.div`
   display: flex;
   width: 380px;
   height: 124px;
-  box-shadow: 0px 3px 6px rgba(0,0,0,.3);
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3);
 `
 
 const MissionDate = styled.div`
@@ -92,8 +95,7 @@ const MissionReources = styled.div`
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 `
-const Actions = styled.div`
-`
+const Actions = styled.div``
 
 const Col1 = styled.div`
   padding: 8px 0px 5px 10px;

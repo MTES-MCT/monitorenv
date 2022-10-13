@@ -1,24 +1,22 @@
-import {  useEffect, useRef } from 'react'
-import { useSelector } from 'react-redux'
-import VectorSource from 'ol/source/Vector'
 import VectorLayer from 'ol/layer/Vector'
-
+import VectorSource from 'ol/source/Vector'
+import { useEffect, useRef } from 'react'
+import { useSelector } from 'react-redux'
 
 import Layers from '../../../domain/entities/layers'
-import { selectedMissionStyle, selectedMissionActionsStyle } from './styles/missions.style'
 import { getMissionZoneFeature, getActionsFeatures } from './missionGeometryHelpers'
+import { selectedMissionStyle, selectedMissionActionsStyle } from './styles/missions.style'
 
-
-export const EditingMissionLayer = ({ map }) => {
+export function EditingMissionLayer({ map }) {
   const { missionState } = useSelector(state => state.missionState)
   const { displayEditingMissionLayer } = useSelector(state => state.global)
-  
+
   const editingMissionVectorSourceRef = useRef(null)
   const GetEditingMissionVectorSource = () => {
     if (editingMissionVectorSourceRef.current === null) {
       editingMissionVectorSourceRef.current = new VectorSource()
-       
     }
+
     return editingMissionVectorSourceRef.current
   }
 
@@ -26,44 +24,45 @@ export const EditingMissionLayer = ({ map }) => {
   const GetEditingMissionActionsVectorSource = () => {
     if (editingMissionActionsVectorSourceRef.current === null) {
       editingMissionActionsVectorSourceRef.current = new VectorSource()
-       
     }
+
     return editingMissionActionsVectorSourceRef.current
   }
 
   const editingMissionVectorLayerRef = useRef(null)
   const editingMissionActionsVectorLayerRef = useRef(null)
-  
 
   const GetSelectedMissionVectorLayer = () => {
     if (editingMissionVectorLayerRef.current === null) {
       editingMissionVectorLayerRef.current = new VectorLayer({
+        renderBuffer: 7,
         source: GetEditingMissionVectorSource(),
         style: selectedMissionStyle,
-        renderBuffer: 7,
         updateWhileAnimating: true,
         updateWhileInteracting: true,
-        zIndex: Layers.MISSION_SELECTED.zIndex,
+        zIndex: Layers.MISSION_SELECTED.zIndex
       })
       editingMissionVectorLayerRef.current.name = Layers.MISSION_SELECTED.code
     }
+
     return editingMissionVectorLayerRef.current
   }
   const GetSelectedMissionActionsVectorLayer = () => {
     if (editingMissionActionsVectorLayerRef.current === null) {
       editingMissionActionsVectorLayerRef.current = new VectorLayer({
+        renderBuffer: 7,
         source: GetEditingMissionActionsVectorSource(),
         style: selectedMissionActionsStyle,
-        renderBuffer: 7,
         updateWhileAnimating: true,
         updateWhileInteracting: true,
-        zIndex: Layers.ACTIONS.zIndex,
+        zIndex: Layers.ACTIONS.zIndex
       })
       editingMissionActionsVectorLayerRef.current.name = Layers.ACTIONS.code
     }
+
     return editingMissionActionsVectorLayerRef.current
   }
-  
+
   useEffect(() => {
     if (map) {
       const layersCollection = map.getLayers()
@@ -73,9 +72,10 @@ export const EditingMissionLayer = ({ map }) => {
 
     return () => {
       if (map) {
-        map.removeLayer(GetSelectedMissionVectorLayer())}
+        map.removeLayer(GetSelectedMissionVectorLayer())
         map.removeLayer(GetSelectedMissionActionsVectorLayer())
       }
+    }
   }, [map])
 
   useEffect(() => {

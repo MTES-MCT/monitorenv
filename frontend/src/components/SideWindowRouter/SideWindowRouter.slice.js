@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 
 /* eslint-disable */
@@ -6,21 +7,18 @@ import { sideWindowPaths } from '../../domain/entities/sideWindow'
 const SideWindowReducerReducer = null
 /* eslint-enable */
 
-
 const sideWindowRouterReducerSlice = createSlice({
-  name: 'sideWindowRouterReducer',
   initialState: {
-   sideWindowPath: sideWindowPaths.MISSIONS
+    sideWindowPath: sideWindowPaths.MISSIONS
   },
+  name: 'sideWindowRouterReducer',
   reducers: {
-    setSideWindowPath (state, action) {
+    setSideWindowPath(state, action) {
       state.sideWindowPath = action.payload
     }
   }
 })
 
-export const {
-  setSideWindowPath,
-} = sideWindowRouterReducerSlice.actions
+export const { setSideWindowPath } = sideWindowRouterReducerSlice.actions
 
-export const sideWindowRouterReducer = sideWindowRouterReducerSlice.reducer;
+export const sideWindowRouterReducer = sideWindowRouterReducerSlice.reducer

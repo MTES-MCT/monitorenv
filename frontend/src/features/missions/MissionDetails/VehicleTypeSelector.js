@@ -1,58 +1,56 @@
-import React, { useEffect, useRef } from 'react'
-import styled from 'styled-components'
-import { Form, SelectPicker } from 'rsuite'
 import { useFormikContext, useField } from 'formik'
-
+import React, { useEffect, useRef } from 'react'
+import { Form, SelectPicker } from 'rsuite'
+import styled from 'styled-components'
 
 import { actionTargetTypeEnum, vehicleTypeEnum } from '../../../domain/entities/missions'
 
 const DEFAULT_SELECT_PICKER_STYLE = {
-  width: 150,
+  width: 150
 }
 
-const DEFAULT_SELECT_PICKER_MENU_STYLE = { 
-  width: 150,
+const DEFAULT_SELECT_PICKER_MENU_STYLE = {
+  width: 150
 }
 
-export const VehicleTypeSelector = ({currentActionIndex, ...props}) => {
-  const { values: { envActions }, setFieldValue } = useFormikContext();
-  const [vehicleTypeField, , { setValue }] = useField(`envActions.${currentActionIndex}.vehicleType`);
+export function VehicleTypeSelector({ currentActionIndex, ...props }) {
+  const {
+    setFieldValue,
+    values: { envActions }
+  } = useFormikContext()
+  const [vehicleTypeField, , { setValue }] = useField(`envActions.${currentActionIndex}.vehicleType`)
   const vehicleTypeSelectorRef = useRef()
   const vehicleTypeFieldList = Object.values(vehicleTypeEnum)
   const targetType = envActions[currentActionIndex]?.actionTargetType
 
-  useEffect(()=> {
-      if ((targetType !== actionTargetTypeEnum.VEHICLE.code)
-        && (vehicleTypeField.value !== '')) {
-        setFieldValue(`envActions.${currentActionIndex}.vehicleType`, '')
-      }
-      if ((targetType === actionTargetTypeEnum.VEHICLE.code)
-      && (vehicleTypeField.value === '')) {
-        setFieldValue(`envActions.${currentActionIndex}.vehicleType`, vehicleTypeEnum.VESSEL.code)
+  useEffect(() => {
+    if (targetType !== actionTargetTypeEnum.VEHICLE.code && vehicleTypeField.value !== '') {
+      setFieldValue(`envActions.${currentActionIndex}.vehicleType`, '')
     }
-    
+    if (targetType === actionTargetTypeEnum.VEHICLE.code && vehicleTypeField.value === '') {
+      setFieldValue(`envActions.${currentActionIndex}.vehicleType`, vehicleTypeEnum.VESSEL.code)
+    }
   }, [currentActionIndex, targetType, setFieldValue, vehicleTypeField.value])
 
   return (
     <SelectorWrapper ref={vehicleTypeSelectorRef}>
-      <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.vehicleType`}>
-        Type de véhicule
-      </Form.ControlLabel>
+      <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.vehicleType`}>Type de véhicule</Form.ControlLabel>
       <SelectPicker
-        className='ghost'
-        size='sm'
+        className="ghost"
         cleanable={false}
-        disabled={targetType !== actionTargetTypeEnum.VEHICLE.code}
-        style={DEFAULT_SELECT_PICKER_STYLE}
-        menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
-        searchable={false}
-        container={()=>vehicleTypeSelectorRef.current}
-        value={vehicleTypeField.value}
-        onChange={setValue}
+        container={() => vehicleTypeSelectorRef.current}
         data={vehicleTypeFieldList}
-        labelKey={'libelle'}
-        valueKey={'code'}
-        {...props} />
+        disabled={targetType !== actionTargetTypeEnum.VEHICLE.code}
+        labelKey="libelle"
+        menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
+        onChange={setValue}
+        searchable={false}
+        size="sm"
+        style={DEFAULT_SELECT_PICKER_STYLE}
+        value={vehicleTypeField.value}
+        valueKey="code"
+        {...props}
+      />
     </SelectorWrapper>
   )
 }

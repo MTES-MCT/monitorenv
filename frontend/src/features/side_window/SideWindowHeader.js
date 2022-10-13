@@ -1,15 +1,15 @@
 import React from 'react'
 import styled from 'styled-components'
+
 import { COLORS } from '../../constants/constants'
 
-export const SideWindowHeader = ({title, children}) => {
-
-  return (<Wrapper>
-    <Title data-cy={'SideWindowHeader-title'}>
-      {title}
-    </Title>
-    {children}
-  </Wrapper>)
+export function SideWindowHeader({ children, title }) {
+  return (
+    <Wrapper>
+      <Title data-cy="SideWindowHeader-title">{title}</Title>
+      {children}
+    </Wrapper>
+  )
 }
 
 const Wrapper = styled.div`
@@ -20,9 +20,9 @@ const Wrapper = styled.div`
   height: 50px;
   display: flex;
   align-items: center;
-  `
-  
-  const Title = styled.h1`
+`
+
+const Title = styled.h1`
   display: inline-block;
   color: ${COLORS.white};
   font-size: 22px;

@@ -1,4 +1,4 @@
-import {Circle, Fill, Stroke, Style} from 'ol/style'
+import { Circle, Fill, Stroke, Style } from 'ol/style'
 
 import { COLORS } from '../../../../constants/constants'
 
@@ -11,17 +11,17 @@ export const dottedLayerStyle = new Style({
 })
 
 const fill = new Fill({
-  color: 'rgba(255,255,255,0.4)',
-});
+  color: 'rgba(255,255,255,0.4)'
+})
 const stroke = new Stroke({
   color: '#3399CC',
-  width: 1.25,
-});
+  width: 1.25
+})
 
 export const pointLayerStyle = new Style({
   image: new Circle({
-    fill: fill,
-    stroke: stroke,
+    fill,
     radius: 5,
-  }),
+    stroke
+  })
 })

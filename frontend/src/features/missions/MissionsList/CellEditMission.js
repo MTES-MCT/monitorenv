@@ -1,18 +1,22 @@
 import React from 'react'
-import styled from 'styled-components'
-import { IconButton, Table } from 'rsuite'
 import { useDispatch } from 'react-redux'
+import { IconButton, Table } from 'rsuite'
+import styled from 'styled-components'
 
-import { ReactComponent as EditIconSVG } from '../../../uiMonitor/icons/editer_12px.svg'
 import { editMission } from '../../../domain/use_cases/missions/editMission'
+import { ReactComponent as EditIconSVG } from '../../../uiMonitor/icons/editer_12px.svg'
 
-export const CellEditMission = ({rowData, dataKey, ...props}) => {
-
+export function CellEditMission({ dataKey, rowData, ...props }) {
   const dispatch = useDispatch()
   const setMission = () => dispatch(editMission(rowData.id))
-  return <CustomCell {...props}>
-    <IconButton icon={<EditIcon className={"rs-icon"}/>} appearance='primary' size='sm' onClick={setMission}>Editer</IconButton>
-  </CustomCell>
+
+  return (
+    <CustomCell {...props}>
+      <IconButton appearance="primary" icon={<EditIcon className="rs-icon" />} onClick={setMission} size="sm">
+        Editer
+      </IconButton>
+    </CustomCell>
+  )
 }
 
 const CustomCell = styled(Table.Cell)`
@@ -20,6 +24,6 @@ const CustomCell = styled(Table.Cell)`
     padding-top: 7px;
   }
 `
-const EditIcon = styled(EditIconSVG)` 
-    padding: 9px !important;
+const EditIcon = styled(EditIconSVG)`
+  padding: 9px !important;
 `

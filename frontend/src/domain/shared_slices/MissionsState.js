@@ -6,30 +6,27 @@ const MissionStateReducer = null
 /* eslint-enable */
 
 const missionStateSlice = createSlice({
-  name: 'missionState',
   initialState: {
-    // selectedMissionId on Map
-    selectedMissionId: null,
     // state of the mission being edited (synced with form)
-    missionState: null
+    missionState: null,
+
+    // selectedMissionId on Map
+    selectedMissionId: null
   },
+  name: 'missionState',
   reducers: {
-    setSelectedMissionId (state, action) {
-      state.selectedMissionId = action.payload
-    },
-    resetSelectedMission (state) {
+    resetSelectedMission(state) {
       state.selectedMissionId = null
     },
-    setMissionState (state, action) {
+    setMissionState(state, action) {
       state.missionState = action.payload
+    },
+    setSelectedMissionId(state, action) {
+      state.selectedMissionId = action.payload
     }
   }
 })
 
-export const {
-  setSelectedMissionId,
-  resetSelectedMission,
-  setMissionState
-} = missionStateSlice.actions
+export const { resetSelectedMission, setMissionState, setSelectedMissionId } = missionStateSlice.actions
 
 export default missionStateSlice.reducer

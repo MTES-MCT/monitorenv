@@ -4,10 +4,7 @@ import { setSideWindowPath } from '../../../components/SideWindowRouter/SideWind
 import { sideWindowPaths, sideWindowMenu } from '../../entities/sideWindow'
 import { openSideWindowTab } from '../../shared_slices/Global'
 
-
-
-export const editMission = (missionId) => (dispatch) => {
+export const editMission = missionId => dispatch => {
   dispatch(openSideWindowTab(sideWindowMenu.MISSIONS.code))
-  dispatch(setSideWindowPath(generatePath(sideWindowPaths.MISSION, {id: missionId})))
+  dispatch(setSideWindowPath(generatePath(sideWindowPaths.MISSION, { id: missionId })))
 }
-

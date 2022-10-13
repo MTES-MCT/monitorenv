@@ -1,22 +1,19 @@
 import React, { forwardRef, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { FulfillingBouncingCircleSpinner } from 'react-epic-spinners'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import {  setSideWindowAsOpen } from '../../domain/shared_slices/Global'
-import { sideWindowPaths } from '../../domain/entities/sideWindow'
-
-import { Missions } from './../missions/Missions'
-import { CreateOrEditMission } from './../missions/CreateOrEditMission'
+import { ErrorBoundary } from '../../components/ErrorBoundary'
 import { SideWindowRoute } from '../../components/SideWindowRouter/SideWindowRoute'
+import { COLORS } from '../../constants/constants'
+import { sideWindowPaths } from '../../domain/entities/sideWindow'
+import { setSideWindowAsOpen } from '../../domain/shared_slices/Global'
+import { CreateOrEditMission } from '../missions/CreateOrEditMission'
+import { Missions } from '../missions/Missions'
 
 // import SideWindowMenu from './SideWindowMenu'
-import { COLORS } from '../../constants/constants'
 
-
-import { ErrorBoundary } from '../../components/ErrorBoundary'
-
-export const SideWindow = forwardRef(function SideWindowComponent(props, ref) {
+export const SideWindow = forwardRef((props, ref) => {
   const { openedSideWindowTab } = useSelector(state => state.global)
   const dispatch = useDispatch()
   const [isPreloading, setIsPreloading] = useState(true)
@@ -31,19 +28,17 @@ export const SideWindow = forwardRef(function SideWindowComponent(props, ref) {
     }
   }, [openedSideWindowTab])
 
-
-  return <>{openedSideWindowTab
-    ? <ErrorBoundary>
-        <Wrapper ref={ref}>
-          {
-            isPreloading
-              ? <Loading>
-                <FulfillingBouncingCircleSpinner
-                  color={COLORS.grayShadow}
-                  size={100}/>
-                <Text data-cy={'first-loader'}>Chargement...</Text>
+  return (
+    <>
+      {openedSideWindowTab ? (
+        <ErrorBoundary>
+          <Wrapper ref={ref}>
+            {isPreloading ? (
+              <Loading>
+                <FulfillingBouncingCircleSpinner color={COLORS.grayShadow} size={100} />
+                <Text data-cy="first-loader">Chargement...</Text>
               </Loading>
-              : 
+            ) : (
               <>
                 <SideWindowRoute path={sideWindowPaths.MISSIONS}>
                   <Missions />
@@ -52,14 +47,13 @@ export const SideWindow = forwardRef(function SideWindowComponent(props, ref) {
                   <CreateOrEditMission />
                 </SideWindowRoute>
               </>
-          }
-        </Wrapper>
-    </ErrorBoundary>
-    : null
-  }
-  </>
+            )}
+          </Wrapper>
+        </ErrorBoundary>
+      ) : null}
+    </>
+  )
 })
-
 
 const Loading = styled.div`
   margin-top: 350px;
@@ -78,9 +72,9 @@ const Wrapper = styled.div`
   height: 100vh;
   display: flex;
   background: ${COLORS.white};
-  
+
   @keyframes blink {
-    0%   {
+    0% {
       background: ${COLORS.background};
     }
     50% {

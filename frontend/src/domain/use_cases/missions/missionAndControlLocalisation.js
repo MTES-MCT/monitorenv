@@ -1,83 +1,121 @@
-import GeoJSON from 'ol/format/GeoJSON'
-import Feature from 'ol/Feature'
-import { MultiPolygon, Polygon, Point, MultiPoint } from 'ol/geom'
-import { boundingExtent } from 'ol/extent'
-import { transformExtent } from 'ol/proj'
 import _ from 'lodash'
+import { boundingExtent } from 'ol/extent'
+import Feature from 'ol/Feature'
+import GeoJSON from 'ol/format/GeoJSON'
+import { MultiPolygon, Polygon, Point, MultiPoint } from 'ol/geom'
+import { transformExtent } from 'ol/proj'
 
-import { setFeatureType, resetInteraction, setFeatures, setInteractionType, resetFeatures } from "../../../features/drawLayer/DrawLayer.slice"
-import { setDisplayedItems } from "../../shared_slices/Global"
-
-import { monitorenvFeatureTypes, interactionTypes, olGeometryTypes } from "../../entities/drawLayer"
+import {
+  setFeatureType,
+  resetInteraction,
+  setFeatures,
+  setInteractionType,
+  resetFeatures
+} from '../../../features/drawLayer/DrawLayer.slice'
+import { monitorenvFeatureTypes, interactionTypes, olGeometryTypes } from '../../entities/drawLayer'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../entities/map'
+import { setDisplayedItems } from '../../shared_slices/Global'
 import { setFitToExtent } from '../../shared_slices/Map'
 
-const convertToGeometryObject = (feature) => {
+const convertToGeometryObject = feature => {
   const format = new GeoJSON()
   const geoJSONGeometry = format.writeGeometryObject(feature, {
-          dataProjection: WSG84_PROJECTION,
-          featureProjection: OPENLAYERS_PROJECTION
-        })
+    dataProjection: WSG84_PROJECTION,
+    featureProjection: OPENLAYERS_PROJECTION
+  })
+
   return geoJSONGeometry
 }
 
-const openDrawLayerModal = (dispatch) => {
-  dispatch(setDisplayedItems({
-    displayLayersSidebar: false,
-    displayMissionsMenu: false,
-    displayMeasurement: false,
-    displayLocateOnMap: false,
-    displayInterestPoint: false,
-    displayMissionsOverlay: false,
-    displayMissionsLayer: false,
-    displaySelectedMissionLayer: false,
-    displayDrawLayerModal: true
-  }))
-}
-
-const closeDrawLayerModal = (dispatch) => {
-  dispatch(setDisplayedItems({
-    displayLayersSidebar: true,
-    displayMissionsMenu: true,
-    displayMeasurement: true,
-    displayLocateOnMap: true,
-    displayInterestPoint: true,
-    displayMissionsOverlay: true,
-    displayMissionsLayer: true,
-    displaySelectedMissionLayer: true,
-    displayDrawLayerModal: false
-  }))
-}
-
-export const addMissionZone = ({callback, geom} ) => (dispatch) => {
-  const features = (geom?.type === olGeometryTypes.MULTIPOLYGON) &&  geom?.coordinates?.length > 0 && geom.coordinates.map(coord=> {
-    return new Feature({
-      geometry: new Polygon(coord).transform(WSG84_PROJECTION, OPENLAYERS_PROJECTION)
+const openDrawLayerModal = dispatch => {
+  dispatch(
+    setDisplayedItems({
+      displayDrawLayerModal: true,
+      displayInterestPoint: false,
+      displayLayersSidebar: false,
+      displayLocateOnMap: false,
+      displayMeasurement: false,
+      displayMissionsLayer: false,
+      displayMissionsMenu: false,
+      displayMissionsOverlay: false,
+      displaySelectedMissionLayer: false
     })
-  })
-  features && dispatch(setFeatures(features))
-  geom?.coordinates?.length && dispatch(setFitToExtent({extent: transformExtent(boundingExtent(_.flattenDepth(geom.coordinates,2)), WSG84_PROJECTION, OPENLAYERS_PROJECTION)}))
-  dispatch(openDrawLayerModal)
-  dispatch(setFeatureType({featureType: monitorenvFeatureTypes.MISSION_ZONE, callback}))
-  dispatch(setInteractionType(interactionTypes.POLYGON))
+  )
 }
 
-
-export const addControlPositions = ({callback, geom, missionGeom} ) => (dispatch) => {
-  const features = geom?.type=== olGeometryTypes.MULTIPOINT &&  geom?.coordinates?.length > 0 && geom.coordinates.map(coord=> {
-    return new Feature({
-      geometry: new Point(coord).transform(WSG84_PROJECTION, OPENLAYERS_PROJECTION)
+const closeDrawLayerModal = dispatch => {
+  dispatch(
+    setDisplayedItems({
+      displayDrawLayerModal: false,
+      displayInterestPoint: true,
+      displayLayersSidebar: true,
+      displayLocateOnMap: true,
+      displayMeasurement: true,
+      displayMissionsLayer: true,
+      displayMissionsMenu: true,
+      displayMissionsOverlay: true,
+      displaySelectedMissionLayer: true
     })
-  })
-  features && dispatch(setFeatures(features))
-  missionGeom?.coordinates?.length && dispatch(setFitToExtent({extent: transformExtent(boundingExtent(_.flattenDepth(missionGeom.coordinates,2)), WSG84_PROJECTION, OPENLAYERS_PROJECTION)}))
-  dispatch(openDrawLayerModal)
-  dispatch(setFeatureType({featureType: monitorenvFeatureTypes.ACTION_LOCALISATION, callback}))
-  dispatch(setInteractionType(interactionTypes.POINT))
-
+  )
 }
 
-export const quitAddLocalisation = (dispatch) => {
+export const addMissionZone =
+  ({ callback, geom }) =>
+  dispatch => {
+    const features =
+      geom?.type === olGeometryTypes.MULTIPOLYGON &&
+      geom?.coordinates?.length > 0 &&
+      geom.coordinates.map(
+        coord =>
+          new Feature({
+            geometry: new Polygon(coord).transform(WSG84_PROJECTION, OPENLAYERS_PROJECTION)
+          })
+      )
+    features && dispatch(setFeatures(features))
+    geom?.coordinates?.length &&
+      dispatch(
+        setFitToExtent({
+          extent: transformExtent(
+            boundingExtent(_.flattenDepth(geom.coordinates, 2)),
+            WSG84_PROJECTION,
+            OPENLAYERS_PROJECTION
+          )
+        })
+      )
+    dispatch(openDrawLayerModal)
+    dispatch(setFeatureType({ callback, featureType: monitorenvFeatureTypes.MISSION_ZONE }))
+    dispatch(setInteractionType(interactionTypes.POLYGON))
+  }
+
+export const addControlPositions =
+  ({ callback, geom, missionGeom }) =>
+  dispatch => {
+    const features =
+      geom?.type === olGeometryTypes.MULTIPOINT &&
+      geom?.coordinates?.length > 0 &&
+      geom.coordinates.map(
+        coord =>
+          new Feature({
+            geometry: new Point(coord).transform(WSG84_PROJECTION, OPENLAYERS_PROJECTION)
+          })
+      )
+    features && dispatch(setFeatures(features))
+    missionGeom?.coordinates?.length &&
+      dispatch(
+        setFitToExtent({
+          extent: transformExtent(
+            boundingExtent(_.flattenDepth(missionGeom.coordinates, 2)),
+            WSG84_PROJECTION,
+            OPENLAYERS_PROJECTION
+          )
+        })
+      )
+    dispatch(openDrawLayerModal)
+    dispatch(setFeatureType({ callback, featureType: monitorenvFeatureTypes.ACTION_LOCALISATION }))
+    dispatch(setInteractionType(interactionTypes.POINT))
+  }
+
+export const quitAddLocalisation = dispatch => {
   dispatch(resetFeatures())
   dispatch(closeDrawLayerModal)
   dispatch(resetInteraction())
@@ -87,7 +125,7 @@ export const validateLocalisation = (dispatch, getState) => {
   const { drawLayer } = getState()
   const { callback, features, featureType } = drawLayer
   if (typeof callback === 'function') {
-    switch(featureType) {
+    switch (featureType) {
       case monitorenvFeatureTypes.MISSION_ZONE: {
         const geometryArray = features.map(f => f.getGeometry())
         const geometry = convertToGeometryObject(new MultiPolygon(geometryArray))
@@ -109,7 +147,7 @@ export const validateLocalisation = (dispatch, getState) => {
   dispatch(resetInteraction())
 }
 
-export const quitEditMission = (dispatch) => {
+export const quitEditMission = dispatch => {
   dispatch(resetFeatures())
   dispatch(resetInteraction())
 }

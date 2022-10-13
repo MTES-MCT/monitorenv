@@ -1,33 +1,31 @@
-import React, { useRef } from 'react'
+import { useField } from 'formik'
 import _ from 'lodash'
-import styled from 'styled-components'
+import React, { useRef } from 'react'
 import { Form, SelectPicker, TagPicker, IconButton } from 'rsuite'
-import {  useField } from 'formik'
+import styled from 'styled-components'
 
 import { useGetControlResourcesQuery } from '../../../api/controlResourcesAPI'
-
-import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression_clair.svg'
 import { COLORS } from '../../../constants/constants'
+import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Suppression_clair.svg'
 
 const DEFAULT_SELECT_PICKER_STYLE = {
-  width: 200,
-  margin: '0',
   borderColor: COLORS.lightGray,
   boxSizing: 'border-box',
-  textOverflow: 'ellipsis'
+  margin: '0',
+  textOverflow: 'ellipsis',
+  width: 200
 }
 
-const DEFAULT_SELECT_PICKER_MENU_STYLE = { 
-  width: 200,
+const DEFAULT_SELECT_PICKER_MENU_STYLE = {
   overflowY: 'hidden',
-  textOverflow: 'ellipsis'
+  textOverflow: 'ellipsis',
+  width: 200
 }
 
-
-export const ResourceUnitSelector = ({ resourceUnitPath, removeResourceUnit, resourceUnitIndex, ...props }) => {
-  const [administrationField, , administrationHelpers] = useField(`resourceUnits.${resourceUnitIndex}.administration`);
-  const [unitField, , unitHelpers] = useField(`resourceUnits.${resourceUnitIndex}.unit`);
-  const [resourcesField, , resourcesHelpers] = useField(`resourceUnits.${resourceUnitIndex}.resources`);
+export function ResourceUnitSelector({ removeResourceUnit, resourceUnitIndex, resourceUnitPath, ...props }) {
+  const [administrationField, , administrationHelpers] = useField(`resourceUnits.${resourceUnitIndex}.administration`)
+  const [unitField, , unitHelpers] = useField(`resourceUnits.${resourceUnitIndex}.unit`)
+  const [resourcesField, , resourcesHelpers] = useField(`resourceUnits.${resourceUnitIndex}.resources`)
 
   const administrationSelectorRef = useRef()
   const unitSelectorRef = useRef()
@@ -35,24 +33,30 @@ export const ResourceUnitSelector = ({ resourceUnitPath, removeResourceUnit, res
   const { data, isError, isLoading } = useGetControlResourcesQuery()
 
   const administrationList = _.uniqBy(data, 'administration')
-  const unitList = _.uniqBy(_.filter(data, r => r.administration === administrationField.value), 'unit')
-  const resourcesList = _.filter(data, r => r.administration === administrationField.value && r.unit === unitField.value && r.resource_name)
-  
+  const unitList = _.uniqBy(
+    _.filter(data, r => r.administration === administrationField.value),
+    'unit'
+  )
+  const resourcesList = _.filter(
+    data,
+    r => r.administration === administrationField.value && r.unit === unitField.value && r.resource_name
+  )
+
   // Add any resource from Mission not present in resourceList from API
-  // See: https://github.com/MTES-MCT/monitorenv/issues/103 
+  // See: https://github.com/MTES-MCT/monitorenv/issues/103
   const existingResourcesOptions = resourcesField?.value?.map(r => ({
     resource_name: r
   }))
-  const combinedResourceList = _.uniqBy([...resourcesList, ...existingResourcesOptions], (r)=>r.resource_name)
+  const combinedResourceList = _.uniqBy([...resourcesList, ...existingResourcesOptions], r => r.resource_name)
 
-  const handleAdministrationChange = (value) => {
+  const handleAdministrationChange = value => {
     if (value !== administrationField.value) {
       administrationHelpers.setValue(value)
       unitHelpers.setValue('')
       resourcesHelpers.setValue([])
     }
   }
-  const handleUnitChange = (value) => {
+  const handleUnitChange = value => {
     if (value !== unitField.value) {
       unitHelpers.setValue(value)
       resourcesHelpers.setValue([])
@@ -60,71 +64,77 @@ export const ResourceUnitSelector = ({ resourceUnitPath, removeResourceUnit, res
   }
 
   if (isError) {
-    return ('Erreur')
+    return 'Erreur'
   }
   if (isLoading) {
-    return ('Chargement')
+    return 'Chargement'
   }
   const resourceUnitIndexDisplayed = resourceUnitIndex + 1
 
   return (
     <RessourceUnitWrapper>
-      <SelectorWrapper >
+      <SelectorWrapper>
         <FormGroupFixed>
           <FormColumn ref={administrationSelectorRef}>
             <Form.ControlLabel htmlFor="administration">Administration {resourceUnitIndexDisplayed}</Form.ControlLabel>
-            <SelectPicker 
-              size='sm'
-              style={DEFAULT_SELECT_PICKER_STYLE}
-              menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
-              searchable={false}
-              container={()=>administrationSelectorRef.current}
-              value={administrationField.value}
-              onChange={handleAdministrationChange}
+            <SelectPicker
+              container={() => administrationSelectorRef.current}
               data={administrationList}
-              labelKey={'administration'}
-              valueKey={'administration'}
-              {...props} />
+              labelKey="administration"
+              menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
+              onChange={handleAdministrationChange}
+              searchable={false}
+              size="sm"
+              style={DEFAULT_SELECT_PICKER_STYLE}
+              value={administrationField.value}
+              valueKey="administration"
+              {...props}
+            />
           </FormColumn>
           <FormColumn ref={unitSelectorRef}>
             <Form.ControlLabel htmlFor="unit">Unité {resourceUnitIndexDisplayed}</Form.ControlLabel>
-            <SelectPicker 
-              size='sm'
-              style={DEFAULT_SELECT_PICKER_STYLE}
-              menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
-              searchable={false}
-              container={()=>unitSelectorRef.current} 
-              value={unitField.value} 
-              onChange={handleUnitChange} 
-              data={unitList} 
-              labelKey={'unit'}
-              valueKey={'unit'}
+            <SelectPicker
+              container={() => unitSelectorRef.current}
+              data={unitList}
               disabled={_.isEmpty(administrationField.value)}
-              {...props} />
+              labelKey="unit"
+              menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
+              onChange={handleUnitChange}
+              searchable={false}
+              size="sm"
+              style={DEFAULT_SELECT_PICKER_STYLE}
+              value={unitField.value}
+              valueKey="unit"
+              {...props}
+            />
           </FormColumn>
         </FormGroupFixed>
         <FormGroupFixed>
-          <RefWrapper ref={resourcesRef} data-cy={'unit-tag-picker'}>
+          <RefWrapper ref={resourcesRef} data-cy="unit-tag-picker">
             <Form.ControlLabel htmlFor="resources">Moyen(s) {resourceUnitIndexDisplayed}</Form.ControlLabel>
             <TagPicker
               block
-              size='sm'
-              creatable
               cleanable={false}
-              container={()=>resourcesRef.current}
-              value={resourcesField.value}
-              onChange={resourcesHelpers.setValue}
+              container={() => resourcesRef.current}
+              creatable
               data={combinedResourceList}
-              labelKey={'resource_name'}
-              valueKey={'resource_name'}
               disabled={_.isEmpty(unitField.value)}
-              {...props} />
+              labelKey="resource_name"
+              onChange={resourcesHelpers.setValue}
+              size="sm"
+              value={resourcesField.value}
+              valueKey="resource_name"
+              {...props}
+            />
           </RefWrapper>
         </FormGroupFixed>
       </SelectorWrapper>
-      
-        {resourceUnitIndex > 0 && <div><DeleteButton appearance="ghost" icon={<DeleteSVG className={"rs-icon"} />} onClick={removeResourceUnit}></DeleteButton></div>}
-      
+
+      {resourceUnitIndex > 0 && (
+        <div>
+          <DeleteButton appearance="ghost" icon={<DeleteSVG className="rs-icon" />} onClick={removeResourceUnit} />
+        </div>
+      )}
     </RessourceUnitWrapper>
   )
 }

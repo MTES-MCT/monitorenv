@@ -1,86 +1,85 @@
-import React, {  useCallback, useEffect, useRef, useState } from 'react'
+import { getCenter } from 'ol/extent'
+import Overlay from 'ol/Overlay'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 // import { useSelector } from 'react-redux'
 import styled from 'styled-components'
-import Overlay from 'ol/Overlay'
-import { getCenter } from 'ol/extent'
-
-import { getOverlayPositionForExtent, getTopLeftMarginForFeature } from './position'
 
 import { COLORS } from '../../../constants/constants'
+import { getOverlayPositionForExtent, getTopLeftMarginForFeature } from './position'
 
 const OVERLAY_HEIGHT = 124
 const OVERLAY_WIDTH = 365
 
 const defaultMargins = {
-  top: {
-    top: 20,
-    middle: 20,
-    bottom: 20
-  },
   left: {
-    right: 20,
     center: 20,
     left: 20,
+    right: 20
+  },
+  top: {
+    bottom: 20,
+    middle: 20,
+    top: 20
   }
 }
 
-export const OverlayPositionOnExtent = ({
-  map, 
+export function OverlayPositionOnExtent({
+  map,
   feature,
-  appClassName, 
-  children, 
-  options: {
-    margins = defaultMargins
-  } = {}
-}) => {
+  appClassName,
+  children,
+  options: { margins = defaultMargins } = {}
+}) {
   const overlayRef = useRef(null)
   const olOverlayObjectRef = useRef(null)
   const [overlayTopLeftMargin, setOverlayTopLeftMargin] = useState([margins.yBottom, margins.xMiddle])
 
-  const overlayCallback = useCallback(ref => {
-    overlayRef.current = ref
-    if (ref) {
-      olOverlayObjectRef.current = new Overlay({
-        element: ref,
-        className: `ol-overlay-container ol-selectable ${appClassName}`
-      })
-    } else {
-      olOverlayObjectRef.current = null
-    }
-  }, [overlayRef, olOverlayObjectRef])
+  const overlayCallback = useCallback(
+    ref => {
+      overlayRef.current = ref
+      if (ref) {
+        olOverlayObjectRef.current = new Overlay({
+          className: `ol-overlay-container ol-selectable ${appClassName}`,
+          element: ref
+        })
+      } else {
+        olOverlayObjectRef.current = null
+      }
+    },
+    [overlayRef, olOverlayObjectRef]
+  )
 
   useEffect(() => {
     if (map) {
       map.addOverlay(olOverlayObjectRef.current)
     }
+
     return () => {
       map.removeOverlay(olOverlayObjectRef.current)
     }
   }, [map, olOverlayObjectRef])
 
   useEffect(() => {
-
     if (overlayRef.current && olOverlayObjectRef.current) {
       if (feature) {
-        const featureExtent =  feature.getGeometry().getExtent()
-        const featureCenter =  getCenter(featureExtent)
+        const featureExtent = feature.getGeometry().getExtent()
+        const featureCenter = getCenter(featureExtent)
         const resolution = map.getView().getResolution()
         const extent = map.getView().calculateExtent()
 
-        const nextOverlayPosition = getOverlayPositionForExtent(
-          featureExtent, 
-          extent,
-          margins,
-          {width: OVERLAY_WIDTH, height: OVERLAY_HEIGHT, resolution}
-          )
+        const nextOverlayPosition = getOverlayPositionForExtent(featureExtent, extent, margins, {
+          height: OVERLAY_HEIGHT,
+          resolution,
+          width: OVERLAY_WIDTH
+        })
 
         const containerMargins = getTopLeftMarginForFeature(
-           nextOverlayPosition,
-           margins,
-           featureExtent, 
-           featureCenter, 
-           {width: OVERLAY_WIDTH, height: OVERLAY_HEIGHT, resolution}
-           )
+          nextOverlayPosition,
+          margins,
+          featureExtent,
+          featureCenter,
+          { height: OVERLAY_HEIGHT, resolution, width: OVERLAY_WIDTH }
+        )
 
         olOverlayObjectRef.current.setPosition(featureCenter)
         setOverlayTopLeftMargin(containerMargins)
@@ -91,10 +90,9 @@ export const OverlayPositionOnExtent = ({
     }
   }, [feature, overlayRef, olOverlayObjectRef, map])
 
-  
   return (
     <OverlayComponent ref={overlayCallback} overlayTopLeftMargin={overlayTopLeftMargin}>
-      { feature && children }
+      {feature && children}
     </OverlayComponent>
   )
 }
