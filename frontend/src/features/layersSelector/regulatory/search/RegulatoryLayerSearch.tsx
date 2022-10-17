@@ -210,9 +210,9 @@ const ZoomIcon = styled(ZoomIconSVG)`
   height: 22px;
 `
 const SearchOnExtentButton = styled(IconButton)`
-  position: fixed;
-  top: 10px;
-  left: 410px;
+  position: absolute;
+  top: 0;
+  left: 350px;
   margin-left: 5px;
   padding: 2px;
   flex-grow: 0;

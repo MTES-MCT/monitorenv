@@ -14,7 +14,7 @@ import { RegulatoryLayerZoneMetadata } from './regulatory/metadata/RegulatoryLay
 import { RegulatoryLayerSearch } from './regulatory/search/RegulatoryLayerSearch'
 
 export function LayersSidebar() {
-  const { regulatoryMetadataPanelIsOpen } = useAppSelector(state => state.regulatoryMetadata)
+  const { regulatoryMetadataLayerId, regulatoryMetadataPanelIsOpen } = useAppSelector(state => state.regulatoryMetadata)
   const dispatch = useDispatch()
 
   const [layersSidebarIsOpen, setLayersSidebarIsOpen] = useState(false)
@@ -46,7 +46,7 @@ export function LayersSidebar() {
           <BaseLayers />
         </Layers>
         <RegulatoryZoneMetadataShifter regulatoryMetadataPanelIsOpen={regulatoryMetadataPanelIsOpen}>
-          <RegulatoryLayerZoneMetadata />
+          {regulatoryMetadataLayerId && <RegulatoryLayerZoneMetadata />}
         </RegulatoryZoneMetadataShifter>
       </Sidebar>
     </>
