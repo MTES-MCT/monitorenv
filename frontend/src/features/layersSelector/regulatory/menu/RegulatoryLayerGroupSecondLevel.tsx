@@ -20,9 +20,12 @@ import { RegulatoryLayerZone } from './RegulatoryLayerZone'
 export function RegulatoryLayerGroupSecondLevel({ groupName, layers }) {
   const dispatch = useDispatch()
   const { showedRegulatoryLayerIds } = useAppSelector(state => state.regulatory)
+  const { regulatoryMetadataLayerId } = useAppSelector(state => state.regulatoryMetadata)
   const groupLayerIds = layers.map(l => l.id)
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
   const regulatoryZonesAreShowed = _.intersection(groupLayerIds, showedRegulatoryLayerIds).length > 0
+  const metadataIsShowed = _.includes(groupLayerIds, regulatoryMetadataLayerId)
+
   const toggleLayerDisplay = e => {
     e.stopPropagation()
     if (regulatoryZonesAreShowed) {
@@ -31,14 +34,21 @@ export function RegulatoryLayerGroupSecondLevel({ groupName, layers }) {
       dispatch(showRegulatoryLayer(groupLayerIds))
     }
   }
+
   const handleRemoveZone = e => {
     e.stopPropagation()
     dispatch(removeRegulatoryZonesFromMyLayers(groupLayerIds))
   }
 
+  const toggleZonesAreOpen = () => {
+    if (!metadataIsShowed) {
+      setZonesAreOpen(!zonesAreOpen)
+    }
+  }
+
   return (
     <>
-      <LayerTopic onClick={() => setZonesAreOpen(!zonesAreOpen)}>
+      <LayerTopic onClick={toggleZonesAreOpen}>
         <TopicName data-cy="regulatory-layer-topic" title={groupName}>
           {groupName}
         </TopicName>
@@ -72,7 +82,7 @@ export function RegulatoryLayerGroupSecondLevel({ groupName, layers }) {
           />
         </Icons>
       </LayerTopic>
-      <RegulatoryZones $isOpen={zonesAreOpen} $length={layers?.length}>
+      <RegulatoryZones $isOpen={zonesAreOpen || metadataIsShowed} $length={layers?.length}>
         {layers?.map(regulatoryZone => (
           <RegulatoryLayerZone key={regulatoryZone.id} regulatoryZone={regulatoryZone} />
         ))}

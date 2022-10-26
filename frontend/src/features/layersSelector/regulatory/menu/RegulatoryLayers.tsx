@@ -6,7 +6,7 @@ import { toggleMyRegulatoryZones } from '../../../../domain/shared_slices/LayerS
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReactComponent as PinSVG } from '../../../../uiMonitor/icons/Pin.svg'
 import { ChevronIcon } from '../../../commonStyles/icons/ChevronIcon.style'
-import RegulatoryLayerList from './RegulatoryLayerList'
+import { RegulatoryLayerList } from './RegulatoryLayerList'
 
 export function RegulatoryLayers() {
   const dispatch = useDispatch()

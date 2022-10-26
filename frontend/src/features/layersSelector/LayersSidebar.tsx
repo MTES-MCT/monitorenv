@@ -39,13 +39,16 @@ export function LayersSidebar() {
         isVisible={layersSidebarIsOpen || regulatoryMetadataPanelIsOpen}
         layersSidebarIsOpen={layersSidebarIsOpen}
       >
-        <RegulatoryLayerSearch />
+        <RegulatoryLayerSearch isVisible={layersSidebarIsOpen} />
         <Layers>
           <RegulatoryLayers />
           <AdministrativeLayers />
           <BaseLayers />
         </Layers>
-        <RegulatoryZoneMetadataShifter regulatoryMetadataPanelIsOpen={regulatoryMetadataPanelIsOpen}>
+        <RegulatoryZoneMetadataShifter
+          layersSidebarIsOpen={layersSidebarIsOpen}
+          regulatoryMetadataPanelIsOpen={regulatoryMetadataPanelIsOpen}
+        >
           {regulatoryMetadataLayerId && <RegulatoryLayerZoneMetadata />}
         </RegulatoryZoneMetadataShifter>
       </Sidebar>
@@ -53,9 +56,22 @@ export function LayersSidebar() {
   )
 }
 
-const RegulatoryZoneMetadataShifter = styled.div<{ regulatoryMetadataPanelIsOpen: boolean }>`
+const RegulatoryZoneMetadataShifter = styled.div<{
+  layersSidebarIsOpen: boolean
+  regulatoryMetadataPanelIsOpen: boolean
+}>`
   position: absolute;
-  margin-left: ${props => (props.regulatoryMetadataPanelIsOpen ? 355 : -455)}px;
+  margin-left: ${p => {
+    if (p.regulatoryMetadataPanelIsOpen) {
+      if (p.layersSidebarIsOpen) {
+        return '355'
+      }
+
+      return '410'
+    }
+
+    return '-455'
+  }}px;
   margin-top: 45px;
   top: 0px;
   opacity: ${props => (props.regulatoryMetadataPanelIsOpen ? 1 : 0)};
@@ -65,7 +81,7 @@ const RegulatoryZoneMetadataShifter = styled.div<{ regulatoryMetadataPanelIsOpen
 `
 
 const Sidebar = styled.div<{ isVisible: boolean; layersSidebarIsOpen: boolean }>`
-  margin-left: ${props => (props.layersSidebarIsOpen ? 0 : '-458px')};
+  margin-left: ${props => (props.layersSidebarIsOpen ? 0 : '-455px')};
   opacity: ${props => (props.isVisible ? 1 : 0)};
   top: 10px;
   left: 57px;

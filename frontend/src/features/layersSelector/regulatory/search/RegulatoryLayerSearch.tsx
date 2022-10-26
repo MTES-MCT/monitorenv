@@ -19,7 +19,7 @@ import { resetSearchExtent, setRegulatoryLayersSearchResult, setSearchExtent } f
 import { RegulatoryLayerSearchInput } from './RegulatoryLayerSearchInput'
 import { RegulatoryLayerSearchResultList } from './RegulatoryLayerSearchResultList'
 
-export function RegulatoryLayerSearch() {
+export function RegulatoryLayerSearch({ isVisible }) {
   const dispatch = useDispatch()
   const { regulatoryLayers } = useAppSelector(state => state.regulatory)
   const { regulatoryLayersSearchResult: results } = useAppSelector(state => state.regulatoryLayerSearch)
@@ -50,7 +50,6 @@ export function RegulatoryLayerSearch() {
       },
       tokenize: 'full'
     })
-
     regulatoryLayers?.forEach(layer => RegulatoryLayersIndex.add(layer))
 
     return (searchedText, geofilter, extent, filterOnThemes) => {
@@ -167,12 +166,12 @@ export function RegulatoryLayerSearch() {
         size="lg"
         title="Définir la zone de recherche et afficher les tracés"
       />
-      {shouldReloadSearchOnExtent && (
+      {isVisible && shouldReloadSearchOnExtent && (
         <ReloadSearch appearance="primary" icon={<SearchIcon className="rs-icon" />} onClick={handleReloadSearch}>
           Relancer la recherche ici
         </ReloadSearch>
       )}
-      {allowResetResults && (
+      {isVisible && allowResetResults && (
         <ResetSearch appearance="ghost" icon={<ResetIcon className="rs-icon" />} onClick={handleResetSearch}>
           Effacer les résultats de la recherche
         </ResetSearch>
