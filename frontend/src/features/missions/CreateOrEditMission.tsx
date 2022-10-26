@@ -26,14 +26,16 @@ import { ActionForm } from './MissionDetails/ActionForm'
 import { ActionsForm } from './MissionDetails/ActionsForm'
 import { GeneralInformationsForm } from './MissionDetails/GeneralInformationsForm'
 import { missionFactory } from './Missions.helpers'
-import { MissionValidationModal } from './MissionValidationModal'
+import { MissionCancelEditModal } from './MissionCancelEditModal'
+import { MissionDeleteModal } from './MissionDeleteModal'
 
 export function CreateOrEditMission({ routeParams }) {
   const dispatch = useDispatch()
   const [currentActionIndex, setCurrentActionIndex] = useState(null)
   const [errorOnSave, setErrorOnSave] = useState(false)
   const [errorOnDelete, setErrorOnDelete] = useState(false)
-  const [confirmationModalIsOpen, setConfirmationModalIsOpen] = useState(false)
+  const [cancelEditModalIsOpen, setCancelEditModalIsOpen] = useState(false)
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
 
   const id = routeParams?.params?.id && parseInt(routeParams?.params?.id, 10)
 
@@ -71,9 +73,17 @@ export function CreateOrEditMission({ routeParams }) {
   }
 
   const handleConfirmFormCancelation = () => {
-    setConfirmationModalIsOpen(true)
+    setCancelEditModalIsOpen(true)
   }
+  const handleConfirmDelete = () => {
+    
+    setDeleteModalIsOpen(true)
+  }
+  const handleReturnToEdition = () =>{
+    setCancelEditModalIsOpen(false)
+    setDeleteModalIsOpen(false)
 
+  }
   const handleDelete = () => {
     deleteMission({ id }).then(response => {
       if ('error' in response) {
@@ -85,17 +95,12 @@ export function CreateOrEditMission({ routeParams }) {
     })
   }
   const handleCancelForm = () => {
-    // eslint-disable-next-line no-console
-    console.log('form canceled', handleConfirmFormCancelation)
-  }
-
-  const handleCancel = () => {
     dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))
   }
 
+
   return (
     <EditMissionWrapper data-cy="editMissionWrapper">
-      <MissionValidationModal onClose={handleCancelForm} open={confirmationModalIsOpen} />
       <SideWindowHeader
         title={`Edition de la mission${
           isLoadingUpdateMission || isLoadingCreateMission ? ' - Enregistrement en cours' : ''
@@ -126,9 +131,21 @@ export function CreateOrEditMission({ routeParams }) {
             formikProps.setFieldValue('missionStatus', missionStatusEnum.CLOSED.code)
             formikProps.handleSubmit()
           }
-    
+          
           return (
             <FormikForm>
+              <MissionCancelEditModal 
+                onConfirm={handleCancelForm} 
+                onCancel={handleReturnToEdition} 
+                open={cancelEditModalIsOpen}
+                
+              />
+              <MissionDeleteModal 
+                onConfirm={handleDelete} 
+                onCancel={handleReturnToEdition} 
+                open={deleteModalIsOpen}
+                
+              />
               <SyncFormValuesWithRedux callback={setMissionState} />
               <Wrapper>
                 <FirstColumn>
@@ -164,11 +181,11 @@ export function CreateOrEditMission({ routeParams }) {
                 <FormActionsWrapper>
                   {
                     // id is undefined if creating a new mission
-                    id === undefined && (
+                    !(id === undefined) && (
                       <IconButton
                         appearance="ghost"
                         icon={<DeleteIcon className="rs-icon" />}
-                        onClick={handleDelete}
+                        onClick={handleConfirmDelete}
                         type="button"
                       >
                         Supprimer la mission
@@ -176,7 +193,7 @@ export function CreateOrEditMission({ routeParams }) {
                     )
                   }
                   <Separator />
-                  <Button onClick={handleCancel} type="button">
+                  <Button onClick={handleConfirmFormCancelation} type="button">
                     Annuler
                   </Button>
                   <IconButton appearance="ghost" icon={<SaveSVG className="rs-icon" />} type="submit">
