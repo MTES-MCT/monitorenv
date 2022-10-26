@@ -12,8 +12,7 @@ import {
 } from '../../../../domain/shared_slices/Regulatory'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReactComponent as CloseIconSVG } from '../../../../uiMonitor/icons/Close.svg'
-import { ReactComponent as ShowIconSVG } from '../../../../uiMonitor/icons/Display.svg'
-import { ReactComponent as HideIconSVG } from '../../../../uiMonitor/icons/Hide.svg'
+import { ReactComponent as DisplaySVG } from '../../../../uiMonitor/icons/Display.svg'
 import { REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT } from '../search/RegulatoryLayerSearchResultZone'
 import { RegulatoryLayerZone } from './RegulatoryLayerZone'
 
@@ -58,22 +57,25 @@ export function RegulatoryLayerGroup({ groupName, layers }) {
           </TagGroup>
           {regulatoryZonesAreShowed ? (
             <IconButton
+              appearance="subtle"
               data-cy="regulatory-layers-my-zones-zone-hide"
-              icon={<ShowIconSVG className="rs-icon" />}
+              icon={<ShowIcon className="rs-icon" />}
               onClick={toggleLayerDisplay}
-              size="sm"
+              size="md"
               title="Cacher la/les zone(s)"
             />
           ) : (
             <IconButton
+              appearance="subtle"
               data-cy="regulatory-layers-my-zones-zone-show"
-              icon={<HideIconSVG className="rs-icon" />}
+              icon={<HideIcon className="rs-icon" />}
               onClick={toggleLayerDisplay}
-              size="sm"
+              size="md"
               title="Afficher la/les zone(s)"
             />
           )}
           <IconButton
+            appearance="subtle"
             data-cy="regulatory-layers-my-zones-zone-delete"
             icon={<CloseIconSVG className="rs-icon" />}
             onClick={handleRemoveZone}
@@ -142,4 +144,14 @@ const Icons = styled.span`
   align-items: center;
   flex: 0;
   margin-right: 4px;
+  > * {
+    margin-right: 4px;
+    margin-left: 4px;
+  }
+`
+const ShowIcon = styled(DisplaySVG)`
+  color: ${COLORS.blueGray};
+`
+const HideIcon = styled(DisplaySVG)`
+  color: ${COLORS.slateGray};
 `

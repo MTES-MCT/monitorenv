@@ -52,10 +52,11 @@ export function RegulatoryLayerSearchResultGroupByLayer({ groupName, result, sea
         <Icons>
           <ZonesNumber>{`${result.length} / ${totalNumberOfZones}`}</ZonesNumber>
           <StyledIconButton
-            $allTopicZonesAreChecked={allTopicZonesAreChecked}
+            allTopicZonesAreChecked={allTopicZonesAreChecked}
+            appearance="subtle"
             icon={allTopicZonesAreChecked ? <PinFullSVGIcon className="rs-icon" /> : <PinSVGIcon className="rs-icon" />}
             onClick={handleCheckAllZones}
-            size="sm"
+            size="md"
           />
         </Icons>
       </LayerTopic>
@@ -120,16 +121,26 @@ const Icons = styled.span`
   flex: 0;
   margin-right: 4px;
 `
-const StyledIconButton = styled(IconButton)`
+const StyledIconButton = styled(IconButton)<{ allTopicZonesAreChecked: boolean }>`
   :focus {
-    color: ${COLORS.white};
+    color: ${COLORS.blueYonder};
   }
-  ${props => (props.$allTopicZonesAreChecked ? `color: ${COLORS.blueGray}` : '')};
+  ${p => (p.allTopicZonesAreChecked ? `color: ${COLORS.blueGray}` : '')};
 `
 
-const PinSVGIcon = styled(PinSVG)``
+const PinSVGIcon = styled(PinSVG)`
+  color: ${COLORS.slateGray};
+  :hover,
+  :focus,
+  :active {
+    color: ${COLORS.blueYonder};
+  }
+`
 const PinFullSVGIcon = styled(PinFullSVG)`
-  &:hover {
-    color: ${COLORS.white};
+  color: ${COLORS.blueGray};
+  :hover,
+  :focus,
+  :active {
+    color: ${COLORS.blueYonder};
   }
 `

@@ -33,4 +33,6 @@ const FiltersWrapper = styled.div`
   text-align: left;
   border-top: 2px solid ${COLORS.lightGray};
 `
-const ResetFilters = styled(Button)``
+const ResetFilters = styled(Button)`
+  padding: 0px;
+`
