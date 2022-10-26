@@ -27,11 +27,7 @@ export const COLORS = {
 
   powderBlue: '#9ED7D9',
   wheat: '#EDD6A4',
-  goldenPoppy: '#FAC11A',
-
-  // deprecated
-  grayShadow: '#969696BF',
-  overlayShadow: '#7077851A'
+  goldenPoppy: '#FAC11A'
 }
 
 export const HIT_PIXEL_TO_TOLERANCE = 15
