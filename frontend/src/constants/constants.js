@@ -27,7 +27,25 @@ export const COLORS = {
 
   powderBlue: '#9ED7D9',
   wheat: '#EDD6A4',
-  goldenPoppy: '#FAC11A'
+  goldenPoppy: '#FAC11A',
+
+  yaleBlue: '#295375',
+  glaucous: '#6284A6',
+  blueNcs: '#3690C0',
+  iceberg: '#67A9CF',
+  lightSteelBlue: '#9AB4D6',
+  lightPeriwinkle: '#CDCFEA',
+  aliceBlue: '#EBF0F4',
+  lightCyan: '#C7EAE5',
+  middleBlueGreen: '#91CFC9',
+  verdigris: '#56B3AB',
+  viridianGreen: '#01A29D',
+  paoloVeroneseGreen: '#21977F',
+  skobeloff: '#01686B',
+  blueSapphire: '#01536A',
+  indigoDye: '#033E54',
+
+  lightCoral: '#FA8282'
 }
 
 export const HIT_PIXEL_TO_TOLERANCE = 15
