@@ -32,4 +32,5 @@ const List = styled.ul`
   overflow-x: hidden;
   color: ${COLORS.slateGray};
   transition: 0.5s all;
+  border-top: 2px solid ${COLORS.lightGray};
 `

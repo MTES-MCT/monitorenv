@@ -17,7 +17,7 @@ import { ReactComponent as HideIconSVG } from '../../../../uiMonitor/icons/Hide.
 import { REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT } from '../search/RegulatoryLayerSearchResultZone'
 import { RegulatoryLayerZone } from './RegulatoryLayerZone'
 
-export function RegulatoryLayerGroupSecondLevel({ groupName, layers }) {
+export function RegulatoryLayerGroup({ groupName, layers }) {
   const dispatch = useDispatch()
   const { showedRegulatoryLayerIds } = useAppSelector(state => state.regulatory)
   const { regulatoryMetadataLayerId } = useAppSelector(state => state.regulatoryMetadata)
@@ -82,7 +82,7 @@ export function RegulatoryLayerGroupSecondLevel({ groupName, layers }) {
           />
         </Icons>
       </LayerTopic>
-      <RegulatoryZones $isOpen={zonesAreOpen || metadataIsShowed} $length={layers?.length}>
+      <RegulatoryZones isOpen={zonesAreOpen || metadataIsShowed} length={layers?.length}>
         {layers?.map(regulatoryZone => (
           <RegulatoryLayerZone key={regulatoryZone.id} regulatoryZone={regulatoryZone} />
         ))}
@@ -130,16 +130,16 @@ const LayerTopic = styled.div`
   }
 `
 
-const RegulatoryZones = styled.div<{ $isOpen: boolean; $length: number }>`
-  height: ${props =>
-    props.$isOpen && props.$length ? props.$length * REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT : 0}px;
+const RegulatoryZones = styled.div<{ isOpen: boolean; length: number }>`
+  height: ${p => (p.isOpen && p.length ? p.length * REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT : 0)}px;
   overflow: hidden;
   transition: 0.5s all;
+  border-bottom: ${p => (p.isOpen ? 1 : 0)}px solid ${COLORS.lightGray};
 `
 const Icons = styled.span`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  flex: 1;
+  flex: 0;
   margin-right: 4px;
 `

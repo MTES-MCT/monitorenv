@@ -2,7 +2,7 @@ import _ from 'lodash'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
-import { RegulatoryLayerGroupSecondLevel } from './RegulatoryLayerGroupSecondLevel'
+import { RegulatoryLayerGroup } from './RegulatoryLayerGroup'
 
 export function RegulatoryLayerList({ results }) {
   if (_.isEmpty(results)) {
@@ -19,7 +19,7 @@ export function RegulatoryLayerList({ results }) {
     <List>
       {layersByLayersName &&
         Object.entries(layersByLayersName).map(([layerName, layers]) => (
-          <RegulatoryLayerGroupSecondLevel key={layerName} groupName={layerName} layers={layers} />
+          <RegulatoryLayerGroup key={layerName} groupName={layerName} layers={layers} />
         ))}
     </List>
   )

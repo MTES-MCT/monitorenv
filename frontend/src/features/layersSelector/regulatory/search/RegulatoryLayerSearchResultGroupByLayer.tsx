@@ -72,6 +72,7 @@ const ZonesNumber = styled.span`
   font-size: 13px;
   color: ${COLORS.slateGray};
   margin-left: auto;
+  margin-right: 8px;
   line-height: 34px;
   font-weight: 400;
   flex: 1;
@@ -116,7 +117,7 @@ const Icons = styled.span`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  flex: 1;
+  flex: 0;
   margin-right: 4px;
 `
 const StyledIconButton = styled(IconButton)`
