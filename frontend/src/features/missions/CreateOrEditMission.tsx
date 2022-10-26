@@ -1,7 +1,7 @@
 import { Formik, FieldArray } from 'formik'
-import React, { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Form, Button, IconButton, ButtonToolbar } from 'rsuite'
+import { Button, IconButton, ButtonToolbar } from 'rsuite'
 import styled from 'styled-components'
 
 import {
@@ -14,9 +14,11 @@ import { setSideWindowPath } from '../../components/SideWindowRouter/SideWindowR
 import { COLORS } from '../../constants/constants'
 import { missionStatusEnum } from '../../domain/entities/missions'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
+import { setError } from '../../domain/shared_slices/Global'
 import { setMissionState } from '../../domain/shared_slices/MissionsState'
 import { quitEditMission } from '../../domain/use_cases/missions/missionAndControlLocalisation'
 import { SyncFormValuesWithRedux } from '../../hooks/useSyncFormValuesWithRedux'
+import { FormikForm } from '../../uiMonitor/CustomFormikFields/FormikForm'
 import { ReactComponent as DeleteSVG } from '../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as SaveSVG } from '../../uiMonitor/icons/Save.svg'
 import { SideWindowHeader } from '../side_window/SideWindowHeader'
@@ -33,7 +35,7 @@ export function CreateOrEditMission({ routeParams }) {
   const [errorOnDelete, setErrorOnDelete] = useState(false)
   const [confirmationModalIsOpen, setConfirmationModalIsOpen] = useState(false)
 
-  const id = routeParams?.params?.id && parseInt(routeParams?.params?.id)
+  const id = routeParams?.params?.id && parseInt(routeParams?.params?.id, 10)
 
   const { missionToEdit } = useGetMissionsQuery(undefined, {
     selectFromResult: ({ data }) => ({
@@ -57,13 +59,12 @@ export function CreateOrEditMission({ routeParams }) {
 
   const handleSubmitForm = values => {
     upsertMission(values).then(response => {
-      const { data, error } = response
-      if (data) {
+      if ('data' in response) {
         dispatch(quitEditMission)
         dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))
         setErrorOnSave(false)
       } else {
-        console.log(error)
+        dispatch(setError(response.error))
         setErrorOnSave(true)
       }
     })
@@ -75,9 +76,8 @@ export function CreateOrEditMission({ routeParams }) {
 
   const handleDelete = () => {
     deleteMission({ id }).then(response => {
-      const { error } = response
-      if (error) {
-        console.log(error)
+      if ('error' in response) {
+        dispatch(setError(response.error))
         setErrorOnDelete(true)
       } else {
         dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))
@@ -85,6 +85,7 @@ export function CreateOrEditMission({ routeParams }) {
     })
   }
   const handleCancelForm = () => {
+    // eslint-disable-next-line no-console
     console.log('form canceled', handleConfirmFormCancelation)
   }
 
@@ -125,9 +126,9 @@ export function CreateOrEditMission({ routeParams }) {
             formikProps.setFieldValue('missionStatus', missionStatusEnum.CLOSED.code)
             formikProps.handleSubmit()
           }
-
+    
           return (
-            <Form onReset={formikProps.handleReset} onSubmit={formikProps.handleSubmit}>
+            <FormikForm>
               <SyncFormValuesWithRedux callback={setMissionState} />
               <Wrapper>
                 <FirstColumn>
@@ -163,7 +164,7 @@ export function CreateOrEditMission({ routeParams }) {
                 <FormActionsWrapper>
                   {
                     // id is undefined if creating a new mission
-                    id && (
+                    id === undefined && (
                       <IconButton
                         appearance="ghost"
                         icon={<DeleteIcon className="rs-icon" />}
@@ -194,7 +195,7 @@ export function CreateOrEditMission({ routeParams }) {
                 {errorOnSave && <ErrorOnSave>Oups... Erreur au moment de la sauvegarde</ErrorOnSave>}
                 {errorOnDelete && <ErrorOnDelete>Oups... Erreur au moment de la suppression</ErrorOnDelete>}
               </Footer>
-            </Form>
+            </FormikForm>
           )
         }}
       </Formik>

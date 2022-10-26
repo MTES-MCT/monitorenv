@@ -1,9 +1,14 @@
-import React from 'react'
 import styled from 'styled-components'
 
 import { COLORS } from '../../constants/constants'
 
-export function SideWindowHeader({ children, title }) {
+import type React from 'react'
+
+type Props = {
+  children?: React.ReactNode
+  title?: string
+}
+export function SideWindowHeader({ children, title }: Props) {
   return (
     <Wrapper>
       <Title data-cy="SideWindowHeader-title">{title}</Title>

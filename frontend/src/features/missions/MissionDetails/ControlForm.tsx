@@ -2,13 +2,13 @@ import { format, isValid } from 'date-fns'
 import { fr } from 'date-fns/locale'
 import { FieldArray, useField, useFormikContext } from 'formik'
 import _ from 'lodash'
-import React, { useEffect, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { useGetControlThemesQuery } from '../../../api/controlThemesAPI'
 import { COLORS } from '../../../constants/constants'
-import { THEME_REQUIRE_PROTECTED_SPECIES } from '../../../domain/entities/missions'
+import { MissionType, MissionControlType, THEME_REQUIRE_PROTECTED_SPECIES } from '../../../domain/entities/missions'
 import { usePrevious } from '../../../hooks/usePrevious'
 import { FormikDatePicker, placeholderDateTimePicker } from '../../../uiMonitor/CustomFormikFields/FormikDatePicker'
 import { FormikInputGhost } from '../../../uiMonitor/CustomFormikFields/FormikInput'
@@ -21,17 +21,25 @@ import { InfractionsForm } from './InfractionsForm'
 import { ProtectedSpeciesSelector } from './ProtectedSpeciesSelector'
 import { VehicleTypeSelector } from './VehicleTypeSelector'
 
-export function ControlForm({ currentActionIndex, remove, setCurrentActionIndex }) {
+export function ControlForm({
+  currentActionIndex,
+  remove,
+  setCurrentActionIndex
+}: {
+  currentActionIndex: number
+  remove: Function
+  setCurrentActionIndex: Function
+}) {
   const {
     setFieldValue,
     values: { envActions }
-  } = useFormikContext()
+  } = useFormikContext<MissionType<MissionControlType>>()
   const [actionStartDatetimeUtcField] = useField(`envActions.${currentActionIndex}.actionStartDatetimeUtc`)
   const parsedActionStartDatetimeUtc = new Date(actionStartDatetimeUtcField.value)
   const actionTheme = envActions[currentActionIndex]?.actionTheme
   const protectedSpecies = envActions[currentActionIndex]?.protectedSpecies
 
-  const { data, isError, isLoading } = useGetControlThemesQuery()
+  const { data, isError, isLoading } = useGetControlThemesQuery({})
   const themes = useMemo(() => _.uniqBy(data, 'themeLevel1'), [data])
   const subThemes = useMemo(() => _.filter(data, t => t.themeLevel1 === actionTheme), [data, actionTheme])
 
@@ -41,7 +49,12 @@ export function ControlForm({ currentActionIndex, remove, setCurrentActionIndex 
     if (previousActionTheme && previousActionTheme !== actionTheme) {
       setFieldValue(`envActions.${currentActionIndex}.actionSubTheme`, '')
     }
-    if (protectedSpecies?.length > 0 && !THEME_REQUIRE_PROTECTED_SPECIES.includes(actionTheme)) {
+    if (
+      !!protectedSpecies &&
+      protectedSpecies.length > 0 &&
+      !!actionTheme &&
+      !THEME_REQUIRE_PROTECTED_SPECIES.includes(actionTheme)
+    ) {
       setFieldValue(`envActions.${currentActionIndex}.protectedSpecies`, [])
     }
   }, [previousActionTheme, actionTheme, protectedSpecies, currentActionIndex, setFieldValue])
@@ -96,7 +109,7 @@ export function ControlForm({ currentActionIndex, remove, setCurrentActionIndex 
             />
           </SelectorWrapper>
 
-          {THEME_REQUIRE_PROTECTED_SPECIES.includes(actionTheme) && (
+          {!!actionTheme && THEME_REQUIRE_PROTECTED_SPECIES.includes(actionTheme) && (
             <SelectorWrapper>
               <ProtectedSpeciesSelector name={`envActions.${currentActionIndex}.protectedSpecies`} />
             </SelectorWrapper>
@@ -138,6 +151,7 @@ export function ControlForm({ currentActionIndex, remove, setCurrentActionIndex 
 
       <FieldArray
         name={`envActions[${currentActionIndex}].infractions`}
+        // eslint-disable-next-line react/jsx-props-no-spreading
         render={props => <InfractionsForm currentActionIndex={currentActionIndex} {...props} />}
       />
     </>

@@ -12,6 +12,11 @@ export const actionTypeEnum = {
     libelle: 'Surveillance'
   }
 }
+export enum ActionTypeEnum {
+  CONTROL = 'CONTROL',
+  NOTE = 'NOTE',
+  SURVEILLANCE = 'SURVEILLANCE'
+}
 
 export const missionTypeEnum = {
   SEA: {
@@ -29,6 +34,11 @@ export const missionTypeEnum = {
     libelle: 'Air'
   }
 }
+export enum MissionTypeEnum {
+  AIR = 'AIR',
+  LAND = 'LAND',
+  SEA = 'SEA'
+}
 
 export const missionNatureEnum = {
   ENV: {
@@ -43,6 +53,11 @@ export const missionNatureEnum = {
     code: 'OTHER',
     libelle: 'Autre'
   }
+}
+export enum MissionNatureEnum {
+  ENV = 'ENV',
+  FISH = 'FISH',
+  OTHER = 'OTHER'
 }
 
 export const infractionTypeEnum = {
@@ -184,6 +199,11 @@ export const missionStatusEnum = {
     libelle: 'En cours'
   }
 }
+export enum MissionStatusEnum {
+  CLOSED = 'CLOSED',
+  ENDED = 'ENDED',
+  PENDING = 'PENDING'
+}
 
 export const THEME_REQUIRE_PROTECTED_SPECIES = ['Police des espèces protégées et de leurs habitats (faune et flore)']
 
@@ -205,3 +225,32 @@ export const relevantCourtEnum = {
     libelle: 'Pôle Régional Environnemental (PRE)'
   }
 }
+
+export type MissionType<MissionSubType = MissionControlType | MissionSurveillanceType | MissionObservationType> = {
+  closedBy: string
+  envActions: Array<MissionSubType>
+  facade: string
+  geom: string
+  id: number
+  inputEndDatetimeUtc: string
+  inputStartDatetimeUtc: string
+  missionNature: MissionNatureEnum
+  missionStatus: MissionStatusEnum
+  missionType: MissionTypeEnum
+  observations: string
+  openBy: string
+  resourceUnits: string
+}
+
+export type EnvAction = {
+  actionStartDatetimeUtc: string
+  actionType: ActionTypeEnum
+  geom: string
+  id: string
+}
+export type MissionControlType = {
+  actionTheme: string
+  protectedSpecies: string
+}
+export type MissionSurveillanceType = {}
+export type MissionObservationType = {}
