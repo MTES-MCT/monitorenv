@@ -3,6 +3,7 @@ import GeoJSON from 'ol/format/GeoJSON'
 import { fromExtent } from 'ol/geom/Polygon'
 import { Vector } from 'ol/layer'
 import VectorSource from 'ol/source/Vector'
+import { getArea } from 'ol/sphere'
 import { MutableRefObject, useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -56,19 +57,26 @@ export function RegulatoryPreviewLayer({ map }) {
     if (map) {
       getRegulatoryVectorSource().clear()
       if (regulatoryLayersSearchResult) {
-        const features = regulatoryLayersSearchResult.map(regulatorylayer => {
+        const features = regulatoryLayersSearchResult.reduce((regulatorylayers, regulatorylayer) => {
           if (regulatorylayer.doc?.geometry) {
             const feature = new GeoJSON({
               featureProjection: OPENLAYERS_PROJECTION
             }).readFeature(regulatorylayer.doc.geometry)
+            const geometry = feature.getGeometry()
+            const area = geometry && getArea(geometry)
             feature.setId(`${Layers.REGULATORY_ENV_PREVIEW.code}:${regulatorylayer.doc.id}`)
-            feature.setProperties({ layerId: regulatorylayer.doc.id, ...regulatorylayer.doc.properties })
 
-            return feature
+            feature.setProperties({
+              area,
+              layerId: regulatorylayer.doc.id,
+              ...regulatorylayer.doc.properties
+            })
+
+            regulatorylayers.push(feature)
           }
 
-          return undefined
-        })
+          return regulatorylayers
+        }, [])
         getRegulatoryVectorSource().addFeatures(features)
       }
     }
@@ -82,6 +90,7 @@ export function RegulatoryPreviewLayer({ map }) {
             name: Layers.REGULATORY_ENV_PREVIEW.code
           },
           renderBuffer: 4,
+          renderOrder: (a, b) => b.get('area') - a.get('area'),
           source: getRegulatoryVectorSource(),
           style: getRegulatoryLayerStyle,
           updateWhileAnimating: true,
