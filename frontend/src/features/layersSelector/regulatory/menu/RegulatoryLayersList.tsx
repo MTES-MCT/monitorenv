@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { COLORS } from '../../../../constants/constants'
 import { RegulatoryLayerGroup } from './RegulatoryLayerGroup'
 
-export function RegulatoryLayerList({ results }) {
+export function RegulatoryLayersList({ results }) {
   if (_.isEmpty(results)) {
     return (
       <List>

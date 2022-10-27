@@ -100,8 +100,8 @@ const SearchBoxInput = styled(Input)`
     border-bottom: 2px solid ${COLORS.blueGray};
   }
   padding-left: 16px;
-  padding-top: 11px;
-  padding-bottom: 11px;
+  padding-top: 9px;
+  padding-bottom: 10px;
   font-size: 13px;
   line-height: 18px;
   width: 320px;

@@ -6,7 +6,7 @@ import { toggleMyRegulatoryZones } from '../../../../domain/shared_slices/LayerS
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReactComponent as PinSVG } from '../../../../uiMonitor/icons/Pin.svg'
 import { ChevronIcon } from '../../../commonStyles/icons/ChevronIcon.style'
-import { RegulatoryLayerList } from './RegulatoryLayerList'
+import { RegulatoryLayersList } from './RegulatoryLayersList'
 
 export function RegulatoryLayers() {
   const dispatch = useDispatch()
@@ -31,7 +31,7 @@ export function RegulatoryLayers() {
         <Title>Mes zones réglementaires</Title>
         <ChevronIcon $isOpen={myRegulatoryZonesIsOpen} $right />
       </RegulatoryLayersTitle>
-      {myRegulatoryZonesIsOpen && <RegulatoryLayerList results={selectedRegulatoryLayers} />}
+      {myRegulatoryZonesIsOpen && <RegulatoryLayersList results={selectedRegulatoryLayers} />}
     </>
   )
 }
@@ -53,7 +53,6 @@ const RegulatoryLayersTitle = styled.div<{ $showRegulatoryLayers: boolean }>`
   padding-left: 16px;
   color: ${COLORS.gainsboro};
   display: flex;
-
   cursor: pointer;
   text-align: left;
   user-select: none;

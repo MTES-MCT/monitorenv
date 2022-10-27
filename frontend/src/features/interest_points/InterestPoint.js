@@ -11,7 +11,7 @@ import {
 import { ReactComponent as InterestPointSVG } from '../../uiMonitor/icons/Landmark.svg'
 import SaveInterestPoint from './SaveInterestPoint'
 
-const INTEREST_POINT_POSITION_FROM_LEFT = 470
+const INTEREST_POINT_POSITION_FROM_LEFT = 478
 
 function InterestPoint() {
   const dispatch = useDispatch()
@@ -66,7 +66,7 @@ function InterestPoint() {
         data-cy="interest-point"
         icon={<InterestPointIcon className="rs-icon" />}
         onClick={openOrCloseInterestPoint}
-        size="sm"
+        size="md"
         title={"Créer un point d'intérêt"}
       />
       <SaveInterestPoint

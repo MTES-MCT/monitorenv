@@ -172,16 +172,22 @@ export function RegulatoryLayerSearch({ isVisible }) {
         isVisible={isVisible}
         shouldReloadSearchOnExtent={shouldReloadSearchOnExtent}
       >
-        {shouldReloadSearchOnExtent && (
-          <ReloadSearch appearance="primary" icon={<SearchIcon className="rs-icon" />} onClick={handleReloadSearch}>
-            Relancer la recherche ici
-          </ReloadSearch>
-        )}
-        {allowResetResults && (
-          <ResetSearch appearance="ghost" icon={<ResetIcon className="rs-icon" />} onClick={handleResetSearch}>
-            Effacer les résultats de la recherche
-          </ResetSearch>
-        )}
+        <ReloadSearch
+          appearance="primary"
+          icon={<SearchIcon className="rs-icon" />}
+          onClick={handleReloadSearch}
+          shouldReloadSearchOnExtent={shouldReloadSearchOnExtent}
+        >
+          Relancer la recherche ici
+        </ReloadSearch>
+        <ResetSearch
+          allowResetResults={allowResetResults}
+          appearance="ghost"
+          icon={<ResetIcon className="rs-icon" />}
+          onClick={handleResetSearch}
+        >
+          Effacer les résultats de la recherche
+        </ResetSearch>
       </ExtraButtonsWrapper>
     </>
   )
@@ -190,10 +196,12 @@ export function RegulatoryLayerSearch({ isVisible }) {
 const Search = styled.div`
   width: 350px;
 `
-const ReloadSearch = styled(IconButton)`
+const ReloadSearch = styled(IconButton)<{ shouldReloadSearchOnExtent: boolean }>`
+  display: ${p => (p.shouldReloadSearchOnExtent ? 'inline-block' : 'none')};
   margin-right: 8px;
 `
-const ResetSearch = styled(IconButton)`
+const ResetSearch = styled(IconButton)<{ allowResetResults: boolean }>`
+  display: ${p => (p.allowResetResults ? 'inline-block' : 'none')};
   background: ${COLORS.white};
 `
 
@@ -226,10 +234,15 @@ const ExtraButtonsWrapper = styled.div<{
   shouldReloadSearchOnExtent: boolean
 }>`
   position: fixed;
-  top: ${p => (p.isVisible ? '15px' : '-50px')};
-  left: calc(
-    50% - ((${p => `${p.shouldReloadSearchOnExtent ? '220px' : '0'} + ${p.allowResetResults ? '285px' : '0'}`}) / 2)
-  );
-  width: calc(${p => `${p.shouldReloadSearchOnExtent ? '220px' : '0'} + ${p.allowResetResults ? '285px' : '0'}`});
-  transition: 0.5s all;
+  top: 15px;
+  left: ${p => {
+    if (p.isVisible && (p.shouldReloadSearchOnExtent || p.allowResetResults)) {
+      return `calc(
+        50% - ((${p.shouldReloadSearchOnExtent ? '220px' : '0px'} + ${p.allowResetResults ? '285px' : '0'}) / 2)
+      )`
+    }
+
+    return '-400px'
+  }}};
+  width: calc(${p => `${p.shouldReloadSearchOnExtent ? '220px' : '0px'} + ${p.allowResetResults ? '285px' : '0px'}`});
 `

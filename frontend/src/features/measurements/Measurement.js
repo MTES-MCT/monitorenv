@@ -99,7 +99,7 @@ function Measurement() {
         data-cy="measurement"
         icon={<MeasurementIconSelector measurementType={measurementTypeToAdd} small />}
         onClick={openOrCloseMeasurement}
-        size="sm"
+        size="md"
         title="prendre une mesure"
       />
       <MeasurementOptions measurementBoxIsOpen={measurementIsOpen}>
