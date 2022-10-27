@@ -52,6 +52,11 @@
   --rs-btn-primary-active-bg: var(--blue-gray);
   --rs-iconbtn-primary-pressed-addon: var(--blue-gray);
   --rs-btn-ghost-active-text: var(--blue-gray);
+  --rs-btn-subtle-text: var(--gunMetal);
+  --rs-btn-subtle-hover-bg: transparent;
+  --rs-btn-subtle-hover-text: var(--blue-yonder);
+  --rs-btn-subtle-active-bg: transparent;
+  --rs-btn-subtle-active-text: var(--blue-gray);
 
   /* Checkbox vars */
   --rs-checkbox-disabled-bg: var(--white);
@@ -167,8 +172,12 @@ label {
   padding: 5px;
 }
 
+.rs-btn-subtle.rs-btn-icon.rs-btn-md {
+  padding: 0;
+}
+
 .rs-btn-icon.rs-btn-sm {
-  padding: 2px;
+  padding: 0px;
 }
 
 .rs-btn-icon.rs-btn-lg {
@@ -199,6 +208,12 @@ label {
 .rs-btn-icon.rs-btn-lg>.rs-icon {
   width: 26px;
   height: 26px;
+}
+
+.rs-btn-icon.rs-btn-sm>.rs-icon {
+  width: 14px;
+  height: 14px;
+  font-size: 14px;
 }
 
 

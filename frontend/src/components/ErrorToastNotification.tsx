@@ -27,7 +27,7 @@ export function ErrorToastNotification() {
         return
       }
 
-      const toastMessage = error.message.split(':')[0]
+      const toastMessage = error.message?.split(':')[0]
 
       switch (error.type) {
         case ErrorType.INFO:

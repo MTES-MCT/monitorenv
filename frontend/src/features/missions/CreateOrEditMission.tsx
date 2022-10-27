@@ -1,7 +1,8 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import { Formik, FieldArray } from 'formik'
-import React, { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Form, Button, IconButton, ButtonToolbar } from 'rsuite'
+import { Button, IconButton, ButtonToolbar } from 'rsuite'
 import styled from 'styled-components'
 
 import {
@@ -14,26 +15,30 @@ import { setSideWindowPath } from '../../components/SideWindowRouter/SideWindowR
 import { COLORS } from '../../constants/constants'
 import { missionStatusEnum } from '../../domain/entities/missions'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
+import { setError } from '../../domain/shared_slices/Global'
 import { setMissionState } from '../../domain/shared_slices/MissionsState'
 import { quitEditMission } from '../../domain/use_cases/missions/missionAndControlLocalisation'
 import { SyncFormValuesWithRedux } from '../../hooks/useSyncFormValuesWithRedux'
+import { FormikForm } from '../../uiMonitor/CustomFormikFields/FormikForm'
 import { ReactComponent as DeleteSVG } from '../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as SaveSVG } from '../../uiMonitor/icons/Save.svg'
 import { SideWindowHeader } from '../side_window/SideWindowHeader'
+import { MissionCancelEditModal } from './MissionCancelEditModal'
+import { MissionDeleteModal } from './MissionDeleteModal'
 import { ActionForm } from './MissionDetails/ActionForm'
 import { ActionsForm } from './MissionDetails/ActionsForm'
 import { GeneralInformationsForm } from './MissionDetails/GeneralInformationsForm'
 import { missionFactory } from './Missions.helpers'
-import { MissionValidationModal } from './MissionValidationModal'
 
 export function CreateOrEditMission({ routeParams }) {
   const dispatch = useDispatch()
   const [currentActionIndex, setCurrentActionIndex] = useState(null)
   const [errorOnSave, setErrorOnSave] = useState(false)
   const [errorOnDelete, setErrorOnDelete] = useState(false)
-  const [confirmationModalIsOpen, setConfirmationModalIsOpen] = useState(false)
+  const [cancelEditModalIsOpen, setCancelEditModalIsOpen] = useState(false)
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
 
-  const id = routeParams?.params?.id && parseInt(routeParams?.params?.id)
+  const id = routeParams?.params?.id && parseInt(routeParams?.params?.id, 10)
 
   const { missionToEdit } = useGetMissionsQuery(undefined, {
     selectFromResult: ({ data }) => ({
@@ -57,27 +62,31 @@ export function CreateOrEditMission({ routeParams }) {
 
   const handleSubmitForm = values => {
     upsertMission(values).then(response => {
-      const { data, error } = response
-      if (data) {
+      if ('data' in response) {
         dispatch(quitEditMission)
         dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))
         setErrorOnSave(false)
       } else {
-        console.log(error)
+        dispatch(setError(response.error))
         setErrorOnSave(true)
       }
     })
   }
 
   const handleConfirmFormCancelation = () => {
-    setConfirmationModalIsOpen(true)
+    setCancelEditModalIsOpen(true)
   }
-
+  const handleConfirmDelete = () => {
+    setDeleteModalIsOpen(true)
+  }
+  const handleReturnToEdition = () => {
+    setCancelEditModalIsOpen(false)
+    setDeleteModalIsOpen(false)
+  }
   const handleDelete = () => {
     deleteMission({ id }).then(response => {
-      const { error } = response
-      if (error) {
-        console.log(error)
+      if ('error' in response) {
+        dispatch(setError(response.error))
         setErrorOnDelete(true)
       } else {
         dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))
@@ -85,16 +94,11 @@ export function CreateOrEditMission({ routeParams }) {
     })
   }
   const handleCancelForm = () => {
-    console.log('form canceled', handleConfirmFormCancelation)
-  }
-
-  const handleCancel = () => {
     dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))
   }
 
   return (
     <EditMissionWrapper data-cy="editMissionWrapper">
-      <MissionValidationModal onClose={handleCancelForm} open={confirmationModalIsOpen} />
       <SideWindowHeader
         title={`Edition de la mission${
           isLoadingUpdateMission || isLoadingCreateMission ? ' - Enregistrement en cours' : ''
@@ -127,7 +131,13 @@ export function CreateOrEditMission({ routeParams }) {
           }
 
           return (
-            <Form onReset={formikProps.handleReset} onSubmit={formikProps.handleSubmit}>
+            <FormikForm>
+              <MissionCancelEditModal
+                onCancel={handleReturnToEdition}
+                onConfirm={handleCancelForm}
+                open={cancelEditModalIsOpen}
+              />
+              <MissionDeleteModal onCancel={handleReturnToEdition} onConfirm={handleDelete} open={deleteModalIsOpen} />
               <SyncFormValuesWithRedux callback={setMissionState} />
               <Wrapper>
                 <FirstColumn>
@@ -163,11 +173,11 @@ export function CreateOrEditMission({ routeParams }) {
                 <FormActionsWrapper>
                   {
                     // id is undefined if creating a new mission
-                    id && (
+                    !(id === undefined) && (
                       <IconButton
                         appearance="ghost"
                         icon={<DeleteIcon className="rs-icon" />}
-                        onClick={handleDelete}
+                        onClick={handleConfirmDelete}
                         type="button"
                       >
                         Supprimer la mission
@@ -175,7 +185,7 @@ export function CreateOrEditMission({ routeParams }) {
                     )
                   }
                   <Separator />
-                  <Button onClick={handleCancel} type="button">
+                  <Button onClick={handleConfirmFormCancelation} type="button">
                     Annuler
                   </Button>
                   <IconButton appearance="ghost" icon={<SaveSVG className="rs-icon" />} type="submit">
@@ -194,7 +204,7 @@ export function CreateOrEditMission({ routeParams }) {
                 {errorOnSave && <ErrorOnSave>Oups... Erreur au moment de la sauvegarde</ErrorOnSave>}
                 {errorOnDelete && <ErrorOnDelete>Oups... Erreur au moment de la suppression</ErrorOnDelete>}
               </Footer>
-            </Form>
+            </FormikForm>
           )
         }}
       </Formik>

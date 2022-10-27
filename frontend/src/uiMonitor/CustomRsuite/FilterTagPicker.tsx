@@ -1,28 +1,39 @@
-import { MutableRefObject, useRef } from 'react'
+import { MutableRefObject, useRef, useState } from 'react'
 import { TagPicker } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../constants/constants'
 
 export function FilterTagPicker({ onChange, value, ...props }) {
+  const [displayPlaceholder, setDisplayPlaceholder] = useState(true)
   const filterWrapperRef = useRef() as MutableRefObject<HTMLDivElement>
   const { placeholder, style, ...rest } = props
   const selectedItems = value?.length
+  const hidePlaceholder = () => {
+    setDisplayPlaceholder(false)
+  }
+  const showPlaceholder = () => {
+    setDisplayPlaceholder(true)
+  }
 
   return (
     <FilterWrapper style={style}>
-      <InputContent>
-        {placeholder}
-        {selectedItems > 0 && <strong> ({selectedItems})</strong>}
-      </InputContent>
+      <PlaceholderWrapper displayPlaceholder={displayPlaceholder}>
+        <PlaceholderContent>
+          {placeholder} {selectedItems > 0 && <strong> ({selectedItems})</strong>}
+        </PlaceholderContent>
+      </PlaceholderWrapper>
       <StyledTagPicker
         // eslint-disable-next-line react/jsx-props-no-spreading
         {...rest}
-        $selectedItems={selectedItems}
         cleanable={false}
         container={() => filterWrapperRef.current}
         onChange={onChange}
+        onEnter={hidePlaceholder}
+        onExit={showPlaceholder}
         placeholder=" "
+        searchable
+        selectedItems={selectedItems}
         value={value}
       />
       <MenuWrapper ref={filterWrapperRef} />
@@ -30,9 +41,9 @@ export function FilterTagPicker({ onChange, value, ...props }) {
   )
 }
 
-const StyledTagPicker = styled(TagPicker)`
+const StyledTagPicker = styled(TagPicker)<{ selectedItems: number }>`
   background-color: transparent;
-  margin-bottom: ${props => (props.$selectedItems > 0 ? '36px' : '0')};
+  margin-bottom: ${props => (props.selectedItems > 0 ? '36px' : '0')};
   width: 100%;
   min-height: 36px;
   border: 0;
@@ -55,14 +66,18 @@ const StyledTagPicker = styled(TagPicker)`
   .rs-tag {
     background-color: ${COLORS.blueYonder};
     color: ${COLORS.white};
+    margin-left: 0 !important;
+    margin-right: 5px;
   }
   .rs-picker-tag-wrapper {
-    display: ${props => (props.$selectedItems > 0 ? 'block' : 'none')};
+    // display: ${props => (props.selectedItems > 0 ? 'block' : 'none')};
     top: 36px;
     width: 100%;
-  }
-  .placement-bottom-start.rs-picker-picker-check-menu.rs-picker-menu {
-    background-color: red !important;
+    > .rs-picker-search {
+      display: block;
+      position: absolute;
+      top: -38px;
+    }
   }
 `
 const MenuWrapper = styled.div`
@@ -76,9 +91,15 @@ const FilterWrapper = styled.div`
   min-width: 100px;
 `
 
-const InputContent = styled.div`
+const PlaceholderWrapper = styled.div<{ displayPlaceholder: boolean }>`
+  display: ${p => (p.displayPlaceholder ? 'block' : 'none')};
   position: absolute;
   top: 4px;
+  left: 50%;
   font-size: 13px;
-  margin-left: 10px;
+`
+const PlaceholderContent = styled.div`
+  position: relative;
+  left: -50%;
+  white-space: nowrap;
 `

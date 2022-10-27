@@ -19,7 +19,7 @@ import { resetSearchExtent, setRegulatoryLayersSearchResult, setSearchExtent } f
 import { RegulatoryLayerSearchInput } from './RegulatoryLayerSearchInput'
 import { RegulatoryLayerSearchResultList } from './RegulatoryLayerSearchResultList'
 
-export function RegulatoryLayerSearch() {
+export function RegulatoryLayerSearch({ isVisible }) {
   const dispatch = useDispatch()
   const { regulatoryLayers } = useAppSelector(state => state.regulatory)
   const { regulatoryLayersSearchResult: results } = useAppSelector(state => state.regulatoryLayerSearch)
@@ -50,7 +50,6 @@ export function RegulatoryLayerSearch() {
       },
       tokenize: 'full'
     })
-
     regulatoryLayers?.forEach(layer => RegulatoryLayersIndex.add(layer))
 
     return (searchedText, geofilter, extent, filterOnThemes) => {
@@ -98,6 +97,7 @@ export function RegulatoryLayerSearch() {
     setShouldReloadSearchOnExtent(false)
     setFilterSearchOnMapExtent(false)
     setGlobalSearchText('')
+    setFilteredRegulatoryThemes([])
     dispatch(resetSearchExtent())
   }
 
@@ -167,16 +167,22 @@ export function RegulatoryLayerSearch() {
         size="lg"
         title="Définir la zone de recherche et afficher les tracés"
       />
-      {shouldReloadSearchOnExtent && (
-        <ReloadSearch appearance="primary" icon={<SearchIcon className="rs-icon" />} onClick={handleReloadSearch}>
-          Relancer la recherche ici
-        </ReloadSearch>
-      )}
-      {allowResetResults && (
-        <ResetSearch appearance="ghost" icon={<ResetIcon className="rs-icon" />} onClick={handleResetSearch}>
-          Effacer les résultats de la recherche
-        </ResetSearch>
-      )}
+      <ExtraButtonsWrapper
+        allowResetResults={allowResetResults}
+        isVisible={isVisible}
+        shouldReloadSearchOnExtent={shouldReloadSearchOnExtent}
+      >
+        {shouldReloadSearchOnExtent && (
+          <ReloadSearch appearance="primary" icon={<SearchIcon className="rs-icon" />} onClick={handleReloadSearch}>
+            Relancer la recherche ici
+          </ReloadSearch>
+        )}
+        {allowResetResults && (
+          <ResetSearch appearance="ghost" icon={<ResetIcon className="rs-icon" />} onClick={handleResetSearch}>
+            Effacer les résultats de la recherche
+          </ResetSearch>
+        )}
+      </ExtraButtonsWrapper>
     </>
   )
 }
@@ -185,15 +191,10 @@ const Search = styled.div`
   width: 350px;
 `
 const ReloadSearch = styled(IconButton)`
-  position: fixed;
-  top: 15px;
-  left: 500px;
+  margin-right: 8px;
 `
 const ResetSearch = styled(IconButton)`
-  position: fixed;
   background: ${COLORS.white};
-  top: 15px;
-  left: 734px;
 `
 
 const SearchIcon = styled(SearchIconSVG)`
@@ -210,12 +211,25 @@ const ZoomIcon = styled(ZoomIconSVG)`
   height: 22px;
 `
 const SearchOnExtentButton = styled(IconButton)`
-  position: fixed;
-  top: 10px;
-  left: 410px;
+  position: absolute;
+  top: 0;
+  left: 350px;
   margin-left: 5px;
   padding: 2px;
   flex-grow: 0;
   flex-shrink: 0;
+  transition: 0.5s all;
+`
+const ExtraButtonsWrapper = styled.div<{
+  allowResetResults: boolean
+  isVisible: boolean
+  shouldReloadSearchOnExtent: boolean
+}>`
+  position: fixed;
+  top: ${p => (p.isVisible ? '15px' : '-50px')};
+  left: calc(
+    50% - ((${p => `${p.shouldReloadSearchOnExtent ? '220px' : '0'} + ${p.allowResetResults ? '285px' : '0'}`}) / 2)
+  );
+  width: calc(${p => `${p.shouldReloadSearchOnExtent ? '220px' : '0'} + ${p.allowResetResults ? '285px' : '0'}`});
   transition: 0.5s all;
 `

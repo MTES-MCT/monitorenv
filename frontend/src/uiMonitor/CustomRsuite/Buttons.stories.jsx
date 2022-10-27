@@ -136,41 +136,31 @@ ButtonsStyles.args = {
 function TemplateIconButtons({ label, ...args }) {
   return (
     <>
-      <h3>Default size (md)</h3>
+      <h3>Primary</h3>
+      <p>(rsuite: appearance=&quot;primary&quot;)</p>
       <ButtonToolbar>
-        <IconButton appearance="default" {...args} icon={<CalendarSVG className="rs-icon" />} />
+        <IconButton appearance="primary" size="lg" {...args} icon={<CalendarSVG className="rs-icon" />} />
         <IconButton appearance="primary" {...args} icon={<CalendarSVG className="rs-icon" />} />
-        <IconButton appearance="link" {...args} icon={<CalendarSVG className="rs-icon" />} />
-        <IconButton appearance="subtle" {...args} icon={<CalendarSVG className="rs-icon" />} />
-        <IconButton appearance="ghost" {...args} icon={<CalendarSVG className="rs-icon" />} />
-      </ButtonToolbar>
-      <br />
-      <h3>Small</h3>
-      <ButtonToolbar>
-        <IconButton appearance="default" size="sm" {...args} icon={<CalendarSVG className="rs-icon" />} />
-        <IconButton appearance="primary" size="sm" {...args} icon={<CalendarSVG className="rs-icon" />} />
-        <IconButton appearance="link" size="sm" {...args} icon={<CalendarSVG className="rs-icon" />} />
-        <IconButton appearance="subtle" size="sm" {...args} icon={<CalendarSVG className="rs-icon" />} />
-        <IconButton appearance="ghost" size="sm" {...args} icon={<CalendarSVG className="rs-icon" />} />
-      </ButtonToolbar>
-      <br />
-      <h3>Medium</h3>
-      <ButtonToolbar>
-        <IconButton appearance="default" size="md" {...args} icon={<CalendarSVG className="rs-icon" />} />
         <IconButton appearance="primary" size="md" {...args} icon={<CalendarSVG className="rs-icon" />} />
-        <IconButton appearance="link" size="md" {...args} icon={<CalendarSVG className="rs-icon" />} />
-        <IconButton appearance="subtle" size="md" {...args} icon={<CalendarSVG className="rs-icon" />} />
+      </ButtonToolbar>
+      <br />
+      <h3>Secondary</h3>
+      <p>(rsuite: appearance=&quot;ghost&quot;)</p>
+      <ButtonToolbar>
+        <IconButton appearance="ghost" size="lg" {...args} icon={<CalendarSVG className="rs-icon" />} />
+        <IconButton appearance="ghost" {...args} icon={<CalendarSVG className="rs-icon" />} />
         <IconButton appearance="ghost" size="md" {...args} icon={<CalendarSVG className="rs-icon" />} />
       </ButtonToolbar>
       <br />
-      <h3>Large</h3>
+      <h3>Tertiary</h3>
+      <p>(rsuite: appearance=&quot;subtle&quot;)</p>
       <ButtonToolbar>
-        <IconButton appearance="default" size="lg" {...args} icon={<CalendarSVG className="rs-icon" />} />
-        <IconButton appearance="primary" size="lg" {...args} icon={<CalendarSVG className="rs-icon" />} />
-        <IconButton appearance="link" size="lg" {...args} icon={<CalendarSVG className="rs-icon" />} />
         <IconButton appearance="subtle" size="lg" {...args} icon={<CalendarSVG className="rs-icon" />} />
-        <IconButton appearance="ghost" size="lg" {...args} icon={<CalendarSVG className="rs-icon" />} />
+        <IconButton appearance="subtle" {...args} icon={<CalendarSVG className="rs-icon" />} />
+        <IconButton appearance="subtle" size="md" {...args} icon={<CalendarSVG className="rs-icon" />} />
+        <IconButton appearance="subtle" size="sm" {...args} icon={<CalendarSVG className="rs-icon" />} />
       </ButtonToolbar>
+      <br />
       <br />
     </>
   )
@@ -182,6 +172,8 @@ function TemplateSpecialStates({ label, ...args }) {
     <>
       <ButtonToolbar>
         <IconButton active appearance="primary" {...args} icon={<CalendarSVG className="rs-icon" />} />
+        <IconButton active appearance="ghost" {...args} icon={<CalendarSVG className="rs-icon" />} />
+        <IconButton active appearance="subtle" {...args} icon={<CalendarSVG className="rs-icon" />} />
         <IconButton active appearance="primary" {...args} icon={<CalendarSVG className="rs-icon" />}>
           {label}
         </IconButton>
@@ -201,6 +193,8 @@ function TemplateSpecialStates({ label, ...args }) {
       <br />
       <ButtonToolbar>
         <IconButton appearance="primary" disabled {...args} icon={<CalendarSVG className="rs-icon" />} />
+        <IconButton appearance="ghost" disabled {...args} icon={<CalendarSVG className="rs-icon" />} />
+        <IconButton appearance="subtle" disabled {...args} icon={<CalendarSVG className="rs-icon" />} />
         <IconButton appearance="primary" disabled {...args} icon={<CalendarSVG className="rs-icon" />}>
           {label}
         </IconButton>

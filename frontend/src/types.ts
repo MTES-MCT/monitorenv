@@ -39,3 +39,10 @@ export type RegulatoryLayerType = {
   properties: RegulatoryAreaProperties
   type: 'Feature'
 }
+
+export type MonitorEnum = {
+  [key: string]: {
+    code: string
+    libelle: string
+  }
+}

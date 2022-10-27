@@ -35,7 +35,7 @@ export const SideWindow = forwardRef((props, ref) => {
           <Wrapper ref={ref}>
             {isPreloading ? (
               <Loading>
-                <FulfillingBouncingCircleSpinner color={COLORS.grayShadow} size={100} />
+                <FulfillingBouncingCircleSpinner color={COLORS.slateGray} size={100} />
                 <Text data-cy="first-loader">Chargement...</Text>
               </Loading>
             ) : (
@@ -63,7 +63,7 @@ const Loading = styled.div`
 const Text = styled.span`
   margin-top: 10px;
   font-size: 13px;
-  color: ${COLORS.grayShadow};
+  color: ${COLORS.slateGray};
   bottom: -17px;
   position: relative;
 `

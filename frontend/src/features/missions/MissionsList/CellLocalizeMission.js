@@ -25,7 +25,7 @@ export function CellLocalizeMission({ dataKey, rowData, ...props }) {
 
   return (
     <CustomCell {...props}>
-      <IconButton icon={<LocalizeIcon className="rs-icon" />} onClick={handleZoomToMission} size="sm" />
+      <IconButton icon={<LocalizeIcon className="rs-icon" />} onClick={handleZoomToMission} size="md" />
     </CustomCell>
   )
 }

@@ -1,6 +1,7 @@
 import GeoJSON from 'ol/format/GeoJSON'
 import { Vector } from 'ol/layer'
 import VectorSource from 'ol/source/Vector'
+import { getArea } from 'ol/sphere'
 import { MutableRefObject, useEffect, useRef } from 'react'
 
 import { Layers } from '../../../domain/entities/layers'
@@ -37,6 +38,7 @@ export function RegulatoryLayers({ map }: { map: OpenLayerMap }) {
             name: Layers.REGULATORY_ENV_PREVIEW.code
           },
           renderBuffer: 4,
+          renderOrder: (a, b) => b.get('area') - a.get('area'),
           source: getVectorSource(),
           style: getRegulatoryLayerStyle,
           updateWhileAnimating: true,
@@ -67,7 +69,9 @@ export function RegulatoryLayers({ map }: { map: OpenLayerMap }) {
               featureProjection: OPENLAYERS_PROJECTION
             }).readFeature(regulatorylayer.geometry)
             feature.setId(`${Layers.REGULATORY_ENV.code}:${regulatorylayer.id}`)
-            feature.setProperties({ layerId: regulatorylayer.id, ...regulatorylayer.properties })
+            const geometry = feature.getGeometry()
+            const area = geometry && getArea(geometry)
+            feature.setProperties({ area, layerId: regulatorylayer.id, ...regulatorylayer.properties })
 
             feats.push(feature)
           }

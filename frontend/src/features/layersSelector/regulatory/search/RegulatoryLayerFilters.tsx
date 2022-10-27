@@ -18,9 +18,11 @@ export function RegulatoryLayerFilters({ filteredRegulatoryThemes, regulatoryThe
         placeholder="Thématiques de contrôle"
         value={filteredRegulatoryThemes}
       />
-      <ResetFilters appearance="link" onClick={handleResetFilters}>
-        Réinitialiser les filtres
-      </ResetFilters>
+      {filteredRegulatoryThemes?.length > 0 && (
+        <ResetFilters appearance="link" onClick={handleResetFilters}>
+          Réinitialiser les filtres
+        </ResetFilters>
+      )}
     </FiltersWrapper>
   )
 }
@@ -29,5 +31,8 @@ const FiltersWrapper = styled.div`
   background-color: ${COLORS.white};
   padding: 16px;
   text-align: left;
+  border-top: 2px solid ${COLORS.lightGray};
 `
-const ResetFilters = styled(Button)``
+const ResetFilters = styled(Button)`
+  padding: 0px;
+`

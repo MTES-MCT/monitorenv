@@ -21,6 +21,6 @@ export function CellEditMission({ dataKey, rowData, ...props }) {
 
 const CustomCell = styled(Table.Cell)`
   .rs-table-cell-content {
-    padding-top: 7px;
+    padding-top: 10px;
   }
 `

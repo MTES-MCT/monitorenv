@@ -18,7 +18,6 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { RegulatoryLayerLegend } from '../../../../ui/RegulatoryLayerLegend'
 import { ReactComponent as CloseSVG } from '../../../../uiMonitor/icons/Close.svg'
 import { ReactComponent as DisplaySVG } from '../../../../uiMonitor/icons/Display.svg'
-import { ReactComponent as HideIconSVG } from '../../../../uiMonitor/icons/Hide.svg'
 import { ReactComponent as SummarySVG } from '../../../../uiMonitor/icons/Summary.svg'
 import { REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT } from '../search/RegulatoryLayerSearchResultZone'
 
@@ -72,33 +71,37 @@ export function RegulatoryLayerZone({ regulatoryZone }) {
         {metadataIsShown ? (
           <IconButton
             active
-            icon={<CustomREGPaperIcon />}
+            appearance="subtle"
+            icon={<CustomREGPaperIcon className="rs-icon" />}
             onClick={toggleRegulatoryZoneMetadata}
-            size="sm"
+            size="md"
             title="Fermer la réglementation"
           />
         ) : (
           <IconButton
-            icon={<CustomREGPaperIcon />}
+            appearance="subtle"
+            icon={<CustomREGPaperIcon className="rs-icon" />}
             onClick={toggleRegulatoryZoneMetadata}
-            size="sm"
+            size="md"
             title="Afficher la réglementation"
           />
         )}
 
         <IconButton
+          appearance="subtle"
           data-cy={
             regulatoryZoneIsShowed ? 'regulatory-layers-my-zones-zone-hide' : 'regulatory-layers-my-zones-zone-show'
           }
-          icon={regulatoryZoneIsShowed ? <DisplaySVG /> : <HideIconSVG />}
+          icon={regulatoryZoneIsShowed ? <ShowIcon className="rs-icon" /> : <HideIcon className="rs-icon" />}
           onClick={toggleLayerDisplay}
-          size="sm"
+          size="md"
           title={regulatoryZoneIsShowed ? 'Cacher la zone' : 'Afficher la zone'}
         />
 
         <IconButton
+          appearance="subtle"
           data-cy="regulatory-layers-my-zones-zone-delete"
-          icon={<CloseSVG />}
+          icon={<CloseSVG className="rs-icon" />}
           onClick={handleRemoveZone}
           size="sm"
           title="Supprimer la zone de ma sélection"
@@ -142,6 +145,17 @@ const Icons = styled.span`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  flex: 1;
+  flex: 0;
   margin-right: 4px;
+  > * {
+    margin-right: 4px;
+    margin-left: 4px;
+  }
+`
+
+const ShowIcon = styled(DisplaySVG)`
+  color: ${COLORS.blueGray};
+`
+const HideIcon = styled(DisplaySVG)`
+  color: ${COLORS.slateGray};
 `

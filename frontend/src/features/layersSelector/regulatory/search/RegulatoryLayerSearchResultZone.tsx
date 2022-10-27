@@ -71,10 +71,11 @@ export function RegulatoryLayerSearchResultZone({ regulatoryZone, searchedText }
       </Name>
       <Icons>
         <IconButton
+          appearance="subtle"
           data-cy="regulatory-zone-check"
           icon={isZoneSelected ? <PinFullSVGIcon className="rs-icon" /> : <PinSVGIcon className="rs-icon" />}
           onClick={handleSelectRegulatoryZone}
-          size="sm"
+          size="md"
         />
       </Icons>
     </Zone>
@@ -114,16 +115,23 @@ const Icons = styled.span`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  flex: 1;
+  flex: 0;
   margin-right: 4px;
 `
 
-const PinSVGIcon = styled(PinSVG)``
+const PinSVGIcon = styled(PinSVG)`
+  color: ${COLORS.slateGray};
+  :hover,
+  :focus,
+  :active {
+    color: ${COLORS.blueYonder};
+  }
+`
 const PinFullSVGIcon = styled(PinFullSVG)`
   color: ${COLORS.blueGray};
   :hover,
-  :focus {
-    color: ${COLORS.white};
+  :focus,
+  :active {
+    color: ${COLORS.blueYonder};
   }
-  :active ;
 `

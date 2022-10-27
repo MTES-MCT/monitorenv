@@ -1,17 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-/* eslint-disable */
-/** @namespace MissionFiltersReducer */
-const MissionFiltersReducer = null
-/* eslint-enable */
-
-const initialState = {
+type MissionFiltersSliceType = {
+  missionNatureFilter: string[]
+  missionStatusFilter: string[]
+  missionTypeFilter: string[]
+}
+const initialState: MissionFiltersSliceType = {
   missionNatureFilter: [],
   missionStatusFilter: [],
   missionTypeFilter: []
 }
 const missionFiltersSlice = createSlice({
-  initialState: { ...initialState },
+  initialState,
   name: 'missionFilters',
   reducers: {
     resetMissionFilters() {

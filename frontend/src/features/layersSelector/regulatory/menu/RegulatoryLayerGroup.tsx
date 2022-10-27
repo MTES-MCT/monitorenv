@@ -12,17 +12,19 @@ import {
 } from '../../../../domain/shared_slices/Regulatory'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReactComponent as CloseIconSVG } from '../../../../uiMonitor/icons/Close.svg'
-import { ReactComponent as ShowIconSVG } from '../../../../uiMonitor/icons/Display.svg'
-import { ReactComponent as HideIconSVG } from '../../../../uiMonitor/icons/Hide.svg'
+import { ReactComponent as DisplaySVG } from '../../../../uiMonitor/icons/Display.svg'
 import { REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT } from '../search/RegulatoryLayerSearchResultZone'
 import { RegulatoryLayerZone } from './RegulatoryLayerZone'
 
-export function RegulatoryLayerGroupSecondLevel({ groupName, layers }) {
+export function RegulatoryLayerGroup({ groupName, layers }) {
   const dispatch = useDispatch()
   const { showedRegulatoryLayerIds } = useAppSelector(state => state.regulatory)
+  const { regulatoryMetadataLayerId } = useAppSelector(state => state.regulatoryMetadata)
   const groupLayerIds = layers.map(l => l.id)
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
   const regulatoryZonesAreShowed = _.intersection(groupLayerIds, showedRegulatoryLayerIds).length > 0
+  const metadataIsShowed = _.includes(groupLayerIds, regulatoryMetadataLayerId)
+
   const toggleLayerDisplay = e => {
     e.stopPropagation()
     if (regulatoryZonesAreShowed) {
@@ -31,14 +33,21 @@ export function RegulatoryLayerGroupSecondLevel({ groupName, layers }) {
       dispatch(showRegulatoryLayer(groupLayerIds))
     }
   }
+
   const handleRemoveZone = e => {
     e.stopPropagation()
     dispatch(removeRegulatoryZonesFromMyLayers(groupLayerIds))
   }
 
+  const toggleZonesAreOpen = () => {
+    if (!metadataIsShowed) {
+      setZonesAreOpen(!zonesAreOpen)
+    }
+  }
+
   return (
     <>
-      <LayerTopic onClick={() => setZonesAreOpen(!zonesAreOpen)}>
+      <LayerTopic onClick={toggleZonesAreOpen}>
         <TopicName data-cy="regulatory-layer-topic" title={groupName}>
           {groupName}
         </TopicName>
@@ -48,22 +57,25 @@ export function RegulatoryLayerGroupSecondLevel({ groupName, layers }) {
           </TagGroup>
           {regulatoryZonesAreShowed ? (
             <IconButton
+              appearance="subtle"
               data-cy="regulatory-layers-my-zones-zone-hide"
-              icon={<ShowIconSVG className="rs-icon" />}
+              icon={<ShowIcon className="rs-icon" />}
               onClick={toggleLayerDisplay}
-              size="sm"
+              size="md"
               title="Cacher la/les zone(s)"
             />
           ) : (
             <IconButton
+              appearance="subtle"
               data-cy="regulatory-layers-my-zones-zone-show"
-              icon={<HideIconSVG className="rs-icon" />}
+              icon={<HideIcon className="rs-icon" />}
               onClick={toggleLayerDisplay}
-              size="sm"
+              size="md"
               title="Afficher la/les zone(s)"
             />
           )}
           <IconButton
+            appearance="subtle"
             data-cy="regulatory-layers-my-zones-zone-delete"
             icon={<CloseIconSVG className="rs-icon" />}
             onClick={handleRemoveZone}
@@ -72,7 +84,7 @@ export function RegulatoryLayerGroupSecondLevel({ groupName, layers }) {
           />
         </Icons>
       </LayerTopic>
-      <RegulatoryZones $isOpen={zonesAreOpen} $length={layers?.length}>
+      <RegulatoryZones isOpen={zonesAreOpen || metadataIsShowed} length={layers?.length}>
         {layers?.map(regulatoryZone => (
           <RegulatoryLayerZone key={regulatoryZone.id} regulatoryZone={regulatoryZone} />
         ))}
@@ -120,16 +132,26 @@ const LayerTopic = styled.div`
   }
 `
 
-const RegulatoryZones = styled.div<{ $isOpen: boolean; $length: number }>`
-  height: ${props =>
-    props.$isOpen && props.$length ? props.$length * REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT : 0}px;
+const RegulatoryZones = styled.div<{ isOpen: boolean; length: number }>`
+  height: ${p => (p.isOpen && p.length ? p.length * REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT : 0)}px;
   overflow: hidden;
   transition: 0.5s all;
+  border-bottom: ${p => (p.isOpen ? 1 : 0)}px solid ${COLORS.lightGray};
 `
 const Icons = styled.span`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  flex: 1;
+  flex: 0;
   margin-right: 4px;
+  > * {
+    margin-right: 4px;
+    margin-left: 4px;
+  }
+`
+const ShowIcon = styled(DisplaySVG)`
+  color: ${COLORS.blueGray};
+`
+const HideIcon = styled(DisplaySVG)`
+  color: ${COLORS.slateGray};
 `

@@ -6,6 +6,7 @@ import GeoJSON from 'ol/format/GeoJSON'
 import { all } from 'ol/loadingstrategy'
 import VectorSource from 'ol/source/Vector'
 
+import { COLORS } from '../constants/constants'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../domain/entities/map'
 /**
  *
@@ -23,132 +24,26 @@ export const customHexToRGB = (hexColor, defaultColor) => {
   return aRgb
 }
 
-export const colorSet1 = [
-  '#e51c23',
-  '#e91e63',
-  '#9c27b0',
-  '#673ab7',
-  '#3f51b5',
-  '#5677fc',
-  '#03a9f4',
-  '#00bcd4',
-  '#009688',
-  '#259b24',
-  '#8bc34a',
-  '#afb42b',
-  '#ff9800',
-  '#ff5722',
-  '#795548',
-  '#607d8b'
+export const regulatoryColorsBlues = [
+  COLORS.yaleBlue,
+  COLORS.glaucous,
+  COLORS.blueNcs,
+  COLORS.iceberg,
+  COLORS.lightSteelBlue,
+  COLORS.lightPeriwinkle
+]
+export const regulatoryColorsGreens = [
+  COLORS.aliceBlue,
+  COLORS.lightCyan,
+  COLORS.middleBlueGreen,
+  COLORS.verdigris,
+  COLORS.viridianGreen,
+  COLORS.paoloVeroneseGreen,
+  COLORS.skobeloff,
+  COLORS.blueSapphire,
+  COLORS.indigoDye
 ]
 
-/**
- * generated from https://colorbrewer2.org/
- */
-export const colorSet2 = [
-  '#8dd3c7',
-  '#ffffb3',
-  '#bebada',
-  '#fb8072',
-  '#80b1d3',
-  '#fdb462',
-  '#b3de69',
-  '#fccde5',
-  '#d9d9d9',
-  '#bc80bd',
-  '#ccebc5',
-  '#ffed6f'
-]
-
-export const colorSet3 = [
-  '#767AB2',
-  '#FFD3C7',
-  '#FFB199',
-  '#FF8F66',
-  '#FC4C0D',
-  '#C9390D',
-  '#9B2F08',
-  '#721E04',
-  '#F8F8C9',
-  '#EAE89B',
-  '#EBEB60',
-  '#D9D932',
-  '#B3B312',
-  '#969600',
-  '#717100',
-  '#EAD0B2',
-  '#DCB57F',
-  '#CF994F',
-  '#AD6918',
-  '#844F10',
-  '#703F09',
-  '#512A03',
-  '#7B9FCC',
-  '#BBDDC4',
-  '#86C195',
-  '#449C5A',
-  '#087021',
-  '#0B541E',
-  '#073613',
-  '#041B0A',
-  '#DFF7F3',
-  '#C7EAE5',
-  '#91CFC9',
-  '#56B3AB',
-  '#499390',
-  '#36696B',
-  '#294F50'
-]
-
-export const reds = [
-  '#FFD3C7',
-  '#FFB199',
-  '#FFB199',
-  '#FF8F66',
-  '#FF8F66',
-  '#FC4C0D',
-  '#FC4C0D',
-  '#C9390D',
-  '#9B2F08',
-  '#721E04'
-]
-export const yellows = [
-  '#F8F8C9',
-  '#EAE89B',
-  '#EAE89B',
-  '#EBEB60',
-  '#EBEB60',
-  '#D9D932',
-  '#D9D932',
-  '#B3B312',
-  '#969600',
-  '#717100'
-]
-export const browns = [
-  '#EAD0B2',
-  '#DCB57F',
-  '#DCB57F',
-  '#CF994F',
-  '#CF994F',
-  '#AD6918',
-  '#AD6918',
-  '#844F10',
-  '#703F09',
-  '#512A03'
-]
-
-export const greens = [
-  '#BBDDC4',
-  '#86C195',
-  '#86C195',
-  '#449C5A',
-  '#449C5A',
-  '#087021',
-  '#087021',
-  '#0B541E',
-  '#073613',
-  '#041B0A'
-]
 /**
  * Get a color from palette from string
  * https://gist.github.com/0x263b/2bdd90886c2036a1ad5bcf06d6e6fb37
@@ -168,7 +63,7 @@ export function stringToArrayItem(str, arr) {
 }
 
 export function stringToColorInGroup(group, name) {
-  const colorSet = stringToArrayItem(group, [reds, yellows, browns, greens])
+  const colorSet = stringToArrayItem(group, [regulatoryColorsBlues, regulatoryColorsGreens])
 
   return stringToArrayItem(name, colorSet)
 }

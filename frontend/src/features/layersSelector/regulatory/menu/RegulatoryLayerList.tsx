@@ -1,11 +1,10 @@
 import _ from 'lodash'
-import React from 'react'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
-import { RegulatoryLayerGroupSecondLevel } from './RegulatoryLayerGroupSecondLevel'
+import { RegulatoryLayerGroup } from './RegulatoryLayerGroup'
 
-function RegulatoryLayerSearchResultList({ results }) {
+export function RegulatoryLayerList({ results }) {
   if (_.isEmpty(results)) {
     return (
       <List>
@@ -20,7 +19,7 @@ function RegulatoryLayerSearchResultList({ results }) {
     <List>
       {layersByLayersName &&
         Object.entries(layersByLayersName).map(([layerName, layers]) => (
-          <RegulatoryLayerGroupSecondLevel key={layerName} groupName={layerName} layers={layers} />
+          <RegulatoryLayerGroup key={layerName} groupName={layerName} layers={layers} />
         ))}
     </List>
   )
@@ -43,5 +42,3 @@ const List = styled.ul`
   color: ${COLORS.slateGray};
   transition: 0.5s all;
 `
-
-export default RegulatoryLayerSearchResultList
