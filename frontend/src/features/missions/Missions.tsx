@@ -1,6 +1,6 @@
 import _ from 'lodash'
-import React, { useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useMemo } from 'react'
+import { useDispatch } from 'react-redux'
 import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
@@ -8,6 +8,7 @@ import { useGetMissionsQuery } from '../../api/missionsAPI'
 import { setSideWindowPath } from '../../components/SideWindowRouter/SideWindowRouter.slice'
 import { COLORS } from '../../constants/constants'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
+import { useAppSelector } from '../../hooks/useAppSelector'
 import { ReactComponent as PlusSVG } from '../../uiMonitor/icons/Plus.svg'
 import { SideWindowHeader } from '../side_window/SideWindowHeader'
 import { MissionsTable } from './MissionsList/MissionsTable'
@@ -18,7 +19,7 @@ export function Missions() {
   const dispatch = useDispatch()
   const { data, isError, isLoading } = useGetMissionsQuery(undefined, { pollingInterval: TWO_MINUTES })
 
-  const { missionNatureFilter, missionStatusFilter, missionTypeFilter } = useSelector(state => state.missionFilters)
+  const { missionNatureFilter, missionStatusFilter, missionTypeFilter } = useAppSelector(state => state.missionFilters)
   const filteredData = useMemo(
     () =>
       data?.filter(
@@ -29,14 +30,16 @@ export function Missions() {
       ),
     [data, missionStatusFilter, missionNatureFilter, missionTypeFilter]
   )
+  if (isError) {
+    return <SideWindowWrapper data-cy="listMissionWrapper">Erreur au chargement des données</SideWindowWrapper>
+  }
+  if (isLoading) {
+    return <SideWindowWrapper data-cy="listMissionWrapper">Chargement en cours...</SideWindowWrapper>
+  }
 
   return (
     <SideWindowWrapper data-cy="listMissionWrapper">
-      {isError ? (
-        <>Erreur au chargement des données</>
-      ) : isLoading ? (
-        <>Chargement en cours...</>
-      ) : data ? (
+      {data ? (
         <>
           <SideWindowHeader title="Missions et contrôles">
             <AddNewMissionButton
@@ -49,7 +52,7 @@ export function Missions() {
           <SideWindowContent>
             <MissionsTableFilters />
             <NumberOfDisplayedMissions data-cy="Missions-numberOfDisplayedMissions">
-              {filteredData.length} Mission{filteredData.length > 1 ? 's' : ''}
+              {filteredData?.length} Mission{filteredData && filteredData.length > 1 ? 's' : ''}
             </NumberOfDisplayedMissions>
             <TableWrapper>
               <MissionsTable data={filteredData} isLoading={isLoading} />
@@ -77,7 +80,9 @@ const SideWindowContent = styled.div`
 const NumberOfDisplayedMissions = styled.h3`
   font-size: 13px;
 `
-const AddNewMissionButton = styled(IconButton)``
+const AddNewMissionButton = styled(IconButton)`
+  background: ${COLORS.white};
+`
 
 const TableWrapper = styled.div`
   flex: 1;
