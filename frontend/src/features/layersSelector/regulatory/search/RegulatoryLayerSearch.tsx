@@ -173,15 +173,15 @@ export function RegulatoryLayerSearch({ isVisible }) {
         shouldReloadSearchOnExtent={shouldReloadSearchOnExtent}
       >
         <ReloadSearch
+          $shouldReloadSearchOnExtent={shouldReloadSearchOnExtent}
           appearance="primary"
           icon={<SearchIcon className="rs-icon" />}
           onClick={handleReloadSearch}
-          shouldReloadSearchOnExtent={shouldReloadSearchOnExtent}
         >
           Relancer la recherche ici
         </ReloadSearch>
         <ResetSearch
-          allowResetResults={allowResetResults}
+          $allowResetResults={allowResetResults}
           appearance="ghost"
           icon={<ResetIcon className="rs-icon" />}
           onClick={handleResetSearch}
@@ -196,12 +196,12 @@ export function RegulatoryLayerSearch({ isVisible }) {
 const Search = styled.div`
   width: 350px;
 `
-const ReloadSearch = styled(IconButton)<{ shouldReloadSearchOnExtent: boolean }>`
-  display: ${p => (p.shouldReloadSearchOnExtent ? 'inline-block' : 'none')};
+const ReloadSearch = styled(IconButton)<{ $shouldReloadSearchOnExtent: boolean }>`
+  display: ${p => (p.$shouldReloadSearchOnExtent ? 'inline-block' : 'none')};
   margin-right: 8px;
 `
-const ResetSearch = styled(IconButton)<{ allowResetResults: boolean }>`
-  display: ${p => (p.allowResetResults ? 'inline-block' : 'none')};
+const ResetSearch = styled(IconButton)<{ $allowResetResults: boolean }>`
+  display: ${p => (p.$allowResetResults ? 'inline-block' : 'none')};
   background: ${COLORS.white};
 `
 
