@@ -22,6 +22,10 @@ class JpaMissionRepository(private val dbMissionRepository: IDBMissionRepository
     return dbMissionRepository.findById(missionId).get().toMissionEntity(mapper)
   }
 
+  override fun count() : Long {
+    return dbMissionRepository.count()
+  }
+
   @Transactional
   override fun save(mission: MissionEntity): MissionEntity {
     return dbMissionRepository.save(MissionModel.fromMissionEntity(mission,mapper)).toMissionEntity(mapper)
