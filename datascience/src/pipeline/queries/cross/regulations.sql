@@ -1,6 +1,5 @@
 SELECT 
 id,
-geom,
 st_multi(ST_SimplifyPreserveTopology(ST_CurveToLine(geom), 0.00001)) geom,
 entity_name,
 url,
@@ -26,4 +25,4 @@ WHERE
   geom IS NOT NULL
   AND entity_name IS NOT NULL
   AND layer_name IS NOT NULL
-  AND thematique IS NOT NULL
+  AND "Thematique" IS NOT NULL
