@@ -17,4 +17,8 @@ class JpaRegulatoryAreaRepository(private val dbRegulatoryAreaRepository: IDBReg
   override fun findRegulatoryAreaById(id: Int): RegulatoryAreaEntity {
     return dbRegulatoryAreaRepository.findById(id).get().toRegulatoryArea()
   }
+
+  override fun count() : Long {
+    return dbRegulatoryAreaRepository.count()
+  }
 }

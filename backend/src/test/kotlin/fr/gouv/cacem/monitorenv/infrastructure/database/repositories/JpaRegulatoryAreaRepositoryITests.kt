@@ -83,4 +83,9 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
     assertThat(requestedRegulatoryArea.signataire).isEqualTo(searchedRegulatoryArea.signataire)
   }
 
+  @Test
+  fun `count should return total number of regulatory areas in db`() {
+    val numberOfRegulatoryAreas = jpaRegulatoryAreasRepository.count()
+    assertThat(numberOfRegulatoryAreas).isEqualTo(13)
+  }
 }
