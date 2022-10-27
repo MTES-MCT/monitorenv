@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import { Formik, FieldArray } from 'formik'
 import { useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -22,12 +23,12 @@ import { FormikForm } from '../../uiMonitor/CustomFormikFields/FormikForm'
 import { ReactComponent as DeleteSVG } from '../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as SaveSVG } from '../../uiMonitor/icons/Save.svg'
 import { SideWindowHeader } from '../side_window/SideWindowHeader'
+import { MissionCancelEditModal } from './MissionCancelEditModal'
+import { MissionDeleteModal } from './MissionDeleteModal'
 import { ActionForm } from './MissionDetails/ActionForm'
 import { ActionsForm } from './MissionDetails/ActionsForm'
 import { GeneralInformationsForm } from './MissionDetails/GeneralInformationsForm'
 import { missionFactory } from './Missions.helpers'
-import { MissionCancelEditModal } from './MissionCancelEditModal'
-import { MissionDeleteModal } from './MissionDeleteModal'
 
 export function CreateOrEditMission({ routeParams }) {
   const dispatch = useDispatch()
@@ -76,13 +77,11 @@ export function CreateOrEditMission({ routeParams }) {
     setCancelEditModalIsOpen(true)
   }
   const handleConfirmDelete = () => {
-    
     setDeleteModalIsOpen(true)
   }
-  const handleReturnToEdition = () =>{
+  const handleReturnToEdition = () => {
     setCancelEditModalIsOpen(false)
     setDeleteModalIsOpen(false)
-
   }
   const handleDelete = () => {
     deleteMission({ id }).then(response => {
@@ -97,7 +96,6 @@ export function CreateOrEditMission({ routeParams }) {
   const handleCancelForm = () => {
     dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))
   }
-
 
   return (
     <EditMissionWrapper data-cy="editMissionWrapper">
@@ -131,21 +129,15 @@ export function CreateOrEditMission({ routeParams }) {
             formikProps.setFieldValue('missionStatus', missionStatusEnum.CLOSED.code)
             formikProps.handleSubmit()
           }
-          
+
           return (
             <FormikForm>
-              <MissionCancelEditModal 
-                onConfirm={handleCancelForm} 
-                onCancel={handleReturnToEdition} 
+              <MissionCancelEditModal
+                onCancel={handleReturnToEdition}
+                onConfirm={handleCancelForm}
                 open={cancelEditModalIsOpen}
-                
               />
-              <MissionDeleteModal 
-                onConfirm={handleDelete} 
-                onCancel={handleReturnToEdition} 
-                open={deleteModalIsOpen}
-                
-              />
+              <MissionDeleteModal onCancel={handleReturnToEdition} onConfirm={handleDelete} open={deleteModalIsOpen} />
               <SyncFormValuesWithRedux callback={setMissionState} />
               <Wrapper>
                 <FirstColumn>
