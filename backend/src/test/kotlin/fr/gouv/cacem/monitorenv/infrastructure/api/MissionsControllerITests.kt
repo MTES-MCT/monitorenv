@@ -166,8 +166,8 @@ class MissionsControllerITests {
     )
     val envAction = EnvActionControlEntity(
       id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
-      actionTargetType = "VEHICLE",
-      vehicleType = "VESSEL",
+      actionTargetType = ActionTargetTypeEnum.VEHICLE,
+      vehicleType = VehicleTypeEnum.VESSEL,
       actionNumberOfControls= 4
     )
     val requestBody = CreateOrUpdateMissionDataInput(

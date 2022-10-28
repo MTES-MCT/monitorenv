@@ -4,7 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.natinfs.NatinfEntity
 
 data class NatinfDataOutput(
   val id: Int,
-  val natinf_code: String,
+  val natinfCode: String,
   val regulation: String?,
   val infractionCategory: String?,
   val infraction: String?
@@ -12,7 +12,7 @@ data class NatinfDataOutput(
   companion object {
     fun fromNatinfEntity(natinf: NatinfEntity) = NatinfDataOutput(
       id = natinf.id,
-      natinf_code = natinf.natinf_code,
+      natinfCode = natinf.natinfCode,
       regulation = natinf.regulation,
       infractionCategory = natinf.infractionCategory,
       infraction = natinf.infraction

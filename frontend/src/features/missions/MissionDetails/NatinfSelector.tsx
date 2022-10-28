@@ -1,16 +1,28 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import { useField } from 'formik'
-import React, { useRef } from 'react'
+import { MutableRefObject, useRef, useMemo } from 'react'
 import { Form, Tag, TagPicker } from 'rsuite'
 import styled from 'styled-components'
 
 import { useGetInfractionsQuery } from '../../../api/infractionsAPI'
 
+const sortNatinf = (a, b) => {
+  if (a?.natinfCode < b?.natinfCode) {
+    return -1
+  }
+  if (a?.natinfCode > b?.natinfCode) {
+    return 1
+  }
+
+  return 0
+}
+
 export function NatinfSelector({ infractionPath, ...props }) {
   const [natinfField, , natinfHelpers] = useField(`${infractionPath}.natinf`)
 
-  const selectorRef = useRef()
+  const selectorRef = useRef() as MutableRefObject<HTMLDivElement>
   const { data, isError, isLoading } = useGetInfractionsQuery()
-
+  const sortedData = useMemo(() => data && [...data]?.sort(sortNatinf), [data])
   if (isError) {
     return 'Erreur'
   }
@@ -24,19 +36,14 @@ export function NatinfSelector({ infractionPath, ...props }) {
       <FixedWidthTagPicker
         block
         container={() => selectorRef.current}
-        data={data}
-        labelKey="natinf_code"
+        data={sortedData}
+        labelKey="natinfCode"
         onChange={natinfHelpers.setValue}
-        renderMenuItem={(label, item) => <>{`${item.natinf_code} - ${item.infraction}`}</>}
-        renderValue={(values, items) =>
-          items?.map((tag, index) => <Tag key={index}>{`${tag.natinf_code} - ${tag.infraction}`}</Tag>)
-        }
-        // sort={()=>(a,b) => {
-        //   return a?.natinf_code < b?.natinf_code ? -1 : a?.natinf_code > b?.natinf_code ? 1 : 0;
-        // }}
+        renderMenuItem={(_, item) => `${item.natinfCode} - ${item.infraction}`}
+        renderValue={(_, items) => items?.map(tag => <Tag key={tag.id}>{`${tag.natinfCode} - ${tag.infraction}`}</Tag>)}
         searchable
         value={natinfField.value}
-        valueKey="natinf_code"
+        valueKey="natinfCode"
         virtualized
         {...props}
       />

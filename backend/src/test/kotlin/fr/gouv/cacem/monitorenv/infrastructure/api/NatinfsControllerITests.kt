@@ -39,7 +39,7 @@ class NatinfsControllerITests {
     // Given
     val natinf = NatinfEntity(
       id=1005,
-      natinf_code = "27718",
+      natinfCode = "27718",
       regulation = "ART.L.945-4 AL.1, ART.L.945-5 1°, 2°, 3°, 4° C.RUR",
       infractionCategory = "Pêche",
       infraction = "Debarquement de produits de la peche maritime et de l'aquaculture marine hors d'un port designe"
@@ -51,7 +51,7 @@ class NatinfsControllerITests {
       // Then
       .andExpect(status().isOk)
       .andExpect(jsonPath("$[0].id", equalTo(natinf.id)))
-      .andExpect(jsonPath("$[0].natinf_code", equalTo(natinf.natinf_code)))
+      .andExpect(jsonPath("$[0].natinfCode", equalTo(natinf.natinfCode)))
       .andExpect(jsonPath("$[0].regulation", equalTo(natinf.regulation)))
       .andExpect(jsonPath("$[0].infractionCategory", equalTo(natinf.infractionCategory)))
       .andExpect(jsonPath("$[0].infraction", equalTo(natinf.infraction)))

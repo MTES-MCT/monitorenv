@@ -1,5 +1,6 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import { useField } from 'formik'
-import React, { useRef } from 'react'
+import { MutableRefObject, useRef } from 'react'
 import { Form, TagPicker } from 'rsuite'
 import styled from 'styled-components'
 
@@ -8,7 +9,7 @@ import { protectedSpeciesEnum } from '../../../domain/entities/missions'
 export function ProtectedSpeciesSelector({ name, ...props }) {
   const [protectedSpeciesField, , protectedSpeciesHelpers] = useField(name)
 
-  const selectorRef = useRef()
+  const selectorRef = useRef() as MutableRefObject<HTMLDivElement>
   const data = Object.values(protectedSpeciesEnum)
 
   return (

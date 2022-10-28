@@ -52,7 +52,7 @@ export function CreateOrEditMission({ routeParams }) {
 
   const [deleteMission] = useDeleteMissionMutation()
 
-  const mission = useMemo(() => (id === undefined ? missionFactory() : missionToEdit), [id, missionToEdit])
+  const mission = useMemo(() =>  missionFactory(missionToEdit), [missionToEdit])
 
   const upsertMission = id === undefined ? createMission : updateMission
 
@@ -106,22 +106,7 @@ export function CreateOrEditMission({ routeParams }) {
       />
       <Formik
         enableReinitialize
-        initialValues={{
-          closed_by: mission?.closed_by,
-          closedBy: mission?.closedBy,
-          envActions: mission?.envActions,
-          facade: mission?.facade,
-          geom: mission?.geom,
-          id: mission?.id,
-          inputEndDatetimeUtc: mission?.inputEndDatetimeUtc || '',
-          inputStartDatetimeUtc: mission?.inputStartDatetimeUtc,
-          missionNature: mission?.missionNature,
-          missionStatus: mission?.missionStatus,
-          missionType: mission?.missionType,
-          observations: mission?.observations,
-          openBy: mission?.openBy,
-          resourceUnits: mission?.resourceUnits
-        }}
+        initialValues={mission}
         onSubmit={handleSubmitForm}
       >
         {formikProps => {

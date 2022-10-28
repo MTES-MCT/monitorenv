@@ -12,12 +12,13 @@ data class EnvActionControlEntity(
   val actionSubTheme: String? = null,
   val protectedSpecies: List<String>? = listOf(),
   val actionNumberOfControls: Int? = null,
-  val actionTargetType: String? = null,
-  val vehicleType: String? = null,
-// override val actionTargetType: ActionTargetTypeEnum? = null,
-// override val vehicleType: VehicleTypeEnum? = null,
+//  val actionTargetType: String? = null,
+//  val vehicleType: String? = null,
+  val actionTargetType: ActionTargetTypeEnum? = null,
+  val vehicleType: VehicleTypeEnum? = null,
   val infractions: List<InfractionEntity>? = listOf()
 ): EnvActionEntity(
   id = id,
   actionType = ActionTypeEnum.CONTROL,
 )
+

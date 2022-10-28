@@ -8,7 +8,7 @@ import styled from 'styled-components'
 
 import { useGetControlThemesQuery } from '../../../api/controlThemesAPI'
 import { COLORS } from '../../../constants/constants'
-import { MissionType, MissionControlType, THEME_REQUIRE_PROTECTED_SPECIES } from '../../../domain/entities/missions'
+import { MissionType, EnvActionControlType, THEME_REQUIRE_PROTECTED_SPECIES } from '../../../domain/entities/missions'
 import { usePrevious } from '../../../hooks/usePrevious'
 import { FormikDatePicker, placeholderDateTimePicker } from '../../../uiMonitor/CustomFormikFields/FormikDatePicker'
 import { FormikInputGhost } from '../../../uiMonitor/CustomFormikFields/FormikInput'
@@ -33,7 +33,7 @@ export function ControlForm({
   const {
     setFieldValue,
     values: { envActions }
-  } = useFormikContext<MissionType<MissionControlType>>()
+  } = useFormikContext<MissionType<EnvActionControlType>>()
   const [actionStartDatetimeUtcField] = useField(`envActions.${currentActionIndex}.actionStartDatetimeUtc`)
   const parsedActionStartDatetimeUtc = new Date(actionStartDatetimeUtcField.value)
   const actionTheme = envActions[currentActionIndex]?.actionTheme

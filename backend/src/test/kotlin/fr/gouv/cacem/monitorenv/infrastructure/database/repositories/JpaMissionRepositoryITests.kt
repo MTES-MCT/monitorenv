@@ -109,8 +109,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
       actionSubTheme = "4",
       protectedSpecies = listOf("5"),
       actionNumberOfControls = 12,
-      actionTargetType = "VEHICLE",
-      vehicleType = "VESSEL",
+      actionTargetType = ActionTargetTypeEnum.VEHICLE,
+      vehicleType = VehicleTypeEnum.VESSEL,
       infractions = listOf(infraction)
     )
     val surveillanceAction = EnvActionSurveillanceEntity(
@@ -161,8 +161,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
     val envAction = EnvActionControlEntity(
       id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
-      actionTargetType = "VEHICLE",
-      vehicleType = "VESSEL",
+      actionTargetType = ActionTargetTypeEnum.VEHICLE,
+      vehicleType = VehicleTypeEnum.VESSEL,
       actionNumberOfControls= 4
     )
     val expectedUpdatedMission = MissionEntity(

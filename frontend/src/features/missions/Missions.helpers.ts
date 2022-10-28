@@ -8,23 +8,23 @@ import {
   missionTypeEnum
 } from '../../domain/entities/missions'
 
-export const infractionFactory = ({ id, ...infraction } = {}) => ({
+export const infractionFactory = ({ id, ...infraction } = { id: undefined }) => ({
   companyName: '',
   controlledPersonIdentity: '',
   formalNotice: formalNoticeEnum.NO.code,
   id: uuidv4(),
-  infractionType: '',
+  infractionType: infractionTypeEnum.WITHOUT_REPORT.code,
   natinf: [],
   observations: '',
   registrationNumber: '',
   relevantCourt: '',
-  toProcess: '',
+  toProcess: false,
   vesselSize: '',
   vesselType: '',
   ...infraction
 })
 
-export const actionFactory = ({ actionType, id, ...action } = {}) => {
+export const actionFactory = ({ actionType, id, ...action }) => {
   switch (actionType) {
     case actionTypeEnum.CONTROL.code:
       return {
@@ -69,7 +69,7 @@ export const actionFactory = ({ actionType, id, ...action } = {}) => {
   }
 }
 
-export const missionFactory = mission => ({
+export const missionFactory = (mission = {}) => ({
   closedBy: '',
   envActions: [],
   geom: null,

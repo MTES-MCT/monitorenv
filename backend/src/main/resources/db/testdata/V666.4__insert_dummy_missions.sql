@@ -80,7 +80,6 @@ COPY public.missions (id, mission_type, mission_status, open_by, observations, f
 
 SELECT pg_catalog.setval('public.missions_id_seq', 50, true);
 
-
 --
 -- PostgreSQL database dump complete
 --
