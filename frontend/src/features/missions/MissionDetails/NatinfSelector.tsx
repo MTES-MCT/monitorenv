@@ -24,10 +24,10 @@ export function NatinfSelector({ infractionPath, ...props }) {
   const { data, isError, isLoading } = useGetInfractionsQuery()
   const sortedData = useMemo(() => data && [...data]?.sort(sortNatinf), [data])
   if (isError) {
-    return 'Erreur'
+    return <div>Erreur</div>
   }
   if (isLoading) {
-    return 'Chargement'
+    return <div>Chargement</div>
   }
 
   return (

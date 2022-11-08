@@ -6,7 +6,7 @@ import { Button, IconButton, ButtonToolbar } from 'rsuite'
 import styled from 'styled-components'
 
 import {
-  useGetMissionsQuery,
+  useGetMissionQuery,
   useUpdateMissionMutation,
   useCreateMissionMutation,
   useDeleteMissionMutation
@@ -40,11 +40,7 @@ export function CreateOrEditMission({ routeParams }) {
 
   const id = routeParams?.params?.id && parseInt(routeParams?.params?.id, 10)
 
-  const { missionToEdit } = useGetMissionsQuery(undefined, {
-    selectFromResult: ({ data }) => ({
-      missionToEdit: data?.find(op => op.id === id)
-    })
-  })
+  const { data: missionToEdit } = useGetMissionQuery(id, { skip: !id })
 
   const [updateMission, { isLoading: isLoadingUpdateMission }] = useUpdateMissionMutation()
 
@@ -52,7 +48,7 @@ export function CreateOrEditMission({ routeParams }) {
 
   const [deleteMission] = useDeleteMissionMutation()
 
-  const mission = useMemo(() =>  missionFactory(missionToEdit), [missionToEdit])
+  const mission = useMemo(() => missionFactory(missionToEdit), [missionToEdit])
 
   const upsertMission = id === undefined ? createMission : updateMission
 
@@ -104,11 +100,7 @@ export function CreateOrEditMission({ routeParams }) {
           isLoadingUpdateMission || isLoadingCreateMission ? ' - Enregistrement en cours' : ''
         }`}
       />
-      <Formik
-        enableReinitialize
-        initialValues={mission}
-        onSubmit={handleSubmitForm}
-      >
+      <Formik enableReinitialize initialValues={mission} onSubmit={handleSubmitForm}>
         {formikProps => {
           const handleCloseMission = () => {
             formikProps.setFieldValue('missionStatus', missionStatusEnum.CLOSED.code)
@@ -171,10 +163,10 @@ export function CreateOrEditMission({ routeParams }) {
                   }
                   <Separator />
                   <Button onClick={handleConfirmFormCancelation} type="button">
-                    Annuler
+                    Quitter
                   </Button>
                   <IconButton appearance="ghost" icon={<SaveSVG className="rs-icon" />} type="submit">
-                    Enregistrer
+                    Enregistrer et quitter
                   </IconButton>
                   <IconButton
                     appearance="primary"

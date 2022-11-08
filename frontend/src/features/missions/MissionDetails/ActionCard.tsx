@@ -33,7 +33,7 @@ export function ActionCard({ action, duplicateAction, removeAction, selectAction
             <ControlIcon />
             <SummaryContent>
               <Title>
-                Contrôles{' '}
+                Contrôle{action.actionNumberOfControls > 1 ? 's ' : ' '}
                 {action.actionTheme ? (
                   <Accented>{`${action.actionTheme} ${
                     action.actionSubTheme ? ` - ${action.actionSubTheme}` : ''
@@ -42,14 +42,16 @@ export function ActionCard({ action, duplicateAction, removeAction, selectAction
                   'à renseigner'
                 )}
               </Title>
-              {action.actionNumberOfControls && (
+              {action.actionNumberOfControls > 0 && (
                 <ControlSummary>
                   <Accented>{action.actionNumberOfControls}</Accented>
-                  {` contrôles réalisés sur des cibles de type `}
+                  {` contrôle${action.actionNumberOfControls > 1 ? 's' : ''} réalisé${
+                    action.actionNumberOfControls > 1 ? 's' : ''
+                  } sur des cibles de type `}
                   <Accented>{actionTargetTypeEnum[action.actionTargetType]?.libelle || 'non spécifié'}</Accented>
                 </ControlSummary>
               )}
-              {action.actionNumberOfControls && (
+              {action.actionNumberOfControls > 0 && (
                 <ControlInfractionsTags
                   actionNumberOfControls={action.actionNumberOfControls}
                   infractions={action?.infractions}
@@ -91,12 +93,19 @@ export function ActionCard({ action, duplicateAction, removeAction, selectAction
 
         <ButtonsWrapper>
           <IconButton
+            appearance="subtle"
             icon={<DuplicateSVG className="rs-icon" />}
             onClick={duplicateAction}
-            size="sm"
+            size="md"
             title="dupliquer"
           />
-          <IconButton icon={<DeleteIcon className="rs-icon" />} onClick={removeAction} size="sm" title="supprimer" />
+          <IconButton
+            appearance="subtle"
+            icon={<DeleteIcon className="rs-icon" />}
+            onClick={removeAction}
+            size="md"
+            title="supprimer"
+          />
         </ButtonsWrapper>
       </ActionSummaryWrapper>
     </Action>
@@ -105,13 +114,13 @@ export function ActionCard({ action, duplicateAction, removeAction, selectAction
 
 const Action = styled.div`
   display: flex;
-  margin-top: ${props => (props.selected ? `1px` : '4px')};
-  margin-bottom: ${props => (props.selected ? `1px` : '4px')};
+  margin-top: 4px;
+  margin-bottom: 4px;
 `
 const TimeLine = styled.div`
   display: flex;
   align-items: center;
-  width: 50px;
+  width: 54px;
   margin-right: 16px;
 `
 
@@ -126,17 +135,23 @@ const DateWrapper = styled.div`
 const Time = styled.div`
   font-size: 13px;
 `
-const ActionSummaryWrapper = styled.div`
+const ActionSummaryWrapper = styled.div<{ $type: string; selected: boolean }>`
   display: flex;
   flex: 1;
-  border: ${props => (props.selected ? `3px solid ${COLORS.blueGray}` : `1px solid ${COLORS.lightGray}`)};
-  background: ${props =>
-    props.$type === actionTypeEnum.CONTROL.code
-      ? COLORS.white
-      : props.$type === actionTypeEnum.SURVEILLANCE.code
-      ? COLORS.gainsboro
-      : COLORS.blueGray25};
-  padding: ${props => (props.selected ? `4px` : '6px')};
+  border: ${p => (p.selected ? `3px solid ${COLORS.blueYonder}` : `1px solid ${COLORS.lightGray}`)};
+  background: ${p => {
+    switch (p.$type) {
+      case actionTypeEnum.CONTROL.code:
+        return COLORS.white
+      case actionTypeEnum.SURVEILLANCE.code:
+        return COLORS.gainsboro
+      case actionTypeEnum.NOTE.code:
+        return COLORS.blueGray25
+      default:
+        return COLORS.white
+    }
+  }};
+  padding: ${p => (p.selected ? `4px` : '6px')};
   margin-left: auto;
 `
 
@@ -155,7 +170,7 @@ const SurveillanceIcon = styled(SurveillanceIconSVG)`
   color: ${COLORS.gunMetal};
   width: 16px;
   height: 16px;
-  margin-top: 18px;
+  margin-top: 20px;
   margin-left: 18px;
   margin-right: 8px;
 `
@@ -164,7 +179,7 @@ const NoteIcon = styled(NoteSVG)`
   color: ${COLORS.gunMetal};
   width: 16px;
   height: 16px;
-  margin-top: 18px;
+  margin-top: 20px;
   margin-left: 18px;
   margin-right: 8px;
   flex: 0 0 18px;

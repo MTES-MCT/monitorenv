@@ -1,5 +1,4 @@
 import { useField } from 'formik'
-import React from 'react'
 import { Form, Button, ButtonToolbar } from 'rsuite'
 import styled from 'styled-components'
 
@@ -82,7 +81,6 @@ const FormGroupFixedHeight = styled(Form.Group)`
 
 const FormColumn = styled.div`
   display: inline-block;
-  ${props => `flex: ${props.flex};`}
 `
 const FormColumnWithCheckbox = styled.div`
   display: inline-block;

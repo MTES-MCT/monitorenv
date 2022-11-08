@@ -290,7 +290,7 @@ export const Layers = {
     showMultipleZonesInAdministrativeZones: false,
     subZoneFieldKey: null,
     type: layersType.REGULATORY,
-    zIndex: 1500
+    zIndex: 900
   },
   REGULATORY_ENV_PREVIEW: {
     code: 'REGULATORY_ENV_PREVIEW',
@@ -300,7 +300,8 @@ export const Layers = {
     name: '',
     showMultipleZonesInAdministrativeZones: false,
     subZoneFieldKey: null,
-    type: null
+    type: null,
+    zIndex: 950
   },
   SIOFA: {
     code: 'fao_siofa_areas',

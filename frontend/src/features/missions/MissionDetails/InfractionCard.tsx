@@ -1,5 +1,4 @@
 import { useField } from 'formik'
-import React from 'react'
 import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
@@ -25,20 +24,33 @@ export function InfractionCard({ currentActionIndex, infractionPath, removeInfra
   const [formalNotice] = useField(`${infractionPath}.formalNotice`)
   const [natinf] = useField(`${infractionPath}.natinf`)
 
+  let libelleInfractionType
+  switch (infractionType?.value) {
+    case undefined:
+      libelleInfractionType = 'PV : -'
+      break
+    case infractionTypeEnum.WITHOUT_REPORT.code:
+      libelleInfractionType = infractionTypeEnum.WITHOUT_REPORT.libelle
+      break
+    case infractionTypeEnum.WITH_REPORT.code:
+    default:
+      libelleInfractionType = infractionTypeEnum.WITH_REPORT.libelle
+  }
+
   return (
     <Wrapper>
       <Summary>
         {targetTypeField.value === actionTargetTypeEnum.VEHICLE.code && (
           <VehicleType>
-            {vehicleTypeEnum[vehicleTypeField?.value]?.libelle || 'Non Renseigné'}{' '}
+            {vehicleTypeEnum[vehicleTypeField?.value]?.libelle || 'Non Renseigné'}
             {vehicleTypeField?.value === vehicleTypeEnum.VESSEL.code
-              ? ` – ${vesselTypeEnum[vesselType?.value]?.libelle}`
+              ? ` – ${vesselTypeEnum[vesselType?.value]?.libelle || 'Type non défini'}`
               : ''}
-            &ndash;
+            &nbsp;&ndash;
           </VehicleType>
         )}
         {targetTypeField.value === actionTargetTypeEnum.VEHICLE.code ? (
-          <Identification>{registrationNumber?.value || 'sans immatriculation'}</Identification>
+          <Identification>{registrationNumber?.value || ' sans immatriculation'}</Identification>
         ) : (
           <Identification>
             {companyName?.value ||
@@ -47,13 +59,7 @@ export function InfractionCard({ currentActionIndex, infractionPath, removeInfra
           </Identification>
         )}
         <SummaryDetails>
-          <Info>
-            {infractionType?.value === undefined
-              ? 'PV : -'
-              : infractionType.value
-              ? infractionTypeEnum.WITHOUT_REPORT.libelle
-              : infractionTypeEnum.WITH_REPORT.libelle}
-          </Info>
+          <Info>{libelleInfractionType}</Info>
           <Info>MED : {formalNoticeEnum[formalNotice?.value]?.libelle || '-'}</Info>
           <Info>{natinf.value?.length || '0'} NATINF</Info>
         </SummaryDetails>
@@ -90,10 +96,12 @@ const ButtonsWrapper = styled.div`
 
 const VehicleType = styled.span`
   font-weight: 800;
+  color: ${COLORS.gunMetal};
 `
 
 const Identification = styled.span`
   font-weight: 800;
+  color: ${COLORS.gunMetal};
 `
 
 const SummaryDetails = styled.div``

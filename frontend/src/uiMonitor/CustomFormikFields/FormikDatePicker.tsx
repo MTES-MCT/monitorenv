@@ -1,5 +1,6 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import { useField } from 'formik'
-import React, { useRef } from 'react'
+import { MutableRefObject, useRef } from 'react'
 import { DatePicker } from 'rsuite'
 import { parseISO } from 'rsuite/esm/utils/dateUtils'
 import styled from 'styled-components'
@@ -7,7 +8,12 @@ import styled from 'styled-components'
 export const placeholderDateTimePicker =
   '\xa0\xa0\xa0\xa0\xa0\xa0/\xa0\xa0\xa0\xa0\xa0\xa0/\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0:\xa0\xa0\xa0\xa0\xa0\xa0'
 
-export function FormikDatePicker({ ghost, name, ...props }) {
+type FormikDatePickerProps = {
+  [x: string]: any
+  ghost?: boolean
+  name: string
+}
+export function FormikDatePicker({ ghost, name, ...props }: FormikDatePickerProps) {
   const [field, , helpers] = useField(name)
   const { value } = field
   const { setValue } = helpers
@@ -19,7 +25,7 @@ export function FormikDatePicker({ ghost, name, ...props }) {
   // parseISO cannot parse undefined. Returns 'Invalid Date' if it cannot parse value.
   const parsedValue = parseISO(value || null)
   const valueAsDate = parsedValue.toString() === 'Invalid Date' ? null : parsedValue
-  const datepickerRef = useRef()
+  const datepickerRef = useRef() as MutableRefObject<HTMLDivElement>
 
   return (
     <DatePickerWrapper ref={datepickerRef} data-cy="datepicker">

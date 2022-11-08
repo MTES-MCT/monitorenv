@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import { FieldArray } from 'formik'
 import { Form } from 'rsuite'
 import styled from 'styled-components'

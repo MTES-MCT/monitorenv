@@ -1,6 +1,6 @@
 import { format, isValid } from 'date-fns'
 import { fr } from 'date-fns/locale'
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { IconButton } from 'rsuite'
 import styled from 'styled-components'
@@ -39,7 +39,9 @@ export function MissionCard({ feature, selected }) {
         <MissionReources>
           {resourceUnits?.map(resource => `${resource.administration} ${resource.unit ? `(${resource.unit})` : ''}`)}
         </MissionReources>
-        <Actions>{numberOfActions} actions réalisées</Actions>
+        <Actions>
+          {numberOfActions || 0} action{numberOfActions > 1 ? 's' : ''} réalisée{numberOfActions > 1 ? 's' : ''}
+        </Actions>
         <MissionStatusLabel missionStatus={missionStatus} />
         {selected && (
           <IconButton

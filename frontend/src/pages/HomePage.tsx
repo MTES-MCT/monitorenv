@@ -1,4 +1,3 @@
-import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { APIWorker } from '../api/APIWorker'
@@ -9,10 +8,11 @@ import Healthcheck from '../features/healthcheck/Healthcheck'
 import InterestPoint from '../features/interest_points/InterestPoint'
 import { LayersSidebar } from '../features/layersSelector/LayersSidebar'
 import { LocateOnMap } from '../features/locateOnMap/LocateOnMap'
-import Map from '../features/map/Map'
+import { Map } from '../features/map/Map'
 import Measurement from '../features/measurements/Measurement'
 import { MissionsMenu } from '../features/missions/MissionsMenu'
 import SideWindowLauncher from '../features/side_window/SideWindowLauncher'
+import { useAppSelector } from '../hooks/useAppSelector'
 
 export function HomePage() {
   const {
@@ -22,7 +22,7 @@ export function HomePage() {
     displayLocateOnMap,
     displayMeasurement,
     displayMissionsMenu
-  } = useSelector(state => state.global)
+  } = useAppSelector(state => state.global)
 
   return (
     <>

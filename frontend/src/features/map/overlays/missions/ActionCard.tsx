@@ -1,6 +1,5 @@
 import { format, isValid } from 'date-fns'
 import { fr } from 'date-fns/locale'
-import React from 'react'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
@@ -19,7 +18,7 @@ export function ActionCard({ feature }) {
   const parsedactionStartDatetimeUtc = new Date(actionStartDatetimeUtc)
 
   return (
-    <ActionCardHeader>
+    <ActionCardHeader selected>
       <Col1>
         <ActionDate>
           {isValid(parsedactionStartDatetimeUtc) && format(parsedactionStartDatetimeUtc, 'dd MMM yyyy', { locale: fr })}
@@ -28,7 +27,9 @@ export function ActionCard({ feature }) {
       <Col2>
         <ControlSummary>
           <Accented>{actionNumberOfControls || 0}</Accented>
-          {` contrôles réalisés sur des cibles de type `}
+          {` contrôle${actionNumberOfControls > 1 ? 's' : ''} réalisé${
+            actionNumberOfControls > 1 ? 's' : ''
+          } sur des cibles de type `}
           <Accented>{actionTargetTypeEnum[actionTargetType]?.libelle || 'non spécifié'}</Accented>
         </ControlSummary>
         <ControlInfractionsTags actionNumberOfControls={actionNumberOfControls} infractions={infractions} />
@@ -38,13 +39,13 @@ export function ActionCard({ feature }) {
   )
 }
 
-const ActionCardHeader = styled.div`
+const ActionCardHeader = styled.div<{ selected: boolean }>`
   background: ${COLORS.white};
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
   display: flex;
   width: 265px;
-  z-index: ${props => (props.selected ? 4900 : 5000)};
+  z-index: ${p => (p.selected ? 4900 : 5000)};
 `
 
 const ActionDate = styled.div`

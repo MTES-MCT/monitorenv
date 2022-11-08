@@ -4,50 +4,52 @@ import Draw, { createBox, createRegularPolygon } from 'ol/interaction/Draw'
 import Modify from 'ol/interaction/Modify'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useEffect, useRef } from 'react'
+import { useDispatch } from 'react-redux'
 
 import { drawLayerTypes } from '../../../domain/entities/drawLayer'
 import { Layers } from '../../../domain/entities/layers'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map'
+import { useAppSelector } from '../../../hooks/useAppSelector'
 import { addFeature } from '../../drawLayer/DrawLayer.slice'
 import { dottedLayerStyle, pointLayerStyle } from './styles/dottedLayer.style'
 import { drawStyle, editStyle } from './styles/draw.style'
 
+import type { Geometry } from 'ol/geom'
+
 export function DrawLayer({ map }) {
-  const { features, interactionType } = useSelector(state => state.drawLayer)
+  const { features, interactionType } = useAppSelector(state => state.drawLayer)
 
   const dispatch = useDispatch()
   // vectorSource & vectorLayer are holding current features (for visualisation + edition)
-  const vectorSourceRef = useRef(null)
+  const vectorSourceRef = useRef() as React.MutableRefObject<VectorSource<Geometry>>
   const GetVectorSource = () => {
-    if (vectorSourceRef.current === null) {
+    if (vectorSourceRef.current === undefined) {
       vectorSourceRef.current = new VectorSource({
         format: new GeoJSON({
           dataProjection: WSG84_PROJECTION,
           featureProjection: OPENLAYERS_PROJECTION
-        }),
-        projection: OPENLAYERS_PROJECTION
+        })
       })
     }
 
     return vectorSourceRef.current
   }
   // drawVectorSource & drawVectorLayer are used to draw features, but features are dismissed after being drawned
-  const drawVectorSourceRef = useRef(null)
+  const drawVectorSourceRef = useRef() as React.MutableRefObject<VectorSource<Geometry>>
 
   const GetDrawVectorSource = () => {
-    if (drawVectorSourceRef.current === null) {
+    if (drawVectorSourceRef.current === undefined) {
       drawVectorSourceRef.current = new VectorSource({ wrapX: false })
     }
 
     return drawVectorSourceRef.current
   }
 
-  const vectorLayerRef = useRef(null)
+  const vectorLayerRef = useRef() as React.MutableRefObject<VectorLayer<VectorSource> & { name?: string }>
   useEffect(() => {
     const GetVectorLayer = () => {
-      if (vectorLayerRef.current === null) {
+      if (vectorLayerRef.current === undefined) {
         vectorLayerRef.current = new VectorLayer({
           renderBuffer: 7,
           source: GetVectorSource(),
@@ -89,7 +91,9 @@ export function DrawLayer({ map }) {
     GetDrawVectorSource()?.clear(true)
     if (!_.isEmpty(features)) {
       GetVectorSource()?.addFeatures(features)
-      interactionType && map.addInteraction(modify)
+      if (interactionType) {
+        map.addInteraction(modify)
+      }
     }
 
     return () => {
@@ -101,32 +105,30 @@ export function DrawLayer({ map }) {
 
   useEffect(() => {
     if (map && interactionType) {
-      let type = null
+      let type
+      let geomFunction
       switch (interactionType) {
         case drawLayerTypes.SQUARE:
+          geomFunction = createBox()
+          type = 'Circle'
+          break
         case drawLayerTypes.CIRCLE:
+          geomFunction = createRegularPolygon()
           type = 'Circle'
           break
         case drawLayerTypes.POLYGON:
           type = 'Polygon'
           break
         case drawLayerTypes.POINT:
+        default:
           type = 'Point'
           break
-        default:
-          console.error('No interaction type specified')
-
-          return
       }
 
       const draw = new Draw({
-        geometryFunction:
-          interactionType === drawLayerTypes.SQUARE
-            ? createBox()
-            : interactionType === drawLayerTypes.CIRCLE
-            ? createRegularPolygon()
-            : null,
+        geometryFunction: geomFunction,
         source: GetDrawVectorSource(),
+        stopClick: true,
         style: drawStyle,
         type
       })
@@ -138,9 +140,15 @@ export function DrawLayer({ map }) {
         map.removeInteraction(draw)
       })
 
-      return () => map.removeInteraction(draw)
+      return () => {
+        if (map) {
+          map.removeInteraction(draw)
+        }
+      }
     }
-  }, [map, interactionType])
+
+    return () => {}
+  }, [dispatch, map, interactionType])
 
   return null
 }

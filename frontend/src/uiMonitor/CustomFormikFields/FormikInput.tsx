@@ -1,5 +1,5 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import { useField } from 'formik'
-import React from 'react'
 import { Input } from 'rsuite'
 import styled from 'styled-components'
 
@@ -10,7 +10,11 @@ export function FormikInput({ name, ...props }) {
   const { value } = field
   const { setValue } = helpers
 
-  return <Input onChange={setValue} value={value || ''} {...props} />
+  const handleOnChange = v => {
+    setValue(v)
+  }
+
+  return <Input onChange={handleOnChange} value={value || ''} {...props} />
 }
 
 export const FormikInputGhost = styled(FormikInput)`

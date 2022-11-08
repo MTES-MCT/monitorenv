@@ -1,5 +1,5 @@
-import { useField } from 'formik'
-import React, { useRef } from 'react'
+/* eslint-disable react/jsx-props-no-spreading */
+import { MutableRefObject, useRef } from 'react'
 import { Form, SelectPicker } from 'rsuite'
 import styled from 'styled-components'
 
@@ -13,9 +13,8 @@ const DEFAULT_SELECT_PICKER_MENU_STYLE = {
   width: 145
 }
 
-export function ActionTargetSelector({ currentActionIndex, ...props }) {
-  const [actionTargetField, , actionTargetHelpers] = useField(`envActions.${currentActionIndex}.actionTargetType`)
-  const actionTargetSelectorRef = useRef()
+export function ActionTargetSelector({ currentActionIndex, onChange, value, ...props }) {
+  const actionTargetSelectorRef = useRef() as MutableRefObject<HTMLDivElement>
   const actionTargetFieldList = Object.values(actionTargetTypeEnum)
 
   return (
@@ -28,11 +27,11 @@ export function ActionTargetSelector({ currentActionIndex, ...props }) {
         data={actionTargetFieldList}
         labelKey="libelle"
         menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
-        onChange={actionTargetHelpers.setValue}
+        onChange={onChange}
         searchable={false}
         size="sm"
         style={DEFAULT_SELECT_PICKER_STYLE}
-        value={actionTargetField.value}
+        value={value}
         valueKey="code"
         {...props}
       />

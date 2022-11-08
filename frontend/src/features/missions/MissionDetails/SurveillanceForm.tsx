@@ -1,6 +1,6 @@
 import { useFormikContext } from 'formik'
 import _ from 'lodash'
-import React, { useMemo, useEffect } from 'react'
+import { useMemo, useEffect } from 'react'
 import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
@@ -8,17 +8,19 @@ import { useGetControlThemesQuery } from '../../../api/controlThemesAPI'
 import { COLORS } from '../../../constants/constants'
 import { usePrevious } from '../../../hooks/usePrevious'
 import { FormikDatePicker, placeholderDateTimePicker } from '../../../uiMonitor/CustomFormikFields/FormikDatePicker'
-import { FormikInputGhost } from '../../../uiMonitor/CustomFormikFields/FormikInput'
+import { FormikInputNumberGhost } from '../../../uiMonitor/CustomFormikFields/FormikInputNumber'
 import { FormikTextarea } from '../../../uiMonitor/CustomFormikFields/FormikTextarea'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as SurveillanceIconSVG } from '../../../uiMonitor/icons/Observation.svg'
 import { ControlThemeSelector } from './ControlThemeSelector'
 
+import type { MissionType, EnvActionControlType } from '../../../domain/entities/missions'
+
 export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionIndex }) {
   const {
     setFieldValue,
     values: { envActions }
-  } = useFormikContext()
+  } = useFormikContext<MissionType<EnvActionControlType>>()
 
   const actionTheme = envActions[currentActionIndex]?.actionTheme
 
@@ -92,7 +94,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
 
       <Form.Group>
         <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.duration`}>Durée</Form.ControlLabel>
-        <FormikInputGhost name={`envActions.${currentActionIndex}.duration`} size="sm" />
+        <FormikInputNumberGhost name={`envActions.${currentActionIndex}.duration`} size="sm" />
       </Form.Group>
 
       <Form.Group>

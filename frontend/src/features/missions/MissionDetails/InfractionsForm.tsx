@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Button } from 'rsuite'
 import styled from 'styled-components'
 
@@ -7,7 +7,7 @@ import { infractionFactory } from '../Missions.helpers'
 import { InfractionCard } from './InfractionCard'
 import { InfractionForm } from './InfractionForm'
 
-export function InfractionsForm({ currentActionIndex, form, push, remove }) {
+export function InfractionsForm({ canAddInfraction, currentActionIndex, form, push, remove }) {
   const [currentInfractionIndex, setCurrentInfractionIndex] = useState(null)
 
   const handleAddInfraction = () => {
@@ -33,7 +33,7 @@ export function InfractionsForm({ currentActionIndex, form, push, remove }) {
     <>
       <Header>
         <Title>Détailler une infraction d&apos;une cible</Title>
-        <Button appearance="ghost" onClick={handleAddInfraction} size="sm">
+        <Button appearance="ghost" disabled={!canAddInfraction} onClick={handleAddInfraction} size="sm">
           + Ajouter une nouvelle infraction
         </Button>
       </Header>
@@ -45,7 +45,6 @@ export function InfractionsForm({ currentActionIndex, form, push, remove }) {
               <InfractionForm
                 key={infraction.id}
                 currentActionIndex={currentActionIndex}
-                infractionIndex={index}
                 infractionPath={`envActions[${currentActionIndex}].infractions[${index}]`}
                 removeInfraction={handleRemoveInfraction(index)}
                 validateInfraction={handleValidate}

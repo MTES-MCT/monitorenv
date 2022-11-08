@@ -56,6 +56,7 @@ const Title = styled.h2`
 const NoteIcon = styled(NoteSVG)`
   color: ${COLORS.gunMetal};
   margin-right: 8px;
+  margin-top: 2px;
   width: 18px;
 `
 

@@ -1,5 +1,4 @@
 import { useField } from 'formik'
-import React from 'react'
 import { Form } from 'rsuite'
 import styled from 'styled-components'
 
@@ -10,6 +9,14 @@ import { VesselTypeSelector } from './VesselTypeSelector'
 
 export function InfractionFormHeaderVehicle({ currentActionIndex, infractionPath }) {
   const [vehicleTypeField] = useField(`envActions.${currentActionIndex}.vehicleType`)
+  const [vesselTypeField, , vesselTypeHelpers] = useField(`${infractionPath}.vesselType`)
+  const [vesselSizeField, , vesselSizeHelpers] = useField(`${infractionPath}.vesselSize`)
+  const handleChangeVesselType = v => {
+    vesselTypeHelpers.setValue(v)
+  }
+  const handleChangeVesselSize = v => {
+    vesselSizeHelpers.setValue(v)
+  }
 
   return (
     <FormGroup>
@@ -20,11 +27,11 @@ export function InfractionFormHeaderVehicle({ currentActionIndex, infractionPath
       {vehicleTypeField?.value === vehicleTypeEnum.VESSEL.code && (
         <>
           <FormColumn>
-            <VesselTypeSelector currentActionIndex={currentActionIndex} infractionPath={infractionPath} />
+            <VesselTypeSelector onChange={handleChangeVesselType} value={vesselTypeField.value} />
           </FormColumn>
 
           <FormColumn>
-            <VesselSizeSelector currentActionIndex={currentActionIndex} infractionPath={infractionPath} />
+            <VesselSizeSelector onChange={handleChangeVesselSize} value={vesselSizeField.value} />
           </FormColumn>
         </>
       )}

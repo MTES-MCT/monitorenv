@@ -5,7 +5,7 @@ import { platformModifierKeyOnly } from 'ol/events/condition'
 import OpenLayerMap from 'ol/Map'
 import { transform } from 'ol/proj'
 import View from 'ol/View'
-import { Children, cloneElement, useCallback, useMemo, useEffect, useRef, useState } from 'react'
+import { Children, cloneElement, useCallback, useMemo, useEffect, useRef, useState, MutableRefObject } from 'react'
 import styled from 'styled-components'
 
 import { HIT_PIXEL_TO_TOLERANCE } from '../../constants/constants'
@@ -13,15 +13,17 @@ import { SelectableLayers, HoverableLayers } from '../../domain/entities/layers'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map'
 import MapAttributionsBox from './controls/MapAttributionsBox'
 
-function BaseMap({ children, showAttributions }) {
-  const [map, setMap] = useState()
+import type Map from 'ol/Map'
+
+export function BaseMap({ children, showAttributions }) {
+  const [currentMap, setCurrentMap] = useState<Map>()
 
   const [mapClickEvent, setMapClickEvent] = useState({ ctrlKeyPressed: false, feature: undefined })
 
   /** @type {currentFeatureOver} feature */
   const [currentFeatureOver, setCurrentFeatureOver] = useState(null)
 
-  const mapElement = useRef()
+  const mapElement = useRef() as MutableRefObject<HTMLDivElement>
 
   const handleMapClick = useCallback(
     (event, current_map) => {
@@ -56,7 +58,7 @@ function BaseMap({ children, showAttributions }) {
   )
 
   useEffect(() => {
-    if (!map) {
+    if (!currentMap) {
       const centeredOnFrance = [2.99049, 46.82801]
       const initialMap = new OpenLayerMap({
         controls: [
@@ -67,7 +69,6 @@ function BaseMap({ children, showAttributions }) {
         ],
         keyboardEventTarget: document,
         layers: [],
-        renderer: ['webgl', 'canvas'],
         target: mapElement.current,
         view: new View({
           center: transform(centeredOnFrance, WSG84_PROJECTION, OPENLAYERS_PROJECTION),
@@ -79,15 +80,19 @@ function BaseMap({ children, showAttributions }) {
       initialMap.on('click', event => handleMapClick(event, initialMap))
       initialMap.on('pointermove', event => handleMouseOverFeature(event, initialMap))
 
-      setMap(initialMap)
+      setCurrentMap(initialMap)
     }
-  }, [map, handleMapClick])
+  }, [currentMap, handleMapClick, handleMouseOverFeature])
 
   return (
     <MapWrapper>
       <MapContainer ref={mapElement} />
       {showAttributions && <MapAttributionsBox />}
-      {map && Children.map(children, child => child && cloneElement(child, { currentFeatureOver, map, mapClickEvent }))}
+      {currentMap &&
+        Children.map(
+          children,
+          child => child && cloneElement(child, { currentFeatureOver, map: currentMap, mapClickEvent })
+        )}
     </MapWrapper>
   )
 }
@@ -103,5 +108,3 @@ const MapContainer = styled.div`
   overflow-y: hidden;
   overflow-x: hidden;
 `
-
-export default BaseMap

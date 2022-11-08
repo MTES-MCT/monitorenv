@@ -2,7 +2,7 @@
 import { useField } from 'formik'
 import { Checkbox } from 'rsuite'
 
-export function FormikCheckbox({ defaultValue, label, name, ...props }) {
+export function FormikCheckbox({ label, name, ...props }) {
   const [field, , helpers] = useField(name)
   const { value } = field
   const { setValue } = helpers
@@ -11,7 +11,7 @@ export function FormikCheckbox({ defaultValue, label, name, ...props }) {
   }
 
   return (
-    <Checkbox name={name} onChange={handleSetValue} value={value} {...props} defaultValue={defaultValue}>
+    <Checkbox name={name} onChange={handleSetValue} value={value} {...props}>
       {label}
     </Checkbox>
   )

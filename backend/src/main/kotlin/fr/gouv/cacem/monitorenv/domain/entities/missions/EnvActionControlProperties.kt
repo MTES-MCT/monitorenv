@@ -9,9 +9,7 @@ data class EnvActionControlProperties(
   val actionSubTheme: String? = null,
   val protectedSpecies: List<String>? = listOf(),
   val actionNumberOfControls: Int? = null,
-//  val actionTargetType: String? = null,
-//  val vehicleType: String? = null,
-  val actionTargetType: ActionTargetTypeEnum? = null,
+  val actionTargetType: ActionTargetTypeEnum,
   val vehicleType: VehicleTypeEnum? = null,
   val infractions: List<InfractionEntity>? = listOf()
 ) {

@@ -1,5 +1,4 @@
 import { useField } from 'formik'
-import React from 'react'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
@@ -14,7 +13,6 @@ export function ActionForm({ currentActionIndex, remove, setCurrentActionIndex }
   if (currentActionIndex === null) {
     return <NoSelectedAction>Ajouter ou sélectionner une action</NoSelectedAction>
   }
-
   switch (actionTypeField.value) {
     case actionTypeEnum.CONTROL.code:
       return (

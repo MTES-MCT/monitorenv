@@ -119,6 +119,7 @@ function MeasurementLayer({ map }) {
       function drawNewFeatureOnMap() {
         const draw = new Draw({
           source: vectorSource,
+          stopClick: true,
           style: [measurementStyle, measurementStyleWithCenter],
           type: measurementTypeToAdd
         })

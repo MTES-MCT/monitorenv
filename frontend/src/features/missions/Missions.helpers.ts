@@ -1,26 +1,28 @@
 import { v4 as uuidv4 } from 'uuid'
 
 import {
+  actionTargetTypeEnum,
   actionTypeEnum,
   formalNoticeEnum,
   infractionTypeEnum,
   missionStatusEnum,
-  missionTypeEnum
+  missionTypeEnum,
+  vehicleTypeEnum
 } from '../../domain/entities/missions'
 
 export const infractionFactory = ({ id, ...infraction } = { id: undefined }) => ({
-  companyName: '',
-  controlledPersonIdentity: '',
+  // companyName: '',
+  // controlledPersonIdentity: '',
   formalNotice: formalNoticeEnum.NO.code,
   id: uuidv4(),
   infractionType: infractionTypeEnum.WITHOUT_REPORT.code,
   natinf: [],
   observations: '',
-  registrationNumber: '',
-  relevantCourt: '',
+  // registrationNumber: '',
+  // relevantCourt: '',
   toProcess: false,
-  vesselSize: '',
-  vesselType: '',
+  // vesselSize: '',
+  // vesselType: '',
   ...infraction
 })
 
@@ -28,17 +30,17 @@ export const actionFactory = ({ actionType, id, ...action }) => {
   switch (actionType) {
     case actionTypeEnum.CONTROL.code:
       return {
-        actionNumberOfControls: '',
+        actionNumberOfControls: 0,
         actionStartDatetimeUtc: new Date().toISOString(),
         actionSubTheme: '',
-        actionTargetType: '',
+        actionTargetType: actionTargetTypeEnum.VEHICLE.code,
         actionTheme: '',
         actionType: actionTypeEnum.CONTROL.code,
         geom: null,
         id: uuidv4(),
         infractions: [],
         protectedSpecies: [],
-        vehicleType: '',
+        vehicleType: vehicleTypeEnum.VESSEL.code,
         ...action
       }
     case actionTypeEnum.NOTE.code:
