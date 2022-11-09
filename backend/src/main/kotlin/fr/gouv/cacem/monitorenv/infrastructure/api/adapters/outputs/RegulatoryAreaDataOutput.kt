@@ -22,27 +22,28 @@ data class RegulatoryAreaDataOutput(
     val date_fin: String? = null,
     val temporalite: String? = null,
     val objet: String? = null,
-    val signataire: String? = null) {
+    val signataire: String? = null
+) {
     companion object {
         fun fromRegulatoryAreaEntity(regulatoryArea: RegulatoryAreaEntity) = RegulatoryAreaDataOutput(
             id = regulatoryArea.id,
-            entity_name= regulatoryArea.entity_name,
-            url= regulatoryArea.url,
-            layer_name= regulatoryArea.layer_name,
-            facade= regulatoryArea.facade,
-            ref_reg= regulatoryArea.ref_reg,
-            edition= regulatoryArea.edition,
-            editeur= regulatoryArea.editeur,
-            source= regulatoryArea.source,
-            observation= regulatoryArea.observation,
-            thematique= regulatoryArea.thematique,
-            echelle= regulatoryArea.echelle,
-            date= regulatoryArea.date,
-            duree_validite= regulatoryArea.duree_validite,
-            date_fin= regulatoryArea.date_fin,
-            temporalite= regulatoryArea.temporalite,
-            objet= regulatoryArea.objet,
-            signataire= regulatoryArea.signataire,
+            entity_name = regulatoryArea.entity_name,
+            url = regulatoryArea.url,
+            layer_name = regulatoryArea.layer_name,
+            facade = regulatoryArea.facade,
+            ref_reg = regulatoryArea.ref_reg,
+            edition = regulatoryArea.edition,
+            editeur = regulatoryArea.editeur,
+            source = regulatoryArea.source,
+            observation = regulatoryArea.observation,
+            thematique = regulatoryArea.thematique,
+            echelle = regulatoryArea.echelle,
+            date = regulatoryArea.date,
+            duree_validite = regulatoryArea.duree_validite,
+            date_fin = regulatoryArea.date_fin,
+            temporalite = regulatoryArea.temporalite,
+            objet = regulatoryArea.objet,
+            signataire = regulatoryArea.signataire,
             geom = regulatoryArea.geom
         )
     }

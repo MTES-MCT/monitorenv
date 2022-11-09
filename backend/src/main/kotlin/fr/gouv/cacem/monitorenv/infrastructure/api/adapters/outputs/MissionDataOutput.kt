@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.missions.*
 import org.locationtech.jts.geom.MultiPolygon
-
 import java.time.ZonedDateTime
 
 data class MissionDataOutput(
@@ -33,7 +32,7 @@ data class MissionDataOutput(
                 missionStatus = mission.missionStatus,
                 openBy = mission.openBy,
                 closedBy = mission.closedBy,
-                observations= mission.observations,
+                observations = mission.observations,
                 facade = mission.facade,
                 geom = mission.geom,
                 inputStartDatetimeUtc = mission.inputStartDatetimeUtc,
