@@ -70,6 +70,8 @@ data class MissionModel(
     var inputStartDatetimeUtc: Instant,
   @Column(name = "input_end_datetime_utc")
     var inputEndDatetimeUtc: Instant? = null,
+  @Column(name = "deleted", nullable = false)
+  val isDeleted: Boolean,
   @OneToMany(fetch = FetchType.EAGER,
     mappedBy = "mission",
     cascade = [CascadeType.ALL],
@@ -92,6 +94,7 @@ data class MissionModel(
     geom = geom,
     inputStartDatetimeUtc = inputStartDatetimeUtc.atZone(UTC),
     inputEndDatetimeUtc = inputEndDatetimeUtc?.atZone(UTC),
+    isDeleted = isDeleted,
     envActions = envActions!!.map {it.toActionEntity(mapper)}
   )
 
@@ -110,6 +113,7 @@ data class MissionModel(
         geom = mission.geom,
         inputStartDatetimeUtc = mission.inputStartDatetimeUtc.toInstant(),
         inputEndDatetimeUtc = mission.inputEndDatetimeUtc?.toInstant(),
+        isDeleted = false
       )
       mission.envActions?.map {
         missionModel.envActions?.add(EnvActionModel.fromEnvActionEntity(it, missionModel, mapper))
@@ -130,6 +134,6 @@ data class MissionModel(
 
   @Override
   override fun toString(): String {
-    return this::class.simpleName + "(id = $id , missionType = $missionType , missionNature = $missionNature ,  resourceUnits = $resourceUnits , missionStatus = $missionStatus , openBy = $openBy , closedBy = $closedBy , observations = $observations , facade = $facade , geom = $geom , inputStartDatetimeUtc = $inputStartDatetimeUtc , inputEndDatetimeUtc = $inputEndDatetimeUtc )"
+    return this::class.simpleName + "(id = $id , missionType = $missionType , missionNature = $missionNature ,  resourceUnits = $resourceUnits , missionStatus = $missionStatus , openBy = $openBy , closedBy = $closedBy , observations = $observations , facade = $facade , geom = $geom , inputStartDatetimeUtc = $inputStartDatetimeUtc , inputEndDatetimeUtc = $inputEndDatetimeUtc, isDeleted = $isDeleted )"
   }
 }

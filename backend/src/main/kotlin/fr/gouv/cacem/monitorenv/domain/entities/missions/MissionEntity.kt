@@ -17,4 +17,5 @@ data class MissionEntity(
         val inputStartDatetimeUtc: ZonedDateTime,
         val inputEndDatetimeUtc: ZonedDateTime? = null,
         val envActions: List<EnvActionEntity>? = listOf(),
+        val isDeleted: Boolean
         )

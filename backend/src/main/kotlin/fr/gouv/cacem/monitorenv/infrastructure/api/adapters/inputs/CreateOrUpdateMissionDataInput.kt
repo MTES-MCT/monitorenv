@@ -34,6 +34,7 @@ data class CreateOrUpdateMissionDataInput(
         geom = this.geom,
         inputStartDatetimeUtc = this.inputStartDatetimeUtc,
         inputEndDatetimeUtc = this.inputEndDatetimeUtc,
+        isDeleted = false,
         envActions = this.envActions
       )
     }

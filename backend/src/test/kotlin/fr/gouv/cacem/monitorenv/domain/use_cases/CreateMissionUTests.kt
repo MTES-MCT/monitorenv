@@ -34,7 +34,8 @@ class CreateMissionUTests {
       missionStatus = MissionStatusEnum.CLOSED,
       facade = "Outre-Mer",
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-      inputEndDatetimeUtc =  ZonedDateTime.parse("2022-01-23T20:29:03Z")
+      inputEndDatetimeUtc =  ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+      isDeleted = false
     )
     given(missionRepository.create(expectedCreatedMission)).willReturn(expectedCreatedMission)
 

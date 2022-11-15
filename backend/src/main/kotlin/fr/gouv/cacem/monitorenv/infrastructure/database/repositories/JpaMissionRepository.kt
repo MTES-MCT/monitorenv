@@ -15,7 +15,7 @@ class JpaMissionRepository(private val dbMissionRepository: IDBMissionRepository
 ) : IMissionRepository {
 
   override fun findMissions(): List<MissionEntity> {
-    return dbMissionRepository.findAllByOrderByInputStartDatetimeUtcDesc().map { it.toMissionEntity(mapper) }
+    return dbMissionRepository.findAllMissions().map { it.toMissionEntity(mapper) }
   }
 
   override fun findMissionById(missionId: Int): MissionEntity {
@@ -38,6 +38,6 @@ class JpaMissionRepository(private val dbMissionRepository: IDBMissionRepository
 
   @Transactional
   override fun delete(missionId: Int) {
-    dbMissionRepository.deleteById(missionId)
+    dbMissionRepository.deleteMission(missionId)
   }
 }

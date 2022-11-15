@@ -51,7 +51,9 @@
           facade = "Outre-Mer",
           missionNature = listOf(MissionNatureEnum.FISH),
           inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-          inputEndDatetimeUtc =  ZonedDateTime.parse("2022-01-23T20:29:03Z")	)
+          inputEndDatetimeUtc =  ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+          isDeleted = false
+       )
        given(missionRepository.save(expectedUpdatedMission)).willReturn(
          expectedUpdatedMission
        )

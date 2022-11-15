@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.missions.*
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
@@ -24,6 +23,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
       missionType = MissionTypeEnum.SEA,
       missionStatus = MissionStatusEnum.PENDING,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+      isDeleted = false
     )
     // When
     val newMissionReturn = jpaMissionRepository.create(newMission)
@@ -61,6 +61,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-03-21T12:11:13Z"),
       inputEndDatetimeUtc = ZonedDateTime.parse("2022-05-27T01:26:04Z"),
       geom = polygon,
+      isDeleted = false,
       envActions = listOf()
     )
     val mission = jpaMissionRepository.findMissionById(10)
@@ -141,6 +142,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
       observations = null,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
       inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+      isDeleted = false,
       envActions = listOf(controlAction, surveillanceAction, noteAction)
     )
     // When
@@ -175,6 +177,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
       observations = null,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
       inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+      isDeleted = false,
       envActions = listOf(envAction)
     )
     // When
@@ -186,13 +189,16 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
   @Test
   @Transactional
-  fun `delete Should delete specified Missions`() {
+  fun `delete Should set the deleted flag as true`() {
+    // Given
+    val missionsList = jpaMissionRepository.findMissions()
+    assertThat(missionsList).hasSize(50)
+
     // When
-    jpaMissionRepository.delete(14)
-    // When
-    assertThatThrownBy {
-      jpaMissionRepository.findMissionById(14);
-    }.isInstanceOf(NoSuchElementException::class.java)
-    // FIXME: check envActions are also deleted
+    jpaMissionRepository.delete(missionsList.first().id!!)
+
+    // Then
+    val nextMissionList = jpaMissionRepository.findMissions()
+    assertThat(nextMissionList).hasSize(49)
   }
 }

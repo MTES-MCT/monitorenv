@@ -73,7 +73,8 @@ class MissionsControllerITests {
       geom = polygon,
       observations = null,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-      inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z")
+      inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+      isDeleted = false
     )
     val newMissionRequest = CreateOrUpdateMissionDataInput(
       missionType = MissionTypeEnum.LAND,
@@ -116,6 +117,7 @@ class MissionsControllerITests {
       observations = null,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
       inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+      isDeleted = false
     )
     given(this.getMissions.execute()).willReturn(listOf(firstMission))
 
@@ -141,6 +143,7 @@ class MissionsControllerITests {
       missionType = MissionTypeEnum.SEA,
       missionStatus = MissionStatusEnum.PENDING,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+      isDeleted = false
     )
     // we test only if the route is called with the right arg
     given(getMissionById.execute(requestedId)).willReturn(firstMission)
@@ -162,6 +165,7 @@ class MissionsControllerITests {
       missionStatus = MissionStatusEnum.PENDING,
       observations = "updated observations",
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+      isDeleted = false
     )
     val envAction = EnvActionControlEntity(
       id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
