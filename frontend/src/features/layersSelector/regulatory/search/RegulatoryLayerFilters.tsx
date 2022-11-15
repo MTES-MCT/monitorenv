@@ -16,6 +16,7 @@ export function RegulatoryLayerFilters({ filteredRegulatoryThemes, regulatoryThe
         data={regulatoryThemes}
         onChange={setFilteredRegulatoryThemes}
         placeholder="Thématiques de contrôle"
+        searchable
         value={filteredRegulatoryThemes}
       />
       {filteredRegulatoryThemes?.length > 0 && (

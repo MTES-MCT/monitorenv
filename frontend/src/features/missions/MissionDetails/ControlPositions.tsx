@@ -1,7 +1,6 @@
 import { useField } from 'formik'
 import _ from 'lodash'
 import { transform } from 'ol/proj'
-import React from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
@@ -100,4 +99,5 @@ const CenterOnMap = styled.div`
 const LocalizeIcon = styled(LocalizeIconSVG)`
   margin-right: 8px;
   font-size: 12px;
+  vertical-align: text-bottom;
 `

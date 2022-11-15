@@ -11,6 +11,9 @@ export function ProtectedSpeciesSelector({ name, ...props }) {
 
   const selectorRef = useRef() as MutableRefObject<HTMLDivElement>
   const data = Object.values(protectedSpeciesEnum)
+  const handleOnChange = v => {
+    protectedSpeciesHelpers.setValue(v)
+  }
 
   return (
     <SelectorWrapper ref={selectorRef}>
@@ -18,12 +21,11 @@ export function ProtectedSpeciesSelector({ name, ...props }) {
       <TagPickerWhite
         block
         container={() => selectorRef.current}
-        data={data}
+        data={data.sort((a, b) => a.libelle.localeCompare(b.libelle))}
         labelKey="libelle"
-        onChange={protectedSpeciesHelpers.setValue}
+        onChange={handleOnChange}
         value={protectedSpeciesField.value}
         valueKey="code"
-        virtualized
         {...props}
       />
     </SelectorWrapper>

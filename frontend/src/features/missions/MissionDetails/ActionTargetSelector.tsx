@@ -1,9 +1,9 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { MutableRefObject, useRef } from 'react'
-import { Form, SelectPicker } from 'rsuite'
+import { Form } from 'rsuite'
 import styled from 'styled-components'
 
 import { actionTargetTypeEnum } from '../../../domain/entities/missions'
+import { SelectPickerWhite } from '../../../uiMonitor/CustomRsuite/SelectPicker'
 
 const DEFAULT_SELECT_PICKER_STYLE = {
   width: 145
@@ -14,16 +14,13 @@ const DEFAULT_SELECT_PICKER_MENU_STYLE = {
 }
 
 export function ActionTargetSelector({ currentActionIndex, onChange, value, ...props }) {
-  const actionTargetSelectorRef = useRef() as MutableRefObject<HTMLDivElement>
   const actionTargetFieldList = Object.values(actionTargetTypeEnum)
 
   return (
-    <SelectorWrapper ref={actionTargetSelectorRef}>
+    <SelectorWrapper>
       <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionTargetType`}>Type de cible</Form.ControlLabel>
-      <SelectPicker
-        className="ghost"
+      <SelectPickerWhite
         cleanable={false}
-        container={() => actionTargetSelectorRef.current}
         data={actionTargetFieldList}
         labelKey="libelle"
         menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
@@ -41,8 +38,4 @@ export function ActionTargetSelector({ currentActionIndex, onChange, value, ...p
 
 const SelectorWrapper = styled.div`
   width: 150px;
-  .rs-picker-menu {
-    position: relative;
-    margin-top: -50px;
-  }
 `

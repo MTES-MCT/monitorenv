@@ -8,11 +8,17 @@ const persistConfig = {
   whitelist: ['measurementsDrawed']
 }
 
+type MeasurementType = {
+  coordinates: any
+  feature: any
+  measurement: any
+}
+
 const measurementSlice = createSlice({
   initialState: {
     circleMeasurementInDrawing: null,
-    circleMeasurementToAdd: null,
-    measurementsDrawed: [],
+    circleMeasurementToAdd: undefined as any,
+    measurementsDrawed: [] as MeasurementType[],
     measurementTypeToAdd: null
   },
   name: 'measurement',

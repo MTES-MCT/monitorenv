@@ -6,7 +6,7 @@ import { batch } from 'react-redux'
 import { OPENLAYERS_PROJECTION } from '../../entities/map'
 import { addMeasurementDrawed, resetCircleMeasurementInDrawing } from '../../shared_slices/Measurement'
 
-const saveMeasurement = (feature, measurement) => dispatch => {
+export const saveMeasurement = (feature, measurement) => dispatch => {
   feature.setId(feature.ol_uid)
 
   if (feature.getGeometry() instanceof Circle) {
@@ -33,5 +33,3 @@ function getGeoJSONFromFeature(feature) {
 
   return parser.writeFeatureObject(feature, { featureProjection: OPENLAYERS_PROJECTION })
 }
-
-export default saveMeasurement

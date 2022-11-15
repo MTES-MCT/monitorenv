@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Layers } from '../../../../domain/entities/layers'
 import { OverlayPositionOnCentroid } from '../OverlayPositionOnCentroid'
 import { ControlCard } from './ControlCard'

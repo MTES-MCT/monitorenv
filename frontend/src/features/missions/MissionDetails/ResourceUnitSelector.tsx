@@ -1,24 +1,19 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import { useField } from 'formik'
 import _ from 'lodash'
-import React, { useRef } from 'react'
-import { Form, SelectPicker, TagPicker, IconButton } from 'rsuite'
+import { MutableRefObject, useRef } from 'react'
+import { Form, TagPicker, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { useGetControlResourcesQuery } from '../../../api/controlResourcesAPI'
-import { COLORS } from '../../../constants/constants'
+import { SelectPicker } from '../../../uiMonitor/CustomRsuite/SelectPicker'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
 
 const DEFAULT_SELECT_PICKER_STYLE = {
-  borderColor: COLORS.lightGray,
-  boxSizing: 'border-box',
-  margin: '0',
-  textOverflow: 'ellipsis',
   width: 200
 }
 
 const DEFAULT_SELECT_PICKER_MENU_STYLE = {
-  overflowY: 'hidden',
-  textOverflow: 'ellipsis',
   width: 200
 }
 
@@ -27,9 +22,7 @@ export function ResourceUnitSelector({ removeResourceUnit, resourceUnitIndex, re
   const [unitField, , unitHelpers] = useField(`resourceUnits.${resourceUnitIndex}.unit`)
   const [resourcesField, , resourcesHelpers] = useField(`resourceUnits.${resourceUnitIndex}.resources`)
 
-  const administrationSelectorRef = useRef()
-  const unitSelectorRef = useRef()
-  const resourcesRef = useRef()
+  const resourcesRef = useRef() as MutableRefObject<HTMLDivElement>
   const { data, isError, isLoading } = useGetControlResourcesQuery()
 
   const administrationList = _.uniqBy(data, 'administration')
@@ -52,7 +45,15 @@ export function ResourceUnitSelector({ removeResourceUnit, resourceUnitIndex, re
   const handleAdministrationChange = value => {
     if (value !== administrationField.value) {
       administrationHelpers.setValue(value)
-      unitHelpers.setValue('')
+      const newUnitList = _.uniqBy(
+        _.filter(data, r => r.administration === value),
+        'unit'
+      )
+      if (newUnitList.length === 1) {
+        unitHelpers.setValue(newUnitList[0]?.unit)
+      } else {
+        unitHelpers.setValue('')
+      }
       resourcesHelpers.setValue([])
     }
   }
@@ -62,12 +63,15 @@ export function ResourceUnitSelector({ removeResourceUnit, resourceUnitIndex, re
       resourcesHelpers.setValue([])
     }
   }
+  const handleResourceChange = value => {
+    resourcesHelpers.setValue(value)
+  }
 
   if (isError) {
-    return 'Erreur'
+    return <div>Erreur</div>
   }
   if (isLoading) {
-    return 'Chargement'
+    return <div>Chargement</div>
   }
   const resourceUnitIndexDisplayed = resourceUnitIndex + 1
 
@@ -75,32 +79,29 @@ export function ResourceUnitSelector({ removeResourceUnit, resourceUnitIndex, re
     <RessourceUnitWrapper>
       <SelectorWrapper>
         <FormGroupFixed>
-          <FormColumn ref={administrationSelectorRef}>
+          <FormColumn>
             <Form.ControlLabel htmlFor="administration">Administration {resourceUnitIndexDisplayed}</Form.ControlLabel>
             <SelectPicker
-              container={() => administrationSelectorRef.current}
               data={administrationList}
               labelKey="administration"
               menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
               onChange={handleAdministrationChange}
-              searchable={false}
+              searchable={administrationList.length > 10}
               size="sm"
               style={DEFAULT_SELECT_PICKER_STYLE}
               value={administrationField.value}
               valueKey="administration"
-              {...props}
             />
           </FormColumn>
-          <FormColumn ref={unitSelectorRef}>
+          <FormColumn>
             <Form.ControlLabel htmlFor="unit">Unité {resourceUnitIndexDisplayed}</Form.ControlLabel>
             <SelectPicker
-              container={() => unitSelectorRef.current}
               data={unitList}
               disabled={_.isEmpty(administrationField.value)}
               labelKey="unit"
               menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
               onChange={handleUnitChange}
-              searchable={false}
+              searchable={unitList.length > 10}
               size="sm"
               style={DEFAULT_SELECT_PICKER_STYLE}
               value={unitField.value}
@@ -120,7 +121,7 @@ export function ResourceUnitSelector({ removeResourceUnit, resourceUnitIndex, re
               data={combinedResourceList}
               disabled={_.isEmpty(unitField.value)}
               labelKey="resourceName"
-              onChange={resourcesHelpers.setValue}
+              onChange={handleResourceChange}
               size="sm"
               value={resourcesField.value}
               valueKey="resourceName"
@@ -147,10 +148,6 @@ const SelectorWrapper = styled.div`
   width: 100%;
   max-width: 416px;
   margin-bottom: 16px;
-  .rs-picker-select-menu {
-    position: relative;
-    margin-top: -50px;
-  }
 `
 
 const FormColumn = styled.div`

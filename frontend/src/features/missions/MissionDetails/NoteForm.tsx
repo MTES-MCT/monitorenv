@@ -1,5 +1,4 @@
 import { useField } from 'formik'
-import React from 'react'
 import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
 

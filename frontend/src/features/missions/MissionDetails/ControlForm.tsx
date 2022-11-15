@@ -81,11 +81,10 @@ export function ControlForm({
     })
   }
   const onTargetTypeChange = selectedTargetType => {
-    
     setValues(v => {
       const w = _.cloneDeep(v)
       _.set(w, `envActions[${currentActionIndex}].actionTargetType`, selectedTargetType)
-      
+
       if (selectedTargetType !== actionTargetTypeEnum.VEHICLE.code) {
         _.set(w, `envActions[${currentActionIndex}].vehicleType`, null)
         _.update(w, `envActions[${currentActionIndex}].infractions`, inf =>
@@ -96,9 +95,8 @@ export function ControlForm({
         _.set(w, `envActions[${currentActionIndex}].vehicleType`, vehicleTypeEnum.VESSEL.code)
       }
 
-        return w
-      })
-
+      return w
+    })
   }
 
   const handleRemoveAction = () => {
@@ -116,7 +114,7 @@ export function ControlForm({
     <>
       <Header>
         <ControlIcon />
-        <Title>Contrôle{actionNumberOfControls && actionNumberOfControls> 1 ? 's' : ''}</Title>
+        <Title>Contrôle{actionNumberOfControls && actionNumberOfControls > 1 ? 's' : ''}</Title>
         <SubTitle>
           &nbsp;(
           {parsedActionStartDatetimeUtc &&
@@ -128,8 +126,8 @@ export function ControlForm({
           appearance="ghost"
           icon={<DeleteIcon className="rs-icon" />}
           onClick={handleRemoveAction}
+          size="sm"
           title="supprimer"
-          size='sm'
         >
           Supprimer
         </IconButtonRight>

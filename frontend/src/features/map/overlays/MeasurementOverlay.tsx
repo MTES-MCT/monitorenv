@@ -1,40 +1,55 @@
 import Overlay from 'ol/Overlay'
-import React, { createRef, useEffect, useState } from 'react'
+import { MutableRefObject, useEffect, useCallback, useRef } from 'react'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
 import { ReactComponent as CloseIconSVG } from '../../../uiMonitor/icons/Close.svg'
 
-function MeasurementOverlay({ coordinates, deleteFeature, id, map, measurement }) {
-  const ref = createRef()
-  const [overlay] = useState(
-    new Overlay({
-      element: ref.current,
-      offset: [0, -7],
-      position: coordinates,
-      positioning: 'bottom-center'
-    })
+type MeasurementOverlayProps = {
+  coordinates: any[]
+  deleteFeature?: Function
+  id?: String
+  map: any
+  measurement: any
+}
+
+export function MeasurementOverlay({ coordinates, deleteFeature, id, map, measurement }: MeasurementOverlayProps) {
+  const overlayRef = useRef()
+  const olOverlayObjectRef = useRef() as MutableRefObject<Overlay>
+  const overlayCallback = useCallback(
+    ref => {
+      overlayRef.current = ref
+      if (ref) {
+        olOverlayObjectRef.current = new Overlay({
+          className: `ol-overlay-container ol-selectable`,
+          element: ref,
+          offset: [0, -7],
+          position: coordinates,
+          positioning: 'bottom-center'
+        })
+      }
+    },
+    [overlayRef, olOverlayObjectRef, coordinates]
   )
 
   useEffect(() => {
     if (map) {
-      overlay.setElement(ref.current)
-      overlay.setPosition(coordinates)
-
-      map.addOverlay(overlay)
+      map.addOverlay(olOverlayObjectRef.current)
 
       return () => {
-        map.removeOverlay(overlay)
+        map.removeOverlay(olOverlayObjectRef.current)
       }
     }
-  }, [measurement, map])
+
+    return () => {}
+  }, [map, olOverlayObjectRef])
 
   return (
     <div>
-      <MeasurementOverlayElement ref={ref}>
+      <MeasurementOverlayElement ref={overlayCallback}>
         <ZoneSelected>
           <ZoneText data-cy="measurement-value">{measurement}</ZoneText>
-          <CloseIcon data-cy="close-measurement" onClick={() => deleteFeature(id)} />
+          <CloseIcon data-cy="close-measurement" onClick={() => deleteFeature && deleteFeature(id)} />
         </ZoneSelected>
         <TrianglePointer>
           <TriangleShadow />
@@ -94,5 +109,3 @@ const CloseIcon = styled(CloseIconSVG)`
   margin: 0 6px 0 7px;
   padding-left: 7px;
 `
-
-export default MeasurementOverlay

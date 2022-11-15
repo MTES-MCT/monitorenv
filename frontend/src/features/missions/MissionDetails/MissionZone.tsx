@@ -1,4 +1,3 @@
-import React from 'react'
 import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
@@ -49,5 +48,6 @@ const CenterOnMap = styled.div`
 `
 const LocalizeIcon = styled(LocalizeIconSVG)`
   margin-right: 8px;
+  vertical-align: text-bottom;
   font-size: 12px;
 `

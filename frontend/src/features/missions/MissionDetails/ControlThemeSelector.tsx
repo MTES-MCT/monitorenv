@@ -1,25 +1,29 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import { useField } from 'formik'
-import React, { useRef } from 'react'
-import { SelectPicker } from 'rsuite'
+import { MutableRefObject, useRef } from 'react'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
+import { SelectPicker } from '../../../uiMonitor/CustomRsuite/SelectPicker'
 
 export function ControlThemeSelector({ name, themes, valueKey, ...props }) {
   const [field, , helpers] = useField(name)
   const { value } = field
   const { setValue } = helpers
-  const wrapperRef = useRef()
+  const wrapperRef = useRef() as MutableRefObject<HTMLDivElement>
+
+  const handleOnChange = v => {
+    setValue(v)
+  }
 
   return (
     <Wrapper ref={wrapperRef}>
       <SelectPicker
         block
-        container={() => wrapperRef.current}
-        data={themes}
+        data={themes.sort((a, b) => a[valueKey].localeCompare(b[valueKey]))}
         labelKey={valueKey}
-        onChange={setValue}
-        searchable={false}
+        onChange={handleOnChange}
+        searchable={themes.length > 10}
         value={value}
         valueKey={valueKey}
         {...props}

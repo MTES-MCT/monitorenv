@@ -1,4 +1,3 @@
-import React from 'react'
 import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
@@ -19,8 +18,9 @@ export function ResourceUnitsForm({ form, push, remove }) {
     <>
       {form?.values.resourceUnits?.length > 0 ? (
         <ResourceUnitsWrapper>
-          {form?.values.resourceUnits?.map((resourceUnit, index) => (
+          {form?.values.resourceUnits?.map((_, index) => (
             <ResourceUnitSelector
+              // eslint-disable-next-line react/no-array-index-key
               key={index}
               removeResourceUnit={handleRemoveResourceUnit(index)}
               resourceUnitIndex={index}
