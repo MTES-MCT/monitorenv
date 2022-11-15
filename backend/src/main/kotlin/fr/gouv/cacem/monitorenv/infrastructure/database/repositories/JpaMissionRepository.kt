@@ -6,16 +6,22 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import java.time.Instant
 
 @Repository
 class JpaMissionRepository(private val dbMissionRepository: IDBMissionRepository,
                            private val mapper: ObjectMapper
 ) : IMissionRepository {
 
-  override fun findMissions(): List<MissionEntity> {
-    return dbMissionRepository.findAllMissions().map { it.toMissionEntity(mapper) }
+  override fun findMissions(afterDateTime: Instant,
+                            beforeDateTime: Instant,
+                            pageable: Pageable): List<MissionEntity> {
+    return dbMissionRepository.findAllMissions(afterDateTime,
+      beforeDateTime,pageable).map { it.toMissionEntity(mapper) }
   }
 
   override fun findMissionById(missionId: Int): MissionEntity {

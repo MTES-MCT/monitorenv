@@ -1,8 +1,7 @@
-import ReloadIcon from '@rsuite/icons/Reload'
 import _ from 'lodash'
-import React, { useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { CheckPicker } from 'rsuite'
+import { MutableRefObject, useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { CheckPicker, DatePicker } from 'rsuite'
 import styled from 'styled-components'
 
 import { missionStatusEnum, missionTypeEnum, missionNatureEnum } from '../../../domain/entities/missions'
@@ -10,15 +9,22 @@ import {
   setMissionStatusFilter,
   setMissionNatureFilter,
   setMissionTypeFilter,
-  resetMissionFilters
+  resetMissionFilters,
+  setMissionStartedAfter,
+  setMissionStartedBefore
 } from '../../../domain/shared_slices/MissionFilters'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+import { ReactComponent as ReloadSVG } from '../../../uiMonitor/icons/Reload.svg'
 
 export function MissionsTableFilters() {
   const dispatch = useDispatch()
-  const { missionNatureFilter, missionStatusFilter, missionTypeFilter } = useSelector(state => state.missionFilters)
+  const { missionNatureFilter, missionStartedAfter, missionStartedBefore, missionStatusFilter, missionTypeFilter } =
+    useAppSelector(state => state.missionFilters)
   const [displayAdvancedFilters, setDisplayAdvancedFilters] = useState(false)
 
-  const unitPickerRef = useRef()
+  const unitPickerRef = useRef() as MutableRefObject<HTMLDivElement>
+  const datepickerStartedAfterRef = useRef() as MutableRefObject<HTMLDivElement>
+  const datepickerStartedBeforeRef = useRef() as MutableRefObject<HTMLDivElement>
   const handleDisplayAdvancedFilters = () => setDisplayAdvancedFilters(!displayAdvancedFilters)
 
   const StatusOptions = Object.values(missionStatusEnum)
@@ -33,6 +39,12 @@ export function MissionsTableFilters() {
   const handleSetNatureFilter = v => {
     dispatch(setMissionNatureFilter(v))
   }
+  const handleSetMissionStartedAfterFilter = v => {
+    dispatch(setMissionStartedAfter(v))
+  }
+  const handleSetMissionStartedBeforeFilter = v => {
+    dispatch(setMissionStartedBefore(v))
+  }
 
   const handleResetFilters = () => {
     dispatch(resetMissionFilters())
@@ -42,6 +54,24 @@ export function MissionsTableFilters() {
     <>
       <Title>FILTRER LA LISTE</Title>
       <FilterWrapper ref={unitPickerRef}>
+        <DatePickerWrapper ref={datepickerStartedAfterRef} data-cy="datepicker-missionStartedAfter">
+          <DatePicker
+            container={() => datepickerStartedAfterRef.current}
+            onChange={handleSetMissionStartedAfterFilter}
+            placeholder="Date de début après le"
+            size="sm"
+            value={missionStartedAfter}
+          />
+        </DatePickerWrapper>
+        <DatePickerWrapper ref={datepickerStartedBeforeRef} data-cy="datepicker-missionStartedBefore">
+          <DatePicker
+            container={() => datepickerStartedBeforeRef.current}
+            onChange={handleSetMissionStartedBeforeFilter}
+            placeholder="Date de début avant le"
+            size="sm"
+            value={missionStartedBefore}
+          />
+        </DatePickerWrapper>
         <CheckPicker
           container={() => unitPickerRef.current}
           data={StatusOptions}
@@ -83,7 +113,15 @@ export function MissionsTableFilters() {
         </AdvancedFiltersButton>
         <Separator />
 
-        {!_.isEmpty([...missionStatusFilter, ...missionNatureFilter, ...missionTypeFilter]) && (
+        {!_.isEmpty(
+          [
+            ...missionStatusFilter,
+            ...missionNatureFilter,
+            ...missionTypeFilter,
+            missionStartedAfter,
+            missionStartedBefore
+          ].filter(v => v)
+        ) && (
           <ResetFiltersButton onClick={handleResetFilters}>
             <ReloadIcon />
             Réinitialiser les filtres
@@ -106,12 +144,15 @@ export function MissionsTableFilters() {
   )
 }
 
+const ReloadIcon = styled(ReloadSVG)``
+
 const Title = styled.h2`
   font-size: 16px;
 `
 
 const FilterWrapper = styled.div`
   display: flex;
+  height: 30px;
 `
 const AdvancedFiltersButton = styled.span`
   display: none;
@@ -120,6 +161,7 @@ const AdvancedFiltersButton = styled.span`
 
 const ResetFiltersButton = styled.div`
   text-decoration: underline;
+  cursor: pointer;
   svg {
     margin-right: 5px;
   }
@@ -132,3 +174,14 @@ const Separator = styled.div`
   flex: 1;
 `
 const tagPickerStyle = { margin: '2px 10px 10px 0', verticalAlign: 'top', width: 160 }
+
+const DatePickerWrapper = styled.div`
+  margin-right: 8px;
+  margin-top: 2px;
+  min-width: 150px;
+  min-height: 20px;
+  .rs-picker-date-menu {
+    position: relative;
+    margin-top: -32px;
+  }
+`

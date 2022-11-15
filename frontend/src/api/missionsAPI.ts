@@ -3,6 +3,10 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type { MissionType } from '../domain/entities/missions'
 
 type MissionsResponse = MissionType[]
+type MissionsFilter = {
+  startedAfterDateTime?: string
+  startedBeforeDateTime?: string
+}
 
 export const missionsAPI = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/bff/v1' }),
@@ -25,14 +29,17 @@ export const missionsAPI = createApi({
     getMission: build.query<MissionType, number>({
       query: id => `missions/${id}`
     }),
-    getMissions: build.query<MissionsResponse, void>({
+    getMissions: build.query<MissionsResponse, MissionsFilter | void>({
       providesTags: result =>
         result
           ? // successful query
             [...result.map(({ id }) => ({ id, type: 'Missions' as const })), { id: 'LIST', type: 'Missions' }]
           : // an error occurred, but we still want to refetch this query when `{ type: 'Missions', id: 'LIST' }` is invalidated
             [{ id: 'LIST', type: 'Missions' }],
-      query: () => `missions`
+      query: filter =>
+        `missions?startedAfterDateTime=${encodeURIComponent(
+          filter?.startedAfterDateTime || ''
+        )}&startedBeforeDateTime=${encodeURIComponent(filter?.startedBeforeDateTime || '')}`
     }),
     updateMission: build.mutation<MissionType, MissionType>({
       invalidatesTags: [{ id: 'LIST', type: 'Missions' }],

@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 import java.util.*
@@ -17,7 +19,10 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
   @Test
   @Transactional
   fun `createMission should create a new mission`() {
-    val existingMissions = jpaMissionRepository.findMissions()
+    val existingMissions = jpaMissionRepository.findMissions(
+      afterDateTime = ZonedDateTime.parse("2022-01-04T10:54:00Z").toInstant(),
+      beforeDateTime = ZonedDateTime.parse("2022-08-07T23:01:09Z").toInstant(),
+      pageable = Pageable.unpaged())
     assertThat(existingMissions).hasSize(50)
     val newMission = MissionEntity(
       missionType = MissionTypeEnum.SEA,
@@ -27,7 +32,10 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     )
     // When
     val newMissionReturn = jpaMissionRepository.create(newMission)
-    val missions = jpaMissionRepository.findMissions()
+    val missions = jpaMissionRepository.findMissions(
+      afterDateTime = ZonedDateTime.parse("2022-01-04T10:54:00Z").toInstant(),
+      beforeDateTime = ZonedDateTime.parse("2022-08-07T23:01:09Z").toInstant(),
+      pageable = Pageable.unpaged())
 
     assertThat(missions).hasSize(51)
   }
@@ -35,9 +43,24 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
   @Transactional
   fun `findMissions Should return all missions`() {
     // When
-    val missions = jpaMissionRepository.findMissions()
-
+    val missions = jpaMissionRepository.findMissions(
+      afterDateTime = ZonedDateTime.parse("2022-01-04T10:54:00Z").toInstant(),
+      beforeDateTime = ZonedDateTime.parse("2022-08-07T23:01:09Z").toInstant(),
+      pageable = Pageable.unpaged())
+    print(missions)
     assertThat(missions).hasSize(50)
+  }
+
+  @Test
+  @Transactional
+  fun `findMissions with pagenumber and pagesize Should return subset of missions`() {
+    // When
+    val missions = jpaMissionRepository.findMissions(
+      afterDateTime = ZonedDateTime.parse("2022-01-04T10:54:00Z").toInstant(),
+      beforeDateTime = ZonedDateTime.parse("2022-08-07T23:01:09Z").toInstant(),
+      pageable = PageRequest.of(1,10))
+    print(missions)
+    assertThat(missions).hasSize(10)
   }
 
   @Test
@@ -191,14 +214,20 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
   @Transactional
   fun `delete Should set the deleted flag as true`() {
     // Given
-    val missionsList = jpaMissionRepository.findMissions()
+    val missionsList = jpaMissionRepository.findMissions(
+      afterDateTime = ZonedDateTime.parse("2022-01-04T10:54:00Z").toInstant(),
+      beforeDateTime = ZonedDateTime.parse("2022-08-07T23:01:09Z").toInstant(),
+      pageable = Pageable.unpaged())
     assertThat(missionsList).hasSize(50)
 
     // When
     jpaMissionRepository.delete(missionsList.first().id!!)
 
     // Then
-    val nextMissionList = jpaMissionRepository.findMissions()
+    val nextMissionList = jpaMissionRepository.findMissions(
+      afterDateTime = ZonedDateTime.parse("2022-01-04T10:54:00Z").toInstant(),
+      beforeDateTime = ZonedDateTime.parse("2022-08-07T23:01:09Z").toInstant(),
+      pageable = Pageable.unpaged())
     assertThat(nextMissionList).hasSize(49)
   }
 }
