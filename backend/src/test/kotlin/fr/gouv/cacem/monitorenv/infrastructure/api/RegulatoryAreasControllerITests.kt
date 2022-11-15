@@ -1,8 +1,9 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api
 
 import fr.gouv.cacem.monitorenv.MeterRegistryConfiguration
-import fr.gouv.cacem.monitorenv.domain.use_cases.crud.regulatoryAreas.*
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.RegulatoryAreasController
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaById
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreas
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.RegulatoryAreasController
 
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test

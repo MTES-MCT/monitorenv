@@ -2,10 +2,10 @@ package fr.gouv.cacem.monitorenv.infrastructure.api
 
 import fr.gouv.cacem.monitorenv.MeterRegistryConfiguration
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.MissionsController
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.MissionsController
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.domain.entities.missions.*
-
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
@@ -25,7 +25,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.time.ZonedDateTime
 import com.fasterxml.jackson.databind.ObjectMapper
-import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.*
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.mockito.Mockito

@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api
 
 import fr.gouv.cacem.monitorenv.MeterRegistryConfiguration
 import fr.gouv.cacem.monitorenv.domain.entities.natinfs.NatinfEntity
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.NatinfsController
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.NatinfsController
 
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import com.fasterxml.jackson.databind.ObjectMapper
-import fr.gouv.cacem.monitorenv.domain.use_cases.crud.natinfs.GetNatinfs
+import fr.gouv.cacem.monitorenv.domain.use_cases.natinfs.GetNatinfs
 
 @Import(MeterRegistryConfiguration::class)
 @ExtendWith(SpringExtension::class)

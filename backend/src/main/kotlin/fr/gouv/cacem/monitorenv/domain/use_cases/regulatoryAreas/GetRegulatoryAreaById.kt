@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.crud.regulatoryAreas
+package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryAreas.RegulatoryAreaEntity

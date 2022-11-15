@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.crud.controlThemes
+package fr.gouv.cacem.monitorenv.domain.use_cases.controlThemes
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.controlThemes.ControlThemeEntity

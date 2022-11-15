@@ -1,8 +1,7 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
-import fr.gouv.cacem.monitorenv.domain.use_cases.crud.natinfs.GetNatinfs
+import fr.gouv.cacem.monitorenv.domain.use_cases.natinfs.GetNatinfs
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.NatinfDataOutput
-import io.micrometer.core.instrument.MeterRegistry
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.GetMapping
@@ -13,8 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/bff/v1/natinfs")
 @Tag(description = "API Natinf", name = "Natinf")
 class NatinfsController(
-  private val getNatinfs: GetNatinfs,
-  meterRegistry: MeterRegistry
+  private val getNatinfs: GetNatinfs
   ) {
 
     @GetMapping("")

@@ -5,7 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionNatureEnum
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionStatusEnum
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.CreateMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateMission
 
 import com.nhaarman.mockitokotlin2.*
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository

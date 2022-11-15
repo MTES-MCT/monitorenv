@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.crud.healthcheck
+package fr.gouv.cacem.monitorenv.domain.use_cases.healthcheck
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.health.Health

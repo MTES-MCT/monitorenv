@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions
+package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
@@ -11,9 +11,6 @@ class CreateMission(private val missionRepository: IMissionRepository,
 ) {
   @Throws(IllegalArgumentException::class)
   fun execute(mission: MissionEntity): MissionEntity {
-    require(mission != null) {
-      "No mission to create"
-    }
 
     if (mission.geom != null) {
       val missionToSave = mission.copy(

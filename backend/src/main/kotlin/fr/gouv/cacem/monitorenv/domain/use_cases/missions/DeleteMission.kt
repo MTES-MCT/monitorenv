@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions
+package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository

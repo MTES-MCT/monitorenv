@@ -10,7 +10,7 @@
  import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionStatusEnum
  import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
  import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
- import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.UpdateMission
+ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.UpdateMission
  import org.assertj.core.api.Assertions.assertThat
  import org.assertj.core.api.Assertions.catchThrowable
  import org.junit.jupiter.api.Test

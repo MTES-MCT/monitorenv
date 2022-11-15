@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.crud.natinfs
+package fr.gouv.cacem.monitorenv.domain.use_cases.natinfs
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.natinfs.NatinfEntity

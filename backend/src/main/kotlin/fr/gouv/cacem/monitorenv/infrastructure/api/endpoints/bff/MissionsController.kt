@@ -1,13 +1,8 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
-import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.CreateMission
-import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.GetMissionById
-import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.GetMissions
-import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.UpdateMission
-import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.DeleteMission
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.*
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.*
-
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdateMissionDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.MissionDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*
@@ -63,8 +58,7 @@ class MissionsController(
     @RequestBody
     updateMissionDataInput: CreateOrUpdateMissionDataInput
   ): MissionDataOutput {
-    // FIXME: à déplacer dans le execute
-    if(missionId !== updateMissionDataInput.id) {
+    if(updateMissionDataInput.id === null || missionId !== updateMissionDataInput.id) {
       throw java.lang.IllegalArgumentException("missionId doesn't match with request param")
     }
     return updateMission.execute(

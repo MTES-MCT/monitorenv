@@ -15,6 +15,6 @@ class JpaNatinfRepositoryITests : AbstractDBTests() {
   fun `findNatinfs Should return all natinfs`() {
     // When
     val natinfs = jpaNatinfsRepository.findNatinfs()
-    assertThat(natinfs).hasSize(1056)
+    assertThat(natinfs).hasSize(661)
   }
 }
