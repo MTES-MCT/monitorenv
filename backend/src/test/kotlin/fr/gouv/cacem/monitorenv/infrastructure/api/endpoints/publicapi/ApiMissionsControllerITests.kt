@@ -1,8 +1,7 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
 import fr.gouv.cacem.monitorenv.MeterRegistryConfiguration
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.MissionsController
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.domain.entities.missions.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
@@ -27,16 +26,13 @@ import java.time.ZonedDateTime
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
-import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mockito
-import org.springframework.data.domain.Pageable
-import java.time.Instant
 import java.util.*
 
 @Import(MeterRegistryConfiguration::class, MapperConfiguration::class)
 @ExtendWith(SpringExtension::class)
-@WebMvcTest(value = [(MissionsController::class)])
-class MissionsControllerITests {
+@WebMvcTest(value = [(ApiMissionsController::class)])
+class ApiMissionsControllerITests {
 
   @Autowired
   private lateinit var mockMvc: MockMvc
@@ -93,7 +89,7 @@ class MissionsControllerITests {
     given(this.createMission.execute(mission = any())).willReturn(newMission)
     // When
     mockMvc.perform(
-      put("/bff/v1/missions")
+      put("/api/v1/missions")
       .content(requestbody)
       .contentType(MediaType.APPLICATION_JSON)
     )
@@ -128,7 +124,7 @@ class MissionsControllerITests {
     any())).willReturn(listOf(firstMission))
 
     // When
-    mockMvc.perform(get("/bff/v1/missions"))
+    mockMvc.perform(get("/api/v1/missions"))
       // Then
       .andDo(MockMvcResultHandlers.print())
       .andExpect(status().isOk)
@@ -155,7 +151,7 @@ class MissionsControllerITests {
     given(getMissionById.execute(requestedId)).willReturn(firstMission)
 
     // When
-    mockMvc.perform(get("/bff/v1/missions/$requestedId"))
+    mockMvc.perform(get("/api/v1/missions/$requestedId"))
       // Then
       .andExpect(status().isOk)
       .andExpect(jsonPath("$.missionType", equalTo(MissionTypeEnum.SEA.toString())))
@@ -192,7 +188,7 @@ class MissionsControllerITests {
     given(this.updateMission.execute(any())).willReturn(expectedUpdatedMission)
     // When
     mockMvc.perform(
-      put("/bff/v1/missions/14")
+      put("/api/v1/missions/14")
         .content(objectMapper.writeValueAsString(requestBody))
         .contentType(MediaType.APPLICATION_JSON)
     )
@@ -205,7 +201,7 @@ class MissionsControllerITests {
   fun `Should delete mission`() {
     // Given
     // When
-    mockMvc.perform(delete("/bff/v1/missions/20"))
+    mockMvc.perform(delete("/api/v1/missions/20"))
     // Then
       .andExpect(status().isOk)
     Mockito.verify(deleteMission).execute(20)

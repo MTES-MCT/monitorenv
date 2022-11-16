@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
 import fr.gouv.cacem.monitorenv.MeterRegistryConfiguration
 import fr.gouv.cacem.monitorenv.domain.entities.controlThemes.ControlThemeEntity
