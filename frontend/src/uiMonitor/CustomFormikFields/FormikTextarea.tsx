@@ -10,5 +10,5 @@ export function FormikTextarea({ name, ...props }) {
     setValue(e)
   }
 
-  return <Input as="textarea" onChange={handleOnChange} rows={3} value={value} {...props} />
+  return <Input as="textarea" onChange={handleOnChange} rows={3} value={value || ''} {...props} />
 }

@@ -70,20 +70,22 @@ class ApiMissionsControllerITests {
       missionStatus = MissionStatusEnum.CLOSED,
       facade = "Outre-Mer",
       geom = polygon,
-      observations = null,
+      observationsCnsp = null,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
       inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-      isDeleted = false
+      isDeleted = false,
+      missionSource = MissionSourceEnum.CNSP
     )
     val newMissionRequest = CreateOrUpdateMissionDataInput(
       missionType = MissionTypeEnum.LAND,
       missionStatus = MissionStatusEnum.CLOSED,
       missionNature = listOf(MissionNatureEnum.ENV),
-      observations = null,
+      observationsCnsp = null,
       facade = "Outre-Mer",
       geom = polygon,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-      inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z")
+      inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+      missionSource = MissionSourceEnum.CNSP
     )
     val requestbody = objectMapper.writeValueAsString(newMissionRequest)
     given(this.createMission.execute(mission = any())).willReturn(newMission)
@@ -113,10 +115,11 @@ class ApiMissionsControllerITests {
       missionNature = listOf(MissionNatureEnum.ENV),
       facade = "Outre-Mer",
       geom = polygon,
-      observations = null,
+      observationsCnsp = null,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
       inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-      isDeleted = false
+      isDeleted = false,
+      missionSource = MissionSourceEnum.CNSP
     )
     given(this.getMissions.execute(
        any(),
@@ -145,7 +148,8 @@ class ApiMissionsControllerITests {
       missionType = MissionTypeEnum.SEA,
       missionStatus = MissionStatusEnum.PENDING,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-      isDeleted = false
+      isDeleted = false,
+      missionSource = MissionSourceEnum.CNSP
     )
     // we test only if the route is called with the right arg
     given(getMissionById.execute(requestedId)).willReturn(firstMission)
@@ -165,9 +169,11 @@ class ApiMissionsControllerITests {
       id = 14,
       missionType = MissionTypeEnum.SEA,
       missionStatus = MissionStatusEnum.PENDING,
-      observations = "updated observations",
+      observationsCacem = "updated observations",
+      observationsCnsp = "updated observations",
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-      isDeleted = false
+      isDeleted = false,
+      missionSource = MissionSourceEnum.CNSP
     )
     val envAction = EnvActionControlEntity(
       id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
@@ -179,8 +185,10 @@ class ApiMissionsControllerITests {
       id = 14,
       missionType = MissionTypeEnum.SEA,
       missionStatus = MissionStatusEnum.PENDING,
-      observations = "updated observations",
+      observationsCacem = "updated observations",
+      observationsCnsp = "updated observations",
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+      missionSource = MissionSourceEnum.CNSP,
       envActions = listOf(envAction)
     )
     // FIXME
@@ -194,7 +202,7 @@ class ApiMissionsControllerITests {
     )
       // Then
       .andExpect(status().isOk)
-      .andExpect(jsonPath("$.observations", equalTo(expectedUpdatedMission.observations)))
+      .andExpect(jsonPath("$.observationsCnsp", equalTo(expectedUpdatedMission.observationsCnsp)))
   }
 
   @Test

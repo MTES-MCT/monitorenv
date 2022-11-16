@@ -15,7 +15,7 @@ import { ReactComponent as LocalizeIconSVG } from '../../../uiMonitor/icons/Focu
 import { getCoordinates } from '../../../utils/coordinates'
 
 export function ControlPositions({ name }) {
-  const [geomField] = useField('geom')
+  const [missionGeomField] = useField('geom')
   const [field, , helpers] = useField(name)
   const { value } = field
   const { setValue } = helpers
@@ -23,7 +23,7 @@ export function ControlPositions({ name }) {
   const { coordinatesFormat } = useAppSelector(state => state.map)
 
   const handleAddControlPositions = () => {
-    dispatch(addControlPositions({ callback: setValue, geom: value, missionGeom: geomField?.value }))
+    dispatch(addControlPositions({ callback: setValue, geom: value, missionGeom: missionGeomField?.value }))
   }
 
   const handleDeleteControlPosition = index => () => {

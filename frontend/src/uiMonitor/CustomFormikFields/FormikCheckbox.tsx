@@ -6,12 +6,12 @@ export function FormikCheckbox({ label, name, ...props }) {
   const [field, , helpers] = useField(name)
   const { value } = field
   const { setValue } = helpers
-  const handleSetValue = val => {
-    setValue(val)
+  const handleSetValue = (_, checked) => {
+    setValue(checked)
   }
 
   return (
-    <Checkbox name={name} onChange={handleSetValue} value={value} {...props}>
+    <Checkbox checked={value} name={name} onChange={handleSetValue} {...props}>
       {label}
     </Checkbox>
   )

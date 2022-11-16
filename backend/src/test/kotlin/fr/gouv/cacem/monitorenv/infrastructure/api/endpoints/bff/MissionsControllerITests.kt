@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
 import fr.gouv.cacem.monitorenv.MeterRegistryConfiguration
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.MissionsController
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.domain.entities.missions.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
@@ -27,10 +26,7 @@ import java.time.ZonedDateTime
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
-import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mockito
-import org.springframework.data.domain.Pageable
-import java.time.Instant
 import java.util.*
 
 @Import(MeterRegistryConfiguration::class, MapperConfiguration::class)
@@ -62,10 +58,10 @@ class MissionsControllerITests {
   @Test
   fun `Should create a new mission`() {
 
-    val WKTreader = WKTReader()
+    val wktReader = WKTReader()
     val multipolygonString =
       "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
-    val polygon = WKTreader.read(multipolygonString) as MultiPolygon
+    val polygon = wktReader.read(multipolygonString) as MultiPolygon
     // Given
     val newMission = MissionEntity(
       id = 10,
@@ -74,20 +70,22 @@ class MissionsControllerITests {
       missionStatus = MissionStatusEnum.CLOSED,
       facade = "Outre-Mer",
       geom = polygon,
-      observations = null,
+      observationsCacem = null,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
       inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-      isDeleted = false
+      isDeleted = false,
+      missionSource = MissionSourceEnum.CACEM
     )
     val newMissionRequest = CreateOrUpdateMissionDataInput(
       missionType = MissionTypeEnum.LAND,
       missionStatus = MissionStatusEnum.CLOSED,
       missionNature = listOf(MissionNatureEnum.ENV),
-      observations = null,
+      observationsCacem = null,
       facade = "Outre-Mer",
       geom = polygon,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-      inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z")
+      inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+      missionSource = MissionSourceEnum.CACEM
     )
     val requestbody = objectMapper.writeValueAsString(newMissionRequest)
     given(this.createMission.execute(mission = any())).willReturn(newMission)
@@ -105,10 +103,10 @@ class MissionsControllerITests {
   @Test
   fun `Should get all missions`() {
     // Given
-    val WKTreader = WKTReader()
+    val wktReader = WKTReader()
     val multipolygonString =
       "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
-    val polygon = WKTreader.read(multipolygonString) as MultiPolygon
+    val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
     val firstMission = MissionEntity(
       id = 10,
@@ -117,10 +115,11 @@ class MissionsControllerITests {
       missionNature = listOf(MissionNatureEnum.ENV),
       facade = "Outre-Mer",
       geom = polygon,
-      observations = null,
+      observationsCacem = null,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
       inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-      isDeleted = false
+      isDeleted = false,
+      missionSource = MissionSourceEnum.CACEM
     )
     given(this.getMissions.execute(
        any(),
@@ -149,7 +148,8 @@ class MissionsControllerITests {
       missionType = MissionTypeEnum.SEA,
       missionStatus = MissionStatusEnum.PENDING,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-      isDeleted = false
+      isDeleted = false,
+      missionSource = MissionSourceEnum.CACEM
     )
     // we test only if the route is called with the right arg
     given(getMissionById.execute(requestedId)).willReturn(firstMission)
@@ -169,9 +169,10 @@ class MissionsControllerITests {
       id = 14,
       missionType = MissionTypeEnum.SEA,
       missionStatus = MissionStatusEnum.PENDING,
-      observations = "updated observations",
+      observationsCacem = "updated observationsCacem",
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-      isDeleted = false
+      isDeleted = false,
+      missionSource = MissionSourceEnum.CACEM
     )
     val envAction = EnvActionControlEntity(
       id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
@@ -183,9 +184,10 @@ class MissionsControllerITests {
       id = 14,
       missionType = MissionTypeEnum.SEA,
       missionStatus = MissionStatusEnum.PENDING,
-      observations = "updated observations",
+      observationsCacem = "updated observationsCacem",
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-      envActions = listOf(envAction)
+      envActions = listOf(envAction),
+      missionSource = MissionSourceEnum.CACEM
     )
     // FIXME
     // given(this.updateMission.execute(mission = requestBody.toMissionEntity())).willReturn(expectedUpdatedMission)
@@ -198,7 +200,7 @@ class MissionsControllerITests {
     )
       // Then
       .andExpect(status().isOk)
-      .andExpect(jsonPath("$.observations", equalTo(expectedUpdatedMission.observations)))
+      .andExpect(jsonPath("$.observationsCacem", equalTo(expectedUpdatedMission.observationsCacem)))
   }
 
   @Test

@@ -73,7 +73,8 @@ data class EnvActionModel(
       actionType = action.actionType,
       actionStartDateTime = action.actionStartDatetimeUtc?.toInstant(),
       value = EnvActionMapper.envActionEntityToJSON(mapper, action),
-      mission = mission
+      mission = mission,
+      geom = action.geom
     )
   }
 

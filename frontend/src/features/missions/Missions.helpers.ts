@@ -5,24 +5,19 @@ import {
   actionTypeEnum,
   formalNoticeEnum,
   infractionTypeEnum,
+  MissionSourceEnum,
   missionStatusEnum,
   missionTypeEnum,
   vehicleTypeEnum
 } from '../../domain/entities/missions'
 
 export const infractionFactory = ({ id, ...infraction } = { id: undefined }) => ({
-  // companyName: '',
-  // controlledPersonIdentity: '',
   formalNotice: formalNoticeEnum.NO.code,
   id: uuidv4(),
   infractionType: infractionTypeEnum.WITHOUT_REPORT.code,
   natinf: [],
   observations: '',
-  // registrationNumber: '',
-  // relevantCourt: '',
   toProcess: false,
-  // vesselSize: '',
-  // vesselType: '',
   ...infraction
 })
 
@@ -78,9 +73,11 @@ export const missionFactory = (mission = {}) => ({
   inputEndDatetimeUtc: '',
   inputStartDatetimeUtc: new Date().toISOString(),
   missionNature: [],
+  missionSource: MissionSourceEnum.CACEM,
   missionStatus: missionStatusEnum.PENDING.code,
   missionType: missionTypeEnum.SEA.code,
-  observations: '',
+  observationsCacem: '',
+  observationsCnsp: '',
   openBy: '',
   resourceUnits: [resourceUnitFactory()],
   ...mission

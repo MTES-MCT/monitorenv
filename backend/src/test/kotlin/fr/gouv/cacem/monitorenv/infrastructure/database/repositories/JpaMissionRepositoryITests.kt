@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.missions.*
+
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
@@ -28,7 +29,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
       missionType = MissionTypeEnum.SEA,
       missionStatus = MissionStatusEnum.PENDING,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-      isDeleted = false
+      isDeleted = false,
+      missionSource = MissionSourceEnum.CACEM
     )
     // When
     val newMissionReturn = jpaMissionRepository.create(newMission)
@@ -80,12 +82,13 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
       openBy = "Kimberly Smith",
       closedBy = "Travis Carter",
       facade = "MED",
-      observations = "Remain vote several ok. Bring American play woman challenge. Throw low law positive seven.",
+      observationsCacem = "Remain vote several ok. Bring American play woman challenge. Throw low law positive seven.",
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-03-21T12:11:13Z"),
       inputEndDatetimeUtc = ZonedDateTime.parse("2022-05-27T01:26:04Z"),
       geom = polygon,
       isDeleted = false,
-      envActions = listOf()
+      envActions = listOf(),
+      missionSource = MissionSourceEnum.CACEM
     )
     val mission = jpaMissionRepository.findMissionById(10)
 
@@ -162,11 +165,13 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
       closedBy = "Carol Tim",
       facade = "MEMN",
       geom = polygon,
-      observations = null,
+      observationsCacem = null,
+      observationsCnsp = null,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
       inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
       isDeleted = false,
-      envActions = listOf(controlAction, surveillanceAction, noteAction)
+      envActions = listOf(controlAction, surveillanceAction, noteAction),
+      missionSource = MissionSourceEnum.CACEM
     )
     // When
     val mission = jpaMissionRepository.save(expectedUpdatedMission)
@@ -197,11 +202,13 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
       missionStatus = MissionStatusEnum.CLOSED,
       facade = "NAMO",
       geom = polygon,
-      observations = null,
+      observationsCacem = null,
+      observationsCnsp = null,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
       inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
       isDeleted = false,
-      envActions = listOf(envAction)
+      envActions = listOf(envAction),
+      missionSource = MissionSourceEnum.CACEM
     )
     // When
     val mission = jpaMissionRepository.save(expectedUpdatedMission)

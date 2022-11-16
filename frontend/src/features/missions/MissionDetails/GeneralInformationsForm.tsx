@@ -55,8 +55,14 @@ export function GeneralInformationsForm() {
 
       <MissionZones name="geom" />
       <Form.Group>
-        <Form.ControlLabel htmlFor="observations">Observations générales </Form.ControlLabel>
-        <InputObservations name="observations" />
+        <ColWrapper>
+          <Form.ControlLabel htmlFor="observationsCacem">Observations CACEM </Form.ControlLabel>
+          <InputObservations name="observationsCacem" />
+        </ColWrapper>
+        <ColWrapper>
+          <Form.ControlLabel htmlFor="observationsCnsp">Observations CNSP </Form.ControlLabel>
+          <InputObservations name="observationsCnsp" />
+        </ColWrapper>
       </Form.Group>
 
       <Form.Group>

@@ -7,11 +7,13 @@ import styled from 'styled-components'
 import { useGetControlThemesQuery } from '../../../api/controlThemesAPI'
 import { COLORS } from '../../../constants/constants'
 import { usePrevious } from '../../../hooks/usePrevious'
+import { FormikCheckbox } from '../../../uiMonitor/CustomFormikFields/FormikCheckbox'
 import { FormikDatePicker, placeholderDateTimePicker } from '../../../uiMonitor/CustomFormikFields/FormikDatePicker'
 import { FormikInputNumberGhost } from '../../../uiMonitor/CustomFormikFields/FormikInputNumber'
 import { FormikTextarea } from '../../../uiMonitor/CustomFormikFields/FormikTextarea'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as SurveillanceIconSVG } from '../../../uiMonitor/icons/Observation.svg'
+import { ControlPositions } from './ControlPositions'
 import { ControlThemeSelector } from './ControlThemeSelector'
 
 import type { MissionType, EnvActionControlType } from '../../../domain/entities/missions'
@@ -78,24 +80,30 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
           </SelectorWrapper>
         </>
       )}
+      <FlexSelectorWrapper>
+        <Column>
+          <Form.ControlLabel htmlFor={`envActions[${currentActionIndex}].actionStartDatetimeUtc`}>
+            Date et heure du début de la surveillance
+          </Form.ControlLabel>
+          <FormikDatePicker
+            format="dd MMM yyyy, HH:mm"
+            ghost
+            name={`envActions[${currentActionIndex}].actionStartDatetimeUtc`}
+            oneTap
+            placeholder={placeholderDateTimePicker}
+          />
+        </Column>
+        <Column>
+          <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.duration`}>Durée</Form.ControlLabel>
+          <SizedFormikInputNumberGhost name={`envActions.${currentActionIndex}.duration`} size="sm" />
+        </Column>
+      </FlexSelectorWrapper>
 
-      <SelectorWrapper>
-        <Form.ControlLabel htmlFor={`envActions[${currentActionIndex}].actionStartDatetimeUtc`}>
-          Date et heure de début{' '}
-        </Form.ControlLabel>
-        <FormikDatePicker
-          format="dd MMM yyyy, HH:mm"
-          ghost
-          name={`envActions[${currentActionIndex}].actionStartDatetimeUtc`}
-          oneTap
-          placeholder={placeholderDateTimePicker}
-        />
-      </SelectorWrapper>
-
-      <Form.Group>
-        <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.duration`}>Durée</Form.ControlLabel>
-        <FormikInputNumberGhost name={`envActions.${currentActionIndex}.duration`} size="sm" />
-      </Form.Group>
+      <ControlPositions name={`envActions[${currentActionIndex}].geom`} />
+      <FormikCheckbox
+        label="Zone de surveillance équivalente à la zone de mission"
+        name={`envActions[${currentActionIndex}].coverMissionZone`}
+      />
 
       <Form.Group>
         <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.observations`}>Observations </Form.ControlLabel>
@@ -120,6 +128,15 @@ const Title = styled.h2`
 const SelectorWrapper = styled(Form.Group)`
   height: 58px;
 `
+const FlexSelectorWrapper = styled(Form.Group)`
+  height: 58px;
+  display: flex;
+`
+const Column = styled.div`
+  & :not(:last-child) {
+    margin-right: 24px;
+  }
+`
 
 const SurveillanceIcon = styled(SurveillanceIconSVG)`
   margin-right: 8px;
@@ -132,4 +149,7 @@ const DeleteIcon = styled(DeleteSVG)`
 
 const IconButtonRight = styled(IconButton)`
   margin-left: auto;
+`
+const SizedFormikInputNumberGhost = styled(FormikInputNumberGhost)`
+  width: 130px !important;
 `

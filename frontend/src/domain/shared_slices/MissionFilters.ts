@@ -1,12 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
 
 type MissionFiltersSliceType = {
   missionNatureFilter: string[]
-  missionStartedAfter: Date | null
-  missionStartedBefore: Date | null
+  missionStartedAfter: string | null
+  missionStartedBefore: string | null
   missionStatusFilter: string[]
   missionTypeFilter: string[]
 }
+
 const initialState: MissionFiltersSliceType = {
   missionNatureFilter: [],
   missionStartedAfter: null,
@@ -14,6 +17,12 @@ const initialState: MissionFiltersSliceType = {
   missionStatusFilter: [],
   missionTypeFilter: []
 }
+
+const persistConfig = {
+  key: 'missionFilters',
+  storage
+}
+
 const missionFiltersSlice = createSlice({
   initialState,
   name: 'missionFilters',
@@ -48,4 +57,4 @@ export const {
   setMissionTypeFilter
 } = missionFiltersSlice.actions
 
-export const missionFiltersReducer = missionFiltersSlice.reducer
+export const missionFiltersPersistedReducer = persistReducer(persistConfig, missionFiltersSlice.reducer)

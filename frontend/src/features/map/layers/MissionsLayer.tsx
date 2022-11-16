@@ -19,8 +19,8 @@ export function MissionsLayer({ map, mapClickEvent }) {
   const { missionStartedAfter, missionStartedBefore } = useAppSelector(state => state.missionFilters)
   const { data } = useGetMissionsQuery(
     {
-      startedAfterDateTime: missionStartedAfter?.toISOString(),
-      startedBeforeDateTime: missionStartedBefore?.toISOString()
+      startedAfterDateTime: missionStartedAfter || undefined,
+      startedBeforeDateTime: missionStartedBefore || undefined
     },
     { pollingInterval: TWO_MINUTES }
   )

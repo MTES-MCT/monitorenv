@@ -13,6 +13,7 @@ data class EnvActionSurveillanceEntity (
   val protectedSpecies: List<String>? = listOf(),
   val duration: Double? = null,
   val observations: String? = null,
+  val coverMissionZone: Boolean? = null,
 ): EnvActionEntity(
   actionType = ActionTypeEnum.SURVEILLANCE,
   id = id

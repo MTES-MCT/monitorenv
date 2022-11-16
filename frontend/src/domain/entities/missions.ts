@@ -222,10 +222,16 @@ export const missionStatusEnum = {
     libelle: 'En cours'
   }
 }
+
 export enum MissionStatusEnum {
   CLOSED = 'CLOSED',
   ENDED = 'ENDED',
   PENDING = 'PENDING'
+}
+
+export enum MissionSourceEnum {
+  CACEM = 'CACEM',
+  CNSP = 'CNSP'
 }
 
 export const THEME_REQUIRE_PROTECTED_SPECIES = ['Police des espèces protégées et de leurs habitats (faune et flore)']
@@ -258,9 +264,11 @@ export type MissionType<EnvActionType = EnvActionControlType | EnvActionSurveill
   inputEndDatetimeUtc: string
   inputStartDatetimeUtc: string
   missionNature: MissionNatureEnum
+  missionSource: MissionSourceEnum
   missionStatus: MissionStatusEnum
   missionType: MissionTypeEnum
-  observations: string
+  observationsCacem: string
+  observationsCnsp: string
   openBy: string
   resourceUnits: string
 }

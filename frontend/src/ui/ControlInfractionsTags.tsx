@@ -1,4 +1,3 @@
-import React from 'react'
 import { Tag, TagGroup } from 'rsuite'
 
 import { getControlInfractionsTags } from '../features/missions/Missions.helpers'

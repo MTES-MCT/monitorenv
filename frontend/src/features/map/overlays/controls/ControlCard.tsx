@@ -28,7 +28,9 @@ export function ControlCard({ feature }) {
           réalisé{actionNumberOfControls > 1 ? 's' : ''} sur des cibles de type{' '}
           <Accented>{actionTargetTypeEnum[actionTargetType]?.libelle || 'non spécifié'}</Accented>
         </Actions>
-        <ControlInfractionsTags actionNumberOfControls={actionNumberOfControls} infractions={infractions} />
+        {infractions && (
+          <ControlInfractionsTags actionNumberOfControls={actionNumberOfControls} infractions={infractions} />
+        )}
       </Col2>
     </ControlCardHeader>
   )

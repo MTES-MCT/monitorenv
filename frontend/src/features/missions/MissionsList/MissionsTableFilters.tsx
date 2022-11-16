@@ -39,16 +39,18 @@ export function MissionsTableFilters() {
   const handleSetNatureFilter = v => {
     dispatch(setMissionNatureFilter(v))
   }
-  const handleSetMissionStartedAfterFilter = v => {
-    dispatch(setMissionStartedAfter(v))
+  const handleSetMissionStartedAfterFilter = (v: Date | null) => {
+    dispatch(setMissionStartedAfter(v ? v.toISOString() : null))
   }
-  const handleSetMissionStartedBeforeFilter = v => {
-    dispatch(setMissionStartedBefore(v))
+  const handleSetMissionStartedBeforeFilter = (v: Date | null) => {
+    dispatch(setMissionStartedBefore(v ? v.toISOString() : null))
   }
 
   const handleResetFilters = () => {
     dispatch(resetMissionFilters())
   }
+  const missionStartedAfterDate = (missionStartedAfter && new Date(missionStartedAfter)) || undefined
+  const missionStartedBeforeDate = (missionStartedBefore && new Date(missionStartedBefore)) || undefined
 
   return (
     <>
@@ -60,7 +62,7 @@ export function MissionsTableFilters() {
             onChange={handleSetMissionStartedAfterFilter}
             placeholder="Date de début après le"
             size="sm"
-            value={missionStartedAfter}
+            value={missionStartedAfterDate}
           />
         </DatePickerWrapper>
         <DatePickerWrapper ref={datepickerStartedBeforeRef} data-cy="datepicker-missionStartedBefore">
@@ -69,7 +71,7 @@ export function MissionsTableFilters() {
             onChange={handleSetMissionStartedBeforeFilter}
             placeholder="Date de début avant le"
             size="sm"
-            value={missionStartedBefore}
+            value={missionStartedBeforeDate}
           />
         </DatePickerWrapper>
         <CheckPicker

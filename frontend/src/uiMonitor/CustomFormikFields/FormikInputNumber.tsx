@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import { COLORS } from '../../constants/constants'
 
-export function FormikInputNumber({ name, ...props }) {
+export function FormikInputNumber({ className, name, ...props }) {
   const [field, , helpers] = useField(name)
   const { value } = field
   const { setValue } = helpers
@@ -14,7 +14,7 @@ export function FormikInputNumber({ name, ...props }) {
     setValue(v)
   }
 
-  return <InputNumber onChange={handleOnChange} value={value} {...props} />
+  return <InputNumber className={className} onChange={handleOnChange} value={value} {...props} />
 }
 
 export const FormikInputNumberGhost = styled(FormikInputNumber)`

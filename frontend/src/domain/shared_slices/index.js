@@ -15,7 +15,7 @@ import { interestPointSlicePersistedReducer } from './InterestPoint'
 import layerSidebar from './LayerSidebar'
 import { mapSliceReducer } from './Map'
 import { measurementSlicePersistedReducer } from './Measurement'
-import { missionFiltersReducer } from './MissionFilters'
+import { missionFiltersPersistedReducer } from './MissionFilters'
 import missionState from './MissionsState'
 import { regulatorySlicePersistedReducer } from './Regulatory'
 import { regulatoryMetadataSliceReducer } from './RegulatoryMetadata'
@@ -28,7 +28,7 @@ export const homeReducers = combineReducers({
   layerSidebar,
   map: mapSliceReducer,
   measurement: measurementSlicePersistedReducer,
-  missionFilters: missionFiltersReducer,
+  missionFilters: missionFiltersPersistedReducer,
   missionState,
   regulatory: regulatorySlicePersistedReducer,
   regulatoryLayerSearch: regulatoryLayerSearchSliceReducer,

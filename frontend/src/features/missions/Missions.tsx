@@ -22,8 +22,8 @@ export function Missions() {
 
   const { data, isError, isLoading } = useGetMissionsQuery(
     {
-      startedAfterDateTime: missionStartedAfter?.toISOString(),
-      startedBeforeDateTime: missionStartedBefore?.toISOString()
+      startedAfterDateTime: missionStartedAfter || undefined,
+      startedBeforeDateTime: missionStartedBefore || undefined
     },
     { pollingInterval: TWO_MINUTES }
   )
