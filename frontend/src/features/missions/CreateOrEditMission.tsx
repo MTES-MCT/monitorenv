@@ -1,7 +1,9 @@
 /* eslint-disable react/jsx-props-no-spreading */
+import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Formik, FieldArray } from 'formik'
 import { useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { matchPath } from 'react-router-dom'
 import { Button, IconButton, ButtonToolbar } from 'rsuite'
 import styled from 'styled-components'
 
@@ -18,6 +20,7 @@ import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { setError } from '../../domain/shared_slices/Global'
 import { setMissionState } from '../../domain/shared_slices/MissionsState'
 import { quitEditMission } from '../../domain/use_cases/missions/missionAndControlLocalisation'
+import { useAppSelector } from '../../hooks/useAppSelector'
 import { SyncFormValuesWithRedux } from '../../hooks/useSyncFormValuesWithRedux'
 import { FormikForm } from '../../uiMonitor/CustomFormikFields/FormikForm'
 import { ReactComponent as DeleteSVG } from '../../uiMonitor/icons/Delete.svg'
@@ -30,17 +33,24 @@ import { ActionsForm } from './MissionDetails/ActionsForm'
 import { GeneralInformationsForm } from './MissionDetails/GeneralInformationsForm'
 import { missionFactory } from './Missions.helpers'
 
-export function CreateOrEditMission({ routeParams }) {
+export function CreateOrEditMission() {
   const dispatch = useDispatch()
+  const { sideWindowPath } = useAppSelector(state => state.sideWindowRouter)
+
+  const routeParams = matchPath<{ id: string }>(sideWindowPath, {
+    exact: true,
+    path: [sideWindowPaths.MISSION, sideWindowPaths.MISSION_NEW],
+    strict: true
+  })
   const [currentActionIndex, setCurrentActionIndex] = useState(null)
   const [errorOnSave, setErrorOnSave] = useState(false)
   const [errorOnDelete, setErrorOnDelete] = useState(false)
   const [cancelEditModalIsOpen, setCancelEditModalIsOpen] = useState(false)
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
 
-  const id = routeParams?.params?.id && parseInt(routeParams?.params?.id, 10)
+  const id = routeParams?.params?.id ? parseInt(routeParams?.params?.id, 10) : undefined
 
-  const { data: missionToEdit } = useGetMissionQuery(id, { skip: !id })
+  const { data: missionToEdit } = useGetMissionQuery(id ?? skipToken)
 
   const [updateMission, { isLoading: isLoadingUpdateMission }] = useUpdateMissionMutation()
 

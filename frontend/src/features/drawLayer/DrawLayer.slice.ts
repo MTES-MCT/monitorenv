@@ -1,15 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-/* eslint-disable */
-/** @namespace DrawLayerReducer */
-const DrawLayerReducer = null
-/* eslint-enable */
+import type Feature from 'ol/Feature'
+import type { Geometry } from 'ol/geom'
 
 const drawLayerReducerSlice = createSlice({
   initialState: {
     callback: null,
 
-    features: [],
+    features: [] as Feature<Geometry>[],
 
     /** Mission or control: see monitorenvFeatureTypesEnum  */
     featureType: null,
@@ -43,7 +41,8 @@ const drawLayerReducerSlice = createSlice({
      * Start an interaction with the OpenLayers map, hence use the mouse to draw geometries
      * @param {Object=} state
      * @param {{payload: {
-     *   interactionType: (InteractionTypes.SQUARE|InteractionTypes.POLYGON|null),
+     *    callback: function,
+     *   featureType: (InteractionTypes.SQUARE|InteractionTypes.POLYGON|null),
      * }}} action - The interaction type (see InteractionTypes enum)
      */
     setFeatureType(state, action) {

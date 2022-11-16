@@ -103,6 +103,7 @@ label {
 .rs-picker.rs-picker-focused {
   box-shadow: none;
   border: 1px solid var(--blue-gray) !important;
+  border-radius: 0;
 }
 
 .rs-input-group-addon.primary {
@@ -132,6 +133,9 @@ label {
   font-size: 15px;
 }
 
+.rs-btn-md {
+  height: 30px;
+}
 
 .rs-btn-icon-with-text.rs-btn-md.rs-btn-icon-placement-left,
 .rs-btn-icon-with-text.rs-btn.rs-btn-icon-placement-left {
@@ -145,8 +149,9 @@ label {
   padding-bottom: 3px;
 }
 
+
 .rs-btn-ghost:hover {
-  background-color: var(--blue-yonder-25);
+  background-color: transparent;
 }
 
 .rs-btn-ghost.rs-btn-active,
@@ -156,7 +161,12 @@ label {
 }
 
 .rs-btn-ghost.rs-btn-icon-with-text:hover>.rs-icon {
-  background-color: var(--blue-yonder-25);
+  background-color: transparent;
+}
+
+.rs-btn-icon-with-text:focus>.rs-icon,
+.rs-btn-icon-with-text:hover>.rs-icon {
+  background-color: transparent;
 }
 
 .rs-btn-ghost.rs-btn,

@@ -1,6 +1,8 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
 import { matchPath } from 'react-router-dom'
+
+import { useAppSelector } from '../../hooks/useAppSelector'
+
+import type { ReactElement } from 'react-markdown'
 
 // SideWindowRouter doesn't have a switch behavior (i.e. renders all routes that matches)
 // be careful to write routes that never collides
@@ -17,8 +19,18 @@ import { matchPath } from 'react-router-dom'
  * @param {React.ReactElement[]} route.children
  * @returns
  */
-export function SideWindowRoute({ children, exact = true, path, strict = true }) {
-  const { sideWindowPath } = useSelector(state => state.sideWindowRouter)
+export function SideWindowRoute({
+  children,
+  exact = true,
+  path,
+  strict = true
+}: {
+  children: ReactElement
+  exact?: boolean
+  path: string | string[]
+  strict?: boolean
+}) {
+  const { sideWindowPath } = useAppSelector(state => state.sideWindowRouter)
 
   const routeParams = matchPath(sideWindowPath, {
     exact,
@@ -26,5 +38,5 @@ export function SideWindowRoute({ children, exact = true, path, strict = true })
     strict
   })
 
-  return routeParams ? React.Children.map(children, child => React.cloneElement(child, { routeParams })) : null
+  return routeParams ? children : null
 }

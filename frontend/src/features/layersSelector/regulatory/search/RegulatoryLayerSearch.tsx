@@ -130,9 +130,12 @@ export function RegulatoryLayerSearch({ isVisible }) {
   const regulatoryThemes = useMemo(
     () =>
       _.chain(regulatoryLayers)
-        .uniqBy(l => l.properties.thematique)
         .filter(l => !!l.properties.thematique)
-        .map(l => ({ label: l.properties.thematique, value: l.properties.thematique }))
+        .map(l => l.properties.thematique.split(','))
+        .flatMap()
+        .map(l => l.trim())
+        .uniq()
+        .map(l => ({ label: l, value: l }))
         .sortBy('label')
         .value(),
     [regulatoryLayers]

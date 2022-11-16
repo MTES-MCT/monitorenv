@@ -9,8 +9,10 @@ import { COLORS } from '../../../constants/constants'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map'
 import { setZoomToCenter } from '../../../domain/shared_slices/Map'
 import { addControlPositions } from '../../../domain/use_cases/missions/missionAndControlLocalisation'
+import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as LocalizeIconSVG } from '../../../uiMonitor/icons/Focus.svg'
+import { getCoordinates } from '../../../utils/coordinates'
 
 export function ControlPositions({ name }) {
   const [geomField] = useField('geom')
@@ -18,6 +20,7 @@ export function ControlPositions({ name }) {
   const { value } = field
   const { setValue } = helpers
   const dispatch = useDispatch()
+  const { coordinatesFormat } = useAppSelector(state => state.map)
 
   const handleAddControlPositions = () => {
     dispatch(addControlPositions({ callback: setValue, geom: value, missionGeom: geomField?.value }))
@@ -34,6 +37,16 @@ export function ControlPositions({ name }) {
     dispatch(setZoomToCenter(center))
   }
 
+  const getShowedCoordinates = coordinates => {
+    const transformedCoordinates = getCoordinates(coordinates, WSG84_PROJECTION, coordinatesFormat)
+
+    if (Array.isArray(transformedCoordinates) && transformedCoordinates.length === 2) {
+      return `${transformedCoordinates[0]} ${transformedCoordinates[1]}`
+    }
+
+    return ''
+  }
+
   return (
     <ControlPositionsWrapper>
       <Form.ControlLabel>Lieu du contrôle</Form.ControlLabel>
@@ -45,7 +58,7 @@ export function ControlPositions({ name }) {
         {_.map(value?.coordinates, (v, i) => (
           <ZoneRow key={i}>
             <Zone>
-              {`(${v[1]}, ${v[0]})`}
+              {getShowedCoordinates(v)}
               <CenterOnMap onClick={handleCenterOnMap(v)}>
                 <LocalizeIcon />
                 Centrer

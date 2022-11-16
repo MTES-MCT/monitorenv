@@ -44,14 +44,14 @@ export function MissionCard({ feature, selected }) {
         </Actions>
         <MissionStatusLabel missionStatus={missionStatus} />
         {selected && (
-          <IconButton
+          <EditButton
             appearance="primary"
             icon={<EditIconSVG className="rs-icon" />}
             onClick={handleEditMission}
             size="sm"
           >
             Editer
-          </IconButton>
+          </EditButton>
         )}
       </Col2>
       <Col3>
@@ -74,7 +74,7 @@ const MissionCardHeader = styled.div`
   border-top-right-radius: 2px;
   display: flex;
   width: 380px;
-  height: 124px;
+  height: 136px;
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3);
 `
 
@@ -90,6 +90,7 @@ const MissionType = styled.div`
 
 const MissionReources = styled.div`
   font-size: 12px;
+  height: 34px;
   color: ${COLORS.slateGray};
   overflow: hidden;
   text-overflow: ellipsis;
@@ -108,4 +109,7 @@ const Col2 = styled.div`
 const Col3 = styled.div`
   margin-left: auto;
   padding-right: 4px;
+`
+const EditButton = styled(IconButton)`
+  margin-top: 4px;
 `

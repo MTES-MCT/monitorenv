@@ -11,7 +11,7 @@ import { LocateOnMap } from '../features/locateOnMap/LocateOnMap'
 import { Map } from '../features/map/Map'
 import Measurement from '../features/measurements/Measurement'
 import { MissionsMenu } from '../features/missions/MissionsMenu'
-import SideWindowLauncher from '../features/side_window/SideWindowLauncher'
+import { SideWindowLauncher } from '../features/side_window/SideWindowLauncher'
 import { useAppSelector } from '../hooks/useAppSelector'
 
 export function HomePage() {
@@ -21,7 +21,7 @@ export function HomePage() {
     displayLayersSidebar,
     displayLocateOnMap,
     displayMeasurement,
-    displayMissionsMenu
+    displayMissionMenuButton
   } = useAppSelector(state => state.global)
 
   return (
@@ -32,7 +32,7 @@ export function HomePage() {
         <Map />
         {displayLayersSidebar && <LayersSidebar />}
         {FEATURE_FLAGS.LOCALIZE_MISSIONS && displayDrawLayerModal && <DrawLayerModal />}
-        {FEATURE_FLAGS.REPORTING && displayMissionsMenu && <MissionsMenu />}
+        {FEATURE_FLAGS.REPORTING && displayMissionMenuButton && <MissionsMenu />}
         {displayMeasurement && <Measurement />}
         {displayLocateOnMap && <LocateOnMap />}
         {displayInterestPoint && <InterestPoint />}

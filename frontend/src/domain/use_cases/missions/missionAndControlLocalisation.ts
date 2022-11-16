@@ -35,8 +35,8 @@ const openDrawLayerModal = dispatch => {
       displayLayersSidebar: false,
       displayLocateOnMap: false,
       displayMeasurement: false,
+      displayMissionMenuButton: false,
       displayMissionsLayer: false,
-      displayMissionsMenu: false,
       displayMissionsOverlay: false,
       displaySelectedMissionLayer: false
     })
@@ -51,8 +51,8 @@ const closeDrawLayerModal = dispatch => {
       displayLayersSidebar: true,
       displayLocateOnMap: true,
       displayMeasurement: true,
+      displayMissionMenuButton: true,
       displayMissionsLayer: true,
-      displayMissionsMenu: true,
       displayMissionsOverlay: true,
       displaySelectedMissionLayer: true
     })
@@ -71,13 +71,16 @@ export const addMissionZone =
             geometry: new Polygon(coord).transform(WSG84_PROJECTION, OPENLAYERS_PROJECTION)
           })
       )
-    features && dispatch(setFeatures(features))
-    geom?.coordinates?.length &&
+    if (features) {
+      dispatch(setFeatures(features))
+    }
+    if (geom?.coordinates?.length) {
       dispatch(
         setFitToExtent(
           transformExtent(boundingExtent(_.flattenDepth(geom.coordinates, 2)), WSG84_PROJECTION, OPENLAYERS_PROJECTION)
         )
       )
+    }
     dispatch(openDrawLayerModal)
     dispatch(setFeatureType({ callback, featureType: monitorenvFeatureTypes.MISSION_ZONE }))
     dispatch(setInteractionType(interactionTypes.POLYGON))
@@ -95,8 +98,10 @@ export const addControlPositions =
             geometry: new Point(coord).transform(WSG84_PROJECTION, OPENLAYERS_PROJECTION)
           })
       )
-    features && dispatch(setFeatures(features))
-    missionGeom?.coordinates?.length &&
+    if (features) {
+      dispatch(setFeatures(features))
+    }
+    if (missionGeom?.coordinates?.length) {
       dispatch(
         setFitToExtent(
           transformExtent(
@@ -106,6 +111,7 @@ export const addControlPositions =
           )
         )
       )
+    }
     dispatch(openDrawLayerModal)
     dispatch(setFeatureType({ callback, featureType: monitorenvFeatureTypes.ACTION_LOCALISATION }))
     dispatch(setInteractionType(interactionTypes.POINT))

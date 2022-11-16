@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { matchPath } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -10,6 +10,7 @@ import {
   quitAddLocalisation,
   validateLocalisation
 } from '../../domain/use_cases/missions/missionAndControlLocalisation'
+import { useAppSelector } from '../../hooks/useAppSelector'
 import { usePrevious } from '../../hooks/usePrevious'
 import { ReactComponent as CircleSVG } from '../../uiMonitor/icons/Info.svg'
 import { ReactComponent as PolygonSVG } from '../../uiMonitor/icons/Polygone.svg'
@@ -28,12 +29,11 @@ const validateButtonPlaceholder = {
 
 export function DrawLayerModal() {
   const dispatch = useDispatch()
-  const { featureType, interactionType } = useSelector(state => state.drawLayer)
+  const { featureType, interactionType } = useAppSelector(state => state.drawLayer)
 
-  const { sideWindowIsOpen } = useSelector(state => state.global)
-  const { sideWindowPath } = useSelector(state => state.sideWindowRouter)
+  const { openedSideWindowTab, sideWindowPath } = useAppSelector(state => state.sideWindowRouter)
 
-  const routeParams = matchPath(sideWindowPath, {
+  const routeParams = matchPath<{ id: string }>(sideWindowPath, {
     exact: true,
     path: [sideWindowPaths.MISSION, sideWindowPaths.MISSION_NEW],
     strict: true
@@ -41,14 +41,16 @@ export function DrawLayerModal() {
   const previousMissionId = usePrevious(routeParams?.params?.id)
 
   useEffect(() => {
-    if (previousMissionId && previousMissionId != routeParams?.params?.id) {
+    if (previousMissionId && previousMissionId !== routeParams?.params?.id) {
       dispatch(quitAddLocalisation)
     }
-  }, [previousMissionId, routeParams])
+  }, [dispatch, previousMissionId, routeParams])
 
   useEffect(() => {
-    !sideWindowIsOpen && dispatch(quitAddLocalisation)
-  }, [sideWindowIsOpen])
+    if (!openedSideWindowTab) {
+      dispatch(quitAddLocalisation)
+    }
+  }, [dispatch, openedSideWindowTab])
 
   const handleQuit = () => {
     dispatch(quitAddLocalisation)
@@ -67,14 +69,16 @@ export function DrawLayerModal() {
     <Wrapper>
       <ContentWrapper>
         <Header>
-          Vous êtes en train d&apos;ajouter {titlePlaceholder[featureType]}
+          Vous êtes en train d&apos;ajouter {featureType && titlePlaceholder[featureType]}
           <QuitButton onClick={handleQuit} type="button">
             Quitter
           </QuitButton>
         </Header>
         <ActionWrapper>
           <ResetButton onClick={handleReset}>Réinitialiser</ResetButton>
-          <ValidateButton onClick={handleValidate}>Valider {validateButtonPlaceholder[featureType]}</ValidateButton>
+          <ValidateButton onClick={handleValidate}>
+            Valider {featureType && validateButtonPlaceholder[featureType]}
+          </ValidateButton>
         </ActionWrapper>
       </ContentWrapper>
       {featureType === monitorenvFeatureTypes.MISSION_ZONE && (
@@ -132,7 +136,7 @@ const Header = styled.h1`
   line-height: 22px;
   padding: 14px;
 `
-const Button = styled.button`
+const Button = styled.button<{ selected: boolean }>`
   width: 32px;
   height: 32px;
   background: ${props => (props.selected ? COLORS.blueYonder : COLORS.charcoal)};
