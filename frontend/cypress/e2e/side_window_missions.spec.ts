@@ -8,6 +8,6 @@ context('Missions', () => {
 
   it('50 Missions should be displayed in Missions Table', () => {
     cy.get('*[data-cy="SideWindowHeader-title"]').contains('Missions et contrôles')
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('50')
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('5')
   })
 })

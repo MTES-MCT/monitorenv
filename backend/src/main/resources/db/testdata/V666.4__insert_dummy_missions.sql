@@ -76,6 +76,11 @@ COPY public.missions (id, mission_type, mission_status, open_by, observations_ca
 
 
 ALTER TABLE public.missions ALTER COLUMN mission_source DROP DEFAULT;
+UPDATE public.missions SET 
+  input_start_datetime_utc = input_start_datetime_utc + (now() - '2022-08-7 23:00:00'),
+  input_end_datetime_utc = input_end_datetime_utc + (now() - '2022-08-7 23:00:00')
+  WHERE id >20;
+  ;
 --
 -- Name: missions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --

@@ -24,7 +24,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
       afterDateTime = ZonedDateTime.parse("2022-01-04T10:54:00Z").toInstant(),
       beforeDateTime = ZonedDateTime.parse("2022-08-07T23:01:09Z").toInstant(),
       pageable = Pageable.unpaged())
-    assertThat(existingMissions).hasSize(50)
+    assertThat(existingMissions).hasSize(38)
     val newMission = MissionEntity(
       missionType = MissionTypeEnum.SEA,
       missionStatus = MissionStatusEnum.PENDING,
@@ -39,7 +39,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
       beforeDateTime = ZonedDateTime.parse("2022-08-07T23:01:09Z").toInstant(),
       pageable = Pageable.unpaged())
 
-    assertThat(missions).hasSize(51)
+    assertThat(missions).hasSize(39)
   }
   @Test
   @Transactional
@@ -50,7 +50,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
       beforeDateTime = ZonedDateTime.parse("2022-08-07T23:01:09Z").toInstant(),
       pageable = Pageable.unpaged())
     print(missions)
-    assertThat(missions).hasSize(50)
+    assertThat(missions).hasSize(38)
   }
 
   @Test
@@ -225,16 +225,16 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
       afterDateTime = ZonedDateTime.parse("2022-01-04T10:54:00Z").toInstant(),
       beforeDateTime = ZonedDateTime.parse("2022-08-07T23:01:09Z").toInstant(),
       pageable = Pageable.unpaged())
-    assertThat(missionsList).hasSize(50)
+    assertThat(missionsList).hasSize(38)
 
     // When
-    jpaMissionRepository.delete(missionsList.first().id!!)
+    jpaMissionRepository.delete(3)
 
     // Then
     val nextMissionList = jpaMissionRepository.findMissions(
       afterDateTime = ZonedDateTime.parse("2022-01-04T10:54:00Z").toInstant(),
       beforeDateTime = ZonedDateTime.parse("2022-08-07T23:01:09Z").toInstant(),
       pageable = Pageable.unpaged())
-    assertThat(nextMissionList).hasSize(49)
+    assertThat(nextMissionList).hasSize(37)
   }
 }
