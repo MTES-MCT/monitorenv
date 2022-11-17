@@ -13,12 +13,14 @@ data class MissionDataOutput(
     val missionStatus: MissionStatusEnum,
     val openBy: String? = null,
     val closedBy: String? = null,
-    val observations: String? = null,
+    val observationsCacem: String? = null,
+    val observationsCnsp: String? = null,
     val facade: String? = null,
     val geom: MultiPolygon? = null,
     val inputStartDatetimeUtc: ZonedDateTime,
     val inputEndDatetimeUtc: ZonedDateTime? = null,
-    val envActions: List<EnvActionEntity>? = null
+    val envActions: List<EnvActionEntity>? = null,
+    val missionSource: MissionSourceEnum
 ) {
     companion object {
         fun fromMission(mission: MissionEntity): MissionDataOutput {
@@ -33,12 +35,14 @@ data class MissionDataOutput(
                 missionStatus = mission.missionStatus,
                 openBy = mission.openBy,
                 closedBy = mission.closedBy,
-                observations= mission.observations,
+                observationsCacem= mission.observationsCacem,
+                observationsCnsp= mission.observationsCnsp,
                 facade = mission.facade,
                 geom = mission.geom,
                 inputStartDatetimeUtc = mission.inputStartDatetimeUtc,
                 inputEndDatetimeUtc = mission.inputEndDatetimeUtc,
-                envActions = mission.envActions
+                envActions = mission.envActions,
+                missionSource = mission.missionSource
             )
         }
     }

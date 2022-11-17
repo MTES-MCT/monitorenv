@@ -4,12 +4,16 @@ import java.time.ZonedDateTime
 import java.util.*
 
 data class EnvActionNoteProperties(
-  val actionStartDatetimeUtc: ZonedDateTime? = null,
   val observations: String? = null,
 ) {
-  fun toEnvActionNoteEntity(id: UUID) = EnvActionNoteEntity(
+  fun toEnvActionNoteEntity(id: UUID, actionStartDateTimeUtc: ZonedDateTime?) = EnvActionNoteEntity(
     id = id,
-    actionStartDatetimeUtc = actionStartDatetimeUtc,
+    actionStartDatetimeUtc = actionStartDateTimeUtc,
     observations = observations
   )
+  companion object  {
+    fun fromEnvActionNoteEntity(envAction: EnvActionNoteEntity) = EnvActionNoteProperties(
+      envAction.observations
+    )
+  }
 }

@@ -1,1 +1,0 @@
-SELECT setval('public.missions_id_seq', 50, true);

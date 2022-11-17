@@ -19,8 +19,9 @@ SET row_security = off;
 --
 -- Data for Name: missions; Type: TABLE DATA; Schema: public; Owner: postgres
 --
+ALTER TABLE public.missions ALTER COLUMN mission_source SET DEFAULT 'CACEM';
 
-COPY public.missions (id, mission_type, mission_status, open_by, observations, facade, input_start_datetime_utc, input_end_datetime_utc, geom, closed_by, mission_nature, resource_units) FROM stdin;
+COPY public.missions (id, mission_type, mission_status, open_by, observations_cacem, facade, input_start_datetime_utc, input_end_datetime_utc, geom, closed_by, mission_nature, resource_units) FROM stdin;
 0	SEA	PENDING	Lori Vazquez	Worker smile spend parent certain tell dream. Small hope professor thus. Every nothing rest myself.	MED	2022-05-10 12:23:59	2022-08-05 18:14:37	\N	Kylie Jones	{OTHER}	[{"unit": "DF 61 Port-de-Bouc", "resources": ["PHEROUSA"], "administration": "Gendarmerie maritime"}, {"unit": "BN Pornic", "resources": ["PHEROUSA"], "administration": "Gendarmerie maritime"}]
 12	SEA	ENDED	Kimberly Woodward	Mother including baby same. Evidence project air practice minute their. Trouble sing suggest maintain like know too.	NAMO	2022-02-24 10:56:33	2022-05-06 19:38:29	\N	Charles Kennedy	{ENV,OTHER}	[{"unit": "DF 61 Port-de-Bouc", "resources": ["CALISTO", "ULAM"], "administration": "Gendarmerie nationale"}, {"unit": "ULAM 62-80", "resources": ["THEMIS", "CALISTO", "PHEROUSA"], "administration": "Gendarmerie maritime"}, {"unit": "ULAM 62-80", "resources": ["THEMIS", "ARIOLA"], "administration": "Douanes"}]
 13	LAND	ENDED	Tyler Dickerson	Receive hit themselves. Example community suggest seek to technology.	NAMO	2022-02-07 04:16:43	2022-07-10 19:55:50	\N	Robin Keller	{ENV,FISH}	[{"unit": "PM 441", "resources": ["THEMIS", "ULAM"], "administration": "Douanes"}, {"unit": "PM 474 Bastia", "resources": ["ARIOLA"], "administration": "Affaires maritimes"}, {"unit": "DF 61 Port-de-Bouc", "resources": ["ARIOLA"], "administration": "Douanes"}]
@@ -74,12 +75,17 @@ COPY public.missions (id, mission_type, mission_status, open_by, observations, f
 \.
 
 
+ALTER TABLE public.missions ALTER COLUMN mission_source DROP DEFAULT;
+UPDATE public.missions SET 
+  input_start_datetime_utc = input_start_datetime_utc + (now() - '2022-08-7 23:00:00'),
+  input_end_datetime_utc = input_end_datetime_utc + (now() - '2022-08-7 23:00:00')
+  WHERE id >20;
+  ;
 --
 -- Name: missions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
 SELECT pg_catalog.setval('public.missions_id_seq', 50, true);
-
 
 --
 -- PostgreSQL database dump complete

@@ -14,7 +14,7 @@ class JpaControlThemeRepository(private val dbControlThemeRepository: IDBControl
     return dbControlThemeRepository.findAll().map { it.toControlTheme() }
   }
 
-  override fun findControlThemeById(id: Int): ControlThemeEntity {
-    return dbControlThemeRepository.findById(id).get().toControlTheme()
+  override fun findControlThemeById(controlThemeId: Int): ControlThemeEntity {
+    return dbControlThemeRepository.findById(controlThemeId).get().toControlTheme()
   }
 }

@@ -1,12 +1,14 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.missions.*
+
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 import java.util.*
@@ -18,26 +20,49 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
   @Test
   @Transactional
   fun `createMission should create a new mission`() {
-    val existingMissions = jpaMissionRepository.findMissions()
-    assertThat(existingMissions).hasSize(50)
+    val existingMissions = jpaMissionRepository.findMissions(
+      afterDateTime = ZonedDateTime.parse("2022-01-04T10:54:00Z").toInstant(),
+      beforeDateTime = ZonedDateTime.parse("2022-08-07T23:01:09Z").toInstant(),
+      pageable = Pageable.unpaged())
+    assertThat(existingMissions).hasSize(38)
     val newMission = MissionEntity(
       missionType = MissionTypeEnum.SEA,
       missionStatus = MissionStatusEnum.PENDING,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+      isDeleted = false,
+      missionSource = MissionSourceEnum.CACEM
     )
     // When
     val newMissionReturn = jpaMissionRepository.create(newMission)
-    val missions = jpaMissionRepository.findMissions()
+    val missions = jpaMissionRepository.findMissions(
+      afterDateTime = ZonedDateTime.parse("2022-01-04T10:54:00Z").toInstant(),
+      beforeDateTime = ZonedDateTime.parse("2022-08-07T23:01:09Z").toInstant(),
+      pageable = Pageable.unpaged())
 
-    assertThat(missions).hasSize(51)
+    assertThat(missions).hasSize(39)
   }
   @Test
   @Transactional
   fun `findMissions Should return all missions`() {
     // When
-    val missions = jpaMissionRepository.findMissions()
+    val missions = jpaMissionRepository.findMissions(
+      afterDateTime = ZonedDateTime.parse("2022-01-04T10:54:00Z").toInstant(),
+      beforeDateTime = ZonedDateTime.parse("2022-08-07T23:01:09Z").toInstant(),
+      pageable = Pageable.unpaged())
+    print(missions)
+    assertThat(missions).hasSize(38)
+  }
 
-    assertThat(missions).hasSize(50)
+  @Test
+  @Transactional
+  fun `findMissions with pagenumber and pagesize Should return subset of missions`() {
+    // When
+    val missions = jpaMissionRepository.findMissions(
+      afterDateTime = ZonedDateTime.parse("2022-01-04T10:54:00Z").toInstant(),
+      beforeDateTime = ZonedDateTime.parse("2022-08-07T23:01:09Z").toInstant(),
+      pageable = PageRequest.of(1,10))
+    print(missions)
+    assertThat(missions).hasSize(10)
   }
 
   @Test
@@ -57,11 +82,13 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
       openBy = "Kimberly Smith",
       closedBy = "Travis Carter",
       facade = "MED",
-      observations = "Remain vote several ok. Bring American play woman challenge. Throw low law positive seven.",
+      observationsCacem = "Remain vote several ok. Bring American play woman challenge. Throw low law positive seven.",
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-03-21T12:11:13Z"),
       inputEndDatetimeUtc = ZonedDateTime.parse("2022-05-27T01:26:04Z"),
       geom = polygon,
-      envActions = listOf()
+      isDeleted = false,
+      envActions = listOf(),
+      missionSource = MissionSourceEnum.CACEM
     )
     val mission = jpaMissionRepository.findMissionById(10)
 
@@ -109,8 +136,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
       actionSubTheme = "4",
       protectedSpecies = listOf("5"),
       actionNumberOfControls = 12,
-      actionTargetType = "VEHICLE",
-      vehicleType = "VESSEL",
+      actionTargetType = ActionTargetTypeEnum.VEHICLE,
+      vehicleType = VehicleTypeEnum.VESSEL,
       infractions = listOf(infraction)
     )
     val surveillanceAction = EnvActionSurveillanceEntity(
@@ -138,10 +165,13 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
       closedBy = "Carol Tim",
       facade = "MEMN",
       geom = polygon,
-      observations = null,
+      observationsCacem = null,
+      observationsCnsp = null,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
       inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-      envActions = listOf(controlAction, surveillanceAction, noteAction)
+      isDeleted = false,
+      envActions = listOf(controlAction, surveillanceAction, noteAction),
+      missionSource = MissionSourceEnum.CACEM
     )
     // When
     val mission = jpaMissionRepository.save(expectedUpdatedMission)
@@ -161,8 +191,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
     val envAction = EnvActionControlEntity(
       id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
-      actionTargetType = "VEHICLE",
-      vehicleType = "VESSEL",
+      actionTargetType = ActionTargetTypeEnum.VEHICLE,
+      vehicleType = VehicleTypeEnum.VESSEL,
       actionNumberOfControls= 4
     )
     val expectedUpdatedMission = MissionEntity(
@@ -172,10 +202,13 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
       missionStatus = MissionStatusEnum.CLOSED,
       facade = "NAMO",
       geom = polygon,
-      observations = null,
+      observationsCacem = null,
+      observationsCnsp = null,
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
       inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-      envActions = listOf(envAction)
+      isDeleted = false,
+      envActions = listOf(envAction),
+      missionSource = MissionSourceEnum.CACEM
     )
     // When
     val mission = jpaMissionRepository.save(expectedUpdatedMission)
@@ -186,13 +219,22 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
   @Test
   @Transactional
-  fun `delete Should delete specified Missions`() {
+  fun `delete Should set the deleted flag as true`() {
+    // Given
+    val missionsList = jpaMissionRepository.findMissions(
+      afterDateTime = ZonedDateTime.parse("2022-01-04T10:54:00Z").toInstant(),
+      beforeDateTime = ZonedDateTime.parse("2022-08-07T23:01:09Z").toInstant(),
+      pageable = Pageable.unpaged())
+    assertThat(missionsList).hasSize(38)
+
     // When
-    jpaMissionRepository.delete(14)
-    // When
-    assertThatThrownBy {
-      jpaMissionRepository.findMissionById(14);
-    }.isInstanceOf(NoSuchElementException::class.java)
-    // FIXME: check envActions are also deleted
+    jpaMissionRepository.delete(3)
+
+    // Then
+    val nextMissionList = jpaMissionRepository.findMissions(
+      afterDateTime = ZonedDateTime.parse("2022-01-04T10:54:00Z").toInstant(),
+      beforeDateTime = ZonedDateTime.parse("2022-08-07T23:01:09Z").toInstant(),
+      pageable = Pageable.unpaged())
+    assertThat(nextMissionList).hasSize(37)
   }
 }

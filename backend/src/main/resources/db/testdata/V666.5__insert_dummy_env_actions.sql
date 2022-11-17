@@ -1,3 +1,3 @@
-INSERT INTO public.env_actions (id, mission_id, action_type, "value") VALUES ( uuid_generate_v4(),14,'CONTROL', ('{"actionType": "CONTROL"}'::jsonb));
-INSERT INTO public.env_actions (id, mission_id, action_type, "value") VALUES ( uuid_generate_v4(),14,'SURVEILLANCE', ('{"actionType": "SURVEILLANCE"}'::jsonb));
-INSERT INTO public.env_actions (id, mission_id, action_type, "value") VALUES ( uuid_generate_v4(),14,'CONTROL', ('{"actionType": "CONTROL"}'::jsonb));
+INSERT INTO public.env_actions (id, mission_id, action_type, "value") VALUES ( '8c3d748f-3b1b-47ce-b056-7ef05b08d60e',14,'CONTROL', ('{"actionType": "CONTROL", "actionTargetType":"VEHICLE"}'::jsonb));
+INSERT INTO public.env_actions (id, mission_id, action_type, "value") VALUES ( 'dfb9710a-2217-4f98-94dc-283d3b7bbaae',14,'SURVEILLANCE', ('{"actionType": "SURVEILLANCE"}'::jsonb));
+INSERT INTO public.env_actions (id, mission_id, action_type, "value") VALUES ( 'd8e580fe-8e71-4303-a0c3-a76e1d4e4fc2',14,'CONTROL', ('{"actionType": "CONTROL", "actionTargetType":"VEHICLE"}'::jsonb));

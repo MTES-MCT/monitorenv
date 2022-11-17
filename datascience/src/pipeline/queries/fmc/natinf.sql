@@ -1,4 +1,5 @@
 SELECT
+    distinct
     inf.idc_fmc_natinf as id,
     inf.code as natinf_code,
     inf.texte_reglementaire as regulation,

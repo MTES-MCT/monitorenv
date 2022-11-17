@@ -24,3 +24,18 @@ export const SHOM_KEY =
   self?.env?.REACT_APP_SHOM_KEY !== '__REACT_APP_SHOM_KEY__'
     ? self.env.REACT_APP_SHOM_KEY
     : process.env.REACT_APP_SHOM_KEY
+
+export const SENTRY_ENV =
+  self?.env?.REACT_APP_SENTRY_ENV !== '__REACT_APP_SENTRY_ENV__'
+    ? self.env.REACT_APP_SENTRY_ENV
+    : process.env.REACT_APP_SENTRY_ENV
+
+export const SENTRY_DSN =
+  self?.env?.REACT_APP_SENTRY_DSN !== '__REACT_APP_SENTRY_DSN__'
+    ? self.env.REACT_APP_SENTRY_DSN
+    : process.env.REACT_APP_SENTRY_DSN
+
+export const SENTRY_TRACING_ORIGINS =
+  self?.env?.REACT_APP_SENTRY_TRACING_ORIGINS !== '__REACT_APP_SENTRY_TRACING_ORIGINS__'
+    ? self.env.REACT_APP_SENTRY_TRACING_ORIGINS
+    : process.env.REACT_APP_SENTRY_TRACING_ORIGINS

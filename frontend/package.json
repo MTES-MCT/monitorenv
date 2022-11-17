@@ -51,6 +51,7 @@
     "react-imask": "^6.1.0",
     "react-markdown": "^6.0.1",
     "react-redux": "^7.2.2",
+    "react-router": "^5.3.4",
     "react-router-dom": "^5.2.0",
     "react-scripts": "5.0.1",
     "react-toastify": "9.0.7",

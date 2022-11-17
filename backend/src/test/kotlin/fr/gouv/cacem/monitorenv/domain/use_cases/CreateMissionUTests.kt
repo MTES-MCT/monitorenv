@@ -1,13 +1,10 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases
 
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionNatureEnum
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionStatusEnum
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.CreateMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateMission
 
 import com.nhaarman.mockitokotlin2.*
+import fr.gouv.cacem.monitorenv.domain.entities.missions.*
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -34,7 +31,9 @@ class CreateMissionUTests {
       missionStatus = MissionStatusEnum.CLOSED,
       facade = "Outre-Mer",
       inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-      inputEndDatetimeUtc =  ZonedDateTime.parse("2022-01-23T20:29:03Z")
+      inputEndDatetimeUtc =  ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+      isDeleted = false,
+      missionSource = MissionSourceEnum.CACEM
     )
     given(missionRepository.create(expectedCreatedMission)).willReturn(expectedCreatedMission)
 

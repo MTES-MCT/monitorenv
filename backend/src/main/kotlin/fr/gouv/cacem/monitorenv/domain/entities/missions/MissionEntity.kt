@@ -11,10 +11,13 @@ data class MissionEntity(
         val resourceUnits: List<ResourceUnitEntity>? = listOf(),
         val openBy: String? = null,
         val closedBy: String? = null,
-        val observations: String? = null,
+        val observationsCacem: String? = null,
+        val observationsCnsp: String? = null,
         val facade: String? = null,
         val geom: MultiPolygon? = null,
         val inputStartDatetimeUtc: ZonedDateTime,
         val inputEndDatetimeUtc: ZonedDateTime? = null,
         val envActions: List<EnvActionEntity>? = listOf(),
+        val isDeleted: Boolean,
+        val missionSource: MissionSourceEnum
         )

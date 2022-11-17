@@ -26,6 +26,7 @@ export function FilterTagPicker({ onChange, value, ...props }) {
       <StyledTagPicker
         // eslint-disable-next-line react/jsx-props-no-spreading
         {...rest}
+        $selectedItems={selectedItems}
         cleanable={false}
         container={() => filterWrapperRef.current}
         onChange={onChange}
@@ -33,7 +34,6 @@ export function FilterTagPicker({ onChange, value, ...props }) {
         onExit={showPlaceholder}
         placeholder=" "
         searchable
-        selectedItems={selectedItems}
         value={value}
       />
       <MenuWrapper ref={filterWrapperRef} />
@@ -41,9 +41,9 @@ export function FilterTagPicker({ onChange, value, ...props }) {
   )
 }
 
-const StyledTagPicker = styled(TagPicker)<{ selectedItems: number }>`
+const StyledTagPicker = styled(TagPicker)<{ $selectedItems: number }>`
   background-color: transparent;
-  margin-bottom: ${props => (props.selectedItems > 0 ? '36px' : '0')};
+  margin-bottom: ${props => (props.$selectedItems > 0 ? '36px' : '0')};
   width: 100%;
   min-height: 36px;
   border: 0;

@@ -10,12 +10,12 @@ import { sideWindowRouterReducer } from '../../components/SideWindowRouter/SideW
 import { drawLayerReducer } from '../../features/drawLayer/DrawLayer.slice'
 import { regulatoryLayerSearchSliceReducer } from '../../features/layersSelector/regulatory/search/RegulatoryLayerSearch.slice'
 import { administrativeSlicePersistedReducer } from './Administrative'
-import global from './Global'
+import { globalReducer } from './Global'
 import { interestPointSlicePersistedReducer } from './InterestPoint'
 import layerSidebar from './LayerSidebar'
 import { mapSliceReducer } from './Map'
 import { measurementSlicePersistedReducer } from './Measurement'
-import { missionFiltersReducer } from './MissionFilters'
+import { missionFiltersPersistedReducer } from './MissionFilters'
 import missionState from './MissionsState'
 import { regulatorySlicePersistedReducer } from './Regulatory'
 import { regulatoryMetadataSliceReducer } from './RegulatoryMetadata'
@@ -23,12 +23,12 @@ import { regulatoryMetadataSliceReducer } from './RegulatoryMetadata'
 export const homeReducers = combineReducers({
   administrative: administrativeSlicePersistedReducer,
   drawLayer: drawLayerReducer,
-  global,
+  global: globalReducer,
   interestPoint: interestPointSlicePersistedReducer,
   layerSidebar,
   map: mapSliceReducer,
   measurement: measurementSlicePersistedReducer,
-  missionFilters: missionFiltersReducer,
+  missionFilters: missionFiltersPersistedReducer,
   missionState,
   regulatory: regulatorySlicePersistedReducer,
   regulatoryLayerSearch: regulatoryLayerSearchSliceReducer,

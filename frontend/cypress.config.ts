@@ -11,7 +11,7 @@ export default defineConfig({
   // Despite the name, this aso applies to Firefox
   chromeWebSecurity: false,
   e2e: {
-    baseUrl: `http://localhost:${DEFAULT_PORT}`,
+    baseUrl: IS_CI ? `http://localhost:${DEFAULT_PORT}` : `http://0.0.0.0:3000`,
     excludeSpecPattern: ['**/__snapshots__/*', '**/__image_snapshots__/*'],
     // We've imported your old cypress plugins here.
     // You may want to clean this up later by importing these.

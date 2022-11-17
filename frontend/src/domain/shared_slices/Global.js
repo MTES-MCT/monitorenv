@@ -1,75 +1,32 @@
+/* eslint-disable sort-keys-fix/sort-keys-fix */
 import { createSlice } from '@reduxjs/toolkit'
-
-/* eslint-disable */
-/** @namespace GlobalReducer */
-const GlobalReducer = null
-/* eslint-enable */
 
 const globalSlice = createSlice({
   initialState: {
-    // state entry for every component displayed on map whose visibility should be controlled
-    // state entry for every layer whose visibility should be controlled
+    // state entry for every component /menu displayed on map whose visibility should be controlled
+    displayMissionMenuButton: true,
     displayDrawLayerModal: false,
-
-    displayEditingMissionLayer: true,
-
+    displayLayersSidebar: true,
+    displayLocateOnMap: true,
+    displayMeasurement: true,
     displayInterestPoint: true,
 
-    displayLayersSidebar: true,
-
-    displayLocateOnMap: true,
-
-    displayMeasurement: true,
-
-    displayMissionsLayer: true,
-
-    displayMissionsMenu: true,
-
     displayMissionsOverlay: true,
-
+    // state entry for every layer whose visibility should be controlled
+    displayEditingMissionLayer: true,
+    displayMissionsLayer: true,
     displaySelectedMissionLayer: true,
+
+    // state entry for other children components whom visibility is already handled by parent components
+    missionsMenuIsOpen: true,
 
     error: null,
 
     /** @type {string | null} healthcheckTextWarning */
-    healthcheckTextWarning: null,
-
-    openedSideWindowTab: null,
-    rightMenuIsOpen: false,
-    sideWindowIsOpen: false
+    healthcheckTextWarning: null
   },
   name: 'global',
   reducers: {
-    /**
-     * Close side window
-     * @function closeSideWindow
-     * @memberOf GlobalReducer
-     * @param {Object=} state
-     */
-    closeSideWindow(state) {
-      state.openedSideWindowTab = null
-      state.sideWindowIsOpen = false
-    },
-
-    contractRightMenu(state) {
-      state.rightMenuIsOpen = false
-    },
-
-    expandRightMenu(state) {
-      state.rightMenuIsOpen = true
-    },
-
-    /**
-     * Open a side window tab
-     * @function openSideWindowTab
-     * @memberOf GlobalReducer
-     * @param {Object} state
-     * @param {{payload: string}} action - The tab to show, see `sideWindowMenu`
-     */
-    openSideWindowTab(state, action) {
-      state.openedSideWindowTab = action.payload
-    },
-
     removeError(state) {
       state.error = null
     },
@@ -89,29 +46,10 @@ const globalSlice = createSlice({
      */
     setHealthcheckTextWarning(state, action) {
       state.healthcheckTextWarning = action.payload
-    },
-    /**
-     * Set the side window as open
-     * @function setSideWindowAsOpen
-     * @memberOf GlobalReducer
-     * @param {Object=} state
-     */
-    setSideWindowAsOpen(state) {
-      state.sideWindowIsOpen = true
     }
   }
 })
 
-export const {
-  closeSideWindow,
-  contractRightMenu,
-  expandRightMenu,
-  openSideWindowTab,
-  removeError,
-  setDisplayedItems,
-  setError,
-  setHealthcheckTextWarning,
-  setSideWindowAsOpen
-} = globalSlice.actions
+export const { removeError, setDisplayedItems, setError, setHealthcheckTextWarning } = globalSlice.actions
 
-export default globalSlice.reducer
+export const globalReducer = globalSlice.reducer
