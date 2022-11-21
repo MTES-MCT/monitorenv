@@ -18,7 +18,7 @@ const globalSlice = createSlice({
     displaySelectedMissionLayer: true,
 
     // state entry for other children components whom visibility is already handled by parent components
-    missionsMenuIsOpen: true,
+    missionsMenuIsOpen: false,
 
     error: null,
 

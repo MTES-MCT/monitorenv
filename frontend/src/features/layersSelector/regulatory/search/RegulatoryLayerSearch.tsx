@@ -50,7 +50,17 @@ export function RegulatoryLayerSearch({ isVisible }) {
       },
       tokenize: 'full'
     })
-    regulatoryLayers?.forEach(layer => RegulatoryLayersIndex.add(layer))
+    regulatoryLayers?.forEach(layer => {
+      if (
+        layer?.properties?.layer_name &&
+        layer?.properties?.entity_name &&
+        layer?.properties?.ref_reg &&
+        layer?.properties?.type &&
+        layer?.properties?.thematique
+      ) {
+        RegulatoryLayersIndex.add(layer)
+      }
+    })
 
     return (searchedText, geofilter, extent, filterOnThemes) => {
       if (searchedText || filterOnThemes.length > 0) {
