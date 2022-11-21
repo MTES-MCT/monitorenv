@@ -3,7 +3,7 @@ import { Integrations } from '@sentry/tracing'
 import { createRoot } from 'react-dom/client'
 
 import { App } from './App'
-import { SENTRY_DSN, SENTRY_ENV, SENTRY_TRACING_ORIGINS } from './env'
+import { SENTRY_DSN, SENTRY_ENV, SENTRY_TRACING_ORIGINS, MONITORENV_VERSION } from './env'
 import { GlobalStyle } from './fonts/fonts'
 
 import 'rsuite/dist/rsuite.min.css'
@@ -14,9 +14,7 @@ import './App.css'
 import './uiMonitor/ol-override.css'
 import './uiMonitor/rsuite-override.css'
 
-const { NODE_ENV } = process.env
-
-if (NODE_ENV === 'production') {
+if (!(process.env.NODE_ENV === 'development')) {
   Sentry.init({
     dsn: SENTRY_DSN || '',
     environment: SENTRY_ENV,
@@ -25,6 +23,7 @@ if (NODE_ENV === 'production') {
         tracingOrigins: SENTRY_TRACING_ORIGINS ? [SENTRY_TRACING_ORIGINS] : undefined
       })
     ],
+    release: `monitorenv:${MONITORENV_VERSION}`,
 
     // Set tracesSampleRate to 1.0 to capture 100%
     // of transactions for performance monitoring.
