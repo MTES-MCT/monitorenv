@@ -52,7 +52,7 @@ export function RegulatoryLayerSearchResultGroupByLayer({ groupName, result, sea
         <Icons>
           <ZonesNumber>{`${result.length} / ${totalNumberOfZones}`}</ZonesNumber>
           <StyledIconButton
-            allTopicZonesAreChecked={allTopicZonesAreChecked}
+            $allTopicZonesAreChecked={allTopicZonesAreChecked}
             appearance="subtle"
             icon={allTopicZonesAreChecked ? <PinFullSVGIcon className="rs-icon" /> : <PinSVGIcon className="rs-icon" />}
             onClick={handleCheckAllZones}
@@ -121,11 +121,11 @@ const Icons = styled.span`
   flex: 0;
   margin-right: 4px;
 `
-const StyledIconButton = styled(IconButton)<{ allTopicZonesAreChecked: boolean }>`
+const StyledIconButton = styled(IconButton)<{ $allTopicZonesAreChecked: boolean }>`
   :focus {
     color: ${COLORS.blueYonder};
   }
-  ${p => (p.allTopicZonesAreChecked ? `color: ${COLORS.blueGray}` : '')};
+  ${p => (p.$allTopicZonesAreChecked ? `color: ${COLORS.blueGray}` : '')};
 `
 
 const PinSVGIcon = styled(PinSVG)`

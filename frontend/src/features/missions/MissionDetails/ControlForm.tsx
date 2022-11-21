@@ -1,6 +1,7 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import { format, isValid } from 'date-fns'
 import { fr } from 'date-fns/locale'
-import { FieldArray, useField, useFormikContext } from 'formik'
+import { FieldArray, useFormikContext } from 'formik'
 import _ from 'lodash'
 import { useEffect, useMemo } from 'react'
 import { Form, IconButton } from 'rsuite'
@@ -8,10 +9,16 @@ import styled from 'styled-components'
 
 import { useGetControlThemesQuery } from '../../../api/controlThemesAPI'
 import { COLORS } from '../../../constants/constants'
-import { MissionType, MissionControlType, THEME_REQUIRE_PROTECTED_SPECIES } from '../../../domain/entities/missions'
+import {
+  MissionType,
+  EnvActionControlType,
+  THEME_REQUIRE_PROTECTED_SPECIES,
+  actionTargetTypeEnum,
+  vehicleTypeEnum
+} from '../../../domain/entities/missions'
 import { usePrevious } from '../../../hooks/usePrevious'
 import { FormikDatePicker, placeholderDateTimePicker } from '../../../uiMonitor/CustomFormikFields/FormikDatePicker'
-import { FormikInputGhost } from '../../../uiMonitor/CustomFormikFields/FormikInput'
+import { FormikInputNumberGhost } from '../../../uiMonitor/CustomFormikFields/FormikInputNumber'
 import { ReactComponent as ControlIconSVG } from '../../../uiMonitor/icons/Control.svg'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
 import { ActionTargetSelector } from './ActionTargetSelector'
@@ -32,14 +39,15 @@ export function ControlForm({
 }) {
   const {
     setFieldValue,
+    setValues,
     values: { envActions }
-  } = useFormikContext<MissionType<MissionControlType>>()
-  const [actionStartDatetimeUtcField] = useField(`envActions.${currentActionIndex}.actionStartDatetimeUtc`)
-  const parsedActionStartDatetimeUtc = new Date(actionStartDatetimeUtcField.value)
-  const actionTheme = envActions[currentActionIndex]?.actionTheme
-  const protectedSpecies = envActions[currentActionIndex]?.protectedSpecies
+  } = useFormikContext<MissionType<EnvActionControlType>>()
+  const currentAction = envActions[currentActionIndex]
 
-  const { data, isError, isLoading } = useGetControlThemesQuery({})
+  const parsedActionStartDateTimeUtc =
+    currentAction?.actionStartDateTimeUtc && new Date(currentAction.actionStartDateTimeUtc)
+  const { actionNumberOfControls, actionTargetType, actionTheme, protectedSpecies, vehicleType } = currentAction || {}
+  const { data, isError, isLoading } = useGetControlThemesQuery()
   const themes = useMemo(() => _.uniqBy(data, 'themeLevel1'), [data])
   const subThemes = useMemo(() => _.filter(data, t => t.themeLevel1 === actionTheme), [data, actionTheme])
 
@@ -59,26 +67,66 @@ export function ControlForm({
     }
   }, [previousActionTheme, actionTheme, protectedSpecies, currentActionIndex, setFieldValue])
 
+  const onVehicleTypeChange = selectedVehicleType => {
+    setValues(v => {
+      const w = _.cloneDeep(v)
+      _.set(w, `envActions[${currentActionIndex}].vehicleType`, selectedVehicleType)
+      if (selectedVehicleType !== vehicleTypeEnum.VESSEL.code) {
+        _.update(w, `envActions[${currentActionIndex}].infractions`, inf =>
+          inf?.map(i => ({ ...i, vesselSize: null, vesselType: null }))
+        )
+      }
+
+      return w
+    })
+  }
+  const onTargetTypeChange = selectedTargetType => {
+    setValues(v => {
+      const w = _.cloneDeep(v)
+      _.set(w, `envActions[${currentActionIndex}].actionTargetType`, selectedTargetType)
+
+      if (selectedTargetType !== actionTargetTypeEnum.VEHICLE.code) {
+        _.set(w, `envActions[${currentActionIndex}].vehicleType`, null)
+        _.update(w, `envActions[${currentActionIndex}].infractions`, inf =>
+          inf?.map(i => ({ ...i, vesselSize: null, vesselType: null }))
+        )
+      }
+      if (selectedTargetType === actionTargetTypeEnum.VEHICLE.code && vehicleType === null) {
+        _.set(w, `envActions[${currentActionIndex}].vehicleType`, vehicleTypeEnum.VESSEL.code)
+      }
+
+      return w
+    })
+  }
+
   const handleRemoveAction = () => {
     setCurrentActionIndex(null)
     remove(currentActionIndex)
   }
 
+  const canAddInfraction =
+    actionNumberOfControls &&
+    actionNumberOfControls > 0 &&
+    ((actionTargetType === actionTargetTypeEnum.VEHICLE.code && vehicleType !== undefined) ||
+      (actionTargetType !== undefined && actionTargetType !== actionTargetTypeEnum.VEHICLE.code))
+
   return (
     <>
       <Header>
         <ControlIcon />
-        <Title>Contrôle</Title>
+        <Title>Contrôle{actionNumberOfControls && actionNumberOfControls > 1 ? 's' : ''}</Title>
         <SubTitle>
           &nbsp;(
-          {isValid(parsedActionStartDatetimeUtc) &&
-            format(parsedActionStartDatetimeUtc, 'dd MMM à HH:mm', { locale: fr })}
+          {parsedActionStartDateTimeUtc &&
+            isValid(parsedActionStartDateTimeUtc) &&
+            format(parsedActionStartDateTimeUtc, 'dd MMM à HH:mm', { locale: fr })}
           )
         </SubTitle>
         <IconButtonRight
           appearance="ghost"
           icon={<DeleteIcon className="rs-icon" />}
           onClick={handleRemoveAction}
+          size="sm"
           title="supprimer"
         >
           Supprimer
@@ -118,13 +166,13 @@ export function ControlForm({
       )}
 
       <Form.Group>
-        <Form.ControlLabel htmlFor={`envActions[${currentActionIndex}].actionStartDatetimeUtc`}>
+        <Form.ControlLabel htmlFor={`envActions[${currentActionIndex}].actionStartDateTimeUtc`}>
           Date et heure du contrôle
         </Form.ControlLabel>
         <FormikDatePicker
           format="dd MMM yyyy, HH:mm"
           ghost
-          name={`envActions[${currentActionIndex}].actionStartDatetimeUtc`}
+          name={`envActions[${currentActionIndex}].actionStartDateTimeUtc`}
           oneTap
           placeholder={placeholderDateTimePicker}
         />
@@ -139,20 +187,31 @@ export function ControlForm({
           <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionNumberOfControls`}>
             Nombre total de contrôles
           </Form.ControlLabel>
-          <FormikInputGhost name={`envActions.${currentActionIndex}.actionNumberOfControls`} size="sm" />
+          <NumberOfControls min={0} name={`envActions.${currentActionIndex}.actionNumberOfControls`} size="sm" />
         </ActionFieldWrapper>
         <ActionFieldWrapper>
-          <ActionTargetSelector currentActionIndex={currentActionIndex} />
+          <ActionTargetSelector
+            currentActionIndex={currentActionIndex}
+            onChange={onTargetTypeChange}
+            value={actionTargetType}
+          />
         </ActionFieldWrapper>
         <ActionFieldWrapper>
-          <VehicleTypeSelector currentActionIndex={currentActionIndex} />
+          <VehicleTypeSelector
+            currentActionIndex={currentActionIndex}
+            disabled={actionTargetType !== actionTargetTypeEnum.VEHICLE.code}
+            onChange={onVehicleTypeChange}
+            value={vehicleType}
+          />
         </ActionFieldWrapper>
       </ActionSummary>
 
       <FieldArray
         name={`envActions[${currentActionIndex}].infractions`}
         // eslint-disable-next-line react/jsx-props-no-spreading
-        render={props => <InfractionsForm currentActionIndex={currentActionIndex} {...props} />}
+        render={props => (
+          <InfractionsForm canAddInfraction={canAddInfraction} currentActionIndex={currentActionIndex} {...props} />
+        )}
       />
     </>
   )
@@ -178,7 +237,7 @@ const SelectorWrapper = styled.div`
 `
 
 const Separator = styled.hr`
-  border-color: ${COLORS.gunMetal};
+  border-color: ${COLORS.slateGray};
 `
 
 const ActionSummary = styled(Form.Group)`
@@ -196,7 +255,8 @@ const ActionFieldWrapper = styled.div`
 const ControlIcon = styled(ControlIconSVG)`
   color: ${COLORS.gunMetal};
   margin-right: 8px;
-  width: 18px;
+  margin-top: 2px;
+  width: 24px;
 `
 
 const SubTitle = styled.div`
@@ -209,4 +269,7 @@ const DeleteIcon = styled(DeleteSVG)`
 
 const IconButtonRight = styled(IconButton)`
   margin-left: auto;
+`
+const NumberOfControls = styled(FormikInputNumberGhost)`
+  width: 150px !important;
 `

@@ -10,7 +10,7 @@ data class NatinfModel(
     @Column(name = "id")
     var id: Int,
     @Column(name = "natinf_code")
-    var natinf_code: String,
+    var natinfCode: String,
     @Column(name = "regulation")
     var regulation: String?,
     @Column(name = "infraction_category")
@@ -20,7 +20,7 @@ data class NatinfModel(
 ) {
     fun toNatinf() = NatinfEntity(
         id = id,
-        natinf_code = natinf_code,
+        natinfCode = natinfCode,
         regulation = regulation,
         infractionCategory = infractionCategory,
         infraction = infraction
@@ -29,7 +29,7 @@ data class NatinfModel(
     companion object {
         fun fromNatinfEntity(natinf: NatinfEntity) = NatinfModel(
             id = natinf.id,
-            natinf_code = natinf.natinf_code,
+            natinfCode = natinf.natinfCode,
             regulation = natinf.regulation,
             infractionCategory = natinf.infractionCategory,
             infraction = natinf.infraction

@@ -13,7 +13,7 @@ import { CellStatus } from './CellStatus'
 import { sortMissionsByProperty } from './MissionsTableSort'
 
 export function MissionsTable({ data, isLoading }) {
-  const [sortColumn, setSortColumn] = React.useState('inputStartDatetimeUtc')
+  const [sortColumn, setSortColumn] = React.useState('inputStartDateTimeUtc')
   const [sortType, setSortType] = React.useState('desc')
 
   const handleSortColumn = (currSortColumn, currSortType) => {
@@ -40,12 +40,12 @@ export function MissionsTable({ data, isLoading }) {
     >
       <Table.Column sortable width={130}>
         <Table.HeaderCell>Date de début</Table.HeaderCell>
-        <DateCell dataKey="inputStartDatetimeUtc" />
+        <DateCell dataKey="inputStartDateTimeUtc" />
       </Table.Column>
 
       <Table.Column sortable width={130}>
         <Table.HeaderCell>Date de fin</Table.HeaderCell>
-        <DateCell dataKey="inputEndDatetimeUtc" />
+        <DateCell dataKey="inputEndDateTimeUtc" />
       </Table.Column>
 
       <Table.Column flexGrow={1}>

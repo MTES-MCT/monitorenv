@@ -12,11 +12,13 @@ data class CreateOrUpdateMissionDataInput(
     val resourceUnits: List<ResourceUnitEntity>? = listOf(),
     val openBy: String? = null,
     val closedBy: String? = null,
-    val observations: String? = null,
+    val observationsCacem: String? = null,
+    val observationsCnsp: String? = null,
     val facade: String? = null,
     val geom: MultiPolygon? = null,
-    val inputStartDatetimeUtc: ZonedDateTime,
-    val inputEndDatetimeUtc: ZonedDateTime? = null,
+    val inputStartDateTimeUtc: ZonedDateTime,
+    val inputEndDateTimeUtc: ZonedDateTime? = null,
+    val missionSource: MissionSourceEnum,
     val envActions: List<EnvActionEntity>? = null
 ) {
     fun toMissionEntity(): MissionEntity {
@@ -28,11 +30,14 @@ data class CreateOrUpdateMissionDataInput(
             resourceUnits = this.resourceUnits,
             openBy = this.openBy,
             closedBy = this.closedBy,
-            observations = this.observations,
+            observationsCacem = this.observationsCacem,
+            observationsCnsp = this.observationsCnsp,
             facade = this.facade,
             geom = this.geom,
-            inputStartDatetimeUtc = this.inputStartDatetimeUtc,
-            inputEndDatetimeUtc = this.inputEndDatetimeUtc,
+            inputStartDateTimeUtc = this.inputStartDateTimeUtc,
+            inputEndDateTimeUtc = this.inputEndDateTimeUtc,
+            isDeleted = false,
+            missionSource = this.missionSource,
             envActions = this.envActions
         )
     }

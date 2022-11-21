@@ -3,6 +3,7 @@ import { Integrations } from '@sentry/tracing'
 import { createRoot } from 'react-dom/client'
 
 import { App } from './App'
+import { SENTRY_DSN, SENTRY_ENV, SENTRY_TRACING_ORIGINS } from './env'
 import { GlobalStyle } from './fonts/fonts'
 
 import 'rsuite/dist/rsuite.min.css'
@@ -13,14 +14,15 @@ import './App.css'
 import './uiMonitor/ol-override.css'
 import './uiMonitor/rsuite-override.css'
 
-const { NODE_ENV, REACT_APP_SENTRY_DSN, REACT_APP_SENTRY_TRACING_ORIGINS } = process.env
+const { NODE_ENV } = process.env
 
 if (NODE_ENV === 'production') {
   Sentry.init({
-    dsn: REACT_APP_SENTRY_DSN || '',
+    dsn: SENTRY_DSN || '',
+    environment: SENTRY_ENV,
     integrations: [
       new Integrations.BrowserTracing({
-        tracingOrigins: REACT_APP_SENTRY_TRACING_ORIGINS ? [REACT_APP_SENTRY_TRACING_ORIGINS] : undefined
+        tracingOrigins: SENTRY_TRACING_ORIGINS ? [SENTRY_TRACING_ORIGINS] : undefined
       })
     ],
 

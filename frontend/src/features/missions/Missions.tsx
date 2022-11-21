@@ -17,9 +17,17 @@ import { MissionsTableFilters } from './MissionsList/MissionsTableFilters'
 const TWO_MINUTES = 2 * 60 * 1000
 export function Missions() {
   const dispatch = useDispatch()
-  const { data, isError, isLoading } = useGetMissionsQuery(undefined, { pollingInterval: TWO_MINUTES })
+  const { missionNatureFilter, missionStartedAfter, missionStartedBefore, missionStatusFilter, missionTypeFilter } =
+    useAppSelector(state => state.missionFilters)
 
-  const { missionNatureFilter, missionStatusFilter, missionTypeFilter } = useAppSelector(state => state.missionFilters)
+  const { data, isError, isLoading } = useGetMissionsQuery(
+    {
+      startedAfterDateTime: missionStartedAfter || undefined,
+      startedBeforeDateTime: missionStartedBefore || undefined
+    },
+    { pollingInterval: TWO_MINUTES }
+  )
+
   const filteredData = useMemo(
     () =>
       data?.filter(

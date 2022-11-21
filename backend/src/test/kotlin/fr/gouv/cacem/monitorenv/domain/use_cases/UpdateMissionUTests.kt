@@ -4,13 +4,10 @@ package fr.gouv.cacem.monitorenv.domain.use_cases
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionNatureEnum
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionStatusEnum
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.missions.*
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.crud.missions.UpdateMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.UpdateMission
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
 import org.junit.jupiter.api.Test
@@ -50,8 +47,10 @@ class UpdateMissionUTests {
             missionStatus = MissionStatusEnum.CLOSED,
             facade = "Outre-Mer",
             missionNature = listOf(MissionNatureEnum.FISH),
-            inputStartDatetimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-            inputEndDatetimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z")
+            inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            inputEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+            isDeleted = false,
+            missionSource = MissionSourceEnum.CACEM
         )
         given(missionRepository.save(expectedUpdatedMission)).willReturn(
             expectedUpdatedMission

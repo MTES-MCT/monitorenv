@@ -1,14 +1,13 @@
 package fr.gouv.cacem.monitorenv.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.PropertyNamingStrategy
+import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import org.n52.jackson.datatype.jts.JtsModule
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
-import java.util.*
 
 @Configuration
 class MapperConfiguration {
@@ -21,7 +20,7 @@ class MapperConfiguration {
         // needed to handle java.time.ZonedDateTime serialization
         mapper.registerModule(JavaTimeModule())
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-        mapper.propertyNamingStrategy = PropertyNamingStrategy.LOWER_CAMEL_CASE
+        mapper.propertyNamingStrategy = PropertyNamingStrategies.LOWER_CAMEL_CASE
 
         return mapper
     }

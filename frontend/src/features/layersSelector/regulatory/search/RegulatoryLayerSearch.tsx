@@ -50,7 +50,17 @@ export function RegulatoryLayerSearch({ isVisible }) {
       },
       tokenize: 'full'
     })
-    regulatoryLayers?.forEach(layer => RegulatoryLayersIndex.add(layer))
+    regulatoryLayers?.forEach(layer => {
+      if (
+        layer?.properties?.layer_name &&
+        layer?.properties?.entity_name &&
+        layer?.properties?.ref_reg &&
+        layer?.properties?.type &&
+        layer?.properties?.thematique
+      ) {
+        RegulatoryLayersIndex.add(layer)
+      }
+    })
 
     return (searchedText, geofilter, extent, filterOnThemes) => {
       if (searchedText || filterOnThemes.length > 0) {
@@ -130,9 +140,12 @@ export function RegulatoryLayerSearch({ isVisible }) {
   const regulatoryThemes = useMemo(
     () =>
       _.chain(regulatoryLayers)
-        .uniqBy(l => l.properties.thematique)
         .filter(l => !!l.properties.thematique)
-        .map(l => ({ label: l.properties.thematique, value: l.properties.thematique }))
+        .map(l => l.properties.thematique.split(','))
+        .flatMap()
+        .map(l => l.trim())
+        .uniq()
+        .map(l => ({ label: l, value: l }))
         .sortBy('label')
         .value(),
     [regulatoryLayers]

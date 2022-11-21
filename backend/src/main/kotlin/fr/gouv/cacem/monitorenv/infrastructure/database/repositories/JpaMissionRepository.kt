@@ -5,8 +5,10 @@ import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import java.time.Instant
 
 @Repository
 class JpaMissionRepository(
@@ -14,8 +16,16 @@ class JpaMissionRepository(
     private val mapper: ObjectMapper
 ) : IMissionRepository {
 
-    override fun findMissions(): List<MissionEntity> {
-        return dbMissionRepository.findAllByOrderByInputStartDatetimeUtcDesc().map { it.toMissionEntity(mapper) }
+    override fun findMissions(
+        afterDateTime: Instant,
+        beforeDateTime: Instant,
+        pageable: Pageable
+    ): List<MissionEntity> {
+        return dbMissionRepository.findAllMissions(
+            afterDateTime,
+            beforeDateTime,
+            pageable
+        ).map { it.toMissionEntity(mapper) }
     }
 
     override fun findMissionById(missionId: Int): MissionEntity {
@@ -38,6 +48,6 @@ class JpaMissionRepository(
 
     @Transactional
     override fun delete(missionId: Int) {
-        dbMissionRepository.deleteById(missionId)
+        dbMissionRepository.deleteMission(missionId)
     }
 }

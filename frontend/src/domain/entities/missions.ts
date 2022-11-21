@@ -71,6 +71,11 @@ export const infractionTypeEnum = {
   }
 }
 
+export enum InfractionTypeEnum {
+  WITHOUT_REPORT = 'WITHOUT_REPORT',
+  WITH_REPORT = 'WITH_REPORT'
+}
+
 export const formalNoticeEnum = {
   NO: {
     code: 'NO',
@@ -84,6 +89,11 @@ export const formalNoticeEnum = {
     code: 'YES',
     libelle: 'Oui'
   }
+}
+export enum FormalNoticeEnum {
+  NO = 'NO',
+  WAITING = 'WAITING',
+  YES = 'YES'
 }
 
 export const actionTargetTypeEnum = {
@@ -138,6 +148,12 @@ export const vesselTypeEnum = {
     libelle: 'Voilier'
   }
 }
+export enum VesselTypeEnum {
+  COMMERCIAL = 'COMMERCIAL',
+  FISHING = 'FISHING',
+  MOTOR = 'MOTOR',
+  SAILING = 'SAILING'
+}
 
 export const vesselSizeEnum = {
   FROM_12_TO_24m: {
@@ -156,6 +172,13 @@ export const vesselSizeEnum = {
     code: 'MORE_THAN_46m',
     libelle: 'plus de 46 m'
   }
+}
+
+export enum VesselSizeEnum {
+  FROM_12_TO_24m = 'FROM_12_TO_24m',
+  FROM_24_TO_46m = 'FROM_24_TO_46m',
+  LESS_THAN_12m = 'LESS_THAN_12m',
+  MORE_THAN_46m = 'MORE_THAN_46m'
 }
 
 export const protectedSpeciesEnum = {
@@ -199,10 +222,16 @@ export const missionStatusEnum = {
     libelle: 'En cours'
   }
 }
+
 export enum MissionStatusEnum {
   CLOSED = 'CLOSED',
   ENDED = 'ENDED',
   PENDING = 'PENDING'
+}
+
+export enum MissionSourceEnum {
+  CACEM = 'CACEM',
+  CNSP = 'CNSP'
 }
 
 export const THEME_REQUIRE_PROTECTED_SPECIES = ['Police des espèces protégées et de leurs habitats (faune et flore)']
@@ -226,31 +255,63 @@ export const relevantCourtEnum = {
   }
 }
 
-export type MissionType<MissionSubType = MissionControlType | MissionSurveillanceType | MissionObservationType> = {
+export type MissionType<EnvActionType = EnvActionControlType | EnvActionSurveillanceType | EnvActionNoteType> = {
   closedBy: string
-  envActions: Array<MissionSubType>
+  envActions: Array<EnvActionType>
   facade: string
   geom: string
   id: number
-  inputEndDatetimeUtc: string
-  inputStartDatetimeUtc: string
+  inputEndDateTimeUtc: string
+  inputStartDateTimeUtc: string
   missionNature: MissionNatureEnum
+  missionSource: MissionSourceEnum
   missionStatus: MissionStatusEnum
   missionType: MissionTypeEnum
-  observations: string
+  observationsCacem: string
+  observationsCnsp: string
   openBy: string
   resourceUnits: string
 }
 
 export type EnvAction = {
-  actionStartDatetimeUtc: string
+  actionStartDateTimeUtc: string
   actionType: ActionTypeEnum
   geom: string
   id: string
 }
-export type MissionControlType = {
-  actionTheme: string
-  protectedSpecies: string
+export type EnvActionControlType = EnvAction & {
+  actionNumberOfControls?: number
+  actionSubTheme?: string
+  actionTargetType?: string
+  actionTheme?: string
+  infractions: InfractionType[]
+  protectedSpecies?: string
+  vehicleType: string
 }
-export type MissionSurveillanceType = {}
-export type MissionObservationType = {}
+
+export type EnvActionSurveillanceType = EnvAction & {
+  actionSubTheme?: string
+  actionTheme?: string
+  duration: number
+  observations: string
+  protectedSpecies?: string
+}
+
+export type EnvActionNoteType = EnvAction & {
+  observations?: string
+}
+
+export type InfractionType = {
+  companyName?: string
+  controlledPersonIdentity?: string
+  formalNotice: FormalNoticeEnum
+  id: string
+  infractionType: InfractionTypeEnum
+  natinf?: string[]
+  observations?: string
+  registrationNumber?: string
+  relevantCourt?: string
+  toProcess: boolean
+  vesselSize?: VesselSizeEnum
+  vesselType?: VesselTypeEnum
+}

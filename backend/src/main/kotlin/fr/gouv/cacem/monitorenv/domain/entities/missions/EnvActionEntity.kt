@@ -19,6 +19,6 @@ import java.util.*
 abstract class EnvActionEntity(
     open val id: UUID,
     open val actionType: ActionTypeEnum,
-    open val actionStartDatetimeUtc: ZonedDateTime? = null,
+    open val actionStartDateTimeUtc: ZonedDateTime? = null,
     open val geom: MultiPoint? = null
 )

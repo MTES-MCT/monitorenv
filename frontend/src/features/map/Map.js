@@ -1,15 +1,13 @@
-import React from 'react'
-
 import { FEATURE_FLAGS } from '../../features'
-import BaseMap from './BaseMap'
+import { BaseMap } from './BaseMap'
 import MapCoordinatesBox from './controls/MapCoordinatesBox'
 import { AdministrativeLayers } from './layers/AdministrativeLayers'
 import BaseLayer from './layers/BaseLayer'
 import { DrawLayer } from './layers/DrawLayer'
 import { EditingMissionLayer } from './layers/EditingMissionLayer'
 import { HoveredMissionLayer } from './layers/HoveredMissionLayer'
-import InterestPointLayer from './layers/InterestPointLayer'
-import MeasurementLayer from './layers/MeasurementLayer'
+import { InterestPointLayer } from './layers/InterestPointLayer'
+import { MeasurementLayer } from './layers/MeasurementLayer'
 import { MissionsLayer } from './layers/MissionsLayer'
 import { RegulatoryLayers } from './layers/RegulatoryLayers'
 import { RegulatoryPreviewLayer } from './layers/RegulatoryPreviewLayer'
@@ -20,7 +18,7 @@ import { ControlOverlay } from './overlays/controls/ControlOverlay'
 import { MissionOverlays } from './overlays/missions/MissionOverlays'
 import { ShowRegulatoryMetadata } from './ShowRegulatoryMetadata'
 
-function Map() {
+export function Map() {
   // const [shouldUpdateView, setShouldUpdateView] = useState(true)
   // const [historyMoveTrigger, setHistoryMoveTrigger] = useState({})
   // const [mapMovingAndZoomEvent, setMapMovingAndZoomEvent] = useState(null)
@@ -68,5 +66,3 @@ function Map() {
     </BaseMap>
   )
 }
-
-export default Map
