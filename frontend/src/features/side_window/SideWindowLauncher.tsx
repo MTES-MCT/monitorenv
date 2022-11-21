@@ -8,11 +8,11 @@ import { NewWindow } from './NewWindow'
 import { SideWindow } from './SideWindow'
 
 export function SideWindowLauncher() {
-  const { openedSideWindowTab } = useAppSelector(state => state.sideWindowRouter)
+  const { sideWindowIsOpen } = useAppSelector(state => state.sideWindowRouter)
   const dispatch = useDispatch()
   const newWindowRef = useRef() as MutableRefObject<HTMLDivElement>
 
-  return openedSideWindowTab ? (
+  return sideWindowIsOpen ? (
     <StyleSheetManager target={newWindowRef.current}>
       <NewWindow
         closeOnUnmount

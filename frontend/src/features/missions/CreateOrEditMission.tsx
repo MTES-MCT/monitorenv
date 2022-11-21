@@ -79,9 +79,6 @@ export function CreateOrEditMission() {
     })
   }
 
-  const handleConfirmFormCancelation = () => {
-    setCancelEditModalIsOpen(true)
-  }
   const handleConfirmDelete = () => {
     setDeleteModalIsOpen(true)
   }
@@ -115,6 +112,13 @@ export function CreateOrEditMission() {
           const handleCloseMission = () => {
             formikProps.setFieldValue('missionStatus', missionStatusEnum.CLOSED.code)
             formikProps.handleSubmit()
+          }
+          const handleConfirmFormCancelation = () => {
+            if (formikProps.dirty) {
+              setCancelEditModalIsOpen(true)
+            } else {
+              handleCancelForm()
+            }
           }
 
           return (
@@ -180,7 +184,7 @@ export function CreateOrEditMission() {
                   </IconButton>
                   <IconButton
                     appearance="primary"
-                    disabled={!(mission.missionStatus === missionStatusEnum.ENDED.code)}
+                    disabled={mission.missionStatus === missionStatusEnum.ENDED.code}
                     icon={<SaveSVG className="rs-icon" />}
                     onClick={handleCloseMission}
                     type="button"

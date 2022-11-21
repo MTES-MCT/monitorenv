@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { matchPath } from 'react-router-dom'
+import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../constants/constants'
@@ -31,7 +32,7 @@ export function DrawLayerModal() {
   const dispatch = useDispatch()
   const { featureType, interactionType } = useAppSelector(state => state.drawLayer)
 
-  const { openedSideWindowTab, sideWindowPath } = useAppSelector(state => state.sideWindowRouter)
+  const { sideWindowIsLoaded, sideWindowPath } = useAppSelector(state => state.sideWindowRouter)
 
   const routeParams = matchPath<{ id: string }>(sideWindowPath, {
     exact: true,
@@ -47,10 +48,10 @@ export function DrawLayerModal() {
   }, [dispatch, previousMissionId, routeParams])
 
   useEffect(() => {
-    if (!openedSideWindowTab) {
+    if (!sideWindowIsLoaded) {
       dispatch(quitAddLocalisation)
     }
-  }, [dispatch, openedSideWindowTab])
+  }, [dispatch, sideWindowIsLoaded])
 
   const handleQuit = () => {
     dispatch(quitAddLocalisation)
@@ -83,27 +84,33 @@ export function DrawLayerModal() {
       </ContentWrapper>
       {featureType === monitorenvFeatureTypes.MISSION_ZONE && (
         <ButtonsWrapper>
-          <Button
+          <IconButton
+            active={interactionType === interactionTypes.POLYGON}
+            appearance="primary"
+            icon={<PolygonIcon className="rs-icon" />}
             onClick={handleSelectInteraction(interactionTypes.POLYGON)}
-            selected={interactionType === interactionTypes.POLYGON}
-          >
-            <PolygonIcon />
-          </Button>
-          <Button
+            size="md"
+          />
+          <IconButton
+            active={interactionType === interactionTypes.SQUARE}
+            appearance="primary"
+            icon={<RectangleIcon className="rs-icon" />}
             onClick={handleSelectInteraction(interactionTypes.SQUARE)}
-            selected={interactionType === interactionTypes.SQUARE}
-          >
-            <RectangleIcon />
-          </Button>
-          <Button
+            size="md"
+          />
+          <IconButton
+            active={interactionType === interactionTypes.CIRCLE}
+            appearance="primary"
+            icon={<CircleIcon className="rs-icon" />}
             onClick={handleSelectInteraction(interactionTypes.CIRCLE)}
-            selected={interactionType === interactionTypes.CIRCLE}
-          >
-            <CircleIcon />
-          </Button>
-          <Button selected={interactionType === interactionTypes.SELECTION}>
-            <SelectorIcon />
-          </Button>
+            size="md"
+          />
+          <IconButton
+            active={interactionType === interactionTypes.SELECTION}
+            appearance="primary"
+            icon={<SelectorIcon className="rs-icon" />}
+            size="md"
+          />
         </ButtonsWrapper>
       )}
     </Wrapper>
@@ -120,6 +127,7 @@ const Wrapper = styled.div`
 const ContentWrapper = styled.div``
 const ButtonsWrapper = styled.div`
   margin-left: 3px;
+  padding-top: 56px;
   button {
     :not(:last-child) {
       margin-bottom: 3px;
@@ -135,15 +143,6 @@ const Header = styled.h1`
   font-weight: normal;
   line-height: 22px;
   padding: 14px;
-`
-const Button = styled.button<{ selected: boolean }>`
-  width: 32px;
-  height: 32px;
-  background: ${props => (props.selected ? COLORS.blueYonder : COLORS.charcoal)};
-  :hover,
-  :focus {
-    background: ${COLORS.blueYonder};
-  }
 `
 const PolygonIcon = styled(PolygonSVG)`
   width: 16px;
@@ -186,4 +185,10 @@ const ValidateButton = styled.button`
   line-height: 18px;
   padding: 8px;
 `
-const ActionWrapper = styled.div``
+const ActionWrapper = styled.div`
+  padding: 10px;
+  background-color: ${COLORS.white};
+  & > :not(:last-child) {
+    margin-right: 10px;
+  }
+`

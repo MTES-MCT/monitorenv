@@ -17,7 +17,7 @@ import { ReactComponent as PlusSVG } from '../../uiMonitor/icons/Plus.svg'
 export function MissionsMenu() {
   const dispatch = useDispatch()
   const { displayMissionsLayer, missionsMenuIsOpen } = useAppSelector(state => state.global)
-  const { openedSideWindowTab } = useAppSelector(state => state.sideWindowRouter)
+  const { sideWindowIsOpen } = useAppSelector(state => state.sideWindowRouter)
 
   const toggleMissionsWindow = () => {
     dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))
@@ -68,7 +68,7 @@ export function MissionsMenu() {
         </MissionsMenuWrapper>
       )}
       <MissionButton
-        active={!!openedSideWindowTab}
+        active={!!sideWindowIsOpen}
         appearance="primary"
         data-cy="missions-button"
         icon={<MissionsIcon className="rs-icon" />}

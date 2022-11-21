@@ -25,22 +25,28 @@ export function ResourceUnitSelector({ removeResourceUnit, resourceUnitIndex, re
   const resourcesRef = useRef() as MutableRefObject<HTMLDivElement>
   const { data, isError, isLoading } = useGetControlResourcesQuery()
 
-  const administrationList = _.uniqBy(data, 'administration')
-  const unitList = _.uniqBy(
-    _.filter(data, r => r.administration === administrationField.value),
-    'unit'
-  )
-  const resourcesList = _.filter(
-    data,
-    r => r.administration === administrationField.value && r.unit === unitField.value && r.resourceName
-  )
+  const administrationList = _.chain(data)
+    .uniqBy('administration')
+    .sort((a, b) => a?.administration?.localeCompare(b?.administration))
+    .value()
+  const unitList = _.chain(data)
+    .filter(r => !!(r.administration === administrationField.value))
+    .uniqBy('unit')
+    .sort((a, b) => a?.unit?.localeCompare(b?.unit))
+    .value()
+  const resourcesList = _.chain(data)
+    .filter(r => !!(r.administration === administrationField.value && r.unit === unitField.value && r.resourceName))
+    .value()
 
   // Add any resource from Mission not present in resourceList from API
   // See: https://github.com/MTES-MCT/monitorenv/issues/103
   const existingResourcesOptions = resourcesField?.value?.map(r => ({
     resourceName: r
   }))
-  const combinedResourceList = _.uniqBy([...resourcesList, ...existingResourcesOptions], r => r.resourceName)
+  const combinedResourceList = _.chain([...resourcesList, ...existingResourcesOptions])
+    .uniqBy('resourceName')
+    .sort((a, b) => a?.resourceName?.localeCompare(b?.resourceName))
+    .value()
 
   const handleAdministrationChange = value => {
     if (value !== administrationField.value) {

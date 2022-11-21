@@ -4,7 +4,8 @@ import { sideWindowPaths } from '../../domain/entities/sideWindow'
 
 const sideWindowRouterReducerSlice = createSlice({
   initialState: {
-    openedSideWindowTab: null,
+    sideWindowIsLoaded: false,
+    sideWindowIsOpen: false,
     sideWindowPath: sideWindowPaths.MISSIONS
   },
   name: 'sideWindowRouterReducer',
@@ -16,7 +17,8 @@ const sideWindowRouterReducerSlice = createSlice({
      * @param {Object=} state
      */
     closeSideWindow(state) {
-      state.openedSideWindowTab = null
+      state.sideWindowIsOpen = false
+      state.sideWindowIsLoaded = false
     },
 
     /**
@@ -27,16 +29,20 @@ const sideWindowRouterReducerSlice = createSlice({
      * @param {{payload: string}} action - The tab to show, see `sideWindowMenu`
      */
     openSideWindowTab(state, action) {
-      state.openedSideWindowTab = action.payload
+      state.sideWindowIsOpen = action.payload
     },
 
+    setSideWindowAsLoaded(state) {
+      state.sideWindowIsLoaded = true
+    },
     setSideWindowPath(state, action) {
-      state.openedSideWindowTab = action.payload
+      state.sideWindowIsOpen = action.payload
       state.sideWindowPath = action.payload
     }
   }
 })
 
-export const { closeSideWindow, openSideWindowTab, setSideWindowPath } = sideWindowRouterReducerSlice.actions
+export const { closeSideWindow, openSideWindowTab, setSideWindowAsLoaded, setSideWindowPath } =
+  sideWindowRouterReducerSlice.actions
 
 export const sideWindowRouterReducer = sideWindowRouterReducerSlice.reducer
