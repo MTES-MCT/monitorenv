@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.missions.*
 import org.locationtech.jts.geom.MultiPolygon
-
 import java.time.ZonedDateTime
 
 data class MissionDataOutput(
@@ -17,8 +16,8 @@ data class MissionDataOutput(
     val observationsCnsp: String? = null,
     val facade: String? = null,
     val geom: MultiPolygon? = null,
-    val inputStartDatetimeUtc: ZonedDateTime,
-    val inputEndDatetimeUtc: ZonedDateTime? = null,
+    val inputStartDateTimeUtc: ZonedDateTime,
+    val inputEndDateTimeUtc: ZonedDateTime? = null,
     val envActions: List<EnvActionEntity>? = null,
     val missionSource: MissionSourceEnum
 ) {
@@ -35,12 +34,12 @@ data class MissionDataOutput(
                 missionStatus = mission.missionStatus,
                 openBy = mission.openBy,
                 closedBy = mission.closedBy,
-                observationsCacem= mission.observationsCacem,
-                observationsCnsp= mission.observationsCnsp,
+                observationsCacem = mission.observationsCacem,
+                observationsCnsp = mission.observationsCnsp,
                 facade = mission.facade,
                 geom = mission.geom,
-                inputStartDatetimeUtc = mission.inputStartDatetimeUtc,
-                inputEndDatetimeUtc = mission.inputEndDatetimeUtc,
+                inputStartDateTimeUtc = mission.inputStartDateTimeUtc,
+                inputEndDateTimeUtc = mission.inputEndDateTimeUtc,
                 envActions = mission.envActions,
                 missionSource = mission.missionSource
             )

@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class MonitorenvApplication
 
 fun main(args: Array<String>) {
-	runApplication<MonitorenvApplication>(*args)
+    runApplication<MonitorenvApplication>(*args)
 }

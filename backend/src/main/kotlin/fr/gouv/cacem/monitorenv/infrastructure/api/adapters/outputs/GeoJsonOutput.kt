@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs
 
 import org.n52.jackson.datatype.jts.GeometrySerializer
 
-//{
+// {
 //  "type": "Feature",
 //  "geometry": {
 //    "type": "Point",
@@ -11,8 +11,8 @@ import org.n52.jackson.datatype.jts.GeometrySerializer
 //    "properties": {
 //    "name": "Dinagat Islands"
 //  }
-//}
-data class GeoJsonOutput (
-  val type: String,
-  val geometry: GeometrySerializer
+// }
+data class GeoJsonOutput(
+    val type: String,
+    val geometry: GeometrySerializer
 )

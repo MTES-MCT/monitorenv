@@ -13,16 +13,16 @@ import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/Note_libre.s
 import { ReactComponent as SurveillanceIconSVG } from '../../../uiMonitor/icons/Observation.svg'
 
 export function ActionCard({ action, duplicateAction, removeAction, selectAction, selected }) {
-  const parsedActionStartDatetimeUtc = new Date(action.actionStartDatetimeUtc)
+  const parsedActionStartDateTimeUtc = new Date(action.actionStartDateTimeUtc)
 
   return (
     <Action onClick={selectAction}>
       <TimeLine>
         <DateTimeWrapper>
-          {isValid(parsedActionStartDatetimeUtc) && (
+          {isValid(parsedActionStartDateTimeUtc) && (
             <>
-              <DateWrapper>{format(parsedActionStartDatetimeUtc, 'dd MMM', { locale: fr })}</DateWrapper>
-              <Time>à {format(parsedActionStartDatetimeUtc, 'HH:mm', { locale: fr })}</Time>
+              <DateWrapper>{format(parsedActionStartDateTimeUtc, 'dd MMM', { locale: fr })}</DateWrapper>
+              <Time>à {format(parsedActionStartDateTimeUtc, 'HH:mm', { locale: fr })}</Time>
             </>
           )}
         </DateTimeWrapper>

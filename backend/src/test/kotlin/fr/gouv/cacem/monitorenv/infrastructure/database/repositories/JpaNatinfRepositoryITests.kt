@@ -7,14 +7,14 @@ import org.springframework.transaction.annotation.Transactional
 
 class JpaNatinfRepositoryITests : AbstractDBTests() {
 
-  @Autowired
-  private lateinit var jpaNatinfsRepository: JpaNatinfRepository
+    @Autowired
+    private lateinit var jpaNatinfsRepository: JpaNatinfRepository
 
-  @Test
-  @Transactional
-  fun `findNatinfs Should return all natinfs`() {
-    // When
-    val natinfs = jpaNatinfsRepository.findNatinfs()
-    assertThat(natinfs).hasSize(661)
-  }
+    @Test
+    @Transactional
+    fun `findNatinfs Should return all natinfs`() {
+        // When
+        val natinfs = jpaNatinfsRepository.findNatinfs()
+        assertThat(natinfs).hasSize(661)
+    }
 }

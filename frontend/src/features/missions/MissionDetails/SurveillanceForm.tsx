@@ -82,13 +82,13 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
       )}
       <FlexSelectorWrapper>
         <Column>
-          <Form.ControlLabel htmlFor={`envActions[${currentActionIndex}].actionStartDatetimeUtc`}>
+          <Form.ControlLabel htmlFor={`envActions[${currentActionIndex}].actionStartDateTimeUtc`}>
             Date et heure du début de la surveillance
           </Form.ControlLabel>
           <FormikDatePicker
             format="dd MMM yyyy, HH:mm"
             ghost
-            name={`envActions[${currentActionIndex}].actionStartDatetimeUtc`}
+            name={`envActions[${currentActionIndex}].actionStartDateTimeUtc`}
             oneTap
             placeholder={placeholderDateTimePicker}
           />

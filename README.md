@@ -51,6 +51,10 @@ Modifier éventuellement `./infra/configurations/backend/application-dev.propert
 `make dev-run-front` : lance le serveur de développement du frontend
 Le navigateur s'ouvre par défaut sur l'url <http://localhost:3000>
 
+### Linting
+
+Avant de pousser un commit, vérifier le linting avec `npm run test:lint:partial`
+
 ### Variables d'environnement
 
 React CRA permet d'introduire des variables d'environnement au build.
@@ -78,6 +82,11 @@ Pour relancer le backend sans recréer les conteneurs de base de données et geo
 make load-sig-data
 make init-geoserver
 ```
+
+### Linting
+
+Commande à lancer pour appliquer le linter (ktlint) sur le backend :
+`./mvnw antrun:run@ktlint-format`
 
 ## Datapipelines
 

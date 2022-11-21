@@ -17,30 +17,30 @@ import javax.websocket.server.PathParam
 @RequestMapping("/bff/v1/controlthemes")
 @Tag(name = "Control Themes", description = "API control themes")
 class ControlThemesController(
-  private val getControlThemes: GetControlThemes,
-  private val getControlThemeById: GetControlThemeById
+    private val getControlThemes: GetControlThemes,
+    private val getControlThemeById: GetControlThemeById
 ) {
 
-  @GetMapping("")
-  @Operation(summary = "Get control themes")
-  fun getControlThemesController(): String {
-    val controlThemes = getControlThemes.execute()
-    val controlThemeEntities = controlThemes.map { ControlThemeDataOutput.fromControlThemeEntity(it) }
-    val mapper = ObjectMapper()
-    mapper.registerModule(JtsModule())
-    return mapper.writeValueAsString(controlThemeEntities)
-  }
+    @GetMapping("")
+    @Operation(summary = "Get control themes")
+    fun getControlThemesController(): String {
+        val controlThemes = getControlThemes.execute()
+        val controlThemeEntities = controlThemes.map { ControlThemeDataOutput.fromControlThemeEntity(it) }
+        val mapper = ObjectMapper()
+        mapper.registerModule(JtsModule())
+        return mapper.writeValueAsString(controlThemeEntities)
+    }
 
-  @GetMapping("/{controlThemeId}")
-  @Operation(summary = "Get regulatory area by Id")
-  fun getControlThemeByIdController(
-    @PathParam("controlTheme id")
-    @PathVariable(name = "controlThemeId")
-    controlThemeId: Int
-  ): String {
-    val controlTheme = getControlThemeById.execute(controlThemeId = controlThemeId)
-    val mapper = ObjectMapper()
-    mapper.registerModule(JtsModule())
-    return mapper.writeValueAsString(controlTheme)
-  }
+    @GetMapping("/{controlThemeId}")
+    @Operation(summary = "Get regulatory area by Id")
+    fun getControlThemeByIdController(
+        @PathParam("controlTheme id")
+        @PathVariable(name = "controlThemeId")
+        controlThemeId: Int
+    ): String {
+        val controlTheme = getControlThemeById.execute(controlThemeId = controlThemeId)
+        val mapper = ObjectMapper()
+        mapper.registerModule(JtsModule())
+        return mapper.writeValueAsString(controlTheme)
+    }
 }

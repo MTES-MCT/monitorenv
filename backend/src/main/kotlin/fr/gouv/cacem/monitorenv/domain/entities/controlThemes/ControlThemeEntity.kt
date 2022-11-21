@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.entities.controlThemes
 
 data class ControlThemeEntity(
-        val id: Int,
-        val themeLevel1: String,
-        val themeLevel2: String? = null
-        )
+    val id: Int,
+    val themeLevel1: String,
+    val themeLevel2: String? = null
+)

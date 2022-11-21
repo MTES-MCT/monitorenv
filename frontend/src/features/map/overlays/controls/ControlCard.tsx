@@ -7,16 +7,16 @@ import { actionTargetTypeEnum } from '../../../../domain/entities/missions'
 import { ControlInfractionsTags } from '../../../../ui/ControlInfractionsTags'
 
 export function ControlCard({ feature }) {
-  const { actionNumberOfControls, actionStartDatetimeUtc, actionTargetType, actionTheme, infractions } =
+  const { actionNumberOfControls, actionStartDateTimeUtc, actionTargetType, actionTheme, infractions } =
     feature.getProperties()
-  const parsedActionStartDatetimeUtc = new Date(actionStartDatetimeUtc)
+  const parsedActionStartDateTimeUtc = new Date(actionStartDateTimeUtc)
 
   return (
     <ControlCardHeader>
       <Col1>
         <ControlDate>
-          {isValid(parsedActionStartDatetimeUtc) &&
-            format(parsedActionStartDatetimeUtc, 'dd MMM à HH:mm', { locale: fr })}
+          {isValid(parsedActionStartDateTimeUtc) &&
+            format(parsedActionStartDateTimeUtc, 'dd MMM à HH:mm', { locale: fr })}
         </ControlDate>
       </Col1>
       <Col2>

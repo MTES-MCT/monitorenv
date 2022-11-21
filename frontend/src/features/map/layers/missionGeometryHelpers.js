@@ -20,8 +20,8 @@ export const getMissionCentroid = (mission, layername) => {
   })
   pointFeature.setId(`${layername}:${mission.id}`)
   pointFeature.setProperties({
-    inputEndDatetimeUtc: mission.inputEndDatetimeUtc,
-    inputStartDatetimeUtc: mission.inputStartDatetimeUtc,
+    inputEndDateTimeUtc: mission.inputEndDateTimeUtc,
+    inputStartDateTimeUtc: mission.inputStartDateTimeUtc,
     missionId: mission.id,
     missionStatus: mission.missionStatus,
     missionType: mission.missionType,
@@ -44,8 +44,8 @@ export const getMissionZoneFeature = (mission, layername) => {
   feature.setId(`${layername}:${mission.id}`)
   feature.setProperties({
     envActions: mission.envActions,
-    inputEndDatetimeUtc: mission.inputEndDatetimeUtc,
-    inputStartDatetimeUtc: mission.inputStartDatetimeUtc,
+    inputEndDateTimeUtc: mission.inputEndDateTimeUtc,
+    inputStartDateTimeUtc: mission.inputStartDateTimeUtc,
     missionId: mission.id,
     missionStatus: mission.missionStatus,
     missionType: mission.missionType,
@@ -60,7 +60,7 @@ const getActionFeature = action => {
   const geoJSON = new GeoJSON()
   const {
     actionNumberOfControls,
-    actionStartDatetimeUtc,
+    actionStartDateTimeUtc,
     actionSubTheme,
     actionTargetType,
     actionTheme,
@@ -81,7 +81,7 @@ const getActionFeature = action => {
   feature.setId(`${Layers.ACTIONS.code}:${action.id}`)
   feature.setProperties({
     actionNumberOfControls,
-    actionStartDatetimeUtc,
+    actionStartDateTimeUtc,
     actionSubTheme,
     actionTargetType,
     actionTheme,

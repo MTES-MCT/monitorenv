@@ -16,7 +16,7 @@ class HealthcheckController(
 ) {
 
     @GetMapping("")
-    @Operation(summary="Get healtcheck of regulatory areas and missions")
+    @Operation(summary = "Get healtcheck of regulatory areas and missions")
     fun getHealthcheck(): HealthDataOutput {
         return HealthDataOutput.fromHealth(getHealthcheck.execute())
     }

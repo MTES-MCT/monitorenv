@@ -261,8 +261,8 @@ export type MissionType<EnvActionType = EnvActionControlType | EnvActionSurveill
   facade: string
   geom: string
   id: number
-  inputEndDatetimeUtc: string
-  inputStartDatetimeUtc: string
+  inputEndDateTimeUtc: string
+  inputStartDateTimeUtc: string
   missionNature: MissionNatureEnum
   missionSource: MissionSourceEnum
   missionStatus: MissionStatusEnum
@@ -274,7 +274,7 @@ export type MissionType<EnvActionType = EnvActionControlType | EnvActionSurveill
 }
 
 export type EnvAction = {
-  actionStartDatetimeUtc: string
+  actionStartDateTimeUtc: string
   actionType: ActionTypeEnum
   geom: string
   id: string

@@ -19,20 +19,20 @@ export function GeneralInformationsForm() {
       <Title>Informations générales</Title>
       <Form.Group>
         <FixedFormGroup>
-          <Form.ControlLabel htmlFor="inputStartDatetimeUtc">Début de mission</Form.ControlLabel>
+          <Form.ControlLabel htmlFor="inputStartDateTimeUtc">Début de mission</Form.ControlLabel>
           <FormikDatePicker
             format="dd MMM yyyy, HH:mm"
-            name="inputStartDatetimeUtc"
+            name="inputStartDateTimeUtc"
             oneTap
             placeholder={placeholderDateTimePicker}
           />
         </FixedFormGroup>
 
         <FixedFormGroup>
-          <Form.ControlLabel htmlFor="inputEndDatetimeUtc">Fin de mission</Form.ControlLabel>
+          <Form.ControlLabel htmlFor="inputEndDateTimeUtc">Fin de mission</Form.ControlLabel>
           <FormikDatePicker
             format="dd MMM yyyy, HH:mm"
-            name="inputEndDatetimeUtc"
+            name="inputEndDateTimeUtc"
             oneTap
             placeholder={placeholderDateTimePicker}
           />

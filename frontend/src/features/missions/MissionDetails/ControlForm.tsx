@@ -44,8 +44,8 @@ export function ControlForm({
   } = useFormikContext<MissionType<EnvActionControlType>>()
   const currentAction = envActions[currentActionIndex]
 
-  const parsedActionStartDatetimeUtc =
-    currentAction?.actionStartDatetimeUtc && new Date(currentAction.actionStartDatetimeUtc)
+  const parsedActionStartDateTimeUtc =
+    currentAction?.actionStartDateTimeUtc && new Date(currentAction.actionStartDateTimeUtc)
   const { actionNumberOfControls, actionTargetType, actionTheme, protectedSpecies, vehicleType } = currentAction || {}
   const { data, isError, isLoading } = useGetControlThemesQuery()
   const themes = useMemo(() => _.uniqBy(data, 'themeLevel1'), [data])
@@ -117,9 +117,9 @@ export function ControlForm({
         <Title>Contrôle{actionNumberOfControls && actionNumberOfControls > 1 ? 's' : ''}</Title>
         <SubTitle>
           &nbsp;(
-          {parsedActionStartDatetimeUtc &&
-            isValid(parsedActionStartDatetimeUtc) &&
-            format(parsedActionStartDatetimeUtc, 'dd MMM à HH:mm', { locale: fr })}
+          {parsedActionStartDateTimeUtc &&
+            isValid(parsedActionStartDateTimeUtc) &&
+            format(parsedActionStartDateTimeUtc, 'dd MMM à HH:mm', { locale: fr })}
           )
         </SubTitle>
         <IconButtonRight
@@ -166,13 +166,13 @@ export function ControlForm({
       )}
 
       <Form.Group>
-        <Form.ControlLabel htmlFor={`envActions[${currentActionIndex}].actionStartDatetimeUtc`}>
+        <Form.ControlLabel htmlFor={`envActions[${currentActionIndex}].actionStartDateTimeUtc`}>
           Date et heure du contrôle
         </Form.ControlLabel>
         <FormikDatePicker
           format="dd MMM yyyy, HH:mm"
           ghost
-          name={`envActions[${currentActionIndex}].actionStartDatetimeUtc`}
+          name={`envActions[${currentActionIndex}].actionStartDateTimeUtc`}
           oneTap
           placeholder={placeholderDateTimePicker}
         />

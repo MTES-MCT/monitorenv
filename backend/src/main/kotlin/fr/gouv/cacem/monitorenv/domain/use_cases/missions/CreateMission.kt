@@ -6,18 +6,18 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 
 @UseCase
-class CreateMission(private val missionRepository: IMissionRepository,
-                    private val facadeRepository: IFacadeAreasRepository
+class CreateMission(
+    private val missionRepository: IMissionRepository,
+    private val facadeRepository: IFacadeAreasRepository
 ) {
-  @Throws(IllegalArgumentException::class)
-  fun execute(mission: MissionEntity): MissionEntity {
-
-    if (mission.geom != null) {
-      val missionToSave = mission.copy(
-        facade = facadeRepository.findFacadeFromMission(mission.geom)
-      )
-      return missionRepository.create(missionToSave)
+    @Throws(IllegalArgumentException::class)
+    fun execute(mission: MissionEntity): MissionEntity {
+        if (mission.geom != null) {
+            val missionToSave = mission.copy(
+                facade = facadeRepository.findFacadeFromMission(mission.geom)
+            )
+            return missionRepository.create(missionToSave)
+        }
+        return missionRepository.create(mission)
     }
-    return missionRepository.create(mission)
-  }
 }

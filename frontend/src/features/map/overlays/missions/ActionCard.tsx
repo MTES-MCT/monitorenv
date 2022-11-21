@@ -10,18 +10,18 @@ export function ActionCard({ feature }) {
   const {
     // actionType,
     actionNumberOfControls,
-    actionStartDatetimeUtc,
+    actionStartDateTimeUtc,
     // actionTheme,
     actionTargetType,
     infractions
   } = feature.getProperties()
-  const parsedactionStartDatetimeUtc = new Date(actionStartDatetimeUtc)
+  const parsedactionStartDateTimeUtc = new Date(actionStartDateTimeUtc)
 
   return (
     <ActionCardHeader selected>
       <Col1>
         <ActionDate>
-          {isValid(parsedactionStartDatetimeUtc) && format(parsedactionStartDatetimeUtc, 'dd MMM yyyy', { locale: fr })}
+          {isValid(parsedactionStartDateTimeUtc) && format(parsedactionStartDateTimeUtc, 'dd MMM yyyy', { locale: fr })}
         </ActionDate>
       </Col1>
       <Col2>

@@ -17,31 +17,31 @@ import javax.websocket.server.PathParam
 @RequestMapping("/bff/v1/regulatory")
 @Tag(name = "Regulatory", description = "API regulatory layers")
 class RegulatoryAreasController(
-  private val getRegulatoryAreas: GetRegulatoryAreas,
-  private val getRegulatoryAreaById: GetRegulatoryAreaById,
-  private val objectMapper: ObjectMapper,
+    private val getRegulatoryAreas: GetRegulatoryAreas,
+    private val getRegulatoryAreaById: GetRegulatoryAreaById,
+    private val objectMapper: ObjectMapper
 ) {
 
-  @GetMapping("")
-  @Operation(summary = "Get regulatory Areas")
-  fun getRegulatoryAreasController(): String {
-    val regulatoryAreas = getRegulatoryAreas.execute()
-    val regulatoryAreaEntities = regulatoryAreas.map { RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(it) }
-    val mapper = ObjectMapper()
-    mapper.registerModule(JtsModule())
-    return mapper.writeValueAsString(regulatoryAreaEntities)
-  }
+    @GetMapping("")
+    @Operation(summary = "Get regulatory Areas")
+    fun getRegulatoryAreasController(): String {
+        val regulatoryAreas = getRegulatoryAreas.execute()
+        val regulatoryAreaEntities = regulatoryAreas.map { RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(it) }
+        val mapper = ObjectMapper()
+        mapper.registerModule(JtsModule())
+        return mapper.writeValueAsString(regulatoryAreaEntities)
+    }
 
-  @GetMapping("/{regulatoryAreaId}")
-  @Operation(summary = "Get regulatory area by Id")
-  fun getRegulatoryAreaByIdController(
-    @PathParam("regulatoryArea id")
-    @PathVariable(name = "regulatoryAreaId")
-    regulatoryAreaId: Int
-  ): String {
-    val regulatoryArea = getRegulatoryAreaById.execute(regulatoryAreaId = regulatoryAreaId)
-    val mapper = ObjectMapper()
-    mapper.registerModule(JtsModule())
-    return mapper.writeValueAsString(regulatoryArea)
-  }
+    @GetMapping("/{regulatoryAreaId}")
+    @Operation(summary = "Get regulatory area by Id")
+    fun getRegulatoryAreaByIdController(
+        @PathParam("regulatoryArea id")
+        @PathVariable(name = "regulatoryAreaId")
+        regulatoryAreaId: Int
+    ): String {
+        val regulatoryArea = getRegulatoryAreaById.execute(regulatoryAreaId = regulatoryAreaId)
+        val mapper = ObjectMapper()
+        mapper.registerModule(JtsModule())
+        return mapper.writeValueAsString(regulatoryArea)
+    }
 }

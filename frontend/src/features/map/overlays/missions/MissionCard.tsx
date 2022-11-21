@@ -15,9 +15,9 @@ import { ReactComponent as EditIconSVG } from '../../../../uiMonitor/icons/Edit.
 
 export function MissionCard({ feature, selected }) {
   const dispatch = useDispatch()
-  const { inputStartDatetimeUtc, missionId, missionStatus, missionType, numberOfActions, resourceUnits } =
+  const { inputStartDateTimeUtc, missionId, missionStatus, missionType, numberOfActions, resourceUnits } =
     feature.getProperties()
-  const parsedInputStartDatetimeUtc = new Date(inputStartDatetimeUtc)
+  const parsedInputStartDateTimeUtc = new Date(inputStartDateTimeUtc)
 
   const handleEditMission = useCallback(() => {
     dispatch(editMission(missionId))
@@ -31,7 +31,7 @@ export function MissionCard({ feature, selected }) {
     <MissionCardHeader>
       <Col1>
         <MissionDate>
-          {isValid(parsedInputStartDatetimeUtc) && format(parsedInputStartDatetimeUtc, 'dd MMM yyyy', { locale: fr })}
+          {isValid(parsedInputStartDateTimeUtc) && format(parsedInputStartDateTimeUtc, 'dd MMM yyyy', { locale: fr })}
         </MissionDate>
       </Col1>
       <Col2>

@@ -7,14 +7,13 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.JpaRegulato
 
 @UseCase
 class GetHealthcheck(
-  private val regulatoryAreaRepository: JpaRegulatoryAreaRepository,
-  private val missionRepository: JpaMissionRepository
+    private val regulatoryAreaRepository: JpaRegulatoryAreaRepository,
+    private val missionRepository: JpaMissionRepository
 ) {
-  fun execute(): Health {
-    val numberOfRegulatoryAreas = regulatoryAreaRepository.count()
-    val numberOfMissions = missionRepository.count()
+    fun execute(): Health {
+        val numberOfRegulatoryAreas = regulatoryAreaRepository.count()
+        val numberOfMissions = missionRepository.count()
 
-
-    return Health(numberOfRegulatoryAreas, numberOfMissions)
-  }
+        return Health(numberOfRegulatoryAreas, numberOfMissions)
+    }
 }

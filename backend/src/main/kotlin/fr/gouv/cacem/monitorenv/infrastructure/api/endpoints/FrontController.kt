@@ -22,8 +22,8 @@ class FrontController : ErrorController {
     private val logger = LoggerFactory.getLogger(FrontController::class.java)
 
     @GetMapping("/auth-callback", "/home")
-    @Operation(summary="Get the Single Page Application index file")
-    fun redirectToSPA() : String {
+    @Operation(summary = "Get the Single Page Application index file")
+    fun redirectToSPA(): String {
         return "index.html"
     }
 
@@ -39,7 +39,7 @@ class FrontController : ErrorController {
     fun errorHandler(request: HttpServletRequest, webRequest: WebRequest, response: HttpServletResponse): String {
         val requestURI = request.getAttribute(requestURIAttribute)
 
-        return if(requestURI.toString().contains(api) || requestURI.toString().contains(bff)) {
+        return if (requestURI.toString().contains(api) || requestURI.toString().contains(bff)) {
             val errorJSON = getErrorJSON(webRequest)
             logger.error(errorJSON)
             buildErrorResponse(response, errorJSON)

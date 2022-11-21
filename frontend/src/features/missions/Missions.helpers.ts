@@ -26,7 +26,7 @@ export const actionFactory = ({ actionType, id, ...action }) => {
     case actionTypeEnum.CONTROL.code:
       return {
         actionNumberOfControls: 0,
-        actionStartDatetimeUtc: new Date().toISOString(),
+        actionStartDateTimeUtc: new Date().toISOString(),
         actionSubTheme: '',
         actionTargetType: actionTargetTypeEnum.VEHICLE.code,
         actionTheme: '',
@@ -40,7 +40,7 @@ export const actionFactory = ({ actionType, id, ...action }) => {
       }
     case actionTypeEnum.NOTE.code:
       return {
-        actionStartDatetimeUtc: new Date().toISOString(),
+        actionStartDateTimeUtc: new Date().toISOString(),
         actionType: actionTypeEnum.NOTE.code,
         id: uuidv4(),
         observations: '',
@@ -48,7 +48,7 @@ export const actionFactory = ({ actionType, id, ...action }) => {
       }
     case actionTypeEnum.SURVEILLANCE.code:
       return {
-        actionStartDatetimeUtc: new Date().toISOString(),
+        actionStartDateTimeUtc: new Date().toISOString(),
         actionSubTheme: '',
         actionTheme: '',
         actionType: actionTypeEnum.SURVEILLANCE.code,
@@ -70,8 +70,8 @@ export const missionFactory = (mission = {}) => ({
   closedBy: '',
   envActions: [],
   geom: null,
-  inputEndDatetimeUtc: '',
-  inputStartDatetimeUtc: new Date().toISOString(),
+  inputEndDateTimeUtc: '',
+  inputStartDateTimeUtc: new Date().toISOString(),
   missionNature: [],
   missionSource: MissionSourceEnum.CACEM,
   missionStatus: missionStatusEnum.PENDING.code,

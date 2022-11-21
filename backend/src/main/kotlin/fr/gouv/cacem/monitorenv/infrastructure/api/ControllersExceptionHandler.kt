@@ -39,6 +39,4 @@ class ControllersExceptionHandler {
         logger.error(e.message, e.cause)
         return ApiError(e)
     }
-
-
 }
