@@ -11,7 +11,11 @@ export function ActionForm({ currentActionIndex, remove, setCurrentActionIndex }
   const [actionTypeField] = useField(`envActions.${currentActionIndex}.actionType`)
 
   if (currentActionIndex === null) {
-    return <NoSelectedAction>Ajouter ou sélectionner une action</NoSelectedAction>
+    return (
+      <FormWrapper>
+        <NoSelectedAction>Ajouter ou sélectionner une action</NoSelectedAction>
+      </FormWrapper>
+    )
   }
   switch (actionTypeField.value) {
     case actionTypeEnum.CONTROL.code:

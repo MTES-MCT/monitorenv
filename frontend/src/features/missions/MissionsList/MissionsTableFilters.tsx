@@ -91,7 +91,7 @@ export function MissionsTableFilters() {
           data={TypeOptions}
           labelKey="libelle"
           onChange={handleSetTypeFilter}
-          placeholder="Type"
+          placeholder="Type de mission"
           searchable={false}
           size="sm"
           style={tagPickerStyle}
@@ -103,7 +103,7 @@ export function MissionsTableFilters() {
           data={NatureOptions}
           labelKey="libelle"
           onChange={handleSetNatureFilter}
-          placeholder="Nature"
+          placeholder="Nature de contrôle"
           searchable={false}
           size="sm"
           style={tagPickerStyle}
