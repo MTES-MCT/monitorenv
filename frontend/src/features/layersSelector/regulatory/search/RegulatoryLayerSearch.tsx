@@ -30,6 +30,7 @@ export function RegulatoryLayerSearch({ isVisible }) {
   const [globalSearchText, setGlobalSearchText] = useState('')
   const [displayRegFilters, setDisplayRegFilters] = useState(false)
   const [filteredRegulatoryThemes, setFilteredRegulatoryThemes] = useState([])
+
   useEffect(() => {
     if (filterSearchOnMapExtent) {
       setShouldReloadSearchOnExtent(true)
@@ -55,7 +56,8 @@ export function RegulatoryLayerSearch({ isVisible }) {
         layer?.properties?.entity_name &&
         layer?.properties?.ref_reg &&
         layer?.properties?.type &&
-        layer?.properties?.thematique
+        layer?.properties?.thematique &&
+        layer?.geometry
       ) {
         RegulatoryLayersIndex.add(layer)
       }
@@ -81,13 +83,13 @@ export function RegulatoryLayerSearch({ isVisible }) {
         }
       } else if (extent && geofilter) {
         const currentExtent = transformExtent(extent, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
-        const filteredResults = _.map(
-          _.filter(regulatoryLayers, layer => intersects(layer.bbox, currentExtent)),
-          layer => ({
+        const filteredResults = _.chain(regulatoryLayers)
+          .filter(layer => layer.geometry?.coordinates?.length > 0 && intersects(layer.bbox, currentExtent))
+          .map(layer => ({
             doc: layer,
             id: layer.id
-          })
-        )
+          }))
+          .value()
         dispatch(setRegulatoryLayersSearchResult(filteredResults))
       } else {
         dispatch(setRegulatoryLayersSearchResult([]))
@@ -158,6 +160,7 @@ export function RegulatoryLayerSearch({ isVisible }) {
           displayRegFilters={displayRegFilters}
           filteredRegulatoryThemes={filteredRegulatoryThemes}
           globalSearchText={globalSearchText}
+          placeholder={regulatoryLayers.length === 0 ? 'Chargement des couches en cours' : 'Rechercher une zone reg.'}
           setGlobalSearchText={handleSearchInputChange}
           toggleRegFilters={toggleRegFilters}
         />
