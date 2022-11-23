@@ -30,7 +30,6 @@ export function RegulatoryLayerSearch({ isVisible }) {
   const [globalSearchText, setGlobalSearchText] = useState('')
   const [displayRegFilters, setDisplayRegFilters] = useState(false)
   const [filteredRegulatoryThemes, setFilteredRegulatoryThemes] = useState([])
-
   useEffect(() => {
     if (filterSearchOnMapExtent) {
       setShouldReloadSearchOnExtent(true)
@@ -249,9 +248,9 @@ const ExtraButtonsWrapper = styled.div<{
   position: fixed;
   top: 15px;
   left: ${p => {
-    if (p.isVisible && (p.shouldReloadSearchOnExtent || p.allowResetResults)) {
+    if (p.shouldReloadSearchOnExtent || p.allowResetResults) {
       return `calc(
-        50% - ((${p.shouldReloadSearchOnExtent ? '220px' : '0px'} + ${p.allowResetResults ? '285px' : '0'}) / 2)
+        50% - ((${p.shouldReloadSearchOnExtent ? '220px' : '0px'} + ${p.allowResetResults ? '285px' : '0px'}) / 2)
       )`
     }
 
