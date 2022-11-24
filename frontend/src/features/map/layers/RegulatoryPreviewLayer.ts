@@ -5,7 +5,6 @@ import { Vector } from 'ol/layer'
 import VectorSource from 'ol/source/Vector'
 import { getArea } from 'ol/sphere'
 import { MutableRefObject, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
 
 import { Layers } from '../../../domain/entities/layers'
 import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map'
@@ -16,9 +15,9 @@ import { dottedLayerStyle } from './styles/dottedLayer.style'
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
 export function RegulatoryPreviewLayer({ map }) {
-  const dispatch = useDispatch()
   const { regulatoryMetadataLayerId } = useAppSelector(state => state.regulatoryMetadata)
   const { regulatoryLayersSearchResult, searchExtent } = useAppSelector(state => state.regulatoryLayerSearch)
+  const { layersSidebarIsOpen } = useAppSelector(state => state.global)
 
   const regulatoryLayerRef = useRef() as MutableRefObject<Vector<VectorSource>>
   const regulatoryVectorSourceRef = useRef() as MutableRefObject<VectorSource>
@@ -113,13 +112,25 @@ export function RegulatoryPreviewLayer({ map }) {
 
   useEffect(() => {
     if (map) {
+      if (layersSidebarIsOpen) {
+        searchExtentLayerRef.current?.setVisible(true)
+        regulatoryLayerRef.current?.setVisible(true)
+      } else {
+        searchExtentLayerRef.current?.setVisible(false)
+        regulatoryLayerRef.current?.setVisible(false)
+      }
+    }
+  }, [map, layersSidebarIsOpen])
+
+  useEffect(() => {
+    if (map) {
       getSearchExtentVectorSource().clear()
       if (searchExtent) {
         const feature = new Feature(fromExtent(searchExtent))
         getSearchExtentVectorSource().addFeature(feature)
       }
     }
-  }, [dispatch, map, searchExtent])
+  }, [map, searchExtent])
 
   useEffect(() => {
     function getLayer() {
