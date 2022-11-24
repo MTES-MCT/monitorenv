@@ -7,7 +7,7 @@ export const ChevronIcon = styled(ChevronIconSVG)<{ $isOpen: boolean; $right: bo
   height: 16px;
   margin-top: 3px;
   margin-right: 8px;
-  transform: ${props => (!props.$isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
+  transform: ${props => (!props.$isOpen ? 'rotate(0deg)' : 'rotate(180deg)')};
   transition: all 0.5s;
   cursor: pointer;
   ${props => props.$right && 'margin-left: auto;'}

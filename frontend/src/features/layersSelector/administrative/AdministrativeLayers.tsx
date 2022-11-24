@@ -1,16 +1,17 @@
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
 import { administrativeLayers } from '../../../domain/entities/administrativeLayers'
 import { toggleAdministrativeZones } from '../../../domain/shared_slices/LayerSidebar'
+import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
-import AdministrativeLayer from './AdministrativeLayer'
-import AdministrativeLayerGroup from './AdministrativeLayerGroup'
+import { AdministrativeLayer } from './AdministrativeLayer'
+// import AdministrativeLayerGroup from './AdministrativeLayerGroup'
 
 export function AdministrativeLayers() {
   const dispatch = useDispatch()
-  const { administrativeZonesIsOpen } = useSelector(state => state.layerSidebar)
+  const { administrativeZonesIsOpen } = useAppSelector(state => state.layerSidebar)
 
   const onSectionTitleClicked = () => {
     dispatch(toggleAdministrativeZones())
@@ -27,20 +28,23 @@ export function AdministrativeLayers() {
       </SectionTitle>
       {administrativeLayers && administrativeLayers.length ? (
         <ZonesList showZones={administrativeZonesIsOpen} zonesLength={administrativeLayers.length}>
-          {administrativeLayers.map((layers, index) => {
+          {administrativeLayers.map(layers => {
             if (layers.length === 1 && layers[0]) {
               return (
                 <ListItem key={layers[0].code}>
-                  <AdministrativeLayer key={layers[0].code} layer={layers[0]} />
+                  <AdministrativeLayer key={layers[0].code} isGrouped={false} layer={layers[0]} />
                 </ListItem>
               )
             }
+            // if (layers[0]?.group?.code) {
 
-            return (
-              <ListItem key={layers[0].group.code}>
-                <AdministrativeLayerGroup isLastItem={administrativeLayers.length === index + 1} layers={layers} />
-              </ListItem>
-            )
+            //   return (
+            //     <ListItem key={layers[0].group.code}>
+            //       <AdministrativeLayerGroup isLastItem={administrativeLayers.length === index + 1} layers={layers} />
+            //     </ListItem>
+            //   )
+            // }
+            return null
           })}
         </ZonesList>
       ) : null}
@@ -48,7 +52,7 @@ export function AdministrativeLayers() {
   )
 }
 
-const SectionTitle = styled.div`
+const SectionTitle = styled.div<{ showZones: boolean }>`
   height: 38px;
   padding-left: 20px;
   padding-top: 5px;
@@ -66,7 +70,7 @@ const SectionTitle = styled.div`
   border-bottom-right-radius: ${props => (props.showZones ? '0' : '2px')};
 `
 
-const ZonesList = styled.ul`
+const ZonesList = styled.ul<{ showZones: boolean; zonesLength: number }>`
   margin: 0;
   padding: 0;
   overflow-x: hidden;

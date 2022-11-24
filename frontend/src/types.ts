@@ -28,6 +28,7 @@ export type RegulatoryAreaProperties = {
   layer_name: string
   ref_reg: string
   thematique: string
+  thematiques?: string[]
   type: string
 }
 

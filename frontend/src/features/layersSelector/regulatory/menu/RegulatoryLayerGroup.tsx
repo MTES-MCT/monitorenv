@@ -96,6 +96,8 @@ export function RegulatoryLayerGroup({ groupName, layers }) {
 const TopicName = styled.span`
   user-select: none;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
   display: block;
   font-size: 13px;
   font-weight: 700;
@@ -106,7 +108,7 @@ const TopicName = styled.span`
   flex: 1;
 `
 
-const LayerTopic = styled.div`
+const LayerTopic = styled.li`
   display: flex;
   user-select: none;
   text-overflow: ellipsis;
@@ -132,7 +134,7 @@ const LayerTopic = styled.div`
   }
 `
 
-const RegulatoryZones = styled.div<{ isOpen: boolean; length: number }>`
+const RegulatoryZones = styled.li<{ isOpen: boolean; length: number }>`
   height: ${p => (p.isOpen && p.length ? p.length * REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT : 0)}px;
   overflow: hidden;
   transition: 0.5s all;

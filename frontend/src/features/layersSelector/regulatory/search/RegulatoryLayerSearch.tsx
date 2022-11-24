@@ -46,7 +46,7 @@ export function RegulatoryLayerSearch({ isVisible }) {
         id: 'id',
         index: ['properties:layer_name', 'properties:entity_name', 'properties:ref_reg', 'properties:type'],
         store: true,
-        tag: 'properties:thematique'
+        tag: 'properties:thematiques'
       },
       tokenize: 'full'
     })
@@ -59,7 +59,10 @@ export function RegulatoryLayerSearch({ isVisible }) {
         layer?.properties?.thematique &&
         layer?.geometry
       ) {
-        RegulatoryLayersIndex.add(layer)
+        const layerToAdd = _.cloneDeep(layer)
+
+        layerToAdd.properties.thematiques = layerToAdd.properties?.thematique.split(',').map(v => v?.trim()) || []
+        RegulatoryLayersIndex.add(layerToAdd)
       }
     })
 

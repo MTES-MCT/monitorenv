@@ -8,7 +8,7 @@ import { closeRegulatoryZoneMetadata } from '../../domain/use_cases/regulatory/c
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { ReactComponent as LayersSVG } from '../../uiMonitor/icons/Couches_carto.svg'
 import { AdministrativeLayers } from './administrative/AdministrativeLayers'
-import BaseLayers from './base/BaseLayers'
+import { BaseLayers } from './base/BaseLayers'
 import { RegulatoryLayers } from './regulatory/menu/RegulatoryLayers'
 import { RegulatoryLayerZoneMetadata } from './regulatory/metadata/RegulatoryLayerZoneMetadata'
 import { RegulatoryLayerSearch } from './regulatory/search/RegulatoryLayerSearch'
