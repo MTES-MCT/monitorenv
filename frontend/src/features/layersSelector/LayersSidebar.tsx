@@ -15,7 +15,7 @@ import { RegulatoryLayerSearch } from './regulatory/search/RegulatoryLayerSearch
 
 export function LayersSidebar() {
   const { regulatoryMetadataLayerId, regulatoryMetadataPanelIsOpen } = useAppSelector(state => state.regulatoryMetadata)
-  const { layersSidebarIsOpen } = useAppSelector(state => state.global)
+  const { displayLayersSidebar, layersSidebarIsOpen } = useAppSelector(state => state.global)
   const dispatch = useDispatch()
 
   const toggleLayerSidebar = () => {
@@ -28,6 +28,7 @@ export function LayersSidebar() {
   return (
     <>
       <SidebarLayersIcon
+        $isVisible={displayLayersSidebar}
         appearance="primary"
         data-cy="layers-sidebar"
         icon={<LayersSVG className="rs-icon" />}
@@ -36,10 +37,10 @@ export function LayersSidebar() {
         title="Couches réglementaires"
       />
       <Sidebar
-        isVisible={layersSidebarIsOpen || regulatoryMetadataPanelIsOpen}
+        isVisible={displayLayersSidebar && (layersSidebarIsOpen || regulatoryMetadataPanelIsOpen)}
         layersSidebarIsOpen={layersSidebarIsOpen}
       >
-        <RegulatoryLayerSearch isVisible={layersSidebarIsOpen} />
+        <RegulatoryLayerSearch isVisible={displayLayersSidebar && layersSidebarIsOpen} />
         <Layers>
           <RegulatoryLayers />
           <AdministrativeLayers />
@@ -98,8 +99,9 @@ const Layers = styled.div`
   max-height: calc(100vh - 160px);
 `
 
-const SidebarLayersIcon = styled(IconButton)`
+const SidebarLayersIcon = styled(IconButton)<{ $isVisible: boolean }>`
   position: absolute;
   top: 10px;
   left: 12px;
+  ${p => (p.$isVisible ? '' : 'display: none;')}
 `

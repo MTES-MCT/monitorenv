@@ -19,9 +19,7 @@ export function FilterTagPicker({ onChange, value, ...props }) {
   return (
     <FilterWrapper style={style}>
       <PlaceholderWrapper displayPlaceholder={displayPlaceholder}>
-        <PlaceholderContent>
-          {placeholder} {selectedItems > 0 && <strong> ({selectedItems})</strong>}
-        </PlaceholderContent>
+        {placeholder} {selectedItems > 0 && <strong> ({selectedItems})</strong>}
       </PlaceholderWrapper>
       <StyledTagPicker
         // eslint-disable-next-line react/jsx-props-no-spreading
@@ -94,12 +92,10 @@ const FilterWrapper = styled.div`
 const PlaceholderWrapper = styled.div<{ displayPlaceholder: boolean }>`
   display: ${p => (p.displayPlaceholder ? 'block' : 'none')};
   position: absolute;
-  top: 4px;
-  left: 50%;
+  top: 5px;
+  left: 8px;
   font-size: 13px;
-`
-const PlaceholderContent = styled.div`
-  position: relative;
-  left: -50%;
-  white-space: nowrap;
+  font-family: 'Marianne';
+  font-weight: 400;
+  color: ${COLORS.slateGray};
 `
