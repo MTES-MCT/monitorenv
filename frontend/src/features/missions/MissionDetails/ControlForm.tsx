@@ -218,7 +218,7 @@ export function ControlForm({
 }
 
 const Header = styled.div`
-  margin-bottom: 32px;
+  margin-bottom: 24px;
   display: flex;
 `
 

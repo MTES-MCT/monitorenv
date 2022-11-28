@@ -114,7 +114,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
 }
 
 const Header = styled.div`
-  margin-bottom: 32px;
+  margin-bottom: 24px;
   display: flex;
 `
 

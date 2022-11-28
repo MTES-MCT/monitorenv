@@ -35,7 +35,7 @@ export function ResourceUnitsForm({ form, push, remove }) {
       )}
 
       <IconButton appearance="ghost" icon={<PlusSVG className="rs-icon" />} onClick={handleAddResourceUnit} size="sm">
-        Ajouter une unité
+        Ajouter une autre unité
       </IconButton>
     </>
   )
