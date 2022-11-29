@@ -17,17 +17,17 @@ export function GeneralInformationsForm() {
   return (
     <>
       <Title>Informations générales</Title>
-      <Form.Group>
+      <FlexFormGroup>
         <ColWrapper>
           <Form.ControlLabel htmlFor="inputStartDateTimeUtc">Début de mission</Form.ControlLabel>
           <FormikDatePicker
+            cleanable={false}
             format="dd MMM yyyy, HH:mm"
             name="inputStartDateTimeUtc"
             oneTap
             placeholder={placeholderDateTimePicker}
             size="sm"
           />
-        </FixedFormGroup>
         </ColWrapper>
         <ColWrapper>
           <Form.ControlLabel htmlFor="inputEndDateTimeUtc">Fin de mission</Form.ControlLabel>
@@ -39,7 +39,7 @@ export function GeneralInformationsForm() {
             size="sm"
           />
         </ColWrapper>
-      </Form.Group>
+      </FlexFormGroup>
 
       <Form.Group>
         <SubGroup>
@@ -82,9 +82,12 @@ const Title = styled.h2`
   padding-bottom: 13px;
   color: ${COLORS.charcoal};
 `
-
+const FlexFormGroup = styled(Form.Group)`
+  display: flex;
+`
 const ColWrapper = styled.div`
   width: 200px;
+  height: 54px;
   display: inline-block;
   :not(:last-child) {
     margin-right: 16px;

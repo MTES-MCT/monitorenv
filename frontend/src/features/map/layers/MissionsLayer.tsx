@@ -3,27 +3,19 @@ import VectorSource from 'ol/source/Vector'
 import { useMemo, useEffect, useRef, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { useGetMissionsQuery } from '../../../api/missionsAPI'
 import { Layers } from '../../../domain/entities/layers'
 import { selectMissionOnMap } from '../../../domain/use_cases/missions/selectMissionOnMap'
 import { useAppSelector } from '../../../hooks/useAppSelector'
+import { useGetFilteredMissionsQuery } from '../../../hooks/useGetFilteredMissionsQuery'
 import { getMissionZoneFeature } from './missionGeometryHelpers'
 import { missionWithCentroidStyleFn } from './styles/missions.style'
 
 import type { Geometry } from 'ol/geom'
 
-const TWO_MINUTES = 2 * 60 * 1000
 export function MissionsLayer({ map, mapClickEvent }) {
   const dispatch = useDispatch()
   const { displayMissionsLayer } = useAppSelector(state => state.global)
-  const { missionStartedAfter, missionStartedBefore } = useAppSelector(state => state.missionFilters)
-  const { data } = useGetMissionsQuery(
-    {
-      startedAfterDateTime: missionStartedAfter || undefined,
-      startedBeforeDateTime: missionStartedBefore || undefined
-    },
-    { pollingInterval: TWO_MINUTES }
-  )
+  const { data } = useGetFilteredMissionsQuery()
 
   const missionsMultiPolygons = useMemo(
     () => data?.filter(f => !!f.geom).map(f => getMissionZoneFeature(f, Layers.MISSIONS.code)),

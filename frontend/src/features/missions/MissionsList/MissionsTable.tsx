@@ -12,9 +12,11 @@ import { CellResources } from './CellResources'
 import { CellStatus } from './CellStatus'
 import { sortMissionsByProperty } from './MissionsTableSort'
 
-export function MissionsTable({ data, isLoading }) {
+import type { MissionType } from '../../../domain/entities/missions'
+
+export function MissionsTable({ data, isLoading }: { data: MissionType[] | undefined; isLoading: boolean }) {
   const [sortColumn, setSortColumn] = React.useState('inputStartDateTimeUtc')
-  const [sortType, setSortType] = React.useState('desc')
+  const [sortType, setSortType] = React.useState<'desc' | 'asc'>('desc')
 
   const handleSortColumn = (currSortColumn, currSortType) => {
     setSortColumn(currSortColumn)
@@ -23,7 +25,7 @@ export function MissionsTable({ data, isLoading }) {
 
   const getMissions = useCallback(() => {
     if (sortColumn && sortType) {
-      return data.slice().sort((a, b) => sortMissionsByProperty(a, b, sortColumn, sortType))
+      return data?.slice().sort((a, b) => sortMissionsByProperty(a, b, sortColumn, sortType))
     }
 
     return data

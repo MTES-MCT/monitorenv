@@ -1,3 +1,5 @@
+import { compareDesc, compareAsc, parseISO } from 'date-fns'
+
 export const actionTypeEnum = {
   CONTROL: {
     code: 'CONTROL',
@@ -220,13 +222,11 @@ export const missionStatusEnum = {
   PENDING: {
     code: 'PENDING',
     libelle: 'En cours'
+  },
+  UPCOMING: {
+    code: 'UPCOMING',
+    libelle: 'À venir'
   }
-}
-
-export enum MissionStatusEnum {
-  CLOSED = 'CLOSED',
-  ENDED = 'ENDED',
-  PENDING = 'PENDING'
 }
 
 export enum MissionSourceEnum {
@@ -263,19 +263,19 @@ export type MissionType<EnvActionType = EnvActionControlType | EnvActionSurveill
   id: number
   inputEndDateTimeUtc: string
   inputStartDateTimeUtc: string
+  isClosed: boolean
   missionNature: MissionNatureEnum
   missionSource: MissionSourceEnum
-  missionStatus: MissionStatusEnum
   missionType: MissionTypeEnum
   observationsCacem: string
   observationsCnsp: string
   openBy: string
   resourceUnits: string
 }
+export type EnvActionType = EnvActionControlType | EnvActionSurveillanceType | EnvActionNoteType
 
 export type EnvAction = {
   actionStartDateTimeUtc: string
-  actionType: ActionTypeEnum
   geom: string
   id: string
 }
@@ -284,6 +284,7 @@ export type EnvActionControlType = EnvAction & {
   actionSubTheme?: string
   actionTargetType?: string
   actionTheme?: string
+  actionType: ActionTypeEnum.CONTROL
   infractions: InfractionType[]
   protectedSpecies?: string
   vehicleType: string
@@ -292,12 +293,14 @@ export type EnvActionControlType = EnvAction & {
 export type EnvActionSurveillanceType = EnvAction & {
   actionSubTheme?: string
   actionTheme?: string
+  actionType: ActionTypeEnum.SURVEILLANCE
   duration: number
   observations: string
   protectedSpecies?: string
 }
 
 export type EnvActionNoteType = EnvAction & {
+  actionType: ActionTypeEnum.NOTE
   observations?: string
 }
 
@@ -314,4 +317,30 @@ export type InfractionType = {
   toProcess: boolean
   vesselSize?: VesselSizeEnum
   vesselType?: VesselTypeEnum
+}
+
+export const getMissionStatus = ({
+  inputEndDateTimeUtc,
+  inputStartDateTimeUtc,
+  isClosed
+}: {
+  inputEndDateTimeUtc: string
+  inputStartDateTimeUtc: string
+  isClosed: Boolean
+}) => {
+  if (isClosed) {
+    return missionStatusEnum.CLOSED.code
+  }
+  if (inputStartDateTimeUtc) {
+    if (parseISO(inputStartDateTimeUtc) && compareAsc(parseISO(inputStartDateTimeUtc), Date.now()) >= 0) {
+      return missionStatusEnum.UPCOMING.code
+    }
+    if (parseISO(inputEndDateTimeUtc) && compareDesc(parseISO(inputEndDateTimeUtc), Date.now()) >= 0) {
+      return missionStatusEnum.ENDED.code
+    }
+
+    return missionStatusEnum.PENDING.code
+  }
+
+  return 'ERROR'
 }

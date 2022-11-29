@@ -9,6 +9,7 @@ export default {
 function Template({ missionStatus, ...args }) {
   return (
     <>
+      <MissionStatusLabel missionStatus={missionStatusEnum.UPCOMING.code} {...args} />
       <MissionStatusLabel missionStatus={missionStatusEnum.PENDING.code} {...args} />
       <MissionStatusLabel missionStatus={missionStatusEnum.ENDED.code} {...args} />
       <MissionStatusLabel missionStatus={missionStatusEnum.CLOSED.code} {...args} />

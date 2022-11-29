@@ -3,7 +3,7 @@ package fr.gouv.cacem.monitorenv.domain.mappers
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.missions.*
 import fr.gouv.cacem.monitorenv.domain.exceptions.EntityConversionException
-import org.locationtech.jts.geom.MultiPoint
+import org.locationtech.jts.geom.Geometry
 import org.springframework.stereotype.Component
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -12,7 +12,7 @@ import java.util.UUID
 object EnvActionMapper {
     private const val jsonbNullString = "null"
 
-    fun getEnvActionEntityFromJSON(mapper: ObjectMapper, id: UUID, actionStartDateTimeUtc: ZonedDateTime?, geom: MultiPoint?, actionType: ActionTypeEnum, value: String?): EnvActionEntity {
+    fun getEnvActionEntityFromJSON(mapper: ObjectMapper, id: UUID, actionStartDateTimeUtc: ZonedDateTime?, geom: Geometry?, actionType: ActionTypeEnum, value: String?): EnvActionEntity {
         return try {
             if (!value.isNullOrEmpty() && value != jsonbNullString) {
                 when (actionType) {

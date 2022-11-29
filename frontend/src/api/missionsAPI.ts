@@ -4,9 +4,23 @@ import type { MissionType } from '../domain/entities/missions'
 
 type MissionsResponse = MissionType[]
 type MissionsFilter = {
+  missionNature?: string[]
+  missionStatus?: string[]
+  missionTypes?: string[]
   startedAfterDateTime?: string
   startedBeforeDateTime?: string
 }
+
+const getStartDateFilter = startedAfterDateTime =>
+  startedAfterDateTime && `startedAfterDateTime=${encodeURIComponent(startedAfterDateTime)}`
+const getEndDateFilter = startedBeforeDateTime =>
+  startedBeforeDateTime && `startedBeforeDateTime=${encodeURIComponent(startedBeforeDateTime)}`
+const getMissionNatureFilter = missionNature =>
+  missionNature && missionNature?.length > 0 && `missionNature=${encodeURIComponent(missionNature)}`
+const getMissionStatusFilter = missionStatus =>
+  missionStatus && missionStatus?.length > 0 && `missionStatus=${encodeURIComponent(missionStatus)}`
+const getMissionTypesFilter = missionTypes =>
+  missionTypes && missionTypes?.length > 0 && `missionTypes=${encodeURIComponent(missionTypes)}`
 
 export const missionsAPI = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/bff/v1' }),
@@ -37,9 +51,16 @@ export const missionsAPI = createApi({
           : // an error occurred, but we still want to refetch this query when `{ type: 'Missions', id: 'LIST' }` is invalidated
             [{ id: 'LIST', type: 'Missions' }],
       query: filter =>
-        `missions?startedAfterDateTime=${encodeURIComponent(
-          filter?.startedAfterDateTime || ''
-        )}&startedBeforeDateTime=${encodeURIComponent(filter?.startedBeforeDateTime || '')}`
+        [
+          'missions?',
+          getStartDateFilter(filter?.startedAfterDateTime),
+          getEndDateFilter(filter?.startedBeforeDateTime),
+          getMissionNatureFilter(filter?.missionNature),
+          getMissionStatusFilter(filter?.missionStatus),
+          getMissionTypesFilter(filter?.missionTypes)
+        ]
+          .filter(v => v)
+          .join('&')
     }),
     updateMission: build.mutation<MissionType, MissionType>({
       invalidatesTags: [{ id: 'LIST', type: 'Missions' }],

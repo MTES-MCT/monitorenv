@@ -29,6 +29,13 @@ export function MissionStatusLabel({ missionStatus }) {
           {missionStatusEnum.CLOSED.libelle}
         </Closed>
       )
+    case missionStatusEnum.UPCOMING.code:
+      return (
+        <Upcoming>
+          <CercleIcon />
+          {missionStatusEnum.UPCOMING.libelle}
+        </Upcoming>
+      )
 
     default:
       return <Closed>No status</Closed>
@@ -56,6 +63,14 @@ const Ended = styled.div`
 
 const Closed = styled.div`
   color: ${COLORS.opal};
+  font-weight: 500;
+  svg {
+    margin-right: 6px;
+  }
+`
+
+const Upcoming = styled.div`
+  color: ${COLORS.blueGray};
   font-weight: 500;
   svg {
     margin-right: 6px;

@@ -95,7 +95,10 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
         </Column>
         <Column>
           <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.duration`}>Durée</Form.ControlLabel>
-          <SizedFormikInputNumberGhost name={`envActions.${currentActionIndex}.duration`} size="sm" />
+          <InputDivWithUnits>
+            <SizedFormikInputNumberGhost name={`envActions.${currentActionIndex}.duration`} size="sm" />
+            &nbsp;heures
+          </InputDivWithUnits>
         </Column>
       </FlexSelectorWrapper>
 
@@ -133,7 +136,7 @@ const FlexSelectorWrapper = styled(Form.Group)`
   display: flex;
 `
 const Column = styled.div`
-  & :not(:last-child) {
+  &:not(:last-child) {
     margin-right: 24px;
   }
 `
@@ -151,5 +154,9 @@ const IconButtonRight = styled(IconButton)`
   margin-left: auto;
 `
 const SizedFormikInputNumberGhost = styled(FormikInputNumberGhost)`
-  width: 130px !important;
+  width: 70px !important;
+`
+const InputDivWithUnits = styled.div`
+  display: flex;
+  align-items: baseline;
 `

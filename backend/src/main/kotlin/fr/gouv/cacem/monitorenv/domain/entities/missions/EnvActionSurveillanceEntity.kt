@@ -1,13 +1,13 @@
 package fr.gouv.cacem.monitorenv.domain.entities.missions
 
-import org.locationtech.jts.geom.MultiPoint
+import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.UUID
 
 data class EnvActionSurveillanceEntity(
     override val id: UUID,
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
-    override val geom: MultiPoint? = null,
+    override val geom: Geometry? = null,
     val actionTheme: String? = null,
     val actionSubTheme: String? = null,
     val protectedSpecies: List<String>? = listOf(),
