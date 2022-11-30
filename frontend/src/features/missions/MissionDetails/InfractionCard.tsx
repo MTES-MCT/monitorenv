@@ -33,8 +33,11 @@ export function InfractionCard({ currentActionIndex, infractionPath, removeInfra
       libelleInfractionType = infractionTypeEnum.WITHOUT_REPORT.libelle
       break
     case infractionTypeEnum.WITH_REPORT.code:
-    default:
       libelleInfractionType = infractionTypeEnum.WITH_REPORT.libelle
+      break
+    case infractionTypeEnum.WAITING.code:
+    default:
+      libelleInfractionType = infractionTypeEnum.WAITING.libelle
   }
 
   return (

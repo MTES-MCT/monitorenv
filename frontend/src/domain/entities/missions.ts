@@ -70,15 +70,26 @@ export const infractionTypeEnum = {
   WITHOUT_REPORT: {
     code: 'WITHOUT_REPORT',
     libelle: 'Sans PV'
+  },
+  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
+  WAITING: {
+    code: 'WAITING',
+    libelle: 'En attente'
   }
 }
 
 export enum InfractionTypeEnum {
+  WAITING = 'WAITING',
   WITHOUT_REPORT = 'WITHOUT_REPORT',
   WITH_REPORT = 'WITH_REPORT'
 }
 
 export const formalNoticeEnum = {
+  YES: {
+    code: 'YES',
+    libelle: 'Oui'
+  },
+  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
   NO: {
     code: 'NO',
     libelle: 'Non'
@@ -86,10 +97,6 @@ export const formalNoticeEnum = {
   WAITING: {
     code: 'PENDING',
     libelle: 'En attente'
-  },
-  YES: {
-    code: 'YES',
-    libelle: 'Oui'
   }
 }
 export enum FormalNoticeEnum {

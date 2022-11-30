@@ -94,7 +94,7 @@ export const getControlInfractionsTags = (actionNumberOfControls, infractions) =
   const infra = infractions.length || 0
   const ras = (actionNumberOfControls || 0) - infra
   const infraSansPV =
-    infractions?.filter(inf => inf.infractionType === infractionTypeEnum.WITHOUT_REPORT.code)?.length || 0
+    infractions?.filter(inf => inf.infractionType !== infractionTypeEnum.WITH_REPORT.code)?.length || 0
   const med = infractions?.filter(inf => inf.formalNotice === formalNoticeEnum.YES.code)?.length || 0
 
   return { infra, infraSansPV, med, ras }

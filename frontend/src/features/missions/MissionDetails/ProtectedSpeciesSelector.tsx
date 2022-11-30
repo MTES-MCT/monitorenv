@@ -24,6 +24,7 @@ export function ProtectedSpeciesSelector({ name, ...props }) {
         data={data.sort((a, b) => a.libelle.localeCompare(b.libelle))}
         labelKey="libelle"
         onChange={handleOnChange}
+        size="sm"
         value={protectedSpeciesField.value}
         valueKey="code"
         {...props}
@@ -35,7 +36,7 @@ export function ProtectedSpeciesSelector({ name, ...props }) {
 const SelectorWrapper = styled.div`
   .rs-picker-menu {
     position: relative;
-    margin-top: -58px;
+    margin-top: -48px;
   }
 `
 const TagPickerWhite = styled(TagPicker)`

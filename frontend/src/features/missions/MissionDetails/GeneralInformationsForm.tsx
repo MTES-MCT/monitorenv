@@ -61,17 +61,16 @@ export function GeneralInformationsForm() {
         <InputObservations name="observationsCacem" />
         <Form.ControlLabel htmlFor="observationsCnsp">CNSP : orientations, observations </Form.ControlLabel>
         <InputObservations name="observationsCnsp" />
-      </Form.Group>
-
-      <Form.Group>
-        <NarrowColumn>
-          <Form.ControlLabel htmlFor="openBy">Ouvert par</Form.ControlLabel>
-          <FormikInput name="openBy" size="sm" />
-        </NarrowColumn>
-        <NarrowColumn>
-          <Form.ControlLabel htmlFor="closedBy">Clôturé par</Form.ControlLabel>
-          <FormikInput name="closedBy" size="sm" />
-        </NarrowColumn>
+        <SubGroup>
+          <NarrowColumn>
+            <Form.ControlLabel htmlFor="openBy">Ouvert par</Form.ControlLabel>
+            <FormikInput name="openBy" size="sm" />
+          </NarrowColumn>
+          <NarrowColumn>
+            <Form.ControlLabel htmlFor="closedBy">Clôturé par</Form.ControlLabel>
+            <FormikInput name="closedBy" size="sm" />
+          </NarrowColumn>
+        </SubGroup>
       </Form.Group>
     </>
   )
@@ -109,7 +108,9 @@ const TypeMissionRadioGroup = styled(FormikRadioGroup)`
   margin-left: -20px;
 `
 
-const NatureMissionCheckboxGroup = styled(FormikCheckboxGroup)``
+const NatureMissionCheckboxGroup = styled(FormikCheckboxGroup)`
+  margin-left: -20px;
+`
 
 const InputObservations = styled(FormikTextarea)`
   max-width: 416px;
