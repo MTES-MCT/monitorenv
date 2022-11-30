@@ -41,7 +41,7 @@ export function NoteForm({ currentActionIndex, remove, setCurrentActionIndex }) 
 }
 
 const Header = styled.div`
-  margin-bottom: 32px;
+  margin-bottom: 24px;
   display: flex;
 `
 

@@ -12,7 +12,7 @@ import org.hibernate.annotations.NaturalId
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.TypeDef
 import org.hibernate.annotations.TypeDefs
-import org.locationtech.jts.geom.MultiPoint
+import org.locationtech.jts.geom.Geometry
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
 import java.time.Instant
@@ -44,7 +44,7 @@ data class EnvActionModel(
     @JsonSerialize(using = GeometrySerializer::class)
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
-    var geom: MultiPoint? = null,
+    var geom: Geometry? = null,
 
     @Column(name = "action_type")
     @Enumerated(EnumType.STRING)

@@ -6,6 +6,7 @@ import Point from 'ol/geom/Point'
 
 import { Layers } from '../../../domain/entities/layers'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map'
+import { getMissionStatus } from '../../../domain/entities/missions'
 
 export const getMissionCentroid = (mission, layername) => {
   const geoJSON = new GeoJSON()
@@ -23,7 +24,7 @@ export const getMissionCentroid = (mission, layername) => {
     inputEndDateTimeUtc: mission.inputEndDateTimeUtc,
     inputStartDateTimeUtc: mission.inputStartDateTimeUtc,
     missionId: mission.id,
-    missionStatus: mission.missionStatus,
+    missionStatus: getMissionStatus(mission),
     missionType: mission.missionType,
     numberOfActions: mission.actions?.length || 0,
     resourceUnits: mission.resourceUnits
@@ -47,7 +48,7 @@ export const getMissionZoneFeature = (mission, layername) => {
     inputEndDateTimeUtc: mission.inputEndDateTimeUtc,
     inputStartDateTimeUtc: mission.inputStartDateTimeUtc,
     missionId: mission.id,
-    missionStatus: mission.missionStatus,
+    missionStatus: getMissionStatus(mission),
     missionType: mission.missionType,
     numberOfActions: mission.actions?.length || 0,
     resourceUnits: mission.resourceUnits

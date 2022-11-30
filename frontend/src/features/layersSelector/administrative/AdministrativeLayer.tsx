@@ -1,16 +1,16 @@
-import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
 import { hideAdministrativeLayer, showAdministrativeLayer } from '../../../domain/shared_slices/Administrative'
+import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ReactComponent as DisplaySVG } from '../../../uiMonitor/icons/Display.svg'
 
-function AdministrativeLayer({ isGrouped, layer }) {
+export function AdministrativeLayer({ isGrouped, layer }) {
   const dispatch = useDispatch()
-  const { showedAdministrativeLayerIds } = useSelector(state => state.administrative)
+  const { showedAdministrativeLayerIds } = useAppSelector(state => state.administrative)
 
-  const isLayerVisible = showedAdministrativeLayerIds.includes(layer.code)
+  const isLayerVisible = showedAdministrativeLayerIds.includes(layer.code as number)
 
   const toggleLayer = () => {
     if (isLayerVisible) {
@@ -35,7 +35,7 @@ const LayerName = styled.span`
   padding-top: 5px;
 `
 
-const Row = styled.span`
+const Row = styled.span<{ $isGrouped: boolean }>`
   margin-top: 0px;
   padding: ${props => (props.$isGrouped ? '4px 16px 3px 20px' : '4px 16px 4px 20px')};
   padding-left: ${props => (props.$isGrouped ? '38px' : '20px')};
@@ -62,5 +62,3 @@ const Row = styled.span`
 const HideIcon = styled(DisplaySVG)`
   color: ${COLORS.lightGray};
 `
-
-export default AdministrativeLayer

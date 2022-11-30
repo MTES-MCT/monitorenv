@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.entities.missions
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
-import org.locationtech.jts.geom.MultiPoint
+import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.*
 
@@ -20,5 +20,5 @@ abstract class EnvActionEntity(
     open val id: UUID,
     open val actionType: ActionTypeEnum,
     open val actionStartDateTimeUtc: ZonedDateTime? = null,
-    open val geom: MultiPoint? = null
+    open val geom: Geometry? = null
 )

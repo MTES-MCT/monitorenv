@@ -1,5 +1,5 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import GeoJSON from 'ol/format/GeoJSON'
-import React from 'react'
 import { useDispatch } from 'react-redux'
 import { IconButton, Table } from 'rsuite'
 import styled from 'styled-components'
@@ -8,7 +8,7 @@ import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import { ReactComponent as LocalizeIconSVG } from '../../../uiMonitor/icons/Focus_zones.svg'
 
-export function CellLocalizeMission({ dataKey, rowData, ...props }) {
+export function CellLocalizeMission({ dataKey, rowData, ...props }: { dataKey?: any; rowData?: any }) {
   const dispatch = useDispatch()
 
   if (!rowData.geom) {

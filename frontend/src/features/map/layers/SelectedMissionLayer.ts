@@ -1,16 +1,16 @@
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useRef } from 'react'
-import { useSelector } from 'react-redux'
+import { MutableRefObject, useCallback, useEffect, useRef } from 'react'
 
 import { useGetMissionsQuery } from '../../../api/missionsAPI'
 import { Layers } from '../../../domain/entities/layers'
+import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getMissionZoneFeature, getActionsFeatures } from './missionGeometryHelpers'
 import { selectedMissionStyle, selectedMissionActionsStyle } from './styles/missions.style'
 
 export function SelectedMissionLayer({ map }) {
-  const { missionState: selectedMissionEditedState, selectedMissionId } = useSelector(state => state.missionState)
-  const { displaySelectedMissionLayer } = useSelector(state => state.global)
+  const { missionState: selectedMissionEditedState, selectedMissionId } = useAppSelector(state => state.missionState)
+  const { displaySelectedMissionLayer } = useAppSelector(state => state.global)
   const { selectedMission } = useGetMissionsQuery(undefined, {
     selectFromResult: ({ data }) => ({
       selectedMission: data?.find(op => op.id === selectedMissionId)
@@ -19,29 +19,31 @@ export function SelectedMissionLayer({ map }) {
 
   const displaySelectedMission = displaySelectedMissionLayer && selectedMissionId !== selectedMissionEditedState?.id
 
-  const selectedMissionVectorSourceRef = useRef(null)
+  const selectedMissionVectorSourceRef = useRef() as MutableRefObject<VectorSource>
   const GetSelectedMissionVectorSource = () => {
-    if (selectedMissionVectorSourceRef.current === null) {
+    if (selectedMissionVectorSourceRef.current === undefined) {
       selectedMissionVectorSourceRef.current = new VectorSource()
     }
 
     return selectedMissionVectorSourceRef.current
   }
 
-  const selectedMissionActionsVectorSourceRef = useRef(null)
+  const selectedMissionActionsVectorSourceRef = useRef() as MutableRefObject<VectorSource>
   const GetSelectedMissionActionsVectorSource = () => {
-    if (selectedMissionActionsVectorSourceRef.current === null) {
+    if (selectedMissionActionsVectorSourceRef.current === undefined) {
       selectedMissionActionsVectorSourceRef.current = new VectorSource()
     }
 
     return selectedMissionActionsVectorSourceRef.current
   }
 
-  const selectedMissionVectorLayerRef = useRef(null)
-  const selectedMissionActionsVectorLayerRef = useRef(null)
+  const selectedMissionVectorLayerRef = useRef() as MutableRefObject<VectorLayer<VectorSource> & { name?: string }>
+  const selectedMissionActionsVectorLayerRef = useRef() as MutableRefObject<
+    VectorLayer<VectorSource> & { name?: string }
+  >
 
-  const GetSelectedMissionVectorLayer = () => {
-    if (selectedMissionVectorLayerRef.current === null) {
+  const GetSelectedMissionVectorLayer = useCallback(() => {
+    if (selectedMissionVectorLayerRef.current === undefined) {
       selectedMissionVectorLayerRef.current = new VectorLayer({
         renderBuffer: 7,
         source: GetSelectedMissionVectorSource(),
@@ -54,9 +56,10 @@ export function SelectedMissionLayer({ map }) {
     }
 
     return selectedMissionVectorLayerRef.current
-  }
-  const GetSelectedMissionActionsVectorLayer = () => {
-    if (selectedMissionActionsVectorLayerRef.current === null) {
+  }, [])
+
+  const GetSelectedMissionActionsVectorLayer = useCallback(() => {
+    if (selectedMissionActionsVectorLayerRef.current === undefined) {
       selectedMissionActionsVectorLayerRef.current = new VectorLayer({
         renderBuffer: 7,
         source: GetSelectedMissionActionsVectorSource(),
@@ -69,7 +72,7 @@ export function SelectedMissionLayer({ map }) {
     }
 
     return selectedMissionActionsVectorLayerRef.current
-  }
+  }, [])
 
   useEffect(() => {
     if (map) {
@@ -84,12 +87,12 @@ export function SelectedMissionLayer({ map }) {
         map.removeLayer(GetSelectedMissionActionsVectorLayer())
       }
     }
-  }, [map])
+  }, [map, GetSelectedMissionVectorLayer, GetSelectedMissionActionsVectorLayer])
 
   useEffect(() => {
     GetSelectedMissionVectorLayer()?.setVisible(displaySelectedMission)
     GetSelectedMissionActionsVectorLayer()?.setVisible(displaySelectedMission)
-  }, [displaySelectedMission])
+  }, [displaySelectedMission, GetSelectedMissionVectorLayer, GetSelectedMissionActionsVectorLayer])
 
   useEffect(() => {
     GetSelectedMissionVectorSource()?.clear(true)

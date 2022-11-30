@@ -2,7 +2,6 @@ import { useField } from 'formik'
 import _ from 'lodash'
 import { boundingExtent } from 'ol/extent'
 import { transformExtent } from 'ol/proj'
-import React from 'react'
 import { useDispatch } from 'react-redux'
 import { Form, Button } from 'rsuite'
 import styled from 'styled-components'
@@ -44,7 +43,6 @@ export function MissionZones({ name }) {
             handleCenterOnMap={handleCenterOnMap(coordinates)}
             handleDelete={handleDeleteZone(i)}
             name={`Polygone dessiné ${i + 1}`}
-            zone={coordinates}
           />
         ))}
       </ZoneList>

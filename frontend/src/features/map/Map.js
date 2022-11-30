@@ -1,4 +1,3 @@
-import { FEATURE_FLAGS } from '../../features'
 import { BaseMap } from './BaseMap'
 import MapCoordinatesBox from './controls/MapCoordinatesBox'
 import { AdministrativeLayers } from './layers/AdministrativeLayers'
@@ -56,13 +55,13 @@ export function Map() {
       <InterestPointLayer />
       <MapExtentController />
       <MapHistory />
-      {FEATURE_FLAGS.LOCALIZE_MISSIONS && <DrawLayer />}
-      {FEATURE_FLAGS.LOCALIZE_MISSIONS && <MissionsLayer />}
-      {FEATURE_FLAGS.LOCALIZE_MISSIONS && <SelectedMissionLayer />}
-      {FEATURE_FLAGS.LOCALIZE_MISSIONS && <EditingMissionLayer />}
-      {FEATURE_FLAGS.LOCALIZE_MISSIONS && <HoveredMissionLayer />}
-      {FEATURE_FLAGS.LOCALIZE_MISSIONS && <MissionOverlays />}
-      {FEATURE_FLAGS.LOCALIZE_MISSIONS && <ControlOverlay />}
+      <DrawLayer />
+      <MissionsLayer />
+      <SelectedMissionLayer />
+      <EditingMissionLayer />
+      <HoveredMissionLayer />
+      <MissionOverlays />
+      <ControlOverlay />
     </BaseMap>
   )
 }

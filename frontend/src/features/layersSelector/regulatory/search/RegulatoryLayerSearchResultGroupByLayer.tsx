@@ -93,9 +93,10 @@ const TopicName = styled.span`
   max-width: 300px;
   line-height: 33px;
   flex: 1;
+  padding-right: 8px;
 `
 
-const LayerTopic = styled.div`
+const LayerTopic = styled.li`
   display: flex;
   user-select: none;
   text-overflow: ellipsis;

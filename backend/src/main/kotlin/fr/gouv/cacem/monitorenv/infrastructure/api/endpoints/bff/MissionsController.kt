@@ -6,11 +6,8 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.MissionDataO
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Pageable
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.bind.annotation.*
-import java.time.Instant
 import java.time.ZonedDateTime
 import javax.websocket.server.PathParam
 
@@ -34,29 +31,33 @@ class MissionsController(
         @Parameter(description = "page size")
         @RequestParam(name = "pageSize")
         pageSize: Int?,
-        @Parameter(description = "started before date")
+        @Parameter(description = "Mission started after date")
+        @RequestParam(name = "startedAfterDateTime", required = false)
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+        startedAfterDateTime: ZonedDateTime?,
+        @Parameter(description = "Mission started before date")
         @RequestParam(name = "startedBeforeDateTime", required = false)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         startedBeforeDateTime: ZonedDateTime?,
-        @Parameter(description = "started after date")
-        @RequestParam(name = "startedAfterDateTime", required = false)
-        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-        startedAfterDateTime: ZonedDateTime?
+        @Parameter(description = "Natures de mission")
+        @RequestParam(name = "missionNature", required = false)
+        missionNatures: List<String>?,
+        @Parameter(description = "Types de mission")
+        @RequestParam(name = "missionTypes", required = false)
+        missionTypes: List<String>?,
+        @Parameter(description = "Statuts de mission")
+        @RequestParam(name = "missionStatus", required = false)
+        missionStatuses: List<String>?
+
     ): List<MissionDataOutput> {
-        var beforeDateTime: Instant = startedBeforeDateTime?.toInstant() ?: ZonedDateTime.now().toInstant()
-        var afterDateTime: Instant = startedAfterDateTime?.toInstant() ?: ZonedDateTime.now().minusMonths(1).toInstant()
-        if (pageNumber != null && pageSize != null) {
-            val missions = getMissions.execute(
-                afterDateTime = afterDateTime,
-                beforeDateTime = beforeDateTime,
-                pageable = PageRequest.of(pageNumber, pageSize)
-            )
-            return missions.map { MissionDataOutput.fromMission(it) }
-        }
         val missions = getMissions.execute(
-            afterDateTime = afterDateTime,
-            beforeDateTime = beforeDateTime,
-            pageable = Pageable.unpaged()
+            startedAfterDateTime = startedAfterDateTime,
+            startedBeforeDateTime = startedBeforeDateTime,
+            missionNatures = missionNatures,
+            missionStatuses = missionStatuses,
+            missionTypes = missionTypes,
+            pageNumber = pageNumber,
+            pageSize = pageSize
         )
         return missions.map { MissionDataOutput.fromMission(it) }
     }

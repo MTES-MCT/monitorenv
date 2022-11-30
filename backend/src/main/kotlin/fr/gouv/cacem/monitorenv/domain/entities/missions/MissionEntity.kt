@@ -5,7 +5,6 @@ import java.time.ZonedDateTime
 data class MissionEntity(
     val id: Int? = null,
     val missionType: MissionTypeEnum,
-    val missionStatus: MissionStatusEnum,
     val missionNature: List<MissionNatureEnum>? = listOf(),
     val resourceUnits: List<ResourceUnitEntity>? = listOf(),
     val openBy: String? = null,
@@ -17,6 +16,7 @@ data class MissionEntity(
     val inputStartDateTimeUtc: ZonedDateTime,
     val inputEndDateTimeUtc: ZonedDateTime? = null,
     val envActions: List<EnvActionEntity>? = listOf(),
+    val isClosed: Boolean,
     val isDeleted: Boolean,
     val missionSource: MissionSourceEnum
 )

@@ -8,7 +8,7 @@ endif
 
 
 # DEV commands
-.PHONY: dev-install dev-run-front dev-run-back-with-infra dev-run-back dev-run-infra dev-erase-db dev-clean-target-env dev-back-config docker-build-app test test-front
+.PHONY: dev-install dev-run-front dev-run-back-with-infra dev-run-back dev-run-infra dev-erase-db dev-clean-target-env dev-back-config docker-build-app test test-front dev-lint-backend
 dev-install:
 	cd frontend && npm install
 
@@ -42,9 +42,19 @@ dev-erase-db:
 dev-clean-target-env:
 	rm -rf $(shell pwd)/backend/target
 
+dev-lint-backend:
+	cd backend && ./mvnw -e antrun:run@ktlint-format
+
+dev-lint-frontend:
+	cd frontend && npm run test:lint:partial
+
+dev-run-storybook:
+	cd frontend && npm run storybook
+
 test:
 	cd backend && ./mvnw clean && ./mvnw test
 	cd frontend && CI=true npm test
+
 test-front:
 	cd frontend && npm test
 

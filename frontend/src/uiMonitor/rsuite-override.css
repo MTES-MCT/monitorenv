@@ -396,7 +396,7 @@ label:hover .rs-checkbox-wrapper .rs-checkbox-inner:before {
 
 /* form */
 .rs-form:not(.rs-form-inline) .rs-form-group:not(:last-child) {
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 
 /* dropdown */

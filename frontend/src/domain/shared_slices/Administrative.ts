@@ -3,11 +3,6 @@ import _ from 'lodash'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
-/* eslint-disable */
-/** @namespace AdministrativeReducer */
-const AdministrativeReducer = null
-/* eslint-enable */
-
 const persistConfig = {
   key: 'administrative',
   storage
@@ -15,7 +10,7 @@ const persistConfig = {
 
 const administrativeSlice = createSlice({
   initialState: {
-    showedAdministrativeLayerIds: []
+    showedAdministrativeLayerIds: [] as number[]
   },
   name: 'administrative',
   reducers: {

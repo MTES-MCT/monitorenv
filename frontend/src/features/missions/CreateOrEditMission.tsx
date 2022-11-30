@@ -15,7 +15,6 @@ import {
 } from '../../api/missionsAPI'
 import { setSideWindowPath } from '../../components/SideWindowRouter/SideWindowRouter.slice'
 import { COLORS } from '../../constants/constants'
-import { missionStatusEnum } from '../../domain/entities/missions'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { setError } from '../../domain/shared_slices/Global'
 import { setMissionState } from '../../domain/shared_slices/MissionsState'
@@ -110,7 +109,7 @@ export function CreateOrEditMission() {
       <Formik enableReinitialize initialValues={mission} onSubmit={handleSubmitForm}>
         {formikProps => {
           const handleCloseMission = () => {
-            formikProps.setFieldValue('missionStatus', missionStatusEnum.CLOSED.code)
+            formikProps.setFieldValue('isClosed', true)
             formikProps.handleSubmit()
           }
           const handleConfirmFormCancelation = () => {
@@ -184,7 +183,6 @@ export function CreateOrEditMission() {
                   </IconButton>
                   <IconButton
                     appearance="primary"
-                    disabled={mission.missionStatus === missionStatusEnum.ENDED.code}
                     icon={<SaveSVG className="rs-icon" />}
                     onClick={handleCloseMission}
                     type="button"

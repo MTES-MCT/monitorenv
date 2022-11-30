@@ -10,6 +10,7 @@ export function RegulatoryLayerSearchInput({
   displayRegFilters,
   filteredRegulatoryThemes,
   globalSearchText,
+  placeholder,
   setGlobalSearchText,
   toggleRegFilters
 }) {
@@ -25,7 +26,7 @@ export function RegulatoryLayerSearchInput({
           classPrefix="input ghost"
           data-cy="regulatory-search-input"
           onChange={setGlobalSearchText}
-          placeholder="Rechercher une zone reg."
+          placeholder={placeholder}
           type="text"
           value={globalSearchText}
         />

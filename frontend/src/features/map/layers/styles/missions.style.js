@@ -19,10 +19,10 @@ export const missionZoneStyle = new Style({
 const missionWithCentroidStyleFactory = color =>
   new Style({
     geometry: feature => {
-      const extent = feature.getGeometry().getExtent()
-      const center = getCenter(extent)
+      const extent = feature?.getGeometry()?.getExtent()
+      const center = extent && getCenter(extent)
 
-      return new Point(center)
+      return center && new Point(center)
     },
     image: new Icon({
       color,
@@ -33,6 +33,8 @@ const missionWithCentroidStyleFactory = color =>
 export const missionWithCentroidStyleFn = feature => {
   const missionStatus = feature.get('missionStatus')
   switch (missionStatus) {
+    case missionStatusEnum.UPCOMING.code:
+      return missionWithCentroidStyleFactory(COLORS.blueGray)
     case missionStatusEnum.PENDING.code:
       return missionWithCentroidStyleFactory(COLORS.mediumSeaGreen)
     case missionStatusEnum.ENDED.code:

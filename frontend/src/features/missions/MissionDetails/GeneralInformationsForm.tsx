@@ -17,27 +17,29 @@ export function GeneralInformationsForm() {
   return (
     <>
       <Title>Informations générales</Title>
-      <Form.Group>
-        <FixedFormGroup>
+      <FlexFormGroup>
+        <ColWrapper>
           <Form.ControlLabel htmlFor="inputStartDateTimeUtc">Début de mission</Form.ControlLabel>
           <FormikDatePicker
+            cleanable={false}
             format="dd MMM yyyy, HH:mm"
             name="inputStartDateTimeUtc"
             oneTap
             placeholder={placeholderDateTimePicker}
+            size="sm"
           />
-        </FixedFormGroup>
-
-        <FixedFormGroup>
+        </ColWrapper>
+        <ColWrapper>
           <Form.ControlLabel htmlFor="inputEndDateTimeUtc">Fin de mission</Form.ControlLabel>
           <FormikDatePicker
             format="dd MMM yyyy, HH:mm"
             name="inputEndDateTimeUtc"
             oneTap
             placeholder={placeholderDateTimePicker}
+            size="sm"
           />
-        </FixedFormGroup>
-      </Form.Group>
+        </ColWrapper>
+      </FlexFormGroup>
 
       <Form.Group>
         <SubGroup>
@@ -45,8 +47,8 @@ export function GeneralInformationsForm() {
           <TypeMissionRadioGroup name="missionType" radioValues={missionTypeEnum} />
         </SubGroup>
         <SubGroup>
-          <Form.ControlLabel htmlFor="missionNature">Nature de mission</Form.ControlLabel>
-          <NatureMissionCheckboxGroup checkBoxValues={missionNatureEnum} inline name="missionNature" />
+          <Form.ControlLabel htmlFor="missionNature">Intentions principales de mission</Form.ControlLabel>
+          <NatureMissionCheckboxGroup checkBoxValues={missionNatureEnum} inline name="missionNature" size="sm" />
         </SubGroup>
       </Form.Group>
       <Form.Group>
@@ -55,25 +57,21 @@ export function GeneralInformationsForm() {
 
       <MissionZones name="geom" />
       <Form.Group>
-        <ColWrapper>
-          <Form.ControlLabel htmlFor="observationsCacem">Observations CACEM </Form.ControlLabel>
-          <InputObservations name="observationsCacem" />
-        </ColWrapper>
-        <ColWrapper>
-          <Form.ControlLabel htmlFor="observationsCnsp">Observations CNSP </Form.ControlLabel>
-          <InputObservations name="observationsCnsp" />
-        </ColWrapper>
+        <Form.ControlLabel htmlFor="observationsCacem">CACEM : orientations, observations </Form.ControlLabel>
+        <InputObservations name="observationsCacem" />
+        <Form.ControlLabel htmlFor="observationsCnsp">CNSP : orientations, observations </Form.ControlLabel>
+        <InputObservations name="observationsCnsp" />
       </Form.Group>
 
       <Form.Group>
-        <ColWrapper>
+        <NarrowColumn>
           <Form.ControlLabel htmlFor="openBy">Ouvert par</Form.ControlLabel>
-          <FormikInput name="openBy" />
-        </ColWrapper>
-        <ColWrapper>
+          <FormikInput name="openBy" size="sm" />
+        </NarrowColumn>
+        <NarrowColumn>
           <Form.ControlLabel htmlFor="closedBy">Clôturé par</Form.ControlLabel>
-          <FormikInput name="closedBy" />
-        </ColWrapper>
+          <FormikInput name="closedBy" size="sm" />
+        </NarrowColumn>
       </Form.Group>
     </>
   )
@@ -84,18 +82,24 @@ const Title = styled.h2`
   padding-bottom: 13px;
   color: ${COLORS.charcoal};
 `
-
+const FlexFormGroup = styled(Form.Group)`
+  display: flex;
+`
 const ColWrapper = styled.div`
   width: 200px;
+  height: 54px;
   display: inline-block;
   :not(:last-child) {
     margin-right: 16px;
   }
 `
 
-const FixedFormGroup = styled.div`
-  height: 58px;
-  margin-bottom: 16px;
+const NarrowColumn = styled.div`
+  width: 120px;
+  display: inline-block;
+  :not(:last-child) {
+    margin-right: 16px;
+  }
 `
 const SubGroup = styled.div`
   magin-bottom: 16px;

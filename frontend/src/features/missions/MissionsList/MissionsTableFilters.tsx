@@ -49,8 +49,8 @@ export function MissionsTableFilters() {
   const handleResetFilters = () => {
     dispatch(resetMissionFilters())
   }
-  const missionStartedAfterDate = (missionStartedAfter && new Date(missionStartedAfter)) || undefined
-  const missionStartedBeforeDate = (missionStartedBefore && new Date(missionStartedBefore)) || undefined
+  const missionStartedAfterDate = (missionStartedAfter && new Date(missionStartedAfter)) || null
+  const missionStartedBeforeDate = (missionStartedBefore && new Date(missionStartedBefore)) || null
 
   return (
     <>

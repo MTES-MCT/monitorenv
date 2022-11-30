@@ -6,21 +6,15 @@ import { Form, TagPicker, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { useGetControlResourcesQuery } from '../../../api/controlResourcesAPI'
+import { FormikInput } from '../../../uiMonitor/CustomFormikFields/FormikInput'
 import { SelectPicker } from '../../../uiMonitor/CustomRsuite/SelectPicker'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
-
-const DEFAULT_SELECT_PICKER_STYLE = {
-  width: 200
-}
-
-const DEFAULT_SELECT_PICKER_MENU_STYLE = {
-  width: 200
-}
 
 export function ResourceUnitSelector({ removeResourceUnit, resourceUnitIndex, resourceUnitPath, ...props }) {
   const [administrationField, , administrationHelpers] = useField(`resourceUnits.${resourceUnitIndex}.administration`)
   const [unitField, , unitHelpers] = useField(`resourceUnits.${resourceUnitIndex}.unit`)
   const [resourcesField, , resourcesHelpers] = useField(`resourceUnits.${resourceUnitIndex}.resources`)
+  const [, , contactHelpers] = useField(`resourceUnits.${resourceUnitIndex}.contact`)
 
   const resourcesRef = useRef() as MutableRefObject<HTMLDivElement>
   const { data, isError, isLoading } = useGetControlResourcesQuery()
@@ -72,7 +66,9 @@ export function ResourceUnitSelector({ removeResourceUnit, resourceUnitIndex, re
   const handleResourceChange = value => {
     resourcesHelpers.setValue(value)
   }
-
+  const handleContactChange = value => {
+    contactHelpers.setValue(value)
+  }
   if (isError) {
     return <div>Erreur</div>
   }
@@ -85,36 +81,32 @@ export function ResourceUnitSelector({ removeResourceUnit, resourceUnitIndex, re
     <RessourceUnitWrapper>
       <SelectorWrapper>
         <FormGroupFixed>
-          <FormColumn>
-            <Form.ControlLabel htmlFor="administration">Administration {resourceUnitIndexDisplayed}</Form.ControlLabel>
-            <SelectPicker
-              data={administrationList}
-              labelKey="administration"
-              menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
-              onChange={handleAdministrationChange}
-              searchable={administrationList.length > 10}
-              size="sm"
-              style={DEFAULT_SELECT_PICKER_STYLE}
-              value={administrationField.value}
-              valueKey="administration"
-            />
-          </FormColumn>
-          <FormColumn>
-            <Form.ControlLabel htmlFor="unit">Unité {resourceUnitIndexDisplayed}</Form.ControlLabel>
-            <SelectPicker
-              data={unitList}
-              disabled={_.isEmpty(administrationField.value)}
-              labelKey="unit"
-              menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
-              onChange={handleUnitChange}
-              searchable={unitList.length > 10}
-              size="sm"
-              style={DEFAULT_SELECT_PICKER_STYLE}
-              value={unitField.value}
-              valueKey="unit"
-              {...props}
-            />
-          </FormColumn>
+          <Form.ControlLabel htmlFor="administration">Administration {resourceUnitIndexDisplayed}</Form.ControlLabel>
+          <SelectPicker
+            block
+            data={administrationList}
+            labelKey="administration"
+            onChange={handleAdministrationChange}
+            searchable={administrationList.length > 10}
+            size="sm"
+            value={administrationField.value}
+            valueKey="administration"
+          />
+        </FormGroupFixed>
+        <FormGroupFixed>
+          <Form.ControlLabel htmlFor="unit">Unité {resourceUnitIndexDisplayed}</Form.ControlLabel>
+          <SelectPicker
+            block
+            data={unitList}
+            disabled={_.isEmpty(administrationField.value)}
+            labelKey="unit"
+            onChange={handleUnitChange}
+            searchable={unitList.length > 10}
+            size="sm"
+            value={unitField.value}
+            valueKey="unit"
+            {...props}
+          />
         </FormGroupFixed>
         <FormGroupFixed>
           <RefWrapper ref={resourcesRef} data-cy="unit-tag-picker">
@@ -135,6 +127,12 @@ export function ResourceUnitSelector({ removeResourceUnit, resourceUnitIndex, re
             />
           </RefWrapper>
         </FormGroupFixed>
+        <FormGroupFixed>
+          <Form.ControlLabel htmlFor={`resourceUnits.${resourceUnitIndex}.contact`}>
+            Contact de l&apos;unité {resourceUnitIndexDisplayed}
+          </Form.ControlLabel>
+          <FormikInput name={`resourceUnits.${resourceUnitIndex}.contact`} onChange={handleContactChange} size="sm" />
+        </FormGroupFixed>
       </SelectorWrapper>
 
       {resourceUnitIndex > 0 && (
@@ -153,19 +151,11 @@ const RessourceUnitWrapper = styled.div`
 const SelectorWrapper = styled.div`
   width: 100%;
   max-width: 416px;
-  margin-bottom: 16px;
-`
-
-const FormColumn = styled.div`
-  display: inline-block;
-  vertical-align: top;
-  :not(:last-child) {
-    margin-right: 16px;
-  }
+  margin-bottom: 14px;
 `
 
 const FormGroupFixed = styled.div`
-  height: 58px;
+  height: 52px;
   :not(:last-child) {
     margin-bottom: 4px;
   }

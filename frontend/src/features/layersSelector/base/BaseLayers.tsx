@@ -1,5 +1,4 @@
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { RadioGroup } from 'rsuite'
 import styled from 'styled-components'
 
@@ -7,15 +6,16 @@ import { COLORS } from '../../../constants/constants'
 import { baseLayers } from '../../../domain/entities/layers'
 import { toggleBaseLayer } from '../../../domain/shared_slices/LayerSidebar'
 import { selectBaseLayer } from '../../../domain/shared_slices/Map'
+import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 import BaseLayerItem from './BaseLayerItem'
 
 const baseLayersKeys = Object.keys(baseLayers).filter(key => key !== baseLayers.DARK.code)
 
-function BaseLayers() {
+export function BaseLayers() {
   const dispatch = useDispatch()
-  const { baselayerIsOpen } = useSelector(state => state.layerSidebar)
-  const { selectedBaseLayer } = useSelector(state => state.map)
+  const { baselayerIsOpen } = useAppSelector(state => state.layerSidebar)
+  const { selectedBaseLayer } = useAppSelector(state => state.map)
   const onSectionTitleClicked = () => {
     dispatch(toggleBaseLayer())
   }
@@ -41,7 +41,7 @@ function BaseLayers() {
   )
 }
 
-const SectionTitle = styled.div`
+const SectionTitle = styled.div<{ $showBaseLayers: boolean }>`
   height: 38px;
   display: flex;
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
@@ -55,11 +55,11 @@ const SectionTitle = styled.div`
   user-select: none;
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
-  border-bottom-left-radius: ${props => (props.$showBaseLayers ? '0' : '2px')};
-  border-bottom-right-radius: ${props => (props.$showBaseLayers ? '0' : '2px')};
+  border-bottom-left-radius: ${p => (p.$showBaseLayers ? '0' : '2px')};
+  border-bottom-right-radius: ${p => (p.$showBaseLayers ? '0' : '2px')};
 `
 
-const BaseLayersList = styled.ul`
+const BaseLayersList = styled.ul<{ $baseLayersLength: number | undefined; $showBaseLayers: boolean }>`
   margin: 0;
   border-radius: 0;
   padding: 0;
@@ -68,20 +68,20 @@ const BaseLayersList = styled.ul`
   overflow-x: hidden;
   background: ${COLORS.background};
 
-  animation: ${props => (props.$showBaseLayers ? 'zones-opening' : 'zones-closing')} 0.5s ease forwards;
+  animation: ${p => (p.$showBaseLayers ? 'zones-opening' : 'zones-closing')} 0.5s ease forwards;
 
   @keyframes zones-opening {
     0% {
       height: 0;
     }
     100% {
-      height: ${props => (props.$baseLayersLength ? `${34 * props.$baseLayersLength}px` : '175px')};
+      height: ${p => (p.$baseLayersLength ? `${38 * p.$baseLayersLength}px` : '175px')};
     }
   }
 
   @keyframes zones-closing {
     0% {
-      height: ${props => (props.$baseLayersLength ? `${34 * props.$baseLayersLength}px` : '175px')};
+      height: ${p => (p.$baseLayersLength ? `${38 * p.$baseLayersLength}px` : '175px')};
     }
     100% {
       height: 0;
@@ -93,7 +93,6 @@ const BaseLayersList = styled.ul`
 `
 
 const ListItem = styled.li`
-  padding: 6px 5px 5px 0px;
   margin: 0;
   text-align: left;
   list-style-type: none;
@@ -111,5 +110,3 @@ const ListItem = styled.li`
     background: ${COLORS.blueYonder25};
   }
 `
-
-export default BaseLayers

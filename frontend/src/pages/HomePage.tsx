@@ -2,7 +2,6 @@ import styled from 'styled-components'
 
 import { APIWorker } from '../api/APIWorker'
 import { ErrorToastNotification } from '../components/ErrorToastNotification'
-import { FEATURE_FLAGS } from '../features'
 import { DrawLayerModal } from '../features/drawLayer/DrawLayerModal'
 import Healthcheck from '../features/healthcheck/Healthcheck'
 import InterestPoint from '../features/interest_points/InterestPoint'
@@ -18,7 +17,6 @@ export function HomePage() {
   const {
     displayDrawLayerModal,
     displayInterestPoint,
-    displayLayersSidebar,
     displayLocateOnMap,
     displayMeasurement,
     displayMissionMenuButton
@@ -30,14 +28,14 @@ export function HomePage() {
       <Wrapper>
         <APIWorker />
         <Map />
-        {displayLayersSidebar && <LayersSidebar />}
-        {FEATURE_FLAGS.LOCALIZE_MISSIONS && displayDrawLayerModal && <DrawLayerModal />}
-        {FEATURE_FLAGS.REPORTING && displayMissionMenuButton && <MissionsMenu />}
+        <LayersSidebar />
+        {displayDrawLayerModal && <DrawLayerModal />}
+        {displayMissionMenuButton && <MissionsMenu />}
         {displayMeasurement && <Measurement />}
         {displayLocateOnMap && <LocateOnMap />}
         {displayInterestPoint && <InterestPoint />}
         <ErrorToastNotification />
-        {FEATURE_FLAGS.REPORTING && <SideWindowLauncher />}
+        <SideWindowLauncher />
       </Wrapper>
     </>
   )

@@ -1,33 +1,34 @@
-import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../constants/constants'
+import { setDisplayedItems } from '../../domain/shared_slices/Global'
 import { closeRegulatoryZoneMetadata } from '../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { ReactComponent as LayersSVG } from '../../uiMonitor/icons/Couches_carto.svg'
 import { AdministrativeLayers } from './administrative/AdministrativeLayers'
-import BaseLayers from './base/BaseLayers'
+import { BaseLayers } from './base/BaseLayers'
 import { RegulatoryLayers } from './regulatory/menu/RegulatoryLayers'
 import { RegulatoryLayerZoneMetadata } from './regulatory/metadata/RegulatoryLayerZoneMetadata'
 import { RegulatoryLayerSearch } from './regulatory/search/RegulatoryLayerSearch'
 
 export function LayersSidebar() {
   const { regulatoryMetadataLayerId, regulatoryMetadataPanelIsOpen } = useAppSelector(state => state.regulatoryMetadata)
+  const { displayLayersSidebar, layersSidebarIsOpen } = useAppSelector(state => state.global)
   const dispatch = useDispatch()
 
-  const [layersSidebarIsOpen, setLayersSidebarIsOpen] = useState(false)
   const toggleLayerSidebar = () => {
     if (layersSidebarIsOpen) {
       dispatch(closeRegulatoryZoneMetadata())
     }
-    setLayersSidebarIsOpen(!layersSidebarIsOpen)
+    dispatch(setDisplayedItems({ layersSidebarIsOpen: !layersSidebarIsOpen }))
   }
 
   return (
     <>
       <SidebarLayersIcon
+        $isVisible={displayLayersSidebar}
         appearance="primary"
         data-cy="layers-sidebar"
         icon={<LayersSVG className="rs-icon" />}
@@ -36,10 +37,10 @@ export function LayersSidebar() {
         title="Couches réglementaires"
       />
       <Sidebar
-        isVisible={layersSidebarIsOpen || regulatoryMetadataPanelIsOpen}
+        isVisible={displayLayersSidebar && (layersSidebarIsOpen || regulatoryMetadataPanelIsOpen)}
         layersSidebarIsOpen={layersSidebarIsOpen}
       >
-        <RegulatoryLayerSearch isVisible={layersSidebarIsOpen} />
+        <RegulatoryLayerSearch isVisible={displayLayersSidebar && layersSidebarIsOpen} />
         <Layers>
           <RegulatoryLayers />
           <AdministrativeLayers />
@@ -98,8 +99,9 @@ const Layers = styled.div`
   max-height: calc(100vh - 160px);
 `
 
-const SidebarLayersIcon = styled(IconButton)`
+const SidebarLayersIcon = styled(IconButton)<{ $isVisible: boolean }>`
   position: absolute;
   top: 10px;
   left: 12px;
+  ${p => (p.$isVisible ? '' : 'display: none;')}
 `

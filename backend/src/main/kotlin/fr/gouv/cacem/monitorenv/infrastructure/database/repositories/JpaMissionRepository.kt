@@ -16,15 +16,21 @@ class JpaMissionRepository(
     private val mapper: ObjectMapper
 ) : IMissionRepository {
 
-    override fun findMissions(
-        afterDateTime: Instant,
-        beforeDateTime: Instant,
+    override fun findAllMissions(
+        startedAfter: Instant,
+        startedBefore: Instant?,
+        missionNatures: List<String>?,
+        missionTypes: List<String>?,
+        missionStatuses: List<String>?,
         pageable: Pageable
     ): List<MissionEntity> {
         return dbMissionRepository.findAllMissions(
-            afterDateTime,
-            beforeDateTime,
-            pageable
+            startedAfter = startedAfter,
+            startedBefore = startedBefore,
+            missionNatures = missionNatures,
+            missionTypes = missionTypes,
+            missionStatuses = missionStatuses,
+            pageable = pageable
         ).map { it.toMissionEntity(mapper) }
     }
 

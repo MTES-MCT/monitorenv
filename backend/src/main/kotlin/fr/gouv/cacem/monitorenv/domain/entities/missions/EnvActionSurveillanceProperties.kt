@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.entities.missions
 
-import org.locationtech.jts.geom.MultiPoint
+import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.*
 
@@ -12,7 +12,7 @@ data class EnvActionSurveillanceProperties(
     val observations: String? = null,
     val coverMissionZone: Boolean? = null
 ) {
-    fun toEnvActionSurveillanceEntity(id: UUID, actionStartDateTimeUtc: ZonedDateTime?, geom: MultiPoint?) = EnvActionSurveillanceEntity(
+    fun toEnvActionSurveillanceEntity(id: UUID, actionStartDateTimeUtc: ZonedDateTime?, geom: Geometry?) = EnvActionSurveillanceEntity(
         id = id,
         actionStartDateTimeUtc = actionStartDateTimeUtc,
         geom = geom,

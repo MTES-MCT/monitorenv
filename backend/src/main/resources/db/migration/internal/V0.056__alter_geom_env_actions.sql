@@ -1,0 +1,1 @@
+ALTER TABLE public.env_actions ALTER COLUMN geom TYPE geometry(geometry, 4326);

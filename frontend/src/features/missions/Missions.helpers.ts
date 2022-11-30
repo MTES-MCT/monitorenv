@@ -6,7 +6,6 @@ import {
   formalNoticeEnum,
   infractionTypeEnum,
   MissionSourceEnum,
-  missionStatusEnum,
   missionTypeEnum,
   vehicleTypeEnum
 } from '../../domain/entities/missions'
@@ -72,9 +71,9 @@ export const missionFactory = (mission = {}) => ({
   geom: null,
   inputEndDateTimeUtc: '',
   inputStartDateTimeUtc: new Date().toISOString(),
+  isClosed: false,
   missionNature: [],
   missionSource: MissionSourceEnum.CACEM,
-  missionStatus: missionStatusEnum.PENDING.code,
   missionType: missionTypeEnum.SEA.code,
   observationsCacem: '',
   observationsCnsp: '',

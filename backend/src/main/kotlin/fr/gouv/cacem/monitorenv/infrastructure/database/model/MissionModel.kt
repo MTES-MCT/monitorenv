@@ -53,9 +53,6 @@ data class MissionModel(
     @Column(name = "resource_units", columnDefinition = "jsonb")
     @Type(type = "jsonb")
     var resourceUnits: String? = null,
-    @Column(name = "mission_status")
-    @Enumerated(EnumType.STRING)
-    var missionStatus: MissionStatusEnum,
     @Column(name = "open_by")
     var openBy: String? = null,
     @Column(name = "closed_by")
@@ -74,6 +71,8 @@ data class MissionModel(
     var inputStartDateTimeUtc: Instant,
     @Column(name = "input_end_datetime_utc")
     var inputEndDateTimeUtc: Instant? = null,
+    @Column(name = "closed", nullable = false)
+    val isClosed: Boolean,
     @Column(name = "deleted", nullable = false)
     val isDeleted: Boolean,
     @Column(name = "mission_source", nullable = false)
@@ -102,7 +101,6 @@ data class MissionModel(
                     .constructCollectionType(MutableList::class.java, ResourceUnitEntity::class.java)
             )
         },
-        missionStatus = missionStatus,
         openBy = openBy,
         closedBy = closedBy,
         observationsCacem = observationsCacem,
@@ -111,6 +109,7 @@ data class MissionModel(
         geom = geom,
         inputStartDateTimeUtc = inputStartDateTimeUtc.atZone(UTC),
         inputEndDateTimeUtc = inputEndDateTimeUtc?.atZone(UTC),
+        isClosed = isClosed,
         isDeleted = isDeleted,
         missionSource = missionSource,
         envActions = envActions!!.map { it.toActionEntity(mapper) }
@@ -123,7 +122,6 @@ data class MissionModel(
                 missionType = mission.missionType,
                 missionNature = mission.missionNature,
                 resourceUnits = if (mission.resourceUnits === null) null else mapper.writeValueAsString(mission.resourceUnits),
-                missionStatus = mission.missionStatus,
                 openBy = mission.openBy,
                 closedBy = mission.closedBy,
                 observationsCacem = mission.observationsCacem,
@@ -132,6 +130,7 @@ data class MissionModel(
                 geom = mission.geom,
                 inputStartDateTimeUtc = mission.inputStartDateTimeUtc.toInstant(),
                 inputEndDateTimeUtc = mission.inputEndDateTimeUtc?.toInstant(),
+                isClosed = mission.isClosed,
                 isDeleted = false,
                 missionSource = mission.missionSource
             )
@@ -154,6 +153,6 @@ data class MissionModel(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , missionType = $missionType , missionNature = $missionNature ,  resourceUnits = $resourceUnits , missionStatus = $missionStatus , openBy = $openBy , closedBy = $closedBy , observationsCacem = $observationsCacem, observationsCnsp = $observationsCnsp , facade = $facade , geom = $geom , inputStartDateTimeUtc = $inputStartDateTimeUtc , inputEndDateTimeUtc = $inputEndDateTimeUtc, isDeleted = $isDeleted, missionSource = $missionSource )"
+        return this::class.simpleName + "(id = $id , missionType = $missionType , missionNature = $missionNature ,  resourceUnits = $resourceUnits , openBy = $openBy , closedBy = $closedBy , observationsCacem = $observationsCacem, observationsCnsp = $observationsCnsp , facade = $facade , geom = $geom , inputStartDateTimeUtc = $inputStartDateTimeUtc , inputEndDateTimeUtc = $inputEndDateTimeUtc, isClosed = $isClosed, isDeleted = $isDeleted, missionSource = $missionSource )"
     }
 }

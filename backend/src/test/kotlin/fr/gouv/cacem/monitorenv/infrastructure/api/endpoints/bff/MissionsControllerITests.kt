@@ -65,24 +65,24 @@ class MissionsControllerITests {
             id = 10,
             missionType = MissionTypeEnum.LAND,
             missionNature = listOf(MissionNatureEnum.ENV),
-            missionStatus = MissionStatusEnum.CLOSED,
             facade = "Outre-Mer",
             geom = polygon,
             observationsCacem = null,
             inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             inputEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
             isDeleted = false,
+            isClosed = false,
             missionSource = MissionSourceEnum.CACEM
         )
         val newMissionRequest = CreateOrUpdateMissionDataInput(
             missionType = MissionTypeEnum.LAND,
-            missionStatus = MissionStatusEnum.CLOSED,
             missionNature = listOf(MissionNatureEnum.ENV),
             observationsCacem = null,
             facade = "Outre-Mer",
             geom = polygon,
             inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             inputEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+            isClosed = false,
             missionSource = MissionSourceEnum.CACEM
         )
         val requestbody = objectMapper.writeValueAsString(newMissionRequest)
@@ -109,21 +109,25 @@ class MissionsControllerITests {
         val firstMission = MissionEntity(
             id = 10,
             missionType = MissionTypeEnum.SEA,
-            missionStatus = MissionStatusEnum.CLOSED,
             missionNature = listOf(MissionNatureEnum.ENV),
             facade = "Outre-Mer",
             geom = polygon,
             observationsCacem = null,
             inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             inputEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+            isClosed = false,
             isDeleted = false,
             missionSource = MissionSourceEnum.CACEM
         )
         given(
             this.getMissions.execute(
-                any(),
-                any(),
-                any()
+                startedAfterDateTime = any(),
+                startedBeforeDateTime = any(),
+                missionNatures = any(),
+                missionTypes = any(),
+                missionStatuses = any(),
+                pageNumber = any(),
+                pageSize = any()
             )
         ).willReturn(listOf(firstMission))
 
@@ -141,8 +145,8 @@ class MissionsControllerITests {
         val firstMission = MissionEntity(
             id = 10,
             missionType = MissionTypeEnum.SEA,
-            missionStatus = MissionStatusEnum.PENDING,
             inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            isClosed = false,
             isDeleted = false,
             missionSource = MissionSourceEnum.CACEM
         )
@@ -163,9 +167,9 @@ class MissionsControllerITests {
         val expectedUpdatedMission = MissionEntity(
             id = 14,
             missionType = MissionTypeEnum.SEA,
-            missionStatus = MissionStatusEnum.PENDING,
             observationsCacem = "updated observationsCacem",
             inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            isClosed = false,
             isDeleted = false,
             missionSource = MissionSourceEnum.CACEM
         )
@@ -178,11 +182,11 @@ class MissionsControllerITests {
         val requestBody = CreateOrUpdateMissionDataInput(
             id = 14,
             missionType = MissionTypeEnum.SEA,
-            missionStatus = MissionStatusEnum.PENDING,
             observationsCacem = "updated observationsCacem",
             inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             envActions = listOf(envAction),
-            missionSource = MissionSourceEnum.CACEM
+            missionSource = MissionSourceEnum.CACEM,
+            isClosed = false
         )
         given(this.updateMission.execute(any())).willReturn(expectedUpdatedMission)
         // When

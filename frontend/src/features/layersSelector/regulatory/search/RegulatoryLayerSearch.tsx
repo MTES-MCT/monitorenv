@@ -46,7 +46,7 @@ export function RegulatoryLayerSearch({ isVisible }) {
         id: 'id',
         index: ['properties:layer_name', 'properties:entity_name', 'properties:ref_reg', 'properties:type'],
         store: true,
-        tag: 'properties:thematique'
+        tag: 'properties:thematiques'
       },
       tokenize: 'full'
     })
@@ -56,9 +56,13 @@ export function RegulatoryLayerSearch({ isVisible }) {
         layer?.properties?.entity_name &&
         layer?.properties?.ref_reg &&
         layer?.properties?.type &&
-        layer?.properties?.thematique
+        layer?.properties?.thematique &&
+        layer?.geometry
       ) {
-        RegulatoryLayersIndex.add(layer)
+        const layerToAdd = _.cloneDeep(layer)
+
+        layerToAdd.properties.thematiques = layerToAdd.properties?.thematique.split(',').map(v => v?.trim()) || []
+        RegulatoryLayersIndex.add(layerToAdd)
       }
     })
 
@@ -82,13 +86,13 @@ export function RegulatoryLayerSearch({ isVisible }) {
         }
       } else if (extent && geofilter) {
         const currentExtent = transformExtent(extent, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
-        const filteredResults = _.map(
-          _.filter(regulatoryLayers, layer => intersects(layer.bbox, currentExtent)),
-          layer => ({
+        const filteredResults = _.chain(regulatoryLayers)
+          .filter(layer => layer.geometry?.coordinates?.length > 0 && intersects(layer.bbox, currentExtent))
+          .map(layer => ({
             doc: layer,
             id: layer.id
-          })
-        )
+          }))
+          .value()
         dispatch(setRegulatoryLayersSearchResult(filteredResults))
       } else {
         dispatch(setRegulatoryLayersSearchResult([]))
@@ -159,6 +163,7 @@ export function RegulatoryLayerSearch({ isVisible }) {
           displayRegFilters={displayRegFilters}
           filteredRegulatoryThemes={filteredRegulatoryThemes}
           globalSearchText={globalSearchText}
+          placeholder={regulatoryLayers.length === 0 ? 'Chargement des couches en cours' : 'Rechercher une zone reg.'}
           setGlobalSearchText={handleSearchInputChange}
           toggleRegFilters={toggleRegFilters}
         />
@@ -249,9 +254,9 @@ const ExtraButtonsWrapper = styled.div<{
   position: fixed;
   top: 15px;
   left: ${p => {
-    if (p.isVisible && (p.shouldReloadSearchOnExtent || p.allowResetResults)) {
+    if (p.shouldReloadSearchOnExtent || p.allowResetResults) {
       return `calc(
-        50% - ((${p.shouldReloadSearchOnExtent ? '220px' : '0px'} + ${p.allowResetResults ? '285px' : '0'}) / 2)
+        50% - ((${p.shouldReloadSearchOnExtent ? '220px' : '0px'} + ${p.allowResetResults ? '285px' : '0px'}) / 2)
       )`
     }
 
