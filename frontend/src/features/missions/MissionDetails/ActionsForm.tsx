@@ -1,9 +1,8 @@
-import React from 'react'
 import { Dropdown } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import { actionTypeEnum } from '../../../domain/entities/missions'
+import { ActionTypeEnum } from '../../../domain/entities/missions'
 import { ReactComponent as ControlSVG } from '../../../uiMonitor/icons/Control.svg'
 import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/Note_libre.svg'
 import { ReactComponent as SurveillanceSVG } from '../../../uiMonitor/icons/Observation.svg'
@@ -12,9 +11,9 @@ import { actionFactory } from '../Missions.helpers'
 import { ActionCard } from './ActionCard'
 
 export function ActionsForm({ currentActionIndex, form, remove, setCurrentActionIndex, unshift }) {
-  const handleAddSurveillanceAction = () => unshift(actionFactory({ actionType: actionTypeEnum.SURVEILLANCE.code }))
-  const handleAddControlAction = () => unshift(actionFactory({ actionType: actionTypeEnum.CONTROL.code }))
-  const handleAddNoteAction = () => unshift(actionFactory({ actionType: actionTypeEnum.NOTE.code }))
+  const handleAddSurveillanceAction = () => unshift(actionFactory({ actionType: ActionTypeEnum.SURVEILLANCE }))
+  const handleAddControlAction = () => unshift(actionFactory({ actionType: ActionTypeEnum.CONTROL }))
+  const handleAddNoteAction = () => unshift(actionFactory({ actionType: ActionTypeEnum.NOTE }))
   const handleSelectAction = index => () => setCurrentActionIndex(index)
   const handleRemoveAction = index => e => {
     e.stopPropagation()
@@ -46,7 +45,7 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
         {form?.values.envActions?.length > 0 ? (
           form.values.envActions.map((action, index) => (
             <ActionCard
-              key={index}
+              key={action.id}
               action={action}
               duplicateAction={handleDuplicateAction(index)}
               removeAction={handleRemoveAction(index)}

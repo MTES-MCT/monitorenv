@@ -29,7 +29,7 @@ export function ControlPositions({ name }) {
   const handleDeleteControlPosition = index => () => {
     const newCoordinates = [...value.coordinates]
     newCoordinates.splice(index, 1)
-    dispatch(setValue({ ...value, coordinates: newCoordinates }))
+    setValue({ ...value, coordinates: newCoordinates })
   }
 
   const handleCenterOnMap = coordinates => () => {

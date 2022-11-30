@@ -109,9 +109,7 @@ const TypeMissionRadioGroup = styled(FormikRadioGroup)`
   margin-left: -20px;
 `
 
-const NatureMissionCheckboxGroup = styled(FormikCheckboxGroup)`
-  margin-left: -20px;
-`
+const NatureMissionCheckboxGroup = styled(FormikCheckboxGroup)``
 
 const InputObservations = styled(FormikTextarea)`
   max-width: 416px;

@@ -17,8 +17,9 @@ export const interactionTypes = {
  * @enum {string}
  */
 export const monitorenvFeatureTypes = {
-  ACTION_LOCALISATION: 'ACTION_LOCALISATION',
-  MISSION_ZONE: 'MISSION_ZONE'
+  CONTROL_POINT: 'CONTROL_POINT',
+  MISSION_ZONE: 'MISSION_ZONE',
+  SURVEILLANCE_ZONE: 'SURVEILLANCE_ZONE'
 }
 
 export const olGeometryTypes = {

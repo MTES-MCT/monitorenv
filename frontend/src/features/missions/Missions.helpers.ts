@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 import {
   actionTargetTypeEnum,
+  ActionTypeEnum,
   actionTypeEnum,
   formalNoticeEnum,
   infractionTypeEnum,
@@ -20,7 +21,7 @@ export const infractionFactory = ({ id, ...infraction } = { id: undefined }) => 
   ...infraction
 })
 
-export const actionFactory = ({ actionType, id, ...action }) => {
+export const actionFactory = ({ actionType, id, ...action }: { actionType: ActionTypeEnum; id?: number }) => {
   switch (actionType) {
     case actionTypeEnum.CONTROL.code:
       return {

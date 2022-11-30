@@ -13,8 +13,8 @@ import { FormikInputNumberGhost } from '../../../uiMonitor/CustomFormikFields/Fo
 import { FormikTextarea } from '../../../uiMonitor/CustomFormikFields/FormikTextarea'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as SurveillanceIconSVG } from '../../../uiMonitor/icons/Observation.svg'
-import { ControlPositions } from './ControlPositions'
 import { ControlThemeSelector } from './ControlThemeSelector'
+import { SurveillanceZones } from './SurveillanceZones'
 
 import type { MissionType, EnvActionControlType } from '../../../domain/entities/missions'
 
@@ -102,8 +102,9 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
         </Column>
       </FlexSelectorWrapper>
 
-      <ControlPositions name={`envActions[${currentActionIndex}].geom`} />
-      <FormikCheckbox
+      <SurveillanceZones name={`envActions[${currentActionIndex}].geom`} />
+      <WhiteCheckbox
+        inline
         label="Zone de surveillance équivalente à la zone de mission"
         name={`envActions[${currentActionIndex}].coverMissionZone`}
       />
@@ -159,4 +160,19 @@ const SizedFormikInputNumberGhost = styled(FormikInputNumberGhost)`
 const InputDivWithUnits = styled.div`
   display: flex;
   align-items: baseline;
+`
+
+const WhiteCheckbox = styled(FormikCheckbox)`
+  margin-left: -10px;
+  margin-bottom: 32px;
+  .rs-checkbox-wrapper .rs-checkbox-inner::before {
+    background-color: ${COLORS.white};
+  }
+
+  .rs-checkbox-wrapper .rs-checkbox-inner::after {
+    border-color: ${COLORS.charcoal};
+  }
+  &:hover .rs-checkbox-wrapper .rs-checkbox-inner::after {
+    border-color: ${COLORS.white};
+  }
 `
