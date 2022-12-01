@@ -5,16 +5,28 @@ import { COLORS } from '../../../constants/constants'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as LocalizeIconSVG } from '../../../uiMonitor/icons/Focus.svg'
 
-export function MissionZone({ handleCenterOnMap, handleDelete, name }) {
+import type { MouseEventHandler } from 'react'
+
+export function Zone({
+  className,
+  handleCenterOnMap,
+  handleDelete,
+  name
+}: {
+  className?: string
+  handleCenterOnMap: MouseEventHandler
+  handleDelete: Function
+  name: string
+}) {
   return (
-    <ZoneWrapper>
-      <Zone>
+    <ZoneWrapper className={className}>
+      <ZoneDetail>
         {name}
         <CenterOnMap onClick={handleCenterOnMap}>
           <LocalizeIcon />
           Centrer sur la carte
         </CenterOnMap>
-      </Zone>
+      </ZoneDetail>
       <PaddedIconButton appearance="ghost" icon={<DeleteSVG className="rs-icon" />} onClick={handleDelete} />
     </ZoneWrapper>
   )
@@ -30,7 +42,7 @@ const PaddedIconButton = styled(IconButton)`
   margin-left: 4px;
 `
 
-const Zone = styled.div`
+const ZoneDetail = styled.div`
   width: 419px;
   line-height: 30px;
   padding-left: 12px;

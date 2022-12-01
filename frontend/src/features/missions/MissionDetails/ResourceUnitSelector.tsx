@@ -20,11 +20,13 @@ export function ResourceUnitSelector({ removeResourceUnit, resourceUnitIndex, re
   const { data, isError, isLoading } = useGetControlResourcesQuery()
 
   const administrationList = _.chain(data)
+    .concat([{ administration: administrationField.value, id: Infinity, unit: unitField.value }])
     .uniqBy('administration')
     .sort((a, b) => a?.administration?.localeCompare(b?.administration))
     .value()
   const unitList = _.chain(data)
     .filter(r => !!(r.administration === administrationField.value))
+    .concat([{ administration: administrationField.value, id: Infinity, unit: unitField.value }])
     .uniqBy('unit')
     .sort((a, b) => a?.unit?.localeCompare(b?.unit))
     .value()

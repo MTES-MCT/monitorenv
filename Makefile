@@ -8,14 +8,28 @@ endif
 
 
 # DEV commands
-.PHONY: dev-install dev-run-front dev-run-back-with-infra dev-run-back dev-run-infra dev-erase-db dev-clean-target-env dev-back-config docker-build-app test test-front dev-lint-backend
+
+# Frontend
+.PHONY: dev-install dev-run-front dev-run-storybook 
 dev-install:
 	cd frontend && npm install
 
 dev-run-front:
 	cd frontend && npm start
 
-dev-back-config:
+dev-run-storybook:
+	cd frontend && npm run storybook
+
+.PHONY: test-front dev-lint-frontend 
+
+dev-lint-frontend:
+	cd frontend && npm run test:lint:partial
+test-front:
+	cd frontend && npm test
+	
+# Backend
+.PHONY: dev-check-config dev-run-back-with-infra dev-run-back dev-run-infra dev-erase-db dev-clean-target-env
+dev-check-config:
 	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='$(INFRA_FOLDER).env' -f ./infra/docker/docker-compose.dev.yml config
 
 dev-run-back-with-infra: dev-erase-db dev-run-infra dev-clean-target-env dev-run-back
@@ -42,22 +56,15 @@ dev-erase-db:
 dev-clean-target-env:
 	rm -rf $(shell pwd)/backend/target
 
+.PHONY: test dev-lint-backend 
 dev-lint-backend:
 	cd backend && ./mvnw -e antrun:run@ktlint-format
-
-dev-lint-frontend:
-	cd frontend && npm run test:lint:partial
-
-dev-run-storybook:
-	cd frontend && npm run storybook
 
 test:
 	cd backend && ./mvnw clean && ./mvnw test
 	cd frontend && CI=true npm test
 
-test-front:
-	cd frontend && npm test
-
+.PHONY: docker-build-app 
 docker-build-app:
 	docker build --no-cache -f infra/docker/app/Dockerfile . -t monitorenv-app:$(VERSION) --build-arg VERSION=$(VERSION) --build-arg ENV_PROFILE=$(ENV_PROFILE) --build-arg GITHUB_SHA=$(GITHUB_SHA)
 

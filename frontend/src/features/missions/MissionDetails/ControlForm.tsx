@@ -175,6 +175,7 @@ export function ControlForm({
           name={`envActions[${currentActionIndex}].actionStartDateTimeUtc`}
           oneTap
           placeholder={placeholderDateTimePicker}
+          size="sm"
         />
       </Form.Group>
 

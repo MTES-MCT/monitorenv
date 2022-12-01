@@ -61,17 +61,16 @@ export function GeneralInformationsForm() {
         <InputObservations name="observationsCacem" />
         <Form.ControlLabel htmlFor="observationsCnsp">CNSP : orientations, observations </Form.ControlLabel>
         <InputObservations name="observationsCnsp" />
-      </Form.Group>
-
-      <Form.Group>
-        <NarrowColumn>
-          <Form.ControlLabel htmlFor="openBy">Ouvert par</Form.ControlLabel>
-          <FormikInput name="openBy" size="sm" />
-        </NarrowColumn>
-        <NarrowColumn>
-          <Form.ControlLabel htmlFor="closedBy">Clôturé par</Form.ControlLabel>
-          <FormikInput name="closedBy" size="sm" />
-        </NarrowColumn>
+        <SubGroup>
+          <NarrowColumn>
+            <Form.ControlLabel htmlFor="openBy">Ouvert par</Form.ControlLabel>
+            <FormikInput name="openBy" size="sm" />
+          </NarrowColumn>
+          <NarrowColumn>
+            <Form.ControlLabel htmlFor="closedBy">Clôturé par</Form.ControlLabel>
+            <FormikInput name="closedBy" size="sm" />
+          </NarrowColumn>
+        </SubGroup>
       </Form.Group>
     </>
   )

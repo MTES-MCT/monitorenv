@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 import {
   actionTargetTypeEnum,
+  ActionTypeEnum,
   actionTypeEnum,
   formalNoticeEnum,
   infractionTypeEnum,
@@ -20,7 +21,7 @@ export const infractionFactory = ({ id, ...infraction } = { id: undefined }) => 
   ...infraction
 })
 
-export const actionFactory = ({ actionType, id, ...action }) => {
+export const actionFactory = ({ actionType, id, ...action }: { actionType: ActionTypeEnum; id?: number }) => {
   switch (actionType) {
     case actionTypeEnum.CONTROL.code:
       return {
@@ -93,7 +94,7 @@ export const getControlInfractionsTags = (actionNumberOfControls, infractions) =
   const infra = infractions.length || 0
   const ras = (actionNumberOfControls || 0) - infra
   const infraSansPV =
-    infractions?.filter(inf => inf.infractionType === infractionTypeEnum.WITHOUT_REPORT.code)?.length || 0
+    infractions?.filter(inf => inf.infractionType !== infractionTypeEnum.WITH_REPORT.code)?.length || 0
   const med = infractions?.filter(inf => inf.formalNotice === formalNoticeEnum.YES.code)?.length || 0
 
   return { infra, infraSansPV, med, ras }

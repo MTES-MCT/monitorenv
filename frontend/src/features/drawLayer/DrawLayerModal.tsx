@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { matchPath } from 'react-router-dom'
-import { IconButton } from 'rsuite'
+import { Button, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../constants/constants'
@@ -13,19 +13,22 @@ import {
 } from '../../domain/use_cases/missions/missionAndControlLocalisation'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { usePrevious } from '../../hooks/usePrevious'
+import { ReactComponent as CloseSVG } from '../../uiMonitor/icons/Close.svg'
 import { ReactComponent as CircleSVG } from '../../uiMonitor/icons/Info.svg'
 import { ReactComponent as PolygonSVG } from '../../uiMonitor/icons/Polygone.svg'
 import { ReactComponent as RectangleSVG } from '../../uiMonitor/icons/Rectangle.svg'
 import { ReactComponent as SelectorSVG } from '../../uiMonitor/icons/Selector.svg'
-import { resetFeatures, setInteractionType } from './DrawLayer.slice'
+import { popLastFeature, setInteractionType } from './DrawLayer.slice'
 
 const titlePlaceholder = {
-  ACTION_LOCALISATION: 'un point de contrôle',
-  MISSION_ZONE: 'une zone de mission'
+  CONTROL_POINT: 'un point de contrôle',
+  MISSION_ZONE: 'une zone de mission',
+  SURVEILLANCE_ZONE: 'une zone de surveillance'
 }
 const validateButtonPlaceholder = {
-  ACTION_LOCALISATION: 'le point de contrôle',
-  MISSION_ZONE: 'la zone de mission'
+  CONTROL_POINT: 'le point de contrôle',
+  MISSION_ZONE: 'la zone de mission',
+  SURVEILLANCE_ZONE: 'la zone de surveillance'
 }
 
 export function DrawLayerModal() {
@@ -60,7 +63,7 @@ export function DrawLayerModal() {
     dispatch(setInteractionType(selectedInteraction))
   }
   const handleReset = () => {
-    dispatch(resetFeatures())
+    dispatch(popLastFeature())
   }
   const handleValidate = () => {
     dispatch(validateLocalisation)
@@ -71,48 +74,50 @@ export function DrawLayerModal() {
       <ContentWrapper>
         <Header>
           Vous êtes en train d&apos;ajouter {featureType && titlePlaceholder[featureType]}
-          <QuitButton onClick={handleQuit} type="button">
+          <QuitButton icon={<CloseSVG className="rs-icon" />} onClick={handleQuit} size="md">
             Quitter
           </QuitButton>
         </Header>
         <ActionWrapper>
-          <ResetButton onClick={handleReset}>Réinitialiser</ResetButton>
+          {featureType === monitorenvFeatureTypes.MISSION_ZONE && (
+            <>
+              <IconButton
+                active={interactionType === interactionTypes.POLYGON}
+                appearance="primary"
+                icon={<PolygonIcon className="rs-icon" />}
+                onClick={handleSelectInteraction(interactionTypes.POLYGON)}
+                size="md"
+              />
+              <IconButton
+                active={interactionType === interactionTypes.SQUARE}
+                appearance="primary"
+                icon={<RectangleIcon className="rs-icon" />}
+                onClick={handleSelectInteraction(interactionTypes.SQUARE)}
+                size="md"
+              />
+              <IconButton
+                active={interactionType === interactionTypes.CIRCLE}
+                appearance="primary"
+                icon={<CircleIcon className="rs-icon" />}
+                onClick={handleSelectInteraction(interactionTypes.CIRCLE)}
+                size="md"
+              />
+              <IconButton
+                active={interactionType === interactionTypes.SELECTION}
+                appearance="primary"
+                icon={<SelectorIcon className="rs-icon" />}
+                size="md"
+              />
+            </>
+          )}
+          <ResetButton appearance="ghost" onClick={handleReset}>
+            Réinitialiser
+          </ResetButton>
           <ValidateButton onClick={handleValidate}>
             Valider {featureType && validateButtonPlaceholder[featureType]}
           </ValidateButton>
         </ActionWrapper>
       </ContentWrapper>
-      {featureType === monitorenvFeatureTypes.MISSION_ZONE && (
-        <ButtonsWrapper>
-          <IconButton
-            active={interactionType === interactionTypes.POLYGON}
-            appearance="primary"
-            icon={<PolygonIcon className="rs-icon" />}
-            onClick={handleSelectInteraction(interactionTypes.POLYGON)}
-            size="md"
-          />
-          <IconButton
-            active={interactionType === interactionTypes.SQUARE}
-            appearance="primary"
-            icon={<RectangleIcon className="rs-icon" />}
-            onClick={handleSelectInteraction(interactionTypes.SQUARE)}
-            size="md"
-          />
-          <IconButton
-            active={interactionType === interactionTypes.CIRCLE}
-            appearance="primary"
-            icon={<CircleIcon className="rs-icon" />}
-            onClick={handleSelectInteraction(interactionTypes.CIRCLE)}
-            size="md"
-          />
-          <IconButton
-            active={interactionType === interactionTypes.SELECTION}
-            appearance="primary"
-            icon={<SelectorIcon className="rs-icon" />}
-            size="md"
-          />
-        </ButtonsWrapper>
-      )}
     </Wrapper>
   )
 }
@@ -125,15 +130,6 @@ const Wrapper = styled.div`
   display: flex;
 `
 const ContentWrapper = styled.div``
-const ButtonsWrapper = styled.div`
-  margin-left: 3px;
-  padding-top: 56px;
-  button {
-    :not(:last-child) {
-      margin-bottom: 3px;
-    }
-  }
-`
 
 const Header = styled.h1`
   background: ${COLORS.charcoal};
@@ -142,7 +138,7 @@ const Header = styled.h1`
   font-size: 16px;
   font-weight: normal;
   line-height: 22px;
-  padding: 14px;
+  padding: 10px;
 `
 const PolygonIcon = styled(PolygonSVG)`
   width: 16px;
@@ -160,30 +156,23 @@ const SelectorIcon = styled(SelectorSVG)`
   width: 16px;
   height: 16px;
 `
-const QuitButton = styled.button`
-  display: inline-block;
+const QuitButton = styled(IconButton)`
   color: ${COLORS.maximumRed};
   background: ${COLORS.cultured};
-  padding-right: 18px;
-  padding-left: 18px;
-  padding-top: 3px;
-  padding-bottom: 3px;
   margin-left: 18px;
+  &:hover {
+    color: ${COLORS.maximumRed};
+    background: ${COLORS.cultured};
+  }
 `
-const ResetButton = styled.button`
-  background: ${COLORS.blueYonder};
-  color: ${COLORS.white};
-  font-weight: bold;
-  font-size: 13px;
-  line-height: 18px;
-  padding: 8px;
-`
-const ValidateButton = styled.button`
+
+const ResetButton = styled(Button)``
+const ValidateButton = styled(Button)`
   background: ${COLORS.mediumSeaGreen};
   color: ${COLORS.white};
-  font-weight: bold;
-  line-height: 18px;
-  padding: 8px;
+  &:hover {
+    background: ${COLORS.mediumSeaGreen};
+  }
 `
 const ActionWrapper = styled.div`
   padding: 10px;

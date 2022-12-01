@@ -86,6 +86,37 @@ export const addMissionZone =
     dispatch(setInteractionType(interactionTypes.POLYGON))
   }
 
+export const addSurveillanceZone =
+  ({ callback, geom, missionGeom }) =>
+  dispatch => {
+    const features =
+      geom?.type === olGeometryTypes.MULTIPOLYGON &&
+      geom?.coordinates?.length > 0 &&
+      geom.coordinates.map(
+        coord =>
+          new Feature({
+            geometry: new Polygon(coord).transform(WSG84_PROJECTION, OPENLAYERS_PROJECTION)
+          })
+      )
+    if (features) {
+      dispatch(setFeatures(features))
+    }
+    if (missionGeom?.coordinates?.length) {
+      dispatch(
+        setFitToExtent(
+          transformExtent(
+            boundingExtent(_.flattenDepth(missionGeom.coordinates, 2)),
+            WSG84_PROJECTION,
+            OPENLAYERS_PROJECTION
+          )
+        )
+      )
+    }
+    dispatch(openDrawLayerModal)
+    dispatch(setFeatureType({ callback, featureType: monitorenvFeatureTypes.SURVEILLANCE_ZONE }))
+    dispatch(setInteractionType(interactionTypes.POLYGON))
+  }
+
 export const addControlPositions =
   ({ callback, geom, missionGeom }) =>
   dispatch => {
@@ -113,7 +144,7 @@ export const addControlPositions =
       )
     }
     dispatch(openDrawLayerModal)
-    dispatch(setFeatureType({ callback, featureType: monitorenvFeatureTypes.ACTION_LOCALISATION }))
+    dispatch(setFeatureType({ callback, featureType: monitorenvFeatureTypes.CONTROL_POINT }))
     dispatch(setInteractionType(interactionTypes.POINT))
   }
 
@@ -128,13 +159,14 @@ export const validateLocalisation = (dispatch, getState) => {
   const { callback, features, featureType } = drawLayer
   if (typeof callback === 'function') {
     switch (featureType) {
+      case monitorenvFeatureTypes.SURVEILLANCE_ZONE:
       case monitorenvFeatureTypes.MISSION_ZONE: {
         const geometryArray = features.map(f => f.getGeometry())
         const geometry = convertToGeometryObject(new MultiPolygon(geometryArray))
         callback(geometry)
         break
       }
-      case monitorenvFeatureTypes.ACTION_LOCALISATION: {
+      case monitorenvFeatureTypes.CONTROL_POINT: {
         const geometryArray = features.map(f => f.getGeometry()?.getCoordinates())
         const geometry = convertToGeometryObject(new MultiPoint(geometryArray))
         callback(geometry)

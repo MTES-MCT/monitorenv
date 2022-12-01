@@ -20,6 +20,9 @@ const drawLayerReducerSlice = createSlice({
       state.features.push(action.payload)
     },
 
+    popLastFeature(state) {
+      state.features.pop()
+    },
     resetFeatures(state) {
       state.features = []
     },
@@ -55,7 +58,14 @@ const drawLayerReducerSlice = createSlice({
   }
 })
 
-export const { addFeature, resetFeatures, resetInteraction, setFeatures, setFeatureType, setInteractionType } =
-  drawLayerReducerSlice.actions
+export const {
+  addFeature,
+  popLastFeature,
+  resetFeatures,
+  resetInteraction,
+  setFeatures,
+  setFeatureType,
+  setInteractionType
+} = drawLayerReducerSlice.actions
 
 export const drawLayerReducer = drawLayerReducerSlice.reducer
