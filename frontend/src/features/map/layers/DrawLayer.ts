@@ -137,7 +137,6 @@ export function DrawLayer({ map }) {
       draw.on('drawend', event => {
         dispatch(addFeature(event.feature))
         GetDrawVectorSource()?.clear(true)
-        map.removeInteraction(draw)
       })
 
       return () => {

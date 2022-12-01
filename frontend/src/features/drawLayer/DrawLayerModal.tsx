@@ -18,7 +18,7 @@ import { ReactComponent as CircleSVG } from '../../uiMonitor/icons/Info.svg'
 import { ReactComponent as PolygonSVG } from '../../uiMonitor/icons/Polygone.svg'
 import { ReactComponent as RectangleSVG } from '../../uiMonitor/icons/Rectangle.svg'
 import { ReactComponent as SelectorSVG } from '../../uiMonitor/icons/Selector.svg'
-import { resetFeatures, setInteractionType } from './DrawLayer.slice'
+import { popLastFeature, setInteractionType } from './DrawLayer.slice'
 
 const titlePlaceholder = {
   CONTROL_POINT: 'un point de contrôle',
@@ -63,7 +63,7 @@ export function DrawLayerModal() {
     dispatch(setInteractionType(selectedInteraction))
   }
   const handleReset = () => {
-    dispatch(resetFeatures())
+    dispatch(popLastFeature())
   }
   const handleValidate = () => {
     dispatch(validateLocalisation)
