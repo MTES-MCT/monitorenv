@@ -8,14 +8,6 @@ from config import ROOT_DIRECTORY
 load_dotenv(ROOT_DIRECTORY / ".env")
 
 db_env = {
-    "ocan": {
-        "client": "ORACLE_CLIENT",
-        "host": "ORACLE_HOST",
-        "port": "ORACLE_PORT",
-        "sid": "ORACLE_OCAN_SID",
-        "usr": "ORACLE_OCAN_USER",
-        "pwd": "ORACLE_OCAN_PASSWORD",
-    },
     "fmc": {
         "client": "ORACLE_CLIENT",
         "host": "ORACLE_HOST",
@@ -75,7 +67,8 @@ def make_connection_string(db: str) -> str:
         PWD = os.environ[db_env[db]["pwd"]]
     except KeyError as e:
         raise KeyError(
-            "Database connection credentials not found in environment: ", e.args
+            "Database connection credentials not found in environment: ",
+            e.args,
         )
 
     return f"{CLIENT}://{USER}:{PWD}@{HOST}:{PORT}/{SID}"
