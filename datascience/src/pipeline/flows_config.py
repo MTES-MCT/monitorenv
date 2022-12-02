@@ -1,16 +1,12 @@
-from docker.types import Mount
 from dotenv import dotenv_values
 from prefect.executors.dask import LocalDaskExecutor
 from prefect.run_configs.docker import DockerRun
-from prefect.schedules import CronSchedule, Schedule, clocks
+from prefect.schedules import CronSchedule
 from prefect.storage.local import Local
 
 from config import (
     DOCKER_IMAGE,
     FLOWS_LOCATION,
-    LOGBOOK_FILES_GID,
-    MONITORENV_HOST,
-    MONITORENV_IP,
     MONITORENV_VERSION,
     ROOT_DIRECTORY,
 )
@@ -49,27 +45,11 @@ for flow in flows_to_register:
 
 ################### Define flows' run config ####################
 for flow in flows_to_register:
-    host_config = {
-        "extra_hosts": {
-            "host.docker.internal": "host-gateway",
-            MONITORENV_HOST: MONITORENV_IP,
-        }
-    }
-    if flow.name == "Logbook":
-        host_config = {
-            **host_config,
-            "group_add": [LOGBOOK_FILES_GID],
-            "mounts": [
-                Mount(
-                    target="/opt2/monitorenv-data/ers",
-                    source="/opt2/monitorenv-data/ers",
-                    type="bind",
-                )
-            ],
-        }
+    host_config = None
 
     flow.run_config = DockerRun(
         image=f"{DOCKER_IMAGE}:{MONITORENV_VERSION}",
         host_config=host_config,
         env=dotenv_values(ROOT_DIRECTORY / ".env"),
+        labels=["monitorenv"],
     )
