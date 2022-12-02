@@ -121,8 +121,9 @@ init-geoserver:
 	set -a
 	. ./infra/.env
 	set +a
-	echo ${PROJECT_NAME} 
-	./infra/init/geoserver_init_layers.sh
+	echo ${PROJECT_NAME}
+	./infra/init/v0.01_geoserver_init_layers.sh
+	./infra/init/v0.02_geoserver_remove_unused_layers.sh
 
 
 # DATA commands

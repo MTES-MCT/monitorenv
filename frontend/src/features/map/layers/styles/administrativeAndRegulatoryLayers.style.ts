@@ -56,68 +56,6 @@ export const getAdministrativeLayersStyle = code => {
             text: `${feature.get(Layers.AEM.subZoneFieldKey) ? feature.get(Layers.AEM.subZoneFieldKey) : ''}`
           })
         })
-    case Layers.cormoran.code:
-      return feature =>
-        new Style({
-          stroke: new Stroke({
-            color: '#767AB2',
-            width: 1
-          }),
-          text: new Text({
-            fill: new Fill({ color: COLORS.gunMetal }),
-            font: '12px Marianne',
-            stroke: new Stroke({ color: 'rgba(255,255,255,0.4)', width: 2 }),
-            text: `${feature.get(Layers.cormoran.subZoneFieldKey) ? feature.get(Layers.cormoran.subZoneFieldKey) : ''}`
-          })
-        })
-    case Layers.situations.code:
-      return feature =>
-        new Style({
-          stroke: new Stroke({
-            color: '#767AB2',
-            width: 2
-          }),
-          text: new Text({
-            fill: new Fill({ color: COLORS.gunMetal }),
-            font: '12px Marianne',
-            stroke: new Stroke({ color: 'rgba(255,255,255,0.4)', width: 2 }),
-            text: `${
-              feature.get(Layers.situations.subZoneFieldKey) ? feature.get(Layers.situations.subZoneFieldKey) : ''
-            }`
-          })
-        })
-    case Layers.brexit.code:
-      return feature =>
-        new Style({
-          stroke: new Stroke({
-            color: '#767AB2',
-            width: 2
-          }),
-          text: new Text({
-            fill: new Fill({ color: COLORS.gunMetal }),
-            font: '12px Marianne',
-            stroke: new Stroke({ color: 'rgba(255,255,255,0.4)', width: 2 }),
-            text: `${feature.get(Layers.brexit.subZoneFieldKey) ? feature.get(Layers.brexit.subZoneFieldKey) : ''}`
-          })
-        })
-    case Layers.rectangles_stat.code:
-      return feature =>
-        new Style({
-          stroke: new Stroke({
-            color: '#767AB2',
-            width: 1
-          }),
-          text: new Text({
-            fill: new Fill({ color: COLORS.gunMetal }),
-            font: '12px Marianne',
-            stroke: new Stroke({ color: 'rgba(255,255,255,0.4)', width: 2 }),
-            text: `${
-              feature.get(Layers.rectangles_stat.subZoneFieldKey)
-                ? feature.get(Layers.rectangles_stat.subZoneFieldKey)
-                : ''
-            }`
-          })
-        })
     case Layers.THREE_MILES.code:
       return () =>
         new Style({
@@ -140,22 +78,6 @@ export const getAdministrativeLayersStyle = code => {
           stroke: new Stroke({
             color: 'rgba(5, 5, 94, 0.5)',
             width: 2
-          })
-        })
-    case Layers.cgpm_areas.code:
-      return feature =>
-        new Style({
-          stroke: new Stroke({
-            color: '#767AB2',
-            width: 1
-          }),
-          text: new Text({
-            fill: new Fill({ color: COLORS.gunMetal }),
-            font: '12px Marianne',
-            stroke: new Stroke({ color: 'rgba(255,255,255,0.4)', width: 2 }),
-            text: `${
-              feature.get(Layers.cgpm_areas.subZoneFieldKey) ? feature.get(Layers.cgpm_areas.subZoneFieldKey) : ''
-            }`
           })
         })
     default:
