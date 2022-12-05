@@ -122,6 +122,7 @@ def start_remote_database_container(set_environment_variables, create_docker_cli
         volumes=migrations_folders_mounts,
     )
     sleep(3)
+    print(remote_database_container.attrs["Mounts"])
     yield remote_database_container
     print("Stopping database container")
     remote_database_container.stop()
