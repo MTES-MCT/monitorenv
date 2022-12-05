@@ -21,6 +21,17 @@ migrations_folders = [
     / Path("../backend/src/main/resources/db/migration/layers").resolve(),
 ]
 
+# Bind mounts of migrations scripts inside test database container
+migrations_mounts_root = "/opt/migrations"
+
+migrations_folders_mounts = [
+    (
+        f"{str(migrations_folder)}:"
+        f"{migrations_mounts_root}/{migrations_folder.name}"
+    )
+    for migrations_folder in migrations_folders
+]
+
 test_data_scripts_folder = TEST_DATA_LOCATION / Path("remote_database")
 
 ################################## Handle migrations ##################################
@@ -108,9 +119,10 @@ def start_remote_database_container(set_environment_variables, create_docker_cli
         },
         ports={"5432/tcp": 5434},
         detach=True,
+        volumes=migrations_folders_mounts,
     )
     sleep(3)
-    yield
+    yield remote_database_container
     print("Stopping database container")
     remote_database_container.stop()
     remote_database_container.remove(v=True)
@@ -118,13 +130,27 @@ def start_remote_database_container(set_environment_variables, create_docker_cli
 
 @pytest.fixture(scope="session")
 def create_tables(set_environment_variables, start_remote_database_container):
-    e = create_engine("monitorenv_remote")
+    container = start_remote_database_container
     migrations = get_migrations_in_folders(migrations_folders)
+
     print("Creating tables")
-    with e.connect() as connection:
-        for m in migrations:
-            connection.execute("COMMIT")
-            connection.execute(m.script)
+    for m in migrations:
+
+        print(f"{m.major}.{m.minor}: {m.path.name}")
+
+        # Script filepath inside database container
+        script_filepath = f"{migrations_mounts_root}/{m.path.parent.name}/{m.path.name}"
+
+        # Use psql inside database container to run migration scripts.
+        # Using sqlalchemy / psycopg2 to run migration scripts from python is not
+        # possible due to the use of `COPY FROM STDIN` in some migrations.
+        container.exec_run(
+            (
+                "psql "
+                f"-U {os.environ['MONITORENV_REMOTE_DB_USER']} "
+                f"-d {os.environ['MONITORENV_REMOTE_DB_NAME']} "
+                f"-f {script_filepath}")
+        )
 
 
 @pytest.fixture()
