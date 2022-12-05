@@ -144,13 +144,24 @@ def create_tables(set_environment_variables, start_remote_database_container):
         # Use psql inside database container to run migration scripts.
         # Using sqlalchemy / psycopg2 to run migration scripts from python is not
         # possible due to the use of `COPY FROM STDIN` in some migrations.
-        container.exec_run(
+        res = container.exec_run(
             (
                 "psql "
                 f"-U {os.environ['MONITORENV_REMOTE_DB_USER']} "
                 f"-d {os.environ['MONITORENV_REMOTE_DB_NAME']} "
                 f"-f {script_filepath}")
         )
+        print(res.output.decode())
+
+    res = container.exec_run(
+        (
+            "psql "
+            f"-U {os.environ['MONITORENV_REMOTE_DB_USER']} "
+            f"-d {os.environ['MONITORENV_REMOTE_DB_NAME']} "
+            f"-c \"SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname='public'\";"
+        )
+    )
+    print(res.output.decode())
 
 
 @pytest.fixture()
