@@ -3,13 +3,22 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-load_dotenv()
 
 # Package structure
 ROOT_DIRECTORY = Path(__file__).parent
 LIBRARY_LOCATION = ROOT_DIRECTORY / Path("src")
 QUERIES_LOCATION = LIBRARY_LOCATION / Path("pipeline/queries")
 TEST_DATA_LOCATION = ROOT_DIRECTORY / Path("tests/test_data")
+
+# Must be set to true when running tests locally
+TEST_LOCAL = os.getenv("TEST_LOCAL", "False").lower() in ("true", "t", "yes", "y")
+if TEST_LOCAL:
+    load_dotenv(ROOT_DIRECTORY / ".env.test")
+
+# Must be set to true when running flows locally
+RUN_LOCAL = os.getenv("RUN_LOCAL", "False").lower() in ("true", "t", "yes", "y")
+if RUN_LOCAL:
+    load_dotenv(ROOT_DIRECTORY / ".env")
 
 # Flow execution configuration
 DOCKER_IMAGE = "ghcr.io/mtes-mct/monitorenv/monitorenv-pipeline"
