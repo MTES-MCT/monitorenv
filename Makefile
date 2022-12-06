@@ -138,7 +138,7 @@ install-pipeline:
 run-notebook:
 	cd datascience && poetry run jupyter notebook
 test-pipeline:
-	cd datascience && export TEST_LOCAL=True && poetry run coverage run -m pytest -s --pdb tests/ && poetry run coverage report && poetry run coverage html
+	cd datascience && export TEST_LOCAL=True && poetry run coverage run -m pytest --pdb tests/ && poetry run coverage report && poetry run coverage html
 update-python-dependencies:
 	cd datascience && poetry export --without-hashes -o requirements.txt && poetry export --without-hashes --dev -o requirements-dev.txt
 
@@ -157,7 +157,7 @@ run-infra-for-frontend-tests:
 docker-build-pipeline:
 	docker build -f "infra/docker/datapipeline/Dockerfile" . -t monitorenv-pipeline:$(VERSION)
 docker-test-pipeline:
-	docker run --network host -v /var/run/docker.sock:/var/run/docker.sock -u monitorenv-pipeline:$(DOCKER_GROUP) --env-file datascience/.env.test --env HOST_MIGRATIONS_FOLDER=$(HOST_MIGRATIONS_FOLDER) monitorenv-pipeline:$(VERSION) coverage run -m pytest --pdb -s tests
+	docker run --network host -v /var/run/docker.sock:/var/run/docker.sock -u monitorenv-pipeline:$(DOCKER_GROUP) --env-file datascience/.env.test --env HOST_MIGRATIONS_FOLDER=$(HOST_MIGRATIONS_FOLDER) monitorenv-pipeline:$(VERSION) coverage run -m pytest --pdb tests
 docker-tag-pipeline:
 	docker tag monitorenv-pipeline:$(VERSION) ghcr.io/mtes-mct/monitorenv/monitorenv-pipeline:$(VERSION)
 docker-push-pipeline:

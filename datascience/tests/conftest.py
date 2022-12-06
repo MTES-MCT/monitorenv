@@ -113,7 +113,6 @@ def create_docker_client(set_environment_variables):
 def start_remote_database_container(set_environment_variables, create_docker_client):
     client = create_docker_client
     print("Starting database container")
-    print(migrations_folders_mounts)
     remote_database_container = client.containers.run(
         "timescale/timescaledb-postgis:1.7.4-pg11",
         environment={
@@ -126,15 +125,6 @@ def start_remote_database_container(set_environment_variables, create_docker_cli
         volumes=migrations_folders_mounts,
     )
     sleep(3)
-    print(remote_database_container.attrs["Mounts"])
-    res = remote_database_container.exec_run("ls /opt")
-    print(res.output.decode())
-    res = remote_database_container.exec_run("ls /opt/migrations")
-    print(res.output.decode())
-    res = remote_database_container.exec_run("ls /opt/migrations/layers")
-    print(res.output.decode())
-    res = remote_database_container.exec_run("ls /opt/migrations/internal")
-    print(res.output.decode())
     yield remote_database_container
     print("Stopping database container")
     remote_database_container.stop()
@@ -157,24 +147,13 @@ def create_tables(set_environment_variables, start_remote_database_container):
         # Use psql inside database container to run migration scripts.
         # Using sqlalchemy / psycopg2 to run migration scripts from python is not
         # possible due to the use of `COPY FROM STDIN` in some migrations.
-        res = container.exec_run(
+        container.exec_run(
             (
                 "psql "
                 f"-U {os.environ['MONITORENV_REMOTE_DB_USER']} "
                 f"-d {os.environ['MONITORENV_REMOTE_DB_NAME']} "
                 f"-f {script_filepath}")
         )
-        print(res.output.decode())
-
-    res = container.exec_run(
-        (
-            "psql "
-            f"-U {os.environ['MONITORENV_REMOTE_DB_USER']} "
-            f"-d {os.environ['MONITORENV_REMOTE_DB_NAME']} "
-            f"-c \"SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname='public'\";"
-        )
-    )
-    print(res.output.decode())
 
 
 @pytest.fixture()
