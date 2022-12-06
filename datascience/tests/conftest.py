@@ -11,14 +11,17 @@ import pytest
 from dotenv import dotenv_values
 from pytest import MonkeyPatch
 
-from config import ROOT_DIRECTORY, TEST_DATA_LOCATION
+from config import HOST_MIGRATIONS_FOLDER, LOCAL_MIGRATIONS_FOLDER, ROOT_DIRECTORY, TEST_DATA_LOCATION
 from src.db_config import create_engine
 
-migrations_folders = [
-    ROOT_DIRECTORY
-    / Path("../backend/src/main/resources/db/migration/internal").resolve(),
-    ROOT_DIRECTORY
-    / Path("../backend/src/main/resources/db/migration/layers").resolve(),
+local_migrations_folders = [
+    Path(LOCAL_MIGRATIONS_FOLDER) / "internal",
+    Path(LOCAL_MIGRATIONS_FOLDER) / "layers"
+]
+
+host_migrations_folders = [
+    Path(HOST_MIGRATIONS_FOLDER) / "internal",
+    Path(HOST_MIGRATIONS_FOLDER) / "layers"
 ]
 
 # Bind mounts of migrations scripts inside test database container
@@ -26,10 +29,10 @@ migrations_mounts_root = "/opt/migrations"
 
 migrations_folders_mounts = [
     (
-        f"{str(migrations_folder)}:"
-        f"{migrations_mounts_root}/{migrations_folder.name}"
+        f"{str(host_migrations_folder)}:"
+        f"{migrations_mounts_root}/{host_migrations_folder.name}"
     )
-    for migrations_folder in migrations_folders
+    for host_migrations_folder in host_migrations_folders
 ]
 
 test_data_scripts_folder = TEST_DATA_LOCATION / Path("remote_database")
@@ -110,6 +113,7 @@ def create_docker_client(set_environment_variables):
 def start_remote_database_container(set_environment_variables, create_docker_client):
     client = create_docker_client
     print("Starting database container")
+    print(migrations_folders_mounts)
     remote_database_container = client.containers.run(
         "timescale/timescaledb-postgis:1.7.4-pg11",
         environment={
@@ -140,7 +144,7 @@ def start_remote_database_container(set_environment_variables, create_docker_cli
 @pytest.fixture(scope="session")
 def create_tables(set_environment_variables, start_remote_database_container):
     container = start_remote_database_container
-    migrations = get_migrations_in_folders(migrations_folders)
+    migrations = get_migrations_in_folders(local_migrations_folders)
 
     print("Creating tables")
     for m in migrations:

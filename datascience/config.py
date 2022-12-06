@@ -10,6 +10,13 @@ LIBRARY_LOCATION = ROOT_DIRECTORY / Path("src")
 QUERIES_LOCATION = LIBRARY_LOCATION / Path("pipeline/queries")
 TEST_DATA_LOCATION = ROOT_DIRECTORY / Path("tests/test_data")
 
+LOCAL_MIGRATIONS_FOLDER = str(
+    (ROOT_DIRECTORY / Path("../backend/src/main/resources/db/migration")).resolve()
+)
+# HOST_MIGRATIONS_FOLDER envirionment variable is needed when running tests in CI to
+# mount migrations folder from the host to the database container
+HOST_MIGRATIONS_FOLDER = os.getenv("HOST_MIGRATIONS_FOLDER", LOCAL_MIGRATIONS_FOLDER)
+
 # Must be set to true when running tests locally
 TEST_LOCAL = os.getenv("TEST_LOCAL", "False").lower() in ("true", "t", "yes", "y")
 if TEST_LOCAL:
