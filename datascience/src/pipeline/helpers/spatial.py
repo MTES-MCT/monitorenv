@@ -1,18 +1,11 @@
 import os
 from dataclasses import dataclass
-from datetime import timedelta
-from typing import Iterable, Set, Tuple, Union
+from typing import Union
 
-import h3
-import numpy as np
 import pandas as pd
 import requests
 from dotenv import load_dotenv
-from pyproj import Geod
 from shapely.geometry import MultiPolygon, Polygon
-
-from src.pipeline.helpers.dates import get_datetime_intervals
-from src.pipeline.processing import rows_belong_to_sequence, zeros_ones_to_bools
 
 load_dotenv()
 
@@ -36,7 +29,6 @@ def to_multipolygon(p: Union[Polygon, MultiPolygon]) -> MultiPolygon:
         raise ValueError("Input must be shapely Polygon or MultiPolygon")
 
     return res
-
 
 
 def geocode(query_string=None, country_code_iso2=None, **kwargs):

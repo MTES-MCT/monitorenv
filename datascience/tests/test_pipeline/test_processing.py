@@ -66,7 +66,11 @@ class TestProcessingMethods(unittest.TestCase):
         )
 
         test_df_2 = pd.DataFrame(
-            {"a": [None, None, None], "b": [None, None, None], "c": [None, None, None]}
+            {
+                "a": [None, None, None],
+                "b": [None, None, None],
+                "c": [None, None, None],
+            }
         )
 
         res1 = concatenate_columns(test_df_1, ["a"])
@@ -123,7 +127,12 @@ class TestProcessingMethods(unittest.TestCase):
         expected_values = [
             {"a": 1, "b": "a", "c": None, "d": 1},
             {"a": 2, "b": 1.0, "c": None, "d": [1, "a", None]},
-            {"a": 3, "b": None, "c": None, "d": [{"a": 1, "b": None, "c": None}]},
+            {
+                "a": 3,
+                "b": None,
+                "c": None,
+                "d": [{"a": 1, "b": None, "c": None}],
+            },
             {
                 "a": 4,
                 "b": None,
@@ -288,9 +297,13 @@ class TestProcessingMethods(unittest.TestCase):
         self.assertEqual(res_c, "null")
         self.assertEqual(res_d, "null")
         self.assertEqual(res_e, '{"a": 1, "2": "b"}')
-        self.assertEqual(res_f, '{"a": {"b": [1, null, null], "c": 4}, "b": 2}')
+        self.assertEqual(
+            res_f, '{"a": {"b": [1, null, null], "c": 4}, "b": 2}'
+        )
         self.assertEqual(res_e, '{"a": 1, "2": "b"}')
-        self.assertEqual(res_f, '{"a": {"b": [1, null, null], "c": 4}, "b": 2}')
+        self.assertEqual(
+            res_f, '{"a": {"b": [1, null, null], "c": 4}, "b": 2}'
+        )
         self.assertEqual(res_g, "[1, 2, 3]")
         self.assertEqual(res_h, "[[1, 2, 3], [4, 5, 6]]")
         self.assertEqual(res_i, '"2020-03-11T20:05:12Z"')
@@ -344,7 +357,12 @@ class TestProcessingMethods(unittest.TestCase):
             {
                 "a": [1, 2, 3, 4],
                 "b": [[1, 2], ["a", "b"], [1, 3], ["a", "a"]],
-                "c": ["This string shouldn't be here", np.nan, ["", 5, " "], None],
+                "c": [
+                    "This string shouldn't be here",
+                    np.nan,
+                    ["", 5, " "],
+                    None,
+                ],
             }
         )
 
@@ -382,7 +400,9 @@ class TestProcessingMethods(unittest.TestCase):
         )
 
         meta = MetaData()
-        table = Table("my_test_table", meta, Column("table_id_column", Integer))
+        table = Table(
+            "my_test_table", meta, Column("table_id_column", Integer)
+        )
         mock_connection = Mock()
         logger = logging.Logger("test_logger")
 
@@ -438,7 +458,13 @@ class TestProcessingMethods(unittest.TestCase):
                     [1, 2, 5],
                     [1, 5, 7],
                     {"a": 1, "b": None, "c": np.nan},
-                    {"a": 1, "b": [datetime.datetime(2021, 1, 23, 12, 56, 7), np.nan]},
+                    {
+                        "a": 1,
+                        "b": [
+                            datetime.datetime(2021, 1, 23, 12, 56, 7),
+                            np.nan,
+                        ],
+                    },
                     np.nan,
                     None,
                     None,
@@ -508,7 +534,17 @@ class TestProcessingMethods(unittest.TestCase):
                 "key_2": ["a", None, "c", "d", "e", None, None, np.nan, None],
                 "key_3": ["A", "B", np.nan, "D", "E", None, None, np.nan, "H"],
                 "value_left_1": [9, 8, 7, 6, 5, 4, 3, 2, 42],
-                "value_left_2": [90, 80, "70", None, 5.025, "left", 40, 30, 48],
+                "value_left_2": [
+                    90,
+                    80,
+                    "70",
+                    None,
+                    5.025,
+                    "left",
+                    40,
+                    30,
+                    48,
+                ],
             }
         )
 
@@ -517,7 +553,16 @@ class TestProcessingMethods(unittest.TestCase):
                 "key_1": [1, 2, 3, 4, 5, 7, np.nan, "conflicting"],
                 "key_2": ["a", None, "c", "ddd", np.nan, None, np.nan, None],
                 "key_3": ["A", "B", "C", "DDD", "E", None, np.nan, "H"],
-                "value_right": ["R1", "R2", "R3", "R4", "R5", "right", np.nan, "ABC"],
+                "value_right": [
+                    "R1",
+                    "R2",
+                    "R3",
+                    "R4",
+                    "R5",
+                    "right",
+                    np.nan,
+                    "ABC",
+                ],
             }
         )
 
@@ -675,12 +720,28 @@ class TestProcessingMethods(unittest.TestCase):
                 "A": [1, 2, 3, None, 1, 2, 3, 4, None, 22, None, None, None],
                 "B": [1, 2, 3, None, 1, 22, 3, 4, None, 2, None, None, 6],
                 "C": [1, 2, 3, 4, 1, 2, 33, 4, None, 2, 2, 5, 6],
-                "D": ["W", "h", "a", "t", "e", "v", "e", "r", "d", "a", "t", "a", "a"],
+                "D": [
+                    "W",
+                    "h",
+                    "a",
+                    "t",
+                    "e",
+                    "v",
+                    "e",
+                    "r",
+                    "d",
+                    "a",
+                    "t",
+                    "a",
+                    "a",
+                ],
             },
             index=[1, 2, 4, 14, 4, 32, 41, 2, 9, 13, 31, 4, 7],
         )
 
-        res = drop_duplicates_by_decreasing_priority(df, subset=["A", "B", "C"])
+        res = drop_duplicates_by_decreasing_priority(
+            df, subset=["A", "B", "C"]
+        )
 
         expected_res = df.iloc[[0, 1, 2, 7, 9, 12, 11]]
 
@@ -721,12 +782,16 @@ class TestProcessingMethods(unittest.TestCase):
         np.testing.assert_array_equal(res, expected_res)
 
         res = array_equals_row_on_window(arr, row, window_length=7)
-        expected_res = np.array([np.nan, np.nan, np.nan, np.nan, np.nan, np.nan])
+        expected_res = np.array(
+            [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan]
+        )
         np.testing.assert_array_equal(res, expected_res)
 
     def test_back_propagate_ones(self):
 
-        arr = np.array([0.0, np.nan, 1.0, 0.0, np.nan, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0])
+        arr = np.array(
+            [0.0, np.nan, 1.0, 0.0, np.nan, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0]
+        )
 
         # Test steps=0
         np.testing.assert_array_equal(arr, back_propagate_ones(arr, 0))

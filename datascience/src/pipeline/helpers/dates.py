@@ -120,6 +120,8 @@ def get_datetime_intervals(
         elif unit == "s":
             pass
         else:
-            raise ValueError(f"unit must be None, 'h', 'min' or 's', got '{unit}'.")
+            raise ValueError(
+                f"unit must be None, 'h', 'min' or 's', got '{unit}'."
+            )
 
     return intervals

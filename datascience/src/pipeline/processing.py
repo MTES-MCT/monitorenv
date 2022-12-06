@@ -119,7 +119,9 @@ def coalesce(df: pd.DataFrame) -> pd.Series:
           DataFrame, taken in order of the DataFrame's columns from left to right.
     """
     non_null_rows = df.dropna(how="all")
-    first_non_null_values_idx = np.argmax(non_null_rows.notnull().values, axis=1)
+    first_non_null_values_idx = np.argmax(
+        non_null_rows.notnull().values, axis=1
+    )
 
     res_values = np.choose(first_non_null_values_idx, non_null_rows.values.T)
 
@@ -148,7 +150,9 @@ def get_first_non_null_column_name(
     """
 
     non_null_rows = df.dropna(how="all")
-    first_non_null_values_idx = np.argmax(non_null_rows.notnull().values, axis=1)
+    first_non_null_values_idx = np.argmax(
+        non_null_rows.notnull().values, axis=1
+    )
 
     res_values = np.choose(first_non_null_values_idx, list(df))
 
@@ -185,7 +189,9 @@ def remove_nones_from_dict(d: dict) -> dict:
 
 
 def df_to_dict_series(
-    df: pd.DataFrame, result_colname: str = "json_col", remove_nulls: bool = False
+    df: pd.DataFrame,
+    result_colname: str = "json_col",
+    remove_nulls: bool = False,
 ):
     """Converts a pandas DataFrame into a Series with the same index as the input
     DataFrame and whose values are dictionaries like :
@@ -284,7 +290,9 @@ def to_pgarr(
             raise ValueError(f"Unexpected type for x: {type(x)}.")
 
     return (
-        "{" + ",".join(filter(lambda x: len(x) > 0, map(str.strip, map(str, x)))) + "}"
+        "{"
+        + ",".join(filter(lambda x: len(x) > 0, map(str.strip, map(str, x))))
+        + "}"
     )
 
 
@@ -796,7 +804,9 @@ def back_propagate_ones(arr: np.array, steps: int) -> np.array:
     if steps == 0:
         return arr
     else:
-        previous_step = back_propagate_ones(np.append(arr[1:], np.nan), steps - 1)
+        previous_step = back_propagate_ones(
+            np.append(arr[1:], np.nan), steps - 1
+        )
         tmp = np.concatenate((arr[:, None], previous_step[:, None]), axis=1)
 
         ones = np.equal(tmp, 1).any(axis=1)
@@ -861,7 +871,9 @@ def rows_belong_to_sequence(
         window_length=window_length,
     )
 
-    rows_known = back_propagate_ones(ends_of_sequences, steps=window_length - 1)
+    rows_known = back_propagate_ones(
+        ends_of_sequences, steps=window_length - 1
+    )
 
     # To test if rows at the beginning and at the end of the array could possibly
     # belong to a sequence `row`s exceeding the boundaries of the array, we add rows to
@@ -884,6 +896,8 @@ def rows_belong_to_sequence(
         ends_of_sequences_extended, steps=window_length - 1
     )[window_length - 1 : -(window_length - 1)]
 
-    res = np.where(np.isnan(rows_known) & rows_maybe.astype(bool), np.nan, rows_maybe)
+    res = np.where(
+        np.isnan(rows_known) & rows_maybe.astype(bool), np.nan, rows_maybe
+    )
 
     return res
