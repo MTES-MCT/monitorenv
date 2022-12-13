@@ -79,7 +79,10 @@ def print_schemas_tables(db: str, schemas=None):
 
 
 def pg_dump_table(
-    db: str, table_name: str, what: Union[None, str] = None, inserts: bool = False
+    db: str,
+    table_name: str,
+    what: Union[None, str] = None,
+    inserts: bool = False,
 ) -> str:
     """
     Runs ``pg_dump --schema-only`` on the selected database and returns the output as a

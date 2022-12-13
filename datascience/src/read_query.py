@@ -74,7 +74,9 @@ def read_saved_query(
         )
 
     else:
-        raise ValueError(f"backend must be 'pandas' or 'geopandas', got {backend}")
+        raise ValueError(
+            f"backend must be 'pandas' or 'geopandas', got {backend}"
+        )
 
 
 def read_query(
@@ -123,7 +125,9 @@ def read_query(
     engine = create_engine(db=db, execution_options=dict(stream_results=True))
 
     if backend == "pandas":
-        return pd.read_sql(query, engine, chunksize=chunksize, params=params, **kwargs)
+        return pd.read_sql(
+            query, engine, chunksize=chunksize, params=params, **kwargs
+        )
     elif backend == "geopandas":
         return gpd.read_postgis(
             query,
@@ -135,7 +139,9 @@ def read_query(
             **kwargs,
         )
     else:
-        raise ValueError(f"backend must be 'pandas' or 'geopandas', got {backend}")
+        raise ValueError(
+            f"backend must be 'pandas' or 'geopandas', got {backend}"
+        )
 
 
 def read_table(db: str, schema: str, table_name: str):

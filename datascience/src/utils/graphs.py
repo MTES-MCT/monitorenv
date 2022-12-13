@@ -7,7 +7,10 @@ from matplotlib_venn import venn2, venn3
 def dataframe_inventory(df: pd.DataFrame, title=None, fig_height=None):
     fig = px.bar(
         pd.DataFrame(
-            {"Valeurs renseignées": df.count(), "Valeurs distinctes": df.nunique()}
+            {
+                "Valeurs renseignées": df.count(),
+                "Valeurs distinctes": df.nunique(),
+            }
         ),
         orientation="h",
         barmode="group",
@@ -19,7 +22,9 @@ def dataframe_inventory(df: pd.DataFrame, title=None, fig_height=None):
     return fig
 
 
-def compare_2_columns_values(df: pd.DataFrame, col_name_1: str, col_name_2: str):
+def compare_2_columns_values(
+    df: pd.DataFrame, col_name_1: str, col_name_2: str
+):
     plot_df = (
         df[[col_name_1, col_name_2]]
         .dropna()
@@ -75,7 +80,9 @@ def compare_2_columns_availability(
 
     if show_all:
         fig = venn3(
-            [all_, set_1, set_2], set_labels=["Ensemble", col_name_1, col_name_2], ax=ax
+            [all_, set_1, set_2],
+            set_labels=["Ensemble", col_name_1, col_name_2],
+            ax=ax,
         )
     else:
         fig = venn2([set_1, set_2], set_labels=[col_name_1, col_name_2], ax=ax)

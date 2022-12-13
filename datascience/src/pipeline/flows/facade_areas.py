@@ -16,7 +16,9 @@ def extract_facade_areas() -> pd.DataFrame:
         pd.DataFrame: GeoDataFrame of facade areas
     """
 
-    return extract(db_name="monitorfish_local", query_filepath="cross/facade_areas.sql")
+    return extract(
+        db_name="monitorfish_local", query_filepath="cross/facade_areas.sql"
+    )
 
 
 @task(checkpoint=False)

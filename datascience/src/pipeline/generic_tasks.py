@@ -220,7 +220,9 @@ def load_with_connection(
         pass
 
     else:
-        raise ValueError(f"how must be 'replace', 'upsert' or 'append', got {how}")
+        raise ValueError(
+            f"how must be 'replace', 'upsert' or 'append', got {how}"
+        )
 
     # Insert data into table
     logger.info(f"Loading into {schema}.{table_name}")

@@ -3,9 +3,8 @@ import shutil
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import Mock, patch
 
-from src.pipeline.utils import delete, get_table, move
+from src.pipeline.utils import move
 
 
 class TestProcessingMethods(unittest.TestCase):
@@ -64,10 +63,14 @@ class TestProcessingMethods(unittest.TestCase):
             self.assertIn("test_file.txt", os.listdir(dest_dirpath))
 
             # Move the test file and test
-            with self.assertRaises(shutil.Error):  # Raise an error by default...
+            with self.assertRaises(
+                shutil.Error
+            ):  # Raise an error by default...
                 move(tmp_file_path, dest_dirpath)
 
-            move(tmp_file_path, dest_dirpath, if_exists="replace")  # Unless specified
+            move(
+                tmp_file_path, dest_dirpath, if_exists="replace"
+            )  # Unless specified
 
             self.assertNotIn("test_file.txt", os.listdir(tmpdir))
             self.assertIn("test_file.txt", os.listdir(dest_dirpath))

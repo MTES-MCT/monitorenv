@@ -11,14 +11,33 @@ import pytest
 from dotenv import dotenv_values
 from pytest import MonkeyPatch
 
-from config import ROOT_DIRECTORY, TEST_DATA_LOCATION
+from config import (
+    HOST_MIGRATIONS_FOLDER,
+    LOCAL_MIGRATIONS_FOLDER,
+    ROOT_DIRECTORY,
+    TEST_DATA_LOCATION,
+)
 from src.db_config import create_engine
 
-migrations_folders = [
-    ROOT_DIRECTORY
-    / Path("../backend/src/main/resources/db/migration/internal").resolve(),
-    ROOT_DIRECTORY
-    / Path("../backend/src/main/resources/db/migration/layers").resolve(),
+local_migrations_folders = [
+    Path(LOCAL_MIGRATIONS_FOLDER) / "internal",
+    Path(LOCAL_MIGRATIONS_FOLDER) / "layers",
+]
+
+host_migrations_folders = [
+    Path(HOST_MIGRATIONS_FOLDER) / "internal",
+    Path(HOST_MIGRATIONS_FOLDER) / "layers",
+]
+
+# Bind mounts of migrations scripts inside test database container
+migrations_mounts_root = "/opt/migrations"
+
+migrations_folders_mounts = [
+    (
+        f"{str(host_migrations_folder)}:"
+        f"{migrations_mounts_root}/{host_migrations_folder.name}"
+    )
+    for host_migrations_folder in host_migrations_folders
 ]
 
 test_data_scripts_folder = TEST_DATA_LOCATION / Path("remote_database")
@@ -53,7 +72,9 @@ def sort_migrations(migrations: List[Migration]) -> List[Migration]:
 
 def get_migrations_in_folder(folder: Path) -> List[Migration]:
     files = os.listdir(folder)
-    migration_regex = re.compile(r"V(?P<major>\d+)\.(?P<minor>\d+)__(?P<name>.*)\.sql")
+    migration_regex = re.compile(
+        r"V(?P<major>\d+)\.(?P<minor>\d+)__(?P<name>.*)\.sql"
+    )
     migrations = []
 
     for file in files:
@@ -67,7 +88,9 @@ def get_migrations_in_folder(folder: Path) -> List[Migration]:
     return sort_migrations(migrations)
 
 
-def get_migrations_in_folders(migrations_folders: List[Path]) -> List[Migration]:
+def get_migrations_in_folders(
+    migrations_folders: List[Path],
+) -> List[Migration]:
     migrations = itertools.chain(
         *[get_migrations_in_folder(f) for f in migrations_folders]
     )
@@ -96,7 +119,9 @@ def create_docker_client(set_environment_variables):
 
 
 @pytest.fixture(scope="session")
-def start_remote_database_container(set_environment_variables, create_docker_client):
+def start_remote_database_container(
+    set_environment_variables, create_docker_client
+):
     client = create_docker_client
     print("Starting database container")
     remote_database_container = client.containers.run(
@@ -108,9 +133,10 @@ def start_remote_database_container(set_environment_variables, create_docker_cli
         },
         ports={"5432/tcp": 5434},
         detach=True,
+        volumes=migrations_folders_mounts,
     )
     sleep(3)
-    yield
+    yield remote_database_container
     print("Stopping database container")
     remote_database_container.stop()
     remote_database_container.remove(v=True)
@@ -118,13 +144,30 @@ def start_remote_database_container(set_environment_variables, create_docker_cli
 
 @pytest.fixture(scope="session")
 def create_tables(set_environment_variables, start_remote_database_container):
-    e = create_engine("monitorenv_remote")
-    migrations = get_migrations_in_folders(migrations_folders)
+    container = start_remote_database_container
+    migrations = get_migrations_in_folders(local_migrations_folders)
+
     print("Creating tables")
-    with e.connect() as connection:
-        for m in migrations:
-            connection.execute("COMMIT")
-            connection.execute(m.script)
+    for m in migrations:
+
+        print(f"{m.major}.{m.minor}: {m.path.name}")
+
+        # Script filepath inside database container
+        script_filepath = (
+            f"{migrations_mounts_root}/{m.path.parent.name}/{m.path.name}"
+        )
+
+        # Use psql inside database container to run migration scripts.
+        # Using sqlalchemy / psycopg2 to run migration scripts from python is not
+        # possible due to the use of `COPY FROM STDIN` in some migrations.
+        container.exec_run(
+            (
+                "psql "
+                f"-U {os.environ['MONITORENV_REMOTE_DB_USER']} "
+                f"-d {os.environ['MONITORENV_REMOTE_DB_NAME']} "
+                f"-f {script_filepath}"
+            )
+        )
 
 
 @pytest.fixture()
