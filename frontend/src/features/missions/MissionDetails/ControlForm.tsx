@@ -17,7 +17,7 @@ import {
   vehicleTypeEnum
 } from '../../../domain/entities/missions'
 import { usePrevious } from '../../../hooks/usePrevious'
-import { FormikDatePicker, placeholderDateTimePicker } from '../../../uiMonitor/CustomFormikFields/FormikDatePicker'
+import { FormikDatePicker } from '../../../uiMonitor/CustomFormikFields/FormikDatePicker'
 import { FormikInputNumberGhost } from '../../../uiMonitor/CustomFormikFields/FormikInputNumber'
 import { ReactComponent as ControlIconSVG } from '../../../uiMonitor/icons/Control.svg'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
@@ -166,16 +166,11 @@ export function ControlForm({
       )}
 
       <Form.Group>
-        <Form.ControlLabel htmlFor={`envActions[${currentActionIndex}].actionStartDateTimeUtc`}>
-          Date et heure du contrôle
-        </Form.ControlLabel>
         <FormikDatePicker
-          format="dd MMM yyyy, HH:mm"
           ghost
+          label="Date et heure du contrôle"
           name={`envActions[${currentActionIndex}].actionStartDateTimeUtc`}
-          oneTap
-          placeholder={placeholderDateTimePicker}
-          size="sm"
+          withTime
         />
       </Form.Group>
 
