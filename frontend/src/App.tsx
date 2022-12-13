@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
 import { CustomProvider } from 'rsuite'
+import { ThemeProvider, THEME } from '@mtes-mct/monitor-ui'
 
 import { AlertUnsupportedBrowser } from './components/AlertUnsupportedBrowser'
 import { ErrorToastNotification } from './components/ErrorToastNotification'
@@ -20,23 +21,25 @@ export function App() {
   const persistor = persistStore(homeStore)
 
   return (
-    <CustomProvider locale={frFR}>
-      <Provider store={homeStore}>
-        <PersistGate loading={undefined} persistor={persistor}>
-          <Router>
-            <Switch>
-              <Route exact path="/side_window">
-                <SideWindowTestContainer />
-              </Route>
-              <Route path="/">
-                <HomePage />
-              </Route>
-            </Switch>
-          </Router>
+    <ThemeProvider theme={THEME}>
+      <CustomProvider locale={frFR}>
+        <Provider store={homeStore}>
+          <PersistGate loading={undefined} persistor={persistor}>
+            <Router>
+              <Switch>
+                <Route exact path="/side_window">
+                  <SideWindowTestContainer />
+                </Route>
+                <Route path="/">
+                  <HomePage />
+                </Route>
+              </Switch>
+            </Router>
 
-          <ErrorToastNotification />
-        </PersistGate>
-      </Provider>
-    </CustomProvider>
+            <ErrorToastNotification />
+          </PersistGate>
+        </Provider>
+      </CustomProvider>
+    </ThemeProvider>
   )
 }
