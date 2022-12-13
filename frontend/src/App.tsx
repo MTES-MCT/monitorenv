@@ -1,9 +1,9 @@
+import { ThemeProvider, THEME } from '@mtes-mct/monitor-ui'
 import { Provider } from 'react-redux'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
 import { CustomProvider } from 'rsuite'
-import { ThemeProvider, THEME } from '@mtes-mct/monitor-ui'
 
 import { AlertUnsupportedBrowser } from './components/AlertUnsupportedBrowser'
 import { ErrorToastNotification } from './components/ErrorToastNotification'
@@ -35,7 +35,6 @@ export function App() {
                 </Route>
               </Switch>
             </Router>
-
             <ErrorToastNotification />
           </PersistGate>
         </Provider>
