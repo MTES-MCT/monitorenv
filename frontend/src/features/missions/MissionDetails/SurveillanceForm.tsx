@@ -8,7 +8,7 @@ import { useGetControlThemesQuery } from '../../../api/controlThemesAPI'
 import { COLORS } from '../../../constants/constants'
 import { usePrevious } from '../../../hooks/usePrevious'
 import { FormikCheckbox } from '../../../uiMonitor/CustomFormikFields/FormikCheckbox'
-import { FormikDatePicker, placeholderDateTimePicker } from '../../../uiMonitor/CustomFormikFields/FormikDatePicker'
+import { FormikDatePicker } from '../../../uiMonitor/CustomFormikFields/FormikDatePicker'
 import { FormikInputNumberGhost } from '../../../uiMonitor/CustomFormikFields/FormikInputNumber'
 import { FormikTextarea } from '../../../uiMonitor/CustomFormikFields/FormikTextarea'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
@@ -82,15 +82,11 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
       )}
       <FlexSelectorWrapper>
         <Column>
-          <Form.ControlLabel htmlFor={`envActions[${currentActionIndex}].actionStartDateTimeUtc`}>
-            Date et heure du début de la surveillance
-          </Form.ControlLabel>
           <FormikDatePicker
-            format="dd MMM yyyy, HH:mm"
             ghost
+            label="Date et heure du début de la surveillance"
             name={`envActions[${currentActionIndex}].actionStartDateTimeUtc`}
-            oneTap
-            placeholder={placeholderDateTimePicker}
+            withTime
           />
         </Column>
         <Column>

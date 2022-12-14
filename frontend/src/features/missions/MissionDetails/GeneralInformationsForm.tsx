@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { COLORS } from '../../../constants/constants'
 import { missionNatureEnum, missionTypeEnum } from '../../../domain/entities/missions'
 import { FormikCheckboxGroup } from '../../../uiMonitor/CustomFormikFields/FormikCheckboxGroup'
-import { FormikDatePicker, placeholderDateTimePicker } from '../../../uiMonitor/CustomFormikFields/FormikDatePicker'
+import { FormikDatePicker } from '../../../uiMonitor/CustomFormikFields/FormikDatePicker'
 import { FormikInput } from '../../../uiMonitor/CustomFormikFields/FormikInput'
 import { FormikRadioGroup } from '../../../uiMonitor/CustomFormikFields/FormikRadioGroup'
 import { FormikTextarea } from '../../../uiMonitor/CustomFormikFields/FormikTextarea'
@@ -19,25 +19,10 @@ export function GeneralInformationsForm() {
       <Title>Informations générales</Title>
       <FlexFormGroup>
         <ColWrapper>
-          <Form.ControlLabel htmlFor="inputStartDateTimeUtc">Début de mission</Form.ControlLabel>
-          <FormikDatePicker
-            cleanable={false}
-            format="dd MMM yyyy, HH:mm"
-            name="inputStartDateTimeUtc"
-            oneTap
-            placeholder={placeholderDateTimePicker}
-            size="sm"
-          />
+          <FormikDatePicker label="Début de mission" name="inputStartDateTimeUtc" withTime />
         </ColWrapper>
         <ColWrapper>
-          <Form.ControlLabel htmlFor="inputEndDateTimeUtc">Fin de mission</Form.ControlLabel>
-          <FormikDatePicker
-            format="dd MMM yyyy, HH:mm"
-            name="inputEndDateTimeUtc"
-            oneTap
-            placeholder={placeholderDateTimePicker}
-            size="sm"
-          />
+          <FormikDatePicker label="Fin de mission" name="inputEndDateTimeUtc" withTime />
         </ColWrapper>
       </FlexFormGroup>
 

@@ -1,3 +1,4 @@
+import { ThemeProvider, THEME } from '@mtes-mct/monitor-ui'
 import { Provider } from 'react-redux'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { persistStore } from 'redux-persist'
@@ -20,23 +21,24 @@ export function App() {
   const persistor = persistStore(homeStore)
 
   return (
-    <CustomProvider locale={frFR}>
-      <Provider store={homeStore}>
-        <PersistGate loading={undefined} persistor={persistor}>
-          <Router>
-            <Switch>
-              <Route exact path="/side_window">
-                <SideWindowTestContainer />
-              </Route>
-              <Route path="/">
-                <HomePage />
-              </Route>
-            </Switch>
-          </Router>
-
-          <ErrorToastNotification />
-        </PersistGate>
-      </Provider>
-    </CustomProvider>
+    <ThemeProvider theme={THEME}>
+      <CustomProvider locale={frFR}>
+        <Provider store={homeStore}>
+          <PersistGate loading={undefined} persistor={persistor}>
+            <Router>
+              <Switch>
+                <Route exact path="/side_window">
+                  <SideWindowTestContainer />
+                </Route>
+                <Route path="/">
+                  <HomePage />
+                </Route>
+              </Switch>
+            </Router>
+            <ErrorToastNotification />
+          </PersistGate>
+        </Provider>
+      </CustomProvider>
+    </ThemeProvider>
   )
 }
