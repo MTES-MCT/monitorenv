@@ -60,3 +60,6 @@ FAO_AREAS_URL = (
     "service=WFS&request=GetFeature&version=1.0.0&"
     "typeName=fifao:FAO_AREAS_CWP&outputFormat=SHAPE-ZIP"
 )
+
+# Prefect Server endpoint
+PREFECT_SERVER_URL = os.getenv("PREFECT_SERVER_URL")
