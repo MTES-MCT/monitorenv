@@ -2,10 +2,9 @@ import { getCenter } from 'ol/extent'
 import Feature from 'ol/Feature'
 import GeoJSON from 'ol/format/GeoJSON'
 import Point from 'ol/geom/Point'
-// import MultiPolygon from 'ol/geom/MultiPolygon'
 
-import { Layers } from '../../../domain/entities/layers'
-import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map'
+import { Layers } from '../../../domain/entities/layers/constants'
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map/constants'
 import { getMissionStatus } from '../../../domain/entities/missions'
 
 export const getMissionCentroid = (mission, layername) => {

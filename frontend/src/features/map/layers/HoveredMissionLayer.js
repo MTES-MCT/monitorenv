@@ -2,7 +2,7 @@ import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useRef } from 'react'
 
-import { Layers } from '../../../domain/entities/layers'
+import { Layers } from '../../../domain/entities/layers/constants'
 import { missionZoneStyle } from './styles/missions.style'
 
 export function HoveredMissionLayer({ currentFeatureOver, map }) {

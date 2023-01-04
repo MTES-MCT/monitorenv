@@ -4,13 +4,14 @@ import { Form } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
+import { InteractionListener } from '../../../domain/entities/map/constants'
 import { missionNatureEnum, missionTypeEnum } from '../../../domain/entities/missions'
 import { FormikCheckboxGroup } from '../../../uiMonitor/CustomFormikFields/FormikCheckboxGroup'
 import { FormikDatePicker } from '../../../uiMonitor/CustomFormikFields/FormikDatePicker'
 import { FormikInput } from '../../../uiMonitor/CustomFormikFields/FormikInput'
 import { FormikRadioGroup } from '../../../uiMonitor/CustomFormikFields/FormikRadioGroup'
 import { FormikTextarea } from '../../../uiMonitor/CustomFormikFields/FormikTextarea'
-import { MissionZones } from './MissionZones'
+import { MultiZonePicker } from '../MultiZonePicker'
 import { ResourceUnitsForm } from './ResourceUnitsForm'
 
 export function GeneralInformationsForm() {
@@ -19,10 +20,10 @@ export function GeneralInformationsForm() {
       <Title>Informations générales</Title>
       <FlexFormGroup>
         <ColWrapper>
-          <FormikDatePicker label="Début de mission" name="inputStartDateTimeUtc" withTime />
+          <FormikDatePicker isCompact label="Début de mission" name="inputStartDateTimeUtc" withTime />
         </ColWrapper>
         <ColWrapper>
-          <FormikDatePicker label="Fin de mission" name="inputEndDateTimeUtc" withTime />
+          <FormikDatePicker isCompact label="Fin de mission" name="inputEndDateTimeUtc" withTime />
         </ColWrapper>
       </FlexFormGroup>
 
@@ -40,7 +41,12 @@ export function GeneralInformationsForm() {
         <FieldArray name="resourceUnits" render={props => <ResourceUnitsForm {...props} />} />
       </Form.Group>
 
-      <MissionZones name="geom" />
+      <MultiZonePicker
+        addButtonLabel="+ Ajouter une zone de mission"
+        interactionListener={InteractionListener.MISSION_ZONE}
+        label="Localisations :"
+        name="geom"
+      />
       <Form.Group>
         <Form.ControlLabel htmlFor="observationsCacem">CACEM : orientations, observations </Form.ControlLabel>
         <InputObservations name="observationsCacem" />

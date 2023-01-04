@@ -2,25 +2,20 @@ import styled from 'styled-components'
 
 import { APIWorker } from '../api/APIWorker'
 import { ErrorToastNotification } from '../components/ErrorToastNotification'
-import { DrawLayerModal } from '../features/drawLayer/DrawLayerModal'
 import Healthcheck from '../features/healthcheck/Healthcheck'
-import InterestPoint from '../features/interest_points/InterestPoint'
 import { LayersSidebar } from '../features/layersSelector/LayersSidebar'
 import { LocateOnMap } from '../features/locateOnMap/LocateOnMap'
+import { DrawModal } from '../features/map/draw/DrawModal'
 import { Map } from '../features/map/Map'
-import Measurement from '../features/measurements/Measurement'
+import { InterestPointMapButton } from '../features/map/tools/interest_points/InterestPointMapButton'
+import { MeasurementMapButton } from '../features/map/tools/measurements/MeasurementMapButton'
 import { MissionsMenu } from '../features/missions/MissionsMenu'
 import { SideWindowLauncher } from '../features/side_window/SideWindowLauncher'
 import { useAppSelector } from '../hooks/useAppSelector'
 
 export function HomePage() {
-  const {
-    displayDrawLayerModal,
-    displayInterestPoint,
-    displayLocateOnMap,
-    displayMeasurement,
-    displayMissionMenuButton
-  } = useAppSelector(state => state.global)
+  const { displayDrawModal, displayInterestPoint, displayLocateOnMap, displayMeasurement, displayMissionMenuButton } =
+    useAppSelector(state => state.global)
 
   return (
     <>
@@ -29,11 +24,11 @@ export function HomePage() {
         <APIWorker />
         <Map />
         <LayersSidebar />
-        {displayDrawLayerModal && <DrawLayerModal />}
-        {displayMissionMenuButton && <MissionsMenu />}
-        {displayMeasurement && <Measurement />}
+        {displayDrawModal && <DrawModal />}
         {displayLocateOnMap && <LocateOnMap />}
-        {displayInterestPoint && <InterestPoint />}
+        {displayMissionMenuButton && <MissionsMenu />}
+        {displayMeasurement && <MeasurementMapButton />}
+        {displayInterestPoint && <InterestPointMapButton />}
         <ErrorToastNotification />
         <SideWindowLauncher />
       </Wrapper>

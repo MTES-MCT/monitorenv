@@ -2,25 +2,42 @@ import { createSlice } from '@reduxjs/toolkit'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
+import type { MeasurementType } from '../entities/map/constants'
+
 const persistConfig = {
   key: 'measurement',
   storage,
   whitelist: ['measurementsDrawed']
 }
 
-type MeasurementType = {
-  coordinates: any
-  feature: any
+type CircleCoordinatesToAddType = {
+  circleCoordinatesToAdd: any
+  circleRadiusToAdd: any
+}
+type CircleMeasurementInDrawingType = {
+  coordinates: number[]
   measurement: any
 }
 
+export type MeasurementState = {
+  // TODO Type this prop.
+  circleMeasurementInDrawing: CircleMeasurementInDrawingType | undefined
+  // TODO Type this prop.
+  circleMeasurementToAdd: CircleCoordinatesToAddType | undefined
+  measurementTypeToAdd: MeasurementType | undefined
+  // TODO Type this prop.
+  measurementsDrawed: Record<string, any>[]
+}
+
+const INITIAL_STATE: MeasurementState = {
+  circleMeasurementInDrawing: undefined,
+  circleMeasurementToAdd: undefined,
+  measurementsDrawed: [],
+  measurementTypeToAdd: undefined
+}
+
 const measurementSlice = createSlice({
-  initialState: {
-    circleMeasurementInDrawing: null,
-    circleMeasurementToAdd: undefined as any,
-    measurementsDrawed: [] as MeasurementType[],
-    measurementTypeToAdd: null
-  },
+  initialState: INITIAL_STATE,
   name: 'measurement',
   reducers: {
     addMeasurementDrawed(state, action) {
@@ -36,14 +53,14 @@ const measurementSlice = createSlice({
       state.measurementsDrawed = nextMeasurementsDrawed
     },
     resetCircleMeasurementInDrawing(state) {
-      state.circleMeasurementInDrawing = null
+      state.circleMeasurementInDrawing = undefined
     },
     resetCircleMeasurementToAdd(state) {
-      state.circleMeasurementToAdd = null
+      state.circleMeasurementToAdd = undefined
     },
 
     resetMeasurementTypeToAdd(state) {
-      state.measurementTypeToAdd = null
+      state.measurementTypeToAdd = undefined
     },
 
     /**

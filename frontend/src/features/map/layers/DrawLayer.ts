@@ -1,29 +1,44 @@
-import _ from 'lodash'
+import { isEmpty } from 'lodash'
 import GeoJSON from 'ol/format/GeoJSON'
-import Draw, { createBox, createRegularPolygon } from 'ol/interaction/Draw'
-import Modify from 'ol/interaction/Modify'
+import { Modify } from 'ol/interaction'
+import Draw, { createBox, createRegularPolygon, GeometryFunction } from 'ol/interaction/Draw'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import React, { useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react'
 
-import { drawLayerTypes } from '../../../domain/entities/drawLayer'
-import { Layers } from '../../../domain/entities/layers'
-import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map'
+import { Layers } from '../../../domain/entities/layers/constants'
+import {
+  InteractionType,
+  OLGeometryType,
+  OPENLAYERS_PROJECTION,
+  WSG84_PROJECTION
+} from '../../../domain/entities/map/constants'
+import { addFeatureToDrawedFeature } from '../../../domain/use_cases/draw/addFeatureToDrawedFeature'
+import { setGeometry } from '../../../domain/use_cases/draw/setGeometry'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { addFeature } from '../../drawLayer/DrawLayer.slice'
-import { dottedLayerStyle, pointLayerStyle } from './styles/dottedLayer.style'
+import { dottedLayerStyle } from './styles/dottedLayer.style'
 import { drawStyle, editStyle } from './styles/draw.style'
 
-import type { Geometry } from 'ol/geom'
+import type { VectorLayerWithName } from '../../../domain/types/layer'
+import type Geometry from 'ol/geom/Geometry'
 
-export function DrawLayer({ map }) {
-  const { features, interactionType } = useAppSelector(state => state.drawLayer)
+function UnmemoizedDrawLayer({ map }) {
+  const dispatch = useAppDispatch()
+  const { geometry, interactionType, listener } = useAppSelector(state => state.draw)
 
-  const dispatch = useDispatch()
-  // vectorSource & vectorLayer are holding current features (for visualisation + edition)
-  const vectorSourceRef = useRef() as React.MutableRefObject<VectorSource<Geometry>>
-  const GetVectorSource = () => {
+  const feature = useMemo(() => {
+    if (!geometry) {
+      return undefined
+    }
+
+    return new GeoJSON({
+      featureProjection: OPENLAYERS_PROJECTION
+    }).readFeature(geometry)
+  }, [geometry])
+
+  const vectorSourceRef = useRef() as MutableRefObject<VectorSource<Geometry>>
+  const getVectorSource = useCallback(() => {
     if (vectorSourceRef.current === undefined) {
       vectorSourceRef.current = new VectorSource({
         format: new GeoJSON({
@@ -34,120 +49,165 @@ export function DrawLayer({ map }) {
     }
 
     return vectorSourceRef.current
-  }
-  // drawVectorSource & drawVectorLayer are used to draw features, but features are dismissed after being drawned
-  const drawVectorSourceRef = useRef() as React.MutableRefObject<VectorSource<Geometry>>
+  }, [])
 
-  const GetDrawVectorSource = () => {
+  const drawVectorSourceRef = useRef() as MutableRefObject<VectorSource<Geometry>>
+
+  const getDrawVectorSource = useCallback(() => {
     if (drawVectorSourceRef.current === undefined) {
-      drawVectorSourceRef.current = new VectorSource({ wrapX: false })
+      drawVectorSourceRef.current = new VectorSource()
     }
 
     return drawVectorSourceRef.current
-  }
+  }, [])
 
-  const vectorLayerRef = useRef() as React.MutableRefObject<VectorLayer<VectorSource> & { name?: string }>
+  const vectorLayerRef = useRef() as MutableRefObject<VectorLayerWithName>
+
   useEffect(() => {
-    const GetVectorLayer = () => {
+    function getVectorLayer() {
       if (vectorLayerRef.current === undefined) {
         vectorLayerRef.current = new VectorLayer({
           renderBuffer: 7,
-          source: GetVectorSource(),
-          style: [pointLayerStyle, dottedLayerStyle, editStyle],
+          source: getVectorSource(),
+          style: [dottedLayerStyle, editStyle],
           updateWhileAnimating: true,
           updateWhileInteracting: true,
-          zIndex: Layers.DRAW_LAYER.zIndex
+          zIndex: Layers.DRAW.zIndex
         })
-        vectorLayerRef.current.name = Layers.DRAW_LAYER.code
+        vectorLayerRef.current.name = Layers.DRAW.code
       }
 
       return vectorLayerRef.current
     }
 
     if (map) {
-      map.getLayers().push(GetVectorLayer())
+      map.getLayers().push(getVectorLayer())
     }
 
     return () => {
       if (map) {
-        map.removeLayer(GetVectorLayer())
+        map.removeLayer(getVectorLayer())
       }
     }
-  }, [map])
+  }, [map, getVectorSource])
+
+  const setGeometryOnModifyEnd = useCallback(
+    event => {
+      const nextGeometry = event.features.item(0).getGeometry()
+      if (nextGeometry) {
+        dispatch(setGeometry(nextGeometry as Geometry))
+      }
+    },
+    [dispatch]
+  )
 
   useEffect(() => {
-    if (vectorLayerRef.current !== null) {
-      if (interactionType) {
-        vectorLayerRef.current.setStyle([pointLayerStyle, dottedLayerStyle, editStyle])
-      } else {
-        vectorLayerRef.current.setStyle([pointLayerStyle, dottedLayerStyle])
-      }
+    if (isEmpty(feature) || !interactionType) {
+      return undefined
     }
-  }, [interactionType])
 
-  useEffect(() => {
-    const modify = new Modify({ source: GetVectorSource() })
-    GetVectorSource()?.clear(true)
-    GetDrawVectorSource()?.clear(true)
-    if (!_.isEmpty(features)) {
-      GetVectorSource()?.addFeatures(features)
-      if (interactionType) {
-        map.addInteraction(modify)
-      }
-    }
+    resetModifyInteractions(map)
+    getVectorSource().clear(true)
+    getDrawVectorSource().clear(true)
+    getVectorSource().addFeature(feature)
+    const modify = new Modify({
+      source: getVectorSource()
+    })
+    map.addInteraction(modify)
+
+    modify.on('modifyend', setGeometryOnModifyEnd)
 
     return () => {
       if (map) {
         map.removeInteraction(modify)
+        modify.un('modifyend', setGeometryOnModifyEnd)
       }
     }
-  }, [features, map, interactionType])
+  }, [getVectorSource, getDrawVectorSource, map, feature, interactionType, setGeometryOnModifyEnd])
 
   useEffect(() => {
-    if (map && interactionType) {
-      let type
-      let geomFunction
-      switch (interactionType) {
-        case drawLayerTypes.SQUARE:
-          geomFunction = createBox()
-          type = 'Circle'
-          break
-        case drawLayerTypes.CIRCLE:
-          geomFunction = createRegularPolygon()
-          type = 'Circle'
-          break
-        case drawLayerTypes.POLYGON:
-          type = 'Polygon'
-          break
-        case drawLayerTypes.POINT:
-        default:
-          type = 'Point'
-          break
-      }
-
-      const draw = new Draw({
-        geometryFunction: geomFunction,
-        source: GetDrawVectorSource(),
-        stopClick: true,
-        style: drawStyle,
-        type
-      })
-      map.addInteraction(draw)
-
-      draw.on('drawend', event => {
-        dispatch(addFeature(event.feature))
-        GetDrawVectorSource()?.clear(true)
-      })
-
-      return () => {
-        if (map) {
-          map.removeInteraction(draw)
-        }
-      }
+    if (!map || !interactionType) {
+      return undefined
     }
 
-    return () => {}
-  }, [dispatch, map, interactionType])
+    resetDrawInteractions(map)
+    const { geometryFunction, geometryType } = getOLTypeAndGeometryFunctionFromInteractionType(interactionType)
+
+    const draw = new Draw({
+      geometryFunction,
+      source: getDrawVectorSource(),
+      stopClick: true,
+      style: drawStyle,
+      type: geometryType
+    })
+
+    map.addInteraction(draw)
+
+    draw.on('drawend', event => {
+      dispatch(addFeatureToDrawedFeature(event.feature))
+      event.stopPropagation()
+      getDrawVectorSource().clear(true)
+    })
+
+    return () => {
+      if (map) {
+        map.removeInteraction(draw)
+        getVectorSource().clear(true)
+        getDrawVectorSource().clear(true)
+      }
+    }
+  }, [map, dispatch, getDrawVectorSource, listener, getVectorSource, interactionType])
 
   return null
 }
+
+function getOLTypeAndGeometryFunctionFromInteractionType(interactionType: InteractionType | null): {
+  geometryFunction: GeometryFunction | undefined
+  geometryType: OLGeometryType
+} {
+  switch (interactionType) {
+    case InteractionType.SQUARE:
+      return {
+        geometryFunction: createBox(),
+        geometryType: OLGeometryType.CIRCLE
+      }
+    case InteractionType.CIRCLE:
+      return {
+        geometryFunction: createRegularPolygon(),
+        geometryType: OLGeometryType.CIRCLE
+      }
+    case InteractionType.POLYGON:
+      return {
+        geometryFunction: undefined,
+        geometryType: OLGeometryType.POLYGON
+      }
+    case InteractionType.POINT:
+      return {
+        geometryFunction: undefined,
+        geometryType: OLGeometryType.POINT
+      }
+    default:
+      return {
+        geometryFunction: undefined,
+        geometryType: OLGeometryType.POINT
+      }
+  }
+}
+
+function resetModifyInteractions(map) {
+  map.getInteractions().forEach(interaction => {
+    if (interaction instanceof Modify) {
+      interaction.setActive(false)
+    }
+  })
+}
+
+function resetDrawInteractions(map) {
+  map.getInteractions().forEach(interaction => {
+    if (interaction instanceof Draw) {
+      interaction.setActive(false)
+    }
+  })
+}
+
+export const DrawLayer = React.memo(UnmemoizedDrawLayer)

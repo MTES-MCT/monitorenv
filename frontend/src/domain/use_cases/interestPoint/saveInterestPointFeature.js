@@ -2,10 +2,10 @@ import Feature from 'ol/Feature'
 import GeoJSON from 'ol/format/GeoJSON'
 import Point from 'ol/geom/Point'
 
-import { OPENLAYERS_PROJECTION } from '../../entities/map'
+import { OPENLAYERS_PROJECTION } from '../../entities/map/constants'
 import { updateInterestPointKeyBeingDrawed } from '../../shared_slices/InterestPoint'
 
-const saveInterestPointFeature = feature => (dispatch, getState) => {
+export const saveInterestPointFeature = feature => (dispatch, getState) => {
   const { interestPointBeingDrawed } = getState().interestPoint
 
   if (interestPointBeingDrawed?.feature) {
@@ -39,5 +39,3 @@ function getGeoJSONFromFeature(feature) {
 
   return parser.writeFeatureObject(feature, { featureProjection: OPENLAYERS_PROJECTION })
 }
-
-export default saveInterestPointFeature

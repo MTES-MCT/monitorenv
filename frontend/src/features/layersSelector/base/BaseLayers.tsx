@@ -3,12 +3,12 @@ import { RadioGroup } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import { baseLayers } from '../../../domain/entities/layers'
+import { baseLayers } from '../../../domain/entities/layers/constants'
 import { toggleBaseLayer } from '../../../domain/shared_slices/LayerSidebar'
 import { selectBaseLayer } from '../../../domain/shared_slices/Map'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
-import BaseLayerItem from './BaseLayerItem'
+import { BaseLayerItem } from './BaseLayerItem'
 
 const baseLayersKeys = Object.keys(baseLayers).filter(key => key !== baseLayers.DARK.code)
 

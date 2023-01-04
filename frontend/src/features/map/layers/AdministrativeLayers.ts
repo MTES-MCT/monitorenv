@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { useEffect } from 'react'
 
-import { layersType } from '../../../domain/entities/layers'
+import { LayerType } from '../../../domain/entities/layers/constants'
 import { getAdministrativeVectorLayer } from '../../../domain/use_cases/administrative/showAdministrativeLayer'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 
@@ -18,7 +18,7 @@ export function AdministrativeLayers({ map }) {
       // remove layers
       olLayersList.forEach(layer => {
         if (
-          layer.get('type') === layersType.ADMINISTRATIVE &&
+          layer.get('type') === LayerType.ADMINISTRATIVE &&
           !showedAdministrativeLayerIds.includes(layer.get('name'))
         ) {
           olLayers.remove(layer)
@@ -28,7 +28,7 @@ export function AdministrativeLayers({ map }) {
       showedAdministrativeLayerIds.forEach(layerId => {
         if (
           !olLayersList.some(
-            _layer => _layer.get('type') === layersType.ADMINISTRATIVE && _layer.get('name') === layerId
+            _layer => _layer.get('type') === LayerType.ADMINISTRATIVE && _layer.get('name') === layerId
           )
         ) {
           const VectorLayer = getAdministrativeVectorLayer(layerId)

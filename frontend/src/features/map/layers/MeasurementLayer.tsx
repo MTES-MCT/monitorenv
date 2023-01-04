@@ -14,8 +14,8 @@ import { getLength } from 'ol/sphere'
 import { useCallback, useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { Layers } from '../../../domain/entities/layers'
-import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map'
+import { Layers } from '../../../domain/entities/layers/constants'
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map/constants'
 import {
   removeMeasurementDrawed,
   resetMeasurementTypeToAdd,
@@ -246,7 +246,7 @@ export function MeasurementLayer({ map }) {
         ),
         style: [measurementStyle, measurementStyleWithCenter]
       })
-      dispatch(saveMeasurement(circleFeature, `r = ${circleMeasurementToAdd.circleRadiusToAdd} nm`))
+      dispatch(saveMeasurement(circleFeature, `r = ${circleMeasurementToAdd?.circleRadiusToAdd} nm`))
     }
 
     addCustomCircleMeasurement()

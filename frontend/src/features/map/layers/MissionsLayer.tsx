@@ -3,7 +3,7 @@ import VectorSource from 'ol/source/Vector'
 import { useMemo, useEffect, useRef, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { Layers } from '../../../domain/entities/layers'
+import { Layers } from '../../../domain/entities/layers/constants'
 import { selectMissionOnMap } from '../../../domain/use_cases/missions/selectMissionOnMap'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useGetFilteredMissionsQuery } from '../../../hooks/useGetFilteredMissionsQuery'

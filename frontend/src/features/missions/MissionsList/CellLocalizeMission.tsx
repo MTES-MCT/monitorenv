@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { IconButton, Table } from 'rsuite'
 import styled from 'styled-components'
 
-import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map'
+import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import { ReactComponent as LocalizeIconSVG } from '../../../uiMonitor/icons/Focus_zones.svg'
 

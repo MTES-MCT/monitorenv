@@ -21,8 +21,8 @@ import { FormikDatePicker } from '../../../uiMonitor/CustomFormikFields/FormikDa
 import { FormikInputNumberGhost } from '../../../uiMonitor/CustomFormikFields/FormikInputNumber'
 import { ReactComponent as ControlIconSVG } from '../../../uiMonitor/icons/Control.svg'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
+import { MultiPointPicker } from '../MultiPointPicker'
 import { ActionTargetSelector } from './ActionTargetSelector'
-import { ControlPositions } from './ControlPositions'
 import { ControlThemeSelector } from './ControlThemeSelector'
 import { InfractionsForm } from './InfractionsForm'
 import { ProtectedSpeciesSelector } from './ProtectedSpeciesSelector'
@@ -167,14 +167,19 @@ export function ControlForm({
 
       <Form.Group>
         <FormikDatePicker
-          ghost
+          isLight
           label="Date et heure du contrôle"
           name={`envActions[${currentActionIndex}].actionStartDateTimeUtc`}
           withTime
         />
       </Form.Group>
 
-      <ControlPositions name={`envActions[${currentActionIndex}].geom`} />
+      <MultiPointPicker
+        addButtonLabel="+ Ajouter un point de contrôle"
+        containerName="geom"
+        label="Lieu du contrôle"
+        name={`envActions[${currentActionIndex}].geom`}
+      />
 
       <Separator />
 

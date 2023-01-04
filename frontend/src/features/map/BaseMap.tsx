@@ -9,8 +9,8 @@ import { Children, cloneElement, useCallback, useMemo, useEffect, useRef, useSta
 import styled from 'styled-components'
 
 import { HIT_PIXEL_TO_TOLERANCE } from '../../constants/constants'
-import { SelectableLayers, HoverableLayers } from '../../domain/entities/layers'
-import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map'
+import { SelectableLayers, HoverableLayers } from '../../domain/entities/layers/constants'
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map/constants'
 import MapAttributionsBox from './controls/MapAttributionsBox'
 
 import type Map from 'ol/Map'
