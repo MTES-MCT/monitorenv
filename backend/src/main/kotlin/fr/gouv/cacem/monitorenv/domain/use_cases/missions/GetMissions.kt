@@ -22,7 +22,7 @@ class GetMissions(private val missionRepository: IMissionRepository) {
         pageSize: Int?
     ): List<MissionEntity> {
         val missions = missionRepository.findAllMissions(
-            startedAfter = startedAfterDateTime?.toInstant() ?: ZonedDateTime.now().minusMonths(1).toInstant(),
+            startedAfter = startedAfterDateTime?.toInstant() ?: ZonedDateTime.now().minusDays(30).toInstant(),
             startedBefore = startedBeforeDateTime?.toInstant(),
             missionNatures = missionNatures,
             missionTypes = missionTypes,

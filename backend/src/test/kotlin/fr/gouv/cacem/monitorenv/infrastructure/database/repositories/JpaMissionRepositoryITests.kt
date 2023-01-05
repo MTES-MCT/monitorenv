@@ -22,15 +22,15 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     fun `createMission should create a new mission`() {
         // Given
         val existingMissions = jpaMissionRepository.findAllMissions(
-            startedAfter = ZonedDateTime.parse("2022-01-04T10:54:00Z").toInstant(),
-            startedBefore = ZonedDateTime.parse("2022-08-07T23:01:09Z").toInstant(),
+            startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
+            startedBefore = ZonedDateTime.parse("2022-08-08T00:00:00Z").toInstant(),
             missionNatures = null,
             missionTypes = null,
             missionStatuses = null,
             pageable = Pageable.unpaged()
         )
 
-        assertThat(existingMissions).hasSize(38)
+        assertThat(existingMissions).hasSize(21)
 
         val newMission = MissionEntity(
             missionType = MissionTypeEnum.SEA,
@@ -42,15 +42,15 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         // When
         val newMissionReturn = jpaMissionRepository.create(newMission)
         val missions = jpaMissionRepository.findAllMissions(
-            startedAfter = ZonedDateTime.parse("2022-01-04T10:54:00Z").toInstant(),
-            startedBefore = ZonedDateTime.parse("2022-08-07T23:01:09Z").toInstant(),
+            startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
+            startedBefore = ZonedDateTime.parse("2022-08-08T00:00:00Z").toInstant(),
             missionNatures = null,
             missionTypes = null,
             missionStatuses = null,
             pageable = Pageable.unpaged()
         )
 
-        assertThat(missions).hasSize(39)
+        assertThat(missions).hasSize(22)
     }
 
     @Test
@@ -58,7 +58,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     fun `findAllMissions Should return all missions when only required startedAfter is set to a very old date`() {
         // When
         val missions = jpaMissionRepository.findAllMissions(
-            startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
+            startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
             startedBefore = null,
             missionNatures = null,
             missionTypes = null,
@@ -73,14 +73,14 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     fun `findAllMissions Should return filterd missions when startedAfter & startedBefore are set`() {
         // When
         val missions = jpaMissionRepository.findAllMissions(
-            startedAfter = ZonedDateTime.parse("2022-01-04T10:54:00Z").toInstant(),
-            startedBefore = ZonedDateTime.parse("2022-08-07T23:01:09Z").toInstant(),
+            startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
+            startedBefore = ZonedDateTime.parse("2022-08-08T00:00:00Z").toInstant(),
             missionNatures = null,
             missionTypes = null,
             missionStatuses = null,
             pageable = Pageable.unpaged()
         )
-        assertThat(missions).hasSize(38)
+        assertThat(missions).hasSize(21)
     }
 
     @Test
@@ -155,7 +155,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionStatuses = listOf("UPCOMING"),
             pageable = Pageable.unpaged()
         )
-        assertThat(missions).hasSize(0)
+        assertThat(missions).hasSize(6)
     }
 
     @Test
@@ -170,7 +170,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionStatuses = listOf("PENDING"),
             pageable = Pageable.unpaged()
         )
-        assertThat(missions).hasSize(13)
+        assertThat(missions).hasSize(20)
     }
 
     @Test
@@ -185,7 +185,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionStatuses = listOf("ENDED"),
             pageable = Pageable.unpaged()
         )
-        assertThat(missions).hasSize(19)
+        assertThat(missions).hasSize(12)
     }
 
     @Test
@@ -215,7 +215,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionStatuses = listOf("CLOSED", "UPCOMING"),
             pageable = Pageable.unpaged()
         )
-        assertThat(missions).hasSize(18)
+        assertThat(missions).hasSize(24)
     }
 
     @Test
@@ -382,27 +382,27 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     fun `delete Should set the deleted flag as true`() {
         // Given
         val missionsList = jpaMissionRepository.findAllMissions(
-            startedAfter = ZonedDateTime.parse("2022-01-04T10:54:00Z").toInstant(),
-            startedBefore = ZonedDateTime.parse("2022-08-07T23:01:09Z").toInstant(),
+            startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
+            startedBefore = ZonedDateTime.parse("2022-08-08T00:00:00Z").toInstant(),
             missionNatures = null,
             missionTypes = null,
             missionStatuses = null,
             pageable = Pageable.unpaged()
         )
-        assertThat(missionsList).hasSize(38)
+        assertThat(missionsList).hasSize(21)
 
         // When
         jpaMissionRepository.delete(3)
 
         // Then
         val nextMissionList = jpaMissionRepository.findAllMissions(
-            startedAfter = ZonedDateTime.parse("2022-01-04T10:54:00Z").toInstant(),
-            startedBefore = ZonedDateTime.parse("2022-08-07T23:01:09Z").toInstant(),
+            startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
+            startedBefore = ZonedDateTime.parse("2022-08-08T00:00:00Z").toInstant(),
             missionNatures = null,
             missionTypes = null,
             missionStatuses = null,
             pageable = Pageable.unpaged()
         )
-        assertThat(nextMissionList).hasSize(37)
+        assertThat(nextMissionList).hasSize(20)
     }
 }

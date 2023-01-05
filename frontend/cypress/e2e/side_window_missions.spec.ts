@@ -6,8 +6,8 @@ context('Missions', () => {
     cy.visit(`/side_window`)
   })
 
-  it('50 Missions should be displayed in Missions Table', () => {
+  it('10 Missions should be displayed in Missions Table', () => {
     cy.get('*[data-cy="SideWindowHeader-title"]').contains('Missions et contrôles')
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('4')
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('10')
   })
 })

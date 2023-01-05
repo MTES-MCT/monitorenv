@@ -54,10 +54,9 @@ COPY public.missions (id, mission_type, open_by, observations_cacem, facade, inp
 \.
 
 
-ALTER TABLE public.missions ALTER COLUMN mission_source DROP DEFAULT;
 UPDATE public.missions SET 
-  input_start_datetime_utc = input_start_datetime_utc + (now() - '2022-08-7 23:00:00'),
-  input_end_datetime_utc = input_end_datetime_utc + (now() - '2022-08-7 23:00:00')
+  input_start_datetime_utc = input_start_datetime_utc + (now() - '2022-06-01 23:00:00'),
+  input_end_datetime_utc = input_end_datetime_utc + (now() - '2022-06-01 23:00:00')
   WHERE id >20;
   ;
 --
