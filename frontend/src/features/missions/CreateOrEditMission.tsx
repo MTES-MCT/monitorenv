@@ -18,7 +18,6 @@ import { COLORS } from '../../constants/constants'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { setError } from '../../domain/shared_slices/Global'
 import { setMissionState } from '../../domain/shared_slices/MissionsState'
-import { quitEditMission } from '../../domain/use_cases/missions/missionAndControlLocalisation'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { SyncFormValuesWithRedux } from '../../hooks/useSyncFormValuesWithRedux'
 import { FormikForm } from '../../uiMonitor/CustomFormikFields/FormikForm'
@@ -68,7 +67,6 @@ export function CreateOrEditMission() {
   const handleSubmitForm = values => {
     upsertMission(values).then(response => {
       if ('data' in response) {
-        dispatch(quitEditMission)
         dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))
         setErrorOnSave(false)
       } else {

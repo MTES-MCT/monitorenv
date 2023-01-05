@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Radio, RadioGroup } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import { CoordinatesFormat, OPENLAYERS_PROJECTION } from '../../../domain/entities/map'
+import { CoordinatesFormat, OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
 import { setCoordinatesFormat } from '../../../domain/shared_slices/Map'
 import { useTriggerOnClickOutsideComponent } from '../../../hooks/useClickOutside'
 import { getCoordinates } from '../../../utils/coordinates'

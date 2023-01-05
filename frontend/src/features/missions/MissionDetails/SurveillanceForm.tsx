@@ -6,6 +6,7 @@ import styled from 'styled-components'
 
 import { useGetControlThemesQuery } from '../../../api/controlThemesAPI'
 import { COLORS } from '../../../constants/constants'
+import { InteractionListener } from '../../../domain/entities/map/constants'
 import { usePrevious } from '../../../hooks/usePrevious'
 import { FormikCheckbox } from '../../../uiMonitor/CustomFormikFields/FormikCheckbox'
 import { FormikDatePicker } from '../../../uiMonitor/CustomFormikFields/FormikDatePicker'
@@ -13,8 +14,8 @@ import { FormikInputNumberGhost } from '../../../uiMonitor/CustomFormikFields/Fo
 import { FormikTextarea } from '../../../uiMonitor/CustomFormikFields/FormikTextarea'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as SurveillanceIconSVG } from '../../../uiMonitor/icons/Observation.svg'
+import { MultiZonePicker } from '../MultiZonePicker'
 import { ControlThemeSelector } from './ControlThemeSelector'
-import { SurveillanceZones } from './SurveillanceZones'
 
 import type { MissionType, EnvActionControlType } from '../../../domain/entities/missions'
 
@@ -83,7 +84,8 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
       <FlexSelectorWrapper>
         <Column>
           <FormikDatePicker
-            ghost
+            isCompact
+            isLight
             label="Date et heure du début de la surveillance"
             name={`envActions[${currentActionIndex}].actionStartDateTimeUtc`}
             withTime
@@ -98,7 +100,13 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
         </Column>
       </FlexSelectorWrapper>
 
-      <SurveillanceZones name={`envActions[${currentActionIndex}].geom`} />
+      <MultiZonePicker
+        addButtonLabel="+ Ajouter une zone de surveillance"
+        interactionListener={InteractionListener.SURVEILLANCE_ZONE}
+        isLight
+        label="Zone de surveillance"
+        name={`envActions[${currentActionIndex}].geom`}
+      />
       <WhiteCheckbox
         inline
         label="Zone de surveillance équivalente à la zone de mission"

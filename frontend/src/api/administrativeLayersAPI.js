@@ -1,4 +1,4 @@
-import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../domain/entities/map'
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../domain/entities/map/constants'
 import { GEOSERVER_REMOTE_URL, GEOSERVER_NAMESPACE } from '../env'
 
 const OK = 200

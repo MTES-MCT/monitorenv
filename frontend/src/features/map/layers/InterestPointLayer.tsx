@@ -14,8 +14,8 @@ import {
   coordinatesOrTypeAreModified,
   interestPointType
 } from '../../../domain/entities/interestPoints'
-import { Layers } from '../../../domain/entities/layers'
-import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map'
+import { Layers } from '../../../domain/entities/layers/constants'
+import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
 import {
   deleteInterestPointBeingDrawed,
   editInterestPoint,
@@ -25,7 +25,7 @@ import {
   updateInterestPointBeingDrawed,
   updateInterestPointKeyBeingDrawed
 } from '../../../domain/shared_slices/InterestPoint'
-import saveInterestPointFeature from '../../../domain/use_cases/interestPoint/saveInterestPointFeature'
+import { saveInterestPointFeature } from '../../../domain/use_cases/interestPoint/saveInterestPointFeature'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { usePrevious } from '../../../hooks/usePrevious'
 import InterestPointOverlay from '../overlays/InterestPointOverlay'

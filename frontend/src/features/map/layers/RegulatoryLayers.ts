@@ -4,8 +4,8 @@ import VectorSource from 'ol/source/Vector'
 import { getArea } from 'ol/sphere'
 import { MutableRefObject, useEffect, useRef } from 'react'
 
-import { Layers } from '../../../domain/entities/layers'
-import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map'
+import { Layers } from '../../../domain/entities/layers/constants'
+import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getRegulatoryLayerStyle } from './styles/administrativeAndRegulatoryLayers.style'
 

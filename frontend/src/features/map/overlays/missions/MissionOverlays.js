@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-import { Layers } from '../../../../domain/entities/layers'
+import { Layers } from '../../../../domain/entities/layers/constants'
 import { OverlayPositionOnExtent } from '../OverlayPositionOnExtent'
 import { MissionCard } from './MissionCard'
 

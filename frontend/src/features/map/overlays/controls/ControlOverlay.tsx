@@ -1,4 +1,4 @@
-import { Layers } from '../../../../domain/entities/layers'
+import { Layers } from '../../../../domain/entities/layers/constants'
 import { OverlayPositionOnCentroid } from '../OverlayPositionOnCentroid'
 import { ControlCard } from './ControlCard'
 

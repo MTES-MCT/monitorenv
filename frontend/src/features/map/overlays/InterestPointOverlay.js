@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map'
+import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
 import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
 import { usePrevious } from '../../../hooks/usePrevious'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'

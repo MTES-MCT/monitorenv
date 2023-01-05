@@ -1,12 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { baseLayers } from '../entities/layers'
-import { CoordinatesFormat } from '../entities/map'
+import { baseLayers } from '../entities/layers/constants'
+import { CoordinatesFormat } from '../entities/map/constants'
+
+import type { Extent } from 'ol/extent'
 
 type MapSliceStateType = {
   coordinatesFormat: string
   currentMapExtentTracker?: number[]
-  fitToExtent?: number[]
+  fitToExtent?: Extent
   selectedBaseLayer: string
   zoomToCenter?: number
 }

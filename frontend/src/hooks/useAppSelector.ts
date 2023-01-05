@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux'
 
-import type { HomeRootState } from '../Store'
+import type { HomeRootState } from '../store'
 import type { TypedUseSelectorHook } from 'react-redux'
 
 /**

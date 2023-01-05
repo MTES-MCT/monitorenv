@@ -18,18 +18,19 @@
     "cypress:run": "cypress run --browser firefox --e2e",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",
-    "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!@codemirror)/\"",
     "test:e2e": "cypress run --browser firefox --e2e",
     "lint:fix": "eslint ./src --fix",
     "test:lint": "eslint ./src",
     "test:lint:partial": "eslint --config=./.eslintrc.partial.js ./src",
     "test:type": "tsc",
-    "test:type:partial": "tsc --project ./tsconfig.partial.json"
+    "test:type:partial": "tsc --project ./tsconfig.partial.json",
+    "test:unit": "jest --config=./config/jest.config.js --detectOpenHandles",
+    "test:unit:watch": "npm run test:unit -- --watch"
   },
   "dependencies": {
     "@dnd-kit/core": "^4.0.3",
     "@dnd-kit/modifiers": "^4.0.0",
-    "@mtes-mct/monitor-ui": "1.11.0",
+    "@mtes-mct/monitor-ui": "2.4.0",
     "@reduxjs/toolkit": "1.8.2",
     "@sentry/react": "6.19.7",
     "@sentry/tracing": "6.19.7",

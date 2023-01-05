@@ -6,7 +6,7 @@ import XYZ from 'ol/source/XYZ'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { Layers, baseLayers } from '../../../domain/entities/layers'
+import { Layers, baseLayers } from '../../../domain/entities/layers/constants'
 import { MAPBOX_KEY, SHOM_KEY } from '../../../env'
 
 function BaseLayer({ map }) {

@@ -9,7 +9,7 @@ import { AlertUnsupportedBrowser } from './components/AlertUnsupportedBrowser'
 import { ErrorToastNotification } from './components/ErrorToastNotification'
 import { SideWindowTestContainer } from './features/side_window/SideWindowTestContainer'
 import { HomePage } from './pages/HomePage'
-import { homeStore } from './Store'
+import { homeStore } from './store'
 import frFR from './uiMonitor/locale_frFR'
 import { isBrowserSupported } from './utils/isBrowserSupported'
 

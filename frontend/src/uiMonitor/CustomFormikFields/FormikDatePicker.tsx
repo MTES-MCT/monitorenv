@@ -9,12 +9,13 @@ export const placeholderDateTimePicker =
   '\xa0\xa0\xa0\xa0\xa0\xa0/\xa0\xa0\xa0\xa0\xa0\xa0/\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0:\xa0\xa0\xa0\xa0\xa0\xa0'
 
 type FormikDatePickerProps = {
-  ghost?: boolean
+  isCompact?: boolean
+  isLight?: boolean
   label: string
   name: string
   withTime?: boolean
 }
-export function FormikDatePicker({ ghost, label, name, withTime }: FormikDatePickerProps) {
+export function FormikDatePicker({ isCompact, isLight, label, name, withTime }: FormikDatePickerProps) {
   const [field, , helpers] = useField(name)
   const { value } = field
   const { setValue } = helpers
@@ -32,13 +33,20 @@ export function FormikDatePicker({ ghost, label, name, withTime }: FormikDatePic
   const datepickerRef = useRef() as MutableRefObject<HTMLDivElement>
 
   return (
-    <DatePickerWrapper ref={datepickerRef} data-cy="datepicker" ghost={ghost}>
-      <DatePicker defaultValue={valueAsDate} label={label} onChange={setValueAsString} withTime={withTime} />
+    <DatePickerWrapper ref={datepickerRef} data-cy="datepicker">
+      <DatePicker
+        defaultValue={valueAsDate}
+        isCompact={isCompact}
+        isLight={isLight}
+        label={label}
+        onChange={setValueAsString}
+        withTime={withTime}
+      />
     </DatePickerWrapper>
   )
 }
 
-const DatePickerWrapper = styled.div<{ ghost?: boolean }>`
+const DatePickerWrapper = styled.div`
   input {
     width: 1.2rem;
   }
@@ -46,9 +54,5 @@ const DatePickerWrapper = styled.div<{ ghost?: boolean }>`
     input:last-child {
       width: 2.5rem;
     }
-  }
-  div > span > span,
-  .js-ranged-time-picker-option {
-    ${p => (p.ghost ? 'background: white' : '')}
   }
 `

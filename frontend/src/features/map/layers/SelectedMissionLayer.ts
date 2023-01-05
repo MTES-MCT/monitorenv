@@ -3,7 +3,7 @@ import VectorSource from 'ol/source/Vector'
 import { MutableRefObject, useCallback, useEffect, useRef } from 'react'
 
 import { useGetMissionsQuery } from '../../../api/missionsAPI'
-import { Layers } from '../../../domain/entities/layers'
+import { Layers } from '../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getMissionZoneFeature, getActionsFeatures } from './missionGeometryHelpers'
 import { selectedMissionStyle, selectedMissionActionsStyle } from './styles/missions.style'

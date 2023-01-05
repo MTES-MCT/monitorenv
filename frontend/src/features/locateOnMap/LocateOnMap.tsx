@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 import { useNominatimAPI } from '../../api/nominatimAPI'
 import { COLORS } from '../../constants/constants'
-import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map'
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map/constants'
 import { setFitToExtent } from '../../domain/shared_slices/Map'
 import { ReactComponent as SearchIconSVG } from '../../uiMonitor/icons/Search.svg'
 

@@ -7,8 +7,8 @@ import VectorSource from 'ol/source/Vector'
 import { getAdministrativeZoneFromAPI } from '../../../api/administrativeLayersAPI'
 import { getAdministrativeLayersStyle } from '../../../features/map/layers/styles/administrativeAndRegulatoryLayers.style'
 import { administrativeLayers } from '../../entities/administrativeLayers'
-import { layersType } from '../../entities/layers'
-import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../entities/map'
+import { LayerType } from '../../entities/layers/constants'
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../entities/map/constants'
 
 const IRRETRIEVABLE_FEATURES_EVENT = 'IRRETRIEVABLE_FEATURES'
 
@@ -26,7 +26,7 @@ export const getAdministrativeVectorLayer = layerId => {
     declutter: true,
     properties: {
       name: layerId,
-      type: layersType.ADMINISTRATIVE
+      type: LayerType.ADMINISTRATIVE
     },
     source: getAdministrativeVectorSourceBBOXStrategy(code, zone),
     style: getAdministrativeLayersStyle(code),

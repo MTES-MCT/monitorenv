@@ -4,7 +4,7 @@ import Stroke from 'ol/style/Stroke'
 import Text from 'ol/style/Text'
 
 import { COLORS } from '../../../../constants/constants'
-import { Layers } from '../../../../domain/entities/layers'
+import { Layers } from '../../../../domain/entities/layers/constants'
 import { getColorWithAlpha, stringToColorInGroup } from '../../../../utils/utils'
 /**
  *

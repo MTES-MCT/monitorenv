@@ -1,5 +1,4 @@
 import { combineReducers } from '@reduxjs/toolkit'
-import thunk from 'redux-thunk'
 
 import { controlResourcesAPI } from '../../api/controlResourcesAPI'
 import { controlThemesAPI } from '../../api/controlThemesAPI'
@@ -7,9 +6,9 @@ import { infractionsAPI } from '../../api/infractionsAPI'
 import { missionsAPI } from '../../api/missionsAPI'
 import { regulatoryLayersAPI } from '../../api/regulatoryLayersAPI'
 import { sideWindowRouterReducer } from '../../components/SideWindowRouter/SideWindowRouter.slice'
-import { drawLayerReducer } from '../../features/drawLayer/DrawLayer.slice'
 import { regulatoryLayerSearchSliceReducer } from '../../features/layersSelector/regulatory/search/RegulatoryLayerSearch.slice'
 import { administrativeSlicePersistedReducer } from './Administrative'
+import { drawReducer } from './Draw'
 import { globalReducer } from './Global'
 import { interestPointSlicePersistedReducer } from './InterestPoint'
 import layerSidebar from './LayerSidebar'
@@ -22,7 +21,7 @@ import { regulatoryMetadataSliceReducer } from './RegulatoryMetadata'
 
 export const homeReducers = combineReducers({
   administrative: administrativeSlicePersistedReducer,
-  drawLayer: drawLayerReducer,
+  draw: drawReducer,
   global: globalReducer,
   interestPoint: interestPointSlicePersistedReducer,
   layerSidebar,
@@ -41,9 +40,7 @@ export const homeReducers = combineReducers({
   sideWindowRouter: sideWindowRouterReducer
 })
 
-// export const homeMiddlewares = getDefaultMiddleware => getDefaultMiddleware().concat(api.middleware)
 export const homeMiddlewares = [
-  thunk,
   missionsAPI.middleware,
   regulatoryLayersAPI.middleware,
   controlThemesAPI.middleware,
