@@ -25,8 +25,9 @@ dev-run-storybook:
 
 dev-lint-frontend:
 	cd frontend && npm run test:lint:partial
+
 test-front:
-	cd frontend && npm test
+	cd frontend && npm run test:unit
 	
 # Backend
 .PHONY: dev-check-config dev-run-back-with-infra dev-run-back dev-run-infra dev-erase-db dev-clean-target-env
@@ -63,7 +64,7 @@ dev-lint-backend:
 
 test:
 	cd backend && ./mvnw clean && ./mvnw test
-	cd frontend && CI=true npm test
+	cd frontend && CI=true npm run test:unit
 
 .PHONY: docker-build-app 
 docker-build-app:
