@@ -9,17 +9,21 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.vladmihalcea.hibernate.type.array.EnumArrayType
 import com.vladmihalcea.hibernate.type.array.ListArrayType
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType
-import fr.gouv.cacem.monitorenv.domain.entities.missions.*
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionNatureEnum
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
 import org.hibernate.Hibernate
-import org.hibernate.annotations.Type
-import org.hibernate.annotations.TypeDef
-import org.hibernate.annotations.TypeDefs
+import org.hibernate.annotations.*
 import org.locationtech.jts.geom.MultiPolygon
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
 import java.time.Instant
 import java.time.ZoneOffset.UTC
 import javax.persistence.*
+import javax.persistence.CascadeType
+import javax.persistence.Entity
+import javax.persistence.Table
 
 @JsonIdentityInfo(
     generator = ObjectIdGenerators.PropertyGenerator::class,
@@ -50,9 +54,7 @@ data class MissionModel(
     @Column(name = "missionNature")
     @Type(type = "enum-array")
     var missionNature: List<MissionNatureEnum>? = listOf(),
-    @Column(name = "resource_units", columnDefinition = "jsonb")
-    @Type(type = "jsonb")
-    var resourceUnits: String? = null,
+
     @Column(name = "open_by")
     var openBy: String? = null,
     @Column(name = "closed_by")
@@ -79,28 +81,35 @@ data class MissionModel(
     @Enumerated(EnumType.STRING)
     val missionSource: MissionSourceEnum,
     @OneToMany(
-        fetch = FetchType.EAGER,
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
         orphanRemoval = true
     )
     @JsonManagedReference
-    var envActions: MutableList<EnvActionModel>? = ArrayList()
+    @Fetch(value = FetchMode.SUBSELECT)
+    var envActions: MutableList<EnvActionModel>? = ArrayList(),
+    @OneToMany(
+        mappedBy = "mission",
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true
+    )
+    @JsonManagedReference
+    @Fetch(value = FetchMode.SUBSELECT)
+    var controlResources: MutableList<MissionControlResourceModel>? = ArrayList(),
+    @OneToMany(
+        mappedBy = "mission",
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true
+    )
+    @JsonManagedReference
+    @Fetch(value = FetchMode.SUBSELECT)
+    var controlUnits: MutableList<MissionControlUnitModel>? = ArrayList()
 ) {
 
     fun toMissionEntity(mapper: ObjectMapper) = MissionEntity(
         id = id,
         missionType = missionType,
         missionNature = if (missionNature === null) listOf() else missionNature,
-        resourceUnits = if (resourceUnits === null) {
-            listOf()
-        } else {
-            mapper.readValue(
-                resourceUnits,
-                mapper.typeFactory
-                    .constructCollectionType(MutableList::class.java, ResourceUnitEntity::class.java)
-            )
-        },
         openBy = openBy,
         closedBy = closedBy,
         observationsCacem = observationsCacem,
@@ -112,7 +121,11 @@ data class MissionModel(
         isClosed = isClosed,
         isDeleted = isDeleted,
         missionSource = missionSource,
-        envActions = envActions!!.map { it.toActionEntity(mapper) }
+        envActions = envActions!!.map { it.toActionEntity(mapper) },
+        controlResources = controlResources?.map { it.ressources.toControlResource() } ?: listOf(),
+        controlUnits = controlUnits?.map {
+            it.units.toControlUnit().copy(contact = it.contact)
+        } ?: listOf()
     )
 
     companion object {
@@ -121,7 +134,6 @@ data class MissionModel(
                 id = mission.id,
                 missionType = mission.missionType,
                 missionNature = mission.missionNature,
-                resourceUnits = if (mission.resourceUnits === null) null else mapper.writeValueAsString(mission.resourceUnits),
                 openBy = mission.openBy,
                 closedBy = mission.closedBy,
                 observationsCacem = mission.observationsCacem,
@@ -137,6 +149,7 @@ data class MissionModel(
             mission.envActions?.map {
                 missionModel.envActions?.add(EnvActionModel.fromEnvActionEntity(it, missionModel, mapper))
             }
+
             return missionModel
         }
     }
@@ -153,6 +166,6 @@ data class MissionModel(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , missionType = $missionType , missionNature = $missionNature ,  resourceUnits = $resourceUnits , openBy = $openBy , closedBy = $closedBy , observationsCacem = $observationsCacem, observationsCnsp = $observationsCnsp , facade = $facade , geom = $geom , inputStartDateTimeUtc = $inputStartDateTimeUtc , inputEndDateTimeUtc = $inputEndDateTimeUtc, isClosed = $isClosed, isDeleted = $isDeleted, missionSource = $missionSource )"
+        return this::class.simpleName + "(id = $id , missionType = $missionType , missionNature = $missionNature , openBy = $openBy , closedBy = $closedBy , observationsCacem = $observationsCacem, observationsCnsp = $observationsCnsp , facade = $facade , geom = $geom , inputStartDateTimeUtc = $inputStartDateTimeUtc , inputEndDateTimeUtc = $inputEndDateTimeUtc, isClosed = $isClosed, isDeleted = $isDeleted, missionSource = $missionSource )"
     }
 }

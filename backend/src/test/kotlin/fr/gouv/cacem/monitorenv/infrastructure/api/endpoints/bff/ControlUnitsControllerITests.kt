@@ -3,7 +3,8 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.MeterRegistryConfiguration
 import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlResourceEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlResources.*
+import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlResources.GetControlUnits
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -14,45 +15,42 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @Import(MeterRegistryConfiguration::class)
 @ExtendWith(SpringExtension::class)
-@WebMvcTest(value = [(ControlResourcesController::class)])
-class ControlResourcesControllerITests {
+@WebMvcTest(value = [(ControlUnitsController::class)])
+class ControlUnitsControllerITests {
 
     @Autowired
     private lateinit var mockMvc: MockMvc
 
     @MockBean
-    private lateinit var getControlResources: GetControlResources
+    private lateinit var getControlUnits: GetControlUnits
 
     @Autowired
     private lateinit var objectMapper: ObjectMapper
 
     @Test
-    fun `Should get all control resources`() {
+    fun `Should get all control units`() {
         // Given
-
-        val controlResource = ControlResourceEntity(
+        val controlUnit = ControlUnitEntity(
             id = 4,
-            facade = "MED",
             administration = "Gendarmerie nationale",
-            size = "10,00 m",
-            name = "vedette",
-            city = "Agde"
+            name = "DF 123",
+            resources = listOf(ControlResourceEntity(1, "Vedette"))
         )
-        given(this.getControlResources.execute()).willReturn(listOf(controlResource))
+        given(this.getControlUnits.execute()).willReturn(listOf(controlUnit))
 
         // When
-        mockMvc.perform(get("/bff/v1/controlresources"))
+        mockMvc.perform(get("/bff/v1/control_units"))
             // Then
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$[0].id", equalTo(controlResource.id)))
-            .andExpect(jsonPath("$[0].facade", equalTo(controlResource.facade)))
-            .andExpect(jsonPath("$[0].administration", equalTo(controlResource.administration)))
-            .andExpect(jsonPath("$[0].name", equalTo(controlResource.name)))
+            .andExpect(jsonPath("$[0].id", equalTo(controlUnit.id)))
+            .andExpect(jsonPath("$[0].administration", equalTo(controlUnit.administration)))
+            .andExpect(jsonPath("$[0].name", equalTo(controlUnit.name)))
+            .andExpect(jsonPath("$[0].resources[0].name", equalTo(controlUnit.resources.first().name)))
     }
 }

@@ -1,14 +1,14 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { useField } from 'formik'
+import {useField} from 'formik'
 import _ from 'lodash'
-import { MutableRefObject, useRef } from 'react'
-import { Form, TagPicker, IconButton } from 'rsuite'
+import {MutableRefObject, useRef} from 'react'
+import {Form, IconButton, TagPicker} from 'rsuite'
 import styled from 'styled-components'
 
-import { useGetControlResourcesQuery } from '../../../api/controlResourcesAPI'
-import { FormikInput } from '../../../uiMonitor/CustomFormikFields/FormikInput'
-import { SelectPicker } from '../../../uiMonitor/CustomRsuite/SelectPicker'
-import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
+import {useGetControlUnitsQuery} from '../../../api/controlUnitsAPI'
+import {FormikInput} from '../../../uiMonitor/CustomFormikFields/FormikInput'
+import {SelectPicker} from '../../../uiMonitor/CustomRsuite/SelectPicker'
+import {ReactComponent as DeleteSVG} from '../../../uiMonitor/icons/Delete.svg'
 
 export function ResourceUnitSelector({ removeResourceUnit, resourceUnitIndex, resourceUnitPath, ...props }) {
   const [administrationField, , administrationHelpers] = useField(`resourceUnits.${resourceUnitIndex}.administration`)
@@ -17,22 +17,21 @@ export function ResourceUnitSelector({ removeResourceUnit, resourceUnitIndex, re
   const [, , contactHelpers] = useField(`resourceUnits.${resourceUnitIndex}.contact`)
 
   const resourcesRef = useRef() as MutableRefObject<HTMLDivElement>
-  const { data, isError, isLoading } = useGetControlResourcesQuery()
+  const { data, isError, isLoading } = useGetControlUnitsQuery()
 
   const administrationList = _.chain(data)
-    .concat([{ administration: administrationField.value, id: Infinity, unit: unitField.value }])
-    .uniqBy('administration')
-    .sort((a, b) => a?.administration?.localeCompare(b?.administration))
+    .map(unit => unit.administration)
+    .uniq()
+    .sort((a, b) => a?.localeCompare(b))
     .value()
   const unitList = _.chain(data)
-    .filter(r => !!(r.administration === administrationField.value))
-    .concat([{ administration: administrationField.value, id: Infinity, unit: unitField.value }])
-    .uniqBy('unit')
-    .sort((a, b) => a?.unit?.localeCompare(b?.unit))
+    .filter(unit => unit.administration === administrationField.value)
+    .sort((a, b) => a?.name?.localeCompare(b?.name))
     .value()
   const resourcesList = _.chain(data)
-    .filter(r => !!(r.administration === administrationField.value && r.unit === unitField.value && r.resourceName))
-    .value()
+      .find(unit => unit.administration === administrationField.value && unit.name === unitField.value)
+      .value()
+      .resources
 
   // Add any resource from Mission not present in resourceList from API
   // See: https://github.com/MTES-MCT/monitorenv/issues/103
@@ -40,9 +39,9 @@ export function ResourceUnitSelector({ removeResourceUnit, resourceUnitIndex, re
     resourceName: r
   }))
   const combinedResourceList = _.chain([...resourcesList, ...existingResourcesOptions])
-    .uniqBy('resourceName')
-    .sort((a, b) => a?.resourceName?.localeCompare(b?.resourceName))
-    .value()
+      .uniqBy('resourceName')
+      .sort((a, b) => a?.resourceName?.localeCompare(b?.resourceName))
+      .value()
 
   const handleAdministrationChange = value => {
     if (value !== administrationField.value) {
@@ -118,7 +117,7 @@ export function ResourceUnitSelector({ removeResourceUnit, resourceUnitIndex, re
               cleanable={false}
               container={() => resourcesRef.current}
               creatable
-              data={combinedResourceList}
+              data={resourcesList}
               disabled={_.isEmpty(unitField.value)}
               labelKey="resourceName"
               onChange={handleResourceChange}
