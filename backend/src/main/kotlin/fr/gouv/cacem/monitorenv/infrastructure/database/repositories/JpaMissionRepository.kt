@@ -46,11 +46,6 @@ class JpaMissionRepository(
 
     @Transactional
     override fun save(mission: MissionEntity): MissionEntity {
-        return dbMissionRepository.save(MissionModel.fromMissionEntity(mission, mapper)).toMissionEntity(mapper)
-    }
-
-    @Transactional
-    override fun create(mission: MissionEntity): MissionEntity {
         return try {
             dbMissionRepository.save(MissionModel.fromMissionEntity(mission, mapper)).toMissionEntity(mapper)
         } catch (e: InvalidDataAccessApiUsageException) {

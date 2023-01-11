@@ -47,7 +47,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         )
 
         // When
-        val newMissionCreated = jpaMissionRepository.create(newMission)
+        val newMissionCreated = jpaMissionRepository.save(newMission)
 
         // Then
         assertThat(newMissionCreated.controlResources).hasSize(1)
@@ -87,7 +87,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
         // When
         val throwable = catchThrowable {
-            jpaMissionRepository.create(newMission)
+            jpaMissionRepository.save(newMission)
         }
 
         // Then
@@ -110,7 +110,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
         // When
         val throwable = catchThrowable {
-            jpaMissionRepository.create(newMission)
+            jpaMissionRepository.save(newMission)
         }
 
         // Then

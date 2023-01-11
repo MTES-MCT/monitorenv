@@ -34,13 +34,13 @@ class CreateMissionUTests {
             isDeleted = false,
             missionSource = MissionSourceEnum.CACEM
         )
-        given(missionRepository.create(expectedCreatedMission)).willReturn(expectedCreatedMission)
+        given(missionRepository.save(expectedCreatedMission)).willReturn(expectedCreatedMission)
 
         // When
         val createdMission = CreateMission(missionRepository, facadeAreasRepository).execute(expectedCreatedMission)
 
         // Then
-        verify(missionRepository, times(1)).create(expectedCreatedMission)
+        verify(missionRepository, times(1)).save(expectedCreatedMission)
         assertThat(createdMission).isEqualTo(expectedCreatedMission)
     }
 }
