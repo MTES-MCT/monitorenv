@@ -10,7 +10,7 @@ import javax.persistence.Table
 data class AdministrationModel(
     @Id
     @Column(name = "id")
-    var id: Int,
+    var id: Int? = null,
     @Column(name = "name")
     var name: String
 )

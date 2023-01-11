@@ -3,7 +3,9 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.missions.*
+import fr.gouv.cacem.monitorenv.domain.exceptions.InvalidControlResourceOrUnitException
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.catchThrowable
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
@@ -39,10 +41,25 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isClosed = false,
             isDeleted = false,
-            missionSource = MissionSourceEnum.CACEM
+            missionSource = MissionSourceEnum.CACEM,
+            controlResources = listOf(ControlResourceEntity(id = 8, name = "PAM Jeanne Barret")),
+            controlUnits = listOf(ControlUnitEntity(id = 10006, name = "DPM – DDTM 35", administration = "DDTM", resources = listOf()))
         )
+
         // When
-        val newMissionReturn = jpaMissionRepository.create(newMission)
+        val newMissionCreated = jpaMissionRepository.create(newMission)
+
+        // Then
+        assertThat(newMissionCreated.controlResources).hasSize(1)
+        assertThat(newMissionCreated.controlResources.first().id).isEqualTo(8)
+        assertThat(newMissionCreated.controlResources.first().name).isEqualTo("PAM Jeanne Barret")
+
+        assertThat(newMissionCreated.controlUnits).hasSize(1)
+        assertThat(newMissionCreated.controlUnits.first().id).isEqualTo(10006)
+        assertThat(newMissionCreated.controlUnits.first().name).isEqualTo("DPM – DDTM 35")
+        assertThat(newMissionCreated.controlUnits.first().administration).isEqualTo("DDTM")
+        assertThat(newMissionCreated.controlUnits.first().resources).isEmpty()
+
         val missions = jpaMissionRepository.findAllMissions(
             startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
             startedBefore = ZonedDateTime.parse("2022-08-08T00:00:00Z").toInstant(),
@@ -53,6 +70,52 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         )
 
         assertThat(missions).hasSize(22)
+    }
+
+    @Test
+    @Transactional
+    fun `createMission should throw an exception When the resource id is not found`() {
+        // Given
+        val newMission = MissionEntity(
+            missionType = MissionTypeEnum.SEA,
+            inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            isClosed = false,
+            isDeleted = false,
+            missionSource = MissionSourceEnum.CACEM,
+            controlResources = listOf(ControlResourceEntity(id = 123456, name = "PAM Jeanne Barret"))
+        )
+
+        // When
+        val throwable = catchThrowable {
+            jpaMissionRepository.create(newMission)
+        }
+
+        // Then
+        assertThat(throwable).isInstanceOf(InvalidControlResourceOrUnitException::class.java)
+        assertThat(throwable.message).contains("Invalid control unit or resource id: not found in referential")
+    }
+
+    @Test
+    @Transactional
+    fun `createMission should throw an exception When the unit id is not found`() {
+        // Given
+        val newMission = MissionEntity(
+            missionType = MissionTypeEnum.SEA,
+            inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            isClosed = false,
+            isDeleted = false,
+            missionSource = MissionSourceEnum.CACEM,
+            controlUnits = listOf(ControlUnitEntity(id = 123456, name = "PAM Jeanne Barret", administration = "", resources = listOf()))
+        )
+
+        // When
+        val throwable = catchThrowable {
+            jpaMissionRepository.create(newMission)
+        }
+
+        // Then
+        assertThat(throwable).isInstanceOf(InvalidControlResourceOrUnitException::class.java)
+        assertThat(throwable.message).contains("Invalid control unit or resource id: not found in referential")
     }
 
     @Test

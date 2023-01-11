@@ -15,7 +15,7 @@ data class ControlResourceModel(
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "unit_id")
     @JsonBackReference
-    var controlUnit: ControlUnitModel
+    var controlUnit: ControlUnitModel? = null
 ) {
     fun toControlResource() = ControlResourceEntity(
         id = id,

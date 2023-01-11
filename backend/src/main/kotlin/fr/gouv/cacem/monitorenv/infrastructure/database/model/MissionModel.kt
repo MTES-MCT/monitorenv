@@ -122,9 +122,9 @@ data class MissionModel(
         isDeleted = isDeleted,
         missionSource = missionSource,
         envActions = envActions!!.map { it.toActionEntity(mapper) },
-        controlResources = controlResources?.map { it.ressources.toControlResource() } ?: listOf(),
+        controlResources = controlResources?.map { it.ressource.toControlResource() } ?: listOf(),
         controlUnits = controlUnits?.map {
-            it.units.toControlUnit().copy(contact = it.contact)
+            it.unit.toControlUnit().copy(contact = it.contact)
         } ?: listOf()
     )
 
@@ -146,8 +146,27 @@ data class MissionModel(
                 isDeleted = false,
                 missionSource = mission.missionSource
             )
+
             mission.envActions?.map {
                 missionModel.envActions?.add(EnvActionModel.fromEnvActionEntity(it, missionModel, mapper))
+            }
+
+            mission.controlResources.map {
+                missionModel.controlResources?.add(
+                    MissionControlResourceModel.fromControlResourceEntity(
+                        it,
+                        missionModel
+                    )
+                )
+            }
+
+            mission.controlUnits.map {
+                missionModel.controlUnits?.add(
+                    MissionControlUnitModel.fromControlUnitEntity(
+                        it,
+                        missionModel
+                    )
+                )
             }
 
             return missionModel

@@ -8,7 +8,7 @@ data class MissionEntity(
     val id: Int? = null,
     val missionType: MissionTypeEnum,
     val missionNature: List<MissionNatureEnum>? = listOf(),
-    val controlUnits: List<ControlUnitEntity>? = listOf(),
+    val controlUnits: List<ControlUnitEntity> = listOf(),
     val controlResources: List<ControlResourceEntity> = listOf(),
     val openBy: String? = null,
     val closedBy: String? = null,
