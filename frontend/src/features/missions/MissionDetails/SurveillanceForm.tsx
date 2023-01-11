@@ -59,6 +59,8 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
           Supprimer
         </IconButtonRight>
       </Header>
+      {isError && <Msg>Erreur au chargement des thèmes</Msg>}
+      {isLoading && <Msg>Chargement des thèmes</Msg>}
       {!isError && !isLoading && (
         <>
           <SelectorWrapper>
@@ -132,6 +134,8 @@ const Title = styled.h2`
   display: inline-block;
   color: ${COLORS.charcoal};
 `
+
+const Msg = styled.div``
 
 const SelectorWrapper = styled(Form.Group)`
   height: 58px;

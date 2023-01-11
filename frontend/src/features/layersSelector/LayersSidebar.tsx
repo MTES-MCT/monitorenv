@@ -8,7 +8,7 @@ import { closeRegulatoryZoneMetadata } from '../../domain/use_cases/regulatory/c
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { ReactComponent as LayersSVG } from '../../uiMonitor/icons/Couches_carto.svg'
 import { AdministrativeLayers } from './administrative/AdministrativeLayers'
-import { BaseLayers } from './base/BaseLayers'
+import { BaseLayerList } from './base/BaseLayerList'
 import { RegulatoryLayers } from './regulatory/menu/RegulatoryLayers'
 import { RegulatoryLayerZoneMetadata } from './regulatory/metadata/RegulatoryLayerZoneMetadata'
 import { RegulatoryLayerSearch } from './regulatory/search/RegulatoryLayerSearch'
@@ -44,7 +44,7 @@ export function LayersSidebar() {
         <Layers>
           <RegulatoryLayers />
           <AdministrativeLayers />
-          <BaseLayers />
+          <BaseLayerList />
         </Layers>
         <RegulatoryZoneMetadataShifter
           layersSidebarIsOpen={layersSidebarIsOpen}

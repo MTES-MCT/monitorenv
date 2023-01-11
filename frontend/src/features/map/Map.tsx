@@ -1,7 +1,8 @@
 import { BaseMap } from './BaseMap'
-import MapCoordinatesBox from './controls/MapCoordinatesBox'
+import { MapAttributionsBox } from './controls/MapAttributionsBox'
+import { MapCoordinatesBox } from './controls/MapCoordinatesBox'
 import { AdministrativeLayers } from './layers/AdministrativeLayers'
-import BaseLayer from './layers/BaseLayer'
+import { BaseLayer } from './layers/BaseLayer'
 import { DrawLayer } from './layers/DrawLayer'
 import { EditingMissionLayer } from './layers/EditingMissionLayer'
 import { HoveredMissionLayer } from './layers/HoveredMissionLayer'
@@ -12,10 +13,21 @@ import { RegulatoryLayers } from './layers/RegulatoryLayers'
 import { RegulatoryPreviewLayer } from './layers/RegulatoryPreviewLayer'
 import { SelectedMissionLayer } from './layers/SelectedMissionLayer'
 import { MapExtentController } from './MapExtentController'
-import MapHistory from './MapHistory'
-import { ControlOverlay } from './overlays/controls/ControlOverlay'
+import { MapHistory } from './MapHistory'
+import { ActionOverlay } from './overlays/actions/ActionOverlay'
 import { MissionOverlays } from './overlays/missions/MissionOverlays'
 import { ShowRegulatoryMetadata } from './ShowRegulatoryMetadata'
+
+import type { MapClickEvent } from '../../types'
+import type { Feature } from 'ol'
+import type { Geometry } from 'ol/geom'
+import type OpenLayerMap from 'ol/Map'
+
+export type MapChildrenProps = Partial<{
+  currentFeatureOver: Feature<Geometry>
+  map: OpenLayerMap
+  mapClickEvent: MapClickEvent
+}>
 
 export function Map() {
   // const [shouldUpdateView, setShouldUpdateView] = useState(true)
@@ -39,12 +51,11 @@ export function Map() {
 
   return (
     <BaseMap
-      // BaseMap forwards map & mapClickEvent as props to children
-      // handleMovingAndZoom={handleMovingAndZoom}
-      // handlePointerMove={handlePointerMove}
-      container="map"
-      showAttributions
+    // BaseMap forwards map & mapClickEvent as props to children
+    // handleMovingAndZoom={handleMovingAndZoom}
+    // handlePointerMove={handlePointerMove}
     >
+      <MapAttributionsBox />
       <MapCoordinatesBox />
       <BaseLayer />
       <RegulatoryLayers />
@@ -61,7 +72,7 @@ export function Map() {
       <EditingMissionLayer />
       <HoveredMissionLayer />
       <MissionOverlays />
-      <ControlOverlay />
+      <ActionOverlay />
     </BaseMap>
   )
 }

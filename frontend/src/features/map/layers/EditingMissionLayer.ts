@@ -1,39 +1,42 @@
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useRef } from 'react'
-import { useSelector } from 'react-redux'
+import { MutableRefObject, useCallback, useEffect, useRef } from 'react'
 
 import { Layers } from '../../../domain/entities/layers/constants'
+import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getMissionZoneFeature, getActionsFeatures } from './missionGeometryHelpers'
 import { selectedMissionStyle, selectedMissionActionsStyle } from './styles/missions.style'
 
-export function EditingMissionLayer({ map }) {
-  const { missionState } = useSelector(state => state.missionState)
-  const { displayEditingMissionLayer } = useSelector(state => state.global)
+import type { VectorLayerWithName } from '../../../domain/types/layer'
+import type { MapChildrenProps } from '../Map'
 
-  const editingMissionVectorSourceRef = useRef(null)
+export function EditingMissionLayer({ map }: MapChildrenProps) {
+  const { missionState } = useAppSelector(state => state.missionState)
+  const { displayEditingMissionLayer } = useAppSelector(state => state.global)
+
+  const editingMissionVectorSourceRef = useRef() as MutableRefObject<VectorSource>
   const GetEditingMissionVectorSource = () => {
-    if (editingMissionVectorSourceRef.current === null) {
+    if (editingMissionVectorSourceRef.current === undefined) {
       editingMissionVectorSourceRef.current = new VectorSource()
     }
 
     return editingMissionVectorSourceRef.current
   }
 
-  const editingMissionActionsVectorSourceRef = useRef(null)
+  const editingMissionActionsVectorSourceRef = useRef() as MutableRefObject<VectorSource>
   const GetEditingMissionActionsVectorSource = () => {
-    if (editingMissionActionsVectorSourceRef.current === null) {
+    if (editingMissionActionsVectorSourceRef.current === undefined) {
       editingMissionActionsVectorSourceRef.current = new VectorSource()
     }
 
     return editingMissionActionsVectorSourceRef.current
   }
 
-  const editingMissionVectorLayerRef = useRef(null)
-  const editingMissionActionsVectorLayerRef = useRef(null)
+  const editingMissionVectorLayerRef = useRef() as MutableRefObject<VectorLayerWithName>
+  const editingMissionActionsVectorLayerRef = useRef() as MutableRefObject<VectorLayerWithName>
 
-  const GetSelectedMissionVectorLayer = () => {
-    if (editingMissionVectorLayerRef.current === null) {
+  const GetSelectedMissionVectorLayer = useCallback(() => {
+    if (editingMissionVectorLayerRef.current === undefined) {
       editingMissionVectorLayerRef.current = new VectorLayer({
         renderBuffer: 7,
         source: GetEditingMissionVectorSource(),
@@ -46,9 +49,10 @@ export function EditingMissionLayer({ map }) {
     }
 
     return editingMissionVectorLayerRef.current
-  }
-  const GetSelectedMissionActionsVectorLayer = () => {
-    if (editingMissionActionsVectorLayerRef.current === null) {
+  }, [])
+
+  const GetSelectedMissionActionsVectorLayer = useCallback(() => {
+    if (editingMissionActionsVectorLayerRef.current === undefined) {
       editingMissionActionsVectorLayerRef.current = new VectorLayer({
         renderBuffer: 7,
         source: GetEditingMissionActionsVectorSource(),
@@ -61,7 +65,7 @@ export function EditingMissionLayer({ map }) {
     }
 
     return editingMissionActionsVectorLayerRef.current
-  }
+  }, [])
 
   useEffect(() => {
     if (map) {
@@ -76,12 +80,12 @@ export function EditingMissionLayer({ map }) {
         map.removeLayer(GetSelectedMissionActionsVectorLayer())
       }
     }
-  }, [map])
+  }, [map, GetSelectedMissionVectorLayer, GetSelectedMissionActionsVectorLayer])
 
   useEffect(() => {
     GetSelectedMissionVectorLayer()?.setVisible(displayEditingMissionLayer)
     GetSelectedMissionActionsVectorLayer()?.setVisible(displayEditingMissionLayer)
-  }, [displayEditingMissionLayer])
+  }, [displayEditingMissionLayer, GetSelectedMissionVectorLayer, GetSelectedMissionActionsVectorLayer])
 
   useEffect(() => {
     GetEditingMissionVectorSource()?.clear(true)

@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
 
-function MapAttributionsBox() {
+export function MapAttributionsBox() {
   const [isVisible, setIsVisible] = useState(false)
 
   return (
@@ -62,5 +62,3 @@ const ListItem = styled.li`
 const Link = styled.a`
   color: ${COLORS.slateGray};
 `
-
-export default MapAttributionsBox

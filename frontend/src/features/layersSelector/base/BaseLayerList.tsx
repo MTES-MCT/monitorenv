@@ -3,16 +3,16 @@ import { RadioGroup } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import { baseLayers } from '../../../domain/entities/layers/constants'
+import { BaseLayers } from '../../../domain/entities/layers/constants'
 import { toggleBaseLayer } from '../../../domain/shared_slices/LayerSidebar'
 import { selectBaseLayer } from '../../../domain/shared_slices/Map'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 import { BaseLayerItem } from './BaseLayerItem'
 
-const baseLayersKeys = Object.keys(baseLayers).filter(key => key !== baseLayers.DARK.code)
+const baseLayersKeys = Object.keys(BaseLayers).filter(key => key !== BaseLayers.DARK.code)
 
-export function BaseLayers() {
+export function BaseLayerList() {
   const dispatch = useDispatch()
   const { baselayerIsOpen } = useAppSelector(state => state.layerSidebar)
   const { selectedBaseLayer } = useAppSelector(state => state.map)

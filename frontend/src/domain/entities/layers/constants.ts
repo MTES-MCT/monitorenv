@@ -146,7 +146,7 @@ export const Layers = {
   }
 }
 
-export const baseLayers = {
+export const BaseLayers = {
   DARK: {
     code: 'DARK',
     text: 'Fond de carte sombre'

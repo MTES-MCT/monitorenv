@@ -1,12 +1,12 @@
 import { Radio } from 'rsuite'
 import styled from 'styled-components'
 
-import { baseLayers } from '../../../domain/entities/layers/constants'
+import { BaseLayers } from '../../../domain/entities/layers/constants'
 
 export function BaseLayerItem({ layer }) {
   return (
     <Row className="base-layers-selection">
-      <Radio value={layer}>{baseLayers[layer].text}</Radio>
+      <Radio value={layer}>{BaseLayers[layer].text}</Radio>
     </Row>
   )
 }

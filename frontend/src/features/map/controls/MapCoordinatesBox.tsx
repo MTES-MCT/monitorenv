@@ -1,36 +1,25 @@
 import { useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { Radio, RadioGroup } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
 import { CoordinatesFormat, OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
 import { setCoordinatesFormat } from '../../../domain/shared_slices/Map'
-import { useTriggerOnClickOutsideComponent } from '../../../hooks/useClickOutside'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+import { useClickOutsideWhenOpened } from '../../../hooks/useClickOutsideWhenOpened'
 import { getCoordinates } from '../../../utils/coordinates'
+
+import type { MapChildrenProps } from '../Map'
+import type { Coordinate } from 'ol/coordinate'
 
 let lastEventForPointerMove
 let timeoutForPointerMove
 
-function MapCoordinatesBox({ map }) {
-  const wrapperRef = useRef(null)
-
-  const dispatch = useDispatch()
-  const { coordinatesFormat } = useSelector(state => state.map)
-  const [cursorCoordinates, setCursorCoordinates] = useState('')
-  const [coordinatesSelectionIsOpen, setCoordinatesSelectionIsOpen] = useState(false)
-  useTriggerOnClickOutsideComponent(wrapperRef, () => {
-    setCoordinatesSelectionIsOpen(false)
-  })
+export function MapCoordinatesBox({ map }: MapChildrenProps) {
+  const [coordinates, setCursorCoordinates] = useState<Coordinate>()
 
   useEffect(() => {
-    function saveCoordinates(event) {
-      if (event) {
-        const clickedCoordinates = map.getCoordinateFromPixel(event.pixel)
-        setCursorCoordinates(clickedCoordinates)
-      }
-    }
-
     function throttleAndHandlePointerMove(event) {
       if (event.dragging || timeoutForPointerMove) {
         if (timeoutForPointerMove) {
@@ -42,24 +31,35 @@ function MapCoordinatesBox({ map }) {
 
       timeoutForPointerMove = setTimeout(() => {
         timeoutForPointerMove = null
+
         saveCoordinates(lastEventForPointerMove)
       }, 50)
     }
-
-    map.on('pointermove', throttleAndHandlePointerMove)
-
-    return () => map.un('pointermove', throttleAndHandlePointerMove)
-  }, [map])
-
-  const getShowedCoordinates = coordinates => {
-    const transformedCoordinates = getCoordinates(coordinates, OPENLAYERS_PROJECTION, coordinatesFormat)
-
-    if (Array.isArray(transformedCoordinates) && transformedCoordinates.length === 2) {
-      return `${transformedCoordinates[0]} ${transformedCoordinates[1]}`
+    function saveCoordinates(event) {
+      if (event) {
+        const clickedCoordinates = map?.getCoordinateFromPixel(event.pixel)
+        if (clickedCoordinates) {
+          setCursorCoordinates(clickedCoordinates)
+        }
+      }
     }
+    if (map) {
+      map.on('pointermove', event => throttleAndHandlePointerMove(event))
+    }
+  })
 
-    return ''
-  }
+  const wrapperRef = useRef(null)
+
+  const dispatch = useAppDispatch()
+  const { coordinatesFormat } = useAppSelector(state => state.map)
+  const [coordinatesSelectionIsOpen, setCoordinatesSelectionIsOpen] = useState(false)
+  const clickedOutsideComponent = useClickOutsideWhenOpened(wrapperRef, coordinatesSelectionIsOpen)
+
+  useEffect(() => {
+    if (clickedOutsideComponent) {
+      setCoordinatesSelectionIsOpen(false)
+    }
+  }, [clickedOutsideComponent])
 
   return (
     <div ref={wrapperRef}>
@@ -95,10 +95,20 @@ function MapCoordinatesBox({ map }) {
         </RadioWrapper>
       </CoordinatesTypeSelection>
       <Coordinates onClick={() => setCoordinatesSelectionIsOpen(!coordinatesSelectionIsOpen)}>
-        {getShowedCoordinates(cursorCoordinates)} ({coordinatesFormat})
+        {getShowedCoordinates(coordinates, coordinatesFormat)} ({coordinatesFormat})
       </Coordinates>
     </div>
   )
+}
+
+const getShowedCoordinates = (coordinates, coordinatesFormat) => {
+  const transformedCoordinates = getCoordinates(coordinates, OPENLAYERS_PROJECTION, coordinatesFormat)
+
+  if (Array.isArray(transformedCoordinates) && transformedCoordinates.length === 2) {
+    return `${transformedCoordinates[0]} ${transformedCoordinates[1]}`
+  }
+
+  return ''
 }
 
 const RadioWrapper = styled(RadioGroup)`
@@ -107,7 +117,7 @@ const RadioWrapper = styled(RadioGroup)`
 
 const Header = styled.span`
   background-color: ${COLORS.charcoal};
-  color: ${COLORS.cultured};
+  color: ${p => p.theme.color.gainsboro};
   padding: 5px 0;
   width: 100%;
   display: inline-block;
@@ -117,9 +127,9 @@ const Header = styled.span`
   border-top-right-radius: 2px;
 `
 
-const CoordinatesTypeSelection = styled.span`
+const CoordinatesTypeSelection = styled.span<{ isOpen: boolean }>`
   position: absolute;
-  bottom: ${props => (props.isOpen ? 40 : -40)}px;
+  bottom: 40px;
   left: 40px;
   display: inline-block;
   margin: 1px;
@@ -128,12 +138,15 @@ const CoordinatesTypeSelection = styled.span`
   font-weight: 300;
   text-decoration: none;
   text-align: center;
-  background-color: ${COLORS.background};
+  background-color: ${COLORS.white};
   border: none;
   border-radius: 2px;
   width: 237px;
   opacity: ${props => (props.isOpen ? 1 : 0)};
+  visibility: ${props => (props.isOpen ? 'visible' : 'hidden')};
+  height: ${props => (props.isOpen ? 69 : 0)}px;
   transition: all 0.5s;
+  overflow: hidden;
 `
 
 const Coordinates = styled.span`
@@ -143,7 +156,7 @@ const Coordinates = styled.span`
   left: 40px;
   display: inline-block;
   padding: 2px 0 6px 2px;
-  color: ${COLORS.gainsboro};
+  color: ${p => p.theme.color.gainsboro};
   font-size: 13px;
   font-weight: 300;
   text-decoration: none;
@@ -155,5 +168,3 @@ const Coordinates = styled.span`
   width: 235px;
   cursor: pointer;
 `
-
-export default MapCoordinatesBox

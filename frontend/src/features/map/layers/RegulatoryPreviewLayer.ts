@@ -12,9 +12,11 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getRegulatoryLayerStyle } from './styles/administrativeAndRegulatoryLayers.style'
 import { dottedLayerStyle } from './styles/dottedLayer.style'
 
+import type { MapChildrenProps } from '../Map'
+
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
-export function RegulatoryPreviewLayer({ map }) {
+export function RegulatoryPreviewLayer({ map }: MapChildrenProps) {
   const { regulatoryMetadataLayerId } = useAppSelector(state => state.regulatoryMetadata)
   const { regulatoryLayersSearchResult, searchExtent } = useAppSelector(state => state.regulatoryLayerSearch)
   const { layersSidebarIsOpen } = useAppSelector(state => state.global)

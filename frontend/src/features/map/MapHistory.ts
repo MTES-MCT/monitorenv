@@ -1,14 +1,17 @@
+import _ from 'lodash'
 import { useEffect, useState, useRef } from 'react'
-import { useDispatch } from 'react-redux'
 
 import { setCurrentMapExtentTracker } from '../../domain/shared_slices/Map'
+import { useAppDispatch } from '../../hooks/useAppDispatch'
+
+import type { MapChildrenProps } from './Map'
 
 /**
  * Handle browser history on map URL - Note that the map parameter is given from
  * the BaseMap component, even if it's not seen in the props passed to MapHistory
  */
-function MapHistory({ map }) {
-  const dispatch = useDispatch()
+export function MapHistory({ map }: MapChildrenProps) {
+  const dispatch = useAppDispatch()
   const [useViewFromUrl, setUseViewFromUrl] = useState(true)
   const shouldStoreUrl = useRef(true)
 
@@ -29,7 +32,7 @@ function MapHistory({ map }) {
     window.addEventListener('popstate', restoreViewOnBrowserHistoryNavigation)
 
     return () => window.removeEventListener('popstate', restoreViewOnBrowserHistoryNavigation)
-  }, [map])
+  }, [dispatch, map])
 
   // init map from url
   useEffect(() => {
@@ -37,14 +40,10 @@ function MapHistory({ map }) {
       if (window.location.hash !== '') {
         const hash = window.location.hash.replace('@', '').replace('#', '')
         const viewParts = hash.split(',')
-        if (
-          viewParts.length === 3 &&
-          !Number.isNaN(viewParts[0]) &&
-          !Number.isNaN(viewParts[1]) &&
-          !Number.isNaN(viewParts[2])
-        ) {
-          map.getView().setCenter([parseFloat(viewParts[0]), parseFloat(viewParts[1])])
-          map.getView().setZoom(parseFloat(viewParts[2]))
+        const [lat, lon, zoom] = viewParts
+        if (lat && lon && zoom && !Number.isNaN(lat) && !Number.isNaN(lon) && !Number.isNaN(zoom)) {
+          map.getView().setCenter([parseFloat(lat), parseFloat(lon)])
+          map.getView().setZoom(parseFloat(zoom))
         }
       }
       setUseViewFromUrl(false)
@@ -57,13 +56,13 @@ function MapHistory({ map }) {
       if (map && shouldStoreUrl.current) {
         const currentView = map.getView()
         const center = currentView.getCenter()
-        const zoom = currentView.getZoom().toFixed(2)
+        const zoom = currentView?.getZoom()?.toFixed(2)
         const view = {
           center,
           zoom
         }
 
-        const url = `#@${center[0].toFixed(2)},${center[1].toFixed(2)},${zoom}`
+        const url = _.isArray(center) ? `#@${center[0]?.toFixed(2)},${center[1]?.toFixed(2)},${zoom}` : null
         window.history.pushState(view, 'map', url)
         const extent = currentView.calculateExtent(map.getSize())
         dispatch(setCurrentMapExtentTracker(extent))
@@ -71,12 +70,10 @@ function MapHistory({ map }) {
       shouldStoreUrl.current = true
     }
 
-    map.on('moveend', storeViewInHistory)
+    map?.on('moveend', storeViewInHistory)
 
-    return () => map.un('moveend', storeViewInHistory)
-  }, [map])
+    return () => map?.un('moveend', storeViewInHistory)
+  }, [dispatch, map])
 
   return null
 }
-
-export default MapHistory

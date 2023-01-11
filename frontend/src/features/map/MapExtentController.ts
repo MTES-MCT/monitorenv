@@ -1,11 +1,14 @@
 import { useEffect } from 'react'
-import { useSelector } from 'react-redux'
+
+import { useAppSelector } from '../../hooks/useAppSelector'
+
+import type { MapChildrenProps } from './Map'
 
 const DEFAULT_MAP_ANIMATION_DURATION = 1000
 const MAX_ZOOM_LEVEL = 14
 
-export function MapExtentController({ map }) {
-  const { fitToExtent, zoomToCenter } = useSelector(state => state.map)
+export function MapExtentController({ map }: MapChildrenProps) {
+  const { fitToExtent, zoomToCenter } = useAppSelector(state => state.map)
 
   useEffect(() => {
     if (fitToExtent) {
@@ -14,13 +17,13 @@ export function MapExtentController({ map }) {
         maxZoom: MAX_ZOOM_LEVEL,
         padding: [30, 30, 30, 30]
       }
-      map.getView().fit(fitToExtent, options)
+      map?.getView().fit(fitToExtent, options)
     }
   }, [map, fitToExtent])
 
   useEffect(() => {
     if (zoomToCenter) {
-      map.getView().animate({ center: zoomToCenter })
+      map?.getView().animate({ center: zoomToCenter })
     }
   }, [map, zoomToCenter])
 

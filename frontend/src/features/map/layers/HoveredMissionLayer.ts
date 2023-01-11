@@ -1,25 +1,28 @@
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useRef } from 'react'
+import { MutableRefObject, useEffect, useRef } from 'react'
 
 import { Layers } from '../../../domain/entities/layers/constants'
 import { missionZoneStyle } from './styles/missions.style'
 
-export function HoveredMissionLayer({ currentFeatureOver, map }) {
-  const vectorSourceRef = useRef(null)
+import type { VectorLayerWithName } from '../../../domain/types/layer'
+import type { MapChildrenProps } from '../Map'
+
+export function HoveredMissionLayer({ currentFeatureOver, map }: MapChildrenProps) {
+  const vectorSourceRef = useRef() as MutableRefObject<VectorSource>
   const GetVectorSource = () => {
-    if (vectorSourceRef.current === null) {
+    if (vectorSourceRef.current === undefined) {
       vectorSourceRef.current = new VectorSource()
     }
 
     return vectorSourceRef.current
   }
 
-  const vectorLayerRef = useRef(null)
+  const vectorLayerRef = useRef() as MutableRefObject<VectorLayerWithName>
 
   useEffect(() => {
     const GetVectorLayer = () => {
-      if (vectorLayerRef.current === null) {
+      if (vectorLayerRef.current === undefined) {
         vectorLayerRef.current = new VectorLayer({
           renderBuffer: 7,
           source: GetVectorSource(),
@@ -27,16 +30,22 @@ export function HoveredMissionLayer({ currentFeatureOver, map }) {
           updateWhileAnimating: true,
           updateWhileInteracting: true,
           zIndex: Layers.MISSIONS.zIndex
-        })
+        }) as VectorLayerWithName
         vectorLayerRef.current.name = Layers.MISSION_SELECTED.code
       }
 
       return vectorLayerRef.current
     }
 
-    map && map.getLayers().push(GetVectorLayer())
+    if (map) {
+      map.getLayers().push(GetVectorLayer())
+    }
 
-    return () => map && map.removeLayer(GetVectorLayer())
+    return () => {
+      if (map) {
+        map.removeLayer(GetVectorLayer())
+      }
+    }
   }, [map])
 
   useEffect(() => {
