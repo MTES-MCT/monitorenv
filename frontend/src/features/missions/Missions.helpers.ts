@@ -68,6 +68,7 @@ export const actionFactory = ({ actionType, id, ...action }: { actionType: Actio
 
 export const missionFactory = (mission = {}) => ({
   closedBy: '',
+  controlUnits: [controlUnitFactory()],
   envActions: [],
   geom: null,
   inputEndDateTimeUtc: '',
@@ -79,14 +80,13 @@ export const missionFactory = (mission = {}) => ({
   observationsCacem: '',
   observationsCnsp: '',
   openBy: '',
-  controlUnits: [controlUnitFactory()],
   ...mission
 })
 
 export const controlUnitFactory = ({ ...resourceUnit } = {}) => ({
   administration: '',
-  resources: [],
   name: '',
+  resources: [],
   ...resourceUnit
 })
 

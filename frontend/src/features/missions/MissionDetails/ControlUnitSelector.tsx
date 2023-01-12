@@ -1,18 +1,21 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import {useField} from 'formik'
+import { useField } from 'formik'
 import _ from 'lodash'
-import {MutableRefObject, useRef} from 'react'
-import {Form, IconButton, TagPicker} from 'rsuite'
+import { MutableRefObject, useRef } from 'react'
+import { Form, IconButton, TagPicker } from 'rsuite'
 import styled from 'styled-components'
 
-import {useGetControlUnitsQuery} from '../../../api/controlUnitsAPI'
-import {FormikInput} from '../../../uiMonitor/CustomFormikFields/FormikInput'
-import {SelectPicker} from '../../../uiMonitor/CustomRsuite/SelectPicker'
-import {ReactComponent as DeleteSVG} from '../../../uiMonitor/icons/Delete.svg'
-import type {ControlResource} from "../../../domain/entities/controlUnit";
+import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
+import { FormikInput } from '../../../uiMonitor/CustomFormikFields/FormikInput'
+import { SelectPicker } from '../../../uiMonitor/CustomRsuite/SelectPicker'
+import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
 
-export function ControlUnitSelector({ removeControlUnit, controlUnitIndex, controlUnitPath, ...props }) {
-  const [administrationField, , administrationHelpers] = useField<string>(`controlUnits.${controlUnitIndex}.administration`)
+import type { ControlResource } from '../../../domain/entities/controlUnit'
+
+export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeControlUnit, ...props }) {
+  const [administrationField, , administrationHelpers] = useField<string>(
+    `controlUnits.${controlUnitIndex}.administration`
+  )
   const [unitField, , unitHelpers] = useField<number | undefined>(`controlUnits.${controlUnitIndex}.id`)
   const [, , unitNameHelpers] = useField<string | undefined>(`controlUnits.${controlUnitIndex}.name`)
   const [resourcesField, , resourcesHelpers] = useField<ControlResource[]>(`controlUnits.${controlUnitIndex}.resources`)
@@ -25,23 +28,24 @@ export function ControlUnitSelector({ removeControlUnit, controlUnitIndex, contr
     .map(unit => unit.administration)
     .uniq()
     .sort((a, b) => a?.localeCompare(b))
-    .map(administration => ({administration}))
+    .map(administration => ({ administration }))
     .value()
   const unitList = _.chain(data)
     .filter(unit => unit.administration === administrationField.value)
     .sort((a, b) => a?.name?.localeCompare(b?.name))
     .value()
-  const resourcesList = _.chain(data)
+  const resourcesList =
+    _.chain(data)
       ?.find(unit => unit.administration === administrationField.value && unit.id === unitField.value)
-      ?.value()
-      ?.resources || []
+      ?.value()?.resources || []
 
   // Add any resource from Mission not present in list from API (as the resource might be historized)
   // See: https://github.com/MTES-MCT/monitorenv/issues/103
+  // eslint-disable-next-line no-unsafe-optional-chaining
   const combinedResourceList = _.chain([...resourcesList, ...resourcesField?.value])
-      .uniqBy('id')
-      .sort((a, b) => a?.name?.localeCompare(b?.name))
-      .value()
+    .uniqBy('id')
+    .sort((a, b) => a?.name?.localeCompare(b?.name))
+    .value()
 
   const handleAdministrationChange = value => {
     if (value !== administrationField.value) {
@@ -67,7 +71,7 @@ export function ControlUnitSelector({ removeControlUnit, controlUnitIndex, contr
     }
   }
   const handleResourceChange = values => {
-    const resourceObjects = values.map(id => resourcesList.find(resource => resource.id == id))
+    const resourceObjects = values.map(id => resourcesList.find(resource => resource.id === id))
     resourcesHelpers.setValue(resourceObjects)
   }
   const handleContactChange = value => {
