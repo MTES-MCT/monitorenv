@@ -12,7 +12,7 @@ import { FormikInput } from '../../../uiMonitor/CustomFormikFields/FormikInput'
 import { FormikRadioGroup } from '../../../uiMonitor/CustomFormikFields/FormikRadioGroup'
 import { FormikTextarea } from '../../../uiMonitor/CustomFormikFields/FormikTextarea'
 import { MultiZonePicker } from '../MultiZonePicker'
-import { ResourceUnitsForm } from './ResourceUnitsForm'
+import { ControlUnitsForm } from './ControlUnitsForm'
 
 export function GeneralInformationsForm() {
   return (
@@ -38,7 +38,7 @@ export function GeneralInformationsForm() {
         </SubGroup>
       </Form.Group>
       <Form.Group>
-        <FieldArray name="resourceUnits" render={props => <ResourceUnitsForm {...props} />} />
+        <FieldArray name="controlUnits" render={props => <ControlUnitsForm {...props} />} />
       </Form.Group>
 
       <MultiZonePicker

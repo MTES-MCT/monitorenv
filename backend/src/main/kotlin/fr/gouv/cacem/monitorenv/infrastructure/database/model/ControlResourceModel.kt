@@ -12,11 +12,19 @@ data class ControlResourceModel(
     var id: Int,
     @Column(name = "name")
     var name: String,
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "unit_id")
     @JsonBackReference
     var controlUnit: ControlUnitModel? = null
 ) {
+    companion object {
+        fun fromControlEntity(controlResourceEntity: ControlResourceEntity, controlUnitModel: ControlUnitModel) = ControlResourceModel(
+                id = controlResourceEntity.id,
+                name = controlResourceEntity.name,
+                controlUnit = controlUnitModel
+        )
+    }
+
     fun toControlResource() = ControlResourceEntity(
         id = id,
         name = name

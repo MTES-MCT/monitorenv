@@ -1,11 +1,11 @@
 export type ControlUnit = {
   administration: string
   id: number
-  resources: controlResource[]
+  resources: ControlResource[]
   name: string
 }
 
-type controlResource = {
+export type ControlResource = {
   id: number
   name: string
 }

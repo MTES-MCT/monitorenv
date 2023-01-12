@@ -13,18 +13,18 @@ data class MissionControlResourceModel(
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "mission_id")
     var mission: MissionModel,
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = [CascadeType.MERGE])
     @JoinColumn(name = "control_resource_id")
     var ressource: ControlResourceModel
 ) {
     companion object {
         fun fromControlResourceEntity(controlResourceEntity: ControlResourceEntity, mission: MissionModel, controlUnitModel: ControlUnitModel) = MissionControlResourceModel(
-            ressource = ControlResourceModel(
-                id = controlResourceEntity.id,
-                name = controlResourceEntity.name,
-                controlUnit = controlUnitModel
-            ),
-            mission = mission
+                ressource = ControlResourceModel(
+                        id = controlResourceEntity.id,
+                        name = controlResourceEntity.name,
+                        controlUnit = controlUnitModel
+                ),
+                mission = mission
         )
     }
 }

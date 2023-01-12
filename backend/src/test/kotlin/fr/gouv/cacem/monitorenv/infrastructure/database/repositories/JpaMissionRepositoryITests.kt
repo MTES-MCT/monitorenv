@@ -23,7 +23,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `createMission should create a new mission`() {
+    fun `save should create a new mission`() {
         // Given
         val existingMissions = jpaMissionRepository.findAllMissions(
             startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
@@ -78,7 +78,52 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `createMission should throw an exception When the resource id is not found`() {
+    fun `save should update mission resources`() {
+        // Given
+        val newMission = MissionEntity(
+                missionType = MissionTypeEnum.SEA,
+                inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                isClosed = false,
+                isDeleted = false,
+                missionSource = MissionSourceEnum.CACEM,
+                controlUnits = listOf(
+                        ControlUnitEntity(
+                                id = 10006,
+                                name = "DPM – DDTM 35",
+                                administration = "DDTM",
+                                resources = listOf(ControlResourceEntity(id = 8, name = "PAM Jeanne Barret"))
+                        )
+                )
+        )
+        jpaMissionRepository.save(newMission)
+
+        // When
+        val newMissionUpdated = jpaMissionRepository.save(newMission.copy(controlUnits = listOf(
+                ControlUnitEntity(
+                        id = 10006,
+                        name = "DPM – DDTM 35",
+                        administration = "DDTM",
+                        resources = listOf(
+                                ControlResourceEntity(id = 8, name = "PAM Jeanne Barret"),
+                                ControlResourceEntity(id = 5, name = "Voiture"))
+                )
+        )))
+
+        // Then
+        assertThat(newMissionUpdated.controlUnits).hasSize(1)
+        assertThat(newMissionUpdated.controlUnits.first().id).isEqualTo(10006)
+        assertThat(newMissionUpdated.controlUnits.first().name).isEqualTo("DPM – DDTM 35")
+        assertThat(newMissionUpdated.controlUnits.first().administration).isEqualTo("DDTM")
+        assertThat(newMissionUpdated.controlUnits.first().resources).hasSize(2)
+        assertThat(newMissionUpdated.controlUnits.first().resources.first().id).isEqualTo(8)
+        assertThat(newMissionUpdated.controlUnits.first().resources.first().name).isEqualTo("PAM Jeanne Barret")
+        assertThat(newMissionUpdated.controlUnits.first().resources.last().id).isEqualTo(5)
+        assertThat(newMissionUpdated.controlUnits.first().resources.last().name).isEqualTo("Voiture")
+    }
+
+    @Test
+    @Transactional
+    fun `save should throw an exception When the resource id is not found`() {
         // Given
         val newMission = MissionEntity(
             missionType = MissionTypeEnum.SEA,
@@ -108,7 +153,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `createMission should throw an exception When the unit id is not found`() {
+    fun `save should throw an exception When the unit id is not found`() {
         // Given
         val newMission = MissionEntity(
             missionType = MissionTypeEnum.SEA,

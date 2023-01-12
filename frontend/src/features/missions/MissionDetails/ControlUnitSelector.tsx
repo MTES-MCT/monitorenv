@@ -9,12 +9,14 @@ import {useGetControlUnitsQuery} from '../../../api/controlUnitsAPI'
 import {FormikInput} from '../../../uiMonitor/CustomFormikFields/FormikInput'
 import {SelectPicker} from '../../../uiMonitor/CustomRsuite/SelectPicker'
 import {ReactComponent as DeleteSVG} from '../../../uiMonitor/icons/Delete.svg'
+import type {ControlResource} from "../../../domain/entities/controlUnit";
 
-export function ResourceUnitSelector({ removeResourceUnit, resourceUnitIndex, resourceUnitPath, ...props }) {
-  const [administrationField, , administrationHelpers] = useField(`resourceUnits.${resourceUnitIndex}.administration`)
-  const [unitField, , unitHelpers] = useField(`resourceUnits.${resourceUnitIndex}.unit`)
-  const [resourcesField, , resourcesHelpers] = useField(`resourceUnits.${resourceUnitIndex}.resources`)
-  const [, , contactHelpers] = useField(`resourceUnits.${resourceUnitIndex}.contact`)
+export function ControlUnitSelector({ removeControlUnit, controlUnitIndex, controlUnitPath, ...props }) {
+  const [administrationField, , administrationHelpers] = useField<string>(`controlUnits.${controlUnitIndex}.administration`)
+  const [unitField, , unitHelpers] = useField<number | undefined>(`controlUnits.${controlUnitIndex}.id`)
+  const [, , unitNameHelpers] = useField<string | undefined>(`controlUnits.${controlUnitIndex}.name`)
+  const [resourcesField, , resourcesHelpers] = useField<ControlResource[]>(`controlUnits.${controlUnitIndex}.resources`)
+  const [, , contactHelpers] = useField<string>(`controlUnits.${controlUnitIndex}.contact`)
 
   const resourcesRef = useRef() as MutableRefObject<HTMLDivElement>
   const { data, isError, isLoading } = useGetControlUnitsQuery()
@@ -23,24 +25,22 @@ export function ResourceUnitSelector({ removeResourceUnit, resourceUnitIndex, re
     .map(unit => unit.administration)
     .uniq()
     .sort((a, b) => a?.localeCompare(b))
+    .map(administration => ({administration}))
     .value()
   const unitList = _.chain(data)
     .filter(unit => unit.administration === administrationField.value)
     .sort((a, b) => a?.name?.localeCompare(b?.name))
     .value()
   const resourcesList = _.chain(data)
-      .find(unit => unit.administration === administrationField.value && unit.name === unitField.value)
-      .value()
-      .resources
+      ?.find(unit => unit.administration === administrationField.value && unit.id === unitField.value)
+      ?.value()
+      ?.resources || []
 
-  // Add any resource from Mission not present in resourceList from API
+  // Add any resource from Mission not present in list from API (as the resource might be historized)
   // See: https://github.com/MTES-MCT/monitorenv/issues/103
-  const existingResourcesOptions = resourcesField?.value?.map(r => ({
-    resourceName: r
-  }))
-  const combinedResourceList = _.chain([...resourcesList, ...existingResourcesOptions])
-      .uniqBy('resourceName')
-      .sort((a, b) => a?.resourceName?.localeCompare(b?.resourceName))
+  const combinedResourceList = _.chain([...resourcesList, ...resourcesField?.value])
+      .uniqBy('id')
+      .sort((a, b) => a?.name?.localeCompare(b?.name))
       .value()
 
   const handleAdministrationChange = value => {
@@ -50,10 +50,10 @@ export function ResourceUnitSelector({ removeResourceUnit, resourceUnitIndex, re
         _.filter(data, r => r.administration === value),
         'unit'
       )
-      if (newUnitList.length === 1) {
-        unitHelpers.setValue(newUnitList[0]?.unit)
+      if (newUnitList.length === 1 && newUnitList[0]?.id) {
+        unitHelpers.setValue(newUnitList[0]?.id)
       } else {
-        unitHelpers.setValue('')
+        unitHelpers.setValue(undefined)
       }
       resourcesHelpers.setValue([])
     }
@@ -62,10 +62,13 @@ export function ResourceUnitSelector({ removeResourceUnit, resourceUnitIndex, re
     if (value !== unitField.value) {
       unitHelpers.setValue(value)
       resourcesHelpers.setValue([])
+      const name = unitList.find(unit => unit.id === value)?.name
+      unitNameHelpers.setValue(name)
     }
   }
-  const handleResourceChange = value => {
-    resourcesHelpers.setValue(value)
+  const handleResourceChange = values => {
+    const resourceObjects = values.map(id => resourcesList.find(resource => resource.id == id))
+    resourcesHelpers.setValue(resourceObjects)
   }
   const handleContactChange = value => {
     contactHelpers.setValue(value)
@@ -76,7 +79,7 @@ export function ResourceUnitSelector({ removeResourceUnit, resourceUnitIndex, re
   if (isLoading) {
     return <div>Chargement</div>
   }
-  const resourceUnitIndexDisplayed = resourceUnitIndex + 1
+  const resourceUnitIndexDisplayed = controlUnitIndex + 1
 
   return (
     <RessourceUnitWrapper>
@@ -100,12 +103,12 @@ export function ResourceUnitSelector({ removeResourceUnit, resourceUnitIndex, re
             block
             data={unitList}
             disabled={_.isEmpty(administrationField.value)}
-            labelKey="unit"
+            labelKey="name"
             onChange={handleUnitChange}
             searchable={unitList.length > 10}
             size="sm"
             value={unitField.value}
-            valueKey="unit"
+            valueKey="id"
             {...props}
           />
         </FormGroupFixed>
@@ -117,28 +120,28 @@ export function ResourceUnitSelector({ removeResourceUnit, resourceUnitIndex, re
               cleanable={false}
               container={() => resourcesRef.current}
               creatable
-              data={resourcesList}
-              disabled={_.isEmpty(unitField.value)}
-              labelKey="resourceName"
+              data={combinedResourceList}
+              disabled={!_.isNumber(unitField.value)}
+              labelKey="name"
               onChange={handleResourceChange}
               size="sm"
-              value={resourcesField.value}
-              valueKey="resourceName"
+              value={resourcesField.value.map(resource => resource.id)}
+              valueKey="id"
               {...props}
             />
           </RefWrapper>
         </FormGroupFixed>
         <FormGroupFixed>
-          <Form.ControlLabel htmlFor={`resourceUnits.${resourceUnitIndex}.contact`}>
+          <Form.ControlLabel htmlFor={`controlUnits.${controlUnitIndex}.contact`}>
             Contact de l&apos;unité {resourceUnitIndexDisplayed}
           </Form.ControlLabel>
-          <FormikInput name={`resourceUnits.${resourceUnitIndex}.contact`} onChange={handleContactChange} size="sm" />
+          <FormikInput name={`controlUnits.${controlUnitIndex}.contact`} onChange={handleContactChange} size="sm" />
         </FormGroupFixed>
       </SelectorWrapper>
 
-      {resourceUnitIndex > 0 && (
+      {controlUnitIndex > 0 && (
         <div>
-          <DeleteButton appearance="ghost" icon={<DeleteSVG className="rs-icon" />} onClick={removeResourceUnit} />
+          <DeleteButton appearance="ghost" icon={<DeleteSVG className="rs-icon" />} onClick={removeControlUnit} />
         </div>
       )}
     </RessourceUnitWrapper>

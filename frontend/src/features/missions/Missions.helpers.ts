@@ -79,14 +79,14 @@ export const missionFactory = (mission = {}) => ({
   observationsCacem: '',
   observationsCnsp: '',
   openBy: '',
-  resourceUnits: [resourceUnitFactory()],
+  controlUnits: [controlUnitFactory()],
   ...mission
 })
 
-export const resourceUnitFactory = ({ ...resourceUnit } = {}) => ({
+export const controlUnitFactory = ({ ...resourceUnit } = {}) => ({
   administration: '',
   resources: [],
-  unit: '',
+  name: '',
   ...resourceUnit
 })
 

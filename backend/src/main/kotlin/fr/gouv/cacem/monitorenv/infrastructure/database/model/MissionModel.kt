@@ -89,9 +89,9 @@ data class MissionModel(
     @Fetch(value = FetchMode.SUBSELECT)
     var envActions: MutableList<EnvActionModel>? = ArrayList(),
     @OneToMany(
-        mappedBy = "mission",
-        cascade = [CascadeType.ALL],
-        orphanRemoval = true
+            mappedBy = "mission",
+            cascade = [CascadeType.ALL],
+            orphanRemoval = true
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
@@ -127,11 +127,11 @@ data class MissionModel(
                 ?.filter { resource ->
                     resource.ressource.controlUnit?.id == unit.unit.id
                 }
-                ?.map { resource -> resource.ressource }
+                ?.map { resource -> resource }
 
             unit.unit.toControlUnit().copy(
                 contact = unit.contact,
-                resources = savedUnitResources?.let { safeUnitResources -> safeUnitResources.map { it.toControlResource() } } ?: listOf()
+                resources = savedUnitResources?.let { safeUnitResources -> safeUnitResources.map { it.ressource.toControlResource() } } ?: listOf()
             )
         } ?: listOf()
     )

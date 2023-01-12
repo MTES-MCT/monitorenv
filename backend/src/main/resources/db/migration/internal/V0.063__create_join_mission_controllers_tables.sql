@@ -2,15 +2,15 @@ create table missions_control_units (
     id serial primary key,
     mission_id integer references missions not null,
     control_unit_id integer references control_units(id) not null,
-    contact text,
-    unique (mission_id, control_unit_id)
+    contact text
+    --unique (mission_id, control_unit_id)
 );
 
 create table missions_control_resources (
     id serial primary key,
     mission_id integer references missions not null,
-    control_resource_id integer references control_resources(id) not null,
-    unique (mission_id, control_resource_id)
+    control_resource_id integer references control_resources(id) not null
+    --unique (mission_id, control_resource_id)
 );
 
 -- Add control units
