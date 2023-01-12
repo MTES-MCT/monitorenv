@@ -15,7 +15,7 @@ create table missions_control_resources (
 
 -- Add control units
 WITH missions_units_name AS (
-    select
+    select distinct
         id AS mission_id,
         jsonb_array_elements(resource_units) ->> 'unit' AS unit_name,
         jsonb_array_elements(resource_units) ->> 'contact' AS unit_contact
