@@ -18,10 +18,11 @@ data class MissionControlResourceModel(
     var ressource: ControlResourceModel
 ) {
     companion object {
-        fun fromControlResourceEntity(controlResourceEntity: ControlResourceEntity, mission: MissionModel) = MissionControlResourceModel(
+        fun fromControlResourceEntity(controlResourceEntity: ControlResourceEntity, mission: MissionModel, controlUnitModel: ControlUnitModel) = MissionControlResourceModel(
             ressource = ControlResourceModel(
                 id = controlResourceEntity.id,
-                name = controlResourceEntity.name
+                name = controlResourceEntity.name,
+                controlUnit = controlUnitModel
             ),
             mission = mission
         )

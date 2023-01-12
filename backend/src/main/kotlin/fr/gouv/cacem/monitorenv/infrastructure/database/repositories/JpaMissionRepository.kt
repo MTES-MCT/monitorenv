@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
-import fr.gouv.cacem.monitorenv.domain.exceptions.InvalidControlResourceOrUnitException
+import fr.gouv.cacem.monitorenv.domain.exceptions.ControlResourceOrUnitNotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
@@ -47,9 +47,10 @@ class JpaMissionRepository(
     @Transactional
     override fun save(mission: MissionEntity): MissionEntity {
         return try {
-            dbMissionRepository.save(MissionModel.fromMissionEntity(mission, mapper)).toMissionEntity(mapper)
+            val missionModel = MissionModel.fromMissionEntity(mission, mapper)
+            dbMissionRepository.save(missionModel).toMissionEntity(mapper)
         } catch (e: InvalidDataAccessApiUsageException) {
-            throw InvalidControlResourceOrUnitException("Invalid control unit or resource id: not found in referential", e)
+            throw ControlResourceOrUnitNotFoundException("Invalid control unit or resource id: not found in referential", e)
         }
     }
 

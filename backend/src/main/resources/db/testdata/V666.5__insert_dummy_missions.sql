@@ -109,7 +109,9 @@ INSERT INTO missions_control_units (mission_id, control_unit_id) VALUES
 (40, 10004);
 
 INSERT INTO missions_control_resources (mission_id, control_resource_id) VALUES
-(10, 8),
+(10, 3),
+(10, 4),
+(10, 5),
 (12, 10),
 (13, 8),
 (14, 3),

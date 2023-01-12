@@ -3,7 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.missions.*
-import fr.gouv.cacem.monitorenv.domain.exceptions.InvalidControlResourceOrUnitException
+import fr.gouv.cacem.monitorenv.domain.exceptions.ControlResourceOrUnitNotFoundException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
 import org.junit.jupiter.api.Test
@@ -42,23 +42,27 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             isClosed = false,
             isDeleted = false,
             missionSource = MissionSourceEnum.CACEM,
-            controlResources = listOf(ControlResourceEntity(id = 8, name = "PAM Jeanne Barret")),
-            controlUnits = listOf(ControlUnitEntity(id = 10006, name = "DPM – DDTM 35", administration = "DDTM", resources = listOf()))
+            controlUnits = listOf(
+                ControlUnitEntity(
+                    id = 10006,
+                    name = "DPM – DDTM 35",
+                    administration = "DDTM",
+                    resources = listOf(ControlResourceEntity(id = 8, name = "PAM Jeanne Barret"))
+                )
+            )
         )
 
         // When
         val newMissionCreated = jpaMissionRepository.save(newMission)
 
         // Then
-        assertThat(newMissionCreated.controlResources).hasSize(1)
-        assertThat(newMissionCreated.controlResources.first().id).isEqualTo(8)
-        assertThat(newMissionCreated.controlResources.first().name).isEqualTo("PAM Jeanne Barret")
-
         assertThat(newMissionCreated.controlUnits).hasSize(1)
         assertThat(newMissionCreated.controlUnits.first().id).isEqualTo(10006)
         assertThat(newMissionCreated.controlUnits.first().name).isEqualTo("DPM – DDTM 35")
         assertThat(newMissionCreated.controlUnits.first().administration).isEqualTo("DDTM")
-        assertThat(newMissionCreated.controlUnits.first().resources).isEmpty()
+        assertThat(newMissionCreated.controlUnits.first().resources).hasSize(1)
+        assertThat(newMissionCreated.controlUnits.first().resources.first().id).isEqualTo(8)
+        assertThat(newMissionCreated.controlUnits.first().resources.first().name).isEqualTo("PAM Jeanne Barret")
 
         val missions = jpaMissionRepository.findAllMissions(
             startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
@@ -82,7 +86,14 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             isClosed = false,
             isDeleted = false,
             missionSource = MissionSourceEnum.CACEM,
-            controlResources = listOf(ControlResourceEntity(id = 123456, name = "PAM Jeanne Barret"))
+            controlUnits = listOf(
+                ControlUnitEntity(
+                    id = 10006,
+                    name = "DPM – DDTM 35",
+                    administration = "DDTM",
+                    resources = listOf(ControlResourceEntity(id = 123456, name = "PAM Jeanne Barret"))
+                )
+            )
         )
 
         // When
@@ -91,7 +102,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         }
 
         // Then
-        assertThat(throwable).isInstanceOf(InvalidControlResourceOrUnitException::class.java)
+        assertThat(throwable).isInstanceOf(ControlResourceOrUnitNotFoundException::class.java)
         assertThat(throwable.message).contains("Invalid control unit or resource id: not found in referential")
     }
 
@@ -114,7 +125,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         }
 
         // Then
-        assertThat(throwable).isInstanceOf(InvalidControlResourceOrUnitException::class.java)
+        assertThat(throwable).isInstanceOf(ControlResourceOrUnitNotFoundException::class.java)
         assertThat(throwable.message).contains("Invalid control unit or resource id: not found in referential")
     }
 
@@ -332,9 +343,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     ),
                     contact = null
                 )
-            ),
-            controlResources = listOf(
-                ControlResourceEntity(id = 8, name = "PAM Jeanne Barret")
             )
         )
         val mission = jpaMissionRepository.findMissionById(10)

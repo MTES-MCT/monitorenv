@@ -122,9 +122,17 @@ data class MissionModel(
         isDeleted = isDeleted,
         missionSource = missionSource,
         envActions = envActions!!.map { it.toActionEntity(mapper) },
-        controlResources = controlResources?.map { it.ressource.toControlResource() } ?: listOf(),
-        controlUnits = controlUnits?.map {
-            it.unit.toControlUnit().copy(contact = it.contact)
+        controlUnits = controlUnits?.map { unit ->
+            val savedUnitResources = controlResources
+                ?.filter { resource ->
+                    resource.ressource.controlUnit?.id == unit.unit.id
+                }
+                ?.map { resource -> resource.ressource }
+
+            unit.unit.toControlUnit().copy(
+                contact = unit.contact,
+                resources = savedUnitResources?.let { safeUnitResources -> safeUnitResources.map { it.toControlResource() } } ?: listOf()
+            )
         } ?: listOf()
     )
 
@@ -151,22 +159,15 @@ data class MissionModel(
                 missionModel.envActions?.add(EnvActionModel.fromEnvActionEntity(it, missionModel, mapper))
             }
 
-            mission.controlResources.map {
-                missionModel.controlResources?.add(
-                    MissionControlResourceModel.fromControlResourceEntity(
-                        it,
-                        missionModel
-                    )
-                )
-            }
-
             mission.controlUnits.map {
-                missionModel.controlUnits?.add(
-                    MissionControlUnitModel.fromControlUnitEntity(
-                        it,
-                        missionModel
-                    )
+                val controlUnitModel = MissionControlUnitModel.fromControlUnitEntity(
+                    it,
+                    missionModel
                 )
+                missionModel.controlUnits?.add(controlUnitModel)
+
+                val resources = it.resources.map { resource -> MissionControlResourceModel.fromControlResourceEntity(resource, missionModel, controlUnitModel.unit) }
+                missionModel.controlResources?.addAll(resources)
             }
 
             return missionModel

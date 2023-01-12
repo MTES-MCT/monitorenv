@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.missions.*
 import org.locationtech.jts.geom.MultiPolygon
@@ -11,7 +10,6 @@ data class CreateOrUpdateMissionDataInput(
     val missionType: MissionTypeEnum,
     val missionNature: List<MissionNatureEnum>? = listOf(),
     val controlUnits: List<ControlUnitEntity> = listOf(),
-    val controlResource: List<ControlResourceEntity> = listOf(),
     val openBy: String? = null,
     val closedBy: String? = null,
     val observationsCacem: String? = null,

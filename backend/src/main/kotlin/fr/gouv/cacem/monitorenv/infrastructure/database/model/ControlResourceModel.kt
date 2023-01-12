@@ -12,7 +12,7 @@ data class ControlResourceModel(
     var id: Int,
     @Column(name = "name")
     var name: String,
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "unit_id")
     @JsonBackReference
     var controlUnit: ControlUnitModel? = null

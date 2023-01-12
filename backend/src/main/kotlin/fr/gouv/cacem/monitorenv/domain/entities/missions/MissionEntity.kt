@@ -1,5 +1,4 @@
 package fr.gouv.cacem.monitorenv.domain.entities.missions
-import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEntity
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
@@ -9,7 +8,6 @@ data class MissionEntity(
     val missionType: MissionTypeEnum,
     val missionNature: List<MissionNatureEnum>? = listOf(),
     val controlUnits: List<ControlUnitEntity> = listOf(),
-    val controlResources: List<ControlResourceEntity> = listOf(),
     val openBy: String? = null,
     val closedBy: String? = null,
     val observationsCacem: String? = null,
