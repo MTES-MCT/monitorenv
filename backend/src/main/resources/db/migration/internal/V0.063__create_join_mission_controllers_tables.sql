@@ -23,7 +23,7 @@ WITH missions_units_name AS (
 )
 
 INSERT INTO missions_control_units(mission_id, control_unit_id, contact)
-    SELECT
+    SELECT DISTINCT
         mun.mission_id,
         cu.id AS control_unit_id,
         mun.unit_contact AS contact

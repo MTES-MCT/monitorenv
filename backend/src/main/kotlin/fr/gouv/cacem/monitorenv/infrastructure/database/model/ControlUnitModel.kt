@@ -12,7 +12,7 @@ data class ControlUnitModel(
     var id: Int,
     @Column(name = "name")
     var name: String,
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "administration_id")
     var administration: AdministrationModel,
     @OneToMany(
