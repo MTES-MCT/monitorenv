@@ -33,7 +33,7 @@ INSERT INTO missions_control_units(mission_id, control_unit_id, contact)
 
 -- Add control resources
 WITH missions_control_resource_names AS (
-    select
+    select distinct
         id AS mission_id,
         jsonb_array_elements_text(jsonb_array_elements(resource_units) -> 'resources')::VARCHAR AS resource_name,
         jsonb_array_elements(resource_units) ->> 'unit' AS unit_name
