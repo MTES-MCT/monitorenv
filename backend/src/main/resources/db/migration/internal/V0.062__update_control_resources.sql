@@ -12,4 +12,3 @@ insert into control_resources_temp(name, unit_id)
 
 drop table control_resources;
 alter table control_resources_temp rename to control_resources;
-ALTER SEQUENCE control_resources_temp_id_seq RENAME TO control_resources_id_seq;
