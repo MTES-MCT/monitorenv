@@ -1,5 +1,6 @@
 export type ControlUnit = {
   administration: string
+  contact: string
   id: number
   name: string
   resources: ControlResource[]
