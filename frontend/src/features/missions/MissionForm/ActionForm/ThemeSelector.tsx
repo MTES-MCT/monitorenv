@@ -3,10 +3,10 @@ import { useField } from 'formik'
 import { MutableRefObject, useRef } from 'react'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../constants/constants'
-import { SelectPicker } from '../../../uiMonitor/CustomRsuite/SelectPicker'
+import { COLORS } from '../../../../constants/constants'
+import { SelectPicker } from '../../../../uiMonitor/CustomRsuite/SelectPicker'
 
-export function ControlThemeSelector({ name, themes, valueKey, ...props }) {
+export function ThemeSelector({ name, themes, valueKey, ...props }) {
   const [field, , helpers] = useField(name)
   const { value } = field
   const { setValue } = helpers

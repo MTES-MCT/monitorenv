@@ -3,20 +3,20 @@ import { MutableRefObject, useRef } from 'react'
 import { Form, SelectPicker } from 'rsuite'
 import styled from 'styled-components'
 
-import { vesselTypeEnum } from '../../../domain/entities/missions'
+import { vesselSizeEnum } from '../../../../../../domain/entities/missions'
 
-export function VesselTypeSelector({ onChange, value, ...props }) {
-  const vesselTypeSelectorRef = useRef() as MutableRefObject<HTMLDivElement>
-  const vesselTypeFieldList = Object.values(vesselTypeEnum)
+export function VesselSizeSelector({ onChange, value, ...props }) {
+  const vesselSizeSelectorRef = useRef() as MutableRefObject<HTMLDivElement>
+  const vesselSizeFieldList = Object.values(vesselSizeEnum)
 
   return (
-    <SelectorWrapper ref={vesselTypeSelectorRef}>
-      <Form.ControlLabel htmlFor="vesselTypeField">Type de navire</Form.ControlLabel>
+    <SelectorWrapper ref={vesselSizeSelectorRef}>
+      <Form.ControlLabel htmlFor="vesselSizeField">Taille du navire</Form.ControlLabel>
       <SelectPicker
         block
         cleanable={false}
-        container={() => vesselTypeSelectorRef.current}
-        data={vesselTypeFieldList}
+        container={() => vesselSizeSelectorRef.current}
+        data={vesselSizeFieldList}
         labelKey="libelle"
         onChange={onChange}
         searchable={false}

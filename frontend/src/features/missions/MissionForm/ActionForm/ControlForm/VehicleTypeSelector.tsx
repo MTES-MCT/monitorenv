@@ -3,7 +3,7 @@ import { MutableRefObject, useRef } from 'react'
 import { Form, SelectPicker } from 'rsuite'
 import styled from 'styled-components'
 
-import { vehicleTypeEnum } from '../../../domain/entities/missions'
+import { vehicleTypeEnum } from '../../../../../domain/entities/missions'
 
 const DEFAULT_SELECT_PICKER_STYLE = {
   width: 150

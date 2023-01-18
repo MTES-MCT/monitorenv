@@ -4,7 +4,7 @@ import { MutableRefObject, useRef, useMemo } from 'react'
 import { Form, Tag, TagPicker } from 'rsuite'
 import styled from 'styled-components'
 
-import { useGetInfractionsQuery } from '../../../api/infractionsAPI'
+import { useGetInfractionsQuery } from '../../../../../../api/infractionsAPI'
 
 const sortNatinf = (a, b) => {
   if (a?.natinfCode < b?.natinfCode) {

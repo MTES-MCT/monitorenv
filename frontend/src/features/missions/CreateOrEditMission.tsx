@@ -26,9 +26,9 @@ import { ReactComponent as SaveSVG } from '../../uiMonitor/icons/Save.svg'
 import { SideWindowHeader } from '../side_window/SideWindowHeader'
 import { MissionCancelEditModal } from './MissionCancelEditModal'
 import { MissionDeleteModal } from './MissionDeleteModal'
-import { ActionForm } from './MissionDetails/ActionForm'
-import { ActionsForm } from './MissionDetails/ActionsForm'
-import { GeneralInformationsForm } from './MissionDetails/GeneralInformationsForm'
+import { ActionForm } from './MissionForm/ActionForm/ActionForm'
+import { ActionsForm } from './MissionForm/ActionsForm'
+import { GeneralInformationsForm } from './MissionForm/GeneralInformationsForm'
 import { missionFactory } from './Missions.helpers'
 
 export function CreateOrEditMission() {

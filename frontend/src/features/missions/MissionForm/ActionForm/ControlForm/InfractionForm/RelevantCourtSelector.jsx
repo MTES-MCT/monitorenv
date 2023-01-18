@@ -1,10 +1,10 @@
 import { useField } from 'formik'
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import { Form, SelectPicker } from 'rsuite'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../constants/constants'
-import { relevantCourtEnum } from '../../../domain/entities/missions'
+import { COLORS } from '../../../../../../constants/constants'
+import { relevantCourtEnum } from '../../../../../../domain/entities/missions'
 
 const DEFAULT_SELECT_PICKER_STYLE = {
   borderColor: COLORS.lightGray,

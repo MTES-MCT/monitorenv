@@ -4,20 +4,20 @@ import { useMemo, useEffect } from 'react'
 import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
-import { useGetControlThemesQuery } from '../../../api/controlThemesAPI'
-import { COLORS } from '../../../constants/constants'
-import { InteractionListener } from '../../../domain/entities/map/constants'
-import { usePrevious } from '../../../hooks/usePrevious'
-import { FormikCheckbox } from '../../../uiMonitor/CustomFormikFields/FormikCheckbox'
-import { FormikDatePicker } from '../../../uiMonitor/CustomFormikFields/FormikDatePicker'
-import { FormikInputNumberGhost } from '../../../uiMonitor/CustomFormikFields/FormikInputNumber'
-import { FormikTextarea } from '../../../uiMonitor/CustomFormikFields/FormikTextarea'
-import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
-import { ReactComponent as SurveillanceIconSVG } from '../../../uiMonitor/icons/Observation.svg'
-import { MultiZonePicker } from '../MultiZonePicker'
-import { ControlThemeSelector } from './ControlThemeSelector'
+import { useGetControlThemesQuery } from '../../../../api/controlThemesAPI'
+import { COLORS } from '../../../../constants/constants'
+import { InteractionListener } from '../../../../domain/entities/map/constants'
+import { usePrevious } from '../../../../hooks/usePrevious'
+import { FormikCheckbox } from '../../../../uiMonitor/CustomFormikFields/FormikCheckbox'
+import { FormikDatePicker } from '../../../../uiMonitor/CustomFormikFields/FormikDatePicker'
+import { FormikInputNumberGhost } from '../../../../uiMonitor/CustomFormikFields/FormikInputNumber'
+import { FormikTextarea } from '../../../../uiMonitor/CustomFormikFields/FormikTextarea'
+import { ReactComponent as DeleteSVG } from '../../../../uiMonitor/icons/Delete.svg'
+import { ReactComponent as SurveillanceIconSVG } from '../../../../uiMonitor/icons/Observation.svg'
+import { MultiZonePicker } from '../../MultiZonePicker'
+import { ThemeSelector } from './ThemeSelector'
 
-import type { MissionType, EnvActionControlType } from '../../../domain/entities/missions'
+import type { MissionType, EnvActionControlType } from '../../../../domain/entities/missions'
 
 export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionIndex }) {
   const {
@@ -34,10 +34,8 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
   const previousActionTheme = usePrevious(actionTheme)
 
   useEffect(() => {
-    if (previousActionTheme && previousActionTheme !== actionTheme) {
       setFieldValue(`envActions.${currentActionIndex}.actionSubTheme`, '')
     }
-  }, [previousActionTheme, actionTheme, currentActionIndex, setFieldValue])
 
   const handleRemoveAction = () => {
     setCurrentActionIndex(null)
@@ -59,13 +57,11 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
           Supprimer
         </IconButtonRight>
       </Header>
-      {isError && <Msg>Erreur au chargement des thèmes</Msg>}
-      {isLoading && <Msg>Chargement des thèmes</Msg>}
       {!isError && !isLoading && (
         <>
           <SelectorWrapper>
             <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionTheme`}>Thématique</Form.ControlLabel>
-            <ControlThemeSelector
+            <ThemeSelector
               name={`envActions.${currentActionIndex}.actionTheme`}
               themes={themes}
               valueKey="themeLevel1"
@@ -75,7 +71,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
             <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionSubTheme`}>
               Sous-thématique
             </Form.ControlLabel>
-            <ControlThemeSelector
+            <ThemeSelector
               name={`envActions.${currentActionIndex}.actionSubTheme`}
               themes={subThemes}
               valueKey="themeLevel2"
@@ -134,8 +130,6 @@ const Title = styled.h2`
   display: inline-block;
   color: ${COLORS.charcoal};
 `
-
-const Msg = styled.div``
 
 const SelectorWrapper = styled(Form.Group)`
   height: 58px;

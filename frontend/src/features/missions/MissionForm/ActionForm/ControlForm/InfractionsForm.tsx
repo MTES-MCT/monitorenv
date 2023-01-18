@@ -2,10 +2,10 @@ import { useState } from 'react'
 import { Button } from 'rsuite'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../constants/constants'
-import { infractionFactory } from '../Missions.helpers'
+import { COLORS } from '../../../../../constants/constants'
+import { infractionFactory } from '../../../Missions.helpers'
 import { InfractionCard } from './InfractionCard'
-import { InfractionForm } from './InfractionForm'
+import { InfractionForm } from './InfractionForm/InfractionForm'
 
 export function InfractionsForm({ canAddInfraction, currentActionIndex, form, push, remove }) {
   const [currentInfractionIndex, setCurrentInfractionIndex] = useState(null)

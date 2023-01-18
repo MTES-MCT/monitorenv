@@ -2,16 +2,16 @@ import { useField } from 'formik'
 import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../constants/constants'
+import { COLORS } from '../../../../../constants/constants'
 import {
   vehicleTypeEnum,
   formalNoticeEnum,
   infractionTypeEnum,
   vesselTypeEnum,
   actionTargetTypeEnum
-} from '../../../domain/entities/missions'
-import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
-import { ReactComponent as EditIconSVG } from '../../../uiMonitor/icons/Edit.svg'
+} from '../../../../../domain/entities/missions'
+import { ReactComponent as DeleteSVG } from '../../../../../uiMonitor/icons/Delete.svg'
+import { ReactComponent as EditIconSVG } from '../../../../../uiMonitor/icons/Edit.svg'
 
 export function InfractionCard({ currentActionIndex, infractionPath, removeInfraction, setCurrentInfractionIndex }) {
   const [targetTypeField] = useField(`envActions.${currentActionIndex}.actionTargetType`)

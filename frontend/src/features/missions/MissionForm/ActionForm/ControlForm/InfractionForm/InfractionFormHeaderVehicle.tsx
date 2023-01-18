@@ -2,8 +2,8 @@ import { useField } from 'formik'
 import { Form } from 'rsuite'
 import styled from 'styled-components'
 
-import { vehicleTypeEnum } from '../../../domain/entities/missions'
-import { FormikInput } from '../../../uiMonitor/CustomFormikFields/FormikInput'
+import { vehicleTypeEnum } from '../../../../../../domain/entities/missions'
+import { FormikInput } from '../../../../../../uiMonitor/CustomFormikFields/FormikInput'
 import { VesselSizeSelector } from './VesselSizeSelector'
 import { VesselTypeSelector } from './VesselTypeSelector'
 

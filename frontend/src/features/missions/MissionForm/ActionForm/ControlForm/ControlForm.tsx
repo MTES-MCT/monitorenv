@@ -7,25 +7,25 @@ import { useEffect, useMemo } from 'react'
 import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
-import { useGetControlThemesQuery } from '../../../api/controlThemesAPI'
-import { COLORS } from '../../../constants/constants'
+import { useGetControlThemesQuery } from '../../../../../api/controlThemesAPI'
+import { COLORS } from '../../../../../constants/constants'
 import {
   MissionType,
   EnvActionControlType,
   THEME_REQUIRE_PROTECTED_SPECIES,
   actionTargetTypeEnum,
   vehicleTypeEnum
-} from '../../../domain/entities/missions'
-import { usePrevious } from '../../../hooks/usePrevious'
-import { FormikDatePicker } from '../../../uiMonitor/CustomFormikFields/FormikDatePicker'
-import { FormikInputNumberGhost } from '../../../uiMonitor/CustomFormikFields/FormikInputNumber'
-import { ReactComponent as ControlIconSVG } from '../../../uiMonitor/icons/Control.svg'
-import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
-import { MultiPointPicker } from '../MultiPointPicker'
+} from '../../../../../domain/entities/missions'
+import { usePrevious } from '../../../../../hooks/usePrevious'
+import { FormikDatePicker } from '../../../../../uiMonitor/CustomFormikFields/FormikDatePicker'
+import { FormikInputNumberGhost } from '../../../../../uiMonitor/CustomFormikFields/FormikInputNumber'
+import { ReactComponent as ControlIconSVG } from '../../../../../uiMonitor/icons/Control.svg'
+import { ReactComponent as DeleteSVG } from '../../../../../uiMonitor/icons/Delete.svg'
+import { MultiPointPicker } from '../../../MultiPointPicker'
+import { ProtectedSpeciesSelector } from '../ProtectedSpeciesSelector'
+import { ThemeSelector } from '../ThemeSelector'
 import { ActionTargetSelector } from './ActionTargetSelector'
-import { ControlThemeSelector } from './ControlThemeSelector'
 import { InfractionsForm } from './InfractionsForm'
-import { ProtectedSpeciesSelector } from './ProtectedSpeciesSelector'
 import { VehicleTypeSelector } from './VehicleTypeSelector'
 
 export function ControlForm({
@@ -140,7 +140,7 @@ export function ControlForm({
             <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionTheme`}>
               Thématique de contrôle
             </Form.ControlLabel>
-            <ControlThemeSelector
+            <ThemeSelector
               name={`envActions.${currentActionIndex}.actionTheme`}
               themes={themes}
               valueKey="themeLevel1"
@@ -150,7 +150,7 @@ export function ControlForm({
             <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionSubTheme`}>
               Sous-thématique de contrôle
             </Form.ControlLabel>
-            <ControlThemeSelector
+            <ThemeSelector
               name={`envActions.${currentActionIndex}.actionSubTheme`}
               themes={subThemes}
               valueKey="themeLevel2"

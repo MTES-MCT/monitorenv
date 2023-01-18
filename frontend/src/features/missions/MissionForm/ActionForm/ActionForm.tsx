@@ -1,9 +1,9 @@
 import { useField } from 'formik'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../constants/constants'
-import { actionTypeEnum } from '../../../domain/entities/missions'
-import { ControlForm } from './ControlForm'
+import { COLORS } from '../../../../constants/constants'
+import { actionTypeEnum } from '../../../../domain/entities/missions'
+import { ControlForm } from './ControlForm/ControlForm'
 import { NoteForm } from './NoteForm'
 import { SurveillanceForm } from './SurveillanceForm'
 

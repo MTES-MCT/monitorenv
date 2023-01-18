@@ -4,7 +4,7 @@ import { MutableRefObject, useRef } from 'react'
 import { Form, TagPicker } from 'rsuite'
 import styled from 'styled-components'
 
-import { protectedSpeciesEnum } from '../../../domain/entities/missions'
+import { protectedSpeciesEnum } from '../../../../domain/entities/missions'
 
 export function ProtectedSpeciesSelector({ name, ...props }) {
   const [protectedSpeciesField, , protectedSpeciesHelpers] = useField(name)

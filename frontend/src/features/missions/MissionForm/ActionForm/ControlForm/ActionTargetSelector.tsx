@@ -2,8 +2,8 @@
 import { Form } from 'rsuite'
 import styled from 'styled-components'
 
-import { actionTargetTypeEnum } from '../../../domain/entities/missions'
-import { SelectPickerWhite } from '../../../uiMonitor/CustomRsuite/SelectPicker'
+import { actionTargetTypeEnum } from '../../../../../domain/entities/missions'
+import { SelectPickerWhite } from '../../../../../uiMonitor/CustomRsuite/SelectPicker'
 
 const DEFAULT_SELECT_PICKER_STYLE = {
   width: 145

@@ -1,7 +1,7 @@
 import { Form } from 'rsuite'
 import styled from 'styled-components'
 
-import { FormikInput } from '../../../uiMonitor/CustomFormikFields/FormikInput'
+import { FormikInput } from '../../../../../../uiMonitor/CustomFormikFields/FormikInput'
 
 export function InfractionFormHeaderCompany({ infractionPath }) {
   return (
