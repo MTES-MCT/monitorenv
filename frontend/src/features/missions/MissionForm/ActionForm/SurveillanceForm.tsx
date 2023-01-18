@@ -32,10 +32,13 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
   const subThemes = useMemo(() => _.filter(data, t => t.themeLevel1 === actionTheme), [data, actionTheme])
 
   const previousActionTheme = usePrevious(actionTheme)
+  const previousActionIndex = usePrevious(currentActionIndex)
 
   useEffect(() => {
+    if (previousActionIndex === currentActionIndex && previousActionTheme && previousActionTheme !== actionTheme) {
       setFieldValue(`envActions.${currentActionIndex}.actionSubTheme`, '')
     }
+  }, [previousActionTheme, actionTheme, previousActionIndex, currentActionIndex, setFieldValue])
 
   const handleRemoveAction = () => {
     setCurrentActionIndex(null)

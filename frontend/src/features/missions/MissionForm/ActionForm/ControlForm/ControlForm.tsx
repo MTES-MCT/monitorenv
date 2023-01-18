@@ -52,12 +52,14 @@ export function ControlForm({
   const subThemes = useMemo(() => _.filter(data, t => t.themeLevel1 === actionTheme), [data, actionTheme])
 
   const previousActionTheme = usePrevious(actionTheme)
+  const previousActionIndex = usePrevious(currentActionIndex)
 
   useEffect(() => {
-    if (previousActionTheme && previousActionTheme !== actionTheme) {
+    if (previousActionIndex === currentActionIndex && previousActionTheme && previousActionTheme !== actionTheme) {
       setFieldValue(`envActions.${currentActionIndex}.actionSubTheme`, '')
     }
     if (
+      previousActionIndex === currentActionIndex &&
       !!protectedSpecies &&
       protectedSpecies.length > 0 &&
       !!actionTheme &&
@@ -65,7 +67,7 @@ export function ControlForm({
     ) {
       setFieldValue(`envActions.${currentActionIndex}.protectedSpecies`, [])
     }
-  }, [previousActionTheme, actionTheme, protectedSpecies, currentActionIndex, setFieldValue])
+  }, [previousActionTheme, actionTheme, protectedSpecies, previousActionIndex, currentActionIndex, setFieldValue])
 
   const onVehicleTypeChange = selectedVehicleType => {
     setValues(v => {
