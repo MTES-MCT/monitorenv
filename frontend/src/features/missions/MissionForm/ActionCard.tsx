@@ -4,7 +4,7 @@ import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import { actionTargetTypeEnum, actionTypeEnum } from '../../../domain/entities/missions'
+import { actionTargetTypeEnum, ActionTypeEnum, actionTypeEnum, EnvActionType } from '../../../domain/entities/missions'
 import { ControlInfractionsTags } from '../../../ui/ControlInfractionsTags'
 import { ReactComponent as ControlIconSVG } from '../../../uiMonitor/icons/Control.svg'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
@@ -12,14 +12,25 @@ import { ReactComponent as DuplicateSVG } from '../../../uiMonitor/icons/Duplica
 import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/Note_libre.svg'
 import { ReactComponent as SurveillanceIconSVG } from '../../../uiMonitor/icons/Observation.svg'
 
-export function ActionCard({ action, duplicateAction, removeAction, selectAction, selected }) {
-  const parsedActionStartDateTimeUtc = new Date(action.actionStartDateTimeUtc)
+import type { MouseEventHandler } from 'react'
+
+type ActionCardProps = {
+  action: EnvActionType
+  duplicateAction: MouseEventHandler
+  removeAction: MouseEventHandler
+  selectAction: MouseEventHandler
+  selected: boolean
+}
+export function ActionCard({ action, duplicateAction, removeAction, selectAction, selected }: ActionCardProps) {
+  const parsedActionStartDateTimeUtc = action.actionStartDateTimeUtc
+    ? new Date(action.actionStartDateTimeUtc)
+    : undefined
 
   return (
     <Action onClick={selectAction}>
       <TimeLine>
         <DateTimeWrapper>
-          {isValid(parsedActionStartDateTimeUtc) && (
+          {parsedActionStartDateTimeUtc && isValid(parsedActionStartDateTimeUtc) && (
             <>
               <DateWrapper>{format(parsedActionStartDateTimeUtc, 'dd MMM', { locale: fr })}</DateWrapper>
               <Time>à {format(parsedActionStartDateTimeUtc, 'HH:mm', { locale: fr })}</Time>
@@ -28,12 +39,12 @@ export function ActionCard({ action, duplicateAction, removeAction, selectAction
         </DateTimeWrapper>
       </TimeLine>
       <ActionSummaryWrapper $type={action.actionType} selected={selected}>
-        {action.actionType === actionTypeEnum.CONTROL.code && (
+        {action.actionType === ActionTypeEnum.CONTROL && (
           <>
             <ControlIcon />
             <SummaryContent>
               <Title>
-                Contrôle{action.actionNumberOfControls > 1 ? 's ' : ' '}
+                Contrôle{action.actionNumberOfControls && action.actionNumberOfControls > 1 ? 's ' : ' '}
                 {action.actionTheme ? (
                   <Accented>{`${action.actionTheme} ${
                     action.actionSubTheme ? ` - ${action.actionSubTheme}` : ''
@@ -42,16 +53,19 @@ export function ActionCard({ action, duplicateAction, removeAction, selectAction
                   'à renseigner'
                 )}
               </Title>
-              {action.actionNumberOfControls > 0 && (
+              {action.actionNumberOfControls && action.actionNumberOfControls > 0 && (
                 <ControlSummary>
                   <Accented>{action.actionNumberOfControls}</Accented>
                   {` contrôle${action.actionNumberOfControls > 1 ? 's' : ''} réalisé${
                     action.actionNumberOfControls > 1 ? 's' : ''
                   } sur des cibles de type `}
-                  <Accented>{actionTargetTypeEnum[action.actionTargetType]?.libelle || 'non spécifié'}</Accented>
+                  <Accented>
+                    {(action.actionTargetType && actionTargetTypeEnum[action.actionTargetType]?.libelle) ||
+                      'non spécifié'}
+                  </Accented>
                 </ControlSummary>
               )}
-              {action.actionNumberOfControls > 0 && (
+              {action.actionNumberOfControls && action.actionNumberOfControls > 0 && (
                 <ControlInfractionsTags
                   actionNumberOfControls={action.actionNumberOfControls}
                   infractions={action?.infractions}
@@ -60,7 +74,7 @@ export function ActionCard({ action, duplicateAction, removeAction, selectAction
             </SummaryContent>
           </>
         )}
-        {action.actionType === actionTypeEnum.SURVEILLANCE.code && (
+        {action.actionType === ActionTypeEnum.SURVEILLANCE && (
           <>
             <SurveillanceIcon />
             <SummaryContent>
@@ -74,7 +88,7 @@ export function ActionCard({ action, duplicateAction, removeAction, selectAction
                   'à renseigner'
                 )}
               </Title>
-              {action.duration && (
+              {action.duration > 0 && (
                 <DurationWrapper>
                   <Accented>{action.duration} heure(s)&nbsp;</Accented>
                   de surveillance
@@ -84,7 +98,7 @@ export function ActionCard({ action, duplicateAction, removeAction, selectAction
           </>
         )}
 
-        {action.actionType === actionTypeEnum.NOTE.code && (
+        {action.actionType === ActionTypeEnum.NOTE && (
           <>
             <NoteIcon />
             <NoteContent>{action.observations || 'Observation à renseigner'}</NoteContent>

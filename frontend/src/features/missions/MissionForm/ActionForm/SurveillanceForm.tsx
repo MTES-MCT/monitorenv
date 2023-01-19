@@ -102,7 +102,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
       </FlexSelectorWrapper>
 
       <MultiZonePicker
-        addButtonLabel="+ Ajouter une zone de surveillance"
+        addButtonLabel="Ajouter une zone de surveillance"
         interactionListener={InteractionListener.SURVEILLANCE_ZONE}
         isLight
         label="Zone de surveillance"

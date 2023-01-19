@@ -42,7 +42,7 @@ export function GeneralInformationsForm() {
       </Form.Group>
 
       <MultiZonePicker
-        addButtonLabel="+ Ajouter une zone de mission"
+        addButtonLabel="Ajouter une zone de mission"
         interactionListener={InteractionListener.MISSION_ZONE}
         label="Localisations :"
         name="geom"

@@ -262,31 +262,38 @@ export const relevantCourtEnum = {
   }
 }
 
+export type ResourceUnit = {
+  administration: string
+}
+
 export type MissionType<EnvActionType = EnvActionControlType | EnvActionSurveillanceType | EnvActionNoteType> = {
   closedBy: string
   envActions: Array<EnvActionType>
   facade: string
-  geom: string
+  geom?: Record<string, any>[]
   id: number
-  inputEndDateTimeUtc: string
-  inputStartDateTimeUtc: string
+  inputEndDateTimeUtc?: string
+  inputStartDateTimeUtc?: string
   isClosed: boolean
-  missionNature: MissionNatureEnum
+  missionNature: MissionNatureEnum[]
   missionSource: MissionSourceEnum
   missionType: MissionTypeEnum
   observationsCacem: string
   observationsCnsp: string
   openBy: string
-  resourceUnits: string
+  resourceUnits: ResourceUnit[]
 }
+
+export type NewMissionType = Omit<MissionType, 'id' | 'facade'>
+
 export type EnvActionType = EnvActionControlType | EnvActionSurveillanceType | EnvActionNoteType
 
-export type EnvAction = {
-  actionStartDateTimeUtc: string
-  geom: string
+export type EnvActionCommonProperties = {
+  actionStartDateTimeUtc?: string
+  geom?: Record<string, any>[]
   id: string
 }
-export type EnvActionControlType = EnvAction & {
+export type EnvActionControlType = EnvActionCommonProperties & {
   actionNumberOfControls?: number
   actionSubTheme?: string
   actionTargetType?: string
@@ -297,16 +304,17 @@ export type EnvActionControlType = EnvAction & {
   vehicleType: string
 }
 
-export type EnvActionSurveillanceType = EnvAction & {
+export type EnvActionSurveillanceType = EnvActionCommonProperties & {
   actionSubTheme?: string
   actionTheme?: string
   actionType: ActionTypeEnum.SURVEILLANCE
+  coverMissionZone?: boolean
   duration: number
   observations: string
   protectedSpecies?: string
 }
 
-export type EnvActionNoteType = EnvAction & {
+export type EnvActionNoteType = EnvActionCommonProperties & {
   actionType: ActionTypeEnum.NOTE
   observations?: string
 }

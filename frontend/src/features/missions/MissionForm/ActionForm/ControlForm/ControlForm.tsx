@@ -134,88 +134,90 @@ export function ControlForm({
           Supprimer
         </IconButtonRight>
       </Header>
-      {isError && <Msg>Erreur au chargement des thèmes</Msg>}
-      {isLoading && <Msg>Chargement des thèmes</Msg>}
-      {!isError && !isLoading && (
-        <>
-          <SelectorWrapper>
-            <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionTheme`}>
-              Thématique de contrôle
-            </Form.ControlLabel>
-            <ThemeSelector
-              name={`envActions.${currentActionIndex}.actionTheme`}
-              themes={themes}
-              valueKey="themeLevel1"
-            />
-          </SelectorWrapper>
-          <SelectorWrapper>
-            <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionSubTheme`}>
-              Sous-thématique de contrôle
-            </Form.ControlLabel>
-            <ThemeSelector
-              name={`envActions.${currentActionIndex}.actionSubTheme`}
-              themes={subThemes}
-              valueKey="themeLevel2"
-            />
-          </SelectorWrapper>
-
-          {!!actionTheme && THEME_REQUIRE_PROTECTED_SPECIES.includes(actionTheme) && (
+      <FormBody>
+        {isError && <Msg>Erreur au chargement des thèmes</Msg>}
+        {isLoading && <Msg>Chargement des thèmes</Msg>}
+        {!isError && !isLoading && (
+          <>
             <SelectorWrapper>
-              <ProtectedSpeciesSelector name={`envActions.${currentActionIndex}.protectedSpecies`} />
+              <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionTheme`}>
+                Thématique de contrôle
+              </Form.ControlLabel>
+              <ThemeSelector
+                name={`envActions.${currentActionIndex}.actionTheme`}
+                themes={themes}
+                valueKey="themeLevel1"
+              />
             </SelectorWrapper>
-          )}
-        </>
-      )}
+            <SelectorWrapper>
+              <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionSubTheme`}>
+                Sous-thématique de contrôle
+              </Form.ControlLabel>
+              <ThemeSelector
+                name={`envActions.${currentActionIndex}.actionSubTheme`}
+                themes={subThemes}
+                valueKey="themeLevel2"
+              />
+            </SelectorWrapper>
 
-      <Form.Group>
-        <FormikDatePicker
-          isLight
-          label="Date et heure du contrôle"
-          name={`envActions[${currentActionIndex}].actionStartDateTimeUtc`}
-          withTime
-        />
-      </Form.Group>
-
-      <MultiPointPicker
-        addButtonLabel="+ Ajouter un point de contrôle"
-        containerName="geom"
-        label="Lieu du contrôle"
-        name={`envActions[${currentActionIndex}].geom`}
-      />
-
-      <Separator />
-
-      <ActionSummary>
-        <ActionFieldWrapper>
-          <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionNumberOfControls`}>
-            Nombre total de contrôles
-          </Form.ControlLabel>
-          <NumberOfControls min={0} name={`envActions.${currentActionIndex}.actionNumberOfControls`} size="sm" />
-        </ActionFieldWrapper>
-        <ActionFieldWrapper>
-          <ActionTargetSelector
-            currentActionIndex={currentActionIndex}
-            onChange={onTargetTypeChange}
-            value={actionTargetType}
-          />
-        </ActionFieldWrapper>
-        <ActionFieldWrapper>
-          <VehicleTypeSelector
-            currentActionIndex={currentActionIndex}
-            disabled={actionTargetType !== actionTargetTypeEnum.VEHICLE.code}
-            onChange={onVehicleTypeChange}
-            value={vehicleType}
-          />
-        </ActionFieldWrapper>
-      </ActionSummary>
-
-      <FieldArray
-        name={`envActions[${currentActionIndex}].infractions`}
-        // eslint-disable-next-line react/jsx-props-no-spreading
-        render={props => (
-          <InfractionsForm canAddInfraction={canAddInfraction} currentActionIndex={currentActionIndex} {...props} />
+            {!!actionTheme && THEME_REQUIRE_PROTECTED_SPECIES.includes(actionTheme) && (
+              <SelectorWrapper>
+                <ProtectedSpeciesSelector name={`envActions.${currentActionIndex}.protectedSpecies`} />
+              </SelectorWrapper>
+            )}
+          </>
         )}
-      />
+
+        <Form.Group>
+          <FormikDatePicker
+            isLight
+            label="Date et heure du contrôle"
+            name={`envActions[${currentActionIndex}].actionStartDateTimeUtc`}
+            withTime
+          />
+        </Form.Group>
+
+        <MultiPointPicker
+          addButtonLabel="Ajouter un point de contrôle"
+          containerName="geom"
+          label="Lieu du contrôle"
+          name={`envActions[${currentActionIndex}].geom`}
+        />
+
+        <Separator />
+
+        <ActionSummary>
+          <ActionFieldWrapper>
+            <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionNumberOfControls`}>
+              Nombre total de contrôles
+            </Form.ControlLabel>
+            <NumberOfControls min={0} name={`envActions.${currentActionIndex}.actionNumberOfControls`} size="sm" />
+          </ActionFieldWrapper>
+          <ActionFieldWrapper>
+            <ActionTargetSelector
+              currentActionIndex={currentActionIndex}
+              onChange={onTargetTypeChange}
+              value={actionTargetType}
+            />
+          </ActionFieldWrapper>
+          <ActionFieldWrapper>
+            <VehicleTypeSelector
+              currentActionIndex={currentActionIndex}
+              disabled={actionTargetType !== actionTargetTypeEnum.VEHICLE.code}
+              onChange={onVehicleTypeChange}
+              value={vehicleType}
+            />
+          </ActionFieldWrapper>
+        </ActionSummary>
+
+        <FieldArray
+          name={`envActions[${currentActionIndex}].infractions`}
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          render={props => (
+            <InfractionsForm canAddInfraction={canAddInfraction} currentActionIndex={currentActionIndex} {...props} />
+          )}
+        />
+      </FormBody>
     </>
   )
 }
@@ -224,7 +226,10 @@ const Header = styled.div`
   margin-bottom: 24px;
   display: flex;
 `
-
+const FormBody = styled.div`
+  display: flex;
+  flex-direction: column;
+`
 const Title = styled.h2`
   font-size: 16px;
   line-height: 22px;

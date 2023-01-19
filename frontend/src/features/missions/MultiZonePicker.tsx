@@ -1,4 +1,4 @@
-import { Accent, Button, Field, Icon, IconButton, Label } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, IconButton, Label } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import _ from 'lodash'
 import { boundingExtent } from 'ol/extent'
@@ -77,7 +77,7 @@ export function MultiZonePicker({ addButtonLabel, interactionListener, isLight, 
   return (
     <Field>
       <Label>{label}</Label>
-      <Button accent={Accent.SECONDARY} Icon={Icon.Plus} onClick={handleAddZone}>
+      <Button accent={Accent.SECONDARY} Icon={Icon.Plus} isFullWidth onClick={handleAddZone}>
         {addButtonLabel}
       </Button>
 
@@ -110,7 +110,14 @@ export function MultiZonePicker({ addButtonLabel, interactionListener, isLight, 
     </Field>
   )
 }
-
+const Field = styled.div`
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  > button {
+    max-width: 416px;
+  }
+`
 const Center = styled.a`
   cursor: pointer;
   margin-left: auto;
@@ -140,4 +147,5 @@ const ZoneWrapper = styled.div<{ isLight?: boolean }>`
   font-size: 13px;
   justify-content: space-between;
   padding: 5px 0.75rem 4px;
+  width: 416px;
 `
