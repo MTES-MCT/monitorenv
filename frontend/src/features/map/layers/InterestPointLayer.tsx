@@ -15,7 +15,8 @@ import {
   interestPointType
 } from '../../../domain/entities/interestPoints'
 import { Layers } from '../../../domain/entities/layers/constants'
-import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
+import { MapToolType, OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
+import { setMapToolOpened } from '../../../domain/shared_slices/Global'
 import {
   deleteInterestPointBeingDrawed,
   editInterestPoint,
@@ -31,6 +32,8 @@ import { usePrevious } from '../../../hooks/usePrevious'
 import InterestPointOverlay from '../overlays/InterestPointOverlay'
 import { getInterestPointStyle, POIStyle } from './styles/interestPoint.style'
 
+import type { MapChildrenProps } from '../Map'
+
 const DRAW_START_EVENT = 'drawstart'
 const DRAW_ABORT_EVENT = 'drawabort'
 const DRAW_END_EVENT = 'drawend'
@@ -44,7 +47,7 @@ type InterestPoint = {
   type: string
   uuid: string
 }
-export function InterestPointLayer({ map }) {
+export function InterestPointLayer({ map }: MapChildrenProps) {
   const dispatch = useDispatch()
 
   const {
@@ -117,6 +120,7 @@ export function InterestPointLayer({ map }) {
   const modifyInterestPoint = useCallback(
     uuid => {
       dispatch(editInterestPoint(uuid))
+      dispatch(setMapToolOpened(MapToolType.INTEREST_POINT))
     },
     [dispatch]
   )
@@ -183,10 +187,9 @@ export function InterestPointLayer({ map }) {
         style: POIStyle,
         type: 'Point'
       })
-      map.addInteraction(draw)
+      map?.addInteraction(draw)
       setDrawObject(draw)
     }
-
     if (map && isDrawing) {
       addEmptyNextInterestPoint()
       drawNewFeatureOnMap()
@@ -194,20 +197,18 @@ export function InterestPointLayer({ map }) {
   }, [dispatch, map, isDrawing])
 
   useEffect(() => {
-    function removeInteraction() {
-      function waitForUnwantedZoomAndQuitInteraction() {
-        setTimeout(() => {
+    function waitForUnwantedZoomAndQuitInteraction() {
+      setTimeout(() => {
+        if (map && drawObject) {
           map.removeInteraction(drawObject)
-        }, 300)
-      }
-      if (!isDrawing && drawObject) {
-        setDrawObject(undefined)
-
-        waitForUnwantedZoomAndQuitInteraction()
-      }
+        }
+      }, 300)
     }
+    if (!isDrawing && drawObject) {
+      setDrawObject(undefined)
 
-    removeInteraction()
+      waitForUnwantedZoomAndQuitInteraction()
+    }
   }, [map, drawObject, isDrawing])
 
   useEffect(() => {

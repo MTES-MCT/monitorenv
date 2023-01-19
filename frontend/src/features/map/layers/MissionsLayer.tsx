@@ -10,9 +10,10 @@ import { useGetFilteredMissionsQuery } from '../../../hooks/useGetFilteredMissio
 import { getMissionZoneFeature } from './missionGeometryHelpers'
 import { missionWithCentroidStyleFn } from './styles/missions.style'
 
+import type { MapChildrenProps } from '../Map'
 import type { Geometry } from 'ol/geom'
 
-export function MissionsLayer({ map, mapClickEvent }) {
+export function MissionsLayer({ map, mapClickEvent }: MapChildrenProps) {
   const dispatch = useDispatch()
   const { displayMissionsLayer } = useAppSelector(state => state.global)
   const { data } = useGetFilteredMissionsQuery()

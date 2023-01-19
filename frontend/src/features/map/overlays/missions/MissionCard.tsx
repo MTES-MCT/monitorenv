@@ -13,7 +13,7 @@ import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
 import { ReactComponent as CloseIconSVG } from '../../../../uiMonitor/icons/Close.svg'
 import { ReactComponent as EditIconSVG } from '../../../../uiMonitor/icons/Edit.svg'
 
-export function MissionCard({ feature, selected }) {
+export function MissionCard({ feature, selected }: { feature: any; selected?: boolean }) {
   const dispatch = useDispatch()
   const { inputStartDateTimeUtc, missionId, missionStatus, missionType, numberOfActions, resourceUnits } =
     feature.getProperties()

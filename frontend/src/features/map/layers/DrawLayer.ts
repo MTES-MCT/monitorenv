@@ -21,9 +21,10 @@ import { dottedLayerStyle } from './styles/dottedLayer.style'
 import { drawStyle, editStyle } from './styles/draw.style'
 
 import type { VectorLayerWithName } from '../../../domain/types/layer'
+import type { MapChildrenProps } from '../Map'
 import type Geometry from 'ol/geom/Geometry'
 
-function UnmemoizedDrawLayer({ map }) {
+function UnmemoizedDrawLayer({ map }: MapChildrenProps) {
   const dispatch = useAppDispatch()
   const { geometry, interactionType, listener } = useAppSelector(state => state.draw)
 
@@ -113,7 +114,7 @@ function UnmemoizedDrawLayer({ map }) {
     const modify = new Modify({
       source: getVectorSource()
     })
-    map.addInteraction(modify)
+    map?.addInteraction(modify)
 
     modify.on('modifyend', setGeometryOnModifyEnd)
 

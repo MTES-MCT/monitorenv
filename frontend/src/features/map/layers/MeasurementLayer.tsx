@@ -27,6 +27,7 @@ import { getNauticalMilesFromMeters } from '../../../utils/utils'
 import { MeasurementOverlay } from '../overlays/MeasurementOverlay'
 import { measurementStyle, measurementStyleWithCenter } from './styles/measurement.style'
 
+import type { MapChildrenProps } from '../Map'
 import type { Geometry } from 'ol/geom'
 
 type Measurement = {
@@ -57,7 +58,7 @@ function getNauticalMilesRadiusOfCircularPolygon(polygon) {
   return `r = ${getNauticalMilesFromMeters(radius)} nm`
 }
 
-export function MeasurementLayer({ map }) {
+export function MeasurementLayer({ map }: MapChildrenProps) {
   const dispatch = useDispatch()
 
   const { circleMeasurementToAdd, measurementsDrawed, measurementTypeToAdd } = useAppSelector(
@@ -186,7 +187,7 @@ export function MeasurementLayer({ map }) {
         setMeasurementInProgress(null)
       })
       currentInteraction.current = draw
-      map.addInteraction(currentInteraction.current)
+      map?.addInteraction(currentInteraction.current)
     }
 
     if (map && measurementTypeToAdd) {
@@ -200,7 +201,9 @@ export function MeasurementLayer({ map }) {
       setMeasurementInProgress(null)
 
       setTimeout(() => {
-        map.removeInteraction(currentInteraction.current)
+        if (currentInteraction.current) {
+          map?.removeInteraction(currentInteraction.current)
+        }
       }, 300)
     }
   }, [map, measurementTypeToAdd])

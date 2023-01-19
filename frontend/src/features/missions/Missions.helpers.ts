@@ -4,10 +4,13 @@ import {
   actionTargetTypeEnum,
   ActionTypeEnum,
   actionTypeEnum,
+  EnvActionType,
   formalNoticeEnum,
   infractionTypeEnum,
   MissionSourceEnum,
-  missionTypeEnum,
+  MissionType,
+  MissionTypeEnum,
+  NewMissionType,
   vehicleTypeEnum
 } from '../../domain/entities/missions'
 
@@ -21,61 +24,56 @@ export const infractionFactory = ({ id, ...infraction } = { id: undefined }) => 
   ...infraction
 })
 
-export const actionFactory = ({ actionType, id, ...action }: { actionType: ActionTypeEnum; id?: number }) => {
+export const actionFactory = ({
+  actionType,
+  id,
+  ...action
+}: {
+  actionType: ActionTypeEnum
+  id?: number
+}): EnvActionType => {
   switch (actionType) {
     case actionTypeEnum.CONTROL.code:
       return {
         actionNumberOfControls: 0,
-        actionStartDateTimeUtc: new Date().toISOString(),
         actionSubTheme: '',
         actionTargetType: actionTargetTypeEnum.VEHICLE.code,
         actionTheme: '',
-        actionType: actionTypeEnum.CONTROL.code,
-        geom: null,
+        actionType: ActionTypeEnum.CONTROL,
         id: uuidv4(),
         infractions: [],
-        protectedSpecies: [],
         vehicleType: vehicleTypeEnum.VESSEL.code,
         ...action
       }
     case actionTypeEnum.NOTE.code:
       return {
-        actionStartDateTimeUtc: new Date().toISOString(),
-        actionType: actionTypeEnum.NOTE.code,
+        actionType: ActionTypeEnum.NOTE,
         id: uuidv4(),
         observations: '',
         ...action
       }
     case actionTypeEnum.SURVEILLANCE.code:
-      return {
-        actionStartDateTimeUtc: new Date().toISOString(),
-        actionSubTheme: '',
-        actionTheme: '',
-        actionType: actionTypeEnum.SURVEILLANCE.code,
-        geom: null,
-        id: uuidv4(),
-        protectedSpecies: [],
-        ...action
-      }
     default:
       return {
-        actionType: '',
+        actionSubTheme: '',
+        actionTheme: '',
+        actionType: ActionTypeEnum.SURVEILLANCE,
+        coverMissionZone: true,
+        duration: 0,
         id: uuidv4(),
+        observations: '',
         ...action
       }
   }
 }
 
-export const missionFactory = (mission = {}) => ({
+export const missionFactory = (mission = {}): MissionType | NewMissionType => ({
   closedBy: '',
   envActions: [],
-  geom: null,
-  inputEndDateTimeUtc: '',
-  inputStartDateTimeUtc: new Date().toISOString(),
   isClosed: false,
   missionNature: [],
   missionSource: MissionSourceEnum.CACEM,
-  missionType: missionTypeEnum.SEA.code,
+  missionType: MissionTypeEnum.SEA,
   observationsCacem: '',
   observationsCnsp: '',
   openBy: '',

@@ -38,7 +38,7 @@ export function MissionsMenu() {
         <MissionsMenuWrapper>
           <MissionsMenuHeader>
             <ToggleMissionMenuButton icon={<CloseSVG />} onClick={toggleMissionsMenu} size="md" />
-            <Title>Misssions et contrôles</Title>
+            <Title>Missions et contrôles</Title>
             <ToggleMissionsButton
               icon={displayMissionsLayer ? <DisplaySVG /> : <HideSVG />}
               onClick={toggleMissionsLayer}
