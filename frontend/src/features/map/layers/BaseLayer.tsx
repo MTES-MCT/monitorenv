@@ -6,6 +6,7 @@ import XYZ from 'ol/source/XYZ'
 import React, { useEffect, useState } from 'react'
 
 import { BaseLayers, Layers } from '../../../domain/entities/layers/constants'
+import { MAPBOX_KEY, SHOM_KEY } from '../../../env'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 
 export type BaseLayerProps = {
@@ -17,7 +18,7 @@ function UnmemoizedBaseLayer({ map }: BaseLayerProps) {
   const [baseLayersObjects] = useState({
     LIGHT: () =>
       new MapboxVector({
-        accessToken: process.env.REACT_APP_MAPBOX_KEY,
+        accessToken: MAPBOX_KEY,
         className: Layers.BASE_LAYER.code,
         styleUrl: 'mapbox://styles/monitorfish/ckrbusml50wgv17nrzy3q374b',
         zIndex: 0
@@ -36,7 +37,7 @@ function UnmemoizedBaseLayer({ map }: BaseLayerProps) {
         className: Layers.BASE_LAYER.code,
         source: new XYZ({
           maxZoom: 19,
-          url: `https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.jpg90?access_token=${process.env.REACT_APP_MAPBOX_KEY}`
+          url: `https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.jpg90?access_token=${MAPBOX_KEY}`
         }),
         zIndex: 0
       }),
@@ -49,7 +50,7 @@ function UnmemoizedBaseLayer({ map }: BaseLayerProps) {
           // Countries have transparency, so do not fade tiles:
           transition: 0,
 
-          url: `https://services.data.shom.fr/${process.env.REACT_APP_SHOM_KEY}/wms/r`
+          url: `https://services.data.shom.fr/${SHOM_KEY}/wms/r`
         }),
         zIndex: 0
       })
