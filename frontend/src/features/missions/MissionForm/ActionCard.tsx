@@ -44,7 +44,7 @@ export function ActionCard({ action, duplicateAction, removeAction, selectAction
             <ControlIcon />
             <SummaryContent>
               <Title>
-                Contrôle{action.actionNumberOfControls && action.actionNumberOfControls > 1 ? 's ' : ' '}
+                Contrôle{!!action.actionNumberOfControls && action.actionNumberOfControls > 1 ? 's ' : ' '}
                 {action.actionTheme ? (
                   <Accented>{`${action.actionTheme} ${
                     action.actionSubTheme ? ` - ${action.actionSubTheme}` : ''
@@ -53,19 +53,19 @@ export function ActionCard({ action, duplicateAction, removeAction, selectAction
                   'à renseigner'
                 )}
               </Title>
-              {action.actionNumberOfControls && action.actionNumberOfControls > 0 && (
+              {!!action.actionNumberOfControls && action.actionNumberOfControls > 0 && (
                 <ControlSummary>
                   <Accented>{action.actionNumberOfControls}</Accented>
                   {` contrôle${action.actionNumberOfControls > 1 ? 's' : ''} réalisé${
                     action.actionNumberOfControls > 1 ? 's' : ''
                   } sur des cibles de type `}
                   <Accented>
-                    {(action.actionTargetType && actionTargetTypeEnum[action.actionTargetType]?.libelle) ||
+                    {(!!action.actionTargetType && actionTargetTypeEnum[action.actionTargetType]?.libelle) ||
                       'non spécifié'}
                   </Accented>
                 </ControlSummary>
               )}
-              {action.actionNumberOfControls && action.actionNumberOfControls > 0 && (
+              {!!action.actionNumberOfControls && action.actionNumberOfControls > 0 && (
                 <ControlInfractionsTags
                   actionNumberOfControls={action.actionNumberOfControls}
                   infractions={action?.infractions}
@@ -88,7 +88,7 @@ export function ActionCard({ action, duplicateAction, removeAction, selectAction
                   'à renseigner'
                 )}
               </Title>
-              {action.duration > 0 && (
+              {!!action.duration && action.duration > 0 && (
                 <DurationWrapper>
                   <Accented>{action.duration} heure(s)&nbsp;</Accented>
                   de surveillance
