@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { DatePicker } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
-import { MutableRefObject, useRef } from 'react'
+import { MutableRefObject, useEffect, useReducer, useRef } from 'react'
 // import { parseISO } from 'rsuite/esm/utils/dateUtils'
 import styled from 'styled-components'
 
@@ -21,9 +21,16 @@ export function FormikDatePicker({ isCompact, isLight, label, name, withTime }: 
   const { setValue } = helpers
   const datepickerRef = useRef() as MutableRefObject<HTMLDivElement>
 
+  const [keyForceUpdate, forceUpdate] = useReducer(x => x + 1, 0)
+
+  useEffect(() => {
+    forceUpdate()
+  }, [name, forceUpdate])
+
   return (
     <DatePickerWrapper ref={datepickerRef} data-cy="datepicker">
       <DatePicker
+        key={keyForceUpdate}
         defaultValue={value}
         isCompact={isCompact}
         isLight={isLight}
