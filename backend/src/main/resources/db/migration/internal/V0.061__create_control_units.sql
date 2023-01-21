@@ -1,7 +1,8 @@
 create table control_units (
     id serial primary key,
     administration_id integer references administrations(id) not null,
-    name varchar not null
+    name varchar not null,
+    deleted boolean not null default false
 );
 
 alter table control_units add unique (administration_id, name);

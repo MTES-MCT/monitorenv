@@ -14,6 +14,7 @@ from src.pipeline.flows import (
     admin_areas,
     facade_areas,
     fao_areas,
+    historic_control_units,
     regulations,
 )
 
@@ -26,6 +27,7 @@ flows_to_register = [
     admin_areas.flow,
     facade_areas.flow,
     fao_areas.flow,
+    historic_control_units.flow,
     regulations.flow,
 ]
 
