@@ -24,16 +24,15 @@ VALUES
     (1005,                                 'DDTM'),
     (1006,                'Parcs Naturels Marins'),
     (1007,                                 'AECP'),
-    (1008,                                'DREAL'),
+    (1008,                         'DREAL / DEAL'),
     (1009,                            'DIRM / DM'),
     (1011,   'Office Français de la Biodiversité'),
     (1012, 'Comité Régional des Pêches Maritimes'),
     (1013,                     'Gestionnaire AMP'),
-    (1014,                'Parc naturel régional'),
+    (1014,             'Parcs Naturels Régionaux'),
     (1015,                    'Police Municipale'),
     (1016,                         'DEAL Réunion'),
     (2000,                                 'DMLC'),
-    (2001,                         'DREAL / DEAL'),
-    (2002,                                 'DGTM');
+    (2001,                                 'DGTM');
 
 ALTER SEQUENCE public.administrations_id_seq RESTART WITH 2003;

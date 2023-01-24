@@ -50,7 +50,7 @@ class UpdateMissionUTests {
             inputEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
             isClosed = false,
             isDeleted = false,
-            missionSource = MissionSourceEnum.CACEM
+            missionSource = MissionSourceEnum.MONITORENV
         )
         given(missionRepository.save(expectedUpdatedMission)).willReturn(
             expectedUpdatedMission

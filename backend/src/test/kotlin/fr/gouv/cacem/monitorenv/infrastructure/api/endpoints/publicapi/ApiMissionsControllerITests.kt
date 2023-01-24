@@ -72,7 +72,7 @@ class ApiMissionsControllerITests {
             inputEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
             isClosed = false,
             isDeleted = false,
-            missionSource = MissionSourceEnum.CNSP
+            missionSource = MissionSourceEnum.MONITORFISH
         )
         val newMissionRequest = CreateOrUpdateMissionDataInput(
             missionType = MissionTypeEnum.LAND,
@@ -82,7 +82,7 @@ class ApiMissionsControllerITests {
             geom = polygon,
             inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             inputEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-            missionSource = MissionSourceEnum.CNSP,
+            missionSource = MissionSourceEnum.MONITORFISH,
             isClosed = false
         )
         val requestbody = objectMapper.writeValueAsString(newMissionRequest)
@@ -116,7 +116,7 @@ class ApiMissionsControllerITests {
             inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             inputEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
             isDeleted = false,
-            missionSource = MissionSourceEnum.CNSP,
+            missionSource = MissionSourceEnum.MONITORFISH,
             isClosed = false
         )
         given(
@@ -147,7 +147,7 @@ class ApiMissionsControllerITests {
             missionType = MissionTypeEnum.SEA,
             inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isDeleted = false,
-            missionSource = MissionSourceEnum.CNSP,
+            missionSource = MissionSourceEnum.MONITORFISH,
             isClosed = false
         )
         // we test only if the route is called with the right arg
@@ -172,7 +172,7 @@ class ApiMissionsControllerITests {
             inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isClosed = false,
             isDeleted = false,
-            missionSource = MissionSourceEnum.CNSP
+            missionSource = MissionSourceEnum.MONITORFISH
         )
         val envAction = EnvActionControlEntity(
             id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
@@ -186,7 +186,7 @@ class ApiMissionsControllerITests {
             observationsCacem = "updated observations",
             observationsCnsp = "updated observations",
             inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-            missionSource = MissionSourceEnum.CNSP,
+            missionSource = MissionSourceEnum.MONITORFISH,
             envActions = listOf(envAction),
             isClosed = false
         )

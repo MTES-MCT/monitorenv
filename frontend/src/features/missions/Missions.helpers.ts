@@ -75,7 +75,7 @@ export const missionFactory = (mission = {}) => ({
   inputStartDateTimeUtc: new Date().toISOString(),
   isClosed: false,
   missionNature: [],
-  missionSource: MissionSourceEnum.CACEM,
+  missionSource: MissionSourceEnum.MONITORENV,
   missionType: missionTypeEnum.SEA.code,
   observationsCacem: '',
   observationsCnsp: '',

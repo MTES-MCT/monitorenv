@@ -237,8 +237,10 @@ export const missionStatusEnum = {
 }
 
 export enum MissionSourceEnum {
-  CACEM = 'CACEM',
-  CNSP = 'CNSP'
+  MONITORENV = 'MONITORENV',
+  MONITORFISH = 'MONITORFISH',
+  POSEIDON_CACEM = 'POSEIDON_CACEM',
+  POSEIDON_CNSP = 'POSEIDON_CNSP'
 }
 
 export const THEME_REQUIRE_PROTECTED_SPECIES = ['Police des espèces protégées et de leurs habitats (faune et flore)']

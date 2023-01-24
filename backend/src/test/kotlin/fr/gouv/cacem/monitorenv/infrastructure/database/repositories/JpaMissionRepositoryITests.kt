@@ -41,7 +41,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isClosed = false,
             isDeleted = false,
-            missionSource = MissionSourceEnum.CACEM,
+            missionSource = MissionSourceEnum.MONITORENV,
             controlUnits = listOf(
                 ControlUnitEntity(
                     id = 10006,
@@ -85,7 +85,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 isClosed = false,
                 isDeleted = false,
-                missionSource = MissionSourceEnum.CACEM,
+                missionSource = MissionSourceEnum.MONITORENV,
                 controlUnits = listOf(
                         ControlUnitEntity(
                                 id = 10006,
@@ -130,7 +130,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isClosed = false,
             isDeleted = false,
-            missionSource = MissionSourceEnum.CACEM,
+            missionSource = MissionSourceEnum.MONITORENV,
             controlUnits = listOf(
                 ControlUnitEntity(
                     id = 10006,
@@ -160,7 +160,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isClosed = false,
             isDeleted = false,
-            missionSource = MissionSourceEnum.CACEM,
+            missionSource = MissionSourceEnum.MONITORENV,
             controlUnits = listOf(ControlUnitEntity(id = 123456, name = "PAM Jeanne Barret", administration = "", resources = listOf()))
         )
 
@@ -375,7 +375,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             isClosed = false,
             isDeleted = false,
             envActions = listOf(),
-            missionSource = MissionSourceEnum.CACEM,
+            missionSource = MissionSourceEnum.MONITORENV,
             controlUnits = listOf(
                 ControlUnitEntity(
                     id = 10003,
@@ -464,7 +464,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             isClosed = false,
             isDeleted = false,
             envActions = listOf(controlAction, surveillanceAction, noteAction),
-            missionSource = MissionSourceEnum.CACEM
+            missionSource = MissionSourceEnum.MONITORENV
         )
         // When
         val mission = jpaMissionRepository.save(expectedUpdatedMission)
@@ -499,7 +499,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             isClosed = false,
             isDeleted = false,
             envActions = listOf(envAction),
-            missionSource = MissionSourceEnum.CACEM
+            missionSource = MissionSourceEnum.MONITORENV
         )
         // When
         val mission = jpaMissionRepository.save(expectedUpdatedMission)
