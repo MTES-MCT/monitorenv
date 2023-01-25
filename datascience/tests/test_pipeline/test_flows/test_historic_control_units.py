@@ -22,11 +22,11 @@ def historic_control_units() -> pd.DataFrame:
             "id": [1315, 1, 1401, 62, 1485],
             "administration_id": [1011, 3, 4, 10, 4],
             "name": [
-                "Administration 1",
+                "Unité 1",
                 "Police de la pêche de poissons qui nagent",
                 "Les Barbouzes",
-                "Administration 2",
-                "Administration 3",
+                "Unité 2",
+                "Unité 3",
             ],
         }
     )
@@ -39,11 +39,11 @@ def transformed_control_units() -> pd.DataFrame:
             "id": [1315, 1, 1401, 62, 1485],
             "administration_id": [1011, 3, 4, 10, 4],
             "name": [
-                "Administration 1 (historique)",
+                "Unité 1 (historique)",
                 "Police de la pêche de poissons qui nagent (historique)",
                 "Les Barbouzes (historique)",
-                "Administration 2 (historique)",
-                "Administration 3 (historique)",
+                "Unité 2 (historique)",
+                "Unité 3 (historique)",
             ],
             "deleted": [True, True, True, True, True],
         }
