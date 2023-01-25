@@ -1,6 +1,7 @@
 SELECT 
     id,
     md5(
+      COALESCE(geom::text, '') ||
       COALESCE(entity_name::text, '') ||
       COALESCE(url::text, '') ||
       COALESCE(layer_name::text, '') ||
@@ -26,4 +27,4 @@ WHERE
   geom IS NOT NULL
   AND entity_name IS NOT NULL
   AND layer_name IS NOT NULL
-  AND "Thematique" IS NOT NULL;
+  AND "Thematique" IS NOT NULL
