@@ -11,4 +11,6 @@ insert into control_resources_temp(name, unit_id)
         WHERE resource_name IS NOT NULL;
 
 drop table control_resources;
+drop sequence control_resources_id_seq;
 alter table control_resources_temp rename to control_resources;
+alter sequence control_resources_temp_id_seq rename to control_resources_id_seq;
