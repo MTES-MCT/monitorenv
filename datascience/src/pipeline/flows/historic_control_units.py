@@ -3,6 +3,7 @@ from pathlib import Path
 import pandas as pd
 import prefect
 from prefect import Flow, Parameter, task
+from sqlalchemy import DDL
 
 from config import HISTORIC_CONTROL_UNITS_MAX_ID
 from src.pipeline.generic_tasks import extract, load
@@ -88,6 +89,19 @@ def load_historic_control_units(control_units: pd.DataFrame):
         how="upsert",
         df_id_column="id",
         table_id_column="id",
+        init_ddls=[
+            DDL(
+                "ALTER TABLE public.missions_control_units "
+                "DROP CONSTRAINT missions_control_units_control_unit_id_fkey;"
+            )
+        ],
+        end_ddls=[
+            DDL(
+                "ALTER TABLE public.missions_control_units "
+                "ADD CONSTRAINT missions_control_units_control_unit_id_fkey "
+                "FOREIGN KEY (control_unit_id) REFERENCES public.control_units (id);"
+            )
+        ],
     )
 
 

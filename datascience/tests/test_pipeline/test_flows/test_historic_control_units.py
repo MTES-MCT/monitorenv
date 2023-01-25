@@ -85,8 +85,24 @@ def test_load_control_units(reset_test_data, transformed_control_units):
 
     load_historic_control_units.run(transformed_control_units)
     control_units = read_query("monitorenv_remote", query)
-    assert len(control_units) == len(initial_control_units) + len(
-        transformed_control_units
+
+    initial_control_units_ids = set(initial_control_units.id)
+    control_units_ids = set(control_units.id)
+    updated_control_units_ids = set(transformed_control_units.id)
+
+    assert (
+        updated_control_units_ids.union(initial_control_units_ids)
+        == control_units_ids
+    )
+    assert (
+        initial_control_units.loc[
+            initial_control_units.id == 1315, "name"
+        ].values[0]
+        == "Unité 1 ancien nom"
+    )
+    assert (
+        control_units.loc[control_units.id == 1315, "name"].values[0]
+        == "Unité 1 (historique)"
     )
 
     # Re-loading the same data should not make any difference
