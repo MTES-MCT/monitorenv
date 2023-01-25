@@ -1,3 +1,10 @@
+DELETE FROM missions_control_resources;
+DELETE FROM control_resources;
+DELETE FROM missions_control_units;
+DELETE FROM control_units;
+
+ALTER SEQUENCE public.control_units_id_seq RESTART WITH 10000;
+
 INSERT INTO public.control_units (
      administration_id,                                     name) VALUES
     (             1005,             'Cultures marines – DDTM 30'),
@@ -34,6 +41,8 @@ INSERT INTO public.control_units (
     (             1004, 'Réserve Naturelle  de L''Ilot M''Bouzi'),
     (             1004,               'Réserve Naturelle 7 Iles');
 
+ALTER SEQUENCE public.control_resources_id_seq RESTART WITH 1;
+
 INSERT INTO public.control_resources (unit_id, name) VALUES
     (10001, 'Semi-rigide 1'),
     (10001, 'Semi-rigide 2'),
@@ -47,6 +56,8 @@ INSERT INTO public.control_resources (unit_id, name) VALUES
     (10019, 'ALTAIR'),
     (10019, 'PHEROUSA'),
     (10019, 'ARIOLA');
+
+
 
 --
 -- Add historic control units

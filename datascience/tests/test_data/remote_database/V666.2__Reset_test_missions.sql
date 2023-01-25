@@ -1,4 +1,7 @@
 
+DELETE FROM env_actions;
+DELETE FROM missions;
+
 INSERT INTO public.missions (
     id, mission_type,             open_by,                                                                                                                     observations_cacem, facade, input_start_datetime_utc, input_end_datetime_utc,          closed_by,   mission_nature, deleted, mission_source, closed) VALUES
     (12,       'SEA', 'Kimberly Woodward',                 'Mother including baby same. Evidence project air practice minute their. Trouble sing suggest maintain like know too.', 'NAMO',    '2022-02-24 10:56:33',  '2022-05-06 19:38:29',  'Charles Kennedy',	'{ENV,OTHER}',	 false,   'MONITORENV',	  true),
@@ -8,16 +11,18 @@ INSERT INTO public.missions (
 
 
 -- Control units keys starts at 10000
-INSERT INTO missions_control_units (mission_id, control_unit_id) VALUES
-(12, 10019),
-(12, 10018),
-(13, 10019),
-(19, 10019),
-(20, 10003);
+INSERT INTO missions_control_units (
+    mission_id, control_unit_id) VALUES
+    (       12,           10019),
+    (       12,           10018),
+    (       13,           10019),
+    (       19,           10019),
+    (       20,           10003);
 
-INSERT INTO missions_control_resources (mission_id, control_resource_id) VALUES
-(12, 10),
-(13, 8);
+INSERT INTO missions_control_resources (
+    mission_id, control_resource_id) VALUES
+    (       12,                  10),
+    (       13,                   8);
 
 --
 -- Name: missions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
