@@ -56,8 +56,10 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
       )
       if (newUnitList.length === 1 && newUnitList[0]?.id) {
         unitHelpers.setValue(newUnitList[0]?.id)
+        unitNameHelpers.setValue(newUnitList[0]?.name)
       } else {
         unitHelpers.setValue(undefined)
+        unitNameHelpers.setValue(undefined)
       }
       resourcesHelpers.setValue([])
     }
@@ -114,6 +116,7 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
             value={unitField.value}
             valueKey="id"
             {...props}
+            key={unitField.value}
           />
         </FormGroupFixed>
         <FormGroupFixed>
