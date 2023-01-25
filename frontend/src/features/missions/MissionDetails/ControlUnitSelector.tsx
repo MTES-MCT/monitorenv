@@ -52,7 +52,7 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
       administrationHelpers.setValue(value)
       const newUnitList = _.uniqBy(
         _.filter(data, r => r.administration === value),
-        'unit'
+        'name'
       )
       if (newUnitList.length === 1 && newUnitList[0]?.id) {
         unitHelpers.setValue(newUnitList[0]?.id)
