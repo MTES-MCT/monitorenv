@@ -1,8 +1,9 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import _ from 'lodash'
 import { Table } from 'rsuite'
 
-import { getControlUnitsAsText, MissionType } from '../../../domain/entities/missions'
+import { getControlUnitsAsText } from '../../../domain/entities/controlUnit'
+
+import type { MissionType } from '../../../domain/entities/missions'
 
 type CellResourcesProps = {
   dataKey?: any

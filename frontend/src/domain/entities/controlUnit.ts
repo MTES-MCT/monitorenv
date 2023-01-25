@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 export type ControlUnit = {
   administration: string
   contact: string
@@ -10,3 +12,11 @@ export type ControlResource = {
   id: number
   name: string
 }
+
+export const getControlUnitsAsText = (controlUnits: ControlUnit[]) =>
+  controlUnits.map(
+    resource =>
+      `${resource.name} ${
+        _.isEmpty(resource.resources) ? '' : `(${resource.resources.map(unit => unit.name).join(' ; ')})`
+      }`
+  )

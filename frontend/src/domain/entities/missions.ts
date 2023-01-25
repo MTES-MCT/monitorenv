@@ -1,5 +1,6 @@
 import { compareDesc, compareAsc, parseISO } from 'date-fns'
-import _ from 'lodash'
+
+import type { ControlUnit } from './controlUnit'
 
 export const actionTypeEnum = {
   CONTROL: {
@@ -265,22 +266,9 @@ export const relevantCourtEnum = {
   }
 }
 
-export type ControlResourceType = {
-  id: number
-  name: string
-}
-
-export type ControlUnitType = {
-  administration: string
-  contact?: string
-  id: number
-  name: string
-  resources: ControlResourceType[]
-}
-
 export type MissionType<EnvActionType = EnvActionControlType | EnvActionSurveillanceType | EnvActionNoteType> = {
   closedBy: string
-  controlUnits: ControlUnitType[]
+  controlUnits: ControlUnit[]
   envActions: Array<EnvActionType>
   facade: string
   geom: string
@@ -367,11 +355,3 @@ export const getMissionStatus = ({
 
   return 'ERROR'
 }
-
-export const getControlUnitsAsText = (controlUnits: ControlUnitType[]) =>
-  controlUnits.map(
-    resource =>
-      `${resource.name} ${
-        _.isEmpty(resource.resources) ? '' : `(${resource.resources.map(unit => unit.name).join(' ; ')})`
-      }`
-  )
