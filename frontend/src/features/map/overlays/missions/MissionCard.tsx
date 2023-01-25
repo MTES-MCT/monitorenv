@@ -6,7 +6,7 @@ import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
-import { missionTypeEnum } from '../../../../domain/entities/missions'
+import { getControlUnitsAsText, missionTypeEnum } from '../../../../domain/entities/missions'
 import { editMission } from '../../../../domain/use_cases/missions/editMission'
 import { clearSelectedMissionOnMap } from '../../../../domain/use_cases/missions/selectMissionOnMap'
 import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
@@ -15,7 +15,7 @@ import { ReactComponent as EditIconSVG } from '../../../../uiMonitor/icons/Edit.
 
 export function MissionCard({ feature, selected }) {
   const dispatch = useDispatch()
-  const { inputStartDateTimeUtc, missionId, missionStatus, missionType, numberOfActions, resourceUnits } =
+  const { controlUnits, inputStartDateTimeUtc, missionId, missionStatus, missionType, numberOfActions } =
     feature.getProperties()
   const parsedInputStartDateTimeUtc = new Date(inputStartDateTimeUtc)
 
@@ -36,9 +36,7 @@ export function MissionCard({ feature, selected }) {
       </Col1>
       <Col2>
         <MissionType>Mission {missionTypeEnum[missionType]?.libelle}</MissionType>
-        <MissionReources>
-          {resourceUnits?.map(resource => `${resource.administration} ${resource.unit ? `(${resource.unit})` : ''}`)}
-        </MissionReources>
+        <MissionReources>{getControlUnitsAsText(controlUnits)}</MissionReources>
         <Actions>
           {numberOfActions || 0} action{numberOfActions > 1 ? 's' : ''} réalisée{numberOfActions > 1 ? 's' : ''}
         </Actions>
