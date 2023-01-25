@@ -45,7 +45,7 @@ def transformed_control_units() -> pd.DataFrame:
                 "Unité 2 (historique)",
                 "Unité 3 (historique)",
             ],
-            "deleted": [True, True, True, True, True],
+            "archived": [True, True, True, True, True],
         }
     )
 

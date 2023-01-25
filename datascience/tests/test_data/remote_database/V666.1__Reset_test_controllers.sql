@@ -63,6 +63,6 @@ INSERT INTO public.control_resources (unit_id, name) VALUES
 -- Add historic control units
 --
 INSERT INTO public.control_units (
-       id, administration_id,                 name, deleted) VALUES
-    (1315,              1011, 'Unité 1 ancien nom',    true),
-    (1485,                 4, 'Unité 3 ancien nom',    true);
+       id, administration_id,                 name, archived) VALUES
+    (1315,              1011, 'Unité 1 ancien nom',     true),
+    (1485,                 4, 'Unité 3 ancien nom',     true);

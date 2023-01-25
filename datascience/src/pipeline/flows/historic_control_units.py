@@ -38,7 +38,7 @@ def transform_control_units(control_units: pd.DataFrame) -> pd.DataFrame:
     control_units["name"] = control_units.name.map(
         lambda s: s + " (historique)"
     )
-    control_units["deleted"] = True
+    control_units["archived"] = True
     return control_units
 
 
