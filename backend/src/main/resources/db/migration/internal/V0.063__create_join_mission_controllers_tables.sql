@@ -40,7 +40,7 @@ WITH missions_control_resource_names AS (
     from missions
 )
 
-INSERT INTO missions_control_resources
+INSERT INTO missions_control_resources (mission_id, control_resource_id)
     SELECT
         mcrn.mission_id,
         cr.id AS control_resource_id
