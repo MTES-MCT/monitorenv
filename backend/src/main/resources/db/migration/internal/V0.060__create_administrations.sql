@@ -10,18 +10,12 @@ VALUES
     (   2,                               'Douane'),
     (   3,                     'Marine Nationale'),
     (   4,                 'Gendarmerie Maritime'),
-    (   5,                             'Etranger'),
+    (   5,             'Administration Étrangère'),
     (   6,                'Gendarmerie Nationale'),
     (   7,                     'Police Nationale'),
     (   8,                            'Armée Air'),
     (   9,                                'ONCFS'),
     (  10,                      'Parcs Nationaux'),
-    (  11,                              'Parquet'),
-    (  12,             'Administration étrangère'),
-    (  13,                                'Autre'),
-    (  14,                      'Sécurité Civile'),
-    (  15,                                 'Port'),
-    (  16,                                'FOSIT'),
     (1000,                 'Inter administration'),
     (1001,                                    '-'),
     (1002,                                  'AFB'),
@@ -39,6 +33,11 @@ VALUES
     (1015,                    'Police Municipale'),
     (1016,                         'DEAL Réunion'),
     (2000,                                 'DMLC'),
-    (2001,                                 'DGTM');
+    (2001,                                 'DGTM'),
+    (2002,                              'Parquet'),
+    (2003,                                'Autre'),
+    (2004,                      'Sécurité Civile'),
+    (2005,                                 'Port'),
+    (2006,                                'FOSIT');
 
 ALTER SEQUENCE public.administrations_id_seq RESTART WITH 2003;
