@@ -20,10 +20,10 @@ export function GeneralInformationsForm() {
       <Title>Informations générales</Title>
       <FlexFormGroup>
         <ColWrapper>
-          <FormikDatePicker isCompact label="Début de mission" name="inputStartDateTimeUtc" withTime />
+          <FormikDatePicker isCompact label="Début de mission" name="startDateTimeUtc" withTime />
         </ColWrapper>
         <ColWrapper>
-          <FormikDatePicker isCompact label="Fin de mission" name="inputEndDateTimeUtc" withTime />
+          <FormikDatePicker isCompact label="Fin de mission" name="endDateTimeUtc" withTime />
         </ColWrapper>
       </FlexFormGroup>
 

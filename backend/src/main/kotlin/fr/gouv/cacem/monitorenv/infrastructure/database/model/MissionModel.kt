@@ -69,10 +69,10 @@ data class MissionModel(
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
     var geom: MultiPolygon? = null,
-    @Column(name = "input_start_datetime_utc")
-    var inputStartDateTimeUtc: Instant,
-    @Column(name = "input_end_datetime_utc")
-    var inputEndDateTimeUtc: Instant? = null,
+    @Column(name = "start_datetime_utc")
+    var startDateTimeUtc: Instant,
+    @Column(name = "end_datetime_utc")
+    var endDateTimeUtc: Instant? = null,
     @Column(name = "closed", nullable = false)
     val isClosed: Boolean,
     @Column(name = "deleted", nullable = false)
@@ -116,8 +116,8 @@ data class MissionModel(
         observationsCnsp = observationsCnsp,
         facade = facade,
         geom = geom,
-        inputStartDateTimeUtc = inputStartDateTimeUtc.atZone(UTC),
-        inputEndDateTimeUtc = inputEndDateTimeUtc?.atZone(UTC),
+        startDateTimeUtc = startDateTimeUtc.atZone(UTC),
+        endDateTimeUtc = endDateTimeUtc?.atZone(UTC),
         isClosed = isClosed,
         isDeleted = isDeleted,
         missionSource = missionSource,
@@ -148,8 +148,8 @@ data class MissionModel(
                 observationsCnsp = mission.observationsCnsp,
                 facade = mission.facade,
                 geom = mission.geom,
-                inputStartDateTimeUtc = mission.inputStartDateTimeUtc.toInstant(),
-                inputEndDateTimeUtc = mission.inputEndDateTimeUtc?.toInstant(),
+                startDateTimeUtc = mission.startDateTimeUtc.toInstant(),
+                endDateTimeUtc = mission.endDateTimeUtc?.toInstant(),
                 isClosed = mission.isClosed,
                 isDeleted = false,
                 missionSource = mission.missionSource
@@ -186,6 +186,6 @@ data class MissionModel(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , missionType = $missionType , missionNature = $missionNature , openBy = $openBy , closedBy = $closedBy , observationsCacem = $observationsCacem, observationsCnsp = $observationsCnsp , facade = $facade , geom = $geom , inputStartDateTimeUtc = $inputStartDateTimeUtc , inputEndDateTimeUtc = $inputEndDateTimeUtc, isClosed = $isClosed, isDeleted = $isDeleted, missionSource = $missionSource )"
+        return this::class.simpleName + "(id = $id , missionType = $missionType , missionNature = $missionNature , openBy = $openBy , closedBy = $closedBy , observationsCacem = $observationsCacem, observationsCnsp = $observationsCnsp , facade = $facade , geom = $geom , startDateTimeUtc = $startDateTimeUtc , endDateTimeUtc = $endDateTimeUtc, isClosed = $isClosed, isDeleted = $isDeleted, missionSource = $missionSource )"
     }
 }

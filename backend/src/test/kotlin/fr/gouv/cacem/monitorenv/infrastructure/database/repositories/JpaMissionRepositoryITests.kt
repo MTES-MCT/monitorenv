@@ -38,7 +38,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
         val newMission = MissionEntity(
             missionType = MissionTypeEnum.SEA,
-            inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isClosed = false,
             isDeleted = false,
             missionSource = MissionSourceEnum.MONITORENV,
@@ -82,7 +82,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         // Given
         val newMission = MissionEntity(
                 missionType = MissionTypeEnum.SEA,
-                inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 isClosed = false,
                 isDeleted = false,
                 missionSource = MissionSourceEnum.MONITORENV,
@@ -127,7 +127,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         // Given
         val newMission = MissionEntity(
             missionType = MissionTypeEnum.SEA,
-            inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isClosed = false,
             isDeleted = false,
             missionSource = MissionSourceEnum.MONITORENV,
@@ -157,7 +157,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         // Given
         val newMission = MissionEntity(
             missionType = MissionTypeEnum.SEA,
-            inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isClosed = false,
             isDeleted = false,
             missionSource = MissionSourceEnum.MONITORENV,
@@ -369,8 +369,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             closedBy = "Travis Carter",
             facade = "NAMO",
             observationsCacem = "Remain vote several ok. Bring American play woman challenge. Throw low law positive seven.",
-            inputStartDateTimeUtc = ZonedDateTime.parse("2022-03-21T12:11:13Z"),
-            inputEndDateTimeUtc = null,
+            startDateTimeUtc = ZonedDateTime.parse("2022-03-21T12:11:13Z"),
+            endDateTimeUtc = null,
             geom = polygon,
             isClosed = false,
             isDeleted = false,
@@ -459,8 +459,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             geom = polygon,
             observationsCacem = null,
             observationsCnsp = null,
-            inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-            inputEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
             isClosed = false,
             isDeleted = false,
             envActions = listOf(controlAction, surveillanceAction, noteAction),
@@ -494,8 +494,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             geom = polygon,
             observationsCacem = null,
             observationsCnsp = null,
-            inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-            inputEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
             isClosed = false,
             isDeleted = false,
             envActions = listOf(envAction),

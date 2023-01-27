@@ -16,8 +16,8 @@ data class MissionDataOutput(
     val observationsCnsp: String? = null,
     val facade: String? = null,
     val geom: MultiPolygon? = null,
-    val inputStartDateTimeUtc: ZonedDateTime,
-    val inputEndDateTimeUtc: ZonedDateTime? = null,
+    val startDateTimeUtc: ZonedDateTime,
+    val endDateTimeUtc: ZonedDateTime? = null,
     val envActions: List<EnvActionEntity>? = null,
     val missionSource: MissionSourceEnum,
     val isClosed: Boolean
@@ -38,8 +38,8 @@ data class MissionDataOutput(
                 observationsCnsp = mission.observationsCnsp,
                 facade = mission.facade,
                 geom = mission.geom,
-                inputStartDateTimeUtc = mission.inputStartDateTimeUtc,
-                inputEndDateTimeUtc = mission.inputEndDateTimeUtc,
+                startDateTimeUtc = mission.startDateTimeUtc,
+                endDateTimeUtc = mission.endDateTimeUtc,
                 envActions = mission.envActions,
                 missionSource = mission.missionSource,
                 isClosed = mission.isClosed

@@ -15,7 +15,7 @@ import { sortMissionsByProperty } from './MissionsTableSort'
 import type { MissionType } from '../../../domain/entities/missions'
 
 export function MissionsTable({ data, isLoading }: { data: MissionType[] | undefined; isLoading: boolean }) {
-  const [sortColumn, setSortColumn] = React.useState('inputStartDateTimeUtc')
+  const [sortColumn, setSortColumn] = React.useState('startDateTimeUtc')
   const [sortType, setSortType] = React.useState<'desc' | 'asc'>('desc')
 
   const handleSortColumn = (currSortColumn, currSortType) => {
@@ -42,12 +42,12 @@ export function MissionsTable({ data, isLoading }: { data: MissionType[] | undef
     >
       <Table.Column sortable width={130}>
         <Table.HeaderCell>Date de début</Table.HeaderCell>
-        <DateCell dataKey="inputStartDateTimeUtc" />
+        <DateCell dataKey="startDateTimeUtc" />
       </Table.Column>
 
       <Table.Column sortable width={130}>
         <Table.HeaderCell>Date de fin</Table.HeaderCell>
-        <DateCell dataKey="inputEndDateTimeUtc" />
+        <DateCell dataKey="endDateTimeUtc" />
       </Table.Column>
 
       <Table.Column flexGrow={1}>

@@ -273,8 +273,8 @@ export type MissionType<EnvActionType = EnvActionControlType | EnvActionSurveill
   facade: string
   geom: string
   id: number
-  inputEndDateTimeUtc: string
-  inputStartDateTimeUtc: string
+  endDateTimeUtc: string
+  startDateTimeUtc: string
   isClosed: boolean
   missionNature: MissionNatureEnum
   missionSource: MissionSourceEnum
@@ -331,22 +331,22 @@ export type InfractionType = {
 }
 
 export const getMissionStatus = ({
-  inputEndDateTimeUtc,
-  inputStartDateTimeUtc,
-  isClosed
+  endDateTimeUtc,
+  isClosed,
+  startDateTimeUtc
 }: {
-  inputEndDateTimeUtc: string
-  inputStartDateTimeUtc: string
+  endDateTimeUtc: string
   isClosed: Boolean
+  startDateTimeUtc: string
 }) => {
   if (isClosed) {
     return missionStatusEnum.CLOSED.code
   }
-  if (inputStartDateTimeUtc) {
-    if (parseISO(inputStartDateTimeUtc) && compareAsc(parseISO(inputStartDateTimeUtc), Date.now()) >= 0) {
+  if (startDateTimeUtc) {
+    if (parseISO(startDateTimeUtc) && compareAsc(parseISO(startDateTimeUtc), Date.now()) >= 0) {
       return missionStatusEnum.UPCOMING.code
     }
-    if (parseISO(inputEndDateTimeUtc) && compareDesc(parseISO(inputEndDateTimeUtc), Date.now()) >= 0) {
+    if (parseISO(endDateTimeUtc) && compareDesc(parseISO(endDateTimeUtc), Date.now()) >= 0) {
       return missionStatusEnum.ENDED.code
     }
 

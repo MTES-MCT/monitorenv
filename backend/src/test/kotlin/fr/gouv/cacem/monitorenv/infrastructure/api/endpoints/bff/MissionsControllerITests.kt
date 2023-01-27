@@ -68,8 +68,8 @@ class MissionsControllerITests {
             facade = "Outre-Mer",
             geom = polygon,
             observationsCacem = null,
-            inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-            inputEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
             isDeleted = false,
             isClosed = false,
             missionSource = MissionSourceEnum.MONITORENV
@@ -80,8 +80,8 @@ class MissionsControllerITests {
             observationsCacem = null,
             facade = "Outre-Mer",
             geom = polygon,
-            inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-            inputEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
             isClosed = false,
             missionSource = MissionSourceEnum.MONITORENV
         )
@@ -113,8 +113,8 @@ class MissionsControllerITests {
             facade = "Outre-Mer",
             geom = polygon,
             observationsCacem = null,
-            inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-            inputEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
             isClosed = false,
             isDeleted = false,
             missionSource = MissionSourceEnum.MONITORENV
@@ -145,7 +145,7 @@ class MissionsControllerITests {
         val firstMission = MissionEntity(
             id = 10,
             missionType = MissionTypeEnum.SEA,
-            inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isClosed = false,
             isDeleted = false,
             missionSource = MissionSourceEnum.MONITORENV
@@ -168,7 +168,7 @@ class MissionsControllerITests {
             id = 14,
             missionType = MissionTypeEnum.SEA,
             observationsCacem = "updated observationsCacem",
-            inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isClosed = false,
             isDeleted = false,
             missionSource = MissionSourceEnum.MONITORENV
@@ -183,7 +183,7 @@ class MissionsControllerITests {
             id = 14,
             missionType = MissionTypeEnum.SEA,
             observationsCacem = "updated observationsCacem",
-            inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             envActions = listOf(envAction),
             missionSource = MissionSourceEnum.MONITORENV,
             isClosed = false
