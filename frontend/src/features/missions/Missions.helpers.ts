@@ -69,10 +69,9 @@ export const actionFactory = ({ actionType, id, ...action }: { actionType: Actio
 export const missionFactory = (mission = {}) => ({
   closedBy: '',
   controlUnits: [controlUnitFactory()],
+  endDateTimeUtc: '',
   envActions: [],
   geom: null,
-  endDateTimeUtc: '',
-  startDateTimeUtc: new Date().toISOString(),
   isClosed: false,
   missionNature: [],
   missionSource: MissionSourceEnum.MONITORENV,
@@ -80,6 +79,7 @@ export const missionFactory = (mission = {}) => ({
   observationsCacem: '',
   observationsCnsp: '',
   openBy: '',
+  startDateTimeUtc: new Date().toISOString(),
   ...mission
 })
 

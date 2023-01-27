@@ -269,12 +269,11 @@ export const relevantCourtEnum = {
 export type MissionType<EnvActionType = EnvActionControlType | EnvActionSurveillanceType | EnvActionNoteType> = {
   closedBy: string
   controlUnits: ControlUnit[]
+  endDateTimeUtc: string
   envActions: Array<EnvActionType>
   facade: string
   geom: string
   id: number
-  endDateTimeUtc: string
-  startDateTimeUtc: string
   isClosed: boolean
   missionNature: MissionNatureEnum
   missionSource: MissionSourceEnum
@@ -282,6 +281,7 @@ export type MissionType<EnvActionType = EnvActionControlType | EnvActionSurveill
   observationsCacem: string
   observationsCnsp: string
   openBy: string
+  startDateTimeUtc: string
 }
 export type EnvActionType = EnvActionControlType | EnvActionSurveillanceType | EnvActionNoteType
 
