@@ -26,9 +26,9 @@ import { ReactComponent as SaveSVG } from '../../uiMonitor/icons/Save.svg'
 import { SideWindowHeader } from '../side_window/SideWindowHeader'
 import { MissionCancelEditModal } from './MissionCancelEditModal'
 import { MissionDeleteModal } from './MissionDeleteModal'
-import { ActionForm } from './MissionDetails/ActionForm'
-import { ActionsForm } from './MissionDetails/ActionsForm'
-import { GeneralInformationsForm } from './MissionDetails/GeneralInformationsForm'
+import { ActionForm } from './MissionForm/ActionForm/ActionForm'
+import { ActionsForm } from './MissionForm/ActionsForm'
+import { GeneralInformationsForm } from './MissionForm/GeneralInformationsForm'
 import { missionFactory } from './Missions.helpers'
 
 export function CreateOrEditMission() {
@@ -56,7 +56,7 @@ export function CreateOrEditMission() {
 
   const [deleteMission] = useDeleteMissionMutation()
 
-  const mission = useMemo(() => missionFactory(missionToEdit), [missionToEdit])
+  const missionFormikValues = useMemo(() => missionFactory(missionToEdit), [missionToEdit])
 
   const upsertMission = id === undefined ? createMission : updateMission
 
@@ -96,6 +96,9 @@ export function CreateOrEditMission() {
   const handleCancelForm = () => {
     dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))
   }
+  if (id && !missionToEdit) {
+    return <Loading>Chargement en cours</Loading>
+  }
 
   return (
     <EditMissionWrapper data-cy="editMissionWrapper">
@@ -104,7 +107,7 @@ export function CreateOrEditMission() {
           isLoadingUpdateMission || isLoadingCreateMission ? ' - Enregistrement en cours' : ''
         }`}
       />
-      <Formik enableReinitialize initialValues={mission} onSubmit={handleSubmitForm}>
+      <Formik enableReinitialize initialValues={missionFormikValues} onSubmit={handleSubmitForm}>
         {formikProps => {
           const handleCloseMission = () => {
             formikProps.setFieldValue('isClosed', true)
@@ -198,6 +201,8 @@ export function CreateOrEditMission() {
     </EditMissionWrapper>
   )
 }
+
+const Loading = styled.div``
 
 const EditMissionWrapper = styled.div`
   flex: 1;

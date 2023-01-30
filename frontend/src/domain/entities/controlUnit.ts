@@ -2,7 +2,7 @@ import _ from 'lodash'
 
 export type ControlUnit = {
   administration: string
-  contact: string
+  contact?: string
   id: number
   name: string
   resources: ControlResource[]

@@ -11,11 +11,10 @@ import styled from 'styled-components'
 import { HIT_PIXEL_TO_TOLERANCE } from '../../constants/constants'
 import { SelectableLayers, HoverableLayers } from '../../domain/entities/layers/constants'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map/constants'
-import MapAttributionsBox from './controls/MapAttributionsBox'
 
 import type Map from 'ol/Map'
 
-export function BaseMap({ children, showAttributions }) {
+export function BaseMap({ children }) {
   const [currentMap, setCurrentMap] = useState<Map>()
 
   const [mapClickEvent, setMapClickEvent] = useState({ ctrlKeyPressed: false, feature: undefined })
@@ -87,7 +86,6 @@ export function BaseMap({ children, showAttributions }) {
   return (
     <MapWrapper>
       <MapContainer ref={mapElement} />
-      {showAttributions && <MapAttributionsBox />}
       {currentMap &&
         Children.map(
           children,

@@ -92,7 +92,7 @@ def pg_dump_table(
       * If ``db`` is ``monitorfish_local``, the ``pg_dump`` command will be run by the
       machine on which the command is run, so postres must be installed.
       * If ``db`` is ``monitorenv_remote``, the command in run through in the docker
-      container with ``docker exec monitorfish_database``.
+      container with ``docker exec monitorenv_database``.
 
     Args:
         db (str): 'monitorenv_remote' or 'monitorfish_local'

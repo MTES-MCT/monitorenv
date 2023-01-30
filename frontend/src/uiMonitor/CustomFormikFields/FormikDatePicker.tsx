@@ -1,8 +1,8 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { DatePicker } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
-import { MutableRefObject, useRef, useCallback } from 'react'
-import { parseISO } from 'rsuite/esm/utils/dateUtils'
+import { MutableRefObject, useEffect, useReducer, useRef } from 'react'
+// import { parseISO } from 'rsuite/esm/utils/dateUtils'
 import styled from 'styled-components'
 
 export const placeholderDateTimePicker =
@@ -19,27 +19,24 @@ export function FormikDatePicker({ isCompact, isLight, label, name, withTime }: 
   const [field, , helpers] = useField(name)
   const { value } = field
   const { setValue } = helpers
-
-  const setValueAsString = useCallback(
-    date => {
-      const dateAsString = date ? date.toISOString() : null
-      setValue(dateAsString)
-    },
-    [setValue]
-  )
-  // parseISO cannot parse undefined. Returns 'Invalid Date' if it cannot parse value.
-  const parsedValue = parseISO(value || null)
-  const valueAsDate = parsedValue.toString() === 'Invalid Date' ? undefined : parsedValue
   const datepickerRef = useRef() as MutableRefObject<HTMLDivElement>
+
+  const [keyForceUpdate, forceUpdate] = useReducer(x => x + 1, 0)
+
+  useEffect(() => {
+    forceUpdate()
+  }, [name, forceUpdate])
 
   return (
     <DatePickerWrapper ref={datepickerRef} data-cy="datepicker">
       <DatePicker
-        defaultValue={valueAsDate}
+        key={keyForceUpdate}
+        defaultValue={value}
         isCompact={isCompact}
         isLight={isLight}
+        isStringDate
         label={label}
-        onChange={setValueAsString}
+        onChange={setValue}
         withTime={withTime}
       />
     </DatePickerWrapper>

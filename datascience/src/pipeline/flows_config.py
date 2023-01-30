@@ -16,6 +16,7 @@ from src.pipeline.flows import (
     fao_areas,
     historic_control_units,
     regulations,
+    natinfs,
 )
 
 ################################ Define flow schedules ################################
@@ -29,6 +30,7 @@ flows_to_register = [
     fao_areas.flow,
     historic_control_units.flow,
     regulations.flow,
+    natinfs.flow,
 ]
 
 ################################ Define flows' executor ###############################

@@ -12,9 +12,8 @@ WITH natinfs AS (
 )
 SELECT id, natinf_code, regulation, infraction_category, infraction
     FROM (
-        SELECT id, natinf_code, regulation, infraction_category, infraction, row_number() over (partition by natinf_code) as row_num
+        SELECT id, natinf_code, regulation, infraction_category, infraction, row_number() over (partition by natinf_code order by natinf_code, regulation) as row_num
 			FROM natinfs
 			order by natinf_code, regulation
 		) t
-	WHERE t.row_num = 1;
-   
+	WHERE t.row_num = 1

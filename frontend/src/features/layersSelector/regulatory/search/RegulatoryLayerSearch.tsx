@@ -71,6 +71,7 @@ export function RegulatoryLayerSearch({ isVisible }) {
         const allResults = RegulatoryLayersIndex.search(searchedText, {
           enrich: true,
           index: ['properties:layer_name', 'properties:entity_name', 'properties:type', 'properties:ref_reg'],
+          limit: 10000,
           tag: filterOnThemes
         })
         const uniqueResults = _.uniqWith(

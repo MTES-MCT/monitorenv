@@ -5,7 +5,9 @@ import { LayerType } from '../../../domain/entities/layers/constants'
 import { getAdministrativeVectorLayer } from '../../../domain/use_cases/administrative/showAdministrativeLayer'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 
-export function AdministrativeLayers({ map }) {
+import type { MapChildrenProps } from '../Map'
+
+export function AdministrativeLayers({ map }: MapChildrenProps) {
   const { showedAdministrativeLayerIds } = useAppSelector(state => state.administrative)
 
   useEffect(() => {

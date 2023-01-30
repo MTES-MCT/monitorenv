@@ -9,12 +9,12 @@ import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getRegulatoryLayerStyle } from './styles/administrativeAndRegulatoryLayers.style'
 
+import type { MapChildrenProps } from '../Map'
 import type { Feature } from 'ol'
-import type OpenLayerMap from 'ol/Map'
 
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
-export function RegulatoryLayers({ map }: { map: OpenLayerMap }) {
+export function RegulatoryLayers({ map }: MapChildrenProps) {
   const { regulatoryLayers, showedRegulatoryLayerIds } = useAppSelector(state => state.regulatory)
   const { regulatoryMetadataLayerId } = useAppSelector(state => state.regulatoryMetadata)
 

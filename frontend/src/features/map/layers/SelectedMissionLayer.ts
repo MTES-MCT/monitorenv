@@ -8,7 +8,9 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getMissionZoneFeature, getActionsFeatures } from './missionGeometryHelpers'
 import { selectedMissionStyle, selectedMissionActionsStyle } from './styles/missions.style'
 
-export function SelectedMissionLayer({ map }) {
+import type { MapChildrenProps } from '../Map'
+
+export function SelectedMissionLayer({ map }: MapChildrenProps) {
   const { missionState: selectedMissionEditedState, selectedMissionId } = useAppSelector(state => state.missionState)
   const { displaySelectedMissionLayer } = useAppSelector(state => state.global)
   const { selectedMission } = useGetMissionsQuery(undefined, {

@@ -11,4 +11,8 @@ class JpaNatinfRepository(private val dbNatinfRepository: IDBNatinfRepository) :
     override fun findNatinfs(): List<NatinfEntity> {
         return dbNatinfRepository.findAll().map { it.toNatinf() }
     }
+
+    override fun count(): Long {
+        return dbNatinfRepository.count()
+    }
 }
