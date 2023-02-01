@@ -1,4 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
+import { FormikDatePicker } from '@mtes-mct/monitor-ui'
 import { format, isValid } from 'date-fns'
 import { fr } from 'date-fns/locale'
 import { FieldArray, useFormikContext } from 'formik'
@@ -17,7 +18,7 @@ import {
   vehicleTypeEnum
 } from '../../../../../domain/entities/missions'
 import { usePrevious } from '../../../../../hooks/usePrevious'
-import { FormikDatePicker } from '../../../../../uiMonitor/CustomFormikFields/FormikDatePicker'
+import { useNewWindow } from '../../../../../ui/NewWindow'
 import { FormikInputNumberGhost } from '../../../../../uiMonitor/CustomFormikFields/FormikInputNumber'
 import { ReactComponent as ControlIconSVG } from '../../../../../uiMonitor/icons/Control.svg'
 import { ReactComponent as DeleteSVG } from '../../../../../uiMonitor/icons/Delete.svg'
@@ -37,6 +38,8 @@ export function ControlForm({
   remove: Function
   setCurrentActionIndex: Function
 }) {
+  const { newWindowContainerRef } = useNewWindow()
+
   const {
     setFieldValue,
     setValues,
@@ -170,7 +173,9 @@ export function ControlForm({
 
         <Form.Group>
           <FormikDatePicker
+            baseContainer={newWindowContainerRef.current}
             isLight
+            isStringDate
             label="Date et heure du contrôle"
             name={`envActions[${currentActionIndex}].actionStartDateTimeUtc`}
             withTime

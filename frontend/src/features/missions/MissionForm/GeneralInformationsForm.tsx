@@ -1,4 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
+import { FormikDatePicker } from '@mtes-mct/monitor-ui'
 import { FieldArray } from 'formik'
 import { Form } from 'rsuite'
 import styled from 'styled-components'
@@ -6,8 +7,8 @@ import styled from 'styled-components'
 import { COLORS } from '../../../constants/constants'
 import { InteractionListener } from '../../../domain/entities/map/constants'
 import { missionNatureEnum, missionTypeEnum } from '../../../domain/entities/missions'
+import { useNewWindow } from '../../../ui/NewWindow'
 import { FormikCheckboxGroup } from '../../../uiMonitor/CustomFormikFields/FormikCheckboxGroup'
-import { FormikDatePicker } from '../../../uiMonitor/CustomFormikFields/FormikDatePicker'
 import { FormikInput } from '../../../uiMonitor/CustomFormikFields/FormikInput'
 import { FormikRadioGroup } from '../../../uiMonitor/CustomFormikFields/FormikRadioGroup'
 import { FormikTextarea } from '../../../uiMonitor/CustomFormikFields/FormikTextarea'
@@ -15,15 +16,31 @@ import { MultiZonePicker } from '../MultiZonePicker'
 import { ResourceUnitsForm } from './ResourceUnitsForm'
 
 export function GeneralInformationsForm() {
+  const { newWindowContainerRef } = useNewWindow()
+
   return (
     <>
       <Title>Informations générales</Title>
       <FlexFormGroup>
         <ColWrapper>
-          <FormikDatePicker isCompact label="Début de mission" name="inputStartDateTimeUtc" withTime />
+          <FormikDatePicker
+            baseContainer={newWindowContainerRef.current}
+            isCompact
+            isStringDate
+            label="Début de mission"
+            name="inputStartDateTimeUtc"
+            withTime
+          />
         </ColWrapper>
         <ColWrapper>
-          <FormikDatePicker isCompact label="Fin de mission" name="inputEndDateTimeUtc" withTime />
+          <FormikDatePicker
+            baseContainer={newWindowContainerRef.current}
+            isCompact
+            isStringDate
+            label="Fin de mission"
+            name="inputEndDateTimeUtc"
+            withTime
+          />
         </ColWrapper>
       </FlexFormGroup>
 
@@ -92,7 +109,7 @@ const NarrowColumn = styled.div`
   }
 `
 const SubGroup = styled.div`
-  magin-bottom: 16px;
+  margin-bottom: 16px;
 `
 
 const TypeMissionRadioGroup = styled(FormikRadioGroup)`
