@@ -8,7 +8,6 @@
     "npm": "8"
   },
   "scripts": {
-    "start": "react-scripts start",
     "build": "react-scripts build",
     "build:dev": "REACT_APP_ENV=dev npm run build",
     "build:local": "REACT_APP_ENV=local npm run build",
@@ -16,14 +15,17 @@
     "build-storybook": "build-storybook -s public",
     "cypress:open": "cypress open --browser firefox --e2e",
     "cypress:run": "cypress run --browser firefox --e2e",
+    "dev": "BROWSER=none DISABLE_ESLINT_PLUGIN=true react-scripts start",
     "eject": "react-scripts eject",
+    "start": "react-scripts start",
     "storybook": "start-storybook -p 6006 -s public",
-    "lint:fix": "eslint ./src --fix",
+    "test:e2e": "npm run cypress:run",
     "test:lint": "eslint ./src",
+    "test:lint:fix": "npm run test:lint -- --fix",
     "test:lint:partial": "eslint --config=./.eslintrc.partial.js ./src",
+    "test:lint:partial:fix": "npm run test:lint:partial -- --fix",
     "test:type": "tsc",
     "test:type:partial": "tsc --project ./tsconfig.partial.json",
-    "test:e2e": "npm run cypress:run",
     "test:unit": "jest --config=./config/jest.config.js --detectOpenHandles",
     "test:unit:watch": "npm run test:unit -- --watch"
   },
