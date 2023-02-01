@@ -10,29 +10,17 @@ import type { ReactElement } from 'react-markdown'
 
 // Unlike original Route component, exact and strict are default to true,
 // so it's easier to use non-colliding routes
-/**
- *
- * @param {Object} route
- * @param {string} route.path
- * @param {boolean} route.exact
- * @param {boolean} route.strict
- * @param {React.ReactElement[]} route.children
- * @returns
- */
-export function SideWindowRoute({
-  children,
-  exact = true,
-  path,
-  strict = true
-}: {
+
+export type RouteProps = {
   children: ReactElement
   exact?: boolean
   path: string | string[]
   strict?: boolean
-}) {
-  const { sideWindowPath } = useAppSelector(state => state.sideWindowRouter)
+}
+export function Route({ children, exact = true, path, strict = true }: RouteProps) {
+  const { currentPath } = useAppSelector(state => state.sideWindow)
 
-  const routeParams = matchPath(sideWindowPath, {
+  const routeParams = matchPath(currentPath, {
     exact,
     path,
     strict

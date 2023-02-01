@@ -2,7 +2,6 @@ import { useDispatch } from 'react-redux'
 import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
-import { setSideWindowPath } from '../../components/SideWindowRouter/SideWindowRouter.slice'
 import { COLORS } from '../../constants/constants'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { setDisplayedItems } from '../../domain/shared_slices/Global'
@@ -13,14 +12,15 @@ import { ReactComponent as EnlargeSVG } from '../../uiMonitor/icons/Enlarge.svg'
 import { ReactComponent as HideSVG } from '../../uiMonitor/icons/Hide.svg'
 import { ReactComponent as MissionsSVG } from '../../uiMonitor/icons/Operations.svg'
 import { ReactComponent as PlusSVG } from '../../uiMonitor/icons/Plus.svg'
+import { sideWindowActions } from '../SideWindow/slice'
 
 export function MissionsMenu() {
   const dispatch = useDispatch()
   const { displayMissionsLayer, missionsMenuIsOpen } = useAppSelector(state => state.global)
-  const { sideWindowIsOpen } = useAppSelector(state => state.sideWindowRouter)
+  const { sideWindow } = useAppSelector(state => state)
 
   const toggleMissionsWindow = () => {
-    dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))
+    dispatch(sideWindowActions.openAndGoTo(sideWindowPaths.MISSIONS))
   }
   const toggleMissionsLayer = () => {
     dispatch(setDisplayedItems({ displayMissionsLayer: !displayMissionsLayer }))
@@ -29,7 +29,7 @@ export function MissionsMenu() {
     dispatch(setDisplayedItems({ missionsMenuIsOpen: !missionsMenuIsOpen }))
   }
   const handleAddNewMission = () => {
-    dispatch(setSideWindowPath(sideWindowPaths.MISSION_NEW))
+    dispatch(sideWindowActions.openAndGoTo(sideWindowPaths.MISSION_NEW))
   }
 
   return (
@@ -68,7 +68,7 @@ export function MissionsMenu() {
         </MissionsMenuWrapper>
       )}
       <MissionButton
-        active={!!sideWindowIsOpen}
+        active={sideWindow.isOpen}
         appearance="primary"
         data-cy="missions-button"
         icon={<MissionsIcon className="rs-icon" />}

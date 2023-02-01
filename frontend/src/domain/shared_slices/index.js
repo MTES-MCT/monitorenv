@@ -5,8 +5,8 @@ import { controlThemesAPI } from '../../api/controlThemesAPI'
 import { infractionsAPI } from '../../api/infractionsAPI'
 import { missionsAPI } from '../../api/missionsAPI'
 import { regulatoryLayersAPI } from '../../api/regulatoryLayersAPI'
-import { sideWindowRouterReducer } from '../../components/SideWindowRouter/SideWindowRouter.slice'
 import { regulatoryLayerSearchSliceReducer } from '../../features/layersSelector/regulatory/search/RegulatoryLayerSearch.slice'
+import { sideWindowReducer } from '../../features/SideWindow/slice'
 import { administrativeSlicePersistedReducer } from './Administrative'
 import { drawReducer } from './Draw'
 import { globalReducer } from './Global'
@@ -37,7 +37,7 @@ export const homeReducers = combineReducers({
   [controlResourcesAPI.reducerPath]: controlResourcesAPI.reducer,
   [infractionsAPI.reducerPath]: infractionsAPI.reducer,
   regulatoryMetadata: regulatoryMetadataSliceReducer,
-  sideWindowRouter: sideWindowRouterReducer
+  sideWindow: sideWindowReducer
 })
 
 export const homeMiddlewares = [

@@ -31,6 +31,7 @@ export function FormikDatePicker({ isCompact, isLight, label, name, withTime }: 
     <DatePickerWrapper ref={datepickerRef} data-cy="datepicker">
       <DatePicker
         key={keyForceUpdate}
+        baseContainer={undefined}
         defaultValue={value}
         isCompact={isCompact}
         isLight={isLight}

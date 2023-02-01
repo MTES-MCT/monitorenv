@@ -2,12 +2,12 @@ import { useDispatch } from 'react-redux'
 import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
-import { setSideWindowPath } from '../../components/SideWindowRouter/SideWindowRouter.slice'
 import { COLORS } from '../../constants/constants'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { useGetFilteredMissionsQuery } from '../../hooks/useGetFilteredMissionsQuery'
 import { ReactComponent as PlusSVG } from '../../uiMonitor/icons/Plus.svg'
-import { SideWindowHeader } from '../side_window/SideWindowHeader'
+import { Header } from '../SideWindow/Header'
+import { sideWindowActions } from '../SideWindow/slice'
 import { MissionsTable } from './MissionsList/MissionsTable'
 import { MissionsTableFilters } from './MissionsList/MissionsTableFilters'
 
@@ -19,14 +19,14 @@ export function Missions() {
   return (
     <SideWindowWrapper data-cy="listMissionWrapper">
       <>
-        <SideWindowHeader title="Missions et contrôles">
+        <Header title="Missions et contrôles">
           <AddNewMissionButton
             icon={<PlusSVG className="rs-icon" />}
-            onClick={() => dispatch(setSideWindowPath(sideWindowPaths.MISSION_NEW))}
+            onClick={() => dispatch(sideWindowActions.openAndGoTo(sideWindowPaths.MISSION_NEW))}
           >
             <span>Ajouter une nouvelle mission</span>
           </AddNewMissionButton>
-        </SideWindowHeader>
+        </Header>
         <SideWindowContent>
           <MissionsTableFilters />
           <NumberOfDisplayedMissions data-cy="Missions-numberOfDisplayedMissions">
