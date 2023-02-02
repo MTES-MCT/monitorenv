@@ -320,18 +320,18 @@ export type EnvActionNote = EnvActionCommonProperties & {
 }
 
 export type Infraction = {
-  companyName?: string
-  controlledPersonIdentity?: string
+  companyName?: string | null
+  controlledPersonIdentity?: string | null
   formalNotice?: FormalNoticeEnum
   id: string
   infractionType: InfractionTypeEnum
   natinf?: string[]
   observations?: string
-  registrationNumber?: string
-  relevantCourt?: string
+  registrationNumber?: string | null
+  relevantCourt?: string | null
   toProcess: boolean
-  vesselSize?: VesselSizeEnum
-  vesselType?: VesselTypeEnum
+  vesselSize?: VesselSizeEnum | null
+  vesselType?: VesselTypeEnum | null
 }
 
 export const getMissionStatus = ({

@@ -17,112 +17,123 @@ import type { MouseEventHandler } from 'react'
 type ActionCardProps = {
   action: EnvAction
   duplicateAction: MouseEventHandler
+  hasError: boolean
   removeAction: MouseEventHandler
   selectAction: MouseEventHandler
   selected: boolean
 }
-export function ActionCard({ action, duplicateAction, removeAction, selectAction, selected }: ActionCardProps) {
+export function ActionCard({
+  action,
+  duplicateAction,
+  hasError,
+  removeAction,
+  selectAction,
+  selected
+}: ActionCardProps) {
   const parsedActionStartDateTimeUtc = action.actionStartDateTimeUtc
     ? new Date(action.actionStartDateTimeUtc)
     : undefined
 
   return (
-    <Action onClick={selectAction}>
-      <TimeLine>
-        <DateTimeWrapper>
-          {parsedActionStartDateTimeUtc && isValid(parsedActionStartDateTimeUtc) && (
+    <>
+      <Action onClick={selectAction}>
+        <TimeLine>
+          <DateTimeWrapper>
+            {parsedActionStartDateTimeUtc && isValid(parsedActionStartDateTimeUtc) && (
+              <>
+                <DateWrapper>{format(parsedActionStartDateTimeUtc, 'dd MMM', { locale: fr })}</DateWrapper>
+                <Time>à {format(parsedActionStartDateTimeUtc, 'HH:mm', { locale: fr })}</Time>
+              </>
+            )}
+          </DateTimeWrapper>
+        </TimeLine>
+        <ActionSummaryWrapper $type={action.actionType} hasError={hasError} selected={selected}>
+          {action.actionType === ActionTypeEnum.CONTROL && (
             <>
-              <DateWrapper>{format(parsedActionStartDateTimeUtc, 'dd MMM', { locale: fr })}</DateWrapper>
-              <Time>à {format(parsedActionStartDateTimeUtc, 'HH:mm', { locale: fr })}</Time>
+              <ControlIcon />
+              <SummaryContent>
+                <Title>
+                  Contrôle{!!action.actionNumberOfControls && action.actionNumberOfControls > 1 ? 's ' : ' '}
+                  {action.actionTheme ? (
+                    <Accented>{`${action.actionTheme} ${
+                      action.actionSubTheme ? ` - ${action.actionSubTheme}` : ''
+                    }`}</Accented>
+                  ) : (
+                    'à renseigner'
+                  )}
+                </Title>
+                {!!action.actionNumberOfControls && action.actionNumberOfControls > 0 && (
+                  <ControlSummary>
+                    <Accented>{action.actionNumberOfControls}</Accented>
+                    {` contrôle${action.actionNumberOfControls > 1 ? 's' : ''} réalisé${
+                      action.actionNumberOfControls > 1 ? 's' : ''
+                    } sur des cibles de type `}
+                    <Accented>
+                      {(!!action.actionTargetType && actionTargetTypeEnum[action.actionTargetType]?.libelle) ||
+                        'non spécifié'}
+                    </Accented>
+                  </ControlSummary>
+                )}
+                {!!action.actionNumberOfControls && action.actionNumberOfControls > 0 && (
+                  <ControlInfractionsTags
+                    actionNumberOfControls={action.actionNumberOfControls}
+                    infractions={action?.infractions}
+                  />
+                )}
+              </SummaryContent>
             </>
           )}
-        </DateTimeWrapper>
-      </TimeLine>
-      <ActionSummaryWrapper $type={action.actionType} selected={selected}>
-        {action.actionType === ActionTypeEnum.CONTROL && (
-          <>
-            <ControlIcon />
-            <SummaryContent>
-              <Title>
-                Contrôle{!!action.actionNumberOfControls && action.actionNumberOfControls > 1 ? 's ' : ' '}
-                {action.actionTheme ? (
-                  <Accented>{`${action.actionTheme} ${
-                    action.actionSubTheme ? ` - ${action.actionSubTheme}` : ''
-                  }`}</Accented>
-                ) : (
-                  'à renseigner'
+          {action.actionType === ActionTypeEnum.SURVEILLANCE && (
+            <>
+              <SurveillanceIcon />
+              <SummaryContent>
+                <Title>
+                  Surveillance{' '}
+                  {action.actionTheme ? (
+                    <Accented>{`${action.actionTheme} ${
+                      action.actionSubTheme ? ` - ${action.actionSubTheme}` : ''
+                    }`}</Accented>
+                  ) : (
+                    'à renseigner'
+                  )}
+                </Title>
+                {!!action.duration && action.duration > 0 && (
+                  <DurationWrapper>
+                    <Accented>{action.duration} heure(s)&nbsp;</Accented>
+                    de surveillance
+                  </DurationWrapper>
                 )}
-              </Title>
-              {!!action.actionNumberOfControls && action.actionNumberOfControls > 0 && (
-                <ControlSummary>
-                  <Accented>{action.actionNumberOfControls}</Accented>
-                  {` contrôle${action.actionNumberOfControls > 1 ? 's' : ''} réalisé${
-                    action.actionNumberOfControls > 1 ? 's' : ''
-                  } sur des cibles de type `}
-                  <Accented>
-                    {(!!action.actionTargetType && actionTargetTypeEnum[action.actionTargetType]?.libelle) ||
-                      'non spécifié'}
-                  </Accented>
-                </ControlSummary>
-              )}
-              {!!action.actionNumberOfControls && action.actionNumberOfControls > 0 && (
-                <ControlInfractionsTags
-                  actionNumberOfControls={action.actionNumberOfControls}
-                  infractions={action?.infractions}
-                />
-              )}
-            </SummaryContent>
-          </>
-        )}
-        {action.actionType === ActionTypeEnum.SURVEILLANCE && (
-          <>
-            <SurveillanceIcon />
-            <SummaryContent>
-              <Title>
-                Surveillance{' '}
-                {action.actionTheme ? (
-                  <Accented>{`${action.actionTheme} ${
-                    action.actionSubTheme ? ` - ${action.actionSubTheme}` : ''
-                  }`}</Accented>
-                ) : (
-                  'à renseigner'
-                )}
-              </Title>
-              {!!action.duration && action.duration > 0 && (
-                <DurationWrapper>
-                  <Accented>{action.duration} heure(s)&nbsp;</Accented>
-                  de surveillance
-                </DurationWrapper>
-              )}
-            </SummaryContent>
-          </>
-        )}
+              </SummaryContent>
+            </>
+          )}
 
-        {action.actionType === ActionTypeEnum.NOTE && (
-          <>
-            <NoteIcon />
-            <NoteContent>{action.observations || 'Observation à renseigner'}</NoteContent>
-          </>
-        )}
+          {action.actionType === ActionTypeEnum.NOTE && (
+            <>
+              <NoteIcon />
+              <NoteContent>{action.observations || 'Observation à renseigner'}</NoteContent>
+            </>
+          )}
 
-        <ButtonsWrapper>
-          <IconButton
-            appearance="subtle"
-            icon={<DuplicateSVG className="rs-icon" />}
-            onClick={duplicateAction}
-            size="md"
-            title="dupliquer"
-          />
-          <IconButton
-            appearance="subtle"
-            icon={<DeleteIcon className="rs-icon" />}
-            onClick={removeAction}
-            size="md"
-            title="supprimer"
-          />
-        </ButtonsWrapper>
-      </ActionSummaryWrapper>
-    </Action>
+          <ButtonsWrapper>
+            <IconButton
+              appearance="subtle"
+              icon={<DuplicateSVG className="rs-icon" />}
+              onClick={duplicateAction}
+              size="md"
+              title="dupliquer"
+            />
+            <IconButton
+              appearance="subtle"
+              icon={<DeleteIcon className="rs-icon" />}
+              onClick={removeAction}
+              size="md"
+              title="supprimer"
+            />
+          </ButtonsWrapper>
+        </ActionSummaryWrapper>
+      </Action>
+      {hasError && <ErrorMessage>Veuillez compléter les champs en rouge pour valider l&apos;action</ErrorMessage>}
+    </>
   )
 }
 
@@ -149,10 +160,15 @@ const DateWrapper = styled.div`
 const Time = styled.div`
   font-size: 13px;
 `
-const ActionSummaryWrapper = styled.div<{ $type: string; selected: boolean }>`
+
+const ActionSummaryWrapper = styled.div<{ $type: string; hasError: boolean; selected: boolean }>`
   display: flex;
   flex: 1;
-  border: ${p => (p.selected ? `3px solid ${COLORS.blueYonder}` : `1px solid ${COLORS.lightGray}`)};
+  border-color: ${p =>
+    // eslint-disable-next-line no-nested-ternary
+    p.hasError ? `${COLORS.maximumRed}` : p.selected ? `${COLORS.blueYonder}` : `${COLORS.lightGray}`};
+  border-size: ${p => (p.selected ? `3px` : `1px`)};
+  border-style: solid;
   background: ${p => {
     switch (p.$type) {
       case actionTypeEnum.CONTROL.code:
@@ -236,4 +252,8 @@ const DeleteIcon = styled(DeleteSVG)`
 const DurationWrapper = styled.div`
   font: normal normal normal 13px/18px Marianne;
   color: ${COLORS.slateGray};
+`
+
+const ErrorMessage = styled.div`
+  color: ${COLORS.maximumRed};
 `

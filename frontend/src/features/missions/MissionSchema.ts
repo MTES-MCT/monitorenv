@@ -18,6 +18,18 @@ import {
 
 import type { ControlResource, ControlUnit } from '../../domain/entities/controlUnit'
 
+Yup.addMethod(Yup.mixed, 'oneOfOptional', (arr, message) =>
+  Yup.mixed().test({
+    exclusive: true,
+    message,
+    name: 'oneOfOptional',
+    params: {},
+    test(value) {
+      return value == null ? true : arr.includes(value)
+    }
+  })
+)
+
 const MissionTypeSchema = Yup.mixed<MissionTypeEnum>().oneOf(Object.values(MissionTypeEnum)).required()
 
 const MissionNatureSchema = Yup.array()
@@ -43,41 +55,43 @@ const ControlUnitSchema: Yup.SchemaOf<ControlUnit> = Yup.object()
   .defined()
 
 const InfractionSchema: Yup.SchemaOf<Infraction> = Yup.object().shape({
-  companyName: Yup.string().optional(),
-  controlledPersonIdentity: Yup.string(),
+  companyName: Yup.string().optional().nullable(),
+  controlledPersonIdentity: Yup.string().nullable(),
   formalNotice: Yup.mixed().oneOf(Object.values(FormalNoticeEnum)).required(),
   id: Yup.string().required(),
   infractionType: Yup.mixed().oneOf(Object.values(InfractionTypeEnum)).required(),
-  natinf: Yup.array().of(Yup.string().ensure()).compact().ensure(),
+  natinf: Yup.array().of(Yup.string().ensure()).compact().min(1),
   observations: Yup.string(),
-  registrationNumber: Yup.string(),
-  relevantCourt: Yup.string(),
+  registrationNumber: Yup.string().nullable(),
+  relevantCourt: Yup.string().nullable(),
   toProcess: Yup.boolean().required(),
-  vesselSize: Yup.mixed().oneOf(Object.values(VesselSizeEnum)),
-  vesselType: Yup.mixed().oneOf(Object.values(VesselTypeEnum))
+  // @ts-ignore
+  vesselSize: Yup.mixed().oneOfOptional(Object.values(VesselSizeEnum)),
+  // @ts-ignore
+  vesselType: Yup.mixed().oneOfOptional(Object.values(VesselTypeEnum))
 })
 
 const EnvActionControlSchema: Yup.SchemaOf<EnvActionControl> = Yup.object()
   .shape({
     actionNumberOfControls: Yup.number().required(),
     actionStartDateTimeUtc: Yup.string().required(),
-    actionSubTheme: Yup.string(),
-    actionTargetType: Yup.string(),
-    actionTheme: Yup.string(),
+    actionSubTheme: Yup.string().nullable(),
+    actionTargetType: Yup.string().nullable(),
+    actionTheme: Yup.string().nullable(),
     actionType: Yup.mixed().oneOf([ActionTypeEnum.CONTROL]),
     geom: Yup.array().ensure(),
     id: Yup.string().required(),
     infractions: Yup.array().of(InfractionSchema).ensure().required(),
-    protectedSpecies: Yup.string(),
-    vehicleType: Yup.string()
+    protectedSpecies: Yup.array().of(Yup.string()),
+    vehicleType: Yup.string().nullable()
   })
   .required()
 
 const EnvActionSurveillanceSchema: Yup.SchemaOf<EnvActionSurveillance> = Yup.object()
   .shape({
     actionStartDateTimeUtc: Yup.string().required(),
-    actionSubTheme: Yup.string(),
-    actionTheme: Yup.string(),
+    actionSubTheme: Yup.string().nullable(),
+    actionTheme: Yup.string().nullable(),
     actionType: Yup.mixed().oneOf([ActionTypeEnum.SURVEILLANCE]),
     geom: Yup.array().ensure(),
     id: Yup.string().required(),
@@ -119,11 +133,11 @@ export const MissionZoneSchema = Yup.object().test({
   test: ({ coordinates }) => !_.isEmpty(coordinates)
 })
 
-export const MissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
+export const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
   .shape({
     closedBy: Yup.string().defined(),
     controlUnits: Yup.array().of(ControlUnitSchema).ensure().defined().min(1),
-    endDateTimeUtc: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!'),
+    endDateTimeUtc: Yup.string().nullable(),
     // FIXME : see issue https://github.com/jquense/yup/issues/1190 & tip for resolution https://github.com/jquense/yup/issues/1283#issuecomment-786559444
     envActions: Yup.array().of(EnvActionSchema as any),
     geom: MissionZoneSchema,
@@ -137,3 +151,18 @@ export const MissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
     startDateTimeUtc: Yup.string().required('Requis')
   })
   .required()
+
+export const ClosedMissionSchema = Yup.object()
+  .shape({
+    closedBy: Yup.string().required(),
+    endDateTimeUtc: Yup.string().required()
+  })
+  .concat(NewMissionSchema)
+
+export const MissionSchema = Yup.lazy(mission => {
+  if (mission.isClosed) {
+    return ClosedMissionSchema
+  }
+
+  return NewMissionSchema
+})

@@ -1,9 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { DatePicker } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
+import _ from 'lodash'
 import { MutableRefObject, useEffect, useReducer, useRef } from 'react'
-// import { parseISO } from 'rsuite/esm/utils/dateUtils'
 import styled from 'styled-components'
+
+import { COLORS } from '../../constants/constants'
 
 export const placeholderDateTimePicker =
   '\xa0\xa0\xa0\xa0\xa0\xa0/\xa0\xa0\xa0\xa0\xa0\xa0/\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0:\xa0\xa0\xa0\xa0\xa0\xa0'
@@ -16,7 +18,7 @@ type FormikDatePickerProps = {
   withTime?: boolean
 }
 export function FormikDatePicker({ isCompact, isLight, label, name, withTime }: FormikDatePickerProps) {
-  const [field, , helpers] = useField(name)
+  const [field, meta, helpers] = useField(name)
   const { value } = field
   const { setValue } = helpers
   const datepickerRef = useRef() as MutableRefObject<HTMLDivElement>
@@ -28,7 +30,7 @@ export function FormikDatePicker({ isCompact, isLight, label, name, withTime }: 
   }, [name, forceUpdate])
 
   return (
-    <DatePickerWrapper ref={datepickerRef} data-cy="datepicker">
+    <DatePickerWrapper ref={datepickerRef} data-cy="datepicker" hasError={!_.isEmpty(meta.error)}>
       <DatePicker
         key={keyForceUpdate}
         defaultValue={value}
@@ -43,7 +45,13 @@ export function FormikDatePicker({ isCompact, isLight, label, name, withTime }: 
   )
 }
 
-const DatePickerWrapper = styled.div`
+const DatePickerWrapper = styled.div<{ hasError: boolean }>`
+  legend {
+    ${p => (p.hasError ? `color:  ${COLORS.maximumRed};` : '')}
+  }
+  > fieldset > div > div {
+    ${p => (p.hasError ? `border: 1px solid ${COLORS.maximumRed};` : '')}
+  }
   input {
     width: 1.2rem;
   }

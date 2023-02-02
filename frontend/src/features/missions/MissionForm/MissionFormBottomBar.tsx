@@ -1,5 +1,6 @@
 import { Icon, Button, Accent } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
+import _ from 'lodash'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
@@ -14,8 +15,8 @@ export function MissionFormBottomBar({
   quitFormEditing,
   reopenMission
 }) {
-  const { errors, values } = useFormikContext()
-  console.log(errors, values)
+  const { errors } = useFormikContext()
+  // console.log(errors, values)
 
   return (
     <Footer>
@@ -26,11 +27,10 @@ export function MissionFormBottomBar({
           </Button>
         )}
         <Separator />
-        {JSON.stringify(errors)}
+        {/* {JSON.stringify(errors)} */}
+        {!_.isEmpty(errors) && <MessageRed>Veuillez corriger les éléments en rouge</MessageRed>}
         <Separator />
-        {isClosed && (
-          <MsgReopenMission>Veuillez rouvrir la mission avant d&apos;en modifier les informations.</MsgReopenMission>
-        )}
+        {isClosed && <MessageRed>Veuillez rouvrir la mission avant d&apos;en modifier les informations.</MessageRed>}
         <Button accent={Accent.TERTIARY} onClick={quitFormEditing} type="button">
           Quitter
         </Button>
@@ -66,7 +66,7 @@ const ErrorOnDelete = styled.div`
 const Separator = styled.div`
   flex: 1;
 `
-const MsgReopenMission = styled.div`
+const MessageRed = styled.div`
   color: ${COLORS.maximumRed};
   padding-top: 7px;
 `

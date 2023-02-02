@@ -2,6 +2,7 @@
 
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Formik, FieldArray } from 'formik'
+import _ from 'lodash'
 import { useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { matchPath } from 'react-router-dom'
@@ -118,12 +119,19 @@ export function CreateOrEditMission() {
         {formikProps => {
           const handleCloseMission = () => {
             formikProps.setFieldValue('isClosed', true)
-            formikProps.handleSubmit()
+            formikProps.validateForm().then(errors => {
+              if (_.isEmpty(errors)) {
+                formikProps.handleSubmit()
+              } else {
+                formikProps.setFieldValue('isClosed', false)
+              }
+            })
           }
           const handleReopenMission = () => {
             formikProps.setFieldValue('isClosed', false)
           }
           const handleQuitFormEditing = () => {
+            formikProps.setFieldValue('isClosed', false)
             if (formikProps.dirty) {
               setCancelEditModalIsOpen(true)
             } else {

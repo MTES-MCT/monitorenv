@@ -5,6 +5,7 @@ import { Form, Tag, TagPicker } from 'rsuite'
 import styled from 'styled-components'
 
 import { useGetInfractionsQuery } from '../../../../../../api/infractionsAPI'
+import { COLORS } from '../../../../../../constants/constants'
 
 const sortNatinf = (a, b) => {
   if (a?.natinfCode < b?.natinfCode) {
@@ -18,7 +19,7 @@ const sortNatinf = (a, b) => {
 }
 
 export function NatinfSelector({ infractionPath, ...props }) {
-  const [natinfField, , natinfHelpers] = useField(`${infractionPath}.natinf`)
+  const [natinfField, meta, natinfHelpers] = useField(`${infractionPath}.natinf`)
 
   const selectorRef = useRef() as MutableRefObject<HTMLDivElement>
   const { data, isError, isLoading } = useGetInfractionsQuery()
@@ -31,7 +32,7 @@ export function NatinfSelector({ infractionPath, ...props }) {
   }
 
   return (
-    <SelectorWrapper ref={selectorRef}>
+    <SelectorWrapper ref={selectorRef} error={!!meta.error}>
       <Form.ControlLabel htmlFor="natinf">NATINF</Form.ControlLabel>
       <FixedWidthTagPicker
         block
@@ -51,7 +52,13 @@ export function NatinfSelector({ infractionPath, ...props }) {
   )
 }
 
-const SelectorWrapper = styled.div`
+const SelectorWrapper = styled.div<{ error: boolean }>`
+  > label {
+    ${p => (p.error ? `color: ${COLORS.maximumRed};` : '')}
+  }
+  .rs-picker-block {
+    ${p => (p.error ? `border: 1px solid ${COLORS.maximumRed};` : '')}
+  }
   position: relative;
   .rs-picker-menu {
   }

@@ -30,7 +30,7 @@ export const actionFactory = ({
   ...action
 }: {
   actionType: ActionTypeEnum
-  id?: number
+  id?: string
 }): EnvAction => {
   switch (actionType) {
     case actionTypeEnum.CONTROL.code:
