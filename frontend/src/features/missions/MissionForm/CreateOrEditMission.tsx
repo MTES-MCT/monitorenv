@@ -1,10 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
+
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Formik, FieldArray } from 'formik'
 import { useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { matchPath } from 'react-router-dom'
-import { Button, IconButton, ButtonToolbar } from 'rsuite'
 import styled from 'styled-components'
 
 import {
@@ -12,24 +12,24 @@ import {
   useUpdateMissionMutation,
   useCreateMissionMutation,
   useDeleteMissionMutation
-} from '../../api/missionsAPI'
-import { setSideWindowPath } from '../../components/SideWindowRouter/SideWindowRouter.slice'
-import { COLORS } from '../../constants/constants'
-import { sideWindowPaths } from '../../domain/entities/sideWindow'
-import { setError } from '../../domain/shared_slices/Global'
-import { setMissionState } from '../../domain/shared_slices/MissionsState'
-import { useAppSelector } from '../../hooks/useAppSelector'
-import { SyncFormValuesWithRedux } from '../../hooks/useSyncFormValuesWithRedux'
-import { FormikForm } from '../../uiMonitor/CustomFormikFields/FormikForm'
-import { ReactComponent as DeleteSVG } from '../../uiMonitor/icons/Delete.svg'
-import { ReactComponent as SaveSVG } from '../../uiMonitor/icons/Save.svg'
-import { SideWindowHeader } from '../side_window/SideWindowHeader'
-import { MissionCancelEditModal } from './MissionCancelEditModal'
-import { MissionDeleteModal } from './MissionDeleteModal'
-import { ActionForm } from './MissionForm/ActionForm/ActionForm'
-import { ActionsForm } from './MissionForm/ActionsForm'
-import { GeneralInformationsForm } from './MissionForm/GeneralInformationsForm'
-import { missionFactory } from './Missions.helpers'
+} from '../../../api/missionsAPI'
+import { setSideWindowPath } from '../../../components/SideWindowRouter/SideWindowRouter.slice'
+import { COLORS } from '../../../constants/constants'
+import { sideWindowPaths } from '../../../domain/entities/sideWindow'
+import { setError } from '../../../domain/shared_slices/Global'
+import { setMissionState } from '../../../domain/shared_slices/MissionsState'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+import { SyncFormValuesWithRedux } from '../../../hooks/useSyncFormValuesWithRedux'
+import { FormikForm } from '../../../uiMonitor/CustomFormikFields/FormikForm'
+import { SideWindowHeader } from '../../side_window/SideWindowHeader'
+import { MissionCancelEditModal } from '../MissionCancelEditModal'
+import { MissionDeleteModal } from '../MissionDeleteModal'
+import { missionFactory } from '../Missions.helpers'
+import { MissionSchema } from '../MissionSchema'
+import { ActionForm } from './ActionForm/ActionForm'
+import { ActionsForm } from './ActionsForm'
+import { GeneralInformationsForm } from './GeneralInformationsForm'
+import { MissionFormBottomBar } from './MissionFormBottomBar'
 
 export function CreateOrEditMission() {
   const dispatch = useDispatch()
@@ -76,9 +76,6 @@ export function CreateOrEditMission() {
     })
   }
 
-  const handleConfirmDelete = () => {
-    setDeleteModalIsOpen(true)
-  }
   const handleReturnToEdition = () => {
     setCancelEditModalIsOpen(false)
     setDeleteModalIsOpen(false)
@@ -96,6 +93,11 @@ export function CreateOrEditMission() {
   const handleCancelForm = () => {
     dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))
   }
+
+  const handleDeleteMission = () => {
+    setDeleteModalIsOpen(true)
+  }
+
   if (id && !missionToEdit) {
     return <Loading>Chargement en cours</Loading>
   }
@@ -107,19 +109,28 @@ export function CreateOrEditMission() {
           isLoadingUpdateMission || isLoadingCreateMission ? ' - Enregistrement en cours' : ''
         }`}
       />
-      <Formik enableReinitialize initialValues={missionFormikValues} onSubmit={handleSubmitForm}>
+      <Formik
+        enableReinitialize
+        initialValues={missionFormikValues}
+        onSubmit={handleSubmitForm}
+        validationSchema={MissionSchema}
+      >
         {formikProps => {
           const handleCloseMission = () => {
             formikProps.setFieldValue('isClosed', true)
             formikProps.handleSubmit()
           }
-          const handleConfirmFormCancelation = () => {
+          const handleReopenMission = () => {
+            formikProps.setFieldValue('isClosed', false)
+          }
+          const handleQuitFormEditing = () => {
             if (formikProps.dirty) {
               setCancelEditModalIsOpen(true)
             } else {
               handleCancelForm()
             }
           }
+          const { isClosed } = formikProps.values
 
           return (
             <FormikForm>
@@ -160,40 +171,16 @@ export function CreateOrEditMission() {
                 </ThirdColumn>
               </Wrapper>
 
-              <Footer>
-                <FormActionsWrapper>
-                  {
-                    // id is undefined if creating a new mission
-                    !(id === undefined) && (
-                      <IconButton
-                        appearance="ghost"
-                        icon={<DeleteIcon className="rs-icon" />}
-                        onClick={handleConfirmDelete}
-                        type="button"
-                      >
-                        Supprimer la mission
-                      </IconButton>
-                    )
-                  }
-                  <Separator />
-                  <Button onClick={handleConfirmFormCancelation} type="button">
-                    Quitter
-                  </Button>
-                  <IconButton appearance="ghost" icon={<SaveSVG className="rs-icon" />} type="submit">
-                    Enregistrer et quitter
-                  </IconButton>
-                  <IconButton
-                    appearance="primary"
-                    icon={<SaveSVG className="rs-icon" />}
-                    onClick={handleCloseMission}
-                    type="button"
-                  >
-                    Enregistrer et clôturer
-                  </IconButton>
-                </FormActionsWrapper>
-                {errorOnSave && <ErrorOnSave>Oups... Erreur au moment de la sauvegarde</ErrorOnSave>}
-                {errorOnDelete && <ErrorOnDelete>Oups... Erreur au moment de la suppression</ErrorOnDelete>}
-              </Footer>
+              <MissionFormBottomBar
+                allowDelete={!(id === undefined)}
+                closeMission={handleCloseMission}
+                deleteMission={handleDeleteMission}
+                errorOnDelete={errorOnDelete}
+                errorOnSave={errorOnSave}
+                isClosed={isClosed}
+                quitFormEditing={handleQuitFormEditing}
+                reopenMission={handleReopenMission}
+              />
             </FormikForm>
           )
         }}
@@ -227,25 +214,4 @@ const ThirdColumn = styled.div`
   background: ${COLORS.gainsboro};
   flex: 1;
   overflow-y: auto;
-`
-
-const ErrorOnSave = styled.div`
-  backgound: ${COLORS.goldenPoppy};
-  text-align: right;
-`
-const ErrorOnDelete = styled.div`
-  backgound: ${COLORS.goldenPoppy};
-`
-const Separator = styled.div`
-  flex: 1;
-`
-const DeleteIcon = styled(DeleteSVG)`
-  color: ${COLORS.maximumRed};
-`
-const Footer = styled.div`
-  border-top: 1px solid ${COLORS.lightGray};
-  padding: 18px;
-`
-const FormActionsWrapper = styled(ButtonToolbar)`
-  display: flex;
 `

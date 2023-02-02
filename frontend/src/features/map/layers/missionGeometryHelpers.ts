@@ -7,10 +7,10 @@ import { Layers } from '../../../domain/entities/layers/constants'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map/constants'
 import {
   ActionTypeEnum,
-  EnvActionControlType,
-  EnvActionSurveillanceType,
+  EnvActionControl,
+  EnvActionSurveillance,
   getMissionStatus,
-  MissionType
+  Mission
 } from '../../../domain/entities/missions'
 
 import type { Geometry } from 'ol/geom'
@@ -64,7 +64,7 @@ export const getMissionZoneFeature = (mission, layername) => {
   return feature
 }
 
-const getActionControlProperties = (action: EnvActionControlType) => {
+const getActionControlProperties = (action: EnvActionControl) => {
   const {
     actionNumberOfControls,
     actionStartDateTimeUtc,
@@ -86,7 +86,7 @@ const getActionControlProperties = (action: EnvActionControlType) => {
   }
 }
 
-const getActionSurveillanceProperties = (action: EnvActionSurveillanceType) => {
+const getActionSurveillanceProperties = (action: EnvActionSurveillance) => {
   const { actionStartDateTimeUtc, actionSubTheme, actionTheme, actionType } = action
 
   return {
@@ -97,7 +97,7 @@ const getActionSurveillanceProperties = (action: EnvActionSurveillanceType) => {
   }
 }
 
-const getActionProperties = (action: EnvActionControlType | EnvActionSurveillanceType) => {
+const getActionProperties = (action: EnvActionControl | EnvActionSurveillance) => {
   switch (action.actionType) {
     case ActionTypeEnum.CONTROL:
       return getActionControlProperties(action)
@@ -107,7 +107,7 @@ const getActionProperties = (action: EnvActionControlType | EnvActionSurveillanc
   }
 }
 
-const getActionFeature = (action: EnvActionControlType | EnvActionSurveillanceType) => {
+const getActionFeature = (action: EnvActionControl | EnvActionSurveillance) => {
   const geoJSON = new GeoJSON()
   const actionProperties = getActionProperties(action)
   if (!action.geom) {
@@ -126,10 +126,10 @@ const getActionFeature = (action: EnvActionControlType | EnvActionSurveillanceTy
   return feature
 }
 
-const isActionControlOrActionSurveillance = (f): f is EnvActionControlType | EnvActionSurveillanceType =>
+const isActionControlOrActionSurveillance = (f): f is EnvActionControl | EnvActionSurveillance =>
   f.actionType === ActionTypeEnum.CONTROL || f.actionType === ActionTypeEnum.SURVEILLANCE
 
-export const getActionsFeatures = (mission: Partial<MissionType>) => {
+export const getActionsFeatures = (mission: Partial<Mission>) => {
   const { envActions } = mission
   if (envActions?.length && envActions?.length > 0) {
     return envActions

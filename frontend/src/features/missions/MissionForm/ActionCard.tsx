@@ -4,7 +4,7 @@ import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import { actionTargetTypeEnum, ActionTypeEnum, actionTypeEnum, EnvActionType } from '../../../domain/entities/missions'
+import { actionTargetTypeEnum, ActionTypeEnum, actionTypeEnum, EnvAction } from '../../../domain/entities/missions'
 import { ControlInfractionsTags } from '../../../ui/ControlInfractionsTags'
 import { ReactComponent as ControlIconSVG } from '../../../uiMonitor/icons/Control.svg'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
@@ -15,7 +15,7 @@ import { ReactComponent as SurveillanceIconSVG } from '../../../uiMonitor/icons/
 import type { MouseEventHandler } from 'react'
 
 type ActionCardProps = {
-  action: EnvActionType
+  action: EnvAction
   duplicateAction: MouseEventHandler
   removeAction: MouseEventHandler
   selectAction: MouseEventHandler

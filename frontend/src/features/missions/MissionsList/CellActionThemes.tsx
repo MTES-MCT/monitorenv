@@ -2,11 +2,11 @@
 import _ from 'lodash'
 import { Table } from 'rsuite'
 
-import { ActionTypeEnum, EnvActionType } from '../../../domain/entities/missions'
+import { ActionTypeEnum, EnvAction } from '../../../domain/entities/missions'
 
 export function CellActionThemes({ dataKey, rowData, ...props }: { dataKey?: any; rowData?: any }) {
   const actionThemes = _.chain(rowData?.envActions)
-    .uniqBy((v: EnvActionType) => {
+    .uniqBy((v: EnvAction) => {
       if (v.actionType === ActionTypeEnum.CONTROL) {
         return `${v.actionTheme}${v.actionSubTheme}`
       }

@@ -31,7 +31,7 @@ export type MultiZonePickerProps = {
 export function MultiZonePicker({ addButtonLabel, interactionListener, isLight, label, name }: MultiZonePickerProps) {
   const dispatch = useAppDispatch()
   const { geometry } = useListenForDrawedGeometry(interactionListener)
-  const [field, , helpers] = useField(name)
+  const [field, meta, helpers] = useField(name)
   const { value } = field
 
   const polygons = useMemo(() => {
@@ -76,10 +76,11 @@ export function MultiZonePicker({ addButtonLabel, interactionListener, isLight, 
 
   return (
     <Field>
-      <Label>{label}</Label>
+      <Label hasError={!!meta.error}>{label}</Label>
       <Button accent={Accent.SECONDARY} Icon={Icon.Plus} isFullWidth onClick={handleAddZone}>
         {addButtonLabel}
       </Button>
+      {!!meta.error && <ErrorMessage>Veuillez définir une zone de mission</ErrorMessage>}
 
       <>
         {polygons.map((polygonCoordinates, index) => (
@@ -148,4 +149,9 @@ const ZoneWrapper = styled.div<{ isLight?: boolean }>`
   justify-content: space-between;
   padding: 5px 0.75rem 4px;
   width: 416px;
+`
+
+const ErrorMessage = styled.div`
+  color: ${COLORS.maximumRed};
+  font: italic normal normal 13px/18px Marianne;
 `

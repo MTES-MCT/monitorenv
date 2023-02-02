@@ -6,6 +6,7 @@ import { Form, IconButton, TagPicker } from 'rsuite'
 import styled from 'styled-components'
 
 import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
+import { FormikErrorWrapper } from '../../../uiMonitor/CustomFormikFields/FormikErrorWrapper'
 import { FormikInput } from '../../../uiMonitor/CustomFormikFields/FormikInput'
 import { SelectPicker } from '../../../uiMonitor/CustomRsuite/SelectPicker'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
@@ -91,33 +92,37 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
     <RessourceUnitWrapper>
       <SelectorWrapper>
         <FormGroupFixed>
-          <Form.ControlLabel htmlFor="administration">Administration {resourceUnitIndexDisplayed}</Form.ControlLabel>
-          <SelectPicker
-            block
-            data={administrationList}
-            labelKey="administration"
-            onChange={handleAdministrationChange}
-            searchable={administrationList.length > 10}
-            size="sm"
-            value={administrationField.value}
-            valueKey="administration"
-          />
+          <FormikErrorWrapper name={`controlUnits.${controlUnitIndex}.administration`} noMessage>
+            <Form.ControlLabel htmlFor="administration">Administration {resourceUnitIndexDisplayed}</Form.ControlLabel>
+            <SelectPicker
+              block
+              data={administrationList}
+              labelKey="administration"
+              onChange={handleAdministrationChange}
+              searchable={administrationList.length > 10}
+              size="sm"
+              value={administrationField.value}
+              valueKey="administration"
+            />
+          </FormikErrorWrapper>
         </FormGroupFixed>
         <FormGroupFixed>
-          <Form.ControlLabel htmlFor="unit">Unité {resourceUnitIndexDisplayed}</Form.ControlLabel>
-          <SelectPicker
-            block
-            data={unitList}
-            disabled={_.isEmpty(administrationField.value)}
-            labelKey="name"
-            onChange={handleUnitChange}
-            searchable={unitList.length > 10}
-            size="sm"
-            value={unitField.value}
-            valueKey="id"
-            {...props}
-            key={unitField.value}
-          />
+          <FormikErrorWrapper name={`controlUnits.${controlUnitIndex}.id`} noMessage>
+            <Form.ControlLabel htmlFor="unit">Unité {resourceUnitIndexDisplayed}</Form.ControlLabel>
+            <SelectPicker
+              block
+              data={unitList}
+              disabled={_.isEmpty(administrationField.value)}
+              labelKey="name"
+              onChange={handleUnitChange}
+              searchable={unitList.length > 10}
+              size="sm"
+              value={unitField.value}
+              valueKey="id"
+              {...props}
+              key={unitField.value}
+            />
+          </FormikErrorWrapper>
         </FormGroupFixed>
         <FormGroupFixed>
           <RefWrapper ref={resourcesRef} data-cy="unit-tag-picker">

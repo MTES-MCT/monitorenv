@@ -8,6 +8,7 @@ import { InteractionListener } from '../../../domain/entities/map/constants'
 import { missionNatureEnum, missionTypeEnum } from '../../../domain/entities/missions'
 import { FormikCheckboxGroup } from '../../../uiMonitor/CustomFormikFields/FormikCheckboxGroup'
 import { FormikDatePicker } from '../../../uiMonitor/CustomFormikFields/FormikDatePicker'
+import { FormikErrorWrapper } from '../../../uiMonitor/CustomFormikFields/FormikErrorWrapper'
 import { FormikInput } from '../../../uiMonitor/CustomFormikFields/FormikInput'
 import { FormikRadioGroup } from '../../../uiMonitor/CustomFormikFields/FormikRadioGroup'
 import { FormikTextarea } from '../../../uiMonitor/CustomFormikFields/FormikTextarea'
@@ -20,27 +21,34 @@ export function GeneralInformationsForm() {
       <Title>Informations générales</Title>
       <FlexFormGroup>
         <ColWrapper>
-          <FormikDatePicker isCompact label="Début de mission" name="startDateTimeUtc" withTime />
+          <FormikErrorWrapper name="startDateTimeUtc">
+            <FormikDatePicker isCompact label="Début de mission" name="startDateTimeUtc" withTime />
+          </FormikErrorWrapper>
         </ColWrapper>
         <ColWrapper>
-          <FormikDatePicker isCompact label="Fin de mission" name="endDateTimeUtc" withTime />
+          <FormikErrorWrapper name="endDateTimeUtc">
+            <FormikDatePicker isCompact label="Fin de mission" name="endDateTimeUtc" withTime />
+          </FormikErrorWrapper>
         </ColWrapper>
       </FlexFormGroup>
 
       <Form.Group>
-        <SubGroup>
-          <Form.ControlLabel htmlFor="missionType">Type de mission</Form.ControlLabel>
-          <TypeMissionRadioGroup name="missionType" radioValues={missionTypeEnum} />
-        </SubGroup>
-        <SubGroup>
-          <Form.ControlLabel htmlFor="missionNature">Intentions principales de mission</Form.ControlLabel>
-          <NatureMissionCheckboxGroup checkBoxValues={missionNatureEnum} inline name="missionNature" size="sm" />
-        </SubGroup>
+        <FieldWrapper>
+          <FormikErrorWrapper name="missionType">
+            <Form.ControlLabel htmlFor="missionType">Type de mission</Form.ControlLabel>
+            <TypeMissionRadioGroup name="missionType" radioValues={missionTypeEnum} />
+          </FormikErrorWrapper>
+        </FieldWrapper>
+        <FieldWrapper>
+          <FormikErrorWrapper name="missionNature">
+            <Form.ControlLabel htmlFor="missionNature">Intentions principales de mission</Form.ControlLabel>
+            <NatureMissionCheckboxGroup checkBoxValues={missionNatureEnum} inline name="missionNature" size="sm" />
+          </FormikErrorWrapper>
+        </FieldWrapper>
       </Form.Group>
       <Form.Group>
         <FieldArray name="controlUnits" render={props => <ControlUnitsForm {...props} />} />
       </Form.Group>
-
       <MultiZonePicker
         addButtonLabel="Ajouter une zone de mission"
         interactionListener={InteractionListener.MISSION_ZONE}
@@ -91,8 +99,10 @@ const NarrowColumn = styled.div`
     margin-right: 16px;
   }
 `
+const FieldWrapper = styled.div``
 const SubGroup = styled.div`
-  magin-bottom: 16px;
+  margin-bottom: 16px;
+  display: flex;
 `
 
 const TypeMissionRadioGroup = styled(FormikRadioGroup)`

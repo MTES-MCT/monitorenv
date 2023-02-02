@@ -12,9 +12,9 @@ import { CellResources } from './CellResources'
 import { CellStatus } from './CellStatus'
 import { sortMissionsByProperty } from './MissionsTableSort'
 
-import type { MissionType } from '../../../domain/entities/missions'
+import type { Mission } from '../../../domain/entities/missions'
 
-export function MissionsTable({ data, isLoading }: { data: MissionType[] | undefined; isLoading: boolean }) {
+export function MissionsTable({ data, isLoading }: { data: Mission[] | undefined; isLoading: boolean }) {
   const [sortColumn, setSortColumn] = React.useState('startDateTimeUtc')
   const [sortType, setSortType] = React.useState<'desc' | 'asc'>('desc')
 

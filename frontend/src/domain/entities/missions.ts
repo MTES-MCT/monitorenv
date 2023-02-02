@@ -266,15 +266,11 @@ export const relevantCourtEnum = {
   }
 }
 
-export type ResourceUnit = {
-  administration: string
-}
-
-export type MissionType<EnvActionType = EnvActionControlType | EnvActionSurveillanceType | EnvActionNoteType> = {
-  closedBy: string
+export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote> = {
+  closedBy?: string
   controlUnits: ControlUnit[]
-  endDateTimeUtc: string
-  envActions: Array<EnvActionType>
+  endDateTimeUtc?: string
+  envActions: EnvAction[]
   facade: string
   geom?: Record<string, any>[]
   id: number
@@ -282,33 +278,33 @@ export type MissionType<EnvActionType = EnvActionControlType | EnvActionSurveill
   missionNature: MissionNatureEnum[]
   missionSource: MissionSourceEnum
   missionType: MissionTypeEnum
-  observationsCacem: string
-  observationsCnsp: string
+  observationsCacem?: string
+  observationsCnsp?: string
   openBy: string
   startDateTimeUtc: string
 }
 
-export type NewMissionType = Omit<MissionType, 'id' | 'facade'>
+export type NewMission = Omit<Mission, 'id' | 'facade' | 'missionSource'>
 
-export type EnvActionType = EnvActionControlType | EnvActionSurveillanceType | EnvActionNoteType
+export type EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote
 
 export type EnvActionCommonProperties = {
   actionStartDateTimeUtc?: string
   geom?: Record<string, any>[]
   id: string
 }
-export type EnvActionControlType = EnvActionCommonProperties & {
+export type EnvActionControl = EnvActionCommonProperties & {
   actionNumberOfControls?: number
   actionSubTheme?: string
   actionTargetType?: string
   actionTheme?: string
   actionType: ActionTypeEnum.CONTROL
-  infractions: InfractionType[]
+  infractions: Infraction[]
   protectedSpecies?: string
   vehicleType: string
 }
 
-export type EnvActionSurveillanceType = EnvActionCommonProperties & {
+export type EnvActionSurveillance = EnvActionCommonProperties & {
   actionSubTheme?: string
   actionTheme?: string
   actionType: ActionTypeEnum.SURVEILLANCE
@@ -318,15 +314,15 @@ export type EnvActionSurveillanceType = EnvActionCommonProperties & {
   protectedSpecies?: string
 }
 
-export type EnvActionNoteType = EnvActionCommonProperties & {
+export type EnvActionNote = EnvActionCommonProperties & {
   actionType: ActionTypeEnum.NOTE
   observations?: string
 }
 
-export type InfractionType = {
+export type Infraction = {
   companyName?: string
   controlledPersonIdentity?: string
-  formalNotice: FormalNoticeEnum
+  formalNotice?: FormalNoticeEnum
   id: string
   infractionType: InfractionTypeEnum
   natinf?: string[]

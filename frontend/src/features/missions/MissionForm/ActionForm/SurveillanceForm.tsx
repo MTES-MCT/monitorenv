@@ -17,13 +17,13 @@ import { ReactComponent as SurveillanceIconSVG } from '../../../../uiMonitor/ico
 import { MultiZonePicker } from '../../MultiZonePicker'
 import { ThemeSelector } from './ThemeSelector'
 
-import type { MissionType, EnvActionControlType } from '../../../../domain/entities/missions'
+import type { Mission, EnvActionControl } from '../../../../domain/entities/missions'
 
 export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionIndex }) {
   const {
     setFieldValue,
     values: { envActions }
-  } = useFormikContext<MissionType<EnvActionControlType>>()
+  } = useFormikContext<Mission<EnvActionControl>>()
 
   const actionTheme = envActions[currentActionIndex]?.actionTheme
 

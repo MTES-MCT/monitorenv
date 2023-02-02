@@ -10,8 +10,8 @@ import styled from 'styled-components'
 import { useGetControlThemesQuery } from '../../../../../api/controlThemesAPI'
 import { COLORS } from '../../../../../constants/constants'
 import {
-  MissionType,
-  EnvActionControlType,
+  Mission,
+  EnvActionControl,
   THEME_REQUIRE_PROTECTED_SPECIES,
   actionTargetTypeEnum,
   vehicleTypeEnum
@@ -41,7 +41,7 @@ export function ControlForm({
     setFieldValue,
     setValues,
     values: { envActions }
-  } = useFormikContext<MissionType<EnvActionControlType>>()
+  } = useFormikContext<Mission<EnvActionControl>>()
   const currentAction = envActions[currentActionIndex]
 
   const parsedActionStartDateTimeUtc =

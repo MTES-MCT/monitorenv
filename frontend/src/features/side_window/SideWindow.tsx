@@ -9,7 +9,7 @@ import { setSideWindowAsLoaded } from '../../components/SideWindowRouter/SideWin
 import { COLORS } from '../../constants/constants'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { useAppSelector } from '../../hooks/useAppSelector'
-import { CreateOrEditMission } from '../missions/CreateOrEditMission'
+import { CreateOrEditMission } from '../missions/MissionForm/CreateOrEditMission'
 import { Missions } from '../missions/Missions'
 
 export const SideWindow = forwardRef<HTMLDivElement>((_, ref) => {

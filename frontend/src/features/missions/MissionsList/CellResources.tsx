@@ -3,11 +3,11 @@ import { Table } from 'rsuite'
 
 import { getControlUnitsAsText } from '../../../domain/entities/controlUnit'
 
-import type { MissionType } from '../../../domain/entities/missions'
+import type { Mission } from '../../../domain/entities/missions'
 
 type CellResourcesProps = {
   dataKey?: any
-  rowData?: MissionType
+  rowData?: Mission
 }
 export function CellResources({ dataKey, rowData, ...props }: CellResourcesProps) {
   return <Table.Cell {...props}>{rowData?.controlUnits && getControlUnitsAsText(rowData.controlUnits)}</Table.Cell>

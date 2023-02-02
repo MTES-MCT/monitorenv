@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-import type { MissionType } from '../domain/entities/missions'
+import type { Mission } from '../domain/entities/missions'
 
-type MissionsResponse = MissionType[]
+type MissionsResponse = Mission[]
 type MissionsFilter = {
   missionNature?: string[]
   missionStatus?: string[]
@@ -25,7 +25,7 @@ const getMissionTypesFilter = missionTypes =>
 export const missionsAPI = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/bff/v1' }),
   endpoints: build => ({
-    createMission: build.mutation<MissionType, Partial<MissionType>>({
+    createMission: build.mutation<Mission, Partial<Mission>>({
       invalidatesTags: [{ id: 'LIST', type: 'Missions' }],
       query: mission => ({
         body: mission,
@@ -40,7 +40,7 @@ export const missionsAPI = createApi({
         url: `missions/${id}`
       })
     }),
-    getMission: build.query<MissionType, number>({
+    getMission: build.query<Mission, number>({
       query: id => `missions/${id}`
     }),
     getMissions: build.query<MissionsResponse, MissionsFilter | void>({
@@ -62,7 +62,7 @@ export const missionsAPI = createApi({
           .filter(v => v)
           .join('&')
     }),
-    updateMission: build.mutation<MissionType, MissionType>({
+    updateMission: build.mutation<Mission, Mission>({
       invalidatesTags: [{ id: 'LIST', type: 'Missions' }],
       // onQueryStarted is useful for optimistic updates
       // The 2nd parameter is the destructured `MutationLifecycleApi`

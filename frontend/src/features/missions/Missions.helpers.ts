@@ -4,13 +4,13 @@ import {
   actionTargetTypeEnum,
   ActionTypeEnum,
   actionTypeEnum,
-  EnvActionType,
+  EnvAction,
   formalNoticeEnum,
   infractionTypeEnum,
   MissionSourceEnum,
-  MissionType,
+  Mission,
   MissionTypeEnum,
-  NewMissionType,
+  NewMission,
   vehicleTypeEnum
 } from '../../domain/entities/missions'
 
@@ -31,7 +31,7 @@ export const actionFactory = ({
 }: {
   actionType: ActionTypeEnum
   id?: number
-}): EnvActionType => {
+}): EnvAction => {
   switch (actionType) {
     case actionTypeEnum.CONTROL.code:
       return {
@@ -67,7 +67,7 @@ export const actionFactory = ({
   }
 }
 
-export const missionFactory = (mission = {}): MissionType | NewMissionType => ({
+export const missionFactory = (mission = {}): Mission | NewMission => ({
   closedBy: '',
   controlUnits: [],
   endDateTimeUtc: '',
