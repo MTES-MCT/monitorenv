@@ -15,7 +15,6 @@ interface IMissionRepository {
         pageable: Pageable
     ): List<MissionEntity>
     fun save(mission: MissionEntity): MissionEntity
-    fun create(mission: MissionEntity): MissionEntity
     fun delete(missionId: Int)
     fun count(): Long
 }

@@ -68,11 +68,11 @@ class MissionsControllerITests {
             facade = "Outre-Mer",
             geom = polygon,
             observationsCacem = null,
-            inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-            inputEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
             isDeleted = false,
             isClosed = false,
-            missionSource = MissionSourceEnum.CACEM
+            missionSource = MissionSourceEnum.MONITORENV
         )
         val newMissionRequest = CreateOrUpdateMissionDataInput(
             missionType = MissionTypeEnum.LAND,
@@ -80,10 +80,10 @@ class MissionsControllerITests {
             observationsCacem = null,
             facade = "Outre-Mer",
             geom = polygon,
-            inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-            inputEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
             isClosed = false,
-            missionSource = MissionSourceEnum.CACEM
+            missionSource = MissionSourceEnum.MONITORENV
         )
         val requestbody = objectMapper.writeValueAsString(newMissionRequest)
         given(this.createMission.execute(mission = any())).willReturn(newMission)
@@ -113,11 +113,11 @@ class MissionsControllerITests {
             facade = "Outre-Mer",
             geom = polygon,
             observationsCacem = null,
-            inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-            inputEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
             isClosed = false,
             isDeleted = false,
-            missionSource = MissionSourceEnum.CACEM
+            missionSource = MissionSourceEnum.MONITORENV
         )
         given(
             this.getMissions.execute(
@@ -145,10 +145,10 @@ class MissionsControllerITests {
         val firstMission = MissionEntity(
             id = 10,
             missionType = MissionTypeEnum.SEA,
-            inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isClosed = false,
             isDeleted = false,
-            missionSource = MissionSourceEnum.CACEM
+            missionSource = MissionSourceEnum.MONITORENV
         )
         // we test only if the route is called with the right arg
         given(getMissionById.execute(requestedId)).willReturn(firstMission)
@@ -168,10 +168,10 @@ class MissionsControllerITests {
             id = 14,
             missionType = MissionTypeEnum.SEA,
             observationsCacem = "updated observationsCacem",
-            inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isClosed = false,
             isDeleted = false,
-            missionSource = MissionSourceEnum.CACEM
+            missionSource = MissionSourceEnum.MONITORENV
         )
         val envAction = EnvActionControlEntity(
             id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
@@ -183,9 +183,9 @@ class MissionsControllerITests {
             id = 14,
             missionType = MissionTypeEnum.SEA,
             observationsCacem = "updated observationsCacem",
-            inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             envActions = listOf(envAction),
-            missionSource = MissionSourceEnum.CACEM,
+            missionSource = MissionSourceEnum.MONITORENV,
             isClosed = false
         )
         given(this.updateMission.execute(any())).willReturn(expectedUpdatedMission)

@@ -19,25 +19,25 @@ interface IDBMissionRepository : CrudRepository<MissionModel, Int> {
         FROM missions 
         WHERE
             deleted IS FALSE
-            AND input_start_datetime_utc >= :startedAfter
-            AND (cast(cast(:startedBefore as text) as timestamp) IS NULL OR input_start_datetime_utc <= cast(cast(:startedBefore as text) as timestamp))
+            AND start_datetime_utc >= :startedAfter
+            AND (cast(cast(:startedBefore as text) as timestamp) IS NULL OR start_datetime_utc <= cast(cast(:startedBefore as text) as timestamp))
             AND (list_to_array(:missionNatures) IS NULL OR mission_nature && list_to_array(:missionNatures))
             AND (list_to_array(:missionTypes) IS NULL OR mission_type = ANY(list_to_array(:missionTypes)))
             AND (list_to_array(:missionStatuses) IS NULL 
                 OR (
                     'UPCOMING' = ANY(list_to_array(:missionStatuses)) AND (
-                    input_start_datetime_utc >= now()
+                    start_datetime_utc >= now()
                     AND closed = false
                     ))
                 OR ( 
                     'PENDING' = ANY(list_to_array(:missionStatuses)) AND (
-                    (input_end_datetime_utc IS NULL OR input_end_datetime_utc >= now())
+                    (end_datetime_utc IS NULL OR end_datetime_utc >= now())
                     AND closed = false
                     )
                 )
                 OR ( 
                     'ENDED' = ANY(list_to_array(:missionStatuses)) AND (
-                    input_end_datetime_utc < now() 
+                    end_datetime_utc < now() 
                     AND closed = false
                     )
                 )
@@ -47,7 +47,7 @@ interface IDBMissionRepository : CrudRepository<MissionModel, Int> {
                 ))
                 
             )
-        ORDER BY input_start_datetime_utc DESC
+        ORDER BY start_datetime_utc DESC
         """,
         nativeQuery = true
     )
