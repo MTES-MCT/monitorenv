@@ -8,22 +8,36 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.vladmihalcea.hibernate.type.array.EnumArrayType
 import com.vladmihalcea.hibernate.type.array.ListArrayType
+import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionNatureEnum
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
 import org.hibernate.Hibernate
-import org.hibernate.annotations.*
+import org.hibernate.annotations.Parameter
+import org.hibernate.annotations.Type
+import org.hibernate.annotations.TypeDef
+import org.hibernate.annotations.TypeDefs
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import org.locationtech.jts.geom.MultiPolygon
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
 import java.time.Instant
 import java.time.ZoneOffset.UTC
-import javax.persistence.*
 import javax.persistence.CascadeType
 import javax.persistence.Entity
+import javax.persistence.Id
 import javax.persistence.Table
+import javax.persistence.GeneratedValue
+import javax.persistence.Basic
+import javax.persistence.Column
+import javax.persistence.Enumerated
+import javax.persistence.GenerationType
+import javax.persistence.EnumType
+import javax.persistence.OneToMany
+
 
 @JsonIdentityInfo(
     generator = ObjectIdGenerators.PropertyGenerator::class,
@@ -34,12 +48,17 @@ import javax.persistence.Table
     TypeDef(
         name = "enum-array",
         typeClass = ListArrayType::class,
-        parameters = [org.hibernate.annotations.Parameter(name = EnumArrayType.SQL_ARRAY_TYPE, value = "text")]
+        parameters = [Parameter(name = EnumArrayType.SQL_ARRAY_TYPE, value = "text")]
     ),
+    TypeDef(
+        name = "pgsql_enum",
+        typeClass = PostgreSQLEnumType::class
+        ),
     TypeDef(
         name = "jsonb",
         typeClass = JsonBinaryType::class
-    )
+    ),
+
 )
 @Table(name = "missions")
 data class MissionModel(
@@ -77,8 +96,9 @@ data class MissionModel(
     val isClosed: Boolean,
     @Column(name = "deleted", nullable = false)
     val isDeleted: Boolean,
-    @Column(name = "mission_source", nullable = false)
+    @Column(name = "mission_source", nullable = false, columnDefinition = "mission_source_type")
     @Enumerated(EnumType.STRING)
+    @Type(type = "pgsql_enum")
     val missionSource: MissionSourceEnum,
     @OneToMany(
         mappedBy = "mission",
