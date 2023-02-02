@@ -30,11 +30,11 @@ export const getMissionCentroid = (mission, layername) => {
   pointFeature.setProperties({
     controlUnits: mission.controlUnits,
     endDateTimeUtc: mission.endDateTimeUtc,
-    startDateTimeUtc: mission.startDateTimeUtc,
     missionId: mission.id,
     missionStatus: getMissionStatus(mission),
     missionType: mission.missionType,
-    numberOfActions: mission.actions?.length || 0
+    numberOfActions: mission.actions?.length || 0,
+    startDateTimeUtc: mission.startDateTimeUtc
   })
 
   return pointFeature
@@ -52,13 +52,13 @@ export const getMissionZoneFeature = (mission, layername) => {
   feature.setId(`${layername}:${mission.id}`)
   feature.setProperties({
     controlUnits: mission.controlUnits,
-    envActions: mission.envActions,
     endDateTimeUtc: mission.endDateTimeUtc,
-    startDateTimeUtc: mission.startDateTimeUtc,
+    envActions: mission.envActions,
     missionId: mission.id,
     missionStatus: getMissionStatus(mission),
     missionType: mission.missionType,
-    numberOfActions: mission.actions?.length || 0
+    numberOfActions: mission.actions?.length || 0,
+    startDateTimeUtc: mission.startDateTimeUtc
   })
 
   return feature
