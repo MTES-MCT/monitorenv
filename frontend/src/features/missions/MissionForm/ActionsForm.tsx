@@ -71,7 +71,6 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
             const index = envActions?.findIndex(a => a.id === action.id)
             const errors =
               form?.errors?.envActions && index !== undefined && index >= 0 && form?.errors?.envActions[index]
-            console.log(index, errors, form?.errors)
 
             return (
               <ActionCard
