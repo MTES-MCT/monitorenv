@@ -28,19 +28,19 @@ class CreateMissionUTests {
             missionType = MissionTypeEnum.LAND,
             missionNature = listOf(MissionNatureEnum.ENV),
             facade = "Outre-Mer",
-            inputStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-            inputEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
             isClosed = false,
             isDeleted = false,
-            missionSource = MissionSourceEnum.CACEM
+            missionSource = MissionSourceEnum.MONITORENV
         )
-        given(missionRepository.create(expectedCreatedMission)).willReturn(expectedCreatedMission)
+        given(missionRepository.save(expectedCreatedMission)).willReturn(expectedCreatedMission)
 
         // When
         val createdMission = CreateMission(missionRepository, facadeAreasRepository).execute(expectedCreatedMission)
 
         // Then
-        verify(missionRepository, times(1)).create(expectedCreatedMission)
+        verify(missionRepository, times(1)).save(expectedCreatedMission)
         assertThat(createdMission).isEqualTo(expectedCreatedMission)
     }
 }

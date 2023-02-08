@@ -1,14 +1,14 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { Table } from 'rsuite'
 
+import { getControlUnitsAsText } from '../../../domain/entities/controlUnit'
+
+import type { MissionType } from '../../../domain/entities/missions'
+
 type CellResourcesProps = {
   dataKey?: any
-  rowData?: any
+  rowData?: MissionType
 }
 export function CellResources({ dataKey, rowData, ...props }: CellResourcesProps) {
-  return (
-    <Table.Cell {...props}>
-      {rowData.resourceUnits?.map(resourceUnit => `${resourceUnit.unit} (${resourceUnit.administration || '-'})`)}
-    </Table.Cell>
-  )
+  return <Table.Cell {...props}>{rowData?.controlUnits && getControlUnitsAsText(rowData.controlUnits)}</Table.Cell>
 }

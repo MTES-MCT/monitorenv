@@ -1,6 +1,8 @@
 package fr.gouv.cacem.monitorenv.domain.entities.missions
 
 enum class MissionSourceEnum {
-    CNSP,
-    CACEM
+    MONITORENV,
+    MONITORFISH,
+    POSEIDON_CACEM,
+    POSEIDON_CNSP
 }

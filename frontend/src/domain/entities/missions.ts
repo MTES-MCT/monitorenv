@@ -1,5 +1,7 @@
 import { compareDesc, compareAsc, parseISO } from 'date-fns'
 
+import type { ControlUnit } from './controlUnit'
+
 export const actionTypeEnum = {
   CONTROL: {
     code: 'CONTROL',
@@ -237,8 +239,10 @@ export const missionStatusEnum = {
 }
 
 export enum MissionSourceEnum {
-  CACEM = 'CACEM',
-  CNSP = 'CNSP'
+  MONITORENV = 'MONITORENV',
+  MONITORFISH = 'MONITORFISH',
+  POSEIDON_CACEM = 'POSEIDON_CACEM',
+  POSEIDON_CNSP = 'POSEIDON_CNSP'
 }
 
 export const THEME_REQUIRE_PROTECTED_SPECIES = ['Police des espèces protégées et de leurs habitats (faune et flore)']
@@ -268,12 +272,12 @@ export type ResourceUnit = {
 
 export type MissionType<EnvActionType = EnvActionControlType | EnvActionSurveillanceType | EnvActionNoteType> = {
   closedBy: string
+  controlUnits: ControlUnit[]
+  endDateTimeUtc: string
   envActions: Array<EnvActionType>
   facade: string
   geom?: Record<string, any>[]
   id: number
-  inputEndDateTimeUtc?: string
-  inputStartDateTimeUtc?: string
   isClosed: boolean
   missionNature: MissionNatureEnum[]
   missionSource: MissionSourceEnum
@@ -281,7 +285,7 @@ export type MissionType<EnvActionType = EnvActionControlType | EnvActionSurveill
   observationsCacem: string
   observationsCnsp: string
   openBy: string
-  resourceUnits: ResourceUnit[]
+  startDateTimeUtc: string
 }
 
 export type NewMissionType = Omit<MissionType, 'id' | 'facade'>
@@ -335,22 +339,22 @@ export type InfractionType = {
 }
 
 export const getMissionStatus = ({
-  inputEndDateTimeUtc,
-  inputStartDateTimeUtc,
-  isClosed
+  endDateTimeUtc,
+  isClosed,
+  startDateTimeUtc
 }: {
-  inputEndDateTimeUtc: string
-  inputStartDateTimeUtc: string
+  endDateTimeUtc: string
   isClosed: Boolean
+  startDateTimeUtc: string
 }) => {
   if (isClosed) {
     return missionStatusEnum.CLOSED.code
   }
-  if (inputStartDateTimeUtc) {
-    if (parseISO(inputStartDateTimeUtc) && compareAsc(parseISO(inputStartDateTimeUtc), Date.now()) >= 0) {
+  if (startDateTimeUtc) {
+    if (parseISO(startDateTimeUtc) && compareAsc(parseISO(startDateTimeUtc), Date.now()) >= 0) {
       return missionStatusEnum.UPCOMING.code
     }
-    if (parseISO(inputEndDateTimeUtc) && compareDesc(parseISO(inputEndDateTimeUtc), Date.now()) >= 0) {
+    if (parseISO(endDateTimeUtc) && compareDesc(parseISO(endDateTimeUtc), Date.now()) >= 0) {
       return missionStatusEnum.ENDED.code
     }
 

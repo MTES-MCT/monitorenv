@@ -1,6 +1,6 @@
 import { combineReducers } from '@reduxjs/toolkit'
 
-import { controlResourcesAPI } from '../../api/controlResourcesAPI'
+import { controlUnitsAPI } from '../../api/controlUnitsAPI'
 import { controlThemesAPI } from '../../api/controlThemesAPI'
 import { infractionsAPI } from '../../api/infractionsAPI'
 import { missionsAPI } from '../../api/missionsAPI'
@@ -34,7 +34,7 @@ export const homeReducers = combineReducers({
   [regulatoryLayersAPI.reducerPath]: regulatoryLayersAPI.reducer,
   [missionsAPI.reducerPath]: missionsAPI.reducer,
   [controlThemesAPI.reducerPath]: controlThemesAPI.reducer,
-  [controlResourcesAPI.reducerPath]: controlResourcesAPI.reducer,
+  [controlUnitsAPI.reducerPath]: controlUnitsAPI.reducer,
   [infractionsAPI.reducerPath]: infractionsAPI.reducer,
   regulatoryMetadata: regulatoryMetadataSliceReducer,
   sideWindow: sideWindowReducer
@@ -44,6 +44,6 @@ export const homeMiddlewares = [
   missionsAPI.middleware,
   regulatoryLayersAPI.middleware,
   controlThemesAPI.middleware,
-  controlResourcesAPI.middleware,
+  controlUnitsAPI.middleware,
   infractionsAPI.middleware
 ]

@@ -69,22 +69,24 @@ export const actionFactory = ({
 
 export const missionFactory = (mission = {}): MissionType | NewMissionType => ({
   closedBy: '',
+  controlUnits: [],
+  endDateTimeUtc: '',
   envActions: [],
   isClosed: false,
   missionNature: [],
-  missionSource: MissionSourceEnum.CACEM,
+  missionSource: MissionSourceEnum.MONITORENV,
   missionType: MissionTypeEnum.SEA,
   observationsCacem: '',
   observationsCnsp: '',
   openBy: '',
-  resourceUnits: [resourceUnitFactory()],
+  startDateTimeUtc: new Date().toISOString(),
   ...mission
 })
 
-export const resourceUnitFactory = ({ ...resourceUnit } = {}) => ({
+export const controlUnitFactory = ({ ...resourceUnit } = {}) => ({
   administration: '',
+  name: '',
   resources: [],
-  unit: '',
   ...resourceUnit
 })
 

@@ -63,3 +63,6 @@ FAO_AREAS_URL = (
 
 # Prefect Server endpoint
 PREFECT_SERVER_URL = os.getenv("PREFECT_SERVER_URL")
+
+# Historic id ranges
+HISTORIC_CONTROL_UNITS_MAX_ID = 9999

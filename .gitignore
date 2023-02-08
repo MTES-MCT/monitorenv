@@ -12,7 +12,7 @@ github_token.txt
 
 # Coverage reports
 datascience/htmlcov/
-datascience/.coverage
+datascience/.coverage.*
 frontend/cypress/videos/
 
 # Local data
