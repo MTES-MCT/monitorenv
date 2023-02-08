@@ -8,13 +8,11 @@ export interface SideWindowState {
   // TODO Replace with an enum once `sideWindowPaths` is converted to an enum.
   currentPath: string
   hasBeenRenderedOnce: boolean
-  isLoaded: boolean
   isOpen: boolean
 }
 const INITIAL_STATE: SideWindowState = {
   currentPath: sideWindowPaths.MISSIONS,
   hasBeenRenderedOnce: false,
-  isLoaded: false,
   isOpen: false
 }
 
@@ -24,7 +22,6 @@ const sideWindowReducerSlice = createSlice({
   reducers: {
     close(state) {
       state.isOpen = false
-      state.isLoaded = false
     },
 
     /**
@@ -34,10 +31,6 @@ const sideWindowReducerSlice = createSlice({
     openAndGoTo(state, action: PayloadAction<string>) {
       state.isOpen = true
       state.currentPath = action.payload
-    },
-
-    setIsLoaded(state, action: PayloadAction<boolean>) {
-      state.isLoaded = action.payload
     }
   }
 })

@@ -39,9 +39,6 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
 
   useEffect(() => {
     setIsFirstRender(false)
-
-    // TODO I don't think it's useful anymore.
-    dispatch(sideWindowActions.setIsLoaded(true))
   }, [dispatch])
 
   return (
