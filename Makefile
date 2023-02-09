@@ -56,12 +56,6 @@ dev-erase-db:
 		--project-directory ./infra/docker \
 		--env-file='./infra/.env' \
 		-f ./infra/docker/docker-compose.yml \
-		down --remove-orphans -v
-	docker compose \
-		--project-name $(PROJECT_NAME) \
-		--project-directory ./infra/docker \
-		--env-file='./infra/.env' \
-		-f ./infra/docker/docker-compose.yml \
 		-f ./infra/docker/docker-compose.dev.yml \
 		down --remove-orphans -v
 
