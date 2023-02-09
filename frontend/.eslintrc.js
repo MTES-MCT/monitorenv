@@ -15,7 +15,6 @@ module.exports = {
     '@typescript/no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': 'off',
 
-    'react/jsx-no-useless-fragment': 'off',
     'react/react-in-jsx-scope': 'off'
   },
   overrides: [
