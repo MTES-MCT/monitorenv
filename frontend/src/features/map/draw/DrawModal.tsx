@@ -42,11 +42,11 @@ export function DrawModal() {
   const dispatch = useAppDispatch()
   const { geometry, interactionType, listener } = useAppSelector(state => state.draw)
 
-  const { sideWindowIsLoaded, sideWindowPath } = useAppSelector(state => state.sideWindowRouter)
+  const { sideWindow } = useAppSelector(state => state)
 
   const initialFeatureNumberRef = useRef<number | undefined>(undefined)
 
-  const routeParams = matchPath<{ id: string }>(sideWindowPath, {
+  const routeParams = matchPath<{ id: string }>(sideWindow.currentPath, {
     exact: true,
     path: [sideWindowPaths.MISSION, sideWindowPaths.MISSION_NEW],
     strict: true
@@ -94,10 +94,10 @@ export function DrawModal() {
   }, [dispatch, previousMissionId, routeParams])
 
   useEffect(() => {
-    if (!sideWindowIsLoaded) {
+    if (!sideWindow.isOpen) {
       dispatch(closeAddZone())
     }
-  }, [dispatch, sideWindowIsLoaded])
+  }, [dispatch, sideWindow.isOpen])
 
   const handleQuit = () => {
     dispatch(closeAddZone())

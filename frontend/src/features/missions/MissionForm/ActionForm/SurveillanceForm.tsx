@@ -1,3 +1,4 @@
+import { FormikDatePicker } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import _ from 'lodash'
 import { useMemo, useEffect } from 'react'
@@ -8,8 +9,8 @@ import { useGetControlThemesQuery } from '../../../../api/controlThemesAPI'
 import { COLORS } from '../../../../constants/constants'
 import { InteractionListener } from '../../../../domain/entities/map/constants'
 import { usePrevious } from '../../../../hooks/usePrevious'
+import { useNewWindow } from '../../../../ui/NewWindow'
 import { FormikCheckbox } from '../../../../uiMonitor/CustomFormikFields/FormikCheckbox'
-import { FormikDatePicker } from '../../../../uiMonitor/CustomFormikFields/FormikDatePicker'
 import { FormikInputNumberGhost } from '../../../../uiMonitor/CustomFormikFields/FormikInputNumber'
 import { FormikTextarea } from '../../../../uiMonitor/CustomFormikFields/FormikTextarea'
 import { ReactComponent as DeleteSVG } from '../../../../uiMonitor/icons/Delete.svg'
@@ -20,6 +21,8 @@ import { ThemeSelector } from './ThemeSelector'
 import type { MissionType, EnvActionControlType } from '../../../../domain/entities/missions'
 
 export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionIndex }) {
+  const { newWindowContainerRef } = useNewWindow()
+
   const {
     setFieldValue,
     values: { envActions }
@@ -85,8 +88,10 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
       <FlexSelectorWrapper>
         <Column>
           <FormikDatePicker
+            baseContainer={newWindowContainerRef.current}
             isCompact
             isLight
+            isStringDate
             label="Date et heure du début de la surveillance"
             name={`envActions[${currentActionIndex}].actionStartDateTimeUtc`}
             withTime

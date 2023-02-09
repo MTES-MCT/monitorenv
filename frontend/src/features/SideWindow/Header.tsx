@@ -4,11 +4,11 @@ import { COLORS } from '../../constants/constants'
 
 import type React from 'react'
 
-type Props = {
+type HeaderProps = {
   children?: React.ReactNode
   title?: string
 }
-export function SideWindowHeader({ children, title }: Props) {
+export function Header({ children, title }: HeaderProps) {
   return (
     <Wrapper>
       <Title data-cy="SideWindowHeader-title">{title}</Title>

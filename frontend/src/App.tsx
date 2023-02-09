@@ -7,7 +7,7 @@ import { CustomProvider } from 'rsuite'
 
 import { AlertUnsupportedBrowser } from './components/AlertUnsupportedBrowser'
 import { ErrorToastNotification } from './components/ErrorToastNotification'
-import { SideWindowTestContainer } from './features/side_window/SideWindowTestContainer'
+import { SideWindow } from './features/SideWindow'
 import { HomePage } from './pages/HomePage'
 import { homeStore } from './store'
 import frFR from './uiMonitor/locale_frFR'
@@ -28,7 +28,7 @@ export function App() {
             <Router>
               <Switch>
                 <Route exact path="/side_window">
-                  <SideWindowTestContainer />
+                  <SideWindow />
                 </Route>
                 <Route path="/">
                   <HomePage />

@@ -13,7 +13,6 @@ import {
   useCreateMissionMutation,
   useDeleteMissionMutation
 } from '../../api/missionsAPI'
-import { setSideWindowPath } from '../../components/SideWindowRouter/SideWindowRouter.slice'
 import { COLORS } from '../../constants/constants'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { setError } from '../../domain/shared_slices/Global'
@@ -23,7 +22,8 @@ import { SyncFormValuesWithRedux } from '../../hooks/useSyncFormValuesWithRedux'
 import { FormikForm } from '../../uiMonitor/CustomFormikFields/FormikForm'
 import { ReactComponent as DeleteSVG } from '../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as SaveSVG } from '../../uiMonitor/icons/Save.svg'
-import { SideWindowHeader } from '../side_window/SideWindowHeader'
+import { Header } from '../SideWindow/Header'
+import { sideWindowActions } from '../SideWindow/slice'
 import { MissionCancelEditModal } from './MissionCancelEditModal'
 import { MissionDeleteModal } from './MissionDeleteModal'
 import { ActionForm } from './MissionForm/ActionForm/ActionForm'
@@ -33,9 +33,9 @@ import { missionFactory } from './Missions.helpers'
 
 export function CreateOrEditMission() {
   const dispatch = useDispatch()
-  const { sideWindowPath } = useAppSelector(state => state.sideWindowRouter)
+  const { sideWindow } = useAppSelector(state => state)
 
-  const routeParams = matchPath<{ id: string }>(sideWindowPath, {
+  const routeParams = matchPath<{ id: string }>(sideWindow.currentPath, {
     exact: true,
     path: [sideWindowPaths.MISSION, sideWindowPaths.MISSION_NEW],
     strict: true
@@ -67,7 +67,7 @@ export function CreateOrEditMission() {
   const handleSubmitForm = values => {
     upsertMission(values).then(response => {
       if ('data' in response) {
-        dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))
+        dispatch(sideWindowActions.openAndGoTo(sideWindowPaths.MISSIONS))
         setErrorOnSave(false)
       } else {
         dispatch(setError(response.error))
@@ -89,12 +89,12 @@ export function CreateOrEditMission() {
         dispatch(setError(response.error))
         setErrorOnDelete(true)
       } else {
-        dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))
+        dispatch(sideWindowActions.openAndGoTo(sideWindowPaths.MISSIONS))
       }
     })
   }
   const handleCancelForm = () => {
-    dispatch(setSideWindowPath(sideWindowPaths.MISSIONS))
+    dispatch(sideWindowActions.openAndGoTo(sideWindowPaths.MISSIONS))
   }
   if (id && !missionToEdit) {
     return <Loading>Chargement en cours</Loading>
@@ -102,7 +102,7 @@ export function CreateOrEditMission() {
 
   return (
     <EditMissionWrapper data-cy="editMissionWrapper">
-      <SideWindowHeader
+      <Header
         title={`Edition de la mission${
           isLoadingUpdateMission || isLoadingCreateMission ? ' - Enregistrement en cours' : ''
         }`}
@@ -230,11 +230,11 @@ const ThirdColumn = styled.div`
 `
 
 const ErrorOnSave = styled.div`
-  backgound: ${COLORS.goldenPoppy};
+  background-color: ${COLORS.goldenPoppy};
   text-align: right;
 `
 const ErrorOnDelete = styled.div`
-  backgound: ${COLORS.goldenPoppy};
+  background-color: ${COLORS.goldenPoppy};
 `
 const Separator = styled.div`
   flex: 1;
