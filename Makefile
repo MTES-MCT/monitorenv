@@ -103,18 +103,18 @@ prod-load-sig-data:
 	. ./infra/.env
 	set +a
 	echo ${PROJECT_NAME} 
-	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra//docker --env-file='./infra/.env' \
+	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='./infra/.env' \
 		-f ./infra/docker/docker-compose.yml \
 		-f ./infra/docker/docker-compose.prod.yml \
 		-f ./infra/docker/docker-compose.override.yml \
 		up -d db
-	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra//docker --env-file='./infra/.env' \
+	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='./infra/.env' \
 		-f ./infra/docker/docker-compose.yml \
 		-f ./infra/docker/docker-compose.prod.yml \
 		-f ./infra/docker/docker-compose.override.yml \
 		exec db \
 		psql -U $(POSTGRES_USER) -d $(POSTGRES_DB) -f /opt/data/integration.sql
-	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra//docker --env-file='./infra/.env' \
+	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='./infra/.env' \
 		-f ./infra/docker/docker-compose.yml \
 		-f ./infra/docker/docker-compose.prod.yml \
 		-f ./infra/docker/docker-compose.override.yml \
@@ -126,12 +126,12 @@ prod-add-metabase-user:
 	. ./infra/.env
 	set +a
 	echo ${PROJECT_NAME} 
-	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra//docker --env-file='./infra/.env' \
+	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='./infra/.env' \
 		-f ./infra/docker/docker-compose.yml \
 		-f ./infra/docker/docker-compose.prod.yml \
 		-f ./infra/docker/docker-compose.override.yml \
 		up -d db
-	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra//docker --env-file='./infra/.env' \
+	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='./infra/.env' \
 		-f ./infra/docker/docker-compose.yml \
 		-f ./infra/docker/docker-compose.prod.yml \
 		-f ./infra/docker/docker-compose.override.yml \
@@ -194,14 +194,14 @@ else
 	@echo "Un fichier .env existe déjà. Editez ou supprimez le fichier existant."
 endif
 check-config:
-	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra//docker --env-file='./infra/.env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml config
+	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='./infra/.env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml config
 
 # RUN commands
 .PHONY: restart-app stop-app
 restart-app:
-	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra//docker --env-file='./infra/.env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml up -d --build app
+	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='./infra/.env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml up -d --build app
 stop-app:
-	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra//docker --env-file='./infra/.env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml stop
+	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='./infra/.env' -f ./infra/docker/docker-compose.yml -f ./infra/docker/docker-compose.prod.yml stop
 
 # MAINTENANCE
 .PHONY: remove-unused-docker-images logs-app logs-geoserver logs-db
