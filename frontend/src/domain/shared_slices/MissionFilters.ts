@@ -3,19 +3,23 @@ import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 type MissionFiltersSliceType = {
+  missionAdministrationFilter: string | null
   missionNatureFilter: string[]
   missionStartedAfter: string | null
   missionStartedBefore: string | null
   missionStatusFilter: string[]
   missionTypeFilter: string[]
+  missionUnitFilter: string | null
 }
 
 const initialState: MissionFiltersSliceType = {
+  missionAdministrationFilter: null,
   missionNatureFilter: [],
   missionStartedAfter: null,
   missionStartedBefore: null,
   missionStatusFilter: [],
-  missionTypeFilter: []
+  missionTypeFilter: [],
+  missionUnitFilter: null
 }
 
 const persistConfig = {
@@ -29,6 +33,9 @@ const missionFiltersSlice = createSlice({
   reducers: {
     resetMissionFilters() {
       return { ...initialState }
+    },
+    setMissionAdministrationFilter(state, action) {
+      state.missionAdministrationFilter = action.payload
     },
     setMissionNatureFilter(state, action) {
       state.missionNatureFilter = action.payload
@@ -44,17 +51,22 @@ const missionFiltersSlice = createSlice({
     },
     setMissionTypeFilter(state, action) {
       state.missionTypeFilter = action.payload
+    },
+    setMissionUnitFilter(state, action) {
+      state.missionUnitFilter = action.payload
     }
   }
 })
 
 export const {
   resetMissionFilters,
+  setMissionAdministrationFilter,
   setMissionNatureFilter,
   setMissionStartedAfter,
   setMissionStartedBefore,
   setMissionStatusFilter,
-  setMissionTypeFilter
+  setMissionTypeFilter,
+  setMissionUnitFilter
 } = missionFiltersSlice.actions
 
 export const missionFiltersPersistedReducer = persistReducer(persistConfig, missionFiltersSlice.reducer)

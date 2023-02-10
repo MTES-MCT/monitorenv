@@ -14,7 +14,7 @@ import { MissionsTableFilters } from './MissionsList/MissionsTableFilters'
 export function Missions() {
   const dispatch = useDispatch()
 
-  const { data, isError, isLoading } = useGetFilteredMissionsQuery()
+  const { isError, isLoading, missions } = useGetFilteredMissionsQuery()
 
   return (
     <SideWindowWrapper data-cy="listMissionWrapper">
@@ -30,13 +30,13 @@ export function Missions() {
         <SideWindowContent>
           <MissionsTableFilters />
           <NumberOfDisplayedMissions data-cy="Missions-numberOfDisplayedMissions">
-            {data?.length || '0'} Mission{data && data.length > 1 ? 's' : ''}
+            {missions?.length || '0'} Mission{missions && missions.length > 1 ? 's' : ''}
           </NumberOfDisplayedMissions>
           <TableWrapper>
             {isError ? (
               <ErrorMessage data-cy="listMissionWrapper">Erreur au chargement des données</ErrorMessage>
             ) : (
-              <MissionsTable data={data} isLoading={isLoading} />
+              <MissionsTable isLoading={isLoading} missions={missions} />
             )}
           </TableWrapper>
         </SideWindowContent>

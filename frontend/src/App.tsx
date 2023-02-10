@@ -1,4 +1,4 @@
-import { ThemeProvider, THEME } from '@mtes-mct/monitor-ui'
+import { THEME, ThemeProvider } from '@mtes-mct/monitor-ui'
 import { Provider } from 'react-redux'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { persistStore } from 'redux-persist'

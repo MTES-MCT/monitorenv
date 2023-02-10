@@ -1,6 +1,6 @@
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useMemo, useEffect, useRef, useCallback } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { Layers } from '../../../domain/entities/layers/constants'
@@ -16,11 +16,11 @@ import type { Geometry } from 'ol/geom'
 export function MissionsLayer({ map, mapClickEvent }: MapChildrenProps) {
   const dispatch = useDispatch()
   const { displayMissionsLayer } = useAppSelector(state => state.global)
-  const { data } = useGetFilteredMissionsQuery()
+  const { missions } = useGetFilteredMissionsQuery()
 
   const missionsMultiPolygons = useMemo(
-    () => data?.filter(f => !!f.geom).map(f => getMissionZoneFeature(f, Layers.MISSIONS.code)),
-    [data]
+    () => missions?.filter(f => !!f.geom).map(f => getMissionZoneFeature(f, Layers.MISSIONS.code)),
+    [missions]
   )
 
   const vectorSourceRef = useRef() as React.MutableRefObject<VectorSource<Geometry>>

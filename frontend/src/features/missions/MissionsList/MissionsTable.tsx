@@ -14,7 +14,7 @@ import { sortMissionsByProperty } from './MissionsTableSort'
 
 import type { MissionType } from '../../../domain/entities/missions'
 
-export function MissionsTable({ data, isLoading }: { data: MissionType[] | undefined; isLoading: boolean }) {
+export function MissionsTable({ isLoading, missions }: { isLoading: boolean; missions: MissionType[] | undefined }) {
   const [sortColumn, setSortColumn] = React.useState('startDateTimeUtc')
   const [sortType, setSortType] = React.useState<'desc' | 'asc'>('desc')
 
@@ -25,11 +25,11 @@ export function MissionsTable({ data, isLoading }: { data: MissionType[] | undef
 
   const getMissions = useCallback(() => {
     if (sortColumn && sortType) {
-      return data?.slice().sort((a, b) => sortMissionsByProperty(a, b, sortColumn, sortType))
+      return missions?.slice().sort((a, b) => sortMissionsByProperty(a, b, sortColumn, sortType))
     }
 
-    return data
-  }, [sortColumn, sortType, data])
+    return missions
+  }, [sortColumn, sortType, missions])
 
   return (
     <Table
