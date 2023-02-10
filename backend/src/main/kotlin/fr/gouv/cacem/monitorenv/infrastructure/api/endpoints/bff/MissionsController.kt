@@ -94,7 +94,7 @@ class MissionsController(
         @RequestBody
         updateMissionDataInput: CreateOrUpdateMissionDataInput
     ): MissionDataOutput {
-        if (updateMissionDataInput.id !== null && missionId !== updateMissionDataInput.id) {
+        if ((updateMissionDataInput.id != null) && (missionId != updateMissionDataInput.id)) {
             throw java.lang.IllegalArgumentException("missionId doesn't match with request param")
         }
         return updateMission.execute(

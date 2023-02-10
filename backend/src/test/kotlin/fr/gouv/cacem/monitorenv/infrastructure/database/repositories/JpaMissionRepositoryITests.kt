@@ -467,7 +467,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionSource = MissionSourceEnum.MONITORENV
         )
         // When
-        val mission = jpaMissionRepository.save(expectedUpdatedMission)
+        jpaMissionRepository.save(expectedUpdatedMission)
         assertThat(jpaMissionRepository.findMissionById(10)).isEqualTo(expectedUpdatedMission)
     }
 
@@ -502,7 +502,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionSource = MissionSourceEnum.MONITORENV
         )
         // When
-        val mission = jpaMissionRepository.save(expectedUpdatedMission)
+        jpaMissionRepository.save(expectedUpdatedMission)
         val updatedMission = jpaMissionRepository.findMissionById(10)
         assertThat(updatedMission).isEqualTo(expectedUpdatedMission)
     }

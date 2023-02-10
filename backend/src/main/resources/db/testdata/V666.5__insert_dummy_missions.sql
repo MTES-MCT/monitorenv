@@ -1,4 +1,4 @@
-
+TRUNCATE public.missions CASCADE;
 COPY public.missions (id, mission_type, open_by, observations_cacem, facade, start_datetime_utc, end_datetime_utc, geom, closed_by, mission_nature, deleted, observations_cnsp, mission_source, closed) FROM stdin;
 12	SEA	Kimberly Woodward	Mother including baby same. Evidence project air practice minute their. Trouble sing suggest maintain like know too.	NAMO	2022-02-24 10:56:33	2022-05-06 19:38:29	\N	Charles Kennedy	{ENV,OTHER}	f	\N	MONITORENV	f
 13	LAND	Tyler Dickerson	Receive hit themselves. Example community suggest seek to technology.	NAMO	2022-02-07 04:16:43	2022-07-10 19:55:50	\N	Robin Keller	{ENV,FISH}	f	\N	MONITORENV	f

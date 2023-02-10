@@ -50,6 +50,7 @@ class Migration:
     path: Path
     major: int
     minor: int
+    patch: int
     script: str = field(init=False)
 
     def __post_init__(self):
@@ -67,13 +68,13 @@ def read_sql_file(script_path: Path) -> str:
 
 
 def sort_migrations(migrations: List[Migration]) -> List[Migration]:
-    return sorted(migrations, key=lambda m: (m.major, m.minor))
+    return sorted(migrations, key=lambda m: (m.major, m.minor, m.patch))
 
 
 def get_migrations_in_folder(folder: Path) -> List[Migration]:
     files = os.listdir(folder)
     migration_regex = re.compile(
-        r"V(?P<major>\d+)\.(?P<minor>\d+)__(?P<name>.*)\.sql"
+        r"V(?P<major>\d+)\.(?P<minor>\d+)(\.(?P<patch>\d+))?__(?P<name>.*)\.sql"
     )
     migrations = []
 
@@ -82,8 +83,11 @@ def get_migrations_in_folder(folder: Path) -> List[Migration]:
         if match:
             major = int(match.group("major"))
             minor = int(match.group("minor"))
+            patch = int(match.group("patch") or "0")
             path = (folder / Path(file)).resolve()
-            migrations.append(Migration(path=path, major=major, minor=minor))
+            migrations.append(
+                Migration(path=path, major=major, minor=minor, patch=patch)
+            )
 
     return sort_migrations(migrations)
 
@@ -131,7 +135,7 @@ def start_remote_database_container(
             "POSTGRES_USER": os.environ["MONITORENV_REMOTE_DB_USER"],
             "POSTGRES_DB": os.environ["MONITORENV_REMOTE_DB_NAME"],
         },
-        ports={"5432/tcp": 5434},
+        ports={"5432/tcp": os.environ["MONITORENV_REMOTE_DB_PORT"]},
         detach=True,
         volumes=migrations_folders_mounts,
     )
@@ -150,7 +154,7 @@ def create_tables(set_environment_variables, start_remote_database_container):
     print("Creating tables")
     for m in migrations:
 
-        print(f"{m.major}.{m.minor}: {m.path.name}")
+        print(f"{m.major}.{m.minor}.{m.patch}: {m.path.name}")
 
         # Script filepath inside database container
         script_filepath = (
@@ -176,5 +180,5 @@ def reset_test_data(create_tables):
     test_data_scripts = get_migrations_in_folder(test_data_scripts_folder)
     print("Inserting test data")
     for s in test_data_scripts:
-        print(f"{s.major}.{s.minor}: {s.path.name}")
+        print(f"{s.major}.{s.minor}.{s.patch}: {s.path.name}")
         e.execute(s.script)
