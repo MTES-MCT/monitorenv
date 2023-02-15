@@ -28,7 +28,7 @@ export function GeneralInformationsForm() {
             isCompact
             isStringDate
             label="Début de mission"
-            name="inputStartDateTimeUtc"
+            name="startDateTimeUtc"
             withTime
           />
         </ColWrapper>
@@ -38,7 +38,7 @@ export function GeneralInformationsForm() {
             isCompact
             isStringDate
             label="Fin de mission"
-            name="inputEndDateTimeUtc"
+            name="endDateTimeUtc"
             withTime
           />
         </ColWrapper>
