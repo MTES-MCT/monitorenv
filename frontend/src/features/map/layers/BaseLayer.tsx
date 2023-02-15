@@ -5,7 +5,7 @@ import TileWMS from 'ol/source/TileWMS'
 import XYZ from 'ol/source/XYZ'
 import React, { useEffect, useState } from 'react'
 
-import { BaseLayers, Layers } from '../../../domain/entities/layers/constants'
+import { Layers } from '../../../domain/entities/layers/constants'
 import { MAPBOX_KEY, SHOM_KEY } from '../../../env'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 
@@ -57,22 +57,6 @@ function UnmemoizedBaseLayer({ map }: BaseLayerProps) {
   })
 
   useEffect(() => {
-    if (!map) {
-      return
-    }
-
-    function addLayerToMap() {
-      const nextSelectedBaseLayer = selectedBaseLayer || BaseLayers.OSM.code
-
-      if (baseLayersObjects[nextSelectedBaseLayer]) {
-        map.getLayers().push(baseLayersObjects[nextSelectedBaseLayer]())
-      }
-    }
-
-    addLayerToMap()
-  }, [map, baseLayersObjects, selectedBaseLayer])
-
-  useEffect(() => {
     if (!map || !selectedBaseLayer || !baseLayersObjects[selectedBaseLayer]) {
       return
     }
@@ -82,11 +66,12 @@ function UnmemoizedBaseLayer({ map }: BaseLayerProps) {
       // eslint-disable-next-line no-underscore-dangle
       const layerToRemove = olLayers.getArray().find(layer => layer.className_ === Layers.BASE_LAYER.code)
 
+      olLayers.insertAt(0, baseLayersObjects[selectedBaseLayer]())
+
       if (!layerToRemove) {
         return
       }
 
-      olLayers.insertAt(0, baseLayersObjects[selectedBaseLayer]())
       setTimeout(() => {
         olLayers.remove(layerToRemove)
       }, 300)
