@@ -1,0 +1,56 @@
+name: CI/CD database docker image
+
+on:
+  push:
+    paths:
+    - '.github/workflows/cicd-database.yml'
+    - 'infra/docker/database/Dockerfile'
+
+jobs:
+  build:
+    name: Build database image
+    runs-on: ubuntu-22.04
+    steps:
+    
+    - name: Checkout
+      uses: actions/checkout@v2    
+
+    - name: Set IMAGE_TAG
+      run: echo "IMAGE_TAG=ghcr.io/mtes-mct/monitorenv/monitorenv-database:pg11-ts1.7.4-postgis3.3.2" >> $GITHUB_ENV
+
+    - name: Set up Docker Buildx
+      id: buildx
+      uses: docker/setup-buildx-action@master
+
+    - name: Cache Docker layers
+      uses: actions/cache@v2
+      with:
+        path: /tmp/.buildx-cache-database
+        key: ${{ runner.os }}-single-buildx-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-single-buildx
+
+    - name: Build image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        load: true
+        builder: ${{ steps.buildx.outputs.name }}
+        file: infra/docker/database/Dockerfile
+        push: false
+        tags: ${{ env.IMAGE_TAG }}
+        cache-from: type=local,src=/tmp/.buildx-cache-database
+        cache-to: type=local,dest=/tmp/.buildx-cache-database-new
+
+      # Temp fix
+      # https://github.com/docker/build-push-action/issues/252
+      # https://github.com/moby/buildkit/issues/1896
+    - name: Move cache
+      run: |
+        rm -rf /tmp/.buildx-cache-database
+        mv /tmp/.buildx-cache-database-new /tmp/.buildx-cache-database
+                
+    - name: Push docker image to registry
+      run: |
+        echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${GITHUB_ACTOR} --password-stdin
+        docker push ${{ env.IMAGE_TAG }}
