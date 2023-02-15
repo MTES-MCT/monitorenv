@@ -1,17 +1,14 @@
-import { useForceUpdate } from '@mtes-mct/monitor-ui'
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useState, useRef } from 'react'
 import { useDispatch } from 'react-redux'
-import styled, { StyleSheetManager } from 'styled-components'
+import styled from 'styled-components'
 
 import { ErrorBoundary } from '../../components/ErrorBoundary'
 import { COLORS } from '../../constants/constants'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { NewWindowContext } from '../../ui/NewWindow'
-import { LegacyNewWindow } from '../../ui/NewWindow/LegacyNewWindow'
 import { CreateOrEditMission } from '../missions/CreateOrEditMission'
 import { Missions } from '../missions/Missions'
 import { Route } from './Route'
-import { sideWindowActions } from './slice'
 
 import type { NewWindowContextValue } from '../../ui/NewWindow'
 import type { ForwardedRef, MutableRefObject } from 'react'
@@ -27,9 +24,7 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
     () => ({
       newWindowContainerRef: wrapperRef.current
         ? (wrapperRef as MutableRefObject<HTMLDivElement>)
-        : {
-            current: window.document.createElement('div')
-          }
+        : { current: window.document.createElement('div') }
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [isFirstRender]
@@ -77,40 +72,4 @@ const Wrapper = styled.div`
   }
 `
 
-function Portal() {
-  const newWindowRef = useRef<HTMLDivElement | null>(null)
-
-  const dispatch = useDispatch()
-
-  const { forceUpdate } = useForceUpdate()
-
-  useEffect(() => {
-    forceUpdate()
-  }, [forceUpdate])
-
-  // First, let's generate the right ref before passing it to <StyleSheetManager />
-  if (!newWindowRef.current) {
-    return <SideWindow ref={newWindowRef} />
-  }
-
-  return (
-    <StyleSheetManager target={newWindowRef.current}>
-      <LegacyNewWindow
-        closeOnUnmount
-        copyStyles
-        features={{ height: '1000px', scrollbars: true, width: '1800px' }}
-        name="MonitorEnv"
-        onUnload={() => {
-          dispatch(sideWindowActions.close())
-        }}
-        title="MonitorEnv"
-      >
-        <SideWindow ref={newWindowRef} />
-      </LegacyNewWindow>
-    </StyleSheetManager>
-  )
-}
-
-export const SideWindow = Object.assign(forwardRef(SideWindowWithRef), {
-  Portal
-})
+export const SideWindow = forwardRef(SideWindowWithRef)
