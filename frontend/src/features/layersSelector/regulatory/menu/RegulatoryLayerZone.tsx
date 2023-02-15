@@ -50,7 +50,7 @@ export function RegulatoryLayerZone({ regulatoryZone }) {
     }
   }
 
-  const displayedName = regulatoryZone?.properties?.entity_name.replace(/[_]/g, ' ') || 'AUNCUN NOM'
+  const displayedName = regulatoryZone?.properties?.entity_name?.replace(/[_]/g, ' ') || 'AUNCUN NOM'
 
   const toggleRegulatoryZoneMetadata = () => {
     if (metadataIsShown) {
