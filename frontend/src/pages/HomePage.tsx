@@ -10,7 +10,7 @@ import { Map } from '../features/map/Map'
 import { InterestPointMapButton } from '../features/map/tools/interest_points/InterestPointMapButton'
 import { MeasurementMapButton } from '../features/map/tools/measurements/MeasurementMapButton'
 import { MissionsMenu } from '../features/missions/MissionsMenu'
-import { SideWindow } from '../features/SideWindow'
+import { SideWindowLauncher } from '../features/SideWindow/SideWindowLauncher'
 import { useAppSelector } from '../hooks/useAppSelector'
 
 export function HomePage() {
@@ -31,7 +31,7 @@ export function HomePage() {
         {displayMeasurement && <MeasurementMapButton />}
         {displayInterestPoint && <InterestPointMapButton />}
 
-        {sideWindow.isOpen && <SideWindow.Portal />}
+        {sideWindow.isOpen && <SideWindowLauncher />}
 
         <ErrorToastNotification />
       </Wrapper>
