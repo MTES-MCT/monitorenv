@@ -37,7 +37,7 @@ export const useGetFilteredMissionsQuery = () => {
     }
 
     if (missionUnitFilter) {
-      return data.filter(mission => mission.controlUnits.find(controlUnit => controlUnit.name === missionUnitFilter))
+      return data.filter(mission => !!mission.controlUnits.find(controlUnit => controlUnit.name === missionUnitFilter))
     }
 
     return data.filter(mission =>

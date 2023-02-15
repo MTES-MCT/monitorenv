@@ -1,25 +1,28 @@
 import { createSlice } from '@reduxjs/toolkit'
+import dayjs from 'dayjs'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
+const THIRTY_DAYS_AGO = dayjs().subtract(30, 'days').toISOString()
+
 type MissionFiltersSliceType = {
-  missionAdministrationFilter: string | null
+  missionAdministrationFilter: string | undefined
   missionNatureFilter: string[]
   missionStartedAfter: string | null
   missionStartedBefore: string | null
   missionStatusFilter: string[]
   missionTypeFilter: string[]
-  missionUnitFilter: string | null
+  missionUnitFilter: string | undefined
 }
 
 const initialState: MissionFiltersSliceType = {
-  missionAdministrationFilter: null,
+  missionAdministrationFilter: undefined,
   missionNatureFilter: [],
-  missionStartedAfter: null,
+  missionStartedAfter: THIRTY_DAYS_AGO,
   missionStartedBefore: null,
   missionStatusFilter: [],
   missionTypeFilter: [],
-  missionUnitFilter: null
+  missionUnitFilter: undefined
 }
 
 const persistConfig = {

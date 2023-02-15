@@ -1,5 +1,4 @@
 import { Option, Select } from '@mtes-mct/monitor-ui'
-import dayjs from 'dayjs'
 import _ from 'lodash'
 import { MutableRefObject, useMemo, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -87,8 +86,7 @@ export function MissionsTableFilters() {
   const handleResetFilters = () => {
     dispatch(resetMissionFilters())
   }
-  const thirtyDaysAgo = dayjs().subtract(30, 'days').toDate()
-  const missionStartedAfterDate = (missionStartedAfter && new Date(missionStartedAfter)) || thirtyDaysAgo
+  const missionStartedAfterDate = (missionStartedAfter && new Date(missionStartedAfter)) || null
   const missionStartedBeforeDate = (missionStartedBefore && new Date(missionStartedBefore)) || null
 
   return (
@@ -97,7 +95,6 @@ export function MissionsTableFilters() {
       <FilterWrapper ref={unitPickerRef}>
         <DatePickerWrapper ref={datepickerStartedAfterRef} data-cy="datepicker-missionStartedAfter">
           <DatePicker
-            calendarDefaultDate={thirtyDaysAgo}
             container={() => datepickerStartedAfterRef.current}
             onChange={handleSetMissionStartedAfterFilter}
             placeholder="Date de début après le"
