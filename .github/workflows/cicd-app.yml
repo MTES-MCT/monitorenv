@@ -3,6 +3,7 @@ name: CI/CD Back & Front
 on:
   push:
     paths:
+      - '.github/workflows/cicd-database.yml'
       - ".github/workflows/cicd-app.yml"
       - "infra/**"
       - "backend/**"
