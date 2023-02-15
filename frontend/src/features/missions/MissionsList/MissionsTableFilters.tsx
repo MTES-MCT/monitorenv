@@ -1,31 +1,68 @@
+import { Option, Select } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
-import { MutableRefObject, useRef, useState } from 'react'
+import { MutableRefObject, useMemo, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { CheckPicker, DatePicker } from 'rsuite'
 import styled from 'styled-components'
 
-import { missionStatusEnum, missionTypeEnum, missionNatureEnum } from '../../../domain/entities/missions'
+import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
+import { missionNatureEnum, missionStatusEnum, missionTypeEnum } from '../../../domain/entities/missions'
 import {
-  setMissionStatusFilter,
-  setMissionNatureFilter,
-  setMissionTypeFilter,
   resetMissionFilters,
+  setMissionAdministrationFilter,
+  setMissionNatureFilter,
   setMissionStartedAfter,
-  setMissionStartedBefore
+  setMissionStartedBefore,
+  setMissionStatusFilter,
+  setMissionTypeFilter,
+  setMissionUnitFilter
 } from '../../../domain/shared_slices/MissionFilters'
 import { useAppSelector } from '../../../hooks/useAppSelector'
+import { useNewWindow } from '../../../ui/NewWindow'
 import { ReactComponent as ReloadSVG } from '../../../uiMonitor/icons/Reload.svg'
 
 export function MissionsTableFilters() {
   const dispatch = useDispatch()
-  const { missionNatureFilter, missionStartedAfter, missionStartedBefore, missionStatusFilter, missionTypeFilter } =
-    useAppSelector(state => state.missionFilters)
-  const [displayAdvancedFilters, setDisplayAdvancedFilters] = useState(false)
+  const { newWindowContainerRef } = useNewWindow()
+  const {
+    missionAdministrationFilter,
+    missionNatureFilter,
+    missionStartedAfter,
+    missionStartedBefore,
+    missionStatusFilter,
+    missionTypeFilter,
+    missionUnitFilter
+  } = useAppSelector(state => state.missionFilters)
 
   const unitPickerRef = useRef() as MutableRefObject<HTMLDivElement>
   const datepickerStartedAfterRef = useRef() as MutableRefObject<HTMLDivElement>
   const datepickerStartedBeforeRef = useRef() as MutableRefObject<HTMLDivElement>
+  const [displayAdvancedFilters, setDisplayAdvancedFilters] = useState(false)
   const handleDisplayAdvancedFilters = () => setDisplayAdvancedFilters(!displayAdvancedFilters)
+
+  const { data } = useGetControlUnitsQuery()
+  const controlUnits = useMemo(() => (data ? Array.from(data) : []), [data])
+
+  const administrationListAsOptions: Option[] = _.chain(controlUnits)
+    .map(unit => unit.administration)
+    .uniq()
+    .sort((a, b) => a?.localeCompare(b))
+    .map(t => ({ label: t, value: t }))
+    .value()
+  const handleSetAdministrationFilter = administrationName => {
+    dispatch(setMissionAdministrationFilter(administrationName))
+    dispatch(setMissionUnitFilter(undefined))
+  }
+
+  const unitListAsOptions: Option[] = _.chain(controlUnits)
+    .sort((a, b) => a?.name?.localeCompare(b?.name))
+    .map(t => ({ label: t.name, value: t.name }))
+    .value()
+  const handleSetUnitFilter = unitName => {
+    const administration = controlUnits.find(unit => unit.name === unitName)?.administration
+    dispatch(setMissionAdministrationFilter(administration))
+    dispatch(setMissionUnitFilter(unitName))
+  }
 
   const StatusOptions = Object.values(missionStatusEnum)
   const handleSetStatusFilter = v => {
@@ -86,6 +123,32 @@ export function MissionsTableFilters() {
           value={missionStatusFilter}
           valueKey="code"
         />
+        <StyledSelect
+          baseContainer={newWindowContainerRef.current}
+          data-cy="select-administrations-filter"
+          defaultValue={missionAdministrationFilter}
+          isLabelHidden
+          label="Administrations"
+          name="administrations"
+          onChange={handleSetAdministrationFilter}
+          options={administrationListAsOptions}
+          placeholder="Administrations"
+          searchable
+          style={tagPickerStyle}
+        />
+        <StyledSelect
+          baseContainer={newWindowContainerRef.current}
+          data-cy="select-units-filter"
+          defaultValue={missionUnitFilter}
+          isLabelHidden
+          label="Unités"
+          name="units"
+          onChange={handleSetUnitFilter}
+          options={unitListAsOptions}
+          placeholder="Unités"
+          searchable
+          style={tagPickerStyle}
+        />
         <CheckPicker
           container={() => unitPickerRef.current}
           data={TypeOptions}
@@ -121,7 +184,9 @@ export function MissionsTableFilters() {
             ...missionNatureFilter,
             ...missionTypeFilter,
             missionStartedAfter,
-            missionStartedBefore
+            missionStartedBefore,
+            missionAdministrationFilter,
+            missionUnitFilter
           ].filter(v => v)
         ) && (
           <ResetFiltersButton onClick={handleResetFilters}>
@@ -185,5 +250,12 @@ const DatePickerWrapper = styled.div`
   .rs-picker-date-menu {
     position: relative;
     margin-top: -32px;
+  }
+`
+
+export const StyledSelect = styled(Select)`
+  .rs-picker-toggle-caret,
+  .rs-picker-toggle-clean {
+    top: 5px !important;
   }
 `

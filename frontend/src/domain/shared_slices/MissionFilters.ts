@@ -1,21 +1,28 @@
 import { createSlice } from '@reduxjs/toolkit'
+import dayjs from 'dayjs'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
+const THIRTY_DAYS_AGO = dayjs().subtract(30, 'days').toISOString()
+
 type MissionFiltersSliceType = {
+  missionAdministrationFilter: string | undefined
   missionNatureFilter: string[]
   missionStartedAfter: string | null
   missionStartedBefore: string | null
   missionStatusFilter: string[]
   missionTypeFilter: string[]
+  missionUnitFilter: string | undefined
 }
 
 const initialState: MissionFiltersSliceType = {
+  missionAdministrationFilter: undefined,
   missionNatureFilter: [],
-  missionStartedAfter: null,
+  missionStartedAfter: THIRTY_DAYS_AGO,
   missionStartedBefore: null,
   missionStatusFilter: [],
-  missionTypeFilter: []
+  missionTypeFilter: [],
+  missionUnitFilter: undefined
 }
 
 const persistConfig = {
@@ -29,6 +36,9 @@ const missionFiltersSlice = createSlice({
   reducers: {
     resetMissionFilters() {
       return { ...initialState }
+    },
+    setMissionAdministrationFilter(state, action) {
+      state.missionAdministrationFilter = action.payload
     },
     setMissionNatureFilter(state, action) {
       state.missionNatureFilter = action.payload
@@ -44,17 +54,22 @@ const missionFiltersSlice = createSlice({
     },
     setMissionTypeFilter(state, action) {
       state.missionTypeFilter = action.payload
+    },
+    setMissionUnitFilter(state, action) {
+      state.missionUnitFilter = action.payload
     }
   }
 })
 
 export const {
   resetMissionFilters,
+  setMissionAdministrationFilter,
   setMissionNatureFilter,
   setMissionStartedAfter,
   setMissionStartedBefore,
   setMissionStatusFilter,
-  setMissionTypeFilter
+  setMissionTypeFilter,
+  setMissionUnitFilter
 } = missionFiltersSlice.actions
 
 export const missionFiltersPersistedReducer = persistReducer(persistConfig, missionFiltersSlice.reducer)
