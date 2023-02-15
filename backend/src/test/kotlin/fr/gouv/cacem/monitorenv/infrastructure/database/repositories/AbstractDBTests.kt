@@ -20,7 +20,7 @@ abstract class AbstractDBTests {
 
     companion object {
         @JvmStatic
-        val container: GenericContainer<Nothing> = GenericContainer<Nothing>("timescale/timescaledb-postgis:1.7.4-pg11")
+        val container: GenericContainer<Nothing> = GenericContainer<Nothing>("ghcr.io/mtes-mct/monitorenv/monitorenv-database:pg11-ts1.7.4-postgis3.3.2")
             .apply {
                 withExposedPorts(5432)
                 withEnv("POSTGRES_DB", "testdb")
