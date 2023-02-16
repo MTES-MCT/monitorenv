@@ -14,7 +14,7 @@ import {
   vehicleTypeEnum
 } from '../../domain/entities/missions'
 
-export const infractionFactory = ({ id, ...infraction } = { id: undefined }) => ({
+export const infractionFactory = ({ id, ...infraction } = { id: '' }) => ({
   formalNotice: formalNoticeEnum.NO.code,
   id: uuidv4(),
   infractionType: infractionTypeEnum.WITHOUT_REPORT.code,

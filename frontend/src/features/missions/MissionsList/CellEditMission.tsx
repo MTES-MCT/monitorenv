@@ -12,7 +12,13 @@ export function CellEditMission({ dataKey, rowData, ...props }: { dataKey?: any;
 
   return (
     <CustomCell {...props}>
-      <IconButton appearance="primary" icon={<EditIconSVG className="rs-icon" />} onClick={setMission} size="sm">
+      <IconButton
+        appearance="primary"
+        data-cy="edit-mission"
+        icon={<EditIconSVG className="rs-icon" />}
+        onClick={setMission}
+        size="sm"
+      >
         Editer
       </IconButton>
     </CustomCell>

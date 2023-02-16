@@ -7,6 +7,8 @@ import { infractionFactory } from '../../../Missions.helpers'
 import { InfractionCard } from './InfractionCard'
 import { InfractionForm } from './InfractionForm/InfractionForm'
 
+import type { InfractionType } from '../../../../../domain/entities/missions'
+
 export function InfractionsForm({ canAddInfraction, currentActionIndex, form, push, remove }) {
   const [currentInfractionIndex, setCurrentInfractionIndex] = useState(null)
 
@@ -29,6 +31,14 @@ export function InfractionsForm({ canAddInfraction, currentActionIndex, form, pu
     remove(index)
   }
 
+  const handleDuplicateInfraction = index => () => {
+    const numberOfInfractions = form?.values.envActions[currentActionIndex]?.infractions.length || 0
+    const selectedInfraction = form?.values.envActions[currentActionIndex]?.infractions[index] as InfractionType
+
+    push(infractionFactory(selectedInfraction))
+    setCurrentInfractionIndex(numberOfInfractions)
+  }
+
   return (
     <>
       <Header>
@@ -40,7 +50,7 @@ export function InfractionsForm({ canAddInfraction, currentActionIndex, form, pu
 
       {form?.values.envActions?.length > 0 && form?.values.envActions[currentActionIndex]?.infractions?.length > 0 ? (
         <InfractionsWrapper>
-          {form?.values.envActions[currentActionIndex]?.infractions?.map((infraction, index) =>
+          {form?.values.envActions[currentActionIndex]?.infractions.map((infraction, index) =>
             index === currentInfractionIndex ? (
               <InfractionForm
                 key={infraction.id}
@@ -53,6 +63,7 @@ export function InfractionsForm({ canAddInfraction, currentActionIndex, form, pu
               <InfractionCard
                 key={infraction.id}
                 currentActionIndex={currentActionIndex}
+                duplicateInfraction={handleDuplicateInfraction(index)}
                 infractionPath={`envActions[${currentActionIndex}].infractions[${index}]`}
                 removeInfraction={handleRemoveInfraction(index)}
                 setCurrentInfractionIndex={handleEditInfraction(index)}
@@ -62,7 +73,7 @@ export function InfractionsForm({ canAddInfraction, currentActionIndex, form, pu
         </InfractionsWrapper>
       ) : (
         <NoActionWrapper>
-          <NoAction>Aucune infraction engregistrée pour le moment</NoAction>
+          <NoAction>Aucune infraction enregistrée pour le moment</NoAction>
         </NoActionWrapper>
       )}
     </>
