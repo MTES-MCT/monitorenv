@@ -39,12 +39,14 @@ context('Missions', () => {
     // Given
     cy.get('*[data-cy="edit-mission"]').eq(3).click()
     cy.get('*[data-cy="action-card"]').eq(1).click()
+    cy.get('*[data-cy="control-form-number-controls"]').type('{backspace}2')
     cy.get('*[data-cy="infraction-form"]').should('not.exist')
 
     // When
     cy.get('*[data-cy="duplicate-infraction"]').click({ force: true })
     cy.get('*[data-cy="infraction-form-registrationNumber"]').should('have.value', 'BALTIK')
     cy.get('*[data-cy="infraction-form-validate"]').click({ force: true })
+    cy.get('*[data-cy="duplicate-infraction"]').eq(1).should('be.disabled')
 
     cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
     cy.get('[type="submit"]').click()
