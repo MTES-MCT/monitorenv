@@ -42,9 +42,9 @@ export function InfractionsForm({ canAddInfraction, currentActionIndex, form, pu
   return (
     <>
       <Header>
-        <Title>Détailler une infraction d&apos;une cible</Title>
+        <Title>Détails de la cible en infraction</Title>
         <Button appearance="ghost" disabled={!canAddInfraction} onClick={handleAddInfraction} size="sm">
-          + Ajouter une nouvelle infraction
+          + Ajouter un contrôle avec infraction
         </Button>
       </Header>
 
@@ -74,7 +74,7 @@ export function InfractionsForm({ canAddInfraction, currentActionIndex, form, pu
         </InfractionsWrapper>
       ) : (
         <NoActionWrapper>
-          <NoAction>Aucune infraction enregistrée pour le moment</NoAction>
+          <NoAction>aucun contrôle avec infraction enregistré pour le moment</NoAction>
         </NoActionWrapper>
       )}
     </>
