@@ -1,6 +1,6 @@
 services:
   db:
-    image: timescale/timescaledb-postgis:1.7.4-pg11
+    image: ghcr.io/mtes-mct/monitorenv/monitorenv-database:pg11-ts1.7.4-postgis3.3.2
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}

@@ -3,6 +3,8 @@ name: CI/CD data processing pipeline
 on:
   push:
     paths:
+    - 'backend/src/main/resources/db/migration'
+    - '.github/workflows/cicd-database.yml'
     - '.github/workflows/cicd-datapipeline.yml'
     - 'datascience/**'
     - 'infra/**'
