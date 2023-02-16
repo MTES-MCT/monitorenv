@@ -62,6 +62,7 @@ export function InfractionsForm({ canAddInfraction, currentActionIndex, form, pu
             ) : (
               <InfractionCard
                 key={infraction.id}
+                canAddInfraction={canAddInfraction}
                 currentActionIndex={currentActionIndex}
                 duplicateInfraction={handleDuplicateInfraction(index)}
                 infractionPath={`envActions[${currentActionIndex}].infractions[${index}]`}

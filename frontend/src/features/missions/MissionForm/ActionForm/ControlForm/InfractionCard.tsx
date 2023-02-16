@@ -15,6 +15,7 @@ import { ReactComponent as DuplicateSVG } from '../../../../../uiMonitor/icons/D
 import { ReactComponent as EditIconSVG } from '../../../../../uiMonitor/icons/Edit.svg'
 
 export function InfractionCard({
+  canAddInfraction,
   currentActionIndex,
   duplicateInfraction,
   infractionPath,
@@ -81,6 +82,7 @@ export function InfractionCard({
         <IconButton
           appearance="ghost"
           data-cy="duplicate-infraction"
+          disabled={!canAddInfraction}
           icon={<DuplicateSVG className="rs-icon" />}
           onClick={duplicateInfraction}
           title="dupliquer"

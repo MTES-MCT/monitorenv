@@ -113,7 +113,8 @@ export function ControlForm({
     actionNumberOfControls &&
     actionNumberOfControls > 0 &&
     ((actionTargetType === actionTargetTypeEnum.VEHICLE.code && vehicleType !== undefined) ||
-      (actionTargetType !== undefined && actionTargetType !== actionTargetTypeEnum.VEHICLE.code))
+      (actionTargetType !== undefined && actionTargetType !== actionTargetTypeEnum.VEHICLE.code)) &&
+    actionNumberOfControls > (envActions[currentActionIndex]?.infractions?.length || 0)
 
   return (
     <>
