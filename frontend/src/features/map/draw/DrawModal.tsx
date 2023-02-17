@@ -1,5 +1,9 @@
+import { CoordinatesInput } from '@mtes-mct/monitor-ui'
+import Feature from 'ol/Feature'
 import GeoJSON from 'ol/format/GeoJSON'
-import { useEffect, useRef, useMemo } from 'react'
+import Point from 'ol/geom/Point'
+import { transform } from 'ol/proj'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { matchPath } from 'react-router-dom'
 import { Button, IconButton } from 'rsuite'
 import styled from 'styled-components'
@@ -9,10 +13,13 @@ import {
   InteractionListener,
   InteractionType,
   OLGeometryType,
-  OPENLAYERS_PROJECTION
+  OPENLAYERS_PROJECTION,
+  WSG84_PROJECTION
 } from '../../../domain/entities/map/constants'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setInteractionType } from '../../../domain/shared_slices/Draw'
+import { setFitToExtent } from '../../../domain/shared_slices/Map'
+import { addFeatureToDrawedFeature } from '../../../domain/use_cases/draw/addFeatureToDrawedFeature'
 import { eraseDrawedGeometries } from '../../../domain/use_cases/draw/eraseDrawedGeometries'
 import { closeAddZone } from '../../../domain/use_cases/missions/closeAddZone'
 import { validateZone } from '../../../domain/use_cases/missions/validateZone'
@@ -40,6 +47,7 @@ const validateButtonPlaceholder = {
 
 export function DrawModal() {
   const dispatch = useAppDispatch()
+  const { coordinatesFormat } = useAppSelector(state => state.map)
   const { geometry, interactionType, listener } = useAppSelector(state => state.draw)
 
   const { sideWindow } = useAppSelector(state => state)
@@ -112,6 +120,24 @@ export function DrawModal() {
     dispatch(validateZone())
   }
 
+  const handleSelectCoordinates = useCallback(
+    (nextCoordinates: number[]) => {
+      const [latitude, longitude] = nextCoordinates
+      if (!latitude || !longitude) {
+        return
+      }
+
+      const nextTransformedCoordinates = transform([longitude, latitude], WSG84_PROJECTION, OPENLAYERS_PROJECTION)
+      const nextFeature = new Feature({
+        geometry: new Point(nextTransformedCoordinates)
+      })
+
+      dispatch(addFeatureToDrawedFeature(nextFeature))
+      dispatch(setFitToExtent(nextFeature.getGeometry()?.getExtent()))
+    },
+    [dispatch]
+  )
+
   return (
     <Wrapper>
       <ContentWrapper>
@@ -153,6 +179,15 @@ export function DrawModal() {
               />
             </>
           )}
+          {listener === InteractionListener.CONTROL_POINT && (
+            <CoordinatesInputWrapper>
+              <CoordinatesInput
+                coordinatesFormat={coordinatesFormat}
+                defaultValue={[]}
+                onChange={handleSelectCoordinates}
+              />
+            </CoordinatesInputWrapper>
+          )}
           <ResetButton appearance="ghost" onClick={handleReset}>
             Réinitialiser
           </ResetButton>
@@ -164,6 +199,13 @@ export function DrawModal() {
     </Wrapper>
   )
 }
+
+const CoordinatesInputWrapper = styled.div`
+  width: 250px;
+  margin-right: auto !important;
+  margin-left: auto;
+  margin-bottom: 8px;
+`
 
 const Wrapper = styled.div`
   position: absolute;

@@ -7,7 +7,7 @@ import type { Coordinate } from 'ol/coordinate'
 import type { Extent } from 'ol/extent'
 
 type MapSliceStateType = {
-  coordinatesFormat: string
+  coordinatesFormat: CoordinatesFormat
   currentMapExtentTracker?: number[]
   fitToExtent?: Extent
   selectedBaseLayer: string
