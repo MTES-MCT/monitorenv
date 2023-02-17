@@ -184,6 +184,7 @@ export function DrawModal() {
               <CoordinatesInput
                 coordinatesFormat={coordinatesFormat}
                 defaultValue={[]}
+                isLight
                 onChange={handleSelectCoordinates}
               />
             </CoordinatesInputWrapper>
