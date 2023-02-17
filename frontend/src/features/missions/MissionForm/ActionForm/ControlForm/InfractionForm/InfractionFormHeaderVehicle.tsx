@@ -22,7 +22,11 @@ export function InfractionFormHeaderVehicle({ currentActionIndex, infractionPath
     <FormGroup>
       <FormColumn>
         <Form.ControlLabel htmlFor={`${infractionPath}.registrationNumber`}>Immatriculation</Form.ControlLabel>
-        <FormikInput name={`${infractionPath}.registrationNumber`} size="sm" />
+        <FormikInput
+          data-cy="infraction-form-registrationNumber"
+          name={`${infractionPath}.registrationNumber`}
+          size="sm"
+        />
       </FormColumn>
       {vehicleTypeField?.value === vehicleTypeEnum.VESSEL.code && (
         <>

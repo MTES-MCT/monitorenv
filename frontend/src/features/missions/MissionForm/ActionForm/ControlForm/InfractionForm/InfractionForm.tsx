@@ -17,7 +17,7 @@ export function InfractionForm({ currentActionIndex, infractionPath, removeInfra
   const [actionTargetField] = useField(`envActions.${currentActionIndex}.actionTargetType`)
 
   return (
-    <FormWrapper>
+    <FormWrapper data-cy="infraction-form">
       {actionTargetField.value === actionTargetTypeEnum.VEHICLE.code && (
         <InfractionFormHeaderVehicle currentActionIndex={currentActionIndex} infractionPath={infractionPath} />
       )}
@@ -63,7 +63,7 @@ export function InfractionForm({ currentActionIndex, infractionPath, removeInfra
       </Form.Group>
       <ButtonToolbarRight>
         <Button onClick={removeInfraction}>Supprimer l&apos;infraction</Button>
-        <Button appearance="primary" onClick={validateInfraction}>
+        <Button appearance="primary" data-cy="infraction-form-validate" onClick={validateInfraction}>
           Valider l&apos;infraction
         </Button>
       </ButtonToolbarRight>

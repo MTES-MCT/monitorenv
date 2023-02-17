@@ -4,16 +4,24 @@ import styled from 'styled-components'
 
 import { COLORS } from '../../../../../constants/constants'
 import {
-  vehicleTypeEnum,
+  actionTargetTypeEnum,
   formalNoticeEnum,
   infractionTypeEnum,
-  vesselTypeEnum,
-  actionTargetTypeEnum
+  vehicleTypeEnum,
+  vesselTypeEnum
 } from '../../../../../domain/entities/missions'
 import { ReactComponent as DeleteSVG } from '../../../../../uiMonitor/icons/Delete.svg'
+import { ReactComponent as DuplicateSVG } from '../../../../../uiMonitor/icons/Duplicate.svg'
 import { ReactComponent as EditIconSVG } from '../../../../../uiMonitor/icons/Edit.svg'
 
-export function InfractionCard({ currentActionIndex, infractionPath, removeInfraction, setCurrentInfractionIndex }) {
+export function InfractionCard({
+  canAddInfraction,
+  currentActionIndex,
+  duplicateInfraction,
+  infractionPath,
+  removeInfraction,
+  setCurrentInfractionIndex
+}) {
   const [targetTypeField] = useField(`envActions.${currentActionIndex}.actionTargetType`)
   const [vehicleTypeField] = useField(`envActions.${currentActionIndex}.vehicleType`)
   const [vesselType] = useField(`${infractionPath}.vesselType`)
@@ -49,7 +57,7 @@ export function InfractionCard({ currentActionIndex, infractionPath, removeInfra
             {vehicleTypeField?.value === vehicleTypeEnum.VESSEL.code
               ? ` – ${vesselTypeEnum[vesselType?.value]?.libelle || 'Type non défini'}`
               : ''}
-            &nbsp;&ndash;
+            &nbsp;&ndash;&nbsp;
           </VehicleType>
         )}
         {targetTypeField.value === actionTargetTypeEnum.VEHICLE.code ? (
@@ -71,6 +79,14 @@ export function InfractionCard({ currentActionIndex, infractionPath, removeInfra
         <IconButton appearance="ghost" icon={<EditIcon className="rs-icon" />} onClick={setCurrentInfractionIndex}>
           Editer
         </IconButton>
+        <IconButton
+          appearance="ghost"
+          data-cy="duplicate-infraction"
+          disabled={!canAddInfraction}
+          icon={<DuplicateSVG className="rs-icon" />}
+          onClick={duplicateInfraction}
+          title="dupliquer"
+        />
         <IconButton appearance="ghost" icon={<DeleteIcon />} onClick={removeInfraction} />
       </ButtonsWrapper>
     </Wrapper>
@@ -92,7 +108,7 @@ const Summary = styled.div`
 
 const ButtonsWrapper = styled.div`
   display: flex;
-  flex: 0 0 142px;
+  flex: 0 0 162px;
   align-items: center;
   justify-content: space-between;
 `

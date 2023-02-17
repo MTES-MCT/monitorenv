@@ -113,7 +113,8 @@ export function ControlForm({
     actionNumberOfControls &&
     actionNumberOfControls > 0 &&
     ((actionTargetType === actionTargetTypeEnum.VEHICLE.code && vehicleType !== undefined) ||
-      (actionTargetType !== undefined && actionTargetType !== actionTargetTypeEnum.VEHICLE.code))
+      (actionTargetType !== undefined && actionTargetType !== actionTargetTypeEnum.VEHICLE.code)) &&
+    actionNumberOfControls > (envActions[currentActionIndex]?.infractions?.length || 0)
 
   return (
     <>
@@ -196,7 +197,12 @@ export function ControlForm({
             <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionNumberOfControls`}>
               Nombre total de contrôles
             </Form.ControlLabel>
-            <NumberOfControls min={0} name={`envActions.${currentActionIndex}.actionNumberOfControls`} size="sm" />
+            <NumberOfControls
+              data-cy="control-form-number-controls"
+              min={0}
+              name={`envActions.${currentActionIndex}.actionNumberOfControls`}
+              size="sm"
+            />
           </ActionFieldWrapper>
           <ActionFieldWrapper>
             <ActionTargetSelector

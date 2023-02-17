@@ -27,7 +27,7 @@ export function ActionCard({ action, duplicateAction, removeAction, selectAction
     : undefined
 
   return (
-    <Action onClick={selectAction}>
+    <Action data-cy="action-card" onClick={selectAction}>
       <TimeLine>
         <DateTimeWrapper>
           {parsedActionStartDateTimeUtc && isValid(parsedActionStartDateTimeUtc) && (
