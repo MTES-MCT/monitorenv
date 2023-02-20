@@ -1,4 +1,4 @@
-CREATE analytics_surveillance_density_map_view AS
+CREATE VIEW analytics_surveillance_density_map AS
 
 WITH surveillance_geoms AS (
     SELECT
