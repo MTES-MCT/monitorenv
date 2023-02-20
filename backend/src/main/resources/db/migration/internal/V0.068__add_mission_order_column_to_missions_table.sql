@@ -1,0 +1,1 @@
+ALTER TABLE public.missions ADD COLUMN mission_order BOOLEAN;
