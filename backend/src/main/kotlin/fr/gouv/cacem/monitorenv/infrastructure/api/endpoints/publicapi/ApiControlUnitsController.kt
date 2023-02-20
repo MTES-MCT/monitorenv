@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlResources.GetControlUnits
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.ControlUnitDataOutput
