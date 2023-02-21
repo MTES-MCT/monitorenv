@@ -72,7 +72,7 @@ context('Missions', () => {
     })
   })
 
-  it.only('A mission should be created', () => {
+  it('A mission should be created', () => {
     // Given
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('10')
     cy.get('*[data-cy="add-mission"]').click()
