@@ -1,8 +1,8 @@
-import { useField } from 'formik'
-import { IconButton } from 'rsuite'
+import {useField} from 'formik'
+import {IconButton} from 'rsuite'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../../../constants/constants'
+import {COLORS} from '../../../../../constants/constants'
 import {
   actionTargetTypeEnum,
   formalNoticeEnum,
@@ -10,9 +10,10 @@ import {
   vehicleTypeEnum,
   vesselTypeEnum
 } from '../../../../../domain/entities/missions'
-import { ReactComponent as DeleteSVG } from '../../../../../uiMonitor/icons/Delete.svg'
-import { ReactComponent as DuplicateSVG } from '../../../../../uiMonitor/icons/Duplicate.svg'
-import { ReactComponent as EditIconSVG } from '../../../../../uiMonitor/icons/Edit.svg'
+import {ReactComponent as DeleteSVG} from '../../../../../uiMonitor/icons/Delete.svg'
+import {ReactComponent as DuplicateSVG} from '../../../../../uiMonitor/icons/Duplicate.svg'
+import {ReactComponent as EditIconSVG} from '../../../../../uiMonitor/icons/Edit.svg'
+import {Accent, Tag} from "@mtes-mct/monitor-ui";
 
 export function InfractionCard({
   canAddInfraction,
@@ -70,9 +71,11 @@ export function InfractionCard({
           </Identification>
         )}
         <SummaryDetails>
-          <Info>{libelleInfractionType}</Info>
-          <Info>MED : {formalNoticeEnum[formalNotice?.value]?.libelle || '-'}</Info>
-          <Info>{natinf.value?.length || '0'} NATINF</Info>
+          <Info accent={Accent.PRIMARY}>{libelleInfractionType}</Info>
+          {formalNotice?.value === formalNoticeEnum.YES.code && <Info accent={Accent.PRIMARY}>MED</Info>}
+          <Info accent={Accent.PRIMARY}>
+            {natinf.value?.length || '0'} NATINF {natinf.value?.length && `: ${natinf.value?.join(', ')}`}
+          </Info>
         </SummaryDetails>
       </Summary>
       <ButtonsWrapper>
@@ -103,7 +106,7 @@ const Wrapper = styled.div`
 `
 
 const Summary = styled.div`
-  height: 40px;
+  height: 48px;
 `
 
 const ButtonsWrapper = styled.div`
@@ -114,19 +117,21 @@ const ButtonsWrapper = styled.div`
 `
 
 const VehicleType = styled.span`
-  font-weight: 800;
+  font-weight: 500;
   color: ${COLORS.gunMetal};
 `
 
 const Identification = styled.span`
-  font-weight: 800;
+  font-weight: 500;
   color: ${COLORS.gunMetal};
 `
 
-const SummaryDetails = styled.div``
+const SummaryDetails = styled.div`
+  margin-top: 9px;
+`
 
-const Info = styled.span`
-  margin-right: 24px;
+const Info = styled(Tag)`
+  margin-right: 8px;
 `
 
 const EditIcon = styled(EditIconSVG)``
