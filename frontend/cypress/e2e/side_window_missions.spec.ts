@@ -71,4 +71,32 @@ context('Missions', () => {
       expect(duplicatedInfraction.id).not.equal("c52c6f20-e495-4b29-b3df-d7edfb67fdd7")
     })
   })
+
+  it.only('A mission should be created', () => {
+    // Given
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('10')
+    cy.get('*[data-cy="add-mission"]').click()
+
+    // When
+    cy.get('*[data-cy="add-control-unit"]').click()
+    cy.get('.rs-picker-search-bar-input').type("Cross{enter}")
+    cy.wait(200)
+    cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
+    cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
+    cy.intercept('PUT', `/bff/v1/missions`).as('createMission')
+    cy.get('form').submit()
+
+    // Then
+    cy.wait('@createMission').then(({ request, response }) => {
+      expect(response && response.statusCode).equal(200)
+
+      expect(request.body.controlUnits.length).equal(1)
+      const controlUnit = request.body.controlUnits[0]
+
+      expect(controlUnit.administration).equal("DIRM / DM")
+      expect(controlUnit.id).equal(10012)
+      expect(controlUnit.name).equal("Cross Etel")
+    })
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('11')
+  })
 })

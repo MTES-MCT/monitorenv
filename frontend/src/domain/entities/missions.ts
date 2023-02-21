@@ -272,7 +272,7 @@ export type ResourceUnit = {
 
 export type MissionType<EnvActionType = EnvActionControlType | EnvActionSurveillanceType | EnvActionNoteType> = {
   closedBy: string
-  controlUnits: ControlUnit[]
+  controlUnits: Omit<ControlUnit, 'id'>[]
   endDateTimeUtc: string
   envActions: Array<EnvActionType>
   facade: string

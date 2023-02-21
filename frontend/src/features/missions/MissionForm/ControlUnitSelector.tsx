@@ -31,7 +31,7 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
     .map(administration => ({ administration }))
     .value()
   const unitList = _.chain(data)
-    .filter(unit => unit.administration === administrationField.value)
+    .filter(unit => (administrationField.value ? administrationField.value === unit.administration : true))
     .sort((a, b) => a?.name?.localeCompare(b?.name))
     .value()
   const resourcesList =
@@ -68,8 +68,13 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
     if (value !== unitField.value) {
       unitHelpers.setValue(value)
       resourcesHelpers.setValue([])
-      const name = unitList.find(unit => unit.id === value)?.name
-      unitNameHelpers.setValue(name)
+
+      const foundUnit = unitList.find(unit => unit.id === value)
+      if (!foundUnit) {
+        return
+      }
+      unitNameHelpers.setValue(foundUnit.name)
+      administrationHelpers.setValue(foundUnit.administration)
     }
   }
   const handleResourceChange = values => {
@@ -95,6 +100,7 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
           <SelectPicker
             block
             data={administrationList}
+            dataCy="add-control-administration"
             labelKey="administration"
             onChange={handleAdministrationChange}
             searchable={administrationList.length > 10}
@@ -108,7 +114,7 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
           <SelectPicker
             block
             data={unitList}
-            disabled={_.isEmpty(administrationField.value)}
+            dataCy="add-control-unit"
             labelKey="name"
             onChange={handleUnitChange}
             searchable={unitList.length > 10}

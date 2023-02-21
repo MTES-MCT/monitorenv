@@ -21,6 +21,7 @@ export function Missions() {
       <>
         <Header title="Missions et contrôles">
           <AddNewMissionButton
+            data-cy="add-mission"
             icon={<PlusSVG className="rs-icon" />}
             onClick={() => dispatch(sideWindowActions.openAndGoTo(sideWindowPaths.MISSION_NEW))}
           >

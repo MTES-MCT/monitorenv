@@ -14,6 +14,8 @@ import {
   vehicleTypeEnum
 } from '../../domain/entities/missions'
 
+import type { ControlUnit } from '../../domain/entities/controlUnit'
+
 export const infractionFactory = ({ id, ...infraction } = { id: '' }) => ({
   formalNotice: formalNoticeEnum.NO.code,
   id: uuidv4(),
@@ -69,7 +71,7 @@ export const actionFactory = ({
 
 export const missionFactory = (mission = {}): MissionType | NewMissionType => ({
   closedBy: '',
-  controlUnits: [],
+  controlUnits: [controlUnitFactory()],
   endDateTimeUtc: '',
   envActions: [],
   isClosed: false,
@@ -83,7 +85,7 @@ export const missionFactory = (mission = {}): MissionType | NewMissionType => ({
   ...mission
 })
 
-export const controlUnitFactory = ({ ...resourceUnit } = {}) => ({
+export const controlUnitFactory = ({ ...resourceUnit } = {}): Omit<ControlUnit, 'id'> => ({
   administration: '',
   name: '',
   resources: [],
