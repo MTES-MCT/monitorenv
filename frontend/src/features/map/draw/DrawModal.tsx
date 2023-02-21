@@ -1,4 +1,4 @@
-import { CoordinatesInput } from '@mtes-mct/monitor-ui'
+import { Coordinates, CoordinatesInput } from '@mtes-mct/monitor-ui'
 import Feature from 'ol/Feature'
 import GeoJSON from 'ol/format/GeoJSON'
 import Point from 'ol/geom/Point'
@@ -121,7 +121,11 @@ export function DrawModal() {
   }
 
   const handleSelectCoordinates = useCallback(
-    (nextCoordinates: number[]) => {
+    (nextCoordinates: Coordinates | undefined) => {
+      if (!nextCoordinates) {
+        return
+      }
+
       const [latitude, longitude] = nextCoordinates
       if (!latitude || !longitude) {
         return
@@ -183,8 +187,10 @@ export function DrawModal() {
             <CoordinatesInputWrapper>
               <CoordinatesInput
                 coordinatesFormat={coordinatesFormat}
-                defaultValue={[]}
+                defaultValue={undefined}
+                isLabelHidden
                 isLight
+                label="Coordonées"
                 onChange={handleSelectCoordinates}
               />
             </CoordinatesInputWrapper>
@@ -202,7 +208,7 @@ export function DrawModal() {
 }
 
 const CoordinatesInputWrapper = styled.div`
-  width: 250px;
+  width: 280px;
   margin-right: auto !important;
   margin-left: auto;
   margin-bottom: 8px;
