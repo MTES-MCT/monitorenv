@@ -1,8 +1,9 @@
-import {useField} from 'formik'
-import {IconButton} from 'rsuite'
+import { Accent, Tag } from '@mtes-mct/monitor-ui'
+import { useField } from 'formik'
+import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
-import {COLORS} from '../../../../../constants/constants'
+import { COLORS } from '../../../../../constants/constants'
 import {
   actionTargetTypeEnum,
   formalNoticeEnum,
@@ -10,10 +11,9 @@ import {
   vehicleTypeEnum,
   vesselTypeEnum
 } from '../../../../../domain/entities/missions'
-import {ReactComponent as DeleteSVG} from '../../../../../uiMonitor/icons/Delete.svg'
-import {ReactComponent as DuplicateSVG} from '../../../../../uiMonitor/icons/Duplicate.svg'
-import {ReactComponent as EditIconSVG} from '../../../../../uiMonitor/icons/Edit.svg'
-import {Accent, Tag} from "@mtes-mct/monitor-ui";
+import { ReactComponent as DeleteSVG } from '../../../../../uiMonitor/icons/Delete.svg'
+import { ReactComponent as DuplicateSVG } from '../../../../../uiMonitor/icons/Duplicate.svg'
+import { ReactComponent as EditIconSVG } from '../../../../../uiMonitor/icons/Edit.svg'
 
 export function InfractionCard({
   canAddInfraction,
