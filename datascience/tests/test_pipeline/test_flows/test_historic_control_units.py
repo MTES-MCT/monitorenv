@@ -19,13 +19,15 @@ def historic_control_units() -> pd.DataFrame:
 
     return pd.DataFrame(
         {
-            "id": [1315, 1, 1401, 62, 1485],
-            "administration_id": [1011, 3, 4, 10, 4],
+            "id": [1315, 1, 1401, 62, 1485, 1486, 1487],
+            "administration_id": [1011, 3, 4, 10, 4, 4, 3],
             "name": [
                 "Unité 1",
                 "Police de la pêche de poissons qui nagent",
                 "Les Barbouzes",
                 "Unité 2",
+                "Unité 3",
+                "Unité 3",
                 "Unité 3",
             ],
         }
@@ -36,16 +38,18 @@ def historic_control_units() -> pd.DataFrame:
 def transformed_control_units() -> pd.DataFrame:
     return pd.DataFrame(
         {
-            "id": [1315, 1, 1401, 62, 1485],
-            "administration_id": [1011, 3, 4, 10, 4],
+            "id": [1315, 1, 1401, 62, 1485, 1486, 1487],
+            "administration_id": [1011, 3, 4, 10, 4, 4, 3],
             "name": [
                 "Unité 1 (historique)",
                 "Police de la pêche de poissons qui nagent (historique)",
                 "Les Barbouzes (historique)",
                 "Unité 2 (historique)",
                 "Unité 3 (historique)",
+                "Unité 3 [2] (historique)",
+                "Unité 3 [3] (historique)",
             ],
-            "archived": [True, True, True, True, True],
+            "archived": [True, True, True, True, True, True, True],
         }
     )
 
