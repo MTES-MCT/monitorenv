@@ -399,8 +399,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findMission Should return specified mission and associated env actions`() {
         // When
-        val mission = jpaMissionRepository.findMissionById(14)
-        assertThat(mission.id).isEqualTo(14)
+        val mission = jpaMissionRepository.findMissionById(34)
+        assertThat(mission.id).isEqualTo(34)
         assertThat(mission.envActions).hasSize(2)
     }
 
