@@ -428,9 +428,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         )
         val controlAction = EnvActionControlEntity(
             id = UUID.randomUUID(),
-            actionTheme = "2",
-            actionSubTheme = "4",
-            protectedSpecies = listOf("5"),
+            themes = listOf(ThemeEntity(theme="5", subThemes = listOf("4"), protectedSpecies = listOf("5"))),
             actionNumberOfControls = 12,
             actionTargetType = ActionTargetTypeEnum.VEHICLE,
             vehicleType = VehicleTypeEnum.VESSEL,
@@ -438,9 +436,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         )
         val surveillanceAction = EnvActionSurveillanceEntity(
             id = UUID.randomUUID(),
-            actionTheme = "6",
-            actionSubTheme = "7",
-            protectedSpecies = listOf("8"),
+            themes = listOf(ThemeEntity(theme="6", subThemes = listOf("7"), protectedSpecies = listOf("8"))),
             duration = 3.4,
             observations = "This is a surveillance action"
         )

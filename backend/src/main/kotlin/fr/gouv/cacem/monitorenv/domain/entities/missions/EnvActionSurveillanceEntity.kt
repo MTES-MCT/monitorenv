@@ -8,9 +8,7 @@ data class EnvActionSurveillanceEntity(
     override val id: UUID,
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
     override val geom: Geometry? = null,
-    val actionTheme: String? = null,
-    val actionSubTheme: String? = null,
-    val protectedSpecies: List<String>? = listOf(),
+    val themes: List<ThemeEntity>? = listOf(),
     val duration: Double? = null,
     val observations: String? = null,
     val coverMissionZone: Boolean? = null

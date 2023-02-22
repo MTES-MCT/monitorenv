@@ -7,9 +7,7 @@ import java.util.*
 data class EnvActionControlProperties(
     val actionStartDateTimeUtc: ZonedDateTime? = null,
     val geom: Geometry? = null,
-    val actionTheme: String? = null,
-    val actionSubTheme: String? = null,
-    val protectedSpecies: List<String>? = listOf(),
+    val themes: List<ThemeEntity>? = listOf(),
     val actionNumberOfControls: Int? = null,
     val actionTargetType: ActionTargetTypeEnum,
     val vehicleType: VehicleTypeEnum? = null,
@@ -19,9 +17,7 @@ data class EnvActionControlProperties(
         id = id,
         actionStartDateTimeUtc = actionStartDateTimeUtc,
         geom = geom,
-        actionTheme = actionTheme,
-        actionSubTheme = actionSubTheme,
-        protectedSpecies = protectedSpecies,
+        themes = themes,
         actionNumberOfControls = actionNumberOfControls,
         actionTargetType = actionTargetType,
         vehicleType = vehicleType,
@@ -29,9 +25,7 @@ data class EnvActionControlProperties(
     )
     companion object {
         fun fromEnvActionControlEntity(envAction: EnvActionControlEntity) = EnvActionControlProperties(
-            actionTheme = envAction.actionTheme,
-            actionSubTheme = envAction.actionSubTheme,
-            protectedSpecies = envAction.protectedSpecies,
+            themes = envAction.themes,
             actionNumberOfControls = envAction.actionNumberOfControls,
             actionTargetType = envAction.actionTargetType,
             vehicleType = envAction.vehicleType,

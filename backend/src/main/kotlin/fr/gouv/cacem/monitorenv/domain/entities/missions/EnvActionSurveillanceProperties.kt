@@ -5,8 +5,7 @@ import java.time.ZonedDateTime
 import java.util.*
 
 data class EnvActionSurveillanceProperties(
-    val actionTheme: String? = null,
-    val actionSubTheme: String? = null,
+    val themes: List<ThemeEntity>? = listOf(),
     val protectedSpecies: List<String>? = listOf(),
     val duration: Double? = null,
     val observations: String? = null,
@@ -16,18 +15,14 @@ data class EnvActionSurveillanceProperties(
         id = id,
         actionStartDateTimeUtc = actionStartDateTimeUtc,
         geom = geom,
-        actionTheme = actionTheme,
-        actionSubTheme = actionSubTheme,
-        protectedSpecies = protectedSpecies,
+        themes = themes,
         duration = duration,
         observations = observations,
         coverMissionZone = coverMissionZone
     )
     companion object {
         fun fromEnvActionSurveillanceEntity(envAction: EnvActionSurveillanceEntity) = EnvActionSurveillanceProperties(
-            actionTheme = envAction.actionTheme,
-            actionSubTheme = envAction.actionSubTheme,
-            protectedSpecies = envAction.protectedSpecies,
+            themes = envAction.themes,
             duration = envAction.duration,
             observations = envAction.observations,
             coverMissionZone = envAction.coverMissionZone
