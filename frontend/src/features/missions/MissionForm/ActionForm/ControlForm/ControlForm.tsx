@@ -10,7 +10,7 @@ import styled from 'styled-components'
 import { COLORS } from '../../../../../constants/constants'
 import {
   MissionType,
-  EnvActionControlType,
+  EnvActionControl,
   actionTargetTypeEnum,
   vehicleTypeEnum
 } from '../../../../../domain/entities/missions'
@@ -38,7 +38,7 @@ export function ControlForm({
   const {
     setValues,
     values: { envActions }
-  } = useFormikContext<MissionType<EnvActionControlType>>()
+  } = useFormikContext<MissionType<EnvActionControl>>()
   const currentAction = envActions[currentActionIndex]
 
   const parsedActionStartDateTimeUtc =

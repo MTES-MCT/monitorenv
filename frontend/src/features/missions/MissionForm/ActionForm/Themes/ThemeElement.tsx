@@ -13,16 +13,16 @@ export function ThemeElement({ labelSubTheme, labelTheme, themePath }) {
   useCleanSubThemesOnThemeChange(themePath)
 
   return (
-    <ThemeEkementWrapper>
+    <ThemeElementWrapper data-cy="envaction-theme-element">
       <ThemeSelector label={labelTheme} name={`${themePath}.theme`} />
       <SubThemesSelector label={labelSubTheme} name={`${themePath}.subThemes`} theme={currentThemeField?.value} />
       {THEME_REQUIRE_PROTECTED_SPECIES.includes(currentThemeField.value) && (
         <ProtectedSpeciesSelector name={`${themePath}.protectedSpecies`} />
       )}
-    </ThemeEkementWrapper>
+    </ThemeElementWrapper>
   )
 }
 
-const ThemeEkementWrapper = styled.div`
+const ThemeElementWrapper = styled.div`
   flex: 1;
 `

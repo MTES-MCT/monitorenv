@@ -11,6 +11,7 @@ export function useCleanSubThemesOnThemeChange(path) {
     const currentTheme = _.get(values, `${path}.theme`)
     if (path === previousPath && currentTheme !== previousTheme) {
       setFieldValue(`${path}.subThemes`, [])
+      setFieldValue(`${path}.protectedSpecies`, [])
     }
 
     // setFieldValue is not memoized thus should not appear in deps

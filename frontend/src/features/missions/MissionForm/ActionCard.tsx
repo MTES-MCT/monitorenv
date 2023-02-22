@@ -9,7 +9,7 @@ import {
   ActionTypeEnum,
   actionTypeEnum,
   EnvActionTheme,
-  EnvActionType
+  EnvAction
 } from '../../../domain/entities/missions'
 import { ControlInfractionsTags } from '../../../ui/ControlInfractionsTags'
 import { ReactComponent as ControlIconSVG } from '../../../uiMonitor/icons/Control.svg'
@@ -21,7 +21,7 @@ import { ReactComponent as SurveillanceIconSVG } from '../../../uiMonitor/icons/
 import type { MouseEventHandler } from 'react'
 
 type ActionCardProps = {
-  action: EnvActionType
+  action: EnvAction
   duplicateAction: MouseEventHandler
   removeAction: MouseEventHandler
   selectAction: MouseEventHandler

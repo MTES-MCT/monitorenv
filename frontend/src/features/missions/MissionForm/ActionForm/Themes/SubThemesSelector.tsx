@@ -31,9 +31,10 @@ export function SubThemesSelector({ label, name, theme }) {
       {isLoading && <Msg>Chargement</Msg>}
       {!isError && !isLoading && (
         <FormikMultiSelect
+          key={theme + name}
           // force update when name or theme changes
-          key={name + theme}
           baseContainer={newWindowContainerRef.current}
+          data-cy="envaction-subtheme-selector"
           disabled={!theme}
           isLight
           label={label}

@@ -28,6 +28,7 @@ export function ThemeSelector({ label, name }) {
         <FormikSelect
           key={name}
           baseContainer={newWindowContainerRef.current}
+          data-cy="envaction-theme-selector"
           isLight
           label={label}
           name={name}

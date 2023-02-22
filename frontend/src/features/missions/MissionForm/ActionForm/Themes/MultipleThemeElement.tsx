@@ -20,7 +20,8 @@ export function MultipleThemeElement({ currentActionIndex, form, push, remove })
   return (
     <ThemesWrapper>
       {currentThemes.map((_, i) => (
-        <ThemeBloc>
+        // eslint-disable-next-line react/no-array-index-key
+        <ThemeBloc key={i}>
           <ThemeElement
             labelSubTheme="Sous-thématiques de surveillance"
             labelTheme="Thématique de surveillance"
@@ -35,7 +36,13 @@ export function MultipleThemeElement({ currentActionIndex, form, push, remove })
         </ThemeBloc>
       ))}
       <ButtonWrapper>
-        <Button accent={Accent.SECONDARY} Icon={Icon.Plus} onClick={handleAddTheme} size={Size.SMALL}>
+        <Button
+          accent={Accent.SECONDARY}
+          data-cy="envaction-add-theme"
+          Icon={Icon.Plus}
+          onClick={handleAddTheme}
+          size={Size.SMALL}
+        >
           Ajouter une autre thématique
         </Button>
       </ButtonWrapper>

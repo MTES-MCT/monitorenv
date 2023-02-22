@@ -4,7 +4,7 @@ import {
   actionTargetTypeEnum,
   ActionTypeEnum,
   actionTypeEnum,
-  EnvActionType,
+  EnvAction,
   formalNoticeEnum,
   infractionTypeEnum,
   MissionSourceEnum,
@@ -30,8 +30,8 @@ export const actionFactory = ({
   ...action
 }: {
   actionType: ActionTypeEnum
-  id?: number
-}): EnvActionType => {
+  id?: string
+}): EnvAction => {
   switch (actionType) {
     case actionTypeEnum.CONTROL.code:
       return {

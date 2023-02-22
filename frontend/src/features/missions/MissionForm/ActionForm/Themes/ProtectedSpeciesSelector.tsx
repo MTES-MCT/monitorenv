@@ -11,6 +11,7 @@ export function ProtectedSpeciesSelector({ name }) {
     <FormikMultiSelect
       key={name}
       baseContainer={newWindowContainerRef.current}
+      data-cy="envaction-protected-species-selector"
       isLight
       label="Espèces protégées"
       name={name}
