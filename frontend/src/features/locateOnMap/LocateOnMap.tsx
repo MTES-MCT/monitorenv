@@ -52,6 +52,7 @@ const Wrapper = styled.div`
   top: 10px;
   right: 10px;
   width: 365px;
+  z-index: 1001;
 `
 const InputWrapper = styled.div`
   border: 0;
