@@ -103,8 +103,9 @@ export function CreateOrEditMission() {
   return (
     <EditMissionWrapper data-cy="editMissionWrapper">
       <Header
-        title={`Edition de la mission${isLoadingUpdateMission || isLoadingCreateMission ? ' - Enregistrement en cours' : ''
-          }`}
+        title={`Edition de la mission${
+          isLoadingUpdateMission || isLoadingCreateMission ? ' - Enregistrement en cours' : ''
+        }`}
       />
       <Formik enableReinitialize initialValues={missionFormikValues} onSubmit={handleSubmitForm}>
         {formikProps => {
