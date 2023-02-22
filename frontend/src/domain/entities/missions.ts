@@ -343,9 +343,9 @@ export const getMissionStatus = ({
   isClosed,
   startDateTimeUtc
 }: {
-  endDateTimeUtc: string
-  isClosed: Boolean
-  startDateTimeUtc: string
+  endDateTimeUtc?: string
+  isClosed?: Boolean
+  startDateTimeUtc?: string
 }) => {
   if (isClosed) {
     return missionStatusEnum.CLOSED.code
@@ -354,7 +354,7 @@ export const getMissionStatus = ({
     if (parseISO(startDateTimeUtc) && compareAsc(parseISO(startDateTimeUtc), Date.now()) >= 0) {
       return missionStatusEnum.UPCOMING.code
     }
-    if (parseISO(endDateTimeUtc) && compareDesc(parseISO(endDateTimeUtc), Date.now()) >= 0) {
+    if (endDateTimeUtc && parseISO(endDateTimeUtc) && compareDesc(parseISO(endDateTimeUtc), Date.now()) >= 0) {
       return missionStatusEnum.ENDED.code
     }
 

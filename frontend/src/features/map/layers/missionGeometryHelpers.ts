@@ -15,7 +15,7 @@ import {
 
 import type { Geometry } from 'ol/geom'
 
-export const getMissionCentroid = (mission, layername) => {
+export const getMissionCentroid = (mission: Partial<MissionType>, layername: string) => {
   const geoJSON = new GeoJSON()
   const { geom } = mission
   const geometry = geoJSON.readGeometry(geom, {
@@ -33,14 +33,14 @@ export const getMissionCentroid = (mission, layername) => {
     missionId: mission.id,
     missionStatus: getMissionStatus(mission),
     missionType: mission.missionType,
-    numberOfActions: mission.actions?.length || 0,
+    numberOfActions: mission.envActions?.length || 0,
     startDateTimeUtc: mission.startDateTimeUtc
   })
 
   return pointFeature
 }
 
-export const getMissionZoneFeature = (mission, layername) => {
+export const getMissionZoneFeature = (mission: Partial<MissionType>, layername: string) => {
   const geoJSON = new GeoJSON()
   const geometry = geoJSON.readGeometry(mission.geom, {
     dataProjection: WSG84_PROJECTION,
@@ -57,7 +57,7 @@ export const getMissionZoneFeature = (mission, layername) => {
     missionId: mission.id,
     missionStatus: getMissionStatus(mission),
     missionType: mission.missionType,
-    numberOfActions: mission.actions?.length || 0,
+    numberOfActions: mission.envActions?.length || 0,
     startDateTimeUtc: mission.startDateTimeUtc
   })
 
