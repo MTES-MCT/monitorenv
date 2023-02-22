@@ -4,9 +4,9 @@ UPDATE public.env_actions SET
     value,
 		'{themes}',
 		jsonb_build_array(
-      json_build_object(
+      jsonb_build_object(
           'theme', value->'actionTheme',
-          'subThemes', json_build_array(value->>'actionSubTheme')
+          'subThemes', jsonb_build_array(value->>'actionSubTheme')
       )
     ))
     - 'actionTheme' 
