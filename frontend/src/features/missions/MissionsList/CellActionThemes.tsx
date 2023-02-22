@@ -1,31 +1,27 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import _ from 'lodash'
+import { reduceBy, map, flatten, pipe, uniq, filter, toPairs, join } from 'ramda'
 import { Table } from 'rsuite'
 
-import { ActionTypeEnum, EnvActionType } from '../../../domain/entities/missions'
+import { ActionTypeEnum } from '../../../domain/entities/missions'
 
 export function CellActionThemes({ dataKey, rowData, ...props }: { dataKey?: any; rowData?: any }) {
-  const actionThemes = _.chain(rowData?.envActions)
-    .uniqBy((v: EnvActionType) => {
-      if (v.actionType === ActionTypeEnum.CONTROL && v.themes?.length > 0) {
-        return `${v.themes[0]?.theme}${v.themes[0]?.subThemes}`
-      }
+  const filterSurveillanceAndControlActions = filter(
+    a => a.actionType === ActionTypeEnum.CONTROL || a.actionType === ActionTypeEnum.SURVEILLANCE
+  )
 
-      return ''
-    })
-    .map((v: EnvActionType) => {
-      if (v.actionType === ActionTypeEnum.CONTROL && v.themes?.length > 0) {
-        return `${v.themes[0]?.theme}${v.themes[0]?.subThemes}`
-      }
+  // get unique subthemes
+  const getTheme = ({ theme }) => theme
+  const aggregateSubThemes = (acc, { subThemes }) => uniq(acc.concat(subThemes))
+  const groupThemes = reduceBy(aggregateSubThemes, [], getTheme)
 
-      return ''
-    })
-    .value()
+  const getActionThemes = ({ themes }) => themes
+  const getGroupedThemes = pipe(filterSurveillanceAndControlActions, map(getActionThemes), flatten, groupThemes)
 
-  const cellContent = actionThemes.join('-')
+  const getThemeAndSubThemesString = ([theme, subThemes]) => `${theme} : ${subThemes.join(' / ')}`
+  const cellContent = pipe(getGroupedThemes, toPairs, map(getThemeAndSubThemesString), join(' ; '))(rowData?.envActions)
 
   return (
-    <Table.Cell {...props} title={cellContent}>
+    <Table.Cell {...props} data-cy="cell-envactions-themes" title={cellContent}>
       {cellContent}
     </Table.Cell>
   )
