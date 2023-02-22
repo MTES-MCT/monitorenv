@@ -65,35 +65,25 @@ export const getMissionZoneFeature = (mission: Partial<MissionType>, layername: 
 }
 
 const getActionControlProperties = (action: EnvActionControlType) => {
-  const {
-    actionNumberOfControls,
-    actionStartDateTimeUtc,
-    actionSubTheme,
-    actionTargetType,
-    actionTheme,
-    actionType,
-    infractions
-  } = action
+  const { actionNumberOfControls, actionStartDateTimeUtc, actionTargetType, actionType, infractions, themes } = action
 
   return {
     actionNumberOfControls,
     actionStartDateTimeUtc,
-    actionSubTheme,
     actionTargetType,
-    actionTheme,
     actionType,
-    infractions
+    infractions,
+    themes
   }
 }
 
 const getActionSurveillanceProperties = (action: EnvActionSurveillanceType) => {
-  const { actionStartDateTimeUtc, actionSubTheme, actionTheme, actionType } = action
+  const { actionStartDateTimeUtc, actionType, themes } = action
 
   return {
     actionStartDateTimeUtc,
-    actionSubTheme,
-    actionTheme,
-    actionType
+    actionType,
+    themes
   }
 }
 

@@ -4,27 +4,22 @@ import { format, isValid } from 'date-fns'
 import { fr } from 'date-fns/locale'
 import { FieldArray, useFormikContext } from 'formik'
 import _ from 'lodash'
-import { useEffect, useMemo } from 'react'
 import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
-import { useGetControlThemesQuery } from '../../../../../api/controlThemesAPI'
 import { COLORS } from '../../../../../constants/constants'
 import {
   MissionType,
   EnvActionControlType,
-  THEME_REQUIRE_PROTECTED_SPECIES,
   actionTargetTypeEnum,
   vehicleTypeEnum
 } from '../../../../../domain/entities/missions'
-import { usePrevious } from '../../../../../hooks/usePrevious'
 import { useNewWindow } from '../../../../../ui/NewWindow'
 import { FormikInputNumberGhost } from '../../../../../uiMonitor/CustomFormikFields/FormikInputNumber'
 import { ReactComponent as ControlIconSVG } from '../../../../../uiMonitor/icons/Control.svg'
 import { ReactComponent as DeleteSVG } from '../../../../../uiMonitor/icons/Delete.svg'
 import { MultiPointPicker } from '../../../MultiPointPicker'
-import { ProtectedSpeciesSelector } from '../ProtectedSpeciesSelector'
-import { ThemeSelector } from '../ThemeSelector'
+import { ThemeElement } from '../Themes/ThemeElement'
 import { ActionTargetSelector } from './ActionTargetSelector'
 import { InfractionsForm } from './InfractionsForm'
 import { VehicleTypeSelector } from './VehicleTypeSelector'
@@ -41,7 +36,6 @@ export function ControlForm({
   const { newWindowContainerRef } = useNewWindow()
 
   const {
-    setFieldValue,
     setValues,
     values: { envActions }
   } = useFormikContext<MissionType<EnvActionControlType>>()
@@ -49,28 +43,7 @@ export function ControlForm({
 
   const parsedActionStartDateTimeUtc =
     currentAction?.actionStartDateTimeUtc && new Date(currentAction.actionStartDateTimeUtc)
-  const { actionNumberOfControls, actionTargetType, actionTheme, protectedSpecies, vehicleType } = currentAction || {}
-  const { data, isError, isLoading } = useGetControlThemesQuery()
-  const themes = useMemo(() => _.uniqBy(data, 'themeLevel1'), [data])
-  const subThemes = useMemo(() => _.filter(data, t => t.themeLevel1 === actionTheme), [data, actionTheme])
-
-  const previousActionTheme = usePrevious(actionTheme)
-  const previousActionIndex = usePrevious(currentActionIndex)
-
-  useEffect(() => {
-    if (previousActionIndex === currentActionIndex && previousActionTheme && previousActionTheme !== actionTheme) {
-      setFieldValue(`envActions.${currentActionIndex}.actionSubTheme`, '')
-    }
-    if (
-      previousActionIndex === currentActionIndex &&
-      !!protectedSpecies &&
-      protectedSpecies.length > 0 &&
-      !!actionTheme &&
-      !THEME_REQUIRE_PROTECTED_SPECIES.includes(actionTheme)
-    ) {
-      setFieldValue(`envActions.${currentActionIndex}.protectedSpecies`, [])
-    }
-  }, [previousActionTheme, actionTheme, protectedSpecies, previousActionIndex, currentActionIndex, setFieldValue])
+  const { actionNumberOfControls, actionTargetType, vehicleType } = currentAction || {}
 
   const onVehicleTypeChange = selectedVehicleType => {
     setValues(v => {
@@ -139,39 +112,11 @@ export function ControlForm({
         </IconButtonRight>
       </Header>
       <FormBody>
-        {isError && <Msg>Erreur au chargement des thèmes</Msg>}
-        {isLoading && <Msg>Chargement des thèmes</Msg>}
-        {!isError && !isLoading && (
-          <>
-            <SelectorWrapper>
-              <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionTheme`}>
-                Thématique de contrôle
-              </Form.ControlLabel>
-              <ThemeSelector
-                name={`envActions.${currentActionIndex}.actionTheme`}
-                themes={themes}
-                valueKey="themeLevel1"
-              />
-            </SelectorWrapper>
-            <SelectorWrapper>
-              <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionSubTheme`}>
-                Sous-thématique de contrôle
-              </Form.ControlLabel>
-              <ThemeSelector
-                name={`envActions.${currentActionIndex}.actionSubTheme`}
-                themes={subThemes}
-                valueKey="themeLevel2"
-              />
-            </SelectorWrapper>
-
-            {!!actionTheme && THEME_REQUIRE_PROTECTED_SPECIES.includes(actionTheme) && (
-              <SelectorWrapper>
-                <ProtectedSpeciesSelector name={`envActions.${currentActionIndex}.protectedSpecies`} />
-              </SelectorWrapper>
-            )}
-          </>
-        )}
-
+        <ThemeElement
+          labelSubTheme="Sous-thématiques de contrôle"
+          labelTheme="Thématique de contrôle"
+          themePath={`envActions[${currentActionIndex}].themes[0]`}
+        />
         <Form.Group>
           <FormikDatePicker
             baseContainer={newWindowContainerRef.current}
@@ -246,13 +191,6 @@ const Title = styled.h2`
   line-height: 22px;
   display: inline-block;
   color: ${COLORS.charcoal};
-`
-
-const Msg = styled.div``
-
-const SelectorWrapper = styled.div`
-  height: 58px;
-  margin-bottom: 16px;
 `
 
 const Separator = styled.hr`

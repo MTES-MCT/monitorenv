@@ -1,14 +1,9 @@
 import { FormikDatePicker } from '@mtes-mct/monitor-ui'
-import { useFormikContext } from 'formik'
-import _ from 'lodash'
-import { useMemo, useEffect } from 'react'
 import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
-import { useGetControlThemesQuery } from '../../../../api/controlThemesAPI'
 import { COLORS } from '../../../../constants/constants'
 import { InteractionListener } from '../../../../domain/entities/map/constants'
-import { usePrevious } from '../../../../hooks/usePrevious'
 import { useNewWindow } from '../../../../ui/NewWindow'
 import { FormikCheckbox } from '../../../../uiMonitor/CustomFormikFields/FormikCheckbox'
 import { FormikInputNumberGhost } from '../../../../uiMonitor/CustomFormikFields/FormikInputNumber'
@@ -16,32 +11,10 @@ import { FormikTextarea } from '../../../../uiMonitor/CustomFormikFields/FormikT
 import { ReactComponent as DeleteSVG } from '../../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as SurveillanceIconSVG } from '../../../../uiMonitor/icons/Observation.svg'
 import { MultiZonePicker } from '../../MultiZonePicker'
-import { ThemeSelector } from './ThemeSelector'
-
-import type { MissionType, EnvActionControlType } from '../../../../domain/entities/missions'
+import { SurveillanceThemes } from './Themes/SurveillanceThemes'
 
 export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionIndex }) {
   const { newWindowContainerRef } = useNewWindow()
-
-  const {
-    setFieldValue,
-    values: { envActions }
-  } = useFormikContext<MissionType<EnvActionControlType>>()
-
-  const actionTheme = envActions[currentActionIndex]?.actionTheme
-
-  const { data, isError, isLoading } = useGetControlThemesQuery()
-  const themes = useMemo(() => _.uniqBy(data, 'themeLevel1'), [data])
-  const subThemes = useMemo(() => _.filter(data, t => t.themeLevel1 === actionTheme), [data, actionTheme])
-
-  const previousActionTheme = usePrevious(actionTheme)
-  const previousActionIndex = usePrevious(currentActionIndex)
-
-  useEffect(() => {
-    if (previousActionIndex === currentActionIndex && previousActionTheme && previousActionTheme !== actionTheme) {
-      setFieldValue(`envActions.${currentActionIndex}.actionSubTheme`, '')
-    }
-  }, [previousActionTheme, actionTheme, previousActionIndex, currentActionIndex, setFieldValue])
 
   const handleRemoveAction = () => {
     setCurrentActionIndex(null)
@@ -63,28 +36,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
           Supprimer
         </IconButtonRight>
       </Header>
-      {!isError && !isLoading && (
-        <>
-          <SelectorWrapper>
-            <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionTheme`}>Thématique</Form.ControlLabel>
-            <ThemeSelector
-              name={`envActions.${currentActionIndex}.actionTheme`}
-              themes={themes}
-              valueKey="themeLevel1"
-            />
-          </SelectorWrapper>
-          <SelectorWrapper>
-            <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionSubTheme`}>
-              Sous-thématique
-            </Form.ControlLabel>
-            <ThemeSelector
-              name={`envActions.${currentActionIndex}.actionSubTheme`}
-              themes={subThemes}
-              valueKey="themeLevel2"
-            />
-          </SelectorWrapper>
-        </>
-      )}
+      <SurveillanceThemes currentActionIndex={currentActionIndex} />
       <FlexSelectorWrapper>
         <Column>
           <FormikDatePicker
@@ -139,9 +91,6 @@ const Title = styled.h2`
   color: ${COLORS.charcoal};
 `
 
-const SelectorWrapper = styled(Form.Group)`
-  height: 58px;
-`
 const FlexSelectorWrapper = styled(Form.Group)`
   height: 58px;
   display: flex;

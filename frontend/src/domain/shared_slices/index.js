@@ -1,7 +1,7 @@
 import { combineReducers } from '@reduxjs/toolkit'
 
-import { controlUnitsAPI } from '../../api/controlUnitsAPI'
 import { controlThemesAPI } from '../../api/controlThemesAPI'
+import { controlUnitsAPI } from '../../api/controlUnitsAPI'
 import { infractionsAPI } from '../../api/infractionsAPI'
 import { missionsAPI } from '../../api/missionsAPI'
 import { regulatoryLayersAPI } from '../../api/regulatoryLayersAPI'

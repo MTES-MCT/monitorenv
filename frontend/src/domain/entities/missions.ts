@@ -194,28 +194,28 @@ export enum VesselSizeEnum {
 
 export const protectedSpeciesEnum = {
   BIRDS: {
-    code: 'BIRDS',
-    libelle: 'Oiseaux'
+    label: 'Oiseaux',
+    value: 'BIRDS'
   },
   FLORA: {
-    code: 'FLORA',
-    libelle: 'Flore'
+    label: 'Flore',
+    value: 'FLORA'
   },
   HABITAT: {
-    code: 'HABITAT',
-    libelle: 'Habitat'
+    label: 'Habitat',
+    value: 'HABITAT'
   },
   MARINE_MAMMALS: {
-    code: 'MARINE_MAMMALS',
-    libelle: 'Mammifères marins'
+    label: 'Mammifères marins',
+    value: 'MARINE_MAMMALS'
   },
   OTHER: {
-    code: 'OTHER',
-    libelle: 'Autres espèces protégées'
+    label: 'Autres espèces protégées',
+    value: 'OTHER'
   },
   REPTILES: {
-    code: 'REPTILES',
-    libelle: 'Reptiles'
+    label: 'Reptiles',
+    value: 'REPTILES'
   }
 }
 
@@ -297,25 +297,27 @@ export type EnvActionCommonProperties = {
   geom?: Record<string, any>[]
   id: string
 }
+
+export type EnvActionTheme = {
+  protectedSpecies?: string
+  subThemes?: string[]
+  theme: string
+}
 export type EnvActionControlType = EnvActionCommonProperties & {
   actionNumberOfControls?: number
-  actionSubTheme?: string
   actionTargetType?: string
-  actionTheme?: string
   actionType: ActionTypeEnum.CONTROL
   infractions: InfractionType[]
-  protectedSpecies?: string
+  themes: EnvActionTheme[]
   vehicleType: string
 }
 
 export type EnvActionSurveillanceType = EnvActionCommonProperties & {
-  actionSubTheme?: string
-  actionTheme?: string
   actionType: ActionTypeEnum.SURVEILLANCE
   coverMissionZone?: boolean
   duration: number
   observations: string
-  protectedSpecies?: string
+  themes: EnvActionTheme[]
 }
 
 export type EnvActionNoteType = EnvActionCommonProperties & {

@@ -103,9 +103,8 @@ export function CreateOrEditMission() {
   return (
     <EditMissionWrapper data-cy="editMissionWrapper">
       <Header
-        title={`Edition de la mission${
-          isLoadingUpdateMission || isLoadingCreateMission ? ' - Enregistrement en cours' : ''
-        }`}
+        title={`Edition de la mission${isLoadingUpdateMission || isLoadingCreateMission ? ' - Enregistrement en cours' : ''
+          }`}
       />
       <Formik enableReinitialize initialValues={missionFormikValues} onSubmit={handleSubmitForm}>
         {formikProps => {
@@ -149,10 +148,10 @@ export function CreateOrEditMission() {
                 <ThirdColumn>
                   <FieldArray
                     name="envActions"
-                    render={props => (
+                    render={({ remove }) => (
                       <ActionForm
-                        {...props}
                         currentActionIndex={currentActionIndex}
+                        remove={remove}
                         setCurrentActionIndex={handleSetCurrentActionIndex}
                       />
                     )}

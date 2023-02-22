@@ -36,12 +36,11 @@ export const actionFactory = ({
     case actionTypeEnum.CONTROL.code:
       return {
         actionNumberOfControls: 0,
-        actionSubTheme: '',
         actionTargetType: actionTargetTypeEnum.VEHICLE.code,
-        actionTheme: '',
         actionType: ActionTypeEnum.CONTROL,
         id: uuidv4(),
         infractions: [],
+        themes: [],
         vehicleType: vehicleTypeEnum.VESSEL.code,
         ...action
       }
@@ -55,13 +54,12 @@ export const actionFactory = ({
     case actionTypeEnum.SURVEILLANCE.code:
     default:
       return {
-        actionSubTheme: '',
-        actionTheme: '',
         actionType: ActionTypeEnum.SURVEILLANCE,
         coverMissionZone: true,
         duration: 0,
         id: uuidv4(),
         observations: '',
+        themes: [{ subThemes: [], theme: '' }],
         ...action
       }
   }
