@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import dayjs from "dayjs";
+import dayjs from 'dayjs'
 
 context('Missions', () => {
   beforeEach(() => {
@@ -12,14 +12,13 @@ context('Missions', () => {
     cy.get('*[data-cy="SideWindowHeader-title"]').contains('Missions et contrôles')
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('10')
 
-
     cy.log('A default date filter should be set')
     const thirtyDaysAgo = dayjs().subtract(30, 'days')
-    const month = thirtyDaysAgo.get('month') <= 9
-        ? '0' + Number(thirtyDaysAgo.get('month') + 1)
-        : thirtyDaysAgo.get('month') + 1
-    cy.get('*[data-cy="datepicker-missionStartedAfter"]')
-        .contains(`${thirtyDaysAgo.get('year')}-${month}-${thirtyDaysAgo.get('date')}`)
+    const month =
+      thirtyDaysAgo.get('month') <= 9 ? `0${Number(thirtyDaysAgo.get('month') + 1)}` : thirtyDaysAgo.get('month') + 1
+    cy.get('*[data-cy="datepicker-missionStartedAfter"]').contains(
+      `${thirtyDaysAgo.get('year')}-${month}-${thirtyDaysAgo.get('date')}`
+    )
 
     cy.log('Units should be filtered')
     cy.get('*[data-cy="select-units-filter"]').click({ force: true })
@@ -33,6 +32,14 @@ context('Missions', () => {
 
     cy.get('*[data-cy="select-administrations-filter"] > .rs-btn-close').click({ force: true })
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('10')
+  })
+
+  it('Missions table should display all themes and subthemes of all the actions of the mission', () => {
+    cy.get('*[data-cy="cell-envactions-themes"] > .rs-table-cell-content')
+      .eq(3)
+      .contains(
+        "Police des espèces protégées et de leurs habitats (faune et flore) : Destruction, capture, arrachage / Atteinte aux habitats d'espèces protégées ; Police des mouillages : Mouillage individuel / ZMEL"
+      )
   })
 
   it('An infraction Should be duplicated', () => {
@@ -54,21 +61,116 @@ context('Missions', () => {
     // Then
     cy.wait('@updateMission').then(({ request, response }) => {
       expect(response && response.statusCode).equal(200)
+      const { infractions } = request.body.envActions.find(a => a.id === 'c52c6f20-e495-4b29-b3df-d7edfb67fdd7')
+      expect(infractions.length).equal(2)
+      const duplicatedInfraction = infractions[1]
 
-      expect(request.body.envActions[1].infractions.length).equal(2)
-      const duplicatedInfraction = request.body.envActions[1].infractions[1]
-
-      expect(duplicatedInfraction.controlledPersonIdentity).equal("John Doe")
-      expect(duplicatedInfraction.formalNotice).equal("PENDING")
-      expect(duplicatedInfraction.infractionType).equal("WITH_REPORT")
+      expect(duplicatedInfraction.controlledPersonIdentity).equal('John Doe')
+      expect(duplicatedInfraction.formalNotice).equal('PENDING')
+      expect(duplicatedInfraction.infractionType).equal('WITH_REPORT')
       expect(duplicatedInfraction.natinf.length).equal(2)
       expect(duplicatedInfraction.observations).equal("Pas d'observations")
-      expect(duplicatedInfraction.registrationNumber).equal("BALTIK")
-      expect(duplicatedInfraction.relevantCourt).equal("LOCAL_COURT")
+      expect(duplicatedInfraction.registrationNumber).equal('BALTIK')
+      expect(duplicatedInfraction.relevantCourt).equal('LOCAL_COURT')
       expect(duplicatedInfraction.toProcess).equal(false)
-      expect(duplicatedInfraction.vesselSize).equal("FROM_24_TO_46m")
-      expect(duplicatedInfraction.vesselType).equal("COMMERCIAL")
-      expect(duplicatedInfraction.id).not.equal("c52c6f20-e495-4b29-b3df-d7edfb67fdd7")
+      expect(duplicatedInfraction.vesselSize).equal('FROM_24_TO_46m')
+      expect(duplicatedInfraction.vesselType).equal('COMMERCIAL')
+      expect(duplicatedInfraction.id).not.equal('c52c6f20-e495-4b29-b3df-d7edfb67fdd7')
+    })
+  })
+
+  it('allow only one theme and may be multiple subthemes in control actions', () => {
+    // Given
+    cy.get('*[data-cy="edit-mission"]').eq(3).click()
+    cy.intercept('GET', `/bff/v1/controlthemes`).as('getControlThemes')
+    cy.get('*[data-cy="action-card"]').eq(1).click()
+    cy.get('*[data-cy="envaction-theme-element"]').should('have.length', 1)
+    cy.wait('@getControlThemes')
+    cy.get('*[data-cy="envaction-theme-selector"]').contains('Police des mouillages')
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Mouillage individuel')
+    cy.get('*[data-cy="envaction-theme-element"]').contains('ZMEL')
+    cy.get('*[data-cy="envaction-protected-species-selector"]').should('not.exist')
+    // When
+    cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Police des espèces protégées').click()
+
+    cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Perturbation').click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Atteinte aux habitats').click({ force: true })
+    cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
+
+    cy.get('*[data-cy="envaction-protected-species-selector"]').should('exist')
+    cy.get('*[data-cy="envaction-protected-species-selector"]').click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Habitat').click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Oiseaux').click({ force: true })
+    cy.get('*[data-cy="envaction-protected-species-selector"]').click({ force: true })
+
+    cy.get('*[data-cy="envaction-add-theme"]').should('not.exist')
+
+    cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
+    cy.get('[type="submit"]').click()
+
+    // Then
+    cy.wait('@updateMission').then(({ request, response }) => {
+      expect(response && response.statusCode).equal(200)
+
+      const { themes } = request.body.envActions.find(a => a.id === 'c52c6f20-e495-4b29-b3df-d7edfb67fdd7')
+      expect(themes.length).equal(1)
+      expect(themes[0].theme).equal('Police des espèces protégées et de leurs habitats (faune et flore)')
+      expect(themes[0].subThemes.length).equal(2)
+      expect(themes[0].subThemes[0]).equal("Perturbation d'animaux")
+      expect(themes[0].subThemes[1]).equal("Atteinte aux habitats d'espèces protégées")
+      expect(themes[0].protectedSpecies.length).equal(2)
+      expect(themes[0].protectedSpecies[0]).equal('HABITAT')
+      expect(themes[0].protectedSpecies[1]).equal('BIRDS')
+    })
+  })
+  it('allow multiple themes and may be multiple subthemes in surveillance actions', () => {
+    // Given
+    cy.get('*[data-cy="edit-mission"]').eq(3).click()
+    cy.intercept('GET', `/bff/v1/controlthemes`).as('getControlThemes')
+    cy.get('*[data-cy="action-card"]').eq(0).click()
+    cy.get('*[data-cy="envaction-theme-element"]').should('have.length', 1)
+    cy.wait('@getControlThemes')
+    cy.get('*[data-cy="envaction-theme-selector"]').contains(
+      'Police des espèces protégées et de leurs habitats (faune et flore)'
+    )
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Destruction, capture, arrachage')
+    cy.get('*[data-cy="envaction-protected-species-selector"]').should('exist')
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Flore').click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Oiseaux').click({ force: true })
+
+    // When
+
+    cy.get('*[data-cy="envaction-add-theme"]').click({ force: true })
+    cy.get('*[data-cy="envaction-theme-selector"]').eq(1).click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').eq(1).contains('Police des mouillages').click()
+
+    cy.get('*[data-cy="envaction-subtheme-selector"]').eq(1).click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').eq(1).contains('ZMEL').click()
+
+    cy.get('*[data-cy="envaction-protected-species-selector"]').should('have.length', 1)
+
+    cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
+    cy.get('[type="submit"]').click()
+
+    // Then
+    cy.wait('@updateMission').then(({ request, response }) => {
+      expect(response && response.statusCode).equal(200)
+
+      const { themes } = request.body.envActions.find(a => a.id === 'b8007c8a-5135-4bc3-816f-c69c7b75d807')
+      expect(themes.length).equal(2)
+      expect(themes[0].theme).equal('Police des espèces protégées et de leurs habitats (faune et flore)')
+      expect(themes[0].subThemes.length).equal(2)
+      expect(themes[0].subThemes[0]).equal('Destruction, capture, arrachage')
+      expect(themes[0].subThemes[1]).equal("Atteinte aux habitats d'espèces protégées")
+      expect(themes[0].protectedSpecies.length).equal(2)
+      expect(themes[0].protectedSpecies[0]).equal('FLORA')
+      expect(themes[0].protectedSpecies[1]).equal('BIRDS')
+      expect(themes[1].theme).equal('Police des mouillages')
+      expect(themes[1].subThemes.length).equal(1)
+      expect(themes[1].subThemes[0]).equal('ZMEL')
+      expect(themes[1].protectedSpecies.length).equal(0)
     })
   })
 })
