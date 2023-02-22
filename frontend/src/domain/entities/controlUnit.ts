@@ -13,7 +13,7 @@ export type ControlResource = {
   name: string
 }
 
-export const getControlUnitsAsText = (controlUnits: ControlUnit[]) =>
+export const getControlUnitsAsText = (controlUnits: Omit<ControlUnit, 'id'>[]) =>
   controlUnits.map(
     resource =>
       `${resource.name} ${

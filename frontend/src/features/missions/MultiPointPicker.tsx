@@ -31,6 +31,7 @@ export type MultiPointPickerProps = {
 }
 export function MultiPointPicker({ addButtonLabel, containerName, label, name }: MultiPointPickerProps) {
   const dispatch = useAppDispatch()
+  const listener = useAppSelector(state => state.draw.listener)
   const { coordinatesFormat } = useAppSelector(state => state.map)
   const { geometry } = useListenForDrawedGeometry(InteractionListener.CONTROL_POINT)
 
@@ -38,6 +39,8 @@ export function MultiPointPicker({ addButtonLabel, containerName, label, name }:
   const [field, , helpers] = useField(name)
   const { value } = field
   const { setValue } = helpers
+
+  const isAddingAControl = useMemo(() => listener === InteractionListener.CONTROL_POINT, [listener])
 
   const points = useMemo(() => {
     if (!value) {
@@ -110,10 +113,16 @@ export function MultiPointPicker({ addButtonLabel, containerName, label, name }:
               </Center>
             </ZoneWrapper>
 
-            <IconButton accent={Accent.SECONDARY} Icon={Icon.Edit} onClick={handleAddPoint} />
+            <IconButton
+              accent={Accent.SECONDARY}
+              disabled={isAddingAControl}
+              Icon={Icon.Edit}
+              onClick={handleAddPoint}
+            />
             <IconButton
               accent={Accent.SECONDARY}
               aria-label="Supprimer cette zone"
+              disabled={isAddingAControl}
               Icon={Icon.Delete}
               onClick={() => handleDeleteZone(index)}
             />

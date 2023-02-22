@@ -4,12 +4,13 @@ import styled from 'styled-components'
 
 import { COLORS } from '../../constants/constants'
 
-type CustomSelectPickerProps<T> = SelectPickerProps<T> & {}
+type CustomSelectPickerProps<T> = SelectPickerProps<T> & { dataCy?: string | undefined }
 
 export function SelectPicker<T>({
   block,
   className,
   data,
+  dataCy,
   disabled,
   labelKey,
   menuStyle,
@@ -36,6 +37,7 @@ export function SelectPicker<T>({
         block={block}
         container={() => wrapperRef.current}
         data={data}
+        data-cy={dataCy}
         disabled={disabled}
         labelKey={labelKey || 'label'}
         menuStyle={
