@@ -35,6 +35,22 @@ def transform_control_units(control_units: pd.DataFrame) -> pd.DataFrame:
         pd.DataFrame: Modified `control_units` DataFrame
     """
     control_units = control_units.copy(deep=True)
+
+    # Add " [x]" suffix to duplicated control unit names.
+    control_units["name_occurence"] = (
+        control_units.groupby("name")["id"].rank().astype(int)
+    )
+    control_units["name_suffix"] = control_units["name_occurence"].map(
+        lambda s: f" [{s}]" if s > 1 else ""
+    )
+    control_units["name"] = control_units[["name", "name_suffix"]].apply(
+        lambda row: row["name"] + row["name_suffix"], axis=1
+    )
+    control_units = control_units.drop(
+        columns=["name_occurence", "name_suffix"]
+    )
+
+    # Add " (historique)" suffix to control units imported from Poseidon.
     control_units["name"] = control_units.name.map(
         lambda s: s + " (historique)"
     )
