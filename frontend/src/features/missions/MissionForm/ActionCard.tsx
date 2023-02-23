@@ -29,12 +29,13 @@ type ActionCardProps = {
 }
 
 function extractThemesAsText(themes: EnvActionTheme[]) {
-  if (themes?.length > 0) {
-    return themes.map(t => t.theme).join(' - ')
+  if (!(themes?.length > 0)) {
+    return ''
   }
 
-  return ''
+  return themes.map(t => t.theme).join(' - ')
 }
+
 export function ActionCard({ action, duplicateAction, removeAction, selectAction, selected }: ActionCardProps) {
   const parsedActionStartDateTimeUtc = action.actionStartDateTimeUtc
     ? new Date(action.actionStartDateTimeUtc)
@@ -59,7 +60,7 @@ export function ActionCard({ action, duplicateAction, removeAction, selectAction
             <SummaryContent>
               <Title>
                 Contrôle{!!action.actionNumberOfControls && action.actionNumberOfControls > 1 ? 's ' : ' '}
-                {action.themes && action.themes?.length > 0 ? (
+                {action.themes?.length > 0 && action.themes[0]?.theme ? (
                   <Accented>{extractThemesAsText(action.themes)}</Accented>
                 ) : (
                   'à renseigner'

@@ -7,22 +7,22 @@ import { SubThemesSelector } from './SubThemesSelector'
 import { ThemeSelector } from './ThemeSelector'
 import { useCleanSubThemesOnThemeChange } from './useCleanSubThemesOnThemeChange'
 
-export function ThemeElement({ labelSubTheme, labelTheme, themePath }) {
+export function ActionTheme({ labelSubTheme, labelTheme, themePath }) {
   const [currentThemeField] = useField(`${themePath}.theme`)
 
   useCleanSubThemesOnThemeChange(themePath)
 
   return (
-    <ThemeElementWrapper data-cy="envaction-theme-element">
+    <ActionThemeWrapper data-cy="envaction-theme-element">
       <ThemeSelector label={labelTheme} name={`${themePath}.theme`} />
       <SubThemesSelector label={labelSubTheme} name={`${themePath}.subThemes`} theme={currentThemeField?.value} />
       {THEME_REQUIRE_PROTECTED_SPECIES.includes(currentThemeField.value) && (
         <ProtectedSpeciesSelector name={`${themePath}.protectedSpecies`} />
       )}
-    </ThemeElementWrapper>
+    </ActionThemeWrapper>
   )
 }
 
-const ThemeElementWrapper = styled.div`
+const ActionThemeWrapper = styled.div`
   flex: 1;
 `

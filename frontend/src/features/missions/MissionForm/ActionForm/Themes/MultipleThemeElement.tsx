@@ -1,7 +1,7 @@
 import { Accent, Button, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { ThemeElement } from './ThemeElement'
+import { ActionTheme } from './ActionTheme'
 
 export function MultipleThemeElement({ currentActionIndex, form, push, remove }) {
   const handleRemoveTheme = index => () => {
@@ -22,7 +22,7 @@ export function MultipleThemeElement({ currentActionIndex, form, push, remove })
       {currentThemes.map((_, i) => (
         // eslint-disable-next-line react/no-array-index-key
         <ThemeBloc key={i}>
-          <ThemeElement
+          <ActionTheme
             labelSubTheme="Sous-thématiques de surveillance"
             labelTheme="Thématique de surveillance"
             themePath={`envActions.${currentActionIndex}.themes.${i}`}

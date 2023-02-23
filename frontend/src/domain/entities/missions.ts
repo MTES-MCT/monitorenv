@@ -299,7 +299,7 @@ export type EnvActionCommonProperties = {
 }
 
 export type EnvActionTheme = {
-  protectedSpecies?: string
+  protectedSpecies?: string[]
   subThemes?: string[]
   theme: string
 }

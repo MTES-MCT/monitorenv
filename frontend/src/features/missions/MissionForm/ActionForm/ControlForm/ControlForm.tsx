@@ -19,7 +19,7 @@ import { FormikInputNumberGhost } from '../../../../../uiMonitor/CustomFormikFie
 import { ReactComponent as ControlIconSVG } from '../../../../../uiMonitor/icons/Control.svg'
 import { ReactComponent as DeleteSVG } from '../../../../../uiMonitor/icons/Delete.svg'
 import { MultiPointPicker } from '../../../MultiPointPicker'
-import { ThemeElement } from '../Themes/ThemeElement'
+import { ActionTheme } from '../Themes/ActionTheme'
 import { ActionTargetSelector } from './ActionTargetSelector'
 import { InfractionsForm } from './InfractionsForm'
 import { VehicleTypeSelector } from './VehicleTypeSelector'
@@ -112,7 +112,7 @@ export function ControlForm({
         </IconButtonRight>
       </Header>
       <FormBody>
-        <ThemeElement
+        <ActionTheme
           labelSubTheme="Sous-thématiques de contrôle"
           labelTheme="Thématique de contrôle"
           themePath={`envActions[${currentActionIndex}].themes[0]`}

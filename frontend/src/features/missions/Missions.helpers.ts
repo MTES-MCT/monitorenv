@@ -40,7 +40,7 @@ export const actionFactory = ({
         actionType: ActionTypeEnum.CONTROL,
         id: uuidv4(),
         infractions: [],
-        themes: [],
+        themes: [{ subThemes: [], theme: '' }],
         vehicleType: vehicleTypeEnum.VESSEL.code,
         ...action
       }
