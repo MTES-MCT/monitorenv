@@ -1,3 +1,4 @@
+from docker.types import Mount
 from dotenv import dotenv_values
 from prefect.executors.dask import LocalDaskExecutor
 from prefect.run_configs.docker import DockerRun
@@ -12,11 +13,12 @@ from config import (
 )
 from src.pipeline.flows import (
     admin_areas,
+    control_objectives,
     facade_areas,
     fao_areas,
     historic_control_units,
-    regulations,
     natinfs,
+    regulations,
 )
 
 ################################ Define flow schedules ################################
@@ -26,6 +28,7 @@ regulations.flow.schedule = CronSchedule("6,16,26,36,46,56 * * * *")
 ###################### List flows to register with prefect server #####################
 flows_to_register = [
     admin_areas.flow,
+    control_objectives.flow,
     facade_areas.flow,
     fao_areas.flow,
     historic_control_units.flow,
@@ -50,6 +53,17 @@ for flow in flows_to_register:
 ################### Define flows' run config ####################
 for flow in flows_to_register:
     host_config = None
+
+    if flow.name == "Control objectives":
+        host_config = {
+            "mounts": [
+                Mount(
+                    target="/home/monitorenv-pipeline/datascience/src/pipeline/data",
+                    source="/opt/data",
+                    type="bind",
+                )
+            ],
+        }
 
     flow.run_config = DockerRun(
         image=f"{DOCKER_IMAGE}:{MONITORENV_VERSION}",

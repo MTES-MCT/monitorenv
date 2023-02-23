@@ -18,6 +18,7 @@ frontend/cypress/videos/
 # Local data
 /data
 /datascience/data
+/datascience/src/pipeline/data/control_objectives.csv
 
 # Python
 *.pyc
