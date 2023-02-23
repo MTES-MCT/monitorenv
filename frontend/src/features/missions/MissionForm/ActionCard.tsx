@@ -4,7 +4,13 @@ import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import { actionTargetTypeEnum, ActionTypeEnum, actionTypeEnum, EnvActionType } from '../../../domain/entities/missions'
+import {
+  actionTargetTypeEnum,
+  ActionTypeEnum,
+  actionTypeEnum,
+  EnvActionTheme,
+  EnvAction
+} from '../../../domain/entities/missions'
 import { ControlInfractionsTags } from '../../../ui/ControlInfractionsTags'
 import { ReactComponent as ControlIconSVG } from '../../../uiMonitor/icons/Control.svg'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
@@ -15,12 +21,21 @@ import { ReactComponent as SurveillanceIconSVG } from '../../../uiMonitor/icons/
 import type { MouseEventHandler } from 'react'
 
 type ActionCardProps = {
-  action: EnvActionType
+  action: EnvAction
   duplicateAction: MouseEventHandler
   removeAction: MouseEventHandler
   selectAction: MouseEventHandler
   selected: boolean
 }
+
+function extractThemesAsText(themes: EnvActionTheme[]) {
+  if (!(themes?.length > 0)) {
+    return ''
+  }
+
+  return themes.map(t => t.theme).join(' - ')
+}
+
 export function ActionCard({ action, duplicateAction, removeAction, selectAction, selected }: ActionCardProps) {
   const parsedActionStartDateTimeUtc = action.actionStartDateTimeUtc
     ? new Date(action.actionStartDateTimeUtc)
@@ -45,10 +60,8 @@ export function ActionCard({ action, duplicateAction, removeAction, selectAction
             <SummaryContent>
               <Title>
                 Contrôle{!!action.actionNumberOfControls && action.actionNumberOfControls > 1 ? 's ' : ' '}
-                {action.actionTheme ? (
-                  <Accented>{`${action.actionTheme} ${
-                    action.actionSubTheme ? ` - ${action.actionSubTheme}` : ''
-                  }`}</Accented>
+                {action.themes?.length > 0 && action.themes[0]?.theme ? (
+                  <Accented>{extractThemesAsText(action.themes)}</Accented>
                 ) : (
                   'à renseigner'
                 )}
@@ -56,9 +69,8 @@ export function ActionCard({ action, duplicateAction, removeAction, selectAction
               {!!action.actionNumberOfControls && action.actionNumberOfControls > 0 && (
                 <ControlSummary>
                   <Accented>{action.actionNumberOfControls}</Accented>
-                  {` contrôle${action.actionNumberOfControls > 1 ? 's' : ''} réalisé${
-                    action.actionNumberOfControls > 1 ? 's' : ''
-                  } sur des cibles de type `}
+                  {` contrôle${action.actionNumberOfControls > 1 ? 's' : ''}`}
+                  {` réalisé${action.actionNumberOfControls > 1 ? 's' : ''} sur des cibles de type `}
                   <Accented>
                     {(!!action.actionTargetType && actionTargetTypeEnum[action.actionTargetType]?.libelle) ||
                       'non spécifié'}
@@ -80,10 +92,8 @@ export function ActionCard({ action, duplicateAction, removeAction, selectAction
             <SummaryContent>
               <Title>
                 Surveillance{' '}
-                {action.actionTheme ? (
-                  <Accented>{`${action.actionTheme} ${
-                    action.actionSubTheme ? ` - ${action.actionSubTheme}` : ''
-                  }`}</Accented>
+                {action.themes && action.themes?.length > 0 ? (
+                  <Accented>{extractThemesAsText(action.themes)}</Accented>
                 ) : (
                   'à renseigner'
                 )}
@@ -227,7 +237,7 @@ const ButtonsWrapper = styled.div`
 `
 
 const Accented = styled.span`
-  font-weight: bold;
+  font-weight: bolder;
 `
 
 const DeleteIcon = styled(DeleteSVG)`

@@ -1,8 +1,10 @@
+import { isBefore } from 'date-fns'
+import { useMemo } from 'react'
 import { Dropdown } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import { ActionTypeEnum } from '../../../domain/entities/missions'
+import { ActionTypeEnum, EnvAction } from '../../../domain/entities/missions'
 import { ReactComponent as ControlSVG } from '../../../uiMonitor/icons/Control.svg'
 import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/Note_libre.svg'
 import { ReactComponent as SurveillanceSVG } from '../../../uiMonitor/icons/Observation.svg'
@@ -11,18 +13,40 @@ import { actionFactory } from '../Missions.helpers'
 import { ActionCard } from './ActionCard'
 
 export function ActionsForm({ currentActionIndex, form, remove, setCurrentActionIndex, unshift }) {
+  const envActions = form?.values?.envActions as EnvAction[] | undefined
+  const currentActionId = envActions && envActions[currentActionIndex]?.id
+  const sortedEnvActions = useMemo(
+    () =>
+      form.values.envActions &&
+      [...form.values.envActions].sort((a, b) => {
+        if (a.actionStartDateTimeUtc === undefined) {
+          return -1
+        }
+        if (b.actionStartDateTimeUtc === undefined) {
+          return +1
+        }
+
+        return isBefore(new Date(a.actionStartDateTimeUtc), new Date(b.actionStartDateTimeUtc)) ? +1 : -1
+      }),
+    [form?.values]
+  )
+
   const handleAddSurveillanceAction = () => unshift(actionFactory({ actionType: ActionTypeEnum.SURVEILLANCE }))
   const handleAddControlAction = () => unshift(actionFactory({ actionType: ActionTypeEnum.CONTROL }))
   const handleAddNoteAction = () => unshift(actionFactory({ actionType: ActionTypeEnum.NOTE }))
-  const handleSelectAction = index => () => setCurrentActionIndex(index)
-  const handleRemoveAction = index => e => {
+  const handleSelectAction = id => () => setCurrentActionIndex(envActions && envActions.findIndex(a => a.id === id))
+  const handleRemoveAction = id => e => {
     e.stopPropagation()
+    remove(envActions && envActions.findIndex(a => a.id === id))
     setCurrentActionIndex(null)
-    remove(index)
   }
-  const handleDuplicateAction = index => () => {
-    unshift(actionFactory(form.values.envActions[index]))
-    setCurrentActionIndex(0)
+
+  const handleDuplicateAction = id => () => {
+    const envAction = envActions && envActions.find(a => a.id === id)
+    if (envAction) {
+      unshift(actionFactory(envAction))
+      setCurrentActionIndex(0)
+    }
   }
 
   return (
@@ -42,15 +66,15 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
         </Dropdown>
       </TitleWrapper>
       <ActionsTimeline>
-        {form?.values.envActions?.length > 0 ? (
-          form.values.envActions.map((action, index) => (
+        {sortedEnvActions?.length > 0 ? (
+          sortedEnvActions.map(action => (
             <ActionCard
               key={action.id}
               action={action}
-              duplicateAction={handleDuplicateAction(index)}
-              removeAction={handleRemoveAction(index)}
-              selectAction={handleSelectAction(index)}
-              selected={index === currentActionIndex}
+              duplicateAction={handleDuplicateAction(action.id)}
+              removeAction={handleRemoveAction(action.id)}
+              selectAction={handleSelectAction(action.id)}
+              selected={action.id === currentActionId}
             />
           ))
         ) : (

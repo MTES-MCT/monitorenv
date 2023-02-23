@@ -194,28 +194,28 @@ export enum VesselSizeEnum {
 
 export const protectedSpeciesEnum = {
   BIRDS: {
-    code: 'BIRDS',
-    libelle: 'Oiseaux'
+    label: 'Oiseaux',
+    value: 'BIRDS'
   },
   FLORA: {
-    code: 'FLORA',
-    libelle: 'Flore'
+    label: 'Flore',
+    value: 'FLORA'
   },
   HABITAT: {
-    code: 'HABITAT',
-    libelle: 'Habitat'
+    label: 'Habitat',
+    value: 'HABITAT'
   },
   MARINE_MAMMALS: {
-    code: 'MARINE_MAMMALS',
-    libelle: 'Mammifères marins'
+    label: 'Mammifères marins',
+    value: 'MARINE_MAMMALS'
   },
   OTHER: {
-    code: 'OTHER',
-    libelle: 'Autres espèces protégées'
+    label: 'Autres espèces protégées',
+    value: 'OTHER'
   },
   REPTILES: {
-    code: 'REPTILES',
-    libelle: 'Reptiles'
+    label: 'Reptiles',
+    value: 'REPTILES'
   }
 }
 
@@ -270,11 +270,11 @@ export type ResourceUnit = {
   administration: string
 }
 
-export type MissionType<EnvActionType = EnvActionControlType | EnvActionSurveillanceType | EnvActionNoteType> = {
+export type MissionType<EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote> = {
   closedBy: string
   controlUnits: Omit<ControlUnit, 'id'>[]
   endDateTimeUtc: string
-  envActions: Array<EnvActionType>
+  envActions: EnvAction[]
   facade: string
   geom?: Record<string, any>[]
   id: number
@@ -290,35 +290,37 @@ export type MissionType<EnvActionType = EnvActionControlType | EnvActionSurveill
 
 export type NewMissionType = Omit<MissionType, 'id' | 'facade'>
 
-export type EnvActionType = EnvActionControlType | EnvActionSurveillanceType | EnvActionNoteType
+export type EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote
 
 export type EnvActionCommonProperties = {
   actionStartDateTimeUtc?: string
   geom?: Record<string, any>[]
   id: string
 }
-export type EnvActionControlType = EnvActionCommonProperties & {
+
+export type EnvActionTheme = {
+  protectedSpecies?: string[]
+  subThemes?: string[]
+  theme: string
+}
+export type EnvActionControl = EnvActionCommonProperties & {
   actionNumberOfControls?: number
-  actionSubTheme?: string
   actionTargetType?: string
-  actionTheme?: string
   actionType: ActionTypeEnum.CONTROL
   infractions: InfractionType[]
-  protectedSpecies?: string
+  themes: EnvActionTheme[]
   vehicleType: string
 }
 
-export type EnvActionSurveillanceType = EnvActionCommonProperties & {
-  actionSubTheme?: string
-  actionTheme?: string
+export type EnvActionSurveillance = EnvActionCommonProperties & {
   actionType: ActionTypeEnum.SURVEILLANCE
   coverMissionZone?: boolean
   duration: number
   observations: string
-  protectedSpecies?: string
+  themes: EnvActionTheme[]
 }
 
-export type EnvActionNoteType = EnvActionCommonProperties & {
+export type EnvActionNote = EnvActionCommonProperties & {
   actionType: ActionTypeEnum.NOTE
   observations?: string
 }
@@ -343,9 +345,9 @@ export const getMissionStatus = ({
   isClosed,
   startDateTimeUtc
 }: {
-  endDateTimeUtc: string
-  isClosed: Boolean
-  startDateTimeUtc: string
+  endDateTimeUtc?: string
+  isClosed?: Boolean
+  startDateTimeUtc?: string
 }) => {
   if (isClosed) {
     return missionStatusEnum.CLOSED.code
@@ -354,7 +356,7 @@ export const getMissionStatus = ({
     if (parseISO(startDateTimeUtc) && compareAsc(parseISO(startDateTimeUtc), Date.now()) >= 0) {
       return missionStatusEnum.UPCOMING.code
     }
-    if (parseISO(endDateTimeUtc) && compareDesc(parseISO(endDateTimeUtc), Date.now()) >= 0) {
+    if (endDateTimeUtc && parseISO(endDateTimeUtc) && compareDesc(parseISO(endDateTimeUtc), Date.now()) >= 0) {
       return missionStatusEnum.ENDED.code
     }
 

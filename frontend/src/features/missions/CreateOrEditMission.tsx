@@ -149,10 +149,10 @@ export function CreateOrEditMission() {
                 <ThirdColumn>
                   <FieldArray
                     name="envActions"
-                    render={props => (
+                    render={({ remove }) => (
                       <ActionForm
-                        {...props}
                         currentActionIndex={currentActionIndex}
+                        remove={remove}
                         setCurrentActionIndex={handleSetCurrentActionIndex}
                       />
                     )}
