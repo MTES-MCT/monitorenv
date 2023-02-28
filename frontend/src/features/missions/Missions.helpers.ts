@@ -85,8 +85,8 @@ export const missionFactory = (mission = {}): MissionType | NewMissionType => ({
 
 export const controlUnitFactory = ({ ...resourceUnit } = {}): Omit<ControlUnit, 'id'> => ({
   administration: '',
-  name: '',
   isArchived: false,
+  name: '',
   resources: [],
   ...resourceUnit
 })

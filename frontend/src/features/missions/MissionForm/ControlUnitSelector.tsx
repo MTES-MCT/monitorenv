@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { useField } from 'formik'
 import _ from 'lodash'
-import {MutableRefObject, useMemo, useRef} from 'react'
+import { MutableRefObject, useMemo, useRef } from 'react'
 import { Form, IconButton, TagPicker } from 'rsuite'
 import styled from 'styled-components'
 
