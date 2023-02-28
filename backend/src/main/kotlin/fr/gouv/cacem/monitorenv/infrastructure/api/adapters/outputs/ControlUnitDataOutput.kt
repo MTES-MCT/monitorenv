@@ -5,6 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEnti
 data class ControlUnitDataOutput(
     val id: Int,
     val administration: String,
+    val isArchived: Boolean,
     val name: String,
     val resources: List<ControlResourceDataOutput>
 ) {
@@ -13,6 +14,7 @@ data class ControlUnitDataOutput(
             id = controlUnit.id,
             administration = controlUnit.administration,
             name = controlUnit.name,
+            isArchived = controlUnit.isArchived,
             resources = controlUnit.resources.map {
                 ControlResourceDataOutput.fromControlResourceEntity(it)
             }

@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { useField } from 'formik'
 import _ from 'lodash'
-import { MutableRefObject, useRef } from 'react'
+import {MutableRefObject, useMemo, useRef} from 'react'
 import { Form, IconButton, TagPicker } from 'rsuite'
 import styled from 'styled-components'
 
@@ -24,18 +24,20 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
   const resourcesRef = useRef() as MutableRefObject<HTMLDivElement>
   const { data, isError, isLoading } = useGetControlUnitsQuery()
 
-  const administrationList = _.chain(data)
+  const filteredControlUnits = useMemo(() => data?.filter(unit => !unit.isArchived) || [], [data])
+
+  const administrationList = _.chain(filteredControlUnits)
     .map(unit => unit.administration)
     .uniq()
     .sort((a, b) => a?.localeCompare(b))
     .map(administration => ({ administration }))
     .value()
-  const unitList = _.chain(data)
+  const unitList = _.chain(filteredControlUnits)
     .filter(unit => (administrationField.value ? administrationField.value === unit.administration : true))
     .sort((a, b) => a?.name?.localeCompare(b?.name))
     .value()
   const resourcesList =
-    _.chain(data)
+    _.chain(filteredControlUnits)
       ?.find(unit => unit.administration === administrationField.value && unit.id === unitField.value)
       ?.value()?.resources || []
 
@@ -51,7 +53,7 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
     if (value !== administrationField.value) {
       administrationHelpers.setValue(value)
       const newUnitList = _.uniqBy(
-        _.filter(data, r => r.administration === value),
+        _.filter(filteredControlUnits, r => r.administration === value),
         'name'
       )
       if (newUnitList.length === 1 && newUnitList[0]?.id) {

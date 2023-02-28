@@ -39,6 +39,7 @@ class ControlUnitsControllerITests {
         val controlUnit = ControlUnitEntity(
             id = 4,
             administration = "Gendarmerie nationale",
+            isArchived = false,
             name = "DF 123",
             resources = listOf(ControlResourceEntity(1, "Vedette"))
         )
@@ -51,6 +52,7 @@ class ControlUnitsControllerITests {
             .andExpect(jsonPath("$[0].id", equalTo(controlUnit.id)))
             .andExpect(jsonPath("$[0].administration", equalTo(controlUnit.administration)))
             .andExpect(jsonPath("$[0].name", equalTo(controlUnit.name)))
+            .andExpect(jsonPath("$[0].isArchived", equalTo(false)))
             .andExpect(jsonPath("$[0].resources[0].name", equalTo(controlUnit.resources.first().name)))
     }
 }
