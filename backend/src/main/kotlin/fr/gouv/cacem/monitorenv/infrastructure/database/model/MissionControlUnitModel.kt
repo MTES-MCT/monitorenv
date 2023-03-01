@@ -24,6 +24,7 @@ data class MissionControlUnitModel(
             unit = ControlUnitModel(
                 id = controlUnitEntity.id,
                 name = controlUnitEntity.name,
+                isArchived = controlUnitEntity.isArchived,
                 administration = AdministrationModel(name = controlUnitEntity.administration)
             ),
             mission = mission,

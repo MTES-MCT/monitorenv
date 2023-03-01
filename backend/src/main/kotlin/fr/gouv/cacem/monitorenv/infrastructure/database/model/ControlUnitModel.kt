@@ -15,6 +15,8 @@ data class ControlUnitModel(
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "administration_id")
     var administration: AdministrationModel,
+    @Column(name = "archived")
+    var isArchived: Boolean,
     @OneToMany(
         fetch = FetchType.EAGER,
         mappedBy = "controlUnit",
@@ -27,6 +29,7 @@ data class ControlUnitModel(
     fun toControlUnit() = ControlUnitEntity(
         id = id,
         administration = administration.name,
+        isArchived = isArchived,
         name = name,
         resources = resources?.map { it.toControlResource() } ?: listOf()
     )

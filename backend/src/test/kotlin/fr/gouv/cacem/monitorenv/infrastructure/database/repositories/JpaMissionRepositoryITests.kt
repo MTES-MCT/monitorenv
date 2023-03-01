@@ -47,6 +47,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     id = 10006,
                     name = "DPM – DDTM 35",
                     administration = "DDTM",
+                    isArchived = false,
                     resources = listOf(ControlResourceEntity(id = 8, name = "PAM Jeanne Barret"))
                 )
             )
@@ -91,6 +92,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                                 id = 10006,
                                 name = "DPM – DDTM 35",
                                 administration = "DDTM",
+                                isArchived = false,
                                 resources = listOf(ControlResourceEntity(id = 8, name = "PAM Jeanne Barret"))
                         )
                 )
@@ -103,6 +105,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                         id = 10006,
                         name = "DPM – DDTM 35",
                         administration = "DDTM",
+                        isArchived = false,
                         resources = listOf(
                                 ControlResourceEntity(id = 8, name = "PAM Jeanne Barret"),
                                 ControlResourceEntity(id = 5, name = "Voiture"))
@@ -136,6 +139,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     id = 10006,
                     name = "DPM – DDTM 35",
                     administration = "DDTM",
+                    isArchived = false,
                     resources = listOf(ControlResourceEntity(id = 123456, name = "PAM Jeanne Barret"))
                 )
             )
@@ -161,7 +165,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             isClosed = false,
             isDeleted = false,
             missionSource = MissionSourceEnum.MONITORENV,
-            controlUnits = listOf(ControlUnitEntity(id = 123456, name = "PAM Jeanne Barret", administration = "", resources = listOf()))
+            controlUnits = listOf(ControlUnitEntity(id = 123456, name = "PAM Jeanne Barret", administration = "", isArchived = false, resources = listOf()))
         )
 
         // When
@@ -380,6 +384,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 ControlUnitEntity(
                     id = 10003,
                     administration = "DDTM",
+                    isArchived = false,
                     name = "DML 2A",
                     resources = listOf(
                         ControlResourceEntity(id = 3, name = "Semi-rigide 1"),

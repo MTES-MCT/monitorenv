@@ -84,7 +84,6 @@ const Wrapper = styled.div`
   position: absolute;
   top: 55px;
   right: 10px;
-  width: 365px;
   display: flex;
   justify-content: flex-end;
 `

@@ -4,6 +4,7 @@ export type ControlUnit = {
   administration: string
   contact?: string
   id: number
+  isArchived: boolean
   name: string
   resources: ControlResource[]
 }
