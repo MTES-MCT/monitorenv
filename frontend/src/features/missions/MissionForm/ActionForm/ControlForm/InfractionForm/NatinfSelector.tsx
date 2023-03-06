@@ -1,27 +1,13 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import { MultiSelect } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { useMemo } from 'react'
-import { Form } from 'rsuite'
-import styled from 'styled-components'
 
 import { useGetInfractionsQuery } from '../../../../../../api/infractionsAPI'
 import { useNewWindow } from '../../../../../../ui/NewWindow'
 
 import type { NatinfType } from '../../../../../../domain/entities/natinfs'
 
-const sortNatinf = (a, b) => {
-  if (a?.natinfCode < b?.natinfCode) {
-    return -1
-  }
-  if (a?.natinfCode > b?.natinfCode) {
-    return 1
-  }
-
-  return 0
-}
-
-export function NatinfSelector({ infractionPath, ...props }) {
+export function NatinfSelector({ infractionPath }) {
   const { newWindowContainerRef } = useNewWindow()
   const [natinfField, , natinfHelpers] = useField(`${infractionPath}.natinf`)
   const { data, isError, isLoading } = useGetInfractionsQuery()
@@ -52,25 +38,27 @@ export function NatinfSelector({ infractionPath, ...props }) {
   }
 
   return (
-    <SelectorWrapper>
-      <Form.ControlLabel htmlFor="natinf">NATINF</Form.ControlLabel>
-      <MultiSelect<NatinfType>
-        baseContainer={newWindowContainerRef.current}
-        block
-        defaultValue={valuesAsOptions}
-        isLabelHidden
-        label="infraction-natinf"
-        name="infraction-natinf"
-        onChange={setValue}
-        options={sortedData}
-        searchable
-        virtualized
-        {...props}
-      />
-    </SelectorWrapper>
+    <MultiSelect<NatinfType>
+      baseContainer={newWindowContainerRef.current}
+      block
+      defaultValue={valuesAsOptions}
+      label="NATINF"
+      name="infraction-natinf"
+      onChange={setValue}
+      options={sortedData}
+      searchable
+      virtualized
+    />
   )
 }
 
-const SelectorWrapper = styled.div`
-  position: relative;
-`
+const sortNatinf = (a, b) => {
+  if (a?.natinfCode < b?.natinfCode) {
+    return -1
+  }
+  if (a?.natinfCode > b?.natinfCode) {
+    return 1
+  }
+
+  return 0
+}
