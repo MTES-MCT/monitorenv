@@ -42,7 +42,7 @@ const openDrawLayerModal = dispatch => {
       displayDrawModal: true,
       displayInterestPoint: false,
       displayLayersSidebar: false,
-      displayLocateOnMap: false,
+      displayLocateOnMap: true,
       displayMeasurement: false,
       displayMissionMenuButton: false,
       displayMissionsLayer: false,

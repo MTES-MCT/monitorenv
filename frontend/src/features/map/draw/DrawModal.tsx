@@ -258,7 +258,9 @@ const QuitButton = styled(IconButton)`
   }
 `
 
-const ResetButton = styled(Button)``
+const ResetButton = styled(Button)`
+  margin-left: 40px;
+`
 const ValidateButton = styled(Button)`
   background: ${COLORS.mediumSeaGreen};
   color: ${COLORS.white};

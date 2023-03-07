@@ -1,10 +1,56 @@
-/* eslint-disable react/jsx-props-no-spreading */
+import { MultiSelect } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
-import { MutableRefObject, useRef, useMemo } from 'react'
-import { Form, Tag, TagPicker } from 'rsuite'
-import styled from 'styled-components'
+import { useMemo } from 'react'
 
 import { useGetInfractionsQuery } from '../../../../../../api/infractionsAPI'
+import { useNewWindow } from '../../../../../../ui/NewWindow'
+
+import type { NatinfType } from '../../../../../../domain/entities/natinfs'
+
+export function NatinfSelector({ infractionPath }) {
+  const { newWindowContainerRef } = useNewWindow()
+  const [natinfField, , natinfHelpers] = useField(`${infractionPath}.natinf`)
+  const { data, isError, isLoading } = useGetInfractionsQuery()
+
+  const valuesAsOptions = useMemo(
+    () => natinfField.value.map(natinfCode => data?.find(natinf => natinf.natinfCode === natinfCode)),
+    [data, natinfField]
+  )
+  const sortedData = useMemo(
+    () =>
+      (data &&
+        [...data]?.sort(sortNatinf).map(item => ({ label: `${item.natinfCode} - ${item.infraction}`, value: item }))) ||
+      [],
+    [data]
+  )
+
+  const setValue = (nextValue: NatinfType[] | undefined) => {
+    const natinfCodes = nextValue?.map(natinf => natinf.natinfCode) || []
+    natinfHelpers.setValue(natinfCodes)
+  }
+
+  if (isError) {
+    return <div>Erreur</div>
+  }
+
+  if (isLoading) {
+    return <div>Chargement</div>
+  }
+
+  return (
+    <MultiSelect<NatinfType>
+      baseContainer={newWindowContainerRef.current}
+      block
+      defaultValue={valuesAsOptions}
+      label="NATINF"
+      name="infraction-natinf"
+      onChange={setValue}
+      options={sortedData}
+      searchable
+      virtualized
+    />
+  )
+}
 
 const sortNatinf = (a, b) => {
   if (a?.natinfCode < b?.natinfCode) {
@@ -16,47 +62,3 @@ const sortNatinf = (a, b) => {
 
   return 0
 }
-
-export function NatinfSelector({ infractionPath, ...props }) {
-  const [natinfField, , natinfHelpers] = useField(`${infractionPath}.natinf`)
-
-  const selectorRef = useRef() as MutableRefObject<HTMLDivElement>
-  const { data, isError, isLoading } = useGetInfractionsQuery()
-  const sortedData = useMemo(() => data && [...data]?.sort(sortNatinf), [data])
-  if (isError) {
-    return <div>Erreur</div>
-  }
-  if (isLoading) {
-    return <div>Chargement</div>
-  }
-
-  return (
-    <SelectorWrapper ref={selectorRef}>
-      <Form.ControlLabel htmlFor="natinf">NATINF</Form.ControlLabel>
-      <FixedWidthTagPicker
-        block
-        container={() => selectorRef.current}
-        data={sortedData}
-        labelKey="natinfCode"
-        onChange={natinfHelpers.setValue}
-        renderMenuItem={(_, item) => `${item.natinfCode} - ${item.infraction}`}
-        renderValue={(_, items) => items?.map(tag => <Tag key={tag.id}>{`${tag.natinfCode} - ${tag.infraction}`}</Tag>)}
-        searchable
-        value={natinfField.value}
-        valueKey="natinfCode"
-        virtualized
-        {...props}
-      />
-    </SelectorWrapper>
-  )
-}
-
-const SelectorWrapper = styled.div`
-  position: relative;
-  .rs-picker-menu {
-  }
-`
-
-const FixedWidthTagPicker = styled(TagPicker)`
-  max-width: 450px;
-`

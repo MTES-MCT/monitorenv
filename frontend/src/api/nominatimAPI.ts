@@ -3,7 +3,7 @@ import { useEffect, useState, useMemo, useRef, MutableRefObject } from 'react'
 
 const NOMINATIM_API_URL = 'https://nominatim.openstreetmap.org/search'
 
-type Place = {
+export type Place = {
   address: {
     country?: string
     country_code?: string

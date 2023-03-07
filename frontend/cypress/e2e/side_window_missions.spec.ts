@@ -14,10 +14,12 @@ context('Missions', () => {
 
     cy.log('A default date filter should be set')
     const thirtyDaysAgo = dayjs().subtract(30, 'days')
+    const date = thirtyDaysAgo.get('date')
+    const day = date < 10 ? '0' + date : date
     const month =
       thirtyDaysAgo.get('month') <= 9 ? `0${Number(thirtyDaysAgo.get('month') + 1)}` : thirtyDaysAgo.get('month') + 1
     cy.get('*[data-cy="datepicker-missionStartedAfter"]').contains(
-      `${thirtyDaysAgo.get('year')}-${month}-${thirtyDaysAgo.get('date')}`
+      `${thirtyDaysAgo.get('year')}-${month}-${day}`
     )
 
     cy.log('Units should be filtered')
