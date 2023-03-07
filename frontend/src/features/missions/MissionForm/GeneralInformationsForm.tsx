@@ -27,7 +27,7 @@ export function GeneralInformationsForm() {
             baseContainer={newWindowContainerRef.current}
             isCompact
             isStringDate
-            label="Début de mission"
+            label="Début de mission (UTC)"
             name="startDateTimeUtc"
             withTime
           />
@@ -37,7 +37,7 @@ export function GeneralInformationsForm() {
             baseContainer={newWindowContainerRef.current}
             isCompact
             isStringDate
-            label="Fin de mission"
+            label="Fin de mission (UTC)"
             name="endDateTimeUtc"
             withTime
           />

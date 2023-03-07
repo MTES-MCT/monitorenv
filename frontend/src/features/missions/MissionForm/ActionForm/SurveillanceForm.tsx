@@ -44,7 +44,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
             isCompact
             isLight
             isStringDate
-            label="Date et heure du début de la surveillance"
+            label="Date et heure du début de la surveillance (UTC)"
             name={`envActions[${currentActionIndex}].actionStartDateTimeUtc`}
             withTime
           />
