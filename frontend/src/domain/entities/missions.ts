@@ -293,7 +293,7 @@ export type NewMissionType = Omit<MissionType, 'id' | 'facade'>
 export type EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote
 
 export type EnvActionCommonProperties = {
-  actionStartDateTimeUtc?: string
+  actionStartDateTimeUtc?: string | null
   geom?: Record<string, any>[]
   id: string
 }
@@ -316,7 +316,7 @@ export type EnvActionSurveillance = EnvActionCommonProperties & {
   actionType: ActionTypeEnum.SURVEILLANCE
   coverMissionZone?: boolean
   duration: number
-  observations: string
+  observations: string | null
   themes: EnvActionTheme[]
 }
 
@@ -327,17 +327,17 @@ export type EnvActionNote = EnvActionCommonProperties & {
 
 export type InfractionType = {
   companyName?: string
-  controlledPersonIdentity?: string
+  controlledPersonIdentity?: string | null
   formalNotice: FormalNoticeEnum
   id: string
   infractionType: InfractionTypeEnum
   natinf?: string[]
-  observations?: string
-  registrationNumber?: string
-  relevantCourt?: string
+  observations?: string | null
+  registrationNumber?: string | null
+  relevantCourt?: string | null
   toProcess: boolean
-  vesselSize?: VesselSizeEnum
-  vesselType?: VesselTypeEnum
+  vesselSize?: VesselSizeEnum | null
+  vesselType?: VesselTypeEnum | null
 }
 
 export const getMissionStatus = ({
@@ -345,9 +345,9 @@ export const getMissionStatus = ({
   isClosed,
   startDateTimeUtc
 }: {
-  endDateTimeUtc?: string
+  endDateTimeUtc?: string | null
   isClosed?: Boolean
-  startDateTimeUtc?: string
+  startDateTimeUtc?: string | null
 }) => {
   if (isClosed) {
     return missionStatusEnum.CLOSED.code

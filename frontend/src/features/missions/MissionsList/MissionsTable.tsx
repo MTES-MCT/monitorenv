@@ -40,12 +40,12 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
       sortColumn={sortColumn}
       sortType={sortType}
     >
-      <Table.Column sortable width={140}>
+      <Table.Column sortable width={180}>
         <Table.HeaderCell>Date de début</Table.HeaderCell>
         <DateCell dataKey="startDateTimeUtc" />
       </Table.Column>
 
-      <Table.Column sortable width={140}>
+      <Table.Column sortable width={180}>
         <Table.HeaderCell>Date de fin</Table.HeaderCell>
         <DateCell dataKey="endDateTimeUtc" />
       </Table.Column>

@@ -122,7 +122,7 @@ export function ControlForm({
             baseContainer={newWindowContainerRef.current}
             isLight
             isStringDate
-            label="Date et heure du contrôle"
+            label="Date et heure du contrôle (UTC)"
             name={`envActions[${currentActionIndex}].actionStartDateTimeUtc`}
             withTime
           />

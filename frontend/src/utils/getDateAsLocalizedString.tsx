@@ -7,28 +7,28 @@ export function formatDateLabel(dateLabel: string) {
   )
 }
 
-export function getDateAsLocalizedStringExpanded(date: string | undefined) {
-  if (date === undefined || date.trim() === '') {
+export function getDateAsLocalizedStringExpanded(date: string | undefined | null) {
+  if (!date || date.trim() === '') {
     return undefined
   }
   const dayJsDate = getLocalizedDayjs(date)
 
   return (
     <>
-      <b>{formatDateLabel(dayJsDate.format('DD MMM'))}</b> à {dayJsDate.format('HH:mm')}
+      <b>{formatDateLabel(dayJsDate.format('DD MMM'))}</b> à {dayJsDate.format('HH:mm')} (UTC)
     </>
   )
 }
 
-export function getDateAsLocalizedStringCompact(date: string | undefined) {
-  if (date === undefined || date.trim() === '') {
+export function getDateAsLocalizedStringCompact(date: string | undefined | null) {
+  if (!date || date.trim() === '') {
     return undefined
   }
   const dayJsDate = getLocalizedDayjs(date)
 
   return (
     <>
-      {formatDateLabel(dayJsDate.format('DD MMM YY'))}, {dayJsDate.format('HH')}h{dayJsDate.format('mm')}
+      {formatDateLabel(dayJsDate.format('DD MMM YY'))}, {dayJsDate.format('HH')}h{dayJsDate.format('mm')} (UTC)
     </>
   )
 }
