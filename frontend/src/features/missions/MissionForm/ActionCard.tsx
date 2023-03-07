@@ -1,5 +1,3 @@
-import { format, isValid } from 'date-fns'
-import { fr } from 'date-fns/locale'
 import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
@@ -17,6 +15,7 @@ import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg
 import { ReactComponent as DuplicateSVG } from '../../../uiMonitor/icons/Duplicate.svg'
 import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/Note_libre.svg'
 import { ReactComponent as SurveillanceIconSVG } from '../../../uiMonitor/icons/Observation.svg'
+import { getDateAsLocalizedStringExpanded } from '../../../utils/getDateAsLocalizedString'
 
 import type { MouseEventHandler } from 'react'
 
@@ -37,21 +36,10 @@ function extractThemesAsText(themes: EnvActionTheme[]) {
 }
 
 export function ActionCard({ action, duplicateAction, removeAction, selectAction, selected }: ActionCardProps) {
-  const parsedActionStartDateTimeUtc = action.actionStartDateTimeUtc
-    ? new Date(action.actionStartDateTimeUtc)
-    : undefined
-
   return (
     <Action data-cy="action-card" onClick={selectAction}>
       <TimeLine>
-        <DateTimeWrapper>
-          {parsedActionStartDateTimeUtc && isValid(parsedActionStartDateTimeUtc) && (
-            <>
-              <DateWrapper>{format(parsedActionStartDateTimeUtc, 'dd MMM', { locale: fr })}</DateWrapper>
-              <Time>à {format(parsedActionStartDateTimeUtc, 'HH:mm', { locale: fr })}</Time>
-            </>
-          )}
-        </DateTimeWrapper>
+        <DateTimeWrapper>{getDateAsLocalizedStringExpanded(action.actionStartDateTimeUtc)}</DateTimeWrapper>
       </TimeLine>
       <ActionSummaryWrapper $type={action.actionType} selected={selected}>
         {action.actionType === ActionTypeEnum.CONTROL && (
@@ -149,16 +137,11 @@ const TimeLine = styled.div`
 `
 
 const DateTimeWrapper = styled.div`
+  font-size: 13px;
   margin-bottom: 4px;
   margin-top: 4px;
 `
-const DateWrapper = styled.div`
-  font-weight: bold;
-  font-size: 13px;
-`
-const Time = styled.div`
-  font-size: 13px;
-`
+
 const ActionSummaryWrapper = styled.div<{ $type: string; selected: boolean }>`
   display: flex;
   flex: 1;
