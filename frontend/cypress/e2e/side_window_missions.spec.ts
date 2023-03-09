@@ -202,7 +202,7 @@ context('Missions', () => {
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('13')
   })
 
-  it.only('Missions from POSEIDON_CACEM must not be editable', () => {
+  it('Missions from POSEIDON_CACEM must not be editable', () => {
     // Given
     cy.intercept('GET', `/bff/v1/missions/51`).as('getMissionPoseidonCacem')
     cy.get('*[data-cy="edit-mission"]').eq(10).click()
