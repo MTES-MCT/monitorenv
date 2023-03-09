@@ -190,7 +190,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionStatuses = null,
             pageable = Pageable.unpaged()
         )
-        assertThat(missions).hasSize(50)
+        assertThat(missions).hasSize(53)
     }
 
     @Test
@@ -220,7 +220,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionStatuses = null,
             pageable = Pageable.unpaged()
         )
-        assertThat(missions).hasSize(26)
+        assertThat(missions).hasSize(29)
     }
 
     @Test
@@ -235,7 +235,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionStatuses = null,
             pageable = Pageable.unpaged()
         )
-        assertThat(missions).hasSize(43)
+        assertThat(missions).hasSize(46)
     }
 
     @Test
@@ -250,7 +250,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionStatuses = null,
             pageable = Pageable.unpaged()
         )
-        assertThat(missions).hasSize(18)
+        assertThat(missions).hasSize(21)
     }
 
     @Test
@@ -265,7 +265,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionStatuses = null,
             pageable = Pageable.unpaged()
         )
-        assertThat(missions).hasSize(41)
+        assertThat(missions).hasSize(44)
     }
 
     @Test
@@ -310,7 +310,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionStatuses = listOf("ENDED"),
             pageable = Pageable.unpaged()
         )
-        assertThat(missions).hasSize(12)
+        assertThat(missions).hasSize(15)
     }
 
     @Test
@@ -356,6 +356,22 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             pageable = PageRequest.of(1, 10)
         )
         assertThat(missions).hasSize(10)
+    }
+
+    @Test
+    @Transactional
+    fun `findAllMissions should filter missions based on MissionSources`() {
+        // When
+        val missions = jpaMissionRepository.findAllMissions(
+            startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
+            startedBefore = null,
+            missionNatures = null,
+            missionTypes = null,
+            missionStatuses = null,
+            missionSources = listOf(MissionSourceEnum.MONITORFISH,MissionSourceEnum.POSEIDON_CACEM, MissionSourceEnum.POSEIDON_CNSP),
+            pageable = Pageable.unpaged()
+        )
+        assertThat(missions).hasSize(3)
     }
 
     @Test

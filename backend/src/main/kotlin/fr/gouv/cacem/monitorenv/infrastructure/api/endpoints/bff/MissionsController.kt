@@ -16,7 +16,7 @@ import javax.websocket.server.PathParam
 @Tag(description = "API Missions", name = "Missions")
 class MissionsController(
     private val createMission: CreateMission,
-    private val getMissions: GetMissions,
+    private val getMonitorEnvMissions: GetMonitorEnvMissions,
     private val getMissionById: GetMissionById,
     private val updateMission: UpdateMission,
     private val deleteMission: DeleteMission
@@ -50,7 +50,7 @@ class MissionsController(
         missionStatuses: List<String>?
 
     ): List<MissionDataOutput> {
-        val missions = getMissions.execute(
+        val missions = getMonitorEnvMissions.execute(
             startedAfterDateTime = startedAfterDateTime,
             startedBeforeDateTime = startedBeforeDateTime,
             missionNatures = missionNatures,

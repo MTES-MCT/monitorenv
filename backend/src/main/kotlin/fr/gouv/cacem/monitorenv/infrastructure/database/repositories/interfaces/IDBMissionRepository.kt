@@ -20,33 +20,34 @@ interface IDBMissionRepository : CrudRepository<MissionModel, Int> {
         WHERE
             deleted IS FALSE
             AND start_datetime_utc >= :startedAfter
-            AND (cast(cast(:startedBefore as text) as timestamp) IS NULL OR start_datetime_utc <= cast(cast(:startedBefore as text) as timestamp))
+            AND (CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL OR start_datetime_utc <= CAST(CAST(:startedBefore AS text) AS timestamp))
             AND (list_to_array(:missionNatures) IS NULL OR mission_nature && list_to_array(:missionNatures))
             AND (list_to_array(:missionTypes) IS NULL OR mission_type = ANY(list_to_array(:missionTypes)))
             AND (list_to_array(:missionStatuses) IS NULL 
                 OR (
                     'UPCOMING' = ANY(list_to_array(:missionStatuses)) AND (
                     start_datetime_utc >= now()
-                    AND closed = false
+                    AND closed = FALSE
                     ))
                 OR ( 
                     'PENDING' = ANY(list_to_array(:missionStatuses)) AND (
                     (end_datetime_utc IS NULL OR end_datetime_utc >= now())
-                    AND closed = false
+                    AND closed = FALSE
                     )
                 )
                 OR ( 
                     'ENDED' = ANY(list_to_array(:missionStatuses)) AND (
                     end_datetime_utc < now() 
-                    AND closed = false
+                    AND closed = FALSE
                     )
                 )
                 OR (
                     'CLOSED' = ANY(list_to_array(:missionStatuses)) AND (
-                    closed = true
-                ))
-                
+                    closed = TRUE
+                    )
+                ) 
             )
+            AND (list_to_array(:missionSources) IS NULL OR CAST(mission_source AS text) = ANY(list_to_array(:missionSources)))
         ORDER BY start_datetime_utc DESC
         """,
         nativeQuery = true
@@ -57,6 +58,7 @@ interface IDBMissionRepository : CrudRepository<MissionModel, Int> {
         missionNatures: List<String>?,
         missionTypes: List<String>?,
         missionStatuses: List<String>?,
+        missionSources: List<String>?,
         pageable: Pageable
     ): List<MissionModel>
 

@@ -1,5 +1,8 @@
 TRUNCATE public.missions CASCADE;
 COPY public.missions (id, mission_type, open_by, observations_cacem, facade, start_datetime_utc, end_datetime_utc, geom, closed_by, mission_nature, deleted, observations_cnsp, mission_source, closed) FROM stdin;
+50	SEA	Kimberly Woodward	Mother including baby same. Evidence project air practice minute their. Trouble sing suggest maintain like know too.	F_MONITORFISH	2022-05-11 03:03:23.588693	2022-05-13 04:47:02.588693	\N	Charles Kennedy	{ENV,OTHER}	f	\N	MONITORFISH	f
+51	SEA	Kimberly Woodward	Mother including baby same. Evidence project air practice minute their. Trouble sing suggest maintain like know too.	F_POSEIDON_CACEM	2022-05-11 04:03:23.588693	2022-05-13 04:47:02.588693	\N	Charles Kennedy	{ENV,OTHER}	f	\N	POSEIDON_CACEM	f
+52	SEA	Kimberly Woodward	Mother including baby same. Evidence project air practice minute their. Trouble sing suggest maintain like know too.	F_POSEIDON_CNSP	2022-05-11 05:03:23.588693	2022-05-13 04:47:02.588693	\N	Charles Kennedy	{ENV,OTHER}	f	\N	POSEIDON_CNSP	f
 12	SEA	Kimberly Woodward	Mother including baby same. Evidence project air practice minute their. Trouble sing suggest maintain like know too.	NAMO	2022-02-24 10:56:33	2022-05-06 19:38:29	\N	Charles Kennedy	{ENV,OTHER}	f	\N	MONITORENV	f
 13	LAND	Tyler Dickerson	Receive hit themselves. Example community suggest seek to technology.	NAMO	2022-02-07 04:16:43	2022-07-10 19:55:50	\N	Robin Keller	{ENV,FISH}	f	\N	MONITORENV	f
 19	SEA	Scott Lopez	Difficult ahead let really old around. Cover operation seven surface use show. Manage beautiful reason account prepare evening sure.	NAMO	2022-06-21 13:24:04	2022-07-18 02:49:08	\N	Edward Gutierrez	{FISH}	 f	\N	MONITORENV	f
@@ -144,4 +147,4 @@ UPDATE public.missions SET
 -- Name: missions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.missions_id_seq', 50, true);
+SELECT pg_catalog.setval('public.missions_id_seq', 53, true);
