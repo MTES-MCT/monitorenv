@@ -14,6 +14,7 @@ import {
   useDeleteMissionMutation
 } from '../../api/missionsAPI'
 import { COLORS } from '../../constants/constants'
+import { MissionSourceEnum } from '../../domain/entities/missions'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { setError } from '../../domain/shared_slices/Global'
 import { setMissionState } from '../../domain/shared_slices/MissionsState'
@@ -164,9 +165,10 @@ export function CreateOrEditMission() {
                 <FormActionsWrapper>
                   {
                     // id is undefined if creating a new mission
-                    !(id === undefined) && (
+                    !(id === undefined) && !(missionToEdit?.missionSource === MissionSourceEnum.POSEIDON_CACEM) && (
                       <IconButton
                         appearance="ghost"
+                        data-cy="delete-mission"
                         icon={<DeleteIcon className="rs-icon" />}
                         onClick={handleConfirmDelete}
                         type="button"
@@ -176,20 +178,30 @@ export function CreateOrEditMission() {
                     )
                   }
                   <Separator />
-                  <Button onClick={handleConfirmFormCancelation} type="button">
+                  <Button data-cy="quit-edit-mission" onClick={handleConfirmFormCancelation} type="button">
                     Quitter
                   </Button>
-                  <IconButton appearance="ghost" icon={<SaveSVG className="rs-icon" />} type="submit">
-                    Enregistrer et quitter
-                  </IconButton>
-                  <IconButton
-                    appearance="primary"
-                    icon={<SaveSVG className="rs-icon" />}
-                    onClick={handleCloseMission}
-                    type="button"
-                  >
-                    Enregistrer et clôturer
-                  </IconButton>
+                  {!(missionToEdit?.missionSource === MissionSourceEnum.POSEIDON_CACEM) && (
+                    <>
+                      <IconButton
+                        appearance="ghost"
+                        data-cy="save-mission"
+                        icon={<SaveSVG className="rs-icon" />}
+                        type="submit"
+                      >
+                        Enregistrer et quitter
+                      </IconButton>
+                      <IconButton
+                        appearance="primary"
+                        data-cy="close-mission"
+                        icon={<SaveSVG className="rs-icon" />}
+                        onClick={handleCloseMission}
+                        type="button"
+                      >
+                        Enregistrer et clôturer
+                      </IconButton>
+                    </>
+                  )}
                 </FormActionsWrapper>
                 {errorOnSave && <ErrorOnSave>Oups... Erreur au moment de la sauvegarde</ErrorOnSave>}
                 {errorOnDelete && <ErrorOnDelete>Oups... Erreur au moment de la suppression</ErrorOnDelete>}
