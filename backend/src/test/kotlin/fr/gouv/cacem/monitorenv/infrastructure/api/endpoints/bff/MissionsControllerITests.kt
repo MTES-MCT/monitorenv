@@ -40,7 +40,7 @@ class MissionsControllerITests {
     private lateinit var createMission: CreateMission
 
     @MockBean
-    private lateinit var getMissions: GetMissions
+    private lateinit var getMonitorEnvMissions: GetMonitorEnvMissions
 
     @MockBean
     private lateinit var getMissionById: GetMissionById
@@ -120,7 +120,7 @@ class MissionsControllerITests {
             missionSource = MissionSourceEnum.MONITORENV
         )
         given(
-            this.getMissions.execute(
+            this.getMonitorEnvMissions.execute(
                 startedAfterDateTime = any(),
                 startedBeforeDateTime = any(),
                 missionNatures = any(),

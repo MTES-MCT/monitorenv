@@ -8,19 +8,17 @@ context('Missions', () => {
     cy.visit(`/side_window`)
   })
 
-  it('10 Missions should be displayed in Missions Table', () => {
+  it('12 Missions should be displayed in Missions Table', () => {
     cy.get('*[data-cy="SideWindowHeader-title"]').contains('Missions et contrôles')
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('10')
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('12')
 
     cy.log('A default date filter should be set')
     const thirtyDaysAgo = dayjs().subtract(30, 'days')
     const date = thirtyDaysAgo.get('date')
-    const day = date < 10 ? '0' + date : date
+    const day = date < 10 ? `0${date}` : date
     const month =
       thirtyDaysAgo.get('month') <= 9 ? `0${Number(thirtyDaysAgo.get('month') + 1)}` : thirtyDaysAgo.get('month') + 1
-    cy.get('*[data-cy="datepicker-missionStartedAfter"]').contains(
-      `${thirtyDaysAgo.get('year')}-${month}-${day}`
-    )
+    cy.get('*[data-cy="datepicker-missionStartedAfter"]').contains(`${thirtyDaysAgo.get('year')}-${month}-${day}`)
 
     cy.log('Units should be filtered')
     cy.get('*[data-cy="select-units-filter"]').click({ force: true })
@@ -33,7 +31,7 @@ context('Missions', () => {
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('6')
 
     cy.get('*[data-cy="select-administrations-filter"] > .rs-btn-close').click({ force: true })
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('10')
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('12')
   })
 
   it('Missions table should display all themes and subthemes of all the actions of the mission', () => {
@@ -178,12 +176,12 @@ context('Missions', () => {
 
   it('A mission should be created', () => {
     // Given
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('10')
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('12')
     cy.get('*[data-cy="add-mission"]').click()
 
     // When
     cy.get('*[data-cy="add-control-unit"]').click()
-    cy.get('.rs-picker-search-bar-input').type("Cross{enter}")
+    cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
     cy.wait(200)
     cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
     cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
@@ -197,10 +195,25 @@ context('Missions', () => {
       expect(request.body.controlUnits.length).equal(1)
       const controlUnit = request.body.controlUnits[0]
 
-      expect(controlUnit.administration).equal("DIRM / DM")
+      expect(controlUnit.administration).equal('DIRM / DM')
       expect(controlUnit.id).equal(10012)
-      expect(controlUnit.name).equal("Cross Etel")
+      expect(controlUnit.name).equal('Cross Etel')
     })
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('11')
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('13')
+  })
+
+  it('Missions from POSEIDON_CACEM must not be editable', () => {
+    // Given
+    cy.intercept('GET', `/bff/v1/missions/51`).as('getMissionPoseidonCacem')
+    cy.get('*[data-cy="edit-mission"]').eq(10).click()
+    cy.wait('@getMissionPoseidonCacem').then(({ response }) => {
+      expect(response && response.statusCode).equal(200)
+      expect(response && response.body.missionSource).equal('POSEIDON_CACEM')
+    })
+
+    cy.get('*[data-cy="quit-edit-mission"]').should('exist')
+    cy.get('*[data-cy="save-mission"]').should('not.exist')
+    cy.get('*[data-cy="close-mission"]').should('not.exist')
+    cy.get('*[data-cy="delete-mission"]').should('not.exist')
   })
 })
