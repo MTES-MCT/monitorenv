@@ -21,7 +21,7 @@ export const getPlaceCoordinates = placeId => {
     })
 }
 
-export type Place = {
+export type Place = google.maps.places.QueryAutocompletePrediction & {
   description: string
   place_id: number
 }
@@ -44,15 +44,17 @@ export const useGooglePlacesAPI = search => {
 
         if (query) {
           const setResultsCallback = (
-            // @ts-ignore
             predictions: google.maps.places.QueryAutocompletePrediction[] | null,
-            // @ts-ignore
             status: google.maps.places.PlacesServiceStatus
           ) => {
             if (status !== google.maps.places.PlacesServiceStatus.OK || !predictions) {
               return
             }
-            setResults(predictions.map(r => ({ label: r.description, value: r.place_id })))
+            setResults(
+              predictions
+                .filter((p): p is Place => !!p.description && !!p.place_id)
+                .map(p => ({ label: p.description, value: p.place_id }))
+            )
           }
 
           const service = new google.maps.places.AutocompleteService()
@@ -61,7 +63,6 @@ export const useGooglePlacesAPI = search => {
 
           return
         }
-        console.log('reset')
         setResults([])
       },
       500,
