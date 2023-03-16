@@ -18,8 +18,8 @@ export function SubThemesSelector({ label, name, theme }) {
   const availableThemes = useMemo(
     () =>
       _.chain(controlThemes)
-        .uniqBy('themeLevel2')
         .filter((t): t is SubTheme => t.themeLevel1 === theme && !!t.themeLevel2)
+        .uniqBy('themeLevel2')
         .map(t => ({ label: t.themeLevel2, value: t.themeLevel2 }))
         .value(),
     [controlThemes, theme]
