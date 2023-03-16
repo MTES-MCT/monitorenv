@@ -5,7 +5,7 @@ import java.time.ZonedDateTime
 
 data class MissionEntity(
     val id: Int? = null,
-    val missionType: MissionTypeEnum,
+    val missionTypes: List<MissionTypeEnum>,
     val missionNature: List<MissionNatureEnum>? = listOf(),
     val controlUnits: List<ControlUnitEntity> = listOf(),
     val openBy: String? = null,

@@ -43,7 +43,7 @@ class UpdateMissionUTests {
         // Given
         val expectedUpdatedMission = MissionEntity(
             id = 0,
-            missionType = MissionTypeEnum.LAND,
+            missionTypes = listOf( MissionTypeEnum.LAND),
             facade = "Outre-Mer",
             missionNature = listOf(MissionNatureEnum.FISH),
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),

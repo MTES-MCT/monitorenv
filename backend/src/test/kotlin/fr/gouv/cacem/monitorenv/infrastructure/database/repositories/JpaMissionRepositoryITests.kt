@@ -37,7 +37,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(existingMissions).hasSize(21)
 
         val newMission = MissionEntity(
-            missionType = MissionTypeEnum.SEA,
+            missionTypes = listOf( MissionTypeEnum.SEA),
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isClosed = false,
             isDeleted = false,
@@ -82,20 +82,20 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     fun `save should update mission resources`() {
         // Given
         val newMission = MissionEntity(
-                missionType = MissionTypeEnum.SEA,
-                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                isClosed = false,
-                isDeleted = false,
-                missionSource = MissionSourceEnum.MONITORENV,
-                controlUnits = listOf(
-                        ControlUnitEntity(
-                                id = 10006,
-                                name = "DPM – DDTM 35",
-                                administration = "DDTM",
-                                isArchived = false,
-                                resources = listOf(ControlResourceEntity(id = 8, name = "PAM Jeanne Barret"))
-                        )
+            missionTypes = listOf( MissionTypeEnum.SEA),
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            isClosed = false,
+            isDeleted = false,
+            missionSource = MissionSourceEnum.MONITORENV,
+            controlUnits = listOf(
+                ControlUnitEntity(
+                    id = 10006,
+                    name = "DPM – DDTM 35",
+                    administration = "DDTM",
+                    isArchived = false,
+                    resources = listOf(ControlResourceEntity(id = 8, name = "PAM Jeanne Barret"))
                 )
+            )
         )
         jpaMissionRepository.save(newMission)
 
@@ -129,7 +129,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     fun `save should throw an exception When the resource id is not found`() {
         // Given
         val newMission = MissionEntity(
-            missionType = MissionTypeEnum.SEA,
+            missionTypes = listOf( MissionTypeEnum.SEA),
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isClosed = false,
             isDeleted = false,
@@ -160,7 +160,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     fun `save should throw an exception When the unit id is not found`() {
         // Given
         val newMission = MissionEntity(
-            missionType = MissionTypeEnum.SEA,
+            missionTypes = listOf( MissionTypeEnum.SEA),
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isClosed = false,
             isDeleted = false,
@@ -383,7 +383,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
         val firstMission = MissionEntity(
             id = 10,
-            missionType = MissionTypeEnum.LAND,
+            missionTypes = listOf( MissionTypeEnum.LAND),
             missionNature = listOf(MissionNatureEnum.ENV, MissionNatureEnum.FISH),
             openBy = "Kimberly Smith",
             closedBy = "Travis Carter",
@@ -468,7 +468,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
         val expectedUpdatedMission = MissionEntity(
             id = 10,
-            missionType = MissionTypeEnum.LAND,
+            missionTypes = listOf( MissionTypeEnum.LAND),
             missionNature = listOf(MissionNatureEnum.FISH, MissionNatureEnum.ENV),
             openBy = "John Smith",
             closedBy = "Carol Tim",
@@ -505,7 +505,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         )
         val expectedUpdatedMission = MissionEntity(
             id = 10,
-            missionType = MissionTypeEnum.LAND,
+            missionTypes = listOf( MissionTypeEnum.LAND),
             missionNature = listOf(MissionNatureEnum.FISH, MissionNatureEnum.ENV),
             facade = "NAMO",
             geom = polygon,
