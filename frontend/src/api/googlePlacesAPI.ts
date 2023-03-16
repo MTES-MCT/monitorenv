@@ -15,9 +15,13 @@ export const getPlaceCoordinates = placeId => {
   return fetch(queryURL)
     .then(r => r.json())
     .then(d => {
-      const bbox = d.results[0].geometry.bounds
+      if (d.status === 'OK') {
+        const bbox = d.results[0].geometry.viewport
 
-      return [bbox.southwest.lng, bbox.northeast.lat, bbox.northeast.lng, bbox.southwest.lat]
+        return [bbox.southwest.lng, bbox.northeast.lat, bbox.northeast.lng, bbox.southwest.lat]
+      }
+
+      return undefined
     })
 }
 
@@ -27,7 +31,8 @@ export type Place = google.maps.places.QueryAutocompletePrediction & {
 }
 type Options = {
   label: string
-  value: string
+  placeId: string
+  value: Number
 }
 
 export const useGooglePlacesAPI = search => {
@@ -53,7 +58,7 @@ export const useGooglePlacesAPI = search => {
             setResults(
               predictions
                 .filter((p): p is Place => !!p.description && !!p.place_id)
-                .map(p => ({ label: p.description, value: p.place_id }))
+                .map((p, i) => ({ label: p.description, placeId: p.place_id, value: i }))
             )
           }
 
