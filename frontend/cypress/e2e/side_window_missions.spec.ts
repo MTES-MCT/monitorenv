@@ -174,12 +174,13 @@ context('Missions', () => {
     })
   })
 
-  it('A mission should be created', () => {
+  it.only('A mission should be created', () => {
     // Given
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('12')
     cy.get('*[data-cy="add-mission"]').click()
 
     // When
+    cy.get('[name="missionTypes1"]').click({ force: true })
     cy.get('*[data-cy="add-control-unit"]').click()
     cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
     cy.wait(200)
@@ -192,9 +193,11 @@ context('Missions', () => {
     cy.wait('@createMission').then(({ request, response }) => {
       expect(response && response.statusCode).equal(200)
 
+      expect(request.body.missionTypes.length).equal(2)
+      expect(request.body.missionTypes[0]).equal('SEA')
+      expect(request.body.missionTypes[1]).equal('LAND')
       expect(request.body.controlUnits.length).equal(1)
       const controlUnit = request.body.controlUnits[0]
-
       expect(controlUnit.administration).equal('DIRM / DM')
       expect(controlUnit.id).equal(10012)
       expect(controlUnit.name).equal('Cross Etel')

@@ -10,5 +10,11 @@ type CellResourcesProps = {
   rowData?: MissionType
 }
 export function CellResources({ dataKey, rowData, ...props }: CellResourcesProps) {
-  return <Table.Cell {...props}>{rowData?.controlUnits && getControlUnitsAsText(rowData.controlUnits)}</Table.Cell>
+  const controlUnitsAsText = rowData?.controlUnits && getControlUnitsAsText(rowData.controlUnits)
+
+  return (
+    <Table.Cell {...props} title={controlUnitsAsText}>
+      {controlUnitsAsText}
+    </Table.Cell>
+  )
 }

@@ -1,8 +1,14 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { Table } from 'rsuite'
 
-import { missionTypeEnum } from '../../../domain/entities/missions'
+import { MissionType, missionTypeEnum } from '../../../domain/entities/missions'
 
-export function CellMissionType({ dataKey, rowData, ...props }: { dataKey?: any; rowData?: any }) {
-  return <Table.Cell {...props}>{missionTypeEnum[rowData.missionType]?.libelle}</Table.Cell>
+export function CellMissionType({ dataKey, rowData, ...props }: { dataKey?: any; rowData?: MissionType }) {
+  const missionTypesAsText = rowData?.missionTypes?.map(t => missionTypeEnum[t]?.libelle).join(' / ')
+
+  return (
+    <Table.Cell {...props} title={missionTypesAsText}>
+      {missionTypesAsText}
+    </Table.Cell>
+  )
 }

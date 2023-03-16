@@ -281,7 +281,7 @@ export type MissionType<EnvAction = EnvActionControl | EnvActionSurveillance | E
   isClosed: boolean
   missionNature: MissionNatureEnum[]
   missionSource: MissionSourceEnum
-  missionType: MissionTypeEnum
+  missionTypes: MissionTypeEnum[]
   observationsCacem: string
   observationsCnsp: string
   openBy: string

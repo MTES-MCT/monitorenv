@@ -32,7 +32,7 @@ export const getMissionCentroid = (mission: Partial<MissionType>, layername: str
     endDateTimeUtc: mission.endDateTimeUtc,
     missionId: mission.id,
     missionStatus: getMissionStatus(mission),
-    missionType: mission.missionType,
+    missionTypes: mission.missionTypes,
     numberOfActions: mission.envActions?.length || 0,
     startDateTimeUtc: mission.startDateTimeUtc
   })
@@ -56,7 +56,7 @@ export const getMissionZoneFeature = (mission: Partial<MissionType>, layername: 
     envActions: mission.envActions,
     missionId: mission.id,
     missionStatus: getMissionStatus(mission),
-    missionType: mission.missionType,
+    missionTypes: mission.missionTypes,
     numberOfActions: mission.envActions?.length || 0,
     startDateTimeUtc: mission.startDateTimeUtc
   })

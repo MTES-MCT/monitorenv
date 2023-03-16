@@ -55,7 +55,7 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
         <CellResources />
       </Table.Column>
 
-      <Table.Column width={100}>
+      <Table.Column width={120}>
         <Table.HeaderCell>Type</Table.HeaderCell>
         <CellMissionType />
       </Table.Column>
