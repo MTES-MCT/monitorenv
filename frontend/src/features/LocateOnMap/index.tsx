@@ -17,6 +17,7 @@ export function LocateOnMap() {
   // value is integer, which does not satisfy Rsuite PropType
   // However, it's the only way to hack the broken behavior of Autocomplete
   // displaying value instead of label after selection
+  // FIXME: see https://github.com/MTES-MCT/monitor-ui/issues/332
   const options = results.map(r => ({ label: r.label, value: r.value })) as any
 
   const handleSelectLocation = async placeId => {
