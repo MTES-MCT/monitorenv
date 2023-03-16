@@ -9,7 +9,7 @@ data class EnvActionControlEntity(
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
     override val geom: Geometry? = null,
     val themes: List<ThemeEntity>? = listOf(),
-    val protectedSpecies: List<String>? = listOf(),
+    val observations: String? = null,
     val actionNumberOfControls: Int? = null,
     val actionTargetType: ActionTargetTypeEnum,
     val vehicleType: VehicleTypeEnum? = null,

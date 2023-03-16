@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { FormikDatePicker } from '@mtes-mct/monitor-ui'
+import { FormikDatePicker, FormikTextarea } from '@mtes-mct/monitor-ui'
 import { format, isValid } from 'date-fns'
 import { fr } from 'date-fns/locale'
 import { FieldArray, useFormikContext } from 'formik'
@@ -173,6 +173,7 @@ export function ControlForm({
             <InfractionsForm canAddInfraction={canAddInfraction} currentActionIndex={currentActionIndex} {...props} />
           )}
         />
+        <FormikTextarea isLight label="Observations" name={`envActions[${currentActionIndex}].observations`} />
       </FormBody>
     </>
   )

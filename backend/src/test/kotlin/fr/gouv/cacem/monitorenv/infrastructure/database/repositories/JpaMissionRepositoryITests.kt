@@ -450,6 +450,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val controlAction = EnvActionControlEntity(
             id = UUID.randomUUID(),
             themes = listOf(ThemeEntity(theme="5", subThemes = listOf("4"), protectedSpecies = listOf("5"))),
+            observations = "RAS",
             actionNumberOfControls = 12,
             actionTargetType = ActionTargetTypeEnum.VEHICLE,
             vehicleType = VehicleTypeEnum.VESSEL,

@@ -125,6 +125,29 @@ context('Missions', () => {
       expect(themes[0].protectedSpecies[1]).equal('BIRDS')
     })
   })
+
+  it('save observations in control Actions', () => {
+    // Given
+    cy.get('*[data-cy="edit-mission"]').eq(3).click()
+    cy.intercept('GET', `/bff/v1/controlthemes`).as('getControlThemes')
+    cy.get('*[data-cy="action-card"]').eq(1).click()
+    cy.get('[id="envActions[1].observations"]').contains('RAS')
+
+    // When
+    cy.get('[id="envActions[1].observations"]').type('{backspace}{backspace}Une observation importante')
+
+    cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
+    cy.get('[type="submit"]').click()
+
+    // Then
+    cy.wait('@updateMission').then(({ request, response }) => {
+      expect(response && response.statusCode).equal(200)
+
+      const { observations } = request.body.envActions.find(a => a.id === 'c52c6f20-e495-4b29-b3df-d7edfb67fdd7')
+      expect(observations).equal('RUne observation importante')
+    })
+  })
+
   it('allow multiple themes and may be multiple subthemes in surveillance actions', () => {
     // Given
     cy.get('*[data-cy="edit-mission"]').eq(3).click()
@@ -174,7 +197,7 @@ context('Missions', () => {
     })
   })
 
-  it.only('A mission should be created', () => {
+  it('A mission should be created', () => {
     // Given
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('12')
     cy.get('*[data-cy="add-mission"]').click()
