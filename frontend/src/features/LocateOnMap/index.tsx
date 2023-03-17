@@ -21,10 +21,10 @@ export function LocateOnMap() {
   const options = results.map(r => ({ label: r.label, value: r.value })) as any
 
   const handleSelectLocation = async placeId => {
-    if (!placeId) {
+    const originalResult = results.find(r => r.value === placeId)
+    if (!originalResult) {
       return
     }
-    const originalResult = results.find(r => r.value === placeId)
     const boundingBox = await getPlaceCoordinates(originalResult?.placeId)
     if (boundingBox) {
       dispatch(setFitToExtent(transformExtent(boundingBox, WSG84_PROJECTION, OPENLAYERS_PROJECTION)))
