@@ -14,11 +14,8 @@ context('Missions', () => {
 
     cy.log('A default date filter should be set')
     const thirtyDaysAgo = dayjs().subtract(30, 'days')
-    const date = thirtyDaysAgo.get('date')
-    const day = date < 10 ? `0${date}` : date
-    const month =
-      thirtyDaysAgo.get('month') <= 9 ? `0${Number(thirtyDaysAgo.get('month') + 1)}` : thirtyDaysAgo.get('month') + 1
-    cy.get('*[data-cy="datepicker-missionStartedAfter"]').contains(`${thirtyDaysAgo.get('year')}-${month}-${day}`)
+
+    cy.get('*[data-cy="datepicker-missionStartedAfter"]').contains(`${thirtyDaysAgo.format('YYYY-MM-DD')}`)
 
     cy.log('Units should be filtered')
     cy.get('*[data-cy="select-units-filter"]').click({ force: true })
@@ -125,6 +122,29 @@ context('Missions', () => {
       expect(themes[0].protectedSpecies[1]).equal('BIRDS')
     })
   })
+
+  it('save observations in control Actions', () => {
+    // Given
+    cy.get('*[data-cy="edit-mission"]').eq(3).click()
+    cy.intercept('GET', `/bff/v1/controlthemes`).as('getControlThemes')
+    cy.get('*[data-cy="action-card"]').eq(1).click()
+    cy.get('[id="envActions[1].observations"]').contains('RAS')
+
+    // When
+    cy.get('[id="envActions[1].observations"]').type('{backspace}{backspace}Une observation importante')
+
+    cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
+    cy.get('[type="submit"]').click()
+
+    // Then
+    cy.wait('@updateMission').then(({ request, response }) => {
+      expect(response && response.statusCode).equal(200)
+
+      const { observations } = request.body.envActions.find(a => a.id === 'c52c6f20-e495-4b29-b3df-d7edfb67fdd7')
+      expect(observations).equal('RUne observation importante')
+    })
+  })
+
   it('allow multiple themes and may be multiple subthemes in surveillance actions', () => {
     // Given
     cy.get('*[data-cy="edit-mission"]').eq(3).click()
@@ -180,6 +200,7 @@ context('Missions', () => {
     cy.get('*[data-cy="add-mission"]').click()
 
     // When
+    cy.get('[name="missionTypes1"]').click({ force: true })
     cy.get('*[data-cy="add-control-unit"]').click()
     cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
     cy.wait(200)
@@ -192,9 +213,11 @@ context('Missions', () => {
     cy.wait('@createMission').then(({ request, response }) => {
       expect(response && response.statusCode).equal(200)
 
+      expect(request.body.missionTypes.length).equal(2)
+      expect(request.body.missionTypes[0]).equal('SEA')
+      expect(request.body.missionTypes[1]).equal('LAND')
       expect(request.body.controlUnits.length).equal(1)
       const controlUnit = request.body.controlUnits[0]
-
       expect(controlUnit.administration).equal('DIRM / DM')
       expect(controlUnit.id).equal(10012)
       expect(controlUnit.name).equal('Cross Etel')

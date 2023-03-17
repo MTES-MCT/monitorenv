@@ -75,7 +75,7 @@ export const missionFactory = (mission = {}): MissionType | NewMissionType => ({
   isClosed: false,
   missionNature: [],
   missionSource: MissionSourceEnum.MONITORENV,
-  missionType: MissionTypeEnum.SEA,
+  missionTypes: [MissionTypeEnum.SEA],
   observationsCacem: '',
   observationsCnsp: '',
   openBy: '',

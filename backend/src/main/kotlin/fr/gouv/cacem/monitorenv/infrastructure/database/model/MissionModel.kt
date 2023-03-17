@@ -67,13 +67,12 @@ data class MissionModel(
     @Basic(optional = false)
     @Column(name = "id", unique = true, nullable = false)
     var id: Int? = null,
-    @Column(name = "mission_type")
-    @Enumerated(EnumType.STRING)
-    var missionType: MissionTypeEnum,
+    @Column(name = "mission_types")
+    @Type(type = "enum-array")
+    var missionTypes: List<MissionTypeEnum>,
     @Column(name = "missionNature")
     @Type(type = "enum-array")
     var missionNature: List<MissionNatureEnum>? = listOf(),
-
     @Column(name = "open_by")
     var openBy: String? = null,
     @Column(name = "closed_by")
@@ -128,7 +127,7 @@ data class MissionModel(
 
     fun toMissionEntity(mapper: ObjectMapper) = MissionEntity(
         id = id,
-        missionType = missionType,
+        missionTypes = missionTypes,
         missionNature = if (missionNature === null) listOf() else missionNature,
         openBy = openBy,
         closedBy = closedBy,
@@ -160,7 +159,7 @@ data class MissionModel(
         fun fromMissionEntity(mission: MissionEntity, mapper: ObjectMapper): MissionModel {
             val missionModel = MissionModel(
                 id = mission.id,
-                missionType = mission.missionType,
+                missionTypes = mission.missionTypes,
                 missionNature = mission.missionNature,
                 openBy = mission.openBy,
                 closedBy = mission.closedBy,
@@ -206,6 +205,6 @@ data class MissionModel(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , missionType = $missionType , missionNature = $missionNature , openBy = $openBy , closedBy = $closedBy , observationsCacem = $observationsCacem, observationsCnsp = $observationsCnsp , facade = $facade , geom = $geom , startDateTimeUtc = $startDateTimeUtc , endDateTimeUtc = $endDateTimeUtc, isClosed = $isClosed, isDeleted = $isDeleted, missionSource = $missionSource )"
+        return this::class.simpleName + "(id = $id , missionTypes = $missionTypes , missionNature = $missionNature , openBy = $openBy , closedBy = $closedBy , observationsCacem = $observationsCacem, observationsCnsp = $observationsCnsp , facade = $facade , geom = $geom , startDateTimeUtc = $startDateTimeUtc , endDateTimeUtc = $endDateTimeUtc, isClosed = $isClosed, isDeleted = $isDeleted, missionSource = $missionSource )"
     }
 }

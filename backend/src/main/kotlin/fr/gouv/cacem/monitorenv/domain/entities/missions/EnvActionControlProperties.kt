@@ -8,6 +8,7 @@ data class EnvActionControlProperties(
     val actionStartDateTimeUtc: ZonedDateTime? = null,
     val geom: Geometry? = null,
     val themes: List<ThemeEntity>? = listOf(),
+    val observations: String? = null,
     val actionNumberOfControls: Int? = null,
     val actionTargetType: ActionTargetTypeEnum,
     val vehicleType: VehicleTypeEnum? = null,
@@ -18,6 +19,7 @@ data class EnvActionControlProperties(
         actionStartDateTimeUtc = actionStartDateTimeUtc,
         geom = geom,
         themes = themes,
+        observations = observations,
         actionNumberOfControls = actionNumberOfControls,
         actionTargetType = actionTargetType,
         vehicleType = vehicleType,
@@ -26,6 +28,7 @@ data class EnvActionControlProperties(
     companion object {
         fun fromEnvActionControlEntity(envAction: EnvActionControlEntity) = EnvActionControlProperties(
             themes = envAction.themes,
+            observations = envAction.observations,
             actionNumberOfControls = envAction.actionNumberOfControls,
             actionTargetType = envAction.actionTargetType,
             vehicleType = envAction.vehicleType,

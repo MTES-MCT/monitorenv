@@ -6,7 +6,6 @@ import java.util.*
 
 data class EnvActionSurveillanceProperties(
     val themes: List<ThemeEntity>? = listOf(),
-    val protectedSpecies: List<String>? = listOf(),
     val duration: Double? = null,
     val observations: String? = null,
     val coverMissionZone: Boolean? = null

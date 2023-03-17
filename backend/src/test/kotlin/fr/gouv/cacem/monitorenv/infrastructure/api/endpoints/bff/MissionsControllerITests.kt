@@ -63,7 +63,7 @@ class MissionsControllerITests {
         // Given
         val newMission = MissionEntity(
             id = 10,
-            missionType = MissionTypeEnum.LAND,
+            missionTypes = listOf( MissionTypeEnum.LAND),
             missionNature = listOf(MissionNatureEnum.ENV),
             facade = "Outre-Mer",
             geom = polygon,
@@ -75,7 +75,7 @@ class MissionsControllerITests {
             missionSource = MissionSourceEnum.MONITORENV
         )
         val newMissionRequest = CreateOrUpdateMissionDataInput(
-            missionType = MissionTypeEnum.LAND,
+            missionTypes = listOf( MissionTypeEnum.LAND),
             missionNature = listOf(MissionNatureEnum.ENV),
             observationsCacem = null,
             facade = "Outre-Mer",
@@ -108,7 +108,7 @@ class MissionsControllerITests {
 
         val firstMission = MissionEntity(
             id = 10,
-            missionType = MissionTypeEnum.SEA,
+            missionTypes = listOf( MissionTypeEnum.SEA),
             missionNature = listOf(MissionNatureEnum.ENV),
             facade = "Outre-Mer",
             geom = polygon,
@@ -144,7 +144,7 @@ class MissionsControllerITests {
         val requestedId = 0
         val firstMission = MissionEntity(
             id = 10,
-            missionType = MissionTypeEnum.SEA,
+            missionTypes = listOf( MissionTypeEnum.SEA),
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isClosed = false,
             isDeleted = false,
@@ -157,7 +157,7 @@ class MissionsControllerITests {
         mockMvc.perform(get("/bff/v1/missions/$requestedId"))
             // Then
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$.missionType", equalTo(MissionTypeEnum.SEA.toString())))
+            .andExpect(jsonPath("$.missionTypes[0]", equalTo(MissionTypeEnum.SEA.toString())))
         verify(getMissionById).execute(requestedId)
     }
 
@@ -166,7 +166,7 @@ class MissionsControllerITests {
         // Given
         val expectedUpdatedMission = MissionEntity(
             id = 14,
-            missionType = MissionTypeEnum.SEA,
+            missionTypes = listOf( MissionTypeEnum.SEA),
             observationsCacem = "updated observationsCacem",
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isClosed = false,
@@ -181,7 +181,7 @@ class MissionsControllerITests {
         )
         val requestBody = CreateOrUpdateMissionDataInput(
             id = 14,
-            missionType = MissionTypeEnum.SEA,
+            missionTypes = listOf( MissionTypeEnum.SEA),
             observationsCacem = "updated observationsCacem",
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             envActions = listOf(envAction),

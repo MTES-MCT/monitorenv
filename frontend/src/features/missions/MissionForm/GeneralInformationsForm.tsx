@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { FormikDatePicker } from '@mtes-mct/monitor-ui'
+import { FormikMultiCheckbox, FormikDatePicker } from '@mtes-mct/monitor-ui'
 import { FieldArray } from 'formik'
 import { Form } from 'rsuite'
 import styled from 'styled-components'
@@ -8,15 +8,18 @@ import { COLORS } from '../../../constants/constants'
 import { InteractionListener } from '../../../domain/entities/map/constants'
 import { missionNatureEnum, missionTypeEnum } from '../../../domain/entities/missions'
 import { useNewWindow } from '../../../ui/NewWindow'
-import { FormikCheckboxGroup } from '../../../uiMonitor/CustomFormikFields/FormikCheckboxGroup'
 import { FormikInput } from '../../../uiMonitor/CustomFormikFields/FormikInput'
-import { FormikRadioGroup } from '../../../uiMonitor/CustomFormikFields/FormikRadioGroup'
 import { FormikTextarea } from '../../../uiMonitor/CustomFormikFields/FormikTextarea'
 import { MultiZonePicker } from '../MultiZonePicker'
 import { ControlUnitsForm } from './ControlUnitsForm'
 
 export function GeneralInformationsForm() {
   const { newWindowContainerRef } = useNewWindow()
+  const missionTypeOptions = Object.entries(missionTypeEnum).map(([key, val]) => ({ label: val.libelle, value: key }))
+  const missionNatureOptions = Object.entries(missionNatureEnum).map(([key, val]) => ({
+    label: val.libelle,
+    value: key
+  }))
 
   return (
     <>
@@ -46,12 +49,22 @@ export function GeneralInformationsForm() {
 
       <Form.Group>
         <SubGroup>
-          <Form.ControlLabel htmlFor="missionType">Type de mission</Form.ControlLabel>
-          <TypeMissionRadioGroup name="missionType" radioValues={missionTypeEnum} />
+          <FormikMultiCheckbox
+            data-cy="mission-types"
+            isInline
+            label="Type de mission"
+            name="missionTypes"
+            options={missionTypeOptions}
+          />
         </SubGroup>
         <SubGroup>
-          <Form.ControlLabel htmlFor="missionNature">Intentions principales de mission</Form.ControlLabel>
-          <NatureMissionCheckboxGroup checkBoxValues={missionNatureEnum} inline name="missionNature" size="sm" />
+          <FormikMultiCheckbox
+            data-cy="mission-nature"
+            isInline
+            label="Intentions principales de mission"
+            name="missionNature"
+            options={missionNatureOptions}
+          />
         </SubGroup>
       </Form.Group>
       <Form.Group>
@@ -110,14 +123,6 @@ const NarrowColumn = styled.div`
 `
 const SubGroup = styled.div`
   margin-bottom: 16px;
-`
-
-const TypeMissionRadioGroup = styled(FormikRadioGroup)`
-  margin-left: -20px;
-`
-
-const NatureMissionCheckboxGroup = styled(FormikCheckboxGroup)`
-  margin-left: -20px;
 `
 
 const InputObservations = styled(FormikTextarea)`
