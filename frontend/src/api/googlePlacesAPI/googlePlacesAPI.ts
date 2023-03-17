@@ -1,9 +1,12 @@
 import _ from 'lodash'
 import { useEffect, useState, useMemo, useRef, MutableRefObject } from 'react'
 
-const GOOGLEMAPS_API_KEY = process.env.REACT_APP_GOOGLEMAPS_API_KEY
+import { GOOGLEMAPS_API_KEY } from '../../env'
+import { loadGoogleMapScript } from './utils'
 
 const GOOGLEMAPS_GEOCODE_URL = 'https://maps.googleapis.com/maps/api/geocode/json'
+const GOOGLEMAPS_SCRIPT_BASEURL = `https://maps.googleapis.com/maps/api/js`
+const GOOGLEMAPS_SCRIPT_URL = `${GOOGLEMAPS_SCRIPT_BASEURL}?key=${GOOGLEMAPS_API_KEY}&libraries=places`
 
 export const getPlaceCoordinates = placeId => {
   // @ts-ignore
@@ -29,6 +32,7 @@ export type Place = google.maps.places.QueryAutocompletePrediction & {
   description: string
   place_id: number
 }
+
 type Options = {
   label: string
   placeId: string
@@ -36,8 +40,16 @@ type Options = {
 }
 
 export const useGooglePlacesAPI = search => {
+  const autoCompleteService = useRef<google.maps.places.AutocompleteService>()
+
   const [results, setResults] = useState<Options[]>([])
   const abortControlerRef = useRef() as MutableRefObject<AbortController>
+
+  useEffect(() => {
+    loadGoogleMapScript(GOOGLEMAPS_SCRIPT_BASEURL, GOOGLEMAPS_SCRIPT_URL).then(() => {
+      autoCompleteService.current = new google.maps.places.AutocompleteService()
+    })
+  }, [])
 
   const throttledSearch = useMemo(() => {
     const throttled = _.throttle(
@@ -62,9 +74,7 @@ export const useGooglePlacesAPI = search => {
             )
           }
 
-          const service = new google.maps.places.AutocompleteService()
-
-          service.getQueryPredictions({ input: query }, setResultsCallback)
+          autoCompleteService.current?.getQueryPredictions({ input: query }, setResultsCallback)
 
           return
         }

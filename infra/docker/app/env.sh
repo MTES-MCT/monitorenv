@@ -3,6 +3,7 @@
 sed -i 's#__REACT_APP_MONITORENV_VERSION__#'"$REACT_APP_MONITORENV_VERSION"'#g' /home/monitorenv/public/env.js
 sed -i 's#__REACT_APP_GEOSERVER_REMOTE_URL__#'"$REACT_APP_GEOSERVER_REMOTE_URL"'#g' /home/monitorenv/public/env.js
 sed -i 's#__REACT_APP_GEOSERVER_NAMESPACE__#'"$REACT_APP_GEOSERVER_NAMESPACE"'#g' /home/monitorenv/public/env.js
+sed -i 's#__REACT_APP_GOOGLEMAPS_API_KEY__#'"$REACT_APP_GOOGLEMAPS_API_KEY"'#g' /home/monitorenv/public/env.js
 sed -i 's#__REACT_APP_MAPBOX_KEY__#'"$REACT_APP_MAPBOX_KEY"'#g' /home/monitorenv/public/env.js
 sed -i 's#__REACT_APP_SENTRY_DSN__#'"$REACT_APP_SENTRY_DSN"'#g' /home/monitorenv/public/env.js
 sed -i 's#__REACT_APP_SENTRY_ENV__#'"$REACT_APP_SENTRY_ENV"'#g' /home/monitorenv/public/env.js

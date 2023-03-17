@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { getPlaceCoordinates, useGooglePlacesAPI } from '../../api/googlePlacesAPI'
+import { getPlaceCoordinates, useGooglePlacesAPI } from '../../api/googlePlacesAPI/googlePlacesAPI'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map/constants'
 import { setFitToExtent } from '../../domain/shared_slices/Map'
 import { ReactComponent as SearchIconSVG } from '../../uiMonitor/icons/Search.svg'

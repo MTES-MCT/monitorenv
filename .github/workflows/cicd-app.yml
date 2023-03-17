@@ -61,7 +61,6 @@ jobs:
     env:
       ENV_PROFILE: ${{needs.version.outputs.ENV_PROFILE}}
       VERSION: ${{needs.version.outputs.VERSION}}
-      REACT_APP_GOOGLEMAPS_API_KEY: ${{secrets.REACT_APP_GOOGLEMAPS_API_KEY}}
       ACTIONS_ALLOW_UNSECURE_COMMANDS: true
     steps:
       - name: Show version
