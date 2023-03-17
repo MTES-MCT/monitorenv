@@ -32,7 +32,6 @@ export function LocateOnMap() {
     <Wrapper>
       <Search
         data-cy="location-search-input"
-        defaultValue={searchedLocation}
         isLabelHidden
         isLight
         isSearchIconHidden
