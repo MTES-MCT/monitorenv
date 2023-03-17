@@ -21,6 +21,9 @@ export function LocateOnMap() {
   const options = results.map(r => ({ label: r.label, value: r.value })) as any
 
   const handleSelectLocation = async placeId => {
+    if (!placeId) {
+      return
+    }
     const originalResult = results.find(r => r.value === placeId)
     const boundingBox = await getPlaceCoordinates(originalResult?.placeId)
     if (boundingBox) {
@@ -32,7 +35,6 @@ export function LocateOnMap() {
     <Wrapper>
       <Search
         data-cy="location-search-input"
-        defaultValue={searchedLocation}
         isLabelHidden
         isLight
         isSearchIconHidden
