@@ -41,7 +41,7 @@ export function CreateOrEditMission() {
     path: [sideWindowPaths.MISSION, sideWindowPaths.MISSION_NEW],
     strict: true
   })
-  const [currentActionIndex, setCurrentActionIndex] = useState(null)
+  const [currentActionIndex, setCurrentActionIndex] = useState(undefined)
   const [errorOnSave, setErrorOnSave] = useState(false)
   const [errorOnDelete, setErrorOnDelete] = useState(false)
   const [cancelEditModalIsOpen, setCancelEditModalIsOpen] = useState(false)
