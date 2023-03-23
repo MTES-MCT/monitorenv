@@ -7,6 +7,16 @@ context('Missions', () => {
     cy.viewport(1280, 1024)
     cy.visit(`/side_window`)
   })
+  it('Control Unit filter should not contain archived control units', () => {
+    cy.intercept('GET', `/bff/v1/control_units`).as('getControlUnits')
+    cy.wait('@getControlUnits').then(({ response }) => {
+      expect(response && response.statusCode).to.equal(200)
+      const archivedControlUnit = response.body.find(controlUnit => controlUnit.name === 'BGC Ajaccio')
+      expect(archivedControlUnit.isArchived).equals(true)
+    })
+    cy.get('*[data-cy="select-units-filter"]').click({ force: true })
+    cy.get('[data-key="BGC Ajaccio"]').should('not.exist')
+  })
 
   it('12 Missions should be displayed in Missions Table', () => {
     cy.get('*[data-cy="SideWindowHeader-title"]').contains('Missions et contrôles')
