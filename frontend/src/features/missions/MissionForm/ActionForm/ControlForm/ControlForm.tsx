@@ -1,7 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { FormikDatePicker, FormikTextarea } from '@mtes-mct/monitor-ui'
-import { format, isValid } from 'date-fns'
-import { fr } from 'date-fns/locale'
 import { FieldArray, useFormikContext } from 'formik'
 import _ from 'lodash'
 import { Form, IconButton } from 'rsuite'
@@ -18,6 +16,7 @@ import { useNewWindow } from '../../../../../ui/NewWindow'
 import { FormikInputNumberGhost } from '../../../../../uiMonitor/CustomFormikFields/FormikInputNumber'
 import { ReactComponent as ControlIconSVG } from '../../../../../uiMonitor/icons/Control.svg'
 import { ReactComponent as DeleteSVG } from '../../../../../uiMonitor/icons/Delete.svg'
+import { getDateAsLocalizedStringCompact } from '../../../../../utils/getDateAsLocalizedString'
 import { MultiPointPicker } from '../../../MultiPointPicker'
 import { ActionTheme } from '../Themes/ActionTheme'
 import { ActionTargetSelector } from './ActionTargetSelector'
@@ -41,8 +40,6 @@ export function ControlForm({
   } = useFormikContext<MissionType<EnvActionControl>>()
   const currentAction = envActions[currentActionIndex]
 
-  const parsedActionStartDateTimeUtc =
-    currentAction?.actionStartDateTimeUtc && new Date(currentAction.actionStartDateTimeUtc)
   const { actionNumberOfControls, actionTargetType, vehicleType } = currentAction || {}
 
   const onVehicleTypeChange = selectedVehicleType => {
@@ -96,10 +93,7 @@ export function ControlForm({
         <Title>Contrôle{actionNumberOfControls && actionNumberOfControls > 1 ? 's' : ''}</Title>
         <SubTitle>
           &nbsp;(
-          {parsedActionStartDateTimeUtc &&
-            isValid(parsedActionStartDateTimeUtc) &&
-            format(parsedActionStartDateTimeUtc, 'dd MMM à HH:mm', { locale: fr })}
-          )
+          {getDateAsLocalizedStringCompact(currentAction?.actionStartDateTimeUtc)})
         </SubTitle>
         <IconButtonRight
           appearance="ghost"
