@@ -7,10 +7,16 @@ import { ControlForm } from './ControlForm/ControlForm'
 import { NoteForm } from './NoteForm'
 import { SurveillanceForm } from './SurveillanceForm'
 
-export function ActionForm({ currentActionIndex, remove, setCurrentActionIndex }) {
+type ActionFormProps = {
+  currentActionIndex: number | undefined
+  remove: (number) => any
+  setCurrentActionIndex: (number) => void
+}
+export function ActionForm({ currentActionIndex, remove, setCurrentActionIndex }: ActionFormProps) {
   const [actionTypeField] = useField(`envActions.${currentActionIndex}.actionType`)
+  const [actionIdField] = useField(`envActions.${currentActionIndex}.id`)
 
-  if (currentActionIndex === null) {
+  if (currentActionIndex === undefined) {
     return (
       <FormWrapper>
         <NoSelectedAction>Ajouter ou sélectionner une action</NoSelectedAction>
@@ -22,6 +28,7 @@ export function ActionForm({ currentActionIndex, remove, setCurrentActionIndex }
       return (
         <FormWrapper>
           <ControlForm
+            key={actionIdField.value}
             currentActionIndex={currentActionIndex}
             remove={remove}
             setCurrentActionIndex={setCurrentActionIndex}
@@ -32,6 +39,7 @@ export function ActionForm({ currentActionIndex, remove, setCurrentActionIndex }
       return (
         <FormWrapper>
           <SurveillanceForm
+            key={actionIdField.value}
             currentActionIndex={currentActionIndex}
             remove={remove}
             setCurrentActionIndex={setCurrentActionIndex}
@@ -42,6 +50,7 @@ export function ActionForm({ currentActionIndex, remove, setCurrentActionIndex }
       return (
         <FormWrapper>
           <NoteForm
+            key={actionIdField.value}
             currentActionIndex={currentActionIndex}
             remove={remove}
             setCurrentActionIndex={setCurrentActionIndex}

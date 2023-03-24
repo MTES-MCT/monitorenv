@@ -49,15 +49,17 @@ export function MissionsTableFilters() {
     .sort((a, b) => a?.localeCompare(b))
     .map(t => ({ label: t, value: t }))
     .value()
+
   const handleSetAdministrationFilter = administrationName => {
     dispatch(setMissionAdministrationFilter(administrationName))
     dispatch(setMissionUnitFilter(undefined))
   }
 
-  const unitListAsOptions: Option[] = _.chain(controlUnits)
+  const unitListAsOptions: Option[] = controlUnits
+    .filter(u => !u.isArchived)
     .sort((a, b) => a?.name?.localeCompare(b?.name))
     .map(t => ({ label: t.name, value: t.name }))
-    .value()
+
   const handleSetUnitFilter = unitName => {
     const administration = controlUnits.find(unit => unit.name === unitName)?.administration
     dispatch(setMissionAdministrationFilter(administration))
