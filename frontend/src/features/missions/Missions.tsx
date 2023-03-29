@@ -18,30 +18,28 @@ export function Missions() {
 
   return (
     <SideWindowWrapper data-cy="listMissionWrapper">
-      <>
-        <Header title="Missions et contrôles">
-          <AddNewMissionButton
-            data-cy="add-mission"
-            icon={<PlusSVG className="rs-icon" />}
-            onClick={() => dispatch(sideWindowActions.openAndGoTo(sideWindowPaths.MISSION_NEW))}
-          >
-            <span>Ajouter une nouvelle mission</span>
-          </AddNewMissionButton>
-        </Header>
-        <SideWindowContent>
-          <MissionsTableFilters />
-          <NumberOfDisplayedMissions data-cy="Missions-numberOfDisplayedMissions">
-            {missions?.length || '0'} Mission{missions && missions.length > 1 ? 's' : ''}
-          </NumberOfDisplayedMissions>
-          <TableWrapper>
-            {isError ? (
-              <ErrorMessage data-cy="listMissionWrapper">Erreur au chargement des données</ErrorMessage>
-            ) : (
-              <MissionsTable isLoading={isLoading} missions={missions} />
-            )}
-          </TableWrapper>
-        </SideWindowContent>
-      </>
+      <Header title="Missions et contrôles">
+        <AddNewMissionButton
+          data-cy="add-mission"
+          icon={<PlusSVG className="rs-icon" />}
+          onClick={() => dispatch(sideWindowActions.openAndGoTo(sideWindowPaths.MISSION_NEW))}
+        >
+          <span>Ajouter une nouvelle mission</span>
+        </AddNewMissionButton>
+      </Header>
+      <SideWindowContent>
+        <MissionsTableFilters />
+        <NumberOfDisplayedMissions data-cy="Missions-numberOfDisplayedMissions">
+          {missions?.length || '0'} Mission{missions && missions.length > 1 ? 's' : ''}
+        </NumberOfDisplayedMissions>
+        <TableWrapper>
+          {isError ? (
+            <ErrorMessage data-cy="listMissionWrapper">Erreur au chargement des données</ErrorMessage>
+          ) : (
+            <MissionsTable isLoading={isLoading} missions={missions} />
+          )}
+        </TableWrapper>
+      </SideWindowContent>
     </SideWindowWrapper>
   )
 }
