@@ -136,7 +136,7 @@ export function MissionsTableFilters() {
           options={administrationListAsOptions}
           placeholder="Administrations"
           searchable
-          style={tagPickerStyle}
+          style={largeTagPickerStyle}
         />
         <StyledSelect
           baseContainer={newWindowContainerRef.current}
@@ -149,7 +149,7 @@ export function MissionsTableFilters() {
           options={unitListAsOptions}
           placeholder="Unités"
           searchable
-          style={tagPickerStyle}
+          style={largeTagPickerStyle}
         />
         <CheckPicker
           container={() => unitPickerRef.current}
@@ -243,6 +243,7 @@ const Separator = styled.div`
   flex: 1;
 `
 const tagPickerStyle = { margin: '2px 10px 10px 0', verticalAlign: 'top', width: 160 }
+const largeTagPickerStyle = { margin: '2px 10px 10px 0', verticalAlign: 'top', width: 260 }
 
 const DatePickerWrapper = styled.div`
   margin-right: 8px;
