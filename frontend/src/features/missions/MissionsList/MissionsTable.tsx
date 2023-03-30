@@ -39,6 +39,7 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
       onSortColumn={handleSortColumn}
       sortColumn={sortColumn}
       sortType={sortType}
+      virtualized
     >
       <Table.Column sortable width={180}>
         <Table.HeaderCell>Date de début</Table.HeaderCell>

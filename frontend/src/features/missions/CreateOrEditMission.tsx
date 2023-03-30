@@ -218,6 +218,7 @@ const Loading = styled.div``
 
 const EditMissionWrapper = styled.div`
   flex: 1;
+  max-width: 100vw;
 `
 const Wrapper = styled.div`
   height: calc(100vh - 118px);
