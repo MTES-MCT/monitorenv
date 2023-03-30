@@ -1,8 +1,8 @@
-import { Option, Select } from '@mtes-mct/monitor-ui'
+import { Option, Select, DatePicker } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 import { MutableRefObject, useMemo, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { CheckPicker, DatePicker } from 'rsuite'
+import { CheckPicker } from 'rsuite'
 import styled from 'styled-components'
 
 import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
@@ -88,8 +88,6 @@ export function MissionsTableFilters() {
   const handleResetFilters = () => {
     dispatch(resetMissionFilters())
   }
-  const missionStartedAfterDate = (missionStartedAfter && new Date(missionStartedAfter)) || null
-  const missionStartedBeforeDate = (missionStartedBefore && new Date(missionStartedBefore)) || null
 
   return (
     <>
@@ -97,20 +95,20 @@ export function MissionsTableFilters() {
       <FilterWrapper ref={unitPickerRef}>
         <DatePickerWrapper ref={datepickerStartedAfterRef} data-cy="datepicker-missionStartedAfter">
           <DatePicker
-            container={() => datepickerStartedAfterRef.current}
+            key={JSON.stringify({ missionStartedAfter })}
+            baseContainer={newWindowContainerRef.current}
+            defaultValue={missionStartedAfter}
+            label="Date de début après le"
             onChange={handleSetMissionStartedAfterFilter}
-            placeholder="Date de début après le"
-            size="sm"
-            value={missionStartedAfterDate}
           />
         </DatePickerWrapper>
         <DatePickerWrapper ref={datepickerStartedBeforeRef} data-cy="datepicker-missionStartedBefore">
           <DatePicker
-            container={() => datepickerStartedBeforeRef.current}
+            key={JSON.stringify({ missionStartedBefore })}
+            baseContainer={newWindowContainerRef.current}
+            defaultValue={missionStartedBefore}
+            label="Date de début avant le"
             onChange={handleSetMissionStartedBeforeFilter}
-            placeholder="Date de début avant le"
-            size="sm"
-            value={missionStartedBeforeDate}
           />
         </DatePickerWrapper>
         <CheckPicker
@@ -221,7 +219,7 @@ const Title = styled.h2`
 
 const FilterWrapper = styled.div`
   display: flex;
-  height: 30px;
+  flex-wrap: wrap;
 `
 const AdvancedFiltersButton = styled.span`
   display: none;
@@ -231,6 +229,8 @@ const AdvancedFiltersButton = styled.span`
 const ResetFiltersButton = styled.div`
   text-decoration: underline;
   cursor: pointer;
+  display: flex;
+  align-items: center;
   svg {
     margin-right: 5px;
   }

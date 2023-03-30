@@ -56,7 +56,6 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
 
 const Wrapper = styled.div`
   height: 100vh;
-  display: flex;
   background: ${COLORS.white};
 
   @keyframes blink {

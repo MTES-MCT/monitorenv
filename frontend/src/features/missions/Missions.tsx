@@ -17,7 +17,7 @@ export function Missions() {
   const { isError, isLoading, missions } = useGetFilteredMissionsQuery()
 
   return (
-    <SideWindowWrapper data-cy="listMissionWrapper">
+    <>
       <Header title="Missions et contrôles">
         <AddNewMissionButton
           data-cy="add-mission"
@@ -32,30 +32,21 @@ export function Missions() {
         <NumberOfDisplayedMissions data-cy="Missions-numberOfDisplayedMissions">
           {missions?.length || '0'} Mission{missions && missions.length > 1 ? 's' : ''}
         </NumberOfDisplayedMissions>
-        <TableWrapper>
-          {isError ? (
-            <ErrorMessage data-cy="listMissionWrapper">Erreur au chargement des données</ErrorMessage>
-          ) : (
-            <MissionsTable isLoading={isLoading} missions={missions} />
-          )}
-        </TableWrapper>
+        {isError ? (
+          <ErrorMessage data-cy="listMissionWrapper">Erreur au chargement des données</ErrorMessage>
+        ) : (
+          <MissionsTable isLoading={isLoading} missions={missions} />
+        )}
       </SideWindowContent>
-    </SideWindowWrapper>
+    </>
   )
 }
 
-const SideWindowWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-`
 const ErrorMessage = styled.div``
 
 const SideWindowContent = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
   padding: 8px;
+  height: calc(100% - 50px);
 `
 
 const NumberOfDisplayedMissions = styled.h3`
@@ -63,8 +54,4 @@ const NumberOfDisplayedMissions = styled.h3`
 `
 const AddNewMissionButton = styled(IconButton)`
   background: ${COLORS.white};
-`
-
-const TableWrapper = styled.div`
-  flex: 1;
 `
