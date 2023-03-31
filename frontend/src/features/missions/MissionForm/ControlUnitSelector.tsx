@@ -134,7 +134,6 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
               block
               cleanable={false}
               container={() => resourcesRef.current}
-              creatable
               data={combinedResourceList}
               disabled={!_.isNumber(unitField.value)}
               labelKey="name"
