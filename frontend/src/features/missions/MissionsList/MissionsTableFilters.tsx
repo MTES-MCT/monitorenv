@@ -35,8 +35,6 @@ export function MissionsTableFilters() {
   } = useAppSelector(state => state.missionFilters)
 
   const unitPickerRef = useRef() as MutableRefObject<HTMLDivElement>
-  const datepickerStartedAfterRef = useRef() as MutableRefObject<HTMLDivElement>
-  const datepickerStartedBeforeRef = useRef() as MutableRefObject<HTMLDivElement>
   const [displayAdvancedFilters, setDisplayAdvancedFilters] = useState(false)
   const handleDisplayAdvancedFilters = () => setDisplayAdvancedFilters(!displayAdvancedFilters)
 
@@ -93,24 +91,23 @@ export function MissionsTableFilters() {
     <>
       <Title>FILTRER LA LISTE</Title>
       <FilterWrapper ref={unitPickerRef}>
-        <DatePickerWrapper ref={datepickerStartedAfterRef} data-cy="datepicker-missionStartedAfter">
-          <DatePicker
-            key={JSON.stringify({ missionStartedAfter })}
-            baseContainer={newWindowContainerRef.current}
-            defaultValue={missionStartedAfter}
-            label="Date de début après le"
-            onChange={handleSetMissionStartedAfterFilter}
-          />
-        </DatePickerWrapper>
-        <DatePickerWrapper ref={datepickerStartedBeforeRef} data-cy="datepicker-missionStartedBefore">
-          <DatePicker
-            key={JSON.stringify({ missionStartedBefore })}
-            baseContainer={newWindowContainerRef.current}
-            defaultValue={missionStartedBefore}
-            label="Date de début avant le"
-            onChange={handleSetMissionStartedBeforeFilter}
-          />
-        </DatePickerWrapper>
+        <DatePicker
+          key={JSON.stringify({ missionStartedAfter })}
+          baseContainer={newWindowContainerRef.current}
+          data-cy="datepicker-missionStartedAfter"
+          defaultValue={missionStartedAfter}
+          label="Date de début après le"
+          onChange={handleSetMissionStartedAfterFilter}
+        />
+        <DatePicker
+          key={JSON.stringify({ missionStartedBefore })}
+          baseContainer={newWindowContainerRef.current}
+          data-cy="datepicker-missionStartedBefore"
+          defaultValue={missionStartedBefore}
+          label="Date de début avant le"
+          onChange={handleSetMissionStartedBeforeFilter}
+          style={{ marginLeft: '10px' }}
+        />
         <CheckPicker
           container={() => unitPickerRef.current}
           data={StatusOptions}
@@ -220,6 +217,8 @@ const Title = styled.h2`
 const FilterWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
+  align-items: end;
+  gap: 10px;
 `
 const AdvancedFiltersButton = styled.span`
   display: none;
@@ -242,21 +241,10 @@ const AdvancedFiltersWrapper = styled.div`
 const Separator = styled.div`
   flex: 1;
 `
-const tagPickerStyle = { margin: '2px 10px 10px 0', verticalAlign: 'top', width: 160 }
-const largeTagPickerStyle = { margin: '2px 10px 10px 0', verticalAlign: 'top', width: 260 }
+const tagPickerStyle = { width: 160 }
+const largeTagPickerStyle = { width: 260 }
 
-const DatePickerWrapper = styled.div`
-  margin-right: 8px;
-  margin-top: 2px;
-  min-width: 150px;
-  min-height: 20px;
-  .rs-picker-date-menu {
-    position: relative;
-    margin-top: -32px;
-  }
-`
-
-export const StyledSelect = styled(Select)`
+const StyledSelect = styled(Select)`
   .rs-picker-toggle-caret,
   .rs-picker-toggle-clean {
     top: 5px !important;

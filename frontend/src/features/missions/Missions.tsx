@@ -32,11 +32,13 @@ export function Missions() {
         <NumberOfDisplayedMissions data-cy="Missions-numberOfDisplayedMissions">
           {missions?.length || '0'} Mission{missions && missions.length > 1 ? 's' : ''}
         </NumberOfDisplayedMissions>
-        {isError ? (
-          <ErrorMessage data-cy="listMissionWrapper">Erreur au chargement des données</ErrorMessage>
-        ) : (
-          <MissionsTable isLoading={isLoading} missions={missions} />
-        )}
+        <TableContainer>
+          {isError ? (
+            <ErrorMessage data-cy="listMissionWrapper">Erreur au chargement des données</ErrorMessage>
+          ) : (
+            <MissionsTable isLoading={isLoading} missions={missions} />
+          )}
+        </TableContainer>
       </SideWindowContent>
     </>
   )
@@ -45,8 +47,10 @@ export function Missions() {
 const ErrorMessage = styled.div``
 
 const SideWindowContent = styled.div`
-  padding: 8px;
-  height: calc(100% - 50px);
+  margin: 8px;
+  height: calc(100% - 50px - 16px);
+  display: flex;
+  flex-direction: column;
 `
 
 const NumberOfDisplayedMissions = styled.h3`
@@ -54,4 +58,7 @@ const NumberOfDisplayedMissions = styled.h3`
 `
 const AddNewMissionButton = styled(IconButton)`
   background: ${COLORS.white};
+`
+const TableContainer = styled.div`
+  flex: 1;
 `
