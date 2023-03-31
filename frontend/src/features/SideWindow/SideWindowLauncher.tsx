@@ -1,12 +1,12 @@
 import { useForceUpdate } from '@mtes-mct/monitor-ui'
-import { MutableRefObject, useEffect, useRef, useState } from 'react'
+import { MutableRefObject, useEffect, useRef } from 'react'
 import { StyleSheetManager } from 'styled-components'
 
 import { SideWindow } from '.'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { LegacyNewWindow } from '../../ui/NewWindow/LegacyNewWindow'
-import { sideWindowActions } from './slice'
+import { SideWindowStatus, sideWindowActions } from './slice'
 
 export function SideWindowLauncher() {
   const dispatch = useAppDispatch()
@@ -14,21 +14,12 @@ export function SideWindowLauncher() {
   const { forceUpdate } = useForceUpdate()
 
   const { sideWindow } = useAppSelector(state => state)
-  const { missionState } = useAppSelector(state => state.missionState)
-  const { listener } = useAppSelector(state => state.draw)
-  const [isFocused, setIsFocused] = useState(false)
-
-  useEffect(() => {
-    if (sideWindow.status === 'hidden' && missionState && !listener) {
-      setIsFocused(true)
-    }
-  }, [sideWindow.status, missionState, listener])
 
   useEffect(() => {
     forceUpdate()
   }, [forceUpdate])
 
-  if (sideWindow.status === 'closed') {
+  if (sideWindow.status === SideWindowStatus.CLOSED) {
     return null
   }
 
@@ -37,7 +28,7 @@ export function SideWindowLauncher() {
       <LegacyNewWindow
         closeOnUnmount
         copyStyles
-        doFocus={isFocused}
+        doFocus={sideWindow.status === SideWindowStatus.VISIBLE}
         features={{ height: '1200px', scrollbars: true, width: window.innerWidth }}
         name="MonitorEnv"
         onChangeFocus={status => dispatch(sideWindowActions.onChangeStatus(status))}

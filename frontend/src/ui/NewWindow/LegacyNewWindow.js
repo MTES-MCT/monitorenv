@@ -44,7 +44,7 @@ export class LegacyNewWindow extends React.PureComponent {
   }
 
   /**
-   * @type {any}
+   *
    * @override
    */
   componentDidUpdate(prevProps) {

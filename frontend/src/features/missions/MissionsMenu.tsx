@@ -12,15 +12,21 @@ import { ReactComponent as EnlargeSVG } from '../../uiMonitor/icons/Enlarge.svg'
 import { ReactComponent as HideSVG } from '../../uiMonitor/icons/Hide.svg'
 import { ReactComponent as MissionsSVG } from '../../uiMonitor/icons/Operations.svg'
 import { ReactComponent as PlusSVG } from '../../uiMonitor/icons/Plus.svg'
-import { sideWindowActions } from '../SideWindow/slice'
+import { SideWindowStatus, sideWindowActions } from '../SideWindow/slice'
 
 export function MissionsMenu() {
   const dispatch = useDispatch()
   const { displayMissionsLayer, missionsMenuIsOpen } = useAppSelector(state => state.global)
   const { sideWindow } = useAppSelector(state => state)
+  const { missionState } = useAppSelector(state => state.missionState)
+  const { listener } = useAppSelector(state => state.draw)
 
   const toggleMissionsWindow = () => {
-    dispatch(sideWindowActions.openAndGoTo(sideWindowPaths.MISSIONS))
+    if (sideWindow.status === SideWindowStatus.HIDDEN && missionState && !listener) {
+      return dispatch(sideWindowActions.onNavigateWhenEditingMission())
+    }
+
+    return dispatch(sideWindowActions.openAndGoTo(sideWindowPaths.MISSIONS))
   }
   const toggleMissionsLayer = () => {
     dispatch(setDisplayedItems({ displayMissionsLayer: !displayMissionsLayer }))
@@ -29,7 +35,11 @@ export function MissionsMenu() {
     dispatch(setDisplayedItems({ missionsMenuIsOpen: !missionsMenuIsOpen }))
   }
   const handleAddNewMission = () => {
-    dispatch(sideWindowActions.openAndGoTo(sideWindowPaths.MISSION_NEW))
+    if (sideWindow.status === SideWindowStatus.HIDDEN && missionState && !listener) {
+      return dispatch(sideWindowActions.onNavigateWhenEditingMission())
+    }
+
+    return dispatch(sideWindowActions.openAndGoTo(sideWindowPaths.MISSION_NEW))
   }
 
   return (
@@ -68,7 +78,7 @@ export function MissionsMenu() {
         </MissionsMenuWrapper>
       )}
       <MissionButton
-        active={sideWindow.status !== 'closed'}
+        active={sideWindow.status !== SideWindowStatus.CLOSED}
         appearance="primary"
         data-cy="missions-button"
         icon={<MissionsIcon className="rs-icon" />}
