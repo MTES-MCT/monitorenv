@@ -36,7 +36,8 @@ Le code source de monitorenv est fortement inspiré de [MonitorFish](https://git
 ## Prérequis
 
 - npm
-- openjdk
+- openjdk (osx: `brew install openjdk`)
+- postgres (seulement `psql` est nécessaire. osx: `brew install libpq`)
 - docker + docker-compose
 - python 3.10 + poetry
 
@@ -63,7 +64,7 @@ En développement, les variables d'environnement sont injectées via CRA. Le fic
 
 ## Backend
 
-Vérifier la configuration : `make dev-back-config`
+Vérifier la configuration : `make dev-check-config`
 Lancer le backend :
 `make dev-run-back-with-infra`:
 
