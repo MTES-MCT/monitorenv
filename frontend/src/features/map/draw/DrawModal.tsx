@@ -102,10 +102,10 @@ export function DrawModal() {
   }, [dispatch, previousMissionId, routeParams])
 
   useEffect(() => {
-    if (!sideWindow.isOpen) {
+    if (sideWindow.status === 'closed') {
       dispatch(closeAddZone())
     }
-  }, [dispatch, sideWindow.isOpen])
+  }, [dispatch, sideWindow.status])
 
   const handleQuit = () => {
     dispatch(closeAddZone())

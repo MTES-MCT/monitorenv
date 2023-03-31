@@ -68,7 +68,7 @@ export function MissionsMenu() {
         </MissionsMenuWrapper>
       )}
       <MissionButton
-        active={sideWindow.isOpen}
+        active={sideWindow.status !== 'closed'}
         appearance="primary"
         data-cy="missions-button"
         icon={<MissionsIcon className="rs-icon" />}
