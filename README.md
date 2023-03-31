@@ -36,8 +36,8 @@ Le code source de monitorenv est fortement inspiré de [MonitorFish](https://git
 ## Prérequis
 
 - npm
-- openjdk `brew install openjdk`
-- postgres `brew install libpq`
+- openjdk (osx: `brew install openjdk`)
+- postgres (seulement `psql` est nécessaire. osx: `brew install libpq`)
 - docker + docker-compose
 - python 3.10 + poetry
 
