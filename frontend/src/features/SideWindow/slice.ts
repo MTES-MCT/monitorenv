@@ -44,6 +44,7 @@ const sideWindowReducerSlice = createSlice({
     openAndGoTo(state, action: PayloadAction<string>) {
       state.currentPath = action.payload
       state.status = SideWindowStatus.VISIBLE
+      state.showConfirmCancelModal = false
     },
 
     setShowConfirmCancelModal(state, action: PayloadAction<boolean>) {

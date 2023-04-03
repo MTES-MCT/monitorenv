@@ -13,8 +13,10 @@ export class LegacyNewWindow extends React.PureComponent {
     this.windowCheckerInterval = undefined
     this.released = false
     this.state = {
+      localShowPrompt: false,
       mounted: false
     }
+    this.beforeUnloadListener = this.beforeUnloadListener.bind(this)
   }
 
   /**
@@ -22,18 +24,11 @@ export class LegacyNewWindow extends React.PureComponent {
    */
   componentDidMount() {
     const { onChangeFocus } = this.props
+
     this.openChild()
     this.setState({ mounted: true })
-    this.window?.addEventListener(
-      'beforeunload',
-      e => {
-        e.preventDefault()
 
-        // eslint-disable-next-line no-return-assign
-        return (e.returnValue = 'blocked')
-      },
-      { capture: true }
-    )
+    this.window?.addEventListener('beforeunload', this.beforeUnloadListener, { capture: true })
 
     this.window?.addEventListener('blur', () => {
       onChangeFocus('hidden')
@@ -48,10 +43,14 @@ export class LegacyNewWindow extends React.PureComponent {
    * @override
    */
   componentDidUpdate(prevProps) {
-    const { doFocus } = this.props
-
+    const { doFocus, showPrompt } = this.props
+    const { localShowPrompt } = this.state
     if (prevProps.doFocus !== doFocus && doFocus) {
       this.window?.focus()
+    }
+
+    if (localShowPrompt !== showPrompt) {
+      this.setState({ localShowPrompt: showPrompt })
     }
   }
 
@@ -72,6 +71,19 @@ export class LegacyNewWindow extends React.PureComponent {
         this.window.document.body.appendChild(clone)
       }
     }
+    this.window?.removeEventListener('beforeunload', this.beforeUnloadListener, { capture: true })
+  }
+
+  beforeUnloadListener(e) {
+    e.preventDefault()
+    const { localShowPrompt } = this.state
+
+    if (localShowPrompt) {
+      // eslint-disable-next-line no-return-assign
+      return (e.returnValue = 'blocked')
+    }
+
+    return null
   }
 
   /**
@@ -148,6 +160,7 @@ export class LegacyNewWindow extends React.PureComponent {
       if (typeof onBlock === 'function') {
         onBlock(null)
       } else {
+        // eslint-disable-next-line no-console
         console.warn('A new window could not be opened. Maybe it was blocked.')
       }
     }
@@ -200,6 +213,7 @@ LegacyNewWindow.defaultProps = {
   onChangeFocus: () => {},
   onOpen: null,
   onUnload: null,
+  showPrompt: false,
   title: '',
   url: ''
 }

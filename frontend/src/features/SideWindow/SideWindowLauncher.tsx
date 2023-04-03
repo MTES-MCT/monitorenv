@@ -1,8 +1,10 @@
 import { useForceUpdate } from '@mtes-mct/monitor-ui'
 import { MutableRefObject, useEffect, useRef } from 'react'
+import { matchPath } from 'react-router'
 import { StyleSheetManager } from 'styled-components'
 
 import { SideWindow } from '.'
+import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { LegacyNewWindow } from '../../ui/NewWindow/LegacyNewWindow'
@@ -14,6 +16,17 @@ export function SideWindowLauncher() {
   const { forceUpdate } = useForceUpdate()
 
   const { sideWindow } = useAppSelector(state => state)
+  const isEditMissionPage = matchPath(sideWindow.currentPath, {
+    exact: true,
+    path: sideWindowPaths.MISSION,
+    strict: false
+  })
+
+  const isCreateMissionPage = matchPath(sideWindow.currentPath, {
+    exact: true,
+    path: sideWindowPaths.MISSION_NEW,
+    strict: false
+  })
 
   useEffect(() => {
     forceUpdate()
@@ -35,6 +48,7 @@ export function SideWindowLauncher() {
         onUnload={() => {
           dispatch(sideWindowActions.close())
         }}
+        showPrompt={!!isEditMissionPage || !!isCreateMissionPage}
         title="MonitorEnv"
       >
         <SideWindow ref={newWindowRef} />
