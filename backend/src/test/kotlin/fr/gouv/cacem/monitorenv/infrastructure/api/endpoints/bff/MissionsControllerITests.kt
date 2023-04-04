@@ -124,6 +124,7 @@ class MissionsControllerITests {
                 startedAfterDateTime = any(),
                 startedBeforeDateTime = any(),
                 missionNatures = any(),
+                missionSource = any(),
                 missionTypes = any(),
                 missionStatuses = any(),
                 pageNumber = any(),

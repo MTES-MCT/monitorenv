@@ -8,6 +8,7 @@ const THIRTY_DAYS_AGO = dayjs().subtract(30, 'days').toISOString()
 type MissionFiltersSliceType = {
   missionAdministrationFilter: string | undefined
   missionNatureFilter: string[]
+  missionSourceFilter: string[]
   missionStartedAfter?: string
   missionStartedBefore?: string
   missionStatusFilter: string[]
@@ -18,6 +19,7 @@ type MissionFiltersSliceType = {
 const initialState: MissionFiltersSliceType = {
   missionAdministrationFilter: undefined,
   missionNatureFilter: [],
+  missionSourceFilter: [],
   missionStartedAfter: THIRTY_DAYS_AGO,
   missionStartedBefore: undefined,
   missionStatusFilter: [],
@@ -43,6 +45,9 @@ const missionFiltersSlice = createSlice({
     setMissionNatureFilter(state, action) {
       state.missionNatureFilter = action.payload
     },
+    setMissionSourceFilter(state, action) {
+      state.missionSourceFilter = action.payload
+    },
     setMissionStartedAfter(state, action) {
       state.missionStartedAfter = action.payload
     },
@@ -65,6 +70,7 @@ export const {
   resetMissionFilters,
   setMissionAdministrationFilter,
   setMissionNatureFilter,
+  setMissionSourceFilter,
   setMissionStartedAfter,
   setMissionStartedBefore,
   setMissionStatusFilter,

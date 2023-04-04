@@ -6,11 +6,17 @@ import { CheckPicker } from 'rsuite'
 import styled from 'styled-components'
 
 import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
-import { missionNatureEnum, missionStatusEnum, missionTypeEnum } from '../../../domain/entities/missions'
+import {
+  missionNatureEnum,
+  missionSourceEnum,
+  missionStatusEnum,
+  missionTypeEnum
+} from '../../../domain/entities/missions'
 import {
   resetMissionFilters,
   setMissionAdministrationFilter,
   setMissionNatureFilter,
+  setMissionSourceFilter,
   setMissionStartedAfter,
   setMissionStartedBefore,
   setMissionStatusFilter,
@@ -27,6 +33,7 @@ export function MissionsTableFilters() {
   const {
     missionAdministrationFilter,
     missionNatureFilter,
+    missionSourceFilter,
     missionStartedAfter,
     missionStartedBefore,
     missionStatusFilter,
@@ -76,6 +83,10 @@ export function MissionsTableFilters() {
   const handleSetNatureFilter = v => {
     dispatch(setMissionNatureFilter(v))
   }
+  const sourceOptions = Object.values(missionSourceEnum)
+  const handleSetSourceFilter = value => {
+    dispatch(setMissionSourceFilter(value))
+  }
   const handleSetMissionStartedAfterFilter = (v: Date | null) => {
     dispatch(setMissionStartedAfter(v ? v.toISOString() : null))
   }
@@ -107,6 +118,18 @@ export function MissionsTableFilters() {
           label="Date de début avant le"
           onChange={handleSetMissionStartedBeforeFilter}
           style={{ marginLeft: '10px' }}
+        />
+        <StyledSelect
+          baseContainer={newWindowContainerRef.current}
+          data-cy="select-origin-filter"
+          defaultValue={missionSourceFilter}
+          isLabelHidden
+          label="Origine"
+          name="origine"
+          onChange={handleSetSourceFilter}
+          options={sourceOptions}
+          placeholder="Origine"
+          style={tagPickerStyle}
         />
         <CheckPicker
           container={() => unitPickerRef.current}

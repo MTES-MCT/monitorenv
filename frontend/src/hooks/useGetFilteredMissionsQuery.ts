@@ -9,6 +9,7 @@ export const useGetFilteredMissionsQuery = () => {
   const {
     missionAdministrationFilter,
     missionNatureFilter,
+    missionSourceFilter,
     missionStartedAfter,
     missionStartedBefore,
     missionStatusFilter,
@@ -19,6 +20,7 @@ export const useGetFilteredMissionsQuery = () => {
   const { data, isError, isLoading } = useGetMissionsQuery(
     {
       missionNature: missionNatureFilter,
+      missionSource: missionSourceFilter,
       missionStatus: missionStatusFilter,
       missionTypes: missionTypeFilter,
       startedAfterDateTime: missionStartedAfter || undefined,
