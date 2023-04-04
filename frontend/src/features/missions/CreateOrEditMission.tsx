@@ -20,6 +20,7 @@ import { setError } from '../../domain/shared_slices/Global'
 import { setMissionState } from '../../domain/shared_slices/MissionsState'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { SyncFormValuesWithRedux } from '../../hooks/useSyncFormValuesWithRedux'
+import { MissionSourceTag } from '../../ui/MissionSourceTag'
 import { FormikForm } from '../../uiMonitor/CustomFormikFields/FormikForm'
 import { ReactComponent as DeleteSVG } from '../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as SaveSVG } from '../../uiMonitor/icons/Save.svg'
@@ -107,7 +108,9 @@ export function CreateOrEditMission() {
         title={`Edition de la mission${
           isLoadingUpdateMission || isLoadingCreateMission ? ' - Enregistrement en cours' : ''
         }`}
-      />
+      >
+        <MissionSourceTag source={missionToEdit?.missionSource} />
+      </Header>
       <Formik enableReinitialize initialValues={missionFormikValues} onSubmit={handleSubmitForm}>
         {formikProps => {
           const handleCloseMission = () => {
