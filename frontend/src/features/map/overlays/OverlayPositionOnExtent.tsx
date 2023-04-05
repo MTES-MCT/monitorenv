@@ -98,7 +98,8 @@ export function OverlayPositionOnExtent({
 }
 
 const OverlayComponent = styled.div`
-  position: relative;
+  position: absolute;
+  z-index: 1000;
   top: ${props => props.overlayTopLeftMargin[0]}px;
   left: ${props => props.overlayTopLeftMargin[1]}px;
   text-align: left;

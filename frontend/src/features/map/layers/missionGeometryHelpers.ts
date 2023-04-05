@@ -10,7 +10,8 @@ import {
   EnvActionControl,
   EnvActionSurveillance,
   getMissionStatus,
-  MissionType
+  MissionType,
+  MissionTypeEnum
 } from '../../../domain/entities/missions'
 
 import type { Geometry } from 'ol/geom'
@@ -46,6 +47,12 @@ export const getMissionZoneFeature = (mission: Partial<MissionType>, layername: 
     dataProjection: WSG84_PROJECTION,
     featureProjection: OPENLAYERS_PROJECTION
   })
+
+  const numberOfControls = mission.envActions?.filter(action => action.actionType === ActionTypeEnum.CONTROL).length
+  const numberOfSurveillance = mission.envActions?.filter(
+    action => action.actionType === ActionTypeEnum.SURVEILLANCE
+  ).length
+
   const feature = new Feature({
     geometry
   })
@@ -59,6 +66,8 @@ export const getMissionZoneFeature = (mission: Partial<MissionType>, layername: 
     missionStatus: getMissionStatus(mission),
     missionTypes: mission.missionTypes,
     numberOfActions: mission.envActions?.length || 0,
+    numberOfControls,
+    numberOfSurveillance,
     startDateTimeUtc: mission.startDateTimeUtc
   })
 
