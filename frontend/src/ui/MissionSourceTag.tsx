@@ -33,6 +33,7 @@ const SourceTag = styled.div<{
   border-radius: 11px;
   padding-left: 8px;
   padding-right: 8px;
+  display: inline-block;
   color: ${COLORS.white};
   background-color: ${p => (p.source === missionSourceEnum.MONITORENV.value ? COLORS.mediumSeaGreen : COLORS.blueGray)};
   p {

@@ -10,13 +10,14 @@ import { getControlUnitsAsText } from '../../../../domain/entities/controlUnit'
 import { missionTypeEnum } from '../../../../domain/entities/missions'
 import { editMission } from '../../../../domain/use_cases/missions/editMission'
 import { clearSelectedMissionOnMap } from '../../../../domain/use_cases/missions/selectMissionOnMap'
+import { MissionSourceTag } from '../../../../ui/MissionSourceTag'
 import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
 import { ReactComponent as CloseIconSVG } from '../../../../uiMonitor/icons/Close.svg'
 import { ReactComponent as EditIconSVG } from '../../../../uiMonitor/icons/Edit.svg'
 
 export function MissionCard({ feature, selected }: { feature: any; selected?: boolean }) {
   const dispatch = useDispatch()
-  const { controlUnits, missionId, missionStatus, missionType, numberOfActions, startDateTimeUtc } =
+  const { controlUnits, missionId, missionSource, missionStatus, missionType, numberOfActions, startDateTimeUtc } =
     feature.getProperties()
   const parsedstartDateTimeUtc = new Date(startDateTimeUtc)
 
@@ -37,7 +38,8 @@ export function MissionCard({ feature, selected }: { feature: any; selected?: bo
       </Col1>
       <Col2>
         <MissionType>Mission {missionTypeEnum[missionType]?.libelle}</MissionType>
-        <MissionReources>{getControlUnitsAsText(controlUnits)}</MissionReources>
+        <MissionResources>{getControlUnitsAsText(controlUnits)}</MissionResources>
+        <MissionSourceTag source={missionSource} />
         <Actions>
           {numberOfActions || 0} action{numberOfActions > 1 ? 's' : ''} réalisée{numberOfActions > 1 ? 's' : ''}
         </Actions>
@@ -73,7 +75,7 @@ const MissionCardHeader = styled.div`
   border-top-right-radius: 2px;
   display: flex;
   width: 380px;
-  height: 136px;
+  height: 157px;
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3);
 `
 
@@ -87,17 +89,20 @@ const MissionType = styled.div`
   font-weight: bold;
 `
 
-const MissionReources = styled.div`
+const MissionResources = styled.div`
   font-size: 12px;
-  height: 34px;
   color: ${COLORS.slateGray};
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  margin-top: 5px;
+  margin-bottom: 5px;
 `
-const Actions = styled.div``
+const Actions = styled.div`
+  margin-top: 5px;
+`
 
 const Col1 = styled.div`
   padding: 8px 0px 5px 10px;
