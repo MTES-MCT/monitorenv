@@ -4,18 +4,20 @@ import styled from 'styled-components'
 import { COLORS } from '../constants/constants'
 import { MissionSourceEnum, missionSourceEnum } from '../domain/entities/missions'
 
-export function MissionSourceTag({ source }: { source?: MissionSourceEnum }) {
+import type { CSSProperties } from 'react'
+
+export function MissionSourceTag({ source, styleProps }: { source?: MissionSourceEnum; styleProps?: CSSProperties }) {
   const text = 'Ouverte par le'
   switch (source) {
     case missionSourceEnum.MONITORENV.value:
       return (
-        <SourceTag source={missionSourceEnum.MONITORENV.value}>
+        <SourceTag source={missionSourceEnum.MONITORENV.value} style={styleProps}>
           {text} {missionSourceEnum.MONITORENV.label}
         </SourceTag>
       )
     case missionSourceEnum.MONITORFISH.value:
       return (
-        <SourceTag source={missionSourceEnum.MONITORFISH.value}>
+        <SourceTag source={missionSourceEnum.MONITORFISH.value} style={styleProps}>
           {text} {missionSourceEnum.MONITORFISH.label}
         </SourceTag>
       )

@@ -10,8 +10,7 @@ import {
   EnvActionControl,
   EnvActionSurveillance,
   getMissionStatus,
-  MissionType,
-  MissionTypeEnum
+  MissionType
 } from '../../../domain/entities/missions'
 
 import type { Geometry } from 'ol/geom'
