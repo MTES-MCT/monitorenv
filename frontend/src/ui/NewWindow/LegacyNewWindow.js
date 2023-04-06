@@ -13,7 +13,6 @@ export class LegacyNewWindow extends React.PureComponent {
     this.windowCheckerInterval = undefined
     this.released = false
     this.state = {
-      localShowPrompt: false,
       mounted: false
     }
     this.beforeUnloadListener = this.beforeUnloadListener.bind(this)
@@ -43,14 +42,9 @@ export class LegacyNewWindow extends React.PureComponent {
    * @override
    */
   componentDidUpdate(prevProps) {
-    const { doFocus, showPrompt } = this.props
-    const { localShowPrompt } = this.state
-    if (prevProps.doFocus !== doFocus && doFocus) {
+    const { shouldHaveFocus } = this.props
+    if (prevProps.shouldHaveFocus !== shouldHaveFocus && shouldHaveFocus) {
       this.window?.focus()
-    }
-
-    if (localShowPrompt !== showPrompt) {
-      this.setState({ localShowPrompt: showPrompt })
     }
   }
 
@@ -76,9 +70,9 @@ export class LegacyNewWindow extends React.PureComponent {
 
   beforeUnloadListener(e) {
     e.preventDefault()
-    const { localShowPrompt } = this.state
+    const { showPrompt } = this.props
 
-    if (localShowPrompt) {
+    if (showPrompt) {
       // eslint-disable-next-line no-return-assign
       return (e.returnValue = 'blocked')
     }
@@ -206,13 +200,13 @@ LegacyNewWindow.defaultProps = {
   center: 'parent',
   closeOnUnmount: true,
   copyStyles: true,
-  doFocus: false,
   features: { height: '640px', width: '600px' },
   name: '',
   onBlock: null,
   onChangeFocus: () => {},
   onOpen: null,
   onUnload: null,
+  shouldHaveFocus: false,
   showPrompt: false,
   title: '',
   url: ''

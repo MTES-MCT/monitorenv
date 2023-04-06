@@ -23,10 +23,10 @@ export function MissionsMenu() {
 
   const toggleMissionsWindow = () => {
     if (sideWindow.status === SideWindowStatus.HIDDEN && missionState && !listener) {
-      return dispatch(sideWindowActions.onNavigateWhenEditingMission())
+      return dispatch(sideWindowActions.onFocusAndDisplayCancelModal())
     }
 
-    return dispatch(sideWindowActions.openAndGoTo(sideWindowPaths.MISSIONS))
+    return dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSIONS))
   }
   const toggleMissionsLayer = () => {
     dispatch(setDisplayedItems({ displayMissionsLayer: !displayMissionsLayer }))
@@ -36,10 +36,10 @@ export function MissionsMenu() {
   }
   const handleAddNewMission = () => {
     if (sideWindow.status === SideWindowStatus.HIDDEN && missionState && !listener) {
-      return dispatch(sideWindowActions.onNavigateWhenEditingMission())
+      return dispatch(sideWindowActions.onFocusAndDisplayCancelModal())
     }
 
-    return dispatch(sideWindowActions.openAndGoTo(sideWindowPaths.MISSION_NEW))
+    return dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSION_NEW))
   }
 
   return (

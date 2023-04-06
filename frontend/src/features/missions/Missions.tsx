@@ -22,7 +22,7 @@ export function Missions() {
         <AddNewMissionButton
           data-cy="add-mission"
           icon={<PlusSVG className="rs-icon" />}
-          onClick={() => dispatch(sideWindowActions.openAndGoTo(sideWindowPaths.MISSION_NEW))}
+          onClick={() => dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSION_NEW))}
         >
           <span>Ajouter une nouvelle mission</span>
         </AddNewMissionButton>

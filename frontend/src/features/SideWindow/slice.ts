@@ -30,21 +30,23 @@ const sideWindowReducerSlice = createSlice({
     close(state) {
       state.status = SideWindowStatus.CLOSED
     },
-    onChangeStatus(state, action: PayloadAction<SideWindowStatus>) {
-      state.status = action.payload
-    },
-    onNavigateWhenEditingMission(state) {
-      state.status = SideWindowStatus.VISIBLE
-      state.showConfirmCancelModal = true
-    },
     /**
      * Open the side window and set its route path
      */
     // TODO Replace with an enum once `sideWindowPaths` is converted to an enum.
-    openAndGoTo(state, action: PayloadAction<string>) {
+    focusAndGoTo(state, action: PayloadAction<string>) {
       state.currentPath = action.payload
       state.status = SideWindowStatus.VISIBLE
       state.showConfirmCancelModal = false
+    },
+
+    onChangeStatus(state, action: PayloadAction<SideWindowStatus>) {
+      state.status = action.payload
+    },
+
+    onFocusAndDisplayCancelModal(state) {
+      state.status = SideWindowStatus.VISIBLE
+      state.showConfirmCancelModal = true
     },
 
     setShowConfirmCancelModal(state, action: PayloadAction<boolean>) {

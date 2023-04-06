@@ -1,5 +1,5 @@
 import { useForceUpdate } from '@mtes-mct/monitor-ui'
-import { MutableRefObject, useEffect, useRef } from 'react'
+import { MutableRefObject, useCallback, useEffect, useRef } from 'react'
 import { matchPath } from 'react-router'
 import { StyleSheetManager } from 'styled-components'
 
@@ -16,13 +16,13 @@ export function SideWindowLauncher() {
   const { forceUpdate } = useForceUpdate()
 
   const { sideWindow } = useAppSelector(state => state)
-  const isEditMissionPage = matchPath(sideWindow.currentPath, {
+  const isEditMissionPage = !!matchPath(sideWindow.currentPath, {
     exact: true,
     path: sideWindowPaths.MISSION,
     strict: false
   })
 
-  const isCreateMissionPage = matchPath(sideWindow.currentPath, {
+  const isCreateMissionPage = !!matchPath(sideWindow.currentPath, {
     exact: true,
     path: sideWindowPaths.MISSION_NEW,
     strict: false
@@ -31,6 +31,13 @@ export function SideWindowLauncher() {
   useEffect(() => {
     forceUpdate()
   }, [forceUpdate])
+
+  const onChangeFocus = useCallback(
+    status => {
+      dispatch(sideWindowActions.onChangeStatus(status))
+    },
+    [dispatch]
+  )
 
   if (sideWindow.status === SideWindowStatus.CLOSED) {
     return null
@@ -41,14 +48,14 @@ export function SideWindowLauncher() {
       <LegacyNewWindow
         closeOnUnmount
         copyStyles
-        doFocus={sideWindow.status === SideWindowStatus.VISIBLE}
         features={{ height: '1200px', scrollbars: true, width: window.innerWidth }}
         name="MonitorEnv"
-        onChangeFocus={status => dispatch(sideWindowActions.onChangeStatus(status))}
+        onChangeFocus={onChangeFocus}
         onUnload={() => {
           dispatch(sideWindowActions.close())
         }}
-        showPrompt={!!isEditMissionPage || !!isCreateMissionPage}
+        shouldHaveFocus={sideWindow.status === SideWindowStatus.VISIBLE}
+        showPrompt={isEditMissionPage || isCreateMissionPage}
         title="MonitorEnv"
       >
         <SideWindow ref={newWindowRef} />
