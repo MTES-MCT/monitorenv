@@ -17,7 +17,7 @@ class GetMonitorEnvMissions(private val missionRepository: IMissionRepository) {
         startedAfterDateTime: ZonedDateTime?,
         startedBeforeDateTime: ZonedDateTime?,
         missionNatures: List<String>?,
-        missionSource: List<MissionSourceEnum>?,
+        missionSources: List<MissionSourceEnum>?,
         missionTypes: List<String>?,
         missionStatuses: List<String>?,
         pageNumber: Int?,
@@ -29,7 +29,7 @@ class GetMonitorEnvMissions(private val missionRepository: IMissionRepository) {
             missionNatures = missionNatures,
             missionTypes = missionTypes,
             missionStatuses = missionStatuses,
-            missionSources = missionSource,
+            missionSources = missionSources,
             pageable = if (pageNumber != null && pageSize != null) PageRequest.of(pageNumber, pageSize) else Pageable.unpaged()
         )
 

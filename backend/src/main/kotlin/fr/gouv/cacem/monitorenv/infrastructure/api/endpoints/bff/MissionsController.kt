@@ -42,7 +42,7 @@ class MissionsController(
         startedBeforeDateTime: ZonedDateTime?,
         @Parameter(description = "Origine")
         @RequestParam(name = "missionSource", required = false)
-        missionSource: List<MissionSourceEnum>?,
+        missionSources: List<MissionSourceEnum>?,
         @Parameter(description = "Natures de mission")
         @RequestParam(name = "missionNature", required = false)
         missionNatures: List<String>?,
@@ -58,7 +58,7 @@ class MissionsController(
             startedAfterDateTime = startedAfterDateTime,
             startedBeforeDateTime = startedBeforeDateTime,
             missionNatures = missionNatures,
-            missionSource = missionSource,
+            missionSources = missionSources,
             missionStatuses = missionStatuses,
             missionTypes = missionTypes,
             pageNumber = pageNumber,
