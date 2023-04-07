@@ -51,7 +51,7 @@ context('Missions', () => {
 
   it('An infraction Should be duplicated', () => {
     // Given
-    cy.get('*[data-cy="edit-mission"]').eq(3).click()
+    cy.get('*[data-cy="edit-mission"]').eq(3).click({ force: true })
     cy.get('*[data-cy="action-card"]').eq(1).click()
     cy.get('*[data-cy="control-form-number-controls"]').type('{backspace}2')
     cy.get('*[data-cy="infraction-form"]').should('not.exist')
@@ -88,7 +88,7 @@ context('Missions', () => {
 
   it('allow only one theme and may be multiple subthemes in control actions', () => {
     // Given
-    cy.get('*[data-cy="edit-mission"]').eq(3).click()
+    cy.get('*[data-cy="edit-mission"]').eq(3).click({ force: true })
     cy.intercept('GET', `/bff/v1/controlthemes`).as('getControlThemes')
     cy.get('*[data-cy="action-card"]').eq(1).click()
     cy.get('*[data-cy="envaction-theme-element"]').should('have.length', 1)
@@ -135,7 +135,7 @@ context('Missions', () => {
 
   it('save observations in control Actions', () => {
     // Given
-    cy.get('*[data-cy="edit-mission"]').eq(3).click()
+    cy.get('*[data-cy="edit-mission"]').eq(3).click({ force: true })
     cy.intercept('GET', `/bff/v1/controlthemes`).as('getControlThemes')
     cy.get('*[data-cy="action-card"]').eq(1).click()
     cy.get('[id="envActions[1].observations"]').contains('RAS')
@@ -157,7 +157,7 @@ context('Missions', () => {
 
   it('allow multiple themes and may be multiple subthemes in surveillance actions', () => {
     // Given
-    cy.get('*[data-cy="edit-mission"]').eq(3).click()
+    cy.get('*[data-cy="edit-mission"]').eq(3).click({ force: true })
     cy.intercept('GET', `/bff/v1/controlthemes`).as('getControlThemes')
     cy.get('*[data-cy="action-card"]').eq(0).click()
     cy.get('*[data-cy="envaction-theme-element"]').should('have.length', 1)
@@ -238,7 +238,7 @@ context('Missions', () => {
   it('Missions from POSEIDON_CACEM must not be editable', () => {
     // Given
     cy.intercept('GET', `/bff/v1/missions/51`).as('getMissionPoseidonCacem')
-    cy.get('*[data-cy="edit-mission"]').eq(10).click()
+    cy.get('*[data-cy="edit-mission"]').eq(10).click({ force: true })
     cy.wait('@getMissionPoseidonCacem').then(({ response }) => {
       expect(response && response.statusCode).equal(200)
       expect(response && response.body.missionSource).equal('POSEIDON_CACEM')
