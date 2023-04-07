@@ -15,7 +15,7 @@ import { pluralize } from '../../../../utils/pluralize'
 
 dayjs.locale('fr')
 
-export function MissionCard({ feature, selected }: { feature: any; selected?: boolean }) {
+export function MissionCard({ feature, selected = false }: { feature: any; selected?: boolean }) {
   const dispatch = useDispatch()
   const {
     controlUnits,
@@ -74,7 +74,7 @@ export function MissionCard({ feature, selected }: { feature: any; selected?: bo
         </Title>
 
         <CloseButton
-          $isVisible={selected || false}
+          $isVisible={selected}
           accent={Accent.TERTIARY}
           data-cy="mission-overlay-close"
           Icon={Icon.Close}
@@ -100,7 +100,7 @@ export function MissionCard({ feature, selected }: { feature: any; selected?: bo
       <EditButton
         accent={Accent.PRIMARY}
         disabled={!selected}
-        Icon={Icon.Calendar}
+        Icon={Icon.Edit}
         onClick={handleEditMission}
         size={Size.SMALL}
       >

@@ -2,19 +2,14 @@ import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import {
-  actionTargetTypeEnum,
-  ActionTypeEnum,
-  actionTypeEnum,
-  EnvActionTheme,
-  EnvAction
-} from '../../../domain/entities/missions'
+import { actionTargetTypeEnum, ActionTypeEnum, actionTypeEnum, EnvAction } from '../../../domain/entities/missions'
 import { ControlInfractionsTags } from '../../../ui/ControlInfractionsTags'
 import { ReactComponent as ControlIconSVG } from '../../../uiMonitor/icons/Control.svg'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as DuplicateSVG } from '../../../uiMonitor/icons/Duplicate.svg'
 import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/Note_libre.svg'
 import { ReactComponent as SurveillanceIconSVG } from '../../../uiMonitor/icons/Observation.svg'
+import { extractThemesAsText } from '../../../utils/extractThemesAsText'
 import { getDateAsLocalizedStringExpanded } from '../../../utils/getDateAsLocalizedString'
 
 import type { MouseEventHandler } from 'react'
@@ -25,14 +20,6 @@ type ActionCardProps = {
   removeAction: MouseEventHandler
   selectAction: MouseEventHandler
   selected: boolean
-}
-
-function extractThemesAsText(themes: EnvActionTheme[]) {
-  if (!(themes?.length > 0)) {
-    return ''
-  }
-
-  return themes.map(t => t.theme).join(' - ')
 }
 
 export function ActionCard({ action, duplicateAction, removeAction, selectAction, selected }: ActionCardProps) {

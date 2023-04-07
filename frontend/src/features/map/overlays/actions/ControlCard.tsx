@@ -1,64 +1,69 @@
-import { format, isValid } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
 import { actionTargetTypeEnum } from '../../../../domain/entities/missions'
 import { ControlInfractionsTags } from '../../../../ui/ControlInfractionsTags'
+import { extractThemesAsText } from '../../../../utils/extractThemesAsText'
+import { pluralize } from '../../../../utils/pluralize'
 
-export function ControlCard({ feature }) {
-  const { actionNumberOfControls, actionStartDateTimeUtc, actionTargetType, actionTheme, infractions } =
+export function ControlCard({ feature }: { feature: any }) {
+  const { actionNumberOfControls, actionStartDateTimeUtc, actionTargetType, infractions, themes } =
     feature.getProperties()
   const parsedActionStartDateTimeUtc = new Date(actionStartDateTimeUtc)
+  const actionDate = getLocalizedDayjs(parsedActionStartDateTimeUtc).format('DD MMM à HH:mm')
 
   return (
     <ControlCardHeader>
-      <Col1>
-        <ControlDate>
-          {isValid(parsedActionStartDateTimeUtc) &&
-            format(parsedActionStartDateTimeUtc, 'dd MMM à HH:mm', { locale: fr })}
-        </ControlDate>
-      </Col1>
-      <Col2>
-        <Theme>{actionTheme}</Theme>
-        <Actions>
-          <Accented>
-            {actionNumberOfControls || 0} contrôle{actionNumberOfControls > 1 ? 's' : ''}
-          </Accented>{' '}
-          réalisé{actionNumberOfControls > 1 ? 's' : ''} sur des cibles de type{' '}
-          <Accented>{actionTargetTypeEnum[actionTargetType]?.libelle || 'non spécifié'}</Accented>
-        </Actions>
-        {infractions && (
-          <ControlInfractionsTags actionNumberOfControls={actionNumberOfControls} infractions={infractions} />
-        )}
-      </Col2>
+      <Actions>
+        <div>
+          {themes?.length > 0 && themes[0]?.theme ? <Accented>{extractThemesAsText(themes)}</Accented> : 'à renseigner'}
+        </div>{' '}
+        <Accented>
+          {actionNumberOfControls} {pluralize('contrôle', actionNumberOfControls)}
+          {' ('}
+          {actionTargetTypeEnum[actionTargetType]?.libelle || 'non spécifié'}
+          {' )'}
+          <Bullet color={infractions.length > 0 ? COLORS.maximumRed : COLORS.mediumSeaGreen} />
+        </Accented>
+      </Actions>
+      {infractions && (
+        <ControlInfractionsTags actionNumberOfControls={actionNumberOfControls} infractions={infractions} />
+      )}
+      <DateControl>{actionDate}</DateControl>
     </ControlCardHeader>
   )
 }
 
 const ControlCardHeader = styled.div`
   background: ${COLORS.white};
-  padding: 4px 5px 5px 5px;
+  padding: 12px;
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
   display: flex;
+  flex-direction: column;
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3);
-  padding: 18px;
+  min-width: 300px;
+  gap: 10px;
 `
 
-const ControlDate = styled.div``
-
-const Theme = styled.div``
 const Actions = styled.div`
-  margin-bottom: 8px;
+  font-weight: 500;
+`
+const Accented = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 5px;
 `
 
-const Col1 = styled.div`
-  width: 120px;
+const Bullet = styled.div<{ color: string }>`
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  background-color: ${p => p.color};
 `
-const Col2 = styled.div`
-  width: 330px;
-`
-const Accented = styled.span`
-  font-weight: 500;
+
+const DateControl = styled.p`
+  color: ${COLORS.slateGray};
 `
