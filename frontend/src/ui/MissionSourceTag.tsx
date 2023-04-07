@@ -1,3 +1,4 @@
+import { Tag } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { COLORS } from '../constants/constants'
@@ -9,17 +10,13 @@ export function MissionSourceTag({ source }: { source?: MissionSourceEnum }) {
     case missionSourceEnum.MONITORENV.value:
       return (
         <SourceTag source={missionSourceEnum.MONITORENV.value}>
-          <p>
-            {text} {missionSourceEnum.MONITORENV.label}
-          </p>
+          {text} {missionSourceEnum.MONITORENV.label}
         </SourceTag>
       )
     case missionSourceEnum.MONITORFISH.value:
       return (
         <SourceTag source={missionSourceEnum.MONITORFISH.value}>
-          <p>
-            {text} {missionSourceEnum.MONITORFISH.label}
-          </p>
+          {text} {missionSourceEnum.MONITORFISH.label}
         </SourceTag>
       )
     default:
@@ -27,17 +24,9 @@ export function MissionSourceTag({ source }: { source?: MissionSourceEnum }) {
   }
 }
 
-const SourceTag = styled.div<{
+const SourceTag = styled(Tag)<{
   source: string
 }>`
-  border-radius: 11px;
-  padding-left: 8px;
-  padding-right: 8px;
-  display: inline-block;
   color: ${COLORS.white};
   background-color: ${p => (p.source === missionSourceEnum.MONITORENV.value ? COLORS.mediumSeaGreen : COLORS.blueGray)};
-  p {
-    margin: auto;
-    font-size: 13px;
-  }
 `
