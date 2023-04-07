@@ -1,6 +1,6 @@
 import { Accent, Button, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
-import { format, isValid } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import dayjs from 'dayjs'
+import 'dayjs/locale/fr'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
@@ -13,10 +13,13 @@ import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
 import { missionTypesToString } from '../../../../utils/missionTypes'
 import { pluralize } from '../../../../utils/pluralize'
 
+dayjs.locale('fr')
+
 export function MissionCard({ feature, selected }: { feature: any; selected?: boolean }) {
   const dispatch = useDispatch()
   const {
     controlUnits,
+    endDateTimeUtc,
     missionId,
     missionSource,
     missionStatus,
@@ -26,8 +29,16 @@ export function MissionCard({ feature, selected }: { feature: any; selected?: bo
     startDateTimeUtc
   } = feature.getProperties()
 
-  const parsedstartDateTimeUtc = new Date(startDateTimeUtc)
-  const formattedDate = isValid(parsedstartDateTimeUtc) && format(parsedstartDateTimeUtc, 'dd MMM yyyy', { locale: fr })
+  const startDate = dayjs(startDateTimeUtc)
+  const endDate = dayjs(endDateTimeUtc)
+
+  const isMissionDuringOneDay = !endDateTimeUtc || (endDateTimeUtc && endDate.diff(startDate, 'day') === 0)
+
+  const formattedStartDate = startDate.isValid() && dayjs(startDateTimeUtc).format('D MMM YYYY')
+  const formattedEndDate = endDateTimeUtc && endDate.isValid() && dayjs(endDateTimeUtc).format('D MMM YYYY')
+  const missionDurationText = isMissionDuringOneDay
+    ? formattedStartDate
+    : `du ${formattedStartDate} au ${formattedEndDate}`
 
   const handleEditMission = useCallback(() => {
     dispatch(editMission(missionId))
@@ -75,7 +86,8 @@ export function MissionCard({ feature, selected }: { feature: any; selected?: bo
       <MissionSourceTag source={missionSource} styleProps={{ alignSelf: 'start' }} />
       <Details>
         <div>
-          Mission {missionTypesToString(missionTypes)} – {formattedDate}
+          {' '}
+          Mission {missionTypesToString(missionTypes)} – {missionDurationText}
         </div>
         <div>
           {numberOfControls} {pluralize('contrôle', numberOfControls)} et {numberOfSurveillance}{' '}
@@ -106,7 +118,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
-  max-width: 300px;
+  min-width: 260px;
 `
 
 const Header = styled.div`
