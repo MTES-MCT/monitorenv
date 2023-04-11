@@ -17,6 +17,7 @@ import {
 import { setFitToExtent } from '../../domain/shared_slices/Map'
 import { addZone } from '../../domain/use_cases/missions/addZone'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
+import { useAppSelector } from '../../hooks/useAppSelector'
 import { useListenForDrawedGeometry } from '../../hooks/useListenForDrawing'
 
 import type { Coordinate } from 'ol/coordinate'
@@ -33,6 +34,9 @@ export function MultiZonePicker({ addButtonLabel, interactionListener, isLight, 
   const { geometry } = useListenForDrawedGeometry(interactionListener)
   const [field, , helpers] = useField(name)
   const { value } = field
+
+  const { listener } = useAppSelector(state => state.draw)
+  const isEditingZone = useMemo(() => listener === InteractionListener.MISSION_ZONE, [listener])
 
   const polygons = useMemo(() => {
     if (!value) {
@@ -97,10 +101,11 @@ export function MultiZonePicker({ addButtonLabel, interactionListener, isLight, 
               </Center>
             </ZoneWrapper>
 
-            <IconButton accent={Accent.SECONDARY} Icon={Icon.Edit} onClick={handleAddZone} />
+            <IconButton accent={Accent.SECONDARY} disabled={isEditingZone} Icon={Icon.Edit} onClick={handleAddZone} />
             <IconButton
               accent={Accent.SECONDARY}
               aria-label="Supprimer cette zone"
+              disabled={isEditingZone}
               Icon={Icon.Delete}
               onClick={() => deleteZone(index)}
             />
