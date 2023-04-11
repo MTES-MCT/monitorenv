@@ -41,12 +41,12 @@ export function NatinfSelector({ infractionPath }) {
     <MultiSelect<NatinfType>
       baseContainer={newWindowContainerRef.current}
       block
-      defaultValue={valuesAsOptions}
       label="NATINF"
       name="infraction-natinf"
       onChange={setValue}
       options={sortedData}
       searchable
+      value={valuesAsOptions}
       virtualized
     />
   )

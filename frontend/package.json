@@ -32,7 +32,7 @@
   "dependencies": {
     "@dnd-kit/core": "^4.0.3",
     "@dnd-kit/modifiers": "^4.0.0",
-    "@mtes-mct/monitor-ui": "3.3.1",
+    "@mtes-mct/monitor-ui": "5.1.1",
     "@reduxjs/toolkit": "1.8.2",
     "@sentry/react": "6.19.7",
     "@sentry/tracing": "6.19.7",
@@ -63,7 +63,7 @@
     "redux": "^4.0.5",
     "redux-persist": "^6.0.0",
     "redux-thunk": "2.4.1",
-    "rsuite": "5.18.0",
+    "rsuite": "5.31.0",
     "styled-components": "5.3.5",
     "timeago.js": "^4.0.2",
     "uuid": "^9.0.0",
