@@ -37,7 +37,9 @@ context('Missions', () => {
     cy.get('[data-key="DDTM"] > .rs-picker-select-menu-item').click({ force: true })
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('6')
 
-    cy.get('*[data-cy="select-administrations-filter"] > .rs-btn-close').click({ force: true })
+    cy.get('*[data-cy="select-administrations-filter"] > .rs-stack > .rs-stack-item > .rs-btn-close').click({
+      force: true
+    })
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('11')
   })
 
