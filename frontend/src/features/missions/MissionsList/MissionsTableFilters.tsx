@@ -122,7 +122,6 @@ export function MissionsTableFilters() {
         <StyledSelect
           baseContainer={newWindowContainerRef.current}
           data-cy="select-origin-filter"
-          defaultValue={missionSourceFilter}
           isLabelHidden
           label="Origine"
           name="origine"
@@ -130,6 +129,7 @@ export function MissionsTableFilters() {
           options={sourceOptions}
           placeholder="Origine"
           style={tagPickerStyle}
+          value={missionSourceFilter}
         />
         <CheckPicker
           container={() => unitPickerRef.current}
