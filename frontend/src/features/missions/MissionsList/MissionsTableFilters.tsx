@@ -156,6 +156,7 @@ export function MissionsTableFilters() {
         />
         <StyledSelect
           baseContainer={newWindowContainerRef.current}
+          data-cy="select-units-filter"
           isLabelHidden
           label="Unités"
           name="units"
