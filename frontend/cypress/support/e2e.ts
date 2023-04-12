@@ -7,12 +7,20 @@ import './commands/loadPath'
 
 declare global {
   namespace Cypress {
+    type DateTuple = [number, number, number]
+    type DateWithTimeTuple = [number, number, number, number, number]
     interface Chainable {
       before(property: string): string
       cleanScreenshots(fromNumber: number): void
-      clickButton(buttonText: string): Chainable<JQuery<HTMLButtonElement>>
+      clickButton(
+        label: string,
+        options?: Partial<{
+          index: number
+          withinSelector: string
+        }>
+      ): Chainable<JQuery<HTMLButtonElement>>
       clickLink(linkText: string): Chainable<JQuery<HTMLAnchorElement>>
-      clickOutside(): Chainable<JQuery<HTMLBodyElement>>
+      clickOutside(xPosition?: number, yPosition?: number): void
       dragTo(
         selector: string,
         options?: Partial<{
@@ -20,8 +28,18 @@ declare global {
           isSmooth: boolean
         }>
       ): void
-      fill(label: string, value: string): Chainable<Element>
-      fillDateRangePicker(label: string, startDate: Date, endDate: Date): Chainable<Element>
+      fill(
+        label: string,
+        value:
+          | boolean
+          | number
+          | string
+          | string[]
+          | (DateTuple | DateWithTimeTuple)
+          | ([Cypress.DateTuple, Cypress.DateTuple] | [Cypress.DateWithTimeTuple, Cypress.DateWithTimeTuple])
+          | undefined
+      ): Chainable<Element>
+      forceClick(): Chainable<JQuery<HTMLElement>>
       getDataCy(dataCy: string): Chainable<JQuery<HTMLElement>>
       loadPath(path: string): void
       toMatchImageSnapshot(settings: any): Chainable<Element>

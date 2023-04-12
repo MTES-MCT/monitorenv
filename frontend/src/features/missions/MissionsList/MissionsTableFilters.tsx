@@ -121,7 +121,6 @@ export function MissionsTableFilters() {
         />
         <StyledSelect
           baseContainer={newWindowContainerRef.current}
-          data-cy="select-origin-filter"
           isLabelHidden
           label="Origine"
           name="origine"
@@ -145,7 +144,6 @@ export function MissionsTableFilters() {
         />
         <StyledSelect
           baseContainer={newWindowContainerRef.current}
-          data-cy="select-administrations-filter"
           isLabelHidden
           label="Administrations"
           name="administrations"
@@ -158,7 +156,6 @@ export function MissionsTableFilters() {
         />
         <StyledSelect
           baseContainer={newWindowContainerRef.current}
-          data-cy="select-units-filter"
           isLabelHidden
           label="Unités"
           name="units"
