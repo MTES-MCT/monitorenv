@@ -34,8 +34,8 @@ export function MissionCard({ feature, selected = false }: { feature: any; selec
 
   const isMissionDuringOneDay = !endDateTimeUtc || (endDateTimeUtc && endDate.diff(startDate, 'day') === 0)
 
-  const formattedStartDate = startDate.isValid() && dayjs(startDateTimeUtc).format('D MMM YYYY')
-  const formattedEndDate = endDateTimeUtc && endDate.isValid() && dayjs(endDateTimeUtc).format('D MMM YYYY')
+  const formattedStartDate = startDate.isValid() && startDate.format('D MMM YYYY')
+  const formattedEndDate = endDateTimeUtc && endDate.isValid() && endDate.format('D MMM YYYY')
   const missionDurationText = isMissionDuringOneDay
     ? formattedStartDate
     : `du ${formattedStartDate} au ${formattedEndDate}`
@@ -118,7 +118,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
-  min-width: 260px;
+  flex: 0 0 260px;
 `
 
 const Header = styled.div`
@@ -146,15 +146,11 @@ const Details = styled.div`
   > div {
     color: ${COLORS.slateGray};
     white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
   }
 `
 
 const Title = styled.div`
   white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
   font: normal normal bold 13px/18px Marianne;
   color: ${COLORS.gunMetal};
 `

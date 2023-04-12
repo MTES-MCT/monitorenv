@@ -83,7 +83,7 @@ export function OverlayPositionOnExtent({
 
         olOverlayObjectRef.current.setPosition(featureCenter)
         setOverlayTopLeftMargin(containerMargins)
-        overlayRef.current.style.display = 'block'
+        overlayRef.current.style.display = 'flex'
       } else {
         overlayRef.current.style.display = 'none'
       }
