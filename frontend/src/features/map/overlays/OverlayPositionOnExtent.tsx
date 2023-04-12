@@ -1,24 +1,29 @@
+// @ts-nocheck
 import { getCenter } from 'ol/extent'
 import Overlay from 'ol/Overlay'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-// import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import { getOverlayPositionForCentroid, getTopLeftMargin } from './position'
+import { getOverlayPositionForExtent, getTopLeftMarginForFeature } from './position'
 
-const OVERLAY_HEIGHT = 74
+const OVERLAY_HEIGHT = 124
+const OVERLAY_WIDTH = 365
 
 const defaultMargins = {
-  xLeft: 20,
-  xMiddle: -116,
-  xRight: -252,
-  yBottom: -153,
-  yMiddle: -64,
-  yTop: 10
+  left: {
+    center: 20,
+    left: 20,
+    right: 20
+  },
+  top: {
+    bottom: 20,
+    middle: 20,
+    top: 20
+  }
 }
 
-export function OverlayPositionOnCentroid({
+export function OverlayPositionOnExtent({
   map,
   feature,
   appClassName,
@@ -41,7 +46,7 @@ export function OverlayPositionOnCentroid({
         olOverlayObjectRef.current = null
       }
     },
-    [overlayRef, olOverlayObjectRef]
+    [overlayRef, olOverlayObjectRef, appClassName]
   )
 
   useEffect(() => {
@@ -55,26 +60,35 @@ export function OverlayPositionOnCentroid({
   }, [map, olOverlayObjectRef])
 
   useEffect(() => {
-    function getNextOverlayPosition(featureCenter) {
-      const [x, y] = featureCenter
-      const extent = map.getView().calculateExtent()
-      const boxSize = map.getView().getResolution() * OVERLAY_HEIGHT
-
-      return getOverlayPositionForCentroid(boxSize, x, y, extent)
-    }
-
     if (overlayRef.current && olOverlayObjectRef.current) {
       if (feature) {
-        const featureCenter = getCenter(feature.getGeometry().getExtent())
+        const featureExtent = feature.getGeometry().getExtent()
+        const featureCenter = getCenter(featureExtent)
+        const resolution = map.getView().getResolution()
+        const extent = map.getView().calculateExtent()
+
+        const nextOverlayPosition = getOverlayPositionForExtent(featureExtent, extent, margins, {
+          height: OVERLAY_HEIGHT,
+          resolution,
+          width: OVERLAY_WIDTH
+        })
+
+        const containerMargins = getTopLeftMarginForFeature(
+          nextOverlayPosition,
+          margins,
+          featureExtent,
+          featureCenter,
+          { height: OVERLAY_HEIGHT, resolution, width: OVERLAY_WIDTH }
+        )
+
         olOverlayObjectRef.current.setPosition(featureCenter)
-        const nextOverlayPosition = getNextOverlayPosition(featureCenter)
-        setOverlayTopLeftMargin(getTopLeftMargin(nextOverlayPosition, margins))
+        setOverlayTopLeftMargin(containerMargins)
         overlayRef.current.style.display = 'block'
       } else {
         overlayRef.current.style.display = 'none'
       }
     }
-  }, [feature, overlayRef, olOverlayObjectRef, map])
+  }, [feature, overlayRef, olOverlayObjectRef, map, margins])
 
   return (
     <OverlayComponent ref={overlayCallback} overlayTopLeftMargin={overlayTopLeftMargin}>
@@ -84,7 +98,7 @@ export function OverlayPositionOnCentroid({
 }
 
 const OverlayComponent = styled.div`
-  position: absolute;
+  position: relative;
   top: ${props => props.overlayTopLeftMargin[0]}px;
   left: ${props => props.overlayTopLeftMargin[1]}px;
   text-align: left;

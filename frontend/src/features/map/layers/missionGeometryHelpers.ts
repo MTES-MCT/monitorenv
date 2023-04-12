@@ -55,6 +55,7 @@ export const getMissionZoneFeature = (mission: Partial<MissionType>, layername: 
     endDateTimeUtc: mission.endDateTimeUtc,
     envActions: mission.envActions,
     missionId: mission.id,
+    missionSource: mission.missionSource,
     missionStatus: getMissionStatus(mission),
     missionTypes: mission.missionTypes,
     numberOfActions: mission.envActions?.length || 0,

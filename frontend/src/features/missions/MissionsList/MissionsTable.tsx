@@ -6,6 +6,7 @@ import { CellActionThemes } from './CellActionThemes'
 import { CellAlert } from './CellAlert'
 import { CellEditMission } from './CellEditMission'
 import { CellLocalizeMission } from './CellLocalizeMission'
+import { CellMissionSource } from './CellMissionSource'
 import { CellMissionType } from './CellMissionType'
 import { CellNumberOfControls } from './CellNumberOfControls'
 import { CellResources } from './CellResources'
@@ -49,6 +50,11 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
       <Table.Column sortable width={180}>
         <Table.HeaderCell>Date de fin</Table.HeaderCell>
         <DateCell dataKey="endDateTimeUtc" />
+      </Table.Column>
+
+      <Table.Column sortable width={90}>
+        <Table.HeaderCell>Origine</Table.HeaderCell>
+        <CellMissionSource dataKey="missionSource" />
       </Table.Column>
 
       <Table.Column flexGrow={1}>

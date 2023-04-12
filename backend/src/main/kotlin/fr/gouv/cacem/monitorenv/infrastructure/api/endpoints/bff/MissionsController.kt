@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.MissionDataOutput
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSourceEnum
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -39,6 +40,9 @@ class MissionsController(
         @RequestParam(name = "startedBeforeDateTime", required = false)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         startedBeforeDateTime: ZonedDateTime?,
+        @Parameter(description = "Origine")
+        @RequestParam(name = "missionSource", required = false)
+        missionSources: List<MissionSourceEnum>?,
         @Parameter(description = "Natures de mission")
         @RequestParam(name = "missionNature", required = false)
         missionNatures: List<String>?,
@@ -54,6 +58,7 @@ class MissionsController(
             startedAfterDateTime = startedAfterDateTime,
             startedBeforeDateTime = startedBeforeDateTime,
             missionNatures = missionNatures,
+            missionSources = missionSources,
             missionStatuses = missionStatuses,
             missionTypes = missionTypes,
             pageNumber = pageNumber,

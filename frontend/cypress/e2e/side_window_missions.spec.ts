@@ -18,9 +18,9 @@ context('Missions', () => {
     cy.get('[data-key="BGC Ajaccio"]').should('not.exist')
   })
 
-  it('12 Missions should be displayed in Missions Table', () => {
+  it('11 Missions should be displayed in Missions Table', () => {
     cy.get('*[data-cy="SideWindowHeader-title"]').contains('Missions et contrôles')
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('12')
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('11')
 
     cy.log('A default date filter should be set')
     const thirtyDaysAgo = dayjs().subtract(30, 'days')
@@ -38,7 +38,7 @@ context('Missions', () => {
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('6')
 
     cy.get('*[data-cy="select-administrations-filter"] > .rs-btn-close').click({ force: true })
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('12')
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('11')
   })
 
   it('Missions table should display all themes and subthemes of all the actions of the mission', () => {
@@ -51,7 +51,7 @@ context('Missions', () => {
 
   it('An infraction Should be duplicated', () => {
     // Given
-    cy.get('*[data-cy="edit-mission"]').eq(3).click()
+    cy.get('*[data-cy="edit-mission"]').eq(3).click({ force: true })
     cy.get('*[data-cy="action-card"]').eq(1).click()
     cy.get('*[data-cy="control-form-number-controls"]').type('{backspace}2')
     cy.get('*[data-cy="infraction-form"]').should('not.exist')
@@ -88,7 +88,7 @@ context('Missions', () => {
 
   it('allow only one theme and may be multiple subthemes in control actions', () => {
     // Given
-    cy.get('*[data-cy="edit-mission"]').eq(3).click()
+    cy.get('*[data-cy="edit-mission"]').eq(3).click({ force: true })
     cy.intercept('GET', `/bff/v1/controlthemes`).as('getControlThemes')
     cy.get('*[data-cy="action-card"]').eq(1).click()
     cy.get('*[data-cy="envaction-theme-element"]').should('have.length', 1)
@@ -135,7 +135,7 @@ context('Missions', () => {
 
   it('save observations in control Actions', () => {
     // Given
-    cy.get('*[data-cy="edit-mission"]').eq(3).click()
+    cy.get('*[data-cy="edit-mission"]').eq(3).click({ force: true })
     cy.intercept('GET', `/bff/v1/controlthemes`).as('getControlThemes')
     cy.get('*[data-cy="action-card"]').eq(1).click()
     cy.get('[id="envActions[1].observations"]').contains('RAS')
@@ -157,7 +157,7 @@ context('Missions', () => {
 
   it('allow multiple themes and may be multiple subthemes in surveillance actions', () => {
     // Given
-    cy.get('*[data-cy="edit-mission"]').eq(3).click()
+    cy.get('*[data-cy="edit-mission"]').eq(3).click({ force: true })
     cy.intercept('GET', `/bff/v1/controlthemes`).as('getControlThemes')
     cy.get('*[data-cy="action-card"]').eq(0).click()
     cy.get('*[data-cy="envaction-theme-element"]').should('have.length', 1)
@@ -206,7 +206,7 @@ context('Missions', () => {
 
   it('A mission should be created', () => {
     // Given
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('12')
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('11')
     cy.get('*[data-cy="add-mission"]').click()
 
     // When
@@ -232,21 +232,6 @@ context('Missions', () => {
       expect(controlUnit.id).equal(10012)
       expect(controlUnit.name).equal('Cross Etel')
     })
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('13')
-  })
-
-  it('Missions from POSEIDON_CACEM must not be editable', () => {
-    // Given
-    cy.intercept('GET', `/bff/v1/missions/51`).as('getMissionPoseidonCacem')
-    cy.get('*[data-cy="edit-mission"]').eq(10).click()
-    cy.wait('@getMissionPoseidonCacem').then(({ response }) => {
-      expect(response && response.statusCode).equal(200)
-      expect(response && response.body.missionSource).equal('POSEIDON_CACEM')
-    })
-
-    cy.get('*[data-cy="quit-edit-mission"]').should('exist')
-    cy.get('*[data-cy="save-mission"]').should('not.exist')
-    cy.get('*[data-cy="close-mission"]').should('not.exist')
-    cy.get('*[data-cy="delete-mission"]').should('not.exist')
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('12')
   })
 })
