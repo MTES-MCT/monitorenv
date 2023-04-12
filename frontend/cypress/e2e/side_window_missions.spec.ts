@@ -28,16 +28,14 @@ context('Missions', () => {
     cy.get('*[data-cy="datepicker-missionStartedAfter"]').contains(`${thirtyDaysAgo.format('YYYY-MM-DD')}`)
 
     cy.log('Units should be filtered')
-    cy.get('*[data-cy="select-units-filter"]').click({ force: true })
-    cy.get('[data-key="Cross Etel"] > .rs-picker-select-menu-item').click({ force: true })
+    cy.fill('Unités', ['Cross Etel'])
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('1')
 
     cy.log('Administrations should be filtered')
-    cy.get('*[data-cy="select-administrations-filter"]').click({ force: true })
-    cy.get('[data-key="DDTM"] > .rs-picker-select-menu-item').click({ force: true })
+    cy.fill('Administrations', ['DDTM'])
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('6')
 
-    cy.get('*[data-cy="select-administrations-filter"] > .rs-btn-close').click({ force: true })
+    cy.fill('Administrations', undefined)
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('11')
   })
 

@@ -87,11 +87,11 @@ export function MissionsTableFilters() {
   const handleSetSourceFilter = value => {
     dispatch(setMissionSourceFilter(value))
   }
-  const handleSetMissionStartedAfterFilter = (v: Date | null) => {
-    dispatch(setMissionStartedAfter(v ? v.toISOString() : null))
+  const handleSetMissionStartedAfterFilter = (v: Date | undefined) => {
+    dispatch(setMissionStartedAfter(v ? v.toISOString() : undefined))
   }
-  const handleSetMissionStartedBeforeFilter = (v: Date | null) => {
-    dispatch(setMissionStartedBefore(v ? v.toISOString() : null))
+  const handleSetMissionStartedBeforeFilter = (v: Date | undefined) => {
+    dispatch(setMissionStartedBefore(v ? v.toISOString() : undefined))
   }
 
   const handleResetFilters = () => {
@@ -121,8 +121,6 @@ export function MissionsTableFilters() {
         />
         <StyledSelect
           baseContainer={newWindowContainerRef.current}
-          data-cy="select-origin-filter"
-          defaultValue={missionSourceFilter}
           isLabelHidden
           label="Origine"
           name="origine"
@@ -130,6 +128,7 @@ export function MissionsTableFilters() {
           options={sourceOptions}
           placeholder="Origine"
           style={tagPickerStyle}
+          value={missionSourceFilter}
         />
         <CheckPicker
           container={() => unitPickerRef.current}
@@ -145,8 +144,6 @@ export function MissionsTableFilters() {
         />
         <StyledSelect
           baseContainer={newWindowContainerRef.current}
-          data-cy="select-administrations-filter"
-          defaultValue={missionAdministrationFilter}
           isLabelHidden
           label="Administrations"
           name="administrations"
@@ -155,11 +152,11 @@ export function MissionsTableFilters() {
           placeholder="Administrations"
           searchable
           style={largeTagPickerStyle}
+          value={missionAdministrationFilter}
         />
         <StyledSelect
           baseContainer={newWindowContainerRef.current}
           data-cy="select-units-filter"
-          defaultValue={missionUnitFilter}
           isLabelHidden
           label="Unités"
           name="units"
@@ -168,6 +165,7 @@ export function MissionsTableFilters() {
           placeholder="Unités"
           searchable
           style={largeTagPickerStyle}
+          value={missionUnitFilter}
         />
         <CheckPicker
           container={() => unitPickerRef.current}

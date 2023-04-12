@@ -5,28 +5,23 @@ import { useMemo } from 'react'
 import { useGetInfractionsQuery } from '../../../../../../api/infractionsAPI'
 import { useNewWindow } from '../../../../../../ui/NewWindow'
 
-import type { NatinfType } from '../../../../../../domain/entities/natinfs'
-
 export function NatinfSelector({ infractionPath }) {
   const { newWindowContainerRef } = useNewWindow()
   const [natinfField, , natinfHelpers] = useField(`${infractionPath}.natinf`)
   const { data, isError, isLoading } = useGetInfractionsQuery()
 
-  const valuesAsOptions = useMemo(
-    () => natinfField.value.map(natinfCode => data?.find(natinf => natinf.natinfCode === natinfCode)),
-    [data, natinfField]
-  )
   const sortedData = useMemo(
     () =>
       (data &&
-        [...data]?.sort(sortNatinf).map(item => ({ label: `${item.natinfCode} - ${item.infraction}`, value: item }))) ||
+        [...data]
+          ?.sort(sortNatinf)
+          .map(item => ({ label: `${item.natinfCode} - ${item.infraction}`, value: item.natinfCode }))) ||
       [],
     [data]
   )
 
-  const setValue = (nextValue: NatinfType[] | undefined) => {
-    const natinfCodes = nextValue?.map(natinf => natinf.natinfCode) || []
-    natinfHelpers.setValue(natinfCodes)
+  const setValue = (nextValue: string[] | undefined) => {
+    natinfHelpers.setValue(nextValue)
   }
 
   if (isError) {
@@ -38,16 +33,16 @@ export function NatinfSelector({ infractionPath }) {
   }
 
   return (
-    <MultiSelect<NatinfType>
+    <MultiSelect
       baseContainer={newWindowContainerRef.current}
       block
-      defaultValue={valuesAsOptions}
       label="NATINF"
       name="infraction-natinf"
       onChange={setValue}
       options={sortedData}
       searchable
-      virtualized
+      value={natinfField.value}
+      valueKey="value"
     />
   )
 }
