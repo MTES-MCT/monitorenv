@@ -6,8 +6,8 @@ import { ErrorBoundary } from '../../components/ErrorBoundary'
 import { COLORS } from '../../constants/constants'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { NewWindowContext } from '../../ui/NewWindow'
-import { CreateOrEditMission } from '../missions/MissionForm/CreateOrEditMission'
-import { Missions } from '../missions/Missions'
+import { Mission } from '../missions/MissionForm'
+import { Missions } from '../missions/MissionsList'
 import { Route } from './Route'
 
 import type { NewWindowContextValue } from '../../ui/NewWindow'
@@ -45,7 +45,7 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
               <Missions />
             </Route>
             <Route path={[sideWindowPaths.MISSION, sideWindowPaths.MISSION_NEW]}>
-              <CreateOrEditMission />
+              <Mission />
             </Route>
           </NewWindowContext.Provider>
         )}

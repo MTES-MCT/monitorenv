@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { COLORS } from '../../constants/constants'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { setDisplayedItems } from '../../domain/shared_slices/Global'
+import { onNavigateBetweenMapAndSideWindow } from '../../domain/use_cases/navigation/onNavigateBetweenMapAndSideWindow'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { ReactComponent as CloseSVG } from '../../uiMonitor/icons/Close.svg'
 import { ReactComponent as DisplaySVG } from '../../uiMonitor/icons/Display.svg'
@@ -12,21 +13,15 @@ import { ReactComponent as EnlargeSVG } from '../../uiMonitor/icons/Enlarge.svg'
 import { ReactComponent as HideSVG } from '../../uiMonitor/icons/Hide.svg'
 import { ReactComponent as MissionsSVG } from '../../uiMonitor/icons/Operations.svg'
 import { ReactComponent as PlusSVG } from '../../uiMonitor/icons/Plus.svg'
-import { SideWindowStatus, sideWindowActions } from '../SideWindow/slice'
+import { SideWindowStatus } from '../SideWindow/slice'
 
 export function MissionsMenu() {
   const dispatch = useDispatch()
   const { displayMissionsLayer, missionsMenuIsOpen } = useAppSelector(state => state.global)
   const { sideWindow } = useAppSelector(state => state)
-  const { missionState } = useAppSelector(state => state.missionState)
-  const { listener } = useAppSelector(state => state.draw)
 
   const toggleMissionsWindow = () => {
-    if (sideWindow.status === SideWindowStatus.HIDDEN && missionState && !listener) {
-      return dispatch(sideWindowActions.onFocusAndDisplayCancelModal())
-    }
-
-    return dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSIONS))
+    dispatch(onNavigateBetweenMapAndSideWindow(sideWindowPaths.MISSIONS))
   }
   const toggleMissionsLayer = () => {
     dispatch(setDisplayedItems({ displayMissionsLayer: !displayMissionsLayer }))
@@ -35,11 +30,7 @@ export function MissionsMenu() {
     dispatch(setDisplayedItems({ missionsMenuIsOpen: !missionsMenuIsOpen }))
   }
   const handleAddNewMission = () => {
-    if (sideWindow.status === SideWindowStatus.HIDDEN && missionState && !listener) {
-      return dispatch(sideWindowActions.onFocusAndDisplayCancelModal())
-    }
-
-    return dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSION_NEW))
+    dispatch(onNavigateBetweenMapAndSideWindow(sideWindowPaths.MISSION_NEW))
   }
 
   return (
