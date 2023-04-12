@@ -9,69 +9,44 @@ export function MissionStatusLabel({ missionStatus }) {
   switch (missionStatus) {
     case missionStatusEnum.PENDING.code:
       return (
-        <Pending>
-          <CercleIcon />
+        <StatusWrapper color={COLORS.mediumSeaGreen}>
+          <CercleSVG />
           {missionStatusEnum.PENDING.libelle}
-        </Pending>
+        </StatusWrapper>
       )
     case missionStatusEnum.ENDED.code:
       return (
-        <Ended>
-          <CercleIcon />
+        <StatusWrapper color={COLORS.charcoal}>
+          <CercleSVG />
           {missionStatusEnum.ENDED.libelle}
-        </Ended>
+        </StatusWrapper>
       )
 
     case missionStatusEnum.CLOSED.code:
       return (
-        <Closed>
-          <CheckIcon />
+        <StatusWrapper color={COLORS.opal}>
+          <CheckSVG />
           {missionStatusEnum.CLOSED.libelle}
-        </Closed>
+        </StatusWrapper>
       )
     case missionStatusEnum.UPCOMING.code:
       return (
-        <Upcoming>
-          <CercleIcon />
+        <StatusWrapper color={COLORS.blueGray}>
+          <CercleSVG />
           {missionStatusEnum.UPCOMING.libelle}
-        </Upcoming>
+        </StatusWrapper>
       )
 
     default:
-      return <Closed>No status</Closed>
+      return <StatusWrapper color={COLORS.opal}>No status</StatusWrapper>
   }
 }
 
-const CercleIcon = styled(CercleSVG)``
-const CheckIcon = styled(CheckSVG)``
-
-const Pending = styled.div`
-  color: ${COLORS.mediumSeaGreen};
+const StatusWrapper = styled.div<{ color: string }>`
+  color: ${p => p.color};
   font-weight: 500;
-  svg {
-    margin-right: 6px;
-  }
-`
-
-const Ended = styled.div`
-  color: ${COLORS.charcoal};
-  font-weight: 500;
-  svg {
-    margin-right: 6px;
-  }
-`
-
-const Closed = styled.div`
-  color: ${COLORS.opal};
-  font-weight: 500;
-  svg {
-    margin-right: 6px;
-  }
-`
-
-const Upcoming = styled.div`
-  color: ${COLORS.blueGray};
-  font-weight: 500;
+  display: flex;
+  align-items: center;
   svg {
     margin-right: 6px;
   }

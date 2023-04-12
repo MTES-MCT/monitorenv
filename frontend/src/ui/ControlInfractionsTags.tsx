@@ -1,4 +1,4 @@
-import { Tag, TagGroup } from 'rsuite'
+import { Accent, Tag, TagGroup } from '@mtes-mct/monitor-ui'
 
 import { getControlInfractionsTags } from '../features/missions/Missions.helpers'
 
@@ -7,10 +7,10 @@ export function ControlInfractionsTags({ actionNumberOfControls, infractions }) 
 
   return (
     <TagGroup>
-      <Tag>{ras} RAS</Tag>
-      <Tag>{infra} INF</Tag>
-      <Tag>{infraSansPV} INF SANS PV</Tag>
-      <Tag>{med} MED</Tag>
+      {ras > 0 && <Tag accent={Accent.PRIMARY}>{ras} RAS</Tag>}
+      {infra > 0 && <Tag accent={Accent.PRIMARY}>{infra} INF</Tag>}
+      {infraSansPV > 0 && <Tag accent={Accent.PRIMARY}>{infraSansPV} INF SANS PV</Tag>}
+      {med > 0 && <Tag accent={Accent.PRIMARY}>{med} MED</Tag>}
     </TagGroup>
   )
 }
