@@ -29,7 +29,7 @@ class GetMonitorEnvMissions(private val missionRepository: IMissionRepository) {
             missionNatures = missionNatures,
             missionTypes = missionTypes,
             missionStatuses = missionStatuses,
-            missionSources = missionSources,
+            missionSources = missionSources ?: listOf(MissionSourceEnum.MONITORENV, MissionSourceEnum.MONITORFISH),
             pageable = if (pageNumber != null && pageSize != null) PageRequest.of(pageNumber, pageSize) else Pageable.unpaged()
         )
 
