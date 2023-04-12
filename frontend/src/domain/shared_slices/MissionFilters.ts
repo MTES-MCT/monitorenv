@@ -6,25 +6,25 @@ import storage from 'redux-persist/lib/storage'
 const THIRTY_DAYS_AGO = dayjs().subtract(30, 'days').toISOString()
 
 type MissionFiltersSliceType = {
-  missionAdministrationFilter: string | undefined
-  missionNatureFilter: string[]
-  missionSourceFilter: string[]
-  missionStartedAfter?: string
-  missionStartedBefore?: string
-  missionStatusFilter: string[]
-  missionTypeFilter: string[]
-  missionUnitFilter: string | undefined
+  administrationFilter: string | undefined
+  natureFilter: string[]
+  sourceFilter: string[]
+  startedAfter?: string
+  startedBefore?: string
+  statusFilter: string[]
+  typeFilter: string[]
+  unitFilter: string | undefined
 }
 
 const initialState: MissionFiltersSliceType = {
-  missionAdministrationFilter: undefined,
-  missionNatureFilter: [],
-  missionSourceFilter: [],
-  missionStartedAfter: THIRTY_DAYS_AGO,
-  missionStartedBefore: undefined,
-  missionStatusFilter: [],
-  missionTypeFilter: [],
-  missionUnitFilter: undefined
+  administrationFilter: undefined,
+  natureFilter: [],
+  sourceFilter: [],
+  startedAfter: THIRTY_DAYS_AGO,
+  startedBefore: undefined,
+  statusFilter: [],
+  typeFilter: [],
+  unitFilter: undefined
 }
 
 const persistConfig = {
@@ -39,43 +39,15 @@ const missionFiltersSlice = createSlice({
     resetMissionFilters() {
       return { ...initialState }
     },
-    setMissionAdministrationFilter(state, action) {
-      state.missionAdministrationFilter = action.payload
-    },
-    setMissionNatureFilter(state, action) {
-      state.missionNatureFilter = action.payload
-    },
-    setMissionSourceFilter(state, action) {
-      state.missionSourceFilter = action.payload
-    },
-    setMissionStartedAfter(state, action) {
-      state.missionStartedAfter = action.payload
-    },
-    setMissionStartedBefore(state, action) {
-      state.missionStartedBefore = action.payload
-    },
-    setMissionStatusFilter(state, action) {
-      state.missionStatusFilter = action.payload
-    },
-    setMissionTypeFilter(state, action) {
-      state.missionTypeFilter = action.payload
-    },
-    setMissionUnitFilter(state, action) {
-      state.missionUnitFilter = action.payload
+    updateFilters(state, action) {
+      return {
+        ...state,
+        [action.payload.key]: action.payload.value
+      }
     }
   }
 })
 
-export const {
-  resetMissionFilters,
-  setMissionAdministrationFilter,
-  setMissionNatureFilter,
-  setMissionSourceFilter,
-  setMissionStartedAfter,
-  setMissionStartedBefore,
-  setMissionStatusFilter,
-  setMissionTypeFilter,
-  setMissionUnitFilter
-} = missionFiltersSlice.actions
+export const { resetMissionFilters, updateFilters } = missionFiltersSlice.actions
 
 export const missionFiltersPersistedReducer = persistReducer(persistConfig, missionFiltersSlice.reducer)

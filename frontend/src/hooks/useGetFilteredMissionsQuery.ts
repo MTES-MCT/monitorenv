@@ -7,24 +7,24 @@ const TWO_MINUTES = 2 * 60 * 1000
 
 export const useGetFilteredMissionsQuery = () => {
   const {
-    missionAdministrationFilter,
-    missionNatureFilter,
-    missionSourceFilter,
-    missionStartedAfter,
-    missionStartedBefore,
-    missionStatusFilter,
-    missionTypeFilter,
-    missionUnitFilter
+    administrationFilter,
+    natureFilter,
+    sourceFilter,
+    startedAfter,
+    startedBefore,
+    statusFilter,
+    typeFilter,
+    unitFilter
   } = useAppSelector(state => state.missionFilters)
 
   const { data, isError, isLoading } = useGetMissionsQuery(
     {
-      missionNature: missionNatureFilter,
-      missionSource: missionSourceFilter,
-      missionStatus: missionStatusFilter,
-      missionTypes: missionTypeFilter,
-      startedAfterDateTime: missionStartedAfter || undefined,
-      startedBeforeDateTime: missionStartedBefore || undefined
+      missionNature: natureFilter,
+      missionSource: sourceFilter,
+      missionStatus: statusFilter,
+      missionTypes: typeFilter,
+      startedAfterDateTime: startedAfter || undefined,
+      startedBeforeDateTime: startedBefore || undefined
     },
     { pollingInterval: TWO_MINUTES }
   )
@@ -34,18 +34,18 @@ export const useGetFilteredMissionsQuery = () => {
       return []
     }
 
-    if (!missionAdministrationFilter && !missionUnitFilter) {
+    if (!administrationFilter && !unitFilter) {
       return data
     }
 
-    if (missionUnitFilter) {
-      return data.filter(mission => !!mission.controlUnits.find(controlUnit => controlUnit.name === missionUnitFilter))
+    if (unitFilter) {
+      return data.filter(mission => !!mission.controlUnits.find(controlUnit => controlUnit.name === unitFilter))
     }
 
     return data.filter(mission =>
-      mission.controlUnits.find(controlUnit => controlUnit.administration === missionAdministrationFilter)
+      mission.controlUnits.find(controlUnit => controlUnit.administration === administrationFilter)
     )
-  }, [data, missionAdministrationFilter, missionUnitFilter])
+  }, [data, administrationFilter, unitFilter])
 
   return { isError, isLoading, missions }
 }

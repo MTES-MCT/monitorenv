@@ -12,17 +12,7 @@ import {
   missionStatusLabels,
   missionTypeEnum
 } from '../../../domain/entities/missions'
-import {
-  resetMissionFilters,
-  setMissionAdministrationFilter,
-  setMissionNatureFilter,
-  setMissionSourceFilter,
-  setMissionStartedAfter,
-  setMissionStartedBefore,
-  setMissionStatusFilter,
-  setMissionTypeFilter,
-  setMissionUnitFilter
-} from '../../../domain/shared_slices/MissionFilters'
+import { resetMissionFilters, updateFilters } from '../../../domain/shared_slices/MissionFilters'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useNewWindow } from '../../../ui/NewWindow'
 import { ReactComponent as ReloadSVG } from '../../../uiMonitor/icons/Reload.svg'
@@ -31,14 +21,14 @@ export function MissionsTableFilters() {
   const dispatch = useDispatch()
   const { newWindowContainerRef } = useNewWindow()
   const {
-    missionAdministrationFilter,
-    missionNatureFilter,
-    missionSourceFilter,
-    missionStartedAfter,
-    missionStartedBefore,
-    missionStatusFilter,
-    missionTypeFilter,
-    missionUnitFilter
+    administrationFilter,
+    natureFilter,
+    sourceFilter,
+    startedAfter,
+    startedBefore,
+    statusFilter,
+    typeFilter,
+    unitFilter
   } = useAppSelector(state => state.missionFilters)
 
   const unitPickerRef = useRef() as MutableRefObject<HTMLDivElement>
@@ -56,8 +46,8 @@ export function MissionsTableFilters() {
     .value()
 
   const handleSetAdministrationFilter = administrationName => {
-    dispatch(setMissionAdministrationFilter(administrationName))
-    dispatch(setMissionUnitFilter(undefined))
+    dispatch(updateFilters({ key: 'administrationFilter', value: administrationName }))
+    dispatch(updateFilters({ key: 'unitFilter', value: undefined }))
   }
 
   const unitListAsOptions: Option[] = controlUnits
@@ -67,31 +57,31 @@ export function MissionsTableFilters() {
 
   const handleSetUnitFilter = unitName => {
     const administration = controlUnits.find(unit => unit.name === unitName)?.administration
-    dispatch(setMissionAdministrationFilter(administration))
-    dispatch(setMissionUnitFilter(unitName))
+    dispatch(updateFilters({ key: 'administrationFilter', value: administration }))
+    dispatch(updateFilters({ key: 'unitFilter', value: unitName }))
   }
 
   const StatusOptions = Object.values(missionStatusLabels)
   const handleSetStatusFilter = v => {
-    dispatch(setMissionStatusFilter(v))
+    dispatch(updateFilters({ key: 'statusFilter', value: v }))
   }
   const TypeOptions = Object.values(missionTypeEnum)
   const handleSetTypeFilter = v => {
-    dispatch(setMissionTypeFilter(v))
+    dispatch(updateFilters({ key: 'typeFilter', value: v }))
   }
   const NatureOptions = Object.values(missionNatureEnum)
   const handleSetNatureFilter = v => {
-    dispatch(setMissionNatureFilter(v))
+    dispatch(updateFilters({ key: 'natureFilter', value: v }))
   }
   const sourceOptions = Object.values(missionSourceEnum)
   const handleSetSourceFilter = value => {
-    dispatch(setMissionSourceFilter(value))
+    dispatch(updateFilters({ key: 'sourceFilter', value }))
   }
   const handleSetMissionStartedAfterFilter = (v: Date | undefined) => {
-    dispatch(setMissionStartedAfter(v ? v.toISOString() : undefined))
+    dispatch(updateFilters({ key: 'startedAfter', value: v ? v.toISOString() : undefined }))
   }
   const handleSetMissionStartedBeforeFilter = (v: Date | undefined) => {
-    dispatch(setMissionStartedBefore(v ? v.toISOString() : undefined))
+    dispatch(updateFilters({ key: 'startedBefore', value: v ? v.toISOString() : undefined }))
   }
 
   const handleResetFilters = () => {
@@ -103,24 +93,25 @@ export function MissionsTableFilters() {
       <Title>FILTRER LA LISTE</Title>
       <FilterWrapper ref={unitPickerRef}>
         <DatePicker
-          key={JSON.stringify({ missionStartedAfter })}
+          key={JSON.stringify({ startedAfter })}
           baseContainer={newWindowContainerRef.current}
           data-cy="datepicker-missionStartedAfter"
-          defaultValue={missionStartedAfter}
+          defaultValue={startedAfter}
           label="Date de début après le"
           onChange={handleSetMissionStartedAfterFilter}
         />
         <DatePicker
-          key={JSON.stringify({ missionStartedBefore })}
+          key={JSON.stringify({ startedBefore })}
           baseContainer={newWindowContainerRef.current}
           data-cy="datepicker-missionStartedBefore"
-          defaultValue={missionStartedBefore}
+          defaultValue={startedBefore}
           label="Date de début avant le"
           onChange={handleSetMissionStartedBeforeFilter}
           style={{ marginLeft: '10px' }}
         />
         <StyledSelect
           baseContainer={newWindowContainerRef.current}
+          data-cy="select-origin-filter"
           isLabelHidden
           label="Origine"
           name="origine"
@@ -128,19 +119,7 @@ export function MissionsTableFilters() {
           options={sourceOptions}
           placeholder="Origine"
           style={tagPickerStyle}
-          value={missionSourceFilter}
-        />
-        <CheckPicker
-          container={() => unitPickerRef.current}
-          data={StatusOptions}
-          labelKey="libelle"
-          onChange={handleSetStatusFilter}
-          placeholder="Statut"
-          searchable={false}
-          size="sm"
-          style={tagPickerStyle}
-          value={missionStatusFilter}
-          valueKey="code"
+          value={sourceFilter}
         />
         <StyledSelect
           baseContainer={newWindowContainerRef.current}
@@ -152,7 +131,7 @@ export function MissionsTableFilters() {
           placeholder="Administrations"
           searchable
           style={largeTagPickerStyle}
-          value={missionAdministrationFilter}
+          value={administrationFilter}
         />
         <StyledSelect
           baseContainer={newWindowContainerRef.current}
@@ -165,7 +144,7 @@ export function MissionsTableFilters() {
           placeholder="Unités"
           searchable
           style={largeTagPickerStyle}
-          value={missionUnitFilter}
+          value={unitFilter}
         />
         <CheckPicker
           container={() => unitPickerRef.current}
@@ -176,7 +155,19 @@ export function MissionsTableFilters() {
           searchable={false}
           size="sm"
           style={tagPickerStyle}
-          value={missionTypeFilter}
+          value={typeFilter}
+          valueKey="code"
+        />
+        <CheckPicker
+          container={() => unitPickerRef.current}
+          data={StatusOptions}
+          labelKey="libelle"
+          onChange={handleSetStatusFilter}
+          placeholder="Statut"
+          searchable={false}
+          size="sm"
+          style={tagPickerStyle}
+          value={statusFilter}
           valueKey="code"
         />
         <CheckPicker
@@ -188,7 +179,7 @@ export function MissionsTableFilters() {
           searchable={false}
           size="sm"
           style={tagPickerStyle}
-          value={missionNatureFilter}
+          value={natureFilter}
           valueKey="code"
         />
         <AdvancedFiltersButton onClick={handleDisplayAdvancedFilters}>
@@ -198,13 +189,13 @@ export function MissionsTableFilters() {
 
         {!_.isEmpty(
           [
-            ...missionStatusFilter,
-            ...missionNatureFilter,
-            ...missionTypeFilter,
-            missionStartedAfter,
-            missionStartedBefore,
-            missionAdministrationFilter,
-            missionUnitFilter
+            ...statusFilter,
+            ...natureFilter,
+            ...typeFilter,
+            startedAfter,
+            startedBefore,
+            administrationFilter,
+            unitFilter
           ].filter(v => v)
         ) && (
           <ResetFiltersButton onClick={handleResetFilters}>
