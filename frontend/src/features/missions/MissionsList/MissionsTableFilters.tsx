@@ -6,12 +6,7 @@ import { CheckPicker } from 'rsuite'
 import styled from 'styled-components'
 
 import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
-import {
-  missionSourceEnum,
-  missionNatureEnum,
-  missionStatusLabels,
-  missionTypeEnum
-} from '../../../domain/entities/missions'
+import { missionSourceEnum, missionStatusLabels, missionTypeEnum } from '../../../domain/entities/missions'
 import { resetMissionFilters, updateFilters } from '../../../domain/shared_slices/MissionFilters'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useNewWindow } from '../../../ui/NewWindow'
@@ -20,16 +15,8 @@ import { ReactComponent as ReloadSVG } from '../../../uiMonitor/icons/Reload.svg
 export function MissionsTableFilters() {
   const dispatch = useDispatch()
   const { newWindowContainerRef } = useNewWindow()
-  const {
-    administrationFilter,
-    natureFilter,
-    sourceFilter,
-    startedAfter,
-    startedBefore,
-    statusFilter,
-    typeFilter,
-    unitFilter
-  } = useAppSelector(state => state.missionFilters)
+  const { administrationFilter, sourceFilter, startedAfter, startedBefore, statusFilter, typeFilter, unitFilter } =
+    useAppSelector(state => state.missionFilters)
 
   const unitPickerRef = useRef() as MutableRefObject<HTMLDivElement>
   const [displayAdvancedFilters, setDisplayAdvancedFilters] = useState(false)
@@ -69,10 +56,7 @@ export function MissionsTableFilters() {
   const handleSetTypeFilter = v => {
     dispatch(updateFilters({ key: 'typeFilter', value: v }))
   }
-  const NatureOptions = Object.values(missionNatureEnum)
-  const handleSetNatureFilter = v => {
-    dispatch(updateFilters({ key: 'natureFilter', value: v }))
-  }
+
   const sourceOptions = Object.values(missionSourceEnum)
   const handleSetSourceFilter = value => {
     dispatch(updateFilters({ key: 'sourceFilter', value }))
@@ -146,7 +130,7 @@ export function MissionsTableFilters() {
           style={largeTagPickerStyle}
           value={unitFilter}
         />
-        <CheckPicker
+        <StyledCheckPicker
           container={() => unitPickerRef.current}
           data={TypeOptions}
           labelKey="libelle"
@@ -158,7 +142,7 @@ export function MissionsTableFilters() {
           value={typeFilter}
           valueKey="code"
         />
-        <CheckPicker
+        <StyledCheckPicker
           container={() => unitPickerRef.current}
           data={StatusOptions}
           labelKey="libelle"
@@ -170,33 +154,13 @@ export function MissionsTableFilters() {
           value={statusFilter}
           valueKey="code"
         />
-        <CheckPicker
-          container={() => unitPickerRef.current}
-          data={NatureOptions}
-          labelKey="libelle"
-          onChange={handleSetNatureFilter}
-          placeholder="Nature de contrôle"
-          searchable={false}
-          size="sm"
-          style={tagPickerStyle}
-          value={natureFilter}
-          valueKey="code"
-        />
         <AdvancedFiltersButton onClick={handleDisplayAdvancedFilters}>
           {displayAdvancedFilters ? 'Masquer les critères avancés' : 'Voir plus de critères'}
         </AdvancedFiltersButton>
         <Separator />
 
         {!_.isEmpty(
-          [
-            ...statusFilter,
-            ...natureFilter,
-            ...typeFilter,
-            startedAfter,
-            startedBefore,
-            administrationFilter,
-            unitFilter
-          ].filter(v => v)
+          [...statusFilter, ...typeFilter, startedAfter, startedBefore, administrationFilter, unitFilter].filter(v => v)
         ) && (
           <ResetFiltersButton onClick={handleResetFilters}>
             <ReloadIcon />
@@ -260,5 +224,10 @@ const StyledSelect = styled(Select)`
   .rs-picker-toggle-caret,
   .rs-picker-toggle-clean {
     top: 5px !important;
+  }
+`
+const StyledCheckPicker = styled(CheckPicker)`
+  .rs-picker-toggle-placeholder {
+    font-size: 13px !important;
   }
 `

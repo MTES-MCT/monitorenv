@@ -6,20 +6,11 @@ import { useAppSelector } from './useAppSelector'
 const TWO_MINUTES = 2 * 60 * 1000
 
 export const useGetFilteredMissionsQuery = () => {
-  const {
-    administrationFilter,
-    natureFilter,
-    sourceFilter,
-    startedAfter,
-    startedBefore,
-    statusFilter,
-    typeFilter,
-    unitFilter
-  } = useAppSelector(state => state.missionFilters)
+  const { administrationFilter, sourceFilter, startedAfter, startedBefore, statusFilter, typeFilter, unitFilter } =
+    useAppSelector(state => state.missionFilters)
 
   const { data, isError, isLoading } = useGetMissionsQuery(
     {
-      missionNature: natureFilter,
       missionSource: sourceFilter,
       missionStatus: statusFilter,
       missionTypes: typeFilter,

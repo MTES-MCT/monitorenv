@@ -7,7 +7,6 @@ const THIRTY_DAYS_AGO = dayjs().subtract(30, 'days').toISOString()
 
 type MissionFiltersSliceType = {
   administrationFilter: string | undefined
-  natureFilter: string[]
   sourceFilter: string[]
   startedAfter?: string
   startedBefore?: string
@@ -18,7 +17,6 @@ type MissionFiltersSliceType = {
 
 const initialState: MissionFiltersSliceType = {
   administrationFilter: undefined,
-  natureFilter: [],
   sourceFilter: [],
   startedAfter: THIRTY_DAYS_AGO,
   startedBefore: undefined,
