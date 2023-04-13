@@ -81,7 +81,7 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
   }
   const handleResourceChange = values => {
     const resourceObjects = values
-      .filter(value => typeof value !== 'string')
+      .filter(value => typeof value === 'number')
       .map(id => resourcesList.find(resource => resource.id === id))
     resourcesHelpers.setValue(resourceObjects)
   }
