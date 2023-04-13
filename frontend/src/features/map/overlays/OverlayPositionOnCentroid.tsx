@@ -70,7 +70,7 @@ export function OverlayPositionOnCentroid({
         olOverlayObjectRef.current.setPosition(featureCenter)
         const nextOverlayPosition = getNextOverlayPosition(featureCenter)
         setOverlayTopLeftMargin(getTopLeftMargin(nextOverlayPosition, margins))
-        overlayRef.current.style.display = 'block'
+        overlayRef.current.style.display = 'flex'
       } else {
         overlayRef.current.style.display = 'none'
       }
