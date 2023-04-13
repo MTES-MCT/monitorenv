@@ -84,7 +84,7 @@ class ApiMissionsController(
         return MissionDataOutput.fromMission(mission)
     }
 
-    @PutMapping(value = ["/{missionId}"], consumes = ["application/json"])
+    @PostMapping(value = ["/{missionId}"], consumes = ["application/json"])
     @Operation(summary = "Update a mission")
     fun updateOperationController(
         @PathParam("Mission Id")

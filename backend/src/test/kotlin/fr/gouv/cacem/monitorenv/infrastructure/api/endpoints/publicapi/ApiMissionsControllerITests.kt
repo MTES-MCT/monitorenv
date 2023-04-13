@@ -193,7 +193,7 @@ class ApiMissionsControllerITests {
         given(this.updateMission.execute(any())).willReturn(expectedUpdatedMission)
         // When
         mockMvc.perform(
-            put("/api/v1/missions/14")
+            post("/api/v1/missions/14")
                 .content(objectMapper.writeValueAsString(requestBody))
                 .contentType(MediaType.APPLICATION_JSON)
         )
