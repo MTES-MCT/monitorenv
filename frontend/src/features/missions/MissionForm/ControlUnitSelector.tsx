@@ -80,7 +80,9 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
     }
   }
   const handleResourceChange = values => {
-    const resourceObjects = values.map(id => resourcesList.find(resource => resource.id === id))
+    const resourceObjects = values
+      .filter(value => typeof value !== 'string')
+      .map(id => resourcesList.find(resource => resource.id === id))
     resourcesHelpers.setValue(resourceObjects)
   }
   const handleContactChange = value => {
@@ -164,6 +166,8 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
 
 const RessourceUnitWrapper = styled.div`
   display: flex;
+  max-width: 416px;
+  margin-bottom: 14px;
 `
 
 const SelectorWrapper = styled.div`
