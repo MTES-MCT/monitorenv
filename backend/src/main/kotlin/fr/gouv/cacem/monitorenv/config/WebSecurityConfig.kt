@@ -23,7 +23,7 @@ class WebSecurityConfig() : WebSecurityConfigurerAdapter() {
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration().apply {
             allowedOrigins = listOf("*")
-            allowedMethods = listOf("HEAD", "GET", "POST", "PUT", "DELETE")
+            allowedMethods = listOf("HEAD", "GET", "POST", "PUT", "OPTIONS", "DELETE")
             allowedHeaders = listOf("Authorization", "Cache-Control", "Content-Type")
         }
 
