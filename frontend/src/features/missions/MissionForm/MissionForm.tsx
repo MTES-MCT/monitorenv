@@ -39,7 +39,6 @@ export function MissionForm({ formValues, id, onCreateMission, onUpdateMission }
   const handleSetCurrentActionIndex = index => {
     setCurrentActionIndex(index)
   }
-  console.log('formValues', formValues)
   const handleSubmitForm = values => {
     upsertMission(values).then(response => {
       if ('data' in response) {
@@ -70,7 +69,6 @@ export function MissionForm({ formValues, id, onCreateMission, onUpdateMission }
     })
   }
   const handleCancelForm = () => {
-    console.log('sideWindow', sideWindow)
     dispatch(sideWindowActions.focusAndGoTo(sideWindow.nextPath || sideWindowPaths.MISSIONS))
   }
 

@@ -24,7 +24,6 @@ export function Mission() {
   const id = routeParams?.params?.id ? parseInt(routeParams?.params?.id, 10) : undefined
 
   const { data: missionToEdit } = useGetMissionQuery(id ?? skipToken)
-  // console.log('missionToEdit', missionToEdit)
 
   const [updateMission, { isLoading: isLoadingUpdateMission }] = useUpdateMissionMutation()
 
@@ -37,7 +36,6 @@ export function Mission() {
 
     return missionFactory(missionToEdit)
   }, [missionToEdit, id])
-  // console.log('missionFormikValues', missionFormikValues)
 
   if (id && !missionToEdit) {
     return <Loading>Chargement en cours</Loading>
