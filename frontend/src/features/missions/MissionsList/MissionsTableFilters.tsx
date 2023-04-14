@@ -1,4 +1,4 @@
-import { Option, Select, DatePicker } from '@mtes-mct/monitor-ui'
+import { Option, Select, DatePicker, SingleTag, OptionValueType } from '@mtes-mct/monitor-ui'
 import dayjs from 'dayjs'
 import _ from 'lodash'
 import { MutableRefObject, useMemo, useRef, useState } from 'react'
@@ -20,6 +20,7 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useNewWindow } from '../../../ui/NewWindow'
 import { ReactComponent as ReloadSVG } from '../../../uiMonitor/icons/Reload.svg'
 import { getDateToIsoFormat } from '../../../utils/getDateToIsoFormat'
+import { FilterTags } from './FilterTags'
 
 export function MissionsTableFilters() {
   const dispatch = useDispatch()
@@ -68,15 +69,15 @@ export function MissionsTableFilters() {
     const startDateTimeUtc = dayjs().toISOString()
     dispatch(updateFilters({ key: 'periodFilter', value: period }))
     switch (period) {
-      case DateRangeEnum.CURRENT_DAY:
+      case DateRangeEnum.DAY:
         dispatch(updateFilters({ key: 'startedAfter', value: getDateToIsoFormat('day', startDateTimeUtc) }))
         break
 
-      case DateRangeEnum.CURRENT_WEEK:
+      case DateRangeEnum.WEEK:
         dispatch(updateFilters({ key: 'startedAfter', value: getDateToIsoFormat('week', startDateTimeUtc) }))
         break
 
-      case DateRangeEnum.CURRENT_MONTH:
+      case DateRangeEnum.MONTH:
         dispatch(updateFilters({ key: 'startedAfter', value: getDateToIsoFormat('month', startDateTimeUtc) }))
         break
 
@@ -125,7 +126,7 @@ export function MissionsTableFilters() {
           name="Période"
           onChange={onPeriodSelected}
           options={dateRangeEnumOptions}
-          placeholder="Période"
+          placeholder="Date de mission depuis"
           style={largeTagPickerStyle}
           value={periodFilter}
         />
@@ -139,6 +140,7 @@ export function MissionsTableFilters() {
           onChange={handleSetSourceFilter}
           options={sourceOptions}
           placeholder="Origine"
+          renderValue={() => sourceFilter && <OptionValue>Origine (1) </OptionValue>}
           style={tagPickerStyle}
           value={sourceFilter}
         />
@@ -150,6 +152,7 @@ export function MissionsTableFilters() {
           onChange={handleSetAdministrationFilter}
           options={administrationListAsOptions}
           placeholder="Administrations"
+          renderValue={() => administrationFilter && <OptionValue>Administration (1) </OptionValue>}
           searchable
           style={largeTagPickerStyle}
           value={administrationFilter}
@@ -163,6 +166,7 @@ export function MissionsTableFilters() {
           onChange={handleSetUnitFilter}
           options={unitListAsOptions}
           placeholder="Unités"
+          renderValue={() => unitFilter && <OptionValue>Unité (1) </OptionValue>}
           searchable
           style={largeTagPickerStyle}
           value={unitFilter}
@@ -173,6 +177,7 @@ export function MissionsTableFilters() {
           labelKey="libelle"
           onChange={handleSetTypeFilter}
           placeholder="Type de mission"
+          renderValue={() => typeFilter && <OptionValue>{`Type (${typeFilter.length})`}</OptionValue>}
           searchable={false}
           size="sm"
           style={tagPickerStyle}
@@ -185,6 +190,7 @@ export function MissionsTableFilters() {
           labelKey="libelle"
           onChange={handleSetStatusFilter}
           placeholder="Statut"
+          renderValue={() => statusFilter && <OptionValue>{`Statut (${statusFilter.length})`}</OptionValue>}
           searchable={false}
           size="sm"
           style={tagPickerStyle}
@@ -192,15 +198,26 @@ export function MissionsTableFilters() {
           valueKey="code"
         />
 
-        {!_.isEmpty(
-          [...statusFilter, ...typeFilter, startedAfter, startedBefore, administrationFilter, unitFilter].filter(v => v)
-        ) && (
+        {!_.isEmpty([
+          ...statusFilter,
+          ...typeFilter,
+          startedAfter,
+          startedBefore,
+          administrationFilter,
+          unitFilter,
+          sourceFilter
+        ]) && (
           <ResetFiltersButton onClick={handleResetFilters}>
             <ReloadSVG />
             Réinitialiser les filtres
           </ResetFiltersButton>
         )}
       </FilterWrapper>
+      <FilterTags
+        onDeleteAdministration={() => handleSetAdministrationFilter(undefined)}
+        onDeleteSource={handleSetSourceFilter}
+        onDeleteUnit={() => handleSetUnitFilter(undefined)}
+      />
       {isCustomPeriodVisible && (
         <StyledCustomPeriodContainer>
           <StyledCutomPeriodLabel>Période spécifique</StyledCutomPeriodLabel>
@@ -280,4 +297,10 @@ const StyledDatePickerContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 10px;
+`
+const OptionValue = styled.span`
+  display: flex;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `

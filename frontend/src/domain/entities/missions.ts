@@ -273,32 +273,27 @@ export const missionSourceEnum = {
 }
 
 export enum DateRangeEnum {
-  CURRENT_DAY = 'CURRENT_DAY',
-  CURRENT_MONTH = 'CURRENT_MONTH',
-  CURRENT_QUARTER = 'CURRENT_QUARTER',
-  CURRENT_WEEK = 'CURRENT_WEEK',
-  CURRENT_YEAR = 'CURRENT_YEAR',
-  CUSTOM = 'CUSTOM'
+  CUSTOM = 'CUSTOM',
+  DAY = 'DAY',
+  MONTH = 'MONTH',
+  WEEK = 'WEEK'
 }
 
 export const dateRangeEnum = {
-  CURRENT_DAY: {
+  DAY: {
     label: 'Aujourd’hui',
-    value: 'CURRENT_DAY'
+    value: 'DAY'
   },
-  CURRENT_WEEK: {
-    label: 'Semaine en cours',
-    value: 'CURRENT_WEEK'
+  WEEK: {
+    label: 'Une semaine',
+    value: 'WEEK'
   },
   // eslint-disable-next-line sort-keys-fix/sort-keys-fix
-  CURRENT_MONTH: {
-    label: 'Mois en cours',
-    value: 'CURRENT_MONTH'
+  MONTH: {
+    label: 'Un mois',
+    value: 'MONTH'
   },
-  CURRENT_QUARTER: {
-    label: 'Trimestre en cours',
-    value: 'CURRENT_QUARTER'
-  },
+  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
   CUSTOM: {
     label: 'Période spécifique',
     value: 'CUSTOM'

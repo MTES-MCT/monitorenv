@@ -10,7 +10,7 @@ export const THIRTY_DAYS_AGO = dayjs().subtract(30, 'days').toISOString()
 type MissionFiltersSliceType = {
   administrationFilter: string | undefined
   periodFilter: string
-  sourceFilter: string[]
+  sourceFilter: string | undefined
   startedAfter?: string
   startedBefore?: string
   statusFilter: string[]
@@ -20,8 +20,8 @@ type MissionFiltersSliceType = {
 
 const initialState: MissionFiltersSliceType = {
   administrationFilter: undefined,
-  periodFilter: dateRangeEnum.CURRENT_WEEK.value,
-  sourceFilter: [],
+  periodFilter: dateRangeEnum.WEEK.value,
+  sourceFilter: undefined,
   startedAfter: THIRTY_DAYS_AGO,
   startedBefore: undefined,
   statusFilter: [],
