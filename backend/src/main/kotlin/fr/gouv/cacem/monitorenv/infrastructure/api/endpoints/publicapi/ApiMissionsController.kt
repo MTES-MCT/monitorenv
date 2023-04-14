@@ -61,7 +61,7 @@ class ApiMissionsController(
         return missions.map { MissionDataOutput.fromMission(it) }
     }
 
-    @PutMapping("", consumes = ["application/json"])
+    @PostMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a new mission")
     fun createMissionController(
         @RequestBody
