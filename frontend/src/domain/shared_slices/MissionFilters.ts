@@ -3,10 +3,13 @@ import dayjs from 'dayjs'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
-const THIRTY_DAYS_AGO = dayjs().subtract(30, 'days').toISOString()
+import { dateRangeEnum } from '../entities/missions'
+
+export const THIRTY_DAYS_AGO = dayjs().subtract(30, 'days').toISOString()
 
 type MissionFiltersSliceType = {
   administrationFilter: string | undefined
+  periodFilter: string
   sourceFilter: string[]
   startedAfter?: string
   startedBefore?: string
@@ -17,6 +20,7 @@ type MissionFiltersSliceType = {
 
 const initialState: MissionFiltersSliceType = {
   administrationFilter: undefined,
+  periodFilter: dateRangeEnum.CURRENT_WEEK.value,
   sourceFilter: [],
   startedAfter: THIRTY_DAYS_AGO,
   startedBefore: undefined,

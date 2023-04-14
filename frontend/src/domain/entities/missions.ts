@@ -272,6 +272,39 @@ export const missionSourceEnum = {
   }
 }
 
+export enum DateRangeEnum {
+  CURRENT_DAY = 'CURRENT_DAY',
+  CURRENT_MONTH = 'CURRENT_MONTH',
+  CURRENT_QUARTER = 'CURRENT_QUARTER',
+  CURRENT_WEEK = 'CURRENT_WEEK',
+  CURRENT_YEAR = 'CURRENT_YEAR',
+  CUSTOM = 'CUSTOM'
+}
+
+export const dateRangeEnum = {
+  CURRENT_DAY: {
+    label: 'Aujourd’hui',
+    value: 'CURRENT_DAY'
+  },
+  CURRENT_WEEK: {
+    label: 'Semaine en cours',
+    value: 'CURRENT_WEEK'
+  },
+  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
+  CURRENT_MONTH: {
+    label: 'Mois en cours',
+    value: 'CURRENT_MONTH'
+  },
+  CURRENT_QUARTER: {
+    label: 'Trimestre en cours',
+    value: 'CURRENT_QUARTER'
+  },
+  CUSTOM: {
+    label: 'Période spécifique',
+    value: 'CUSTOM'
+  }
+}
+
 export const THEME_REQUIRE_PROTECTED_SPECIES = ['Police des espèces protégées et de leurs habitats (faune et flore)']
 
 export const relevantCourtEnum = {

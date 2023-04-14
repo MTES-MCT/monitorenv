@@ -1,4 +1,5 @@
 import { Option, Select, DatePicker } from '@mtes-mct/monitor-ui'
+import dayjs from 'dayjs'
 import _ from 'lodash'
 import { MutableRefObject, useMemo, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -6,21 +7,37 @@ import { CheckPicker } from 'rsuite'
 import styled from 'styled-components'
 
 import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
-import { missionSourceEnum, missionStatusLabels, missionTypeEnum } from '../../../domain/entities/missions'
-import { resetMissionFilters, updateFilters } from '../../../domain/shared_slices/MissionFilters'
+import { COLORS } from '../../../constants/constants'
+import {
+  DateRangeEnum,
+  dateRangeEnum,
+  missionSourceEnum,
+  missionStatusLabels,
+  missionTypeEnum
+} from '../../../domain/entities/missions'
+import { THIRTY_DAYS_AGO, resetMissionFilters, updateFilters } from '../../../domain/shared_slices/MissionFilters'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useNewWindow } from '../../../ui/NewWindow'
 import { ReactComponent as ReloadSVG } from '../../../uiMonitor/icons/Reload.svg'
+import { getDateToIsoFormat } from '../../../utils/getDateToIsoFormat'
 
 export function MissionsTableFilters() {
   const dispatch = useDispatch()
   const { newWindowContainerRef } = useNewWindow()
-  const { administrationFilter, sourceFilter, startedAfter, startedBefore, statusFilter, typeFilter, unitFilter } =
-    useAppSelector(state => state.missionFilters)
+  const {
+    administrationFilter,
+    periodFilter,
+    sourceFilter,
+    startedAfter,
+    startedBefore,
+    statusFilter,
+    typeFilter,
+    unitFilter
+  } = useAppSelector(state => state.missionFilters)
+
+  const [isCustomPeriodVisible, setIsCustomPeriodVisible] = useState(false)
 
   const unitPickerRef = useRef() as MutableRefObject<HTMLDivElement>
-  const [displayAdvancedFilters, setDisplayAdvancedFilters] = useState(false)
-  const handleDisplayAdvancedFilters = () => setDisplayAdvancedFilters(!displayAdvancedFilters)
 
   const { data } = useGetControlUnitsQuery()
   const controlUnits = useMemo(() => (data ? Array.from(data) : []), [data])
@@ -36,7 +53,6 @@ export function MissionsTableFilters() {
     dispatch(updateFilters({ key: 'administrationFilter', value: administrationName }))
     dispatch(updateFilters({ key: 'unitFilter', value: undefined }))
   }
-
   const unitListAsOptions: Option[] = controlUnits
     .filter(u => !u.isArchived)
     .sort((a, b) => a?.name?.localeCompare(b?.name))
@@ -47,7 +63,32 @@ export function MissionsTableFilters() {
     dispatch(updateFilters({ key: 'administrationFilter', value: administration }))
     dispatch(updateFilters({ key: 'unitFilter', value: unitName }))
   }
+  const dateRangeEnumOptions = Object.values(dateRangeEnum)
+  const onPeriodSelected = period => {
+    const startDateTimeUtc = dayjs().toISOString()
+    dispatch(updateFilters({ key: 'periodFilter', value: period }))
+    switch (period) {
+      case DateRangeEnum.CURRENT_DAY:
+        dispatch(updateFilters({ key: 'startedAfter', value: getDateToIsoFormat('day', startDateTimeUtc) }))
+        break
 
+      case DateRangeEnum.CURRENT_WEEK:
+        dispatch(updateFilters({ key: 'startedAfter', value: getDateToIsoFormat('week', startDateTimeUtc) }))
+        break
+
+      case DateRangeEnum.CURRENT_MONTH:
+        dispatch(updateFilters({ key: 'startedAfter', value: getDateToIsoFormat('month', startDateTimeUtc) }))
+        break
+
+      case DateRangeEnum.CUSTOM:
+        setIsCustomPeriodVisible(true)
+        break
+
+      default:
+        dispatch(updateFilters({ key: 'startedAfter', value: THIRTY_DAYS_AGO }))
+        break
+    }
+  }
   const StatusOptions = Object.values(missionStatusLabels)
   const handleSetStatusFilter = v => {
     dispatch(updateFilters({ key: 'statusFilter', value: v }))
@@ -61,6 +102,7 @@ export function MissionsTableFilters() {
   const handleSetSourceFilter = value => {
     dispatch(updateFilters({ key: 'sourceFilter', value }))
   }
+
   const handleSetMissionStartedAfterFilter = (v: Date | undefined) => {
     dispatch(updateFilters({ key: 'startedAfter', value: v ? v.toISOString() : undefined }))
   }
@@ -76,23 +118,18 @@ export function MissionsTableFilters() {
     <>
       <Title>FILTRER LA LISTE</Title>
       <FilterWrapper ref={unitPickerRef}>
-        <DatePicker
-          key={JSON.stringify({ startedAfter })}
+        <StyledSelect
           baseContainer={newWindowContainerRef.current}
-          data-cy="datepicker-missionStartedAfter"
-          defaultValue={startedAfter}
-          label="Date de début après le"
-          onChange={handleSetMissionStartedAfterFilter}
+          isLabelHidden
+          label="Période"
+          name="Période"
+          onChange={onPeriodSelected}
+          options={dateRangeEnumOptions}
+          placeholder="Période"
+          style={largeTagPickerStyle}
+          value={periodFilter}
         />
-        <DatePicker
-          key={JSON.stringify({ startedBefore })}
-          baseContainer={newWindowContainerRef.current}
-          data-cy="datepicker-missionStartedBefore"
-          defaultValue={startedBefore}
-          label="Date de début avant le"
-          onChange={handleSetMissionStartedBeforeFilter}
-          style={{ marginLeft: '10px' }}
-        />
+
         <StyledSelect
           baseContainer={newWindowContainerRef.current}
           data-cy="select-origin-filter"
@@ -154,37 +191,44 @@ export function MissionsTableFilters() {
           value={statusFilter}
           valueKey="code"
         />
-        <AdvancedFiltersButton onClick={handleDisplayAdvancedFilters}>
-          {displayAdvancedFilters ? 'Masquer les critères avancés' : 'Voir plus de critères'}
-        </AdvancedFiltersButton>
-        <Separator />
 
         {!_.isEmpty(
           [...statusFilter, ...typeFilter, startedAfter, startedBefore, administrationFilter, unitFilter].filter(v => v)
         ) && (
           <ResetFiltersButton onClick={handleResetFilters}>
-            <ReloadIcon />
+            <ReloadSVG />
             Réinitialiser les filtres
           </ResetFiltersButton>
         )}
       </FilterWrapper>
-      {displayAdvancedFilters && (
-        <AdvancedFiltersWrapper>
-          <CheckPicker
-            data={[
-              { label: 'NAMO', value: 'NAMO' },
-              { label: 'MED', value: 'MED' }
-            ]}
-            placeholder="Facade"
-            style={tagPickerStyle}
-          />
-        </AdvancedFiltersWrapper>
+      {isCustomPeriodVisible && (
+        <StyledCustomPeriodContainer>
+          <StyledCutomPeriodLabel>Période spécifique</StyledCutomPeriodLabel>
+          <StyledDatePickerContainer>
+            <DatePicker
+              key="missionStartedAfter"
+              baseContainer={newWindowContainerRef.current}
+              data-cy="datepicker-missionStartedAfter"
+              defaultValue={startedAfter}
+              isLabelHidden
+              label="Date de début après le"
+              onChange={handleSetMissionStartedAfterFilter}
+            />
+            <DatePicker
+              key="missionStartedBefore"
+              baseContainer={newWindowContainerRef.current}
+              data-cy="datepicker-missionStartedBefore"
+              defaultValue={startedBefore}
+              isLabelHidden
+              label="Date de début avant le"
+              onChange={handleSetMissionStartedBeforeFilter}
+            />
+          </StyledDatePickerContainer>
+        </StyledCustomPeriodContainer>
       )}
     </>
   )
 }
-
-const ReloadIcon = styled(ReloadSVG)``
 
 const Title = styled.h2`
   font-size: 16px;
@@ -195,10 +239,6 @@ const FilterWrapper = styled.div`
   flex-wrap: wrap;
   align-items: end;
   gap: 10px;
-`
-const AdvancedFiltersButton = styled.span`
-  display: none;
-  text-decoration: underline;
 `
 
 const ResetFiltersButton = styled.div`
@@ -211,12 +251,6 @@ const ResetFiltersButton = styled.div`
   }
 `
 
-const AdvancedFiltersWrapper = styled.div`
-  display: flex;
-`
-const Separator = styled.div`
-  flex: 1;
-`
 const tagPickerStyle = { width: 160 }
 const largeTagPickerStyle = { width: 260 }
 
@@ -230,4 +264,20 @@ const StyledCheckPicker = styled(CheckPicker)`
   .rs-picker-toggle-placeholder {
     font-size: 13px !important;
   }
+`
+const StyledCustomPeriodContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 5px;
+`
+const StyledCutomPeriodLabel = styled.span`
+  font-size: 13px;
+  color: ${COLORS.slateGray};
+`
+
+const StyledDatePickerContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
 `
