@@ -8,7 +8,6 @@ const TWO_MINUTES = 2 * 60 * 1000
 export const useGetFilteredMissionsQuery = () => {
   const { administrationFilter, sourceFilter, startedAfter, startedBefore, statusFilter, typeFilter, unitFilter } =
     useAppSelector(state => state.missionFilters)
-
   const { data, isError, isLoading } = useGetMissionsQuery(
     {
       missionSource: sourceFilter,
@@ -25,16 +24,31 @@ export const useGetFilteredMissionsQuery = () => {
       return []
     }
 
-    if (!administrationFilter && !unitFilter) {
+    if (administrationFilter.length === 0 && unitFilter.length === 0) {
       return data
     }
 
-    if (unitFilter) {
-      return data.filter(mission => !!mission.controlUnits.find(controlUnit => controlUnit.name === unitFilter))
+    if (unitFilter.length > 0) {
+      return data.filter(
+        mission =>
+          !!mission.controlUnits.find(controlUnit => {
+            if (unitFilter.find(unit => unit === controlUnit.name)) {
+              return controlUnit
+            }
+
+            return undefined
+          })
+      )
     }
 
     return data.filter(mission =>
-      mission.controlUnits.find(controlUnit => controlUnit.administration === administrationFilter)
+      mission.controlUnits.find(controlUnit => {
+        if (administrationFilter.find(adminFilter => adminFilter === controlUnit.administration)) {
+          return controlUnit
+        }
+
+        return undefined
+      })
     )
   }, [data, administrationFilter, unitFilter])
 

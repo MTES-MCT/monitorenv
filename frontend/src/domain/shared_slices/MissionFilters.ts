@@ -5,28 +5,30 @@ import storage from 'redux-persist/lib/storage'
 
 import { dateRangeEnum } from '../entities/missions'
 
-export const THIRTY_DAYS_AGO = dayjs().subtract(30, 'days').toISOString()
+export const SEVEN_DAYS_AGO = dayjs().subtract(7, 'days').toISOString()
 
 type MissionFiltersSliceType = {
-  administrationFilter: string | undefined
+  administrationFilter: string[]
+  hasNoFilter: boolean
   periodFilter: string
   sourceFilter: string | undefined
   startedAfter?: string
   startedBefore?: string
   statusFilter: string[]
   typeFilter: string[]
-  unitFilter: string | undefined
+  unitFilter: string[]
 }
 
 const initialState: MissionFiltersSliceType = {
-  administrationFilter: undefined,
+  administrationFilter: [],
+  hasNoFilter: true,
   periodFilter: dateRangeEnum.WEEK.value,
   sourceFilter: undefined,
-  startedAfter: THIRTY_DAYS_AGO,
+  startedAfter: SEVEN_DAYS_AGO,
   startedBefore: undefined,
   statusFilter: [],
   typeFilter: [],
-  unitFilter: undefined
+  unitFilter: []
 }
 
 const persistConfig = {
@@ -44,7 +46,9 @@ const missionFiltersSlice = createSlice({
     updateFilters(state, action) {
       return {
         ...state,
-        [action.payload.key]: action.payload.value
+        [action.payload.key]: action.payload.value,
+        // TODO update condition when unit and administrations were array
+        hasNoFilter: !state.administrationFilter && !state.sourceFilter
       }
     }
   }

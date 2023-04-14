@@ -1,5 +1,4 @@
-import { Option, Select, DatePicker, SingleTag, OptionValueType } from '@mtes-mct/monitor-ui'
-import dayjs from 'dayjs'
+import { Option, Select, customDayjs, DateRangePicker, DateAsStringRange } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 import { MutableRefObject, useMemo, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -15,27 +14,17 @@ import {
   missionStatusLabels,
   missionTypeEnum
 } from '../../../domain/entities/missions'
-import { THIRTY_DAYS_AGO, resetMissionFilters, updateFilters } from '../../../domain/shared_slices/MissionFilters'
+import { resetMissionFilters, updateFilters } from '../../../domain/shared_slices/MissionFilters'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useNewWindow } from '../../../ui/NewWindow'
 import { ReactComponent as ReloadSVG } from '../../../uiMonitor/icons/Reload.svg'
-import { getDateToIsoFormat } from '../../../utils/getDateToIsoFormat'
 import { FilterTags } from './FilterTags'
 
 export function MissionsTableFilters() {
   const dispatch = useDispatch()
   const { newWindowContainerRef } = useNewWindow()
-  const {
-    administrationFilter,
-    periodFilter,
-    sourceFilter,
-    startedAfter,
-    startedBefore,
-    statusFilter,
-    typeFilter,
-    unitFilter
-  } = useAppSelector(state => state.missionFilters)
-
+  const { administrationFilter, hasNoFilter, periodFilter, sourceFilter, statusFilter, typeFilter, unitFilter } =
+    useAppSelector(state => state.missionFilters)
   const [isCustomPeriodVisible, setIsCustomPeriodVisible] = useState(false)
 
   const unitPickerRef = useRef() as MutableRefObject<HTMLDivElement>
@@ -43,42 +32,67 @@ export function MissionsTableFilters() {
   const { data } = useGetControlUnitsQuery()
   const controlUnits = useMemo(() => (data ? Array.from(data) : []), [data])
 
-  const administrationListAsOptions: Option[] = _.chain(controlUnits)
+  const filteredAdministrations = controlUnits.filter(unitToFilter => {
+    if (unitFilter.length > 0) {
+      return unitFilter.find(unit => unit === unitToFilter.name)
+    }
+
+    return unitToFilter
+  })
+
+  const administrationListAsOptions: Option[] = _.chain(filteredAdministrations)
     .map(unit => unit.administration)
     .uniq()
     .sort((a, b) => a?.localeCompare(b))
     .map(t => ({ label: t, value: t }))
     .value()
 
-  const handleSetAdministrationFilter = administrationName => {
-    dispatch(updateFilters({ key: 'administrationFilter', value: administrationName }))
-    dispatch(updateFilters({ key: 'unitFilter', value: undefined }))
+  const handleSetAdministrationFilter = administrations => {
+    dispatch(updateFilters({ key: 'administrationFilter', value: administrations }))
   }
   const unitListAsOptions: Option[] = controlUnits
     .filter(u => !u.isArchived)
+    .filter(unitToFilter => {
+      if (administrationFilter.length > 0) {
+        return administrationFilter.find(admin => admin === unitToFilter.administration)
+      }
+
+      return unitToFilter
+    })
     .sort((a, b) => a?.name?.localeCompare(b?.name))
     .map(t => ({ label: t.name, value: t.name }))
 
   const handleSetUnitFilter = unitName => {
-    const administration = controlUnits.find(unit => unit.name === unitName)?.administration
-    dispatch(updateFilters({ key: 'administrationFilter', value: administration }))
     dispatch(updateFilters({ key: 'unitFilter', value: unitName }))
   }
+
   const dateRangeEnumOptions = Object.values(dateRangeEnum)
   const onPeriodSelected = period => {
-    const startDateTimeUtc = dayjs().toISOString()
     dispatch(updateFilters({ key: 'periodFilter', value: period }))
     switch (period) {
       case DateRangeEnum.DAY:
-        dispatch(updateFilters({ key: 'startedAfter', value: getDateToIsoFormat('day', startDateTimeUtc) }))
+        dispatch(updateFilters({ key: 'startedAfter', value: customDayjs().utc().startOf('day').toISOString() }))
+        dispatch(updateFilters({ key: 'startedBefore', value: undefined }))
         break
 
       case DateRangeEnum.WEEK:
-        dispatch(updateFilters({ key: 'startedAfter', value: getDateToIsoFormat('week', startDateTimeUtc) }))
+        dispatch(
+          updateFilters({
+            key: 'startedAfter',
+            value: customDayjs.utc().startOf('day').utc().subtract(7, 'day').toISOString()
+          })
+        )
+        dispatch(updateFilters({ key: 'startedBefore', value: undefined }))
         break
 
       case DateRangeEnum.MONTH:
-        dispatch(updateFilters({ key: 'startedAfter', value: getDateToIsoFormat('month', startDateTimeUtc) }))
+        dispatch(
+          updateFilters({
+            key: 'startedAfter',
+            value: customDayjs.utc().startOf('day').utc().subtract(30, 'day').toISOString()
+          })
+        )
+        dispatch(updateFilters({ key: 'startedBefore', value: undefined }))
         break
 
       case DateRangeEnum.CUSTOM:
@@ -86,7 +100,13 @@ export function MissionsTableFilters() {
         break
 
       default:
-        dispatch(updateFilters({ key: 'startedAfter', value: THIRTY_DAYS_AGO }))
+        dispatch(
+          updateFilters({
+            key: 'startedAfter',
+            value: customDayjs.utc().startOf('day').utc().subtract(7, 'day').toISOString()
+          })
+        )
+        dispatch(updateFilters({ key: 'startedBefore', value: undefined }))
         break
     }
   }
@@ -104,14 +124,13 @@ export function MissionsTableFilters() {
     dispatch(updateFilters({ key: 'sourceFilter', value }))
   }
 
-  const handleSetMissionStartedAfterFilter = (v: Date | undefined) => {
-    dispatch(updateFilters({ key: 'startedAfter', value: v ? v.toISOString() : undefined }))
-  }
-  const handleSetMissionStartedBeforeFilter = (v: Date | undefined) => {
-    dispatch(updateFilters({ key: 'startedBefore', value: v ? v.toISOString() : undefined }))
+  const handleSetMissionStartedAfterFilter = (date: DateAsStringRange | undefined) => {
+    dispatch(updateFilters({ key: 'startedAfter', value: date && date[0] ? date[0] : undefined }))
+    dispatch(updateFilters({ key: 'startedBefore', value: date && date[1] ? date[1] : undefined }))
   }
 
   const handleResetFilters = () => {
+    setIsCustomPeriodVisible(false)
     dispatch(resetMissionFilters())
   }
 
@@ -127,7 +146,7 @@ export function MissionsTableFilters() {
           onChange={onPeriodSelected}
           options={dateRangeEnumOptions}
           placeholder="Date de mission depuis"
-          style={largeTagPickerStyle}
+          style={tagPickerStyle}
           value={periodFilter}
         />
 
@@ -140,36 +159,36 @@ export function MissionsTableFilters() {
           onChange={handleSetSourceFilter}
           options={sourceOptions}
           placeholder="Origine"
-          renderValue={() => sourceFilter && <OptionValue>Origine (1) </OptionValue>}
           style={tagPickerStyle}
           value={sourceFilter}
         />
-        <StyledSelect
-          baseContainer={newWindowContainerRef.current}
-          isLabelHidden
-          label="Administrations"
-          name="administrations"
+        <StyledCheckPicker
+          container={() => unitPickerRef.current}
+          data={administrationListAsOptions}
+          labelKey="label"
           onChange={handleSetAdministrationFilter}
-          options={administrationListAsOptions}
           placeholder="Administrations"
-          renderValue={() => administrationFilter && <OptionValue>Administration (1) </OptionValue>}
+          renderValue={() =>
+            administrationFilter && <OptionValue>{`Administration (${administrationFilter.length})`}</OptionValue>
+          }
           searchable
-          style={largeTagPickerStyle}
+          size="sm"
+          style={tagPickerStyle}
           value={administrationFilter}
+          valueKey="value"
         />
-        <StyledSelect
-          baseContainer={newWindowContainerRef.current}
-          data-cy="select-units-filter"
-          isLabelHidden
-          label="Unités"
-          name="units"
+        <StyledCheckPicker
+          container={() => unitPickerRef.current}
+          data={unitListAsOptions}
+          labelKey="label"
           onChange={handleSetUnitFilter}
-          options={unitListAsOptions}
           placeholder="Unités"
-          renderValue={() => unitFilter && <OptionValue>Unité (1) </OptionValue>}
+          renderValue={() => unitFilter && <OptionValue>{`Unité (${unitFilter.length})`}</OptionValue>}
           searchable
-          style={largeTagPickerStyle}
+          size="sm"
+          style={tagPickerStyle}
           value={unitFilter}
+          valueKey="value"
         />
         <StyledCheckPicker
           container={() => unitPickerRef.current}
@@ -197,52 +216,31 @@ export function MissionsTableFilters() {
           value={statusFilter}
           valueKey="code"
         />
+      </FilterWrapper>
+      {isCustomPeriodVisible && <StyledCutomPeriodLabel>Période spécifique</StyledCutomPeriodLabel>}
+      <StyledTagsContainer>
+        {isCustomPeriodVisible && (
+          <StyledCustomPeriodContainer>
+            <DateRangePicker
+              key="dateRange"
+              baseContainer={newWindowContainerRef.current}
+              data-cy="datepicker-missionStartedAfter"
+              isLabelHidden
+              isStringDate
+              label="Date de début entre le et le"
+              onChange={handleSetMissionStartedAfterFilter}
+            />
+          </StyledCustomPeriodContainer>
+        )}
+        <FilterTags />
 
-        {!_.isEmpty([
-          ...statusFilter,
-          ...typeFilter,
-          startedAfter,
-          startedBefore,
-          administrationFilter,
-          unitFilter,
-          sourceFilter
-        ]) && (
+        {!hasNoFilter && (
           <ResetFiltersButton onClick={handleResetFilters}>
             <ReloadSVG />
             Réinitialiser les filtres
           </ResetFiltersButton>
         )}
-      </FilterWrapper>
-      <FilterTags
-        onDeleteAdministration={() => handleSetAdministrationFilter(undefined)}
-        onDeleteSource={handleSetSourceFilter}
-        onDeleteUnit={() => handleSetUnitFilter(undefined)}
-      />
-      {isCustomPeriodVisible && (
-        <StyledCustomPeriodContainer>
-          <StyledCutomPeriodLabel>Période spécifique</StyledCutomPeriodLabel>
-          <StyledDatePickerContainer>
-            <DatePicker
-              key="missionStartedAfter"
-              baseContainer={newWindowContainerRef.current}
-              data-cy="datepicker-missionStartedAfter"
-              defaultValue={startedAfter}
-              isLabelHidden
-              label="Date de début après le"
-              onChange={handleSetMissionStartedAfterFilter}
-            />
-            <DatePicker
-              key="missionStartedBefore"
-              baseContainer={newWindowContainerRef.current}
-              data-cy="datepicker-missionStartedBefore"
-              defaultValue={startedBefore}
-              isLabelHidden
-              label="Date de début avant le"
-              onChange={handleSetMissionStartedBeforeFilter}
-            />
-          </StyledDatePickerContainer>
-        </StyledCustomPeriodContainer>
-      )}
+      </StyledTagsContainer>
     </>
   )
 }
@@ -269,7 +267,6 @@ const ResetFiltersButton = styled.div`
 `
 
 const tagPickerStyle = { width: 160 }
-const largeTagPickerStyle = { width: 260 }
 
 const StyledSelect = styled(Select)`
   .rs-picker-toggle-caret,
@@ -282,6 +279,12 @@ const StyledCheckPicker = styled(CheckPicker)`
     font-size: 13px !important;
   }
 `
+const StyledTagsContainer = styled.div`
+  display: flex;
+  flex-direction row;
+  gap: 16px;
+  align-items: baseline;
+`
 const StyledCustomPeriodContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -291,13 +294,9 @@ const StyledCustomPeriodContainer = styled.div`
 const StyledCutomPeriodLabel = styled.span`
   font-size: 13px;
   color: ${COLORS.slateGray};
+  margin-top: 16px;
 `
 
-const StyledDatePickerContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-`
 const OptionValue = styled.span`
   display: flex;
   overflow: hidden;

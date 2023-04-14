@@ -3,7 +3,6 @@ import { Table } from 'rsuite'
 
 import { DateCell } from '../../../ui/Table/Cell/DateCell'
 import { CellActionThemes } from './CellActionThemes'
-import { CellAlert } from './CellAlert'
 import { CellEditMission } from './CellEditMission'
 import { CellLocalizeMission } from './CellLocalizeMission'
 import { CellMissionSource } from './CellMissionSource'

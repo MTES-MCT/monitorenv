@@ -4,7 +4,7 @@ import type { Mission } from '../domain/entities/missions'
 
 type MissionsResponse = Mission[]
 type MissionsFilter = {
-  missionSource?: string[]
+  missionSource?: string
   missionStatus?: string[]
   missionTypes?: string[]
   startedAfterDateTime?: string
@@ -15,8 +15,7 @@ const getStartDateFilter = startedAfterDateTime =>
   startedAfterDateTime && `startedAfterDateTime=${encodeURIComponent(startedAfterDateTime)}`
 const getEndDateFilter = startedBeforeDateTime =>
   startedBeforeDateTime && `startedBeforeDateTime=${encodeURIComponent(startedBeforeDateTime)}`
-const getMissionSourceFilter = missionSource =>
-  missionSource && missionSource?.length > 0 && `missionSource=${encodeURIComponent(missionSource)}`
+const getMissionSourceFilter = missionSource => missionSource && `missionSource=${encodeURIComponent(missionSource)}`
 const getMissionStatusFilter = missionStatus =>
   missionStatus && missionStatus?.length > 0 && `missionStatus=${encodeURIComponent(missionStatus)}`
 const getMissionTypesFilter = missionTypes =>
