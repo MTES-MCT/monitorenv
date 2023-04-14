@@ -89,7 +89,7 @@ class ApiMissionsControllerITests {
         given(this.createMission.execute(mission = any())).willReturn(newMission)
         // When
         mockMvc.perform(
-            put("/api/v1/missions")
+            post("/api/v1/missions")
                 .content(requestbody)
                 .contentType(MediaType.APPLICATION_JSON)
         )
