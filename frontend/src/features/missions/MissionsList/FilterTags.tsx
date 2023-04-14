@@ -10,47 +10,34 @@ export function FilterTags() {
   const dispatch = useDispatch()
   const { administrationFilter, statusFilter, typeFilter, unitFilter } = useAppSelector(state => state.missionFilters)
 
-  const onDeleteType = (typeToDelete: string) => {
-    const updateTypeFilter = typeFilter.filter(type => type !== typeToDelete)
-    dispatch(updateFilters({ key: 'typeFilter', value: updateTypeFilter }))
-  }
-  const onDeleteStatus = (statusToDelete: string) => {
-    const updateStatusFilter = statusFilter.filter(status => status !== statusToDelete)
-    dispatch(updateFilters({ key: 'statusFilter', value: updateStatusFilter }))
-  }
-  const onDeleteAdmin = (adminToDelete: string) => {
-    const updateAdminFilter = administrationFilter.filter(admin => admin !== adminToDelete)
-    dispatch(updateFilters({ key: 'administrationFilter', value: updateAdminFilter }))
-  }
-
-  const onDeleteUnit = (unitToDelete: string) => {
-    const updateUnitnFilter = unitFilter.filter(unit => unit !== unitToDelete)
-    dispatch(updateFilters({ key: 'unitFilter', value: updateUnitnFilter }))
+  const onDeleteTag = (valueToDelete: string, filterKey: string, missionFilter) => {
+    const updatedFilter = missionFilter.filter(unit => unit !== valueToDelete)
+    dispatch(updateFilters({ key: filterKey, value: updatedFilter }))
   }
 
   return (
     <StyledContainer>
       {administrationFilter.length > 0 &&
         administrationFilter.map(admin => (
-          <SingleTag key={admin} onDelete={() => onDeleteAdmin(admin)}>
+          <SingleTag key={admin} onDelete={() => onDeleteTag(admin, 'administrationFilter', administrationFilter)}>
             {String(`Admin. ${admin}`)}
           </SingleTag>
         ))}
       {unitFilter.length > 0 &&
         unitFilter.map(unit => (
-          <SingleTag key={unit} onDelete={() => onDeleteUnit(unit)}>
+          <SingleTag key={unit} onDelete={() => onDeleteTag(unit, 'unitFilter', unitFilter)}>
             {String(`Unité ${unit}`)}
           </SingleTag>
         ))}
       {typeFilter.length > 0 &&
         typeFilter.map(type => (
-          <SingleTag key={type} onDelete={() => onDeleteType(type)}>
+          <SingleTag key={type} onDelete={() => onDeleteTag(type, 'statusFilter', statusFilter)}>
             {String(`Type ${missionTypeEnum[type].libelle}`)}
           </SingleTag>
         ))}
       {statusFilter.length > 0 &&
         statusFilter.map(status => (
-          <SingleTag key={status} onDelete={() => onDeleteStatus(status)}>
+          <SingleTag key={status} onDelete={() => onDeleteTag(status, 'typeFilter', typeFilter)}>
             {String(`Mission ${missionStatusEnum[status].libelle.toLowerCase()}`)}
           </SingleTag>
         ))}
