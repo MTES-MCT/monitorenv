@@ -87,11 +87,6 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
         <CellStatus />
       </Table.Column>
 
-      <Table.Column width={120}>
-        <Table.HeaderCell>Alerte</Table.HeaderCell>
-        <CellAlert />
-      </Table.Column>
-
       <Table.Column align="center" width={60}>
         <Table.HeaderCell>&nbsp;</Table.HeaderCell>
         <CellLocalizeMission />
