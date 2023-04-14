@@ -56,6 +56,7 @@ export function MissionForm({ formValues, id, onCreateMission, onUpdateMission }
   }
   const handleReturnToEdition = () => {
     dispatch(sideWindowActions.setShowConfirmCancelModal(false))
+    dispatch(sideWindowActions.setNextPath(null))
     setDeleteModalIsOpen(false)
   }
   const handleDelete = () => {
@@ -92,7 +93,7 @@ export function MissionForm({ formValues, id, onCreateMission, onUpdateMission }
             <MissionCancelEditModal
               onCancel={handleReturnToEdition}
               onConfirm={handleCancelForm}
-              open={sideWindow.showConfirmCancelModal}
+              open={sideWindow.showConfirmCancelModal && formikProps.dirty}
             />
             <MissionDeleteModal onCancel={handleReturnToEdition} onConfirm={handleDelete} open={deleteModalIsOpen} />
             <SyncFormValuesWithRedux callback={setMissionState} />
