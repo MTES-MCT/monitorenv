@@ -14,28 +14,29 @@ export function ControlCard({ feature }: { feature: any }) {
   const actionDate = getLocalizedDayjs(parsedActionStartDateTimeUtc).format('DD MMM à HH:mm')
 
   return (
-    <ControlCardHeader>
-      <Actions>
-        <div>
-          {themes?.length > 0 && themes[0]?.theme ? <Accented>{extractThemesAsText(themes)}</Accented> : 'à renseigner'}
-        </div>{' '}
+    <StyledControlCardHeader>
+      <StyledControlThemes>
+        <StyledThemes>
+          {themes?.length > 0 && themes[0]?.theme ? extractThemesAsText(themes) : 'Thématique à renseigner'}
+        </StyledThemes>{' '}
         <Accented>
           {actionNumberOfControls} {pluralize('contrôle', actionNumberOfControls)}
           {' ('}
-          {actionTargetTypeEnum[actionTargetType]?.libelle || 'non spécifié'}
-          {' )'}
+          {actionTargetTypeEnum[actionTargetType]?.libelle || 'cible non renseignée'}
+          {/* eslint-disable-next-line react/jsx-curly-brace-presence */}
+          {')'}
           <Bullet color={infractions.length > 0 ? COLORS.maximumRed : COLORS.mediumSeaGreen} />
         </Accented>
-      </Actions>
+      </StyledControlThemes>
       {infractions && (
         <ControlInfractionsTags actionNumberOfControls={actionNumberOfControls} infractions={infractions} />
       )}
-      <DateControl>{actionDate}</DateControl>
-    </ControlCardHeader>
+      {actionStartDateTimeUtc ? <DateControl>{actionDate}</DateControl> : <span>Date à renseigner</span>}
+    </StyledControlCardHeader>
   )
 }
 
-const ControlCardHeader = styled.div`
+const StyledControlCardHeader = styled.div`
   background: ${COLORS.white};
   padding: 12px;
   border-top-left-radius: 2px;
@@ -43,18 +44,27 @@ const ControlCardHeader = styled.div`
   display: flex;
   flex-direction: column;
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3);
-  min-width: 300px;
   gap: 10px;
+  flex: 0 0 200px;
 `
 
-const Actions = styled.div`
-  font-weight: 500;
+const StyledControlThemes = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 `
+const StyledThemes = styled.div`
+  white-space: nowrap;
+  font-weight: 700;
+`
+
 const Accented = styled.div`
   display: flex;
   flex-direction: row;
   align-items: baseline;
+  white-space: nowrap;
   gap: 5px;
+  font-weight: 500;
 `
 
 const Bullet = styled.div<{ color: string }>`

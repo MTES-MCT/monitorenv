@@ -91,8 +91,7 @@ export function MissionCard({ feature, selected = false }: { feature: any; selec
         </div>
         <div>
           {numberOfControls} {pluralize('contrôle', numberOfControls)} et {numberOfSurveillance}{' '}
-          {pluralize('surveillance', numberOfSurveillance)}{' '}
-          {pluralize('réalisé', numberOfControls + numberOfSurveillance)}
+          {pluralize('surveillance', numberOfSurveillance)}
         </div>
       </Details>
       <MissionStatusLabel missionStatus={missionStatus} />
