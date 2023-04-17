@@ -41,22 +41,31 @@ export function MissionsTableFilters() {
   const { data } = useGetControlUnitsQuery()
   const controlUnits = useMemo(() => (data ? Array.from(data) : []), [data])
 
-  const filteredAdministrations = controlUnits.filter(unitToFilter => {
-    if (unitFilter.length > 0) {
-      return unitFilter.find(unit => unit === unitToFilter.name)
-    }
+  const administrationsWithTheirControlsUnits = _.chain(controlUnits)
+    .reduce((acc, curr) => {
+      const unitsControlsUpdated = acc[curr.administration]
+        ? [...acc[curr.administration].unitsControls, curr.name]
+        : [curr.name]
 
-    return unitToFilter
-  })
-
-  const administrationListAsOptions: Option[] = _.chain(filteredAdministrations)
-    .map(unit => unit.administration)
-    .uniq()
+      return {
+        ...acc,
+        [curr.administration]: {
+          label: curr.administration,
+          unitsControls: unitsControlsUpdated,
+          value: curr.administration
+        }
+      }
+    }, [] as any[])
     .sort((a, b) => a?.localeCompare(b))
-    .map(t => ({ label: t, value: t }))
     .value()
 
   const handleSetAdministrationFilter = administrations => {
+    const administrationsUpdatedWithUnits = _.flatten(
+      administrations.map(admin => administrationsWithTheirControlsUnits[admin].unitsControls)
+    )
+
+    const unitsFiltered = unitFilter.filter(unit => administrationsUpdatedWithUnits.find(control => control === unit))
+    dispatch(updateFilters({ key: 'unitFilter', value: unitsFiltered }))
     dispatch(updateFilters({ key: 'administrationFilter', value: administrations }))
   }
   const unitListAsOptions: Option[] = controlUnits
@@ -70,9 +79,9 @@ export function MissionsTableFilters() {
     })
     .sort((a, b) => a?.name?.localeCompare(b?.name))
     .map(t => ({ label: t.name, value: t.name }))
-
-  const handleSetUnitFilter = unitName => {
-    dispatch(updateFilters({ key: 'unitFilter', value: unitName }))
+  // console.log('unitListAsOptions', unitListAsOptions)
+  const handleSetUnitFilter = unitsName => {
+    dispatch(updateFilters({ key: 'unitFilter', value: unitsName }))
   }
 
   const dateRangeEnumOptions = Object.values(dateRangeEnum)
@@ -177,7 +186,7 @@ export function MissionsTableFilters() {
         />
         <StyledCheckPicker
           container={() => unitPickerRef.current}
-          data={administrationListAsOptions}
+          data={Object.values(administrationsWithTheirControlsUnits)}
           labelKey="label"
           onChange={handleSetAdministrationFilter}
           placeholder="Administrations"

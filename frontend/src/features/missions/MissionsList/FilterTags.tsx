@@ -40,7 +40,7 @@ export function FilterTags() {
       {seaFrontFilter.length > 0 &&
         seaFrontFilter.map(seaFront => (
           <SingleTag key={seaFront} onDelete={() => onDeleteTag(seaFront, 'seaFrontFilter', seaFrontFilter)}>
-            {String(`Facade. ${seaFront}`)}
+            {String(`Facade ${seaFront}`)}
           </SingleTag>
         ))}
       {statusFilter.length > 0 &&

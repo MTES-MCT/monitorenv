@@ -49,8 +49,14 @@ const missionFiltersSlice = createSlice({
       return {
         ...state,
         [action.payload.key]: action.payload.value,
-        // TODO update condition when unit and administrations were array
-        hasNoFilter: !state.administrationFilter && !state.sourceFilter
+        hasNoFilter:
+          state.periodFilter === dateRangeEnum.WEEK.value &&
+          !state.sourceFilter &&
+          !state.administrationFilter &&
+          state.unitFilter.length === 0 &&
+          state.typeFilter.length === 0 &&
+          state.seaFrontFilter.length === 0 &&
+          state.statusFilter.length === 0
       }
     }
   }
