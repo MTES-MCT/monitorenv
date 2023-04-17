@@ -11,6 +11,7 @@ type MissionFiltersSliceType = {
   administrationFilter: string[]
   hasNoFilter: boolean
   periodFilter: string
+  seaFrontFilter: string[]
   sourceFilter: string | undefined
   startedAfter?: string
   startedBefore?: string
@@ -23,6 +24,7 @@ const initialState: MissionFiltersSliceType = {
   administrationFilter: [],
   hasNoFilter: true,
   periodFilter: dateRangeEnum.WEEK.value,
+  seaFrontFilter: [],
   sourceFilter: undefined,
   startedAfter: SEVEN_DAYS_AGO,
   startedBefore: undefined,

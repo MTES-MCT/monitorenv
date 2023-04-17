@@ -7,6 +7,7 @@ type MissionsFilter = {
   missionSource?: string
   missionStatus?: string[]
   missionTypes?: string[]
+  seaFronts: string[]
   startedAfterDateTime?: string
   startedBeforeDateTime?: string
 }
@@ -20,6 +21,8 @@ const getMissionStatusFilter = missionStatus =>
   missionStatus && missionStatus?.length > 0 && `missionStatus=${encodeURIComponent(missionStatus)}`
 const getMissionTypesFilter = missionTypes =>
   missionTypes && missionTypes?.length > 0 && `missionTypes=${encodeURIComponent(missionTypes)}`
+const getSeaFrontsFilter = seaFronts =>
+  seaFronts && seaFronts?.length > 0 && `seaFronts=${encodeURIComponent(seaFronts)}`
 
 export const missionsAPI = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/bff/v1' }),
@@ -56,7 +59,8 @@ export const missionsAPI = createApi({
           getEndDateFilter(filter?.startedBeforeDateTime),
           getMissionSourceFilter(filter?.missionSource),
           getMissionStatusFilter(filter?.missionStatus),
-          getMissionTypesFilter(filter?.missionTypes)
+          getMissionTypesFilter(filter?.missionTypes),
+          getSeaFrontsFilter(filter?.seaFronts)
         ]
           .filter(v => v)
           .join('&')

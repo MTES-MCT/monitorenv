@@ -4,6 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.MissionDataOutput
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSeaFrontEnum
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -51,8 +52,10 @@ class MissionsController(
         missionTypes: List<String>?,
         @Parameter(description = "Statuts de mission")
         @RequestParam(name = "missionStatus", required = false)
-        missionStatuses: List<String>?
-
+        missionStatuses: List<String>?,
+        @Parameter(description = "Facades")
+        @RequestParam(name = "seaFronts", required = false)
+        seaFronts: List<MissionSeaFrontEnum>?
     ): List<MissionDataOutput> {
         val missions = getMonitorEnvMissions.execute(
             startedAfterDateTime = startedAfterDateTime,
@@ -62,7 +65,8 @@ class MissionsController(
             missionStatuses = missionStatuses,
             missionTypes = missionTypes,
             pageNumber = pageNumber,
-            pageSize = pageSize
+            pageSize = pageSize,
+            seaFronts = seaFronts
         )
         return missions.map { MissionDataOutput.fromMission(it) }
     }

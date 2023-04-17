@@ -8,7 +8,9 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 
 export function FilterTags() {
   const dispatch = useDispatch()
-  const { administrationFilter, statusFilter, typeFilter, unitFilter } = useAppSelector(state => state.missionFilters)
+  const { administrationFilter, seaFrontFilter, statusFilter, typeFilter, unitFilter } = useAppSelector(
+    state => state.missionFilters
+  )
 
   const onDeleteTag = (valueToDelete: string, filterKey: string, missionFilter) => {
     const updatedFilter = missionFilter.filter(unit => unit !== valueToDelete)
@@ -33,6 +35,12 @@ export function FilterTags() {
         typeFilter.map(type => (
           <SingleTag key={type} onDelete={() => onDeleteTag(type, 'statusFilter', statusFilter)}>
             {String(`Type ${missionTypeEnum[type].libelle}`)}
+          </SingleTag>
+        ))}
+      {seaFrontFilter.length > 0 &&
+        seaFrontFilter.map(seaFront => (
+          <SingleTag key={seaFront} onDelete={() => onDeleteTag(seaFront, 'seaFrontFilter', seaFrontFilter)}>
+            {String(`Facade. ${seaFront}`)}
           </SingleTag>
         ))}
       {statusFilter.length > 0 &&

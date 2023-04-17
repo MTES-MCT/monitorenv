@@ -12,7 +12,8 @@ import {
   dateRangeEnum,
   missionSourceEnum,
   missionStatusLabels,
-  missionTypeEnum
+  missionTypeEnum,
+  seaFrontEnum
 } from '../../../domain/entities/missions'
 import { resetMissionFilters, updateFilters } from '../../../domain/shared_slices/MissionFilters'
 import { useAppSelector } from '../../../hooks/useAppSelector'
@@ -23,8 +24,16 @@ import { FilterTags } from './FilterTags'
 export function MissionsTableFilters() {
   const dispatch = useDispatch()
   const { newWindowContainerRef } = useNewWindow()
-  const { administrationFilter, hasNoFilter, periodFilter, sourceFilter, statusFilter, typeFilter, unitFilter } =
-    useAppSelector(state => state.missionFilters)
+  const {
+    administrationFilter,
+    hasNoFilter,
+    periodFilter,
+    seaFrontFilter,
+    sourceFilter,
+    statusFilter,
+    typeFilter,
+    unitFilter
+  } = useAppSelector(state => state.missionFilters)
   const [isCustomPeriodVisible, setIsCustomPeriodVisible] = useState(false)
 
   const unitPickerRef = useRef() as MutableRefObject<HTMLDivElement>
@@ -124,6 +133,10 @@ export function MissionsTableFilters() {
     dispatch(updateFilters({ key: 'sourceFilter', value }))
   }
 
+  const seaFrontsOptions = Object.values(seaFrontEnum)
+  const handleSetSeaFrontFilter = value => {
+    dispatch(updateFilters({ key: 'seaFrontFilter', value }))
+  }
   const handleSetMissionStartedAfterFilter = (date: DateAsStringRange | undefined) => {
     dispatch(updateFilters({ key: 'startedAfter', value: date && date[0] ? date[0] : undefined }))
     dispatch(updateFilters({ key: 'startedBefore', value: date && date[1] ? date[1] : undefined }))
@@ -202,6 +215,19 @@ export function MissionsTableFilters() {
           style={tagPickerStyle}
           value={typeFilter}
           valueKey="code"
+        />
+        <StyledCheckPicker
+          container={() => unitPickerRef.current}
+          data={seaFrontsOptions}
+          labelKey="label"
+          onChange={handleSetSeaFrontFilter}
+          placeholder="Facade"
+          renderValue={() => seaFrontFilter && <OptionValue>{`Facade (${seaFrontFilter.length})`}</OptionValue>}
+          searchable={false}
+          size="sm"
+          style={tagPickerStyle}
+          value={seaFrontFilter}
+          valueKey="value"
         />
         <StyledCheckPicker
           container={() => unitPickerRef.current}

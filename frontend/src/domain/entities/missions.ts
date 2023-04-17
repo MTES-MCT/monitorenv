@@ -272,6 +272,42 @@ export const missionSourceEnum = {
   }
 }
 
+export enum SeaFrontEnum {
+  MED = 'MED',
+  MEMN = 'MEMN',
+  NAMO = 'NAMO',
+  OUTREMEROA = 'OUTREMEROA',
+  OUTREMEROI = 'OUTREMEROI',
+  SA = 'SA'
+}
+
+export const seaFrontEnum = {
+  MED: {
+    label: 'MED',
+    value: 'MED'
+  },
+  MEMN: {
+    label: 'MEMN',
+    value: 'MEMN'
+  },
+  NAMO: {
+    label: 'NAMO',
+    value: 'NAMO'
+  },
+  OUTREMEROA: {
+    label: 'OUTREMEROA',
+    value: 'OUTREMEROA'
+  },
+  OUTREMEROI: {
+    label: 'OUTREMEROI',
+    value: 'OUTREMEROI'
+  },
+  SA: {
+    label: 'SA',
+    value: 'SA'
+  }
+}
+
 export enum DateRangeEnum {
   CUSTOM = 'CUSTOM',
   DAY = 'DAY',
@@ -330,7 +366,7 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
   controlUnits: Omit<ControlUnit, 'id'>[]
   endDateTimeUtc?: string
   envActions: EnvAction[]
-  facade: string
+  facade: SeaFrontEnum
   geom?: Record<string, any>[]
   id: number
   isClosed: boolean

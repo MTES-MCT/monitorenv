@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.FacadeAreasModel
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSeaFrontEnum
 import org.locationtech.jts.geom.MultiPolygon
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
@@ -14,5 +15,6 @@ interface IDBFacadeAreasRepository : CrudRepository<FacadeAreasModel, Int> {
      """,
         nativeQuery = true
     )
-    fun findFacadeFromMission(missionGeometry: MultiPolygon): String?
+    fun findFacadeFromMission(missionGeometry: MultiPolygon): MissionSeaFrontEnum
+?
 }

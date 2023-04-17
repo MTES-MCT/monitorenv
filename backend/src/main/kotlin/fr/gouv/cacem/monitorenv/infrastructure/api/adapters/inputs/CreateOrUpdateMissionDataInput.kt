@@ -14,7 +14,7 @@ data class CreateOrUpdateMissionDataInput(
     val closedBy: String? = null,
     val observationsCacem: String? = null,
     val observationsCnsp: String? = null,
-    val facade: String? = null,
+    val facade: MissionSeaFrontEnum? = null,
     val geom: MultiPolygon? = null,
     val startDateTimeUtc: ZonedDateTime,
     val endDateTimeUtc: ZonedDateTime? = null,

@@ -10,10 +10,7 @@ import com.vladmihalcea.hibernate.type.array.EnumArrayType
 import com.vladmihalcea.hibernate.type.array.ListArrayType
 import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionNatureEnum
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSourceEnum
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.missions.*
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Parameter
 import org.hibernate.annotations.Type
@@ -82,7 +79,9 @@ data class MissionModel(
     @Column(name = "observations_cnsp")
     var observationsCnsp: String? = null,
     @Column(name = "facade")
-    var facade: String? = null,
+    @Enumerated(EnumType.STRING)
+    @Type(type = "pgsql_enum")
+    var facade: MissionSeaFrontEnum? = null,
     @JsonSerialize(using = GeometrySerializer::class)
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
