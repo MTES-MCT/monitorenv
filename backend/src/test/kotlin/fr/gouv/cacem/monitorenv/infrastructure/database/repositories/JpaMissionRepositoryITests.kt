@@ -305,7 +305,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionStatuses = listOf("PENDING"),
             pageable = Pageable.unpaged()
         )
-        assertThat(missions).hasSize(20)
+        assertThat(missions).hasSize(14)
     }
 
     @Test
