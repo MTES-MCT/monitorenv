@@ -45,7 +45,7 @@ export function FilterTags() {
         ))}
       {statusFilter.length > 0 &&
         statusFilter.map(status => (
-          <SingleTag key={status} onDelete={() => onDeleteTag(status, 'typeFilter', typeFilter)}>
+          <SingleTag key={status} onDelete={() => onDeleteTag(status, 'statusFilter', statusFilter)}>
             {String(`Mission ${missionStatusEnum[status].libelle.toLowerCase()}`)}
           </SingleTag>
         ))}

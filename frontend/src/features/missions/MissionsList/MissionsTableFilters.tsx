@@ -161,6 +161,7 @@ export function MissionsTableFilters() {
       <FilterWrapper ref={unitPickerRef}>
         <StyledSelect
           baseContainer={newWindowContainerRef.current}
+          cleanable={false}
           isLabelHidden
           label="Période"
           name="Période"
