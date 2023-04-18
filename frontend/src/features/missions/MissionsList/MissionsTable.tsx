@@ -61,7 +61,7 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
         <CellResources />
       </Table.Column>
 
-      <Table.Column width={120}>
+      <Table.Column width={100}>
         <Table.HeaderCell>Type</Table.HeaderCell>
         <CellMissionType />
       </Table.Column>
@@ -76,7 +76,7 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
         <CellActionThemes />
       </Table.Column>
 
-      <Table.Column width={120}>
+      <Table.Column width={100}>
         <Table.HeaderCell>Nb Contrôles</Table.HeaderCell>
         <CellNumberOfControls />
       </Table.Column>

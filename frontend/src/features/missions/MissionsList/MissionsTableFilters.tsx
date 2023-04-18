@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux'
 import { CheckPicker } from 'rsuite'
 import styled from 'styled-components'
 
+import { useGetControlThemesQuery } from '../../../api/controlThemesAPI'
 import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
 import { COLORS } from '../../../constants/constants'
 import {
@@ -26,11 +27,12 @@ export function MissionsTableFilters() {
   const { newWindowContainerRef } = useNewWindow()
   const {
     administrationFilter,
-    hasNoFilter,
+    hasFilters,
     periodFilter,
     seaFrontFilter,
     sourceFilter,
     statusFilter,
+    themeFilter,
     typeFilter,
     unitFilter
   } = useAppSelector(state => state.missionFilters)
@@ -40,6 +42,14 @@ export function MissionsTableFilters() {
 
   const { data } = useGetControlUnitsQuery()
   const controlUnits = useMemo(() => (data ? Array.from(data) : []), [data])
+  const { data: controlThemes } = useGetControlThemesQuery()
+
+  const themesListAsOptions: Option[] = _.chain(controlThemes)
+    .map(theme => theme.themeLevel1)
+    .uniq()
+    .sort((a, b) => a?.localeCompare(b))
+    .map(t => ({ label: t, value: t }))
+    .value()
 
   const administrationsWithTheirControlsUnits = _.chain(controlUnits)
     .reduce((acc, curr) => {
@@ -59,15 +69,6 @@ export function MissionsTableFilters() {
     .sort((a, b) => a?.localeCompare(b))
     .value()
 
-  const handleSetAdministrationFilter = administrations => {
-    const administrationsUpdatedWithUnits = _.flatten(
-      administrations.map(admin => administrationsWithTheirControlsUnits[admin].unitsControls)
-    )
-
-    const unitsFiltered = unitFilter.filter(unit => administrationsUpdatedWithUnits.find(control => control === unit))
-    dispatch(updateFilters({ key: 'unitFilter', value: unitsFiltered }))
-    dispatch(updateFilters({ key: 'administrationFilter', value: administrations }))
-  }
   const unitListAsOptions: Option[] = controlUnits
     .filter(u => !u.isArchived)
     .filter(unitToFilter => {
@@ -79,14 +80,16 @@ export function MissionsTableFilters() {
     })
     .sort((a, b) => a?.name?.localeCompare(b?.name))
     .map(t => ({ label: t.name, value: t.name }))
-  // console.log('unitListAsOptions', unitListAsOptions)
-  const handleSetUnitFilter = unitsName => {
-    dispatch(updateFilters({ key: 'unitFilter', value: unitsName }))
-  }
 
   const dateRangeEnumOptions = Object.values(dateRangeEnum)
-  const onPeriodSelected = period => {
+  const StatusOptions = Object.values(missionStatusLabels)
+  const TypeOptions = Object.values(missionTypeEnum)
+  const sourceOptions = Object.values(missionSourceEnum)
+  const seaFrontsOptions = Object.values(seaFrontEnum)
+
+  const onUpdatePeriodFilter = period => {
     dispatch(updateFilters({ key: 'periodFilter', value: period }))
+    setIsCustomPeriodVisible(false)
     switch (period) {
       case DateRangeEnum.DAY:
         dispatch(updateFilters({ key: 'startedAfter', value: customDayjs().utc().startOf('day').toISOString() }))
@@ -128,30 +131,26 @@ export function MissionsTableFilters() {
         break
     }
   }
-  const StatusOptions = Object.values(missionStatusLabels)
-  const handleSetStatusFilter = v => {
-    dispatch(updateFilters({ key: 'statusFilter', value: v }))
-  }
-  const TypeOptions = Object.values(missionTypeEnum)
-  const handleSetTypeFilter = v => {
-    dispatch(updateFilters({ key: 'typeFilter', value: v }))
+  const onUpdateAdministrationFilter = administrations => {
+    const administrationsUpdatedWithUnits = _.flatten(
+      administrations.map(admin => administrationsWithTheirControlsUnits[admin].unitsControls)
+    )
+    const unitsFiltered = unitFilter.filter(unit => administrationsUpdatedWithUnits.find(control => control === unit))
+
+    dispatch(updateFilters({ key: 'unitFilter', value: unitsFiltered }))
+    dispatch(updateFilters({ key: 'administrationFilter', value: administrations }))
   }
 
-  const sourceOptions = Object.values(missionSourceEnum)
-  const handleSetSourceFilter = value => {
-    dispatch(updateFilters({ key: 'sourceFilter', value }))
-  }
-
-  const seaFrontsOptions = Object.values(seaFrontEnum)
-  const handleSetSeaFrontFilter = value => {
-    dispatch(updateFilters({ key: 'seaFrontFilter', value }))
-  }
-  const handleSetMissionStartedAfterFilter = (date: DateAsStringRange | undefined) => {
+  const onUpdateDateRangeFilter = (date: DateAsStringRange | undefined) => {
     dispatch(updateFilters({ key: 'startedAfter', value: date && date[0] ? date[0] : undefined }))
     dispatch(updateFilters({ key: 'startedBefore', value: date && date[1] ? date[1] : undefined }))
   }
 
-  const handleResetFilters = () => {
+  const onUpdateSimpleFilter = (value, filter) => {
+    dispatch(updateFilters({ key: filter, value }))
+  }
+
+  const onResetFilters = () => {
     setIsCustomPeriodVisible(false)
     dispatch(resetMissionFilters())
   }
@@ -165,7 +164,7 @@ export function MissionsTableFilters() {
           isLabelHidden
           label="Période"
           name="Période"
-          onChange={onPeriodSelected}
+          onChange={onUpdatePeriodFilter}
           options={dateRangeEnumOptions}
           placeholder="Date de mission depuis"
           style={tagPickerStyle}
@@ -178,7 +177,7 @@ export function MissionsTableFilters() {
           isLabelHidden
           label="Origine"
           name="origine"
-          onChange={handleSetSourceFilter}
+          onChange={value => onUpdateSimpleFilter(value, 'sourceFilter')}
           options={sourceOptions}
           placeholder="Origine"
           style={tagPickerStyle}
@@ -188,8 +187,8 @@ export function MissionsTableFilters() {
           container={() => unitPickerRef.current}
           data={Object.values(administrationsWithTheirControlsUnits)}
           labelKey="label"
-          onChange={handleSetAdministrationFilter}
-          placeholder="Administrations"
+          onChange={onUpdateAdministrationFilter}
+          placeholder="Administration"
           renderValue={() =>
             administrationFilter && <OptionValue>{`Administration (${administrationFilter.length})`}</OptionValue>
           }
@@ -203,8 +202,8 @@ export function MissionsTableFilters() {
           container={() => unitPickerRef.current}
           data={unitListAsOptions}
           labelKey="label"
-          onChange={handleSetUnitFilter}
-          placeholder="Unités"
+          onChange={value => onUpdateSimpleFilter(value, 'unitFilter')}
+          placeholder="Unité"
           renderValue={() => unitFilter && <OptionValue>{`Unité (${unitFilter.length})`}</OptionValue>}
           searchable
           size="sm"
@@ -216,7 +215,7 @@ export function MissionsTableFilters() {
           container={() => unitPickerRef.current}
           data={TypeOptions}
           labelKey="libelle"
-          onChange={handleSetTypeFilter}
+          onChange={value => onUpdateSimpleFilter(value, 'typeFilter')}
           placeholder="Type de mission"
           renderValue={() => typeFilter && <OptionValue>{`Type (${typeFilter.length})`}</OptionValue>}
           searchable={false}
@@ -229,7 +228,7 @@ export function MissionsTableFilters() {
           container={() => unitPickerRef.current}
           data={seaFrontsOptions}
           labelKey="label"
-          onChange={handleSetSeaFrontFilter}
+          onChange={value => onUpdateSimpleFilter(value, 'seaFrontFilter')}
           placeholder="Facade"
           renderValue={() => seaFrontFilter && <OptionValue>{`Facade (${seaFrontFilter.length})`}</OptionValue>}
           searchable={false}
@@ -242,7 +241,7 @@ export function MissionsTableFilters() {
           container={() => unitPickerRef.current}
           data={StatusOptions}
           labelKey="libelle"
-          onChange={handleSetStatusFilter}
+          onChange={value => onUpdateSimpleFilter(value, 'statusFilter')}
           placeholder="Statut"
           renderValue={() => statusFilter && <OptionValue>{`Statut (${statusFilter.length})`}</OptionValue>}
           searchable={false}
@@ -250,6 +249,19 @@ export function MissionsTableFilters() {
           style={tagPickerStyle}
           value={statusFilter}
           valueKey="code"
+        />
+        <StyledCheckPicker
+          container={() => unitPickerRef.current}
+          data={themesListAsOptions}
+          labelKey="label"
+          onChange={value => onUpdateSimpleFilter(value, 'themeFilter')}
+          placeholder="Thématique"
+          renderValue={() => themeFilter && <OptionValue>{`Theme (${themeFilter.length})`}</OptionValue>}
+          searchable={false}
+          size="sm"
+          style={tagPickerStyle}
+          value={themeFilter}
+          valueKey="value"
         />
       </FilterWrapper>
       {isCustomPeriodVisible && <StyledCutomPeriodLabel>Période spécifique</StyledCutomPeriodLabel>}
@@ -263,14 +275,14 @@ export function MissionsTableFilters() {
               isLabelHidden
               isStringDate
               label="Date de début entre le et le"
-              onChange={handleSetMissionStartedAfterFilter}
+              onChange={onUpdateDateRangeFilter}
             />
           </StyledCustomPeriodContainer>
         )}
         <FilterTags />
 
-        {!hasNoFilter && (
-          <ResetFiltersButton onClick={handleResetFilters}>
+        {hasFilters && (
+          <ResetFiltersButton onClick={onResetFilters}>
             <ReloadSVG />
             Réinitialiser les filtres
           </ResetFiltersButton>
