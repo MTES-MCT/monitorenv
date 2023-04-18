@@ -33,6 +33,7 @@ interface IDBMissionRepository : CrudRepository<MissionModel, Int> {
                 OR ( 
                     'PENDING' = ANY(list_to_array(:missionStatuses)) AND (
                     (end_datetime_utc IS NULL OR end_datetime_utc >= now())
+                    AND (start_datetime_utc <= now())
                     AND closed = FALSE
                     )
                 )
