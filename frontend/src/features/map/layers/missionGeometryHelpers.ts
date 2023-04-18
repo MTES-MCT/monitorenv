@@ -47,7 +47,10 @@ export const getMissionZoneFeature = (mission: Partial<MissionType>, layername: 
     featureProjection: OPENLAYERS_PROJECTION
   })
 
-  const numberOfControls = mission.envActions?.filter(action => action.actionType === ActionTypeEnum.CONTROL).length
+  const numberOfControls = mission.envActions
+    ?.map(control => (control.actionType === ActionTypeEnum.CONTROL && control.actionNumberOfControls) || 0)
+    .reduce((acc, curr) => acc + curr, 0)
+
   const numberOfSurveillance = mission.envActions?.filter(
     action => action.actionType === ActionTypeEnum.SURVEILLANCE
   ).length
