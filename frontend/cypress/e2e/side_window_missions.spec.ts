@@ -1,7 +1,5 @@
 /// <reference types="cypress" />
 
-import dayjs from 'dayjs'
-
 context('Missions', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
@@ -18,25 +16,32 @@ context('Missions', () => {
     cy.get('[data-key="BGC Ajaccio"]').should('not.exist')
   })
 
-  it('11 Missions should be displayed in Missions Table', () => {
+  it('9 Missions should be displayed in Missions Table', () => {
     cy.get('*[data-cy="SideWindowHeader-title"]').contains('Missions et contrôles')
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('11')
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('9')
 
-    cy.log('A default date filter should be set')
-    const thirtyDaysAgo = dayjs().subtract(30, 'days')
-
-    cy.get('*[data-cy="datepicker-missionStartedAfter"]').contains(`${thirtyDaysAgo.format('YYYY-MM-DD')}`)
-
-    cy.log('Units should be filtered')
-    cy.fill('Unités', ['Cross Etel'])
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('1')
+    cy.log('A default period filter should be set')
+    cy.fill('Période', 'Une semaine')
 
     cy.log('Administrations should be filtered')
-    cy.fill('Administrations', ['DDTM'])
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('7')
+    cy.get('*[data-cy="select-administration-filter"]').click({ force: true })
+    cy.get('div[role="option"]').find('label').contains('DDTM').click({ force: true })
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('5')
 
-    cy.fill('Administrations', undefined)
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('11')
+    cy.log('Initialize filters')
+    cy.get('*[data-cy="reinitialize-filters"]').click({ force: true })
+
+    cy.log('Units should be filtered')
+    cy.get('*[data-cy="select-units-filter"]').click({ force: true })
+    cy.get('div[role="option"]').find('label').contains('Cross Etel').click({ force: true })
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('1')
+
+    cy.log('Units filter should be clear')
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').click('topLeft')
+    cy.get('*[data-cy="select-units-filter"] > .rs-stack > .rs-stack-item > .rs-btn-close').click({
+      force: true
+    })
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('9')
   })
 
   it('Missions table should display all themes and subthemes of all the actions of the mission', () => {

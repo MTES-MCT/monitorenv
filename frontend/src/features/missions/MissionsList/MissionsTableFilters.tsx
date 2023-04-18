@@ -162,6 +162,7 @@ export function MissionsTableFilters() {
         <StyledSelect
           baseContainer={newWindowContainerRef.current}
           cleanable={false}
+          data-cy="select-period-filter"
           isLabelHidden
           label="Période"
           name="Période"
@@ -187,6 +188,7 @@ export function MissionsTableFilters() {
         <StyledCheckPicker
           container={() => unitPickerRef.current}
           data={Object.values(administrationsWithTheirControlsUnits)}
+          data-cy="select-administration-filter"
           labelKey="label"
           onChange={onUpdateAdministrationFilter}
           placeholder="Administration"
@@ -202,6 +204,7 @@ export function MissionsTableFilters() {
         <StyledCheckPicker
           container={() => unitPickerRef.current}
           data={unitListAsOptions}
+          data-cy="select-units-filter"
           labelKey="label"
           onChange={value => onUpdateSimpleFilter(value, 'unitFilter')}
           placeholder="Unité"
@@ -283,7 +286,7 @@ export function MissionsTableFilters() {
         <FilterTags />
 
         {hasFilters && (
-          <ResetFiltersButton onClick={onResetFilters}>
+          <ResetFiltersButton data-cy="reinitialize-filters" onClick={onResetFilters}>
             <ReloadSVG />
             Réinitialiser les filtres
           </ResetFiltersButton>
