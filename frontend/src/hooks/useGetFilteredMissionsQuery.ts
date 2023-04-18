@@ -45,7 +45,7 @@ export const useGetFilteredMissionsQuery = () => {
       const missionsWithThemes = missionWithActions.reduce((acc, curr) => {
         const actions = _.flatten(curr.envActions)
 
-        const themes = _.flatten(actions.map(action => action?.themes))
+        const themes = _.flatten(actions.map((action: any) => action?.themes))
         const themesFormatted = themes?.map(theme => theme?.theme)
 
         return {
