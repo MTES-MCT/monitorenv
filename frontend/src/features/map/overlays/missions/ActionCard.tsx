@@ -3,7 +3,7 @@ import { fr } from 'date-fns/locale'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
-import { actionTargetTypeEnum } from '../../../../domain/entities/missions'
+import { actionTargetTypeLabels } from '../../../../domain/entities/missions'
 import { ControlInfractionsTags } from '../../../../ui/ControlInfractionsTags'
 
 export function ActionCard({ feature }) {
@@ -30,7 +30,7 @@ export function ActionCard({ feature }) {
           {` contrôle${actionNumberOfControls > 1 ? 's' : ''} réalisé${
             actionNumberOfControls > 1 ? 's' : ''
           } sur des cibles de type `}
-          <Accented>{actionTargetTypeEnum[actionTargetType]?.libelle || 'non spécifié'}</Accented>
+          <Accented>{actionTargetTypeLabels[actionTargetType]?.libelle || 'non spécifié'}</Accented>
         </ControlSummary>
         <ControlInfractionsTags actionNumberOfControls={actionNumberOfControls} infractions={infractions} />
         <Accented>{infractions || 0}</Accented>infraction(s)

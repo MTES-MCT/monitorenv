@@ -2,7 +2,7 @@ import { useField } from 'formik'
 import { Form } from 'rsuite'
 import styled from 'styled-components'
 
-import { vehicleTypeEnum } from '../../../../../../domain/entities/missions'
+import { VehicleTypeEnum } from '../../../../../../domain/entities/missions'
 import { FormikInput } from '../../../../../../uiMonitor/CustomFormikFields/FormikInput'
 import { VesselSizeSelector } from './VesselSizeSelector'
 import { VesselTypeSelector } from './VesselTypeSelector'
@@ -28,7 +28,7 @@ export function InfractionFormHeaderVehicle({ currentActionIndex, infractionPath
           size="sm"
         />
       </FormColumn>
-      {vehicleTypeField?.value === vehicleTypeEnum.VESSEL.code && (
+      {vehicleTypeField?.value === VehicleTypeEnum.VESSEL && (
         <>
           <FormColumn>
             <VesselTypeSelector onChange={handleChangeVesselType} value={vesselTypeField.value} />

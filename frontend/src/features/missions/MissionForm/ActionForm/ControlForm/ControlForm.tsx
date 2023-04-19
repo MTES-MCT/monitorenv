@@ -10,8 +10,8 @@ import { COLORS } from '../../../../../constants/constants'
 import {
   Mission,
   EnvActionControl,
-  actionTargetTypeEnum,
-  vehicleTypeEnum
+  ActionTargetTypeEnum,
+  VehicleTypeEnum
 } from '../../../../../domain/entities/missions'
 import { useNewWindow } from '../../../../../ui/NewWindow'
 import { ReactComponent as ControlIconSVG } from '../../../../../uiMonitor/icons/Control.svg'
@@ -56,8 +56,8 @@ export function ControlForm({
   const canAddInfraction =
     actionNumberOfControls &&
     actionNumberOfControls > 0 &&
-    ((actionTargetType === actionTargetTypeEnum.VEHICLE.code && vehicleType !== undefined) ||
-      (actionTargetType !== undefined && actionTargetType !== actionTargetTypeEnum.VEHICLE.code)) &&
+    ((actionTargetType === ActionTargetTypeEnum.VEHICLE && vehicleType !== undefined) ||
+      (actionTargetType !== undefined && actionTargetType !== ActionTargetTypeEnum.VEHICLE)) &&
     actionNumberOfControls > (envActions[currentActionIndex]?.infractions?.length || 0)
 
   const onVehicleTypeChange = selectedVehicleType => {
@@ -70,7 +70,7 @@ export function ControlForm({
     setValues(v => {
       const w = _.cloneDeep(v)
       _.set(w, `envActions[${currentActionIndex}].vehicleType`, selectedVehicleType)
-      if (selectedVehicleType !== vehicleTypeEnum.VESSEL.code) {
+      if (selectedVehicleType !== VehicleTypeEnum.VESSEL) {
         _.update(w, `envActions[${currentActionIndex}].infractions`, inf =>
           inf?.map(i => ({ ...i, vesselSize: null, vesselType: null }))
         )
@@ -90,7 +90,7 @@ export function ControlForm({
       const w = _.cloneDeep(v)
       _.set(w, `envActions[${currentActionIndex}].actionTargetType`, selectedTargetType)
 
-      if (selectedTargetType !== actionTargetTypeEnum.VEHICLE.code) {
+      if (selectedTargetType !== ActionTargetTypeEnum.VEHICLE) {
         _.set(w, `envActions[${currentActionIndex}].vehicleType`, null)
         _.update(w, `envActions[${currentActionIndex}].infractions`, inf =>
           inf?.map(i => ({ ...i, vesselSize: null, vesselType: null }))
@@ -176,7 +176,7 @@ export function ControlForm({
           <ActionFieldWrapper>
             <VehicleTypeSelector
               currentActionIndex={currentActionIndex}
-              disabled={actionTargetType !== actionTargetTypeEnum.VEHICLE.code}
+              disabled={actionTargetType !== ActionTargetTypeEnum.VEHICLE}
               error={actionVehicleTypeErrorMessage}
               onChange={onVehicleTypeChange}
               value={vehicleType}

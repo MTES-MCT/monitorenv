@@ -51,6 +51,7 @@ export function CreateOrEditMission() {
   const missionFormikValues = useMemo(() => missionFactory(missionToEdit), [missionToEdit])
 
   const allowEditMission =
+    missionToEdit?.missionSource === undefined ||
     missionToEdit?.missionSource === MissionSourceEnum.MONITORENV ||
     missionToEdit?.missionSource === MissionSourceEnum.MONITORFISH
   const allowDeleteMission = !(id === undefined) && allowEditMission

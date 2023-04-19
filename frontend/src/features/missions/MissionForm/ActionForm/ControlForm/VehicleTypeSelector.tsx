@@ -3,7 +3,7 @@ import { Select } from '@mtes-mct/monitor-ui'
 import { MutableRefObject, useRef } from 'react'
 import styled from 'styled-components'
 
-import { vehicleTypeEnum } from '../../../../../domain/entities/missions'
+import { vehicleTypeLabels } from '../../../../../domain/entities/missions'
 import { useNewWindow } from '../../../../../ui/NewWindow'
 
 import type { Promisable } from 'type-fest'
@@ -24,7 +24,7 @@ export function VehicleTypeSelector({
 }: VehicleTypeSelectorProps) {
   const { newWindowContainerRef } = useNewWindow()
   const vehicleTypeSelectorRef = useRef() as MutableRefObject<HTMLDivElement>
-  const vehicleTypeFieldList = Object.values(vehicleTypeEnum).map(o => ({ label: o.libelle, value: o.code }))
+  const vehicleTypeFieldList = Object.values(vehicleTypeLabels).map(o => ({ label: o.libelle, value: o.code }))
 
   return (
     <SelectorWrapper ref={vehicleTypeSelectorRef}>

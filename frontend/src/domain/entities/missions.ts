@@ -2,7 +2,12 @@ import { compareDesc, compareAsc, parseISO } from 'date-fns'
 
 import type { ControlUnit } from './controlUnit'
 
-export const actionTypeEnum = {
+export enum ActionTypeEnum {
+  CONTROL = 'CONTROL',
+  NOTE = 'NOTE',
+  SURVEILLANCE = 'SURVEILLANCE'
+}
+export const actionTypeLabels = {
   CONTROL: {
     code: 'CONTROL',
     libelle: 'Contrôle'
@@ -16,12 +21,12 @@ export const actionTypeEnum = {
     libelle: 'Surveillance'
   }
 }
-export enum ActionTypeEnum {
-  CONTROL = 'CONTROL',
-  NOTE = 'NOTE',
-  SURVEILLANCE = 'SURVEILLANCE'
-}
 
+export enum MissionTypeEnum {
+  AIR = 'AIR',
+  LAND = 'LAND',
+  SEA = 'SEA'
+}
 export const missionTypeEnum = {
   SEA: {
     code: 'SEA',
@@ -38,12 +43,12 @@ export const missionTypeEnum = {
     libelle: 'Air'
   }
 }
-export enum MissionTypeEnum {
-  AIR = 'AIR',
-  LAND = 'LAND',
-  SEA = 'SEA'
-}
 
+export enum MissionNatureEnum {
+  ENV = 'ENV',
+  FISH = 'FISH',
+  OTHER = 'OTHER'
+}
 export const missionNatureEnum = {
   ENV: {
     code: 'ENV',
@@ -58,13 +63,13 @@ export const missionNatureEnum = {
     libelle: 'Autre'
   }
 }
-export enum MissionNatureEnum {
-  ENV = 'ENV',
-  FISH = 'FISH',
-  OTHER = 'OTHER'
-}
 
-export const infractionTypeEnum = {
+export enum InfractionTypeEnum {
+  WAITING = 'WAITING',
+  WITHOUT_REPORT = 'WITHOUT_REPORT',
+  WITH_REPORT = 'WITH_REPORT'
+}
+export const infractionTypeLabels = {
   WITH_REPORT: {
     code: 'WITH_REPORT',
     libelle: 'Avec PV'
@@ -80,13 +85,12 @@ export const infractionTypeEnum = {
   }
 }
 
-export enum InfractionTypeEnum {
-  WAITING = 'WAITING',
-  WITHOUT_REPORT = 'WITHOUT_REPORT',
-  WITH_REPORT = 'WITH_REPORT'
+export enum FormalNoticeEnum {
+  NO = 'NO',
+  PENDING = 'PENDING',
+  YES = 'YES'
 }
-
-export const formalNoticeEnum = {
+export const formalNoticeLabels = {
   YES: {
     code: 'YES',
     libelle: 'Oui'
@@ -101,13 +105,13 @@ export const formalNoticeEnum = {
     libelle: 'En attente'
   }
 }
-export enum FormalNoticeEnum {
-  NO = 'NO',
-  PENDING = 'PENDING',
-  YES = 'YES'
-}
 
-export const actionTargetTypeEnum = {
+export enum ActionTargetTypeEnum {
+  COMPANY = 'COMPANY',
+  INDIVIDUAL = 'INDIVIDUAL',
+  VEHICLE = 'VEHICLE'
+}
+export const actionTargetTypeLabels = {
   COMPANY: {
     code: 'COMPANY',
     libelle: 'Société'
@@ -122,7 +126,14 @@ export const actionTargetTypeEnum = {
   }
 }
 
-export const vehicleTypeEnum = {
+export enum VehicleTypeEnum {
+  OTHER_SEA = 'OTHER_SEA',
+  VEHICLE_AIR = 'VEHICLE_AIR',
+  VEHICLE_LAND = 'VEHICLE_LAND',
+  VESSEL = 'VESSEL'
+}
+
+export const vehicleTypeLabels = {
   OTHER_SEA: {
     code: 'OTHER_SEA',
     libelle: 'Autre véhicule marin'
@@ -141,7 +152,13 @@ export const vehicleTypeEnum = {
   }
 }
 
-export const vesselTypeEnum = {
+export enum VesselTypeEnum {
+  COMMERCIAL = 'COMMERCIAL',
+  FISHING = 'FISHING',
+  MOTOR = 'MOTOR',
+  SAILING = 'SAILING'
+}
+export const vesselTypeLabels = {
   COMMERCIAL: {
     code: 'COMMERCIAL',
     libelle: 'Commerce'
@@ -159,13 +176,13 @@ export const vesselTypeEnum = {
     libelle: 'Voilier'
   }
 }
-export enum VesselTypeEnum {
-  COMMERCIAL = 'COMMERCIAL',
-  FISHING = 'FISHING',
-  MOTOR = 'MOTOR',
-  SAILING = 'SAILING'
-}
 
+export enum VesselSizeEnum {
+  FROM_12_TO_24m = 'FROM_12_TO_24m',
+  FROM_24_TO_46m = 'FROM_24_TO_46m',
+  LESS_THAN_12m = 'LESS_THAN_12m',
+  MORE_THAN_46m = 'MORE_THAN_46m'
+}
 export const vesselSizeEnum = {
   FROM_12_TO_24m: {
     code: 'FROM_12_TO_24m',
@@ -183,13 +200,6 @@ export const vesselSizeEnum = {
     code: 'MORE_THAN_46m',
     libelle: 'plus de 46 m'
   }
-}
-
-export enum VesselSizeEnum {
-  FROM_12_TO_24m = 'FROM_12_TO_24m',
-  FROM_24_TO_46m = 'FROM_24_TO_46m',
-  LESS_THAN_12m = 'LESS_THAN_12m',
-  MORE_THAN_46m = 'MORE_THAN_46m'
 }
 
 export const protectedSpeciesEnum = {
@@ -219,7 +229,13 @@ export const protectedSpeciesEnum = {
   }
 }
 
-export const missionStatusEnum = {
+export enum MissionStatusEnum {
+  CLOSED = 'CLOSED',
+  ENDED = 'ENDED',
+  PENDING = 'PENDING',
+  UPCOMING = 'UPCOMING'
+}
+export const missionStatusLabels = {
   CLOSED: {
     code: 'CLOSED',
     libelle: 'Cloturée'
@@ -318,14 +334,13 @@ export type EnvActionTheme = {
 export type NewEnvActionControl = EnvActionCommonProperties & {
   actionNumberOfControls?: number
   actionTargetType?: string
-  actionType?: ActionTypeEnum.CONTROL
+  actionType: ActionTypeEnum.CONTROL
   infractions: Infraction[]
   themes: EnvActionTheme[]
   vehicleType?: string
 }
 export type EnvActionControl = NewEnvActionControl & {
-  actionType: ActionTypeEnum.CONTROL
-  vehicleType: string
+  actionTargetType: string
 }
 
 export type EnvActionSurveillance = EnvActionCommonProperties & {
@@ -370,17 +385,17 @@ export const getMissionStatus = ({
   startDateTimeUtc?: string | null
 }) => {
   if (isClosed) {
-    return missionStatusEnum.CLOSED.code
+    return MissionStatusEnum.CLOSED
   }
   if (startDateTimeUtc) {
     if (parseISO(startDateTimeUtc) && compareAsc(parseISO(startDateTimeUtc), Date.now()) >= 0) {
-      return missionStatusEnum.UPCOMING.code
+      return MissionStatusEnum.UPCOMING
     }
     if (endDateTimeUtc && parseISO(endDateTimeUtc) && compareDesc(parseISO(endDateTimeUtc), Date.now()) >= 0) {
-      return missionStatusEnum.ENDED.code
+      return MissionStatusEnum.ENDED
     }
 
-    return missionStatusEnum.PENDING.code
+    return MissionStatusEnum.PENDING
   }
 
   return 'ERROR'

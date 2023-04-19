@@ -2,7 +2,7 @@ import { useField } from 'formik'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
-import { actionTypeEnum } from '../../../../domain/entities/missions'
+import { ActionTypeEnum } from '../../../../domain/entities/missions'
 import { ControlForm } from './ControlForm/ControlForm'
 import { NoteForm } from './NoteForm'
 import { SurveillanceForm } from './SurveillanceForm'
@@ -25,7 +25,7 @@ export function ActionForm({ currentActionIndex, remove, setCurrentActionIndex }
     )
   }
   switch (actionTypeField.value) {
-    case actionTypeEnum.CONTROL.code:
+    case ActionTypeEnum.CONTROL:
       return (
         <FormWrapper>
           <ControlForm
@@ -37,7 +37,7 @@ export function ActionForm({ currentActionIndex, remove, setCurrentActionIndex }
           />
         </FormWrapper>
       )
-    case actionTypeEnum.SURVEILLANCE.code:
+    case ActionTypeEnum.SURVEILLANCE:
       return (
         <FormWrapper>
           <SurveillanceForm
@@ -49,7 +49,7 @@ export function ActionForm({ currentActionIndex, remove, setCurrentActionIndex }
           />
         </FormWrapper>
       )
-    case actionTypeEnum.NOTE.code:
+    case ActionTypeEnum.NOTE:
       return (
         <FormWrapper>
           <NoteForm

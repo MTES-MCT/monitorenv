@@ -2,21 +2,18 @@ import { v4 as uuidv4 } from 'uuid'
 
 import {
   ActionTypeEnum,
-  actionTypeEnum,
   NewEnvAction,
-  formalNoticeEnum,
-  infractionTypeEnum,
+  FormalNoticeEnum,
   MissionSourceEnum,
   Mission,
-  NewMission
+  NewMission,
+  InfractionTypeEnum
 } from '../../domain/entities/missions'
 
 import type { ControlUnit } from '../../domain/entities/controlUnit'
 
 export const infractionFactory = ({ id, ...infraction } = { id: '' }) => ({
-  formalNotice: formalNoticeEnum.NO.code,
   id: uuidv4(),
-  infractionType: infractionTypeEnum.WITHOUT_REPORT.code,
   natinf: [],
   observations: '',
   toProcess: false,
@@ -32,7 +29,7 @@ export const actionFactory = ({
   id?: string
 }): NewEnvAction => {
   switch (actionType) {
-    case actionTypeEnum.CONTROL.code:
+    case ActionTypeEnum.CONTROL:
       return {
         actionNumberOfControls: undefined,
         actionTargetType: undefined,
@@ -42,7 +39,7 @@ export const actionFactory = ({
         themes: [{ subThemes: [], theme: '' }],
         ...action
       }
-    case actionTypeEnum.NOTE.code:
+    case ActionTypeEnum.NOTE:
       return {
         actionStartDateTimeUtc: new Date().toISOString(),
         actionType: ActionTypeEnum.NOTE,
@@ -50,7 +47,7 @@ export const actionFactory = ({
         observations: '',
         ...action
       }
-    case actionTypeEnum.SURVEILLANCE.code:
+    case ActionTypeEnum.SURVEILLANCE:
     default:
       return {
         actionType: ActionTypeEnum.SURVEILLANCE,
@@ -91,9 +88,8 @@ export const controlUnitFactory = ({ ...resourceUnit } = {}): Omit<ControlUnit, 
 export const getControlInfractionsTags = (actionNumberOfControls, infractions) => {
   const infra = infractions.length || 0
   const ras = (actionNumberOfControls || 0) - infra
-  const infraSansPV =
-    infractions?.filter(inf => inf.infractionType !== infractionTypeEnum.WITH_REPORT.code)?.length || 0
-  const med = infractions?.filter(inf => inf.formalNotice === formalNoticeEnum.YES.code)?.length || 0
+  const infraSansPV = infractions?.filter(inf => inf.infractionType !== InfractionTypeEnum.WITH_REPORT)?.length || 0
+  const med = infractions?.filter(inf => inf.formalNotice === FormalNoticeEnum.YES)?.length || 0
 
   return { infra, infraSansPV, med, ras }
 }

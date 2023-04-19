@@ -2,7 +2,7 @@ import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import { actionTargetTypeEnum, ActionTypeEnum, actionTypeEnum, EnvAction } from '../../../domain/entities/missions'
+import { actionTargetTypeLabels, ActionTypeEnum, EnvAction } from '../../../domain/entities/missions'
 import { ControlInfractionsTags } from '../../../ui/ControlInfractionsTags'
 import { ReactComponent as ControlIconSVG } from '../../../uiMonitor/icons/Control.svg'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
@@ -58,7 +58,7 @@ export function ActionCard({
                     {` contrôle${action.actionNumberOfControls > 1 ? 's' : ''}`}
                     {` réalisé${action.actionNumberOfControls > 1 ? 's' : ''} sur des cibles de type `}
                     <Accented>
-                      {(!!action.actionTargetType && actionTargetTypeEnum[action.actionTargetType]?.libelle) ||
+                      {(!!action.actionTargetType && actionTargetTypeLabels[action.actionTargetType]?.libelle) ||
                         'non spécifié'}
                     </Accented>
                   </ControlSummary>
@@ -157,11 +157,11 @@ const ActionSummaryWrapper = styled.div<{ $type: string; hasError: boolean; sele
   border-style: solid;
   background: ${p => {
     switch (p.$type) {
-      case actionTypeEnum.CONTROL.code:
+      case ActionTypeEnum.CONTROL:
         return COLORS.white
-      case actionTypeEnum.SURVEILLANCE.code:
+      case ActionTypeEnum.SURVEILLANCE:
         return COLORS.gainsboro
-      case actionTypeEnum.NOTE.code:
+      case ActionTypeEnum.NOTE:
         return COLORS.blueGray25
       default:
         return COLORS.white

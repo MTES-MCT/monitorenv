@@ -2,7 +2,7 @@
 import { Select } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { actionTargetTypeEnum } from '../../../../../domain/entities/missions'
+import { actionTargetTypeLabels } from '../../../../../domain/entities/missions'
 import { useNewWindow } from '../../../../../ui/NewWindow'
 
 import type { Promisable } from 'type-fest'
@@ -15,7 +15,7 @@ type ActionTargetSelectorProps = {
 }
 export function ActionTargetSelector({ currentActionIndex, error, onChange, value }: ActionTargetSelectorProps) {
   const { newWindowContainerRef } = useNewWindow()
-  const actionTargetFieldList = Object.values(actionTargetTypeEnum).map(o => ({ label: o.libelle, value: o.code }))
+  const actionTargetFieldList = Object.values(actionTargetTypeLabels).map(o => ({ label: o.libelle, value: o.code }))
 
   return (
     <SelectorWrapper>

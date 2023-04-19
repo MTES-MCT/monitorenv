@@ -3,11 +3,11 @@ import { MutableRefObject, useRef } from 'react'
 import { Form, SelectPicker } from 'rsuite'
 import styled from 'styled-components'
 
-import { vesselTypeEnum } from '../../../../../../domain/entities/missions'
+import { vesselTypeLabels } from '../../../../../../domain/entities/missions'
 
 export function VesselTypeSelector({ onChange, value, ...props }) {
   const vesselTypeSelectorRef = useRef() as MutableRefObject<HTMLDivElement>
-  const vesselTypeFieldList = Object.values(vesselTypeEnum)
+  const vesselTypeFieldList = Object.values(vesselTypeLabels)
 
   return (
     <SelectorWrapper ref={vesselTypeSelectorRef}>

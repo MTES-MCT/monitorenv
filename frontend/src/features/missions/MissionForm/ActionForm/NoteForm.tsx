@@ -4,7 +4,7 @@ import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
-import { actionTypeEnum } from '../../../../domain/entities/missions'
+import { actionTypeLabels } from '../../../../domain/entities/missions'
 import { ReactComponent as DeleteSVG } from '../../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as NoteSVG } from '../../../../uiMonitor/icons/Note_libre.svg'
 
@@ -20,7 +20,7 @@ export function NoteForm({ currentActionIndex, remove, setCurrentActionIndex }) 
     <>
       <Header>
         <NoteIcon />
-        <Title>{actionTypeEnum[actionTypeField.value]?.libelle}</Title>
+        <Title>{actionTypeLabels[actionTypeField.value]?.libelle}</Title>
         <IconButtonRight
           appearance="ghost"
           icon={<DeleteIcon className="rs-icon" />}

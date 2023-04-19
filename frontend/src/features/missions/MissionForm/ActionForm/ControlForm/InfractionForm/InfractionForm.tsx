@@ -1,49 +1,75 @@
+import { FormikCheckbox, FormikMultiRadio, FormikTextarea, FormikTextInput } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { Form, Button, ButtonToolbar } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../../../constants/constants'
-import { infractionTypeEnum, formalNoticeEnum, actionTargetTypeEnum } from '../../../../../../domain/entities/missions'
-import { FormikCheckbox } from '../../../../../../uiMonitor/CustomFormikFields/FormikCheckbox'
-import { FormikInput } from '../../../../../../uiMonitor/CustomFormikFields/FormikInput'
-import { FormikRadioGroup } from '../../../../../../uiMonitor/CustomFormikFields/FormikRadioGroup'
-import { FormikTextarea } from '../../../../../../uiMonitor/CustomFormikFields/FormikTextarea'
+import {
+  infractionTypeLabels,
+  formalNoticeLabels,
+  ActionTargetTypeEnum
+} from '../../../../../../domain/entities/missions'
 import { InfractionFormHeaderCompany } from './InfractionFormHeaderCompany'
 import { InfractionFormHeaderVehicle } from './InfractionFormHeaderVehicle'
 import { NatinfSelector } from './NatinfSelector'
 import { RelevantCourtSelector } from './RelevantCourtSelector'
 
-export function InfractionForm({ currentActionIndex, infractionPath, removeInfraction, validateInfraction }) {
-  const [actionTargetField] = useField(`envActions.${currentActionIndex}.actionTargetType`)
-  const [, meta] = useField(`envActions.${currentActionIndex}`)
-  const [isClosedField] = useField('isClosed')
+import type { MouseEventHandler } from 'react'
+
+const infractionTypeOptions = Object.values(infractionTypeLabels).map(o => ({ label: o.libelle, value: o.code }))
+const formalNoticeOPtions = Object.values(formalNoticeLabels).map(o => ({ label: o.libelle, value: o.code }))
+
+type InfractionFormProps = {
+  currentActionIndex: number
+  currentInfractionIndex: number
+  removeInfraction: MouseEventHandler
+  validateInfraction: MouseEventHandler
+}
+export function InfractionForm({
+  currentActionIndex,
+  currentInfractionIndex,
+  removeInfraction,
+  validateInfraction
+}: InfractionFormProps) {
+  const infractionPath = `envActions[${currentActionIndex}].infractions[${currentInfractionIndex}]`
+
+  const [actionTargetField] = useField<string>(`envActions.${currentActionIndex}.actionTargetType`)
+  const [, meta] = useField(infractionPath)
+  const [isClosedField] = useField<boolean>('isClosed')
   const readOnly = isClosedField.value
 
   return (
     <FormWrapper data-cy="infraction-form">
-      {actionTargetField.value === actionTargetTypeEnum.VEHICLE.code && (
+      {actionTargetField.value === ActionTargetTypeEnum.VEHICLE && (
         <InfractionFormHeaderVehicle currentActionIndex={currentActionIndex} infractionPath={infractionPath} />
       )}
 
-      {actionTargetField.value === actionTargetTypeEnum.COMPANY.code && (
+      {actionTargetField.value === ActionTargetTypeEnum.COMPANY && (
         <InfractionFormHeaderCompany infractionPath={infractionPath} />
       )}
 
       <Form.Group>
-        <Form.ControlLabel htmlFor={`${infractionPath}.controlledPersonIdentity`}>
-          Identité de la personne controlée
-        </Form.ControlLabel>
-        <FormikInput name={`${infractionPath}.controlledPersonIdentity`} size="sm" />
+        <FormikTextInput
+          label="Identité de la personne controlée"
+          name={`${infractionPath}.controlledPersonIdentity`}
+        />
       </Form.Group>
 
       <SubGroup>
-        <Form.ControlLabel htmlFor={`${infractionPath}.infractionType`}>Type d&apos;infraction</Form.ControlLabel>
-        <FormikRadioGroup name={`${infractionPath}.infractionType`} radioValues={infractionTypeEnum} />
+        <Form.ControlLabel htmlFor={`${infractionPath}.infractionType`} />
+        <FormikMultiRadio
+          label="Type d'infraction"
+          name={`${infractionPath}.infractionType`}
+          options={infractionTypeOptions}
+        />
       </SubGroup>
 
       <SubGroup>
-        <Form.ControlLabel htmlFor={`${infractionPath}.formalNotice`}>Mise en demeure</Form.ControlLabel>
-        <FormikRadioGroup name={`${infractionPath}.formalNotice`} radioValues={formalNoticeEnum} />
+        <FormikMultiRadio
+          label="Mise en demeure"
+          name={`${infractionPath}.formalNotice`}
+          options={formalNoticeOPtions}
+        />
       </SubGroup>
 
       <FormGroupFixedHeight>
@@ -61,8 +87,7 @@ export function InfractionForm({ currentActionIndex, infractionPath, removeInfra
       </Form.Group>
 
       <Form.Group>
-        <Form.ControlLabel htmlFor="observations">Observations</Form.ControlLabel>
-        <FormikTextarea name={`${infractionPath}.observations`} />
+        <FormikTextarea label="Observations" name={`${infractionPath}.observations`} />
       </Form.Group>
       <ButtonToolbarRight>
         {!readOnly && <Button onClick={removeInfraction}>Supprimer l&apos;infraction</Button>}

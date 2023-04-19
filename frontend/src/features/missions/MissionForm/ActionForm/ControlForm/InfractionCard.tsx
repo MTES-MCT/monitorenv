@@ -1,15 +1,19 @@
 import { Accent, Tag } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { IconButton } from 'rsuite'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { COLORS } from '../../../../../constants/constants'
 import {
-  actionTargetTypeEnum,
-  formalNoticeEnum,
-  infractionTypeEnum,
-  vehicleTypeEnum,
-  vesselTypeEnum
+  actionTargetTypeLabels,
+  ActionTargetTypeEnum,
+  FormalNoticeEnum,
+  InfractionTypeEnum,
+  infractionTypeLabels,
+  VehicleTypeEnum,
+  vehicleTypeLabels,
+  VesselTypeEnum,
+  vesselTypeLabels
 } from '../../../../../domain/entities/missions'
 import { ReactComponent as DeleteSVG } from '../../../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as DuplicateSVG } from '../../../../../uiMonitor/icons/Duplicate.svg'
@@ -18,21 +22,24 @@ import { ReactComponent as EditIconSVG } from '../../../../../uiMonitor/icons/Ed
 export function InfractionCard({
   canAddInfraction,
   currentActionIndex,
+  currentInfractionIndex,
   duplicateInfraction,
-  infractionPath,
   removeInfraction,
   setCurrentInfractionIndex
 }) {
+  const infractionPath = `envActions.${currentActionIndex}.infractions.${currentInfractionIndex}`
+  const [, meta] = useField(infractionPath)
   const [targetTypeField] = useField(`envActions.${currentActionIndex}.actionTargetType`)
-  const [vehicleTypeField] = useField(`envActions.${currentActionIndex}.vehicleType`)
-  const [vesselType] = useField(`${infractionPath}.vesselType`)
-  const [registrationNumber] = useField(`${infractionPath}.registrationNumber`)
-  const [controlledPersonIdentity] = useField(`${infractionPath}.controlledPersonIdentity`)
-  const [companyName] = useField(`${infractionPath}.companyName`)
-  const [infractionType] = useField(`${infractionPath}.infractionType`)
-  const [formalNotice] = useField(`${infractionPath}.formalNotice`)
+  const [vehicleTypeField] = useField<VehicleTypeEnum>(`envActions.${currentActionIndex}.vehicleType`)
+  const [vesselType] = useField<VesselTypeEnum>(`${infractionPath}.vesselType`)
+  const [registrationNumber] = useField<string>(`${infractionPath}.registrationNumber`)
+  const [controlledPersonIdentity] = useField<string>(`${infractionPath}.controlledPersonIdentity`)
+  const [companyName] = useField<string>(`${infractionPath}.companyName`)
+  const [infractionType] = useField<InfractionTypeEnum>(`${infractionPath}.infractionType`)
+  const [formalNotice] = useField<FormalNoticeEnum>(`${infractionPath}.formalNotice`)
   const [natinf] = useField(`${infractionPath}.natinf`)
-  const [isClosedField] = useField(`isClosed`)
+  const [isClosedField] = useField<Boolean>(`isClosed`)
+
   const readOnly = isClosedField.value
 
   let libelleInfractionType
@@ -40,41 +47,41 @@ export function InfractionCard({
     case undefined:
       libelleInfractionType = 'PV : -'
       break
-    case infractionTypeEnum.WITHOUT_REPORT.code:
-      libelleInfractionType = infractionTypeEnum.WITHOUT_REPORT.libelle
+    case infractionTypeLabels.WITHOUT_REPORT.code:
+      libelleInfractionType = infractionTypeLabels.WITHOUT_REPORT.libelle
       break
-    case infractionTypeEnum.WITH_REPORT.code:
-      libelleInfractionType = infractionTypeEnum.WITH_REPORT.libelle
+    case infractionTypeLabels.WITH_REPORT.code:
+      libelleInfractionType = infractionTypeLabels.WITH_REPORT.libelle
       break
-    case infractionTypeEnum.WAITING.code:
+    case infractionTypeLabels.WAITING.code:
     default:
-      libelleInfractionType = infractionTypeEnum.WAITING.libelle
+      libelleInfractionType = infractionTypeLabels.WAITING.libelle
   }
 
   return (
-    <Wrapper>
+    <Wrapper $hasError={!!meta.error}>
       <Summary>
-        {targetTypeField.value === actionTargetTypeEnum.VEHICLE.code && (
+        {targetTypeField.value === ActionTargetTypeEnum.VEHICLE && (
           <VehicleType>
-            {vehicleTypeEnum[vehicleTypeField?.value]?.libelle || 'Non Renseigné'}
-            {vehicleTypeField?.value === vehicleTypeEnum.VESSEL.code
-              ? ` – ${vesselTypeEnum[vesselType?.value]?.libelle || 'Type non défini'}`
+            {vehicleTypeLabels[vehicleTypeField?.value]?.libelle || 'Non Renseigné'}
+            {vehicleTypeField?.value === VehicleTypeEnum.VESSEL
+              ? ` – ${vesselTypeLabels[vesselType?.value]?.libelle || 'Type non défini'}`
               : ''}
             &nbsp;&ndash;&nbsp;
           </VehicleType>
         )}
-        {targetTypeField.value === actionTargetTypeEnum.VEHICLE.code ? (
+        {targetTypeField.value === ActionTargetTypeEnum.VEHICLE ? (
           <Identification>{registrationNumber?.value || ' sans immatriculation'}</Identification>
         ) : (
           <Identification>
             {companyName?.value ||
               controlledPersonIdentity?.value ||
-              actionTargetTypeEnum[targetTypeField.value]?.libelle}
+              actionTargetTypeLabels[targetTypeField.value]?.libelle}
           </Identification>
         )}
         <SummaryDetails>
           <Info accent={Accent.PRIMARY}>{libelleInfractionType}</Info>
-          {formalNotice?.value === formalNoticeEnum.YES.code && <Info accent={Accent.PRIMARY}>MED</Info>}
+          {formalNotice?.value === FormalNoticeEnum.YES && <Info accent={Accent.PRIMARY}>MED</Info>}
           <Info accent={Accent.PRIMARY}>
             {natinf.value?.length || '0'} NATINF {natinf.value?.length && `: ${natinf.value?.join(', ')}`}
           </Info>
@@ -102,13 +109,18 @@ export function InfractionCard({
   )
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ $hasError: boolean }>`
   background: ${COLORS.white};
   margin-top: 8px;
   margin-bottom: 8px;
   padding: 12px;
   display: flex;
   justify-content: space-between;
+  ${p =>
+    p.$hasError &&
+    css`
+      border: 2px solid ${p.theme.color.maximumRed};
+    `}
 `
 
 const Summary = styled.div`

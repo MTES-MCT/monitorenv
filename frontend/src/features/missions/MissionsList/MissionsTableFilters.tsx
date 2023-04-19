@@ -7,9 +7,9 @@ import styled from 'styled-components'
 
 import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
 import {
-  missionNatureEnum,
   missionSourceEnum,
-  missionStatusEnum,
+  missionNatureEnum,
+  missionStatusLabels,
   missionTypeEnum
 } from '../../../domain/entities/missions'
 import {
@@ -71,7 +71,7 @@ export function MissionsTableFilters() {
     dispatch(setMissionUnitFilter(unitName))
   }
 
-  const StatusOptions = Object.values(missionStatusEnum)
+  const StatusOptions = Object.values(missionStatusLabels)
   const handleSetStatusFilter = v => {
     dispatch(setMissionStatusFilter(v))
   }

@@ -6,7 +6,7 @@ import Fill from 'ol/style/Fill'
 import Stroke from 'ol/style/Stroke'
 
 import { COLORS } from '../../../../constants/constants'
-import { ActionTypeEnum, missionStatusEnum } from '../../../../domain/entities/missions'
+import { ActionTypeEnum, MissionStatusEnum } from '../../../../domain/entities/missions'
 
 export const missionZoneStyle = new Style({
   fill: new Fill({
@@ -37,13 +37,13 @@ const missionWithCentroidStyleFactory = color =>
 export const missionWithCentroidStyleFn = feature => {
   const missionStatus = feature.get('missionStatus')
   switch (missionStatus) {
-    case missionStatusEnum.UPCOMING.code:
+    case MissionStatusEnum.UPCOMING:
       return missionWithCentroidStyleFactory(COLORS.blueGray)
-    case missionStatusEnum.PENDING.code:
+    case MissionStatusEnum.PENDING:
       return missionWithCentroidStyleFactory(COLORS.mediumSeaGreen)
-    case missionStatusEnum.ENDED.code:
+    case MissionStatusEnum.ENDED:
       return missionWithCentroidStyleFactory(COLORS.charcoal)
-    case missionStatusEnum.CLOSED.code:
+    case MissionStatusEnum.CLOSED:
       return missionWithCentroidStyleFactory(COLORS.opal)
     default:
       return missionWithCentroidStyleFactory(COLORS.opal)
