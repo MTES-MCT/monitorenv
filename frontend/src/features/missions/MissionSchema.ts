@@ -79,7 +79,7 @@ const InfractionSchema: Yup.SchemaOf<Infraction> = Yup.object().shape({
   id: Yup.string().required(),
   infractionType: Yup.mixed().oneOf(Object.values(InfractionTypeEnum)).required('Requis'),
   natinf: Yup.array().of(Yup.string().ensure()).compact().min(1, 'Sélectionnez au moins une infraction'),
-  observations: Yup.string(),
+  observations: Yup.string().required(),
   registrationNumber: Yup.string().nullable(),
   relevantCourt: Yup.string().nullable(),
   toProcess: Yup.boolean().required('Requis'),

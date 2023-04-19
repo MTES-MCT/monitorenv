@@ -336,6 +336,7 @@ export type NewEnvActionControl = EnvActionCommonProperties & {
   actionTargetType?: string
   actionType: ActionTypeEnum.CONTROL
   infractions: Infraction[]
+  observations: string | null
   themes: EnvActionTheme[]
   vehicleType?: string
 }
@@ -347,13 +348,14 @@ export type EnvActionSurveillance = EnvActionCommonProperties & {
   actionType: ActionTypeEnum.SURVEILLANCE
   coverMissionZone?: boolean
   duration: number
+  durationMatchesMission?: boolean
   observations: string | null
   themes: EnvActionTheme[]
 }
 
 export type EnvActionNote = EnvActionCommonProperties & {
   actionType: ActionTypeEnum.NOTE
-  observations?: string
+  observations?: string | null
 }
 
 export type NewInfraction = {
@@ -363,7 +365,7 @@ export type NewInfraction = {
   id: string
   infractionType?: InfractionTypeEnum
   natinf?: string[]
-  observations?: string | null
+  observations: string | null
   registrationNumber?: string | null
   relevantCourt?: string | null
   toProcess: boolean

@@ -7,7 +7,8 @@ import {
   MissionSourceEnum,
   Mission,
   NewMission,
-  InfractionTypeEnum
+  InfractionTypeEnum,
+  EnvAction
 } from '../../domain/entities/missions'
 
 import type { ControlUnit } from '../../domain/entities/controlUnit'
@@ -24,10 +25,7 @@ export const actionFactory = ({
   actionType,
   id,
   ...action
-}: {
-  actionType: ActionTypeEnum
-  id?: string
-}): NewEnvAction => {
+}: Partial<EnvAction> & { actionType: ActionTypeEnum }): NewEnvAction => {
   switch (actionType) {
     case ActionTypeEnum.CONTROL:
       return {
@@ -36,6 +34,7 @@ export const actionFactory = ({
         actionType: ActionTypeEnum.CONTROL,
         id: uuidv4(),
         infractions: [],
+        observations: '',
         themes: [{ subThemes: [], theme: '' }],
         ...action
       }
@@ -53,6 +52,7 @@ export const actionFactory = ({
         actionType: ActionTypeEnum.SURVEILLANCE,
         coverMissionZone: true,
         duration: 0,
+        durationMatchesMission: true,
         id: uuidv4(),
         observations: '',
         themes: [{ subThemes: [], theme: '' }],

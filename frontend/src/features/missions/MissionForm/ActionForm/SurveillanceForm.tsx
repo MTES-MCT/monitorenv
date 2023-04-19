@@ -51,6 +51,11 @@ export function SurveillanceForm({ currentActionIndex, readOnly, remove, setCurr
           <InputDivWithUnits>&nbsp;heures</InputDivWithUnits>
         </Column>
       </FlexSelectorWrapper>
+      <FormikCheckbox
+        inline
+        label="Dates et heures de surveillance équivalentes à celles de la mission"
+        name={`envActions[${currentActionIndex}].durationMatchesMission`}
+      />
 
       <MultiZonePicker
         addButtonLabel="Ajouter une zone de surveillance"

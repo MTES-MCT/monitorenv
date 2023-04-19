@@ -36,7 +36,8 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
     [envActions]
   )
 
-  const handleAddSurveillanceAction = () => unshift(actionFactory({ actionType: ActionTypeEnum.SURVEILLANCE }))
+  const handleAddSurveillanceAction = () =>
+    unshift(actionFactory({ actionType: ActionTypeEnum.SURVEILLANCE, durationMatchesMission: false }))
   const handleAddControlAction = () => unshift(actionFactory({ actionType: ActionTypeEnum.CONTROL }))
   const handleAddNoteAction = () => unshift(actionFactory({ actionType: ActionTypeEnum.NOTE }))
   const handleSelectAction = id => () => setCurrentActionIndex(envActions && envActions.findIndex(a => a.id === id))
