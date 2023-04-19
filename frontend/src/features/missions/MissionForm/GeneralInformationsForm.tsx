@@ -39,6 +39,7 @@ export function GeneralInformationsForm() {
           <FormikDatePicker
             baseContainer={newWindowContainerRef.current}
             isCompact
+            isEndDate
             isStringDate
             label="Fin de mission (UTC)"
             name="endDateTimeUtc"
