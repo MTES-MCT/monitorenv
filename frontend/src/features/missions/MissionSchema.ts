@@ -17,10 +17,11 @@ import {
   VesselSizeEnum,
   VesselTypeEnum
 } from '../../domain/entities/missions'
+import { REACT_APP_CYPRESS_TEST } from '../../env'
 
 import type { ControlResource, ControlUnit } from '../../domain/entities/controlUnit'
 
-const shouldUseAlternateValidationInTestEnvironment = process.env.NODE_ENV === 'development'
+const shouldUseAlternateValidationInTestEnvironment = process.env.NODE_ENV === 'development' || REACT_APP_CYPRESS_TEST
 
 Yup.addMethod(Yup.mixed, 'oneOfOptional', (arr, message) =>
   Yup.mixed().test({
