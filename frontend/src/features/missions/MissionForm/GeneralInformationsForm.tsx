@@ -56,9 +56,8 @@ export function GeneralInformationsForm() {
             options={missionTypeOptions}
           />
         </SubGroup>
-        <SubGroup>
+        <SubGroup data-cy="mission-nature">
           <FormikMultiCheckbox
-            data-cy="mission-nature"
             isInline
             label="Intentions principales de mission"
             name="missionNature"

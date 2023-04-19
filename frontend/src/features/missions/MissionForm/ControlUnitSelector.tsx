@@ -156,7 +156,12 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
           <Form.ControlLabel htmlFor={`controlUnits.${controlUnitIndex}.contact`}>
             Contact de l&apos;unité {resourceUnitIndexDisplayed}
           </Form.ControlLabel>
-          <FormikInput name={`controlUnits.${controlUnitIndex}.contact`} onChange={handleContactChange} size="sm" />
+          <FormikInput
+            data-cy="control-unit-contact"
+            name={`controlUnits.${controlUnitIndex}.contact`}
+            onChange={handleContactChange}
+            size="sm"
+          />
         </FormGroupFixed>
       </SelectorWrapper>
 

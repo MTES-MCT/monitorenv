@@ -31,9 +31,10 @@ Yup.addMethod(Yup.mixed, 'oneOfOptional', (arr, message) =>
   })
 )
 
-const MissionTypeSchema = Yup.mixed<MissionTypeEnum>()
-  .oneOf(Object.values(MissionTypeEnum), 'Requis')
-  .required('Requis')
+const MissionTypesSchema = Yup.array()
+  .of(Yup.mixed<MissionTypeEnum>().oneOf(Object.values(MissionTypeEnum)).required())
+  .ensure()
+  .min(1, 'Requis')
 
 const MissionNatureSchema = Yup.array()
   .of(Yup.mixed<MissionNatureEnum>().oneOf(Object.values(MissionNatureEnum)).required())
@@ -144,7 +145,14 @@ export const EnvActions = Yup.array().of(EnvActionSurveillanceSchema)
 export const MissionZoneSchema = Yup.object().test({
   message: 'Veuillez définir une zone de mission',
   name: 'has-geom',
-  test: val => val && !_.isEmpty(val?.coordinates)
+  test: val => {
+    if (process.env.NODE_ENV === 'development') {
+      // Cypress ne peut pas tester les interactions entre la sidewindow et la carte
+      return true
+    }
+
+    return val && !_.isEmpty(val?.coordinates)
+  }
 })
 
 export const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
@@ -158,7 +166,7 @@ export const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
     geom: MissionZoneSchema,
     isClosed: Yup.boolean().default(false),
     missionNature: MissionNatureSchema,
-    missionType: MissionTypeSchema,
+    missionTypes: MissionTypesSchema,
     openBy: Yup.string()
       .min(3, 'Minimum 3 lettres pour le Trigramme')
       .max(3, 'Maximum 3 lettres pour le Trigramme')

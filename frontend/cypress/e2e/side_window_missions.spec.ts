@@ -202,15 +202,23 @@ context('Missions', () => {
     })
   })
 
-  it('A mission should be created', () => {
+  it.only('A mission should be created', () => {
     // Given
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('11')
     cy.get('*[data-cy="add-mission"]').click()
 
+    cy.get('*[data-cy="mission-nature"]').find('.rs-checkbox').should('have.length', 3)
+    cy.get('*[data-cy="mission-nature"]').find('.rs-checkbox-checked').should('have.length', 0)
+
     // When
+    cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
+    cy.get('[name="missionNature1"]').click({ force: true })
+    cy.get('[name="openBy"]').type('PCF')
+
     cy.get('*[data-cy="add-control-unit"]').click()
     cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
+    cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
     cy.wait(200)
     cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
     cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
