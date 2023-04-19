@@ -17,6 +17,7 @@
     "cypress:run": "cypress run --browser firefox --e2e",
     "dev": "BROWSER=none DISABLE_ESLINT_PLUGIN=true react-scripts start",
     "eject": "react-scripts eject",
+    "prepare": "cd .. && husky install ./frontend/config/husky",
     "start": "react-scripts start",
     "storybook": "start-storybook -p 6006 -s public",
     "test:e2e": "npm run cypress:run",
