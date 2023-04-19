@@ -6,16 +6,30 @@ import styled from 'styled-components'
 import { COLORS } from '../../../constants/constants'
 
 import type { Mission } from '../../../domain/entities/missions'
+import type { MouseEventHandler } from 'react'
 
+type MissionFormBottomBarProps = {
+  allowDelete: boolean
+  allowEdit: boolean
+  closeMission: MouseEventHandler<HTMLButtonElement>
+  deleteMission: MouseEventHandler<HTMLButtonElement>
+  isClosed: boolean
+  isValidating: boolean
+  quitFormEditing: MouseEventHandler<HTMLButtonElement>
+  reopenMission: MouseEventHandler<HTMLButtonElement>
+  saveMission: MouseEventHandler<HTMLButtonElement>
+}
 export function MissionFormBottomBar({
   allowDelete,
   allowEdit,
   closeMission,
   deleteMission,
   isClosed,
+  isValidating,
   quitFormEditing,
-  reopenMission
-}) {
+  reopenMission,
+  saveMission
+}: MissionFormBottomBarProps) {
   const { errors } = useFormikContext<Mission>()
 
   return (
@@ -33,6 +47,8 @@ export function MissionFormBottomBar({
           </Button>
         )}
         <Separator />
+        {isValidating && 'IS VALIDATING'}
+        {JSON.stringify(errors)}
         {!_.isEmpty(errors) && <MessageRed>Veuillez corriger les éléments en rouge</MessageRed>}
         <Separator />
         {isClosed && allowEdit && (
@@ -43,7 +59,7 @@ export function MissionFormBottomBar({
         </Button>
         {!isClosed && allowEdit && (
           <>
-            <Button accent={Accent.PRIMARY} data-cy="save-mission" Icon={Icon.Save} type="submit">
+            <Button accent={Accent.PRIMARY} data-cy="save-mission" Icon={Icon.Save} onClick={saveMission} type="button">
               Enregistrer et quitter
             </Button>
             <Button

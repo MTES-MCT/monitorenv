@@ -5,7 +5,15 @@ import styled from 'styled-components'
 import { actionTargetTypeEnum } from '../../../../../domain/entities/missions'
 import { useNewWindow } from '../../../../../ui/NewWindow'
 
-export function ActionTargetSelector({ currentActionIndex, error, onChange, value }) {
+import type { Promisable } from 'type-fest'
+
+type ActionTargetSelectorProps = {
+  currentActionIndex: number
+  error: string
+  onChange: (nextValue: string | undefined) => Promisable<void>
+  value?: string
+}
+export function ActionTargetSelector({ currentActionIndex, error, onChange, value }: ActionTargetSelectorProps) {
   const { newWindowContainerRef } = useNewWindow()
   const actionTargetFieldList = Object.values(actionTargetTypeEnum).map(o => ({ label: o.libelle, value: o.code }))
 

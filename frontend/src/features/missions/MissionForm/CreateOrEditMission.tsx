@@ -38,6 +38,8 @@ export function CreateOrEditMission() {
     path: [sideWindowPaths.MISSION, sideWindowPaths.MISSION_NEW],
     strict: true
   })
+
+  const [shouldValidateOnChange, setShouldValidateOnChange] = useState(false)
   const [currentActionIndex, setCurrentActionIndex] = useState(null)
   const [cancelEditModalIsOpen, setCancelEditModalIsOpen] = useState(false)
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
@@ -88,17 +90,31 @@ export function CreateOrEditMission() {
         enableReinitialize
         initialValues={missionFormikValues}
         onSubmit={handleSubmitForm}
-        validateOnChange={false}
+        validateOnBlur={false}
+        validateOnChange={shouldValidateOnChange}
         validateOnMount={false}
         validationSchema={MissionSchema}
       >
         {formikProps => {
+          const handleSaveMission = async () => {
+            formikProps.validateForm().then(errors => {
+              if (_.isEmpty(errors)) {
+                formikProps.handleSubmit()
+
+                return
+              }
+              setShouldValidateOnChange(true)
+            })
+          }
           const handleCloseMission = async () => {
             await formikProps.setFieldValue('isClosed', true)
             formikProps.validateForm().then(errors => {
               if (_.isEmpty(errors)) {
                 formikProps.handleSubmit()
+
+                return
               }
+              setShouldValidateOnChange(true)
             })
           }
 
@@ -122,11 +138,13 @@ export function CreateOrEditMission() {
                 <SecondColumn>
                   <FieldArray
                     name="envActions"
-                    render={props => (
+                    render={({ form, remove, unshift }) => (
                       <ActionsForm
-                        {...props}
                         currentActionIndex={currentActionIndex}
+                        form={form}
+                        remove={remove}
                         setCurrentActionIndex={handleSetCurrentActionIndex}
+                        unshift={unshift}
                       />
                     )}
                   />
@@ -150,9 +168,11 @@ export function CreateOrEditMission() {
                 allowEdit={allowEditMission}
                 closeMission={handleCloseMission}
                 deleteMission={handleDeleteMission}
-                isClosed={missionToEdit?.isClosed}
+                isClosed={!!missionToEdit?.isClosed}
+                isValidating={formikProps.isValidating}
                 quitFormEditing={handleCancelForm}
                 reopenMission={handleReopenMission}
+                saveMission={handleSaveMission}
               />
             </FormikForm>
           )

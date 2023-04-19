@@ -6,7 +6,22 @@ import styled from 'styled-components'
 import { vehicleTypeEnum } from '../../../../../domain/entities/missions'
 import { useNewWindow } from '../../../../../ui/NewWindow'
 
-export function VehicleTypeSelector({ currentActionIndex, disabled, error, onChange, value }) {
+import type { Promisable } from 'type-fest'
+
+type VehicleTypeSelectorProps = {
+  currentActionIndex: number
+  disabled: boolean
+  error: string
+  onChange: (nextValue: string | undefined) => Promisable<void>
+  value?: string
+}
+export function VehicleTypeSelector({
+  currentActionIndex,
+  disabled,
+  error,
+  onChange,
+  value
+}: VehicleTypeSelectorProps) {
   const { newWindowContainerRef } = useNewWindow()
   const vehicleTypeSelectorRef = useRef() as MutableRefObject<HTMLDivElement>
   const vehicleTypeFieldList = Object.values(vehicleTypeEnum).map(o => ({ label: o.libelle, value: o.code }))

@@ -18,8 +18,8 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
   const currentActionId = envActions && envActions[currentActionIndex]?.id
   const sortedEnvActions = useMemo(
     () =>
-      form.values.envActions &&
-      [...form.values.envActions].sort((a, b) => {
+      envActions &&
+      [...envActions].sort((a, b) => {
         if (a.actionStartDateTimeUtc === undefined) {
           return -1
         }
@@ -27,9 +27,13 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
           return +1
         }
 
-        return isBefore(new Date(a.actionStartDateTimeUtc), new Date(b.actionStartDateTimeUtc)) ? +1 : -1
+        return a.actionStartDateTimeUtc &&
+          b.actionStartDateTimeUtc &&
+          isBefore(new Date(a.actionStartDateTimeUtc), new Date(b.actionStartDateTimeUtc))
+          ? +1
+          : -1
       }),
-    [form?.values]
+    [envActions]
   )
 
   const handleAddSurveillanceAction = () => unshift(actionFactory({ actionType: ActionTypeEnum.SURVEILLANCE }))
@@ -69,7 +73,7 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
         )}
       </TitleWrapper>
       <ActionsTimeline>
-        {sortedEnvActions?.length > 0 ? (
+        {sortedEnvActions && sortedEnvActions.length > 0 ? (
           sortedEnvActions.map(action => {
             const index = envActions?.findIndex(a => a.id === action.id)
             const errors =

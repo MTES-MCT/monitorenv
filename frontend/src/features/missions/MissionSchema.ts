@@ -100,7 +100,6 @@ const EnvActionControlSchema: Yup.SchemaOf<EnvActionControl> = Yup.object()
     geom: Yup.array().ensure(),
     id: Yup.string().required(),
     infractions: Yup.array().of(InfractionSchema).ensure().required(),
-    protectedSpecies: Yup.array().of(Yup.string()),
     themes: Yup.array().of(ThemeSchema).ensure().required(),
     vehicleType: Yup.string().when('actionTargetType', (actionTargetType, schema) => {
       if (!actionTargetType || actionTargetType === actionTargetTypeEnum.VEHICLE.code) {
@@ -115,24 +114,19 @@ const EnvActionControlSchema: Yup.SchemaOf<EnvActionControl> = Yup.object()
 const EnvActionSurveillanceSchema: Yup.SchemaOf<EnvActionSurveillance> = Yup.object()
   .shape({
     actionStartDateTimeUtc: Yup.string().required('Requis').nullable(),
-    actionSubTheme: Yup.string().nullable(),
-    actionTheme: Yup.string().nullable(),
     actionType: Yup.mixed().oneOf([ActionTypeEnum.SURVEILLANCE]),
     geom: Yup.array().ensure(),
     id: Yup.string().required(),
-    protectedSpecies: Yup.string()
+    protectedSpecies: Yup.string(),
+    themes: Yup.array().of(ThemeSchema).ensure().required()
   })
   .required()
 
 const EnvActionNoteSchema: Yup.SchemaOf<EnvActionNote> = Yup.object()
   .shape({
     actionStartDateTimeUtc: Yup.string().required(),
-    actionSubTheme: Yup.string(),
-    actionTheme: Yup.string(),
     actionType: Yup.mixed().oneOf([ActionTypeEnum.SURVEILLANCE]),
-    geom: Yup.array().ensure(),
-    id: Yup.string().required(),
-    protectedSpecies: Yup.string()
+    id: Yup.string().required()
   })
   .required()
 
@@ -150,7 +144,7 @@ export const EnvActionSchema = Yup.lazy(value => {
   return EnvActionControlSchema
 })
 
-export const EnvActions = Yup.array().of(EnvActionSurveillanceSchema)
+// export const EnvActions = Yup.array().of(EnvActionSurveillanceSchema)
 
 export const MissionZoneSchema = Yup.object().test({
   message: 'Veuillez définir une zone de mission',
@@ -165,7 +159,9 @@ export const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
     endDateTimeUtc: Yup.string().nullable(),
     // FIXME : see issue https://github.com/jquense/yup/issues/1190
     // & tip for resolution https://github.com/jquense/yup/issues/1283#issuecomment-786559444
-    envActions: Yup.array().of(EnvActionSchema as any),
+    envActions: Yup.array()
+      .of(EnvActionSchema as any)
+      .nullable(),
     geom: shouldUseAlternateValidationInTestEnvironment ? Yup.object().nullable() : MissionZoneSchema,
     isClosed: Yup.boolean().default(false),
     missionNature: MissionNatureSchema,
@@ -188,8 +184,8 @@ export const ClosedMissionSchema = Yup.object()
   })
   .concat(NewMissionSchema)
 
-export const MissionSchema = Yup.lazy(mission => {
-  if (mission.isClosed) {
+export const MissionSchema = Yup.object().when('isClosed', isClosed => {
+  if (isClosed) {
     return ClosedMissionSchema
   }
 

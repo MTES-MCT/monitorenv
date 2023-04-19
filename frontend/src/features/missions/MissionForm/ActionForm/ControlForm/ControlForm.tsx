@@ -2,6 +2,7 @@
 import { FormikDatePicker, FormikNumberInput, FormikTextarea } from '@mtes-mct/monitor-ui'
 import { FieldArray, useFormikContext, getIn } from 'formik'
 import _ from 'lodash'
+import { useMemo } from 'react'
 import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
@@ -25,12 +26,12 @@ import { VehicleTypeSelector } from './VehicleTypeSelector'
 export function ControlForm({
   currentActionIndex,
   readOnly,
-  remove,
+  removeControlAction,
   setCurrentActionIndex
 }: {
   currentActionIndex: number
   readOnly: boolean
-  remove: Function
+  removeControlAction: Function
   setCurrentActionIndex: Function
 }) {
   const { newWindowContainerRef } = useNewWindow()
@@ -44,11 +45,28 @@ export function ControlForm({
 
   const { actionNumberOfControls, actionTargetType, vehicleType } = currentAction || {}
 
+  const actionTargetTypeErrorMessage = useMemo(
+    () => getIn(errors, `envActions[${currentActionIndex}].actionTargetType`) || '',
+    [errors, currentActionIndex]
+  )
+  const actionVehicleTypeErrorMessage = useMemo(
+    () => getIn(errors, `envActions[${currentActionIndex}].vehicleType`) || '',
+    [errors, currentActionIndex]
+  )
+  const canAddInfraction =
+    actionNumberOfControls &&
+    actionNumberOfControls > 0 &&
+    ((actionTargetType === actionTargetTypeEnum.VEHICLE.code && vehicleType !== undefined) ||
+      (actionTargetType !== undefined && actionTargetType !== actionTargetTypeEnum.VEHICLE.code)) &&
+    actionNumberOfControls > (envActions[currentActionIndex]?.infractions?.length || 0)
+
   const onVehicleTypeChange = selectedVehicleType => {
-    if (envActions[currentActionIndex]?.vehicleType === selectedVehicleType) {
+    if (
+      envActions[currentActionIndex]?.vehicleType === selectedVehicleType ||
+      (envActions[currentActionIndex]?.vehicleType === null && selectedVehicleType === undefined)
+    ) {
       return
     }
-
     setValues(v => {
       const w = _.cloneDeep(v)
       _.set(w, `envActions[${currentActionIndex}].vehicleType`, selectedVehicleType)
@@ -62,7 +80,10 @@ export function ControlForm({
     })
   }
   const onTargetTypeChange = selectedTargetType => {
-    if (envActions[currentActionIndex]?.actionTargetType === selectedTargetType) {
+    if (
+      envActions[currentActionIndex]?.actionTargetType === selectedTargetType ||
+      (envActions[currentActionIndex]?.actionTargetType === null && selectedTargetType === undefined)
+    ) {
       return
     }
     setValues(v => {
@@ -75,9 +96,6 @@ export function ControlForm({
           inf?.map(i => ({ ...i, vesselSize: null, vesselType: null }))
         )
       }
-      if (selectedTargetType === actionTargetTypeEnum.VEHICLE.code && vehicleType === null) {
-        _.set(w, `envActions[${currentActionIndex}].vehicleType`, vehicleTypeEnum.VESSEL.code)
-      }
 
       return w
     })
@@ -85,15 +103,8 @@ export function ControlForm({
 
   const handleRemoveAction = () => {
     setCurrentActionIndex(null)
-    remove(currentActionIndex)
+    removeControlAction(currentActionIndex)
   }
-
-  const canAddInfraction =
-    actionNumberOfControls &&
-    actionNumberOfControls > 0 &&
-    ((actionTargetType === actionTargetTypeEnum.VEHICLE.code && vehicleType !== undefined) ||
-      (actionTargetType !== undefined && actionTargetType !== actionTargetTypeEnum.VEHICLE.code)) &&
-    actionNumberOfControls > (envActions[currentActionIndex]?.infractions?.length || 0)
 
   return (
     <>
@@ -157,7 +168,7 @@ export function ControlForm({
           <ActionFieldWrapper>
             <ActionTargetSelector
               currentActionIndex={currentActionIndex}
-              error={getIn(errors, `envActions[${currentActionIndex}].actionTargetType`)}
+              error={actionTargetTypeErrorMessage}
               onChange={onTargetTypeChange}
               value={actionTargetType}
             />
@@ -166,7 +177,7 @@ export function ControlForm({
             <VehicleTypeSelector
               currentActionIndex={currentActionIndex}
               disabled={actionTargetType !== actionTargetTypeEnum.VEHICLE.code}
-              error={getIn(errors, `envActions[${currentActionIndex}].vehicleType`)}
+              error={actionVehicleTypeErrorMessage}
               onChange={onVehicleTypeChange}
               value={vehicleType}
             />
@@ -176,8 +187,14 @@ export function ControlForm({
         <FieldArray
           name={`envActions[${currentActionIndex}].infractions`}
           // eslint-disable-next-line react/jsx-props-no-spreading
-          render={props => (
-            <InfractionsForm canAddInfraction={canAddInfraction} currentActionIndex={currentActionIndex} {...props} />
+          render={({ form, push, remove }) => (
+            <InfractionsForm
+              canAddInfraction={canAddInfraction}
+              currentActionIndex={currentActionIndex}
+              form={form}
+              push={push}
+              remove={remove}
+            />
           )}
         />
         <FormikTextarea isLight label="Observations" name={`envActions[${currentActionIndex}].observations`} />

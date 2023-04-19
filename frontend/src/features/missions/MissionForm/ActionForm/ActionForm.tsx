@@ -32,7 +32,7 @@ export function ActionForm({ currentActionIndex, remove, setCurrentActionIndex }
             key={actionIdField.value}
             currentActionIndex={currentActionIndex}
             readOnly={isClosedField.value}
-            remove={remove}
+            removeControlAction={remove}
             setCurrentActionIndex={setCurrentActionIndex}
           />
         </FormWrapper>
