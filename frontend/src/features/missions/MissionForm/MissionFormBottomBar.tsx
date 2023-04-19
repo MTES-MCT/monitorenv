@@ -105,13 +105,14 @@ const Separator = styled.div`
 `
 const MessageRed = styled.div`
   color: ${COLORS.maximumRed};
-  padding-top: 7px;
+  padding-top: 6px;
   font-style: italic;
 `
 const Footer = styled.div`
   border-top: 1px solid ${COLORS.lightGray};
-  padding: 18px;
+  padding: 16px;
 `
 const FormActionsWrapper = styled.div`
   display: flex;
+  gap: 16px;
 `
