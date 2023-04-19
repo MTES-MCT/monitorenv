@@ -6,7 +6,7 @@ import fr.gouv.cacem.monitorenv.MeterRegistryConfiguration
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.domain.entities.missions.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdateMissionDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdatePublicMissionDataInput
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -61,7 +61,7 @@ class ApiMissionsControllerITests {
             "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
         val polygon = WKTreader.read(multipolygonString) as MultiPolygon
         // Given
-        val newMission = MissionEntity(
+        val expectedNewMission = MissionEntity(
             id = 10,
             missionTypes = listOf( MissionTypeEnum.LAND),
             missionNature = listOf(MissionNatureEnum.ENV),
@@ -72,9 +72,11 @@ class ApiMissionsControllerITests {
             endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
             isClosed = false,
             isDeleted = false,
-            missionSource = MissionSourceEnum.MONITORFISH
+            missionSource = MissionSourceEnum.MONITORFISH,
+            hasMissionOrder = true,
+            isUnderJdp = true
         )
-        val newMissionRequest = CreateOrUpdateMissionDataInput(
+        val newMissionRequest = CreateOrUpdatePublicMissionDataInput(
             missionTypes = listOf( MissionTypeEnum.LAND),
             missionNature = listOf(MissionNatureEnum.ENV),
             observationsCnsp = null,
@@ -83,10 +85,12 @@ class ApiMissionsControllerITests {
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
             missionSource = MissionSourceEnum.MONITORFISH,
-            isClosed = false
+            isClosed = false,
+            hasMissionOrder = true,
+            isUnderJdp = true
         )
         val requestbody = objectMapper.writeValueAsString(newMissionRequest)
-        given(this.createMission.execute(mission = any())).willReturn(newMission)
+        given(this.createMission.execute(mission = any())).willReturn(expectedNewMission)
         // When
         mockMvc.perform(
             post("/api/v1/missions")
@@ -106,7 +110,7 @@ class ApiMissionsControllerITests {
             "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
         val polygon = WKTreader.read(multipolygonString) as MultiPolygon
 
-        val firstMission = MissionEntity(
+        val expectedFirstMission = MissionEntity(
             id = 10,
             missionTypes = listOf( MissionTypeEnum.SEA),
             missionNature = listOf(MissionNatureEnum.ENV),
@@ -117,7 +121,9 @@ class ApiMissionsControllerITests {
             endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
             isDeleted = false,
             missionSource = MissionSourceEnum.MONITORFISH,
-            isClosed = false
+            isClosed = false,
+            hasMissionOrder = false,
+            isUnderJdp = false
         )
         given(
             this.getMissions.execute(
@@ -130,7 +136,7 @@ class ApiMissionsControllerITests {
                 pageNumber = any(),
                 pageSize = any()
             )
-        ).willReturn(listOf(firstMission))
+        ).willReturn(listOf(expectedFirstMission))
 
         // When
         mockMvc.perform(get("/api/v1/missions"))
@@ -143,16 +149,18 @@ class ApiMissionsControllerITests {
     fun `Should get specific mission when requested by Id`() {
         // Given
         val requestedId = 0
-        val firstMission = MissionEntity(
+        val expectedFirstMission = MissionEntity(
             id = 10,
             missionTypes = listOf( MissionTypeEnum.SEA),
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isDeleted = false,
             missionSource = MissionSourceEnum.MONITORFISH,
-            isClosed = false
+            isClosed = false,
+            hasMissionOrder = false,
+            isUnderJdp = false
         )
         // we test only if the route is called with the right arg
-        given(getMissionById.execute(requestedId)).willReturn(firstMission)
+        given(getMissionById.execute(requestedId)).willReturn(expectedFirstMission)
 
         // When
         mockMvc.perform(get("/api/v1/missions/$requestedId"))
@@ -173,7 +181,9 @@ class ApiMissionsControllerITests {
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isClosed = false,
             isDeleted = false,
-            missionSource = MissionSourceEnum.MONITORFISH
+            missionSource = MissionSourceEnum.MONITORFISH,
+            hasMissionOrder = true,
+            isUnderJdp = true
         )
         val envAction = EnvActionControlEntity(
             id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
@@ -181,7 +191,7 @@ class ApiMissionsControllerITests {
             vehicleType = VehicleTypeEnum.VESSEL,
             actionNumberOfControls = 4
         )
-        val requestBody = CreateOrUpdateMissionDataInput(
+        val requestBody = CreateOrUpdatePublicMissionDataInput(
             id = 14,
             missionTypes = listOf( MissionTypeEnum.SEA),
             observationsCacem = "updated observations",
@@ -189,7 +199,9 @@ class ApiMissionsControllerITests {
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             missionSource = MissionSourceEnum.MONITORFISH,
             envActions = listOf(envAction),
-            isClosed = false
+            isClosed = false,
+            hasMissionOrder = true,
+            isUnderJdp = true
         )
         given(this.updateMission.execute(any())).willReturn(expectedUpdatedMission)
         // When

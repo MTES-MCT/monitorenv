@@ -97,6 +97,10 @@ data class MissionModel(
     @Enumerated(EnumType.STRING)
     @Type(type = "pgsql_enum")
     val missionSource: MissionSourceEnum,
+    @Column(name = "has_mission_order", nullable = false)
+    var hasMissionOrder: Boolean,
+    @Column(name = "is_under_jdp", nullable = false)
+    var isUnderJdp: Boolean,
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
@@ -138,6 +142,8 @@ data class MissionModel(
         isClosed = isClosed,
         isDeleted = isDeleted,
         missionSource = missionSource,
+        hasMissionOrder = hasMissionOrder,
+        isUnderJdp = isUnderJdp,
         envActions = envActions!!.map { it.toActionEntity(mapper) },
         controlUnits = controlUnits?.map { unit ->
             val savedUnitResources = controlResources
@@ -169,7 +175,9 @@ data class MissionModel(
                 endDateTimeUtc = mission.endDateTimeUtc?.toInstant(),
                 isClosed = mission.isClosed,
                 isDeleted = false,
-                missionSource = mission.missionSource
+                missionSource = mission.missionSource,
+                hasMissionOrder = mission.hasMissionOrder,
+                isUnderJdp = mission.isUnderJdp
             )
 
             mission.envActions?.map {

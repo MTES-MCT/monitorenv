@@ -20,4 +20,6 @@ data class MissionEntity(
     val isClosed: Boolean,
     val isDeleted: Boolean,
     val missionSource: MissionSourceEnum,
+    val hasMissionOrder: Boolean,
+    val isUnderJdp: Boolean
 )

@@ -43,6 +43,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             isClosed = false,
             isDeleted = false,
             missionSource = MissionSourceEnum.MONITORENV,
+            hasMissionOrder = false,
+            isUnderJdp = false,
             controlUnits = listOf(
                 ControlUnitEntity(
                     id = 10006,
@@ -89,6 +91,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             isClosed = false,
             isDeleted = false,
             missionSource = MissionSourceEnum.MONITORENV,
+            hasMissionOrder = false,
+            isUnderJdp = false,
             controlUnits = listOf(
                 ControlUnitEntity(
                     id = 10006,
@@ -136,6 +140,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             isClosed = false,
             isDeleted = false,
             missionSource = MissionSourceEnum.MONITORENV,
+            hasMissionOrder = false,
+            isUnderJdp = false,
             controlUnits = listOf(
                 ControlUnitEntity(
                     id = 10006,
@@ -167,6 +173,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             isClosed = false,
             isDeleted = false,
             missionSource = MissionSourceEnum.MONITORENV,
+            hasMissionOrder = false,
+            isUnderJdp = false,
             controlUnits = listOf(ControlUnitEntity(id = 123456, name = "PAM Jeanne Barret", administration = "", isArchived = false, resources = listOf()))
         )
 
@@ -427,6 +435,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             isDeleted = false,
             envActions = listOf(),
             missionSource = MissionSourceEnum.MONITORENV,
+            hasMissionOrder = false,
+            isUnderJdp = false,
             controlUnits = listOf(
                 ControlUnitEntity(
                     id = 10003,
@@ -513,7 +523,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             isClosed = false,
             isDeleted = false,
             envActions = listOf(controlAction, surveillanceAction, noteAction),
-            missionSource = MissionSourceEnum.MONITORENV
+            missionSource = MissionSourceEnum.MONITORENV,
+            hasMissionOrder = false,
+            isUnderJdp = false
         )
         // When
         jpaMissionRepository.save(expectedUpdatedMission)
@@ -548,7 +560,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             isClosed = false,
             isDeleted = false,
             envActions = listOf(envAction),
-            missionSource = MissionSourceEnum.MONITORENV
+            missionSource = MissionSourceEnum.MONITORENV,
+            hasMissionOrder = false,
+            isUnderJdp = false
         )
         // When
         jpaMissionRepository.save(expectedUpdatedMission)
