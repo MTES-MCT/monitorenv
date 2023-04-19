@@ -1,4 +1,4 @@
-import { THEME, ThemeProvider } from '@mtes-mct/monitor-ui'
+import { THEME, ThemeProvider, OnlyFontGlobalStyle } from '@mtes-mct/monitor-ui'
 import { Provider } from 'react-redux'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { persistStore } from 'redux-persist'
@@ -22,6 +22,7 @@ export function App() {
 
   return (
     <ThemeProvider theme={THEME}>
+      <OnlyFontGlobalStyle />
       <CustomProvider locale={frFR}>
         <Provider store={homeStore}>
           <PersistGate loading={undefined} persistor={persistor}>

@@ -4,7 +4,6 @@ import { createRoot } from 'react-dom/client'
 
 import { App } from './App'
 import { SENTRY_DSN, SENTRY_ENV, SENTRY_TRACING_ORIGINS, MONITORENV_VERSION } from './env'
-import { GlobalStyle } from './fonts/fonts'
 
 import 'rsuite/dist/rsuite.min.css'
 import 'ol/ol.css'
@@ -38,9 +37,4 @@ if (!container) {
 }
 const root = createRoot(container)
 
-root.render(
-  <>
-    <GlobalStyle />
-    <App />
-  </>
-)
+root.render(<App />)
