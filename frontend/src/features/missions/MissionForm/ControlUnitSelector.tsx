@@ -1,4 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
+import { FormikTextInput } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import _ from 'lodash'
 import { MutableRefObject, useMemo, useRef } from 'react'
@@ -7,7 +8,6 @@ import styled from 'styled-components'
 
 import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
 import { FormikErrorWrapper } from '../../../uiMonitor/CustomFormikFields/FormikErrorWrapper'
-import { FormikInput } from '../../../uiMonitor/CustomFormikFields/FormikInput'
 import { SelectPicker } from '../../../uiMonitor/CustomRsuite/SelectPicker'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
 
@@ -20,7 +20,6 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
   const [unitField, , unitHelpers] = useField<number | undefined>(`controlUnits.${controlUnitIndex}.id`)
   const [, , unitNameHelpers] = useField<string | undefined>(`controlUnits.${controlUnitIndex}.name`)
   const [resourcesField, , resourcesHelpers] = useField<ControlResource[]>(`controlUnits.${controlUnitIndex}.resources`)
-  const [, , contactHelpers] = useField<string>(`controlUnits.${controlUnitIndex}.contact`)
 
   const resourcesRef = useRef() as MutableRefObject<HTMLDivElement>
   const { data, isError, isLoading } = useGetControlUnitsQuery()
@@ -86,9 +85,7 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
       .map(id => resourcesList.find(resource => resource.id === id))
     resourcesHelpers.setValue(resourceObjects)
   }
-  const handleContactChange = value => {
-    contactHelpers.setValue(value)
-  }
+
   if (isError) {
     return <div>Erreur</div>
   }
@@ -153,14 +150,10 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
           </RefWrapper>
         </FormGroupFixed>
         <FormGroupFixed>
-          <Form.ControlLabel htmlFor={`controlUnits.${controlUnitIndex}.contact`}>
-            Contact de l&apos;unité {resourceUnitIndexDisplayed}
-          </Form.ControlLabel>
-          <FormikInput
+          <FormikTextInput
             data-cy="control-unit-contact"
+            label={`Contact de l'unité ${resourceUnitIndexDisplayed}`}
             name={`controlUnits.${controlUnitIndex}.contact`}
-            onChange={handleContactChange}
-            size="sm"
           />
         </FormGroupFixed>
       </SelectorWrapper>

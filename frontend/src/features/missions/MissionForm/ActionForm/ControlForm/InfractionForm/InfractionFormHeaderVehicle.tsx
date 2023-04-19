@@ -1,9 +1,8 @@
+import { FormikTextInput } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
-import { Form } from 'rsuite'
 import styled from 'styled-components'
 
 import { EnvActionControl, Infraction, VehicleTypeEnum } from '../../../../../../domain/entities/missions'
-import { FormikInput } from '../../../../../../uiMonitor/CustomFormikFields/FormikInput'
 import { VesselSizeSelector } from './VesselSizeSelector'
 import { VesselTypeSelector } from './VesselTypeSelector'
 
@@ -23,11 +22,10 @@ export function InfractionFormHeaderVehicle({ currentActionIndex, infractionPath
   return (
     <FormGroup>
       <FormColumn>
-        <Form.ControlLabel htmlFor={`${infractionPath}.registrationNumber`}>Immatriculation</Form.ControlLabel>
-        <FormikInput
+        <FormikTextInput
           data-cy="infraction-form-registrationNumber"
+          label="Immatriculation"
           name={`${infractionPath}.registrationNumber`}
-          size="sm"
         />
       </FormColumn>
       {vehicleTypeField?.value === VehicleTypeEnum.VESSEL && (
