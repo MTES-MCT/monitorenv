@@ -88,7 +88,7 @@ const InfractionSchema: Yup.SchemaOf<Infraction> = Yup.object().shape({
 
 const EnvActionControlSchema: Yup.SchemaOf<EnvActionControl> = Yup.object()
   .shape({
-    actionNumberOfControls: Yup.number().required(),
+    actionNumberOfControls: Yup.number().required('Requis'),
     actionStartDateTimeUtc: Yup.string().required('Requis').nullable(),
     actionTargetType: Yup.string().nullable(),
     actionType: Yup.mixed().oneOf([ActionTypeEnum.CONTROL]),

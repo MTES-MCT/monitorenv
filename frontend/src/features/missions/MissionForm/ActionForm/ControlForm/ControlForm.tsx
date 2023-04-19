@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { FormikDatePicker, FormikTextarea } from '@mtes-mct/monitor-ui'
+import { FormikDatePicker, FormikNumberInput, FormikTextarea } from '@mtes-mct/monitor-ui'
 import { FieldArray, useFormikContext } from 'formik'
 import _ from 'lodash'
 import { Form, IconButton } from 'rsuite'
@@ -13,7 +13,6 @@ import {
   vehicleTypeEnum
 } from '../../../../../domain/entities/missions'
 import { useNewWindow } from '../../../../../ui/NewWindow'
-import { FormikInputNumberGhost } from '../../../../../uiMonitor/CustomFormikFields/FormikInputNumber'
 import { ReactComponent as ControlIconSVG } from '../../../../../uiMonitor/icons/Control.svg'
 import { ReactComponent as DeleteSVG } from '../../../../../uiMonitor/icons/Delete.svg'
 import { getDateAsLocalizedStringCompact } from '../../../../../utils/getDateAsLocalizedString'
@@ -138,14 +137,13 @@ export function ControlForm({
 
         <ActionSummary>
           <ActionFieldWrapper>
-            <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionNumberOfControls`}>
-              Nombre total de contrôles
-            </Form.ControlLabel>
+            <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionNumberOfControls`} />
             <NumberOfControls
               data-cy="control-form-number-controls"
+              isLight
+              label="Nombre total de contrôles"
               min={0}
               name={`envActions.${currentActionIndex}.actionNumberOfControls`}
-              size="sm"
             />
           </ActionFieldWrapper>
           <ActionFieldWrapper>
@@ -227,6 +225,6 @@ const DeleteIcon = styled(DeleteSVG)`
 const IconButtonRight = styled(IconButton)`
   margin-left: auto;
 `
-const NumberOfControls = styled(FormikInputNumberGhost)`
+const NumberOfControls = styled(FormikNumberInput)`
   width: 150px !important;
 `

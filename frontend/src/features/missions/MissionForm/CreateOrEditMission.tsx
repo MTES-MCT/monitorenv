@@ -82,6 +82,8 @@ export function CreateOrEditMission() {
         enableReinitialize
         initialValues={missionFormikValues}
         onSubmit={handleSubmitForm}
+        validateOnChange={false}
+        validateOnMount={false}
         validationSchema={MissionSchema}
       >
         {formikProps => {

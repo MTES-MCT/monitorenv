@@ -14,7 +14,6 @@ export function MissionFormBottomBar({
   reopenMission
 }) {
   const { errors } = useFormikContext()
-  console.log(errors)
 
   return (
     <Footer>

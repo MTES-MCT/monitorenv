@@ -36,6 +36,7 @@ export const actionFactory = ({
       return {
         actionNumberOfControls: undefined,
         actionTargetType: undefined,
+        actionType: ActionTypeEnum.CONTROL,
         id: uuidv4(),
         infractions: [],
         themes: [{ subThemes: [], theme: '' }],
@@ -43,6 +44,7 @@ export const actionFactory = ({
       }
     case actionTypeEnum.NOTE.code:
       return {
+        actionStartDateTimeUtc: new Date().toISOString(),
         actionType: ActionTypeEnum.NOTE,
         id: uuidv4(),
         observations: '',
