@@ -28,8 +28,9 @@ export type MultiPointPickerProps = {
   containerName: string
   label: string
   name: string
+  readOnly: boolean
 }
-export function MultiPointPicker({ addButtonLabel, containerName, label, name }: MultiPointPickerProps) {
+export function MultiPointPicker({ addButtonLabel, containerName, label, name, readOnly }: MultiPointPickerProps) {
   const dispatch = useAppDispatch()
   const listener = useAppSelector(state => state.draw.listener)
   const { coordinatesFormat } = useAppSelector(state => state.map)
@@ -93,9 +94,11 @@ export function MultiPointPicker({ addButtonLabel, containerName, label, name }:
   return (
     <Field>
       <Label>{label}</Label>
-      <Button accent={Accent.SECONDARY} Icon={Icon.Plus} isFullWidth onClick={handleAddPoint}>
-        {addButtonLabel}
-      </Button>
+      {!readOnly && (
+        <Button accent={Accent.SECONDARY} Icon={Icon.Plus} isFullWidth onClick={handleAddPoint}>
+          {addButtonLabel}
+        </Button>
+      )}
 
       <>
         {points.map((coordinates, index) => (
@@ -113,19 +116,23 @@ export function MultiPointPicker({ addButtonLabel, containerName, label, name }:
               </Center>
             </ZoneWrapper>
 
-            <IconButton
-              accent={Accent.SECONDARY}
-              disabled={isAddingAControl}
-              Icon={Icon.Edit}
-              onClick={handleAddPoint}
-            />
-            <IconButton
-              accent={Accent.SECONDARY}
-              aria-label="Supprimer cette zone"
-              disabled={isAddingAControl}
-              Icon={Icon.Delete}
-              onClick={() => handleDeleteZone(index)}
-            />
+            {!readOnly && (
+              <>
+                <IconButton
+                  accent={Accent.SECONDARY}
+                  disabled={isAddingAControl}
+                  Icon={Icon.Edit}
+                  onClick={handleAddPoint}
+                />
+                <IconButton
+                  accent={Accent.SECONDARY}
+                  aria-label="Supprimer cette zone"
+                  disabled={isAddingAControl}
+                  Icon={Icon.Delete}
+                  onClick={() => handleDeleteZone(index)}
+                />
+              </>
+            )}
           </Row>
         ))}
       </>

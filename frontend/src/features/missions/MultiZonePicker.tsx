@@ -28,8 +28,16 @@ export type MultiZonePickerProps = {
   isLight?: boolean
   label: string
   name: string
+  readOnly: boolean
 }
-export function MultiZonePicker({ addButtonLabel, interactionListener, isLight, label, name }: MultiZonePickerProps) {
+export function MultiZonePicker({
+  addButtonLabel,
+  interactionListener,
+  isLight,
+  label,
+  name,
+  readOnly
+}: MultiZonePickerProps) {
   const dispatch = useAppDispatch()
   const { geometry } = useListenForDrawedGeometry(interactionListener)
   const [field, meta, helpers] = useField(name)
@@ -81,9 +89,11 @@ export function MultiZonePicker({ addButtonLabel, interactionListener, isLight, 
   return (
     <Field>
       <Label hasError={!!meta.error}>{label}</Label>
-      <Button accent={Accent.SECONDARY} Icon={Icon.Plus} isFullWidth onClick={handleAddZone}>
-        {addButtonLabel}
-      </Button>
+      {!readOnly && (
+        <Button accent={Accent.SECONDARY} Icon={Icon.Plus} isFullWidth onClick={handleAddZone}>
+          {addButtonLabel}
+        </Button>
+      )}
       {!!meta.error && <ErrorMessage>Veuillez définir une zone de mission</ErrorMessage>}
 
       <>
@@ -102,14 +112,23 @@ export function MultiZonePicker({ addButtonLabel, interactionListener, isLight, 
               </Center>
             </ZoneWrapper>
 
-            <IconButton accent={Accent.SECONDARY} disabled={isEditingZone} Icon={Icon.Edit} onClick={handleAddZone} />
-            <IconButton
-              accent={Accent.SECONDARY}
-              aria-label="Supprimer cette zone"
-              disabled={isEditingZone}
-              Icon={Icon.Delete}
-              onClick={() => deleteZone(index)}
-            />
+            {!readOnly && (
+              <>
+                <IconButton
+                  accent={Accent.SECONDARY}
+                  disabled={isEditingZone}
+                  Icon={Icon.Edit}
+                  onClick={handleAddZone}
+                />
+                <IconButton
+                  accent={Accent.SECONDARY}
+                  aria-label="Supprimer cette zone"
+                  disabled={isEditingZone}
+                  Icon={Icon.Delete}
+                  onClick={() => deleteZone(index)}
+                />
+              </>
+            )}
           </Row>
         ))}
       </>

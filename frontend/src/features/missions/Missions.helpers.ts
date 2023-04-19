@@ -1,17 +1,14 @@
 import { v4 as uuidv4 } from 'uuid'
 
 import {
-  actionTargetTypeEnum,
   ActionTypeEnum,
   actionTypeEnum,
-  EnvAction,
+  NewEnvAction,
   formalNoticeEnum,
   infractionTypeEnum,
   MissionSourceEnum,
   Mission,
-  MissionTypeEnum,
-  NewMission,
-  vehicleTypeEnum
+  NewMission
 } from '../../domain/entities/missions'
 
 import type { ControlUnit } from '../../domain/entities/controlUnit'
@@ -33,17 +30,15 @@ export const actionFactory = ({
 }: {
   actionType: ActionTypeEnum
   id?: string
-}): EnvAction => {
+}): NewEnvAction => {
   switch (actionType) {
     case actionTypeEnum.CONTROL.code:
       return {
-        actionNumberOfControls: 0,
-        actionTargetType: actionTargetTypeEnum.VEHICLE.code,
-        actionType: ActionTypeEnum.CONTROL,
+        actionNumberOfControls: undefined,
+        actionTargetType: undefined,
         id: uuidv4(),
         infractions: [],
         themes: [{ subThemes: [], theme: '' }],
-        vehicleType: vehicleTypeEnum.VESSEL.code,
         ...action
       }
     case actionTypeEnum.NOTE.code:
@@ -75,7 +70,7 @@ export const missionFactory = (mission = {}): Mission | NewMission => ({
   isClosed: false,
   missionNature: [],
   missionSource: MissionSourceEnum.MONITORENV,
-  missionTypes: [MissionTypeEnum.SEA],
+  missionTypes: [],
   observationsCacem: '',
   observationsCnsp: '',
   openBy: '',

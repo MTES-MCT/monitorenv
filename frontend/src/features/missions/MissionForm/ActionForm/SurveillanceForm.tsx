@@ -10,7 +10,7 @@ import { ReactComponent as SurveillanceIconSVG } from '../../../../uiMonitor/ico
 import { MultiZonePicker } from '../../MultiZonePicker'
 import { SurveillanceThemes } from './Themes/SurveillanceThemes'
 
-export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionIndex }) {
+export function SurveillanceForm({ currentActionIndex, readOnly, remove, setCurrentActionIndex }) {
   const { newWindowContainerRef } = useNewWindow()
 
   const handleRemoveAction = () => {
@@ -58,6 +58,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
         isLight
         label="Zone de surveillance"
         name={`envActions[${currentActionIndex}].geom`}
+        readOnly={readOnly}
       />
       <FormikCheckbox
         inline

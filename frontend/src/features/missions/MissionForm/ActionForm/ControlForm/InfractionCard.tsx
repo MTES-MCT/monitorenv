@@ -32,6 +32,8 @@ export function InfractionCard({
   const [infractionType] = useField(`${infractionPath}.infractionType`)
   const [formalNotice] = useField(`${infractionPath}.formalNotice`)
   const [natinf] = useField(`${infractionPath}.natinf`)
+  const [isClosedField] = useField(`isClosed`)
+  const readOnly = isClosedField.value
 
   let libelleInfractionType
   switch (infractionType?.value) {
@@ -80,17 +82,21 @@ export function InfractionCard({
       </Summary>
       <ButtonsWrapper>
         <IconButton appearance="ghost" icon={<EditIcon className="rs-icon" />} onClick={setCurrentInfractionIndex}>
-          Editer
+          {readOnly ? 'Consulter' : 'Editer'}
         </IconButton>
-        <IconButton
-          appearance="ghost"
-          data-cy="duplicate-infraction"
-          disabled={!canAddInfraction}
-          icon={<DuplicateSVG className="rs-icon" />}
-          onClick={duplicateInfraction}
-          title="dupliquer"
-        />
-        <IconButton appearance="ghost" icon={<DeleteIcon />} onClick={removeInfraction} />
+        {!readOnly && (
+          <>
+            <IconButton
+              appearance="ghost"
+              data-cy="duplicate-infraction"
+              disabled={!canAddInfraction}
+              icon={<DuplicateSVG className="rs-icon" />}
+              onClick={duplicateInfraction}
+              title="dupliquer"
+            />
+            <IconButton appearance="ghost" icon={<DeleteIcon />} onClick={removeInfraction} />
+          </>
+        )}
       </ButtonsWrapper>
     </Wrapper>
   )

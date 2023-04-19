@@ -16,6 +16,8 @@ import { RelevantCourtSelector } from './RelevantCourtSelector'
 export function InfractionForm({ currentActionIndex, infractionPath, removeInfraction, validateInfraction }) {
   const [actionTargetField] = useField(`envActions.${currentActionIndex}.actionTargetType`)
   const [, meta] = useField(`envActions.${currentActionIndex}`)
+  const [isClosedField] = useField('isClosed')
+  const readOnly = isClosedField.value
 
   return (
     <FormWrapper data-cy="infraction-form">
@@ -63,9 +65,9 @@ export function InfractionForm({ currentActionIndex, infractionPath, removeInfra
         <FormikTextarea name={`${infractionPath}.observations`} />
       </Form.Group>
       <ButtonToolbarRight>
-        <Button onClick={removeInfraction}>Supprimer l&apos;infraction</Button>
+        {!readOnly && <Button onClick={removeInfraction}>Supprimer l&apos;infraction</Button>}
         <Button appearance="primary" data-cy="infraction-form-validate" onClick={validateInfraction}>
-          Valider l&apos;infraction
+          {readOnly ? "Fermer l'infraction" : "Valider l'infraction"}
         </Button>
       </ButtonToolbarRight>
       {!!meta.error && (

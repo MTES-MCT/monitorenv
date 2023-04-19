@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { controlUnitFactory } from '../Missions.helpers'
 import { ControlUnitSelector } from './ControlUnitSelector'
 
-export function ControlUnitsForm({ form, push, remove }) {
+export function ControlUnitsForm({ form, push, readOnly, remove }) {
   const handleAddControlUnit = () => {
     push(controlUnitFactory())
   }
@@ -28,9 +28,11 @@ export function ControlUnitsForm({ form, push, remove }) {
           ))}
         </ControlUnitsWrapper>
       )}
-      <Button accent={Accent.SECONDARY} Icon={Icon.Plus} onClick={handleAddControlUnit} size={Size.SMALL}>
-        Ajouter une autre unité
-      </Button>
+      {!readOnly && (
+        <Button accent={Accent.SECONDARY} Icon={Icon.Plus} onClick={handleAddControlUnit} size={Size.SMALL}>
+          Ajouter une autre unité
+        </Button>
+      )}
     </>
   )
 }

@@ -25,10 +25,12 @@ import { VehicleTypeSelector } from './VehicleTypeSelector'
 
 export function ControlForm({
   currentActionIndex,
+  readOnly,
   remove,
   setCurrentActionIndex
 }: {
   currentActionIndex: number
+  readOnly: boolean
   remove: Function
   setCurrentActionIndex: Function
 }) {
@@ -95,15 +97,17 @@ export function ControlForm({
           &nbsp;(
           {getDateAsLocalizedStringCompact(currentAction?.actionStartDateTimeUtc)})
         </SubTitle>
-        <IconButtonRight
-          appearance="ghost"
-          icon={<DeleteIcon className="rs-icon" />}
-          onClick={handleRemoveAction}
-          size="sm"
-          title="supprimer"
-        >
-          Supprimer
-        </IconButtonRight>
+        {!readOnly && (
+          <IconButtonRight
+            appearance="ghost"
+            icon={<DeleteIcon className="rs-icon" />}
+            onClick={handleRemoveAction}
+            size="sm"
+            title="supprimer"
+          >
+            Supprimer
+          </IconButtonRight>
+        )}
       </Header>
       <FormBody>
         <ActionTheme
@@ -127,6 +131,7 @@ export function ControlForm({
           containerName="geom"
           label="Lieu du contrôle"
           name={`envActions[${currentActionIndex}].geom`}
+          readOnly={readOnly}
         />
 
         <Separator />

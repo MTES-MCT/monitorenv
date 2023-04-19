@@ -18,6 +18,7 @@ type ActionCardProps = {
   action: EnvAction
   duplicateAction: MouseEventHandler
   hasError: boolean
+  readOnly: boolean
   removeAction: MouseEventHandler
   selectAction: MouseEventHandler
   selected: boolean
@@ -27,6 +28,7 @@ export function ActionCard({
   action,
   duplicateAction,
   hasError,
+  readOnly,
   removeAction,
   selectAction,
   selected
@@ -99,22 +101,24 @@ export function ActionCard({
             </>
           )}
 
-          <ButtonsWrapper>
-            <IconButton
-              appearance="subtle"
-              icon={<DuplicateSVG className="rs-icon" />}
-              onClick={duplicateAction}
-              size="md"
-              title="dupliquer"
-            />
-            <IconButton
-              appearance="subtle"
-              icon={<DeleteIcon className="rs-icon" />}
-              onClick={removeAction}
-              size="md"
-              title="supprimer"
-            />
-          </ButtonsWrapper>
+          {!readOnly && (
+            <ButtonsWrapper>
+              <IconButton
+                appearance="subtle"
+                icon={<DuplicateSVG className="rs-icon" />}
+                onClick={duplicateAction}
+                size="md"
+                title="dupliquer"
+              />
+              <IconButton
+                appearance="subtle"
+                icon={<DeleteIcon className="rs-icon" />}
+                onClick={removeAction}
+                size="md"
+                title="supprimer"
+              />
+            </ButtonsWrapper>
+          )}
         </ActionSummaryWrapper>
         {hasError && <ErrorMessage>Veuillez compléter les champs manquants dans cette action de contrôle</ErrorMessage>}
       </Card>

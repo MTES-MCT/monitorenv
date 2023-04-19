@@ -302,6 +302,7 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
 export type NewMission = Omit<Mission, 'id' | 'facade' | 'missionSource'>
 
 export type EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote
+export type NewEnvAction = NewEnvActionControl | EnvActionSurveillance | EnvActionNote
 
 export type EnvActionCommonProperties = {
   actionStartDateTimeUtc?: string | null
@@ -314,12 +315,16 @@ export type EnvActionTheme = {
   subThemes?: string[]
   theme: string
 }
-export type EnvActionControl = EnvActionCommonProperties & {
+export type NewEnvActionControl = EnvActionCommonProperties & {
   actionNumberOfControls?: number
   actionTargetType?: string
-  actionType: ActionTypeEnum.CONTROL
+  actionType?: ActionTypeEnum.CONTROL
   infractions: Infraction[]
   themes: EnvActionTheme[]
+  vehicleType?: string
+}
+export type EnvActionControl = NewEnvActionControl & {
+  actionType: ActionTypeEnum.CONTROL
   vehicleType: string
 }
 
@@ -336,12 +341,12 @@ export type EnvActionNote = EnvActionCommonProperties & {
   observations?: string
 }
 
-export type Infraction = {
+export type NewInfraction = {
   companyName?: string | null
   controlledPersonIdentity?: string | null
-  formalNotice: FormalNoticeEnum
+  formalNotice?: FormalNoticeEnum
   id: string
-  infractionType: InfractionTypeEnum
+  infractionType?: InfractionTypeEnum
   natinf?: string[]
   observations?: string | null
   registrationNumber?: string | null
@@ -349,6 +354,10 @@ export type Infraction = {
   toProcess: boolean
   vesselSize?: VesselSizeEnum | null
   vesselType?: VesselTypeEnum | null
+}
+export type Infraction = NewInfraction & {
+  formalNotice: FormalNoticeEnum
+  infractionType: InfractionTypeEnum
 }
 
 export const getMissionStatus = ({

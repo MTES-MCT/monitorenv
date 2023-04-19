@@ -1,5 +1,5 @@
 import { FormikDatePicker, FormikMultiCheckbox, FormikTextInput, FormikTextarea } from '@mtes-mct/monitor-ui'
-import { FieldArray } from 'formik'
+import { FieldArray, useField } from 'formik'
 import { Form } from 'rsuite'
 import styled from 'styled-components'
 
@@ -12,6 +12,8 @@ import { ControlUnitsForm } from './ControlUnitsForm'
 
 export function GeneralInformationsForm() {
   const { newWindowContainerRef } = useNewWindow()
+  const [isClosedField] = useField(`isClosed`)
+
   const missionTypeOptions = Object.entries(missionTypeEnum).map(([key, val]) => ({ label: val.libelle, value: key }))
   const missionNatureOptions = Object.entries(missionNatureEnum).map(([key, val]) => ({
     label: val.libelle,
@@ -65,14 +67,18 @@ export function GeneralInformationsForm() {
         </SubGroup>
       </Form.Group>
       <Form.Group>
-        {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-        <FieldArray name="controlUnits" render={props => <ControlUnitsForm {...props} />} />
+        <FieldArray
+          name="controlUnits"
+          /* eslint-disable-next-line react/jsx-props-no-spreading */
+          render={props => <ControlUnitsForm readOnly={isClosedField.value} {...props} />}
+        />
       </Form.Group>
       <MultiZonePicker
         addButtonLabel="Ajouter une zone de mission"
         interactionListener={InteractionListener.MISSION_ZONE}
         label="Localisations :"
         name="geom"
+        readOnly={isClosedField.value}
       />
       <Form.Group>
         <InputObservations label="CACEM : orientations, observations" name="observationsCacem" />

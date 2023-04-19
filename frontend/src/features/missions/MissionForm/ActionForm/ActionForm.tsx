@@ -15,6 +15,7 @@ type ActionFormProps = {
 export function ActionForm({ currentActionIndex, remove, setCurrentActionIndex }: ActionFormProps) {
   const [actionTypeField] = useField(`envActions.${currentActionIndex}.actionType`)
   const [actionIdField] = useField(`envActions.${currentActionIndex}.id`)
+  const [isClosedField] = useField(`isClosed`)
 
   if (currentActionIndex === undefined) {
     return (
@@ -30,6 +31,7 @@ export function ActionForm({ currentActionIndex, remove, setCurrentActionIndex }
           <ControlForm
             key={actionIdField.value}
             currentActionIndex={currentActionIndex}
+            readOnly={isClosedField.value}
             remove={remove}
             setCurrentActionIndex={setCurrentActionIndex}
           />
@@ -41,6 +43,7 @@ export function ActionForm({ currentActionIndex, remove, setCurrentActionIndex }
           <SurveillanceForm
             key={actionIdField.value}
             currentActionIndex={currentActionIndex}
+            readOnly={isClosedField.value}
             remove={remove}
             setCurrentActionIndex={setCurrentActionIndex}
           />
