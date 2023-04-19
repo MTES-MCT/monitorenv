@@ -2,20 +2,20 @@ import { useField } from 'formik'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
-import { ActionTypeEnum } from '../../../../domain/entities/missions'
+import { ActionTypeEnum, EnvAction, Mission } from '../../../../domain/entities/missions'
 import { ControlForm } from './ControlForm/ControlForm'
 import { NoteForm } from './NoteForm'
 import { SurveillanceForm } from './SurveillanceForm'
 
 type ActionFormProps = {
   currentActionIndex: number | undefined
-  remove: (number) => any
-  setCurrentActionIndex: (number) => void
+  remove: (index: number) => any
+  setCurrentActionIndex: (index: number | undefined) => void
 }
 export function ActionForm({ currentActionIndex, remove, setCurrentActionIndex }: ActionFormProps) {
-  const [actionTypeField] = useField(`envActions.${currentActionIndex}.actionType`)
-  const [actionIdField] = useField(`envActions.${currentActionIndex}.id`)
-  const [isClosedField] = useField(`isClosed`)
+  const [actionTypeField] = useField<ActionTypeEnum>(`envActions.${currentActionIndex}.actionType`)
+  const [actionIdField] = useField<EnvAction['id']>(`envActions.${currentActionIndex}.id`)
+  const [isClosedField] = useField<Mission['isClosed']>(`isClosed`)
 
   if (currentActionIndex === undefined) {
     return (

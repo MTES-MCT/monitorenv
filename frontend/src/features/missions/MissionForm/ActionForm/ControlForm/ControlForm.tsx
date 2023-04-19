@@ -102,7 +102,7 @@ export function ControlForm({
   }
 
   const handleRemoveAction = () => {
-    setCurrentActionIndex(null)
+    setCurrentActionIndex(undefined)
     removeControlAction(currentActionIndex)
   }
 

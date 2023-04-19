@@ -33,14 +33,14 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
     .sort((a, b) => a?.localeCompare(b))
     .map(administration => ({ administration }))
     .value()
-  const unitList = _.chain(filteredControlUnits)
+
+  const unitList = filteredControlUnits
     .filter(unit => (administrationField.value ? administrationField.value === unit.administration : true))
     .sort((a, b) => a?.name?.localeCompare(b?.name))
-    .value()
+
   const resourcesList =
-    _.chain(filteredControlUnits)
-      ?.find(unit => unit.administration === administrationField.value && unit.id === unitField.value)
-      ?.value()?.resources || []
+    filteredControlUnits?.find(unit => unit.administration === administrationField.value && unit.id === unitField.value)
+      ?.resources || []
 
   // Add any resource from Mission not present in list from API (as the resource might be historized)
   // See: https://github.com/MTES-MCT/monitorenv/issues/103

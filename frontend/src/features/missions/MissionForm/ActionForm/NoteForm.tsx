@@ -4,15 +4,15 @@ import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
-import { actionTypeLabels } from '../../../../domain/entities/missions'
+import { ActionTypeEnum, actionTypeLabels } from '../../../../domain/entities/missions'
 import { ReactComponent as DeleteSVG } from '../../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as NoteSVG } from '../../../../uiMonitor/icons/Note_libre.svg'
 
 export function NoteForm({ currentActionIndex, remove, setCurrentActionIndex }) {
-  const [actionTypeField] = useField(`envActions.${currentActionIndex}.actionType`)
+  const [actionTypeField] = useField<ActionTypeEnum>(`envActions.${currentActionIndex}.actionType`)
 
   const handleRemoveAction = () => {
-    setCurrentActionIndex(null)
+    setCurrentActionIndex(undefined)
     remove(currentActionIndex)
   }
 

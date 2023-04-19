@@ -40,7 +40,7 @@ export function CreateOrEditMission() {
   })
 
   const [shouldValidateOnChange, setShouldValidateOnChange] = useState(false)
-  const [currentActionIndex, setCurrentActionIndex] = useState(null)
+  const [currentActionIndex, setCurrentActionIndex] = useState(undefined)
   const [cancelEditModalIsOpen, setCancelEditModalIsOpen] = useState(false)
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
 

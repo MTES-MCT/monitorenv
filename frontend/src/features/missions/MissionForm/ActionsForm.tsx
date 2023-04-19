@@ -44,7 +44,7 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
   const handleRemoveAction = id => e => {
     e.stopPropagation()
     remove(envActions && envActions.findIndex(a => a.id === id))
-    setCurrentActionIndex(null)
+    setCurrentActionIndex(undefined)
   }
 
   const handleDuplicateAction = id => () => {

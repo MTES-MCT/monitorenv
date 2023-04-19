@@ -13,7 +13,10 @@ import {
   VehicleTypeEnum,
   vehicleTypeLabels,
   VesselTypeEnum,
-  vesselTypeLabels
+  vesselTypeLabels,
+  EnvActionControl,
+  Infraction,
+  Mission
 } from '../../../../../domain/entities/missions'
 import { ReactComponent as DeleteSVG } from '../../../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as DuplicateSVG } from '../../../../../uiMonitor/icons/Duplicate.svg'
@@ -28,17 +31,21 @@ export function InfractionCard({
   setCurrentInfractionIndex
 }) {
   const infractionPath = `envActions.${currentActionIndex}.infractions.${currentInfractionIndex}`
-  const [, meta] = useField(infractionPath)
-  const [targetTypeField] = useField(`envActions.${currentActionIndex}.actionTargetType`)
+  const [, meta] = useField<Infraction>(infractionPath)
+  const [targetTypeField] = useField<EnvActionControl['actionTargetType']>(
+    `envActions.${currentActionIndex}.actionTargetType`
+  )
   const [vehicleTypeField] = useField<VehicleTypeEnum>(`envActions.${currentActionIndex}.vehicleType`)
   const [vesselType] = useField<VesselTypeEnum>(`${infractionPath}.vesselType`)
-  const [registrationNumber] = useField<string>(`${infractionPath}.registrationNumber`)
-  const [controlledPersonIdentity] = useField<string>(`${infractionPath}.controlledPersonIdentity`)
-  const [companyName] = useField<string>(`${infractionPath}.companyName`)
+  const [registrationNumber] = useField<Infraction['registrationNumber']>(`${infractionPath}.registrationNumber`)
+  const [controlledPersonIdentity] = useField<Infraction['controlledPersonIdentity']>(
+    `${infractionPath}.controlledPersonIdentity`
+  )
+  const [companyName] = useField<Infraction['companyName']>(`${infractionPath}.companyName`)
   const [infractionType] = useField<InfractionTypeEnum>(`${infractionPath}.infractionType`)
   const [formalNotice] = useField<FormalNoticeEnum>(`${infractionPath}.formalNotice`)
-  const [natinf] = useField(`${infractionPath}.natinf`)
-  const [isClosedField] = useField<Boolean>(`isClosed`)
+  const [natinf] = useField<Infraction['natinf']>(`${infractionPath}.natinf`)
+  const [isClosedField] = useField<Mission['isClosed']>(`isClosed`)
 
   const readOnly = isClosedField.value
 

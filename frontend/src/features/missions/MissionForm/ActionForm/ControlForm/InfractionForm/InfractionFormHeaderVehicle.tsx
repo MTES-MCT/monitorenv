@@ -2,18 +2,20 @@ import { useField } from 'formik'
 import { Form } from 'rsuite'
 import styled from 'styled-components'
 
-import { VehicleTypeEnum } from '../../../../../../domain/entities/missions'
+import { EnvActionControl, Infraction, VehicleTypeEnum } from '../../../../../../domain/entities/missions'
 import { FormikInput } from '../../../../../../uiMonitor/CustomFormikFields/FormikInput'
 import { VesselSizeSelector } from './VesselSizeSelector'
 import { VesselTypeSelector } from './VesselTypeSelector'
 
 export function InfractionFormHeaderVehicle({ currentActionIndex, infractionPath }) {
-  const [vehicleTypeField] = useField(`envActions.${currentActionIndex}.vehicleType`)
-  const [vesselTypeField, , vesselTypeHelpers] = useField(`${infractionPath}.vesselType`)
-  const [vesselSizeField, , vesselSizeHelpers] = useField(`${infractionPath}.vesselSize`)
+  const [vehicleTypeField] = useField<EnvActionControl['vehicleType']>(`envActions.${currentActionIndex}.vehicleType`)
+  const [vesselTypeField, , vesselTypeHelpers] = useField<Infraction['vesselType']>(`${infractionPath}.vesselType`)
+  const [vesselSizeField, , vesselSizeHelpers] = useField<Infraction['vesselSize']>(`${infractionPath}.vesselSize`)
+
   const handleChangeVesselType = v => {
     vesselTypeHelpers.setValue(v)
   }
+
   const handleChangeVesselSize = v => {
     vesselSizeHelpers.setValue(v)
   }

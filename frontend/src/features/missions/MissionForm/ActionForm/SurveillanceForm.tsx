@@ -14,7 +14,7 @@ export function SurveillanceForm({ currentActionIndex, readOnly, remove, setCurr
   const { newWindowContainerRef } = useNewWindow()
 
   const handleRemoveAction = () => {
-    setCurrentActionIndex(null)
+    setCurrentActionIndex(undefined)
     remove(currentActionIndex)
   }
 

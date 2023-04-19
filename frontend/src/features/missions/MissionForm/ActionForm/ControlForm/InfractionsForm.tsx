@@ -10,7 +10,7 @@ import { InfractionForm } from './InfractionForm/InfractionForm'
 import type { Infraction } from '../../../../../domain/entities/missions'
 
 export function InfractionsForm({ canAddInfraction, currentActionIndex, form, push, remove }) {
-  const [currentInfractionIndex, setCurrentInfractionIndex] = useState(undefined)
+  const [currentInfractionIndex, setCurrentInfractionIndex] = useState<number | undefined>(undefined)
 
   const handleAddInfraction = () => {
     const numberOfInfractions = form?.values.envActions[currentActionIndex]?.infractions?.length || 0
@@ -51,7 +51,7 @@ export function InfractionsForm({ canAddInfraction, currentActionIndex, form, pu
       {form?.values.envActions?.length > 0 && form?.values.envActions[currentActionIndex]?.infractions?.length > 0 ? (
         <InfractionsWrapper>
           {form?.values.envActions[currentActionIndex]?.infractions.map((infraction, index) =>
-            currentInfractionIndex && index === currentInfractionIndex ? (
+            currentInfractionIndex !== undefined && index === currentInfractionIndex ? (
               <InfractionForm
                 key={infraction.id}
                 currentActionIndex={currentActionIndex}
