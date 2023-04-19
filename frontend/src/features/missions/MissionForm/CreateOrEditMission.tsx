@@ -96,7 +96,10 @@ export function CreateOrEditMission() {
         validationSchema={MissionSchema}
       >
         {formikProps => {
+          const allowCloseMission = !missionToEdit?.isClosed || !formikProps.values?.isClosed
+
           const handleSaveMission = async () => {
+            await formikProps.setFieldValue('isClosed', false)
             formikProps.validateForm().then(errors => {
               if (_.isEmpty(errors)) {
                 formikProps.handleSubmit()
@@ -106,6 +109,7 @@ export function CreateOrEditMission() {
               setShouldValidateOnChange(true)
             })
           }
+
           const handleCloseMission = async () => {
             await formikProps.setFieldValue('isClosed', true)
             formikProps.validateForm().then(errors => {
@@ -164,12 +168,11 @@ export function CreateOrEditMission() {
               </Wrapper>
 
               <MissionFormBottomBar
+                allowClose={allowCloseMission}
                 allowDelete={allowDeleteMission}
                 allowEdit={allowEditMission}
                 closeMission={handleCloseMission}
                 deleteMission={handleDeleteMission}
-                isClosed={!!missionToEdit?.isClosed}
-                isValidating={formikProps.isValidating}
                 quitFormEditing={handleCancelForm}
                 reopenMission={handleReopenMission}
                 saveMission={handleSaveMission}

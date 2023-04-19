@@ -9,23 +9,21 @@ import type { Mission } from '../../../domain/entities/missions'
 import type { MouseEventHandler } from 'react'
 
 type MissionFormBottomBarProps = {
+  allowClose: boolean
   allowDelete: boolean
   allowEdit: boolean
   closeMission: MouseEventHandler<HTMLButtonElement>
   deleteMission: MouseEventHandler<HTMLButtonElement>
-  isClosed: boolean
-  isValidating: boolean
   quitFormEditing: MouseEventHandler<HTMLButtonElement>
   reopenMission: MouseEventHandler<HTMLButtonElement>
   saveMission: MouseEventHandler<HTMLButtonElement>
 }
 export function MissionFormBottomBar({
+  allowClose,
   allowDelete,
   allowEdit,
   closeMission,
   deleteMission,
-  isClosed,
-  isValidating,
   quitFormEditing,
   reopenMission,
   saveMission
@@ -47,17 +45,16 @@ export function MissionFormBottomBar({
           </Button>
         )}
         <Separator />
-        {isValidating && 'IS VALIDATING'}
         {JSON.stringify(errors)}
         {!_.isEmpty(errors) && <MessageRed>Veuillez corriger les éléments en rouge</MessageRed>}
         <Separator />
-        {isClosed && allowEdit && (
+        {!allowClose && allowEdit && (
           <MessageRed>Veuillez rouvrir la mission avant d&apos;en modifier les informations.</MessageRed>
         )}
         <Button accent={Accent.TERTIARY} data-cy="quit-edit-mission" onClick={quitFormEditing} type="button">
           Quitter
         </Button>
-        {!isClosed && allowEdit && (
+        {allowClose && allowEdit && (
           <>
             <Button accent={Accent.PRIMARY} data-cy="save-mission" Icon={Icon.Save} onClick={saveMission} type="button">
               Enregistrer et quitter
@@ -73,7 +70,7 @@ export function MissionFormBottomBar({
             </Button>
           </>
         )}
-        {isClosed && allowEdit && (
+        {!allowClose && allowEdit && (
           <Button
             accent={Accent.PRIMARY}
             data-cy="reopen-mission"

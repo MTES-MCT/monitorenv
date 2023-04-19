@@ -55,7 +55,7 @@ const ControlResourceSchema: Yup.SchemaOf<ControlResource> = Yup.object()
 const ControlUnitSchema: Yup.SchemaOf<ControlUnit> = Yup.object()
   .shape({
     administration: Yup.string().required(),
-    contact: Yup.string().required('Requis').nullable(),
+    contact: Yup.string().nullable().required('Requis'),
     id: Yup.number().required(),
     name: Yup.string().required(),
     resources: Yup.array().ensure().of(ControlResourceSchema).required()
@@ -94,8 +94,8 @@ const InfractionSchema: Yup.SchemaOf<Infraction> = Yup.object().shape({
 const EnvActionControlSchema: Yup.SchemaOf<EnvActionControl> = Yup.object()
   .shape({
     actionNumberOfControls: Yup.number().required('Requis'),
-    actionStartDateTimeUtc: Yup.string().required('Requis').nullable(),
-    actionTargetType: Yup.string().required('Requis').nullable(),
+    actionStartDateTimeUtc: Yup.string().nullable().required('Requis'),
+    actionTargetType: Yup.string().nullable().required('Requis'),
     actionType: Yup.mixed().oneOf([ActionTypeEnum.CONTROL]),
     geom: Yup.array().ensure(),
     id: Yup.string().required(),
@@ -109,15 +109,15 @@ const EnvActionControlSchema: Yup.SchemaOf<EnvActionControl> = Yup.object()
       return schema.nullable()
     })
   })
+  .nullable()
   .required()
 
 const EnvActionSurveillanceSchema: Yup.SchemaOf<EnvActionSurveillance> = Yup.object()
   .shape({
-    actionStartDateTimeUtc: Yup.string().required('Requis').nullable(),
+    actionStartDateTimeUtc: Yup.string().nullable().required('Requis'),
     actionType: Yup.mixed().oneOf([ActionTypeEnum.SURVEILLANCE]),
     geom: Yup.array().ensure(),
     id: Yup.string().required(),
-    protectedSpecies: Yup.string(),
     themes: Yup.array().of(ThemeSchema).ensure().required()
   })
   .required()
@@ -141,7 +141,7 @@ export const EnvActionSchema = Yup.lazy(value => {
     return EnvActionNoteSchema
   }
 
-  return EnvActionControlSchema
+  return Yup.object().required()
 })
 
 // export const EnvActions = Yup.array().of(EnvActionSurveillanceSchema)
@@ -184,8 +184,8 @@ export const ClosedMissionSchema = Yup.object()
   })
   .concat(NewMissionSchema)
 
-export const MissionSchema = Yup.object().when('isClosed', isClosed => {
-  if (isClosed) {
+export const MissionSchema = Yup.lazy(value => {
+  if (value.isClosed) {
     return ClosedMissionSchema
   }
 
