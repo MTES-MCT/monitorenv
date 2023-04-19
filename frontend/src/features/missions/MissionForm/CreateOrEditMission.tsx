@@ -2,6 +2,7 @@
 
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Formik, FieldArray } from 'formik'
+import _ from 'lodash'
 import { useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { matchPath } from 'react-router-dom'
@@ -21,6 +22,7 @@ import { sideWindowActions } from '../../SideWindow/slice'
 import { MissionCancelEditModal } from '../MissionCancelEditModal'
 import { MissionDeleteModal } from '../MissionDeleteModal'
 import { missionFactory } from '../Missions.helpers'
+import { MissionSchema } from '../MissionSchema'
 import { ActionForm } from './ActionForm/ActionForm'
 import { ActionsForm } from './ActionsForm'
 import { GeneralInformationsForm } from './GeneralInformationsForm'
@@ -50,7 +52,7 @@ export function CreateOrEditMission() {
   }
 
   const handleSubmitForm = values => {
-    createOrEditMissionAndGoToMissionsList(values)
+    dispatch(createOrEditMissionAndGoToMissionsList(values))
   }
 
   const handleReturnToEdition = () => {
@@ -59,7 +61,7 @@ export function CreateOrEditMission() {
   }
 
   const handleDelete = () => {
-    deleteMissionAndGoToMissionsList(id)
+    dispatch(deleteMissionAndGoToMissionsList(id))
   }
   const handleCancelForm = () => {
     dispatch(sideWindowActions.openAndGoTo(sideWindowPaths.MISSIONS))
@@ -76,16 +78,24 @@ export function CreateOrEditMission() {
   return (
     <EditMissionWrapper data-cy="editMissionWrapper">
       <Header title={`Edition de la mission${id ? ' - Enregistrement en cours' : ''}`} />
-      <Formik enableReinitialize initialValues={missionFormikValues} onSubmit={handleSubmitForm}>
+      <Formik
+        enableReinitialize
+        initialValues={missionFormikValues}
+        onSubmit={handleSubmitForm}
+        validationSchema={MissionSchema}
+      >
         {formikProps => {
           const handleCloseMission = () => {
             formikProps.setFieldValue('isClosed', true)
-            if (formikProps.dirty) {
-              setCancelEditModalIsOpen(true)
-            } else {
-              handleCancelForm()
-            }
+            formikProps.validateForm().then(errors => {
+              if (_.isEmpty(errors)) {
+                formikProps.handleSubmit()
+              } else {
+                formikProps.setFieldValue('isClosed', false)
+              }
+            })
           }
+
           const handleReopenMission = () => {
             formikProps.setFieldValue('isClosed', false)
             formikProps.submitForm()

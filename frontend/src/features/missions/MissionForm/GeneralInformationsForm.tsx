@@ -1,5 +1,4 @@
-/* eslint-disable react/jsx-props-no-spreading */
-import { FormikMultiCheckbox, FormikDatePicker } from '@mtes-mct/monitor-ui'
+import { FormikDatePicker, FormikMultiCheckbox, FormikTextInput } from '@mtes-mct/monitor-ui'
 import { FieldArray } from 'formik'
 import { Form } from 'rsuite'
 import styled from 'styled-components'
@@ -8,7 +7,6 @@ import { COLORS } from '../../../constants/constants'
 import { InteractionListener } from '../../../domain/entities/map/constants'
 import { missionNatureEnum, missionTypeEnum } from '../../../domain/entities/missions'
 import { useNewWindow } from '../../../ui/NewWindow'
-import { FormikInput } from '../../../uiMonitor/CustomFormikFields/FormikInput'
 import { FormikTextarea } from '../../../uiMonitor/CustomFormikFields/FormikTextarea'
 import { MultiZonePicker } from '../MultiZonePicker'
 import { ControlUnitsForm } from './ControlUnitsForm'
@@ -68,6 +66,7 @@ export function GeneralInformationsForm() {
         </SubGroup>
       </Form.Group>
       <Form.Group>
+        {/* eslint-disable-next-line react/jsx-props-no-spreading */}
         <FieldArray name="controlUnits" render={props => <ControlUnitsForm {...props} />} />
       </Form.Group>
       <MultiZonePicker
@@ -83,24 +82,24 @@ export function GeneralInformationsForm() {
         <InputObservations name="observationsCnsp" />
         <SubGroup>
           <NarrowColumn>
-            <Form.ControlLabel htmlFor="openBy">Ouvert par</Form.ControlLabel>
-            <FormikInput name="openBy" size="sm" />
+            <FormikTextInput label="Ouvert par" name="openBy" />
           </NarrowColumn>
           <NarrowColumn>
-            <Form.ControlLabel htmlFor="closedBy">Clôturé par</Form.ControlLabel>
-            <FormikInput name="closedBy" size="sm" />
+            <FormikTextInput label="Clôturé par" name="closedBy" />
           </NarrowColumn>
         </SubGroup>
       </Form.Group>
     </>
   )
 }
+
 const Title = styled.h2`
   font-size: 16px;
   line-height: 22px;
   padding-bottom: 13px;
   color: ${COLORS.charcoal};
 `
+
 const FlexFormGroup = styled(Form.Group)`
   display: flex;
 `
