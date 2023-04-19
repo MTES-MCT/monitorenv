@@ -32,11 +32,11 @@ export function ActionCard({
   selected
 }: ActionCardProps) {
   return (
-    <>
-      <Action data-cy="action-card" onClick={selectAction}>
-        <TimeLine>
-          <DateTimeWrapper>{getDateAsLocalizedStringExpanded(action.actionStartDateTimeUtc)}</DateTimeWrapper>
-        </TimeLine>
+    <Action data-cy="action-card" onClick={selectAction}>
+      <TimeLine>
+        <DateTimeWrapper>{getDateAsLocalizedStringExpanded(action.actionStartDateTimeUtc)}</DateTimeWrapper>
+      </TimeLine>
+      <Card>
         <ActionSummaryWrapper $type={action.actionType} hasError={hasError} selected={selected}>
           {action.actionType === ActionTypeEnum.CONTROL && (
             <>
@@ -116,11 +116,15 @@ export function ActionCard({
             />
           </ButtonsWrapper>
         </ActionSummaryWrapper>
-      </Action>
-      {hasError && <ErrorMessage>Veuillez compléter les champs en rouge pour valider l&apos;action</ErrorMessage>}
-    </>
+        {hasError && <ErrorMessage>Veuillez compléter les champs manquants dans cette action de contrôle</ErrorMessage>}
+      </Card>
+    </Action>
   )
 }
+
+const Card = styled.div`
+  flex: 1;
+`
 
 const Action = styled.div`
   display: flex;
@@ -142,7 +146,6 @@ const DateTimeWrapper = styled.div`
 
 const ActionSummaryWrapper = styled.div<{ $type: string; hasError: boolean; selected: boolean }>`
   display: flex;
-  flex: 1;
   border-color: ${p =>
     // eslint-disable-next-line no-nested-ternary
     p.hasError ? `${COLORS.maximumRed}` : p.selected ? `${COLORS.blueYonder}` : `${COLORS.lightGray}`};
@@ -161,7 +164,6 @@ const ActionSummaryWrapper = styled.div<{ $type: string; hasError: boolean; sele
     }
   }};
   padding: ${p => (p.selected ? `4px` : '6px')};
-  margin-left: auto;
 `
 
 const Title = styled.span`

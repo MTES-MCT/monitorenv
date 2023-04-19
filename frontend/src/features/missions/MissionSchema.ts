@@ -79,8 +79,10 @@ const InfractionSchema: Yup.SchemaOf<Infraction> = Yup.object().shape({
   relevantCourt: Yup.string().nullable(),
   toProcess: Yup.boolean().required(),
   // @ts-ignore
+  // Property 'oneOfOptional' does not exist on type 'MixedSchema<any, AnyObject, any>'
   vesselSize: Yup.mixed().oneOfOptional(Object.values(VesselSizeEnum)),
   // @ts-ignore
+  // Property 'oneOfOptional' does not exist on type 'MixedSchema<any, AnyObject, any>'
   vesselType: Yup.mixed().oneOfOptional(Object.values(VesselTypeEnum))
 })
 
@@ -150,7 +152,8 @@ export const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
     closedBy: Yup.string(),
     controlUnits: Yup.array().of(ControlUnitSchema).ensure().defined().min(1),
     endDateTimeUtc: Yup.string().nullable(),
-    // FIXME : see issue https://github.com/jquense/yup/issues/1190 & tip for resolution https://github.com/jquense/yup/issues/1283#issuecomment-786559444
+    // FIXME : see issue https://github.com/jquense/yup/issues/1190
+    // & tip for resolution https://github.com/jquense/yup/issues/1283#issuecomment-786559444
     envActions: Yup.array().of(EnvActionSchema as any),
     geom: MissionZoneSchema,
     isClosed: Yup.boolean().default(false),

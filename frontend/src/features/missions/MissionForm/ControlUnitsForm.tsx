@@ -1,7 +1,6 @@
-import { IconButton } from 'rsuite'
+import { Accent, Button, Icon, Size } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { ReactComponent as PlusSVG } from '../../../uiMonitor/icons/Plus.svg'
 import { controlUnitFactory } from '../Missions.helpers'
 import { ControlUnitSelector } from './ControlUnitSelector'
 
@@ -29,9 +28,9 @@ export function ControlUnitsForm({ form, push, remove }) {
           ))}
         </ControlUnitsWrapper>
       )}
-      <IconButton appearance="ghost" icon={<PlusSVG className="rs-icon" />} onClick={handleAddControlUnit} size="sm">
+      <Button accent={Accent.SECONDARY} Icon={Icon.Plus} onClick={handleAddControlUnit} size={Size.SMALL}>
         Ajouter une autre unité
-      </IconButton>
+      </Button>
     </>
   )
 }

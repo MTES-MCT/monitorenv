@@ -85,23 +85,18 @@ export function CreateOrEditMission() {
         validationSchema={MissionSchema}
       >
         {formikProps => {
-          const handleCloseMission = () => {
-            formikProps.setFieldValue('isClosed', true)
+          const handleCloseMission = async () => {
+            await formikProps.setFieldValue('isClosed', true)
             formikProps.validateForm().then(errors => {
               if (_.isEmpty(errors)) {
                 formikProps.handleSubmit()
-              } else {
-                formikProps.setFieldValue('isClosed', false)
               }
             })
           }
 
           const handleReopenMission = () => {
             formikProps.setFieldValue('isClosed', false)
-            formikProps.submitForm()
           }
-
-          const { isClosed } = formikProps.values
 
           return (
             <FormikForm>
@@ -146,7 +141,7 @@ export function CreateOrEditMission() {
                 allowDelete={!(id === undefined)}
                 closeMission={handleCloseMission}
                 deleteMission={handleDeleteMission}
-                isClosed={isClosed}
+                isClosed={missionToEdit?.isClosed}
                 quitFormEditing={handleCancelForm}
                 reopenMission={handleReopenMission}
               />

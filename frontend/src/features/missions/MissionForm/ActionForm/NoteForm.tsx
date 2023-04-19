@@ -1,10 +1,10 @@
+import { FormikTextarea } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
 import { actionTypeEnum } from '../../../../domain/entities/missions'
-import { FormikTextarea } from '../../../../uiMonitor/CustomFormikFields/FormikTextarea'
 import { ReactComponent as DeleteSVG } from '../../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as NoteSVG } from '../../../../uiMonitor/icons/Note_libre.svg'
 
@@ -33,8 +33,7 @@ export function NoteForm({ currentActionIndex, remove, setCurrentActionIndex }) 
       </Header>
 
       <Form.Group>
-        <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.observations`}>Observations </Form.ControlLabel>
-        <FormikTextarea classPrefix="input ghost" name={`envActions.${currentActionIndex}.observations`} />
+        <FormikTextarea isLight label="Observations" name={`envActions.${currentActionIndex}.observations`} />
       </Form.Group>
     </>
   )

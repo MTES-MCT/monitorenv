@@ -1,4 +1,4 @@
-import { FormikDatePicker, FormikMultiCheckbox, FormikTextInput } from '@mtes-mct/monitor-ui'
+import { FormikDatePicker, FormikMultiCheckbox, FormikTextInput, FormikTextarea } from '@mtes-mct/monitor-ui'
 import { FieldArray } from 'formik'
 import { Form } from 'rsuite'
 import styled from 'styled-components'
@@ -7,7 +7,6 @@ import { COLORS } from '../../../constants/constants'
 import { InteractionListener } from '../../../domain/entities/map/constants'
 import { missionNatureEnum, missionTypeEnum } from '../../../domain/entities/missions'
 import { useNewWindow } from '../../../ui/NewWindow'
-import { FormikTextarea } from '../../../uiMonitor/CustomFormikFields/FormikTextarea'
 import { MultiZonePicker } from '../MultiZonePicker'
 import { ControlUnitsForm } from './ControlUnitsForm'
 
@@ -76,10 +75,8 @@ export function GeneralInformationsForm() {
         name="geom"
       />
       <Form.Group>
-        <Form.ControlLabel htmlFor="observationsCacem">CACEM : orientations, observations </Form.ControlLabel>
-        <InputObservations name="observationsCacem" />
-        <Form.ControlLabel htmlFor="observationsCnsp">CNSP : orientations, observations </Form.ControlLabel>
-        <InputObservations name="observationsCnsp" />
+        <InputObservations label="CACEM : orientations, observations" name="observationsCacem" />
+        <InputObservations label="CNSP : orientations, observations" name="observationsCnsp" />
         <SubGroup>
           <NarrowColumn>
             <FormikTextInput label="Ouvert par" name="openBy" />

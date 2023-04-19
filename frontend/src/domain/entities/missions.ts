@@ -96,14 +96,14 @@ export const formalNoticeEnum = {
     code: 'NO',
     libelle: 'Non'
   },
-  WAITING: {
+  PENDING: {
     code: 'PENDING',
     libelle: 'En attente'
   }
 }
 export enum FormalNoticeEnum {
   NO = 'NO',
-  WAITING = 'WAITING',
+  PENDING = 'PENDING',
   YES = 'YES'
 }
 
@@ -337,7 +337,7 @@ export type EnvActionNote = EnvActionCommonProperties & {
 }
 
 export type Infraction = {
-  companyName?: string
+  companyName?: string | null
   controlledPersonIdentity?: string | null
   formalNotice: FormalNoticeEnum
   id: string
