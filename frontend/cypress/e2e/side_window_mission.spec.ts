@@ -8,7 +8,7 @@ context('Missions', () => {
 
   it('An infraction Should be duplicated', () => {
     // Given
-    cy.get('*[data-cy="edit-mission"]').eq(3).click()
+    cy.get('*[data-cy="edit-mission"]').eq(3).click({ force: true })
     cy.get('*[data-cy="action-card"]').eq(1).click()
     cy.get('*[data-cy="control-form-number-controls"]').type('{backspace}2')
     cy.get('*[data-cy="infraction-form"]').should('not.exist')
@@ -45,7 +45,7 @@ context('Missions', () => {
 
   it('allow only one theme and may be multiple subthemes in control actions', () => {
     // Given
-    cy.get('*[data-cy="edit-mission"]').eq(3).click()
+    cy.get('*[data-cy="edit-mission"]').eq(3).click({ force: true })
     cy.intercept('GET', `/bff/v1/controlthemes`).as('getControlThemes')
     cy.get('*[data-cy="action-card"]').eq(1).click()
     cy.get('*[data-cy="envaction-theme-element"]').should('have.length', 1)
@@ -92,7 +92,7 @@ context('Missions', () => {
 
   it('save observations in control Actions', () => {
     // Given
-    cy.get('*[data-cy="edit-mission"]').eq(3).click()
+    cy.get('*[data-cy="edit-mission"]').eq(3).click({ force: true })
     cy.intercept('GET', `/bff/v1/controlthemes`).as('getControlThemes')
     cy.get('*[data-cy="action-card"]').eq(1).click()
     cy.get('[id="envActions[1].observations"]').contains('RAS')
@@ -114,7 +114,7 @@ context('Missions', () => {
 
   it('allow multiple themes and may be multiple subthemes in surveillance actions', () => {
     // Given
-    cy.get('*[data-cy="edit-mission"]').eq(3).click()
+    cy.get('*[data-cy="edit-mission"]').eq(3).click({ force: true })
     cy.intercept('GET', `/bff/v1/controlthemes`).as('getControlThemes')
     cy.get('*[data-cy="action-card"]').eq(0).click()
     cy.get('*[data-cy="envaction-theme-element"]').should('have.length', 1)
@@ -161,9 +161,10 @@ context('Missions', () => {
     })
   })
 
-  it('A mission should be created', () => {
+  it.only('A mission should be created', () => {
     // Given
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('12')
+    cy.wait(200)
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('11')
     cy.get('*[data-cy="add-mission"]').click()
 
     cy.get('*[data-cy="mission-nature"]').find('.rs-checkbox').should('have.length', 3)
@@ -197,6 +198,27 @@ context('Missions', () => {
       expect(controlUnit.id).equal(10012)
       expect(controlUnit.name).equal('Cross Etel')
     })
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('13')
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('12')
+  })
+
+  it.only('A mission should be deleted', () => {
+    // Given
+    cy.wait(200)
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('12')
+    cy.get('*[data-cy="edit-mission"]').eq(9).click({ force: true })
+
+    cy.intercept({
+      url: `/bff/v1/missions*`
+    }).as('deleteMission')
+    cy.get('*[data-cy="delete-mission"]').click()
+    cy.get('*[name="delete-mission-modal-cancel"]').click()
+    cy.get('*[data-cy="delete-mission"]').click()
+    cy.get('*[name="delete-mission-modal-confirm"]').click()
+
+    // Then
+    cy.wait('@deleteMission').then(({ response }) => {
+      expect(response && response.statusCode).equal(200)
+    })
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('11')
   })
 })

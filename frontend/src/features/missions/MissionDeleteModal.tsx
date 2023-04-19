@@ -12,10 +12,10 @@ export function MissionDeleteModal({ onCancel, onConfirm, open }) {
         </Dialog.Body>
 
         <Dialog.Action>
-          <Button accent={Accent.SECONDARY} onClick={onCancel}>
+          <Button accent={Accent.SECONDARY} name="delete-mission-modal-cancel" onClick={onCancel}>
             Retourner à l&apos;édition
           </Button>
-          <Button accent={Accent.PRIMARY} onClick={onConfirm}>
+          <Button accent={Accent.PRIMARY} name="delete-mission-modal-confirm" onClick={onConfirm}>
             Confirmer la suppression
           </Button>
         </Dialog.Action>
