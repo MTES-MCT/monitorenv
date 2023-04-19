@@ -32,7 +32,7 @@
   "dependencies": {
     "@dnd-kit/core": "^4.0.3",
     "@dnd-kit/modifiers": "^4.0.0",
-    "@mtes-mct/monitor-ui": "5.2.2",
+    "@mtes-mct/monitor-ui": "5.3.2",
     "@reduxjs/toolkit": "1.8.2",
     "@sentry/react": "6.19.7",
     "@sentry/tracing": "6.19.7",
@@ -67,7 +67,8 @@
     "styled-components": "5.3.5",
     "timeago.js": "^4.0.2",
     "uuid": "^9.0.0",
-    "worker-loader": "^3.0.6"
+    "worker-loader": "^3.0.6",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@ivangabriele/eslint-config-typescript-react": "4.2.0",
