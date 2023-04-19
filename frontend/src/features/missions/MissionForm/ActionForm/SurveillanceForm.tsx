@@ -20,7 +20,6 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
     setCurrentActionIndex(null)
     remove(currentActionIndex)
   }
-  console.log('test2')
 
   return (
     <>
