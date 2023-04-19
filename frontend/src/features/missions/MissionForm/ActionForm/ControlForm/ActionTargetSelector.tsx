@@ -22,6 +22,7 @@ export function ActionTargetSelector({ currentActionIndex, error, onChange, valu
       <Select
         baseContainer={newWindowContainerRef.current}
         error={error}
+        isErrorMessageHidden
         isLight
         label="Type de cible"
         name={`envActions.${currentActionIndex}.actionTargetType`}

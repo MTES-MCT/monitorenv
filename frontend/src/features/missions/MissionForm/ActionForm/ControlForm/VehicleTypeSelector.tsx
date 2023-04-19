@@ -32,6 +32,7 @@ export function VehicleTypeSelector({
         baseContainer={newWindowContainerRef.current}
         disabled={disabled}
         error={error}
+        isErrorMessageHidden
         isLight
         label="Type de véhicule"
         name={`envActions.${currentActionIndex}.vehicleType`}

@@ -29,6 +29,7 @@ export function ThemeSelector({ label, name }) {
           key={name}
           baseContainer={newWindowContainerRef.current}
           data-cy="envaction-theme-selector"
+          isErrorMessageHidden
           isLight
           label={label}
           name={name}

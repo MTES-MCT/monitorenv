@@ -33,7 +33,7 @@ context('Missions', () => {
 
     cy.log('Administrations should be filtered')
     cy.fill('Administrations', ['DDTM'])
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('6')
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('7')
 
     cy.fill('Administrations', undefined)
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('11')

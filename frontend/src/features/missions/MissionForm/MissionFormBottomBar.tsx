@@ -59,8 +59,9 @@ export function MissionFormBottomBar({
           </Button>
         )}
         <Separator />
-        {JSON.stringify(cleanedErrors)}
-        {!_.isEmpty(cleanedErrors) && <MessageRed>Veuillez corriger les éléments en rouge</MessageRed>}
+        {!_.isEmpty(cleanedErrors) && (
+          <MessageRed data-cy="mission-errors">Veuillez corriger les éléments en rouge</MessageRed>
+        )}
         <Separator />
         {!allowClose && allowEdit && (
           <MessageRed>Veuillez rouvrir la mission avant d&apos;en modifier les informations.</MessageRed>

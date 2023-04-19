@@ -78,8 +78,14 @@ const InfractionSchema: Yup.SchemaOf<Infraction> = Yup.object().shape({
   formalNotice: Yup.mixed().oneOf(Object.values(FormalNoticeEnum)).required('Requis'),
   id: Yup.string().required(),
   infractionType: Yup.mixed().oneOf(Object.values(InfractionTypeEnum)).required('Requis'),
-  natinf: Yup.array().of(Yup.string().ensure()).compact().min(1, 'Sélectionnez au moins une infraction'),
-  observations: Yup.string().required(),
+  natinf: Yup.array()
+    .of(Yup.string().ensure())
+    .when('infractionType', {
+      is: InfractionTypeEnum.WAITING,
+      otherwise: schema => schema.compact().min(1, 'Sélectionnez au moins une infraction'),
+      then: schema => schema.compact().min(0)
+    }),
+  observations: Yup.string().nullable(),
   registrationNumber: Yup.string().nullable(),
   relevantCourt: Yup.string().nullable(),
   toProcess: Yup.boolean().required('Requis'),
@@ -124,7 +130,7 @@ const EnvActionSurveillanceSchema: Yup.SchemaOf<EnvActionSurveillance> = Yup.obj
 
 const EnvActionNoteSchema: Yup.SchemaOf<EnvActionNote> = Yup.object()
   .shape({
-    actionStartDateTimeUtc: Yup.string().required(),
+    actionStartDateTimeUtc: Yup.string().required('Requis'),
     actionType: Yup.mixed().oneOf([ActionTypeEnum.NOTE]),
     id: Yup.string().required()
   })
@@ -157,11 +163,6 @@ export const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
     closedBy: Yup.string(),
     controlUnits: Yup.array().of(ControlUnitSchema).ensure().defined().min(1),
     endDateTimeUtc: Yup.string().nullable(),
-    // FIXME : see issue https://github.com/jquense/yup/issues/1190
-    // & tip for resolution https://github.com/jquense/yup/issues/1283#issuecomment-786559444
-    envActions: Yup.array()
-      .of(EnvActionSchema as any)
-      .nullable(),
     geom: shouldUseAlternateValidationInTestEnvironment ? Yup.object().nullable() : MissionZoneSchema,
     isClosed: Yup.boolean().default(false),
     missionNature: MissionNatureSchema,
@@ -180,7 +181,14 @@ export const ClosedMissionSchema = Yup.object()
       .min(3, 'Minimum 3 lettres pour le Trigramme')
       .max(3, 'Maximum 3 lettres pour le Trigramme')
       .required('Requis'),
-    endDateTimeUtc: Yup.string().required()
+
+    endDateTimeUtc: Yup.string().required('Requis'),
+    // cast as any to avoid type error
+    // FIXME : see issue https://github.com/jquense/yup/issues/1190
+    // & tip for resolution https://github.com/jquense/yup/issues/1283#issuecomment-786559444
+    envActions: Yup.array()
+      .of(EnvActionSchema as any)
+      .nullable()
   })
   .concat(NewMissionSchema)
 

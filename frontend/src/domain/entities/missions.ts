@@ -365,7 +365,7 @@ export type NewInfraction = {
   id: string
   infractionType?: InfractionTypeEnum
   natinf?: string[]
-  observations: string | null
+  observations?: string | null
   registrationNumber?: string | null
   relevantCourt?: string | null
   toProcess: boolean

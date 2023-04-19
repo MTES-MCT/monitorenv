@@ -152,6 +152,7 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
         <FormGroupFixed>
           <FormikTextInput
             data-cy="control-unit-contact"
+            isErrorMessageHidden
             label={`Contact de l'unité ${resourceUnitIndexDisplayed}`}
             name={`controlUnits.${controlUnitIndex}.contact`}
           />

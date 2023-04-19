@@ -58,6 +58,8 @@ export function InfractionForm({
       <SubGroup>
         <Form.ControlLabel htmlFor={`${infractionPath}.infractionType`} />
         <FormikMultiRadio
+          isErrorMessageHidden
+          isInline
           label="Type d'infraction"
           name={`${infractionPath}.infractionType`}
           options={infractionTypeOptions}
@@ -66,6 +68,8 @@ export function InfractionForm({
 
       <SubGroup>
         <FormikMultiRadio
+          isErrorMessageHidden
+          isInline
           label="Mise en demeure"
           name={`${infractionPath}.formalNotice`}
           options={formalNoticeOPtions}

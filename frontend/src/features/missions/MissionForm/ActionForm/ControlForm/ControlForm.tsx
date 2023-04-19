@@ -157,8 +157,9 @@ export function ControlForm({
         <ActionSummary>
           <ActionFieldWrapper>
             <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionNumberOfControls`} />
-            <NumberOfControls
+            <FormikNumberInput
               data-cy="control-form-number-controls"
+              isErrorMessageHidden
               isLight
               label="Nombre total de contrôles"
               min={0}
@@ -251,7 +252,4 @@ const DeleteIcon = styled(DeleteSVG)`
 
 const IconButtonRight = styled(IconButton)`
   margin-left: auto;
-`
-const NumberOfControls = styled(FormikNumberInput)`
-  width: 150px !important;
 `

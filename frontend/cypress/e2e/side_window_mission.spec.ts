@@ -170,6 +170,10 @@ context('Missions', () => {
     cy.get('*[data-cy="mission-nature"]').find('.rs-checkbox').should('have.length', 3)
     cy.get('*[data-cy="mission-nature"]').find('.rs-checkbox-checked').should('have.length', 0)
 
+    cy.get('form').submit()
+    cy.wait(100)
+    cy.get('*[data-cy="mission-errors"]').should('exist')
+
     // When
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
@@ -201,7 +205,7 @@ context('Missions', () => {
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('12')
   })
 
-  it.only('A mission should be deleted', () => {
+  it('A mission should be deleted', () => {
     // Given
     cy.wait(200)
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('12')
@@ -218,6 +222,24 @@ context('Missions', () => {
     // Then
     cy.wait('@deleteMission').then(({ response }) => {
       expect(response && response.statusCode).equal(200)
+    })
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('11')
+  })
+
+  it('A closed mission should be reopenable, editable and saved again', () => {
+    // Given
+    cy.wait(200)
+    cy.get('*[data-cy="edit-mission"]').eq(10).click({ force: true })
+    cy.intercept('PUT', `/bff/v1/missions/47`).as('updateMission')
+
+    cy.get('*[data-cy="reopen-mission"]').click()
+    cy.get('[name="openBy"]').type('{backspace}{backspace}{backspace}PCF', { force: true })
+    cy.get('form').submit()
+
+    // Then
+    cy.wait('@updateMission').then(({ request, response }) => {
+      expect(response && response.statusCode).equal(200)
+      expect(request.body.openBy).equal('PCF')
     })
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('11')
   })

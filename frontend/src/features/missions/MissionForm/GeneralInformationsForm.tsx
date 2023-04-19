@@ -21,7 +21,7 @@ export function GeneralInformationsForm() {
   }))
 
   return (
-    <>
+    <FormWrapper>
       <Title>Informations générales</Title>
       <FlexFormGroup>
         <ColWrapper>
@@ -50,6 +50,7 @@ export function GeneralInformationsForm() {
         <SubGroup>
           <FormikMultiCheckbox
             data-cy="mission-types"
+            isErrorMessageHidden
             isInline
             label="Type de mission"
             name="missionTypes"
@@ -58,6 +59,7 @@ export function GeneralInformationsForm() {
         </SubGroup>
         <SubGroup data-cy="mission-nature">
           <FormikMultiCheckbox
+            isErrorMessageHidden
             isInline
             label="Intentions principales de mission"
             name="missionNature"
@@ -85,17 +87,20 @@ export function GeneralInformationsForm() {
         <InputObservations label="CNSP : orientations, observations" name="observationsCnsp" />
         <SubGroup>
           <NarrowColumn>
-            <FormikTextInput label="Ouvert par" name="openBy" />
+            <FormikTextInput isErrorMessageHidden label="Ouvert par" name="openBy" />
           </NarrowColumn>
           <NarrowColumn>
-            <FormikTextInput label="Clôturé par" name="closedBy" />
+            <FormikTextInput isErrorMessageHidden label="Clôturé par" name="closedBy" />
           </NarrowColumn>
         </SubGroup>
       </Form.Group>
-    </>
+    </FormWrapper>
   )
 }
 
+const FormWrapper = styled.div`
+  padding: 32px;
+`
 const Title = styled.h2`
   font-size: 16px;
   line-height: 22px;

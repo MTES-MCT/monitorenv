@@ -205,7 +205,6 @@ const FirstColumn = styled.div`
   background: ${COLORS.white};
   flex: 1;
   overflow-y: auto;
-  padding: 32px;
 `
 
 const SecondColumn = styled.div`
