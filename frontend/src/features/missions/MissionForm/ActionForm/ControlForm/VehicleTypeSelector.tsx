@@ -30,7 +30,6 @@ export function VehicleTypeSelector({
     <SelectorWrapper ref={vehicleTypeSelectorRef}>
       <Select
         baseContainer={newWindowContainerRef.current}
-        defaultValue={value}
         disabled={disabled}
         error={error}
         isLight
@@ -39,6 +38,7 @@ export function VehicleTypeSelector({
         onChange={onChange}
         options={vehicleTypeFieldList}
         searchable={false}
+        value={value}
       />
     </SelectorWrapper>
   )

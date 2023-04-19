@@ -17,6 +17,7 @@ import { createOrEditMissionAndGoToMissionsList } from '../../../domain/use_case
 import { deleteMissionAndGoToMissionsList } from '../../../domain/use_cases/missions/deleteMission'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { SyncFormValuesWithRedux } from '../../../hooks/useSyncFormValuesWithRedux'
+import { MissionSourceTag } from '../../../ui/MissionSourceTag'
 import { FormikForm } from '../../../uiMonitor/CustomFormikFields/FormikForm'
 import { Header } from '../../SideWindow/Header'
 import { sideWindowActions } from '../../SideWindow/slice'
@@ -86,7 +87,9 @@ export function CreateOrEditMission() {
 
   return (
     <EditMissionWrapper data-cy="editMissionWrapper">
-      <Header title={`Edition de la mission${id ? ' - Enregistrement en cours' : ''}`} />
+      <Header title="Edition de la mission">
+        <MissionSourceTag source={missionToEdit?.missionSource} />
+      </Header>
       <Formik
         enableReinitialize
         initialValues={missionFormikValues}
@@ -190,6 +193,7 @@ const Loading = styled.div``
 
 const EditMissionWrapper = styled.div`
   flex: 1;
+  max-width: 100vw;
 `
 const Wrapper = styled.div`
   height: calc(100vh - 118px);

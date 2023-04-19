@@ -21,7 +21,6 @@ export function ActionTargetSelector({ currentActionIndex, error, onChange, valu
     <SelectorWrapper>
       <Select
         baseContainer={newWindowContainerRef.current}
-        defaultValue={value}
         error={error}
         isLight
         label="Type de cible"
@@ -29,6 +28,7 @@ export function ActionTargetSelector({ currentActionIndex, error, onChange, valu
         onChange={onChange}
         options={actionTargetFieldList}
         searchable={false}
+        value={value}
       />
     </SelectorWrapper>
   )
