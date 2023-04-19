@@ -10,6 +10,7 @@ import styled from 'styled-components'
 
 import { useGetMissionQuery } from '../../../api/missionsAPI'
 import { COLORS } from '../../../constants/constants'
+import { MissionSourceEnum } from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setMissionState } from '../../../domain/shared_slices/MissionsState'
 import { createOrEditMissionAndGoToMissionsList } from '../../../domain/use_cases/missions/createOrEditMission'
@@ -46,6 +47,11 @@ export function CreateOrEditMission() {
   const { data: missionToEdit } = useGetMissionQuery(id ?? skipToken)
 
   const missionFormikValues = useMemo(() => missionFactory(missionToEdit), [missionToEdit])
+
+  const allowEditMission =
+    missionToEdit?.missionSource === MissionSourceEnum.MONITORENV ||
+    missionToEdit?.missionSource === MissionSourceEnum.MONITORFISH
+  const allowDeleteMission = !(id === undefined) && allowEditMission
 
   const handleSetCurrentActionIndex = index => {
     setCurrentActionIndex(index)
@@ -140,7 +146,8 @@ export function CreateOrEditMission() {
               </Wrapper>
 
               <MissionFormBottomBar
-                allowDelete={!(id === undefined)}
+                allowDelete={allowDeleteMission}
+                allowEdit={allowEditMission}
                 closeMission={handleCloseMission}
                 deleteMission={handleDeleteMission}
                 isClosed={missionToEdit?.isClosed}

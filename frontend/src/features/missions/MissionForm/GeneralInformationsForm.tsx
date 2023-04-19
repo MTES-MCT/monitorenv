@@ -12,7 +12,7 @@ import { ControlUnitsForm } from './ControlUnitsForm'
 
 export function GeneralInformationsForm() {
   const { newWindowContainerRef } = useNewWindow()
-  const [isClosedField] = useField(`isClosed`)
+  const [isClosedField] = useField<boolean>(`isClosed`)
 
   const missionTypeOptions = Object.entries(missionTypeEnum).map(([key, val]) => ({ label: val.libelle, value: key }))
   const missionNatureOptions = Object.entries(missionNatureEnum).map(([key, val]) => ({

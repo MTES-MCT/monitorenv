@@ -1,40 +1,29 @@
 /* eslint-disable react/jsx-props-no-spreading */
+import { Select } from '@mtes-mct/monitor-ui'
 import { MutableRefObject, useRef } from 'react'
-import { Form, SelectPicker } from 'rsuite'
 import styled from 'styled-components'
 
 import { vehicleTypeEnum } from '../../../../../domain/entities/missions'
+import { useNewWindow } from '../../../../../ui/NewWindow'
 
-const DEFAULT_SELECT_PICKER_STYLE = {
-  width: 150
-}
-
-const DEFAULT_SELECT_PICKER_MENU_STYLE = {
-  width: 150
-}
-
-export function VehicleTypeSelector({ currentActionIndex, disabled, onChange, value, ...props }) {
+export function VehicleTypeSelector({ currentActionIndex, disabled, error, onChange, value }) {
+  const { newWindowContainerRef } = useNewWindow()
   const vehicleTypeSelectorRef = useRef() as MutableRefObject<HTMLDivElement>
-  const vehicleTypeFieldList = Object.values(vehicleTypeEnum)
+  const vehicleTypeFieldList = Object.values(vehicleTypeEnum).map(o => ({ label: o.libelle, value: o.code }))
 
   return (
     <SelectorWrapper ref={vehicleTypeSelectorRef}>
-      <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.vehicleType`}>Type de véhicule</Form.ControlLabel>
-      <SelectPicker
-        className="ghost"
-        cleanable={false}
-        container={() => vehicleTypeSelectorRef.current}
-        data={vehicleTypeFieldList}
+      <Select
+        baseContainer={newWindowContainerRef.current}
+        defaultValue={value}
         disabled={disabled}
-        labelKey="libelle"
-        menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
+        error={error}
+        isLight
+        label="Type de véhicule"
+        name={`envActions.${currentActionIndex}.vehicleType`}
         onChange={onChange}
+        options={vehicleTypeFieldList}
         searchable={false}
-        size="sm"
-        style={DEFAULT_SELECT_PICKER_STYLE}
-        value={value}
-        valueKey="code"
-        {...props}
       />
     </SelectorWrapper>
   )

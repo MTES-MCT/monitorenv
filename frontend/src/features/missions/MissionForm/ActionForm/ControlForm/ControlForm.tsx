@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { FormikDatePicker, FormikNumberInput, FormikTextarea } from '@mtes-mct/monitor-ui'
-import { FieldArray, useFormikContext } from 'formik'
+import { FieldArray, useFormikContext, getIn } from 'formik'
 import _ from 'lodash'
 import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
@@ -36,6 +36,7 @@ export function ControlForm({
   const { newWindowContainerRef } = useNewWindow()
 
   const {
+    errors,
     setValues,
     values: { envActions }
   } = useFormikContext<Mission<EnvActionControl>>()
@@ -44,6 +45,10 @@ export function ControlForm({
   const { actionNumberOfControls, actionTargetType, vehicleType } = currentAction || {}
 
   const onVehicleTypeChange = selectedVehicleType => {
+    if (envActions[currentActionIndex]?.vehicleType === selectedVehicleType) {
+      return
+    }
+
     setValues(v => {
       const w = _.cloneDeep(v)
       _.set(w, `envActions[${currentActionIndex}].vehicleType`, selectedVehicleType)
@@ -57,6 +62,9 @@ export function ControlForm({
     })
   }
   const onTargetTypeChange = selectedTargetType => {
+    if (envActions[currentActionIndex]?.actionTargetType === selectedTargetType) {
+      return
+    }
     setValues(v => {
       const w = _.cloneDeep(v)
       _.set(w, `envActions[${currentActionIndex}].actionTargetType`, selectedTargetType)
@@ -149,6 +157,7 @@ export function ControlForm({
           <ActionFieldWrapper>
             <ActionTargetSelector
               currentActionIndex={currentActionIndex}
+              error={getIn(errors, `envActions[${currentActionIndex}].actionTargetType`)}
               onChange={onTargetTypeChange}
               value={actionTargetType}
             />
@@ -157,6 +166,7 @@ export function ControlForm({
             <VehicleTypeSelector
               currentActionIndex={currentActionIndex}
               disabled={actionTargetType !== actionTargetTypeEnum.VEHICLE.code}
+              error={getIn(errors, `envActions[${currentActionIndex}].vehicleType`)}
               onChange={onVehicleTypeChange}
               value={vehicleType}
             />

@@ -2,6 +2,7 @@ import _ from 'lodash'
 import * as Yup from 'yup'
 
 import {
+  actionTargetTypeEnum,
   ActionTypeEnum,
   EnvActionControl,
   EnvActionNote,
@@ -18,6 +19,8 @@ import {
 } from '../../domain/entities/missions'
 
 import type { ControlResource, ControlUnit } from '../../domain/entities/controlUnit'
+
+const shouldUseAlternateValidationInTestEnvironment = process.env.NODE_ENV === 'development'
 
 Yup.addMethod(Yup.mixed, 'oneOfOptional', (arr, message) =>
   Yup.mixed().test({
@@ -91,14 +94,20 @@ const EnvActionControlSchema: Yup.SchemaOf<EnvActionControl> = Yup.object()
   .shape({
     actionNumberOfControls: Yup.number().required('Requis'),
     actionStartDateTimeUtc: Yup.string().required('Requis').nullable(),
-    actionTargetType: Yup.string().nullable(),
+    actionTargetType: Yup.string().required('Requis').nullable(),
     actionType: Yup.mixed().oneOf([ActionTypeEnum.CONTROL]),
     geom: Yup.array().ensure(),
     id: Yup.string().required(),
     infractions: Yup.array().of(InfractionSchema).ensure().required(),
     protectedSpecies: Yup.array().of(Yup.string()),
     themes: Yup.array().of(ThemeSchema).ensure().required(),
-    vehicleType: Yup.string().nullable()
+    vehicleType: Yup.string().when('actionTargetType', (actionTargetType, schema) => {
+      if (!actionTargetType || actionTargetType === actionTargetTypeEnum.VEHICLE.code) {
+        return schema.nullable().required('Requis')
+      }
+
+      return schema.nullable()
+    })
   })
   .required()
 
@@ -145,14 +154,7 @@ export const EnvActions = Yup.array().of(EnvActionSurveillanceSchema)
 export const MissionZoneSchema = Yup.object().test({
   message: 'Veuillez définir une zone de mission',
   name: 'has-geom',
-  test: val => {
-    if (process.env.NODE_ENV === 'development') {
-      // Cypress ne peut pas tester les interactions entre la sidewindow et la carte
-      return true
-    }
-
-    return val && !_.isEmpty(val?.coordinates)
-  }
+  test: val => val && !_.isEmpty(val?.coordinates)
 })
 
 export const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
@@ -163,7 +165,7 @@ export const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
     // FIXME : see issue https://github.com/jquense/yup/issues/1190
     // & tip for resolution https://github.com/jquense/yup/issues/1283#issuecomment-786559444
     envActions: Yup.array().of(EnvActionSchema as any),
-    geom: MissionZoneSchema,
+    geom: shouldUseAlternateValidationInTestEnvironment ? Yup.object().nullable() : MissionZoneSchema,
     isClosed: Yup.boolean().default(false),
     missionNature: MissionNatureSchema,
     missionTypes: MissionTypesSchema,

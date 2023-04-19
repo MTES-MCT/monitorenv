@@ -1,36 +1,26 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { Form } from 'rsuite'
+import { Select } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { actionTargetTypeEnum } from '../../../../../domain/entities/missions'
-import { SelectPickerWhite } from '../../../../../uiMonitor/CustomRsuite/SelectPicker'
+import { useNewWindow } from '../../../../../ui/NewWindow'
 
-const DEFAULT_SELECT_PICKER_STYLE = {
-  width: 145
-}
-
-const DEFAULT_SELECT_PICKER_MENU_STYLE = {
-  width: 145
-}
-
-export function ActionTargetSelector({ currentActionIndex, onChange, value, ...props }) {
-  const actionTargetFieldList = Object.values(actionTargetTypeEnum)
+export function ActionTargetSelector({ currentActionIndex, error, onChange, value }) {
+  const { newWindowContainerRef } = useNewWindow()
+  const actionTargetFieldList = Object.values(actionTargetTypeEnum).map(o => ({ label: o.libelle, value: o.code }))
 
   return (
     <SelectorWrapper>
-      <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionTargetType`}>Type de cible</Form.ControlLabel>
-      <SelectPickerWhite
-        cleanable={false}
-        data={actionTargetFieldList}
-        labelKey="libelle"
-        menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
+      <Select
+        baseContainer={newWindowContainerRef.current}
+        defaultValue={value}
+        error={error}
+        isLight
+        label="Type de cible"
+        name={`envActions.${currentActionIndex}.actionTargetType`}
         onChange={onChange}
+        options={actionTargetFieldList}
         searchable={false}
-        size="sm"
-        style={DEFAULT_SELECT_PICKER_STYLE}
-        value={value}
-        valueKey="code"
-        {...props}
       />
     </SelectorWrapper>
   )
