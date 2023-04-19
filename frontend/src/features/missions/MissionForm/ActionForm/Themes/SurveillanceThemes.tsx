@@ -9,6 +9,7 @@ export function SurveillanceThemes({ currentActionIndex }) {
       render={({ form, push, remove }) => (
         <MultipleThemeElement currentActionIndex={currentActionIndex} form={form} push={push} remove={remove} />
       )}
+      validateOnChange={false}
     />
   )
 }

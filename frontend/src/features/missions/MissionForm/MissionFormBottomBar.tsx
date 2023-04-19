@@ -30,6 +30,20 @@ export function MissionFormBottomBar({
 }: MissionFormBottomBarProps) {
   const { errors } = useFormikContext<Mission>()
 
+  const { envActions, ...errorsWithoutEnvActions } = errors
+
+  const updatedEnvActionsErrors = Array.isArray(envActions)
+    ? (envActions as Array<Record<string, any>>).filter(error => error !== null)
+    : null
+
+  const cleanedErrors = {
+    ...errorsWithoutEnvActions,
+    ...(updatedEnvActionsErrors &&
+      updatedEnvActionsErrors.length > 0 && {
+        envActions: updatedEnvActionsErrors
+      })
+  }
+
   return (
     <Footer>
       <FormActionsWrapper>
@@ -45,8 +59,8 @@ export function MissionFormBottomBar({
           </Button>
         )}
         <Separator />
-        {JSON.stringify(errors)}
-        {!_.isEmpty(errors) && <MessageRed>Veuillez corriger les éléments en rouge</MessageRed>}
+        {JSON.stringify(cleanedErrors)}
+        {!_.isEmpty(cleanedErrors) && <MessageRed>Veuillez corriger les éléments en rouge</MessageRed>}
         <Separator />
         {!allowClose && allowEdit && (
           <MessageRed>Veuillez rouvrir la mission avant d&apos;en modifier les informations.</MessageRed>

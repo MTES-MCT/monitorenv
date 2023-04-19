@@ -70,6 +70,7 @@ export function GeneralInformationsForm() {
           name="controlUnits"
           /* eslint-disable-next-line react/jsx-props-no-spreading */
           render={props => <ControlUnitsForm readOnly={isClosedField.value} {...props} />}
+          validateOnChange={false}
         />
       </Form.Group>
       <MultiZonePicker

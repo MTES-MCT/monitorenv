@@ -155,6 +155,7 @@ export function CreateOrEditMission() {
                         unshift={unshift}
                       />
                     )}
+                    validateOnChange={false}
                   />
                 </SecondColumn>
                 <ThirdColumn>
@@ -167,6 +168,7 @@ export function CreateOrEditMission() {
                         setCurrentActionIndex={handleSetCurrentActionIndex}
                       />
                     )}
+                    validateOnChange={false}
                   />
                 </ThirdColumn>
               </Wrapper>

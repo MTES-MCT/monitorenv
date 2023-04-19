@@ -186,7 +186,6 @@ export function ControlForm({
 
         <FieldArray
           name={`envActions[${currentActionIndex}].infractions`}
-          // eslint-disable-next-line react/jsx-props-no-spreading
           render={({ form, push, remove }) => (
             <InfractionsForm
               canAddInfraction={canAddInfraction}
@@ -196,6 +195,7 @@ export function ControlForm({
               remove={remove}
             />
           )}
+          validateOnChange={false}
         />
         <FormikTextarea isLight label="Observations" name={`envActions[${currentActionIndex}].observations`} />
       </FormBody>
