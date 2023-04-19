@@ -67,16 +67,23 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
       </TitleWrapper>
       <ActionsTimeline>
         {sortedEnvActions?.length > 0 ? (
-          sortedEnvActions.map(action => (
-            <ActionCard
-              key={action.id}
-              action={action}
-              duplicateAction={handleDuplicateAction(action.id)}
-              removeAction={handleRemoveAction(action.id)}
-              selectAction={handleSelectAction(action.id)}
-              selected={action.id === currentActionId}
-            />
-          ))
+          sortedEnvActions.map(action => {
+            const index = envActions?.findIndex(a => a.id === action.id)
+            const errors =
+              form?.errors?.envActions && index !== undefined && index >= 0 && form?.errors?.envActions[index]
+
+            return (
+              <ActionCard
+                key={action.id}
+                action={action}
+                duplicateAction={handleDuplicateAction(action.id)}
+                hasError={!!errors}
+                removeAction={handleRemoveAction(action.id)}
+                selectAction={handleSelectAction(action.id)}
+                selected={action.id === currentActionId}
+              />
+            )
+          })
         ) : (
           <NoActionWrapper>
             <NoAction>Aucune action n&apos;est ajoutée pour le moment</NoAction>

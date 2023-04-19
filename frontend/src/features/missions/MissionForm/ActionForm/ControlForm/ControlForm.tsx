@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import { COLORS } from '../../../../../constants/constants'
 import {
-  MissionType,
+  Mission,
   EnvActionControl,
   actionTargetTypeEnum,
   vehicleTypeEnum
@@ -37,7 +37,7 @@ export function ControlForm({
   const {
     setValues,
     values: { envActions }
-  } = useFormikContext<MissionType<EnvActionControl>>()
+  } = useFormikContext<Mission<EnvActionControl>>()
   const currentAction = envActions[currentActionIndex]
 
   const { actionNumberOfControls, actionTargetType, vehicleType } = currentAction || {}

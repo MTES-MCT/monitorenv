@@ -70,7 +70,6 @@ export function GeneralInformationsForm() {
       <Form.Group>
         <FieldArray name="controlUnits" render={props => <ControlUnitsForm {...props} />} />
       </Form.Group>
-
       <MultiZonePicker
         addButtonLabel="Ajouter une zone de mission"
         interactionListener={InteractionListener.MISSION_ZONE}
@@ -123,6 +122,7 @@ const NarrowColumn = styled.div`
 `
 const SubGroup = styled.div`
   margin-bottom: 16px;
+  display: flex;
 `
 
 const InputObservations = styled(FormikTextarea)`

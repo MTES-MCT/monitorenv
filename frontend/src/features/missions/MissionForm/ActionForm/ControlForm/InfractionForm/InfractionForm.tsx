@@ -15,6 +15,7 @@ import { RelevantCourtSelector } from './RelevantCourtSelector'
 
 export function InfractionForm({ currentActionIndex, infractionPath, removeInfraction, validateInfraction }) {
   const [actionTargetField] = useField(`envActions.${currentActionIndex}.actionTargetType`)
+  const [, meta] = useField(`envActions.${currentActionIndex}`)
 
   return (
     <FormWrapper data-cy="infraction-form">
@@ -67,9 +68,17 @@ export function InfractionForm({ currentActionIndex, infractionPath, removeInfra
           Valider l&apos;infraction
         </Button>
       </ButtonToolbarRight>
+      {!!meta.error && (
+        <ErrorMessage>Veuillez compléter les champs en rouge pour valider l&apos;infraction</ErrorMessage>
+      )}
     </FormWrapper>
   )
 }
+
+const ErrorMessage = styled.div`
+  color: ${COLORS.maximumRed};
+  font: italic normal normal 13px/18px Marianne;
+`
 
 const FormWrapper = styled.div`
   background: ${COLORS.white};

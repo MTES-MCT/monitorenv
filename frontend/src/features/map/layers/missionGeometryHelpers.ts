@@ -10,12 +10,12 @@ import {
   EnvActionControl,
   EnvActionSurveillance,
   getMissionStatus,
-  MissionType
+  Mission
 } from '../../../domain/entities/missions'
 
 import type { Geometry } from 'ol/geom'
 
-export const getMissionCentroid = (mission: Partial<MissionType>, layername: string) => {
+export const getMissionCentroid = (mission: Partial<Mission>, layername: string) => {
   const geoJSON = new GeoJSON()
   const { geom } = mission
   const geometry = geoJSON.readGeometry(geom, {
@@ -40,7 +40,7 @@ export const getMissionCentroid = (mission: Partial<MissionType>, layername: str
   return pointFeature
 }
 
-export const getMissionZoneFeature = (mission: Partial<MissionType>, layername: string) => {
+export const getMissionZoneFeature = (mission: Partial<Mission>, layername: string) => {
   const geoJSON = new GeoJSON()
   const geometry = geoJSON.readGeometry(mission.geom, {
     dataProjection: WSG84_PROJECTION,
@@ -131,7 +131,7 @@ const getActionFeature = (action: EnvActionControl | EnvActionSurveillance) => {
 const isActionControlOrActionSurveillance = (f): f is EnvActionControl | EnvActionSurveillance =>
   f.actionType === ActionTypeEnum.CONTROL || f.actionType === ActionTypeEnum.SURVEILLANCE
 
-export const getActionsFeatures = (mission: Partial<MissionType>) => {
+export const getActionsFeatures = (mission: Partial<Mission>) => {
   const { envActions } = mission
   if (envActions?.length && envActions?.length > 0) {
     return envActions

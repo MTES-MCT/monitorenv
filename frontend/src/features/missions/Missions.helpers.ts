@@ -8,9 +8,9 @@ import {
   formalNoticeEnum,
   infractionTypeEnum,
   MissionSourceEnum,
-  MissionType,
+  Mission,
   MissionTypeEnum,
-  NewMissionType,
+  NewMission,
   vehicleTypeEnum
 } from '../../domain/entities/missions'
 
@@ -67,7 +67,7 @@ export const actionFactory = ({
   }
 }
 
-export const missionFactory = (mission = {}): MissionType | NewMissionType => ({
+export const missionFactory = (mission = {}): Mission | NewMission => ({
   closedBy: '',
   controlUnits: [controlUnitFactory()],
   endDateTimeUtc: '',

@@ -281,10 +281,10 @@ export type ResourceUnit = {
   administration: string
 }
 
-export type MissionType<EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote> = {
+export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote> = {
   closedBy: string
   controlUnits: Omit<ControlUnit, 'id'>[]
-  endDateTimeUtc: string
+  endDateTimeUtc?: string
   envActions: EnvAction[]
   facade: string
   geom?: Record<string, any>[]
@@ -293,13 +293,13 @@ export type MissionType<EnvAction = EnvActionControl | EnvActionSurveillance | E
   missionNature: MissionNatureEnum[]
   missionSource: MissionSourceEnum
   missionTypes: MissionTypeEnum[]
-  observationsCacem: string
-  observationsCnsp: string
+  observationsCacem?: string
+  observationsCnsp?: string
   openBy: string
   startDateTimeUtc: string
 }
 
-export type NewMissionType = Omit<MissionType, 'id' | 'facade'>
+export type NewMission = Omit<Mission, 'id' | 'facade' | 'missionSource'>
 
 export type EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote
 
@@ -318,7 +318,7 @@ export type EnvActionControl = EnvActionCommonProperties & {
   actionNumberOfControls?: number
   actionTargetType?: string
   actionType: ActionTypeEnum.CONTROL
-  infractions: InfractionType[]
+  infractions: Infraction[]
   themes: EnvActionTheme[]
   vehicleType: string
 }
@@ -336,7 +336,7 @@ export type EnvActionNote = EnvActionCommonProperties & {
   observations?: string
 }
 
-export type InfractionType = {
+export type Infraction = {
   companyName?: string
   controlledPersonIdentity?: string | null
   formalNotice: FormalNoticeEnum
