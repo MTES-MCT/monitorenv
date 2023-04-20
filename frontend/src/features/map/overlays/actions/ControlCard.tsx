@@ -2,7 +2,7 @@ import { getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
-import { actionTargetTypeEnum } from '../../../../domain/entities/missions'
+import { actionTargetTypeLabels } from '../../../../domain/entities/missions'
 import { ControlInfractionsTags } from '../../../../ui/ControlInfractionsTags'
 import { extractThemesAsText } from '../../../../utils/extractThemesAsText'
 import { pluralize } from '../../../../utils/pluralize'
@@ -22,7 +22,7 @@ export function ControlCard({ feature }: { feature: any }) {
         <Accented>
           {actionNumberOfControls} {pluralize('contrôle', actionNumberOfControls)}
           {' ('}
-          {actionTargetTypeEnum[actionTargetType]?.libelle || 'cible non renseignée'}
+          {actionTargetTypeLabels[actionTargetType]?.libelle || 'cible non renseignée'}
           {/* eslint-disable-next-line react/jsx-curly-brace-presence */}
           {')'}
           <Bullet color={infractions.length > 0 ? COLORS.maximumRed : COLORS.mediumSeaGreen} />

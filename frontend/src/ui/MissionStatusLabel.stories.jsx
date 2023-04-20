@@ -1,4 +1,4 @@
-import { missionStatusEnum } from '../domain/entities/missions'
+import { missionStatusLabels } from '../domain/entities/missions'
 import { MissionStatusLabel } from './MissionStatusLabel'
 
 export default {
@@ -9,10 +9,10 @@ export default {
 function Template({ missionStatus, ...args }) {
   return (
     <>
-      <MissionStatusLabel missionStatus={missionStatusEnum.UPCOMING.code} {...args} />
-      <MissionStatusLabel missionStatus={missionStatusEnum.PENDING.code} {...args} />
-      <MissionStatusLabel missionStatus={missionStatusEnum.ENDED.code} {...args} />
-      <MissionStatusLabel missionStatus={missionStatusEnum.CLOSED.code} {...args} />
+      <MissionStatusLabel missionStatus={missionStatusLabels.UPCOMING.code} {...args} />
+      <MissionStatusLabel missionStatus={missionStatusLabels.PENDING.code} {...args} />
+      <MissionStatusLabel missionStatus={missionStatusLabels.ENDED.code} {...args} />
+      <MissionStatusLabel missionStatus={missionStatusLabels.CLOSED.code} {...args} />
       <MissionStatusLabel missionStatus={missionStatus} {...args} />
     </>
   )

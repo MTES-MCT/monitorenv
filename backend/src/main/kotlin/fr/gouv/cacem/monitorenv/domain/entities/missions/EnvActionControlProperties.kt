@@ -10,7 +10,7 @@ data class EnvActionControlProperties(
     val themes: List<ThemeEntity>? = listOf(),
     val observations: String? = null,
     val actionNumberOfControls: Int? = null,
-    val actionTargetType: ActionTargetTypeEnum,
+    val actionTargetType: ActionTargetTypeEnum? = null,
     val vehicleType: VehicleTypeEnum? = null,
     val infractions: List<InfractionEntity>? = listOf()
 ) {

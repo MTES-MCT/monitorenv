@@ -1,4 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
+import { FormikTextInput } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import _ from 'lodash'
 import { MutableRefObject, useMemo, useRef } from 'react'
@@ -6,7 +7,7 @@ import { Form, IconButton, TagPicker } from 'rsuite'
 import styled from 'styled-components'
 
 import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
-import { FormikInput } from '../../../uiMonitor/CustomFormikFields/FormikInput'
+import { FormikErrorWrapper } from '../../../uiMonitor/CustomFormikFields/FormikErrorWrapper'
 import { SelectPicker } from '../../../uiMonitor/CustomRsuite/SelectPicker'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
 
@@ -19,7 +20,6 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
   const [unitField, , unitHelpers] = useField<number | undefined>(`controlUnits.${controlUnitIndex}.id`)
   const [, , unitNameHelpers] = useField<string | undefined>(`controlUnits.${controlUnitIndex}.name`)
   const [resourcesField, , resourcesHelpers] = useField<ControlResource[]>(`controlUnits.${controlUnitIndex}.resources`)
-  const [, , contactHelpers] = useField<string>(`controlUnits.${controlUnitIndex}.contact`)
 
   const resourcesRef = useRef() as MutableRefObject<HTMLDivElement>
   const { data, isError, isLoading } = useGetControlUnitsQuery()
@@ -32,14 +32,14 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
     .sort((a, b) => a?.localeCompare(b))
     .map(administration => ({ administration }))
     .value()
-  const unitList = _.chain(filteredControlUnits)
+
+  const unitList = filteredControlUnits
     .filter(unit => (administrationField.value ? administrationField.value === unit.administration : true))
     .sort((a, b) => a?.name?.localeCompare(b?.name))
-    .value()
+
   const resourcesList =
-    _.chain(filteredControlUnits)
-      ?.find(unit => unit.administration === administrationField.value && unit.id === unitField.value)
-      ?.value()?.resources || []
+    filteredControlUnits?.find(unit => unit.administration === administrationField.value && unit.id === unitField.value)
+      ?.resources || []
 
   // Add any resource from Mission not present in list from API (as the resource might be historized)
   // See: https://github.com/MTES-MCT/monitorenv/issues/103
@@ -85,9 +85,7 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
       .map(id => resourcesList.find(resource => resource.id === id))
     resourcesHelpers.setValue(resourceObjects)
   }
-  const handleContactChange = value => {
-    contactHelpers.setValue(value)
-  }
+
   if (isError) {
     return <div>Erreur</div>
   }
@@ -100,34 +98,38 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
     <RessourceUnitWrapper>
       <SelectorWrapper>
         <FormGroupFixed>
-          <Form.ControlLabel htmlFor="administration">Administration {resourceUnitIndexDisplayed}</Form.ControlLabel>
-          <SelectPicker
-            block
-            data={administrationList}
-            dataCy="add-control-administration"
-            labelKey="administration"
-            onChange={handleAdministrationChange}
-            searchable={administrationList.length > 10}
-            size="sm"
-            value={administrationField.value}
-            valueKey="administration"
-          />
+          <FormikErrorWrapper name={`controlUnits.${controlUnitIndex}.administration`} noMessage>
+            <Form.ControlLabel htmlFor="administration">Administration {resourceUnitIndexDisplayed}</Form.ControlLabel>
+            <SelectPicker
+              block
+              data={administrationList}
+              dataCy="add-control-administration"
+              labelKey="administration"
+              onChange={handleAdministrationChange}
+              searchable={administrationList.length > 10}
+              size="sm"
+              value={administrationField.value}
+              valueKey="administration"
+            />
+          </FormikErrorWrapper>
         </FormGroupFixed>
         <FormGroupFixed>
-          <Form.ControlLabel htmlFor="unit">Unité {resourceUnitIndexDisplayed}</Form.ControlLabel>
-          <SelectPicker
-            block
-            data={unitList}
-            dataCy="add-control-unit"
-            labelKey="name"
-            onChange={handleUnitChange}
-            searchable={unitList.length > 10}
-            size="sm"
-            value={unitField.value}
-            valueKey="id"
-            {...props}
-            key={unitField.value}
-          />
+          <FormikErrorWrapper name={`controlUnits.${controlUnitIndex}.id`} noMessage>
+            <Form.ControlLabel htmlFor="unit">Unité {resourceUnitIndexDisplayed}</Form.ControlLabel>
+            <SelectPicker
+              block
+              data={unitList}
+              dataCy="add-control-unit"
+              labelKey="name"
+              onChange={handleUnitChange}
+              searchable={unitList.length > 10}
+              size="sm"
+              value={unitField.value}
+              valueKey="id"
+              {...props}
+              key={unitField.value}
+            />
+          </FormikErrorWrapper>
         </FormGroupFixed>
         <FormGroupFixed>
           <RefWrapper ref={resourcesRef} data-cy="unit-tag-picker">
@@ -148,10 +150,12 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
           </RefWrapper>
         </FormGroupFixed>
         <FormGroupFixed>
-          <Form.ControlLabel htmlFor={`controlUnits.${controlUnitIndex}.contact`}>
-            Contact de l&apos;unité {resourceUnitIndexDisplayed}
-          </Form.ControlLabel>
-          <FormikInput name={`controlUnits.${controlUnitIndex}.contact`} onChange={handleContactChange} size="sm" />
+          <FormikTextInput
+            data-cy="control-unit-contact"
+            isErrorMessageHidden
+            label={`Contact de l'unité ${resourceUnitIndexDisplayed}`}
+            name={`controlUnits.${controlUnitIndex}.contact`}
+          />
         </FormGroupFixed>
       </SelectorWrapper>
 

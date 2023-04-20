@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import type { MissionType } from '../entities/missions'
+import type { Mission } from '../entities/missions'
 
 type MissionStateSliceType = {
-  missionState: Partial<MissionType> | undefined
+  missionState: Partial<Mission> | undefined
   selectedMissionId: number | undefined
 }
 const initialState: MissionStateSliceType = {

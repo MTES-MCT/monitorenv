@@ -1,6 +1,5 @@
-/* eslint-disable react/jsx-props-no-spreading */
-import { FormikMultiCheckbox, FormikDatePicker } from '@mtes-mct/monitor-ui'
-import { FieldArray } from 'formik'
+import { FormikDatePicker, FormikMultiCheckbox, FormikTextInput, FormikTextarea } from '@mtes-mct/monitor-ui'
+import { FieldArray, useField } from 'formik'
 import { Form } from 'rsuite'
 import styled from 'styled-components'
 
@@ -8,13 +7,13 @@ import { COLORS } from '../../../constants/constants'
 import { InteractionListener } from '../../../domain/entities/map/constants'
 import { missionNatureEnum, missionTypeEnum } from '../../../domain/entities/missions'
 import { useNewWindow } from '../../../ui/NewWindow'
-import { FormikInput } from '../../../uiMonitor/CustomFormikFields/FormikInput'
-import { FormikTextarea } from '../../../uiMonitor/CustomFormikFields/FormikTextarea'
 import { MultiZonePicker } from '../MultiZonePicker'
 import { ControlUnitsForm } from './ControlUnitsForm'
 
 export function GeneralInformationsForm() {
   const { newWindowContainerRef } = useNewWindow()
+  const [isClosedField] = useField<boolean>(`isClosed`)
+
   const missionTypeOptions = Object.entries(missionTypeEnum).map(([key, val]) => ({ label: val.libelle, value: key }))
   const missionNatureOptions = Object.entries(missionNatureEnum).map(([key, val]) => ({
     label: val.libelle,
@@ -22,7 +21,7 @@ export function GeneralInformationsForm() {
   }))
 
   return (
-    <>
+    <FormWrapper>
       <Title>Informations générales</Title>
       <FlexFormGroup>
         <ColWrapper>
@@ -51,15 +50,16 @@ export function GeneralInformationsForm() {
         <SubGroup>
           <FormikMultiCheckbox
             data-cy="mission-types"
+            isErrorMessageHidden
             isInline
             label="Type de mission"
             name="missionTypes"
             options={missionTypeOptions}
           />
         </SubGroup>
-        <SubGroup>
+        <SubGroup data-cy="mission-nature">
           <FormikMultiCheckbox
-            data-cy="mission-nature"
+            isErrorMessageHidden
             isInline
             label="Intentions principales de mission"
             name="missionNature"
@@ -68,40 +68,46 @@ export function GeneralInformationsForm() {
         </SubGroup>
       </Form.Group>
       <Form.Group>
-        <FieldArray name="controlUnits" render={props => <ControlUnitsForm {...props} />} />
+        <FieldArray
+          name="controlUnits"
+          /* eslint-disable-next-line react/jsx-props-no-spreading */
+          render={props => <ControlUnitsForm readOnly={isClosedField.value} {...props} />}
+          validateOnChange={false}
+        />
       </Form.Group>
-
       <MultiZonePicker
         addButtonLabel="Ajouter une zone de mission"
         interactionListener={InteractionListener.MISSION_ZONE}
         label="Localisations :"
         name="geom"
+        readOnly={isClosedField.value}
       />
       <Form.Group>
-        <Form.ControlLabel htmlFor="observationsCacem">CACEM : orientations, observations </Form.ControlLabel>
-        <InputObservations name="observationsCacem" />
-        <Form.ControlLabel htmlFor="observationsCnsp">CNSP : orientations, observations </Form.ControlLabel>
-        <InputObservations name="observationsCnsp" />
+        <InputObservations label="CACEM : orientations, observations" name="observationsCacem" />
+        <InputObservations label="CNSP : orientations, observations" name="observationsCnsp" />
         <SubGroup>
           <NarrowColumn>
-            <Form.ControlLabel htmlFor="openBy">Ouvert par</Form.ControlLabel>
-            <FormikInput name="openBy" size="sm" />
+            <FormikTextInput isErrorMessageHidden label="Ouvert par" name="openBy" />
           </NarrowColumn>
           <NarrowColumn>
-            <Form.ControlLabel htmlFor="closedBy">Clôturé par</Form.ControlLabel>
-            <FormikInput name="closedBy" size="sm" />
+            <FormikTextInput isErrorMessageHidden label="Clôturé par" name="closedBy" />
           </NarrowColumn>
         </SubGroup>
       </Form.Group>
-    </>
+    </FormWrapper>
   )
 }
+
+const FormWrapper = styled.div`
+  padding: 32px;
+`
 const Title = styled.h2`
   font-size: 16px;
   line-height: 22px;
   padding-bottom: 13px;
   color: ${COLORS.charcoal};
 `
+
 const FlexFormGroup = styled(Form.Group)`
   display: flex;
 `
@@ -123,6 +129,7 @@ const NarrowColumn = styled.div`
 `
 const SubGroup = styled.div`
   margin-bottom: 16px;
+  display: flex;
 `
 
 const InputObservations = styled(FormikTextarea)`

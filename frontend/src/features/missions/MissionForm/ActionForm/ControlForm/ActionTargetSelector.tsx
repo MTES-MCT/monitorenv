@@ -1,36 +1,35 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { Form } from 'rsuite'
+import { Select } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { actionTargetTypeEnum } from '../../../../../domain/entities/missions'
-import { SelectPickerWhite } from '../../../../../uiMonitor/CustomRsuite/SelectPicker'
+import { actionTargetTypeLabels } from '../../../../../domain/entities/missions'
+import { useNewWindow } from '../../../../../ui/NewWindow'
 
-const DEFAULT_SELECT_PICKER_STYLE = {
-  width: 145
+import type { Promisable } from 'type-fest'
+
+type ActionTargetSelectorProps = {
+  currentActionIndex: number
+  error: string
+  onChange: (nextValue: string | undefined) => Promisable<void>
+  value?: string
 }
-
-const DEFAULT_SELECT_PICKER_MENU_STYLE = {
-  width: 145
-}
-
-export function ActionTargetSelector({ currentActionIndex, onChange, value, ...props }) {
-  const actionTargetFieldList = Object.values(actionTargetTypeEnum)
+export function ActionTargetSelector({ currentActionIndex, error, onChange, value }: ActionTargetSelectorProps) {
+  const { newWindowContainerRef } = useNewWindow()
+  const actionTargetFieldList = Object.values(actionTargetTypeLabels).map(o => ({ label: o.libelle, value: o.code }))
 
   return (
     <SelectorWrapper>
-      <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionTargetType`}>Type de cible</Form.ControlLabel>
-      <SelectPickerWhite
-        cleanable={false}
-        data={actionTargetFieldList}
-        labelKey="libelle"
-        menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
+      <Select
+        baseContainer={newWindowContainerRef.current}
+        error={error}
+        isErrorMessageHidden
+        isLight
+        label="Type de cible"
+        name={`envActions.${currentActionIndex}.actionTargetType`}
         onChange={onChange}
+        options={actionTargetFieldList}
         searchable={false}
-        size="sm"
-        style={DEFAULT_SELECT_PICKER_STYLE}
         value={value}
-        valueKey="code"
-        {...props}
       />
     </SelectorWrapper>
   )

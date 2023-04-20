@@ -2,7 +2,7 @@ import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import { actionTargetTypeEnum, ActionTypeEnum, actionTypeEnum, EnvAction } from '../../../domain/entities/missions'
+import { actionTargetTypeLabels, ActionTypeEnum, EnvAction } from '../../../domain/entities/missions'
 import { ControlInfractionsTags } from '../../../ui/ControlInfractionsTags'
 import { ReactComponent as ControlIconSVG } from '../../../uiMonitor/icons/Control.svg'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
@@ -17,99 +17,118 @@ import type { MouseEventHandler } from 'react'
 type ActionCardProps = {
   action: EnvAction
   duplicateAction: MouseEventHandler
+  hasError: boolean
+  readOnly: boolean
   removeAction: MouseEventHandler
   selectAction: MouseEventHandler
   selected: boolean
 }
 
-export function ActionCard({ action, duplicateAction, removeAction, selectAction, selected }: ActionCardProps) {
+export function ActionCard({
+  action,
+  duplicateAction,
+  hasError,
+  readOnly,
+  removeAction,
+  selectAction,
+  selected
+}: ActionCardProps) {
   return (
     <Action data-cy="action-card" onClick={selectAction}>
       <TimeLine>
         <DateTimeWrapper>{getDateAsLocalizedStringExpanded(action.actionStartDateTimeUtc)}</DateTimeWrapper>
       </TimeLine>
-      <ActionSummaryWrapper $type={action.actionType} selected={selected}>
-        {action.actionType === ActionTypeEnum.CONTROL && (
-          <>
-            <ControlIcon />
-            <SummaryContent>
-              <Title>
-                Contrôle{!!action.actionNumberOfControls && action.actionNumberOfControls > 1 ? 's ' : ' '}
-                {action.themes?.length > 0 && action.themes[0]?.theme ? (
-                  <Accented>{extractThemesAsText(action.themes)}</Accented>
-                ) : (
-                  'à renseigner'
+      <Card>
+        <ActionSummaryWrapper $type={action.actionType} hasError={hasError} selected={selected}>
+          {action.actionType === ActionTypeEnum.CONTROL && (
+            <>
+              <ControlIcon />
+              <SummaryContent>
+                <Title>
+                  Contrôle{!!action.actionNumberOfControls && action.actionNumberOfControls > 1 ? 's ' : ' '}
+                  {action.themes?.length > 0 && action.themes[0]?.theme ? (
+                    <Accented>{extractThemesAsText(action.themes)}</Accented>
+                  ) : (
+                    'à renseigner'
+                  )}
+                </Title>
+                {!!action.actionNumberOfControls && action.actionNumberOfControls > 0 && (
+                  <ControlSummary>
+                    <Accented>{action.actionNumberOfControls}</Accented>
+                    {` contrôle${action.actionNumberOfControls > 1 ? 's' : ''}`}
+                    {` réalisé${action.actionNumberOfControls > 1 ? 's' : ''} sur des cibles de type `}
+                    <Accented>
+                      {(!!action.actionTargetType && actionTargetTypeLabels[action.actionTargetType]?.libelle) ||
+                        'non spécifié'}
+                    </Accented>
+                  </ControlSummary>
                 )}
-              </Title>
-              {!!action.actionNumberOfControls && action.actionNumberOfControls > 0 && (
-                <ControlSummary>
-                  <Accented>{action.actionNumberOfControls}</Accented>
-                  {` contrôle${action.actionNumberOfControls > 1 ? 's' : ''}`}
-                  {` réalisé${action.actionNumberOfControls > 1 ? 's' : ''} sur des cibles de type `}
-                  <Accented>
-                    {(!!action.actionTargetType && actionTargetTypeEnum[action.actionTargetType]?.libelle) ||
-                      'non spécifié'}
-                  </Accented>
-                </ControlSummary>
-              )}
-              {!!action.actionNumberOfControls && action.actionNumberOfControls > 0 && (
-                <ControlInfractionsTags
-                  actionNumberOfControls={action.actionNumberOfControls}
-                  infractions={action?.infractions}
-                />
-              )}
-            </SummaryContent>
-          </>
-        )}
-        {action.actionType === ActionTypeEnum.SURVEILLANCE && (
-          <>
-            <SurveillanceIcon />
-            <SummaryContent>
-              <Title>
-                Surveillance{' '}
-                {action.themes && action.themes?.length > 0 ? (
-                  <Accented>{extractThemesAsText(action.themes)}</Accented>
-                ) : (
-                  'à renseigner'
+                {!!action.actionNumberOfControls && action.actionNumberOfControls > 0 && (
+                  <ControlInfractionsTags
+                    actionNumberOfControls={action.actionNumberOfControls}
+                    infractions={action?.infractions}
+                  />
                 )}
-              </Title>
-              {!!action.duration && action.duration > 0 && (
-                <DurationWrapper>
-                  <Accented>{action.duration} heure(s)&nbsp;</Accented>
-                  de surveillance
-                </DurationWrapper>
-              )}
-            </SummaryContent>
-          </>
-        )}
+              </SummaryContent>
+            </>
+          )}
+          {action.actionType === ActionTypeEnum.SURVEILLANCE && (
+            <>
+              <SurveillanceIcon />
+              <SummaryContent>
+                <Title>
+                  Surveillance{' '}
+                  {action.themes && action.themes?.length > 0 ? (
+                    <Accented>{extractThemesAsText(action.themes)}</Accented>
+                  ) : (
+                    'à renseigner'
+                  )}
+                </Title>
+                {!!action.duration && action.duration > 0 && (
+                  <DurationWrapper>
+                    <Accented>{action.duration} heure(s)&nbsp;</Accented>
+                    de surveillance
+                  </DurationWrapper>
+                )}
+              </SummaryContent>
+            </>
+          )}
 
-        {action.actionType === ActionTypeEnum.NOTE && (
-          <>
-            <NoteIcon />
-            <NoteContent>{action.observations || 'Observation à renseigner'}</NoteContent>
-          </>
-        )}
+          {action.actionType === ActionTypeEnum.NOTE && (
+            <>
+              <NoteIcon />
+              <NoteContent>{action.observations || 'Observation à renseigner'}</NoteContent>
+            </>
+          )}
 
-        <ButtonsWrapper>
-          <IconButton
-            appearance="subtle"
-            icon={<DuplicateSVG className="rs-icon" />}
-            onClick={duplicateAction}
-            size="md"
-            title="dupliquer"
-          />
-          <IconButton
-            appearance="subtle"
-            icon={<DeleteIcon className="rs-icon" />}
-            onClick={removeAction}
-            size="md"
-            title="supprimer"
-          />
-        </ButtonsWrapper>
-      </ActionSummaryWrapper>
+          {!readOnly && (
+            <ButtonsWrapper>
+              <IconButton
+                appearance="subtle"
+                icon={<DuplicateSVG className="rs-icon" />}
+                onClick={duplicateAction}
+                size="md"
+                title="dupliquer"
+              />
+              <IconButton
+                appearance="subtle"
+                icon={<DeleteIcon className="rs-icon" />}
+                onClick={removeAction}
+                size="md"
+                title="supprimer"
+              />
+            </ButtonsWrapper>
+          )}
+        </ActionSummaryWrapper>
+        {hasError && <ErrorMessage>Veuillez compléter les champs manquants dans cette action de contrôle</ErrorMessage>}
+      </Card>
     </Action>
   )
 }
+
+const Card = styled.div`
+  flex: 1;
+`
 
 const Action = styled.div`
   display: flex;
@@ -129,24 +148,26 @@ const DateTimeWrapper = styled.div`
   margin-top: 4px;
 `
 
-const ActionSummaryWrapper = styled.div<{ $type: string; selected: boolean }>`
+const ActionSummaryWrapper = styled.div<{ $type: string; hasError: boolean; selected: boolean }>`
   display: flex;
-  flex: 1;
-  border: ${p => (p.selected ? `3px solid ${COLORS.blueYonder}` : `1px solid ${COLORS.lightGray}`)};
+  border-color: ${p =>
+    // eslint-disable-next-line no-nested-ternary
+    p.hasError ? `${COLORS.maximumRed}` : p.selected ? `${COLORS.blueYonder}` : `${COLORS.lightGray}`};
+  border-size: ${p => (p.selected ? `3px` : `1px`)};
+  border-style: solid;
   background: ${p => {
     switch (p.$type) {
-      case actionTypeEnum.CONTROL.code:
+      case ActionTypeEnum.CONTROL:
         return COLORS.white
-      case actionTypeEnum.SURVEILLANCE.code:
+      case ActionTypeEnum.SURVEILLANCE:
         return COLORS.gainsboro
-      case actionTypeEnum.NOTE.code:
+      case ActionTypeEnum.NOTE:
         return COLORS.blueGray25
       default:
         return COLORS.white
     }
   }};
   padding: ${p => (p.selected ? `4px` : '6px')};
-  margin-left: auto;
 `
 
 const Title = styled.span`
@@ -216,4 +237,8 @@ const DeleteIcon = styled(DeleteSVG)`
 const DurationWrapper = styled.div`
   font: normal normal normal 13px/18px Marianne;
   color: ${COLORS.slateGray};
+`
+
+const ErrorMessage = styled.div`
+  color: ${COLORS.maximumRed};
 `

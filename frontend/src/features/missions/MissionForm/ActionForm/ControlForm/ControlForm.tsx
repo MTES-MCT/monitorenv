@@ -1,19 +1,19 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { FormikDatePicker, FormikTextarea } from '@mtes-mct/monitor-ui'
-import { FieldArray, useFormikContext } from 'formik'
+import { FormikDatePicker, FormikNumberInput, FormikTextarea } from '@mtes-mct/monitor-ui'
+import { FieldArray, useFormikContext, getIn } from 'formik'
 import _ from 'lodash'
+import { useMemo } from 'react'
 import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../../constants/constants'
 import {
-  MissionType,
+  Mission,
   EnvActionControl,
-  actionTargetTypeEnum,
-  vehicleTypeEnum
+  ActionTargetTypeEnum,
+  VehicleTypeEnum
 } from '../../../../../domain/entities/missions'
 import { useNewWindow } from '../../../../../ui/NewWindow'
-import { FormikInputNumberGhost } from '../../../../../uiMonitor/CustomFormikFields/FormikInputNumber'
 import { ReactComponent as ControlIconSVG } from '../../../../../uiMonitor/icons/Control.svg'
 import { ReactComponent as DeleteSVG } from '../../../../../uiMonitor/icons/Delete.svg'
 import { getDateAsLocalizedStringCompact } from '../../../../../utils/getDateAsLocalizedString'
@@ -25,28 +25,52 @@ import { VehicleTypeSelector } from './VehicleTypeSelector'
 
 export function ControlForm({
   currentActionIndex,
-  remove,
+  readOnly,
+  removeControlAction,
   setCurrentActionIndex
 }: {
   currentActionIndex: number
-  remove: Function
+  readOnly: boolean
+  removeControlAction: Function
   setCurrentActionIndex: Function
 }) {
   const { newWindowContainerRef } = useNewWindow()
 
   const {
+    errors,
     setValues,
     values: { envActions }
-  } = useFormikContext<MissionType<EnvActionControl>>()
+  } = useFormikContext<Mission<EnvActionControl>>()
   const currentAction = envActions[currentActionIndex]
 
   const { actionNumberOfControls, actionTargetType, vehicleType } = currentAction || {}
 
+  const actionTargetTypeErrorMessage = useMemo(
+    () => getIn(errors, `envActions[${currentActionIndex}].actionTargetType`) || '',
+    [errors, currentActionIndex]
+  )
+  const actionVehicleTypeErrorMessage = useMemo(
+    () => getIn(errors, `envActions[${currentActionIndex}].vehicleType`) || '',
+    [errors, currentActionIndex]
+  )
+  const canAddInfraction =
+    actionNumberOfControls &&
+    actionNumberOfControls > 0 &&
+    ((actionTargetType === ActionTargetTypeEnum.VEHICLE && vehicleType !== undefined) ||
+      (actionTargetType !== undefined && actionTargetType !== ActionTargetTypeEnum.VEHICLE)) &&
+    actionNumberOfControls > (envActions[currentActionIndex]?.infractions?.length || 0)
+
   const onVehicleTypeChange = selectedVehicleType => {
+    if (
+      envActions[currentActionIndex]?.vehicleType === selectedVehicleType ||
+      (envActions[currentActionIndex]?.vehicleType === null && selectedVehicleType === undefined)
+    ) {
+      return
+    }
     setValues(v => {
       const w = _.cloneDeep(v)
       _.set(w, `envActions[${currentActionIndex}].vehicleType`, selectedVehicleType)
-      if (selectedVehicleType !== vehicleTypeEnum.VESSEL.code) {
+      if (selectedVehicleType !== VehicleTypeEnum.VESSEL) {
         _.update(w, `envActions[${currentActionIndex}].infractions`, inf =>
           inf?.map(i => ({ ...i, vesselSize: null, vesselType: null }))
         )
@@ -56,18 +80,21 @@ export function ControlForm({
     })
   }
   const onTargetTypeChange = selectedTargetType => {
+    if (
+      envActions[currentActionIndex]?.actionTargetType === selectedTargetType ||
+      (envActions[currentActionIndex]?.actionTargetType === null && selectedTargetType === undefined)
+    ) {
+      return
+    }
     setValues(v => {
       const w = _.cloneDeep(v)
       _.set(w, `envActions[${currentActionIndex}].actionTargetType`, selectedTargetType)
 
-      if (selectedTargetType !== actionTargetTypeEnum.VEHICLE.code) {
+      if (selectedTargetType !== ActionTargetTypeEnum.VEHICLE) {
         _.set(w, `envActions[${currentActionIndex}].vehicleType`, null)
         _.update(w, `envActions[${currentActionIndex}].infractions`, inf =>
           inf?.map(i => ({ ...i, vesselSize: null, vesselType: null }))
         )
-      }
-      if (selectedTargetType === actionTargetTypeEnum.VEHICLE.code && vehicleType === null) {
-        _.set(w, `envActions[${currentActionIndex}].vehicleType`, vehicleTypeEnum.VESSEL.code)
       }
 
       return w
@@ -75,16 +102,9 @@ export function ControlForm({
   }
 
   const handleRemoveAction = () => {
-    setCurrentActionIndex(null)
-    remove(currentActionIndex)
+    setCurrentActionIndex(undefined)
+    removeControlAction(currentActionIndex)
   }
-
-  const canAddInfraction =
-    actionNumberOfControls &&
-    actionNumberOfControls > 0 &&
-    ((actionTargetType === actionTargetTypeEnum.VEHICLE.code && vehicleType !== undefined) ||
-      (actionTargetType !== undefined && actionTargetType !== actionTargetTypeEnum.VEHICLE.code)) &&
-    actionNumberOfControls > (envActions[currentActionIndex]?.infractions?.length || 0)
 
   return (
     <>
@@ -95,15 +115,17 @@ export function ControlForm({
           &nbsp;(
           {getDateAsLocalizedStringCompact(currentAction?.actionStartDateTimeUtc)})
         </SubTitle>
-        <IconButtonRight
-          appearance="ghost"
-          icon={<DeleteIcon className="rs-icon" />}
-          onClick={handleRemoveAction}
-          size="sm"
-          title="supprimer"
-        >
-          Supprimer
-        </IconButtonRight>
+        {!readOnly && (
+          <IconButtonRight
+            appearance="ghost"
+            icon={<DeleteIcon className="rs-icon" />}
+            onClick={handleRemoveAction}
+            size="sm"
+            title="supprimer"
+          >
+            Supprimer
+          </IconButtonRight>
+        )}
       </Header>
       <FormBody>
         <ActionTheme
@@ -127,25 +149,27 @@ export function ControlForm({
           containerName="geom"
           label="Lieu du contrôle"
           name={`envActions[${currentActionIndex}].geom`}
+          readOnly={readOnly}
         />
 
         <Separator />
 
         <ActionSummary>
           <ActionFieldWrapper>
-            <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionNumberOfControls`}>
-              Nombre total de contrôles
-            </Form.ControlLabel>
-            <NumberOfControls
+            <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionNumberOfControls`} />
+            <FormikNumberInput
               data-cy="control-form-number-controls"
+              isErrorMessageHidden
+              isLight
+              label="Nombre total de contrôles"
               min={0}
               name={`envActions.${currentActionIndex}.actionNumberOfControls`}
-              size="sm"
             />
           </ActionFieldWrapper>
           <ActionFieldWrapper>
             <ActionTargetSelector
               currentActionIndex={currentActionIndex}
+              error={actionTargetTypeErrorMessage}
               onChange={onTargetTypeChange}
               value={actionTargetType}
             />
@@ -153,7 +177,8 @@ export function ControlForm({
           <ActionFieldWrapper>
             <VehicleTypeSelector
               currentActionIndex={currentActionIndex}
-              disabled={actionTargetType !== actionTargetTypeEnum.VEHICLE.code}
+              disabled={actionTargetType !== ActionTargetTypeEnum.VEHICLE}
+              error={actionVehicleTypeErrorMessage}
               onChange={onVehicleTypeChange}
               value={vehicleType}
             />
@@ -162,10 +187,16 @@ export function ControlForm({
 
         <FieldArray
           name={`envActions[${currentActionIndex}].infractions`}
-          // eslint-disable-next-line react/jsx-props-no-spreading
-          render={props => (
-            <InfractionsForm canAddInfraction={canAddInfraction} currentActionIndex={currentActionIndex} {...props} />
+          render={({ form, push, remove }) => (
+            <InfractionsForm
+              canAddInfraction={canAddInfraction}
+              currentActionIndex={currentActionIndex}
+              form={form}
+              push={push}
+              remove={remove}
+            />
           )}
+          validateOnChange={false}
         />
         <FormikTextarea isLight label="Observations" name={`envActions[${currentActionIndex}].observations`} />
       </FormBody>
@@ -221,7 +252,4 @@ const DeleteIcon = styled(DeleteSVG)`
 
 const IconButtonRight = styled(IconButton)`
   margin-left: auto;
-`
-const NumberOfControls = styled(FormikInputNumberGhost)`
-  width: 150px !important;
 `

@@ -1,13 +1,10 @@
-import { Form } from 'rsuite'
+import { FormikTextInput } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
-
-import { FormikInput } from '../../../../../../uiMonitor/CustomFormikFields/FormikInput'
 
 export function InfractionFormHeaderCompany({ infractionPath }) {
   return (
     <SubGroup>
-      <Form.ControlLabel htmlFor={`${infractionPath}.companyName`}>Nom de la société</Form.ControlLabel>
-      <FormikInput name={`${infractionPath}.companyName`} size="sm" />
+      <FormikTextInput label="Nom de la société" name={`${infractionPath}.companyName`} />
     </SubGroup>
   )
 }

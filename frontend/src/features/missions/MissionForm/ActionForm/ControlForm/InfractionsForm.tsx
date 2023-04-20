@@ -7,10 +7,10 @@ import { infractionFactory } from '../../../Missions.helpers'
 import { InfractionCard } from './InfractionCard'
 import { InfractionForm } from './InfractionForm/InfractionForm'
 
-import type { InfractionType } from '../../../../../domain/entities/missions'
+import type { Infraction } from '../../../../../domain/entities/missions'
 
 export function InfractionsForm({ canAddInfraction, currentActionIndex, form, push, remove }) {
-  const [currentInfractionIndex, setCurrentInfractionIndex] = useState(null)
+  const [currentInfractionIndex, setCurrentInfractionIndex] = useState<number | undefined>(undefined)
 
   const handleAddInfraction = () => {
     const numberOfInfractions = form?.values.envActions[currentActionIndex]?.infractions?.length || 0
@@ -19,7 +19,7 @@ export function InfractionsForm({ canAddInfraction, currentActionIndex, form, pu
   }
 
   const handleValidate = () => {
-    setCurrentInfractionIndex(null)
+    setCurrentInfractionIndex(undefined)
   }
 
   const handleEditInfraction = index => () => {
@@ -27,13 +27,13 @@ export function InfractionsForm({ canAddInfraction, currentActionIndex, form, pu
   }
 
   const handleRemoveInfraction = index => () => {
-    setCurrentInfractionIndex(null)
+    setCurrentInfractionIndex(undefined)
     remove(index)
   }
 
   const handleDuplicateInfraction = index => () => {
     const numberOfInfractions = form?.values.envActions[currentActionIndex]?.infractions.length || 0
-    const selectedInfraction = form?.values.envActions[currentActionIndex]?.infractions[index] as InfractionType
+    const selectedInfraction = form?.values.envActions[currentActionIndex]?.infractions[index] as Infraction
 
     push(infractionFactory(selectedInfraction))
     setCurrentInfractionIndex(numberOfInfractions)
@@ -51,11 +51,11 @@ export function InfractionsForm({ canAddInfraction, currentActionIndex, form, pu
       {form?.values.envActions?.length > 0 && form?.values.envActions[currentActionIndex]?.infractions?.length > 0 ? (
         <InfractionsWrapper>
           {form?.values.envActions[currentActionIndex]?.infractions.map((infraction, index) =>
-            index === currentInfractionIndex ? (
+            currentInfractionIndex !== undefined && index === currentInfractionIndex ? (
               <InfractionForm
                 key={infraction.id}
                 currentActionIndex={currentActionIndex}
-                infractionPath={`envActions[${currentActionIndex}].infractions[${index}]`}
+                currentInfractionIndex={currentInfractionIndex}
                 removeInfraction={handleRemoveInfraction(index)}
                 validateInfraction={handleValidate}
               />
@@ -64,8 +64,8 @@ export function InfractionsForm({ canAddInfraction, currentActionIndex, form, pu
                 key={infraction.id}
                 canAddInfraction={canAddInfraction}
                 currentActionIndex={currentActionIndex}
+                currentInfractionIndex={index}
                 duplicateInfraction={handleDuplicateInfraction(index)}
-                infractionPath={`envActions[${currentActionIndex}].infractions[${index}]`}
                 removeInfraction={handleRemoveInfraction(index)}
                 setCurrentInfractionIndex={handleEditInfraction(index)}
               />

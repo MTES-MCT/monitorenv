@@ -1,7 +1,7 @@
 --
 -- Data for Name: env_actions; Type: TABLE DATA; Schema: public; Owner: postgres
 --
-
+TRUNCATE public.env_actions;
 INSERT INTO public.env_actions VALUES ('f3e90d3a-6ba4-4bb3-805e-d391508aa46d', 38, 'CONTROL', '{"themes": [{"theme": "Police des espèces protégées et de leurs habitats (faune et flore)", "subThemes": ["Dérogations concernant les espèces protégées"], "protectedSpecies": ["MARINE_MAMMALS"]}], "infractions": [{"id": "6670e718-3ecd-46c1-8149-8b963c6f72dd", "natinf": ["10041"], "toProcess": false, "vesselSize": null, "vesselType": null, "companyName": "MASOCIETE", "formalNotice": "YES", "observations": "RAS", "relevantCourt": "LOCAL_COURT", "infractionType": "WITH_REPORT", "registrationNumber": null, "controlledPersonIdentity": null}], "vehicleType": null, "actionTargetType": "COMPANY", "actionNumberOfControls": 1, "actionStartDateTimeUtc": null}', NULL, '0104000020E61000000100000001010000005021F1D4BE1805C074D5525CD6154840');
 INSERT INTO public.env_actions VALUES ('475d2887-5344-46cd-903b-8cb5e42f9a9c', 49, 'SURVEILLANCE', '{"themes": [{"theme": "Police du conservatoire du littoral", "subThemes": ["Réglementation du conservatoire du littoral"], "protectedSpecies": []}], "duration": 0.0, "observations": "RAS", "coverMissionZone": false, "protectedSpecies": []}', NULL, '0106000020E61000000100000001030000000100000005000000D56979C3E95203C0BC117648B972474084387273B24D02C00C726AA38C6E4740BFFBD6B9762002C0349A2D10497347407A8D399212A102C0546E1659817A4740D56979C3E95203C0BC117648B9724740');
 INSERT INTO public.env_actions VALUES ('16eeb9e8-f30c-430e-b36b-32b4673f81ce', 49, 'NOTE', '{"observations": "Note libre"}', NULL, NULL);

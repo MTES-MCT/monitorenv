@@ -36,6 +36,7 @@ export function SubThemesSelector({ label, name, theme }) {
           baseContainer={newWindowContainerRef.current}
           data-cy="envaction-subtheme-selector"
           disabled={!theme}
+          isErrorMessageHidden
           isLight
           label={label}
           name={name}

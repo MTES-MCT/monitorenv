@@ -1,3 +1,4 @@
+import { THEME, ThemeProvider, OnlyFontGlobalStyle } from '@mtes-mct/monitor-ui'
 import 'rsuite/dist/rsuite.min.css'
 import 'ol/ol.css'
 
@@ -7,14 +8,13 @@ import '../src/uiMonitor/ol-override.css'
 import '../src/uiMonitor/rsuite-override.css'
 
 import './storybook.css'
-import { GlobalStyle } from '../src/fonts/fonts'
 
 export const decorators = [
   Story => (
-    <>
-      <GlobalStyle />
+    <ThemeProvider theme={THEME}>
+      <OnlyFontGlobalStyle />
       <Story />
-    </>
+    </ThemeProvider>
   )
 ]
 export const parameters = {

@@ -1,15 +1,22 @@
 import { Accent, Tag } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { IconButton } from 'rsuite'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import { COLORS } from '../../../../../constants/constants'
 import {
-  actionTargetTypeEnum,
-  formalNoticeEnum,
-  infractionTypeEnum,
-  vehicleTypeEnum,
-  vesselTypeEnum
+  actionTargetTypeLabels,
+  ActionTargetTypeEnum,
+  FormalNoticeEnum,
+  InfractionTypeEnum,
+  infractionTypeLabels,
+  VehicleTypeEnum,
+  vehicleTypeLabels,
+  VesselTypeEnum,
+  vesselTypeLabels,
+  EnvActionControl,
+  Infraction,
+  Mission
 } from '../../../../../domain/entities/missions'
 import { ReactComponent as DeleteSVG } from '../../../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as DuplicateSVG } from '../../../../../uiMonitor/icons/Duplicate.svg'
@@ -18,61 +25,70 @@ import { ReactComponent as EditIconSVG } from '../../../../../uiMonitor/icons/Ed
 export function InfractionCard({
   canAddInfraction,
   currentActionIndex,
+  currentInfractionIndex,
   duplicateInfraction,
-  infractionPath,
   removeInfraction,
   setCurrentInfractionIndex
 }) {
-  const [targetTypeField] = useField(`envActions.${currentActionIndex}.actionTargetType`)
-  const [vehicleTypeField] = useField(`envActions.${currentActionIndex}.vehicleType`)
-  const [vesselType] = useField(`${infractionPath}.vesselType`)
-  const [registrationNumber] = useField(`${infractionPath}.registrationNumber`)
-  const [controlledPersonIdentity] = useField(`${infractionPath}.controlledPersonIdentity`)
-  const [companyName] = useField(`${infractionPath}.companyName`)
-  const [infractionType] = useField(`${infractionPath}.infractionType`)
-  const [formalNotice] = useField(`${infractionPath}.formalNotice`)
-  const [natinf] = useField(`${infractionPath}.natinf`)
+  const infractionPath = `envActions.${currentActionIndex}.infractions.${currentInfractionIndex}`
+  const [, meta] = useField<Infraction>(infractionPath)
+  const [targetTypeField] = useField<EnvActionControl['actionTargetType']>(
+    `envActions.${currentActionIndex}.actionTargetType`
+  )
+  const [vehicleTypeField] = useField<VehicleTypeEnum>(`envActions.${currentActionIndex}.vehicleType`)
+  const [vesselType] = useField<VesselTypeEnum>(`${infractionPath}.vesselType`)
+  const [registrationNumber] = useField<Infraction['registrationNumber']>(`${infractionPath}.registrationNumber`)
+  const [controlledPersonIdentity] = useField<Infraction['controlledPersonIdentity']>(
+    `${infractionPath}.controlledPersonIdentity`
+  )
+  const [companyName] = useField<Infraction['companyName']>(`${infractionPath}.companyName`)
+  const [infractionType] = useField<InfractionTypeEnum>(`${infractionPath}.infractionType`)
+  const [formalNotice] = useField<FormalNoticeEnum>(`${infractionPath}.formalNotice`)
+  const [natinf] = useField<Infraction['natinf']>(`${infractionPath}.natinf`)
+  const [isClosedField] = useField<Mission['isClosed']>(`isClosed`)
+
+  const readOnly = isClosedField.value
 
   let libelleInfractionType
   switch (infractionType?.value) {
     case undefined:
       libelleInfractionType = 'PV : -'
       break
-    case infractionTypeEnum.WITHOUT_REPORT.code:
-      libelleInfractionType = infractionTypeEnum.WITHOUT_REPORT.libelle
+    case infractionTypeLabels.WITHOUT_REPORT.code:
+      libelleInfractionType = infractionTypeLabels.WITHOUT_REPORT.libelle
       break
-    case infractionTypeEnum.WITH_REPORT.code:
-      libelleInfractionType = infractionTypeEnum.WITH_REPORT.libelle
+    case infractionTypeLabels.WITH_REPORT.code:
+      libelleInfractionType = infractionTypeLabels.WITH_REPORT.libelle
       break
-    case infractionTypeEnum.WAITING.code:
+    case infractionTypeLabels.WAITING.code:
     default:
-      libelleInfractionType = infractionTypeEnum.WAITING.libelle
+      libelleInfractionType = infractionTypeLabels.WAITING.libelle
   }
 
   return (
-    <Wrapper>
+    <Wrapper $hasError={!!meta.error}>
       <Summary>
-        {targetTypeField.value === actionTargetTypeEnum.VEHICLE.code && (
+        {targetTypeField.value === ActionTargetTypeEnum.VEHICLE && (
           <VehicleType>
-            {vehicleTypeEnum[vehicleTypeField?.value]?.libelle || 'Non Renseigné'}
-            {vehicleTypeField?.value === vehicleTypeEnum.VESSEL.code
-              ? ` – ${vesselTypeEnum[vesselType?.value]?.libelle || 'Type non défini'}`
+            {vehicleTypeLabels[vehicleTypeField?.value]?.libelle || 'Non Renseigné'}
+            {vehicleTypeField?.value === VehicleTypeEnum.VESSEL
+              ? ` – ${vesselTypeLabels[vesselType?.value]?.libelle || 'Type non défini'}`
               : ''}
             &nbsp;&ndash;&nbsp;
           </VehicleType>
         )}
-        {targetTypeField.value === actionTargetTypeEnum.VEHICLE.code ? (
+        {targetTypeField.value === ActionTargetTypeEnum.VEHICLE ? (
           <Identification>{registrationNumber?.value || ' sans immatriculation'}</Identification>
         ) : (
           <Identification>
             {companyName?.value ||
               controlledPersonIdentity?.value ||
-              actionTargetTypeEnum[targetTypeField.value]?.libelle}
+              actionTargetTypeLabels[targetTypeField.value]?.libelle}
           </Identification>
         )}
         <SummaryDetails>
           <Info accent={Accent.PRIMARY}>{libelleInfractionType}</Info>
-          {formalNotice?.value === formalNoticeEnum.YES.code && <Info accent={Accent.PRIMARY}>MED</Info>}
+          {formalNotice?.value === FormalNoticeEnum.YES && <Info accent={Accent.PRIMARY}>MED</Info>}
           <Info accent={Accent.PRIMARY}>
             {natinf.value?.length || '0'} NATINF {natinf.value?.length && `: ${natinf.value?.join(', ')}`}
           </Info>
@@ -80,29 +96,38 @@ export function InfractionCard({
       </Summary>
       <ButtonsWrapper>
         <IconButton appearance="ghost" icon={<EditIcon className="rs-icon" />} onClick={setCurrentInfractionIndex}>
-          Editer
+          {readOnly ? 'Consulter' : 'Editer'}
         </IconButton>
-        <IconButton
-          appearance="ghost"
-          data-cy="duplicate-infraction"
-          disabled={!canAddInfraction}
-          icon={<DuplicateSVG className="rs-icon" />}
-          onClick={duplicateInfraction}
-          title="dupliquer"
-        />
-        <IconButton appearance="ghost" icon={<DeleteIcon />} onClick={removeInfraction} />
+        {!readOnly && (
+          <>
+            <IconButton
+              appearance="ghost"
+              data-cy="duplicate-infraction"
+              disabled={!canAddInfraction}
+              icon={<DuplicateSVG className="rs-icon" />}
+              onClick={duplicateInfraction}
+              title="dupliquer"
+            />
+            <IconButton appearance="ghost" icon={<DeleteIcon />} onClick={removeInfraction} />
+          </>
+        )}
       </ButtonsWrapper>
     </Wrapper>
   )
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ $hasError: boolean }>`
   background: ${COLORS.white};
   margin-top: 8px;
   margin-bottom: 8px;
   padding: 12px;
   display: flex;
   justify-content: space-between;
+  ${p =>
+    p.$hasError &&
+    css`
+      border: 2px solid ${p.theme.color.maximumRed};
+    `}
 `
 
 const Summary = styled.div`

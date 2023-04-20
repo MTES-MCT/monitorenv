@@ -5,12 +5,25 @@ import { useMemo } from 'react'
 import { useGetInfractionsQuery } from '../../../../../../api/infractionsAPI'
 import { useNewWindow } from '../../../../../../ui/NewWindow'
 
+import type { Infraction } from '../../../../../../domain/entities/missions'
+
+const sortNatinf = (a, b) => {
+  if (a?.natinfCode < b?.natinfCode) {
+    return -1
+  }
+  if (a?.natinfCode > b?.natinfCode) {
+    return 1
+  }
+
+  return 0
+}
+
 export function NatinfSelector({ infractionPath }) {
   const { newWindowContainerRef } = useNewWindow()
-  const [natinfField, , natinfHelpers] = useField(`${infractionPath}.natinf`)
+  const [natinfField, meta, natinfHelpers] = useField<Infraction['natinf']>(`${infractionPath}.natinf`)
   const { data, isError, isLoading } = useGetInfractionsQuery()
 
-  const sortedData = useMemo(
+  const sortedNatinfs = useMemo(
     () =>
       (data &&
         [...data]
@@ -19,7 +32,6 @@ export function NatinfSelector({ infractionPath }) {
       [],
     [data]
   )
-
   const setValue = (nextValue: string[] | undefined) => {
     natinfHelpers.setValue(nextValue)
   }
@@ -36,24 +48,14 @@ export function NatinfSelector({ infractionPath }) {
     <MultiSelect
       baseContainer={newWindowContainerRef.current}
       block
+      error={meta.error}
       label="NATINF"
       name="infraction-natinf"
       onChange={setValue}
-      options={sortedData}
+      options={sortedNatinfs}
       searchable
       value={natinfField.value}
       valueKey="value"
     />
   )
-}
-
-const sortNatinf = (a, b) => {
-  if (a?.natinfCode < b?.natinfCode) {
-    return -1
-  }
-  if (a?.natinfCode > b?.natinfCode) {
-    return 1
-  }
-
-  return 0
 }

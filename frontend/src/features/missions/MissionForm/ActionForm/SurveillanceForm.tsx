@@ -1,23 +1,20 @@
-import { FormikDatePicker } from '@mtes-mct/monitor-ui'
+import { FormikCheckbox, FormikDatePicker, FormikNumberInput, FormikTextarea } from '@mtes-mct/monitor-ui'
 import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
 import { InteractionListener } from '../../../../domain/entities/map/constants'
 import { useNewWindow } from '../../../../ui/NewWindow'
-import { FormikCheckbox } from '../../../../uiMonitor/CustomFormikFields/FormikCheckbox'
-import { FormikInputNumberGhost } from '../../../../uiMonitor/CustomFormikFields/FormikInputNumber'
-import { FormikTextarea } from '../../../../uiMonitor/CustomFormikFields/FormikTextarea'
 import { ReactComponent as DeleteSVG } from '../../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as SurveillanceIconSVG } from '../../../../uiMonitor/icons/Observation.svg'
 import { MultiZonePicker } from '../../MultiZonePicker'
 import { SurveillanceThemes } from './Themes/SurveillanceThemes'
 
-export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionIndex }) {
+export function SurveillanceForm({ currentActionIndex, readOnly, remove, setCurrentActionIndex }) {
   const { newWindowContainerRef } = useNewWindow()
 
   const handleRemoveAction = () => {
-    setCurrentActionIndex(null)
+    setCurrentActionIndex(undefined)
     remove(currentActionIndex)
   }
 
@@ -50,13 +47,15 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
           />
         </Column>
         <Column>
-          <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.duration`}>Durée</Form.ControlLabel>
-          <InputDivWithUnits>
-            <SizedFormikInputNumberGhost name={`envActions.${currentActionIndex}.duration`} size="sm" />
-            &nbsp;heures
-          </InputDivWithUnits>
+          <SizedFormikInputNumberGhost isLight label="Durée" name={`envActions.${currentActionIndex}.duration`} />
+          <InputDivWithUnits>&nbsp;heures</InputDivWithUnits>
         </Column>
       </FlexSelectorWrapper>
+      <FormikCheckbox
+        inline
+        label="Dates et heures de surveillance équivalentes à celles de la mission"
+        name={`envActions[${currentActionIndex}].durationMatchesMission`}
+      />
 
       <MultiZonePicker
         addButtonLabel="Ajouter une zone de surveillance"
@@ -64,16 +63,17 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
         isLight
         label="Zone de surveillance"
         name={`envActions[${currentActionIndex}].geom`}
+        readOnly={readOnly}
       />
-      <WhiteCheckbox
+      <FormikCheckbox
         inline
         label="Zone de surveillance équivalente à la zone de mission"
         name={`envActions[${currentActionIndex}].coverMissionZone`}
       />
 
       <Form.Group>
-        <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.observations`}>Observations </Form.ControlLabel>
-        <FormikTextarea classPrefix="input ghost" name={`envActions.${currentActionIndex}.observations`} />
+        <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.observations`}> </Form.ControlLabel>
+        <FormikTextarea isLight label="Observations" name={`envActions.${currentActionIndex}.observations`} />
       </Form.Group>
     </>
   )
@@ -96,6 +96,7 @@ const FlexSelectorWrapper = styled(Form.Group)`
   display: flex;
 `
 const Column = styled.div`
+  display: flex;
   &:not(:last-child) {
     margin-right: 24px;
   }
@@ -113,25 +114,10 @@ const DeleteIcon = styled(DeleteSVG)`
 const IconButtonRight = styled(IconButton)`
   margin-left: auto;
 `
-const SizedFormikInputNumberGhost = styled(FormikInputNumberGhost)`
+const SizedFormikInputNumberGhost = styled(FormikNumberInput)`
   width: 70px !important;
 `
 const InputDivWithUnits = styled.div`
   display: flex;
   align-items: baseline;
-`
-
-const WhiteCheckbox = styled(FormikCheckbox)`
-  margin-left: -10px;
-  margin-bottom: 32px;
-  .rs-checkbox-wrapper .rs-checkbox-inner::before {
-    background-color: ${COLORS.white};
-  }
-
-  .rs-checkbox-wrapper .rs-checkbox-inner::after {
-    border-color: ${COLORS.charcoal};
-  }
-  &:hover .rs-checkbox-wrapper .rs-checkbox-inner::after {
-    border-color: ${COLORS.white};
-  }
 `

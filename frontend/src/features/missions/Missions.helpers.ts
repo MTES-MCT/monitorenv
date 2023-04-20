@@ -1,25 +1,20 @@
 import { v4 as uuidv4 } from 'uuid'
 
 import {
-  actionTargetTypeEnum,
   ActionTypeEnum,
-  actionTypeEnum,
-  EnvAction,
-  formalNoticeEnum,
-  infractionTypeEnum,
+  NewEnvAction,
+  FormalNoticeEnum,
   MissionSourceEnum,
-  MissionType,
-  MissionTypeEnum,
-  NewMissionType,
-  vehicleTypeEnum
+  Mission,
+  NewMission,
+  InfractionTypeEnum,
+  EnvAction
 } from '../../domain/entities/missions'
 
 import type { ControlUnit } from '../../domain/entities/controlUnit'
 
 export const infractionFactory = ({ id, ...infraction } = { id: '' }) => ({
-  formalNotice: formalNoticeEnum.NO.code,
   id: uuidv4(),
-  infractionType: infractionTypeEnum.WITHOUT_REPORT.code,
   natinf: [],
   observations: '',
   toProcess: false,
@@ -30,35 +25,34 @@ export const actionFactory = ({
   actionType,
   id,
   ...action
-}: {
-  actionType: ActionTypeEnum
-  id?: string
-}): EnvAction => {
+}: Partial<EnvAction> & { actionType: ActionTypeEnum }): NewEnvAction => {
   switch (actionType) {
-    case actionTypeEnum.CONTROL.code:
+    case ActionTypeEnum.CONTROL:
       return {
-        actionNumberOfControls: 0,
-        actionTargetType: actionTargetTypeEnum.VEHICLE.code,
+        actionNumberOfControls: undefined,
+        actionTargetType: undefined,
         actionType: ActionTypeEnum.CONTROL,
         id: uuidv4(),
         infractions: [],
+        observations: '',
         themes: [{ subThemes: [], theme: '' }],
-        vehicleType: vehicleTypeEnum.VESSEL.code,
         ...action
       }
-    case actionTypeEnum.NOTE.code:
+    case ActionTypeEnum.NOTE:
       return {
+        actionStartDateTimeUtc: new Date().toISOString(),
         actionType: ActionTypeEnum.NOTE,
         id: uuidv4(),
         observations: '',
         ...action
       }
-    case actionTypeEnum.SURVEILLANCE.code:
+    case ActionTypeEnum.SURVEILLANCE:
     default:
       return {
         actionType: ActionTypeEnum.SURVEILLANCE,
         coverMissionZone: true,
         duration: 0,
+        durationMatchesMission: true,
         id: uuidv4(),
         observations: '',
         themes: [{ subThemes: [], theme: '' }],
@@ -67,7 +61,7 @@ export const actionFactory = ({
   }
 }
 
-export const missionFactory = (mission = {}): MissionType | NewMissionType => ({
+export const missionFactory = (mission = {}): Mission | NewMission => ({
   closedBy: '',
   controlUnits: [controlUnitFactory()],
   endDateTimeUtc: '',
@@ -75,7 +69,7 @@ export const missionFactory = (mission = {}): MissionType | NewMissionType => ({
   isClosed: false,
   missionNature: [],
   missionSource: MissionSourceEnum.MONITORENV,
-  missionTypes: [MissionTypeEnum.SEA],
+  missionTypes: [],
   observationsCacem: '',
   observationsCnsp: '',
   openBy: '',
@@ -94,9 +88,8 @@ export const controlUnitFactory = ({ ...resourceUnit } = {}): Omit<ControlUnit, 
 export const getControlInfractionsTags = (actionNumberOfControls, infractions) => {
   const infra = infractions.length || 0
   const ras = (actionNumberOfControls || 0) - infra
-  const infraSansPV =
-    infractions?.filter(inf => inf.infractionType !== infractionTypeEnum.WITH_REPORT.code)?.length || 0
-  const med = infractions?.filter(inf => inf.formalNotice === formalNoticeEnum.YES.code)?.length || 0
+  const infraSansPV = infractions?.filter(inf => inf.infractionType !== InfractionTypeEnum.WITH_REPORT)?.length || 0
+  const med = infractions?.filter(inf => inf.formalNotice === FormalNoticeEnum.YES)?.length || 0
 
   return { infra, infraSansPV, med, ras }
 }

@@ -28,11 +28,19 @@ export type MultiZonePickerProps = {
   isLight?: boolean
   label: string
   name: string
+  readOnly: boolean
 }
-export function MultiZonePicker({ addButtonLabel, interactionListener, isLight, label, name }: MultiZonePickerProps) {
+export function MultiZonePicker({
+  addButtonLabel,
+  interactionListener,
+  isLight,
+  label,
+  name,
+  readOnly
+}: MultiZonePickerProps) {
   const dispatch = useAppDispatch()
   const { geometry } = useListenForDrawedGeometry(interactionListener)
-  const [field, , helpers] = useField(name)
+  const [field, meta, helpers] = useField(name)
   const { value } = field
 
   const { listener } = useAppSelector(state => state.draw)
@@ -80,10 +88,13 @@ export function MultiZonePicker({ addButtonLabel, interactionListener, isLight, 
 
   return (
     <Field>
-      <Label>{label}</Label>
-      <Button accent={Accent.SECONDARY} Icon={Icon.Plus} isFullWidth onClick={handleAddZone}>
-        {addButtonLabel}
-      </Button>
+      <Label hasError={!!meta.error}>{label}</Label>
+      {!readOnly && (
+        <Button accent={Accent.SECONDARY} Icon={Icon.Plus} isFullWidth onClick={handleAddZone}>
+          {addButtonLabel}
+        </Button>
+      )}
+      {!!meta.error && <ErrorMessage>Veuillez définir une zone de mission</ErrorMessage>}
 
       <>
         {polygons.map((polygonCoordinates, index) => (
@@ -101,14 +112,23 @@ export function MultiZonePicker({ addButtonLabel, interactionListener, isLight, 
               </Center>
             </ZoneWrapper>
 
-            <IconButton accent={Accent.SECONDARY} disabled={isEditingZone} Icon={Icon.Edit} onClick={handleAddZone} />
-            <IconButton
-              accent={Accent.SECONDARY}
-              aria-label="Supprimer cette zone"
-              disabled={isEditingZone}
-              Icon={Icon.Delete}
-              onClick={() => deleteZone(index)}
-            />
+            {!readOnly && (
+              <>
+                <IconButton
+                  accent={Accent.SECONDARY}
+                  disabled={isEditingZone}
+                  Icon={Icon.Edit}
+                  onClick={handleAddZone}
+                />
+                <IconButton
+                  accent={Accent.SECONDARY}
+                  aria-label="Supprimer cette zone"
+                  disabled={isEditingZone}
+                  Icon={Icon.Delete}
+                  onClick={() => deleteZone(index)}
+                />
+              </>
+            )}
           </Row>
         ))}
       </>
@@ -153,4 +173,9 @@ const ZoneWrapper = styled.div<{ isLight?: boolean }>`
   justify-content: space-between;
   padding: 5px 0.75rem 4px;
   width: 416px;
+`
+
+const ErrorMessage = styled.div`
+  color: ${COLORS.maximumRed};
+  font: italic normal normal 13px/18px Marianne;
 `

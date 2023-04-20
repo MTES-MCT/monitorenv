@@ -1,39 +1,39 @@
 import styled from 'styled-components'
 
 import { COLORS } from '../constants/constants'
-import { missionStatusEnum } from '../domain/entities/missions'
+import { missionStatusLabels } from '../domain/entities/missions'
 import { ReactComponent as CercleSVG } from '../uiMonitor/icons/Cercle.svg'
 import { ReactComponent as CheckSVG } from '../uiMonitor/icons/Check.svg'
 
 export function MissionStatusLabel({ missionStatus }) {
   switch (missionStatus) {
-    case missionStatusEnum.PENDING.code:
+    case missionStatusLabels.PENDING.code:
       return (
         <StatusWrapper color={COLORS.mediumSeaGreen}>
           <CercleSVG />
-          {missionStatusEnum.PENDING.libelle}
+          {missionStatusLabels.PENDING.libelle}
         </StatusWrapper>
       )
-    case missionStatusEnum.ENDED.code:
+    case missionStatusLabels.ENDED.code:
       return (
         <StatusWrapper color={COLORS.charcoal}>
           <CercleSVG />
-          {missionStatusEnum.ENDED.libelle}
+          {missionStatusLabels.ENDED.libelle}
         </StatusWrapper>
       )
 
-    case missionStatusEnum.CLOSED.code:
+    case missionStatusLabels.CLOSED.code:
       return (
         <StatusWrapper color={COLORS.opal}>
           <CheckSVG />
-          {missionStatusEnum.CLOSED.libelle}
+          {missionStatusLabels.CLOSED.libelle}
         </StatusWrapper>
       )
-    case missionStatusEnum.UPCOMING.code:
+    case missionStatusLabels.UPCOMING.code:
       return (
         <StatusWrapper color={COLORS.blueGray}>
           <CercleSVG />
-          {missionStatusEnum.UPCOMING.libelle}
+          {missionStatusLabels.UPCOMING.libelle}
         </StatusWrapper>
       )
 

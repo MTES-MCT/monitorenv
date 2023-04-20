@@ -14,11 +14,12 @@ import { ActionCard } from './ActionCard'
 
 export function ActionsForm({ currentActionIndex, form, remove, setCurrentActionIndex, unshift }) {
   const envActions = form?.values?.envActions as EnvAction[] | undefined
+  const isClosed = form?.values?.isClosed
   const currentActionId = envActions && envActions[currentActionIndex]?.id
   const sortedEnvActions = useMemo(
     () =>
-      form.values.envActions &&
-      [...form.values.envActions].sort((a, b) => {
+      envActions &&
+      [...envActions].sort((a, b) => {
         if (a.actionStartDateTimeUtc === undefined) {
           return -1
         }
@@ -26,19 +27,24 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
           return +1
         }
 
-        return isBefore(new Date(a.actionStartDateTimeUtc), new Date(b.actionStartDateTimeUtc)) ? +1 : -1
+        return a.actionStartDateTimeUtc &&
+          b.actionStartDateTimeUtc &&
+          isBefore(new Date(a.actionStartDateTimeUtc), new Date(b.actionStartDateTimeUtc))
+          ? +1
+          : -1
       }),
-    [form?.values]
+    [envActions]
   )
 
-  const handleAddSurveillanceAction = () => unshift(actionFactory({ actionType: ActionTypeEnum.SURVEILLANCE }))
+  const handleAddSurveillanceAction = () =>
+    unshift(actionFactory({ actionType: ActionTypeEnum.SURVEILLANCE, durationMatchesMission: false }))
   const handleAddControlAction = () => unshift(actionFactory({ actionType: ActionTypeEnum.CONTROL }))
   const handleAddNoteAction = () => unshift(actionFactory({ actionType: ActionTypeEnum.NOTE }))
   const handleSelectAction = id => () => setCurrentActionIndex(envActions && envActions.findIndex(a => a.id === id))
   const handleRemoveAction = id => e => {
     e.stopPropagation()
     remove(envActions && envActions.findIndex(a => a.id === id))
-    setCurrentActionIndex(null)
+    setCurrentActionIndex(undefined)
   }
 
   const handleDuplicateAction = id => () => {
@@ -53,30 +59,40 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
     <FormWrapper>
       <TitleWrapper>
         <Title>Actions réalisées en mission</Title>
-        <Dropdown appearance="primary" icon={<PlusSVG className="rs-icon" />} noCaret title="Ajouter">
-          <Dropdown.Item icon={<ControlSVG />} onClick={handleAddControlAction}>
-            Ajouter des contrôles
-          </Dropdown.Item>
-          <Dropdown.Item icon={<SurveillanceSVG />} onClick={handleAddSurveillanceAction}>
-            Ajouter une surveillance
-          </Dropdown.Item>
-          <Dropdown.Item icon={<NoteSVG />} onClick={handleAddNoteAction}>
-            Ajouter une note libre
-          </Dropdown.Item>
-        </Dropdown>
+        {!isClosed && (
+          <Dropdown appearance="primary" icon={<PlusSVG className="rs-icon" />} noCaret title="Ajouter">
+            <Dropdown.Item icon={<ControlSVG />} onClick={handleAddControlAction}>
+              Ajouter des contrôles
+            </Dropdown.Item>
+            <Dropdown.Item icon={<SurveillanceSVG />} onClick={handleAddSurveillanceAction}>
+              Ajouter une surveillance
+            </Dropdown.Item>
+            <Dropdown.Item icon={<NoteSVG />} onClick={handleAddNoteAction}>
+              Ajouter une note libre
+            </Dropdown.Item>
+          </Dropdown>
+        )}
       </TitleWrapper>
       <ActionsTimeline>
-        {sortedEnvActions?.length > 0 ? (
-          sortedEnvActions.map(action => (
-            <ActionCard
-              key={action.id}
-              action={action}
-              duplicateAction={handleDuplicateAction(action.id)}
-              removeAction={handleRemoveAction(action.id)}
-              selectAction={handleSelectAction(action.id)}
-              selected={action.id === currentActionId}
-            />
-          ))
+        {sortedEnvActions && sortedEnvActions.length > 0 ? (
+          sortedEnvActions.map(action => {
+            const index = envActions?.findIndex(a => a.id === action.id)
+            const errors =
+              form?.errors?.envActions && index !== undefined && index >= 0 && form?.errors?.envActions[index]
+
+            return (
+              <ActionCard
+                key={action.id}
+                action={action}
+                duplicateAction={handleDuplicateAction(action.id)}
+                hasError={!!errors}
+                readOnly={isClosed}
+                removeAction={handleRemoveAction(action.id)}
+                selectAction={handleSelectAction(action.id)}
+                selected={action.id === currentActionId}
+              />
+            )
+          })
         ) : (
           <NoActionWrapper>
             <NoAction>Aucune action n&apos;est ajoutée pour le moment</NoAction>

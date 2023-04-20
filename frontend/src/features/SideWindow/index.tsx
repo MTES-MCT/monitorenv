@@ -6,7 +6,7 @@ import { ErrorBoundary } from '../../components/ErrorBoundary'
 import { COLORS } from '../../constants/constants'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { NewWindowContext } from '../../ui/NewWindow'
-import { CreateOrEditMission } from '../missions/CreateOrEditMission'
+import { CreateOrEditMission } from '../missions/MissionForm/CreateOrEditMission'
 import { Missions } from '../missions/Missions'
 import { Route } from './Route'
 

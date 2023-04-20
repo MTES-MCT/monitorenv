@@ -1,4 +1,4 @@
-import { Button } from 'rsuite'
+import { Accent, Button } from '@mtes-mct/monitor-ui'
 
 import { Dialog } from '../../uiMonitor/Dialog'
 
@@ -12,10 +12,10 @@ export function MissionDeleteModal({ onCancel, onConfirm, open }) {
         </Dialog.Body>
 
         <Dialog.Action>
-          <Button appearance="ghost" onClick={onCancel}>
+          <Button accent={Accent.SECONDARY} name="delete-mission-modal-cancel" onClick={onCancel}>
             Retourner à l&apos;édition
           </Button>
-          <Button appearance="primary" onClick={onConfirm}>
+          <Button accent={Accent.PRIMARY} name="delete-mission-modal-confirm" onClick={onConfirm}>
             Confirmer la suppression
           </Button>
         </Dialog.Action>

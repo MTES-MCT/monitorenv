@@ -1,40 +1,45 @@
 /* eslint-disable react/jsx-props-no-spreading */
+import { Select } from '@mtes-mct/monitor-ui'
 import { MutableRefObject, useRef } from 'react'
-import { Form, SelectPicker } from 'rsuite'
 import styled from 'styled-components'
 
-import { vehicleTypeEnum } from '../../../../../domain/entities/missions'
+import { vehicleTypeLabels } from '../../../../../domain/entities/missions'
+import { useNewWindow } from '../../../../../ui/NewWindow'
 
-const DEFAULT_SELECT_PICKER_STYLE = {
-  width: 150
+import type { Promisable } from 'type-fest'
+
+type VehicleTypeSelectorProps = {
+  currentActionIndex: number
+  disabled: boolean
+  error: string
+  onChange: (nextValue: string | undefined) => Promisable<void>
+  value?: string
 }
-
-const DEFAULT_SELECT_PICKER_MENU_STYLE = {
-  width: 150
-}
-
-export function VehicleTypeSelector({ currentActionIndex, disabled, onChange, value, ...props }) {
+export function VehicleTypeSelector({
+  currentActionIndex,
+  disabled,
+  error,
+  onChange,
+  value
+}: VehicleTypeSelectorProps) {
+  const { newWindowContainerRef } = useNewWindow()
   const vehicleTypeSelectorRef = useRef() as MutableRefObject<HTMLDivElement>
-  const vehicleTypeFieldList = Object.values(vehicleTypeEnum)
+  const vehicleTypeFieldList = Object.values(vehicleTypeLabels).map(o => ({ label: o.libelle, value: o.code }))
 
   return (
     <SelectorWrapper ref={vehicleTypeSelectorRef}>
-      <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.vehicleType`}>Type de véhicule</Form.ControlLabel>
-      <SelectPicker
-        className="ghost"
-        cleanable={false}
-        container={() => vehicleTypeSelectorRef.current}
-        data={vehicleTypeFieldList}
+      <Select
+        baseContainer={newWindowContainerRef.current}
         disabled={disabled}
-        labelKey="libelle"
-        menuStyle={DEFAULT_SELECT_PICKER_MENU_STYLE}
+        error={error}
+        isErrorMessageHidden
+        isLight
+        label="Type de véhicule"
+        name={`envActions.${currentActionIndex}.vehicleType`}
         onChange={onChange}
+        options={vehicleTypeFieldList}
         searchable={false}
-        size="sm"
-        style={DEFAULT_SELECT_PICKER_STYLE}
         value={value}
-        valueKey="code"
-        {...props}
       />
     </SelectorWrapper>
   )
