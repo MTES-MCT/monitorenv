@@ -16,22 +16,25 @@ export function ControlCard({ feature }: { feature: any }) {
   return (
     <StyledControlCardHeader>
       <StyledControlThemes>
-        <StyledThemes>
-          {themes?.length > 0 && themes[0]?.theme ? extractThemesAsText(themes) : 'Thématique à renseigner'}
-        </StyledThemes>{' '}
+        {themes?.length > 0 && themes[0]?.theme ? (
+          <StyledThemes>{extractThemesAsText(themes)}</StyledThemes>
+        ) : (
+          <StyledGrayText>Thématique à renseigner</StyledGrayText>
+        )}{' '}
         <Accented>
-          {actionNumberOfControls} {pluralize('contrôle', actionNumberOfControls)}
-          {' ('}
-          {actionTargetTypeLabels[actionTargetType]?.libelle || 'cible non renseignée'}
-          {/* eslint-disable-next-line react/jsx-curly-brace-presence */}
-          {')'}
+          {actionNumberOfControls} {pluralize('contrôle', actionNumberOfControls)}{' '}
+          {actionTargetTypeLabels[actionTargetType]?.libelle ? (
+            <>({actionTargetTypeLabels[actionTargetType]?.libelle})</>
+          ) : (
+            <StyledGrayText>(cible non renseignée)</StyledGrayText>
+          )}
           <Bullet color={infractions.length > 0 ? COLORS.maximumRed : COLORS.mediumSeaGreen} />
         </Accented>
       </StyledControlThemes>
       {infractions && (
         <ControlInfractionsTags actionNumberOfControls={actionNumberOfControls} infractions={infractions} />
       )}
-      {actionStartDateTimeUtc ? <DateControl>{actionDate}</DateControl> : <span>Date à renseigner</span>}
+      <StyledGrayText>{actionStartDateTimeUtc ? actionDate : 'Date à renseigner'}</StyledGrayText>
     </StyledControlCardHeader>
   )
 }
@@ -74,6 +77,6 @@ const Bullet = styled.div<{ color: string }>`
   background-color: ${p => p.color};
 `
 
-const DateControl = styled.p`
+const StyledGrayText = styled.p`
   color: ${COLORS.slateGray};
 `
