@@ -2,7 +2,7 @@ import { SingleTag } from '@mtes-mct/monitor-ui'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { missionStatusEnum, missionTypeEnum } from '../../../../domain/entities/missions'
+import { missionStatusLabels, missionTypeEnum } from '../../../../domain/entities/missions'
 import { MissionFiltersEnum, updateFilters } from '../../../../domain/shared_slices/MissionFilters'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
@@ -52,7 +52,7 @@ export function FilterTags() {
       {statusFilter.length > 0 &&
         statusFilter.map(status => (
           <SingleTag key={status} onDelete={() => onDeleteTag(status, MissionFiltersEnum.STATUS_FILTER, statusFilter)}>
-            {String(`Mission ${missionStatusEnum[status].libelle.toLowerCase()}`)}
+            {String(`Mission ${missionStatusLabels[status].libelle.toLowerCase()}`)}
           </SingleTag>
         ))}
       {themeFilter.length > 0 &&

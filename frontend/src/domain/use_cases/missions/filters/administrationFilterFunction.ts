@@ -1,6 +1,6 @@
-import type { MissionType } from '../../../entities/missions'
+import type { Mission } from '../../../entities/missions'
 
-export function administrationFilterFunction(mission: MissionType, filter: string[]) {
+export function administrationFilterFunction(mission: Mission, filter: string[]) {
   if (filter.length === 0) {
     return true
   }

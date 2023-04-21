@@ -1,6 +1,6 @@
-import type { MissionType } from '../../../entities/missions'
+import type { Mission } from '../../../entities/missions'
 
-export function themeFilterFunction(mission: MissionType, themeFilter: string[]) {
+export function themeFilterFunction(mission: Mission, themeFilter: string[]) {
   if (themeFilter.length === 0) {
     return true
   }

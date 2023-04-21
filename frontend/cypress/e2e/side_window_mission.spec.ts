@@ -46,10 +46,8 @@ context('Missions', () => {
   it('allow only one theme and may be multiple subthemes in control actions', () => {
     // Given
     cy.get('*[data-cy="edit-mission"]').eq(3).click({ force: true })
-    cy.intercept('GET', `/bff/v1/controlthemes`).as('getControlThemes')
     cy.get('*[data-cy="action-card"]').eq(1).click()
     cy.get('*[data-cy="envaction-theme-element"]').should('have.length', 1)
-    cy.wait('@getControlThemes')
     cy.get('*[data-cy="envaction-theme-selector"]').contains('Police des mouillages')
     cy.get('*[data-cy="envaction-theme-element"]').contains('Mouillage individuel')
     cy.get('*[data-cy="envaction-theme-element"]').contains('ZMEL')
@@ -93,7 +91,6 @@ context('Missions', () => {
   it('save observations in control Actions', () => {
     // Given
     cy.get('*[data-cy="edit-mission"]').eq(3).click({ force: true })
-    cy.intercept('GET', `/bff/v1/controlthemes`).as('getControlThemes')
     cy.get('*[data-cy="action-card"]').eq(1).click()
     cy.get('[id="envActions[1].observations"]').contains('RAS')
 
@@ -164,7 +161,7 @@ context('Missions', () => {
   it.only('A mission should be created', () => {
     // Given
     cy.wait(200)
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('11')
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('9')
     cy.get('*[data-cy="add-mission"]').click()
 
     cy.get('*[data-cy="mission-nature"]').find('.rs-checkbox').should('have.length', 3)
@@ -202,13 +199,13 @@ context('Missions', () => {
       expect(controlUnit.id).equal(10012)
       expect(controlUnit.name).equal('Cross Etel')
     })
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('12')
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('10')
   })
 
   it('A mission should be deleted', () => {
     // Given
     cy.wait(200)
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('12')
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('10')
     cy.get('*[data-cy="edit-mission"]').eq(9).click({ force: true })
 
     cy.intercept({
@@ -223,7 +220,7 @@ context('Missions', () => {
     cy.wait('@deleteMission').then(({ response }) => {
       expect(response && response.statusCode).equal(200)
     })
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('11')
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('9')
   })
 
   it('A closed mission should be reopenable, editable and saved again', () => {
@@ -241,6 +238,6 @@ context('Missions', () => {
       expect(response && response.statusCode).equal(200)
       expect(request.body.openBy).equal('PCF')
     })
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('11')
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('9')
   })
 })
