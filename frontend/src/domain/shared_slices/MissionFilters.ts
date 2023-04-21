@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
-import { dateRangeEnum } from '../entities/missions'
+import { dateRangeLabels } from '../entities/missions'
 
 export const SEVEN_DAYS_AGO = dayjs().subtract(7, 'days').toISOString()
 
@@ -24,7 +24,7 @@ type MissionFiltersSliceType = {
 const initialState: MissionFiltersSliceType = {
   administrationFilter: [],
   hasFilters: false,
-  periodFilter: dateRangeEnum.WEEK.value,
+  periodFilter: dateRangeLabels.WEEK.value,
   seaFrontFilter: [],
   sourceFilter: undefined,
   startedAfter: SEVEN_DAYS_AGO,
@@ -53,7 +53,7 @@ const missionFiltersSlice = createSlice({
         [action.payload.key]: action.payload.value,
         hasFilters:
           (action.payload.value && action.payload.value.length > 0) ||
-          state.periodFilter !== dateRangeEnum.WEEK.value ||
+          state.periodFilter !== dateRangeLabels.WEEK.value ||
           state.administrationFilter.length > 0 ||
           state.unitFilter.length > 0 ||
           state.typeFilter.length > 0 ||

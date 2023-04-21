@@ -31,8 +31,6 @@ class JpaMissionRepository(
         pageable: Pageable
     ): List<MissionEntity> {
         val missionSourcesAsStringArray = missionSources?.map{ it.name }
-        println(missionSources)
-        println(missionSourcesAsStringArray)
         val facadeAsStringArray = seaFronts?.map{ it.name }
         return dbMissionRepository.findAllMissions(
             startedAfter = startedAfter,

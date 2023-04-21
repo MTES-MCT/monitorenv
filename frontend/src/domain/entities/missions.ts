@@ -281,7 +281,7 @@ export enum SeaFrontEnum {
   SA = 'SA'
 }
 
-export const seaFrontEnum = {
+export const seaFrontLabels = {
   MED: {
     label: 'MED',
     value: 'MED'
@@ -315,7 +315,7 @@ export enum DateRangeEnum {
   WEEK = 'WEEK'
 }
 
-export const dateRangeEnum = {
+export const dateRangeLabels = {
   DAY: {
     label: 'Aujourd’hui',
     value: 'DAY'

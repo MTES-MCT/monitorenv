@@ -276,6 +276,22 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(missions).hasSize(44)
     }
 
+     @Test
+    @Transactional
+    fun `findAllMissions Should return filtered missions when seaFront is set to MEMN`() {
+        // When
+        val missions = jpaMissionRepository.findAllMissions(
+            startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
+            startedBefore = null,
+            missionNatures = null,
+            missionTypes = null,
+            missionStatuses = null,
+            seaFronts = listOf(MissionSeaFrontEnum.MEMN),
+            pageable = Pageable.unpaged()
+        )
+        assertThat(missions).hasSize(9)
+    }
+
     @Test
     @Transactional
     fun `findAllMissions Should return filtered missions when status is set to UPCOMING`() {

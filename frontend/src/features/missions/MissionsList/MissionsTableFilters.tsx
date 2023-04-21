@@ -10,11 +10,11 @@ import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
 import { COLORS } from '../../../constants/constants'
 import {
   DateRangeEnum,
-  dateRangeEnum,
+  dateRangeLabels,
   missionSourceEnum,
   missionStatusLabels,
   missionTypeEnum,
-  seaFrontEnum
+  seaFrontLabels
 } from '../../../domain/entities/missions'
 import { resetMissionFilters, updateFilters } from '../../../domain/shared_slices/MissionFilters'
 import { useAppSelector } from '../../../hooks/useAppSelector'
@@ -81,11 +81,11 @@ export function MissionsTableFilters() {
     .sort((a, b) => a?.name?.localeCompare(b?.name))
     .map(t => ({ label: t.name, value: t.name }))
 
-  const dateRangeEnumOptions = Object.values(dateRangeEnum)
+  const dateRangeOptions = Object.values(dateRangeLabels)
   const StatusOptions = Object.values(missionStatusLabels)
   const TypeOptions = Object.values(missionTypeEnum)
   const sourceOptions = Object.values(missionSourceEnum)
-  const seaFrontsOptions = Object.values(seaFrontEnum)
+  const seaFrontsOptions = Object.values(seaFrontLabels)
 
   const onUpdatePeriodFilter = period => {
     dispatch(updateFilters({ key: 'periodFilter', value: period }))
@@ -167,7 +167,7 @@ export function MissionsTableFilters() {
           label="Période"
           name="Période"
           onChange={onUpdatePeriodFilter}
-          options={dateRangeEnumOptions}
+          options={dateRangeOptions}
           placeholder="Date de mission depuis"
           style={tagPickerStyle}
           value={periodFilter}
@@ -261,7 +261,6 @@ export function MissionsTableFilters() {
           onChange={value => onUpdateSimpleFilter(value, 'themeFilter')}
           placeholder="Thématique"
           renderValue={() => themeFilter && <OptionValue>{`Theme (${themeFilter.length})`}</OptionValue>}
-          searchable={false}
           size="sm"
           style={tagPickerStyle}
           value={themeFilter}
@@ -312,6 +311,7 @@ const ResetFiltersButton = styled.div`
   cursor: pointer;
   display: flex;
   align-items: center;
+  padding-top: 10px;
   svg {
     margin-right: 5px;
   }

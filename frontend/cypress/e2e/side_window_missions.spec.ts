@@ -16,7 +16,7 @@ context('Missions', () => {
     cy.get('[data-key="BGC Ajaccio"]').should('not.exist')
   })
 
-  it('9 Missions should be displayed in Missions Table', () => {
+  it('Missions should be displayed in Missions Table and filterable', () => {
     cy.get('*[data-cy="SideWindowHeader-title"]').contains('Missions et contrôles')
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('9')
 
@@ -24,21 +24,21 @@ context('Missions', () => {
     cy.fill('Période', 'Une semaine')
 
     cy.log('Administrations should be filtered')
-    cy.get('*[data-cy="select-administration-filter"]').click({ force: true })
-    cy.get('div[role="option"]').find('label').contains('DDTM').click({ force: true })
+    cy.get('*[data-cy="select-administration-filter"]').click()
+    cy.get('div[role="option"]').find('label').contains('DDTM').click()
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('5')
 
     cy.log('Initialize filters')
-    cy.get('*[data-cy="reinitialize-filters"]').click({ force: true })
+    cy.get('*[data-cy="reinitialize-filters"]').click()
 
     cy.log('Units should be filtered')
-    cy.get('*[data-cy="select-units-filter"]').click({ force: true })
-    cy.get('div[role="option"]').find('label').contains('Cross Etel').click({ force: true })
+    cy.get('*[data-cy="select-units-filter"]').click()
+    cy.get('div[role="option"]').find('label').contains('Cross Etel').click()
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('1')
 
     cy.log('Units filter should be clear')
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').click('topLeft')
-    cy.get('*[data-cy="select-units-filter"] > .rs-stack > .rs-stack-item > .rs-btn-close').click({
+    cy.get('*[data-cy="select-units-filter"]').get('[title="Clear"]').click({
       force: true
     })
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('9')
