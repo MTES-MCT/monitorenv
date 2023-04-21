@@ -80,7 +80,6 @@ data class MissionModel(
     var observationsCnsp: String? = null,
     @Column(name = "facade")
     @Enumerated(EnumType.STRING)
-    @Type(type = "pgsql_enum")
     var facade: MissionSeaFrontEnum? = null,
     @JsonSerialize(using = GeometrySerializer::class)
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
