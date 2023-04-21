@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import { matchPath } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { useGetMissionQuery, useUpdateMissionMutation, useCreateMissionMutation } from '../../../api/missionsAPI'
+import { useGetMissionQuery } from '../../../api/missionsAPI'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { MissionSourceTag } from '../../../ui/MissionSourceTag'
@@ -25,10 +25,6 @@ export function Mission() {
 
   const { data: missionToEdit } = useGetMissionQuery(id ?? skipToken)
 
-  const [updateMission, { isLoading: isLoadingUpdateMission }] = useUpdateMissionMutation()
-
-  const [createMission, { isLoading: isLoadingCreateMission }] = useCreateMissionMutation()
-
   const missionFormikValues = useMemo(() => {
     if (!id) {
       return missionFactory()
@@ -38,29 +34,18 @@ export function Mission() {
   }, [missionToEdit, id])
 
   if (id && !missionToEdit) {
-    return <Loading>Chargement en cours</Loading>
+    return <div>Chargement en cours</div>
   }
 
   return (
     <EditMissionWrapper data-cy="editMissionWrapper">
-      <Header
-        title={`Edition de la mission${
-          isLoadingUpdateMission || isLoadingCreateMission ? ' - Enregistrement en cours' : ''
-        }`}
-      >
+      <Header title="Edition de la mission">
         <MissionSourceTag source={missionToEdit?.missionSource} />
       </Header>
-      <MissionForm
-        formValues={missionFormikValues}
-        id={id}
-        onCreateMission={createMission}
-        onUpdateMission={updateMission}
-      />
+      <MissionForm formValues={missionFormikValues} id={id} mission={missionToEdit} />
     </EditMissionWrapper>
   )
 }
-
-const Loading = styled.div``
 
 const EditMissionWrapper = styled.div`
   flex: 1;

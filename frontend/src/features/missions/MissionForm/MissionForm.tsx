@@ -1,85 +1,109 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
-import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
 import { Formik, FieldArray } from 'formik'
+import _ from 'lodash'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { IconButton, ButtonToolbar } from 'rsuite'
 import styled from 'styled-components'
 
-import { useDeleteMissionMutation } from '../../../api/missionsAPI'
 import { COLORS } from '../../../constants/constants'
+import { MissionSourceEnum } from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
-import { setError } from '../../../domain/shared_slices/Global'
 import { setMissionState } from '../../../domain/shared_slices/MissionsState'
+import { createOrEditMissionAndGoToMissionsList } from '../../../domain/use_cases/missions/createOrEditMission'
+import { deleteMissionAndGoToMissionsList } from '../../../domain/use_cases/missions/deleteMission'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { SyncFormValuesWithRedux } from '../../../hooks/useSyncFormValuesWithRedux'
 import { FormikForm } from '../../../uiMonitor/CustomFormikFields/FormikForm'
-import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
 import { sideWindowActions } from '../../SideWindow/slice'
 import { MissionCancelEditModal } from '../MissionCancelEditModal'
 import { MissionDeleteModal } from '../MissionDeleteModal'
+import { MissionSchema } from '../MissionSchema'
 import { ActionForm } from './ActionForm/ActionForm'
 import { ActionsForm } from './ActionsForm'
 import { GeneralInformationsForm } from './GeneralInformationsForm'
+import { MissionFormBottomBar } from './MissionFormBottomBar'
 
-export function MissionForm({ formValues, id, onCreateMission, onUpdateMission }) {
+export function MissionForm({ formValues, id, mission }) {
   const dispatch = useDispatch()
   const { sideWindow } = useAppSelector(state => state)
 
   const [currentActionIndex, setCurrentActionIndex] = useState(undefined)
-  const [errorOnSave, setErrorOnSave] = useState(false)
-  const [errorOnDelete, setErrorOnDelete] = useState(false)
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
+  const [shouldValidateOnChange, setShouldValidateOnChange] = useState(false)
 
-  const [deleteMission] = useDeleteMissionMutation()
-
-  const upsertMission = id === undefined ? onCreateMission : onUpdateMission
+  const allowEditMission =
+    mission?.missionSource === undefined ||
+    mission?.missionSource === MissionSourceEnum.MONITORENV ||
+    mission?.missionSource === MissionSourceEnum.MONITORFISH
+  const allowDeleteMission = !(id === undefined) && allowEditMission
 
   const handleSetCurrentActionIndex = index => {
     setCurrentActionIndex(index)
   }
-  const handleSubmitForm = values => {
-    upsertMission(values).then(response => {
-      if ('data' in response) {
-        dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSIONS))
-        setErrorOnSave(false)
-      } else {
-        dispatch(setError(response.error))
-        setErrorOnSave(true)
-      }
-    })
-  }
 
-  const handleConfirmDelete = () => {
-    setDeleteModalIsOpen(true)
-  }
   const handleReturnToEdition = () => {
     dispatch(sideWindowActions.setShowConfirmCancelModal(false))
     dispatch(sideWindowActions.setNextPath(null))
     setDeleteModalIsOpen(false)
   }
   const handleDelete = () => {
-    deleteMission({ id }).then(response => {
-      if ('error' in response) {
-        dispatch(setError(response.error))
-        setErrorOnDelete(true)
-      } else {
-        dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSIONS))
-      }
-    })
+    dispatch(deleteMissionAndGoToMissionsList(id))
   }
+
+  const handleDeleteMission = () => {
+    setDeleteModalIsOpen(true)
+  }
+
   const handleCancelForm = () => {
     dispatch(sideWindowActions.focusAndGoTo(sideWindow.nextPath || sideWindowPaths.MISSIONS))
   }
 
+  const handleSubmitForm = values => {
+    dispatch(createOrEditMissionAndGoToMissionsList(values))
+  }
+
   return (
-    <Formik enableReinitialize initialValues={formValues} onSubmit={handleSubmitForm}>
+    <Formik
+      enableReinitialize
+      initialValues={formValues}
+      onSubmit={handleSubmitForm}
+      validateOnBlur={false}
+      validateOnChange={shouldValidateOnChange}
+      validateOnMount={false}
+      validationSchema={MissionSchema}
+    >
       {formikProps => {
-        const handleCloseMission = () => {
-          formikProps.setFieldValue('isClosed', true)
-          formikProps.handleSubmit()
+        const allowCloseMission = !mission?.isClosed || !formikProps.values?.isClosed
+
+        const handleSaveMission = async () => {
+          await formikProps.setFieldValue('isClosed', false)
+          formikProps.validateForm().then(errors => {
+            if (_.isEmpty(errors)) {
+              formikProps.handleSubmit()
+
+              return
+            }
+            setShouldValidateOnChange(true)
+          })
         }
+
+        const handleCloseMission = async () => {
+          await formikProps.setFieldValue('isClosed', true)
+          formikProps.validateForm().then(errors => {
+            if (_.isEmpty(errors)) {
+              formikProps.handleSubmit()
+
+              return
+            }
+            setShouldValidateOnChange(true)
+          })
+        }
+
+        const handleReopenMission = () => {
+          formikProps.setFieldValue('isClosed', false)
+        }
+
         const handleConfirmFormCancelation = () => {
           if (formikProps.dirty) {
             dispatch(sideWindowActions.setShowConfirmCancelModal(true))
@@ -104,13 +128,16 @@ export function MissionForm({ formValues, id, onCreateMission, onUpdateMission }
               <SecondColumn>
                 <FieldArray
                   name="envActions"
-                  render={props => (
+                  render={({ form, remove, unshift }) => (
                     <ActionsForm
-                      {...props}
                       currentActionIndex={currentActionIndex}
+                      form={form}
+                      remove={remove}
                       setCurrentActionIndex={handleSetCurrentActionIndex}
+                      unshift={unshift}
                     />
                   )}
+                  validateOnChange={false}
                 />
               </SecondColumn>
               <ThirdColumn>
@@ -123,51 +150,21 @@ export function MissionForm({ formValues, id, onCreateMission, onUpdateMission }
                       setCurrentActionIndex={handleSetCurrentActionIndex}
                     />
                   )}
+                  validateOnChange={false}
                 />
               </ThirdColumn>
             </Wrapper>
 
-            <Footer>
-              <FormActionsWrapper>
-                {
-                  // id is undefined if creating a new mission
-                  !id && (
-                    <IconButton
-                      appearance="ghost"
-                      data-cy="delete-mission"
-                      icon={<DeleteIcon className="rs-icon" />}
-                      onClick={handleConfirmDelete}
-                      type="button"
-                    >
-                      Supprimer la mission
-                    </IconButton>
-                  )
-                }
-                <Separator />
-                <Button
-                  accent={Accent.TERTIARY}
-                  data-cy="quit-edit-mission"
-                  onClick={handleConfirmFormCancelation}
-                  type="button"
-                >
-                  Quitter
-                </Button>
-
-                <Button data-cy="save-mission" Icon={Icon.Save} type="submit">
-                  Enregistrer et quitter
-                </Button>
-                <Button
-                  accent={Accent.SECONDARY}
-                  data-cy="close-mission"
-                  Icon={Icon.Check}
-                  onClick={handleCloseMission}
-                >
-                  Enregistrer et clôturer
-                </Button>
-              </FormActionsWrapper>
-              {errorOnSave && <ErrorOnSave>Oups... Erreur au moment de la sauvegarde</ErrorOnSave>}
-              {errorOnDelete && <ErrorOnDelete>Oups... Erreur au moment de la suppression</ErrorOnDelete>}
-            </Footer>
+            <MissionFormBottomBar
+              allowClose={allowCloseMission}
+              allowDelete={allowDeleteMission}
+              allowEdit={allowEditMission}
+              closeMission={handleCloseMission}
+              deleteMission={handleDeleteMission}
+              quitFormEditing={handleConfirmFormCancelation}
+              reopenMission={handleReopenMission}
+              saveMission={handleSaveMission}
+            />
           </FormikForm>
         )
       }}
@@ -183,7 +180,6 @@ const FirstColumn = styled.div`
   background: ${COLORS.white};
   flex: 1;
   overflow-y: auto;
-  padding: 32px;
 `
 
 const SecondColumn = styled.div`
@@ -195,25 +191,4 @@ const ThirdColumn = styled.div`
   background: ${COLORS.gainsboro};
   flex: 1;
   overflow-y: auto;
-`
-
-const ErrorOnSave = styled.div`
-  background-color: ${COLORS.goldenPoppy};
-  text-align: right;
-`
-const ErrorOnDelete = styled.div`
-  background-color: ${COLORS.goldenPoppy};
-`
-const Separator = styled.div`
-  flex: 1;
-`
-const DeleteIcon = styled(DeleteSVG)`
-  color: ${COLORS.maximumRed};
-`
-const Footer = styled.div`
-  border-top: 1px solid ${COLORS.lightGray};
-  padding: 18px;
-`
-const FormActionsWrapper = styled(ButtonToolbar)`
-  display: flex;
 `

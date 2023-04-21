@@ -37,51 +37,33 @@ const sideWindowReducerSlice = createSlice({
      */
     // TODO Replace with an enum once `sideWindowPaths` is converted to an enum.
     focusAndGoTo(state, action: PayloadAction<string>) {
-      return {
-        ...state,
-        currentPath: action.payload,
-        nextPath: null,
-        showConfirmCancelModal: false,
-        status: SideWindowStatus.VISIBLE
-      }
+      state.currentPath = action.payload
+      state.nextPath = null
+      state.status = SideWindowStatus.VISIBLE
+      state.showConfirmCancelModal = false
     },
 
     onChangeStatus(state, action: PayloadAction<SideWindowStatus>) {
-      return {
-        ...state,
-        status: action.payload
-      }
+      state.status = action.payload
     },
 
     onConfirmCancelModal(state) {
-      return {
-        ...state,
-        nextPath: null,
-        showConfirmCancelModal: false,
-        status: SideWindowStatus.VISIBLE
-      }
+      state.nextPath = null
+      state.status = SideWindowStatus.VISIBLE
+      state.showConfirmCancelModal = false
     },
 
     onFocusAndDisplayCancelModal(state, action: PayloadAction<string>) {
-      return {
-        ...state,
-        nextPath: action.payload,
-        showConfirmCancelModal: true,
-        status: SideWindowStatus.VISIBLE
-      }
+      state.nextPath = action.payload
+      state.status = SideWindowStatus.VISIBLE
+      state.showConfirmCancelModal = true
     },
 
     setNextPath(state, action: PayloadAction<string | null>) {
-      return {
-        ...state,
-        nextPath: action.payload
-      }
+      state.nextPath = action.payload
     },
     setShowConfirmCancelModal(state, action: PayloadAction<boolean>) {
-      return {
-        ...state,
-        showConfirmCancelModal: action.payload
-      }
+      state.showConfirmCancelModal = action.payload
     }
   }
 })
