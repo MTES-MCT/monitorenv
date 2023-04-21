@@ -4,16 +4,25 @@ import { sideWindowPaths } from '../../domain/entities/sideWindow'
 
 import type { PayloadAction } from '@reduxjs/toolkit'
 
+export enum SideWindowStatus {
+  CLOSED = 'closed',
+  HIDDEN = 'hidden',
+  VISIBLE = 'visible'
+}
 export interface SideWindowState {
   // TODO Replace with an enum once `sideWindowPaths` is converted to an enum.
   currentPath: string
   hasBeenRenderedOnce: boolean
-  isOpen: boolean
+  nextPath?: string | null
+  showConfirmCancelModal: boolean
+  status: string
 }
 const INITIAL_STATE: SideWindowState = {
   currentPath: sideWindowPaths.MISSIONS,
   hasBeenRenderedOnce: false,
-  isOpen: false
+  nextPath: null,
+  showConfirmCancelModal: false,
+  status: SideWindowStatus.CLOSED
 }
 
 const sideWindowReducerSlice = createSlice({
@@ -21,16 +30,40 @@ const sideWindowReducerSlice = createSlice({
   name: 'sideWindowReducer',
   reducers: {
     close(state) {
-      state.isOpen = false
+      state.status = SideWindowStatus.CLOSED
     },
-
     /**
      * Open the side window and set its route path
      */
     // TODO Replace with an enum once `sideWindowPaths` is converted to an enum.
-    openAndGoTo(state, action: PayloadAction<string>) {
-      state.isOpen = true
+    focusAndGoTo(state, action: PayloadAction<string>) {
       state.currentPath = action.payload
+      state.nextPath = null
+      state.status = SideWindowStatus.VISIBLE
+      state.showConfirmCancelModal = false
+    },
+
+    onChangeStatus(state, action: PayloadAction<SideWindowStatus>) {
+      state.status = action.payload
+    },
+
+    onConfirmCancelModal(state) {
+      state.nextPath = null
+      state.status = SideWindowStatus.VISIBLE
+      state.showConfirmCancelModal = false
+    },
+
+    onFocusAndDisplayCancelModal(state, action: PayloadAction<string>) {
+      state.nextPath = action.payload
+      state.status = SideWindowStatus.VISIBLE
+      state.showConfirmCancelModal = true
+    },
+
+    setNextPath(state, action: PayloadAction<string | null>) {
+      state.nextPath = action.payload
+    },
+    setShowConfirmCancelModal(state, action: PayloadAction<boolean>) {
+      state.showConfirmCancelModal = action.payload
     }
   }
 })

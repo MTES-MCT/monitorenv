@@ -1,15 +1,14 @@
+import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
 import { useDispatch } from 'react-redux'
-import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
-import { COLORS } from '../../constants/constants'
-import { sideWindowPaths } from '../../domain/entities/sideWindow'
-import { useGetFilteredMissionsQuery } from '../../hooks/useGetFilteredMissionsQuery'
-import { ReactComponent as PlusSVG } from '../../uiMonitor/icons/Plus.svg'
-import { Header } from '../SideWindow/Header'
-import { sideWindowActions } from '../SideWindow/slice'
-import { MissionsTable } from './MissionsList/MissionsTable'
-import { MissionsTableFilters } from './MissionsList/MissionsTableFilters'
+import { COLORS } from '../../../constants/constants'
+import { sideWindowPaths } from '../../../domain/entities/sideWindow'
+import { useGetFilteredMissionsQuery } from '../../../hooks/useGetFilteredMissionsQuery'
+import { Header } from '../../SideWindow/Header'
+import { sideWindowActions } from '../../SideWindow/slice'
+import { MissionsTable } from './MissionsTable'
+import { MissionsTableFilters } from './MissionsTableFilters'
 
 export function Missions() {
   const dispatch = useDispatch()
@@ -19,13 +18,14 @@ export function Missions() {
   return (
     <>
       <Header title="Missions et contrôles">
-        <AddNewMissionButton
+        <StyledButton
+          accent={Accent.SECONDARY}
           data-cy="add-mission"
-          icon={<PlusSVG className="rs-icon" />}
-          onClick={() => dispatch(sideWindowActions.openAndGoTo(sideWindowPaths.MISSION_NEW))}
+          Icon={Icon.Plus}
+          onClick={() => dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSION_NEW))}
         >
-          <span>Ajouter une nouvelle mission</span>
-        </AddNewMissionButton>
+          Ajouter une nouvelle mission
+        </StyledButton>
       </Header>
       <SideWindowContent>
         <MissionsTableFilters />
@@ -34,7 +34,7 @@ export function Missions() {
         </NumberOfDisplayedMissions>
         <TableContainer>
           {isError ? (
-            <ErrorMessage data-cy="listMissionWrapper">Erreur au chargement des données</ErrorMessage>
+            <p data-cy="listMissionWrapper">Erreur au chargement des données</p>
           ) : (
             <MissionsTable isLoading={isLoading} missions={missions} />
           )}
@@ -43,8 +43,6 @@ export function Missions() {
     </>
   )
 }
-
-const ErrorMessage = styled.div``
 
 const SideWindowContent = styled.div`
   margin: 8px;
@@ -56,8 +54,8 @@ const SideWindowContent = styled.div`
 const NumberOfDisplayedMissions = styled.h3`
   font-size: 13px;
 `
-const AddNewMissionButton = styled(IconButton)`
-  background: ${COLORS.white};
+const StyledButton = styled(Button)`
+  background-color: ${COLORS.white};
 `
 const TableContainer = styled.div`
   flex: 1;

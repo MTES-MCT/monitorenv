@@ -16,7 +16,6 @@ import { useAppSelector } from '../hooks/useAppSelector'
 export function HomePage() {
   const { displayDrawModal, displayInterestPoint, displayLocateOnMap, displayMeasurement, displayMissionMenuButton } =
     useAppSelector(state => state.global)
-  const { sideWindow } = useAppSelector(state => state)
 
   return (
     <>
@@ -31,7 +30,7 @@ export function HomePage() {
         {displayMeasurement && <MeasurementMapButton />}
         {displayInterestPoint && <InterestPointMapButton />}
 
-        {sideWindow.isOpen && <SideWindowLauncher />}
+        <SideWindowLauncher />
 
         <ErrorToastNotification />
       </Wrapper>

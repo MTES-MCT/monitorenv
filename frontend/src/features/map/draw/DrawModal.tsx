@@ -31,6 +31,7 @@ import { ReactComponent as CircleSVG } from '../../../uiMonitor/icons/Info.svg'
 import { ReactComponent as PolygonSVG } from '../../../uiMonitor/icons/Polygone.svg'
 import { ReactComponent as RectangleSVG } from '../../../uiMonitor/icons/Rectangle.svg'
 import { ReactComponent as SelectorSVG } from '../../../uiMonitor/icons/Selector.svg'
+import { SideWindowStatus } from '../../SideWindow/slice'
 
 import type { MultiPoint, MultiPolygon } from 'ol/geom'
 
@@ -102,10 +103,10 @@ export function DrawModal() {
   }, [dispatch, previousMissionId, routeParams])
 
   useEffect(() => {
-    if (!sideWindow.isOpen) {
+    if (sideWindow.status === SideWindowStatus.CLOSED) {
       dispatch(closeAddZone())
     }
-  }, [dispatch, sideWindow.isOpen])
+  }, [dispatch, sideWindow.status])
 
   const handleQuit = () => {
     dispatch(closeAddZone())
