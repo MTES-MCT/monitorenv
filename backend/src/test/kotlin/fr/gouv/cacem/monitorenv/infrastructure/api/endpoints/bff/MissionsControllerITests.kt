@@ -61,7 +61,7 @@ class MissionsControllerITests {
             "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
         // Given
-        val newMission = MissionEntity(
+        val expectedNewMission = MissionEntity(
             id = 10,
             missionTypes = listOf( MissionTypeEnum.LAND),
             missionNature = listOf(MissionNatureEnum.ENV),
@@ -72,7 +72,9 @@ class MissionsControllerITests {
             endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
             isDeleted = false,
             isClosed = false,
-            missionSource = MissionSourceEnum.MONITORENV
+            missionSource = MissionSourceEnum.MONITORENV,
+            hasMissionOrder = false,
+            isUnderJdp = false
         )
         val newMissionRequest = CreateOrUpdateMissionDataInput(
             missionTypes = listOf( MissionTypeEnum.LAND),
@@ -86,7 +88,7 @@ class MissionsControllerITests {
             missionSource = MissionSourceEnum.MONITORENV
         )
         val requestbody = objectMapper.writeValueAsString(newMissionRequest)
-        given(this.createMission.execute(mission = any())).willReturn(newMission)
+        given(this.createMission.execute(mission = any())).willReturn(expectedNewMission)
         // When
         mockMvc.perform(
             put("/bff/v1/missions")
@@ -106,7 +108,7 @@ class MissionsControllerITests {
             "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
-        val firstMission = MissionEntity(
+        val expectedFirstMission = MissionEntity(
             id = 10,
             missionTypes = listOf( MissionTypeEnum.SEA),
             missionNature = listOf(MissionNatureEnum.ENV),
@@ -117,7 +119,9 @@ class MissionsControllerITests {
             endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
             isClosed = false,
             isDeleted = false,
-            missionSource = MissionSourceEnum.MONITORENV
+            missionSource = MissionSourceEnum.MONITORENV,
+            hasMissionOrder = false,
+            isUnderJdp = false
         )
         given(
             this.getMonitorEnvMissions.execute(
@@ -131,7 +135,7 @@ class MissionsControllerITests {
                 pageNumber = any(),
                 pageSize = any()
             )
-        ).willReturn(listOf(firstMission))
+        ).willReturn(listOf(expectedFirstMission))
 
         // When
         mockMvc.perform(get("/bff/v1/missions"))
@@ -144,16 +148,18 @@ class MissionsControllerITests {
     fun `Should get specific mission when requested by Id`() {
         // Given
         val requestedId = 0
-        val firstMission = MissionEntity(
+        val expectedFirstMission = MissionEntity(
             id = 10,
             missionTypes = listOf( MissionTypeEnum.SEA),
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isClosed = false,
             isDeleted = false,
-            missionSource = MissionSourceEnum.MONITORENV
+            missionSource = MissionSourceEnum.MONITORENV,
+            hasMissionOrder = false,
+            isUnderJdp = false
         )
         // we test only if the route is called with the right arg
-        given(getMissionById.execute(requestedId)).willReturn(firstMission)
+        given(getMissionById.execute(requestedId)).willReturn(expectedFirstMission)
 
         // When
         mockMvc.perform(get("/bff/v1/missions/$requestedId"))
@@ -173,7 +179,9 @@ class MissionsControllerITests {
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isClosed = false,
             isDeleted = false,
-            missionSource = MissionSourceEnum.MONITORENV
+            missionSource = MissionSourceEnum.MONITORENV,
+            hasMissionOrder = false,
+            isUnderJdp = false
         )
         val envAction = EnvActionControlEntity(
             id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),

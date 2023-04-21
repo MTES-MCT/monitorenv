@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdateMissionDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdatePublicMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.MissionDataOutput
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSeaFrontEnum
 import io.swagger.v3.oas.annotations.Operation
@@ -70,7 +70,7 @@ class ApiMissionsController(
     @Operation(summary = "Create a new mission")
     fun createMissionController(
         @RequestBody
-        createMissionDataInput: CreateOrUpdateMissionDataInput
+        createMissionDataInput: CreateOrUpdatePublicMissionDataInput
     ): MissionDataOutput {
         val newMission = createMissionDataInput.toMissionEntity()
         val createdMission = createMission.execute(mission = newMission)
@@ -96,7 +96,7 @@ class ApiMissionsController(
         @PathVariable(name = "missionId")
         missionId: Int,
         @RequestBody
-        updateMissionDataInput: CreateOrUpdateMissionDataInput
+        updateMissionDataInput: CreateOrUpdatePublicMissionDataInput
     ): MissionDataOutput {
         if ((updateMissionDataInput.id == null) || (missionId != updateMissionDataInput.id)) {
             throw java.lang.IllegalArgumentException("missionId doesn't match with request param")

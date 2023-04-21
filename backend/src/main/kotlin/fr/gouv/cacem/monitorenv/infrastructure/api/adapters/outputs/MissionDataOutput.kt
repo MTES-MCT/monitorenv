@@ -20,13 +20,16 @@ data class MissionDataOutput(
     val endDateTimeUtc: ZonedDateTime? = null,
     val envActions: List<EnvActionEntity>? = null,
     val missionSource: MissionSourceEnum,
-    val isClosed: Boolean
+    val isClosed: Boolean,
+    val hasMissionOrder: Boolean,
+    val isUnderJdp: Boolean
 ) {
     companion object {
         fun fromMission(mission: MissionEntity): MissionDataOutput {
             requireNotNull(mission.id) {
                 "a mission must have an id"
             }
+
             return MissionDataOutput(
                 id = mission.id,
                 missionTypes = mission.missionTypes,
@@ -42,7 +45,9 @@ data class MissionDataOutput(
                 endDateTimeUtc = mission.endDateTimeUtc,
                 envActions = mission.envActions,
                 missionSource = mission.missionSource,
-                isClosed = mission.isClosed
+                isClosed = mission.isClosed,
+                hasMissionOrder = mission.hasMissionOrder,
+                isUnderJdp = mission.isUnderJdp
             )
         }
     }

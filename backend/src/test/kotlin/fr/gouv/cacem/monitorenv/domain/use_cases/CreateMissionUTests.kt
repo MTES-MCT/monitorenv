@@ -33,7 +33,9 @@ class CreateMissionUTests {
             endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
             isClosed = false,
             isDeleted = false,
-            missionSource = MissionSourceEnum.MONITORENV
+            missionSource = MissionSourceEnum.MONITORENV,
+            hasMissionOrder = false,
+            isUnderJdp = false
         )
         given(missionRepository.save(expectedCreatedMission)).willReturn(expectedCreatedMission)
 
