@@ -2,9 +2,9 @@ import { SingleTag } from '@mtes-mct/monitor-ui'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { missionStatusEnum, missionTypeEnum } from '../../../domain/entities/missions'
-import { updateFilters } from '../../../domain/shared_slices/MissionFilters'
-import { useAppSelector } from '../../../hooks/useAppSelector'
+import { missionStatusEnum, missionTypeEnum } from '../../../../domain/entities/missions'
+import { updateFilters } from '../../../../domain/shared_slices/MissionFilters'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 export function FilterTags() {
   const dispatch = useDispatch()

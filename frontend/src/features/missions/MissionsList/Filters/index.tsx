@@ -5,9 +5,9 @@ import { useDispatch } from 'react-redux'
 import { CheckPicker } from 'rsuite'
 import styled from 'styled-components'
 
-import { useGetControlThemesQuery } from '../../../api/controlThemesAPI'
-import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
-import { COLORS } from '../../../constants/constants'
+import { useGetControlThemesQuery } from '../../../../api/controlThemesAPI'
+import { useGetControlUnitsQuery } from '../../../../api/controlUnitsAPI'
+import { COLORS } from '../../../../constants/constants'
 import {
   DateRangeEnum,
   dateRangeLabels,
@@ -15,11 +15,11 @@ import {
   missionStatusLabels,
   missionTypeEnum,
   seaFrontLabels
-} from '../../../domain/entities/missions'
-import { resetMissionFilters, updateFilters } from '../../../domain/shared_slices/MissionFilters'
-import { useAppSelector } from '../../../hooks/useAppSelector'
-import { useNewWindow } from '../../../ui/NewWindow'
-import { ReactComponent as ReloadSVG } from '../../../uiMonitor/icons/Reload.svg'
+} from '../../../../domain/entities/missions'
+import { resetMissionFilters, updateFilters } from '../../../../domain/shared_slices/MissionFilters'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { useNewWindow } from '../../../../ui/NewWindow'
+import { ReactComponent as ReloadSVG } from '../../../../uiMonitor/icons/Reload.svg'
 import { FilterTags } from './FilterTags'
 
 export function MissionsTableFilters() {

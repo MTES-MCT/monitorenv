@@ -1,7 +1,9 @@
-import _ from 'lodash'
 import { useMemo } from 'react'
 
 import { useGetMissionsQuery } from '../api/missionsAPI'
+import { administrationFilterFunction } from '../domain/use_cases/missions/filters/administrationFilterFunction'
+import { themeFilterFunction } from '../domain/use_cases/missions/filters/themeFilterFunction'
+import { unitFilterFunction } from '../domain/use_cases/missions/filters/unitFilterFunction'
 import { useAppSelector } from './useAppSelector'
 
 const TWO_MINUTES = 2 * 60 * 1000
@@ -38,59 +40,12 @@ export const useGetFilteredMissionsQuery = () => {
     if (administrationFilter.length === 0 && unitFilter.length === 0 && themeFilter.length === 0) {
       return data
     }
-    let tempData = data
-    if (themeFilter.length > 0) {
-      const missionWithActions = data.filter(mission => mission.envActions.length > 0)
 
-      const missionsWithThemes = missionWithActions.reduce((acc, curr) => {
-        const actions = _.flatten(curr.envActions)
+    const tempData = data.filter(
+      mission => administrationFilterFunction(mission, administrationFilter) && unitFilterFunction(mission, unitFilter)
+    )
 
-        const themes = _.flatten(actions.map((action: any) => action?.themes))
-        const themesFormatted = themes?.map(theme => theme?.theme)
-
-        return {
-          ...acc,
-          [curr.id]: themesFormatted
-        }
-      }, {})
-
-      const filteredMissions = Object.entries<any>(missionsWithThemes).map(([key, value]) => {
-        if (value.find(theme => themeFilter.includes(theme))) {
-          return key
-        }
-
-        return null
-      })
-
-      tempData = data.filter(mission => filteredMissions.includes(String(mission.id)))
-    }
-
-    if (unitFilter.length > 0) {
-      return tempData.filter(
-        mission =>
-          !!mission.controlUnits.find(controlUnit => {
-            if (unitFilter.find(unit => unit === controlUnit.name)) {
-              return controlUnit
-            }
-
-            return undefined
-          })
-      )
-    }
-
-    if (administrationFilter.length > 0) {
-      return tempData.filter(mission =>
-        mission.controlUnits.find(controlUnit => {
-          if (administrationFilter.find(adminFilter => adminFilter === controlUnit.administration)) {
-            return controlUnit
-          }
-
-          return undefined
-        })
-      )
-    }
-
-    return tempData
+    return themeFilterFunction(tempData, themeFilter)
   }, [data, administrationFilter, themeFilter, unitFilter])
 
   return { isError, isLoading, missions }
