@@ -188,7 +188,7 @@ export function MissionsTableFilters() {
           isLabelHidden
           label="Origine"
           name="origine"
-          onChange={value => onUpdateSimpleFilter(value, 'sourceFilter')}
+          onChange={value => onUpdateSimpleFilter(value, MissionFiltersEnum.SOURCE_FILTER)}
           options={sourceOptions}
           placeholder="Origine"
           style={tagPickerStyle}
@@ -215,7 +215,7 @@ export function MissionsTableFilters() {
           data={unitListAsOptions}
           data-cy="select-units-filter"
           labelKey="label"
-          onChange={value => onUpdateSimpleFilter(value, 'unitFilter')}
+          onChange={value => onUpdateSimpleFilter(value, MissionFiltersEnum.UNIT_FILTER)}
           placeholder="Unité"
           renderValue={() => unitFilter && <OptionValue>{`Unité (${unitFilter.length})`}</OptionValue>}
           searchable
@@ -228,7 +228,7 @@ export function MissionsTableFilters() {
           container={() => unitPickerRef.current}
           data={TypeOptions}
           labelKey="libelle"
-          onChange={value => onUpdateSimpleFilter(value, 'typeFilter')}
+          onChange={value => onUpdateSimpleFilter(value, MissionFiltersEnum.TYPE_FILTER)}
           placeholder="Type de mission"
           renderValue={() => typeFilter && <OptionValue>{`Type (${typeFilter.length})`}</OptionValue>}
           searchable={false}
@@ -241,7 +241,7 @@ export function MissionsTableFilters() {
           container={() => unitPickerRef.current}
           data={seaFrontsOptions}
           labelKey="label"
-          onChange={value => onUpdateSimpleFilter(value, 'seaFrontFilter')}
+          onChange={value => onUpdateSimpleFilter(value, MissionFiltersEnum.SEA_FRONT_FILTER)}
           placeholder="Facade"
           renderValue={() => seaFrontFilter && <OptionValue>{`Facade (${seaFrontFilter.length})`}</OptionValue>}
           searchable={false}
@@ -254,7 +254,7 @@ export function MissionsTableFilters() {
           container={() => unitPickerRef.current}
           data={StatusOptions}
           labelKey="libelle"
-          onChange={value => onUpdateSimpleFilter(value, 'statusFilter')}
+          onChange={value => onUpdateSimpleFilter(value, MissionFiltersEnum.STATUS_FILTER)}
           placeholder="Statut"
           renderValue={() => statusFilter && <OptionValue>{`Statut (${statusFilter.length})`}</OptionValue>}
           searchable={false}
@@ -267,7 +267,7 @@ export function MissionsTableFilters() {
           container={() => unitPickerRef.current}
           data={themesListAsOptions}
           labelKey="label"
-          onChange={value => onUpdateSimpleFilter(value, 'themeFilter')}
+          onChange={value => onUpdateSimpleFilter(value, MissionFiltersEnum.THEME_FILTER)}
           placeholder="Thématique"
           renderValue={() => themeFilter && <OptionValue>{`Theme (${themeFilter.length})`}</OptionValue>}
           size="sm"
