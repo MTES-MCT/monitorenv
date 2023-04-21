@@ -41,11 +41,12 @@ export const useGetFilteredMissionsQuery = () => {
       return data
     }
 
-    const tempData = data.filter(
-      mission => administrationFilterFunction(mission, administrationFilter) && unitFilterFunction(mission, unitFilter)
+    return data.filter(
+      mission =>
+        administrationFilterFunction(mission, administrationFilter) &&
+        unitFilterFunction(mission, unitFilter) &&
+        themeFilterFunction(mission, themeFilter)
     )
-
-    return themeFilterFunction(tempData, themeFilter)
   }, [data, administrationFilter, themeFilter, unitFilter])
 
   return { isError, isLoading, missions }
