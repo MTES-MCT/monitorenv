@@ -9,12 +9,8 @@ python = "^3.10"
 
 # Project-Specific
 python-dotenv = "^0.19.2"
-click = "^8.0.3"
 
-# Jupyter Notebook
-jupyter = "^1.0.0"
-matplotlib = "^3.5.1"
-jupytext = "^1.13.6"
+docker-compose = "^1.28.4"
 
 pandas = "^1.4.0"
 openpyxl = "^3.0.9"
@@ -26,32 +22,58 @@ psycopg2 = "^2.9.3"
 
 simplejson = "^3.17.6"
 h3 = "^3.7.3"
-pytz = "2021.3"
+pytz = "^2021.3"
 
 prefect = "^1.3"
+
+geopandas = "0.10.2"
+Rtree = "^1.0.0"
+
+tqdm = "^4.56.2"
+
+requests-mock = "^1.10.0"
+coverage = "^6.4"
+pytest = "^6.2.5"
+
+[tool.poetry.dev-dependencies]
+
+
+# Jupyter Notebook
+jupyter = "^1.0.0"
+matplotlib = "^3.5.1"
+plotly = "^4.14.3"
+XlsxWriter = "^1.3.7"
+matplotlib-venn = "^0.11.6"
+seaborn = "^0.11.1"
+line-profiler = "^3.1.0"
+ipywidgets = "^7.6.3"
+pyarrow = "^3.0.0"
+xlrd = "^2.0.1"
+tabula-py = "^2.2.0"
+grip = "^4.5.2"
 
 Sphinx = "^4.4.0"
 sphinx-click = "^3.1.0"
 sphinx-rtd-theme = "^1.0.0"
 sphinxcontrib-apidoc = "^0.3.0"
 sphinx-autodoc-typehints = "^1.16.0"
+sphinx-autoapi = "^1.8.4"
+sphinx-intl = "^2.0.1"
+
 importlib-metadata = "^4.10.1"
 myst-parser = "^0.16.1"
 Pygments = "^2.11.2"
-progressbar = "^2.5"
+
+prefect = {version = "^1.3", extras = ["viz"]}
+
 Faker = "^12.3.0"
 
-coverage = "^6.4"
-pytest = "^6.2.5"
-geopandas = "0.10.2"
-Rtree = "^1.0.0"
-
-[tool.poetry.dev-dependencies]
 # Linting
 ## Type Checking and Data Validation
 mypy = "^0.931"
 ## Code formatting
 black = "^22.1.0"
+flake8 = "^3.8.4"
 ## Code quality
 isort = "^5.10.1"
 pylint = "^2.12.2"
@@ -59,20 +81,18 @@ pylint = "^2.12.2"
 pre-commit = "^2.17.0"
 
 
-[tool.poetry.scripts]
-cli = "bin.cli:cli"
-
 #################################################################################
 # Tooling configs                                                               #
 #################################################################################
-[tool.black]
-line-length = 79
 
 [tool.coverage.run]
-branch = true
-concurrency = ["multiprocessing"]
-parallel = true
-source = ["artificialisation"]
+source = ['.']
+omit = ['src/utils/*', 'tests/*']
+
+[tool.pytest.ini_options]
+env_files = [
+    ".env.test"
+]
 
 [tool.coverage.report]
 exclude_lines =[
@@ -84,6 +104,9 @@ exclude_lines =[
 fail_under = 70
 show_missing = true
 skip_covered = true
+
+[tool.black]
+line-length = 79
 
 [tool.isort]
 profile = "black"
