@@ -272,6 +272,70 @@ export const missionSourceEnum = {
   }
 }
 
+export enum SeaFrontEnum {
+  MED = 'MED',
+  MEMN = 'MEMN',
+  NAMO = 'NAMO',
+  OUTREMEROA = 'OUTREMEROA',
+  OUTREMEROI = 'OUTREMEROI',
+  SA = 'SA'
+}
+
+export const seaFrontLabels = {
+  MED: {
+    label: 'MED',
+    value: 'MED'
+  },
+  MEMN: {
+    label: 'MEMN',
+    value: 'MEMN'
+  },
+  NAMO: {
+    label: 'NAMO',
+    value: 'NAMO'
+  },
+  OUTREMEROA: {
+    label: 'OUTREMEROA',
+    value: 'OUTREMEROA'
+  },
+  OUTREMEROI: {
+    label: 'OUTREMEROI',
+    value: 'OUTREMEROI'
+  },
+  SA: {
+    label: 'SA',
+    value: 'SA'
+  }
+}
+
+export enum DateRangeEnum {
+  CUSTOM = 'CUSTOM',
+  DAY = 'DAY',
+  MONTH = 'MONTH',
+  WEEK = 'WEEK'
+}
+
+export const dateRangeLabels = {
+  DAY: {
+    label: 'Aujourd’hui',
+    value: 'DAY'
+  },
+  WEEK: {
+    label: 'Une semaine',
+    value: 'WEEK'
+  },
+  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
+  MONTH: {
+    label: 'Un mois',
+    value: 'MONTH'
+  },
+  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
+  CUSTOM: {
+    label: 'Période spécifique',
+    value: 'CUSTOM'
+  }
+}
+
 export const THEME_REQUIRE_PROTECTED_SPECIES = ['Police des espèces protégées et de leurs habitats (faune et flore)']
 
 export const relevantCourtEnum = {
@@ -302,7 +366,7 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
   controlUnits: Omit<ControlUnit, 'id'>[]
   endDateTimeUtc?: string
   envActions: EnvAction[]
-  facade: string
+  facade: SeaFrontEnum
   geom?: Record<string, any>[]
   id: number
   isClosed: boolean

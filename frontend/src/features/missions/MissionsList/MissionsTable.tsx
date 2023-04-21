@@ -3,7 +3,6 @@ import { Table } from 'rsuite'
 
 import { DateCell } from '../../../ui/Table/Cell/DateCell'
 import { CellActionThemes } from './CellActionThemes'
-import { CellAlert } from './CellAlert'
 import { CellEditMission } from './CellEditMission'
 import { CellLocalizeMission } from './CellLocalizeMission'
 import { CellMissionSource } from './CellMissionSource'
@@ -62,7 +61,7 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
         <CellResources />
       </Table.Column>
 
-      <Table.Column width={120}>
+      <Table.Column width={100}>
         <Table.HeaderCell>Type</Table.HeaderCell>
         <CellMissionType />
       </Table.Column>
@@ -77,7 +76,7 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
         <CellActionThemes />
       </Table.Column>
 
-      <Table.Column width={120}>
+      <Table.Column width={100}>
         <Table.HeaderCell>Nb Contrôles</Table.HeaderCell>
         <CellNumberOfControls />
       </Table.Column>
@@ -85,11 +84,6 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
       <Table.Column width={120}>
         <Table.HeaderCell>Statut</Table.HeaderCell>
         <CellStatus />
-      </Table.Column>
-
-      <Table.Column width={120}>
-        <Table.HeaderCell>Alerte</Table.HeaderCell>
-        <CellAlert />
       </Table.Column>
 
       <Table.Column align="center" width={60}>

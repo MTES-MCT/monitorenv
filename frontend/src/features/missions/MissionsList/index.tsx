@@ -7,8 +7,8 @@ import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { useGetFilteredMissionsQuery } from '../../../hooks/useGetFilteredMissionsQuery'
 import { Header } from '../../SideWindow/Header'
 import { sideWindowActions } from '../../SideWindow/slice'
+import { MissionsTableFilters } from './Filters'
 import { MissionsTable } from './MissionsTable'
-import { MissionsTableFilters } from './MissionsTableFilters'
 
 export function Missions() {
   const dispatch = useDispatch()

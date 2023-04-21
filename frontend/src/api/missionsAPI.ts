@@ -4,10 +4,10 @@ import type { Mission } from '../domain/entities/missions'
 
 type MissionsResponse = Mission[]
 type MissionsFilter = {
-  missionNature?: string[]
-  missionSource?: string[]
+  missionSource?: string
   missionStatus?: string[]
   missionTypes?: string[]
+  seaFronts: string[]
   startedAfterDateTime?: string
   startedBeforeDateTime?: string
 }
@@ -16,14 +16,13 @@ const getStartDateFilter = startedAfterDateTime =>
   startedAfterDateTime && `startedAfterDateTime=${encodeURIComponent(startedAfterDateTime)}`
 const getEndDateFilter = startedBeforeDateTime =>
   startedBeforeDateTime && `startedBeforeDateTime=${encodeURIComponent(startedBeforeDateTime)}`
-const getMissionNatureFilter = missionNature =>
-  missionNature && missionNature?.length > 0 && `missionNature=${encodeURIComponent(missionNature)}`
-const getMissionSourceFilter = missionSource =>
-  missionSource && missionSource?.length > 0 && `missionSource=${encodeURIComponent(missionSource)}`
+const getMissionSourceFilter = missionSource => missionSource && `missionSource=${encodeURIComponent(missionSource)}`
 const getMissionStatusFilter = missionStatus =>
   missionStatus && missionStatus?.length > 0 && `missionStatus=${encodeURIComponent(missionStatus)}`
 const getMissionTypesFilter = missionTypes =>
   missionTypes && missionTypes?.length > 0 && `missionTypes=${encodeURIComponent(missionTypes)}`
+const getSeaFrontsFilter = seaFronts =>
+  seaFronts && seaFronts?.length > 0 && `seaFronts=${encodeURIComponent(seaFronts)}`
 
 export const missionsAPI = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/bff/v1' }),
@@ -58,10 +57,10 @@ export const missionsAPI = createApi({
           'missions?',
           getStartDateFilter(filter?.startedAfterDateTime),
           getEndDateFilter(filter?.startedBeforeDateTime),
-          getMissionNatureFilter(filter?.missionNature),
           getMissionSourceFilter(filter?.missionSource),
           getMissionStatusFilter(filter?.missionStatus),
-          getMissionTypesFilter(filter?.missionTypes)
+          getMissionTypesFilter(filter?.missionTypes),
+          getSeaFrontsFilter(filter?.seaFronts)
         ]
           .filter(v => v)
           .join('&')

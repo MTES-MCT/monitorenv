@@ -23,6 +23,7 @@ interface IDBMissionRepository : CrudRepository<MissionModel, Int> {
             AND (CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL OR start_datetime_utc <= CAST(CAST(:startedBefore AS text) AS timestamp))
             AND (list_to_array(:missionNatures) IS NULL OR mission_nature && list_to_array(:missionNatures))
             AND (list_to_array(:missionTypes) IS NULL OR mission_types && list_to_array(:missionTypes))
+            AND (list_to_array(:seaFronts) IS NULL OR CAST(facade AS text) = ANY(list_to_array(:seaFronts)))
             AND (list_to_array(:missionStatuses) IS NULL 
                 OR (
                     'UPCOMING' = ANY(list_to_array(:missionStatuses)) AND (
@@ -32,6 +33,7 @@ interface IDBMissionRepository : CrudRepository<MissionModel, Int> {
                 OR ( 
                     'PENDING' = ANY(list_to_array(:missionStatuses)) AND (
                     (end_datetime_utc IS NULL OR end_datetime_utc >= now())
+                    AND (start_datetime_utc <= now())
                     AND closed = FALSE
                     )
                 )
@@ -59,6 +61,7 @@ interface IDBMissionRepository : CrudRepository<MissionModel, Int> {
         missionTypes: List<String>?,
         missionStatuses: List<String>?,
         missionSources: List<String>?,
+        seaFronts: List<String>?,
         pageable: Pageable
     ): List<MissionModel>
 

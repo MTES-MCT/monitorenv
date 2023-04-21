@@ -3,28 +3,49 @@ import dayjs from 'dayjs'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
-const THIRTY_DAYS_AGO = dayjs().subtract(30, 'days').toISOString()
+import { dateRangeLabels } from '../entities/missions'
+
+export const SEVEN_DAYS_AGO = dayjs().subtract(7, 'days').toISOString()
+
+export enum MissionFiltersEnum {
+  ADMINISTRATION_FILTER = 'administrationFilter',
+  PERIOD_FILTER = 'periodFilter',
+  SEA_FRONT_FILTER = 'seaFrontFilter',
+  SOURCE_FILTER = 'sourceFilter',
+  STARTED_AFTER_FILTER = 'startedAfter',
+  STARTED_BEFORE_FILTER = 'startedBefore',
+  STATUS_FILTER = 'statusFilter',
+  THEME_FILTER = 'themeFilter',
+  TYPE_FILTER = 'typeFilter',
+  UNIT_FILTER = 'unitFilter'
+}
 
 type MissionFiltersSliceType = {
-  missionAdministrationFilter: string | undefined
-  missionNatureFilter: string[]
-  missionSourceFilter: string[]
-  missionStartedAfter?: string
-  missionStartedBefore?: string
-  missionStatusFilter: string[]
-  missionTypeFilter: string[]
-  missionUnitFilter: string | undefined
+  administrationFilter: string[]
+  hasFilters: boolean
+  periodFilter: string
+  seaFrontFilter: string[]
+  sourceFilter: string | undefined
+  startedAfter?: string
+  startedBefore?: string
+  statusFilter: string[]
+  themeFilter: string[]
+  typeFilter: string[]
+  unitFilter: string[]
 }
 
 const initialState: MissionFiltersSliceType = {
-  missionAdministrationFilter: undefined,
-  missionNatureFilter: [],
-  missionSourceFilter: [],
-  missionStartedAfter: THIRTY_DAYS_AGO,
-  missionStartedBefore: undefined,
-  missionStatusFilter: [],
-  missionTypeFilter: [],
-  missionUnitFilter: undefined
+  administrationFilter: [],
+  hasFilters: false,
+  periodFilter: dateRangeLabels.WEEK.value,
+  seaFrontFilter: [],
+  sourceFilter: undefined,
+  startedAfter: SEVEN_DAYS_AGO,
+  startedBefore: undefined,
+  statusFilter: [],
+  themeFilter: [],
+  typeFilter: [],
+  unitFilter: []
 }
 
 const persistConfig = {
@@ -39,43 +60,24 @@ const missionFiltersSlice = createSlice({
     resetMissionFilters() {
       return { ...initialState }
     },
-    setMissionAdministrationFilter(state, action) {
-      state.missionAdministrationFilter = action.payload
-    },
-    setMissionNatureFilter(state, action) {
-      state.missionNatureFilter = action.payload
-    },
-    setMissionSourceFilter(state, action) {
-      state.missionSourceFilter = action.payload
-    },
-    setMissionStartedAfter(state, action) {
-      state.missionStartedAfter = action.payload
-    },
-    setMissionStartedBefore(state, action) {
-      state.missionStartedBefore = action.payload
-    },
-    setMissionStatusFilter(state, action) {
-      state.missionStatusFilter = action.payload
-    },
-    setMissionTypeFilter(state, action) {
-      state.missionTypeFilter = action.payload
-    },
-    setMissionUnitFilter(state, action) {
-      state.missionUnitFilter = action.payload
+    updateFilters(state, action) {
+      return {
+        ...state,
+        [action.payload.key]: action.payload.value,
+        hasFilters:
+          (action.payload.value && action.payload.value.length > 0) ||
+          state.periodFilter !== dateRangeLabels.WEEK.value ||
+          state.administrationFilter.length > 0 ||
+          state.unitFilter.length > 0 ||
+          state.typeFilter.length > 0 ||
+          state.seaFrontFilter.length > 0 ||
+          state.statusFilter.length > 0 ||
+          state.themeFilter.length > 0
+      }
     }
   }
 })
 
-export const {
-  resetMissionFilters,
-  setMissionAdministrationFilter,
-  setMissionNatureFilter,
-  setMissionSourceFilter,
-  setMissionStartedAfter,
-  setMissionStartedBefore,
-  setMissionStatusFilter,
-  setMissionTypeFilter,
-  setMissionUnitFilter
-} = missionFiltersSlice.actions
+export const { resetMissionFilters, updateFilters } = missionFiltersSlice.actions
 
 export const missionFiltersPersistedReducer = persistReducer(persistConfig, missionFiltersSlice.reducer)

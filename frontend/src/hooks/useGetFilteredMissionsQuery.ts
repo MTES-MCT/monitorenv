@@ -1,30 +1,33 @@
 import { useMemo } from 'react'
 
 import { useGetMissionsQuery } from '../api/missionsAPI'
+import { administrationFilterFunction } from '../domain/use_cases/missions/filters/administrationFilterFunction'
+import { themeFilterFunction } from '../domain/use_cases/missions/filters/themeFilterFunction'
+import { unitFilterFunction } from '../domain/use_cases/missions/filters/unitFilterFunction'
 import { useAppSelector } from './useAppSelector'
 
 const TWO_MINUTES = 2 * 60 * 1000
 
 export const useGetFilteredMissionsQuery = () => {
   const {
-    missionAdministrationFilter,
-    missionNatureFilter,
-    missionSourceFilter,
-    missionStartedAfter,
-    missionStartedBefore,
-    missionStatusFilter,
-    missionTypeFilter,
-    missionUnitFilter
+    administrationFilter,
+    seaFrontFilter,
+    sourceFilter,
+    startedAfter,
+    startedBefore,
+    statusFilter,
+    themeFilter,
+    typeFilter,
+    unitFilter
   } = useAppSelector(state => state.missionFilters)
-
   const { data, isError, isLoading } = useGetMissionsQuery(
     {
-      missionNature: missionNatureFilter,
-      missionSource: missionSourceFilter,
-      missionStatus: missionStatusFilter,
-      missionTypes: missionTypeFilter,
-      startedAfterDateTime: missionStartedAfter || undefined,
-      startedBeforeDateTime: missionStartedBefore || undefined
+      missionSource: sourceFilter,
+      missionStatus: statusFilter,
+      missionTypes: typeFilter,
+      seaFronts: seaFrontFilter,
+      startedAfterDateTime: startedAfter || undefined,
+      startedBeforeDateTime: startedBefore || undefined
     },
     { pollingInterval: TWO_MINUTES }
   )
@@ -34,18 +37,17 @@ export const useGetFilteredMissionsQuery = () => {
       return []
     }
 
-    if (!missionAdministrationFilter && !missionUnitFilter) {
+    if (administrationFilter.length === 0 && unitFilter.length === 0 && themeFilter.length === 0) {
       return data
     }
 
-    if (missionUnitFilter) {
-      return data.filter(mission => !!mission.controlUnits.find(controlUnit => controlUnit.name === missionUnitFilter))
-    }
-
-    return data.filter(mission =>
-      mission.controlUnits.find(controlUnit => controlUnit.administration === missionAdministrationFilter)
+    return data.filter(
+      mission =>
+        administrationFilterFunction(mission, administrationFilter) &&
+        unitFilterFunction(mission, unitFilter) &&
+        themeFilterFunction(mission, themeFilter)
     )
-  }, [data, missionAdministrationFilter, missionUnitFilter])
+  }, [data, administrationFilter, themeFilter, unitFilter])
 
   return { isError, isLoading, missions }
 }

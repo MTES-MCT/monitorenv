@@ -31,6 +31,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionNatures = null,
             missionTypes = null,
             missionStatuses = null,
+            seaFronts = null,
             pageable = Pageable.unpaged()
         )
 
@@ -71,6 +72,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionNatures = null,
             missionTypes = null,
             missionStatuses = null,
+            seaFronts= null,
             pageable = Pageable.unpaged()
         )
 
@@ -188,6 +190,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionNatures = null,
             missionTypes = null,
             missionStatuses = null,
+            seaFronts = null,
             pageable = Pageable.unpaged()
         )
         assertThat(missions).hasSize(53)
@@ -203,6 +206,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionNatures = null,
             missionTypes = null,
             missionStatuses = null,
+            seaFronts = null,
             pageable = Pageable.unpaged()
         )
         assertThat(missions).hasSize(21)
@@ -218,6 +222,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionNatures = listOf("ENV"),
             missionTypes = null,
             missionStatuses = null,
+            seaFronts = null,
             pageable = Pageable.unpaged()
         )
         assertThat(missions).hasSize(29)
@@ -233,6 +238,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionNatures = listOf("ENV", "FISH"),
             missionTypes = null,
             missionStatuses = null,
+            seaFronts = null,
             pageable = Pageable.unpaged()
         )
         assertThat(missions).hasSize(46)
@@ -248,6 +254,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionNatures = null,
             missionTypes = listOf("SEA"),
             missionStatuses = null,
+            seaFronts = null,
             pageable = Pageable.unpaged()
         )
         assertThat(missions).hasSize(21)
@@ -263,9 +270,26 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionNatures = null,
             missionTypes = listOf("SEA", "LAND"),
             missionStatuses = null,
+            seaFronts = null,
             pageable = Pageable.unpaged()
         )
         assertThat(missions).hasSize(44)
+    }
+
+     @Test
+    @Transactional
+    fun `findAllMissions Should return filtered missions when seaFront is set to MEMN`() {
+        // When
+        val missions = jpaMissionRepository.findAllMissions(
+            startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
+            startedBefore = null,
+            missionNatures = null,
+            missionTypes = null,
+            missionStatuses = null,
+            seaFronts = listOf(MissionSeaFrontEnum.MEMN),
+            pageable = Pageable.unpaged()
+        )
+        assertThat(missions).hasSize(9)
     }
 
     @Test
@@ -277,6 +301,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             startedBefore = null,
             missionNatures = null,
             missionTypes = null,
+            seaFronts = null,
             missionStatuses = listOf("UPCOMING"),
             pageable = Pageable.unpaged()
         )
@@ -292,10 +317,11 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             startedBefore = null,
             missionNatures = null,
             missionTypes = null,
+            seaFronts = null,
             missionStatuses = listOf("PENDING"),
             pageable = Pageable.unpaged()
         )
-        assertThat(missions).hasSize(20)
+        assertThat(missions).hasSize(14)
     }
 
     @Test
@@ -307,6 +333,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             startedBefore = null,
             missionNatures = null,
             missionTypes = null,
+            seaFronts = null,
             missionStatuses = listOf("ENDED"),
             pageable = Pageable.unpaged()
         )
@@ -322,6 +349,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             startedBefore = null,
             missionNatures = null,
             missionTypes = null,
+            seaFronts = null,
             missionStatuses = listOf("CLOSED"),
             pageable = Pageable.unpaged()
         )
@@ -337,6 +365,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             startedBefore = null,
             missionNatures = null,
             missionTypes = null,
+            seaFronts = null,
             missionStatuses = listOf("CLOSED", "UPCOMING"),
             pageable = Pageable.unpaged()
         )
@@ -353,6 +382,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionNatures = null,
             missionTypes = null,
             missionStatuses = null,
+            seaFronts = null,
             pageable = PageRequest.of(1, 10)
         )
         assertThat(missions).hasSize(10)
@@ -368,6 +398,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionNatures = null,
             missionTypes = null,
             missionStatuses = null,
+            seaFronts = null,
             missionSources = listOf(MissionSourceEnum.MONITORFISH,MissionSourceEnum.POSEIDON_CACEM, MissionSourceEnum.POSEIDON_CNSP),
             pageable = Pageable.unpaged()
         )
@@ -387,7 +418,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionNature = listOf(MissionNatureEnum.ENV, MissionNatureEnum.FISH),
             openBy = "KIM",
             closedBy = "TRA",
-            facade = "NAMO",
+            facade = MissionSeaFrontEnum.NAMO,
             observationsCacem = "Remain vote several ok. Bring American play woman challenge. Throw low law positive seven.",
             startDateTimeUtc = ZonedDateTime.parse("2022-03-21T12:11:13Z"),
             endDateTimeUtc = null,
@@ -473,7 +504,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionNature = listOf(MissionNatureEnum.FISH, MissionNatureEnum.ENV),
             openBy = "John Smith",
             closedBy = "Carol Tim",
-            facade = "MEMN",
+            facade = MissionSeaFrontEnum.MEMN,
             geom = polygon,
             observationsCacem = null,
             observationsCnsp = null,
@@ -508,7 +539,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             id = 10,
             missionTypes = listOf( MissionTypeEnum.LAND),
             missionNature = listOf(MissionNatureEnum.FISH, MissionNatureEnum.ENV),
-            facade = "NAMO",
+            facade = MissionSeaFrontEnum.NAMO,
             geom = polygon,
             observationsCacem = null,
             observationsCnsp = null,
@@ -535,6 +566,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionNatures = null,
             missionTypes = null,
             missionStatuses = null,
+            seaFronts = null,
             pageable = Pageable.unpaged()
         )
         assertThat(missionsList).hasSize(21)
@@ -549,6 +581,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionNatures = null,
             missionTypes = null,
             missionStatuses = null,
+            seaFronts = null,
             pageable = Pageable.unpaged()
         )
         assertThat(nextMissionList).hasSize(20)
