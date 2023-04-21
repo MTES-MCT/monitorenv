@@ -16,7 +16,7 @@ import {
   missionTypeEnum,
   seaFrontLabels
 } from '../../../../domain/entities/missions'
-import { resetMissionFilters, updateFilters } from '../../../../domain/shared_slices/MissionFilters'
+import { MissionFiltersEnum, resetMissionFilters, updateFilters } from '../../../../domain/shared_slices/MissionFilters'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useNewWindow } from '../../../../ui/NewWindow'
 import { ReactComponent as ReloadSVG } from '../../../../uiMonitor/icons/Reload.svg'
@@ -88,32 +88,37 @@ export function MissionsTableFilters() {
   const seaFrontsOptions = Object.values(seaFrontLabels)
 
   const onUpdatePeriodFilter = period => {
-    dispatch(updateFilters({ key: 'periodFilter', value: period }))
+    dispatch(updateFilters({ key: MissionFiltersEnum.PERIOD_FILTER, value: period }))
     setIsCustomPeriodVisible(false)
     switch (period) {
       case DateRangeEnum.DAY:
-        dispatch(updateFilters({ key: 'startedAfter', value: customDayjs().utc().startOf('day').toISOString() }))
-        dispatch(updateFilters({ key: 'startedBefore', value: undefined }))
+        dispatch(
+          updateFilters({
+            key: MissionFiltersEnum.STARTED_AFTER_FILTER,
+            value: customDayjs().utc().startOf('day').toISOString()
+          })
+        )
+        dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_BEFORE_FILTER, value: undefined }))
         break
 
       case DateRangeEnum.WEEK:
         dispatch(
           updateFilters({
-            key: 'startedAfter',
+            key: MissionFiltersEnum.STARTED_AFTER_FILTER,
             value: customDayjs.utc().startOf('day').utc().subtract(7, 'day').toISOString()
           })
         )
-        dispatch(updateFilters({ key: 'startedBefore', value: undefined }))
+        dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_BEFORE_FILTER, value: undefined }))
         break
 
       case DateRangeEnum.MONTH:
         dispatch(
           updateFilters({
-            key: 'startedAfter',
+            key: MissionFiltersEnum.STARTED_AFTER_FILTER,
             value: customDayjs.utc().startOf('day').utc().subtract(30, 'day').toISOString()
           })
         )
-        dispatch(updateFilters({ key: 'startedBefore', value: undefined }))
+        dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_BEFORE_FILTER, value: undefined }))
         break
 
       case DateRangeEnum.CUSTOM:
@@ -123,11 +128,11 @@ export function MissionsTableFilters() {
       default:
         dispatch(
           updateFilters({
-            key: 'startedAfter',
+            key: MissionFiltersEnum.STARTED_AFTER_FILTER,
             value: customDayjs.utc().startOf('day').utc().subtract(7, 'day').toISOString()
           })
         )
-        dispatch(updateFilters({ key: 'startedBefore', value: undefined }))
+        dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_BEFORE_FILTER, value: undefined }))
         break
     }
   }
@@ -137,13 +142,17 @@ export function MissionsTableFilters() {
     )
     const unitsFiltered = unitFilter.filter(unit => administrationsUpdatedWithUnits.find(control => control === unit))
 
-    dispatch(updateFilters({ key: 'unitFilter', value: unitsFiltered }))
-    dispatch(updateFilters({ key: 'administrationFilter', value: administrations }))
+    dispatch(updateFilters({ key: MissionFiltersEnum.UNIT_FILTER, value: unitsFiltered }))
+    dispatch(updateFilters({ key: MissionFiltersEnum.ADMINISTRATION_FILTER, value: administrations }))
   }
 
   const onUpdateDateRangeFilter = (date: DateAsStringRange | undefined) => {
-    dispatch(updateFilters({ key: 'startedAfter', value: date && date[0] ? date[0] : undefined }))
-    dispatch(updateFilters({ key: 'startedBefore', value: date && date[1] ? date[1] : undefined }))
+    dispatch(
+      updateFilters({ key: MissionFiltersEnum.STARTED_AFTER_FILTER, value: date && date[0] ? date[0] : undefined })
+    )
+    dispatch(
+      updateFilters({ key: MissionFiltersEnum.STARTED_BEFORE_FILTER, value: date && date[1] ? date[1] : undefined })
+    )
   }
 
   const onUpdateSimpleFilter = (value, filter) => {

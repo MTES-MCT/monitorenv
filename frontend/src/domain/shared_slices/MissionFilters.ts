@@ -7,6 +7,19 @@ import { dateRangeLabels } from '../entities/missions'
 
 export const SEVEN_DAYS_AGO = dayjs().subtract(7, 'days').toISOString()
 
+export enum MissionFiltersEnum {
+  ADMINISTRATION_FILTER = 'administrationFilter',
+  PERIOD_FILTER = 'periodFilter',
+  SEA_FRONT_FILTER = 'seaFrontFilter',
+  SOURCE_FILTER = 'sourceFilter',
+  STARTED_AFTER_FILTER = 'startedAfter',
+  STARTED_BEFORE_FILTER = 'startedBefore',
+  STATUS_FILTER = 'statusFilter',
+  THEME_FILTER = 'themeFilter',
+  TYPE_FILTER = 'typeFilter',
+  UNIT_FILTER = 'unitFilter'
+}
+
 type MissionFiltersSliceType = {
   administrationFilter: string[]
   hasFilters: boolean
