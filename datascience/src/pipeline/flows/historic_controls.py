@@ -6,10 +6,9 @@ import prefect
 from prefect import Flow, task
 from sqlalchemy import DDL
 
+from config import POSEIDON_CACEM_MISSION_ID_TO_MONITORENV_MISSION_ID_SHIFT
 from src.db_config import create_engine
 from src.pipeline.generic_tasks import extract, load
-
-POSEIDON_CACEM_MISSION_ID_TO_MONITORENV_MISSION_ID_SHIFT = -100000
 
 # dictionnaire des correspondances pour les nouveaux Themes
 dict_new_themes = {
@@ -156,7 +155,7 @@ def make_env_actions(historic_controls: pd.DataFrame) -> pd.DataFrame:
     Return a dataframe
 
     """
-
+    historic_controls = historic_controls.copy(deep=True)
     historic_controls["mission_id"] = (
         historic_controls["mission_id"]
         + POSEIDON_CACEM_MISSION_ID_TO_MONITORENV_MISSION_ID_SHIFT
@@ -246,14 +245,14 @@ def make_env_missions(missions_poseidon: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame
     """
-
+    missions_poseidon = missions_poseidon.copy(deep=True)
     missions_poseidon["id"] = (
         missions_poseidon["id"]
         + POSEIDON_CACEM_MISSION_ID_TO_MONITORENV_MISSION_ID_SHIFT
     )
     missions_poseidon["mission_types"] = missions_poseidon[
         "mission_types"
-    ].map(manage_mission_types)
+    ].apply(manage_mission_types)
     missions_poseidon["start_datetime_utc"] = missions_poseidon.apply(
         lambda x: pd.Timestamp(x.start_datetime_utc), axis=1
     )
@@ -284,11 +283,19 @@ def make_env_mission_units(mission_units: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame
     """
-
+    mission_units = mission_units.copy(deep=True)
+    mission_units["id"] = pd.Series(
+        [20000, 20001, 20002, 20003, 20004, 20005, 20006], copy=False
+    )
     mission_units["mission_id"] = (
         mission_units["mission_id"]
         + POSEIDON_CACEM_MISSION_ID_TO_MONITORENV_MISSION_ID_SHIFT
     )
+    mission_units = mission_units.loc[
+        :,
+        ["id", "mission_id", "control_unit_id"],
+    ]
+
     return mission_units
 
 
@@ -353,6 +360,7 @@ def load_missions_and_missions_control_units(
             table_name="missions",
             schema="public",
             connection=connection,
+            table_id_column="mission_source",
             logger=prefect.context.get("logger"),
             how="upsert",
             pg_array_columns=["mission_types"],
