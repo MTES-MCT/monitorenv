@@ -652,7 +652,6 @@ def mock_extract_historic_missions_units_in_flow() -> pd.DataFrame:
     return historic_missions_units_df
 
 
-breakpoint()
 flow.replace(
     flow.get_tasks("extract_historic_controls")[0],
     mock_extract_historic_controls_in_flow,
@@ -770,7 +769,7 @@ def test_flow_abrakadabra(
             initial_missions_ids_poseidon
         )
     )
-    breakpoint()
+
     assert -95690 and -95689 not in updated_missions_ids
     assert initial_missions_ids_no_poseidon.issubset(updated_missions_ids)
     assert test_missions_ids.issubset(updated_missions_ids)
@@ -780,7 +779,7 @@ def test_flow_abrakadabra(
             initial_missions_units_with_mission_source_ids_poseidon
         )
     )
-    breakpoint()
+
     assert -95690 and -95689 not in updated_control_unit_missions_ids
     assert initial_missions_units_with_mission_source_ids_no_poseidon.issubset(
         updated_control_unit_missions_ids
