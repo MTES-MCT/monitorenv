@@ -1,4 +1,5 @@
 import { FormikCheckbox, FormikDatePicker, FormikNumberInput, FormikTextarea } from '@mtes-mct/monitor-ui'
+import { useField } from 'formik'
 import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
@@ -12,6 +13,9 @@ import { SurveillanceThemes } from './Themes/SurveillanceThemes'
 
 export function SurveillanceForm({ currentActionIndex, readOnly, remove, setCurrentActionIndex }) {
   const { newWindowContainerRef } = useNewWindow()
+  const [field, ,] = useField(`envActions[${currentActionIndex}].geom`)
+
+  const hasCustomZone = field.value && field.value.coordinates.length > 0
 
   const handleRemoveAction = () => {
     setCurrentActionIndex(undefined)
@@ -59,6 +63,7 @@ export function SurveillanceForm({ currentActionIndex, readOnly, remove, setCurr
 
       <MultiZonePicker
         addButtonLabel="Ajouter une zone de surveillance"
+        currentActionIndex={currentActionIndex}
         interactionListener={InteractionListener.SURVEILLANCE_ZONE}
         isLight
         label="Zone de surveillance"
@@ -66,6 +71,7 @@ export function SurveillanceForm({ currentActionIndex, readOnly, remove, setCurr
         readOnly={readOnly}
       />
       <FormikCheckbox
+        disabled={hasCustomZone}
         inline
         label="Zone de surveillance équivalente à la zone de mission"
         name={`envActions[${currentActionIndex}].coverMissionZone`}
