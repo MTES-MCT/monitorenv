@@ -1,0 +1,1 @@
+REFRESH MATERIALIZED VIEW public.analytics_actions;
