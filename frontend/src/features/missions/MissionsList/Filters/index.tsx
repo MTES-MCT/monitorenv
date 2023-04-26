@@ -195,7 +195,7 @@ export function MissionsTableFilters() {
           value={sourceFilter}
         />
         <StyledCheckPicker
-          container={() => unitPickerRef.current}
+          container={newWindowContainerRef.current}
           data={Object.values(administrationsWithTheirControlsUnits)}
           data-cy="select-administration-filter"
           labelKey="label"
@@ -211,7 +211,7 @@ export function MissionsTableFilters() {
           valueKey="value"
         />
         <StyledCheckPicker
-          container={() => unitPickerRef.current}
+          container={newWindowContainerRef.current}
           data={unitListAsOptions}
           data-cy="select-units-filter"
           labelKey="label"
@@ -225,7 +225,7 @@ export function MissionsTableFilters() {
           valueKey="value"
         />
         <StyledCheckPicker
-          container={() => unitPickerRef.current}
+          container={newWindowContainerRef.current}
           data={TypeOptions}
           labelKey="libelle"
           onChange={value => onUpdateSimpleFilter(value, MissionFiltersEnum.TYPE_FILTER)}
@@ -238,7 +238,7 @@ export function MissionsTableFilters() {
           valueKey="code"
         />
         <StyledCheckPicker
-          container={() => unitPickerRef.current}
+          container={newWindowContainerRef.current}
           data={seaFrontsOptions}
           labelKey="label"
           onChange={value => onUpdateSimpleFilter(value, MissionFiltersEnum.SEA_FRONT_FILTER)}
@@ -251,7 +251,7 @@ export function MissionsTableFilters() {
           valueKey="value"
         />
         <StyledCheckPicker
-          container={() => unitPickerRef.current}
+          container={newWindowContainerRef.current}
           data={StatusOptions}
           labelKey="libelle"
           onChange={value => onUpdateSimpleFilter(value, MissionFiltersEnum.STATUS_FILTER)}
@@ -264,7 +264,7 @@ export function MissionsTableFilters() {
           valueKey="code"
         />
         <StyledCheckPicker
-          container={() => unitPickerRef.current}
+          container={newWindowContainerRef.current}
           data={themesListAsOptions}
           labelKey="label"
           onChange={value => onUpdateSimpleFilter(value, MissionFiltersEnum.THEME_FILTER)}

@@ -294,7 +294,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionNatures = null,
             missionTypes = null,
             missionStatuses = null,
-            seaFronts = listOf(MissionSeaFrontEnum.MEMN),
+            seaFronts = listOf("MEMN"),
             pageable = Pageable.unpaged()
         )
         assertThat(missions).hasSize(9)
@@ -426,7 +426,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionNature = listOf(MissionNatureEnum.ENV, MissionNatureEnum.FISH),
             openBy = "KIM",
             closedBy = "TRA",
-            facade = MissionSeaFrontEnum.NAMO,
+            facade = "NAMO",
             observationsCacem = "Remain vote several ok. Bring American play woman challenge. Throw low law positive seven.",
             startDateTimeUtc = ZonedDateTime.parse("2022-03-21T12:11:13Z"),
             endDateTimeUtc = null,
@@ -514,7 +514,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionNature = listOf(MissionNatureEnum.FISH, MissionNatureEnum.ENV),
             openBy = "John Smith",
             closedBy = "Carol Tim",
-            facade = MissionSeaFrontEnum.MEMN,
+            facade = "MEMN",
             geom = polygon,
             observationsCacem = null,
             observationsCnsp = null,
@@ -551,7 +551,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             id = 10,
             missionTypes = listOf( MissionTypeEnum.LAND),
             missionNature = listOf(MissionNatureEnum.FISH, MissionNatureEnum.ENV),
-            facade = MissionSeaFrontEnum.NAMO,
+            facade = "NAMO",
             geom = polygon,
             observationsCacem = null,
             observationsCnsp = null,

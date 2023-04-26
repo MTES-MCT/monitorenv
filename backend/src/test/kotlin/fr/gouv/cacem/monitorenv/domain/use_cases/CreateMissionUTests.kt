@@ -5,7 +5,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.missions.*
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateMission
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSeaFrontEnum
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -28,7 +27,7 @@ class CreateMissionUTests {
         val expectedCreatedMission = MissionEntity(
             missionTypes = listOf( MissionTypeEnum.LAND),
             missionNature = listOf(MissionNatureEnum.ENV),
-            facade = MissionSeaFrontEnum.OUTREMEROA,
+            facade = "Outre-Mer",
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
             isClosed = false,

@@ -79,8 +79,7 @@ data class MissionModel(
     @Column(name = "observations_cnsp")
     var observationsCnsp: String? = null,
     @Column(name = "facade")
-    @Enumerated(EnumType.STRING)
-    var facade: MissionSeaFrontEnum? = null,
+    var facade: String? = null,
     @JsonSerialize(using = GeometrySerializer::class)
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")

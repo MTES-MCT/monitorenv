@@ -3,7 +3,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSourceEnum
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSeaFrontEnum
 import fr.gouv.cacem.monitorenv.domain.exceptions.ControlResourceOrUnitNotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
@@ -27,11 +26,10 @@ class JpaMissionRepository(
         missionTypes: List<String>?,
         missionStatuses: List<String>?,
         missionSources: List<MissionSourceEnum>?,
-        seaFronts: List<MissionSeaFrontEnum>?,
+        seaFronts: List<String>?,
         pageable: Pageable
     ): List<MissionEntity> {
         val missionSourcesAsStringArray = missionSources?.map{ it.name }
-        val facadeAsStringArray = seaFronts?.map{ it.name }
         return dbMissionRepository.findAllMissions(
             startedAfter = startedAfter,
             startedBefore = startedBefore,
@@ -39,7 +37,7 @@ class JpaMissionRepository(
             missionTypes = missionTypes,
             missionStatuses = missionStatuses,
             missionSources = missionSourcesAsStringArray,
-            seaFronts= facadeAsStringArray,
+            seaFronts= seaFronts,
             pageable = pageable
         ).map { it.toMissionEntity(mapper) }
     }

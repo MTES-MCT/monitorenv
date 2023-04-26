@@ -6,7 +6,6 @@ import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSeaFrontEnum
 
 class JpaFacadeAreasRepositoryTests : AbstractDBTests() {
 
@@ -25,6 +24,6 @@ class JpaFacadeAreasRepositoryTests : AbstractDBTests() {
         // When
         val requestedFacade = jpaFacadeAreasRepository.findFacadeFromMission(missionGeometry)
         // Then
-        assertThat(requestedFacade).isEqualTo(MissionSeaFrontEnum.NAMO)
+        assertThat(requestedFacade).isEqualTo("NAMO")
     }
 }
