@@ -1,11 +1,13 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { useMemo } from 'react'
+import { useDispatch } from 'react-redux'
 import { matchPath } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { useGetMissionQuery } from '../../../api/missionsAPI'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
+import { onNavigate } from '../../../domain/use_cases/navigation/onNavigate'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { MissionSourceTag } from '../../../ui/MissionSourceTag'
 import { Header } from '../../SideWindow/Header'
@@ -14,6 +16,7 @@ import { MissionForm } from './MissionForm'
 
 export function Mission() {
   const { sideWindow } = useAppSelector(state => state)
+  const dispatch = useDispatch()
 
   const routeParams = matchPath<{ id: string }>(sideWindow.currentPath, {
     exact: true,
@@ -33,13 +36,17 @@ export function Mission() {
     return missionFactory(missionToEdit)
   }, [missionToEdit, id])
 
+  const onQuitMission = () => {
+    dispatch(onNavigate(sideWindowPaths.MISSIONS))
+  }
+
   if (id && !missionToEdit) {
     return <div>Chargement en cours</div>
   }
 
   return (
     <EditMissionWrapper data-cy="editMissionWrapper">
-      <Header title="Edition de la mission">
+      <Header onClose={onQuitMission} title="Edition de la mission" withCloseButton>
         <MissionSourceTag source={missionToEdit?.missionSource} />
       </Header>
       <MissionForm formValues={missionFormikValues} id={id} mission={missionToEdit} />

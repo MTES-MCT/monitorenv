@@ -1,13 +1,13 @@
 import { SideWindowStatus, sideWindowActions } from '../../../features/SideWindow/slice'
 
-export const onNavigateBetweenMapAndSideWindow = (path: string) => (dispatch, getState) => {
+export const onNavigate = (path: string) => (dispatch, getState) => {
   const {
     draw: { listener },
     missionState: { isFormDirty, missionState },
     sideWindow
   } = getState()
 
-  if (sideWindow.status === SideWindowStatus.HIDDEN && missionState && !listener && isFormDirty) {
+  if ((sideWindow.status === SideWindowStatus.HIDDEN && missionState && !listener && isFormDirty) || isFormDirty) {
     return dispatch(sideWindowActions.onFocusAndDisplayCancelModal(path))
   }
 

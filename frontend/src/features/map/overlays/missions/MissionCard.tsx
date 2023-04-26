@@ -9,7 +9,7 @@ import styled from 'styled-components'
 import { COLORS } from '../../../../constants/constants'
 import { sideWindowPaths } from '../../../../domain/entities/sideWindow'
 import { clearSelectedMissionOnMap } from '../../../../domain/use_cases/missions/selectMissionOnMap'
-import { onNavigateBetweenMapAndSideWindow } from '../../../../domain/use_cases/navigation/onNavigateBetweenMapAndSideWindow'
+import { onNavigate } from '../../../../domain/use_cases/navigation/onNavigate'
 import { MissionSourceTag } from '../../../../ui/MissionSourceTag'
 import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
 import { missionTypesToString } from '../../../../utils/missionTypes'
@@ -43,7 +43,7 @@ export function MissionCard({ feature, selected = false }: { feature: any; selec
     : `du ${formattedStartDate} au ${formattedEndDate}`
 
   const handleEditMission = useCallback(() => {
-    dispatch(onNavigateBetweenMapAndSideWindow(generatePath(sideWindowPaths.MISSION, { id: missionId })))
+    dispatch(onNavigate(generatePath(sideWindowPaths.MISSION, { id: missionId })))
   }, [dispatch, missionId])
 
   const handleCloseOverlay = useCallback(() => {

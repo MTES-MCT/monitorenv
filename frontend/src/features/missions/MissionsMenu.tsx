@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { COLORS } from '../../constants/constants'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { setDisplayedItems } from '../../domain/shared_slices/Global'
-import { onNavigateBetweenMapAndSideWindow } from '../../domain/use_cases/navigation/onNavigateBetweenMapAndSideWindow'
+import { onNavigate } from '../../domain/use_cases/navigation/onNavigate'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { ReactComponent as CloseSVG } from '../../uiMonitor/icons/Close.svg'
 import { ReactComponent as DisplaySVG } from '../../uiMonitor/icons/Display.svg'
@@ -21,7 +21,7 @@ export function MissionsMenu() {
   const { sideWindow } = useAppSelector(state => state)
 
   const toggleMissionsWindow = () => {
-    dispatch(onNavigateBetweenMapAndSideWindow(sideWindowPaths.MISSIONS))
+    dispatch(onNavigate(sideWindowPaths.MISSIONS))
   }
   const toggleMissionsLayer = () => {
     dispatch(setDisplayedItems({ displayMissionsLayer: !displayMissionsLayer }))
@@ -30,7 +30,7 @@ export function MissionsMenu() {
     dispatch(setDisplayedItems({ missionsMenuIsOpen: !missionsMenuIsOpen }))
   }
   const handleAddNewMission = () => {
-    dispatch(onNavigateBetweenMapAndSideWindow(sideWindowPaths.MISSION_NEW))
+    dispatch(onNavigate(sideWindowPaths.MISSION_NEW))
   }
 
   return (
