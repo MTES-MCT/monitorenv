@@ -69,14 +69,16 @@ export class LegacyNewWindow extends React.PureComponent {
   }
 
   beforeUnloadListener(e) {
-    e.preventDefault()
     const { showPrompt } = this.props
 
     if (showPrompt) {
+      e.preventDefault()
+
       // eslint-disable-next-line no-return-assign
       return (e.returnValue = 'blocked')
     }
 
+    // eslint-disable-next-line no-return-assign, no-param-reassign
     return null
   }
 

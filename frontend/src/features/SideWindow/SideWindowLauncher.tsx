@@ -15,7 +15,7 @@ export function SideWindowLauncher() {
   const newWindowRef = useRef() as MutableRefObject<HTMLDivElement>
   const { forceUpdate } = useForceUpdate()
 
-  const { sideWindow } = useAppSelector(state => state)
+  const { missionState, sideWindow } = useAppSelector(state => state)
   const isEditMissionPage = !!matchPath(sideWindow.currentPath, {
     exact: true,
     path: sideWindowPaths.MISSION,
@@ -55,7 +55,7 @@ export function SideWindowLauncher() {
           dispatch(sideWindowActions.close())
         }}
         shouldHaveFocus={sideWindow.status === SideWindowStatus.VISIBLE}
-        showPrompt={isEditMissionPage || isCreateMissionPage}
+        showPrompt={(isEditMissionPage || isCreateMissionPage) && missionState.isFormDirty}
         title="MonitorEnv"
       >
         <SideWindow ref={newWindowRef} />
