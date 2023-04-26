@@ -273,15 +273,29 @@ export const missionSourceEnum = {
 }
 
 export enum SeaFrontEnum {
+  GUADELOUPE = 'Guadeloupe',
+  GUYANE = 'Guyane',
+  MARTINIQUE = 'Martinique',
   MED = 'MED',
   MEMN = 'MEMN',
   NAMO = 'NAMO',
-  OUTREMEROA = 'OUTREMEROA',
-  OUTREMEROI = 'OUTREMEROI',
-  SA = 'SA'
+  SA = 'SA',
+  SOUTH_INDIAN_OCEAN = 'SOUTH_INDIAN_OCEAN'
 }
 
 export const seaFrontLabels = {
+  GUADELOUPE: {
+    label: 'Guadeloupe',
+    value: 'Guadeloupe'
+  },
+  GUYANE: {
+    label: 'Guyane',
+    value: 'Guyane'
+  },
+  MARTINIQUE: {
+    label: 'Martinique',
+    value: 'Martinique'
+  },
   MED: {
     label: 'MED',
     value: 'MED'
@@ -294,17 +308,13 @@ export const seaFrontLabels = {
     label: 'NAMO',
     value: 'NAMO'
   },
-  OUTREMEROA: {
-    label: 'OUTREMEROA',
-    value: 'OUTREMEROA'
-  },
-  OUTREMEROI: {
-    label: 'OUTREMEROI',
-    value: 'OUTREMEROI'
-  },
   SA: {
     label: 'SA',
     value: 'SA'
+  },
+  SOUTH_INDIAN_OCEAN: {
+    label: 'Sud Océan Indien',
+    value: 'Sud Océan Indien'
   }
 }
 

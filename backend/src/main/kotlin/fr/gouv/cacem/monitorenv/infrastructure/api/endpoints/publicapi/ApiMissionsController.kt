@@ -3,7 +3,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdatePublicMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.MissionDataOutput
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSeaFrontEnum
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -51,7 +50,7 @@ class ApiMissionsController(
         missionStatuses: List<String>?,
         @Parameter(description = "Facades")
         @RequestParam(name = "seaFronts", required = false)
-        seaFronts: List<MissionSeaFrontEnum>?
+        seaFronts: List<String>?
     ): List<MissionDataOutput> {
         val missions = getMissions.execute(
             startedAfterDateTime = startedAfterDateTime,
