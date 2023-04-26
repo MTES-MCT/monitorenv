@@ -1,10 +1,11 @@
-import { FormikCheckbox, FormikDatePicker, FormikNumberInput, FormikTextarea } from '@mtes-mct/monitor-ui'
+import { FormikCheckbox, FormikDateRangePicker, FormikTextarea } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
 import { InteractionListener } from '../../../../domain/entities/map/constants'
+import { ActionTypeEnum, type EnvAction } from '../../../../domain/entities/missions'
 import { useNewWindow } from '../../../../ui/NewWindow'
 import { ReactComponent as DeleteSVG } from '../../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as SurveillanceIconSVG } from '../../../../uiMonitor/icons/Observation.svg'
@@ -13,9 +14,16 @@ import { SurveillanceThemes } from './Themes/SurveillanceThemes'
 
 export function SurveillanceForm({ currentActionIndex, readOnly, remove, setCurrentActionIndex }) {
   const { newWindowContainerRef } = useNewWindow()
+  const [actionsFields] = useField<EnvAction[]>('envActions')
   const [field, ,] = useField(`envActions[${currentActionIndex}].geom`)
+  const [durationMatchMissionField] = useField(`envActions[${currentActionIndex}].durationMatchesMission`)
+  const [durationField] = useField(`envActions[${currentActionIndex}].duration`)
 
   const hasCustomZone = field.value && field.value.coordinates.length > 0
+
+  const totalSurveillances = actionsFields.value.filter(
+    action => action.actionType === ActionTypeEnum.SURVEILLANCE
+  ).length
 
   const handleRemoveAction = () => {
     setCurrentActionIndex(undefined)
@@ -39,27 +47,25 @@ export function SurveillanceForm({ currentActionIndex, readOnly, remove, setCurr
       </Header>
       <SurveillanceThemes currentActionIndex={currentActionIndex} />
       <FlexSelectorWrapper>
-        <Column>
-          <FormikDatePicker
-            baseContainer={newWindowContainerRef.current}
-            isCompact
-            isLight
-            isStringDate
-            label="Date et heure du début de la surveillance (UTC)"
-            name={`envActions[${currentActionIndex}].actionStartDateTimeUtc`}
-            withTime
-          />
-        </Column>
-        <Column>
-          <SizedFormikInputNumberGhost isLight label="Durée" name={`envActions.${currentActionIndex}.duration`} />
-          <InputDivWithUnits>&nbsp;heures</InputDivWithUnits>
-        </Column>
+        <FormikDateRangePicker
+          baseContainer={newWindowContainerRef.current}
+          disabled={!!durationMatchMissionField.value}
+          isCompact
+          isLight
+          isStringDate
+          label="Date et fin de surveillance (UTC)"
+          name={`envActions[${currentActionIndex}].dateRange`}
+          withTime
+        />
+
+        <FormikCheckbox
+          disabled={totalSurveillances > 1}
+          inline
+          label="Dates et heures de surveillance équivalentes à celles de la mission"
+          name={`envActions[${currentActionIndex}].durationMatchesMission`}
+        />
+        <div>{`Durée : ${durationField?.value || 0} H`}</div>
       </FlexSelectorWrapper>
-      <FormikCheckbox
-        inline
-        label="Dates et heures de surveillance équivalentes à celles de la mission"
-        name={`envActions[${currentActionIndex}].durationMatchesMission`}
-      />
 
       <MultiZonePicker
         addButtonLabel="Ajouter une zone de surveillance"
@@ -97,15 +103,11 @@ const Title = styled.h2`
   color: ${COLORS.charcoal};
 `
 
-const FlexSelectorWrapper = styled(Form.Group)`
-  height: 58px;
+const FlexSelectorWrapper = styled.div`
   display: flex;
-`
-const Column = styled.div`
-  display: flex;
-  &:not(:last-child) {
-    margin-right: 24px;
-  }
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
 `
 
 const SurveillanceIcon = styled(SurveillanceIconSVG)`
@@ -119,11 +121,4 @@ const DeleteIcon = styled(DeleteSVG)`
 
 const IconButtonRight = styled(IconButton)`
   margin-left: auto;
-`
-const SizedFormikInputNumberGhost = styled(FormikNumberInput)`
-  width: 70px !important;
-`
-const InputDivWithUnits = styled.div`
-  display: flex;
-  align-items: baseline;
 `

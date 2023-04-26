@@ -9,11 +9,13 @@ import { ReactComponent as ControlSVG } from '../../../uiMonitor/icons/Control.s
 import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/Note_libre.svg'
 import { ReactComponent as SurveillanceSVG } from '../../../uiMonitor/icons/Observation.svg'
 import { ReactComponent as PlusSVG } from '../../../uiMonitor/icons/Plus.svg'
+import { dateDifferenceInHours } from '../../../utils/dateDifferenceInHours'
 import { actionFactory } from '../Missions.helpers'
 import { ActionCard } from './ActionCard'
 
 export function ActionsForm({ currentActionIndex, form, remove, setCurrentActionIndex, unshift }) {
   const envActions = form?.values?.envActions as EnvAction[] | undefined
+  const isFirstSurveillanceAction = !envActions?.find(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
   const isClosed = form?.values?.isClosed
   const currentActionId = envActions && envActions[currentActionIndex]?.id
   const sortedEnvActions = useMemo(
@@ -37,7 +39,20 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
   )
 
   const handleAddSurveillanceAction = () =>
-    unshift(actionFactory({ actionType: ActionTypeEnum.SURVEILLANCE, durationMatchesMission: false }))
+    unshift(
+      actionFactory({
+        actionType: ActionTypeEnum.SURVEILLANCE,
+        durationMatchesMission: isFirstSurveillanceAction,
+        ...(isFirstSurveillanceAction && {
+          actionStartDateTimeUtc: form?.values?.startDateTimeUtc,
+          dateRange: [form?.values?.startDateTimeUtc, form?.values?.endDateTimeUtc || form?.values?.startDateTimeUtc],
+          duration:
+            form?.values?.startDateTimeUtc && form?.values?.endDateTimeUtc
+              ? dateDifferenceInHours(form?.values?.startDateTimeUtc, form?.values?.endDateTimeUtc)
+              : 0
+        })
+      })
+    )
   const handleAddControlAction = () => unshift(actionFactory({ actionType: ActionTypeEnum.CONTROL }))
   const handleAddNoteAction = () => unshift(actionFactory({ actionType: ActionTypeEnum.NOTE }))
   const handleSelectAction = id => () => setCurrentActionIndex(envActions && envActions.findIndex(a => a.id === id))

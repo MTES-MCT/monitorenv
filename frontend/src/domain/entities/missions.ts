@@ -414,6 +414,7 @@ export type EnvActionControl = NewEnvActionControl & {
 export type EnvActionSurveillance = EnvActionCommonProperties & {
   actionType: ActionTypeEnum.SURVEILLANCE
   coverMissionZone?: boolean
+  dateRange?: [string, string]
   duration: number
   durationMatchesMission?: boolean
   observations: string | null
