@@ -9,20 +9,20 @@ from src.pipeline.shared_tasks.control_flow import check_flow_not_running
 
 
 @task(checkpoint=False)
-def extract_natinfs():
+def extract_infractions():
     return extract("fmc", "fmc/natinf.sql")
 
 
 @task(checkpoint=False)
-def clean_natinfs(natinfs):
-    natinfs.loc[:, "infraction"] = natinfs.infraction.map(str.capitalize)
-    return natinfs
+def clean_infractions(infractions):
+    infractions.loc[:, "infraction"] = infractions.infraction.map(str.capitalize)
+    return infractions
 
 
 @task(checkpoint=False)
-def load_natinfs(natinfs):
+def load_infractions(infractions):
     load(
-        natinfs,
+        infractions,
         table_name="natinfs",
         schema="public",
         db_name="monitorenv_remote",
@@ -31,13 +31,13 @@ def load_natinfs(natinfs):
     )
 
 
-with Flow("Natinfs", executor=LocalDaskExecutor()) as flow:
+with Flow("infractions", executor=LocalDaskExecutor()) as flow:
 
     flow_not_running = check_flow_not_running()
     with case(flow_not_running, True):
 
-        natinfs = extract_natinfs()
-        natinfs = clean_natinfs(natinfs)
-        load_natinfs(natinfs)
+        infractions = extract_infractions()
+        infractions = clean_infractions(infractions)
+        load_infractions(infractions)
 
 flow.file_name = Path(__file__).name
