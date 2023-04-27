@@ -2,7 +2,7 @@ from docker.types import Mount
 from dotenv import dotenv_values
 from prefect.executors.dask import LocalDaskExecutor
 from prefect.run_configs.docker import DockerRun
-from prefect.schedules import CronSchedule
+from prefect.schedules import CronSchedule, Schedule, clocks
 from prefect.storage.local import Local
 
 from config import (
@@ -18,11 +18,22 @@ from src.pipeline.flows import (
     fao_areas,
     historic_control_units,
     natinfs,
+    refresh_materialized_view,
     regulations,
 )
 
 ################################ Define flow schedules ################################
 
+refresh_materialized_view.flow.schedule = Schedule(
+    clocks=[
+        clocks.CronClock(
+            "30 12 * * *",
+            parameter_defaults={
+                "view_name": "analytics_actions",
+            },
+        ),
+    ]
+)
 regulations.flow.schedule = CronSchedule("6,16,26,36,46,56 * * * *")
 
 ###################### List flows to register with prefect server #####################
@@ -33,6 +44,7 @@ flows_to_register = [
     fao_areas.flow,
     historic_control_units.flow,
     regulations.flow,
+    refresh_materialized_view.flow,
     natinfs.flow,
 ]
 
