@@ -17,6 +17,7 @@ SELECT
     CASE WHEN action_type = 'CONTROL' THEN ST_X(geom_element.geom) END AS longitude,
     CASE WHEN action_type = 'CONTROL' THEN ST_Y(geom_element.geom) END AS latitude,
     CASE WHEN action_type = 'CONTROL' THEN CASE WHEN jsonb_array_length(a.value->'infractions') > 0 THEN true ELSE false END END AS infraction,
+    (a.value->'actionNumberOfControls')::DOUBLE PRECISION AS number_of_controls,
     CASE WHEN action_type = 'SURVEILLANCE' THEN COALESCE((a.value->>'duration')::DOUBLE PRECISION, EXTRACT(epoch FROM m.end_datetime_utc - m.start_datetime_utc) / 3600) END AS surveillance_duration
 FROM env_actions a
 LEFT JOIN ST_Dump(a.geom) AS geom_element
