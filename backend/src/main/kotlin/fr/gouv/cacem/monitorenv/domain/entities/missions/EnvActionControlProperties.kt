@@ -5,8 +5,6 @@ import java.time.ZonedDateTime
 import java.util.*
 
 data class EnvActionControlProperties(
-    val actionStartDateTimeUtc: ZonedDateTime? = null,
-    val geom: Geometry? = null,
     val themes: List<ThemeEntity>? = listOf(),
     val observations: String? = null,
     val actionNumberOfControls: Int? = null,
