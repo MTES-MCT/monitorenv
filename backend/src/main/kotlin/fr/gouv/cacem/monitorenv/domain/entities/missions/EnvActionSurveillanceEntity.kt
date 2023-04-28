@@ -7,6 +7,7 @@ import java.util.UUID
 data class EnvActionSurveillanceEntity(
     override val id: UUID,
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
+    override val actionEndDateTimeUtc: ZonedDateTime? = null,
     override val geom: Geometry? = null,
     val themes: List<ThemeEntity>? = listOf(),
     val duration: Double? = null,

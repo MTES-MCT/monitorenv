@@ -7,6 +7,7 @@ import java.util.*
 data class EnvActionControlEntity(
     override val id: UUID,
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
+    override val actionEndDateTimeUtc: ZonedDateTime? = null,
     override val geom: Geometry? = null,
     val themes: List<ThemeEntity>? = listOf(),
     val observations: String? = null,

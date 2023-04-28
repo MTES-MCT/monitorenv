@@ -1,0 +1,1 @@
+ALTER TABLE public.env_actions add column action_end_datetime_utc TIMESTAMP;

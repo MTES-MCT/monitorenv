@@ -19,13 +19,13 @@ import java.util.UUID
 object EnvActionMapper {
     private const val jsonbNullString = "null"
 
-    fun getEnvActionEntityFromJSON(mapper: ObjectMapper, id: UUID, actionStartDateTimeUtc: ZonedDateTime?, geom: Geometry?, actionType: ActionTypeEnum, value: String?): EnvActionEntity {
+    fun getEnvActionEntityFromJSON(mapper: ObjectMapper, id: UUID, actionStartDateTimeUtc: ZonedDateTime?, actionEndDateTimeUtc: ZonedDateTime?, geom: Geometry?, actionType: ActionTypeEnum, value: String?): EnvActionEntity {
         return try {
             if (!value.isNullOrEmpty() && value != jsonbNullString) {
                 when (actionType) {
-                    ActionTypeEnum.SURVEILLANCE -> mapper.readValue(value, EnvActionSurveillanceProperties::class.java).toEnvActionSurveillanceEntity(id, actionStartDateTimeUtc, geom)
-                    ActionTypeEnum.CONTROL -> mapper.readValue(value, EnvActionControlProperties::class.java).toEnvActionControlEntity(id, actionStartDateTimeUtc, geom)
-                    ActionTypeEnum.NOTE -> mapper.readValue(value, EnvActionNoteProperties::class.java).toEnvActionNoteEntity(id, actionStartDateTimeUtc)
+                    ActionTypeEnum.SURVEILLANCE -> mapper.readValue(value, EnvActionSurveillanceProperties::class.java).toEnvActionSurveillanceEntity(id, actionStartDateTimeUtc, actionEndDateTimeUtc, geom)
+                    ActionTypeEnum.CONTROL -> mapper.readValue(value, EnvActionControlProperties::class.java).toEnvActionControlEntity(id, actionStartDateTimeUtc, actionEndDateTimeUtc, geom)
+                    ActionTypeEnum.NOTE -> mapper.readValue(value, EnvActionNoteProperties::class.java).toEnvActionNoteEntity(id, actionStartDateTimeUtc, actionEndDateTimeUtc)
                 }
             } else {
                 throw EntityConversionException("No action value found.")

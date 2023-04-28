@@ -10,9 +10,10 @@ data class EnvActionSurveillanceProperties(
     val observations: String? = null,
     val coverMissionZone: Boolean? = null,
 ) {
-    fun toEnvActionSurveillanceEntity(id: UUID, actionStartDateTimeUtc: ZonedDateTime?, geom: Geometry?) = EnvActionSurveillanceEntity(
+    fun toEnvActionSurveillanceEntity(id: UUID, actionStartDateTimeUtc: ZonedDateTime?, actionEndDateTimeUtc: ZonedDateTime?, geom: Geometry?) = EnvActionSurveillanceEntity(
         id = id,
         actionStartDateTimeUtc = actionStartDateTimeUtc,
+        actionEndDateTimeUtc = actionEndDateTimeUtc,
         geom = geom,
         themes = themes,
         duration = duration,

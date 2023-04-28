@@ -6,10 +6,11 @@ import java.util.*
 data class EnvActionNoteProperties(
     val observations: String? = null,
 ) {
-    fun toEnvActionNoteEntity(id: UUID, actionStartDateTimeUtc: ZonedDateTime?) = EnvActionNoteEntity(
+    fun toEnvActionNoteEntity(id: UUID, actionStartDateTimeUtc: ZonedDateTime?, actionEndDateTimeUtc: ZonedDateTime?) = EnvActionNoteEntity(
         id = id,
         actionStartDateTimeUtc = actionStartDateTimeUtc,
-        observations = observations,
+        actionEndDateTimeUtc = actionEndDateTimeUtc,
+        observations = observations
     )
     companion object {
         fun fromEnvActionNoteEntity(envAction: EnvActionNoteEntity) = EnvActionNoteProperties(
