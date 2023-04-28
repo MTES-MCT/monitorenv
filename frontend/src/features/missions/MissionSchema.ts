@@ -124,6 +124,7 @@ const EnvActionControlSchema: Yup.SchemaOf<EnvActionControl> = Yup.object()
 
 const EnvActionSurveillanceSchema: Yup.SchemaOf<EnvActionSurveillance> = Yup.object()
   .shape({
+    actionEndDateTimeUtc: Yup.string().nullable().required('Requis'),
     actionStartDateTimeUtc: Yup.string().nullable().required('Requis'),
     actionType: Yup.mixed().oneOf([ActionTypeEnum.SURVEILLANCE]),
     geom: Yup.array().ensure(),
@@ -171,8 +172,8 @@ export const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
     isClosed: Yup.boolean().default(false),
     missionTypes: MissionTypesSchema,
     openBy: Yup.string()
-      .min(3, 'Minimum 3 lettres pour le Trigramme')
-      .max(3, 'Maximum 3 lettres pour le Trigramme')
+      .min(3, 'le Trigramme doit comporter 3 lettres')
+      .max(3, 'le Trigramme doit comporter 3 lettres')
       .required('Requis'),
     startDateTimeUtc: Yup.string().required('Requis')
   })

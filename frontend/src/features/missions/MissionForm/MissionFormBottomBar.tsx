@@ -12,23 +12,23 @@ type MissionFormBottomBarProps = {
   allowClose: boolean
   allowDelete: boolean
   allowEdit: boolean
-  closeMission: MouseEventHandler<HTMLButtonElement>
-  deleteMission: MouseEventHandler<HTMLButtonElement>
   isFromMonitorFish: boolean
-  quitFormEditing: MouseEventHandler<HTMLButtonElement>
-  reopenMission: MouseEventHandler<HTMLButtonElement>
-  saveMission: MouseEventHandler<HTMLButtonElement>
+  onCloseMission: MouseEventHandler<HTMLButtonElement>
+  onDeleteMission: MouseEventHandler<HTMLButtonElement>
+  onQuitFormEditing: MouseEventHandler<HTMLButtonElement>
+  onReopenMission: MouseEventHandler<HTMLButtonElement>
+  onSaveMission: MouseEventHandler<HTMLButtonElement>
 }
 export function MissionFormBottomBar({
   allowClose,
   allowDelete,
   allowEdit,
-  closeMission,
-  deleteMission,
   isFromMonitorFish,
-  quitFormEditing,
-  reopenMission,
-  saveMission
+  onCloseMission,
+  onDeleteMission,
+  onQuitFormEditing,
+  onReopenMission,
+  onSaveMission
 }: MissionFormBottomBarProps) {
   const { errors } = useFormikContext<Mission>()
 
@@ -55,7 +55,7 @@ export function MissionFormBottomBar({
             data-cy="delete-mission"
             disabled={isFromMonitorFish}
             Icon={Icon.Delete}
-            onClick={deleteMission}
+            onClick={onDeleteMission}
             type="button"
           >
             Supprimer la mission
@@ -69,19 +69,25 @@ export function MissionFormBottomBar({
         {!allowClose && allowEdit && (
           <MessageRed>Veuillez rouvrir la mission avant d&apos;en modifier les informations.</MessageRed>
         )}
-        <Button accent={Accent.TERTIARY} data-cy="quit-edit-mission" onClick={quitFormEditing} type="button">
+        <Button accent={Accent.TERTIARY} data-cy="quit-edit-mission" onClick={onQuitFormEditing} type="button">
           Quitter
         </Button>
         {allowClose && allowEdit && (
           <>
-            <Button accent={Accent.PRIMARY} data-cy="save-mission" Icon={Icon.Save} onClick={saveMission} type="button">
+            <Button
+              accent={Accent.PRIMARY}
+              data-cy="save-mission"
+              Icon={Icon.Save}
+              onClick={onSaveMission}
+              type="button"
+            >
               Enregistrer et quitter
             </Button>
             <Button
               accent={Accent.SECONDARY}
               data-cy="close-mission"
               Icon={Icon.Save}
-              onClick={closeMission}
+              onClick={onCloseMission}
               type="button"
             >
               Enregistrer et clôturer
@@ -93,7 +99,7 @@ export function MissionFormBottomBar({
             accent={Accent.PRIMARY}
             data-cy="reopen-mission"
             Icon={Icon.Unlock}
-            onClick={reopenMission}
+            onClick={onReopenMission}
             type="button"
           >
             Rouvrir la mission

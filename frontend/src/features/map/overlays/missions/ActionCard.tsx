@@ -7,14 +7,7 @@ import { actionTargetTypeLabels } from '../../../../domain/entities/missions'
 import { ControlInfractionsTags } from '../../../../ui/ControlInfractionsTags'
 
 export function ActionCard({ feature }) {
-  const {
-    // actionType,
-    actionNumberOfControls,
-    actionStartDateTimeUtc,
-    // actionTheme,
-    actionTargetType,
-    infractions
-  } = feature.getProperties()
+  const { actionNumberOfControls, actionStartDateTimeUtc, actionTargetType, infractions } = feature.getProperties()
   const parsedactionStartDateTimeUtc = new Date(actionStartDateTimeUtc)
 
   return (

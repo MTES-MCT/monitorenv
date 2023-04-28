@@ -120,7 +120,7 @@ export function ActionCard({
             </ButtonsWrapper>
           )}
         </ActionSummaryWrapper>
-        {hasError && <ErrorMessage>Veuillez compléter les champs manquants dans cette action de contrôle</ErrorMessage>}
+        {hasError && <ErrorMessage>Veuillez compléter les champs manquants dans cette action</ErrorMessage>}
       </Card>
     </Action>
   )
