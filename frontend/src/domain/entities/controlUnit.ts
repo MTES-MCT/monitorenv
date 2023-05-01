@@ -12,5 +12,5 @@ export type ControlResource = {
   name: string
 }
 
-export const getControlUnitsAsText = (controlUnits: Omit<ControlUnit, 'id'>[]) =>
+export const getControlUnitsAsText = (controlUnits: ControlUnit[]) =>
   controlUnits.map(controlUnit => `${controlUnit.name} (${controlUnit.administration})`).join(' / ')

@@ -1,32 +1,15 @@
-/* eslint-disable react/jsx-props-no-spreading */
+import { Button, Icon, Size } from '@mtes-mct/monitor-ui'
 import { useDispatch } from 'react-redux'
-import { IconButton, Table } from 'rsuite'
-import styled from 'styled-components'
 
 import { editMission } from '../../../domain/use_cases/missions/editMission'
-import { ReactComponent as EditIconSVG } from '../../../uiMonitor/icons/Edit.svg'
 
-export function CellEditMission({ dataKey, rowData, ...props }: { dataKey?: any; rowData?: any }) {
+export function CellEditMission({ id }: { id: number }) {
   const dispatch = useDispatch()
-  const setMission = () => dispatch(editMission(rowData.id))
+  const setMission = () => dispatch(editMission(id))
 
   return (
-    <CustomCell {...props}>
-      <IconButton
-        appearance="primary"
-        data-cy="edit-mission"
-        icon={<EditIconSVG className="rs-icon" />}
-        onClick={setMission}
-        size="sm"
-      >
-        Editer
-      </IconButton>
-    </CustomCell>
+    <Button Icon={Icon.Edit} onClick={setMission} size={Size.SMALL}>
+      Editer
+    </Button>
   )
 }
-
-const CustomCell = styled(Table.Cell)`
-  .rs-table-cell-content {
-    padding-top: 10px;
-  }
-`

@@ -1,9 +1,8 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { reduceBy, map, flatten, pipe, uniq, filter, toPairs, join } from 'ramda'
 import { useMemo } from 'react'
-import { Table } from 'rsuite'
 
-import { ActionTypeEnum } from '../../../domain/entities/missions'
+import { ActionTypeEnum, EnvAction } from '../../../domain/entities/missions'
 
 const getAllThemesAndSubThemesAsString = envactions => {
   const filterSurveillanceAndControlActions = filter(
@@ -28,12 +27,8 @@ const getAllThemesAndSubThemesAsString = envactions => {
   return pipe(flattenAndGroupSubThemesByThemes, toPairs, map(getThemeAndSubThemesString), join(' ; '))(envactions)
 }
 
-export function CellActionThemes({ dataKey, rowData, ...props }: { dataKey?: any; rowData?: any }) {
-  const cellContent = useMemo(() => getAllThemesAndSubThemesAsString(rowData?.envActions), [rowData?.envActions])
+export function CellActionThemes({ envActions }: { envActions: EnvAction[] }) {
+  const cellContent = useMemo(() => getAllThemesAndSubThemesAsString(envActions), [envActions])
 
-  return (
-    <Table.Cell {...props} data-cy="cell-envactions-themes" title={cellContent}>
-      {cellContent}
-    </Table.Cell>
-  )
+  return <span>{cellContent}</span>
 }
