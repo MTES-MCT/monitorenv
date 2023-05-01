@@ -6,6 +6,7 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import { Loader } from 'rsuite'
 import styled from 'styled-components'
 
+import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 import { CellActionThemes } from './CellActionThemes'
 import { CellEditMission } from './CellEditMission'
 import { CellLocalizeMission } from './CellLocalizeMission'
@@ -19,82 +20,100 @@ import { getResourcesCell } from './getResourcesCell'
 import type { Mission } from '../../../domain/entities/missions'
 
 export function MissionsTable({ isLoading, missions }: { isLoading: boolean; missions: Mission[] }) {
-  const [sorting, setSorting] = useState<SortingState>([{ desc: false, id: 'dateDebut' }])
+  const [sorting, setSorting] = useState<SortingState>([{ desc: false, id: 'startDate' }])
 
   const columns = useMemo(
     () => [
       {
         accessorFn: row => row.startDateTimeUtc,
         cell: info => getDateCell(info.getValue()),
+        enableSorting: true,
         header: () => 'Début',
-        id: 'startDate'
+        id: 'startDate',
+        size: 180
       },
       {
         accessorFn: row => row.endDateTimeUtc,
         cell: info => getDateCell(info.getValue()),
+        enableSorting: true,
         header: () => 'Fin',
-        id: 'endDate'
+        id: 'endDate',
+        size: 180
       },
       {
         accessorFn: row => row.missionSource,
         cell: info => getMissionSourceCell(info.getValue()),
+        enableSorting: true,
         header: () => 'Origine',
-        id: 'missionSource'
+        id: 'missionSource',
+        size: 90
       },
       {
         accessorFn: row => row.controlUnits,
         cell: info => getResourcesCell(info.getValue()),
         enableSorting: false,
         header: () => 'Unité (Administration)',
-        id: 'unitAndAdministration'
+        id: 'unitAndAdministration',
+        maxSize: 280,
+        minSize: 200
       },
       {
         accessorFn: row => row.missionTypes,
         cell: info => getMissionTypeCell(info.getValue()),
         enableSorting: false,
         header: () => 'Type',
-        id: 'type'
+        id: 'type',
+        size: 100
       },
       {
         accessorFn: row => row.facade,
         cell: info => info.getValue(),
+        enableSorting: true,
         header: () => 'Facade',
-        id: 'seaFront'
+        id: 'seaFront',
+        size: 100
       },
       {
         accessorFn: row => row.envActions,
         cell: info => <CellActionThemes envActions={info.getValue()} />,
         enableSorting: false,
         header: () => 'Thématiques',
-        id: 'themes'
+        id: 'themes',
+        maxSize: 280,
+        minSize: 100,
+        size: 200
       },
       {
         accessorFn: row => row.envActions,
         cell: info => getNumberOfControlsCell(info.getValue()),
         enableSorting: false,
         header: () => 'Nbre contrôles',
-        id: 'controls'
+        id: 'controls',
+        size: 100
       },
       {
         accessorFn: row => row.isClosed,
         cell: ({ row }) => <CellStatus row={row} />,
         enableSorting: false,
         header: () => 'Statut',
-        id: 'status'
+        id: 'status',
+        size: 120
       },
       {
         accessorFn: row => row.geom,
         cell: info => <CellLocalizeMission geom={info.getValue()} />,
         enableSorting: false,
         header: () => '',
-        id: 'geom'
+        id: 'geom',
+        size: 60
       },
       {
         accessorFn: row => row.id,
         cell: info => <CellEditMission id={info.getValue()} />,
         enableSorting: false,
         header: () => '',
-        id: 'edit'
+        id: 'edit',
+        size: 160
       }
     ],
     []
@@ -103,6 +122,7 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
   const table = useReactTable({
     columns,
     data: missions,
+    enableSortingRemoval: false,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
@@ -142,7 +162,15 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
           {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => (
-                <SimpleTable.StyledTh key={header.id}>
+                <SimpleTable.StyledTh
+                  {...{
+                    style: {
+                      maxWidth: header.column.getSize(),
+                      minWidth: header.column.getSize(),
+                      width: header.column.getSize()
+                    }
+                  }}
+                >
                   {header.isPlaceholder ? undefined : (
                     <SimpleTable.StyledSortContainer
                       {...{
@@ -151,10 +179,11 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
                       }}
                     >
                       {flexRender(header.column.columnDef.header, header.getContext())}
+
                       {header.column.getCanSort() &&
                         ({
-                          asc: <Icon.Close />,
-                          desc: <Icon.Chevron />
+                          asc: <StyledChevronIcon $isOpen={false} $right={false} />,
+                          desc: <StyledChevronIcon $isOpen $right={false} />
                         }[header.column.getIsSorted() as string] ?? <Icon.SortingArrows size={14} />)}
                     </SimpleTable.StyledSortContainer>
                   )}
@@ -175,7 +204,16 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
             return (
               <SimpleTable.StyledBodyTr key={virtualRow.key}>
                 {row?.getVisibleCells().map(cell => (
-                  <SimpleTable.StyledTd key={cell.id}>
+                  <SimpleTable.StyledTd
+                    {...{
+                      key: cell.id,
+                      style: {
+                        maxWidth: cell.column.getSize(),
+                        minWidth: cell.column.getSize(),
+                        width: cell.column.getSize()
+                      }
+                    }}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </SimpleTable.StyledTd>
                 ))}
@@ -196,4 +234,8 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
 const StyledMissionsContainer = styled.div`
   overflow: auto;
   margon-bottom: 10px;
+`
+const StyledChevronIcon = styled(ChevronIcon)`
+  margin-top: 0px;
+  margin-right: 0px;
 `
