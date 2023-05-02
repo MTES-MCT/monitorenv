@@ -485,9 +485,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         )
         val surveillanceAction = EnvActionSurveillanceEntity(
             id = UUID.randomUUID(),
-            themes = listOf(ThemeEntity(theme = "6", subThemes = listOf("7"), protectedSpecies = listOf("8"))),
-            duration = 3.4,
-            observations = "This is a surveillance action",
+            themes = listOf(ThemeEntity(theme="6", subThemes = listOf("7"), protectedSpecies = listOf("8"))),
+            observations = "This is a surveillance action"
         )
         val noteAction = EnvActionNoteEntity(
             id = UUID.randomUUID(),
