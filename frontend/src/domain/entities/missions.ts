@@ -388,6 +388,7 @@ export type EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote
 export type NewEnvAction = NewEnvActionControl | EnvActionSurveillance | EnvActionNote
 
 export type EnvActionCommonProperties = {
+  actionEndDateTimeUtc?: string | null
   actionStartDateTimeUtc?: string | null
   geom?: Record<string, any>[]
   id: string
@@ -415,7 +416,6 @@ export type EnvActionSurveillance = EnvActionCommonProperties & {
   actionType: ActionTypeEnum.SURVEILLANCE
   coverMissionZone?: boolean
   dateRange?: [string, string]
-  duration: number
   durationMatchesMission?: boolean
   observations: string | null
   themes: EnvActionTheme[]

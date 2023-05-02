@@ -1,4 +1,5 @@
 import { isBefore } from 'date-fns'
+import { useFormikContext } from 'formik'
 import { useMemo } from 'react'
 import { Dropdown } from 'rsuite'
 import styled from 'styled-components'
@@ -9,11 +10,11 @@ import { ReactComponent as ControlSVG } from '../../../uiMonitor/icons/Control.s
 import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/Note_libre.svg'
 import { ReactComponent as SurveillanceSVG } from '../../../uiMonitor/icons/Observation.svg'
 import { ReactComponent as PlusSVG } from '../../../uiMonitor/icons/Plus.svg'
-import { dateDifferenceInHours } from '../../../utils/dateDifferenceInHours'
 import { actionFactory } from '../Missions.helpers'
 import { ActionCard } from './ActionCard'
 
 export function ActionsForm({ currentActionIndex, form, remove, setCurrentActionIndex, unshift }) {
+  const { setFieldValue } = useFormikContext()
   const envActions = form?.values?.envActions as EnvAction[] | undefined
   const isFirstSurveillanceAction = !envActions?.find(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
   const isClosed = form?.values?.isClosed
@@ -38,21 +39,26 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
     [envActions]
   )
 
-  const handleAddSurveillanceAction = () =>
+  const handleAddSurveillanceAction = () => {
+    if (!isFirstSurveillanceAction) {
+      const surveillanceIndex = envActions?.findIndex(
+        action => action.actionType === ActionTypeEnum.SURVEILLANCE && action.durationMatchesMission
+      )
+      setFieldValue(`envActions[${surveillanceIndex}].durationMatchesMission`, false)
+    }
+
     unshift(
       actionFactory({
         actionType: ActionTypeEnum.SURVEILLANCE,
         durationMatchesMission: isFirstSurveillanceAction,
         ...(isFirstSurveillanceAction && {
-          actionStartDateTimeUtc: form?.values?.startDateTimeUtc,
-          dateRange: [form?.values?.startDateTimeUtc, form?.values?.endDateTimeUtc || form?.values?.startDateTimeUtc],
-          duration:
-            form?.values?.startDateTimeUtc && form?.values?.endDateTimeUtc
-              ? dateDifferenceInHours(form?.values?.startDateTimeUtc, form?.values?.endDateTimeUtc)
-              : 0
+          actionEndDateTimeUtc: form?.values?.endDateTimeUtc,
+          actionStartDateTimeUtc: form?.values?.startDateTimeUtc
         })
       })
     )
+  }
+
   const handleAddControlAction = () => unshift(actionFactory({ actionType: ActionTypeEnum.CONTROL }))
   const handleAddNoteAction = () => unshift(actionFactory({ actionType: ActionTypeEnum.NOTE }))
   const handleSelectAction = id => () => setCurrentActionIndex(envActions && envActions.findIndex(a => a.id === id))

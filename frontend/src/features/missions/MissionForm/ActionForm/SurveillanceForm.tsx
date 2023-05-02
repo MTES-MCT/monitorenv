@@ -1,4 +1,4 @@
-import { FormikCheckbox, FormikDateRangePicker, FormikTextarea } from '@mtes-mct/monitor-ui'
+import { FormikCheckbox, FormikDatePicker, FormikTextarea } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
@@ -9,21 +9,21 @@ import { ActionTypeEnum, type EnvAction } from '../../../../domain/entities/miss
 import { useNewWindow } from '../../../../ui/NewWindow'
 import { ReactComponent as DeleteSVG } from '../../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as SurveillanceIconSVG } from '../../../../uiMonitor/icons/Observation.svg'
+import { dateDifferenceInHours } from '../../../../utils/dateDifferenceInHours'
 import { MultiZonePicker } from '../../MultiZonePicker'
 import { SurveillanceThemes } from './Themes/SurveillanceThemes'
 
 export function SurveillanceForm({ currentActionIndex, readOnly, remove, setCurrentActionIndex }) {
   const { newWindowContainerRef } = useNewWindow()
+
   const [actionsFields] = useField<EnvAction[]>('envActions')
-  const [field, ,] = useField(`envActions[${currentActionIndex}].geom`)
-  const [durationMatchMissionField] = useField(`envActions[${currentActionIndex}].durationMatchesMission`)
-  const [durationField] = useField(`envActions[${currentActionIndex}].duration`)
+  const [geomField, ,] = useField(`envActions[${currentActionIndex}].geom`)
 
-  const hasCustomZone = field.value && field.value.coordinates.length > 0
+  // const [durationMatchMissionField] = useField(`envActions[${currentActionIndex}].durationMatchesMission`)
+  const [envActionField] = useField(`envActions[${currentActionIndex}]`)
 
-  const totalSurveillances = actionsFields.value.filter(
-    action => action.actionType === ActionTypeEnum.SURVEILLANCE
-  ).length
+  const hasCustomZone = geomField.value && geomField.value.coordinates.length > 0
+  const surveillances = actionsFields.value.filter(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
 
   const handleRemoveAction = () => {
     setCurrentActionIndex(undefined)
@@ -47,24 +47,45 @@ export function SurveillanceForm({ currentActionIndex, readOnly, remove, setCurr
       </Header>
       <SurveillanceThemes currentActionIndex={currentActionIndex} />
       <FlexSelectorWrapper>
-        <FormikDateRangePicker
-          baseContainer={newWindowContainerRef.current}
-          disabled={!!durationMatchMissionField.value}
-          isCompact
-          isLight
-          isStringDate
-          label="Date et fin de surveillance (UTC)"
-          name={`envActions[${currentActionIndex}].dateRange`}
-          withTime
-        />
-
-        <FormikCheckbox
-          disabled={totalSurveillances > 1}
-          inline
-          label="Dates et heures de surveillance équivalentes à celles de la mission"
-          name={`envActions[${currentActionIndex}].durationMatchesMission`}
-        />
-        <div>{`Durée : ${durationField?.value || 0} H`}</div>
+        <Form.Group>
+          <Form.ControlLabel>Début et fin de surveillance (UTC)</Form.ControlLabel>
+          <StyledDatePickerContainer>
+            <FormikDatePicker
+              baseContainer={newWindowContainerRef.current}
+              // disabled={!!durationMatchMissionField.value}
+              isCompact
+              isLabelHidden
+              isLight
+              isStringDate
+              label="Date et heure de début de surveillance (UTC)"
+              name={`envActions[${currentActionIndex}].actionStartDateTimeUtc`}
+              withTime
+            />
+            <FormikDatePicker
+              baseContainer={newWindowContainerRef.current}
+              // disabled={!!durationMatchMissionField.value}
+              isCompact
+              isLabelHidden
+              isLight
+              isStringDate
+              label="Date et heure de fin de surveillance (UTC)"
+              name={`envActions[${currentActionIndex}].actionEndDateTimeUtc`}
+              withTime
+            />
+            {envActionField.value.actionStartDateTimeUtc && envActionField.value.actionEndDateTimeUtc && (
+              <StyledDuration>{`(${dateDifferenceInHours(
+                envActionField.value.actionStartDateTimeUtc,
+                envActionField.value.actionEndDateTimeUtc
+              )} heures)`}</StyledDuration>
+            )}
+          </StyledDatePickerContainer>
+          <FormikCheckbox
+            disabled={surveillances.length > 1}
+            inline
+            label="Dates et heures de surveillance équivalentes à celles de la mission"
+            name={`envActions[${currentActionIndex}].durationMatchesMission`}
+          />
+        </Form.Group>
       </FlexSelectorWrapper>
 
       <MultiZonePicker
@@ -108,6 +129,18 @@ const FlexSelectorWrapper = styled.div`
   flex-direction: column;
   gap: 8px;
   margin-bottom: 20px;
+`
+const StyledDatePickerContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+`
+const StyledDuration = styled.div`
+  font-size: 13px;
+  color: ${COLORS.slateGray};
+  margin-left: 8px;
 `
 
 const SurveillanceIcon = styled(SurveillanceIconSVG)`

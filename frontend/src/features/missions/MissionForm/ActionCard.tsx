@@ -9,6 +9,7 @@ import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg
 import { ReactComponent as DuplicateSVG } from '../../../uiMonitor/icons/Duplicate.svg'
 import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/Note_libre.svg'
 import { ReactComponent as SurveillanceIconSVG } from '../../../uiMonitor/icons/Observation.svg'
+import { dateDifferenceInHours } from '../../../utils/dateDifferenceInHours'
 import { extractThemesAsText } from '../../../utils/extractThemesAsText'
 import { getDateAsLocalizedStringExpanded } from '../../../utils/getDateAsLocalizedString'
 
@@ -84,9 +85,11 @@ export function ActionCard({
                     'à renseigner'
                   )}
                 </Title>
-                {!!action.duration && action.duration > 0 && (
+                {action.actionStartDateTimeUtc && action.actionEndDateTimeUtc && (
                   <DurationWrapper>
-                    <Accented>{action.duration} heure(s)&nbsp;</Accented>
+                    <Accented>
+                      {dateDifferenceInHours(action.actionStartDateTimeUtc, action.actionEndDateTimeUtc)} heure(s)&nbsp;
+                    </Accented>
                     de surveillance
                   </DurationWrapper>
                 )}
