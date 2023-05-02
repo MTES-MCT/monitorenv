@@ -49,8 +49,6 @@ export function ControlCard({ feature }: { feature: any }) {
 const StyledControlCardHeader = styled.div`
   background: ${COLORS.white};
   padding: 12px;
-  border-top-left-radius: 2px;
-  border-top-right-radius: 2px;
   display: flex;
   flex-direction: column;
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3);
@@ -65,7 +63,7 @@ const StyledControlThemes = styled.div`
 `
 const StyledThemes = styled.div`
   white-space: nowrap;
-  font-weight: 700;
+  font: normal normal bold 13px/18px Marianne;
 `
 
 const Accented = styled.div`

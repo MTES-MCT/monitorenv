@@ -51,7 +51,6 @@ export const actionFactory = ({
       return {
         actionType: ActionTypeEnum.SURVEILLANCE,
         coverMissionZone: true,
-        duration: 0,
         durationMatchesMission: true,
         id: uuidv4(),
         observations: '',
