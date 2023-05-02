@@ -3,5 +3,5 @@ import { ControlUnit, getControlUnitsAsText } from '../../../domain/entities/con
 export function getResourcesCell(controlUnits: ControlUnit[]) {
   const controlUnitsAsText = controlUnits && getControlUnitsAsText(controlUnits)
 
-  return controlUnitsAsText
+  return <span title={controlUnitsAsText}>{controlUnitsAsText}</span>
 }
