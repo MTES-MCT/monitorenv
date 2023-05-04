@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 
 import {
@@ -60,22 +61,64 @@ export const actionFactory = ({
   }
 }
 
-export const missionFactory = (mission = {}): Mission | NewMission => ({
-  closedBy: '',
-  controlUnits: [controlUnitFactory()],
-  endDateTimeUtc: '',
-  envActions: [],
-  hasMissionOrder: false,
-  isClosed: false,
-  isUnderJdp: false,
-  missionSource: MissionSourceEnum.MONITORENV,
-  missionTypes: [],
-  observationsCacem: '',
-  observationsCnsp: '',
-  openBy: '',
-  startDateTimeUtc: new Date().toISOString(),
-  ...mission
-})
+export const missionFactory = (mission): Mission | NewMission => {
+  if (!_.isEmpty(mission)) {
+    const { envActions } = mission
+    const surveillances = envActions.filter(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
+
+    const surveillanceWithSamePeriodIndex =
+      surveillances?.length === 1
+        ? envActions.findIndex(
+            action =>
+              action.actionType === ActionTypeEnum.SURVEILLANCE &&
+              action.actionEndDateTimeUtc === mission?.endDateTimeUtc &&
+              action.actionStartDateTimeUtc === mission?.startDateTimeUtc
+          )
+        : -1
+    if (surveillanceWithSamePeriodIndex !== -1) {
+      const envActionsUpdated = [...envActions]
+      const surveillance = {
+        durationMatchesMission: true,
+        ...envActionsUpdated[surveillanceWithSamePeriodIndex]
+      }
+      envActionsUpdated.splice(surveillanceWithSamePeriodIndex, 1, surveillance)
+
+      return {
+        closedBy: '',
+        controlUnits: [controlUnitFactory()],
+        endDateTimeUtc: '',
+        isClosed: false,
+        isUnderJdp: false,
+        missionNature: [],
+        missionSource: MissionSourceEnum.MONITORENV,
+        missionTypes: [],
+        observationsCacem: '',
+        observationsCnsp: '',
+        openBy: '',
+        startDateTimeUtc: new Date().toISOString(),
+        ...mission,
+        envActions: envActionsUpdated
+      }
+    }
+  }
+
+  return {
+    closedBy: '',
+    controlUnits: [controlUnitFactory()],
+    endDateTimeUtc: '',
+    envActions: [],
+    isClosed: false,
+    isUnderJdp: false,
+    missionNature: [],
+    missionSource: MissionSourceEnum.MONITORENV,
+    missionTypes: [],
+    observationsCacem: '',
+    observationsCnsp: '',
+    openBy: '',
+    startDateTimeUtc: new Date().toISOString(),
+    ...mission
+  }
+}
 
 export const controlUnitFactory = ({ ...resourceUnit } = {}): Omit<ControlUnit, 'id'> => ({
   administration: '',

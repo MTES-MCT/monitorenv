@@ -1,5 +1,4 @@
 import { isBefore } from 'date-fns'
-import { useFormikContext } from 'formik'
 import { useMemo } from 'react'
 import { Dropdown } from 'rsuite'
 import styled from 'styled-components'
@@ -14,7 +13,6 @@ import { actionFactory } from '../Missions.helpers'
 import { ActionCard } from './ActionCard'
 
 export function ActionsForm({ currentActionIndex, form, remove, setCurrentActionIndex, unshift }) {
-  const { setFieldValue } = useFormikContext()
   const envActions = form?.values?.envActions as EnvAction[] | undefined
   const isFirstSurveillanceAction = !envActions?.find(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
   const isClosed = form?.values?.isClosed
@@ -40,13 +38,6 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
   )
 
   const handleAddSurveillanceAction = () => {
-    if (!isFirstSurveillanceAction) {
-      const surveillanceIndex = envActions?.findIndex(
-        action => action.actionType === ActionTypeEnum.SURVEILLANCE && action.durationMatchesMission
-      )
-      setFieldValue(`envActions[${surveillanceIndex}].durationMatchesMission`, false)
-    }
-
     unshift(
       actionFactory({
         actionType: ActionTypeEnum.SURVEILLANCE,
