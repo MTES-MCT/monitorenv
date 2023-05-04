@@ -7,10 +7,8 @@ import javax.persistence.*
 @Table(name = "natinfs")
 data class NatinfModel(
     @Id
-    @Column(name = "id")
-    var id: Int,
     @Column(name = "natinf_code")
-    var natinfCode: String,
+    var natinfCode: Int,
     @Column(name = "regulation")
     var regulation: String?,
     @Column(name = "infraction_category")
@@ -19,7 +17,6 @@ data class NatinfModel(
     var infraction: String?
 ) {
     fun toNatinf() = NatinfEntity(
-        id = id,
         natinfCode = natinfCode,
         regulation = regulation,
         infractionCategory = infractionCategory,
@@ -28,7 +25,6 @@ data class NatinfModel(
 
     companion object {
         fun fromNatinfEntity(natinf: NatinfEntity) = NatinfModel(
-            id = natinf.id,
             natinfCode = natinf.natinfCode,
             regulation = natinf.regulation,
             infractionCategory = natinf.infractionCategory,

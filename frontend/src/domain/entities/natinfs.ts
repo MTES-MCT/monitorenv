@@ -1,7 +1,6 @@
 export type NatinfType = {
-  id: number
   infraction?: string
   infractionCategory?: string
-  natinfCode: string
+  natinfCode: number
   regulation?: string
 }
