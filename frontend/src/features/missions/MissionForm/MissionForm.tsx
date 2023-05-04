@@ -48,7 +48,7 @@ export function MissionForm({ formValues, id, mission }) {
     setDeleteModalIsOpen(false)
   }
   const handleDelete = () => {
-    dispatch(deleteMissionAndGoToMissionsList(id))
+    dispatch(deleteMissionAndGoToMissionsList(id, sideWindow))
   }
 
   const handleDeleteMission = () => {
