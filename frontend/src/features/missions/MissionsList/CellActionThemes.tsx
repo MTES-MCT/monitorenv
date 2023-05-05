@@ -30,5 +30,9 @@ const getAllThemesAndSubThemesAsString = envactions => {
 export function CellActionThemes({ envActions }: { envActions: EnvAction[] }) {
   const cellContent = useMemo(() => getAllThemesAndSubThemesAsString(envActions), [envActions])
 
-  return <span title={cellContent}>{cellContent}</span>
+  return (
+    <span data-cy="cell-envactions-themes" title={cellContent}>
+      {cellContent}
+    </span>
+  )
 }

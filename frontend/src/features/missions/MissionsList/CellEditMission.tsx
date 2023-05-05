@@ -8,7 +8,7 @@ export function CellEditMission({ id }: { id: number }) {
   const setMission = () => dispatch(editMission(id))
 
   return (
-    <Button Icon={Icon.Edit} onClick={setMission} size={Size.SMALL}>
+    <Button data-cy="edit-mission" Icon={Icon.Edit} onClick={setMission} size={Size.SMALL}>
       Editer
     </Button>
   )

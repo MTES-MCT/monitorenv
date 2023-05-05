@@ -20,7 +20,7 @@ import { getResourcesCell } from './getResourcesCell'
 import type { Mission } from '../../../domain/entities/missions'
 
 export function MissionsTable({ isLoading, missions }: { isLoading: boolean; missions: Mission[] }) {
-  const [sorting, setSorting] = useState<SortingState>([{ desc: false, id: 'startDate' }])
+  const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'startDate' }])
 
   const columns = useMemo(
     () => [
@@ -89,7 +89,7 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
         enableSorting: false,
         header: () => 'Nbre contrôles',
         id: 'controls',
-        size: 100
+        size: 110
       },
       {
         accessorFn: row => row.isClosed,
@@ -157,13 +157,14 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
 
   return (
     <StyledMissionsContainer ref={tableContainerRef}>
-      <SimpleTable.StyledTable>
-        <SimpleTable.StyledHead>
+      <SimpleTable.Table>
+        <SimpleTable.Head>
           {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => (
-                <SimpleTable.StyledTh
+                <SimpleTable.Th
                   {...{
+                    key: header.id,
                     style: {
                       maxWidth: header.column.getSize(),
                       minWidth: header.column.getSize(),
@@ -172,7 +173,7 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
                   }}
                 >
                   {header.isPlaceholder ? undefined : (
-                    <SimpleTable.StyledSortContainer
+                    <SimpleTable.SortContainer
                       {...{
                         className: header.column.getCanSort() ? 'cursor-pointer select-none' : '',
                         onClick: header.column.getToggleSortingHandler()
@@ -185,13 +186,13 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
                           asc: <StyledChevronIcon $isOpen={false} $right={false} />,
                           desc: <StyledChevronIcon $isOpen $right={false} />
                         }[header.column.getIsSorted() as string] ?? <Icon.SortingArrows size={14} />)}
-                    </SimpleTable.StyledSortContainer>
+                    </SimpleTable.SortContainer>
                   )}
-                </SimpleTable.StyledTh>
+                </SimpleTable.Th>
               ))}
             </tr>
           ))}
-        </SimpleTable.StyledHead>
+        </SimpleTable.Head>
         <tbody>
           {paddingTop > 0 && (
             <tr>
@@ -202,9 +203,9 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
             const row = rows[virtualRow.index]
 
             return (
-              <SimpleTable.StyledBodyTr key={virtualRow.key}>
+              <SimpleTable.BodyTr key={virtualRow.key}>
                 {row?.getVisibleCells().map(cell => (
-                  <SimpleTable.StyledTd
+                  <SimpleTable.Td
                     {...{
                       key: cell.id,
                       style: {
@@ -215,9 +216,9 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
                     }}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </SimpleTable.StyledTd>
+                  </SimpleTable.Td>
                 ))}
-              </SimpleTable.StyledBodyTr>
+              </SimpleTable.BodyTr>
             )
           })}
           {paddingBottom > 0 && (
@@ -226,7 +227,7 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
             </tr>
           )}
         </tbody>
-      </SimpleTable.StyledTable>
+      </SimpleTable.Table>
     </StyledMissionsContainer>
   )
 }
