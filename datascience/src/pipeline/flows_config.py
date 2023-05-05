@@ -17,12 +17,14 @@ from src.pipeline.flows import (
     facade_areas,
     fao_areas,
     historic_control_units,
-    natinfs,
+    infractions,
     refresh_materialized_view,
     regulations,
 )
 
 ################################ Define flow schedules ################################
+
+infractions.flow.schedule = CronSchedule("2 8 * * *")
 
 refresh_materialized_view.flow.schedule = Schedule(
     clocks=[
@@ -45,7 +47,7 @@ flows_to_register = [
     historic_control_units.flow,
     regulations.flow,
     refresh_materialized_view.flow,
-    natinfs.flow,
+    infractions.flow,
 ]
 
 ################################ Define flows' executor ###############################

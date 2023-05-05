@@ -28,7 +28,7 @@ export function NatinfSelector({ infractionPath }) {
       (data &&
         [...data]
           ?.sort(sortNatinf)
-          .map(item => ({ label: `${item.natinfCode} - ${item.infraction}`, value: item.natinfCode }))) ||
+          .map(item => ({ label: `${item.natinfCode} - ${item.infraction}`, value: item.natinfCode.toString() }))) ||
       [],
     [data]
   )
