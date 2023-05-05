@@ -48,7 +48,7 @@ export function MissionFormBottomBar({
     <Footer>
       <FormActionsWrapper>
         {allowDelete && (
-          <Button
+          <StyledButton
             accent={Accent.SECONDARY}
             data-cy="delete-mission"
             Icon={Icon.Delete}
@@ -56,7 +56,7 @@ export function MissionFormBottomBar({
             type="button"
           >
             Supprimer la mission
-          </Button>
+          </StyledButton>
         )}
         <Separator />
         {!_.isEmpty(cleanedErrors) && (
@@ -116,4 +116,9 @@ const Footer = styled.div`
 const FormActionsWrapper = styled.div`
   display: flex;
   gap: 16px;
+`
+const StyledButton = styled(Button)`
+  svg {
+    color: ${COLORS.maximumRed};
+  }
 `

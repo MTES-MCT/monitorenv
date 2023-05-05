@@ -112,10 +112,8 @@ context('Missions', () => {
   it('allow multiple themes and may be multiple subthemes in surveillance actions', () => {
     // Given
     cy.get('*[data-cy="edit-mission"]').eq(3).click({ force: true })
-    cy.intercept('GET', `/bff/v1/controlthemes`).as('getControlThemes')
     cy.get('*[data-cy="action-card"]').eq(0).click()
     cy.get('*[data-cy="envaction-theme-element"]').should('have.length', 1)
-    cy.wait('@getControlThemes')
     cy.get('*[data-cy="envaction-theme-selector"]').contains(
       'Police des espèces protégées et de leurs habitats (faune et flore)'
     )
@@ -158,7 +156,7 @@ context('Missions', () => {
     })
   })
 
-  it.only('A mission should be created', () => {
+  it('A mission should be created', () => {
     // Given
     cy.wait(200)
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('9')
@@ -226,17 +224,17 @@ context('Missions', () => {
   it('A closed mission should be reopenable, editable and saved again', () => {
     // Given
     cy.wait(200)
-    cy.get('*[data-cy="edit-mission"]').eq(10).click({ force: true })
-    cy.intercept('PUT', `/bff/v1/missions/47`).as('updateMission')
+    cy.get('*[data-cy="edit-mission"]').eq(7).click({ force: true })
+    cy.intercept('PUT', `/bff/v1/missions/25`).as('updateMission')
 
     cy.get('*[data-cy="reopen-mission"]').click()
-    cy.get('[name="openBy"]').type('{backspace}{backspace}{backspace}PCF', { force: true })
+    cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
     cy.get('form').submit()
 
     // Then
     cy.wait('@updateMission').then(({ request, response }) => {
       expect(response && response.statusCode).equal(200)
-      expect(request.body.openBy).equal('PCF')
+      expect(request.body.openBy).equal('KEV')
     })
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('9')
   })
