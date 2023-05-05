@@ -11,7 +11,7 @@ export function MapExtentController({ map }: MapChildrenProps) {
   const { fitToExtent, zoomToCenter } = useAppSelector(state => state.map)
 
   useEffect(() => {
-    if (fitToExtent) {
+    if (fitToExtent && fitToExtent[0] !== Infinity) {
       const options = {
         duration: DEFAULT_MAP_ANIMATION_DURATION,
         maxZoom: MAX_ZOOM_LEVEL,
