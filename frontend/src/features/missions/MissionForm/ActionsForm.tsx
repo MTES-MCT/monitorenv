@@ -36,7 +36,6 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
       }),
     [envActions]
   )
-
   const handleAddSurveillanceAction = () => {
     unshift(
       actionFactory({
@@ -76,7 +75,11 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
             <Dropdown.Item icon={<ControlSVG />} onClick={handleAddControlAction}>
               Ajouter des contrôles
             </Dropdown.Item>
-            <Dropdown.Item icon={<SurveillanceSVG />} onClick={handleAddSurveillanceAction}>
+            <Dropdown.Item
+              data-cy="add-surveillance-action"
+              icon={<SurveillanceSVG />}
+              onClick={handleAddSurveillanceAction}
+            >
               Ajouter une surveillance
             </Dropdown.Item>
             <Dropdown.Item icon={<NoteSVG />} onClick={handleAddNoteAction}>
@@ -101,7 +104,7 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
                 readOnly={isClosed}
                 removeAction={handleRemoveAction(action.id)}
                 selectAction={handleSelectAction(action.id)}
-                selected={action.id === currentActionId}
+                selected={currentActionId ? action.id === currentActionId : true}
               />
             )
           })
