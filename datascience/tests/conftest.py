@@ -139,7 +139,24 @@ def start_remote_database_container(
         detach=True,
         volumes=migrations_folders_mounts,
     )
-    sleep(3)
+
+    timeout = 30
+    stop_time = 3
+    elapsed_time = 0
+    healthcheck_exit_code = None
+
+    while healthcheck_exit_code != 0 and elapsed_time < timeout:
+        print(f"Waiting for database container to start ({elapsed_time}/{timeout})")
+        sleep(stop_time)
+        healthcheck_exit_code = remote_database_container.exec_run(
+            f"pg_isready -U {os.environ['MONITORENV_REMOTE_DB_USER']} -d {os.environ['MONITORENV_REMOTE_DB_NAME']}"
+        ).exit_code
+        remote_database_container.reload()
+        print(f"Container status: {remote_database_container.status}")
+        print(f"Healthcheck exit code: {healthcheck_exit_code}")
+        elapsed_time += stop_time
+        continue
+
     yield remote_database_container
     print("Stopping database container")
     remote_database_container.stop()
@@ -164,14 +181,17 @@ def create_tables(set_environment_variables, start_remote_database_container):
         # Use psql inside database container to run migration scripts.
         # Using sqlalchemy / psycopg2 to run migration scripts from python is not
         # possible due to the use of `COPY FROM STDIN` in some migrations.
-        container.exec_run(
+        result = container.exec_run(
             (
                 "psql "
+                f"-v ON_ERROR_STOP=1 "
                 f"-U {os.environ['MONITORENV_REMOTE_DB_USER']} "
                 f"-d {os.environ['MONITORENV_REMOTE_DB_NAME']} "
                 f"-f {script_filepath}"
             )
         )
+        if(result.exit_code != 0):
+            raise Exception(f"Error running migration {m.path.name}. Error message is: {result.output}")
 
 
 @pytest.fixture()
