@@ -238,4 +238,20 @@ context('Missions', () => {
     })
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('9')
   })
+
+  it('A mission can be closed without contact', () => {
+    // Given
+    cy.wait(200)
+    cy.get('*[data-cy="edit-mission"]').eq(2).click({ force: true })
+    cy.intercept('PUT', `/bff/v1/missions/43`).as('updateMission')
+
+    cy.get('*[data-cy="close-mission"]').click()
+
+    // Then
+    cy.wait('@updateMission').then(({ request, response }) => {
+      expect(response && response.statusCode).equal(200)
+      expect(request.body.controlUnits[0].contact).equal(null)
+    })
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('9')
+  })
 })

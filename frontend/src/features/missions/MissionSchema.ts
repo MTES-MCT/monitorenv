@@ -65,7 +65,7 @@ const ControlUnitSchema: Yup.SchemaOf<ControlUnit> = Yup.object()
 const ClosedControlUnitSchema: Yup.SchemaOf<ControlUnit> = Yup.object()
   .shape({
     administration: Yup.string().required(),
-    contact: Yup.string().notRequired(),
+    contact: Yup.string().nullable().notRequired(),
     id: Yup.number().required(),
     name: Yup.string().required(),
     resources: Yup.array().ensure().of(ControlResourceSchema).required()
