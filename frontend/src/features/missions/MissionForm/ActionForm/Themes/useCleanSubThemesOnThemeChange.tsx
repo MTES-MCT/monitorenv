@@ -7,9 +7,11 @@ export function useCleanSubThemesOnThemeChange(path) {
   const { setFieldValue, values } = useFormikContext()
   const previousPath = usePrevious(path)
   const previousTheme = usePrevious(_.get(values, `${path}.theme`))
+
   useEffect(() => {
     const currentTheme = _.get(values, `${path}.theme`)
-    if (path === previousPath && currentTheme !== previousTheme) {
+
+    if (path === previousPath && currentTheme !== previousTheme && !currentTheme) {
       setFieldValue(`${path}.subThemes`, [])
       setFieldValue(`${path}.protectedSpecies`, [])
     }
