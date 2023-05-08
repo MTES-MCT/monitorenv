@@ -44,26 +44,6 @@ export const missionTypeEnum = {
   }
 }
 
-export enum MissionNatureEnum {
-  ENV = 'ENV',
-  FISH = 'FISH',
-  OTHER = 'OTHER'
-}
-export const missionNatureEnum = {
-  ENV: {
-    code: 'ENV',
-    libelle: 'Env'
-  },
-  FISH: {
-    code: 'FISH',
-    libelle: 'Pêche'
-  },
-  OTHER: {
-    code: 'OTHER',
-    libelle: 'Autre'
-  }
-}
-
 export enum InfractionTypeEnum {
   WAITING = 'WAITING',
   WITHOUT_REPORT = 'WITHOUT_REPORT',
@@ -380,7 +360,6 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
   geom?: Record<string, any>[]
   id: number
   isClosed: boolean
-  missionNature: MissionNatureEnum[]
   missionSource: MissionSourceEnum
   missionTypes: MissionTypeEnum[]
   observationsCacem?: string

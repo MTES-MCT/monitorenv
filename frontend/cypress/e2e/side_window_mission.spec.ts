@@ -172,7 +172,6 @@ context('Missions', () => {
     // When
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
-    cy.get('[name="missionNature1"]').click({ force: true })
     cy.get('[name="openBy"]').type('PCF')
 
     cy.get('*[data-cy="add-control-unit"]').click()

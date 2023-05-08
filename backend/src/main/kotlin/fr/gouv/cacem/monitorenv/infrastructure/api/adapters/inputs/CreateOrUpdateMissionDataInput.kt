@@ -8,7 +8,6 @@ import java.time.ZonedDateTime
 data class CreateOrUpdateMissionDataInput(
     val id: Int? = null,
     val missionTypes: List<MissionTypeEnum>,
-    val missionNature: List<MissionNatureEnum>? = listOf(),
     val controlUnits: List<ControlUnitEntity> = listOf(),
     val openBy: String? = null,
     val closedBy: String? = null,
@@ -31,7 +30,6 @@ data class CreateOrUpdateMissionDataInput(
         return MissionEntity(
             id = this.id,
             missionTypes = this.missionTypes,
-            missionNature = this.missionNature,
             controlUnits = this.controlUnits,
             openBy = this.openBy,
             closedBy = this.closedBy,

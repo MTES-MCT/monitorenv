@@ -15,7 +15,6 @@ class GetMissions(private val missionRepository: IMissionRepository) {
     fun execute(
         startedAfterDateTime: ZonedDateTime?,
         startedBeforeDateTime: ZonedDateTime?,
-        missionNatures: List<String>?,
         missionTypes: List<String>?,
         missionStatuses: List<String>?,
         pageNumber: Int?,
@@ -25,7 +24,6 @@ class GetMissions(private val missionRepository: IMissionRepository) {
         val missions = missionRepository.findAllMissions(
             startedAfter = startedAfterDateTime?.toInstant() ?: ZonedDateTime.now().minusDays(30).toInstant(),
             startedBefore = startedBeforeDateTime?.toInstant(),
-            missionNatures = missionNatures,
             missionTypes = missionTypes,
             missionStatuses = missionStatuses,
             seaFronts = seaFronts,

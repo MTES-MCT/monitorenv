@@ -28,7 +28,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val existingMissions = jpaMissionRepository.findAllMissions(
             startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
             startedBefore = ZonedDateTime.parse("2022-08-08T00:00:00Z").toInstant(),
-            missionNatures = null,
             missionTypes = null,
             missionStatuses = null,
             seaFronts = null,
@@ -71,7 +70,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val missions = jpaMissionRepository.findAllMissions(
             startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
             startedBefore = ZonedDateTime.parse("2022-08-08T00:00:00Z").toInstant(),
-            missionNatures = null,
             missionTypes = null,
             missionStatuses = null,
             seaFronts= null,
@@ -195,7 +193,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val missions = jpaMissionRepository.findAllMissions(
             startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
             startedBefore = null,
-            missionNatures = null,
             missionTypes = null,
             missionStatuses = null,
             seaFronts = null,
@@ -211,7 +208,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val missions = jpaMissionRepository.findAllMissions(
             startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
             startedBefore = ZonedDateTime.parse("2022-08-08T00:00:00Z").toInstant(),
-            missionNatures = null,
             missionTypes = null,
             missionStatuses = null,
             seaFronts = null,
@@ -222,44 +218,11 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `findAllMissions Should return filtered missions when missionNatures is set`() {
-        // When
-        val missions = jpaMissionRepository.findAllMissions(
-            startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
-            startedBefore = null,
-            missionNatures = listOf("ENV"),
-            missionTypes = null,
-            missionStatuses = null,
-            seaFronts = null,
-            pageable = Pageable.unpaged()
-        )
-        assertThat(missions).hasSize(29)
-    }
-
-    @Test
-    @Transactional
-    fun `findAllMissions Should return filtered missions when multiple missionNatures are set`() {
-        // When
-        val missions = jpaMissionRepository.findAllMissions(
-            startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
-            startedBefore = null,
-            missionNatures = listOf("ENV", "FISH"),
-            missionTypes = null,
-            missionStatuses = null,
-            seaFronts = null,
-            pageable = Pageable.unpaged()
-        )
-        assertThat(missions).hasSize(46)
-    }
-
-    @Test
-    @Transactional
     fun `findAllMissions Should return filtered missions when missionTypes is set`() {
         // When
         val missions = jpaMissionRepository.findAllMissions(
             startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
             startedBefore = null,
-            missionNatures = null,
             missionTypes = listOf("SEA"),
             missionStatuses = null,
             seaFronts = null,
@@ -275,7 +238,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val missions = jpaMissionRepository.findAllMissions(
             startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
             startedBefore = null,
-            missionNatures = null,
             missionTypes = listOf("SEA", "LAND"),
             missionStatuses = null,
             seaFronts = null,
@@ -291,7 +253,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val missions = jpaMissionRepository.findAllMissions(
             startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
             startedBefore = null,
-            missionNatures = null,
             missionTypes = null,
             missionStatuses = null,
             seaFronts = listOf("MEMN"),
@@ -307,7 +268,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val missions = jpaMissionRepository.findAllMissions(
             startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
             startedBefore = null,
-            missionNatures = null,
             missionTypes = null,
             seaFronts = null,
             missionStatuses = listOf("UPCOMING"),
@@ -323,7 +283,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val missions = jpaMissionRepository.findAllMissions(
             startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
             startedBefore = null,
-            missionNatures = null,
             missionTypes = null,
             seaFronts = null,
             missionStatuses = listOf("PENDING"),
@@ -339,7 +298,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val missions = jpaMissionRepository.findAllMissions(
             startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
             startedBefore = null,
-            missionNatures = null,
             missionTypes = null,
             seaFronts = null,
             missionStatuses = listOf("ENDED"),
@@ -355,7 +313,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val missions = jpaMissionRepository.findAllMissions(
             startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
             startedBefore = null,
-            missionNatures = null,
             missionTypes = null,
             seaFronts = null,
             missionStatuses = listOf("CLOSED"),
@@ -371,7 +328,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val missions = jpaMissionRepository.findAllMissions(
             startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
             startedBefore = null,
-            missionNatures = null,
             missionTypes = null,
             seaFronts = null,
             missionStatuses = listOf("CLOSED", "UPCOMING"),
@@ -387,7 +343,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val missions = jpaMissionRepository.findAllMissions(
             startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
             startedBefore = null,
-            missionNatures = null,
             missionTypes = null,
             missionStatuses = null,
             seaFronts = null,
@@ -403,7 +358,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val missions = jpaMissionRepository.findAllMissions(
             startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
             startedBefore = null,
-            missionNatures = null,
             missionTypes = null,
             missionStatuses = null,
             seaFronts = null,
@@ -423,7 +377,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val firstMission = MissionEntity(
             id = 10,
             missionTypes = listOf( MissionTypeEnum.LAND),
-            missionNature = listOf(MissionNatureEnum.ENV, MissionNatureEnum.FISH),
             openBy = "KIM",
             closedBy = "TRA",
             facade = "NAMO",
@@ -511,7 +464,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val expectedUpdatedMission = MissionEntity(
             id = 10,
             missionTypes = listOf( MissionTypeEnum.LAND),
-            missionNature = listOf(MissionNatureEnum.FISH, MissionNatureEnum.ENV),
             openBy = "John Smith",
             closedBy = "Carol Tim",
             facade = "MEMN",
@@ -550,7 +502,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val expectedUpdatedMission = MissionEntity(
             id = 10,
             missionTypes = listOf( MissionTypeEnum.LAND),
-            missionNature = listOf(MissionNatureEnum.FISH, MissionNatureEnum.ENV),
             facade = "NAMO",
             geom = polygon,
             observationsCacem = null,
@@ -577,7 +528,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val missionsList = jpaMissionRepository.findAllMissions(
             startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
             startedBefore = ZonedDateTime.parse("2022-08-08T00:00:00Z").toInstant(),
-            missionNatures = null,
             missionTypes = null,
             missionStatuses = null,
             seaFronts = null,
@@ -592,7 +542,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val nextMissionList = jpaMissionRepository.findAllMissions(
             startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
             startedBefore = ZonedDateTime.parse("2022-08-08T00:00:00Z").toInstant(),
-            missionNatures = null,
             missionTypes = null,
             missionStatuses = null,
             seaFronts = null,

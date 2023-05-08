@@ -22,7 +22,6 @@ class JpaMissionRepository(
     override fun findAllMissions(
         startedAfter: Instant,
         startedBefore: Instant?,
-        missionNatures: List<String>?,
         missionTypes: List<String>?,
         missionStatuses: List<String>?,
         missionSources: List<MissionSourceEnum>?,
@@ -33,7 +32,6 @@ class JpaMissionRepository(
         return dbMissionRepository.findAllMissions(
             startedAfter = startedAfter,
             startedBefore = startedBefore,
-            missionNatures = missionNatures,
             missionTypes = missionTypes,
             missionStatuses = missionStatuses,
             missionSources = missionSourcesAsStringArray,

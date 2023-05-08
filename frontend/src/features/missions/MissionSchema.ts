@@ -11,7 +11,6 @@ import {
   FormalNoticeEnum,
   Infraction,
   InfractionTypeEnum,
-  MissionNatureEnum,
   MissionTypeEnum,
   NewMission,
   VesselSizeEnum,
@@ -37,11 +36,6 @@ Yup.addMethod(Yup.mixed, 'oneOfOptional', (arr, message) =>
 
 const MissionTypesSchema = Yup.array()
   .of(Yup.mixed<MissionTypeEnum>().oneOf(Object.values(MissionTypeEnum)).required())
-  .ensure()
-  .min(1, 'Requis')
-
-const MissionNatureSchema = Yup.array()
-  .of(Yup.mixed<MissionNatureEnum>().oneOf(Object.values(MissionNatureEnum)).required())
   .ensure()
   .min(1, 'Requis')
 
@@ -165,7 +159,6 @@ export const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
     endDateTimeUtc: Yup.string().nullable(),
     geom: shouldUseAlternateValidationInTestEnvironment ? Yup.object().nullable() : MissionZoneSchema,
     isClosed: Yup.boolean().default(false),
-    missionNature: MissionNatureSchema,
     missionTypes: MissionTypesSchema,
     openBy: Yup.string()
       .min(3, 'Minimum 3 lettres pour le Trigramme')

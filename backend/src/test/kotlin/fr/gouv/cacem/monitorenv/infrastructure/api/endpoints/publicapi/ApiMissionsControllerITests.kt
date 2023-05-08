@@ -64,7 +64,6 @@ class ApiMissionsControllerITests {
         val expectedNewMission = MissionEntity(
             id = 10,
             missionTypes = listOf( MissionTypeEnum.LAND),
-            missionNature = listOf(MissionNatureEnum.ENV),
             facade = "Outre-Mer",
             geom = polygon,
             observationsCnsp = null,
@@ -78,7 +77,6 @@ class ApiMissionsControllerITests {
         )
         val newMissionRequest = CreateOrUpdatePublicMissionDataInput(
             missionTypes = listOf( MissionTypeEnum.LAND),
-            missionNature = listOf(MissionNatureEnum.ENV),
             observationsCnsp = null,
             facade = "Outre-Mer",
             geom = polygon,
@@ -113,7 +111,6 @@ class ApiMissionsControllerITests {
         val expectedFirstMission = MissionEntity(
             id = 10,
             missionTypes = listOf( MissionTypeEnum.SEA),
-            missionNature = listOf(MissionNatureEnum.ENV),
             facade = "Outre-Mer",
             geom = polygon,
             observationsCnsp = null,
@@ -129,7 +126,6 @@ class ApiMissionsControllerITests {
             this.getMissions.execute(
                 startedAfterDateTime = any(),
                 startedBeforeDateTime = any(),
-                missionNatures = any(),
                 missionTypes = any(),
                 missionStatuses = any(),
                 seaFronts = any(),

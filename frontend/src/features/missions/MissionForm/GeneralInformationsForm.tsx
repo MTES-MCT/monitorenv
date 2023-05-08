@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
 import { InteractionListener } from '../../../domain/entities/map/constants'
-import { missionNatureEnum, missionTypeEnum } from '../../../domain/entities/missions'
+import { missionTypeEnum } from '../../../domain/entities/missions'
 import { useNewWindow } from '../../../ui/NewWindow'
 import { MultiZonePicker } from '../MultiZonePicker'
 import { ControlUnitsForm } from './ControlUnitsForm'
@@ -15,10 +15,6 @@ export function GeneralInformationsForm() {
   const [isClosedField] = useField<boolean>(`isClosed`)
 
   const missionTypeOptions = Object.entries(missionTypeEnum).map(([key, val]) => ({ label: val.libelle, value: key }))
-  const missionNatureOptions = Object.entries(missionNatureEnum).map(([key, val]) => ({
-    label: val.libelle,
-    value: key
-  }))
 
   return (
     <FormWrapper>
@@ -56,15 +52,6 @@ export function GeneralInformationsForm() {
             label="Type de mission"
             name="missionTypes"
             options={missionTypeOptions}
-          />
-        </SubGroup>
-        <SubGroup data-cy="mission-nature">
-          <FormikMultiCheckbox
-            isErrorMessageHidden
-            isInline
-            label="Intentions principales de mission"
-            name="missionNature"
-            options={missionNatureOptions}
           />
         </SubGroup>
       </Form.Group>
