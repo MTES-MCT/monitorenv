@@ -358,9 +358,10 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
   envActions: EnvAction[]
   facade: SeaFrontEnum
   geom?: Record<string, any>[]
+  hasMissionOrder?: boolean
   id: number
   isClosed: boolean
-  isUnderJdp: boolean
+  isUnderJdp?: boolean
   missionSource: MissionSourceEnum
   missionTypes: MissionTypeEnum[]
   observationsCacem?: string

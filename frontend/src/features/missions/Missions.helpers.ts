@@ -66,6 +66,7 @@ export const missionFactory = (mission = {}): Mission | NewMission => ({
   controlUnits: [controlUnitFactory()],
   endDateTimeUtc: '',
   envActions: [],
+  hasMissionOrder: false,
   isClosed: false,
   isUnderJdp: false,
   missionSource: MissionSourceEnum.MONITORENV,

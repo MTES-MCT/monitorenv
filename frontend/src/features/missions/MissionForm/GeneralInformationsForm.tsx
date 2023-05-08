@@ -3,7 +3,8 @@ import {
   FormikDatePicker,
   FormikMultiCheckbox,
   FormikTextInput,
-  FormikTextarea
+  FormikTextarea,
+  MultiRadio
 } from '@mtes-mct/monitor-ui'
 import { FieldArray, useField } from 'formik'
 import styled from 'styled-components'
@@ -17,7 +18,8 @@ import { ControlUnitsForm } from './ControlUnitsForm'
 
 export function GeneralInformationsForm() {
   const { newWindowContainerRef } = useNewWindow()
-  const [isClosedField] = useField<boolean>(`isClosed`)
+  const [isClosedField] = useField<boolean>('isClosed')
+  const [hasMissionOrderField] = useField<boolean>('hasMissionOrder')
 
   const missionTypeOptions = Object.entries(missionTypeEnum).map(([key, val]) => ({ label: val.libelle, value: key }))
 
@@ -57,6 +59,17 @@ export function GeneralInformationsForm() {
         />
         <FormikCheckbox disabled label="Mission sous JDP" name="isUnderJdp" />
       </StyledMissionType>
+      <MultiRadio
+        disabled
+        isInline
+        label="Ordre de mission"
+        name="hasMissionOrder"
+        options={[
+          { label: 'Oui', value: true },
+          { label: 'Non', value: false }
+        ]}
+        value={hasMissionOrderField.value}
+      />
 
       <StyledUnitsContainer>
         <FieldArray
