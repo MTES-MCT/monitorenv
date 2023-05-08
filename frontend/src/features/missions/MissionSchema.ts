@@ -62,6 +62,16 @@ const ControlUnitSchema: Yup.SchemaOf<ControlUnit> = Yup.object()
   })
   .defined()
 
+const ClosedControlUnitSchema: Yup.SchemaOf<ControlUnit> = Yup.object()
+  .shape({
+    administration: Yup.string().required(),
+    contact: Yup.string().nullable().notRequired(),
+    id: Yup.number().required(),
+    name: Yup.string().required(),
+    resources: Yup.array().ensure().of(ControlResourceSchema).required()
+  })
+  .defined()
+
 const ThemeSchema: Yup.SchemaOf<EnvActionTheme> = Yup.object().shape({
   protectedSpecies: Yup.array().of(Yup.string().optional()).nullable().optional(),
   subThemes: Yup.array()
@@ -175,22 +185,29 @@ export const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
   })
   .required()
 
-export const ClosedMissionSchema = Yup.object()
-  .shape({
-    closedBy: Yup.string()
-      .min(3, 'Minimum 3 lettres pour le Trigramme')
-      .max(3, 'Maximum 3 lettres pour le Trigramme')
-      .required('Requis'),
-
-    endDateTimeUtc: Yup.string().required('Requis'),
-    // cast as any to avoid type error
-    // FIXME : see issue https://github.com/jquense/yup/issues/1190
-    // & tip for resolution https://github.com/jquense/yup/issues/1283#issuecomment-786559444
-    envActions: Yup.array()
-      .of(EnvActionSchema as any)
-      .nullable()
-  })
-  .concat(NewMissionSchema)
+export const ClosedMissionSchema = Yup.object().shape({
+  closedBy: Yup.string()
+    .min(3, 'Minimum 3 lettres pour le Trigramme')
+    .max(3, 'Maximum 3 lettres pour le Trigramme')
+    .required('Requis'),
+  controlUnits: Yup.array().of(ClosedControlUnitSchema).ensure().defined().min(1),
+  endDateTimeUtc: Yup.string().nullable().required('Requis'),
+  // cast as any to avoid type error
+  // FIXME : see issue https://github.com/jquense/yup/issues/1190
+  // & tip for resolution https://github.com/jquense/yup/issues/1283#issuecomment-786559444
+  envActions: Yup.array()
+    .of(EnvActionSchema as any)
+    .nullable(),
+  geom: shouldUseAlternateValidationInTestEnvironment ? Yup.object().nullable() : MissionZoneSchema,
+  isClosed: Yup.boolean().default(false),
+  missionNature: MissionNatureSchema,
+  missionTypes: MissionTypesSchema,
+  openBy: Yup.string()
+    .min(3, 'Minimum 3 lettres pour le Trigramme')
+    .max(3, 'Maximum 3 lettres pour le Trigramme')
+    .required('Requis'),
+  startDateTimeUtc: Yup.string().required('Requis')
+})
 
 export const MissionSchema = Yup.lazy(value => {
   if (value.isClosed) {
