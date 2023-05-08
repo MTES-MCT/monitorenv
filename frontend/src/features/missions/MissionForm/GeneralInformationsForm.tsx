@@ -122,7 +122,7 @@ const StyledMissionType = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: end;
   justify-content: space-between;
 `
 
