@@ -1,6 +1,11 @@
-import { FormikDatePicker, FormikMultiCheckbox, FormikTextInput, FormikTextarea } from '@mtes-mct/monitor-ui'
+import {
+  FormikCheckbox,
+  FormikDatePicker,
+  FormikMultiCheckbox,
+  FormikTextInput,
+  FormikTextarea
+} from '@mtes-mct/monitor-ui'
 import { FieldArray, useField } from 'formik'
-import { Form } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
@@ -19,50 +24,49 @@ export function GeneralInformationsForm() {
   return (
     <FormWrapper>
       <Title>Informations générales</Title>
-      <FlexFormGroup>
-        <ColWrapper>
-          <FormikDatePicker
-            baseContainer={newWindowContainerRef.current}
-            isCompact
-            isStringDate
-            label="Début de mission (UTC)"
-            name="startDateTimeUtc"
-            withTime
-          />
-        </ColWrapper>
-        <ColWrapper>
-          <FormikDatePicker
-            baseContainer={newWindowContainerRef.current}
-            isCompact
-            isEndDate
-            isStringDate
-            label="Fin de mission (UTC)"
-            name="endDateTimeUtc"
-            withTime
-          />
-        </ColWrapper>
-      </FlexFormGroup>
 
-      <Form.Group>
-        <SubGroup>
-          <FormikMultiCheckbox
-            data-cy="mission-types"
-            isErrorMessageHidden
-            isInline
-            label="Type de mission"
-            name="missionTypes"
-            options={missionTypeOptions}
-          />
-        </SubGroup>
-      </Form.Group>
-      <Form.Group>
+      <StyledDatePickerContainer>
+        <FormikDatePicker
+          baseContainer={newWindowContainerRef.current}
+          isCompact
+          isStringDate
+          label="Début de mission (UTC)"
+          name="startDateTimeUtc"
+          withTime
+        />
+
+        <FormikDatePicker
+          baseContainer={newWindowContainerRef.current}
+          isCompact
+          isEndDate
+          isStringDate
+          label="Fin de mission (UTC)"
+          name="endDateTimeUtc"
+          withTime
+        />
+      </StyledDatePickerContainer>
+
+      <StyledMissionType>
+        <FormikMultiCheckbox
+          data-cy="mission-types"
+          isErrorMessageHidden
+          isInline
+          label="Type de mission"
+          name="missionTypes"
+          options={missionTypeOptions}
+        />
+        <FormikCheckbox disabled label="Mission sous JDP" name="isUnderJdp" />
+      </StyledMissionType>
+
+      <StyledUnitsContainer>
         <FieldArray
           name="controlUnits"
           /* eslint-disable-next-line react/jsx-props-no-spreading */
           render={props => <ControlUnitsForm readOnly={isClosedField.value} {...props} />}
           validateOnChange={false}
         />
-      </Form.Group>
+      </StyledUnitsContainer>
+
       <MultiZonePicker
         addButtonLabel="Ajouter une zone de mission"
         interactionListener={InteractionListener.MISSION_ZONE}
@@ -70,56 +74,59 @@ export function GeneralInformationsForm() {
         name="geom"
         readOnly={isClosedField.value}
       />
-      <Form.Group>
-        <InputObservations label="CACEM : orientations, observations" name="observationsCacem" />
-        <InputObservations label="CNSP : orientations, observations" name="observationsCnsp" />
-        <SubGroup>
-          <NarrowColumn>
-            <FormikTextInput isErrorMessageHidden label="Ouvert par" name="openBy" />
-          </NarrowColumn>
-          <NarrowColumn>
-            <FormikTextInput isErrorMessageHidden label="Clôturé par" name="closedBy" />
-          </NarrowColumn>
-        </SubGroup>
-      </Form.Group>
+
+      <StyledObservationsContainer>
+        <FormikTextarea label="CACEM : orientations, observations" name="observationsCacem" />
+        <FormikTextarea label="CNSP : orientations, observations" name="observationsCnsp" />
+        <StyledAuthorContainer>
+          <FormikTextInput isErrorMessageHidden label="Ouvert par" name="openBy" />
+          <FormikTextInput isErrorMessageHidden label="Clôturé par" name="closedBy" />
+        </StyledAuthorContainer>
+      </StyledObservationsContainer>
     </FormWrapper>
   )
 }
 
 const FormWrapper = styled.div`
   padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 504px;
 `
 const Title = styled.h2`
   font-size: 16px;
   line-height: 22px;
-  padding-bottom: 13px;
+  padding-bottom: 8px;
   color: ${COLORS.charcoal};
 `
 
-const FlexFormGroup = styled(Form.Group)`
+const StyledDatePickerContainer = styled.div`
   display: flex;
+  gap: 8px;
 `
-const ColWrapper = styled.div`
-  width: 200px;
-  height: 54px;
-  display: inline-block;
-  :not(:last-child) {
-    margin-right: 16px;
-  }
+const StyledMissionType = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+  justify-content: space-between;
 `
 
-const NarrowColumn = styled.div`
-  width: 120px;
-  display: inline-block;
-  :not(:last-child) {
-    margin-right: 16px;
-  }
-`
-const SubGroup = styled.div`
-  margin-bottom: 16px;
+const StyledUnitsContainer = styled.div`
   display: flex;
+  flex-direction: column;
 `
 
-const InputObservations = styled(FormikTextarea)`
-  max-width: 416px;
+const StyledObservationsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`
+const StyledAuthorContainer = styled.div`
+  display: flex;
+  gap: 8px;
+  .Field-TextInput {
+    width: 120px;
+  }
 `

@@ -57,6 +57,9 @@ export function SelectPicker<T>({
 }
 
 const Wrapper = styled.div`
+  .rs-picker {
+    margin-top: 4px;
+  }
   .rs-picker-select-menu.rs-picker-menu {
     position: relative;
     margin-top: -30px;

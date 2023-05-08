@@ -360,6 +360,7 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
   geom?: Record<string, any>[]
   id: number
   isClosed: boolean
+  isUnderJdp: boolean
   missionSource: MissionSourceEnum
   missionTypes: MissionTypeEnum[]
   observationsCacem?: string
