@@ -9,8 +9,8 @@ import { DrawModal } from '../features/map/draw/DrawModal'
 import { Map } from '../features/map/Map'
 import { InterestPointMapButton } from '../features/map/tools/interest_points/InterestPointMapButton'
 import { MeasurementMapButton } from '../features/map/tools/measurements/MeasurementMapButton'
-import { SemaphoreMapButton } from '../features/map/tools/semaphores'
 import { MissionsMenu } from '../features/missions/MissionsMenu'
+import { SemaphoresOnMap } from '../features/Semaphores/SemaphoresOnMap'
 import { SideWindowLauncher } from '../features/SideWindow/SideWindowLauncher'
 import { useAppSelector } from '../hooks/useAppSelector'
 
@@ -34,7 +34,7 @@ export function HomePage() {
         {displayDrawModal && <DrawModal />}
         {displayLocateOnMap && <LocateOnMap />}
         {displayMissionMenuButton && <MissionsMenu />}
-        {displaySemaphoreButton && <SemaphoreMapButton />}
+        {displaySemaphoreButton && <SemaphoresOnMap />}
 
         {displayMeasurement && <MeasurementMapButton />}
         {displayInterestPoint && <InterestPointMapButton />}

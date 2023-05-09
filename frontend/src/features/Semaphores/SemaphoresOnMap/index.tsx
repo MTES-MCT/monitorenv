@@ -1,13 +1,13 @@
 import { Icon, Size } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { setDisplayedItems } from '../../../../domain/shared_slices/Global'
-import { useAppDispatch } from '../../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { MenuWithCloseButton } from '../../../commonStyles/map/MenuWithCloseButton'
+import { setDisplayedItems } from '../../../domain/shared_slices/Global'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
 import { SearchSemaphores } from './SearchSemaphores'
 
-export function SemaphoreMapButton() {
+export function SemaphoresOnMap() {
   const dispatch = useAppDispatch()
   const { isSearchSemaphoreVisible } = useAppSelector(state => state.global)
 
@@ -19,6 +19,7 @@ export function SemaphoreMapButton() {
     <Wrapper>
       <SearchSemaphores />
       <MenuWithCloseButton.ButtonOnMap
+        className={isSearchSemaphoreVisible ? '_active' : undefined}
         data-cy="semaphores-button"
         // TODO change Icon with Semaphore Icon
         Icon={Icon.Vms}

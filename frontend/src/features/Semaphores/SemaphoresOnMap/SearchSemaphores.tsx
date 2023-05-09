@@ -2,9 +2,9 @@ import { Accent, Icon, Search } from '@mtes-mct/monitor-ui'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { setDisplayedItems } from '../../../../domain/shared_slices/Global'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { MenuWithCloseButton } from '../../../commonStyles/map/MenuWithCloseButton'
+import { setDisplayedItems } from '../../../domain/shared_slices/Global'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
 
 export function SearchSemaphores() {
   const dispatch = useDispatch()
