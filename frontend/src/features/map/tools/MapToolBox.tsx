@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 
-import { COLORS } from '../../../constants/constants'
 import { MapComponentStyle } from '../../commonStyles/MapComponent.style'
 
 export const MapToolBox = styled(MapComponentStyle)<{
@@ -8,7 +7,7 @@ export const MapToolBox = styled(MapComponentStyle)<{
   isHidden?: boolean
   isOpen: boolean
 }>`
-  background: ${COLORS.white};
+  background: ${p => p.theme.color.white};
   margin-right: ${p => (p.isOpen ? '45px' : '-420px')};
   opacity: ${p => (p.isOpen ? '1' : '0')};
   right: 10px;

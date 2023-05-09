@@ -13,6 +13,7 @@ type GlobalStateType = {
   displayLocateOnMap: boolean
   displayMeasurement: boolean
   displayInterestPoint: boolean
+  displaySemaphoreButton: boolean
 
   displayMissionsOverlay: boolean
   // state entry for every layer whose visibility should be controlled
@@ -23,6 +24,9 @@ type GlobalStateType = {
   // state entry for other children components whom visibility is already handled by parent components
   missionsMenuIsOpen: boolean
   layersSidebarIsOpen: boolean
+
+  isSearchSemaphoreVisible: boolean
+  displaySemaphoresLayer: boolean
 
   mapToolOpened: MapToolType | undefined
 
@@ -39,6 +43,7 @@ const initialState: GlobalStateType = {
   displayLocateOnMap: true,
   displayMeasurement: true,
   displayInterestPoint: true,
+  displaySemaphoreButton: true,
 
   displayMissionsOverlay: true,
   // state entry for every layer whose visibility should be controlled
@@ -49,6 +54,9 @@ const initialState: GlobalStateType = {
   // state entry for other children components whom visibility is already handled by parent components
   missionsMenuIsOpen: false,
   layersSidebarIsOpen: false,
+
+  isSearchSemaphoreVisible: false,
+  displaySemaphoresLayer: true,
 
   mapToolOpened: undefined,
 

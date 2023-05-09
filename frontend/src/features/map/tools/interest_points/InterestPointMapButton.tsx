@@ -48,7 +48,7 @@ export function InterestPointMapButton() {
 
   return (
     <Wrapper ref={wrapperRef}>
-      <InterestPointButton
+      <MapToolButton
         dataCy="interest-point"
         isHidden={!displayInterestPoint}
         isOpen={isOpen}
@@ -57,7 +57,7 @@ export function InterestPointMapButton() {
         title={"Créer un point d'intérêt"}
       >
         <InterestPointIcon $isRightMenuShrinked={isRightMenuShrinked} />
-      </InterestPointButton>
+      </MapToolButton>
       <EditInterestPoint close={close} healthcheckTextWarning={healthcheckTextWarning} isOpen={isOpen} />
     </Wrapper>
   )
@@ -67,8 +67,6 @@ const Wrapper = styled.div`
   transition: all 0.2s;
   z-index: 1000;
 `
-
-const InterestPointButton = styled(MapToolButton)``
 
 const InterestPointIcon = styled(InterestPointSVG)<{
   $isRightMenuShrinked: boolean

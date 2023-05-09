@@ -27,7 +27,7 @@ export function MissionsMenu() {
     dispatch(setDisplayedItems({ displayMissionsLayer: !displayMissionsLayer }))
   }
   const toggleMissionsMenu = () => {
-    dispatch(setDisplayedItems({ missionsMenuIsOpen: !missionsMenuIsOpen }))
+    dispatch(setDisplayedItems({ isSearchSemaphoreVisible: false, missionsMenuIsOpen: !missionsMenuIsOpen }))
   }
   const handleAddNewMission = () => {
     dispatch(onNavigateBetweenMapAndSideWindow(sideWindowPaths.MISSION_NEW))
