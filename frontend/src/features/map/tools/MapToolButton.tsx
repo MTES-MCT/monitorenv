@@ -1,57 +1,48 @@
+import { IconButton, IconProps, Size } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { MapButtonStyle } from '../../commonStyles/MapButton.style'
 
-import type { CSSProperties, ReactNode } from 'react'
+import type { CSSProperties, FunctionComponent } from 'react'
 
 type MapToolButtonProps = {
-  children: ReactNode
   dataCy?: string
+  icon: FunctionComponent<IconProps>
   isHidden: boolean
   isOpen: boolean
   onClick: () => void
   style?: CSSProperties
   title: string
 }
-export function MapToolButton({ children, dataCy, isHidden, isOpen, onClick, style, title }: MapToolButtonProps) {
-  const { healthcheckTextWarning, rightMenuIsOpen } = useAppSelector(state => state.global)
-  const isRightMenuShrinked = !rightMenuIsOpen
+export function MapToolButton({ dataCy, icon, isHidden, isOpen, onClick, style, title }: MapToolButtonProps) {
+  const { healthcheckTextWarning } = useAppSelector(state => state.global)
 
   return (
     <StyledMapToolButton
+      $healthcheckTextWarning={!!healthcheckTextWarning}
+      $isHidden={isHidden}
+      $isOpen={isOpen}
+      className={isOpen ? '_active' : undefined}
       data-cy={dataCy}
-      healthcheckTextWarning={!!healthcheckTextWarning}
-      isHidden={isHidden}
-      isOpen={isOpen}
-      isRightMenuShrinked={isRightMenuShrinked}
+      Icon={icon}
       onClick={onClick}
+      size={Size.LARGE}
       style={style}
       title={title}
-    >
-      {children}
-    </StyledMapToolButton>
+    />
   )
 }
 
-const StyledMapToolButton = styled(MapButtonStyle)<{
-  isOpen: boolean
-  isRightMenuShrinked: boolean
+const StyledMapToolButton = styled(IconButton)<{
+  $healthcheckTextWarning: boolean
+  $isHidden: boolean
+  $isOpen: boolean
 }>`
   position: absolute;
-  display: inline-block;
-  padding-top: 5px;
-  margin-left: 5px;
+  padding: 6px;
   z-index: 99;
-  height: 40px;
-  width: ${p => (p.isRightMenuShrinked ? '5px' : '40px')};
-  border-radius: ${p => (p.isRightMenuShrinked ? '1px' : '2px')};
-  right: ${p => (p.isRightMenuShrinked ? '0' : '10px')};
-  background: ${p => (p.isOpen ? p.theme.color.blueGray[100] : p.theme.color.charcoal)};
+  right: 10px;
   transition: all 0.3s;
-
-  :hover,
-  :focus {
-    background: ${p => (p.isOpen ? p.theme.color.blueGray[100] : p.theme.color.charcoal)};
-  }
+  margin-top: ${p => (p.$healthcheckTextWarning ? 50 : 0)}px;
+  visibility: ${p => (p.$isHidden ? 'hidden' : 'visible')};
 `

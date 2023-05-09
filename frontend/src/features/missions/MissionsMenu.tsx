@@ -1,5 +1,5 @@
+import { Accent, Button, Icon, Size } from '@mtes-mct/monitor-ui'
 import { useDispatch } from 'react-redux'
-import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../constants/constants'
@@ -7,12 +7,7 @@ import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { setDisplayedItems } from '../../domain/shared_slices/Global'
 import { onNavigateBetweenMapAndSideWindow } from '../../domain/use_cases/navigation/onNavigateBetweenMapAndSideWindow'
 import { useAppSelector } from '../../hooks/useAppSelector'
-import { ReactComponent as CloseSVG } from '../../uiMonitor/icons/Close.svg'
-import { ReactComponent as DisplaySVG } from '../../uiMonitor/icons/Display.svg'
-import { ReactComponent as EnlargeSVG } from '../../uiMonitor/icons/Enlarge.svg'
-import { ReactComponent as HideSVG } from '../../uiMonitor/icons/Hide.svg'
-import { ReactComponent as MissionsSVG } from '../../uiMonitor/icons/Operations.svg'
-import { ReactComponent as PlusSVG } from '../../uiMonitor/icons/Plus.svg'
+import { MenuWithCloseButton } from '../commonStyles/map/MenuWithCloseButton'
 import { SideWindowStatus } from '../SideWindow/slice'
 
 export function MissionsMenu() {
@@ -36,45 +31,36 @@ export function MissionsMenu() {
   return (
     <Wrapper>
       {missionsMenuIsOpen && (
-        <MissionsMenuWrapper>
-          <MissionsMenuHeader>
-            <ToggleMissionMenuButton icon={<CloseSVG />} onClick={toggleMissionsMenu} size="md" />
-            <Title>Missions et contrôles</Title>
-            <ToggleMissionsButton
-              icon={displayMissionsLayer ? <DisplaySVG /> : <HideSVG />}
+        <MenuWithCloseButton.Container>
+          <MenuWithCloseButton.Header>
+            <MenuWithCloseButton.CloseButton Icon={Icon.Close} onClick={toggleMissionsMenu} />
+            <MenuWithCloseButton.Title>Missions et contrôles</MenuWithCloseButton.Title>
+            <MenuWithCloseButton.VisibilityButton
+              accent={Accent.SECONDARY}
+              Icon={displayMissionsLayer ? Icon.Display : Icon.Hide}
               onClick={toggleMissionsLayer}
-              size="md"
             />
-          </MissionsMenuHeader>
+          </MenuWithCloseButton.Header>
           <MissionsMenuBody>
             <Section>
-              <BlockIconButton
-                appearance="primary"
-                icon={<PlusSVG className="rs-icon" />}
-                onClick={handleAddNewMission}
-              >
+              <Button Icon={Icon.Plus} isFullWidth onClick={handleAddNewMission}>
                 Ajouter une nouvelle mission
-              </BlockIconButton>
+              </Button>
             </Section>
             <Section>
-              <BlockIconButton
-                appearance="ghost"
-                icon={<EnlargeSVG className="rs-icon" />}
-                onClick={toggleMissionsWindow}
-              >
+              <Button accent={Accent.SECONDARY} Icon={Icon.Expand} isFullWidth onClick={toggleMissionsWindow}>
                 Voir la vue détaillée des missions
-              </BlockIconButton>
+              </Button>
             </Section>
           </MissionsMenuBody>
-        </MissionsMenuWrapper>
+        </MenuWithCloseButton.Container>
       )}
-      <MissionButton
-        active={sideWindow.status !== SideWindowStatus.CLOSED}
-        appearance="primary"
+      <MenuWithCloseButton.ButtonOnMap
+        className={sideWindow.status !== SideWindowStatus.CLOSED ? '_active' : undefined}
         data-cy="missions-button"
-        icon={<MissionsIcon className="rs-icon" />}
+        Icon={Icon.MissionAction}
         onClick={toggleMissionsMenu}
-        size="lg"
+        size={Size.LARGE}
         title="voir les missions"
       />
     </Wrapper>
@@ -83,46 +69,16 @@ export function MissionsMenu() {
 
 const Wrapper = styled.div`
   position: absolute;
-  top: 55px;
+  top: 85px;
   right: 10px;
   display: flex;
   justify-content: flex-end;
 `
-const MissionsMenuWrapper = styled.div`
-  width: 319px;
-  margin-right: 6px;
-  background-color: ${COLORS.white};
-  box-shadow: 0px 3px 6px ${COLORS.slateGray};
-`
-const MissionsMenuHeader = styled.div`
-  height: 40px;
-  background-color: ${COLORS.charcoal};
-  display: flex;
-  justify-content: space-between;
-  padding-right: 10px;
-  padding-left: 10px;
-  align-items: center;
-`
-const Title = styled.span`
-  font-size: 16px;
-  line-height: 22px;
-  color: ${COLORS.white};
-`
+
 const MissionsMenuBody = styled.div``
 const Section = styled.div`
   padding: 12px;
   &:not(:last-child) {
     border-bottom: 1px solid ${COLORS.gainsboro};
   }
-`
-const MissionButton = styled(IconButton)``
-const MissionsIcon = styled(MissionsSVG)``
-const ToggleMissionsButton = styled(IconButton)`
-  background: ${COLORS.white};
-`
-const ToggleMissionMenuButton = styled(IconButton)`
-  color: white;
-`
-const BlockIconButton = styled(IconButton)`
-  width: 100%;
 `

@@ -1,3 +1,4 @@
+import { Icon } from '@mtes-mct/monitor-ui'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
@@ -11,16 +12,12 @@ import {
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useEscapeFromKeyboardAndExecute } from '../../../../hooks/useEscapeFromKeyboardAndExecute'
-import { ReactComponent as InterestPointSVG } from '../../../../uiMonitor/icons/Landmark.svg'
 import { MapToolButton } from '../MapToolButton'
 import { EditInterestPoint } from './EditInterestPoint'
 
 export function InterestPointMapButton() {
   const dispatch = useAppDispatch()
-  const { displayInterestPoint, healthcheckTextWarning, mapToolOpened, rightMenuIsOpen } = useAppSelector(
-    state => state.global
-  )
-  const isRightMenuShrinked = !rightMenuIsOpen
+  const { displayInterestPoint, healthcheckTextWarning, mapToolOpened } = useAppSelector(state => state.global)
   const isOpen = useMemo(() => mapToolOpened === MapToolType.INTEREST_POINT, [mapToolOpened])
   const wrapperRef = useRef(null)
 
@@ -50,14 +47,14 @@ export function InterestPointMapButton() {
     <Wrapper ref={wrapperRef}>
       <MapToolButton
         dataCy="interest-point"
+        icon={Icon.Pinpoint}
         isHidden={!displayInterestPoint}
         isOpen={isOpen}
         onClick={openOrCloseInterestPoint}
-        style={{ top: 291 }}
+        style={{ top: 301 }}
         title={"Créer un point d'intérêt"}
-      >
-        <InterestPointIcon $isRightMenuShrinked={isRightMenuShrinked} />
-      </MapToolButton>
+      />
+
       <EditInterestPoint close={close} healthcheckTextWarning={healthcheckTextWarning} isOpen={isOpen} />
     </Wrapper>
   )
@@ -66,21 +63,4 @@ export function InterestPointMapButton() {
 const Wrapper = styled.div`
   transition: all 0.2s;
   z-index: 1000;
-`
-
-const InterestPointIcon = styled(InterestPointSVG)<{
-  $isRightMenuShrinked: boolean
-}>`
-  height: 25px;
-  opacity: ${p => (p.$isRightMenuShrinked ? '0' : '1')};
-  transition: all 0.2s;
-  width: 25px;
-
-  rect:first-of-type {
-    fill: ${p => p.theme.color.gainsboro};
-  }
-
-  path:first-of-type {
-    fill: ${p => p.theme.color.gainsboro};
-  }
 `

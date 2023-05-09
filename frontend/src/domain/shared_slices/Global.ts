@@ -5,7 +5,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { MapToolType } from '../entities/map/constants'
 
 type GlobalStateType = {
-  rightMenuIsOpen: boolean
   // state entry for every component /menu displayed on map whose visibility should be controlled
   displayMissionMenuButton: boolean
   displayDrawModal: boolean
@@ -35,7 +34,6 @@ type GlobalStateType = {
   healthcheckTextWarning?: string
 }
 const initialState: GlobalStateType = {
-  rightMenuIsOpen: true,
   // state entry for every component /menu displayed on map whose visibility should be controlled
   displayMissionMenuButton: true,
   displayDrawModal: false,

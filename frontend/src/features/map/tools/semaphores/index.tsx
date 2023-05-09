@@ -1,9 +1,10 @@
-import { Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
+import { Icon, Size } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { setDisplayedItems } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { MenuWithCloseButton } from '../../../commonStyles/map/MenuWithCloseButton'
 import { SearchSemaphores } from './SearchSemaphores'
 
 export function SemaphoreMapButton() {
@@ -17,8 +18,9 @@ export function SemaphoreMapButton() {
   return (
     <Wrapper>
       <SearchSemaphores />
-      <StyledIconButton
+      <MenuWithCloseButton.ButtonOnMap
         data-cy="semaphores-button"
+        // TODO change Icon with Semaphore Icon
         Icon={Icon.Vms}
         onClick={openOrCloseSearchSemaphore}
         size={Size.LARGE}
@@ -30,11 +32,8 @@ export function SemaphoreMapButton() {
 
 const Wrapper = styled.div`
   position: absolute;
-  top: 100px;
+  top: 135px;
   right: 10px;
   display: flex;
   justify-content: flex-end;
-`
-const StyledIconButton = styled(IconButton)`
-  height: fit-content;
 `

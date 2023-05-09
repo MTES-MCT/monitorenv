@@ -1,4 +1,4 @@
-import { Accent, IconButton, Search, Size } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, Search, Size } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -7,7 +7,6 @@ import styled from 'styled-components'
 import { getPlaceCoordinates, useGooglePlacesAPI } from '../../api/googlePlacesAPI/googlePlacesAPI'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map/constants'
 import { setFitToExtent } from '../../domain/shared_slices/Map'
-import { ReactComponent as SearchIconSVG } from '../../uiMonitor/icons/Search.svg'
 
 export function LocateOnMap() {
   const dispatch = useDispatch()
@@ -45,16 +44,10 @@ export function LocateOnMap() {
         options={options}
         placeholder="rechercher un lieu (port, lieu-dit, baie...)"
       />
-      <IconButton accent={Accent.PRIMARY} Icon={SearchIcon} size={Size.LARGE} />
+      <StyledIconButton accent={Accent.PRIMARY} Icon={Icon.Search} size={Size.LARGE} />
     </Wrapper>
   )
 }
-
-const SearchIcon = styled(SearchIconSVG)`
-  width: 24px;
-  height: 24px;
-  margin-left: auto;
-`
 
 const Wrapper = styled.div`
   position: absolute;
@@ -67,4 +60,7 @@ const Wrapper = styled.div`
   > div {
     flex-grow: 1;
   }
+`
+const StyledIconButton = styled(IconButton)`
+  padding: 6px;
 `
