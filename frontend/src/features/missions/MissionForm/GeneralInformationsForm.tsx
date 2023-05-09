@@ -121,9 +121,8 @@ const StyledDatePickerContainer = styled.div`
 const StyledMissionType = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: end;
-  justify-content: space-between;
+  gap: 48px;
 `
 
 const StyledUnitsContainer = styled.div`
