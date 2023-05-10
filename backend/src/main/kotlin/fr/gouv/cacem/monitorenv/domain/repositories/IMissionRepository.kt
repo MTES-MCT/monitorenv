@@ -10,7 +10,6 @@ interface IMissionRepository {
     fun findAllMissions(
         startedAfter: Instant,
         startedBefore: Instant?,
-        missionNatures: List<String>?,
         missionTypes: List<String>?,
         missionStatuses: List<String>?,
         missionSources: List<MissionSourceEnum>? = null,

@@ -162,9 +162,6 @@ context('Missions', () => {
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('9')
     cy.get('*[data-cy="add-mission"]').click()
 
-    cy.get('*[data-cy="mission-nature"]').find('.rs-checkbox').should('have.length', 3)
-    cy.get('*[data-cy="mission-nature"]').find('.rs-checkbox-checked').should('have.length', 0)
-
     cy.get('form').submit()
     cy.wait(100)
     cy.get('*[data-cy="mission-errors"]').should('exist')
@@ -172,8 +169,6 @@ context('Missions', () => {
     // When
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
-    cy.get('[name="missionNature1"]').click({ force: true })
-    cy.get('[name="openBy"]').type('PCF')
 
     cy.get('*[data-cy="add-control-unit"]').click()
     cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
@@ -181,6 +176,8 @@ context('Missions', () => {
     cy.wait(200)
     cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
     cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
+
+    cy.get('[name="openBy"]').scrollIntoView().type('PCF')
     cy.intercept('PUT', `/bff/v1/missions`).as('createMission')
     cy.get('form').submit()
 

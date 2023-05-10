@@ -67,9 +67,6 @@ data class MissionModel(
     @Column(name = "mission_types")
     @Type(type = "enum-array")
     var missionTypes: List<MissionTypeEnum>,
-    @Column(name = "missionNature")
-    @Type(type = "enum-array")
-    var missionNature: List<MissionNatureEnum>? = listOf(),
     @Column(name = "open_by")
     var openBy: String? = null,
     @Column(name = "closed_by")
@@ -129,7 +126,6 @@ data class MissionModel(
     fun toMissionEntity(mapper: ObjectMapper) = MissionEntity(
         id = id,
         missionTypes = missionTypes,
-        missionNature = if (missionNature === null) listOf() else missionNature,
         openBy = openBy,
         closedBy = closedBy,
         observationsCacem = observationsCacem,
@@ -163,7 +159,6 @@ data class MissionModel(
             val missionModel = MissionModel(
                 id = mission.id,
                 missionTypes = mission.missionTypes,
-                missionNature = mission.missionNature,
                 openBy = mission.openBy,
                 closedBy = mission.closedBy,
                 observationsCacem = mission.observationsCacem,
@@ -210,6 +205,6 @@ data class MissionModel(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , missionTypes = $missionTypes , missionNature = $missionNature , openBy = $openBy , closedBy = $closedBy , observationsCacem = $observationsCacem, observationsCnsp = $observationsCnsp , facade = $facade , geom = $geom , startDateTimeUtc = $startDateTimeUtc , endDateTimeUtc = $endDateTimeUtc, isClosed = $isClosed, isDeleted = $isDeleted, missionSource = $missionSource )"
+        return this::class.simpleName + "(id = $id , missionTypes = $missionTypes , openBy = $openBy , closedBy = $closedBy , observationsCacem = $observationsCacem, observationsCnsp = $observationsCnsp , facade = $facade , geom = $geom , startDateTimeUtc = $startDateTimeUtc , endDateTimeUtc = $endDateTimeUtc, isClosed = $isClosed, isDeleted = $isDeleted, missionSource = $missionSource )"
     }
 }

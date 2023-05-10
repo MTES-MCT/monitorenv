@@ -26,7 +26,6 @@ class CreateMissionUTests {
         // Given
         val expectedCreatedMission = MissionEntity(
             missionTypes = listOf( MissionTypeEnum.LAND),
-            missionNature = listOf(MissionNatureEnum.ENV),
             facade = "Outre-Mer",
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),

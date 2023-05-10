@@ -143,9 +143,6 @@ const Field = styled.div`
   align-items: flex-start;
   display: flex;
   flex-direction: column;
-  > button {
-    max-width: 416px;
-  }
 `
 const Center = styled.a`
   cursor: pointer;

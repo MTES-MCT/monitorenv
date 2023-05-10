@@ -1,81 +1,84 @@
-import { FormikDatePicker, FormikMultiCheckbox, FormikTextInput, FormikTextarea } from '@mtes-mct/monitor-ui'
+import {
+  FormikCheckbox,
+  FormikDatePicker,
+  FormikMultiCheckbox,
+  FormikTextInput,
+  FormikTextarea,
+  MultiRadio
+} from '@mtes-mct/monitor-ui'
 import { FieldArray, useField } from 'formik'
-import { Form } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
 import { InteractionListener } from '../../../domain/entities/map/constants'
-import { missionNatureEnum, missionTypeEnum } from '../../../domain/entities/missions'
+import { hasMissionOrderLabels, missionTypeEnum } from '../../../domain/entities/missions'
 import { useNewWindow } from '../../../ui/NewWindow'
 import { MultiZonePicker } from '../MultiZonePicker'
 import { ControlUnitsForm } from './ControlUnitsForm'
 
 export function GeneralInformationsForm() {
   const { newWindowContainerRef } = useNewWindow()
-  const [isClosedField] = useField<boolean>(`isClosed`)
+  const [isClosedField] = useField<boolean>('isClosed')
+  const [hasMissionOrderField] = useField<boolean>('hasMissionOrder')
 
   const missionTypeOptions = Object.entries(missionTypeEnum).map(([key, val]) => ({ label: val.libelle, value: key }))
-  const missionNatureOptions = Object.entries(missionNatureEnum).map(([key, val]) => ({
-    label: val.libelle,
-    value: key
-  }))
+
+  const hasMissionOrderOptions = Object.values(hasMissionOrderLabels)
 
   return (
     <FormWrapper>
       <Title>Informations générales</Title>
-      <FlexFormGroup>
-        <ColWrapper>
-          <FormikDatePicker
-            baseContainer={newWindowContainerRef.current}
-            isCompact
-            isStringDate
-            label="Début de mission (UTC)"
-            name="startDateTimeUtc"
-            withTime
-          />
-        </ColWrapper>
-        <ColWrapper>
-          <FormikDatePicker
-            baseContainer={newWindowContainerRef.current}
-            isCompact
-            isEndDate
-            isStringDate
-            label="Fin de mission (UTC)"
-            name="endDateTimeUtc"
-            withTime
-          />
-        </ColWrapper>
-      </FlexFormGroup>
 
-      <Form.Group>
-        <SubGroup>
-          <FormikMultiCheckbox
-            data-cy="mission-types"
-            isErrorMessageHidden
-            isInline
-            label="Type de mission"
-            name="missionTypes"
-            options={missionTypeOptions}
-          />
-        </SubGroup>
-        <SubGroup data-cy="mission-nature">
-          <FormikMultiCheckbox
-            isErrorMessageHidden
-            isInline
-            label="Intentions principales de mission"
-            name="missionNature"
-            options={missionNatureOptions}
-          />
-        </SubGroup>
-      </Form.Group>
-      <Form.Group>
+      <StyledDatePickerContainer>
+        <FormikDatePicker
+          baseContainer={newWindowContainerRef.current}
+          isCompact
+          isStringDate
+          label="Début de mission (UTC)"
+          name="startDateTimeUtc"
+          withTime
+        />
+
+        <FormikDatePicker
+          baseContainer={newWindowContainerRef.current}
+          isCompact
+          isEndDate
+          isStringDate
+          label="Fin de mission (UTC)"
+          name="endDateTimeUtc"
+          withTime
+        />
+      </StyledDatePickerContainer>
+
+      <StyledMissionType>
+        <FormikMultiCheckbox
+          data-cy="mission-types"
+          isErrorMessageHidden
+          isInline
+          label="Type de mission"
+          name="missionTypes"
+          options={missionTypeOptions}
+        />
+        <FormikCheckbox disabled label="Mission sous JDP" name="isUnderJdp" />
+      </StyledMissionType>
+      <MultiRadio
+        disabled
+        isInline
+        label="Ordre de mission"
+        name="hasMissionOrder"
+        options={hasMissionOrderOptions}
+        value={hasMissionOrderField.value}
+      />
+
+      <StyledUnitsContainer>
         <FieldArray
           name="controlUnits"
           /* eslint-disable-next-line react/jsx-props-no-spreading */
           render={props => <ControlUnitsForm readOnly={isClosedField.value} {...props} />}
           validateOnChange={false}
         />
-      </Form.Group>
+      </StyledUnitsContainer>
+
       <MultiZonePicker
         addButtonLabel="Ajouter une zone de mission"
         interactionListener={InteractionListener.MISSION_ZONE}
@@ -83,56 +86,58 @@ export function GeneralInformationsForm() {
         name="geom"
         readOnly={isClosedField.value}
       />
-      <Form.Group>
-        <InputObservations label="CACEM : orientations, observations" name="observationsCacem" />
-        <InputObservations label="CNSP : orientations, observations" name="observationsCnsp" />
-        <SubGroup>
-          <NarrowColumn>
-            <FormikTextInput isErrorMessageHidden label="Ouvert par" name="openBy" />
-          </NarrowColumn>
-          <NarrowColumn>
-            <FormikTextInput isErrorMessageHidden label="Clôturé par" name="closedBy" />
-          </NarrowColumn>
-        </SubGroup>
-      </Form.Group>
+
+      <StyledObservationsContainer>
+        <FormikTextarea label="CACEM : orientations, observations" name="observationsCacem" />
+        <FormikTextarea label="CNSP : orientations, observations" name="observationsCnsp" />
+        <StyledAuthorContainer>
+          <FormikTextInput isErrorMessageHidden label="Ouvert par" name="openBy" />
+          <FormikTextInput isErrorMessageHidden label="Clôturé par" name="closedBy" />
+        </StyledAuthorContainer>
+      </StyledObservationsContainer>
     </FormWrapper>
   )
 }
 
 const FormWrapper = styled.div`
   padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 504px;
 `
 const Title = styled.h2`
   font-size: 16px;
   line-height: 22px;
-  padding-bottom: 13px;
+  padding-bottom: 8px;
   color: ${COLORS.charcoal};
 `
 
-const FlexFormGroup = styled(Form.Group)`
+const StyledDatePickerContainer = styled.div`
   display: flex;
+  gap: 8px;
 `
-const ColWrapper = styled.div`
-  width: 200px;
-  height: 54px;
-  display: inline-block;
-  :not(:last-child) {
-    margin-right: 16px;
-  }
+const StyledMissionType = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  gap: 48px;
 `
 
-const NarrowColumn = styled.div`
-  width: 120px;
-  display: inline-block;
-  :not(:last-child) {
-    margin-right: 16px;
-  }
-`
-const SubGroup = styled.div`
-  margin-bottom: 16px;
+const StyledUnitsContainer = styled.div`
   display: flex;
+  flex-direction: column;
 `
 
-const InputObservations = styled(FormikTextarea)`
-  max-width: 416px;
+const StyledObservationsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`
+const StyledAuthorContainer = styled.div`
+  display: flex;
+  gap: 8px;
+  .Field-TextInput {
+    width: 120px;
+  }
 `

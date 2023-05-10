@@ -96,7 +96,7 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
 
   return (
     <RessourceUnitWrapper>
-      <SelectorWrapper>
+      <>
         <FormGroupFixed>
           <FormikErrorWrapper name={`controlUnits.${controlUnitIndex}.administration`} noMessage>
             <Form.ControlLabel htmlFor="administration">Administration {resourceUnitIndexDisplayed}</Form.ControlLabel>
@@ -157,7 +157,7 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
             name={`controlUnits.${controlUnitIndex}.contact`}
           />
         </FormGroupFixed>
-      </SelectorWrapper>
+      </>
 
       {controlUnitIndex > 0 && (
         <div>
@@ -170,13 +170,7 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
 
 const RessourceUnitWrapper = styled.div`
   display: flex;
-  max-width: 416px;
-  margin-bottom: 14px;
-`
-
-const SelectorWrapper = styled.div`
-  width: 100%;
-  max-width: 416px;
+  flex-direction: column;
   margin-bottom: 14px;
 `
 

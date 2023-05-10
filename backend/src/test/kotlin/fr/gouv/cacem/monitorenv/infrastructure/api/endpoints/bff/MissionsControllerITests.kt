@@ -64,7 +64,6 @@ class MissionsControllerITests {
         val expectedNewMission = MissionEntity(
             id = 10,
             missionTypes = listOf( MissionTypeEnum.LAND),
-            missionNature = listOf(MissionNatureEnum.ENV),
             facade = "Outre-Mer",
             geom = polygon,
             observationsCacem = null,
@@ -78,7 +77,6 @@ class MissionsControllerITests {
         )
         val newMissionRequest = CreateOrUpdateMissionDataInput(
             missionTypes = listOf( MissionTypeEnum.LAND),
-            missionNature = listOf(MissionNatureEnum.ENV),
             observationsCacem = null,
             facade = "Outre-Mer",
             geom = polygon,
@@ -111,7 +109,6 @@ class MissionsControllerITests {
         val expectedFirstMission = MissionEntity(
             id = 10,
             missionTypes = listOf( MissionTypeEnum.SEA),
-            missionNature = listOf(MissionNatureEnum.ENV),
             facade = "Outre-Mer",
             geom = polygon,
             observationsCacem = null,
@@ -127,7 +124,6 @@ class MissionsControllerITests {
             this.getMonitorEnvMissions.execute(
                 startedAfterDateTime = any(),
                 startedBeforeDateTime = any(),
-                missionNatures = any(),
                 seaFronts = any(),
                 missionSources = any(),
                 missionTypes = any(),

@@ -44,26 +44,6 @@ export const missionTypeEnum = {
   }
 }
 
-export enum MissionNatureEnum {
-  ENV = 'ENV',
-  FISH = 'FISH',
-  OTHER = 'OTHER'
-}
-export const missionNatureEnum = {
-  ENV: {
-    code: 'ENV',
-    libelle: 'Env'
-  },
-  FISH: {
-    code: 'FISH',
-    libelle: 'Pêche'
-  },
-  OTHER: {
-    code: 'OTHER',
-    libelle: 'Autre'
-  }
-}
-
 export enum InfractionTypeEnum {
   WAITING = 'WAITING',
   WITHOUT_REPORT = 'WITHOUT_REPORT',
@@ -149,6 +129,18 @@ export const vehicleTypeLabels = {
   VESSEL: {
     code: 'VESSEL',
     libelle: 'Navire'
+  }
+}
+
+export const hasMissionOrderLabels = {
+  YES: {
+    label: 'Oui',
+    value: true
+  },
+  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
+  NO: {
+    label: 'Non',
+    value: false
   }
 }
 
@@ -378,9 +370,10 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
   envActions: EnvAction[]
   facade: SeaFrontEnum
   geom?: Record<string, any>[]
+  hasMissionOrder?: boolean
   id: number
   isClosed: boolean
-  missionNature: MissionNatureEnum[]
+  isUnderJdp?: boolean
   missionSource: MissionSourceEnum
   missionTypes: MissionTypeEnum[]
   observationsCacem?: string

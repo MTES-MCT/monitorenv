@@ -43,9 +43,6 @@ class MissionsController(
         @Parameter(description = "Origine")
         @RequestParam(name = "missionSource", required = false)
         missionSources: List<MissionSourceEnum>?,
-        @Parameter(description = "Natures de mission")
-        @RequestParam(name = "missionNature", required = false)
-        missionNatures: List<String>?,
         @Parameter(description = "Types de mission")
         @RequestParam(name = "missionTypes", required = false)
         missionTypes: List<String>?,
@@ -59,7 +56,6 @@ class MissionsController(
         val missions = getMonitorEnvMissions.execute(
             startedAfterDateTime = startedAfterDateTime,
             startedBeforeDateTime = startedBeforeDateTime,
-            missionNatures = missionNatures,
             missionSources = missionSources,
             missionStatuses = missionStatuses,
             missionTypes = missionTypes,

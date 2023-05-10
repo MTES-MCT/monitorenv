@@ -1,3 +1,3 @@
-COPY public.missions (id, mission_type, open_by, observations_cacem, facade, input_start_datetime_utc, input_end_datetime_utc, geom, closed_by, mission_nature, deleted, observations_cnsp, mission_source, closed) FROM stdin;
-12	SEA	Kimberly Woodward	Mother including baby same. Evidence project air practice minute their. Trouble sing suggest maintain like know too.	NAMO	2022-02-24 10:56:33	2022-05-06 19:38:29	\N	Charles Kennedy	{ENV,OTHER}	f	\N	CACEM	f
+COPY public.missions (id, mission_type, open_by, observations_cacem, facade, input_start_datetime_utc, input_end_datetime_utc, geom, closed_by, deleted, observations_cnsp, mission_source, closed) FROM stdin;
+12	SEA	Kimberly Woodward	Mother including baby same. Evidence project air practice minute their. Trouble sing suggest maintain like know too.	NAMO	2022-02-24 10:56:33	2022-05-06 19:38:29	\N	Charles Kennedy	f	\N	CACEM	f
 \.

@@ -45,7 +45,6 @@ class UpdateMissionUTests {
             id = 0,
             missionTypes = listOf( MissionTypeEnum.LAND),
             facade = "Outre-Mer",
-            missionNature = listOf(MissionNatureEnum.FISH),
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
             isClosed = false,
