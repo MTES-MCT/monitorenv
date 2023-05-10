@@ -11,7 +11,7 @@ import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
 import { InteractionListener } from '../../../domain/entities/map/constants'
-import { missionTypeEnum } from '../../../domain/entities/missions'
+import { hasMissionOrderLabels, missionTypeEnum } from '../../../domain/entities/missions'
 import { useNewWindow } from '../../../ui/NewWindow'
 import { MultiZonePicker } from '../MultiZonePicker'
 import { ControlUnitsForm } from './ControlUnitsForm'
@@ -22,6 +22,8 @@ export function GeneralInformationsForm() {
   const [hasMissionOrderField] = useField<boolean>('hasMissionOrder')
 
   const missionTypeOptions = Object.entries(missionTypeEnum).map(([key, val]) => ({ label: val.libelle, value: key }))
+
+  const hasMissionOrderOptions = Object.values(hasMissionOrderLabels)
 
   return (
     <FormWrapper>
@@ -64,10 +66,7 @@ export function GeneralInformationsForm() {
         isInline
         label="Ordre de mission"
         name="hasMissionOrder"
-        options={[
-          { label: 'Oui', value: true },
-          { label: 'Non', value: false }
-        ]}
+        options={hasMissionOrderOptions}
         value={hasMissionOrderField.value}
       />
 

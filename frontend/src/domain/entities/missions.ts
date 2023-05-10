@@ -132,6 +132,18 @@ export const vehicleTypeLabels = {
   }
 }
 
+export const hasMissionOrderLabels = {
+  YES: {
+    label: 'Oui',
+    value: true
+  },
+  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
+  NO: {
+    label: 'Non',
+    value: false
+  }
+}
+
 export enum VesselTypeEnum {
   COMMERCIAL = 'COMMERCIAL',
   FISHING = 'FISHING',
