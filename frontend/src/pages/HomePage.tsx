@@ -33,6 +33,7 @@ export function HomePage() {
         <LayersSidebar />
         {displayDrawModal && <DrawModal />}
         {displayLocateOnMap && <LocateOnMap />}
+
         {displayMissionMenuButton && <MissionsMenu />}
         {displaySemaphoreButton && <SemaphoresOnMap />}
 

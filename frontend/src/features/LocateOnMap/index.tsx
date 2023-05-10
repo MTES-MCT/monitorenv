@@ -32,7 +32,7 @@ export function LocateOnMap() {
 
   return (
     <Wrapper>
-      <Search
+      <StyledSearch
         data-cy="location-search-input"
         isLabelHidden
         isLight
@@ -61,6 +61,12 @@ const Wrapper = styled.div`
     flex-grow: 1;
   }
 `
+const StyledSearch = styled(Search)`
+  box-shadow: 0px 3px 6px ${p => p.theme.color.slateGray};
+`
+
+// TODO delete padding when Monitor-ui component have good padding
 const StyledIconButton = styled(IconButton)`
   padding: 6px;
+  margin-left: 5px;
 `

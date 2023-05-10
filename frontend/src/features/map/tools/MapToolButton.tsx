@@ -33,6 +33,7 @@ export function MapToolButton({ dataCy, icon, isHidden, isOpen, onClick, style, 
   )
 }
 
+// TODO delete padding when Monitor-ui component have good padding
 const StyledMapToolButton = styled(IconButton)<{
   $healthcheckTextWarning: boolean
   $isHidden: boolean

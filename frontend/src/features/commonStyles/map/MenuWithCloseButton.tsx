@@ -29,6 +29,7 @@ const CloseButton = styled(IconButton)`
   color: white;
 `
 
+// TODO delete padding when Monitor-ui component have good padding
 const ButtonOnMap = styled(IconButton)`
   height: fit-content;
   padding: 6px;
