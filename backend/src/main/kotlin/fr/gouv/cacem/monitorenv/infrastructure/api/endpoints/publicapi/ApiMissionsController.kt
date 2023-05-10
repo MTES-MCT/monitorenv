@@ -46,7 +46,7 @@ class ApiMissionsController(
         @Parameter(description = "Types de mission")
         @RequestParam(name = "missionTypes", required = false)
         missionTypes: List<String>?,
-        @Parameter(description = "Statuts de mission")
+        @Parameter(description = "Statut de mission")
         @RequestParam(name = "missionStatus", required = false)
         missionStatuses: List<String>?,
         @Parameter(description = "Facades")
