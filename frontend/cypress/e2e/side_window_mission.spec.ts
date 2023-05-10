@@ -137,10 +137,10 @@ context('Missions', () => {
     cy.get('form').submit()
 
     // Then
-    cy.wait('@updateMission').then(({ request, response }) => {
+    cy.wait('@updateMission').then(({ response }) => {
       expect(response && response.statusCode).equal(200)
 
-      const { themes } = request.body.envActions.find(a => a.id === 'b8007c8a-5135-4bc3-816f-c69c7b75d807')
+      const { themes } = response && response.body.envActions.find(a => a.id === 'b8007c8a-5135-4bc3-816f-c69c7b75d807')
       expect(themes.length).equal(2)
       expect(themes[0].theme).equal('Police des espèces protégées et de leurs habitats (faune et flore)')
       expect(themes[0].subThemes.length).equal(2)

@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { ActionTheme } from './ActionTheme'
 
 export function MultipleThemeElement({ currentActionIndex, form, push, remove }) {
-  const handleRemoveTheme = index => () => {
+  const handleRemoveTheme = (index: number) => {
     remove(index)
   }
   const handleAddTheme = () => {
@@ -19,18 +19,18 @@ export function MultipleThemeElement({ currentActionIndex, form, push, remove })
 
   return (
     <ThemesWrapper>
-      {currentThemes.map((_, i) => (
+      {currentThemes.map((_, index) => (
         // eslint-disable-next-line react/no-array-index-key
-        <ThemeBloc key={i}>
+        <ThemeBloc key={index}>
           <ActionTheme
             labelSubTheme="Sous-thématiques de surveillance"
             labelTheme="Thématique de surveillance"
-            themePath={`envActions.${currentActionIndex}.themes.${i}`}
+            themePath={`envActions.${currentActionIndex}.themes.${index}`}
           />
 
-          {i > 0 && (
+          {index > 0 && (
             <RemoveButtonWrapper>
-              <IconButton accent={Accent.SECONDARY} Icon={Icon.Delete} onClick={handleRemoveTheme(i)} />
+              <IconButton accent={Accent.SECONDARY} Icon={Icon.Delete} onClick={() => handleRemoveTheme(index)} />
             </RemoveButtonWrapper>
           )}
         </ThemeBloc>
