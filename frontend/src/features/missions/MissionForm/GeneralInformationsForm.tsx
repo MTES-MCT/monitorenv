@@ -33,6 +33,7 @@ export function GeneralInformationsForm() {
       <StyledDatePickerContainer>
         <FormikDatePicker
           baseContainer={newWindowContainerRef.current}
+          data-cy="mission-start-date-time"
           isCompact
           isStringDate
           label="Début de mission (UTC)"
