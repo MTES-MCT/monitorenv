@@ -193,7 +193,6 @@ export const ClosedMissionSchema = Yup.object().shape({
     .nullable(),
   geom: shouldUseAlternateValidationInTestEnvironment ? Yup.object().nullable() : MissionZoneSchema,
   isClosed: Yup.boolean().default(false),
-  missionNature: MissionNatureSchema,
   missionTypes: MissionTypesSchema,
   openBy: Yup.string()
     .min(3, 'Minimum 3 lettres pour le Trigramme')
