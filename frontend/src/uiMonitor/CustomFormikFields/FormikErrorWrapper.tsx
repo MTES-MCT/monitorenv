@@ -21,6 +21,7 @@ export function FormikErrorWrapper({ children, name, noMessage }: FormikErrorWra
 }
 
 const ErrorWrapper = styled.div<{ error: boolean }>`
+  width: 100%;
   .rs-input,
   .rs-input:hover,
   .rs-picker-toggle {
