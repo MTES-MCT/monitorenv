@@ -17,6 +17,7 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
   const isFirstSurveillanceAction = !envActions?.find(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
   const isClosed = form?.values?.isClosed
   const currentActionId = envActions && envActions[currentActionIndex]?.id
+
   const sortedEnvActions = useMemo(
     () =>
       envActions &&
@@ -47,10 +48,23 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
         })
       })
     )
+    if (envActions?.length === 0) {
+      setCurrentActionIndex(0)
+    }
   }
 
-  const handleAddControlAction = () => unshift(actionFactory({ actionType: ActionTypeEnum.CONTROL }))
-  const handleAddNoteAction = () => unshift(actionFactory({ actionType: ActionTypeEnum.NOTE }))
+  const handleAddControlAction = () => {
+    unshift(actionFactory({ actionType: ActionTypeEnum.CONTROL }))
+    if (envActions?.length === 0) {
+      setCurrentActionIndex(0)
+    }
+  }
+  const handleAddNoteAction = () => {
+    unshift(actionFactory({ actionType: ActionTypeEnum.NOTE }))
+    if (envActions?.length === 0) {
+      setCurrentActionIndex(0)
+    }
+  }
   const handleSelectAction = id => () => setCurrentActionIndex(envActions && envActions.findIndex(a => a.id === id))
   const handleRemoveAction = id => e => {
     e.stopPropagation()
@@ -104,7 +118,7 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
                 readOnly={isClosed}
                 removeAction={handleRemoveAction(action.id)}
                 selectAction={handleSelectAction(action.id)}
-                selected={currentActionId ? action.id === currentActionId : true}
+                selected={action.id === currentActionId}
               />
             )
           })

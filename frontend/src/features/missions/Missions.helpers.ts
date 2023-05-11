@@ -9,7 +9,8 @@ import {
   Mission,
   NewMission,
   InfractionTypeEnum,
-  EnvAction
+  EnvAction,
+  EnvActionSurveillance
 } from '../../domain/entities/missions'
 
 import type { ControlUnit } from '../../domain/entities/controlUnit'
@@ -61,55 +62,14 @@ export const actionFactory = ({
   }
 }
 
-export const missionFactory = (mission): Mission | NewMission => {
-  if (!_.isEmpty(mission)) {
-    const { envActions } = mission
-    const surveillances = envActions.filter(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
-
-    const surveillanceWithSamePeriodIndex =
-      surveillances?.length === 1
-        ? envActions.findIndex(
-            action =>
-              action.actionType === ActionTypeEnum.SURVEILLANCE &&
-              action.actionEndDateTimeUtc === mission?.endDateTimeUtc &&
-              action.actionStartDateTimeUtc === mission?.startDateTimeUtc
-          )
-        : -1
-    if (surveillanceWithSamePeriodIndex !== -1) {
-      const envActionsUpdated = [...envActions]
-      const surveillance = {
-        durationMatchesMission: true,
-        ...envActionsUpdated[surveillanceWithSamePeriodIndex]
-      }
-      envActionsUpdated.splice(surveillanceWithSamePeriodIndex, 1, surveillance)
-
-      return {
-        closedBy: '',
-        controlUnits: [controlUnitFactory()],
-        endDateTimeUtc: '',
-        isClosed: false,
-        isUnderJdp: false,
-        missionNature: [],
-        missionSource: MissionSourceEnum.MONITORENV,
-        missionTypes: [],
-        observationsCacem: '',
-        observationsCnsp: '',
-        openBy: '',
-        startDateTimeUtc: new Date().toISOString(),
-        ...mission,
-        envActions: envActionsUpdated
-      }
-    }
-  }
-
-  return {
+export const missionFactory = (mission: Mission | undefined): Mission | NewMission => {
+  let formattedMission = {
     closedBy: '',
     controlUnits: [controlUnitFactory()],
     endDateTimeUtc: '',
     envActions: [],
     isClosed: false,
     isUnderJdp: false,
-    missionNature: [],
     missionSource: MissionSourceEnum.MONITORENV,
     missionTypes: [],
     observationsCacem: '',
@@ -118,6 +78,39 @@ export const missionFactory = (mission): Mission | NewMission => {
     startDateTimeUtc: new Date().toISOString(),
     ...mission
   }
+
+  if (_.isEmpty(mission)) {
+    return formattedMission
+  }
+
+  const { envActions } = mission
+  const surveillances = envActions.filter(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
+
+  const surveillanceWithSamePeriodIndex =
+    surveillances?.length === 1
+      ? envActions.findIndex(
+          action =>
+            action.actionType === ActionTypeEnum.SURVEILLANCE &&
+            action.actionEndDateTimeUtc === mission?.endDateTimeUtc &&
+            action.actionStartDateTimeUtc === mission?.startDateTimeUtc
+        )
+      : -1
+  if (surveillanceWithSamePeriodIndex !== -1 && envActions.length > 0) {
+    const envActionsUpdated: EnvAction[] = [...envActions]
+    const surveillance: EnvActionSurveillance = {
+      ...(envActionsUpdated[surveillanceWithSamePeriodIndex] as EnvActionSurveillance),
+      durationMatchesMission: true
+    }
+
+    envActionsUpdated.splice(surveillanceWithSamePeriodIndex, 1, surveillance)
+
+    formattedMission = {
+      ...formattedMission,
+      envActions: envActionsUpdated
+    }
+  }
+
+  return formattedMission
 }
 
 export const controlUnitFactory = ({ ...resourceUnit } = {}): Omit<ControlUnit, 'id'> => ({

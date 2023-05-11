@@ -5,10 +5,8 @@ import { useDispatch } from 'react-redux'
 
 import { setIsFormDirty } from '../domain/shared_slices/MissionsState'
 
-import type { Mission } from '../domain/entities/missions'
-
 export const useSyncFormValuesWithRedux = (setFormValues: (values) => void) => {
-  const { dirty, values } = useFormikContext<Mission>()
+  const { dirty, values } = useFormikContext()
   const dispatch = useDispatch()
 
   const dispatchFormUpdate = useMemo(() => {

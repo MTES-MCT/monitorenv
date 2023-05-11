@@ -14,11 +14,11 @@ export function SurveillanceCard({ feature }) {
 
   const duration = dateDifferenceInHours(actionStartDateTimeUtc, actionEndDateTimeUtc)
 
-  const startDate = getLocalizedDayjs(actionStartDateTimeUtc)
+  const startDate = actionStartDateTimeUtc ? getLocalizedDayjs(actionStartDateTimeUtc) : undefined
   const endDate = actionEndDateTimeUtc ? getLocalizedDayjs(actionEndDateTimeUtc) : null
   const isSurveillanceOnOneDay = endDate && dayjs(startDate).isSame(dayjs(endDate), 'day')
 
-  const simpleDate = startDate.isValid() && startDate.format('DD MMMM YYYY')
+  const simpleDate = startDate?.isValid() && startDate?.format('DD MMMM YYYY')
 
   if (listener === InteractionListener.SURVEILLANCE_ZONE) {
     return null
@@ -36,7 +36,7 @@ export function SurveillanceCard({ feature }) {
         {endDate && isSurveillanceOnOneDay && simpleDate}
         {endDate &&
           !isSurveillanceOnOneDay &&
-          `du ${startDate.format('DD MMMM YYYY')} au ${endDate.format('DD MMMM YYYY')}`}
+          `du ${startDate?.format('DD MMMM YYYY')} au ${endDate.format('DD MMMM YYYY')}`}
       </StyledDate>
     </StyledSurveillanceCard>
   )

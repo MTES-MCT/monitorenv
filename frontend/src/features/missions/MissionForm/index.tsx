@@ -33,7 +33,7 @@ export function Mission() {
 
   const missionFormikValues = useMemo(() => {
     if (!id) {
-      return missionFactory(null)
+      return missionFactory(undefined)
     }
 
     return missionFactory(missionToEdit)

@@ -28,16 +28,12 @@ export const useUpdateSurveillance = () => {
   }, [setFieldValue, values?.startDateTimeUtc, values?.endDateTimeUtc])
 
   useEffect(() => {
-    const surveillances = (values.envActions as Array<Record<string, any>>).filter(
-      action => action.actionType === ActionTypeEnum.SURVEILLANCE
-    )
+    const surveillances = values.envActions.filter(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
 
     const surveillanceWithDurationMatchIndex = values.envActions.findIndex(
       action => action.actionType === ActionTypeEnum.SURVEILLANCE && action.durationMatchesMission
     )
 
     surveillanceFormUpdate(surveillances, surveillanceWithDurationMatchIndex)
-
-    return () => surveillanceFormUpdate(null, null)
   }, [values, surveillanceFormUpdate])
 }
