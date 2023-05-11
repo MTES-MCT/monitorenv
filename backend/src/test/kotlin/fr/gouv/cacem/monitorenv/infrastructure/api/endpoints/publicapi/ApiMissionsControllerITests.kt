@@ -87,12 +87,12 @@ class ApiMissionsControllerITests {
             hasMissionOrder = true,
             isUnderJdp = true
         )
-        val requestbody = objectMapper.writeValueAsString(newMissionRequest)
+        val requestBody = objectMapper.writeValueAsString(newMissionRequest)
         given(this.createMission.execute(mission = any())).willReturn(expectedNewMission)
         // When
         mockMvc.perform(
             post("/api/v1/missions")
-                .content(requestbody)
+                .content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON)
         )
             // Then
@@ -126,6 +126,7 @@ class ApiMissionsControllerITests {
             this.getMissions.execute(
                 startedAfterDateTime = any(),
                 startedBeforeDateTime = any(),
+                missionSources = any(),
                 missionTypes = any(),
                 missionStatuses = any(),
                 seaFronts = any(),

@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdatePublicMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.MissionDataOutput
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSourceEnum
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -39,10 +40,13 @@ class ApiMissionsController(
         @RequestParam(name = "startedBeforeDateTime", required = false)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         startedBeforeDateTime: ZonedDateTime?,
+        @Parameter(description = "Origine")
+        @RequestParam(name = "missionSource", required = false)
+        missionSources: List<MissionSourceEnum>?,
         @Parameter(description = "Types de mission")
         @RequestParam(name = "missionTypes", required = false)
         missionTypes: List<String>?,
-        @Parameter(description = "Statuts de mission")
+        @Parameter(description = "Statut de mission")
         @RequestParam(name = "missionStatus", required = false)
         missionStatuses: List<String>?,
         @Parameter(description = "Facades")
@@ -52,6 +56,7 @@ class ApiMissionsController(
         val missions = getMissions.execute(
             startedAfterDateTime = startedAfterDateTime,
             startedBeforeDateTime = startedBeforeDateTime,
+            missionSources = missionSources,
             missionStatuses = missionStatuses,
             missionTypes = missionTypes,
             seaFronts = seaFronts,
