@@ -99,15 +99,6 @@ historic_missions_df = pd.DataFrame(
             pd.Timestamp("22/04/2017 10:30:00"),
         ],
         "closed_by": ["VSQ", "VSQ", "GYT", "RIO", "CBG", "VSQ", "VSQ"],
-        "mission_nature": [
-            "{ENV}",
-            "{ENV}",
-            "{ENV}",
-            "{ENV}",
-            "{ENV}",
-            "{ENV}",
-            "{ENV}",
-        ],
         "mission_source": [
             "POSEIDON_CACEM",
             "POSEIDON_CACEM",
@@ -377,15 +368,6 @@ def transformed_historic_missions() -> pd.DataFrame:
                 pd.Timestamp("22/04/2017 10:30:00"),
             ],
             "closed_by": ["VSQ", "VSQ", "GYT", "RIO", "CBG", "VSQ", "VSQ"],
-            "mission_nature": [
-                "{ENV}",
-                "{ENV}",
-                "{ENV}",
-                "{ENV}",
-                "{ENV}",
-                "{ENV}",
-                "{ENV}",
-            ],
             "mission_source": [
                 "POSEIDON_CACEM",
                 "POSEIDON_CACEM",
@@ -476,7 +458,6 @@ flow.replace(
 def test_make_env_actions(historic_controls, transformed_historic_controls):
     with patch("src.pipeline.flows.historic_controls.uuid", mock_uuid):
         res = make_env_actions.run(historic_controls)
-    breakpoint()
     pd.testing.assert_frame_equal(res, transformed_historic_controls)
 
 
@@ -513,7 +494,7 @@ def test_flow(
 
     query_missions = (
         "SELECT id, mission_types, open_by, observations_cacem, facade,"
-        " start_datetime_utc, closed_by, mission_nature, mission_source,"
+        " start_datetime_utc, closed_by, mission_source,"
         " closed, observations_cnsp, deleted, geom FROM missions ORDER BY id"
     )
     initial_missions = read_query("monitorenv_remote", query_missions)

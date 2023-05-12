@@ -195,8 +195,6 @@ def make_env_actions(historic_controls: pd.DataFrame) -> pd.DataFrame:
         axis=1,
     )
 
-    breakpoint()
-
     # fin du preprocessing
     historic_controls.drop(
         ["action_number_of_controls", "Themes", "natinf", "infractions"],
