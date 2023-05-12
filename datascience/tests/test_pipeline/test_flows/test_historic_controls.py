@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 from unittest.mock import MagicMock, patch
 
 import pandas as pd
@@ -13,54 +14,35 @@ from src.pipeline.flows.historic_controls import (
 )
 from src.read_query import read_query
 
-
-# test pour valider si les 2 dictionnaires "infractions" sont similaires
-def dic_infr(df1: pd.DataFrame, df2: pd.DataFrame, id: int):
-    for i in range(len(df1["value"][id]["infractions"])):
-        t1 = df1["value"][id]["infractions"][i].copy()
-        t2 = df2["value"][id]["infractions"][i].copy()
-        del t1["id"], t2["id"]
-        assert t1 == t2
-
-
-# test pour valider si 2 dictionnaires "value" sont similaires
-def dic_value(df1: pd.DataFrame, df2: pd.DataFrame):
-    for i in range(len(df1["value"])):
-        t1 = df1["value"][i].copy()
-        t2 = df2["value"][i].copy()
-        del t1["infractions"], t2["infractions"]
-        assert t1 == t2
-
-
 historic_controls_df = pd.DataFrame(
     {
         "id": [10009, 10010, 10011, 10012, 10013, 10014],
         "Themes": [
-            "Police des espèces protégées et de leurs habitats",
+            "Police des espèces protégées et de leurs habitats,Police des aires marines protégées",
             "Pêche à pied",
             "Domanialité publique dont circulation",
-            "Pêche à pied",
+            "Pêche à pied,Police de la chasse en mer",
             "Domanialité publique dont circulation",
             "Police des aires marines protégées",
         ],
         "action_number_of_controls": [5, 1, 2, 70, 16, 42],
-        "natinf": [" ", "10041", "10080,10010", "2785", " ", "2798,10042"],
+        "natinf": [None, "10041", "10080,10010", "2785", None, "2798,10042"],
         "protected_species": [
-            "Mamifères marins",
+            "Flore,Mamifères marins,Oiseaux",
             "Oiseaux,Flore",
-            "",
+            None,
             "Flore",
-            "",
+            None,
             "Oiseaux,Mammifères marins",
         ],
         "mission_id": [10012, 10013, 10015, 10017, 10018, 10019],
         "action_start_datetime_utc": [
-            "12/03/2017 09:40:00",
-            "14/03/2017 10:00:00",
-            "23/03/2017 21:00:00",
-            "28/03/2017 10:00:00",
-            "29/03/2017 12:15:00",
-            "29/03/2017 11:45:00",
+            datetime(2017, 12, 3, 9, 40),
+            datetime(2017, 3, 14, 10),
+            datetime(2017, 3, 23, 21),
+            datetime(2017, 3, 28, 10),
+            datetime(2017, 3, 29, 12, 15),
+            datetime(2017, 3, 29, 11, 45),
         ],
         "action_type": [
             "CONTROL",
@@ -79,7 +61,10 @@ historic_missions_df = pd.DataFrame(
         "open_by": ["JBL", "GYT", "RIO", "CBG", "LEG", "RIO", "CRO"],
         "observations_cacem": [
             "91 pàp pro contrôlés/ 4 pàp pro en infraction surquotas",
-            "Surveillance: protection des aires marines / protection des espèces sensibles dont perturbation intentionnelle des espèces protégées  RAS",
+            (
+                "Surveillance: protection des aires marines / protection des espèces"
+                " sensibles dont perturbation intentionnelle des espèces protégées  RAS"
+            ),
             None,
             "contrôle de 3 pêcheurs plaisanciers : RAS",
             None,
@@ -96,22 +81,22 @@ historic_missions_df = pd.DataFrame(
             "DIRM Med",
         ],
         "start_datetime_utc": [
-            "29/03/2017 11:45:00",
-            "30/03/2017 07:00:00",
-            "06/04/2017 09:00:00",
-            "09/04/2017 10:45:00",
-            "15/04/2017 10:00:00",
-            "17/04/2017 08:00:00",
-            "22/04/2017 07:30:00",
+            pd.Timestamp("29/03/2017 11:45:00"),
+            pd.Timestamp("30/03/2017 07:00:00"),
+            pd.Timestamp("06/04/2017 09:00:00"),
+            pd.Timestamp("09/04/2017 10:45:00"),
+            pd.Timestamp("15/04/2017 10:00:00"),
+            pd.Timestamp("17/04/2017 08:00:00"),
+            pd.Timestamp("22/04/2017 07:30:00"),
         ],
         "end_datetime_utc": [
-            "29/03/2017 16:00:00",
-            "30/03/2017 10:30:00",
-            "06/04/2017 13:15:00",
-            "09/04/2017 11:10:00",
-            "15/04/2017 18:00:00",
-            "17/04/2017 13:30:00",
-            "22/04/2017 10:30:00",
+            pd.Timestamp("29/03/2017 16:00:00"),
+            pd.Timestamp("30/03/2017 10:30:00"),
+            pd.Timestamp("06/04/2017 13:15:00"),
+            pd.Timestamp("09/04/2017 11:10:00"),
+            pd.Timestamp("15/04/2017 18:00:00"),
+            pd.Timestamp("17/04/2017 13:30:00"),
+            pd.Timestamp("22/04/2017 10:30:00"),
         ],
         "closed_by": ["VSQ", "VSQ", "GYT", "RIO", "CBG", "VSQ", "VSQ"],
         "mission_nature": [
@@ -182,18 +167,22 @@ def transformed_historic_controls() -> pd.DataFrame:
                     "themes": [
                         {
                             "theme": "Police des espèces protégées et de leurs habitats (faune et flore)",
-                            "protected_species": ["Mamifères marins"],
-                        }
-                    ],
-                    "infractions": [
+                            "protected_species": [
+                                "Flore",
+                                "Mamifères marins",
+                                "Oiseaux",
+                            ],
+                        },
                         {
-                            "id": uuid.UUID(
-                                "27c395ff-9357-438c-b62b-08861780c33a"
-                            ),
-                            "natinf": [],
-                            "toProcess": False,
-                        }
+                            "theme": "Police des parcs nationaux",
+                            "protected_species": [
+                                "Flore",
+                                "Mamifères marins",
+                                "Oiseaux",
+                            ],
+                        },
                     ],
+                    "infractions": [],
                     "vehicleType": None,
                     "actionTargetType": None,
                     "actionNumberOfControls": int(5),
@@ -250,7 +239,11 @@ def transformed_historic_controls() -> pd.DataFrame:
                         {
                             "theme": "Pêche à pied",
                             "protected_species": ["Flore"],
-                        }
+                        },
+                        {
+                            "theme": "Pêche de loisir",
+                            "protected_species": ["Flore"],
+                        },
                     ],
                     "infractions": [
                         {
@@ -272,15 +265,7 @@ def transformed_historic_controls() -> pd.DataFrame:
                             "protected_species": [],
                         }
                     ],
-                    "infractions": [
-                        {
-                            "id": uuid.UUID(
-                                "27c395ff-9357-438c-b62b-08861780c33a"
-                            ),
-                            "natinf": [],
-                            "toProcess": False,
-                        }
-                    ],
+                    "infractions": [],
                     "vehicleType": None,
                     "actionTargetType": None,
                     "actionNumberOfControls": int(16),
@@ -324,190 +309,15 @@ def transformed_historic_controls() -> pd.DataFrame:
                 pd.Timestamp("2017-03-29 12:15:00"),
                 pd.Timestamp("2017-03-29 11:45:00"),
             ],
-            "geom": [None, None, None, None, None, None],
         }
     )
 
 
 @pytest.fixture
 def transformed_historic_controls_non_constant_uuid() -> pd.DataFrame:
-
-    return pd.DataFrame(
-        {
-            "id": [
-                uuid.uuid4(),
-                uuid.uuid4(),
-                uuid.uuid4(),
-                uuid.uuid4(),
-                uuid.uuid4(),
-                uuid.uuid4(),
-            ],
-            "mission_id": [
-                10012 - 100000,
-                10013 - 100000,
-                10015 - 100000,
-                10017 - 100000,
-                10018 - 100000,
-                10019 - 100000,
-            ],
-            "action_type": [
-                "CONTROL",
-                "CONTROL",
-                "CONTROL",
-                "CONTROL",
-                "CONTROL",
-                "CONTROL",
-            ],
-            "value": [
-                {
-                    "themes": [
-                        {
-                            "theme": "Police des espèces protégées et de leurs habitats (faune et flore)",
-                            "protected_species": ["Mamifères marins"],
-                        }
-                    ],
-                    "infractions": [
-                        {
-                            "id": uuid.UUID(
-                                "27c395ff-9357-438c-b62b-08861780c33a"
-                            ),
-                            "natinf": [],
-                            "toProcess": False,
-                        }
-                    ],
-                    "vehicleType": None,
-                    "actionTargetType": None,
-                    "actionNumberOfControls": int(5),
-                },
-                {
-                    "themes": [
-                        {
-                            "theme": "Pêche à pied",
-                            "protected_species": ["Oiseaux", "Flore"],
-                        }
-                    ],
-                    "infractions": [
-                        {
-                            "id": uuid.UUID(
-                                "27c395ff-9357-438c-b62b-08861780c33a"
-                            ),
-                            "natinf": ["10041"],
-                            "toProcess": False,
-                        }
-                    ],
-                    "vehicleType": None,
-                    "actionTargetType": None,
-                    "actionNumberOfControls": int(1),
-                },
-                {
-                    "themes": [
-                        {
-                            "theme": "Domanialité publique dont circulation",
-                            "protected_species": [],
-                        }
-                    ],
-                    "infractions": [
-                        {
-                            "id": uuid.UUID(
-                                "27c395ff-9357-438c-b62b-08861780c33a"
-                            ),
-                            "natinf": ["10080"],
-                            "toProcess": False,
-                        },
-                        {
-                            "id": uuid.UUID(
-                                "27c395ff-9357-438c-b62b-08861780c33a"
-                            ),
-                            "natinf": ["10010"],
-                            "toProcess": False,
-                        },
-                    ],
-                    "vehicleType": None,
-                    "actionTargetType": None,
-                    "actionNumberOfControls": int(2),
-                },
-                {
-                    "themes": [
-                        {
-                            "theme": "Pêche à pied",
-                            "protected_species": ["Flore"],
-                        }
-                    ],
-                    "infractions": [
-                        {
-                            "id": uuid.UUID(
-                                "27c395ff-9357-438c-b62b-08861780c33a"
-                            ),
-                            "natinf": ["2785"],
-                            "toProcess": False,
-                        }
-                    ],
-                    "vehicleType": None,
-                    "actionTargetType": None,
-                    "actionNumberOfControls": int(70),
-                },
-                {
-                    "themes": [
-                        {
-                            "theme": "Domanialité publique dont circulation",
-                            "protected_species": [],
-                        }
-                    ],
-                    "infractions": [
-                        {
-                            "id": uuid.UUID(
-                                "27c395ff-9357-438c-b62b-08861780c33a"
-                            ),
-                            "natinf": [],
-                            "toProcess": False,
-                        }
-                    ],
-                    "vehicleType": None,
-                    "actionTargetType": None,
-                    "actionNumberOfControls": int(16),
-                },
-                {
-                    "themes": [
-                        {
-                            "theme": "Police des parcs nationaux",
-                            "protected_species": [
-                                "Oiseaux",
-                                "Mammifères marins",
-                            ],
-                        },
-                    ],
-                    "infractions": [
-                        {
-                            "id": uuid.UUID(
-                                "27c395ff-9357-438c-b62b-08861780c33a"
-                            ),
-                            "natinf": ["2798"],
-                            "toProcess": False,
-                        },
-                        {
-                            "id": uuid.UUID(
-                                "27c395ff-9357-438c-b62b-08861780c33a"
-                            ),
-                            "natinf": ["10042"],
-                            "toProcess": False,
-                        },
-                    ],
-                    "vehicleType": None,
-                    "actionTargetType": None,
-                    "actionNumberOfControls": int(42),
-                },
-            ],
-            "action_start_datetime_utc": [
-                pd.Timestamp("2017-12-03 09:40:00"),
-                pd.Timestamp("2017-03-14 10:00:00"),
-                pd.Timestamp("2017-03-23 21:00:00"),
-                pd.Timestamp("2017-03-28 10:00:00"),
-                pd.Timestamp("2017-03-29 12:15:00"),
-                pd.Timestamp("2017-03-29 11:45:00"),
-            ],
-            "geom": [None, None, None, None, None, None],
-        }
-    )
+    temp = transformed_historic_controls
+    temp["id"] = temp.apply(lambda x: uuid.uuid4(), axis=1)
+    return temp
 
 
 @pytest.fixture
@@ -586,9 +396,7 @@ def transformed_historic_missions() -> pd.DataFrame:
                 "POSEIDON_CACEM",
             ],
             "closed": [True, True, True, True, False, True, True],
-            "observations_cnsp": [None, None, None, None, None, None, None],
             "deleted": [False, False, False, False, False, False, False],
-            "geom": [None, None, None, None, None, None, None],
         }
     )
 
@@ -602,7 +410,6 @@ def historic_missions_units() -> pd.DataFrame:
 def transformed_missions_units() -> pd.DataFrame:
     return pd.DataFrame(
         {
-            "id": [20000, 20001, 20002, 20003, 20004, 20005, 20006],
             "mission_id": [
                 10012 - 100000,
                 10013 - 100000,
@@ -669,6 +476,7 @@ flow.replace(
 def test_make_env_actions(historic_controls, transformed_historic_controls):
     with patch("src.pipeline.flows.historic_controls.uuid", mock_uuid):
         res = make_env_actions.run(historic_controls)
+    breakpoint()
     pd.testing.assert_frame_equal(res, transformed_historic_controls)
 
 
@@ -690,22 +498,34 @@ def test_env_missions_units(
     )
 
 
-def test_flow_abrakadabra(
+def test_flow(
     reset_test_data,
     transformed_historic_controls,
     transformed_historic_missions,
     transformed_missions_units,
 ):
 
-    query_controls = "SELECT id, mission_id, action_type, value, action_start_datetime_utc, geom FROM env_actions ORDER BY id"
+    query_controls = (
+        "SELECT id, mission_id, action_type, value, action_start_datetime_utc,"
+        " geom FROM env_actions ORDER BY id"
+    )
     initial_controls = read_query("monitorenv_remote", query_controls)
 
-    query_missions = "SELECT id, mission_types, open_by, observations_cacem, facade, start_datetime_utc, closed_by, mission_nature, mission_source, closed, observations_cnsp, deleted, geom FROM missions ORDER BY id"
+    query_missions = (
+        "SELECT id, mission_types, open_by, observations_cacem, facade,"
+        " start_datetime_utc, closed_by, mission_nature, mission_source,"
+        " closed, observations_cnsp, deleted, geom FROM missions ORDER BY id"
+    )
     initial_missions = read_query("monitorenv_remote", query_missions)
 
     query_missions_units = "SELECT id, mission_id, control_unit_id FROM missions_control_units ORDER BY id"
 
-    query_missions_units_with_mission_source = "SELECT missions_control_units.id, mission_id, control_unit_id, missions.mission_source FROM missions_control_units LEFT JOIN missions ON missions.id=missions_control_units.mission_id ORDER BY id"
+    query_missions_units_with_mission_source = (
+        "SELECT missions_control_units.id, mission_id,"
+        " control_unit_id, missions.mission_source "
+        "FROM missions_control_units LEFT JOIN missions "
+        "ON missions.id=missions_control_units.mission_id ORDER BY id"
+    )
     initial_missions_units_with_mission_source = read_query(
         "monitorenv_remote", query_missions_units_with_mission_source
     )
@@ -753,9 +573,6 @@ def test_flow_abrakadabra(
         ]
     )
 
-    """initial_control_unit_missions_ids_poseidon = set(initial_missions_units.mission_id.isin(initial_missions_ids_poseidon))
-    initial_control_unit_missions_ids_no_poseidon = set(initial_missions_units.mission_id.isin(initial_missions_ids_no_poseidon))"""
-
     updated_control_unit_missions_ids = set(missions_units.mission_id)
     test_control_unit_missions_ids = set(transformed_missions_units.mission_id)
 
@@ -765,9 +582,8 @@ def test_flow_abrakadabra(
     )
 
     print(
-        "Ids that should not be in the updated version of the missions table : {}".format(
-            initial_missions_ids_poseidon
-        )
+        "Ids that should not be in the updated version "
+        f"of the missions table : {initial_missions_ids_poseidon}"
     )
 
     assert -95690 and -95689 not in updated_missions_ids
@@ -775,9 +591,9 @@ def test_flow_abrakadabra(
     assert test_missions_ids.issubset(updated_missions_ids)
 
     print(
-        "Ids that should not be in the updated version of the control_unit table : {}".format(
-            initial_missions_units_with_mission_source_ids_poseidon
-        )
+        "Ids that should not be in the updated version of"
+        " the control_unit table : "
+        f"{initial_missions_units_with_mission_source_ids_poseidon}"
     )
 
     assert -95690 and -95689 not in updated_control_unit_missions_ids

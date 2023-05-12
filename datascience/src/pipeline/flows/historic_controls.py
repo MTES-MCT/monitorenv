@@ -45,47 +45,16 @@ dict_new_facades = {
 }
 
 
-def manage_protected_species(protected_species: str) -> list:
-    """create a list of protected_species
+def str_to_list(s: str) -> list:
+    """create a list of strings based on the coma separator
 
     Args:
-        protected_species (str): a string composed of nothing, one string, or several string separated with commas
+        s (str): string to separate
 
     Returns:
-        list: an empty list if there was no protected species, or a list of separated species if there was one or several protected species
+        list: list of strings
     """
-    if "," in protected_species:
-        protected_species = protected_species.split(",")
-    elif protected_species == "":
-        protected_species = protected_species.split()
-    else:
-        protected_species = [protected_species]
-    return protected_species
-
-
-def manage_natinf(text_natinfs: str) -> list:
-    """Separate natinfs within a long string in a list of string natinfs
-    The condition is based on the "," in the string because the parameter in the split function is not the same
-
-    Args:
-        text_natinfs (str): a string composed of multiple natinfs
-
-    Returns:
-        list: containaing separated natinfs strings
-    """
-    if "," in text_natinfs:
-        text_natinfs = text_natinfs.split(",")
-    else:
-        text_natinfs = text_natinfs.split()
-    return text_natinfs
-
-
-def manage_mission_types(text_types: str) -> list:
-    if "," in text_types:
-        text_types = text_types.split(",")
-    else:
-        text_types = text_types.split()
-    return text_types
+    return s.split(",")
 
 
 def make_infractions(natinf: list) -> list[dict]:
@@ -98,8 +67,8 @@ def make_infractions(natinf: list) -> list[dict]:
         list[dict]: return a list of infractions (infractions are dictionaries)
     """
     inf = []
-    if len(natinf) == 0:
-        inf.append({"id": (uuid.uuid4()), "natinf": [], "toProcess": False})
+    if natinf is None:
+        inf = []
     else:
         for i in range(len(natinf)):
             inf.append(
@@ -110,6 +79,29 @@ def make_infractions(natinf: list) -> list[dict]:
                 }
             )
     return inf
+
+
+def make_themes(row: pd.Series) -> list[dict]:
+    """split themes from a string into a list of distinct string themes, then map the new themes names
+    and create a dictionnary for each theme
+
+    Args:
+        Themes (list): a list of string themes
+
+    Returns:
+        list[dict]: return a list of themes (infractions are dictionaries)
+    """
+
+    themes = str_to_list(row.Themes)
+    lthemes = []
+    for item in themes:
+        lthemes.append(
+            {
+                "theme": dict_new_themes.get(item),
+                "protected_species": row.protected_species,
+            }
+        )
+    return lthemes
 
 
 @task(checkpoint=False)
@@ -164,11 +156,7 @@ def make_env_actions(historic_controls: pd.DataFrame) -> pd.DataFrame:
     historic_controls["action_number_of_controls"] = historic_controls[
         "action_number_of_controls"
     ].fillna(0)
-    historic_controls["Themes"] = historic_controls["Themes"].fillna("")
-    historic_controls["Themes"] = historic_controls["Themes"].map(
-        dict_new_themes
-    )
-    historic_controls["natinf"] = historic_controls["natinf"].fillna(" ")
+
     historic_controls["id"] = historic_controls.apply(
         lambda x: uuid.uuid4(), axis=1
     )
@@ -176,35 +164,28 @@ def make_env_actions(historic_controls: pd.DataFrame) -> pd.DataFrame:
     historic_controls["action_number_of_controls"] = historic_controls.apply(
         lambda x: int(x.action_number_of_controls), axis=1
     )
-    historic_controls["action_start_datetime_utc"] = historic_controls.apply(
-        lambda x: pd.Timestamp(x.action_start_datetime_utc), axis=1
-    )
-    historic_controls["geom"] = None
-
-    # creation of new json columns
-    historic_controls["infractions"] = ""
-
     # séparation des natinfs
-    historic_controls["natinf"] = historic_controls["natinf"].apply(
-        manage_natinf
+    historic_controls["natinf"] = historic_controls["natinf"].map(
+        str_to_list, na_action="ignore"
     )
     historic_controls["protected_species"] = historic_controls[
         "protected_species"
-    ].apply(manage_protected_species)
+    ].map(str_to_list, na_action="ignore")
+
+    historic_controls["protected_species"] = historic_controls[
+        "protected_species"
+    ].map(lambda y: y if isinstance(y, list) else [])
 
     historic_controls["infractions"] = historic_controls["natinf"].map(
         make_infractions
     )
 
+    historic_controls["Themes"] = historic_controls.apply(make_themes, axis=1)
+
     historic_controls["value"] = historic_controls.apply(
         lambda x: (
             {
-                "themes": [
-                    {
-                        "theme": x.Themes,
-                        "protected_species": x.protected_species,
-                    }
-                ],
+                "themes": x.Themes,
                 "infractions": x.infractions,
                 "vehicleType": None,
                 "actionTargetType": None,
@@ -213,6 +194,8 @@ def make_env_actions(historic_controls: pd.DataFrame) -> pd.DataFrame:
         ),
         axis=1,
     )
+
+    breakpoint()
 
     # fin du preprocessing
     historic_controls.drop(
@@ -228,7 +211,6 @@ def make_env_actions(historic_controls: pd.DataFrame) -> pd.DataFrame:
             "action_type",
             "value",
             "action_start_datetime_utc",
-            "geom",
         ],
     ]
 
@@ -252,23 +234,15 @@ def make_env_missions(missions_poseidon: pd.DataFrame) -> pd.DataFrame:
     )
     missions_poseidon["mission_types"] = missions_poseidon[
         "mission_types"
-    ].apply(manage_mission_types)
-    missions_poseidon["start_datetime_utc"] = missions_poseidon.apply(
-        lambda x: pd.Timestamp(x.start_datetime_utc), axis=1
-    )
-    missions_poseidon["end_datetime_utc"] = missions_poseidon.apply(
-        lambda x: pd.Timestamp(x.end_datetime_utc), axis=1
-    )
-    missions_poseidon["observations_cnsp"] = None
-    missions_poseidon["mission_source"] = "POSEIDON_CACEM"
-    missions_poseidon["deleted"] = False
-    missions_poseidon["geom"] = None
+    ].map(str_to_list, na_action="ignore")
+
     missions_poseidon["facade"] = missions_poseidon["facade"].map(
         dict_new_facades
     )
     missions_poseidon["closed"] = missions_poseidon.apply(
         lambda x: False if x.closed == "0" else True, axis=1
     )
+    missions_poseidon["deleted"] = False
 
     return missions_poseidon
 
@@ -284,16 +258,13 @@ def make_env_mission_units(mission_units: pd.DataFrame) -> pd.DataFrame:
         pd.DataFrame
     """
     mission_units = mission_units.copy(deep=True)
-    mission_units["id"] = pd.Series(
-        [20000, 20001, 20002, 20003, 20004, 20005, 20006], copy=False
-    )
     mission_units["mission_id"] = (
         mission_units["mission_id"]
         + POSEIDON_CACEM_MISSION_ID_TO_MONITORENV_MISSION_ID_SHIFT
     )
     mission_units = mission_units.loc[
         :,
-        ["id", "mission_id", "control_unit_id"],
+        ["mission_id", "control_unit_id"],
     ]
 
     return mission_units
