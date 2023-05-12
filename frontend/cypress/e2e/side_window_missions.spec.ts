@@ -45,10 +45,10 @@ context('Missions', () => {
   })
 
   it('Missions table should display all themes and subthemes of all the actions of the mission', () => {
-    cy.get('*[data-cy="cell-envactions-themes"] > .rs-table-cell-content')
-      .eq(3)
+    cy.get('*[data-cy="cell-envactions-themes"]')
+      .eq(0)
       .contains(
-        "Police des espèces protégées et de leurs habitats (faune et flore) : Destruction, capture, arrachage / Atteinte aux habitats d'espèces protégées ; Police des mouillages : Mouillage individuel / ZMEL"
+        'Police des espèces protégées et de leurs habitats (faune et flore) : Dérogations concernant les espèces protégées'
       )
   })
 })
