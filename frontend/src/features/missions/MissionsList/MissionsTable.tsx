@@ -2,125 +2,20 @@
 import { Icon, SimpleTable } from '@mtes-mct/monitor-ui'
 import { flexRender, getCoreRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { Loader } from 'rsuite'
 import styled from 'styled-components'
 
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
-import { CellActionThemes } from './CellActionThemes'
-import { CellEditMission } from './CellEditMission'
-import { CellLocalizeMission } from './CellLocalizeMission'
-import { CellStatus } from './CellStatus'
-import { getDateCell } from './getDateCell'
-import { getMissionSourceCell } from './getMissionSourceCell'
-import { getMissionTypeCell } from './getMissionTypeCell'
-import { getNumberOfControlsCell } from './getNumberOfControlsCell'
-import { getResourcesCell } from './getResourcesCell'
+import { Columns } from './Columns'
 
 import type { Mission } from '../../../domain/entities/missions'
 
 export function MissionsTable({ isLoading, missions }: { isLoading: boolean; missions: Mission[] }) {
   const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'startDate' }])
 
-  const columns = useMemo(
-    () => [
-      {
-        accessorFn: row => row.startDateTimeUtc,
-        cell: info => getDateCell(info.getValue()),
-        enableSorting: true,
-        header: () => 'Début',
-        id: 'startDate',
-        size: 180
-      },
-      {
-        accessorFn: row => row.endDateTimeUtc,
-        cell: info => getDateCell(info.getValue()),
-        enableSorting: true,
-        header: () => 'Fin',
-        id: 'endDate',
-        size: 180
-      },
-      {
-        accessorFn: row => row.missionSource,
-        cell: info => getMissionSourceCell(info.getValue()),
-        enableSorting: true,
-        header: () => 'Origine',
-        id: 'missionSource',
-        size: 90
-      },
-      {
-        accessorFn: row => row.controlUnits,
-        cell: info => getResourcesCell(info.getValue()),
-        enableSorting: false,
-        header: () => 'Unité (Administration)',
-        id: 'unitAndAdministration',
-        maxSize: 280,
-        minSize: 200
-      },
-      {
-        accessorFn: row => row.missionTypes,
-        cell: info => getMissionTypeCell(info.getValue()),
-        enableSorting: false,
-        header: () => 'Type',
-        id: 'type',
-        size: 100
-      },
-      {
-        accessorFn: row => row.facade,
-        cell: info => info.getValue(),
-        enableSorting: true,
-        header: () => 'Facade',
-        id: 'seaFront',
-        size: 100
-      },
-      {
-        accessorFn: row => row.envActions,
-        cell: info => <CellActionThemes envActions={info.getValue()} />,
-        enableSorting: false,
-        header: () => 'Thématiques',
-        id: 'themes',
-        maxSize: 280,
-        minSize: 100,
-        size: 200
-      },
-      {
-        accessorFn: row => row.envActions,
-        cell: info => getNumberOfControlsCell(info.getValue()),
-        enableSorting: false,
-        header: () => 'Nbre contrôles',
-        id: 'controls',
-        size: 110
-      },
-      {
-        accessorFn: row => row.isClosed,
-        cell: ({ row }) => <CellStatus row={row} />,
-        enableSorting: false,
-        header: () => 'Statut',
-        id: 'status',
-        size: 120
-      },
-      {
-        accessorFn: row => row.geom,
-        cell: info => <CellLocalizeMission geom={info.getValue()} />,
-        enableSorting: false,
-        header: () => '',
-        id: 'geom',
-        size: 60
-      },
-      {
-        accessorFn: row => row.id,
-        cell: info => <CellEditMission id={info.getValue()} />,
-        enableSorting: false,
-        header: () => '',
-        id: 'edit',
-        size: 160
-      }
-    ],
-    []
-  )
-
   const table = useReactTable({
-    columns,
+    columns: Columns,
     data: missions,
     enableSortingRemoval: false,
     getCoreRowModel: getCoreRowModel(),
@@ -234,7 +129,6 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
 
 const StyledMissionsContainer = styled.div`
   overflow: auto;
-  margon-bottom: 10px;
 `
 const StyledChevronIcon = styled(ChevronIcon)`
   margin-top: 0px;

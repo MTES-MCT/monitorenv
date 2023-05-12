@@ -1,11 +1,9 @@
+import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import GeoJSON from 'ol/format/GeoJSON'
 import { useDispatch } from 'react-redux'
-import { IconButton } from 'rsuite'
-import styled from 'styled-components'
 
 import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
-import { ReactComponent as LocalizeIconSVG } from '../../../uiMonitor/icons/Focus_zones.svg'
 
 export function CellLocalizeMission({ geom }: { geom: any }) {
   const dispatch = useDispatch()
@@ -22,9 +20,5 @@ export function CellLocalizeMission({ geom }: { geom: any }) {
     dispatch(setFitToExtent(extent))
   }
 
-  return <IconButton icon={<LocalizeIcon className="rs-icon" />} onClick={handleZoomToMission} size="md" />
+  return <IconButton accent={Accent.TERTIARY} Icon={Icon.FocusZones} onClick={handleZoomToMission} />
 }
-
-const LocalizeIcon = styled(LocalizeIconSVG)`
-  width: 20px;
-`
