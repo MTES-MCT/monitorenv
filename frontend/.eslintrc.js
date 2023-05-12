@@ -38,7 +38,7 @@ module.exports = {
     },
     {
       files: ['cypress/**/*.js', 'cypress/**/*.ts', 'cypress.config.ts'],
-      plugins: ['cypress'],
+      plugins: ['cypress', 'no-only-tests'],
       rules: {
         'cypress/no-assigning-return-values': 'error',
         // TODO Hopefully we'll able to enforce that rule someday.
@@ -50,7 +50,8 @@ module.exports = {
         'cypress/no-pause': 'error',
 
         'import/no-default-export': 'off',
-        'import/no-extraneous-dependencies': 'off'
+        'import/no-extraneous-dependencies': 'off',
+        'no-only-tests/no-only-tests': 'error'
       }
     },
     // Custom monitorenv rule
