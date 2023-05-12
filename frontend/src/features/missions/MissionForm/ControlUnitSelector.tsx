@@ -96,10 +96,10 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
 
   return (
     <RessourceUnitWrapper>
-      <>
-        <FormGroupFixed>
-          <FormikErrorWrapper name={`controlUnits.${controlUnitIndex}.administration`} noMessage>
-            <Form.ControlLabel htmlFor="administration">Administration {resourceUnitIndexDisplayed}</Form.ControlLabel>
+      <FormGroupFixed>
+        <FormikErrorWrapper name={`controlUnits.${controlUnitIndex}.administration`} noMessage>
+          <Form.ControlLabel htmlFor="administration">Administration {resourceUnitIndexDisplayed}</Form.ControlLabel>
+          <StyledAdministartionContainer>
             <SelectPicker
               block
               data={administrationList}
@@ -111,84 +111,97 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
               value={administrationField.value}
               valueKey="administration"
             />
-          </FormikErrorWrapper>
-        </FormGroupFixed>
-        <FormGroupFixed>
-          <FormikErrorWrapper name={`controlUnits.${controlUnitIndex}.id`} noMessage>
-            <Form.ControlLabel htmlFor="unit">Unité {resourceUnitIndexDisplayed}</Form.ControlLabel>
-            <SelectPicker
-              block
-              data={unitList}
-              dataCy="add-control-unit"
-              labelKey="name"
-              onChange={handleUnitChange}
-              searchable={unitList.length > 10}
-              size="sm"
-              value={unitField.value}
-              valueKey="id"
-              {...props}
-              key={unitField.value}
-            />
-          </FormikErrorWrapper>
-        </FormGroupFixed>
-        <FormGroupFixed>
-          <RefWrapper ref={resourcesRef} data-cy="unit-tag-picker">
-            <Form.ControlLabel htmlFor="resources">Moyen(s) {resourceUnitIndexDisplayed}</Form.ControlLabel>
-            <TagPicker
-              block
-              cleanable={false}
-              container={() => resourcesRef.current}
-              data={combinedResourceList}
-              disabled={!_.isNumber(unitField.value)}
-              labelKey="name"
-              onChange={handleResourceChange}
-              size="sm"
-              value={resourcesField.value.map(resource => resource.id)}
-              valueKey="id"
-              {...props}
-            />
-          </RefWrapper>
-        </FormGroupFixed>
-        <FormGroupFixed>
-          <FormikTextInput
-            data-cy="control-unit-contact"
-            isErrorMessageHidden
-            label={`Contact de l'unité ${resourceUnitIndexDisplayed}`}
-            name={`controlUnits.${controlUnitIndex}.contact`}
+            {controlUnitIndex > 0 && (
+              <DeleteButton appearance="ghost" icon={<DeleteSVG className="rs-icon" />} onClick={removeControlUnit} />
+            )}
+          </StyledAdministartionContainer>
+        </FormikErrorWrapper>
+      </FormGroupFixed>
+      <FormGroupFixed>
+        <FormikErrorWrapper name={`controlUnits.${controlUnitIndex}.id`} noMessage>
+          <Form.ControlLabel htmlFor="unit">Unité {resourceUnitIndexDisplayed}</Form.ControlLabel>
+          <SelectPicker
+            block
+            data={unitList}
+            dataCy="add-control-unit"
+            labelKey="name"
+            onChange={handleUnitChange}
+            searchable={unitList.length > 10}
+            size="sm"
+            value={unitField.value}
+            valueKey="id"
+            {...props}
+            key={unitField.value}
           />
-        </FormGroupFixed>
-      </>
-
-      {controlUnitIndex > 0 && (
-        <div>
-          <DeleteButton appearance="ghost" icon={<DeleteSVG className="rs-icon" />} onClick={removeControlUnit} />
-        </div>
-      )}
+        </FormikErrorWrapper>
+      </FormGroupFixed>
+      <FormGroupFixed>
+        <RefWrapper ref={resourcesRef} data-cy="unit-tag-picker">
+          <Form.ControlLabel htmlFor="resources">Moyen(s) {resourceUnitIndexDisplayed}</Form.ControlLabel>
+          <TagPicker
+            block
+            cleanable={false}
+            container={() => resourcesRef.current}
+            data={combinedResourceList}
+            disabled={!_.isNumber(unitField.value)}
+            labelKey="name"
+            onChange={handleResourceChange}
+            size="sm"
+            value={resourcesField.value.map(resource => resource.id)}
+            valueKey="id"
+            {...props}
+          />
+        </RefWrapper>
+      </FormGroupFixed>
+      <FormGroupFixed>
+        <FormikTextInput
+          data-cy="control-unit-contact"
+          isErrorMessageHidden
+          label={`Contact de l'unité ${resourceUnitIndexDisplayed}`}
+          name={`controlUnits.${controlUnitIndex}.contact`}
+        />
+      </FormGroupFixed>
     </RessourceUnitWrapper>
   )
 }
 
 const RessourceUnitWrapper = styled.div`
+  margin-bottom: 14px;
   display: flex;
   flex-direction: column;
-  margin-bottom: 14px;
+  flex: 1;
 `
 
 const FormGroupFixed = styled.div`
+  display: flex;
+  flex-direction: row;
   height: 52px;
+  width: 100%;
+
   :not(:last-child) {
     margin-bottom: 4px;
+  }
+  .Field-TextInput {
+    flex: 1;
   }
 `
 
 const RefWrapper = styled.div`
+  width: 100%;
+  .rs-picker {
+    margin-top: 4px;
+  }
   .rs-picker-menu {
     position: relative;
     margin-top: -50px;
   }
 `
+const StyledAdministartionContainer = styled.div`
+  position: relative;
+`
 
 const DeleteButton = styled(IconButton)`
-  margin-top: 22px;
-  margin-left: 8px;
+  position: absolute;
+  top: 0px;
+  left: 425px;
 `

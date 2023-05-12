@@ -104,7 +104,7 @@ const FormWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
-  max-width: 504px;
+  max-width: 484px;
 `
 const Title = styled.h2`
   font-size: 16px;
