@@ -13,12 +13,6 @@ export function LocateOnMap() {
   const [searchedLocation, setSearchedLocation] = useState<string | undefined>('')
   const results = useGooglePlacesAPI(searchedLocation)
 
-  // value is integer, which does not satisfy Rsuite PropType
-  // However, it's the only way to hack the broken behavior of Autocomplete
-  // displaying value instead of label after selection
-  // FIXME: see https://github.com/MTES-MCT/monitor-ui/issues/332
-  const options = results.map(r => ({ label: r.label, value: r.value })) as any
-
   const handleSelectLocation = async placeId => {
     const originalResult = results.find(r => r.value === placeId)
     if (!originalResult) {
@@ -41,7 +35,7 @@ export function LocateOnMap() {
         name="search-place"
         onChange={placeId => handleSelectLocation(placeId)}
         onQuery={value => setSearchedLocation(value)}
-        options={options}
+        options={results}
         placeholder="rechercher un lieu (port, lieu-dit, baie...)"
       />
       <StyledIconButton accent={Accent.PRIMARY} Icon={Icon.Search} size={Size.LARGE} />

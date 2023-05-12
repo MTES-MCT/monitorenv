@@ -21,7 +21,8 @@ export function MissionsMenu() {
   const toggleMissionsLayer = () => {
     dispatch(setDisplayedItems({ displayMissionsLayer: !displayMissionsLayer }))
   }
-  const toggleMissionsMenu = () => {
+  const toggleMissionsMenu = e => {
+    e.preventDefault()
     dispatch(setDisplayedItems({ isSearchSemaphoreVisible: false, missionsMenuIsOpen: !missionsMenuIsOpen }))
   }
   const handleAddNewMission = () => {
@@ -43,14 +44,14 @@ export function MissionsMenu() {
           </MenuWithCloseButton.Header>
           <MissionsMenuBody>
             <Section>
-              <Button Icon={Icon.Plus} isFullWidth onClick={handleAddNewMission}>
+              <StyledButton Icon={Icon.Plus} isFullWidth onClick={handleAddNewMission}>
                 Ajouter une nouvelle mission
-              </Button>
+              </StyledButton>
             </Section>
             <Section>
-              <Button accent={Accent.SECONDARY} Icon={Icon.Expand} isFullWidth onClick={toggleMissionsWindow}>
+              <StyledButton accent={Accent.SECONDARY} Icon={Icon.Expand} isFullWidth onClick={toggleMissionsWindow}>
                 Voir la vue détaillée des missions
-              </Button>
+              </StyledButton>
             </Section>
           </MissionsMenuBody>
         </MenuWithCloseButton.Container>
@@ -81,4 +82,9 @@ const Section = styled.div`
   &:not(:last-child) {
     border-bottom: 1px solid ${COLORS.gainsboro};
   }
+`
+
+// TODO delete when Monitor-ui component have good padding
+const StyledButton = styled(Button)`
+  padding: 4px 12px;
 `

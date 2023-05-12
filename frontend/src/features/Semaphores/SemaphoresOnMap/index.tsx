@@ -17,7 +17,7 @@ export function SemaphoresOnMap() {
 
   return (
     <Wrapper>
-      <SearchSemaphores />
+      {isSearchSemaphoreVisible && <SearchSemaphores />}
       <MenuWithCloseButton.ButtonOnMap
         className={isSearchSemaphoreVisible ? '_active' : undefined}
         data-cy="semaphores-button"
