@@ -11,7 +11,7 @@ import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
 import { InteractionListener } from '../../../domain/entities/map/constants'
-import { hasMissionOrderLabels, missionTypeEnum } from '../../../domain/entities/missions'
+import { MissionSourceEnum, hasMissionOrderLabels, missionTypeEnum } from '../../../domain/entities/missions'
 import { useNewWindow } from '../../../ui/NewWindow'
 import { MultiZonePicker } from '../MultiZonePicker'
 import { ControlUnitsForm } from './ControlUnitsForm'
@@ -20,6 +20,7 @@ export function GeneralInformationsForm() {
   const { newWindowContainerRef } = useNewWindow()
   const [isClosedField] = useField<boolean>('isClosed')
   const [hasMissionOrderField] = useField<boolean>('hasMissionOrder')
+  const [misisonSourceField] = useField<MissionSourceEnum>('missionSource')
 
   const missionTypeOptions = Object.entries(missionTypeEnum).map(([key, val]) => ({ label: val.libelle, value: key }))
 
@@ -59,16 +60,22 @@ export function GeneralInformationsForm() {
           name="missionTypes"
           options={missionTypeOptions}
         />
-        <FormikCheckbox disabled label="Mission sous JDP" name="isUnderJdp" />
+        {(misisonSourceField.value === MissionSourceEnum.MONITORFISH ||
+          misisonSourceField.value === MissionSourceEnum.POSEIDON_CNSP) && (
+          <FormikCheckbox disabled label="Mission sous JDP" name="isUnderJdp" />
+        )}
       </StyledMissionType>
-      <MultiRadio
-        disabled
-        isInline
-        label="Ordre de mission"
-        name="hasMissionOrder"
-        options={hasMissionOrderOptions}
-        value={hasMissionOrderField.value}
-      />
+      {(misisonSourceField.value === MissionSourceEnum.MONITORFISH ||
+        misisonSourceField.value === MissionSourceEnum.POSEIDON_CNSP) && (
+        <MultiRadio
+          disabled
+          isInline
+          label="Ordre de mission"
+          name="hasMissionOrder"
+          options={hasMissionOrderOptions}
+          value={hasMissionOrderField.value}
+        />
+      )}
 
       <StyledUnitsContainer>
         <FieldArray
