@@ -16,7 +16,7 @@
 
 	<properties>
 		<java.version>11</java.version>
-		<spring.version>2.6.6</spring.version>
+		<spring.version>3.0.4</spring.version>
 		<springfox.version>2.9.2</springfox.version>
 		<kotlin.version>1.8.10</kotlin.version>
 		<testcontainers.version>1.17.6</testcontainers.version>
