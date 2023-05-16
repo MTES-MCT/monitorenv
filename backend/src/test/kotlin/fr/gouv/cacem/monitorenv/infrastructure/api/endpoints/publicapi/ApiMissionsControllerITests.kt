@@ -102,7 +102,7 @@ class ApiMissionsControllerITests {
         mockMvc.perform(
             post("/api/v1/missions")
                 .content(requestBody)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON),
         )
             // Then
             .andDo(MockMvcResultHandlers.print())

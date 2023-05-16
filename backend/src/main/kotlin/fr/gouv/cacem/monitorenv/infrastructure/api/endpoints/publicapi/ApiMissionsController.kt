@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionById
@@ -7,7 +8,6 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissions
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.UpdateMission
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdatePublicMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.MissionDataOutput
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSourceEnum
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag

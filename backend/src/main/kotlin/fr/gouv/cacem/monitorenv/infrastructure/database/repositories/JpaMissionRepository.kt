@@ -64,6 +64,6 @@ class JpaMissionRepository(
     }
 
     private fun convertToPGArray(array: List<String>?): String {
-        return array?.joinToString(separator = ",", prefix = "{", postfix = "}")?: "{}"
+        return array?.joinToString(separator = ",", prefix = "{", postfix = "}") ?: "{}"
     }
 }
