@@ -11,12 +11,12 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.UpdateMission
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
 import org.junit.jupiter.api.Test
-import org.springframework.context.annotation.Import
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.mock.mockito.MockBean
-import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
 
-@Import(WebSecurityConfig::class)
+@ExtendWith(SpringExtension::class)
 class UpdateMissionUTests {
 
     @MockBean

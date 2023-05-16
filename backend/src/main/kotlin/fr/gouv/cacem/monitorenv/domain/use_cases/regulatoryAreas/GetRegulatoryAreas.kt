@@ -11,7 +11,7 @@ class GetRegulatoryAreas(private val regulatoryAreaRepository: IRegulatoryAreaRe
 
     fun execute(): List<RegulatoryAreaEntity> {
         val regulatoryAreas = regulatoryAreaRepository.findRegulatoryAreas()
-        logger.info("Found ${regulatoryAreas.size} missions ")
+        logger.info("Found ${regulatoryAreas.size} regulatory areas ")
 
         return regulatoryAreas
     }
