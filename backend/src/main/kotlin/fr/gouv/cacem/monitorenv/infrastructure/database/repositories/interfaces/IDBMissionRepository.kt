@@ -51,7 +51,7 @@ interface IDBMissionRepository : CrudRepository<MissionModel, Int> {
             AND (list_to_array(:missionSources) IS NULL OR CAST(mission_source AS text) = ANY(list_to_array(:missionSources)))
         ORDER BY start_datetime_utc DESC
         """,
-        nativeQuery = true
+        nativeQuery = true,
     )
     fun findAllMissions(
         startedAfter: Instant,
@@ -60,7 +60,7 @@ interface IDBMissionRepository : CrudRepository<MissionModel, Int> {
         missionStatuses: List<String>?,
         missionSources: List<String>?,
         seaFronts: List<String>?,
-        pageable: Pageable
+        pageable: Pageable,
     ): List<MissionModel>
 
     @Modifying(clearAutomatically = true)
@@ -70,7 +70,7 @@ interface IDBMissionRepository : CrudRepository<MissionModel, Int> {
         SET deleted = TRUE
         WHERE id = :id
     """,
-        nativeQuery = true
+        nativeQuery = true,
     )
     fun deleteMission(id: Int)
 }

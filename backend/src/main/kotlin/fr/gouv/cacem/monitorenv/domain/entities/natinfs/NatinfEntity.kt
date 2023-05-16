@@ -4,5 +4,5 @@ data class NatinfEntity(
     val natinfCode: Int,
     val regulation: String?,
     val infractionCategory: String?,
-    val infraction: String?
+    val infraction: String?,
 )

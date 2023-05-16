@@ -9,33 +9,34 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.vladmihalcea.hibernate.type.array.ListArrayType
 import com.vladmihalcea.hibernate.type.array.internal.AbstractArrayType.SQL_ARRAY_TYPE
 import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType
-import fr.gouv.cacem.monitorenv.domain.entities.missions.*
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
+import jakarta.persistence.Basic
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
+import jakarta.persistence.Table
 import org.hibernate.Hibernate
-import org.hibernate.annotations.Type
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
+import org.hibernate.annotations.Parameter
+import org.hibernate.annotations.Type
 import org.locationtech.jts.geom.MultiPolygon
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
 import java.time.Instant
 import java.time.ZoneOffset.UTC
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.Table
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.Basic
-import jakarta.persistence.Column
-import jakarta.persistence.Enumerated
-import jakarta.persistence.GenerationType
-import jakarta.persistence.EnumType
-import jakarta.persistence.OneToMany
-import org.hibernate.annotations.Parameter
-
 
 @JsonIdentityInfo(
     generator = ObjectIdGenerators.PropertyGenerator::class,
-    property = "id"
+    property = "id",
 )
 @Entity
 @Table(name = "missions")
@@ -47,7 +48,7 @@ data class MissionModel(
     var id: Int? = null,
     @Type(
         ListArrayType::class,
-        parameters = [Parameter(name = SQL_ARRAY_TYPE, value = "text")]
+        parameters = [Parameter(name = SQL_ARRAY_TYPE, value = "text")],
     )
     @Column(name = "mission_types", columnDefinition = "text[]")
     var missionTypes: List<MissionTypeEnum>,
@@ -84,15 +85,15 @@ data class MissionModel(
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
-        orphanRemoval = true
+        orphanRemoval = true,
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
     var envActions: MutableList<EnvActionModel>? = ArrayList(),
     @OneToMany(
-            mappedBy = "mission",
-            cascade = [CascadeType.ALL],
-            orphanRemoval = true
+        mappedBy = "mission",
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
@@ -100,11 +101,11 @@ data class MissionModel(
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
-        orphanRemoval = true
+        orphanRemoval = true,
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
-    var controlUnits: MutableList<MissionControlUnitModel>? = ArrayList()
+    var controlUnits: MutableList<MissionControlUnitModel>? = ArrayList(),
 ) {
 
     fun toMissionEntity(mapper: ObjectMapper) = MissionEntity(
@@ -133,9 +134,9 @@ data class MissionModel(
 
             unit.unit.toControlUnit().copy(
                 contact = unit.contact,
-                resources = savedUnitResources?.let { safeUnitResources -> safeUnitResources.map { it.ressource.toControlResource() } } ?: listOf()
+                resources = savedUnitResources?.let { safeUnitResources -> safeUnitResources.map { it.ressource.toControlResource() } } ?: listOf(),
             )
-        } ?: listOf()
+        } ?: listOf(),
     )
 
     companion object {
@@ -155,7 +156,7 @@ data class MissionModel(
                 isDeleted = false,
                 missionSource = mission.missionSource,
                 hasMissionOrder = mission.hasMissionOrder,
-                isUnderJdp = mission.isUnderJdp
+                isUnderJdp = mission.isUnderJdp,
             )
 
             mission.envActions?.map {
@@ -165,7 +166,7 @@ data class MissionModel(
             mission.controlUnits.map {
                 val controlUnitModel = MissionControlUnitModel.fromControlUnitEntity(
                     it,
-                    missionModel
+                    missionModel,
                 )
                 missionModel.controlUnits?.add(controlUnitModel)
 

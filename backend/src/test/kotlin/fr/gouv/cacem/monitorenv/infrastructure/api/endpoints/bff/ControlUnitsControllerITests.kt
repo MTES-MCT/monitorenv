@@ -1,10 +1,9 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
+import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlResources.GetControlUnits
-import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
@@ -27,9 +26,6 @@ class ControlUnitsControllerITests {
     @MockBean
     private lateinit var getControlUnits: GetControlUnits
 
-    @Autowired
-    private lateinit var objectMapper: ObjectMapper
-
     @Test
     fun `Should get all control units`() {
         // Given
@@ -38,7 +34,7 @@ class ControlUnitsControllerITests {
             administration = "Gendarmerie nationale",
             isArchived = false,
             name = "DF 123",
-            resources = listOf(ControlResourceEntity(1, "Vedette"))
+            resources = listOf(ControlResourceEntity(1, "Vedette")),
         )
         given(this.getControlUnits.execute()).willReturn(listOf(controlUnit))
 

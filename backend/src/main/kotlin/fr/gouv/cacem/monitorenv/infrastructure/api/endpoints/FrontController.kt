@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints
 
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

@@ -3,10 +3,13 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryAreas.RegulatoryAreaEntity
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 import org.locationtech.jts.geom.MultiPolygon
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
-import jakarta.persistence.*
 
 @Entity
 @Table(name = "regulations_cacem")
@@ -51,7 +54,7 @@ data class RegulatoryAreaModel(
     @Column(name = "objet")
     var objet: String?,
     @Column(name = "signataire")
-    var signataire: String?
+    var signataire: String?,
 ) {
     fun toRegulatoryArea() = RegulatoryAreaEntity(
         id = id,
@@ -72,7 +75,7 @@ data class RegulatoryAreaModel(
         date_fin = date_fin,
         temporalite = temporalite,
         objet = objet,
-        signataire = signataire
+        signataire = signataire,
     )
 
     companion object {
@@ -95,7 +98,7 @@ data class RegulatoryAreaModel(
             date_fin = regulatoryArea.date_fin,
             temporalite = regulatoryArea.temporalite,
             objet = regulatoryArea.objet,
-            signataire = regulatoryArea.signataire
+            signataire = regulatoryArea.signataire,
         )
     }
 }

@@ -1,13 +1,21 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
-import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
-import fr.gouv.cacem.monitorenv.MeterRegistryConfiguration
-import fr.gouv.cacem.monitorenv.config.MapperConfiguration
-import fr.gouv.cacem.monitorenv.domain.entities.missions.*
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdatePublicMissionDataInput
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.any
+import fr.gouv.cacem.monitorenv.config.MapperConfiguration
+import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
+import fr.gouv.cacem.monitorenv.domain.entities.missions.ActionTargetTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.missions.EnvActionControlEntity
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.missions.VehicleTypeEnum
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionById
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissions
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.UpdateMission
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdatePublicMissionDataInput
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
@@ -21,13 +29,16 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
-@Import(WebSecurityConfig::class, MeterRegistryConfiguration::class, MapperConfiguration::class)
+@Import(WebSecurityConfig::class, MapperConfiguration::class)
 @WebMvcTest(value = [(ApiMissionsController::class)])
 class ApiMissionsControllerITests {
 
@@ -61,7 +72,7 @@ class ApiMissionsControllerITests {
         // Given
         val expectedNewMission = MissionEntity(
             id = 10,
-            missionTypes = listOf( MissionTypeEnum.LAND),
+            missionTypes = listOf(MissionTypeEnum.LAND),
             facade = "Outre-Mer",
             geom = polygon,
             observationsCnsp = null,
@@ -71,10 +82,10 @@ class ApiMissionsControllerITests {
             isDeleted = false,
             missionSource = MissionSourceEnum.MONITORFISH,
             hasMissionOrder = true,
-            isUnderJdp = true
+            isUnderJdp = true,
         )
         val newMissionRequest = CreateOrUpdatePublicMissionDataInput(
-            missionTypes = listOf( MissionTypeEnum.LAND),
+            missionTypes = listOf(MissionTypeEnum.LAND),
             observationsCnsp = null,
             facade = "Outre-Mer",
             geom = polygon,
@@ -83,7 +94,7 @@ class ApiMissionsControllerITests {
             missionSource = MissionSourceEnum.MONITORFISH,
             isClosed = false,
             hasMissionOrder = true,
-            isUnderJdp = true
+            isUnderJdp = true,
         )
         val requestBody = objectMapper.writeValueAsString(newMissionRequest)
         given(this.createMission.execute(mission = any())).willReturn(expectedNewMission)
@@ -108,7 +119,7 @@ class ApiMissionsControllerITests {
 
         val expectedFirstMission = MissionEntity(
             id = 10,
-            missionTypes = listOf( MissionTypeEnum.SEA),
+            missionTypes = listOf(MissionTypeEnum.SEA),
             facade = "Outre-Mer",
             geom = polygon,
             observationsCnsp = null,
@@ -118,7 +129,7 @@ class ApiMissionsControllerITests {
             missionSource = MissionSourceEnum.MONITORFISH,
             isClosed = false,
             hasMissionOrder = false,
-            isUnderJdp = false
+            isUnderJdp = false,
         )
         given(
             this.getMissions.execute(
@@ -129,8 +140,8 @@ class ApiMissionsControllerITests {
                 missionStatuses = any(),
                 seaFronts = any(),
                 pageNumber = any(),
-                pageSize = any()
-            )
+                pageSize = any(),
+            ),
         ).willReturn(listOf(expectedFirstMission))
 
         // When
@@ -146,13 +157,13 @@ class ApiMissionsControllerITests {
         val requestedId = 0
         val expectedFirstMission = MissionEntity(
             id = 10,
-            missionTypes = listOf( MissionTypeEnum.SEA),
+            missionTypes = listOf(MissionTypeEnum.SEA),
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isDeleted = false,
             missionSource = MissionSourceEnum.MONITORFISH,
             isClosed = false,
             hasMissionOrder = false,
-            isUnderJdp = false
+            isUnderJdp = false,
         )
         // we test only if the route is called with the right arg
         given(getMissionById.execute(requestedId)).willReturn(expectedFirstMission)
@@ -170,7 +181,7 @@ class ApiMissionsControllerITests {
         // Given
         val expectedUpdatedMission = MissionEntity(
             id = 14,
-            missionTypes = listOf( MissionTypeEnum.SEA),
+            missionTypes = listOf(MissionTypeEnum.SEA),
             observationsCacem = "updated observations",
             observationsCnsp = "updated observations",
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
@@ -178,17 +189,17 @@ class ApiMissionsControllerITests {
             isDeleted = false,
             missionSource = MissionSourceEnum.MONITORFISH,
             hasMissionOrder = true,
-            isUnderJdp = true
+            isUnderJdp = true,
         )
         val envAction = EnvActionControlEntity(
             id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
             actionTargetType = ActionTargetTypeEnum.VEHICLE,
             vehicleType = VehicleTypeEnum.VESSEL,
-            actionNumberOfControls = 4
+            actionNumberOfControls = 4,
         )
         val requestBody = CreateOrUpdatePublicMissionDataInput(
             id = 14,
-            missionTypes = listOf( MissionTypeEnum.SEA),
+            missionTypes = listOf(MissionTypeEnum.SEA),
             observationsCacem = "updated observations",
             observationsCnsp = "updated observations",
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
@@ -196,14 +207,14 @@ class ApiMissionsControllerITests {
             envActions = listOf(envAction),
             isClosed = false,
             hasMissionOrder = true,
-            isUnderJdp = true
+            isUnderJdp = true,
         )
         given(this.updateMission.execute(any())).willReturn(expectedUpdatedMission)
         // When
         mockMvc.perform(
             post("/api/v1/missions/14")
                 .content(objectMapper.writeValueAsString(requestBody))
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON),
         )
             // Then
             .andExpect(status().isOk)

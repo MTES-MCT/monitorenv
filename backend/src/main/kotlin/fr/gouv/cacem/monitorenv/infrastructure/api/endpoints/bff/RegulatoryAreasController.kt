@@ -6,12 +6,12 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAr
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.RegulatoryAreaDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.websocket.server.PathParam
 import org.n52.jackson.datatype.jts.JtsModule
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import jakarta.websocket.server.PathParam
 
 @RestController
 @RequestMapping("/bff/v1/regulatory")
@@ -19,7 +19,7 @@ import jakarta.websocket.server.PathParam
 class RegulatoryAreasController(
     private val getRegulatoryAreas: GetRegulatoryAreas,
     private val getRegulatoryAreaById: GetRegulatoryAreaById,
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
 ) {
 
     @GetMapping("")
@@ -37,7 +37,7 @@ class RegulatoryAreasController(
     fun getRegulatoryAreaByIdController(
         @PathParam("regulatoryArea id")
         @PathVariable(name = "regulatoryAreaId")
-        regulatoryAreaId: Int
+        regulatoryAreaId: Int,
     ): String {
         val regulatoryArea = getRegulatoryAreaById.execute(regulatoryAreaId = regulatoryAreaId)
         val mapper = ObjectMapper()

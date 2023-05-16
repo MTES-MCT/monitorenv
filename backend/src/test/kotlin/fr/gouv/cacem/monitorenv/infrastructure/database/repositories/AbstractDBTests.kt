@@ -27,7 +27,7 @@ abstract class AbstractDBTests {
                 withEnv("POSTGRES_USER", "postgres")
                 withEnv("POSTGRES_PASSWORD", "postgres")
                 waitingFor(
-                    Wait.forLogMessage(".*ready to accept connections.*\\s", 2)
+                    Wait.forLogMessage(".*ready to accept connections.*\\s", 2),
                 )
                 withStartupTimeout(Duration.of(60L, ChronoUnit.SECONDS))
                 this.start()

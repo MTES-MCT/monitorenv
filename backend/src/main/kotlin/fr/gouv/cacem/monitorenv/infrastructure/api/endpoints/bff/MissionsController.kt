@@ -1,16 +1,27 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionById
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMonitorEnvMissions
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.UpdateMission
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.MissionDataOutput
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSourceEnum
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.format.annotation.DateTimeFormat
-import org.springframework.web.bind.annotation.*
-import java.time.ZonedDateTime
 import jakarta.websocket.server.PathParam
+import org.springframework.format.annotation.DateTimeFormat
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
+import java.time.ZonedDateTime
 
 @RestController
 @RequestMapping("/bff/v1/missions")
@@ -20,7 +31,7 @@ class MissionsController(
     private val getMonitorEnvMissions: GetMonitorEnvMissions,
     private val getMissionById: GetMissionById,
     private val updateMission: UpdateMission,
-    private val deleteMission: DeleteMission
+    private val deleteMission: DeleteMission,
 ) {
 
     @GetMapping("")
@@ -51,7 +62,7 @@ class MissionsController(
         missionStatuses: List<String>?,
         @Parameter(description = "Facades")
         @RequestParam(name = "seaFronts", required = false)
-        seaFronts: List<String>?
+        seaFronts: List<String>?,
     ): List<MissionDataOutput> {
         val missions = getMonitorEnvMissions.execute(
             startedAfterDateTime = startedAfterDateTime,
@@ -61,7 +72,7 @@ class MissionsController(
             missionTypes = missionTypes,
             pageNumber = pageNumber,
             pageSize = pageSize,
-            seaFronts = seaFronts
+            seaFronts = seaFronts,
         )
         return missions.map { MissionDataOutput.fromMission(it) }
     }
@@ -70,7 +81,7 @@ class MissionsController(
     @Operation(summary = "Create a new mission")
     fun createMissionController(
         @RequestBody
-        createMissionDataInput: CreateOrUpdateMissionDataInput
+        createMissionDataInput: CreateOrUpdateMissionDataInput,
     ): MissionDataOutput {
         val newMission = createMissionDataInput.toMissionEntity()
         val createdMission = createMission.execute(mission = newMission)
@@ -82,7 +93,7 @@ class MissionsController(
     fun getMissionByIdController(
         @PathParam("Mission id")
         @PathVariable(name = "missionId")
-        missionId: Int
+        missionId: Int,
     ): MissionDataOutput {
         val mission = getMissionById.execute(missionId = missionId)
 
@@ -96,13 +107,13 @@ class MissionsController(
         @PathVariable(name = "missionId")
         missionId: Int,
         @RequestBody
-        updateMissionDataInput: CreateOrUpdateMissionDataInput
+        updateMissionDataInput: CreateOrUpdateMissionDataInput,
     ): MissionDataOutput {
         if ((updateMissionDataInput.id != null) && (missionId != updateMissionDataInput.id)) {
             throw java.lang.IllegalArgumentException("missionId doesn't match with request param")
         }
         return updateMission.execute(
-            mission = updateMissionDataInput.toMissionEntity()
+            mission = updateMissionDataInput.toMissionEntity(),
         ).let {
             MissionDataOutput.fromMission(it)
         }
@@ -113,7 +124,7 @@ class MissionsController(
     fun deleteOperationController(
         @PathParam("Mission Id")
         @PathVariable(name = "missionId")
-        missionId: Int
+        missionId: Int,
     ) {
         deleteMission.execute(missionId = missionId)
     }

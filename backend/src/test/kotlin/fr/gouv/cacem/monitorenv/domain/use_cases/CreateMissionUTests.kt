@@ -1,14 +1,18 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases
+package fr.gouv.cacem.monitorenv.domain.use_cases // ktlint-disable package-name
 
-import com.nhaarman.mockitokotlin2.*
-import fr.gouv.cacem.monitorenv.domain.entities.missions.*
+import com.nhaarman.mockitokotlin2.given
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateMission
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
 
@@ -25,7 +29,7 @@ class CreateMissionUTests {
     fun `should create and return a new mission`() {
         // Given
         val expectedCreatedMission = MissionEntity(
-            missionTypes = listOf( MissionTypeEnum.LAND),
+            missionTypes = listOf(MissionTypeEnum.LAND),
             facade = "Outre-Mer",
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
@@ -33,7 +37,7 @@ class CreateMissionUTests {
             isDeleted = false,
             missionSource = MissionSourceEnum.MONITORENV,
             hasMissionOrder = false,
-            isUnderJdp = false
+            isUnderJdp = false,
         )
         given(missionRepository.save(expectedCreatedMission)).willReturn(expectedCreatedMission)
 
