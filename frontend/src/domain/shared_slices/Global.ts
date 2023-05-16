@@ -26,6 +26,7 @@ type GlobalStateType = {
 
   isSearchSemaphoreVisible: boolean
   displaySemaphoresLayer: boolean
+  displaySemaphoreOverlay: boolean
 
   mapToolOpened: MapToolType | undefined
 
@@ -55,6 +56,7 @@ const initialState: GlobalStateType = {
 
   isSearchSemaphoreVisible: false,
   displaySemaphoresLayer: true,
+  displaySemaphoreOverlay: true,
 
   mapToolOpened: undefined,
 

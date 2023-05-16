@@ -72,7 +72,7 @@ export function OverlayPositionOnCentroid({
         setOverlayTopLeftMargin(getTopLeftMargin(nextOverlayPosition, margins))
         overlayRef.current.style.display = 'flex'
       } else {
-        overlayRef.current.style.display = 'none'
+        overlayRef.current.style.display = 'flex'
       }
     }
   }, [feature, overlayRef, olOverlayObjectRef, map, margins])

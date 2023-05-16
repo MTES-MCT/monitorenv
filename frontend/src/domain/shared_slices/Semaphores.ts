@@ -2,17 +2,21 @@ import { createSlice } from '@reduxjs/toolkit'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
+import type { Semaphore } from '../entities/semaphore'
+
 const persistConfig = {
   key: 'semaphores',
   storage
 }
 
 type SemaphoresState = {
-  registeredSemaphores: { label: string; value: string }[]
+  registeredSemaphores: Semaphore[]
+  selectedSemaphoreId: number | undefined
 }
 
 const INITIAL_STATE: SemaphoresState = {
-  registeredSemaphores: []
+  registeredSemaphores: [],
+  selectedSemaphoreId: undefined
 }
 
 const semaphoresSlice = createSlice({
@@ -23,11 +27,16 @@ const semaphoresSlice = createSlice({
       if (state.registeredSemaphores.length === 4) {
         state.registeredSemaphores.shift()
       }
-      state.registeredSemaphores.push(action.payload)
+      if (!state.registeredSemaphores.find(registeredSemaphore => registeredSemaphore.id === action.payload.id)) {
+        state.registeredSemaphores.push(action.payload)
+      }
+    },
+    setSelectedSemaphore(state, action) {
+      state.selectedSemaphoreId = action.payload
     }
   }
 })
 
-export const { addSemaphore } = semaphoresSlice.actions
+export const { addSemaphore, setSelectedSemaphore } = semaphoresSlice.actions
 
 export const semaphoresPersistedReducer = persistReducer(persistConfig, semaphoresSlice.reducer)

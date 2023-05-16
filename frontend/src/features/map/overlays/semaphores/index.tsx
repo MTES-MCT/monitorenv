@@ -1,0 +1,45 @@
+import { Layers } from '../../../../domain/entities/layers/constants'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { OverlayPositionOnCentroid } from '../OverlayPositionOnCentroid'
+import { SemaphoreCard } from './SemaphoreCard'
+
+import type { VectorLayerWithName } from '../../../../domain/types/layer'
+import type { MapChildrenProps } from '../../Map'
+
+export function SemaphoreOverlays({ currentFeatureOver, map }: MapChildrenProps) {
+  const { selectedSemaphoreId } = useAppSelector(state => state.semaphores)
+  const { displaySemaphoreOverlay } = useAppSelector(state => state.global)
+  const feature = map
+    ?.getLayers()
+    ?.getArray()
+    ?.find(
+      (l): l is VectorLayerWithName =>
+        Object.prototype.hasOwnProperty.call(l, 'name') && (l as VectorLayerWithName).name === Layers.SEMAPHORES.code
+    )
+    ?.getSource()
+    ?.getFeatureById(`${Layers.SEMAPHORES.code}:${selectedSemaphoreId}`)
+  const currentfeatureId = currentFeatureOver?.getId()
+  const displayHoveredFeature =
+    typeof currentfeatureId === 'string' &&
+    currentfeatureId.startsWith(Layers.SEMAPHORES.code) &&
+    currentfeatureId !== `${Layers.SEMAPHORES.code}:${selectedSemaphoreId}`
+
+  return (
+    <>
+      <OverlayPositionOnCentroid
+        appClassName="overlay-semaphore-selected"
+        feature={displaySemaphoreOverlay && feature}
+        map={map}
+      >
+        <SemaphoreCard feature={feature} />
+      </OverlayPositionOnCentroid>
+      <OverlayPositionOnCentroid
+        appClassName="overlay-semaphore-hover"
+        feature={displaySemaphoreOverlay && displayHoveredFeature && currentFeatureOver}
+        map={map}
+      >
+        <SemaphoreCard feature={currentFeatureOver} />
+      </OverlayPositionOnCentroid>
+    </>
+  )
+}
