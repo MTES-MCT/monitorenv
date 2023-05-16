@@ -1,8 +1,8 @@
 
 CREATE TABLE public.semaphores (
-    id bigint NOT NULL PRIMARY KEY,
-    geom public.geometry(Point,4326),
-    nom text,
+    id int NOT NULL PRIMARY KEY,
+    geom public.geometry(Point,4326) NOT NULL,
+    nom text NOT NULL,
     dept text,
     facade character varying(20),
     administration text,

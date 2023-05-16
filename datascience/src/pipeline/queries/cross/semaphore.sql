@@ -10,3 +10,4 @@ SELECT
   telephone,
   base
 FROM prod.semaphore
+WHERE geom IS NOT NULL and nom IS NOT NULL
