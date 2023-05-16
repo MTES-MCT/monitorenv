@@ -32,10 +32,10 @@ class JpaMissionRepository(
         return dbMissionRepository.findAllMissions(
             startedAfter = startedAfter,
             startedBefore = startedBefore,
-            missionTypes = missionTypes,
-            missionStatuses = missionStatuses,
-            missionSources = missionSourcesAsStringArray,
-            seaFronts = seaFronts,
+            missionTypes = convertToPGArray(missionTypes),
+            missionStatuses = convertToPGArray(missionStatuses),
+            missionSources = convertToPGArray(missionSourcesAsStringArray),
+            seaFronts = convertToPGArray(seaFronts),
             pageable = pageable,
         ).map { it.toMissionEntity(mapper) }
     }
@@ -61,5 +61,9 @@ class JpaMissionRepository(
     @Transactional
     override fun delete(missionId: Int) {
         dbMissionRepository.deleteMission(missionId)
+    }
+
+    private fun convertToPGArray(array: List<String>?): String {
+        return array?.joinToString(separator = ",", prefix = "{", postfix = "}")?: "{}"
     }
 }

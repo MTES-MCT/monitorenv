@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
+import org.springframework.lang.Nullable
 import java.time.Instant
 
 @DynamicUpdate
@@ -19,36 +20,36 @@ interface IDBMissionRepository : CrudRepository<MissionModel, Int> {
         FROM missions 
         WHERE
             deleted IS FALSE
-            AND start_datetime_utc >= :startedAfter
+            AND start_datetime_utc >= CAST(CAST(:startedAfter AS text) AS timestamp)
             AND (CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL OR start_datetime_utc <= CAST(CAST(:startedBefore AS text) AS timestamp))
-            AND (list_to_array(:missionTypes) IS NULL OR mission_types && list_to_array(:missionTypes))
-            AND (list_to_array(:seaFronts) IS NULL OR CAST(facade AS text) = ANY(list_to_array(:seaFronts)))
-            AND (list_to_array(:missionStatuses) IS NULL 
+            AND ((:missionTypes) = '{}' OR mission_types && CAST(:missionTypes as text[]))
+            AND ((:seaFronts) = '{}' OR CAST(facade AS text) = ANY(CAST(:seaFronts as text[])))
+            AND ((:missionStatuses) = '{}'
                 OR (
-                    'UPCOMING' = ANY(list_to_array(:missionStatuses)) AND (
+                    'UPCOMING' = ANY(CAST(:missionStatuses as text[])) AND (
                     start_datetime_utc >= now()
                     AND closed = FALSE
                     ))
                 OR ( 
-                    'PENDING' = ANY(list_to_array(:missionStatuses)) AND (
-                    (end_datetime_utc IS NULL OR end_datetime_utc >= now())
+                    'PENDING' = ANY(CAST(:missionStatuses as text[])) AND (
+                    (end_datetime_utc IS NOT NULL OR end_datetime_utc >= now())
                     AND (start_datetime_utc <= now())
                     AND closed = FALSE
                     )
                 )
                 OR ( 
-                    'ENDED' = ANY(list_to_array(:missionStatuses)) AND (
+                    'ENDED' = ANY(CAST(:missionStatuses as text[])) AND (
                     end_datetime_utc < now() 
                     AND closed = FALSE
                     )
                 )
                 OR (
-                    'CLOSED' = ANY(list_to_array(:missionStatuses)) AND (
+                    'CLOSED' = ANY(CAST(:missionStatuses as text[])) AND (
                     closed = TRUE
                     )
                 ) 
             )
-            AND (list_to_array(:missionSources) IS NULL OR CAST(mission_source AS text) = ANY(list_to_array(:missionSources)))
+            AND ((:missionSources) = '{}' OR CAST(mission_source AS text) = ANY(CAST(:missionSources as text[])))
         ORDER BY start_datetime_utc DESC
         """,
         nativeQuery = true,
@@ -56,10 +57,10 @@ interface IDBMissionRepository : CrudRepository<MissionModel, Int> {
     fun findAllMissions(
         startedAfter: Instant,
         startedBefore: Instant?,
-        missionTypes: List<String>?,
-        missionStatuses: List<String>?,
-        missionSources: List<String>?,
-        seaFronts: List<String>?,
+        missionTypes: String,
+        missionStatuses: String,
+        missionSources: String,
+        seaFronts: String,
         pageable: Pageable,
     ): List<MissionModel>
 
