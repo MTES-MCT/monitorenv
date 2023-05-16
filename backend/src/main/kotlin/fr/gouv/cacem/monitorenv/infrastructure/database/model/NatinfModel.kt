@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import fr.gouv.cacem.monitorenv.domain.entities.natinfs.NatinfEntity
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "natinfs")

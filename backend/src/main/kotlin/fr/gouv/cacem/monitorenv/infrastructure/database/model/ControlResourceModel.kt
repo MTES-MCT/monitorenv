@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
 import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlResourceEntity
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "control_resources")

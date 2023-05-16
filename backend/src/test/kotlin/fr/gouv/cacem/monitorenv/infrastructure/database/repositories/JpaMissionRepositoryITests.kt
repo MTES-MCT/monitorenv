@@ -246,7 +246,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(missions).hasSize(44)
     }
 
-     @Test
+    @Test
     @Transactional
     fun `findAllMissions Should return filtered missions when seaFront is set to MEMN`() {
         // When

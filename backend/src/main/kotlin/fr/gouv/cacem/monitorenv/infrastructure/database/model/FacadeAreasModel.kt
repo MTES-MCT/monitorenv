@@ -1,10 +1,10 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import org.locationtech.jts.geom.MultiPolygon
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 
 @Table(name = "facade_areas_subdivided")
 @Entity

@@ -1,29 +1,26 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import fr.gouv.cacem.monitorenv.MeterRegistryConfiguration
+import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryAreas.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreas
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.context.annotation.Import
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.context.annotation.Import
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@Import(MeterRegistryConfiguration::class)
-@ExtendWith(SpringExtension::class)
+@Import(WebSecurityConfig::class)
 @WebMvcTest(value = [(RegulatoryAreasController::class)])
 class RegulatoryAreasControllerITests {
 

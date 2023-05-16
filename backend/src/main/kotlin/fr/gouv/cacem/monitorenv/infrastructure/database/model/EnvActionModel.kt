@@ -8,33 +8,23 @@ import com.vladmihalcea.hibernate.type.json.JsonBinaryType
 import fr.gouv.cacem.monitorenv.domain.entities.missions.*
 import fr.gouv.cacem.monitorenv.domain.mappers.EnvActionMapper
 import org.hibernate.Hibernate
-import org.hibernate.annotations.NaturalId
 import org.hibernate.annotations.Type
-import org.hibernate.annotations.TypeDef
-import org.hibernate.annotations.TypeDefs
 import org.locationtech.jts.geom.Geometry
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
 import java.time.Instant
 import java.time.ZoneOffset.UTC
 import java.util.*
-import javax.persistence.*
+import jakarta.persistence.*
 
 @JsonIdentityInfo(
     generator = ObjectIdGenerators.PropertyGenerator::class,
     property = "id"
 )
 @Entity
-@TypeDefs(
-    TypeDef(
-        name = "jsonb",
-        typeClass = JsonBinaryType::class
-    )
-)
 @Table(name = "env_actions")
 data class EnvActionModel(
     @Id
-    @NaturalId
     @Column(name = "id")
     var id: UUID,
 
@@ -50,7 +40,7 @@ data class EnvActionModel(
     @Enumerated(EnumType.STRING)
     var actionType: ActionTypeEnum,
 
-    @Type(type = "jsonb")
+    @Type(JsonBinaryType::class)
     @Column(name = "value", columnDefinition = "jsonb")
     var value: String,
 

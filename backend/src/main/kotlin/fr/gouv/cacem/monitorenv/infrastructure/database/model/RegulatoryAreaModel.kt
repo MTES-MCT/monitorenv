@@ -6,7 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.regulatoryAreas.RegulatoryAreaEn
 import org.locationtech.jts.geom.MultiPolygon
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "regulations_cacem")

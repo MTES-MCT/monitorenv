@@ -1,15 +1,15 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.nhaarman.mockitokotlin2.any
+import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.MeterRegistryConfiguration
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.domain.entities.missions.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdatePublicMissionDataInput
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.nhaarman.mockitokotlin2.any
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.mockito.BDDMockito.given
@@ -20,7 +20,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
@@ -28,8 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.time.ZonedDateTime
 import java.util.*
 
-@Import(MeterRegistryConfiguration::class, MapperConfiguration::class)
-@ExtendWith(SpringExtension::class)
+@Import(WebSecurityConfig::class, MeterRegistryConfiguration::class, MapperConfiguration::class)
 @WebMvcTest(value = [(ApiMissionsController::class)])
 class ApiMissionsControllerITests {
 
