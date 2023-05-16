@@ -20,11 +20,12 @@ from src.pipeline.flows import (
     infractions,
     refresh_materialized_view,
     regulations,
+    semaphores
 )
 
 ################################ Define flow schedules ################################
 
-infractions.flow.schedule = CronSchedule("2 8 * * *")
+infractions.flow.schedule = CronSchedule("2 8,14 * * *")
 
 refresh_materialized_view.flow.schedule = Schedule(
     clocks=[
@@ -36,7 +37,10 @@ refresh_materialized_view.flow.schedule = Schedule(
         ),
     ]
 )
+
 regulations.flow.schedule = CronSchedule("6,16,26,36,46,56 * * * *")
+
+semaphores.flow.schedule = CronSchedule("3 5,15 * * *")
 
 ###################### List flows to register with prefect server #####################
 flows_to_register = [
@@ -47,6 +51,7 @@ flows_to_register = [
     historic_control_units.flow,
     regulations.flow,
     refresh_materialized_view.flow,
+    semaphores.flow,
     infractions.flow,
 ]
 
