@@ -2,7 +2,6 @@
 import { getCenter } from 'ol/extent'
 import Overlay from 'ol/Overlay'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-// import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
@@ -72,7 +71,7 @@ export function OverlayPositionOnCentroid({
         setOverlayTopLeftMargin(getTopLeftMargin(nextOverlayPosition, margins))
         overlayRef.current.style.display = 'flex'
       } else {
-        overlayRef.current.style.display = 'flex'
+        overlayRef.current.style.display = 'none'
       }
     }
   }, [feature, overlayRef, olOverlayObjectRef, map, margins])
