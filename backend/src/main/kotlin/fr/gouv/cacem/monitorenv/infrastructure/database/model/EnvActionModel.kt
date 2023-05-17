@@ -20,7 +20,9 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import org.hibernate.Hibernate
+import org.hibernate.annotations.JdbcType
 import org.hibernate.annotations.Type
+import org.hibernate.type.descriptor.jdbc.UUIDJdbcType
 import org.locationtech.jts.geom.Geometry
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
@@ -36,7 +38,8 @@ import java.util.UUID
 @Table(name = "env_actions")
 data class EnvActionModel(
     @Id
-    @Column(name = "id")
+    @JdbcType(UUIDJdbcType::class)
+    @Column(name = "id", nullable = false, updatable = false, columnDefinition = "uuid")
     var id: UUID,
 
     @Column(name = "action_start_datetime_utc")
