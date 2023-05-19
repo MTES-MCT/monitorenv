@@ -35,8 +35,7 @@ export type Place = google.maps.places.QueryAutocompletePrediction & {
 
 type Options = {
   label: string
-  placeId: string
-  value: Number
+  value: number
 }
 
 export const useGooglePlacesAPI = search => {
@@ -70,7 +69,7 @@ export const useGooglePlacesAPI = search => {
             setResults(
               predictions
                 .filter((p): p is Place => !!p.description && !!p.place_id)
-                .map((p, i) => ({ label: p.description, placeId: p.place_id, value: i }))
+                .map(p => ({ label: p.description, value: p.place_id }))
             )
           }
 

@@ -1,13 +1,16 @@
 import { Accent, Icon, Search } from '@mtes-mct/monitor-ui'
+import { GeoJSON } from 'ol/format'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { useGooglePlacesAPI } from '../../../api/googlePlacesAPI/googlePlacesAPI'
+import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
 import { setDisplayedItems } from '../../../domain/shared_slices/Global'
-import { addSemaphore } from '../../../domain/shared_slices/Semaphores'
+import { setFitToExtent } from '../../../domain/shared_slices/Map'
+import { addSemaphore, setSelectedSemaphore } from '../../../domain/shared_slices/Semaphores'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
+import * as mocks from './semaphores.json'
 
 export function SearchSemaphores() {
   const dispatch = useDispatch()
@@ -15,7 +18,7 @@ export function SearchSemaphores() {
   const { registeredSemaphores } = useAppSelector(state => state.semaphores)
 
   const [isRegisteredSemaphoresVisible, setIsRegisteredSemaphoresVisible] = useState(registeredSemaphores.length > 0)
-  const [searchedSemaphores, setSearchedSemaphores] = useState<string | undefined>('')
+  const [searchedSemaphores, setSearchedSemaphores] = useState<string | undefined>()
 
   const setSemaphoreVisibilityOnMap = () => {
     dispatch(setDisplayedItems({ displaySemaphoresLayer: !displaySemaphoresLayer, missionsMenuIsOpen: false }))
@@ -24,25 +27,36 @@ export function SearchSemaphores() {
     dispatch(setDisplayedItems({ isSearchSemaphoreVisible: false }))
   }
 
-  const results = useGooglePlacesAPI(searchedSemaphores)
-  const options = results.map(r => ({ label: r.label, value: r.label })) as any
+  const results = mocks.semaphores.filter(semaphore => semaphore.unite.search(searchedSemaphores || '') !== -1)
+  const options = results.map(result => ({ key: result.id, label: result.unite || result.nom, value: result })) as any
 
   const handleQuerySemaphore = value => {
     setIsRegisteredSemaphoresVisible(false)
     setSearchedSemaphores(value)
   }
-  const handleSelectSemaphore = async semaphore => {
-    if (semaphore) {
-      dispatch(
-        addSemaphore({
-          label: semaphore,
-          value: semaphore
-        })
-      )
+
+  const handleSelectSemaphore = selectedSemaphore => {
+    if (selectedSemaphore) {
+      dispatch(addSemaphore(selectedSemaphore))
+      dispatch(setSelectedSemaphore(selectedSemaphore.id))
+      zoomOnSempahore(selectedSemaphore.geom)
     }
   }
 
-  const selectRegiteredSemaphore = () => {}
+  const selectRegiteredSemaphore = selectedRegisteredSemaphore => {
+    setIsRegisteredSemaphoresVisible(false)
+    dispatch(setSelectedSemaphore(selectedRegisteredSemaphore.id))
+    zoomOnSempahore(selectedRegisteredSemaphore.geom)
+  }
+
+  const zoomOnSempahore = geom => {
+    const feature = new GeoJSON({
+      featureProjection: OPENLAYERS_PROJECTION
+    }).readFeature(geom)
+
+    const extent = feature?.getGeometry()?.getExtent()
+    dispatch(setFitToExtent(extent))
+  }
 
   return (
     <MenuWithCloseButton.Container>
@@ -66,6 +80,7 @@ export function SearchSemaphores() {
           onChange={handleSelectSemaphore}
           onQuery={handleQuerySemaphore}
           options={options}
+          optionValueKey="unite"
           placeholder="Rechercher un sémaphore"
         />
 
@@ -73,8 +88,8 @@ export function SearchSemaphores() {
           <StyledRegisteredSemaphoreList>
             <StyledHistoricTitle>Historique de recherche</StyledHistoricTitle>
             {registeredSemaphores.map(semaphore => (
-              <StyledRegisteredSemaphore onClick={selectRegiteredSemaphore}>
-                {semaphore.label}
+              <StyledRegisteredSemaphore key={semaphore.id} onClick={() => selectRegiteredSemaphore(semaphore)}>
+                {semaphore.unite || semaphore.nom}
               </StyledRegisteredSemaphore>
             ))}
           </StyledRegisteredSemaphoreList>

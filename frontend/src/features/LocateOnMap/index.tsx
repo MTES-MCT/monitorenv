@@ -14,11 +14,10 @@ export function LocateOnMap() {
   const results = useGooglePlacesAPI(searchedLocation)
 
   const handleSelectLocation = async placeId => {
-    const originalResult = results.find(r => r.value === placeId)
-    if (!originalResult) {
+    if (!placeId) {
       return
     }
-    const boundingBox = await getPlaceCoordinates(originalResult?.placeId)
+    const boundingBox = await getPlaceCoordinates(placeId)
     if (boundingBox) {
       dispatch(setFitToExtent(transformExtent(boundingBox, WSG84_PROJECTION, OPENLAYERS_PROJECTION)))
     }
@@ -33,8 +32,8 @@ export function LocateOnMap() {
         isSearchIconVisible={false}
         label="Rechercher un lieu"
         name="search-place"
-        onChange={placeId => handleSelectLocation(placeId)}
-        onQuery={value => setSearchedLocation(value)}
+        onChange={handleSelectLocation}
+        onQuery={setSearchedLocation}
         options={results}
         placeholder="rechercher un lieu (port, lieu-dit, baie...)"
       />

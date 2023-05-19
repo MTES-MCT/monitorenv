@@ -31,12 +31,15 @@ const semaphoresSlice = createSlice({
         state.registeredSemaphores.push(action.payload)
       }
     },
+    resetSelectedSemaphore(state) {
+      state.selectedSemaphoreId = undefined
+    },
     setSelectedSemaphore(state, action) {
       state.selectedSemaphoreId = action.payload
     }
   }
 })
 
-export const { addSemaphore, setSelectedSemaphore } = semaphoresSlice.actions
+export const { addSemaphore, resetSelectedSemaphore, setSelectedSemaphore } = semaphoresSlice.actions
 
 export const semaphoresPersistedReducer = persistReducer(persistConfig, semaphoresSlice.reducer)
