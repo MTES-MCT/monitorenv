@@ -45,7 +45,3 @@ SET action_end_datetime_utc = CASE
 END
 FROM missions
 WHERE missions.id = env_actions.mission_id AND env_actions.action_type = 'SURVEILLANCE';
-
-
-UPDATE public.env_actions
-    SET value = value - 'duration';
