@@ -14,6 +14,7 @@ type MissionFormBottomBarProps = {
   allowEdit: boolean
   closeMission: MouseEventHandler<HTMLButtonElement>
   deleteMission: MouseEventHandler<HTMLButtonElement>
+  isFromMonitorFish: boolean
   quitFormEditing: MouseEventHandler<HTMLButtonElement>
   reopenMission: MouseEventHandler<HTMLButtonElement>
   saveMission: MouseEventHandler<HTMLButtonElement>
@@ -24,6 +25,7 @@ export function MissionFormBottomBar({
   allowEdit,
   closeMission,
   deleteMission,
+  isFromMonitorFish,
   quitFormEditing,
   reopenMission,
   saveMission
@@ -51,6 +53,7 @@ export function MissionFormBottomBar({
           <StyledButton
             accent={Accent.SECONDARY}
             data-cy="delete-mission"
+            disabled={isFromMonitorFish}
             Icon={Icon.Delete}
             onClick={deleteMission}
             type="button"
@@ -118,7 +121,9 @@ const FormActionsWrapper = styled.div`
   gap: 16px;
 `
 const StyledButton = styled(Button)`
-  svg {
-    color: ${COLORS.maximumRed};
+  :not([disabled]) {
+    svg {
+      color: ${COLORS.maximumRed};
+    }
   }
 `

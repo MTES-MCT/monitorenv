@@ -161,6 +161,7 @@ export function MissionForm({ formValues, id, mission }) {
               allowEdit={allowEditMission}
               closeMission={handleCloseMission}
               deleteMission={handleDeleteMission}
+              isFromMonitorFish={mission?.missionSource === MissionSourceEnum.MONITORFISH}
               quitFormEditing={handleConfirmFormCancelation}
               reopenMission={handleReopenMission}
               saveMission={handleSaveMission}
