@@ -4,10 +4,11 @@ import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { Layers } from '../../../../domain/entities/layers/constants'
+import { setOverlayPosition } from '../../../../domain/shared_slices/Semaphores'
 import { selectSemaphoreOnMap } from '../../../../domain/use_cases/semaphores/selectSemaphoreOnMap'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import * as mocks from '../../../Semaphores/SemaphoresOnMap/semaphores.json'
-import { semaphoreStyle } from './semaphores.style'
+import { semaphoreStyles } from './semaphores.style'
 import { getSemaphoreZoneFeature } from './semaphoresGeometryHelpers'
 
 import type { MapChildrenProps } from '../../Map'
@@ -16,6 +17,7 @@ import type { Geometry } from 'ol/geom'
 export function SemaphoresLayer({ map, mapClickEvent }: MapChildrenProps) {
   const dispatch = useDispatch()
   const { displaySemaphoresLayer } = useAppSelector(state => state.global)
+  const { overlayPosition, selectedSemaphoreId } = useAppSelector(state => state.semaphores)
 
   const semaphoresPoint = useMemo(
     () => mocks.semaphores?.filter(f => !!f.geom).map(f => getSemaphoreZoneFeature(f, Layers.SEMAPHORES.code)),
@@ -35,7 +37,7 @@ export function SemaphoresLayer({ map, mapClickEvent }: MapChildrenProps) {
       vectorLayerRef.current = new VectorLayer({
         renderBuffer: 7,
         source: GetVectorSource(),
-        style: semaphoreStyle,
+        style: semaphoreStyles,
         updateWhileAnimating: true,
         updateWhileInteracting: true,
         zIndex: Layers.SEMAPHORES.zIndex
@@ -45,6 +47,16 @@ export function SemaphoresLayer({ map, mapClickEvent }: MapChildrenProps) {
 
     return vectorLayerRef.current
   }, [])
+
+  useEffect(() => {
+    GetVectorSource().forEachFeature(feature => {
+      const selectedSemaphore = `${Layers.SEMAPHORES.code}:${selectedSemaphoreId}`
+      feature.setProperties({
+        isSelected: feature.getId() === selectedSemaphore,
+        overlayPosition: feature.getId() === selectedSemaphore ? overlayPosition : undefined
+      })
+    })
+  }, [overlayPosition, selectedSemaphoreId])
 
   useEffect(() => {
     if (map) {
@@ -73,6 +85,7 @@ export function SemaphoresLayer({ map, mapClickEvent }: MapChildrenProps) {
       if (feature.getId()?.toString()?.includes(Layers.SEMAPHORES.code)) {
         const { id } = feature.getProperties()
         dispatch(selectSemaphoreOnMap(id))
+        dispatch(setOverlayPosition(undefined))
       }
     }
   }, [dispatch, mapClickEvent])

@@ -28,7 +28,7 @@ export function SemaphoreOverlay({ currentFeatureOver, map }: MapChildrenProps) 
     <>
       <OverlayPositionOnCentroid
         appClassName="overlay-semaphore-selected"
-        feature={displaySemaphoreOverlay && feature}
+        feature={displaySemaphoreOverlay ? feature : undefined}
         featureIsShowed
         map={map}
       >
@@ -36,7 +36,7 @@ export function SemaphoreOverlay({ currentFeatureOver, map }: MapChildrenProps) 
       </OverlayPositionOnCentroid>
       <OverlayPositionOnCentroid
         appClassName="overlay-semaphore-hover"
-        feature={displaySemaphoreOverlay && displayHoveredFeature && currentFeatureOver}
+        feature={displaySemaphoreOverlay && displayHoveredFeature ? currentFeatureOver : undefined}
         map={map}
       >
         <SemaphoreCard feature={currentFeatureOver} />

@@ -214,7 +214,7 @@ export function getTopLeftMarginForFeature(nextOverlayPosition, margins, extent,
     case OverlayPosition.TOP_RIGHT:
       return [marginHeight - top - boxSize.height, marginWidth - right]
     case OverlayPosition.BOTTOM_LEFT:
-      return [bottom, marginWidth - left - boxSize.widthh]
+      return [bottom, marginWidth - left - boxSize.width]
     case OverlayPosition.BOTTOM_RIGHT:
       return [bottom, marginWidth - right]
     case OverlayPosition.TOP:

@@ -5,18 +5,21 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
+import { setOverlayPosition } from '../../../domain/shared_slices/Semaphores'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
 import { getOverlayPositionForCentroid, getTopLeftMargin } from './position'
 
 const OVERLAY_HEIGHT = 74
-export const initialOffsetValue = [-10, 10]
+
+const INITIAL_OFFSET_VALUE = [-90, 10]
 const defaultMargins = {
-  xLeft: 20,
-  xMiddle: -116,
-  xRight: -252,
-  yBottom: -123,
-  yMiddle: -64,
-  yTop: 10
+  xLeft: 30,
+  xMiddle: -155,
+  xRight: -340,
+  yBottom: -155,
+  yMiddle: -60,
+  yTop: 20
 }
 
 export function OverlayPositionOnCentroid({
@@ -27,12 +30,15 @@ export function OverlayPositionOnCentroid({
   options: { margins = defaultMargins } = {},
   featureIsShowed = false
 }) {
+  const dispatch = useAppDispatch()
   const overlayRef = useRef(null)
   const olOverlayObjectRef = useRef(null)
+  const isThrottled = useRef(false)
   const [showed, setShowed] = useState(false)
+  const currentCoordinates = useRef([])
 
   const [overlayTopLeftMargin, setOverlayTopLeftMargin] = useState([margins.yBottom, margins.xMiddle])
-  const currentOffset = useRef(initialOffsetValue)
+  const currentOffset = useRef(INITIAL_OFFSET_VALUE)
 
   const overlayCallback = useCallback(
     ref => {
@@ -40,7 +46,8 @@ export function OverlayPositionOnCentroid({
       if (ref) {
         olOverlayObjectRef.current = new Overlay({
           className: `ol-overlay-container ol-selectable ${appClassName}`,
-          element: ref
+          element: ref,
+          offset: currentOffset.current
         })
       } else {
         olOverlayObjectRef.current = null
@@ -49,6 +56,17 @@ export function OverlayPositionOnCentroid({
     [overlayRef, olOverlayObjectRef, appClassName]
   )
 
+  useEffect(() => {
+    if (olOverlayObjectRef.current) {
+      currentOffset.current = INITIAL_OFFSET_VALUE
+      olOverlayObjectRef.current.setOffset(INITIAL_OFFSET_VALUE)
+    }
+    if (feature) {
+      currentCoordinates.current = feature?.getGeometry()?.getCoordinates()
+    } else {
+      currentCoordinates.current = undefined
+    }
+  }, [feature])
   useEffect(() => {
     if (map) {
       map.addOverlay(olOverlayObjectRef.current)
@@ -62,7 +80,31 @@ export function OverlayPositionOnCentroid({
     }
   }, [map, olOverlayObjectRef, featureIsShowed])
 
-  useMoveOverlayWhenDragging(olOverlayObjectRef.current, map, currentOffset, () => {}, showed)
+  const moveCardWithThrottle = useCallback(
+    (target, delay) => {
+      if (isThrottled.current) {
+        return
+      }
+
+      isThrottled.current = true
+      setTimeout(() => {
+        if (currentCoordinates.current) {
+          const offset = target.getOffset()
+          const pixel = map.getPixelFromCoordinate(currentCoordinates.current)
+
+          const { width } = target.getElement().getBoundingClientRect()
+          const nextXPixelCenter = pixel[0] + offset[0] - 50 + width / 2
+          const nextYPixelCenter = pixel[1] + offset[1] - 120
+
+          const nextCoordinates = map.getCoordinateFromPixel([nextXPixelCenter, nextYPixelCenter])
+          dispatch(setOverlayPosition(nextCoordinates))
+
+          isThrottled.current = false
+        }
+      }, delay)
+    },
+    [dispatch, map]
+  )
 
   useEffect(() => {
     function getNextOverlayPosition(featureCenter) {
@@ -84,7 +126,9 @@ export function OverlayPositionOnCentroid({
         overlayRef.current.style.display = 'none'
       }
     }
-  }, [feature, overlayRef, olOverlayObjectRef, map, margins])
+  }, [dispatch, feature, overlayRef, olOverlayObjectRef, map, margins])
+
+  useMoveOverlayWhenDragging(olOverlayObjectRef.current, map, currentOffset, moveCardWithThrottle, showed)
 
   return (
     <OverlayComponent ref={overlayCallback} overlayTopLeftMargin={overlayTopLeftMargin}>
