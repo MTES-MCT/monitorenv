@@ -21,8 +21,7 @@ export function SemaphoresOnMap() {
       <MenuWithCloseButton.ButtonOnMap
         className={isSearchSemaphoreVisible ? '_active' : undefined}
         data-cy="semaphores-button"
-        // TODO change Icon with Semaphore Icon
-        Icon={Icon.Vms}
+        Icon={Icon.Semaphore}
         onClick={openOrCloseSearchSemaphore}
         size={Size.LARGE}
         title="Chercher un sémpahore"

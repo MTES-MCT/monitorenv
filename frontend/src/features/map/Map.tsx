@@ -12,12 +12,12 @@ import { MissionsLayer } from './layers/MissionsLayer'
 import { RegulatoryLayers } from './layers/RegulatoryLayers'
 import { RegulatoryPreviewLayer } from './layers/RegulatoryPreviewLayer'
 import { SelectedMissionLayer } from './layers/SelectedMissionLayer'
-import { SemaphoresLayer } from './layers/Semaphores/SemaphoresLayer'
+import { SemaphoresLayer } from './layers/Semaphores'
 import { MapExtentController } from './MapExtentController'
 import { MapHistory } from './MapHistory'
 import { ActionOverlay } from './overlays/actions/ActionOverlay'
 import { MissionOverlays } from './overlays/missions/MissionOverlays'
-import { SemaphoreOverlays } from './overlays/semaphores'
+import { SemaphoreOverlay } from './overlays/semaphores'
 import { ShowRegulatoryMetadata } from './ShowRegulatoryMetadata'
 
 import type { MapClickEvent } from '../../types'
@@ -53,7 +53,7 @@ export function Map() {
       <MissionOverlays />
       <ActionOverlay />
       <SemaphoresLayer />
-      <SemaphoreOverlays />
+      <SemaphoreOverlay />
     </BaseMap>
   )
 }

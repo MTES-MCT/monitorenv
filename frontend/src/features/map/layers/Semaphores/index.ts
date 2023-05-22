@@ -7,7 +7,7 @@ import { Layers } from '../../../../domain/entities/layers/constants'
 import { selectSemaphoreOnMap } from '../../../../domain/use_cases/semaphores/selectSemaphoreOnMap'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import * as mocks from '../../../Semaphores/SemaphoresOnMap/semaphores.json'
-import { sempahoreWithCentroidStyleFactory } from './semaphores.style'
+import { semaphoreStyle } from './semaphores.style'
 import { getSemaphoreZoneFeature } from './semaphoresGeometryHelpers'
 
 import type { MapChildrenProps } from '../../Map'
@@ -17,7 +17,7 @@ export function SemaphoresLayer({ map, mapClickEvent }: MapChildrenProps) {
   const dispatch = useDispatch()
   const { displaySemaphoresLayer } = useAppSelector(state => state.global)
 
-  const semaphoresMultiPolygons = useMemo(
+  const semaphoresPoint = useMemo(
     () => mocks.semaphores?.filter(f => !!f.geom).map(f => getSemaphoreZoneFeature(f, Layers.SEMAPHORES.code)),
     []
   )
@@ -35,7 +35,7 @@ export function SemaphoresLayer({ map, mapClickEvent }: MapChildrenProps) {
       vectorLayerRef.current = new VectorLayer({
         renderBuffer: 7,
         source: GetVectorSource(),
-        style: sempahoreWithCentroidStyleFactory,
+        style: semaphoreStyle,
         updateWhileAnimating: true,
         updateWhileInteracting: true,
         zIndex: Layers.SEMAPHORES.zIndex
@@ -58,10 +58,10 @@ export function SemaphoresLayer({ map, mapClickEvent }: MapChildrenProps) {
 
   useEffect(() => {
     GetVectorSource()?.clear(true)
-    if (semaphoresMultiPolygons) {
-      GetVectorSource()?.addFeatures(semaphoresMultiPolygons)
+    if (semaphoresPoint) {
+      GetVectorSource()?.addFeatures(semaphoresPoint)
     }
-  }, [semaphoresMultiPolygons])
+  }, [semaphoresPoint])
 
   useEffect(() => {
     GetVectorLayer()?.setVisible(displaySemaphoresLayer)

@@ -47,7 +47,7 @@ export function InterestPointMapButton() {
     <Wrapper ref={wrapperRef}>
       <MapToolButton
         dataCy="interest-point"
-        icon={Icon.Pinpoint}
+        icon={Icon.Landmark}
         isHidden={!displayInterestPoint}
         isOpen={isOpen}
         onClick={openOrCloseInterestPoint}

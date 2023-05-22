@@ -5,15 +5,16 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
+import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
 import { getOverlayPositionForCentroid, getTopLeftMargin } from './position'
 
 const OVERLAY_HEIGHT = 74
-
+export const initialOffsetValue = [-10, 10]
 const defaultMargins = {
   xLeft: 20,
   xMiddle: -116,
   xRight: -252,
-  yBottom: -153,
+  yBottom: -123,
   yMiddle: -64,
   yTop: 10
 }
@@ -23,11 +24,15 @@ export function OverlayPositionOnCentroid({
   feature,
   appClassName,
   children,
-  options: { margins = defaultMargins } = {}
+  options: { margins = defaultMargins } = {},
+  featureIsShowed = false
 }) {
   const overlayRef = useRef(null)
   const olOverlayObjectRef = useRef(null)
+  const [showed, setShowed] = useState(false)
+
   const [overlayTopLeftMargin, setOverlayTopLeftMargin] = useState([margins.yBottom, margins.xMiddle])
+  const currentOffset = useRef(initialOffsetValue)
 
   const overlayCallback = useCallback(
     ref => {
@@ -47,12 +52,17 @@ export function OverlayPositionOnCentroid({
   useEffect(() => {
     if (map) {
       map.addOverlay(olOverlayObjectRef.current)
+      if (featureIsShowed) {
+        setShowed(true)
+      }
     }
 
     return () => {
       map.removeOverlay(olOverlayObjectRef.current)
     }
-  }, [map, olOverlayObjectRef])
+  }, [map, olOverlayObjectRef, featureIsShowed])
+
+  useMoveOverlayWhenDragging(olOverlayObjectRef.current, map, currentOffset, () => {}, showed)
 
   useEffect(() => {
     function getNextOverlayPosition(featureCenter) {

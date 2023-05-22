@@ -6,7 +6,7 @@ import { SemaphoreCard } from './SemaphoreCard'
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { MapChildrenProps } from '../../Map'
 
-export function SemaphoreOverlays({ currentFeatureOver, map }: MapChildrenProps) {
+export function SemaphoreOverlay({ currentFeatureOver, map }: MapChildrenProps) {
   const { selectedSemaphoreId } = useAppSelector(state => state.semaphores)
   const { displaySemaphoreOverlay } = useAppSelector(state => state.global)
   const feature = map
@@ -29,9 +29,10 @@ export function SemaphoreOverlays({ currentFeatureOver, map }: MapChildrenProps)
       <OverlayPositionOnCentroid
         appClassName="overlay-semaphore-selected"
         feature={displaySemaphoreOverlay && feature}
+        featureIsShowed
         map={map}
       >
-        <SemaphoreCard feature={feature} />
+        <SemaphoreCard feature={feature} selected />
       </OverlayPositionOnCentroid>
       <OverlayPositionOnCentroid
         appClassName="overlay-semaphore-hover"

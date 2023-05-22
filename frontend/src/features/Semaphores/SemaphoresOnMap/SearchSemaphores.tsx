@@ -14,6 +14,7 @@ import * as mocks from './semaphores.json'
 
 export function SearchSemaphores() {
   const dispatch = useDispatch()
+
   const { displaySemaphoresLayer } = useAppSelector(state => state.global)
   const { registeredSemaphores } = useAppSelector(state => state.semaphores)
 
@@ -28,7 +29,7 @@ export function SearchSemaphores() {
   }
 
   const results = mocks.semaphores.filter(semaphore => semaphore.unite.search(searchedSemaphores || '') !== -1)
-  const options = results.map(result => ({ key: result.id, label: result.unite || result.nom, value: result })) as any
+  const options = results.map(result => ({ key: result.id, label: result.unite || result.nom, value: result }))
 
   const handleQuerySemaphore = value => {
     setIsRegisteredSemaphoresVisible(false)

@@ -1,0 +1,64 @@
+{
+  "semaphores": [
+    {
+      "id": 21,
+      "geom": { "type": "Point", "coordinates": [-3.621389, 47.745000000000005] },
+      "nom": "SEMAPHORE LE TOULINGUET",
+      "dept": "29",
+      "facade": "NAMO",
+      "administration": "NULL",
+      "unite": "Sémaphore Le Toulinguet",
+      "email": "",
+      "telephone": "",
+      "base": ""
+    },
+    {
+      "id": 22,
+      "geom": { "type": "Point", "coordinates": [0.953889, 51.23777799999999] },
+      "nom": "SEMAPHORE PLOUMANAC''H",
+      "dept": "22",
+      "facade": "NAMO",
+      "administration": "FOSIT",
+      "unite": "Sémaphore de Ploumanac’h",
+      "email": "sema@sema.gouv.fr'",
+      "telephone": "01 23 45 67 89",
+      "base": "Ploumana’ch'"
+    },
+    {
+      "id": 23,
+      "geom": { "type": "Point", "coordinates": [-4.961111, 48.527221999999995] },
+      "nom": "SEMAPHORE SAINT CAST",
+      "dept": "22",
+      "facade": "NAMO",
+      "administration": "FOSIT",
+      "unite": "Sémaphore de Saint-Cast",
+      "email": "semaphore-sema@sema.gouv.fr",
+      "telephone": "01 23 45 67 89",
+      "base": "Saint-Cast-le-Guildo"
+    },
+    {
+      "id": 24,
+      "geom": { "type": "Point", "coordinates": [-2.637082732781131, 48.17060426754588] },
+      "nom": "SEMAPHORE SAINT MATHIEU",
+      "dept": "29",
+      "facade": "NAMO",
+      "administration": "FOSIT",
+      "unite": "Sémaphore de Saint-Mathieu",
+      "email": "semaphore-sema@sema.gouv.fr",
+      "telephone": "01 23 45 67 89",
+      "base": "Plougonvelin"
+    },
+    {
+      "id": 25,
+      "geom": { "type": "Point", "coordinates": [-218124.30831793512, 5876801.514049967] },
+      "nom": "SEMAPHORE ST QUAY PORTRIEUX",
+      "dept": "22",
+      "facade": "NAMO",
+      "administration": "FOSIT",
+      "unite": "Sémaphore de Saint-Quay",
+      "email": "sema@sema.gouv.fr",
+      "telephone": "01 23 45 67 89",
+      "base": "Saint-Quay-Portieux"
+    }
+  ]
+}

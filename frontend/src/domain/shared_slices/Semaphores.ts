@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage'
 import type { Semaphore } from '../entities/semaphore'
 
 const persistConfig = {
+  blacklist: ['selectedSemaphoreId'],
   key: 'semaphores',
   storage
 }
