@@ -9,7 +9,7 @@ context('Missions', () => {
     cy.intercept('GET', `/bff/v1/control_units`).as('getControlUnits')
     cy.wait('@getControlUnits').then(({ response }) => {
       expect(response && response.statusCode).to.equal(200)
-      const archivedControlUnit = response.body.find(controlUnit => controlUnit.name === 'BGC Ajaccio')
+      const archivedControlUnit = response && response.body.find(controlUnit => controlUnit.name === 'BGC Ajaccio')
       expect(archivedControlUnit.isArchived).equals(true)
     })
     cy.get('*[data-cy="select-units-filter"]').click({ force: true })

@@ -251,4 +251,18 @@ context('Missions', () => {
     })
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('9')
   })
+
+  it('A mission from monitorFish cannot be deleted', () => {
+    // Given
+    cy.wait(200)
+
+    cy.get('*[data-cy="select-period-filter"]').click()
+    cy.get('div[data-key="MONTH"]').click()
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('11')
+
+    cy.get('*[data-cy="edit-mission"]').eq(9).click({ force: true })
+
+    // Then
+    cy.get('*[data-cy="delete-mission"]').should('be.disabled')
+  })
 })
