@@ -1,41 +1,45 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.annotation.*
+import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonIdentityInfo
+import com.fasterxml.jackson.annotation.ObjectIdGenerators
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType
-import fr.gouv.cacem.monitorenv.domain.entities.missions.*
+import fr.gouv.cacem.monitorenv.domain.entities.missions.ActionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.missions.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.mappers.EnvActionMapper
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
 import org.hibernate.Hibernate
-import org.hibernate.annotations.NaturalId
+import org.hibernate.annotations.JdbcType
 import org.hibernate.annotations.Type
-import org.hibernate.annotations.TypeDef
-import org.hibernate.annotations.TypeDefs
+import org.hibernate.type.descriptor.jdbc.UUIDJdbcType
 import org.locationtech.jts.geom.Geometry
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
 import java.time.Instant
 import java.time.ZoneOffset.UTC
-import java.util.*
-import javax.persistence.*
+import java.util.UUID
 
 @JsonIdentityInfo(
     generator = ObjectIdGenerators.PropertyGenerator::class,
-    property = "id"
+    property = "id",
 )
 @Entity
-@TypeDefs(
-    TypeDef(
-        name = "jsonb",
-        typeClass = JsonBinaryType::class
-    )
-)
 @Table(name = "env_actions")
 data class EnvActionModel(
     @Id
-    @NaturalId
-    @Column(name = "id")
+    @JdbcType(UUIDJdbcType::class)
+    @Column(name = "id", nullable = false, updatable = false, columnDefinition = "uuid")
     var id: UUID,
 
     @Column(name = "action_start_datetime_utc")
@@ -50,14 +54,14 @@ data class EnvActionModel(
     @Enumerated(EnumType.STRING)
     var actionType: ActionTypeEnum,
 
-    @Type(type = "jsonb")
+    @Type(JsonBinaryType::class)
     @Column(name = "value", columnDefinition = "jsonb")
     var value: String,
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "mission_id")
     @JsonBackReference
-    var mission: MissionModel
+    var mission: MissionModel,
 ) {
 
     fun toActionEntity(mapper: ObjectMapper): EnvActionEntity {
@@ -67,7 +71,7 @@ data class EnvActionModel(
             actionStartDateTime?.atZone(UTC),
             geom,
             actionType,
-            value
+            value,
         )
     }
     companion object {
@@ -77,7 +81,7 @@ data class EnvActionModel(
             actionStartDateTime = action.actionStartDateTimeUtc?.toInstant(),
             value = EnvActionMapper.envActionEntityToJSON(mapper, action),
             mission = mission,
-            geom = action.geom
+            geom = action.geom,
         )
     }
 

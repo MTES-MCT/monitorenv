@@ -16,7 +16,7 @@ import java.time.Instant
 @Repository
 class JpaMissionRepository(
     private val dbMissionRepository: IDBMissionRepository,
-    private val mapper: ObjectMapper
+    private val mapper: ObjectMapper,
 ) : IMissionRepository {
 
     override fun findAllMissions(
@@ -26,17 +26,17 @@ class JpaMissionRepository(
         missionStatuses: List<String>?,
         missionSources: List<MissionSourceEnum>?,
         seaFronts: List<String>?,
-        pageable: Pageable
+        pageable: Pageable,
     ): List<MissionEntity> {
-        val missionSourcesAsStringArray = missionSources?.map{ it.name }
+        val missionSourcesAsStringArray = missionSources?.map { it.name }
         return dbMissionRepository.findAllMissions(
             startedAfter = startedAfter,
             startedBefore = startedBefore,
-            missionTypes = missionTypes,
-            missionStatuses = missionStatuses,
-            missionSources = missionSourcesAsStringArray,
-            seaFronts= seaFronts,
-            pageable = pageable
+            missionTypes = convertToPGArray(missionTypes),
+            missionStatuses = convertToPGArray(missionStatuses),
+            missionSources = convertToPGArray(missionSourcesAsStringArray),
+            seaFronts = convertToPGArray(seaFronts),
+            pageable = pageable,
         ).map { it.toMissionEntity(mapper) }
     }
 
@@ -61,5 +61,9 @@ class JpaMissionRepository(
     @Transactional
     override fun delete(missionId: Int) {
         dbMissionRepository.deleteMission(missionId)
+    }
+
+    private fun convertToPGArray(array: List<String>?): String {
+        return array?.joinToString(separator = ",", prefix = "{", postfix = "}") ?: "{}"
     }
 }

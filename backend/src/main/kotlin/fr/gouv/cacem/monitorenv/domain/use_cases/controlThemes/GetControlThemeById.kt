@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.controlThemes
+package fr.gouv.cacem.monitorenv.domain.use_cases.controlThemes // ktlint-disable package-name
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.controlThemes.ControlThemeEntity

@@ -8,7 +8,7 @@ data class EnvActionSurveillanceProperties(
     val themes: List<ThemeEntity>? = listOf(),
     val duration: Double? = null,
     val observations: String? = null,
-    val coverMissionZone: Boolean? = null
+    val coverMissionZone: Boolean? = null,
 ) {
     fun toEnvActionSurveillanceEntity(id: UUID, actionStartDateTimeUtc: ZonedDateTime?, geom: Geometry?) = EnvActionSurveillanceEntity(
         id = id,
@@ -17,14 +17,14 @@ data class EnvActionSurveillanceProperties(
         themes = themes,
         duration = duration,
         observations = observations,
-        coverMissionZone = coverMissionZone
+        coverMissionZone = coverMissionZone,
     )
     companion object {
         fun fromEnvActionSurveillanceEntity(envAction: EnvActionSurveillanceEntity) = EnvActionSurveillanceProperties(
             themes = envAction.themes,
             duration = envAction.duration,
             observations = envAction.observations,
-            coverMissionZone = envAction.coverMissionZone
+            coverMissionZone = envAction.coverMissionZone,
         )
     }
 }

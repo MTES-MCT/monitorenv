@@ -10,7 +10,7 @@ data class EnvActionControlProperties(
     val actionNumberOfControls: Int? = null,
     val actionTargetType: ActionTargetTypeEnum? = null,
     val vehicleType: VehicleTypeEnum? = null,
-    val infractions: List<InfractionEntity>? = listOf()
+    val infractions: List<InfractionEntity>? = listOf(),
 ) {
     fun toEnvActionControlEntity(id: UUID, actionStartDateTimeUtc: ZonedDateTime?, geom: Geometry?) = EnvActionControlEntity(
         id = id,
@@ -21,7 +21,7 @@ data class EnvActionControlProperties(
         actionNumberOfControls = actionNumberOfControls,
         actionTargetType = actionTargetType,
         vehicleType = vehicleType,
-        infractions = infractions
+        infractions = infractions,
     )
     companion object {
         fun fromEnvActionControlEntity(envAction: EnvActionControlEntity) = EnvActionControlProperties(
@@ -30,7 +30,7 @@ data class EnvActionControlProperties(
             actionNumberOfControls = envAction.actionNumberOfControls,
             actionTargetType = envAction.actionTargetType,
             vehicleType = envAction.vehicleType,
-            infractions = envAction.infractions
+            infractions = envAction.infractions,
         )
     }
 }

@@ -4,12 +4,12 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlResource
 
 data class ControlResourceDataOutput(
     val id: Int,
-    val name: String
+    val name: String,
 ) {
     companion object {
         fun fromControlResourceEntity(controlResource: ControlResourceEntity) = ControlResourceDataOutput(
             id = controlResource.id,
-            name = controlResource.name
+            name = controlResource.name,
         )
     }
 }

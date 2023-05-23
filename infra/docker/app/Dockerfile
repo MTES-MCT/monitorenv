@@ -9,7 +9,7 @@ ARG VERSION=NO_VERSION
 ########################################
 # Build monitorenv backend with maven #
 ########################################
-FROM maven:3.6.0-jdk-11-slim as buildBack
+FROM maven:3.8.5-openjdk-17-slim as buildBack
 
 ARG GITHUB_SHA
 ARG VERSION
@@ -51,7 +51,7 @@ RUN npm run build
 # Create final image #
 ######################
 # There is no more JRE with Java 11 : https://stackoverflow.com/a/53733414
-FROM azul/zulu-openjdk-alpine:11
+FROM azul/zulu-openjdk-alpine:17
 
 ARG VERSION
 ENV VERSION $VERSION

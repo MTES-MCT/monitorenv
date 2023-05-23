@@ -1,10 +1,10 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 import org.locationtech.jts.geom.MultiPolygon
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
 
 @Table(name = "facade_areas_subdivided")
 @Entity
@@ -17,5 +17,5 @@ data class FacadeAreasModel(
     var facade: String,
 
     @Column(name = "geometry")
-    var geometry: MultiPolygon? = null
+    var geometry: MultiPolygon? = null,
 )

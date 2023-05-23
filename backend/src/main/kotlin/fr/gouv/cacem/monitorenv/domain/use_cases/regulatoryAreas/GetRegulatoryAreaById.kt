@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas
+package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas // ktlint-disable package-name
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryAreas.RegulatoryAreaEntity

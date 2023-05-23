@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.missions
+package fr.gouv.cacem.monitorenv.domain.use_cases.missions // ktlint-disable package-name
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
@@ -8,7 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 @UseCase
 class UpdateMission(
     private val missionRepository: IMissionRepository,
-    private val facadeAreasRepository: IFacadeAreasRepository
+    private val facadeAreasRepository: IFacadeAreasRepository,
 ) {
     @Throws(IllegalArgumentException::class)
     fun execute(mission: MissionEntity?): MissionEntity {
@@ -18,7 +18,7 @@ class UpdateMission(
 
         if (mission.geom != null) {
             val missionToSave = mission.copy(
-                facade = facadeAreasRepository.findFacadeFromMission(mission.geom)
+                facade = facadeAreasRepository.findFacadeFromMission(mission.geom),
             )
             return missionRepository.save(missionToSave)
         }

@@ -6,57 +6,39 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.vladmihalcea.hibernate.type.array.EnumArrayType
 import com.vladmihalcea.hibernate.type.array.ListArrayType
+import com.vladmihalcea.hibernate.type.array.internal.AbstractArrayType.SQL_ARRAY_TYPE
 import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType
-import fr.gouv.cacem.monitorenv.domain.entities.missions.*
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
+import jakarta.persistence.Basic
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
+import jakarta.persistence.Table
 import org.hibernate.Hibernate
-import org.hibernate.annotations.Parameter
-import org.hibernate.annotations.Type
-import org.hibernate.annotations.TypeDef
-import org.hibernate.annotations.TypeDefs
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
+import org.hibernate.annotations.Parameter
+import org.hibernate.annotations.Type
 import org.locationtech.jts.geom.MultiPolygon
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
 import java.time.Instant
 import java.time.ZoneOffset.UTC
-import javax.persistence.CascadeType
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
-import javax.persistence.GeneratedValue
-import javax.persistence.Basic
-import javax.persistence.Column
-import javax.persistence.Enumerated
-import javax.persistence.GenerationType
-import javax.persistence.EnumType
-import javax.persistence.OneToMany
-
 
 @JsonIdentityInfo(
     generator = ObjectIdGenerators.PropertyGenerator::class,
-    property = "id"
+    property = "id",
 )
 @Entity
-@TypeDefs(
-    TypeDef(
-        name = "enum-array",
-        typeClass = ListArrayType::class,
-        parameters = [Parameter(name = EnumArrayType.SQL_ARRAY_TYPE, value = "text")]
-    ),
-    TypeDef(
-        name = "pgsql_enum",
-        typeClass = PostgreSQLEnumType::class
-        ),
-    TypeDef(
-        name = "jsonb",
-        typeClass = JsonBinaryType::class
-    ),
-
-)
 @Table(name = "missions")
 data class MissionModel(
     @Id
@@ -64,8 +46,11 @@ data class MissionModel(
     @Basic(optional = false)
     @Column(name = "id", unique = true, nullable = false)
     var id: Int? = null,
-    @Column(name = "mission_types")
-    @Type(type = "enum-array")
+    @Type(
+        ListArrayType::class,
+        parameters = [Parameter(name = SQL_ARRAY_TYPE, value = "text")],
+    )
+    @Column(name = "mission_types", columnDefinition = "text[]")
     var missionTypes: List<MissionTypeEnum>,
     @Column(name = "open_by")
     var openBy: String? = null,
@@ -91,7 +76,7 @@ data class MissionModel(
     val isDeleted: Boolean,
     @Column(name = "mission_source", nullable = false, columnDefinition = "mission_source_type")
     @Enumerated(EnumType.STRING)
-    @Type(type = "pgsql_enum")
+    @Type(PostgreSQLEnumType::class)
     val missionSource: MissionSourceEnum,
     @Column(name = "has_mission_order", nullable = false)
     var hasMissionOrder: Boolean,
@@ -100,15 +85,15 @@ data class MissionModel(
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
-        orphanRemoval = true
+        orphanRemoval = true,
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
     var envActions: MutableList<EnvActionModel>? = ArrayList(),
     @OneToMany(
-            mappedBy = "mission",
-            cascade = [CascadeType.ALL],
-            orphanRemoval = true
+        mappedBy = "mission",
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
@@ -116,11 +101,11 @@ data class MissionModel(
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
-        orphanRemoval = true
+        orphanRemoval = true,
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
-    var controlUnits: MutableList<MissionControlUnitModel>? = ArrayList()
+    var controlUnits: MutableList<MissionControlUnitModel>? = ArrayList(),
 ) {
 
     fun toMissionEntity(mapper: ObjectMapper) = MissionEntity(
@@ -149,9 +134,9 @@ data class MissionModel(
 
             unit.unit.toControlUnit().copy(
                 contact = unit.contact,
-                resources = savedUnitResources?.let { safeUnitResources -> safeUnitResources.map { it.ressource.toControlResource() } } ?: listOf()
+                resources = savedUnitResources?.let { safeUnitResources -> safeUnitResources.map { it.ressource.toControlResource() } } ?: listOf(),
             )
-        } ?: listOf()
+        } ?: listOf(),
     )
 
     companion object {
@@ -171,7 +156,7 @@ data class MissionModel(
                 isDeleted = false,
                 missionSource = mission.missionSource,
                 hasMissionOrder = mission.hasMissionOrder,
-                isUnderJdp = mission.isUnderJdp
+                isUnderJdp = mission.isUnderJdp,
             )
 
             mission.envActions?.map {
@@ -181,7 +166,7 @@ data class MissionModel(
             mission.controlUnits.map {
                 val controlUnitModel = MissionControlUnitModel.fromControlUnitEntity(
                     it,
-                    missionModel
+                    missionModel,
                 )
                 missionModel.controlUnits?.add(controlUnitModel)
 

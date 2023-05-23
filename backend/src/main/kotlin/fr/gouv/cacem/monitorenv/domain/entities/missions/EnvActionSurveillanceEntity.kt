@@ -11,8 +11,8 @@ data class EnvActionSurveillanceEntity(
     val themes: List<ThemeEntity>? = listOf(),
     val duration: Double? = null,
     val observations: String? = null,
-    val coverMissionZone: Boolean? = null
+    val coverMissionZone: Boolean? = null,
 ) : EnvActionEntity(
     actionType = ActionTypeEnum.SURVEILLANCE,
-    id = id
+    id = id,
 )

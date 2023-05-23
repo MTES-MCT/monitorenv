@@ -20,5 +20,5 @@ data class MissionEntity(
     val isDeleted: Boolean,
     val missionSource: MissionSourceEnum,
     val hasMissionOrder: Boolean,
-    val isUnderJdp: Boolean
+    val isUnderJdp: Boolean,
 )

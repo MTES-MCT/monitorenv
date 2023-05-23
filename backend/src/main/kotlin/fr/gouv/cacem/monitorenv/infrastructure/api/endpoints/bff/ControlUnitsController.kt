@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/bff/v1/control_units")
 @Tag(name = "Control Units", description = "API control units")
 class ControlUnitsController(
-    private val getControlUnits: GetControlUnits
+    private val getControlUnits: GetControlUnits,
 ) {
 
     @GetMapping("")

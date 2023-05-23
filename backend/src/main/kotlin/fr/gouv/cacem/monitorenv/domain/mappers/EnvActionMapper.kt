@@ -1,7 +1,14 @@
 package fr.gouv.cacem.monitorenv.domain.mappers
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import fr.gouv.cacem.monitorenv.domain.entities.missions.*
+import fr.gouv.cacem.monitorenv.domain.entities.missions.ActionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.missions.EnvActionControlEntity
+import fr.gouv.cacem.monitorenv.domain.entities.missions.EnvActionControlProperties
+import fr.gouv.cacem.monitorenv.domain.entities.missions.EnvActionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.missions.EnvActionNoteEntity
+import fr.gouv.cacem.monitorenv.domain.entities.missions.EnvActionNoteProperties
+import fr.gouv.cacem.monitorenv.domain.entities.missions.EnvActionSurveillanceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.missions.EnvActionSurveillanceProperties
 import fr.gouv.cacem.monitorenv.domain.exceptions.EntityConversionException
 import org.locationtech.jts.geom.Geometry
 import org.springframework.stereotype.Component
@@ -32,18 +39,18 @@ object EnvActionMapper {
             when (envAction.actionType) {
                 ActionTypeEnum.SURVEILLANCE -> mapper.writeValueAsString(
                     EnvActionSurveillanceProperties.fromEnvActionSurveillanceEntity(
-                        envAction as EnvActionSurveillanceEntity
-                    )
+                        envAction as EnvActionSurveillanceEntity,
+                    ),
                 )
                 ActionTypeEnum.CONTROL -> mapper.writeValueAsString(
                     EnvActionControlProperties.fromEnvActionControlEntity(
-                        envAction as EnvActionControlEntity
-                    )
+                        envAction as EnvActionControlEntity,
+                    ),
                 )
                 ActionTypeEnum.NOTE -> mapper.writeValueAsString(
                     EnvActionNoteProperties.fromEnvActionNoteEntity(
-                        envAction as EnvActionNoteEntity
-                    )
+                        envAction as EnvActionNoteEntity,
+                    ),
                 )
             }
         } catch (e: Exception) {

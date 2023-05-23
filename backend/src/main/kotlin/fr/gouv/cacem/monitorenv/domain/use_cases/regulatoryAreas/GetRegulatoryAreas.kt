@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas
+package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas // ktlint-disable package-name
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryAreas.RegulatoryAreaEntity
@@ -11,7 +11,7 @@ class GetRegulatoryAreas(private val regulatoryAreaRepository: IRegulatoryAreaRe
 
     fun execute(): List<RegulatoryAreaEntity> {
         val regulatoryAreas = regulatoryAreaRepository.findRegulatoryAreas()
-        logger.info("Found ${regulatoryAreas.size} missions ")
+        logger.info("Found ${regulatoryAreas.size} regulatory areas ")
 
         return regulatoryAreas
     }

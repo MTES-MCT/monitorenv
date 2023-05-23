@@ -64,7 +64,10 @@ dev-clean-target-env:
 
 .PHONY: test dev-lint-backend 
 dev-lint-backend:
-	cd backend && ./mvnw -e antrun:run@ktlint-format
+	cd ./backend && ./mvnw antrun:run@ktlint-format | grep -v \
+		-e "Exceeded max line length" \
+		-e "Package name must not contain underscore" \
+		-e "Wildcard import"
 
 clean:
 	make dev-erase-db

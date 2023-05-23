@@ -1,7 +1,10 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.entities.missions.*
+import fr.gouv.cacem.monitorenv.domain.entities.missions.EnvActionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
@@ -21,7 +24,7 @@ data class MissionDataOutput(
     val missionSource: MissionSourceEnum,
     val isClosed: Boolean,
     val hasMissionOrder: Boolean,
-    val isUnderJdp: Boolean
+    val isUnderJdp: Boolean,
 ) {
     companion object {
         fun fromMission(mission: MissionEntity): MissionDataOutput {
@@ -45,7 +48,7 @@ data class MissionDataOutput(
                 missionSource = mission.missionSource,
                 isClosed = mission.isClosed,
                 hasMissionOrder = mission.hasMissionOrder,
-                isUnderJdp = mission.isUnderJdp
+                isUnderJdp = mission.isUnderJdp,
             )
         }
     }

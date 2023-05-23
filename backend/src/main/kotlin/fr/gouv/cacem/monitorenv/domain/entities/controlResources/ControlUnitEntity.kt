@@ -6,5 +6,5 @@ data class ControlUnitEntity(
     val isArchived: Boolean,
     val name: String,
     val resources: List<ControlResourceEntity>,
-    val contact: String? = null
+    val contact: String? = null,
 )

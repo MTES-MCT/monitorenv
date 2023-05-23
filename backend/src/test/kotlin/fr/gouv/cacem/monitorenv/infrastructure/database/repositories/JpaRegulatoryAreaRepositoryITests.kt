@@ -50,8 +50,8 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
                 date_fin = "2035-07-01",
                 temporalite = "temporaire",
                 objet = "",
-                signataire = ""
-            )
+                signataire = "",
+            ),
         )
 
         // When

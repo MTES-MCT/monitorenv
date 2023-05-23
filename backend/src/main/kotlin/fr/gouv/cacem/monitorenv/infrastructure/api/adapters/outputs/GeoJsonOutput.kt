@@ -14,5 +14,5 @@ import org.n52.jackson.datatype.jts.GeometrySerializer
 // }
 data class GeoJsonOutput(
     val type: String,
-    val geometry: GeometrySerializer
+    val geometry: GeometrySerializer,
 )

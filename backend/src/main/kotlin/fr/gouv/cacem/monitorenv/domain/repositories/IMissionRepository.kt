@@ -14,7 +14,7 @@ interface IMissionRepository {
         missionStatuses: List<String>?,
         missionSources: List<MissionSourceEnum>? = null,
         seaFronts: List<String>?,
-        pageable: Pageable
+        pageable: Pageable,
     ): List<MissionEntity>
     fun save(mission: MissionEntity): MissionEntity
     fun delete(missionId: Int)

@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.missions
+package fr.gouv.cacem.monitorenv.domain.use_cases.missions // ktlint-disable package-name
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
@@ -21,7 +21,7 @@ class GetMissions(private val missionRepository: IMissionRepository) {
         missionStatuses: List<String>?,
         pageNumber: Int?,
         pageSize: Int?,
-        seaFronts: List<String>?
+        seaFronts: List<String>?,
     ): List<MissionEntity> {
         val missions = missionRepository.findAllMissions(
             startedAfter = startedAfterDateTime?.toInstant() ?: ZonedDateTime.now().minusDays(30).toInstant(),
@@ -30,7 +30,7 @@ class GetMissions(private val missionRepository: IMissionRepository) {
             missionTypes = missionTypes,
             missionStatuses = missionStatuses,
             seaFronts = seaFronts,
-            pageable = if (pageNumber != null && pageSize != null) PageRequest.of(pageNumber, pageSize) else Pageable.unpaged()
+            pageable = if (pageNumber != null && pageSize != null) PageRequest.of(pageNumber, pageSize) else Pageable.unpaged(),
         )
 
         logger.info("Found ${missions.size} missions ")

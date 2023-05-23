@@ -28,8 +28,8 @@ class JpaControlThemeRepositoryITests : AbstractDBTests() {
             ControlThemeEntity(
                 id = 1,
                 themeLevel1 = "Police des mouillages",
-                themeLevel2 = "Mouillage individuel"
-            )
+                themeLevel2 = "Mouillage individuel",
+            ),
         )
         // When
         val requestedControlTheme = jpaControlThemesRepository.findControlThemeById(1)

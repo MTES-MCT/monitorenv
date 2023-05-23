@@ -12,8 +12,8 @@ interface IDBFacadeAreasRepository : CrudRepository<FacadeAreasModel, Int> {
           WHERE st_intersects(geometry, st_setsrid(:missionGeometry, 4326))
           LIMIT 1
      """,
-        nativeQuery = true
+        nativeQuery = true,
     )
     fun findFacadeFromMission(missionGeometry: MultiPolygon): String
-?
+        ?
 }

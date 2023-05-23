@@ -1,7 +1,15 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEntity
-import javax.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
 
 @Entity
 @Table(name = "missions_control_units")
@@ -17,7 +25,7 @@ data class MissionControlUnitModel(
     var mission: MissionModel,
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "control_unit_id")
-    var unit: ControlUnitModel
+    var unit: ControlUnitModel,
 ) {
     companion object {
         fun fromControlUnitEntity(controlUnitEntity: ControlUnitEntity, mission: MissionModel) = MissionControlUnitModel(
@@ -25,10 +33,10 @@ data class MissionControlUnitModel(
                 id = controlUnitEntity.id,
                 name = controlUnitEntity.name,
                 isArchived = controlUnitEntity.isArchived,
-                administration = AdministrationModel(name = controlUnitEntity.administration)
+                administration = AdministrationModel(name = controlUnitEntity.administration),
             ),
             mission = mission,
-            contact = controlUnitEntity.contact
+            contact = controlUnitEntity.contact,
         )
     }
 }

@@ -1,10 +1,12 @@
- 
-package fr.gouv.cacem.monitorenv.domain.use_cases
+
+package fr.gouv.cacem.monitorenv.domain.use_cases // ktlint-disable package-name
 
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import fr.gouv.cacem.monitorenv.domain.entities.missions.*
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.UpdateMission
@@ -43,7 +45,7 @@ class UpdateMissionUTests {
         // Given
         val expectedUpdatedMission = MissionEntity(
             id = 0,
-            missionTypes = listOf( MissionTypeEnum.LAND),
+            missionTypes = listOf(MissionTypeEnum.LAND),
             facade = "Outre-Mer",
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
@@ -51,10 +53,10 @@ class UpdateMissionUTests {
             isDeleted = false,
             missionSource = MissionSourceEnum.MONITORENV,
             hasMissionOrder = false,
-            isUnderJdp = false
+            isUnderJdp = false,
         )
         given(missionRepository.save(expectedUpdatedMission)).willReturn(
-            expectedUpdatedMission
+            expectedUpdatedMission,
         )
 
         // When

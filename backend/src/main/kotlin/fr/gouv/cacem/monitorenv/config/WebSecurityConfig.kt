@@ -1,29 +1,31 @@
 package fr.gouv.cacem.monitorenv.config
 
 import org.springframework.context.annotation.Bean
-import org.springframework.http.HttpMethod
+import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
-@EnableWebSecurity
-class WebSecurityConfig() : WebSecurityConfigurerAdapter() {
-    override fun configure(http: HttpSecurity) {
+@Configuration
+class WebSecurityConfig {
+    @Bean
+    fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .cors().and()
             .csrf().disable()
-            .authorizeRequests()
-            .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+            .authorizeHttpRequests { authorize -> authorize.requestMatchers(AntPathRequestMatcher("/**")).permitAll() }
+
+        return http.build()
     }
 
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration().apply {
             allowedOrigins = listOf("*")
-            allowedMethods = listOf("HEAD", "GET", "POST", "PUT", "OPTIONS", "DELETE")
+            allowedMethods = listOf("HEAD", "GET", "POST", "PUT", "DELETE")
             allowedHeaders = listOf("Authorization", "Cache-Control", "Content-Type")
         }
 

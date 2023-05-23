@@ -2,7 +2,20 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.entities.missions.*
+import fr.gouv.cacem.monitorenv.domain.entities.missions.ActionTargetTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.missions.EnvActionControlEntity
+import fr.gouv.cacem.monitorenv.domain.entities.missions.EnvActionNoteEntity
+import fr.gouv.cacem.monitorenv.domain.entities.missions.EnvActionSurveillanceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.missions.FormalNoticeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.missions.InfractionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.missions.InfractionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.missions.ThemeEntity
+import fr.gouv.cacem.monitorenv.domain.entities.missions.VehicleTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.missions.VesselSizeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.missions.VesselTypeEnum
 import fr.gouv.cacem.monitorenv.domain.exceptions.ControlResourceOrUnitNotFoundException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
@@ -14,7 +27,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 class JpaMissionRepositoryITests : AbstractDBTests() {
 
@@ -31,13 +44,13 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionTypes = null,
             missionStatuses = null,
             seaFronts = null,
-            pageable = Pageable.unpaged()
+            pageable = Pageable.unpaged(),
         )
 
         assertThat(existingMissions).hasSize(21)
 
         val newMission = MissionEntity(
-            missionTypes = listOf( MissionTypeEnum.SEA),
+            missionTypes = listOf(MissionTypeEnum.SEA),
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isClosed = false,
             isDeleted = false,
@@ -50,9 +63,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     name = "DPM – DDTM 35",
                     administration = "DDTM",
                     isArchived = false,
-                    resources = listOf(ControlResourceEntity(id = 8, name = "PAM Jeanne Barret"))
-                )
-            )
+                    resources = listOf(ControlResourceEntity(id = 8, name = "PAM Jeanne Barret")),
+                ),
+            ),
         )
 
         // When
@@ -72,8 +85,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             startedBefore = ZonedDateTime.parse("2022-08-08T00:00:00Z").toInstant(),
             missionTypes = null,
             missionStatuses = null,
-            seaFronts= null,
-            pageable = Pageable.unpaged()
+            seaFronts = null,
+            pageable = Pageable.unpaged(),
         )
 
         assertThat(missions).hasSize(22)
@@ -84,7 +97,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     fun `save should update mission resources`() {
         // Given
         val newMission = MissionEntity(
-            missionTypes = listOf( MissionTypeEnum.SEA),
+            missionTypes = listOf(MissionTypeEnum.SEA),
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isClosed = false,
             isDeleted = false,
@@ -97,24 +110,29 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     name = "DPM – DDTM 35",
                     administration = "DDTM",
                     isArchived = false,
-                    resources = listOf(ControlResourceEntity(id = 8, name = "PAM Jeanne Barret"))
-                )
-            )
+                    resources = listOf(ControlResourceEntity(id = 8, name = "PAM Jeanne Barret")),
+                ),
+            ),
         )
         jpaMissionRepository.save(newMission)
 
         // When
-        val newMissionUpdated = jpaMissionRepository.save(newMission.copy(controlUnits = listOf(
-                ControlUnitEntity(
+        val newMissionUpdated = jpaMissionRepository.save(
+            newMission.copy(
+                controlUnits = listOf(
+                    ControlUnitEntity(
                         id = 10006,
                         name = "DPM – DDTM 35",
                         administration = "DDTM",
                         isArchived = false,
                         resources = listOf(
-                                ControlResourceEntity(id = 8, name = "PAM Jeanne Barret"),
-                                ControlResourceEntity(id = 5, name = "Voiture"))
-                )
-        )))
+                            ControlResourceEntity(id = 8, name = "PAM Jeanne Barret"),
+                            ControlResourceEntity(id = 5, name = "Voiture"),
+                        ),
+                    ),
+                ),
+            ),
+        )
 
         // Then
         assertThat(newMissionUpdated.controlUnits).hasSize(1)
@@ -133,7 +151,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     fun `save should throw an exception When the resource id is not found`() {
         // Given
         val newMission = MissionEntity(
-            missionTypes = listOf( MissionTypeEnum.SEA),
+            missionTypes = listOf(MissionTypeEnum.SEA),
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isClosed = false,
             isDeleted = false,
@@ -146,9 +164,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     name = "DPM – DDTM 35",
                     administration = "DDTM",
                     isArchived = false,
-                    resources = listOf(ControlResourceEntity(id = 123456, name = "PAM Jeanne Barret"))
-                )
-            )
+                    resources = listOf(ControlResourceEntity(id = 123456, name = "PAM Jeanne Barret")),
+                ),
+            ),
         )
 
         // When
@@ -166,14 +184,14 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     fun `save should throw an exception When the unit id is not found`() {
         // Given
         val newMission = MissionEntity(
-            missionTypes = listOf( MissionTypeEnum.SEA),
+            missionTypes = listOf(MissionTypeEnum.SEA),
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             isClosed = false,
             isDeleted = false,
             missionSource = MissionSourceEnum.MONITORENV,
             hasMissionOrder = false,
             isUnderJdp = false,
-            controlUnits = listOf(ControlUnitEntity(id = 123456, name = "PAM Jeanne Barret", administration = "", isArchived = false, resources = listOf()))
+            controlUnits = listOf(ControlUnitEntity(id = 123456, name = "PAM Jeanne Barret", administration = "", isArchived = false, resources = listOf())),
         )
 
         // When
@@ -196,7 +214,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionTypes = null,
             missionStatuses = null,
             seaFronts = null,
-            pageable = Pageable.unpaged()
+            pageable = Pageable.unpaged(),
         )
         assertThat(missions).hasSize(53)
     }
@@ -211,7 +229,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionTypes = null,
             missionStatuses = null,
             seaFronts = null,
-            pageable = Pageable.unpaged()
+            pageable = Pageable.unpaged(),
         )
         assertThat(missions).hasSize(21)
     }
@@ -226,7 +244,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionTypes = listOf("SEA"),
             missionStatuses = null,
             seaFronts = null,
-            pageable = Pageable.unpaged()
+            pageable = Pageable.unpaged(),
         )
         assertThat(missions).hasSize(21)
     }
@@ -241,12 +259,12 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionTypes = listOf("SEA", "LAND"),
             missionStatuses = null,
             seaFronts = null,
-            pageable = Pageable.unpaged()
+            pageable = Pageable.unpaged(),
         )
         assertThat(missions).hasSize(44)
     }
 
-     @Test
+    @Test
     @Transactional
     fun `findAllMissions Should return filtered missions when seaFront is set to MEMN`() {
         // When
@@ -256,9 +274,24 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionTypes = null,
             missionStatuses = null,
             seaFronts = listOf("MEMN"),
-            pageable = Pageable.unpaged()
+            pageable = Pageable.unpaged(),
         )
         assertThat(missions).hasSize(9)
+    }
+
+    @Test
+    @Transactional
+    fun `findAllMissions Should return filtered missions when seaFront is set to MEMN and NAMO`() {
+        // When
+        val missions = jpaMissionRepository.findAllMissions(
+            startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
+            startedBefore = null,
+            missionTypes = null,
+            missionStatuses = null,
+            seaFronts = listOf("MEMN", "NAMO"),
+            pageable = Pageable.unpaged(),
+        )
+        assertThat(missions).hasSize(26)
     }
 
     @Test
@@ -271,7 +304,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionTypes = null,
             seaFronts = null,
             missionStatuses = listOf("UPCOMING"),
-            pageable = Pageable.unpaged()
+            pageable = Pageable.unpaged(),
         )
         assertThat(missions).hasSize(6)
     }
@@ -286,9 +319,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionTypes = null,
             seaFronts = null,
             missionStatuses = listOf("PENDING"),
-            pageable = Pageable.unpaged()
+            pageable = Pageable.unpaged(),
         )
-        assertThat(missions).hasSize(14)
+        assertThat(missions).hasSize(18)
     }
 
     @Test
@@ -301,7 +334,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionTypes = null,
             seaFronts = null,
             missionStatuses = listOf("ENDED"),
-            pageable = Pageable.unpaged()
+            pageable = Pageable.unpaged(),
         )
         assertThat(missions).hasSize(15)
     }
@@ -316,7 +349,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionTypes = null,
             seaFronts = null,
             missionStatuses = listOf("CLOSED"),
-            pageable = Pageable.unpaged()
+            pageable = Pageable.unpaged(),
         )
         assertThat(missions).hasSize(18)
     }
@@ -331,7 +364,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionTypes = null,
             seaFronts = null,
             missionStatuses = listOf("CLOSED", "UPCOMING"),
-            pageable = Pageable.unpaged()
+            pageable = Pageable.unpaged(),
         )
         assertThat(missions).hasSize(24)
     }
@@ -346,7 +379,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionTypes = null,
             missionStatuses = null,
             seaFronts = null,
-            pageable = PageRequest.of(1, 10)
+            pageable = PageRequest.of(1, 10),
         )
         assertThat(missions).hasSize(10)
     }
@@ -361,8 +394,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionTypes = null,
             missionStatuses = null,
             seaFronts = null,
-            missionSources = listOf(MissionSourceEnum.MONITORFISH,MissionSourceEnum.POSEIDON_CACEM, MissionSourceEnum.POSEIDON_CNSP),
-            pageable = Pageable.unpaged()
+            missionSources = listOf(MissionSourceEnum.MONITORFISH, MissionSourceEnum.POSEIDON_CACEM, MissionSourceEnum.POSEIDON_CNSP),
+            pageable = Pageable.unpaged(),
         )
         assertThat(missions).hasSize(3)
     }
@@ -376,7 +409,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
         val firstMission = MissionEntity(
             id = 10,
-            missionTypes = listOf( MissionTypeEnum.LAND),
+            missionTypes = listOf(MissionTypeEnum.LAND),
             openBy = "KIM",
             closedBy = "TRA",
             facade = "NAMO",
@@ -399,11 +432,11 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     resources = listOf(
                         ControlResourceEntity(id = 3, name = "Semi-rigide 1"),
                         ControlResourceEntity(id = 4, name = "Semi-rigide 2"),
-                        ControlResourceEntity(id = 5, name = "Voiture")
+                        ControlResourceEntity(id = 5, name = "Voiture"),
                     ),
-                    contact = null
-                )
-            )
+                    contact = null,
+                ),
+            ),
         )
         val mission = jpaMissionRepository.findMissionById(10)
 
@@ -439,31 +472,31 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             toProcess = false,
             controlledPersonIdentity = "Dick Hoover",
             vesselType = VesselTypeEnum.FISHING,
-            vesselSize = VesselSizeEnum.FROM_12_TO_24m
+            vesselSize = VesselSizeEnum.FROM_12_TO_24m,
         )
         val controlAction = EnvActionControlEntity(
             id = UUID.randomUUID(),
-            themes = listOf(ThemeEntity(theme="5", subThemes = listOf("4"), protectedSpecies = listOf("5"))),
+            themes = listOf(ThemeEntity(theme = "5", subThemes = listOf("4"), protectedSpecies = listOf("5"))),
             observations = "RAS",
             actionNumberOfControls = 12,
             actionTargetType = ActionTargetTypeEnum.VEHICLE,
             vehicleType = VehicleTypeEnum.VESSEL,
-            infractions = listOf(infraction)
+            infractions = listOf(infraction),
         )
         val surveillanceAction = EnvActionSurveillanceEntity(
             id = UUID.randomUUID(),
-            themes = listOf(ThemeEntity(theme="6", subThemes = listOf("7"), protectedSpecies = listOf("8"))),
+            themes = listOf(ThemeEntity(theme = "6", subThemes = listOf("7"), protectedSpecies = listOf("8"))),
             duration = 3.4,
-            observations = "This is a surveillance action"
+            observations = "This is a surveillance action",
         )
         val noteAction = EnvActionNoteEntity(
             id = UUID.randomUUID(),
-            observations = "This is a note"
+            observations = "This is a note",
         )
 
         val expectedUpdatedMission = MissionEntity(
             id = 10,
-            missionTypes = listOf( MissionTypeEnum.LAND),
+            missionTypes = listOf(MissionTypeEnum.LAND),
             openBy = "John Smith",
             closedBy = "Carol Tim",
             facade = "MEMN",
@@ -477,7 +510,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             envActions = listOf(controlAction, surveillanceAction, noteAction),
             missionSource = MissionSourceEnum.MONITORENV,
             hasMissionOrder = false,
-            isUnderJdp = false
+            isUnderJdp = false,
         )
         // When
         jpaMissionRepository.save(expectedUpdatedMission)
@@ -497,11 +530,11 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
             actionTargetType = ActionTargetTypeEnum.VEHICLE,
             vehicleType = VehicleTypeEnum.VESSEL,
-            actionNumberOfControls = 4
+            actionNumberOfControls = 4,
         )
         val expectedUpdatedMission = MissionEntity(
             id = 10,
-            missionTypes = listOf( MissionTypeEnum.LAND),
+            missionTypes = listOf(MissionTypeEnum.LAND),
             facade = "NAMO",
             geom = polygon,
             observationsCacem = null,
@@ -513,7 +546,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             envActions = listOf(envAction),
             missionSource = MissionSourceEnum.MONITORENV,
             hasMissionOrder = false,
-            isUnderJdp = false
+            isUnderJdp = false,
         )
         // When
         jpaMissionRepository.save(expectedUpdatedMission)
@@ -531,7 +564,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionTypes = null,
             missionStatuses = null,
             seaFronts = null,
-            pageable = Pageable.unpaged()
+            pageable = Pageable.unpaged(),
         )
         assertThat(missionsList).hasSize(21)
 
@@ -545,7 +578,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionTypes = null,
             missionStatuses = null,
             seaFronts = null,
-            pageable = Pageable.unpaged()
+            pageable = Pageable.unpaged(),
         )
         assertThat(nextMissionList).hasSize(20)
     }
