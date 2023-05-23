@@ -48,22 +48,19 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
         })
       })
     )
-    if (envActions?.length === 0) {
-      setCurrentActionIndex(0)
-    }
+
+    setCurrentActionIndex(0)
   }
 
   const handleAddControlAction = () => {
     unshift(actionFactory({ actionType: ActionTypeEnum.CONTROL }))
-    if (envActions?.length === 0) {
-      setCurrentActionIndex(0)
-    }
+
+    setCurrentActionIndex(0)
   }
   const handleAddNoteAction = () => {
     unshift(actionFactory({ actionType: ActionTypeEnum.NOTE }))
-    if (envActions?.length === 0) {
-      setCurrentActionIndex(0)
-    }
+
+    setCurrentActionIndex(0)
   }
   const handleSelectAction = id => () => setCurrentActionIndex(envActions && envActions.findIndex(a => a.id === id))
   const handleRemoveAction = id => e => {

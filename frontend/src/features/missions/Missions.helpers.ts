@@ -62,7 +62,7 @@ export const actionFactory = ({
   }
 }
 
-export const missionFactory = (mission: Mission | undefined): Mission | NewMission => {
+export const missionFactory = (mission?: Mission | undefined): Mission | NewMission => {
   let formattedMission = {
     closedBy: '',
     controlUnits: [controlUnitFactory()],

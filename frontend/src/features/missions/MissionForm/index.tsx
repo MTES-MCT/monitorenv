@@ -33,7 +33,7 @@ export function Mission() {
 
   const missionFormikValues = useMemo(() => {
     if (!id) {
-      return missionFactory(undefined)
+      return missionFactory()
     }
 
     return missionFactory(missionToEdit)
@@ -62,11 +62,9 @@ export function Mission() {
         validateOnMount={false}
         validationSchema={MissionSchema}
       >
-        {() => (
-          <FormikForm>
-            <MissionForm id={id} mission={missionToEdit} setShouldValidateOnChange={setShouldValidateOnChange} />
-          </FormikForm>
-        )}
+        <FormikForm>
+          <MissionForm id={id} mission={missionToEdit} setShouldValidateOnChange={setShouldValidateOnChange} />
+        </FormikForm>
       </Formik>
     </EditMissionWrapper>
   )
