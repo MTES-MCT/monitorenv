@@ -1,14 +1,12 @@
 import { InteractionListener, InteractionType } from '../../entities/map/constants'
 import { setGeometry, setInteractionTypeAndListener } from '../../shared_slices/Draw'
 import { setDisplayedItems } from '../../shared_slices/Global'
-import { fitMultiPolygonToExtent } from '../map/fitMultiPolygonToExtent'
 
 import type { GeoJSON as GeoJSONNamespace } from '../../types/GeoJSON'
 
 export const addZone = (geometry: GeoJSONNamespace.Geometry | undefined, listener: InteractionListener) => dispatch => {
   if (geometry) {
     dispatch(setGeometry(geometry))
-    dispatch(fitMultiPolygonToExtent(geometry))
   }
 
   dispatch(openDrawLayerModal)
@@ -20,21 +18,19 @@ export const addZone = (geometry: GeoJSONNamespace.Geometry | undefined, listene
   )
 }
 
-export const addControlPosition =
-  (geometry: GeoJSONNamespace.Geometry | undefined, container: GeoJSONNamespace.Geometry | undefined) => dispatch => {
-    if (geometry) {
-      dispatch(setGeometry(geometry))
-    }
-
-    dispatch(fitMultiPolygonToExtent(container))
-    dispatch(openDrawLayerModal)
-    dispatch(
-      setInteractionTypeAndListener({
-        listener: InteractionListener.CONTROL_POINT,
-        type: InteractionType.POINT
-      })
-    )
+export const addControlPosition = (geometry: GeoJSONNamespace.Geometry | undefined) => dispatch => {
+  if (geometry) {
+    dispatch(setGeometry(geometry))
   }
+
+  dispatch(openDrawLayerModal)
+  dispatch(
+    setInteractionTypeAndListener({
+      listener: InteractionListener.CONTROL_POINT,
+      type: InteractionType.POINT
+    })
+  )
+}
 
 const openDrawLayerModal = dispatch => {
   dispatch(
