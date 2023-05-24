@@ -3,10 +3,10 @@ geom,
 mpa_oriname,
 des_desigfr,
 md5(
-  coalesce(id,'')||
-  coalesce(geom,'')||
+  coalesce(id::text,'')||
+  coalesce(geom::text,'')||
   coalesce(mpa_oriname,'')||
-  coalesce(des_desigfr,'')||
+  coalesce(des_desigfr,'')
   ) as row_hash
 	FROM prod."Aires marines protégées"
   WHERE

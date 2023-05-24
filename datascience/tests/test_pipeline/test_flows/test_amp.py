@@ -13,11 +13,11 @@ from src.read_query import read_query
 
 
 @pytest.fixture
-def remote_hashes() -> pd.DataFrame:
+def local_hashes() -> pd.DataFrame:
     return pd.DataFrame(
         {
             "id": [ 1, 2, 3, 4, 6],
-            "monitorenv_row_hash": [
+            "cacem_row_hash": [
                 "cacem_row_hash_1",
                 "cacem_row_hash_2",
                 "cacem_row_hash_3",
@@ -28,11 +28,11 @@ def remote_hashes() -> pd.DataFrame:
     )
 
 @pytest.fixture
-def local_hashes() -> pd.DataFrame:
+def remote_hashes() -> pd.DataFrame:
     return pd.DataFrame(
         {
             "id": [ 1, 2, 3, 4, 5],
-            "cacem_row_hash": [
+            "monitorenv_row_hash": [
                 "cacem_row_hash_1",
                 "cacem_row_hash_2",
                 "cacem_row_hash_3",
