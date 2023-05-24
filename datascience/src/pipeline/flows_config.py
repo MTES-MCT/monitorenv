@@ -13,6 +13,7 @@ from config import (
 )
 from src.pipeline.flows import (
     admin_areas,
+    amp,
     control_objectives,
     facade_areas,
     fao_areas,
@@ -24,6 +25,7 @@ from src.pipeline.flows import (
 )
 
 ################################ Define flow schedules ################################
+amp.flow.schedule = CronSchedule("22 0 * * *")
 
 infractions.flow.schedule = CronSchedule("2 8,14 * * *")
 
@@ -44,6 +46,7 @@ semaphores.flow.schedule = CronSchedule("3 5,15 * * *")
 
 ###################### List flows to register with prefect server #####################
 flows_to_register = [
+    amp.flow,
     admin_areas.flow,
     control_objectives.flow,
     facade_areas.flow,
