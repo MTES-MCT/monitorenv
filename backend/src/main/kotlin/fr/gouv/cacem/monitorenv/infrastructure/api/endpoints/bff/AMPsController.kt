@@ -20,12 +20,8 @@ class AMPsController (
 
   @GetMapping("")
   @Operation(summary = "Get AMPs")
-  fun getAMPsController(): String {
+  fun getAMPsController(): List<AMPDataOutput> {
     val amps = getAMPs.execute()
-    val ampEntities = amps.map { AMPDataOutput.fromAMPEntity(it) }
-    // FIXME: fails when using objectMapper from MapperConfiguration
-    val mapper = ObjectMapper()
-    mapper.registerModule(JtsModule())
-    return mapper.writeValueAsString(ampEntities)
+    return amps.map { AMPDataOutput.fromAMPEntity(it) }
   }
 }

@@ -1,9 +1,10 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
-import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.MeterRegistryConfiguration
+import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.domain.entities.amp.AMPEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.amps.GetAMPs
+import com.nhaarman.mockitokotlin2.given
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -20,7 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 
-@Import(MeterRegistryConfiguration::class)
+@Import(MeterRegistryConfiguration::class, MapperConfiguration::class)
 @ExtendWith(SpringExtension::class)
 @WebMvcTest(value = [(AMPsController::class)])
 
