@@ -22,7 +22,7 @@ class JpaFacadeAreasRepositoryTests : AbstractDBTests() {
         val missionGeometry = wktReader.read(multipolygonString) as MultiPolygon
 
         // When
-        val requestedFacade = jpaFacadeAreasRepository.findFacadeFromMission(missionGeometry)
+        val requestedFacade = jpaFacadeAreasRepository.findFacadeFromGeometry(missionGeometry)
         // Then
         assertThat(requestedFacade).isEqualTo("NAMO")
     }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
 class JpaFacadeAreasRepository(private val dbFacadeAreasRepository: IDBFacadeAreasRepository) :
     IFacadeAreasRepository {
 
-    override fun findFacadeFromMission(missionGeometry: MultiPolygon): String? {
-        return dbFacadeAreasRepository.findFacadeFromMission(missionGeometry)
+    override fun findFacadeFromGeometry(geometry: MultiPolygon): String? {
+        return dbFacadeAreasRepository.findFacadeFromGeometry(geometry)
     }
 }

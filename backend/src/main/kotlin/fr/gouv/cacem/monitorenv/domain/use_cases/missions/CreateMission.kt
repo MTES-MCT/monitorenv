@@ -14,7 +14,7 @@ class CreateMission(
     fun execute(mission: MissionEntity): MissionEntity {
         if (mission.geom != null) {
             val missionToSave = mission.copy(
-                facade = facadeRepository.findFacadeFromMission(mission.geom),
+                facade = facadeRepository.findFacadeFromGeometry(mission.geom),
             )
             return missionRepository.save(missionToSave)
         }

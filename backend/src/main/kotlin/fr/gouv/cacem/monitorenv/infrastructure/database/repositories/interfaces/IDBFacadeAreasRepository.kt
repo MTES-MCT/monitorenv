@@ -8,8 +8,8 @@ import org.springframework.data.repository.CrudRepository
 interface IDBFacadeAreasRepository : CrudRepository<FacadeAreasModel, Int> {
     @Query(
         """
-        WITH mission_geom AS (
-            SELECT st_setsrid(:missionGeometry, 4326) AS geom
+        WITH geom AS (
+            SELECT st_setsrid(:geometry, 4326) AS geom
         ),
         
         facades_intersection_areas AS (
@@ -19,15 +19,15 @@ interface IDBFacadeAreasRepository : CrudRepository<FacadeAreasModel, Int> {
                     ST_Area(
                         CAST(
                             ST_Intersection(
-                                mission_geom.geom,
+                                geom.geom,
                                 facade_areas_subdivided.geometry
                             ) AS geography
                         )
                     )
                 ) AS intersection_area
             FROM facade_areas_subdivided
-            JOIN mission_geom
-            ON ST_Intersects(mission_geom.geom, facade_areas_subdivided.geometry)
+            JOIN geom
+            ON ST_Intersects(geom.geom, facade_areas_subdivided.geometry)
             GROUP BY facade
         )
         
@@ -38,6 +38,6 @@ interface IDBFacadeAreasRepository : CrudRepository<FacadeAreasModel, Int> {
      """,
         nativeQuery = true,
     )
-    fun findFacadeFromMission(missionGeometry: MultiPolygon): String
+    fun findFacadeFromGeometry(geometry: MultiPolygon): String
         ?
 }
