@@ -4,5 +4,5 @@ data class Health(
     val numberOfRegulatoryAreas: Long,
     val numberOfMissions: Long,
     val numberOfNatinfs: Long,
-    val numberOfSemaphores: Long
+    val numberOfSemaphores: Long,
 )

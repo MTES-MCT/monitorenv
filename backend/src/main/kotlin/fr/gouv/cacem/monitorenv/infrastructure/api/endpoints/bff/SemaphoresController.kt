@@ -14,21 +14,22 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/bff/v1/semaphores")
 @Tag(description = "API Semaphores", name = "Semaphores")
-class SemaphoresController (private val getSemaphores: GetSemaphores, private val getSemaphoreById: GetSemaphoreById) {
-  @GetMapping("")
-  @Operation(summary = "Get all semaphores")
-  fun getSemaphoresController(): List<SemaphoreDataOutput> {
-    val semaphores = getSemaphores.execute()
-    return semaphores.map { SemaphoreDataOutput.fromSemaphoreEntity(it) }
-  }
-  @GetMapping("/{semaphoreId}")
-  @Operation(summary = "Get semaphore by Id")
-  fun getSemaphoreByIdController(
-    @PathParam("semaphore id")
-    @PathVariable(name = "semaphoreId")
-    semaphoreId: Int
-  ): SemaphoreDataOutput {
-    val semaphore = getSemaphoreById.execute(semaphoreId)
-    return SemaphoreDataOutput.fromSemaphoreEntity(semaphore)
-  }
+class SemaphoresController(private val getSemaphores: GetSemaphores, private val getSemaphoreById: GetSemaphoreById) {
+    @GetMapping("")
+    @Operation(summary = "Get all semaphores")
+    fun getSemaphoresController(): List<SemaphoreDataOutput> {
+        val semaphores = getSemaphores.execute()
+        return semaphores.map { SemaphoreDataOutput.fromSemaphoreEntity(it) }
+    }
+
+    @GetMapping("/{semaphoreId}")
+    @Operation(summary = "Get semaphore by Id")
+    fun getSemaphoreByIdController(
+        @PathParam("semaphore id")
+        @PathVariable(name = "semaphoreId")
+        semaphoreId: Int,
+    ): SemaphoreDataOutput {
+        val semaphore = getSemaphoreById.execute(semaphoreId)
+        return SemaphoreDataOutput.fromSemaphoreEntity(semaphore)
+    }
 }

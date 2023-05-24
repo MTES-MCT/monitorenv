@@ -6,14 +6,14 @@ data class HealthDataOutput(
     val numberOfRegulatoryAreas: Long,
     val numberOfMissions: Long,
     val numberOfNatinfs: Long,
-    val numberOfSemaphores: Long
+    val numberOfSemaphores: Long,
 ) {
     companion object {
         fun fromHealth(health: Health) = HealthDataOutput(
             numberOfRegulatoryAreas = health.numberOfRegulatoryAreas,
             numberOfMissions = health.numberOfMissions,
             numberOfNatinfs = health.numberOfNatinfs,
-            numberOfSemaphores = health.numberOfSemaphores
+            numberOfSemaphores = health.numberOfSemaphores,
         )
     }
 }

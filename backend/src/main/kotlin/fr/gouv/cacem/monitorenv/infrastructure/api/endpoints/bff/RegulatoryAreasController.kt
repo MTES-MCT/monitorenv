@@ -34,7 +34,7 @@ class RegulatoryAreasController(
         regulatoryAreaId: Int,
     ): RegulatoryAreaDataOutput {
         return RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(
-            getRegulatoryAreaById.execute(regulatoryAreaId = regulatoryAreaId)
+            getRegulatoryAreaById.execute(regulatoryAreaId = regulatoryAreaId),
         )
     }
 }

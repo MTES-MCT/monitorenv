@@ -12,7 +12,7 @@ class GetHealthcheck(
     private val regulatoryAreaRepository: JpaRegulatoryAreaRepository,
     private val missionRepository: JpaMissionRepository,
     private val natinfRepository: JpaNatinfRepository,
-    private val semaphoreRepository: JpaSemaphoreRepository
+    private val semaphoreRepository: JpaSemaphoreRepository,
 ) {
     fun execute(): Health {
         val numberOfRegulatoryAreas = regulatoryAreaRepository.count()
@@ -24,7 +24,7 @@ class GetHealthcheck(
             numberOfRegulatoryAreas = numberOfRegulatoryAreas,
             numberOfMissions = numberOfMissions,
             numberOfNatinfs = numberOfNatinfs,
-            numberOfSemaphores = numberOfSemaphores
+            numberOfSemaphores = numberOfSemaphores,
         )
     }
 }

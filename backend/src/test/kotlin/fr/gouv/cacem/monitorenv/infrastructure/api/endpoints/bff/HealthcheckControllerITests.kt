@@ -28,7 +28,8 @@ class HealthcheckControllerITests {
     @Test
     fun `Healthcheck returns number of reg areas`() {
         given(this.getHealthcheck.execute()).willReturn(
-            Health(numberOfRegulatoryAreas = 13,
+            Health(
+                numberOfRegulatoryAreas = 13,
                 numberOfMissions = 50,
                 numberOfNatinfs = 50,
                 numberOfSemaphores = 10,

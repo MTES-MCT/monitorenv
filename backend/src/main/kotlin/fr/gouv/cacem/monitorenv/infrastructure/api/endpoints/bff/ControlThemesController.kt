@@ -31,7 +31,7 @@ class ControlThemesController(
     fun getControlThemeByIdController(
         @PathParam("controlTheme id")
         @PathVariable(name = "controlThemeId")
-        controlThemeId: Int
+        controlThemeId: Int,
     ): ControlThemeDataOutput {
         val controlTheme = getControlThemeById.execute(controlThemeId = controlThemeId)
         return ControlThemeDataOutput.fromControlThemeEntity(controlTheme)
