@@ -7,12 +7,12 @@ import org.slf4j.LoggerFactory
 
 @UseCase
 class GetAMPs(private val ampRepository: IAMPRepository) {
-  private val logger = LoggerFactory.getLogger(GetAMPs::class.java)
+    private val logger = LoggerFactory.getLogger(GetAMPs::class.java)
 
-  fun execute(): List<AMPEntity> {
-    val amps = ampRepository.findAMPs()
-    logger.info("Found ${amps.size} amps")
+    fun execute(): List<AMPEntity> {
+        val amps = ampRepository.findAMPs()
+        logger.info("Found ${amps.size} amps")
 
-    return amps
-  }
+        return amps
+    }
 }

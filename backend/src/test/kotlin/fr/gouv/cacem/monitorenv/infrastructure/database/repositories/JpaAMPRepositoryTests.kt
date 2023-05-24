@@ -7,14 +7,14 @@ import org.springframework.transaction.annotation.Transactional
 
 class JpaAMPRepositoryTests : AbstractDBTests() {
 
-  @Autowired
-  private lateinit var jpaAMPRepository: JpaAMPRepository
+    @Autowired
+    private lateinit var jpaAMPRepository: JpaAMPRepository
 
-  @Test
-  @Transactional
-  fun `findAMPs Should return all amps`() {
-    // When
-    val amps = jpaAMPRepository.findAMPs()
-    assertThat(amps).hasSize(20)
-  }
+    @Test
+    @Transactional
+    fun `findAMPs Should return all amps`() {
+        // When
+        val amps = jpaAMPRepository.findAMPs()
+        assertThat(amps).hasSize(20)
+    }
 }
