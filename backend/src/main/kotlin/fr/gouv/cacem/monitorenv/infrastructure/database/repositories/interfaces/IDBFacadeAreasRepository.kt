@@ -8,9 +8,33 @@ import org.springframework.data.repository.CrudRepository
 interface IDBFacadeAreasRepository : CrudRepository<FacadeAreasModel, Int> {
     @Query(
         """
-       SELECT facade FROM facade_areas_subdivided 
-          WHERE st_intersects(geometry, st_setsrid(:missionGeometry, 4326))
-          LIMIT 1
+        WITH mission_geom AS (
+            SELECT st_setsrid(:missionGeometry, 4326) AS geom
+        ),
+        
+        facades_intersection_areas AS (
+            SELECT
+                facade,
+                SUM(
+                    ST_Area(
+                        CAST(
+                            ST_Intersection(
+                                mission_geom.geom,
+                                facade_areas_subdivided.geometry
+                            ) AS geography
+                        )
+                    )
+                ) AS intersection_area
+            FROM facade_areas_subdivided
+            JOIN mission_geom
+            ON ST_Intersects(mission_geom.geom, facade_areas_subdivided.geometry)
+            GROUP BY facade
+        )
+        
+        SELECT facade
+        FROM facades_intersection_areas
+        ORDER BY intersection_area DESC
+        LIMIT 1
      """,
         nativeQuery = true,
     )
