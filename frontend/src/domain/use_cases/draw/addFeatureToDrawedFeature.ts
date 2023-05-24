@@ -1,7 +1,7 @@
 import { Geometry, MultiPolygon, MultiPoint, Polygon, Point } from 'ol/geom'
 
 import { addGeometryToMultiGeometryGeoJSON, convertToGeoJSONGeometryObject } from '../../entities/layers'
-import { OLGeometryType } from '../../entities/map/constants'
+import { InteractionListener, OLGeometryType } from '../../entities/map/constants'
 import { setGeometry } from '../../shared_slices/Draw'
 
 import type Feature from 'ol/Feature'
@@ -13,7 +13,7 @@ export const addFeatureToDrawedFeature = (featureToAdd: Feature<Geometry>) => (d
     return
   }
 
-  if (!geometry) {
+  if (!geometry || listener === InteractionListener.CONTROL_POINT) {
     const typeOfGeometryToAdd = geometryToAdd.getType()
     let nextGeometry
     switch (typeOfGeometryToAdd) {

@@ -95,7 +95,13 @@ export function MultiPointPicker({ addButtonLabel, containerName, label, name, r
     <Field>
       <Label>{label}</Label>
       {!readOnly && (
-        <Button accent={Accent.SECONDARY} Icon={Icon.Plus} isFullWidth onClick={handleAddPoint}>
+        <Button
+          accent={Accent.SECONDARY}
+          disabled={points.length > 0}
+          Icon={Icon.Plus}
+          isFullWidth
+          onClick={handleAddPoint}
+        >
           {addButtonLabel}
         </Button>
       )}
