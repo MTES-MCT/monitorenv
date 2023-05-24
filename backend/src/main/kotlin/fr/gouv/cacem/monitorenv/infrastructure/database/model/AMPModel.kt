@@ -16,15 +16,15 @@ data class AMPModel(
   @Column(name = "geom")
   var geom: MultiPolygon,
   @Column(name = "mpa_oriname")
-  var mpaOriname: String,
+  var name: String,
   @Column(name = "des_desigfr")
-  var desDesigfr: String,
+  var designation: String,
 ) {
   fun toAMP() = AMPEntity(
     id = id,
     geom = geom,
-    mpaOriname = mpaOriname,
-    desDesigfr = desDesigfr
+    name = name,
+    designation = designation
   )
 
 }
