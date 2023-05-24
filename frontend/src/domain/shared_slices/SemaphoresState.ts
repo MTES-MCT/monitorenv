@@ -24,7 +24,7 @@ const INITIAL_STATE: SemaphoresState = {
 
 const semaphoresSlice = createSlice({
   initialState: INITIAL_STATE,
-  name: 'semaphores',
+  name: 'semaphoresState',
   reducers: {
     addSemaphore(state, action: any) {
       if (state.registeredSemaphores.length === 4) {

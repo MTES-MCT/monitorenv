@@ -1,12 +1,12 @@
 export type Semaphore = {
   administration: string
   base: string
-  dept: string
+  department: string
   email: string
   facade: string
   geom?: { coordinates: number[]; type: string }
   id: number
-  nom: string
-  telephone: string
-  unite: string
+  name: string
+  phoneNumber: string
+  unit: string
 }

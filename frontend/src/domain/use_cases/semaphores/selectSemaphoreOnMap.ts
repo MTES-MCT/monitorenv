@@ -1,4 +1,4 @@
-import { resetSelectedSemaphore, setSelectedSemaphore } from '../../shared_slices/Semaphores'
+import { resetSelectedSemaphore, setSelectedSemaphore } from '../../shared_slices/SemaphoresState'
 
 export const selectSemaphoreOnMap = semaphoreId => dispatch => {
   dispatch(setSelectedSemaphore(semaphoreId))

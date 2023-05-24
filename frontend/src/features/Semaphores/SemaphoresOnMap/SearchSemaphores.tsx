@@ -1,25 +1,41 @@
 import { Accent, Icon, Search } from '@mtes-mct/monitor-ui'
+import Fuse from 'fuse.js'
 import { GeoJSON } from 'ol/format'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
+import { useGetSemaphoresQuery } from '../../../api/semaphoresAPI'
 import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
 import { setDisplayedItems } from '../../../domain/shared_slices/Global'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
-import { addSemaphore, setSelectedSemaphore } from '../../../domain/shared_slices/Semaphores'
+import { addSemaphore, setSelectedSemaphore } from '../../../domain/shared_slices/SemaphoresState'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
-import * as mocks from './semaphores.json'
+
+import type { Semaphore } from '../../../domain/entities/semaphore'
+
+const FUSE_OPTIONS = {
+  includeScore: true,
+  keys: ['unit', 'name']
+}
+
+type SemaphoreOption = {
+  label: string
+  value: Semaphore
+}
 
 export function SearchSemaphores() {
   const dispatch = useDispatch()
 
   const { displaySemaphoresLayer } = useAppSelector(state => state.global)
-  const { registeredSemaphores } = useAppSelector(state => state.semaphores)
+  const { registeredSemaphores } = useAppSelector(state => state.semaphoresState)
+  const { data } = useGetSemaphoresQuery()
 
   const [isRegisteredSemaphoresVisible, setIsRegisteredSemaphoresVisible] = useState(registeredSemaphores.length > 0)
-  const [searchedSemaphores, setSearchedSemaphores] = useState<string | undefined>()
+  const [options, setOptions] = useState<SemaphoreOption[]>([])
+
+  const fuse = new Fuse(data || [], FUSE_OPTIONS)
 
   const setSemaphoreVisibilityOnMap = () => {
     dispatch(setDisplayedItems({ displaySemaphoresLayer: !displaySemaphoresLayer, missionsMenuIsOpen: false }))
@@ -28,12 +44,10 @@ export function SearchSemaphores() {
     dispatch(setDisplayedItems({ isSearchSemaphoreVisible: false }))
   }
 
-  const results = mocks.semaphores.filter(semaphore => semaphore.unite.search(searchedSemaphores || '') !== -1)
-  const options = results.map(result => ({ key: result.id, label: result.unite || result.nom, value: result }))
-
   const handleQuerySemaphore = value => {
     setIsRegisteredSemaphoresVisible(false)
-    setSearchedSemaphores(value)
+    const results = fuse.search(value).map(({ item }) => ({ label: item.name || item.unit, value: item }))
+    setOptions(results)
   }
 
   const handleSelectSemaphore = selectedSemaphore => {
@@ -81,7 +95,7 @@ export function SearchSemaphores() {
           onChange={handleSelectSemaphore}
           onQuery={handleQuerySemaphore}
           options={options}
-          optionValueKey="unite"
+          optionValueKey={'unite' as any}
           placeholder="Rechercher un sémaphore"
         />
 
@@ -90,7 +104,7 @@ export function SearchSemaphores() {
             <StyledHistoricTitle>Historique de recherche</StyledHistoricTitle>
             {registeredSemaphores.map(semaphore => (
               <StyledRegisteredSemaphore key={semaphore.id} onClick={() => selectRegiteredSemaphore(semaphore)}>
-                {semaphore.unite || semaphore.nom}
+                {semaphore.unit || semaphore.name}
               </StyledRegisteredSemaphore>
             ))}
           </StyledRegisteredSemaphoreList>

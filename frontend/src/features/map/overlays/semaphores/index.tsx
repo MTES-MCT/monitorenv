@@ -7,7 +7,7 @@ import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { MapChildrenProps } from '../../Map'
 
 export function SemaphoreOverlay({ currentFeatureOver, map }: MapChildrenProps) {
-  const { selectedSemaphoreId } = useAppSelector(state => state.semaphores)
+  const { selectedSemaphoreId } = useAppSelector(state => state.semaphoresState)
   const { displaySemaphoreOverlay } = useAppSelector(state => state.global)
   const feature = map
     ?.getLayers()

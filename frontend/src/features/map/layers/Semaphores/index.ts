@@ -3,11 +3,11 @@ import VectorSource from 'ol/source/Vector'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { useGetSemaphoresQuery } from '../../../../api/semaphoresAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
-import { setOverlayPosition } from '../../../../domain/shared_slices/Semaphores'
+import { setOverlayPosition } from '../../../../domain/shared_slices/SemaphoresState'
 import { selectSemaphoreOnMap } from '../../../../domain/use_cases/semaphores/selectSemaphoreOnMap'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import * as mocks from '../../../Semaphores/SemaphoresOnMap/semaphores.json'
 import { semaphoreStyles } from './semaphores.style'
 import { getSemaphoreZoneFeature } from './semaphoresGeometryHelpers'
 
@@ -17,11 +17,13 @@ import type { Geometry } from 'ol/geom'
 export function SemaphoresLayer({ map, mapClickEvent }: MapChildrenProps) {
   const dispatch = useDispatch()
   const { displaySemaphoresLayer } = useAppSelector(state => state.global)
-  const { overlayPosition, selectedSemaphoreId } = useAppSelector(state => state.semaphores)
+  const { overlayPosition, selectedSemaphoreId } = useAppSelector(state => state.semaphoresState)
+
+  const { data } = useGetSemaphoresQuery()
 
   const semaphoresPoint = useMemo(
-    () => mocks.semaphores?.filter(f => !!f.geom).map(f => getSemaphoreZoneFeature(f, Layers.SEMAPHORES.code)),
-    []
+    () => data?.filter(f => !!f.geom).map(f => getSemaphoreZoneFeature(f, Layers.SEMAPHORES.code)),
+    [data]
   )
   const vectorSourceRef = useRef() as React.MutableRefObject<VectorSource<Geometry>>
   const GetVectorSource = () => {

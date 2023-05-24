@@ -7,7 +7,7 @@ import { clearSelectedSemaphoreOnMap } from '../../../../domain/use_cases/semaph
 
 export function SemaphoreCard({ feature, selected = false }: { feature: any; selected?: boolean }) {
   const dispatch = useDispatch()
-  const { email, nom, telephone, unite } = feature.getProperties()
+  const { email, name, phoneNumber, unit } = feature.getProperties()
 
   const handleCloseOverlay = useCallback(() => {
     dispatch(clearSelectedSemaphoreOnMap())
@@ -16,7 +16,7 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
   return (
     <Wrapper data-cy="semaphore-overlay">
       <StyledHeader>
-        <StyledTitle>{unite ?? nom.toLowerCase()}</StyledTitle>
+        <StyledTitle>{unit ?? name.toLowerCase()}</StyledTitle>
         <CloseButton
           $isVisible={selected}
           accent={Accent.TERTIARY}
@@ -28,7 +28,7 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
       </StyledHeader>
 
       <StyledContactContainer>
-        {telephone && <span>Contact&nbsp;:&nbsp;{telephone}</span>}
+        {phoneNumber && <span>Contact&nbsp;:&nbsp;{phoneNumber}</span>}
         {email && <span>{email}</span>}
       </StyledContactContainer>
     </Wrapper>
