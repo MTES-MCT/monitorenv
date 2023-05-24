@@ -11,5 +11,3 @@ CREATE TABLE public.semaphores (
     telephone text,
     base text
 );
-
-CREATE INDEX semaphores_geom_sidx ON public.semaphores USING gist (geom);

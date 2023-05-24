@@ -28,7 +28,12 @@ class HealthcheckControllerITests {
     @Test
     fun `Healthcheck returns number of reg areas`() {
         given(this.getHealthcheck.execute()).willReturn(
-            Health(numberOfRegulatoryAreas = 13, numberOfMissions = 50, numberOfNatinfs = 50),
+            Health(
+                numberOfRegulatoryAreas = 13,
+                numberOfMissions = 50,
+                numberOfNatinfs = 50,
+                numberOfSemaphores = 10,
+            ),
         )
         mockMvc.perform(get("/bff/v1/healthcheck"))
             // Then
@@ -36,5 +41,6 @@ class HealthcheckControllerITests {
             .andExpect(jsonPath("numberOfRegulatoryAreas", equalTo(13)))
             .andExpect(jsonPath("numberOfMissions", equalTo(50)))
             .andExpect(jsonPath("numberOfNatinfs", equalTo(50)))
+            .andExpect(jsonPath("numberOfSemaphores", equalTo(10)))
     }
 }
