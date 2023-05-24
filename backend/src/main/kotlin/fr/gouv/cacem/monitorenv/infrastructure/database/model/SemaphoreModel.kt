@@ -16,32 +16,32 @@ data class SemaphoreModel(
   @Column(name = "geom")
   var geom: Point,
   @Column(name = "nom")
-  var nom: String,
+  var name: String,
   @Column(name = "dept")
-  var dept: String? = null,
+  var department: String? = null,
   @Column(name = "facade")
   var facade: String? = null,
   @Column(name = "administration")
   var administration: String? = null,
   @Column(name = "unite")
-  var unite: String? = null,
+  var unit: String? = null,
   @Column(name = "email")
   var email: String? = null,
   @Column(name = "telephone")
-  var telephone: String? = null,
+  var phoneNumber: String? = null,
   @Column(name = "base")
   var base: String? = null
 ) {
   fun toSemaphore() = SemaphoreEntity(
     id = id,
     geom = geom,
-    nom = nom,
-    dept = dept,
+    name = name,
+    department = department,
     facade = facade,
     administration = administration,
-    unite = unite,
+    unit = unit,
     email = email,
-    telephone = telephone,
+    phoneNumber = phoneNumber,
     base = base
   )
 }

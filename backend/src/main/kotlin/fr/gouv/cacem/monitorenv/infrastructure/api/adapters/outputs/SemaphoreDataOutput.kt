@@ -6,26 +6,26 @@ import org.locationtech.jts.geom.Point
 data class SemaphoreDataOutput(
   val id: Int,
   val geom: Point,
-  val nom: String,
-  val dept: String?,
+  val name: String,
+  val department: String?,
   val facade: String?,
   val administration: String?,
-  val unite: String?,
+  val unit: String?,
   val email: String?,
-  val telephone: String?,
+  val phoneNumber: String?,
   val base: String?
 ) {
   companion object{
     fun fromSemaphoreEntity(semaphore: SemaphoreEntity) = SemaphoreDataOutput(
       id = semaphore.id,
       geom = semaphore.geom,
-      nom = semaphore.nom,
-      dept = semaphore.dept,
+      name = semaphore.name,
+      department = semaphore.department,
       facade = semaphore.facade,
       administration = semaphore.administration,
-      unite = semaphore.unite,
+      unit = semaphore.unit,
       email = semaphore.email,
-      telephone = semaphore.telephone,
+      phoneNumber = semaphore.phoneNumber,
       base = semaphore.base,
     )
   }
