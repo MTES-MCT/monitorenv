@@ -9,6 +9,7 @@ import { useNewWindow } from '../../../../ui/NewWindow'
 import { ReactComponent as DeleteSVG } from '../../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as SurveillanceIconSVG } from '../../../../uiMonitor/icons/Observation.svg'
 import { dateDifferenceInHours } from '../../../../utils/dateDifferenceInHours'
+import { pluralize } from '../../../../utils/pluralize'
 import { MultiZonePicker } from '../../MultiZonePicker'
 import { SurveillanceThemes } from './Themes/SurveillanceThemes'
 
@@ -23,6 +24,11 @@ export function SurveillanceForm({ currentActionIndex, readOnly, remove, setCurr
 
   const hasCustomZone = geomField.value && geomField.value.coordinates.length > 0
   const surveillances = actionsFields.value.filter(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
+
+  const duration = dateDifferenceInHours(
+    envActionField.value.actionStartDateTimeUtc,
+    envActionField.value.actionEndDateTimeUtc
+  )
 
   const handleRemoveAction = () => {
     setCurrentActionIndex(undefined)
@@ -75,10 +81,9 @@ export function SurveillanceForm({ currentActionIndex, readOnly, remove, setCurr
               withTime
             />
             {envActionField.value.actionStartDateTimeUtc && envActionField.value.actionEndDateTimeUtc && (
-              <StyledDuration>{`(${dateDifferenceInHours(
-                envActionField.value.actionStartDateTimeUtc,
-                envActionField.value.actionEndDateTimeUtc
-              )} heures)`}</StyledDuration>
+              <StyledDuration>
+                {duration === 0 ? "Moins d'1 heure" : `(${duration} ${pluralize('heure', duration)})`}
+              </StyledDuration>
             )}
           </StyledDatePickerContainer>
           <StyledFormikCheckbox
