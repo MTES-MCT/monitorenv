@@ -27,7 +27,7 @@ const semaphoresSlice = createSlice({
   name: 'semaphoresSlice',
   reducers: {
     addSemaphore(state, action: any) {
-      if (state.registeredSemaphores.length === 4) {
+      if (state.registeredSemaphores.length === 5) {
         state.registeredSemaphores.shift()
       }
       if (!state.registeredSemaphores.find(registeredSemaphore => registeredSemaphore.id === action.payload.id)) {

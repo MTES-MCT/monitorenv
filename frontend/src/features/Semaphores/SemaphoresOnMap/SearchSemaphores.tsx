@@ -1,7 +1,6 @@
-import { Accent, Icon, Search } from '@mtes-mct/monitor-ui'
-import Fuse from 'fuse.js'
+import { Accent, CustomSearch, Icon, Search } from '@mtes-mct/monitor-ui'
 import { GeoJSON } from 'ol/format'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
@@ -13,11 +12,6 @@ import { addSemaphore, setSelectedSemaphore } from '../../../domain/shared_slice
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
 
-const FUSE_OPTIONS = {
-  includeScore: true,
-  keys: ['unit', 'name']
-}
-
 export function SearchSemaphores() {
   const dispatch = useDispatch()
 
@@ -26,9 +20,10 @@ export function SearchSemaphores() {
   const { data } = useGetSemaphoresQuery()
 
   const [isRegisteredSemaphoresVisible, setIsRegisteredSemaphoresVisible] = useState(registeredSemaphores.length > 0)
-  const [options, setOptions] = useState<any>()
-
-  const fuse = new Fuse(data || [], FUSE_OPTIONS)
+  const optionsRef = useRef(data?.map(semaphore => ({ label: semaphore.unit || semaphore.name, value: semaphore })))
+  const customSearchRef = useRef(
+    new CustomSearch(optionsRef.current || [], ['value.name', 'value.unit'], { isStrict: true })
+  )
 
   const setSemaphoreVisibilityOnMap = () => {
     dispatch(setDisplayedItems({ displaySemaphoresLayer: !displaySemaphoresLayer, missionsMenuIsOpen: false }))
@@ -37,12 +32,12 @@ export function SearchSemaphores() {
     dispatch(setDisplayedItems({ isSearchSemaphoreVisible: false }))
   }
 
-  const handleQuerySemaphore = value => {
+  const handleQuerySemaphore = () => {
     setIsRegisteredSemaphoresVisible(false)
-    const results = fuse.search(value).map(({ item }) => ({ label: item.unit || item.name, value: item }))
-    setOptions(results)
   }
-
+  const onClose = () => {
+    setIsRegisteredSemaphoresVisible(true)
+  }
   const handleSelectSemaphore = selectedSemaphore => {
     if (selectedSemaphore) {
       dispatch(addSemaphore(selectedSemaphore))
@@ -52,7 +47,6 @@ export function SearchSemaphores() {
   }
 
   const selectRegiteredSemaphore = selectedRegisteredSemaphore => {
-    setIsRegisteredSemaphoresVisible(false)
     dispatch(setSelectedSemaphore(selectedRegisteredSemaphore.id))
     zoomOnSempahore(selectedRegisteredSemaphore.geom)
   }
@@ -79,30 +73,30 @@ export function SearchSemaphores() {
         />
       </MenuWithCloseButton.Header>
 
-      <StyledSearchContainer>
-        <Search
-          isLabelHidden
-          isLight
-          label="Rechercher un sémaphore"
-          name="search-semaphore"
-          onChange={handleSelectSemaphore}
-          onQuery={handleQuerySemaphore}
-          options={options}
-          optionValueKey={'name' as any}
-          placeholder="Rechercher un sémaphore"
-        />
+      <Search
+        customSearch={customSearchRef.current}
+        isLabelHidden
+        isLight
+        label="Rechercher un sémaphore"
+        name="search-semaphore"
+        onChange={handleSelectSemaphore}
+        onClose={onClose}
+        onQuery={handleQuerySemaphore}
+        options={optionsRef.current}
+        optionValueKey={'name' as any}
+        placeholder="Rechercher un sémaphore"
+      />
 
-        {isRegisteredSemaphoresVisible && (
-          <StyledRegisteredSemaphoreList>
-            <StyledHistoricTitle>Historique de recherche</StyledHistoricTitle>
-            {registeredSemaphores.map(semaphore => (
-              <StyledRegisteredSemaphore key={semaphore.id} onClick={() => selectRegiteredSemaphore(semaphore)}>
-                {semaphore.unit || semaphore.name}
-              </StyledRegisteredSemaphore>
-            ))}
-          </StyledRegisteredSemaphoreList>
-        )}
-      </StyledSearchContainer>
+      {isRegisteredSemaphoresVisible && (
+        <StyledRegisteredSemaphoreList>
+          <StyledHistoricTitle>Historique de recherche</StyledHistoricTitle>
+          {registeredSemaphores.map(semaphore => (
+            <StyledRegisteredSemaphore key={semaphore.id} onClick={() => selectRegiteredSemaphore(semaphore)}>
+              {semaphore.unit || semaphore.name}
+            </StyledRegisteredSemaphore>
+          ))}
+        </StyledRegisteredSemaphoreList>
+      )}
     </MenuWithCloseButton.Container>
   )
 }
@@ -112,6 +106,7 @@ const StyledRegisteredSemaphoreList = styled.div`
   flex-direction: column;
   align-items: start;
   gap: 16px;
+  border-top: 1px solid ${p => p.theme.color.lightGray};
 `
 
 const StyledHistoricTitle = styled.span`
@@ -132,7 +127,4 @@ const StyledRegisteredSemaphore = styled.button`
   &:last-child {
     padding-bottom: 16px;
   }
-`
-const StyledSearchContainer = styled.div`
-  box-shadow: 0px 3px 6px ${p => p.theme.color.slateGray};
 `

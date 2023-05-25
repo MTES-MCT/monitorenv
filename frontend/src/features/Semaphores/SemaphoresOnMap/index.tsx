@@ -24,7 +24,7 @@ export function SemaphoresOnMap() {
         Icon={Icon.Semaphore}
         onClick={openOrCloseSearchSemaphore}
         size={Size.LARGE}
-        title="Chercher un sémpahore"
+        title="Chercher un sémaphore"
       />
     </Wrapper>
   )
