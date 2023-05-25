@@ -3,14 +3,14 @@ import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { clearSelectedSemaphoreOnMap } from '../../../../domain/use_cases/semaphores/selectSemaphoreOnMap'
+import { resetSelectedSemaphore } from '../../../../domain/shared_slices/SemaphoresSlice'
 
 export function SemaphoreCard({ feature, selected = false }: { feature: any; selected?: boolean }) {
   const dispatch = useDispatch()
   const { email, name, phoneNumber, unit } = feature.getProperties()
 
   const handleCloseOverlay = useCallback(() => {
-    dispatch(clearSelectedSemaphoreOnMap())
+    dispatch(resetSelectedSemaphore())
   }, [dispatch])
 
   return (

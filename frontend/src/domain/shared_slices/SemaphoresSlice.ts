@@ -24,7 +24,7 @@ const INITIAL_STATE: SemaphoresState = {
 
 const semaphoresSlice = createSlice({
   initialState: INITIAL_STATE,
-  name: 'semaphoresState',
+  name: 'semaphoresSlice',
   reducers: {
     addSemaphore(state, action: any) {
       if (state.registeredSemaphores.length === 4) {
@@ -36,6 +36,7 @@ const semaphoresSlice = createSlice({
     },
     resetSelectedSemaphore(state) {
       state.selectedSemaphoreId = undefined
+      state.overlayPosition = undefined
     },
     setOverlayPosition(state, action) {
       state.overlayPosition = action.payload

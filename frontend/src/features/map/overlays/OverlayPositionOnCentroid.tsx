@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import { setOverlayPosition } from '../../../domain/shared_slices/SemaphoresState'
+import { setOverlayPosition } from '../../../domain/shared_slices/SemaphoresSlice'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
 import { getOverlayPositionForCentroid, getTopLeftMargin } from './position'
@@ -67,10 +67,12 @@ export function OverlayPositionOnCentroid({
       currentCoordinates.current = undefined
     }
   }, [feature])
+
   useEffect(() => {
     if (map) {
       map.addOverlay(olOverlayObjectRef.current)
-      if (featureIsShowed) {
+
+      if (featureIsShowed && !showed) {
         setShowed(true)
       }
     }
@@ -78,14 +80,13 @@ export function OverlayPositionOnCentroid({
     return () => {
       map.removeOverlay(olOverlayObjectRef.current)
     }
-  }, [map, olOverlayObjectRef, featureIsShowed])
+  }, [map, olOverlayObjectRef, featureIsShowed, showed])
 
   const moveCardWithThrottle = useCallback(
     (target, delay) => {
-      if (isThrottled.current) {
+      if (isThrottled.current && !currentCoordinates.current) {
         return
       }
-
       isThrottled.current = true
       setTimeout(() => {
         if (currentCoordinates.current) {

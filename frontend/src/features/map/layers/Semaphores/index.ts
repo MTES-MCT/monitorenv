@@ -5,8 +5,7 @@ import { useDispatch } from 'react-redux'
 
 import { useGetSemaphoresQuery } from '../../../../api/semaphoresAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
-import { setOverlayPosition } from '../../../../domain/shared_slices/SemaphoresState'
-import { selectSemaphoreOnMap } from '../../../../domain/use_cases/semaphores/selectSemaphoreOnMap'
+import { setOverlayPosition, setSelectedSemaphore } from '../../../../domain/shared_slices/SemaphoresSlice'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { semaphoreStyles } from './semaphores.style'
 import { getSemaphoreZoneFeature } from './semaphoresGeometryHelpers'
@@ -17,7 +16,7 @@ import type { Geometry } from 'ol/geom'
 export function SemaphoresLayer({ map, mapClickEvent }: MapChildrenProps) {
   const dispatch = useDispatch()
   const { displaySemaphoresLayer } = useAppSelector(state => state.global)
-  const { overlayPosition, selectedSemaphoreId } = useAppSelector(state => state.semaphoresState)
+  const { overlayPosition, selectedSemaphoreId } = useAppSelector(state => state.semaphoresSlice)
 
   const { data } = useGetSemaphoresQuery()
 
@@ -86,7 +85,7 @@ export function SemaphoresLayer({ map, mapClickEvent }: MapChildrenProps) {
       const feature = mapClickEvent?.feature
       if (feature.getId()?.toString()?.includes(Layers.SEMAPHORES.code)) {
         const { id } = feature.getProperties()
-        dispatch(selectSemaphoreOnMap(id))
+        dispatch(setSelectedSemaphore(id))
         dispatch(setOverlayPosition(undefined))
       }
     }

@@ -9,31 +9,24 @@ import { useGetSemaphoresQuery } from '../../../api/semaphoresAPI'
 import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
 import { setDisplayedItems } from '../../../domain/shared_slices/Global'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
-import { addSemaphore, setSelectedSemaphore } from '../../../domain/shared_slices/SemaphoresState'
+import { addSemaphore, setSelectedSemaphore } from '../../../domain/shared_slices/SemaphoresSlice'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
-
-import type { Semaphore } from '../../../domain/entities/semaphore'
 
 const FUSE_OPTIONS = {
   includeScore: true,
   keys: ['unit', 'name']
 }
 
-type SemaphoreOption = {
-  label: string
-  value: Semaphore
-}
-
 export function SearchSemaphores() {
   const dispatch = useDispatch()
 
   const { displaySemaphoresLayer } = useAppSelector(state => state.global)
-  const { registeredSemaphores } = useAppSelector(state => state.semaphoresState)
+  const { registeredSemaphores } = useAppSelector(state => state.semaphoresSlice)
   const { data } = useGetSemaphoresQuery()
 
   const [isRegisteredSemaphoresVisible, setIsRegisteredSemaphoresVisible] = useState(registeredSemaphores.length > 0)
-  const [options, setOptions] = useState<SemaphoreOption[]>([])
+  const [options, setOptions] = useState<any>()
 
   const fuse = new Fuse(data || [], FUSE_OPTIONS)
 
@@ -46,7 +39,7 @@ export function SearchSemaphores() {
 
   const handleQuerySemaphore = value => {
     setIsRegisteredSemaphoresVisible(false)
-    const results = fuse.search(value).map(({ item }) => ({ label: item.name || item.unit, value: item }))
+    const results = fuse.search(value).map(({ item }) => ({ label: item.unit || item.name, value: item }))
     setOptions(results)
   }
 
@@ -95,7 +88,7 @@ export function SearchSemaphores() {
           onChange={handleSelectSemaphore}
           onQuery={handleQuerySemaphore}
           options={options}
-          optionValueKey={'unite' as any}
+          optionValueKey={'name' as any}
           placeholder="Rechercher un sémaphore"
         />
 
