@@ -83,7 +83,7 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
         <Title>Actions réalisées en mission</Title>
         {!isClosed && (
           <Dropdown appearance="primary" icon={<PlusSVG className="rs-icon" />} noCaret title="Ajouter">
-            <Dropdown.Item icon={<ControlSVG />} onClick={handleAddControlAction}>
+            <Dropdown.Item data-cy="add-control-action" icon={<ControlSVG />} onClick={handleAddControlAction}>
               Ajouter des contrôles
             </Dropdown.Item>
             <Dropdown.Item

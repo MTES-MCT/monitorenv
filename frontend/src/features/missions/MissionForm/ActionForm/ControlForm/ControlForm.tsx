@@ -136,6 +136,7 @@ export function ControlForm({
         <Form.Group>
           <FormikDatePicker
             baseContainer={newWindowContainerRef.current}
+            data-cy="control-date-time"
             isLight
             isStringDate
             label="Date et heure du contrôle (UTC)"
