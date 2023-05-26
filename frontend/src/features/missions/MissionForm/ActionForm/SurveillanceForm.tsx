@@ -70,6 +70,7 @@ export function SurveillanceForm({ currentActionIndex, readOnly, remove, setCurr
             />
             <StyledFormikDatePicker
               baseContainer={newWindowContainerRef.current}
+              data-cy="surveillance-end-date-time"
               disabled={!!durationMatchMissionField.value}
               isCompact
               isLabelHidden

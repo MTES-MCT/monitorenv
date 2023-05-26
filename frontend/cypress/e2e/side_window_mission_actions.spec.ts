@@ -155,7 +155,7 @@ context('Missions', () => {
     })
   })
 
-  it('A mission should be created with surveillances', () => {
+  it('A mission should be created and closed with surveillances and valid dates', () => {
     // Given
     cy.wait(200)
     cy.get('*[data-cy="add-mission"]').click()
@@ -165,6 +165,8 @@ context('Missions', () => {
     cy.get('*[data-cy="mission-errors"]').should('exist')
 
     // When
+    cy.fill('Début de mission (UTC)', [2023, 5, 26, 12, 0])
+    cy.fill('Fin de mission (UTC)', [2023, 5, 28, 14, 15])
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
 
@@ -176,11 +178,18 @@ context('Missions', () => {
     cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
 
     cy.get('[name="openBy"]').scrollIntoView().type('PCF')
+    cy.get('[name="closedBy"]').scrollIntoView().type('PCF')
 
     // Add a surveillance
     cy.clickButton('Ajouter')
     cy.get('*[data-cy="add-surveillance-action"]').click({ force: true })
     cy.get('*[data-cy="action-card"]').eq(0).click()
+
+    cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Police des espèces protégées').click()
+    cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Perturbation').click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').click('topLeft')
 
     cy.getDataCy('surveillance-duration-matches-mission').should('have.class', 'rs-checkbox-checked')
     cy.get('*[data-cy="surveillance-start-date-time"]')
@@ -233,29 +242,64 @@ context('Missions', () => {
     cy.clickButton('Ajouter')
     cy.getDataCy('add-surveillance-action').click({ force: true })
 
-    cy.getDataCy('action-card').eq(1).click()
+    cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Police des mouillages').click()
+    cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').contains('ZMEL').click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').click('topLeft')
+
+    cy.getDataCy('action-card').eq(0).click()
     cy.getDataCy('surveillance-duration-matches-mission').should('not.have.class', 'rs-checkbox-checked')
 
-    cy.intercept('PUT', '/bff/v1/missions').as('createMission')
-    cy.get('form').submit()
+    // Start date of surveillance is before start date of mission
+    cy.fill('Date et heure de début de surveillance (UTC)', [2023, 5, 25, 23, 35])
+    cy.get('*[data-cy="close-mission"]').click()
+    cy.wait(100)
+    cy.get('*[data-cy="surveillance-start-date-time"] > div > p').contains(
+      'La date doit être postérieure à la date de début de mission'
+    )
+
+    // Start date of surveillance is after end date of mission
+    cy.fill('Date et heure de début de surveillance (UTC)', [2023, 5, 28, 15, 35])
+    cy.get('*[data-cy="close-mission"]').click()
+    cy.wait(100)
+    cy.get('*[data-cy="surveillance-start-date-time"] > div > p').contains(
+      'La date doit être antérieure à la date de fin de mission'
+    )
+
+    // Valid start date of surveillance
+    cy.fill('Date et heure de début de surveillance (UTC)', [2023, 5, 26, 23, 35])
+
+    // End date of surveillance is before start date of mission
+    cy.fill('Date et heure de fin de surveillance (UTC)', [2023, 5, 25, 23, 35])
+    cy.get('*[data-cy="close-mission"]').click()
+    cy.wait(100)
+    cy.get('*[data-cy="surveillance-end-date-time"] > div > p').contains(
+      'La date doit être postérieure à la date de début de mission'
+    )
+
+    // End date of surveillance is after end date of mission
+    cy.fill('Date et heure de fin de surveillance (UTC)', [2023, 5, 28, 15, 35])
+    cy.get('*[data-cy="close-mission"]').click()
+    cy.wait(100)
+    cy.get('*[data-cy="surveillance-end-date-time"] > div > p').contains(
+      'La date doit être antérieure à la date de fin de mission'
+    )
+
+    // Valid end date of surveillance
+    cy.fill('Date et heure de fin de surveillance (UTC)', [2023, 5, 28, 13, 35])
 
     // Then
-    cy.wait('@createMission').then(({ request, response }) => {
-      expect(response && response.statusCode).equal(200)
+    cy.intercept('PUT', '/bff/v1/missions').as('createAndCloseMission')
+    cy.get('*[data-cy="close-mission"]').click()
+    cy.wait(100)
 
-      expect(request.body.missionTypes.length).equal(2)
-      expect(request.body.missionTypes[0]).equal('SEA')
-      expect(request.body.missionTypes[1]).equal('LAND')
-      expect(request.body.controlUnits.length).equal(1)
-      const controlUnit = request.body.controlUnits[0]
-      expect(controlUnit.administration).equal('DIRM / DM')
-      expect(controlUnit.id).equal(10012)
-      expect(controlUnit.name).equal('Cross Etel')
+    cy.wait('@createAndCloseMission').then(({ response }) => {
+      expect(response && response.statusCode).equal(200)
     })
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('10')
   })
 
-  it('A mission should be created with valid dates', () => {
+  it('A mission should be created with valid dates for control action', () => {
     // Given
     cy.wait(200)
     cy.get('*[data-cy="add-mission"]').click()
