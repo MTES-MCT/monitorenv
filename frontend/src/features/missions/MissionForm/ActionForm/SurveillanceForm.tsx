@@ -55,7 +55,7 @@ export function SurveillanceForm({ currentActionIndex, readOnly, remove, setCurr
         <Form.Group>
           <Form.ControlLabel>Début et fin de surveillance (UTC)</Form.ControlLabel>
           <StyledDatePickerContainer>
-            <FormikDatePicker
+            <StyledFormikDatePicker
               baseContainer={newWindowContainerRef.current}
               data-cy="surveillance-start-date-time"
               disabled={!!durationMatchMissionField.value}
@@ -68,7 +68,7 @@ export function SurveillanceForm({ currentActionIndex, readOnly, remove, setCurr
               name={`envActions[${currentActionIndex}].actionStartDateTimeUtc`}
               withTime
             />
-            <FormikDatePicker
+            <StyledFormikDatePicker
               baseContainer={newWindowContainerRef.current}
               disabled={!!durationMatchMissionField.value}
               isCompact
@@ -135,6 +135,7 @@ const Title = styled.h2`
 const FlexSelectorWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: baseline;
   gap: 8px;
   margin-bottom: 24px;
 `
@@ -142,8 +143,13 @@ const StyledDatePickerContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 8px;
-  align-items: center;
+  align-items: baseline;
   margin-bottom: 8px;
+`
+const StyledFormikDatePicker = styled(FormikDatePicker)`
+  p {
+    max-width: 200px;
+  }
 `
 const StyledDuration = styled.div`
   font-size: 13px;
