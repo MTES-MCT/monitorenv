@@ -3,10 +3,18 @@ import { fr } from 'date-fns/locale'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
+import { InteractionListener } from '../../../../domain/entities/map/constants'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 export function SurveillanceCard({ feature }) {
+  const listener = useAppSelector(state => state.draw.listener)
+
   const { actionStartDateTimeUtc, actionTheme } = feature.getProperties()
   const parsedActionStartDateTimeUtc = new Date(actionStartDateTimeUtc)
+
+  if (listener === InteractionListener.SURVEILLANCE_ZONE) {
+    return null
+  }
 
   return (
     <SurveillanceCardHeader>
