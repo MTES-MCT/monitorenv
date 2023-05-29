@@ -3,6 +3,7 @@ import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
+import { setOverlayPosition } from '../../../../domain/shared_slices/Global'
 import { resetSelectedSemaphore } from '../../../../domain/shared_slices/SemaphoresSlice'
 
 export function SemaphoreCard({ feature, selected = false }: { feature: any; selected?: boolean }) {
@@ -11,6 +12,7 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
 
   const handleCloseOverlay = useCallback(() => {
     dispatch(resetSelectedSemaphore())
+    dispatch(setOverlayPosition(undefined))
   }, [dispatch])
 
   return (

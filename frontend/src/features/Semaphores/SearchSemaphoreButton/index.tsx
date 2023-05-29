@@ -7,7 +7,7 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
 import { SearchSemaphores } from './SearchSemaphores'
 
-export function SemaphoresOnMap() {
+export function SearchSemaphoreButton() {
   const dispatch = useAppDispatch()
   const { isSearchSemaphoreVisible } = useAppSelector(state => state.global)
 

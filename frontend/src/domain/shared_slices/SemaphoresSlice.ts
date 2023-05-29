@@ -5,21 +5,19 @@ import storage from 'redux-persist/lib/storage'
 import type { Semaphore } from '../entities/semaphore'
 
 const persistConfig = {
-  blacklist: ['overlayPosition', 'selectedSemaphoreId'],
+  blacklist: ['selectedSemaphoreId'],
   key: 'semaphores',
   storage
 }
 
 type SemaphoresState = {
-  overlayPosition: [number, number] | undefined
-  registeredSemaphores: Semaphore[]
   selectedSemaphoreId: number | undefined
+  semaphoresResearchHistory: Semaphore[]
 }
 
 const INITIAL_STATE: SemaphoresState = {
-  overlayPosition: undefined,
-  registeredSemaphores: [],
-  selectedSemaphoreId: undefined
+  selectedSemaphoreId: undefined,
+  semaphoresResearchHistory: []
 }
 
 const semaphoresSlice = createSlice({
@@ -27,19 +25,15 @@ const semaphoresSlice = createSlice({
   name: 'semaphoresSlice',
   reducers: {
     addSemaphore(state, action: any) {
-      if (state.registeredSemaphores.length === 5) {
-        state.registeredSemaphores.shift()
+      if (state.semaphoresResearchHistory.length === 5) {
+        state.semaphoresResearchHistory.shift()
       }
-      if (!state.registeredSemaphores.find(registeredSemaphore => registeredSemaphore.id === action.payload.id)) {
-        state.registeredSemaphores.push(action.payload)
+      if (!state.semaphoresResearchHistory.find(registeredSemaphore => registeredSemaphore.id === action.payload.id)) {
+        state.semaphoresResearchHistory.push(action.payload)
       }
     },
     resetSelectedSemaphore(state) {
       state.selectedSemaphoreId = undefined
-      state.overlayPosition = undefined
-    },
-    setOverlayPosition(state, action) {
-      state.overlayPosition = action.payload
     },
     setSelectedSemaphore(state, action) {
       state.selectedSemaphoreId = action.payload
@@ -47,7 +41,6 @@ const semaphoresSlice = createSlice({
   }
 })
 
-export const { addSemaphore, resetSelectedSemaphore, setOverlayPosition, setSelectedSemaphore } =
-  semaphoresSlice.actions
+export const { addSemaphore, resetSelectedSemaphore, setSelectedSemaphore } = semaphoresSlice.actions
 
 export const semaphoresPersistedReducer = persistReducer(persistConfig, semaphoresSlice.reducer)

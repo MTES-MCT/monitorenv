@@ -12,7 +12,7 @@ type GlobalStateType = {
   displayLocateOnMap: boolean
   displayMeasurement: boolean
   displayInterestPoint: boolean
-  displaySemaphoreButton: boolean
+  displaySearchSemaphoreButton: boolean
 
   displayMissionsOverlay: boolean
   // state entry for every layer whose visibility should be controlled
@@ -33,6 +33,8 @@ type GlobalStateType = {
   error: any
 
   healthcheckTextWarning?: string
+
+  overlayPosition: [number, number] | undefined
 }
 const initialState: GlobalStateType = {
   // state entry for every component /menu displayed on map whose visibility should be controlled
@@ -42,7 +44,7 @@ const initialState: GlobalStateType = {
   displayLocateOnMap: true,
   displayMeasurement: true,
   displayInterestPoint: true,
-  displaySemaphoreButton: true,
+  displaySearchSemaphoreButton: true,
 
   displayMissionsOverlay: true,
   // state entry for every layer whose visibility should be controlled
@@ -62,7 +64,9 @@ const initialState: GlobalStateType = {
 
   error: null,
 
-  healthcheckTextWarning: undefined
+  healthcheckTextWarning: undefined,
+
+  overlayPosition: undefined
 }
 
 const globalSlice = createSlice({
@@ -95,11 +99,20 @@ const globalSlice = createSlice({
      */
     setHealthcheckTextWarning(state, action) {
       state.healthcheckTextWarning = action.payload
+    },
+    setOverlayPosition(state, action) {
+      state.overlayPosition = action.payload
     }
   }
 })
 
-export const { removeError, setDisplayedItems, setError, setHealthcheckTextWarning, setMapToolOpened } =
-  globalSlice.actions
+export const {
+  removeError,
+  setDisplayedItems,
+  setError,
+  setHealthcheckTextWarning,
+  setMapToolOpened,
+  setOverlayPosition
+} = globalSlice.actions
 
 export const globalReducer = globalSlice.reducer

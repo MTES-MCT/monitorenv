@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import { setOverlayPosition } from '../../../domain/shared_slices/SemaphoresSlice'
+import { setOverlayPosition } from '../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
 import { getOverlayPositionForCentroid, getTopLeftMargin } from './position'

@@ -16,10 +16,10 @@ export function SearchSemaphores() {
   const dispatch = useDispatch()
 
   const { displaySemaphoresLayer } = useAppSelector(state => state.global)
-  const { registeredSemaphores } = useAppSelector(state => state.semaphoresSlice)
+  const { semaphoresResearchHistory } = useAppSelector(state => state.semaphoresSlice)
   const { data } = useGetSemaphoresQuery()
 
-  const [isRegisteredSemaphoresVisible, setIsRegisteredSemaphoresVisible] = useState(registeredSemaphores.length > 0)
+  const [isSemaphoresHistoryVisible, setIsSemaphoresHistoryVisible] = useState(semaphoresResearchHistory.length > 0)
   const optionsRef = useRef(data?.map(semaphore => ({ label: semaphore.unit || semaphore.name, value: semaphore })))
   const customSearchRef = useRef(
     new CustomSearch(optionsRef.current || [], ['value.name', 'value.unit'], { isStrict: true })
@@ -33,10 +33,10 @@ export function SearchSemaphores() {
   }
 
   const handleQuerySemaphore = () => {
-    setIsRegisteredSemaphoresVisible(false)
+    setIsSemaphoresHistoryVisible(false)
   }
   const onClose = () => {
-    setIsRegisteredSemaphoresVisible(true)
+    setIsSemaphoresHistoryVisible(true)
   }
   const handleSelectSemaphore = selectedSemaphore => {
     if (selectedSemaphore) {
@@ -87,10 +87,10 @@ export function SearchSemaphores() {
         placeholder="Rechercher un sémaphore"
       />
 
-      {isRegisteredSemaphoresVisible && (
+      {isSemaphoresHistoryVisible && (
         <StyledRegisteredSemaphoreList>
           <StyledHistoricTitle>Historique de recherche</StyledHistoricTitle>
-          {registeredSemaphores.map(semaphore => (
+          {semaphoresResearchHistory.map(semaphore => (
             <StyledRegisteredSemaphore key={semaphore.id} onClick={() => selectRegiteredSemaphore(semaphore)}>
               {semaphore.unit || semaphore.name}
             </StyledRegisteredSemaphore>
