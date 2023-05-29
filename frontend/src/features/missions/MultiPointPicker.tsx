@@ -25,18 +25,16 @@ import type { Coordinate } from 'ol/coordinate'
 
 export type MultiPointPickerProps = {
   addButtonLabel: string
-  containerName: string
   label: string
   name: string
   readOnly: boolean
 }
-export function MultiPointPicker({ addButtonLabel, containerName, label, name, readOnly }: MultiPointPickerProps) {
+export function MultiPointPicker({ addButtonLabel, label, name, readOnly }: MultiPointPickerProps) {
   const dispatch = useAppDispatch()
   const listener = useAppSelector(state => state.draw.listener)
   const { coordinatesFormat } = useAppSelector(state => state.map)
   const { geometry } = useListenForDrawedGeometry(InteractionListener.CONTROL_POINT)
 
-  const [containerField] = useField(containerName)
   const [field, , helpers] = useField(name)
   const { value } = field
   const { setValue } = helpers
@@ -77,8 +75,8 @@ export function MultiPointPicker({ addButtonLabel, containerName, label, name, r
   }
 
   const handleAddPoint = useCallback(() => {
-    dispatch(addControlPosition(value, containerField.value))
-  }, [dispatch, value, containerField.value])
+    dispatch(addControlPosition(value))
+  }, [dispatch, value])
 
   const handleDeleteZone = useCallback(
     (index: number) => {

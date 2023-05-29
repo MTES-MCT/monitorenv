@@ -146,7 +146,6 @@ export function ControlForm({
 
         <MultiPointPicker
           addButtonLabel="Ajouter un point de contrôle"
-          containerName="geom"
           label="Lieu du contrôle"
           name={`envActions[${currentActionIndex}].geom`}
           readOnly={readOnly}
