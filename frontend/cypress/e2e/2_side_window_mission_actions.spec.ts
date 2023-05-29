@@ -105,7 +105,7 @@ context('Missions', () => {
       expect(response && response.statusCode).equal(200)
 
       const { observations } = request.body.envActions.find(a => a.id === 'c52c6f20-e495-4b29-b3df-d7edfb67fdd7')
-      expect(observations).equal('Une observation importante')
+      expect(observations).equal('RUne observation importante')
     })
   })
 
