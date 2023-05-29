@@ -37,7 +37,7 @@ export function LocateOnMap() {
         data-cy="location-search-input"
         isLabelHidden
         isLight
-        isSearchIconHidden
+        isSearchIconVisible={false}
         label="Rechercher un lieu"
         name="search-place"
         onChange={placeId => handleSelectLocation(placeId)}

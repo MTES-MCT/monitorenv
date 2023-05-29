@@ -182,8 +182,7 @@ context('Missions', () => {
 
     // Add a surveillance
     cy.clickButton('Ajouter')
-    cy.get('*[data-cy="add-surveillance-action"]').click({ force: true })
-    cy.get('*[data-cy="action-card"]').eq(0).click()
+    cy.clickButton('Ajouter une surveillance')
 
     cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').contains('Police des espèces protégées').click()
@@ -240,7 +239,7 @@ context('Missions', () => {
 
     // Add a second surveillance
     cy.clickButton('Ajouter')
-    cy.getDataCy('add-surveillance-action').click({ force: true })
+    cy.clickButton('Ajouter une surveillance')
 
     cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').contains('Police des mouillages').click()
@@ -255,7 +254,7 @@ context('Missions', () => {
     cy.fill('Date et heure de début de surveillance (UTC)', [2023, 5, 25, 23, 35])
     cy.get('*[data-cy="close-mission"]').click()
     cy.wait(100)
-    cy.get('*[data-cy="surveillance-start-date-time"] > div > p').contains(
+    cy.get('.Field-DatePicker .Element-FieldError').contains(
       'La date doit être postérieure à la date de début de mission'
     )
 
@@ -263,9 +262,7 @@ context('Missions', () => {
     cy.fill('Date et heure de début de surveillance (UTC)', [2023, 5, 28, 15, 35])
     cy.get('*[data-cy="close-mission"]').click()
     cy.wait(100)
-    cy.get('*[data-cy="surveillance-start-date-time"] > div > p').contains(
-      'La date doit être antérieure à la date de fin de mission'
-    )
+    cy.get('.Field-DatePicker .Element-FieldError').contains('La date doit être antérieure à la date de fin de mission')
 
     // Valid start date of surveillance
     cy.fill('Date et heure de début de surveillance (UTC)', [2023, 5, 26, 23, 35])
@@ -274,7 +271,7 @@ context('Missions', () => {
     cy.fill('Date et heure de fin de surveillance (UTC)', [2023, 5, 25, 23, 35])
     cy.get('*[data-cy="close-mission"]').click()
     cy.wait(100)
-    cy.get('*[data-cy="surveillance-end-date-time"] > div > p').contains(
+    cy.get('.Field-DatePicker .Element-FieldError').contains(
       'La date doit être postérieure à la date de début de mission'
     )
 
@@ -282,9 +279,7 @@ context('Missions', () => {
     cy.fill('Date et heure de fin de surveillance (UTC)', [2023, 5, 28, 15, 35])
     cy.get('*[data-cy="close-mission"]').click()
     cy.wait(100)
-    cy.get('*[data-cy="surveillance-end-date-time"] > div > p').contains(
-      'La date doit être antérieure à la date de fin de mission'
-    )
+    cy.get('.Field-DatePicker .Element-FieldError').contains('La date doit être antérieure à la date de fin de mission')
 
     // Valid end date of surveillance
     cy.fill('Date et heure de fin de surveillance (UTC)', [2023, 5, 28, 13, 35])
@@ -323,8 +318,7 @@ context('Missions', () => {
 
     // Add a control
     cy.clickButton('Ajouter')
-    cy.get('*[data-cy="add-control-action"]').click({ force: true })
-    cy.get('*[data-cy="action-card"]').eq(0).click()
+    cy.clickButton('Ajouter des contrôles')
 
     cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').contains('Police des espèces protégées').click()

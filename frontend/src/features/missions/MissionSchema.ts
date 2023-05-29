@@ -108,15 +108,19 @@ const getEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActionControl> =>
       actionStartDateTimeUtc: Yup.string()
         .nullable()
         .required('Requis')
-        .test('isDateBefore', 'La date doit être postérieure à la date de début de mission', value =>
-          value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true
-        )
-        .test('isDateAfter', 'La date doit être antérieure à la date de fin de mission', value => {
-          if (!ctx.from[1].value.endDateTimeUtc) {
-            return true
-          }
+        .test({
+          message: 'La date doit être postérieure à la date de début de mission',
+          test: value => (value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true)
+        })
+        .test({
+          message: 'La date doit être antérieure à la date de fin de mission',
+          test: value => {
+            if (!ctx.from[1].value.endDateTimeUtc) {
+              return true
+            }
 
-          return value ? !(new Date(value) > new Date(ctx.from[1].value.endDateTimeUtc)) : true
+            return value ? !(new Date(value) > new Date(ctx.from[1].value.endDateTimeUtc)) : true
+          }
         }),
       actionTargetType: Yup.string().nullable().required('Requis'),
       actionType: Yup.mixed().oneOf([ActionTypeEnum.CONTROL]),
@@ -141,29 +145,37 @@ const getEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<EnvActionSurveil
       actionEndDateTimeUtc: Yup.date()
         .nullable()
         .required('Requis')
-        .test('isDateBefore', 'La date doit être postérieure à la date de début de mission', value =>
-          value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true
-        )
-        .test('isDateAfter', 'La date doit être antérieure à la date de fin de mission', value => {
-          if (!ctx.from[1].value.endDateTimeUtc) {
-            return true
-          }
+        .test({
+          message: 'La date doit être postérieure à la date de début de mission',
+          test: value => (value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true)
+        })
+        .test({
+          message: 'La date doit être antérieure à la date de fin de mission',
+          test: value => {
+            if (!ctx.from[1].value.endDateTimeUtc) {
+              return true
+            }
 
-          return value ? !(new Date(value) > new Date(ctx.from[1].value.endDateTimeUtc)) : true
+            return value ? !(new Date(value) > new Date(ctx.from[1].value.endDateTimeUtc)) : true
+          }
         })
         .min(Yup.ref('actionStartDateTimeUtc'), () => 'La date de fin doit être postérieure à la date de début'),
       actionStartDateTimeUtc: Yup.date()
         .nullable()
         .required('Requis')
-        .test('isDateBefore', 'La date doit être postérieure à la date de début de mission', value =>
-          value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true
-        )
-        .test('isDateAfter', 'La date doit être antérieure à la date de fin de mission', value => {
-          if (!ctx.from[1].value.endDateTimeUtc) {
-            return true
-          }
+        .test({
+          message: 'La date doit être postérieure à la date de début de mission',
+          test: value => (value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true)
+        })
+        .test({
+          message: 'La date doit être antérieure à la date de fin de mission',
+          test: value => {
+            if (!ctx.from[1].value.endDateTimeUtc) {
+              return true
+            }
 
-          return value ? !(new Date(value) > new Date(ctx.from[1].value.endDateTimeUtc)) : true
+            return value ? !(new Date(value) > new Date(ctx.from[1].value.endDateTimeUtc)) : true
+          }
         }),
       actionType: Yup.mixed().oneOf([ActionTypeEnum.SURVEILLANCE]),
       geom: Yup.array().ensure(),
