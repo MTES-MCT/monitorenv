@@ -1,3 +1,4 @@
+import { useBeforeunload } from 'react-beforeunload'
 import { ToastContainer } from 'react-toastify'
 import styled from 'styled-components'
 
@@ -23,6 +24,13 @@ export function HomePage() {
     displayMissionMenuButton,
     displaySearchSemaphoreButton
   } = useAppSelector(state => state.global)
+  const { isFormDirty, missionState } = useAppSelector(state => state.missionState)
+
+  useBeforeunload(event => {
+    if (isFormDirty && missionState) {
+      event.preventDefault()
+    }
+  })
 
   return (
     <>
