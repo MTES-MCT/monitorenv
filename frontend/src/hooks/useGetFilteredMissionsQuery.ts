@@ -20,7 +20,7 @@ export const useGetFilteredMissionsQuery = () => {
     typeFilter,
     unitFilter
   } = useAppSelector(state => state.missionFilters)
-  const { data, isError, isLoading } = useGetMissionsQuery(
+  const { data, isError, isFetching, isLoading } = useGetMissionsQuery(
     {
       missionSource: sourceFilter,
       missionStatus: statusFilter,
@@ -49,5 +49,5 @@ export const useGetFilteredMissionsQuery = () => {
     )
   }, [data, administrationFilter, themeFilter, unitFilter])
 
-  return { isError, isLoading, missions }
+  return { isError, isFetching, isLoading, missions }
 }

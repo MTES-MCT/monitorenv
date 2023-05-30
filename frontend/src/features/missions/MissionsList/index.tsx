@@ -13,7 +13,7 @@ import { MissionsTable } from './MissionsTable'
 export function Missions() {
   const dispatch = useDispatch()
 
-  const { isError, isLoading, missions } = useGetFilteredMissionsQuery()
+  const { isError, isFetching, isLoading, missions } = useGetFilteredMissionsQuery()
 
   return (
     <>
@@ -36,7 +36,7 @@ export function Missions() {
         {isError ? (
           <p data-cy="listMissionWrapper">Erreur au chargement des données</p>
         ) : (
-          <MissionsTable isLoading={isLoading} missions={missions} />
+          <MissionsTable isFetching={isFetching} isLoading={isLoading} missions={missions} />
         )}
       </SideWindowContent>
     </>

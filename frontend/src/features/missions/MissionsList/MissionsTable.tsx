@@ -11,7 +11,15 @@ import { Columns } from './Columns'
 
 import type { Mission } from '../../../domain/entities/missions'
 
-export function MissionsTable({ isLoading, missions }: { isLoading: boolean; missions: Mission[] }) {
+export function MissionsTable({
+  isFetching,
+  isLoading,
+  missions
+}: {
+  isFetching: boolean
+  isLoading: boolean
+  missions: Mission[]
+}) {
   const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'startDate' }])
 
   const table = useReactTable({
@@ -52,6 +60,7 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
 
   return (
     <StyledMissionsContainer ref={tableContainerRef}>
+      {isFetching && <Loader center content={<span>Chargement</span>} size="md" />}
       <SimpleTable.Table>
         <SimpleTable.Head>
           {table.getHeaderGroups().map(headerGroup => (
