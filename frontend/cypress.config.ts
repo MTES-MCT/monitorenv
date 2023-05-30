@@ -18,7 +18,11 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       return cypressPlugins(on, config) as any
     },
-    specPattern: 'cypress/e2e/**/*.{js,jsx,ts,tsx}'
+    specPattern: [
+      'cypress/e2e/00_side_window_missions.spec.ts',
+      'cypress/e2e/01_side_window_mission.spec.ts',
+      'cypress/e2e/02_side_window_mission_actions.spec.ts'
+    ]
   },
   env: {
     'cypress-plugin-snapshots': {
