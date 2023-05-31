@@ -34,10 +34,17 @@ jobs:
     - name: Set VERSION
       run: |
         if [ "${ENV_PROFILE}" != "prod" ]; then\
-            echo "VERSION=${{ steps.lastrelease.outputs.release }}_snapshot" >> $GITHUB_ENV
-        else\
-            echo "VERSION=${{ steps.lastrelease.outputs.release }}" >> $GITHUB_ENV
-        fi
+              if [ "${{github.ref}}" == "refs/heads/main" ]; then\
+                  export VERSION=${{ steps.lastrelease.outputs.release }}_snapshot
+              else\
+                  export REF_NAME=${{ github.ref_name }}
+                  export VERSION=${REF_NAME//\//_}
+              fi
+          else\
+              export VERSION=${{ steps.lastrelease.outputs.release }}
+          fi
+          echo $VERSION
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
 
     - name: Set up Docker Buildx
       id: buildx
@@ -78,7 +85,6 @@ jobs:
       run: make docker-test-pipeline
                 
     - name: Push docker image to registry
-      if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v') || startsWith(github.ref, 'refs/heads/v')
       run: |
         echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${GITHUB_ACTOR} --password-stdin
         make docker-tag-pipeline
