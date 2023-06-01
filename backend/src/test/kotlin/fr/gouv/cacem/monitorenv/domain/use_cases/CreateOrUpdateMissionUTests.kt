@@ -1,17 +1,13 @@
-
 package fr.gouv.cacem.monitorenv.domain.use_cases // ktlint-disable package-name
 
-import com.nhaarman.mockitokotlin2.anyOrNull
-import com.nhaarman.mockitokotlin2.given
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.*
 import fr.gouv.cacem.monitorenv.domain.entities.missions.*
 import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.UpdateMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
+import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.catchThrowable
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.locationtech.jts.geom.MultiPoint
@@ -23,7 +19,7 @@ import java.time.ZonedDateTime
 import java.util.*
 
 @ExtendWith(SpringExtension::class)
-class UpdateMissionUTests {
+class CreateOrUpdateMissionUTests {
 
     @MockBean
     private lateinit var departmentRepository: IDepartmentAreasRepository
@@ -35,10 +31,10 @@ class UpdateMissionUTests {
     private lateinit var facadeAreasRepository: IFacadeAreasRepository
 
     @Test
-    fun `execute Should throw an exception When no mission to update is given`() {
+    fun `execute Should throw an exception When input mission is null`() {
         // When
-        val throwable = catchThrowable {
-            UpdateMission(departmentRepository, missionRepository, facadeAreasRepository)
+        val throwable = Assertions.catchThrowable {
+            CreateOrUpdateMission(departmentRepository, missionRepository, facadeAreasRepository)
                 .execute(null)
         }
 
@@ -48,7 +44,7 @@ class UpdateMissionUTests {
     }
 
     @Test
-    fun `execute Should return the updated mission When a field to update is given`() {
+    fun `should return the mission to create or update with computed facade and department info`() {
         // Given
         val wktReader = WKTReader()
 
@@ -58,7 +54,7 @@ class UpdateMissionUTests {
         val multipointString = "MULTIPOINT((49.354105 -0.427455))"
         val point = wktReader.read(multipointString) as MultiPoint
 
-        val missionToUpdate = MissionEntity(
+        val missionToCreate = MissionEntity(
             missionTypes = listOf(MissionTypeEnum.LAND),
             facade = "Outre-Mer",
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
@@ -84,7 +80,7 @@ class UpdateMissionUTests {
             )
         )
 
-        val expectedUpdatedMission = missionToUpdate.copy(
+        val expectedCreatedMission = missionToCreate.copy(
             facade = null,
             envActions = listOf(
                 EnvActionControlEntity(
@@ -106,18 +102,15 @@ class UpdateMissionUTests {
             )
         )
 
-        given(missionRepository.save(expectedUpdatedMission)).willReturn(
-            expectedUpdatedMission,
-        )
+        given(missionRepository.save(expectedCreatedMission)).willReturn(expectedCreatedMission)
         given(facadeAreasRepository.findFacadeFromGeometry(anyOrNull())).willReturn("La Face Ade")
         given(departmentRepository.findDepartmentFromGeometry(anyOrNull())).willReturn("Quequ'part")
 
         // When
-        val updatedMission = UpdateMission(departmentRepository, missionRepository, facadeAreasRepository)
-            .execute(missionToUpdate)
+        val createdMission = CreateOrUpdateMission(departmentRepository, missionRepository, facadeAreasRepository).execute(missionToCreate)
 
         // Then
-        verify(missionRepository, times(1)).save(expectedUpdatedMission)
-        assertThat(updatedMission).isEqualTo(expectedUpdatedMission)
+        verify(missionRepository, times(1)).save(expectedCreatedMission)
+        assertThat(createdMission).isEqualTo(expectedCreatedMission)
     }
 }

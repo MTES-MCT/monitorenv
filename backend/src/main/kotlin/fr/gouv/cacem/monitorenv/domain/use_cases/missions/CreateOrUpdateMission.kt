@@ -5,17 +5,19 @@ import fr.gouv.cacem.monitorenv.domain.entities.missions.*
 import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
-import kotlin.reflect.typeOf
 
 @UseCase
-class CreateMission(
+class CreateOrUpdateMission(
     private val departmentRepository: IDepartmentAreasRepository,
     private val missionRepository: IMissionRepository,
     private val facadeRepository: IFacadeAreasRepository,
 
 ) {
     @Throws(IllegalArgumentException::class)
-    fun execute(mission: MissionEntity): MissionEntity {
+    fun execute(mission: MissionEntity?): MissionEntity {
+        require(mission != null) {
+            "No mission to update"
+        }
         val envActions = mission.envActions?.map {
             when (it.actionType) {
                 ActionTypeEnum.CONTROL -> {

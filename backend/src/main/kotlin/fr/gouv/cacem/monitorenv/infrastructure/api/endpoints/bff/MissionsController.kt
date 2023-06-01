@@ -1,11 +1,10 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSourceEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionById
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMonitorEnvMissions
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.UpdateMission
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.MissionDataOutput
 import io.swagger.v3.oas.annotations.Operation
@@ -27,10 +26,9 @@ import java.time.ZonedDateTime
 @RequestMapping("/bff/v1/missions")
 @Tag(description = "API Missions", name = "Missions")
 class MissionsController(
-    private val createMission: CreateMission,
+    private val createOrUpdateMission: CreateOrUpdateMission,
     private val getMonitorEnvMissions: GetMonitorEnvMissions,
     private val getMissionById: GetMissionById,
-    private val updateMission: UpdateMission,
     private val deleteMission: DeleteMission,
 ) {
 
@@ -84,7 +82,7 @@ class MissionsController(
         createMissionDataInput: CreateOrUpdateMissionDataInput,
     ): MissionDataOutput {
         val newMission = createMissionDataInput.toMissionEntity()
-        val createdMission = createMission.execute(mission = newMission)
+        val createdMission = createOrUpdateMission.execute(mission = newMission)
         return MissionDataOutput.fromMission(createdMission)
     }
 
@@ -112,7 +110,7 @@ class MissionsController(
         if ((updateMissionDataInput.id != null) && (missionId != updateMissionDataInput.id)) {
             throw java.lang.IllegalArgumentException("missionId doesn't match with request param")
         }
-        return updateMission.execute(
+        return createOrUpdateMission.execute(
             mission = updateMissionDataInput.toMissionEntity(),
         ).let {
             MissionDataOutput.fromMission(it)
