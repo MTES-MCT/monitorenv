@@ -2,10 +2,11 @@ WITH facades_intersection_areas AS (
     SELECT
         missions.id,
         facade_areas_subdivided.facade,
-        SUM(ST_Area(ST_Intersection(missions.geom, facade_areas_subdivided.geometry)::geography)) AS intersection_area
-    FROM facade_areas_subdivided
-    JOIN missions
+        SUM(ST_Area(ST_Intersection(ST_MakeValid(missions.geom), facade_areas_subdivided.geometry)::geography)) AS intersection_area
+    FROM missions
+    LEFT JOIN facade_areas_subdivided
     ON ST_Intersects(missions.geom, facade_areas_subdivided.geometry)
+    WHERE mission_source IN ('MONITORENV', 'MONITORFISH')
     GROUP BY missions.id, facade_areas_subdivided.facade
 ),
 
@@ -25,7 +26,7 @@ missions_facades AS (
     WHERE rk = 1
 )
 
-UPDATE missions
-SET facade = missions_facades.facade
-FROM missions_facades
-WHERE missions.id = missions_facades.id;
+UPDATE missions m
+SET facade = mf.facade
+FROM missions_facades mf
+WHERE m.id = mf.id;
