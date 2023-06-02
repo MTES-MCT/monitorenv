@@ -40,7 +40,7 @@ export const Columns = [
     header: () => 'Unité (Administration)',
     id: 'unitAndAdministration',
     maxSize: 280,
-    minSize: 200
+    minSize: 230
   },
   {
     accessorFn: row => row.missionTypes,
@@ -48,7 +48,7 @@ export const Columns = [
     enableSorting: false,
     header: () => 'Type',
     id: 'type',
-    size: 100
+    size: 90
   },
   {
     accessorFn: row => row.facade,
@@ -66,7 +66,7 @@ export const Columns = [
     id: 'themes',
     maxSize: 280,
     minSize: 100,
-    size: 200
+    size: 230
   },
   {
     accessorFn: row => row.envActions,
@@ -90,7 +90,7 @@ export const Columns = [
     enableSorting: false,
     header: () => '',
     id: 'geom',
-    size: 60
+    size: 55
   },
   {
     accessorFn: row => row.id,
@@ -98,6 +98,6 @@ export const Columns = [
     enableSorting: false,
     header: () => '',
     id: 'edit',
-    size: 160
+    size: 100
   }
 ]
