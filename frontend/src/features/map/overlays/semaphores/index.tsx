@@ -6,6 +6,14 @@ import { SemaphoreCard } from './SemaphoreCard'
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { MapChildrenProps } from '../../Map'
 
+const MARGINS = {
+  xLeft: 50,
+  xMiddle: 30,
+  xRight: -55,
+  yBottom: 0,
+  yMiddle: 80,
+  yTop: 50
+}
 export function SemaphoreOverlay({ currentFeatureOver, map }: MapChildrenProps) {
   const { selectedSemaphoreId } = useAppSelector(state => state.semaphoresSlice)
   const { displaySemaphoreOverlay } = useAppSelector(state => state.global)
@@ -31,6 +39,7 @@ export function SemaphoreOverlay({ currentFeatureOver, map }: MapChildrenProps) 
         feature={displaySemaphoreOverlay ? feature : undefined}
         featureIsShowed
         map={map}
+        options={{ margins: MARGINS }}
       >
         <SemaphoreCard feature={feature} selected />
       </OverlayPositionOnCentroid>
@@ -38,6 +47,7 @@ export function SemaphoreOverlay({ currentFeatureOver, map }: MapChildrenProps) 
         appClassName="overlay-semaphore-hover"
         feature={displaySemaphoreOverlay && displayHoveredFeature ? currentFeatureOver : undefined}
         map={map}
+        options={{ margins: MARGINS }}
       >
         <SemaphoreCard feature={currentFeatureOver} />
       </OverlayPositionOnCentroid>

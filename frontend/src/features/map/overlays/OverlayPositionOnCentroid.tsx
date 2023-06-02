@@ -94,8 +94,8 @@ export function OverlayPositionOnCentroid({
           const pixel = map.getPixelFromCoordinate(currentCoordinates.current)
 
           const { width } = target.getElement().getBoundingClientRect()
-          const nextXPixelCenter = pixel[0] + offset[0] - 50 + width / 2
-          const nextYPixelCenter = pixel[1] + offset[1] - 120
+          const nextXPixelCenter = pixel[0] + offset[0] + width / 2
+          const nextYPixelCenter = pixel[1] + offset[1]
 
           const nextCoordinates = map.getCoordinateFromPixel([nextXPixelCenter, nextYPixelCenter])
           dispatch(setOverlayPosition(nextCoordinates))

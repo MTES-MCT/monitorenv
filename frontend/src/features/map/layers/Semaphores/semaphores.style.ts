@@ -23,6 +23,7 @@ const lineStyle = new Style({
 
 const semaphoreStyle = new Style({
   image: new Icon({
+    color: COLORS.charcoal,
     src: 'semaphore.svg'
   })
 })

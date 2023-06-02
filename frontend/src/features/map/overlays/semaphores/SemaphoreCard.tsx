@@ -5,15 +5,21 @@ import styled from 'styled-components'
 
 import { setOverlayPosition } from '../../../../domain/shared_slices/Global'
 import { resetSelectedSemaphore } from '../../../../domain/shared_slices/SemaphoresSlice'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 export function SemaphoreCard({ feature, selected = false }: { feature: any; selected?: boolean }) {
   const dispatch = useDispatch()
+  const { displaySemaphoresLayer } = useAppSelector(state => state.global)
   const { email, name, phoneNumber, unit } = feature.getProperties()
 
   const handleCloseOverlay = useCallback(() => {
     dispatch(resetSelectedSemaphore())
     dispatch(setOverlayPosition(undefined))
   }, [dispatch])
+
+  if (!displaySemaphoresLayer) {
+    return null
+  }
 
   return (
     <Wrapper data-cy="semaphore-overlay">
@@ -44,7 +50,6 @@ const Wrapper = styled.div`
   background-color: ${p => p.theme.color.white};
   display: flex;
   flex-direction: column;
-  flex: 0 0 260px;
   gap: 4px;
 `
 const StyledHeader = styled.div`
@@ -70,4 +75,5 @@ const StyledContactContainer = styled.div`
   flex-direction: column;
   font: normal normal normal 13px/18px Marianne;
   color: ${p => p.theme.color.slateGray};
+  white-space: nowrap;
 `
