@@ -1,6 +1,11 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix */
 import { containsXY } from 'ol/extent'
-
+/**
+ *
+ * @param {*} boxSize taille de la boite
+ * @param {*} x coordonnée x du centre de la boite
+ * @param {*} y coordonnée y du centre de la boite
+ */
 function getOuterExtentPositionForCentroid(boxSize, x, y) {
   return {
     TOP_LEFT: {
@@ -123,6 +128,12 @@ export function getTopLeftMargin(nextOverlayPosition, margins) {
 
 export function getOverlayPositionForCentroid(boxSize, x, y, extent) {
   const position = getOuterExtentPositionForCentroid(boxSize, x, y)
+  if (!containsXY(extent, position.TOP.x, position.TOP.y) && !containsXY(extent, position.LEFT.x, position.LEFT.y)) {
+    return OverlayPosition.TOP_LEFT
+  }
+  if (!containsXY(extent, position.TOP.x, position.TOP.y) && !containsXY(extent, position.RIGHT.x, position.RIGHT.y)) {
+    return OverlayPosition.TOP_RIGHT
+  }
   if (
     !containsXY(extent, position.BOTTOM.x, position.BOTTOM.y) &&
     !containsXY(extent, position.LEFT.x, position.LEFT.y)
@@ -135,14 +146,8 @@ export function getOverlayPositionForCentroid(boxSize, x, y, extent) {
   ) {
     return OverlayPosition.BOTTOM_RIGHT
   }
-  if (!containsXY(extent, position.TOP.x, position.TOP.y) && !containsXY(extent, position.LEFT.x, position.LEFT.y)) {
-    return OverlayPosition.TOP_LEFT
-  }
-  if (!containsXY(extent, position.TOP.x, position.TOP.y) && !containsXY(extent, position.RIGHT.x, position.RIGHT.y)) {
-    return OverlayPosition.TOP_RIGHT
-  }
   if (!containsXY(extent, position.TOP.x, position.TOP.y)) {
-    return OverlayPosition.TOP
+    return OverlayPosition.BOTTOM
   }
   if (!containsXY(extent, position.RIGHT.x, position.RIGHT.y)) {
     return OverlayPosition.RIGHT
@@ -151,7 +156,7 @@ export function getOverlayPositionForCentroid(boxSize, x, y, extent) {
     return OverlayPosition.LEFT
   }
   if (!containsXY(extent, position.BOTTOM.x, position.BOTTOM.y)) {
-    return OverlayPosition.BOTTOM
+    return OverlayPosition.TOP
   }
 
   return OverlayPosition.BOTTOM

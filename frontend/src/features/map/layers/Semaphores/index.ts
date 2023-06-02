@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 
 import { useGetSemaphoresQuery } from '../../../../api/semaphoresAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
-import { setOverlayPosition } from '../../../../domain/shared_slices/Global'
+import { setOverlayCoordinates } from '../../../../domain/shared_slices/Global'
 import { setSelectedSemaphore } from '../../../../domain/shared_slices/SemaphoresSlice'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { semaphoreStyles } from './semaphores.style'
@@ -18,7 +18,7 @@ export function SemaphoresLayer({ map, mapClickEvent }: MapChildrenProps) {
   const dispatch = useDispatch()
   const { displaySemaphoresLayer } = useAppSelector(state => state.global)
   const { selectedSemaphoreId } = useAppSelector(state => state.semaphoresSlice)
-  const { overlayPosition } = useAppSelector(state => state.global)
+  const { overlayCoordinates } = useAppSelector(state => state.global)
 
   const { data: semaphores } = useGetSemaphoresQuery()
 
@@ -56,10 +56,10 @@ export function SemaphoresLayer({ map, mapClickEvent }: MapChildrenProps) {
       const selectedSemaphore = `${Layers.SEMAPHORES.code}:${selectedSemaphoreId}`
       feature.setProperties({
         isSelected: feature.getId() === selectedSemaphore,
-        overlayPosition: feature.getId() === selectedSemaphore ? overlayPosition : undefined
+        overlayCoordinates: feature.getId() === selectedSemaphore ? overlayCoordinates : undefined
       })
     })
-  }, [overlayPosition, selectedSemaphoreId])
+  }, [overlayCoordinates, selectedSemaphoreId])
 
   useEffect(() => {
     if (map) {
@@ -88,7 +88,7 @@ export function SemaphoresLayer({ map, mapClickEvent }: MapChildrenProps) {
       if (feature.getId()?.toString()?.includes(Layers.SEMAPHORES.code)) {
         const { id } = feature.getProperties()
         dispatch(setSelectedSemaphore(id))
-        dispatch(setOverlayPosition(undefined))
+        dispatch(setOverlayCoordinates(undefined))
       }
     }
   }, [dispatch, mapClickEvent])

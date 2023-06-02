@@ -20,7 +20,7 @@ export const useMoveOverlayWhenDragging = (overlay, map, currentOffset, moveLine
         unByKey(eventKey)
       }
     }
-  }, [overlay, map])
+  }, [overlay, map, moveLineWithThrottle])
 
   useEffect(() => {
     let hammer
@@ -41,5 +41,5 @@ export const useMoveOverlayWhenDragging = (overlay, map, currentOffset, moveLine
         hammer.off('panend')
       }
     }
-  }, [showed, overlay])
+  }, [showed, overlay, currentOffset])
 }

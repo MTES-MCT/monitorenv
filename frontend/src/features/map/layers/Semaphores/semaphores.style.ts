@@ -5,7 +5,7 @@ import { COLORS } from '../../../../constants/constants'
 
 const lineStyle = new Style({
   geometry: feature => {
-    const overlayPostion = feature.get('overlayPosition')
+    const overlayPostion = feature.get('overlayCoordinates')
 
     if (!overlayPostion) {
       return undefined

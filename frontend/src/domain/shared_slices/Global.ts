@@ -34,7 +34,7 @@ type GlobalStateType = {
 
   healthcheckTextWarning?: string
 
-  overlayPosition: [number, number] | undefined
+  overlayCoordinates: [number, number] | undefined
 }
 const initialState: GlobalStateType = {
   // state entry for every component /menu displayed on map whose visibility should be controlled
@@ -66,7 +66,7 @@ const initialState: GlobalStateType = {
 
   healthcheckTextWarning: undefined,
 
-  overlayPosition: undefined
+  overlayCoordinates: undefined
 }
 
 const globalSlice = createSlice({
@@ -100,8 +100,8 @@ const globalSlice = createSlice({
     setHealthcheckTextWarning(state, action) {
       state.healthcheckTextWarning = action.payload
     },
-    setOverlayPosition(state, action) {
-      state.overlayPosition = action.payload
+    setOverlayCoordinates(state, action) {
+      state.overlayCoordinates = action.payload
     }
   }
 })
@@ -112,7 +112,7 @@ export const {
   setError,
   setHealthcheckTextWarning,
   setMapToolOpened,
-  setOverlayPosition
+  setOverlayCoordinates
 } = globalSlice.actions
 
 export const globalReducer = globalSlice.reducer

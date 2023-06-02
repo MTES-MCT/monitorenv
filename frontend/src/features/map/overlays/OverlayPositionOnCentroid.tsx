@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import { setOverlayPosition } from '../../../domain/shared_slices/Global'
+import { setOverlayCoordinates } from '../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
 import { getOverlayPositionForCentroid, getTopLeftMargin } from './position'
@@ -94,17 +94,18 @@ export function OverlayPositionOnCentroid({
           const pixel = map.getPixelFromCoordinate(currentCoordinates.current)
 
           const { width } = target.getElement().getBoundingClientRect()
-          const nextXPixelCenter = pixel[0] + offset[0] + width / 2
-          const nextYPixelCenter = pixel[1] + offset[1]
+
+          const nextXPixelCenter = pixel[0] + offset[0] + overlayTopLeftMargin[1] + width / 2
+          const nextYPixelCenter = pixel[1] + offset[1] + overlayTopLeftMargin[0]
 
           const nextCoordinates = map.getCoordinateFromPixel([nextXPixelCenter, nextYPixelCenter])
-          dispatch(setOverlayPosition(nextCoordinates))
+          dispatch(setOverlayCoordinates(nextCoordinates))
 
           isThrottled.current = false
         }
       }, delay)
     },
-    [dispatch, map]
+    [dispatch, map, overlayTopLeftMargin]
   )
 
   useEffect(() => {
@@ -113,7 +114,9 @@ export function OverlayPositionOnCentroid({
       const extent = map.getView().calculateExtent()
       const boxSize = map.getView().getResolution() * OVERLAY_HEIGHT
 
-      return getOverlayPositionForCentroid(boxSize, x, y, extent)
+      const position = getOverlayPositionForCentroid(boxSize, x, y, extent)
+
+      return position
     }
 
     if (overlayRef.current && olOverlayObjectRef.current) {
