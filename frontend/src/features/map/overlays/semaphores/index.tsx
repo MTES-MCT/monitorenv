@@ -10,7 +10,7 @@ const MARGINS = {
   xLeft: 50,
   xMiddle: 30,
   xRight: -55,
-  yBottom: 100,
+  yBottom: 50,
   yMiddle: 100,
   yTop: -100
 }

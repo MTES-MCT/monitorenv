@@ -14,12 +14,12 @@ const OVERLAY_HEIGHT = 74
 
 const INITIAL_OFFSET_VALUE = [-90, 10]
 const defaultMargins = {
-  xLeft: 30,
-  xMiddle: -155,
-  xRight: -340,
-  yBottom: -155,
-  yMiddle: -60,
-  yTop: 20
+  xLeft: 50,
+  xMiddle: 30,
+  xRight: -155,
+  yBottom: 50,
+  yMiddle: 100,
+  yTop: -200
 }
 
 export function OverlayPositionOnCentroid({
