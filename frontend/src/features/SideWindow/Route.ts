@@ -12,19 +12,20 @@ import type { ReactElement } from 'react-markdown'
 // so it's easier to use non-colliding routes
 
 export type RouteProps = {
-  children: ReactElement
-  exact?: boolean
-  path: string | string[]
-  strict?: boolean
+  element: ReactElement
+  end?: boolean
+  path: string
 }
-export function Route({ children, exact = true, path, strict = true }: RouteProps) {
+export function Route({ element, end = false, path }: RouteProps) {
   const { currentPath } = useAppSelector(state => state.sideWindow)
 
-  const routeParams = matchPath(currentPath, {
-    exact,
-    path,
-    strict
-  })
+  const routeParams = matchPath<'id', string>(
+    {
+      end,
+      path
+    },
+    currentPath
+  )
 
-  return routeParams ? children : null
+  return routeParams ? element : null
 }
