@@ -41,8 +41,9 @@ export function GeneralInformationsForm() {
           withTime
         />
 
-        <FormikDatePicker
+        <StyledFormikDatePicker
           baseContainer={newWindowContainerRef.current}
+          data-cy="mission-end-date-time"
           isCompact
           isEndDate
           isStringDate
@@ -125,6 +126,12 @@ const StyledDatePickerContainer = styled.div`
   display: flex;
   gap: 8px;
 `
+const StyledFormikDatePicker = styled(FormikDatePicker)`
+  p {
+    max-width: 200px;
+  }
+`
+
 const StyledMissionType = styled.div`
   display: flex;
   flex-direction: row;

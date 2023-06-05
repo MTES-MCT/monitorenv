@@ -86,11 +86,7 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
             <Dropdown.Item icon={<ControlSVG />} onClick={handleAddControlAction}>
               Ajouter des contrôles
             </Dropdown.Item>
-            <Dropdown.Item
-              data-cy="add-surveillance-action"
-              icon={<SurveillanceSVG />}
-              onClick={handleAddSurveillanceAction}
-            >
+            <Dropdown.Item icon={<SurveillanceSVG />} onClick={handleAddSurveillanceAction}>
               Ajouter une surveillance
             </Dropdown.Item>
             <Dropdown.Item icon={<NoteSVG />} onClick={handleAddNoteAction}>

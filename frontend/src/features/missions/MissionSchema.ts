@@ -101,37 +101,88 @@ const InfractionSchema: Yup.SchemaOf<Infraction> = Yup.object().shape({
   vesselType: Yup.mixed().oneOfOptional(Object.values(VesselTypeEnum))
 })
 
-const EnvActionControlSchema: Yup.SchemaOf<EnvActionControl> = Yup.object()
-  .shape({
-    actionNumberOfControls: Yup.number().required('Requis'),
-    actionStartDateTimeUtc: Yup.string().nullable().required('Requis'),
-    actionTargetType: Yup.string().nullable().required('Requis'),
-    actionType: Yup.mixed().oneOf([ActionTypeEnum.CONTROL]),
-    geom: Yup.array().ensure(),
-    id: Yup.string().required(),
-    infractions: Yup.array().of(InfractionSchema).ensure().required(),
-    themes: Yup.array().of(ThemeSchema).ensure().required(),
-    vehicleType: Yup.string().when('actionTargetType', (actionTargetType, schema) => {
-      if (!actionTargetType || actionTargetType === ActionTargetTypeEnum.VEHICLE) {
-        return schema.nullable().required('Requis')
-      }
+const getEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActionControl> =>
+  Yup.object()
+    .shape({
+      actionNumberOfControls: Yup.number().required('Requis'),
+      actionStartDateTimeUtc: Yup.string()
+        .nullable()
+        .required('Requis')
+        .test({
+          message: 'La date doit être postérieure à la date de début de mission',
+          test: value => (value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true)
+        })
+        .test({
+          message: 'La date doit être antérieure à la date de fin de mission',
+          test: value => {
+            if (!ctx.from[1].value.endDateTimeUtc) {
+              return true
+            }
 
-      return schema.nullable()
+            return value ? !(new Date(value) > new Date(ctx.from[1].value.endDateTimeUtc)) : true
+          }
+        }),
+      actionTargetType: Yup.string().nullable().required('Requis'),
+      actionType: Yup.mixed().oneOf([ActionTypeEnum.CONTROL]),
+      geom: Yup.array().ensure(),
+      id: Yup.string().required(),
+      infractions: Yup.array().of(InfractionSchema).ensure().required(),
+      themes: Yup.array().of(ThemeSchema).ensure().required(),
+      vehicleType: Yup.string().when('actionTargetType', (actionTargetType, schema) => {
+        if (!actionTargetType || actionTargetType === ActionTargetTypeEnum.VEHICLE) {
+          return schema.nullable().required('Requis')
+        }
+
+        return schema.nullable()
+      })
     })
-  })
-  .nullable()
-  .required()
+    .nullable()
+    .required()
 
-const EnvActionSurveillanceSchema: Yup.SchemaOf<EnvActionSurveillance> = Yup.object()
-  .shape({
-    actionEndDateTimeUtc: Yup.string().nullable().required('Requis'),
-    actionStartDateTimeUtc: Yup.string().nullable().required('Requis'),
-    actionType: Yup.mixed().oneOf([ActionTypeEnum.SURVEILLANCE]),
-    geom: Yup.array().ensure(),
-    id: Yup.string().required(),
-    themes: Yup.array().of(ThemeSchema).ensure().required()
-  })
-  .required()
+const getEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<EnvActionSurveillance> =>
+  Yup.object()
+    .shape({
+      actionEndDateTimeUtc: Yup.date()
+        .nullable()
+        .required('Requis')
+        .test({
+          message: 'La date doit être postérieure à la date de début de mission',
+          test: value => (value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true)
+        })
+        .test({
+          message: 'La date doit être antérieure à la date de fin de mission',
+          test: value => {
+            if (!ctx.from[1].value.endDateTimeUtc) {
+              return true
+            }
+
+            return value ? !(new Date(value) > new Date(ctx.from[1].value.endDateTimeUtc)) : true
+          }
+        })
+        .min(Yup.ref('actionStartDateTimeUtc'), () => 'La date de fin doit être postérieure à la date de début'),
+      actionStartDateTimeUtc: Yup.date()
+        .nullable()
+        .required('Requis')
+        .test({
+          message: 'La date doit être postérieure à la date de début de mission',
+          test: value => (value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true)
+        })
+        .test({
+          message: 'La date doit être antérieure à la date de fin de mission',
+          test: value => {
+            if (!ctx.from[1].value.endDateTimeUtc) {
+              return true
+            }
+
+            return value ? !(new Date(value) > new Date(ctx.from[1].value.endDateTimeUtc)) : true
+          }
+        }),
+      actionType: Yup.mixed().oneOf([ActionTypeEnum.SURVEILLANCE]),
+      geom: Yup.array().ensure(),
+      id: Yup.string().required(),
+      themes: Yup.array().of(ThemeSchema).ensure().required()
+    })
+    .required()
 
 const EnvActionNoteSchema: Yup.SchemaOf<EnvActionNote> = Yup.object()
   .shape({
@@ -141,12 +192,12 @@ const EnvActionNoteSchema: Yup.SchemaOf<EnvActionNote> = Yup.object()
   })
   .required()
 
-export const EnvActionSchema = Yup.lazy(value => {
+export const EnvActionSchema = Yup.lazy((value, context) => {
   if (value.actionType === ActionTypeEnum.CONTROL) {
-    return EnvActionControlSchema
+    return getEnvActionControlSchema(context)
   }
   if (value.actionType === ActionTypeEnum.SURVEILLANCE) {
-    return EnvActionSurveillanceSchema
+    return getEnvActionSurveillanceSchema(context)
   }
   if (value.actionType === ActionTypeEnum.NOTE) {
     return EnvActionNoteSchema
@@ -154,8 +205,6 @@ export const EnvActionSchema = Yup.lazy(value => {
 
   return Yup.object().required()
 })
-
-// export const EnvActions = Yup.array().of(EnvActionSurveillanceSchema)
 
 export const MissionZoneSchema = Yup.object().test({
   message: 'Veuillez définir une zone de mission',
@@ -167,7 +216,9 @@ export const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
   .shape({
     closedBy: Yup.string(),
     controlUnits: Yup.array().of(ControlUnitSchema).ensure().defined().min(1),
-    endDateTimeUtc: Yup.string().nullable(),
+    endDateTimeUtc: Yup.date()
+      .nullable()
+      .min(Yup.ref('startDateTimeUtc'), () => 'La date de fin doit être postérieure à la date de début'),
     geom: shouldUseAlternateValidationInTestEnvironment ? Yup.object().nullable() : MissionZoneSchema,
     isClosed: Yup.boolean().default(false),
     missionTypes: MissionTypesSchema,
@@ -175,7 +226,7 @@ export const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
       .min(3, 'le Trigramme doit comporter 3 lettres')
       .max(3, 'le Trigramme doit comporter 3 lettres')
       .required('Requis'),
-    startDateTimeUtc: Yup.string().required('Requis')
+    startDateTimeUtc: Yup.date().required('Requis')
   })
   .required()
 
@@ -185,7 +236,10 @@ export const ClosedMissionSchema = Yup.object().shape({
     .max(3, 'Maximum 3 lettres pour le Trigramme')
     .required('Requis'),
   controlUnits: Yup.array().of(ClosedControlUnitSchema).ensure().defined().min(1),
-  endDateTimeUtc: Yup.string().nullable().required('Requis'),
+  endDateTimeUtc: Yup.date()
+    .nullable()
+    .required('Requis')
+    .min(Yup.ref('startDateTimeUtc'), () => 'La date de fin doit être postérieure à la date de début'),
   // cast as any to avoid type error
   // FIXME : see issue https://github.com/jquense/yup/issues/1190
   // & tip for resolution https://github.com/jquense/yup/issues/1283#issuecomment-786559444
@@ -199,7 +253,7 @@ export const ClosedMissionSchema = Yup.object().shape({
     .min(3, 'Minimum 3 lettres pour le Trigramme')
     .max(3, 'Maximum 3 lettres pour le Trigramme')
     .required('Requis'),
-  startDateTimeUtc: Yup.string().required('Requis')
+  startDateTimeUtc: Yup.date().required('Requis')
 })
 
 export const MissionSchema = Yup.lazy(value => {
