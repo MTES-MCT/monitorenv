@@ -43,8 +43,8 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
         {!isFirstRender && (
           <NewWindowContext.Provider value={newWindowContextProviderValue}>
             <Route element={<Missions />} path={sideWindowPaths.MISSIONS} />
-            <Route element={<Mission />} end path={sideWindowPaths.MISSION} />
-            <Route element={<Mission />} end path={sideWindowPaths.MISSION_NEW} />
+            <Route element={<Mission />} path={sideWindowPaths.MISSION} />
+            <Route element={<Mission />} path={sideWindowPaths.MISSION_NEW} />
           </NewWindowContext.Provider>
         )}
         <ToastContainer containerId="sideWindow" enableMultiContainer />

@@ -13,15 +13,14 @@ import type { ReactElement } from 'react-markdown'
 
 export type RouteProps = {
   element: ReactElement
-  end?: boolean
   path: string
 }
-export function Route({ element, end = false, path }: RouteProps) {
+export function Route({ element, path }: RouteProps) {
   const { currentPath } = useAppSelector(state => state.sideWindow)
 
   const routeParams = matchPath<'id', string>(
     {
-      end,
+      end: true,
       path
     },
     currentPath

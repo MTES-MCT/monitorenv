@@ -27,18 +27,18 @@ export function HomePage() {
   } = useAppSelector(state => state.global)
   const { isFormDirty, missionState } = useAppSelector(state => state.missionState)
 
-  useBeforeUnload(
-    useCallback(
-      event => {
-        event.preventDefault()
-        if (isFormDirty && missionState) {
-          // eslint-disable-next-line no-param-reassign
-          event.returnValue = ''
-        }
-      },
-      [isFormDirty, missionState]
-    )
+  const beforeUnload = useCallback(
+    event => {
+      event.preventDefault()
+      if (isFormDirty && missionState) {
+        // eslint-disable-next-line no-param-reassign
+        event.returnValue = ''
+      }
+    },
+    [isFormDirty, missionState]
   )
+
+  useBeforeUnload(beforeUnload)
 
   return (
     <>
