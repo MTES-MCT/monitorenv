@@ -36,7 +36,7 @@ export function Missions() {
         {isError ? (
           <p data-cy="listMissionWrapper">Erreur au chargement des données</p>
         ) : (
-          <MissionsTable isFetching={isFetching} isLoading={isLoading} missions={missions} />
+          <MissionsTable isLoading={isLoading || isFetching} missions={missions} />
         )}
       </SideWindowContent>
     </>

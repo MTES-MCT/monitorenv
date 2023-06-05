@@ -1,12 +1,12 @@
-import { CellActionThemes } from './CellActionThemes'
-import { CellEditMission } from './CellEditMission'
-import { CellLocalizeMission } from './CellLocalizeMission'
-import { CellStatus } from './CellStatus'
-import { getDateCell } from './getDateCell'
-import { getMissionSourceCell } from './getMissionSourceCell'
-import { getMissionTypeCell } from './getMissionTypeCell'
-import { getNumberOfControlsCell } from './getNumberOfControlsCell'
-import { getResourcesCell } from './getResourcesCell'
+import { CellActionThemes } from '../CellActionThemes'
+import { CellEditMission } from '../CellEditMission'
+import { CellLocalizeMission } from '../CellLocalizeMission'
+import { CellStatus } from '../CellStatus'
+import { getDateCell } from '../getDateCell'
+import { getMissionSourceCell } from '../getMissionSourceCell'
+import { getMissionTypeCell } from '../getMissionTypeCell'
+import { getNumberOfControlsCell } from '../getNumberOfControlsCell'
+import { getResourcesCell } from '../getResourcesCell'
 
 export const Columns = [
   {
