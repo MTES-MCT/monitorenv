@@ -14,8 +14,10 @@ import { ActionCard } from './ActionCard'
 
 export function ActionsForm({ currentActionIndex, form, remove, setCurrentActionIndex, unshift }) {
   const envActions = form?.values?.envActions as EnvAction[] | undefined
+  const isFirstSurveillanceAction = !envActions?.find(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
   const isClosed = form?.values?.isClosed
   const currentActionId = envActions && envActions[currentActionIndex]?.id
+
   const sortedEnvActions = useMemo(
     () =>
       envActions &&
@@ -35,11 +37,31 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
       }),
     [envActions]
   )
+  const handleAddSurveillanceAction = () => {
+    unshift(
+      actionFactory({
+        actionType: ActionTypeEnum.SURVEILLANCE,
+        durationMatchesMission: isFirstSurveillanceAction,
+        ...(isFirstSurveillanceAction && {
+          actionEndDateTimeUtc: form?.values?.endDateTimeUtc,
+          actionStartDateTimeUtc: form?.values?.startDateTimeUtc
+        })
+      })
+    )
 
-  const handleAddSurveillanceAction = () =>
-    unshift(actionFactory({ actionType: ActionTypeEnum.SURVEILLANCE, durationMatchesMission: false }))
-  const handleAddControlAction = () => unshift(actionFactory({ actionType: ActionTypeEnum.CONTROL }))
-  const handleAddNoteAction = () => unshift(actionFactory({ actionType: ActionTypeEnum.NOTE }))
+    setCurrentActionIndex(0)
+  }
+
+  const handleAddControlAction = () => {
+    unshift(actionFactory({ actionType: ActionTypeEnum.CONTROL }))
+
+    setCurrentActionIndex(0)
+  }
+  const handleAddNoteAction = () => {
+    unshift(actionFactory({ actionType: ActionTypeEnum.NOTE }))
+
+    setCurrentActionIndex(0)
+  }
   const handleSelectAction = id => () => setCurrentActionIndex(envActions && envActions.findIndex(a => a.id === id))
   const handleRemoveAction = id => e => {
     e.stopPropagation()
@@ -64,7 +86,11 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
             <Dropdown.Item icon={<ControlSVG />} onClick={handleAddControlAction}>
               Ajouter des contrôles
             </Dropdown.Item>
-            <Dropdown.Item icon={<SurveillanceSVG />} onClick={handleAddSurveillanceAction}>
+            <Dropdown.Item
+              data-cy="add-surveillance-action"
+              icon={<SurveillanceSVG />}
+              onClick={handleAddSurveillanceAction}
+            >
               Ajouter une surveillance
             </Dropdown.Item>
             <Dropdown.Item icon={<NoteSVG />} onClick={handleAddNoteAction}>

@@ -1,53 +1,64 @@
-import { format, isValid } from 'date-fns'
-import { fr } from 'date-fns/locale'
+import { getLocalizedDayjs } from '@mtes-mct/monitor-ui'
+import dayjs from 'dayjs'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
 import { InteractionListener } from '../../../../domain/entities/map/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { dateDifferenceInHours } from '../../../../utils/dateDifferenceInHours'
+import { extractThemesAsText } from '../../../../utils/extractThemesAsText'
 
 export function SurveillanceCard({ feature }) {
   const listener = useAppSelector(state => state.draw.listener)
+  const { actionEndDateTimeUtc, actionStartDateTimeUtc, themes } = feature.getProperties()
 
-  const { actionStartDateTimeUtc, actionTheme } = feature.getProperties()
-  const parsedActionStartDateTimeUtc = new Date(actionStartDateTimeUtc)
+  const duration = dateDifferenceInHours(actionStartDateTimeUtc, actionEndDateTimeUtc)
+
+  const startDate = actionStartDateTimeUtc ? getLocalizedDayjs(actionStartDateTimeUtc) : undefined
+  const endDate = actionEndDateTimeUtc ? getLocalizedDayjs(actionEndDateTimeUtc) : null
+  const isSurveillanceOnOneDay = endDate && dayjs(startDate).isSame(dayjs(endDate), 'day')
+
+  const simpleDate = startDate?.isValid() && startDate?.format('DD MMMM YYYY')
 
   if (listener === InteractionListener.SURVEILLANCE_ZONE) {
     return null
   }
 
   return (
-    <SurveillanceCardHeader>
-      <Col1>
-        <SurveillanceDate>
-          {isValid(parsedActionStartDateTimeUtc) &&
-            format(parsedActionStartDateTimeUtc, 'dd MMM à HH:mm', { locale: fr })}
-        </SurveillanceDate>
-      </Col1>
-      <Col2>
-        <Theme>{actionTheme}</Theme>
-      </Col2>
-    </SurveillanceCardHeader>
+    <StyledSurveillanceCard>
+      <div>
+        <StyledThemes>{extractThemesAsText(themes)}</StyledThemes>
+        <StyledDuration>{duration > 0 ? `1 surveillance (${duration}h)` : '1 surveillance'}</StyledDuration>
+      </div>
+
+      <StyledDate>
+        {!actionEndDateTimeUtc && simpleDate}
+        {endDate && isSurveillanceOnOneDay && simpleDate}
+        {endDate &&
+          !isSurveillanceOnOneDay &&
+          `du ${startDate?.format('DD MMMM YYYY')} au ${endDate.format('DD MMMM YYYY')}`}
+      </StyledDate>
+    </StyledSurveillanceCard>
   )
 }
 
-const SurveillanceCardHeader = styled.div`
+const StyledSurveillanceCard = styled.div`
   background: ${COLORS.white};
-  padding: 4px 5px 5px 5px;
-  border-top-left-radius: 2px;
-  border-top-right-radius: 2px;
   display: flex;
+  flex-direction: column;
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3);
-  padding: 18px;
+  padding: 12px;
+  gap: 8px;
+  flex: 0 0 200px;
+`
+const StyledThemes = styled.div`
+  white-space: nowrap;
+  font-weight: 700;
+`
+const StyledDuration = styled.div`
+  font-weight: 500;
 `
 
-const SurveillanceDate = styled.div``
-
-const Theme = styled.div``
-
-const Col1 = styled.div`
-  width: 120px;
-`
-const Col2 = styled.div`
-  width: 330px;
+const StyledDate = styled.div`
+  color: ${COLORS.slateGray};
 `

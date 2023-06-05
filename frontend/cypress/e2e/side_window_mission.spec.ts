@@ -178,7 +178,67 @@ context('Missions', () => {
     cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
 
     cy.get('[name="openBy"]').scrollIntoView().type('PCF')
-    cy.intercept('PUT', `/bff/v1/missions`).as('createMission')
+
+    // Add a surveillance
+    cy.clickButton('Ajouter')
+    cy.get('*[data-cy="add-surveillance-action"]').click({ force: true })
+    cy.get('*[data-cy="action-card"]').eq(0).click()
+
+    cy.getDataCy('surveillance-duration-matches-mission').should('have.class', 'rs-checkbox-checked')
+    cy.get('*[data-cy="surveillance-start-date-time"]')
+      .find('[aria-label="Jour"]')
+      .invoke('val')
+      .then(surveillanceStartDay => {
+        cy.getDataCy('mission-start-date-time')
+          .find('[aria-label="Jour"]')
+          .invoke('val')
+          .should('eq', surveillanceStartDay)
+      })
+    cy.get('*[data-cy="surveillance-start-date-time"]')
+      .find('[aria-label="Mois"]')
+      .invoke('val')
+      .then(surveillanceStartMonth => {
+        cy.getDataCy('mission-start-date-time')
+          .find('[aria-label="Mois"]')
+          .invoke('val')
+          .should('eq', surveillanceStartMonth)
+      })
+    cy.get('*[data-cy="surveillance-start-date-time"]')
+      .find('[aria-label="Année"]')
+      .invoke('val')
+      .then(surveillanceStartYear => {
+        cy.getDataCy('mission-start-date-time')
+          .find('[aria-label="Année"]')
+          .invoke('val')
+          .should('eq', surveillanceStartYear)
+      })
+    cy.get('*[data-cy="surveillance-start-date-time"]')
+      .find('[aria-label="Heure"]')
+      .invoke('val')
+      .then(surveillanceStartHour => {
+        cy.getDataCy('mission-start-date-time')
+          .find('[aria-label="Heure"]')
+          .invoke('val')
+          .should('eq', surveillanceStartHour)
+      })
+    cy.get('*[data-cy="surveillance-start-date-time"]')
+      .find('[aria-label="Minute"]')
+      .invoke('val')
+      .then(surveillanceStartMinute => {
+        cy.getDataCy('mission-start-date-time')
+          .find('[aria-label="Minute"]')
+          .invoke('val')
+          .should('eq', surveillanceStartMinute)
+      })
+
+    // Add a second surveillance
+    cy.clickButton('Ajouter')
+    cy.getDataCy('add-surveillance-action').click({ force: true })
+
+    cy.getDataCy('action-card').eq(1).click()
+    cy.getDataCy('surveillance-duration-matches-mission').should('not.have.class', 'rs-checkbox-checked')
+
+    cy.intercept('PUT', '/bff/v1/missions').as('createMission')
     cy.get('form').submit()
 
     // Then

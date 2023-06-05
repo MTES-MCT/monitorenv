@@ -45,6 +45,9 @@ data class EnvActionModel(
     @Column(name = "action_start_datetime_utc")
     var actionStartDateTime: Instant? = null,
 
+    @Column(name = "action_end_datetime_utc")
+    var actionEndDateTime: Instant? = null,
+
     @JsonSerialize(using = GeometrySerializer::class)
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
@@ -69,6 +72,7 @@ data class EnvActionModel(
             mapper,
             id,
             actionStartDateTime?.atZone(UTC),
+            actionEndDateTime?.atZone(UTC),
             geom,
             actionType,
             value,
@@ -79,6 +83,7 @@ data class EnvActionModel(
             id = action.id,
             actionType = action.actionType,
             actionStartDateTime = action.actionStartDateTimeUtc?.toInstant(),
+            actionEndDateTime = action.actionEndDateTimeUtc?.toInstant(),
             value = EnvActionMapper.envActionEntityToJSON(mapper, action),
             mission = mission,
             geom = action.geom,
@@ -97,6 +102,6 @@ data class EnvActionModel(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , geom = $geom , actionStartDateTime = $actionStartDateTime, actionType = $actionType , value = $value )"
+        return this::class.simpleName + "(id = $id , geom = $geom , actionStartDateTime = $actionStartDateTime, actionEndDateTime = $actionEndDateTime, actionType = $actionType , value = $value )"
     }
 }

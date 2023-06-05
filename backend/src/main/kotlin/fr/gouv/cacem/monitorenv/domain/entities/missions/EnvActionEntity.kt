@@ -20,5 +20,6 @@ abstract class EnvActionEntity(
     open val id: UUID,
     open val actionType: ActionTypeEnum,
     open val actionStartDateTimeUtc: ZonedDateTime? = null,
-    open val geom: Geometry? = null,
+    open val actionEndDateTimeUtc: ZonedDateTime? = null,
+    open val geom: Geometry? = null
 )

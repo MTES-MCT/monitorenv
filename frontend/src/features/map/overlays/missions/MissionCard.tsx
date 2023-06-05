@@ -114,7 +114,6 @@ export function MissionCard({ feature, selected = false }: { feature: any; selec
 const Wrapper = styled.div`
   padding: 10px;
   box-shadow: 0px 3px 6px #70778540;
-  border-radius: 1px;
   background-color: ${COLORS.white};
   display: flex;
   flex-direction: column;

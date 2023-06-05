@@ -90,9 +90,10 @@ const getActionControlProperties = (action: EnvActionControl) => {
 }
 
 const getActionSurveillanceProperties = (action: EnvActionSurveillance) => {
-  const { actionStartDateTimeUtc, actionType, themes } = action
+  const { actionEndDateTimeUtc, actionStartDateTimeUtc, actionType, themes } = action
 
   return {
+    actionEndDateTimeUtc,
     actionStartDateTimeUtc,
     actionType,
     themes
