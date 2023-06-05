@@ -1,5 +1,6 @@
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useState, useRef } from 'react'
 import { useDispatch } from 'react-redux'
+import { ToastContainer } from 'react-toastify'
 import styled from 'styled-components'
 
 import { ErrorBoundary } from '../../components/ErrorBoundary'
@@ -49,6 +50,7 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
             </Route>
           </NewWindowContext.Provider>
         )}
+        <ToastContainer containerId="sideWindow" enableMultiContainer />
       </Wrapper>
     </ErrorBoundary>
   )

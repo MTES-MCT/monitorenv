@@ -1,7 +1,7 @@
+import { ToastContainer } from 'react-toastify'
 import styled from 'styled-components'
 
 import { APIWorker } from '../api/APIWorker'
-import { ErrorToastNotification } from '../components/ErrorToastNotification'
 import Healthcheck from '../features/healthcheck/Healthcheck'
 import { LayersSidebar } from '../features/layersSelector/LayersSidebar'
 import { LocateOnMap } from '../features/LocateOnMap'
@@ -42,7 +42,7 @@ export function HomePage() {
 
         <SideWindowLauncher />
 
-        <ErrorToastNotification />
+        <ToastContainer containerId="default" enableMultiContainer />
       </Wrapper>
     </>
   )
