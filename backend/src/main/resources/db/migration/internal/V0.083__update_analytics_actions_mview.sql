@@ -14,6 +14,21 @@ SELECT
     COALESCE(m.facade, 'Hors façade') AS mission_facade,
     cu.name AS control_unit,
     adm.name AS administration,
+    cu.name ILIKE 'ulam%' OR (
+        adm.name = 'DIRM / DM' AND
+        cu.name ILIKE 'PAM%'
+    ) AS is_aff_mar,
+    (
+        cu.name ILIKE 'ulam%' OR (
+            adm.name = 'DIRM / DM' AND
+            cu.name ILIKE 'PAM%'
+        )
+    ) OR adm.name IN ('Gendarmerie Nationale', 'Gendarmerie Maritime', 'Douane', 'Marine Nationale') AS is_aem,
+    CASE
+        WHEN cu.name ILIKE 'ulam%' OR (adm.name = 'DIRM / DM' AND cu.name ILIKE 'PAM%') THEN 'Affaires Maritimes'
+        WHEN adm.name IN ('Gendarmerie Nationale', 'Gendarmerie Maritime', 'Douane', 'Marine Nationale') THEN adm.name
+        ELSE 'Administrations hors AEM'
+    END AS administration_aem,
     COALESCE(a.facade, 'Hors façade') AS action_facade,
     COALESCE(a.department, 'Hors département') AS action_department,
     CASE WHEN COALESCE(t1->>'theme', '') = '' THEN 'Aucun thème' ELSE t1->>'theme' END AS theme_level_1,
