@@ -45,3 +45,21 @@ SET action_end_datetime_utc = CASE
 END
 FROM missions
 WHERE missions.id = env_actions.mission_id AND env_actions.action_type = 'SURVEILLANCE';
+
+WITH actions_to_delete AS (
+    SELECT env_actions.id
+    FROM env_actions
+    JOIN missions
+    ON missions.id = env_actions.mission_id
+    WHERE missions.start_datetime_utc < '2023-12-31 23:59:59'
+)
+
+DELETE FROM env_actions
+WHERE id IN (SELECT id FROM actions_to_delete);
+
+DELETE 
+    FROM missions
+    WHERE missions.start_datetime_utc < '2022-12-31 23:59:59';
+
+
+	
