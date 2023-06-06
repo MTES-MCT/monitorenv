@@ -101,29 +101,23 @@ const NewInfractionSchema: Yup.SchemaOf<Infraction> = Yup.object().shape({
   vesselType: Yup.mixed().oneOfOptional(Object.values(VesselTypeEnum))
 })
 
-const ClosedInfractionSchema: Yup.SchemaOf<Infraction> = NewInfractionSchema.shape({
-  infractionType: Yup.mixed()
-    .oneOf([InfractionTypeEnum.WITH_REPORT, InfractionTypeEnum.WITHOUT_REPORT])
-    .required('Requis')
-})
+const ClosedInfractionSchema: Yup.SchemaOf<Infraction> = Yup.object()
+  .concat(NewInfractionSchema)
+  .shape({
+    formalNotice: Yup.mixed().oneOf([FormalNoticeEnum.YES, FormalNoticeEnum.NO]).required('Requis'),
+    infractionType: Yup.mixed()
+      .oneOf([InfractionTypeEnum.WITH_REPORT, InfractionTypeEnum.WITHOUT_REPORT])
+      .required('Requis')
+  })
 
 const NewEnvActionControlSchema: Yup.SchemaOf<EnvActionControl> = Yup.object()
   .shape({
-    actionStartDateTimeUtc: Yup.string().nullable().required('Requis'),
     actionType: Yup.mixed().oneOf([ActionTypeEnum.CONTROL]),
     id: Yup.string().required(),
     infractions: Yup.array().of(NewInfractionSchema).ensure().required()
   })
   .nullable()
   .required()
-
-const ClosedEnvActionControlSchema: Yup.SchemaOf<EnvActionControl> = NewEnvActionControlSchema.shape({
-  actionNumberOfControls: Yup.number().required('Requis'),
-  actionTargetType: Yup.string().nullable().required('Requis'),
-  geom: Yup.array().ensure(),
-  infractions: Yup.array().of(ClosedInfractionSchema).ensure().required(),
-  themes: Yup.array().of(ThemeSchema).ensure().required()
-})
 
 const getEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActionControl> =>
   Yup.object()
@@ -150,7 +144,7 @@ const getEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActionControl> =>
       actionType: Yup.mixed().oneOf([ActionTypeEnum.CONTROL]),
       geom: Yup.array().ensure(),
       id: Yup.string().required(),
-      infractions: Yup.array().of(ClosedEnvActionControlSchema).ensure().required(),
+      infractions: Yup.array().of(ClosedInfractionSchema).ensure().required(),
       themes: Yup.array().of(ThemeSchema).ensure().required(),
       vehicleType: Yup.string().when('actionTargetType', (actionTargetType, schema) => {
         if (!actionTargetType || actionTargetType === ActionTargetTypeEnum.VEHICLE) {
