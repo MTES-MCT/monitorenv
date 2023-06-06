@@ -3,15 +3,11 @@ package fr.gouv.cacem.monitorenv
 import io.sentry.Sentry
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.info.BuildProperties
 import org.springframework.boot.runApplication
 
 
 @SpringBootApplication
 class MonitorenvApplication
-
-@Autowired
-private val buildProperties: BuildProperties? = null
 
 fun main(args: Array<String>) {
 
@@ -23,7 +19,7 @@ fun main(args: Array<String>) {
         Sentry.init { options ->
             options.dsn = ctx.environment.getProperty("monitorenv.sentry.dsn")
             options.environment = ctx.environment.getProperty("monitorenv.sentry.environment")
-            options.release = buildProperties?.version
+            options.release = ctx.environment.getProperty("monitorenv.version")
             // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
             // We recommend adjusting this value in production.
             options.tracesSampleRate = 1.0
