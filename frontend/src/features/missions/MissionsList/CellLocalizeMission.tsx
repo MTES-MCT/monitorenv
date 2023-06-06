@@ -1,6 +1,7 @@
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import GeoJSON from 'ol/format/GeoJSON'
 import { useDispatch } from 'react-redux'
+import styled from 'styled-components'
 
 import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
@@ -9,7 +10,7 @@ export function CellLocalizeMission({ geom }: { geom: any }) {
   const dispatch = useDispatch()
 
   if (!geom) {
-    return <span>-</span>
+    return <StyledEmptyContainer>-</StyledEmptyContainer>
   }
   const handleZoomToMission = () => {
     const feature = new GeoJSON({
@@ -20,5 +21,15 @@ export function CellLocalizeMission({ geom }: { geom: any }) {
     dispatch(setFitToExtent(extent))
   }
 
-  return <IconButton accent={Accent.TERTIARY} Icon={Icon.FocusZones} onClick={handleZoomToMission} />
+  return <StyledIconButton accent={Accent.TERTIARY} Icon={Icon.FocusZones} onClick={handleZoomToMission} />
 }
+
+const StyledIconButton = styled(IconButton)`
+  display: inherit;
+`
+const StyledEmptyContainer = styled.div`
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`

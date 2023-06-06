@@ -31,12 +31,14 @@ export function MissionsTableFilters() {
     periodFilter,
     seaFrontFilter,
     sourceFilter,
+    startedAfter,
+    startedBefore,
     statusFilter,
     themeFilter,
     typeFilter,
     unitFilter
   } = useAppSelector(state => state.missionFilters)
-  const [isCustomPeriodVisible, setIsCustomPeriodVisible] = useState(false)
+  const [isCustomPeriodVisible, setIsCustomPeriodVisible] = useState(periodFilter === DateRangeEnum.CUSTOM)
 
   const unitPickerRef = useRef() as MutableRefObject<HTMLDivElement>
 
@@ -284,6 +286,9 @@ export function MissionsTableFilters() {
               key="dateRange"
               baseContainer={newWindowContainerRef.current}
               data-cy="datepicker-missionStartedAfter"
+              defaultValue={
+                startedAfter && startedBefore ? [new Date(startedAfter), new Date(startedBefore)] : undefined
+              }
               isLabelHidden
               isStringDate
               label="Date de début entre le et le"

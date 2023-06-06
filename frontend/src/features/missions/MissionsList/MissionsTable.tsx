@@ -2,21 +2,25 @@
 import { Icon, SimpleTable } from '@mtes-mct/monitor-ui'
 import { flexRender, getCoreRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
-import { useCallback, useRef, useState } from 'react'
-import { Loader } from 'rsuite'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 import { Columns } from './Columns'
+import { SkeletonColumns } from './Columns/Skeleton'
 
 import type { Mission } from '../../../domain/entities/missions'
 
 export function MissionsTable({ isLoading, missions }: { isLoading: boolean; missions: Mission[] }) {
   const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'startDate' }])
 
+  const tableData = useMemo(() => (isLoading ? Array(5).fill({}) : missions), [isLoading, missions])
+
+  const columns = useMemo(() => (isLoading ? SkeletonColumns : Columns), [isLoading])
+
   const table = useReactTable({
-    columns: Columns,
-    data: missions,
+    columns,
+    data: tableData,
     enableSortingRemoval: false,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -45,10 +49,6 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
           Math.max(0, rowVirtualizer.getTotalSize() - (virtualRows[virtualRows.length - 1]?.end || 0))
         ]
       : [0, 0]
-
-  if (isLoading) {
-    return <Loader center content={<span>Chargement</span>} />
-  }
 
   return (
     <StyledMissionsContainer ref={tableContainerRef}>
