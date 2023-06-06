@@ -76,7 +76,7 @@ const ThemeSchema: Yup.SchemaOf<EnvActionTheme> = Yup.object().shape({
   theme: Yup.string().required('Sélectionnez un thême')
 })
 
-const InfractionSchema: Yup.SchemaOf<Infraction> = Yup.object().shape({
+const NewInfractionSchema: Yup.SchemaOf<Infraction> = Yup.object().shape({
   companyName: Yup.string().optional().nullable(),
   controlledPersonIdentity: Yup.string().nullable(),
   formalNotice: Yup.mixed().oneOf(Object.values(FormalNoticeEnum)).required('Requis'),
@@ -99,6 +99,30 @@ const InfractionSchema: Yup.SchemaOf<Infraction> = Yup.object().shape({
   // @ts-ignore
   // Property 'oneOfOptional' does not exist on type 'MixedSchema<any, AnyObject, any>'
   vesselType: Yup.mixed().oneOfOptional(Object.values(VesselTypeEnum))
+})
+
+const ClosedInfractionSchema: Yup.SchemaOf<Infraction> = NewInfractionSchema.shape({
+  infractionType: Yup.mixed()
+    .oneOf([InfractionTypeEnum.WITH_REPORT, InfractionTypeEnum.WITHOUT_REPORT])
+    .required('Requis')
+})
+
+const NewEnvActionControlSchema: Yup.SchemaOf<EnvActionControl> = Yup.object()
+  .shape({
+    actionStartDateTimeUtc: Yup.string().nullable().required('Requis'),
+    actionType: Yup.mixed().oneOf([ActionTypeEnum.CONTROL]),
+    id: Yup.string().required(),
+    infractions: Yup.array().of(NewInfractionSchema).ensure().required()
+  })
+  .nullable()
+  .required()
+
+const ClosedEnvActionControlSchema: Yup.SchemaOf<EnvActionControl> = NewEnvActionControlSchema.shape({
+  actionNumberOfControls: Yup.number().required('Requis'),
+  actionTargetType: Yup.string().nullable().required('Requis'),
+  geom: Yup.array().ensure(),
+  infractions: Yup.array().of(ClosedInfractionSchema).ensure().required(),
+  themes: Yup.array().of(ThemeSchema).ensure().required()
 })
 
 const getEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActionControl> =>
@@ -126,7 +150,7 @@ const getEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActionControl> =>
       actionType: Yup.mixed().oneOf([ActionTypeEnum.CONTROL]),
       geom: Yup.array().ensure(),
       id: Yup.string().required(),
-      infractions: Yup.array().of(InfractionSchema).ensure().required(),
+      infractions: Yup.array().of(ClosedEnvActionControlSchema).ensure().required(),
       themes: Yup.array().of(ThemeSchema).ensure().required(),
       vehicleType: Yup.string().when('actionTargetType', (actionTargetType, schema) => {
         if (!actionTargetType || actionTargetType === ActionTargetTypeEnum.VEHICLE) {
@@ -184,6 +208,14 @@ const getEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<EnvActionSurveil
     })
     .required()
 
+const NewEnvActionSurveillanceSchema: Yup.SchemaOf<EnvActionSurveillance> = Yup.object()
+  .shape({
+    actionStartDateTimeUtc: Yup.string().nullable().required('Requis'),
+    actionType: Yup.mixed().oneOf([ActionTypeEnum.SURVEILLANCE]),
+    id: Yup.string().required()
+  })
+  .required()
+
 const EnvActionNoteSchema: Yup.SchemaOf<EnvActionNote> = Yup.object()
   .shape({
     actionStartDateTimeUtc: Yup.string().required('Requis'),
@@ -192,7 +224,21 @@ const EnvActionNoteSchema: Yup.SchemaOf<EnvActionNote> = Yup.object()
   })
   .required()
 
-export const EnvActionSchema = Yup.lazy((value, context) => {
+const NewEnvActionSchema = Yup.lazy(value => {
+  if (value.actionType === ActionTypeEnum.CONTROL) {
+    return NewEnvActionControlSchema
+  }
+  if (value.actionType === ActionTypeEnum.SURVEILLANCE) {
+    return NewEnvActionSurveillanceSchema
+  }
+  if (value.actionType === ActionTypeEnum.NOTE) {
+    return EnvActionNoteSchema
+  }
+
+  return Yup.object().required()
+})
+
+const ClosedEnvActionSchema = Yup.lazy((value, context) => {
   if (value.actionType === ActionTypeEnum.CONTROL) {
     return getEnvActionControlSchema(context)
   }
@@ -206,13 +252,13 @@ export const EnvActionSchema = Yup.lazy((value, context) => {
   return Yup.object().required()
 })
 
-export const MissionZoneSchema = Yup.object().test({
+const MissionZoneSchema = Yup.object().test({
   message: 'Veuillez définir une zone de mission',
   name: 'has-geom',
   test: val => val && !_.isEmpty(val?.coordinates)
 })
 
-export const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
+const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
   .shape({
     closedBy: Yup.string(),
     controlUnits: Yup.array().of(ControlUnitSchema).ensure().defined().min(1),
@@ -223,10 +269,10 @@ export const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
     // FIXME : see issue https://github.com/jquense/yup/issues/1190
     // & tip for resolution https://github.com/jquense/yup/issues/1283#issuecomment-786559444
     envActions: Yup.array()
-      .of(EnvActionSchema as any)
+      .of(NewEnvActionSchema as any)
       .nullable(),
     geom: shouldUseAlternateValidationInTestEnvironment ? Yup.object().nullable() : MissionZoneSchema,
-    isClosed: Yup.boolean().default(false),
+    isClosed: Yup.boolean().oneOf([false]).required(),
     missionTypes: MissionTypesSchema,
     openBy: Yup.string()
       .min(3, 'le Trigramme doit comporter 3 lettres')
@@ -236,30 +282,16 @@ export const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
   })
   .required()
 
-export const ClosedMissionSchema = Yup.object().shape({
-  closedBy: Yup.string()
-    .min(3, 'Minimum 3 lettres pour le Trigramme')
-    .max(3, 'Maximum 3 lettres pour le Trigramme')
-    .required('Requis'),
+const ClosedMissionSchema = NewMissionSchema.shape({
   controlUnits: Yup.array().of(ClosedControlUnitSchema).ensure().defined().min(1),
   endDateTimeUtc: Yup.date()
     .nullable()
-    .required('Requis')
-    .min(Yup.ref('startDateTimeUtc'), () => 'La date de fin doit être postérieure à la date de début'),
-  // cast as any to avoid type error
-  // FIXME : see issue https://github.com/jquense/yup/issues/1190
-  // & tip for resolution https://github.com/jquense/yup/issues/1283#issuecomment-786559444
-  envActions: Yup.array()
-    .of(EnvActionSchema as any)
-    .nullable(),
-  geom: shouldUseAlternateValidationInTestEnvironment ? Yup.object().nullable() : MissionZoneSchema,
-  isClosed: Yup.boolean().default(false),
-  missionTypes: MissionTypesSchema,
-  openBy: Yup.string()
-    .min(3, 'Minimum 3 lettres pour le Trigramme')
-    .max(3, 'Maximum 3 lettres pour le Trigramme')
+    .min(Yup.ref('startDateTimeUtc'), () => 'La date de fin doit être postérieure à la date de début')
     .required('Requis'),
-  startDateTimeUtc: Yup.date().required('Requis')
+  envActions: Yup.array()
+    .of(ClosedEnvActionSchema as any)
+    .nullable(),
+  isClosed: Yup.boolean().oneOf([true]).required()
 })
 
 export const MissionSchema = Yup.lazy(value => {
