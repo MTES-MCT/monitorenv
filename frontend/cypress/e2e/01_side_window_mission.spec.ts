@@ -17,10 +17,10 @@ context('Missions', () => {
     cy.get('*[data-cy="mission-errors"]').should('exist')
 
     // When
-    cy.fill('Début de mission (UTC)', [2023, 5, 26, 12, 0])
+    cy.fill('Début de mission (UTC)', [2024, 5, 26, 12, 0])
 
     // with wrong end date of mission
-    cy.fill('Fin de mission (UTC)', [2023, 5, 25, 14, 15])
+    cy.fill('Fin de mission (UTC)', [2024, 5, 25, 14, 15])
     cy.get('form').submit()
     cy.wait(100)
     cy.get('*[data-cy="mission-end-date-time"] > div > p').contains(
@@ -28,7 +28,7 @@ context('Missions', () => {
     )
 
     // with good date
-    cy.fill('Fin de mission (UTC)', [2023, 5, 28, 14, 15])
+    cy.fill('Fin de mission (UTC)', [2024, 5, 28, 14, 15])
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
 
@@ -64,7 +64,7 @@ context('Missions', () => {
     // Given
     cy.wait(200)
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('10')
-    cy.get('*[data-cy="edit-mission"]').eq(9).click({ force: true })
+    cy.get('*[data-cy="edit-mission"]').eq(0).click({ force: true })
 
     cy.intercept({
       url: `/bff/v1/missions*`
