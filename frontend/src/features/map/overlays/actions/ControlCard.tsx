@@ -2,7 +2,6 @@ import { getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
-import { InteractionListener } from '../../../../domain/entities/map/constants'
 import { actionTargetTypeLabels } from '../../../../domain/entities/missions'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ControlInfractionsTags } from '../../../../ui/ControlInfractionsTags'
@@ -16,7 +15,7 @@ export function ControlCard({ feature }: { feature: any }) {
   const parsedActionStartDateTimeUtc = new Date(actionStartDateTimeUtc)
   const actionDate = getLocalizedDayjs(parsedActionStartDateTimeUtc).format('DD MMM à HH:mm')
 
-  if (listener === InteractionListener.CONTROL_POINT) {
+  if (listener) {
     return null
   }
 

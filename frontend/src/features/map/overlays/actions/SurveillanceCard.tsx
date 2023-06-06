@@ -3,7 +3,6 @@ import dayjs from 'dayjs'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
-import { InteractionListener } from '../../../../domain/entities/map/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { dateDifferenceInHours } from '../../../../utils/dateDifferenceInHours'
 import { extractThemesAsText } from '../../../../utils/extractThemesAsText'
@@ -20,7 +19,7 @@ export function SurveillanceCard({ feature }) {
 
   const simpleDate = startDate?.isValid() && startDate?.format('DD MMMM YYYY')
 
-  if (listener === InteractionListener.SURVEILLANCE_ZONE) {
+  if (listener) {
     return null
   }
 
