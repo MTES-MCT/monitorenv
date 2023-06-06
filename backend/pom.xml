@@ -92,7 +92,7 @@
 					<artifactId>jts-core</artifactId>
 				</exclusion>
 			</exclusions>
-    </dependency>
+    	</dependency>
 		<dependency>
 			<groupId>com.nhaarman.mockitokotlin2</groupId>
 			<artifactId>mockito-kotlin</artifactId>
@@ -231,6 +231,11 @@
 			<artifactId>jna</artifactId>
 			<version>5.12.1</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.sentry</groupId>
+			<artifactId>sentry</artifactId>
+			<version>6.21.0</version>
 		</dependency>
 	</dependencies>
 

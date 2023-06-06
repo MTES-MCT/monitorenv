@@ -33,8 +33,9 @@
     </Appenders>
     <Loggers>
         <Root level="INFO">
+            <!-- This <AppenderRef> is used to target the right <Console> -->
             <AppenderRef ref="${ENV}"/>
-            <AppenderRef ref="Kibana" level="info"/>
+            <AppenderRef ref="Kibana"/>
         </Root>
         <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter"
                 level="DEBUG"
@@ -47,6 +48,7 @@
                              onMismatch="ACCEPT"/>
             </Filters>
             <AppenderRef ref="${ENV}"/>
+            <AppenderRef ref="Kibana"/>
         </logger>
     </Loggers>
 </Configuration>
