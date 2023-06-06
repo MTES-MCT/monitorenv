@@ -1,7 +1,6 @@
 package fr.gouv.cacem.monitorenv
 
 import io.sentry.Sentry
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
