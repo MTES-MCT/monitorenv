@@ -55,9 +55,35 @@ WITH actions_to_delete AS (
         missions.start_datetime_utc < '2022-12-31 23:59:59' AND
         missions.mission_source = 'MONITORENV'
 )
-
 DELETE FROM env_actions
 WHERE id IN (SELECT id FROM actions_to_delete);
+
+WITH resources_to_delete AS (
+    SELECT missions_control_resources.id
+    FROM missions_control_resources
+    JOIN missions
+    ON missions.id = missions_control_resources.mission_id
+    WHERE
+        missions.start_datetime_utc < '2022-12-31 23:59:59' AND
+        missions.mission_source = 'MONITORENV'
+)
+
+DELETE FROM missions_control_resources
+WHERE id IN (SELECT id FROM resources_to_delete);
+
+WITH units_to_delete AS (
+    SELECT missions_control_units.id
+    FROM missions_control_units
+    JOIN missions
+    ON missions.id = missions_control_units.mission_id
+    WHERE
+        missions.start_datetime_utc < '2022-12-31 23:59:59' AND
+        missions.mission_source = 'MONITORENV'
+)
+
+DELETE FROM missions_control_units
+WHERE id IN (SELECT id FROM units_to_delete);
+
 
 DELETE 
     FROM missions
