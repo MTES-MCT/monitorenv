@@ -114,6 +114,10 @@ export const Layers = {
     type: null,
     zIndex: 950
   },
+  SEMAPHORES: {
+    code: 'semaphores',
+    zIndex: 1300
+  },
   SIX_MILES: {
     code: '6_miles_areas',
     containsMultipleZones: false,
@@ -169,5 +173,10 @@ export const BaseLayers = {
   }
 }
 
-export const SelectableLayers = [Layers.MISSIONS.code, Layers.REGULATORY_ENV_PREVIEW.code, Layers.REGULATORY_ENV.code]
-export const HoverableLayers = [Layers.MISSIONS.code, Layers.ACTIONS.code]
+export const SelectableLayers = [
+  Layers.MISSIONS.code,
+  Layers.REGULATORY_ENV_PREVIEW.code,
+  Layers.REGULATORY_ENV.code,
+  Layers.SEMAPHORES.code
+]
+export const HoverableLayers = [Layers.MISSIONS.code, Layers.ACTIONS.code, Layers.SEMAPHORES.code]

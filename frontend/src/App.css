@@ -5,45 +5,55 @@
  */
 
 .hide {
-    display: none;
+  display: none;
 }
 
 .visible {
-    visibility: visible;
+  visibility: visible;
 }
 
 .active-tab {
-    background-color: #707785;
+  background-color: #707785;
 }
 
 .highlight {
-    margin: 0;
-    padding: 0;
-    background-color: #CCCFD6;
-    color: rgb(81, 81, 81);
+  margin: 0;
+  padding: 0;
+  background-color: #cccfd6;
+  color: rgb(81, 81, 81);
 }
 
 .collapsed {
-    display: none;
+  display: none;
 }
-
 
 /* classNames added via ol component */
 
 .overlay-mission-hover {
-    z-index: 5000;
-    width: 0;
-    height: 0;
+  z-index: 5000;
+  width: 0;
+  height: 0;
 }
 
 .overlay-mission-selected {
-    z-index: 4000;
-    width: 0;
-    height: 0;
+  z-index: 4000;
+  width: 0;
+  height: 0;
 }
 
 .overlay-action-hover {
-    z-index: 5500;
-    width: 0;
-    height: 0;
+  z-index: 5500;
+  width: 0;
+  height: 0;
+}
+.overlay-semaphore-hover {
+  z-index: 6000;
+  width: 0;
+  height: 0;
+}
+
+.overlay-semaphore-selected {
+  z-index: 5500;
+  width: 0;
+  height: 0;
 }

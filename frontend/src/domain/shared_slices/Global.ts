@@ -5,7 +5,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { MapToolType } from '../entities/map/constants'
 
 type GlobalStateType = {
-  rightMenuIsOpen: boolean
   // state entry for every component /menu displayed on map whose visibility should be controlled
   displayMissionMenuButton: boolean
   displayDrawModal: boolean
@@ -13,6 +12,7 @@ type GlobalStateType = {
   displayLocateOnMap: boolean
   displayMeasurement: boolean
   displayInterestPoint: boolean
+  displaySearchSemaphoreButton: boolean
 
   displayMissionsOverlay: boolean
   // state entry for every layer whose visibility should be controlled
@@ -24,14 +24,19 @@ type GlobalStateType = {
   missionsMenuIsOpen: boolean
   layersSidebarIsOpen: boolean
 
+  isSearchSemaphoreVisible: boolean
+  displaySemaphoresLayer: boolean
+  displaySemaphoreOverlay: boolean
+
   mapToolOpened: MapToolType | undefined
 
   error: any
 
   healthcheckTextWarning?: string
+
+  overlayCoordinates: [number, number] | undefined
 }
 const initialState: GlobalStateType = {
-  rightMenuIsOpen: true,
   // state entry for every component /menu displayed on map whose visibility should be controlled
   displayMissionMenuButton: true,
   displayDrawModal: false,
@@ -39,6 +44,7 @@ const initialState: GlobalStateType = {
   displayLocateOnMap: true,
   displayMeasurement: true,
   displayInterestPoint: true,
+  displaySearchSemaphoreButton: true,
 
   displayMissionsOverlay: true,
   // state entry for every layer whose visibility should be controlled
@@ -50,11 +56,17 @@ const initialState: GlobalStateType = {
   missionsMenuIsOpen: false,
   layersSidebarIsOpen: false,
 
+  isSearchSemaphoreVisible: false,
+  displaySemaphoresLayer: true,
+  displaySemaphoreOverlay: true,
+
   mapToolOpened: undefined,
 
   error: null,
 
-  healthcheckTextWarning: undefined
+  healthcheckTextWarning: undefined,
+
+  overlayCoordinates: undefined
 }
 
 const globalSlice = createSlice({
@@ -87,11 +99,20 @@ const globalSlice = createSlice({
      */
     setHealthcheckTextWarning(state, action) {
       state.healthcheckTextWarning = action.payload
+    },
+    setOverlayCoordinates(state, action) {
+      state.overlayCoordinates = action.payload
     }
   }
 })
 
-export const { removeError, setDisplayedItems, setError, setHealthcheckTextWarning, setMapToolOpened } =
-  globalSlice.actions
+export const {
+  removeError,
+  setDisplayedItems,
+  setError,
+  setHealthcheckTextWarning,
+  setMapToolOpened,
+  setOverlayCoordinates
+} = globalSlice.actions
 
 export const globalReducer = globalSlice.reducer

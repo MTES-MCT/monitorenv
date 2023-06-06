@@ -12,10 +12,12 @@ import { MissionsLayer } from './layers/MissionsLayer'
 import { RegulatoryLayers } from './layers/RegulatoryLayers'
 import { RegulatoryPreviewLayer } from './layers/RegulatoryPreviewLayer'
 import { SelectedMissionLayer } from './layers/SelectedMissionLayer'
+import { SemaphoresLayer } from './layers/Semaphores'
 import { MapExtentController } from './MapExtentController'
 import { MapHistory } from './MapHistory'
 import { ActionOverlay } from './overlays/actions/ActionOverlay'
 import { MissionOverlays } from './overlays/missions/MissionOverlays'
+import { SemaphoreOverlay } from './overlays/semaphores'
 import { ShowRegulatoryMetadata } from './ShowRegulatoryMetadata'
 
 import type { MapClickEvent } from '../../types'
@@ -30,31 +32,8 @@ export type MapChildrenProps = Partial<{
 }>
 
 export function Map() {
-  // const [shouldUpdateView, setShouldUpdateView] = useState(true)
-  // const [historyMoveTrigger, setHistoryMoveTrigger] = useState({})
-  // const [mapMovingAndZoomEvent, setMapMovingAndZoomEvent] = useState(null)
-  // const [handlePointerMoveEventPixel, setHandlePointerMoveEventPixel] = useState(null)
-
-  // const handleMovingAndZoom = () => {
-  //   if (!shouldUpdateView) {
-  //     setShouldUpdateView(true)
-  //   }
-  //   setHistoryMoveTrigger({ dummyUpdate: true })
-  //   setMapMovingAndZoomEvent({ dummyUpdate: true })
-  // }
-
-  // const handlePointerMove = (event) => {
-  //   if (event) {
-  //     setHandlePointerMoveEventPixel(event.pixel)
-  //   }
-  // }
-
   return (
-    <BaseMap
-    // BaseMap forwards map & mapClickEvent as props to children
-    // handleMovingAndZoom={handleMovingAndZoom}
-    // handlePointerMove={handlePointerMove}
-    >
+    <BaseMap>
       <MapAttributionsBox />
       <MapCoordinatesBox />
       <BaseLayer />
@@ -73,6 +52,8 @@ export function Map() {
       <HoveredMissionLayer />
       <MissionOverlays />
       <ActionOverlay />
+      <SemaphoresLayer />
+      <SemaphoreOverlay />
     </BaseMap>
   )
 }

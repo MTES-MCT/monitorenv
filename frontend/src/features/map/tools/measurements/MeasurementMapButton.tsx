@@ -1,3 +1,4 @@
+import { Icon } from '@mtes-mct/monitor-ui'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
@@ -10,7 +11,6 @@ import { useClickOutsideWhenOpenedAndExecute } from '../../../../hooks/useClickO
 import { useEscapeFromKeyboardAndExecute } from '../../../../hooks/useEscapeFromKeyboardAndExecute'
 import { ReactComponent as MultiLineSVG } from '../../../../uiMonitor/icons/Measure_broken_line.svg'
 import { ReactComponent as CircleRangeSVG } from '../../../../uiMonitor/icons/Measure_circle.svg'
-import { ReactComponent as MeasurementSVG } from '../../../../uiMonitor/icons/Measure_line.svg'
 import { MapComponentStyle } from '../../../commonStyles/MapComponent.style'
 import { MapToolButton } from '../MapToolButton'
 import { CustomCircleRange } from './CustomCircleRange'
@@ -18,11 +18,8 @@ import { CustomCircleRange } from './CustomCircleRange'
 export function MeasurementMapButton() {
   const dispatch = useAppDispatch()
   const { measurementTypeToAdd } = useAppSelector(state => state.measurement)
-  const { displayMeasurement, healthcheckTextWarning, mapToolOpened, rightMenuIsOpen } = useAppSelector(
-    state => state.global
-  )
+  const { displayMeasurement, healthcheckTextWarning, mapToolOpened } = useAppSelector(state => state.global)
 
-  const isRightMenuShrinked = !rightMenuIsOpen
   const isOpen = useMemo(() => mapToolOpened === MapToolType.MEASUREMENT_MENU, [mapToolOpened])
   const isMeasurementToolOpen = useMemo(() => mapToolOpened === MapToolType.MEASUREMENT, [mapToolOpened])
   const wrapperRef = useRef(null)
@@ -50,13 +47,13 @@ export function MeasurementMapButton() {
   const measurementIcon = useMemo(() => {
     switch (measurementTypeToAdd) {
       case MeasurementType.MULTILINE:
-        return <MultiLineIcon />
+        return Icon.MeasureBrokenLine
       case MeasurementType.CIRCLE_RANGE:
-        return <CircleRangeIcon />
+        return Icon.MeasureCircle
       default:
-        return <MeasurementIcon $isRightMenuShrinked={isRightMenuShrinked} />
+        return Icon.MeasureLine
     }
-  }, [measurementTypeToAdd, isRightMenuShrinked])
+  }, [measurementTypeToAdd])
 
   const openOrCloseMeasurementMenu = useCallback(() => {
     if (measurementTypeToAdd) {
@@ -69,16 +66,16 @@ export function MeasurementMapButton() {
 
   return (
     <Wrapper ref={wrapperRef}>
-      <MeasurementButton
+      <MapToolButton
         dataCy="measurement"
+        icon={measurementIcon}
         isHidden={!displayMeasurement}
         isOpen={isOpen || !!measurementTypeToAdd}
         onClick={openOrCloseMeasurementMenu}
         style={{ top: 249 }}
         title="Mesurer une distance"
-      >
-        {measurementIcon}
-      </MeasurementButton>
+      />
+
       <MeasurementOptions healthcheckTextWarning={!!healthcheckTextWarning} isOpen={isOpen}>
         <MeasurementItem
           className=".map-menu"
@@ -156,19 +153,4 @@ const MeasurementOptions = styled(MapComponentStyle)<{
   transition: all 0.5s;
   width: 175px;
   z-index: 999;
-`
-
-const MeasurementButton = styled(MapToolButton)``
-
-const MeasurementIcon = styled(MeasurementSVG)<{
-  $isRightMenuShrinked: boolean
-}>`
-  height: 25px;
-  opacity: ${p => (p.$isRightMenuShrinked ? '0' : '1')};
-  transition: all 0.2s;
-  width: 25px;
-
-  path:first-of-type {
-    fill: ${p => p.theme.color.gainsboro};
-  }
 `

@@ -10,12 +10,19 @@ import { Map } from '../features/map/Map'
 import { InterestPointMapButton } from '../features/map/tools/interest_points/InterestPointMapButton'
 import { MeasurementMapButton } from '../features/map/tools/measurements/MeasurementMapButton'
 import { MissionsMenu } from '../features/missions/MissionsMenu'
+import { SearchSemaphoreButton } from '../features/Semaphores/SearchSemaphoreButton'
 import { SideWindowLauncher } from '../features/SideWindow/SideWindowLauncher'
 import { useAppSelector } from '../hooks/useAppSelector'
 
 export function HomePage() {
-  const { displayDrawModal, displayInterestPoint, displayLocateOnMap, displayMeasurement, displayMissionMenuButton } =
-    useAppSelector(state => state.global)
+  const {
+    displayDrawModal,
+    displayInterestPoint,
+    displayLocateOnMap,
+    displayMeasurement,
+    displayMissionMenuButton,
+    displaySearchSemaphoreButton
+  } = useAppSelector(state => state.global)
 
   return (
     <>
@@ -26,7 +33,10 @@ export function HomePage() {
         <LayersSidebar />
         {displayDrawModal && <DrawModal />}
         {displayLocateOnMap && <LocateOnMap />}
+
         {displayMissionMenuButton && <MissionsMenu />}
+        {displaySearchSemaphoreButton && <SearchSemaphoreButton />}
+
         {displayMeasurement && <MeasurementMapButton />}
         {displayInterestPoint && <InterestPointMapButton />}
 

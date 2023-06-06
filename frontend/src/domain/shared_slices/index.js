@@ -5,6 +5,7 @@ import { controlUnitsAPI } from '../../api/controlUnitsAPI'
 import { infractionsAPI } from '../../api/infractionsAPI'
 import { missionsAPI } from '../../api/missionsAPI'
 import { regulatoryLayersAPI } from '../../api/regulatoryLayersAPI'
+import { semaphoresAPI } from '../../api/semaphoresAPI'
 import { regulatoryLayerSearchSliceReducer } from '../../features/layersSelector/regulatory/search/RegulatoryLayerSearch.slice'
 import { sideWindowReducer } from '../../features/SideWindow/slice'
 import { administrativeSlicePersistedReducer } from './Administrative'
@@ -18,6 +19,7 @@ import { missionFiltersPersistedReducer } from './MissionFilters'
 import { missionStateSliceReducer } from './MissionsState'
 import { regulatorySlicePersistedReducer } from './Regulatory'
 import { regulatoryMetadataSliceReducer } from './RegulatoryMetadata'
+import { semaphoresPersistedReducer } from './SemaphoresSlice'
 
 export const homeReducers = combineReducers({
   administrative: administrativeSlicePersistedReducer,
@@ -37,6 +39,8 @@ export const homeReducers = combineReducers({
   [controlUnitsAPI.reducerPath]: controlUnitsAPI.reducer,
   [infractionsAPI.reducerPath]: infractionsAPI.reducer,
   regulatoryMetadata: regulatoryMetadataSliceReducer,
+  [semaphoresAPI.reducerPath]: semaphoresAPI.reducer,
+  semaphoresSlice: semaphoresPersistedReducer,
   sideWindow: sideWindowReducer
 })
 
@@ -45,5 +49,6 @@ export const homeMiddlewares = [
   regulatoryLayersAPI.middleware,
   controlThemesAPI.middleware,
   controlUnitsAPI.middleware,
-  infractionsAPI.middleware
+  infractionsAPI.middleware,
+  semaphoresAPI.middleware
 ]
