@@ -275,6 +275,10 @@ const ClosedMissionSchema = NewMissionSchema.shape({
     .max(3, 'Maximum 3 lettres pour le Trigramme')
     .required('Requis'),
   controlUnits: Yup.array().of(ClosedControlUnitSchema).ensure().defined().min(1),
+  endDateTimeUtc: Yup.date()
+    .nullable()
+    .required('Requis')
+    .min(Yup.ref('startDateTimeUtc'), () => 'La date de fin doit être postérieure à la date de début'),
   envActions: Yup.array()
     .of(ClosedEnvActionSchema as any)
     .nullable(),
