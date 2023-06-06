@@ -1,22 +1,26 @@
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { toast, ToastContainer } from 'react-toastify'
+import { toast } from 'react-toastify'
 
 import { ErrorType } from '../domain/entities/errors'
 
 import type { ToastOptions } from 'react-toastify'
 
-const TOAST_OPTIONS: ToastOptions = {
+const DEFAULT_TOAST_OPTIONS: ToastOptions = {
   autoClose: 3000,
+  containerId: 'default',
   position: 'bottom-right'
 }
 
 export function ErrorToastNotification() {
   // TODO Remove `any` once Redux Global state typed.
   const { error } = useSelector(state => (state as any).global)
-
   useEffect(() => {
     if (error) {
+      const TOAST_OPTIONS = error.containerId
+        ? { ...DEFAULT_TOAST_OPTIONS, containerId: error.containerId }
+        : DEFAULT_TOAST_OPTIONS
+
       if (error.type && error.type === ErrorType.INFO_AND_HIDDEN) {
         return
       }
@@ -42,5 +46,5 @@ export function ErrorToastNotification() {
     }
   }, [error])
 
-  return <ToastContainer />
+  return null
 }
