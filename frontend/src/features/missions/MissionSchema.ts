@@ -219,6 +219,12 @@ export const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
     endDateTimeUtc: Yup.date()
       .nullable()
       .min(Yup.ref('startDateTimeUtc'), () => 'La date de fin doit être postérieure à la date de début'),
+    // cast as any to avoid type error
+    // FIXME : see issue https://github.com/jquense/yup/issues/1190
+    // & tip for resolution https://github.com/jquense/yup/issues/1283#issuecomment-786559444
+    envActions: Yup.array()
+      .of(EnvActionSchema as any)
+      .nullable(),
     geom: shouldUseAlternateValidationInTestEnvironment ? Yup.object().nullable() : MissionZoneSchema,
     isClosed: Yup.boolean().default(false),
     missionTypes: MissionTypesSchema,
