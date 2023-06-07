@@ -10,7 +10,6 @@ import { COLORS } from '../../../../constants/constants'
 import { sideWindowPaths } from '../../../../domain/entities/sideWindow'
 import { clearSelectedMissionOnMap } from '../../../../domain/use_cases/missions/selectMissionOnMap'
 import { onNavigateBetweenMapAndSideWindow } from '../../../../domain/use_cases/navigation/onNavigateBetweenMapAndSideWindow'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { MissionSourceTag } from '../../../../ui/MissionSourceTag'
 import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
 import { missionTypesToString } from '../../../../utils/missionTypes'
@@ -35,8 +34,6 @@ export function MissionCard({ feature, selected = false }: { feature: any; selec
   const startDate = dayjs(startDateTimeUtc)
   const endDate = dayjs(endDateTimeUtc)
 
-  const listener = useAppSelector(state => state.draw.listener)
-
   const isMissionDuringOneDay = !endDateTimeUtc || (endDateTimeUtc && endDate.diff(startDate, 'day') === 0)
 
   const formattedStartDate = startDate.isValid() && startDate.format('D MMM YYYY')
@@ -52,10 +49,6 @@ export function MissionCard({ feature, selected = false }: { feature: any; selec
   const handleCloseOverlay = useCallback(() => {
     dispatch(clearSelectedMissionOnMap())
   }, [dispatch])
-
-  if (listener) {
-    return null
-  }
 
   return (
     <Wrapper data-cy="mission-overlay">

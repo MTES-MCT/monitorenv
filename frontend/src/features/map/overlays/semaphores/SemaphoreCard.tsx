@@ -40,7 +40,6 @@ const hoverTooltip = (text, className) => <StyledTooltip className={className}>{
 export function SemaphoreCard({ feature, selected = false }: { feature: any; selected?: boolean }) {
   const dispatch = useDispatch()
   const { displaySemaphoresLayer } = useAppSelector(state => state.global)
-  const listener = useAppSelector(state => state.draw.listener)
 
   const { email, name, phoneNumber, unit } = feature.getProperties()
   const [tooltipPhoneState, setTooltipPhoneState] = useState(PHONE_TOOLTIP_STATE.hover)
@@ -65,7 +64,7 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
     setTooltipPhoneState(PHONE_TOOLTIP_STATE.hover)
   }
 
-  if (!displaySemaphoresLayer || listener) {
+  if (!displaySemaphoresLayer) {
     return null
   }
 
