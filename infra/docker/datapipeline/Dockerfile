@@ -1,4 +1,4 @@
-FROM python:3.10.2-slim-buster
+FROM python:3.10.11-slim-bullseye
 
 ENV TINI_VERSION v0.19.0
 ENV USER="monitorenv-pipeline"
