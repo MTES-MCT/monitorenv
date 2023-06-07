@@ -16,7 +16,7 @@ class CreateOrUpdateMission(
     @Throws(IllegalArgumentException::class)
     fun execute(mission: MissionEntity?): MissionEntity {
         require(mission != null) {
-            "No mission to update"
+            "No mission to create or update"
         }
         val envActions = mission.envActions?.map {
             when (it.actionType) {
