@@ -1,16 +1,15 @@
-import _ from 'lodash'
+import { Icon } from '@mtes-mct/monitor-ui'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { toggleMyAmps } from '../../../domain/shared_slices/LayerSidebar'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { ReactComponent as PinSVG } from '../../../uiMonitor/icons/Pin.svg'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 import { AmpLayersList } from './AmpLayersList'
 
 export function AmpLayers() {
   const dispatch = useDispatch()
-  const { selectedAmpLayerIds } = useAppSelector(state => state.selectedAmp)
+
   const { myAmpsIsOpen } = useAppSelector(state => state.layerSidebar)
   const onTitleClicked = () => {
     dispatch(toggleMyAmps())
@@ -18,30 +17,16 @@ export function AmpLayers() {
 
   return (
     <>
-      <AmpLayersTitle $showAmpLayers={myAmpsIsOpen} data-cy="regulatory-layers-my-zones" onClick={onTitleClicked}>
-        <PinSVGIcon />
+      <AmpLayersTitle $showAmpLayers={myAmpsIsOpen} data-cy="amp-layers-my-zones" onClick={onTitleClicked}>
+        <Icon.Pin size={18} />
         <Title>Mes AMP</Title>
         <ChevronIcon $isOpen={myAmpsIsOpen} $right />
       </AmpLayersTitle>
-      {myAmpsIsOpen && (
-        <List>
-          {_.isEmpty(selectedAmpLayerIds) ? (
-            <NoLayerSelected>Aucune zone sélectionnée</NoLayerSelected>
-          ) : (
-            <AmpLayersList />
-          )}
-        </List>
-      )}
+      {myAmpsIsOpen && <AmpLayersList />}
     </>
   )
 }
 
-const PinSVGIcon = styled(PinSVG)`
-  width: 18px;
-  height: 18px;
-  margin-top: 2px;
-  margin-right: 8px;
-`
 const Title = styled.span`
   font-size: 16px;
   line-height: 22px;
@@ -62,22 +47,4 @@ const AmpLayersTitle = styled.div<{ $showAmpLayers: boolean }>`
   border-bottom-left-radius: ${props => (props.$showAmpLayers ? '0' : '2px')};
   border-bottom-right-radius: ${props => (props.$showAmpLayers ? '0' : '2px')};
   background: ${p => p.theme.color.charcoal};
-`
-
-const NoLayerSelected = styled.div`
-  color: ${p => p.theme.color.slateGray};
-  margin: 10px;
-  font-size: 13px;
-`
-
-const List = styled.ul`
-  margin: 0;
-  background: ${p => p.theme.color.white};
-  border-radius: 0;
-  padding: 0;
-  max-height: 50vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  color: ${p => p.theme.color.slateGray};
-  transition: 0.5s all;
 `

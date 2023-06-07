@@ -2,6 +2,7 @@ import { BaseMap } from './BaseMap'
 import { MapAttributionsBox } from './controls/MapAttributionsBox'
 import { MapCoordinatesBox } from './controls/MapCoordinatesBox'
 import { AdministrativeLayers } from './layers/AdministrativeLayers'
+import { AMPLayers } from './layers/AMPLayers'
 import { BaseLayer } from './layers/BaseLayer'
 import { DrawLayer } from './layers/DrawLayer'
 import { EditingMissionLayer } from './layers/EditingMissionLayer'
@@ -40,6 +41,7 @@ export function Map() {
       <RegulatoryLayers />
       <RegulatoryPreviewLayer />
       <ShowRegulatoryMetadata />
+      <AMPLayers />
       <AdministrativeLayers />
       <MeasurementLayer />
       <InterestPointLayer />

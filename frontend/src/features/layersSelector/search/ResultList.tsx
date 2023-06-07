@@ -1,38 +1,103 @@
 import _ from 'lodash'
+import { useState } from 'react'
 import styled from 'styled-components'
 
+import { useGetAMPsQuery } from '../../../api/ampsAPI'
 import { COLORS } from '../../../constants/constants'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { LayerGroup } from './LayerGroup'
+import { AMPLayerGroup } from './AMPLayerGroup'
+import { RegulatoryLayerGroup } from './RegulatoryLayerGroup'
 
 export function ResultList({ searchedText }) {
-  const { regulatoryLayersSearchResult: foundLayerIds } = useAppSelector(state => state.regulatoryLayerSearch)
+  const { ampsSearchResult, regulatoryLayersSearchResult } = useAppSelector(state => state.layerSearch)
   const { regulatoryLayersById } = useAppSelector(state => state.regulatory)
-  const layersByLayerName = _.groupBy(foundLayerIds, r => regulatoryLayersById[r]?.properties.layer_name)
+  const { data: amps } = useGetAMPsQuery()
+
+  const [showRegulatory, setShowRegulatory] = useState<boolean>(true)
+  const [showAMPs, setShowAMPs] = useState<boolean>(true)
+
+  const ampsByAMPName = _.groupBy(amps?.entities, a => a?.name)
+  const ampResulstsByAMPName = _.groupBy(ampsSearchResult, a => amps?.entities[a]?.name)
+
+  const regulatoryLayersByLayerName = _.groupBy(
+    regulatoryLayersSearchResult,
+    r => regulatoryLayersById[r]?.properties.layer_name
+  )
+  const toggleRegulatory = () => {
+    setShowRegulatory(true)
+    setShowAMPs(false)
+  }
+  const toggleAMPs = () => {
+    setShowRegulatory(false)
+    setShowAMPs(true)
+  }
 
   return (
     <List>
-      {layersByLayerName &&
-        Object.entries(layersByLayerName).map(([layerGroupName, layerIdsInGroup]) => (
-          <LayerGroup
-            key={layerGroupName}
-            groupName={layerGroupName}
-            layerIds={layerIdsInGroup}
-            searchedText={searchedText}
-          />
-        ))}
+      {regulatoryLayersSearchResult && (
+        <>
+          <Header onClick={toggleRegulatory}>
+            ZONES RÉGLEMENTAIRES{' '}
+            <NumberOfResults>({regulatoryLayersSearchResult?.length || '0'} résultats)</NumberOfResults>
+          </Header>
+          <SubList $isExpanded={showRegulatory}>
+            {Object.entries(regulatoryLayersByLayerName).map(([layerGroupName, layerIdsInGroup]) => (
+              <RegulatoryLayerGroup
+                key={layerGroupName}
+                groupName={layerGroupName}
+                layerIds={layerIdsInGroup}
+                searchedText={searchedText}
+              />
+            ))}
+          </SubList>
+        </>
+      )}
+      {ampsSearchResult && (
+        <>
+          <Header onClick={toggleAMPs}>
+            ZONES AMP <NumberOfResults>( {ampsSearchResult?.length || '0'} résultats)</NumberOfResults>
+          </Header>
+          <SubList $isExpanded={showAMPs}>
+            {Object.entries(ampResulstsByAMPName).map(([ampName, ampIdsInGroup]) => (
+              <AMPLayerGroup
+                key={ampName}
+                groupName={ampName}
+                groups={ampsByAMPName}
+                layerIds={ampIdsInGroup}
+                searchedText={searchedText}
+              />
+            ))}
+          </SubList>
+        </>
+      )}
     </List>
   )
 }
 
-const List = styled.ul`
+const Header = styled.div`
+  text-align: left;
+  padding: 8px 16px;
+  font-weight: bold;
+  cursor: pointer;
+  height: 36px;
+  color: ${COLORS.gunMetal};
+  border-bottom: 1px solid ${COLORS.lightGray};
+`
+const NumberOfResults = styled.span`
+  color: ${COLORS.slateGray};
+  font-weight: normal;
+`
+const SubList = styled.ul<{ $isExpanded: boolean }>`
+  padding: 0;
   margin: 0;
+  display: ${({ $isExpanded }) => ($isExpanded ? 'block' : 'none')};
+  max-height: calc(50vh - 72px);
+  overflow-y: scroll;
+`
+const List = styled.div`
   background: ${COLORS.background};
   border-radius: 0;
-  padding: 0;
   max-height: 50vh;
-  overflow-y: auto;
-  overflow-x: hidden;
   color: ${COLORS.slateGray};
   transition: 0.5s all;
   border-top: 2px solid ${COLORS.lightGray};

@@ -12,13 +12,13 @@ const homeStore = configureStore({
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       immutableCheck: {
-        ignoredPaths: ['regulatory', 'regulatoryLayerSearch']
+        ignoredPaths: ['regulatory', 'layerSearch']
       },
       // TODO Create a Redux middleware to properly serialize/deserialize `Date`, `Error` objects into plain objects.
       // https://redux-toolkit.js.org/api/serializabilityMiddleware
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER, 'regulatory/setRegulatoryLayers'],
-        ignoredPaths: ['regulatory', 'regulatoryLayerSearch'],
+        ignoredPaths: ['regulatory', 'layerSearch'],
         isSerializable: (value: any) => isPlain(value) || value instanceof Date || value instanceof Error
       }
     }).concat(homeMiddlewares),

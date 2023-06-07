@@ -68,7 +68,7 @@ const StyledTagPicker = styled(TagPicker)<{ $selectedItems: number }>`
     margin-right: 5px;
   }
   .rs-picker-tag-wrapper {
-    // display: ${props => (props.selectedItems > 0 ? 'block' : 'none')};
+    display: ${props => (props.$selectedItems > 0 ? 'block' : 'none')};
     top: 36px;
     width: 100%;
     > .rs-picker-search {

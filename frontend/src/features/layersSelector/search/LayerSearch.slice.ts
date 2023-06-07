@@ -1,17 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-type RegulatoryLayerSearchState = {
+type LayerSearchState = {
+  ampsSearchResult: number[] | undefined
   regulatoryLayersSearchResult: number[] | undefined
   searchExtent: number[] | undefined
 }
-const initialState: RegulatoryLayerSearchState = {
+const initialState: LayerSearchState = {
+  ampsSearchResult: undefined,
   regulatoryLayersSearchResult: undefined,
   searchExtent: undefined
 }
 
-const regulatoryLayerSearchSlice = createSlice({
+const layerSearchSlice = createSlice({
   initialState,
-  name: 'regulatoryLayerSearch',
+  name: 'layerSearch',
   reducers: {
     /**
      * Set the selected zone to filter regulations
@@ -19,6 +21,10 @@ const regulatoryLayerSearchSlice = createSlice({
      */
     resetSearchExtent(state) {
       state.searchExtent = undefined
+    },
+
+    setAMPsSearchResult(state, action) {
+      state.ampsSearchResult = action.payload
     },
 
     /**
@@ -49,7 +55,7 @@ const regulatoryLayerSearchSlice = createSlice({
   }
 })
 
-export const { resetSearchExtent, setRegulatoryLayersSearchResult, setSearchExtent } =
-  regulatoryLayerSearchSlice.actions
+export const { resetSearchExtent, setAMPsSearchResult, setRegulatoryLayersSearchResult, setSearchExtent } =
+  layerSearchSlice.actions
 
-export const regulatoryLayerSearchSliceReducer = regulatoryLayerSearchSlice.reducer
+export const layerSearchSliceReducer = layerSearchSlice.reducer

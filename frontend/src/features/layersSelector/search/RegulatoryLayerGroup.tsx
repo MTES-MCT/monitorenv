@@ -15,7 +15,7 @@ import { ReactComponent as PinSVG } from '../../../uiMonitor/icons/Pin.svg'
 import { ReactComponent as PinFullSVG } from '../../../uiMonitor/icons/Pin_filled.svg'
 import { RegulatoryLayer, REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT } from './RegulatoryLayer'
 
-export function LayerGroup({
+export function RegulatoryLayerGroup({
   groupName,
   layerIds,
   searchedText

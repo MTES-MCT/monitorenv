@@ -4,10 +4,14 @@ import { Extent, intersects } from 'ol/extent'
 import { transformExtent } from 'ol/proj'
 
 export const getIntersectingLayerIds = <T>(
+  shouldFilter: Boolean,
   layers: T[],
-  extent: Extent,
+  extent: Extent | undefined,
   { bboxPath = 'bbox', idPath = 'id' }: { bboxPath?: string; idPath?: string } = {}
-) => {
+): number[] => {
+  if (!shouldFilter || !extent) {
+    return layers.map(layer => _.get(layer, idPath))
+  }
   const currentExtent = transformExtent(extent, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
 
   return layers.reduce((layerIds, layer) => {
@@ -17,5 +21,5 @@ export const getIntersectingLayerIds = <T>(
     }
 
     return layerIds
-  }, []) as any[]
+  }, [] as number[])
 }

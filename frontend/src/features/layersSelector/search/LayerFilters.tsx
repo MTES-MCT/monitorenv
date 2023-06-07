@@ -1,16 +1,37 @@
+import { Checkbox } from '@mtes-mct/monitor-ui'
 import { Button } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
 import { FilterTagPicker } from '../../../uiMonitor/CustomRsuite/FilterTagPicker'
 
-export function RegulatoryLayerFilters({ filteredRegulatoryThemes, regulatoryThemes, setFilteredRegulatoryThemes }) {
+export function RegulatoryLayerFilters({
+  filteredRegulatoryThemes,
+  regulatoryThemes,
+  setFilteredRegulatoryThemes,
+  setShouldSearchAMPs,
+  setShouldSearchRegulatory,
+  shouldSearchAMPs,
+  shouldSearchRegulatory
+}) {
   const handleResetFilters = () => {
     setFilteredRegulatoryThemes([])
   }
 
   return (
     <FiltersWrapper>
+      <Checkbox
+        checked={shouldSearchRegulatory}
+        label="Zones avec une réglementation"
+        name="shouldSearchRegulatory"
+        onChange={setShouldSearchRegulatory}
+      />
+      <Checkbox
+        checked={shouldSearchAMPs}
+        label="Zones dans une AMP"
+        name="shouldSearchAMPs"
+        onChange={setShouldSearchAMPs}
+      />
       <FilterTagPicker
         block
         data={regulatoryThemes}

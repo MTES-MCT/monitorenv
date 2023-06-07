@@ -1,8 +1,9 @@
 import type { GeoJSON } from '../types/GeoJSON'
 
-export type AMP = {
-  desDesigfr: string
+export type AMPFromAPI = {
+  designation: string
   geom: GeoJSON.MultiPolygon
   id: number
-  mpaOriname: string
+  name: string
 }
+export type AMP = AMPFromAPI & { bbox: number[] }

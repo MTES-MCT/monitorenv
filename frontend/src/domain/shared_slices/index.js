@@ -7,7 +7,7 @@ import { infractionsAPI } from '../../api/infractionsAPI'
 import { missionsAPI } from '../../api/missionsAPI'
 import { regulatoryLayersAPI } from '../../api/regulatoryLayersAPI'
 import { semaphoresAPI } from '../../api/semaphoresAPI'
-import { regulatoryLayerSearchSliceReducer } from '../../features/layersSelector/search/LayerSearch.slice'
+import { layerSearchSliceReducer } from '../../features/layersSelector/search/LayerSearch.slice'
 import { sideWindowReducer } from '../../features/SideWindow/slice'
 import { administrativeSlicePersistedReducer } from './Administrative'
 import { drawReducer } from './Draw'
@@ -29,13 +29,13 @@ export const homeReducers = combineReducers({
   draw: drawReducer,
   global: globalReducer,
   interestPoint: interestPointSlicePersistedReducer,
+  layerSearch: layerSearchSliceReducer,
   map: mapSliceReducer,
   measurement: measurementSlicePersistedReducer,
   missionFilters: missionFiltersPersistedReducer,
   missionState: missionStateSliceReducer,
   multiMissions: multiMissionsSliceReducer,
   regulatory: regulatorySlicePersistedReducer,
-  regulatoryLayerSearch: regulatoryLayerSearchSliceReducer,
   regulatoryMetadata: regulatoryMetadataSliceReducer,
   [layerSidebarSlice.name]: layerSidebarSlice.reducer,
   [ampsAPI.reducerPath]: ampsAPI.reducer,
