@@ -43,6 +43,7 @@ export const missionsAPI = createApi({
       })
     }),
     getMission: build.query<Mission, number>({
+      providesTags: (_, __, id) => [{ id, type: 'Missions' }],
       query: id => `missions/${id}`
     }),
     getMissions: build.query<MissionsResponse, MissionsFilter | void>({
@@ -66,21 +67,10 @@ export const missionsAPI = createApi({
           .join('&')
     }),
     updateMission: build.mutation<Mission, Mission>({
-      invalidatesTags: [{ id: 'LIST', type: 'Missions' }],
-      // onQueryStarted is useful for optimistic updates
-      // The 2nd parameter is the destructured `MutationLifecycleApi`
-      async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
-        const patchResult = dispatch(
-          missionsAPI.util.updateQueryData('getMission', id, draft => {
-            Object.assign(draft, patch)
-          })
-        )
-        try {
-          await queryFulfilled
-        } catch {
-          patchResult.undo()
-        }
-      },
+      invalidatesTags: (_, __, { id }) => [
+        { id, type: 'Missions' },
+        { id: 'LIST', type: 'Missions' }
+      ],
 
       query: ({ id, ...patch }) => ({
         body: { id, ...patch },
