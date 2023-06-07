@@ -1,8 +1,8 @@
 import { Button } from 'rsuite'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../../constants/constants'
-import { FilterTagPicker } from '../../../../uiMonitor/CustomRsuite/FilterTagPicker'
+import { COLORS } from '../../../constants/constants'
+import { FilterTagPicker } from '../../../uiMonitor/CustomRsuite/FilterTagPicker'
 
 export function RegulatoryLayerFilters({ filteredRegulatoryThemes, regulatoryThemes, setFilteredRegulatoryThemes }) {
   const handleResetFilters = () => {

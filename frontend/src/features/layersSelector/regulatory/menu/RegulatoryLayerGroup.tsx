@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux'
 import { Tag, TagGroup, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
-import { RegulatoryLayerZone } from './RegulatoryLayerZone'
 import { COLORS } from '../../../../constants/constants'
 import {
   hideRegulatoryLayers,
@@ -14,7 +13,8 @@ import {
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReactComponent as CloseIconSVG } from '../../../../uiMonitor/icons/Close.svg'
 import { ReactComponent as DisplaySVG } from '../../../../uiMonitor/icons/Display.svg'
-import { REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT } from '../search/RegulatoryLayerSearchResultZone'
+import { REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT } from '../../search/RegulatoryLayerSearchResultZone'
+import { RegulatoryLayerZone } from './RegulatoryLayerZone'
 
 export function RegulatoryLayerGroup({ groupName, layers }) {
   const dispatch = useDispatch()

@@ -1,5 +1,13 @@
 import { combineReducers } from '@reduxjs/toolkit'
 
+import { controlThemesAPI } from '../../api/controlThemesAPI'
+import { controlUnitsAPI } from '../../api/controlUnitsAPI'
+import { infractionsAPI } from '../../api/infractionsAPI'
+import { missionsAPI } from '../../api/missionsAPI'
+import { regulatoryLayersAPI } from '../../api/regulatoryLayersAPI'
+import { semaphoresAPI } from '../../api/semaphoresAPI'
+import { regulatoryLayerSearchSliceReducer } from '../../features/layersSelector/search/RegulatoryLayerSearch.slice'
+import { sideWindowReducer } from '../../features/SideWindow/slice'
 import { administrativeSlicePersistedReducer } from './Administrative'
 import { drawReducer } from './Draw'
 import { globalReducer } from './Global'
@@ -13,14 +21,6 @@ import { multiMissionsSliceReducer } from './MultiMissions'
 import { regulatorySlicePersistedReducer } from './Regulatory'
 import { regulatoryMetadataSliceReducer } from './RegulatoryMetadata'
 import { semaphoresPersistedReducer } from './SemaphoresSlice'
-import { controlThemesAPI } from '../../api/controlThemesAPI'
-import { controlUnitsAPI } from '../../api/controlUnitsAPI'
-import { infractionsAPI } from '../../api/infractionsAPI'
-import { missionsAPI } from '../../api/missionsAPI'
-import { regulatoryLayersAPI } from '../../api/regulatoryLayersAPI'
-import { semaphoresAPI } from '../../api/semaphoresAPI'
-import { regulatoryLayerSearchSliceReducer } from '../../features/layersSelector/regulatory/search/RegulatoryLayerSearch.slice'
-import { sideWindowReducer } from '../../features/SideWindow/slice'
 
 export const homeReducers = combineReducers({
   administrative: administrativeSlicePersistedReducer,
