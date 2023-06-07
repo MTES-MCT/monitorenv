@@ -8,7 +8,7 @@ from src.pipeline.shared_tasks.control_flow import check_flow_not_running
 from src.pipeline.shared_tasks.etl import run_sql_script
 
 with Flow(
-    "Update departments and façades", executor=LocalDaskExecutor()
+    "Update departments and façades for missions and envActions", executor=LocalDaskExecutor()
 ) as flow:
 
     flow_not_running = check_flow_not_running()
