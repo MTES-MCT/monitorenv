@@ -5,7 +5,7 @@ WITH facades_intersection_areas AS (
         SUM(ST_Area(ST_Intersection(ST_MakeValid(missions.geom), facade_areas_subdivided.geometry)::geography)) AS intersection_area
     FROM missions
     LEFT JOIN facade_areas_subdivided
-    ON ST_Intersects(missions.geom, facade_areas_subdivided.geometry)
+    ON ST_Intersects(ST_MakeValid(missions.geom), facade_areas_subdivided.geometry)
     WHERE mission_source IN ('MONITORENV', 'MONITORFISH')
     GROUP BY missions.id, facade_areas_subdivided.facade
 ),
