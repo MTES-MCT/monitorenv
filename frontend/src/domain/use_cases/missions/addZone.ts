@@ -43,7 +43,10 @@ const openDrawLayerModal = dispatch => {
       displayMissionMenuButton: false,
       displayMissionsLayer: false,
       displayMissionsOverlay: false,
-      displaySelectedMissionLayer: false
+      displaySearchSemaphoreButton: false,
+      displaySelectedMissionLayer: false,
+      displaySemaphoreOverlay: false,
+      displaySemaphoresLayer: false
     })
   )
 }
@@ -59,7 +62,10 @@ export const closeDrawLayerModal = dispatch => {
       displayMissionMenuButton: true,
       displayMissionsLayer: true,
       displayMissionsOverlay: true,
-      displaySelectedMissionLayer: true
+      displaySearchSemaphoreButton: true,
+      displaySelectedMissionLayer: true,
+      displaySemaphoreOverlay: true,
+      displaySemaphoresLayer: true
     })
   )
 }
