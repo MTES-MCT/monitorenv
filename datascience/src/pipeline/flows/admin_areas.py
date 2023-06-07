@@ -100,6 +100,23 @@ def load_aem_areas(aem_areas: pd.DataFrame):
     )
 
 
+@task(checkpoint=False)
+def extract_departments_areas() -> pd.DataFrame:
+    return extract("monitorfish_local", "cross/departments_areas.sql")
+
+
+@task(checkpoint=False)
+def load_departments_areas(departments_areas: pd.DataFrame):
+    load(
+        departments_areas,
+        table_name="departments_areas",
+        schema="public",
+        db_name="monitorenv_remote",
+        logger=prefect.context.get("logger"),
+        how="replace",
+    )
+
+
 with Flow("Administrative areas") as flow:
 
     three_miles_areas = extract_3_miles_areas()
@@ -117,5 +134,7 @@ with Flow("Administrative areas") as flow:
     aem_areas = extract_aem_areas()
     load_aem_areas(aem_areas)
 
+    departments_areas = extract_departments_areas()
+    load_departments_areas(departments_areas)
 
 flow.file_name = Path(__file__).name

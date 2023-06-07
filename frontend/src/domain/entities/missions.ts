@@ -268,6 +268,7 @@ export enum SeaFrontEnum {
   GUADELOUPE = 'Guadeloupe',
   GUYANE = 'Guyane',
   MARTINIQUE = 'Martinique',
+  MAYOTTE = 'Mayotte',
   MED = 'MED',
   MEMN = 'MEMN',
   NAMO = 'NAMO',
@@ -287,6 +288,10 @@ export const seaFrontLabels = {
   MARTINIQUE: {
     label: 'Martinique',
     value: 'Martinique'
+  },
+  MAYOTTE: {
+    label: 'Mayotte',
+    value: 'Mayotte'
   },
   MED: {
     label: 'MED',

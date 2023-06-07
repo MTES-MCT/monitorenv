@@ -60,6 +60,11 @@ data class EnvActionModel(
     @Type(JsonBinaryType::class)
     @Column(name = "value", columnDefinition = "jsonb")
     var value: String,
+    @Column(name = "facade")
+    var facade: String? = null,
+    @Column(name = "department")
+    var department: String? = null,
+
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "mission_id")

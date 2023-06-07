@@ -10,11 +10,10 @@ import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.missions.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionById
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissions
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.UpdateMission
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdatePublicMissionDataInput
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
@@ -46,16 +45,13 @@ class ApiMissionsControllerITests {
     private lateinit var mockMvc: MockMvc
 
     @MockBean
-    private lateinit var createMission: CreateMission
+    private lateinit var createOrUpdateMission: CreateOrUpdateMission
 
     @MockBean
     private lateinit var getMissions: GetMissions
 
     @MockBean
     private lateinit var getMissionById: GetMissionById
-
-    @MockBean
-    private lateinit var updateMission: UpdateMission
 
     @MockBean
     private lateinit var deleteMission: DeleteMission
@@ -97,7 +93,7 @@ class ApiMissionsControllerITests {
             isUnderJdp = true,
         )
         val requestBody = objectMapper.writeValueAsString(newMissionRequest)
-        given(this.createMission.execute(mission = any())).willReturn(expectedNewMission)
+        given(this.createOrUpdateMission.execute(mission = any())).willReturn(expectedNewMission)
         // When
         mockMvc.perform(
             post("/api/v1/missions")
@@ -209,7 +205,7 @@ class ApiMissionsControllerITests {
             hasMissionOrder = true,
             isUnderJdp = true,
         )
-        given(this.updateMission.execute(any())).willReturn(expectedUpdatedMission)
+        given(this.createOrUpdateMission.execute(any())).willReturn(expectedUpdatedMission)
         // When
         mockMvc.perform(
             post("/api/v1/missions/14")

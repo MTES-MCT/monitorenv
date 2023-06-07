@@ -21,7 +21,8 @@ from src.pipeline.flows import (
     infractions,
     refresh_materialized_view,
     regulations,
-    semaphores
+    semaphores,
+    update_departments_and_facades
 )
 
 ################################ Define flow schedules ################################
@@ -46,16 +47,17 @@ semaphores.flow.schedule = CronSchedule("3 5,15 * * *")
 
 ###################### List flows to register with prefect server #####################
 flows_to_register = [
-    amp.flow,
     admin_areas.flow,
+    amp.flow,
     control_objectives.flow,
     facade_areas.flow,
     fao_areas.flow,
     historic_control_units.flow,
-    regulations.flow,
-    refresh_materialized_view.flow,
-    semaphores.flow,
     infractions.flow,
+    refresh_materialized_view.flow,
+    regulations.flow,
+    semaphores.flow,
+    update_departments_and_facades.flow,
 ]
 
 ################################ Define flows' executor ###############################
