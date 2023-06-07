@@ -40,7 +40,7 @@ class CreateOrUpdateMissionUTests {
 
         // Then
         assertThat(throwable).isInstanceOf(IllegalArgumentException::class.java)
-        assertThat(throwable.message).contains("No mission to update")
+        assertThat(throwable.message).contains("No mission to create or update")
     }
 
     @Test
