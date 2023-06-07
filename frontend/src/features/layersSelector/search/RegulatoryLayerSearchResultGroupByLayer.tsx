@@ -5,14 +5,14 @@ import { useDispatch } from 'react-redux'
 import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
-import { ReactComponent as PinSVG } from '../../../../uiMonitor/icons/Pin.svg'
-import { ReactComponent as PinFullSVG } from '../../../../uiMonitor/icons/Pin_filled.svg'
 import { COLORS } from '../../../constants/constants'
 import {
   addRegulatoryZonesToMyLayers,
   removeRegulatoryZonesFromMyLayers
 } from '../../../domain/shared_slices/Regulatory'
 import { useAppSelector } from '../../../hooks/useAppSelector'
+import { ReactComponent as PinSVG } from '../../../uiMonitor/icons/Pin.svg'
+import { ReactComponent as PinFullSVG } from '../../../uiMonitor/icons/Pin_filled.svg'
 import { REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT } from './RegulatoryLayerSearchResultZone'
 import { RegulatoryLayerSearchResultZones } from './RegulatoryLayerSearchResultZones'
 

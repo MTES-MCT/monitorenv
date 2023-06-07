@@ -1,10 +1,10 @@
 import { IconButton, Input, InputGroup } from 'rsuite'
 import styled from 'styled-components'
 
-import { ReactComponent as CloseIconSVG } from '../../../../uiMonitor/icons/Close.svg'
-import { ReactComponent as FiltreIconSVG } from '../../../../uiMonitor/icons/Filtres.svg'
-import { ReactComponent as SearchIconSVG } from '../../../../uiMonitor/icons/Search.svg'
 import { COLORS } from '../../../constants/constants'
+import { ReactComponent as CloseIconSVG } from '../../../uiMonitor/icons/Close.svg'
+import { ReactComponent as FiltreIconSVG } from '../../../uiMonitor/icons/Filtres.svg'
+import { ReactComponent as SearchIconSVG } from '../../../uiMonitor/icons/Search.svg'
 
 export function RegulatoryLayerSearchInput({
   displayRegFilters,

@@ -5,8 +5,6 @@ import { useDispatch } from 'react-redux'
 import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
-import { ReactComponent as PinSVG } from '../../../../uiMonitor/icons/Pin.svg'
-import { ReactComponent as PinFullSVG } from '../../../../uiMonitor/icons/Pin_filled.svg'
 import { COLORS } from '../../../constants/constants'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map/constants'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
@@ -18,6 +16,8 @@ import { closeRegulatoryZoneMetadata } from '../../../domain/use_cases/regulator
 import { showRegulatoryZoneMetadata } from '../../../domain/use_cases/regulatory/showRegulatoryZoneMetadata'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { RegulatoryLayerLegend } from '../../../ui/RegulatoryLayerLegend'
+import { ReactComponent as PinSVG } from '../../../uiMonitor/icons/Pin.svg'
+import { ReactComponent as PinFullSVG } from '../../../uiMonitor/icons/Pin_filled.svg'
 
 export const REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT = 36
 
