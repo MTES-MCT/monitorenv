@@ -10,7 +10,7 @@ export const sideWindowMenu = {
 // (i.e. 'missions/new' would collide with 'missions/:id' -> rewritten to 'missions_new' or '/missions/new/' used with strict + exact)
 export const sideWindowPaths = {
   HOME: '/',
-  MISSION: '/missions/:id',
-  MISSION_NEW: '/missions/new/',
+  MISSION: '/mission/:id',
+  MISSION_NEW: '/mission/',
   MISSIONS: '/missions/'
 }

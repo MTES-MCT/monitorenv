@@ -16,17 +16,21 @@ export function SideWindowLauncher() {
   const { forceUpdate } = useForceUpdate()
 
   const { missionState, sideWindow } = useAppSelector(state => state)
-  const isEditMissionPage = !!matchPath(sideWindow.currentPath, {
-    exact: true,
-    path: sideWindowPaths.MISSION,
-    strict: false
-  })
+  const isEditMissionPage = !!matchPath<'id', string>(
+    {
+      end: true,
+      path: sideWindowPaths.MISSION
+    },
+    sideWindow.currentPath
+  )
 
-  const isCreateMissionPage = !!matchPath(sideWindow.currentPath, {
-    exact: true,
-    path: sideWindowPaths.MISSION_NEW,
-    strict: false
-  })
+  const isCreateMissionPage = !!matchPath(
+    {
+      end: true,
+      path: sideWindowPaths.MISSION_NEW
+    },
+    sideWindow.currentPath
+  )
 
   useEffect(() => {
     forceUpdate()

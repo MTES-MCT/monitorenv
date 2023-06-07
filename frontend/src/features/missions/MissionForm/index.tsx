@@ -21,13 +21,15 @@ export function Mission() {
   const dispatch = useDispatch()
   const [shouldValidateOnChange, setShouldValidateOnChange] = useState(false)
 
-  const routeParams = matchPath<{ id: string }>(sideWindow.currentPath, {
-    exact: true,
-    path: [sideWindowPaths.MISSION, sideWindowPaths.MISSION_NEW],
-    strict: true
-  })
+  const isEditMissionRoute = matchPath<'id', string>(
+    {
+      end: true,
+      path: sideWindowPaths.MISSION
+    },
+    sideWindow.currentPath
+  )
 
-  const id = routeParams?.params?.id ? parseInt(routeParams?.params?.id, 10) : undefined
+  const id = isEditMissionRoute?.params?.id ? parseInt(isEditMissionRoute?.params?.id, 10) : undefined
 
   const { data: missionToEdit } = useGetMissionQuery(id ?? skipToken)
 

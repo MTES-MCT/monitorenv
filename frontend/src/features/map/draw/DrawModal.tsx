@@ -55,11 +55,14 @@ export function DrawModal() {
 
   const initialFeatureNumberRef = useRef<number | undefined>(undefined)
 
-  const routeParams = matchPath<{ id: string }>(sideWindow.currentPath, {
-    exact: true,
-    path: [sideWindowPaths.MISSION, sideWindowPaths.MISSION_NEW],
-    strict: true
-  })
+  const routeParams = matchPath<'id', string>(
+    {
+      end: true,
+      path: sideWindowPaths.MISSION
+    },
+    sideWindow.currentPath
+  )
+
   const previousMissionId = usePrevious(routeParams?.params?.id)
 
   const feature = useMemo(() => {

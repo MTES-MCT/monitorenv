@@ -1,3 +1,5 @@
+import { useCallback } from 'react'
+import { useBeforeUnload } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import styled from 'styled-components'
 
@@ -23,6 +25,20 @@ export function HomePage() {
     displayMissionMenuButton,
     displaySearchSemaphoreButton
   } = useAppSelector(state => state.global)
+  const { isFormDirty, missionState } = useAppSelector(state => state.missionState)
+
+  const beforeUnload = useCallback(
+    event => {
+      event.preventDefault()
+      if (isFormDirty && missionState) {
+        // eslint-disable-next-line no-param-reassign
+        event.returnValue = ''
+      }
+    },
+    [isFormDirty, missionState]
+  )
+
+  useBeforeUnload(beforeUnload)
 
   return (
     <>

@@ -1,6 +1,6 @@
 import { THEME, ThemeProvider, OnlyFontGlobalStyle } from '@mtes-mct/monitor-ui'
 import { Provider } from 'react-redux'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
 import { CustomProvider } from 'rsuite'
@@ -27,15 +27,12 @@ export function App() {
         <Provider store={homeStore}>
           <PersistGate loading={undefined} persistor={persistor}>
             <Router>
-              <Switch>
-                <Route exact path="/side_window">
-                  <SideWindow />
-                </Route>
-                <Route path="/">
-                  <HomePage />
-                </Route>
-              </Switch>
+              <Routes>
+                <Route element={<SideWindow />} path="/side_window" />
+                <Route element={<HomePage />} path="/" />
+              </Routes>
             </Router>
+
             <ErrorToastNotification />
           </PersistGate>
         </Provider>
