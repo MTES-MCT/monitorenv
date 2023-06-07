@@ -1,14 +1,11 @@
-import Document from 'flexsearch/dist/module/document'
+import Fuse from 'fuse.js'
 import _ from 'lodash'
-import { intersects } from 'ol/extent'
-import { transformExtent } from 'ol/proj'
 import { useState, useEffect, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map/constants'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ReactComponent as CloseIconSVG } from '../../../uiMonitor/icons/Close.svg'
@@ -16,8 +13,11 @@ import { ReactComponent as ZoomIconSVG } from '../../../uiMonitor/icons/Focus_zo
 import { ReactComponent as SearchIconSVG } from '../../../uiMonitor/icons/Search.svg'
 import { RegulatoryLayerFilters } from './LayerFilters'
 import { resetSearchExtent, setRegulatoryLayersSearchResult, setSearchExtent } from './LayerSearch.slice'
-import { RegulatoryLayerSearchInput } from './RegulatoryLayerSearchInput'
-import { RegulatoryLayerSearchResultList } from './RegulatoryLayerSearchResultList'
+import { ResultList } from './ResultList'
+import { SearchInput } from './SearchInput'
+import { getIntersectingLayerIds } from './utils/getIntersectingLayerIds'
+
+import type { RegulatoryLayerType } from '../../../types'
 
 export function RegulatoryLayerSearch({ isVisible }) {
   const dispatch = useDispatch()
@@ -40,60 +40,27 @@ export function RegulatoryLayerSearch({ isVisible }) {
   }, [filterSearchOnMapExtent, currentMapExtentTracker])
 
   const searchLayers = useMemo(() => {
-    const RegulatoryLayersIndex = new Document({
-      charset: 'latin:extra',
-      document: {
-        id: 'id',
-        index: ['properties:layer_name', 'properties:entity_name', 'properties:ref_reg', 'properties:type'],
-        store: true,
-        tag: 'properties:thematiques'
-      },
-      tokenize: 'full'
-    })
-    regulatoryLayers?.forEach(layer => {
-      if (
-        layer?.properties?.layer_name &&
-        layer?.properties?.entity_name &&
-        layer?.properties?.ref_reg &&
-        layer?.properties?.type &&
-        layer?.properties?.thematique &&
-        layer?.geometry
-      ) {
-        const layerToAdd = _.cloneDeep(layer)
-
-        layerToAdd.properties.thematiques = layerToAdd.properties?.thematique.split(',').map(v => v?.trim()) || []
-        RegulatoryLayersIndex.add(layerToAdd)
-      }
+    const fuse = new Fuse(regulatoryLayers, {
+      distance: 50,
+      includeScore: false,
+      keys: ['properties.layer_name', 'properties.entity_name', 'properties.ref_reg', 'properties.type'],
+      threshold: 0.4
     })
 
-    return (searchedText, geofilter, extent, filterOnThemes) => {
+    return async (searchedText, geofilter, extent, filterOnThemes) => {
       if (searchedText || filterOnThemes.length > 0) {
-        const allResults = RegulatoryLayersIndex.search(searchedText, {
-          enrich: true,
-          index: ['properties:layer_name', 'properties:entity_name', 'properties:type', 'properties:ref_reg'],
-          limit: 10000,
-          tag: filterOnThemes
-        })
-        const uniqueResults = _.uniqWith(
-          _.flatMap(allResults, field => field.result),
-          (a, b) => a.id === b.id
-        )
+        const allResults = fuse.search<RegulatoryLayerType>(searchedText)
         if (extent && geofilter) {
-          const currentExtent = transformExtent(extent, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
-          const filteredResults = _.filter(uniqueResults, result => intersects(result?.doc?.bbox, currentExtent))
+          const filteredResults = getIntersectingLayerIds(allResults, extent, {
+            bboxPath: 'item.bbox',
+            idPath: 'item.id'
+          })
           dispatch(setRegulatoryLayersSearchResult(filteredResults))
         } else {
-          dispatch(setRegulatoryLayersSearchResult(uniqueResults))
+          dispatch(setRegulatoryLayersSearchResult(allResults.map(layer => layer.item.id)))
         }
       } else if (extent && geofilter) {
-        const currentExtent = transformExtent(extent, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
-        const filteredResults = _.chain(regulatoryLayers)
-          .filter(layer => layer.geometry?.coordinates?.length > 0 && intersects(layer.bbox, currentExtent))
-          .map(layer => ({
-            doc: layer,
-            id: layer.id
-          }))
-          .value()
+        const filteredResults = getIntersectingLayerIds(regulatoryLayers, extent)
         dispatch(setRegulatoryLayersSearchResult(filteredResults))
       } else {
         dispatch(setRegulatoryLayersSearchResult([]))
@@ -160,7 +127,7 @@ export function RegulatoryLayerSearch({ isVisible }) {
   return (
     <>
       <Search>
-        <RegulatoryLayerSearchInput
+        <SearchInput
           displayRegFilters={displayRegFilters}
           filteredRegulatoryThemes={filteredRegulatoryThemes}
           globalSearchText={globalSearchText}
@@ -175,7 +142,7 @@ export function RegulatoryLayerSearch({ isVisible }) {
             setFilteredRegulatoryThemes={handleSetFilteredRegulatoryThemes}
           />
         )}
-        <RegulatoryLayerSearchResultList results={results} searchedText={globalSearchText} />
+        <ResultList searchedText={globalSearchText} />
       </Search>
       <SearchOnExtentButton
         active={filterSearchOnMapExtent}

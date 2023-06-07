@@ -6,7 +6,7 @@ import { ReactComponent as CloseIconSVG } from '../../../uiMonitor/icons/Close.s
 import { ReactComponent as FiltreIconSVG } from '../../../uiMonitor/icons/Filtres.svg'
 import { ReactComponent as SearchIconSVG } from '../../../uiMonitor/icons/Search.svg'
 
-export function RegulatoryLayerSearchInput({
+export function SearchInput({
   displayRegFilters,
   filteredRegulatoryThemes,
   globalSearchText,

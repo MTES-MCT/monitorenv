@@ -2,19 +2,22 @@ import _ from 'lodash'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import { RegulatoryLayerSearchResultGroupByLayer } from './RegulatoryLayerSearchResultGroupByLayer'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+import { LayerGroup } from './LayerGroup'
 
-export function RegulatoryLayerSearchResultList({ results, searchedText }) {
-  const layersByLayerName = _.groupBy(results, r => r?.doc?.properties?.layer_name)
+export function ResultList({ searchedText }) {
+  const { regulatoryLayersSearchResult: foundLayerIds } = useAppSelector(state => state.regulatoryLayerSearch)
+  const { regulatoryLayersById } = useAppSelector(state => state.regulatory)
+  const layersByLayerName = _.groupBy(foundLayerIds, r => regulatoryLayersById[r]?.properties.layer_name)
 
   return (
     <List>
       {layersByLayerName &&
-        Object.entries(layersByLayerName).map(([layerGroupName, groupedResult]) => (
-          <RegulatoryLayerSearchResultGroupByLayer
+        Object.entries(layersByLayerName).map(([layerGroupName, layerIdsInGroup]) => (
+          <LayerGroup
             key={layerGroupName}
             groupName={layerGroupName}
-            result={groupedResult}
+            layerIds={layerIdsInGroup}
             searchedText={searchedText}
           />
         ))}

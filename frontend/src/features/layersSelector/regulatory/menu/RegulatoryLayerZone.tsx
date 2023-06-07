@@ -19,7 +19,7 @@ import { RegulatoryLayerLegend } from '../../../../ui/RegulatoryLayerLegend'
 import { ReactComponent as CloseSVG } from '../../../../uiMonitor/icons/Close.svg'
 import { ReactComponent as DisplaySVG } from '../../../../uiMonitor/icons/Display.svg'
 import { ReactComponent as SummarySVG } from '../../../../uiMonitor/icons/Summary.svg'
-import { REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT } from '../../search/RegulatoryLayerSearchResultZone'
+import { REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT } from '../../search/RegulatoryLayer'
 
 export function RegulatoryLayerZone({ regulatoryZone }) {
   const dispatch = useDispatch()

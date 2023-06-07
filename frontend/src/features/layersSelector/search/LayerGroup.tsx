@@ -13,18 +13,24 @@ import {
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ReactComponent as PinSVG } from '../../../uiMonitor/icons/Pin.svg'
 import { ReactComponent as PinFullSVG } from '../../../uiMonitor/icons/Pin_filled.svg'
-import { REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT } from './RegulatoryLayerSearchResultZone'
-import { RegulatoryLayerSearchResultZones } from './RegulatoryLayerSearchResultZones'
+import { RegulatoryLayer, REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT } from './RegulatoryLayer'
 
-export function RegulatoryLayerSearchResultGroupByLayer({ groupName, result, searchedText }) {
+export function LayerGroup({
+  groupName,
+  layerIds,
+  searchedText
+}: {
+  groupName: string
+  layerIds: number[]
+  searchedText: string
+}) {
   const dispatch = useDispatch()
 
   const { selectedRegulatoryLayerIds } = useAppSelector(state => state.regulatory)
   const { regulatoryMetadataLayerId } = useAppSelector(state => state.regulatoryMetadata)
-  const totalNumberOfZones = useAppSelector(state => state.regulatory?.regulatoryLayersByLayerName[groupName]?.length)
+  const totalNumberOfZones = useAppSelector(state => state.regulatory?.regulatoryLayersIdsByName[groupName]?.length)
 
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
-  const layerIds = _.map(result, 'id')
   const zonesSelected = _.intersection(selectedRegulatoryLayerIds, layerIds)
   const forceZonesAreOpen = _.includes(layerIds, regulatoryMetadataLayerId)
   const allTopicZonesAreChecked = zonesSelected?.length === layerIds?.length
@@ -50,7 +56,7 @@ export function RegulatoryLayerSearchResultGroupByLayer({ groupName, result, sea
           />
         </TopicName>
         <Icons>
-          <ZonesNumber>{`${result.length} / ${totalNumberOfZones}`}</ZonesNumber>
+          <ZonesNumber>{`${layerIds.length} / ${totalNumberOfZones}`}</ZonesNumber>
           <StyledIconButton
             $allTopicZonesAreChecked={allTopicZonesAreChecked}
             appearance="subtle"
@@ -60,11 +66,11 @@ export function RegulatoryLayerSearchResultGroupByLayer({ groupName, result, sea
           />
         </Icons>
       </LayerTopic>
-      <RegulatoryLayerSearchResultZones
-        result={result}
-        searchedText={searchedText}
-        zonesAreOpen={forceZonesAreOpen || zonesAreOpen}
-      />
+      <SubGroup isOpen={forceZonesAreOpen || zonesAreOpen} length={layerIds?.length}>
+        {layerIds?.map(layerId => (
+          <RegulatoryLayer key={layerId} layerId={layerId} searchedText={searchedText} />
+        ))}
+      </SubGroup>
     </>
   )
 }
@@ -144,4 +150,11 @@ const PinFullSVGIcon = styled(PinFullSVG)`
   :active {
     color: ${COLORS.blueYonder};
   }
+`
+
+const SubGroup = styled.div<{ isOpen: boolean; length: number }>`
+  height: ${props => (props.isOpen && props.length ? props.length * REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT : 0)}px;
+  overflow: hidden;
+  transition: 0.5s all;
+  border-bottom: ${p => (p.isOpen ? 1 : 0)}px solid ${COLORS.lightGray};
 `

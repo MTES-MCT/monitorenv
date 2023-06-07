@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 type RegulatoryLayerSearchState = {
-  regulatoryLayersSearchResult: any
+  regulatoryLayersSearchResult: number[] | undefined
   searchExtent: number[] | undefined
 }
 const initialState: RegulatoryLayerSearchState = {

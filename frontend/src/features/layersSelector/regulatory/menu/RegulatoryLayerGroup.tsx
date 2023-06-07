@@ -13,7 +13,7 @@ import {
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReactComponent as CloseIconSVG } from '../../../../uiMonitor/icons/Close.svg'
 import { ReactComponent as DisplaySVG } from '../../../../uiMonitor/icons/Display.svg'
-import { REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT } from '../../search/RegulatoryLayerSearchResultZone'
+import { REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT } from '../../search/RegulatoryLayer'
 import { RegulatoryLayerZone } from './RegulatoryLayerZone'
 
 export function RegulatoryLayerGroup({ groupName, layers }) {

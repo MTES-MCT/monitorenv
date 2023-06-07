@@ -19,6 +19,7 @@ export const metadataIsShowedPropertyName = 'metadataIsShowed'
 export function RegulatoryPreviewLayer({ map }: MapChildrenProps) {
   const { regulatoryMetadataLayerId } = useAppSelector(state => state.regulatoryMetadata)
   const { regulatoryLayersSearchResult, searchExtent } = useAppSelector(state => state.regulatoryLayerSearch)
+  const { regulatoryLayersById } = useAppSelector(state => state.regulatory)
   const { layersSidebarIsOpen } = useAppSelector(state => state.global)
 
   const regulatoryLayerRef = useRef() as MutableRefObject<Vector<VectorSource>>
@@ -58,30 +59,32 @@ export function RegulatoryPreviewLayer({ map }: MapChildrenProps) {
     if (map) {
       getRegulatoryVectorSource().clear()
       if (regulatoryLayersSearchResult) {
-        const features = regulatoryLayersSearchResult.reduce((regulatorylayers, regulatorylayer) => {
-          if (regulatorylayer.doc?.geometry) {
+        const features = regulatoryLayersSearchResult.reduce((regulatorylayers, id) => {
+          const layer = regulatoryLayersById[id]
+
+          if (layer && layer.geometry) {
             const feature = new GeoJSON({
               featureProjection: OPENLAYERS_PROJECTION
-            }).readFeature(regulatorylayer.doc.geometry)
+            }).readFeature(layer.geometry)
             const geometry = feature.getGeometry()
             const area = geometry && getArea(geometry)
-            feature.setId(`${Layers.REGULATORY_ENV_PREVIEW.code}:${regulatorylayer.doc.id}`)
+            feature.setId(`${Layers.REGULATORY_ENV_PREVIEW.code}:${layer.id}`)
 
             feature.setProperties({
               area,
-              layerId: regulatorylayer.doc.id,
-              ...regulatorylayer.doc.properties
+              layerId: layer.id,
+              ...layer.properties
             })
 
             regulatorylayers.push(feature)
           }
 
           return regulatorylayers
-        }, [])
+        }, [] as Feature[])
         getRegulatoryVectorSource().addFeatures(features)
       }
     }
-  }, [map, regulatoryLayersSearchResult])
+  }, [map, regulatoryLayersSearchResult, regulatoryLayersById])
 
   useEffect(() => {
     function getLayer() {

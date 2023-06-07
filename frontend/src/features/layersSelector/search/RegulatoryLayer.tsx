@@ -21,19 +21,22 @@ import { ReactComponent as PinFullSVG } from '../../../uiMonitor/icons/Pin_fille
 
 export const REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT = 36
 
-export function RegulatoryLayerSearchResultZone({ regulatoryZone, searchedText }) {
+export function RegulatoryLayer({ layerId, searchedText }: { layerId: number; searchedText: string }) {
   const dispatch = useDispatch()
-  const { selectedRegulatoryLayerIds } = useAppSelector(state => state.regulatory)
+  const {
+    regulatoryLayersById: { [layerId]: layer },
+    selectedRegulatoryLayerIds
+  } = useAppSelector(state => state.regulatory)
   const { regulatoryMetadataLayerId, regulatoryMetadataPanelIsOpen } = useAppSelector(state => state.regulatoryMetadata)
-  const isZoneSelected = selectedRegulatoryLayerIds.includes(regulatoryZone.id)
-  const metadataIsShown = regulatoryMetadataPanelIsOpen && regulatoryZone.id === regulatoryMetadataLayerId
+  const isZoneSelected = selectedRegulatoryLayerIds.includes(layerId)
+  const metadataIsShown = regulatoryMetadataPanelIsOpen && layerId === regulatoryMetadataLayerId
 
   const handleSelectRegulatoryZone = e => {
     e.stopPropagation()
     if (isZoneSelected) {
-      dispatch(removeRegulatoryZonesFromMyLayers([regulatoryZone.id]))
+      dispatch(removeRegulatoryZonesFromMyLayers([layerId]))
     } else {
-      dispatch(addRegulatoryZonesToMyLayers([regulatoryZone.id]))
+      dispatch(addRegulatoryZonesToMyLayers([layerId]))
     }
   }
 
@@ -41,13 +44,16 @@ export function RegulatoryLayerSearchResultZone({ regulatoryZone, searchedText }
     if (metadataIsShown) {
       dispatch(closeRegulatoryZoneMetadata())
     } else {
-      dispatch(showRegulatoryZoneMetadata(regulatoryZone.id))
+      dispatch(showRegulatoryZoneMetadata(layerId))
     }
   }
 
   const fitToRegulatoryLayer = () => {
+    if (!layer?.bbox) {
+      return
+    }
     const extent = transformExtent(
-      regulatoryZone?.doc?.bbox,
+      layer?.bbox,
       new Projection({ code: WSG84_PROJECTION }),
       new Projection({ code: OPENLAYERS_PROJECTION })
     )
@@ -56,18 +62,15 @@ export function RegulatoryLayerSearchResultZone({ regulatoryZone, searchedText }
 
   return (
     <Zone $metadataIsShown={metadataIsShown} onClick={toggleRegulatoryZoneMetadata}>
-      <RegulatoryLayerLegend
-        entity_name={regulatoryZone?.doc?.properties?.entity_name}
-        thematique={regulatoryZone?.doc?.properties?.thematique}
-      />
-      <Name onClick={fitToRegulatoryLayer} title={regulatoryZone?.doc?.properties?.entity_name}>
+      <RegulatoryLayerLegend entity_name={layer?.properties?.entity_name} thematique={layer?.properties?.thematique} />
+      <Name onClick={fitToRegulatoryLayer} title={layer?.properties?.entity_name}>
         <Highlighter
           autoEscape
           highlightClassName="highlight"
           searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
-          textToHighlight={regulatoryZone?.doc?.properties?.entity_name || ''}
+          textToHighlight={layer?.properties?.entity_name || ''}
         />
-        {!regulatoryZone?.doc?.properties?.entity_name && 'AUCUN NOM'}
+        {!layer?.properties?.entity_name && 'AUCUN NOM'}
       </Name>
       <Icons>
         <IconButton
