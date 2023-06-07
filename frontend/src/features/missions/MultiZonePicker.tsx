@@ -47,7 +47,10 @@ export function MultiZonePicker({
   const { value } = field
 
   const { listener } = useAppSelector(state => state.draw)
-  const isEditingZone = useMemo(() => listener === InteractionListener.MISSION_ZONE, [listener])
+  const isEditingZone = useMemo(
+    () => listener === InteractionListener.MISSION_ZONE || listener === InteractionListener.SURVEILLANCE_ZONE,
+    [listener]
+  )
 
   const polygons = useMemo(() => {
     if (!value) {
@@ -143,6 +146,7 @@ const Field = styled.div`
   align-items: flex-start;
   display: flex;
   flex-direction: column;
+  width: 100%;
 `
 const Center = styled.a`
   cursor: pointer;
@@ -160,6 +164,7 @@ const Row = styled.div`
   align-items: center;
   display: flex;
   margin: 0.5rem 0 0;
+  width: 100%;
 
   > button {
     margin: 0 0 0 0.5rem;
@@ -173,7 +178,6 @@ const ZoneWrapper = styled.div<{ isLight?: boolean }>`
   font-size: 13px;
   justify-content: space-between;
   padding: 5px 0.75rem 4px;
-  width: 416px;
 `
 
 const ErrorMessage = styled.div`

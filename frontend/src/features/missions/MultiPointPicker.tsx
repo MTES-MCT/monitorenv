@@ -148,9 +148,6 @@ const Field = styled.div`
   align-items: flex-start;
   display: flex;
   flex-direction: column;
-  > button {
-    max-width: 416px;
-  }
 `
 const Center = styled.div`
   cursor: pointer;
@@ -170,7 +167,7 @@ const Row = styled.div`
   }
   align-items: center;
   display: flex;
-
+  width: 100%;
   margin-bottom: 4px;
 
   > button {
@@ -185,5 +182,4 @@ const ZoneWrapper = styled.div`
   font-size: 13px;
   justify-content: space-between;
   padding: 5px 0.75rem 4px;
-  width: 416px;
 `

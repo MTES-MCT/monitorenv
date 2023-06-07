@@ -1,10 +1,12 @@
 import { FormikCheckbox, FormikDatePicker, FormikTextarea } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
+import { useMemo } from 'react'
 import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { InteractionListener } from '../../../../domain/entities/map/constants'
 import { ActionTypeEnum, type EnvAction } from '../../../../domain/entities/missions'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useNewWindow } from '../../../../ui/NewWindow'
 import { ReactComponent as DeleteSVG } from '../../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as SurveillanceIconSVG } from '../../../../uiMonitor/icons/Observation.svg'
@@ -24,6 +26,9 @@ export function SurveillanceForm({ currentActionIndex, readOnly, remove, setCurr
 
   const hasCustomZone = geomField.value && geomField.value.coordinates.length > 0
   const surveillances = actionsFields.value.filter(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
+
+  const { listener } = useAppSelector(state => state.draw)
+  const isEditingZone = useMemo(() => listener === InteractionListener.SURVEILLANCE_ZONE, [listener])
 
   const duration = dateDifferenceInHours(
     envActionField.value.actionStartDateTimeUtc,
@@ -107,7 +112,7 @@ export function SurveillanceForm({ currentActionIndex, readOnly, remove, setCurr
           readOnly={readOnly}
         />
         <StyledFormikCheckbox
-          disabled={hasCustomZone}
+          disabled={hasCustomZone || isEditingZone}
           inline
           label="Zone de surveillance équivalente à la zone de mission"
           name={`envActions[${currentActionIndex}].coverMissionZone`}
