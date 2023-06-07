@@ -7,7 +7,7 @@ WITH departments_intersection_areas AS (
     JOIN missions
     ON missions.id = env_actions.mission_id
     LEFT JOIN departments_areas
-    ON ST_Intersects(env_actions.geom, departments_areas.geometry)
+    ON ST_Intersects(ST_MakeValid(env_actions.geom), departments_areas.geometry)
     WHERE missions.mission_source = 'MONITORENV'
     GROUP BY env_actions.id, departments_areas.insee_dep
 ),

@@ -7,7 +7,7 @@ WITH facades_intersection_areas AS (
     JOIN missions
     ON missions.id = env_actions.mission_id
     LEFT JOIN facade_areas_subdivided
-    ON ST_Intersects(env_actions.geom, facade_areas_subdivided.geometry)
+    ON ST_Intersects(ST_MakeValid(env_actions.geom), facade_areas_subdivided.geometry)
     WHERE missions.mission_source = 'MONITORENV'
     GROUP BY env_actions.id, facade_areas_subdivided.facade
 ),
