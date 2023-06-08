@@ -159,7 +159,7 @@ export function getOverlayPositionForCentroid(boxSize, x, y, extent) {
     return OverlayPosition.TOP
   }
 
-  return OverlayPosition.BOTTOM
+  return OverlayPosition.TOP
 }
 
 /**
