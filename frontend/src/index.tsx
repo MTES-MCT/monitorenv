@@ -1,5 +1,5 @@
-import * as Sentry from '@sentry/react'
-import { Integrations } from '@sentry/tracing'
+import { BrowserTracing } from '@sentry/browser'
+import { init } from '@sentry/react'
 import { createRoot } from 'react-dom/client'
 
 import { App } from './App'
@@ -14,11 +14,11 @@ import './uiMonitor/ol-override.css'
 import './uiMonitor/rsuite-override.css'
 
 if (!(process.env.NODE_ENV === 'development')) {
-  Sentry.init({
+  init({
     dsn: SENTRY_DSN || '',
     environment: SENTRY_ENV,
     integrations: [
-      new Integrations.BrowserTracing({
+      new BrowserTracing({
         tracingOrigins: SENTRY_TRACING_ORIGINS ? [SENTRY_TRACING_ORIGINS] : undefined
       })
     ],
