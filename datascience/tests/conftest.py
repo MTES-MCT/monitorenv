@@ -10,6 +10,7 @@ import docker
 import pytest
 from dotenv import dotenv_values
 from pytest import MonkeyPatch
+from sqlalchemy import text
 
 from config import (
     HOST_MIGRATIONS_FOLDER,
@@ -146,7 +147,9 @@ def start_remote_database_container(
     healthcheck_exit_code = None
 
     while healthcheck_exit_code != 0 and elapsed_time < timeout:
-        print(f"Waiting for database container to start ({elapsed_time}/{timeout})")
+        print(
+            f"Waiting for database container to start ({elapsed_time}/{timeout})"
+        )
         sleep(stop_time)
         healthcheck_exit_code = remote_database_container.exec_run(
             f"pg_isready -U {os.environ['MONITORENV_REMOTE_DB_USER']} -d {os.environ['MONITORENV_REMOTE_DB_NAME']}"
@@ -190,8 +193,10 @@ def create_tables(set_environment_variables, start_remote_database_container):
                 f"-f {script_filepath}"
             )
         )
-        if(result.exit_code != 0):
-            raise Exception(f"Error running migration {m.path.name}. Error message is: {result.output}")
+        if result.exit_code != 0:
+            raise Exception(
+                f"Error running migration {m.path.name}. Error message is: {result.output}"
+            )
 
 
 @pytest.fixture()
@@ -199,6 +204,8 @@ def reset_test_data(create_tables):
     e = create_engine("monitorenv_remote")
     test_data_scripts = get_migrations_in_folder(test_data_scripts_folder)
     print("Inserting test data")
-    for s in test_data_scripts:
-        print(f"{s.major}.{s.minor}.{s.patch}: {s.path.name}")
-        e.execute(s.script)
+
+    with e.begin() as connection:
+        for s in test_data_scripts:
+            print(f"{s.major}.{s.minor}.{s.patch}: {s.path.name}")
+            connection.execute(text(s.script))

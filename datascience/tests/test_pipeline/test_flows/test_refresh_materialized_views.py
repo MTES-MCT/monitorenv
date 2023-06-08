@@ -1,4 +1,5 @@
 import pandas as pd
+from sqlalchemy import text
 
 from src.db_config import create_engine
 from src.pipeline.flows.refresh_materialized_view import flow
@@ -13,15 +14,20 @@ flow.replace(
 def test_refresh_analytics_actions(reset_test_data):
 
     e = create_engine("monitorenv_remote")
-    query = """
-    SELECT *
-    FROM analytics_actions
-    ORDER BY id, control_unit
-    """
+    query = text(
+        """
+        SELECT *
+        FROM analytics_actions
+        ORDER BY id, control_unit
+        """
+    )
 
     initial_actions = read_query("monitorenv_remote", query)
 
-    e.execute("DELETE FROM env_actions WHERE mission_id = 12")
+    with e.begin() as connection:
+        connection.execute(
+            text("DELETE FROM env_actions WHERE mission_id = 12")
+        )
 
     actions_before_refresh = read_query("monitorenv_remote", query)
 
