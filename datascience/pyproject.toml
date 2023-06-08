@@ -42,21 +42,8 @@ cli = "bin.cli:cli"
 line-length = 79
 
 [tool.coverage.run]
-branch = true
-concurrency = ["multiprocessing"]
-parallel = true
-source = ["artificialisation"]
-
-[tool.coverage.report]
-exclude_lines =[
-    "pragma: no cover",
-    "raise AssertionError",
-    "raise NotImplementedError",
-    "if __name__ == .__main__.:",
-]
-fail_under = 70
-show_missing = true
-skip_covered = true
+source = ["."]
+omit = ['src/utils/', 'tests/']
 
 [tool.isort]
 profile = "black"
