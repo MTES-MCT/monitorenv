@@ -1,4 +1,4 @@
-import { FormikCheckbox, FormikDatePicker, FormikTextarea } from '@mtes-mct/monitor-ui'
+import { FieldError, FormikCheckbox, FormikDatePicker, FormikTextarea } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { useMemo } from 'react'
 import { Form, IconButton } from 'rsuite'
@@ -17,6 +17,9 @@ import { SurveillanceThemes } from './Themes/SurveillanceThemes'
 
 export function SurveillanceForm({ currentActionIndex, readOnly, remove, setCurrentActionIndex }) {
   const { newWindowContainerRef } = useNewWindow()
+
+  const [, actionStartDateMeta] = useField(`envActions[${currentActionIndex}].actionStartDateTimeUtc`)
+  const [, actionEndDateMeta] = useField(`envActions[${currentActionIndex}].actionEndDateTimeUtc`)
 
   const [actionsFields] = useField<EnvAction[]>('envActions')
   const [geomField, ,] = useField(`envActions[${currentActionIndex}].geom`)
@@ -65,6 +68,7 @@ export function SurveillanceForm({ currentActionIndex, readOnly, remove, setCurr
               data-cy="surveillance-start-date-time"
               disabled={!!durationMatchMissionField.value}
               isCompact
+              isErrorMessageHidden
               isLabelHidden
               isLight
               isStringDate
@@ -78,6 +82,7 @@ export function SurveillanceForm({ currentActionIndex, readOnly, remove, setCurr
               data-cy="surveillance-end-date-time"
               disabled={!!durationMatchMissionField.value}
               isCompact
+              isErrorMessageHidden
               isLabelHidden
               isLight
               isStringDate
@@ -88,10 +93,12 @@ export function SurveillanceForm({ currentActionIndex, readOnly, remove, setCurr
             />
             {envActionField.value.actionStartDateTimeUtc && envActionField.value.actionEndDateTimeUtc && (
               <StyledDuration>
-                {duration === 0 ? "Moins d'1 heure" : `(${duration} ${pluralize('heure', duration)})`}
+                {duration === 0 ? "(Moins d'1 heure)" : `(${duration} ${pluralize('heure', duration)})`}
               </StyledDuration>
             )}
           </StyledDatePickerContainer>
+          {actionStartDateMeta.error && <FieldError>{actionStartDateMeta.error}</FieldError>}
+          {actionEndDateMeta.error && <FieldError>{actionEndDateMeta.error}</FieldError>}
           <StyledFormikCheckbox
             data-cy="surveillance-duration-matches-mission"
             disabled={surveillances.length > 1}
@@ -178,4 +185,5 @@ const IconButtonRight = styled(IconButton)`
 
 const StyledFormikCheckbox = styled(FormikCheckbox)`
   margin-left: 0px;
+  margin-top: 8px;
 `

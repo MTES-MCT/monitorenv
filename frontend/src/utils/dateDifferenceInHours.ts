@@ -5,5 +5,5 @@ export function dateDifferenceInHours(startDate: string | undefined, endDate: st
     return 0
   }
 
-  return dayjs(endDate).diff(startDate, 'hours', false)
+  return Math.round(dayjs(endDate).diff(startDate, 'hour', true))
 }
