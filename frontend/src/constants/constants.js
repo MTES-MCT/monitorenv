@@ -1,5 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix */
 export const COLORS = {
+  ampBackground: '#FAF0ED',
+
   background: '#FFFFFF',
 
   gunMetal: '#282F3E',

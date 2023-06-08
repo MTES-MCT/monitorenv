@@ -54,9 +54,9 @@ export function ResultList({ searchedText }) {
       )}
       {ampsSearchResult && (
         <>
-          <Header onClick={toggleAMPs}>
+          <HeaderAMP onClick={toggleAMPs}>
             ZONES AMP <NumberOfResults>( {ampsSearchResult?.length || '0'} résultats)</NumberOfResults>
-          </Header>
+          </HeaderAMP>
           <SubList $isExpanded={showAMPs}>
             {Object.entries(ampResulstsByAMPName).map(([ampName, ampIdsInGroup]) => (
               <AMPLayerGroup
@@ -82,6 +82,9 @@ const Header = styled.div`
   height: 36px;
   color: ${COLORS.gunMetal};
   border-bottom: 1px solid ${COLORS.lightGray};
+`
+const HeaderAMP = styled(Header)`
+  background: ${COLORS.ampBackground};
 `
 const NumberOfResults = styled.span`
   color: ${COLORS.slateGray};

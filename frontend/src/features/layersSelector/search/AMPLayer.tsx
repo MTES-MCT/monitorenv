@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { useGetAMPsQuery } from '../../../api/ampsAPI'
+import { COLORS } from '../../../constants/constants'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map/constants'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import { addAmpZonesToMyLayers, removeAmpZonesFromMyLayers } from '../../../domain/shared_slices/SelectedAmp'
@@ -91,7 +92,7 @@ const Zone = styled.span`
   text-align: left;
   font-size: 13px;
   padding-left: 20px;
-  background: ${p => p.theme.color.white};
+  background: ${COLORS.ampBackground};
   color: ${p => p.theme.color.gunMetal};
   height: ${REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT}px;
   align-items: center;

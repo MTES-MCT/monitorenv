@@ -99,6 +99,7 @@ const TopicName = styled.span`
 `
 
 const LayerTopic = styled.li`
+  background: ${COLORS.ampBackground};
   display: flex;
   user-select: none;
   text-overflow: ellipsis;
