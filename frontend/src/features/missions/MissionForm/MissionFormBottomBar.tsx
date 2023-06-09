@@ -48,64 +48,56 @@ export function MissionFormBottomBar({
 
   return (
     <Footer>
-      <FormActionsWrapper>
-        {allowDelete && (
-          <StyledButton
-            accent={Accent.SECONDARY}
-            data-cy="delete-mission"
-            disabled={isFromMonitorFish}
-            Icon={Icon.Delete}
-            onClick={onDeleteMission}
-            type="button"
-          >
-            Supprimer la mission
-          </StyledButton>
-        )}
-        <Separator />
-        {!_.isEmpty(cleanedErrors) && (
-          <MessageRed data-cy="mission-errors">Veuillez corriger les éléments en rouge</MessageRed>
-        )}
-        <Separator />
-        {!allowClose && allowEdit && (
-          <MessageRed>Veuillez rouvrir la mission avant d&apos;en modifier les informations.</MessageRed>
-        )}
-        <Button accent={Accent.TERTIARY} data-cy="quit-edit-mission" onClick={onQuitFormEditing} type="button">
-          Quitter
-        </Button>
-        {allowClose && allowEdit && (
-          <>
-            <Button
-              accent={Accent.PRIMARY}
-              data-cy="save-mission"
-              Icon={Icon.Save}
-              onClick={onSaveMission}
-              type="button"
-            >
-              Enregistrer et quitter
-            </Button>
-            <Button
-              accent={Accent.SECONDARY}
-              data-cy="close-mission"
-              Icon={Icon.Save}
-              onClick={onCloseMission}
-              type="button"
-            >
-              Enregistrer et clôturer
-            </Button>
-          </>
-        )}
-        {!allowClose && allowEdit && (
-          <Button
-            accent={Accent.PRIMARY}
-            data-cy="reopen-mission"
-            Icon={Icon.Unlock}
-            onClick={onReopenMission}
-            type="button"
-          >
-            Rouvrir la mission
+      {allowDelete && (
+        <StyledButton
+          accent={Accent.SECONDARY}
+          data-cy="delete-mission"
+          disabled={isFromMonitorFish}
+          Icon={Icon.Delete}
+          onClick={onDeleteMission}
+          type="button"
+        >
+          Supprimer la mission
+        </StyledButton>
+      )}
+      <Separator />
+      {!_.isEmpty(cleanedErrors) && (
+        <MessageRed data-cy="mission-errors">Veuillez corriger les éléments en rouge</MessageRed>
+      )}
+      <Separator />
+      {!allowClose && allowEdit && (
+        <MessageRed>Veuillez rouvrir la mission avant d&apos;en modifier les informations.</MessageRed>
+      )}
+      <Button accent={Accent.TERTIARY} data-cy="quit-edit-mission" onClick={onQuitFormEditing} type="button">
+        Quitter
+      </Button>
+      {allowClose && allowEdit && (
+        <StyledButtonsContainer>
+          <Button accent={Accent.PRIMARY} data-cy="save-mission" Icon={Icon.Save} onClick={onSaveMission} type="button">
+            Enregistrer et quitter
           </Button>
-        )}
-      </FormActionsWrapper>
+          <Button
+            accent={Accent.SECONDARY}
+            data-cy="close-mission"
+            Icon={Icon.Save}
+            onClick={onCloseMission}
+            type="button"
+          >
+            Enregistrer et clôturer
+          </Button>
+        </StyledButtonsContainer>
+      )}
+      {!allowClose && allowEdit && (
+        <Button
+          accent={Accent.PRIMARY}
+          data-cy="reopen-mission"
+          Icon={Icon.Unlock}
+          onClick={onReopenMission}
+          type="button"
+        >
+          Rouvrir la mission
+        </Button>
+      )}
     </Footer>
   )
 }
@@ -121,11 +113,14 @@ const MessageRed = styled.div`
 const Footer = styled.div`
   border-top: 1px solid ${COLORS.lightGray};
   padding: 16px;
+  gap: 16px;
+  display: flex;
 `
-const FormActionsWrapper = styled.div`
+const StyledButtonsContainer = styled.div`
   display: flex;
   gap: 16px;
 `
+
 const StyledButton = styled(Button)`
   :not([disabled]) {
     svg {

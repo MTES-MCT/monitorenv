@@ -13,6 +13,7 @@ import styled from 'styled-components'
 import { COLORS } from '../../../constants/constants'
 import { InteractionListener } from '../../../domain/entities/map/constants'
 import { MissionSourceEnum, hasMissionOrderLabels, missionTypeEnum } from '../../../domain/entities/missions'
+import { MissionSourceTag } from '../../../ui/MissionSourceTag'
 import { useNewWindow } from '../../../ui/NewWindow'
 import { MultiZonePicker } from '../MultiZonePicker'
 import { ControlUnitsForm } from './ControlUnitsForm'
@@ -32,7 +33,10 @@ export function GeneralInformationsForm() {
 
   return (
     <FormWrapper>
-      <Title>Informations générales</Title>
+      <StyledHeader>
+        <Title>Mission</Title>
+        <MissionSourceTag source={misisonSourceField?.value} />
+      </StyledHeader>
 
       <div>
         <StyledDatePickerContainer>
@@ -123,6 +127,13 @@ const FormWrapper = styled.div`
   gap: 24px;
   max-width: 484px;
 `
+
+const StyledHeader = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`
+
 const Title = styled.h2`
   font-size: 16px;
   line-height: 22px;

@@ -1,4 +1,4 @@
-import { useForceUpdate } from '@mtes-mct/monitor-ui'
+import { NewWindow, useForceUpdate } from '@mtes-mct/monitor-ui'
 import { MutableRefObject, useCallback, useEffect, useRef } from 'react'
 import { matchPath } from 'react-router'
 import { StyleSheetManager } from 'styled-components'
@@ -7,7 +7,6 @@ import { SideWindow } from '.'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
-import { LegacyNewWindow } from '../../ui/NewWindow/LegacyNewWindow'
 import { SideWindowStatus, sideWindowActions } from './slice'
 
 export function SideWindowLauncher() {
@@ -49,10 +48,10 @@ export function SideWindowLauncher() {
 
   return (
     <StyleSheetManager target={newWindowRef.current}>
-      <LegacyNewWindow
+      <NewWindow
         closeOnUnmount
         copyStyles
-        features={{ height: '1200px', scrollbars: true, width: window.innerWidth }}
+        features={{ height: 1200, width: window.innerWidth }}
         name="MonitorEnv"
         onChangeFocus={onChangeFocus}
         onUnload={() => {
@@ -63,7 +62,7 @@ export function SideWindowLauncher() {
         title="MonitorEnv"
       >
         <SideWindow ref={newWindowRef} />
-      </LegacyNewWindow>
+      </NewWindow>
     </StyleSheetManager>
   )
 }

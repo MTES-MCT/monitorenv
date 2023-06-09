@@ -97,7 +97,7 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
   }
 
   return (
-    <>
+    <StyledFormContainer>
       <MissionCancelEditModal
         onCancel={handleReturnToEdition}
         onConfirm={handleCancelForm}
@@ -149,13 +149,20 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
         onReopenMission={handleReopenMission}
         onSaveMission={handleSaveMission}
       />
-    </>
+    </StyledFormContainer>
   )
 }
 
-const Wrapper = styled.div`
-  height: calc(100vh - 118px);
+const StyledFormContainer = styled.div`
   display: flex;
+  flex-direction: column;
+  flex: 1;
+`
+
+const Wrapper = styled.div`
+  height: calc(100vh - 68px);
+  display: flex;
+  flex-direction: row;
 `
 const FirstColumn = styled.div`
   background: ${COLORS.white};
