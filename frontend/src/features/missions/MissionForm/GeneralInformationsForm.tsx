@@ -49,7 +49,6 @@ export function GeneralInformationsForm() {
 
           <StyledFormikDatePicker
             baseContainer={newWindowContainerRef.current}
-            data-cy="mission-end-date-time"
             isCompact
             isEndDate
             isErrorMessageHidden
