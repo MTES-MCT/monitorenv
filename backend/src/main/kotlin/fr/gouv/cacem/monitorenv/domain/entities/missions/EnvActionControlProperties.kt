@@ -12,10 +12,12 @@ data class EnvActionControlProperties(
     val vehicleType: VehicleTypeEnum? = null,
     val infractions: List<InfractionEntity>? = listOf(),
 ) {
-    fun toEnvActionControlEntity(id: UUID, actionStartDateTimeUtc: ZonedDateTime?, actionEndDateTimeUtc: ZonedDateTime?, geom: Geometry?) = EnvActionControlEntity(
+    fun toEnvActionControlEntity(id: UUID, actionStartDateTimeUtc: ZonedDateTime?, actionEndDateTimeUtc: ZonedDateTime?, facade: String?, department: String?, geom: Geometry?) = EnvActionControlEntity(
         id = id,
         actionStartDateTimeUtc = actionStartDateTimeUtc,
         actionEndDateTimeUtc = actionEndDateTimeUtc,
+        facade = facade,
+        department = department,
         geom = geom,
         themes = themes,
         observations = observations,
