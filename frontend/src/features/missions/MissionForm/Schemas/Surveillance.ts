@@ -7,6 +7,7 @@ export const getNewEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<EnvAct
   Yup.object()
     .shape({
       actionEndDateTimeUtc: Yup.date()
+        .nullable()
         .test({
           message: 'La date de fin doit être postérieure à celle de début de mission',
           test: value => (value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true)
