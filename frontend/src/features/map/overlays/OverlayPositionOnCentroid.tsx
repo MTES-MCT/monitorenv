@@ -159,4 +159,5 @@ const OverlayComponent = styled.div`
   text-align: left;
   background-color: ${COLORS.white};
   border-radius: 2px;
+  cursor: grabbing;
 `
