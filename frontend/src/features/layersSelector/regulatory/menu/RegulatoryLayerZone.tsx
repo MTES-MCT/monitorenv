@@ -1,7 +1,7 @@
+import { IconButton, Accent, Size, Icon } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { useDispatch } from 'react-redux'
-import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
@@ -16,9 +16,6 @@ import { closeRegulatoryZoneMetadata } from '../../../../domain/use_cases/regula
 import { showRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/showRegulatoryZoneMetadata'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { RegulatoryLayerLegend } from '../../../../ui/RegulatoryLayerLegend'
-import { ReactComponent as CloseSVG } from '../../../../uiMonitor/icons/Close.svg'
-import { ReactComponent as DisplaySVG } from '../../../../uiMonitor/icons/Display.svg'
-import { ReactComponent as SummarySVG } from '../../../../uiMonitor/icons/Summary.svg'
 import { REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT } from '../../search/RegulatoryLayer'
 
 export function RegulatoryLayerZone({ regulatoryZone }) {
@@ -68,42 +65,33 @@ export function RegulatoryLayerZone({ regulatoryZone }) {
       />
       <Name title={displayedName}>{displayedName}</Name>
       <Icons>
-        {metadataIsShown ? (
-          <IconButton
-            active
-            appearance="subtle"
-            icon={<CustomREGPaperIcon className="rs-icon" />}
-            onClick={toggleRegulatoryZoneMetadata}
-            size="md"
-            title="Fermer la réglementation"
-          />
-        ) : (
-          <IconButton
-            appearance="subtle"
-            icon={<CustomREGPaperIcon className="rs-icon" />}
-            onClick={toggleRegulatoryZoneMetadata}
-            size="md"
-            title="Afficher la réglementation"
-          />
-        )}
+        <IconButton
+          accent={Accent.TERTIARY}
+          color={metadataIsShown ? COLORS.blueGray : COLORS.slateGray}
+          Icon={Icon.Summary}
+          iconSize={20}
+          onClick={toggleRegulatoryZoneMetadata}
+          size={Size.NORMAL}
+          title={metadataIsShown ? 'Fermer la réglementation' : 'Afficher la réglementation'}
+        />
 
         <IconButton
-          appearance="subtle"
-          data-cy={
-            regulatoryZoneIsShowed ? 'regulatory-layers-my-zones-zone-hide' : 'regulatory-layers-my-zones-zone-show'
-          }
-          icon={regulatoryZoneIsShowed ? <ShowIcon className="rs-icon" /> : <HideIcon className="rs-icon" />}
+          accent={Accent.TERTIARY}
+          color={regulatoryZoneIsShowed ? COLORS.blueGray : COLORS.slateGray}
+          data-cy={regulatoryZoneIsShowed ? 'regulatory-my-zones-zone-hide' : 'regulatory-my-zones-zone-show'}
+          Icon={Icon.Display}
+          iconSize={20}
           onClick={toggleLayerDisplay}
-          size="md"
+          size={Size.SMALL}
           title={regulatoryZoneIsShowed ? 'Cacher la zone' : 'Afficher la zone'}
         />
 
         <IconButton
-          appearance="subtle"
-          data-cy="regulatory-layers-my-zones-zone-delete"
-          icon={<CloseSVG className="rs-icon" />}
+          accent={Accent.TERTIARY}
+          data-cy="regulatory-my-zones-zone-delete"
+          Icon={Icon.Close}
           onClick={handleRemoveZone}
-          size="sm"
+          size={Size.SMALL}
           title="Supprimer la zone de ma sélection"
         />
       </Icons>
@@ -139,8 +127,6 @@ const Zone = styled.span<{ $selected: boolean }>`
   }
 `
 
-const CustomREGPaperIcon = styled(SummarySVG)``
-
 const Icons = styled.span`
   display: flex;
   justify-content: flex-end;
@@ -151,11 +137,4 @@ const Icons = styled.span`
     margin-right: 4px;
     margin-left: 4px;
   }
-`
-
-const ShowIcon = styled(DisplaySVG)`
-  color: ${COLORS.blueGray};
-`
-const HideIcon = styled(DisplaySVG)`
-  color: ${COLORS.slateGray};
 `

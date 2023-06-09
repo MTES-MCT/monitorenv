@@ -1,8 +1,7 @@
-import { Accent, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, Size, Tag } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Tag, TagGroup } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
@@ -42,28 +41,18 @@ export function AMPLayerGroup({ groupName, layers, showedAmpLayerIds }) {
           {groupName}
         </TopicName>
         <Icons>
-          <TagGroup>
-            <Tag size="sm">{`${layers?.length}`}</Tag>
-          </TagGroup>
-          {ampZonesAreShowed ? (
-            <IconButton
-              accent={Accent.TERTIARY}
-              data-cy="amp-layers-my-zones-zone-hide"
-              Icon={Icon.Display}
-              onClick={toggleLayerDisplay}
-              size={Size.SMALL}
-              title="Cacher la/les zone(s)"
-            />
-          ) : (
-            <IconButton
-              accent={Accent.TERTIARY}
-              data-cy="amp-layers-my-zones-zone-show"
-              Icon={Icon.Display}
-              onClick={toggleLayerDisplay}
-              size={Size.SMALL}
-              title="Afficher la/les zone(s)"
-            />
-          )}
+          <Tag accent={Accent.PRIMARY}>{`${layers?.length}`}</Tag>
+          <IconButton
+            accent={Accent.TERTIARY}
+            color={ampZonesAreShowed ? COLORS.blueGray : COLORS.slateGray}
+            data-cy={ampZonesAreShowed ? 'amp-my-zones-zone-hide' : 'amp-my-zones-zone-show'}
+            Icon={Icon.Display}
+            iconSize={20}
+            onClick={toggleLayerDisplay}
+            size={Size.SMALL}
+            title={ampZonesAreShowed ? 'Cacher la/les zone(s)' : 'Afficher la/les zone(s)'}
+          />
+
           <IconButton
             accent={Accent.TERTIARY}
             data-cy="amp-layers-my-zones-zone-delete"

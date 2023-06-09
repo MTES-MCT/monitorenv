@@ -41,6 +41,7 @@ export function FilterTagPicker({ onChange, value, ...props }) {
 
 const StyledTagPicker = styled(TagPicker)<{ $selectedItems: number }>`
   background-color: transparent;
+  margin-top: 16px;
   margin-bottom: ${props => (props.$selectedItems > 0 ? '36px' : '0')};
   width: 100%;
   min-height: 36px;

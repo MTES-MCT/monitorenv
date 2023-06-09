@@ -54,6 +54,9 @@ const FiltersWrapper = styled.div`
   padding: 16px;
   text-align: left;
   border-top: 2px solid ${COLORS.lightGray};
+  > .Field-Checkbox:not(:first-child) {
+    margin-top: 10px;
+  }
 `
 const ResetFilters = styled(Button)`
   padding: 0px;

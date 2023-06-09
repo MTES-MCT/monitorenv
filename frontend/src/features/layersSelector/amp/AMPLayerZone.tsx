@@ -38,7 +38,7 @@ export function AMPLayerZone({ amp, isDisplayed }: { amp: AMP; isDisplayed: bool
     }
   }
 
-  const displayedName = amp?.name?.replace(/[_]/g, ' ') || 'AUNCUN NOM'
+  const displayedName = amp?.designation?.replace(/[_]/g, ' ') || 'AUNCUN NOM'
 
   return (
     <Zone>
@@ -49,6 +49,7 @@ export function AMPLayerZone({ amp, isDisplayed }: { amp: AMP; isDisplayed: bool
           accent={Accent.TERTIARY}
           data-cy={isDisplayed ? 'amp-layers-my-zones-zone-hide' : 'amp-layers-my-zones-zone-show'}
           Icon={Icon.Display}
+          iconSize={20}
           onClick={toggleLayerDisplay}
           size={Size.SMALL}
           title={isDisplayed ? 'Cacher la zone' : 'Afficher la zone'}

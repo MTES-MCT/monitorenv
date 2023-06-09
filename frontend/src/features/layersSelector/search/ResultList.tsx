@@ -104,4 +104,5 @@ const List = styled.div`
   color: ${COLORS.slateGray};
   transition: 0.5s all;
   border-top: 2px solid ${COLORS.lightGray};
+  overflow-y: hidden;
 `

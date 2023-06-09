@@ -1,7 +1,7 @@
+import { Tag, IconButton, Accent, Icon, Size } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Tag, TagGroup, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
@@ -11,8 +11,6 @@ import {
   showRegulatoryLayer
 } from '../../../../domain/shared_slices/Regulatory'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { ReactComponent as CloseIconSVG } from '../../../../uiMonitor/icons/Close.svg'
-import { ReactComponent as DisplaySVG } from '../../../../uiMonitor/icons/Display.svg'
 import { REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT } from '../../search/RegulatoryLayer'
 import { RegulatoryLayerZone } from './RegulatoryLayerZone'
 
@@ -52,34 +50,24 @@ export function RegulatoryLayerGroup({ groupName, layers }) {
           {groupName}
         </TopicName>
         <Icons>
-          <TagGroup>
-            <Tag size="sm">{`${layers?.length}`}</Tag>
-          </TagGroup>
-          {regulatoryZonesAreShowed ? (
-            <IconButton
-              appearance="subtle"
-              data-cy="regulatory-layers-my-zones-zone-hide"
-              icon={<ShowIcon className="rs-icon" />}
-              onClick={toggleLayerDisplay}
-              size="md"
-              title="Cacher la/les zone(s)"
-            />
-          ) : (
-            <IconButton
-              appearance="subtle"
-              data-cy="regulatory-layers-my-zones-zone-show"
-              icon={<HideIcon className="rs-icon" />}
-              onClick={toggleLayerDisplay}
-              size="md"
-              title="Afficher la/les zone(s)"
-            />
-          )}
+          <Tag accent={Accent.PRIMARY}>{`${layers?.length}`}</Tag>
           <IconButton
-            appearance="subtle"
-            data-cy="regulatory-layers-my-zones-zone-delete"
-            icon={<CloseIconSVG className="rs-icon" />}
+            accent={Accent.TERTIARY}
+            color={regulatoryZonesAreShowed ? COLORS.blueGray : COLORS.slateGray}
+            data-cy={regulatoryZonesAreShowed ? 'regulatory-my-zones-zone-hide' : 'regulatory-my-zones-zone-show'}
+            Icon={Icon.Display}
+            iconSize={20}
+            onClick={toggleLayerDisplay}
+            size={Size.SMALL}
+            title={regulatoryZonesAreShowed ? 'Cacher la/les zone(s)' : 'Afficher la/les zone(s)'}
+          />
+
+          <IconButton
+            accent={Accent.TERTIARY}
+            data-cy="regulatory-my-zones-zone-delete"
+            Icon={Icon.Close}
             onClick={handleRemoveZone}
-            size="sm"
+            size={Size.SMALL}
             title="Supprimer la/les zone(s) de ma sélection"
           />
         </Icons>
@@ -150,10 +138,4 @@ const Icons = styled.span`
     margin-right: 4px;
     margin-left: 4px;
   }
-`
-const ShowIcon = styled(DisplaySVG)`
-  color: ${COLORS.blueGray};
-`
-const HideIcon = styled(DisplaySVG)`
-  color: ${COLORS.slateGray};
 `
