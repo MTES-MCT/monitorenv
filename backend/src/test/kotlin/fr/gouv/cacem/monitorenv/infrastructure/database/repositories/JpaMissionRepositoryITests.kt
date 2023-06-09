@@ -2,24 +2,12 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.entities.missions.ActionTargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.missions.EnvActionControlEntity
-import fr.gouv.cacem.monitorenv.domain.entities.missions.EnvActionNoteEntity
-import fr.gouv.cacem.monitorenv.domain.entities.missions.EnvActionSurveillanceEntity
-import fr.gouv.cacem.monitorenv.domain.entities.missions.FormalNoticeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.missions.InfractionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.missions.InfractionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSourceEnum
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.missions.ThemeEntity
-import fr.gouv.cacem.monitorenv.domain.entities.missions.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.missions.VesselSizeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.missions.VesselTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.missions.*
 import fr.gouv.cacem.monitorenv.domain.exceptions.ControlResourceOrUnitNotFoundException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
 import org.junit.jupiter.api.Test
+import org.locationtech.jts.geom.MultiPoint
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
@@ -49,6 +37,16 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
         assertThat(existingMissions).hasSize(21)
 
+        val wktReader = WKTReader()
+
+        val multipolygonString = "MULTIPOLYGON(((-2.7335 47.6078, -2.7335 47.8452, -3.6297 47.8452, -3.6297 47.6078, -2.7335 47.6078)))"
+        val polygon = wktReader.read(multipolygonString) as MultiPolygon
+
+        val multipointString = "MULTIPOINT((49.354105 -0.427455))"
+        val point = wktReader.read(multipointString) as MultiPoint
+
+        val noteObservations = "Quelqu'un aurait vu quelque chose quelque part à un certain moment."
+
         val newMission = MissionEntity(
             missionTypes = listOf(MissionTypeEnum.SEA),
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
@@ -57,6 +55,24 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionSource = MissionSourceEnum.MONITORENV,
             hasMissionOrder = false,
             isUnderJdp = false,
+            envActions = listOf(
+                EnvActionControlEntity(
+                    id = UUID.fromString("33310163-4e22-4d3d-b585-dac4431eb4b5"),
+                    facade = "Facade 1",
+                    department = "Department 1",
+                    geom = point,
+                ),
+                EnvActionSurveillanceEntity(
+                    id = UUID.fromString("a6c4bd17-eb45-4504-ab15-7a18ea714a10"),
+                    facade = "Facade 2",
+                    department = "Department 2",
+                    geom = polygon
+                ),
+                EnvActionNoteEntity(
+                    id = UUID.fromString("126ded89-2dc0-4c77-9bf2-49f86b9a71a1"),
+                    observations = noteObservations
+                )
+            ),
             controlUnits = listOf(
                 ControlUnitEntity(
                     id = 10006,
@@ -79,6 +95,12 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(newMissionCreated.controlUnits.first().resources).hasSize(1)
         assertThat(newMissionCreated.controlUnits.first().resources.first().id).isEqualTo(8)
         assertThat(newMissionCreated.controlUnits.first().resources.first().name).isEqualTo("PAM Jeanne Barret")
+        assertThat(newMissionCreated.envActions).hasSize(3)
+        assertThat(newMissionCreated.envActions?.first()?.facade).isEqualTo("Facade 1")
+        assertThat(newMissionCreated.envActions?.first()?.department).isEqualTo("Department 1")
+        assertThat(newMissionCreated.envActions?.get(1)?.facade).isEqualTo("Facade 2")
+        assertThat(newMissionCreated.envActions?.get(1)?.department).isEqualTo("Department 2")
+        assertThat((newMissionCreated.envActions?.get(2) as EnvActionNoteEntity).observations).isEqualTo(noteObservations)
 
         val missions = jpaMissionRepository.findAllMissions(
             startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),

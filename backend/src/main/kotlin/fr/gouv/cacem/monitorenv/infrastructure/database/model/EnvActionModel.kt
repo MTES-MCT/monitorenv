@@ -80,6 +80,8 @@ data class EnvActionModel(
             actionEndDateTime?.atZone(UTC),
             geom,
             actionType,
+            facade,
+            department,
             value,
         )
     }
@@ -89,6 +91,8 @@ data class EnvActionModel(
             actionType = action.actionType,
             actionStartDateTime = action.actionStartDateTimeUtc?.toInstant(),
             actionEndDateTime = action.actionEndDateTimeUtc?.toInstant(),
+            facade = action.facade,
+            department = action.department,
             value = EnvActionMapper.envActionEntityToJSON(mapper, action),
             mission = mission,
             geom = action.geom,
