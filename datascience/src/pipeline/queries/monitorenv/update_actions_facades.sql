@@ -7,8 +7,14 @@ WITH facades_intersection_areas AS (
     JOIN missions
     ON missions.id = env_actions.mission_id
     LEFT JOIN facade_areas_subdivided
-    ON ST_Intersects(ST_MakeValid(env_actions.geom), facade_areas_subdivided.geometry)
-    WHERE missions.mission_source = 'MONITORENV'
+    ON ST_Intersects(
+        ST_MakeValid(
+            CASE WHEN env_actions.action_type = 'SURVEILLANCE' AND env_actions.value->>'cover_mission_zone' = 'true' THEN COALESCE(missions.geom, env_actions.geom)
+            ELSE COALESCE(env_actions.geom, missions.geom) END
+        ),
+        facade_areas_subdivided.geometry
+    )
+    WHERE missions.mission_source IN ('MONITORENV', 'MONITORFISH')
     GROUP BY env_actions.id, facade_areas_subdivided.facade
 ),
 
