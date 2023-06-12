@@ -8,6 +8,7 @@ export const getNewEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActionCo
   Yup.object()
     .shape({
       actionStartDateTimeUtc: Yup.string()
+        .nullable()
         .test({
           message: 'La date doit être postérieure à celle de début de mission',
           test: value => (value ? !(new Date(value) < new Date(ctx.from[1].value.startDateTimeUtc)) : true)
