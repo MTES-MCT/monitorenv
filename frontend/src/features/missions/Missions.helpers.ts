@@ -63,6 +63,9 @@ export const actionFactory = ({
 }
 
 export const missionFactory = (mission?: Mission | undefined): Mission | NewMission => {
+  const startDate = new Date()
+  startDate.setSeconds(0, 0)
+
   let formattedMission = {
     closedBy: '',
     controlUnits: [controlUnitFactory()],
@@ -75,7 +78,7 @@ export const missionFactory = (mission?: Mission | undefined): Mission | NewMiss
     observationsCacem: '',
     observationsCnsp: '',
     openBy: '',
-    startDateTimeUtc: new Date().toISOString(),
+    startDateTimeUtc: startDate.toISOString(),
     ...mission
   }
 
