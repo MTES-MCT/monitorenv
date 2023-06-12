@@ -15,28 +15,26 @@ export function Missions() {
 
   return (
     <StyledMissionsContainer>
-      <SideWindowContent>
-        <StyledHeader>
-          <Title data-cy="SideWindowHeader-title">Missions et contrôles</Title>
-          <StyledButton
-            data-cy="add-mission"
-            Icon={Icon.Plus}
-            onClick={() => dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSION_NEW))}
-          >
-            Ajouter une nouvelle mission
-          </StyledButton>
-        </StyledHeader>
-        <MissionsTableFilters />
-        <NumberOfDisplayedMissions data-cy="Missions-numberOfDisplayedMissions">
-          {missions?.length || '0'} Mission{missions && missions.length > 1 ? 's' : ''}
-        </NumberOfDisplayedMissions>
+      <StyledHeader>
+        <Title data-cy="SideWindowHeader-title">Missions et contrôles</Title>
+        <StyledButton
+          data-cy="add-mission"
+          Icon={Icon.Plus}
+          onClick={() => dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSION_NEW))}
+        >
+          Ajouter une nouvelle mission
+        </StyledButton>
+      </StyledHeader>
+      <MissionsTableFilters />
+      <NumberOfDisplayedMissions data-cy="Missions-numberOfDisplayedMissions">
+        {missions?.length || '0'} Mission{missions && missions.length > 1 ? 's' : ''}
+      </NumberOfDisplayedMissions>
 
-        {isError ? (
-          <p data-cy="listMissionWrapper">Erreur au chargement des données</p>
-        ) : (
-          <MissionsTable isLoading={isLoading || isFetching} missions={missions} />
-        )}
-      </SideWindowContent>
+      {isError ? (
+        <p data-cy="listMissionWrapper">Erreur au chargement des données</p>
+      ) : (
+        <MissionsTable isLoading={isLoading || isFetching} missions={missions} />
+      )}
     </StyledMissionsContainer>
   )
 }
@@ -46,13 +44,10 @@ const StyledMissionsContainer = styled.div`
   flex: 1;
   flex-direction: column;
   padding: 40px;
+  width: calc(100vw - 64px);
+  overflow: auto;
 `
 
-const SideWindowContent = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-`
 const StyledHeader = styled.div`
   display: flex;
   flex-direction: row;

@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../constants/constants'
 import { Mission, MissionSourceEnum } from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setMissionState } from '../../../domain/shared_slices/MissionsState'
@@ -165,18 +164,18 @@ const Wrapper = styled.div`
   flex-direction: row;
 `
 const FirstColumn = styled.div`
-  background: ${COLORS.white};
+  background: ${p => p.theme.color.white};
   flex: 1;
   overflow-y: auto;
 `
 
 const SecondColumn = styled.div`
-  background: ${COLORS.cultured};
+  background: ${p => p.theme.color.cultured};
   overflow-y: auto;
   flex: 1;
 `
 const ThirdColumn = styled.div`
-  background: ${COLORS.gainsboro};
+  background: ${p => p.theme.color.gainsboro};
   flex: 1;
   overflow-y: auto;
 `

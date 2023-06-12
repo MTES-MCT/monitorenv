@@ -9,7 +9,6 @@ import { ErrorBoundary } from '../../components/ErrorBoundary'
 import { COLORS } from '../../constants/constants'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { onNavigateDuringEditingMission } from '../../domain/use_cases/navigation/onNavigateBetweenMapAndSideWindow'
-import { useAppSelector } from '../../hooks/useAppSelector'
 import { NewWindowContext } from '../../ui/NewWindow'
 import { Mission } from '../missions/MissionForm'
 import { Missions } from '../missions/MissionsList'
@@ -20,7 +19,6 @@ import type { ForwardedRef, MutableRefObject } from 'react'
 
 function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
   const wrapperRef = useRef<HTMLDivElement | null>(null)
-  const { currentPath } = useAppSelector(state => state.sideWindow)
 
   const [isFirstRender, setIsFirstRender] = useState(true)
 
@@ -40,7 +38,7 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
 
   useEffect(() => {
     setIsFirstRender(false)
-  }, [dispatch])
+  }, [])
 
   return (
     <ErrorBoundary>
@@ -48,9 +46,10 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
         {!isFirstRender && (
           <NewWindowContext.Provider value={newWindowContextProviderValue}>
             <SideMenu>
+              {/* TODO manage active cases when other buttons are implemented */}
               <SideMenu.Button
                 Icon={Icon.MissionAction}
-                isActive={currentPath === sideWindowPaths.MISSIONS}
+                isActive
                 onClick={() => dispatch(onNavigateDuringEditingMission(generatePath(sideWindowPaths.MISSIONS)))}
                 title="missions"
               />
