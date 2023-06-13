@@ -36,8 +36,9 @@ export function SideWindowLauncher() {
   }, [forceUpdate])
 
   const onChangeFocus = useCallback(
-    status => {
-      dispatch(sideWindowActions.onChangeStatus(status))
+    isFocused => {
+      const nextStatus = isFocused ? SideWindowStatus.VISIBLE : SideWindowStatus.HIDDEN
+      dispatch(sideWindowActions.onChangeStatus(nextStatus))
     },
     [dispatch]
   )

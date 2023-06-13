@@ -32,7 +32,7 @@ export function GeneralInformationsForm() {
   const [isClosedField] = useField<boolean>('isClosed')
   const [hasMissionOrderField] = useField<boolean>('hasMissionOrder')
   const [missionSourceField] = useField<MissionSourceEnum>('missionSource')
-  const { initialValues } = useFormikContext<Mission>()
+  const { values } = useFormikContext<Mission>()
   const missionTypeOptions = Object.entries(missionTypeEnum).map(([key, val]) => ({ label: val.libelle, value: key }))
 
   const hasMissionOrderOptions = Object.values(hasMissionOrderLabels)
@@ -52,9 +52,8 @@ export function GeneralInformationsForm() {
   const title = isCreateMissionPage
     ? 'Nouvelle mission'
     : `Mission ${
-        initialValues.missionTypes &&
-        initialValues.missionTypes.map(missionType => missionTypeEnum[missionType].libelle).join(' / ')
-      } – ${initialValues.controlUnits.map(controlUnit => controlUnit.name?.replace('(historique)', '')).join(', ')}`
+        values.missionTypes && values.missionTypes.map(missionType => missionTypeEnum[missionType].libelle).join(' / ')
+      } – ${values.controlUnits.map(controlUnit => controlUnit.name?.replace('(historique)', '')).join(', ')}`
 
   return (
     <StyledContainer>
@@ -63,7 +62,7 @@ export function GeneralInformationsForm() {
         {!isCreateMissionPage && (
           <StyledTagsContainer>
             <MissionSourceTag source={missionSourceField?.value} />
-            <MissionStatusTag status={getMissionStatus(initialValues)} />
+            <MissionStatusTag status={getMissionStatus(values)} />
           </StyledTagsContainer>
         )}
       </StyledHeader>
