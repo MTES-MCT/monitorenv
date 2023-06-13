@@ -73,6 +73,7 @@ export function GeneralInformationsForm() {
               baseContainer={newWindowContainerRef.current}
               data-cy="mission-start-date-time"
               isCompact
+              isErrorMessageHidden
               isStringDate
               label="Début de mission (UTC)"
               name="startDateTimeUtc"
@@ -84,6 +85,7 @@ export function GeneralInformationsForm() {
               data-cy="mission-end-date-time"
               isCompact
               isEndDate
+              isErrorMessageHidden
               isStringDate
               label="Fin de mission (UTC)"
               name="endDateTimeUtc"
