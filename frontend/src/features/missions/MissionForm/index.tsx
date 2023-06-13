@@ -13,8 +13,8 @@ import { MissionSourceTag } from '../../../ui/MissionSourceTag'
 import { FormikForm } from '../../../uiMonitor/CustomFormikFields/FormikForm'
 import { Header } from '../../SideWindow/Header'
 import { missionFactory } from '../Missions.helpers'
-import { MissionSchema } from '../MissionSchema'
 import { MissionForm } from './MissionForm'
+import { MissionSchema } from './Schemas'
 
 export function Mission() {
   const { sideWindow } = useAppSelector(state => state)

@@ -23,9 +23,7 @@ context('Missions', () => {
     cy.fill('Fin de mission (UTC)', [2024, 5, 25, 14, 15])
     cy.get('form').submit()
     cy.wait(100)
-    cy.get('*[data-cy="mission-end-date-time"] > div > p').contains(
-      'La date de fin doit être postérieure à la date de début'
-    )
+    cy.get('.Element-FieldError').contains('La date de fin doit être postérieure à la date de début')
 
     // with good date
     cy.fill('Fin de mission (UTC)', [2024, 5, 28, 14, 15])

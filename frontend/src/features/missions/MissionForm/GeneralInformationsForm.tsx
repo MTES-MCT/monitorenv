@@ -1,4 +1,5 @@
 import {
+  FieldError,
   FormikCheckbox,
   FormikDatePicker,
   FormikMultiCheckbox,
@@ -26,33 +27,40 @@ export function GeneralInformationsForm() {
 
   const hasMissionOrderOptions = Object.values(hasMissionOrderLabels)
 
+  const [, startDateMeta] = useField('startDateTimeUtc')
+  const [, endDateMeta] = useField('endDateTimeUtc')
+
   return (
     <FormWrapper>
       <Title>Informations générales</Title>
 
-      <StyledDatePickerContainer>
-        <FormikDatePicker
-          baseContainer={newWindowContainerRef.current}
-          data-cy="mission-start-date-time"
-          isCompact
-          isStringDate
-          label="Début de mission (UTC)"
-          name="startDateTimeUtc"
-          withTime
-        />
+      <div>
+        <StyledDatePickerContainer>
+          <FormikDatePicker
+            baseContainer={newWindowContainerRef.current}
+            data-cy="mission-start-date-time"
+            isCompact
+            isErrorMessageHidden
+            isStringDate
+            label="Début de mission (UTC)"
+            name="startDateTimeUtc"
+            withTime
+          />
 
-        <StyledFormikDatePicker
-          baseContainer={newWindowContainerRef.current}
-          data-cy="mission-end-date-time"
-          isCompact
-          isEndDate
-          isStringDate
-          label="Fin de mission (UTC)"
-          name="endDateTimeUtc"
-          withTime
-        />
-      </StyledDatePickerContainer>
-
+          <StyledFormikDatePicker
+            baseContainer={newWindowContainerRef.current}
+            isCompact
+            isEndDate
+            isErrorMessageHidden
+            isStringDate
+            label="Fin de mission (UTC)"
+            name="endDateTimeUtc"
+            withTime
+          />
+        </StyledDatePickerContainer>
+        {startDateMeta.error && <FieldError>{startDateMeta.error}</FieldError>}
+        {endDateMeta.error && <FieldError>{endDateMeta.error}</FieldError>}
+      </div>
       <StyledMissionType>
         <FormikMultiCheckbox
           data-cy="mission-types"
