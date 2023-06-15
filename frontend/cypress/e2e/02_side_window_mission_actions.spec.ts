@@ -254,13 +254,13 @@ context('Mission actions', () => {
 
     // Start date of surveillance is before start date of mission
     cy.fill('Date et heure de début de surveillance (UTC)', [2024, 5, 25, 23, 35])
-    cy.get('*[data-cy="close-mission"]').click()
+    cy.clickButton('Enregistrer et clôturer')
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date de début doit être postérieure à celle de début de mission')
 
     // Start date of surveillance is after end date of mission
     cy.fill('Date et heure de début de surveillance (UTC)', [2024, 5, 28, 15, 35])
-    cy.get('*[data-cy="close-mission"]').click()
+    cy.clickButton('Enregistrer et clôturer')
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date de début doit être antérieure à celle de fin de mission')
 
@@ -269,13 +269,13 @@ context('Mission actions', () => {
 
     // End date of surveillance is before start date of mission
     cy.fill('Date et heure de fin de surveillance (UTC)', [2024, 5, 25, 23, 35])
-    cy.get('*[data-cy="close-mission"]').click()
+    cy.clickButton('Enregistrer et clôturer')
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date de fin doit être postérieure à celle de début de mission')
 
     // End date of surveillance is after end date of mission
     cy.fill('Date et heure de fin de surveillance (UTC)', [2024, 5, 28, 15, 35])
-    cy.get('*[data-cy="close-mission"]').click()
+    cy.clickButton('Enregistrer et clôturer')
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date de fin doit être antérieure à celle de fin de mission')
 
@@ -284,7 +284,7 @@ context('Mission actions', () => {
 
     // Then
     cy.intercept('PUT', '/bff/v1/missions').as('createAndCloseMission')
-    cy.get('*[data-cy="close-mission"]').click()
+    cy.clickButton('Enregistrer et clôturer')
     cy.wait(100)
 
     cy.wait('@createAndCloseMission').then(({ response }) => {
@@ -330,13 +330,13 @@ context('Mission actions', () => {
     // Date is before start date of mission
     cy.fill('Date et heure du contrôle (UTC)', [2024, 5, 25, 23, 35])
 
-    cy.get('*[data-cy="close-mission"]').click()
+    cy.clickButton('Enregistrer et clôturer')
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date doit être postérieure à celle de début de mission')
 
     // Date is after end date of mission
     cy.fill('Date et heure du contrôle (UTC)', [2024, 5, 28, 14, 16])
-    cy.get('*[data-cy="close-mission"]').click()
+    cy.clickButton('Enregistrer et clôturer')
     cy.wait(100)
     cy.get('.Element-FieldError').contains('La date doit être antérieure à celle de fin de mission')
 
@@ -345,7 +345,7 @@ context('Mission actions', () => {
 
     // Then
     cy.intercept('PUT', '/bff/v1/missions').as('createAndCloseMission')
-    cy.get('*[data-cy="close-mission"]').click()
+    cy.clickButton('Enregistrer et clôturer')
     cy.wait(100)
 
     cy.wait('@createAndCloseMission').then(({ response }) => {
