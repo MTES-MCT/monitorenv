@@ -1,16 +1,17 @@
 import { Icon, Button, Accent } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import _ from 'lodash'
-import { useState, type MouseEventHandler } from 'react'
 import styled from 'styled-components'
 
 import type { Mission } from '../../../domain/entities/missions'
+import type { MouseEventHandler } from 'react'
 
 type MissionFormBottomBarProps = {
   allowClose: boolean
   allowDelete: boolean
   allowEdit: boolean
   isFromMonitorFish: boolean
+  isReopenMessageVisible: boolean
   onCloseMission: MouseEventHandler<HTMLButtonElement>
   onDeleteMission: MouseEventHandler<HTMLButtonElement>
   onQuitFormEditing: MouseEventHandler<HTMLButtonElement>
@@ -22,14 +23,13 @@ export function MissionFormBottomBar({
   allowDelete,
   allowEdit,
   isFromMonitorFish,
+  isReopenMessageVisible,
   onCloseMission,
   onDeleteMission,
   onQuitFormEditing,
   onReopenMission,
   onSaveMission
 }: MissionFormBottomBarProps) {
-  const [isReopenMessageVisible, setIsReopenMessageVisible] = useState(false)
-
   const { errors } = useFormikContext<Mission>()
 
   const { envActions, ...errorsWithoutEnvActions } = errors
@@ -44,11 +44,6 @@ export function MissionFormBottomBar({
       updatedEnvActionsErrors.length > 0 && {
         envActions: updatedEnvActionsErrors
       })
-  }
-
-  const onClickReopenMission = e => {
-    setIsReopenMessageVisible(true)
-    onReopenMission(e)
   }
 
   return (
@@ -84,13 +79,7 @@ export function MissionFormBottomBar({
         )}
 
         {allowClose && allowEdit && (
-          <Button
-            accent={Accent.SECONDARY}
-            data-cy="close-mission"
-            Icon={Icon.Save}
-            onClick={onCloseMission}
-            type="button"
-          >
+          <Button accent={Accent.SECONDARY} Icon={Icon.Save} onClick={onCloseMission} type="button">
             Enregistrer et clôturer
           </Button>
         )}
@@ -101,7 +90,7 @@ export function MissionFormBottomBar({
           accent={Accent.SECONDARY}
           data-cy="reopen-mission"
           Icon={Icon.Unlock}
-          onClick={onClickReopenMission}
+          onClick={onReopenMission}
           type="button"
         >
           Rouvrir la mission

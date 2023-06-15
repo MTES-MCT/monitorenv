@@ -11,28 +11,24 @@ import { FieldArray, useField, useFormikContext } from 'formik'
 import { matchPath } from 'react-router'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../constants/constants'
 import { InteractionListener } from '../../../domain/entities/map/constants'
 import {
   Mission,
   MissionSourceEnum,
   getMissionStatus,
   hasMissionOrderLabels,
-  missionStatusLabels,
   missionTypeEnum
 } from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { MissionSourceTag } from '../../../ui/MissionSourceTag'
-import { MissionStatusTag, StatusTag } from '../../../ui/MissionStatusTag'
+import { MissionStatusTag } from '../../../ui/MissionStatusTag'
 import { useNewWindow } from '../../../ui/NewWindow'
 import { MultiZonePicker } from '../MultiZonePicker'
 import { ControlUnitsForm } from './ControlUnitsForm'
 
 export function GeneralInformationsForm() {
   const { newWindowContainerRef } = useNewWindow()
-
-  const { isClosedMission } = useAppSelector(state => state.missionState)
 
   const [isClosedField] = useField<boolean>('isClosed')
   const [hasMissionOrderField] = useField<boolean>('hasMissionOrder')
@@ -60,14 +56,6 @@ export function GeneralInformationsForm() {
         values.missionTypes && values.missionTypes.map(missionType => missionTypeEnum[missionType].libelle).join(' / ')
       } – ${values.controlUnits.map(controlUnit => controlUnit.name?.replace('(historique)', '')).join(', ')}`
 
-  const getStatus = () => {
-    if (isClosedMission) {
-      return <StatusTag bgColor={COLORS.opal}>{missionStatusLabels.CLOSED.libelle}</StatusTag>
-    }
-
-    return <MissionStatusTag status={getMissionStatus({ ...values, isClosed: false })} />
-  }
-
   return (
     <StyledContainer>
       <StyledHeader>
@@ -75,7 +63,7 @@ export function GeneralInformationsForm() {
         {!isCreateMissionPage && (
           <StyledTagsContainer>
             <MissionSourceTag source={missionSourceField?.value} />
-            {getStatus()}
+            <MissionStatusTag status={getMissionStatus(values)} />
           </StyledTagsContainer>
         )}
       </StyledHeader>
