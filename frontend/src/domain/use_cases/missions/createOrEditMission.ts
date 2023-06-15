@@ -3,7 +3,7 @@ import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { sideWindowPaths } from '../../entities/sideWindow'
 import { setError } from '../../shared_slices/Global'
 
-export const createOrEditMissionAndGoToMissionsList =
+export const createOrEditMission =
   (values, redirect = true) =>
   dispatch => {
     const upsertMission = !values.id ? missionsAPI.endpoints.createMission : missionsAPI.endpoints.updateMission

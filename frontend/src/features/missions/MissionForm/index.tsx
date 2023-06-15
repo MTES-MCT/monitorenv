@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import { useGetMissionQuery } from '../../../api/missionsAPI'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
-import { createOrEditMissionAndGoToMissionsList } from '../../../domain/use_cases/missions/createOrEditMission'
+import { createOrEditMission } from '../../../domain/use_cases/missions/createOrEditMission'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { FormikForm } from '../../../uiMonitor/CustomFormikFields/FormikForm'
 import { missionFactory } from '../Missions.helpers'
@@ -40,7 +40,7 @@ export function Mission() {
   }, [missionToEdit, id])
 
   const handleSubmitForm = values => {
-    dispatch(createOrEditMissionAndGoToMissionsList(values))
+    dispatch(createOrEditMission(values))
   }
 
   if (id && !missionToEdit) {

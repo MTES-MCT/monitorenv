@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import { Mission, MissionSourceEnum } from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setMissionState } from '../../../domain/shared_slices/MissionsState'
-import { createOrEditMissionAndGoToMissionsList } from '../../../domain/use_cases/missions/createOrEditMission'
+import { createOrEditMission } from '../../../domain/use_cases/missions/createOrEditMission'
 import { deleteMissionAndGoToMissionsList } from '../../../domain/use_cases/missions/deleteMission'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useSyncFormValuesWithRedux } from '../../../hooks/useSyncFormValuesWithRedux'
@@ -102,7 +102,7 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
   }
 
   const handleReopen = async () => {
-    dispatch(createOrEditMissionAndGoToMissionsList({ ...values, isClosed: false }, false))
+    dispatch(createOrEditMission({ ...values, isClosed: false }, false))
     setIsReopenMessageVisible(true)
     setIsReopenModalOpen(false)
   }

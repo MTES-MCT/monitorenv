@@ -22,7 +22,7 @@ export function MissionStatusTag({ status }: { status: string }) {
   }
 }
 
-export const StatusTag = styled(Tag)<{
+const StatusTag = styled(Tag)<{
   bgColor: string
 }>`
   align-self: end;
