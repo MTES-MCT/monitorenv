@@ -3,9 +3,12 @@ import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { sideWindowPaths } from '../../entities/sideWindow'
 import { setError } from '../../shared_slices/Global'
 
-export const createOrEditMissionAndGoToMissionsList = values => dispatch => {
+export const createOrEditMissionAndGoToMissionsList = values => (dispatch, getState) => {
   const upsertMission = !values.id ? missionsAPI.endpoints.createMission : missionsAPI.endpoints.updateMission
-  dispatch(upsertMission.initiate(values))
+  const {
+    missionState: { isClosedMission }
+  } = getState()
+  dispatch(upsertMission.initiate({ ...values, isClosed: isClosedMission }))
     .then(response => {
       if ('data' in response) {
         dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSIONS))

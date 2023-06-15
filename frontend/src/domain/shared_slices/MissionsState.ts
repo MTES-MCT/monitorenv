@@ -3,13 +3,14 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { Mission } from '../entities/missions'
 
 type MissionStateSliceType = {
+  isClosedMission: boolean
   isFormDirty: boolean
   missionState: Partial<Mission> | undefined
   selectedMissionId: number | undefined
 }
 const initialState: MissionStateSliceType = {
+  isClosedMission: false,
   isFormDirty: false,
-
   // state of the mission being edited (synced with form)
   missionState: undefined,
   // selectedMissionId on Map
@@ -23,6 +24,12 @@ const missionStateSlice = createSlice({
       return {
         ...state,
         selectedMissionId: undefined
+      }
+    },
+    setIsClosedMission(state, action) {
+      return {
+        ...state,
+        isClosedMission: action.payload
       }
     },
     setIsFormDirty(state, action) {
@@ -46,6 +53,7 @@ const missionStateSlice = createSlice({
   }
 })
 
-export const { resetSelectedMission, setIsFormDirty, setMissionState, setSelectedMissionId } = missionStateSlice.actions
+export const { resetSelectedMission, setIsClosedMission, setIsFormDirty, setMissionState, setSelectedMissionId } =
+  missionStateSlice.actions
 
 export const missionStateSliceReducer = missionStateSlice.reducer

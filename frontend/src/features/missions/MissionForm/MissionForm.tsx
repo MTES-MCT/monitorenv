@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 import { Mission, MissionSourceEnum } from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
-import { setMissionState } from '../../../domain/shared_slices/MissionsState'
+import { setIsClosedMission, setMissionState } from '../../../domain/shared_slices/MissionsState'
 import { deleteMissionAndGoToMissionsList } from '../../../domain/use_cases/missions/deleteMission'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useSyncFormValuesWithRedux } from '../../../hooks/useSyncFormValuesWithRedux'
@@ -21,8 +21,8 @@ import { MissionFormBottomBar } from './MissionFormBottomBar'
 
 export function MissionForm({ id, mission, setShouldValidateOnChange }) {
   const dispatch = useDispatch()
-  const { sideWindow } = useAppSelector(state => state)
-  const { dirty, handleSubmit, setFieldValue, validateForm, values } = useFormikContext<Mission>()
+  const { missionState, sideWindow } = useAppSelector(state => state)
+  const { dirty, handleSubmit, validateForm, values } = useFormikContext<Mission>()
 
   useSyncFormValuesWithRedux(setMissionState)
   useUpdateSurveillance()
@@ -57,10 +57,10 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
     dispatch(sideWindowActions.focusAndGoTo(sideWindow.nextPath || sideWindowPaths.MISSIONS))
   }
 
-  const allowCloseMission = !mission?.isClosed || !values?.isClosed
+  const allowCloseMission = !mission?.isClosed || !values?.isClosed || !missionState.isClosedMission
 
   const handleSaveMission = async () => {
-    await setFieldValue('isClosed', false)
+    await dispatch(setIsClosedMission(missionState.isClosedMission))
     validateForm().then(errors => {
       if (_.isEmpty(errors)) {
         handleSubmit()
@@ -72,7 +72,7 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
   }
 
   const handleCloseMission = async () => {
-    await setFieldValue('isClosed', true)
+    await dispatch(setIsClosedMission(true))
     validateForm().then(errors => {
       if (_.isEmpty(errors)) {
         handleSubmit()
@@ -83,8 +83,8 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
     })
   }
 
-  const handleReopenMission = () => {
-    setFieldValue('isClosed', false)
+  const handleReopenMission = async () => {
+    dispatch(setIsClosedMission(false))
   }
 
   const handleConfirmFormCancelation = () => {

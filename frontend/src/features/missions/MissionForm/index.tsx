@@ -1,12 +1,13 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Formik } from 'formik'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { matchPath } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { useGetMissionQuery } from '../../../api/missionsAPI'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
+import { setIsClosedMission } from '../../../domain/shared_slices/MissionsState'
 import { createOrEditMissionAndGoToMissionsList } from '../../../domain/use_cases/missions/createOrEditMission'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { FormikForm } from '../../../uiMonitor/CustomFormikFields/FormikForm'
@@ -38,6 +39,12 @@ export function Mission() {
 
     return missionFactory(missionToEdit)
   }, [missionToEdit, id])
+
+  useEffect(() => {
+    if (missionToEdit) {
+      dispatch(setIsClosedMission(missionToEdit?.isClosed))
+    }
+  }, [dispatch, missionToEdit])
 
   const handleSubmitForm = values => {
     dispatch(createOrEditMissionAndGoToMissionsList(values))
