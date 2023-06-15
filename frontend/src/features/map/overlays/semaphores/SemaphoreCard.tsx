@@ -89,7 +89,7 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
             <Whisper
               controlId="phone-tooltip"
               onClick={onCopyPhone}
-              placement="right"
+              placement="left"
               speaker={hoverTooltip(tooltipPhoneState.text, tooltipPhoneState.className)}
               trigger={tooltipPhoneState.trigger as OverlayTriggerType}
             >
@@ -110,7 +110,7 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
             <Whisper
               controlId="mail-tooltip"
               onClick={onCopyMail}
-              placement="right"
+              placement="left"
               speaker={hoverTooltip(tooltipMailState.text, tooltipMailState.className)}
               trigger={tooltipMailState.trigger as OverlayTriggerType}
             >
@@ -192,10 +192,10 @@ const StyledTooltip = styled(Tooltip)`
     background-color: ${p => p.theme.color.mediumSeaGreen};
   }
 
-  &.rs-tooltip.placement-right:after {
-    border-right-color: ${p => p.theme.color.blueYonder[100]};
+  &.rs-tooltip.placement-left:after {
+    border-left-color: ${p => p.theme.color.blueYonder[100]};
   }
-  &.greenTooltip.rs-tooltip.placement-right:after {
-    border-right-color: ${p => p.theme.color.mediumSeaGreen};
+  &.greenTooltip.rs-tooltip.placement-left:after {
+    border-left-color: ${p => p.theme.color.mediumSeaGreen};
   }
 `

@@ -36,7 +36,7 @@ export function HomePage() {
         return (event.returnValue = 'blocked')
       }
 
-      return null
+      return undefined
     },
     [isFormDirty, missionState]
   )
