@@ -9,9 +9,7 @@ import { useGetMissionQuery } from '../../../api/missionsAPI'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { createOrEditMissionAndGoToMissionsList } from '../../../domain/use_cases/missions/createOrEditMission'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { MissionSourceTag } from '../../../ui/MissionSourceTag'
 import { FormikForm } from '../../../uiMonitor/CustomFormikFields/FormikForm'
-import { Header } from '../../SideWindow/Header'
 import { missionFactory } from '../Missions.helpers'
 import { MissionForm } from './MissionForm'
 import { MissionSchema } from './Schemas'
@@ -51,10 +49,6 @@ export function Mission() {
 
   return (
     <EditMissionWrapper data-cy="editMissionWrapper">
-      <Header title="Edition de la mission">
-        <MissionSourceTag source={missionToEdit?.missionSource} />
-      </Header>
-
       <Formik
         enableReinitialize
         initialValues={missionFormikValues}
@@ -73,6 +67,7 @@ export function Mission() {
 }
 
 const EditMissionWrapper = styled.div`
-  flex: 1;
-  max-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 `

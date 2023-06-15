@@ -29,6 +29,7 @@ export function MissionSourceTag({ source, styleProps }: { source?: MissionSourc
 const SourceTag = styled(Tag)<{
   source: string
 }>`
-  color: ${COLORS.white};
+  align-self: end;
+  color: ${p => p.theme.color.white};
   background-color: ${p => (p.source === missionSourceEnum.MONITORENV.value ? COLORS.mediumSeaGreen : COLORS.blueGray)};
 `

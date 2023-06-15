@@ -1,11 +1,14 @@
+import { Icon, SideMenu } from '@mtes-mct/monitor-ui'
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useState, useRef } from 'react'
 import { useDispatch } from 'react-redux'
+import { generatePath } from 'react-router'
 import { ToastContainer } from 'react-toastify'
 import styled from 'styled-components'
 
 import { ErrorBoundary } from '../../components/ErrorBoundary'
 import { COLORS } from '../../constants/constants'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
+import { onNavigateDuringEditingMission } from '../../domain/use_cases/navigation/onNavigateBetweenMapAndSideWindow'
 import { NewWindowContext } from '../../ui/NewWindow'
 import { Mission } from '../missions/MissionForm'
 import { Missions } from '../missions/MissionsList'
@@ -35,16 +38,27 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
 
   useEffect(() => {
     setIsFirstRender(false)
-  }, [dispatch])
+  }, [])
 
   return (
     <ErrorBoundary>
       <Wrapper ref={wrapperRef}>
         {!isFirstRender && (
           <NewWindowContext.Provider value={newWindowContextProviderValue}>
-            <Route element={<Missions />} path={sideWindowPaths.MISSIONS} />
-            <Route element={<Mission />} path={sideWindowPaths.MISSION} />
-            <Route element={<Mission />} path={sideWindowPaths.MISSION_NEW} />
+            <SideMenu>
+              {/* TODO manage active cases when other buttons are implemented */}
+              <SideMenu.Button
+                Icon={Icon.MissionAction}
+                isActive
+                onClick={() => dispatch(onNavigateDuringEditingMission(generatePath(sideWindowPaths.MISSIONS)))}
+                title="missions"
+              />
+            </SideMenu>
+            <StyledContainer>
+              <Route element={<Missions />} path={sideWindowPaths.MISSIONS} />
+              <Route element={<Mission />} path={sideWindowPaths.MISSION} />
+              <Route element={<Mission />} path={sideWindowPaths.MISSION_NEW} />
+            </StyledContainer>
           </NewWindowContext.Provider>
         )}
         <ToastContainer containerId="sideWindow" enableMultiContainer />
@@ -53,9 +67,13 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
   )
 }
 
-const Wrapper = styled.div`
-  height: 100vh;
-  background: ${COLORS.white};
+const Wrapper = styled.section`
+  background: ${p => p.theme.color.white};
+  display: flex;
+  flex: 1;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
 
   @keyframes blink {
     0% {
@@ -68,6 +86,11 @@ const Wrapper = styled.div`
       background: ${COLORS.background};
     }
   }
+`
+
+const StyledContainer = styled.section`
+  display: flex;
+  flex: 1;
 `
 
 export const SideWindow = forwardRef(SideWindowWithRef)

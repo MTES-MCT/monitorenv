@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../constants/constants'
 import { Mission, MissionSourceEnum } from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setMissionState } from '../../../domain/shared_slices/MissionsState'
@@ -97,7 +96,7 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
   }
 
   return (
-    <>
+    <StyledFormContainer>
       <MissionCancelEditModal
         onCancel={handleReturnToEdition}
         onConfirm={handleCancelForm}
@@ -149,27 +148,34 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
         onReopenMission={handleReopenMission}
         onSaveMission={handleSaveMission}
       />
-    </>
+    </StyledFormContainer>
   )
 }
 
-const Wrapper = styled.div`
-  height: calc(100vh - 118px);
+const StyledFormContainer = styled.div`
   display: flex;
+  flex-direction: column;
+  flex: 1;
+`
+
+const Wrapper = styled.div`
+  height: calc(100vh - 68px);
+  display: flex;
+  flex-direction: row;
 `
 const FirstColumn = styled.div`
-  background: ${COLORS.white};
+  background: ${p => p.theme.color.white};
   flex: 1;
   overflow-y: auto;
 `
 
 const SecondColumn = styled.div`
-  background: ${COLORS.cultured};
+  background: ${p => p.theme.color.cultured};
   overflow-y: auto;
   flex: 1;
 `
 const ThirdColumn = styled.div`
-  background: ${COLORS.gainsboro};
+  background: ${p => p.theme.color.gainsboro};
   flex: 1;
   overflow-y: auto;
 `

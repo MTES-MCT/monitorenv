@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-context('Missions', () => {
+context('Mission', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
     cy.visit(`/side_window`)

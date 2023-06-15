@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-context('Missions', () => {
+context('Mission actions', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
     cy.visit(`/side_window`)
@@ -95,7 +95,9 @@ context('Missions', () => {
     cy.get('[id="envActions[1].observations"]').contains('RAS')
 
     // When
-    cy.get('[id="envActions[1].observations"]').type('{backspace}{backspace}Une observation importante')
+    cy.get('[id="envActions[1].observations"]').type('{backspace}{backspace}Une observation importante', {
+      force: true
+    })
 
     cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
     cy.get('form').submit()
@@ -128,7 +130,7 @@ context('Missions', () => {
     cy.get('*[data-cy="envaction-theme-element"]').eq(1).contains('Police des mouillages').click()
 
     cy.get('*[data-cy="envaction-subtheme-selector"]').eq(1).click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').eq(1).contains('ZMEL').click()
+    cy.get('*[data-cy="envaction-theme-element"]').eq(1).contains('ZMEL').click({ force: true })
 
     cy.get('*[data-cy="envaction-protected-species-selector"]').should('have.length', 1)
 
