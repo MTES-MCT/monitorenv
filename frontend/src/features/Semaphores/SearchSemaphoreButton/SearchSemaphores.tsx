@@ -42,16 +42,16 @@ export function SearchSemaphores() {
     if (selectedSemaphore) {
       dispatch(addSemaphore(selectedSemaphore))
       dispatch(setSelectedSemaphore(selectedSemaphore.id))
-      zoomOnSempahore(selectedSemaphore.geom)
+      zoomOnSemaphore(selectedSemaphore.geom)
     }
   }
 
   const selectRegiteredSemaphore = selectedRegisteredSemaphore => {
     dispatch(setSelectedSemaphore(selectedRegisteredSemaphore.id))
-    zoomOnSempahore(selectedRegisteredSemaphore.geom)
+    zoomOnSemaphore(selectedRegisteredSemaphore.geom)
   }
 
-  const zoomOnSempahore = geom => {
+  const zoomOnSemaphore = geom => {
     const feature = new GeoJSON({
       featureProjection: OPENLAYERS_PROJECTION
     }).readFeature(geom)
@@ -73,7 +73,7 @@ export function SearchSemaphores() {
         />
       </MenuWithCloseButton.Header>
 
-      <Search
+      <StyledSearch
         customSearch={customSearchRef.current}
         isLabelHidden
         isLight
@@ -100,6 +100,12 @@ export function SearchSemaphores() {
     </MenuWithCloseButton.Container>
   )
 }
+
+const StyledSearch = styled(Search)`
+  .rs-picker-menu {
+    width: 100%;
+  }
+`
 
 const StyledRegisteredSemaphoreList = styled.div`
   display: flex;

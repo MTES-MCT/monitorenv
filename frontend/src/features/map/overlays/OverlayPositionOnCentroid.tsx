@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import { COLORS } from '../../../constants/constants'
 import { setOverlayCoordinates } from '../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
 import { getOverlayPositionForCentroid, getTopLeftMargin } from './position'
 
@@ -19,7 +20,7 @@ const defaultMargins = {
   xRight: -155,
   yBottom: 50,
   yMiddle: 100,
-  yTop: -200
+  yTop: -180
 }
 
 export function OverlayPositionOnCentroid({
@@ -36,6 +37,7 @@ export function OverlayPositionOnCentroid({
   const isThrottled = useRef(false)
   const [showed, setShowed] = useState(false)
   const currentCoordinates = useRef([])
+  const { overlayCoordinates } = useAppSelector(state => state.global)
 
   const [overlayTopLeftMargin, setOverlayTopLeftMargin] = useState([margins.yBottom, margins.xMiddle])
   const currentOffset = useRef(INITIAL_OFFSET_VALUE)
@@ -67,6 +69,15 @@ export function OverlayPositionOnCentroid({
       currentCoordinates.current = undefined
     }
   }, [feature])
+
+  useEffect(() => {
+    const view = map.getView()
+    view.on('change:resolution', () => {
+      if (overlayCoordinates) {
+        dispatch(setOverlayCoordinates(undefined))
+      }
+    })
+  }, [dispatch, map, overlayCoordinates])
 
   useEffect(() => {
     if (map) {
@@ -148,4 +159,5 @@ const OverlayComponent = styled.div`
   text-align: left;
   background-color: ${COLORS.white};
   border-radius: 2px;
+  cursor: grabbing;
 `

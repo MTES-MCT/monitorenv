@@ -29,11 +29,14 @@ export function HomePage() {
 
   const beforeUnload = useCallback(
     event => {
-      event.preventDefault()
       if (isFormDirty && missionState) {
-        // eslint-disable-next-line no-param-reassign
-        event.returnValue = ''
+        event.preventDefault()
+
+        // eslint-disable-next-line no-return-assign, no-param-reassign
+        return (event.returnValue = 'blocked')
       }
+
+      return undefined
     },
     [isFormDirty, missionState]
   )

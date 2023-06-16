@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { Tooltip, Whisper } from 'rsuite'
 import styled from 'styled-components'
 
+import { COLORS } from '../../../../constants/constants'
 import { setOverlayCoordinates } from '../../../../domain/shared_slices/Global'
 import { resetSelectedSemaphore } from '../../../../domain/shared_slices/SemaphoresSlice'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -75,7 +76,7 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
         <CloseButton
           $isVisible={selected}
           accent={Accent.TERTIARY}
-          data-cy="sempahore-overlay-close"
+          data-cy="semaphore-overlay-close"
           Icon={Icon.Close}
           iconSize={14}
           onClick={handleCloseOverlay}
@@ -84,26 +85,46 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
 
       <StyledContactContainer>
         {phoneNumber && (
-          <Whisper
-            controlId="phone-tooltip"
-            onClick={onCopyPhone}
-            placement="right"
-            speaker={hoverTooltip(tooltipPhoneState.text, tooltipPhoneState.className)}
-            trigger={tooltipPhoneState.trigger as OverlayTriggerType}
-          >
-            <StyledContact>Contact&nbsp;:&nbsp;{phoneNumber}</StyledContact>
-          </Whisper>
+          <StyledContactLine>
+            <Whisper
+              controlId="phone-tooltip"
+              onClick={onCopyPhone}
+              placement="left"
+              speaker={hoverTooltip(tooltipPhoneState.text, tooltipPhoneState.className)}
+              trigger={tooltipPhoneState.trigger as OverlayTriggerType}
+            >
+              <span>
+                <StyledCopyButton
+                  accent={Accent.TERTIARY}
+                  color={COLORS.slateGray}
+                  Icon={Icon.Duplicate}
+                  iconSize={20}
+                />
+              </span>
+            </Whisper>
+            <span>Contact&nbsp;:&nbsp;{phoneNumber}</span>
+          </StyledContactLine>
         )}
         {email && (
-          <Whisper
-            controlId="mail-tooltip"
-            onClick={onCopyMail}
-            placement="right"
-            speaker={hoverTooltip(tooltipMailState.text, tooltipMailState.className)}
-            trigger={tooltipMailState.trigger as OverlayTriggerType}
-          >
-            <StyledContact>{email}</StyledContact>
-          </Whisper>
+          <StyledContactLine>
+            <Whisper
+              controlId="mail-tooltip"
+              onClick={onCopyMail}
+              placement="left"
+              speaker={hoverTooltip(tooltipMailState.text, tooltipMailState.className)}
+              trigger={tooltipMailState.trigger as OverlayTriggerType}
+            >
+              <span>
+                <StyledCopyButton
+                  accent={Accent.TERTIARY}
+                  color={COLORS.slateGray}
+                  Icon={Icon.Duplicate}
+                  iconSize={20}
+                />
+              </span>
+            </Whisper>
+            <span>{email}</span>
+          </StyledContactLine>
         )}
       </StyledContactContainer>
     </Wrapper>
@@ -144,10 +165,19 @@ const StyledContactContainer = styled.div`
   color: ${p => p.theme.color.slateGray};
   white-space: nowrap;
 `
-const StyledContact = styled.span`
-  &:hover {
-    text-decoration: underline;
-    cursor: pointer;
+
+const StyledContactLine = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  align-items: center;
+`
+const StyledCopyButton = styled(IconButton)`
+  padding: 0px;
+  .Element-IconBox {
+    :hover {
+      color: ${p => p.theme.color.blueYonder[100]};
+    }
   }
 `
 
@@ -162,10 +192,10 @@ const StyledTooltip = styled(Tooltip)`
     background-color: ${p => p.theme.color.mediumSeaGreen};
   }
 
-  &.rs-tooltip.placement-right:after {
-    border-right-color: ${p => p.theme.color.blueYonder[100]};
+  &.rs-tooltip.placement-left:after {
+    border-left-color: ${p => p.theme.color.blueYonder[100]};
   }
-  &.greenTooltip.rs-tooltip.placement-right:after {
-    border-right-color: ${p => p.theme.color.mediumSeaGreen};
+  &.greenTooltip.rs-tooltip.placement-left:after {
+    border-left-color: ${p => p.theme.color.mediumSeaGreen};
   }
 `
