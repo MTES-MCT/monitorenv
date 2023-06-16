@@ -22,7 +22,7 @@ from src.pipeline.flows import (
     refresh_materialized_view,
     regulations,
     semaphores,
-    update_departments_and_facades
+    update_departments_and_facades,
 )
 
 ################################ Define flow schedules ################################

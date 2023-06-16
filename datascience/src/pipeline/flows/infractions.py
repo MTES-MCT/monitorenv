@@ -15,7 +15,9 @@ def extract_infractions():
 
 @task(checkpoint=False)
 def clean_infractions(infractions):
-    infractions.loc[:, "infraction"] = infractions.infraction.map(str.capitalize)
+    infractions.loc[:, "infraction"] = infractions.infraction.map(
+        str.capitalize
+    )
     return infractions
 
 

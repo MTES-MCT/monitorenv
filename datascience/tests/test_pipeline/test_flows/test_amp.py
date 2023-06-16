@@ -1,5 +1,3 @@
-from unittest.mock import patch
-
 import pandas as pd
 import pytest
 
@@ -7,7 +5,7 @@ from src.pipeline.flows.amp import (
     load_new_amp,
     merge_hashes,
     select_ids_to_delete,
-    select_ids_to_upsert
+    select_ids_to_upsert,
 )
 from src.read_query import read_query
 
@@ -16,7 +14,7 @@ from src.read_query import read_query
 def local_hashes() -> pd.DataFrame:
     return pd.DataFrame(
         {
-            "id": [ 1, 2, 3, 4, 6],
+            "id": [1, 2, 3, 4, 6],
             "cacem_row_hash": [
                 "cacem_row_hash_1",
                 "cacem_row_hash_2",
@@ -27,11 +25,12 @@ def local_hashes() -> pd.DataFrame:
         }
     )
 
+
 @pytest.fixture
 def remote_hashes() -> pd.DataFrame:
     return pd.DataFrame(
         {
-            "id": [ 1, 2, 3, 4, 5],
+            "id": [1, 2, 3, 4, 5],
             "monitorenv_row_hash": [
                 "cacem_row_hash_1",
                 "cacem_row_hash_2",
@@ -48,17 +47,18 @@ def test_select_ids_to_delete(remote_hashes, local_hashes):
     ids_to_delete = select_ids_to_delete.run(hashes)
     assert ids_to_delete == {5}
 
+
 def test_select_ids_to_upsert(remote_hashes, local_hashes):
     hashes = merge_hashes.run(local_hashes, remote_hashes)
     ids_to_upsert = select_ids_to_upsert.run(hashes)
-    assert ids_to_upsert == {4,6}
+    assert ids_to_upsert == {4, 6}
 
 
 @pytest.fixture
 def new_amp() -> pd.DataFrame:
     return pd.DataFrame(
         {
-            "id": [ 1, 2, 3, 4],
+            "id": [1, 2, 3, 4],
             "geom": [
                 "0106000020E610000001000000010300000001000000040000001EA36CE84A6F04C028FCC"
                 "F619D7F47407B5A4C4F4F6904C06878344D997F4740906370C20E6A04C050111641647F47"
@@ -73,8 +73,18 @@ def new_amp() -> pd.DataFrame:
                 "CD5455446407A715E737969F3BFEAD7CEDEB655464036ED5A29A137F4BF97F69352CC3446"
                 "40F57994631533F2BFE2B98CD545544640",
             ],
-            "mpa_oriname": ["Calanques - aire d'adhésion", "dunes, forêt et marais d'Olonne", "dunes, forêt et marais d'Olonne'", "estuaire de la Bidassoa et baie de Fontarabie"],
-            "des_desigfr": ["Parc national (aire d'adhésion)", "Zone de protection spéciale (N2000, DO)", "Zone spéciale de conservation (N2000, DHFF)", "Zone de protection spéciale (N2000, DO)"],
+            "mpa_oriname": [
+                "Calanques - aire d'adhésion",
+                "dunes, forêt et marais d'Olonne",
+                "dunes, forêt et marais d'Olonne'",
+                "estuaire de la Bidassoa et baie de Fontarabie",
+            ],
+            "des_desigfr": [
+                "Parc national (aire d'adhésion)",
+                "Zone de protection spéciale (N2000, DO)",
+                "Zone spéciale de conservation (N2000, DHFF)",
+                "Zone de protection spéciale (N2000, DO)",
+            ],
             "row_hash": [
                 "cacem_row_hash_1",
                 "cacem_row_hash_2",
@@ -83,6 +93,7 @@ def new_amp() -> pd.DataFrame:
             ],
         }
     )
+
 
 def test_load_new_amp(new_amp):
     load_new_amp.run(new_amp)

@@ -17,7 +17,8 @@ def refresh_view(view: Table) -> pd.DataFrame:
 
     query = text(f"REFRESH MATERIALIZED VIEW {view.schema}.{view.name}")
     e = create_engine("monitorenv_remote")
-    e.execute(query)
+    with e.begin() as connection:
+        connection.execute(query)
 
 
 with Flow("Refresh materialized view", executor=LocalDaskExecutor()) as flow:

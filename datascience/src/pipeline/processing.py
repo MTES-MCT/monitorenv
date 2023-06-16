@@ -424,7 +424,7 @@ def drop_rows_already_in_table(
     df_ids = tuple(df[df_column_name].unique())
     df_n_ids = len(df_ids)
 
-    statement = select([getattr(table.c, table_column_name)]).where(
+    statement = select(getattr(table.c, table_column_name)).where(
         getattr(table.c, table_column_name).in_(df_ids)
     )
 
