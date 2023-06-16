@@ -1,10 +1,9 @@
-import React from 'react'
 import styled from 'styled-components'
 
 import { Key, Value, Fields, Field } from './RegulatoryMetadata.style'
 import { COLORS } from '../../../../constants/constants'
 
-function Identification({ entity_name, facade, thematique, type }) {
+export function Identification({ entity_name, facade, thematique, type }) {
   return (
     <Zone>
       <Fields>
@@ -49,5 +48,3 @@ const Zone = styled.div`
   flex-wrap: wrap;
   border-bottom: 1px solid ${COLORS.lightGray};
 `
-
-export default Identification

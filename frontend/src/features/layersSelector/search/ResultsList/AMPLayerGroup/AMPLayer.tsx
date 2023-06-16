@@ -3,17 +3,15 @@ import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import Highlighter from 'react-highlight-words'
 import { useDispatch } from 'react-redux'
-import styled from 'styled-components'
 
-import { useGetAMPsQuery } from '../../../api/ampsAPI'
-import { COLORS } from '../../../constants/constants'
-import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map/constants'
-import { setFitToExtent } from '../../../domain/shared_slices/Map'
-import { addAmpZonesToMyLayers, removeAmpZonesFromMyLayers } from '../../../domain/shared_slices/SelectedAmp'
-import { useAppSelector } from '../../../hooks/useAppSelector'
-import { RegulatoryLayerLegend } from '../../../ui/RegulatoryLayerLegend'
-
-export const REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT = 36
+import { useGetAMPsQuery } from '../../../../../api/ampsAPI'
+import { COLORS } from '../../../../../constants/constants'
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../../domain/entities/map/constants'
+import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
+import { addAmpZonesToMyLayers, removeAmpZonesFromMyLayers } from '../../../../../domain/shared_slices/SelectedAmp'
+import { useAppSelector } from '../../../../../hooks/useAppSelector'
+import { RegulatoryLayerLegend } from '../../../../../ui/RegulatoryLayerLegend'
+import { LayerSelector } from '../../utils/LayerSelector.style'
 
 export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedText: string }) {
   const dispatch = useDispatch()
@@ -47,9 +45,9 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
   }
 
   return (
-    <Zone>
+    <LayerSelector.LayerGroup>
       <RegulatoryLayerLegend entity_name={layer?.name} thematique={layer?.designation} />
-      <Name onClick={fitToRegulatoryLayer} title={layer?.designation}>
+      <LayerSelector.LayerName onClick={fitToRegulatoryLayer} title={layer?.designation}>
         <Highlighter
           autoEscape
           highlightClassName="highlight"
@@ -57,55 +55,18 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
           textToHighlight={layer?.designation || ''}
         />
         {!layer?.designation && 'AUCUN NOM'}
-      </Name>
-      <Icons>
+      </LayerSelector.LayerName>
+      <LayerSelector.IconGroup>
         <IconButton
           accent={Accent.TERTIARY}
           aria-label="Sélectionner la zone"
-          color={isZoneSelected ? 'blue' : 'grey'}
-          Icon={Icon.Pin}
+          color={isZoneSelected ? COLORS.blueGray : COLORS.gunMetal}
+          Icon={isZoneSelected ? Icon.PinFilled : Icon.Pin}
           iconSize={20}
           onClick={handleSelectRegulatoryZone}
           size={Size.SMALL}
         />
-      </Icons>
-    </Zone>
+      </LayerSelector.IconGroup>
+    </LayerSelector.LayerGroup>
   )
 }
-
-const Name = styled.span`
-  width: 280px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow-x: hidden !important;
-  font-size: inherit;
-  text-align: left;
-  span {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-`
-
-const Zone = styled.span`
-  user-select: none;
-  display: flex;
-  text-align: left;
-  font-size: 13px;
-  padding-left: 20px;
-  background: ${COLORS.ampBackground};
-  color: ${p => p.theme.color.gunMetal};
-  height: ${REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT}px;
-  align-items: center;
-
-  :hover {
-    background: ${p => p.theme.color.blueYonder25};
-  }
-`
-
-const Icons = styled.span`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  flex: 0;
-  margin-right: 4px;
-`

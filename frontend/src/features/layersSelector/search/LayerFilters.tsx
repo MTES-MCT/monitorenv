@@ -1,42 +1,21 @@
-import { Checkbox } from '@mtes-mct/monitor-ui'
 import { Button } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
 import { FilterTagPicker } from '../../../uiMonitor/CustomRsuite/FilterTagPicker'
 
-export function RegulatoryLayerFilters({
-  filteredRegulatoryThemes,
-  regulatoryThemes,
-  setFilteredRegulatoryThemes,
-  setShouldSearchAMPs,
-  setShouldSearchRegulatory,
-  shouldSearchAMPs,
-  shouldSearchRegulatory
-}) {
+export function RegulatoryLayerFilters({ filteredRegulatoryThemes, regulatoryThemes, setFilteredRegulatoryThemes }) {
   const handleResetFilters = () => {
     setFilteredRegulatoryThemes([])
   }
 
   return (
     <FiltersWrapper>
-      <Checkbox
-        checked={shouldSearchRegulatory}
-        label="Zones avec une réglementation"
-        name="shouldSearchRegulatory"
-        onChange={setShouldSearchRegulatory}
-      />
-      <Checkbox
-        checked={shouldSearchAMPs}
-        label="Zones dans une AMP"
-        name="shouldSearchAMPs"
-        onChange={setShouldSearchAMPs}
-      />
       <FilterTagPicker
         block
         data={regulatoryThemes}
         onChange={setFilteredRegulatoryThemes}
-        placeholder="Thématiques de contrôle"
+        placeholder="Thématiques réglementaires"
         searchable
         value={filteredRegulatoryThemes}
       />
@@ -54,9 +33,6 @@ const FiltersWrapper = styled.div`
   padding: 16px;
   text-align: left;
   border-top: 2px solid ${COLORS.lightGray};
-  > .Field-Checkbox:not(:first-child) {
-    margin-top: 10px;
-  }
 `
 const ResetFilters = styled(Button)`
   padding: 0px;

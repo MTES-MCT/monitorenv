@@ -8,11 +8,11 @@ import { closeRegulatoryZoneMetadata } from '../../domain/use_cases/regulatory/c
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { ReactComponent as LayersSVG } from '../../uiMonitor/icons/Couches_carto.svg'
 import { AdministrativeLayers } from './administrative/AdministrativeLayers'
-import { AmpLayers } from './amp/AmpLayers'
-import { BaseLayerList } from './base/BaseLayerList'
-import { RegulatoryLayers } from './regulatory/menu/RegulatoryLayers'
-import { RegulatoryLayerZoneMetadata } from './regulatory/metadata/RegulatoryLayerZoneMetadata'
-import { RegulatoryLayerSearch } from './search/LayerSearch'
+import { AmpLayers } from './amp'
+import { BaseLayerList } from './base'
+import { RegulatoryLayers } from './regulatory/menu'
+import { RegulatoryLayerZoneMetadata } from './regulatory/metadata'
+import { LayerSearch } from './search'
 
 export function LayersSidebar() {
   const { regulatoryMetadataLayerId, regulatoryMetadataPanelIsOpen } = useAppSelector(state => state.regulatoryMetadata)
@@ -41,7 +41,7 @@ export function LayersSidebar() {
         isVisible={displayLayersSidebar && (layersSidebarIsOpen || regulatoryMetadataPanelIsOpen)}
         layersSidebarIsOpen={layersSidebarIsOpen}
       >
-        <RegulatoryLayerSearch isVisible={displayLayersSidebar && layersSidebarIsOpen} />
+        <LayerSearch isVisible={displayLayersSidebar && layersSidebarIsOpen} />
         <Layers>
           <RegulatoryLayers />
           <AmpLayers />

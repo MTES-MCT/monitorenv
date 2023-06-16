@@ -1,19 +1,17 @@
+import { Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { useCallback } from 'react'
 import { FingerprintSpinner } from 'react-epic-spinners'
 import { useDispatch } from 'react-redux'
-import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
-import Identification from './Identification'
-import MetadataRegulatoryReferences from './MetadataRegulatoryReferences'
 import { useGetRegulatoryLayerQuery } from '../../../../api/regulatoryLayersAPI'
-import { COLORS } from '../../../../constants/constants'
 import { getTitle } from '../../../../domain/entities/regulatory'
 import { closeRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { RegulatoryLayerLegend } from '../../../../ui/RegulatoryLayerLegend'
 import { ReactComponent as AlertSVG } from '../../../../uiMonitor/icons/Attention_controles.svg'
-import { ReactComponent as CloseSVG } from '../../../../uiMonitor/icons/Close.svg'
+import { Identification } from './Identification'
+import { MetadataRegulatoryReferences } from './MetadataRegulatoryReferences'
 
 const FOUR_HOURS = 4 * 60 * 60 * 1000
 
@@ -39,11 +37,7 @@ export function RegulatoryLayerZoneMetadata() {
             <RegulatoryZoneName title={getTitle(regulatoryMetadata?.layer_name)}>
               {getTitle(regulatoryMetadata?.layer_name)}
             </RegulatoryZoneName>
-            <PaddedIconButton
-              data-cy="regulatory-layers-metadata-close"
-              icon={<CloseSVG />}
-              onClick={onCloseIconClicked}
-            />
+            <IconButton data-cy="regulatory-layers-metadata-close" Icon={Icon.Close} onClick={onCloseIconClicked} />
           </Header>
           <Warning>
             <WarningIcon />
@@ -73,8 +67,8 @@ const Wrapper = styled.div<{ $regulatoryMetadataPanelIsOpen: boolean }>`
   border-radius: 2px;
   width: 400px;
   display: block;
-  color: ${COLORS.charcoal};
-  opacity: ${props => (props.$regulatoryMetadataPanelIsOpen ? 1 : 0)};
+  color: ${p => p.theme.color.charcoal};
+  opacity: ${p => (p.$regulatoryMetadataPanelIsOpen ? 1 : 0)};
   z-index: -1;
   padding: 0;
   transition: all 0.5s;
@@ -92,7 +86,7 @@ const RegulatoryZoneName = styled.span`
 `
 
 const Header = styled.div`
-  color: ${COLORS.gunMetal};
+  color: ${p => p.theme.color.gunMetal};
   margin-left: 6px;
   text-align: left;
   height: 40px;
@@ -101,20 +95,21 @@ const Header = styled.div`
   font-size: 15px;
   align-items: center;
   justify-content: center;
+  padding: 4px;
 `
 
 const Content = styled.div`
   border-radius: 2px;
-  color: ${COLORS.lightGray};
-  background: ${COLORS.background};
+  color: ${p => p.theme.color.lightGray};
+  background: ${p => p.theme.color.background};
   overflow-y: auto;
   max-height: 72vh;
 `
 
 const Warning = styled.div`
   font-size: 13px;
-  color: ${COLORS.gunMetal};
-  background: ${COLORS.goldenPoppy};
+  color: ${p => p.theme.color.gunMetal};
+  background: ${p => p.theme.color.goldenPoppy};
   display: flex;
   text-align: left;
   font: normal normal bold 13px/18px Marianne;
@@ -131,8 +126,4 @@ const CenteredFingerprintSpinner = styled(FingerprintSpinner)`
   position: initial !important;
   display: block;
   margin-top: 300px;
-`
-
-const PaddedIconButton = styled(IconButton)`
-  margin-right: 4px;
 `

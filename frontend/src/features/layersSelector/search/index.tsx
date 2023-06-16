@@ -19,14 +19,14 @@ import {
   setRegulatoryLayersSearchResult,
   setSearchExtent
 } from './LayerSearch.slice'
-import { ResultList } from './ResultList'
+import { ResultList } from './ResultsList'
 import { SearchInput } from './SearchInput'
 import { getIntersectingLayerIds } from './utils/getIntersectingLayerIds'
 
 import type { AMP } from '../../../domain/entities/AMPs'
 import type { RegulatoryLayerType } from '../../../types'
 
-export function RegulatoryLayerSearch({ isVisible }) {
+export function LayerSearch({ isVisible }) {
   const dispatch = useDispatch()
   const { data: amps } = useGetAMPsQuery()
   const { regulatoryLayers } = useAppSelector(state => state.regulatory)
@@ -40,8 +40,6 @@ export function RegulatoryLayerSearch({ isVisible }) {
   const [filteredRegulatoryThemes, setFilteredRegulatoryThemes] = useState<string[]>([])
 
   const [filterSearchOnMapExtent, setFilterSearchOnMapExtent] = useState<boolean>(false)
-  const [shouldSearchAMPs, setShouldSearchAMPs] = useState<boolean>(true)
-  const [shouldSearchRegulatory, setShouldSearchRegulatory] = useState<boolean>(true)
 
   useEffect(() => {
     if (filterSearchOnMapExtent) {
@@ -75,10 +73,10 @@ export function RegulatoryLayerSearch({ isVisible }) {
         searchRegulatory
       }: { geofilter: boolean; searchAmps: boolean; searchRegulatory: boolean }
     ) => {
-      if (searchAmps && (searchedText.length > 0 || geofilter)) {
+      if (searchAmps && (searchedText.length > 2 || geofilter)) {
         let searchedAMPS
         let itemSchema
-        if (searchedText.length > 0) {
+        if (searchedText.length > 2) {
           searchedAMPS = fuseAMPs?.search<AMP>(searchedText)
           itemSchema = { bboxPath: 'item.bbox', idPath: 'item.id' }
         } else {
@@ -91,10 +89,10 @@ export function RegulatoryLayerSearch({ isVisible }) {
         dispatch(setAMPsSearchResult([]))
       }
 
-      if (searchRegulatory && (searchedText.length > 0 || filterOnThemes.length > 0 || geofilter)) {
+      if (searchRegulatory && (searchedText.length > 2 || filterOnThemes.length > 0 || geofilter)) {
         let searchedRegulatory
         let itemSchema
-        if (searchedText.length > 0) {
+        if (searchedText.length > 2) {
           searchedRegulatory = fuseRegulatory.search<RegulatoryLayerType>(searchedText)
           itemSchema = { bboxPath: 'item.bbox', idPath: 'item.id' }
         } else {
@@ -116,8 +114,8 @@ export function RegulatoryLayerSearch({ isVisible }) {
     setShouldReloadSearchOnExtent(false)
     searchLayers(globalSearchText, filteredRegulatoryThemes, currentMapExtentTracker, {
       geofilter: filterSearchOnMapExtent,
-      searchAmps: shouldSearchAMPs,
-      searchRegulatory: shouldSearchRegulatory
+      searchAmps: true,
+      searchRegulatory: true
     })
     dispatch(setSearchExtent(currentMapExtentTracker))
     dispatch(setFitToExtent(currentMapExtentTracker))
@@ -136,33 +134,16 @@ export function RegulatoryLayerSearch({ isVisible }) {
     setGlobalSearchText(searchedText)
     searchLayers(searchedText, filteredRegulatoryThemes, currentMapExtentTracker, {
       geofilter: filterSearchOnMapExtent,
-      searchAmps: shouldSearchAMPs,
-      searchRegulatory: shouldSearchRegulatory
+      searchAmps: true,
+      searchRegulatory: true
     })
   }
   const handleSetFilteredRegulatoryThemes = filteredThemes => {
     setFilteredRegulatoryThemes(filteredThemes)
     searchLayers(globalSearchText, filteredThemes, currentMapExtentTracker, {
       geofilter: filterSearchOnMapExtent,
-      searchAmps: shouldSearchAMPs,
-      searchRegulatory: shouldSearchRegulatory
-    })
-  }
-  const handleSetSearchAMPs = state => {
-    setShouldSearchAMPs(state)
-    searchLayers(globalSearchText, filteredRegulatoryThemes, currentMapExtentTracker, {
-      geofilter: filterSearchOnMapExtent,
-      searchAmps: state,
-      searchRegulatory: shouldSearchRegulatory
-    })
-  }
-
-  const handleSetSearchRegulatory = state => {
-    setShouldSearchRegulatory(state)
-    searchLayers(globalSearchText, filteredRegulatoryThemes, currentMapExtentTracker, {
-      geofilter: filterSearchOnMapExtent,
-      searchAmps: shouldSearchAMPs,
-      searchRegulatory: state
+      searchAmps: true,
+      searchRegulatory: true
     })
   }
 
@@ -178,8 +159,8 @@ export function RegulatoryLayerSearch({ isVisible }) {
     }
     searchLayers(globalSearchText, filteredRegulatoryThemes, currentMapExtentTracker, {
       geofilter: !filterSearchOnMapExtent,
-      searchAmps: shouldSearchAMPs,
-      searchRegulatory: shouldSearchRegulatory
+      searchAmps: true,
+      searchRegulatory: true
     })
   }
 
@@ -218,10 +199,6 @@ export function RegulatoryLayerSearch({ isVisible }) {
             filteredRegulatoryThemes={filteredRegulatoryThemes}
             regulatoryThemes={regulatoryThemes}
             setFilteredRegulatoryThemes={handleSetFilteredRegulatoryThemes}
-            setShouldSearchAMPs={handleSetSearchAMPs}
-            setShouldSearchRegulatory={handleSetSearchRegulatory}
-            shouldSearchAMPs={shouldSearchAMPs}
-            shouldSearchRegulatory={shouldSearchRegulatory}
           />
         )}
         <ResultList searchedText={globalSearchText} />

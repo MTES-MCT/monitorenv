@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { toggleMyAmps } from '../../../domain/shared_slices/LayerSidebar'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
-import { AmpLayersList } from './AmpLayersList'
+import { AMPLayersList } from './AMPLayersList'
 
 export function AmpLayers() {
   const dispatch = useDispatch()
@@ -22,7 +22,7 @@ export function AmpLayers() {
         <Title>Mes AMP</Title>
         <ChevronIcon $isOpen={myAmpsIsOpen} $right />
       </AmpLayersTitle>
-      {myAmpsIsOpen && <AmpLayersList />}
+      {myAmpsIsOpen && <AMPLayersList />}
     </>
   )
 }

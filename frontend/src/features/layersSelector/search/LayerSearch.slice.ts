@@ -1,12 +1,16 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 type LayerSearchState = {
   ampsSearchResult: number[] | undefined
+  isAmpSearchResultsVisible: boolean
+  isRegulatorySearchResultsVisible: boolean
   regulatoryLayersSearchResult: number[] | undefined
   searchExtent: number[] | undefined
 }
 const initialState: LayerSearchState = {
   ampsSearchResult: undefined,
+  isAmpSearchResultsVisible: false,
+  isRegulatorySearchResultsVisible: false,
   regulatoryLayersSearchResult: undefined,
   searchExtent: undefined
 }
@@ -27,6 +31,13 @@ const layerSearchSlice = createSlice({
       state.ampsSearchResult = action.payload
     },
 
+    setIsAmpSearchResultsVisible(state, action: PayloadAction<boolean>) {
+      state.isAmpSearchResultsVisible = action.payload
+    },
+
+    setIsRegulatorySearchResultsVisible(state, action: PayloadAction<boolean>) {
+      state.isRegulatorySearchResultsVisible = action.payload
+    },
     /**
      * Set regulatory layers search result structured as
      * LawType: {
@@ -55,7 +66,13 @@ const layerSearchSlice = createSlice({
   }
 })
 
-export const { resetSearchExtent, setAMPsSearchResult, setRegulatoryLayersSearchResult, setSearchExtent } =
-  layerSearchSlice.actions
+export const {
+  resetSearchExtent,
+  setAMPsSearchResult,
+  setIsAmpSearchResultsVisible,
+  setIsRegulatorySearchResultsVisible,
+  setRegulatoryLayersSearchResult,
+  setSearchExtent
+} = layerSearchSlice.actions
 
 export const layerSearchSliceReducer = layerSearchSlice.reducer

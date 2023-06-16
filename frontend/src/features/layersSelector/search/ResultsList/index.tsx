@@ -1,15 +1,24 @@
+import { Checkbox } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 import { useState } from 'react'
 import styled from 'styled-components'
 
-import { useGetAMPsQuery } from '../../../api/ampsAPI'
-import { COLORS } from '../../../constants/constants'
-import { useAppSelector } from '../../../hooks/useAppSelector'
+import { useGetAMPsQuery } from '../../../../api/ampsAPI'
+import { COLORS } from '../../../../constants/constants'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { setIsAmpSearchResultsVisible, setIsRegulatorySearchResultsVisible } from '../LayerSearch.slice'
 import { AMPLayerGroup } from './AMPLayerGroup'
 import { RegulatoryLayerGroup } from './RegulatoryLayerGroup'
 
 export function ResultList({ searchedText }) {
-  const { ampsSearchResult, regulatoryLayersSearchResult } = useAppSelector(state => state.layerSearch)
+  const {
+    ampsSearchResult,
+    isAmpSearchResultsVisible,
+    isRegulatorySearchResultsVisible,
+    regulatoryLayersSearchResult
+  } = useAppSelector(state => state.layerSearch)
+  const dispatch = useAppDispatch()
   const { regulatoryLayersById } = useAppSelector(state => state.regulatory)
   const { data: amps } = useGetAMPsQuery()
 
@@ -24,12 +33,21 @@ export function ResultList({ searchedText }) {
     r => regulatoryLayersById[r]?.properties.layer_name
   )
   const toggleRegulatory = () => {
-    setShowRegulatory(true)
+    setShowRegulatory(!showRegulatory)
     setShowAMPs(false)
   }
   const toggleAMPs = () => {
     setShowRegulatory(false)
-    setShowAMPs(true)
+    setShowAMPs(!showAMPs)
+  }
+
+  const toggleAMPVisibility = () => {
+    setShowAMPs(false)
+    dispatch(setIsAmpSearchResultsVisible(!isAmpSearchResultsVisible))
+  }
+  const toggleRegulatoryVisibility = () => {
+    setShowRegulatory(false)
+    dispatch(setIsRegulatorySearchResultsVisible(!isRegulatorySearchResultsVisible))
   }
 
   return (
@@ -37,6 +55,12 @@ export function ResultList({ searchedText }) {
       {regulatoryLayersSearchResult && (
         <>
           <Header onClick={toggleRegulatory}>
+            <Checkbox
+              checked={isRegulatorySearchResultsVisible}
+              label=""
+              name="isRegulatorySearchResultsVisible"
+              onChange={toggleRegulatoryVisibility}
+            />
             ZONES RÉGLEMENTAIRES{' '}
             <NumberOfResults>({regulatoryLayersSearchResult?.length || '0'} résultats)</NumberOfResults>
           </Header>
@@ -55,7 +79,14 @@ export function ResultList({ searchedText }) {
       {ampsSearchResult && (
         <>
           <HeaderAMP onClick={toggleAMPs}>
-            ZONES AMP <NumberOfResults>( {ampsSearchResult?.length || '0'} résultats)</NumberOfResults>
+            <Checkbox
+              checked={isAmpSearchResultsVisible}
+              label=""
+              name="isAmpSearchResultsVisible"
+              onChange={toggleAMPVisibility}
+            />{' '}
+            ZONES AMP
+            <NumberOfResults>( {ampsSearchResult?.length || '0'} résultats)</NumberOfResults>
           </HeaderAMP>
           <SubList $isExpanded={showAMPs}>
             {Object.entries(ampResulstsByAMPName).map(([ampName, ampIdsInGroup]) => (
@@ -95,7 +126,7 @@ const SubList = styled.ul<{ $isExpanded: boolean }>`
   margin: 0;
   display: ${({ $isExpanded }) => ($isExpanded ? 'block' : 'none')};
   max-height: calc(50vh - 72px);
-  overflow-y: scroll;
+  overflow-y: auto;
 `
 const List = styled.div`
   background: ${COLORS.background};
