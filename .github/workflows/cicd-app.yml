@@ -213,6 +213,7 @@ jobs:
     name: Push to registry
     needs: [version, e2e_test]
     runs-on: ubuntu-22.04
+    if:  startsWith(github.ref, 'refs/heads/dependabot') == false
     env:
       ACTIONS_ALLOW_UNSECURE_COMMANDS: true
       ENV_PROFILE: ${{needs.version.outputs.ENV_PROFILE}}
