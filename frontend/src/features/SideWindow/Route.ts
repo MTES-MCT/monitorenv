@@ -2,7 +2,7 @@ import { matchPath } from 'react-router-dom'
 
 import { useAppSelector } from '../../hooks/useAppSelector'
 
-import type { ReactElement } from 'react-markdown'
+import type { ReactElement } from 'react'
 
 // SideWindowRouter doesn't have a switch behavior (i.e. renders all routes that matches)
 // be careful to write routes that never collides

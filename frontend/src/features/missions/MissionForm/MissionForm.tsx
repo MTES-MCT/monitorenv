@@ -1,6 +1,6 @@
 import { FieldArray, useFormikContext } from 'formik'
 import _ from 'lodash'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
@@ -24,8 +24,11 @@ import { sideWindowActions } from '../../SideWindow/slice'
 
 export function MissionForm({ id, mission, setShouldValidateOnChange }) {
   const dispatch = useDispatch()
-  const { sideWindow } = useAppSelector(state => state)
-  const { dirty, handleSubmit, setFieldValue, validateForm, values } = useFormikContext<Mission>()
+  const {
+    missionState: { missionState },
+    sideWindow
+  } = useAppSelector(state => state)
+  const { dirty, handleSubmit, setFieldValue, setValues, validateForm, values } = useFormikContext<Partial<Mission>>()
 
   useSyncFormValuesWithRedux(setMissionState)
   useUpdateSurveillance()
@@ -121,6 +124,15 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
       cancelForm()
     }
   }
+
+  useEffect(() => {
+    if (!missionState) {
+      dispatch(setMissionState(values))
+    }
+    if (missionState && missionState.id !== values.id) {
+      setValues(missionState)
+    }
+  }, [missionState, setValues, id, dispatch, values])
 
   return (
     <StyledFormContainer>

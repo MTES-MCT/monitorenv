@@ -27,6 +27,14 @@ export function Mission() {
     sideWindow.currentPath
   )
 
+  const isNewMissionRoute = matchPath<'id', string>(
+    {
+      end: true,
+      path: sideWindowPaths.MISSION_NEW
+    },
+    sideWindow.currentPath
+  )
+
   const id = isEditMissionRoute?.params?.id ? parseInt(isEditMissionRoute?.params?.id, 10) : undefined
 
   const { data: missionToEdit } = useGetMissionQuery(id ?? skipToken)
@@ -50,7 +58,7 @@ export function Mission() {
   return (
     <EditMissionWrapper data-cy="editMissionWrapper">
       <Formik
-        enableReinitialize
+        // enableReinitialize
         initialValues={missionFormikValues}
         onSubmit={handleSubmitForm}
         validateOnBlur={false}
@@ -59,7 +67,11 @@ export function Mission() {
         validationSchema={MissionSchema}
       >
         <FormikForm>
-          <MissionForm id={id} mission={missionToEdit} setShouldValidateOnChange={setShouldValidateOnChange} />
+          <MissionForm
+            id={isNewMissionRoute ? Number(isNewMissionRoute?.params?.id) : id}
+            mission={missionToEdit}
+            setShouldValidateOnChange={setShouldValidateOnChange}
+          />
         </FormikForm>
       </Formik>
     </EditMissionWrapper>

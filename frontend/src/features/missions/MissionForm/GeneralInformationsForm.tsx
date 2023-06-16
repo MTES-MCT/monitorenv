@@ -179,7 +179,7 @@ const Title = styled.h2`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 70%;
+  max-width: 60%;
 `
 const StyledTagsContainer = styled.div`
   display: flex;

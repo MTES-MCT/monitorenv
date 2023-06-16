@@ -168,7 +168,6 @@ export function MissionsTableFilters() {
 
   return (
     <>
-      <Title>FILTRER LA LISTE</Title>
       <FilterWrapper ref={unitPickerRef}>
         <StyledSelect
           baseContainer={newWindowContainerRef.current}
@@ -308,10 +307,6 @@ export function MissionsTableFilters() {
     </>
   )
 }
-
-const Title = styled.h2`
-  font-size: 16px;
-`
 
 const FilterWrapper = styled.div`
   display: flex;

@@ -35,6 +35,7 @@
     "@dnd-kit/modifiers": "^4.0.0",
     "@mtes-mct/monitor-ui": "7.4.2",
     "@reduxjs/toolkit": "1.9.5",
+    "@rsuite/responsive-nav": "^5.0.1",
     "@sentry/browser": "7.47.0",
     "@sentry/react": "7.56.0",
     "@sentry/tracing": "7.47.0",

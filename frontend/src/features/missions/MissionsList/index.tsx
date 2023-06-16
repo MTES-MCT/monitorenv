@@ -1,27 +1,35 @@
 import { Button, Icon } from '@mtes-mct/monitor-ui'
 import { useDispatch } from 'react-redux'
+import { generatePath } from 'react-router'
 import styled from 'styled-components'
 
 import { MissionsTableFilters } from './Filters'
 import { MissionsTable } from './MissionsTable'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
+import { setSelectedMissionsIds } from '../../../domain/shared_slices/MultiMissionsState'
+import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useGetFilteredMissionsQuery } from '../../../hooks/useGetFilteredMissionsQuery'
 import { sideWindowActions } from '../../SideWindow/slice'
 
 export function Missions() {
   const dispatch = useDispatch()
 
+  const { selectedMissionsIds } = useAppSelector(state => state.multiMissionsState)
+
   const { isError, isFetching, isLoading, missions } = useGetFilteredMissionsQuery()
+
+  const onAddMission = () => {
+    dispatch(setSelectedMissionsIds({ id: selectedMissionsIds.length + 1, type: 'new' }))
+    dispatch(
+      sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.MISSION_NEW, { id: selectedMissionsIds.length + 1 }))
+    )
+  }
 
   return (
     <StyledMissionsContainer>
       <StyledHeader>
         <Title data-cy="SideWindowHeader-title">Missions et contrôles</Title>
-        <StyledButton
-          data-cy="add-mission"
-          Icon={Icon.Plus}
-          onClick={() => dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSION_NEW))}
-        >
+        <StyledButton data-cy="add-mission" Icon={Icon.Plus} onClick={onAddMission}>
           Ajouter une nouvelle mission
         </StyledButton>
       </StyledHeader>
@@ -52,6 +60,7 @@ const StyledHeader = styled.div`
   display: flex;
   flex-direction: row;
   gap: 32px;
+  margin-bottom: 40px;
 `
 
 const Title = styled.h1`
@@ -62,6 +71,7 @@ const Title = styled.h1`
 
 const NumberOfDisplayedMissions = styled.h3`
   font-size: 13px;
+  margin-top 32px;
 `
 const StyledButton = styled(Button)`
   align-self: center;
