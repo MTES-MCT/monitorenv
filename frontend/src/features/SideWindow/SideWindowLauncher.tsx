@@ -1,13 +1,12 @@
 import { NewWindow, useForceUpdate } from '@mtes-mct/monitor-ui'
 import { MutableRefObject, useCallback, useEffect, useRef } from 'react'
-import { matchPath } from 'react-router'
 import { StyleSheetManager } from 'styled-components'
 
 import { SideWindow } from '.'
-import { SideWindowStatus, sideWindowActions } from './slice'
-import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
+import { editMissionPageRoute, newMissionPageRoute } from '../../utils/isEditOrNewMissionPage'
+import { SideWindowStatus, sideWindowActions } from './slice'
 
 export function SideWindowLauncher() {
   const dispatch = useAppDispatch()
@@ -15,21 +14,9 @@ export function SideWindowLauncher() {
   const { forceUpdate } = useForceUpdate()
 
   const { missionState, sideWindow } = useAppSelector(state => state)
-  const isEditMissionPage = !!matchPath<'id', string>(
-    {
-      end: true,
-      path: sideWindowPaths.MISSION
-    },
-    sideWindow.currentPath
-  )
+  const isEditMissionPage = !!editMissionPageRoute(sideWindow.currentPath)
 
-  const isCreateMissionPage = !!matchPath(
-    {
-      end: true,
-      path: sideWindowPaths.MISSION_NEW
-    },
-    sideWindow.currentPath
-  )
+  const isCreateMissionPage = !!newMissionPageRoute(sideWindow.currentPath)
 
   useEffect(() => {
     forceUpdate()

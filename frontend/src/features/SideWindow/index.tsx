@@ -2,7 +2,7 @@ import { Icon, SideMenu } from '@mtes-mct/monitor-ui'
 import ResponsiveNav from '@rsuite/responsive-nav'
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useState, useRef } from 'react'
 import { useDispatch } from 'react-redux'
-import { generatePath, matchPath } from 'react-router'
+import { generatePath } from 'react-router'
 import { ToastContainer } from 'react-toastify'
 import styled from 'styled-components'
 
@@ -15,6 +15,7 @@ import { switchMission } from '../../domain/use_cases/missions/swithMission'
 import { onNavigateDuringEditingMission } from '../../domain/use_cases/navigation/onNavigateBetweenMapAndSideWindow'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { NewWindowContext } from '../../ui/NewWindow'
+import { editMissionPageRoute, newMissionPageRoute } from '../../utils/isEditOrNewMissionPage'
 import { Mission } from '../missions/MissionForm'
 import { Missions } from '../missions/MissionsList'
 
@@ -28,9 +29,6 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
     sideWindow: { currentPath }
   } = useAppSelector(state => state)
   const [isFirstRender, setIsFirstRender] = useState(true)
-
-  /*   console.log('multiMissionsState', multiMissionsState)
-  console.log(' missionState, selectedMissionId', missionState, selectedMissionId) */
 
   const tabs = useMemo(() => {
     const missionsList = {
@@ -53,8 +51,8 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
 
   const dispatch = useDispatch()
 
-  const onSelectNavItem = async eventKey => {
-    await dispatch(switchMission(eventKey))
+  const onSelectNavItem = eventKey => {
+    dispatch(switchMission(eventKey))
   }
 
   const newWindowContextProviderValue: NewWindowContextValue = useMemo(
@@ -95,27 +93,11 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
                 moreProps={{ noCaret: true }}
                 moreText="plus"
                 onItemRemove={eventKey => {
-                  const editRouteParams = matchPath<'id', string>(
-                    {
-                      end: true,
-                      path: sideWindowPaths.MISSION
-                    },
-                    eventKey as string
-                  )
-                  const newRouteParams = matchPath<'id', string>(
-                    {
-                      end: true,
-                      path: sideWindowPaths.MISSION_NEW
-                    },
-                    eventKey as string
-                  )
+                  const editRouteParams = editMissionPageRoute(eventKey as string)
+                  const newRouteParams = newMissionPageRoute(eventKey as string)
 
-                  const indexToRemove = selectedMissionsIds.findIndex(
-                    mission =>
-                      Number(editRouteParams?.params.id) === mission.id ||
-                      Number(newRouteParams?.params.id) === mission.id
-                  )
-                  dispatch(deleteSelectedMissionId(indexToRemove))
+                  const id = Number(editRouteParams?.params.id) || Number(newRouteParams?.params.id)
+                  dispatch(deleteSelectedMissionId(id))
                 }}
                 onSelect={onSelectNavItem}
                 removable

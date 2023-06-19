@@ -4,15 +4,7 @@ import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { ActionForm } from './ActionForm/ActionForm'
-import { ActionsForm } from './ActionsForm'
-import { GeneralInformationsForm } from './GeneralInformationsForm'
-import { useUpdateSurveillance } from './hooks/useUpdateSurveillance'
-import { MissionFormBottomBar } from './MissionFormBottomBar'
-import { CancelEditModal } from './modals/CancelEditModal'
-import { DeleteModal } from './modals/DeleteModal'
-import { ReopenModal } from './modals/ReopenModal'
-import { Mission, MissionSourceEnum } from '../../../domain/entities/missions'
+import { Mission, MissionSourceEnum, NewMission } from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setToast } from '../../../domain/shared_slices/Global'
 import { setMissionState } from '../../../domain/shared_slices/MissionsState'
@@ -21,6 +13,14 @@ import { deleteMissionAndGoToMissionsList } from '../../../domain/use_cases/miss
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useSyncFormValuesWithRedux } from '../../../hooks/useSyncFormValuesWithRedux'
 import { sideWindowActions } from '../../SideWindow/slice'
+import { ActionForm } from './ActionForm/ActionForm'
+import { ActionsForm } from './ActionsForm'
+import { GeneralInformationsForm } from './GeneralInformationsForm'
+import { useUpdateSurveillance } from './hooks/useUpdateSurveillance'
+import { MissionFormBottomBar } from './MissionFormBottomBar'
+import { CancelEditModal } from './modals/CancelEditModal'
+import { DeleteModal } from './modals/DeleteModal'
+import { ReopenModal } from './modals/ReopenModal'
 
 export function MissionForm({ id, mission, setShouldValidateOnChange }) {
   const dispatch = useDispatch()
@@ -28,7 +28,8 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
     missionState: { missionState },
     sideWindow
   } = useAppSelector(state => state)
-  const { dirty, handleSubmit, setFieldValue, setValues, validateForm, values } = useFormikContext<Partial<Mission>>()
+  const { dirty, handleSubmit, setFieldValue, setValues, validateForm, values } =
+    useFormikContext<Partial<Mission | NewMission>>()
 
   useSyncFormValuesWithRedux(setMissionState)
   useUpdateSurveillance()
@@ -124,15 +125,14 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
       cancelForm()
     }
   }
-
   useEffect(() => {
     if (!missionState) {
       dispatch(setMissionState(values))
-    }
-    if (missionState && missionState.id !== values.id) {
+    } else {
       setValues(missionState)
     }
-  }, [missionState, setValues, id, dispatch, values])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id])
 
   return (
     <StyledFormContainer>

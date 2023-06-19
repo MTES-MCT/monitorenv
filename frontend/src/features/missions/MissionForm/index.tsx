@@ -2,16 +2,15 @@ import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Formik } from 'formik'
 import { useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { matchPath } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { MissionForm } from './MissionForm'
 import { MissionSchema } from './Schemas'
 import { useGetMissionQuery } from '../../../api/missionsAPI'
-import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { createOrEditMission } from '../../../domain/use_cases/missions/createOrEditMission'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { FormikForm } from '../../../uiMonitor/CustomFormikFields/FormikForm'
+import { editMissionPageRoute, newMissionPageRoute } from '../../../utils/isEditOrNewMissionPage'
 import { missionFactory } from '../Missions.helpers'
 
 export function Mission() {
@@ -19,33 +18,21 @@ export function Mission() {
   const dispatch = useDispatch()
   const [shouldValidateOnChange, setShouldValidateOnChange] = useState(false)
 
-  const isEditMissionRoute = matchPath<'id', string>(
-    {
-      end: true,
-      path: sideWindowPaths.MISSION
-    },
-    sideWindow.currentPath
-  )
+  const editMissionRoute = editMissionPageRoute(sideWindow.currentPath)
 
-  const isNewMissionRoute = matchPath<'id', string>(
-    {
-      end: true,
-      path: sideWindowPaths.MISSION_NEW
-    },
-    sideWindow.currentPath
-  )
+  const newMissionRoute = newMissionPageRoute(sideWindow.currentPath)
 
-  const id = isEditMissionRoute?.params?.id ? parseInt(isEditMissionRoute?.params?.id, 10) : undefined
+  const id = editMissionRoute?.params?.id ? parseInt(editMissionRoute?.params?.id, 10) : undefined
 
   const { data: missionToEdit } = useGetMissionQuery(id ?? skipToken)
 
   const missionFormikValues = useMemo(() => {
     if (!id) {
-      return missionFactory()
+      return missionFactory(undefined, Number(newMissionRoute?.params?.id))
     }
 
     return missionFactory(missionToEdit)
-  }, [missionToEdit, id])
+  }, [missionToEdit, newMissionRoute, id])
 
   const handleSubmitForm = values => {
     dispatch(createOrEditMission(values))
@@ -58,7 +45,6 @@ export function Mission() {
   return (
     <EditMissionWrapper data-cy="editMissionWrapper">
       <Formik
-        // enableReinitialize
         initialValues={missionFormikValues}
         onSubmit={handleSubmitForm}
         validateOnBlur={false}
@@ -68,7 +54,7 @@ export function Mission() {
       >
         <FormikForm>
           <MissionForm
-            id={isNewMissionRoute ? Number(isNewMissionRoute?.params?.id) : id}
+            id={newMissionRoute ? Number(newMissionRoute?.params?.id) : id}
             mission={missionToEdit}
             setShouldValidateOnChange={setShouldValidateOnChange}
           />
