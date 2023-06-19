@@ -20,13 +20,17 @@ const multiMissionsStateSlice = createSlice({
   name: 'multiMissionsState',
   reducers: {
     deleteSelectedMissionId(state, action) {
-      state.selectedMissionsIds = [...state.selectedMissionsIds].filter((_, index) => action.payload !== index)
+      state.selectedMissionsIds = [...state.selectedMissionsIds].filter(
+        selectedMission => action.payload !== selectedMission.id
+      )
     },
     setMultiMissionsState(state, action) {
       state.multiMissionsState = action.payload
     },
     setSelectedMissionsIds(state, action) {
-      state.selectedMissionsIds = [...state.selectedMissionsIds, action.payload]
+      if (!state.selectedMissionsIds.find(selectedId => selectedId.id === action.payload.id)) {
+        state.selectedMissionsIds = [...state.selectedMissionsIds, action.payload]
+      }
     }
   }
 })
