@@ -1,57 +1,35 @@
-import { matchPath } from 'react-router'
-
 import { sideWindowActions } from '../../../features/SideWindow/slice'
-import { sideWindowPaths } from '../../entities/sideWindow'
+import { editMissionPageRoute, newMissionPageRoute } from '../../../utils/isEditOrNewMissionPage'
 import { setMissionState, setSelectedMissionId } from '../../shared_slices/MissionsState'
 import { setMultiMissionsState } from '../../shared_slices/MultiMissionsState'
 
-export const switchMission = path => (dispatch, getState) => {
+export const switchMission = path => async (dispatch, getState) => {
   const {
     missionState: { missionState },
-    multiMissionsState: { multiMissionsState },
-    sideWindow: { currentPath }
+    multiMissionsState: { multiMissionsState }
   } = getState()
-  const listRouteParams = matchPath(
-    {
-      end: true,
-      path: sideWindowPaths.MISSIONS
-    },
-    currentPath as string
-  )
-  const editRouteParams = matchPath<'id', string>(
-    {
-      end: true,
-      path: sideWindowPaths.MISSION
-    },
-    path as string
-  )
-  const newRouteParams = matchPath<'id', string>(
-    {
-      end: true,
-      path: sideWindowPaths.MISSION_NEW
-    },
-    path as string
-  )
 
-  const id = Number(editRouteParams?.params.id) || Number(newRouteParams?.params.id)
-
-  if (!listRouteParams) {
-    const missionsUpdated = [...multiMissionsState]
-    const missionIndex = missionsUpdated.findIndex(mission => mission.id === id)
+  const newMissionPage = newMissionPageRoute(path)
+  const editMissionPage = editMissionPageRoute(path)
+  const id = Number(newMissionPage?.params.id) || Number(editMissionPage?.params.id) || undefined
+  const missionsUpdated = [...multiMissionsState]
+  const missionIndex = missionsUpdated.findIndex(mission =>
+    missionState ? mission.id === missionState?.id : mission.id === id
+  )
+  if (missionState) {
     if (missionIndex !== -1) {
       missionsUpdated[missionIndex] = missionState
     } else {
       missionsUpdated.push(missionState)
     }
-    dispatch(setMultiMissionsState(missionsUpdated))
   }
 
-  if (!Number.isNaN(id)) {
-    const newSelectedMission = multiMissionsState.find(mission => mission.id === id)
-    if (newSelectedMission) {
-      dispatch(setSelectedMissionId(newSelectedMission.id))
-      dispatch(setMissionState(newSelectedMission))
-    }
+  const newSelectedMission = multiMissionsState.find(mission => mission.id === id)
+  if (newSelectedMission) {
+    await dispatch(setSelectedMissionId(newSelectedMission.id))
+    await dispatch(setMissionState(newSelectedMission))
   }
-  dispatch(sideWindowActions.setCurrentPath(path))
+
+  await dispatch(setMultiMissionsState(missionsUpdated))
+  await dispatch(sideWindowActions.setCurrentPath(path))
 }
