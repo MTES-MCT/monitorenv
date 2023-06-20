@@ -100,10 +100,10 @@ export const StyledResponsiveNav = styled(ResponsiveNav)`
 `
 
 export const StyledStatus = styled.div<{ color: string }>`
-  height: 12px;
-  width: 12px;
+  height: 8px;
+  width: 8px;
   margin-right: 5px;
   background-color: ${p => p.color};
   border-radius: 50%;
-  display: flex;
+  display: inline-block;
 `

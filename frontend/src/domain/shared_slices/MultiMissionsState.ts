@@ -3,39 +3,29 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { Mission } from '../entities/missions'
 
 type SelectedMission = {
-  id: number
-  type: string
+  mission: Partial<Mission>
+  type: 'new' | 'edit'
+}
+type MultiMissionsStateSliceType = {
+  multiMissionsState: SelectedMission[]
 }
 
-type MultiMissionsStateSliceType = {
-  multiMissionsState: Partial<Mission>[]
-  selectedMissionsIds: SelectedMission[]
-}
 const initialState: MultiMissionsStateSliceType = {
-  multiMissionsState: [],
-  selectedMissionsIds: []
+  multiMissionsState: []
 }
 const multiMissionsStateSlice = createSlice({
   initialState,
   name: 'multiMissionsState',
   reducers: {
-    deleteSelectedMissionId(state, action) {
-      state.selectedMissionsIds = [...state.selectedMissionsIds].filter(
-        selectedMission => action.payload !== selectedMission.id
-      )
+    deleteMissionFromMultiMissionState(state, action) {
+      state.multiMissionsState = [...state.multiMissionsState].filter(mission => action.payload !== mission.mission.id)
     },
     setMultiMissionsState(state, action) {
       state.multiMissionsState = action.payload
-    },
-    setSelectedMissionsIds(state, action) {
-      if (!state.selectedMissionsIds.find(selectedId => selectedId.id === action.payload.id)) {
-        state.selectedMissionsIds = [...state.selectedMissionsIds, action.payload]
-      }
     }
   }
 })
 
-export const { deleteSelectedMissionId, setMultiMissionsState, setSelectedMissionsIds } =
-  multiMissionsStateSlice.actions
+export const { deleteMissionFromMultiMissionState, setMultiMissionsState } = multiMissionsStateSlice.actions
 
 export const multiMissionsStateSliceReducer = multiMissionsStateSlice.reducer
