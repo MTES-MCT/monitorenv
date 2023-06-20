@@ -2,7 +2,7 @@ import { missionsAPI } from '../../../api/missionsAPI'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { sideWindowPaths } from '../../entities/sideWindow'
 import { setToast } from '../../shared_slices/Global'
-import { deleteSelectedMissionId } from '../../shared_slices/MultiMissionsState'
+import { deleteMissionFromMultiMissionState } from '../../shared_slices/MultiMissionsState'
 
 export const deleteMissionAndGoToMissionsList = id => (dispatch, getState) => {
   const { sideWindow } = getState()
@@ -11,7 +11,7 @@ export const deleteMissionAndGoToMissionsList = id => (dispatch, getState) => {
       if ('error' in response) {
         throw Error('Erreur à la suppression de la mission')
       } else {
-        dispatch(deleteSelectedMissionId(id))
+        dispatch(deleteMissionFromMultiMissionState(id))
         dispatch(sideWindowActions.focusAndGoTo(sideWindow.nextPath || sideWindowPaths.MISSIONS))
       }
     })

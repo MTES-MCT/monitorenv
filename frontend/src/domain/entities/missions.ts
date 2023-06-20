@@ -1,5 +1,7 @@
 import { compareDesc, compareAsc, parseISO } from 'date-fns'
 
+import { COLORS } from '../../constants/constants'
+
 import type { ControlUnit } from './controlUnit'
 
 export enum ActionTypeEnum {
@@ -230,18 +232,22 @@ export enum MissionStatusEnum {
 export const missionStatusLabels = {
   CLOSED: {
     code: 'CLOSED',
+    color: COLORS.opal,
     libelle: 'Cloturée'
   },
   ENDED: {
     code: 'ENDED',
+    color: COLORS.charcoal,
     libelle: 'Terminée'
   },
   PENDING: {
     code: 'PENDING',
+    color: COLORS.mediumSeaGreen,
     libelle: 'En cours'
   },
   UPCOMING: {
     code: 'UPCOMING',
+    color: COLORS.blueGray,
     libelle: 'À venir'
   }
 }

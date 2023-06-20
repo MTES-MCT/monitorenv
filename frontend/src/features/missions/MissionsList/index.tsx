@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { MissionsTableFilters } from './Filters'
 import { MissionsTable } from './MissionsTable'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
-import { setSelectedMissionsIds } from '../../../domain/shared_slices/MultiMissionsState'
+import { setMultiMissionsState } from '../../../domain/shared_slices/MultiMissionsState'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useGetFilteredMissionsQuery } from '../../../hooks/useGetFilteredMissionsQuery'
 import { sideWindowActions } from '../../SideWindow/slice'
@@ -14,15 +14,14 @@ import { sideWindowActions } from '../../SideWindow/slice'
 export function Missions() {
   const dispatch = useDispatch()
 
-  const { selectedMissionsIds } = useAppSelector(state => state.multiMissionsState)
+  const { multiMissionsState } = useAppSelector(state => state.multiMissionsState)
 
   const { isError, isFetching, isLoading, missions } = useGetFilteredMissionsQuery()
 
   const onAddMission = () => {
-    dispatch(setSelectedMissionsIds({ id: selectedMissionsIds.length + 1, type: 'new' }))
-    dispatch(
-      sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.MISSION_NEW, { id: selectedMissionsIds.length + 1 }))
-    )
+    const id = multiMissionsState.length + 1
+    dispatch(setMultiMissionsState([...multiMissionsState, { mission: { id }, type: 'new' }]))
+    dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.MISSION_NEW, { id })))
   }
 
   return (

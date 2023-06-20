@@ -21,6 +21,7 @@ const missionStateSlice = createSlice({
     resetSelectedMission(state) {
       return {
         ...state,
+        missionState: undefined,
         selectedMissionId: undefined
       }
     },

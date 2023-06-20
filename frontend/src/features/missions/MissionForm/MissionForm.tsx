@@ -199,7 +199,7 @@ const StyledFormContainer = styled.div`
 `
 
 const Wrapper = styled.div`
-  height: calc(100vh - 68px);
+  height: calc(100vh - 116px);
   display: flex;
   flex-direction: row;
 `

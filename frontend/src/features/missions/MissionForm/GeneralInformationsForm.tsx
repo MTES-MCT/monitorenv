@@ -23,6 +23,7 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { MissionSourceTag } from '../../../ui/MissionSourceTag'
 import { MissionStatusTag } from '../../../ui/MissionStatusTag'
 import { useNewWindow } from '../../../ui/NewWindow'
+import { getMissionTitle } from '../../../utils/getMissionTitle'
 import { newMissionPageRoute } from '../../../utils/isEditOrNewMissionPage'
 import { MultiZonePicker } from '../MultiZonePicker'
 
@@ -43,11 +44,7 @@ export function GeneralInformationsForm() {
   const { sideWindow } = useAppSelector(state => state)
   const isCreateMissionPage = !!newMissionPageRoute(sideWindow.currentPath)
 
-  const title = isCreateMissionPage
-    ? 'Nouvelle mission'
-    : `Mission ${
-        values.missionTypes && values.missionTypes.map(missionType => missionTypeEnum[missionType].libelle).join(' / ')
-      } – ${values.controlUnits.map(controlUnit => controlUnit.name?.replace('(historique)', '')).join(', ')}`
+  const title = getMissionTitle(isCreateMissionPage, values)
 
   return (
     <StyledContainer>

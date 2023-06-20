@@ -1,31 +1,37 @@
-import { Icon, SideMenu } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, SideMenu } from '@mtes-mct/monitor-ui'
 import ResponsiveNav from '@rsuite/responsive-nav'
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useState, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { generatePath } from 'react-router'
 import { ToastContainer } from 'react-toastify'
-import styled from 'styled-components'
 
-import { Route } from './Route'
 import { ErrorBoundary } from '../../components/ErrorBoundary'
-import { COLORS } from '../../constants/constants'
+import { getMissionStatus, missionStatusLabels } from '../../domain/entities/missions'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
-import { deleteSelectedMissionId } from '../../domain/shared_slices/MultiMissionsState'
+import { resetSelectedMission } from '../../domain/shared_slices/MissionsState'
+import { deleteMissionFromMultiMissionState } from '../../domain/shared_slices/MultiMissionsState'
 import { switchMission } from '../../domain/use_cases/missions/swithMission'
-import { onNavigateDuringEditingMission } from '../../domain/use_cases/navigation/onNavigateBetweenMapAndSideWindow'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { NewWindowContext } from '../../ui/NewWindow'
+import { getMissionTitle } from '../../utils/getMissionTitle'
 import { editMissionPageRoute, newMissionPageRoute } from '../../utils/isEditOrNewMissionPage'
 import { Mission } from '../missions/MissionForm'
 import { Missions } from '../missions/MissionsList'
+import { Route } from './Route'
+import { StyledContainer, StyledResponsiveNav, StyledStatus, Wrapper } from './style'
 
 import type { NewWindowContextValue } from '../../ui/NewWindow'
 import type { ForwardedRef, MutableRefObject } from 'react'
 
+function MissionStatus({ mission }) {
+  const status = getMissionStatus(mission)
+
+  return <StyledStatus color={missionStatusLabels[status].color} />
+}
 function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
   const wrapperRef = useRef<HTMLDivElement | null>(null)
   const {
-    multiMissionsState: { selectedMissionsIds },
+    multiMissionsState: { multiMissionsState },
     sideWindow: { currentPath }
   } = useAppSelector(state => state)
   const [isFirstRender, setIsFirstRender] = useState(true)
@@ -37,22 +43,23 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
       label: 'Liste des missions'
     }
 
-    const openingMissions = selectedMissionsIds.map(mission => ({
+    const openingMissions = multiMissionsState.map(mission => ({
       eventKey:
         mission.type === 'edit'
-          ? generatePath(sideWindowPaths.MISSION, { id: mission.id })
-          : generatePath(sideWindowPaths.MISSION_NEW, { id: mission.id }),
-      icon: undefined,
-      label: mission.type === 'edit' ? `Mission ${mission.id}` : 'Nouvelle mission'
+          ? generatePath(sideWindowPaths.MISSION, { id: mission.mission.id })
+          : generatePath(sideWindowPaths.MISSION_NEW, { id: mission.mission.id }),
+      icon: mission.type === 'edit' ? <MissionStatus mission={mission.mission} /> : undefined,
+      label: <span>{getMissionTitle(mission.type === 'new', mission.mission)}</span>
     }))
 
     return [missionsList, ...openingMissions]
-  }, [selectedMissionsIds])
-
+  }, [multiMissionsState])
   const dispatch = useDispatch()
 
   const onSelectNavItem = eventKey => {
-    dispatch(switchMission(eventKey))
+    if (eventKey) {
+      dispatch(switchMission(eventKey))
+    }
   }
 
   const newWindowContextProviderValue: NewWindowContextValue = useMemo(
@@ -81,33 +88,36 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
               <SideMenu.Button
                 Icon={Icon.MissionAction}
                 isActive
-                onClick={() => dispatch(onNavigateDuringEditingMission(generatePath(sideWindowPaths.MISSIONS)))}
+                onClick={() => onSelectNavItem(generatePath(sideWindowPaths.MISSIONS))}
                 title="missions"
               />
             </SideMenu>
 
             <StyledContainer>
-              <StyledResponsiveNav
-                activeKey={currentPath}
-                appearance="tabs"
-                moreProps={{ noCaret: true }}
-                moreText="plus"
-                onItemRemove={eventKey => {
-                  const editRouteParams = editMissionPageRoute(eventKey as string)
-                  const newRouteParams = newMissionPageRoute(eventKey as string)
+              <div style={{ width: '100%' }}>
+                <StyledResponsiveNav
+                  activeKey={currentPath}
+                  appearance="tabs"
+                  moreProps={{ placement: 'bottomEnd' }}
+                  moreText={<IconButton accent={Accent.TERTIARY} Icon={Icon.More} />}
+                  onItemRemove={eventKey => {
+                    const editRouteParams = editMissionPageRoute(eventKey as string)
+                    const newRouteParams = newMissionPageRoute(eventKey as string)
 
-                  const id = Number(editRouteParams?.params.id) || Number(newRouteParams?.params.id)
-                  dispatch(deleteSelectedMissionId(id))
-                }}
-                onSelect={onSelectNavItem}
-                removable
-              >
-                {tabs.map(item => (
-                  <ResponsiveNav.Item key={item.eventKey} eventKey={item.eventKey} icon={item.icon}>
-                    {item.label}
-                  </ResponsiveNav.Item>
-                ))}
-              </StyledResponsiveNav>
+                    const id = Number(editRouteParams?.params.id) || Number(newRouteParams?.params.id)
+                    dispatch(deleteMissionFromMultiMissionState(id))
+                    dispatch(resetSelectedMission())
+                  }}
+                  onSelect={onSelectNavItem}
+                  removable
+                >
+                  {tabs.map(item => (
+                    <ResponsiveNav.Item key={item.eventKey} eventKey={item.eventKey} icon={item.icon}>
+                      {item.label}
+                    </ResponsiveNav.Item>
+                  ))}
+                </StyledResponsiveNav>
+              </div>
               <Route element={<Missions />} path={sideWindowPaths.MISSIONS} />
               <Route element={<Mission />} path={sideWindowPaths.MISSION} />
               <Route element={<Mission />} path={sideWindowPaths.MISSION_NEW} />
@@ -119,66 +129,5 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
     </ErrorBoundary>
   )
 }
-
-const Wrapper = styled.section`
-  background: ${p => p.theme.color.white};
-  display: flex;
-  flex: 1;
-  height: 100%;
-  min-height: 0;
-  min-width: 0;
-
-  @keyframes blink {
-    0% {
-      background: ${COLORS.background};
-    }
-    50% {
-      background: ${COLORS.lightGray};
-    }
-    0% {
-      background: ${COLORS.background};
-    }
-  }
-`
-
-const StyledContainer = styled.section`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  width: calc(100% - 64px);
-`
-const StyledResponsiveNav = styled(ResponsiveNav)`
-  display: flex;
-  > .rs-nav-item {
-
-    border-radius: 0px;
-    display: flex;
-    justify-content: space-between;
-    align-self: start;
-    align-items: center;
-    color: ${p => p.theme.color.slateGray}
-    font-size: 14px;
-
-    &.rs-nav-item-active {
-      background-color: ${p => p.theme.color.blueGray[25]};
-      color: ${p => p.theme.color.gunMetal};
-      font-weight: 500;
-      border-radius: 0px;
-      > .rs-icon {
-        color: ${p => p.theme.color.slateGray} !important;
-      }
-    }
-
-    > .rs-icon {
-      color: ${p => p.theme.color.slateGray};
-    }
-    &:hover {
-      border-radius: 0px;
-    }
-  }
-
-  
-  
-`
 
 export const SideWindow = forwardRef(SideWindowWithRef)
