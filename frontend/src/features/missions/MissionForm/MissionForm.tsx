@@ -44,27 +44,27 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
     setCurrentActionIndex(index)
   }
 
-  const handleReturnToEdition = () => {
+  const returnToEdition = () => {
     dispatch(sideWindowActions.setShowConfirmCancelModal(false))
     dispatch(sideWindowActions.setNextPath(null))
     setDeleteModalIsOpen(false)
     setIsReopenModalOpen(false)
   }
-  const handleDelete = () => {
+  const deleteMission = () => {
     dispatch(deleteMissionAndGoToMissionsList(id))
   }
 
-  const handleDeleteMission = () => {
+  const deleteMissionMission = () => {
     setDeleteModalIsOpen(true)
   }
 
-  const handleCancelForm = () => {
+  const cancelForm = () => {
     dispatch(sideWindowActions.focusAndGoTo(sideWindow.nextPath || sideWindowPaths.MISSIONS))
   }
 
   const allowCloseMission = !mission?.isClosed || !values?.isClosed
 
-  const handleSaveMission = async () => {
+  const saveMission = async () => {
     validateForm().then(errors => {
       if (_.isEmpty(errors)) {
         handleSubmit()
@@ -75,7 +75,7 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
     })
   }
 
-  const handleCloseMission = async () => {
+  const closeMission = async () => {
     await setFieldValue('isClosed', true)
     validateForm().then(errors => {
       if (_.isEmpty(errors)) {
@@ -87,43 +87,43 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
     })
   }
 
-  const handleReopenMission = async () => {
+  const reopenMissionMission = async () => {
     validateForm({ ...values, isClosed: false }).then(errors => {
       if (_.isEmpty(errors)) {
         if (dirty) {
           return setIsReopenModalOpen(true)
         }
 
-        return handleReopen()
+        return reopenMission()
       }
 
       return setShouldValidateOnChange(true)
     })
   }
 
-  const handleReopen = async () => {
+  const reopenMission = async () => {
     dispatch(createOrEditMission({ ...values, isClosed: false }, false))
     setIsReopenMessageVisible(true)
     setIsReopenModalOpen(false)
   }
 
-  const handleConfirmFormCancelation = () => {
+  const confirmFormCancelation = () => {
     if (dirty) {
       dispatch(sideWindowActions.setShowConfirmCancelModal(true))
     } else {
-      handleCancelForm()
+      cancelForm()
     }
   }
 
   return (
     <StyledFormContainer>
       <CancelEditModal
-        onCancel={handleReturnToEdition}
-        onConfirm={handleCancelForm}
+        onCancel={returnToEdition}
+        onConfirm={cancelForm}
         open={sideWindow.showConfirmCancelModal && dirty}
       />
-      <DeleteModal onCancel={handleReturnToEdition} onConfirm={handleDelete} open={deleteModalIsOpen} />
-      <ReopenModal onCancel={handleReturnToEdition} onConfirm={handleReopen} open={isReopenModalOpen} />
+      <DeleteModal onCancel={returnToEdition} onConfirm={deleteMission} open={deleteModalIsOpen} />
+      <ReopenModal onCancel={returnToEdition} onConfirm={reopenMission} open={isReopenModalOpen} />
       <Wrapper>
         <FirstColumn>
           <GeneralInformationsForm />
@@ -164,11 +164,11 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
         allowEdit={allowEditMission}
         isFromMonitorFish={mission?.missionSource === MissionSourceEnum.MONITORFISH}
         isReopenMessageVisible={isReopenMessageVisible}
-        onCloseMission={handleCloseMission}
-        onDeleteMission={handleDeleteMission}
-        onQuitFormEditing={handleConfirmFormCancelation}
-        onReopenMission={handleReopenMission}
-        onSaveMission={handleSaveMission}
+        onCloseMission={closeMission}
+        onDeleteMission={deleteMissionMission}
+        onQuitFormEditing={confirmFormCancelation}
+        onReopenMission={reopenMissionMission}
+        onSaveMission={saveMission}
       />
     </StyledFormContainer>
   )
