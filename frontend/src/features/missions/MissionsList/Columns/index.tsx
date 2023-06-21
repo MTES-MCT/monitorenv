@@ -94,7 +94,7 @@ export const Columns = [
   },
   {
     accessorFn: row => row.id,
-    cell: ({ row }) => <CellEditMission row={row} />,
+    cell: info => <CellEditMission id={info.getValue()} />,
     enableSorting: false,
     header: () => '',
     id: 'edit',

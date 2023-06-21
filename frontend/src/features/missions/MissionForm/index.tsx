@@ -16,6 +16,7 @@ import { missionFactory } from '../Missions.helpers'
 export function Mission() {
   const { sideWindow } = useAppSelector(state => state)
   const dispatch = useDispatch()
+
   const [shouldValidateOnChange, setShouldValidateOnChange] = useState(false)
 
   const editMissionRoute = editMissionPageRoute(sideWindow.currentPath)

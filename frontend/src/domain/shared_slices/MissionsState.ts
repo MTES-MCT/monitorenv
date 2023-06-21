@@ -4,7 +4,7 @@ import type { Mission } from '../entities/missions'
 
 type MissionStateSliceType = {
   isFormDirty: boolean
-  missionState: Partial<Mission> | undefined
+  missionState: Mission | undefined
   selectedMissionId: number | undefined
 }
 const initialState: MissionStateSliceType = {
@@ -21,7 +21,6 @@ const missionStateSlice = createSlice({
     resetSelectedMission(state) {
       return {
         ...state,
-        missionState: undefined,
         selectedMissionId: undefined
       }
     },
@@ -34,7 +33,8 @@ const missionStateSlice = createSlice({
     setMissionState(state, action) {
       return {
         ...state,
-        missionState: action.payload
+        missionState: action.payload,
+        selectedMissionId: action.payload?.id || undefined
       }
     },
     setSelectedMissionId(state, action) {

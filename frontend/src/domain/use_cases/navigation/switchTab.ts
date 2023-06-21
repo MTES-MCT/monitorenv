@@ -1,11 +1,11 @@
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { editMissionPageRoute, newMissionPageRoute } from '../../../utils/isEditOrNewMissionPage'
-import { setMissionState, setSelectedMissionId } from '../../shared_slices/MissionsState'
+import { setMissionState } from '../../shared_slices/MissionsState'
 import { setMultiMissionsState } from '../../shared_slices/MultiMissionsState'
 
-export const switchMission = path => async (dispatch, getState) => {
+export const switchTab = path => async (dispatch, getState) => {
   const {
-    missionState: { missionState },
+    missionState: { isFormDirty, missionState },
     multiMissionsState: { multiMissionsState },
     sideWindow: { currentPath }
   } = getState()
@@ -19,7 +19,11 @@ export const switchMission = path => async (dispatch, getState) => {
   )
 
   if (missionState) {
-    const missionFormatted = { mission: missionState, type: newMissionPageRoute(currentPath) ? 'new' : 'edit' }
+    const missionFormatted = {
+      isFormDirty,
+      mission: missionState,
+      type: newMissionPageRoute(currentPath) ? 'new' : 'edit'
+    }
     if (missionIndex !== -1) {
       missionsUpdated[missionIndex] = missionFormatted
     } else {
@@ -29,7 +33,6 @@ export const switchMission = path => async (dispatch, getState) => {
 
   const newSelectedMission = multiMissionsState.find(mission => mission.mission.id === id)
   if (newSelectedMission) {
-    await dispatch(setSelectedMissionId(newSelectedMission.mission.id))
     await dispatch(setMissionState(newSelectedMission.mission))
   }
 

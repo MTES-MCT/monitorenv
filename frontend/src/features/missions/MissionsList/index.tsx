@@ -1,34 +1,26 @@
 import { Button, Icon } from '@mtes-mct/monitor-ui'
 import { useDispatch } from 'react-redux'
-import { generatePath } from 'react-router'
 import styled from 'styled-components'
 
+import { addMission } from '../../../domain/use_cases/missions/addMission'
+import { useGetFilteredMissionsQuery } from '../../../hooks/useGetFilteredMissionsQuery'
 import { MissionsTableFilters } from './Filters'
 import { MissionsTable } from './MissionsTable'
-import { sideWindowPaths } from '../../../domain/entities/sideWindow'
-import { setMultiMissionsState } from '../../../domain/shared_slices/MultiMissionsState'
-import { useAppSelector } from '../../../hooks/useAppSelector'
-import { useGetFilteredMissionsQuery } from '../../../hooks/useGetFilteredMissionsQuery'
-import { sideWindowActions } from '../../SideWindow/slice'
 
 export function Missions() {
   const dispatch = useDispatch()
 
-  const { multiMissionsState } = useAppSelector(state => state.multiMissionsState)
-
   const { isError, isFetching, isLoading, missions } = useGetFilteredMissionsQuery()
 
-  const onAddMission = () => {
-    const id = multiMissionsState.length + 1
-    dispatch(setMultiMissionsState([...multiMissionsState, { mission: { id }, type: 'new' }]))
-    dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.MISSION_NEW, { id })))
+  const createMission = () => {
+    dispatch(addMission())
   }
 
   return (
     <StyledMissionsContainer>
       <StyledHeader>
         <Title data-cy="SideWindowHeader-title">Missions et contrôles</Title>
-        <StyledButton data-cy="add-mission" Icon={Icon.Plus} onClick={onAddMission}>
+        <StyledButton data-cy="add-mission" Icon={Icon.Plus} onClick={createMission}>
           Ajouter une nouvelle mission
         </StyledButton>
       </StyledHeader>

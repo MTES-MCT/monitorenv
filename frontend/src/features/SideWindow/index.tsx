@@ -8,13 +8,11 @@ import { ToastContainer } from 'react-toastify'
 import { ErrorBoundary } from '../../components/ErrorBoundary'
 import { getMissionStatus, missionStatusLabels } from '../../domain/entities/missions'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
-import { resetSelectedMission } from '../../domain/shared_slices/MissionsState'
-import { deleteMissionFromMultiMissionState } from '../../domain/shared_slices/MultiMissionsState'
-import { switchMission } from '../../domain/use_cases/missions/swithMission'
+import { deleteTab } from '../../domain/use_cases/navigation/deleteTab'
+import { switchTab } from '../../domain/use_cases/navigation/switchTab'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { NewWindowContext } from '../../ui/NewWindow'
 import { getMissionTitle } from '../../utils/getMissionTitle'
-import { editMissionPageRoute, newMissionPageRoute } from '../../utils/isEditOrNewMissionPage'
 import { Mission } from '../missions/MissionForm'
 import { Missions } from '../missions/MissionsList'
 import { Route } from './Route'
@@ -34,6 +32,7 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
     multiMissionsState: { multiMissionsState },
     sideWindow: { currentPath }
   } = useAppSelector(state => state)
+
   const [isFirstRender, setIsFirstRender] = useState(true)
 
   const tabs = useMemo(() => {
@@ -56,9 +55,15 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
   }, [multiMissionsState])
   const dispatch = useDispatch()
 
-  const onSelectNavItem = eventKey => {
+  const selectTab = eventKey => {
     if (eventKey) {
-      dispatch(switchMission(eventKey))
+      dispatch(switchTab(eventKey))
+    }
+  }
+
+  const removeTab = eventKey => {
+    if (eventKey) {
+      dispatch(deleteTab(eventKey))
     }
   }
 
@@ -88,7 +93,7 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
               <SideMenu.Button
                 Icon={Icon.MissionAction}
                 isActive
-                onClick={() => onSelectNavItem(generatePath(sideWindowPaths.MISSIONS))}
+                onClick={() => selectTab(generatePath(sideWindowPaths.MISSIONS))}
                 title="missions"
               />
             </SideMenu>
@@ -100,15 +105,8 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
                   appearance="tabs"
                   moreProps={{ placement: 'bottomEnd' }}
                   moreText={<IconButton accent={Accent.TERTIARY} Icon={Icon.More} />}
-                  onItemRemove={eventKey => {
-                    const editRouteParams = editMissionPageRoute(eventKey as string)
-                    const newRouteParams = newMissionPageRoute(eventKey as string)
-
-                    const id = Number(editRouteParams?.params.id) || Number(newRouteParams?.params.id)
-                    dispatch(deleteMissionFromMultiMissionState(id))
-                    dispatch(resetSelectedMission())
-                  }}
-                  onSelect={onSelectNavItem}
+                  onItemRemove={removeTab}
+                  onSelect={selectTab}
                   removable
                 >
                   {tabs.map(item => (

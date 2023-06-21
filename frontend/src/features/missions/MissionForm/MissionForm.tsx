@@ -2,12 +2,14 @@ import { FieldArray, useFormikContext } from 'formik'
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { generatePath } from 'react-router'
 import styled from 'styled-components'
 
 import { Mission, MissionSourceEnum, NewMission } from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setToast } from '../../../domain/shared_slices/Global'
 import { setMissionState } from '../../../domain/shared_slices/MissionsState'
+import { deleteMissionFromMultiMissionState } from '../../../domain/shared_slices/MultiMissionsState'
 import { createOrEditMission } from '../../../domain/use_cases/missions/createOrEditMission'
 import { deleteMissionAndGoToMissionsList } from '../../../domain/use_cases/missions/deleteMission'
 import { useAppSelector } from '../../../hooks/useAppSelector'
@@ -63,7 +65,9 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
   }
 
   const cancelForm = () => {
-    dispatch(sideWindowActions.focusAndGoTo(sideWindow.nextPath || sideWindowPaths.MISSIONS))
+    dispatch(deleteMissionFromMultiMissionState(id))
+    dispatch(setMissionState(undefined))
+    dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.MISSIONS)))
   }
 
   const allowCloseMission = !mission?.isClosed || !values?.isClosed
@@ -132,7 +136,7 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
       setValues(missionState)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id])
+  }, [id, mission])
 
   return (
     <StyledFormContainer>
