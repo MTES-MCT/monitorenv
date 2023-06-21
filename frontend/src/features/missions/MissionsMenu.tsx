@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { COLORS } from '../../constants/constants'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { setDisplayedItems } from '../../domain/shared_slices/Global'
+import { addMission } from '../../domain/use_cases/missions/addMission'
 import { onNavigateBetweenMapAndSideWindow } from '../../domain/use_cases/navigation/onNavigateBetweenMapAndSideWindow'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { MenuWithCloseButton } from '../commonStyles/map/MenuWithCloseButton'
@@ -26,7 +27,7 @@ export function MissionsMenu() {
     dispatch(setDisplayedItems({ isSearchSemaphoreVisible: false, missionsMenuIsOpen: !missionsMenuIsOpen }))
   }
   const handleAddNewMission = () => {
-    dispatch(onNavigateBetweenMapAndSideWindow(sideWindowPaths.MISSION_NEW))
+    dispatch(addMission())
   }
 
   return (
