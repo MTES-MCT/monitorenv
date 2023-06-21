@@ -3,8 +3,6 @@ import { useFormikContext } from 'formik'
 import _ from 'lodash'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../constants/constants'
-
 import type { Mission } from '../../../domain/entities/missions'
 import type { MouseEventHandler } from 'react'
 
@@ -13,6 +11,7 @@ type MissionFormBottomBarProps = {
   allowDelete: boolean
   allowEdit: boolean
   isFromMonitorFish: boolean
+  isReopenMessageVisible: boolean
   onCloseMission: MouseEventHandler<HTMLButtonElement>
   onDeleteMission: MouseEventHandler<HTMLButtonElement>
   onQuitFormEditing: MouseEventHandler<HTMLButtonElement>
@@ -24,6 +23,7 @@ export function MissionFormBottomBar({
   allowDelete,
   allowEdit,
   isFromMonitorFish,
+  isReopenMessageVisible,
   onCloseMission,
   onDeleteMission,
   onQuitFormEditing,
@@ -65,31 +65,29 @@ export function MissionFormBottomBar({
         <MessageRed data-cy="mission-errors">Veuillez corriger les éléments en rouge</MessageRed>
       )}
       <Separator />
-      {!allowClose && allowEdit && (
-        <MessageRed>Veuillez rouvrir la mission avant d&apos;en modifier les informations.</MessageRed>
-      )}
+      {isReopenMessageVisible && <StyledMessage>La mission a bien été réouverte</StyledMessage>}
+
       <Button accent={Accent.TERTIARY} data-cy="quit-edit-mission" onClick={onQuitFormEditing} type="button">
         Quitter
       </Button>
-      {allowClose && allowEdit && (
-        <StyledButtonsContainer>
+
+      <StyledButtonsContainer>
+        {allowEdit && (
           <Button accent={Accent.PRIMARY} data-cy="save-mission" Icon={Icon.Save} onClick={onSaveMission} type="button">
             Enregistrer et quitter
           </Button>
-          <Button
-            accent={Accent.SECONDARY}
-            data-cy="close-mission"
-            Icon={Icon.Save}
-            onClick={onCloseMission}
-            type="button"
-          >
+        )}
+
+        {allowClose && allowEdit && (
+          <Button accent={Accent.SECONDARY} Icon={Icon.Save} onClick={onCloseMission} type="button">
             Enregistrer et clôturer
           </Button>
-        </StyledButtonsContainer>
-      )}
+        )}
+      </StyledButtonsContainer>
+
       {!allowClose && allowEdit && (
         <Button
-          accent={Accent.PRIMARY}
+          accent={Accent.SECONDARY}
           data-cy="reopen-mission"
           Icon={Icon.Unlock}
           onClick={onReopenMission}
@@ -106,12 +104,18 @@ const Separator = styled.div`
   flex: 1;
 `
 const MessageRed = styled.div`
-  color: ${COLORS.maximumRed};
+  color: ${p => p.theme.color.maximumRed};
+  padding-top: 6px;
+  font-style: italic;
+`
+
+const StyledMessage = styled.div`
+  color: ${p => p.theme.color.mediumSeaGreen};
   padding-top: 6px;
   font-style: italic;
 `
 const Footer = styled.div`
-  border-top: 1px solid ${COLORS.lightGray};
+  border-top: 1px solid ${p => p.theme.color.lightGray};
   padding: 16px;
   gap: 16px;
   display: flex;
@@ -124,7 +128,7 @@ const StyledButtonsContainer = styled.div`
 const StyledButton = styled(Button)`
   :not([disabled]) {
     svg {
-      color: ${COLORS.maximumRed};
+      color: ${p => p.theme.color.maximumRed};
     }
   }
 `

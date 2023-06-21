@@ -1,8 +1,6 @@
-import { Accent, Button } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Dialog } from '@mtes-mct/monitor-ui'
 
-import { Dialog } from '../../uiMonitor/Dialog'
-
-export function MissionDeleteModal({ onCancel, onConfirm, open }) {
+export function DeleteModal({ onCancel, onConfirm, open }) {
   return (
     open && (
       <Dialog isAbsolute>

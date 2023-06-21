@@ -103,7 +103,7 @@ context('Mission', () => {
     cy.get('*[data-cy="edit-mission"]').eq(2).click({ force: true })
     cy.intercept('PUT', `/bff/v1/missions/43`).as('updateMission')
 
-    cy.get('*[data-cy="close-mission"]').click()
+    cy.clickButton('Enregistrer et clôturer')
 
     // Then
     cy.wait('@updateMission').then(({ request, response }) => {

@@ -1,8 +1,7 @@
+import { Dialog } from '@mtes-mct/monitor-ui'
 import { Button } from 'rsuite'
 
-import { Dialog } from '../../uiMonitor/Dialog'
-
-export function MissionCancelEditModal({ onCancel, onConfirm, open }) {
+export function CancelEditModal({ onCancel, onConfirm, open }) {
   return (
     open && (
       <Dialog isAbsolute>

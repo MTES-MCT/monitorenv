@@ -29,6 +29,7 @@ import { ControlUnitsForm } from './ControlUnitsForm'
 
 export function GeneralInformationsForm() {
   const { newWindowContainerRef } = useNewWindow()
+
   const [isClosedField] = useField<boolean>('isClosed')
   const [hasMissionOrderField] = useField<boolean>('hasMissionOrder')
   const [missionSourceField] = useField<MissionSourceEnum>('missionSource')

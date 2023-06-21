@@ -9,7 +9,6 @@ type MissionStateSliceType = {
 }
 const initialState: MissionStateSliceType = {
   isFormDirty: false,
-
   // state of the mission being edited (synced with form)
   missionState: undefined,
   // selectedMissionId on Map
