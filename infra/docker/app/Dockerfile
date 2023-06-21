@@ -51,7 +51,7 @@ RUN npm run build
 # Create final image #
 ######################
 # There is no more JRE with Java 11 : https://stackoverflow.com/a/53733414
-FROM azul/zulu-openjdk-alpine:17
+FROM azul/zulu-openjdk-alpine:17.0.7-17.42.19
 
 ARG VERSION
 ENV VERSION $VERSION
