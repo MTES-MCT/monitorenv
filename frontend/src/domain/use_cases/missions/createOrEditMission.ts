@@ -3,10 +3,11 @@ import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { newMissionPageRoute } from '../../../utils/isEditOrNewMissionPage'
 import { sideWindowPaths } from '../../entities/sideWindow'
 import { setToast } from '../../shared_slices/Global'
+import { setMissionState } from '../../shared_slices/MissionsState'
 import { deleteMissionFromMultiMissionState } from '../../shared_slices/MultiMissionsState'
 
 export const createOrEditMission =
-  (values, redirect = true) =>
+  (values, reopen = false) =>
   (dispatch, getState) => {
     const {
       sideWindow: { currentPath }
@@ -17,10 +18,13 @@ export const createOrEditMission =
     dispatch(upsertMission.initiate(cleanValues))
       .then(response => {
         if ('data' in response) {
-          dispatch(deleteMissionFromMultiMissionState(values.id))
-          if (redirect) {
-            dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSIONS))
+          if (reopen) {
+            dispatch(setMissionState(response.data))
+
+            return
           }
+          dispatch(deleteMissionFromMultiMissionState(values.id))
+          dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSIONS))
         } else {
           throw Error('Erreur à la création ou à la modification de la mission')
         }
