@@ -52,7 +52,6 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
 
   const returnToEdition = () => {
     dispatch(sideWindowActions.setShowConfirmCancelModal(false))
-    dispatch(sideWindowActions.setNextPath(null))
     setDeleteModalIsOpen(false)
     setIsReopenModalOpen(false)
   }

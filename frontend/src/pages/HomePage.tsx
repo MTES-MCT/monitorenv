@@ -25,11 +25,14 @@ export function HomePage() {
     displayMissionMenuButton,
     displaySearchSemaphoreButton
   } = useAppSelector(state => state.global)
-  const { isFormDirty, missionState } = useAppSelector(state => state.missionState)
+  const {
+    missionState: { isFormDirty, missionState },
+    multiMissionsState: { multiMissionsState }
+  } = useAppSelector(state => state)
 
   const beforeUnload = useCallback(
     event => {
-      if (isFormDirty && missionState) {
+      if ((isFormDirty && missionState) || multiMissionsState.find(mission => mission.isFormDirty)) {
         event.preventDefault()
 
         // eslint-disable-next-line no-return-assign, no-param-reassign
@@ -38,7 +41,7 @@ export function HomePage() {
 
       return undefined
     },
-    [isFormDirty, missionState]
+    [multiMissionsState, isFormDirty, missionState]
   )
 
   useBeforeUnload(beforeUnload)

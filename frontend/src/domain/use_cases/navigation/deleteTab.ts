@@ -8,6 +8,7 @@ import { deleteMissionFromMultiMissionState } from '../../shared_slices/MultiMis
 
 export const deleteTab = eventKey => async (dispatch, getState) => {
   const {
+    missionState: { isFormDirty },
     multiMissionsState: { multiMissionsState },
     sideWindow: { currentPath }
   } = getState()
@@ -18,7 +19,7 @@ export const deleteTab = eventKey => async (dispatch, getState) => {
 
   const indexToDelete = multiMissionsState.findIndex(mission => mission.mission.id === id)
 
-  if (multiMissionsState[indexToDelete]?.isFormDirty) {
+  if (multiMissionsState[indexToDelete]?.isFormDirty || isFormDirty) {
     dispatch(setMissionState(multiMissionsState[indexToDelete]?.mission))
     dispatch(sideWindowActions.setShowConfirmCancelModal(true))
     dispatch(

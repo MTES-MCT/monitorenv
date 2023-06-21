@@ -42,7 +42,7 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
       label: 'Liste des missions'
     }
 
-    const openingMissions = multiMissionsState.map(mission => ({
+    const openMissions = multiMissionsState.map(mission => ({
       eventKey:
         mission.type === 'edit'
           ? generatePath(sideWindowPaths.MISSION, { id: mission.mission.id })
@@ -51,7 +51,7 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
       label: <span>{getMissionTitle(mission.type === 'new', mission.mission)}</span>
     }))
 
-    return [missionsList, ...openingMissions]
+    return [missionsList, ...openMissions]
   }, [multiMissionsState])
   const dispatch = useDispatch()
 
