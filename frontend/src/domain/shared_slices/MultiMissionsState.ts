@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { Mission } from '../entities/missions'
 
 type SelectedMission = {
+  isFormDirty: boolean
   mission: Partial<Mission>
   type: 'new' | 'edit'
 }
