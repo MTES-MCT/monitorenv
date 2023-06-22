@@ -4,6 +4,11 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import type { MapToolType } from '../entities/map/constants'
 
+type Toast = {
+  message: any
+  type?: string
+  containerId?: string
+}
 type GlobalStateType = {
   // state entry for every component /menu displayed on map whose visibility should be controlled
   displayMissionMenuButton: boolean
@@ -30,11 +35,11 @@ type GlobalStateType = {
 
   mapToolOpened: MapToolType | undefined
 
-  error: any
-
   healthcheckTextWarning?: string
 
   overlayCoordinates: [number, number] | undefined
+
+  toast: Toast | undefined
 }
 const initialState: GlobalStateType = {
   // state entry for every component /menu displayed on map whose visibility should be controlled
@@ -62,19 +67,23 @@ const initialState: GlobalStateType = {
 
   mapToolOpened: undefined,
 
-  error: null,
-
   healthcheckTextWarning: undefined,
 
-  overlayCoordinates: undefined
+  overlayCoordinates: undefined,
+
+  toast: undefined
 }
 
 const globalSlice = createSlice({
   initialState,
   name: 'global',
   reducers: {
-    removeError(state) {
-      state.error = null
+    removeToast(state) {
+      state.toast = undefined
+    },
+
+    setToast(state, action) {
+      state.toast = action.payload
     },
 
     setDisplayedItems(state, action) {
@@ -86,10 +95,6 @@ const globalSlice = createSlice({
      */
     setMapToolOpened(state, action: PayloadAction<MapToolType | undefined>) {
       state.mapToolOpened = action.payload
-    },
-
-    setError(state, action) {
-      state.error = action.payload
     },
 
     /**
@@ -107,12 +112,12 @@ const globalSlice = createSlice({
 })
 
 export const {
-  removeError,
+  removeToast,
   setDisplayedItems,
-  setError,
   setHealthcheckTextWarning,
   setMapToolOpened,
-  setOverlayCoordinates
+  setOverlayCoordinates,
+  setToast
 } = globalSlice.actions
 
 export const globalReducer = globalSlice.reducer

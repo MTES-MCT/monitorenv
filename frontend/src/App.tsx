@@ -6,7 +6,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { CustomProvider } from 'rsuite'
 
 import { AlertUnsupportedBrowser } from './components/AlertUnsupportedBrowser'
-import { ErrorToastNotification } from './components/ErrorToastNotification'
+import { ToastNotification } from './components/ToastNotification'
 import { SideWindow } from './features/SideWindow'
 import { HomePage } from './pages/HomePage'
 import { homeStore } from './store'
@@ -33,7 +33,7 @@ export function App() {
               </Routes>
             </Router>
 
-            <ErrorToastNotification />
+            <ToastNotification />
           </PersistGate>
         </Provider>
       </CustomProvider>
