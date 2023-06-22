@@ -38,7 +38,7 @@ export const missionWithCentroidStyleFn = feature => {
   const missionStatus = feature.get('missionStatus')
   switch (missionStatus) {
     case MissionStatusEnum.UPCOMING:
-      return missionWithCentroidStyleFactory(COLORS.blueGray)
+      return missionWithCentroidStyleFactory(COLORS.yellowGreen)
     case MissionStatusEnum.PENDING:
       return missionWithCentroidStyleFactory(COLORS.mediumSeaGreen)
     case MissionStatusEnum.ENDED:
