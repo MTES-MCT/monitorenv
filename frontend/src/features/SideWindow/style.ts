@@ -29,11 +29,10 @@ export const StyledContainer = styled.section`
 `
 export const StyledResponsiveNav = styled(ResponsiveNav)`
   display: flex;
-  height: 48px;
   box-shadow: 0px 3px 4px #7077854d;
+  height: 48px;
   > .rs-nav-item {
     width: 360px;
-    height: 48px;
     border-radius: 0px !important;
     color: ${p => p.theme.color.slateGray};
     font-size: 14px;
@@ -63,6 +62,7 @@ export const StyledResponsiveNav = styled(ResponsiveNav)`
     }
     &:hover {
       border-radius: 0px !important;
+      background-color: ${p => p.theme.color.blueYonder[25]};
     }
     &:first-child {
       > svg {
@@ -82,7 +82,7 @@ export const StyledResponsiveNav = styled(ResponsiveNav)`
       > .rs-dropdown-item {
         color: ${p => p.theme.color.slateGray};
         &:hover {
-          background-color: #e5e5ea;
+          background-color: ${p => p.theme.color.blueYonder[25]};
         }
         &.rs-dropdown-item-active {
           background-color: ${p => p.theme.color.blueGray[25]};
@@ -97,10 +97,11 @@ export const StyledResponsiveNav = styled(ResponsiveNav)`
 `
 
 export const StyledStatus = styled.div<{ color: string }>`
-  height: 8px;
-  width: 8px;
+  height: 12px;
+  width: 12px;
   margin-right: 5px;
   background-color: ${p => p.color};
   border-radius: 50%;
-  display: inline-block;
+  display: flex;
+  flex-basis: 14px;
 `
