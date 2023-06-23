@@ -2,7 +2,6 @@ import { generatePath } from 'react-router'
 
 import { missionsAPI } from '../../../api/missionsAPI'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
-import { newMissionPageRoute } from '../../../utils/isEditOrNewMissionPage'
 import { sideWindowPaths } from '../../entities/sideWindow'
 import { setError } from '../../shared_slices/Global'
 import { setMissionState } from '../../shared_slices/MissionsState'
@@ -11,8 +10,7 @@ import { setMultiMissionsState } from '../../shared_slices/MultiMissionsState'
 export const editMission = missionId => (dispatch, getState) => {
   const {
     missionState: { isFormDirty, missionState },
-    multiMissionsState: { multiMissionsState },
-    sideWindow: { currentPath }
+    multiMissionsState: { multiMissionsState }
   } = getState()
 
   const missionToEdit = missionsAPI.endpoints.getMission
@@ -24,12 +22,15 @@ export const editMission = missionId => (dispatch, getState) => {
         const missions = [...multiMissionsState]
         const missionToSave = missionState || response.data
 
+        const missionStateIndex = missions.findIndex(mission => mission.mission.id === missionState.id)
+
         const missionIndex = missions.findIndex(mission => mission.mission.id === missionToSave.id)
         const missionFormatted = {
           isFormDirty: missionState ? isFormDirty : false,
           mission: missionToSave,
-          type: newMissionPageRoute(currentPath) ? 'new' : 'edit'
+          type: missionState && missionStateIndex !== -1 ? missions[missionStateIndex].type : 'edit'
         }
+
         if (missionIndex !== -1) {
           missions[missionIndex] = missionFormatted
         } else {

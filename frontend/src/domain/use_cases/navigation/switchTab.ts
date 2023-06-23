@@ -6,8 +6,7 @@ import { setMultiMissionsState } from '../../shared_slices/MultiMissionsState'
 export const switchTab = path => async (dispatch, getState) => {
   const {
     missionState: { isFormDirty, missionState },
-    multiMissionsState: { multiMissionsState },
-    sideWindow: { currentPath }
+    multiMissionsState: { multiMissionsState }
   } = getState()
 
   const newMissionPage = newMissionPageRoute(path)
@@ -22,7 +21,7 @@ export const switchTab = path => async (dispatch, getState) => {
     const missionFormatted = {
       isFormDirty,
       mission: missionState,
-      type: newMissionPageRoute(currentPath) ? 'new' : 'edit'
+      type: missionsUpdated[missionIndex].type
     }
     if (missionIndex !== -1) {
       missionsUpdated[missionIndex] = missionFormatted

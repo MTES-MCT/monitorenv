@@ -81,6 +81,9 @@ export const StyledResponsiveNav = styled(ResponsiveNav)`
     > .rs-dropdown-menu {
       > .rs-dropdown-item {
         color: ${p => p.theme.color.slateGray};
+        display: flex;
+        flex-direction: row;
+        align-items: center;
         &:hover {
           background-color: ${p => p.theme.color.blueYonder[25]};
         }
@@ -103,5 +106,4 @@ export const StyledStatus = styled.div<{ color: string }>`
   background-color: ${p => p.color};
   border-radius: 50%;
   display: flex;
-  flex-basis: 14px;
 `

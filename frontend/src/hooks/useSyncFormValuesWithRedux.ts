@@ -22,7 +22,5 @@ export const useSyncFormValuesWithRedux = (setMissionState: ActionCreatorWithPay
 
   useEffect(() => {
     dispatchFormUpdate(values)
-
-    return () => dispatchFormUpdate(null)
   }, [values, dispatchFormUpdate])
 }

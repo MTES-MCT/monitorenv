@@ -24,7 +24,11 @@ import type { ForwardedRef, MutableRefObject } from 'react'
 function MissionStatus({ mission }) {
   const status = getMissionStatus(mission)
 
-  return <StyledStatus color={missionStatusLabels[status].color} />
+  return (
+    <div>
+      <StyledStatus color={missionStatusLabels[status].color} />
+    </div>
+  )
 }
 function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
   const wrapperRef = useRef<HTMLDivElement | null>(null)

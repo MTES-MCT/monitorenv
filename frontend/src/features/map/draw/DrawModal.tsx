@@ -29,7 +29,7 @@ import { ReactComponent as CircleSVG } from '../../../uiMonitor/icons/Info.svg'
 import { ReactComponent as PolygonSVG } from '../../../uiMonitor/icons/Polygone.svg'
 import { ReactComponent as RectangleSVG } from '../../../uiMonitor/icons/Rectangle.svg'
 import { ReactComponent as SelectorSVG } from '../../../uiMonitor/icons/Selector.svg'
-import { editMissionPageRoute } from '../../../utils/isEditOrNewMissionPage'
+import { editMissionPageRoute, newMissionPageRoute } from '../../../utils/isEditOrNewMissionPage'
 import { SideWindowStatus } from '../../SideWindow/slice'
 
 import type { MultiPoint, MultiPolygon } from 'ol/geom'
@@ -54,7 +54,11 @@ export function DrawModal() {
 
   const initialFeatureNumberRef = useRef<number | undefined>(undefined)
 
-  const routeParams = editMissionPageRoute(sideWindow.currentPath)
+  const editRouteParams = editMissionPageRoute(sideWindow.currentPath)
+
+  const newRouteParams = newMissionPageRoute(sideWindow.currentPath)
+
+  const routeParams = editRouteParams || newRouteParams
 
   const previousMissionId = usePrevious(routeParams?.params?.id)
 
