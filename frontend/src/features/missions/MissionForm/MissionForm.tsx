@@ -128,11 +128,12 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
       cancelForm()
     }
   }
+
   useEffect(() => {
     if (!missionState) {
       dispatch(setMissionState(values))
     } else {
-      setValues(missionState)
+      setValues(missionState, false)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, mission])

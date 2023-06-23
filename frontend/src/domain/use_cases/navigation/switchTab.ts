@@ -17,6 +17,7 @@ export const switchTab = path => async (dispatch, getState) => {
     missionState ? mission.mission.id === missionState?.id : mission.mission.id === id
   )
 
+  // We want to save the active form before switching on another
   if (missionState) {
     const missionFormatted = {
       isFormDirty,

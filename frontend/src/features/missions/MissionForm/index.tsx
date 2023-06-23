@@ -33,7 +33,9 @@ export function Mission() {
     }
 
     return missionFactory(missionToEdit)
-  }, [missionToEdit, newMissionRoute, id])
+    // to prevent re-render
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleSubmitForm = values => {
     dispatch(createOrEditMission(values))
@@ -46,6 +48,7 @@ export function Mission() {
   return (
     <EditMissionWrapper data-cy="editMissionWrapper">
       <Formik
+        enableReinitialize
         initialValues={missionFormikValues}
         onSubmit={handleSubmitForm}
         validateOnBlur={false}

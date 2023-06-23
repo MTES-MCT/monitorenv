@@ -24,6 +24,7 @@ export const createOrEditMission =
             return
           }
           dispatch(deleteMissionFromMultiMissionState(values.id))
+          dispatch(setMissionState(undefined))
           dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSIONS))
         } else {
           throw Error('Erreur à la création ou à la modification de la mission')

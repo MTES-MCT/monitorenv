@@ -22,15 +22,14 @@ export const editMission = missionId => (dispatch, getState) => {
         const missions = [...multiMissionsState]
         const missionToSave = missionState || response.data
 
-        const missionStateIndex = missions.findIndex(mission => mission.mission.id === missionState.id)
-
-        const missionIndex = missions.findIndex(mission => mission.mission.id === missionToSave.id)
+        const missionStateIndex = missions.findIndex(mission => mission.mission.id === missionState?.id)
         const missionFormatted = {
           isFormDirty: missionState ? isFormDirty : false,
           mission: missionToSave,
           type: missionState && missionStateIndex !== -1 ? missions[missionStateIndex].type : 'edit'
         }
 
+        const missionIndex = missions.findIndex(mission => mission.mission.id === missionToSave.id)
         if (missionIndex !== -1) {
           missions[missionIndex] = missionFormatted
         } else {
