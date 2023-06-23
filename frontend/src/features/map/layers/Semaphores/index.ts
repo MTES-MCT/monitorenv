@@ -19,6 +19,7 @@ export function SemaphoresLayer({ map, mapClickEvent }: MapChildrenProps) {
   const { displaySemaphoresLayer } = useAppSelector(state => state.global)
   const { selectedSemaphoreId } = useAppSelector(state => state.semaphoresSlice)
   const { overlayCoordinates } = useAppSelector(state => state.global)
+  const listener = useAppSelector(state => state.draw.listener)
 
   const { data: semaphores } = useGetSemaphoresQuery()
 
@@ -79,8 +80,8 @@ export function SemaphoresLayer({ map, mapClickEvent }: MapChildrenProps) {
   }, [semaphoresPoint])
 
   useEffect(() => {
-    GetVectorLayer()?.setVisible(displaySemaphoresLayer)
-  }, [displaySemaphoresLayer, GetVectorLayer])
+    GetVectorLayer()?.setVisible(displaySemaphoresLayer && !listener)
+  }, [displaySemaphoresLayer, GetVectorLayer, listener])
 
   useEffect(() => {
     if (mapClickEvent?.feature) {
