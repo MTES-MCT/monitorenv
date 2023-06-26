@@ -14,6 +14,7 @@ const DEFAULT_TOAST_OPTIONS: ToastOptions = {
   position: 'bottom-right'
 }
 
+// todo use monitor-ui component
 export function ToastNotification() {
   const { toast } = useAppSelector(state => state.global)
 

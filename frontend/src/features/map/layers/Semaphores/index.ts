@@ -80,6 +80,8 @@ export function SemaphoresLayer({ map, mapClickEvent }: MapChildrenProps) {
   }, [semaphoresPoint])
 
   useEffect(() => {
+    // we don't want to display semaphores on the map if the user so decides (displaySemaphoresLayer variable)
+    // or if user edits a surveillance zone or a control point (listener variable)
     GetVectorLayer()?.setVisible(displaySemaphoresLayer && !listener)
   }, [displaySemaphoresLayer, GetVectorLayer, listener])
 

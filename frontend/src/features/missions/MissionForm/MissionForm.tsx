@@ -87,7 +87,7 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
     })
   }
 
-  const reopenMission = async () => {
+  const reopenMission = () => {
     validateForm({ ...values, isClosed: false }).then(errors => {
       if (_.isEmpty(errors)) {
         if (dirty) {
@@ -103,7 +103,7 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
   }
 
   const validateReopenMission = async () => {
-    dispatch(createOrEditMission({ ...values, isClosed: false }, false))
+    await dispatch(createOrEditMission({ ...values, isClosed: false }, false))
     dispatch(
       setToast({
         containerId: 'sideWindow',
