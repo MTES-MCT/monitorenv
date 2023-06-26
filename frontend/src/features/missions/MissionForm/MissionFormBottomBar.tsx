@@ -11,7 +11,6 @@ type MissionFormBottomBarProps = {
   allowDelete: boolean
   allowEdit: boolean
   isFromMonitorFish: boolean
-  isReopenMessageVisible: boolean
   onCloseMission: MouseEventHandler<HTMLButtonElement>
   onDeleteMission: MouseEventHandler<HTMLButtonElement>
   onQuitFormEditing: MouseEventHandler<HTMLButtonElement>
@@ -23,7 +22,6 @@ export function MissionFormBottomBar({
   allowDelete,
   allowEdit,
   isFromMonitorFish,
-  isReopenMessageVisible,
   onCloseMission,
   onDeleteMission,
   onQuitFormEditing,
@@ -65,7 +63,6 @@ export function MissionFormBottomBar({
         <MessageRed data-cy="mission-errors">Veuillez corriger les éléments en rouge</MessageRed>
       )}
       <Separator />
-      {isReopenMessageVisible && <StyledMessage>La mission a bien été réouverte</StyledMessage>}
 
       <Button accent={Accent.TERTIARY} data-cy="quit-edit-mission" onClick={onQuitFormEditing} type="button">
         Quitter
@@ -109,11 +106,6 @@ const MessageRed = styled.div`
   font-style: italic;
 `
 
-const StyledMessage = styled.div`
-  color: ${p => p.theme.color.mediumSeaGreen};
-  padding-top: 6px;
-  font-style: italic;
-`
 const Footer = styled.div`
   border-top: 1px solid ${p => p.theme.color.lightGray};
   padding: 16px;

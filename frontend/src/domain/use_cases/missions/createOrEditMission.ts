@@ -1,7 +1,7 @@
 import { missionsAPI } from '../../../api/missionsAPI'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { sideWindowPaths } from '../../entities/sideWindow'
-import { setError } from '../../shared_slices/Global'
+import { setToast } from '../../shared_slices/Global'
 
 export const createOrEditMission =
   (values, redirect = true) =>
@@ -18,8 +18,6 @@ export const createOrEditMission =
         }
       })
       .catch(error => {
-        // eslint-disable-next-line no-param-reassign
-        error.containerId = 'sideWindow'
-        dispatch(setError(error))
+        dispatch(setToast({ containerId: 'sideWindow', message: error }))
       })
   }

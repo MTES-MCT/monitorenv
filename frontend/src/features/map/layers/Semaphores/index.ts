@@ -19,6 +19,7 @@ export function SemaphoresLayer({ map, mapClickEvent }: MapChildrenProps) {
   const { displaySemaphoresLayer } = useAppSelector(state => state.global)
   const { selectedSemaphoreId } = useAppSelector(state => state.semaphoresSlice)
   const { overlayCoordinates } = useAppSelector(state => state.global)
+  const listener = useAppSelector(state => state.draw.listener)
 
   const { data: semaphores } = useGetSemaphoresQuery()
 
@@ -79,8 +80,10 @@ export function SemaphoresLayer({ map, mapClickEvent }: MapChildrenProps) {
   }, [semaphoresPoint])
 
   useEffect(() => {
-    GetVectorLayer()?.setVisible(displaySemaphoresLayer)
-  }, [displaySemaphoresLayer, GetVectorLayer])
+    // we don't want to display semaphores on the map if the user so decides (displaySemaphoresLayer variable)
+    // or if user edits a surveillance zone or a control point (listener variable)
+    GetVectorLayer()?.setVisible(displaySemaphoresLayer && !listener)
+  }, [displaySemaphoresLayer, GetVectorLayer, listener])
 
   useEffect(() => {
     if (mapClickEvent?.feature) {
