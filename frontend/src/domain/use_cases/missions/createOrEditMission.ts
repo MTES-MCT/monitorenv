@@ -1,6 +1,6 @@
 import { missionsAPI } from '../../../api/missionsAPI'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
-import { newMissionPageRoute } from '../../../utils/isEditOrNewMissionPage'
+import { getMissionPageRoute } from '../../../utils/getMissionPageRoute'
 import { sideWindowPaths } from '../../entities/sideWindow'
 import { setToast } from '../../shared_slices/Global'
 import { setMissionState } from '../../shared_slices/MissionsState'
@@ -12,7 +12,9 @@ export const createOrEditMission =
     const {
       sideWindow: { currentPath }
     } = getState()
-    const isNewMission = !!newMissionPageRoute(currentPath)
+    const routeParams = getMissionPageRoute(currentPath)
+    const isNewMission = !!routeParams?.params?.id && routeParams?.params?.id.includes('new-')
+
     const cleanValues = isNewMission ? { ...values, id: undefined } : values
     const upsertMission = isNewMission ? missionsAPI.endpoints.createMission : missionsAPI.endpoints.updateMission
     try {

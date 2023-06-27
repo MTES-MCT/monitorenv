@@ -64,7 +64,8 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
   }
 
   const cancelForm = () => {
-    dispatch(multiMissionsActions.deleteSelectedMission(id))
+    const idToDelete = id.includes('new-') ? id : parseInt(id, 10)
+    dispatch(multiMissionsActions.deleteSelectedMission(idToDelete))
     dispatch(setMissionState(undefined))
     dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.MISSIONS)))
   }
@@ -110,7 +111,7 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
   }
 
   const validateReopenMission = async () => {
-    await dispatch(createOrEditMission({ ...values, isClosed: false }, false))
+    await dispatch(createOrEditMission({ ...values, isClosed: false }, true))
     dispatch(
       setToast({
         containerId: 'sideWindow',

@@ -1,7 +1,7 @@
 import { generatePath } from 'react-router'
 
 import { sideWindowActions } from '../../../features/SideWindow/slice'
-import { editMissionPageRoute, newMissionPageRoute } from '../../../utils/isEditOrNewMissionPage'
+import { getMissionPageRoute } from '../../../utils/getMissionPageRoute'
 import { sideWindowPaths } from '../../entities/sideWindow'
 import { setMissionState } from '../../shared_slices/MissionsState'
 import { multiMissionsActions } from '../../shared_slices/MultiMissions'
@@ -13,10 +13,11 @@ export const deleteTab = nextPath => async (dispatch, getState) => {
     sideWindow: { currentPath }
   } = getState()
 
-  const editRouteParams = editMissionPageRoute(nextPath as string)
-  const newRouteParams = newMissionPageRoute(nextPath as string)
-  const id = Number(editRouteParams?.params.id) || Number(newRouteParams?.params.id)
-
+  const routeParams = getMissionPageRoute(nextPath as string)
+  const id =
+    routeParams?.params.id && routeParams?.params.id.includes('new-')
+      ? routeParams?.params.id
+      : parseInt(routeParams?.params.id || '', 10)
   const indexToDelete = selectedMissions.findIndex(mission => mission.mission.id === id)
 
   // We want to close the tab with a form that has changes
@@ -25,7 +26,7 @@ export const deleteTab = nextPath => async (dispatch, getState) => {
     dispatch(sideWindowActions.setShowConfirmCancelModal(true))
     dispatch(
       sideWindowActions.setCurrentPath(
-        generatePath(newRouteParams ? sideWindowPaths.MISSION_NEW : sideWindowPaths.MISSION, {
+        generatePath(sideWindowPaths.MISSION, {
           id: selectedMissions[indexToDelete]?.mission.id
         })
       )
@@ -47,7 +48,7 @@ export const deleteTab = nextPath => async (dispatch, getState) => {
       dispatch(setMissionState(previousMission.mission))
       dispatch(
         sideWindowActions.setCurrentPath(
-          generatePath(previousMission.type === 'new' ? sideWindowPaths.MISSION_NEW : sideWindowPaths.MISSION, {
+          generatePath(sideWindowPaths.MISSION, {
             id: previousMission?.mission.id
           })
         )

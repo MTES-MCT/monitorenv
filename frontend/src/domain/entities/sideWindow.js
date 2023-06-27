@@ -11,6 +11,5 @@ export const sideWindowMenu = {
 export const sideWindowPaths = {
   HOME: '/',
   MISSION: '/mission/:id',
-  MISSION_NEW: '/new-mission/:id',
   MISSIONS: '/missions'
 }

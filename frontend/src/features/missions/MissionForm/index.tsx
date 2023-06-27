@@ -10,7 +10,7 @@ import { useGetMissionQuery } from '../../../api/missionsAPI'
 import { createOrEditMission } from '../../../domain/use_cases/missions/createOrEditMission'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { FormikForm } from '../../../uiMonitor/CustomFormikFields/FormikForm'
-import { editMissionPageRoute, newMissionPageRoute } from '../../../utils/isEditOrNewMissionPage'
+import { getMissionPageRoute } from '../../../utils/getMissionPageRoute'
 import { missionFactory } from '../Missions.helpers'
 
 export function Mission() {
@@ -19,23 +19,21 @@ export function Mission() {
 
   const [shouldValidateOnChange, setShouldValidateOnChange] = useState(false)
 
-  const editMissionRoute = editMissionPageRoute(sideWindow.currentPath)
+  const routeParams = getMissionPageRoute(sideWindow.currentPath)
 
-  const newMissionRoute = newMissionPageRoute(sideWindow.currentPath)
-
-  const id = editMissionRoute?.params?.id ? parseInt(editMissionRoute?.params?.id, 10) : undefined
+  const id = !routeParams?.params?.id?.includes('new-') ? parseInt(routeParams?.params?.id || '', 10) : undefined
 
   const { data: missionToEdit } = useGetMissionQuery(id ?? skipToken)
 
   const missionFormikValues = useMemo(() => {
     if (!id) {
-      return missionFactory(undefined, Number(newMissionRoute?.params?.id))
+      return missionFactory(undefined, routeParams?.params?.id)
     }
 
     return missionFactory(missionToEdit)
     // to prevent re-render
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id])
+  }, [])
 
   const handleSubmitForm = values => {
     dispatch(createOrEditMission(values))
@@ -58,7 +56,7 @@ export function Mission() {
       >
         <FormikForm>
           <MissionForm
-            id={newMissionRoute ? Number(newMissionRoute?.params?.id) : id}
+            id={routeParams?.params?.id}
             mission={missionToEdit}
             setShouldValidateOnChange={setShouldValidateOnChange}
           />

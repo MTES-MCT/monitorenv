@@ -62,7 +62,10 @@ export const actionFactory = ({
   }
 }
 
-export const missionFactory = (mission?: Mission | undefined, id?: number | undefined): Mission | NewMission => {
+export const missionFactory = (
+  mission?: Mission | undefined,
+  id?: number | string | undefined
+): Mission | NewMission => {
   const startDate = new Date()
   startDate.setSeconds(0, 0)
 

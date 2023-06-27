@@ -16,17 +16,14 @@ export const addMission = () => async (dispatch, getState) => {
 
   const maxNewMissionId = _.chain(missions)
     .filter(newMission => newMission.type === 'new')
-    .maxBy(filteredNewMission => filteredNewMission.mission.id)
+    .maxBy(filteredNewMission => filteredNewMission.mission.id.split('new-')[1])
     .value()
 
-  const id = maxNewMissionId && maxNewMissionId.mission.id ? maxNewMissionId.mission.id + 1 : 1
+  const id = maxNewMissionId && maxNewMissionId.mission.id ? `new-${maxNewMissionId.mission.id + 1}` : 'new-1'
 
-  const missionsUpdated = [
-    ...missions,
-    { isFormDirty: false, mission: missionFactory(undefined, Number(id)), type: 'new' }
-  ]
+  const missionsUpdated = [...missions, { isFormDirty: false, mission: missionFactory(undefined, id), type: 'new' }]
 
   await dispatch(multiMissionsActions.setSelectedMissions(missionsUpdated))
 
-  dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.MISSION_NEW, { id })))
+  dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.MISSION, { id })))
 }

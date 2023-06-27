@@ -1,5 +1,5 @@
 import { sideWindowActions } from '../../../features/SideWindow/slice'
-import { editMissionPageRoute, newMissionPageRoute } from '../../../utils/isEditOrNewMissionPage'
+import { getMissionPageRoute } from '../../../utils/getMissionPageRoute'
 import { setMissionState } from '../../shared_slices/MissionsState'
 import { multiMissionsActions } from '../../shared_slices/MultiMissions'
 
@@ -9,9 +9,11 @@ export const switchTab = path => async (dispatch, getState) => {
     multiMissions: { selectedMissions }
   } = getState()
 
-  const newMissionPage = newMissionPageRoute(path)
-  const editMissionPage = editMissionPageRoute(path)
-  const id = Number(newMissionPage?.params.id) || Number(editMissionPage?.params.id) || undefined
+  const routeParams = getMissionPageRoute(path)
+  const id =
+    routeParams?.params.id && routeParams?.params.id.includes('new-')
+      ? routeParams?.params.id
+      : parseInt(routeParams?.params.id || '', 10)
   const missionsUpdated = [...selectedMissions]
   const missionIndex = missionsUpdated.findIndex(mission =>
     missionState ? mission.mission.id === missionState?.id : mission.mission.id === id

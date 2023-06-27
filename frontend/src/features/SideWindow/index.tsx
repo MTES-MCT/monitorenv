@@ -49,10 +49,7 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
     const openMissions = selectedMissions.map(mission => ({
       icon: mission.type === 'edit' ? <MissionStatus mission={mission.mission} /> : undefined,
       label: <span>{getMissionTitle(mission.type === 'new', mission.mission)}</span>,
-      nextPath:
-        mission.type === 'edit'
-          ? generatePath(sideWindowPaths.MISSION, { id: mission.mission.id })
-          : generatePath(sideWindowPaths.MISSION_NEW, { id: mission.mission.id })
+      nextPath: generatePath(sideWindowPaths.MISSION, { id: mission.mission.id })
     }))
 
     return [missionsList, ...openMissions]
@@ -122,7 +119,6 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
               </div>
               <Route element={<Missions />} path={sideWindowPaths.MISSIONS} />
               <Route element={<Mission />} path={sideWindowPaths.MISSION} />
-              <Route element={<Mission />} path={sideWindowPaths.MISSION_NEW} />
             </StyledContainer>
           </NewWindowContext.Provider>
         )}

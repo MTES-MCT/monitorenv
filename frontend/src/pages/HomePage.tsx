@@ -30,13 +30,13 @@ export function HomePage() {
     multiMissions: { selectedMissions }
   } = useAppSelector(state => state)
 
-  const hasSelectedMissionsDirty = useMemo(
+  const hasAtLeastOneMissionFormDirty = useMemo(
     () => selectedMissions.find(mission => mission.isFormDirty),
     [selectedMissions]
   )
   const beforeUnload = useCallback(
     event => {
-      if ((isFormDirty && missionState) || hasSelectedMissionsDirty) {
+      if ((isFormDirty && missionState) || hasAtLeastOneMissionFormDirty) {
         event.preventDefault()
 
         // eslint-disable-next-line no-return-assign, no-param-reassign
@@ -45,7 +45,7 @@ export function HomePage() {
 
       return undefined
     },
-    [hasSelectedMissionsDirty, isFormDirty, missionState]
+    [hasAtLeastOneMissionFormDirty, isFormDirty, missionState]
   )
 
   useBeforeUnload(beforeUnload)
