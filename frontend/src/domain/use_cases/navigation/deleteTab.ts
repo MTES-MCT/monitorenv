@@ -4,29 +4,29 @@ import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { editMissionPageRoute, newMissionPageRoute } from '../../../utils/isEditOrNewMissionPage'
 import { sideWindowPaths } from '../../entities/sideWindow'
 import { setMissionState } from '../../shared_slices/MissionsState'
-import { deleteMissionFromMultiMissionState } from '../../shared_slices/MultiMissionsState'
+import { multiMissionsActions } from '../../shared_slices/MultiMissions'
 
-export const deleteTab = eventKey => async (dispatch, getState) => {
+export const deleteTab = nextPath => async (dispatch, getState) => {
   const {
     missionState: { isFormDirty },
-    multiMissionsState: { multiMissionsState },
+    multiMissions: { selectedMissions },
     sideWindow: { currentPath }
   } = getState()
 
-  const editRouteParams = editMissionPageRoute(eventKey as string)
-  const newRouteParams = newMissionPageRoute(eventKey as string)
+  const editRouteParams = editMissionPageRoute(nextPath as string)
+  const newRouteParams = newMissionPageRoute(nextPath as string)
   const id = Number(editRouteParams?.params.id) || Number(newRouteParams?.params.id)
 
-  const indexToDelete = multiMissionsState.findIndex(mission => mission.mission.id === id)
+  const indexToDelete = selectedMissions.findIndex(mission => mission.mission.id === id)
 
   // We want to close the tab with a form that has changes
-  if (multiMissionsState[indexToDelete]?.isFormDirty || (multiMissionsState.length === 1 && isFormDirty)) {
-    dispatch(setMissionState(multiMissionsState[indexToDelete]?.mission))
+  if (selectedMissions[indexToDelete]?.isFormDirty || (selectedMissions.length === 1 && isFormDirty)) {
+    dispatch(setMissionState(selectedMissions[indexToDelete]?.mission))
     dispatch(sideWindowActions.setShowConfirmCancelModal(true))
     dispatch(
       sideWindowActions.setCurrentPath(
         generatePath(newRouteParams ? sideWindowPaths.MISSION_NEW : sideWindowPaths.MISSION, {
-          id: multiMissionsState[indexToDelete]?.mission.id
+          id: selectedMissions[indexToDelete]?.mission.id
         })
       )
     )
@@ -34,16 +34,16 @@ export const deleteTab = eventKey => async (dispatch, getState) => {
     return
   }
 
-  dispatch(deleteMissionFromMultiMissionState(id))
+  dispatch(multiMissionsActions.deleteSelectedMission(id))
 
   // We want to close the tab with a form that has no changes
-  if (eventKey === currentPath) {
+  if (nextPath === currentPath) {
     // we want to redirect to missions list
     if (indexToDelete === 0) {
       dispatch(setMissionState(undefined))
       dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.MISSIONS)))
     } else {
-      const previousMission = multiMissionsState[indexToDelete - 1]
+      const previousMission = selectedMissions[indexToDelete - 1]
       dispatch(setMissionState(previousMission.mission))
       dispatch(
         sideWindowActions.setCurrentPath(

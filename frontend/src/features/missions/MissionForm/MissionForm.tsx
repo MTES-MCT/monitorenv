@@ -9,7 +9,7 @@ import { Mission, MissionSourceEnum, NewMission } from '../../../domain/entities
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setToast } from '../../../domain/shared_slices/Global'
 import { setMissionState } from '../../../domain/shared_slices/MissionsState'
-import { deleteMissionFromMultiMissionState } from '../../../domain/shared_slices/MultiMissionsState'
+import { multiMissionsActions } from '../../../domain/shared_slices/MultiMissions'
 import { createOrEditMission } from '../../../domain/use_cases/missions/createOrEditMission'
 import { deleteMissionAndGoToMissionsList } from '../../../domain/use_cases/missions/deleteMission'
 import { useAppSelector } from '../../../hooks/useAppSelector'
@@ -64,7 +64,7 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
   }
 
   const cancelForm = () => {
-    dispatch(deleteMissionFromMultiMissionState(id))
+    dispatch(multiMissionsActions.deleteSelectedMission(id))
     dispatch(setMissionState(undefined))
     dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.MISSIONS)))
   }

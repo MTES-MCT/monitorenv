@@ -33,7 +33,7 @@ function MissionStatus({ mission }) {
 function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
   const wrapperRef = useRef<HTMLDivElement | null>(null)
   const {
-    multiMissionsState: { multiMissionsState },
+    multiMissions: { selectedMissions },
     sideWindow: { currentPath }
   } = useAppSelector(state => state)
 
@@ -41,33 +41,33 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
 
   const tabs = useMemo(() => {
     const missionsList = {
-      eventKey: sideWindowPaths.MISSIONS,
       icon: <Icon.Summary size={16} />,
-      label: 'Liste des missions'
+      label: 'Liste des missions',
+      nextPath: sideWindowPaths.MISSIONS
     }
 
-    const openMissions = multiMissionsState.map(mission => ({
-      eventKey:
+    const openMissions = selectedMissions.map(mission => ({
+      icon: mission.type === 'edit' ? <MissionStatus mission={mission.mission} /> : undefined,
+      label: <span>{getMissionTitle(mission.type === 'new', mission.mission)}</span>,
+      nextPath:
         mission.type === 'edit'
           ? generatePath(sideWindowPaths.MISSION, { id: mission.mission.id })
-          : generatePath(sideWindowPaths.MISSION_NEW, { id: mission.mission.id }),
-      icon: mission.type === 'edit' ? <MissionStatus mission={mission.mission} /> : undefined,
-      label: <span>{getMissionTitle(mission.type === 'new', mission.mission)}</span>
+          : generatePath(sideWindowPaths.MISSION_NEW, { id: mission.mission.id })
     }))
 
     return [missionsList, ...openMissions]
-  }, [multiMissionsState])
+  }, [selectedMissions])
   const dispatch = useDispatch()
 
-  const selectTab = eventKey => {
-    if (eventKey) {
-      dispatch(switchTab(eventKey))
+  const selectTab = nextPath => {
+    if (nextPath) {
+      dispatch(switchTab(nextPath))
     }
   }
 
-  const removeTab = eventKey => {
-    if (eventKey) {
-      dispatch(deleteTab(eventKey))
+  const removeTab = nextPath => {
+    if (nextPath) {
+      dispatch(deleteTab(nextPath))
     }
   }
 
@@ -114,7 +114,7 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
                   removable
                 >
                   {tabs.map(item => (
-                    <ResponsiveNav.Item key={item.eventKey} eventKey={item.eventKey} icon={item.icon}>
+                    <ResponsiveNav.Item key={item.nextPath} eventKey={item.nextPath} icon={item.icon}>
                       {item.label}
                     </ResponsiveNav.Item>
                   ))}

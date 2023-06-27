@@ -1,6 +1,5 @@
+import { THEME } from '@mtes-mct/monitor-ui'
 import { compareDesc, compareAsc, parseISO } from 'date-fns'
-
-import { COLORS } from '../../constants/constants'
 
 import type { ControlUnit } from './controlUnit'
 
@@ -232,22 +231,22 @@ export enum MissionStatusEnum {
 export const missionStatusLabels = {
   CLOSED: {
     code: 'CLOSED',
-    color: COLORS.opal,
+    color: THEME.color.opal,
     libelle: 'Cloturée'
   },
   ENDED: {
     code: 'ENDED',
-    color: COLORS.charcoal,
+    color: THEME.color.charcoal,
     libelle: 'Terminée'
   },
   PENDING: {
     code: 'PENDING',
-    color: COLORS.mediumSeaGreen,
+    color: THEME.color.mediumSeaGreen,
     libelle: 'En cours'
   },
   UPCOMING: {
     code: 'UPCOMING',
-    color: COLORS.blueGray,
+    color: THEME.color.blueGray[100],
     libelle: 'À venir'
   }
 }

@@ -5,13 +5,13 @@ import { missionFactory } from '../../../features/missions/Missions.helpers'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { sideWindowPaths } from '../../entities/sideWindow'
 import { setMissionState } from '../../shared_slices/MissionsState'
-import { setMultiMissionsState } from '../../shared_slices/MultiMissionsState'
+import { multiMissionsActions } from '../../shared_slices/MultiMissions'
 
 export const addMission = () => async (dispatch, getState) => {
   const {
-    multiMissionsState: { multiMissionsState }
+    multiMissions: { selectedMissions }
   } = getState()
-  const missions = [...multiMissionsState]
+  const missions = [...selectedMissions]
   dispatch(setMissionState(undefined))
 
   const maxNewMissionId = _.chain(missions)
@@ -26,7 +26,7 @@ export const addMission = () => async (dispatch, getState) => {
     { isFormDirty: false, mission: missionFactory(undefined, Number(id)), type: 'new' }
   ]
 
-  await dispatch(setMultiMissionsState(missionsUpdated))
+  await dispatch(multiMissionsActions.setSelectedMissions(missionsUpdated))
 
   dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.MISSION_NEW, { id })))
 }

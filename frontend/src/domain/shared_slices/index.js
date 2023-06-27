@@ -9,7 +9,7 @@ import { mapSliceReducer } from './Map'
 import { measurementSlicePersistedReducer } from './Measurement'
 import { missionFiltersPersistedReducer } from './MissionFilters'
 import { missionStateSliceReducer } from './MissionsState'
-import { multiMissionsStateSliceReducer } from './MultiMissionsState'
+import { multiMissionsSliceReducer } from './MultiMissions'
 import { regulatorySlicePersistedReducer } from './Regulatory'
 import { regulatoryMetadataSliceReducer } from './RegulatoryMetadata'
 import { semaphoresPersistedReducer } from './SemaphoresSlice'
@@ -32,7 +32,7 @@ export const homeReducers = combineReducers({
   measurement: measurementSlicePersistedReducer,
   missionFilters: missionFiltersPersistedReducer,
   missionState: missionStateSliceReducer,
-  multiMissionsState: multiMissionsStateSliceReducer,
+  multiMissions: multiMissionsSliceReducer,
   regulatory: regulatorySlicePersistedReducer,
   regulatoryLayerSearch: regulatoryLayerSearchSliceReducer,
   [regulatoryLayersAPI.reducerPath]: regulatoryLayersAPI.reducer,

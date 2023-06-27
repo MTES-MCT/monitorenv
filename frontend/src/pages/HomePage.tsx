@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useBeforeUnload } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import styled from 'styled-components'
@@ -27,12 +27,16 @@ export function HomePage() {
   } = useAppSelector(state => state.global)
   const {
     missionState: { isFormDirty, missionState },
-    multiMissionsState: { multiMissionsState }
+    multiMissions: { selectedMissions }
   } = useAppSelector(state => state)
 
+  const hasSelectedMissionsDirty = useMemo(
+    () => selectedMissions.find(mission => mission.isFormDirty),
+    [selectedMissions]
+  )
   const beforeUnload = useCallback(
     event => {
-      if ((isFormDirty && missionState) || multiMissionsState.find(mission => mission.isFormDirty)) {
+      if ((isFormDirty && missionState) || hasSelectedMissionsDirty) {
         event.preventDefault()
 
         // eslint-disable-next-line no-return-assign, no-param-reassign
@@ -41,7 +45,7 @@ export function HomePage() {
 
       return undefined
     },
-    [multiMissionsState, isFormDirty, missionState]
+    [hasSelectedMissionsDirty, isFormDirty, missionState]
   )
 
   useBeforeUnload(beforeUnload)

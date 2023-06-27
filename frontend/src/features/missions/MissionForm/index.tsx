@@ -35,7 +35,7 @@ export function Mission() {
     return missionFactory(missionToEdit)
     // to prevent re-render
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [id])
 
   const handleSubmitForm = values => {
     dispatch(createOrEditMission(values))

@@ -3,7 +3,7 @@ import { MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react
 import { StyleSheetManager } from 'styled-components'
 
 import { SideWindow } from '.'
-import { setMultiMissionsState } from '../../domain/shared_slices/MultiMissionsState'
+import { multiMissionsActions } from '../../domain/shared_slices/MultiMissions'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { editMissionPageRoute, newMissionPageRoute } from '../../utils/isEditOrNewMissionPage'
@@ -16,7 +16,7 @@ export function SideWindowLauncher() {
 
   const {
     missionState,
-    multiMissionsState: { multiMissionsState },
+    multiMissions: { selectedMissions },
     sideWindow
   } = useAppSelector(state => state)
   const isEditMissionPage = !!editMissionPageRoute(sideWindow.currentPath)
@@ -36,8 +36,8 @@ export function SideWindowLauncher() {
   )
 
   const isMissionsFormsAreDirty = useMemo(
-    () => !!multiMissionsState.find(mission => mission.isFormDirty),
-    [multiMissionsState]
+    () => !!selectedMissions.find(mission => mission.isFormDirty),
+    [selectedMissions]
   )
 
   if (sideWindow.status === SideWindowStatus.CLOSED) {
@@ -54,7 +54,7 @@ export function SideWindowLauncher() {
         onChangeFocus={onChangeFocus}
         onUnload={() => {
           dispatch(sideWindowActions.close())
-          dispatch(setMultiMissionsState([]))
+          dispatch(multiMissionsActions.setSelectedMissions([]))
         }}
         shouldHaveFocus={sideWindow.status === SideWindowStatus.VISIBLE}
         showPrompt={(isEditMissionPage || isCreateMissionPage) && (isMissionsFormsAreDirty || missionState.isFormDirty)}
