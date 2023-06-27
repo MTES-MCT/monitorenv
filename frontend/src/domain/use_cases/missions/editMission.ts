@@ -30,6 +30,7 @@ export const editMission = missionId => async (dispatch, getState) => {
       }
 
       const missionIndex = missions.findIndex(mission => mission.mission.id === missionToSave.id)
+
       if (missionIndex !== -1) {
         missions[missionIndex] = missionFormatted
       } else {
@@ -47,6 +48,7 @@ export const editMission = missionId => async (dispatch, getState) => {
           mission: response.data,
           type: 'edit'
         }
+
         if (newMissionIndex !== -1) {
           missions[newMissionIndex] = {
             ...missionFormatted,
