@@ -44,10 +44,10 @@ export function RegulatoryLayerGroup({ groupName, layers }) {
 
   return (
     <>
-      <LayerSelector.LayerGroup onClick={toggleZonesAreOpen}>
-        <LayerSelector.LayerGroupName data-cy="regulatory-layer-topic" title={groupName}>
+      <LayerSelector.GroupWrapper onClick={toggleZonesAreOpen}>
+        <LayerSelector.GroupName data-cy="regulatory-layer-topic" title={groupName}>
           {groupName}
-        </LayerSelector.LayerGroupName>
+        </LayerSelector.GroupName>
         <LayerSelector.IconGroup>
           <Tag accent={Accent.PRIMARY}>{`${layers?.length}`}</Tag>
           <IconButton
@@ -70,12 +70,12 @@ export function RegulatoryLayerGroup({ groupName, layers }) {
             title="Supprimer la/les zone(s) de ma sélection"
           />
         </LayerSelector.IconGroup>
-      </LayerSelector.LayerGroup>
-      <LayerSelector.LayersWrapper isOpen={zonesAreOpen || metadataIsShowed} length={layers?.length}>
+      </LayerSelector.GroupWrapper>
+      <LayerSelector.GroupList isOpen={zonesAreOpen || metadataIsShowed} length={layers?.length}>
         {layers?.map(regulatoryZone => (
           <RegulatoryLayerZone key={regulatoryZone.id} regulatoryZone={regulatoryZone} />
         ))}
-      </LayerSelector.LayersWrapper>
+      </LayerSelector.GroupList>
     </>
   )
 }

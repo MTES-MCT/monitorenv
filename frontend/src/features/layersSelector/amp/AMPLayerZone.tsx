@@ -43,7 +43,7 @@ export function AMPLayerZone({ amp, isDisplayed }: { amp: AMP; isDisplayed: bool
   return (
     <LayerSelector.Layer>
       <RegulatoryLayerLegend entity_name={amp?.name} thematique={amp?.designation} />
-      <LayerSelector.LayerName title={displayedName}>{displayedName}</LayerSelector.LayerName>
+      <LayerSelector.Name title={displayedName}>{displayedName}</LayerSelector.Name>
       <LayerSelector.IconGroup>
         <IconButton
           accent={Accent.TERTIARY}

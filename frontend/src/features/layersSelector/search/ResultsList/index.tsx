@@ -1,29 +1,31 @@
 import { Checkbox } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
-import { useState } from 'react'
 import styled from 'styled-components'
 
 import { useGetAMPsQuery } from '../../../../api/ampsAPI'
-import { COLORS } from '../../../../constants/constants'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { setIsAmpSearchResultsVisible, setIsRegulatorySearchResultsVisible } from '../LayerSearch.slice'
+import {
+  setIsAmpSearchResultsExpanded,
+  setIsAmpSearchResultsVisible,
+  setIsRegulatorySearchResultsExpanded,
+  setIsRegulatorySearchResultsVisible
+} from '../LayerSearch.slice'
 import { AMPLayerGroup } from './AMPLayerGroup'
 import { RegulatoryLayerGroup } from './RegulatoryLayerGroup'
 
 export function ResultList({ searchedText }) {
   const {
     ampsSearchResult,
+    isAmpSearchResultsExpanded,
     isAmpSearchResultsVisible,
+    isRegulatorySearchResultsExpanded,
     isRegulatorySearchResultsVisible,
     regulatoryLayersSearchResult
   } = useAppSelector(state => state.layerSearch)
   const dispatch = useAppDispatch()
   const { regulatoryLayersById } = useAppSelector(state => state.regulatory)
   const { data: amps } = useGetAMPsQuery()
-
-  const [showRegulatory, setShowRegulatory] = useState<boolean>(true)
-  const [showAMPs, setShowAMPs] = useState<boolean>(true)
 
   const ampsByAMPName = _.groupBy(amps?.entities, a => a?.name)
   const ampResulstsByAMPName = _.groupBy(ampsSearchResult, a => amps?.entities[a]?.name)
@@ -33,20 +35,26 @@ export function ResultList({ searchedText }) {
     r => regulatoryLayersById[r]?.properties.layer_name
   )
   const toggleRegulatory = () => {
-    setShowRegulatory(!showRegulatory)
-    setShowAMPs(false)
+    if (!isRegulatorySearchResultsVisible) {
+      dispatch(setIsRegulatorySearchResultsVisible(true))
+    }
+    dispatch(setIsRegulatorySearchResultsExpanded(!isRegulatorySearchResultsExpanded))
+    dispatch(setIsAmpSearchResultsExpanded(false))
   }
   const toggleAMPs = () => {
-    setShowRegulatory(false)
-    setShowAMPs(!showAMPs)
+    if (!isAmpSearchResultsVisible) {
+      dispatch(setIsAmpSearchResultsVisible(true))
+    }
+    dispatch(setIsRegulatorySearchResultsExpanded(false))
+    dispatch(setIsAmpSearchResultsExpanded(!isAmpSearchResultsExpanded))
   }
 
   const toggleAMPVisibility = () => {
-    setShowAMPs(false)
+    dispatch(setIsAmpSearchResultsExpanded(false))
     dispatch(setIsAmpSearchResultsVisible(!isAmpSearchResultsVisible))
   }
   const toggleRegulatoryVisibility = () => {
-    setShowRegulatory(false)
+    dispatch(setIsRegulatorySearchResultsExpanded(false))
     dispatch(setIsRegulatorySearchResultsVisible(!isRegulatorySearchResultsVisible))
   }
 
@@ -54,17 +62,19 @@ export function ResultList({ searchedText }) {
     <List>
       {regulatoryLayersSearchResult && (
         <>
-          <Header onClick={toggleRegulatory}>
+          <Header>
             <Checkbox
               checked={isRegulatorySearchResultsVisible}
               label=""
               name="isRegulatorySearchResultsVisible"
               onChange={toggleRegulatoryVisibility}
             />
-            ZONES RÉGLEMENTAIRES &nbsp;
-            <NumberOfResults>({regulatoryLayersSearchResult?.length || '0'} résultats)</NumberOfResults>
+            <Title onClick={toggleRegulatory}>
+              ZONES RÉGLEMENTAIRES &nbsp;
+              <NumberOfResults>({regulatoryLayersSearchResult?.length || '0'} résultats)</NumberOfResults>
+            </Title>
           </Header>
-          <SubList $isExpanded={showRegulatory}>
+          <SubList $isExpanded={isRegulatorySearchResultsExpanded}>
             {Object.entries(regulatoryLayersByLayerName).map(([layerGroupName, layerIdsInGroup]) => (
               <RegulatoryLayerGroup
                 key={layerGroupName}
@@ -78,16 +88,18 @@ export function ResultList({ searchedText }) {
       )}
       {ampsSearchResult && (
         <>
-          <HeaderAMP onClick={toggleAMPs}>
+          <HeaderAMP>
             <Checkbox
               checked={isAmpSearchResultsVisible}
               label=""
               name="isAmpSearchResultsVisible"
               onChange={toggleAMPVisibility}
             />
-            ZONES AMP &nbsp;<NumberOfResults> ({ampsSearchResult?.length || '0'} résultats)</NumberOfResults>
+            <Title onClick={toggleAMPs}>
+              ZONES AMP &nbsp;<NumberOfResults> ({ampsSearchResult?.length || '0'} résultats)</NumberOfResults>
+            </Title>
           </HeaderAMP>
-          <SubList $isExpanded={showAMPs}>
+          <SubListAMP $isExpanded={isAmpSearchResultsExpanded}>
             {Object.entries(ampResulstsByAMPName).map(([ampName, ampIdsInGroup]) => (
               <AMPLayerGroup
                 key={ampName}
@@ -97,7 +109,7 @@ export function ResultList({ searchedText }) {
                 searchedText={searchedText}
               />
             ))}
-          </SubList>
+          </SubListAMP>
         </>
       )}
     </List>
@@ -111,14 +123,16 @@ const Header = styled.div`
   font-weight: bold;
   cursor: pointer;
   height: 36px;
-  color: ${COLORS.gunMetal};
-  border-bottom: 1px solid ${COLORS.lightGray};
+  color: ${p => p.theme.color.gunMetal};
+  border-bottom: 1px solid ${p => p.theme.color.lightGray};
 `
+const Title = styled.div``
+
 const HeaderAMP = styled(Header)`
-  background: ${COLORS.ampBackground};
+  background: ${p => p.theme.color.chineseRed}1A;
 `
 const NumberOfResults = styled.span`
-  color: ${COLORS.slateGray};
+  color: ${p => p.theme.color.slateGray};
   font-weight: normal;
 `
 const SubList = styled.ul<{ $isExpanded: boolean }>`
@@ -127,13 +141,17 @@ const SubList = styled.ul<{ $isExpanded: boolean }>`
   display: ${({ $isExpanded }) => ($isExpanded ? 'block' : 'none')};
   max-height: calc(50vh - 72px);
   overflow-y: auto;
+  background: ${p => p.theme.color.white};
+`
+const SubListAMP = styled(SubList)`
+  background: ${p => p.theme.color.chineseRed}1A;
 `
 const List = styled.div`
-  background: ${COLORS.background};
+  background: ${p => p.theme.color.white};
   border-radius: 0;
   max-height: 50vh;
-  color: ${COLORS.slateGray};
+  color: ${p => p.theme.color.slateGray};
   transition: 0.5s all;
-  border-top: 2px solid ${COLORS.lightGray};
+  border-top: 2px solid ${p => p.theme.color.lightGray};
   overflow-y: hidden;
 `

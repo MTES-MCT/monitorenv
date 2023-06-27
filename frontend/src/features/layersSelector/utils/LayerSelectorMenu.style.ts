@@ -29,7 +29,7 @@ const Pin = styled(Icon.Pin)`
   margin-top: 2px;
 `
 
-export const LayerType = {
+export const LayerSelectorMenu = {
   Pin,
   Title,
   Wrapper

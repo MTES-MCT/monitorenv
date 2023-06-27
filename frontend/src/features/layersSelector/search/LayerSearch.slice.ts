@@ -2,14 +2,18 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 type LayerSearchState = {
   ampsSearchResult: number[] | undefined
+  isAmpSearchResultsExpanded: boolean
   isAmpSearchResultsVisible: boolean
+  isRegulatorySearchResultsExpanded: boolean
   isRegulatorySearchResultsVisible: boolean
   regulatoryLayersSearchResult: number[] | undefined
   searchExtent: number[] | undefined
 }
 const initialState: LayerSearchState = {
   ampsSearchResult: undefined,
+  isAmpSearchResultsExpanded: false,
   isAmpSearchResultsVisible: false,
+  isRegulatorySearchResultsExpanded: false,
   isRegulatorySearchResultsVisible: false,
   regulatoryLayersSearchResult: undefined,
   searchExtent: undefined
@@ -31,8 +35,15 @@ const layerSearchSlice = createSlice({
       state.ampsSearchResult = action.payload
     },
 
+    setIsAmpSearchResultsExpanded(state, action: PayloadAction<boolean>) {
+      state.isAmpSearchResultsExpanded = action.payload
+    },
+
     setIsAmpSearchResultsVisible(state, action: PayloadAction<boolean>) {
       state.isAmpSearchResultsVisible = action.payload
+    },
+    setIsRegulatorySearchResultsExpanded(state, action: PayloadAction<boolean>) {
+      state.isRegulatorySearchResultsExpanded = action.payload
     },
 
     setIsRegulatorySearchResultsVisible(state, action: PayloadAction<boolean>) {
@@ -69,7 +80,9 @@ const layerSearchSlice = createSlice({
 export const {
   resetSearchExtent,
   setAMPsSearchResult,
+  setIsAmpSearchResultsExpanded,
   setIsAmpSearchResultsVisible,
+  setIsRegulatorySearchResultsExpanded,
   setIsRegulatorySearchResultsVisible,
   setRegulatoryLayersSearchResult,
   setSearchExtent

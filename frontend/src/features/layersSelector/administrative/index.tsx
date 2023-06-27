@@ -5,7 +5,7 @@ import { administrativeLayers } from '../../../domain/entities/administrativeLay
 import { toggleAdministrativeZones } from '../../../domain/shared_slices/LayerSidebar'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
-import { LayerType } from '../utils/LayerType.style'
+import { LayerSelectorMenu } from '../utils/LayerSelectorMenu.style'
 import { AdministrativeLayer } from './AdministrativeLayer'
 
 export function AdministrativeLayers() {
@@ -18,14 +18,14 @@ export function AdministrativeLayers() {
 
   return (
     <>
-      <LayerType.Wrapper
+      <LayerSelectorMenu.Wrapper
         $isExpanded={administrativeZonesIsOpen}
         data-cy="administrative-zones-open"
         onClick={onSectionTitleClicked}
       >
-        <LayerType.Title>Zones administratives</LayerType.Title>
+        <LayerSelectorMenu.Title>Zones administratives</LayerSelectorMenu.Title>
         <ChevronIcon $isOpen={administrativeZonesIsOpen} $right />
-      </LayerType.Wrapper>
+      </LayerSelectorMenu.Wrapper>
       {administrativeLayers && administrativeLayers.length ? (
         <ZonesList showZones={administrativeZonesIsOpen} zonesLength={administrativeLayers.length}>
           {administrativeLayers.map(layers => {

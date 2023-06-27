@@ -62,7 +62,7 @@ export function RegulatoryLayerZone({ regulatoryZone }) {
         entity_name={regulatoryZone?.properties?.entity_name}
         thematique={regulatoryZone?.properties?.thematique}
       />
-      <LayerSelector.LayerName title={displayedName}>{displayedName}</LayerSelector.LayerName>
+      <LayerSelector.Name title={displayedName}>{displayedName}</LayerSelector.Name>
       <LayerSelector.IconGroup>
         <IconButton
           accent={Accent.TERTIARY}

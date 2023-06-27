@@ -8,7 +8,7 @@ import { toggleBaseLayer } from '../../../domain/shared_slices/LayerSidebar'
 import { selectBaseLayer } from '../../../domain/shared_slices/Map'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
-import { LayerType } from '../utils/LayerType.style'
+import { LayerSelectorMenu } from '../utils/LayerSelectorMenu.style'
 import { BaseLayerItem } from './BaseLayerItem'
 
 const baseLayersKeys = Object.keys(BaseLayers).filter(key => key !== BaseLayers.DARK.code)
@@ -26,10 +26,10 @@ export function BaseLayerList() {
 
   return (
     <>
-      <LayerType.Wrapper $isExpanded={baselayerIsOpen} onClick={onSectionTitleClicked}>
-        <LayerType.Title>Fonds de carte</LayerType.Title>
+      <LayerSelectorMenu.Wrapper $isExpanded={baselayerIsOpen} onClick={onSectionTitleClicked}>
+        <LayerSelectorMenu.Title>Fonds de carte</LayerSelectorMenu.Title>
         <ChevronIcon $isOpen={baselayerIsOpen} $right />
-      </LayerType.Wrapper>
+      </LayerSelectorMenu.Wrapper>
       <RadioGroup onChange={handleSelectBaseLayer} value={selectedBaseLayer}>
         <BaseLayersList $baseLayersLength={baseLayersKeys.length} $showBaseLayers={baselayerIsOpen}>
           {baseLayersKeys.map(layer => (

@@ -42,15 +42,15 @@ export function AMPLayerGroup({
 
   return (
     <>
-      <LayerSelector.LayerGroup onClick={() => setZonesAreOpen(!zonesAreOpen)}>
-        <LayerSelector.LayerGroupName data-cy="amp-layer-topic" title={groupName}>
+      <LayerSelector.GroupWrapper onClick={() => setZonesAreOpen(!zonesAreOpen)}>
+        <LayerSelector.GroupName data-cy="amp-layer-topic" title={groupName}>
           <Highlighter
             autoEscape
             highlightClassName="highlight"
             searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
             textToHighlight={groupName || ''}
           />
-        </LayerSelector.LayerGroupName>
+        </LayerSelector.GroupName>
         <LayerSelector.IconGroup>
           <LayerSelector.ZonesNumber>{`${layerIds.length} / ${totalNumberOfZones}`}</LayerSelector.ZonesNumber>
           <IconButton
@@ -61,7 +61,7 @@ export function AMPLayerGroup({
             size={Size.NORMAL}
           />
         </LayerSelector.IconGroup>
-      </LayerSelector.LayerGroup>
+      </LayerSelector.GroupWrapper>
       <LayerSelector.SubGroup isOpen={zonesAreOpen} length={layerIds?.length}>
         {layerIds?.map(layerId => (
           <AMPLayer key={layerId} layerId={layerId} searchedText={searchedText} />

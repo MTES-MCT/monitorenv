@@ -37,10 +37,10 @@ export function AMPLayerGroup({ groupName, layers, showedAmpLayerIds }) {
 
   return (
     <>
-      <LayerSelector.LayerGroup onClick={toggleZonesAreOpen}>
-        <LayerSelector.LayerGroupName data-cy="amp-layer-topic" title={groupName}>
+      <LayerSelector.GroupWrapper onClick={toggleZonesAreOpen}>
+        <LayerSelector.GroupName data-cy="amp-layer-topic" title={groupName}>
           {groupName}
-        </LayerSelector.LayerGroupName>
+        </LayerSelector.GroupName>
         <LayerSelector.IconGroup>
           <Tag accent={Accent.PRIMARY}>{`${layers?.length}`}</Tag>
           <IconButton
@@ -63,12 +63,12 @@ export function AMPLayerGroup({ groupName, layers, showedAmpLayerIds }) {
             title="Supprimer la/les zone(s) de ma sélection"
           />
         </LayerSelector.IconGroup>
-      </LayerSelector.LayerGroup>
-      <LayerSelector.LayersWrapper isOpen={zonesAreOpen} length={layers?.length}>
+      </LayerSelector.GroupWrapper>
+      <LayerSelector.GroupList isOpen={zonesAreOpen} length={layers?.length}>
         {layers?.map(layer => (
           <AMPLayerZone key={layer.id} amp={layer} isDisplayed={showedAmpLayerIds.includes(layer.id)} />
         ))}
-      </LayerSelector.LayersWrapper>
+      </LayerSelector.GroupList>
     </>
   )
 }

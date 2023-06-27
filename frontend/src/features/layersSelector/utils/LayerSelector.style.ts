@@ -15,7 +15,7 @@ const Layer = styled.span<{ $metadataIsShown?: boolean; $selected?: boolean }>`
   text-align: left;
   font-size: 13px;
   padding-left: 20px;
-  background: ${p => (p.$metadataIsShown || p.$selected ? p.theme.color.blueYonder25 : p.theme.color.white)};
+  background: ${p => (p.$metadataIsShown || p.$selected ? p.theme.color.blueYonder25 : 'transparent')};
   color: ${p => p.theme.color.gunMetal};
   height: ${LAYER_SELECTOR_ROW_HEIGHT}px;
   align-items: center;
@@ -25,7 +25,7 @@ const Layer = styled.span<{ $metadataIsShown?: boolean; $selected?: boolean }>`
   }
 `
 
-const LayerName = styled.span`
+const Name = styled.span`
   width: 280px;
   display: block;
   text-overflow: ellipsis;
@@ -50,7 +50,7 @@ const ZonesNumber = styled.span`
   max-width: 50px;
 `
 
-const LayerGroup = styled.li`
+const GroupWrapper = styled.li`
   display: flex;
   user-select: none;
   text-overflow: ellipsis;
@@ -77,7 +77,7 @@ const LayerGroup = styled.li`
   }
 `
 
-const LayerGroupName = styled.span`
+const GroupName = styled.span`
   user-select: none;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -93,7 +93,7 @@ const LayerGroupName = styled.span`
   padding-right: 8px;
 `
 
-const LayersWrapper = styled.li<{ isOpen: boolean; length: number }>`
+const GroupList = styled.li<{ isOpen: boolean; length: number }>`
   height: ${p => (p.isOpen && p.length ? p.length * LAYER_SELECTOR_ROW_HEIGHT : 0)}px;
   overflow: hidden;
   transition: 0.5s all;
@@ -127,13 +127,13 @@ const NoLayerSelected = styled.div`
 `
 
 export const LayerSelector = {
+  GroupList,
+  GroupName,
+  GroupWrapper,
   IconGroup,
   Layer,
-  LayerGroup,
-  LayerGroupName,
   LayerList,
-  LayerName,
-  LayersWrapper,
+  Name,
   NoLayerSelected,
   SubGroup,
   ZonesNumber

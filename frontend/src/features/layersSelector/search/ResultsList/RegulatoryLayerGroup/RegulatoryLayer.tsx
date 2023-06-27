@@ -58,7 +58,7 @@ export function RegulatoryLayer({ layerId, searchedText }: { layerId: number; se
   return (
     <LayerSelector.Layer $metadataIsShown={metadataIsShown} onClick={toggleRegulatoryZoneMetadata}>
       <RegulatoryLayerLegend entity_name={layer?.properties?.entity_name} thematique={layer?.properties?.thematique} />
-      <LayerSelector.LayerName onClick={fitToRegulatoryLayer} title={layer?.properties?.entity_name}>
+      <LayerSelector.Name onClick={fitToRegulatoryLayer} title={layer?.properties?.entity_name}>
         <Highlighter
           autoEscape
           highlightClassName="highlight"
@@ -66,7 +66,7 @@ export function RegulatoryLayer({ layerId, searchedText }: { layerId: number; se
           textToHighlight={layer?.properties?.entity_name || ''}
         />
         {!layer?.properties?.entity_name && 'AUCUN NOM'}
-      </LayerSelector.LayerName>
+      </LayerSelector.Name>
       <LayerSelector.IconGroup>
         <IconButton
           accent={Accent.TERTIARY}

@@ -44,15 +44,15 @@ export function RegulatoryLayerGroup({
 
   return (
     <>
-      <LayerSelector.LayerGroup onClick={() => setZonesAreOpen(!zonesAreOpen)}>
-        <LayerSelector.LayerGroupName data-cy="regulatory-layer-topic" title={groupName}>
+      <LayerSelector.GroupWrapper onClick={() => setZonesAreOpen(!zonesAreOpen)}>
+        <LayerSelector.GroupName data-cy="regulatory-layer-topic" title={groupName}>
           <Highlighter
             autoEscape
             highlightClassName="highlight"
             searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
             textToHighlight={groupName || ''}
           />
-        </LayerSelector.LayerGroupName>
+        </LayerSelector.GroupName>
         <LayerSelector.IconGroup>
           <LayerSelector.ZonesNumber>{`${layerIds.length} / ${totalNumberOfZones}`}</LayerSelector.ZonesNumber>
           <IconButton
@@ -63,7 +63,7 @@ export function RegulatoryLayerGroup({
             size={Size.NORMAL}
           />
         </LayerSelector.IconGroup>
-      </LayerSelector.LayerGroup>
+      </LayerSelector.GroupWrapper>
       <LayerSelector.SubGroup isOpen={forceZonesAreOpen || zonesAreOpen} length={layerIds?.length}>
         {layerIds?.map(layerId => (
           <RegulatoryLayer key={layerId} layerId={layerId} searchedText={searchedText} />

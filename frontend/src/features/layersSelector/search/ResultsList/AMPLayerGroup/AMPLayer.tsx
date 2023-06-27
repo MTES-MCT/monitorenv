@@ -45,9 +45,9 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
   }
 
   return (
-    <LayerSelector.LayerGroup>
+    <LayerSelector.Layer>
       <RegulatoryLayerLegend entity_name={layer?.name} thematique={layer?.designation} />
-      <LayerSelector.LayerName onClick={fitToRegulatoryLayer} title={layer?.designation}>
+      <LayerSelector.Name onClick={fitToRegulatoryLayer} title={layer?.designation}>
         <Highlighter
           autoEscape
           highlightClassName="highlight"
@@ -55,7 +55,7 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
           textToHighlight={layer?.designation || ''}
         />
         {!layer?.designation && 'AUCUN NOM'}
-      </LayerSelector.LayerName>
+      </LayerSelector.Name>
       <LayerSelector.IconGroup>
         <IconButton
           accent={Accent.TERTIARY}
@@ -67,6 +67,6 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
           size={Size.SMALL}
         />
       </LayerSelector.IconGroup>
-    </LayerSelector.LayerGroup>
+    </LayerSelector.Layer>
   )
 }
