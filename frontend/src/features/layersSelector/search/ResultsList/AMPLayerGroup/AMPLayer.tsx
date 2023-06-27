@@ -11,7 +11,7 @@ import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
 import { addAmpZonesToMyLayers, removeAmpZonesFromMyLayers } from '../../../../../domain/shared_slices/SelectedAmp'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
 import { RegulatoryLayerLegend } from '../../../../../ui/RegulatoryLayerLegend'
-import { LayerSelector } from '../../utils/LayerSelector.style'
+import { LayerSelector } from '../../../utils/LayerSelector.style'
 
 export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedText: string }) {
   const dispatch = useDispatch()

@@ -15,7 +15,7 @@ import { closeRegulatoryZoneMetadata } from '../../../../domain/use_cases/regula
 import { showRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/showRegulatoryZoneMetadata'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { RegulatoryLayerLegend } from '../../../../ui/RegulatoryLayerLegend'
-import { LayerSelector } from '../../search/utils/LayerSelector.style'
+import { LayerSelector } from '../../utils/LayerSelector.style'
 
 export function RegulatoryLayerZone({ regulatoryZone }) {
   const dispatch = useDispatch()

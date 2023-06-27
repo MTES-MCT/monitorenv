@@ -2,13 +2,14 @@ import { useDispatch } from 'react-redux'
 import { RadioGroup } from 'rsuite'
 import styled from 'styled-components'
 
-import { BaseLayerItem } from './BaseLayerItem'
 import { COLORS } from '../../../constants/constants'
 import { BaseLayers } from '../../../domain/entities/layers/constants'
 import { toggleBaseLayer } from '../../../domain/shared_slices/LayerSidebar'
 import { selectBaseLayer } from '../../../domain/shared_slices/Map'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
+import { LayerType } from '../utils/LayerType.style'
+import { BaseLayerItem } from './BaseLayerItem'
 
 const baseLayersKeys = Object.keys(BaseLayers).filter(key => key !== BaseLayers.DARK.code)
 
@@ -25,9 +26,10 @@ export function BaseLayerList() {
 
   return (
     <>
-      <SectionTitle $showBaseLayers={baselayerIsOpen} onClick={onSectionTitleClicked}>
-        Fonds de carte <ChevronIcon $isOpen={baselayerIsOpen} $right />
-      </SectionTitle>
+      <LayerType.Wrapper $isExpanded={baselayerIsOpen} onClick={onSectionTitleClicked}>
+        <LayerType.Title>Fonds de carte</LayerType.Title>
+        <ChevronIcon $isOpen={baselayerIsOpen} $right />
+      </LayerType.Wrapper>
       <RadioGroup onChange={handleSelectBaseLayer} value={selectedBaseLayer}>
         <BaseLayersList $baseLayersLength={baseLayersKeys.length} $showBaseLayers={baselayerIsOpen}>
           {baseLayersKeys.map(layer => (
@@ -40,24 +42,6 @@ export function BaseLayerList() {
     </>
   )
 }
-
-const SectionTitle = styled.div<{ $showBaseLayers: boolean }>`
-  height: 38px;
-  display: flex;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-  background: ${COLORS.charcoal};
-  color: ${COLORS.gainsboro};
-  font-size: 16px;
-  padding-top: 5px;
-  cursor: pointer;
-  text-align: left;
-  padding-left: 20px;
-  user-select: none;
-  border-top-left-radius: 2px;
-  border-top-right-radius: 2px;
-  border-bottom-left-radius: ${p => (p.$showBaseLayers ? '0' : '2px')};
-  border-bottom-right-radius: ${p => (p.$showBaseLayers ? '0' : '2px')};
-`
 
 const BaseLayersList = styled.ul<{ $baseLayersLength: number | undefined; $showBaseLayers: boolean }>`
   margin: 0;

@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux'
 import { COLORS } from '../../../../../constants/constants'
 import { addAmpZonesToMyLayers, removeAmpZonesFromMyLayers } from '../../../../../domain/shared_slices/SelectedAmp'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
-import { LayerSelector } from '../../utils/LayerSelector.style'
+import { LayerSelector } from '../../../utils/LayerSelector.style'
 import { AMPLayer } from './AMPLayer'
 
 import type { AMP } from '../../../../../domain/entities/AMPs'

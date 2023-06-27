@@ -61,7 +61,7 @@ export function ResultList({ searchedText }) {
               name="isRegulatorySearchResultsVisible"
               onChange={toggleRegulatoryVisibility}
             />
-            ZONES RÉGLEMENTAIRES{' '}
+            ZONES RÉGLEMENTAIRES &nbsp;
             <NumberOfResults>({regulatoryLayersSearchResult?.length || '0'} résultats)</NumberOfResults>
           </Header>
           <SubList $isExpanded={showRegulatory}>
@@ -84,9 +84,8 @@ export function ResultList({ searchedText }) {
               label=""
               name="isAmpSearchResultsVisible"
               onChange={toggleAMPVisibility}
-            />{' '}
-            ZONES AMP
-            <NumberOfResults>( {ampsSearchResult?.length || '0'} résultats)</NumberOfResults>
+            />
+            ZONES AMP &nbsp;<NumberOfResults> ({ampsSearchResult?.length || '0'} résultats)</NumberOfResults>
           </HeaderAMP>
           <SubList $isExpanded={showAMPs}>
             {Object.entries(ampResulstsByAMPName).map(([ampName, ampIdsInGroup]) => (
@@ -106,6 +105,7 @@ export function ResultList({ searchedText }) {
 }
 
 const Header = styled.div`
+  display: flex;
   text-align: left;
   padding: 8px 16px;
   font-weight: bold;

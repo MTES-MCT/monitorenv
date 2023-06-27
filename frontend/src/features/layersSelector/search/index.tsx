@@ -12,6 +12,7 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ReactComponent as CloseIconSVG } from '../../../uiMonitor/icons/Close.svg'
 import { ReactComponent as ZoomIconSVG } from '../../../uiMonitor/icons/Focus_zones.svg'
 import { ReactComponent as SearchIconSVG } from '../../../uiMonitor/icons/Search.svg'
+import { getIntersectingLayerIds } from '../utils/getIntersectingLayerIds'
 import { RegulatoryLayerFilters } from './LayerFilters'
 import {
   resetSearchExtent,
@@ -21,7 +22,6 @@ import {
 } from './LayerSearch.slice'
 import { ResultList } from './ResultsList'
 import { SearchInput } from './SearchInput'
-import { getIntersectingLayerIds } from './utils/getIntersectingLayerIds'
 
 import type { AMP } from '../../../domain/entities/AMPs'
 import type { RegulatoryLayerType } from '../../../types'

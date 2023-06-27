@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-import { LayerSelector } from '../../search/utils/LayerSelector.style'
+import { LayerSelector } from '../../utils/LayerSelector.style'
 import { RegulatoryLayerGroup } from './RegulatoryLayerGroup'
 
 export function RegulatoryLayersList({ results }) {

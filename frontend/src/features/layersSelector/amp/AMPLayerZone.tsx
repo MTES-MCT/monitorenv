@@ -7,7 +7,7 @@ import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entitie
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import { hideAmpLayer, removeAmpZonesFromMyLayers, showAmpLayer } from '../../../domain/shared_slices/SelectedAmp'
 import { RegulatoryLayerLegend } from '../../../ui/RegulatoryLayerLegend'
-import { LayerSelector } from '../search/utils/LayerSelector.style'
+import { LayerSelector } from '../utils/LayerSelector.style'
 
 import type { AMP } from '../../../domain/entities/AMPs'
 

@@ -101,7 +101,7 @@ const Header = styled.div`
 const Content = styled.div`
   border-radius: 2px;
   color: ${p => p.theme.color.lightGray};
-  background: ${p => p.theme.color.background};
+  background: ${p => p.theme.color.white};
   overflow-y: auto;
   max-height: 72vh;
 `

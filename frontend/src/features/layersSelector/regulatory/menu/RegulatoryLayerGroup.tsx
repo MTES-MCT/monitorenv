@@ -10,7 +10,7 @@ import {
   showRegulatoryLayer
 } from '../../../../domain/shared_slices/Regulatory'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { LayerSelector } from '../../search/utils/LayerSelector.style'
+import { LayerSelector } from '../../utils/LayerSelector.style'
 import { RegulatoryLayerZone } from './RegulatoryLayerZone'
 
 export function RegulatoryLayerGroup({ groupName, layers }) {

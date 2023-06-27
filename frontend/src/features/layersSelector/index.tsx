@@ -7,7 +7,7 @@ import { setDisplayedItems } from '../../domain/shared_slices/Global'
 import { closeRegulatoryZoneMetadata } from '../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { ReactComponent as LayersSVG } from '../../uiMonitor/icons/Couches_carto.svg'
-import { AdministrativeLayers } from './administrative/AdministrativeLayers'
+import { AdministrativeLayers } from './administrative'
 import { AmpLayers } from './amp'
 import { BaseLayerList } from './base'
 import { RegulatoryLayers } from './regulatory/menu'
@@ -96,7 +96,6 @@ const Sidebar = styled.div<{ isVisible: boolean; layersSidebarIsOpen: boolean }>
 `
 
 const Layers = styled.div`
-  margin-top: 5px;
   width: 350px;
   max-height: calc(100vh - 160px);
 `

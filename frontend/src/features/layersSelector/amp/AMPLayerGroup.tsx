@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 
 import { COLORS } from '../../../constants/constants'
 import { hideAmpLayers, removeAmpZonesFromMyLayers, showAmpLayer } from '../../../domain/shared_slices/SelectedAmp'
-import { LayerSelector } from '../search/utils/LayerSelector.style'
+import { LayerSelector } from '../utils/LayerSelector.style'
 import { AMPLayerZone } from './AMPLayerZone'
 
 export const AMP_LAYER_ZONE_HEIGHT = 36
