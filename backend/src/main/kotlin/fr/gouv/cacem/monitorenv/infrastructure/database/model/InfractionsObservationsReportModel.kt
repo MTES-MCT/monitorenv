@@ -19,6 +19,7 @@ import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.SequenceGenerator
 import jakarta.persistence.Table
 import org.hibernate.annotations.Type
 import org.locationtech.jts.geom.Geometry
@@ -31,10 +32,11 @@ import java.time.ZoneOffset.UTC
 @Table(name = "infractions_observations_reports")
 data class InfractionsObservationsReportModel(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "infractions_observation_reports_id_seq", sequenceName = "infractions_observation_reports_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "infractions_observation_reports_id_seq")
     @Basic(optional = false)
     @Column(name = "id", unique = true, nullable = false)
-    var id: Int,
+    var id: Int? = null,
 
     @Column(name = "source_type", columnDefinition = "infractions_observations_reports_source_type")
     @Enumerated(EnumType.STRING)

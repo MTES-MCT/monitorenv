@@ -33,24 +33,31 @@ data class InfractionsObservationsReportDataOutput(
     val validityTime: Int? = null,
 ) {
     companion object {
-        fun fromInfractionsObservationsReportEntity(entity: InfractionsObservationsReportEntity) = InfractionsObservationsReportDataOutput(
-            id = entity.id,
-            sourceType = entity.sourceType,
-            sourceName = entity.sourceName,
-            targetType = entity.targetType,
-            vehicleType = entity.vehicleType,
-            targetDetails = entity.targetDetails,
-            geom = entity.geom,
-            description = entity.description,
-            reportType = entity.reportType,
-            theme = entity.theme,
-            subThemes = entity.subThemes,
-            actionTaken = entity.actionTaken,
-            isInfractionProven = entity.isInfractionProven,
-            isControlRequired = entity.isControlRequired,
-            isUnitAvailable = entity.isUnitAvailable,
-            createdAt = entity.createdAt,
-            validityTime = entity.validityTime,
-        )
+        fun fromInfractionsObservationsReportEntity(entity: InfractionsObservationsReportEntity):InfractionsObservationsReportDataOutput {
+          requireNotNull(entity.id) {
+            "InfractionsObservationsReportEntity.id cannot be null"
+          }
+            return InfractionsObservationsReportDataOutput(
+                id = entity.id,
+                sourceType = entity.sourceType,
+                semaphore = entity.semaphore,
+                controlUnit = entity.controlUnit,
+                sourceName = entity.sourceName,
+                targetType = entity.targetType,
+                vehicleType = entity.vehicleType,
+                targetDetails = entity.targetDetails,
+                geom = entity.geom,
+                description = entity.description,
+                reportType = entity.reportType,
+                theme = entity.theme,
+                subThemes = entity.subThemes,
+                actionTaken = entity.actionTaken,
+                isInfractionProven = entity.isInfractionProven,
+                isControlRequired = entity.isControlRequired,
+                isUnitAvailable = entity.isUnitAvailable,
+                createdAt = entity.createdAt,
+                validityTime = entity.validityTime,
+            )
+        }
     }
 }

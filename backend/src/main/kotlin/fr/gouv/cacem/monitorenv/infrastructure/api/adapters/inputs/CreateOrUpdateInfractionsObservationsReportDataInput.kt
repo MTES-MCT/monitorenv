@@ -4,18 +4,22 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEnti
 import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.InfractionsObservationsReportEntity
 import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.ReportTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.SourceTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.TargetTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphores.SemaphoreEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 
 data class CreateOrUpdateInfractionsObservationsReportDataInput(
-    val id: Int,
+    val id: Int? = null,
     val sourceType: SourceTypeEnum? = null,
     val semaphore: SemaphoreEntity? = null,
     val controlUnit: ControlUnitEntity? = null,
     val sourceName: String? = null,
     val targetType: TargetTypeEnum? = null,
+    val vehicleType: VehicleTypeEnum? = null,
+    val targetDetails: TargetDetailsEntity? = null,
     val geom: Geometry? = null,
     val description: String? = null,
     val reportType: ReportTypeEnum? = null,
@@ -36,6 +40,8 @@ data class CreateOrUpdateInfractionsObservationsReportDataInput(
             controlUnit = this.controlUnit,
             sourceName = this.sourceName,
             targetType = this.targetType,
+            vehicleType = this.vehicleType,
+            targetDetails = this.targetDetails,
             geom = this.geom,
             description = this.description,
             reportType = this.reportType,

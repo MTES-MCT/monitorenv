@@ -6,7 +6,7 @@ import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 
 data class InfractionsObservationsReportEntity(
-    val id: Int,
+    val id: Int? = null,
     val sourceType: SourceTypeEnum? = null,
     val semaphore: SemaphoreEntity? = null,
     val controlUnit: ControlUnitEntity? = null,
