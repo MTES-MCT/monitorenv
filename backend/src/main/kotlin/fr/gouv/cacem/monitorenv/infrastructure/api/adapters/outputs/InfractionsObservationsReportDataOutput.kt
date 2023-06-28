@@ -33,10 +33,10 @@ data class InfractionsObservationsReportDataOutput(
     val validityTime: Int? = null,
 ) {
     companion object {
-        fun fromInfractionsObservationsReportEntity(entity: InfractionsObservationsReportEntity):InfractionsObservationsReportDataOutput {
-          requireNotNull(entity.id) {
-            "InfractionsObservationsReportEntity.id cannot be null"
-          }
+        fun fromInfractionsObservationsReportEntity(entity: InfractionsObservationsReportEntity): InfractionsObservationsReportDataOutput {
+            requireNotNull(entity.id) {
+                "InfractionsObservationsReportEntity.id cannot be null"
+            }
             return InfractionsObservationsReportDataOutput(
                 id = entity.id,
                 sourceType = entity.sourceType,

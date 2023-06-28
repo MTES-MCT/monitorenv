@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.vladmihalcea.hibernate.type.array.ListArrayType
@@ -16,9 +17,12 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.SequenceGenerator
 import jakarta.persistence.Table
 import org.hibernate.annotations.Type
@@ -42,6 +46,20 @@ data class InfractionsObservationsReportModel(
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
     var sourceType: SourceTypeEnum? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "semaphore_id", insertable = false, updatable = false)
+    var semaphore: SemaphoreModel? = null,
+    @Column(name = "semaphore_id")
+    @JsonIgnore
+    var semaphoreId: Int? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "control_unit_id", insertable = false, updatable = false)
+    var controlUnit: ControlUnitModel? = null,
+    @Column(name = "control_unit_id")
+    @JsonIgnore
+    var controlUnitId: Int? = null,
 
     @Column(name = "source_name")
     var sourceName: String? = null,
@@ -105,6 +123,8 @@ data class InfractionsObservationsReportModel(
     fun toInfractionsObservationsReport() = InfractionsObservationsReportEntity(
         id = id,
         sourceType = sourceType,
+        semaphore = semaphore?.toSemaphore(),
+        controlUnit = controlUnit?.toControlUnit(),
         sourceName = sourceName,
         targetType = targetType,
         vehicleType = vehicleType,
@@ -124,25 +144,27 @@ data class InfractionsObservationsReportModel(
     )
 
     companion object {
-        fun fromInfractionsObservationsReportEntity(entity: InfractionsObservationsReportEntity) = InfractionsObservationsReportModel(
-            id = entity.id,
-            sourceType = entity.sourceType,
-            sourceName = entity.sourceName,
-            targetType = entity.targetType,
-            vehicleType = entity.vehicleType,
-            targetDetails = entity.targetDetails,
-            geom = entity.geom,
-            description = entity.description,
-            reportType = entity.reportType,
-            theme = entity.theme,
-            subThemes = entity.subThemes,
-            actionTaken = entity.actionTaken,
-            isInfractionProven = entity.isInfractionProven,
-            isControlRequired = entity.isControlRequired,
-            isUnitAvailable = entity.isUnitAvailable,
-            createdAt = entity.createdAt.toInstant(),
-            validityTime = entity.validityTime,
-            isDeleted = entity.isDeleted,
+        fun fromInfractionsObservationsReportEntity(infractionsObservationsReport: InfractionsObservationsReportEntity) = InfractionsObservationsReportModel(
+            id = infractionsObservationsReport.id,
+            sourceType = infractionsObservationsReport.sourceType,
+            semaphoreId = infractionsObservationsReport.semaphore?.id,
+            controlUnitId = infractionsObservationsReport.controlUnit?.id,
+            sourceName = infractionsObservationsReport.sourceName,
+            targetType = infractionsObservationsReport.targetType,
+            vehicleType = infractionsObservationsReport.vehicleType,
+            targetDetails = infractionsObservationsReport.targetDetails,
+            geom = infractionsObservationsReport.geom,
+            description = infractionsObservationsReport.description,
+            reportType = infractionsObservationsReport.reportType,
+            theme = infractionsObservationsReport.theme,
+            subThemes = infractionsObservationsReport.subThemes,
+            actionTaken = infractionsObservationsReport.actionTaken,
+            isInfractionProven = infractionsObservationsReport.isInfractionProven,
+            isControlRequired = infractionsObservationsReport.isControlRequired,
+            isUnitAvailable = infractionsObservationsReport.isUnitAvailable,
+            createdAt = infractionsObservationsReport.createdAt.toInstant(),
+            validityTime = infractionsObservationsReport.validityTime,
+            isDeleted = infractionsObservationsReport.isDeleted,
         )
     }
 }

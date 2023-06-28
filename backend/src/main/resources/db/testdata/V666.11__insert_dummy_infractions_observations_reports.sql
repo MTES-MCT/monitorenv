@@ -1,5 +1,3 @@
-
-
 INSERT INTO infractions_observations_reports (
     id,
     source_type ,
@@ -42,7 +40,6 @@ INSERT INTO infractions_observations_reports (
     24,
     false
 );
-
 
 INSERT INTO infractions_observations_reports (
     id,
@@ -87,7 +84,6 @@ INSERT INTO infractions_observations_reports (
     false
 );
 
-
 INSERT INTO infractions_observations_reports (
     id,
     source_type ,
@@ -130,3 +126,5 @@ INSERT INTO infractions_observations_reports (
     12,
     false
 );
+
+SELECT setval('infractions_observation_reports_id_seq', 4);
