@@ -33,6 +33,7 @@ class HealthcheckControllerITests {
                 numberOfMissions = 50,
                 numberOfNatinfs = 50,
                 numberOfSemaphores = 10,
+                numberOfInfractionsObservationsReports = 50,
             ),
         )
         mockMvc.perform(get("/bff/v1/healthcheck"))
@@ -42,5 +43,6 @@ class HealthcheckControllerITests {
             .andExpect(jsonPath("numberOfMissions", equalTo(50)))
             .andExpect(jsonPath("numberOfNatinfs", equalTo(50)))
             .andExpect(jsonPath("numberOfSemaphores", equalTo(10)))
+            .andExpect(jsonPath("numberOfInfractionsObservationsReports", equalTo(50)))
     }
 }
