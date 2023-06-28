@@ -41,6 +41,7 @@ class JpaDepartmentAreasRepositoryTests : AbstractDBTests() {
         // Then
         assertThat(requestedDepartment).isEqualTo("29")
     }
+
     @Test
     @Transactional
     fun `findDepartmentFromGeometry Should return null when there is no intersection with departments`() {

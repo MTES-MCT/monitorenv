@@ -4,12 +4,10 @@ import io.sentry.Sentry
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
-
 @SpringBootApplication
 class MonitorenvApplication
 
 fun main(args: Array<String>) {
-
     val ctx = runApplication<MonitorenvApplication>(*args)
 
     val isSentryEnabled: String? = ctx.environment.getProperty("monitorenv.sentry.enabled")

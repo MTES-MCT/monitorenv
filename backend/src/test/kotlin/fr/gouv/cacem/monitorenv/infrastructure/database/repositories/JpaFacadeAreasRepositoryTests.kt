@@ -42,6 +42,7 @@ class JpaFacadeAreasRepositoryTests : AbstractDBTests() {
         // Then
         assertThat(requestedFacade).isEqualTo("SA")
     }
+
     @Test
     @Transactional
     fun `findFacadeFromGeometry Should return null when there is no intersection with facades`() {
@@ -55,4 +56,4 @@ class JpaFacadeAreasRepositoryTests : AbstractDBTests() {
         val requestedFacade = jpaFacadeAreasRepository.findFacadeFromGeometry(geometry)
         // Then
         assertThat(requestedFacade).isNull()
-    }}
+    } }

@@ -65,7 +65,6 @@ data class EnvActionModel(
     @Column(name = "department")
     var department: String? = null,
 
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "mission_id")
     @JsonBackReference
