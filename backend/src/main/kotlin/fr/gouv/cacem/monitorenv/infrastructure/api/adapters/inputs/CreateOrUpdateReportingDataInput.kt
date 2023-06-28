@@ -1,17 +1,17 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.InfractionsObservationsReportEntity
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.ReportTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.SourceTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.TargetDetailsEntity
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.VehicleTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphores.SemaphoreEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 
-data class CreateOrUpdateInfractionsObservationsReportDataInput(
+data class CreateOrUpdateReportingDataInput(
     val id: Int? = null,
     val sourceType: SourceTypeEnum? = null,
     val semaphore: SemaphoreEntity? = null,
@@ -22,7 +22,7 @@ data class CreateOrUpdateInfractionsObservationsReportDataInput(
     val targetDetails: TargetDetailsEntity? = null,
     val geom: Geometry? = null,
     val description: String? = null,
-    val reportType: ReportTypeEnum? = null,
+    val reportType: ReportingTypeEnum? = null,
     val theme: String? = null,
     val subThemes: List<String>? = listOf(),
     val actionTaken: String? = null,
@@ -32,8 +32,8 @@ data class CreateOrUpdateInfractionsObservationsReportDataInput(
     val createdAt: ZonedDateTime,
     val validityTime: Int? = null,
 ) {
-    fun toInfractionsObservationsReportEntity(): InfractionsObservationsReportEntity {
-        return InfractionsObservationsReportEntity(
+    fun toReportingEntity(): ReportingEntity {
+        return ReportingEntity(
             id = this.id,
             sourceType = this.sourceType,
             semaphore = this.semaphore,

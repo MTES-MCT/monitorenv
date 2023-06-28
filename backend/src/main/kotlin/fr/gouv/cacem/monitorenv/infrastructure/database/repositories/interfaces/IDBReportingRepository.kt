@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.InfractionsObservationsReportModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel
 import org.hibernate.annotations.DynamicUpdate
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Modifying
@@ -8,27 +8,27 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 
 @DynamicUpdate
-interface IDBInfractionsObservationsReportRepository : CrudRepository<InfractionsObservationsReportModel, Int> {
+interface IDBReportingRepository : CrudRepository<ReportingModel, Int> {
 
     @Query(
         value = """
         SELECT *
-        FROM infractions_observations_reports
+        FROM reportings
         WHERE is_deleted IS FALSE
         
     """,
         nativeQuery = true,
     )
-    fun findAllInfractionsObservationsReports(pageable: Pageable): List<InfractionsObservationsReportModel>
+    fun findAll(pageable: Pageable): List<ReportingModel>
 
     @Modifying(clearAutomatically = true)
     @Query(
         value = """
-        UPDATE infractions_observations_reports
+        UPDATE reportings
         SET is_deleted = TRUE
         WHERE id = :id
     """,
         nativeQuery = true,
     )
-    fun deleteInfractionsObservationsReport(id: Int)
+    fun deleteReporting(id: Int)
 }

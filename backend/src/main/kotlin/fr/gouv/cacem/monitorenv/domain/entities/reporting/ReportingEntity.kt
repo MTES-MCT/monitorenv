@@ -1,11 +1,11 @@
-package fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport
+package fr.gouv.cacem.monitorenv.domain.entities.reporting
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.semaphores.SemaphoreEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 
-data class InfractionsObservationsReportEntity(
+data class ReportingEntity(
     val id: Int? = null,
     val sourceType: SourceTypeEnum? = null,
     val semaphore: SemaphoreEntity? = null,
@@ -16,7 +16,7 @@ data class InfractionsObservationsReportEntity(
     val targetDetails: TargetDetailsEntity? = null,
     val geom: Geometry? = null,
     val description: String? = null,
-    val reportType: ReportTypeEnum? = null,
+    val reportType: ReportingTypeEnum? = null,
     val theme: String? = null,
     val subThemes: List<String>? = listOf(),
     val actionTaken: String? = null,
