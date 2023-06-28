@@ -4,4 +4,5 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEnti
 
 interface IControlUnitRepository {
     fun findControlUnits(): List<ControlUnitEntity>
+    fun findControlUnitById(id: Int): ControlUnitEntity
 }

@@ -7,14 +7,13 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.semaphores.SemaphoreEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 
 data class CreateOrUpdateReportingDataInput(
     val id: Int? = null,
     val sourceType: SourceTypeEnum? = null,
-    val semaphore: SemaphoreEntity? = null,
+    val semaphore: ReportingSemaphoreDataInput? = null,
     val controlUnit: ControlUnitEntity? = null,
     val sourceName: String? = null,
     val targetType: TargetTypeEnum? = null,
@@ -36,8 +35,8 @@ data class CreateOrUpdateReportingDataInput(
         return ReportingEntity(
             id = this.id,
             sourceType = this.sourceType,
-            semaphore = this.semaphore,
-            controlUnit = this.controlUnit,
+            semaphoreId = this.semaphore?.id,
+            controlUnitId = this.controlUnit?.id,
             sourceName = this.sourceName,
             targetType = this.targetType,
             vehicleType = this.vehicleType,

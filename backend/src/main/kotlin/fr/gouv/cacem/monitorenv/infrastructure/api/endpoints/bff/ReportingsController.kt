@@ -45,7 +45,7 @@ class ReportingsController(
             pageNumber = pageNumber,
             pageSize = pageSize,
         ).map {
-            ReportingDataOutput.fromReportingEntity(it)
+            ReportingDataOutput.fromReporting(it.first, it.second, it.third)
         }
     }
 
@@ -58,7 +58,7 @@ class ReportingsController(
     ): ReportingDataOutput {
         val newReporting = createReporting.toReportingEntity()
         val createdReporting = createOrUpdateReporting.execute(newReporting)
-        return ReportingDataOutput.fromReportingEntity(createdReporting)
+        return ReportingDataOutput.fromReporting(createdReporting.first, createdReporting.second, createdReporting.third)
     }
 
     @GetMapping("/{id}")
@@ -69,7 +69,7 @@ class ReportingsController(
         id: Int,
     ): ReportingDataOutput {
         return getReportingById.execute(id).let {
-            ReportingDataOutput.fromReportingEntity(it)
+            ReportingDataOutput.fromReporting(it.first, it.second, it.third)
         }
     }
 
@@ -85,7 +85,7 @@ class ReportingsController(
         return createOrUpdateReporting.execute(
             reporting.toReportingEntity(),
         ).let {
-            ReportingDataOutput.fromReportingEntity(it)
+            ReportingDataOutput.fromReporting(it.first, it.second, it.third)
         }
     }
 

@@ -47,18 +47,11 @@ data class ReportingModel(
     @Type(PostgreSQLEnumType::class)
     var sourceType: SourceTypeEnum? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "semaphore_id", insertable = false, updatable = false)
-    var semaphore: SemaphoreModel? = null,
+
     @Column(name = "semaphore_id")
-    @JsonIgnore
     var semaphoreId: Int? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "control_unit_id", insertable = false, updatable = false)
-    var controlUnit: ControlUnitModel? = null,
     @Column(name = "control_unit_id")
-    @JsonIgnore
     var controlUnitId: Int? = null,
 
     @Column(name = "source_name")
@@ -123,8 +116,8 @@ data class ReportingModel(
     fun toReporting() = ReportingEntity(
         id = id,
         sourceType = sourceType,
-        semaphore = semaphore?.toSemaphore(),
-        controlUnit = controlUnit?.toControlUnit(),
+        semaphoreId = semaphoreId,
+        controlUnitId = controlUnitId,
         sourceName = sourceName,
         targetType = targetType,
         vehicleType = vehicleType,
@@ -147,8 +140,8 @@ data class ReportingModel(
         fun fromReportingEntity(reporting: ReportingEntity) = ReportingModel(
             id = reporting.id,
             sourceType = reporting.sourceType,
-            semaphoreId = reporting.semaphore?.id,
-            controlUnitId = reporting.controlUnit?.id,
+            semaphoreId = reporting.semaphoreId,
+            controlUnitId = reporting.controlUnitId,
             sourceName = reporting.sourceName,
             targetType = reporting.targetType,
             vehicleType = reporting.vehicleType,
