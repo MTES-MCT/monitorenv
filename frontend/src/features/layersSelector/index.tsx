@@ -35,7 +35,7 @@ export function LayersSidebar() {
         icon={<LayersSVG className="rs-icon" />}
         onClick={toggleLayerSidebar}
         size="lg"
-        title="Couches réglementaires"
+        title="Arbre des couches"
       />
       <Sidebar
         isVisible={displayLayersSidebar && (layersSidebarIsOpen || regulatoryMetadataPanelIsOpen)}

@@ -12,9 +12,9 @@ type LayerSearchState = {
 const initialState: LayerSearchState = {
   ampsSearchResult: undefined,
   isAmpSearchResultsExpanded: false,
-  isAmpSearchResultsVisible: false,
+  isAmpSearchResultsVisible: true,
   isRegulatorySearchResultsExpanded: false,
-  isRegulatorySearchResultsVisible: false,
+  isRegulatorySearchResultsVisible: true,
   regulatoryLayersSearchResult: undefined,
   searchExtent: undefined
 }

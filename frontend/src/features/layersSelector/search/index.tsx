@@ -13,7 +13,7 @@ import { ReactComponent as CloseIconSVG } from '../../../uiMonitor/icons/Close.s
 import { ReactComponent as ZoomIconSVG } from '../../../uiMonitor/icons/Focus_zones.svg'
 import { ReactComponent as SearchIconSVG } from '../../../uiMonitor/icons/Search.svg'
 import { getIntersectingLayerIds } from '../utils/getIntersectingLayerIds'
-import { RegulatoryLayerFilters } from './LayerFilters'
+import { LayerFilters } from './LayerFilters'
 import {
   resetSearchExtent,
   setAMPsSearchResult,
@@ -195,7 +195,7 @@ export function LayerSearch({ isVisible }) {
           toggleRegFilters={toggleRegFilters}
         />
         {displayRegFilters && (
-          <RegulatoryLayerFilters
+          <LayerFilters
             filteredRegulatoryThemes={filteredRegulatoryThemes}
             regulatoryThemes={regulatoryThemes}
             setFilteredRegulatoryThemes={handleSetFilteredRegulatoryThemes}
