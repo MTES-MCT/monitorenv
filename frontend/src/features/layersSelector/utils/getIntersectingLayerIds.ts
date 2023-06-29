@@ -5,10 +5,13 @@ import { transformExtent } from 'ol/proj'
 
 export const getIntersectingLayerIds = <T>(
   shouldFilter: Boolean,
-  layers: T[],
+  layers: T[] | undefined,
   extent: Extent | undefined,
   { bboxPath = 'bbox', idPath = 'id' }: { bboxPath?: string; idPath?: string } = {}
 ): number[] => {
+  if (!layers) {
+    return []
+  }
   if (!shouldFilter || !extent) {
     return layers.map(layer => _.get(layer, idPath))
   }
