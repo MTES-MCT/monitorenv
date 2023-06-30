@@ -33,7 +33,7 @@ export function SideWindowLauncher() {
     [dispatch]
   )
 
-  const isMissionsFormsAreDirty = useMemo(
+  const hasAtLeastOneMissionFormDirty = useMemo(
     () => !!selectedMissions.find(mission => mission.isFormDirty),
     [selectedMissions]
   )
@@ -55,7 +55,7 @@ export function SideWindowLauncher() {
           dispatch(multiMissionsActions.setSelectedMissions([]))
         }}
         shouldHaveFocus={sideWindow.status === SideWindowStatus.VISIBLE}
-        showPrompt={routeParams && (isMissionsFormsAreDirty || missionState.isFormDirty)}
+        showPrompt={routeParams && (hasAtLeastOneMissionFormDirty || missionState.isFormDirty)}
         title="MonitorEnv"
       >
         <SideWindow ref={newWindowRef} />
