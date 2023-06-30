@@ -25,6 +25,7 @@ import { MissionStatusTag } from '../../../ui/MissionStatusTag'
 import { useNewWindow } from '../../../ui/NewWindow'
 import { getMissionPageRoute } from '../../../utils/getMissionPageRoute'
 import { getMissionTitle } from '../../../utils/getMissionTitle'
+import { isNewMission } from '../../../utils/isNewMission'
 import { MultiZonePicker } from '../MultiZonePicker'
 
 export function GeneralInformationsForm() {
@@ -44,15 +45,15 @@ export function GeneralInformationsForm() {
   const { sideWindow } = useAppSelector(state => state)
   const routeParams = getMissionPageRoute(sideWindow.currentPath)
 
-  const isNewMission = !!routeParams?.params?.id && routeParams?.params?.id.includes('new-')
+  const missionIsNewMission = isNewMission(routeParams?.params?.id)
 
-  const title = getMissionTitle(isNewMission, values)
+  const title = getMissionTitle(missionIsNewMission, values)
 
   return (
     <StyledContainer>
       <StyledHeader>
         <Title>{title}</Title>
-        {!isNewMission && (
+        {!missionIsNewMission && (
           <StyledTagsContainer>
             <MissionSourceTag source={missionSourceField?.value} />
             <MissionStatusTag status={getMissionStatus(values)} />

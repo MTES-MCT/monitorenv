@@ -5,7 +5,6 @@ import type { Mission } from '../entities/missions'
 type SelectedMission = {
   isFormDirty: boolean
   mission: Partial<Mission>
-  type: 'new' | 'edit'
 }
 type MultiMissionsState = {
   selectedMissions: SelectedMission[]

@@ -12,6 +12,7 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { FormikForm } from '../../../uiMonitor/CustomFormikFields/FormikForm'
 import { getIdTyped } from '../../../utils/getIdTyped'
 import { getMissionPageRoute } from '../../../utils/getMissionPageRoute'
+import { isNewMission } from '../../../utils/isNewMission'
 import { missionFactory } from '../Missions.helpers'
 
 export function Mission() {
@@ -26,22 +27,22 @@ export function Mission() {
   const routeParams = getMissionPageRoute(sideWindow.currentPath)
 
   const idTyped = useMemo(() => getIdTyped(routeParams?.params?.id), [routeParams?.params?.id])
-  const isNewMission = useMemo(() => typeof idTyped === 'string', [idTyped])
+  const missionIsNewMission = useMemo(() => isNewMission(routeParams?.params?.id), [routeParams?.params?.id])
 
-  const { data: missionToEdit, isLoading } = useGetMissionQuery(!isNewMission ? idTyped : skipToken)
+  const { data: missionToEdit, isLoading } = useGetMissionQuery(!missionIsNewMission ? idTyped : skipToken)
   const selectedMission = useMemo(
     () => selectedMissions.find(mis => mis.mission.id === idTyped),
     [idTyped, selectedMissions]
   )
   const missionFormikValues = useMemo(() => {
-    if (isNewMission) {
+    if (missionIsNewMission) {
       return missionFactory(undefined, idTyped)
     }
 
     return missionFactory(missionToEdit)
     // to prevent re-render
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [idTyped, isNewMission, missionToEdit])
+  }, [idTyped, missionIsNewMission, missionToEdit])
 
   const handleSubmitForm = values => {
     dispatch(createOrEditMission(values))
@@ -66,7 +67,7 @@ export function Mission() {
         <FormikForm>
           <MissionForm
             id={idTyped}
-            isNewMission={isNewMission}
+            isNewMission={missionIsNewMission}
             selectedMission={selectedMission?.mission}
             setShouldValidateOnChange={setShouldValidateOnChange}
           />

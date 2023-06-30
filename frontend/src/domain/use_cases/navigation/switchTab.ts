@@ -21,8 +21,7 @@ export const switchTab = path => async (dispatch, getState) => {
   if (missionState && selectedMissions.length > 0) {
     const missionFormatted = {
       isFormDirty,
-      mission: missionState,
-      type: missionsUpdated[missionIndex].type
+      mission: missionState
     }
     if (missionIndex !== -1) {
       missionsUpdated[missionIndex] = missionFormatted

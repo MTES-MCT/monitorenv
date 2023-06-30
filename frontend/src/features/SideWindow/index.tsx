@@ -13,6 +13,7 @@ import { switchTab } from '../../domain/use_cases/navigation/switchTab'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { NewWindowContext } from '../../ui/NewWindow'
 import { getMissionTitle } from '../../utils/getMissionTitle'
+import { isNewMission } from '../../utils/isNewMission'
 import { Mission } from '../missions/MissionForm'
 import { Missions } from '../missions/MissionsList'
 import { Route } from './Route'
@@ -46,11 +47,16 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
       nextPath: sideWindowPaths.MISSIONS
     }
 
-    const openMissions = selectedMissions.map(mission => ({
-      icon: mission.type === 'edit' ? <MissionStatus mission={mission.mission} /> : undefined,
-      label: <span>{getMissionTitle(mission.type === 'new', mission.mission)}</span>,
-      nextPath: generatePath(sideWindowPaths.MISSION, { id: mission.mission.id })
-    }))
+    const openMissions = selectedMissions.map(selectedMission => {
+      const { mission } = selectedMission
+      const missionIsNewMission = isNewMission(mission?.id)
+
+      return {
+        icon: !missionIsNewMission ? <MissionStatus mission={mission} /> : undefined,
+        label: <span>{getMissionTitle(missionIsNewMission, mission)}</span>,
+        nextPath: generatePath(sideWindowPaths.MISSION, { id: mission.id })
+      }
+    })
 
     return [missionsList, ...openMissions]
   }, [selectedMissions])
