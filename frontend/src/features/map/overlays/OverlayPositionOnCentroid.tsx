@@ -24,12 +24,12 @@ const defaultMargins = {
 }
 
 export function OverlayPositionOnCentroid({
-  map,
-  feature,
   appClassName,
   children,
-  options: { margins = defaultMargins } = {},
-  featureIsShowed = false
+  feature,
+  featureIsShowed = false,
+  map,
+  options: { margins = defaultMargins } = {}
 }) {
   const dispatch = useAppDispatch()
   const overlayRef = useRef(null)

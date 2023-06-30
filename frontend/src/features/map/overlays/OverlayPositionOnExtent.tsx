@@ -24,10 +24,10 @@ const defaultMargins = {
 }
 
 export function OverlayPositionOnExtent({
-  map,
-  feature,
   appClassName,
   children,
+  feature,
+  map,
   options: { margins = defaultMargins } = {}
 }) {
   const overlayRef = useRef(null)
