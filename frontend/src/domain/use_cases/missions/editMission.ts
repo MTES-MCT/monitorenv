@@ -4,7 +4,6 @@ import { missionsAPI } from '../../../api/missionsAPI'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { sideWindowPaths } from '../../entities/sideWindow'
 import { setToast } from '../../shared_slices/Global'
-import { setMissionState } from '../../shared_slices/MissionsState'
 import { multiMissionsActions } from '../../shared_slices/MultiMissions'
 
 export const editMission = missionId => async (dispatch, getState) => {
@@ -17,48 +16,35 @@ export const editMission = missionId => async (dispatch, getState) => {
   try {
     const response = await dispatch(missionToEdit.initiate(missionId))
     if ('data' in response) {
-      const newSelectedMission = selectedMissions.find(mission => mission.mission.id === missionId)
-
       const missions = [...selectedMissions]
-      const missionToSave = missionState || response.data
+      // first we want to save the active mission in multiMissions state
+      if (missionState) {
+        const selectedMissionIndex = missions.findIndex(mission => mission.mission.id === missionState.id)
 
-      const missionStateIndex = missions.findIndex(mission => mission.mission.id === missionState?.id)
-      const missionFormatted = {
-        isFormDirty: missionState ? isFormDirty : false,
-        mission: missionToSave,
-        type: missionState && missionStateIndex !== -1 ? missions[missionStateIndex].type : 'edit'
-      }
-
-      const missionIndex = missions.findIndex(mission => mission.mission.id === missionToSave.id)
-
-      if (missionIndex !== -1) {
-        missions[missionIndex] = missionFormatted
-      } else {
-        missions.push(missionFormatted)
-      }
-
-      // when mission already open
-      if (newSelectedMission) {
-        await dispatch(setMissionState(newSelectedMission.mission))
-      } else {
-        // when we have to open a new tab
-        const newMissionIndex = missions.findIndex(mission => mission.mission.id === missionId)
-        const newMissionFormatted = {
-          isFormDirty: false,
-          mission: response.data,
-          type: 'edit'
+        const missionFormatted = {
+          isFormDirty,
+          mission: missionState,
+          type: selectedMissionIndex !== -1 ? missions[selectedMissionIndex].type : 'edit'
         }
 
-        if (newMissionIndex !== -1) {
-          missions[newMissionIndex] = {
-            ...missionFormatted,
-            isFormDirty: missions[newMissionIndex].isFormDirty
-          }
+        if (selectedMissionIndex !== -1) {
+          missions[selectedMissionIndex] = missionFormatted
         } else {
-          missions.push(newMissionFormatted)
+          missions.push(missionFormatted)
         }
+      }
 
-        await dispatch(setMissionState(response.data))
+      // now we want to save in multiMissions state the mission we want to edit
+      const missionToSave = response.data
+      const newSelectedMissionIndex = missions.findIndex(mission => mission.mission.id === missionToSave?.id)
+      const missionFormatted = {
+        isFormDirty: false,
+        mission: missionToSave,
+        type: 'edit'
+      }
+
+      if (newSelectedMissionIndex === -1) {
+        missions.push(missionFormatted)
       }
 
       await dispatch(multiMissionsActions.setSelectedMissions(missions))

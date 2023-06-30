@@ -4,7 +4,6 @@ import { generatePath } from 'react-router'
 import { missionFactory } from '../../../features/missions/Missions.helpers'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { sideWindowPaths } from '../../entities/sideWindow'
-import { setMissionState } from '../../shared_slices/MissionsState'
 import { multiMissionsActions } from '../../shared_slices/MultiMissions'
 
 export const addMission = () => async (dispatch, getState) => {
@@ -12,7 +11,6 @@ export const addMission = () => async (dispatch, getState) => {
     multiMissions: { selectedMissions }
   } = getState()
   const missions = [...selectedMissions]
-  dispatch(setMissionState(undefined))
 
   const maxNewMissionId = _.chain(missions)
     .filter(newMission => newMission.type === 'new')

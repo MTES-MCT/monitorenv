@@ -24,27 +24,32 @@ import { CancelEditModal } from './modals/CancelEditModal'
 import { DeleteModal } from './modals/DeleteModal'
 import { ReopenModal } from './modals/ReopenModal'
 
-export function MissionForm({ id, mission, setShouldValidateOnChange }) {
+export function MissionForm({ id, isNewMission, selectedMission, setShouldValidateOnChange }) {
   const dispatch = useDispatch()
-  const {
-    missionState: { missionState },
-    sideWindow
-  } = useAppSelector(state => state)
+  const { sideWindow } = useAppSelector(state => state)
   const { dirty, handleSubmit, setFieldValue, setValues, validateForm, values } =
     useFormikContext<Partial<Mission | NewMission>>()
 
   useSyncFormValuesWithRedux(setMissionState)
   useUpdateSurveillance()
 
+  useEffect(() => {
+    if (selectedMission) {
+      setValues(selectedMission)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedMission])
+
   const [currentActionIndex, setCurrentActionIndex] = useState(undefined)
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
   const [isReopenModalOpen, setIsReopenModalOpen] = useState(false)
 
   const allowEditMission =
-    mission?.missionSource === undefined ||
-    mission?.missionSource === MissionSourceEnum.MONITORENV ||
-    mission?.missionSource === MissionSourceEnum.MONITORFISH
-  const allowDeleteMission = !(id === undefined) && allowEditMission
+    selectedMission?.missionSource === undefined ||
+    selectedMission?.missionSource === MissionSourceEnum.MONITORENV ||
+    selectedMission?.missionSource === MissionSourceEnum.MONITORFISH
+  const allowDeleteMission = !isNewMission && allowEditMission
+  const allowCloseMission = !selectedMission?.isClosed || !values?.isClosed
 
   const handleSetCurrentActionIndex = index => {
     setCurrentActionIndex(index)
@@ -55,22 +60,19 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
     setDeleteModalIsOpen(false)
     setIsReopenModalOpen(false)
   }
-  const deleteMission = () => {
+  const validateDeleteMission = () => {
     dispatch(deleteMissionAndGoToMissionsList(id))
   }
 
-  const deleteMissionMission = () => {
+  const deleteMission = () => {
     setDeleteModalIsOpen(true)
   }
 
-  const cancelForm = () => {
-    const idToDelete = id.includes('new-') ? id : parseInt(id, 10)
-    dispatch(multiMissionsActions.deleteSelectedMission(idToDelete))
-    dispatch(setMissionState(undefined))
+  const cancelForm = async () => {
+    await dispatch(multiMissionsActions.deleteSelectedMission(id))
+    dispatch(sideWindowActions.setShowConfirmCancelModal(false))
     dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.MISSIONS)))
   }
-
-  const allowCloseMission = !mission?.isClosed || !values?.isClosed
 
   const saveMission = async () => {
     validateForm().then(errors => {
@@ -130,15 +132,6 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
     }
   }
 
-  useEffect(() => {
-    if (!missionState) {
-      dispatch(setMissionState(values))
-    } else {
-      setValues(missionState, false)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, mission])
-
   return (
     <StyledFormContainer>
       <CancelEditModal
@@ -146,7 +139,7 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
         onConfirm={cancelForm}
         open={sideWindow.showConfirmCancelModal && dirty}
       />
-      <DeleteModal onCancel={returnToEdition} onConfirm={deleteMission} open={deleteModalIsOpen} />
+      <DeleteModal onCancel={returnToEdition} onConfirm={validateDeleteMission} open={deleteModalIsOpen} />
       <ReopenModal onCancel={returnToEdition} onConfirm={validateReopenMission} open={isReopenModalOpen} />
       <Wrapper>
         <FirstColumn>
@@ -186,9 +179,9 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
         allowClose={allowCloseMission}
         allowDelete={allowDeleteMission}
         allowEdit={allowEditMission}
-        isFromMonitorFish={mission?.missionSource === MissionSourceEnum.MONITORFISH}
+        isFromMonitorFish={selectedMission?.missionSource === MissionSourceEnum.MONITORFISH}
         onCloseMission={closeMission}
-        onDeleteMission={deleteMissionMission}
+        onDeleteMission={deleteMission}
         onQuitFormEditing={confirmFormCancelation}
         onReopenMission={reopenMission}
         onSaveMission={saveMission}

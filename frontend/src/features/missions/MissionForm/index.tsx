@@ -10,42 +10,51 @@ import { useGetMissionQuery } from '../../../api/missionsAPI'
 import { createOrEditMission } from '../../../domain/use_cases/missions/createOrEditMission'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { FormikForm } from '../../../uiMonitor/CustomFormikFields/FormikForm'
+import { getIdTyped } from '../../../utils/getIdTyped'
 import { getMissionPageRoute } from '../../../utils/getMissionPageRoute'
 import { missionFactory } from '../Missions.helpers'
 
 export function Mission() {
-  const { sideWindow } = useAppSelector(state => state)
+  const {
+    multiMissions: { selectedMissions },
+    sideWindow
+  } = useAppSelector(state => state)
   const dispatch = useDispatch()
 
   const [shouldValidateOnChange, setShouldValidateOnChange] = useState(false)
 
   const routeParams = getMissionPageRoute(sideWindow.currentPath)
 
-  const id = !routeParams?.params?.id?.includes('new-') ? parseInt(routeParams?.params?.id || '', 10) : undefined
+  const idTyped = useMemo(() => getIdTyped(routeParams?.params?.id), [routeParams?.params?.id])
+  const isNewMission = useMemo(() => typeof idTyped === 'string', [idTyped])
 
-  const { data: missionToEdit } = useGetMissionQuery(id ?? skipToken)
-
+  const { data: missionToEdit, isLoading } = useGetMissionQuery(!isNewMission ? idTyped : skipToken)
+  const selectedMission = useMemo(
+    () => selectedMissions.find(mis => mis.mission.id === idTyped),
+    [idTyped, selectedMissions]
+  )
   const missionFormikValues = useMemo(() => {
-    if (!id) {
-      return missionFactory(undefined, routeParams?.params?.id)
+    if (isNewMission) {
+      return missionFactory(undefined, idTyped)
     }
 
     return missionFactory(missionToEdit)
     // to prevent re-render
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [idTyped, isNewMission, missionToEdit])
 
   const handleSubmitForm = values => {
     dispatch(createOrEditMission(values))
   }
 
-  if (id && !missionToEdit) {
+  if (isLoading) {
     return <div>Chargement en cours</div>
   }
 
   return (
     <EditMissionWrapper data-cy="editMissionWrapper">
       <Formik
+        key={idTyped}
         enableReinitialize
         initialValues={missionFormikValues}
         onSubmit={handleSubmitForm}
@@ -56,8 +65,9 @@ export function Mission() {
       >
         <FormikForm>
           <MissionForm
-            id={routeParams?.params?.id}
-            mission={missionToEdit}
+            id={idTyped}
+            isNewMission={isNewMission}
+            selectedMission={selectedMission?.mission}
             setShouldValidateOnChange={setShouldValidateOnChange}
           />
         </FormikForm>

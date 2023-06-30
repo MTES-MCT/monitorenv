@@ -23,4 +23,10 @@ export const useSyncFormValuesWithRedux = (setMissionState: ActionCreatorWithPay
   useEffect(() => {
     dispatchFormUpdate(values)
   }, [values, dispatchFormUpdate])
+
+  useEffect(
+    () => () => dispatchFormUpdate(undefined),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
 }

@@ -34,7 +34,7 @@ const missionStateSlice = createSlice({
       return {
         ...state,
         missionState: action.payload,
-        selectedMissionId: action.payload?.id || undefined
+        selectedMissionId: action.payload?.id
       }
     },
     setSelectedMissionId(state, action) {
