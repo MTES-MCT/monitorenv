@@ -85,6 +85,7 @@ def new_amp() -> pd.DataFrame:
                 "Zone spéciale de conservation (N2000, DHFF)",
                 "Zone de protection spéciale (N2000, DO)",
             ],
+            "mpa_type": ["Parc national", "Natura 2000", "Parc naturel marin", "Réserve naturelle"],
             "row_hash": [
                 "cacem_row_hash_1",
                 "cacem_row_hash_2",

@@ -3,7 +3,8 @@ md5(
   coalesce(id::text,'')||
   coalesce(geom::text,'')||
   coalesce(mpa_oriname,'')||
-  coalesce(des_desigfr,'')
+  coalesce(des_desigfr,'')||
+  coalesce(mpa_type,'')
   ) as cacem_row_hash
 	FROM prod."Aires marines protégées"
   WHERE
