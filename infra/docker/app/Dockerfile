@@ -49,7 +49,7 @@ RUN npm run build
 ######################
 # Upload sourcemaps  #
 ######################
-FROM getsentry/sentry-cli:latest as uploadSourcemaps
+FROM getsentry/sentry-cli:latest as buildSourcemaps
 
 ARG VERSION
 ARG SENTRY_URL
@@ -57,8 +57,8 @@ ARG SENTRY_AUTH_TOKEN
 ARG SENTRY_ORG
 ARG SENTRY_PROJECT
 
-RUN mkdir -p /tmp/frontend
-COPY --from=buildFront /tmp/frontend/build /tmp/frontend
+RUN mkdir -p /tmp/frontend/build
+COPY --from=buildFront /tmp/frontend/build /tmp/frontend/build
 # Upload sourcemaps to sentry
 RUN sentry-cli sourcemaps inject /tmp/frontend
 RUN sentry-cli \
@@ -109,7 +109,7 @@ COPY infra/configurations/backend /home/monitorenv/configurations/
 USER monitorenv
 # Copy files for the front
 RUN mkdir /home/monitorenv/public
-COPY --from=buildFront /tmp/frontend/build /home/monitorenv/public/
+COPY --from=buildSourcemaps /tmp/frontend/build /home/monitorenv/public/
 COPY --from=buildFront /tmp/infra/docker/app/env.sh /home/monitorenv/
 
 # Add logs folder to be mounted as volume
