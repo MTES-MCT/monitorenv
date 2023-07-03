@@ -91,6 +91,7 @@ const Wrapper = styled.section`
 const StyledContainer = styled.section`
   display: flex;
   flex: 1;
+  width: calc(100% - 62px);
 `
 
 export const SideWindow = forwardRef(SideWindowWithRef)
