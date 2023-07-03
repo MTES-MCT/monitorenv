@@ -90,7 +90,14 @@ test:
 
 .PHONY: docker-build-app 
 docker-build-app:
-	docker build --no-cache -f infra/docker/app/Dockerfile . -t monitorenv-app:$(VERSION) --build-arg VERSION=$(VERSION) --build-arg ENV_PROFILE=$(ENV_PROFILE) --build-arg GITHUB_SHA=$(GITHUB_SHA)
+	docker build --no-cache -f infra/docker/app/Dockerfile . -t monitorenv-app:$(VERSION) \
+		--build-arg VERSION=$(VERSION) \
+		--build-arg ENV_PROFILE=$(ENV_PROFILE) \
+		--build-arg GITHUB_SHA=$(GITHUB_SHA) \
+		--build-arg SENTRY_URL=$(SENTRY_URL) \
+		--build-arg SENTRY_AUTH_TOKEN=$(SENTRY_AUTH_TOKEN) \
+		--build-arg SENTRY_ORG=$(SENTRY_ORG) \
+		--build-arg SENTRY_PROJECT=$(SENTRY_PROJECT)
 
 # INIT commands
 .PHONY: load-sig-data prod-load-sig-data init-geoserver

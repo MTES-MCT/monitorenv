@@ -32,11 +32,10 @@ RUN mvn clean package -DskipTests=true
 FROM node:18-alpine as buildFront
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV DISABLE_ESLINT_PLUGIN=true
 
+ARG VERSION
 ARG ENV_PROFILE
-ENV REACT_APP_ENV $ENV_PROFILE
-
+ENV REACT_APP_ENV=$ENV_PROFILE
 RUN echo ${REACT_APP_ENV}
 
 COPY frontend/ /tmp/frontend/
@@ -48,19 +47,41 @@ RUN npm ci
 RUN npm run build
 
 ######################
+# Upload sourcemaps  #
+######################
+FROM getsentry/sentry-cli:latest as uploadSourcemaps
+
+ARG VERSION
+ARG SENTRY_URL
+ARG SENTRY_AUTH_TOKEN
+ARG SENTRY_ORG
+ARG SENTRY_PROJECT
+
+RUN mkdir -p /tmp/frontend
+COPY --from=buildFront /tmp/frontend/build /tmp/frontend
+# Upload sourcemaps to sentry
+RUN sentry-cli sourcemaps inject /tmp/frontend
+RUN sentry-cli \
+  --url ${SENTRY_URL} \
+  --auth-token ${SENTRY_AUTH_TOKEN} \
+  sourcemaps upload /tmp/frontend \
+  --release ${VERSION} \
+  --org ${SENTRY_ORG} \
+  --project ${SENTRY_PROJECT}
+
+######################
 # Create final image #
 ######################
 # There is no more JRE with Java 11 : https://stackoverflow.com/a/53733414
 FROM azul/zulu-openjdk-alpine:17.0.7-17.42.19
 
 ARG VERSION
-ENV VERSION $VERSION
+ENV VERSION=$VERSION
 
 ARG ENV_PROFILE
-ENV ENV_PROFILE $ENV_PROFILE
+ENV ENV_PROFILE=$ENV_PROFILE
 
-ENV REACT_APP_ENV $ENV_PROFILE
-ENV ENV_DB_URL=
+ENV ENV_DB_URL=""
 
 # Add bash
 RUN apk add --no-cache bash
@@ -73,7 +94,7 @@ EXPOSE 5000
 EXPOSE 5001
 WORKDIR /home/monitorenv
 
-ENV JAVA_TOOL_OPTIONS "-Dcom.sun.management.jmxremote.ssl=false \
+ENV JAVA_TOOL_OPTIONS="-Dcom.sun.management.jmxremote.ssl=false \
   -Dcom.sun.management.jmxremote.authenticate=false \
   -Dcom.sun.management.jmxremote.port=5000 \
   -Dcom.sun.management.jmxremote.rmi.port=5001 \
@@ -96,10 +117,10 @@ RUN mkdir /home/monitorenv/logs
 
 # Set up environement variable that define the root folder use for serving static files
 # It must point to the front (React) files
-ENV STATIC_FILES_PATH /home/monitorenv/public
+ENV STATIC_FILES_PATH=/home/monitorenv/public
 
 # Default profile is for local. Can be overiden at start : docker run -e "SPRING_PROFILES_ACTIVE=prod"
-ENV SPRING_PROFILES_ACTIVE ${ENV_PROFILE}
+ENV SPRING_PROFILES_ACTIVE=${ENV_PROFILE}
 
 RUN echo ${ENV_PROFILE}
 
