@@ -44,7 +44,7 @@ export function RegulatoryLayerGroup({ groupName, layers }) {
 
   return (
     <>
-      <LayerSelector.GroupWrapper onClick={toggleZonesAreOpen}>
+      <LayerSelector.GroupWrapper $isPadded onClick={toggleZonesAreOpen}>
         <LayerSelector.GroupName data-cy="regulatory-layer-topic" title={groupName}>
           {groupName}
         </LayerSelector.GroupName>

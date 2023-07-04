@@ -96,7 +96,7 @@ const Sidebar = styled.div<{ isVisible: boolean; layersSidebarIsOpen: boolean }>
 `
 
 const Layers = styled.div`
-  width: 350px;
+  width: 352px;
   max-height: calc(100vh - 160px);
 `
 

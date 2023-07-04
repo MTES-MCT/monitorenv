@@ -50,16 +50,16 @@ const ZonesNumber = styled.span`
   max-width: 50px;
 `
 
-const GroupWrapper = styled.li`
+const GroupWrapper = styled.li<{ $isPadded?: boolean }>`
   display: flex;
   user-select: none;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden !important;
-  padding-right: 0;
   height: ${LAYER_SELECTOR_ROW_HEIGHT}px;
   font-size: 13px;
   padding-left: 18px;
+  padding-right: ${p => (p.$isPadded ? '11px' : '0')};
   font-weight: 700;
   color: ${p => p.theme.color.gunMetal};
   border-bottom: 1px solid ${p => p.theme.color.lightGray};

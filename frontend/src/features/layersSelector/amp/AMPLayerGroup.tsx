@@ -37,7 +37,7 @@ export function AMPLayerGroup({ groupName, layers, showedAmpLayerIds }) {
 
   return (
     <>
-      <LayerSelector.GroupWrapper onClick={toggleZonesAreOpen}>
+      <LayerSelector.GroupWrapper $isPadded onClick={toggleZonesAreOpen}>
         <LayerSelector.GroupName data-cy="amp-layer-topic" title={groupName}>
           {groupName}
         </LayerSelector.GroupName>

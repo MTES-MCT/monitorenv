@@ -2,11 +2,22 @@ import { SingleTag } from '@mtes-mct/monitor-ui'
 import { Button, CheckPicker } from 'rsuite'
 import styled from 'styled-components'
 
-export function LayerFilters({ filteredRegulatoryThemes, regulatoryThemes, setFilteredRegulatoryThemes }) {
-  const handleResetFilteredRegulatoryThemes = () => {
-    setFilteredRegulatoryThemes([])
+export function LayerFilters({
+  ampTypes,
+  filteredAmpTypes,
+  filteredRegulatoryThemes,
+  handleResetFilters,
+  regulatoryThemes,
+  setFilteredAmpTypes,
+  setFilteredRegulatoryThemes
+}) {
+  const handleSetFilteredAmpTypes = v => {
+    setFilteredAmpTypes(v)
   }
 
+  const handleDeleteAmpType = v => () => {
+    setFilteredAmpTypes(filteredAmpTypes.filter(theme => theme !== v))
+  }
   const handleSetFilteredRegulatoryThemes = v => {
     setFilteredRegulatoryThemes(v)
   }
@@ -21,10 +32,10 @@ export function LayerFilters({ filteredRegulatoryThemes, regulatoryThemes, setFi
         data={regulatoryThemes}
         labelKey="label"
         onChange={handleSetFilteredRegulatoryThemes}
-        placeholder="Thématique Réglementaire"
+        placeholder="Thématique réglementaire"
         renderValue={() =>
           filteredRegulatoryThemes && (
-            <OptionValue>{`Thématique Réglementaire (${filteredRegulatoryThemes.length})`}</OptionValue>
+            <OptionValue>{`Thématique réglementaire (${filteredRegulatoryThemes.length})`}</OptionValue>
           )
         }
         size="sm"
@@ -41,27 +52,26 @@ export function LayerFilters({ filteredRegulatoryThemes, regulatoryThemes, setFi
       </TagWrapper>
 
       <StyledCheckPicker
-        data={regulatoryThemes}
+        data={ampTypes}
         labelKey="label"
-        onChange={handleSetFilteredRegulatoryThemes}
+        onChange={handleSetFilteredAmpTypes}
         placeholder="Type d'AMP"
-        renderValue={() =>
-          filteredRegulatoryThemes && <OptionValue>{`Type d'AMP (${filteredRegulatoryThemes.length})`}</OptionValue>
-        }
+        renderValue={() => filteredAmpTypes && <OptionValue>{`Type d'AMP (${filteredAmpTypes.length})`}</OptionValue>}
         size="sm"
-        value={filteredRegulatoryThemes}
+        value={filteredAmpTypes}
         valueKey="value"
       />
       <TagWrapper>
-        {filteredRegulatoryThemes.length > 0 &&
-          filteredRegulatoryThemes.map(theme => (
-            <StyledSingleTag key={theme} onDelete={handleDeleteRegulatoryTheme(theme)}>
-              {theme}
+        {filteredAmpTypes.length > 0 &&
+          filteredAmpTypes.map(type => (
+            <StyledSingleTag key={type} onDelete={handleDeleteAmpType(type)}>
+              {type}
             </StyledSingleTag>
           ))}
       </TagWrapper>
-      {filteredRegulatoryThemes?.length > 0 && (
-        <ResetFilters appearance="link" onClick={handleResetFilteredRegulatoryThemes}>
+
+      {(filteredRegulatoryThemes?.length > 0 || filteredAmpTypes.length > 0) && (
+        <ResetFilters appearance="link" onClick={handleResetFilters}>
           Réinitialiser les filtres
         </ResetFilters>
       )}

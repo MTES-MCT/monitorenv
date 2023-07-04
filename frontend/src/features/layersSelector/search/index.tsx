@@ -1,17 +1,14 @@
+import { Accent, Icon, IconButton, Button, Size } from '@mtes-mct/monitor-ui'
 import Fuse from 'fuse.js'
 import _ from 'lodash'
 import { useState, useEffect, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
-import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { useGetAMPsQuery } from '../../../api/ampsAPI'
 import { COLORS } from '../../../constants/constants'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { ReactComponent as CloseIconSVG } from '../../../uiMonitor/icons/Close.svg'
-import { ReactComponent as ZoomIconSVG } from '../../../uiMonitor/icons/Focus_zones.svg'
-import { ReactComponent as SearchIconSVG } from '../../../uiMonitor/icons/Search.svg'
 import { getIntersectingLayerIds } from '../utils/getIntersectingLayerIds'
 import { LayerFilters } from './LayerFilters'
 import {
@@ -38,6 +35,7 @@ export function LayerSearch({ isVisible }) {
 
   const [globalSearchText, setGlobalSearchText] = useState<string>('')
   const [filteredRegulatoryThemes, setFilteredRegulatoryThemes] = useState<string[]>([])
+  const [filteredAmpTypes, setFilteredAmpTypes] = useState<string[]>([])
 
   const [filterSearchOnMapExtent, setFilterSearchOnMapExtent] = useState<boolean>(false)
 
@@ -63,17 +61,20 @@ export function LayerSearch({ isVisible }) {
       threshold: 0.4
     })
 
-    return async (
-      searchedText: string,
-      filterOnThemes: string[],
-      extent: number[] | undefined,
-      {
-        geofilter,
-        searchAmps,
-        searchRegulatory
-      }: { geofilter: boolean; searchAmps: boolean; searchRegulatory: boolean }
-    ) => {
-      if (searchAmps && (searchedText.length > 2 || geofilter)) {
+    return async ({
+      ampTypes,
+      extent,
+      geofilter,
+      regulatoryThemes,
+      searchedText
+    }: {
+      ampTypes: string[]
+      extent: number[] | undefined
+      geofilter: boolean
+      regulatoryThemes: string[]
+      searchedText: string
+    }) => {
+      if (searchedText.length > 2 || ampTypes.length > 0 || geofilter) {
         let searchedAMPS
         let itemSchema
         if (searchedText.length > 2) {
@@ -83,13 +84,16 @@ export function LayerSearch({ isVisible }) {
           searchedAMPS = amps?.entities && Object.values(amps?.entities)
           itemSchema = { bboxPath: 'bbox', idPath: 'id' }
         }
+        if (ampTypes.length > 0) {
+          searchedAMPS = searchedAMPS.filter(amp => ampTypes.includes(amp.type))
+        }
         const searchedAMPsInExtent = getIntersectingLayerIds(geofilter, searchedAMPS, extent, itemSchema)
         dispatch(setAMPsSearchResult(searchedAMPsInExtent))
       } else {
         dispatch(setAMPsSearchResult([]))
       }
 
-      if (searchRegulatory && (searchedText.length > 2 || filterOnThemes.length > 0 || geofilter)) {
+      if (searchedText.length > 2 || regulatoryThemes.length > 0 || geofilter) {
         let searchedRegulatory
         let itemSchema
         if (searchedText.length > 2) {
@@ -99,8 +103,10 @@ export function LayerSearch({ isVisible }) {
           searchedRegulatory = regulatoryLayers
           itemSchema = { bboxPath: 'bbox', idPath: 'id' }
         }
-        if (filterOnThemes.length > 0) {
-          searchedRegulatory = searchedRegulatory.filter(layer => filterOnThemes.includes(layer.properties.thematique))
+        if (regulatoryThemes.length > 0) {
+          searchedRegulatory = searchedRegulatory.filter(layer =>
+            regulatoryThemes.includes(layer.properties.thematique)
+          )
         }
         const searchedRegulatoryInExtent = getIntersectingLayerIds(geofilter, searchedRegulatory, extent, itemSchema)
         dispatch(setRegulatoryLayersSearchResult(searchedRegulatoryInExtent))
@@ -112,14 +118,17 @@ export function LayerSearch({ isVisible }) {
 
   const handleReloadSearch = () => {
     setShouldReloadSearchOnExtent(false)
-    searchLayers(globalSearchText, filteredRegulatoryThemes, currentMapExtentTracker, {
+    searchLayers({
+      ampTypes: filteredAmpTypes,
+      extent: currentMapExtentTracker,
       geofilter: filterSearchOnMapExtent,
-      searchAmps: true,
-      searchRegulatory: true
+      regulatoryThemes: filteredRegulatoryThemes,
+      searchedText: globalSearchText
     })
     dispatch(setSearchExtent(currentMapExtentTracker))
     dispatch(setFitToExtent(currentMapExtentTracker))
   }
+
   const handleResetSearch = () => {
     dispatch(setRegulatoryLayersSearchResult([]))
     dispatch(setAMPsSearchResult([]))
@@ -132,18 +141,46 @@ export function LayerSearch({ isVisible }) {
 
   const handleSearchInputChange = searchedText => {
     setGlobalSearchText(searchedText)
-    searchLayers(searchedText, filteredRegulatoryThemes, currentMapExtentTracker, {
+    searchLayers({
+      ampTypes: filteredAmpTypes,
+      extent: currentMapExtentTracker,
       geofilter: filterSearchOnMapExtent,
-      searchAmps: true,
-      searchRegulatory: true
+      regulatoryThemes: filteredRegulatoryThemes,
+      searchedText
     })
   }
+
+  const handleSetFilteredAmpTypes = filteredTypes => {
+    setFilteredAmpTypes(filteredTypes)
+    searchLayers({
+      ampTypes: filteredTypes,
+      extent: currentMapExtentTracker,
+      geofilter: filterSearchOnMapExtent,
+      regulatoryThemes: filteredRegulatoryThemes,
+      searchedText: globalSearchText
+    })
+  }
+
   const handleSetFilteredRegulatoryThemes = filteredThemes => {
     setFilteredRegulatoryThemes(filteredThemes)
-    searchLayers(globalSearchText, filteredThemes, currentMapExtentTracker, {
+    searchLayers({
+      ampTypes: filteredAmpTypes,
+      extent: currentMapExtentTracker,
       geofilter: filterSearchOnMapExtent,
-      searchAmps: true,
-      searchRegulatory: true
+      regulatoryThemes: filteredThemes,
+      searchedText: globalSearchText
+    })
+  }
+
+  const handleResetFilters = () => {
+    setFilteredRegulatoryThemes([])
+    setFilteredAmpTypes([])
+    searchLayers({
+      ampTypes: [],
+      extent: currentMapExtentTracker,
+      geofilter: filterSearchOnMapExtent,
+      regulatoryThemes: [],
+      searchedText: globalSearchText
     })
   }
 
@@ -157,10 +194,12 @@ export function LayerSearch({ isVisible }) {
       dispatch(setSearchExtent(currentMapExtentTracker))
       dispatch(setFitToExtent(currentMapExtentTracker))
     }
-    searchLayers(globalSearchText, filteredRegulatoryThemes, currentMapExtentTracker, {
-      geofilter: !filterSearchOnMapExtent,
-      searchAmps: true,
-      searchRegulatory: true
+    searchLayers({
+      ampTypes: filteredAmpTypes,
+      extent: currentMapExtentTracker,
+      geofilter: filterSearchOnMapExtent,
+      regulatoryThemes: filteredRegulatoryThemes,
+      searchedText: globalSearchText
     })
   }
 
@@ -168,6 +207,16 @@ export function LayerSearch({ isVisible }) {
     setDisplayRegFilters(!displayRegFilters)
   }
 
+  const ampTypes = useMemo(
+    () =>
+      _.chain(amps?.entities)
+        .map(l => l?.type)
+        .uniq()
+        .map(l => ({ label: l, value: l }))
+        .sortBy('label')
+        .value(),
+    [amps]
+  )
   const regulatoryThemes = useMemo(
     () =>
       _.chain(regulatoryLayers)
@@ -188,28 +237,33 @@ export function LayerSearch({ isVisible }) {
       <Search>
         <SearchInput
           displayRegFilters={displayRegFilters}
+          filteredAmpTypes={filteredAmpTypes}
           filteredRegulatoryThemes={filteredRegulatoryThemes}
           globalSearchText={globalSearchText}
-          placeholder={regulatoryLayers.length === 0 ? 'Chargement des couches en cours' : 'Rechercher une zone reg.'}
+          placeholder={regulatoryLayers.length === 0 ? 'Chargement des couches en cours' : 'Rechercher une zone'}
           setGlobalSearchText={handleSearchInputChange}
           toggleRegFilters={toggleRegFilters}
         />
         {displayRegFilters && (
           <LayerFilters
+            ampTypes={ampTypes}
+            filteredAmpTypes={filteredAmpTypes}
             filteredRegulatoryThemes={filteredRegulatoryThemes}
+            handleResetFilters={handleResetFilters}
             regulatoryThemes={regulatoryThemes}
+            setFilteredAmpTypes={handleSetFilteredAmpTypes}
             setFilteredRegulatoryThemes={handleSetFilteredRegulatoryThemes}
           />
         )}
         <ResultList searchedText={globalSearchText} />
       </Search>
       <SearchOnExtentButton
-        active={filterSearchOnMapExtent}
-        appearance="primary"
-        data-cy="regulatory-layers-advanced-search"
-        icon={<ZoomIcon className="rs-icon" />}
+        $active={filterSearchOnMapExtent}
+        accent={Accent.PRIMARY}
+        data-cy="layers-advanced-search"
+        Icon={Icon.FocusZones}
         onClick={toggleFilterSearchOnMapExtent}
-        size="lg"
+        size={Size.LARGE}
         title="Définir la zone de recherche et afficher les tracés"
       />
       <ExtraButtonsWrapper
@@ -218,17 +272,17 @@ export function LayerSearch({ isVisible }) {
         shouldReloadSearchOnExtent={shouldReloadSearchOnExtent}
       >
         <ReloadSearch
-          $shouldReloadSearchOnExtent={shouldReloadSearchOnExtent}
-          appearance="primary"
-          icon={<SearchIcon className="rs-icon" />}
+          $active={shouldReloadSearchOnExtent}
+          accent={Accent.PRIMARY}
+          Icon={Icon.Search}
           onClick={handleReloadSearch}
         >
           Relancer la recherche ici
         </ReloadSearch>
         <ResetSearch
           $allowResetResults={allowResetResults}
-          appearance="ghost"
-          icon={<ResetIcon className="rs-icon" />}
+          accent={Accent.TERTIARY}
+          Icon={Icon.Close}
           onClick={handleResetSearch}
         >
           Effacer les résultats de la recherche
@@ -239,39 +293,21 @@ export function LayerSearch({ isVisible }) {
 }
 
 const Search = styled.div`
-  width: 350px;
+  width: 352px;
 `
-const ReloadSearch = styled(IconButton)<{ $shouldReloadSearchOnExtent: boolean }>`
-  display: ${p => (p.$shouldReloadSearchOnExtent ? 'inline-block' : 'none')};
+const ReloadSearch = styled(Button)<{ $active: boolean }>`
+  display: ${p => (p.$active ? 'inline-flex' : 'none')};
   margin-right: 8px;
 `
-const ResetSearch = styled(IconButton)<{ $allowResetResults: boolean }>`
-  display: ${p => (p.$allowResetResults ? 'inline-block' : 'none')};
+const ResetSearch = styled(Button)<{ $allowResetResults: boolean }>`
+  display: ${p => (p.$allowResetResults ? 'inline-flex' : 'none')};
   background: ${COLORS.white};
 `
 
-const SearchIcon = styled(SearchIconSVG)`
-  width: 16px;
-  height: 16px;
-`
-const ResetIcon = styled(CloseIconSVG)`
-  width: 16px;
-  height: 16px;
-`
-
-const ZoomIcon = styled(ZoomIconSVG)`
-  width: 24px;
-  height: 22px;
-`
-const SearchOnExtentButton = styled(IconButton)`
+const SearchOnExtentButton = styled(IconButton)<{ $active: boolean }>`
   position: absolute;
   top: 0;
-  left: 350px;
-  margin-left: 5px;
-  padding: 2px;
-  flex-grow: 0;
-  flex-shrink: 0;
-  transition: 0.5s all;
+  left: 355px;
 `
 const ExtraButtonsWrapper = styled.div<{
   allowResetResults: boolean
