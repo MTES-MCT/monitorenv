@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
 
+import { useAppSelector } from './useAppSelector'
 import { useGetMissionsQuery } from '../api/missionsAPI'
 import { administrationFilterFunction } from '../domain/use_cases/missions/filters/administrationFilterFunction'
 import { themeFilterFunction } from '../domain/use_cases/missions/filters/themeFilterFunction'
 import { unitFilterFunction } from '../domain/use_cases/missions/filters/unitFilterFunction'
-import { useAppSelector } from './useAppSelector'
 
 const TWO_MINUTES = 2 * 60 * 1000
 

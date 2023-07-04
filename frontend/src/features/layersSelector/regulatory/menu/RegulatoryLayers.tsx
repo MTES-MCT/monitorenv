@@ -1,12 +1,12 @@
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
+import { RegulatoryLayersList } from './RegulatoryLayersList'
 import { COLORS } from '../../../../constants/constants'
 import { toggleMyRegulatoryZones } from '../../../../domain/shared_slices/LayerSidebar'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReactComponent as PinSVG } from '../../../../uiMonitor/icons/Pin.svg'
 import { ChevronIcon } from '../../../commonStyles/icons/ChevronIcon.style'
-import { RegulatoryLayersList } from './RegulatoryLayersList'
 
 export function RegulatoryLayers() {
   const dispatch = useDispatch()

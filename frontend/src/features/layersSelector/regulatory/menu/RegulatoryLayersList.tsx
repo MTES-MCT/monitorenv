@@ -1,8 +1,8 @@
 import _ from 'lodash'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../../constants/constants'
 import { RegulatoryLayerGroup } from './RegulatoryLayerGroup'
+import { COLORS } from '../../../../constants/constants'
 
 export function RegulatoryLayersList({ results }) {
   if (_.isEmpty(results)) {

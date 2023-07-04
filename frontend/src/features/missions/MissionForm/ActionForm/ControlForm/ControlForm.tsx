@@ -6,6 +6,9 @@ import { useMemo } from 'react'
 import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
+import { ActionTargetSelector } from './ActionTargetSelector'
+import { InfractionsForm } from './InfractionsForm'
+import { VehicleTypeSelector } from './VehicleTypeSelector'
 import { COLORS } from '../../../../../constants/constants'
 import {
   Mission,
@@ -19,9 +22,6 @@ import { ReactComponent as DeleteSVG } from '../../../../../uiMonitor/icons/Dele
 import { getDateAsLocalizedStringCompact } from '../../../../../utils/getDateAsLocalizedString'
 import { MultiPointPicker } from '../../../MultiPointPicker'
 import { ActionTheme } from '../Themes/ActionTheme'
-import { ActionTargetSelector } from './ActionTargetSelector'
-import { InfractionsForm } from './InfractionsForm'
-import { VehicleTypeSelector } from './VehicleTypeSelector'
 
 export function ControlForm({
   currentActionIndex,

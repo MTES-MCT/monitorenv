@@ -1,8 +1,8 @@
 import _ from 'lodash'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../../constants/constants'
 import { RegulatoryLayerSearchResultGroupByLayer } from './RegulatoryLayerSearchResultGroupByLayer'
+import { COLORS } from '../../../../constants/constants'
 
 export function RegulatoryLayerSearchResultList({ results, searchedText }) {
   const layersByLayerName = _.groupBy(results, r => r?.doc?.properties?.layer_name)

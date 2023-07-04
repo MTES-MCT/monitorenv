@@ -2,6 +2,7 @@ import { Icon } from '@mtes-mct/monitor-ui'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
+import { EditInterestPoint } from './EditInterestPoint'
 import { MapToolType } from '../../../../domain/entities/map/constants'
 import { setMapToolOpened } from '../../../../domain/shared_slices/Global'
 import {
@@ -13,7 +14,6 @@ import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useEscapeFromKeyboardAndExecute } from '../../../../hooks/useEscapeFromKeyboardAndExecute'
 import { MapToolButton } from '../MapToolButton'
-import { EditInterestPoint } from './EditInterestPoint'
 
 export function InterestPointMapButton() {
   const dispatch = useAppDispatch()

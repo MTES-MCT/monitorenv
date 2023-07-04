@@ -2,13 +2,13 @@ import { useDispatch } from 'react-redux'
 import { RadioGroup } from 'rsuite'
 import styled from 'styled-components'
 
+import { BaseLayerItem } from './BaseLayerItem'
 import { COLORS } from '../../../constants/constants'
 import { BaseLayers } from '../../../domain/entities/layers/constants'
 import { toggleBaseLayer } from '../../../domain/shared_slices/LayerSidebar'
 import { selectBaseLayer } from '../../../domain/shared_slices/Map'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
-import { BaseLayerItem } from './BaseLayerItem'
 
 const baseLayersKeys = Object.keys(BaseLayers).filter(key => key !== BaseLayers.DARK.code)
 

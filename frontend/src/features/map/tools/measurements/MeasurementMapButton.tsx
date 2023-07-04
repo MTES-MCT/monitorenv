@@ -2,6 +2,7 @@ import { Icon } from '@mtes-mct/monitor-ui'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
+import { CustomCircleRange } from './CustomCircleRange'
 import { MapToolType, MeasurementType } from '../../../../domain/entities/map/constants'
 import { setMapToolOpened } from '../../../../domain/shared_slices/Global'
 import { setMeasurementTypeToAdd } from '../../../../domain/shared_slices/Measurement'
@@ -13,7 +14,6 @@ import { ReactComponent as MultiLineSVG } from '../../../../uiMonitor/icons/Meas
 import { ReactComponent as CircleRangeSVG } from '../../../../uiMonitor/icons/Measure_circle.svg'
 import { MapComponentStyle } from '../../../commonStyles/MapComponent.style'
 import { MapToolButton } from '../MapToolButton'
-import { CustomCircleRange } from './CustomCircleRange'
 
 export function MeasurementMapButton() {
   const dispatch = useAppDispatch()

@@ -1,7 +1,7 @@
+import { SemaphoreCard } from './SemaphoreCard'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { OverlayPositionOnCentroid } from '../OverlayPositionOnCentroid'
-import { SemaphoreCard } from './SemaphoreCard'
 
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { MapChildrenProps } from '../../Map'

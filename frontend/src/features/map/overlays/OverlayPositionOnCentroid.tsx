@@ -4,12 +4,12 @@ import Overlay from 'ol/Overlay'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
+import { getOverlayPositionForCentroid, getTopLeftMargin } from './position'
 import { COLORS } from '../../../constants/constants'
 import { setOverlayCoordinates } from '../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
-import { getOverlayPositionForCentroid, getTopLeftMargin } from './position'
 
 const OVERLAY_HEIGHT = 74
 

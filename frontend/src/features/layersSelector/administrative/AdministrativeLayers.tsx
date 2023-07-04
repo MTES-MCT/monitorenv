@@ -1,12 +1,12 @@
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
+import { AdministrativeLayer } from './AdministrativeLayer'
 import { COLORS } from '../../../constants/constants'
 import { administrativeLayers } from '../../../domain/entities/administrativeLayers'
 import { toggleAdministrativeZones } from '../../../domain/shared_slices/LayerSidebar'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
-import { AdministrativeLayer } from './AdministrativeLayer'
 // import AdministrativeLayerGroup from './AdministrativeLayerGroup'
 
 export function AdministrativeLayers() {

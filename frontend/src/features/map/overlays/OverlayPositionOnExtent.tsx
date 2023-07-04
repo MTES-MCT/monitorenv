@@ -4,8 +4,8 @@ import Overlay from 'ol/Overlay'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../constants/constants'
 import { getOverlayPositionForExtent, getTopLeftMarginForFeature } from './position'
+import { COLORS } from '../../../constants/constants'
 
 const OVERLAY_HEIGHT = 124
 const OVERLAY_WIDTH = 365

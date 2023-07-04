@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import { Dropdown } from 'rsuite'
 import styled from 'styled-components'
 
+import { ActionCard } from './ActionCard'
 import { COLORS } from '../../../constants/constants'
 import { ActionTypeEnum, EnvAction } from '../../../domain/entities/missions'
 import { ReactComponent as ControlSVG } from '../../../uiMonitor/icons/Control.svg'
@@ -10,7 +11,6 @@ import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/Note_libre.s
 import { ReactComponent as SurveillanceSVG } from '../../../uiMonitor/icons/Observation.svg'
 import { ReactComponent as PlusSVG } from '../../../uiMonitor/icons/Plus.svg'
 import { actionFactory } from '../Missions.helpers'
-import { ActionCard } from './ActionCard'
 
 export function ActionsForm({ currentActionIndex, form, remove, setCurrentActionIndex, unshift }) {
   const envActions = form?.values?.envActions as EnvAction[] | undefined

@@ -2,11 +2,11 @@ import { Button, Icon } from '@mtes-mct/monitor-ui'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
+import { MissionsTableFilters } from './Filters'
+import { MissionsTable } from './MissionsTable'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { useGetFilteredMissionsQuery } from '../../../hooks/useGetFilteredMissionsQuery'
 import { sideWindowActions } from '../../SideWindow/slice'
-import { MissionsTableFilters } from './Filters'
-import { MissionsTable } from './MissionsTable'
 
 export function Missions() {
   const dispatch = useDispatch()

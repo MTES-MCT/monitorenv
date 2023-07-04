@@ -2,10 +2,10 @@ import { useState } from 'react'
 import { Button } from 'rsuite'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../../../constants/constants'
-import { infractionFactory } from '../../../Missions.helpers'
 import { InfractionCard } from './InfractionCard'
 import { InfractionForm } from './InfractionForm/InfractionForm'
+import { COLORS } from '../../../../../constants/constants'
+import { infractionFactory } from '../../../Missions.helpers'
 
 import type { Infraction } from '../../../../../domain/entities/missions'
 

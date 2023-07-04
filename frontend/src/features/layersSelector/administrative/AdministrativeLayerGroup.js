@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
+import AdministrativeLayer from './AdministrativeLayer'
 import { COLORS } from '../../../constants/constants'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
-import AdministrativeLayer from './AdministrativeLayer'
 
 function AdministrativeLayerGroup({ isLastItem, layers }) {
   const [isOpen, setIsOpen] = useState(false)

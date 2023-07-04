@@ -2,11 +2,11 @@ import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { MutableRefObject, useCallback, useEffect, useRef } from 'react'
 
+import { getMissionZoneFeature, getActionsFeatures } from './missionGeometryHelpers'
+import { selectedMissionStyle, selectedMissionActionsStyle } from './styles/missions.style'
 import { useGetMissionsQuery } from '../../../api/missionsAPI'
 import { Layers } from '../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { getMissionZoneFeature, getActionsFeatures } from './missionGeometryHelpers'
-import { selectedMissionStyle, selectedMissionActionsStyle } from './styles/missions.style'
 
 import type { MapChildrenProps } from '../Map'
 

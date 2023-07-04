@@ -1,8 +1,8 @@
+import { ControlCard } from './ControlCard'
+import { SurveillanceCard } from './SurveillanceCard'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { ActionTypeEnum } from '../../../../domain/entities/missions'
 import { OverlayPositionOnCentroid } from '../OverlayPositionOnCentroid'
-import { ControlCard } from './ControlCard'
-import { SurveillanceCard } from './SurveillanceCard'
 
 import type { MapChildrenProps } from '../../Map'
 

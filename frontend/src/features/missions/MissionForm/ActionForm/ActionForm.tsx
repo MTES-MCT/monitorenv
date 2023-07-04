@@ -1,11 +1,11 @@
 import { useField } from 'formik'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../../constants/constants'
-import { ActionTypeEnum, EnvAction, Mission } from '../../../../domain/entities/missions'
 import { ControlForm } from './ControlForm/ControlForm'
 import { NoteForm } from './NoteForm'
 import { SurveillanceForm } from './SurveillanceForm'
+import { COLORS } from '../../../../constants/constants'
+import { ActionTypeEnum, EnvAction, Mission } from '../../../../domain/entities/missions'
 
 type ActionFormProps = {
   currentActionIndex: number | undefined
