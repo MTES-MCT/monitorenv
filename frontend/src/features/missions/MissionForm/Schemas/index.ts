@@ -25,7 +25,19 @@ const ControlResourceSchema: Yup.SchemaOf<ControlResource> = Yup.object()
 const ControlUnitSchema: Yup.SchemaOf<ControlUnit> = Yup.object()
   .shape({
     administration: Yup.string().required(),
-    contact: Yup.string().nullable().required('Requis'),
+    contact: Yup.string()
+      .nullable()
+      .test({
+        message: 'Requis',
+        name: 'controlUnits contact',
+        test: (value, context) => {
+          if (!value && context.path === 'controlUnits[0].contact') {
+            return false
+          }
+
+          return true
+        }
+      }),
     id: Yup.number().required(),
     name: Yup.string().required(),
     resources: Yup.array().ensure().of(ControlResourceSchema).required()
