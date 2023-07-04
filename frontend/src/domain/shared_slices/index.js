@@ -1,6 +1,6 @@
 import { combineReducers } from '@reduxjs/toolkit'
 
-import { ampsAPI } from '../../api/ampsAPI'
+import { ampsAPI, ampsErrorLoggerMiddleware } from '../../api/ampsAPI'
 import { controlThemesAPI } from '../../api/controlThemesAPI'
 import { controlUnitsAPI } from '../../api/controlUnitsAPI'
 import { infractionsAPI } from '../../api/infractionsAPI'
@@ -53,6 +53,7 @@ export const homeReducers = combineReducers({
 
 export const homeMiddlewares = [
   ampsAPI.middleware,
+  ampsErrorLoggerMiddleware,
   missionsAPI.middleware,
   regulatoryLayersAPI.middleware,
   controlThemesAPI.middleware,
