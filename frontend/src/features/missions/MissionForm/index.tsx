@@ -5,14 +5,14 @@ import { useDispatch } from 'react-redux'
 import { matchPath } from 'react-router-dom'
 import styled from 'styled-components'
 
+import { MissionForm } from './MissionForm'
+import { MissionSchema } from './Schemas'
 import { useGetMissionQuery } from '../../../api/missionsAPI'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { createOrEditMission } from '../../../domain/use_cases/missions/createOrEditMission'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { FormikForm } from '../../../uiMonitor/CustomFormikFields/FormikForm'
 import { missionFactory } from '../Missions.helpers'
-import { MissionForm } from './MissionForm'
-import { MissionSchema } from './Schemas'
 
 export function Mission() {
   const { sideWindow } = useAppSelector(state => state)

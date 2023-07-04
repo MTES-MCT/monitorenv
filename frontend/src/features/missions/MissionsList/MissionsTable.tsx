@@ -5,9 +5,9 @@ import { useVirtualizer } from '@tanstack/react-virtual'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 import { Columns } from './Columns'
 import { SkeletonColumns } from './Columns/Skeleton'
+import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 
 import type { Mission } from '../../../domain/entities/missions'
 

@@ -5,6 +5,7 @@ import { generatePath } from 'react-router'
 import { ToastContainer } from 'react-toastify'
 import styled from 'styled-components'
 
+import { Route } from './Route'
 import { ErrorBoundary } from '../../components/ErrorBoundary'
 import { COLORS } from '../../constants/constants'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
@@ -12,7 +13,6 @@ import { onNavigateDuringEditingMission } from '../../domain/use_cases/navigatio
 import { NewWindowContext } from '../../ui/NewWindow'
 import { Mission } from '../missions/MissionForm'
 import { Missions } from '../missions/MissionsList'
-import { Route } from './Route'
 
 import type { NewWindowContextValue } from '../../ui/NewWindow'
 import type { ForwardedRef, MutableRefObject } from 'react'

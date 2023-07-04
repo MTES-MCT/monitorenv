@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../../constants/constants'
 import { Key, Value, Fields, Field } from './RegulatoryMetadata.style'
+import { COLORS } from '../../../../constants/constants'
 
 function Identification({ entity_name, facade, thematique, type }) {
   return (

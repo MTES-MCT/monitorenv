@@ -1,10 +1,10 @@
 import styled from 'styled-components'
 
-import { COLORS } from '../../../../constants/constants'
 import {
   RegulatoryLayerSearchResultZone,
   REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT
 } from './RegulatoryLayerSearchResultZone'
+import { COLORS } from '../../../../constants/constants'
 
 export function RegulatoryLayerSearchResultZones({ result, searchedText, zonesAreOpen }) {
   return (

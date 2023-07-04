@@ -1,10 +1,10 @@
 import _ from 'lodash'
 import * as Yup from 'yup'
 
-import { ActionTypeEnum, EnvActionNote, MissionTypeEnum, NewMission } from '../../../../domain/entities/missions'
-import { REACT_APP_CYPRESS_TEST } from '../../../../env'
 import { getClosedEnvActionControlSchema, getNewEnvActionControlSchema } from './Control'
 import { getClosedEnvActionSurveillanceSchema, getNewEnvActionSurveillanceSchema } from './Surveillance'
+import { ActionTypeEnum, EnvActionNote, MissionTypeEnum, NewMission } from '../../../../domain/entities/missions'
+import { REACT_APP_CYPRESS_TEST } from '../../../../env'
 
 import type { ControlResource, ControlUnit } from '../../../../domain/entities/controlUnit'
 

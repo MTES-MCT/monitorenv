@@ -4,10 +4,10 @@ import { matchPath } from 'react-router'
 import { StyleSheetManager } from 'styled-components'
 
 import { SideWindow } from '.'
+import { SideWindowStatus, sideWindowActions } from './slice'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
-import { SideWindowStatus, sideWindowActions } from './slice'
 
 export function SideWindowLauncher() {
   const dispatch = useAppDispatch()

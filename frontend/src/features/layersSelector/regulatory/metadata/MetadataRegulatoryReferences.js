@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { Link } from '../../../../ui/Link'
 import { SectionTitle, Section, List } from './RegulatoryMetadata.style'
+import { Link } from '../../../../ui/Link'
 
 function MetadataRegulatoryReferences({ regulatoryReference, url }) {
   return (

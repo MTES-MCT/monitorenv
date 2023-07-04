@@ -5,6 +5,8 @@ import { useDispatch } from 'react-redux'
 import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
+import { REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT } from './RegulatoryLayerSearchResultZone'
+import { RegulatoryLayerSearchResultZones } from './RegulatoryLayerSearchResultZones'
 import { COLORS } from '../../../../constants/constants'
 import {
   addRegulatoryZonesToMyLayers,
@@ -13,8 +15,6 @@ import {
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReactComponent as PinSVG } from '../../../../uiMonitor/icons/Pin.svg'
 import { ReactComponent as PinFullSVG } from '../../../../uiMonitor/icons/Pin_filled.svg'
-import { REGULATORY_LAYER_SEARCH_RESULT_ZONE_HEIGHT } from './RegulatoryLayerSearchResultZone'
-import { RegulatoryLayerSearchResultZones } from './RegulatoryLayerSearchResultZones'
 
 export function RegulatoryLayerSearchResultGroupByLayer({ groupName, result, searchedText }) {
   const dispatch = useDispatch()

@@ -1,7 +1,7 @@
 import { Accent, Button, Icon, Size } from '@mtes-mct/monitor-ui'
 
-import { controlUnitFactory } from '../Missions.helpers'
 import { ControlUnitSelector } from './ControlUnitSelector'
+import { controlUnitFactory } from '../Missions.helpers'
 
 export function ControlUnitsForm({ form, push, readOnly, remove }) {
   const handleAddControlUnit = () => {

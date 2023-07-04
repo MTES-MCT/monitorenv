@@ -1,8 +1,8 @@
 import _ from 'lodash'
 import { useEffect, useState, useMemo, useRef, MutableRefObject } from 'react'
 
-import { GOOGLEMAPS_API_KEY } from '../../env'
 import { loadGoogleMapScript } from './utils'
+import { GOOGLEMAPS_API_KEY } from '../../env'
 
 const GOOGLEMAPS_GEOCODE_URL = 'https://maps.googleapis.com/maps/api/geocode/json'
 const GOOGLEMAPS_SCRIPT_BASEURL = `https://maps.googleapis.com/maps/api/js`

@@ -1,7 +1,7 @@
+import { MissionCard } from './MissionCard'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { OverlayPositionOnExtent } from '../OverlayPositionOnExtent'
-import { MissionCard } from './MissionCard'
 
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { MapChildrenProps } from '../../Map'

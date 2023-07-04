@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux'
 import { CheckPicker } from 'rsuite'
 import styled from 'styled-components'
 
+import { FilterTags } from './FilterTags'
 import { useGetControlThemesQuery } from '../../../../api/controlThemesAPI'
 import { useGetControlUnitsQuery } from '../../../../api/controlUnitsAPI'
 import { COLORS } from '../../../../constants/constants'
@@ -20,7 +21,6 @@ import { MissionFiltersEnum, resetMissionFilters, updateFilters } from '../../..
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useNewWindow } from '../../../../ui/NewWindow'
 import { ReactComponent as ReloadSVG } from '../../../../uiMonitor/icons/Reload.svg'
-import { FilterTags } from './FilterTags'
 
 export function MissionsTableFilters() {
   const dispatch = useDispatch()

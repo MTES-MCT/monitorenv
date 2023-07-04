@@ -11,6 +11,7 @@ import { FieldArray, useField, useFormikContext } from 'formik'
 import { matchPath } from 'react-router'
 import styled from 'styled-components'
 
+import { ControlUnitsForm } from './ControlUnitsForm'
 import { InteractionListener } from '../../../domain/entities/map/constants'
 import {
   Mission,
@@ -25,7 +26,6 @@ import { MissionSourceTag } from '../../../ui/MissionSourceTag'
 import { MissionStatusTag } from '../../../ui/MissionStatusTag'
 import { useNewWindow } from '../../../ui/NewWindow'
 import { MultiZonePicker } from '../MultiZonePicker'
-import { ControlUnitsForm } from './ControlUnitsForm'
 
 export function GeneralInformationsForm() {
   const { newWindowContainerRef } = useNewWindow()

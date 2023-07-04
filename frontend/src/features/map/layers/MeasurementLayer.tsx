@@ -14,6 +14,7 @@ import { getLength } from 'ol/sphere'
 import { useCallback, useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { measurementStyle, measurementStyleWithCenter } from './styles/measurement.style'
 import { Layers } from '../../../domain/entities/layers/constants'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map/constants'
 import {
@@ -25,7 +26,6 @@ import { saveMeasurement } from '../../../domain/use_cases/measurement/saveMeasu
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getNauticalMilesFromMeters } from '../../../utils/utils'
 import { MeasurementOverlay } from '../overlays/MeasurementOverlay'
-import { measurementStyle, measurementStyleWithCenter } from './styles/measurement.style'
 
 import type { MapChildrenProps } from '../Map'
 import type { Geometry } from 'ol/geom'

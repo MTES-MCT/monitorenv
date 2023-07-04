@@ -4,6 +4,8 @@ import { useDispatch } from 'react-redux'
 import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
+import Identification from './Identification'
+import MetadataRegulatoryReferences from './MetadataRegulatoryReferences'
 import { useGetRegulatoryLayerQuery } from '../../../../api/regulatoryLayersAPI'
 import { COLORS } from '../../../../constants/constants'
 import { getTitle } from '../../../../domain/entities/regulatory'
@@ -12,8 +14,6 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { RegulatoryLayerLegend } from '../../../../ui/RegulatoryLayerLegend'
 import { ReactComponent as AlertSVG } from '../../../../uiMonitor/icons/Attention_controles.svg'
 import { ReactComponent as CloseSVG } from '../../../../uiMonitor/icons/Close.svg'
-import Identification from './Identification'
-import MetadataRegulatoryReferences from './MetadataRegulatoryReferences'
 
 const FOUR_HOURS = 4 * 60 * 60 * 1000
 

@@ -1,11 +1,11 @@
 import { useField } from 'formik'
 import styled from 'styled-components'
 
-import { THEME_REQUIRE_PROTECTED_SPECIES } from '../../../../../domain/entities/missions'
 import { ProtectedSpeciesSelector } from './ProtectedSpeciesSelector'
 import { SubThemesSelector } from './SubThemesSelector'
 import { ThemeSelector } from './ThemeSelector'
 import { useCleanSubThemesOnThemeChange } from './useCleanSubThemesOnThemeChange'
+import { THEME_REQUIRE_PROTECTED_SPECIES } from '../../../../../domain/entities/missions'
 
 export function ActionTheme({ labelSubTheme, labelTheme, themePath }) {
   const [currentThemeField] = useField(`${themePath}.theme`)

@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
+import { SurveillanceThemes } from './Themes/SurveillanceThemes'
 import { InteractionListener } from '../../../../domain/entities/map/constants'
 import { ActionTypeEnum, type EnvAction } from '../../../../domain/entities/missions'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -13,7 +14,6 @@ import { ReactComponent as SurveillanceIconSVG } from '../../../../uiMonitor/ico
 import { dateDifferenceInHours } from '../../../../utils/dateDifferenceInHours'
 import { pluralize } from '../../../../utils/pluralize'
 import { MultiZonePicker } from '../../MultiZonePicker'
-import { SurveillanceThemes } from './Themes/SurveillanceThemes'
 
 export function SurveillanceForm({ currentActionIndex, readOnly, remove, setCurrentActionIndex }) {
   const { newWindowContainerRef } = useNewWindow()

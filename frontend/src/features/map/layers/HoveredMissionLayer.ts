@@ -2,8 +2,8 @@ import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { MutableRefObject, useEffect, useRef } from 'react'
 
-import { Layers } from '../../../domain/entities/layers/constants'
 import { missionZoneStyle } from './styles/missions.style'
+import { Layers } from '../../../domain/entities/layers/constants'
 
 import type { VectorLayerWithName } from '../../../domain/types/layer'
 import type { MapChildrenProps } from '../Map'

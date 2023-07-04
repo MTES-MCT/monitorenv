@@ -2,16 +2,16 @@ import { useDispatch } from 'react-redux'
 import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
-import { COLORS } from '../../constants/constants'
-import { setDisplayedItems } from '../../domain/shared_slices/Global'
-import { closeRegulatoryZoneMetadata } from '../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
-import { useAppSelector } from '../../hooks/useAppSelector'
-import { ReactComponent as LayersSVG } from '../../uiMonitor/icons/Couches_carto.svg'
 import { AdministrativeLayers } from './administrative/AdministrativeLayers'
 import { BaseLayerList } from './base/BaseLayerList'
 import { RegulatoryLayers } from './regulatory/menu/RegulatoryLayers'
 import { RegulatoryLayerZoneMetadata } from './regulatory/metadata/RegulatoryLayerZoneMetadata'
 import { RegulatoryLayerSearch } from './regulatory/search/RegulatoryLayerSearch'
+import { COLORS } from '../../constants/constants'
+import { setDisplayedItems } from '../../domain/shared_slices/Global'
+import { closeRegulatoryZoneMetadata } from '../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
+import { useAppSelector } from '../../hooks/useAppSelector'
+import { ReactComponent as LayersSVG } from '../../uiMonitor/icons/Couches_carto.svg'
 
 export function LayersSidebar() {
   const { regulatoryMetadataLayerId, regulatoryMetadataPanelIsOpen } = useAppSelector(state => state.regulatoryMetadata)

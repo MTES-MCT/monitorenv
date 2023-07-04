@@ -8,6 +8,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid'
 
+import { getInterestPointStyle, POIStyle } from './styles/interestPoint.style'
 import { InterestPointLine } from '../../../domain/entities/interestPointLine'
 import {
   coordinatesAreModified,
@@ -30,7 +31,6 @@ import { saveInterestPointFeature } from '../../../domain/use_cases/interestPoin
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { usePrevious } from '../../../hooks/usePrevious'
 import InterestPointOverlay from '../overlays/InterestPointOverlay'
-import { getInterestPointStyle, POIStyle } from './styles/interestPoint.style'
 
 import type { MapChildrenProps } from '../Map'
 

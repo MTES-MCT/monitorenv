@@ -1,7 +1,7 @@
 import * as Yup from 'yup'
 
-import { ActionTypeEnum, EnvActionSurveillance } from '../../../../domain/entities/missions'
 import { ThemeSchema } from './Theme'
+import { ActionTypeEnum, EnvActionSurveillance } from '../../../../domain/entities/missions'
 
 export const getNewEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<EnvActionSurveillance> =>
   Yup.object()
