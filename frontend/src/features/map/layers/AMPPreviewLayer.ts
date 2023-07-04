@@ -24,6 +24,7 @@ export function AMPPreviewLayer({ map }: MapChildrenProps) {
 
   const ampLayerRef = useRef() as MutableRefObject<Vector<VectorSource>>
   const ampVectorSourceRef = useRef() as MutableRefObject<VectorSource>
+  const isThrottled = useRef(false)
 
   function getAMPVectorSource() {
     if (!ampVectorSourceRef.current) {
@@ -48,7 +49,7 @@ export function AMPPreviewLayer({ map }: MapChildrenProps) {
   }
 
   useEffect(() => {
-    if (map) {
+    function refreshPreviewLayer() {
       getAMPVectorSource().clear()
       if (ampsSearchResult && ampLayers?.entities) {
         const features = ampsSearchResult.reduce((amplayers, id) => {
@@ -75,6 +76,19 @@ export function AMPPreviewLayer({ map }: MapChildrenProps) {
         }, [] as Feature[])
         getAMPVectorSource().addFeatures(features)
       }
+    }
+
+    if (map) {
+      if (isThrottled.current) {
+        return
+      }
+
+      isThrottled.current = true
+
+      setTimeout(() => {
+        isThrottled.current = false
+        refreshPreviewLayer()
+      }, 300)
     }
   }, [map, ampsSearchResult, ampLayers])
 

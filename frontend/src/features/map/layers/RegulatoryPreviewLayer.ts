@@ -26,6 +26,8 @@ export function RegulatoryPreviewLayer({ map }: MapChildrenProps) {
 
   const regulatoryLayerRef = useRef() as MutableRefObject<Vector<VectorSource>>
   const regulatoryVectorSourceRef = useRef() as MutableRefObject<VectorSource>
+  const isThrottled = useRef(false)
+
   function getRegulatoryVectorSource() {
     if (!regulatoryVectorSourceRef.current) {
       regulatoryVectorSourceRef.current = new VectorSource({
@@ -58,7 +60,7 @@ export function RegulatoryPreviewLayer({ map }: MapChildrenProps) {
   }, [map, regulatoryMetadataLayerId])
 
   useEffect(() => {
-    if (map) {
+    function refreshPreviewLayer() {
       getRegulatoryVectorSource().clear()
       if (regulatoryLayersSearchResult) {
         const features = regulatoryLayersSearchResult.reduce((regulatorylayers, id) => {
@@ -85,6 +87,19 @@ export function RegulatoryPreviewLayer({ map }: MapChildrenProps) {
         }, [] as Feature[])
         getRegulatoryVectorSource().addFeatures(features)
       }
+    }
+
+    if (map) {
+      if (isThrottled.current) {
+        return
+      }
+
+      isThrottled.current = true
+
+      setTimeout(() => {
+        isThrottled.current = false
+        refreshPreviewLayer()
+      }, 300)
     }
   }, [map, regulatoryLayersSearchResult, regulatoryLayersById])
 
