@@ -2,10 +2,10 @@ import { Button, Icon } from '@mtes-mct/monitor-ui'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { addMission } from '../../../domain/use_cases/missions/addMission'
-import { useGetFilteredMissionsQuery } from '../../../hooks/useGetFilteredMissionsQuery'
 import { MissionsTableFilters } from './Filters'
 import { MissionsTable } from './MissionsTable'
+import { addMission } from '../../../domain/use_cases/missions/addMission'
+import { useGetFilteredMissionsQuery } from '../../../hooks/useGetFilteredMissionsQuery'
 
 export function Missions() {
   const dispatch = useDispatch()

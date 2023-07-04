@@ -3,11 +3,11 @@ import { MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react
 import { StyleSheetManager } from 'styled-components'
 
 import { SideWindow } from '.'
+import { SideWindowStatus, sideWindowActions } from './slice'
 import { multiMissionsActions } from '../../domain/shared_slices/MultiMissions'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { getMissionPageRoute } from '../../utils/getMissionPageRoute'
-import { SideWindowStatus, sideWindowActions } from './slice'
 
 export function SideWindowLauncher() {
   const dispatch = useAppDispatch()
