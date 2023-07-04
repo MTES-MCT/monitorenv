@@ -39,11 +39,11 @@ export function Map() {
       <MapAttributionsBox />
       <MapCoordinatesBox />
       <BaseLayer />
+      <AMPLayers />
+      <AMPPreviewLayer />
       <RegulatoryLayers />
       <RegulatoryPreviewLayer />
       <ShowRegulatoryMetadata />
-      <AMPLayers />
-      <AMPPreviewLayer />
       <AdministrativeLayers />
       <MeasurementLayer />
       <InterestPointLayer />
