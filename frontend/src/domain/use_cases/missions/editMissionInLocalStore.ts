@@ -6,7 +6,7 @@ import { sideWindowPaths } from '../../entities/sideWindow'
 import { setToast } from '../../shared_slices/Global'
 import { multiMissionsActions } from '../../shared_slices/MultiMissions'
 
-export const editMission = missionId => async (dispatch, getState) => {
+export const editMissionInLocalStore = missionId => async (dispatch, getState) => {
   const {
     missionState: { isFormDirty, missionState },
     multiMissions: { selectedMissions }

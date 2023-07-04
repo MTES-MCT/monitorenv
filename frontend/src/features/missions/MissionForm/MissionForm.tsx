@@ -10,8 +10,8 @@ import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setToast } from '../../../domain/shared_slices/Global'
 import { setMissionState } from '../../../domain/shared_slices/MissionsState'
 import { multiMissionsActions } from '../../../domain/shared_slices/MultiMissions'
-import { createOrEditMission } from '../../../domain/use_cases/missions/createOrEditMission'
 import { deleteMissionAndGoToMissionsList } from '../../../domain/use_cases/missions/deleteMission'
+import { saveMission } from '../../../domain/use_cases/missions/saveMission'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useSyncFormValuesWithRedux } from '../../../hooks/useSyncFormValuesWithRedux'
 import { sideWindowActions } from '../../SideWindow/slice'
@@ -37,8 +37,7 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
     if (selectedMission) {
       setValues(selectedMission)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedMission])
+  }, [setValues, selectedMission])
 
   const [currentActionIndex, setCurrentActionIndex] = useState(undefined)
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
@@ -74,7 +73,7 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
     dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.MISSIONS)))
   }
 
-  const saveMission = async () => {
+  const submitMission = async () => {
     validateForm().then(errors => {
       if (_.isEmpty(errors)) {
         handleSubmit()
@@ -113,7 +112,7 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
   }
 
   const validateReopenMission = async () => {
-    await dispatch(createOrEditMission({ ...values, isClosed: false }, true))
+    await dispatch(saveMission({ ...values, isClosed: false }, true))
     dispatch(
       setToast({
         containerId: 'sideWindow',
@@ -184,7 +183,7 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
         onDeleteMission={deleteMission}
         onQuitFormEditing={confirmFormCancelation}
         onReopenMission={reopenMission}
-        onSaveMission={saveMission}
+        onSaveMission={submitMission}
       />
     </StyledFormContainer>
   )

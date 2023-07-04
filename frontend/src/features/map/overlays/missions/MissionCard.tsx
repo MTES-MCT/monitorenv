@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
-import { editMission } from '../../../../domain/use_cases/missions/editMission'
+import { editMissionInLocalStore } from '../../../../domain/use_cases/missions/editMissionInLocalStore'
 import { clearSelectedMissionOnMap } from '../../../../domain/use_cases/missions/selectMissionOnMap'
 import { MissionSourceTag } from '../../../../ui/MissionSourceTag'
 import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
@@ -41,7 +41,7 @@ export function MissionCard({ feature, selected = false }: { feature: any; selec
     : `du ${formattedStartDate} au ${formattedEndDate}`
 
   const handleEditMission = useCallback(() => {
-    dispatch(editMission(missionId))
+    dispatch(editMissionInLocalStore(missionId))
   }, [dispatch, missionId])
 
   const handleCloseOverlay = useCallback(() => {

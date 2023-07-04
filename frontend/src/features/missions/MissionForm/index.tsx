@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import { MissionForm } from './MissionForm'
 import { MissionSchema } from './Schemas'
 import { useGetMissionQuery } from '../../../api/missionsAPI'
-import { createOrEditMission } from '../../../domain/use_cases/missions/createOrEditMission'
+import { saveMission } from '../../../domain/use_cases/missions/saveMission'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { FormikForm } from '../../../uiMonitor/CustomFormikFields/FormikForm'
 import { getIdTyped } from '../../../utils/getIdTyped'
@@ -29,7 +29,9 @@ export function Mission() {
   const idTyped = useMemo(() => getIdTyped(routeParams?.params?.id), [routeParams?.params?.id])
   const missionIsNewMission = useMemo(() => isNewMission(routeParams?.params?.id), [routeParams?.params?.id])
 
-  const { data: missionToEdit, isLoading } = useGetMissionQuery(!missionIsNewMission ? idTyped : skipToken)
+  const { data: missionToEdit, isLoading } = useGetMissionQuery(
+    !missionIsNewMission && idTyped ? Number(idTyped) : skipToken
+  )
   const selectedMission = useMemo(
     () => selectedMissions.find(mis => mis.mission.id === idTyped),
     [idTyped, selectedMissions]
@@ -45,7 +47,7 @@ export function Mission() {
   }, [idTyped, missionIsNewMission, missionToEdit])
 
   const handleSubmitForm = values => {
-    dispatch(createOrEditMission(values))
+    dispatch(saveMission(values))
   }
 
   if (isLoading) {

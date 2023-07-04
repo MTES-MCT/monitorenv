@@ -1,4 +1,4 @@
-export function getIdTyped(id) {
+export function getIdTyped(id: string | undefined) {
   if (!id) {
     return undefined
   }

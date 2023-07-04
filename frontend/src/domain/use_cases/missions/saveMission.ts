@@ -6,7 +6,7 @@ import { sideWindowPaths } from '../../entities/sideWindow'
 import { setToast } from '../../shared_slices/Global'
 import { multiMissionsActions } from '../../shared_slices/MultiMissions'
 
-export const createOrEditMission =
+export const saveMission =
   (values, reopen = false) =>
   async (dispatch, getState) => {
     const {
