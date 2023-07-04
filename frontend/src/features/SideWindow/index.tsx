@@ -42,7 +42,7 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
 
   const tabs = useMemo(() => {
     const missionsList = {
-      icon: <Icon.Summary size={16} />,
+      icon: <Icon.Summary />,
       label: 'Liste des missions',
       nextPath: sideWindowPaths.MISSIONS
     }
