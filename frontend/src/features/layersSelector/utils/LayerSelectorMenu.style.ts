@@ -1,7 +1,7 @@
 import { Icon } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-const Wrapper = styled.div<{ $isExpanded: boolean }>`
+const Wrapper = styled.div<{ $hasPinnedLayers?: boolean; $isExpanded: boolean }>`
   height: 38px;
   font-size: 16px;
   line-height: 22px;
@@ -19,6 +19,9 @@ const Wrapper = styled.div<{ $isExpanded: boolean }>`
   border-bottom-left-radius: ${props => (props.$isExpanded ? '0' : '2px')};
   border-bottom-right-radius: ${props => (props.$isExpanded ? '0' : '2px')};
   background: ${p => p.theme.color.charcoal};
+
+  ${props =>
+    props.$hasPinnedLayers && `.Element-IconBox:first-of-type svg { color: ${props.theme.color.blueGray[100]}; }`}
 `
 const Title = styled.span`
   flex: 1;

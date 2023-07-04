@@ -1,12 +1,11 @@
+import { IconButton, Accent, Size, Icon } from '@mtes-mct/monitor-ui'
 import { useDispatch } from 'react-redux'
-import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../constants/constants'
 import { setDisplayedItems } from '../../domain/shared_slices/Global'
 import { closeRegulatoryZoneMetadata } from '../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
 import { useAppSelector } from '../../hooks/useAppSelector'
-import { ReactComponent as LayersSVG } from '../../uiMonitor/icons/Couches_carto.svg'
 import { AdministrativeLayers } from './administrative'
 import { AmpLayers } from './amp'
 import { BaseLayerList } from './base'
@@ -29,12 +28,13 @@ export function LayersSidebar() {
   return (
     <>
       <SidebarLayersIcon
+        $isActive={layersSidebarIsOpen}
         $isVisible={displayLayersSidebar}
-        appearance="primary"
+        accent={Accent.PRIMARY}
         data-cy="layers-sidebar"
-        icon={<LayersSVG className="rs-icon" />}
+        Icon={Icon.MapLayers}
         onClick={toggleLayerSidebar}
-        size="lg"
+        size={Size.LARGE}
         title="Arbre des couches"
       />
       <Sidebar
@@ -100,9 +100,11 @@ const Layers = styled.div`
   max-height: calc(100vh - 160px);
 `
 
-const SidebarLayersIcon = styled(IconButton)<{ $isVisible: boolean }>`
+const SidebarLayersIcon = styled(IconButton)<{ $isActive: boolean; $isVisible: boolean }>`
   position: absolute;
   top: 10px;
   left: 12px;
+  ${p => (p.$isActive ? `background: ${p.theme.color.blueGray[100]};` : '')}
+  ${p => (p.$isActive ? `border-color: ${p.theme.color.blueGray[100]};` : '')}
   ${p => (p.$isVisible ? '' : 'display: none;')}
 `

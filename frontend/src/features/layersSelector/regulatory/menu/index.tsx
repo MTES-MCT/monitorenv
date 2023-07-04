@@ -21,6 +21,7 @@ export function RegulatoryLayers() {
   return (
     <>
       <LayerSelectorMenu.Wrapper
+        $hasPinnedLayers={selectedRegulatoryLayerIds?.length > 0}
         $isExpanded={myRegulatoryZonesIsOpen}
         data-cy="regulatory-layers-my-zones"
         onClick={onTitleClicked}
