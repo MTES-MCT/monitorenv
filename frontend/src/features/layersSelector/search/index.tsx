@@ -59,7 +59,7 @@ export function LayerSearch({ isVisible }) {
     const fuseAMPs = new Fuse((amps?.entities && Object.values(amps?.entities)) || [], {
       distance: 50,
       includeScore: false,
-      keys: ['name', 'designation'],
+      keys: ['name', 'type'],
       threshold: 0.4
     })
 
@@ -80,7 +80,7 @@ export function LayerSearch({ isVisible }) {
           searchedAMPS = fuseAMPs?.search<AMP>(searchedText)
           itemSchema = { bboxPath: 'item.bbox', idPath: 'item.id' }
         } else {
-          searchedAMPS = amps
+          searchedAMPS = amps?.entities && Object.values(amps?.entities)
           itemSchema = { bboxPath: 'bbox', idPath: 'id' }
         }
         const searchedAMPsInExtent = getIntersectingLayerIds(geofilter, searchedAMPS, extent, itemSchema)

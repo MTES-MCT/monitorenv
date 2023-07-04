@@ -38,11 +38,11 @@ export function AMPLayerZone({ amp, isDisplayed }: { amp: AMP; isDisplayed: bool
     }
   }
 
-  const displayedName = amp?.designation?.replace(/[_]/g, ' ') || 'AUNCUN NOM'
+  const displayedName = amp?.type?.replace(/[_]/g, ' ') || 'AUNCUN NOM'
 
   return (
     <LayerSelector.Layer>
-      <RegulatoryLayerLegend entity_name={amp?.name} thematique={amp?.designation} />
+      <RegulatoryLayerLegend entity_name={amp?.name} thematique={amp?.type} />
       <LayerSelector.Name title={displayedName}>{displayedName}</LayerSelector.Name>
       <LayerSelector.IconGroup>
         <IconButton

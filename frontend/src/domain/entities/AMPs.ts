@@ -5,5 +5,6 @@ export type AMPFromAPI = {
   geom: GeoJSON.MultiPolygon
   id: number
   name: string
+  type: string
 }
 export type AMP = AMPFromAPI & { bbox: number[] }

@@ -37,8 +37,9 @@ class AMPsControllerITests {
         val amp = AMPEntity(
             id = 1,
             geom = polygon,
-            name = "test",
-            designation = "test",
+            name = "mon nom",
+            designation = "ma designation",
+            type = "mon type",
         )
         given(this.getAMPs.execute()).willReturn(listOf(amp))
 
@@ -50,5 +51,6 @@ class AMPsControllerITests {
             .andExpect(jsonPath("$[0].geom").exists())
             .andExpect(jsonPath("$[0].name", equalTo(amp.name)))
             .andExpect(jsonPath("$[0].designation", equalTo(amp.designation)))
+            .andExpect(jsonPath("$[0].type", equalTo(amp.type)))
     }
 }

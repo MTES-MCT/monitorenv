@@ -85,7 +85,12 @@ def new_amp() -> pd.DataFrame:
                 "Zone spéciale de conservation (N2000, DHFF)",
                 "Zone de protection spéciale (N2000, DO)",
             ],
-            "mpa_type": ["Parc national", "Natura 2000", "Parc naturel marin", "Réserve naturelle"],
+            "mpa_type": [
+                "Parc national",
+                "Natura 2000",
+                "Parc naturel marin",
+                "Réserve naturelle"
+            ],
             "row_hash": [
                 "cacem_row_hash_1",
                 "cacem_row_hash_2",
@@ -99,7 +104,12 @@ def new_amp() -> pd.DataFrame:
 def test_load_new_amp(new_amp):
     load_new_amp.run(new_amp)
     loaded_amp = read_query(
-        "monitorenv_remote", "SELECT * FROM amp_cacem ORDER BY id"
+        "monitorenv_remote", 
+        "SELECT id, geom, "
+            "mpa_oriname, des_desigfr, "
+            "mpa_type, row_hash "
+            "FROM amp_cacem "
+            "ORDER BY id"
     )
 
     pd.testing.assert_frame_equal(loaded_amp, new_amp)
