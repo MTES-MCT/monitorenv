@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 
-import { COLORS } from '../constants/constants'
 import { missionStatusLabels } from '../domain/entities/missions'
 import { ReactComponent as CercleSVG } from '../uiMonitor/icons/Cercle.svg'
 import { ReactComponent as CheckSVG } from '../uiMonitor/icons/Check.svg'
@@ -9,14 +8,14 @@ export function MissionStatusLabel({ missionStatus }) {
   switch (missionStatus) {
     case missionStatusLabels.PENDING.code:
       return (
-        <StatusWrapper color={COLORS.mediumSeaGreen}>
+        <StatusWrapper color={missionStatusLabels.PENDING.color}>
           <CercleSVG />
           {missionStatusLabels.PENDING.libelle}
         </StatusWrapper>
       )
     case missionStatusLabels.ENDED.code:
       return (
-        <StatusWrapper color={COLORS.charcoal}>
+        <StatusWrapper color={missionStatusLabels.ENDED.color}>
           <CercleSVG />
           {missionStatusLabels.ENDED.libelle}
         </StatusWrapper>
@@ -24,21 +23,21 @@ export function MissionStatusLabel({ missionStatus }) {
 
     case missionStatusLabels.CLOSED.code:
       return (
-        <StatusWrapper color={COLORS.opal}>
+        <StatusWrapper color={missionStatusLabels.CLOSED.color}>
           <CheckSVG />
           {missionStatusLabels.CLOSED.libelle}
         </StatusWrapper>
       )
     case missionStatusLabels.UPCOMING.code:
       return (
-        <StatusWrapper color={COLORS.blueGray}>
+        <StatusWrapper color={missionStatusLabels.UPCOMING.color}>
           <CercleSVG />
           {missionStatusLabels.UPCOMING.libelle}
         </StatusWrapper>
       )
 
     default:
-      return <StatusWrapper color={COLORS.opal}>No status</StatusWrapper>
+      return <StatusWrapper color={missionStatusLabels.CLOSED.color}>No status</StatusWrapper>
   }
 }
 

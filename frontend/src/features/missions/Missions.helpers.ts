@@ -62,7 +62,10 @@ export const actionFactory = ({
   }
 }
 
-export const missionFactory = (mission?: Mission | undefined): Mission | NewMission => {
+export const missionFactory = (
+  mission?: Mission | undefined,
+  id?: number | string | undefined
+): Mission | NewMission => {
   const startDate = new Date()
   startDate.setSeconds(0, 0)
 
@@ -83,7 +86,10 @@ export const missionFactory = (mission?: Mission | undefined): Mission | NewMiss
   }
 
   if (_.isEmpty(mission)) {
-    return formattedMission
+    return {
+      ...formattedMission,
+      id
+    } as NewMission
   }
 
   const { envActions } = mission
@@ -113,7 +119,7 @@ export const missionFactory = (mission?: Mission | undefined): Mission | NewMiss
     }
   }
 
-  return formattedMission
+  return formattedMission as Mission
 }
 
 export const controlUnitFactory = ({ ...resourceUnit } = {}): Omit<ControlUnit, 'id'> => ({

@@ -1,3 +1,4 @@
+import { THEME } from '@mtes-mct/monitor-ui'
 import { compareDesc, compareAsc, parseISO } from 'date-fns'
 
 import type { ControlUnit } from './controlUnit'
@@ -230,18 +231,22 @@ export enum MissionStatusEnum {
 export const missionStatusLabels = {
   CLOSED: {
     code: 'CLOSED',
+    color: THEME.color.opal,
     libelle: 'Cloturée'
   },
   ENDED: {
     code: 'ENDED',
+    color: THEME.color.charcoal,
     libelle: 'Terminée'
   },
   PENDING: {
     code: 'PENDING',
+    color: THEME.color.mediumSeaGreen,
     libelle: 'En cours'
   },
   UPCOMING: {
     code: 'UPCOMING',
+    color: THEME.color.blueGray[100],
     libelle: 'À venir'
   }
 }
@@ -387,7 +392,7 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
   startDateTimeUtc: string
 }
 
-export type NewMission = Omit<Mission, 'id' | 'facade' | 'missionSource'>
+export type NewMission = Omit<Mission, 'facade' | 'missionSource'>
 
 export type EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote
 export type NewEnvAction = NewEnvActionControl | EnvActionSurveillance | EnvActionNote

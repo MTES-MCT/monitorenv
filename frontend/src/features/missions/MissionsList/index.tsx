@@ -4,24 +4,23 @@ import styled from 'styled-components'
 
 import { MissionsTableFilters } from './Filters'
 import { MissionsTable } from './MissionsTable'
-import { sideWindowPaths } from '../../../domain/entities/sideWindow'
+import { addMission } from '../../../domain/use_cases/missions/addMission'
 import { useGetFilteredMissionsQuery } from '../../../hooks/useGetFilteredMissionsQuery'
-import { sideWindowActions } from '../../SideWindow/slice'
 
 export function Missions() {
   const dispatch = useDispatch()
 
   const { isError, isFetching, isLoading, missions } = useGetFilteredMissionsQuery()
 
+  const createMission = () => {
+    dispatch(addMission())
+  }
+
   return (
     <StyledMissionsContainer>
       <StyledHeader>
         <Title data-cy="SideWindowHeader-title">Missions et contrôles</Title>
-        <StyledButton
-          data-cy="add-mission"
-          Icon={Icon.Plus}
-          onClick={() => dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSION_NEW))}
-        >
+        <StyledButton data-cy="add-mission" Icon={Icon.Plus} onClick={createMission}>
           Ajouter une nouvelle mission
         </StyledButton>
       </StyledHeader>
@@ -52,6 +51,7 @@ const StyledHeader = styled.div`
   display: flex;
   flex-direction: row;
   gap: 32px;
+  margin-bottom: 40px;
 `
 
 const Title = styled.h1`
@@ -62,6 +62,7 @@ const Title = styled.h1`
 
 const NumberOfDisplayedMissions = styled.h3`
   font-size: 13px;
+  margin-top 32px;
 `
 const StyledButton = styled(Button)`
   align-self: center;

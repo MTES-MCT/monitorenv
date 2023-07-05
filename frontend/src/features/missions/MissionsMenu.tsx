@@ -5,10 +5,10 @@ import styled from 'styled-components'
 import { COLORS } from '../../constants/constants'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { setDisplayedItems } from '../../domain/shared_slices/Global'
-import { onNavigateBetweenMapAndSideWindow } from '../../domain/use_cases/navigation/onNavigateBetweenMapAndSideWindow'
+import { addMission } from '../../domain/use_cases/missions/addMission'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { MenuWithCloseButton } from '../commonStyles/map/MenuWithCloseButton'
-import { SideWindowStatus } from '../SideWindow/slice'
+import { sideWindowActions, SideWindowStatus } from '../SideWindow/slice'
 
 export function MissionsMenu() {
   const dispatch = useDispatch()
@@ -16,7 +16,7 @@ export function MissionsMenu() {
   const { sideWindow } = useAppSelector(state => state)
 
   const toggleMissionsWindow = () => {
-    dispatch(onNavigateBetweenMapAndSideWindow(sideWindowPaths.MISSIONS))
+    dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSIONS))
   }
   const toggleMissionsLayer = () => {
     dispatch(setDisplayedItems({ displayMissionsLayer: !displayMissionsLayer }))
@@ -26,7 +26,7 @@ export function MissionsMenu() {
     dispatch(setDisplayedItems({ isSearchSemaphoreVisible: false, missionsMenuIsOpen: !missionsMenuIsOpen }))
   }
   const handleAddNewMission = () => {
-    dispatch(onNavigateBetweenMapAndSideWindow(sideWindowPaths.MISSION_NEW))
+    dispatch(addMission())
   }
 
   return (

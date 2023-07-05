@@ -7,22 +7,26 @@ import { setIsFormDirty } from '../domain/shared_slices/MissionsState'
 
 import type { ActionCreatorWithPayload } from '@reduxjs/toolkit'
 
-export const useSyncFormValuesWithRedux = (setFormValues: ActionCreatorWithPayload<any, string>) => {
+export const useSyncFormValuesWithRedux = (setMissionState: ActionCreatorWithPayload<any, string>) => {
   const { dirty, values } = useFormikContext()
   const dispatch = useAppDispatch()
 
   const dispatchFormUpdate = useMemo(() => {
     const throttled = newValues => {
-      dispatch(setFormValues(newValues))
+      dispatch(setMissionState(newValues))
       dispatch(setIsFormDirty(dirty))
     }
 
     return _.throttle(throttled, 500)
-  }, [setFormValues, dispatch, dirty])
+  }, [setMissionState, dispatch, dirty])
 
   useEffect(() => {
     dispatchFormUpdate(values)
-
-    return () => dispatchFormUpdate(null)
   }, [values, dispatchFormUpdate])
+
+  useEffect(
+    () => () => dispatchFormUpdate(undefined),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
 }

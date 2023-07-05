@@ -8,7 +8,6 @@ import {
   MultiRadio
 } from '@mtes-mct/monitor-ui'
 import { FieldArray, useField, useFormikContext } from 'formik'
-import { matchPath } from 'react-router'
 import styled from 'styled-components'
 
 import { ControlUnitsForm } from './ControlUnitsForm'
@@ -20,11 +19,13 @@ import {
   hasMissionOrderLabels,
   missionTypeEnum
 } from '../../../domain/entities/missions'
-import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { MissionSourceTag } from '../../../ui/MissionSourceTag'
 import { MissionStatusTag } from '../../../ui/MissionStatusTag'
 import { useNewWindow } from '../../../ui/NewWindow'
+import { getMissionPageRoute } from '../../../utils/getMissionPageRoute'
+import { getMissionTitle } from '../../../utils/getMissionTitle'
+import { isNewMission } from '../../../utils/isNewMission'
 import { MultiZonePicker } from '../MultiZonePicker'
 
 export function GeneralInformationsForm() {
@@ -42,25 +43,17 @@ export function GeneralInformationsForm() {
   const [, endDateMeta] = useField('endDateTimeUtc')
 
   const { sideWindow } = useAppSelector(state => state)
-  const isCreateMissionPage = !!matchPath(
-    {
-      end: true,
-      path: sideWindowPaths.MISSION_NEW
-    },
-    sideWindow.currentPath
-  )
+  const routeParams = getMissionPageRoute(sideWindow.currentPath)
 
-  const title = isCreateMissionPage
-    ? 'Nouvelle mission'
-    : `Mission ${
-        values.missionTypes && values.missionTypes.map(missionType => missionTypeEnum[missionType].libelle).join(' / ')
-      } – ${values.controlUnits.map(controlUnit => controlUnit.name?.replace('(historique)', '')).join(', ')}`
+  const missionIsNewMission = isNewMission(routeParams?.params?.id)
+
+  const title = getMissionTitle(missionIsNewMission, values)
 
   return (
     <StyledContainer>
       <StyledHeader>
         <Title>{title}</Title>
-        {!isCreateMissionPage && (
+        {!missionIsNewMission && (
           <StyledTagsContainer>
             <MissionSourceTag source={missionSourceField?.value} />
             <MissionStatusTag status={getMissionStatus(values)} />
@@ -179,7 +172,7 @@ const Title = styled.h2`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 70%;
+  max-width: 60%;
 `
 const StyledTagsContainer = styled.div`
   display: flex;

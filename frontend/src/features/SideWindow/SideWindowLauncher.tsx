@@ -1,35 +1,25 @@
 import { NewWindow, useForceUpdate } from '@mtes-mct/monitor-ui'
-import { MutableRefObject, useCallback, useEffect, useRef } from 'react'
-import { matchPath } from 'react-router'
+import { MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react'
 import { StyleSheetManager } from 'styled-components'
 
 import { SideWindow } from '.'
 import { SideWindowStatus, sideWindowActions } from './slice'
-import { sideWindowPaths } from '../../domain/entities/sideWindow'
+import { multiMissionsActions } from '../../domain/shared_slices/MultiMissions'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
+import { getMissionPageRoute } from '../../utils/getMissionPageRoute'
 
 export function SideWindowLauncher() {
   const dispatch = useAppDispatch()
   const newWindowRef = useRef() as MutableRefObject<HTMLDivElement>
   const { forceUpdate } = useForceUpdate()
 
-  const { missionState, sideWindow } = useAppSelector(state => state)
-  const isEditMissionPage = !!matchPath<'id', string>(
-    {
-      end: true,
-      path: sideWindowPaths.MISSION
-    },
-    sideWindow.currentPath
-  )
-
-  const isCreateMissionPage = !!matchPath(
-    {
-      end: true,
-      path: sideWindowPaths.MISSION_NEW
-    },
-    sideWindow.currentPath
-  )
+  const {
+    missionState,
+    multiMissions: { selectedMissions },
+    sideWindow
+  } = useAppSelector(state => state)
+  const routeParams = !!getMissionPageRoute(sideWindow.currentPath)
 
   useEffect(() => {
     forceUpdate()
@@ -41,6 +31,11 @@ export function SideWindowLauncher() {
       dispatch(sideWindowActions.onChangeStatus(nextStatus))
     },
     [dispatch]
+  )
+
+  const hasAtLeastOneMissionFormDirty = useMemo(
+    () => !!selectedMissions.find(mission => mission.isFormDirty),
+    [selectedMissions]
   )
 
   if (sideWindow.status === SideWindowStatus.CLOSED) {
@@ -57,9 +52,10 @@ export function SideWindowLauncher() {
         onChangeFocus={onChangeFocus}
         onUnload={() => {
           dispatch(sideWindowActions.close())
+          dispatch(multiMissionsActions.setSelectedMissions([]))
         }}
         shouldHaveFocus={sideWindow.status === SideWindowStatus.VISIBLE}
-        showPrompt={(isEditMissionPage || isCreateMissionPage) && missionState.isFormDirty}
+        showPrompt={routeParams && (hasAtLeastOneMissionFormDirty || missionState.isFormDirty)}
         title="MonitorEnv"
       >
         <SideWindow ref={newWindowRef} />

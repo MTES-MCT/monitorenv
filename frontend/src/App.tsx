@@ -23,7 +23,7 @@ export function App() {
   return (
     <ThemeProvider theme={THEME}>
       <OnlyFontGlobalStyle />
-      <CustomProvider locale={frFR}>
+      <CustomProvider disableRipple locale={frFR}>
         <Provider store={homeStore}>
           <PersistGate loading={undefined} persistor={persistor}>
             <Router>

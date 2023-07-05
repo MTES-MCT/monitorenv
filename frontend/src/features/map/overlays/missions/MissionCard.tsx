@@ -3,13 +3,11 @@ import dayjs from 'dayjs'
 import 'dayjs/locale/fr'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { generatePath } from 'react-router'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
-import { sideWindowPaths } from '../../../../domain/entities/sideWindow'
+import { editMissionInLocalStore } from '../../../../domain/use_cases/missions/editMissionInLocalStore'
 import { clearSelectedMissionOnMap } from '../../../../domain/use_cases/missions/selectMissionOnMap'
-import { onNavigateBetweenMapAndSideWindow } from '../../../../domain/use_cases/navigation/onNavigateBetweenMapAndSideWindow'
 import { MissionSourceTag } from '../../../../ui/MissionSourceTag'
 import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
 import { missionTypesToString } from '../../../../utils/missionTypes'
@@ -43,7 +41,7 @@ export function MissionCard({ feature, selected = false }: { feature: any; selec
     : `du ${formattedStartDate} au ${formattedEndDate}`
 
   const handleEditMission = useCallback(() => {
-    dispatch(onNavigateBetweenMapAndSideWindow(generatePath(sideWindowPaths.MISSION, { id: missionId })))
+    dispatch(editMissionInLocalStore(missionId))
   }, [dispatch, missionId])
 
   const handleCloseOverlay = useCallback(() => {

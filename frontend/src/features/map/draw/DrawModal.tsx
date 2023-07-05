@@ -4,7 +4,6 @@ import GeoJSON from 'ol/format/GeoJSON'
 import Point from 'ol/geom/Point'
 import { transform } from 'ol/proj'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { matchPath } from 'react-router-dom'
 import { Button, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
@@ -16,7 +15,6 @@ import {
   OPENLAYERS_PROJECTION,
   WSG84_PROJECTION
 } from '../../../domain/entities/map/constants'
-import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setInteractionType } from '../../../domain/shared_slices/Draw'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import { addFeatureToDrawedFeature } from '../../../domain/use_cases/draw/addFeatureToDrawedFeature'
@@ -31,6 +29,7 @@ import { ReactComponent as CircleSVG } from '../../../uiMonitor/icons/Info.svg'
 import { ReactComponent as PolygonSVG } from '../../../uiMonitor/icons/Polygone.svg'
 import { ReactComponent as RectangleSVG } from '../../../uiMonitor/icons/Rectangle.svg'
 import { ReactComponent as SelectorSVG } from '../../../uiMonitor/icons/Selector.svg'
+import { getMissionPageRoute } from '../../../utils/getMissionPageRoute'
 import { SideWindowStatus } from '../../SideWindow/slice'
 
 import type { MultiPoint, MultiPolygon } from 'ol/geom'
@@ -55,13 +54,7 @@ export function DrawModal() {
 
   const initialFeatureNumberRef = useRef<number | undefined>(undefined)
 
-  const routeParams = matchPath<'id', string>(
-    {
-      end: true,
-      path: sideWindowPaths.MISSION
-    },
-    sideWindow.currentPath
-  )
+  const routeParams = getMissionPageRoute(sideWindow.currentPath)
 
   const previousMissionId = usePrevious(routeParams?.params?.id)
 

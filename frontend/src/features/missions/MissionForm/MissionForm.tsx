@@ -1,7 +1,8 @@
 import { FieldArray, useFormikContext } from 'formik'
 import _ from 'lodash'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { generatePath } from 'react-router'
 import styled from 'styled-components'
 
 import { ActionForm } from './ActionForm/ActionForm'
@@ -12,33 +13,42 @@ import { MissionFormBottomBar } from './MissionFormBottomBar'
 import { CancelEditModal } from './modals/CancelEditModal'
 import { DeleteModal } from './modals/DeleteModal'
 import { ReopenModal } from './modals/ReopenModal'
-import { Mission, MissionSourceEnum } from '../../../domain/entities/missions'
+import { Mission, MissionSourceEnum, NewMission } from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setToast } from '../../../domain/shared_slices/Global'
 import { setMissionState } from '../../../domain/shared_slices/MissionsState'
-import { createOrEditMission } from '../../../domain/use_cases/missions/createOrEditMission'
+import { multiMissionsActions } from '../../../domain/shared_slices/MultiMissions'
 import { deleteMissionAndGoToMissionsList } from '../../../domain/use_cases/missions/deleteMission'
+import { saveMission } from '../../../domain/use_cases/missions/saveMission'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useSyncFormValuesWithRedux } from '../../../hooks/useSyncFormValuesWithRedux'
 import { sideWindowActions } from '../../SideWindow/slice'
 
-export function MissionForm({ id, mission, setShouldValidateOnChange }) {
+export function MissionForm({ id, isNewMission, selectedMission, setShouldValidateOnChange }) {
   const dispatch = useDispatch()
   const { sideWindow } = useAppSelector(state => state)
-  const { dirty, handleSubmit, setFieldValue, validateForm, values } = useFormikContext<Mission>()
+  const { dirty, handleSubmit, setFieldValue, setValues, validateForm, values } =
+    useFormikContext<Partial<Mission | NewMission>>()
 
   useSyncFormValuesWithRedux(setMissionState)
   useUpdateSurveillance()
+
+  useEffect(() => {
+    if (selectedMission) {
+      setValues(selectedMission)
+    }
+  }, [setValues, selectedMission])
 
   const [currentActionIndex, setCurrentActionIndex] = useState(undefined)
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
   const [isReopenModalOpen, setIsReopenModalOpen] = useState(false)
 
   const allowEditMission =
-    mission?.missionSource === undefined ||
-    mission?.missionSource === MissionSourceEnum.MONITORENV ||
-    mission?.missionSource === MissionSourceEnum.MONITORFISH
-  const allowDeleteMission = !(id === undefined) && allowEditMission
+    selectedMission?.missionSource === undefined ||
+    selectedMission?.missionSource === MissionSourceEnum.MONITORENV ||
+    selectedMission?.missionSource === MissionSourceEnum.MONITORFISH
+  const allowDeleteMission = !isNewMission && allowEditMission
+  const allowCloseMission = !selectedMission?.isClosed || !values?.isClosed
 
   const handleSetCurrentActionIndex = index => {
     setCurrentActionIndex(index)
@@ -46,25 +56,24 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
 
   const returnToEdition = () => {
     dispatch(sideWindowActions.setShowConfirmCancelModal(false))
-    dispatch(sideWindowActions.setNextPath(null))
     setDeleteModalIsOpen(false)
     setIsReopenModalOpen(false)
   }
-  const deleteMission = () => {
+  const validateDeleteMission = () => {
     dispatch(deleteMissionAndGoToMissionsList(id))
   }
 
-  const deleteMissionMission = () => {
+  const deleteMission = () => {
     setDeleteModalIsOpen(true)
   }
 
-  const cancelForm = () => {
-    dispatch(sideWindowActions.focusAndGoTo(sideWindow.nextPath || sideWindowPaths.MISSIONS))
+  const cancelForm = async () => {
+    await dispatch(multiMissionsActions.deleteSelectedMission(id))
+    dispatch(sideWindowActions.setShowConfirmCancelModal(false))
+    dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.MISSIONS)))
   }
 
-  const allowCloseMission = !mission?.isClosed || !values?.isClosed
-
-  const saveMission = async () => {
+  const submitMission = async () => {
     validateForm().then(errors => {
       if (_.isEmpty(errors)) {
         handleSubmit()
@@ -103,7 +112,7 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
   }
 
   const validateReopenMission = async () => {
-    await dispatch(createOrEditMission({ ...values, isClosed: false }, false))
+    await dispatch(saveMission({ ...values, isClosed: false }, true))
     dispatch(
       setToast({
         containerId: 'sideWindow',
@@ -129,7 +138,7 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
         onConfirm={cancelForm}
         open={sideWindow.showConfirmCancelModal && dirty}
       />
-      <DeleteModal onCancel={returnToEdition} onConfirm={deleteMission} open={deleteModalIsOpen} />
+      <DeleteModal onCancel={returnToEdition} onConfirm={validateDeleteMission} open={deleteModalIsOpen} />
       <ReopenModal onCancel={returnToEdition} onConfirm={validateReopenMission} open={isReopenModalOpen} />
       <Wrapper>
         <FirstColumn>
@@ -169,12 +178,12 @@ export function MissionForm({ id, mission, setShouldValidateOnChange }) {
         allowClose={allowCloseMission}
         allowDelete={allowDeleteMission}
         allowEdit={allowEditMission}
-        isFromMonitorFish={mission?.missionSource === MissionSourceEnum.MONITORFISH}
+        isFromMonitorFish={selectedMission?.missionSource === MissionSourceEnum.MONITORFISH}
         onCloseMission={closeMission}
-        onDeleteMission={deleteMissionMission}
+        onDeleteMission={deleteMission}
         onQuitFormEditing={confirmFormCancelation}
         onReopenMission={reopenMission}
-        onSaveMission={saveMission}
+        onSaveMission={submitMission}
       />
     </StyledFormContainer>
   )
@@ -187,7 +196,7 @@ const StyledFormContainer = styled.div`
 `
 
 const Wrapper = styled.div`
-  height: calc(100vh - 68px);
+  height: calc(100vh - 116px);
   display: flex;
   flex-direction: row;
 `
