@@ -69,6 +69,7 @@ export function Mission() {
         <FormikForm>
           <MissionForm
             id={idTyped}
+            isAlreadyClosed={missionToEdit?.isClosed}
             isNewMission={missionIsNewMission}
             selectedMission={selectedMission?.mission}
             setShouldValidateOnChange={setShouldValidateOnChange}

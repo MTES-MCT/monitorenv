@@ -24,7 +24,7 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useSyncFormValuesWithRedux } from '../../../hooks/useSyncFormValuesWithRedux'
 import { sideWindowActions } from '../../SideWindow/slice'
 
-export function MissionForm({ id, isNewMission, selectedMission, setShouldValidateOnChange }) {
+export function MissionForm({ id, isAlreadyClosed, isNewMission, selectedMission, setShouldValidateOnChange }) {
   const dispatch = useDispatch()
   const { sideWindow } = useAppSelector(state => state)
   const { dirty, handleSubmit, setFieldValue, setValues, validateForm, values } =
@@ -74,6 +74,13 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
   }
 
   const submitMission = async () => {
+    setShouldValidateOnChange(false)
+
+    // If the mission is not already closed (from the API), we want the `isClosed` field to be set to false.
+    // if the user has already tried to close the mission and the `isClosed` field is set to true.
+    if (!isAlreadyClosed) {
+      await setFieldValue('isClosed', false)
+    }
     validateForm().then(errors => {
       if (_.isEmpty(errors)) {
         handleSubmit()

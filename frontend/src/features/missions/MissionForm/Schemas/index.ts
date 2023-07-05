@@ -97,7 +97,8 @@ const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
     openBy: Yup.string()
       .min(3, 'le Trigramme doit comporter 3 lettres')
       .max(3, 'le Trigramme doit comporter 3 lettres')
-      .required('Requis'),
+      .nullable()
+      .required('Trigramme requis'),
     startDateTimeUtc: Yup.date().required('Date de début requise')
   })
   .required()
@@ -106,7 +107,8 @@ const ClosedMissionSchema = NewMissionSchema.shape({
   closedBy: Yup.string()
     .min(3, 'Minimum 3 lettres pour le Trigramme')
     .max(3, 'Maximum 3 lettres pour le Trigramme')
-    .required('Requis'),
+    .nullable()
+    .required('Trigramme requis'),
   controlUnits: Yup.array().of(ClosedControlUnitSchema).ensure().defined().min(1),
   endDateTimeUtc: Yup.date()
     .nullable()

@@ -29,7 +29,6 @@ export type MultiZonePickerProps = {
   isLight?: boolean
   label: string
   name: string
-  readOnly: boolean
 }
 export function MultiZonePicker({
   addButtonLabel,
@@ -37,8 +36,7 @@ export function MultiZonePicker({
   interactionListener,
   isLight,
   label,
-  name,
-  readOnly
+  name
 }: MultiZonePickerProps) {
   const dispatch = useAppDispatch()
   const { geometry } = useListenForDrawedGeometry(interactionListener)
@@ -96,11 +94,11 @@ export function MultiZonePicker({
   return (
     <Field>
       <Label hasError={!!meta.error}>{label}</Label>
-      {!readOnly && (
-        <Button accent={Accent.SECONDARY} Icon={Icon.Plus} isFullWidth onClick={handleAddZone}>
-          {addButtonLabel}
-        </Button>
-      )}
+
+      <Button accent={Accent.SECONDARY} Icon={Icon.Plus} isFullWidth onClick={handleAddZone}>
+        {addButtonLabel}
+      </Button>
+
       {!!meta.error && <ErrorMessage>Veuillez définir une zone de mission</ErrorMessage>}
 
       <>
@@ -119,23 +117,16 @@ export function MultiZonePicker({
               </Center>
             </ZoneWrapper>
 
-            {!readOnly && (
-              <>
-                <IconButton
-                  accent={Accent.SECONDARY}
-                  disabled={isEditingZone}
-                  Icon={Icon.Edit}
-                  onClick={handleAddZone}
-                />
-                <IconButton
-                  accent={Accent.SECONDARY}
-                  aria-label="Supprimer cette zone"
-                  disabled={isEditingZone}
-                  Icon={Icon.Delete}
-                  onClick={() => deleteZone(index)}
-                />
-              </>
-            )}
+            <>
+              <IconButton accent={Accent.SECONDARY} disabled={isEditingZone} Icon={Icon.Edit} onClick={handleAddZone} />
+              <IconButton
+                accent={Accent.SECONDARY}
+                aria-label="Supprimer cette zone"
+                disabled={isEditingZone}
+                Icon={Icon.Delete}
+                onClick={() => deleteZone(index)}
+              />
+            </>
           </Row>
         ))}
       </>

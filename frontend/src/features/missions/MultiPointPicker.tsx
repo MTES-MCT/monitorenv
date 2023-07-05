@@ -27,9 +27,8 @@ export type MultiPointPickerProps = {
   addButtonLabel: string
   label: string
   name: string
-  readOnly: boolean
 }
-export function MultiPointPicker({ addButtonLabel, label, name, readOnly }: MultiPointPickerProps) {
+export function MultiPointPicker({ addButtonLabel, label, name }: MultiPointPickerProps) {
   const dispatch = useAppDispatch()
   const listener = useAppSelector(state => state.draw.listener)
   const { coordinatesFormat } = useAppSelector(state => state.map)
@@ -92,17 +91,16 @@ export function MultiPointPicker({ addButtonLabel, label, name, readOnly }: Mult
   return (
     <Field>
       <Label>{label}</Label>
-      {!readOnly && (
-        <Button
-          accent={Accent.SECONDARY}
-          disabled={points.length > 0}
-          Icon={Icon.Plus}
-          isFullWidth
-          onClick={handleAddPoint}
-        >
-          {addButtonLabel}
-        </Button>
-      )}
+
+      <Button
+        accent={Accent.SECONDARY}
+        disabled={points.length > 0}
+        Icon={Icon.Plus}
+        isFullWidth
+        onClick={handleAddPoint}
+      >
+        {addButtonLabel}
+      </Button>
 
       <>
         {points.map((coordinates, index) => (
@@ -120,23 +118,21 @@ export function MultiPointPicker({ addButtonLabel, label, name, readOnly }: Mult
               </Center>
             </ZoneWrapper>
 
-            {!readOnly && (
-              <>
-                <IconButton
-                  accent={Accent.SECONDARY}
-                  disabled={isAddingAControl}
-                  Icon={Icon.Edit}
-                  onClick={handleAddPoint}
-                />
-                <IconButton
-                  accent={Accent.SECONDARY}
-                  aria-label="Supprimer cette zone"
-                  disabled={isAddingAControl}
-                  Icon={Icon.Delete}
-                  onClick={() => handleDeleteZone(index)}
-                />
-              </>
-            )}
+            <>
+              <IconButton
+                accent={Accent.SECONDARY}
+                disabled={isAddingAControl}
+                Icon={Icon.Edit}
+                onClick={handleAddPoint}
+              />
+              <IconButton
+                accent={Accent.SECONDARY}
+                aria-label="Supprimer cette zone"
+                disabled={isAddingAControl}
+                Icon={Icon.Delete}
+                onClick={() => handleDeleteZone(index)}
+              />
+            </>
           </Row>
         ))}
       </>

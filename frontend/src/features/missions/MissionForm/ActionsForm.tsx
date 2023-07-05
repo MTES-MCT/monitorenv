@@ -15,7 +15,6 @@ import { actionFactory } from '../Missions.helpers'
 export function ActionsForm({ currentActionIndex, form, remove, setCurrentActionIndex, unshift }) {
   const envActions = form?.values?.envActions as EnvAction[] | undefined
   const isFirstSurveillanceAction = !envActions?.find(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
-  const isClosed = form?.values?.isClosed
   const currentActionId = envActions && envActions[currentActionIndex]?.id
 
   const sortedEnvActions = useMemo(
@@ -81,19 +80,17 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
     <FormWrapper>
       <TitleWrapper>
         <Title>Actions réalisées en mission</Title>
-        {!isClosed && (
-          <Dropdown appearance="primary" icon={<PlusSVG className="rs-icon" />} noCaret title="Ajouter">
-            <Dropdown.Item icon={<ControlSVG />} onClick={handleAddControlAction}>
-              Ajouter des contrôles
-            </Dropdown.Item>
-            <Dropdown.Item icon={<SurveillanceSVG />} onClick={handleAddSurveillanceAction}>
-              Ajouter une surveillance
-            </Dropdown.Item>
-            <Dropdown.Item icon={<NoteSVG />} onClick={handleAddNoteAction}>
-              Ajouter une note libre
-            </Dropdown.Item>
-          </Dropdown>
-        )}
+        <Dropdown appearance="primary" icon={<PlusSVG className="rs-icon" />} noCaret title="Ajouter">
+          <Dropdown.Item icon={<ControlSVG />} onClick={handleAddControlAction}>
+            Ajouter des contrôles
+          </Dropdown.Item>
+          <Dropdown.Item icon={<SurveillanceSVG />} onClick={handleAddSurveillanceAction}>
+            Ajouter une surveillance
+          </Dropdown.Item>
+          <Dropdown.Item icon={<NoteSVG />} onClick={handleAddNoteAction}>
+            Ajouter une note libre
+          </Dropdown.Item>
+        </Dropdown>
       </TitleWrapper>
       <ActionsTimeline>
         {sortedEnvActions && sortedEnvActions.length > 0 ? (
@@ -108,7 +105,6 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
                 action={action}
                 duplicateAction={handleDuplicateAction(action.id)}
                 hasError={!!errors}
-                readOnly={isClosed}
                 removeAction={handleRemoveAction(action.id)}
                 selectAction={handleSelectAction(action.id)}
                 selected={action.id === currentActionId}

@@ -25,12 +25,10 @@ import { ActionTheme } from '../Themes/ActionTheme'
 
 export function ControlForm({
   currentActionIndex,
-  readOnly,
   removeControlAction,
   setCurrentActionIndex
 }: {
   currentActionIndex: number
-  readOnly: boolean
   removeControlAction: Function
   setCurrentActionIndex: Function
 }) {
@@ -115,17 +113,16 @@ export function ControlForm({
           &nbsp;(
           {getDateAsLocalizedStringCompact(currentAction?.actionStartDateTimeUtc)})
         </SubTitle>
-        {!readOnly && (
-          <IconButtonRight
-            appearance="ghost"
-            icon={<DeleteIcon className="rs-icon" />}
-            onClick={handleRemoveAction}
-            size="sm"
-            title="supprimer"
-          >
-            Supprimer
-          </IconButtonRight>
-        )}
+
+        <IconButtonRight
+          appearance="ghost"
+          icon={<DeleteIcon className="rs-icon" />}
+          onClick={handleRemoveAction}
+          size="sm"
+          title="supprimer"
+        >
+          Supprimer
+        </IconButtonRight>
       </Header>
       <FormBody>
         <ActionTheme
@@ -148,7 +145,6 @@ export function ControlForm({
           addButtonLabel="Ajouter un point de contrôle"
           label="Lieu du contrôle"
           name={`envActions[${currentActionIndex}].geom`}
-          readOnly={readOnly}
         />
 
         <Separator />
