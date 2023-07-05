@@ -15,13 +15,13 @@ const Layer = styled.span<{ $metadataIsShown?: boolean; $selected?: boolean }>`
   text-align: left;
   font-size: 13px;
   padding-left: 20px;
-  background: ${p => (p.$metadataIsShown || p.$selected ? p.theme.color.blueYonder25 : 'transparent')};
+  background: ${p => (p.$metadataIsShown || p.$selected ? p.theme.color.blueYonder[25] : 'transparent')};
   color: ${p => p.theme.color.gunMetal};
   height: ${LAYER_SELECTOR_ROW_HEIGHT}px;
   align-items: center;
 
   :hover {
-    background: ${p => p.theme.color.blueYonder25};
+    background: ${p => p.theme.color.blueYonder[25]};
   }
 `
 
@@ -65,7 +65,7 @@ const GroupWrapper = styled.li<{ $isPadded?: boolean }>`
   border-bottom: 1px solid ${p => p.theme.color.lightGray};
 
   :hover {
-    background: ${p => p.theme.color.blueYonder25};
+    background: ${p => p.theme.color.blueYonder[25]};
   }
 
   .rs-checkbox-checker {

@@ -257,8 +257,8 @@ export function LayerSearch({ isVisible }) {
         <ResultList searchedText={globalSearchText} />
       </Search>
       <SearchOnExtentButton
-        $active={filterSearchOnMapExtent}
         accent={Accent.PRIMARY}
+        className={filterSearchOnMapExtent ? '_active' : ''}
         data-cy="layers-advanced-search"
         Icon={Icon.FocusZones}
         onClick={toggleFilterSearchOnMapExtent}
@@ -303,7 +303,7 @@ const ResetSearch = styled(Button)<{ $allowResetResults: boolean }>`
   background: ${p => p.theme.color.white};
 `
 
-const SearchOnExtentButton = styled(IconButton)<{ $active: boolean }>`
+const SearchOnExtentButton = styled(IconButton)`
   position: absolute;
   top: 0;
   left: 355px;

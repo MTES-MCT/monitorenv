@@ -1,7 +1,6 @@
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../constants/constants'
 import { hideAdministrativeLayer, showAdministrativeLayer } from '../../../domain/shared_slices/Administrative'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ReactComponent as DisplaySVG } from '../../../uiMonitor/icons/Display.svg'
@@ -51,7 +50,7 @@ const Row = styled.span<{ $isGrouped: boolean }>`
   min-height: 36px;
 
   :hover {
-    background: ${COLORS.blueYonder25};
+    background: ${p => p.theme.color.blueYonder[25]};
   }
   & > :last-child {
     margin-left: auto;
@@ -60,5 +59,5 @@ const Row = styled.span<{ $isGrouped: boolean }>`
 `
 
 const HideIcon = styled(DisplaySVG)`
-  color: ${COLORS.lightGray};
+  color: ${p => p.theme.color.lightGray};
 `
