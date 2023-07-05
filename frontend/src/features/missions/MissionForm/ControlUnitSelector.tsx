@@ -203,5 +203,5 @@ const StyledAdministartionContainer = styled.div`
 const DeleteButton = styled(IconButton)`
   position: absolute;
   top: 0px;
-  left: 425px;
+  left: calc(100% + 4px);
 `

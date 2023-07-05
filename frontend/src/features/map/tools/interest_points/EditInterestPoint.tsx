@@ -29,7 +29,6 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
   const dispatch = useAppDispatch()
 
   const { interestPointBeingDrawed, isEditing } = useAppSelector(state => state.interestPoint)
-
   /** Coordinates formatted in DD [latitude, longitude] */
   const coordinates: number[] = useMemo(() => {
     if (!interestPointBeingDrawed?.coordinates?.length) {
@@ -79,7 +78,7 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
 
   const updateType = useCallback(
     type => {
-      if (type && interestPointBeingDrawed?.type !== type && coordinates?.length) {
+      if (type && interestPointBeingDrawed?.type !== type) {
         dispatch(
           updateInterestPointKeyBeingDrawed({
             key: 'type',
@@ -88,7 +87,7 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
         )
       }
     },
-    [dispatch, interestPointBeingDrawed?.type, coordinates]
+    [dispatch, interestPointBeingDrawed?.type]
   )
 
   /**
