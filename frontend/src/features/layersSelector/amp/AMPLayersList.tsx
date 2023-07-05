@@ -1,10 +1,10 @@
 import _ from 'lodash'
 import { useMemo } from 'react'
 
+import { AMPLayerGroup } from './AMPLayerGroup'
 import { useGetAMPsQuery } from '../../../api/ampsAPI'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { LayerSelector } from '../utils/LayerSelector.style'
-import { AMPLayerGroup } from './AMPLayerGroup'
 
 export function AMPLayersList() {
   const { selectedAmpLayerIds, showedAmpLayerIds } = useAppSelector(state => state.selectedAmp)

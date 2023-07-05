@@ -2,16 +2,15 @@ import { IconButton, Accent, Size, Icon } from '@mtes-mct/monitor-ui'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { COLORS } from '../../constants/constants'
-import { setDisplayedItems } from '../../domain/shared_slices/Global'
-import { closeRegulatoryZoneMetadata } from '../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
-import { useAppSelector } from '../../hooks/useAppSelector'
 import { AdministrativeLayers } from './administrative'
 import { AmpLayers } from './amp'
 import { BaseLayerList } from './base'
 import { RegulatoryLayers } from './regulatory/menu'
 import { RegulatoryLayerZoneMetadata } from './regulatory/metadata'
 import { LayerSearch } from './search'
+import { setDisplayedItems } from '../../domain/shared_slices/Global'
+import { closeRegulatoryZoneMetadata } from '../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
+import { useAppSelector } from '../../hooks/useAppSelector'
 
 export function LayersSidebar() {
   const { regulatoryMetadataLayerId, regulatoryMetadataPanelIsOpen } = useAppSelector(state => state.regulatoryMetadata)
@@ -78,7 +77,7 @@ const RegulatoryZoneMetadataShifter = styled.div<{
   margin-top: 45px;
   top: 0px;
   opacity: ${props => (props.regulatoryMetadataPanelIsOpen ? 1 : 0)};
-  background: ${COLORS.gainsboro};
+  background: ${p => p.theme.color.gainsboro};
   z-index: -1;
   transition: 0.5s all;
 `

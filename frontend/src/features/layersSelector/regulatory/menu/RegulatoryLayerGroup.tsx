@@ -3,6 +3,7 @@ import _ from 'lodash'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { RegulatoryLayerZone } from './RegulatoryLayerZone'
 import { COLORS } from '../../../../constants/constants'
 import {
   hideRegulatoryLayers,
@@ -11,7 +12,6 @@ import {
 } from '../../../../domain/shared_slices/Regulatory'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { LayerSelector } from '../../utils/LayerSelector.style'
-import { RegulatoryLayerZone } from './RegulatoryLayerZone'
 
 export function RegulatoryLayerGroup({ groupName, layers }) {
   const dispatch = useDispatch()

@@ -2,7 +2,6 @@ import { Accent, IconButton, Icon, Size } from '@mtes-mct/monitor-ui'
 import { Input, InputGroup } from 'rsuite'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../constants/constants'
 import { ReactComponent as CloseIconSVG } from '../../../uiMonitor/icons/Close.svg'
 import { ReactComponent as SearchIconSVG } from '../../../uiMonitor/icons/Search.svg'
 
@@ -62,7 +61,7 @@ const SearchHeader = styled.div`
 `
 const SearchInputGroup = styled(InputGroup)`
   width: 310px;
-  background: ${COLORS.white};
+  background: ${p => p.theme.color.white};
 `
 const SearchBoxInput = styled(Input)`
   padding-left: 12px;
@@ -80,8 +79,8 @@ const CloseIcon = styled(CloseIconSVG)`
 const FilterIcon = styled.div``
 
 const NumberOfFilteredReg = styled.span`
-  background: ${COLORS.maximumRed};
-  color: ${COLORS.white};
+  background: ${p => p.theme.color.maximumRed};
+  color: ${p => p.theme.color.white};
   position: absolute;
   top: -5px;
   right: -5px;

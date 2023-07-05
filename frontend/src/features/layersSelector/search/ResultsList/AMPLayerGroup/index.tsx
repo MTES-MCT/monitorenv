@@ -1,14 +1,13 @@
-import { IconButton, Icon, Accent, Size } from '@mtes-mct/monitor-ui'
+import { IconButton, Icon, Accent, Size, THEME } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 import { useState } from 'react'
 import Highlighter from 'react-highlight-words'
 import { useDispatch } from 'react-redux'
 
-import { COLORS } from '../../../../../constants/constants'
+import { AMPLayer } from './AMPLayer'
 import { addAmpZonesToMyLayers, removeAmpZonesFromMyLayers } from '../../../../../domain/shared_slices/SelectedAmp'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
 import { LayerSelector } from '../../../utils/LayerSelector.style'
-import { AMPLayer } from './AMPLayer'
 
 import type { AMP } from '../../../../../domain/entities/AMPs'
 
@@ -55,7 +54,7 @@ export function AMPLayerGroup({
           <LayerSelector.ZonesNumber>{`${layerIds.length} / ${totalNumberOfZones}`}</LayerSelector.ZonesNumber>
           <IconButton
             accent={Accent.TERTIARY}
-            color={allTopicZonesAreChecked ? COLORS.blueGray : COLORS.gunMetal}
+            color={allTopicZonesAreChecked ? THEME.color.blueGray[100] : THEME.color.gunMetal}
             Icon={allTopicZonesAreChecked ? Icon.PinFilled : Icon.Pin}
             onClick={handleCheckAllZones}
             size={Size.NORMAL}

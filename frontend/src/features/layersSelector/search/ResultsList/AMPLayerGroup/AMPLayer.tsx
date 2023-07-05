@@ -1,11 +1,10 @@
-import { Accent, Icon, Size, IconButton } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, Size, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import Highlighter from 'react-highlight-words'
 import { useDispatch } from 'react-redux'
 
 import { useGetAMPsQuery } from '../../../../../api/ampsAPI'
-import { COLORS } from '../../../../../constants/constants'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../../domain/entities/map/constants'
 import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
 import { addAmpZonesToMyLayers, removeAmpZonesFromMyLayers } from '../../../../../domain/shared_slices/SelectedAmp'
@@ -60,7 +59,7 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
         <IconButton
           accent={Accent.TERTIARY}
           aria-label="Sélectionner la zone"
-          color={isZoneSelected ? COLORS.blueGray : COLORS.gunMetal}
+          color={isZoneSelected ? THEME.color.blueGray[100] : THEME.color.gunMetal}
           Icon={isZoneSelected ? Icon.PinFilled : Icon.Pin}
           iconSize={20}
           onClick={handleSelectRegulatoryZone}

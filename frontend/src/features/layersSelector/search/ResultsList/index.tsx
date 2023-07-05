@@ -2,6 +2,8 @@ import { Checkbox } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 import styled from 'styled-components'
 
+import { AMPLayerGroup } from './AMPLayerGroup'
+import { RegulatoryLayerGroup } from './RegulatoryLayerGroup'
 import { useGetAMPsQuery } from '../../../../api/ampsAPI'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -11,8 +13,6 @@ import {
   setIsRegulatorySearchResultsExpanded,
   setIsRegulatorySearchResultsVisible
 } from '../LayerSearch.slice'
-import { AMPLayerGroup } from './AMPLayerGroup'
-import { RegulatoryLayerGroup } from './RegulatoryLayerGroup'
 
 export function ResultList({ searchedText }) {
   const {

@@ -5,11 +5,6 @@ import { useState, useEffect, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { useGetAMPsQuery } from '../../../api/ampsAPI'
-import { COLORS } from '../../../constants/constants'
-import { setFitToExtent } from '../../../domain/shared_slices/Map'
-import { useAppSelector } from '../../../hooks/useAppSelector'
-import { getIntersectingLayerIds } from '../utils/getIntersectingLayerIds'
 import { LayerFilters } from './LayerFilters'
 import {
   resetSearchExtent,
@@ -19,6 +14,10 @@ import {
 } from './LayerSearch.slice'
 import { ResultList } from './ResultsList'
 import { SearchInput } from './SearchInput'
+import { useGetAMPsQuery } from '../../../api/ampsAPI'
+import { setFitToExtent } from '../../../domain/shared_slices/Map'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+import { getIntersectingLayerIds } from '../utils/getIntersectingLayerIds'
 
 import type { AMP } from '../../../domain/entities/AMPs'
 import type { RegulatoryLayerType } from '../../../types'
@@ -301,7 +300,7 @@ const ReloadSearch = styled(Button)<{ $active: boolean }>`
 `
 const ResetSearch = styled(Button)<{ $allowResetResults: boolean }>`
   display: ${p => (p.$allowResetResults ? 'inline-flex' : 'none')};
-  background: ${COLORS.white};
+  background: ${p => p.theme.color.white};
 `
 
 const SearchOnExtentButton = styled(IconButton)<{ $active: boolean }>`

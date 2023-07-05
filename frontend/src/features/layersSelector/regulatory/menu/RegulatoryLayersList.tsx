@@ -1,7 +1,7 @@
 import _ from 'lodash'
 
-import { LayerSelector } from '../../utils/LayerSelector.style'
 import { RegulatoryLayerGroup } from './RegulatoryLayerGroup'
+import { LayerSelector } from '../../utils/LayerSelector.style'
 
 export function RegulatoryLayersList({ results }) {
   if (_.isEmpty(results)) {

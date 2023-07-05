@@ -6,12 +6,12 @@ import VectorSource from 'ol/source/Vector'
 import { getArea } from 'ol/sphere'
 import { MutableRefObject, useEffect, useRef } from 'react'
 
+import { getAMPLayerStyle } from './styles/AMPLayers.style'
+import { dottedLayerStyle } from './styles/dottedLayer.style'
 import { useGetAMPsQuery } from '../../../api/ampsAPI'
 import { Layers } from '../../../domain/entities/layers/constants'
 import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { getAMPLayerStyle } from './styles/AMPLayers.style'
-import { dottedLayerStyle } from './styles/dottedLayer.style'
 
 import type { MapChildrenProps } from '../Map'
 

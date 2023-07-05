@@ -1,10 +1,10 @@
 import { useDispatch } from 'react-redux'
 
+import { AMPLayersList } from './AMPLayersList'
 import { toggleMyAmps } from '../../../domain/shared_slices/LayerSidebar'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 import { LayerSelectorMenu } from '../utils/LayerSelectorMenu.style'
-import { AMPLayersList } from './AMPLayersList'
 
 export function AmpLayers() {
   const dispatch = useDispatch()
