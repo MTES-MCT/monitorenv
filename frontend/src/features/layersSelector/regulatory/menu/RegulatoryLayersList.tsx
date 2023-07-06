@@ -17,9 +17,10 @@ export function RegulatoryLayersList({ results }) {
   return (
     <LayerSelector.LayerList>
       {layersByLayersName &&
-        Object.entries(layersByLayersName).map(([layerName, layers]) => (
-          <RegulatoryLayerGroup key={layerName} groupName={layerName} layers={layers} />
-        ))}
+        Object.entries(layersByLayersName).map(
+          ([layerName, layers]) =>
+            !!layers && <RegulatoryLayerGroup key={layerName} groupName={layerName} layers={layers} />
+        )}
     </LayerSelector.LayerList>
   )
 }
