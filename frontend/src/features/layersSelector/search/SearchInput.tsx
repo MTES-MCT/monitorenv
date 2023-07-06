@@ -36,7 +36,7 @@ export function SearchInput({
             <SearchIcon className="rs-icon" />
           </InputGroup.Addon>
         ) : (
-          <InputGroup.Button onClick={handleResetSearch}>
+          <InputGroup.Button appearance="ghost" onClick={handleResetSearch}>
             <CloseIcon className="rs-icon" />
           </InputGroup.Button>
         )}

@@ -13,7 +13,7 @@ import {
 import { closeRegulatoryZoneMetadata } from '../../../../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
 import { showRegulatoryZoneMetadata } from '../../../../../domain/use_cases/regulatory/showRegulatoryZoneMetadata'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
-import { RegulatoryLayerLegend } from '../../../../../ui/RegulatoryLayerLegend'
+import { RegulatoryLayerLegend } from '../../../utils/LayerLegend.style'
 import { LayerSelector } from '../../../utils/LayerSelector.style'
 
 export function RegulatoryLayer({ layerId, searchedText }: { layerId: number; searchedText: string }) {

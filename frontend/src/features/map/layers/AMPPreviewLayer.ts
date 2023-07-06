@@ -88,7 +88,7 @@ export function AMPPreviewLayer({ map }: MapChildrenProps) {
       setTimeout(() => {
         isThrottled.current = false
         refreshPreviewLayer()
-      }, 300)
+      }, 3000)
     }
   }, [map, ampsSearchResult, ampLayers])
 

@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map/constants'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import { hideAmpLayer, removeAmpZonesFromMyLayers, showAmpLayer } from '../../../domain/shared_slices/SelectedAmp'
-import { RegulatoryLayerLegend } from '../../../ui/RegulatoryLayerLegend'
+import { AMPLayerLegend } from '../utils/LayerLegend.style'
 import { LayerSelector } from '../utils/LayerSelector.style'
 
 import type { AMP } from '../../../domain/entities/AMPs'
@@ -40,7 +40,7 @@ export function AMPLayerZone({ amp, isDisplayed }: { amp: AMP; isDisplayed: bool
 
   return (
     <LayerSelector.Layer>
-      <RegulatoryLayerLegend entity_name={amp?.name} thematique={amp?.type} />
+      <AMPLayerLegend name={amp?.name} type={amp?.type} />
       <LayerSelector.Name title={displayedName}>{displayedName}</LayerSelector.Name>
       <LayerSelector.IconGroup>
         <IconButton

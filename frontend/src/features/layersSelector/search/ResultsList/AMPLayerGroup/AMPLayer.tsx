@@ -9,7 +9,7 @@ import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../../domain/e
 import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
 import { addAmpZonesToMyLayers, removeAmpZonesFromMyLayers } from '../../../../../domain/shared_slices/SelectedAmp'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
-import { RegulatoryLayerLegend } from '../../../../../ui/RegulatoryLayerLegend'
+import { AMPLayerLegend } from '../../../utils/LayerLegend.style'
 import { LayerSelector } from '../../../utils/LayerSelector.style'
 
 export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedText: string }) {
@@ -45,7 +45,7 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
 
   return (
     <LayerSelector.Layer>
-      <RegulatoryLayerLegend entity_name={layer?.name} thematique={layer?.type} />
+      <AMPLayerLegend name={layer?.name} type={layer?.type} />
       <LayerSelector.Name onClick={fitToRegulatoryLayer} title={layer?.type}>
         <Highlighter
           autoEscape

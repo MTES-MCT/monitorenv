@@ -239,7 +239,7 @@ export function LayerSearch({ isVisible }) {
           filteredAmpTypes={filteredAmpTypes}
           filteredRegulatoryThemes={filteredRegulatoryThemes}
           globalSearchText={globalSearchText}
-          placeholder={regulatoryLayers.length === 0 ? 'Chargement des couches en cours' : 'Rechercher une zone'}
+          placeholder="Rechercher une zone"
           setGlobalSearchText={handleSearchInputChange}
           toggleRegFilters={toggleRegFilters}
         />

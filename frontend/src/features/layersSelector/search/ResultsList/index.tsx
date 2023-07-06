@@ -63,7 +63,7 @@ export function ResultList({ searchedText }) {
       {regulatoryLayersSearchResult && (
         <>
           <Header>
-            <Checkbox
+            <StyledCheckbox
               checked={isRegulatorySearchResultsVisible}
               label=""
               name="isRegulatorySearchResultsVisible"
@@ -89,7 +89,7 @@ export function ResultList({ searchedText }) {
       {ampsSearchResult && (
         <>
           <HeaderAMP>
-            <Checkbox
+            <StyledCheckbox
               checked={isAmpSearchResultsVisible}
               label=""
               name="isAmpSearchResultsVisible"
@@ -119,14 +119,20 @@ export function ResultList({ searchedText }) {
 const Header = styled.div`
   display: flex;
   text-align: left;
-  padding: 8px 16px;
   font-weight: bold;
   cursor: pointer;
   height: 36px;
   color: ${p => p.theme.color.gunMetal};
   border-bottom: 1px solid ${p => p.theme.color.lightGray};
 `
-const Title = styled.div``
+const Title = styled.div`
+  padding: 8px 0px 8px 8px;
+  width: 100%;
+`
+
+const StyledCheckbox = styled(Checkbox)`
+  margin: 5px 0px 0px 8px;
+`
 
 const HeaderAMP = styled(Header)`
   background: ${p => p.theme.color.chineseRed}1A;

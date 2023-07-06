@@ -1,4 +1,4 @@
-import { Icon, IconButton } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { useCallback } from 'react'
 import { FingerprintSpinner } from 'react-epic-spinners'
 import { useDispatch } from 'react-redux'
@@ -10,8 +10,8 @@ import { useGetRegulatoryLayerQuery } from '../../../../api/regulatoryLayersAPI'
 import { getTitle } from '../../../../domain/entities/regulatory'
 import { closeRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { RegulatoryLayerLegend } from '../../../../ui/RegulatoryLayerLegend'
 import { ReactComponent as AlertSVG } from '../../../../uiMonitor/icons/Attention_controles.svg'
+import { RegulatoryLayerLegend } from '../../utils/LayerLegend.style'
 
 const FOUR_HOURS = 4 * 60 * 60 * 1000
 
@@ -37,7 +37,12 @@ export function RegulatoryLayerZoneMetadata() {
             <RegulatoryZoneName title={getTitle(regulatoryMetadata?.layer_name)}>
               {getTitle(regulatoryMetadata?.layer_name)}
             </RegulatoryZoneName>
-            <IconButton data-cy="regulatory-layers-metadata-close" Icon={Icon.Close} onClick={onCloseIconClicked} />
+            <IconButton
+              accent={Accent.TERTIARY}
+              data-cy="regulatory-layers-metadata-close"
+              Icon={Icon.Close}
+              onClick={onCloseIconClicked}
+            />
           </Header>
           <Warning>
             <WarningIcon />
