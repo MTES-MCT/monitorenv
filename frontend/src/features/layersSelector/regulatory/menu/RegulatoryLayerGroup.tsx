@@ -1,10 +1,9 @@
-import { Tag, IconButton, Accent, Icon, Size } from '@mtes-mct/monitor-ui'
+import { Tag, IconButton, Accent, Icon, Size, THEME } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { RegulatoryLayerZone } from './RegulatoryLayerZone'
-import { COLORS } from '../../../../constants/constants'
 import {
   hideRegulatoryLayers,
   removeRegulatoryZonesFromMyLayers,
@@ -52,7 +51,7 @@ export function RegulatoryLayerGroup({ groupName, layers }) {
           <Tag accent={Accent.PRIMARY}>{`${layers?.length}`}</Tag>
           <IconButton
             accent={Accent.TERTIARY}
-            color={regulatoryZonesAreShowed ? COLORS.blueGray : COLORS.slateGray}
+            color={regulatoryZonesAreShowed ? THEME.color.blueGray[100] : THEME.color.slateGray}
             data-cy={regulatoryZonesAreShowed ? 'regulatory-my-zones-zone-hide' : 'regulatory-my-zones-zone-show'}
             Icon={Icon.Display}
             iconSize={20}

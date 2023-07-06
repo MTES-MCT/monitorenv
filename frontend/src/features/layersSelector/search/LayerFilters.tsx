@@ -11,8 +11,8 @@ export function LayerFilters({
   setFilteredAmpTypes,
   setFilteredRegulatoryThemes
 }) {
-  const handleSetFilteredAmpTypes = v => {
-    setFilteredAmpTypes(v)
+  const handleSetFilteredAmpTypes = filteredAmps => {
+    setFilteredAmpTypes(filteredAmps)
   }
 
   const handleDeleteAmpType = v => () => {

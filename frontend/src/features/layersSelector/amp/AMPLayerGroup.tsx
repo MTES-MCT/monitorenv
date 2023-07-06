@@ -1,14 +1,11 @@
-import { Accent, Icon, IconButton, Size, Tag } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, Size, Tag, THEME } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { AMPLayerZone } from './AMPLayerZone'
-import { COLORS } from '../../../constants/constants'
 import { hideAmpLayers, removeAmpZonesFromMyLayers, showAmpLayer } from '../../../domain/shared_slices/SelectedAmp'
 import { LayerSelector } from '../utils/LayerSelector.style'
-
-export const AMP_LAYER_ZONE_HEIGHT = 36
 
 export function AMPLayerGroup({ groupName, layers, showedAmpLayerIds }) {
   const dispatch = useDispatch()
@@ -42,10 +39,10 @@ export function AMPLayerGroup({ groupName, layers, showedAmpLayerIds }) {
           {groupName}
         </LayerSelector.GroupName>
         <LayerSelector.IconGroup>
-          <Tag accent={Accent.PRIMARY}>{`${layers?.length}`}</Tag>
+          <Tag accent={Accent.PRIMARY}>{layers?.length}</Tag>
           <IconButton
             accent={Accent.TERTIARY}
-            color={ampZonesAreShowed ? COLORS.blueGray : COLORS.slateGray}
+            color={ampZonesAreShowed ? THEME.color.blueGray[100] : THEME.color.slateGray}
             data-cy={ampZonesAreShowed ? 'amp-my-zones-zone-hide' : 'amp-my-zones-zone-show'}
             Icon={Icon.Display}
             iconSize={20}

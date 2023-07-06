@@ -11,8 +11,6 @@ import { LayerSelector } from '../utils/LayerSelector.style'
 
 import type { AMP } from '../../../domain/entities/AMPs'
 
-export const AMP_LAYER_ZONE_HEIGHT = 36
-
 export function AMPLayerZone({ amp, isDisplayed }: { amp: AMP; isDisplayed: boolean }) {
   const dispatch = useDispatch()
 

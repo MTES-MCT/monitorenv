@@ -1,9 +1,8 @@
-import { IconButton, Accent, Size, Icon } from '@mtes-mct/monitor-ui'
+import { IconButton, Accent, Size, Icon, THEME } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { useDispatch } from 'react-redux'
 
-import { COLORS } from '../../../../constants/constants'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map/constants'
 import { setFitToExtent } from '../../../../domain/shared_slices/Map'
 import {
@@ -66,7 +65,7 @@ export function RegulatoryLayerZone({ regulatoryZone }) {
       <LayerSelector.IconGroup>
         <IconButton
           accent={Accent.TERTIARY}
-          color={metadataIsShown ? COLORS.blueGray : COLORS.slateGray}
+          color={metadataIsShown ? THEME.color.blueGray[100] : THEME.color.slateGray}
           Icon={Icon.Summary}
           iconSize={20}
           onClick={toggleRegulatoryZoneMetadata}
@@ -76,7 +75,7 @@ export function RegulatoryLayerZone({ regulatoryZone }) {
 
         <IconButton
           accent={Accent.TERTIARY}
-          color={regulatoryZoneIsShowed ? COLORS.blueGray : COLORS.slateGray}
+          color={regulatoryZoneIsShowed ? THEME.color.blueGray[100] : THEME.color.slateGray}
           data-cy={regulatoryZoneIsShowed ? 'regulatory-my-zones-zone-hide' : 'regulatory-my-zones-zone-show'}
           Icon={Icon.Display}
           iconSize={20}

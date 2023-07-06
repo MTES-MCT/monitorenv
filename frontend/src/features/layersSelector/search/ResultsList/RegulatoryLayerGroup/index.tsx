@@ -56,7 +56,7 @@ export function RegulatoryLayerGroup({
           <LayerSelector.ZonesNumber>{`${layerIds.length} / ${totalNumberOfZones}`}</LayerSelector.ZonesNumber>
           <IconButton
             accent={Accent.TERTIARY}
-            color={allTopicZonesAreChecked ? THEME.color.blueYonder[100] : THEME.color.gunMetal}
+            color={allTopicZonesAreChecked ? THEME.color.blueGray[100] : THEME.color.gunMetal}
             Icon={allTopicZonesAreChecked ? Icon.PinFilled : Icon.Pin}
             onClick={handleCheckAllZones}
             size={Size.NORMAL}
