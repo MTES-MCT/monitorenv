@@ -99,7 +99,7 @@ export function RegulatoryPreviewLayer({ map }: MapChildrenProps) {
       setTimeout(() => {
         isThrottled.current = false
         refreshPreviewLayer()
-      }, 3000)
+      }, 300)
     }
   }, [map, regulatoryLayersSearchResult, regulatoryLayersById])
 

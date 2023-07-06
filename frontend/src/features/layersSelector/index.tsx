@@ -1,4 +1,5 @@
-import { IconButton, Accent, Size, Icon } from '@mtes-mct/monitor-ui'
+import { IconButton, Accent, Size, Icon, THEME } from '@mtes-mct/monitor-ui'
+import { FulfillingBouncingCircleSpinner } from 'react-epic-spinners'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
@@ -8,6 +9,7 @@ import { BaseLayerList } from './base'
 import { RegulatoryLayers } from './regulatory/menu'
 import { RegulatoryLayerZoneMetadata } from './regulatory/metadata'
 import { LayerSearch } from './search'
+import { useGetAMPsQuery } from '../../api/ampsAPI'
 import { setDisplayedItems } from '../../domain/shared_slices/Global'
 import { closeRegulatoryZoneMetadata } from '../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
 import { useAppSelector } from '../../hooks/useAppSelector'
@@ -15,6 +17,9 @@ import { useAppSelector } from '../../hooks/useAppSelector'
 export function LayersSidebar() {
   const { regulatoryMetadataLayerId, regulatoryMetadataPanelIsOpen } = useAppSelector(state => state.regulatoryMetadata)
   const { displayLayersSidebar, layersSidebarIsOpen } = useAppSelector(state => state.global)
+  const { regulatoryLayers } = useAppSelector(state => state.regulatory)
+  const amps = useGetAMPsQuery()
+
   const dispatch = useDispatch()
 
   const toggleLayerSidebar = () => {
@@ -54,6 +59,12 @@ export function LayersSidebar() {
           {regulatoryMetadataLayerId && <RegulatoryLayerZoneMetadata />}
         </RegulatoryZoneMetadataShifter>
       </Sidebar>
+      {regulatoryLayers.length === 0 && amps.isLoading && (
+        <SpinnerWrapper $layersSidebarIsOpen={layersSidebarIsOpen}>
+          <FulfillingBouncingCircleSpinner color={THEME.color.gunMetal} size={30} />
+          <Message>Chargement des zones cartographiques</Message>
+        </SpinnerWrapper>
+      )}
     </>
   )
 }
@@ -106,4 +117,18 @@ const SidebarLayersIcon = styled(IconButton)<{ $isActive: boolean; $isVisible: b
   ${p => (p.$isActive ? `background: ${p.theme.color.blueGray[100]};` : '')}
   ${p => (p.$isActive ? `border-color: ${p.theme.color.blueGray[100]};` : '')}
   ${p => (p.$isVisible ? '' : 'display: none;')}
+`
+
+const SpinnerWrapper = styled.div<{ $layersSidebarIsOpen: boolean }>`
+  position: absolute;
+  top: 12px;
+  left: ${props => (props.$layersSidebarIsOpen ? '410px' : '65px')};
+  display: flex;
+  padding: 4px;
+`
+const Message = styled.div`
+  font-size: 14px;
+  font-weight: 900;
+  white-space: nowrap;
+  padding: 4px;
 `
