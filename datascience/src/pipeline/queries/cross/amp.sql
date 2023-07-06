@@ -1,5 +1,5 @@
 SELECT id,
-geom,
+st_multi(ST_SimplifyPreserveTopology(ST_CurveToLine(geom), 0.00001)) geom,
 mpa_oriname,
 des_desigfr,
 mpa_type,
