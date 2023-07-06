@@ -1,7 +1,7 @@
 import { Accent, Icon, IconButton, Button, Size } from '@mtes-mct/monitor-ui'
 import Fuse from 'fuse.js'
 import _ from 'lodash'
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
@@ -38,6 +38,8 @@ export function LayerSearch({ isVisible }) {
 
   const [filterSearchOnMapExtent, setFilterSearchOnMapExtent] = useState<boolean>(false)
 
+  const isSearchThrottled = useRef(false)
+
   useEffect(() => {
     if (filterSearchOnMapExtent) {
       setShouldReloadSearchOnExtent(true)
@@ -73,45 +75,54 @@ export function LayerSearch({ isVisible }) {
       regulatoryThemes: string[]
       searchedText: string
     }) => {
-      if (searchedText.length > 2 || ampTypes.length > 0 || geofilter) {
-        let searchedAMPS
-        let itemSchema
-        if (searchedText.length > 2) {
-          searchedAMPS = fuseAMPs?.search<AMP>(searchedText)
-          itemSchema = { bboxPath: 'item.bbox', idPath: 'item.id' }
-        } else {
-          searchedAMPS = amps?.entities && Object.values(amps?.entities)
-          itemSchema = { bboxPath: 'bbox', idPath: 'id' }
-        }
-        if (ampTypes.length > 0) {
-          searchedAMPS = searchedAMPS.filter(amp => ampTypes.includes(amp.type))
-        }
-        const searchedAMPsInExtent = getIntersectingLayerIds(geofilter, searchedAMPS, extent, itemSchema)
-        dispatch(setAMPsSearchResult(searchedAMPsInExtent))
-      } else {
-        dispatch(setAMPsSearchResult([]))
+      if (isSearchThrottled.current) {
+        return
       }
+      isSearchThrottled.current = true
 
-      if (searchedText.length > 2 || regulatoryThemes.length > 0 || geofilter) {
-        let searchedRegulatory
-        let itemSchema
-        if (searchedText.length > 2) {
-          searchedRegulatory = fuseRegulatory.search<RegulatoryLayerType>(searchedText)
-          itemSchema = { bboxPath: 'item.bbox', idPath: 'item.id' }
+      setTimeout(() => {
+        isSearchThrottled.current = false
+
+        if (searchedText.length > 2 || ampTypes.length > 0 || geofilter) {
+          let searchedAMPS
+          let itemSchema
+          if (searchedText.length > 2) {
+            searchedAMPS = fuseAMPs?.search<AMP>(searchedText)
+            itemSchema = { bboxPath: 'item.bbox', idPath: 'item.id' }
+          } else {
+            searchedAMPS = amps?.entities && Object.values(amps?.entities)
+            itemSchema = { bboxPath: 'bbox', idPath: 'id' }
+          }
+          if (ampTypes.length > 0) {
+            searchedAMPS = searchedAMPS.filter(amp => ampTypes.includes(amp.type))
+          }
+          const searchedAMPsInExtent = getIntersectingLayerIds(geofilter, searchedAMPS, extent, itemSchema)
+          dispatch(setAMPsSearchResult(searchedAMPsInExtent))
         } else {
-          searchedRegulatory = regulatoryLayers
-          itemSchema = { bboxPath: 'bbox', idPath: 'id' }
+          dispatch(setAMPsSearchResult([]))
         }
-        if (regulatoryThemes.length > 0) {
-          searchedRegulatory = searchedRegulatory.filter(layer =>
-            regulatoryThemes.includes(layer.properties.thematique)
-          )
+
+        if (searchedText.length > 2 || regulatoryThemes.length > 0 || geofilter) {
+          let searchedRegulatory
+          let itemSchema
+          if (searchedText.length > 2) {
+            searchedRegulatory = fuseRegulatory.search<RegulatoryLayerType>(searchedText)
+            itemSchema = { bboxPath: 'item.bbox', idPath: 'item.id' }
+          } else {
+            searchedRegulatory = regulatoryLayers
+            itemSchema = { bboxPath: 'bbox', idPath: 'id' }
+          }
+          if (regulatoryThemes.length > 0) {
+            searchedRegulatory = searchedRegulatory.filter(layer =>
+              regulatoryThemes.includes(layer.properties.thematique)
+            )
+          }
+          const searchedRegulatoryInExtent = getIntersectingLayerIds(geofilter, searchedRegulatory, extent, itemSchema)
+          dispatch(setRegulatoryLayersSearchResult(searchedRegulatoryInExtent))
+        } else {
+          dispatch(setRegulatoryLayersSearchResult([]))
         }
-        const searchedRegulatoryInExtent = getIntersectingLayerIds(geofilter, searchedRegulatory, extent, itemSchema)
-        dispatch(setRegulatoryLayersSearchResult(searchedRegulatoryInExtent))
-      } else {
-        dispatch(setRegulatoryLayersSearchResult([]))
-      }
+      }, 300)
     }
   }, [dispatch, regulatoryLayers, amps])
 
@@ -196,7 +207,7 @@ export function LayerSearch({ isVisible }) {
     searchLayers({
       ampTypes: filteredAmpTypes,
       extent: currentMapExtentTracker,
-      geofilter: filterSearchOnMapExtent,
+      geofilter: !filterSearchOnMapExtent,
       regulatoryThemes: filteredRegulatoryThemes,
       searchedText: globalSearchText
     })
