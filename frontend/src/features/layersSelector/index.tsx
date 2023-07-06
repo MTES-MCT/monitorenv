@@ -59,10 +59,14 @@ export function LayersSidebar() {
           {regulatoryMetadataLayerId && <RegulatoryLayerZoneMetadata />}
         </RegulatoryZoneMetadataShifter>
       </Sidebar>
-      {regulatoryLayers.length === 0 && amps.isLoading && (
+      {(regulatoryLayers.length === 0 || amps.isLoading) && (
         <SpinnerWrapper $layersSidebarIsOpen={layersSidebarIsOpen}>
           <FulfillingBouncingCircleSpinner color={THEME.color.gunMetal} size={30} />
-          <Message>Chargement des zones cartographiques</Message>
+          <Message>
+            Chargement des zones cartographiques ({regulatoryLayers.length > 0 && 'Zones réglementaires'}
+            {regulatoryLayers.length > 0 || amps.isLoading ? ' et ' : ''}
+            {amps.isLoading && 'Aires Marines Protégées'})
+          </Message>
         </SpinnerWrapper>
       )}
     </>
@@ -122,7 +126,7 @@ const SidebarLayersIcon = styled(IconButton)<{ $isActive: boolean; $isVisible: b
 const SpinnerWrapper = styled.div<{ $layersSidebarIsOpen: boolean }>`
   position: absolute;
   top: 12px;
-  left: ${props => (props.$layersSidebarIsOpen ? '410px' : '65px')};
+  left: ${props => (props.$layersSidebarIsOpen ? '460px' : '65px')};
   display: flex;
   padding: 4px;
 `
@@ -131,4 +135,5 @@ const Message = styled.div`
   font-weight: 900;
   white-space: nowrap;
   padding: 4px;
+  padding-left: 8px;
 `
