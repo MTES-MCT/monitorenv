@@ -22,7 +22,7 @@ if (!(process.env.NODE_ENV === 'development')) {
         tracingOrigins: SENTRY_TRACING_ORIGINS ? [SENTRY_TRACING_ORIGINS] : undefined
       })
     ],
-    release: `monitorenv:${MONITORENV_VERSION}`,
+    release: `${MONITORENV_VERSION}`,
 
     // Set tracesSampleRate to 1.0 to capture 100%
     // of transactions for performance monitoring.
