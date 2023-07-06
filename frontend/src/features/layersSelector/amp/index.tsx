@@ -9,6 +9,7 @@ import { LayerSelectorMenu } from '../utils/LayerSelectorMenu.style'
 export function AmpLayers() {
   const dispatch = useDispatch()
 
+  const { selectedAmpLayerIds } = useAppSelector(state => state.selectedAmp)
   const { myAmpsIsOpen } = useAppSelector(state => state.layerSidebar)
   const onTitleClicked = () => {
     dispatch(toggleMyAmps())
@@ -16,7 +17,12 @@ export function AmpLayers() {
 
   return (
     <>
-      <LayerSelectorMenu.Wrapper $isExpanded={myAmpsIsOpen} data-cy="amp-layers-my-zones" onClick={onTitleClicked}>
+      <LayerSelectorMenu.Wrapper
+        $hasPinnedLayers={selectedAmpLayerIds?.length > 0}
+        $isExpanded={myAmpsIsOpen}
+        data-cy="amp-layers-my-zones"
+        onClick={onTitleClicked}
+      >
         <LayerSelectorMenu.Pin />
         <LayerSelectorMenu.Title>Mes AMP</LayerSelectorMenu.Title>
         <ChevronIcon $isOpen={myAmpsIsOpen} $right />

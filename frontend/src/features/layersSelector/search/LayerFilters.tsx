@@ -86,7 +86,7 @@ const FiltersWrapper = styled.div`
   border-top: 2px solid ${p => p.theme.color.lightGray};
 `
 const TagWrapper = styled.div`
-  margin-top: 8px;
+  margin-top: 4px;
   margin-bottom: 16px;
 `
 const ResetFilters = styled(Button)`
@@ -110,6 +110,8 @@ const OptionValue = styled.span`
   white-space: nowrap;
 `
 const StyledSingleTag = styled(SingleTag)`
+  margin-top: 4px;
+  margin-right: 4px;
   > * {
     background-color: ${p => p.theme.color.blueYonder['100']};
     color: ${p => p.theme.color.white};
