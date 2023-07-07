@@ -2,7 +2,6 @@ import { debounce } from 'lodash'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { COLORS } from '../../constants/constants'
 import { isNumeric } from '../../utils/isNumeric'
 
 type DDCoordinatesInputProps = {
@@ -96,6 +95,7 @@ const DDInput = styled.input`
 
 const CoordinatesType = styled.span`
   margin-left: 7px;
+  color: ${p => p.theme.color.charcoal};
 `
 
 const Error = styled.span`
@@ -108,7 +108,7 @@ const Body = styled.div`
   text-align: left;
 
   input {
-    background: ${COLORS.gainsboro};
+    background: ${p => p.theme.color.gainsboro};
     border: none;
     height: 27px;
     margin-top: 7px;

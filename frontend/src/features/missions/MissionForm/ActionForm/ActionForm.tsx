@@ -5,7 +5,7 @@ import { ControlForm } from './ControlForm/ControlForm'
 import { NoteForm } from './NoteForm'
 import { SurveillanceForm } from './SurveillanceForm'
 import { COLORS } from '../../../../constants/constants'
-import { ActionTypeEnum, EnvAction, Mission } from '../../../../domain/entities/missions'
+import { ActionTypeEnum, EnvAction } from '../../../../domain/entities/missions'
 
 type ActionFormProps = {
   currentActionIndex: number | undefined
@@ -15,7 +15,6 @@ type ActionFormProps = {
 export function ActionForm({ currentActionIndex, remove, setCurrentActionIndex }: ActionFormProps) {
   const [actionTypeField] = useField<ActionTypeEnum>(`envActions.${currentActionIndex}.actionType`)
   const [actionIdField] = useField<EnvAction['id']>(`envActions.${currentActionIndex}.id`)
-  const [isClosedField] = useField<Mission['isClosed']>(`isClosed`)
 
   if (currentActionIndex === undefined) {
     return (
@@ -31,7 +30,6 @@ export function ActionForm({ currentActionIndex, remove, setCurrentActionIndex }
           <ControlForm
             key={actionIdField.value}
             currentActionIndex={currentActionIndex}
-            readOnly={isClosedField.value}
             removeControlAction={remove}
             setCurrentActionIndex={setCurrentActionIndex}
           />
@@ -43,7 +41,6 @@ export function ActionForm({ currentActionIndex, remove, setCurrentActionIndex }
           <SurveillanceForm
             key={actionIdField.value}
             currentActionIndex={currentActionIndex}
-            readOnly={isClosedField.value}
             remove={remove}
             setCurrentActionIndex={setCurrentActionIndex}
           />

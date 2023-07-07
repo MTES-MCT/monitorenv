@@ -3,7 +3,7 @@ import { Accent, Button, Icon, Size } from '@mtes-mct/monitor-ui'
 import { ControlUnitSelector } from './ControlUnitSelector'
 import { controlUnitFactory } from '../Missions.helpers'
 
-export function ControlUnitsForm({ form, push, readOnly, remove }) {
+export function ControlUnitsForm({ form, push, remove }) {
   const handleAddControlUnit = () => {
     push(controlUnitFactory())
   }
@@ -27,11 +27,10 @@ export function ControlUnitsForm({ form, push, readOnly, remove }) {
           ))}
         </>
       )}
-      {!readOnly && (
-        <Button accent={Accent.SECONDARY} Icon={Icon.Plus} onClick={handleAddControlUnit} size={Size.SMALL}>
-          Ajouter une autre unité
-        </Button>
-      )}
+
+      <Button accent={Accent.SECONDARY} Icon={Icon.Plus} onClick={handleAddControlUnit} size={Size.SMALL}>
+        Ajouter une autre unité
+      </Button>
     </div>
   )
 }

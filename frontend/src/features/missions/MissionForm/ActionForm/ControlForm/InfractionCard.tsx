@@ -15,8 +15,7 @@ import {
   VesselTypeEnum,
   vesselTypeLabels,
   EnvActionControl,
-  Infraction,
-  Mission
+  Infraction
 } from '../../../../../domain/entities/missions'
 import { ReactComponent as DeleteSVG } from '../../../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as DuplicateSVG } from '../../../../../uiMonitor/icons/Duplicate.svg'
@@ -45,9 +44,6 @@ export function InfractionCard({
   const [infractionType] = useField<InfractionTypeEnum>(`${infractionPath}.infractionType`)
   const [formalNotice] = useField<FormalNoticeEnum>(`${infractionPath}.formalNotice`)
   const [natinf] = useField<Infraction['natinf']>(`${infractionPath}.natinf`)
-  const [isClosedField] = useField<Mission['isClosed']>(`isClosed`)
-
-  const readOnly = isClosedField.value
 
   let libelleInfractionType
   switch (infractionType?.value) {
@@ -96,21 +92,20 @@ export function InfractionCard({
       </Summary>
       <ButtonsWrapper>
         <IconButton appearance="ghost" icon={<EditIcon className="rs-icon" />} onClick={setCurrentInfractionIndex}>
-          {readOnly ? 'Consulter' : 'Editer'}
+          Editer
         </IconButton>
-        {!readOnly && (
-          <>
-            <IconButton
-              appearance="ghost"
-              data-cy="duplicate-infraction"
-              disabled={!canAddInfraction}
-              icon={<DuplicateSVG className="rs-icon" />}
-              onClick={duplicateInfraction}
-              title="dupliquer"
-            />
-            <IconButton appearance="ghost" icon={<DeleteIcon />} onClick={removeInfraction} />
-          </>
-        )}
+
+        <>
+          <IconButton
+            appearance="ghost"
+            data-cy="duplicate-infraction"
+            disabled={!canAddInfraction}
+            icon={<DuplicateSVG className="rs-icon" />}
+            onClick={duplicateInfraction}
+            title="dupliquer"
+          />
+          <IconButton appearance="ghost" icon={<DeleteIcon />} onClick={removeInfraction} />
+        </>
       </ButtonsWrapper>
     </Wrapper>
   )

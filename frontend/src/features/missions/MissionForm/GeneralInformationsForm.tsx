@@ -31,16 +31,12 @@ import { MultiZonePicker } from '../MultiZonePicker'
 export function GeneralInformationsForm() {
   const { newWindowContainerRef } = useNewWindow()
 
-  const [isClosedField] = useField<boolean>('isClosed')
   const [hasMissionOrderField] = useField<boolean>('hasMissionOrder')
   const [missionSourceField] = useField<MissionSourceEnum>('missionSource')
-  const { values } = useFormikContext<Mission>()
+  const { errors, values } = useFormikContext<Mission>()
   const missionTypeOptions = Object.entries(missionTypeEnum).map(([key, val]) => ({ label: val.libelle, value: key }))
 
   const hasMissionOrderOptions = Object.values(hasMissionOrderLabels)
-
-  const [, startDateMeta] = useField('startDateTimeUtc')
-  const [, endDateMeta] = useField('endDateTimeUtc')
 
   const { sideWindow } = useAppSelector(state => state)
   const routeParams = getMissionPageRoute(sideWindow.currentPath)
@@ -86,8 +82,8 @@ export function GeneralInformationsForm() {
               withTime
             />
           </StyledDatePickerContainer>
-          {startDateMeta.error && <FieldError>{startDateMeta.error}</FieldError>}
-          {endDateMeta.error && <FieldError>{endDateMeta.error}</FieldError>}
+          {errors.startDateTimeUtc && <FieldError>{errors.startDateTimeUtc}</FieldError>}
+          {errors.endDateTimeUtc && <FieldError>{errors.endDateTimeUtc}</FieldError>}
         </div>
 
         <StyledMissionType>
@@ -120,7 +116,7 @@ export function GeneralInformationsForm() {
           <FieldArray
             name="controlUnits"
             /* eslint-disable-next-line react/jsx-props-no-spreading */
-            render={props => <ControlUnitsForm readOnly={isClosedField.value} {...props} />}
+            render={props => <ControlUnitsForm {...props} />}
             validateOnChange={false}
           />
         </StyledUnitsContainer>
@@ -130,7 +126,6 @@ export function GeneralInformationsForm() {
           interactionListener={InteractionListener.MISSION_ZONE}
           label="Localisations :"
           name="geom"
-          readOnly={isClosedField.value}
         />
 
         <StyledObservationsContainer>
@@ -140,6 +135,8 @@ export function GeneralInformationsForm() {
             <FormikTextInput isErrorMessageHidden label="Ouvert par" name="openBy" />
             <FormikTextInput isErrorMessageHidden label="Clôturé par" name="closedBy" />
           </StyledAuthorContainer>
+          {errors.openBy && <FieldError>{errors.openBy}</FieldError>}
+          {errors.closedBy && <FieldError>{errors.closedBy}</FieldError>}
         </StyledObservationsContainer>
       </StyledFormWrapper>
     </StyledContainer>

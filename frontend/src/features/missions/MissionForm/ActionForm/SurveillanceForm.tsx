@@ -15,7 +15,7 @@ import { dateDifferenceInHours } from '../../../../utils/dateDifferenceInHours'
 import { pluralize } from '../../../../utils/pluralize'
 import { MultiZonePicker } from '../../MultiZonePicker'
 
-export function SurveillanceForm({ currentActionIndex, readOnly, remove, setCurrentActionIndex }) {
+export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionIndex }) {
   const { newWindowContainerRef } = useNewWindow()
 
   const [, actionStartDateMeta] = useField(`envActions[${currentActionIndex}].actionStartDateTimeUtc`)
@@ -116,7 +116,6 @@ export function SurveillanceForm({ currentActionIndex, readOnly, remove, setCurr
           isLight
           label="Zone de surveillance"
           name={`envActions[${currentActionIndex}].geom`}
-          readOnly={readOnly}
         />
         <StyledFormikCheckbox
           disabled={hasCustomZone || isEditingZone}

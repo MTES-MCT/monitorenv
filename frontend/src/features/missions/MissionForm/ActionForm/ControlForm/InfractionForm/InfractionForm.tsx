@@ -35,8 +35,6 @@ export function InfractionForm({
 
   const [actionTargetField] = useField<string>(`envActions.${currentActionIndex}.actionTargetType`)
   const [, meta] = useField(infractionPath)
-  const [isClosedField] = useField<boolean>('isClosed')
-  const readOnly = isClosedField.value
 
   return (
     <FormWrapper data-cy="infraction-form">
@@ -94,9 +92,9 @@ export function InfractionForm({
         <FormikTextarea label="Observations" name={`${infractionPath}.observations`} />
       </Form.Group>
       <ButtonToolbarRight>
-        {!readOnly && <Button onClick={removeInfraction}>Supprimer l&apos;infraction</Button>}
+        <Button onClick={removeInfraction}>Supprimer l&apos;infraction</Button>
         <Button appearance="primary" data-cy="infraction-form-validate" onClick={validateInfraction}>
-          {readOnly ? "Fermer l'infraction" : "Valider l'infraction"}
+          Valider l&apos;infraction
         </Button>
       </ButtonToolbarRight>
       {!!meta.error && (

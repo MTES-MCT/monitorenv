@@ -2,8 +2,6 @@ import { useCallback, useMemo } from 'react'
 import CoordinateInput from 'react-coordinate-input'
 import styled from 'styled-components'
 
-import { COLORS } from '../../constants/constants'
-
 import type { CoordinatesFormat } from '../../domain/entities/map/constants'
 
 type DMSCoordinatesInputProps = {
@@ -43,6 +41,7 @@ export function DMSCoordinatesInput({ coordinates, coordinatesFormat, updateCoor
 
 const CoordinatesType = styled.span`
   margin-left: 7px;
+  color: ${p => p.theme.color.charcoal};
 `
 
 const Body = styled.div`
@@ -50,7 +49,7 @@ const Body = styled.div`
   text-align: left;
 
   input {
-    background: ${COLORS.gainsboro};
+    background: ${p => p.theme.color.gainsboro};
     border: none;
     height: 27px;
     margin-top: 7px;
