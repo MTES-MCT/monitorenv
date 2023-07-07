@@ -1,8 +1,10 @@
 /* eslint-disable no-bitwise */
 
+import { THEME } from '@mtes-mct/monitor-ui'
 import { asArray, asString } from 'ol/color'
 
-import { COLORS } from '../constants/constants'
+import { Layers } from '../domain/entities/layers/constants'
+
 /**
  *
  * @param {string} hexColor
@@ -20,25 +22,40 @@ export const customHexToRGB = (hexColor, defaultColor) => {
 }
 
 export const regulatoryColorsBlues = [
-  COLORS.yaleBlue,
-  COLORS.glaucous,
-  COLORS.blueNcs,
-  COLORS.iceberg,
-  COLORS.lightSteelBlue,
-  COLORS.lightPeriwinkle
+  THEME.color.yaleBlue,
+  THEME.color.glaucous,
+  THEME.color.blueNcs,
+  THEME.color.iceberg,
+  THEME.color.lightSteelBlue,
+  THEME.color.lightPeriwinkle
 ]
 export const regulatoryColorsGreens = [
-  COLORS.aliceBlue,
-  COLORS.lightCyan,
-  COLORS.middleBlueGreen,
-  COLORS.verdigris,
-  COLORS.viridianGreen,
-  COLORS.paoloVeroneseGreen,
-  COLORS.skobeloff,
-  COLORS.blueSapphire,
-  COLORS.indigoDye
+  THEME.color.aliceBlue,
+  THEME.color.lightCyan,
+  THEME.color.middleBlueGreen,
+  THEME.color.verdigris,
+  THEME.color.viridianGreen,
+  THEME.color.paoloVeroneseGreen,
+  THEME.color.skobeloff,
+  THEME.color.blueSapphire,
+  THEME.color.indigoDye
 ]
 
+export const ampColors = [
+  THEME.color.chineseRed,
+  THEME.color.brownSugar,
+  THEME.color.rust,
+  THEME.color.burntSienna,
+  THEME.color.persianOrange,
+  THEME.color.jasper,
+  THEME.color.bittersweet,
+  THEME.color.coral,
+  THEME.color.peach,
+  THEME.color.apricot,
+  THEME.color.melon,
+  THEME.color.paleDogwood,
+  THEME.color.seashell
+]
 /**
  * Get a color from palette from string
  * https://gist.github.com/0x263b/2bdd90886c2036a1ad5bcf06d6e6fb37
@@ -57,8 +74,9 @@ export function stringToArrayItem(str, arr) {
   return arr[hash]
 }
 
-export function stringToColorInGroup(group, name) {
-  const colorSet = stringToArrayItem(group, [regulatoryColorsBlues, regulatoryColorsGreens])
+export function stringToColorInGroup(group, name, layerType) {
+  const colors = layerType === Layers.AMP.code ? [ampColors] : [regulatoryColorsBlues, regulatoryColorsGreens]
+  const colorSet = stringToArrayItem(group, colors)
 
   return stringToArrayItem(name, colorSet)
 }

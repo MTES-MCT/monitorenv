@@ -21,6 +21,17 @@ export const Layers = {
     subZoneFieldKey: 'name',
     type: LayerType.ADMINISTRATIVE
   },
+  AMP: {
+    code: 'AMP',
+    containsMultipleZones: false,
+    group: null,
+    isIntersectable: false,
+    name: 'environment_amp_areas',
+    showMultipleZonesInAdministrativeZones: false,
+    subZoneFieldKey: null,
+    type: LayerType.REGULATORY,
+    zIndex: 925
+  },
   BASE_LAYER: {
     code: 'baselayer',
     containsMultipleZones: false,

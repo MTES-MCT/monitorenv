@@ -1,10 +1,9 @@
-import React from 'react'
 import styled from 'styled-components'
 
 import { SectionTitle, Section, List } from './RegulatoryMetadata.style'
 import { Link } from '../../../../ui/Link'
 
-function MetadataRegulatoryReferences({ regulatoryReference, url }) {
+export function MetadataRegulatoryReferences({ regulatoryReference, url }) {
   return (
     regulatoryReference && (
       <Section>
@@ -26,5 +25,3 @@ const Reference = styled.li`
   padding-left: 10px;
   font-size: 13px;
 `
-
-export default MetadataRegulatoryReferences

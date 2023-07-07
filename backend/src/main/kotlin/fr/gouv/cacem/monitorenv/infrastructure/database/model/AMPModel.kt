@@ -19,11 +19,14 @@ data class AMPModel(
     var name: String,
     @Column(name = "des_desigfr")
     var designation: String,
+    @Column(name = "mpa_type")
+    var type: String,
 ) {
     fun toAMP() = AMPEntity(
         id = id,
         geom = geom,
         name = name,
         designation = designation,
+        type = type,
     )
 }

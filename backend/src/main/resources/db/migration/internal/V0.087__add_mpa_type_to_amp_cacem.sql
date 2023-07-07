@@ -1,0 +1,1 @@
+ALTER TABLE amp_cacem ADD COLUMN mpa_type text;

@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import { APIWorker } from '../api/APIWorker'
 import Healthcheck from '../features/healthcheck/Healthcheck'
-import { LayersSidebar } from '../features/layersSelector/LayersSidebar'
+import { LayersSidebar } from '../features/layersSelector'
 import { LocateOnMap } from '../features/LocateOnMap'
 import { DrawModal } from '../features/map/draw/DrawModal'
 import { Map } from '../features/map/Map'

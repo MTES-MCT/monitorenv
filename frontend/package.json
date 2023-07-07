@@ -33,7 +33,7 @@
   "dependencies": {
     "@dnd-kit/core": "^4.0.3",
     "@dnd-kit/modifiers": "^4.0.0",
-    "@mtes-mct/monitor-ui": "7.4.3",
+    "@mtes-mct/monitor-ui": "7.6.0",
     "@reduxjs/toolkit": "1.9.5",
     "@rsuite/responsive-nav": "^5.0.1",
     "@sentry/browser": "7.47.0",
@@ -44,8 +44,8 @@
     "@tanstack/react-virtual": "^3.0.0-beta.54",
     "date-fns": "2.29.2",
     "dayjs": "1.11.7",
-    "flexsearch": "0.7.21",
     "formik": "2.2.9",
+    "fuse.js": "^6.6.2",
     "hammerjs": "2.0.8",
     "imask": "^6.6.1",
     "lodash": "^4.17.21",

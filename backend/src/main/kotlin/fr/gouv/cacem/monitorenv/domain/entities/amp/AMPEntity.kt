@@ -7,4 +7,5 @@ data class AMPEntity(
     val geom: MultiPolygon,
     val name: String,
     val designation: String,
+    val type: String,
 )

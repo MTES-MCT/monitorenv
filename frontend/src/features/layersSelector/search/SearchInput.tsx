@@ -1,13 +1,13 @@
-import { IconButton, Input, InputGroup } from 'rsuite'
+import { Accent, IconButton, Icon, Size } from '@mtes-mct/monitor-ui'
+import { Input, InputGroup } from 'rsuite'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../../constants/constants'
-import { ReactComponent as CloseIconSVG } from '../../../../uiMonitor/icons/Close.svg'
-import { ReactComponent as FiltreIconSVG } from '../../../../uiMonitor/icons/Filtres.svg'
-import { ReactComponent as SearchIconSVG } from '../../../../uiMonitor/icons/Search.svg'
+import { ReactComponent as CloseIconSVG } from '../../../uiMonitor/icons/Close.svg'
+import { ReactComponent as SearchIconSVG } from '../../../uiMonitor/icons/Search.svg'
 
-export function RegulatoryLayerSearchInput({
+export function SearchInput({
   displayRegFilters,
+  filteredAmpTypes,
   filteredRegulatoryThemes,
   globalSearchText,
   placeholder,
@@ -17,7 +17,7 @@ export function RegulatoryLayerSearchInput({
   const handleResetSearch = () => {
     setGlobalSearchText('')
   }
-  const numberOfFilteredRegulatoryThemes = filteredRegulatoryThemes?.length
+  const numberOfFilters = (filteredRegulatoryThemes?.length || 0) + (filteredAmpTypes?.length || 0)
 
   return (
     <SearchHeader>
@@ -36,21 +36,19 @@ export function RegulatoryLayerSearchInput({
             <SearchIcon className="rs-icon" />
           </InputGroup.Addon>
         ) : (
-          <InputGroup.Button onClick={handleResetSearch}>
+          <InputGroup.Button appearance="ghost" onClick={handleResetSearch}>
             <CloseIcon className="rs-icon" />
           </InputGroup.Button>
         )}
       </SearchInputGroup>
       <FilterIcon>
-        {!displayRegFilters && numberOfFilteredRegulatoryThemes > 0 && (
-          <NumberOfFilteredReg>{numberOfFilteredRegulatoryThemes}</NumberOfFilteredReg>
-        )}
-        <FilterIconButton
-          active={displayRegFilters}
-          appearance="primary"
-          icon={<FiltreIconSVG className="rs-icon" />}
+        {!displayRegFilters && numberOfFilters > 0 && <NumberOfFilteredReg>{numberOfFilters}</NumberOfFilteredReg>}
+        <IconButton
+          accent={Accent.PRIMARY}
+          className={displayRegFilters ? '_active' : ''}
+          Icon={Icon.FilterBis}
           onClick={toggleRegFilters}
-          size="lg"
+          size={Size.LARGE}
         />
       </FilterIcon>
     </SearchHeader>
@@ -63,8 +61,7 @@ const SearchHeader = styled.div`
 `
 const SearchInputGroup = styled(InputGroup)`
   width: 310px;
-  background: ${COLORS.white};
-  border: 0;
+  background: ${p => p.theme.color.white};
 `
 const SearchBoxInput = styled(Input)`
   padding-left: 12px;
@@ -81,12 +78,9 @@ const CloseIcon = styled(CloseIconSVG)`
 `
 const FilterIcon = styled.div``
 
-const FilterIconButton = styled(IconButton)`
-  width: 40px;
-`
 const NumberOfFilteredReg = styled.span`
-  background: ${COLORS.maximumRed};
-  color: ${COLORS.white};
+  background: ${p => p.theme.color.maximumRed};
+  color: ${p => p.theme.color.white};
   position: absolute;
   top: -5px;
   right: -5px;
