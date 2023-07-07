@@ -1,4 +1,5 @@
 import { Accent, Button, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
+import { isEmpty, compact } from 'lodash'
 import styled from 'styled-components'
 
 import { ActionTheme } from './ActionTheme'
@@ -19,13 +20,24 @@ export function MultipleThemeElement({ currentActionIndex, form, push, remove })
 
   return (
     <ThemesWrapper>
+      {isEmpty(compact(currentThemes)) && (
+        <ThemeBloc key={0}>
+          <ActionTheme
+            actionIndex={currentActionIndex}
+            labelSubTheme="Sous-thématiques de surveillance"
+            labelTheme="Thématique de surveillance"
+            themeIndex={0}
+          />
+        </ThemeBloc>
+      )}
       {currentThemes.map((_, index) => (
         // eslint-disable-next-line react/no-array-index-key
         <ThemeBloc key={index}>
           <ActionTheme
+            actionIndex={currentActionIndex}
             labelSubTheme="Sous-thématiques de surveillance"
             labelTheme="Thématique de surveillance"
-            themePath={`envActions.${currentActionIndex}.themes.${index}`}
+            themeIndex={index}
           />
 
           {index > 0 && (

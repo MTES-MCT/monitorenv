@@ -5,5 +5,13 @@ export function extractThemesAsText(themes: EnvActionTheme[]) {
     return ''
   }
 
-  return themes.map(t => t.theme).join(' - ')
+  return themes
+    .reduce((acc, t) => {
+      if (t?.theme) {
+        acc.push(t.theme)
+      }
+
+      return acc
+    }, [] as string[])
+    .join(' - ')
 }

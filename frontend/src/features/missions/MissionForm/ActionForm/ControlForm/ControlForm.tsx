@@ -126,9 +126,10 @@ export function ControlForm({
       </Header>
       <FormBody>
         <ActionTheme
+          actionIndex={currentActionIndex}
           labelSubTheme="Sous-thématiques de contrôle"
           labelTheme="Thématique de contrôle"
-          themePath={`envActions[${currentActionIndex}].themes[0]`}
+          themeIndex={0}
         />
         <Form.Group>
           <FormikDatePicker

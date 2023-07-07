@@ -4,20 +4,22 @@ import styled from 'styled-components'
 import { ProtectedSpeciesSelector } from './ProtectedSpeciesSelector'
 import { SubThemesSelector } from './SubThemesSelector'
 import { ThemeSelector } from './ThemeSelector'
-import { useCleanSubThemesOnThemeChange } from './useCleanSubThemesOnThemeChange'
 import { THEME_REQUIRE_PROTECTED_SPECIES } from '../../../../../domain/entities/missions'
 
-export function ActionTheme({ labelSubTheme, labelTheme, themePath }) {
-  const [currentThemeField] = useField(`${themePath}.theme`)
-
-  useCleanSubThemesOnThemeChange(themePath)
+export function ActionTheme({ actionIndex, labelSubTheme, labelTheme, themeIndex }) {
+  const [currentThemeField] = useField<string>(`envActions[${actionIndex}].themes[${themeIndex}].theme`)
 
   return (
     <ActionThemeWrapper data-cy="envaction-theme-element">
-      <ThemeSelector label={labelTheme} name={`${themePath}.theme`} />
-      <SubThemesSelector label={labelSubTheme} name={`${themePath}.subThemes`} theme={currentThemeField?.value} />
+      <ThemeSelector actionIndex={actionIndex} label={labelTheme} themeIndex={themeIndex} />
+      <SubThemesSelector
+        actionIndex={actionIndex}
+        label={labelSubTheme}
+        theme={currentThemeField?.value}
+        themeIndex={themeIndex}
+      />
       {THEME_REQUIRE_PROTECTED_SPECIES.includes(currentThemeField.value) && (
-        <ProtectedSpeciesSelector name={`${themePath}.protectedSpecies`} />
+        <ProtectedSpeciesSelector actionIndex={actionIndex} themeIndex={themeIndex} />
       )}
     </ActionThemeWrapper>
   )
