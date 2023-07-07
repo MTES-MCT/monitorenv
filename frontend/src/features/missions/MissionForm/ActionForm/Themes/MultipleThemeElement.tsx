@@ -23,9 +23,10 @@ export function MultipleThemeElement({ currentActionIndex, form, push, remove })
       {isEmpty(compact(currentThemes)) && (
         <ThemeBloc key={0}>
           <ActionTheme
+            actionIndex={currentActionIndex}
             labelSubTheme="Sous-thématiques de surveillance"
             labelTheme="Thématique de surveillance"
-            themePath={`envActions.${currentActionIndex}.themes.0`}
+            themeIndex={0}
           />
         </ThemeBloc>
       )}
@@ -33,9 +34,10 @@ export function MultipleThemeElement({ currentActionIndex, form, push, remove })
         // eslint-disable-next-line react/no-array-index-key
         <ThemeBloc key={index}>
           <ActionTheme
+            actionIndex={currentActionIndex}
             labelSubTheme="Sous-thématiques de surveillance"
             labelTheme="Thématique de surveillance"
-            themePath={`envActions.${currentActionIndex}.themes.${index}`}
+            themeIndex={index}
           />
 
           {index > 0 && (
