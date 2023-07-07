@@ -12,12 +12,12 @@ const getAllThemesAndSubThemesAsString = (envactions: EnvAction[]) => {
     .reduce((acc, { themes }) => {
       if (themes) {
         themes.forEach(t => {
-          if (!acc[t.theme]) {
+          if (!!t.theme && !acc[t.theme]) {
             acc[t.theme] = []
           }
           if (t.subThemes) {
             t.subThemes.forEach(st => {
-              if (!acc[t.theme].includes(st)) {
+              if (!!st && !acc[t.theme].includes(st)) {
                 acc[t.theme].push(st)
               }
             })
