@@ -9,7 +9,10 @@ import { LayerSelector } from '../utils/LayerSelector.style'
 export function AMPLayersList() {
   const { selectedAmpLayerIds, showedAmpLayerIds } = useAppSelector(state => state.selectedAmp)
   const { currentData: amps, isLoading } = useGetAMPsQuery()
-  const selectedAmps = useMemo(() => selectedAmpLayerIds.map(id => amps?.entities?.[id]), [amps, selectedAmpLayerIds])
+  const selectedAmps = useMemo(
+    () => selectedAmpLayerIds.map(id => amps?.entities?.[id]).filter(l => l),
+    [amps, selectedAmpLayerIds]
+  )
   const layersByLayersName = useMemo(() => _.groupBy(selectedAmps, r => r?.name), [selectedAmps])
 
   if (_.isEmpty(selectedAmpLayerIds)) {
