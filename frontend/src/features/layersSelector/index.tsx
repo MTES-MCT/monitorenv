@@ -63,8 +63,8 @@ export function LayersSidebar() {
         <SpinnerWrapper $layersSidebarIsOpen={layersSidebarIsOpen}>
           <FulfillingBouncingCircleSpinner color={THEME.color.gunMetal} size={30} />
           <Message>
-            Chargement des zones cartographiques ({regulatoryLayers.length > 0 && 'Zones réglementaires'}
-            {regulatoryLayers.length > 0 || amps.isLoading ? ' et ' : ''}
+            Chargement des zones cartographiques ({regulatoryLayers.length === 0 && 'Zones réglementaires'}
+            {regulatoryLayers.length === 0 && amps.isLoading ? ' et ' : ''}
             {amps.isLoading && 'Aires Marines Protégées'})
           </Message>
         </SpinnerWrapper>
