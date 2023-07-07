@@ -115,24 +115,27 @@ context('Mission actions', () => {
     // Given
     cy.get('*[data-cy="edit-mission"]').eq(3).click({ force: true })
     cy.get('*[data-cy="action-card"]').eq(0).click()
-    cy.get('*[data-cy="envaction-theme-element"]').should('have.length', 1)
-    cy.get('*[data-cy="envaction-theme-selector"]').contains(
-      'Police des espèces protégées et de leurs habitats (faune et flore)'
-    )
+    cy.get('*[data-cy="envaction-theme-element"]').should('have.length', 2)
+    cy.get('*[data-cy="envaction-theme-selector"]')
+      .eq(0)
+      .contains('Police des espèces protégées et de leurs habitats (faune et flore)')
     cy.get('*[data-cy="envaction-theme-element"]').contains('Destruction, capture, arrachage')
     cy.get('*[data-cy="envaction-protected-species-selector"]').should('exist')
     cy.get('*[data-cy="envaction-theme-element"]').contains('Flore')
     cy.get('*[data-cy="envaction-theme-element"]').contains('Oiseaux')
 
     // When
+    cy.get('*[data-cy="envaction-theme-selector"]').eq(0).click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').eq(0).contains('Police des réserves naturelles').click()
+
     cy.get('*[data-cy="envaction-add-theme"]').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-selector"]').eq(1).click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').eq(1).contains('Police des mouillages').click()
+    cy.get('*[data-cy="envaction-theme-selector"]').eq(2).click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').eq(2).contains('Rejets illicites').click()
 
-    cy.get('*[data-cy="envaction-subtheme-selector"]').eq(1).click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').eq(1).contains('ZMEL').click({ force: true })
+    cy.get('*[data-cy="envaction-subtheme-selector"]').eq(2).click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').eq(2).contains('Jet de déchet').click({ force: true })
 
-    cy.get('*[data-cy="envaction-protected-species-selector"]').should('have.length', 1)
+    cy.get('*[data-cy="envaction-protected-species-selector"]').should('have.length', 0)
 
     cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
     cy.get('form').submit()
@@ -142,18 +145,19 @@ context('Mission actions', () => {
       expect(response && response.statusCode).equal(200)
 
       const { themes } = response && response.body.envActions.find(a => a.id === 'b8007c8a-5135-4bc3-816f-c69c7b75d807')
-      expect(themes.length).equal(2)
-      expect(themes[0].theme).equal('Police des espèces protégées et de leurs habitats (faune et flore)')
-      expect(themes[0].subThemes.length).equal(2)
-      expect(themes[0].subThemes[0]).equal('Destruction, capture, arrachage')
-      expect(themes[0].subThemes[1]).equal("Atteinte aux habitats d'espèces protégées")
-      expect(themes[0].protectedSpecies.length).equal(2)
-      expect(themes[0].protectedSpecies[0]).equal('FLORA')
-      expect(themes[0].protectedSpecies[1]).equal('BIRDS')
+      expect(themes.length).equal(3)
+      expect(themes[0].theme).equal('Police des réserves naturelles')
+      expect(themes[0].subThemes.length).equal(0)
+      expect(themes[0].protectedSpecies.length).equal(0)
       expect(themes[1].theme).equal('Police des mouillages')
-      expect(themes[1].subThemes.length).equal(1)
-      expect(themes[1].subThemes[0]).equal('ZMEL')
+      expect(themes[1].subThemes.length).equal(2)
+      expect(themes[1].subThemes[0]).equal('Mouillage individuel')
+      expect(themes[1].subThemes[1]).equal('ZMEL')
       expect(themes[1].protectedSpecies.length).equal(0)
+      expect(themes[2].theme).equal('Rejets illicites')
+      expect(themes[2].subThemes.length).equal(1)
+      expect(themes[2].subThemes[0]).equal('Jet de déchet')
+      expect(themes[2].protectedSpecies.length).equal(0)
     })
   })
 
