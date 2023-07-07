@@ -1,30 +1,36 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { reduceBy, map, flatten, pipe, uniq, filter, toPairs, join } from 'ramda'
 import { useMemo } from 'react'
 
-import { ActionTypeEnum, EnvAction } from '../../../domain/entities/missions'
+import { ActionTypeEnum, EnvAction, EnvActionControl, EnvActionSurveillance } from '../../../domain/entities/missions'
 
-const getAllThemesAndSubThemesAsString = envactions => {
-  const filterSurveillanceAndControlActions = filter(
-    a => a.actionType === ActionTypeEnum.CONTROL || a.actionType === ActionTypeEnum.SURVEILLANCE
-  )
+const getAllThemesAndSubThemesAsString = (envactions: EnvAction[]) => {
+  const uniqueThemesAndSubthemes = envactions
+    .filter(
+      (a): a is EnvActionControl | EnvActionSurveillance =>
+        a.actionType === ActionTypeEnum.CONTROL || a.actionType === ActionTypeEnum.SURVEILLANCE
+    )
+    .reduce((acc, { themes }) => {
+      if (themes) {
+        themes.forEach(t => {
+          if (!acc[t.theme]) {
+            acc[t.theme] = []
+          }
+          if (t.subThemes) {
+            t.subThemes.forEach(st => {
+              if (!acc[t.theme].includes(st)) {
+                acc[t.theme].push(st)
+              }
+            })
+          }
+        })
+      }
 
-  // get unique subthemes
-  const getTheme = ({ theme }) => theme
-  const aggregateSubThemes = (acc, { subThemes }) => uniq(acc.concat(subThemes))
-  const groupThemes = reduceBy(aggregateSubThemes, [], getTheme)
-
-  const getActionThemes = ({ themes }) => themes
-  const flattenAndGroupSubThemesByThemes = pipe(
-    filterSurveillanceAndControlActions,
-    map(getActionThemes),
-    flatten,
-    groupThemes
-  )
+      return acc
+    }, {})
 
   const getThemeAndSubThemesString = ([theme, subThemes]) => `${theme} : ${subThemes.join(' / ')}`
 
-  return pipe(flattenAndGroupSubThemesByThemes, toPairs, map(getThemeAndSubThemesString), join(' ; '))(envactions)
+  return Object.entries(uniqueThemesAndSubthemes).map(getThemeAndSubThemesString).join(' ; ')
 }
 
 export function CellActionThemes({ envActions }: { envActions: EnvAction[] }) {
