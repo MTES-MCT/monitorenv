@@ -37,7 +37,7 @@ export const actionFactory = ({
         id: uuidv4(),
         infractions: [],
         observations: '',
-        themes: [{ subThemes: [], theme: '' }],
+        themes: [],
         ...action
       }
     case ActionTypeEnum.NOTE:
@@ -56,7 +56,7 @@ export const actionFactory = ({
         durationMatchesMission: true,
         id: uuidv4(),
         observations: '',
-        themes: [{ subThemes: [], theme: '' }],
+        themes: [],
         ...action
       }
   }
