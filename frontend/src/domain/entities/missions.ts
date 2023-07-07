@@ -230,8 +230,9 @@ export enum MissionStatusEnum {
 }
 export const missionStatusLabels = {
   CLOSED: {
+    borderColor: THEME.color.slateGray,
     code: 'CLOSED',
-    color: THEME.color.opal,
+    color: THEME.color.white,
     libelle: 'Cloturée'
   },
   ENDED: {
@@ -246,7 +247,7 @@ export const missionStatusLabels = {
   },
   UPCOMING: {
     code: 'UPCOMING',
-    color: THEME.color.blueGray[100],
+    color: THEME.color.yellowGreen,
     libelle: 'À venir'
   }
 }

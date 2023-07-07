@@ -99,11 +99,12 @@ export const StyledResponsiveNav = styled(ResponsiveNav)`
   }
 `
 
-export const StyledStatus = styled.div<{ color: string }>`
+export const StyledStatus = styled.div<{ borderColor: string | undefined; color: string }>`
   height: 12px;
   width: 12px;
   margin-right: 5px;
   background-color: ${p => p.color};
   border-radius: 50%;
   display: flex;
+  border: ${p => (p.borderColor ? `1px solid ${p.borderColor}` : '0px')};
 `

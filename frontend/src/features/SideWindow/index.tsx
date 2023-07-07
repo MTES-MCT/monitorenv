@@ -27,7 +27,7 @@ function MissionStatus({ mission }) {
 
   return (
     <div>
-      <StyledStatus color={missionStatusLabels[status].color} />
+      <StyledStatus borderColor={missionStatusLabels[status].borderColor} color={missionStatusLabels[status].color} />
     </div>
   )
 }

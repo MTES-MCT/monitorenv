@@ -45,7 +45,9 @@ export const COLORS = {
   blueSapphire: '#01536A',
   indigoDye: '#033E54',
 
-  lightCoral: '#FA8282'
+  lightCoral: '#FA8282',
+
+  yellowGreen: '#8CC800'
 }
 
 export const HIT_PIXEL_TO_TOLERANCE = 15

@@ -1,3 +1,4 @@
+import { THEME } from '@mtes-mct/monitor-ui'
 import { getCenter } from 'ol/extent'
 import { MultiPoint, MultiPolygon } from 'ol/geom'
 import Point from 'ol/geom/Point'
@@ -5,7 +6,6 @@ import { Icon, Style } from 'ol/style'
 import Fill from 'ol/style/Fill'
 import Stroke from 'ol/style/Stroke'
 
-import { COLORS } from '../../../../constants/constants'
 import { ActionTypeEnum, MissionStatusEnum } from '../../../../domain/entities/missions'
 
 export const missionZoneStyle = new Style({
@@ -13,7 +13,7 @@ export const missionZoneStyle = new Style({
     color: 'rgba(86, 151, 210, .2)' // Blue Gray
   }),
   stroke: new Stroke({
-    color: COLORS.charcoal,
+    color: THEME.color.charcoal,
     lineCap: 'square',
     lineDash: [2, 8],
     width: 4
@@ -38,15 +38,15 @@ export const missionWithCentroidStyleFn = feature => {
   const missionStatus = feature.get('missionStatus')
   switch (missionStatus) {
     case MissionStatusEnum.UPCOMING:
-      return missionWithCentroidStyleFactory(COLORS.blueGray)
+      return missionWithCentroidStyleFactory(THEME.color.yellowGreen)
     case MissionStatusEnum.PENDING:
-      return missionWithCentroidStyleFactory(COLORS.mediumSeaGreen)
+      return missionWithCentroidStyleFactory(THEME.color.mediumSeaGreen)
     case MissionStatusEnum.ENDED:
-      return missionWithCentroidStyleFactory(COLORS.charcoal)
+      return missionWithCentroidStyleFactory(THEME.color.charcoal)
     case MissionStatusEnum.CLOSED:
-      return missionWithCentroidStyleFactory(COLORS.opal)
+      return missionWithCentroidStyleFactory(THEME.color.opal)
     default:
-      return missionWithCentroidStyleFactory(COLORS.opal)
+      return missionWithCentroidStyleFactory(THEME.color.opal)
   }
 }
 
@@ -61,7 +61,7 @@ export const selectedMissionActionsStyle = [
       src: 'Control.svg'
     }),
     stroke: new Stroke({
-      color: COLORS.shadowBlue,
+      color: THEME.color.charcoal,
       width: 2
     })
   }),
@@ -102,7 +102,7 @@ export const selectedMissionStyle = new Style({
     color: 'rgba(86, 151, 210, .25)' // Blue Gray
   }),
   stroke: new Stroke({
-    color: COLORS.charcoal,
+    color: THEME.color.charcoal,
     lineCap: 'square',
     lineDash: [2, 8],
     width: 5
