@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
+import { IsGeometryValid } from '../../utils/geometryValidation'
+
 import type { InteractionListener, InteractionType } from '../entities/map/constants'
 import type { GeoJSON } from '../types/GeoJSON'
 import type { InteractionTypeAndListener } from '../types/map'
@@ -7,11 +9,13 @@ import type { InteractionTypeAndListener } from '../types/map'
 type DrawState = {
   geometry: GeoJSON.Geometry | undefined
   interactionType: InteractionType | undefined
+  isGeometryValid: boolean | undefined
   listener: InteractionListener | undefined
 }
 const INITIAL_STATE: DrawState = {
   geometry: undefined,
   interactionType: undefined,
+  isGeometryValid: undefined,
   listener: undefined
 }
 
@@ -21,6 +25,7 @@ const drawReducerSlice = createSlice({
   reducers: {
     resetGeometry(state) {
       state.geometry = undefined
+      state.isGeometryValid = undefined
     },
 
     /**
@@ -34,6 +39,7 @@ const drawReducerSlice = createSlice({
 
     setGeometry(state, action: PayloadAction<GeoJSON.Geometry>) {
       state.geometry = action.payload
+      state.isGeometryValid = IsGeometryValid(action.payload)
     },
 
     /**

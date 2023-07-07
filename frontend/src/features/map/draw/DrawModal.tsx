@@ -48,7 +48,7 @@ const validateButtonPlaceholder = {
 export function DrawModal() {
   const dispatch = useAppDispatch()
   const { coordinatesFormat } = useAppSelector(state => state.map)
-  const { geometry, interactionType, listener } = useAppSelector(state => state.draw)
+  const { geometry, interactionType, isGeometryValid, listener } = useAppSelector(state => state.draw)
 
   const { sideWindow } = useAppSelector(state => state)
 
@@ -141,45 +141,14 @@ export function DrawModal() {
 
   return (
     <Wrapper>
-      <ContentWrapper>
+      <Panel>
         <Header>
           Vous êtes en train d&apos;ajouter {listener && titlePlaceholder[listener]}
           <QuitButton icon={<CloseSVG className="rs-icon" />} onClick={handleQuit} size="md">
             Quitter
           </QuitButton>
         </Header>
-        <ActionWrapper>
-          {listener === InteractionListener.MISSION_ZONE && (
-            <>
-              <IconButton
-                active={interactionType === InteractionType.POLYGON}
-                appearance="primary"
-                icon={<PolygonIcon className="rs-icon" />}
-                onClick={handleSelectInteraction(InteractionType.POLYGON)}
-                size="md"
-              />
-              <IconButton
-                active={interactionType === InteractionType.SQUARE}
-                appearance="primary"
-                icon={<RectangleIcon className="rs-icon" />}
-                onClick={handleSelectInteraction(InteractionType.SQUARE)}
-                size="md"
-              />
-              <IconButton
-                active={interactionType === InteractionType.CIRCLE}
-                appearance="primary"
-                icon={<CircleIcon className="rs-icon" />}
-                onClick={handleSelectInteraction(InteractionType.CIRCLE)}
-                size="md"
-              />
-              <IconButton
-                active={interactionType === InteractionType.SELECTION}
-                appearance="primary"
-                icon={<SelectorIcon className="rs-icon" />}
-                size="md"
-              />
-            </>
-          )}
+        <Body>
           {listener === InteractionListener.CONTROL_POINT && (
             <CoordinatesInputWrapper>
               <CoordinatesInput
@@ -192,14 +161,49 @@ export function DrawModal() {
               />
             </CoordinatesInputWrapper>
           )}
-          <ResetButton appearance="ghost" onClick={handleReset}>
-            Réinitialiser
-          </ResetButton>
-          <ValidateButton onClick={handleValidate}>
-            Valider {listener && validateButtonPlaceholder[listener]}
-          </ValidateButton>
-        </ActionWrapper>
-      </ContentWrapper>
+          <ButtonRow $withTools={listener === InteractionListener.MISSION_ZONE}>
+            {listener === InteractionListener.MISSION_ZONE && (
+              <IconGroup>
+                <IconButton
+                  active={interactionType === InteractionType.POLYGON}
+                  appearance="primary"
+                  icon={<PolygonIcon className="rs-icon" />}
+                  onClick={handleSelectInteraction(InteractionType.POLYGON)}
+                  size="md"
+                />
+                <IconButton
+                  active={interactionType === InteractionType.SQUARE}
+                  appearance="primary"
+                  icon={<RectangleIcon className="rs-icon" />}
+                  onClick={handleSelectInteraction(InteractionType.SQUARE)}
+                  size="md"
+                />
+                <IconButton
+                  active={interactionType === InteractionType.CIRCLE}
+                  appearance="primary"
+                  icon={<CircleIcon className="rs-icon" />}
+                  onClick={handleSelectInteraction(InteractionType.CIRCLE)}
+                  size="md"
+                />
+                <IconButton
+                  active={interactionType === InteractionType.SELECTION}
+                  appearance="primary"
+                  icon={<SelectorIcon className="rs-icon" />}
+                  size="md"
+                />
+              </IconGroup>
+            )}
+            <ButtonGroup>
+              <ResetButton appearance="ghost" onClick={handleReset}>
+                Réinitialiser
+              </ResetButton>
+              <ValidateButton disabled={!isGeometryValid} onClick={handleValidate}>
+                Valider {listener && validateButtonPlaceholder[listener]}
+              </ValidateButton>
+            </ButtonGroup>
+          </ButtonRow>
+        </Body>
+      </Panel>
     </Wrapper>
   )
 }
@@ -214,21 +218,30 @@ const CoordinatesInputWrapper = styled.div`
 const Wrapper = styled.div`
   position: absolute;
   top: 0;
-  margin-left: calc(50% - 225px);
-  margin-right: calc(50% - 225px);
-  display: flex;
+  width: 580px;
+  margin-left: calc(50% - 290px);
+  margin-right: calc(50% - 290px);
 `
-const ContentWrapper = styled.div``
+const Panel = styled.div`
+  box-shadow: 0px 3px 6px #00000029;
+`
 
 const Header = styled.h1`
   background: ${COLORS.charcoal};
-  width: 550px;
+  width: 580px;
   color: ${COLORS.white};
   font-size: 16px;
   font-weight: normal;
   line-height: 22px;
   padding: 10px;
 `
+const IconGroup = styled.div`
+  display: inline-block;
+  & > :not(:last-child) {
+    margin-right: 16px;
+  }
+`
+
 const PolygonIcon = styled(PolygonSVG)`
   width: 16px;
   height: 16px;
@@ -245,6 +258,13 @@ const SelectorIcon = styled(SelectorSVG)`
   width: 16px;
   height: 16px;
 `
+
+const ButtonGroup = styled.div`
+  display: inline-block;
+  & > :not(:last-child) {
+    margin-right: 16px;
+  }
+`
 const QuitButton = styled(IconButton)`
   color: ${COLORS.maximumRed};
   background: ${COLORS.cultured};
@@ -255,9 +275,7 @@ const QuitButton = styled(IconButton)`
   }
 `
 
-const ResetButton = styled(Button)`
-  margin-left: 40px;
-`
+const ResetButton = styled(Button)``
 const ValidateButton = styled(Button)`
   background: ${COLORS.mediumSeaGreen};
   color: ${COLORS.white};
@@ -265,10 +283,12 @@ const ValidateButton = styled(Button)`
     background: ${COLORS.mediumSeaGreen};
   }
 `
-const ActionWrapper = styled.div`
-  padding: 10px;
+const ButtonRow = styled.div<{ $withTools?: boolean }>`
+  display: flex;
+  justify-content: ${p => (p.$withTools ? 'space-between' : 'flex-end')};
+`
+const Body = styled.div`
+  padding: 24px;
+
   background-color: ${COLORS.white};
-  & > :not(:last-child) {
-    margin-right: 10px;
-  }
 `
