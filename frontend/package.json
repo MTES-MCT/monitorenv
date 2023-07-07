@@ -92,7 +92,6 @@
     "@swc/core": "1.2.207",
     "@swc/jest": "0.2.21",
     "@tsconfig/create-react-app": "1.0.2",
-    "@types/flexsearch": "^0.7.3",
     "@types/google.maps": "^3.52.2",
     "@types/jest": "28.1.6",
     "@types/node": "18.0.6",
