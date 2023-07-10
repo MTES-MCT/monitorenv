@@ -36,7 +36,7 @@
     "@mtes-mct/monitor-ui": "7.6.0",
     "@reduxjs/toolkit": "1.9.5",
     "@rsuite/responsive-nav": "^5.0.1",
-    "@sentry/browser": "7.47.0",
+    "@sentry/browser": "7.57.0",
     "@sentry/react": "7.56.0",
     "@sentry/tracing": "7.47.0",
     "@svgr/webpack": "^5.5.0",
