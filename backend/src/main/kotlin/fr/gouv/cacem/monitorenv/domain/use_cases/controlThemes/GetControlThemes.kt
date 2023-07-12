@@ -10,7 +10,7 @@ class GetControlThemes(private val controlThemeRepository: IControlThemeReposito
     private val logger = LoggerFactory.getLogger(GetControlThemes::class.java)
 
     fun execute(): List<ControlThemeEntity> {
-        val controlThemes = controlThemeRepository.findControlThemes()
+        val controlThemes = controlThemeRepository.findAll()
         logger.info("Found ${controlThemes.size} control themes ")
 
         return controlThemes

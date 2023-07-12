@@ -36,7 +36,7 @@ class ControlUnitsControllerITests {
             name = "DF 123",
             resources = listOf(ControlResourceEntity(1, "Vedette")),
         )
-        given(this.getControlUnits.execute()).willReturn(listOf(controlUnit))
+        given(getControlUnits.execute()).willReturn(listOf(controlUnit))
 
         // When
         mockMvc.perform(get("/bff/v1/control_units"))

@@ -34,7 +34,7 @@ class NatinfsControllerITests {
             infractionCategory = "Pêche",
             infraction = "Debarquement de produits de la peche maritime et de l'aquaculture marine hors d'un port designe",
         )
-        given(this.getNatinfs.execute()).willReturn(listOf(natinf))
+        given(getNatinfs.execute()).willReturn(listOf(natinf))
 
         // When
         mockMvc.perform(get("/bff/v1/natinfs"))

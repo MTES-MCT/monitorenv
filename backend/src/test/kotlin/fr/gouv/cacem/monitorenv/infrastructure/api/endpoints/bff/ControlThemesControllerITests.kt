@@ -38,7 +38,7 @@ class ControlThemesControllerITests {
             themeLevel1 = "Police des mouillages",
             themeLevel2 = "Mouillage individuel",
         )
-        given(this.getControlThemes.execute()).willReturn(listOf(controlTheme))
+        given(getControlThemes.execute()).willReturn(listOf(controlTheme))
 
         // When
         mockMvc.perform(get("/bff/v1/controlthemes"))
@@ -59,7 +59,7 @@ class ControlThemesControllerITests {
             themeLevel2 = "Mouillage individuel",
         )
 
-        given(this.getControlThemeById.execute(3)).willReturn(controlTheme)
+        given(getControlThemeById.execute(3)).willReturn(controlTheme)
 
         // When
         mockMvc.perform(get("/bff/v1/controlthemes/3"))

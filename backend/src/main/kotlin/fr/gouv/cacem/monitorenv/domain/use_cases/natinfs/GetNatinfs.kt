@@ -10,7 +10,7 @@ class GetNatinfs(private val natinfRepository: INatinfRepository) {
     private val logger = LoggerFactory.getLogger(GetNatinfs::class.java)
 
     fun execute(): List<NatinfEntity> {
-        val natinfs = natinfRepository.findNatinfs()
+        val natinfs = natinfRepository.findAll()
         logger.info("Found ${natinfs.size} natinfs ")
 
         return natinfs

@@ -7,6 +7,6 @@ import fr.gouv.cacem.monitorenv.domain.repositories.ISemaphoreRepository
 @UseCase
 class GetSemaphoreById(private val semaphoreRepository: ISemaphoreRepository) {
     fun execute(id: Int): SemaphoreEntity {
-        return semaphoreRepository.findSemaphoreById(id)
+        return semaphoreRepository.findById(id)
     }
 }

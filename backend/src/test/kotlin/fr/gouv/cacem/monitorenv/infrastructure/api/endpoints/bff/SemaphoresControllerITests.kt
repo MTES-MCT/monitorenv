@@ -42,7 +42,7 @@ class SemaphoresControllerITests {
             name = "Semaphore 1",
             geom = point,
         )
-        given(this.getSemaphores.execute()).willReturn(listOf(semaphore))
+        given(getSemaphores.execute()).willReturn(listOf(semaphore))
         // When
         mockMvc.perform(get("/bff/v1/semaphores"))
             // Then
@@ -65,7 +65,7 @@ class SemaphoresControllerITests {
             name = "Semaphore 1",
             geom = point,
         )
-        given(this.getSemaphoreById.execute(21)).willReturn(semaphore)
+        given(getSemaphoreById.execute(21)).willReturn(semaphore)
         // When
         mockMvc.perform(get("/bff/v1/semaphores/21"))
             // Then

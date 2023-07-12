@@ -91,7 +91,7 @@ class MissionsControllerITests {
             missionSource = MissionSourceEnum.MONITORENV,
         )
         val requestbody = objectMapper.writeValueAsString(newMissionRequest)
-        given(this.createOrUpdateMission.execute(mission = any())).willReturn(expectedNewMission)
+        given(createOrUpdateMission.execute(mission = any())).willReturn(expectedNewMission)
         // When
         mockMvc.perform(
             put("/bff/v1/missions")
@@ -126,7 +126,7 @@ class MissionsControllerITests {
             isUnderJdp = false,
         )
         given(
-            this.getMonitorEnvMissions.execute(
+            getMonitorEnvMissions.execute(
                 startedAfterDateTime = any(),
                 startedBeforeDateTime = any(),
                 seaFronts = any(),
@@ -141,7 +141,6 @@ class MissionsControllerITests {
         // When
         mockMvc.perform(get("/bff/v1/missions"))
             // Then
-            .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
     }
 
@@ -199,7 +198,7 @@ class MissionsControllerITests {
             missionSource = MissionSourceEnum.MONITORENV,
             isClosed = false,
         )
-        given(this.createOrUpdateMission.execute(any())).willReturn(expectedUpdatedMission)
+        given(createOrUpdateMission.execute(any())).willReturn(expectedUpdatedMission)
         // When
         mockMvc.perform(
             put("/bff/v1/missions/14")

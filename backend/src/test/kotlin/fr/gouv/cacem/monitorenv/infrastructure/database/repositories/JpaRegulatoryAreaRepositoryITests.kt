@@ -16,15 +16,15 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `findRegulatoryAreas Should return all regulatoryAreas`() {
+    fun `findAll Should return all regulatoryAreas`() {
         // When
-        val regulatoryAreas = jpaRegulatoryAreasRepository.findRegulatoryAreas()
+        val regulatoryAreas = jpaRegulatoryAreasRepository.findAll()
         assertThat(regulatoryAreas).hasSize(13)
     }
 
     @Test
     @Transactional
-    fun `findRegulatoryAreaById Should return specific RegulatoryArea`() {
+    fun `findById Should return specific RegulatoryArea`() {
         // Given
         val WKTreader = WKTReader()
         val multipolygonString =
@@ -55,7 +55,7 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
         )
 
         // When
-        val requestedRegulatoryArea = jpaRegulatoryAreasRepository.findRegulatoryAreaById(17)
+        val requestedRegulatoryArea = jpaRegulatoryAreasRepository.findById(17)
         // Then
         assertThat(requestedRegulatoryArea.id).isEqualTo(searchedRegulatoryArea.id)
         assertThat(requestedRegulatoryArea.geom).isEqualTo(searchedRegulatoryArea.geom)

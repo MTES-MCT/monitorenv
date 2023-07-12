@@ -12,9 +12,9 @@ class JpaNatinfRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `findNatinfs Should return all natinfs`() {
+    fun `findAll Should return all natinfs`() {
         // When
-        val natinfs = jpaNatinfsRepository.findNatinfs()
+        val natinfs = jpaNatinfsRepository.findAll()
         assertThat(natinfs).hasSize(644)
     }
 }

@@ -7,11 +7,11 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class JpaSemaphoreRepository(private val dbSemaphoreRepository: IDBSemaphoreRepository) : ISemaphoreRepository {
-    override fun findAllSemaphores(): List<SemaphoreEntity> {
+    override fun findAll(): List<SemaphoreEntity> {
         return dbSemaphoreRepository.findAll().map { it.toSemaphore() }
     }
 
-    override fun findSemaphoreById(id: Int): SemaphoreEntity {
+    override fun findById(id: Int): SemaphoreEntity {
         return dbSemaphoreRepository.findById(id).get().toSemaphore()
     }
 

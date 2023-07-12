@@ -11,17 +11,17 @@ class JpaSemaphoreRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `findSemaphores Should return all semaphores`() {
+    fun `findAll Should return all semaphores`() {
         // When
-        val semaphores = jpaSemaphoreRepository.findAllSemaphores()
+        val semaphores = jpaSemaphoreRepository.findAll()
         assertThat(semaphores).hasSize(10)
     }
 
     @Test
     @Transactional
-    fun `findSemaphoreById should return specific semaphore`() {
+    fun `findById should return specific semaphore`() {
         // When
-        val semaphore = jpaSemaphoreRepository.findSemaphoreById(22)
+        val semaphore = jpaSemaphoreRepository.findById(22)
         // Then
         assertThat(semaphore.id).isEqualTo(22)
         assertThat(semaphore.geom.toString()).isEqualTo("POINT (-3.473888888888889 48.82972222222222)")

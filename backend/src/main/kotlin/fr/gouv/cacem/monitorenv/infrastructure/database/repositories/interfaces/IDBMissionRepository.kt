@@ -53,7 +53,7 @@ interface IDBMissionRepository : CrudRepository<MissionModel, Int> {
         """,
         nativeQuery = true,
     )
-    fun findAllMissions(
+    fun findAll(
         startedAfter: Instant,
         startedBefore: Instant?,
         missionTypes: String,
@@ -72,5 +72,5 @@ interface IDBMissionRepository : CrudRepository<MissionModel, Int> {
     """,
         nativeQuery = true,
     )
-    fun deleteMission(id: Int)
+    fun delete(id: Int)
 }

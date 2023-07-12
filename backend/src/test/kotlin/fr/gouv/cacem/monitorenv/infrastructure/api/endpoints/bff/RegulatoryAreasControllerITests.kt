@@ -64,7 +64,7 @@ class RegulatoryAreasControllerITests {
             objet = "",
             signataire = "",
         )
-        given(this.getRegulatoryAreas.execute()).willReturn(listOf(regulatoryArea))
+        given(getRegulatoryAreas.execute()).willReturn(listOf(regulatoryArea))
 
         // When
         mockMvc.perform(get("/bff/v1/regulatory"))
@@ -111,7 +111,7 @@ class RegulatoryAreasControllerITests {
             signataire = "",
         )
 
-        given(this.getRegulatoryAreaById.execute(17)).willReturn(regulatoryArea)
+        given(getRegulatoryAreaById.execute(17)).willReturn(regulatoryArea)
 
         // When
         mockMvc.perform(get("/bff/v1/regulatory/17"))

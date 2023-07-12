@@ -6,8 +6,8 @@ import org.springframework.data.domain.Pageable
 import java.time.Instant
 
 interface IMissionRepository {
-    fun findMissionById(missionId: Int): MissionEntity
-    fun findAllMissions(
+    fun findById(missionId: Int): MissionEntity
+    fun findAll(
         startedAfter: Instant,
         startedBefore: Instant?,
         missionTypes: List<String>?,

@@ -14,15 +14,15 @@ class JpaControlThemeRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `findControlThemes Should return all control theme`() {
+    fun `findAll Should return all control theme`() {
         // When
-        val controlThemes = jpaControlThemesRepository.findControlThemes()
+        val controlThemes = jpaControlThemesRepository.findAll()
         assertThat(controlThemes).hasSize(83)
     }
 
     @Test
     @Transactional
-    fun `findControlThemeById Should return specific ControlTheme`() {
+    fun `findById Should return specific ControlTheme`() {
         // Given
         val searchedControlTheme = ControlThemeModel.fromControlThemeEntity(
             ControlThemeEntity(
@@ -32,7 +32,7 @@ class JpaControlThemeRepositoryITests : AbstractDBTests() {
             ),
         )
         // When
-        val requestedControlTheme = jpaControlThemesRepository.findControlThemeById(1)
+        val requestedControlTheme = jpaControlThemesRepository.findById(1)
         // Then
         assertThat(requestedControlTheme.id).isEqualTo(searchedControlTheme.id)
         assertThat(requestedControlTheme.themeLevel1).isEqualTo(searchedControlTheme.themeLevel1)
