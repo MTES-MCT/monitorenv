@@ -93,7 +93,7 @@ class ReportingsController(
     @Operation(summary = "Delete a reporting")
     fun deleteController(
         @PathParam("Id")
-        @PathVariable(name = "Id")
+        @PathVariable(name = "id")
         id: Int,
     ) {
         deleteReporting.execute(id = id)

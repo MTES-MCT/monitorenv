@@ -34,7 +34,7 @@ class JpaReportingRepository(
 
     @Transactional
     override fun delete(reportingId: Int) {
-        dbReportingRepository.deleteReporting(reportingId)
+        dbReportingRepository.delete(reportingId)
     }
 
     override fun count(): Long {

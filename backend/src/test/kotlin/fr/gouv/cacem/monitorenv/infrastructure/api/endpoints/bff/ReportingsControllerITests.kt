@@ -83,7 +83,7 @@ class ReportingsControllerITests {
         val semaphore = SemaphoreEntity(
             id = 1,
             name = "name",
-            geom = WKTReader().read("POINT (-61.0 14.0)") as Point
+            geom = WKTReader().read("POINT (-61.0 14.0)") as Point,
         )
 
         val request = CreateOrUpdateReportingDataInput(
@@ -107,7 +107,7 @@ class ReportingsControllerITests {
             validityTime = 10,
         )
 
-        given(createOrUpdateReporting.execute(any())).willReturn(Triple(reporting,null, semaphore))
+        given(createOrUpdateReporting.execute(any())).willReturn(Triple(reporting, null, semaphore))
         // When
         mockedApi.perform(
             put("/bff/v1/reportings")
@@ -159,12 +159,14 @@ class ReportingsControllerITests {
         val semaphore = SemaphoreEntity(
             id = 1,
             name = "name",
-            geom = WKTReader().read("POINT (-61.0 14.0)") as Point
+            geom = WKTReader().read("POINT (-61.0 14.0)") as Point,
         )
-        given(getAllReportings.execute(
-            pageNumber = anyOrNull(),
-            pageSize = anyOrNull(),
-        )).willReturn(listOf(Triple(reporting,null, semaphore)))
+        given(
+            getAllReportings.execute(
+                pageNumber = anyOrNull(),
+                pageSize = anyOrNull(),
+            ),
+        ).willReturn(listOf(Triple(reporting, null, semaphore)))
 
         // When
         mockedApi.perform(get("/bff/v1/reportings"))
@@ -187,7 +189,6 @@ class ReportingsControllerITests {
             .andExpect(jsonPath("$[0].isUnitAvailable").value(true))
             .andExpect(jsonPath("$[0].createdAt").value("2022-01-15T04:50:09Z"))
             .andExpect(jsonPath("$[0].validityTime").value(10))
-
     }
 
     @Test
