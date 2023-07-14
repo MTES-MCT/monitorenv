@@ -80,6 +80,8 @@ data class MissionModel(
     val missionSource: MissionSourceEnum,
     @Column(name = "has_mission_order", nullable = false)
     var hasMissionOrder: Boolean,
+    @Column(name = "is_geometry_computed_from_controls", nullable = false)
+    var isGeometryComputedFromControls: Boolean,
     @Column(name = "is_under_jdp", nullable = false)
     var isUnderJdp: Boolean,
     @OneToMany(
@@ -124,6 +126,7 @@ data class MissionModel(
         missionSource = missionSource,
         hasMissionOrder = hasMissionOrder,
         isUnderJdp = isUnderJdp,
+        isGeometryComputedFromControls = isGeometryComputedFromControls,
         envActions = envActions!!.map { it.toActionEntity(mapper) },
         controlUnits = controlUnits?.map { unit ->
             val savedUnitResources = controlResources
@@ -157,6 +160,7 @@ data class MissionModel(
                 missionSource = mission.missionSource,
                 hasMissionOrder = mission.hasMissionOrder,
                 isUnderJdp = mission.isUnderJdp,
+                isGeometryComputedFromControls = mission.isGeometryComputedFromControls
             )
 
             mission.envActions?.map {

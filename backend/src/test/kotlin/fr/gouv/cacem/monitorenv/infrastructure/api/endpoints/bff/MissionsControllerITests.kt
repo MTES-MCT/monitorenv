@@ -79,6 +79,7 @@ class MissionsControllerITests {
             missionSource = MissionSourceEnum.MONITORENV,
             hasMissionOrder = false,
             isUnderJdp = false,
+            isGeometryComputedFromControls = false
         )
         val newMissionRequest = CreateOrUpdateMissionDataInput(
             missionTypes = listOf(MissionTypeEnum.LAND),
@@ -124,6 +125,7 @@ class MissionsControllerITests {
             missionSource = MissionSourceEnum.MONITORENV,
             hasMissionOrder = false,
             isUnderJdp = false,
+            isGeometryComputedFromControls = false
         )
         given(
             this.getMonitorEnvMissions.execute(
@@ -158,6 +160,7 @@ class MissionsControllerITests {
             missionSource = MissionSourceEnum.MONITORENV,
             hasMissionOrder = false,
             isUnderJdp = false,
+            isGeometryComputedFromControls = false
         )
         // we test only if the route is called with the right arg
         given(getMissionById.execute(requestedId)).willReturn(expectedFirstMission)
@@ -183,6 +186,7 @@ class MissionsControllerITests {
             missionSource = MissionSourceEnum.MONITORENV,
             hasMissionOrder = false,
             isUnderJdp = false,
+            isGeometryComputedFromControls = false
         )
         val envAction = EnvActionControlEntity(
             id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),

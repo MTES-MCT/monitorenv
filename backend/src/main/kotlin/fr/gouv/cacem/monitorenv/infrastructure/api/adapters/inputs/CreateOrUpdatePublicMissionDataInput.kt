@@ -25,6 +25,7 @@ data class CreateOrUpdatePublicMissionDataInput(
     val envActions: List<EnvActionEntity>? = null,
     val hasMissionOrder: Boolean,
     val isUnderJdp: Boolean,
+    val isGeometryComputedFromControls: Boolean
 ) {
     fun toMissionEntity(): MissionEntity {
         return MissionEntity(
@@ -45,6 +46,7 @@ data class CreateOrUpdatePublicMissionDataInput(
             envActions = this.envActions,
             hasMissionOrder = this.hasMissionOrder,
             isUnderJdp = this.isUnderJdp,
+            isGeometryComputedFromControls = this.isGeometryComputedFromControls
         )
     }
 }

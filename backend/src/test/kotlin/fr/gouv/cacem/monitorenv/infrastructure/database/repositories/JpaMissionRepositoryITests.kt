@@ -82,6 +82,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     resources = listOf(ControlResourceEntity(id = 8, name = "PAM Jeanne Barret")),
                 ),
             ),
+            isGeometryComputedFromControls = false
         )
 
         // When
@@ -135,6 +136,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     resources = listOf(ControlResourceEntity(id = 8, name = "PAM Jeanne Barret")),
                 ),
             ),
+            isGeometryComputedFromControls = false
         )
         jpaMissionRepository.save(newMission)
 
@@ -189,6 +191,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     resources = listOf(ControlResourceEntity(id = 123456, name = "PAM Jeanne Barret")),
                 ),
             ),
+            isGeometryComputedFromControls = false
         )
 
         // When
@@ -214,6 +217,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             hasMissionOrder = false,
             isUnderJdp = false,
             controlUnits = listOf(ControlUnitEntity(id = 123456, name = "PAM Jeanne Barret", administration = "", isArchived = false, resources = listOf())),
+            isGeometryComputedFromControls = false
         )
 
         // When
@@ -459,6 +463,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     contact = null,
                 ),
             ),
+            isGeometryComputedFromControls = false
         )
         val mission = jpaMissionRepository.findMissionById(10)
 
@@ -532,6 +537,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionSource = MissionSourceEnum.MONITORENV,
             hasMissionOrder = false,
             isUnderJdp = false,
+            isGeometryComputedFromControls = false
         )
         // When
         jpaMissionRepository.save(expectedUpdatedMission)
@@ -568,6 +574,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionSource = MissionSourceEnum.MONITORENV,
             hasMissionOrder = false,
             isUnderJdp = false,
+            isGeometryComputedFromControls = false
         )
         // When
         jpaMissionRepository.save(expectedUpdatedMission)

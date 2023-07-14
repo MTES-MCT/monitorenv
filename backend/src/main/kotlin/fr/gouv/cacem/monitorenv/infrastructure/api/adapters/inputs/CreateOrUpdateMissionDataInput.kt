@@ -48,6 +48,7 @@ data class CreateOrUpdateMissionDataInput(
             envActions = this.envActions,
             hasMissionOrder = hasMissionOrder,
             isUnderJdp = isUnderJdp,
+            isGeometryComputedFromControls = false
         )
     }
 }
