@@ -274,10 +274,6 @@ def make_env_mission_units(mission_units: pd.DataFrame) -> pd.DataFrame:
         mission_units["mission_id"]
         + POSEIDON_CACEM_MISSION_ID_TO_MONITORENV_MISSION_ID_SHIFT
     )
-    mission_units = mission_units.loc[
-        :,
-        ["mission_id", "control_unit_id"],
-    ]
 
     return mission_units
 
