@@ -6,6 +6,7 @@ WITH control_actions as (
         rc.DATE_DEBUT as action_start_datetime_utc,
         'CONTROL' as action_type
     FROM FMC2.FMC_BC_RESULTAT_CTRL_ENV rc
+    WHERE rc.DATE_DEBUT < TO_DATE( '2023-01-01', 'YYYY-MM-DD')
 ),
 
 actions_infractions AS (
