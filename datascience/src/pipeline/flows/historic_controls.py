@@ -230,9 +230,11 @@ def make_env_missions(missions_poseidon: pd.DataFrame) -> pd.DataFrame:
         missions_poseidon["id"]
         + POSEIDON_CACEM_MISSION_ID_TO_MONITORENV_MISSION_ID_SHIFT
     )
-    missions_poseidon["mission_types"] = missions_poseidon[
-        "mission_types"
-    ].map(str_to_list, na_action="ignore")
+    missions_poseidon["mission_types"] = missions_poseidon["mission_type"].map(
+        str_to_list, na_action="ignore"
+    )
+
+    missions_poseidon = missions_poseidon.drop(columns=["mission_type"])
 
     missions_poseidon["facade"] = missions_poseidon["facade"].map(
         dict_new_facades

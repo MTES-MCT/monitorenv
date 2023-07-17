@@ -57,7 +57,7 @@ historic_controls_df = pd.DataFrame(
 historic_missions_df = pd.DataFrame(
     {
         "id": [10012, 10013, 10015, 10017, 10018, 10019, 10050],
-        "mission_types": ["SEA", "SEA", "LAND", "SEA", "LAND", "AIR", "LAND"],
+        "mission_type": ["SEA", "SEA", "LAND", "SEA", "LAND", "AIR", "LAND"],
         "open_by": ["JBL", "GYT", "RIO", "CBG", "LEG", "RIO", "CRO"],
         "observations_cacem": [
             "91 pàp pro contrôlés/ 4 pàp pro en infraction surquotas",
@@ -464,7 +464,7 @@ def test_make_env_actions(historic_controls, transformed_historic_controls):
 def test_env_missions(historic_missions, transformed_historic_missions):
     historic_missions = make_env_missions.run(historic_missions)
     pd.testing.assert_frame_equal(
-        historic_missions, transformed_historic_missions
+        historic_missions, transformed_historic_missions, check_like=True
     )
 
 
