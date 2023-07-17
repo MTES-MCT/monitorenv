@@ -13,7 +13,7 @@ actions_infractions AS (
         rc.id_fmc_bc_resultat_ctrl_env as id,
         LISTAGG(
             COALESCE(
-                nat.CODE,
+                TRIM(nat.CODE),
                 REGEXP_SUBSTR(inf.LIBELLE_AUTRE_INFRACTION,  '\d{4,5}')
             ),
             ','
