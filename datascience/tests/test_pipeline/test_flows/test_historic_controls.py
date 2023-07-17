@@ -18,10 +18,13 @@ historic_controls_df = pd.DataFrame(
     {
         "id": [10009, 10010, 10011, 10012, 10013, 10014],
         "themes": [
-            "Police des espèces protégées et de leurs habitats,Police des aires marines protégées",
+            (
+                "Police des espèces protégées et de leurs habitats<separator>"
+                "Travaux en milieu marin (dragage, clapage, infrastructures)"
+            ),
             "Pêche à pied",
             "Domanialité publique dont circulation",
-            "Pêche à pied,Police de la chasse en mer",
+            "Pêche à pied<separator>Police de la chasse en mer",
             "Domanialité publique dont circulation",
             "Police des aires marines protégées",
         ],
@@ -165,7 +168,7 @@ def transformed_historic_controls() -> pd.DataFrame:
                             ],
                         },
                         {
-                            "theme": "Police des parcs nationaux",
+                            "theme": "Travaux en milieu marin",
                             "protected_species": [
                                 "Flore",
                                 "Mamifères marins",

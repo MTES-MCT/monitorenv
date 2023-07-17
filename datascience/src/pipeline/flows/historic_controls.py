@@ -15,15 +15,26 @@ dict_new_themes = {
     "Pêche à pied": "Pêche à pied",
     "Rejets illicites (carénage ou macro-déchets)": "Rejets illicites",
     "Police des mouillages": "Police des mouillages",
-    "Police des espèces protégées et de leurs habitats": "Police des espèces protégées et de leurs habitats (faune et flore)",
-    "Activités et manifestations soumises à évaluation d'incidence Natura 2000": "Activités et manifestations soumises à évaluation d'incidence Natura 2000",
+    "Police des espèces protégées et de leurs habitats": (
+        "Police des espèces protégées et de leurs habitats (faune et flore)"
+    ),
+    "Activités et manifestations soumises à évaluation d'incidence Natura 2000": (
+        "Activités et manifestations soumises à évaluation d'incidence Natura 2000"
+    ),
     "Pêche de loisir": "Pêche de loisir",
     "Domanialité publique dont circulation": "Domanialité publique dont circulation",
-    "Lutte contre la pollution due aux opérations d'exploitation / exploration / immersion / incinération en mer": "Rejets illicites",
-    "Lutte contre la pollution par les opérations d'immersion et d'incinération": "Rejets illicites",
+    (
+        "Lutte contre la pollution due aux opérations d'exploitation / "
+        "exploration / immersion / incinération en mer"
+    ): "Rejets illicites",
+    "Lutte contre la pollution par les opérations d'immersion et d'incinération": (
+        "Rejets illicites"
+    ),
     "Cultures marines": "Police des activités de cultures marines",
     "Travaux en milieu marin (granulats)": "Travaux en milieu marin",
-    "Travaux en milieu marin (dragage, clapage, infrastructures)": "Travaux en milieu marin",
+    "Travaux en milieu marin (dragage, clapage, infrastructures)": (
+        "Travaux en milieu marin"
+    ),
     "Arrêtés PREMAR": "Arrêté à visa environnemental",
     "Police des aires marines protégées": "Police des parcs nationaux",
     "Police de la chasse en mer": "Pêche de loisir",
@@ -45,16 +56,19 @@ dict_new_facades = {
 }
 
 
-def str_to_list(s: str) -> list:
-    """create a list of strings based on the coma separator
+def str_to_list(s: str, sep: str = ",") -> list:
+    """
+    Split input string at `sep` instances, return list of elements between `sep`
+    instances.
 
     Args:
-        s (str): string to separate
+        s (str): string to separate.
+        sep (str, optional): Separator. Defaults to ",".
 
     Returns:
         list: list of strings
     """
-    return s.split(",")
+    return s.split(sep)
 
 
 def make_infractions(natinf: list) -> list[dict]:
@@ -82,17 +96,19 @@ def make_infractions(natinf: list) -> list[dict]:
 
 
 def make_themes(row: pd.Series) -> list[dict]:
-    """split themes from a string into a list of distinct string themes, then map the new themes names
-    and create a dictionnary for each theme
+    """
+    Take a pandas Series with `themes` and `protected_species` entries, split
+    `themes` from a string into a list of distinct string themes, then map the new
+    themes names and create a dictionnary for each theme.
 
     Args:
-        Themes (list): a list of string themes
+        row (pd.Seris): pandas Series with `themes` and `protected_species` entries
 
     Returns:
-        list[dict]: return a list of themes (infractions are dictionaries)
+        list[dict]: return a list of themes
     """
 
-    themes = str_to_list(row.themes)
+    themes = str_to_list(row.themes, sep="<separator>")
     lthemes = []
     for item in themes:
         lthemes.append(

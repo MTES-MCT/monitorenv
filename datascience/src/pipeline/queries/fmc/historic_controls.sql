@@ -30,7 +30,7 @@ actions_infractions AS (
 actions_themes AS (
     SELECT
         rc.id_fmc_bc_resultat_ctrl_env as id,
-        LISTAGG(cnc.LIBELLE, ',')  WITHIN GROUP (ORDER BY 1) as themes
+        LISTAGG(cnc.LIBELLE, '<separator>')  WITHIN GROUP (ORDER BY 1) as themes
     FROM FMC2.FMC_BC_RESULTAT_CTRL_ENV rc
     JOIN FMC2.FMC_BC_RES_CTRL_ENV_NAT rcn
     ON rc.ID_FMC_BC_RESULTAT_CTRL_ENV=rcn.ID_FMC_BC_RESULTAT_CTRL_ENV
