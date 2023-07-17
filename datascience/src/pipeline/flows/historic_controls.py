@@ -92,7 +92,7 @@ def make_themes(row: pd.Series) -> list[dict]:
         list[dict]: return a list of themes (infractions are dictionaries)
     """
 
-    themes = str_to_list(row.Themes)
+    themes = str_to_list(row.themes)
     lthemes = []
     for item in themes:
         lthemes.append(
@@ -180,12 +180,12 @@ def make_env_actions(historic_controls: pd.DataFrame) -> pd.DataFrame:
         make_infractions
     )
 
-    historic_controls["Themes"] = historic_controls.apply(make_themes, axis=1)
+    historic_controls["themes"] = historic_controls.apply(make_themes, axis=1)
 
     historic_controls["value"] = historic_controls.apply(
         lambda x: (
             {
-                "themes": x.Themes,
+                "themes": x.themes,
                 "infractions": x.infractions,
                 "vehicleType": None,
                 "actionTargetType": None,
@@ -197,7 +197,7 @@ def make_env_actions(historic_controls: pd.DataFrame) -> pd.DataFrame:
 
     # fin du preprocessing
     historic_controls.drop(
-        ["action_number_of_controls", "Themes", "natinf", "infractions"],
+        ["action_number_of_controls", "themes", "natinf", "infractions"],
         axis=1,
         inplace=True,
     )

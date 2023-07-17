@@ -17,7 +17,7 @@ from src.read_query import read_query
 historic_controls_df = pd.DataFrame(
     {
         "id": [10009, 10010, 10011, 10012, 10013, 10014],
-        "Themes": [
+        "themes": [
             "Police des espèces protégées et de leurs habitats,Police des aires marines protégées",
             "Pêche à pied",
             "Domanialité publique dont circulation",
