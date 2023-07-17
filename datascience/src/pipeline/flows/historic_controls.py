@@ -169,17 +169,10 @@ def make_env_actions(historic_controls: pd.DataFrame) -> pd.DataFrame:
         + POSEIDON_CACEM_MISSION_ID_TO_MONITORENV_MISSION_ID_SHIFT
     )
 
-    historic_controls["action_number_of_controls"] = historic_controls[
-        "action_number_of_controls"
-    ].fillna(0)
-
     historic_controls["id"] = historic_controls.apply(
         lambda x: uuid.uuid4(), axis=1
     )
 
-    historic_controls["action_number_of_controls"] = historic_controls.apply(
-        lambda x: int(x.action_number_of_controls), axis=1
-    )
     # séparation des natinfs
     historic_controls["natinf"] = historic_controls["natinf"].map(
         str_to_list, na_action="ignore"

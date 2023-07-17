@@ -2,7 +2,7 @@ WITH control_actions as (
     SELECT
         rc.id_fmc_bc_resultat_ctrl_env as id,
         rc.ID_FMC_BC_MISSION as mission_id,
-        rc.NBRE_PERS_NAV_CTRLES as action_number_of_controls,
+        COALESCE(rc.NBRE_PERS_NAV_CTRLES, 1) as action_number_of_controls,
         rc.DATE_DEBUT as action_start_datetime_utc,
         'CONTROL' as action_type
     FROM FMC2.FMC_BC_RESULTAT_CTRL_ENV rc
