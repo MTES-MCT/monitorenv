@@ -32,9 +32,7 @@ import java.time.ZoneOffset.UTC
 @Table(name = "reportings")
 data class ReportingModel(
     @Id
-    @SequenceGenerator(name = "reportings_id_seq", sequenceName = "reportings_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reportings_id_seq")
-    @Basic(optional = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     var id: Int? = null,
 
@@ -104,6 +102,9 @@ data class ReportingModel(
     @Column(name = "validity_time")
     var validityTime: Int? = null,
 
+    @Column(name = "is_archived", nullable = false)
+    val isArchived: Boolean,
+
     @Column(name = "is_deleted", nullable = false)
     val isDeleted: Boolean,
 ) {
@@ -128,6 +129,7 @@ data class ReportingModel(
         isUnitAvailable = isUnitAvailable,
         createdAt = createdAt.atZone(UTC),
         validityTime = validityTime,
+        isArchived = isArchived,
         isDeleted = isDeleted,
     )
 
@@ -152,6 +154,7 @@ data class ReportingModel(
             isUnitAvailable = reporting.isUnitAvailable,
             createdAt = reporting.createdAt.toInstant(),
             validityTime = reporting.validityTime,
+            isArchived = reporting.isArchived,
             isDeleted = reporting.isDeleted,
         )
     }

@@ -23,6 +23,7 @@ data class ReportingEntity(
     val isUnitAvailable: Boolean? = null,
     val createdAt: ZonedDateTime,
     val validityTime: Int? = null,
+    val isArchived: Boolean,
     val isDeleted: Boolean,
 ) {
     fun checkValidity() {

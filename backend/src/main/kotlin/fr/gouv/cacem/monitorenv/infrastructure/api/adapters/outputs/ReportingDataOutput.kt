@@ -31,6 +31,7 @@ data class ReportingDataOutput(
     val isUnitAvailable: Boolean? = null,
     val createdAt: ZonedDateTime,
     val validityTime: Int? = null,
+    val isArchived: Boolean,
 ) {
     companion object {
         fun fromReporting(reporting: ReportingEntity, controlUnit: ControlUnitEntity?, semaphore: SemaphoreEntity?): ReportingDataOutput {
@@ -57,6 +58,7 @@ data class ReportingDataOutput(
                 isUnitAvailable = reporting.isUnitAvailable,
                 createdAt = reporting.createdAt,
                 validityTime = reporting.validityTime,
+                isArchived = reporting.isArchived,
             )
         }
     }
