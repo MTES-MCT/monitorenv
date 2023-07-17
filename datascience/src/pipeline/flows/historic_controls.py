@@ -45,7 +45,7 @@ dict_new_facades = {
     "DIRM SA": "SA",
     "DM Guyane": "Guyane",
     "DM Martinique": "Martinique",
-    "DM Guadeloupe": "Guadeloupe et îles du Nord",
+    "DM Guadeloupe": "Guadeloupe",
     "DM SOI": "Sud Océan Indien",
     "DIRM Med": "MED",
     "DIRM MEMN": "MEMN",
