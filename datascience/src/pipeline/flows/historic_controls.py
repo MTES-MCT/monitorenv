@@ -158,10 +158,8 @@ def extract_historic_missions_units() -> pd.DataFrame:
 def make_env_actions(historic_controls: pd.DataFrame) -> pd.DataFrame:
 
     """
-    Transform historic controls from Poseidon into the monitorenv env_actions schema structure
-
-    Return a dataframe
-
+    Transform historic controls from Poseidon into the monitorenv env_actions schema
+    structure.
     """
     historic_controls = historic_controls.copy(deep=True)
     historic_controls["mission_id"] = (
@@ -226,7 +224,9 @@ def make_env_actions(historic_controls: pd.DataFrame) -> pd.DataFrame:
 
 @task(checkpoint=False)
 def make_env_missions(missions_poseidon: pd.DataFrame) -> pd.DataFrame:
-    """Transform historic missions from Poseidon into the monitorenv missions schema structure
+    """
+    Transform historic missions from Poseidon into the monitorenv missions schema
+    structure.
 
     Args:
         missions_poseidon (pd.DataFrame)
@@ -258,7 +258,9 @@ def make_env_missions(missions_poseidon: pd.DataFrame) -> pd.DataFrame:
 
 @task(checkpoint=False)
 def make_env_mission_units(mission_units: pd.DataFrame) -> pd.DataFrame:
-    """Transform historic missions units from Poseidon into the monitorenv env_actions schema structure
+    """
+    Transform historic missions units from Poseidon into the monitorenv env_actions
+    schema structure.
 
     Args:
         mission_units (pd.DataFrame)
@@ -285,7 +287,9 @@ def delete_missing_id(
     historic_missions: pd.DataFrame,
     historic_missions_units: pd.DataFrame,
 ) -> pd.DataFrame:
-    """Delete rows from historic_controls and historic_mission_units whose mission_id does not exist in historic_mission dataframe
+    """
+    Delete rows from historic_controls and historic_mission_units whose mission_id
+    does not exist in historic_mission dataframe.
 
     Args:
         df_rows_to_delete (pd.DataFrame): dataframe containing rows we may delete
@@ -300,7 +304,8 @@ def delete_missing_id(
     l_mmi = list(historic_missions["id"])
     l_mumi = list(historic_missions_units["mission_id"])
 
-    # creating lists that host mission_id differences for historic_controls and historic_missions_units with historic_missions
+    # creating lists that host mission_id differences for historic_controls and
+    # historic_missions_units with historic_missions
     cmi_diff = list(set(l_cmi) - set(l_mmi))
     mumi_diff = list(set(l_mumi) - set(l_mmi))
 

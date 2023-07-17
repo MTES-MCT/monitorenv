@@ -344,7 +344,11 @@ def transformed_historic_missions() -> pd.DataFrame:
             "open_by": ["JBL", "GYT", "RIO", "CBG", "LEG", "RIO", "CRO"],
             "observations_cacem": [
                 "91 pàp pro contrôlés/ 4 pàp pro en infraction surquotas",
-                "Surveillance: protection des aires marines / protection des espèces sensibles dont perturbation intentionnelle des espèces protégées  RAS",
+                (
+                    "Surveillance: protection des aires marines / protection des "
+                    "espèces sensibles dont perturbation intentionnelle des espèces "
+                    "protégées  RAS"
+                ),
                 None,
                 "contrôle de 3 pêcheurs plaisanciers : RAS",
                 None,
@@ -502,7 +506,10 @@ def test_flow(
     )
     initial_missions = read_query("monitorenv_remote", query_missions)
 
-    query_missions_units = "SELECT id, mission_id, control_unit_id FROM missions_control_units ORDER BY id"
+    query_missions_units = (
+        "SELECT id, mission_id, control_unit_id "
+        "FROM missions_control_units ORDER BY id"
+    )
 
     query_missions_units_with_mission_source = (
         "SELECT missions_control_units.id, mission_id,"
