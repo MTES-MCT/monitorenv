@@ -278,47 +278,24 @@ def make_env_mission_units(mission_units: pd.DataFrame) -> pd.DataFrame:
 
 
 @task(checkpoint=False)
-def delete_missing_id(
-    historic_controls: pd.DataFrame,
-    historic_missions: pd.DataFrame,
-    historic_missions_units: pd.DataFrame,
+def delete_if_missing_mission(
+    df: pd.DataFrame, missions: pd.DataFrame
 ) -> pd.DataFrame:
     """
-    Delete rows from historic_controls and historic_mission_units whose mission_id
-    does not exist in historic_mission dataframe.
+    Delete rows from df whose mission_id does not exist in missions dataframe.
 
     Args:
-        df_rows_to_delete (pd.DataFrame): dataframe containing rows we may delete
-        historic_missions (pd.DataFrame)
+        df (pd.DataFrame): pandas DataFrame. Must have 'mission_id' column.
+        missions (pd.DataFrame): pandas DataFrame. Must have 'id' column.
 
     Returns:
-        pd.DataFrame: return the df_rows_to_delete without the missing mission_id
+        pd.DataFrame : filtered df
     """
 
-    # listes containing mission_id of each dataframe
-    l_cmi = list(historic_controls["mission_id"])
-    l_mmi = list(historic_missions["id"])
-    l_mumi = list(historic_missions_units["mission_id"])
+    df = df.copy(deep=True)
+    df = df.loc[df.mission_id.isin(missions.id.values)]
 
-    # creating lists that host mission_id differences for historic_controls and
-    # historic_missions_units with historic_missions
-    cmi_diff = list(set(l_cmi) - set(l_mmi))
-    mumi_diff = list(set(l_mumi) - set(l_mmi))
-
-    # retrieving indexes of missing_ids
-    index_to_drop_from_cmi = historic_controls[
-        historic_controls["mission_id"].isin(cmi_diff)
-    ].index
-    index_to_drop_from_mumi = historic_missions_units[
-        historic_missions_units["mission_id"].isin(mumi_diff)
-    ].index
-
-    historic_controls = historic_controls.drop(index_to_drop_from_cmi)
-    historic_missions_units = historic_missions_units.drop(
-        index_to_drop_from_mumi
-    )
-
-    return historic_controls, historic_missions_units
+    return df
 
 
 @task(checkpoint=False)
@@ -413,14 +390,20 @@ def load_missions_and_missions_control_units(
 
 
 with Flow("Historic control") as flow:
+    # Extract
     controls = extract_historic_controls()
     missions = extract_historic_missions()
     missions_units = extract_historic_missions_units()
+
+    # Transform
+    controls = delete_if_missing_mission(controls, missions)
+    missions_units = delete_if_missing_mission(missions_units, missions)
 
     controls = make_env_actions(controls)
     missions = make_env_missions(missions)
     missions_units = make_env_mission_units(missions_units)
 
+    # Load
     load_missions_and_missions_control_units(
         controls, missions, missions_units
     )

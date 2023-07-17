@@ -16,7 +16,7 @@ from src.read_query import read_query
 
 historic_controls_df = pd.DataFrame(
     {
-        "id": [10009, 10010, 10011, 10012, 10013, 10014],
+        "id": [10009, 10010, 10011, 10012, 10013, 10014, 10015],
         "themes": [
             (
                 "Police des espèces protégées et de leurs habitats<separator>"
@@ -27,9 +27,18 @@ historic_controls_df = pd.DataFrame(
             "Pêche à pied<separator>Police de la chasse en mer",
             "Domanialité publique dont circulation",
             "Police des aires marines protégées",
+            "Pêche à pied",
         ],
-        "action_number_of_controls": [5, 1, 2, 70, 16, 42],
-        "natinf": [None, "10041", "10080,10010", "2785", None, "2798,10042"],
+        "action_number_of_controls": [5, 1, 2, 70, 16, 42, 16],
+        "natinf": [
+            None,
+            "10041",
+            "10080,10010",
+            "2785",
+            None,
+            "2798,10042",
+            None,
+        ],
         "protected_species": [
             "Flore,Mamifères marins,Oiseaux",
             "Oiseaux,Flore",
@@ -37,8 +46,9 @@ historic_controls_df = pd.DataFrame(
             "Flore",
             None,
             "Oiseaux,Mammifères marins",
+            None,
         ],
-        "mission_id": [10012, 10013, 10015, 10017, 10018, 10019],
+        "mission_id": [10012, 10013, 10015, 10017, 10018, 10019, 10042],
         "action_start_datetime_utc": [
             datetime(2017, 12, 3, 9, 40),
             datetime(2017, 3, 14, 10),
@@ -46,8 +56,10 @@ historic_controls_df = pd.DataFrame(
             datetime(2017, 3, 28, 10),
             datetime(2017, 3, 29, 12, 15),
             datetime(2017, 3, 29, 11, 45),
+            datetime(2017, 4, 29, 11, 45),
         ],
         "action_type": [
+            "CONTROL",
             "CONTROL",
             "CONTROL",
             "CONTROL",
@@ -116,8 +128,17 @@ historic_missions_df = pd.DataFrame(
 )
 historic_missions_units_df = pd.DataFrame(
     {
-        "mission_id": [10012, 10013, 10015, 10017, 10018, 10019, 10050],
-        "control_unit_id": [10005, 10005, 10005, 10011, 10013, 10009, 10010],
+        "mission_id": [10012, 10013, 10015, 10017, 10018, 10019, 10050, 10042],
+        "control_unit_id": [
+            10005,
+            10005,
+            10005,
+            10011,
+            10013,
+            10009,
+            10010,
+            10010,
+        ],
     }
 )
 
@@ -320,6 +341,15 @@ def historic_missions() -> pd.DataFrame:
 
 
 @pytest.fixture
+def historic_controls_without_missing_missions(
+    historic_missions,
+) -> pd.DataFrame:
+    return historic_controls_df[
+        historic_controls_df.mission_id.isin(historic_missions.id.values)
+    ]
+
+
+@pytest.fixture
 def transformed_historic_missions() -> pd.DataFrame:
     return pd.DataFrame(
         {
@@ -396,6 +426,15 @@ def historic_missions_units() -> pd.DataFrame:
 
 
 @pytest.fixture
+def historic_missions_units_without_missing_missions(
+    historic_missions,
+) -> pd.DataFrame:
+    return historic_missions_units_df[
+        historic_missions_units_df.mission_id.isin(historic_missions.id.values)
+    ]
+
+
+@pytest.fixture
 def transformed_missions_units() -> pd.DataFrame:
     return pd.DataFrame(
         {
@@ -462,9 +501,11 @@ flow.replace(
 )
 
 
-def test_make_env_actions(historic_controls, transformed_historic_controls):
+def test_make_env_actions(
+    historic_controls_without_missing_missions, transformed_historic_controls
+):
     with patch("src.pipeline.flows.historic_controls.uuid", mock_uuid):
-        res = make_env_actions.run(historic_controls)
+        res = make_env_actions.run(historic_controls_without_missing_missions)
     pd.testing.assert_frame_equal(res, transformed_historic_controls)
 
 
@@ -476,10 +517,11 @@ def test_env_missions(historic_missions, transformed_historic_missions):
 
 
 def test_env_missions_units(
-    historic_missions_units, transformed_missions_units
+    historic_missions_units_without_missing_missions,
+    transformed_missions_units,
 ):
     historic_missions_units = make_env_mission_units.run(
-        historic_missions_units
+        historic_missions_units_without_missing_missions
     )
     pd.testing.assert_frame_equal(
         historic_missions_units, transformed_missions_units
