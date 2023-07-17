@@ -9,6 +9,7 @@ from sqlalchemy import DDL
 from config import POSEIDON_CACEM_MISSION_ID_TO_MONITORENV_MISSION_ID_SHIFT
 from src.db_config import create_engine
 from src.pipeline.generic_tasks import extract, load
+from src.pipeline.processing import zeros_ones_to_bools
 
 # dictionnaire des correspondances pour les nouveaux Themes
 dict_new_themes = {
@@ -249,9 +250,7 @@ def make_env_missions(missions_poseidon: pd.DataFrame) -> pd.DataFrame:
     missions_poseidon["facade"] = missions_poseidon["facade"].map(
         dict_new_facades
     )
-    missions_poseidon["closed"] = missions_poseidon.apply(
-        lambda x: False if x.closed == "0" else True, axis=1
-    )
+    missions_poseidon["closed"] = zeros_ones_to_bools(missions_poseidon.closed)
     missions_poseidon["deleted"] = False
 
     return missions_poseidon
