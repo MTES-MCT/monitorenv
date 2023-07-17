@@ -175,6 +175,11 @@ def make_env_actions(historic_controls: pd.DataFrame) -> pd.DataFrame:
     historic_controls["natinf"] = historic_controls["natinf"].map(
         str_to_list, na_action="ignore"
     )
+    historic_controls["infractions"] = historic_controls["natinf"].map(
+        make_infractions
+    )
+
+    # Preparing protected species
     historic_controls["protected_species"] = historic_controls[
         "protected_species"
     ].map(str_to_list, na_action="ignore")
@@ -182,10 +187,6 @@ def make_env_actions(historic_controls: pd.DataFrame) -> pd.DataFrame:
     historic_controls["protected_species"] = historic_controls[
         "protected_species"
     ].map(lambda y: y if isinstance(y, list) else [])
-
-    historic_controls["infractions"] = historic_controls["natinf"].map(
-        make_infractions
-    )
 
     historic_controls["themes"] = historic_controls.apply(make_themes, axis=1)
 
