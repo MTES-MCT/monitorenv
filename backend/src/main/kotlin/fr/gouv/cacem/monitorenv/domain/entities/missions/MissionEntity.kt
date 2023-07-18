@@ -18,6 +18,7 @@ data class MissionEntity(
     val envActions: List<EnvActionEntity>? = listOf(),
     val isClosed: Boolean,
     val isDeleted: Boolean,
+    val isGeometryComputedFromControls: Boolean,
     val missionSource: MissionSourceEnum,
     val hasMissionOrder: Boolean,
     val isUnderJdp: Boolean,

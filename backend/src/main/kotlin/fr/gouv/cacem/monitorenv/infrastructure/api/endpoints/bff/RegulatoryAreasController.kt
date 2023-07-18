@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreas
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.RegulatoryAreaDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.RegulatoryAreaDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam

@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.semaphores.GetSemaphoreById
 import fr.gouv.cacem.monitorenv.domain.use_cases.semaphores.GetSemaphores
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.SemaphoreDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.SemaphoreDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam

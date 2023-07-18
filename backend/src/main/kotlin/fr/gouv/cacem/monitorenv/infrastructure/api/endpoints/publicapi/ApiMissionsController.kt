@@ -5,8 +5,8 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionById
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissions
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdatePublicMissionDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.MissionDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.MissionDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -79,7 +79,7 @@ class ApiMissionsController(
     @Operation(summary = "Create a new mission")
     fun createMissionController(
         @RequestBody
-        createMissionDataInput: CreateOrUpdatePublicMissionDataInput,
+        createMissionDataInput: CreateOrUpdateMissionDataInput,
     ): MissionDataOutput {
         val newMission = createMissionDataInput.toMissionEntity()
         val createdMission = createOrUpdateMission.execute(mission = newMission)
@@ -105,7 +105,7 @@ class ApiMissionsController(
         @PathVariable(name = "missionId")
         missionId: Int,
         @RequestBody
-        updateMissionDataInput: CreateOrUpdatePublicMissionDataInput,
+        updateMissionDataInput: CreateOrUpdateMissionDataInput,
     ): MissionDataOutput {
         if ((updateMissionDataInput.id == null) || (missionId != updateMissionDataInput.id)) {
             throw java.lang.IllegalArgumentException("missionId doesn't match with request param")

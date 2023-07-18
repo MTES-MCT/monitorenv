@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlThemes.GetControlThemeById
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlThemes.GetControlThemes
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.ControlThemeDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ControlThemeDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam

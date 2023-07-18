@@ -5,8 +5,8 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionById
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMonitorEnvMissions
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdateMissionDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.MissionDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateMissionDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.MissionDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag

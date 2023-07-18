@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.missions.EnvActionEntity
@@ -23,13 +23,11 @@ data class CreateOrUpdateMissionDataInput(
     val missionSource: MissionSourceEnum,
     val isClosed: Boolean,
     val envActions: List<EnvActionEntity>? = null,
-    val hasMissionOrder: Boolean? = false,
-    val isUnderJdp: Boolean? = false,
+    val hasMissionOrder: Boolean,
+    val isUnderJdp: Boolean,
+    val isGeometryComputedFromControls: Boolean
 ) {
     fun toMissionEntity(): MissionEntity {
-        val hasMissionOrder = this.hasMissionOrder ?: false
-        val isUnderJdp = this.isUnderJdp ?: false
-
         return MissionEntity(
             id = this.id,
             missionTypes = this.missionTypes,
@@ -46,8 +44,9 @@ data class CreateOrUpdateMissionDataInput(
             isDeleted = false,
             missionSource = this.missionSource,
             envActions = this.envActions,
-            hasMissionOrder = hasMissionOrder,
-            isUnderJdp = isUnderJdp,
+            hasMissionOrder = this.hasMissionOrder,
+            isUnderJdp = this.isUnderJdp,
+            isGeometryComputedFromControls = this.isGeometryComputedFromControls
         )
     }
 }

@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlThemes.ControlThemeEntity
 

@@ -14,7 +14,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionById
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMonitorEnvMissions
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdateMissionDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateMissionDataInput
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
@@ -79,6 +79,7 @@ class MissionsControllerITests {
             missionSource = MissionSourceEnum.MONITORENV,
             hasMissionOrder = false,
             isUnderJdp = false,
+            isGeometryComputedFromControls = false
         )
         val newMissionRequest = CreateOrUpdateMissionDataInput(
             missionTypes = listOf(MissionTypeEnum.LAND),
@@ -124,6 +125,7 @@ class MissionsControllerITests {
             missionSource = MissionSourceEnum.MONITORENV,
             hasMissionOrder = false,
             isUnderJdp = false,
+            isGeometryComputedFromControls = false
         )
         given(
             this.getMonitorEnvMissions.execute(
@@ -158,6 +160,7 @@ class MissionsControllerITests {
             missionSource = MissionSourceEnum.MONITORENV,
             hasMissionOrder = false,
             isUnderJdp = false,
+            isGeometryComputedFromControls = false
         )
         // we test only if the route is called with the right arg
         given(getMissionById.execute(requestedId)).willReturn(expectedFirstMission)
@@ -183,6 +186,7 @@ class MissionsControllerITests {
             missionSource = MissionSourceEnum.MONITORENV,
             hasMissionOrder = false,
             isUnderJdp = false,
+            isGeometryComputedFromControls = false
         )
         val envAction = EnvActionControlEntity(
             id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),

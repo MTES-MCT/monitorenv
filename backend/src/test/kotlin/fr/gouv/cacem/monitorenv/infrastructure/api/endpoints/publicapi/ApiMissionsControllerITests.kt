@@ -14,7 +14,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionById
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissions
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdatePublicMissionDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
@@ -79,8 +79,9 @@ class ApiMissionsControllerITests {
             missionSource = MissionSourceEnum.MONITORFISH,
             hasMissionOrder = true,
             isUnderJdp = true,
+            isGeometryComputedFromControls = false
         )
-        val newMissionRequest = CreateOrUpdatePublicMissionDataInput(
+        val newMissionRequest = CreateOrUpdateMissionDataInput(
             missionTypes = listOf(MissionTypeEnum.LAND),
             observationsCnsp = null,
             facade = "Outre-Mer",
@@ -91,6 +92,7 @@ class ApiMissionsControllerITests {
             isClosed = false,
             hasMissionOrder = true,
             isUnderJdp = true,
+            isGeometryComputedFromControls = false
         )
         val requestBody = objectMapper.writeValueAsString(newMissionRequest)
         given(this.createOrUpdateMission.execute(mission = any())).willReturn(expectedNewMission)
@@ -126,6 +128,7 @@ class ApiMissionsControllerITests {
             isClosed = false,
             hasMissionOrder = false,
             isUnderJdp = false,
+            isGeometryComputedFromControls = false
         )
         given(
             this.getMissions.execute(
@@ -160,6 +163,7 @@ class ApiMissionsControllerITests {
             isClosed = false,
             hasMissionOrder = false,
             isUnderJdp = false,
+            isGeometryComputedFromControls = false
         )
         // we test only if the route is called with the right arg
         given(getMissionById.execute(requestedId)).willReturn(expectedFirstMission)
@@ -186,6 +190,7 @@ class ApiMissionsControllerITests {
             missionSource = MissionSourceEnum.MONITORFISH,
             hasMissionOrder = true,
             isUnderJdp = true,
+            isGeometryComputedFromControls = false
         )
         val envAction = EnvActionControlEntity(
             id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
@@ -193,7 +198,7 @@ class ApiMissionsControllerITests {
             vehicleType = VehicleTypeEnum.VESSEL,
             actionNumberOfControls = 4,
         )
-        val requestBody = CreateOrUpdatePublicMissionDataInput(
+        val requestBody = CreateOrUpdateMissionDataInput(
             id = 14,
             missionTypes = listOf(MissionTypeEnum.SEA),
             observationsCacem = "updated observations",
@@ -204,6 +209,7 @@ class ApiMissionsControllerITests {
             isClosed = false,
             hasMissionOrder = true,
             isUnderJdp = true,
+            isGeometryComputedFromControls = false
         )
         given(this.createOrUpdateMission.execute(any())).willReturn(expectedUpdatedMission)
         // When

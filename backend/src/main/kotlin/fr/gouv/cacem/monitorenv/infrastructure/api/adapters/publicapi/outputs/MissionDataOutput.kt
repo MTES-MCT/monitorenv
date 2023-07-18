@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.missions.EnvActionEntity
@@ -25,6 +25,7 @@ data class MissionDataOutput(
     val isClosed: Boolean,
     val hasMissionOrder: Boolean,
     val isUnderJdp: Boolean,
+    val isGeometryComputedFromControls: Boolean
 ) {
     companion object {
         fun fromMission(mission: MissionEntity): MissionDataOutput {
@@ -49,6 +50,7 @@ data class MissionDataOutput(
                 isClosed = mission.isClosed,
                 hasMissionOrder = mission.hasMissionOrder,
                 isUnderJdp = mission.isUnderJdp,
+                isGeometryComputedFromControls = mission.isGeometryComputedFromControls
             )
         }
     }
