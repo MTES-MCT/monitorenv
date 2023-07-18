@@ -14,7 +14,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionById
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissions
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdatePublicMissionDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
@@ -81,7 +81,7 @@ class ApiMissionsControllerITests {
             isUnderJdp = true,
             isGeometryComputedFromControls = false
         )
-        val newMissionRequest = CreateOrUpdatePublicMissionDataInput(
+        val newMissionRequest = CreateOrUpdateMissionDataInput(
             missionTypes = listOf(MissionTypeEnum.LAND),
             observationsCnsp = null,
             facade = "Outre-Mer",
@@ -198,7 +198,7 @@ class ApiMissionsControllerITests {
             vehicleType = VehicleTypeEnum.VESSEL,
             actionNumberOfControls = 4,
         )
-        val requestBody = CreateOrUpdatePublicMissionDataInput(
+        val requestBody = CreateOrUpdateMissionDataInput(
             id = 14,
             missionTypes = listOf(MissionTypeEnum.SEA),
             observationsCacem = "updated observations",

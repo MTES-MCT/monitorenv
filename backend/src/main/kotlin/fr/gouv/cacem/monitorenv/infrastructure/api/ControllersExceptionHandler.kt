@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api
 
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.ApiError
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.MissingParameterApiError
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ApiError
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.MissingParameterApiError
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.Ordered.HIGHEST_PRECEDENCE

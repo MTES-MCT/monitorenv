@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
 
 import org.n52.jackson.datatype.jts.GeometrySerializer
 

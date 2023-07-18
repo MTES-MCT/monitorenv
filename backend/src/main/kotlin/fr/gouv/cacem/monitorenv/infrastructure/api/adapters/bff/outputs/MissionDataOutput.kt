@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.missions.EnvActionEntity
@@ -8,7 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
-data class PublicMissionDataOutput(
+data class MissionDataOutput(
     val id: Int,
     val missionTypes: List<MissionTypeEnum>,
     val controlUnits: List<ControlUnitEntity>? = listOf(),
@@ -25,15 +25,14 @@ data class PublicMissionDataOutput(
     val isClosed: Boolean,
     val hasMissionOrder: Boolean,
     val isUnderJdp: Boolean,
-    val isGeometryComputedFromControls: Boolean
 ) {
     companion object {
-        fun fromMission(mission: MissionEntity): PublicMissionDataOutput {
+        fun fromMission(mission: MissionEntity): MissionDataOutput {
             requireNotNull(mission.id) {
                 "a mission must have an id"
             }
 
-            return PublicMissionDataOutput(
+            return MissionDataOutput(
                 id = mission.id,
                 missionTypes = mission.missionTypes,
                 controlUnits = mission.controlUnits,
@@ -50,7 +49,6 @@ data class PublicMissionDataOutput(
                 isClosed = mission.isClosed,
                 hasMissionOrder = mission.hasMissionOrder,
                 isUnderJdp = mission.isUnderJdp,
-                isGeometryComputedFromControls = mission.isGeometryComputedFromControls
             )
         }
     }

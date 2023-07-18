@@ -5,9 +5,8 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionById
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissions
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdatePublicMissionDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.MissionDataOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.PublicMissionDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.MissionDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -62,7 +61,7 @@ class ApiMissionsController(
         @Parameter(description = "Facades")
         @RequestParam(name = "seaFronts", required = false)
         seaFronts: List<String>?,
-    ): List<PublicMissionDataOutput> {
+    ): List<MissionDataOutput> {
         val missions = getMissions.execute(
             startedAfterDateTime = startedAfterDateTime,
             startedBeforeDateTime = startedBeforeDateTime,
@@ -73,18 +72,18 @@ class ApiMissionsController(
             pageNumber = pageNumber,
             pageSize = pageSize,
         )
-        return missions.map { PublicMissionDataOutput.fromMission(it) }
+        return missions.map { MissionDataOutput.fromMission(it) }
     }
 
     @PostMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a new mission")
     fun createMissionController(
         @RequestBody
-        createMissionDataInput: CreateOrUpdatePublicMissionDataInput,
-    ): PublicMissionDataOutput {
+        createMissionDataInput: CreateOrUpdateMissionDataInput,
+    ): MissionDataOutput {
         val newMission = createMissionDataInput.toMissionEntity()
         val createdMission = createOrUpdateMission.execute(mission = newMission)
-        return PublicMissionDataOutput.fromMission(createdMission)
+        return MissionDataOutput.fromMission(createdMission)
     }
 
     @GetMapping("/{missionId}")
@@ -93,10 +92,10 @@ class ApiMissionsController(
         @PathParam("Mission id")
         @PathVariable(name = "missionId")
         missionId: Int,
-    ): PublicMissionDataOutput {
+    ): MissionDataOutput {
         val mission = getMissionById.execute(missionId = missionId)
 
-        return PublicMissionDataOutput.fromMission(mission)
+        return MissionDataOutput.fromMission(mission)
     }
 
     @PostMapping(value = ["/{missionId}"], consumes = ["application/json"])
@@ -106,15 +105,15 @@ class ApiMissionsController(
         @PathVariable(name = "missionId")
         missionId: Int,
         @RequestBody
-        updateMissionDataInput: CreateOrUpdatePublicMissionDataInput,
-    ): PublicMissionDataOutput {
+        updateMissionDataInput: CreateOrUpdateMissionDataInput,
+    ): MissionDataOutput {
         if ((updateMissionDataInput.id == null) || (missionId != updateMissionDataInput.id)) {
             throw java.lang.IllegalArgumentException("missionId doesn't match with request param")
         }
         return createOrUpdateMission.execute(
             mission = updateMissionDataInput.toMissionEntity(),
         ).let {
-            PublicMissionDataOutput.fromMission(it)
+            MissionDataOutput.fromMission(it)
         }
     }
 
