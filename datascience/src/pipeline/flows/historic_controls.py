@@ -69,7 +69,11 @@ def str_to_list(s: str, sep: str = ",") -> list:
     Returns:
         list: list of strings
     """
-    return s.split(sep)
+    if isinstance(s, str):
+        res = s.split(sep)
+    else:
+        res = []
+    return res
 
 
 def make_infractions(natinf: list) -> list[dict]:

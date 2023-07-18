@@ -25,7 +25,7 @@ historic_controls_df = pd.DataFrame(
             "Pêche à pied",
             "Domanialité publique dont circulation",
             "Pêche à pied<separator>Police de la chasse en mer",
-            "Domanialité publique dont circulation",
+            None,
             "Police des aires marines protégées",
             "Pêche à pied",
         ],
@@ -274,12 +274,7 @@ def transformed_historic_controls() -> pd.DataFrame:
                     "actionNumberOfControls": int(70),
                 },
                 {
-                    "themes": [
-                        {
-                            "theme": "Domanialité publique dont circulation",
-                            "protected_species": [],
-                        }
-                    ],
+                    "themes": [],
                     "infractions": [],
                     "vehicleType": None,
                     "actionTargetType": None,
