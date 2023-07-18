@@ -389,7 +389,7 @@ def load_missions_and_missions_control_units(
         )
 
 
-with Flow("Historic control") as flow:
+with Flow("Historic controls") as flow:
     # Extract
     controls = extract_historic_controls()
     missions = extract_historic_missions()
