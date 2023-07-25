@@ -1,7 +1,7 @@
 astroid==2.15.5 ; python_full_version == "3.10.12"
 attrs==23.1.0 ; python_full_version == "3.10.12"
 black==23.3.0 ; python_full_version == "3.10.12"
-certifi==2023.5.7 ; python_full_version == "3.10.12"
+certifi==2023.7.22 ; python_full_version == "3.10.12"
 cfgv==3.3.1 ; python_full_version == "3.10.12"
 charset-normalizer==3.1.0 ; python_full_version == "3.10.12"
 click-plugins==1.1.1 ; python_full_version == "3.10.12"
