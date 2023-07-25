@@ -38,7 +38,7 @@
     "@rsuite/responsive-nav": "^5.0.1",
     "@sentry/browser": "7.47.0",
     "@sentry/react": "7.56.0",
-    "@sentry/tracing": "7.47.0",
+    "@sentry/tracing": "7.55.2",
     "@svgr/webpack": "^5.5.0",
     "@tanstack/react-table": "^8.8.5",
     "@tanstack/react-virtual": "^3.0.0-beta.54",
