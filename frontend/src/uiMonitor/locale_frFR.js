@@ -1,6 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix */
-
-import { fr } from 'date-fns/locale'
+import fr_FR from 'rsuite/locales/fr_FR'
 
 export const Calendar = {
   sunday: 'Dim',
@@ -18,7 +17,7 @@ export const Calendar = {
   seconds: 'Secondes',
   formattedMonthPattern: 'MMM, yyyy',
   formattedDayPattern: 'MMM dd, yyyy',
-  dateLocale: fr
+  dateLocale: fr_FR.Calendar.dateLocale
 }
 
 export default {

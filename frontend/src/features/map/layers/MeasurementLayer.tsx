@@ -162,6 +162,9 @@ export function MeasurementLayer({ map }: MapChildrenProps) {
     }
 
     function drawNewFeatureOnMap() {
+      if (!measurementTypeToAdd) {
+        return
+      }
       const draw = new Draw({
         source: GetVectorSource(),
         stopClick: true,

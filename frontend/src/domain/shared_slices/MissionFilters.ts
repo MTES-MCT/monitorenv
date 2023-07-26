@@ -1,5 +1,5 @@
+import { customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 import { createSlice } from '@reduxjs/toolkit'
-import dayjs from 'dayjs'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 

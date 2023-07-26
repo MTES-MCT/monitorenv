@@ -1,4 +1,4 @@
-import { isBefore } from 'date-fns'
+import { customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
 import { Dropdown } from 'rsuite'
 import styled from 'styled-components'
@@ -30,7 +30,7 @@ export function ActionsForm({ currentActionIndex, form, remove, setCurrentAction
 
         return a.actionStartDateTimeUtc &&
           b.actionStartDateTimeUtc &&
-          isBefore(new Date(a.actionStartDateTimeUtc), new Date(b.actionStartDateTimeUtc))
+          dayjs(a.actionStartDateTimeUtc).isBefore(dayjs(b.actionStartDateTimeUtc))
           ? +1
           : -1
       }),
