@@ -61,11 +61,11 @@ ARG SENTRY_PROJECT
 RUN mkdir -p /tmp/frontend/build
 COPY --from=buildFront /tmp/frontend/build /tmp/frontend/build
 # Upload sourcemaps to sentry
-RUN sentry-cli sourcemaps inject /tmp/frontend
+RUN sentry-cli sourcemaps inject /tmp/frontend/build
 RUN sentry-cli \
   --url ${SENTRY_URL} \
   --auth-token ${SENTRY_AUTH_TOKEN} \
-  sourcemaps upload /tmp/frontend \
+  sourcemaps upload /tmp/frontend/build \
   --release ${VERSION} \
   --org ${SENTRY_ORG} \
   --project ${SENTRY_PROJECT}
