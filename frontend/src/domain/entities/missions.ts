@@ -1,5 +1,4 @@
-import { THEME } from '@mtes-mct/monitor-ui'
-import { compareDesc, compareAsc, parseISO } from 'date-fns'
+import { THEME, customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 
 import type { ControlUnit } from './controlUnit'
 
@@ -468,10 +467,10 @@ export const getMissionStatus = ({
     return MissionStatusEnum.CLOSED
   }
   if (startDateTimeUtc) {
-    if (parseISO(startDateTimeUtc) && compareAsc(parseISO(startDateTimeUtc), Date.now()) >= 0) {
+    if (dayjs().isBefore(dayjs(startDateTimeUtc)) || dayjs().isSame(dayjs(startDateTimeUtc))) {
       return MissionStatusEnum.UPCOMING
     }
-    if (endDateTimeUtc && parseISO(endDateTimeUtc) && compareDesc(parseISO(endDateTimeUtc), Date.now()) >= 0) {
+    if (dayjs().isAfter(dayjs(endDateTimeUtc)) || dayjs().isSame(dayjs(endDateTimeUtc))) {
       return MissionStatusEnum.ENDED
     }
 

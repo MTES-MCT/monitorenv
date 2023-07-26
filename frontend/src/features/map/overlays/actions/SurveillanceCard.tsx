@@ -1,5 +1,4 @@
-import { getLocalizedDayjs } from '@mtes-mct/monitor-ui'
-import dayjs from 'dayjs'
+import { getLocalizedDayjs, customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
