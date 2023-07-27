@@ -50,15 +50,17 @@ export function LayerSearch({ isVisible }) {
 
   const searchLayers = useMemo(() => {
     const fuseRegulatory = new Fuse(regulatoryLayers, {
-      distance: 50,
+      ignoreLocation: true,
       includeScore: false,
       keys: ['properties.layer_name', 'properties.entity_name', 'properties.ref_reg', 'properties.type'],
+      minMatchCharLength: 3,
       threshold: 0.4
     })
     const fuseAMPs = new Fuse((amps?.entities && Object.values(amps?.entities)) || [], {
-      distance: 50,
+      ignoreLocation: true,
       includeScore: false,
       keys: ['name', 'type'],
+      minMatchCharLength: 3,
       threshold: 0.4
     })
 
