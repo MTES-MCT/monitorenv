@@ -1,4 +1,4 @@
-import { FormikNumberInput, customDayjs as dayjs } from '@mtes-mct/monitor-ui'
+import { FormikNumberInput, customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import styled from 'styled-components'
 
@@ -7,20 +7,20 @@ import type { Reporting } from '../../../domain/entities/reporting'
 export function Validity() {
   const { values } = useFormikContext<Reporting>()
 
-  const formattedCreatedAt = dayjs(values?.createdAt).format('DD/MM/YYYY à HH:mm')
+  const formattedCreatedAt = getLocalizedDayjs(values?.createdAt).format('DD/MM/YYYY à HH:mm')
 
-  const archiveDate = dayjs(values?.createdAt).add(values?.validityTime || 0, 'hour')
+  const archiveDate = getLocalizedDayjs(values?.createdAt).add(values?.validityTime || 0, 'hour')
   const formattedArchivedDate = archiveDate.format('DD MMMM à HH:mm')
 
-  const remainingTime = archiveDate.diff(dayjs(), 'hour')
+  const remainingTime = archiveDate.diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour')
 
   return (
     <StyledValidityContainer>
       <StyledFormikNumberInput label="Validité (h)" max={24} name="validityTime" />
       {!values.isArchived && remainingTime > 0 && values?.validityTime && values?.validityTime > 0 ? (
-        <GrayText>{`Le signalement ouvert le ${formattedCreatedAt} sera archivé le ${formattedArchivedDate} ( dans ${remainingTime}h)`}</GrayText>
+        <GrayText>{`Le signalement ouvert le ${formattedCreatedAt} (UTC) sera archivé le ${formattedArchivedDate} (UTC) (dans ${remainingTime}h)`}</GrayText>
       ) : (
-        <RedText>{`La date de validité du signalement, ouvert le ${formattedCreatedAt}, est dépassée. Pour le rouvrir, veuillez augmenter sa durée de validité.`}</RedText>
+        <RedText>{`La date de validité du signalement, ouvert le ${formattedCreatedAt} (UTC) , est dépassée. Pour le rouvrir, veuillez augmenter sa durée de validité.`}</RedText>
       )}
     </StyledValidityContainer>
   )

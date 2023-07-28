@@ -3,10 +3,11 @@ import { useField, useFormikContext } from 'formik'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Toggle } from 'rsuite'
+import styled from 'styled-components'
 
 import { CancelEditDialog } from './Dialog/CancelEditDialog'
 import { Footer } from './Footer'
-import { Localization } from './Localization'
+import { Position } from './Position'
 import { Source } from './Source'
 import { Target } from './Target'
 import { ThemeSelector } from './ThemeSelector'
@@ -26,7 +27,7 @@ import { addReporting } from '../../../domain/use_cases/reportings/addReporting'
 import { deleteReporting } from '../../../domain/use_cases/reportings/deleteReporting'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useSyncFormValuesWithRedux } from '../../../hooks/useSyncFormValuesWithRedux'
-import { ReportingStatusLabel } from '../../../ui/ReportingStatusLabel'
+import { ReportingStatusTag } from '../../../ui/ReportingStatusTag'
 import { DeleteModal } from '../../commonComponents/Modals/Delete'
 import {
   Separator,
@@ -147,7 +148,7 @@ export function ReportingForm({ setShouldValidateOnChange }) {
         <StyledTitle>
           <Icon.Report />
           {values.reportingId ? `SIGNALEMENT ${getFormattedReportingId(values.reportingId)}` : 'NOUVEAU SIGNALEMENT'}
-          <ReportingStatusLabel reportingStatus={getReportingStatus(values)} />
+          {values.reportingId && <ReportingStatusTag reportingStatus={getReportingStatus(values)} />}
         </StyledTitle>
 
         <StyledHeaderButtons>
@@ -163,12 +164,12 @@ export function ReportingForm({ setShouldValidateOnChange }) {
       <StyledForm>
         <Source />
         <Target />
-        <Localization />
+        <Position />
         <FormikTextarea label="Description du signalement" name="description" />
         <Separator />
 
         <div>
-          <MultiRadio
+          <ReportTypeMultiRadio
             isInline
             label="Type de signalement"
             name="reportType"
@@ -217,3 +218,14 @@ export function ReportingForm({ setShouldValidateOnChange }) {
     </StyledFormContainer>
   )
 }
+
+const ReportTypeMultiRadio = styled(MultiRadio)`
+  > div > div > div:first-child label::after {
+    color: ${({ theme }) => theme.color.maximumRed};
+    content: ' ●';
+  }
+  > div > div > div:last-child label::after {
+    color: ${({ theme }) => theme.color.blueGray[100]};
+    content: ' ●';
+  }
+`

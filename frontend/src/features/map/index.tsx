@@ -15,6 +15,7 @@ import { SelectedMissionLayer } from './layers/Missions/SelectedMissionLayer'
 import { RegulatoryLayers } from './layers/Regulatory'
 import { RegulatoryPreviewLayer } from './layers/Regulatory/RegulatoryPreviewLayer'
 import { ReportingsLayer } from './layers/Reportings'
+import { EditingReportingLayer } from './layers/Reportings/EditingReportingLayer'
 import { HoveredReportingLayer } from './layers/Reportings/HoveredReportingLayer'
 import { SelectedReportingLayer } from './layers/Reportings/SelectedReporting'
 import { SemaphoresLayer } from './layers/Semaphores'
@@ -57,6 +58,7 @@ export function Map() {
       <ActionOverlay />
       <SemaphoresLayer />
       <SemaphoreOverlay />
+      <EditingReportingLayer />
       <SelectedReportingLayer />
       <HoveredReportingLayer />
       <ReportingsLayer />

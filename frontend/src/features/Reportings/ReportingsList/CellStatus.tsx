@@ -1,8 +1,8 @@
 import { getReportingStatus } from '../../../domain/entities/reporting'
-import { ReportingStatusLabel } from '../../../ui/ReportingStatusLabel'
+import { ReportingStatusTag } from '../../../ui/ReportingStatusTag'
 
 export function CellStatus({ row }: { row: any }) {
   const status = getReportingStatus(row.original)
 
-  return <ReportingStatusLabel reportingStatus={status} />
+  return <ReportingStatusTag isLabel reportingStatus={status} />
 }

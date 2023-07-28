@@ -1,4 +1,4 @@
-import { Accent, Button, Icon, IconButton, customDayjs as dayjs } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, IconButton, customDayjs as dayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
@@ -17,15 +17,12 @@ export function ReportingCard({ feature, selected = false }: { feature: any; sel
   const { createdAt, description, displayedSource, id, isArchived, reportingId, subThemes, theme, validityTime } =
     feature.getProperties()
 
-  const creationDate = dayjs(createdAt).format('DD MMM YYYY à HH:mm')
+  const creationDate = getLocalizedDayjs(createdAt).format('DD MMM YYYY à HH:mm')
 
-  const endOfValidity = dayjs(createdAt).add(validityTime || 0, 'hour')
+  const endOfValidity = getLocalizedDayjs(createdAt).add(validityTime || 0, 'hour')
 
-  const timeLeft = endOfValidity.diff(dayjs(), 'hour')
+  const timeLeft = endOfValidity.diff(getLocalizedDayjs(dayjs().toISOString()), 'hour')
   const subThemesFormatted = subThemes.map(subTheme => subTheme).join(', ')
-
-  // TODO gérer le cas sémaphore et unités
-  const subTitle = displayedSource
 
   const editReporting = () => {
     dispatch(openReporting(id))
@@ -44,8 +41,8 @@ export function ReportingCard({ feature, selected = false }: { feature: any; sel
       <StyledHeader>
         <StyledHeaderFirstLine>
           <StyledBoldText>{`SIGNALEMENT ${getFormattedReportingId(reportingId)}`}</StyledBoldText>
-          <StyledBoldText>{subTitle}</StyledBoldText>
-          <StyledCreationDate>{creationDate}</StyledCreationDate>
+          <StyledBoldText>{displayedSource}</StyledBoldText>
+          <StyledCreationDate>{creationDate} (UTC)</StyledCreationDate>
         </StyledHeaderFirstLine>
 
         <StyledHeaderSecondLine>
@@ -68,7 +65,7 @@ export function ReportingCard({ feature, selected = false }: { feature: any; sel
           {theme && <StyledBoldText>{theme}</StyledBoldText>}
           {subThemes.length > 0 && <StyledMediumText>&nbsp;/&nbsp;{subThemesFormatted}</StyledMediumText>}
         </StyledThemeContainer>
-        {description && <StyledDescription>{description}</StyledDescription>}
+        {description && <StyledDescription title={description}>{description}</StyledDescription>}
       </div>
       <StyledButton Icon={Icon.Edit} isFullWidth onClick={editReporting}>
         Editer le signalement

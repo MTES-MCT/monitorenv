@@ -11,6 +11,7 @@ export const StyledFormContainer = styled.div`
 `
 export const StyledForm = styled.div`
   padding: 32px;
+  padding-right: calc(32px - var(--scrollbar-width));
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -107,14 +108,11 @@ export const StyledVesselForm = styled.div`
   }
 `
 
-export const StyledLocalizationContainer = styled.div`
+export const StyledPositionContainer = styled.div`
   display: flex;
   flex-direction: row;
   flex: 1;
   gap: 8px;
-  > button {
-    width: 175px;
-  }
 `
 export const StyledThemeContainer = styled.div`
   display: flex;

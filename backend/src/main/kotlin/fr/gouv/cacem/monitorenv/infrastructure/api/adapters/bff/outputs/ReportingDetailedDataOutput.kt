@@ -49,7 +49,7 @@ data class ReportingDetailedDataOutput(
                 controlUnitId = reporting.controlUnitId,
                 sourceName = reporting.sourceName,
                 displayedSource = when (reporting.sourceType) {
-                    SourceTypeEnum.SEMAPHORE -> semaphore?.name
+                    SourceTypeEnum.SEMAPHORE -> semaphore?.unit ?: semaphore?.name
                     SourceTypeEnum.CONTROL_UNIT -> controlUnit?.name
                     SourceTypeEnum.OTHER -> reporting.sourceName
                     else -> ""

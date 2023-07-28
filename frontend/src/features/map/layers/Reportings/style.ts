@@ -73,7 +73,7 @@ const selectedReportingStyleFactory = (color, fillColor) => [
       return undefined
     },
     image: new Icon({
-      color: 'red',
+      color,
       scale: 0.6,
       src: 'Close.svg'
     })
@@ -152,3 +152,5 @@ export const reportingPinStyleFn = feature => {
       return reportingStyleFactory(THEME.color.white, 'archived_reporting.svg')
   }
 }
+
+export const editingReportingStyleFn = feature => [reportingPinStyleFn(feature), ...selectedReportingStyleFn(feature)]

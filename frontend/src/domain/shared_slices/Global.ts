@@ -23,7 +23,7 @@ type GlobalStateType = {
   displayReportingsButton: boolean
 
   // state entry for every layer whose visibility should be controlled
-  isSearchMissions: boolean
+  isSearchMissionsVisible: boolean
   displayMissionsOverlay: boolean
   displayMissionEditingLayer: boolean
   displayMissionsLayer: boolean
@@ -39,6 +39,7 @@ type GlobalStateType = {
   reportingFormVisibility: ReportingFormVisibility
   displayReportingsLayer: boolean
   displayReportingsOverlay: boolean
+  displayReportingEditingLayer: boolean
   displayReportingSelectedLayer: boolean
 
   isLayersSidebarVisible: boolean
@@ -62,14 +63,14 @@ const initialState: GlobalStateType = {
   displaySearchSemaphoreButton: true,
   displayReportingsButton: true,
 
-  displayMissionsOverlay: true,
   // state entry for every layer whose visibility should be controlled
-  displayMissionEditingLayer: true,
+  isSearchMissionsVisible: false,
   displayMissionsLayer: true,
+  displayMissionsOverlay: true,
+  displayMissionEditingLayer: true,
   displayMissionSelectedLayer: true,
 
   // state entry for other children components whom visibility is already handled by parent components
-  isSearchMissions: false,
   isLayersSidebarVisible: false,
 
   isSearchSemaphoreVisible: false,
@@ -80,6 +81,7 @@ const initialState: GlobalStateType = {
   reportingFormVisibility: ReportingFormVisibility.NONE,
   displayReportingsLayer: true,
   displayReportingsOverlay: true,
+  displayReportingEditingLayer: true,
   displayReportingSelectedLayer: true,
 
   isMapToolVisible: undefined,
@@ -98,7 +100,7 @@ const globalSlice = createSlice({
     hideSideButtons(state) {
       state.isSearchReportingsVisible = false
       state.isSearchSemaphoreVisible = false
-      state.isSearchMissions = false
+      state.isSearchMissionsVisible = false
       state.isMapToolVisible = undefined
     },
     removeToast(state) {

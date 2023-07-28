@@ -119,7 +119,7 @@ export function TargetDetails({ form, push, remove }) {
           : null}
       </Container>
       {form.values.targetType === TargetTypeEnum.VEHICLE && !!form.values.vehicleType && (
-        <Button accent={Accent.SECONDARY} onClick={handleAddTargetDetails}>
+        <Button accent={Accent.SECONDARY} Icon={Icon.Plus} onClick={handleAddTargetDetails}>
           Ajouter une cible
         </Button>
       )}

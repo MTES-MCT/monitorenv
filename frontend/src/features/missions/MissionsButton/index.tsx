@@ -12,7 +12,9 @@ import { sideWindowActions, SideWindowStatus } from '../../SideWindow/slice'
 
 export function MissionsMenu() {
   const dispatch = useDispatch()
-  const { displayMissionsLayer, isSearchMissions, reportingFormVisibility } = useAppSelector(state => state.global)
+  const { displayMissionsLayer, isSearchMissionsVisible, reportingFormVisibility } = useAppSelector(
+    state => state.global
+  )
   const { sideWindow } = useAppSelector(state => state)
 
   const toggleMissionsWindow = () => {
@@ -25,7 +27,7 @@ export function MissionsMenu() {
     e.preventDefault()
     dispatch(
       setDisplayedItems({
-        isSearchMissions: !isSearchMissions,
+        isSearchMissionsVisible: !isSearchMissionsVisible,
         isSearchReportingsVisible: false,
         isSearchSemaphoreVisible: false
       })
@@ -40,7 +42,7 @@ export function MissionsMenu() {
 
   return (
     <Wrapper reportingFormVisibility={reportingFormVisibility}>
-      {isSearchMissions && (
+      {isSearchMissionsVisible && (
         <MenuWithCloseButton.Container>
           <MenuWithCloseButton.Header>
             <MenuWithCloseButton.CloseButton Icon={Icon.Close} onClick={toggleMissionsMenu} />

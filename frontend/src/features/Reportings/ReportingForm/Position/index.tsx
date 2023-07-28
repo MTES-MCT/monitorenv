@@ -7,9 +7,9 @@ import { PointPicker } from './PointPicker'
 import { ZonePicker } from './ZonePicker'
 import { InteractionListener } from '../../../../domain/entities/map/constants'
 import { drawPoint, drawPolygon } from '../../../../domain/use_cases/draw/drawGeometry'
-import { StyledLocalizationContainer } from '../../style'
+import { StyledPositionContainer } from '../../style'
 
-export function Localization() {
+export function Position() {
   const dispatch = useDispatch()
   const [field, meta] = useField('geom')
   const { value } = field
@@ -25,7 +25,7 @@ export function Localization() {
   return (
     <div>
       <Label hasError={!!meta.error}>Localisation</Label>
-      <StyledLocalizationContainer>
+      <StyledPositionContainer>
         <Button
           accent={Accent.SECONDARY}
           disabled={field.value?.coordinates}
@@ -44,7 +44,7 @@ export function Localization() {
         >
           Ajouter un point
         </Button>
-      </StyledLocalizationContainer>
+      </StyledPositionContainer>
       <ZonePicker />
       <PointPicker />
       {meta.error && <FieldError>{meta.error}</FieldError>}

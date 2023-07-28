@@ -16,7 +16,7 @@ export function ReportingsButton() {
     dispatch(
       setDisplayedItems({
         isMapToolVisible: undefined,
-        isSearchMissions: false,
+        isSearchMissionsVisible: false,
         isSearchReportingsVisible: !isSearchReportingsVisible,
         isSearchSemaphoreVisible: false
       })

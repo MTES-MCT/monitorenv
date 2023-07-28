@@ -15,7 +15,10 @@ export function Source() {
 
   // Semaphores
   const semaphoresOptions = useMemo(
-    () => semaphores?.map(semaphore => ({ label: semaphore.unit || semaphore.name, value: semaphore.id })),
+    () =>
+      semaphores
+        ?.map(semaphore => ({ label: semaphore.unit || semaphore.name, value: semaphore.id }))
+        .sort((a, b) => a.label.localeCompare(b.label)),
     [semaphores]
   )
 

@@ -16,7 +16,7 @@ export function SearchSemaphoreButton() {
     dispatch(
       setDisplayedItems({
         isMapToolVisible: undefined,
-        isSearchMissions: false,
+        isSearchMissionsVisible: false,
         isSearchReportingsVisible: false,
         isSearchSemaphoreVisible: !isSearchSemaphoreVisible
       })

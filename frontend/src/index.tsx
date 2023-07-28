@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client'
 
 import { App } from './App'
 import { SENTRY_DSN, SENTRY_ENV, SENTRY_TRACING_ORIGINS, MONITORENV_VERSION } from './env'
+import { measureScrollbarWidth } from './utils/styleHelpers'
 
 import 'rsuite/dist/rsuite.min.css'
 import 'ol/ol.css'
@@ -30,6 +31,8 @@ if (!(process.env.NODE_ENV === 'development')) {
     tracesSampleRate: 1.0
   })
 }
+
+measureScrollbarWidth()
 
 const container = document.getElementById('root')
 if (!container) {
