@@ -17,8 +17,8 @@ class GetReportingById(
     fun execute(id: Int): Triple<ReportingEntity, ControlUnitEntity?, SemaphoreEntity?> {
         val reporting = reportingRepository.findById(id)
 
-        val controlUnit = if (reporting.controlUnitId != null) controlUnitRepository.findControlUnitById(reporting.controlUnitId) else null
-        val semaphore = if (reporting.semaphoreId != null) semaphoreRepository.findSemaphoreById(reporting.semaphoreId) else null
+        val controlUnit = if (reporting.controlUnitId != null) controlUnitRepository.findById(reporting.controlUnitId) else null
+        val semaphore = if (reporting.semaphoreId != null) semaphoreRepository.findById(reporting.semaphoreId) else null
 
         return Triple(reporting, controlUnit, semaphore)
     }

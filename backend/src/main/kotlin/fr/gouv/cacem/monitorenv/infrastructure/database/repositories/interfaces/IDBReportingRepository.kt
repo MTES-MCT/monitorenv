@@ -30,5 +30,5 @@ interface IDBReportingRepository : CrudRepository<ReportingModel, Int> {
     """,
         nativeQuery = true,
     )
-    fun deleteReporting(id: Int)
+    fun delete(id: Int)
 }
