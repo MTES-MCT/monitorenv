@@ -5,10 +5,10 @@ import _ from 'lodash'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { useGetControlThemesQuery } from '../../../api/controlThemesAPI'
-import { updateTheme } from '../../missions/MissionForm/formikUseCases/updateActionThemes'
+import { useGetControlThemesQuery } from '../../../../../../api/controlThemesAPI'
+import { updateTheme } from '../../../formikUseCases/updateActionThemes'
 
-import type { Mission } from '../../../domain/entities/missions'
+import type { Mission } from '../../../../../../domain/entities/missions'
 
 export function ThemeSelector({ actionIndex, isInNewWindow = false, isLight = true, label, themeIndex }) {
   const { data: controlThemes, isError, isLoading } = useGetControlThemesQuery()

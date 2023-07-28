@@ -7,8 +7,6 @@ export const saveReporting = values => async dispatch => {
   try {
     const response = await dispatch(endpoint.initiate(values))
     if ('data' in response) {
-      // eslint-disable-next-line no-console
-      console.log('response', response)
       dispatch(setReportingFormVisibility(ReportingFormVisibility.NONE))
     } else {
       throw Error('Erreur à la création ou à la modification du signalement')

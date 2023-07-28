@@ -9,6 +9,8 @@ import { Footer } from './Footer'
 import { Localization } from './Localization'
 import { Source } from './Source'
 import { Target } from './Target'
+import { ThemeSelector } from './ThemeSelector'
+import { SubThemesSelector } from './ThemeSelector/SubThemesSelector'
 import { Validity } from './Validity'
 import {
   Reporting,
@@ -26,8 +28,6 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useSyncFormValuesWithRedux } from '../../../hooks/useSyncFormValuesWithRedux'
 import { ReportingStatusLabel } from '../../../ui/ReportingStatusLabel'
 import { DeleteModal } from '../../commonComponents/Modals/Delete'
-import { ThemeSelector } from '../../commonComponents/ThemeSelector'
-import { SubThemesSelector } from '../../commonComponents/ThemeSelector/SubThemesSelector'
 import {
   Separator,
   StyledForm,

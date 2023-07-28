@@ -4,11 +4,11 @@ import _ from 'lodash'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { useGetControlThemesQuery } from '../../../api/controlThemesAPI'
-import { updateSubThemes } from '../../missions/MissionForm/formikUseCases/updateActionThemes'
+import { useGetControlThemesQuery } from '../../../../../../api/controlThemesAPI'
+import { updateSubThemes } from '../../../formikUseCases/updateActionThemes'
 
-import type { ControlTheme } from '../../../domain/entities/controlThemes'
-import type { Mission } from '../../../domain/entities/missions'
+import type { ControlTheme } from '../../../../../../domain/entities/controlThemes'
+import type { Mission } from '../../../../../../domain/entities/missions'
 
 export function SubThemesSelector({ actionIndex, isInNewWindow = false, isLight = false, label, theme, themeIndex }) {
   const { data: controlThemes, isError, isLoading } = useGetControlThemesQuery()
