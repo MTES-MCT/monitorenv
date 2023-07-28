@@ -4,20 +4,26 @@ CREATE OR REPLACE FUNCTION reportings_yearly_sequence_value() RETURNS integer AS
   BEGIN
 		IF NOT EXISTS (SELECT 0 FROM pg_class where relname = 'reportings_'||EXTRACT(year FROM CURRENT_TIMESTAMP)::TEXT||'_seq' )
 			THEN
-				EXECUTE format('CREATE SEQUENCE IF NOT EXISTS %1$I START WITH 2;', 
-			   (SELECT 'reportings_'||EXTRACT(year FROM CURRENT_TIMESTAMP)::TEXT||'_seq')
+				EXECUTE format(
+          'CREATE SEQUENCE IF NOT EXISTS %1$I START WITH 2;', 
+			    (SELECT 'reportings_'||EXTRACT(year FROM CURRENT_TIMESTAMP)::TEXT||'_seq')
 			   );
- 			RETURN 1;
+ 			RETURN (LEFT(EXTRACT(year FROM CURRENT_TIMESTAMP)::TEXT,2)||00001)::integer;
 		END IF; 
 		
-		RETURN (SELECT nextval('reportings_'||EXTRACT(year FROM CURRENT_TIMESTAMP)::TEXT||'_seq' ));
+		RETURN (
+      SELECT (RIGHT(EXTRACT(year FROM CURRENT_TIMESTAMP)::TEXT,2) || RIGHT('0000',greatest(5-length(id::text),0))||id::text)::integer
+          FROM (
+            SELECT nextval('reportings_'||EXTRACT(year FROM CURRENT_TIMESTAMP)::TEXT||'_seq' ) as id
+          ) t
+    );
 				
   END;
 $$ LANGUAGE plpgsql;
 
 CREATE TYPE reportings_source_type AS ENUM ('SEMAPHORE', 'CONTROL_UNIT', 'OTHER');
 CREATE TYPE reportings_target_type AS ENUM ('VEHICLE', 'COMPANY', 'INDIVIDUAL');
-CREATE TYPE reportings_vehicle_type AS ENUM ('VESSEL', 'OTHER');
+CREATE TYPE reportings_vehicle_type AS ENUM ('VESSEL', 'OTHER_SEA', 'VEHICLE_LAND', 'VEHICLE_AIR');
 CREATE TYPE reportings_report_type AS ENUM ('INFRACTION_SUSPICION', 'OBSERVATION');
 
 
