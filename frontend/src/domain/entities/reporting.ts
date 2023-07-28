@@ -1,4 +1,4 @@
-import dayjs from 'dayjs'
+import { customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 
 import type { TargetTypeEnum } from './targetType'
 

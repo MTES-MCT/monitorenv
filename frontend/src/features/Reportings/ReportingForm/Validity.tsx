@@ -1,5 +1,4 @@
-import { FormikNumberInput } from '@mtes-mct/monitor-ui'
-import dayjs from 'dayjs'
+import { FormikNumberInput, customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import styled from 'styled-components'
 

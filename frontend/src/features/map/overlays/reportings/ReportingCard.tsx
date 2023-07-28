@@ -1,5 +1,4 @@
-import { Accent, Button, Icon, IconButton } from '@mtes-mct/monitor-ui'
-import dayjs from 'dayjs'
+import { Accent, Button, Icon, IconButton, customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
