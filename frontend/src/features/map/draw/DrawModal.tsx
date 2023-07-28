@@ -7,7 +7,6 @@ import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Button, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../constants/constants'
 import {
   InteractionListener,
   InteractionType,
@@ -17,6 +16,7 @@ import {
 } from '../../../domain/entities/map/constants'
 import { setInteractionType } from '../../../domain/shared_slices/Draw'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
+import { ReportingFormVisibility } from '../../../domain/shared_slices/ReportingState'
 import { addFeatureToDrawedFeature } from '../../../domain/use_cases/draw/addFeatureToDrawedFeature'
 import { eraseDrawedGeometries } from '../../../domain/use_cases/draw/eraseDrawedGeometries'
 import { closeAddZone } from '../../../domain/use_cases/missions/closeAddZone'
@@ -51,10 +51,13 @@ const validateButtonPlaceholder = {
 
 export function DrawModal() {
   const dispatch = useAppDispatch()
-  const { coordinatesFormat } = useAppSelector(state => state.map)
-  const { geometry, interactionType, isGeometryValid, listener } = useAppSelector(state => state.draw)
 
-  const { sideWindow } = useAppSelector(state => state)
+  const {
+    draw: { geometry, interactionType, isGeometryValid, listener },
+    global,
+    map: { coordinatesFormat },
+    sideWindow
+  } = useAppSelector(state => state)
 
   const initialFeatureNumberRef = useRef<number | undefined>(undefined)
 
@@ -97,10 +100,13 @@ export function DrawModal() {
   }, [feature])
 
   useEffect(() => {
-    if (listener === InteractionListener.REPORTING_ZONE || listener === InteractionListener.REPORTING_POINT) {
-      return
-    }
-    if (previousMissionId && previousMissionId !== routeParams?.params?.id) {
+    if (
+      previousMissionId &&
+      previousMissionId !== routeParams?.params?.id &&
+      (listener === InteractionListener.MISSION_ZONE ||
+        listener === InteractionListener.CONTROL_POINT ||
+        listener === InteractionListener.SURVEILLANCE_ZONE)
+    ) {
       dispatch(closeAddZone())
     }
   }, [listener, dispatch, previousMissionId, routeParams])
@@ -108,12 +114,11 @@ export function DrawModal() {
   useEffect(() => {
     if (
       sideWindow.status === SideWindowStatus.CLOSED &&
-      listener !== InteractionListener.REPORTING_ZONE &&
-      listener !== InteractionListener.REPORTING_POINT
+      global.reportingFormVisibility === ReportingFormVisibility.NONE
     ) {
       dispatch(closeAddZone())
     }
-  }, [dispatch, listener, sideWindow.status])
+  }, [dispatch, global.reportingFormVisibility, sideWindow.status])
 
   const handleQuit = () => {
     dispatch(closeAddZone())
@@ -172,7 +177,11 @@ export function DrawModal() {
               />
             </CoordinatesInputWrapper>
           )}
-          <ButtonRow $withTools={listener === InteractionListener.MISSION_ZONE}>
+          <ButtonRow
+            $withTools={
+              listener === InteractionListener.MISSION_ZONE || listener === InteractionListener.REPORTING_ZONE
+            }
+          >
             {(listener === InteractionListener.MISSION_ZONE || listener === InteractionListener.REPORTING_ZONE) && (
               <IconGroup>
                 <IconButton
@@ -239,9 +248,9 @@ const Panel = styled.div`
 `
 
 const Header = styled.h1`
-  background: ${COLORS.charcoal};
+  background: ${p => p.theme.color.charcoal};
   width: 580px;
-  color: ${COLORS.white};
+  color: ${p => p.theme.color.white};
   font-size: 16px;
   font-weight: normal;
   line-height: 22px;
@@ -278,21 +287,21 @@ const ButtonGroup = styled.div`
   }
 `
 const QuitButton = styled(IconButton)`
-  color: ${COLORS.maximumRed};
-  background: ${COLORS.cultured};
+  color: ${p => p.theme.color.maximumRed};
+  background: ${p => p.theme.color.cultured};
   margin-left: 18px;
   &:hover {
-    color: ${COLORS.maximumRed};
-    background: ${COLORS.cultured};
+    color: ${p => p.theme.color.maximumRed};
+    background: ${p => p.theme.color.cultured};
   }
 `
 
 const ResetButton = styled(Button)``
 const ValidateButton = styled(Button)`
-  background: ${COLORS.mediumSeaGreen};
-  color: ${COLORS.white};
+  background: ${p => p.theme.color.mediumSeaGreen};
+  color: ${p => p.theme.color.white};
   &:hover {
-    background: ${COLORS.mediumSeaGreen};
+    background: ${p => p.theme.color.mediumSeaGreen};
   }
 `
 const ButtonRow = styled.div<{ $withTools?: boolean }>`
@@ -302,5 +311,5 @@ const ButtonRow = styled.div<{ $withTools?: boolean }>`
 const Body = styled.div`
   padding: 24px;
 
-  background-color: ${COLORS.white};
+  background-color: ${p => p.theme.color.white};
 `

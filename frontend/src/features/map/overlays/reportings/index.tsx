@@ -16,7 +16,7 @@ const MARGINS = {
 }
 export function ReportingOverlay({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const { selectedReportingIdOnMap } = useAppSelector(state => state.reportingState)
-  const { displayReportingsLayer } = useAppSelector(state => state.global)
+  const { displayReportingsOverlay } = useAppSelector(state => state.global)
 
   const feature = map
     ?.getLayers()
@@ -37,7 +37,7 @@ export function ReportingOverlay({ currentFeatureOver, map }: BaseMapChildrenPro
     <>
       <OverlayPositionOnCentroid
         appClassName="overlay-reporting-selected"
-        feature={displayReportingsLayer ? feature : undefined}
+        feature={displayReportingsOverlay ? feature : undefined}
         featureIsShowed
         map={map}
         options={{ margins: MARGINS }}
@@ -46,7 +46,7 @@ export function ReportingOverlay({ currentFeatureOver, map }: BaseMapChildrenPro
       </OverlayPositionOnCentroid>
       <OverlayPositionOnCentroid
         appClassName="overlay-reporting-hover"
-        feature={displayReportingsLayer && displayHoveredFeature ? currentFeatureOver : undefined}
+        feature={displayReportingsOverlay && displayHoveredFeature ? currentFeatureOver : undefined}
         map={map}
         options={{ margins: MARGINS }}
       >

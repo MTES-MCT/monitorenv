@@ -6,19 +6,18 @@ import { transformExtent } from 'ol/proj'
 import { useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../constants/constants'
 import {
   InteractionListener,
   OLGeometryType,
   OPENLAYERS_PROJECTION,
   WSG84_PROJECTION
-} from '../../../domain/entities/map/constants'
-import { setFitToExtent } from '../../../domain/shared_slices/Map'
-import { addControlPosition } from '../../../domain/use_cases/missions/addZone'
-import { useAppDispatch } from '../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../hooks/useAppSelector'
-import { useListenForDrawedGeometry } from '../../../hooks/useListenForDrawing'
-import { getCoordinates } from '../../../utils/coordinates'
+} from '../../../../domain/entities/map/constants'
+import { setFitToExtent } from '../../../../domain/shared_slices/Map'
+import { drawPoint } from '../../../../domain/use_cases/draw/drawGeometry'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { useListenForDrawedGeometry } from '../../../../hooks/useListenForDrawing'
+import { formatCoordinates } from '../../../../utils/coordinates'
 
 import type { Coordinate } from 'ol/coordinate'
 
@@ -32,7 +31,7 @@ export function PointPicker() {
   const { value } = field
   const { setValue } = helpers
 
-  const isAddingAControl = useMemo(() => listener === InteractionListener.REPORTING_POINT, [listener])
+  const isAddingAPoint = useMemo(() => listener === InteractionListener.REPORTING_POINT, [listener])
 
   useEffect(() => {
     if (geometry?.type === OLGeometryType.MULTIPOINT && !_.isEqual(geometry, value)) {
@@ -40,30 +39,17 @@ export function PointPicker() {
     }
   }, [geometry, setValue, value])
 
-  const getShowedCoordinates = () => {
-    const { coordinates } = value
-
-    const transformedCoordinates = getCoordinates(coordinates[0], WSG84_PROJECTION, coordinatesFormat)
-
-    if (Array.isArray(transformedCoordinates) && transformedCoordinates.length === 2) {
-      return `${transformedCoordinates[0]} ${transformedCoordinates[1]}`
-    }
-
-    return ''
-  }
-
   const handleCenterOnMap = () => {
     const { coordinates } = value
-    if (!coordinates) {
+    if (!coordinates || !coordinates.length) {
       return
     }
-
-    const extent = transformExtent(boundingExtent([coordinates as Coordinate]), WSG84_PROJECTION, OPENLAYERS_PROJECTION)
+    const extent = transformExtent(boundingExtent([coordinates[0]]), WSG84_PROJECTION, OPENLAYERS_PROJECTION)
     dispatch(setFitToExtent(extent))
   }
 
   const handleAddPoint = useCallback(() => {
-    dispatch(addControlPosition(value, InteractionListener.REPORTING_POINT))
+    dispatch(drawPoint(value, InteractionListener.REPORTING_POINT))
   }, [dispatch, value])
 
   const handleDeleteZone = useCallback(() => {
@@ -77,18 +63,18 @@ export function PointPicker() {
       {value?.coordinates && value.type === OLGeometryType.MULTIPOINT && (
         <Row>
           <ZoneWrapper>
-            {getShowedCoordinates()}
+            {formatCoordinates(value.coordinates[0] as Coordinate, coordinatesFormat)}
             <Center onClick={handleCenterOnMap}>
               <Icon.SelectRectangle />
               Centrer sur la carte
             </Center>
           </ZoneWrapper>
 
-          <IconButton accent={Accent.SECONDARY} disabled={isAddingAControl} Icon={Icon.Edit} onClick={handleAddPoint} />
+          <IconButton accent={Accent.SECONDARY} disabled={isAddingAPoint} Icon={Icon.Edit} onClick={handleAddPoint} />
           <IconButton
             accent={Accent.SECONDARY}
             aria-label="Supprimer cette zone"
-            disabled={isAddingAControl}
+            disabled={isAddingAPoint}
             Icon={Icon.Delete}
             onClick={handleDeleteZone}
           />
@@ -107,7 +93,7 @@ const Center = styled.div`
   cursor: pointer;
   margin-left: auto;
   margin-right: 8px;
-  color: ${COLORS.slateGray};
+  color: ${p => p.theme.color.slateGray};
   text-decoration: underline;
   > div {
     vertical-align: middle;
@@ -125,7 +111,7 @@ const Row = styled.div`
   margin-bottom: 4px;
 
   > button {
-    margin: 0 0 0 0.5rem;
+    margin: 0 0 0 4px;
   }
 `
 
@@ -135,5 +121,5 @@ const ZoneWrapper = styled.div`
   flex-grow: 1;
   font-size: 13px;
   justify-content: space-between;
-  padding: 5px 0.75rem 4px;
+  padding: 4px 8px 4px;
 `

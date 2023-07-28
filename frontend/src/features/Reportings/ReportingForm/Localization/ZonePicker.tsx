@@ -6,25 +6,21 @@ import { transformExtent } from 'ol/proj'
 import { useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../constants/constants'
 import {
   InteractionListener,
   OLGeometryType,
   OPENLAYERS_PROJECTION,
   WSG84_PROJECTION
-} from '../../../domain/entities/map/constants'
-import { setFitToExtent } from '../../../domain/shared_slices/Map'
-import { addZone } from '../../../domain/use_cases/missions/addZone'
-import { useAppDispatch } from '../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../hooks/useAppSelector'
-import { useListenForDrawedGeometry } from '../../../hooks/useListenForDrawing'
-
-import type { Coordinate } from 'ol/coordinate'
+} from '../../../../domain/entities/map/constants'
+import { setFitToExtent } from '../../../../domain/shared_slices/Map'
+import { drawPolygon } from '../../../../domain/use_cases/draw/drawGeometry'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { useListenForDrawedGeometry } from '../../../../hooks/useListenForDrawing'
 
 export function ZonePicker() {
   const dispatch = useAppDispatch()
-  const interactionListener = InteractionListener.REPORTING_ZONE
-  const { geometry } = useListenForDrawedGeometry(interactionListener)
+  const { geometry } = useListenForDrawedGeometry(InteractionListener.REPORTING_ZONE)
   const [field, , helpers] = useField('geom')
   const { value } = field
 
@@ -37,8 +33,9 @@ export function ZonePicker() {
     }
   }, [geometry, helpers, value])
 
-  const handleCenterOnMap = (coordinates: Coordinate[][]) => {
-    const firstRing = coordinates[0]
+  const handleCenterOnMap = () => {
+    const firstPolygon = value?.coordinates[0]
+    const firstRing = firstPolygon?.[0]
     if (!firstRing) {
       return
     }
@@ -48,8 +45,8 @@ export function ZonePicker() {
   }
 
   const handleAddZone = useCallback(() => {
-    dispatch(addZone(value, interactionListener))
-  }, [dispatch, value, interactionListener])
+    dispatch(drawPolygon(value, InteractionListener.REPORTING_ZONE))
+  }, [dispatch, value])
 
   const deleteZone = useCallback(() => {
     if (value) {
@@ -63,7 +60,7 @@ export function ZonePicker() {
         <Row>
           <ZoneWrapper>
             Polygone dessiné
-            <Center onClick={() => handleCenterOnMap(value.coordinates as Coordinate[][])}>
+            <Center onClick={handleCenterOnMap}>
               <Icon.SelectRectangle />
               Centrer sur la carte
             </Center>
@@ -91,7 +88,7 @@ const Center = styled.a`
   cursor: pointer;
   margin-left: auto;
   margin-right: 8px;
-  color: ${COLORS.slateGray};
+  color: ${p => p.theme.color.slateGray};
   text-decoration: underline;
   > div {
     vertical-align: middle;
@@ -102,11 +99,11 @@ const Center = styled.a`
 const Row = styled.div`
   align-items: center;
   display: flex;
-  margin: 0.5rem 0 0;
+  margin: 4px 0 0;
   width: 100%;
 
   > button {
-    margin: 0 0 0 0.5rem;
+    margin: 0 0 0 4px;
   }
 `
 
@@ -116,5 +113,5 @@ const ZoneWrapper = styled.div<{ isLight?: boolean }>`
   flex-grow: 1;
   font-size: 13px;
   justify-content: space-between;
-  padding: 5px 0.75rem 4px;
+  padding: 4px 8px 4px;
 `

@@ -9,7 +9,7 @@ export const deleteReporting = id => async dispatch => {
       throw Error('Erreur à la suppression du signalement')
     } else {
       dispatch(reportingStateActions.setSelectedReportingId(undefined))
-      dispatch(setReportingFormVisibility(ReportingFormVisibility.NOT_VISIBLE))
+      dispatch(setReportingFormVisibility(ReportingFormVisibility.NONE))
     }
   } catch (error) {
     dispatch(setToast({ message: error }))

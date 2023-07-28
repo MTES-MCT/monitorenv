@@ -6,9 +6,26 @@ import { Toggle } from 'rsuite'
 
 import { CancelEditDialog } from './Dialog/CancelEditDialog'
 import { Footer } from './Footer'
-import { useSyncFormValuesWithRedux } from './hook/useSyncFormValuesWithRedux'
 import { Localization } from './Localization'
 import { Source } from './Source'
+import { Target } from './Target'
+import { Validity } from './Validity'
+import {
+  Reporting,
+  ReportingTypeEnum,
+  getFormattedReportingId,
+  infractionProvenLabels,
+  reportingTypeLabels
+} from '../../../domain/entities/reporting'
+import { hideSideButtons, setReportingFormVisibility } from '../../../domain/shared_slices/Global'
+import { ReportingFormVisibility, reportingStateActions } from '../../../domain/shared_slices/ReportingState'
+import { addReporting } from '../../../domain/use_cases/reportings/addReporting'
+import { deleteReporting } from '../../../domain/use_cases/reportings/deleteReporting'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+import { useSyncFormValuesWithRedux } from '../../../hooks/useSyncFormValuesWithRedux'
+import { DeleteModal } from '../../commonComponents/Modals/Delete'
+import { ThemeSelector } from '../../commonComponents/ThemeSelector'
+import { SubThemesSelector } from '../../commonComponents/ThemeSelector/SubThemesSelector'
 import {
   Separator,
   StyledForm,
@@ -20,25 +37,9 @@ import {
   StyledHeaderButtons,
   StyledTitle,
   StyledChevronIcon
-} from './style'
-import { Target } from './Target'
-import { Validity } from './Validity'
-import {
-  Reporting,
-  ReportingTypeEnum,
-  infractionProvenLabels,
-  reportingTypeLabels
-} from '../../domain/entities/reporting'
-import { hideSideButtons, setReportingFormVisibility } from '../../domain/shared_slices/Global'
-import { ReportingFormVisibility, reportingStateActions } from '../../domain/shared_slices/ReportingState'
-import { addReporting } from '../../domain/use_cases/reportings/addReporting'
-import { deleteReporting } from '../../domain/use_cases/reportings/deleteReporting'
-import { useAppSelector } from '../../hooks/useAppSelector'
-import { DeleteModal } from '../commonComponents/Modals/Delete'
-import { ThemeSelector } from '../commonComponents/ThemeSelector'
-import { SubThemesSelector } from '../commonComponents/ThemeSelector/SubThemesSelector'
+} from '../style'
 
-export function ReportingForm() {
+export function ReportingForm({ setShouldValidateOnChange }) {
   const dispatch = useDispatch()
   const {
     global: { reportingFormVisibility },
@@ -46,15 +47,15 @@ export function ReportingForm() {
     reportingState: { isConfirmCancelDialogVisible }
   } = useAppSelector(state => state)
 
-  const [isDeleteModalOpen, setIsDeletModalOpen] = useState(false)
   const { dirty, errors, setFieldValue, values } = useFormikContext<Partial<Reporting>>()
+  const [themeField] = useField('theme')
 
-  useSyncFormValuesWithRedux(reportingStateActions.setReportingState)
+  const [isDeleteModalOpen, setIsDeletModalOpen] = useState(false)
+
+  useSyncFormValuesWithRedux(reportingStateActions.setReportingState, reportingStateActions.setIsDirty)
 
   const reportTypeOptions = Object.values(reportingTypeLabels)
   const InfractionProvenOptions = Object.values(infractionProvenLabels)
-
-  const [themeField] = useField('theme')
 
   const changeReportType = reportType => {
     setFieldValue('reportType', reportType)
@@ -83,7 +84,7 @@ export function ReportingForm() {
   const reduceOrExpandReporting = () => {
     dispatch(hideSideButtons())
     if (reportingFormVisibility === ReportingFormVisibility.VISIBLE) {
-      dispatch(setReportingFormVisibility(ReportingFormVisibility.REDUCE))
+      dispatch(setReportingFormVisibility(ReportingFormVisibility.REDUCED))
     } else {
       dispatch(hideSideButtons())
       dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
@@ -100,7 +101,7 @@ export function ReportingForm() {
       dispatch(addReporting(nextSelectedReporting))
     } else {
       dispatch(reportingStateActions.setSelectedReportingId(undefined))
-      dispatch(setReportingFormVisibility(ReportingFormVisibility.NOT_VISIBLE))
+      dispatch(setReportingFormVisibility(ReportingFormVisibility.NONE))
     }
   }
 
@@ -112,7 +113,7 @@ export function ReportingForm() {
     if (dirty) {
       dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(true))
     } else {
-      dispatch(setReportingFormVisibility(ReportingFormVisibility.NOT_VISIBLE))
+      dispatch(setReportingFormVisibility(ReportingFormVisibility.NONE))
     }
   }
 
@@ -122,7 +123,7 @@ export function ReportingForm() {
 
   const confirmDeleteReporting = () => {
     dispatch(deleteReporting(values.id))
-    dispatch(setReportingFormVisibility(ReportingFormVisibility.NOT_VISIBLE))
+    dispatch(setReportingFormVisibility(ReportingFormVisibility.NONE))
   }
 
   return (
@@ -143,12 +144,12 @@ export function ReportingForm() {
       <StyledHeader>
         <StyledTitle>
           <Icon.Report />
-          {values.id ? `SIGNALEMENT ${values.id}` : 'NOUVEAU SIGNALEMENT'}
+          {values.id ? `SIGNALEMENT ${getFormattedReportingId(values.id)}` : 'NOUVEAU SIGNALEMENT'}
         </StyledTitle>
 
         <StyledHeaderButtons>
           <StyledChevronIcon
-            $isOpen={reportingFormVisibility === ReportingFormVisibility.REDUCE}
+            $isOpen={reportingFormVisibility === ReportingFormVisibility.REDUCED}
             accent={Accent.TERTIARY}
             Icon={Icon.Chevron}
             onClick={reduceOrExpandReporting}
@@ -205,7 +206,11 @@ export function ReportingForm() {
           <span>Le signalement nécessite un contrôle</span>
         </StyledToggle>
       </StyledForm>
-      <Footer onCancel={cancelNewReporting} onDelete={deleteCurrentReporting} />
+      <Footer
+        onCancel={cancelNewReporting}
+        onDelete={deleteCurrentReporting}
+        setShouldValidateOnChange={setShouldValidateOnChange}
+      />
     </StyledFormContainer>
   )
 }

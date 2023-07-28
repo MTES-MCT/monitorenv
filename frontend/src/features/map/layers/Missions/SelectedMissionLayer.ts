@@ -12,14 +12,14 @@ import type { BaseMapChildrenProps } from '../../BaseMap'
 
 export function SelectedMissionLayer({ map }: BaseMapChildrenProps) {
   const { missionState: selectedMissionEditedState, selectedMissionId } = useAppSelector(state => state.missionState)
-  const { displaySelectedMissionLayer } = useAppSelector(state => state.global)
+  const { displayMissionSelectedLayer } = useAppSelector(state => state.global)
   const { selectedMission } = useGetMissionsQuery(undefined, {
     selectFromResult: ({ data }) => ({
       selectedMission: data?.find(op => op.id === selectedMissionId)
     })
   })
 
-  const displaySelectedMission = displaySelectedMissionLayer && selectedMissionId !== selectedMissionEditedState?.id
+  const displaySelectedMission = displayMissionSelectedLayer && selectedMissionId !== selectedMissionEditedState?.id
 
   const selectedMissionVectorSourceRef = useRef() as MutableRefObject<VectorSource>
   const GetSelectedMissionVectorSource = () => {

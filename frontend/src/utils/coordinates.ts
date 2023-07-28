@@ -3,6 +3,8 @@ import { transform } from 'ol/proj'
 import { isNumeric } from './isNumeric'
 import { CoordinatesFormat, WSG84_PROJECTION } from '../domain/entities/map/constants'
 
+import type { Coordinate } from 'ol/coordinate'
+
 enum CoordinateLatLon {
   LATITUDE = 'LATITUDE',
   LONGITUDE = 'LONGITUDE'
@@ -16,7 +18,7 @@ enum CoordinateLatLon {
  * @param {boolean} forPrint - If it's for print or not. Default to true
  * @returns {string[]} coordinates - The [latitude, longitude] coordinates
  */
-export const getCoordinates = (coordinates, projection, coordinatesFormat, forPrint = true) => {
+export const getCoordinates = (coordinates, projection, coordinatesFormat: CoordinatesFormat, forPrint = true) => {
   if (!coordinates) {
     return ['', '']
   }
@@ -183,4 +185,14 @@ export const coordinatesAreDistinct = (nextCoordinates: number[], coordinates: n
     (longitude !== nextLongitude || latitude !== nextLatitude) &&
     (Math.abs(nextLongitude - longitude) > roundingDifference || Math.abs(nextLatitude - latitude) > roundingDifference)
   )
+}
+
+export const formatCoordinates = (coordinates: Coordinate, coordinatesFormat: CoordinatesFormat) => {
+  const transformedCoordinates = getCoordinates(coordinates, WSG84_PROJECTION, coordinatesFormat)
+
+  if (Array.isArray(transformedCoordinates) && transformedCoordinates.length === 2) {
+    return `${transformedCoordinates[0]} ${transformedCoordinates[1]}`
+  }
+
+  return ''
 }

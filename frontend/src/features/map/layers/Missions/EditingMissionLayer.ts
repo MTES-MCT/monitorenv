@@ -12,7 +12,7 @@ import type { BaseMapChildrenProps } from '../../BaseMap'
 
 export function EditingMissionLayer({ map }: BaseMapChildrenProps) {
   const { missionState } = useAppSelector(state => state.missionState)
-  const { displayEditingMissionLayer } = useAppSelector(state => state.global)
+  const { displayMissionEditingLayer } = useAppSelector(state => state.global)
 
   const editingMissionVectorSourceRef = useRef() as MutableRefObject<VectorSource>
   const GetEditingMissionVectorSource = () => {
@@ -83,9 +83,9 @@ export function EditingMissionLayer({ map }: BaseMapChildrenProps) {
   }, [map, GetSelectedMissionVectorLayer, GetSelectedMissionActionsVectorLayer])
 
   useEffect(() => {
-    GetSelectedMissionVectorLayer()?.setVisible(displayEditingMissionLayer)
-    GetSelectedMissionActionsVectorLayer()?.setVisible(displayEditingMissionLayer)
-  }, [displayEditingMissionLayer, GetSelectedMissionVectorLayer, GetSelectedMissionActionsVectorLayer])
+    GetSelectedMissionVectorLayer()?.setVisible(displayMissionEditingLayer)
+    GetSelectedMissionActionsVectorLayer()?.setVisible(displayMissionEditingLayer)
+  }, [displayMissionEditingLayer, GetSelectedMissionVectorLayer, GetSelectedMissionActionsVectorLayer])
 
   useEffect(() => {
     GetEditingMissionVectorSource()?.clear(true)

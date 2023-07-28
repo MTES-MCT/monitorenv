@@ -5,9 +5,9 @@ import { useDispatch } from 'react-redux'
 
 import { PointPicker } from './PointPicker'
 import { ZonePicker } from './ZonePicker'
-import { InteractionListener } from '../../../domain/entities/map/constants'
-import { addControlPosition, addZone } from '../../../domain/use_cases/missions/addZone'
-import { StyledLocalizationContainer } from '../style'
+import { InteractionListener } from '../../../../domain/entities/map/constants'
+import { drawPoint, drawPolygon } from '../../../../domain/use_cases/draw/drawGeometry'
+import { StyledLocalizationContainer } from '../../style'
 
 export function Localization() {
   const dispatch = useDispatch()
@@ -15,11 +15,11 @@ export function Localization() {
   const { value } = field
 
   const handleAddZone = useCallback(() => {
-    dispatch(addZone(value, InteractionListener.REPORTING_ZONE))
+    dispatch(drawPolygon(value, InteractionListener.REPORTING_ZONE))
   }, [dispatch, value])
 
   const handleAddPoint = useCallback(() => {
-    dispatch(addControlPosition(value, InteractionListener.REPORTING_POINT))
+    dispatch(drawPoint(value, InteractionListener.REPORTING_POINT))
   }, [dispatch, value])
 
   return (

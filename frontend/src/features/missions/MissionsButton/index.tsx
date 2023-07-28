@@ -2,7 +2,6 @@ import { Accent, Button, Icon, Size } from '@mtes-mct/monitor-ui'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../constants/constants'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setDisplayedItems, setReportingFormVisibility } from '../../../domain/shared_slices/Global'
 import { ReportingFormVisibility } from '../../../domain/shared_slices/ReportingState'
@@ -13,7 +12,7 @@ import { sideWindowActions, SideWindowStatus } from '../../SideWindow/slice'
 
 export function MissionsMenu() {
   const dispatch = useDispatch()
-  const { displayMissionsLayer, missionsMenuIsOpen, reportingFormVisibility } = useAppSelector(state => state.global)
+  const { displayMissionsLayer, isSearchMissions, reportingFormVisibility } = useAppSelector(state => state.global)
   const { sideWindow } = useAppSelector(state => state)
 
   const toggleMissionsWindow = () => {
@@ -26,13 +25,13 @@ export function MissionsMenu() {
     e.preventDefault()
     dispatch(
       setDisplayedItems({
+        isSearchMissions: !isSearchMissions,
         isSearchReportingsVisible: false,
-        isSearchSemaphoreVisible: false,
-        missionsMenuIsOpen: !missionsMenuIsOpen
+        isSearchSemaphoreVisible: false
       })
     )
-    if (reportingFormVisibility !== ReportingFormVisibility.NOT_VISIBLE) {
-      dispatch(setReportingFormVisibility(ReportingFormVisibility.REDUCE))
+    if (reportingFormVisibility !== ReportingFormVisibility.NONE) {
+      dispatch(setReportingFormVisibility(ReportingFormVisibility.REDUCED))
     }
   }
   const handleAddNewMission = () => {
@@ -40,8 +39,8 @@ export function MissionsMenu() {
   }
 
   return (
-    <Wrapper className={reportingFormVisibility}>
-      {missionsMenuIsOpen && (
+    <Wrapper reportingFormVisibility={reportingFormVisibility}>
+      {isSearchMissions && (
         <MenuWithCloseButton.Container>
           <MenuWithCloseButton.Header>
             <MenuWithCloseButton.CloseButton Icon={Icon.Close} onClick={toggleMissionsMenu} />
@@ -52,18 +51,18 @@ export function MissionsMenu() {
               onClick={toggleMissionsLayer}
             />
           </MenuWithCloseButton.Header>
-          <MissionsMenuBody>
-            <Section>
+          <MenuWithCloseButton.Body>
+            <MenuWithCloseButton.Section>
               <StyledButton Icon={Icon.Plus} isFullWidth onClick={handleAddNewMission}>
                 Ajouter une nouvelle mission
               </StyledButton>
-            </Section>
-            <Section>
+            </MenuWithCloseButton.Section>
+            <MenuWithCloseButton.Section>
               <StyledButton accent={Accent.SECONDARY} Icon={Icon.Expand} isFullWidth onClick={toggleMissionsWindow}>
                 Voir la vue détaillée des missions
               </StyledButton>
-            </Section>
-          </MissionsMenuBody>
+            </MenuWithCloseButton.Section>
+          </MenuWithCloseButton.Body>
         </MenuWithCloseButton.Container>
       )}
       <MenuWithCloseButton.ButtonOnMap
@@ -78,24 +77,13 @@ export function MissionsMenu() {
   )
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ reportingFormVisibility: ReportingFormVisibility }>`
   position: absolute;
   top: 85px;
-  right: 10px;
+  right: ${p => (p.reportingFormVisibility === ReportingFormVisibility.VISIBLE ? '0' : '10')}px;
   display: flex;
   justify-content: flex-end;
   transition: right 0.3s ease-out;
-  &.visible {
-    right: 0px;
-  }
-`
-
-const MissionsMenuBody = styled.div``
-const Section = styled.div`
-  padding: 12px;
-  &:not(:last-child) {
-    border-bottom: 1px solid ${COLORS.gainsboro};
-  }
 `
 
 // TODO delete when Monitor-ui component have good padding

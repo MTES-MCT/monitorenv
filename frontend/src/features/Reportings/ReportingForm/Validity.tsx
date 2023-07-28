@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import { useFormikContext } from 'formik'
 import styled from 'styled-components'
 
-import type { Reporting } from '../../domain/entities/reporting'
+import type { Reporting } from '../../../domain/entities/reporting'
 
 export function Validity() {
   const { values } = useFormikContext<Reporting>()

@@ -4,8 +4,8 @@ import type { Reporting } from '../entities/reporting'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 export enum ReportingFormVisibility {
-  NOT_VISIBLE = 'not_visible',
-  REDUCE = 'reduce',
+  NONE = 'none',
+  REDUCED = 'reduced',
   VISIBLE = 'visible',
   VISIBLE_LEFT = 'visible_left'
 }

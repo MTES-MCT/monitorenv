@@ -65,6 +65,25 @@ export const StyledInlineContainer = styled.div`
   }
 `
 
+const StyledTargetDetailsContainer = styled.div`
+  background-color: ${p => p.theme.color.gainsboro};
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  justify-content: space-between;
+  padding: 8px;
+  gap: 16px;
+`
+export const StyledCompanyContainer = styled(StyledTargetDetailsContainer)`
+  > .Field-TextInput {
+    flex: 1;
+  }
+`
+
+export const StyledVesselContainer = styled(StyledTargetDetailsContainer)`
+  flex-direction: column;
+`
+
 export const StyledEmptyTarget = styled.div`
   height: 180px;
   background-color: ${p => p.theme.color.cultured};
@@ -77,26 +96,6 @@ export const StyledEmptyTarget = styled.div`
   }
 `
 
-export const StyledCompanyContainer = styled.div`
-  background-color: ${p => p.theme.color.gainsboro};
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 8px;
-  gap: 16px;
-  > .Field-TextInput {
-    flex: 1;
-  }
-`
-
-export const StyledVesselContainer = styled.div`
-  background-color: ${p => p.theme.color.gainsboro};
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 8px;
-  gap: 16px;
-`
 export const StyledVesselForm = styled.div`
   display: flex;
   flex-direction: row;

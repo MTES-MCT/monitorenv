@@ -4,21 +4,22 @@ import { setDisplayedItems } from '../../shared_slices/Global'
 
 import type { GeoJSON as GeoJSONNamespace } from '../../types/GeoJSON'
 
-export const addZone = (geometry: GeoJSONNamespace.Geometry | undefined, listener: InteractionListener) => dispatch => {
-  if (geometry) {
-    dispatch(setGeometry(geometry))
+export const drawPolygon =
+  (geometry: GeoJSONNamespace.Geometry | undefined, listener: InteractionListener) => dispatch => {
+    if (geometry) {
+      dispatch(setGeometry(geometry))
+    }
+
+    dispatch(openDrawLayerModal)
+    dispatch(
+      setInteractionTypeAndListener({
+        listener,
+        type: InteractionType.POLYGON
+      })
+    )
   }
 
-  dispatch(openDrawLayerModal)
-  dispatch(
-    setInteractionTypeAndListener({
-      listener,
-      type: InteractionType.POLYGON
-    })
-  )
-}
-
-export const addControlPosition =
+export const drawPoint =
   (geometry: GeoJSONNamespace.Geometry | undefined, listener?: InteractionListener) => dispatch => {
     if (geometry) {
       dispatch(setGeometry(geometry))
@@ -42,10 +43,11 @@ const openDrawLayerModal = dispatch => {
       displayLocateOnMap: true,
       displayMeasurement: false,
       displayMissionMenuButton: false,
+      displayMissionSelectedLayer: false,
       displayMissionsLayer: false,
       displayMissionsOverlay: false,
-      displaySearchSemaphoreButton: false,
-      displaySelectedMissionLayer: false
+      displayReportingsOverlay: false,
+      displaySearchSemaphoreButton: false
     })
   )
 }
@@ -59,10 +61,11 @@ export const closeDrawLayerModal = dispatch => {
       displayLocateOnMap: true,
       displayMeasurement: true,
       displayMissionMenuButton: true,
+      displayMissionSelectedLayer: true,
       displayMissionsLayer: true,
       displayMissionsOverlay: true,
-      displaySearchSemaphoreButton: true,
-      displaySelectedMissionLayer: true
+      displayReportingsOverlay: true,
+      displaySearchSemaphoreButton: true
     })
   )
 }

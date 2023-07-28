@@ -9,7 +9,7 @@ export const saveReporting = values => async dispatch => {
     if ('data' in response) {
       // eslint-disable-next-line no-console
       console.log('response', response)
-      dispatch(setReportingFormVisibility(ReportingFormVisibility.NOT_VISIBLE))
+      dispatch(setReportingFormVisibility(ReportingFormVisibility.NONE))
     } else {
       throw Error('Erreur à la création ou à la modification du signalement')
     }

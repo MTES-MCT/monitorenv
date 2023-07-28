@@ -85,3 +85,6 @@ export const infractionProvenLabels = {
     value: false
   }
 }
+
+export const getFormattedReportingId = (reportingId: number) =>
+  `${String(reportingId).slice(0, 2)}-${String(reportingId).slice(2)}`

@@ -1,41 +1,38 @@
 import { Icon, Size } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { SearchSemaphores } from './SearchSemaphores'
-import { setDisplayedItems, setReportingFormVisibility } from '../../../domain/shared_slices/Global'
+import { SearchReportings } from './SearchReportings'
+import { setDisplayedItems } from '../../../domain/shared_slices/Global'
 import { ReportingFormVisibility } from '../../../domain/shared_slices/ReportingState'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
 
-export function SearchSemaphoreButton() {
+export function ReportingsButton() {
   const dispatch = useAppDispatch()
-  const { isSearchSemaphoreVisible, reportingFormVisibility } = useAppSelector(state => state.global)
+  const { isSearchReportingsVisible, reportingFormVisibility } = useAppSelector(state => state.global)
 
-  const openOrCloseSearchSemaphore = () => {
+  const toggleSearchReportings = () => {
     dispatch(
       setDisplayedItems({
         isMapToolVisible: undefined,
         isSearchMissions: false,
-        isSearchReportingsVisible: false,
-        isSearchSemaphoreVisible: !isSearchSemaphoreVisible
+        isSearchReportingsVisible: !isSearchReportingsVisible,
+        isSearchSemaphoreVisible: false
       })
     )
-    if (reportingFormVisibility !== ReportingFormVisibility.NONE) {
-      dispatch(setReportingFormVisibility(ReportingFormVisibility.REDUCED))
-    }
   }
 
   return (
     <Wrapper reportingFormVisibility={reportingFormVisibility}>
-      {isSearchSemaphoreVisible && <SearchSemaphores />}
+      {isSearchReportingsVisible && <SearchReportings />}
       <MenuWithCloseButton.ButtonOnMap
-        className={isSearchSemaphoreVisible ? '_active' : undefined}
-        data-cy="semaphores-button"
-        Icon={Icon.Semaphore}
-        onClick={openOrCloseSearchSemaphore}
+        className={isSearchReportingsVisible ? '_active' : undefined}
+        data-cy="reportings-button"
+        Icon={Icon.Report}
+        onClick={toggleSearchReportings}
         size={Size.LARGE}
-        title="Chercher un sémaphore"
+        title="Chercher des signalements"
       />
     </Wrapper>
   )
@@ -43,7 +40,7 @@ export function SearchSemaphoreButton() {
 
 const Wrapper = styled.div<{ reportingFormVisibility: ReportingFormVisibility }>`
   position: absolute;
-  top: 185px;
+  top: 135px;
   right: ${p => (p.reportingFormVisibility === ReportingFormVisibility.VISIBLE ? '0' : '10')}px;
   display: flex;
   justify-content: flex-end;

@@ -20,7 +20,7 @@ export const metadataIsShowedPropertyName = 'metadataIsShowed'
 export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
   const { ampsSearchResult, isAmpSearchResultsVisible, searchExtent } = useAppSelector(state => state.layerSearch)
   const { data: ampLayers } = useGetAMPsQuery()
-  const { layersSidebarIsOpen } = useAppSelector(state => state.global)
+  const { isLayersSidebarVisible } = useAppSelector(state => state.global)
 
   const ampLayerRef = useRef() as MutableRefObject<Vector<VectorSource>>
   const ampVectorSourceRef = useRef() as MutableRefObject<VectorSource>
@@ -123,7 +123,7 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
 
   useEffect(() => {
     if (map) {
-      if (layersSidebarIsOpen && isAmpSearchResultsVisible) {
+      if (isLayersSidebarVisible && isAmpSearchResultsVisible) {
         searchExtentLayerRef.current?.setVisible(true)
         ampLayerRef.current?.setVisible(true)
       } else {
@@ -131,7 +131,7 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
         ampLayerRef.current?.setVisible(false)
       }
     }
-  }, [map, layersSidebarIsOpen, isAmpSearchResultsVisible])
+  }, [map, isLayersSidebarVisible, isAmpSearchResultsVisible])
 
   useEffect(() => {
     if (map) {

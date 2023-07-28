@@ -1,12 +1,25 @@
 import { Accent, Icon, THEME } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
+import _ from 'lodash'
 
-import { StyledButton, StyledSubmitButton, StyledDeleteButton, StyledFooter } from './style'
+import { StyledButton, StyledSubmitButton, StyledDeleteButton, StyledFooter } from '../style'
 
-import type { Reporting } from '../../domain/entities/reporting'
+import type { Reporting } from '../../../domain/entities/reporting'
 
-export function Footer({ onCancel, onDelete }) {
-  const { handleSubmit, values } = useFormikContext<Partial<Reporting>>()
+export function Footer({ onCancel, onDelete, setShouldValidateOnChange }) {
+  const { handleSubmit, setFieldValue, validateForm, values } = useFormikContext<Partial<Reporting>>()
+
+  const handleArchive = async () => {
+    await setFieldValue('isArchived', true)
+    validateForm().then(errors => {
+      if (_.isEmpty(errors)) {
+        handleSubmit()
+
+        return
+      }
+      setShouldValidateOnChange(true)
+    })
+  }
 
   if (values.id) {
     return (
@@ -20,7 +33,9 @@ export function Footer({ onCancel, onDelete }) {
 
         <div>
           {/* TODO gérer l'archivage */}
-          <StyledButton Icon={Icon.Archive}>Enregistrer et archiver</StyledButton>
+          <StyledButton Icon={Icon.Archive} onClick={handleArchive}>
+            Enregistrer et archiver
+          </StyledButton>
           <StyledSubmitButton accent={Accent.SECONDARY} Icon={Icon.Save} onClick={() => handleSubmit()}>
             Enregistrer et quitter
           </StyledSubmitButton>

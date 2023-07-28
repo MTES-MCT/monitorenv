@@ -22,7 +22,7 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
     state => state.layerSearch
   )
   const { regulatoryLayersById } = useAppSelector(state => state.regulatory)
-  const { layersSidebarIsOpen } = useAppSelector(state => state.global)
+  const { isLayersSidebarVisible } = useAppSelector(state => state.global)
 
   const regulatoryLayerRef = useRef() as MutableRefObject<Vector<VectorSource>>
   const regulatoryVectorSourceRef = useRef() as MutableRefObject<VectorSource>
@@ -134,7 +134,7 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
 
   useEffect(() => {
     if (map) {
-      if (layersSidebarIsOpen && isRegulatorySearchResultsVisible) {
+      if (isLayersSidebarVisible && isRegulatorySearchResultsVisible) {
         searchExtentLayerRef.current?.setVisible(true)
         regulatoryLayerRef.current?.setVisible(true)
       } else {
@@ -142,7 +142,7 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
         regulatoryLayerRef.current?.setVisible(false)
       }
     }
-  }, [map, layersSidebarIsOpen, isRegulatorySearchResultsVisible])
+  }, [map, isLayersSidebarVisible, isRegulatorySearchResultsVisible])
 
   useEffect(() => {
     if (map) {

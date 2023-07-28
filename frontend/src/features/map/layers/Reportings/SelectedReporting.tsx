@@ -8,13 +8,13 @@ import { useGetReportingsQuery } from '../../../../api/reportingsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
-import type { MapChildrenProps } from '../../Map'
+import type { BaseMapChildrenProps } from '../../BaseMap'
 
-export function SelectedReportingLayer({ map }: MapChildrenProps) {
+export function SelectedReportingLayer({ map }: BaseMapChildrenProps) {
   const { reportingState: selectedReportingEditedState, selectedReportingIdOnMap } = useAppSelector(
     state => state.reportingState
   )
-  const { displaySelectedReportingLayer } = useAppSelector(state => state.global)
+  const { displayReportingSelectedLayer } = useAppSelector(state => state.global)
   const { selectedReporting } = useGetReportingsQuery(undefined, {
     selectFromResult: ({ data }) => ({
       selectedReporting: data?.find(op => op.id === selectedReportingIdOnMap)
@@ -22,7 +22,7 @@ export function SelectedReportingLayer({ map }: MapChildrenProps) {
   })
 
   const displaySelectedReporting =
-    displaySelectedReportingLayer && selectedReportingIdOnMap !== selectedReportingEditedState?.id
+    displayReportingSelectedLayer && selectedReportingIdOnMap !== selectedReportingEditedState?.id
 
   const selectedReportingVectorSourceRef = useRef() as MutableRefObject<VectorSource>
   const GetSelectedReportingVectorSource = () => {

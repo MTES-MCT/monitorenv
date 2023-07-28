@@ -22,32 +22,34 @@ type GlobalStateType = {
   displaySearchSemaphoreButton: boolean
   displayReportingsButton: boolean
 
-  displayMissionsOverlay: boolean
   // state entry for every layer whose visibility should be controlled
-  displayEditingMissionLayer: boolean
+  isSearchMissions: boolean
+  displayMissionsOverlay: boolean
+  displayMissionEditingLayer: boolean
   displayMissionsLayer: boolean
-  displaySelectedMissionLayer: boolean
+  displayMissionSelectedLayer: boolean
 
   // state entry for other children components whom visibility is already handled by parent components
-  missionsMenuIsOpen: boolean
-  layersSidebarIsOpen: boolean
 
   isSearchSemaphoreVisible: boolean
   displaySemaphoresLayer: boolean
   displaySemaphoreOverlay: boolean
 
-  mapToolOpened: MapToolType | undefined
+  isSearchReportingsVisible: boolean
+  reportingFormVisibility: ReportingFormVisibility
+  displayReportingsLayer: boolean
+  displayReportingsOverlay: boolean
+  displayReportingSelectedLayer: boolean
+
+  isLayersSidebarVisible: boolean
+
+  isMapToolVisible: MapToolType | undefined
 
   healthcheckTextWarning?: string
 
   overlayCoordinates: [number, number] | undefined
 
   toast: Toast | undefined
-
-  displayReportingsLayer: boolean
-  reportingFormVisibility: ReportingFormVisibility
-  displaySelectedReportingLayer: boolean
-  isSearchReportingsVisible: boolean
 }
 const initialState: GlobalStateType = {
   // state entry for every component /menu displayed on map whose visibility should be controlled
@@ -62,30 +64,31 @@ const initialState: GlobalStateType = {
 
   displayMissionsOverlay: true,
   // state entry for every layer whose visibility should be controlled
-  displayEditingMissionLayer: true,
+  displayMissionEditingLayer: true,
   displayMissionsLayer: true,
-  displaySelectedMissionLayer: true,
+  displayMissionSelectedLayer: true,
 
   // state entry for other children components whom visibility is already handled by parent components
-  missionsMenuIsOpen: false,
-  layersSidebarIsOpen: false,
+  isSearchMissions: false,
+  isLayersSidebarVisible: false,
 
   isSearchSemaphoreVisible: false,
   displaySemaphoresLayer: true,
   displaySemaphoreOverlay: true,
 
-  mapToolOpened: undefined,
+  isSearchReportingsVisible: false,
+  reportingFormVisibility: ReportingFormVisibility.NONE,
+  displayReportingsLayer: true,
+  displayReportingsOverlay: true,
+  displayReportingSelectedLayer: true,
+
+  isMapToolVisible: undefined,
 
   healthcheckTextWarning: undefined,
 
   overlayCoordinates: undefined,
 
-  toast: undefined,
-
-  reportingFormVisibility: ReportingFormVisibility.NOT_VISIBLE,
-  displayReportingsLayer: true,
-  displaySelectedReportingLayer: true,
-  isSearchReportingsVisible: false
+  toast: undefined
 }
 
 const globalSlice = createSlice({
@@ -95,8 +98,8 @@ const globalSlice = createSlice({
     hideSideButtons(state) {
       state.isSearchReportingsVisible = false
       state.isSearchSemaphoreVisible = false
-      state.missionsMenuIsOpen = false
-      state.mapToolOpened = undefined
+      state.isSearchMissions = false
+      state.isMapToolVisible = undefined
     },
     removeToast(state) {
       state.toast = undefined
@@ -106,7 +109,7 @@ const globalSlice = createSlice({
       state.toast = action.payload
     },
 
-    setDisplayedItems(state, action) {
+    setDisplayedItems(state, action: PayloadAction<Partial<GlobalStateType>>) {
       return { ...state, ...action.payload }
     },
 
@@ -116,8 +119,8 @@ const globalSlice = createSlice({
     /**
      * Set the map tool opened
      */
-    setMapToolOpened(state, action: PayloadAction<MapToolType | undefined>) {
-      state.mapToolOpened = action.payload
+    setisMapToolVisible(state, action: PayloadAction<MapToolType | undefined>) {
+      state.isMapToolVisible = action.payload
     },
 
     /**
@@ -139,7 +142,7 @@ export const {
   removeToast,
   setDisplayedItems,
   setHealthcheckTextWarning,
-  setMapToolOpened,
+  setisMapToolVisible,
   setOverlayCoordinates,
   setReportingFormVisibility,
   setToast

@@ -1,10 +1,9 @@
-import { Accent, Button, Icon, IconButton } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { useCallback, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Tooltip, Whisper } from 'rsuite'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../../constants/constants'
 import { ReportingSourceEnum } from '../../../../domain/entities/reporting'
 import {
   hideSideButtons,
@@ -121,7 +120,7 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
               <span>
                 <StyledCopyButton
                   accent={Accent.TERTIARY}
-                  color={COLORS.slateGray}
+                  color={THEME.color.slateGray}
                   Icon={Icon.Duplicate}
                   iconSize={20}
                 />
@@ -142,7 +141,7 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
               <span>
                 <StyledCopyButton
                   accent={Accent.TERTIARY}
-                  color={COLORS.slateGray}
+                  color={THEME.color.slateGray}
                   Icon={Icon.Duplicate}
                   iconSize={20}
                 />

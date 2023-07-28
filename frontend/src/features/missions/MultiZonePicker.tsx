@@ -7,7 +7,6 @@ import { remove } from 'ramda'
 import { useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { COLORS } from '../../constants/constants'
 import {
   InteractionListener,
   OLGeometryType,
@@ -15,7 +14,7 @@ import {
   WSG84_PROJECTION
 } from '../../domain/entities/map/constants'
 import { setFitToExtent } from '../../domain/shared_slices/Map'
-import { addZone } from '../../domain/use_cases/missions/addZone'
+import { drawPolygon } from '../../domain/use_cases/draw/drawGeometry'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { useListenForDrawedGeometry } from '../../hooks/useListenForDrawing'
@@ -75,7 +74,7 @@ export function MultiZonePicker({
   }
 
   const handleAddZone = useCallback(() => {
-    dispatch(addZone(value, interactionListener))
+    dispatch(drawPolygon(value, interactionListener))
     coverMissionZoneHelpers.setValue(false)
   }, [coverMissionZoneHelpers, dispatch, value, interactionListener])
 
@@ -143,7 +142,7 @@ const Center = styled.a`
   cursor: pointer;
   margin-left: auto;
   margin-right: 8px;
-  color: ${COLORS.slateGray};
+  color: ${p => p.theme.color.slateGray};
   text-decoration: underline;
   > div {
     vertical-align: middle;
@@ -172,6 +171,6 @@ const ZoneWrapper = styled.div<{ isLight?: boolean }>`
 `
 
 const ErrorMessage = styled.div`
-  color: ${COLORS.maximumRed};
+  color: ${p => p.theme.color.maximumRed};
   font: italic normal normal 13px/18px Marianne;
 `

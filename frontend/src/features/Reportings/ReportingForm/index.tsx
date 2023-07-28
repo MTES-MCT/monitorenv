@@ -1,16 +1,16 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Form, Formik } from 'formik'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { ReportingForm } from './ReportingForm'
 import { ReportingSchema } from './Schema'
-import { getReportingInitialValues } from './utils'
-import { useGetReportingQuery } from '../../api/reportingsAPI'
-import { ReportingFormVisibility } from '../../domain/shared_slices/ReportingState'
-import { saveReporting } from '../../domain/use_cases/reportings/saveReporting'
-import { useAppSelector } from '../../hooks/useAppSelector'
+import { useGetReportingQuery } from '../../../api/reportingsAPI'
+import { ReportingFormVisibility } from '../../../domain/shared_slices/ReportingState'
+import { saveReporting } from '../../../domain/use_cases/reportings/saveReporting'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+import { getReportingInitialValues } from '../utils'
 
 export function Reporting() {
   const {
@@ -18,7 +18,10 @@ export function Reporting() {
     multiReportings: { selectedReportings },
     reportingState: { selectedReportingId }
   } = useAppSelector(state => state)
+
   const dispatch = useDispatch()
+  const [shouldValidateOnChange, setShouldValidateOnChange] = useState(false)
+
   const { data: reportingToEdit } = useGetReportingQuery(selectedReportingId || skipToken)
 
   const submitReportForm = async values => {
@@ -34,17 +37,17 @@ export function Reporting() {
   }, [reportingToEdit, selectedReportings])
 
   return (
-    <StyledContainer className={reportingFormVisibility}>
-      {reportingFormVisibility !== ReportingFormVisibility.NOT_VISIBLE && (
+    <StyledContainer reportingFormVisibility={reportingFormVisibility}>
+      {reportingFormVisibility !== ReportingFormVisibility.NONE && (
         <Formik
           enableReinitialize
           initialValues={reportingInitialValues}
           onSubmit={submitReportForm}
-          validateOnChange={false}
+          validateOnChange={shouldValidateOnChange}
           validationSchema={ReportingSchema}
         >
           <StyledForm>
-            <ReportingForm />
+            <ReportingForm setShouldValidateOnChange={setShouldValidateOnChange} />
           </StyledForm>
         </Formik>
       )}
@@ -52,27 +55,28 @@ export function Reporting() {
   )
 }
 
-const StyledContainer = styled.div`
+const StyledContainer = styled.div<{ reportingFormVisibility: ReportingFormVisibility }>`
   background-color: ${p => p.theme.color.white};
   position: absolute;
   top: 0;
-  bottom: 0;
-  right: -500px;
   width: 500px;
   overflow: hidden;
   display: flex;
   transition: right 0.5s ease-out, top 0.5s ease-out;
   z-index: 100;
-  &.visible {
-    right: 8px;
-  }
-  &.reduce {
-    right: 12px;
-    top: calc(100vh - 52px);
-  }
-  &.visible_left {
-    right: 56px;
-  }
+
+  ${p => {
+    switch (p.reportingFormVisibility) {
+      case ReportingFormVisibility.VISIBLE:
+        return 'right: 8px;'
+      case ReportingFormVisibility.VISIBLE_LEFT:
+        return 'right: 56px;'
+      case ReportingFormVisibility.REDUCED:
+        return 'right: 12px; top: calc(100vh - 52px);'
+      default:
+        return 'right: -500px;'
+    }
+  }}
 `
 const StyledForm = styled(Form)`
   width: 100%;
