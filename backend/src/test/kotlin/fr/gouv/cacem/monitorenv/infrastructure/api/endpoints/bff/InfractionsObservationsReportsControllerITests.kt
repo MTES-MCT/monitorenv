@@ -33,89 +33,89 @@ import java.time.ZonedDateTime
 @WebMvcTest(value = [(InfractionsObservationsReportsController::class)])
 class InfractionsObservationsReportsControllerITests {
 
-  @Autowired
-  private lateinit var mockedApi: MockMvc
+    @Autowired
+    private lateinit var mockedApi: MockMvc
 
-  @Autowired
-  private lateinit var objectMapper: ObjectMapper
+    @Autowired
+    private lateinit var objectMapper: ObjectMapper
 
-  @MockBean
-  private lateinit var createOrUpdateInfractionsObservationsReport: CreateOrUpdateInfractionsObservationsReport
+    @MockBean
+    private lateinit var createOrUpdateInfractionsObservationsReport: CreateOrUpdateInfractionsObservationsReport
 
-  @MockBean
-  private lateinit var getAllInfractionsObservationsReports: GetAllInfractionsObservationsReports
+    @MockBean
+    private lateinit var getAllInfractionsObservationsReports: GetAllInfractionsObservationsReports
 
-  @MockBean
-  private lateinit var getInfractionsObservationsReportById: GetInfractionsObservationsReportById
+    @MockBean
+    private lateinit var getInfractionsObservationsReportById: GetInfractionsObservationsReportById
 
-  @MockBean
-  private lateinit var deleteInfractionsObservationsReport: DeleteInfractionsObservationsReport
+    @MockBean
+    private lateinit var deleteInfractionsObservationsReport: DeleteInfractionsObservationsReport
 
-  @Test
-  fun `Should create a new InfractionsObservationsReport`() {
-    // Given
-    val polygon = WKTReader().read("MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))")
-    val infractionsObservationsReport = InfractionsObservationsReportEntity(
-      id = 1,
-      sourceType = SourceTypeEnum.SEMAPHORE,
-      targetType = TargetTypeEnum.VEHICLE,
-      vehicleType = VehicleTypeEnum.VESSEL,
-      geom = polygon,
-      description = "description",
-      reportType = ReportTypeEnum.INFRACTION,
-      theme = "theme",
-      subThemes = listOf("subTheme1", "subTheme2"),
-      actionTaken = "actions effectuées blabla",
-      isInfractionProven = true,
-      isControlRequired = true,
-      isUnitAvailable = true,
-      createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-      validityTime = 10,
-      isDeleted = false
-    )
+    @Test
+    fun `Should create a new InfractionsObservationsReport`() {
+        // Given
+        val polygon = WKTReader().read("MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))")
+        val infractionsObservationsReport = InfractionsObservationsReportEntity(
+            id = 1,
+            sourceType = SourceTypeEnum.SEMAPHORE,
+            targetType = TargetTypeEnum.VEHICLE,
+            vehicleType = VehicleTypeEnum.VESSEL,
+            geom = polygon,
+            description = "description",
+            reportType = ReportTypeEnum.INFRACTION,
+            theme = "theme",
+            subThemes = listOf("subTheme1", "subTheme2"),
+            actionTaken = "actions effectuées blabla",
+            isInfractionProven = true,
+            isControlRequired = true,
+            isUnitAvailable = true,
+            createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            validityTime = 10,
+            isDeleted = false,
+        )
 
-    val request = CreateOrUpdateInfractionsObservationsReportDataInput(
-      sourceType = SourceTypeEnum.SEMAPHORE,
-      targetType = TargetTypeEnum.VEHICLE,
-      vehicleType = VehicleTypeEnum.VESSEL,
-      geom = polygon,
-      description = "description",
-      reportType = ReportTypeEnum.INFRACTION,
-      theme = "theme",
-      subThemes = listOf("subTheme1", "subTheme2"),
-      actionTaken = "actions effectuées blabla",
-      isInfractionProven = true,
-      isControlRequired = true,
-      isUnitAvailable = true,
-      createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-      validityTime = 10,
-    )
+        val request = CreateOrUpdateInfractionsObservationsReportDataInput(
+            sourceType = SourceTypeEnum.SEMAPHORE,
+            targetType = TargetTypeEnum.VEHICLE,
+            vehicleType = VehicleTypeEnum.VESSEL,
+            geom = polygon,
+            description = "description",
+            reportType = ReportTypeEnum.INFRACTION,
+            theme = "theme",
+            subThemes = listOf("subTheme1", "subTheme2"),
+            actionTaken = "actions effectuées blabla",
+            isInfractionProven = true,
+            isControlRequired = true,
+            isUnitAvailable = true,
+            createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            validityTime = 10,
+        )
 
-    given(this.createOrUpdateInfractionsObservationsReport.execute(any())).willReturn(infractionsObservationsReport)
-    // When
-    mockedApi.perform(put("/bff/v1/infractions-observations-reports")
-      .contentType(MediaType.APPLICATION_JSON)
-      .content(objectMapper.writeValueAsString(request)))
-    // Then
-      .andExpect(status().isCreated)
-      .andDo(MockMvcResultHandlers.print())
-      .andExpect(jsonPath("$.id").value(1))
-      .andExpect(jsonPath("$.sourceType").value("SEMAPHORE"))
-      .andExpect(jsonPath("$.targetType").value("VEHICLE"))
-      .andExpect(jsonPath("$.vehicleType").value("VESSEL"))
-      .andExpect(jsonPath("$.geom.type").value("MultiPolygon"))
-      .andExpect(jsonPath("$.description").value("description"))
-      .andExpect(jsonPath("$.reportType").value("INFRACTION"))
-      .andExpect(jsonPath("$.theme").value("theme"))
-      .andExpect(jsonPath("$.subThemes[0]").value("subTheme1"))
-      .andExpect(jsonPath("$.subThemes[1]").value("subTheme2"))
-      .andExpect(jsonPath("$.actionTaken").value("actions effectuées blabla"))
-      .andExpect(jsonPath("$.isInfractionProven").value(true))
-      .andExpect(jsonPath("$.isControlRequired").value(true))
-      .andExpect(jsonPath("$.isUnitAvailable").value(true))
-      .andExpect(jsonPath("$.createdAt").value("2022-01-15T04:50:09Z"))
-      .andExpect(jsonPath("$.validityTime").value(10))
-
-  }
-
+        given(this.createOrUpdateInfractionsObservationsReport.execute(any())).willReturn(infractionsObservationsReport)
+        // When
+        mockedApi.perform(
+            put("/bff/v1/infractions-observations-reports")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)),
+        )
+            // Then
+            .andExpect(status().isCreated)
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(jsonPath("$.id").value(1))
+            .andExpect(jsonPath("$.sourceType").value("SEMAPHORE"))
+            .andExpect(jsonPath("$.targetType").value("VEHICLE"))
+            .andExpect(jsonPath("$.vehicleType").value("VESSEL"))
+            .andExpect(jsonPath("$.geom.type").value("MultiPolygon"))
+            .andExpect(jsonPath("$.description").value("description"))
+            .andExpect(jsonPath("$.reportType").value("INFRACTION"))
+            .andExpect(jsonPath("$.theme").value("theme"))
+            .andExpect(jsonPath("$.subThemes[0]").value("subTheme1"))
+            .andExpect(jsonPath("$.subThemes[1]").value("subTheme2"))
+            .andExpect(jsonPath("$.actionTaken").value("actions effectuées blabla"))
+            .andExpect(jsonPath("$.isInfractionProven").value(true))
+            .andExpect(jsonPath("$.isControlRequired").value(true))
+            .andExpect(jsonPath("$.isUnitAvailable").value(true))
+            .andExpect(jsonPath("$.createdAt").value("2022-01-15T04:50:09Z"))
+            .andExpect(jsonPath("$.validityTime").value(10))
+    }
 }
