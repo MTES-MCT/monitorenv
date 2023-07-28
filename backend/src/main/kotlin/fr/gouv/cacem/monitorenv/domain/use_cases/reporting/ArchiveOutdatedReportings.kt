@@ -8,15 +8,15 @@ import org.springframework.scheduling.annotation.Scheduled
 
 @UseCase
 class ArchiveOutdatedReportings(
-  private val reportingRepository: IReportingRepository,
+    private val reportingRepository: IReportingRepository,
 ) {
-  private val logger: Logger = LoggerFactory.getLogger(ArchiveOutdatedReportings::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(ArchiveOutdatedReportings::class.java)
 
-  // At every 5 minutes, after 1 minute of initial delay
-  @Scheduled(fixedDelay = 300000, initialDelay = 6000)
-  fun execute() {
-    logger.info("Archiving reportings")
-    val numberOfArchivedReportings = reportingRepository.ArchiveOutdatedReportings()
-    logger.info("Archived $numberOfArchivedReportings reportings")
-  }
+    // At every 5 minutes, after 1 minute of initial delay
+    @Scheduled(fixedDelay = 300000, initialDelay = 6000)
+    fun execute() {
+        logger.info("Archiving reportings")
+        val numberOfArchivedReportings = reportingRepository.ArchiveOutdatedReportings()
+        logger.info("Archived $numberOfArchivedReportings reportings")
+    }
 }

@@ -6,6 +6,7 @@ import java.time.ZonedDateTime
 
 data class ReportingEntity(
     val id: Int? = null,
+    val reportingId: Int? = null,
     val sourceType: SourceTypeEnum? = null,
     val semaphoreId: Int? = null,
     val controlUnitId: Int? = null,

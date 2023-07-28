@@ -5,11 +5,11 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
+import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphores.SemaphoreEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.CreateOrUpdateReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.DeleteReporting
@@ -167,7 +167,7 @@ class ReportingsControllerITests {
         // When
         mockedApi.perform(
             get("/bff/v1/reportings/1")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON),
         )
             // Then
             .andExpect(status().isOk)
@@ -188,8 +188,6 @@ class ReportingsControllerITests {
             .andExpect(jsonPath("$.createdAt").value("2022-01-15T04:50:09Z"))
             .andExpect(jsonPath("$.validityTime").value(10))
             .andExpect(jsonPath("$.isArchived").value(false))
-
-
     }
 
     @Test
@@ -279,32 +277,36 @@ class ReportingsControllerITests {
             name = "name",
             geom = WKTReader().read("POINT (-61.0 14.0)") as Point,
         )
-        val updateRequestBody = objectMapper.writeValueAsString(CreateOrUpdateReportingDataInput(
-            id = 1,
-            sourceType = SourceTypeEnum.SEMAPHORE,
-            targetType = TargetTypeEnum.VEHICLE,
-            vehicleType = VehicleTypeEnum.VESSEL,
-            geom = polygon,
-            description = "description",
-            reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-            theme = "theme",
-            subThemes = listOf("subTheme1", "subTheme2"),
-            actionTaken = "actions effectuées blabla",
-            isInfractionProven = true,
-            isControlRequired = true,
-            isUnitAvailable = true,
-            createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-            validityTime = 10,
-            isArchived = false,
-        ))
+        val updateRequestBody = objectMapper.writeValueAsString(
+            CreateOrUpdateReportingDataInput(
+                id = 1,
+                sourceType = SourceTypeEnum.SEMAPHORE,
+                targetType = TargetTypeEnum.VEHICLE,
+                vehicleType = VehicleTypeEnum.VESSEL,
+                geom = polygon,
+                description = "description",
+                reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                theme = "theme",
+                subThemes = listOf("subTheme1", "subTheme2"),
+                actionTaken = "actions effectuées blabla",
+                isInfractionProven = true,
+                isControlRequired = true,
+                isUnitAvailable = true,
+                createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                validityTime = 10,
+                isArchived = false,
+            ),
+        )
 
         given(createOrUpdateReporting.execute(any())).willReturn(Triple(updatedReporting, null, semaphore))
 
         // When
-        mockedApi.perform(put("/bff/v1/reportings/1")
-            .content(updateRequestBody)
-            .contentType(MediaType.APPLICATION_JSON))
-        // Then
+        mockedApi.perform(
+            put("/bff/v1/reportings/1")
+                .content(updateRequestBody)
+                .contentType(MediaType.APPLICATION_JSON),
+        )
+            // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id").value(1))
             .andExpect(jsonPath("$.sourceType").value("SEMAPHORE"))
@@ -323,8 +325,8 @@ class ReportingsControllerITests {
             .andExpect(jsonPath("$.createdAt").value("2022-01-15T04:50:09Z"))
             .andExpect(jsonPath("$.validityTime").value(10))
             .andExpect(jsonPath("$.isArchived").value(false))
-
     }
+
     @Test
     fun `Should delete a reporting`() {
         // When

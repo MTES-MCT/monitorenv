@@ -1,5 +1,3 @@
-
-
 CREATE OR REPLACE FUNCTION reportings_yearly_sequence_value() RETURNS integer AS $$
   BEGIN
 		IF NOT EXISTS (SELECT 0 FROM pg_class where relname = 'reportings_'||EXTRACT(year FROM CURRENT_TIMESTAMP)::TEXT||'_seq' )
@@ -17,7 +15,6 @@ CREATE OR REPLACE FUNCTION reportings_yearly_sequence_value() RETURNS integer AS
             SELECT nextval('reportings_'||EXTRACT(year FROM CURRENT_TIMESTAMP)::TEXT||'_seq' ) as id
           ) t
     );
-				
   END;
 $$ LANGUAGE plpgsql;
 
@@ -26,9 +23,9 @@ CREATE TYPE reportings_target_type AS ENUM ('VEHICLE', 'COMPANY', 'INDIVIDUAL');
 CREATE TYPE reportings_vehicle_type AS ENUM ('VESSEL', 'OTHER_SEA', 'VEHICLE_LAND', 'VEHICLE_AIR');
 CREATE TYPE reportings_report_type AS ENUM ('INFRACTION_SUSPICION', 'OBSERVATION');
 
-
 CREATE TABLE reportings (
-    id BIGINT NOT NULL DEFAULT reportings_yearly_sequence_value(),
+    id serial PRIMARY KEY,
+    reporting_id BIGINT UNIQUE NOT NULL DEFAULT reportings_yearly_sequence_value(),
     source_type reportings_source_type ,
     semaphore_id BIGINT,
     control_unit_id BIGINT,
@@ -49,7 +46,6 @@ CREATE TABLE reportings (
     validity_time integer,
     is_archived boolean DEFAULT false NOT NULL,
     is_deleted boolean DEFAULT false NOT NULL,
-    PRIMARY KEY (id),
     CONSTRAINT fk_semaphores FOREIGN KEY (semaphore_id) REFERENCES semaphores (id),
     CONSTRAINT fk_control_units FOREIGN KEY (control_unit_id) REFERENCES control_units (id)
 )

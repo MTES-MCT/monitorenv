@@ -17,7 +17,8 @@ export function ReportingCard({ feature, selected = false }: { feature: any; sel
     reportingState: { isDirty }
   } = useAppSelector(state => state)
 
-  const { createdAt, description, id, isArchived, sourceName, subThemes, theme, validityTime } = feature.getProperties()
+  const { createdAt, description, id, isArchived, reportingId, sourceName, subThemes, theme, validityTime } =
+    feature.getProperties()
 
   const creationDate = dayjs(createdAt).format('DD MMM YYYY à HH:mm')
 
@@ -54,7 +55,7 @@ export function ReportingCard({ feature, selected = false }: { feature: any; sel
     <Wrapper data-cy="reporting-overlay">
       <StyledHeader>
         <StyledHeaderFirstLine>
-          <StyledBoldText>{`SIGNALEMENT ${getFormattedReportingId(id)}`}</StyledBoldText>
+          <StyledBoldText>{`SIGNALEMENT ${getFormattedReportingId(reportingId)}`}</StyledBoldText>
           <StyledBoldText>{subTitle}</StyledBoldText>
           <StyledCreationDate>{creationDate}</StyledCreationDate>
         </StyledHeaderFirstLine>

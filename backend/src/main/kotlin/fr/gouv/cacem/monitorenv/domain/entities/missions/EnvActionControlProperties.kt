@@ -6,12 +6,12 @@ import java.time.ZonedDateTime
 import java.util.*
 
 data class EnvActionControlProperties(
-  val themes: List<ThemeEntity>? = listOf(),
-  val observations: String? = null,
-  val actionNumberOfControls: Int? = null,
-  val actionTargetType: ActionTargetTypeEnum? = null,
-  val vehicleType: VehicleTypeEnum? = null,
-  val infractions: List<InfractionEntity>? = listOf(),
+    val themes: List<ThemeEntity>? = listOf(),
+    val observations: String? = null,
+    val actionNumberOfControls: Int? = null,
+    val actionTargetType: ActionTargetTypeEnum? = null,
+    val vehicleType: VehicleTypeEnum? = null,
+    val infractions: List<InfractionEntity>? = listOf(),
 ) {
     fun toEnvActionControlEntity(id: UUID, actionStartDateTimeUtc: ZonedDateTime?, actionEndDateTimeUtc: ZonedDateTime?, facade: String?, department: String?, geom: Geometry?) = EnvActionControlEntity(
         id = id,

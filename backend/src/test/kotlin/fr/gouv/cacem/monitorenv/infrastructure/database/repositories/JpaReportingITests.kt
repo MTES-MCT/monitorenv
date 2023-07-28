@@ -17,7 +17,6 @@ class JpaReportingITests : AbstractDBTests() {
     @Autowired
     private lateinit var jpaReportingRepository: JpaReportingRepository
 
-
     @Test
     @Transactional
     fun `save should create a new Reporting`() {
@@ -41,9 +40,10 @@ class JpaReportingITests : AbstractDBTests() {
     }
 
     @Test
-    fun `findById should return specified reporting`(){
-        val reporting = jpaReportingRepository.findById(2300001)
-        assertThat(reporting.id).isEqualTo(2300001)
+    fun `findById should return specified reporting`() {
+        val reporting = jpaReportingRepository.findById(1)
+        assertThat(reporting.id).isEqualTo(1)
+        assertThat(reporting.reportingId).isEqualTo(2300001)
         assertThat(reporting.sourceType).isEqualTo(SourceTypeEnum.SEMAPHORE)
         assertThat(reporting.semaphoreId).isEqualTo(21)
         assertThat(reporting.controlUnitId).isNull()
@@ -55,7 +55,7 @@ class JpaReportingITests : AbstractDBTests() {
     }
 
     @Test
-    fun `findAll should return all reportings`(){
+    fun `findAll should return all reportings`() {
         val reportings = jpaReportingRepository.findAll(Pageable.unpaged())
         assertThat(reportings.size).isEqualTo(3)
     }
@@ -68,7 +68,7 @@ class JpaReportingITests : AbstractDBTests() {
         assertThat(numberOfExistingReportings).isEqualTo(3)
 
         // When
-        val existingReporting = jpaReportingRepository.findById(2300001)
+        val existingReporting = jpaReportingRepository.findById(1)
         val updatedReporting = existingReporting.copy(
             sourceType = SourceTypeEnum.SEMAPHORE,
             semaphoreId = 23,
@@ -79,10 +79,9 @@ class JpaReportingITests : AbstractDBTests() {
         val savedReporting = jpaReportingRepository.save(updatedReporting)
 
         // Then
-        assertThat(savedReporting.id).isEqualTo(2300001)
+        assertThat(savedReporting.id).isEqualTo(1)
         assertThat(savedReporting.sourceType).isEqualTo(SourceTypeEnum.SEMAPHORE)
         assertThat(savedReporting.semaphoreId).isEqualTo(23)
-
 
         val numberOfExistingReportingsAfterSave = jpaReportingRepository.count()
         assertThat(numberOfExistingReportingsAfterSave).isEqualTo(3)
@@ -94,16 +93,16 @@ class JpaReportingITests : AbstractDBTests() {
         // Given
         val numberOfExistingReportings = jpaReportingRepository.count()
         assertThat(numberOfExistingReportings).isEqualTo(3)
-        val existingReporting = jpaReportingRepository.findById(2300001)
+        val existingReporting = jpaReportingRepository.findById(1)
         assertThat(existingReporting.isDeleted).isEqualTo(false)
         // When
-        jpaReportingRepository.delete(2300001)
+        jpaReportingRepository.delete(1)
 
         // Then
         val numberOfExistingReportingsAfterSave = jpaReportingRepository.count()
         assertThat(numberOfExistingReportingsAfterSave).isEqualTo(3)
 
-        val deletedReporting = jpaReportingRepository.findById(2300001)
+        val deletedReporting = jpaReportingRepository.findById(1)
         assertThat(deletedReporting.isDeleted).isEqualTo(true)
     }
 }

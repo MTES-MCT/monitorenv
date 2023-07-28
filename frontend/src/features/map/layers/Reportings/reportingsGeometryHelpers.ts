@@ -25,6 +25,7 @@ export const getReportingZoneFeature = (reporting: Reporting, layername: string)
     id: reporting.id,
     isArchived: reporting.isArchived,
     isInfractionProven: reporting.isInfractionProven,
+    reportingId: reporting.reportingId,
     reportType: reporting.reportType,
     semaphoreId: reporting.semaphoreId,
     sourceName: reporting.sourceName,

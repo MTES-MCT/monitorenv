@@ -1,5 +1,6 @@
 INSERT INTO reportings (
     id,
+    reporting_id,
     source_type ,
     semaphore_id ,
     control_unit_id ,
@@ -19,6 +20,7 @@ INSERT INTO reportings (
     created_at,
     validity_time,
     is_deleted) VALUES (
+    1,
     2300001,
     'SEMAPHORE',
     21,
@@ -27,11 +29,11 @@ INSERT INTO reportings (
     'VEHICLE',
     'VESSEL',
     '[{"vesselName": "Vessel 1", "mmsi": "012314231343" }]',
-    ST_GeomFromText('POINT(-8.6109 41.1459)', 4326),
+    ST_GeomFromText('MULTIPOINT((-4.938881879556736 48.4149566883917))', 4326),
     'Description 1',
     'INFRACTION_SUSPICION',
-    'THEME',
-    '{"subtheme1", "subtheme2"}',
+    'Rejets illicites',
+    '{"Jet de déchet","Carénage sauvage"}',
     'ACTION TAKEN',
     true,
     true,
@@ -43,6 +45,7 @@ INSERT INTO reportings (
 
 INSERT INTO reportings (
     id,
+    reporting_id,
     source_type ,
     semaphore_id ,
     control_unit_id ,
@@ -62,6 +65,7 @@ INSERT INTO reportings (
     created_at,
     validity_time,
     is_deleted) VALUES (
+    2,
     2300002,
     'SEMAPHORE',
     23,
@@ -70,11 +74,11 @@ INSERT INTO reportings (
     'VEHICLE',
     'VESSEL',
     '[{"vesselName": "Vessel 2", "mmsi": "012314231344" }]',
-    ST_GeomFromText('POINT(-8.6109 41.1859)', 4326),
+    ST_GeomFromText('MULTIPOINT((-4.779484119719514 48.619074487031526))', 4326),
     'Description 2',
     'INFRACTION_SUSPICION',
-    'THEME',
-    '{"subtheme1", "subtheme2"}',
+    'Police des mouillages',
+    '{"ZMEL"}',
     'ACTION TAKEN',
     true,
     true,
@@ -86,6 +90,7 @@ INSERT INTO reportings (
 
 INSERT INTO reportings (
     id,
+    reporting_id,
     source_type ,
     semaphore_id ,
     control_unit_id ,
@@ -105,6 +110,7 @@ INSERT INTO reportings (
     created_at,
     validity_time,
     is_deleted) VALUES (
+    3,
     2300003,
     'CONTROL_UNIT',
     null,
@@ -113,11 +119,11 @@ INSERT INTO reportings (
     'VEHICLE',
     'VESSEL',
     '[{"vesselName": "Vessel 3", "mmsi": "012314231345" }]',
-    ST_GeomFromText('POINT(-8.7109 41.1459)', 4326),
+    ST_GeomFromText('MULTIPOLYGON(((-3.504632038765229 48.938606793539606,-3.24829506967698 48.956239351532986,-3.484446288370139 48.996964545159244,-3.504632038765229 48.938606793539606)))', 4326),
     'Description 3',
     'INFRACTION_SUSPICION',
-    'THEME',
-    '{"subtheme1", "subtheme2"}',
+    'Police des mouillages',
+    '{"ZMEL"}',
     'ACTION TAKEN',
     true,
     true,
@@ -126,5 +132,6 @@ INSERT INTO reportings (
     12,
     false
 );
+SELECT setval('reportings_id_seq', 4, false);
 CREATE SEQUENCE IF NOT EXISTS reportings_2023_seq;
-SELECT setval('reportings_2023_seq', 5);
+SELECT setval('reportings_2023_seq', 4, false);

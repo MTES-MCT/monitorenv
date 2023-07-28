@@ -144,7 +144,7 @@ export function ReportingForm({ setShouldValidateOnChange }) {
       <StyledHeader>
         <StyledTitle>
           <Icon.Report />
-          {values.id ? `SIGNALEMENT ${getFormattedReportingId(values.id)}` : 'NOUVEAU SIGNALEMENT'}
+          {values.reportingId ? `SIGNALEMENT ${getFormattedReportingId(values.reportingId)}` : 'NOUVEAU SIGNALEMENT'}
         </StyledTitle>
 
         <StyledHeaderButtons>

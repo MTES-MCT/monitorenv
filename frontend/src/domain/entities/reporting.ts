@@ -11,6 +11,7 @@ export type Reporting = {
   isControlRequired?: boolean | undefined
   isInfractionProven?: boolean | undefined
   reportType: ReportingTypeEnum
+  reportingId?: number
   semaphoreId?: number
   sourceName?: string
   sourceType: ReportingSourceEnum
