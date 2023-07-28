@@ -6,36 +6,34 @@ import VectorSource from 'ol/source/Vector'
 import { getArea } from 'ol/sphere'
 import { MutableRefObject, useEffect, useRef } from 'react'
 
-import { getRegulatoryLayerStyle } from './styles/administrativeAndRegulatoryLayers.style'
-import { dottedLayerStyle } from './styles/dottedLayer.style'
-import { Layers } from '../../../domain/entities/layers/constants'
-import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
-import { useAppSelector } from '../../../hooks/useAppSelector'
+import { getAMPLayerStyle } from './AMPLayers.style'
+import { useGetAMPsQuery } from '../../../../api/ampsAPI'
+import { Layers } from '../../../../domain/entities/layers/constants'
+import { OPENLAYERS_PROJECTION } from '../../../../domain/entities/map/constants'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { dottedLayerStyle } from '../styles/dottedLayer.style'
 
-import type { MapChildrenProps } from '../Map'
+import type { BaseMapChildrenProps } from '../../BaseMap'
 
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
-export function RegulatoryPreviewLayer({ map }: MapChildrenProps) {
-  const { regulatoryMetadataLayerId } = useAppSelector(state => state.regulatoryMetadata)
-  const { isRegulatorySearchResultsVisible, regulatoryLayersSearchResult, searchExtent } = useAppSelector(
-    state => state.layerSearch
-  )
-  const { regulatoryLayersById } = useAppSelector(state => state.regulatory)
+export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
+  const { ampsSearchResult, isAmpSearchResultsVisible, searchExtent } = useAppSelector(state => state.layerSearch)
+  const { data: ampLayers } = useGetAMPsQuery()
   const { layersSidebarIsOpen } = useAppSelector(state => state.global)
 
-  const regulatoryLayerRef = useRef() as MutableRefObject<Vector<VectorSource>>
-  const regulatoryVectorSourceRef = useRef() as MutableRefObject<VectorSource>
+  const ampLayerRef = useRef() as MutableRefObject<Vector<VectorSource>>
+  const ampVectorSourceRef = useRef() as MutableRefObject<VectorSource>
   const isThrottled = useRef(false)
 
-  function getRegulatoryVectorSource() {
-    if (!regulatoryVectorSourceRef.current) {
-      regulatoryVectorSourceRef.current = new VectorSource({
+  function getAMPVectorSource() {
+    if (!ampVectorSourceRef.current) {
+      ampVectorSourceRef.current = new VectorSource({
         features: []
       })
     }
 
-    return regulatoryVectorSourceRef.current
+    return ampVectorSourceRef.current
   }
 
   const searchExtentLayerRef = useRef() as MutableRefObject<Vector<VectorSource>>
@@ -51,25 +49,16 @@ export function RegulatoryPreviewLayer({ map }: MapChildrenProps) {
   }
 
   useEffect(() => {
-    if (map) {
-      const features = getRegulatoryVectorSource().getFeatures()
-      if (features?.length) {
-        features.forEach(f => f.set(metadataIsShowedPropertyName, f.get('layerId') === regulatoryMetadataLayerId))
-      }
-    }
-  }, [map, regulatoryMetadataLayerId])
-
-  useEffect(() => {
     function refreshPreviewLayer() {
-      getRegulatoryVectorSource().clear()
-      if (regulatoryLayersSearchResult) {
-        const features = regulatoryLayersSearchResult.reduce((regulatorylayers, id) => {
-          const layer = regulatoryLayersById[id]
+      getAMPVectorSource().clear()
+      if (ampsSearchResult && ampLayers?.entities) {
+        const features = ampsSearchResult.reduce((amplayers, id) => {
+          const layer = ampLayers.entities[id]
 
-          if (layer && layer.geometry) {
+          if (layer && layer.geom) {
             const feature = new GeoJSON({
               featureProjection: OPENLAYERS_PROJECTION
-            }).readFeature(layer.geometry)
+            }).readFeature(layer.geom)
             const geometry = feature.getGeometry()
             const area = geometry && getArea(geometry)
             feature.setId(`${Layers.REGULATORY_ENV_PREVIEW.code}:${layer.id}`)
@@ -77,15 +66,15 @@ export function RegulatoryPreviewLayer({ map }: MapChildrenProps) {
             feature.setProperties({
               area,
               layerId: layer.id,
-              ...layer.properties
+              ...layer
             })
 
-            regulatorylayers.push(feature)
+            amplayers.push(feature)
           }
 
-          return regulatorylayers
+          return amplayers
         }, [] as Feature[])
-        getRegulatoryVectorSource().addFeatures(features)
+        getAMPVectorSource().addFeatures(features)
       }
     }
 
@@ -101,25 +90,25 @@ export function RegulatoryPreviewLayer({ map }: MapChildrenProps) {
         refreshPreviewLayer()
       }, 300)
     }
-  }, [map, regulatoryLayersSearchResult, regulatoryLayersById])
+  }, [map, ampsSearchResult, ampLayers])
 
   useEffect(() => {
     function getLayer() {
-      if (!regulatoryLayerRef.current) {
-        regulatoryLayerRef.current = new Vector({
+      if (!ampLayerRef.current) {
+        ampLayerRef.current = new Vector({
           properties: {
-            name: Layers.REGULATORY_ENV_PREVIEW.code
+            name: Layers.AMP.code
           },
           renderBuffer: 4,
           renderOrder: (a, b) => b.get('area') - a.get('area'),
-          source: getRegulatoryVectorSource(),
-          style: getRegulatoryLayerStyle,
+          source: getAMPVectorSource(),
+          style: getAMPLayerStyle,
           updateWhileAnimating: true,
           updateWhileInteracting: true
         })
       }
 
-      return regulatoryLayerRef.current
+      return ampLayerRef.current
     }
     if (map) {
       map.getLayers().push(getLayer())
@@ -134,15 +123,15 @@ export function RegulatoryPreviewLayer({ map }: MapChildrenProps) {
 
   useEffect(() => {
     if (map) {
-      if (layersSidebarIsOpen && isRegulatorySearchResultsVisible) {
+      if (layersSidebarIsOpen && isAmpSearchResultsVisible) {
         searchExtentLayerRef.current?.setVisible(true)
-        regulatoryLayerRef.current?.setVisible(true)
+        ampLayerRef.current?.setVisible(true)
       } else {
         searchExtentLayerRef.current?.setVisible(false)
-        regulatoryLayerRef.current?.setVisible(false)
+        ampLayerRef.current?.setVisible(false)
       }
     }
-  }, [map, layersSidebarIsOpen, isRegulatorySearchResultsVisible])
+  }, [map, layersSidebarIsOpen, isAmpSearchResultsVisible])
 
   useEffect(() => {
     if (map) {

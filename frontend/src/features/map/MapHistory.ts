@@ -4,13 +4,13 @@ import { useEffect, useState, useRef } from 'react'
 import { setCurrentMapExtentTracker } from '../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 
-import type { MapChildrenProps } from './Map'
+import type { BaseMapChildrenProps } from './BaseMap'
 
 /**
  * Handle browser history on map URL - Note that the map parameter is given from
  * the BaseMap component, even if it's not seen in the props passed to MapHistory
  */
-export function MapHistory({ map }: MapChildrenProps) {
+export function MapHistory({ map }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const [useViewFromUrl, setUseViewFromUrl] = useState(true)
   const shouldStoreUrl = useRef(true)

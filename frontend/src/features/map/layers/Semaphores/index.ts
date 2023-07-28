@@ -11,10 +11,10 @@ import { setOverlayCoordinates } from '../../../../domain/shared_slices/Global'
 import { setSelectedSemaphore } from '../../../../domain/shared_slices/SemaphoresSlice'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
-import type { MapChildrenProps } from '../../Map'
+import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { Geometry } from 'ol/geom'
 
-export function SemaphoresLayer({ map, mapClickEvent }: MapChildrenProps) {
+export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useDispatch()
   const { displaySemaphoresLayer } = useAppSelector(state => state.global)
   const { selectedSemaphoreId } = useAppSelector(state => state.semaphoresSlice)

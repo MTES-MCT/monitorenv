@@ -154,11 +154,11 @@ const Center = styled.a`
 const Row = styled.div`
   align-items: center;
   display: flex;
-  margin: 0.5rem 0 0;
+  margin: 4px 0 0;
   width: 100%;
 
   > button {
-    margin: 0 0 0 0.5rem;
+    margin: 0 0 0 4px;
   }
 `
 
@@ -168,7 +168,7 @@ const ZoneWrapper = styled.div<{ isLight?: boolean }>`
   flex-grow: 1;
   font-size: 13px;
   justify-content: space-between;
-  padding: 5px 0.75rem 4px;
+  padding: 4px 8px 4px;
 `
 
 const ErrorMessage = styled.div`

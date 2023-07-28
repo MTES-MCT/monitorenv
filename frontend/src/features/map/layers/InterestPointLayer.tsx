@@ -32,7 +32,7 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { usePrevious } from '../../../hooks/usePrevious'
 import InterestPointOverlay from '../overlays/InterestPointOverlay'
 
-import type { MapChildrenProps } from '../Map'
+import type { BaseMapChildrenProps } from '../BaseMap'
 
 const DRAW_START_EVENT = 'drawstart'
 const DRAW_ABORT_EVENT = 'drawabort'
@@ -47,7 +47,7 @@ type InterestPoint = {
   type: string
   uuid: string
 }
-export function InterestPointLayer({ map }: MapChildrenProps) {
+export function InterestPointLayer({ map }: BaseMapChildrenProps) {
   const dispatch = useDispatch()
 
   const {

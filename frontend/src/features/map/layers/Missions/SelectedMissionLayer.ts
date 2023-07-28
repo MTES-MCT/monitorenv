@@ -3,14 +3,14 @@ import VectorSource from 'ol/source/Vector'
 import { MutableRefObject, useCallback, useEffect, useRef } from 'react'
 
 import { getMissionZoneFeature, getActionsFeatures } from './missionGeometryHelpers'
-import { selectedMissionStyle, selectedMissionActionsStyle } from './styles/missions.style'
-import { useGetMissionsQuery } from '../../../api/missionsAPI'
-import { Layers } from '../../../domain/entities/layers/constants'
-import { useAppSelector } from '../../../hooks/useAppSelector'
+import { selectedMissionStyle, selectedMissionActionsStyle } from './missions.style'
+import { useGetMissionsQuery } from '../../../../api/missionsAPI'
+import { Layers } from '../../../../domain/entities/layers/constants'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
 
-import type { MapChildrenProps } from '../Map'
+import type { BaseMapChildrenProps } from '../../BaseMap'
 
-export function SelectedMissionLayer({ map }: MapChildrenProps) {
+export function SelectedMissionLayer({ map }: BaseMapChildrenProps) {
   const { missionState: selectedMissionEditedState, selectedMissionId } = useAppSelector(state => state.missionState)
   const { displaySelectedMissionLayer } = useAppSelector(state => state.global)
   const { selectedMission } = useGetMissionsQuery(undefined, {

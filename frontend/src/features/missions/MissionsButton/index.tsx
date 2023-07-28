@@ -2,14 +2,14 @@ import { Accent, Button, Icon, Size } from '@mtes-mct/monitor-ui'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { COLORS } from '../../constants/constants'
-import { sideWindowPaths } from '../../domain/entities/sideWindow'
-import { setDisplayedItems, setReportingFormVisibility } from '../../domain/shared_slices/Global'
-import { ReportingFormVisibility } from '../../domain/shared_slices/ReportingState'
-import { addMission } from '../../domain/use_cases/missions/addMission'
-import { useAppSelector } from '../../hooks/useAppSelector'
-import { MenuWithCloseButton } from '../commonStyles/map/MenuWithCloseButton'
-import { sideWindowActions, SideWindowStatus } from '../SideWindow/slice'
+import { COLORS } from '../../../constants/constants'
+import { sideWindowPaths } from '../../../domain/entities/sideWindow'
+import { setDisplayedItems, setReportingFormVisibility } from '../../../domain/shared_slices/Global'
+import { ReportingFormVisibility } from '../../../domain/shared_slices/ReportingState'
+import { addMission } from '../../../domain/use_cases/missions/addMission'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
+import { sideWindowActions, SideWindowStatus } from '../../SideWindow/slice'
 
 export function MissionsMenu() {
   const dispatch = useDispatch()

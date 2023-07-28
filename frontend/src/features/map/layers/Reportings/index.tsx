@@ -10,10 +10,10 @@ import { Layers } from '../../../../domain/entities/layers/constants'
 import { reportingStateActions } from '../../../../domain/shared_slices/ReportingState'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
-import type { MapChildrenProps } from '../../Map'
+import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { Geometry } from 'ol/geom'
 
-export function ReportingsLayer({ map, mapClickEvent }: MapChildrenProps) {
+export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useDispatch()
   const { displayReportingsLayer } = useAppSelector(state => state.global)
   const { selectedReportingId } = useAppSelector(state => state.reportingState)

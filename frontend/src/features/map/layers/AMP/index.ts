@@ -4,18 +4,18 @@ import VectorSource from 'ol/source/Vector'
 import { getArea } from 'ol/sphere'
 import { MutableRefObject, useEffect, useRef } from 'react'
 
-import { getAMPLayerStyle } from './styles/AMPLayers.style'
-import { useGetAMPsQuery } from '../../../api/ampsAPI'
-import { Layers } from '../../../domain/entities/layers/constants'
-import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
-import { useAppSelector } from '../../../hooks/useAppSelector'
+import { getAMPLayerStyle } from './AMPLayers.style'
+import { useGetAMPsQuery } from '../../../../api/ampsAPI'
+import { Layers } from '../../../../domain/entities/layers/constants'
+import { OPENLAYERS_PROJECTION } from '../../../../domain/entities/map/constants'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
 
-import type { MapChildrenProps } from '../Map'
+import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { Feature } from 'ol'
 
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
-export function AMPLayers({ map }: MapChildrenProps) {
+export function AMPLayers({ map }: BaseMapChildrenProps) {
   const { showedAmpLayerIds } = useAppSelector(state => state.selectedAmp)
 
   const { data: ampLayers } = useGetAMPsQuery()

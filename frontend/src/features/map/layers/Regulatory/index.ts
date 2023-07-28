@@ -4,17 +4,17 @@ import VectorSource from 'ol/source/Vector'
 import { getArea } from 'ol/sphere'
 import { MutableRefObject, useEffect, useRef } from 'react'
 
-import { getRegulatoryLayerStyle } from './styles/administrativeAndRegulatoryLayers.style'
-import { Layers } from '../../../domain/entities/layers/constants'
-import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
-import { useAppSelector } from '../../../hooks/useAppSelector'
+import { Layers } from '../../../../domain/entities/layers/constants'
+import { OPENLAYERS_PROJECTION } from '../../../../domain/entities/map/constants'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { getRegulatoryLayerStyle } from '../styles/administrativeAndRegulatoryLayers.style'
 
-import type { MapChildrenProps } from '../Map'
+import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { Feature } from 'ol'
 
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
-export function RegulatoryLayers({ map }: MapChildrenProps) {
+export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
   const { regulatoryLayers, showedRegulatoryLayerIds } = useAppSelector(state => state.regulatory)
   const { regulatoryMetadataLayerId } = useAppSelector(state => state.regulatoryMetadata)
 

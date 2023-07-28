@@ -2,13 +2,13 @@ import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { MutableRefObject, useEffect, useRef } from 'react'
 
-import { missionZoneStyle } from './styles/missions.style'
-import { Layers } from '../../../domain/entities/layers/constants'
+import { missionZoneStyle } from './missions.style'
+import { Layers } from '../../../../domain/entities/layers/constants'
 
-import type { VectorLayerWithName } from '../../../domain/types/layer'
-import type { MapChildrenProps } from '../Map'
+import type { VectorLayerWithName } from '../../../../domain/types/layer'
+import type { BaseMapChildrenProps } from '../../BaseMap'
 
-export function HoveredMissionLayer({ currentFeatureOver, map }: MapChildrenProps) {
+export function HoveredMissionLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const vectorSourceRef = useRef() as MutableRefObject<VectorSource>
   const GetVectorSource = () => {
     if (vectorSourceRef.current === undefined) {

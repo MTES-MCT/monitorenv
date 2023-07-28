@@ -4,7 +4,7 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { OverlayPositionOnCentroid } from '../OverlayPositionOnCentroid'
 
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
-import type { MapChildrenProps } from '../../Map'
+import type { BaseMapChildrenProps } from '../../BaseMap'
 
 const MARGINS = {
   xLeft: 50,
@@ -14,7 +14,7 @@ const MARGINS = {
   yMiddle: 100,
   yTop: 120
 }
-export function ReportingOverlay({ currentFeatureOver, map }: MapChildrenProps) {
+export function ReportingOverlay({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const { selectedReportingIdOnMap } = useAppSelector(state => state.reportingState)
   const { displayReportingsLayer } = useAppSelector(state => state.global)
 

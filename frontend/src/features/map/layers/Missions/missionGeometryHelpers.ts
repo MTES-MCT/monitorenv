@@ -3,15 +3,15 @@ import Feature from 'ol/Feature'
 import GeoJSON from 'ol/format/GeoJSON'
 import Point from 'ol/geom/Point'
 
-import { Layers } from '../../../domain/entities/layers/constants'
-import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map/constants'
+import { Layers } from '../../../../domain/entities/layers/constants'
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map/constants'
 import {
   ActionTypeEnum,
   EnvActionControl,
   EnvActionSurveillance,
   getMissionStatus,
   Mission
-} from '../../../domain/entities/missions'
+} from '../../../../domain/entities/missions'
 
 import type { Geometry } from 'ol/geom'
 

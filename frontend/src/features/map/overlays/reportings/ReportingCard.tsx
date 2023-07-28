@@ -4,6 +4,7 @@ import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
+import { getFormattedReportingId } from '../../../../domain/entities/reporting'
 import { hideSideButtons, setReportingFormVisibility } from '../../../../domain/shared_slices/Global'
 import { ReportingFormVisibility, reportingStateActions } from '../../../../domain/shared_slices/ReportingState'
 import { editReportingInLocalStore } from '../../../../domain/use_cases/reportings/editReportingInLocalStore'
@@ -16,14 +17,14 @@ export function ReportingCard({ feature, selected = false }: { feature: any; sel
     reportingState: { isDirty }
   } = useAppSelector(state => state)
 
-  const { createdAt, description, id, sourceName, subThemes, theme, validityTime } = feature.getProperties()
+  const { createdAt, description, id, isArchived, sourceName, subThemes, theme, validityTime } = feature.getProperties()
 
   const creationDate = dayjs(createdAt).format('DD MMM YYYY à HH:mm')
 
   const endOfValidity = dayjs(createdAt)
     .add(validityTime || 0, 'hour')
     .toISOString()
-  const restingTime = dayjs(endOfValidity).diff(dayjs(), 'hour')
+  const timeLeft = dayjs(endOfValidity).diff(dayjs(), 'hour')
   const subThemesFormatted = subThemes.map(subTheme => subTheme).join(', ')
 
   // TODO gérer le cas sémaphore et unités
@@ -53,14 +54,14 @@ export function ReportingCard({ feature, selected = false }: { feature: any; sel
     <Wrapper data-cy="reporting-overlay">
       <StyledHeader>
         <StyledHeaderFirstLine>
-          <StyledBoldText>{`SIGNALEMENT ${String(id).slice(0, 2)}-${String(id).slice(2)}`}</StyledBoldText>
+          <StyledBoldText>{`SIGNALEMENT ${getFormattedReportingId(id)}`}</StyledBoldText>
           <StyledBoldText>{subTitle}</StyledBoldText>
           <StyledCreationDate>{creationDate}</StyledCreationDate>
         </StyledHeaderFirstLine>
 
         <StyledHeaderSecondLine>
           <Icon.Clock />
-          <span>{restingTime < 0 ? 'Archivé' : `Fin dans ${restingTime} h`}</span>
+          <span>{timeLeft < 0 || isArchived ? 'Archivé' : `Fin dans ${timeLeft} h`}</span>
 
           <CloseButton
             $isVisible={selected}

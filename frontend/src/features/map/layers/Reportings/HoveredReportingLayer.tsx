@@ -6,9 +6,9 @@ import { hoveredReportingStyleFactory } from './style'
 import { Layers } from '../../../../domain/entities/layers/constants'
 
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
-import type { MapChildrenProps } from '../../Map'
+import type { BaseMapChildrenProps } from '../../BaseMap'
 
-export function HoveredReportingLayer({ currentFeatureOver, map }: MapChildrenProps) {
+export function HoveredReportingLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const vectorSourceRef = useRef() as MutableRefObject<VectorSource>
   const GetVectorSource = () => {
     if (vectorSourceRef.current === undefined) {

@@ -27,7 +27,7 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getNauticalMilesFromMeters } from '../../../utils/utils'
 import { MeasurementOverlay } from '../overlays/MeasurementOverlay'
 
-import type { MapChildrenProps } from '../Map'
+import type { BaseMapChildrenProps } from '../BaseMap'
 import type { Geometry } from 'ol/geom'
 
 type Measurement = {
@@ -58,7 +58,7 @@ function getNauticalMilesRadiusOfCircularPolygon(polygon) {
   return `r = ${getNauticalMilesFromMeters(radius)} nm`
 }
 
-export function MeasurementLayer({ map }: MapChildrenProps) {
+export function MeasurementLayer({ map }: BaseMapChildrenProps) {
   const dispatch = useDispatch()
 
   const { circleMeasurementToAdd, measurementsDrawed, measurementTypeToAdd } = useAppSelector(

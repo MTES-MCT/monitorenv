@@ -4,9 +4,9 @@ import { Layers } from '../../../../domain/entities/layers/constants'
 import { ActionTypeEnum } from '../../../../domain/entities/missions'
 import { OverlayPositionOnCentroid } from '../OverlayPositionOnCentroid'
 
-import type { MapChildrenProps } from '../../Map'
+import type { BaseMapChildrenProps } from '../../BaseMap'
 
-export function ActionOverlay({ currentFeatureOver, map }: MapChildrenProps) {
+export function ActionOverlay({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const currentfeatureId = currentFeatureOver?.getId()
   const displayHoveredFeature =
     typeof currentfeatureId === 'string' && currentfeatureId.startsWith(`${Layers.ACTIONS.code}`)

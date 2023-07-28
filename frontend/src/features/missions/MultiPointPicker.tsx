@@ -167,7 +167,7 @@ const Row = styled.div`
   margin-bottom: 4px;
 
   > button {
-    margin: 0 0 0 0.5rem;
+    margin: 0 0 0 4px;
   }
 `
 
@@ -177,5 +177,5 @@ const ZoneWrapper = styled.div`
   flex-grow: 1;
   font-size: 13px;
   justify-content: space-between;
-  padding: 5px 0.75rem 4px;
+  padding: 4px 8px 4px;
 `

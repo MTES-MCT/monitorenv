@@ -10,13 +10,13 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useClickOutsideWhenOpened } from '../../../hooks/useClickOutsideWhenOpened'
 import { getCoordinates } from '../../../utils/coordinates'
 
-import type { MapChildrenProps } from '../Map'
+import type { BaseMapChildrenProps } from '../BaseMap'
 import type { Coordinate } from 'ol/coordinate'
 
 let lastEventForPointerMove
 let timeoutForPointerMove
 
-export function MapCoordinatesBox({ map }: MapChildrenProps) {
+export function MapCoordinatesBox({ map }: BaseMapChildrenProps) {
   const [coordinates, setCursorCoordinates] = useState<Coordinate>()
 
   useEffect(() => {

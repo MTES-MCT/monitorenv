@@ -2,12 +2,12 @@ import { useEffect } from 'react'
 
 import { useAppSelector } from '../../hooks/useAppSelector'
 
-import type { MapChildrenProps } from './Map'
+import type { BaseMapChildrenProps } from './BaseMap'
 
 const DEFAULT_MAP_ANIMATION_DURATION = 1000
 const MAX_ZOOM_LEVEL = 14
 
-export function MapExtentController({ map }: MapChildrenProps) {
+export function MapExtentController({ map }: BaseMapChildrenProps) {
   const { fitToExtent, zoomToCenter } = useAppSelector(state => state.map)
 
   useEffect(() => {

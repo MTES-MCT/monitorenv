@@ -3,14 +3,14 @@ import VectorSource from 'ol/source/Vector'
 import { MutableRefObject, useCallback, useEffect, useRef } from 'react'
 
 import { getMissionZoneFeature, getActionsFeatures } from './missionGeometryHelpers'
-import { selectedMissionStyle, selectedMissionActionsStyle } from './styles/missions.style'
-import { Layers } from '../../../domain/entities/layers/constants'
-import { useAppSelector } from '../../../hooks/useAppSelector'
+import { selectedMissionStyle, selectedMissionActionsStyle } from './missions.style'
+import { Layers } from '../../../../domain/entities/layers/constants'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
 
-import type { VectorLayerWithName } from '../../../domain/types/layer'
-import type { MapChildrenProps } from '../Map'
+import type { VectorLayerWithName } from '../../../../domain/types/layer'
+import type { BaseMapChildrenProps } from '../../BaseMap'
 
-export function EditingMissionLayer({ map }: MapChildrenProps) {
+export function EditingMissionLayer({ map }: BaseMapChildrenProps) {
   const { missionState } = useAppSelector(state => state.missionState)
   const { displayEditingMissionLayer } = useAppSelector(state => state.global)
 

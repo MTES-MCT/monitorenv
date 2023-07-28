@@ -4,16 +4,16 @@ import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { getMissionZoneFeature } from './missionGeometryHelpers'
-import { missionWithCentroidStyleFn } from './styles/missions.style'
-import { Layers } from '../../../domain/entities/layers/constants'
-import { selectMissionOnMap } from '../../../domain/use_cases/missions/selectMissionOnMap'
-import { useAppSelector } from '../../../hooks/useAppSelector'
-import { useGetFilteredMissionsQuery } from '../../../hooks/useGetFilteredMissionsQuery'
+import { missionWithCentroidStyleFn } from './missions.style'
+import { Layers } from '../../../../domain/entities/layers/constants'
+import { selectMissionOnMap } from '../../../../domain/use_cases/missions/selectMissionOnMap'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { useGetFilteredMissionsQuery } from '../../../../hooks/useGetFilteredMissionsQuery'
 
-import type { MapChildrenProps } from '../Map'
+import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { Geometry } from 'ol/geom'
 
-export function MissionsLayer({ map, mapClickEvent }: MapChildrenProps) {
+export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useDispatch()
   const { displayMissionsLayer } = useAppSelector(state => state.global)
   const { missions } = useGetFilteredMissionsQuery()

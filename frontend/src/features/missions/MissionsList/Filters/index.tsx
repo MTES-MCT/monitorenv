@@ -9,9 +9,8 @@ import { FilterTags } from './FilterTags'
 import { useGetControlThemesQuery } from '../../../../api/controlThemesAPI'
 import { useGetControlUnitsQuery } from '../../../../api/controlUnitsAPI'
 import { COLORS } from '../../../../constants/constants'
+import { DateRangeEnum, dateRangeLabels } from '../../../../domain/entities/dateRange'
 import {
-  DateRangeEnum,
-  dateRangeLabels,
   missionSourceEnum,
   missionStatusLabels,
   missionTypeEnum,

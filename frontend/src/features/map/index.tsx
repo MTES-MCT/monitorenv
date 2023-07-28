@@ -2,21 +2,21 @@ import { BaseMap } from './BaseMap'
 import { MapAttributionsBox } from './controls/MapAttributionsBox'
 import { MapCoordinatesBox } from './controls/MapCoordinatesBox'
 import { AdministrativeLayers } from './layers/AdministrativeLayers'
-import { AMPLayers } from './layers/AMPLayers'
-import { AMPPreviewLayer } from './layers/AMPPreviewLayer'
+import { AMPLayers } from './layers/AMP'
+import { AMPPreviewLayer } from './layers/AMP/AMPPreviewLayer'
 import { BaseLayer } from './layers/BaseLayer'
 import { DrawLayer } from './layers/DrawLayer'
-import { EditingMissionLayer } from './layers/EditingMissionLayer'
-import { HoveredMissionLayer } from './layers/HoveredMissionLayer'
 import { InterestPointLayer } from './layers/InterestPointLayer'
 import { MeasurementLayer } from './layers/MeasurementLayer'
-import { MissionsLayer } from './layers/MissionsLayer'
-import { RegulatoryLayers } from './layers/RegulatoryLayers'
-import { RegulatoryPreviewLayer } from './layers/RegulatoryPreviewLayer'
+import { MissionsLayer } from './layers/Missions'
+import { EditingMissionLayer } from './layers/Missions/EditingMissionLayer'
+import { HoveredMissionLayer } from './layers/Missions/HoveredMissionLayer'
+import { SelectedMissionLayer } from './layers/Missions/SelectedMissionLayer'
+import { RegulatoryLayers } from './layers/Regulatory'
+import { RegulatoryPreviewLayer } from './layers/Regulatory/RegulatoryPreviewLayer'
 import { ReportingsLayer } from './layers/Reportings'
 import { HoveredReportingLayer } from './layers/Reportings/HoveredReportingLayer'
 import { SelectedReportingLayer } from './layers/Reportings/SelectedReporting'
-import { SelectedMissionLayer } from './layers/SelectedMissionLayer'
 import { SemaphoresLayer } from './layers/Semaphores'
 import { MapExtentController } from './MapExtentController'
 import { MapHistory } from './MapHistory'
@@ -25,22 +25,16 @@ import { MissionOverlays } from './overlays/missions'
 import { ReportingOverlay } from './overlays/reportings'
 import { SemaphoreOverlay } from './overlays/semaphores'
 import { ShowRegulatoryMetadata } from './ShowRegulatoryMetadata'
-import { Reporting } from '../Reportings'
-
-import type { MapClickEvent } from '../../types'
-import type { Feature } from 'ol'
-import type { Geometry } from 'ol/geom'
-import type OpenLayerMap from 'ol/Map'
-
-export type MapChildrenProps = Partial<{
-  currentFeatureOver: Feature<Geometry>
-  map: OpenLayerMap
-  mapClickEvent: MapClickEvent
-}>
 
 export function Map() {
   return (
-    <BaseMap>
+    <BaseMap
+    // BaseMap forwards map & mapClickEvent as props to children
+    // handleMovingAndZoom={handleMovingAndZoom}
+    // handlePointerMove={handlePointerMove}
+    //
+    // -> only add child to BaseMap if it requires map or mapClickEvent
+    >
       <MapAttributionsBox />
       <MapCoordinatesBox />
       <BaseLayer />
@@ -63,7 +57,6 @@ export function Map() {
       <ActionOverlay />
       <SemaphoresLayer />
       <SemaphoreOverlay />
-      <Reporting />
       <ReportingsLayer />
       <SelectedReportingLayer />
       <HoveredReportingLayer />
