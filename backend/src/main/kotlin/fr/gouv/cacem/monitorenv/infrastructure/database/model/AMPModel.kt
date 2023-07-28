@@ -1,11 +1,11 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import fr.gouv.cacem.monitorenv.domain.entities.amp.AMPEntity
-import org.locationtech.jts.geom.MultiPolygon
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import org.locationtech.jts.geom.MultiPolygon
 
 @Entity
 @Table(name = "amp_cacem")

@@ -10,7 +10,7 @@ data class EnvActionNoteProperties(
         id = id,
         actionStartDateTimeUtc = actionStartDateTimeUtc,
         actionEndDateTimeUtc = actionEndDateTimeUtc,
-        observations = observations
+        observations = observations,
     )
     companion object {
         fun fromEnvActionNoteEntity(envAction: EnvActionNoteEntity) = EnvActionNoteProperties(

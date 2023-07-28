@@ -66,12 +66,12 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     id = UUID.fromString("a6c4bd17-eb45-4504-ab15-7a18ea714a10"),
                     facade = "Facade 2",
                     department = "Department 2",
-                    geom = polygon
+                    geom = polygon,
                 ),
                 EnvActionNoteEntity(
                     id = UUID.fromString("126ded89-2dc0-4c77-9bf2-49f86b9a71a1"),
-                    observations = noteObservations
-                )
+                    observations = noteObservations,
+                ),
             ),
             controlUnits = listOf(
                 ControlUnitEntity(
@@ -512,8 +512,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         )
         val surveillanceAction = EnvActionSurveillanceEntity(
             id = UUID.randomUUID(),
-            themes = listOf(ThemeEntity(theme="6", subThemes = listOf("7"), protectedSpecies = listOf("8"))),
-            observations = "This is a surveillance action"
+            themes = listOf(ThemeEntity(theme = "6", subThemes = listOf("7"), protectedSpecies = listOf("8"))),
+            observations = "This is a surveillance action",
         )
         val noteAction = EnvActionNoteEntity(
             id = UUID.randomUUID(),
