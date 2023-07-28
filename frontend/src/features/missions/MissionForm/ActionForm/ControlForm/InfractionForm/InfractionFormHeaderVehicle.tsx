@@ -2,9 +2,11 @@ import { FormikTextInput } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import styled from 'styled-components'
 
+import { VehicleTypeEnum } from '../../../../../../domain/entities/vehicleType'
 import { VesselSizeSelector } from './VesselSizeSelector'
 import { VesselTypeSelector } from './VesselTypeSelector'
-import { EnvActionControl, Infraction, VehicleTypeEnum } from '../../../../../../domain/entities/missions'
+
+import type { EnvActionControl, Infraction } from '../../../../../../domain/entities/missions'
 
 export function InfractionFormHeaderVehicle({ currentActionIndex, infractionPath }) {
   const [vehicleTypeField] = useField<EnvActionControl['vehicleType']>(`envActions.${currentActionIndex}.vehicleType`)

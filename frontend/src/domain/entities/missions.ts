@@ -86,52 +86,6 @@ export const formalNoticeLabels = {
   }
 }
 
-export enum ActionTargetTypeEnum {
-  COMPANY = 'COMPANY',
-  INDIVIDUAL = 'INDIVIDUAL',
-  VEHICLE = 'VEHICLE'
-}
-export const actionTargetTypeLabels = {
-  COMPANY: {
-    code: 'COMPANY',
-    libelle: 'Société'
-  },
-  INDIVIDUAL: {
-    code: 'INDIVIDUAL',
-    libelle: 'Personne physique'
-  },
-  VEHICLE: {
-    code: 'VEHICLE',
-    libelle: 'Véhicule'
-  }
-}
-
-export enum VehicleTypeEnum {
-  OTHER_SEA = 'OTHER_SEA',
-  VEHICLE_AIR = 'VEHICLE_AIR',
-  VEHICLE_LAND = 'VEHICLE_LAND',
-  VESSEL = 'VESSEL'
-}
-
-export const vehicleTypeLabels = {
-  OTHER_SEA: {
-    code: 'OTHER_SEA',
-    libelle: 'Autre véhicule marin'
-  },
-  VEHICLE_AIR: {
-    code: 'VEHICLE_AIR',
-    libelle: 'Véhicule aérien'
-  },
-  VEHICLE_LAND: {
-    code: 'VEHICLE_LAND',
-    libelle: 'Véhicule terrestre'
-  },
-  VESSEL: {
-    code: 'VESSEL',
-    libelle: 'Navire'
-  }
-}
-
 export const hasMissionOrderLabels = {
   YES: {
     label: 'Oui',

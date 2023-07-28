@@ -37,11 +37,15 @@ import type { MultiPoint, MultiPolygon } from 'ol/geom'
 const titlePlaceholder = {
   CONTROL_POINT: 'un point de contrôle',
   MISSION_ZONE: 'une zone de mission',
+  REPORTING_POINT: 'un point de signalement',
+  REPORTING_ZONE: 'une zone de signalement',
   SURVEILLANCE_ZONE: 'une zone de surveillance'
 }
 const validateButtonPlaceholder = {
   CONTROL_POINT: 'le point de contrôle',
   MISSION_ZONE: 'la zone de mission',
+  REPORTING_POINT: 'le point',
+  REPORTING_ZONE: 'la zone',
   SURVEILLANCE_ZONE: 'la zone de surveillance'
 }
 
@@ -93,16 +97,23 @@ export function DrawModal() {
   }, [feature])
 
   useEffect(() => {
+    if (listener === InteractionListener.REPORTING_ZONE || listener === InteractionListener.REPORTING_POINT) {
+      return
+    }
     if (previousMissionId && previousMissionId !== routeParams?.params?.id) {
       dispatch(closeAddZone())
     }
-  }, [dispatch, previousMissionId, routeParams])
+  }, [listener, dispatch, previousMissionId, routeParams])
 
   useEffect(() => {
-    if (sideWindow.status === SideWindowStatus.CLOSED) {
+    if (
+      sideWindow.status === SideWindowStatus.CLOSED &&
+      listener !== InteractionListener.REPORTING_ZONE &&
+      listener !== InteractionListener.REPORTING_POINT
+    ) {
       dispatch(closeAddZone())
     }
-  }, [dispatch, sideWindow.status])
+  }, [dispatch, listener, sideWindow.status])
 
   const handleQuit = () => {
     dispatch(closeAddZone())
@@ -149,7 +160,7 @@ export function DrawModal() {
           </QuitButton>
         </Header>
         <Body>
-          {listener === InteractionListener.CONTROL_POINT && (
+          {(listener === InteractionListener.CONTROL_POINT || listener === InteractionListener.REPORTING_POINT) && (
             <CoordinatesInputWrapper>
               <CoordinatesInput
                 coordinatesFormat={coordinatesFormat}
@@ -162,7 +173,7 @@ export function DrawModal() {
             </CoordinatesInputWrapper>
           )}
           <ButtonRow $withTools={listener === InteractionListener.MISSION_ZONE}>
-            {listener === InteractionListener.MISSION_ZONE && (
+            {(listener === InteractionListener.MISSION_ZONE || listener === InteractionListener.REPORTING_ZONE) && (
               <IconGroup>
                 <IconButton
                   active={interactionType === InteractionType.POLYGON}

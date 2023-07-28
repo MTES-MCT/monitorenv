@@ -10,18 +10,16 @@ import { ActionTargetSelector } from './ActionTargetSelector'
 import { InfractionsForm } from './InfractionsForm'
 import { VehicleTypeSelector } from './VehicleTypeSelector'
 import { COLORS } from '../../../../../constants/constants'
-import {
-  Mission,
-  EnvActionControl,
-  ActionTargetTypeEnum,
-  VehicleTypeEnum
-} from '../../../../../domain/entities/missions'
+import { TargetTypeEnum } from '../../../../../domain/entities/targetType'
+import { VehicleTypeEnum } from '../../../../../domain/entities/vehicleType'
 import { useNewWindow } from '../../../../../ui/NewWindow'
 import { ReactComponent as ControlIconSVG } from '../../../../../uiMonitor/icons/Control.svg'
 import { ReactComponent as DeleteSVG } from '../../../../../uiMonitor/icons/Delete.svg'
 import { getDateAsLocalizedStringCompact } from '../../../../../utils/getDateAsLocalizedString'
 import { MultiPointPicker } from '../../../MultiPointPicker'
 import { ActionTheme } from '../Themes/ActionTheme'
+
+import type { Mission, EnvActionControl } from '../../../../../domain/entities/missions'
 
 export function ControlForm({
   currentActionIndex,
@@ -54,8 +52,8 @@ export function ControlForm({
   const canAddInfraction =
     actionNumberOfControls &&
     actionNumberOfControls > 0 &&
-    ((actionTargetType === ActionTargetTypeEnum.VEHICLE && vehicleType !== undefined) ||
-      (actionTargetType !== undefined && actionTargetType !== ActionTargetTypeEnum.VEHICLE)) &&
+    ((actionTargetType === TargetTypeEnum.VEHICLE && vehicleType !== undefined) ||
+      (actionTargetType !== undefined && actionTargetType !== TargetTypeEnum.VEHICLE)) &&
     actionNumberOfControls > (envActions[currentActionIndex]?.infractions?.length || 0)
 
   const onVehicleTypeChange = selectedVehicleType => {
@@ -88,7 +86,7 @@ export function ControlForm({
       const w = _.cloneDeep(v)
       _.set(w, `envActions[${currentActionIndex}].actionTargetType`, selectedTargetType)
 
-      if (selectedTargetType !== ActionTargetTypeEnum.VEHICLE) {
+      if (selectedTargetType !== TargetTypeEnum.VEHICLE) {
         _.set(w, `envActions[${currentActionIndex}].vehicleType`, null)
         _.update(w, `envActions[${currentActionIndex}].infractions`, inf =>
           inf?.map(i => ({ ...i, vesselSize: null, vesselType: null }))
@@ -158,7 +156,7 @@ export function ControlForm({
               isErrorMessageHidden
               isLight
               label="Nombre total de contrôles"
-              min={0}
+              min={1}
               name={`envActions.${currentActionIndex}.actionNumberOfControls`}
             />
           </ActionFieldWrapper>
@@ -172,9 +170,9 @@ export function ControlForm({
           </ActionFieldWrapper>
           <ActionFieldWrapper>
             <VehicleTypeSelector
-              currentActionIndex={currentActionIndex}
-              disabled={actionTargetType !== ActionTargetTypeEnum.VEHICLE}
+              disabled={actionTargetType !== TargetTypeEnum.VEHICLE}
               error={actionVehicleTypeErrorMessage}
+              name={`envActions.${currentActionIndex}.vehicleType`}
               onChange={onVehicleTypeChange}
               value={vehicleType}
             />

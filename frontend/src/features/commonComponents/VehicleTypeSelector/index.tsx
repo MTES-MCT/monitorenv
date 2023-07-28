@@ -1,10 +1,9 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { Select } from '@mtes-mct/monitor-ui'
+import { Select, useNewWindow } from '@mtes-mct/monitor-ui'
 import { MutableRefObject, useRef } from 'react'
 import styled from 'styled-components'
 
-import { vehicleTypeLabels } from '../../../../../domain/entities/vehicleType'
-import { useNewWindow } from '../../../../../ui/NewWindow'
+import { vehicleTypeLabels } from '../../../domain/entities/vehicleType'
 
 import type { Promisable } from 'type-fest'
 
@@ -41,8 +40,4 @@ export function VehicleTypeSelector({ disabled, error, name, onChange, value }: 
 
 const SelectorWrapper = styled.div`
   width: 150px;
-  .rs-picker-menu {
-    position: relative;
-    margin-top: -50px;
-  }
 `

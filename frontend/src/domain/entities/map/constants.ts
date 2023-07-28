@@ -14,6 +14,8 @@ export enum InteractionListener {
   INTEREST_POINT = 'INTEREST_POINT',
   MEASUREMENT = 'MEASUREMENT',
   MISSION_ZONE = 'MISSION_ZONE',
+  REPORTING_POINT = 'REPORTING_POINT',
+  REPORTING_ZONE = 'REPORTING_ZONE',
   SURVEILLANCE_ZONE = 'SURVEILLANCE_ZONE'
 }
 
@@ -52,5 +54,7 @@ export const InteractionListenerToOLGeometryType: Record<InteractionListener, OL
   [InteractionListener.INTEREST_POINT]: undefined,
   [InteractionListener.MEASUREMENT]: undefined,
   [InteractionListener.SURVEILLANCE_ZONE]: OLGeometryType.MULTIPOLYGON,
-  [InteractionListener.MISSION_ZONE]: OLGeometryType.MULTIPOLYGON
+  [InteractionListener.MISSION_ZONE]: OLGeometryType.MULTIPOLYGON,
+  [InteractionListener.REPORTING_ZONE]: OLGeometryType.MULTIPOLYGON,
+  [InteractionListener.REPORTING_POINT]: OLGeometryType.MULTIPOINT
 }

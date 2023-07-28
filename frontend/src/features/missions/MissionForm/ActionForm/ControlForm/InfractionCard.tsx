@@ -5,18 +5,16 @@ import styled, { css } from 'styled-components'
 
 import { COLORS } from '../../../../../constants/constants'
 import {
-  actionTargetTypeLabels,
-  ActionTargetTypeEnum,
   FormalNoticeEnum,
   InfractionTypeEnum,
   infractionTypeLabels,
-  VehicleTypeEnum,
-  vehicleTypeLabels,
   VesselTypeEnum,
   vesselTypeLabels,
   EnvActionControl,
   Infraction
 } from '../../../../../domain/entities/missions'
+import { TargetTypeEnum, targetTypeLabels } from '../../../../../domain/entities/targetType'
+import { vehicleTypeLabels, VehicleTypeEnum } from '../../../../../domain/entities/vehicleType'
 import { ReactComponent as DeleteSVG } from '../../../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as DuplicateSVG } from '../../../../../uiMonitor/icons/Duplicate.svg'
 import { ReactComponent as EditIconSVG } from '../../../../../uiMonitor/icons/Edit.svg'
@@ -64,22 +62,20 @@ export function InfractionCard({
   return (
     <Wrapper $hasError={!!meta.error}>
       <Summary>
-        {targetTypeField.value === ActionTargetTypeEnum.VEHICLE && (
+        {targetTypeField.value === TargetTypeEnum.VEHICLE && (
           <VehicleType>
-            {vehicleTypeLabels[vehicleTypeField?.value]?.libelle || 'Non Renseigné'}
+            {vehicleTypeLabels[vehicleTypeField?.value]?.label || 'Non Renseigné'}
             {vehicleTypeField?.value === VehicleTypeEnum.VESSEL
               ? ` – ${vesselTypeLabels[vesselType?.value]?.libelle || 'Type non défini'}`
               : ''}
             &nbsp;&ndash;&nbsp;
           </VehicleType>
         )}
-        {targetTypeField.value === ActionTargetTypeEnum.VEHICLE ? (
+        {targetTypeField.value === TargetTypeEnum.VEHICLE ? (
           <Identification>{registrationNumber?.value || ' sans immatriculation'}</Identification>
         ) : (
           <Identification>
-            {companyName?.value ||
-              controlledPersonIdentity?.value ||
-              actionTargetTypeLabels[targetTypeField.value]?.libelle}
+            {companyName?.value || controlledPersonIdentity?.value || targetTypeLabels[targetTypeField.value]?.label}
           </Identification>
         )}
         <SummaryDetails>

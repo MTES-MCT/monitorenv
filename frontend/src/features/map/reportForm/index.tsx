@@ -1,24 +1,27 @@
 import { Form, Formik } from 'formik'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ReportForm } from './ReportForm'
+import { getReportingInitialValues } from './utils'
 
 export function Report() {
-  const { isReportFormOpen } = useAppSelector(state => state.global)
+  const {
+    global: { isReportFormOpen },
+    reportingState: { reporting }
+  } = useAppSelector(state => state)
 
   const submitReportForm = () => {
     // eslint-disable-next-line no-console
     console.log('coucou')
   }
 
+  const reportingInitialValues = useMemo(() => getReportingInitialValues(reporting), [reporting])
+
   return (
     <StyledContainer className={isReportFormOpen ? 'open' : undefined}>
-      <Formik
-        enableReinitialize
-        initialValues={{ needControl: undefined, theme: { subthemes: null, theme: null } }}
-        onSubmit={submitReportForm}
-      >
+      <Formik enableReinitialize initialValues={reportingInitialValues} onSubmit={submitReportForm}>
         <StyledForm>
           <ReportForm />
         </StyledForm>
@@ -39,11 +42,12 @@ const StyledContainer = styled.div`
   transition: right 0.5s ease-out;
   z-index: 100000;
   &.open {
-    right: 0;
+    right: 12px;
     overflow-y: auto;
   }
 `
 const StyledForm = styled(Form)`
   display: flex;
-  flex: 1;
+  flex-direction: column;
+  flex: 1 0 auto;
 `

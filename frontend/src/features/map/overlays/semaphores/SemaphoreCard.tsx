@@ -6,6 +6,7 @@ import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
 import { setIsReportFormOpen, setOverlayCoordinates } from '../../../../domain/shared_slices/Global'
+import { reportingStateActions } from '../../../../domain/shared_slices/ReportingState'
 import { resetSelectedSemaphore } from '../../../../domain/shared_slices/SemaphoresSlice'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
@@ -42,7 +43,7 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
   const dispatch = useDispatch()
   const { displaySemaphoresLayer, isReportFormOpen } = useAppSelector(state => state.global)
 
-  const { email, name, phoneNumber, unit } = feature.getProperties()
+  const { email, id, name, phoneNumber, unit } = feature.getProperties()
   const [tooltipPhoneState, setTooltipPhoneState] = useState(PHONE_TOOLTIP_STATE.hover)
 
   const [tooltipMailState, setTooltipMailState] = useState(MAIL_TOOLTIP_STATE.hover)
@@ -67,6 +68,7 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
 
   const addReport = () => {
     dispatch(setIsReportFormOpen(!isReportFormOpen))
+    dispatch(reportingStateActions.setReporting({ semaphoreId: id, sourceType: 'SEMAPHORE' }))
   }
 
   if (!displaySemaphoresLayer) {

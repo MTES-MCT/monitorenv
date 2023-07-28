@@ -1,5 +1,14 @@
 import { combineReducers } from '@reduxjs/toolkit'
 
+import { ampsAPI, ampsErrorLoggerMiddleware } from '../../api/ampsAPI'
+import { controlThemesAPI } from '../../api/controlThemesAPI'
+import { controlUnitsAPI } from '../../api/controlUnitsAPI'
+import { infractionsAPI } from '../../api/infractionsAPI'
+import { missionsAPI } from '../../api/missionsAPI'
+import { regulatoryLayersAPI } from '../../api/regulatoryLayersAPI'
+import { semaphoresAPI } from '../../api/semaphoresAPI'
+import { layerSearchSliceReducer } from '../../features/layersSelector/search/LayerSearch.slice'
+import { sideWindowReducer } from '../../features/SideWindow/slice'
 import { administrativeSlicePersistedReducer } from './Administrative'
 import { drawReducer } from './Draw'
 import { globalReducer } from './Global'
@@ -12,17 +21,9 @@ import { missionStateSliceReducer } from './MissionsState'
 import { multiMissionsSliceReducer } from './MultiMissions'
 import { regulatorySlicePersistedReducer } from './Regulatory'
 import { regulatoryMetadataSliceReducer } from './RegulatoryMetadata'
+import { reportingStateSliceReducer } from './ReportingState'
 import { selectedAmpSlicePersistedReducer } from './SelectedAmp'
 import { semaphoresPersistedReducer } from './SemaphoresSlice'
-import { ampsAPI, ampsErrorLoggerMiddleware } from '../../api/ampsAPI'
-import { controlThemesAPI } from '../../api/controlThemesAPI'
-import { controlUnitsAPI } from '../../api/controlUnitsAPI'
-import { infractionsAPI } from '../../api/infractionsAPI'
-import { missionsAPI } from '../../api/missionsAPI'
-import { regulatoryLayersAPI } from '../../api/regulatoryLayersAPI'
-import { semaphoresAPI } from '../../api/semaphoresAPI'
-import { layerSearchSliceReducer } from '../../features/layersSelector/search/LayerSearch.slice'
-import { sideWindowReducer } from '../../features/SideWindow/slice'
 
 export const homeReducers = combineReducers({
   administrative: administrativeSlicePersistedReducer,
@@ -46,6 +47,7 @@ export const homeReducers = combineReducers({
   [controlUnitsAPI.reducerPath]: controlUnitsAPI.reducer,
   [infractionsAPI.reducerPath]: infractionsAPI.reducer,
   [semaphoresAPI.reducerPath]: semaphoresAPI.reducer,
+  reportingState: reportingStateSliceReducer,
   selectedAmp: selectedAmpSlicePersistedReducer,
   semaphoresSlice: semaphoresPersistedReducer,
   sideWindow: sideWindowReducer

@@ -1,24 +1,33 @@
 import type { TargetTypeEnum } from './targetType'
 
 export type Report = {
-  actions?: string
+  actionTaken?: string
+  controlUnitId?: number
+  createdAt: Date
   description?: string
-  geom?: Record<string, any>[]
-  infractionProven?: boolean | undefined
-  needControl: boolean
-  reportTargetType?: TargetTypeEnum
-  reportType: string
-  semaphoreName?: string
-  source: string
-  targetDetails?: string
-  themes: ReportTheme[]
-  validity?: Date
+  geom: Record<string, any>[]
+  id?: number
+  isControlRequired?: boolean | undefined
+  isInfractionProven?: boolean | undefined
+  reportType?: string
+  semaphoreId?: number
+  sourceName?: string
+  sourceType: string
+  subThemes?: string[]
+  targetDetails?: TargetDetails
+  targetType?: TargetTypeEnum
+  theme?: string
+  validityTime?: number
   vehicleType?: string
 }
 
-export type ReportTheme = {
-  subThemes?: string[]
-  theme: string
+type TargetDetails = {
+  externalReferenceNumber?: string
+  imo?: string
+  mmsi?: string
+  operatorName?: string
+  size?: number
+  vesselName?: string
 }
 
 export enum ReportSourceEnum {
@@ -59,7 +68,7 @@ export const reportTypeLabels = {
 }
 
 export enum InfractionProvenEnum {
-  NOT_PROVEN = 'Non avérée',
+  NOT_PROVEN = 'NOT_PROVEN',
   PROVEN = 'PROVEN'
 }
 

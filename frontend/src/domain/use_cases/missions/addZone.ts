@@ -18,19 +18,20 @@ export const addZone = (geometry: GeoJSONNamespace.Geometry | undefined, listene
   )
 }
 
-export const addControlPosition = (geometry: GeoJSONNamespace.Geometry | undefined) => dispatch => {
-  if (geometry) {
-    dispatch(setGeometry(geometry))
-  }
+export const addControlPosition =
+  (geometry: GeoJSONNamespace.Geometry | undefined, listener?: InteractionListener) => dispatch => {
+    if (geometry) {
+      dispatch(setGeometry(geometry))
+    }
 
-  dispatch(openDrawLayerModal)
-  dispatch(
-    setInteractionTypeAndListener({
-      listener: InteractionListener.CONTROL_POINT,
-      type: InteractionType.POINT
-    })
-  )
-}
+    dispatch(openDrawLayerModal)
+    dispatch(
+      setInteractionTypeAndListener({
+        listener: listener || InteractionListener.CONTROL_POINT,
+        type: InteractionType.POINT
+      })
+    )
+  }
 
 const openDrawLayerModal = dispatch => {
   dispatch(

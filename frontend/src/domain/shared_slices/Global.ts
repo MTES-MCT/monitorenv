@@ -75,7 +75,7 @@ const initialState: GlobalStateType = {
 
   toast: undefined,
 
-  isReportFormOpen: true
+  isReportFormOpen: false
 }
 
 const globalSlice = createSlice({
