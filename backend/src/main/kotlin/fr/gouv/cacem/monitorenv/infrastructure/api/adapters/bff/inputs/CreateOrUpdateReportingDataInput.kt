@@ -30,6 +30,7 @@ data class CreateOrUpdateReportingDataInput(
     val isUnitAvailable: Boolean? = null,
     val createdAt: ZonedDateTime,
     val validityTime: Int? = null,
+    val isArchived: Boolean,
 ) {
     fun toReportingEntity(): ReportingEntity {
         return ReportingEntity(
@@ -52,6 +53,7 @@ data class CreateOrUpdateReportingDataInput(
             isUnitAvailable = this.isUnitAvailable,
             createdAt = this.createdAt,
             validityTime = this.validityTime,
+            isArchived = this.isArchived,
             isDeleted = false,
         )
     }

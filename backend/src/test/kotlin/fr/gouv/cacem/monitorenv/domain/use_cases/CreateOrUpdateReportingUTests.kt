@@ -74,6 +74,7 @@ class CreateOrUpdateReportingUTests {
             isUnitAvailable = true,
             createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             validityTime = 10,
+            isArchived = false,
             isDeleted = false,
         )
         val reportingWithControlUnit = ReportingEntity(
@@ -92,6 +93,7 @@ class CreateOrUpdateReportingUTests {
             isUnitAvailable = true,
             createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             validityTime = 10,
+            isArchived = false,
             isDeleted = false,
         )
 
@@ -154,6 +156,7 @@ class CreateOrUpdateReportingUTests {
             isUnitAvailable = true,
             createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             validityTime = 10,
+            isArchived = false,
             isDeleted = false,
         )
 

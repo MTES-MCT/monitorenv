@@ -21,6 +21,7 @@ class JpaReportingITests : AbstractDBTests() {
         // When
         val newReporting = ReportingEntity(
             createdAt = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+            isArchived = false,
             isDeleted = false,
         )
         val createdReporting = jpaReportingRepository.save(newReporting)

@@ -78,6 +78,7 @@ class ReportingsControllerITests {
             isUnitAvailable = true,
             createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             validityTime = 10,
+            isArchived = false,
             isDeleted = false,
         )
         val semaphore = SemaphoreEntity(
@@ -105,6 +106,7 @@ class ReportingsControllerITests {
             isUnitAvailable = true,
             createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             validityTime = 10,
+            isArchived = false,
         )
 
         given(createOrUpdateReporting.execute(any())).willReturn(Triple(reporting, null, semaphore))
@@ -132,6 +134,7 @@ class ReportingsControllerITests {
             .andExpect(jsonPath("$.isUnitAvailable").value(true))
             .andExpect(jsonPath("$.createdAt").value("2022-01-15T04:50:09Z"))
             .andExpect(jsonPath("$.validityTime").value(10))
+            .andExpect(jsonPath("$.isArchived").value(false))
     }
 
     @Test
@@ -154,6 +157,7 @@ class ReportingsControllerITests {
             isUnitAvailable = true,
             createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             validityTime = 10,
+            isArchived = false,
             isDeleted = false,
         )
         val semaphore = SemaphoreEntity(
@@ -189,6 +193,7 @@ class ReportingsControllerITests {
             .andExpect(jsonPath("$[0].isUnitAvailable").value(true))
             .andExpect(jsonPath("$[0].createdAt").value("2022-01-15T04:50:09Z"))
             .andExpect(jsonPath("$[0].validityTime").value(10))
+            .andExpect(jsonPath("$[0].isArchived").value(false))
     }
 
     @Test

@@ -126,5 +126,5 @@ INSERT INTO reportings (
     12,
     false
 );
-
-SELECT setval('reportings_id_seq', 4);
+CREATE SEQUENCE IF NOT EXISTS reportings_2023_seq;
+SELECT setval('reportings_2023_seq', 5);
