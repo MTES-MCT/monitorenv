@@ -14,7 +14,8 @@ export const StyledForm = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
-  padding-bottom: 72px;
+  height: calc(100vh - 108px);
+  overflow-y: auto;
 `
 
 export const StyledHeader = styled.div`
@@ -37,6 +38,11 @@ export const StyledTitle = styled.div`
 export const StyledIconButton = styled(IconButton)`
   color: ${p => p.theme.color.white};
 `
+export const StyledChevronIcon = styled(IconButton)<{ $isOpen: boolean }>`
+  transform: ${props => (!props.$isOpen ? 'rotate(0deg)' : 'rotate(-180deg)')};
+  transition: all 0.5s;
+`
+
 export const StyledHeaderButtons = styled.div`
   display: flex;
   flex-direction: row;
@@ -140,15 +146,19 @@ export const StyledFooter = styled.div`
   width: 500px;
   padding: 13px;
   display: flex;
-  justify-content: end;
+  justify-content: space-between;
   gap: 4px;
 `
 export const StyledSubmitButton = styled(Button)`
   background-color: ${p => p.theme.color.white};
   padding: 4px 12px;
 `
-
-export const StyledDeleteButton = styled(Button)`
+export const StyledArchivedButton = styled(Button)`
   border: 1px solid ${p => p.theme.color.white};
-  padding: 4px 12px;
+  padding: 3px 12px;
+  margin-right: 8px;
+`
+
+export const StyledDeleteButton = styled(IconButton)`
+  background-color: ${p => p.theme.color.white};
 `
