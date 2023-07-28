@@ -45,6 +45,7 @@ type GlobalStateType = {
 
   displayReportingsLayer: boolean
   reportingFormVisibility: ReportingFormVisibility
+  displaySelectedReportingLayer: boolean
 }
 const initialState: GlobalStateType = {
   // state entry for every component /menu displayed on map whose visibility should be controlled
@@ -79,7 +80,8 @@ const initialState: GlobalStateType = {
   toast: undefined,
 
   reportingFormVisibility: ReportingFormVisibility.NOT_VISIBLE,
-  displayReportingsLayer: true
+  displayReportingsLayer: true,
+  displaySelectedReportingLayer: true
 }
 
 const globalSlice = createSlice({

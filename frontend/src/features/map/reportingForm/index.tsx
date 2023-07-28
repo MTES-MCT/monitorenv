@@ -16,7 +16,7 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 export function Reporting() {
   const {
     global: { reportingFormVisibility },
-    reportingState: { reporting, selectedReportingId }
+    reportingState: { reportingState, selectedReportingId }
   } = useAppSelector(state => state)
   const dispatch = useDispatch()
 
@@ -32,8 +32,8 @@ export function Reporting() {
       return getReportingInitialValues(reportingToEdit)
     }
 
-    return getReportingInitialValues(reporting)
-  }, [reporting, reportingToEdit, selectedReportingId])
+    return getReportingInitialValues(reportingState)
+  }, [reportingState, reportingToEdit, selectedReportingId])
 
   return (
     <StyledContainer className={reportingFormVisibility}>

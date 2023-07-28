@@ -97,7 +97,7 @@ export function ReportingForm() {
             isInline
             isLabelHidden
             label="La suspicion d'infraction est"
-            name="infractionProven"
+            name="isInfractionProven"
             options={InfractionProvenOptions}
           />
         </StyledInfractionProven>

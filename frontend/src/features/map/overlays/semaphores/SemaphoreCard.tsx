@@ -67,9 +67,9 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
   }
 
   const addReporting = () => {
-    dispatch(reportingStateActions.setSelectedReportingId(undefined))
     dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
-    dispatch(reportingStateActions.setReporting({ semaphoreId: id, sourceType: 'SEMAPHORE' }))
+    dispatch(reportingStateActions.setSelectedReportingId(undefined))
+    dispatch(reportingStateActions.setReportingState({ semaphoreId: id, sourceType: 'SEMAPHORE' }))
   }
 
   if (!displaySemaphoresLayer) {

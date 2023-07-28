@@ -25,6 +25,12 @@ export const reportingsAPI = createApi({
       query: id => `reportings/${id}`
     }),
     getReportings: build.query<Reporting[], void>({
+      providesTags: result =>
+        result
+          ? // successful query
+            [...result.map(({ id }) => ({ id, type: 'Reportings' as const })), { id: 'LIST', type: 'Reportings' }]
+          : // an error occurred, but we still want to refetch this query when `{ type: 'Reportings', id: 'LIST' }` is invalidated
+            [{ id: 'LIST', type: 'Reportings' }],
       query: () => 'reportings'
     }),
     updateReporting: build.mutation<Reporting, Reporting>({

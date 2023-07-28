@@ -14,6 +14,7 @@ import { MissionsLayer } from './layers/MissionsLayer'
 import { RegulatoryLayers } from './layers/RegulatoryLayers'
 import { RegulatoryPreviewLayer } from './layers/RegulatoryPreviewLayer'
 import { ReportingsLayer } from './layers/Reportings'
+import { SelectedReportingLayer } from './layers/Reportings/SelectedReporting'
 import { SelectedMissionLayer } from './layers/SelectedMissionLayer'
 import { SemaphoresLayer } from './layers/Semaphores'
 import { MapExtentController } from './MapExtentController'
@@ -63,6 +64,7 @@ export function Map() {
       <SemaphoreOverlay />
       <Reporting />
       <ReportingsLayer />
+      <SelectedReportingLayer />
       <ReportingOverlay />
     </BaseMap>
   )

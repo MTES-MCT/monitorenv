@@ -26,7 +26,7 @@ export function ReportingCard({ feature, selected = false }: { feature: any; sel
   }
 
   const closeReportingCard = useCallback(() => {
-    dispatch(reportingStateActions.setSelectedReportingId(undefined))
+    dispatch(reportingStateActions.setSelectedReportingIdOnMap(undefined))
   }, [dispatch])
 
   if (!displayReportingsLayer) {

@@ -9,23 +9,28 @@ export enum ReportingFormVisibility {
 }
 
 type ReportingState = {
-  reporting: Reporting | undefined
+  reportingState: Reporting | undefined
   selectedReportingId: number | undefined
+  selectedReportingIdOnMap: number | undefined
 }
 
 const initialState: ReportingState = {
-  reporting: undefined,
-  selectedReportingId: undefined
+  reportingState: undefined,
+  selectedReportingId: undefined,
+  selectedReportingIdOnMap: undefined
 }
 const reportingStateSlice = createSlice({
   initialState,
   name: 'reportingState',
   reducers: {
-    setReporting(state, action) {
-      state.reporting = action.payload
+    setReportingState(state, action) {
+      state.reportingState = action.payload
     },
     setSelectedReportingId(state, action) {
       state.selectedReportingId = action.payload
+    },
+    setSelectedReportingIdOnMap(state, action) {
+      state.selectedReportingIdOnMap = action.payload
     }
   }
 })

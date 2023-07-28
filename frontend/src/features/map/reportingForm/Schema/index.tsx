@@ -11,7 +11,7 @@ const MissionZoneSchema = Yup.object().test({
 export const ReportingSchema: Yup.SchemaOf<Reporting> = Yup.object()
   .shape({
     controlUnitId: Yup.number().when('sourceType', (sourceType, schema) => {
-      if (sourceType === ReportingSourceEnum.UNIT) {
+      if (sourceType === ReportingSourceEnum.CONTROL_UNIT) {
         return schema.nullable().required('Veuillez définir une source au signalement')
       }
 
@@ -26,7 +26,7 @@ export const ReportingSchema: Yup.SchemaOf<Reporting> = Yup.object()
 
       return schema.nullable()
     }),
-    sourceName: Yup.number().when('sourceType', (sourceType, schema) => {
+    sourceName: Yup.string().when('sourceType', (sourceType, schema) => {
       if (sourceType === ReportingSourceEnum.OTHER) {
         return schema.nullable().required('Veuillez définir une source au signalement')
       }

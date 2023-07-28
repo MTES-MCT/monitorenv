@@ -31,18 +31,19 @@ type TargetDetails = {
 }
 
 export enum ReportingSourceEnum {
+  CONTROL_UNIT = 'CONTROL_UNIT',
   OTHER = 'OTHER',
-  SEMAPHORE = 'SEMAPHORE',
-  UNIT = 'UNIT'
+  SEMAPHORE = 'SEMAPHORE'
 }
 export const reportingSourceLabels = {
   SEMAPHORE: {
     label: 'Sémaphore',
     value: 'SEMAPHORE'
   },
-  UNIT: {
+  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
+  CONTROL_UNIT: {
     label: 'Unité',
-    value: 'UNIT'
+    value: 'CONTROL_UNIT'
   },
   // eslint-disable-next-line sort-keys-fix/sort-keys-fix
   OTHER: {
@@ -75,11 +76,11 @@ export enum InfractionProvenEnum {
 export const infractionProvenLabels = {
   PROVEN: {
     label: 'Avérée',
-    value: 'PROVEN'
+    value: true
   },
   // eslint-disable-next-line sort-keys-fix/sort-keys-fix
   NOT_PROVEN: {
     label: 'Non avérée',
-    value: 'NOT_PROVEN'
+    value: false
   }
 }

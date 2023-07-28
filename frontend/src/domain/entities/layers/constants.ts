@@ -125,9 +125,13 @@ export const Layers = {
     type: null,
     zIndex: 950
   },
+  REPORTING_SELECTED: {
+    code: 'reporting_selected',
+    zIndex: 1100
+  },
   REPORTINGS: {
     code: 'reportings',
-    zIndex: 1300
+    zIndex: 1000
   },
   SEMAPHORES: {
     code: 'semaphores',

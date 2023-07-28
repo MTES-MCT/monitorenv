@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { getReportingZoneFeature } from './reportingsGeometryHelpers'
-import { reportingStyles } from './style'
+import { styleReporting } from './style'
 import { useGetReportingsQuery } from '../../../../api/reportingsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { reportingStateActions } from '../../../../domain/shared_slices/ReportingState'
@@ -40,7 +40,7 @@ export function ReportingsLayer({ map, mapClickEvent }: MapChildrenProps) {
       vectorLayerRef.current = new VectorLayer({
         renderBuffer: 7,
         source: GetVectorSource(),
-        style: reportingStyles,
+        style: styleReporting,
         updateWhileAnimating: true,
         updateWhileInteracting: true,
         zIndex: Layers.REPORTINGS.zIndex
@@ -87,7 +87,7 @@ export function ReportingsLayer({ map, mapClickEvent }: MapChildrenProps) {
       const feature = mapClickEvent?.feature
       if (feature.getId()?.toString()?.includes(Layers.REPORTINGS.code)) {
         const { id } = feature.getProperties()
-        dispatch(reportingStateActions.setSelectedReportingId(id))
+        dispatch(reportingStateActions.setSelectedReportingIdOnMap(id))
       }
     }
   }, [dispatch, mapClickEvent])

@@ -15,7 +15,7 @@ const MARGINS = {
   yTop: 120
 }
 export function ReportingOverlay({ currentFeatureOver, map }: MapChildrenProps) {
-  const { selectedReportingId } = useAppSelector(state => state.reportingState)
+  const { selectedReportingIdOnMap } = useAppSelector(state => state.reportingState)
   const { displayReportingsLayer } = useAppSelector(state => state.global)
 
   const feature = map
@@ -26,12 +26,12 @@ export function ReportingOverlay({ currentFeatureOver, map }: MapChildrenProps) 
         Object.prototype.hasOwnProperty.call(l, 'name') && (l as VectorLayerWithName).name === Layers.REPORTINGS.code
     )
     ?.getSource()
-    ?.getFeatureById(`${Layers.REPORTINGS.code}:${selectedReportingId}`)
+    ?.getFeatureById(`${Layers.REPORTINGS.code}:${selectedReportingIdOnMap}`)
   const currentfeatureId = currentFeatureOver?.getId()
   const displayHoveredFeature =
     typeof currentfeatureId === 'string' &&
     currentfeatureId.startsWith(Layers.REPORTINGS.code) &&
-    currentfeatureId !== `${Layers.REPORTINGS.code}:${selectedReportingId}`
+    currentfeatureId !== `${Layers.REPORTINGS.code}:${selectedReportingIdOnMap}`
 
   return (
     <>

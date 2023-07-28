@@ -58,7 +58,7 @@ export function Source() {
           searchable
         />
       )}
-      {values?.sourceType === ReportingSourceEnum.UNIT && (
+      {values?.sourceType === ReportingSourceEnum.CONTROL_UNIT && (
         <FormikSelect
           customSearch={customSearchControlUnits}
           label="Nom de l'unité"
