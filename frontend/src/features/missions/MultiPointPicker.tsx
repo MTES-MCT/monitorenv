@@ -25,10 +25,10 @@ import type { Coordinate } from 'ol/coordinate'
 
 export type MultiPointPickerProps = {
   addButtonLabel: string
-  label: string
+  label?: string
   name: string
 }
-export function MultiPointPicker({ addButtonLabel, label, name }: MultiPointPickerProps) {
+export function MultiPointPicker({ addButtonLabel, label = undefined, name }: MultiPointPickerProps) {
   const dispatch = useAppDispatch()
   const listener = useAppSelector(state => state.draw.listener)
   const { coordinatesFormat } = useAppSelector(state => state.map)
@@ -90,7 +90,7 @@ export function MultiPointPicker({ addButtonLabel, label, name }: MultiPointPick
 
   return (
     <Field>
-      <Label>{label}</Label>
+      {label && <Label>{label}</Label>}
 
       <Button
         accent={Accent.SECONDARY}

@@ -20,6 +20,7 @@ import { MapHistory } from './MapHistory'
 import { ActionOverlay } from './overlays/actions'
 import { MissionOverlays } from './overlays/missions'
 import { SemaphoreOverlay } from './overlays/semaphores'
+import { Report } from './reportForm'
 import { ShowRegulatoryMetadata } from './ShowRegulatoryMetadata'
 
 import type { MapClickEvent } from '../../types'
@@ -58,6 +59,7 @@ export function Map() {
       <ActionOverlay />
       <SemaphoresLayer />
       <SemaphoreOverlay />
+      <Report />
     </BaseMap>
   )
 }

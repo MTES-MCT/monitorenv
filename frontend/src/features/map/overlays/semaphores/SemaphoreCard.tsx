@@ -1,11 +1,11 @@
-import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { useCallback, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Tooltip, Whisper } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
-import { setOverlayCoordinates } from '../../../../domain/shared_slices/Global'
+import { setIsReportFormOpen, setOverlayCoordinates } from '../../../../domain/shared_slices/Global'
 import { resetSelectedSemaphore } from '../../../../domain/shared_slices/SemaphoresSlice'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
@@ -40,7 +40,7 @@ const hoverTooltip = (text, className) => <StyledTooltip className={className}>{
 
 export function SemaphoreCard({ feature, selected = false }: { feature: any; selected?: boolean }) {
   const dispatch = useDispatch()
-  const { displaySemaphoresLayer } = useAppSelector(state => state.global)
+  const { displaySemaphoresLayer, isReportFormOpen } = useAppSelector(state => state.global)
 
   const { email, name, phoneNumber, unit } = feature.getProperties()
   const [tooltipPhoneState, setTooltipPhoneState] = useState(PHONE_TOOLTIP_STATE.hover)
@@ -63,6 +63,10 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
     navigator.clipboard.writeText(email)
     setTooltipMailState(MAIL_TOOLTIP_STATE.click)
     setTooltipPhoneState(PHONE_TOOLTIP_STATE.hover)
+  }
+
+  const addReport = () => {
+    dispatch(setIsReportFormOpen(!isReportFormOpen))
   }
 
   if (!displaySemaphoresLayer) {
@@ -126,6 +130,10 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
             <span>{email}</span>
           </StyledContactLine>
         )}
+
+        <StyledButton Icon={Icon.Plus} isFullWidth onClick={addReport}>
+          Créer un signalement
+        </StyledButton>
       </StyledContactContainer>
     </Wrapper>
   )
@@ -198,4 +206,9 @@ const StyledTooltip = styled(Tooltip)`
   &.greenTooltip.rs-tooltip.placement-left:after {
     border-left-color: ${p => p.theme.color.mediumSeaGreen};
   }
+`
+// TODO delete when Monitor-ui component have good padding
+const StyledButton = styled(Button)`
+  padding: 4px 12px;
+  margin-top: 16px;
 `

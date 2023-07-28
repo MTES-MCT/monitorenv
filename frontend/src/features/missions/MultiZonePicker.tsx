@@ -27,7 +27,7 @@ export type MultiZonePickerProps = {
   currentActionIndex?: number
   interactionListener: InteractionListener
   isLight?: boolean
-  label: string
+  label?: string | undefined
   name: string
 }
 export function MultiZonePicker({
@@ -35,7 +35,7 @@ export function MultiZonePicker({
   currentActionIndex,
   interactionListener,
   isLight,
-  label,
+  label = undefined,
   name
 }: MultiZonePickerProps) {
   const dispatch = useAppDispatch()
@@ -93,7 +93,7 @@ export function MultiZonePicker({
 
   return (
     <Field>
-      <Label hasError={!!meta.error}>{label}</Label>
+      {label && <Label hasError={!!meta.error}>{label}</Label>}
 
       <Button accent={Accent.SECONDARY} Icon={Icon.Plus} isFullWidth onClick={handleAddZone}>
         {addButtonLabel}

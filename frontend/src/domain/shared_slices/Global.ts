@@ -40,6 +40,8 @@ type GlobalStateType = {
   overlayCoordinates: [number, number] | undefined
 
   toast: Toast | undefined
+
+  isReportFormOpen: boolean
 }
 const initialState: GlobalStateType = {
   // state entry for every component /menu displayed on map whose visibility should be controlled
@@ -71,7 +73,9 @@ const initialState: GlobalStateType = {
 
   overlayCoordinates: undefined,
 
-  toast: undefined
+  toast: undefined,
+
+  isReportFormOpen: true
 }
 
 const globalSlice = createSlice({
@@ -88,6 +92,10 @@ const globalSlice = createSlice({
 
     setDisplayedItems(state, action) {
       return { ...state, ...action.payload }
+    },
+
+    setIsReportFormOpen(state, action) {
+      state.isReportFormOpen = action.payload
     },
 
     /**
@@ -115,6 +123,7 @@ export const {
   removeToast,
   setDisplayedItems,
   setHealthcheckTextWarning,
+  setIsReportFormOpen,
   setMapToolOpened,
   setOverlayCoordinates,
   setToast
