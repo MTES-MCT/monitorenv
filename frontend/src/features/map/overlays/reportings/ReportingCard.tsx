@@ -32,8 +32,9 @@ export function ReportingCard({ feature, selected = false }: { feature: any; sel
   const editReporting = () => {
     if (isDirty) {
       dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(true))
-      dispatch(editReportingInLocalStore(id))
+      dispatch(editReportingInLocalStore(id, true))
     } else {
+      dispatch(editReportingInLocalStore(id, false))
       dispatch(reportingStateActions.setSelectedReportingId(id))
     }
     dispatch(hideSideButtons())

@@ -139,21 +139,21 @@ export const StyledToggle = styled.div`
     background-color: ${p => p.theme.color.gunMetal};
   }
 `
-export const StyledFooter = styled.div`
+export const StyledFooter = styled.div<{ $justify?: string | undefined }>`
   background-color: ${p => p.theme.color.charcoal};
   height: 56px;
   color: ${p => p.theme.color.white};
   width: 500px;
   padding: 13px;
   display: flex;
-  justify-content: space-between;
+  justify-content: ${p => p.$justify ?? 'space-between'};
   gap: 4px;
 `
 export const StyledSubmitButton = styled(Button)`
   background-color: ${p => p.theme.color.white};
   padding: 4px 12px;
 `
-export const StyledArchivedButton = styled(Button)`
+export const StyledButton = styled(Button)`
   border: 1px solid ${p => p.theme.color.white};
   padding: 3px 12px;
   margin-right: 8px;

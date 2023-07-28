@@ -87,6 +87,7 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
     }
     dispatch(hideSideButtons())
     dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
+    dispatch(reportingStateActions.setSelectedReportingIdOnMap(undefined))
   }
 
   if (!displaySemaphoresLayer) {
