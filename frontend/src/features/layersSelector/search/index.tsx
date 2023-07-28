@@ -50,15 +50,23 @@ export function LayerSearch({ isVisible }) {
 
   const searchLayers = useMemo(() => {
     const fuseRegulatory = new Fuse(regulatoryLayers, {
-      distance: 50,
+      ignoreLocation: true,
       includeScore: false,
-      keys: ['properties.layer_name', 'properties.entity_name', 'properties.ref_reg', 'properties.type'],
+      keys: [
+        'properties.layer_name',
+        'properties.entity_name',
+        'properties.ref_reg',
+        'properties.type',
+        'properties.thematique'
+      ],
+      minMatchCharLength: 3,
       threshold: 0.4
     })
     const fuseAMPs = new Fuse((amps?.entities && Object.values(amps?.entities)) || [], {
-      distance: 50,
+      ignoreLocation: true,
       includeScore: false,
       keys: ['name', 'type'],
+      minMatchCharLength: 3,
       threshold: 0.4
     })
 
@@ -86,15 +94,23 @@ export function LayerSearch({ isVisible }) {
         if (searchedText.length > 2 || ampTypes.length > 0 || geofilter) {
           let searchedAMPS
           let itemSchema
-          if (searchedText.length > 2) {
-            searchedAMPS = fuseAMPs?.search<AMP>(searchedText)
+          if (searchedText.length > 2 || ampTypes.length > 0) {
+            const filterWithTextExpression =
+              searchedText.length > 0 ? { $path: ['name'], $val: searchedText } : undefined
+            const filterWithType =
+              regulatoryThemes.length > 0
+                ? { $or: regulatoryThemes.map(theme => ({ $path: ['type'], $val: `'${theme}` })) }
+                : undefined
+
+            const filterExpression = [filterWithTextExpression, filterWithType].filter(f => !!f) as Fuse.Expression[]
+
+            searchedAMPS = fuseAMPs?.search<AMP>({
+              $and: filterExpression
+            })
             itemSchema = { bboxPath: 'item.bbox', idPath: 'item.id' }
           } else {
             searchedAMPS = amps?.entities && Object.values(amps?.entities)
             itemSchema = { bboxPath: 'bbox', idPath: 'id' }
-          }
-          if (ampTypes.length > 0) {
-            searchedAMPS = searchedAMPS.filter(amp => ampTypes.includes(amp.type))
           }
           const searchedAMPsInExtent = getIntersectingLayerIds(geofilter, searchedAMPS, extent, itemSchema)
           dispatch(setAMPsSearchResult(searchedAMPsInExtent))
@@ -105,18 +121,34 @@ export function LayerSearch({ isVisible }) {
         if (searchedText.length > 2 || regulatoryThemes.length > 0 || geofilter) {
           let searchedRegulatory
           let itemSchema
-          if (searchedText.length > 2) {
-            searchedRegulatory = fuseRegulatory.search<RegulatoryLayerType>(searchedText)
+          if (searchedText.length > 2 || regulatoryThemes.length > 0) {
+            const filterWithTextExpression =
+              searchedText.length > 0
+                ? {
+                    $or: [
+                      { $path: ['properties', 'layer_name'], $val: searchedText },
+                      { $path: ['properties', 'entity_name'], $val: searchedText },
+                      { $path: ['properties', 'ref_reg'], $val: searchedText },
+                      { $path: ['properties', 'type'], $val: searchedText }
+                    ]
+                  }
+                : undefined
+
+            const filterWithTheme =
+              regulatoryThemes.length > 0
+                ? { $or: regulatoryThemes.map(theme => ({ $path: ['properties', 'thematique'], $val: `'${theme}` })) }
+                : undefined
+
+            const filterExpression = [filterWithTextExpression, filterWithTheme].filter(f => !!f) as Fuse.Expression[]
+            searchedRegulatory = fuseRegulatory.search<RegulatoryLayerType>({
+              $and: filterExpression
+            })
             itemSchema = { bboxPath: 'item.bbox', idPath: 'item.id' }
           } else {
             searchedRegulatory = regulatoryLayers
             itemSchema = { bboxPath: 'bbox', idPath: 'id' }
           }
-          if (regulatoryThemes.length > 0) {
-            searchedRegulatory = searchedRegulatory.filter(layer =>
-              regulatoryThemes.includes(layer.properties.thematique)
-            )
-          }
+
           const searchedRegulatoryInExtent = getIntersectingLayerIds(geofilter, searchedRegulatory, extent, itemSchema)
           dispatch(setRegulatoryLayersSearchResult(searchedRegulatoryInExtent))
         } else {
@@ -235,6 +267,7 @@ export function LayerSearch({ isVisible }) {
         .flatMap()
         .map(l => l.trim())
         .uniq()
+        .filter(l => !!l)
         .map(l => ({ label: l, value: l }))
         .sortBy('label')
         .value(),
