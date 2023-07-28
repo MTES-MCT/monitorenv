@@ -23,7 +23,7 @@ import { ActionOverlay } from './overlays/actions'
 import { MissionOverlays } from './overlays/missions'
 import { ReportingOverlay } from './overlays/reportings'
 import { SemaphoreOverlay } from './overlays/semaphores'
-import { Reporting } from './reportingForm'
+import { Reporting } from './reporting'
 import { ShowRegulatoryMetadata } from './ShowRegulatoryMetadata'
 
 import type { MapClickEvent } from '../../types'

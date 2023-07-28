@@ -29,6 +29,11 @@ export const StyledHeader = styled.div`
   padding: 16px 24px;
   gap: 8px;
 `
+export const StyledTitle = styled.div`
+  display: flex;
+  gap: 8px;
+`
+
 export const StyledIconButton = styled(IconButton)`
   color: ${p => p.theme.color.white};
 `
@@ -124,6 +129,9 @@ export const StyledToggle = styled.div`
   flex-direction: row;
   flex: 1;
   gap: 8px;
+  > .rs-toggle-checked .rs-toggle-presentation {
+    background-color: ${p => p.theme.color.gunMetal};
+  }
 `
 export const StyledFooter = styled.div`
   background-color: ${p => p.theme.color.charcoal};

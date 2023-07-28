@@ -9,6 +9,7 @@ import { LayersSidebar } from '../features/layersSelector'
 import { LocateOnMap } from '../features/LocateOnMap'
 import { DrawModal } from '../features/map/draw/DrawModal'
 import { Map } from '../features/map/Map'
+import { RightMenuOnHoverArea } from '../features/map/shared/RightMenuOnHoverArea'
 import { InterestPointMapButton } from '../features/map/tools/interest_points/InterestPointMapButton'
 import { MeasurementMapButton } from '../features/map/tools/measurements/MeasurementMapButton'
 import { MissionsMenu } from '../features/missions/MissionsMenu'
@@ -57,6 +58,7 @@ export function HomePage() {
         <APIWorker />
         <Map />
         <LayersSidebar />
+        <RightMenuOnHoverArea />
         {displayDrawModal && <DrawModal />}
         {displayLocateOnMap && <LocateOnMap />}
 

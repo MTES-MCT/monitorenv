@@ -4,8 +4,9 @@ import styled from 'styled-components'
 
 import { CustomCircleRange } from './CustomCircleRange'
 import { MapToolType, MeasurementType } from '../../../../domain/entities/map/constants'
-import { setMapToolOpened } from '../../../../domain/shared_slices/Global'
+import { setMapToolOpened, setReportingFormVisibility } from '../../../../domain/shared_slices/Global'
 import { setMeasurementTypeToAdd } from '../../../../domain/shared_slices/Measurement'
+import { ReportingFormVisibility } from '../../../../domain/shared_slices/ReportingState'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useClickOutsideWhenOpenedAndExecute } from '../../../../hooks/useClickOutsideWhenOpenedAndExecute'
@@ -18,7 +19,9 @@ import { MapToolButton } from '../MapToolButton'
 export function MeasurementMapButton() {
   const dispatch = useAppDispatch()
   const { measurementTypeToAdd } = useAppSelector(state => state.measurement)
-  const { displayMeasurement, healthcheckTextWarning, mapToolOpened } = useAppSelector(state => state.global)
+  const { displayMeasurement, healthcheckTextWarning, mapToolOpened, reportingFormVisibility } = useAppSelector(
+    state => state.global
+  )
 
   const isOpen = useMemo(() => mapToolOpened === MapToolType.MEASUREMENT_MENU, [mapToolOpened])
   const isMeasurementToolOpen = useMemo(() => mapToolOpened === MapToolType.MEASUREMENT, [mapToolOpened])
@@ -62,10 +65,13 @@ export function MeasurementMapButton() {
     } else {
       dispatch(setMapToolOpened(MapToolType.MEASUREMENT_MENU))
     }
-  }, [dispatch, measurementTypeToAdd])
+    if (reportingFormVisibility !== ReportingFormVisibility.NOT_VISIBLE) {
+      dispatch(setReportingFormVisibility(ReportingFormVisibility.REDUCE))
+    }
+  }, [dispatch, measurementTypeToAdd, reportingFormVisibility])
 
   return (
-    <Wrapper ref={wrapperRef}>
+    <Wrapper ref={wrapperRef} className={reportingFormVisibility}>
       <MapToolButton
         dataCy="measurement"
         icon={measurementIcon}
@@ -78,7 +84,6 @@ export function MeasurementMapButton() {
 
       <MeasurementOptions healthcheckTextWarning={!!healthcheckTextWarning} isOpen={isOpen}>
         <MeasurementItem
-          className=".map-menu"
           data-cy="measurement-multiline"
           onClick={() => makeMeasurement(MeasurementType.MULTILINE)}
           title={"Mesure d'une distance avec lignes brisées"}
@@ -86,7 +91,6 @@ export function MeasurementMapButton() {
           <MultiLineIcon />
         </MeasurementItem>
         <MeasurementItem
-          className=".map-menu"
           data-cy="measurement-circle-range"
           onClick={() => makeMeasurement(MeasurementType.CIRCLE_RANGE)}
           title={"Rayon d'action"}
@@ -134,8 +138,13 @@ const CircleRangeIcon = styled(CircleRangeSVG)`
 `
 
 const Wrapper = styled.div`
-  transition: all 0.2s;
-  z-index: 1000;
+  position: absolute;
+  right: 10px;
+  top: 270px;
+  transition: right 0.3s ease-out;
+  &.visible {
+    right: 0px;
+  }
 `
 
 const MeasurementOptions = styled(MapComponentStyle)<{
@@ -145,12 +154,11 @@ const MeasurementOptions = styled(MapComponentStyle)<{
 }>`
   border-radius: 2px;
   display: inline-block;
-  margin-right: ${p => (p.isOpen ? '45px' : '-200px')};
+  margin-right: ${p => (p.isOpen ? '36px' : '-200px')};
   opacity: ${p => (p.isOpen ? '1' : '0')};
   position: absolute;
   right: 10px;
-  top: 249px;
+  top: 0;
   transition: all 0.5s;
   width: 175px;
-  z-index: 999;
 `

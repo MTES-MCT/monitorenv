@@ -33,11 +33,10 @@ export const styleReporting = feature => {
     return reportingStyleFactory(THEME.color.maximumRed)
   }
 
-  // TODO change color to hae backgroung in white and border in slateGray
-  return reportingStyleFactory(THEME.color.white)
+  return reportingStyleFactory(THEME.color.white, 'archived_reporting.svg')
 }
 
-export const reportingStyleFactory = color =>
+export const reportingStyleFactory = (color, src?: string | undefined) =>
   new Style({
     geometry: feature => {
       const extent = feature?.getGeometry()?.getExtent()
@@ -47,6 +46,6 @@ export const reportingStyleFactory = color =>
     },
     image: new Icon({
       color,
-      src: 'report.svg'
+      src: src || 'report.svg'
     })
   })

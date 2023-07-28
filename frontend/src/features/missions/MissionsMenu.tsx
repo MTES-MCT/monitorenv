@@ -4,7 +4,8 @@ import styled from 'styled-components'
 
 import { COLORS } from '../../constants/constants'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
-import { setDisplayedItems } from '../../domain/shared_slices/Global'
+import { setDisplayedItems, setReportingFormVisibility } from '../../domain/shared_slices/Global'
+import { ReportingFormVisibility } from '../../domain/shared_slices/ReportingState'
 import { addMission } from '../../domain/use_cases/missions/addMission'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { MenuWithCloseButton } from '../commonStyles/map/MenuWithCloseButton'
@@ -12,7 +13,7 @@ import { sideWindowActions, SideWindowStatus } from '../SideWindow/slice'
 
 export function MissionsMenu() {
   const dispatch = useDispatch()
-  const { displayMissionsLayer, missionsMenuIsOpen } = useAppSelector(state => state.global)
+  const { displayMissionsLayer, missionsMenuIsOpen, reportingFormVisibility } = useAppSelector(state => state.global)
   const { sideWindow } = useAppSelector(state => state)
 
   const toggleMissionsWindow = () => {
@@ -24,13 +25,16 @@ export function MissionsMenu() {
   const toggleMissionsMenu = e => {
     e.preventDefault()
     dispatch(setDisplayedItems({ isSearchSemaphoreVisible: false, missionsMenuIsOpen: !missionsMenuIsOpen }))
+    if (reportingFormVisibility !== ReportingFormVisibility.NOT_VISIBLE) {
+      dispatch(setReportingFormVisibility(ReportingFormVisibility.REDUCE))
+    }
   }
   const handleAddNewMission = () => {
     dispatch(addMission())
   }
 
   return (
-    <Wrapper>
+    <Wrapper className={reportingFormVisibility}>
       {missionsMenuIsOpen && (
         <MenuWithCloseButton.Container>
           <MenuWithCloseButton.Header>
@@ -74,6 +78,10 @@ const Wrapper = styled.div`
   right: 10px;
   display: flex;
   justify-content: flex-end;
+  transition: right 0.3s ease-out;
+  &.visible {
+    right: 0px;
+  }
 `
 
 const MissionsMenuBody = styled.div``

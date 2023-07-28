@@ -9,10 +9,10 @@ export type Reporting = {
   id?: number
   isControlRequired?: boolean | undefined
   isInfractionProven?: boolean | undefined
-  reportType: string
+  reportType: ReportingTypeEnum
   semaphoreId?: number
   sourceName?: string
-  sourceType: string
+  sourceType: ReportingSourceEnum
   subThemes?: string[]
   targetDetails?: TargetDetails
   targetType?: TargetTypeEnum

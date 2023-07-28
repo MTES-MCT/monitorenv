@@ -5,7 +5,8 @@ import type { Reporting } from '../entities/reporting'
 export enum ReportingFormVisibility {
   NOT_VISIBLE = 'not_visible',
   REDUCE = 'reduce',
-  VISIBLE = 'visible'
+  VISIBLE = 'visible',
+  VISIBLE_LEFT = 'visible_left'
 }
 
 type ReportingState = {

@@ -65,12 +65,16 @@ const StyledContainer = styled.div`
   transition: right 0.5s ease-out, top 0.5s ease-out;
   z-index: 100;
   &.visible {
-    right: 12px;
+    right: 8px;
     overflow-y: auto;
   }
   &.reduce {
     right: 12px;
     top: calc(100vh - 52px);
+  }
+  &.visible_left {
+    right: 56px;
+    overflow-y: auto;
   }
 `
 const StyledForm = styled(Form)`

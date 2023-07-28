@@ -5,7 +5,11 @@ import { Tooltip, Whisper } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
-import { setOverlayCoordinates, setReportingFormVisibility } from '../../../../domain/shared_slices/Global'
+import {
+  setDisplayedItems,
+  setOverlayCoordinates,
+  setReportingFormVisibility
+} from '../../../../domain/shared_slices/Global'
 import { ReportingFormVisibility, reportingStateActions } from '../../../../domain/shared_slices/ReportingState'
 import { resetSelectedSemaphore } from '../../../../domain/shared_slices/SemaphoresSlice'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -67,6 +71,9 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
   }
 
   const addReporting = () => {
+    dispatch(
+      setDisplayedItems({ isSearchSemaphoreVisible: false, mapToolOpened: undefined, missionsMenuIsOpen: false })
+    )
     dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
     dispatch(reportingStateActions.setSelectedReportingId(undefined))
     dispatch(reportingStateActions.setReportingState({ semaphoreId: id, sourceType: 'SEMAPHORE' }))

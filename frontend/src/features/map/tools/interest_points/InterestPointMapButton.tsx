@@ -4,12 +4,13 @@ import styled from 'styled-components'
 
 import { EditInterestPoint } from './EditInterestPoint'
 import { MapToolType } from '../../../../domain/entities/map/constants'
-import { setMapToolOpened } from '../../../../domain/shared_slices/Global'
+import { setMapToolOpened, setReportingFormVisibility } from '../../../../domain/shared_slices/Global'
 import {
   deleteInterestPointBeingDrawed,
   drawInterestPoint,
   endInterestPointDraw
 } from '../../../../domain/shared_slices/InterestPoint'
+import { ReportingFormVisibility } from '../../../../domain/shared_slices/ReportingState'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useEscapeFromKeyboardAndExecute } from '../../../../hooks/useEscapeFromKeyboardAndExecute'
@@ -17,7 +18,9 @@ import { MapToolButton } from '../MapToolButton'
 
 export function InterestPointMapButton() {
   const dispatch = useAppDispatch()
-  const { displayInterestPoint, healthcheckTextWarning, mapToolOpened } = useAppSelector(state => state.global)
+  const { displayInterestPoint, healthcheckTextWarning, mapToolOpened, reportingFormVisibility } = useAppSelector(
+    state => state.global
+  )
   const isOpen = useMemo(() => mapToolOpened === MapToolType.INTEREST_POINT, [mapToolOpened])
   const wrapperRef = useRef(null)
 
@@ -41,10 +44,13 @@ export function InterestPointMapButton() {
     } else {
       close()
     }
-  }, [dispatch, isOpen, close])
+    if (reportingFormVisibility !== ReportingFormVisibility.NOT_VISIBLE) {
+      dispatch(setReportingFormVisibility(ReportingFormVisibility.REDUCE))
+    }
+  }, [dispatch, isOpen, close, reportingFormVisibility])
 
   return (
-    <Wrapper ref={wrapperRef}>
+    <Wrapper ref={wrapperRef} className={reportingFormVisibility}>
       <MapToolButton
         dataCy="interest-point"
         icon={Icon.Landmark}
@@ -61,6 +67,11 @@ export function InterestPointMapButton() {
 }
 
 const Wrapper = styled.div`
-  transition: all 0.2s;
-  z-index: 1000;
+  position: absolute;
+  right: 10px;
+  top: 312px;
+  transition: right 0.3s ease-out;
+  &.visible {
+    right: 0px;
+  }
 `
