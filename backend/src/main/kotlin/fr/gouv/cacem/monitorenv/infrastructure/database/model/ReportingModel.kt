@@ -60,7 +60,7 @@ data class ReportingModel(
 
   @Column(name = "target_details", columnDefinition = "jsonb")
     @Type(JsonBinaryType::class)
-    var targetDetails: TargetDetailsEntity? = null,
+    var targetDetails: List<TargetDetailsEntity>? = listOf(),
 
   @JsonSerialize(using = GeometrySerializer::class)
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)

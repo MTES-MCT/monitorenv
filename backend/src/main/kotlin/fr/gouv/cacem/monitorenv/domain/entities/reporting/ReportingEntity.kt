@@ -12,7 +12,7 @@ data class ReportingEntity(
     val sourceName: String? = null,
     val targetType: TargetTypeEnum? = null,
     val vehicleType: VehicleTypeEnum? = null,
-    val targetDetails: TargetDetailsEntity? = null,
+    val targetDetails: List<TargetDetailsEntity>? = listOf(),
     val geom: Geometry? = null,
     val description: String? = null,
     val reportType: ReportingTypeEnum? = null,
