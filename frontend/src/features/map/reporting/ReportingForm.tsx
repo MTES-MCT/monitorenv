@@ -1,8 +1,10 @@
-import { Accent, FormikTextarea, Icon, IconButton, Label, MultiRadio } from '@mtes-mct/monitor-ui'
+import { Accent, FieldError, FormikTextarea, Icon, IconButton, Label, MultiRadio, THEME } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import { useDispatch } from 'react-redux'
 import { Toggle } from 'rsuite'
 
+import { CancelEditDialog } from './Dialog/CancelEditDialog'
+import { useSyncFormValuesWithRedux } from './hook/useSyncFormValuesWithRedux'
 import { Localization } from './Localization'
 import { Source } from './Source'
 import {
@@ -17,7 +19,9 @@ import {
   StyledThemeContainer,
   StyledToggle,
   StyledHeaderButtons,
-  StyledTitle
+  StyledTitle,
+  StyledChevronIcon,
+  StyledArchivedButton
 } from './style'
 import { Target } from './Target'
 import { Validity } from './Validity'
@@ -29,6 +33,7 @@ import {
 } from '../../../domain/entities/reporting'
 import { setDisplayedItems, setMapToolOpened, setReportingFormVisibility } from '../../../domain/shared_slices/Global'
 import { ReportingFormVisibility, reportingStateActions } from '../../../domain/shared_slices/ReportingState'
+import { deleteReporting } from '../../../domain/use_cases/reportings/deleteReporting'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { SubThemesSelector } from '../../missions/MissionForm/ActionForm/Themes/SubThemesSelector'
 import { ThemeSelector } from '../../missions/MissionForm/ActionForm/Themes/ThemeSelector'
@@ -36,9 +41,12 @@ import { ThemeSelector } from '../../missions/MissionForm/ActionForm/Themes/Them
 export function ReportingForm() {
   const dispatch = useDispatch()
   const {
-    global: { reportingFormVisibility }
+    global: { reportingFormVisibility },
+    reportingState: { isConfirmCancelDialogVisible, nextSelectedReportingId }
   } = useAppSelector(state => state)
-  const { handleSubmit, setFieldValue, values } = useFormikContext<Partial<Reporting>>()
+  const { dirty, errors, handleSubmit, setFieldValue, values } = useFormikContext<Partial<Reporting>>()
+
+  useSyncFormValuesWithRedux(reportingStateActions.setReportingState)
 
   const reportTypeOptions = Object.values(reportingTypeLabels)
   const InfractionProvenOptions = Object.values(infractionProvenLabels)
@@ -62,8 +70,11 @@ export function ReportingForm() {
   }
 
   const closeReporting = () => {
-    dispatch(reportingStateActions.setSelectedReportingId(undefined))
-    dispatch(setReportingFormVisibility(ReportingFormVisibility.NOT_VISIBLE))
+    if (dirty) {
+      dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(true))
+    } else {
+      confirmCloseReporting()
+    }
   }
 
   const reduceOrExpandReporting = () => {
@@ -77,9 +88,32 @@ export function ReportingForm() {
       dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
     }
   }
+  const returnToEdition = () => {
+    dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(false))
+  }
+
+  const confirmCloseReporting = () => {
+    dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(false))
+    if (nextSelectedReportingId) {
+      dispatch(reportingStateActions.setSelectedReportingId(nextSelectedReportingId))
+      dispatch(reportingStateActions.setNextSelectedReportingId(undefined))
+    } else {
+      dispatch(reportingStateActions.setSelectedReportingId(undefined))
+      dispatch(setReportingFormVisibility(ReportingFormVisibility.NOT_VISIBLE))
+    }
+  }
+
+  const deleteCurrentReporting = () => {
+    dispatch(deleteReporting(values.id))
+  }
 
   return (
     <StyledFormContainer>
+      <CancelEditDialog
+        onCancel={returnToEdition}
+        onConfirm={confirmCloseReporting}
+        open={isConfirmCancelDialogVisible}
+      />
       <StyledHeader>
         <StyledTitle>
           <Icon.Report />
@@ -87,7 +121,12 @@ export function ReportingForm() {
         </StyledTitle>
 
         <StyledHeaderButtons>
-          <IconButton accent={Accent.TERTIARY} Icon={Icon.Chevron} onClick={reduceOrExpandReporting} />
+          <StyledChevronIcon
+            $isOpen={reportingFormVisibility === ReportingFormVisibility.REDUCE}
+            accent={Accent.TERTIARY}
+            Icon={Icon.Chevron}
+            onClick={reduceOrExpandReporting}
+          />
           <IconButton accent={Accent.TERTIARY} Icon={Icon.Close} onClick={closeReporting} />
         </StyledHeaderButtons>
       </StyledHeader>
@@ -98,14 +137,17 @@ export function ReportingForm() {
         <FormikTextarea label="Description du signalement" name="description" />
         <Separator />
 
-        <MultiRadio
-          isInline
-          label="Type de signalement"
-          name="reportType"
-          onChange={changeReportType}
-          options={reportTypeOptions}
-          value={values.reportType}
-        />
+        <div>
+          <MultiRadio
+            isInline
+            label="Type de signalement"
+            name="reportType"
+            onChange={changeReportType}
+            options={reportTypeOptions}
+            value={values.reportType}
+          />
+          {errors.reportType && <FieldError>{errors.reportType}</FieldError>}
+        </div>
         <StyledThemeContainer>
           <ThemeSelector isLight={false} label="Thématique du signalement" name="theme" />
           <SubThemesSelector
@@ -138,10 +180,25 @@ export function ReportingForm() {
         </StyledToggle>
       </StyledForm>
       <StyledFooter>
-        <StyledDeleteButton Icon={Icon.Delete}>Supprimer</StyledDeleteButton>
-        <StyledSubmitButton accent={Accent.SECONDARY} Icon={Icon.Save} onClick={() => handleSubmit()}>
-          Valider le signalement
-        </StyledSubmitButton>
+        <StyledDeleteButton
+          accent={Accent.SECONDARY}
+          color={THEME.color.maximumRed}
+          Icon={Icon.Delete}
+          onClick={deleteCurrentReporting}
+        />
+        {values.id ? (
+          <div>
+            {/* TODO mettre à jour icône + gérer l'archivage */}
+            <StyledArchivedButton Icon={Icon.Save}>Enregistrer et archiver</StyledArchivedButton>
+            <StyledSubmitButton accent={Accent.SECONDARY} Icon={Icon.Save} onClick={() => handleSubmit()}>
+              Enregistrer et quitter
+            </StyledSubmitButton>
+          </div>
+        ) : (
+          <StyledSubmitButton accent={Accent.SECONDARY} Icon={Icon.Save} onClick={() => handleSubmit()}>
+            Valider le signalement
+          </StyledSubmitButton>
+        )}
       </StyledFooter>
     </StyledFormContainer>
   )

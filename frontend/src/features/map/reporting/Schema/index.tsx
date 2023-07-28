@@ -33,6 +33,6 @@ export const ReportingSchema: Yup.SchemaOf<Reporting> = Yup.object()
 
       return schema.nullable()
     }),
-    sourceType: Yup.string().nullable().required()
+    sourceType: Yup.string().nullable().required('Veuillez définir une source au signalement')
   })
   .required()

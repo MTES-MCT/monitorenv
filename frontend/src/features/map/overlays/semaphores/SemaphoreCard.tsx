@@ -45,9 +45,12 @@ const hoverTooltip = (text, className) => <StyledTooltip className={className}>{
 
 export function SemaphoreCard({ feature, selected = false }: { feature: any; selected?: boolean }) {
   const dispatch = useDispatch()
-  const { displaySemaphoresLayer } = useAppSelector(state => state.global)
+  const {
+    global: { displaySemaphoresLayer },
+    reportingState: { isDirty }
+  } = useAppSelector(state => state)
 
-  const { email, id, name, phoneNumber, unit } = feature.getProperties()
+  const { email, name, phoneNumber, unit } = feature.getProperties()
   const [tooltipPhoneState, setTooltipPhoneState] = useState(PHONE_TOOLTIP_STATE.hover)
 
   const [tooltipMailState, setTooltipMailState] = useState(MAIL_TOOLTIP_STATE.hover)
@@ -71,12 +74,15 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
   }
 
   const addReporting = () => {
-    dispatch(
-      setDisplayedItems({ isSearchSemaphoreVisible: false, mapToolOpened: undefined, missionsMenuIsOpen: false })
-    )
-    dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
-    dispatch(reportingStateActions.setSelectedReportingId(undefined))
-    dispatch(reportingStateActions.setReportingState({ semaphoreId: id, sourceType: 'SEMAPHORE' }))
+    if (isDirty) {
+      dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(true))
+    } else {
+      dispatch(
+        setDisplayedItems({ isSearchSemaphoreVisible: false, mapToolOpened: undefined, missionsMenuIsOpen: false })
+      )
+      dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
+      // dispatch(reportingStateActions.setReportingState({ id: undefined, semaphoreId: id, sourceType: 'SEMAPHORE' }))
+    }
   }
 
   if (!displaySemaphoresLayer) {

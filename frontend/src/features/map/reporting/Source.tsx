@@ -1,4 +1,4 @@
-import { CustomSearch, FormikSelect, FormikTextInput, MultiRadio } from '@mtes-mct/monitor-ui'
+import { CustomSearch, FieldError, FormikSelect, FormikTextInput, MultiRadio } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import { useMemo } from 'react'
 
@@ -11,7 +11,7 @@ export function Source() {
   const { data: units } = useGetControlUnitsQuery()
 
   const sourceOptions = Object.values(reportingSourceLabels)
-  const { setFieldValue, values } = useFormikContext<Reporting>()
+  const { errors, setFieldValue, values } = useFormikContext<Reporting>()
 
   // Semaphores
   const semaphoresOptions = useMemo(
@@ -62,15 +62,17 @@ export function Source() {
 
   return (
     <>
-      <MultiRadio
-        isErrorMessageHidden
-        isInline
-        label="Source"
-        name="sourceType"
-        onChange={changeSourceType}
-        options={sourceOptions}
-        value={values.sourceType}
-      />
+      <div>
+        <MultiRadio
+          isInline
+          label="Source"
+          name="sourceType"
+          onChange={changeSourceType}
+          options={sourceOptions}
+          value={values.sourceType}
+        />
+        {errors.sourceType && <FieldError>{errors.sourceType}</FieldError>}
+      </div>
       {values?.sourceType === ReportingSourceEnum.SEMAPHORE && (
         <FormikSelect
           customSearch={customSearchSemaphore}

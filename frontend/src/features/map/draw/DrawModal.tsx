@@ -229,6 +229,7 @@ const CoordinatesInputWrapper = styled.div`
 const Wrapper = styled.div`
   position: absolute;
   top: 0;
+  z-index: 10;
   width: 580px;
   margin-left: calc(50% - 290px);
   margin-right: calc(50% - 290px);

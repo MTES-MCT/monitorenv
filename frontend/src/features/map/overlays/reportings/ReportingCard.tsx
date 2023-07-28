@@ -10,19 +10,32 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 export function ReportingCard({ feature, selected = false }: { feature: any; selected?: boolean }) {
   const dispatch = useDispatch()
-  const { displayReportingsLayer } = useAppSelector(state => state.global)
+  const {
+    global: { displayReportingsLayer },
+    reportingState: { isDirty }
+  } = useAppSelector(state => state)
 
-  const { createdAt, description, id, semaphoreId, subThemes, theme, validityTime } = feature.getProperties()
+  const { createdAt, description, id, sourceName, subThemes, theme, validityTime } = feature.getProperties()
 
   const creationDate = dayjs(createdAt).format('DD MMM YYYY à HH:mm')
 
-  const endOfValidity = dayjs(createdAt).add(validityTime || 0, 'hour')
-  const restingTime = endOfValidity.diff(dayjs(createdAt), 'hour')
+  const endOfValidity = dayjs(createdAt)
+    .add(validityTime || 0, 'hour')
+    .toISOString()
+  const restingTime = dayjs(endOfValidity).diff(dayjs(), 'hour')
   const subThemesFormatted = subThemes.map(subTheme => subTheme).join(', ')
 
+  // TODO gérer le cas sémaphore et unités
+  const subTitle = sourceName
+
   const editReporting = () => {
+    if (isDirty) {
+      dispatch(reportingStateActions.setNextSelectedReportingId(id))
+      dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(true))
+    } else {
+      dispatch(reportingStateActions.setSelectedReportingId(id))
+    }
     dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
-    dispatch(reportingStateActions.setSelectedReportingId(id))
   }
 
   const closeReportingCard = useCallback(() => {
@@ -38,13 +51,13 @@ export function ReportingCard({ feature, selected = false }: { feature: any; sel
       <StyledHeader>
         <StyledHeaderFirstLine>
           <StyledBoldText>{`SIGNALEMENT ${id} -`}</StyledBoldText>
-          <StyledBoldText>{semaphoreId}</StyledBoldText>
+          <StyledBoldText>{subTitle}</StyledBoldText>
           <StyledCreationDate>{creationDate}</StyledCreationDate>
         </StyledHeaderFirstLine>
 
         <StyledHeaderSecondLine>
           <Icon.Clock />
-          <span>{`Fin dans ${restingTime} h`}</span>
+          <span>{restingTime < 0 ? 'Archivé' : `Fin dans ${restingTime} h`}</span>
 
           <CloseButton
             $isVisible={selected}
@@ -60,7 +73,7 @@ export function ReportingCard({ feature, selected = false }: { feature: any; sel
       <div>
         <StyledThemeContainer>
           {theme && <StyledBoldText>{theme}</StyledBoldText>}
-          {subThemes.length > 0 && <StyledBoldText>&nbsp;/&nbsp;{subThemesFormatted}</StyledBoldText>}
+          {subThemes.length > 0 && <StyledMediumText>&nbsp;/&nbsp;{subThemesFormatted}</StyledMediumText>}
         </StyledThemeContainer>
         {description && <StyledDescription>{description}</StyledDescription>}
       </div>
@@ -86,6 +99,7 @@ const StyledHeader = styled.div`
   flex-direction: row;
   align-items: start;
   justify-content: space-between;
+  margin-bottom: 16px;
 `
 
 const StyledHeaderFirstLine = styled.div`
@@ -99,6 +113,7 @@ const StyledHeaderSecondLine = styled.div`
   flex-direction: row;
   > span {
     margin-left: 4px;
+    color: ${p => p.theme.color.charcoal};
   }
 `
 const CloseButton = styled(IconButton)<{ $isVisible: boolean }>`
@@ -108,11 +123,14 @@ const CloseButton = styled(IconButton)<{ $isVisible: boolean }>`
 `
 
 const StyledBoldText = styled.span`
-  font: normal normal bold 13px/18px Marianne;
+  font-weight: 700;
+  color: ${p => p.theme.color.gunMetal};
+`
+const StyledMediumText = styled.span`
+  font-weight: 500;
   color: ${p => p.theme.color.gunMetal};
 `
 const StyledCreationDate = styled.p`
-  font-size: 12px;
   color: ${p => p.theme.color.slateGray};
 `
 
@@ -121,6 +139,7 @@ const StyledDescription = styled.p`
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
+  color: ${p => p.theme.color.gunMetal};
 `
 
 const StyledThemeContainer = styled.div`
@@ -128,7 +147,7 @@ const StyledThemeContainer = styled.div`
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
-  font: normal normal normal 13px/18px Marianne;
+  margin-bottom: 4px;
 `
 
 // TODO delete when Monitor-ui component have good padding

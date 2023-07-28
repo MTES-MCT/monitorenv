@@ -49,7 +49,6 @@ const Wrapper = styled.div`
   top: 10px;
   right: 10px;
   width: 365px;
-  z-index: 1001;
   display: flex;
   transition: right 0.5s ease-out;
 
