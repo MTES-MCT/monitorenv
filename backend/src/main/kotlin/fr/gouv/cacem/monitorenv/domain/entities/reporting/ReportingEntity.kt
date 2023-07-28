@@ -1,15 +1,13 @@
 package fr.gouv.cacem.monitorenv.domain.entities.reporting
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.entities.semaphores.SemaphoreEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 
 data class ReportingEntity(
     val id: Int? = null,
     val sourceType: SourceTypeEnum? = null,
-    val semaphore: SemaphoreEntity? = null,
-    val controlUnit: ControlUnitEntity? = null,
+    val semaphoreId: Int? = null,
+    val controlUnitId: Int? = null,
     val sourceName: String? = null,
     val targetType: TargetTypeEnum? = null,
     val vehicleType: VehicleTypeEnum? = null,

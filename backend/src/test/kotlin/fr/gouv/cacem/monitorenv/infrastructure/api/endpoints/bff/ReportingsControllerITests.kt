@@ -9,12 +9,15 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.VehicleTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.semaphores.SemaphoreEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.CreateOrUpdateReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.DeleteReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.GetAllReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.GetReportingById
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdateReportingDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.ReportingSemaphoreDataInput
 import org.junit.jupiter.api.Test
+import org.locationtech.jts.geom.Point
 import org.locationtech.jts.io.WKTReader
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
@@ -73,9 +76,18 @@ class ReportingsControllerITests {
             validityTime = 10,
             isDeleted = false,
         )
+        val semaphore = SemaphoreEntity(
+            id = 1,
+            name = "name",
+            geom = WKTReader().read("POINT (-61.0 14.0)") as Point
+        )
 
         val request = CreateOrUpdateReportingDataInput(
             sourceType = SourceTypeEnum.SEMAPHORE,
+            semaphore = ReportingSemaphoreDataInput(
+                id = 1,
+                name = "name",
+            ),
             targetType = TargetTypeEnum.VEHICLE,
             vehicleType = VehicleTypeEnum.VESSEL,
             geom = polygon,
@@ -91,7 +103,7 @@ class ReportingsControllerITests {
             validityTime = 10,
         )
 
-        given(this.createOrUpdateReporting.execute(any())).willReturn(reporting)
+        given(this.createOrUpdateReporting.execute(any())).willReturn(Triple(reporting,null, semaphore))
         // When
         mockedApi.perform(
             put("/bff/v1/reportings")

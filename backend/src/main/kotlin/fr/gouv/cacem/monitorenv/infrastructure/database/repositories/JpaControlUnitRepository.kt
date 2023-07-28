@@ -11,4 +11,8 @@ class JpaControlUnitRepository(private val dbControlUnitRepository: IDBControlUn
     override fun findControlUnits(): List<ControlUnitEntity> {
         return dbControlUnitRepository.findAll().map { it.toControlUnit() }
     }
+
+    override fun findControlUnitById(id: Int): ControlUnitEntity {
+        return dbControlUnitRepository.findById(id).get().toControlUnit()
+    }
 }

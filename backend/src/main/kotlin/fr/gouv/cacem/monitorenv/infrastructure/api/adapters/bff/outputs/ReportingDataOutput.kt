@@ -14,8 +14,8 @@ import java.time.ZonedDateTime
 data class ReportingDataOutput(
     val id: Int,
     val sourceType: SourceTypeEnum? = null,
-    val semaphore: SemaphoreEntity? = null,
-    val controlUnit: ControlUnitEntity? = null,
+    val semaphore: SemaphoreDataOutput? = null,
+    val controlUnit: ControlUnitDataOutput? = null,
     val sourceName: String? = null,
     val targetType: TargetTypeEnum? = null,
     val vehicleType: VehicleTypeEnum? = null,
@@ -33,30 +33,30 @@ data class ReportingDataOutput(
     val validityTime: Int? = null,
 ) {
     companion object {
-        fun fromReportingEntity(entity: ReportingEntity): ReportingDataOutput {
-            requireNotNull(entity.id) {
+        fun fromReporting(reporting: ReportingEntity, controlUnit: ControlUnitEntity?, semaphore: SemaphoreEntity?): ReportingDataOutput {
+            requireNotNull(reporting.id) {
                 "ReportingEntity.id cannot be null"
             }
             return ReportingDataOutput(
-                id = entity.id,
-                sourceType = entity.sourceType,
-                semaphore = entity.semaphore,
-                controlUnit = entity.controlUnit,
-                sourceName = entity.sourceName,
-                targetType = entity.targetType,
-                vehicleType = entity.vehicleType,
-                targetDetails = entity.targetDetails,
-                geom = entity.geom,
-                description = entity.description,
-                reportType = entity.reportType,
-                theme = entity.theme,
-                subThemes = entity.subThemes,
-                actionTaken = entity.actionTaken,
-                isInfractionProven = entity.isInfractionProven,
-                isControlRequired = entity.isControlRequired,
-                isUnitAvailable = entity.isUnitAvailable,
-                createdAt = entity.createdAt,
-                validityTime = entity.validityTime,
+                id = reporting.id,
+                sourceType = reporting.sourceType,
+                semaphore = if (semaphore != null) SemaphoreDataOutput.fromSemaphoreEntity(semaphore) else null,
+                controlUnit = if (controlUnit != null) ControlUnitDataOutput.fromControlUnitEntity(controlUnit) else null,
+                sourceName = reporting.sourceName,
+                targetType = reporting.targetType,
+                vehicleType = reporting.vehicleType,
+                targetDetails = reporting.targetDetails,
+                geom = reporting.geom,
+                description = reporting.description,
+                reportType = reporting.reportType,
+                theme = reporting.theme,
+                subThemes = reporting.subThemes,
+                actionTaken = reporting.actionTaken,
+                isInfractionProven = reporting.isInfractionProven,
+                isControlRequired = reporting.isControlRequired,
+                isUnitAvailable = reporting.isUnitAvailable,
+                createdAt = reporting.createdAt,
+                validityTime = reporting.validityTime,
             )
         }
     }
