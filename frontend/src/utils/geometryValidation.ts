@@ -3,7 +3,7 @@ import JSTSGeometryFactory from 'jsts/org/locationtech/jts/geom/GeometryFactory'
 import JSTSGeometryGraph from 'jsts/org/locationtech/jts/geomgraph/GeometryGraph'
 import JSTSIsSimpleOp from 'jsts/org/locationtech/jts/operation/IsSimpleOp'
 import JSTSConsistentAreaTester from 'jsts/org/locationtech/jts/operation/valid/ConsistentAreaTester'
-import _ from 'lodash'
+import { dropRight, map, flattenDeep, chunk, reduce, uniq } from 'lodash'
 
 import { OLGeometryType } from '../domain/entities/map/constants'
 
@@ -13,7 +13,7 @@ import type { Coordinate } from 'ol/coordinate'
 // Based on https://engblog.nextdoor.com/fast-polygon-self-intersection-detection-in-javascript-a405ba40dd50
 
 const geoJSON2JTS = function geoJSON2JTS(boundaries) {
-  return _.map(boundaries, (__, index) => new JSTSCoordinate(boundaries[index][1], boundaries[index][0]))
+  return map(boundaries, (__, index) => new JSTSCoordinate(boundaries[index][1], boundaries[index][0]))
 }
 
 const findSelfIntersects = function findSelfIntersects(geoJsonPolygon) {
@@ -43,11 +43,11 @@ const findSelfIntersects = function findSelfIntersects(geoJsonPolygon) {
   return res
 }
 
-function IsPolygonValid(polygon: Coordinate[][]) {
+function isPolygonValid(polygon: Coordinate[][]) {
   // Construct a array of point
-  const pointsArray = _.flattenDeep(polygon)
+  const pointsArray = flattenDeep(polygon)
 
-  const coordinates = _.chunk(pointsArray, 2)
+  const coordinates = chunk(pointsArray, 2)
 
   if (coordinates.length < 3) {
     // Polygon has less than 3 points
@@ -74,7 +74,7 @@ function IsPolygonValid(polygon: Coordinate[][]) {
   }
 
   // Check no duplicate points
-  let stringArray = _.reduce(
+  let stringArray = reduce(
     coordinates,
     (accu, coordinate) => {
       if (coordinate) {
@@ -87,25 +87,25 @@ function IsPolygonValid(polygon: Coordinate[][]) {
   )
 
   // Remove the last point that is a duplicate of the first point
-  stringArray = _.dropRight(stringArray)
+  stringArray = dropRight(stringArray)
 
-  if (stringArray && stringArray.length !== _.uniq(stringArray).length) {
+  if (stringArray && stringArray.length !== uniq(stringArray).length) {
     return false
   }
 
   return true
 }
 
-function ArePolygonsValid(polygons: Coordinate[][][]) {
-  return _.reduce(polygons, (result, polygon) => result && IsPolygonValid(polygon), true)
+function arePolygonsValid(polygons: Coordinate[][][]) {
+  return reduce(polygons, (result, polygon) => result && isPolygonValid(polygon), true)
 }
 
-export function IsGeometryValid(geometry: GeoJSON.Geometry) {
+export function isGeometryValid(geometry: GeoJSON.Geometry) {
   if (geometry && geometry.type === OLGeometryType.MULTIPOLYGON) {
-    return ArePolygonsValid(geometry.coordinates as Coordinate[][][])
+    return arePolygonsValid(geometry.coordinates as Coordinate[][][])
   }
   if (geometry && geometry.type === OLGeometryType.POLYGON) {
-    return IsPolygonValid(geometry.coordinates as Coordinate[][])
+    return isPolygonValid(geometry.coordinates as Coordinate[][])
   }
 
   // other geometry types (POINTS) are valid by default
