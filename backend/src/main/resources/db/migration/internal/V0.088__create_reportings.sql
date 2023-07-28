@@ -34,6 +34,7 @@ CREATE TABLE reportings (
     vehicle_type reportings_vehicle_type,
     target_details jsonb,
     geom geometry(Geometry, 4326),
+    sea_front text,
     description text,
     report_type reportings_report_type,
     theme text,

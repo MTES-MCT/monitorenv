@@ -67,6 +67,7 @@ class ReportingsControllerITests {
             targetType = TargetTypeEnum.VEHICLE,
             vehicleType = VehicleTypeEnum.VESSEL,
             geom = polygon,
+            seaFront = "Facade 1",
             description = "description",
             reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
             theme = "theme",
@@ -119,6 +120,7 @@ class ReportingsControllerITests {
             .andExpect(jsonPath("$.targetType").value("VEHICLE"))
             .andExpect(jsonPath("$.vehicleType").value("VESSEL"))
             .andExpect(jsonPath("$.geom.type").value("MultiPolygon"))
+            .andExpect(jsonPath("$.seaFront").value("Facade 1"))
             .andExpect(jsonPath("$.description").value("description"))
             .andExpect(jsonPath("$.reportType").value("INFRACTION_SUSPICION"))
             .andExpect(jsonPath("$.theme").value("theme"))
@@ -143,6 +145,7 @@ class ReportingsControllerITests {
             targetType = TargetTypeEnum.VEHICLE,
             vehicleType = VehicleTypeEnum.VESSEL,
             geom = polygon,
+            seaFront = "Facade 1",
             description = "description",
             reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
             theme = "theme",
@@ -176,6 +179,7 @@ class ReportingsControllerITests {
             .andExpect(jsonPath("$.targetType").value("VEHICLE"))
             .andExpect(jsonPath("$.vehicleType").value("VESSEL"))
             .andExpect(jsonPath("$.geom.type").value("MultiPolygon"))
+            .andExpect(jsonPath("$.seaFront").value("Facade 1"))
             .andExpect(jsonPath("$.description").value("description"))
             .andExpect(jsonPath("$.reportType").value("INFRACTION_SUSPICION"))
             .andExpect(jsonPath("$.theme").value("theme"))
@@ -200,6 +204,7 @@ class ReportingsControllerITests {
             targetType = TargetTypeEnum.VEHICLE,
             vehicleType = VehicleTypeEnum.VESSEL,
             geom = polygon,
+            seaFront = "Facade 1",
             description = "description",
             reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
             theme = "theme",
@@ -235,6 +240,7 @@ class ReportingsControllerITests {
             .andExpect(jsonPath("$[0].targetType").value("VEHICLE"))
             .andExpect(jsonPath("$[0].vehicleType").value("VESSEL"))
             .andExpect(jsonPath("$[0].geom.type").value("MultiPolygon"))
+            .andExpect(jsonPath("$[0].seaFront").value("Facade 1"))
             .andExpect(jsonPath("$[0].description").value("description"))
             .andExpect(jsonPath("$[0].reportType").value("INFRACTION_SUSPICION"))
             .andExpect(jsonPath("$[0].theme").value("theme"))
@@ -259,6 +265,7 @@ class ReportingsControllerITests {
             targetType = TargetTypeEnum.VEHICLE,
             vehicleType = VehicleTypeEnum.VESSEL,
             geom = polygon,
+            seaFront = "Facade 1",
             description = "description",
             reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
             theme = "theme",
@@ -313,6 +320,7 @@ class ReportingsControllerITests {
             .andExpect(jsonPath("$.targetType").value("VEHICLE"))
             .andExpect(jsonPath("$.vehicleType").value("VESSEL"))
             .andExpect(jsonPath("$.geom.type").value("MultiPolygon"))
+            .andExpect(jsonPath("$.seaFront").value("Facade 1"))
             .andExpect(jsonPath("$.description").value("description"))
             .andExpect(jsonPath("$.reportType").value("INFRACTION_SUSPICION"))
             .andExpect(jsonPath("$.theme").value("theme"))

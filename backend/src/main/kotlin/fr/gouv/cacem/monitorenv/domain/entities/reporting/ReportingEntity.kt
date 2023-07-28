@@ -15,6 +15,7 @@ data class ReportingEntity(
     val vehicleType: VehicleTypeEnum? = null,
     val targetDetails: List<TargetDetailsEntity>? = listOf(),
     val geom: Geometry? = null,
+    val seaFront: String? = null,
     val description: String? = null,
     val reportType: ReportingTypeEnum? = null,
     val theme: String? = null,

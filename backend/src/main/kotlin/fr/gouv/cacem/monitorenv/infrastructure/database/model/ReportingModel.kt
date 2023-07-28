@@ -70,6 +70,9 @@ data class ReportingModel(
     @Column(name = "geom")
     var geom: Geometry? = null,
 
+    @Column(name = "sea_front")
+    var seaFront: String? = null,
+
     @Column(name = "description")
     var description: String? = null,
 
@@ -121,6 +124,7 @@ data class ReportingModel(
         vehicleType = vehicleType,
         targetDetails = targetDetails,
         geom = geom,
+        seaFront = seaFront,
         description = description,
         reportType = reportType,
         theme = theme,
@@ -147,6 +151,7 @@ data class ReportingModel(
             vehicleType = reporting.vehicleType,
             targetDetails = reporting.targetDetails,
             geom = reporting.geom,
+            seaFront = reporting.seaFront,
             description = reporting.description,
             reportType = reporting.reportType,
             theme = reporting.theme,
