@@ -9,6 +9,18 @@ import type { Reporting } from '../../../domain/entities/reporting'
 export function Footer({ onCancel, onDelete, setShouldValidateOnChange }) {
   const { handleSubmit, setFieldValue, validateForm, values } = useFormikContext<Partial<Reporting>>()
 
+  const handleReopen = async () => {
+    await setFieldValue('isArchived', false)
+    validateForm().then(errors => {
+      if (_.isEmpty(errors)) {
+        handleSubmit()
+
+        return
+      }
+      setShouldValidateOnChange(true)
+    })
+  }
+
   const handleArchive = async () => {
     await setFieldValue('isArchived', true)
     validateForm().then(errors => {
@@ -32,10 +44,15 @@ export function Footer({ onCancel, onDelete, setShouldValidateOnChange }) {
         />
 
         <div>
-          {/* TODO gérer l'archivage */}
-          <StyledButton Icon={Icon.Archive} onClick={handleArchive}>
-            Enregistrer et archiver
-          </StyledButton>
+          {values.isArchived ? (
+            <StyledButton Icon={Icon.Unlock} onClick={handleReopen}>
+              Rouvrir le signalement
+            </StyledButton>
+          ) : (
+            <StyledButton Icon={Icon.Archive} onClick={handleArchive}>
+              Enregistrer et archiver
+            </StyledButton>
+          )}
           <StyledSubmitButton accent={Accent.SECONDARY} Icon={Icon.Save} onClick={() => handleSubmit()}>
             Enregistrer et quitter
           </StyledSubmitButton>

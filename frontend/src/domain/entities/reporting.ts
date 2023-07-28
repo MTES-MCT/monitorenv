@@ -109,13 +109,11 @@ export const getFormattedReportingId = (reportingId: number) =>
 export const getReportingStatus = ({
   createdAt,
   isArchived,
-  isInfractionProven,
   reportType,
   validityTime
 }: {
   createdAt?: string | undefined
   isArchived?: boolean
-  isInfractionProven?: boolean
   reportType?: ReportingTypeEnum
   validityTime?: number | undefined
 }) => {
@@ -128,14 +126,12 @@ export const getReportingStatus = ({
     return ReportingStatusEnum.ARCHIVED
   }
 
-  if (isInfractionProven) {
-    if (reportType === ReportingTypeEnum.OBSERVATION) {
-      return ReportingStatusEnum.OBSERVATION
-    }
-    if (reportType === ReportingTypeEnum.INFRACTION_SUSPICION) {
-      // TODO handle attached to mission
-      return ReportingStatusEnum.INFRACTION_SUSPICION
-    }
+  if (reportType === ReportingTypeEnum.OBSERVATION) {
+    return ReportingStatusEnum.OBSERVATION
+  }
+  if (reportType === ReportingTypeEnum.INFRACTION_SUSPICION) {
+    // TODO handle attached to mission
+    return ReportingStatusEnum.INFRACTION_SUSPICION
   }
 
   return ReportingStatusEnum.IN_PROGRESS

@@ -6,7 +6,7 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { Columns } from './Columns'
-import { SkeletonColumns } from './Columns/Skeleton'
+import { StyledSkeletonRow } from '../../commonComponents/Skeleton'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 
 import type { Reporting } from '../../../domain/entities/reporting'
@@ -16,7 +16,10 @@ export function ReportingsTable({ isLoading, reportings }: { isLoading: boolean;
 
   const tableData = useMemo(() => (isLoading ? Array(5).fill({}) : reportings), [isLoading, reportings])
 
-  const columns = useMemo(() => (isLoading ? SkeletonColumns : Columns), [isLoading])
+  const columns = useMemo(
+    () => (isLoading ? Columns.map(column => ({ ...column, cell: StyledSkeletonRow })) : Columns),
+    [isLoading]
+  )
 
   const table = useReactTable({
     columns,

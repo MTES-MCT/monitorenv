@@ -84,7 +84,6 @@ export const hoveredReportingStyleFn = feature => {
   const status = getReportingStatus({
     createdAt: feature.get('createdAt'),
     isArchived: feature.get('isArchived'),
-    isInfractionProven: feature.get('isInfractionProven'),
     reportType: feature.get('reportType') as ReportingTypeEnum,
     validityTime: feature.get('validityTime')
   })
@@ -109,7 +108,6 @@ export const selectedReportingStyleFn = feature => {
   const status = getReportingStatus({
     createdAt: feature.get('createdAt'),
     isArchived: feature.get('isArchived'),
-    isInfractionProven: feature.get('isInfractionProven'),
     reportType: feature.get('reportType') as ReportingTypeEnum,
     validityTime: feature.get('validityTime')
   })
@@ -135,7 +133,6 @@ export const reportingPinStyleFn = feature => {
   const status = getReportingStatus({
     createdAt: feature.get('createdAt'),
     isArchived: feature.get('isArchived'),
-    isInfractionProven: feature.get('isInfractionProven'),
     reportType: feature.get('reportType') as ReportingTypeEnum,
     validityTime: feature.get('validityTime')
   })

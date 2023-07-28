@@ -12,16 +12,23 @@ export function Validity() {
   const archiveDate = getLocalizedDayjs(values?.createdAt).add(values?.validityTime || 0, 'hour')
   const formattedArchivedDate = archiveDate.format('DD MMMM à HH:mm')
 
-  const remainingTime = archiveDate.diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour')
+  const remainingHours = archiveDate.diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour')
+  const remainingTime = archiveDate.diff(getLocalizedDayjs(customDayjs().toISOString()))
 
   return (
     <StyledValidityContainer>
       <StyledFormikNumberInput label="Validité (h)" max={24} name="validityTime" />
-      {!values.isArchived && remainingTime > 0 && values?.validityTime && values?.validityTime > 0 ? (
-        <GrayText>{`Le signalement ouvert le ${formattedCreatedAt} (UTC) sera archivé le ${formattedArchivedDate} (UTC) (dans ${remainingTime}h)`}</GrayText>
-      ) : (
-        <RedText>{`La date de validité du signalement, ouvert le ${formattedCreatedAt} (UTC) , est dépassée. Pour le rouvrir, veuillez augmenter sa durée de validité.`}</RedText>
+      {values.isArchived && (
+        <GrayText>{`Le signalement ouvert le ${formattedCreatedAt} (UTC) a été archivé.`}</GrayText>
       )}
+      {!values.isArchived &&
+        !!values?.validityTime &&
+        values?.validityTime > 0 &&
+        (remainingTime > 0 ? (
+          <GrayText>{`Le signalement ouvert le ${formattedCreatedAt} (UTC) sera archivé le ${formattedArchivedDate} (UTC) (dans ${remainingHours}h)`}</GrayText>
+        ) : (
+          <RedText>{`La date de validité du signalement, ouvert le ${formattedCreatedAt} (UTC) , est dépassée. Pour le rouvrir, veuillez augmenter sa durée de validité.`}</RedText>
+        ))}
     </StyledValidityContainer>
   )
 }

@@ -135,7 +135,7 @@ INSERT INTO reportings (
     true,
     true,
     now() - INTERVAL '1 hour',
-    12,
+    1,
     false
 );
 SELECT setval('reportings_id_seq', 4, false);
