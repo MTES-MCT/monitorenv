@@ -83,6 +83,7 @@ export const StyledCompanyContainer = styled(StyledTargetDetailsContainer)`
 
 export const StyledVesselContainer = styled(StyledTargetDetailsContainer)`
   flex-direction: column;
+  align-self: stretch;
 `
 
 export const StyledEmptyTarget = styled.div`

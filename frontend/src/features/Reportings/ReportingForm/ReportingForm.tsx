@@ -64,6 +64,7 @@ export function ReportingForm({ setShouldValidateOnChange }) {
     setFieldValue('reportType', reportType)
     if (reportType === ReportingTypeEnum.OBSERVATION) {
       setFieldValue('isInfractionProven', undefined)
+      setFieldValue('isControlRequired', undefined)
     }
   }
 
@@ -206,7 +207,7 @@ export function ReportingForm({ setShouldValidateOnChange }) {
           />
         </StyledInfractionProven>
         <StyledToggle>
-          <Toggle checked={values.isControlRequired} onChange={changeNeedControlValue} />
+          <Toggle checked={values.isControlRequired || false} onChange={changeNeedControlValue} />
           <span>Le signalement nécessite un contrôle</span>
         </StyledToggle>
       </StyledForm>
