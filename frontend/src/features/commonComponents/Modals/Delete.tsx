@@ -1,15 +1,15 @@
 import { Accent, Button, Dialog } from '@mtes-mct/monitor-ui'
 
 type DeleteModalProps = {
+  context: string
   isAbsolute?: boolean
-  key: string
   onCancel: () => void
   onConfirm: () => void
   open: boolean
   subTitle: string
 }
 
-export function DeleteModal({ isAbsolute = true, key, onCancel, onConfirm, open, subTitle }: DeleteModalProps) {
+export function DeleteModal({ context, isAbsolute = true, onCancel, onConfirm, open, subTitle }: DeleteModalProps) {
   if (!open) {
     return null
   }
@@ -22,10 +22,10 @@ export function DeleteModal({ isAbsolute = true, key, onCancel, onConfirm, open,
       </Dialog.Body>
 
       <Dialog.Action>
-        <Button accent={Accent.SECONDARY} name={`delete-${key}-modal-cancel`} onClick={onCancel}>
+        <Button accent={Accent.SECONDARY} name={`delete-${context}-modal-cancel`} onClick={onCancel}>
           Retourner à l&apos;édition
         </Button>
-        <Button accent={Accent.PRIMARY} name={`delete-${key}-modal-confirm`} onClick={onConfirm}>
+        <Button accent={Accent.PRIMARY} name={`delete-${context}-modal-confirm`} onClick={onConfirm}>
           Confirmer la suppression
         </Button>
       </Dialog.Action>

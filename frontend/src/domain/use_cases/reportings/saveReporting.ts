@@ -11,7 +11,7 @@ export const saveReporting = values => async dispatch => {
       console.log('response', response)
       dispatch(setReportingFormVisibility(ReportingFormVisibility.NOT_VISIBLE))
     } else {
-      throw Error('Erreur à la création ou à la modification de la mission')
+      throw Error('Erreur à la création ou à la modification du signalement')
     }
   } catch (error) {
     dispatch(setToast({ message: error }))

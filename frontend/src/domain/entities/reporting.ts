@@ -7,6 +7,7 @@ export type Reporting = {
   description?: string
   geom: Record<string, any>[]
   id?: number
+  isArchived?: boolean
   isControlRequired?: boolean | undefined
   isInfractionProven?: boolean | undefined
   reportType: ReportingTypeEnum

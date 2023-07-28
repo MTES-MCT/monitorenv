@@ -53,7 +53,7 @@ export function ReportingCard({ feature, selected = false }: { feature: any; sel
     <Wrapper data-cy="reporting-overlay">
       <StyledHeader>
         <StyledHeaderFirstLine>
-          <StyledBoldText>{`SIGNALEMENT ${id} -`}</StyledBoldText>
+          <StyledBoldText>{`SIGNALEMENT ${String(id).slice(0, 2)}-${String(id).slice(2)}`}</StyledBoldText>
           <StyledBoldText>{subTitle}</StyledBoldText>
           <StyledCreationDate>{creationDate}</StyledCreationDate>
         </StyledHeaderFirstLine>

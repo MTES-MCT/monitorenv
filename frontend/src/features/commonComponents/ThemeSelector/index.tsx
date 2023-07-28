@@ -1,17 +1,16 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { Select } from '@mtes-mct/monitor-ui'
+import { Select, useNewWindow } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import _ from 'lodash'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { useGetControlThemesQuery } from '../../../../../api/controlThemesAPI'
-import { useNewWindow } from '../../../../../ui/NewWindow'
-import { updateTheme } from '../../formikUseCases/updateActionThemes'
+import { useGetControlThemesQuery } from '../../../api/controlThemesAPI'
+import { updateTheme } from '../../missions/MissionForm/formikUseCases/updateActionThemes'
 
-import type { Mission } from '../../../../../domain/entities/missions'
+import type { Mission } from '../../../domain/entities/missions'
 
-export function ThemeSelector({ actionIndex, label, themeIndex }) {
+export function ThemeSelector({ actionIndex, isInNewWindow = false, isLight = true, label, themeIndex }) {
   const { data: controlThemes, isError, isLoading } = useGetControlThemesQuery()
   const { newWindowContainerRef } = useNewWindow()
   const [currentThemeField] = useField<string>(`envActions[${actionIndex}].themes[${themeIndex}].theme`)
@@ -36,10 +35,10 @@ export function ThemeSelector({ actionIndex, label, themeIndex }) {
       {!isError && !isLoading && (
         <Select
           key={`${actionIndex}-${themeIndex}`}
-          baseContainer={newWindowContainerRef.current}
+          baseContainer={isInNewWindow ? newWindowContainerRef.current : null}
           data-cy="envaction-theme-selector"
           isErrorMessageHidden
-          isLight
+          isLight={isLight}
           label={label}
           name={`${actionIndex}-${themeIndex}`}
           onChange={handleUpdateTheme}

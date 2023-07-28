@@ -129,6 +129,7 @@ export const reportingStyleFactory = (color, src?: string | undefined) =>
     },
     image: new Icon({
       color,
+      displacement: [4, 16],
       src: src || 'report.svg'
     })
   })

@@ -1,4 +1,3 @@
 <svg id="Report" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-  <rect id="Rectangle_6366" data-name="Rectangle 6366" width="20" height="20" fill="none"/>
-  <path id="Tracé_1655" data-name="Tracé 1655" d="M-143,6.6-155,1V19h2V11.453Z" transform="translate(160)" fill="#fff"/>
+  <path  d="M17,6.6 5,1V19h2V11.453Z"  fill="#fff"/>
 </svg>

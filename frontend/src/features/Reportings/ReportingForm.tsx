@@ -35,8 +35,8 @@ import { addReporting } from '../../domain/use_cases/reportings/addReporting'
 import { deleteReporting } from '../../domain/use_cases/reportings/deleteReporting'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { DeleteModal } from '../commonComponents/Modals/Delete'
-import { SubThemesSelector } from '../missions/MissionForm/ActionForm/Themes/SubThemesSelector'
-import { ThemeSelector } from '../missions/MissionForm/ActionForm/Themes/ThemeSelector'
+import { ThemeSelector } from '../commonComponents/ThemeSelector'
+import { SubThemesSelector } from '../commonComponents/ThemeSelector/SubThemesSelector'
 
 export function ReportingForm() {
   const dispatch = useDispatch()
@@ -133,7 +133,7 @@ export function ReportingForm() {
         open={isConfirmCancelDialogVisible}
       />
       <DeleteModal
-        key="reporting"
+        context="reporting"
         isAbsolute={false}
         onCancel={cancelDeleteReporting}
         onConfirm={confirmDeleteReporting}

@@ -1,7 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
-  <g id="Groupe_5091" data-name="Groupe 5091" transform="translate(61 -19)">
-    <path id="Tracé_1648" data-name="Tracé 1648" d="M-38.9,27.58-54.5,20.3V43.7h2.6V33.889Z" fill="#fff" stroke="#707785" stroke-width="1.5"/>
-    <path id="Tracé_1649" data-name="Tracé 1649" d="M-61,19h26V45H-61Z" fill="none"/>
-    <rect id="Rectangle_6453" data-name="Rectangle 6453" width="26" height="26" transform="translate(-61 19)" fill="none"/>
+  <g transform="translate(61 -19)">
+    <path d="M-38.9,27.58-54.5,20.3V43.7h2.6V33.889Z" fill="#fff" stroke="#707785" stroke-width="1.5"/>
   </g>
 </svg>

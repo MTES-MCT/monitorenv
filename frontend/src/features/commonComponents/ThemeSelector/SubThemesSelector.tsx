@@ -1,17 +1,16 @@
-import { MultiSelect } from '@mtes-mct/monitor-ui'
+import { MultiSelect, useNewWindow } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import _ from 'lodash'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { useGetControlThemesQuery } from '../../../../../api/controlThemesAPI'
-import { useNewWindow } from '../../../../../ui/NewWindow'
-import { updateSubThemes } from '../../formikUseCases/updateActionThemes'
+import { useGetControlThemesQuery } from '../../../api/controlThemesAPI'
+import { updateSubThemes } from '../../missions/MissionForm/formikUseCases/updateActionThemes'
 
-import type { ControlTheme } from '../../../../../domain/entities/controlThemes'
-import type { Mission } from '../../../../../domain/entities/missions'
+import type { ControlTheme } from '../../../domain/entities/controlThemes'
+import type { Mission } from '../../../domain/entities/missions'
 
-export function SubThemesSelector({ actionIndex, label, theme, themeIndex }) {
+export function SubThemesSelector({ actionIndex, isInNewWindow = false, isLight = false, label, theme, themeIndex }) {
   const { data: controlThemes, isError, isLoading } = useGetControlThemesQuery()
   const { newWindowContainerRef } = useNewWindow()
   const { setFieldValue } = useFormikContext<Mission>()
@@ -39,11 +38,11 @@ export function SubThemesSelector({ actionIndex, label, theme, themeIndex }) {
         <MultiSelect
           // force update when name or theme changes
           key={`${actionIndex}-${themeIndex}-${theme}`}
-          baseContainer={newWindowContainerRef.current}
+          baseContainer={isInNewWindow ? newWindowContainerRef.current : null}
           data-cy="envaction-subtheme-selector"
           disabled={!theme}
           isErrorMessageHidden
-          isLight
+          isLight={isLight}
           label={label}
           name={`${actionIndex}-${themeIndex}`}
           onChange={handleUpdateSubTheme}
