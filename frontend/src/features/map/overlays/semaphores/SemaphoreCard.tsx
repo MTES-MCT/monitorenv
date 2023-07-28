@@ -1,19 +1,13 @@
 import { Accent, Button, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { useCallback, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { Tooltip, Whisper } from 'rsuite'
 import styled from 'styled-components'
 
 import { ReportingSourceEnum } from '../../../../domain/entities/reporting'
-import {
-  hideSideButtons,
-  setOverlayCoordinates,
-  setReportingFormVisibility
-} from '../../../../domain/shared_slices/Global'
-import { multiReportingsActions } from '../../../../domain/shared_slices/MultiReportings'
-import { ReportingFormVisibility, reportingStateActions } from '../../../../domain/shared_slices/ReportingState'
+import { setOverlayCoordinates } from '../../../../domain/shared_slices/Global'
 import { resetSelectedSemaphore } from '../../../../domain/shared_slices/SemaphoresSlice'
-import { addReporting } from '../../../../domain/use_cases/reportings/addReporting'
+import { createAndOpenNewReporting } from '../../../../domain/use_cases/reportings/createAndOpenNewReporting'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 import type { OverlayTriggerType } from 'rsuite/esm/Overlay/OverlayTrigger'
@@ -46,10 +40,9 @@ const MAIL_TOOLTIP_STATE = {
 const hoverTooltip = (text, className) => <StyledTooltip className={className}>{text}</StyledTooltip>
 
 export function SemaphoreCard({ feature, selected = false }: { feature: any; selected?: boolean }) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const {
-    global: { displaySemaphoresLayer },
-    reportingState: { isDirty }
+    global: { displaySemaphoresLayer }
   } = useAppSelector(state => state)
 
   const { email, id, name, phoneNumber, unit } = feature.getProperties()
@@ -76,17 +69,7 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
   }
 
   const createSemaphoreReporting = () => {
-    if (isDirty) {
-      dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(true))
-      dispatch(
-        multiReportingsActions.setNextSelectedReporting({ semaphoreId: id, sourceType: ReportingSourceEnum.SEMAPHORE })
-      )
-    } else {
-      dispatch(addReporting({ semaphoreId: id, sourceType: ReportingSourceEnum.SEMAPHORE }))
-    }
-    dispatch(hideSideButtons())
-    dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
-    dispatch(reportingStateActions.setSelectedReportingIdOnMap(undefined))
+    dispatch(createAndOpenNewReporting({ semaphoreId: id, sourceType: ReportingSourceEnum.SEMAPHORE }))
   }
 
   if (!displaySemaphoresLayer) {

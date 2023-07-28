@@ -3,7 +3,7 @@ import VectorSource from 'ol/source/Vector'
 import { MutableRefObject, useCallback, useEffect, useRef } from 'react'
 
 import { getReportingZoneFeature } from './reportingsGeometryHelpers'
-import { selectedReportingStyleFactory } from './style'
+import { selectedReportingStyleFn } from './style'
 import { useGetReportingsQuery } from '../../../../api/reportingsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -40,7 +40,7 @@ export function SelectedReportingLayer({ map }: BaseMapChildrenProps) {
       selectedReportingVectorLayerRef.current = new VectorLayer({
         renderBuffer: 7,
         source: GetSelectedReportingVectorSource(),
-        style: selectedReportingStyleFactory,
+        style: selectedReportingStyleFn,
         updateWhileAnimating: true,
         updateWhileInteracting: true,
         zIndex: Layers.REPORTING_SELECTED.zIndex

@@ -4,122 +4,10 @@ import { Point } from 'ol/geom'
 import { Fill, Icon, Stroke, Style } from 'ol/style'
 
 import { OLGeometryType } from '../../../../domain/entities/map/constants'
-import { ReportingTypeEnum } from '../../../../domain/entities/reporting'
+import { ReportingStatusEnum, ReportingTypeEnum, getReportingStatus } from '../../../../domain/entities/reporting'
+import { getColorWithAlpha } from '../../../../utils/utils'
 
-export const hoveredReportingZoneStyleFactory = (color, fillColor, geomType) => [
-  new Style({
-    fill: new Fill({
-      color: fillColor
-    }),
-    stroke: new Stroke({
-      color,
-      lineCap: 'square',
-      lineDash: [2, 8],
-      width: 4
-    })
-  }),
-  new Style({
-    geometry: feature => {
-      if (geomType === OLGeometryType.MULTIPOINT) {
-        return feature.getGeometry()
-      }
-
-      return undefined
-    },
-    image: new Icon({
-      color,
-      scale: 0.6,
-      src: 'Close.svg'
-    })
-  })
-]
-
-export const hoveredReportingStyleFactory = feature => {
-  const isProven = feature.get('isInfractionProven')
-  const reportingType = feature.get('reportType')
-  const geomType = feature.get('geom')?.type
-
-  if (reportingType === ReportingTypeEnum.OBSERVATION) {
-    return hoveredReportingZoneStyleFactory(THEME.color.blueGray[100], 'rgb(86, 151, 210, .2)', geomType)
-  }
-
-  if (isProven === undefined || isProven === null) {
-    return hoveredReportingZoneStyleFactory(THEME.color.slateGray, 'rgba(112, 119, 133, .2)', geomType)
-  }
-  if (isProven && reportingType === ReportingTypeEnum.INFRACTION) {
-    return hoveredReportingZoneStyleFactory(THEME.color.maximumRed, 'rgba(225, 0, 15, .2)', geomType)
-  }
-
-  return hoveredReportingZoneStyleFactory(THEME.color.white, 'rgb(255, 255, 255, .2)', geomType)
-}
-
-export const selectedReportingStyleFactory = feature => {
-  const isProven = feature.get('isInfractionProven')
-  const reportingType = feature.get('reportType')
-  const geomType = feature.get('geom')?.type
-
-  if (reportingType === ReportingTypeEnum.OBSERVATION) {
-    return selectedReportingStyle(THEME.color.blueGray[100], 'rgb(86, 151, 210, .25)', geomType)
-  }
-
-  if (isProven === undefined || isProven === null) {
-    return selectedReportingStyle(THEME.color.slateGray, 'rgba(112, 119, 133, .25)', geomType)
-  }
-  if (isProven && reportingType === ReportingTypeEnum.INFRACTION) {
-    return selectedReportingStyle(THEME.color.maximumRed, 'rgba(225, 0, 15, .25)', geomType)
-  }
-
-  return selectedReportingStyle(THEME.color.white, 'rgb(255, 255, 255, .25)', geomType)
-}
-
-export const selectedReportingStyle = (color, fillColor, geomType) => [
-  new Style({
-    fill: new Fill({
-      color: fillColor
-    }),
-    stroke: new Stroke({
-      color,
-      lineCap: 'square',
-      lineDash: [2, 8],
-      width: 5
-    })
-  }),
-  new Style({
-    geometry: feature => {
-      if (geomType === OLGeometryType.MULTIPOINT) {
-        return feature.getGeometry()
-      }
-
-      return undefined
-    },
-    image: new Icon({
-      color: 'red',
-      scale: 0.6,
-      src: 'Close.svg'
-    })
-  })
-]
-
-// TODO handle case when reporting is attach to a mission
-export const styleReporting = feature => {
-  const isProven = feature.get('isInfractionProven')
-  const reportingType = feature.get('reportType')
-
-  if (reportingType === ReportingTypeEnum.OBSERVATION) {
-    return reportingStyleFactory(THEME.color.blueGray[100])
-  }
-
-  if (isProven === undefined || isProven === null) {
-    return reportingStyleFactory(THEME.color.charcoal)
-  }
-  if (isProven && reportingType === ReportingTypeEnum.INFRACTION) {
-    return reportingStyleFactory(THEME.color.maximumRed)
-  }
-
-  return reportingStyleFactory(THEME.color.white, 'archived_reporting.svg')
-}
-
-export const reportingStyleFactory = (color, src?: string | undefined) =>
+const reportingStyleFactory = (color, src?: string | undefined) =>
   new Style({
     geometry: feature => {
       const extent = feature?.getGeometry()?.getExtent()
@@ -133,3 +21,134 @@ export const reportingStyleFactory = (color, src?: string | undefined) =>
       src: src || 'report.svg'
     })
   })
+
+const hoveredReportingZoneStyleFactory = (color, fillColor) => [
+  new Style({
+    fill: new Fill({
+      color: fillColor
+    }),
+    stroke: new Stroke({
+      color,
+      lineCap: 'square',
+      lineDash: [2, 8],
+      width: 4
+    })
+  }),
+  new Style({
+    geometry: feature => {
+      const geometry = feature.getGeometry()
+      if (geometry?.getType() === OLGeometryType.MULTIPOINT) {
+        return feature.getGeometry()
+      }
+
+      return undefined
+    },
+    image: new Icon({
+      color,
+      scale: 0.6,
+      src: 'Close.svg'
+    })
+  })
+]
+
+const selectedReportingStyleFactory = (color, fillColor) => [
+  new Style({
+    fill: new Fill({
+      color: fillColor
+    }),
+    stroke: new Stroke({
+      color,
+      lineCap: 'square',
+      lineDash: [2, 8],
+      width: 5
+    })
+  }),
+  new Style({
+    geometry: feature => {
+      const geometry = feature.getGeometry()
+      if (geometry?.getType() === OLGeometryType.MULTIPOINT) {
+        return feature.getGeometry()
+      }
+
+      return undefined
+    },
+    image: new Icon({
+      color: 'red',
+      scale: 0.6,
+      src: 'Close.svg'
+    })
+  })
+]
+
+export const hoveredReportingStyleFn = feature => {
+  const status = getReportingStatus({
+    createdAt: feature.get('createdAt'),
+    isArchived: feature.get('isArchived'),
+    isInfractionProven: feature.get('isInfractionProven'),
+    reportType: feature.get('reportType') as ReportingTypeEnum,
+    validityTime: feature.get('validityTime')
+  })
+
+  switch (status) {
+    case ReportingStatusEnum.OBSERVATION:
+      return hoveredReportingZoneStyleFactory(
+        THEME.color.blueGray[100],
+        getColorWithAlpha(THEME.color.blueGray[100], 0.2)
+      )
+    case ReportingStatusEnum.INFRACTION_SUSPICION:
+      return hoveredReportingZoneStyleFactory(THEME.color.maximumRed, getColorWithAlpha(THEME.color.maximumRed, 0.2))
+    case ReportingStatusEnum.IN_PROGRESS:
+      return hoveredReportingZoneStyleFactory(THEME.color.slateGray, getColorWithAlpha(THEME.color.slateGray, 0.2))
+    case ReportingStatusEnum.ARCHIVED:
+    default:
+      return hoveredReportingZoneStyleFactory(THEME.color.white, getColorWithAlpha(THEME.color.white, 0.2))
+  }
+}
+
+export const selectedReportingStyleFn = feature => {
+  const status = getReportingStatus({
+    createdAt: feature.get('createdAt'),
+    isArchived: feature.get('isArchived'),
+    isInfractionProven: feature.get('isInfractionProven'),
+    reportType: feature.get('reportType') as ReportingTypeEnum,
+    validityTime: feature.get('validityTime')
+  })
+
+  switch (status) {
+    case ReportingStatusEnum.OBSERVATION:
+      return selectedReportingStyleFactory(
+        THEME.color.blueGray[100],
+        getColorWithAlpha(THEME.color.blueGray[100], 0.25)
+      )
+    case ReportingStatusEnum.INFRACTION_SUSPICION:
+      return selectedReportingStyleFactory(THEME.color.maximumRed, getColorWithAlpha(THEME.color.maximumRed, 0.25))
+    case ReportingStatusEnum.IN_PROGRESS:
+      return selectedReportingStyleFactory(THEME.color.slateGray, getColorWithAlpha(THEME.color.slateGray, 0.25))
+    case ReportingStatusEnum.ARCHIVED:
+    default:
+      return selectedReportingStyleFactory(THEME.color.white, getColorWithAlpha(THEME.color.white, 0.25))
+  }
+}
+
+// TODO handle case when reporting is attach to a mission
+export const reportingPinStyleFn = feature => {
+  const status = getReportingStatus({
+    createdAt: feature.get('createdAt'),
+    isArchived: feature.get('isArchived'),
+    isInfractionProven: feature.get('isInfractionProven'),
+    reportType: feature.get('reportType') as ReportingTypeEnum,
+    validityTime: feature.get('validityTime')
+  })
+
+  switch (status) {
+    case ReportingStatusEnum.OBSERVATION:
+      return reportingStyleFactory(THEME.color.blueGray[100])
+    case ReportingStatusEnum.INFRACTION_SUSPICION:
+      return reportingStyleFactory(THEME.color.maximumRed)
+    case ReportingStatusEnum.IN_PROGRESS:
+      return reportingStyleFactory(THEME.color.slateGray)
+    case ReportingStatusEnum.ARCHIVED:
+    default:
+      return reportingStyleFactory(THEME.color.white, 'archived_reporting.svg')
+  }
+}

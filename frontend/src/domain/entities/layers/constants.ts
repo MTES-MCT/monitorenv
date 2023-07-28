@@ -127,11 +127,11 @@ export const Layers = {
   },
   REPORTING_SELECTED: {
     code: 'reporting_selected',
-    zIndex: 1100
+    zIndex: 1125
   },
   REPORTINGS: {
     code: 'reportings',
-    zIndex: 1000
+    zIndex: 1025
   },
   SEMAPHORES: {
     code: 'semaphores',

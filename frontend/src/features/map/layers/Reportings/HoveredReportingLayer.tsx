@@ -2,7 +2,7 @@ import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { MutableRefObject, useEffect, useRef } from 'react'
 
-import { hoveredReportingStyleFactory } from './style'
+import { hoveredReportingStyleFn } from './style'
 import { Layers } from '../../../../domain/entities/layers/constants'
 
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
@@ -26,7 +26,7 @@ export function HoveredReportingLayer({ currentFeatureOver, map }: BaseMapChildr
         vectorLayerRef.current = new VectorLayer({
           renderBuffer: 7,
           source: GetVectorSource(),
-          style: hoveredReportingStyleFactory,
+          style: hoveredReportingStyleFn,
           updateWhileAnimating: true,
           updateWhileInteracting: true,
           zIndex: Layers.REPORTINGS.zIndex

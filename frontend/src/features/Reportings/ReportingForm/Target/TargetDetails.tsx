@@ -1,4 +1,15 @@
-import { Accent, Button, FormikNumberInput, FormikTextInput, Icon, IconButton, Label } from '@mtes-mct/monitor-ui'
+import {
+  Accent,
+  Button,
+  FormikNumberInput,
+  FormikTextInput,
+  Icon,
+  IconButton,
+  Label,
+  useForceUpdate,
+  usePrevious
+} from '@mtes-mct/monitor-ui'
+import { useEffect } from 'react'
 import styled from 'styled-components'
 
 import { TargetTypeEnum } from '../../../../domain/entities/targetType'
@@ -6,6 +17,19 @@ import { VehicleTypeEnum } from '../../../../domain/entities/vehicleType'
 import { StyledCompanyContainer, StyledEmptyTarget, StyledVesselContainer, StyledVesselForm } from '../../style'
 
 export function TargetDetails({ form, push, remove }) {
+  // Ensure that the component is re-rendered when the number of targets changes
+  // -> use of index as key in targetDetaiils.map()
+  const { forceUpdate } = useForceUpdate()
+
+  const numberOfTargets = form?.values?.targetDetails?.length || 0
+  const previousNumberOfTargets = usePrevious(numberOfTargets)
+
+  useEffect(() => {
+    if (numberOfTargets !== previousNumberOfTargets) {
+      forceUpdate()
+    }
+  }, [forceUpdate, numberOfTargets, previousNumberOfTargets])
+
   const handleAddTargetDetails = () => {
     push({})
   }
@@ -24,9 +48,9 @@ export function TargetDetails({ form, push, remove }) {
           </StyledEmptyTarget>
         )}
         {form?.values.targetDetails?.length > 0
-          ? form.values.targetDetails.map((targetDetail, index) => (
+          ? form.values.targetDetails.map((_, index) => (
               // eslint-disable-next-line react/no-array-index-key
-              <TargetWrapper key={`${index}-${JSON.stringify(targetDetail)}`}>
+              <TargetWrapper key={`${index}`}>
                 {form.values.targetType === TargetTypeEnum.COMPANY && (
                   <StyledCompanyContainer>
                     <FormikTextInput isLight label="Nom de la société" name={`targetDetails.${index}.operatorName`} />

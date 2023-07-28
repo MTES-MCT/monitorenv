@@ -1,78 +1,84 @@
 import styled from 'styled-components'
 
-// import { getDateCell } from '../getDateCell'
+import { CellEditReporting } from '../CellEditReporting'
+import { CellLocalizeReporting } from '../CellLocalizeReporting'
+import { CellStatus } from '../CellStatus'
+import { CellValidityTime } from '../CellValidityTime'
+import { getDateCell } from '../getDateCell'
+import { getReportType } from '../getReportType'
 
 export const Columns = [
   {
-    accessorFn: row => row.id,
+    accessorFn: row => row.reportingId,
     cell: info => <Cell id={info.getValue()}>{info.getValue()}</Cell>,
     enableSorting: true,
     header: () => '',
-    id: 'id',
-    size: 180
-  },
-  {
-    accessorFn: row => row.createdAt,
-    cell: info => <Cell id={info.getValue()}>{info.getValue()}</Cell>,
-    enableSorting: true,
-    header: () => 'Ouverture',
-    id: 'createdAt',
-    size: 180
-  },
-  {
-    accessorFn: row => row.validityTime,
-    cell: info => <Cell id={info.getValue()}>{info.getValue()}</Cell>,
-    enableSorting: true,
-    header: () => 'Validité',
-    id: 'missionSource',
+    id: 'reportingId',
     size: 90
   },
   {
-    accessorFn: row => row.sourceName,
+    accessorFn: row => row.createdAt,
+    cell: info => getDateCell(info.getValue()),
+    enableSorting: true,
+    header: () => 'Ouverture',
+    id: 'createdAt',
+    size: 150
+  },
+  {
+    accessorFn: row => row.validityTime,
+    cell: info => <CellValidityTime validityTime={info.getValue()} />,
+    enableSorting: true,
+    header: () => 'Validité',
+    id: 'validityTime',
+    size: 70
+  },
+  {
+    accessorFn: row => row.displayedSource,
     cell: info => <Cell id={info.getValue()}>{info.getValue()}</Cell>,
     enableSorting: false,
     header: () => 'Source',
-    id: 'unitAndAdministration',
+    id: 'displayedSource',
     maxSize: 280,
     minSize: 230
   },
   {
-    accessorFn: row => row.sourceType,
-    cell: info => <Cell id={info.getValue()}>{info.getValue()}</Cell>,
+    accessorFn: row => row.reportType,
+    cell: info => getReportType(info.getValue()),
     enableSorting: false,
     header: () => 'Type',
-    id: 'type',
-    size: 90
+    id: 'reportType',
+    size: 150
   },
   {
     accessorFn: row => row.theme,
     cell: info => <Cell id={info.getValue()}>{info.getValue()}</Cell>,
     enableSorting: true,
     header: () => 'Thématique',
-    id: 'seaFront',
-    size: 100
+    id: 'theme',
+    maxSize: 280,
+    minSize: 230
   },
   {
-    accessorFn: row => row.envActions,
+    accessorFn: row => row.seaFront,
     cell: info => <Cell id={info.getValue()}>{info.getValue()}</Cell>,
     enableSorting: false,
     header: () => 'Façade',
-    id: 'themes',
+    id: 'seaFront',
     maxSize: 280,
     minSize: 100,
     size: 230
   },
   {
-    accessorFn: row => row.envActions,
-    cell: info => <Cell id={info.getValue()}>{info.getValue()}</Cell>,
+    accessorFn: row => row.status,
+    cell: ({ row }) => <CellStatus row={row} />,
     enableSorting: false,
     header: () => 'Statut',
-    id: 'controls',
+    id: 'status',
     size: 110
   },
   {
     accessorFn: row => row.geom,
-    cell: () => <Cell />,
+    cell: info => <CellLocalizeReporting geom={info.getValue()} />,
     enableSorting: false,
     header: () => '',
     id: 'geom',
@@ -80,10 +86,10 @@ export const Columns = [
   },
   {
     accessorFn: row => row.id,
-    cell: info => <Cell id={info.getValue()}>{info.getValue()}</Cell>,
+    cell: info => <CellEditReporting id={info.getValue()} />,
     enableSorting: false,
     header: () => '',
-    id: 'edit',
+    id: 'id',
     size: 100
   }
 ]

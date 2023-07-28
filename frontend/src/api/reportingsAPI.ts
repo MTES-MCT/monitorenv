@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-import type { Reporting } from '../domain/entities/reporting'
+import type { Reporting, ReportingDetailed } from '../domain/entities/reporting'
 
 type ReportingsFilter = {
   reportingSource?: string
@@ -46,7 +46,7 @@ export const reportingsAPI = createApi({
       providesTags: (_, __, id) => [{ id, type: 'Reportings' }],
       query: id => `reportings/${id}`
     }),
-    getReportings: build.query<Reporting[], ReportingsFilter | void>({
+    getReportings: build.query<ReportingDetailed[], ReportingsFilter | void>({
       providesTags: result =>
         result
           ? // successful query

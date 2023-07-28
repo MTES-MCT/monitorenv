@@ -5,42 +5,31 @@ import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { getFormattedReportingId } from '../../../../domain/entities/reporting'
-import { hideSideButtons, setReportingFormVisibility } from '../../../../domain/shared_slices/Global'
-import { ReportingFormVisibility, reportingStateActions } from '../../../../domain/shared_slices/ReportingState'
-import { editReportingInLocalStore } from '../../../../domain/use_cases/reportings/editReportingInLocalStore'
+import { reportingStateActions } from '../../../../domain/shared_slices/ReportingState'
+import { openReporting } from '../../../../domain/use_cases/reportings/openReporting'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 export function ReportingCard({ feature, selected = false }: { feature: any; selected?: boolean }) {
   const dispatch = useDispatch()
   const {
-    global: { displayReportingsLayer },
-    reportingState: { isDirty }
+    global: { displayReportingsLayer }
   } = useAppSelector(state => state)
 
-  const { createdAt, description, id, isArchived, reportingId, sourceName, subThemes, theme, validityTime } =
+  const { createdAt, description, displayedSource, id, isArchived, reportingId, subThemes, theme, validityTime } =
     feature.getProperties()
 
   const creationDate = dayjs(createdAt).format('DD MMM YYYY à HH:mm')
 
-  const endOfValidity = dayjs(createdAt)
-    .add(validityTime || 0, 'hour')
-    .toISOString()
-  const timeLeft = dayjs(endOfValidity).diff(dayjs(), 'hour')
+  const endOfValidity = dayjs(createdAt).add(validityTime || 0, 'hour')
+
+  const timeLeft = endOfValidity.diff(dayjs(), 'hour')
   const subThemesFormatted = subThemes.map(subTheme => subTheme).join(', ')
 
   // TODO gérer le cas sémaphore et unités
-  const subTitle = sourceName
+  const subTitle = displayedSource
 
   const editReporting = () => {
-    if (isDirty) {
-      dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(true))
-      dispatch(editReportingInLocalStore(id, true))
-    } else {
-      dispatch(editReportingInLocalStore(id, false))
-      dispatch(reportingStateActions.setSelectedReportingId(id))
-    }
-    dispatch(hideSideButtons())
-    dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
+    dispatch(openReporting(id))
   }
 
   const closeReportingCard = useCallback(() => {

@@ -57,9 +57,9 @@ export function Map() {
       <ActionOverlay />
       <SemaphoresLayer />
       <SemaphoreOverlay />
-      <ReportingsLayer />
       <SelectedReportingLayer />
       <HoveredReportingLayer />
+      <ReportingsLayer />
       <ReportingOverlay />
     </BaseMap>
   )

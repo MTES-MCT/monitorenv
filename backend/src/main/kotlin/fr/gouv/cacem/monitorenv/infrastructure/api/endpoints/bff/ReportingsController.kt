@@ -6,6 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.GetAllReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.GetReportingById
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdateReportingDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.ReportingDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs.ReportingDetailedDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -33,19 +34,19 @@ class ReportingsController(
 
     @GetMapping("")
     @Operation(summary = "Get reportings")
-    fun getReportingController(
+    fun getReportingsController(
         @Parameter(description = "page number")
         @RequestParam(name = "pageNumber")
         pageNumber: Int?,
         @Parameter(description = "page size")
         @RequestParam(name = "pageSize")
         pageSize: Int?,
-    ): List<ReportingDataOutput> {
+    ): List<ReportingDetailedDataOutput> {
         return getAllReportings.execute(
             pageNumber = pageNumber,
             pageSize = pageSize,
         ).map {
-            ReportingDataOutput.fromReporting(it.first, it.second, it.third)
+            ReportingDetailedDataOutput.fromReporting(it.first, it.second, it.third)
         }
     }
 

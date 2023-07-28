@@ -220,7 +220,7 @@ class ReportingsControllerITests {
         )
         val semaphore = SemaphoreEntity(
             id = 1,
-            name = "name",
+            name = "semaphore name",
             geom = WKTReader().read("POINT (-61.0 14.0)") as Point,
         )
         given(
@@ -237,6 +237,7 @@ class ReportingsControllerITests {
             .andExpect(jsonPath("$.length()", equalTo(1)))
             .andExpect(jsonPath("$[0].id").value(1))
             .andExpect(jsonPath("$[0].sourceType").value("SEMAPHORE"))
+            .andExpect(jsonPath("$[0].displayedSource").value("semaphore name"))
             .andExpect(jsonPath("$[0].targetType").value("VEHICLE"))
             .andExpect(jsonPath("$[0].vehicleType").value("VESSEL"))
             .andExpect(jsonPath("$[0].geom.type").value("MultiPolygon"))

@@ -2,20 +2,16 @@ import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
 import { useDispatch } from 'react-redux'
 
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
-import { hideSideButtons, setDisplayedItems, setReportingFormVisibility } from '../../../domain/shared_slices/Global'
-import { multiReportingsActions } from '../../../domain/shared_slices/MultiReportings'
-import { ReportingFormVisibility, reportingStateActions } from '../../../domain/shared_slices/ReportingState'
-import { addReporting } from '../../../domain/use_cases/reportings/addReporting'
+import { setDisplayedItems } from '../../../domain/shared_slices/Global'
+import { createAndOpenNewReporting } from '../../../domain/use_cases/reportings/createAndOpenNewReporting'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
 import { sideWindowActions } from '../../SideWindow/slice'
-import { getReportingInitialValues } from '../utils'
 
 export function SearchReportings() {
   const dispatch = useDispatch()
   const {
-    global: { displayReportingsLayer },
-    reportingState: { isDirty }
+    global: { displayReportingsLayer }
   } = useAppSelector(state => state)
 
   const closeSearchReportings = () => {
@@ -27,14 +23,7 @@ export function SearchReportings() {
   }
 
   const createReporting = () => {
-    if (isDirty) {
-      dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(true))
-      dispatch(multiReportingsActions.setNextSelectedReporting(getReportingInitialValues()))
-    } else {
-      dispatch(addReporting())
-    }
-    dispatch(hideSideButtons())
-    dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
+    dispatch(createAndOpenNewReporting())
   }
 
   const toggleReportingsWindow = () => {

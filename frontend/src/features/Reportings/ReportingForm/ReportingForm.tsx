@@ -14,6 +14,7 @@ import {
   Reporting,
   ReportingTypeEnum,
   getFormattedReportingId,
+  getReportingStatus,
   infractionProvenLabels,
   reportingTypeLabels
 } from '../../../domain/entities/reporting'
@@ -23,6 +24,7 @@ import { addReporting } from '../../../domain/use_cases/reportings/addReporting'
 import { deleteReporting } from '../../../domain/use_cases/reportings/deleteReporting'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useSyncFormValuesWithRedux } from '../../../hooks/useSyncFormValuesWithRedux'
+import { ReportingStatusLabel } from '../../../ui/ReportingStatusLabel'
 import { DeleteModal } from '../../commonComponents/Modals/Delete'
 import { ThemeSelector } from '../../commonComponents/ThemeSelector'
 import { SubThemesSelector } from '../../commonComponents/ThemeSelector/SubThemesSelector'
@@ -145,6 +147,7 @@ export function ReportingForm({ setShouldValidateOnChange }) {
         <StyledTitle>
           <Icon.Report />
           {values.reportingId ? `SIGNALEMENT ${getFormattedReportingId(values.reportingId)}` : 'NOUVEAU SIGNALEMENT'}
+          <ReportingStatusLabel reportingStatus={getReportingStatus(values)} />
         </StyledTitle>
 
         <StyledHeaderButtons>

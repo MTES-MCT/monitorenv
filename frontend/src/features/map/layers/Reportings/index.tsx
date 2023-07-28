@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { getReportingZoneFeature } from './reportingsGeometryHelpers'
-import { styleReporting } from './style'
+import { reportingPinStyleFn } from './style'
 import { useGetReportingsQuery } from '../../../../api/reportingsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { reportingStateActions } from '../../../../domain/shared_slices/ReportingState'
@@ -40,7 +40,7 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       vectorLayerRef.current = new VectorLayer({
         renderBuffer: 7,
         source: GetVectorSource(),
-        style: styleReporting,
+        style: reportingPinStyleFn,
         updateWhileAnimating: true,
         updateWhileInteracting: true,
         zIndex: Layers.REPORTINGS.zIndex
