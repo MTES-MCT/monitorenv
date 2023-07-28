@@ -31,4 +31,15 @@ interface IDBReportingRepository : CrudRepository<ReportingModel, Int> {
         nativeQuery = true,
     )
     fun delete(id: Int)
+
+    @Modifying(clearAutomatically = true)
+    @Query(
+        value = """
+        UPDATE reportings
+        SET is_archived = TRUE
+        WHERE (created_at + make_interval(hours => validity_time)) < NOW()  
+    """,
+        nativeQuery = true,
+    )
+    fun ArchiveOutdatedReportings(): Int
 }

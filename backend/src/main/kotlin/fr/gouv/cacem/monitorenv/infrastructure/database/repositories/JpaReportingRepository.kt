@@ -40,4 +40,8 @@ class JpaReportingRepository(
     override fun count(): Long {
         return dbReportingRepository.count()
     }
+
+    override fun ArchiveOutdatedReportings(): Int {
+        return dbReportingRepository.ArchiveOutdatedReportings()
+    }
 }
