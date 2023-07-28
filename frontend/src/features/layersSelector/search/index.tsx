@@ -98,9 +98,7 @@ export function LayerSearch({ isVisible }) {
             const filterWithTextExpression =
               searchedText.length > 0 ? { $path: ['name'], $val: searchedText } : undefined
             const filterWithType =
-              regulatoryThemes.length > 0
-                ? { $or: regulatoryThemes.map(theme => ({ $path: ['type'], $val: `'${theme}` })) }
-                : undefined
+              ampTypes.length > 0 ? { $or: ampTypes.map(theme => ({ $path: 'type', $val: `'${theme}` })) } : undefined
 
             const filterExpression = [filterWithTextExpression, filterWithType].filter(f => !!f) as Fuse.Expression[]
 
