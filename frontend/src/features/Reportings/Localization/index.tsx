@@ -5,8 +5,8 @@ import { useDispatch } from 'react-redux'
 
 import { PointPicker } from './PointPicker'
 import { ZonePicker } from './ZonePicker'
-import { InteractionListener } from '../../../../domain/entities/map/constants'
-import { addControlPosition, addZone } from '../../../../domain/use_cases/missions/addZone'
+import { InteractionListener } from '../../../domain/entities/map/constants'
+import { addControlPosition, addZone } from '../../../domain/use_cases/missions/addZone'
 import { StyledLocalizationContainer } from '../style'
 
 export function Localization() {

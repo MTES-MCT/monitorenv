@@ -8,12 +8,12 @@ import {
   StyledVesselContainer,
   StyledVesselForm
 } from './style'
-import { TargetTypeEnum } from '../../../domain/entities/targetType'
-import { VehicleTypeEnum } from '../../../domain/entities/vehicleType'
-import { TargetSelector } from '../../commonComponents/TargetSelector'
-import { VehicleTypeSelector } from '../../commonComponents/VehicleTypeSelector'
+import { TargetTypeEnum } from '../../domain/entities/targetType'
+import { VehicleTypeEnum } from '../../domain/entities/vehicleType'
+import { TargetSelector } from '../commonComponents/TargetSelector'
+import { VehicleTypeSelector } from '../commonComponents/VehicleTypeSelector'
 
-import type { Reporting } from '../../../domain/entities/reporting'
+import type { Reporting } from '../../domain/entities/reporting'
 
 export function Target() {
   const { setFieldValue, values } = useFormikContext<Reporting>()

@@ -2,8 +2,8 @@ import { useFormikContext } from 'formik'
 import _ from 'lodash'
 import { useEffect, useMemo } from 'react'
 
-import { reportingStateActions } from '../../../../domain/shared_slices/ReportingState'
-import { useAppDispatch } from '../../../../hooks/useAppDispatch'
+import { reportingStateActions } from '../../../domain/shared_slices/ReportingState'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 
 import type { ActionCreatorWithPayload } from '@reduxjs/toolkit'
 

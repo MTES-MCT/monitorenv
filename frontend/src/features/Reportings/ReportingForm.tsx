@@ -30,13 +30,13 @@ import {
   ReportingTypeEnum,
   infractionProvenLabels,
   reportingTypeLabels
-} from '../../../domain/entities/reporting'
-import { hideSideButtons, setMapToolOpened, setReportingFormVisibility } from '../../../domain/shared_slices/Global'
-import { ReportingFormVisibility, reportingStateActions } from '../../../domain/shared_slices/ReportingState'
-import { deleteReporting } from '../../../domain/use_cases/reportings/deleteReporting'
-import { useAppSelector } from '../../../hooks/useAppSelector'
-import { SubThemesSelector } from '../../missions/MissionForm/ActionForm/Themes/SubThemesSelector'
-import { ThemeSelector } from '../../missions/MissionForm/ActionForm/Themes/ThemeSelector'
+} from '../../domain/entities/reporting'
+import { hideSideButtons, setMapToolOpened, setReportingFormVisibility } from '../../domain/shared_slices/Global'
+import { ReportingFormVisibility, reportingStateActions } from '../../domain/shared_slices/ReportingState'
+import { deleteReporting } from '../../domain/use_cases/reportings/deleteReporting'
+import { useAppSelector } from '../../hooks/useAppSelector'
+import { SubThemesSelector } from '../missions/MissionForm/ActionForm/Themes/SubThemesSelector'
+import { ThemeSelector } from '../missions/MissionForm/ActionForm/Themes/ThemeSelector'
 
 export function ReportingForm() {
   const dispatch = useDispatch()

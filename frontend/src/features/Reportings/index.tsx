@@ -7,10 +7,10 @@ import styled from 'styled-components'
 import { ReportingForm } from './ReportingForm'
 import { ReportingSchema } from './Schema'
 import { getReportingInitialValues } from './utils'
-import { useGetReportingQuery } from '../../../api/reportingsAPI'
-import { ReportingFormVisibility } from '../../../domain/shared_slices/ReportingState'
-import { saveReporting } from '../../../domain/use_cases/reportings/saveReporting'
-import { useAppSelector } from '../../../hooks/useAppSelector'
+import { useGetReportingQuery } from '../../api/reportingsAPI'
+import { ReportingFormVisibility } from '../../domain/shared_slices/ReportingState'
+import { saveReporting } from '../../domain/use_cases/reportings/saveReporting'
+import { useAppSelector } from '../../hooks/useAppSelector'
 
 export function Reporting() {
   const {

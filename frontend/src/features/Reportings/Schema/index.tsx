@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import * as Yup from 'yup'
 
-import { ReportingSourceEnum, type Reporting } from '../../../../domain/entities/reporting'
+import { ReportingSourceEnum, type Reporting } from '../../../domain/entities/reporting'
 
 const MissionZoneSchema = Yup.object().test({
   message: 'Veuillez définir la localisation du signalement',

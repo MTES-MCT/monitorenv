@@ -2,9 +2,9 @@ import { CustomSearch, FieldError, FormikSelect, FormikTextInput, MultiRadio } f
 import { useFormikContext } from 'formik'
 import { useMemo } from 'react'
 
-import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
-import { useGetSemaphoresQuery } from '../../../api/semaphoresAPI'
-import { Reporting, ReportingSourceEnum, reportingSourceLabels } from '../../../domain/entities/reporting'
+import { useGetControlUnitsQuery } from '../../api/controlUnitsAPI'
+import { useGetSemaphoresQuery } from '../../api/semaphoresAPI'
+import { Reporting, ReportingSourceEnum, reportingSourceLabels } from '../../domain/entities/reporting'
 
 export function Source() {
   const { data: semaphores } = useGetSemaphoresQuery()

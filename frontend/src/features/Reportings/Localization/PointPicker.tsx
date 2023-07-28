@@ -6,19 +6,19 @@ import { transformExtent } from 'ol/proj'
 import { useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../../constants/constants'
+import { COLORS } from '../../../constants/constants'
 import {
   InteractionListener,
   OLGeometryType,
   OPENLAYERS_PROJECTION,
   WSG84_PROJECTION
-} from '../../../../domain/entities/map/constants'
-import { setFitToExtent } from '../../../../domain/shared_slices/Map'
-import { addControlPosition } from '../../../../domain/use_cases/missions/addZone'
-import { useAppDispatch } from '../../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useListenForDrawedGeometry } from '../../../../hooks/useListenForDrawing'
-import { getCoordinates } from '../../../../utils/coordinates'
+} from '../../../domain/entities/map/constants'
+import { setFitToExtent } from '../../../domain/shared_slices/Map'
+import { addControlPosition } from '../../../domain/use_cases/missions/addZone'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+import { useListenForDrawedGeometry } from '../../../hooks/useListenForDrawing'
+import { getCoordinates } from '../../../utils/coordinates'
 
 import type { Coordinate } from 'ol/coordinate'
 

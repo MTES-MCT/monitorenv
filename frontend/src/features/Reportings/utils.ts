@@ -1,4 +1,4 @@
-import { ReportingSourceEnum, type Reporting } from '../../../domain/entities/reporting'
+import { ReportingSourceEnum, type Reporting } from '../../domain/entities/reporting'
 
 export function getReportingInitialValues(reporting?: Partial<Reporting | undefined>) {
   if (reporting) {
