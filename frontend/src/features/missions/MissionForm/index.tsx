@@ -42,8 +42,6 @@ export function Mission() {
     }
 
     return missionFactory(missionToEdit)
-    // to prevent re-render
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idTyped, missionIsNewMission, missionToEdit])
 
   const handleSubmitForm = values => {

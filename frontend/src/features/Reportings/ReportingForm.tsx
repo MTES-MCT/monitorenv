@@ -31,8 +31,9 @@ import {
   infractionProvenLabels,
   reportingTypeLabels
 } from '../../domain/entities/reporting'
-import { hideSideButtons, setMapToolOpened, setReportingFormVisibility } from '../../domain/shared_slices/Global'
+import { hideSideButtons, setReportingFormVisibility } from '../../domain/shared_slices/Global'
 import { ReportingFormVisibility, reportingStateActions } from '../../domain/shared_slices/ReportingState'
+import { addReporting } from '../../domain/use_cases/reportings/addReporting'
 import { deleteReporting } from '../../domain/use_cases/reportings/deleteReporting'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { SubThemesSelector } from '../missions/MissionForm/ActionForm/Themes/SubThemesSelector'
@@ -42,7 +43,8 @@ export function ReportingForm() {
   const dispatch = useDispatch()
   const {
     global: { reportingFormVisibility },
-    reportingState: { isConfirmCancelDialogVisible, nextSelectedReportingId }
+    multiReportings: { nextSelectedReporting },
+    reportingState: { isConfirmCancelDialogVisible }
   } = useAppSelector(state => state)
   const { dirty, errors, handleSubmit, setFieldValue, values } = useFormikContext<Partial<Reporting>>()
 
@@ -80,9 +82,9 @@ export function ReportingForm() {
   const reduceOrExpandReporting = () => {
     dispatch(hideSideButtons())
     if (reportingFormVisibility === ReportingFormVisibility.VISIBLE) {
-      dispatch(setMapToolOpened(undefined))
       dispatch(setReportingFormVisibility(ReportingFormVisibility.REDUCE))
     } else {
+      dispatch(hideSideButtons())
       dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
     }
   }
@@ -92,9 +94,9 @@ export function ReportingForm() {
 
   const confirmCloseReporting = () => {
     dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(false))
-    if (nextSelectedReportingId) {
-      dispatch(reportingStateActions.setSelectedReportingId(nextSelectedReportingId))
-      dispatch(reportingStateActions.setNextSelectedReportingId(undefined))
+
+    if (nextSelectedReporting) {
+      dispatch(addReporting(nextSelectedReporting))
     } else {
       dispatch(reportingStateActions.setSelectedReportingId(undefined))
       dispatch(setReportingFormVisibility(ReportingFormVisibility.NOT_VISIBLE))

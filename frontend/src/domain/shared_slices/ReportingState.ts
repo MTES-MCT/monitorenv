@@ -13,7 +13,6 @@ export enum ReportingFormVisibility {
 type ReportingState = {
   isConfirmCancelDialogVisible: boolean
   isDirty: boolean
-  nextSelectedReportingId: number | undefined
   reportingState: Reporting | undefined
   selectedReportingId: number | undefined
   selectedReportingIdOnMap: number | undefined
@@ -22,7 +21,6 @@ type ReportingState = {
 const initialState: ReportingState = {
   isConfirmCancelDialogVisible: false,
   isDirty: false,
-  nextSelectedReportingId: undefined,
   reportingState: undefined,
   selectedReportingId: undefined,
   selectedReportingIdOnMap: undefined
@@ -36,9 +34,6 @@ const reportingStateSlice = createSlice({
     },
     setIsDirty(state, action) {
       state.isDirty = action.payload
-    },
-    setNextSelectedReportingId(state, action: PayloadAction<number | undefined>) {
-      state.nextSelectedReportingId = action.payload
     },
     setReportingState(state, action) {
       state.reportingState = action.payload

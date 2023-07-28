@@ -15,6 +15,7 @@ import { useAppSelector } from '../../hooks/useAppSelector'
 export function Reporting() {
   const {
     global: { reportingFormVisibility },
+    multiReportings: { selectedReportings },
     reportingState: { selectedReportingId }
   } = useAppSelector(state => state)
   const dispatch = useDispatch()
@@ -25,12 +26,12 @@ export function Reporting() {
   }
 
   const reportingInitialValues = useMemo(() => {
-    if (reportingToEdit && selectedReportingId) {
-      return getReportingInitialValues(reportingToEdit)
+    if (selectedReportings[0]?.reporting) {
+      return getReportingInitialValues(selectedReportings[0]?.reporting)
     }
 
-    return getReportingInitialValues()
-  }, [selectedReportingId, reportingToEdit])
+    return getReportingInitialValues(reportingToEdit)
+  }, [reportingToEdit, selectedReportings])
 
   return (
     <StyledContainer className={reportingFormVisibility}>

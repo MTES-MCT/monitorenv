@@ -6,6 +6,7 @@ import styled from 'styled-components'
 
 import { hideSideButtons, setReportingFormVisibility } from '../../../../domain/shared_slices/Global'
 import { ReportingFormVisibility, reportingStateActions } from '../../../../domain/shared_slices/ReportingState'
+import { editReportingInLocalStore } from '../../../../domain/use_cases/reportings/editReportingInLocalStore'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 export function ReportingCard({ feature, selected = false }: { feature: any; selected?: boolean }) {
@@ -30,8 +31,8 @@ export function ReportingCard({ feature, selected = false }: { feature: any; sel
 
   const editReporting = () => {
     if (isDirty) {
-      dispatch(reportingStateActions.setNextSelectedReportingId(id))
       dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(true))
+      dispatch(editReportingInLocalStore(id))
     } else {
       dispatch(reportingStateActions.setSelectedReportingId(id))
     }

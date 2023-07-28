@@ -3,9 +3,12 @@ import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { hideSideButtons, setDisplayedItems, setReportingFormVisibility } from '../../../../domain/shared_slices/Global'
+import { multiReportingsActions } from '../../../../domain/shared_slices/MultiReportings'
 import { ReportingFormVisibility, reportingStateActions } from '../../../../domain/shared_slices/ReportingState'
+import { addReporting } from '../../../../domain/use_cases/reportings/addReporting'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { MenuWithCloseButton } from '../../../commonStyles/map/MenuWithCloseButton'
+import { getReportingInitialValues } from '../../../Reportings/utils'
 
 export function SearchReportings() {
   const dispatch = useDispatch()
@@ -25,8 +28,9 @@ export function SearchReportings() {
   const createReporting = () => {
     if (isDirty) {
       dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(true))
+      dispatch(multiReportingsActions.setNextSelectedReporting(getReportingInitialValues()))
     } else {
-      // TODO pré-remplir le formulaire avec l'info du sémaphore
+      dispatch(addReporting())
     }
     dispatch(hideSideButtons())
     dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))

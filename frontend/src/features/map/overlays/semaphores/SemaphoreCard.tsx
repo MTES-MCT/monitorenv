@@ -5,13 +5,16 @@ import { Tooltip, Whisper } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
+import { ReportingSourceEnum } from '../../../../domain/entities/reporting'
 import {
   hideSideButtons,
   setOverlayCoordinates,
   setReportingFormVisibility
 } from '../../../../domain/shared_slices/Global'
+import { multiReportingsActions } from '../../../../domain/shared_slices/MultiReportings'
 import { ReportingFormVisibility, reportingStateActions } from '../../../../domain/shared_slices/ReportingState'
 import { resetSelectedSemaphore } from '../../../../domain/shared_slices/SemaphoresSlice'
+import { addReporting } from '../../../../domain/use_cases/reportings/addReporting'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 import type { OverlayTriggerType } from 'rsuite/esm/Overlay/OverlayTrigger'
@@ -50,7 +53,7 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
     reportingState: { isDirty }
   } = useAppSelector(state => state)
 
-  const { email, name, phoneNumber, unit } = feature.getProperties()
+  const { email, id, name, phoneNumber, unit } = feature.getProperties()
   const [tooltipPhoneState, setTooltipPhoneState] = useState(PHONE_TOOLTIP_STATE.hover)
 
   const [tooltipMailState, setTooltipMailState] = useState(MAIL_TOOLTIP_STATE.hover)
@@ -73,11 +76,15 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
     setTooltipPhoneState(PHONE_TOOLTIP_STATE.hover)
   }
 
-  const addReporting = () => {
+  const createSemaphoreReporting = () => {
     if (isDirty) {
       dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(true))
+      dispatch(
+        multiReportingsActions.setNextSelectedReporting({ semaphoreId: id, sourceType: ReportingSourceEnum.SEMAPHORE })
+      )
+    } else {
+      dispatch(addReporting({ semaphoreId: id, sourceType: ReportingSourceEnum.SEMAPHORE }))
     }
-    // TODO pré-remplir le formulaire avec l'info du sémaphore
     dispatch(hideSideButtons())
     dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
   }
@@ -144,7 +151,7 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
           </StyledContactLine>
         )}
 
-        <StyledButton Icon={Icon.Plus} isFullWidth onClick={addReporting}>
+        <StyledButton Icon={Icon.Plus} isFullWidth onClick={createSemaphoreReporting}>
           Créer un signalement
         </StyledButton>
       </StyledContactContainer>
