@@ -79,7 +79,7 @@ class ApiMissionsControllerITests {
             missionSource = MissionSourceEnum.MONITORFISH,
             hasMissionOrder = true,
             isUnderJdp = true,
-            isGeometryComputedFromControls = false
+            isGeometryComputedFromControls = false,
         )
         val newMissionRequest = CreateOrUpdateMissionDataInput(
             missionTypes = listOf(MissionTypeEnum.LAND),
@@ -92,7 +92,7 @@ class ApiMissionsControllerITests {
             isClosed = false,
             hasMissionOrder = true,
             isUnderJdp = true,
-            isGeometryComputedFromControls = false
+            isGeometryComputedFromControls = false,
         )
         val requestBody = objectMapper.writeValueAsString(newMissionRequest)
         given(createOrUpdateMission.execute(mission = any())).willReturn(expectedNewMission)
@@ -128,7 +128,7 @@ class ApiMissionsControllerITests {
             isClosed = false,
             hasMissionOrder = false,
             isUnderJdp = false,
-            isGeometryComputedFromControls = false
+            isGeometryComputedFromControls = false,
         )
         given(
             getMissions.execute(
@@ -163,7 +163,7 @@ class ApiMissionsControllerITests {
             isClosed = false,
             hasMissionOrder = false,
             isUnderJdp = false,
-            isGeometryComputedFromControls = false
+            isGeometryComputedFromControls = false,
         )
         // we test only if the route is called with the right arg
         given(getMissionById.execute(requestedId)).willReturn(expectedFirstMission)
@@ -190,7 +190,7 @@ class ApiMissionsControllerITests {
             missionSource = MissionSourceEnum.MONITORFISH,
             hasMissionOrder = true,
             isUnderJdp = true,
-            isGeometryComputedFromControls = false
+            isGeometryComputedFromControls = false,
         )
         val envAction = EnvActionControlEntity(
             id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
@@ -209,7 +209,7 @@ class ApiMissionsControllerITests {
             isClosed = false,
             hasMissionOrder = true,
             isUnderJdp = true,
-            isGeometryComputedFromControls = false
+            isGeometryComputedFromControls = false,
         )
         given(createOrUpdateMission.execute(any())).willReturn(expectedUpdatedMission)
         // When

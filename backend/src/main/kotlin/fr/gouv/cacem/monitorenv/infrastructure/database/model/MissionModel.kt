@@ -160,7 +160,7 @@ data class MissionModel(
                 missionSource = mission.missionSource,
                 hasMissionOrder = mission.hasMissionOrder,
                 isUnderJdp = mission.isUnderJdp,
-                isGeometryComputedFromControls = mission.isGeometryComputedFromControls
+                isGeometryComputedFromControls = mission.isGeometryComputedFromControls,
             )
 
             mission.envActions?.map {

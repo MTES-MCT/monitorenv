@@ -15,7 +15,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.CreateOrUpdateReporti
 import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.DeleteReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.GetAllReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.GetReportingById
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdateReportingDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateReportingDataInput
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.Point

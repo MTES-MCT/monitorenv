@@ -75,10 +75,10 @@ class CreateOrUpdateMissionUTests {
                 ),
                 EnvActionNoteEntity(
                     id = UUID.fromString("a6c4bd17-eb45-4504-ab15-7a18ea714a10"),
-                    observations = "Quelqu'un aurait vu quelque chose quelque part à un certain moment."
-                )
+                    observations = "Quelqu'un aurait vu quelque chose quelque part à un certain moment.",
+                ),
             ),
-            isGeometryComputedFromControls = false
+            isGeometryComputedFromControls = false,
         )
 
         val expectedCreatedMission = missionToCreate.copy(
