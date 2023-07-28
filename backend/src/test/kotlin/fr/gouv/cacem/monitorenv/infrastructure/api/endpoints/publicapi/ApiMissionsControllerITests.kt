@@ -95,7 +95,7 @@ class ApiMissionsControllerITests {
             isGeometryComputedFromControls = false
         )
         val requestBody = objectMapper.writeValueAsString(newMissionRequest)
-        given(this.createOrUpdateMission.execute(mission = any())).willReturn(expectedNewMission)
+        given(createOrUpdateMission.execute(mission = any())).willReturn(expectedNewMission)
         // When
         mockMvc.perform(
             post("/api/v1/missions")
@@ -131,7 +131,7 @@ class ApiMissionsControllerITests {
             isGeometryComputedFromControls = false
         )
         given(
-            this.getMissions.execute(
+            getMissions.execute(
                 startedAfterDateTime = any(),
                 startedBeforeDateTime = any(),
                 missionSources = any(),
@@ -211,7 +211,7 @@ class ApiMissionsControllerITests {
             isUnderJdp = true,
             isGeometryComputedFromControls = false
         )
-        given(this.createOrUpdateMission.execute(any())).willReturn(expectedUpdatedMission)
+        given(createOrUpdateMission.execute(any())).willReturn(expectedUpdatedMission)
         // When
         mockMvc.perform(
             post("/api/v1/missions/14")

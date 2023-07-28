@@ -9,11 +9,11 @@ import org.springframework.stereotype.Repository
 class JpaControlThemeRepository(private val dbControlThemeRepository: IDBControlThemeRepository) :
     IControlThemeRepository {
 
-    override fun findControlThemes(): List<ControlThemeEntity> {
+    override fun findAll(): List<ControlThemeEntity> {
         return dbControlThemeRepository.findAll().map { it.toControlTheme() }
     }
 
-    override fun findControlThemeById(controlThemeId: Int): ControlThemeEntity {
+    override fun findById(controlThemeId: Int): ControlThemeEntity {
         return dbControlThemeRepository.findById(controlThemeId).get().toControlTheme()
     }
 }

@@ -27,7 +27,7 @@ class ApiHealthcheckControllerITests {
 
     @Test
     fun `Healthcheck returns number of reg areas`() {
-        given(this.getHealthcheck.execute()).willReturn(
+        given(getHealthcheck.execute()).willReturn(
             Health(
                 numberOfRegulatoryAreas = 13,
                 numberOfMissions = 50,

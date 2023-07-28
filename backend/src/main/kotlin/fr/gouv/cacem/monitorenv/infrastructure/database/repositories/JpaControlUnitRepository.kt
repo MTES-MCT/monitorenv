@@ -8,11 +8,11 @@ import org.springframework.stereotype.Repository
 @Repository
 class JpaControlUnitRepository(private val dbControlUnitRepository: IDBControlUnitRepository) : IControlUnitRepository {
 
-    override fun findControlUnits(): List<ControlUnitEntity> {
+    override fun findAll(): List<ControlUnitEntity> {
         return dbControlUnitRepository.findAll().map { it.toControlUnit() }
     }
 
-    override fun findControlUnitById(id: Int): ControlUnitEntity {
+    override fun findById(id: Int): ControlUnitEntity {
         return dbControlUnitRepository.findById(id).get().toControlUnit()
     }
 }
