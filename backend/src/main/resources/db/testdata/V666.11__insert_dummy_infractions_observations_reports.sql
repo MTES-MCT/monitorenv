@@ -1,4 +1,4 @@
-INSERT INTO infractions_observations_reports (
+INSERT INTO reportings (
     id,
     source_type ,
     semaphore_id ,
@@ -29,7 +29,7 @@ INSERT INTO infractions_observations_reports (
     '{"vesselName": "Vessel 1", "mmsi": "012314231343" }',
     ST_GeomFromText('POINT(-8.6109 41.1459)', 4326),
     'Description 1',
-    'INFRACTION',
+    'INFRACTION_SUSPICION',
     'THEME',
     '{"subtheme1", "subtheme2"}',
     'ACTION TAKEN',
@@ -41,7 +41,7 @@ INSERT INTO infractions_observations_reports (
     false
 );
 
-INSERT INTO infractions_observations_reports (
+INSERT INTO reportings (
     id,
     source_type ,
     semaphore_id ,
@@ -72,7 +72,7 @@ INSERT INTO infractions_observations_reports (
     '{"vesselName": "Vessel 2", "mmsi": "012314231344" }',
     ST_GeomFromText('POINT(-8.6109 41.1859)', 4326),
     'Description 2',
-    'INFRACTION',
+    'INFRACTION_SUSPICION',
     'THEME',
     '{"subtheme1", "subtheme2"}',
     'ACTION TAKEN',
@@ -84,7 +84,7 @@ INSERT INTO infractions_observations_reports (
     false
 );
 
-INSERT INTO infractions_observations_reports (
+INSERT INTO reportings (
     id,
     source_type ,
     semaphore_id ,
@@ -115,7 +115,7 @@ INSERT INTO infractions_observations_reports (
     '{"vesselName": "Vessel 3", "mmsi": "012314231345" }',
     ST_GeomFromText('POINT(-8.7109 41.1459)', 4326),
     'Description 3',
-    'INFRACTION',
+    'INFRACTION_SUSPICION',
     'THEME',
     '{"subtheme1", "subtheme2"}',
     'ACTION TAKEN',
@@ -127,4 +127,4 @@ INSERT INTO infractions_observations_reports (
     false
 );
 
-SELECT setval('infractions_observation_reports_id_seq', 4);
+SELECT setval('reportings_id_seq', 4);

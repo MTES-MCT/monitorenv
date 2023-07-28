@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport
+package fr.gouv.cacem.monitorenv.domain.entities.reporting
 
 data class TargetDetailsEntity(
     val mmsi: String? = null,

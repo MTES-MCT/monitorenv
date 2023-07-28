@@ -6,12 +6,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.vladmihalcea.hibernate.type.array.ListArrayType
 import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.InfractionsObservationsReportEntity
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.ReportTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.SourceTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.TargetDetailsEntity
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.VehicleTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.VehicleTypeEnum
 import jakarta.persistence.Basic
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -33,16 +33,16 @@ import java.time.Instant
 import java.time.ZoneOffset.UTC
 
 @Entity
-@Table(name = "infractions_observations_reports")
-data class InfractionsObservationsReportModel(
+@Table(name = "reportings")
+data class ReportingModel(
     @Id
-    @SequenceGenerator(name = "infractions_observation_reports_id_seq", sequenceName = "infractions_observation_reports_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "infractions_observation_reports_id_seq")
+    @SequenceGenerator(name = "reportings_id_seq", sequenceName = "reportings_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reportings_id_seq")
     @Basic(optional = false)
     @Column(name = "id", unique = true, nullable = false)
     var id: Int? = null,
 
-    @Column(name = "source_type", columnDefinition = "infractions_observations_reports_source_type")
+    @Column(name = "source_type", columnDefinition = "reportings_source_type")
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
     var sourceType: SourceTypeEnum? = null,
@@ -64,12 +64,12 @@ data class InfractionsObservationsReportModel(
     @Column(name = "source_name")
     var sourceName: String? = null,
 
-    @Column(name = "target_type", columnDefinition = "infractions_observations_reports_target_type")
+    @Column(name = "target_type", columnDefinition = "reportings_target_type")
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
     var targetType: TargetTypeEnum? = null,
 
-    @Column(name = "vehicle_type", columnDefinition = "infractions_observations_reports_vehicle_type")
+    @Column(name = "vehicle_type", columnDefinition = "reportings_vehicle_type")
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
     var vehicleType: VehicleTypeEnum? = null,
@@ -86,10 +86,10 @@ data class InfractionsObservationsReportModel(
     @Column(name = "description")
     var description: String? = null,
 
-    @Column(name = "report_type", columnDefinition = "infractions_observations_reports_report_type")
+    @Column(name = "report_type", columnDefinition = "reportings_report_type")
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
-    var reportType: ReportTypeEnum? = null,
+    var reportType: ReportingTypeEnum? = null,
 
     @Column(name = "theme")
     var theme: String? = null,
@@ -120,7 +120,7 @@ data class InfractionsObservationsReportModel(
     val isDeleted: Boolean,
 ) {
 
-    fun toInfractionsObservationsReport() = InfractionsObservationsReportEntity(
+    fun toReporting() = ReportingEntity(
         id = id,
         sourceType = sourceType,
         semaphore = semaphore?.toSemaphore(),
@@ -144,27 +144,27 @@ data class InfractionsObservationsReportModel(
     )
 
     companion object {
-        fun fromInfractionsObservationsReportEntity(infractionsObservationsReport: InfractionsObservationsReportEntity) = InfractionsObservationsReportModel(
-            id = infractionsObservationsReport.id,
-            sourceType = infractionsObservationsReport.sourceType,
-            semaphoreId = infractionsObservationsReport.semaphore?.id,
-            controlUnitId = infractionsObservationsReport.controlUnit?.id,
-            sourceName = infractionsObservationsReport.sourceName,
-            targetType = infractionsObservationsReport.targetType,
-            vehicleType = infractionsObservationsReport.vehicleType,
-            targetDetails = infractionsObservationsReport.targetDetails,
-            geom = infractionsObservationsReport.geom,
-            description = infractionsObservationsReport.description,
-            reportType = infractionsObservationsReport.reportType,
-            theme = infractionsObservationsReport.theme,
-            subThemes = infractionsObservationsReport.subThemes,
-            actionTaken = infractionsObservationsReport.actionTaken,
-            isInfractionProven = infractionsObservationsReport.isInfractionProven,
-            isControlRequired = infractionsObservationsReport.isControlRequired,
-            isUnitAvailable = infractionsObservationsReport.isUnitAvailable,
-            createdAt = infractionsObservationsReport.createdAt.toInstant(),
-            validityTime = infractionsObservationsReport.validityTime,
-            isDeleted = infractionsObservationsReport.isDeleted,
+        fun fromReportingEntity(reporting: ReportingEntity) = ReportingModel(
+            id = reporting.id,
+            sourceType = reporting.sourceType,
+            semaphoreId = reporting.semaphore?.id,
+            controlUnitId = reporting.controlUnit?.id,
+            sourceName = reporting.sourceName,
+            targetType = reporting.targetType,
+            vehicleType = reporting.vehicleType,
+            targetDetails = reporting.targetDetails,
+            geom = reporting.geom,
+            description = reporting.description,
+            reportType = reporting.reportType,
+            theme = reporting.theme,
+            subThemes = reporting.subThemes,
+            actionTaken = reporting.actionTaken,
+            isInfractionProven = reporting.isInfractionProven,
+            isControlRequired = reporting.isControlRequired,
+            isUnitAvailable = reporting.isUnitAvailable,
+            createdAt = reporting.createdAt.toInstant(),
+            validityTime = reporting.validityTime,
+            isDeleted = reporting.isDeleted,
         )
     }
 }

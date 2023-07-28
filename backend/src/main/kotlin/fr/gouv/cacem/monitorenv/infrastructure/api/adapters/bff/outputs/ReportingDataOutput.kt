@@ -1,17 +1,17 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.InfractionsObservationsReportEntity
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.ReportTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.SourceTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.TargetDetailsEntity
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.VehicleTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphores.SemaphoreEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 
-data class InfractionsObservationsReportDataOutput(
+data class ReportingDataOutput(
     val id: Int,
     val sourceType: SourceTypeEnum? = null,
     val semaphore: SemaphoreEntity? = null,
@@ -22,7 +22,7 @@ data class InfractionsObservationsReportDataOutput(
     val targetDetails: TargetDetailsEntity? = null,
     val geom: Geometry? = null,
     val description: String? = null,
-    val reportType: ReportTypeEnum? = null,
+    val reportType: ReportingTypeEnum? = null,
     val theme: String? = null,
     val subThemes: List<String>? = listOf(),
     val actionTaken: String? = null,
@@ -33,11 +33,11 @@ data class InfractionsObservationsReportDataOutput(
     val validityTime: Int? = null,
 ) {
     companion object {
-        fun fromInfractionsObservationsReportEntity(entity: InfractionsObservationsReportEntity): InfractionsObservationsReportDataOutput {
+        fun fromReportingEntity(entity: ReportingEntity): ReportingDataOutput {
             requireNotNull(entity.id) {
-                "InfractionsObservationsReportEntity.id cannot be null"
+                "ReportingEntity.id cannot be null"
             }
-            return InfractionsObservationsReportDataOutput(
+            return ReportingDataOutput(
                 id = entity.id,
                 sourceType = entity.sourceType,
                 semaphore = entity.semaphore,

@@ -3,13 +3,13 @@ package fr.gouv.cacem.monitorenv.domain.use_cases
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.InfractionsObservationsReportEntity
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.ReportTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.SourceTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.repositories.IInfractionsObservationsReportRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.infractionsObservationsReports.CreateOrUpdateInfractionsObservationsReport
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.VehicleTypeEnum
+import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.CreateOrUpdateReporting
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -21,39 +21,39 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
 
 @ExtendWith(SpringExtension::class)
-class CreateOrUpdateInfractionsObservationsReportUTests {
+class CreateOrUpdateReportingUTests {
     @MockBean
-    private lateinit var createOrUpdateInfractionsObservationsReportRepositoty: IInfractionsObservationsReportRepository
+    private lateinit var createOrUpdateReportingRepositoty: IReportingRepository
 
     @Test
     fun `Should throw an exception when input is null`() {
         // When
         val throwable = Assertions.catchThrowable {
-            CreateOrUpdateInfractionsObservationsReport(createOrUpdateInfractionsObservationsReportRepositoty)
+            CreateOrUpdateReporting(createOrUpdateReportingRepositoty)
                 .execute(null)
         }
 
         // Then
         assertThat(throwable).isInstanceOf(IllegalArgumentException::class.java)
-        assertThat(throwable.message).contains("No infractionObservationReport to create or update")
+        assertThat(throwable.message).contains("No reporting to create or update")
     }
 
     @Test
-    fun `should return new or updated infractionObservationReport`() {
+    fun `should return new or updated reporting`() {
         // Given
         val wktReader = WKTReader()
 
         val multipolygonString = "MULTIPOLYGON(((-2.7335 47.6078, -2.7335 47.8452, -3.6297 47.8452, -3.6297 47.6078, -2.7335 47.6078)))"
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
-        val infractionObservationReport = InfractionsObservationsReportEntity(
+        val reporting = ReportingEntity(
             sourceType = SourceTypeEnum.SEMAPHORE,
             sourceName = "Semaphore 1",
             targetType = TargetTypeEnum.VEHICLE,
             vehicleType = VehicleTypeEnum.VESSEL,
             geom = polygon,
             description = "description",
-            reportType = ReportTypeEnum.INFRACTION,
+            reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
             theme = "theme",
             subThemes = listOf("subTheme1", "subTheme2"),
             actionTaken = "actions effectuées blabal ",
@@ -65,14 +65,14 @@ class CreateOrUpdateInfractionsObservationsReportUTests {
             isDeleted = false,
         )
 
-        given(createOrUpdateInfractionsObservationsReportRepositoty.save(infractionObservationReport)).willReturn(infractionObservationReport)
+        given(createOrUpdateReportingRepositoty.save(reporting)).willReturn(reporting)
 
         // When
-        val createdInfractionObservationReport = CreateOrUpdateInfractionsObservationsReport(createOrUpdateInfractionsObservationsReportRepositoty)
-            .execute(infractionObservationReport)
+        val createdReporting = CreateOrUpdateReporting(createOrUpdateReportingRepositoty)
+            .execute(reporting)
 
         // Then
-        verify(createOrUpdateInfractionsObservationsReportRepositoty, times(1)).save(infractionObservationReport)
-        assertThat(createdInfractionObservationReport).isEqualTo(infractionObservationReport)
+        verify(createOrUpdateReportingRepositoty, times(1)).save(reporting)
+        assertThat(createdReporting).isEqualTo(reporting)
     }
 }

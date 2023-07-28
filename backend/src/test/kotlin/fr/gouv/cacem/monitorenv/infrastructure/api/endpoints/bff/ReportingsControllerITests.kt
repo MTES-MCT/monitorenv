@@ -4,16 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.InfractionsObservationsReportEntity
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.ReportTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.SourceTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.infractionsObservationsReport.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.infractionsObservationsReports.CreateOrUpdateInfractionsObservationsReport
-import fr.gouv.cacem.monitorenv.domain.use_cases.infractionsObservationsReports.DeleteInfractionsObservationsReport
-import fr.gouv.cacem.monitorenv.domain.use_cases.infractionsObservationsReports.GetAllInfractionsObservationsReports
-import fr.gouv.cacem.monitorenv.domain.use_cases.infractionsObservationsReports.GetInfractionsObservationsReportById
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdateInfractionsObservationsReportDataInput
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.VehicleTypeEnum
+import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.CreateOrUpdateReporting
+import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.DeleteReporting
+import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.GetAllReportings
+import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.GetReportingById
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs.CreateOrUpdateReportingDataInput
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.io.WKTReader
 import org.mockito.BDDMockito.given
@@ -30,8 +30,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.ZonedDateTime
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
-@WebMvcTest(value = [(InfractionsObservationsReportsController::class)])
-class InfractionsObservationsReportsControllerITests {
+@WebMvcTest(value = [(ReportingsController::class)])
+class ReportingsControllerITests {
 
     @Autowired
     private lateinit var mockedApi: MockMvc
@@ -40,29 +40,29 @@ class InfractionsObservationsReportsControllerITests {
     private lateinit var objectMapper: ObjectMapper
 
     @MockBean
-    private lateinit var createOrUpdateInfractionsObservationsReport: CreateOrUpdateInfractionsObservationsReport
+    private lateinit var createOrUpdateReporting: CreateOrUpdateReporting
 
     @MockBean
-    private lateinit var getAllInfractionsObservationsReports: GetAllInfractionsObservationsReports
+    private lateinit var getAllReportings: GetAllReportings
 
     @MockBean
-    private lateinit var getInfractionsObservationsReportById: GetInfractionsObservationsReportById
+    private lateinit var getReportingById: GetReportingById
 
     @MockBean
-    private lateinit var deleteInfractionsObservationsReport: DeleteInfractionsObservationsReport
+    private lateinit var deleteReporting: DeleteReporting
 
     @Test
-    fun `Should create a new InfractionsObservationsReport`() {
+    fun `Should create a new Reporting`() {
         // Given
         val polygon = WKTReader().read("MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))")
-        val infractionsObservationsReport = InfractionsObservationsReportEntity(
+        val reporting = ReportingEntity(
             id = 1,
             sourceType = SourceTypeEnum.SEMAPHORE,
             targetType = TargetTypeEnum.VEHICLE,
             vehicleType = VehicleTypeEnum.VESSEL,
             geom = polygon,
             description = "description",
-            reportType = ReportTypeEnum.INFRACTION,
+            reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
             theme = "theme",
             subThemes = listOf("subTheme1", "subTheme2"),
             actionTaken = "actions effectuées blabla",
@@ -74,13 +74,13 @@ class InfractionsObservationsReportsControllerITests {
             isDeleted = false,
         )
 
-        val request = CreateOrUpdateInfractionsObservationsReportDataInput(
+        val request = CreateOrUpdateReportingDataInput(
             sourceType = SourceTypeEnum.SEMAPHORE,
             targetType = TargetTypeEnum.VEHICLE,
             vehicleType = VehicleTypeEnum.VESSEL,
             geom = polygon,
             description = "description",
-            reportType = ReportTypeEnum.INFRACTION,
+            reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
             theme = "theme",
             subThemes = listOf("subTheme1", "subTheme2"),
             actionTaken = "actions effectuées blabla",
@@ -91,10 +91,10 @@ class InfractionsObservationsReportsControllerITests {
             validityTime = 10,
         )
 
-        given(this.createOrUpdateInfractionsObservationsReport.execute(any())).willReturn(infractionsObservationsReport)
+        given(this.createOrUpdateReporting.execute(any())).willReturn(reporting)
         // When
         mockedApi.perform(
-            put("/bff/v1/infractions-observations-reports")
+            put("/bff/v1/reportings")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)),
         )
@@ -107,7 +107,7 @@ class InfractionsObservationsReportsControllerITests {
             .andExpect(jsonPath("$.vehicleType").value("VESSEL"))
             .andExpect(jsonPath("$.geom.type").value("MultiPolygon"))
             .andExpect(jsonPath("$.description").value("description"))
-            .andExpect(jsonPath("$.reportType").value("INFRACTION"))
+            .andExpect(jsonPath("$.reportType").value("INFRACTION_SUSPICION"))
             .andExpect(jsonPath("$.theme").value("theme"))
             .andExpect(jsonPath("$.subThemes[0]").value("subTheme1"))
             .andExpect(jsonPath("$.subThemes[1]").value("subTheme2"))
