@@ -125,6 +125,10 @@ export const Layers = {
     type: null,
     zIndex: 950
   },
+  REPORTINGS: {
+    code: 'reportings',
+    zIndex: 1300
+  },
   SEMAPHORES: {
     code: 'semaphores',
     zIndex: 1300
@@ -188,6 +192,12 @@ export const SelectableLayers = [
   Layers.MISSIONS.code,
   Layers.REGULATORY_ENV_PREVIEW.code,
   Layers.REGULATORY_ENV.code,
-  Layers.SEMAPHORES.code
+  Layers.SEMAPHORES.code,
+  Layers.REPORTINGS.code
 ]
-export const HoverableLayers = [Layers.MISSIONS.code, Layers.ACTIONS.code, Layers.SEMAPHORES.code]
+export const HoverableLayers = [
+  Layers.MISSIONS.code,
+  Layers.ACTIONS.code,
+  Layers.SEMAPHORES.code,
+  Layers.REPORTINGS.code
+]

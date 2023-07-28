@@ -7,11 +7,12 @@ import styled from 'styled-components'
 import { getPlaceCoordinates, useGooglePlacesAPI } from '../../api/googlePlacesAPI/googlePlacesAPI'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map/constants'
 import { setFitToExtent } from '../../domain/shared_slices/Map'
+import { ReportingFormVisibility } from '../../domain/shared_slices/ReportingState'
 import { useAppSelector } from '../../hooks/useAppSelector'
 
 export function LocateOnMap() {
   const dispatch = useDispatch()
-  const { isReportFormOpen } = useAppSelector(state => state.global)
+  const { reportingFormVisibility } = useAppSelector(state => state.global)
   const [searchedLocation, setSearchedLocation] = useState<string | undefined>('')
   const results = useGooglePlacesAPI(searchedLocation)
 
@@ -26,7 +27,7 @@ export function LocateOnMap() {
   }
 
   return (
-    <Wrapper className={isReportFormOpen ? 'left' : undefined}>
+    <Wrapper className={reportingFormVisibility === ReportingFormVisibility.VISIBLE ? 'left' : undefined}>
       <StyledSearch
         data-cy="location-search-input"
         isLabelHidden

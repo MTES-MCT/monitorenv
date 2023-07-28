@@ -13,14 +13,16 @@ import { MeasurementLayer } from './layers/MeasurementLayer'
 import { MissionsLayer } from './layers/MissionsLayer'
 import { RegulatoryLayers } from './layers/RegulatoryLayers'
 import { RegulatoryPreviewLayer } from './layers/RegulatoryPreviewLayer'
+import { ReportingsLayer } from './layers/Reportings'
 import { SelectedMissionLayer } from './layers/SelectedMissionLayer'
 import { SemaphoresLayer } from './layers/Semaphores'
 import { MapExtentController } from './MapExtentController'
 import { MapHistory } from './MapHistory'
 import { ActionOverlay } from './overlays/actions'
 import { MissionOverlays } from './overlays/missions'
+import { ReportingOverlay } from './overlays/reportings'
 import { SemaphoreOverlay } from './overlays/semaphores'
-import { Report } from './reportForm'
+import { Reporting } from './reportingForm'
 import { ShowRegulatoryMetadata } from './ShowRegulatoryMetadata'
 
 import type { MapClickEvent } from '../../types'
@@ -59,7 +61,9 @@ export function Map() {
       <ActionOverlay />
       <SemaphoresLayer />
       <SemaphoreOverlay />
-      <Report />
+      <Reporting />
+      <ReportingsLayer />
+      <ReportingOverlay />
     </BaseMap>
   )
 }

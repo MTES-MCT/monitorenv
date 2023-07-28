@@ -1,13 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import type { Report } from '../entities/report'
+import type { Reporting } from '../entities/reporting'
+
+export enum ReportingFormVisibility {
+  NOT_VISIBLE = 'not_visible',
+  REDUCE = 'reduce',
+  VISIBLE = 'visible'
+}
 
 type ReportingState = {
-  reporting: Report | undefined
+  reporting: Reporting | undefined
+  selectedReportingId: number | undefined
 }
 
 const initialState: ReportingState = {
-  reporting: undefined
+  reporting: undefined,
+  selectedReportingId: undefined
 }
 const reportingStateSlice = createSlice({
   initialState,
@@ -15,6 +23,9 @@ const reportingStateSlice = createSlice({
   reducers: {
     setReporting(state, action) {
       state.reporting = action.payload
+    },
+    setSelectedReportingId(state, action) {
+      state.selectedReportingId = action.payload
     }
   }
 })

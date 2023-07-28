@@ -1,16 +1,22 @@
 import { FormikNumberInput, FormikTextInput, Label } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 
+import {
+  StyledCompanyContainer,
+  StyledEmptyTarget,
+  StyledInlineContainer,
+  StyledVesselContainer,
+  StyledVesselForm
+} from './style'
 import { TargetTypeEnum } from '../../../domain/entities/targetType'
 import { VehicleTypeEnum } from '../../../domain/entities/vehicleType'
 import { TargetSelector } from '../../commonComponents/TargetSelector'
 import { VehicleTypeSelector } from '../../commonComponents/VehicleTypeSelector'
-import { StyledCompanyContainer, StyledEmptyTarget, StyledInlineContainer, StyledVesselContainer } from './style'
 
-import type { Report } from '../../../domain/entities/report'
+import type { Reporting } from '../../../domain/entities/reporting'
 
 export function Target() {
-  const { setFieldValue, values } = useFormikContext<Report>()
+  const { setFieldValue, values } = useFormikContext<Reporting>()
 
   const onVehicleTypeChange = selectedVehicleType => {
     setFieldValue('vehicleType', selectedVehicleType)
@@ -18,6 +24,7 @@ export function Target() {
 
   const onTargetTypeChange = selectedTarget => {
     setFieldValue('targetType', selectedTarget)
+    setFieldValue('vehicleType', undefined)
   }
 
   return (
@@ -52,20 +59,28 @@ export function Target() {
             <FormikTextInput isLight label="Identité de la personne" name="targetDetails.operatorName" />
           </StyledCompanyContainer>
         )}
+        {values.targetType === TargetTypeEnum.VEHICLE &&
+          values.vehicleType &&
+          values.vehicleType !== VehicleTypeEnum.VESSEL && (
+            <StyledVesselContainer>
+              <FormikTextInput isLight label="Immatriculation" name="targetDetails.externalReferenceNumber" />
+              <FormikTextInput isLight label="Identité de la personne contrôlée" name="targetDetails.operatorName" />
+            </StyledVesselContainer>
+          )}
         {values.targetType === TargetTypeEnum.VEHICLE && values.vehicleType === VehicleTypeEnum.VESSEL && (
           <StyledVesselContainer>
-            <div>
+            <StyledVesselForm>
               <FormikTextInput isLight label="MMSI" name="targetDetails.mmsi" />
               <FormikTextInput isLight label="Nom du navire" name="targetDetails.vesselName" />
-            </div>
-            <div>
+            </StyledVesselForm>
+            <StyledVesselForm>
               <FormikTextInput isLight label="IMO" name="targetDetails.imo" />
               <FormikTextInput isLight label="Nom du capitaine" name="targetDetails.operatorName" />
-            </div>
-            <div>
+            </StyledVesselForm>
+            <StyledVesselForm>
               <FormikTextInput isLight label="Immatriculation" name="targetDetails.externalReferenceNumber" />
               <FormikNumberInput isLight label="Taille" name="targetDetails.size" />
-            </div>
+            </StyledVesselForm>
           </StyledVesselContainer>
         )}
       </div>

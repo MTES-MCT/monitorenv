@@ -1,6 +1,6 @@
 import type { TargetTypeEnum } from './targetType'
 
-export type Report = {
+export type Reporting = {
   actionTaken?: string
   controlUnitId?: number
   createdAt: Date
@@ -9,7 +9,7 @@ export type Report = {
   id?: number
   isControlRequired?: boolean | undefined
   isInfractionProven?: boolean | undefined
-  reportType?: string
+  reportType: string
   semaphoreId?: number
   sourceName?: string
   sourceType: string
@@ -30,12 +30,12 @@ type TargetDetails = {
   vesselName?: string
 }
 
-export enum ReportSourceEnum {
+export enum ReportingSourceEnum {
   OTHER = 'OTHER',
   SEMAPHORE = 'SEMAPHORE',
   UNIT = 'UNIT'
 }
-export const reportSourceLabels = {
+export const reportingSourceLabels = {
   SEMAPHORE: {
     label: 'Sémaphore',
     value: 'SEMAPHORE'
@@ -51,15 +51,15 @@ export const reportSourceLabels = {
   }
 }
 
-export enum ReportTypeEnum {
-  INFRACTION = 'INFRACTION',
+export enum ReportingTypeEnum {
+  INFRACTION = 'INFRACTION_SUSPICION',
   OBSERVATION = 'OBSERVATION'
 }
 
-export const reportTypeLabels = {
+export const reportingTypeLabels = {
   INFRACTION: {
     label: 'Infraction (suspicion)',
-    value: 'INFRACTION'
+    value: 'INFRACTION_SUSPICION'
   },
   OBSERVATION: {
     label: 'Observation',

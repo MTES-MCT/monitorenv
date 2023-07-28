@@ -5,8 +5,8 @@ import { Tooltip, Whisper } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
-import { setIsReportFormOpen, setOverlayCoordinates } from '../../../../domain/shared_slices/Global'
-import { reportingStateActions } from '../../../../domain/shared_slices/ReportingState'
+import { setOverlayCoordinates, setReportingFormVisibility } from '../../../../domain/shared_slices/Global'
+import { ReportingFormVisibility, reportingStateActions } from '../../../../domain/shared_slices/ReportingState'
 import { resetSelectedSemaphore } from '../../../../domain/shared_slices/SemaphoresSlice'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
@@ -41,7 +41,7 @@ const hoverTooltip = (text, className) => <StyledTooltip className={className}>{
 
 export function SemaphoreCard({ feature, selected = false }: { feature: any; selected?: boolean }) {
   const dispatch = useDispatch()
-  const { displaySemaphoresLayer, isReportFormOpen } = useAppSelector(state => state.global)
+  const { displaySemaphoresLayer } = useAppSelector(state => state.global)
 
   const { email, id, name, phoneNumber, unit } = feature.getProperties()
   const [tooltipPhoneState, setTooltipPhoneState] = useState(PHONE_TOOLTIP_STATE.hover)
@@ -66,8 +66,9 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
     setTooltipPhoneState(PHONE_TOOLTIP_STATE.hover)
   }
 
-  const addReport = () => {
-    dispatch(setIsReportFormOpen(!isReportFormOpen))
+  const addReporting = () => {
+    dispatch(reportingStateActions.setSelectedReportingId(undefined))
+    dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
     dispatch(reportingStateActions.setReporting({ semaphoreId: id, sourceType: 'SEMAPHORE' }))
   }
 
@@ -133,7 +134,7 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
           </StyledContactLine>
         )}
 
-        <StyledButton Icon={Icon.Plus} isFullWidth onClick={addReport}>
+        <StyledButton Icon={Icon.Plus} isFullWidth onClick={addReporting}>
           Créer un signalement
         </StyledButton>
       </StyledContactContainer>

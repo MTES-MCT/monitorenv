@@ -1,14 +1,5 @@
 import { combineReducers } from '@reduxjs/toolkit'
 
-import { ampsAPI, ampsErrorLoggerMiddleware } from '../../api/ampsAPI'
-import { controlThemesAPI } from '../../api/controlThemesAPI'
-import { controlUnitsAPI } from '../../api/controlUnitsAPI'
-import { infractionsAPI } from '../../api/infractionsAPI'
-import { missionsAPI } from '../../api/missionsAPI'
-import { regulatoryLayersAPI } from '../../api/regulatoryLayersAPI'
-import { semaphoresAPI } from '../../api/semaphoresAPI'
-import { layerSearchSliceReducer } from '../../features/layersSelector/search/LayerSearch.slice'
-import { sideWindowReducer } from '../../features/SideWindow/slice'
 import { administrativeSlicePersistedReducer } from './Administrative'
 import { drawReducer } from './Draw'
 import { globalReducer } from './Global'
@@ -24,6 +15,16 @@ import { regulatoryMetadataSliceReducer } from './RegulatoryMetadata'
 import { reportingStateSliceReducer } from './ReportingState'
 import { selectedAmpSlicePersistedReducer } from './SelectedAmp'
 import { semaphoresPersistedReducer } from './SemaphoresSlice'
+import { ampsAPI, ampsErrorLoggerMiddleware } from '../../api/ampsAPI'
+import { controlThemesAPI } from '../../api/controlThemesAPI'
+import { controlUnitsAPI } from '../../api/controlUnitsAPI'
+import { infractionsAPI } from '../../api/infractionsAPI'
+import { missionsAPI } from '../../api/missionsAPI'
+import { regulatoryLayersAPI } from '../../api/regulatoryLayersAPI'
+import { reportingsAPI } from '../../api/reportingsAPI'
+import { semaphoresAPI } from '../../api/semaphoresAPI'
+import { layerSearchSliceReducer } from '../../features/layersSelector/search/LayerSearch.slice'
+import { sideWindowReducer } from '../../features/SideWindow/slice'
 
 export const homeReducers = combineReducers({
   administrative: administrativeSlicePersistedReducer,
@@ -48,6 +49,7 @@ export const homeReducers = combineReducers({
   [infractionsAPI.reducerPath]: infractionsAPI.reducer,
   [semaphoresAPI.reducerPath]: semaphoresAPI.reducer,
   reportingState: reportingStateSliceReducer,
+  [reportingsAPI.reducerPath]: reportingsAPI.reducer,
   selectedAmp: selectedAmpSlicePersistedReducer,
   semaphoresSlice: semaphoresPersistedReducer,
   sideWindow: sideWindowReducer
@@ -61,5 +63,6 @@ export const homeMiddlewares = [
   controlThemesAPI.middleware,
   controlUnitsAPI.middleware,
   infractionsAPI.middleware,
-  semaphoresAPI.middleware
+  semaphoresAPI.middleware,
+  reportingsAPI.middleware
 ]

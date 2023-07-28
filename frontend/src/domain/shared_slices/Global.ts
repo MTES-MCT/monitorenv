@@ -2,6 +2,8 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
+import { ReportingFormVisibility } from './ReportingState'
+
 import type { MapToolType } from '../entities/map/constants'
 
 type Toast = {
@@ -41,7 +43,8 @@ type GlobalStateType = {
 
   toast: Toast | undefined
 
-  isReportFormOpen: boolean
+  displayReportingsLayer: boolean
+  reportingFormVisibility: ReportingFormVisibility
 }
 const initialState: GlobalStateType = {
   // state entry for every component /menu displayed on map whose visibility should be controlled
@@ -75,7 +78,8 @@ const initialState: GlobalStateType = {
 
   toast: undefined,
 
-  isReportFormOpen: false
+  reportingFormVisibility: ReportingFormVisibility.NOT_VISIBLE,
+  displayReportingsLayer: true
 }
 
 const globalSlice = createSlice({
@@ -94,10 +98,9 @@ const globalSlice = createSlice({
       return { ...state, ...action.payload }
     },
 
-    setIsReportFormOpen(state, action) {
-      state.isReportFormOpen = action.payload
+    setReportingFormVisibility(state, action) {
+      state.reportingFormVisibility = action.payload
     },
-
     /**
      * Set the map tool opened
      */
@@ -123,9 +126,9 @@ export const {
   removeToast,
   setDisplayedItems,
   setHealthcheckTextWarning,
-  setIsReportFormOpen,
   setMapToolOpened,
   setOverlayCoordinates,
+  setReportingFormVisibility,
   setToast
 } = globalSlice.actions
 

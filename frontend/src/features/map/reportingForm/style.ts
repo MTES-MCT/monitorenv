@@ -1,4 +1,4 @@
-import { Button } from '@mtes-mct/monitor-ui'
+import { Button, IconButton } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 export const StyledFormContainer = styled.div`
@@ -20,7 +20,7 @@ export const StyledForm = styled.div`
 export const StyledHeader = styled.div`
   display: flex;
   align-items: center;
-  justify-contant: start;
+  justify-content: space-between;
   background-color: ${p => p.theme.color.charcoal};
   height: 52px;
   color: ${p => p.theme.color.white};
@@ -29,6 +29,17 @@ export const StyledHeader = styled.div`
   padding: 16px 24px;
   gap: 8px;
 `
+export const StyledIconButton = styled(IconButton)`
+  color: ${p => p.theme.color.white};
+`
+export const StyledHeaderButtons = styled.div`
+  display: flex;
+  flex-direction: row;
+  > button {
+    color: ${p => p.theme.color.white};
+  }
+`
+
 export const Separator = styled.div`
   margin-top: 8px;
   border: 1px solid ${p => p.theme.color.slateGray};
@@ -74,17 +85,18 @@ export const StyledVesselContainer = styled.div`
   justify-content: space-between;
   padding: 8px;
   gap: 16px;
-  > div {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 16px;
-    > .Field-TextInput,
-    .Field-NumberInput {
-      flex: 1;
-    }
+`
+export const StyledVesselForm = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 16px;
+  > .Field-TextInput,
+  .Field-NumberInput {
+    flex: 1;
   }
 `
+
 export const StyledLocalizationContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -117,8 +129,6 @@ export const StyledFooter = styled.div`
   background-color: ${p => p.theme.color.charcoal};
   height: 56px;
   color: ${p => p.theme.color.white};
-  position: fixed;
-  bottom: 0;
   width: 500px;
   padding: 13px;
   display: flex;
