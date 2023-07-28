@@ -74,7 +74,7 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
 
             <StyledContainer>
               <Route element={<ReportingsList />} path={sideWindowPaths.REPORTINGS} />
-              <Route element={<MissionsNavBar />} path={sideWindowPaths.MISSIONS} />
+              <Route element={<MissionsNavBar />} path={[sideWindowPaths.MISSIONS, sideWindowPaths.MISSION]} />
               <Route element={<Missions />} path={sideWindowPaths.MISSIONS} />
               <Route element={<Mission />} path={sideWindowPaths.MISSION} />
             </StyledContainer>

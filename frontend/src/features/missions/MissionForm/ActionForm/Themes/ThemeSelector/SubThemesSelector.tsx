@@ -10,7 +10,7 @@ import { updateSubThemes } from '../../../formikUseCases/updateActionThemes'
 import type { ControlTheme } from '../../../../../../domain/entities/controlThemes'
 import type { Mission } from '../../../../../../domain/entities/missions'
 
-export function SubThemesSelector({ actionIndex, isInNewWindow = false, isLight = false, label, theme, themeIndex }) {
+export function SubThemesSelector({ actionIndex, label, theme, themeIndex }) {
   const { data: controlThemes, isError, isLoading } = useGetControlThemesQuery()
   const { newWindowContainerRef } = useNewWindow()
   const { setFieldValue } = useFormikContext<Mission>()
@@ -38,11 +38,11 @@ export function SubThemesSelector({ actionIndex, isInNewWindow = false, isLight 
         <MultiSelect
           // force update when name or theme changes
           key={`${actionIndex}-${themeIndex}-${theme}`}
-          baseContainer={isInNewWindow ? newWindowContainerRef.current : null}
+          baseContainer={newWindowContainerRef.current}
           data-cy="envaction-subtheme-selector"
           disabled={!theme}
           isErrorMessageHidden
-          isLight={isLight}
+          isLight
           label={label}
           name={`${actionIndex}-${themeIndex}`}
           onChange={handleUpdateSubTheme}

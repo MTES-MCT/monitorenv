@@ -10,7 +10,7 @@ import { updateTheme } from '../../../formikUseCases/updateActionThemes'
 
 import type { Mission } from '../../../../../../domain/entities/missions'
 
-export function ThemeSelector({ actionIndex, isInNewWindow = false, isLight = true, label, themeIndex }) {
+export function ThemeSelector({ actionIndex, label, themeIndex }) {
   const { data: controlThemes, isError, isLoading } = useGetControlThemesQuery()
   const { newWindowContainerRef } = useNewWindow()
   const [currentThemeField] = useField<string>(`envActions[${actionIndex}].themes[${themeIndex}].theme`)
@@ -35,10 +35,10 @@ export function ThemeSelector({ actionIndex, isInNewWindow = false, isLight = tr
       {!isError && !isLoading && (
         <Select
           key={`${actionIndex}-${themeIndex}`}
-          baseContainer={isInNewWindow ? newWindowContainerRef.current : null}
+          baseContainer={newWindowContainerRef.current}
           data-cy="envaction-theme-selector"
           isErrorMessageHidden
-          isLight={isLight}
+          isLight
           label={label}
           name={`${actionIndex}-${themeIndex}`}
           onChange={handleUpdateTheme}

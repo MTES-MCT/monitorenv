@@ -8,8 +8,14 @@ context('Mission', () => {
 
   it('A mission should be created', () => {
     // Given
-    cy.wait(200)
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('13')
+    cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
+    cy.wait('@getMissions')
+    cy.wait(400)
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').then($el => {
+      const numberOfMissions = parseInt($el.text(), 13)
+      cy.wrap(numberOfMissions).as('numberOfMissions')
+    })
+
     cy.get('*[data-cy="add-mission"]').click()
 
     cy.get('form').submit()
@@ -55,14 +61,27 @@ context('Mission', () => {
       expect(controlUnit.id).equal(10012)
       expect(controlUnit.name).equal('Cross Etel')
     })
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('14')
+    cy.wait('@getMissions')
+    cy.wait(500)
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').then($el => {
+      const numberOfMissions = parseInt($el.text(), 14)
+      cy.get('@numberOfMissions').then(numberOfMissionsBefore => {
+        expect(numberOfMissions).equal(parseInt(numberOfMissionsBefore as unknown as string, 14) + 1)
+      })
+    })
   })
 
   it('A mission should be deleted', () => {
     // Given
-    cy.wait(200)
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('14')
-    cy.get('*[data-cy="edit-mission"]').eq(0).click({ force: true })
+    cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
+    cy.wait('@getMissions')
+    cy.wait(400)
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').then($el => {
+      const numberOfMissions = parseInt($el.text(), 14)
+      cy.wrap(numberOfMissions).as('numberOfMissions')
+    })
+
+    cy.get('*[data-cy="edit-mission-49"]').click({ force: true })
 
     cy.intercept({
       url: `/bff/v1/missions*`
@@ -76,13 +95,20 @@ context('Mission', () => {
     cy.wait('@deleteMission').then(({ response }) => {
       expect(response && response.statusCode).equal(200)
     })
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('13')
+    cy.wait('@getMissions')
+    cy.wait(500)
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').then($el => {
+      const numberOfMissions = parseInt($el.text(), 10)
+      cy.get('@numberOfMissions').then(numberOfMissionsBefore => {
+        expect(numberOfMissions).equal(parseInt(numberOfMissionsBefore as unknown as string, 13) - 1)
+      })
+    })
   })
 
   it('A closed mission should be reopenable, editable and saved again', () => {
     // Given
     cy.wait(200)
-    cy.get('*[data-cy="edit-mission"]').eq(7).click({ force: true })
+    cy.get('*[data-cy="edit-mission-25"]').click({ force: true })
     cy.intercept('PUT', `/bff/v1/missions/25`).as('updateMission')
 
     cy.get('*[data-cy="reopen-mission"]').click()
@@ -90,17 +116,17 @@ context('Mission', () => {
     cy.get('form').submit()
 
     // Then
-    cy.wait('@updateMission').then(({ request, response }) => {
+    cy.wait('@updateMission').then(({ response }) => {
       expect(response && response.statusCode).equal(200)
-      expect(request.body.openBy).equal('KEV')
+      expect(response && response.body.isClosed).equal(false)
     })
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('13')
+    cy.get('*[data-cy="SideWindowHeader-title"]').contains('Missions et contrôles')
   })
 
   it('A mission can be closed without contact', () => {
     // Given
     cy.wait(200)
-    cy.get('*[data-cy="edit-mission"]').eq(2).click({ force: true })
+    cy.get('*[data-cy="edit-mission-43"]').click({ force: true })
     cy.intercept('PUT', `/bff/v1/missions/43`).as('updateMission')
 
     cy.clickButton('Enregistrer et clôturer')
@@ -110,7 +136,7 @@ context('Mission', () => {
       expect(response && response.statusCode).equal(200)
       expect(request.body.controlUnits[0].contact).equal(null)
     })
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('13')
+    cy.get('*[data-cy="SideWindowHeader-title"]').contains('Missions et contrôles')
   })
 
   it('A mission from monitorFish cannot be deleted', () => {
@@ -119,9 +145,8 @@ context('Mission', () => {
 
     cy.get('*[data-cy="select-period-filter"]').click()
     cy.get('div[data-key="MONTH"]').click()
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('18')
 
-    cy.get('*[data-cy="edit-mission"]').eq(9).click({ force: true })
+    cy.get('*[data-cy="edit-mission-50"]').click({ force: true })
 
     // Then
     cy.get('*[data-cy="delete-mission"]').should('be.disabled')

@@ -266,6 +266,7 @@ export function MissionsTableFilters() {
         <StyledCheckPicker
           container={newWindowContainerRef.current}
           data={themesListAsOptions}
+          data-cy="select-theme-filter"
           labelKey="label"
           onChange={value => onUpdateSimpleFilter(value, MissionFiltersEnum.THEME_FILTER)}
           placeholder="Thématique"

@@ -11,10 +11,9 @@ export function ActionTheme({ actionIndex, labelSubTheme, labelTheme, themeIndex
 
   return (
     <ActionThemeWrapper data-cy="envaction-theme-element">
-      <ThemeSelector actionIndex={actionIndex} isInNewWindow label={labelTheme} themeIndex={themeIndex} />
+      <ThemeSelector actionIndex={actionIndex} label={labelTheme} themeIndex={themeIndex} />
       <SubThemesSelector
         actionIndex={actionIndex}
-        isInNewWindow
         label={labelSubTheme}
         theme={currentThemeField?.value}
         themeIndex={themeIndex}

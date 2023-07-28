@@ -18,37 +18,46 @@ context('Missions', () => {
 
   it('Missions should be displayed in Missions Table and filterable', () => {
     cy.get('*[data-cy="SideWindowHeader-title"]').contains('Missions et contrôles')
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('13')
 
     cy.log('A default period filter should be set')
     cy.fill('Période', 'Une semaine')
+    cy.get('*[data-cy="edit-mission-47"]').should('not.exist')
+    cy.fill('Période', 'Un mois')
+    cy.get('*[data-cy="edit-mission-47"]').should('exist')
 
     cy.log('Administrations should be filtered')
+    cy.get('*[data-cy="edit-mission-48"]').should('exist')
     cy.get('*[data-cy="select-administration-filter"]').click()
     cy.get('div[role="option"]').find('label').contains('DDTM').click()
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('7')
+    cy.get('*[data-cy="edit-mission-48"]').should('not.exist')
 
     cy.log('Initialize filters')
     cy.get('*[data-cy="reinitialize-filters"]').click()
+    cy.get('*[data-cy="edit-mission-48"]').should('exist')
 
     cy.log('Units should be filtered')
+    cy.get('*[data-cy="edit-mission-38"]').should('exist')
     cy.get('*[data-cy="select-units-filter"]').click()
     cy.get('div[role="option"]').find('label').contains('Cross Etel').click()
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('1')
+    cy.get('*[data-cy="edit-mission-48"]').should('exist')
+    cy.get('*[data-cy="edit-mission-38"]').should('not.exist')
 
     cy.log('Units filter should be clear')
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').click('topLeft')
     cy.get('*[data-cy="select-units-filter"]').get('[title="Clear"]').click({
       force: true
     })
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('13')
+    cy.get('*[data-cy="edit-mission-38"]').should('exist')
   })
 
   it('Missions table should display all themes and subthemes of all the actions of the mission', () => {
+    cy.log('Should filter by theme')
+    cy.get('*[data-cy="select-theme-filter"]').click()
+    cy.get('div[role="option"]').find('label').contains('Police des épaves').click({ force: true })
     cy.get('*[data-cy="cell-envactions-themes"]')
       .eq(0)
       .contains(
-        'Police des espèces protégées et de leurs habitats (faune et flore) : Dérogations concernant les espèces protégées'
+        'Police des activités de cultures marines : Contrôle du schéma des structures ; Police des épaves : Épave/navire abandonné / Contrôle administratif'
       )
   })
 })
