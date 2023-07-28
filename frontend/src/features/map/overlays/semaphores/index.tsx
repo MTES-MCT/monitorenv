@@ -12,7 +12,7 @@ const MARGINS = {
   xRight: -55,
   yBottom: 50,
   yMiddle: 100,
-  yTop: -120
+  yTop: -170
 }
 export function SemaphoreOverlay({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const { selectedSemaphoreId } = useAppSelector(state => state.semaphoresSlice)

@@ -85,7 +85,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
-  flex: 0 0 320px;
+  flex: 0 0 345px;
 `
 const StyledHeader = styled.div`
   display: flex;
