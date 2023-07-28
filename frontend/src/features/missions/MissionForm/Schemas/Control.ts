@@ -1,9 +1,9 @@
 import * as Yup from 'yup'
 
-import { ActionTypeEnum, type EnvActionControl } from '../../../../domain/entities/missions'
-import { TargetTypeEnum } from '../../../../domain/entities/targetType'
 import { ClosedInfractionSchema, NewInfractionSchema } from './Infraction'
 import { ThemeSchema } from './Theme'
+import { ActionTypeEnum, type EnvActionControl } from '../../../../domain/entities/missions'
+import { TargetTypeEnum } from '../../../../domain/entities/targetType'
 
 export const getNewEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActionControl> =>
   Yup.object()

@@ -3,13 +3,13 @@ import { useField } from 'formik'
 import { Form, Button, ButtonToolbar } from 'rsuite'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../../../../constants/constants'
-import { infractionTypeLabels, formalNoticeLabels } from '../../../../../../domain/entities/missions'
-import { TargetTypeEnum } from '../../../../../../domain/entities/targetType'
 import { InfractionFormHeaderCompany } from './InfractionFormHeaderCompany'
 import { InfractionFormHeaderVehicle } from './InfractionFormHeaderVehicle'
 import { NatinfSelector } from './NatinfSelector'
 import { RelevantCourtSelector } from './RelevantCourtSelector'
+import { COLORS } from '../../../../../../constants/constants'
+import { infractionTypeLabels, formalNoticeLabels } from '../../../../../../domain/entities/missions'
+import { TargetTypeEnum } from '../../../../../../domain/entities/targetType'
 
 import type { MouseEventHandler } from 'react'
 
