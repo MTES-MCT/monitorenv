@@ -9,6 +9,7 @@ import { LayersSidebar } from '../features/layersSelector'
 import { LocateOnMap } from '../features/LocateOnMap'
 import { DrawModal } from '../features/map/draw/DrawModal'
 import { Map } from '../features/map/Map'
+import { ReportingsButton } from '../features/map/reporting/ReportingsButton'
 import { RightMenuOnHoverArea } from '../features/map/shared/RightMenuOnHoverArea'
 import { InterestPointMapButton } from '../features/map/tools/interest_points/InterestPointMapButton'
 import { MeasurementMapButton } from '../features/map/tools/measurements/MeasurementMapButton'
@@ -24,6 +25,7 @@ export function HomePage() {
     displayLocateOnMap,
     displayMeasurement,
     displayMissionMenuButton,
+    displayReportingsButton,
     displaySearchSemaphoreButton
   } = useAppSelector(state => state.global)
   const {
@@ -63,6 +65,7 @@ export function HomePage() {
         {displayLocateOnMap && <LocateOnMap />}
 
         {displayMissionMenuButton && <MissionsMenu />}
+        {displayReportingsButton && <ReportingsButton />}
         {displaySearchSemaphoreButton && <SearchSemaphoreButton />}
 
         {displayMeasurement && <MeasurementMapButton />}

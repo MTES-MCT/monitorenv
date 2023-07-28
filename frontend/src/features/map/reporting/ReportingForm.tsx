@@ -31,7 +31,7 @@ import {
   infractionProvenLabels,
   reportingTypeLabels
 } from '../../../domain/entities/reporting'
-import { setDisplayedItems, setMapToolOpened, setReportingFormVisibility } from '../../../domain/shared_slices/Global'
+import { hideSideButtons, setMapToolOpened, setReportingFormVisibility } from '../../../domain/shared_slices/Global'
 import { ReportingFormVisibility, reportingStateActions } from '../../../domain/shared_slices/ReportingState'
 import { deleteReporting } from '../../../domain/use_cases/reportings/deleteReporting'
 import { useAppSelector } from '../../../hooks/useAppSelector'
@@ -78,9 +78,7 @@ export function ReportingForm() {
   }
 
   const reduceOrExpandReporting = () => {
-    dispatch(
-      setDisplayedItems({ isSearchSemaphoreVisible: false, mapToolOpened: undefined, missionsMenuIsOpen: false })
-    )
+    dispatch(hideSideButtons())
     if (reportingFormVisibility === ReportingFormVisibility.VISIBLE) {
       dispatch(setMapToolOpened(undefined))
       dispatch(setReportingFormVisibility(ReportingFormVisibility.REDUCE))

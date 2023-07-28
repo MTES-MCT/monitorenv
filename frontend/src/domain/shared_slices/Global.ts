@@ -20,6 +20,7 @@ type GlobalStateType = {
   displayMeasurement: boolean
   displayInterestPoint: boolean
   displaySearchSemaphoreButton: boolean
+  displayReportingsButton: boolean
 
   displayMissionsOverlay: boolean
   // state entry for every layer whose visibility should be controlled
@@ -46,6 +47,7 @@ type GlobalStateType = {
   displayReportingsLayer: boolean
   reportingFormVisibility: ReportingFormVisibility
   displaySelectedReportingLayer: boolean
+  isSearchReportingsVisible: boolean
 }
 const initialState: GlobalStateType = {
   // state entry for every component /menu displayed on map whose visibility should be controlled
@@ -56,6 +58,7 @@ const initialState: GlobalStateType = {
   displayMeasurement: true,
   displayInterestPoint: true,
   displaySearchSemaphoreButton: true,
+  displayReportingsButton: true,
 
   displayMissionsOverlay: true,
   // state entry for every layer whose visibility should be controlled
@@ -81,13 +84,20 @@ const initialState: GlobalStateType = {
 
   reportingFormVisibility: ReportingFormVisibility.NOT_VISIBLE,
   displayReportingsLayer: true,
-  displaySelectedReportingLayer: true
+  displaySelectedReportingLayer: true,
+  isSearchReportingsVisible: false
 }
 
 const globalSlice = createSlice({
   initialState,
   name: 'global',
   reducers: {
+    hideSideButtons(state) {
+      state.isSearchReportingsVisible = false
+      state.isSearchSemaphoreVisible = false
+      state.missionsMenuIsOpen = false
+      state.mapToolOpened = undefined
+    },
     removeToast(state) {
       state.toast = undefined
     },
@@ -125,6 +135,7 @@ const globalSlice = createSlice({
 })
 
 export const {
+  hideSideButtons,
   removeToast,
   setDisplayedItems,
   setHealthcheckTextWarning,

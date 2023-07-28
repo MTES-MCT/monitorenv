@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
 import {
-  setDisplayedItems,
+  hideSideButtons,
   setOverlayCoordinates,
   setReportingFormVisibility
 } from '../../../../domain/shared_slices/Global'
@@ -76,13 +76,10 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
   const addReporting = () => {
     if (isDirty) {
       dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(true))
-    } else {
-      dispatch(
-        setDisplayedItems({ isSearchSemaphoreVisible: false, mapToolOpened: undefined, missionsMenuIsOpen: false })
-      )
-      dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
-      // dispatch(reportingStateActions.setReportingState({ id: undefined, semaphoreId: id, sourceType: 'SEMAPHORE' }))
     }
+    // TODO pré-remplir le formulaire avec l'info du sémaphore
+    dispatch(hideSideButtons())
+    dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
   }
 
   if (!displaySemaphoresLayer) {

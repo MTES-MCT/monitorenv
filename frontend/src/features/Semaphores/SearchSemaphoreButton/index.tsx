@@ -15,8 +15,9 @@ export function SearchSemaphoreButton() {
   const openOrCloseSearchSemaphore = () => {
     dispatch(
       setDisplayedItems({
+        isSearchReportingsVisible: false,
         isSearchSemaphoreVisible: !isSearchSemaphoreVisible,
-
+        mapToolOpened: undefined,
         missionsMenuIsOpen: false
       })
     )
@@ -42,7 +43,7 @@ export function SearchSemaphoreButton() {
 
 const Wrapper = styled.div`
   position: absolute;
-  top: 135px;
+  top: 185px;
   right: 10px;
   display: flex;
   justify-content: flex-end;

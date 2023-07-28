@@ -26,7 +26,11 @@ export function SearchSemaphores() {
   )
 
   const setSemaphoreVisibilityOnMap = () => {
-    dispatch(setDisplayedItems({ displaySemaphoresLayer: !displaySemaphoresLayer, missionsMenuIsOpen: false }))
+    dispatch(
+      setDisplayedItems({
+        displaySemaphoresLayer: !displaySemaphoresLayer
+      })
+    )
   }
   const closeSearchSemaphore = () => {
     dispatch(setDisplayedItems({ isSearchSemaphoreVisible: false }))

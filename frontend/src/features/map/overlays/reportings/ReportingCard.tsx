@@ -4,7 +4,7 @@ import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { setReportingFormVisibility } from '../../../../domain/shared_slices/Global'
+import { hideSideButtons, setReportingFormVisibility } from '../../../../domain/shared_slices/Global'
 import { ReportingFormVisibility, reportingStateActions } from '../../../../domain/shared_slices/ReportingState'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
@@ -35,6 +35,7 @@ export function ReportingCard({ feature, selected = false }: { feature: any; sel
     } else {
       dispatch(reportingStateActions.setSelectedReportingId(id))
     }
+    dispatch(hideSideButtons())
     dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
   }
 

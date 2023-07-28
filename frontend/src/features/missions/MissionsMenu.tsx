@@ -24,7 +24,13 @@ export function MissionsMenu() {
   }
   const toggleMissionsMenu = e => {
     e.preventDefault()
-    dispatch(setDisplayedItems({ isSearchSemaphoreVisible: false, missionsMenuIsOpen: !missionsMenuIsOpen }))
+    dispatch(
+      setDisplayedItems({
+        isSearchReportingsVisible: false,
+        isSearchSemaphoreVisible: false,
+        missionsMenuIsOpen: !missionsMenuIsOpen
+      })
+    )
     if (reportingFormVisibility !== ReportingFormVisibility.NOT_VISIBLE) {
       dispatch(setReportingFormVisibility(ReportingFormVisibility.REDUCE))
     }
