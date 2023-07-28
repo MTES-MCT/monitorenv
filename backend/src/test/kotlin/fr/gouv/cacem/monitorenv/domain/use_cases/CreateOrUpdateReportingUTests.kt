@@ -8,7 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.VehicleTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphores.SemaphoreEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
@@ -133,7 +133,7 @@ class CreateOrUpdateReportingUTests {
     }
 
     @Test
-    fun`A report cannot be linked to a controlUnit if sourceType is set to Semaphore`() {
+    fun`A semaphoreId must be set and controlUnitId & sourceName must be null when sourceType is set to Semaphore`() {
         // Given
         val wktReader = WKTReader()
 
@@ -169,5 +169,83 @@ class CreateOrUpdateReportingUTests {
         // Then
         assertThat(throwable).isInstanceOf(IllegalArgumentException::class.java)
         assertThat(throwable.message).contains("SemaphoreId must be set and controlUnitId and sourceName must be null")
+    }
+
+    @Test
+    fun`A controlUnitId must be set and semaphoreId & sourceName must be null when sourceType is set to ControlUnit`() {
+        // Given
+        val wktReader = WKTReader()
+
+        val multipolygonString = "MULTIPOLYGON(((-2.7335 47.6078, -2.7335 47.8452, -3.6297 47.8452, -3.6297 47.6078, -2.7335 47.6078)))"
+        val polygon = wktReader.read(multipolygonString) as MultiPolygon
+
+        val reporting = ReportingEntity(
+            sourceType = SourceTypeEnum.CONTROL_UNIT,
+            semaphoreId = 1,
+            targetType = TargetTypeEnum.VEHICLE,
+            vehicleType = VehicleTypeEnum.VESSEL,
+            geom = polygon,
+            description = "description",
+            reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+            theme = "theme",
+            subThemes = listOf("subTheme1", "subTheme2"),
+            actionTaken = "actions effectuées blabal ",
+            isInfractionProven = true,
+            isControlRequired = true,
+            isUnitAvailable = true,
+            createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            validityTime = 10,
+            isArchived = false,
+            isDeleted = false,
+        )
+
+        // When
+        val throwable = Assertions.catchThrowable {
+            CreateOrUpdateReporting(createOrUpdateReportingRepositoty, controlUnitRepository, semaphoreRepository)
+                .execute(reporting)
+        }
+
+        // Then
+        assertThat(throwable).isInstanceOf(IllegalArgumentException::class.java)
+        assertThat(throwable.message).contains("ControlUnitId must be set and semaphoreId and sourceName must be null")
+    }
+
+    @Test
+    fun`A sourceName must be set and semaphoreId & controlUnitId must be null when sourceType is set to OTHER`() {
+        // Given
+        val wktReader = WKTReader()
+
+        val multipolygonString = "MULTIPOLYGON(((-2.7335 47.6078, -2.7335 47.8452, -3.6297 47.8452, -3.6297 47.6078, -2.7335 47.6078)))"
+        val polygon = wktReader.read(multipolygonString) as MultiPolygon
+
+        val reporting = ReportingEntity(
+            sourceType = SourceTypeEnum.OTHER,
+            controlUnitId = 1,
+            targetType = TargetTypeEnum.VEHICLE,
+            vehicleType = VehicleTypeEnum.VESSEL,
+            geom = polygon,
+            description = "description",
+            reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+            theme = "theme",
+            subThemes = listOf("subTheme1", "subTheme2"),
+            actionTaken = "actions effectuées blabal ",
+            isInfractionProven = true,
+            isControlRequired = true,
+            isUnitAvailable = true,
+            createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            validityTime = 10,
+            isArchived = false,
+            isDeleted = false,
+        )
+
+        // When
+        val throwable = Assertions.catchThrowable {
+            CreateOrUpdateReporting(createOrUpdateReportingRepositoty, controlUnitRepository, semaphoreRepository)
+                .execute(reporting)
+        }
+
+        // Then
+        assertThat(throwable).isInstanceOf(IllegalArgumentException::class.java)
+        assertThat(throwable.message).contains("SourceName must be set and semaphoreId and controlUnitId must be null")
     }
 }

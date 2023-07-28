@@ -1,20 +1,19 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.inputs
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.VehicleTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 
 data class CreateOrUpdateReportingDataInput(
     val id: Int? = null,
     val sourceType: SourceTypeEnum? = null,
-    val semaphore: ReportingSemaphoreDataInput? = null,
-    val controlUnit: ControlUnitEntity? = null,
+    val semaphoreId: Int? = null,
+    val controlUnitId: Int? = null,
     val sourceName: String? = null,
     val targetType: TargetTypeEnum? = null,
     val vehicleType: VehicleTypeEnum? = null,
@@ -36,8 +35,8 @@ data class CreateOrUpdateReportingDataInput(
         return ReportingEntity(
             id = this.id,
             sourceType = this.sourceType,
-            semaphoreId = this.semaphore?.id,
-            controlUnitId = this.controlUnit?.id,
+            semaphoreId = this.semaphoreId,
+            controlUnitId = this.controlUnitId,
             sourceName = this.sourceName,
             targetType = this.targetType,
             vehicleType = this.vehicleType,

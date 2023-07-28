@@ -6,32 +6,32 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.VehicleTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphores.SemaphoreEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 
 data class ReportingDataOutput(
-    val id: Int,
-    val sourceType: SourceTypeEnum? = null,
-    val semaphore: SemaphoreDataOutput? = null,
-    val controlUnit: ControlUnitDataOutput? = null,
-    val sourceName: String? = null,
-    val targetType: TargetTypeEnum? = null,
-    val vehicleType: VehicleTypeEnum? = null,
-    val targetDetails: TargetDetailsEntity? = null,
-    val geom: Geometry? = null,
-    val description: String? = null,
-    val reportType: ReportingTypeEnum? = null,
-    val theme: String? = null,
-    val subThemes: List<String>? = listOf(),
-    val actionTaken: String? = null,
-    val isInfractionProven: Boolean? = null,
-    val isControlRequired: Boolean? = null,
-    val isUnitAvailable: Boolean? = null,
-    val createdAt: ZonedDateTime,
-    val validityTime: Int? = null,
-    val isArchived: Boolean,
+  val id: Int,
+  val sourceType: SourceTypeEnum? = null,
+  val semaphore: SemaphoreDataOutput? = null,
+  val controlUnit: ControlUnitDataOutput? = null,
+  val sourceName: String? = null,
+  val targetType: TargetTypeEnum? = null,
+  val vehicleType: VehicleTypeEnum? = null,
+  val targetDetails: TargetDetailsEntity? = null,
+  val geom: Geometry? = null,
+  val description: String? = null,
+  val reportType: ReportingTypeEnum? = null,
+  val theme: String? = null,
+  val subThemes: List<String>? = listOf(),
+  val actionTaken: String? = null,
+  val isInfractionProven: Boolean? = null,
+  val isControlRequired: Boolean? = null,
+  val isUnitAvailable: Boolean? = null,
+  val createdAt: ZonedDateTime,
+  val validityTime: Int? = null,
+  val isArchived: Boolean,
 ) {
     companion object {
         fun fromReporting(reporting: ReportingEntity, controlUnit: ControlUnitEntity?, semaphore: SemaphoreEntity?): ReportingDataOutput {

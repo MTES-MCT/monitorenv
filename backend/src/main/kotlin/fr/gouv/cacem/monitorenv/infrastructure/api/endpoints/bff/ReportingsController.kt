@@ -79,9 +79,10 @@ class ReportingsController(
         @PathParam("reporting id")
         @PathVariable(name = "id")
         id: Int,
-        @Parameter(description = "reporting")
+        @RequestBody
         reporting: CreateOrUpdateReportingDataInput,
     ): ReportingDataOutput {
+        require(id == reporting.id) { "id in path and body must be the same" }
         return createOrUpdateReporting.execute(
             reporting.toReportingEntity(),
         ).let {
