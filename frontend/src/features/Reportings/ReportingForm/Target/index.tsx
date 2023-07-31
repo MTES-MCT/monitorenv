@@ -14,7 +14,7 @@ export function Target() {
   const onTargetTypeChange = selectedTarget => {
     setFieldValue('targetType', selectedTarget)
     setFieldValue('vehicleType', undefined)
-    setFieldValue('targetDetails', [{}])
+    setFieldValue('targetDetails', [])
   }
   const onVehicleTypeChange = selectedVehicleType => {
     setFieldValue('vehicleType', selectedVehicleType)

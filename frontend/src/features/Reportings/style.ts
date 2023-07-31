@@ -1,4 +1,4 @@
-import { Button, IconButton } from '@mtes-mct/monitor-ui'
+import { Button, IconButton, MultiRadio, Tag } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 export const StyledFormContainer = styled.div`
@@ -35,7 +35,9 @@ export const StyledTitle = styled.div`
   display: flex;
   gap: 8px;
 `
-
+export const StyledArchivedTag = styled(Tag)`
+  margin-left: 16px;
+`
 export const StyledIconButton = styled(IconButton)`
   color: ${p => p.theme.color.white};
 `
@@ -115,6 +117,17 @@ export const StyledPositionContainer = styled.div`
   flex: 1;
   gap: 8px;
 `
+export const ReportTypeMultiRadio = styled(MultiRadio)`
+  > div > div > div:first-child label::after {
+    color: ${({ theme }) => theme.color.maximumRed};
+    content: ' ●';
+  }
+  > div > div > div:last-child label::after {
+    color: ${({ theme }) => theme.color.blueGray[100]};
+    content: ' ●';
+  }
+`
+
 export const StyledThemeContainer = styled.div`
   display: flex;
   flex-direction: column;

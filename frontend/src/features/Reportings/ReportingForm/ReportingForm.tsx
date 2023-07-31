@@ -3,7 +3,6 @@ import { useField, useFormikContext } from 'formik'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Toggle } from 'rsuite'
-import styled from 'styled-components'
 
 import { CancelEditDialog } from './Dialog/CancelEditDialog'
 import { Footer } from './Footer'
@@ -15,6 +14,7 @@ import { SubThemesSelector } from './ThemeSelector/SubThemesSelector'
 import { Validity } from './Validity'
 import {
   Reporting,
+  ReportingStatusEnum,
   ReportingTypeEnum,
   getFormattedReportingId,
   getReportingStatus,
@@ -27,7 +27,6 @@ import { addReporting } from '../../../domain/use_cases/reportings/addReporting'
 import { deleteReporting } from '../../../domain/use_cases/reportings/deleteReporting'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useSyncFormValuesWithRedux } from '../../../hooks/useSyncFormValuesWithRedux'
-import { ReportingStatusTag } from '../../../ui/ReportingStatusTag'
 import { DeleteModal } from '../../commonComponents/Modals/Delete'
 import {
   Separator,
@@ -39,7 +38,9 @@ import {
   StyledToggle,
   StyledHeaderButtons,
   StyledTitle,
-  StyledChevronIcon
+  StyledChevronIcon,
+  ReportTypeMultiRadio,
+  StyledArchivedTag
 } from '../style'
 
 export function ReportingForm({ setShouldValidateOnChange }) {
@@ -58,7 +59,9 @@ export function ReportingForm({ setShouldValidateOnChange }) {
   useSyncFormValuesWithRedux(reportingStateActions.setReportingState, reportingStateActions.setIsDirty)
 
   const reportTypeOptions = Object.values(reportingTypeLabels)
-  const InfractionProvenOptions = Object.values(infractionProvenLabels)
+  const infractionProvenOptions = Object.values(infractionProvenLabels)
+
+  const reportingStatus = getReportingStatus(values)
 
   const changeReportType = reportType => {
     setFieldValue('reportType', reportType)
@@ -148,8 +151,16 @@ export function ReportingForm({ setShouldValidateOnChange }) {
       <StyledHeader>
         <StyledTitle>
           <Icon.Report />
-          {values.reportingId ? `SIGNALEMENT ${getFormattedReportingId(values.reportingId)}` : 'NOUVEAU SIGNALEMENT'}
-          {values.reportingId && <ReportingStatusTag reportingStatus={getReportingStatus(values)} />}
+          {values.reportingId ? (
+            <>
+              {`SIGNALEMENT ${getFormattedReportingId(values.reportingId)}`}
+              {reportingStatus === ReportingStatusEnum.ARCHIVED && (
+                <StyledArchivedTag accent={Accent.PRIMARY}>Archivé</StyledArchivedTag>
+              )}
+            </>
+          ) : (
+            'NOUVEAU SIGNALEMENT'
+          )}
         </StyledTitle>
 
         <StyledHeaderButtons>
@@ -202,7 +213,7 @@ export function ReportingForm({ setShouldValidateOnChange }) {
             label="La suspicion d'infraction est"
             name="isInfractionProven"
             onChange={changeIsInfractionProven}
-            options={InfractionProvenOptions}
+            options={infractionProvenOptions}
             value={values.isInfractionProven}
           />
         </StyledInfractionProven>
@@ -219,14 +230,3 @@ export function ReportingForm({ setShouldValidateOnChange }) {
     </StyledFormContainer>
   )
 }
-
-const ReportTypeMultiRadio = styled(MultiRadio)`
-  > div > div > div:first-child label::after {
-    color: ${({ theme }) => theme.color.maximumRed};
-    content: ' ●';
-  }
-  > div > div > div:last-child label::after {
-    color: ${({ theme }) => theme.color.blueGray[100]};
-    content: ' ●';
-  }
-`
