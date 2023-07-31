@@ -1,3 +1,4 @@
+import { cloneDeep, reduce } from 'lodash'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
@@ -5,6 +6,7 @@ import { useDispatch } from 'react-redux'
 
 import { semaphoreStyles } from './semaphores.style'
 import { getSemaphoreZoneFeature } from './semaphoresGeometryHelpers'
+import { useGetReportingsQuery } from '../../../../api/reportingsAPI'
 import { useGetSemaphoresQuery } from '../../../../api/semaphoresAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { setOverlayCoordinates } from '../../../../domain/shared_slices/Global'
@@ -12,6 +14,7 @@ import { setSelectedSemaphore } from '../../../../domain/shared_slices/Semaphore
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
 export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
@@ -23,9 +26,47 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
 
   const { data: semaphores } = useGetSemaphoresQuery()
 
+  const { data: reportings } = useGetReportingsQuery()
+
+  const reportingsBySemaphoreId = useMemo(
+    () =>
+      reduce(
+        reportings?.entities,
+        (reportingsBySemaphore, reporting) => {
+          const reports = cloneDeep(reportingsBySemaphore)
+          if (reporting && reporting.semaphoreId) {
+            if (!reports[reporting.semaphoreId]) {
+              reports[reporting.semaphoreId] = [reporting]
+            } else {
+              reports[reporting.semaphoreId].push(reporting)
+            }
+          }
+
+          return reports
+        },
+        {} as Record<string, any>
+      ),
+    [reportings]
+  )
+
   const semaphoresPoint = useMemo(
-    () => semaphores?.filter(f => !!f.geom).map(f => getSemaphoreZoneFeature(f, Layers.SEMAPHORES.code)),
-    [semaphores]
+    () =>
+      reduce(
+        semaphores?.entities,
+        (features, semaphore) => {
+          if (semaphore && semaphore.geom) {
+            const semaphoreFeature = getSemaphoreZoneFeature(semaphore, Layers.SEMAPHORES.code)
+            semaphoreFeature.setProperties({
+              reportings: reportingsBySemaphoreId[semaphore.id]
+            })
+            features.push(semaphoreFeature)
+          }
+
+          return features
+        },
+        [] as Feature[]
+      ),
+    [semaphores, reportingsBySemaphoreId]
   )
   const vectorSourceRef = useRef() as React.MutableRefObject<VectorSource<Geometry>>
   const GetVectorSource = () => {

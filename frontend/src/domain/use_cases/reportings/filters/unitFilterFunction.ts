@@ -1,6 +1,6 @@
-import type { Reporting } from '../../../entities/reporting'
+import type { ReportingDetailed } from '../../../entities/reporting'
 
-export function unitFilterFunction(reporting: Reporting, filter: string[]) {
+export function unitFilterFunction(reporting: ReportingDetailed, filter: string[]) {
   if (filter.length === 0) {
     return true
   }

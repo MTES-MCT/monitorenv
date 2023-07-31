@@ -9,9 +9,15 @@ import { Columns } from './Columns'
 import { StyledSkeletonRow } from '../../commonComponents/Skeleton'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 
-import type { Reporting } from '../../../domain/entities/reporting'
+import type { ReportingDetailed } from '../../../domain/entities/reporting'
 
-export function ReportingsTable({ isLoading, reportings }: { isLoading: boolean; reportings: Reporting[] }) {
+export function ReportingsTable({
+  isLoading,
+  reportings
+}: {
+  isLoading: boolean
+  reportings: (ReportingDetailed | undefined)[]
+}) {
   const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'createdAt' }])
 
   const tableData = useMemo(() => (isLoading ? Array(5).fill({}) : reportings), [isLoading, reportings])

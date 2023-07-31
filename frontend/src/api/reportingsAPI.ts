@@ -1,3 +1,4 @@
+import { EntityState, createEntityAdapter } from '@reduxjs/toolkit'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 import type { Reporting, ReportingDetailed } from '../domain/entities/reporting'
@@ -24,6 +25,9 @@ const getReportingTypesFilter = reportingTypes =>
 const getSeaFrontsFilter = seaFronts =>
   seaFronts && seaFronts?.length > 0 && `seaFronts=${encodeURIComponent(seaFronts)}`
 
+const ReportingAdapter = createEntityAdapter<ReportingDetailed>()
+const initialState = ReportingAdapter.getInitialState()
+
 export const reportingsAPI = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/bff/v1' }),
   endpoints: build => ({
@@ -46,13 +50,11 @@ export const reportingsAPI = createApi({
       providesTags: (_, __, id) => [{ id, type: 'Reportings' }],
       query: id => `reportings/${id}`
     }),
-    getReportings: build.query<ReportingDetailed[], ReportingsFilter | void>({
+    getReportings: build.query<EntityState<ReportingDetailed>, ReportingsFilter | void>({
       providesTags: result =>
-        result
-          ? // successful query
-            [...result.map(({ id }) => ({ id, type: 'Reportings' as const })), { id: 'LIST', type: 'Reportings' }]
-          : // an error occurred, but we still want to refetch this query when `{ type: 'Reportings', id: 'LIST' }` is invalidated
-            [{ id: 'LIST', type: 'Reportings' }],
+        result?.ids
+          ? result?.ids?.map(id => ({ id, type: 'Reportings' as const }))
+          : [{ id: 'LIST', type: 'Reportings' }],
       query: filter =>
         [
           'reportings?',
@@ -64,7 +66,8 @@ export const reportingsAPI = createApi({
           getSeaFrontsFilter(filter?.seaFronts)
         ]
           .filter(v => v)
-          .join('&')
+          .join('&'),
+      transformResponse: (response: ReportingDetailed[]) => ReportingAdapter.setAll(initialState, response)
     }),
     updateReporting: build.mutation<Reporting, Reporting>({
       invalidatesTags: (_, __, { id }) => [
@@ -90,3 +93,9 @@ export const {
   useGetReportingsQuery,
   useUpdateReportingMutation
 } = reportingsAPI
+
+export const reportingsBySemaphoreId = (state: any, semaphoreId: number) => {
+  const reportings = ReportingAdapter.getSelectors().selectAll(state)
+
+  return reportings.filter(reporting => reporting.semaphoreId === semaphoreId)
+}

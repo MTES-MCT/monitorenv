@@ -1,3 +1,4 @@
+import { filter } from 'lodash'
 import { useMemo } from 'react'
 
 import { useAppSelector } from './useAppSelector'
@@ -22,12 +23,14 @@ export const useGetFilteredReportingsQuery = () => {
   )
 
   const reportings = useMemo(() => {
-    if (!data) {
+    if (!data?.entities) {
       return []
     }
 
-    return data.filter(
-      reporting => unitFilterFunction(reporting, unitFilter) && themeFilterFunction(reporting, themeFilter)
+    return filter(
+      data.entities,
+      reporting =>
+        !!reporting && unitFilterFunction(reporting, unitFilter) && themeFilterFunction(reporting, themeFilter)
     )
   }, [data, themeFilter, unitFilter])
 

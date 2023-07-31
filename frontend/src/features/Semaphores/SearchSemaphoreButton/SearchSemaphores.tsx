@@ -1,4 +1,5 @@
 import { Accent, CustomSearch, Icon, Search } from '@mtes-mct/monitor-ui'
+import { reduce } from 'lodash'
 import { GeoJSON } from 'ol/format'
 import { useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -12,6 +13,8 @@ import { addSemaphore, setSelectedSemaphore } from '../../../domain/shared_slice
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
 
+import type { Semaphore } from '../../../domain/entities/semaphore'
+
 export function SearchSemaphores() {
   const dispatch = useDispatch()
 
@@ -20,7 +23,19 @@ export function SearchSemaphores() {
   const { data } = useGetSemaphoresQuery()
 
   const [isSemaphoresHistoryVisible, setIsSemaphoresHistoryVisible] = useState(semaphoresResearchHistory.length > 0)
-  const optionsRef = useRef(data?.map(semaphore => ({ label: semaphore.unit || semaphore.name, value: semaphore })))
+  const optionsRef = useRef(
+    reduce(
+      data?.entities,
+      (options, semaphore) => {
+        if (semaphore) {
+          options.push({ label: semaphore.unit || semaphore.name, value: semaphore })
+        }
+
+        return options
+      },
+      [] as { label: string; value: Semaphore }[]
+    ).sort((a, b) => a.label.localeCompare(b.label))
+  )
   const customSearchRef = useRef(
     new CustomSearch(optionsRef.current || [], ['value.name', 'value.unit'], { isStrict: true })
   )

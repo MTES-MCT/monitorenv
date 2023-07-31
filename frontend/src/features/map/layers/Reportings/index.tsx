@@ -1,3 +1,4 @@
+import { reduce } from 'lodash'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
@@ -11,19 +12,30 @@ import { reportingStateActions } from '../../../../domain/shared_slices/Reportin
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
 export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useDispatch()
-  const { displayReportingsLayer } = useAppSelector(state => state.global)
+  const { displayReportingsLayer, overlayCoordinates } = useAppSelector(state => state.global)
   const { selectedReportingId } = useAppSelector(state => state.reportingState)
-  const { overlayCoordinates } = useAppSelector(state => state.global)
   const listener = useAppSelector(state => state.draw.listener)
 
   const { data: reportings } = useGetReportingsQuery()
 
   const reportingsPointOrZone = useMemo(
-    () => reportings?.filter(f => !!f.geom).map(f => getReportingZoneFeature(f, Layers.REPORTINGS.code)),
+    () =>
+      reduce(
+        reportings?.entities,
+        (features, reporting) => {
+          if (reporting && reporting.geom) {
+            features.push(getReportingZoneFeature(reporting, Layers.REPORTINGS.code))
+          }
+
+          return features
+        },
+        [] as Feature[]
+      ),
     [reportings]
   )
   const vectorSourceRef = useRef() as React.MutableRefObject<VectorSource<Geometry>>

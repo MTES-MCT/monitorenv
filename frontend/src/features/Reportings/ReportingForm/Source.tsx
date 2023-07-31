@@ -1,5 +1,6 @@
 import { CustomSearch, FieldError, FormikSelect, FormikTextInput, MultiRadio } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
+import { reduce } from 'lodash'
 import { useMemo } from 'react'
 
 import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
@@ -16,9 +17,17 @@ export function Source() {
   // Semaphores
   const semaphoresOptions = useMemo(
     () =>
-      semaphores
-        ?.map(semaphore => ({ label: semaphore.unit || semaphore.name, value: semaphore.id }))
-        .sort((a, b) => a.label.localeCompare(b.label)),
+      reduce(
+        semaphores?.entities,
+        (labels, semaphore) => {
+          if (semaphore) {
+            labels.push({ label: semaphore.unit || semaphore.name, value: semaphore.id })
+          }
+
+          return labels
+        },
+        [] as { label: string; value: number }[]
+      ).sort((a, b) => a.label.localeCompare(b.label)),
     [semaphores]
   )
 

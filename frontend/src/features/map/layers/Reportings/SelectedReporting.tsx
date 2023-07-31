@@ -17,7 +17,7 @@ export function SelectedReportingLayer({ map }: BaseMapChildrenProps) {
   const { displayReportingSelectedLayer } = useAppSelector(state => state.global)
   const { selectedReporting } = useGetReportingsQuery(undefined, {
     selectFromResult: ({ data }) => ({
-      selectedReporting: data?.find(op => op.id === selectedReportingIdOnMap)
+      selectedReporting: selectedReportingIdOnMap && data?.entities[selectedReportingIdOnMap]
     })
   })
 
