@@ -41,5 +41,5 @@ interface IDBReportingRepository : CrudRepository<ReportingModel, Int> {
     """,
         nativeQuery = true,
     )
-    fun ArchiveOutdatedReportings(): Int
+    fun archiveOutdatedReportings(): Int
 }

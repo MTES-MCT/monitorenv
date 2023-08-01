@@ -105,4 +105,18 @@ class JpaReportingITests : AbstractDBTests() {
         val deletedReporting = jpaReportingRepository.findById(1)
         assertThat(deletedReporting.isDeleted).isEqualTo(true)
     }
+
+    @Test
+    @Transactional
+    fun `archive should archive outdated reporting`() {
+        // Given
+        val existingReporting = jpaReportingRepository.findById(1)
+        assertThat(existingReporting.isArchived).isEqualTo(false)
+        // When
+        jpaReportingRepository.archiveOutdatedReportings()
+        // Then
+        val archivedReporting = jpaReportingRepository.findById(1)
+        assertThat(archivedReporting.isArchived).isEqualTo(true)
+
+    }
 }

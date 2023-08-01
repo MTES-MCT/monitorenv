@@ -41,7 +41,8 @@ class JpaReportingRepository(
         return dbReportingRepository.count()
     }
 
-    override fun ArchiveOutdatedReportings(): Int {
-        return dbReportingRepository.ArchiveOutdatedReportings()
+    @Transactional
+    override fun archiveOutdatedReportings(): Int {
+        return dbReportingRepository.archiveOutdatedReportings()
     }
 }

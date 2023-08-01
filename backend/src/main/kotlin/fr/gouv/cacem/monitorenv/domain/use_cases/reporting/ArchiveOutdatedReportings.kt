@@ -16,7 +16,7 @@ class ArchiveOutdatedReportings(
     @Scheduled(fixedDelay = 300000, initialDelay = 6000)
     fun execute() {
         logger.info("Archiving reportings")
-        val numberOfArchivedReportings = reportingRepository.ArchiveOutdatedReportings()
+        val numberOfArchivedReportings = reportingRepository.archiveOutdatedReportings()
         logger.info("Archived $numberOfArchivedReportings reportings")
     }
 }

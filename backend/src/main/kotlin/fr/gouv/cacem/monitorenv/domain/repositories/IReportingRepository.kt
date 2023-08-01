@@ -11,5 +11,5 @@ interface IReportingRepository {
     fun save(reporting: ReportingEntity): ReportingEntity
     fun delete(reportingId: Int)
     fun count(): Long
-    fun ArchiveOutdatedReportings(): Int
+    fun archiveOutdatedReportings(): Int
 }

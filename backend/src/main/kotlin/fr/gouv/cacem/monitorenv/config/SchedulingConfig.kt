@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenvh.config
+package fr.gouv.cacem.monitorenv.config
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Configuration
