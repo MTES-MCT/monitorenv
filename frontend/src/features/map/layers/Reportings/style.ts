@@ -4,8 +4,9 @@ import { Point } from 'ol/geom'
 import { Fill, Icon, Stroke, Style } from 'ol/style'
 
 import { OLGeometryType } from '../../../../domain/entities/map/constants'
-import { ReportingStatusEnum, ReportingTypeEnum, getReportingStatus } from '../../../../domain/entities/reporting'
+import { ReportingStatusEnum, ReportingTypeEnum } from '../../../../domain/entities/reporting'
 import { getColorWithAlpha } from '../../../../utils/utils'
+import { getReportingStatus } from '../../../Reportings/utils'
 
 const reportingStyleFactory = (color, src?: string | undefined) =>
   new Style({

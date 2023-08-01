@@ -1,34 +1,54 @@
-import { FormikNumberInput, customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
+import { FormikNumberInput, customDayjs } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import type { Reporting } from '../../../domain/entities/reporting'
+import { ReportingStatusEnum, type Reporting } from '../../../domain/entities/reporting'
+import { getReportingEndOfValidity, getReportingStatus, getReportingTimeLeft } from '../utils'
 
-export function Validity() {
+export function Validity({ mustIncreaseValidity }: { mustIncreaseValidity: boolean }) {
   const { values } = useFormikContext<Reporting>()
 
-  const formattedCreatedAt = getLocalizedDayjs(values?.createdAt).format('DD/MM/YYYY à HH:mm')
+  const reportingStatus = getReportingStatus(values)
 
-  const archiveDate = getLocalizedDayjs(values?.createdAt).add(values?.validityTime || 0, 'hour')
-  const formattedArchivedDate = archiveDate.format('DD MMMM à HH:mm')
+  const formattedCreatedAt = customDayjs(values?.createdAt).format('DD/MM/YYYY à HH:mm')
 
-  const remainingHours = archiveDate.diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour')
-  const remainingTime = archiveDate.diff(getLocalizedDayjs(customDayjs().toISOString()))
+  const endOfValidity = getReportingEndOfValidity(values?.createdAt, values?.validityTime)
+  const formattedEndOfValidity = endOfValidity.format('DD/MM/YYYY à HH:mm')
+
+  const timeLeft = getReportingTimeLeft(values?.createdAt, values?.validityTime)
+
+  let remainingMinutes = 0
+  if (timeLeft < 1 && timeLeft > 0) {
+    remainingMinutes = endOfValidity.diff(customDayjs().toISOString(), 'minute')
+  }
+
+  const canReopenReporting = useMemo(
+    () => reportingStatus === ReportingStatusEnum.ARCHIVED && mustIncreaseValidity && timeLeft > 0,
+    [reportingStatus, mustIncreaseValidity, timeLeft]
+  )
 
   return (
     <StyledValidityContainer>
-      <StyledFormikNumberInput label="Validité (h)" max={24} name="validityTime" />
-      {values.isArchived && (
+      <StyledFormikNumberInput label="Validité (h)" name="validityTime" />
+      {reportingStatus === ReportingStatusEnum.ARCHIVED && !mustIncreaseValidity && (
         <GrayText>{`Le signalement ouvert le ${formattedCreatedAt} (UTC) a été archivé.`}</GrayText>
       )}
-      {!values.isArchived &&
-        !!values?.validityTime &&
-        values?.validityTime > 0 &&
-        (remainingTime > 0 ? (
-          <GrayText>{`Le signalement ouvert le ${formattedCreatedAt} (UTC) sera archivé le ${formattedArchivedDate} (UTC) (dans ${remainingHours}h)`}</GrayText>
-        ) : (
-          <RedText>{`La date de validité du signalement, ouvert le ${formattedCreatedAt} (UTC) , est dépassée. Pour le rouvrir, veuillez augmenter sa durée de validité.`}</RedText>
-        ))}
+      {reportingStatus === ReportingStatusEnum.ARCHIVED && mustIncreaseValidity && !canReopenReporting && (
+        <RedText>{`La date de validité du signalement, ouvert le ${formattedCreatedAt} (UTC), est dépassée. Pour le rouvrir, veuillez augmenter sa durée de validité.`}</RedText>
+      )}
+
+      {((reportingStatus !== ReportingStatusEnum.ARCHIVED && timeLeft > 0 && timeLeft < 1) ||
+        (canReopenReporting && timeLeft > 0 && timeLeft < 1)) && (
+        <GrayText>{`Le signalement ouvert le ${formattedCreatedAt} (UTC) sera archivé le ${formattedEndOfValidity} (UTC) (dans ${remainingMinutes}min)`}</GrayText>
+      )}
+
+      {((reportingStatus !== ReportingStatusEnum.ARCHIVED && timeLeft >= 1) ||
+        (canReopenReporting && timeLeft >= 1)) && (
+        <GrayText>{`Le signalement ouvert le ${formattedCreatedAt} (UTC) sera archivé le ${formattedEndOfValidity} (UTC) (dans ${Math.round(
+          timeLeft
+        )}h)`}</GrayText>
+      )}
     </StyledValidityContainer>
   )
 }

@@ -17,7 +17,6 @@ import {
   ReportingStatusEnum,
   ReportingTypeEnum,
   getFormattedReportingId,
-  getReportingStatus,
   infractionProvenLabels,
   reportingTypeLabels
 } from '../../../domain/entities/reporting'
@@ -42,6 +41,7 @@ import {
   ReportTypeMultiRadio,
   StyledArchivedTag
 } from '../style'
+import { getReportingStatus } from '../utils'
 
 export function ReportingForm({ setShouldValidateOnChange }) {
   const dispatch = useDispatch()
@@ -55,13 +55,19 @@ export function ReportingForm({ setShouldValidateOnChange }) {
   const [themeField] = useField('theme')
 
   const [isDeleteModalOpen, setIsDeletModalOpen] = useState(false)
+  const [mustIncreaseValidity, setMustIncreaseValidity] = useState(false)
 
   useSyncFormValuesWithRedux(reportingStateActions.setReportingState, reportingStateActions.setIsDirty)
 
   const reportTypeOptions = Object.values(reportingTypeLabels)
   const infractionProvenOptions = Object.values(infractionProvenLabels)
 
-  const reportingStatus = getReportingStatus(values)
+  const reportingStatus = getReportingStatus({
+    createdAt: values.createdAt,
+    isArchived: values.isArchived,
+    reportType: values.reportType as ReportingTypeEnum,
+    validityTime: values.validityTime
+  })
 
   const changeReportType = reportType => {
     setFieldValue('reportType', reportType)
@@ -200,7 +206,7 @@ export function ReportingForm({ setShouldValidateOnChange }) {
             theme={themeField?.value}
           />
         </StyledThemeContainer>
-        <Validity />
+        <Validity mustIncreaseValidity={mustIncreaseValidity} />
         <Separator />
         <FormikTextarea label="Actions effectuées" name="actions" />
         <StyledInfractionProven>
@@ -225,6 +231,7 @@ export function ReportingForm({ setShouldValidateOnChange }) {
       <Footer
         onCancel={cancelNewReporting}
         onDelete={deleteCurrentReporting}
+        setMustIncreaseValidity={setMustIncreaseValidity}
         setShouldValidateOnChange={setShouldValidateOnChange}
       />
     </StyledFormContainer>

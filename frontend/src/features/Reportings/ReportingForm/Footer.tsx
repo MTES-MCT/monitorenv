@@ -1,19 +1,31 @@
 import { Accent, Icon, THEME } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import _ from 'lodash'
+import { useDispatch } from 'react-redux'
 
+import { ReportingStatusEnum, type Reporting } from '../../../domain/entities/reporting'
+import { reopenReporting } from '../../../domain/use_cases/reportings/reopenReporting'
 import { StyledButton, StyledSubmitButton, StyledDeleteButton, StyledFooter } from '../style'
+import { getReportingStatus, getReportingTimeLeft } from '../utils'
 
-import type { Reporting } from '../../../domain/entities/reporting'
+export function Footer({ onCancel, onDelete, setMustIncreaseValidity, setShouldValidateOnChange }) {
+  const dispatch = useDispatch()
+  const { handleSubmit, setFieldValue, validateForm, values } = useFormikContext<Reporting>()
 
-export function Footer({ onCancel, onDelete, setShouldValidateOnChange }) {
-  const { handleSubmit, setFieldValue, validateForm, values } = useFormikContext<Partial<Reporting>>()
+  const reportingStatus = getReportingStatus(values)
 
   const handleReopen = async () => {
-    await setFieldValue('isArchived', false)
-    validateForm().then(errors => {
+    const timeLeft = getReportingTimeLeft(values?.createdAt, values?.validityTime)
+
+    if (timeLeft < 0) {
+      setMustIncreaseValidity(true)
+
+      return
+    }
+    setMustIncreaseValidity(false)
+    validateForm({ ...values, isArchived: false }).then(async errors => {
       if (_.isEmpty(errors)) {
-        handleSubmit()
+        await dispatch(reopenReporting({ ...values, isArchived: false }))
 
         return
       }
@@ -44,7 +56,7 @@ export function Footer({ onCancel, onDelete, setShouldValidateOnChange }) {
         />
 
         <div>
-          {values.isArchived ? (
+          {reportingStatus === ReportingStatusEnum.ARCHIVED || values.isArchived ? (
             <StyledButton Icon={Icon.Unlock} onClick={handleReopen}>
               Rouvrir le signalement
             </StyledButton>

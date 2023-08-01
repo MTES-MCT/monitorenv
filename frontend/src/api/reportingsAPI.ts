@@ -53,7 +53,7 @@ export const reportingsAPI = createApi({
     getReportings: build.query<EntityState<ReportingDetailed>, ReportingsFilter | void>({
       providesTags: result =>
         result?.ids
-          ? result?.ids?.map(id => ({ id, type: 'Reportings' as const }))
+          ? [{ id: 'LIST', type: 'Reportings' }, ...result.ids.map(id => ({ id, type: 'Reportings' as const }))]
           : [{ id: 'LIST', type: 'Reportings' }],
       query: filter =>
         [
