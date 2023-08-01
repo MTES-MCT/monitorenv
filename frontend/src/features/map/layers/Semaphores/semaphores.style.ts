@@ -1,8 +1,8 @@
-import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+/* import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { isEmpty } from 'lodash'
 import { getCenter } from 'ol/extent'
-import { GeoJSON } from 'ol/format'
-import { LineString, MultiLineString, Point } from 'ol/geom'
+import { GeoJSON } from 'ol/format' */
+import { LineString, /* MultiLineString, */ Point } from 'ol/geom'
 import { Icon, Stroke, Style } from 'ol/style'
 
 import { COLORS } from '../../../../constants/constants'
@@ -24,7 +24,7 @@ const lineStyle = new Style({
   })
 })
 
-const reportingLinkStyle = new Style({
+/* const reportingLinkStyle = new Style({
   geometry: feature => {
     const semaphoreGeometry = (feature?.getGeometry() as Point)?.getCoordinates()
     const reportingsGeometries = feature?.get('reportings')?.reduce((lines, reporting) => {
@@ -55,11 +55,12 @@ const reportingLinkStyle = new Style({
     color: COLORS.slateGray,
     width: 1
   })
-})
+}) */
+
 const semaphoreStyle = new Style({
   image: new Icon({
     src: 'semaphore.svg'
   })
 })
 
-export const semaphoreStyles = [lineStyle, semaphoreStyle, reportingLinkStyle]
+export const semaphoreStyles = [lineStyle, semaphoreStyle]

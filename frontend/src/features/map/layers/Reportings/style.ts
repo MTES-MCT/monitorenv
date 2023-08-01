@@ -45,7 +45,7 @@ const hoveredReportingZoneStyleFactory = (color, fillColor) => [
       return undefined
     },
     image: new Icon({
-      color,
+      color: color === THEME.color.white ? THEME.color.slateGray : color,
       scale: 0.6,
       src: 'Close.svg'
     })
@@ -74,7 +74,7 @@ const selectedReportingStyleFactory = (color, fillColor) => [
       return undefined
     },
     image: new Icon({
-      color,
+      color: color === THEME.color.white ? THEME.color.slateGray : color,
       scale: 0.6,
       src: 'Close.svg'
     })
