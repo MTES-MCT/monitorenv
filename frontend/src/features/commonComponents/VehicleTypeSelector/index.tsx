@@ -8,13 +8,14 @@ import { vehicleTypeLabels } from '../../../domain/entities/vehicleType'
 import type { Promisable } from 'type-fest'
 
 type VehicleTypeSelectorProps = {
+  dataCy?: string
   disabled: boolean
-  error: string
+  error?: string
   name: string
   onChange: (nextValue: string | undefined) => Promisable<void>
   value?: string
 }
-export function VehicleTypeSelector({ disabled, error, name, onChange, value }: VehicleTypeSelectorProps) {
+export function VehicleTypeSelector({ dataCy, disabled, error, name, onChange, value }: VehicleTypeSelectorProps) {
   const { newWindowContainerRef } = useNewWindow()
   const vehicleTypeSelectorRef = useRef() as MutableRefObject<HTMLDivElement>
   const vehicleTypeFieldList = Object.values(vehicleTypeLabels)
@@ -23,6 +24,7 @@ export function VehicleTypeSelector({ disabled, error, name, onChange, value }: 
     <SelectorWrapper ref={vehicleTypeSelectorRef}>
       <Select
         baseContainer={newWindowContainerRef.current}
+        data-cy={dataCy}
         disabled={disabled}
         error={error}
         isErrorMessageHidden

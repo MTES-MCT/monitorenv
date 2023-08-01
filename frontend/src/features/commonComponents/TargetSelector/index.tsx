@@ -6,12 +6,13 @@ import { targetTypeLabels } from '../../../domain/entities/targetType'
 import type { Promisable } from 'type-fest'
 
 type TargetSelectorProps = {
-  error: string
+  dataCy?: string
+  error?: string | undefined
   name: string
   onChange: (nextValue: string | undefined) => Promisable<void>
   value?: string
 }
-export function TargetSelector({ error, name, onChange, value }: TargetSelectorProps) {
+export function TargetSelector({ dataCy, error, name, onChange, value }: TargetSelectorProps) {
   const { newWindowContainerRef } = useNewWindow()
   const actionTargetFieldList = Object.values(targetTypeLabels)
 
@@ -19,6 +20,7 @@ export function TargetSelector({ error, name, onChange, value }: TargetSelectorP
     <SelectorWrapper>
       <Select
         baseContainer={newWindowContainerRef.current}
+        data-cy={dataCy}
         error={error}
         isErrorMessageHidden
         isLight

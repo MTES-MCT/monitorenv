@@ -24,10 +24,15 @@ export function Target() {
   return (
     <>
       <StyledInlineContainer>
-        <TargetSelector error="" name="targetType" onChange={onTargetTypeChange} value={values.targetType} />
+        <TargetSelector
+          dataCy="reporting-target-type"
+          name="targetType"
+          onChange={onTargetTypeChange}
+          value={values.targetType}
+        />
         <VehicleTypeSelector
+          dataCy="reporting-vehicle-type"
           disabled={values.targetType !== TargetTypeEnum.VEHICLE}
-          error=""
           name="vehicleType"
           onChange={onVehicleTypeChange}
           value={values.vehicleType}

@@ -123,6 +123,7 @@ export function Source() {
         <SemaphoreWrapper>
           <FormikSelect
             customSearch={customSearchSemaphore}
+            data-cy="add-semaphore-source"
             label="Nom du Sémaphore"
             name="semaphoreId"
             options={semaphoresOptions || []}

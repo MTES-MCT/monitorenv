@@ -188,6 +188,7 @@ export function ReportingForm({ setShouldValidateOnChange }) {
 
         <div>
           <ReportTypeMultiRadio
+            data-cy="reporting-type"
             isInline
             label="Type de signalement"
             name="reportType"
@@ -208,7 +209,7 @@ export function ReportingForm({ setShouldValidateOnChange }) {
         </StyledThemeContainer>
         <Validity mustIncreaseValidity={mustIncreaseValidity} />
         <Separator />
-        <FormikTextarea label="Actions effectuées" name="actions" />
+        <FormikTextarea label="Actions effectuées" name="actionTaken" />
         <StyledInfractionProven>
           <Label>La suspicion d&apos;infraction est </Label>
           <MultiRadio
@@ -224,7 +225,11 @@ export function ReportingForm({ setShouldValidateOnChange }) {
           />
         </StyledInfractionProven>
         <StyledToggle>
-          <Toggle checked={values.isControlRequired || false} onChange={changeNeedControlValue} />
+          <Toggle
+            checked={values.isControlRequired || false}
+            data-cy="reporting-is-control-required"
+            onChange={changeNeedControlValue}
+          />
           <span>Le signalement nécessite un contrôle</span>
         </StyledToggle>
       </StyledForm>
