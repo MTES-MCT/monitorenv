@@ -16,28 +16,28 @@ export function ReportingsList() {
   }
 
   return (
-    <StyledMissionsContainer>
+    <StyledReportingsContainer>
       <StyledHeader>
         <Title data-cy="SideWindowHeader-title">Signalements</Title>
-        <StyledButton data-cy="add-mission" Icon={Icon.Plus} onClick={createReporting}>
+        <StyledButton Icon={Icon.Plus} onClick={createReporting}>
           Ajouter un nouveau signalement
         </StyledButton>
       </StyledHeader>
       {/* <MissionsTableFilters /> */}
-      <NumberOfDisplayedMissions data-cy="Missions-numberOfDisplayedMissions">
+      <NumberOfDisplayedReportings>
         {reportings?.length || '0'} Signalement{reportings && reportings.length > 1 ? 's' : ''}
-      </NumberOfDisplayedMissions>
+      </NumberOfDisplayedReportings>
 
       {isError ? (
         <p data-cy="listMissionWrapper">Erreur au chargement des données</p>
       ) : (
         <ReportingsTable isLoading={isLoading || isFetching} reportings={reportings} />
       )}
-    </StyledMissionsContainer>
+    </StyledReportingsContainer>
   )
 }
 
-const StyledMissionsContainer = styled.div`
+const StyledReportingsContainer = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -59,7 +59,7 @@ const Title = styled.h1`
   line-height: 50px;
 `
 
-const NumberOfDisplayedMissions = styled.h3`
+const NumberOfDisplayedReportings = styled.h3`
   font-size: 13px;
   margin-top 32px;
 `

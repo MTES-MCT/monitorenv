@@ -13,6 +13,16 @@ import { useAppSelector } from '../../hooks/useAppSelector'
 import { getMissionTitle } from '../../utils/getMissionTitle'
 import { isNewMission } from '../../utils/isNewMission'
 
+function MissionStatus({ mission }) {
+  const status = getMissionStatus(mission)
+
+  return (
+    <div>
+      <StyledStatus borderColor={missionStatusLabels[status].borderColor} color={missionStatusLabels[status].color} />
+    </div>
+  )
+}
+
 export function MissionsNavBar() {
   const {
     multiMissions: { selectedMissions },
@@ -156,13 +166,3 @@ export const StyledStatus = styled.div<{ borderColor: string | undefined; color:
   display: flex;
   border: ${p => (p.borderColor ? `1px solid ${p.borderColor}` : '0px')};
 `
-
-function MissionStatus({ mission }) {
-  const status = getMissionStatus(mission)
-
-  return (
-    <div>
-      <StyledStatus borderColor={missionStatusLabels[status].borderColor} color={missionStatusLabels[status].color} />
-    </div>
-  )
-}

@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 
+import { getFormattedReportingId } from '../../../../domain/entities/reporting'
 import { CellEditReporting } from '../CellEditReporting'
 import { CellLocalizeReporting } from '../CellLocalizeReporting'
 import { CellStatus } from '../CellStatus'
@@ -10,8 +11,8 @@ import { getReportType } from '../getReportType'
 export const Columns = [
   {
     accessorFn: row => row.reportingId,
-    cell: info => <Cell id={info.getValue()}>{info.getValue()}</Cell>,
-    enableSorting: true,
+    cell: info => <Cell id={info.getValue()}>{getFormattedReportingId(info.getValue())}</Cell>,
+    enableSorting: false,
     header: () => '',
     id: 'reportingId',
     size: 90
@@ -35,7 +36,7 @@ export const Columns = [
   {
     accessorFn: row => row.displayedSource,
     cell: info => <Cell id={info.getValue()}>{info.getValue()}</Cell>,
-    enableSorting: false,
+    enableSorting: true,
     header: () => 'Source',
     id: 'displayedSource',
     maxSize: 280,
@@ -44,7 +45,7 @@ export const Columns = [
   {
     accessorFn: row => row.reportType,
     cell: info => getReportType(info.getValue()),
-    enableSorting: false,
+    enableSorting: true,
     header: () => 'Type',
     id: 'reportType',
     size: 150
@@ -61,17 +62,15 @@ export const Columns = [
   {
     accessorFn: row => row.seaFront,
     cell: info => <Cell id={info.getValue()}>{info.getValue()}</Cell>,
-    enableSorting: false,
+    enableSorting: true,
     header: () => 'Façade',
     id: 'seaFront',
-    maxSize: 280,
-    minSize: 100,
-    size: 230
+    size: 100
   },
   {
     accessorFn: row => row.status,
     cell: ({ row }) => <CellStatus row={row} />,
-    enableSorting: false,
+    enableSorting: true,
     header: () => 'Statut',
     id: 'status',
     size: 110
@@ -82,6 +81,8 @@ export const Columns = [
     enableSorting: false,
     header: () => '',
     id: 'geom',
+    maxSize: 55,
+    minSize: 55,
     size: 55
   },
   {

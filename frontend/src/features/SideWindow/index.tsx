@@ -1,7 +1,7 @@
 import { Icon, SideMenu } from '@mtes-mct/monitor-ui'
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useState, useRef } from 'react'
 import { useDispatch } from 'react-redux'
-import { generatePath } from 'react-router'
+import { generatePath, matchPath } from 'react-router'
 import { ToastContainer } from 'react-toastify'
 
 import { Route } from './Route'
@@ -28,6 +28,26 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
   const [isFirstRender, setIsFirstRender] = useState(true)
 
   const dispatch = useDispatch()
+
+  const isMissionButtonIsActive = useMemo(() => {
+    const isMissionPage = !!matchPath<'id', string>(
+      {
+        end: true,
+        path: sideWindowPaths.MISSION
+      },
+      currentPath as string
+    )
+
+    const isMissionsPage = !!matchPath(
+      {
+        end: true,
+        path: sideWindowPaths.MISSIONS
+      },
+      currentPath as string
+    )
+
+    return isMissionPage || isMissionsPage
+  }, [currentPath])
 
   const selectTab = nextPath => {
     if (nextPath) {
@@ -57,10 +77,9 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
         {!isFirstRender && (
           <NewWindowContext.Provider value={newWindowContextProviderValue}>
             <SideMenu>
-              {/* TODO manage active cases when other buttons are implemented */}
               <SideMenu.Button
                 Icon={Icon.MissionAction}
-                isActive={currentPath === sideWindowPaths.MISSIONS}
+                isActive={isMissionButtonIsActive}
                 onClick={() => selectTab(generatePath(sideWindowPaths.MISSIONS))}
                 title="missions"
               />

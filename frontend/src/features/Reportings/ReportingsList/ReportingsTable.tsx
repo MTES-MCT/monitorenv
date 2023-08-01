@@ -107,7 +107,7 @@ export function ReportingsTable({
             const row = rows[virtualRow.index]
 
             return (
-              <SimpleTable.BodyTr key={virtualRow.key}>
+              <StyledTableBodyTr key={virtualRow.key}>
                 {row?.getVisibleCells().map(cell => (
                   <SimpleTable.Td
                     {...{
@@ -122,7 +122,7 @@ export function ReportingsTable({
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </SimpleTable.Td>
                 ))}
-              </SimpleTable.BodyTr>
+              </StyledTableBodyTr>
             )
           })}
           {paddingBottom > 0 && (
@@ -142,4 +142,11 @@ const StyledMissionsContainer = styled.div`
 const StyledChevronIcon = styled(ChevronIcon)`
   margin-top: 0px;
   margin-right: 0px;
+`
+
+// TODO to delete when we implement the good table
+const StyledTableBodyTr = styled(SimpleTable.BodyTr)`
+  td:nth-child(9) {
+    text-align: center;
+  }
 `
