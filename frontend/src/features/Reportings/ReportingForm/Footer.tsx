@@ -1,12 +1,11 @@
-import { Accent, Icon, THEME } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, THEME, customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import _ from 'lodash'
 import { useDispatch } from 'react-redux'
 
-import { ReportingStatusEnum, type Reporting } from '../../../domain/entities/reporting'
+import { ReportingStatusEnum, type Reporting, getReportingStatus } from '../../../domain/entities/reporting'
 import { reopenReporting } from '../../../domain/use_cases/reportings/reopenReporting'
 import { StyledButton, StyledSubmitButton, StyledDeleteButton, StyledFooter } from '../style'
-import { getReportingStatus, getReportingTimeLeft } from '../utils'
 
 export function Footer({ onCancel, onDelete, setMustIncreaseValidity, setShouldValidateOnChange }) {
   const dispatch = useDispatch()
@@ -15,7 +14,8 @@ export function Footer({ onCancel, onDelete, setMustIncreaseValidity, setShouldV
   const reportingStatus = getReportingStatus(values)
 
   const handleReopen = async () => {
-    const timeLeft = getReportingTimeLeft(values?.createdAt, values?.validityTime)
+    const endOfValidity = getLocalizedDayjs(values?.createdAt).add(values?.validityTime || 0, 'hour')
+    const timeLeft = customDayjs(endOfValidity).diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour', true)
 
     if (timeLeft < 0) {
       setMustIncreaseValidity(true)

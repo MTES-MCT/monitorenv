@@ -1,4 +1,4 @@
-import { Accent, Button, Icon, IconButton, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, IconButton, customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
@@ -7,7 +7,6 @@ import { getFormattedReportingId } from '../../../../domain/entities/reporting'
 import { reportingStateActions } from '../../../../domain/shared_slices/ReportingState'
 import { openReporting } from '../../../../domain/use_cases/reportings/openReporting'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { getReportingTimeLeft } from '../../../Reportings/utils'
 
 export function ReportingCard({ feature, selected = false }: { feature: any; selected?: boolean }) {
   const dispatch = useDispatch()
@@ -19,8 +18,9 @@ export function ReportingCard({ feature, selected = false }: { feature: any; sel
     feature.getProperties()
 
   const creationDate = getLocalizedDayjs(createdAt).format('DD MMM YYYY à HH:mm')
+  const endOfValidity = getLocalizedDayjs(createdAt).add(validityTime || 0, 'hour')
+  const timeLeft = customDayjs(endOfValidity).diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour', true)
 
-  const timeLeft = getReportingTimeLeft(createdAt, validityTime)
   const subThemesFormatted = subThemes.map(subTheme => subTheme).join(', ')
 
   const editReporting = () => {

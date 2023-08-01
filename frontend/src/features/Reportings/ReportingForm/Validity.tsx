@@ -1,26 +1,25 @@
-import { FormikNumberInput, customDayjs } from '@mtes-mct/monitor-ui'
+import { FormikNumberInput, customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { ReportingStatusEnum, type Reporting } from '../../../domain/entities/reporting'
-import { getReportingEndOfValidity, getReportingStatus, getReportingTimeLeft } from '../utils'
+import { ReportingStatusEnum, type Reporting, getReportingStatus } from '../../../domain/entities/reporting'
 
 export function Validity({ mustIncreaseValidity }: { mustIncreaseValidity: boolean }) {
   const { values } = useFormikContext<Reporting>()
 
   const reportingStatus = getReportingStatus(values)
 
-  const formattedCreatedAt = customDayjs(values?.createdAt).format('DD/MM/YYYY à HH:mm')
+  const formattedCreatedAt = getLocalizedDayjs(values?.createdAt).format('DD/MM/YYYY à HH:mm')
 
-  const endOfValidity = getReportingEndOfValidity(values?.createdAt, values?.validityTime)
+  const endOfValidity = getLocalizedDayjs(values?.createdAt).add(values?.validityTime || 0, 'hour')
   const formattedEndOfValidity = endOfValidity.format('DD/MM/YYYY à HH:mm')
 
-  const timeLeft = getReportingTimeLeft(values?.createdAt, values?.validityTime)
+  const timeLeft = endOfValidity.diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour', true)
 
   let remainingMinutes = 0
   if (timeLeft < 1 && timeLeft > 0) {
-    remainingMinutes = endOfValidity.diff(customDayjs().toISOString(), 'minute')
+    remainingMinutes = endOfValidity.diff(getLocalizedDayjs(customDayjs().toISOString()), 'minute')
   }
 
   const canReopenReporting = useMemo(

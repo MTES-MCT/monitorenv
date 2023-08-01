@@ -18,7 +18,8 @@ import {
   ReportingTypeEnum,
   getFormattedReportingId,
   infractionProvenLabels,
-  reportingTypeLabels
+  reportingTypeLabels,
+  getReportingStatus
 } from '../../../domain/entities/reporting'
 import { hideSideButtons, setReportingFormVisibility } from '../../../domain/shared_slices/Global'
 import { ReportingFormVisibility, reportingStateActions } from '../../../domain/shared_slices/ReportingState'
@@ -41,7 +42,6 @@ import {
   ReportTypeMultiRadio,
   StyledArchivedTag
 } from '../style'
-import { getReportingStatus } from '../utils'
 
 export function ReportingForm({ setShouldValidateOnChange }) {
   const dispatch = useDispatch()

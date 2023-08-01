@@ -1,3 +1,5 @@
+import { customDayjs as dayjs } from '@mtes-mct/monitor-ui'
+
 import type { TargetTypeEnum } from './targetType'
 
 export type Reporting = {
@@ -103,3 +105,34 @@ export enum ReportingStatusEnum {
 
 export const getFormattedReportingId = (reportingId: number) =>
   `${String(reportingId).slice(0, 2)}-${String(reportingId).slice(2)}`
+
+export const getReportingStatus = ({
+  createdAt,
+  isArchived,
+  reportType,
+  validityTime
+}: {
+  createdAt?: string | undefined
+  isArchived?: boolean
+  reportType?: ReportingTypeEnum
+  validityTime?: number | undefined
+}) => {
+  const endOfValidity = dayjs(createdAt)
+    .add(validityTime || 0, 'hour')
+    .toISOString()
+  const timeLeft = dayjs(endOfValidity).diff(dayjs(), 'hour', true)
+
+  if (timeLeft < 0 || isArchived) {
+    return ReportingStatusEnum.ARCHIVED
+  }
+
+  if (reportType === ReportingTypeEnum.OBSERVATION) {
+    return ReportingStatusEnum.OBSERVATION
+  }
+  if (reportType === ReportingTypeEnum.INFRACTION_SUSPICION) {
+    // TODO handle attached to mission
+    return ReportingStatusEnum.INFRACTION_SUSPICION
+  }
+
+  return ReportingStatusEnum.IN_PROGRESS
+}
