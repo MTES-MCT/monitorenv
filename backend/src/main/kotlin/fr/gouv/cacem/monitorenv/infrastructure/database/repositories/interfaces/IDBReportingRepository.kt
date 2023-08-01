@@ -37,7 +37,7 @@ interface IDBReportingRepository : CrudRepository<ReportingModel, Int> {
         value = """
         UPDATE reportings
         SET is_archived = TRUE
-        WHERE (created_at + make_interval(hours => validity_time)) < NOW()  
+        WHERE (created_at + make_interval(hours => validity_time)) < NOW() AND is_archived IS FALSE  
     """,
         nativeQuery = true,
     )
