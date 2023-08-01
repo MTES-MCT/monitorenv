@@ -23,6 +23,7 @@ import { saveMission } from '../../../domain/use_cases/missions/saveMission'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useSyncFormValuesWithRedux } from '../../../hooks/useSyncFormValuesWithRedux'
 import { sideWindowActions } from '../../SideWindow/slice'
+import { missionFactory } from '../Missions.helpers'
 
 export function MissionForm({ id, isAlreadyClosed, isNewMission, selectedMission, setShouldValidateOnChange }) {
   const dispatch = useDispatch()
@@ -35,7 +36,7 @@ export function MissionForm({ id, isAlreadyClosed, isNewMission, selectedMission
 
   useEffect(() => {
     if (selectedMission) {
-      setValues(selectedMission)
+      setValues(missionFactory(selectedMission))
     }
   }, [setValues, selectedMission])
 
