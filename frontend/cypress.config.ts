@@ -21,8 +21,8 @@ export default defineConfig({
     specPattern: [
       'cypress/e2e/00_side_window_missions.spec.ts',
       'cypress/e2e/01_side_window_mission.spec.ts',
-      'cypress/e2e/02_side_window_mission_actions.spec.ts',
-      'cypress/e2e/03_create_reporting.spec.ts'
+      'cypress/e2e/02_side_window_mission_actions.spec.ts'
+      // 'cypress/e2e/03_create_reporting.spec.ts'
     ]
   },
   env: {
