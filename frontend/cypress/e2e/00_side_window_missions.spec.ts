@@ -18,7 +18,7 @@ context('Missions', () => {
 
   it('Missions should be displayed in Missions Table and filterable', () => {
     cy.get('*[data-cy="SideWindowHeader-title"]').contains('Missions et contrôles')
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('9')
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('13')
 
     cy.log('A default period filter should be set')
     cy.fill('Période', 'Une semaine')
@@ -26,7 +26,7 @@ context('Missions', () => {
     cy.log('Administrations should be filtered')
     cy.get('*[data-cy="select-administration-filter"]').click()
     cy.get('div[role="option"]').find('label').contains('DDTM').click()
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('5')
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('7')
 
     cy.log('Initialize filters')
     cy.get('*[data-cy="reinitialize-filters"]').click()
@@ -41,7 +41,7 @@ context('Missions', () => {
     cy.get('*[data-cy="select-units-filter"]').get('[title="Clear"]').click({
       force: true
     })
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('9')
+    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').contains('13')
   })
 
   it('Missions table should display all themes and subthemes of all the actions of the mission', () => {
