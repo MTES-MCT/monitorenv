@@ -1,7 +1,7 @@
 import { Icon, SideMenu } from '@mtes-mct/monitor-ui'
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useState, useRef } from 'react'
 import { useDispatch } from 'react-redux'
-import { generatePath, matchPath } from 'react-router'
+import { generatePath } from 'react-router'
 import { ToastContainer } from 'react-toastify'
 
 import { Route } from './Route'
@@ -11,6 +11,7 @@ import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { switchTab } from '../../domain/use_cases/navigation/switchTab'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { NewWindowContext } from '../../ui/NewWindow'
+import { isMissionOrMissionsPage, isReportingsPage } from '../../utils/routes'
 import { Mission } from '../missions/MissionForm'
 import { Missions } from '../missions/MissionsList'
 import { MissionsNavBar } from '../missions/MissionsNavBar'
@@ -29,25 +30,8 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
 
   const dispatch = useDispatch()
 
-  const isMissionButtonIsActive = useMemo(() => {
-    const isMissionPage = !!matchPath<'id', string>(
-      {
-        end: true,
-        path: sideWindowPaths.MISSION
-      },
-      currentPath as string
-    )
-
-    const isMissionsPage = !!matchPath(
-      {
-        end: true,
-        path: sideWindowPaths.MISSIONS
-      },
-      currentPath as string
-    )
-
-    return isMissionPage || isMissionsPage
-  }, [currentPath])
+  const isMissionButtonIsActive = useMemo(() => isMissionOrMissionsPage(currentPath), [currentPath])
+  const isReportingsButtonIsActive = useMemo(() => isReportingsPage(currentPath), [currentPath])
 
   const selectTab = nextPath => {
     if (nextPath) {
@@ -85,7 +69,7 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
               />
               <SideMenu.Button
                 Icon={Icon.Report}
-                isActive={currentPath === sideWindowPaths.REPORTINGS}
+                isActive={isReportingsButtonIsActive}
                 onClick={() => selectTab(generatePath(sideWindowPaths.REPORTINGS))}
                 title="signalements"
               />

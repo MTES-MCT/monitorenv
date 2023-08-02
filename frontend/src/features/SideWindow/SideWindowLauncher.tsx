@@ -7,7 +7,7 @@ import { SideWindowStatus, sideWindowActions } from './slice'
 import { multiMissionsActions } from '../../domain/shared_slices/MultiMissions'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
-import { getMissionPageRoute } from '../../utils/getMissionPageRoute'
+import { getMissionPageRoute } from '../../utils/routes'
 
 export function SideWindowLauncher() {
   const dispatch = useAppDispatch()

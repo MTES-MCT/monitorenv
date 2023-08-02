@@ -23,9 +23,9 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { MissionSourceTag } from '../../../ui/MissionSourceTag'
 import { MissionStatusTag } from '../../../ui/MissionStatusTag'
 import { useNewWindow } from '../../../ui/NewWindow'
-import { getMissionPageRoute } from '../../../utils/getMissionPageRoute'
 import { getMissionTitle } from '../../../utils/getMissionTitle'
 import { isNewMission } from '../../../utils/isNewMission'
+import { getMissionPageRoute } from '../../../utils/routes'
 import { MultiZonePicker } from '../MultiZonePicker'
 
 export function GeneralInformationsForm() {

@@ -1,4 +1,5 @@
 import { Accent, Button, Icon, Size } from '@mtes-mct/monitor-ui'
+import { useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
@@ -7,6 +8,7 @@ import { setDisplayedItems, setReportingFormVisibility } from '../../../domain/s
 import { ReportingFormVisibility } from '../../../domain/shared_slices/ReportingState'
 import { addMission } from '../../../domain/use_cases/missions/addMission'
 import { useAppSelector } from '../../../hooks/useAppSelector'
+import { isMissionOrMissionsPage } from '../../../utils/routes'
 import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
 import { sideWindowActions, SideWindowStatus } from '../../SideWindow/slice'
 
@@ -16,6 +18,11 @@ export function MissionsMenu() {
     state => state.global
   )
   const { sideWindow } = useAppSelector(state => state)
+
+  const isMissionButtonIsActive = useMemo(
+    () => isMissionOrMissionsPage(sideWindow.currentPath) && sideWindow.status !== SideWindowStatus.CLOSED,
+    [sideWindow.currentPath, sideWindow.status]
+  )
 
   const toggleMissionsWindow = () => {
     dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSIONS))
@@ -68,7 +75,7 @@ export function MissionsMenu() {
         </MenuWithCloseButton.Container>
       )}
       <MenuWithCloseButton.ButtonOnMap
-        className={sideWindow.status !== SideWindowStatus.CLOSED ? '_active' : undefined}
+        className={isMissionButtonIsActive ? '_active' : undefined}
         data-cy="missions-button"
         Icon={Icon.MissionAction}
         onClick={toggleMissionsMenu}

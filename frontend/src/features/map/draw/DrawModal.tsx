@@ -1,10 +1,10 @@
-import { Coordinates, CoordinatesInput } from '@mtes-mct/monitor-ui'
+import { Button, Coordinates, CoordinatesInput, Icon, Size } from '@mtes-mct/monitor-ui'
 import Feature from 'ol/Feature'
 import GeoJSON from 'ol/format/GeoJSON'
 import Point from 'ol/geom/Point'
 import { transform } from 'ol/proj'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { Button, IconButton } from 'rsuite'
+import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import {
@@ -24,12 +24,11 @@ import { validateZone } from '../../../domain/use_cases/missions/validateZone'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { usePrevious } from '../../../hooks/usePrevious'
-import { ReactComponent as CloseSVG } from '../../../uiMonitor/icons/Close.svg'
 import { ReactComponent as CircleSVG } from '../../../uiMonitor/icons/Info.svg'
 import { ReactComponent as PolygonSVG } from '../../../uiMonitor/icons/Polygone.svg'
 import { ReactComponent as RectangleSVG } from '../../../uiMonitor/icons/Rectangle.svg'
 import { ReactComponent as SelectorSVG } from '../../../uiMonitor/icons/Selector.svg'
-import { getMissionPageRoute } from '../../../utils/getMissionPageRoute'
+import { getMissionPageRoute } from '../../../utils/routes'
 import { SideWindowStatus } from '../../SideWindow/slice'
 
 import type { MultiPoint, MultiPolygon } from 'ol/geom'
@@ -159,11 +158,12 @@ export function DrawModal() {
     <Wrapper>
       <Panel>
         <Header>
-          Vous êtes en train d&apos;ajouter {listener && titlePlaceholder[listener]}
-          <QuitButton icon={<CloseSVG className="rs-icon" />} onClick={handleQuit} size="md">
+          <Title>Vous êtes en train d&apos;ajouter {listener && titlePlaceholder[listener]}</Title>
+          <QuitButton Icon={Icon.Close} onClick={handleQuit} size={Size.SMALL}>
             Quitter
           </QuitButton>
         </Header>
+
         <Body>
           {(listener === InteractionListener.CONTROL_POINT || listener === InteractionListener.REPORTING_POINT) && (
             <CoordinatesInputWrapper>
@@ -214,11 +214,9 @@ export function DrawModal() {
               </IconGroup>
             )}
             <ButtonGroup>
-              <ResetButton appearance="ghost" onClick={handleReset}>
-                Réinitialiser
-              </ResetButton>
+              <ResetButton onClick={handleReset}>Réinitialiser</ResetButton>
               <ValidateButton disabled={!isGeometryValid} onClick={handleValidate}>
-                Valider {listener && validateButtonPlaceholder[listener]}
+                {`Valider ${listener && validateButtonPlaceholder[listener]}`}
               </ValidateButton>
             </ButtonGroup>
           </ButtonRow>
@@ -246,15 +244,19 @@ const Wrapper = styled.div`
 const Panel = styled.div`
   box-shadow: 0px 3px 6px #00000029;
 `
-
-const Header = styled.h1`
+const Header = styled.div`
+  display: flex;
   background: ${p => p.theme.color.charcoal};
   width: 580px;
+  justify-content: space-around;
+  padding: 12px;
+`
+
+const Title = styled.h1`
   color: ${p => p.theme.color.white};
   font-size: 16px;
   font-weight: normal;
   line-height: 22px;
-  padding: 10px;
 `
 const IconGroup = styled.div`
   display: inline-block;
@@ -286,9 +288,10 @@ const ButtonGroup = styled.div`
     margin-right: 16px;
   }
 `
-const QuitButton = styled(IconButton)`
+const QuitButton = styled(Button)`
   color: ${p => p.theme.color.maximumRed};
   background: ${p => p.theme.color.cultured};
+  align-self: center;
   margin-left: 18px;
   &:hover {
     color: ${p => p.theme.color.maximumRed};
@@ -299,9 +302,11 @@ const QuitButton = styled(IconButton)`
 const ResetButton = styled(Button)``
 const ValidateButton = styled(Button)`
   background: ${p => p.theme.color.mediumSeaGreen};
+  border: 1px ${p => p.theme.color.mediumSeaGreen} solid;
   color: ${p => p.theme.color.white};
   &:hover {
     background: ${p => p.theme.color.mediumSeaGreen};
+    border: 1px ${p => p.theme.color.mediumSeaGreen} solid;
   }
 `
 const ButtonRow = styled.div<{ $withTools?: boolean }>`

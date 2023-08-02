@@ -129,7 +129,9 @@ export function Source() {
             options={semaphoresOptions || []}
             searchable
           />
-          <IconButton accent={Accent.TERTIARY} Icon={Icon.FocusZones} onClick={handleZoomToSemaphore} />
+          {values?.semaphoreId && (
+            <IconButton accent={Accent.TERTIARY} Icon={Icon.FocusZones} onClick={handleZoomToSemaphore} />
+          )}
         </SemaphoreWrapper>
       )}
       {values?.sourceType === ReportingSourceEnum.CONTROL_UNIT && (

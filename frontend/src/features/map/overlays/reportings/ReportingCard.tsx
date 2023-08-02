@@ -1,5 +1,5 @@
 import { Accent, Button, Icon, IconButton, customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
@@ -22,6 +22,18 @@ export function ReportingCard({ feature, selected = false }: { feature: any; sel
   const timeLeft = customDayjs(endOfValidity).diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour', true)
 
   const subThemesFormatted = subThemes.map(subTheme => subTheme).join(', ')
+
+  const timeLeftText = useMemo(() => {
+    if (timeLeft < 0 || isArchived) {
+      return 'Archivé'
+    }
+
+    if (timeLeft > 0 && timeLeft < 1) {
+      return 'Fin dans < 1h'
+    }
+
+    return `Fin dans ${Math.round(timeLeft)} h`
+  }, [timeLeft, isArchived])
 
   const editReporting = () => {
     dispatch(openReporting(id))
@@ -46,7 +58,7 @@ export function ReportingCard({ feature, selected = false }: { feature: any; sel
 
         <StyledHeaderSecondLine>
           <Icon.Clock />
-          <span>{timeLeft < 0 || isArchived ? 'Archivé' : `Fin dans ${Math.round(timeLeft)} h`}</span>
+          <span>{timeLeftText}</span>
 
           <CloseButton
             $isVisible={selected}

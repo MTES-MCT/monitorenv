@@ -29,7 +29,7 @@ export function Validity({ mustIncreaseValidity }: { mustIncreaseValidity: boole
 
   return (
     <StyledValidityContainer>
-      <StyledFormikNumberInput label="Validité (h)" name="validityTime" />
+      <StyledFormikNumberInput label="Validité (h)" min={1} name="validityTime" />
       {reportingStatus === ReportingStatusEnum.ARCHIVED && !mustIncreaseValidity && (
         <GrayText>{`Le signalement ouvert le ${formattedCreatedAt} (UTC) a été archivé.`}</GrayText>
       )}

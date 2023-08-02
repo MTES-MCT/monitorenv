@@ -11,8 +11,8 @@ import { saveMission } from '../../../domain/use_cases/missions/saveMission'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { FormikForm } from '../../../uiMonitor/CustomFormikFields/FormikForm'
 import { getIdTyped } from '../../../utils/getIdTyped'
-import { getMissionPageRoute } from '../../../utils/getMissionPageRoute'
 import { isNewMission } from '../../../utils/isNewMission'
+import { getMissionPageRoute } from '../../../utils/routes'
 import { missionFactory } from '../Missions.helpers'
 
 export function Mission() {
