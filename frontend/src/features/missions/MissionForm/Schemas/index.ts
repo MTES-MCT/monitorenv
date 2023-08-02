@@ -96,7 +96,8 @@ const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
     controlUnits: Yup.array().of(ControlUnitSchema).ensure().defined().min(1),
     endDateTimeUtc: Yup.date()
       .nullable()
-      .min(Yup.ref('startDateTimeUtc'), () => 'La date de fin doit être postérieure à la date de début'),
+      .min(Yup.ref('startDateTimeUtc'), () => 'La date de fin doit être postérieure à la date de début')
+      .required('Date de fin requise'),
     // cast as any to avoid type error
     // FIXME : see issue https://github.com/jquense/yup/issues/1190
     // & tip for resolution https://github.com/jquense/yup/issues/1283#issuecomment-786559444
@@ -122,10 +123,6 @@ const ClosedMissionSchema = NewMissionSchema.shape({
     .nullable()
     .required('Trigramme requis'),
   controlUnits: Yup.array().of(ClosedControlUnitSchema).ensure().defined().min(1),
-  endDateTimeUtc: Yup.date()
-    .nullable()
-    .required('Date de fin requise')
-    .min(Yup.ref('startDateTimeUtc'), () => 'La date de fin doit être postérieure à la date de début'),
   envActions: Yup.array()
     .of(ClosedEnvActionSchema as any)
     .nullable(),
