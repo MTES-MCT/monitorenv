@@ -21,6 +21,11 @@ interface IDBMissionRepository : CrudRepository<MissionModel, Int> {
             deleted IS FALSE
             AND start_datetime_utc >= CAST(CAST(:startedAfter AS text) AS timestamp)
             AND (CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL OR start_datetime_utc <= CAST(CAST(:startedBefore AS text) AS timestamp))
+            OR (
+                end_datetime_utc >= CAST(CAST(:startedAfter AS text) AS timestamp)
+                AND (CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL OR end_datetime_utc <= CAST(CAST(:startedBefore AS text) AS timestamp))
+                )
+            
             AND ((:missionTypes) = '{}' OR mission_types && CAST(:missionTypes as text[]))
             AND ((:seaFronts) = '{}' OR CAST(facade AS text) = ANY(CAST(:seaFronts as text[])))
             AND ((:missionStatuses) = '{}'
