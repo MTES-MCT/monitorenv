@@ -102,7 +102,10 @@ export enum ReportingStatusEnum {
   // eslint-disable-next-line typescript-sort-keys/string-enum
   ATTACHED_TO_MISSION = 'ATTACHED_TO_MISSION'
 }
-
+export enum StatusFilterEnum {
+  ARCHIVED = 'ARCHIVED',
+  IN_PROGRESS = 'IN_PROGRESS'
+}
 export const getFormattedReportingId = (reportingId: number) =>
   `${String(reportingId).slice(0, 2)}-${String(reportingId).slice(2)}`
 

@@ -2,65 +2,61 @@ import { SingleTag } from '@mtes-mct/monitor-ui'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { missionStatusLabels, missionTypeEnum } from '../../../../domain/entities/missions'
-import { MissionFiltersEnum, updateFilters } from '../../../../domain/shared_slices/MissionFilters'
+import { reportingSourceLabels } from '../../../../domain/entities/reporting'
+import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../../domain/shared_slices/ReportingsFilters'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 export function FilterTags() {
   const dispatch = useDispatch()
-  const { administrationFilter, seaFrontFilter, statusFilter, themeFilter, typeFilter, unitFilter } = useAppSelector(
-    state => state.missionFilters
-  )
+  const { seaFrontFilter, sourceTypeFilter, themeFilter } = useAppSelector(state => state.reportingFilters)
 
-  const onDeleteTag = (valueToDelete: string, filterKey: MissionFiltersEnum, missionFilter) => {
-    const updatedFilter = missionFilter.filter(unit => unit !== valueToDelete)
-    dispatch(updateFilters({ key: filterKey, value: updatedFilter }))
+  const onDeleteTag = (valueToDelete: string, filterKey: ReportingsFiltersEnum, reportingFilter) => {
+    const updatedFilter = reportingFilter.filter(unit => unit !== valueToDelete)
+    dispatch(reportingsFiltersActions.updateFilters({ key: filterKey, value: updatedFilter }))
   }
 
   return (
     <StyledContainer>
-      {administrationFilter.length > 0 &&
-        administrationFilter.map(admin => (
+      {sourceTypeFilter.length > 0 &&
+        sourceTypeFilter.map(sourceType => (
           <SingleTag
-            key={admin}
-            onDelete={() => onDeleteTag(admin, MissionFiltersEnum.ADMINISTRATION_FILTER, administrationFilter)}
+            key={sourceType}
+            onDelete={() => onDeleteTag(sourceType, ReportingsFiltersEnum.SOURCE_TYPE_FILTER, sourceTypeFilter)}
           >
-            {String(`Admin. ${admin}`)}
+            {String(`Type ${reportingSourceLabels[sourceType].label}`)}
           </SingleTag>
         ))}
-      {unitFilter.length > 0 &&
-        unitFilter.map(unit => (
-          <SingleTag key={unit} onDelete={() => onDeleteTag(unit, MissionFiltersEnum.UNIT_FILTER, unitFilter)}>
-            {String(`Unité ${unit}`)}
-          </SingleTag>
-        ))}
-      {typeFilter.length > 0 &&
-        typeFilter.map(type => (
-          <SingleTag key={type} onDelete={() => onDeleteTag(type, MissionFiltersEnum.TYPE_FILTER, typeFilter)}>
-            {String(`Type ${missionTypeEnum[type].libelle}`)}
+      {themeFilter.length > 0 &&
+        themeFilter.map(theme => (
+          <SingleTag key={theme} onDelete={() => onDeleteTag(theme, ReportingsFiltersEnum.THEME_FILTER, themeFilter)}>
+            {String(`Thème ${theme}`)}
           </SingleTag>
         ))}
       {seaFrontFilter.length > 0 &&
         seaFrontFilter.map(seaFront => (
           <SingleTag
             key={seaFront}
-            onDelete={() => onDeleteTag(seaFront, MissionFiltersEnum.SEA_FRONT_FILTER, seaFrontFilter)}
+            onDelete={() => onDeleteTag(seaFront, ReportingsFiltersEnum.SEA_FRONT_FILTER, seaFrontFilter)}
           >
             {String(`Facade ${seaFront}`)}
           </SingleTag>
         ))}
+
+      {/*
+      {typeFilter.length > 0 &&
+        typeFilter.map(type => (
+          <SingleTag key={type} onDelete={() => onDeleteTag(type, ReportingsFiltersEnum.TYPE_FILTER, typeFilter)}>
+            {String(`Type ${missionTypeEnum[type].libelle}`)}
+          </SingleTag>
+        ))}
+   
       {statusFilter.length > 0 &&
         statusFilter.map(status => (
-          <SingleTag key={status} onDelete={() => onDeleteTag(status, MissionFiltersEnum.STATUS_FILTER, statusFilter)}>
+          <SingleTag key={status} onDelete={() => onDeleteTag(status, ReportingsFiltersEnum.STATUS_FILTER, statusFilter)}>
             {String(`Mission ${missionStatusLabels[status].libelle.toLowerCase()}`)}
           </SingleTag>
         ))}
-      {themeFilter.length > 0 &&
-        themeFilter.map(theme => (
-          <SingleTag key={theme} onDelete={() => onDeleteTag(theme, MissionFiltersEnum.THEME_FILTER, themeFilter)}>
-            {String(`Thème ${theme}`)}
-          </SingleTag>
-        ))}
+       */}
     </StyledContainer>
   )
 }

@@ -4,42 +4,52 @@ import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 import { dateRangeLabels } from '../entities/dateRange'
+import { StatusFilterEnum } from '../entities/reporting'
 
 export const SEVEN_DAYS_AGO = dayjs().subtract(7, 'days').toISOString()
 
 export enum ReportingsFiltersEnum {
+  ACTIONS = 'actionsFilter',
   PERIOD_FILTER = 'periodFilter',
+  PROVEN_FILTER = 'provenFilter',
   SEA_FRONT_FILTER = 'seaFrontFilter',
   SOURCE_FILTER = 'sourceFilter',
+  SOURCE_TYPE_FILTER = 'sourceTypeFilter',
   STARTED_AFTER_FILTER = 'startedAfter',
   STARTED_BEFORE_FILTER = 'startedBefore',
   STATUS_FILTER = 'statusFilter',
   THEME_FILTER = 'themeFilter',
-  UNIT_FILTER = 'unitFilter'
+  TYPE_FILTER = 'typeFilter'
 }
 
 type ReportingsFiltersSliceType = {
+  actionsFilter: string[]
   hasFilters: boolean
   periodFilter: string
+  provenFilter: boolean
   seaFrontFilter: string[]
-  sourceFilter: string | undefined
+  sourceFilter?: string[]
+  sourceTypeFilter: string[]
   startedAfter?: string
   startedBefore?: string
   statusFilter: string[]
   themeFilter: string[]
-  unitFilter: string[]
+  typeFilter?: string | undefined
 }
 
 const initialState: ReportingsFiltersSliceType = {
+  actionsFilter: [],
   hasFilters: false,
   periodFilter: dateRangeLabels.WEEK.value,
+  provenFilter: true,
   seaFrontFilter: [],
-  sourceFilter: undefined,
+  sourceFilter: [],
+  sourceTypeFilter: [],
   startedAfter: SEVEN_DAYS_AGO,
   startedBefore: undefined,
-  statusFilter: [],
+  statusFilter: [StatusFilterEnum.ARCHIVED, StatusFilterEnum.IN_PROGRESS],
   themeFilter: [],
-  unitFilter: []
+  typeFilter: undefined
 }
 
 const persistConfig = {
@@ -61,7 +71,6 @@ const reportingFiltersSlice = createSlice({
         hasFilters:
           (action.payload.value && action.payload.value.length > 0) ||
           state.periodFilter !== dateRangeLabels.WEEK.value ||
-          state.unitFilter.length > 0 ||
           state.seaFrontFilter.length > 0 ||
           state.statusFilter.length > 0 ||
           state.themeFilter.length > 0
@@ -70,6 +79,6 @@ const reportingFiltersSlice = createSlice({
   }
 })
 
-export const { resetReportingsFilters, updateFilters } = reportingFiltersSlice.actions
+export const reportingsFiltersActions = reportingFiltersSlice.actions
 
 export const reportingFiltersPersistedReducer = persistReducer(persistConfig, reportingFiltersSlice.reducer)

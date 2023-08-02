@@ -4,9 +4,8 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type { Reporting, ReportingDetailed } from '../domain/entities/reporting'
 
 type ReportingsFilter = {
-  reportingSource?: string
-  reportingStatus?: string[]
-  reportingTypes?: string[]
+  reportingSourceType?: string[]
+  reportingType: string | undefined
   seaFronts: string[]
   startedAfterDateTime?: string
   startedBeforeDateTime?: string
@@ -16,6 +15,14 @@ const getStartDateFilter = startedAfterDateTime =>
   startedAfterDateTime && `startedAfterDateTime=${encodeURIComponent(startedAfterDateTime)}`
 const getEndDateFilter = startedBeforeDateTime =>
   startedBeforeDateTime && `startedBeforeDateTime=${encodeURIComponent(startedBeforeDateTime)}`
+const getReportingSourcesTypeFilter = reportingSourceType =>
+  reportingSourceType &&
+  reportingSourceType?.length > 0 &&
+  `reportingSourcesType=${encodeURIComponent(reportingSourceType)}`
+const getReportingTypeFilter = reportingType =>
+  reportingType && reportingType?.length > 0 && `reportingType=${encodeURIComponent(reportingType)}`
+const getSeaFrontsFilter = seaFronts =>
+  seaFronts && seaFronts?.length > 0 && `seaFronts=${encodeURIComponent(seaFronts)}`
 
 const ReportingAdapter = createEntityAdapter<ReportingDetailed>()
 const initialState = ReportingAdapter.getInitialState()
@@ -51,7 +58,10 @@ export const reportingsAPI = createApi({
         [
           'reportings?',
           getStartDateFilter(filter?.startedAfterDateTime),
-          getEndDateFilter(filter?.startedBeforeDateTime)
+          getEndDateFilter(filter?.startedBeforeDateTime),
+          getReportingSourcesTypeFilter(filter?.reportingSourceType),
+          getReportingTypeFilter(filter?.reportingType),
+          getSeaFrontsFilter(filter?.seaFronts)
         ]
           .filter(v => v)
           .join('&'),

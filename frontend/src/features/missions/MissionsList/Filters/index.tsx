@@ -10,12 +10,8 @@ import { useGetControlThemesQuery } from '../../../../api/controlThemesAPI'
 import { useGetControlUnitsQuery } from '../../../../api/controlUnitsAPI'
 import { COLORS } from '../../../../constants/constants'
 import { DateRangeEnum, dateRangeLabels } from '../../../../domain/entities/dateRange'
-import {
-  missionSourceEnum,
-  missionStatusLabels,
-  missionTypeEnum,
-  seaFrontLabels
-} from '../../../../domain/entities/missions'
+import { missionSourceEnum, missionStatusLabels, missionTypeEnum } from '../../../../domain/entities/missions'
+import { seaFrontLabels } from '../../../../domain/entities/seaFrontType'
 import { MissionFiltersEnum, resetMissionFilters, updateFilters } from '../../../../domain/shared_slices/MissionFilters'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReactComponent as ReloadSVG } from '../../../../uiMonitor/icons/Reload.svg'
