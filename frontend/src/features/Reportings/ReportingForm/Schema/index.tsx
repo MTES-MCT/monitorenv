@@ -3,7 +3,7 @@ import * as Yup from 'yup'
 
 import { ReportingSourceEnum, type Reporting } from '../../../../domain/entities/reporting'
 
-const MissionZoneSchema = Yup.object().test({
+const ReportingZoneSchema = Yup.object().test({
   message: 'Veuillez définir la localisation du signalement',
   test: val => val && !_.isEmpty(val?.coordinates)
 })
@@ -17,7 +17,7 @@ export const ReportingSchema: Yup.SchemaOf<Reporting> = Yup.object()
 
       return schema.nullable()
     }),
-    geom: MissionZoneSchema,
+    geom: ReportingZoneSchema,
     reportType: Yup.string().nullable().required('Veuillez définir le type de signalement'),
     semaphoreId: Yup.number().when('sourceType', (sourceType, schema) => {
       if (sourceType === ReportingSourceEnum.SEMAPHORE) {

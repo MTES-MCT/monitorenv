@@ -5,10 +5,10 @@ import { generatePath } from 'react-router'
 import { ToastContainer } from 'react-toastify'
 
 import { Route } from './Route'
+import { sideWindowActions } from './slice'
 import { StyledContainer, Wrapper } from './style'
 import { ErrorBoundary } from '../../components/ErrorBoundary'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
-import { switchTab } from '../../domain/use_cases/navigation/switchTab'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { NewWindowContext } from '../../ui/NewWindow'
 import { isMissionOrMissionsPage, isReportingsPage } from '../../utils/routes'
@@ -33,9 +33,9 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
   const isMissionButtonIsActive = useMemo(() => isMissionOrMissionsPage(currentPath), [currentPath])
   const isReportingsButtonIsActive = useMemo(() => isReportingsPage(currentPath), [currentPath])
 
-  const selectTab = nextPath => {
+  const navigate = nextPath => {
     if (nextPath) {
-      dispatch(switchTab(nextPath))
+      dispatch(sideWindowActions.setCurrentPath(nextPath))
     }
   }
 
@@ -64,13 +64,13 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
               <SideMenu.Button
                 Icon={Icon.MissionAction}
                 isActive={isMissionButtonIsActive}
-                onClick={() => selectTab(generatePath(sideWindowPaths.MISSIONS))}
+                onClick={() => navigate(generatePath(sideWindowPaths.MISSIONS))}
                 title="missions"
               />
               <SideMenu.Button
                 Icon={Icon.Report}
                 isActive={isReportingsButtonIsActive}
-                onClick={() => selectTab(generatePath(sideWindowPaths.REPORTINGS))}
+                onClick={() => navigate(generatePath(sideWindowPaths.REPORTINGS))}
                 title="signalements"
               />
             </SideMenu>

@@ -12,7 +12,7 @@ const MARGINS = {
   xRight: -55,
   yBottom: 50,
   yMiddle: 50,
-  yTop: -230
+  yTop: -280
 }
 export function ReportingOverlay({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const { selectedReportingIdOnMap } = useAppSelector(state => state.reportingState)

@@ -1,11 +1,27 @@
-import { Icon } from '@mtes-mct/monitor-ui'
+import { Icon, customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-export function CellValidityTime({ validityTime }) {
+export function CellValidityTime({ row }) {
+  const { createdAt, isArchived, validityTime } = row.original
+  const endOfValidity = getLocalizedDayjs(createdAt).add(validityTime || 0, 'hour')
+  const timeLeft = customDayjs(endOfValidity).diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour', true)
+
+  const timeLeftText = () => {
+    if (timeLeft < 0 || isArchived) {
+      return '—'
+    }
+
+    if (timeLeft > 0 && timeLeft < 1) {
+      return '< 1h'
+    }
+
+    return `${Math.round(timeLeft)} h`
+  }
+
   return (
     <>
       <Icon.Clock />
-      <Validity>{validityTime ? `${validityTime}h` : '—'}</Validity>
+      <Validity>{timeLeftText()}</Validity>
     </>
   )
 }

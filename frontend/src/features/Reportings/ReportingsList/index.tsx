@@ -29,7 +29,7 @@ export function ReportingsList() {
       </NumberOfDisplayedReportings>
 
       {isError ? (
-        <p data-cy="listMissionWrapper">Erreur au chargement des données</p>
+        <p data-cy="listReportingWrapper">Erreur au chargement des données</p>
       ) : (
         <ReportingsTable isLoading={isLoading || isFetching} reportings={reportings} />
       )}

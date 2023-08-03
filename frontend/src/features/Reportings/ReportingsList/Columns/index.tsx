@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
 import { getFormattedReportingId } from '../../../../domain/entities/reporting'
+import { CellActionThemes } from '../CellActionThemes'
 import { CellEditReporting } from '../CellEditReporting'
 import { CellLocalizeReporting } from '../CellLocalizeReporting'
 import { CellStatus } from '../CellStatus'
@@ -27,9 +28,9 @@ export const Columns = [
   },
   {
     accessorFn: row => row.validityTime,
-    cell: info => <CellValidityTime validityTime={info.getValue()} />,
-    enableSorting: true,
-    header: () => 'Validité',
+    cell: ({ row }) => <CellValidityTime row={row} />,
+    enableSorting: false, // TODO see how we can sort on timeLeft and not validityTime
+    header: () => 'Fin dans',
     id: 'validityTime',
     size: 70
   },
@@ -52,7 +53,7 @@ export const Columns = [
   },
   {
     accessorFn: row => row.theme,
-    cell: info => <Cell id={info.getValue()}>{info.getValue()}</Cell>,
+    cell: ({ row }) => <CellActionThemes subThemes={row.original.subThemes} theme={row.original.theme} />,
     enableSorting: true,
     header: () => 'Thématique',
     id: 'theme',

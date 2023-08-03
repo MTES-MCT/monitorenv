@@ -60,7 +60,7 @@ export function ReportingsTable({
       : [0, 0]
 
   return (
-    <StyledMissionsContainer ref={tableContainerRef}>
+    <StyledReportingsContainer ref={tableContainerRef}>
       <SimpleTable.Table>
         <SimpleTable.Head>
           {table.getHeaderGroups().map(headerGroup => (
@@ -132,11 +132,11 @@ export function ReportingsTable({
           )}
         </tbody>
       </SimpleTable.Table>
-    </StyledMissionsContainer>
+    </StyledReportingsContainer>
   )
 }
 
-const StyledMissionsContainer = styled.div`
+const StyledReportingsContainer = styled.div`
   overflow: auto;
 `
 const StyledChevronIcon = styled(ChevronIcon)`
