@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
 import org.springframework.http.HttpStatus
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
+import java.time.ZonedDateTime
 
 @RestController
 @RequestMapping("/bff/v1/reportings")
@@ -41,10 +43,20 @@ class ReportingsController(
         @Parameter(description = "page size")
         @RequestParam(name = "pageSize")
         pageSize: Int?,
+        @Parameter(description = "Reporting created after date")
+        @RequestParam(name = "startedAfterDateTime", required = false)
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+        startedAfterDateTime: ZonedDateTime?,
+        @Parameter(description = "Reporting created before date")
+        @RequestParam(name = "startedBeforeDateTime", required = false)
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+        startedBeforeDateTime: ZonedDateTime?,
     ): List<ReportingDetailedDataOutput> {
         return getAllReportings.execute(
             pageNumber = pageNumber,
             pageSize = pageSize,
+            startedAfterDateTime = startedAfterDateTime,
+            startedBeforeDateTime = startedBeforeDateTime,
         ).map {
             ReportingDetailedDataOutput.fromReporting(it.first, it.second, it.third)
         }

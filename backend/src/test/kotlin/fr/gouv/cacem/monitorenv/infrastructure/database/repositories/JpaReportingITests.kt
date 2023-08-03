@@ -56,7 +56,11 @@ class JpaReportingITests : AbstractDBTests() {
 
     @Test
     fun `findAll should return all reportings`() {
-        val reportings = jpaReportingRepository.findAll(Pageable.unpaged())
+        val reportings = jpaReportingRepository.findAll(
+            Pageable.unpaged(),
+            startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
+            startedBefore = null,
+        )
         assertThat(reportings.size).isEqualTo(3)
     }
 

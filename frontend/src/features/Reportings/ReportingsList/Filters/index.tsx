@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import { FilterTags } from './FilterTags'
 import { useGetControlThemesQuery } from '../../../../api/controlThemesAPI'
 import { COLORS } from '../../../../constants/constants'
-import { DateRangeEnum, dateRangeLabels } from '../../../../domain/entities/dateRange'
+import { DateRangeEnum, ReportingDateRangeEnum, reportingDateRangeLabels } from '../../../../domain/entities/dateRange'
 import {
   provenFiltersLabels,
   reportingSourceLabels,
@@ -48,7 +48,7 @@ export function ReportingsTableFilters() {
     .map(t => ({ label: t, value: t }))
     .value()
 
-  const dateRangeOptions = Object.values(dateRangeLabels)
+  const dateRangeOptions = Object.values(reportingDateRangeLabels)
   const typeOptions = Object.values(reportingTypeLabels)
   const sourceTypeOptions = Object.values(reportingSourceLabels)
   const seaFrontsOptions = Object.values(seaFrontLabels)
@@ -59,11 +59,11 @@ export function ReportingsTableFilters() {
     dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.PERIOD_FILTER, value: period }))
     setIsCustomPeriodVisible(false)
     switch (period) {
-      case DateRangeEnum.DAY:
+      case ReportingDateRangeEnum.DAY:
         dispatch(
           reportingsFiltersActions.updateFilters({
             key: ReportingsFiltersEnum.STARTED_AFTER_FILTER,
-            value: customDayjs().utc().startOf('day').toISOString()
+            value: customDayjs.utc().subtract(24, 'hour').toISOString()
           })
         )
         dispatch(
@@ -71,7 +71,7 @@ export function ReportingsTableFilters() {
         )
         break
 
-      case DateRangeEnum.WEEK:
+      case ReportingDateRangeEnum.WEEK:
         dispatch(
           reportingsFiltersActions.updateFilters({
             key: ReportingsFiltersEnum.STARTED_AFTER_FILTER,
@@ -83,7 +83,7 @@ export function ReportingsTableFilters() {
         )
         break
 
-      case DateRangeEnum.MONTH:
+      case ReportingDateRangeEnum.MONTH:
         dispatch(
           reportingsFiltersActions.updateFilters({
             key: ReportingsFiltersEnum.STARTED_AFTER_FILTER,
@@ -94,8 +94,19 @@ export function ReportingsTableFilters() {
           reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.STARTED_BEFORE_FILTER, value: undefined })
         )
         break
+      case ReportingDateRangeEnum.YEAR:
+        dispatch(
+          reportingsFiltersActions.updateFilters({
+            key: ReportingsFiltersEnum.STARTED_AFTER_FILTER,
+            value: customDayjs.utc().startOf('year').toISOString()
+          })
+        )
+        dispatch(
+          reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.STARTED_BEFORE_FILTER, value: undefined })
+        )
+        break
 
-      case DateRangeEnum.CUSTOM:
+      case ReportingDateRangeEnum.CUSTOM:
         setIsCustomPeriodVisible(true)
         break
 

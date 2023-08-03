@@ -227,6 +227,8 @@ class ReportingsControllerITests {
             getAllReportings.execute(
                 pageNumber = anyOrNull(),
                 pageSize = anyOrNull(),
+                startedAfterDateTime = any(),
+                startedBeforeDateTime = any(),
             ),
         ).willReturn(listOf(Triple(reporting, null, semaphore)))
 

@@ -9,6 +9,7 @@ import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import java.time.Instant
 
 @Repository
 class JpaReportingRepository(
@@ -18,8 +19,16 @@ class JpaReportingRepository(
         return dbReportingRepository.findById(reportingId).get().toReporting()
     }
 
-    override fun findAll(pageable: Pageable): List<ReportingEntity> {
-        return dbReportingRepository.findAll(pageable).map { it.toReporting() }
+    override fun findAll(
+        pageable: Pageable,
+        startedAfter: Instant,
+        startedBefore: Instant?
+    ): List<ReportingEntity> {
+        return dbReportingRepository.findAll(
+            pageable,
+            startedAfter = startedAfter,
+            startedBefore = startedBefore,
+        ).map { it.toReporting() }
     }
 
     @Transactional

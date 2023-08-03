@@ -1,12 +1,12 @@
-import { customDayjs as dayjs } from '@mtes-mct/monitor-ui'
+import { customDayjs } from '@mtes-mct/monitor-ui'
 import { createSlice } from '@reduxjs/toolkit'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
-import { dateRangeLabels } from '../entities/dateRange'
+import { dateRangeLabels, reportingDateRangeLabels } from '../entities/dateRange'
 import { InfractionProvenEnum, StatusFilterEnum } from '../entities/reporting'
 
-export const SEVEN_DAYS_AGO = dayjs().subtract(7, 'days').toISOString()
+export const LAST_24_HOURS = customDayjs.utc().subtract(24, 'hour').toISOString()
 
 export enum ReportingsFiltersEnum {
   ACTIONS = 'actionsFilter',
@@ -40,12 +40,12 @@ type ReportingsFiltersSliceType = {
 const initialState: ReportingsFiltersSliceType = {
   actionsFilter: [],
   hasFilters: false,
-  periodFilter: dateRangeLabels.WEEK.value,
+  periodFilter: reportingDateRangeLabels.DAY.value,
   provenFilter: [InfractionProvenEnum.PROVEN, InfractionProvenEnum.NOT_PROVEN],
   seaFrontFilter: [],
   sourceFilter: [],
   sourceTypeFilter: [],
-  startedAfter: SEVEN_DAYS_AGO,
+  startedAfter: LAST_24_HOURS,
   startedBefore: undefined,
   statusFilter: [StatusFilterEnum.IN_PROGRESS],
   themeFilter: [],

@@ -10,6 +10,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.ISemaphoreRepository
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
+import java.time.ZonedDateTime
 
 @UseCase
 class GetAllReportings(
@@ -22,8 +23,12 @@ class GetAllReportings(
     fun execute(
         pageNumber: Int?,
         pageSize: Int?,
+        startedAfterDateTime: ZonedDateTime?,
+        startedBeforeDateTime: ZonedDateTime?,
     ): List<Triple<ReportingEntity, ControlUnitEntity?, SemaphoreEntity?>> {
         val reports = reportingRepository.findAll(
+            startedAfter = startedAfterDateTime?.toInstant() ?: ZonedDateTime.now().minusDays(30).toInstant(),
+            startedBefore = startedBeforeDateTime?.toInstant(),
             pageable = if (pageNumber != null && pageSize != null) PageRequest.of(pageNumber, pageSize) else Pageable.unpaged(),
         )
         val controlUnits = controlUnitRepository.findAll()
