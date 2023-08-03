@@ -12,7 +12,7 @@ context('Mission', () => {
     cy.wait('@getMissions')
     cy.wait(400)
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').then($el => {
-      const numberOfMissions = parseInt($el.text(), 13)
+      const numberOfMissions = parseInt($el.text(), 10)
       cy.wrap(numberOfMissions).as('numberOfMissions')
     })
 
@@ -64,9 +64,9 @@ context('Mission', () => {
     cy.wait('@getMissions')
     cy.wait(500)
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').then($el => {
-      const numberOfMissions = parseInt($el.text(), 14)
+      const numberOfMissions = parseInt($el.text(), 10)
       cy.get('@numberOfMissions').then(numberOfMissionsBefore => {
-        expect(numberOfMissions).equal(parseInt(numberOfMissionsBefore as unknown as string, 14) + 1)
+        expect(numberOfMissions).equal(parseInt(numberOfMissionsBefore as unknown as string, 10) + 1)
       })
     })
   })
@@ -77,7 +77,7 @@ context('Mission', () => {
     cy.wait('@getMissions')
     cy.wait(400)
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').then($el => {
-      const numberOfMissions = parseInt($el.text(), 14)
+      const numberOfMissions = parseInt($el.text(), 10)
       cy.wrap(numberOfMissions).as('numberOfMissions')
     })
 
@@ -100,7 +100,7 @@ context('Mission', () => {
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').then($el => {
       const numberOfMissions = parseInt($el.text(), 10)
       cy.get('@numberOfMissions').then(numberOfMissionsBefore => {
-        expect(numberOfMissions).equal(parseInt(numberOfMissionsBefore as unknown as string, 13) - 1)
+        expect(numberOfMissions).equal(parseInt(numberOfMissionsBefore as unknown as string, 10) - 1)
       })
     })
   })
