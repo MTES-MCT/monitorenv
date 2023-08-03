@@ -141,7 +141,7 @@ const StyledHeaderFirstLine = styled.div`
   display: flex;
   flex-direction: column;
   align-items: start;
-  > div {
+  > span {
     max-width: 190px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -163,7 +163,7 @@ const CloseButton = styled(IconButton)<{ $isVisible: boolean }>`
   ${p => !p.$isVisible && 'visibility: hidden;'};
 `
 
-const StyledBoldText = styled.div`
+const StyledBoldText = styled.span`
   font-weight: 700;
   color: ${p => p.theme.color.gunMetal};
 `

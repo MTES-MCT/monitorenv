@@ -11,7 +11,7 @@ import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
 
-const OVERLAY_HEIGHT = 74
+const OVERLAY_HEIGHT = 174
 
 const INITIAL_OFFSET_VALUE = [-90, 10]
 const defaultMargins = {
