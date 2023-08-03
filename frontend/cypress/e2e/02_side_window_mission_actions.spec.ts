@@ -14,6 +14,7 @@ context('Mission actions', () => {
     cy.get('*[data-cy="infraction-form"]').should('not.exist')
 
     // When
+    cy.fill('Fin de mission (UTC)', [2023, 9, 15, 18, 10])
     cy.get('*[data-cy="duplicate-infraction"]').click({ force: true })
     cy.get('*[data-cy="infraction-form-registrationNumber"]').should('have.value', 'BALTIK')
     cy.get('*[data-cy="infraction-form-validate"]').click({ force: true })
