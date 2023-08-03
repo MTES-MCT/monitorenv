@@ -4,7 +4,7 @@ import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 import { dateRangeLabels } from '../entities/dateRange'
-import { StatusFilterEnum } from '../entities/reporting'
+import { InfractionProvenEnum, StatusFilterEnum } from '../entities/reporting'
 
 export const SEVEN_DAYS_AGO = dayjs().subtract(7, 'days').toISOString()
 
@@ -26,7 +26,7 @@ type ReportingsFiltersSliceType = {
   actionsFilter: string[]
   hasFilters: boolean
   periodFilter: string
-  provenFilter: boolean
+  provenFilter: string[]
   seaFrontFilter: string[]
   sourceFilter?: string[]
   sourceTypeFilter: string[]
@@ -41,13 +41,13 @@ const initialState: ReportingsFiltersSliceType = {
   actionsFilter: [],
   hasFilters: false,
   periodFilter: dateRangeLabels.WEEK.value,
-  provenFilter: true,
+  provenFilter: [InfractionProvenEnum.PROVEN, InfractionProvenEnum.NOT_PROVEN],
   seaFrontFilter: [],
   sourceFilter: [],
   sourceTypeFilter: [],
   startedAfter: SEVEN_DAYS_AGO,
   startedBefore: undefined,
-  statusFilter: [StatusFilterEnum.ARCHIVED, StatusFilterEnum.IN_PROGRESS],
+  statusFilter: [StatusFilterEnum.IN_PROGRESS],
   themeFilter: [],
   typeFilter: undefined
 }

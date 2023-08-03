@@ -4,11 +4,13 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type { Reporting, ReportingDetailed } from '../domain/entities/reporting'
 
 type ReportingsFilter = {
+  provenStatus?: string[]
   reportingSourceType?: string[]
   reportingType: string | undefined
   seaFronts: string[]
   startedAfterDateTime?: string
   startedBeforeDateTime?: string
+  status?: string[]
 }
 
 const getStartDateFilter = startedAfterDateTime =>
@@ -23,6 +25,9 @@ const getReportingTypeFilter = reportingType =>
   reportingType && reportingType?.length > 0 && `reportingType=${encodeURIComponent(reportingType)}`
 const getSeaFrontsFilter = seaFronts =>
   seaFronts && seaFronts?.length > 0 && `seaFronts=${encodeURIComponent(seaFronts)}`
+const getStatusFilter = status => status && status?.length > 0 && `status=${encodeURIComponent(status)}`
+const getProvenStatusFilter = provenStatus =>
+  provenStatus && provenStatus.length > 0 && `provenStatus=${encodeURIComponent(provenStatus)}`
 
 const ReportingAdapter = createEntityAdapter<ReportingDetailed>()
 const initialState = ReportingAdapter.getInitialState()
@@ -61,7 +66,9 @@ export const reportingsAPI = createApi({
           getEndDateFilter(filter?.startedBeforeDateTime),
           getReportingSourcesTypeFilter(filter?.reportingSourceType),
           getReportingTypeFilter(filter?.reportingType),
-          getSeaFrontsFilter(filter?.seaFronts)
+          getSeaFrontsFilter(filter?.seaFronts),
+          getStatusFilter(filter?.status),
+          getProvenStatusFilter(filter?.provenStatus)
         ]
           .filter(v => v)
           .join('&'),

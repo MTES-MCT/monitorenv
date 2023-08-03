@@ -93,6 +93,18 @@ export const infractionProvenLabels = {
   }
 }
 
+export const provenFiltersLabels = {
+  PROVEN: {
+    label: 'Avéré',
+    value: InfractionProvenEnum.PROVEN
+  },
+  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
+  NOT_PROVEN: {
+    label: 'Non avéré',
+    value: InfractionProvenEnum.NOT_PROVEN
+  }
+}
+
 export enum ReportingStatusEnum {
   ARCHIVED = 'ARCHIVED',
   IN_PROGRESS = 'IN_PROGRESS',
@@ -102,9 +114,22 @@ export enum ReportingStatusEnum {
   // eslint-disable-next-line typescript-sort-keys/string-enum
   ATTACHED_TO_MISSION = 'ATTACHED_TO_MISSION'
 }
+
 export enum StatusFilterEnum {
   ARCHIVED = 'ARCHIVED',
   IN_PROGRESS = 'IN_PROGRESS'
+}
+
+export const statusFilterLabels = {
+  ARCHIVED: {
+    label: 'Archivés',
+    value: StatusFilterEnum.ARCHIVED
+  },
+  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
+  IN_PROGRESS: {
+    label: 'En cours',
+    value: StatusFilterEnum.IN_PROGRESS
+  }
 }
 export const getFormattedReportingId = (reportingId: number) =>
   `${String(reportingId).slice(0, 2)}-${String(reportingId).slice(2)}`

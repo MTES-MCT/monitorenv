@@ -8,16 +8,25 @@ import { themeFilterFunction } from '../domain/use_cases/reportings/filters/them
 const TWO_MINUTES = 2 * 60 * 1000
 
 export const useGetFilteredReportingsQuery = () => {
-  const { seaFrontFilter, sourceTypeFilter, startedAfter, startedBefore, themeFilter, typeFilter } = useAppSelector(
-    state => state.reportingFilters
-  )
+  const {
+    provenFilter,
+    seaFrontFilter,
+    sourceTypeFilter,
+    startedAfter,
+    startedBefore,
+    statusFilter,
+    themeFilter,
+    typeFilter
+  } = useAppSelector(state => state.reportingFilters)
   const { data, isError, isFetching, isLoading } = useGetReportingsQuery(
     {
+      provenStatus: provenFilter,
       reportingSourceType: sourceTypeFilter,
       reportingType: typeFilter,
       seaFronts: seaFrontFilter,
       startedAfterDateTime: startedAfter || undefined,
-      startedBeforeDateTime: startedBefore || undefined
+      startedBeforeDateTime: startedBefore || undefined,
+      status: statusFilter
     },
     { pollingInterval: TWO_MINUTES }
   )

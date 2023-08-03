@@ -9,7 +9,12 @@ import { FilterTags } from './FilterTags'
 import { useGetControlThemesQuery } from '../../../../api/controlThemesAPI'
 import { COLORS } from '../../../../constants/constants'
 import { DateRangeEnum, dateRangeLabels } from '../../../../domain/entities/dateRange'
-import { reportingSourceLabels, reportingTypeLabels } from '../../../../domain/entities/reporting'
+import {
+  provenFiltersLabels,
+  reportingSourceLabels,
+  reportingTypeLabels,
+  statusFilterLabels
+} from '../../../../domain/entities/reporting'
 import { seaFrontLabels } from '../../../../domain/entities/seaFrontType'
 import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../../domain/shared_slices/ReportingsFilters'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -21,10 +26,12 @@ export function ReportingsTableFilters() {
   const {
     hasFilters,
     periodFilter,
+    provenFilter,
     seaFrontFilter,
     sourceTypeFilter,
     startedAfter,
     startedBefore,
+    statusFilter,
     themeFilter,
     typeFilter
   } = useAppSelector(state => state.reportingFilters)
@@ -45,8 +52,10 @@ export function ReportingsTableFilters() {
   const typeOptions = Object.values(reportingTypeLabels)
   const sourceTypeOptions = Object.values(reportingSourceLabels)
   const seaFrontsOptions = Object.values(seaFrontLabels)
+  const statusOptions = Object.values(statusFilterLabels)
+  const isProvenOptions = Object.values(provenFiltersLabels)
 
-  const onUpdatePeriodFilter = period => {
+  const updatePeriodFilter = period => {
     dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.PERIOD_FILTER, value: period }))
     setIsCustomPeriodVisible(false)
     switch (period) {
@@ -104,7 +113,7 @@ export function ReportingsTableFilters() {
     }
   }
 
-  const onUpdateDateRangeFilter = (date: DateAsStringRange | undefined) => {
+  const updateDateRangeFilter = (date: DateAsStringRange | undefined) => {
     dispatch(
       reportingsFiltersActions.updateFilters({
         key: ReportingsFiltersEnum.STARTED_AFTER_FILTER,
@@ -119,11 +128,24 @@ export function ReportingsTableFilters() {
     )
   }
 
-  const onUpdateSimpleFilter = (value, filter) => {
+  const updateSimpleFilter = (value, filter) => {
     dispatch(reportingsFiltersActions.updateFilters({ key: filter, value }))
   }
 
-  const onResetFilters = () => {
+  const updateCheckboxFilter = (isChecked, value, key, filter) => {
+    const updatedFilter = [...filter] || []
+
+    if (!isChecked && updatedFilter.includes(String(value))) {
+      const newFilter = updatedFilter.filter(status => status !== String(value))
+      dispatch(reportingsFiltersActions.updateFilters({ key, value: newFilter }))
+    }
+    if (isChecked && !updatedFilter.includes(value)) {
+      const newFilter = [...updatedFilter, value]
+      dispatch(reportingsFiltersActions.updateFilters({ key, value: newFilter }))
+    }
+  }
+
+  const resetFilters = () => {
     setIsCustomPeriodVisible(false)
     dispatch(reportingsFiltersActions.resetReportingsFilters())
   }
@@ -131,70 +153,99 @@ export function ReportingsTableFilters() {
   return (
     <>
       <FilterWrapper ref={unitPickerRef}>
-        <StyledSelect
-          baseContainer={newWindowContainerRef.current}
-          cleanable={false}
-          data-cy="select-period-filter"
-          isLabelHidden
-          label="Période"
-          name="Période"
-          onChange={onUpdatePeriodFilter}
-          options={dateRangeOptions}
-          placeholder="Date de signalement depuis"
-          style={tagPickerStyle}
-          value={periodFilter}
-        />
+        <StyledFiltersFirstLine>
+          <StyledStatusFilter>
+            {statusOptions.map(status => (
+              <Checkbox
+                key={status.label}
+                checked={statusFilter?.includes(String(status.value))}
+                label={status.label}
+                name={status.label}
+                onChange={isChecked =>
+                  updateCheckboxFilter(isChecked, status.value, ReportingsFiltersEnum.STATUS_FILTER, statusFilter)
+                }
+              />
+            ))}
+            <StyledVerticalSeparator />
+            {isProvenOptions.map(provenStatus => (
+              <Checkbox
+                key={provenStatus.label}
+                checked={provenFilter?.includes(String(provenStatus.value))}
+                label={provenStatus.label}
+                name={provenStatus.label}
+                onChange={isChecked =>
+                  updateCheckboxFilter(isChecked, provenStatus.value, ReportingsFiltersEnum.PROVEN_FILTER, provenFilter)
+                }
+              />
+            ))}
+          </StyledStatusFilter>
+        </StyledFiltersFirstLine>
+        <StyledFiltersSecondLine>
+          <StyledSelect
+            baseContainer={newWindowContainerRef.current}
+            cleanable={false}
+            data-cy="select-period-filter"
+            isLabelHidden
+            label="Période"
+            name="Période"
+            onChange={updatePeriodFilter}
+            options={dateRangeOptions}
+            placeholder="Date de signalement depuis"
+            style={tagPickerStyle}
+            value={periodFilter}
+          />
 
-        <StyledCheckPicker
-          container={newWindowContainerRef.current}
-          data={sourceTypeOptions}
-          labelKey="label"
-          onChange={value => onUpdateSimpleFilter(value, ReportingsFiltersEnum.SOURCE_TYPE_FILTER)}
-          placeholder="Type de source"
-          renderValue={() => sourceTypeFilter && <OptionValue>{`Type (${sourceTypeFilter.length})`}</OptionValue>}
-          size="sm"
-          style={tagPickerStyle}
-          value={sourceTypeFilter}
-          valueKey="value"
-        />
+          <StyledCheckPicker
+            container={newWindowContainerRef.current}
+            data={sourceTypeOptions}
+            labelKey="label"
+            onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SOURCE_TYPE_FILTER)}
+            placeholder="Type de source"
+            renderValue={() => sourceTypeFilter && <OptionValue>{`Type (${sourceTypeFilter.length})`}</OptionValue>}
+            size="sm"
+            style={tagPickerStyle}
+            value={sourceTypeFilter}
+            valueKey="value"
+          />
 
-        <StyledSelect
-          baseContainer={newWindowContainerRef.current}
-          data-cy="select-type-filter"
-          isLabelHidden
-          label="Type de signalement"
-          name="type"
-          onChange={value => onUpdateSimpleFilter(value, ReportingsFiltersEnum.TYPE_FILTER)}
-          options={typeOptions}
-          placeholder="Type de signalement"
-          style={tagPickerStyle}
-          value={typeFilter}
-        />
-        <StyledCheckPicker
-          container={newWindowContainerRef.current}
-          data={themesListAsOptions}
-          labelKey="label"
-          onChange={value => onUpdateSimpleFilter(value, ReportingsFiltersEnum.THEME_FILTER)}
-          placeholder="Thématiques"
-          renderValue={() => themeFilter && <OptionValue>{`Theme (${themeFilter.length})`}</OptionValue>}
-          size="sm"
-          style={tagPickerStyle}
-          value={themeFilter}
-          valueKey="value"
-        />
-        <StyledCheckPicker
-          container={newWindowContainerRef.current}
-          data={seaFrontsOptions}
-          labelKey="label"
-          onChange={value => onUpdateSimpleFilter(value, ReportingsFiltersEnum.SEA_FRONT_FILTER)}
-          placeholder="Facade"
-          renderValue={() => seaFrontFilter && <OptionValue>{`Facade (${seaFrontFilter.length})`}</OptionValue>}
-          searchable={false}
-          size="sm"
-          style={tagPickerStyle}
-          value={seaFrontFilter}
-          valueKey="value"
-        />
+          <StyledSelect
+            baseContainer={newWindowContainerRef.current}
+            data-cy="select-type-filter"
+            isLabelHidden
+            label="Type de signalement"
+            name="type"
+            onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.TYPE_FILTER)}
+            options={typeOptions}
+            placeholder="Type de signalement"
+            style={tagPickerStyle}
+            value={typeFilter}
+          />
+          <StyledCheckPicker
+            container={newWindowContainerRef.current}
+            data={themesListAsOptions}
+            labelKey="label"
+            onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.THEME_FILTER)}
+            placeholder="Thématiques"
+            renderValue={() => themeFilter && <OptionValue>{`Theme (${themeFilter.length})`}</OptionValue>}
+            size="sm"
+            style={tagPickerStyle}
+            value={themeFilter}
+            valueKey="value"
+          />
+          <StyledCheckPicker
+            container={newWindowContainerRef.current}
+            data={seaFrontsOptions}
+            labelKey="label"
+            onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SEA_FRONT_FILTER)}
+            placeholder="Facade"
+            renderValue={() => seaFrontFilter && <OptionValue>{`Facade (${seaFrontFilter.length})`}</OptionValue>}
+            searchable={false}
+            size="sm"
+            style={tagPickerStyle}
+            value={seaFrontFilter}
+            valueKey="value"
+          />
+        </StyledFiltersSecondLine>
       </FilterWrapper>
       {isCustomPeriodVisible && <StyledCutomPeriodLabel>Période spécifique</StyledCutomPeriodLabel>}
       <StyledTagsContainer>
@@ -210,14 +261,15 @@ export function ReportingsTableFilters() {
               isLabelHidden
               isStringDate
               label="Date de début entre le et le"
-              onChange={onUpdateDateRangeFilter}
+              onChange={updateDateRangeFilter}
             />
           </StyledCustomPeriodContainer>
         )}
+
         <FilterTags />
 
         {hasFilters && (
-          <ResetFiltersButton data-cy="reinitialize-filters" onClick={onResetFilters}>
+          <ResetFiltersButton data-cy="reinitialize-filters" onClick={resetFilters}>
             <ReloadSVG />
             Réinitialiser les filtres
           </ResetFiltersButton>
@@ -229,11 +281,30 @@ export function ReportingsTableFilters() {
 
 const FilterWrapper = styled.div`
   display: flex;
+  gap: 16px;
+  flex-direction: column;
+`
+const StyledFiltersFirstLine = styled.div`
+  display: flex;
+  justify-content: end;
+`
+const StyledStatusFilter = styled.div`
+  display: flex;
   flex-wrap: wrap;
   align-items: end;
-  gap: 10px;
+  gap: 16px;
+`
+const StyledVerticalSeparator = styled.div`
+  height: 21px;
+  border: 1px solid ${p => p.theme.color.slateGray};
+  margin-right: 16px;
+  margin-left: 16px;
 `
 
+const StyledFiltersSecondLine = styled.div`
+  display: flex;
+  gap: 10px;
+`
 const ResetFiltersButton = styled.div`
   text-decoration: underline;
   cursor: pointer;
@@ -245,7 +316,7 @@ const ResetFiltersButton = styled.div`
   }
 `
 
-const tagPickerStyle = { width: 160 }
+const tagPickerStyle = { width: 200 }
 
 const StyledSelect = styled(Select)`
   .rs-picker-toggle-caret,
