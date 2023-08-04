@@ -32,6 +32,7 @@ export function ReportingsTableFilters() {
     startedAfter,
     startedBefore,
     statusFilter,
+    subThemesFilter,
     themeFilter,
     typeFilter
   } = useAppSelector(state => state.reportingFilters)
@@ -39,12 +40,19 @@ export function ReportingsTableFilters() {
 
   const unitPickerRef = useRef() as MutableRefObject<HTMLDivElement>
 
-  const { data: controlThemes } = useGetControlThemesQuery()
+  const { data: themes } = useGetControlThemesQuery()
 
-  const themesListAsOptions: Option[] = _.chain(controlThemes)
+  const themesListAsOptions: Option[] = _.chain(themes)
     .map(theme => theme.themeLevel1)
     .uniq()
     .sort((a, b) => a?.localeCompare(b))
+    .map(t => ({ label: t, value: t }))
+    .value()
+
+  const subThemesListAsOptions = _.chain(themes)
+    .map(theme => theme.themeLevel2 || '')
+    .sort((a, b) => a?.localeCompare(b))
+    .uniq()
     .map(t => ({ label: t, value: t }))
     .value()
 
@@ -238,10 +246,22 @@ export function ReportingsTableFilters() {
             labelKey="label"
             onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.THEME_FILTER)}
             placeholder="Thématiques"
-            renderValue={() => themeFilter && <OptionValue>{`Theme (${themeFilter.length})`}</OptionValue>}
+            renderValue={() => themeFilter && <OptionValue>{`Thème (${themeFilter.length})`}</OptionValue>}
             size="sm"
-            style={tagPickerStyle}
+            style={{ width: 311 }}
             value={themeFilter}
+            valueKey="value"
+          />
+          <StyledCheckPicker
+            container={newWindowContainerRef.current}
+            data={subThemesListAsOptions}
+            labelKey="label"
+            onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SUB_THEMES_FILTER)}
+            placeholder="Sous-thématiques"
+            renderValue={() => subThemesFilter && <OptionValue>{`Sous-thème (${subThemesFilter.length})`}</OptionValue>}
+            size="sm"
+            style={{ width: 311 }}
+            value={subThemesFilter}
             valueKey="value"
           />
           <StyledCheckPicker

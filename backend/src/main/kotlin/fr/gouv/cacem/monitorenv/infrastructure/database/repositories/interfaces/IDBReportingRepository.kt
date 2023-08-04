@@ -25,10 +25,12 @@ interface IDBReportingRepository : CrudRepository<ReportingModel, Int> {
             OR (
                 'ARCHIVED' = ANY(CAST(:status as text[])) AND (
                     is_archived = true
+                    OR (created_at + make_interval(hours => validity_time)) < NOW() 
                 ))
             OR ( 
                 'IN_PROGRESS' = ANY(CAST(:status as text[])) AND (
                     is_archived = false
+                    AND (created_at + make_interval(hours => validity_time)) >= NOW() 
                 )
             )
         )

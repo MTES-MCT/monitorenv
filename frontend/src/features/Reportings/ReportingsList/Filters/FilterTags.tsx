@@ -8,7 +8,9 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 export function FilterTags() {
   const dispatch = useDispatch()
-  const { seaFrontFilter, sourceTypeFilter, themeFilter } = useAppSelector(state => state.reportingFilters)
+  const { seaFrontFilter, sourceTypeFilter, subThemesFilter, themeFilter } = useAppSelector(
+    state => state.reportingFilters
+  )
 
   const onDeleteTag = (valueToDelete: string, filterKey: ReportingsFiltersEnum, reportingFilter) => {
     const updatedFilter = reportingFilter.filter(unit => unit !== valueToDelete)
@@ -30,6 +32,15 @@ export function FilterTags() {
         themeFilter.map(theme => (
           <SingleTag key={theme} onDelete={() => onDeleteTag(theme, ReportingsFiltersEnum.THEME_FILTER, themeFilter)}>
             {String(`Thème ${theme}`)}
+          </SingleTag>
+        ))}
+      {subThemesFilter.length > 0 &&
+        subThemesFilter.map(subTheme => (
+          <SingleTag
+            key={subTheme}
+            onDelete={() => onDeleteTag(subTheme, ReportingsFiltersEnum.SUB_THEMES_FILTER, subThemesFilter)}
+          >
+            {String(`Sous-thème ${subTheme}`)}
           </SingleTag>
         ))}
       {seaFrontFilter.length > 0 &&

@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 
 import { useAppSelector } from './useAppSelector'
 import { useGetReportingsQuery } from '../api/reportingsAPI'
+import { subThemesFilterFunction } from '../domain/use_cases/reportings/filters/subThemesFilterFunction'
 import { themeFilterFunction } from '../domain/use_cases/reportings/filters/themeFilterFunction'
 
 const TWO_MINUTES = 2 * 60 * 1000
@@ -15,6 +16,7 @@ export const useGetFilteredReportingsQuery = () => {
     startedAfter,
     startedBefore,
     statusFilter,
+    subThemesFilter,
     themeFilter,
     typeFilter
   } = useAppSelector(state => state.reportingFilters)
@@ -36,8 +38,14 @@ export const useGetFilteredReportingsQuery = () => {
       return []
     }
 
-    return filter(data.entities, reporting => !!reporting && themeFilterFunction(reporting, themeFilter))
-  }, [data, themeFilter])
+    return filter(
+      data.entities,
+      reporting =>
+        !!reporting &&
+        themeFilterFunction(reporting, themeFilter) &&
+        subThemesFilterFunction(reporting, subThemesFilter)
+    )
+  }, [data, themeFilter, subThemesFilter])
 
   return { isError, isFetching, isLoading, reportings }
 }
