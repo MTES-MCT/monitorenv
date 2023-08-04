@@ -16,14 +16,6 @@ const getStartDateFilter = startedAfterDateTime =>
   startedAfterDateTime && `startedAfterDateTime=${encodeURIComponent(startedAfterDateTime)}`
 const getEndDateFilter = startedBeforeDateTime =>
   startedBeforeDateTime && `startedBeforeDateTime=${encodeURIComponent(startedBeforeDateTime)}`
-const getReportingSourceFilter = reportingSource =>
-  reportingSource && `reportingSource=${encodeURIComponent(reportingSource)}`
-const getReportingStatusFilter = reportingStatus =>
-  reportingStatus && reportingStatus?.length > 0 && `reportingStatus=${encodeURIComponent(reportingStatus)}`
-const getReportingTypesFilter = reportingTypes =>
-  reportingTypes && reportingTypes?.length > 0 && `reportingTypes=${encodeURIComponent(reportingTypes)}`
-const getSeaFrontsFilter = seaFronts =>
-  seaFronts && seaFronts?.length > 0 && `seaFronts=${encodeURIComponent(seaFronts)}`
 
 const ReportingAdapter = createEntityAdapter<ReportingDetailed>()
 const initialState = ReportingAdapter.getInitialState()
@@ -59,11 +51,7 @@ export const reportingsAPI = createApi({
         [
           'reportings?',
           getStartDateFilter(filter?.startedAfterDateTime),
-          getEndDateFilter(filter?.startedBeforeDateTime),
-          getReportingSourceFilter(filter?.reportingSource),
-          getReportingStatusFilter(filter?.reportingStatus),
-          getReportingTypesFilter(filter?.reportingTypes),
-          getSeaFrontsFilter(filter?.seaFronts)
+          getEndDateFilter(filter?.startedBeforeDateTime)
         ]
           .filter(v => v)
           .join('&'),

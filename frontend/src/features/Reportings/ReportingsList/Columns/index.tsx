@@ -9,6 +9,8 @@ import { CellValidityTime } from '../CellValidityTime'
 import { getDateCell } from '../getDateCell'
 import { getReportType } from '../getReportType'
 
+import type { Row } from '@tanstack/react-table'
+
 export const Columns = [
   {
     accessorFn: row => row.reportingId,
@@ -73,8 +75,18 @@ export const Columns = [
     cell: ({ row }) => <CellStatus row={row} />,
     enableSorting: true,
     header: () => 'Statut',
-    id: 'status',
-    size: 110
+    id: 'isArchived',
+    size: 110,
+    sortingFn: (rowA: Row<any>, rowB: Row<any>, columnId: string) => {
+      if (rowA.original[columnId] > rowB.original[columnId]) {
+        return -1
+      }
+      if (rowB.original[columnId] > rowA.original[columnId]) {
+        return 1
+      }
+
+      return 1
+    }
   },
   {
     accessorFn: row => row.geom,
