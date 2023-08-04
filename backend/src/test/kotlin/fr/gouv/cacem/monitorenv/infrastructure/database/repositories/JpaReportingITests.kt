@@ -60,6 +60,11 @@ class JpaReportingITests : AbstractDBTests() {
             Pageable.unpaged(),
             startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
             startedBefore = null,
+            provenStatus = null,
+            reportingType = null,
+            seaFronts = null,
+            sourcesType = null,
+            status = null,
         )
         assertThat(reportings.size).isEqualTo(3)
     }

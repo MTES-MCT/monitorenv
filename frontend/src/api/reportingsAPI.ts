@@ -18,9 +18,7 @@ const getStartDateFilter = startedAfterDateTime =>
 const getEndDateFilter = startedBeforeDateTime =>
   startedBeforeDateTime && `startedBeforeDateTime=${encodeURIComponent(startedBeforeDateTime)}`
 const getReportingSourcesTypeFilter = reportingSourceType =>
-  reportingSourceType &&
-  reportingSourceType?.length > 0 &&
-  `reportingSourcesType=${encodeURIComponent(reportingSourceType)}`
+  reportingSourceType && reportingSourceType?.length > 0 && `sourcesType=${encodeURIComponent(reportingSourceType)}`
 const getReportingTypeFilter = reportingType =>
   reportingType && reportingType?.length > 0 && `reportingType=${encodeURIComponent(reportingType)}`
 const getSeaFrontsFilter = seaFronts =>

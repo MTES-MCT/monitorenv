@@ -7,6 +7,8 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.GetReportingById
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateReportingDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ReportingDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ReportingDetailedDataOutput
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -51,12 +53,32 @@ class ReportingsController(
         @RequestParam(name = "startedBeforeDateTime", required = false)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         startedBeforeDateTime: ZonedDateTime?,
+        @Parameter(description = "Is the reporting infraction proven")
+        @RequestParam(name = "provenStatus", required = false)
+        provenStatus: List<String>?,
+        @Parameter(description = "Reporting type")
+        @RequestParam(name = "reportingType", required = false)
+        reportingType: List<ReportingTypeEnum>?,
+        @Parameter(description = "Facades")
+        @RequestParam(name = "seaFronts", required = false)
+        seaFronts: List<String>?,
+        @Parameter(description = "Reporting source types")
+        @RequestParam(name = "sourcesType", required = false)
+        sourcesType: List<SourceTypeEnum>?, 
+        @Parameter(description = "Reporting status")
+        @RequestParam(name = "status", required = false)
+        status: List<String>?,
     ): List<ReportingDetailedDataOutput> {
         return getAllReportings.execute(
             pageNumber = pageNumber,
             pageSize = pageSize,
+            provenStatus = provenStatus,
+            reportingType = reportingType,
+            seaFronts = seaFronts,
+            sourcesType = sourcesType, 
             startedAfterDateTime = startedAfterDateTime,
             startedBeforeDateTime = startedBeforeDateTime,
+            status = status,
         ).map {
             ReportingDetailedDataOutput.fromReporting(it.first, it.second, it.third)
         }

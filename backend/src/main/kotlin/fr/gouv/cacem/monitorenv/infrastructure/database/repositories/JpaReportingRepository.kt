@@ -1,6 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.exceptions.ControlResourceOrUnitNotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel
@@ -21,13 +23,25 @@ class JpaReportingRepository(
 
     override fun findAll(
         pageable: Pageable,
+        provenStatus: List<String>?,
+        reportingType: List<ReportingTypeEnum>?,
+        seaFronts: List<String>?,
+        sourcesType: List<SourceTypeEnum>?, 
         startedAfter: Instant,
-        startedBefore: Instant?
+        startedBefore: Instant?,
+        status: List<String>?,
     ): List<ReportingEntity> {
+        val sourcesTypeAsStringArray = sourcesType?.map { it.name }
+        val reportingTypeAsStringArray = reportingType?.map { it.name }
         return dbReportingRepository.findAll(
             pageable,
+            provenStatus = convertToPGArray(provenStatus),
+            reportingType = convertToPGArray(reportingTypeAsStringArray),
+            seaFronts = convertToPGArray(seaFronts), 
+            sourcesType = convertToPGArray(sourcesTypeAsStringArray),
             startedAfter = startedAfter,
             startedBefore = startedBefore,
+            status = convertToPGArray(status),
         ).map { it.toReporting() }
     }
 
@@ -53,5 +67,9 @@ class JpaReportingRepository(
     @Transactional
     override fun archiveOutdatedReportings(): Int {
         return dbReportingRepository.archiveOutdatedReportings()
+    }
+
+    private fun convertToPGArray(array: List<String>?): String {
+        return array?.joinToString(separator = ",", prefix = "{", postfix = "}") ?: "{}"
     }
 }

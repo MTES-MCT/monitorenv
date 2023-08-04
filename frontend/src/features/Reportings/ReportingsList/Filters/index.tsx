@@ -10,7 +10,7 @@ import { useGetControlThemesQuery } from '../../../../api/controlThemesAPI'
 import { COLORS } from '../../../../constants/constants'
 import { DateRangeEnum, ReportingDateRangeEnum, reportingDateRangeLabels } from '../../../../domain/entities/dateRange'
 import {
-  provenFiltersLabels,
+  // provenFiltersLabels,
   reportingSourceLabels,
   reportingTypeLabels,
   statusFilterLabels
@@ -26,7 +26,7 @@ export function ReportingsTableFilters() {
   const {
     hasFilters,
     periodFilter,
-    provenFilter,
+    // provenFilter,
     seaFrontFilter,
     sourceTypeFilter,
     startedAfter,
@@ -53,7 +53,7 @@ export function ReportingsTableFilters() {
   const sourceTypeOptions = Object.values(reportingSourceLabels)
   const seaFrontsOptions = Object.values(seaFrontLabels)
   const statusOptions = Object.values(statusFilterLabels)
-  const isProvenOptions = Object.values(provenFiltersLabels)
+  // const isProvenOptions = Object.values(provenFiltersLabels)
 
   const updatePeriodFilter = period => {
     dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.PERIOD_FILTER, value: period }))
@@ -177,6 +177,7 @@ export function ReportingsTableFilters() {
                 }
               />
             ))}
+            {/* TODO  awaiting validation Ariane and Adeline              
             <StyledVerticalSeparator />
             {isProvenOptions.map(provenStatus => (
               <Checkbox
@@ -188,7 +189,7 @@ export function ReportingsTableFilters() {
                   updateCheckboxFilter(isChecked, provenStatus.value, ReportingsFiltersEnum.PROVEN_FILTER, provenFilter)
                 }
               />
-            ))}
+            ))} */}
           </StyledStatusFilter>
         </StyledFiltersFirstLine>
         <StyledFiltersSecondLine>
@@ -297,7 +298,6 @@ const FilterWrapper = styled.div`
 `
 const StyledFiltersFirstLine = styled.div`
   display: flex;
-  justify-content: end;
 `
 const StyledStatusFilter = styled.div`
   display: flex;
@@ -305,12 +305,12 @@ const StyledStatusFilter = styled.div`
   align-items: end;
   gap: 16px;
 `
-const StyledVerticalSeparator = styled.div`
+/* const StyledVerticalSeparator = styled.div`
   height: 21px;
   border: 1px solid ${p => p.theme.color.slateGray};
   margin-right: 16px;
   margin-left: 16px;
-`
+` */
 
 const StyledFiltersSecondLine = styled.div`
   display: flex;

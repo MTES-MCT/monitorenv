@@ -229,6 +229,11 @@ class ReportingsControllerITests {
                 pageSize = anyOrNull(),
                 startedAfterDateTime = any(),
                 startedBeforeDateTime = any(),
+                provenStatus = any(),
+                reportingType = any(),
+                seaFronts = any(), 
+                sourcesType = any(),
+                status = any(),
             ),
         ).willReturn(listOf(Triple(reporting, null, semaphore)))
 
