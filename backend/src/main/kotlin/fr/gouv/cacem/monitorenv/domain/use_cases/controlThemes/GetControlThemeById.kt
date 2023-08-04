@@ -10,7 +10,7 @@ class GetControlThemeById(private val controlThemeRepository: IControlThemeRepos
     private val logger = LoggerFactory.getLogger(GetControlThemeById::class.java)
 
     fun execute(controlThemeId: Int): ControlThemeEntity {
-        val controlTheme = controlThemeRepository.findControlThemeById(controlThemeId)
+        val controlTheme = controlThemeRepository.findById(controlThemeId)
 
         return controlTheme
     }

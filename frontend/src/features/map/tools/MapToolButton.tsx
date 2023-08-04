@@ -39,10 +39,7 @@ const StyledMapToolButton = styled(IconButton)<{
   $isHidden: boolean
   $isOpen: boolean
 }>`
-  position: absolute;
   padding: 6px;
-  z-index: 99;
-  right: 10px;
   transition: all 0.3s;
   margin-top: ${p => (p.$healthcheckTextWarning ? 50 : 0)}px;
   visibility: ${p => (p.$isHidden ? 'hidden' : 'visible')};

@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
-import { dateRangeLabels } from '../entities/missions'
+import { dateRangeLabels } from '../entities/dateRange'
 
 export const SEVEN_DAYS_AGO = dayjs().subtract(7, 'days').toISOString()
 

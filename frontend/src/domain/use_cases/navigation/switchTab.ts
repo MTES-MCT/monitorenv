@@ -1,6 +1,6 @@
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { getIdTyped } from '../../../utils/getIdTyped'
-import { getMissionPageRoute } from '../../../utils/getMissionPageRoute'
+import { getMissionPageRoute } from '../../../utils/routes'
 import { multiMissionsActions } from '../../shared_slices/MultiMissions'
 
 export const switchTab = path => async (dispatch, getState) => {

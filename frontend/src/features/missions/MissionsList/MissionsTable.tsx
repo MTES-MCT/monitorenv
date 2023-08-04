@@ -6,7 +6,7 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { Columns } from './Columns'
-import { SkeletonColumns } from './Columns/Skeleton'
+import { StyledSkeletonRow } from '../../commonComponents/Skeleton'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 
 import type { Mission } from '../../../domain/entities/missions'
@@ -16,7 +16,10 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
 
   const tableData = useMemo(() => (isLoading ? Array(5).fill({}) : missions), [isLoading, missions])
 
-  const columns = useMemo(() => (isLoading ? SkeletonColumns : Columns), [isLoading])
+  const columns = useMemo(
+    () => (isLoading ? Columns.map(column => ({ ...column, cell: StyledSkeletonRow })) : Columns),
+    [isLoading]
+  )
 
   const table = useReactTable({
     columns,

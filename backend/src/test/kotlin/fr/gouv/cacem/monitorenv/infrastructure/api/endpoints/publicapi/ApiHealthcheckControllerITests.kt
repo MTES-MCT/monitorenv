@@ -27,12 +27,13 @@ class ApiHealthcheckControllerITests {
 
     @Test
     fun `Healthcheck returns number of reg areas`() {
-        given(this.getHealthcheck.execute()).willReturn(
+        given(getHealthcheck.execute()).willReturn(
             Health(
                 numberOfRegulatoryAreas = 13,
                 numberOfMissions = 50,
                 numberOfNatinfs = 50,
                 numberOfSemaphores = 10,
+                numberOfReportings = 50,
             ),
         )
         mockMvc.perform(get("/api/v1/healthcheck"))
@@ -42,5 +43,6 @@ class ApiHealthcheckControllerITests {
             .andExpect(jsonPath("numberOfMissions", equalTo(50)))
             .andExpect(jsonPath("numberOfNatinfs", equalTo(50)))
             .andExpect(jsonPath("numberOfSemaphores", equalTo(10)))
+            .andExpect(jsonPath("numberOfReportings", equalTo(50)))
     }
 }

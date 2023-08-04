@@ -4,12 +4,13 @@ import styled from 'styled-components'
 
 import { EditInterestPoint } from './EditInterestPoint'
 import { MapToolType } from '../../../../domain/entities/map/constants'
-import { setMapToolOpened } from '../../../../domain/shared_slices/Global'
+import { setisMapToolVisible, setReportingFormVisibility } from '../../../../domain/shared_slices/Global'
 import {
   deleteInterestPointBeingDrawed,
   drawInterestPoint,
   endInterestPointDraw
 } from '../../../../domain/shared_slices/InterestPoint'
+import { ReportingFormVisibility } from '../../../../domain/shared_slices/ReportingState'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useEscapeFromKeyboardAndExecute } from '../../../../hooks/useEscapeFromKeyboardAndExecute'
@@ -17,12 +18,14 @@ import { MapToolButton } from '../MapToolButton'
 
 export function InterestPointMapButton() {
   const dispatch = useAppDispatch()
-  const { displayInterestPoint, healthcheckTextWarning, mapToolOpened } = useAppSelector(state => state.global)
-  const isOpen = useMemo(() => mapToolOpened === MapToolType.INTEREST_POINT, [mapToolOpened])
+  const { displayInterestPoint, healthcheckTextWarning, isMapToolVisible, reportingFormVisibility } = useAppSelector(
+    state => state.global
+  )
+  const isOpen = useMemo(() => isMapToolVisible === MapToolType.INTEREST_POINT, [isMapToolVisible])
   const wrapperRef = useRef(null)
 
   const close = useCallback(() => {
-    dispatch(setMapToolOpened(undefined))
+    dispatch(setisMapToolVisible(undefined))
   }, [dispatch])
 
   useEscapeFromKeyboardAndExecute(close)
@@ -37,14 +40,17 @@ export function InterestPointMapButton() {
   const openOrCloseInterestPoint = useCallback(() => {
     if (!isOpen) {
       dispatch(drawInterestPoint())
-      dispatch(setMapToolOpened(MapToolType.INTEREST_POINT))
+      dispatch(setisMapToolVisible(MapToolType.INTEREST_POINT))
     } else {
       close()
     }
-  }, [dispatch, isOpen, close])
+    if (reportingFormVisibility !== ReportingFormVisibility.NONE) {
+      dispatch(setReportingFormVisibility(ReportingFormVisibility.REDUCED))
+    }
+  }, [dispatch, isOpen, close, reportingFormVisibility])
 
   return (
-    <Wrapper ref={wrapperRef}>
+    <Wrapper ref={wrapperRef} reportingFormVisibility={reportingFormVisibility}>
       <MapToolButton
         dataCy="interest-point"
         icon={Icon.Landmark}
@@ -60,7 +66,9 @@ export function InterestPointMapButton() {
   )
 }
 
-const Wrapper = styled.div`
-  transition: all 0.2s;
-  z-index: 1000;
+const Wrapper = styled.div<{ reportingFormVisibility: ReportingFormVisibility }>`
+  position: absolute;
+  top: 312px;
+  transition: right 0.3s ease-out;
+  right: ${p => (p.reportingFormVisibility === ReportingFormVisibility.VISIBLE ? '0' : '10')}px;
 `

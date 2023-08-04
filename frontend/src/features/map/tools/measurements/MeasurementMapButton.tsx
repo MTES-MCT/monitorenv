@@ -4,8 +4,10 @@ import styled from 'styled-components'
 
 import { CustomCircleRange } from './CustomCircleRange'
 import { MapToolType, MeasurementType } from '../../../../domain/entities/map/constants'
-import { setMapToolOpened } from '../../../../domain/shared_slices/Global'
+import { setisMapToolVisible } from '../../../../domain/shared_slices/Global'
 import { setMeasurementTypeToAdd } from '../../../../domain/shared_slices/Measurement'
+import { ReportingFormVisibility } from '../../../../domain/shared_slices/ReportingState'
+import { reduceReportingForm } from '../../../../domain/use_cases/reduceReportingForm'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useClickOutsideWhenOpenedAndExecute } from '../../../../hooks/useClickOutsideWhenOpenedAndExecute'
@@ -18,19 +20,21 @@ import { MapToolButton } from '../MapToolButton'
 export function MeasurementMapButton() {
   const dispatch = useAppDispatch()
   const { measurementTypeToAdd } = useAppSelector(state => state.measurement)
-  const { displayMeasurement, healthcheckTextWarning, mapToolOpened } = useAppSelector(state => state.global)
+  const { displayMeasurement, healthcheckTextWarning, isMapToolVisible, reportingFormVisibility } = useAppSelector(
+    state => state.global
+  )
 
-  const isOpen = useMemo(() => mapToolOpened === MapToolType.MEASUREMENT_MENU, [mapToolOpened])
-  const isMeasurementToolOpen = useMemo(() => mapToolOpened === MapToolType.MEASUREMENT, [mapToolOpened])
+  const isOpen = useMemo(() => isMapToolVisible === MapToolType.MEASUREMENT_MENU, [isMapToolVisible])
+  const isMeasurementToolOpen = useMemo(() => isMapToolVisible === MapToolType.MEASUREMENT, [isMapToolVisible])
   const wrapperRef = useRef(null)
 
   useClickOutsideWhenOpenedAndExecute(wrapperRef, isOpen, () => {
-    dispatch(setMapToolOpened(undefined))
+    dispatch(setisMapToolVisible(undefined))
   })
 
   useEscapeFromKeyboardAndExecute(() => {
     dispatch(setMeasurementTypeToAdd(undefined))
-    dispatch(setMapToolOpened(undefined))
+    dispatch(setisMapToolVisible(undefined))
   })
 
   useEffect(() => {
@@ -41,7 +45,7 @@ export function MeasurementMapButton() {
 
   const makeMeasurement = nextMeasurementTypeToAdd => {
     dispatch(setMeasurementTypeToAdd(nextMeasurementTypeToAdd))
-    dispatch(setMapToolOpened(MapToolType.MEASUREMENT))
+    dispatch(setisMapToolVisible(MapToolType.MEASUREMENT))
   }
 
   const measurementIcon = useMemo(() => {
@@ -58,14 +62,15 @@ export function MeasurementMapButton() {
   const openOrCloseMeasurementMenu = useCallback(() => {
     if (measurementTypeToAdd) {
       dispatch(setMeasurementTypeToAdd(undefined))
-      dispatch(setMapToolOpened(undefined))
+      dispatch(setisMapToolVisible(undefined))
     } else {
-      dispatch(setMapToolOpened(MapToolType.MEASUREMENT_MENU))
+      dispatch(setisMapToolVisible(MapToolType.MEASUREMENT_MENU))
     }
+    dispatch(reduceReportingForm())
   }, [dispatch, measurementTypeToAdd])
 
   return (
-    <Wrapper ref={wrapperRef}>
+    <Wrapper ref={wrapperRef} reportingFormVisibility={reportingFormVisibility}>
       <MapToolButton
         dataCy="measurement"
         icon={measurementIcon}
@@ -78,7 +83,6 @@ export function MeasurementMapButton() {
 
       <MeasurementOptions healthcheckTextWarning={!!healthcheckTextWarning} isOpen={isOpen}>
         <MeasurementItem
-          className=".map-menu"
           data-cy="measurement-multiline"
           onClick={() => makeMeasurement(MeasurementType.MULTILINE)}
           title={"Mesure d'une distance avec lignes brisées"}
@@ -86,7 +90,6 @@ export function MeasurementMapButton() {
           <MultiLineIcon />
         </MeasurementItem>
         <MeasurementItem
-          className=".map-menu"
           data-cy="measurement-circle-range"
           onClick={() => makeMeasurement(MeasurementType.CIRCLE_RANGE)}
           title={"Rayon d'action"}
@@ -133,9 +136,11 @@ const CircleRangeIcon = styled(CircleRangeSVG)`
   }
 `
 
-const Wrapper = styled.div`
-  transition: all 0.2s;
-  z-index: 1000;
+const Wrapper = styled.div<{ reportingFormVisibility: ReportingFormVisibility }>`
+  position: absolute;
+  right: ${p => (p.reportingFormVisibility === ReportingFormVisibility.VISIBLE ? '0' : '10')}px;
+  top: 270px;
+  transition: right 0.3s ease-out;
 `
 
 const MeasurementOptions = styled(MapComponentStyle)<{
@@ -145,12 +150,11 @@ const MeasurementOptions = styled(MapComponentStyle)<{
 }>`
   border-radius: 2px;
   display: inline-block;
-  margin-right: ${p => (p.isOpen ? '45px' : '-200px')};
+  margin-right: ${p => (p.isOpen ? '36px' : '-200px')};
   opacity: ${p => (p.isOpen ? '1' : '0')};
   position: absolute;
   right: 10px;
-  top: 249px;
+  top: 0;
   transition: all 0.5s;
   width: 175px;
-  z-index: 999;
 `

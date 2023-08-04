@@ -4,9 +4,9 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { OverlayPositionOnExtent } from '../OverlayPositionOnExtent'
 
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
-import type { MapChildrenProps } from '../../Map'
+import type { BaseMapChildrenProps } from '../../BaseMap'
 
-export function MissionOverlays({ currentFeatureOver, map }: MapChildrenProps) {
+export function MissionOverlays({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const { selectedMissionId } = useAppSelector(state => state.missionState)
   const { displayMissionsOverlay } = useAppSelector(state => state.global)
   const feature = map

@@ -3,22 +3,24 @@ import _ from 'lodash'
 import { useEffect, useMemo } from 'react'
 
 import { useAppDispatch } from './useAppDispatch'
-import { setIsFormDirty } from '../domain/shared_slices/MissionsState'
 
 import type { ActionCreatorWithPayload } from '@reduxjs/toolkit'
 
-export const useSyncFormValuesWithRedux = (setMissionState: ActionCreatorWithPayload<any, string>) => {
+export const useSyncFormValuesWithRedux = (
+  setState: ActionCreatorWithPayload<any, string>,
+  setIsDirty: ActionCreatorWithPayload<any, string>
+) => {
   const { dirty, values } = useFormikContext()
   const dispatch = useAppDispatch()
 
   const dispatchFormUpdate = useMemo(() => {
     const throttled = newValues => {
-      dispatch(setMissionState(newValues))
-      dispatch(setIsFormDirty(dirty))
+      dispatch(setState(newValues))
+      dispatch(setIsDirty(newValues ? dirty : false))
     }
 
     return _.throttle(throttled, 500)
-  }, [setMissionState, dispatch, dirty])
+  }, [setState, dispatch, dirty, setIsDirty])
 
   useEffect(() => {
     dispatchFormUpdate(values)

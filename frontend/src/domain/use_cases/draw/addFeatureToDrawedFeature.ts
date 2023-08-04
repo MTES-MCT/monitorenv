@@ -13,8 +13,9 @@ export const addFeatureToDrawedFeature = (featureToAdd: Feature<Geometry>) => (d
     return
   }
 
-  if (!geometry || listener === InteractionListener.CONTROL_POINT) {
+  if (!geometry || listener === InteractionListener.CONTROL_POINT || listener === InteractionListener.REPORTING_POINT) {
     const typeOfGeometryToAdd = geometryToAdd.getType()
+
     let nextGeometry
     switch (typeOfGeometryToAdd) {
       case OLGeometryType.POLYGON:
@@ -25,7 +26,6 @@ export const addFeatureToDrawedFeature = (featureToAdd: Feature<Geometry>) => (d
         nextGeometry = convertToGeoJSONGeometryObject(new MultiPoint([(geometryToAdd as Point).getCoordinates()]))
         break
     }
-
     dispatch(setGeometry(nextGeometry))
 
     return

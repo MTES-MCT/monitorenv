@@ -2,6 +2,8 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
+import { ReportingFormVisibility } from './ReportingState'
+
 import type { MapToolType } from '../entities/map/constants'
 
 type Toast = {
@@ -18,22 +20,31 @@ type GlobalStateType = {
   displayMeasurement: boolean
   displayInterestPoint: boolean
   displaySearchSemaphoreButton: boolean
+  displayReportingsButton: boolean
 
-  displayMissionsOverlay: boolean
   // state entry for every layer whose visibility should be controlled
-  displayEditingMissionLayer: boolean
+  isSearchMissionsVisible: boolean
+  displayMissionsOverlay: boolean
+  displayMissionEditingLayer: boolean
   displayMissionsLayer: boolean
-  displaySelectedMissionLayer: boolean
+  displayMissionSelectedLayer: boolean
 
   // state entry for other children components whom visibility is already handled by parent components
-  missionsMenuIsOpen: boolean
-  layersSidebarIsOpen: boolean
 
   isSearchSemaphoreVisible: boolean
   displaySemaphoresLayer: boolean
   displaySemaphoreOverlay: boolean
 
-  mapToolOpened: MapToolType | undefined
+  isSearchReportingsVisible: boolean
+  reportingFormVisibility: ReportingFormVisibility
+  displayReportingsLayer: boolean
+  displayReportingsOverlay: boolean
+  displayReportingEditingLayer: boolean
+  displayReportingSelectedLayer: boolean
+
+  isLayersSidebarVisible: boolean
+
+  isMapToolVisible: MapToolType | undefined
 
   healthcheckTextWarning?: string
 
@@ -50,22 +61,30 @@ const initialState: GlobalStateType = {
   displayMeasurement: true,
   displayInterestPoint: true,
   displaySearchSemaphoreButton: true,
+  displayReportingsButton: true,
 
-  displayMissionsOverlay: true,
   // state entry for every layer whose visibility should be controlled
-  displayEditingMissionLayer: true,
+  isSearchMissionsVisible: false,
   displayMissionsLayer: true,
-  displaySelectedMissionLayer: true,
+  displayMissionsOverlay: true,
+  displayMissionEditingLayer: true,
+  displayMissionSelectedLayer: true,
 
   // state entry for other children components whom visibility is already handled by parent components
-  missionsMenuIsOpen: false,
-  layersSidebarIsOpen: false,
+  isLayersSidebarVisible: false,
 
   isSearchSemaphoreVisible: false,
   displaySemaphoresLayer: true,
   displaySemaphoreOverlay: true,
 
-  mapToolOpened: undefined,
+  isSearchReportingsVisible: false,
+  reportingFormVisibility: ReportingFormVisibility.NONE,
+  displayReportingsLayer: true,
+  displayReportingsOverlay: true,
+  displayReportingEditingLayer: true,
+  displayReportingSelectedLayer: true,
+
+  isMapToolVisible: undefined,
 
   healthcheckTextWarning: undefined,
 
@@ -78,6 +97,12 @@ const globalSlice = createSlice({
   initialState,
   name: 'global',
   reducers: {
+    hideSideButtons(state) {
+      state.isSearchReportingsVisible = false
+      state.isSearchSemaphoreVisible = false
+      state.isSearchMissionsVisible = false
+      state.isMapToolVisible = undefined
+    },
     removeToast(state) {
       state.toast = undefined
     },
@@ -86,15 +111,18 @@ const globalSlice = createSlice({
       state.toast = action.payload
     },
 
-    setDisplayedItems(state, action) {
+    setDisplayedItems(state, action: PayloadAction<Partial<GlobalStateType>>) {
       return { ...state, ...action.payload }
     },
 
+    setReportingFormVisibility(state, action) {
+      state.reportingFormVisibility = action.payload
+    },
     /**
      * Set the map tool opened
      */
-    setMapToolOpened(state, action: PayloadAction<MapToolType | undefined>) {
-      state.mapToolOpened = action.payload
+    setisMapToolVisible(state, action: PayloadAction<MapToolType | undefined>) {
+      state.isMapToolVisible = action.payload
     },
 
     /**
@@ -112,11 +140,13 @@ const globalSlice = createSlice({
 })
 
 export const {
+  hideSideButtons,
   removeToast,
   setDisplayedItems,
   setHealthcheckTextWarning,
-  setMapToolOpened,
+  setisMapToolVisible,
   setOverlayCoordinates,
+  setReportingFormVisibility,
   setToast
 } = globalSlice.actions
 

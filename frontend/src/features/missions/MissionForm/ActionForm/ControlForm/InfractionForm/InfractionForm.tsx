@@ -8,11 +8,8 @@ import { InfractionFormHeaderVehicle } from './InfractionFormHeaderVehicle'
 import { NatinfSelector } from './NatinfSelector'
 import { RelevantCourtSelector } from './RelevantCourtSelector'
 import { COLORS } from '../../../../../../constants/constants'
-import {
-  infractionTypeLabels,
-  formalNoticeLabels,
-  ActionTargetTypeEnum
-} from '../../../../../../domain/entities/missions'
+import { infractionTypeLabels, formalNoticeLabels } from '../../../../../../domain/entities/missions'
+import { TargetTypeEnum } from '../../../../../../domain/entities/targetType'
 
 import type { MouseEventHandler } from 'react'
 
@@ -38,11 +35,11 @@ export function InfractionForm({
 
   return (
     <FormWrapper data-cy="infraction-form">
-      {actionTargetField.value === ActionTargetTypeEnum.VEHICLE && (
+      {actionTargetField.value === TargetTypeEnum.VEHICLE && (
         <InfractionFormHeaderVehicle currentActionIndex={currentActionIndex} infractionPath={infractionPath} />
       )}
 
-      {actionTargetField.value === ActionTargetTypeEnum.COMPANY && (
+      {actionTargetField.value === TargetTypeEnum.COMPANY && (
         <InfractionFormHeaderCompany infractionPath={infractionPath} />
       )}
 

@@ -23,7 +23,7 @@ class CreateOrUpdateMission(
                 ActionTypeEnum.CONTROL -> {
                     (it as EnvActionControlEntity).copy(
                         facade = (it.geom ?: mission.geom)?.let { geom -> facadeRepository.findFacadeFromGeometry(geom) },
-                        department= (it.geom ?: mission.geom)?.let { geom -> departmentRepository.findDepartmentFromGeometry(geom) }
+                        department = (it.geom ?: mission.geom)?.let { geom -> departmentRepository.findDepartmentFromGeometry(geom) },
                     )
                 }
                 ActionTypeEnum.SURVEILLANCE -> {
@@ -38,7 +38,7 @@ class CreateOrUpdateMission(
                     val geometry = if (surveillance.coverMissionZone == true) (mission.geom ?: surveillance.geom) else (surveillance.geom ?: mission.geom)
                     surveillance.copy(
                         facade = geometry?.let { geom -> facadeRepository.findFacadeFromGeometry(geom) },
-                        department = geometry?.let { geom -> departmentRepository.findDepartmentFromGeometry(geom) }
+                        department = geometry?.let { geom -> departmentRepository.findDepartmentFromGeometry(geom) },
                     )
                 }
                 ActionTypeEnum.NOTE -> {
@@ -55,8 +55,8 @@ class CreateOrUpdateMission(
 
         val missionToSave = mission.copy(
             facade = facade,
-            envActions = envActions
-            )
+            envActions = envActions,
+        )
 
         return missionRepository.save(missionToSave)
     }

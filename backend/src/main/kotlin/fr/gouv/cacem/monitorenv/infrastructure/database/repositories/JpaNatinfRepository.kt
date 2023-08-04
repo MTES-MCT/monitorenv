@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 @Repository
 class JpaNatinfRepository(private val dbNatinfRepository: IDBNatinfRepository) :
     INatinfRepository {
-    override fun findNatinfs(): List<NatinfEntity> {
+    override fun findAll(): List<NatinfEntity> {
         return dbNatinfRepository.findAll().map { it.toNatinf() }
     }
 

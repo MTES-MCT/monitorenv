@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.entities.missions
 
+import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.*

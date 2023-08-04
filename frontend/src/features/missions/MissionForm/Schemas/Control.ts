@@ -2,7 +2,8 @@ import * as Yup from 'yup'
 
 import { ClosedInfractionSchema, NewInfractionSchema } from './Infraction'
 import { ThemeSchema } from './Theme'
-import { ActionTargetTypeEnum, ActionTypeEnum, type EnvActionControl } from '../../../../domain/entities/missions'
+import { ActionTypeEnum, type EnvActionControl } from '../../../../domain/entities/missions'
+import { TargetTypeEnum } from '../../../../domain/entities/targetType'
 
 export const getNewEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActionControl> =>
   Yup.object()
@@ -58,7 +59,7 @@ export const getClosedEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActio
       infractions: Yup.array().of(ClosedInfractionSchema).ensure().required(),
       themes: Yup.array().of(ThemeSchema).ensure().required(),
       vehicleType: Yup.string().when('actionTargetType', (actionTargetType, schema) => {
-        if (!actionTargetType || actionTargetType === ActionTargetTypeEnum.VEHICLE) {
+        if (!actionTargetType || actionTargetType === TargetTypeEnum.VEHICLE) {
           return schema.nullable().required('Requis')
         }
 

@@ -12,9 +12,9 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `findControlUnits should get all control units`() {
+    fun `findAll should get all control units`() {
         // When
-        val controlUnits = jpaControlUnitRepository.findControlUnits()
+        val controlUnits = jpaControlUnitRepository.findAll()
 
         // Then
         assertThat(controlUnits).hasSize(33)

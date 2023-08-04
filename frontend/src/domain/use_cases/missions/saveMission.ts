@@ -1,7 +1,7 @@
 import { missionsAPI } from '../../../api/missionsAPI'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
-import { getMissionPageRoute } from '../../../utils/getMissionPageRoute'
 import { isNewMission } from '../../../utils/isNewMission'
+import { getMissionPageRoute } from '../../../utils/routes'
 import { sideWindowPaths } from '../../entities/sideWindow'
 import { setToast } from '../../shared_slices/Global'
 import { multiMissionsActions } from '../../shared_slices/MultiMissions'

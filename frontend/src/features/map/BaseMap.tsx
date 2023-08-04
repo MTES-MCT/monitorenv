@@ -12,10 +12,18 @@ import { HIT_PIXEL_TO_TOLERANCE } from '../../constants/constants'
 import { SelectableLayers, HoverableLayers } from '../../domain/entities/layers/constants'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map/constants'
 
-import type Map from 'ol/Map'
+import type { MapClickEvent } from '../../types'
+import type { Feature } from 'ol'
+import type { Geometry } from 'ol/geom'
+
+export type BaseMapChildrenProps = Partial<{
+  currentFeatureOver: Feature<Geometry>
+  map: OpenLayerMap
+  mapClickEvent: MapClickEvent
+}>
 
 export function BaseMap({ children }) {
-  const [currentMap, setCurrentMap] = useState<Map>()
+  const [currentMap, setCurrentMap] = useState<OpenLayerMap>()
 
   const [mapClickEvent, setMapClickEvent] = useState({ ctrlKeyPressed: false, feature: undefined })
 

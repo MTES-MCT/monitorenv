@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
+import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.missions.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.missions.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.missions.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionById
@@ -79,7 +79,7 @@ class ApiMissionsControllerITests {
             missionSource = MissionSourceEnum.MONITORFISH,
             hasMissionOrder = true,
             isUnderJdp = true,
-            isGeometryComputedFromControls = false
+            isGeometryComputedFromControls = false,
         )
         val newMissionRequest = CreateOrUpdateMissionDataInput(
             missionTypes = listOf(MissionTypeEnum.LAND),
@@ -92,10 +92,10 @@ class ApiMissionsControllerITests {
             isClosed = false,
             hasMissionOrder = true,
             isUnderJdp = true,
-            isGeometryComputedFromControls = false
+            isGeometryComputedFromControls = false,
         )
         val requestBody = objectMapper.writeValueAsString(newMissionRequest)
-        given(this.createOrUpdateMission.execute(mission = any())).willReturn(expectedNewMission)
+        given(createOrUpdateMission.execute(mission = any())).willReturn(expectedNewMission)
         // When
         mockMvc.perform(
             post("/api/v1/missions")
@@ -128,10 +128,10 @@ class ApiMissionsControllerITests {
             isClosed = false,
             hasMissionOrder = false,
             isUnderJdp = false,
-            isGeometryComputedFromControls = false
+            isGeometryComputedFromControls = false,
         )
         given(
-            this.getMissions.execute(
+            getMissions.execute(
                 startedAfterDateTime = any(),
                 startedBeforeDateTime = any(),
                 missionSources = any(),
@@ -163,7 +163,7 @@ class ApiMissionsControllerITests {
             isClosed = false,
             hasMissionOrder = false,
             isUnderJdp = false,
-            isGeometryComputedFromControls = false
+            isGeometryComputedFromControls = false,
         )
         // we test only if the route is called with the right arg
         given(getMissionById.execute(requestedId)).willReturn(expectedFirstMission)
@@ -190,7 +190,7 @@ class ApiMissionsControllerITests {
             missionSource = MissionSourceEnum.MONITORFISH,
             hasMissionOrder = true,
             isUnderJdp = true,
-            isGeometryComputedFromControls = false
+            isGeometryComputedFromControls = false,
         )
         val envAction = EnvActionControlEntity(
             id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
@@ -209,9 +209,9 @@ class ApiMissionsControllerITests {
             isClosed = false,
             hasMissionOrder = true,
             isUnderJdp = true,
-            isGeometryComputedFromControls = false
+            isGeometryComputedFromControls = false,
         )
-        given(this.createOrUpdateMission.execute(any())).willReturn(expectedUpdatedMission)
+        given(createOrUpdateMission.execute(any())).willReturn(expectedUpdatedMission)
         // When
         mockMvc.perform(
             post("/api/v1/missions/14")

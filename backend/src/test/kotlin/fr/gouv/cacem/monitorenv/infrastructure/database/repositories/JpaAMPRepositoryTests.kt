@@ -12,9 +12,9 @@ class JpaAMPRepositoryTests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `findAMPs Should return all amps`() {
+    fun `findAll Should return all amps`() {
         // When
-        val amps = jpaAMPRepository.findAMPs()
+        val amps = jpaAMPRepository.findAll()
         assertThat(amps).hasSize(20)
     }
 }

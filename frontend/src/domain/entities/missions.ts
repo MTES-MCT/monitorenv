@@ -86,52 +86,6 @@ export const formalNoticeLabels = {
   }
 }
 
-export enum ActionTargetTypeEnum {
-  COMPANY = 'COMPANY',
-  INDIVIDUAL = 'INDIVIDUAL',
-  VEHICLE = 'VEHICLE'
-}
-export const actionTargetTypeLabels = {
-  COMPANY: {
-    code: 'COMPANY',
-    libelle: 'Société'
-  },
-  INDIVIDUAL: {
-    code: 'INDIVIDUAL',
-    libelle: 'Personne physique'
-  },
-  VEHICLE: {
-    code: 'VEHICLE',
-    libelle: 'Véhicule'
-  }
-}
-
-export enum VehicleTypeEnum {
-  OTHER_SEA = 'OTHER_SEA',
-  VEHICLE_AIR = 'VEHICLE_AIR',
-  VEHICLE_LAND = 'VEHICLE_LAND',
-  VESSEL = 'VESSEL'
-}
-
-export const vehicleTypeLabels = {
-  OTHER_SEA: {
-    code: 'OTHER_SEA',
-    libelle: 'Autre véhicule marin'
-  },
-  VEHICLE_AIR: {
-    code: 'VEHICLE_AIR',
-    libelle: 'Véhicule aérien'
-  },
-  VEHICLE_LAND: {
-    code: 'VEHICLE_LAND',
-    libelle: 'Véhicule terrestre'
-  },
-  VESSEL: {
-    code: 'VESSEL',
-    libelle: 'Navire'
-  }
-}
-
 export const hasMissionOrderLabels = {
   YES: {
     label: 'Oui',
@@ -317,34 +271,6 @@ export const seaFrontLabels = {
   SOUTH_INDIAN_OCEAN: {
     label: 'Sud Océan Indien',
     value: 'Sud Océan Indien'
-  }
-}
-
-export enum DateRangeEnum {
-  CUSTOM = 'CUSTOM',
-  DAY = 'DAY',
-  MONTH = 'MONTH',
-  WEEK = 'WEEK'
-}
-
-export const dateRangeLabels = {
-  DAY: {
-    label: 'Aujourd’hui',
-    value: 'DAY'
-  },
-  WEEK: {
-    label: 'Une semaine',
-    value: 'WEEK'
-  },
-  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
-  MONTH: {
-    label: 'Un mois',
-    value: 'MONTH'
-  },
-  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
-  CUSTOM: {
-    label: 'Période spécifique',
-    value: 'CUSTOM'
   }
 }
 

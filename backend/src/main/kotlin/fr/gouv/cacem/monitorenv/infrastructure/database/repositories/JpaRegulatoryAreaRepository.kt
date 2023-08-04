@@ -9,11 +9,11 @@ import org.springframework.stereotype.Repository
 class JpaRegulatoryAreaRepository(private val dbRegulatoryAreaRepository: IDBRegulatoryAreaRepository) :
     IRegulatoryAreaRepository {
 
-    override fun findRegulatoryAreas(): List<RegulatoryAreaEntity> {
+    override fun findAll(): List<RegulatoryAreaEntity> {
         return dbRegulatoryAreaRepository.findAll().map { it.toRegulatoryArea() }
     }
 
-    override fun findRegulatoryAreaById(id: Int): RegulatoryAreaEntity {
+    override fun findById(id: Int): RegulatoryAreaEntity {
         return dbRegulatoryAreaRepository.findById(id).get().toRegulatoryArea()
     }
 

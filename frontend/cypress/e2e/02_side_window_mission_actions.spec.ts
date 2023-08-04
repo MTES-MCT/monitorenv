@@ -8,13 +8,12 @@ context('Mission actions', () => {
 
   it('An infraction Should be duplicated', () => {
     // Given
-    cy.get('*[data-cy="edit-mission"]').eq(3).click({ force: true })
+    cy.get('*[data-cy="edit-mission-34"]').click({ force: true })
     cy.get('*[data-cy="action-card"]').eq(1).click()
     cy.get('*[data-cy="control-form-number-controls"]').type('{backspace}2')
     cy.get('*[data-cy="infraction-form"]').should('not.exist')
 
     // When
-    cy.fill('Fin de mission (UTC)', [2023, 9, 15, 18, 10])
     cy.get('*[data-cy="duplicate-infraction"]').click({ force: true })
     cy.get('*[data-cy="infraction-form-registrationNumber"]').should('have.value', 'BALTIK')
     cy.get('*[data-cy="infraction-form-validate"]').click({ force: true })
@@ -46,7 +45,7 @@ context('Mission actions', () => {
 
   it('allow only one theme and may be multiple subthemes in control actions', () => {
     // Given
-    cy.get('*[data-cy="edit-mission"]').eq(3).click({ force: true })
+    cy.get('*[data-cy="edit-mission-34"]').click({ force: true })
     cy.get('*[data-cy="action-card"]').eq(1).click()
     cy.get('*[data-cy="envaction-theme-element"]').should('have.length', 1)
     cy.get('*[data-cy="envaction-theme-selector"]').contains('Police des mouillages')
@@ -91,7 +90,7 @@ context('Mission actions', () => {
 
   it('save observations in control Actions', () => {
     // Given
-    cy.get('*[data-cy="edit-mission"]').eq(3).click({ force: true })
+    cy.get('*[data-cy="edit-mission-34"]').click({ force: true })
     cy.get('*[data-cy="action-card"]').eq(1).click()
     cy.get('[id="envActions[1].observations"]').contains('RAS')
 
@@ -114,7 +113,7 @@ context('Mission actions', () => {
 
   it('allow multiple themes and may be multiple subthemes in surveillance actions', () => {
     // Given
-    cy.get('*[data-cy="edit-mission"]').eq(3).click({ force: true })
+    cy.get('*[data-cy="edit-mission-34"]').click({ force: true })
     cy.get('*[data-cy="action-card"]').eq(0).click()
     cy.get('*[data-cy="envaction-theme-element"]').should('have.length', 2)
     cy.get('*[data-cy="envaction-theme-selector"]')
@@ -195,7 +194,7 @@ context('Mission actions', () => {
     cy.get('*[data-cy="envaction-theme-element"]').contains('Police des espèces protégées').click()
     cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').contains('Perturbation').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').click('topLeft')
+    cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
 
     cy.getDataCy('surveillance-duration-matches-mission').should('have.class', 'rs-checkbox-checked')
     cy.get('*[data-cy="surveillance-start-date-time"]')
@@ -252,7 +251,7 @@ context('Mission actions', () => {
     cy.get('*[data-cy="envaction-theme-element"]').contains('Police des mouillages').click()
     cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').contains('ZMEL').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').click('topLeft')
+    cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
 
     cy.getDataCy('action-card').eq(0).click()
     cy.getDataCy('surveillance-duration-matches-mission').should('not.have.class', 'rs-checkbox-checked')
@@ -328,6 +327,7 @@ context('Mission actions', () => {
     cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').contains('Perturbation').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').click('topLeft')
+    cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
 
     cy.get('*[data-cy="control-form-number-controls"]').type('{backspace}2')
     cy.fill('Type de cible', 'Société')

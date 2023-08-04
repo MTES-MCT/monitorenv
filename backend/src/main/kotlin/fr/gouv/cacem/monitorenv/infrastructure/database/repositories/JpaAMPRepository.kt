@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 @Repository
 class JpaAMPRepository(private val dbAMPRepository: IDBAMPRepository) :
     IAMPRepository {
-    override fun findAMPs(): List<AMPEntity> {
+    override fun findAll(): List<AMPEntity> {
         return dbAMPRepository.findAll().map { it.toAMP() }
     }
 

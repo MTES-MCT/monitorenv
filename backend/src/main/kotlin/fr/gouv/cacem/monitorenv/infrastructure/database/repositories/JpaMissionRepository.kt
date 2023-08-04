@@ -19,7 +19,7 @@ class JpaMissionRepository(
     private val mapper: ObjectMapper,
 ) : IMissionRepository {
 
-    override fun findAllMissions(
+    override fun findAll(
         startedAfter: Instant,
         startedBefore: Instant?,
         missionTypes: List<String>?,
@@ -29,7 +29,7 @@ class JpaMissionRepository(
         pageable: Pageable,
     ): List<MissionEntity> {
         val missionSourcesAsStringArray = missionSources?.map { it.name }
-        return dbMissionRepository.findAllMissions(
+        return dbMissionRepository.findAll(
             startedAfter = startedAfter,
             startedBefore = startedBefore,
             missionTypes = convertToPGArray(missionTypes),
@@ -40,7 +40,7 @@ class JpaMissionRepository(
         ).map { it.toMissionEntity(mapper) }
     }
 
-    override fun findMissionById(missionId: Int): MissionEntity {
+    override fun findById(missionId: Int): MissionEntity {
         return dbMissionRepository.findById(missionId).get().toMissionEntity(mapper)
     }
 
@@ -60,7 +60,7 @@ class JpaMissionRepository(
 
     @Transactional
     override fun delete(missionId: Int) {
-        dbMissionRepository.deleteMission(missionId)
+        dbMissionRepository.delete(missionId)
     }
 
     private fun convertToPGArray(array: List<String>?): String {

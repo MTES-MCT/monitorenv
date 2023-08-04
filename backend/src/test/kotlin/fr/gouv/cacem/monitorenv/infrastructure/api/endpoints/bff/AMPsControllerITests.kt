@@ -41,7 +41,7 @@ class AMPsControllerITests {
             designation = "ma designation",
             type = "mon type",
         )
-        given(this.getAMPs.execute()).willReturn(listOf(amp))
+        given(getAMPs.execute()).willReturn(listOf(amp))
 
         // When
         mockMvc.perform(get("/bff/v1/amps"))

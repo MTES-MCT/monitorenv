@@ -16,23 +16,23 @@ import { useAppSelector } from '../../hooks/useAppSelector'
 
 export function LayersSidebar() {
   const { regulatoryMetadataLayerId, regulatoryMetadataPanelIsOpen } = useAppSelector(state => state.regulatoryMetadata)
-  const { displayLayersSidebar, layersSidebarIsOpen } = useAppSelector(state => state.global)
+  const { displayLayersSidebar, isLayersSidebarVisible } = useAppSelector(state => state.global)
   const { regulatoryLayers } = useAppSelector(state => state.regulatory)
   const amps = useGetAMPsQuery()
 
   const dispatch = useDispatch()
 
   const toggleLayerSidebar = () => {
-    if (layersSidebarIsOpen) {
+    if (isLayersSidebarVisible) {
       dispatch(closeRegulatoryZoneMetadata())
     }
-    dispatch(setDisplayedItems({ layersSidebarIsOpen: !layersSidebarIsOpen }))
+    dispatch(setDisplayedItems({ isLayersSidebarVisible: !isLayersSidebarVisible }))
   }
 
   return (
     <>
       <SidebarLayersIcon
-        $isActive={layersSidebarIsOpen}
+        $isActive={isLayersSidebarVisible}
         $isVisible={displayLayersSidebar}
         accent={Accent.PRIMARY}
         data-cy="layers-sidebar"
@@ -42,10 +42,10 @@ export function LayersSidebar() {
         title="Arbre des couches"
       />
       <Sidebar
-        isVisible={displayLayersSidebar && (layersSidebarIsOpen || regulatoryMetadataPanelIsOpen)}
-        layersSidebarIsOpen={layersSidebarIsOpen}
+        isLayersSidebarVisible={isLayersSidebarVisible}
+        isVisible={displayLayersSidebar && (isLayersSidebarVisible || regulatoryMetadataPanelIsOpen)}
       >
-        <LayerSearch isVisible={displayLayersSidebar && layersSidebarIsOpen} />
+        <LayerSearch isVisible={displayLayersSidebar && isLayersSidebarVisible} />
         <Layers>
           <RegulatoryLayers />
           <AmpLayers />
@@ -53,14 +53,14 @@ export function LayersSidebar() {
           <BaseLayerList />
         </Layers>
         <RegulatoryZoneMetadataShifter
-          layersSidebarIsOpen={layersSidebarIsOpen}
+          isLayersSidebarVisible={isLayersSidebarVisible}
           regulatoryMetadataPanelIsOpen={regulatoryMetadataPanelIsOpen}
         >
           {regulatoryMetadataLayerId && <RegulatoryLayerZoneMetadata />}
         </RegulatoryZoneMetadataShifter>
       </Sidebar>
       {(regulatoryLayers.length === 0 || amps.isLoading) && (
-        <SpinnerWrapper $layersSidebarIsOpen={layersSidebarIsOpen}>
+        <SpinnerWrapper $isLayersSidebarVisible={isLayersSidebarVisible}>
           <FulfillingBouncingCircleSpinner color={THEME.color.gunMetal} size={30} />
           <Message>
             Chargement des zones cartographiques ({regulatoryLayers.length === 0 && 'Zones réglementaires'}
@@ -74,13 +74,13 @@ export function LayersSidebar() {
 }
 
 const RegulatoryZoneMetadataShifter = styled.div<{
-  layersSidebarIsOpen: boolean
+  isLayersSidebarVisible: boolean
   regulatoryMetadataPanelIsOpen: boolean
 }>`
   position: absolute;
   margin-left: ${p => {
     if (p.regulatoryMetadataPanelIsOpen) {
-      if (p.layersSidebarIsOpen) {
+      if (p.isLayersSidebarVisible) {
         return '355'
       }
 
@@ -97,8 +97,8 @@ const RegulatoryZoneMetadataShifter = styled.div<{
   transition: 0.5s all;
 `
 
-const Sidebar = styled.div<{ isVisible: boolean; layersSidebarIsOpen: boolean }>`
-  margin-left: ${props => (props.layersSidebarIsOpen ? 0 : '-455px')};
+const Sidebar = styled.div<{ isLayersSidebarVisible: boolean; isVisible: boolean }>`
+  margin-left: ${props => (props.isLayersSidebarVisible ? 0 : '-455px')};
   opacity: ${props => (props.isVisible ? 1 : 0)};
   top: 10px;
   left: 57px;
@@ -123,10 +123,10 @@ const SidebarLayersIcon = styled(IconButton)<{ $isActive: boolean; $isVisible: b
   ${p => (p.$isVisible ? '' : 'display: none;')}
 `
 
-const SpinnerWrapper = styled.div<{ $layersSidebarIsOpen: boolean }>`
+const SpinnerWrapper = styled.div<{ $isLayersSidebarVisible: boolean }>`
   position: absolute;
   top: 12px;
-  left: ${props => (props.$layersSidebarIsOpen ? '460px' : '65px')};
+  left: ${props => (props.$isLayersSidebarVisible ? '460px' : '65px')};
   display: flex;
   padding: 4px;
 `

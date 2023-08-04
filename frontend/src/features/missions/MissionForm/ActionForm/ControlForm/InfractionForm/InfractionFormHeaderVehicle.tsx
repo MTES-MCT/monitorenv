@@ -4,7 +4,9 @@ import styled from 'styled-components'
 
 import { VesselSizeSelector } from './VesselSizeSelector'
 import { VesselTypeSelector } from './VesselTypeSelector'
-import { EnvActionControl, Infraction, VehicleTypeEnum } from '../../../../../../domain/entities/missions'
+import { VehicleTypeEnum } from '../../../../../../domain/entities/vehicleType'
+
+import type { EnvActionControl, Infraction } from '../../../../../../domain/entities/missions'
 
 export function InfractionFormHeaderVehicle({ currentActionIndex, infractionPath }) {
   const [vehicleTypeField] = useField<EnvActionControl['vehicleType']>(`envActions.${currentActionIndex}.vehicleType`)

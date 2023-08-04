@@ -4,9 +4,9 @@ import { useDispatch } from 'react-redux'
 import { Layers } from '../../domain/entities/layers/constants'
 import { showRegulatoryZoneMetadata } from '../../domain/use_cases/regulatory/showRegulatoryZoneMetadata'
 
-import type { MapChildrenProps } from './Map'
+import type { BaseMapChildrenProps } from './BaseMap'
 
-export function ShowRegulatoryMetadata({ mapClickEvent }: MapChildrenProps) {
+export function ShowRegulatoryMetadata({ mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useDispatch()
 
   useEffect(() => {

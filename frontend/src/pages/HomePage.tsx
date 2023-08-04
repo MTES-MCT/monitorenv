@@ -7,11 +7,14 @@ import { APIWorker } from '../api/APIWorker'
 import Healthcheck from '../features/healthcheck/Healthcheck'
 import { LayersSidebar } from '../features/layersSelector'
 import { LocateOnMap } from '../features/LocateOnMap'
+import { Map } from '../features/map'
 import { DrawModal } from '../features/map/draw/DrawModal'
-import { Map } from '../features/map/Map'
+import { RightMenuOnHoverArea } from '../features/map/shared/RightMenuOnHoverArea'
 import { InterestPointMapButton } from '../features/map/tools/interest_points/InterestPointMapButton'
 import { MeasurementMapButton } from '../features/map/tools/measurements/MeasurementMapButton'
-import { MissionsMenu } from '../features/missions/MissionsMenu'
+import { MissionsMenu } from '../features/missions/MissionsButton'
+import { Reporting } from '../features/Reportings/ReportingForm'
+import { ReportingsButton } from '../features/Reportings/ReportingsButton'
 import { SearchSemaphoreButton } from '../features/Semaphores/SearchSemaphoreButton'
 import { SideWindowLauncher } from '../features/SideWindow/SideWindowLauncher'
 import { useAppSelector } from '../hooks/useAppSelector'
@@ -23,6 +26,7 @@ export function HomePage() {
     displayLocateOnMap,
     displayMeasurement,
     displayMissionMenuButton,
+    displayReportingsButton,
     displaySearchSemaphoreButton
   } = useAppSelector(state => state.global)
   const {
@@ -57,14 +61,18 @@ export function HomePage() {
         <APIWorker />
         <Map />
         <LayersSidebar />
+        <RightMenuOnHoverArea />
         {displayDrawModal && <DrawModal />}
         {displayLocateOnMap && <LocateOnMap />}
 
         {displayMissionMenuButton && <MissionsMenu />}
+        {displayReportingsButton && <ReportingsButton />}
         {displaySearchSemaphoreButton && <SearchSemaphoreButton />}
 
         {displayMeasurement && <MeasurementMapButton />}
         {displayInterestPoint && <InterestPointMapButton />}
+
+        <Reporting />
 
         <SideWindowLauncher />
 

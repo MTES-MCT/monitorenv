@@ -2,7 +2,8 @@ import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
-import { actionTargetTypeLabels, ActionTypeEnum, EnvAction } from '../../../domain/entities/missions'
+import { ActionTypeEnum, EnvAction } from '../../../domain/entities/missions'
+import { targetTypeLabels } from '../../../domain/entities/targetType'
 import { ControlInfractionsTags } from '../../../ui/ControlInfractionsTags'
 import { ReactComponent as ControlIconSVG } from '../../../uiMonitor/icons/Control.svg'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
@@ -57,7 +58,7 @@ export function ActionCard({
                     {` contrôle${action.actionNumberOfControls > 1 ? 's' : ''}`}
                     {` réalisé${action.actionNumberOfControls > 1 ? 's' : ''} sur des cibles de type `}
                     <Accented>
-                      {(!!action.actionTargetType && actionTargetTypeLabels[action.actionTargetType]?.libelle) ||
+                      {(!!action.actionTargetType && targetTypeLabels[action.actionTargetType]?.label) ||
                         'non spécifié'}
                     </Accented>
                   </ControlSummary>

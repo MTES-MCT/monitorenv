@@ -9,9 +9,8 @@ import { FilterTags } from './FilterTags'
 import { useGetControlThemesQuery } from '../../../../api/controlThemesAPI'
 import { useGetControlUnitsQuery } from '../../../../api/controlUnitsAPI'
 import { COLORS } from '../../../../constants/constants'
+import { DateRangeEnum, dateRangeLabels } from '../../../../domain/entities/dateRange'
 import {
-  DateRangeEnum,
-  dateRangeLabels,
   missionSourceEnum,
   missionStatusLabels,
   missionTypeEnum,
@@ -267,6 +266,7 @@ export function MissionsTableFilters() {
         <StyledCheckPicker
           container={newWindowContainerRef.current}
           data={themesListAsOptions}
+          data-cy="select-theme-filter"
           labelKey="label"
           onChange={value => onUpdateSimpleFilter(value, MissionFiltersEnum.THEME_FILTER)}
           placeholder="Thématique"

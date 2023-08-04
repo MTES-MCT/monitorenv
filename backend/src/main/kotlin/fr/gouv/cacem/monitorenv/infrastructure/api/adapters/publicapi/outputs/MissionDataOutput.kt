@@ -25,7 +25,7 @@ data class MissionDataOutput(
     val isClosed: Boolean,
     val hasMissionOrder: Boolean,
     val isUnderJdp: Boolean,
-    val isGeometryComputedFromControls: Boolean
+    val isGeometryComputedFromControls: Boolean,
 ) {
     companion object {
         fun fromMission(mission: MissionEntity): MissionDataOutput {
@@ -50,7 +50,7 @@ data class MissionDataOutput(
                 isClosed = mission.isClosed,
                 hasMissionOrder = mission.hasMissionOrder,
                 isUnderJdp = mission.isUnderJdp,
-                isGeometryComputedFromControls = mission.isGeometryComputedFromControls
+                isGeometryComputedFromControls = mission.isGeometryComputedFromControls,
             )
         }
     }

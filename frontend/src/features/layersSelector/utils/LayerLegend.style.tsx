@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
+import { getAMPColorWithAlpha } from '../../map/layers/AMP/AMPLayers.style'
 import { getRegulatoryEnvColorWithAlpha } from '../../map/layers/styles/administrativeAndRegulatoryLayers.style'
-import { getAMPColorWithAlpha } from '../../map/layers/styles/AMPLayers.style'
 
 export function RegulatoryLayerLegend({ entity_name, thematique }) {
   const color = getRegulatoryEnvColorWithAlpha(thematique, entity_name)

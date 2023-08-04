@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory
 class GetSemaphores(private val semaphoreRepository: ISemaphoreRepository) {
     private val logger = LoggerFactory.getLogger(GetSemaphores::class.java)
     fun execute(): List<SemaphoreEntity> {
-        val semaphores = semaphoreRepository.findAllSemaphores()
+        val semaphores = semaphoreRepository.findAll()
         logger.info("Found ${semaphores.size} semaphores ")
         return semaphores
     }

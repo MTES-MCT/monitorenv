@@ -7,7 +7,6 @@ import { remove } from 'ramda'
 import { useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { COLORS } from '../../constants/constants'
 import {
   InteractionListener,
   OLGeometryType,
@@ -15,7 +14,7 @@ import {
   WSG84_PROJECTION
 } from '../../domain/entities/map/constants'
 import { setFitToExtent } from '../../domain/shared_slices/Map'
-import { addZone } from '../../domain/use_cases/missions/addZone'
+import { drawPolygon } from '../../domain/use_cases/draw/drawGeometry'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { useListenForDrawedGeometry } from '../../hooks/useListenForDrawing'
@@ -27,7 +26,7 @@ export type MultiZonePickerProps = {
   currentActionIndex?: number
   interactionListener: InteractionListener
   isLight?: boolean
-  label: string
+  label?: string | undefined
   name: string
 }
 export function MultiZonePicker({
@@ -35,7 +34,7 @@ export function MultiZonePicker({
   currentActionIndex,
   interactionListener,
   isLight,
-  label,
+  label = undefined,
   name
 }: MultiZonePickerProps) {
   const dispatch = useAppDispatch()
@@ -75,7 +74,7 @@ export function MultiZonePicker({
   }
 
   const handleAddZone = useCallback(() => {
-    dispatch(addZone(value, interactionListener))
+    dispatch(drawPolygon(value, interactionListener))
     coverMissionZoneHelpers.setValue(false)
   }, [coverMissionZoneHelpers, dispatch, value, interactionListener])
 
@@ -93,7 +92,7 @@ export function MultiZonePicker({
 
   return (
     <Field>
-      <Label hasError={!!meta.error}>{label}</Label>
+      {label && <Label hasError={!!meta.error}>{label}</Label>}
 
       <Button accent={Accent.SECONDARY} Icon={Icon.Plus} isFullWidth onClick={handleAddZone}>
         {addButtonLabel}
@@ -143,7 +142,7 @@ const Center = styled.a`
   cursor: pointer;
   margin-left: auto;
   margin-right: 8px;
-  color: ${COLORS.slateGray};
+  color: ${p => p.theme.color.slateGray};
   text-decoration: underline;
   > div {
     vertical-align: middle;
@@ -154,11 +153,11 @@ const Center = styled.a`
 const Row = styled.div`
   align-items: center;
   display: flex;
-  margin: 0.5rem 0 0;
+  margin: 4px 0 0;
   width: 100%;
 
   > button {
-    margin: 0 0 0 0.5rem;
+    margin: 0 0 0 4px;
   }
 `
 
@@ -168,10 +167,10 @@ const ZoneWrapper = styled.div<{ isLight?: boolean }>`
   flex-grow: 1;
   font-size: 13px;
   justify-content: space-between;
-  padding: 5px 0.75rem 4px;
+  padding: 4px 8px 4px;
 `
 
 const ErrorMessage = styled.div`
-  color: ${COLORS.maximumRed};
+  color: ${p => p.theme.color.maximumRed};
   font: italic normal normal 13px/18px Marianne;
 `

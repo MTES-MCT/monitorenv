@@ -21,6 +21,14 @@ const Title = styled.span`
   line-height: 22px;
   color: ${p => p.theme.color.white};
 `
+const Body = styled.div``
+
+const Section = styled.div`
+  padding: 12px;
+  &:not(:last-child) {
+    border-bottom: 1px solid ${p => p.theme.color.gainsboro};
+  }
+`
 
 const VisibilityButton = styled(IconButton)`
   background: ${p => p.theme.color.white};
@@ -36,10 +44,12 @@ const ButtonOnMap = styled(IconButton)`
 `
 
 export const MenuWithCloseButton = {
+  Body,
   ButtonOnMap,
   CloseButton,
   Container,
   Header,
+  Section,
   Title,
   VisibilityButton
 }

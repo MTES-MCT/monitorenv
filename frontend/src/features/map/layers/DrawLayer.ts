@@ -21,10 +21,10 @@ import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 
 import type { VectorLayerWithName } from '../../../domain/types/layer'
-import type { MapChildrenProps } from '../Map'
+import type { BaseMapChildrenProps } from '../BaseMap'
 import type Geometry from 'ol/geom/Geometry'
 
-function UnmemoizedDrawLayer({ map }: MapChildrenProps) {
+function UnmemoizedDrawLayer({ map }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const { geometry, interactionType, listener } = useAppSelector(state => state.draw)
 

@@ -1,12 +1,13 @@
-import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { useCallback, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { Tooltip, Whisper } from 'rsuite'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../../constants/constants'
+import { ReportingSourceEnum } from '../../../../domain/entities/reporting'
 import { setOverlayCoordinates } from '../../../../domain/shared_slices/Global'
 import { resetSelectedSemaphore } from '../../../../domain/shared_slices/SemaphoresSlice'
+import { createAndOpenNewReporting } from '../../../../domain/use_cases/reportings/createAndOpenNewReporting'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 import type { OverlayTriggerType } from 'rsuite/esm/Overlay/OverlayTrigger'
@@ -39,10 +40,12 @@ const MAIL_TOOLTIP_STATE = {
 const hoverTooltip = (text, className) => <StyledTooltip className={className}>{text}</StyledTooltip>
 
 export function SemaphoreCard({ feature, selected = false }: { feature: any; selected?: boolean }) {
-  const dispatch = useDispatch()
-  const { displaySemaphoresLayer } = useAppSelector(state => state.global)
+  const dispatch = useAppDispatch()
+  const {
+    global: { displaySemaphoresLayer }
+  } = useAppSelector(state => state)
 
-  const { email, name, phoneNumber, unit } = feature.getProperties()
+  const { email, id, name, phoneNumber, unit } = feature.getProperties()
   const [tooltipPhoneState, setTooltipPhoneState] = useState(PHONE_TOOLTIP_STATE.hover)
 
   const [tooltipMailState, setTooltipMailState] = useState(MAIL_TOOLTIP_STATE.hover)
@@ -63,6 +66,10 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
     navigator.clipboard.writeText(email)
     setTooltipMailState(MAIL_TOOLTIP_STATE.click)
     setTooltipPhoneState(PHONE_TOOLTIP_STATE.hover)
+  }
+
+  const createSemaphoreReporting = () => {
+    dispatch(createAndOpenNewReporting({ semaphoreId: id, sourceType: ReportingSourceEnum.SEMAPHORE }))
   }
 
   if (!displaySemaphoresLayer) {
@@ -96,7 +103,7 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
               <span>
                 <StyledCopyButton
                   accent={Accent.TERTIARY}
-                  color={COLORS.slateGray}
+                  color={THEME.color.slateGray}
                   Icon={Icon.Duplicate}
                   iconSize={20}
                 />
@@ -117,7 +124,7 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
               <span>
                 <StyledCopyButton
                   accent={Accent.TERTIARY}
-                  color={COLORS.slateGray}
+                  color={THEME.color.slateGray}
                   Icon={Icon.Duplicate}
                   iconSize={20}
                 />
@@ -126,6 +133,10 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
             <span>{email}</span>
           </StyledContactLine>
         )}
+
+        <StyledButton Icon={Icon.Plus} isFullWidth onClick={createSemaphoreReporting}>
+          Créer un signalement
+        </StyledButton>
       </StyledContactContainer>
     </Wrapper>
   )
@@ -198,4 +209,9 @@ const StyledTooltip = styled(Tooltip)`
   &.greenTooltip.rs-tooltip.placement-left:after {
     border-left-color: ${p => p.theme.color.mediumSeaGreen};
   }
+`
+// TODO delete when Monitor-ui component have good padding
+const StyledButton = styled(Button)`
+  padding: 4px 12px;
+  margin-top: 16px;
 `

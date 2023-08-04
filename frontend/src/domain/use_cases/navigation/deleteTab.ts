@@ -2,7 +2,7 @@ import { generatePath } from 'react-router'
 
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { getIdTyped } from '../../../utils/getIdTyped'
-import { getMissionPageRoute } from '../../../utils/getMissionPageRoute'
+import { getMissionPageRoute } from '../../../utils/routes'
 import { sideWindowPaths } from '../../entities/sideWindow'
 import { multiMissionsActions } from '../../shared_slices/MultiMissions'
 
