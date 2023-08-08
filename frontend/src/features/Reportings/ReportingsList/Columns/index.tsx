@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 
+import { RowCheckbox } from './RowCheckbox'
 import { getFormattedReportingId } from '../../../../domain/entities/reporting'
 import { CellActionThemes } from '../CellActionThemes'
 import { CellEditReporting } from '../CellEditReporting'
@@ -12,6 +13,33 @@ import { getReportType } from '../getReportType'
 import type { Row } from '@tanstack/react-table'
 
 export const Columns = [
+  {
+    accessorFn: row => row.reportingId,
+    cell: ({ row }) => (
+      <div className="px-1">
+        <RowCheckbox
+          {...{
+            checked: row.getIsSelected(),
+            disabled: !row.getCanSelect(),
+            indeterminate: row.getIsSomeSelected(),
+            onChange: row.getToggleSelectedHandler(row)
+          }}
+        />
+      </div>
+    ),
+    enableSorting: false,
+    header: ({ table }) => (
+      <RowCheckbox
+        {...{
+          checked: table.getIsAllRowsSelected(),
+          indeterminate: table.getIsSomeRowsSelected(),
+          onChange: table.getToggleAllRowsSelectedHandler()
+        }}
+      />
+    ),
+    id: 'select',
+    size: 50
+  },
   {
     accessorFn: row => row.reportingId,
     cell: info => <Cell id={info.getValue()}>{getFormattedReportingId(info.getValue())}</Cell>,
@@ -103,7 +131,7 @@ export const Columns = [
     cell: info => <CellEditReporting id={info.getValue()} />,
     enableSorting: false,
     header: () => '',
-    id: 'id',
+    id: 'edit',
     size: 100
   }
 ]

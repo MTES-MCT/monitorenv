@@ -25,9 +25,6 @@ export function ReportingsList() {
         </StyledButton>
       </StyledHeader>
       <ReportingsTableFilters />
-      <NumberOfDisplayedReportings>
-        {reportings?.length || '0'} Signalement{reportings && reportings.length > 1 ? 's' : ''}
-      </NumberOfDisplayedReportings>
 
       {isError ? (
         <p data-cy="listReportingWrapper">Erreur au chargement des données</p>
@@ -60,10 +57,6 @@ const Title = styled.h1`
   line-height: 50px;
 `
 
-const NumberOfDisplayedReportings = styled.h3`
-  font-size: 13px;
-  margin-top 32px;
-`
 const StyledButton = styled(Button)`
   align-self: center;
 `

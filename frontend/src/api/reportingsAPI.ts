@@ -33,6 +33,20 @@ const initialState = ReportingAdapter.getInitialState()
 export const reportingsAPI = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/bff/v1' }),
   endpoints: build => ({
+    archiveReportings: build.mutation({
+      invalidatesTags: (_, __, results) =>
+        results?.ids
+          ? [{ id: 'LIST', type: 'Reportings' }, ...results.ids.map(id => ({ id, type: 'Reportings' as const }))]
+          : [{ id: 'LIST', type: 'Reportings' }],
+      queryFn: async ({ ids }, { dispatch }) => {
+        const promises = await ids.map(async id => {
+          const { data: reporting } = await dispatch(reportingsAPI.endpoints.getReporting.initiate(id))
+          dispatch(reportingsAPI.endpoints.updateReporting.initiate({ ...(reporting as Reporting), isArchived: true }))
+        })
+
+        return Promise.all(promises).then(results => ({ data: results }))
+      }
+    }),
     createReporting: build.mutation<Reporting, Partial<Reporting>>({
       invalidatesTags: [{ id: 'LIST', type: 'Reportings' }],
       query: reporting => ({
@@ -47,6 +61,17 @@ export const reportingsAPI = createApi({
         method: 'DELETE',
         url: `reportings/${id}`
       })
+    }),
+    deleteReportings: build.mutation({
+      invalidatesTags: (_, __, results) =>
+        results?.ids
+          ? [{ id: 'LIST', type: 'Reportings' }, ...results.ids.map(id => ({ id, type: 'Reportings' as const }))]
+          : [{ id: 'LIST', type: 'Reportings' }],
+      queryFn: async ({ ids }, { dispatch }) => {
+        const promises = await ids.map(id => dispatch(reportingsAPI.endpoints.deleteReporting.initiate({ id })))
+
+        return Promise.all(promises).then(results => ({ data: results }))
+      }
     }),
     getReporting: build.query<Reporting, number>({
       providesTags: (_, __, id) => [{ id, type: 'Reportings' }],
@@ -77,7 +102,6 @@ export const reportingsAPI = createApi({
         { id, type: 'Reportings' },
         { id: 'LIST', type: 'Reportings' }
       ],
-
       query: ({ id, ...patch }) => ({
         body: { id, ...patch },
         method: 'PUT',
