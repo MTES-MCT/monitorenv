@@ -36,7 +36,7 @@ export enum ReportingDateRangeEnum {
 
 export const reportingDateRangeLabels = {
   DAY: {
-    label: '24 denières heures',
+    label: '24 dernières heures',
     value: 'DAY'
   },
   WEEK: {

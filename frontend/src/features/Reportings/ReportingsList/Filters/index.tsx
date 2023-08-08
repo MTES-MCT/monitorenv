@@ -251,6 +251,7 @@ export function ReportingsTableFilters() {
               <Checkbox
                 key={status.label}
                 checked={statusFilter?.includes(String(status.value))}
+                data-cy={`status-filter-${status.label}`}
                 label={status.label}
                 name={status.label}
                 onChange={isChecked =>
@@ -291,6 +292,7 @@ export function ReportingsTableFilters() {
           <StyledCheckPicker
             container={newWindowContainerRef.current}
             data={sourceTypeOptions}
+            data-cy="select-source-type-filter"
             labelKey="label"
             onChange={value => updateSourceTypeFilter(value)}
             placeholder="Type de source"
@@ -304,6 +306,7 @@ export function ReportingsTableFilters() {
           <StyledCheckPicker
             container={newWindowContainerRef.current}
             data={sourceOptions}
+            data-cy="select-source-filter"
             labelKey="label"
             onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SOURCE_FILTER)}
             placeholder="Source"

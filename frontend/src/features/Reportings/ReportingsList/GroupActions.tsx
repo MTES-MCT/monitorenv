@@ -33,7 +33,7 @@ export function GroupActions({ resetSelectionFn, selectedReportingsIds, totalRep
           onClick={deleteMultiReportings}
         />
       </StyledButtonsContainer>
-      <NumberOfDisplayedReportings>
+      <NumberOfDisplayedReportings data-cy="totalReportings">
         {totalReportings} {pluralize('Signalement', totalReportings)}
       </NumberOfDisplayedReportings>
     </StyledGroupActionContainer>
