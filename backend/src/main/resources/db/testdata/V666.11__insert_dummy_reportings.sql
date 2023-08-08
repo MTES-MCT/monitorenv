@@ -117,7 +117,31 @@ VALUES
     now() - INTERVAL '3 hour',
     4,
     false
+),
+(
+    5,
+    2300005,
+    'SEMAPHORE',
+    36,
+    NULL,
+    NULL,
+    'COMPANY',
+    NULL,
+    '[{"operatorName": "Ma société", "vesselName": "Mr le gérant" }]',
+    ST_GeomFromText('MULTIPOINT((-4.18759766312331 47.11281269827924))', 4326),
+    'Gudeloupe',
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    'OBSERVATION',
+    NULL,
+    NULL,
+    NULL,
+    false,
+    true,
+    true,
+    now() - INTERVAL '1 hour',
+    6,
+    false
 );
-SELECT setval('reportings_id_seq', 4, false);
+SELECT setval('reportings_id_seq', 6, false);
 CREATE SEQUENCE IF NOT EXISTS reportings_2023_seq;
-SELECT setval('reportings_2023_seq', 4, false);
+SELECT setval('reportings_2023_seq', 6, false);

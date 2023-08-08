@@ -22,7 +22,7 @@ class JpaReportingITests : AbstractDBTests() {
     fun `save should create a new Reporting`() {
         // Given
         val numberOfExistingReportings = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportings).isEqualTo(3)
+        assertThat(numberOfExistingReportings).isEqualTo(5)
 
         // When
         val newReporting = ReportingEntity(
@@ -36,7 +36,7 @@ class JpaReportingITests : AbstractDBTests() {
         assertThat(createdReporting.id).isNotNull()
 
         val numberOfExistingReportingsAfterSave = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(4)
+        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(6)
     }
 
     @Test
@@ -66,7 +66,7 @@ class JpaReportingITests : AbstractDBTests() {
             sourcesType = null,
             status = null,
         )
-        assertThat(reportings.size).isEqualTo(3)
+        assertThat(reportings.size).isEqualTo(5)
     }
 
     @Test
@@ -74,7 +74,7 @@ class JpaReportingITests : AbstractDBTests() {
     fun `save should update an existing Reporting`() {
         // Given
         val numberOfExistingReportings = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportings).isEqualTo(3)
+        assertThat(numberOfExistingReportings).isEqualTo(5)
 
         // When
         val existingReporting = jpaReportingRepository.findById(1)
@@ -93,7 +93,7 @@ class JpaReportingITests : AbstractDBTests() {
         assertThat(savedReporting.semaphoreId).isEqualTo(23)
 
         val numberOfExistingReportingsAfterSave = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(3)
+        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(5)
     }
 
     @Test
@@ -101,7 +101,7 @@ class JpaReportingITests : AbstractDBTests() {
     fun `delete should soft delete reporting`() {
         // Given
         val numberOfExistingReportings = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportings).isEqualTo(3)
+        assertThat(numberOfExistingReportings).isEqualTo(5)
         val existingReporting = jpaReportingRepository.findById(1)
         assertThat(existingReporting.isDeleted).isEqualTo(false)
         // When
@@ -109,7 +109,7 @@ class JpaReportingITests : AbstractDBTests() {
 
         // Then
         val numberOfExistingReportingsAfterSave = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(3)
+        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(5)
 
         val deletedReporting = jpaReportingRepository.findById(1)
         assertThat(deletedReporting.isDeleted).isEqualTo(true)
