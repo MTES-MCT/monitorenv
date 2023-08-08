@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 
 import { useAppSelector } from './useAppSelector'
 import { useGetReportingsQuery } from '../api/reportingsAPI'
+import { sourceFilterFunction } from '../domain/use_cases/reportings/filters/sourceFilterFunction'
 import { subThemesFilterFunction } from '../domain/use_cases/reportings/filters/subThemesFilterFunction'
 import { themeFilterFunction } from '../domain/use_cases/reportings/filters/themeFilterFunction'
 
@@ -12,6 +13,7 @@ export const useGetFilteredReportingsQuery = () => {
   const {
     provenFilter,
     seaFrontFilter,
+    sourceFilter,
     sourceTypeFilter,
     startedAfter,
     startedBefore,
@@ -43,9 +45,10 @@ export const useGetFilteredReportingsQuery = () => {
       reporting =>
         !!reporting &&
         themeFilterFunction(reporting, themeFilter) &&
-        subThemesFilterFunction(reporting, subThemesFilter)
+        subThemesFilterFunction(reporting, subThemesFilter) &&
+        sourceFilterFunction(reporting, sourceFilter)
     )
-  }, [data, themeFilter, subThemesFilter])
+  }, [data, themeFilter, subThemesFilter, sourceFilter])
 
   return { isError, isFetching, isLoading, reportings }
 }

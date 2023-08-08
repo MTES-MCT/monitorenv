@@ -1,15 +1,26 @@
-import { Option, Select, customDayjs, DateRangePicker, DateAsStringRange, useNewWindow } from '@mtes-mct/monitor-ui'
-import _ from 'lodash'
-import { MutableRefObject, useRef, useState } from 'react'
+import {
+  Option,
+  Select,
+  customDayjs,
+  DateRangePicker,
+  DateAsStringRange,
+  useNewWindow,
+  Checkbox
+} from '@mtes-mct/monitor-ui'
+import _, { reduce } from 'lodash'
+import { MutableRefObject, useMemo, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { CheckPicker } from 'rsuite'
 import styled from 'styled-components'
 
 import { FilterTags } from './FilterTags'
 import { useGetControlThemesQuery } from '../../../../api/controlThemesAPI'
+import { useGetControlUnitsQuery } from '../../../../api/controlUnitsAPI'
+import { useGetSemaphoresQuery } from '../../../../api/semaphoresAPI'
 import { COLORS } from '../../../../constants/constants'
 import { DateRangeEnum, ReportingDateRangeEnum, reportingDateRangeLabels } from '../../../../domain/entities/dateRange'
 import {
+  ReportingSourceEnum,
   // provenFiltersLabels,
   reportingSourceLabels,
   reportingTypeLabels,
@@ -28,6 +39,7 @@ export function ReportingsTableFilters() {
     periodFilter,
     // provenFilter,
     seaFrontFilter,
+    sourceFilter,
     sourceTypeFilter,
     startedAfter,
     startedBefore,
@@ -41,6 +53,9 @@ export function ReportingsTableFilters() {
   const unitPickerRef = useRef() as MutableRefObject<HTMLDivElement>
 
   const { data: themes } = useGetControlThemesQuery()
+  const { data: controlUnits } = useGetControlUnitsQuery()
+  const { data: semaphores } = useGetSemaphoresQuery()
+  const controlUnitsOptions = useMemo(() => (controlUnits ? Array.from(controlUnits) : []), [controlUnits])
 
   const themesListAsOptions: Option[] = _.chain(themes)
     .map(theme => theme.themeLevel1)
@@ -55,6 +70,59 @@ export function ReportingsTableFilters() {
     .uniq()
     .map(t => ({ label: t, value: t }))
     .value()
+
+  const unitListAsOptions = controlUnitsOptions
+    .filter(u => !u.isArchived)
+    .sort((a, b) => a?.name?.localeCompare(b?.name))
+    .map(t => ({
+      label: t.name,
+      value: {
+        id: t.id,
+        label: t.name
+      }
+    }))
+
+  const semaphoresAsOptions = useMemo(
+    () =>
+      reduce(
+        semaphores?.entities,
+        (labels, semaphore) => {
+          if (semaphore) {
+            labels.push({
+              label: semaphore.unit || semaphore.name,
+              value: {
+                id: semaphore.id,
+                label: semaphore.unit || semaphore.name
+              }
+            })
+          }
+
+          return labels
+        },
+        [] as {
+          label: string
+          value: {
+            id: number
+            label: string
+          }
+        }[]
+      ).sort((a, b) => a.label.localeCompare(b.label)),
+    [semaphores]
+  )
+
+  const sourceOptions = useMemo(() => {
+    if (sourceTypeFilter.length === 1 && sourceTypeFilter[0] === ReportingSourceEnum.SEMAPHORE) {
+      return semaphoresAsOptions
+    }
+    if (sourceTypeFilter.length === 1 && sourceTypeFilter[0] === ReportingSourceEnum.CONTROL_UNIT) {
+      return unitListAsOptions
+    }
+
+    return _.chain(unitListAsOptions)
+      .concat(semaphoresAsOptions)
+      .sort((a, b) => a.label.localeCompare(b.label))
+      .value()
+  }, [unitListAsOptions, semaphoresAsOptions, sourceTypeFilter])
 
   const dateRangeOptions = Object.values(reportingDateRangeLabels)
   const typeOptions = Object.values(reportingTypeLabels)
@@ -164,6 +232,11 @@ export function ReportingsTableFilters() {
     }
   }
 
+  const updateSourceTypeFilter = types => {
+    dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SOURCE_TYPE_FILTER, value: types }))
+    dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SOURCE_FILTER, value: [] }))
+  }
+
   const resetFilters = () => {
     setIsCustomPeriodVisible(false)
     dispatch(reportingsFiltersActions.resetReportingsFilters())
@@ -219,12 +292,25 @@ export function ReportingsTableFilters() {
             container={newWindowContainerRef.current}
             data={sourceTypeOptions}
             labelKey="label"
-            onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SOURCE_TYPE_FILTER)}
+            onChange={value => updateSourceTypeFilter(value)}
             placeholder="Type de source"
             renderValue={() => sourceTypeFilter && <OptionValue>{`Type (${sourceTypeFilter.length})`}</OptionValue>}
             size="sm"
             style={tagPickerStyle}
             value={sourceTypeFilter}
+            valueKey="value"
+          />
+
+          <StyledCheckPicker
+            container={newWindowContainerRef.current}
+            data={sourceOptions}
+            labelKey="label"
+            onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SOURCE_FILTER)}
+            placeholder="Source"
+            renderValue={() => sourceFilter && <OptionValue>{`Source (${sourceFilter.length})`}</OptionValue>}
+            size="sm"
+            style={tagPickerStyle}
+            value={sourceFilter}
             valueKey="value"
           />
 

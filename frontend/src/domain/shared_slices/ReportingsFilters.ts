@@ -8,6 +8,10 @@ import { /* InfractionProvenEnum, */ StatusFilterEnum } from '../entities/report
 
 export const LAST_24_HOURS = customDayjs.utc().subtract(24, 'hour').toISOString()
 
+export type SourceFilterProps = {
+  id: number
+  label: string
+}
 export enum ReportingsFiltersEnum {
   ACTIONS = 'actionsFilter',
   PERIOD_FILTER = 'periodFilter',
@@ -29,7 +33,7 @@ type ReportingsFiltersSliceType = {
   periodFilter: string
   provenFilter: string[]
   seaFrontFilter: string[]
-  sourceFilter: string[]
+  sourceFilter: SourceFilterProps[]
   sourceTypeFilter: string[]
   startedAfter: string
   startedBefore?: string
