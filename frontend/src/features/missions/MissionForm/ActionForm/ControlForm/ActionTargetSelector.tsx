@@ -1,9 +1,8 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { Select } from '@mtes-mct/monitor-ui'
+import { Select, useNewWindow } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { targetTypeLabels } from '../../../../../domain/entities/targetType'
-import { useNewWindow } from '../../../../../ui/NewWindow'
 
 import type { Promisable } from 'type-fest'
 

@@ -1,9 +1,8 @@
-import { MultiSelect } from '@mtes-mct/monitor-ui'
+import { MultiSelect, useNewWindow } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { useMemo } from 'react'
 
 import { useGetInfractionsQuery } from '../../../../../../api/infractionsAPI'
-import { useNewWindow } from '../../../../../../ui/NewWindow'
 
 import type { Infraction } from '../../../../../../domain/entities/missions'
 

@@ -1,4 +1,4 @@
-import { Option, Select, customDayjs, DateRangePicker, DateAsStringRange } from '@mtes-mct/monitor-ui'
+import { Option, Select, customDayjs, DateRangePicker, DateAsStringRange, useNewWindow } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 import { MutableRefObject, useMemo, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -18,7 +18,6 @@ import {
 } from '../../../../domain/entities/missions'
 import { MissionFiltersEnum, resetMissionFilters, updateFilters } from '../../../../domain/shared_slices/MissionFilters'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useNewWindow } from '../../../../ui/NewWindow'
 import { ReactComponent as ReloadSVG } from '../../../../uiMonitor/icons/Reload.svg'
 
 export function MissionsTableFilters() {
