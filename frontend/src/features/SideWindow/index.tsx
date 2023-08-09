@@ -6,7 +6,7 @@ import { ToastContainer } from 'react-toastify'
 
 import { Route } from './Route'
 import { sideWindowActions } from './slice'
-import { StyledContainer, Wrapper } from './style'
+import { StyledRouteContainer, Wrapper } from './style'
 import { ErrorBoundary } from '../../components/ErrorBoundary'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { useAppSelector } from '../../hooks/useAppSelector'
@@ -75,12 +75,12 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
               />
             </SideMenu>
 
-            <StyledContainer>
+            <StyledRouteContainer>
               <Route element={<ReportingsList />} path={sideWindowPaths.REPORTINGS} />
               <Route element={<MissionsNavBar />} path={[sideWindowPaths.MISSIONS, sideWindowPaths.MISSION]} />
               <Route element={<Missions />} path={sideWindowPaths.MISSIONS} />
               <Route element={<Mission />} path={sideWindowPaths.MISSION} />
-            </StyledContainer>
+            </StyledRouteContainer>
           </NewWindowContext.Provider>
         )}
         <ToastContainer containerId="sideWindow" enableMultiContainer />

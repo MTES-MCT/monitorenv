@@ -1,10 +1,11 @@
-import { MultiSelect, useNewWindow } from '@mtes-mct/monitor-ui'
+import { MultiSelect } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import _ from 'lodash'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { useGetControlThemesQuery } from '../../../../../../api/controlThemesAPI'
+import { useNewWindow } from '../../../../../../ui/NewWindow'
 import { updateSubThemes } from '../../../formikUseCases/updateActionThemes'
 
 import type { ControlTheme } from '../../../../../../domain/entities/controlThemes'
