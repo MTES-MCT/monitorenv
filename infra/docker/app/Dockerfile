@@ -73,7 +73,7 @@ RUN sentry-cli \
 ######################
 # Create final image #
 ######################
-FROM azul/zulu-openjdk-alpine:17-jre
+FROM azul/zulu-openjdk-alpine:17.0.8-17.44.15
 
 ARG VERSION
 ENV VERSION=$VERSION
