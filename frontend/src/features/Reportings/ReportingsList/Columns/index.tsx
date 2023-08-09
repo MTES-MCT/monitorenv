@@ -1,6 +1,6 @@
+import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { RowCheckbox } from './RowCheckbox'
 import { getFormattedReportingId } from '../../../../domain/entities/reporting'
 import { CellActionThemes } from '../CellActionThemes'
 import { CellEditReporting } from '../CellEditReporting'
@@ -17,11 +17,10 @@ export const Columns = [
     accessorFn: row => row.reportingId,
     cell: ({ row }) => (
       <div className="px-1">
-        <RowCheckbox
+        <TableWithSelectableRows.RowCheckbox
           {...{
-            checked: row.getIsSelected(),
             disabled: !row.getCanSelect(),
-            indeterminate: row.getIsSomeSelected(),
+            isChecked: row.getIsSelected(),
             onChange: row.getToggleSelectedHandler(row)
           }}
         />
@@ -29,14 +28,15 @@ export const Columns = [
     ),
     enableSorting: false,
     header: ({ table }) => (
-      <RowCheckbox
+      <TableWithSelectableRows.RowCheckbox
         {...{
-          checked: table.getIsAllRowsSelected(),
-          indeterminate: table.getIsSomeRowsSelected(),
+          isChecked: table.getIsAllRowsSelected(),
+          isIndeterminate: table.getIsSomeRowsSelected(),
           onChange: table.getToggleAllRowsSelectedHandler()
         }}
       />
     ),
+
     id: 'select',
     size: 50
   },
