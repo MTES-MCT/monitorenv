@@ -63,6 +63,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
           <Form.ControlLabel>Début et fin de surveillance (UTC)</Form.ControlLabel>
           <StyledDatePickerContainer>
             <StyledFormikDatePicker
+              key={`start-date-${durationMatchMissionField.value}`}
               baseContainer={newWindowContainerRef.current}
               data-cy="surveillance-start-date-time"
               disabled={!!durationMatchMissionField.value}
@@ -77,6 +78,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
               withTime
             />
             <StyledFormikDatePicker
+              key={`end-date-${durationMatchMissionField.value}`}
               baseContainer={newWindowContainerRef.current}
               data-cy="surveillance-end-date-time"
               disabled={!!durationMatchMissionField.value}
