@@ -21,7 +21,7 @@ export const Wrapper = styled.section`
   }
 `
 
-export const StyledContainer = styled.section`
+export const StyledRouteContainer = styled.section`
   display: flex;
   flex-direction: column;
   width: calc(100vw - 64px);

@@ -1,4 +1,4 @@
-import { FormikMultiSelect, useNewWindow } from '@mtes-mct/monitor-ui'
+import { FormikMultiSelect } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 import { useMemo } from 'react'
 import styled from 'styled-components'
@@ -7,9 +7,8 @@ import { useGetControlThemesQuery } from '../../../../api/controlThemesAPI'
 
 import type { ControlTheme } from '../../../../domain/entities/controlThemes'
 
-export function SubThemesSelector({ isInNewWindow = false, isLight = false, label, name, theme }) {
+export function SubThemesSelector({ isLight = false, label, name, theme }) {
   const { data: controlThemes, isError, isLoading } = useGetControlThemesQuery()
-  const { newWindowContainerRef } = useNewWindow()
 
   const availableThemes = useMemo(
     () =>
@@ -29,7 +28,6 @@ export function SubThemesSelector({ isInNewWindow = false, isLight = false, labe
         <FormikMultiSelect
           // force update when name or theme changes
           key={`${theme}`}
-          baseContainer={isInNewWindow ? newWindowContainerRef.current : null}
           data-cy="reporting-subtheme-selector"
           disabled={!theme}
           isErrorMessageHidden

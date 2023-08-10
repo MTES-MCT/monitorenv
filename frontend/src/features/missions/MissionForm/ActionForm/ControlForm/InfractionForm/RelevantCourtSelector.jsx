@@ -1,7 +1,6 @@
-import { FormikSelect } from '@mtes-mct/monitor-ui'
+import { FormikSelect, useNewWindow } from '@mtes-mct/monitor-ui'
 
 import { relevantCourtEnum } from '../../../../../../domain/entities/missions'
-import { useNewWindow } from '../../../../../../ui/NewWindow'
 
 export function RelevantCourtSelector({ infractionPath }) {
   const { newWindowContainerRef } = useNewWindow()

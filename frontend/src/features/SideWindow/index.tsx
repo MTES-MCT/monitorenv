@@ -1,4 +1,4 @@
-import { Icon, SideMenu } from '@mtes-mct/monitor-ui'
+import { Icon, SideMenu, type NewWindowContextValue, NewWindowContext } from '@mtes-mct/monitor-ui'
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useState, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { generatePath } from 'react-router'
@@ -6,18 +6,16 @@ import { ToastContainer } from 'react-toastify'
 
 import { Route } from './Route'
 import { sideWindowActions } from './slice'
-import { StyledContainer, Wrapper } from './style'
+import { StyledRouteContainer, Wrapper } from './style'
 import { ErrorBoundary } from '../../components/ErrorBoundary'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { useAppSelector } from '../../hooks/useAppSelector'
-import { NewWindowContext } from '../../ui/NewWindow'
 import { isMissionOrMissionsPage, isReportingsPage } from '../../utils/routes'
 import { Mission } from '../missions/MissionForm'
 import { Missions } from '../missions/MissionsList'
 import { MissionsNavBar } from '../missions/MissionsNavBar'
 import { ReportingsList } from '../Reportings/ReportingsList'
 
-import type { NewWindowContextValue } from '../../ui/NewWindow'
 import type { ForwardedRef, MutableRefObject } from 'react'
 
 function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
@@ -75,12 +73,12 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
               />
             </SideMenu>
 
-            <StyledContainer>
+            <StyledRouteContainer>
               <Route element={<ReportingsList />} path={sideWindowPaths.REPORTINGS} />
               <Route element={<MissionsNavBar />} path={[sideWindowPaths.MISSIONS, sideWindowPaths.MISSION]} />
               <Route element={<Missions />} path={sideWindowPaths.MISSIONS} />
               <Route element={<Mission />} path={sideWindowPaths.MISSION} />
-            </StyledContainer>
+            </StyledRouteContainer>
           </NewWindowContext.Provider>
         )}
         <ToastContainer containerId="sideWindow" enableMultiContainer />
