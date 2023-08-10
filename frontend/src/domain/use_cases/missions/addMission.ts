@@ -9,10 +9,25 @@ import { multiMissionsActions } from '../../shared_slices/MultiMissions'
 
 export const addMission = () => async (dispatch, getState) => {
   const {
+    missionState: { isFormDirty, missionState },
     multiMissions: { selectedMissions }
   } = getState()
   const missions = [...selectedMissions]
 
+  if (missionState) {
+    const selectedMissionIndex = missions.findIndex(mission => mission.mission.id === missionState.id)
+
+    const missionFormatted = {
+      isFormDirty,
+      mission: missionState
+    }
+
+    if (selectedMissionIndex !== -1) {
+      missions[selectedMissionIndex] = missionFormatted
+    } else {
+      missions.push(missionFormatted)
+    }
+  }
   const maxNewMissionId = _.chain(missions)
     .filter(newMission => isNewMission(newMission.mission.id))
     .maxBy(filteredNewMission => Number(filteredNewMission?.mission?.id?.split('new-')[1]))
