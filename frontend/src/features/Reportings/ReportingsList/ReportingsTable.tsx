@@ -128,10 +128,11 @@ export function ReportingsTable({
               const row = rows[virtualRow.index]
 
               return (
-                <StyledTableBodyTr key={virtualRow.key}>
+                <TableWithSelectableRows.BodyTr key={virtualRow.key}>
                   {row?.getVisibleCells().map(cell => (
                     <TableWithSelectableRows.Td
                       {...{
+                        $hasRightBorder: !!(cell.column.id === 'geom'),
                         $isCenter: !!(cell.column.id === 'geom' || cell.column.id === 'edit'),
                         key: cell.id,
                         style: {
@@ -144,7 +145,7 @@ export function ReportingsTable({
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableWithSelectableRows.Td>
                   ))}
-                </StyledTableBodyTr>
+                </TableWithSelectableRows.BodyTr>
               )
             })}
             {paddingBottom > 0 && (
@@ -165,11 +166,4 @@ const StyledReportingsContainer = styled.div`
 const StyledChevronIcon = styled(ChevronIcon)`
   margin-top: 0px;
   margin-right: 0px;
-`
-
-// TODO to delete when we implement the good table
-const StyledTableBodyTr = styled(TableWithSelectableRows.BodyTr)`
-  td:nth-child(9) {
-    text-align: center;
-  }
 `

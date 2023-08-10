@@ -40,7 +40,7 @@ export const reportingDateRangeLabels = {
     value: 'DAY'
   },
   WEEK: {
-    label: '7 dernier jours',
+    label: '7 derniers jours',
     value: 'WEEK'
   },
   // eslint-disable-next-line sort-keys-fix/sort-keys-fix

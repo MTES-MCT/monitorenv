@@ -153,6 +153,7 @@ export function ReportingForm({ setShouldValidateOnChange }) {
         onConfirm={confirmDeleteReporting}
         open={isDeleteModalOpen}
         subTitle="Êtes-vous sûr de vouloir supprimer le signalement&nbsp;?"
+        title="Supprimer le signalement&nbsp;?"
       />
       <StyledHeader>
         <StyledTitle>
