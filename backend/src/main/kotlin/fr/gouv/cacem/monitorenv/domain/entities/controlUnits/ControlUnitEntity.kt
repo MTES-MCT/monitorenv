@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.entities.controlResource
+package fr.gouv.cacem.monitorenv.domain.entities.controlResource // ktlint-disable package-name
 
 data class ControlUnitEntity(
     val id: Int,

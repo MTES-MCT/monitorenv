@@ -11,24 +11,30 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 
 @Entity
-@Table(name = "control_resources")
-data class ControlResourceModel(
+@Table(name = "legacy_control_resources")
+data class LegacyControlResourceModel(
     @Id
     @Column(name = "id")
     val id: Int,
+
     @Column(name = "name")
     val name: String,
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "unit_id")
     @JsonBackReference
-    val controlUnit: ControlUnitModel? = null,
+    val controlUnit: LegacyControlUnitModel? = null,
 ) {
     companion object {
-        fun fromControlEntity(controlResourceEntity: ControlResourceEntity, controlUnitModel: ControlUnitModel) = ControlResourceModel(
-            id = controlResourceEntity.id,
-            name = controlResourceEntity.name,
-            controlUnit = controlUnitModel,
-        )
+        fun fromControlEntity(
+            controlResourceEntity: ControlResourceEntity,
+            legacyControlUnitModel: LegacyControlUnitModel
+        ) =
+            LegacyControlResourceModel(
+                id = controlResourceEntity.id,
+                name = controlResourceEntity.name,
+                controlUnit = legacyControlUnitModel,
+            )
     }
 
     fun toControlResource() = ControlResourceEntity(

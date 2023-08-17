@@ -6,7 +6,7 @@ export const controlUnitsAPI = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/bff/v1' }),
   endpoints: build => ({
     getControlUnits: build.query<ControlUnit[], void>({
-      query: () => `control_units`
+      query: () => `legacy_control_units`
     })
   }),
   reducerPath: 'controlUnits'

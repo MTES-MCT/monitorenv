@@ -24,14 +24,18 @@ data class MissionControlResourceModel(
     val mission: MissionModel,
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = [CascadeType.MERGE])
     @JoinColumn(name = "control_resource_id")
-    val ressource: ControlResourceModel,
+    var ressource: LegacyControlResourceModel,
 ) {
     companion object {
-        fun fromControlResourceEntity(controlResourceEntity: ControlResourceEntity, mission: MissionModel, controlUnitModel: ControlUnitModel) = MissionControlResourceModel(
-            ressource = ControlResourceModel(
+        fun fromControlResourceEntity(
+            controlResourceEntity: ControlResourceEntity,
+            mission: MissionModel,
+            legacyControlUnitModel: LegacyControlUnitModel
+        ) = MissionControlResourceModel(
+            ressource = LegacyControlResourceModel(
                 id = controlResourceEntity.id,
                 name = controlResourceEntity.name,
-                controlUnit = controlUnitModel,
+                controlUnit = legacyControlUnitModel,
             ),
             mission = mission,
         )

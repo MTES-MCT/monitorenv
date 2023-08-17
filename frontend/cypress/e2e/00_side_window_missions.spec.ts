@@ -6,7 +6,7 @@ context('Missions', () => {
     cy.visit(`/side_window`)
   })
   it('Control Unit filter should not contain archived control units', () => {
-    cy.intercept('GET', `/bff/v1/control_units`).as('getControlUnits')
+    cy.intercept('GET', `/bff/v1/legacy_control_units`).as('getControlUnits')
     cy.wait('@getControlUnits').then(({ response }) => {
       expect(response && response.statusCode).to.equal(200)
       const archivedControlUnit = response && response.body.find(controlUnit => controlUnit.name === 'BGC Ajaccio')

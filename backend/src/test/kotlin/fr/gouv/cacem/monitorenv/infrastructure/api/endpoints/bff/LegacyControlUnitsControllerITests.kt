@@ -17,8 +17,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @Import(WebSecurityConfig::class)
-@WebMvcTest(value = [(ControlUnitsController::class)])
-class ControlUnitsControllerITests {
+@WebMvcTest(value = [(LegacyControlUnitsController::class)])
+class LegacyControlUnitsControllerITests {
 
     @Autowired
     private lateinit var mockMvc: MockMvc
@@ -39,7 +39,7 @@ class ControlUnitsControllerITests {
         given(getAllControlUnits.execute()).willReturn(listOf(controlUnit))
 
         // When
-        mockMvc.perform(get("/bff/v1/control_units"))
+        mockMvc.perform(get("/bff/v1/legacy_control_units"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].id", equalTo(controlUnit.id)))

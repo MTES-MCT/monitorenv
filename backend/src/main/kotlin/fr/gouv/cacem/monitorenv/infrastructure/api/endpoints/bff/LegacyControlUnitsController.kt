@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlResources.GetAllControlUnits
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ControlUnitDataOutput
@@ -9,14 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/v1/control_units")
+@RequestMapping("/bff/v1/legacy_control_units")
 @Tag(name = "Control Units", description = "API control units")
-class ApiControlUnitsController(
+class LegacyControlUnitsController(
     private val getAllControlUnits: GetAllControlUnits,
 ) {
-
     @GetMapping("")
-    @Operation(summary = "Get control units")
+    @Operation(summary = "Get legacy control units")
     fun getControlResourcesController(): List<ControlUnitDataOutput> {
         return getAllControlUnits.execute().map { ControlUnitDataOutput.fromControlUnitEntity(it) }
     }
