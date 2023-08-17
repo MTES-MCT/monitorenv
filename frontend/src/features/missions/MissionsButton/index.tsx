@@ -60,18 +60,15 @@ export function MissionsMenu() {
               onClick={toggleMissionsLayer}
             />
           </MenuWithCloseButton.Header>
-          <MenuWithCloseButton.Body>
-            <MenuWithCloseButton.Section>
-              <StyledButton Icon={Icon.Plus} isFullWidth onClick={handleAddNewMission}>
-                Ajouter une nouvelle mission
-              </StyledButton>
-            </MenuWithCloseButton.Section>
-            <MenuWithCloseButton.Section>
-              <StyledButton accent={Accent.SECONDARY} Icon={Icon.Expand} isFullWidth onClick={toggleMissionsWindow}>
-                Voir la vue détaillée des missions
-              </StyledButton>
-            </MenuWithCloseButton.Section>
-          </MenuWithCloseButton.Body>
+          <MenuWithCloseButton.Footer>
+            <StyledButton Icon={Icon.Plus} isFullWidth onClick={handleAddNewMission}>
+              Ajouter une nouvelle mission
+            </StyledButton>
+            <StyledSeparator />
+            <StyledButton accent={Accent.SECONDARY} Icon={Icon.Expand} isFullWidth onClick={toggleMissionsWindow}>
+              Voir la vue détaillée des missions
+            </StyledButton>
+          </MenuWithCloseButton.Footer>
         </MenuWithCloseButton.Container>
       )}
       <MenuWithCloseButton.ButtonOnMap
@@ -98,4 +95,11 @@ const Wrapper = styled.div<{ reportingFormVisibility: ReportingFormVisibility }>
 // TODO delete when Monitor-ui component have good padding
 const StyledButton = styled(Button)`
   padding: 4px 12px;
+`
+
+const StyledSeparator = styled.div`
+  height: 1px;
+  border-top: 1px solid ${p => p.theme.color.gainsboro};
+  margin-left: -12px;
+  margin-right: -12px;
 `

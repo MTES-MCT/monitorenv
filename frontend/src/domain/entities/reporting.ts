@@ -121,14 +121,14 @@ export enum StatusFilterEnum {
 }
 
 export const statusFilterLabels = {
-  ARCHIVED: {
-    label: 'Archivés',
-    value: StatusFilterEnum.ARCHIVED
-  },
-  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
   IN_PROGRESS: {
     label: 'En cours',
     value: StatusFilterEnum.IN_PROGRESS
+  },
+  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
+  ARCHIVED: {
+    label: 'Archivés',
+    value: StatusFilterEnum.ARCHIVED
   }
 }
 export const getFormattedReportingId = (reportingId: number) =>

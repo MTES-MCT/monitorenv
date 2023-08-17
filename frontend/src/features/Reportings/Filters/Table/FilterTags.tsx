@@ -1,4 +1,4 @@
-import { Accent, SingleTag } from '@mtes-mct/monitor-ui'
+import { SingleTag } from '@mtes-mct/monitor-ui'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
@@ -23,7 +23,6 @@ export function FilterTags() {
         sourceTypeFilter.map(sourceType => (
           <SingleTag
             key={sourceType}
-            accent={Accent.SECONDARY}
             onDelete={() => onDeleteTag(sourceType, ReportingsFiltersEnum.SOURCE_TYPE_FILTER, sourceTypeFilter)}
           >
             {String(`Type ${reportingSourceLabels[sourceType].label}`)}
@@ -33,7 +32,6 @@ export function FilterTags() {
         sourceFilter.map(source => (
           <SingleTag
             key={`${source.id}-${source.label}`}
-            accent={Accent.SECONDARY}
             onDelete={() => onDeleteTag(source, ReportingsFiltersEnum.SOURCE_FILTER, sourceFilter)}
           >
             {String(`Source ${source.label}`)}
@@ -41,11 +39,7 @@ export function FilterTags() {
         ))}
       {themeFilter.length > 0 &&
         themeFilter.map(theme => (
-          <SingleTag
-            key={theme}
-            accent={Accent.SECONDARY}
-            onDelete={() => onDeleteTag(theme, ReportingsFiltersEnum.THEME_FILTER, themeFilter)}
-          >
+          <SingleTag key={theme} onDelete={() => onDeleteTag(theme, ReportingsFiltersEnum.THEME_FILTER, themeFilter)}>
             {String(`Thème ${theme}`)}
           </SingleTag>
         ))}
@@ -53,7 +47,6 @@ export function FilterTags() {
         subThemesFilter.map(subTheme => (
           <SingleTag
             key={subTheme}
-            accent={Accent.SECONDARY}
             onDelete={() => onDeleteTag(subTheme, ReportingsFiltersEnum.SUB_THEMES_FILTER, subThemesFilter)}
           >
             {String(`Sous-thème ${subTheme}`)}
@@ -63,12 +56,27 @@ export function FilterTags() {
         seaFrontFilter.map(seaFront => (
           <SingleTag
             key={seaFront}
-            accent={Accent.SECONDARY}
             onDelete={() => onDeleteTag(seaFront, ReportingsFiltersEnum.SEA_FRONT_FILTER, seaFrontFilter)}
           >
             {String(`Facade ${seaFront}`)}
           </SingleTag>
         ))}
+
+      {/*
+      {typeFilter.length > 0 &&
+        typeFilter.map(type => (
+          <SingleTag key={type} onDelete={() => onDeleteTag(type, ReportingsFiltersEnum.TYPE_FILTER, typeFilter)}>
+            {String(`Type ${missionTypeEnum[type].libelle}`)}
+          </SingleTag>
+        ))}
+   
+      {statusFilter.length > 0 &&
+        statusFilter.map(status => (
+          <SingleTag key={status} onDelete={() => onDeleteTag(status, ReportingsFiltersEnum.STATUS_FILTER, statusFilter)}>
+            {String(`Mission ${missionStatusLabels[status].libelle.toLowerCase()}`)}
+          </SingleTag>
+        ))}
+       */}
     </StyledContainer>
   )
 }

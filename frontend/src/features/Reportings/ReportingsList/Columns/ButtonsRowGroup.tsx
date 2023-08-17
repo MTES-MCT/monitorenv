@@ -60,12 +60,29 @@ export function ButtonsGroupRow({ id }) {
   return (
     <>
       <ButtonsGroup>
-        <IconButton accent={Accent.TERTIARY} Icon={Icon.Duplicate} onClick={duplicate} />
-        <IconButton accent={Accent.TERTIARY} Icon={Icon.Edit} onClick={edit} />
+        <IconButton accent={Accent.TERTIARY} Icon={Icon.Duplicate} onClick={duplicate} title="Dupliquer" />
+        <IconButton accent={Accent.TERTIARY} Icon={Icon.Edit} onClick={edit} title="Editer" />
 
-        <StyledDropdown accent={Accent.SECONDARY} Icon={Icon.More} onSelect={archiveOrDelete}>
-          <Dropdown.Item accent={Accent.SECONDARY} eventKey={ACTIONS.ARCHIVE} Icon={Icon.Archive} />
-          <Dropdown.Item accent={Accent.SECONDARY} eventKey={ACTIONS.DELETE} Icon={Icon.Delete} />
+        <StyledDropdown
+          accent={Accent.SECONDARY}
+          data-cy={`more-actions-reporting-${id}`}
+          Icon={Icon.More}
+          onSelect={archiveOrDelete}
+        >
+          <Dropdown.Item
+            accent={Accent.SECONDARY}
+            data-cy={`archive-reporting-${id}`}
+            eventKey={ACTIONS.ARCHIVE}
+            Icon={Icon.Archive}
+            title="Archiver"
+          />
+          <Dropdown.Item
+            accent={Accent.SECONDARY}
+            data-cy={`delete-reporting-${id}`}
+            eventKey={ACTIONS.DELETE}
+            Icon={Icon.Delete}
+            title="Supprimer"
+          />
         </StyledDropdown>
       </ButtonsGroup>
       <DeleteModal

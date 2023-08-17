@@ -129,7 +129,7 @@ VALUES
     NULL,
     '[{"operatorName": "Ma société", "vesselName": "Mr le gérant" }]',
     ST_GeomFromText('MULTIPOINT((-4.18759766312331 47.11281269827924))', 4326),
-    'Gudeloupe',
+    'Guadeloupe',
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     'OBSERVATION',
     NULL,

@@ -25,12 +25,14 @@ export function GroupActions({ resetSelectionFn, selectedReportingsIds, totalRep
           disabled={selectedReportingsIds.length === 0}
           Icon={Icon.Archive}
           onClick={archiveReportings}
+          title="Archiver"
         />
         <IconButton
           accent={Accent.SECONDARY}
           disabled={selectedReportingsIds.length === 0}
           Icon={Icon.Delete}
           onClick={deleteMultiReportings}
+          title="Supprimer"
         />
       </StyledButtonsContainer>
       <NumberOfDisplayedReportings data-cy="totalReportings">

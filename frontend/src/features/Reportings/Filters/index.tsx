@@ -1,0 +1,262 @@
+import { Option, customDayjs, DateAsStringRange } from '@mtes-mct/monitor-ui'
+import _, { reduce } from 'lodash'
+import { MutableRefObject, useMemo, useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
+
+import { MapReportingsFilters } from './Map'
+import { TableReportingsFilters } from './Table'
+import { useGetControlThemesQuery } from '../../../api/controlThemesAPI'
+import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
+import { useGetSemaphoresQuery } from '../../../api/semaphoresAPI'
+import { DateRangeEnum, ReportingDateRangeEnum, reportingDateRangeLabels } from '../../../domain/entities/dateRange'
+import {
+  ReportingSourceEnum,
+  // provenFiltersLabels,
+  reportingSourceLabels,
+  reportingTypeLabels,
+  statusFilterLabels
+} from '../../../domain/entities/reporting'
+import { seaFrontLabels } from '../../../domain/entities/seaFrontType'
+import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../domain/shared_slices/ReportingsFilters'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+
+export enum ReportingFilterContext {
+  MAP = 'MAP',
+  TABLE = 'TABLE'
+}
+export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { context?: string }) {
+  const dispatch = useDispatch()
+  const {
+    periodFilter,
+    // provenFilter,
+    sourceTypeFilter
+  } = useAppSelector(state => state.reportingFilters)
+  const wrapperRef = useRef() as MutableRefObject<HTMLDivElement>
+  const [isCustomPeriodVisible, setIsCustomPeriodVisible] = useState(periodFilter === DateRangeEnum.CUSTOM)
+
+  const { data: themes } = useGetControlThemesQuery()
+  const { data: controlUnits } = useGetControlUnitsQuery()
+  const { data: semaphores } = useGetSemaphoresQuery()
+  const controlUnitsOptions = useMemo(() => (controlUnits ? Array.from(controlUnits) : []), [controlUnits])
+
+  const themesListAsOptions: Option[] = _.chain(themes)
+    .map(theme => theme.themeLevel1)
+    .uniq()
+    .sort((a, b) => a?.localeCompare(b))
+    .map(t => ({ label: t, value: t }))
+    .value()
+
+  const subThemesListAsOptions = _.chain(themes)
+    .map(theme => theme.themeLevel2 || '')
+    .sort((a, b) => a?.localeCompare(b))
+    .uniq()
+    .map(t => ({ label: t, value: t }))
+    .value()
+
+  const unitListAsOptions = controlUnitsOptions
+    .filter(u => !u.isArchived)
+    .sort((a, b) => a?.name?.localeCompare(b?.name))
+    .map(t => ({
+      label: t.name,
+      value: {
+        id: t.id,
+        label: t.name
+      }
+    }))
+
+  const semaphoresAsOptions = useMemo(
+    () =>
+      reduce(
+        semaphores?.entities,
+        (labels, semaphore) => {
+          if (semaphore) {
+            labels.push({
+              label: semaphore.unit || semaphore.name,
+              value: {
+                id: semaphore.id,
+                label: semaphore.unit || semaphore.name
+              }
+            })
+          }
+
+          return labels
+        },
+        [] as {
+          label: string
+          value: {
+            id: number
+            label: string
+          }
+        }[]
+      ).sort((a, b) => a.label.localeCompare(b.label)),
+    [semaphores]
+  )
+
+  const sourceOptions = useMemo(() => {
+    if (sourceTypeFilter.length === 1 && sourceTypeFilter[0] === ReportingSourceEnum.SEMAPHORE) {
+      return semaphoresAsOptions
+    }
+    if (sourceTypeFilter.length === 1 && sourceTypeFilter[0] === ReportingSourceEnum.CONTROL_UNIT) {
+      return unitListAsOptions
+    }
+
+    return _.chain(unitListAsOptions)
+      .concat(semaphoresAsOptions)
+      .sort((a, b) => a.label.localeCompare(b.label))
+      .value()
+  }, [unitListAsOptions, semaphoresAsOptions, sourceTypeFilter])
+
+  const dateRangeOptions = Object.values(reportingDateRangeLabels)
+  const typeOptions = Object.values(reportingTypeLabels)
+  const sourceTypeOptions = Object.values(reportingSourceLabels)
+  const seaFrontsOptions = Object.values(seaFrontLabels)
+  const statusOptions = Object.values(statusFilterLabels)
+  // const isProvenOptions = Object.values(provenFiltersLabels)
+
+  const optionsList = {
+    dateRangeOptions,
+    seaFrontsOptions,
+    sourceOptions,
+    sourceTypeOptions,
+    statusOptions,
+    subThemesListAsOptions,
+    themesListAsOptions,
+    typeOptions
+  }
+
+  const updatePeriodFilter = period => {
+    dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.PERIOD_FILTER, value: period }))
+    setIsCustomPeriodVisible(false)
+    switch (period) {
+      case ReportingDateRangeEnum.DAY:
+        dispatch(
+          reportingsFiltersActions.updateFilters({
+            key: ReportingsFiltersEnum.STARTED_AFTER_FILTER,
+            value: customDayjs.utc().subtract(24, 'hour').toISOString()
+          })
+        )
+        dispatch(
+          reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.STARTED_BEFORE_FILTER, value: undefined })
+        )
+        break
+
+      case ReportingDateRangeEnum.WEEK:
+        dispatch(
+          reportingsFiltersActions.updateFilters({
+            key: ReportingsFiltersEnum.STARTED_AFTER_FILTER,
+            value: customDayjs.utc().startOf('day').utc().subtract(7, 'day').toISOString()
+          })
+        )
+        dispatch(
+          reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.STARTED_BEFORE_FILTER, value: undefined })
+        )
+        break
+
+      case ReportingDateRangeEnum.MONTH:
+        dispatch(
+          reportingsFiltersActions.updateFilters({
+            key: ReportingsFiltersEnum.STARTED_AFTER_FILTER,
+            value: customDayjs.utc().startOf('day').utc().subtract(30, 'day').toISOString()
+          })
+        )
+        dispatch(
+          reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.STARTED_BEFORE_FILTER, value: undefined })
+        )
+        break
+      case ReportingDateRangeEnum.YEAR:
+        dispatch(
+          reportingsFiltersActions.updateFilters({
+            key: ReportingsFiltersEnum.STARTED_AFTER_FILTER,
+            value: customDayjs.utc().startOf('year').toISOString()
+          })
+        )
+        dispatch(
+          reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.STARTED_BEFORE_FILTER, value: undefined })
+        )
+        break
+
+      case ReportingDateRangeEnum.CUSTOM:
+        setIsCustomPeriodVisible(true)
+        break
+
+      default:
+        dispatch(
+          reportingsFiltersActions.updateFilters({
+            key: ReportingsFiltersEnum.STARTED_AFTER_FILTER,
+            value: customDayjs.utc().startOf('day').utc().subtract(7, 'day').toISOString()
+          })
+        )
+        dispatch(
+          reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.STARTED_BEFORE_FILTER, value: undefined })
+        )
+        break
+    }
+  }
+
+  const updateDateRangeFilter = (date: DateAsStringRange | undefined) => {
+    dispatch(
+      reportingsFiltersActions.updateFilters({
+        key: ReportingsFiltersEnum.STARTED_AFTER_FILTER,
+        value: date && date[0] ? date[0] : undefined
+      })
+    )
+    dispatch(
+      reportingsFiltersActions.updateFilters({
+        key: ReportingsFiltersEnum.STARTED_BEFORE_FILTER,
+        value: date && date[1] ? date[1] : undefined
+      })
+    )
+  }
+
+  const updateSimpleFilter = (value, filter) => {
+    dispatch(reportingsFiltersActions.updateFilters({ key: filter, value }))
+  }
+
+  const updateCheckboxFilter = (isChecked, value, key, filter) => {
+    const updatedFilter = [...filter] || []
+
+    if (!isChecked && updatedFilter.includes(String(value))) {
+      const newFilter = updatedFilter.filter(status => status !== String(value))
+      dispatch(reportingsFiltersActions.updateFilters({ key, value: newFilter }))
+    }
+    if (isChecked && !updatedFilter.includes(value)) {
+      const newFilter = [...updatedFilter, value]
+      dispatch(reportingsFiltersActions.updateFilters({ key, value: newFilter }))
+    }
+  }
+
+  const updateSourceTypeFilter = types => {
+    dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SOURCE_TYPE_FILTER, value: types }))
+    dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SOURCE_FILTER, value: [] }))
+  }
+
+  const resetFilters = () => {
+    setIsCustomPeriodVisible(false)
+    dispatch(reportingsFiltersActions.resetReportingsFilters())
+  }
+
+  return context === ReportingFilterContext.TABLE ? (
+    <TableReportingsFilters
+      ref={wrapperRef}
+      isCustomPeriodVisible={isCustomPeriodVisible}
+      optionsList={optionsList}
+      resetFilters={resetFilters}
+      updateCheckboxFilter={updateCheckboxFilter}
+      updateDateRangeFilter={updateDateRangeFilter}
+      updatePeriodFilter={updatePeriodFilter}
+      updateSimpleFilter={updateSimpleFilter}
+      updateSourceTypeFilter={updateSourceTypeFilter}
+    />
+  ) : (
+    <MapReportingsFilters
+      ref={wrapperRef}
+      isCustomPeriodVisible={isCustomPeriodVisible}
+      optionsList={optionsList}
+      updateCheckboxFilter={updateCheckboxFilter}
+      updateDateRangeFilter={updateDateRangeFilter}
+      updatePeriodFilter={updatePeriodFilter}
+      updateSimpleFilter={updateSimpleFilter}
+      updateSourceTypeFilter={updateSourceTypeFilter}
+    />
+  )
+}

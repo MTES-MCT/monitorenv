@@ -1,11 +1,11 @@
 import { Button, Icon } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { ReportingsTableFilters } from './Filters'
 import { ReportingsTable } from './ReportingsTable'
 import { createAndOpenNewReporting } from '../../../domain/use_cases/reportings/createAndOpenNewReporting'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useGetFilteredReportingsQuery } from '../../../hooks/useGetFilteredReportingsQuery'
+import { ReportingsFilters } from '../Filters'
 
 export function ReportingsList() {
   const dispatch = useAppDispatch()
@@ -24,7 +24,7 @@ export function ReportingsList() {
           Ajouter un nouveau signalement
         </StyledButton>
       </StyledHeader>
-      <ReportingsTableFilters />
+      <ReportingsFilters />
 
       {isError ? (
         <p data-cy="listReportingWrapper">Erreur au chargement des données</p>
