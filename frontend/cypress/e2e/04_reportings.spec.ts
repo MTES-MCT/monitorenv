@@ -39,8 +39,8 @@ context('Missions', () => {
     cy.wait(400)
     cy.intercept('PUT', '/bff/v1/reportings/5').as('archiveReporting')
     cy.get('*[data-cy="status-filter-Archivés"]').click()
-    cy.get('*[data-cy="more-actions-reporting-5"]').scrollIntoView().click()
-    cy.get('*[data-cy="archive-reporting-5"]').scrollIntoView().click()
+    cy.get('*[data-cy="more-actions-reporting-5"]').scrollIntoView().click({ force: true })
+    cy.get('*[data-cy="archive-reporting-5"]').scrollIntoView().click({ force: true })
 
     cy.wait('@archiveReporting').then(({ response }) => {
       expect(response && response.body.id).equal(5)
