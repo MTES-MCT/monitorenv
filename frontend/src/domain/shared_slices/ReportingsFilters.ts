@@ -1,5 +1,6 @@
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import { createSlice } from '@reduxjs/toolkit'
+import { isEqual, omit } from 'lodash'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
@@ -75,15 +76,14 @@ const reportingFiltersSlice = createSlice({
       return {
         ...state,
         [action.payload.key]: action.payload.value,
-        hasFilters:
-          (action.payload.value && action.payload.value.length > 0) ||
-          state.periodFilter !== reportingDateRangeLabels.DAY.value ||
-          state.sourceTypeFilter.length > 0 ||
-          state.typeFilter !== undefined ||
-          state.seaFrontFilter.length > 0 ||
-          state.statusFilter.length > 0 ||
-          state.themeFilter.length > 0 ||
-          state.subThemesFilter.length > 0
+        hasFilters: !isEqual(
+          omit(initialState, ['hasFilters', 'startedAfter', 'startedBefore']),
+          omit({ ...state, [action.payload.key]: action.payload.value }, [
+            'hasFilters',
+            'startedAfter',
+            'startedBefore'
+          ])
+        )
       }
     }
   }
