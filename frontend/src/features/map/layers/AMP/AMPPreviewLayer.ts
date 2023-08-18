@@ -61,7 +61,7 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
             }).readFeature(layer.geom)
             const geometry = feature.getGeometry()
             const area = geometry && getArea(geometry)
-            feature.setId(`${Layers.REGULATORY_ENV_PREVIEW.code}:${layer.id}`)
+            feature.setId(`${Layers.AMP.code}:${layer.id}`)
 
             feature.setProperties({
               area,

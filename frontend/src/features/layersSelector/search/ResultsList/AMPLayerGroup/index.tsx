@@ -5,7 +5,11 @@ import Highlighter from 'react-highlight-words'
 import { useDispatch } from 'react-redux'
 
 import { AMPLayer } from './AMPLayer'
-import { addAmpZonesToMyLayers, removeAmpZonesFromMyLayers } from '../../../../../domain/shared_slices/SelectedAmp'
+import {
+  addAmpZonesToMyLayers,
+  removeAmpZonesFromMyLayers,
+  setSelectedAmpLayerId
+} from '../../../../../domain/shared_slices/SelectedAmp'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
 import { LayerSelector } from '../../../utils/LayerSelector.style'
 
@@ -24,11 +28,12 @@ export function AMPLayerGroup({
 }) {
   const dispatch = useDispatch()
 
-  const { selectedAmpLayerIds } = useAppSelector(state => state.selectedAmp)
+  const { selectedAmpLayerId, selectedAmpLayerIds } = useAppSelector(state => state.selectedAmp)
   const totalNumberOfZones = groups[groupName]?.length
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
   const zonesSelected = _.intersection(selectedAmpLayerIds, layerIds)
   const allTopicZonesAreChecked = zonesSelected?.length === layerIds?.length
+  const forceZonesAreOpen = _.includes(layerIds, selectedAmpLayerId)
 
   const handleCheckAllZones = e => {
     e.stopPropagation()
@@ -38,10 +43,14 @@ export function AMPLayerGroup({
       dispatch(addAmpZonesToMyLayers(layerIds))
     }
   }
+  const clickOnGroupZones = () => {
+    setZonesAreOpen(!zonesAreOpen)
+    dispatch(setSelectedAmpLayerId(undefined))
+  }
 
   return (
     <>
-      <LayerSelector.GroupWrapper onClick={() => setZonesAreOpen(!zonesAreOpen)}>
+      <LayerSelector.GroupWrapper onClick={clickOnGroupZones}>
         <LayerSelector.GroupName data-cy="amp-layer-topic" title={groupName}>
           <Highlighter
             autoEscape
@@ -61,7 +70,7 @@ export function AMPLayerGroup({
           />
         </LayerSelector.IconGroup>
       </LayerSelector.GroupWrapper>
-      <LayerSelector.SubGroup isOpen={zonesAreOpen} length={layerIds?.length}>
+      <LayerSelector.SubGroup isOpen={zonesAreOpen || forceZonesAreOpen} length={layerIds?.length}>
         {layerIds?.map(layerId => (
           <AMPLayer key={layerId} layerId={layerId} searchedText={searchedText} />
         ))}

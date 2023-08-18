@@ -41,7 +41,7 @@ export function ReportingCard({ feature, selected = false }: { feature: any; sel
   const endOfValidity = getLocalizedDayjs(createdAt).add(validityTime || 0, 'hour')
   const timeLeft = customDayjs(endOfValidity).diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour', true)
 
-  const subThemesFormatted = subThemes.map(subTheme => subTheme).join(', ')
+  const subThemesFormatted = subThemes?.map(subTheme => subTheme).join(', ')
 
   const timeLeftText = useMemo(() => {
     if (timeLeft < 0 || isArchived) {
@@ -108,7 +108,7 @@ export function ReportingCard({ feature, selected = false }: { feature: any; sel
       <div>
         <StyledThemeContainer>
           {theme && <StyledBoldText>{theme}</StyledBoldText>}
-          {subThemes.length > 0 && <StyledMediumText>&nbsp;/&nbsp;{subThemesFormatted}</StyledMediumText>}
+          {subThemes?.length > 0 && <StyledMediumText>&nbsp;/&nbsp;{subThemesFormatted}</StyledMediumText>}
         </StyledThemeContainer>
         {description && <StyledDescription title={description}>{description}</StyledDescription>}
       </div>
