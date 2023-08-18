@@ -1,7 +1,7 @@
 import { THEME } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { ReportingTypeEnum, reportingTypeLabels } from '../../../domain/entities/reporting'
+import { ReportingTypeEnum, reportingTypeLabels } from '../../../../domain/entities/reporting'
 
 export function getReportType(reportType: string) {
   if (reportType) {

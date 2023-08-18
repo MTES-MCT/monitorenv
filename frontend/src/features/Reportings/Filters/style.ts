@@ -20,22 +20,23 @@ export const StyledCheckPicker = styled(CheckPicker)`
     font-size: 13px !important;
   }
 `
-export const StyledTagsContainer = styled.div`
+export const StyledTagsContainer = styled.div<{ $withMargin: boolean }>`
+  margin-top: ${p => (p.$withMargin ? '50px' : '0px')};
   display: flex;
   flex-direction row;
-  gap: 16px;
-  align-items: baseline;
+  max-width: 100%;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: end;
 `
 export const StyledCustomPeriodContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 5px;
-  margin-top: 5px;
 `
 export const StyledCutomPeriodLabel = styled.div`
   font-size: 13px;
   color: ${p => p.theme.color.slateGray};
-  margin-top: 16px;
 `
 
 export const OptionValue = styled.span`

@@ -30,6 +30,7 @@ export function TableReportingsFiltersWithRef(
   ref
 ) {
   const { newWindowContainerRef } = useNewWindow()
+
   const {
     hasFilters,
     periodFilter,
@@ -181,10 +182,10 @@ export function TableReportingsFiltersWithRef(
           />
         </StyledFiltersSecondLine>
       </FilterWrapper>
-      {isCustomPeriodVisible && <StyledCutomPeriodLabel>Période spécifique</StyledCutomPeriodLabel>}
-      <StyledTagsContainer>
+      <StyledTagsContainer $withMargin={isCustomPeriodVisible || hasFilters}>
         {isCustomPeriodVisible && (
           <StyledCustomPeriodContainer>
+            <StyledCutomPeriodLabel>Période spécifique</StyledCutomPeriodLabel>
             <DateRangePicker
               key="dateRange"
               baseContainer={newWindowContainerRef.current}
@@ -224,13 +225,6 @@ const StyledFiltersFirstLine = styled.div`
   display: flex;
 `
 
-/* const StyledVerticalSeparator = styled.div`
-  height: 21px;
-  border: 1px solid ${p => p.theme.color.slateGray};
-  margin-right: 16px;
-  margin-left: 16px;
-` */
-
 const StyledFiltersSecondLine = styled.div`
   display: flex;
   gap: 10px;
@@ -240,7 +234,6 @@ const ResetFiltersButton = styled.div`
   cursor: pointer;
   display: flex;
   align-items: center;
-  padding-top: 10px;
   svg {
     margin-right: 5px;
   }

@@ -1,14 +1,14 @@
 import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { ButtonsGroupRow } from './ButtonsRowGroup'
 import { getFormattedReportingId } from '../../../../domain/entities/reporting'
-import { CellActionThemes } from '../CellActionThemes'
-import { CellLocalizeReporting } from '../CellLocalizeReporting'
-import { CellStatus } from '../CellStatus'
-import { CellValidityTime } from '../CellValidityTime'
-import { getDateCell } from '../getDateCell'
-import { getReportType } from '../getReportType'
+import { ButtonsGroupRow } from '../Cells/ButtonsRowGroup'
+import { CellActionThemes } from '../Cells/CellActionThemes'
+import { CellLocalizeReporting } from '../Cells/CellLocalizeReporting'
+import { CellStatus } from '../Cells/CellStatus'
+import { CellValidityTime } from '../Cells/CellValidityTime'
+import { getDateCell } from '../Cells/getDateCell'
+import { getReportType } from '../Cells/getReportType'
 
 import type { Row } from '@tanstack/react-table'
 
