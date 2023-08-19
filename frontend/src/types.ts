@@ -15,6 +15,11 @@ export type MonitorEnvBaseLayer = BaseLayer & {
   type?: string
 }
 
+export type Native = boolean | null | number | string | undefined
+export type NativeAny = boolean | NativeArray | NativeObject | null | number | string | undefined
+export type NativeArray = Array<NativeAny>
+export type NativeObject = { [x: string]: NativeAny } | {}
+
 interface VectorSourceType extends VectorSource<Geometry> {}
 
 export type MonitorEnvVectorImageLayer = VectorImageLayer<VectorSourceType> & {
@@ -49,3 +54,32 @@ export type MonitorEnum = {
 }
 
 export type AtLeast<T, K extends keyof T> = Partial<T> & Pick<T, K>
+
+/**
+ * Mark all the prop types of an interface/type as `prop: <MyType> | undefined` while preserving array props.
+ *
+ * @description
+ * When `exactOptionalPropertyTypes` is enabled in tsconfig.json,
+ * this is useful to create objects allowing undefined prop values while keeping all their props required.
+ *
+ * Opposite of `Defined`.
+ *
+ * @example
+ * ```
+ * type MyType {
+ *   aRequiredProp: string
+ *   anOptionalProp?: string
+ *   anArrayProp: number[]
+ * }
+ *
+ * // `type MyPartialType = UndefineExceptArrays<MyType>` is the same as typing:
+ * type MyPartialType {
+ *   aRequiredProp: string | undefined
+ *   anOptionalProp?: string | undefined
+ *   anArrayProp: number[]
+ * }
+ * ```
+ */
+export type UndefineExceptArrays<T> = {
+  [K in keyof T]: T[K] extends (infer U)[] ? U[] : T[K] | undefined
+}

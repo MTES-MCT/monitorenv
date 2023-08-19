@@ -6,7 +6,7 @@ import { getClosedEnvActionSurveillanceSchema, getNewEnvActionSurveillanceSchema
 import { ActionTypeEnum, EnvActionNote, MissionTypeEnum, NewMission } from '../../../../domain/entities/missions'
 import { REACT_APP_CYPRESS_TEST } from '../../../../env'
 
-import type { ControlResource, ControlUnit } from '../../../../domain/entities/controlUnit'
+import type { ControlResource, ControlUnit } from '../../../../domain/entities/legacyControlUnit'
 
 const shouldUseAlternateValidationInTestEnvironment = process.env.NODE_ENV === 'development' || REACT_APP_CYPRESS_TEST
 

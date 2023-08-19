@@ -13,7 +13,7 @@ import {
   EnvActionSurveillance
 } from '../../domain/entities/missions'
 
-import type { ControlUnit } from '../../domain/entities/controlUnit'
+import type { ControlUnit } from '../../domain/entities/legacyControlUnit'
 
 export const infractionFactory = ({ id, ...infraction } = { id: '' }) => ({
   id: uuidv4(),

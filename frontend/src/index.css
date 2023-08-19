@@ -9,6 +9,12 @@ html,
   -moz-osx-font-smoothing: grayscale;
 }
 
+body,
+html,
+#root {
+  height: 100%;
+}
+
 *::before,
 *::after {
   -webkit-box-sizing: revert;
@@ -32,4 +38,8 @@ a:focus {
 
 input:focus {
   outline: none;
+}
+
+#root {
+  height: 100%;
 }

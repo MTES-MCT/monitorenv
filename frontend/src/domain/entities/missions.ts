@@ -1,6 +1,6 @@
 import { THEME, customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 
-import type { ControlUnit } from './controlUnit'
+import type { ControlUnit } from './legacyControlUnit'
 import type { SeaFrontEnum } from './seaFrontType'
 
 export enum ActionTypeEnum {

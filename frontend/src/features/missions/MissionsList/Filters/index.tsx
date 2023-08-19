@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import { FilterTags } from './FilterTags'
 import { useGetControlThemesQuery } from '../../../../api/controlThemesAPI'
-import { useGetControlUnitsQuery } from '../../../../api/controlUnitsAPI'
+import { useGetLegacyControlUnitsQuery } from '../../../../api/legacyControlUnit'
 import { COLORS } from '../../../../constants/constants'
 import { DateRangeEnum, dateRangeLabels } from '../../../../domain/entities/dateRange'
 import { missionSourceEnum, missionStatusLabels, missionTypeEnum } from '../../../../domain/entities/missions'
@@ -37,7 +37,7 @@ export function MissionsTableFilters() {
 
   const unitPickerRef = useRef() as MutableRefObject<HTMLDivElement>
 
-  const { data } = useGetControlUnitsQuery()
+  const { data } = useGetLegacyControlUnitsQuery()
   const controlUnits = useMemo(() => (data ? Array.from(data) : []), [data])
   const { data: controlThemes } = useGetControlThemesQuery()
 

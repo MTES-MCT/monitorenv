@@ -2,6 +2,7 @@ import { configureStore, isPlain } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist'
 
+import { monitorenvPrivateApi, monitorenvPublicApi } from './api/api'
 import { homeReducers, homeMiddlewares } from './domain/shared_slices'
 import { regulatoryActionSanitizer } from './domain/shared_slices/Regulatory'
 
@@ -21,7 +22,7 @@ const homeStore = configureStore({
         ignoredPaths: ['regulatory', 'layerSearch'],
         isSerializable: (value: any) => isPlain(value) || value instanceof Date || value instanceof Error
       }
-    }).concat(homeMiddlewares),
+    }).concat(homeMiddlewares as any, monitorenvPrivateApi.middleware, monitorenvPublicApi.middleware),
   reducer: homeReducers
 })
 
