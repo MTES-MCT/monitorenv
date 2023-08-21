@@ -60,14 +60,14 @@ export function LayerSearch({ isVisible }) {
         'properties.thematique'
       ],
       minMatchCharLength: 2,
-      threshold: 0.3
+      threshold: 0.2
     })
     const fuseAMPs = new Fuse((amps?.entities && Object.values(amps?.entities)) || [], {
       ignoreLocation: true,
       includeScore: false,
       keys: ['name', 'type'],
       minMatchCharLength: 2,
-      threshold: 0.3
+      threshold: 0.2
     })
 
     return async ({

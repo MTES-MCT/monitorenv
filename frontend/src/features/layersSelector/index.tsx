@@ -102,7 +102,7 @@ const Sidebar = styled.div<{ isLayersSidebarVisible: boolean; isVisible: boolean
   opacity: ${props => (props.isVisible ? 1 : 0)};
   top: 10px;
   left: 57px;
-
+  z-index: 1;
   border-radius: 2px;
   position: absolute;
   display: inline-block;

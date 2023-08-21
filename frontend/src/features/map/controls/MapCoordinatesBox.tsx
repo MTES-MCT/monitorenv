@@ -112,7 +112,7 @@ const getShowedCoordinates = (coordinates, coordinatesFormat) => {
 }
 
 const StyledCoordinatesContainer = styled.div`
-  z-index: 1;
+  z-index: 2;
 `
 const RadioWrapper = styled(RadioGroup)`
   padding: 6px 12px 12px 12px !important;
