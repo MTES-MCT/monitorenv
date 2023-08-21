@@ -1,4 +1,12 @@
-import { Accent, Button, FormikSelect, FormikTextInput, FormikTextarea } from '@mtes-mct/monitor-ui'
+import {
+  Accent,
+  Button,
+  FormikSelect,
+  FormikTextInput,
+  FormikTextarea,
+  getOptionsFromIdAndName,
+  getOptionsFromLabelledEnum
+} from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Formik } from 'formik'
 import { sortBy } from 'lodash/fp'
@@ -13,8 +21,6 @@ import { useGetPortsQuery } from '../../../api/port'
 import { ControlUnit } from '../../../domain/entities/controlUnit/types'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../libs/FrontendError'
-import { getOptionsFromIdAndName } from '../../../utils/getOptionsFromIdAndName'
-import { getOptionsFromLabelledEnum } from '../../../utils/getOptionsFromLabelledEnum'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenu } from '../Menu/constants'
 
 import type { ControlUnitResourceFormValues } from './types'

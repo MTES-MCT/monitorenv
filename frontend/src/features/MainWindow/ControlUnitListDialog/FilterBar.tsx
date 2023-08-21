@@ -1,4 +1,12 @@
-import { FormikEffect, FormikSelect, FormikTextInput, Icon, Size } from '@mtes-mct/monitor-ui'
+import {
+  FormikEffect,
+  FormikSelect,
+  FormikTextInput,
+  Icon,
+  Size,
+  getOptionsFromIdAndName,
+  getOptionsFromLabelledEnum
+} from '@mtes-mct/monitor-ui'
 import { Formik } from 'formik'
 import { noop } from 'lodash/fp'
 import { useCallback, useMemo } from 'react'
@@ -7,8 +15,6 @@ import styled from 'styled-components'
 import { useGetControlUnitAdministrationsQuery } from '../../../api/controlUnitAdministration'
 import { useGetPortsQuery } from '../../../api/port'
 import { ControlUnit } from '../../../domain/entities/controlUnit/types'
-import { getOptionsFromIdAndName } from '../../../utils/getOptionsFromIdAndName'
-import { getOptionsFromLabelledEnum } from '../../../utils/getOptionsFromLabelledEnum'
 
 import type { Filter, FilterFormValues } from './types'
 import type { Promisable } from 'type-fest'

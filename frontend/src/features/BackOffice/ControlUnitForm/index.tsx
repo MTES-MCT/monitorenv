@@ -1,4 +1,12 @@
-import { Accent, Button, FormikCheckbox, FormikSelect, FormikTextInput, FormikTextarea } from '@mtes-mct/monitor-ui'
+import {
+  Accent,
+  Button,
+  FormikCheckbox,
+  FormikSelect,
+  FormikTextInput,
+  FormikTextarea,
+  getOptionsFromIdAndName
+} from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Formik } from 'formik'
 import { useCallback, useMemo } from 'react'
@@ -11,7 +19,6 @@ import { useGetControlUnitAdministrationsQuery } from '../../../api/controlUnitA
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../libs/FrontendError'
 import { DefaultTable } from '../../../ui/Table/DefaultTable'
-import { getOptionsFromIdAndName } from '../../../utils/getOptionsFromIdAndName'
 import { CONTROL_UNIT_CONTACTS_TABLE_COLUMNS } from '../ControlUnitContactList/constants'
 import { CONTROL_UNIT_RESOURCES_TABLE_COLUMNS } from '../ControlUnitResourceList/constants'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenu } from '../Menu/constants'

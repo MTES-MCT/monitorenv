@@ -13,6 +13,7 @@ export function Td({ cell, children }: TdProps) {
   return (
     <SimpleTable.Td
       key={cell.id}
+      $isCenter={false}
       style={{
         maxWidth: cell.column.getSize() !== 150 ? cell.column.getSize() : 'auto',
         minWidth: cell.column.getSize() !== 150 ? cell.column.getSize() : 'auto',

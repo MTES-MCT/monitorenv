@@ -61,7 +61,7 @@ const Item = styled.div`
   margin-top: 8px;
   padding: 8px 12px;
   /* TODO Check monitor-ui <MapMenuDialog.Body /> alignment. */
-  text-align: left;
+  /* text-align: left; */
 `
 
 const NameText = styled.div`

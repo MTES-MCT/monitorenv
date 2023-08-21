@@ -1,6 +1,5 @@
-import { isObject } from './isObject'
-import { nullify } from './nullify'
-import { undefinedize } from './undefinedize'
+import { isObject, nullify, undefine } from '@mtes-mct/monitor-ui'
+
 import { FrontendError } from '../libs/FrontendError'
 
 import type { BaseQueryEnhancer, FetchArgs } from '@reduxjs/toolkit/dist/query'
@@ -21,7 +20,7 @@ export const normalizeRtkBaseQuery: BaseQueryEnhancer<unknown, {}, {} | void> =
       const normalizedResult = result.data
         ? ({
             ...result,
-            data: undefinedize((result as any).data)
+            data: undefine((result as any).data)
           } as any)
         : result
 
