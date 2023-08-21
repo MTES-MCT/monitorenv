@@ -8,6 +8,7 @@ import { ReportingContext } from '../domain/shared_slices/Global'
 import Healthcheck from '../features/healthcheck/Healthcheck'
 import { LayersSidebar } from '../features/layersSelector'
 import { LocateOnMap } from '../features/LocateOnMap'
+import { ControlUnitListButton } from '../features/MainWindow/RightMenu/ControlUnitListButton'
 import { Map } from '../features/map'
 import { DrawModal } from '../features/map/draw/DrawModal'
 import { RightMenuOnHoverArea } from '../features/map/shared/RightMenuOnHoverArea'
@@ -28,7 +29,8 @@ export function HomePage() {
     displayMeasurement,
     displayMissionMenuButton,
     displayReportingsButton,
-    displaySearchSemaphoreButton
+    displaySearchSemaphoreButton,
+    isRightMenuControlUnitListButtonVisible: isControlUnitListDialogButtonVisible
   } = useAppSelector(state => state.global)
   const {
     missionState: { isFormDirty, missionState },
@@ -69,6 +71,7 @@ export function HomePage() {
         {displayMissionMenuButton && <MissionsMenu />}
         {displayReportingsButton && <ReportingsButton />}
         {displaySearchSemaphoreButton && <SearchSemaphoreButton />}
+        {isControlUnitListDialogButtonVisible && <ControlUnitListButton />}
 
         {displayMeasurement && <MeasurementMapButton />}
         {displayInterestPoint && <InterestPointMapButton />}

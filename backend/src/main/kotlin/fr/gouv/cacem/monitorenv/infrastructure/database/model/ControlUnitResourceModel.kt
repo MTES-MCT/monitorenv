@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
 import fr.gouv.cacem.monitorenv.domain.entities.nextControlUnit.NextControlUnitResourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.nextControlUnit.NextControlUnitResourceType
 import fr.gouv.cacem.monitorenv.utils.requireNonNull
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -33,11 +34,11 @@ data class ControlUnitResourceModel(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "port_id", nullable = false)
     @JsonBackReference
-    // TODO Make that non-nullable once all resources will have been attached to a port via the frontend resources manager?
+    // TODO Make that non-nullable once all resources will have been attached to a port.
     var port: PortModel? = null,
 
     @Column(name = "type", nullable = false)
-    // TODO Make that non-nullable once all resources will have been attached to a type via the frontend resources manager?
+    // TODO Make that non-nullable once all resources will have been attached to a type.
     var type: String? = null,
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -65,14 +66,16 @@ data class ControlUnitResourceModel(
         if (port != other.port) return false
         if (type != other.type) return false
         if (createdAt != other.createdAt) return false
-        return updatedAt == other.updatedAt
+        if (updatedAt != other.updatedAt) return false
+
+        return true
     }
 
     companion object {
         fun fromNextControlUnitResourceEntity(
             nextControlUnitResourceEntity: NextControlUnitResourceEntity,
             controlUnitModel: ControlUnitModel,
-            // TODO Make that non-nullable once all resources will have been attached to a port via the frontend resources manager?
+            // TODO Make that non-nullable once all resources will have been attached to a port.
             portModel: PortModel?
         ): ControlUnitResourceModel {
             return ControlUnitResourceModel(
@@ -82,6 +85,7 @@ data class ControlUnitResourceModel(
                 note = nextControlUnitResourceEntity.note,
                 photo = nextControlUnitResourceEntity.photo,
                 port = portModel,
+                type = nextControlUnitResourceEntity.type?.name,
             )
         }
     }
@@ -110,6 +114,7 @@ data class ControlUnitResourceModel(
             note = note,
             photo = photo,
             portId = port?.id,
+            type = type?.let { NextControlUnitResourceType.valueOf(it) },
         )
     }
 }

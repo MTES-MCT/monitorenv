@@ -1,5 +1,5 @@
-/* eslint-disable typescript-sort-keys/interface */
-/* eslint-disable sort-keys-fix/sort-keys-fix */
+// TODO It may be a good thing to either call this slice 'mainWindowSlice' since it targets the main window.
+
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import type { MapToolType } from '../entities/map/constants'
@@ -21,11 +21,12 @@ export type ReportingFormVisibilityProps = {
   visibility: VisibilityState
 }
 type Toast = {
+  containerId?: string
   message: any
   type?: string
-  containerId?: string
 }
 
+/* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 type GlobalStateType = {
   // state entry for every component /menu displayed on map whose visibility should be controlled
   displayMissionMenuButton: boolean
@@ -36,6 +37,8 @@ type GlobalStateType = {
   displayInterestPoint: boolean
   displaySearchSemaphoreButton: boolean
   displayReportingsButton: boolean
+  isRightMenuControlUnitListButtonVisible: boolean
+  isControlUnitListDialogVisible: boolean
 
   // state entry for every layer whose visibility should be controlled
   isSearchMissionsVisible: boolean
@@ -78,6 +81,8 @@ const initialState: GlobalStateType = {
   displayInterestPoint: true,
   displaySearchSemaphoreButton: true,
   displayReportingsButton: true,
+  isControlUnitListDialogVisible: false,
+  isRightMenuControlUnitListButtonVisible: true,
 
   // state entry for every layer whose visibility should be controlled
   isSearchMissionsVisible: false,
@@ -111,6 +116,7 @@ const initialState: GlobalStateType = {
 
   toast: undefined
 }
+/* eslint-enable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 
 const globalSlice = createSlice({
   initialState,
@@ -126,22 +132,8 @@ const globalSlice = createSlice({
       state.toast = undefined
     },
 
-    setToast(state, action) {
-      state.toast = action.payload
-    },
-
     setDisplayedItems(state, action: PayloadAction<Partial<GlobalStateType>>) {
       return { ...state, ...action.payload }
-    },
-
-    setReportingFormVisibility(state, action) {
-      state.reportingFormVisibility = action.payload
-    },
-    /**
-     * Set the map tool opened
-     */
-    setIsMapToolVisible(state, action: PayloadAction<MapToolType | undefined>) {
-      state.isMapToolVisible = action.payload
     },
 
     /**
@@ -152,8 +144,39 @@ const globalSlice = createSlice({
     setHealthcheckTextWarning(state, action) {
       state.healthcheckTextWarning = action.payload
     },
+
+    setIsControlUnitListDialogVisible(state, action: PayloadAction<boolean>) {
+      state.isControlUnitListDialogVisible = action.payload
+    },
+
+    /**
+     * Set the map tool opened
+     */
+    setIsMapToolVisible(state, action: PayloadAction<MapToolType | undefined>) {
+      state.isMapToolVisible = action.payload
+    },
+
+    /**
+     * Set the map tool opened
+     */
+    setisMapToolVisible(state, action: PayloadAction<MapToolType | undefined>) {
+      state.isMapToolVisible = action.payload
+    },
+
+    setIsRightMenuControlUnitListButtonVisible(state, action: PayloadAction<boolean>) {
+      state.isRightMenuControlUnitListButtonVisible = action.payload
+    },
+
     setOverlayCoordinates(state, action) {
       state.overlayCoordinates = action.payload
+    },
+
+    setReportingFormVisibility(state, action) {
+      state.reportingFormVisibility = action.payload
+    },
+
+    setToast(state, action) {
+      state.toast = action.payload
     }
   }
 })
@@ -163,7 +186,9 @@ export const {
   removeToast,
   setDisplayedItems,
   setHealthcheckTextWarning,
-  setIsMapToolVisible,
+  setIsControlUnitListDialogVisible,
+  setisMapToolVisible,
+  setIsRightMenuControlUnitListButtonVisible,
   setOverlayCoordinates,
   setReportingFormVisibility,
   setToast

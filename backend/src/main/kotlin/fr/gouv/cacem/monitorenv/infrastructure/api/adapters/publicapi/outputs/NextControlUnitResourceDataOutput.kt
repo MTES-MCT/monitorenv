@@ -15,10 +15,10 @@ data class NextControlUnitResourceDataOutput(
     val name: String,
     val note: String? = null,
     val photo: ByteArray? = byteArrayOf(),
-    // TODO Make that non-nullable once all resources will have been attached to a port via the frontend resources manager?
+    // TODO Make that non-nullable once all resources will have been attached to a port.
     val port: PortEntity? = null,
     val portId: Int? = null,
-    // TODO Make that non-nullable once all resources will have been attached to a type via the frontend resources manager?
+    // TODO Make that non-nullable once all resources will have been attached to a type.
     val type: NextControlUnitResourceType? = null,
 ) {
     override fun equals(other: Any?): Boolean {

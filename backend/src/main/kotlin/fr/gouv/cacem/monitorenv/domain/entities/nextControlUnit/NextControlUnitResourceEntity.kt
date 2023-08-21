@@ -1,14 +1,18 @@
 package fr.gouv.cacem.monitorenv.domain.entities.nextControlUnit
 
+import fr.gouv.cacem.monitorenv.domain.entities.port.PortEntity
+
 data class NextControlUnitResourceEntity(
     val id: Int? = null,
     val controlUnitId: Int,
     val name: String,
     val note: String? = null,
     val photo: ByteArray? = byteArrayOf(),
-    // TODO Make that non-nullable once all resources will have been attached to a port via the frontend resources manager?
+    // Only used for deep resolution of the port attached to each control unit resource when outputting control units.
+    val port: PortEntity? = null,
+    // TODO Make that non-nullable once all resources will have been attached to a port.
     val portId: Int? = null,
-    // TODO Make that non-nullable once all resources will have been attached to a type via the frontend resources manager?
+    // TODO Make that non-nullable once all resources will have been attached to a type.
     val type: NextControlUnitResourceType? = null,
 ) {
     override fun equals(other: Any?): Boolean {
@@ -25,8 +29,11 @@ data class NextControlUnitResourceEntity(
             if (other.photo == null) return false
             if (!photo.contentEquals(other.photo)) return false
         } else if (other.photo != null) return false
+        if (port != other.port) return false
         if (portId != other.portId) return false
-        return type == other.type
+        if (type != other.type) return false
+
+        return true
     }
 
     override fun hashCode(): Int {
@@ -35,6 +42,7 @@ data class NextControlUnitResourceEntity(
         result = 31 * result + name.hashCode()
         result = 31 * result + (note?.hashCode() ?: 0)
         result = 31 * result + (photo?.contentHashCode() ?: 0)
+        result = 31 * result + (port?.hashCode() ?: 0)
         result = 31 * result + (portId ?: 0)
         result = 31 * result + (type?.hashCode() ?: 0)
 

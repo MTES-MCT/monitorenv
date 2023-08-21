@@ -84,7 +84,7 @@ const ListItem = styled.li`
   text-overflow: ellipsis;
   overflow: hidden !important;
   cursor: pointer;
-  background: ${p => p.theme.color.background};
+  background: ${p => p.theme.color.white};
   color: ${p => p.theme.color.gunMetal};
   border-bottom: 1px solid ${p => p.theme.color.lightGray};
   line-height: 1.9em;

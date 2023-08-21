@@ -9,7 +9,11 @@ export namespace ControlUnit {
     controlUnitContactIds: number[]
     controlUnitContacts: ControlUnitContactData[]
     controlUnitResourceIds: number[]
-    controlUnitResources: ControlUnitResourceData[]
+    controlUnitResources: Array<
+      ControlUnitResourceData & {
+        port: Port.PortData
+      }
+    >
     id: number
     isArchived: boolean
     name: string
@@ -42,10 +46,10 @@ export namespace ControlUnit {
     note: string | undefined
     /** Base64 Data URI. */
     photo: string | undefined
-    // TODO Make that non-undefinable once all resources will have been attached to a port via the frontend resources manager?
+    // TODO Make that non-undefinable once all resources will have been attached to a port.
     port: Port.PortData | undefined
     portId: number | undefined
-    // TODO Make that non-undefinable once all resources will have been attached to a type via the frontend resources manager?
+    // TODO Make that non-undefinable once all resources will have been attached to a type.
     type: ControlUnitResourceType | undefined
   }
 
