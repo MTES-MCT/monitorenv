@@ -131,10 +131,13 @@ export const controlUnitFactory = ({ ...resourceUnit } = {}): Omit<ControlUnit, 
 })
 
 export const getControlInfractionsTags = (actionNumberOfControls, infractions) => {
-  const infra = infractions.length || 0
-  const ras = (actionNumberOfControls || 0) - infra
-  const infraSansPV = infractions?.filter(inf => inf.infractionType !== InfractionTypeEnum.WITH_REPORT)?.length || 0
+  const totalInfractions = infractions.length || 0
+  const ras = (actionNumberOfControls || 0) - totalInfractions
+  const infractionsWithoutPV =
+    infractions?.filter(inf => inf.infractionType === InfractionTypeEnum.WITHOUT_REPORT)?.length || 0
+  const infractionsWithWaitingPv =
+    infractions?.filter(inf => inf.infractionType === InfractionTypeEnum.WAITING)?.length || 0
   const med = infractions?.filter(inf => inf.formalNotice === FormalNoticeEnum.YES)?.length || 0
 
-  return { infra, infraSansPV, med, ras }
+  return { infractionsWithoutPV, infractionsWithWaitingPv, med, ras, totalInfractions }
 }
