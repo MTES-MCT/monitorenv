@@ -49,7 +49,7 @@ const BaseLayersList = styled.ul<{ $baseLayersLength: number | undefined; $showB
   height: 0;
   overflow-y: hidden;
   overflow-x: hidden;
-  background: ${p => p.theme.color.background};
+  background: ${p => p.theme.color.white};
 
   animation: ${p => (p.$showBaseLayers ? 'zones-opening' : 'zones-closing')} 0.5s ease forwards;
 
