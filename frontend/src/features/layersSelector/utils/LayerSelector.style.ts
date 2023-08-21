@@ -124,6 +124,7 @@ const NoLayerSelected = styled.div`
   padding: 6px;
   font-size: 13px;
   height: 36px;
+  text-align: center;
 `
 
 export const LayerSelector = {
