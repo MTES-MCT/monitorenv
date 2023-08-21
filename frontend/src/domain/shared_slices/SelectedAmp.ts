@@ -10,10 +10,12 @@ const persistConfig = {
 }
 
 type SelectedAmpSliceState = {
+  selectedAmpLayerId: number | undefined
   selectedAmpLayerIds: number[]
   showedAmpLayerIds: number[]
 }
 const initialState: SelectedAmpSliceState = {
+  selectedAmpLayerId: undefined,
   selectedAmpLayerIds: [],
   showedAmpLayerIds: []
 }
@@ -64,6 +66,9 @@ const selectedAmpSlice = createSlice({
       }
     },
 
+    setSelectedAmpLayerId(state, action) {
+      state.selectedAmpLayerId = action.payload
+    },
     /**
      * show AmpLayer
      * @memberOf AmpReducer
@@ -76,7 +81,13 @@ const selectedAmpSlice = createSlice({
   }
 })
 
-export const { addAmpZonesToMyLayers, hideAmpLayer, hideAmpLayers, removeAmpZonesFromMyLayers, showAmpLayer } =
-  selectedAmpSlice.actions
+export const {
+  addAmpZonesToMyLayers,
+  hideAmpLayer,
+  hideAmpLayers,
+  removeAmpZonesFromMyLayers,
+  setSelectedAmpLayerId,
+  showAmpLayer
+} = selectedAmpSlice.actions
 
 export const selectedAmpSlicePersistedReducer = persistReducer(persistConfig, selectedAmpSlice.reducer)

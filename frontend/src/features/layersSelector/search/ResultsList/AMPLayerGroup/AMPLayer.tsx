@@ -1,25 +1,32 @@
 import { Accent, Icon, Size, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
+import { createRef, useEffect } from 'react'
 import Highlighter from 'react-highlight-words'
 import { useDispatch } from 'react-redux'
 
 import { useGetAMPsQuery } from '../../../../../api/ampsAPI'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../../domain/entities/map/constants'
 import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
-import { addAmpZonesToMyLayers, removeAmpZonesFromMyLayers } from '../../../../../domain/shared_slices/SelectedAmp'
+import {
+  addAmpZonesToMyLayers,
+  removeAmpZonesFromMyLayers,
+  setSelectedAmpLayerId
+} from '../../../../../domain/shared_slices/SelectedAmp'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
 import { AMPLayerLegend } from '../../../utils/LayerLegend.style'
 import { LayerSelector } from '../../../utils/LayerSelector.style'
 
 export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedText: string }) {
   const dispatch = useDispatch()
+  const ref = createRef<HTMLSpanElement>()
+
   const { layer } = useGetAMPsQuery(undefined, {
     selectFromResult: ({ data }) => ({
       layer: data?.entities[layerId]
     })
   })
-  const { selectedAmpLayerIds } = useAppSelector(state => state.selectedAmp)
+  const { selectedAmpLayerId, selectedAmpLayerIds } = useAppSelector(state => state.selectedAmp)
   const isZoneSelected = selectedAmpLayerIds.includes(layerId)
 
   const handleSelectRegulatoryZone = e => {
@@ -41,10 +48,19 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
       new Projection({ code: OPENLAYERS_PROJECTION })
     )
     dispatch(setFitToExtent(extent))
+    dispatch(setSelectedAmpLayerId(layerId))
   }
 
+  useEffect(() => {
+    if (selectedAmpLayerId === layerId && ref?.current) {
+      ref.current.scrollIntoView({
+        behavior: 'smooth'
+      })
+    }
+  }, [selectedAmpLayerId, ref, layerId])
+
   return (
-    <LayerSelector.Layer>
+    <LayerSelector.Layer ref={ref} $selected={selectedAmpLayerId === layerId}>
       <AMPLayerLegend name={layer?.name} type={layer?.type} />
       <LayerSelector.Name onClick={fitToRegulatoryLayer} title={layer?.type}>
         <Highlighter

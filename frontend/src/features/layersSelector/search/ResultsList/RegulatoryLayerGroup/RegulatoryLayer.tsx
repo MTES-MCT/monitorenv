@@ -1,6 +1,7 @@
 import { Accent, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
+import { createRef, useEffect } from 'react'
 import Highlighter from 'react-highlight-words'
 import { useDispatch } from 'react-redux'
 
@@ -25,6 +26,8 @@ export function RegulatoryLayer({ layerId, searchedText }: { layerId: number; se
   const { regulatoryMetadataLayerId, regulatoryMetadataPanelIsOpen } = useAppSelector(state => state.regulatoryMetadata)
   const isZoneSelected = selectedRegulatoryLayerIds.includes(layerId)
   const metadataIsShown = regulatoryMetadataPanelIsOpen && layerId === regulatoryMetadataLayerId
+
+  const ref = createRef<HTMLSpanElement>()
 
   const handleSelectRegulatoryZone = e => {
     e.stopPropagation()
@@ -55,8 +58,16 @@ export function RegulatoryLayer({ layerId, searchedText }: { layerId: number; se
     dispatch(setFitToExtent(extent))
   }
 
+  useEffect(() => {
+    if (layerId === regulatoryMetadataLayerId && ref?.current) {
+      ref.current.scrollIntoView({
+        behavior: 'smooth'
+      })
+    }
+  }, [layerId, regulatoryMetadataLayerId, ref])
+
   return (
-    <LayerSelector.Layer $metadataIsShown={metadataIsShown} onClick={toggleRegulatoryZoneMetadata}>
+    <LayerSelector.Layer ref={ref} $metadataIsShown={metadataIsShown} onClick={toggleRegulatoryZoneMetadata}>
       <RegulatoryLayerLegend entity_name={layer?.properties?.entity_name} thematique={layer?.properties?.thematique} />
       <LayerSelector.Name onClick={fitToRegulatoryLayer} title={layer?.properties?.entity_name}>
         <Highlighter

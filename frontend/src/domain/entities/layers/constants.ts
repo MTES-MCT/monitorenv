@@ -196,6 +196,7 @@ export const SelectableLayers = [
   Layers.MISSIONS.code,
   Layers.REGULATORY_ENV_PREVIEW.code,
   Layers.REGULATORY_ENV.code,
+  Layers.AMP.code,
   Layers.SEMAPHORES.code,
   Layers.REPORTINGS.code
 ]
