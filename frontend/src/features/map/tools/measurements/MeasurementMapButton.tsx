@@ -1,4 +1,4 @@
-import { Icon } from '@mtes-mct/monitor-ui'
+import { Icon, THEME } from '@mtes-mct/monitor-ui'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
@@ -12,8 +12,6 @@ import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useClickOutsideWhenOpenedAndExecute } from '../../../../hooks/useClickOutsideWhenOpenedAndExecute'
 import { useEscapeFromKeyboardAndExecute } from '../../../../hooks/useEscapeFromKeyboardAndExecute'
-import { ReactComponent as MultiLineSVG } from '../../../../uiMonitor/icons/Measure_broken_line.svg'
-import { ReactComponent as CircleRangeSVG } from '../../../../uiMonitor/icons/Measure_circle.svg'
 import { MapComponentStyle } from '../../../commonStyles/MapComponent.style'
 import { MapToolButton } from '../MapToolButton'
 
@@ -87,14 +85,14 @@ export function MeasurementMapButton() {
           onClick={() => makeMeasurement(MeasurementType.MULTILINE)}
           title={"Mesure d'une distance avec lignes brisées"}
         >
-          <MultiLineIcon />
+          <Icon.MeasureBrokenLine color={THEME.color.gainsboro} size={25} />
         </MeasurementItem>
         <MeasurementItem
           data-cy="measurement-circle-range"
           onClick={() => makeMeasurement(MeasurementType.CIRCLE_RANGE)}
           title={"Rayon d'action"}
         >
-          <CircleRangeIcon />
+          <Icon.MeasureCircle color={THEME.color.gainsboro} size={25} />
         </MeasurementItem>
       </MeasurementOptions>
       <CustomCircleRange />
@@ -106,34 +104,12 @@ const MeasurementItem = styled.div`
   background: ${p => p.theme.color.blueGray[100]};
   border-radius: 2px;
   cursor: pointer;
-  display: inline-block;
   float: right;
   height: 40px;
   margin-left: 5px;
-  padding: 0;
-  padding-top: 8px;
   position: relative;
-  right: 0;
   width: 40px;
-  z-index: 99;
-`
-
-const MultiLineIcon = styled(MultiLineSVG)`
-  height: 25px;
-  width: 25px;
-
-  path {
-    fill: ${p => p.theme.color.gainsboro};
-  }
-`
-
-const CircleRangeIcon = styled(CircleRangeSVG)`
-  height: 25px;
-  width: 25px;
-
-  path {
-    fill: ${p => p.theme.color.gainsboro};
-  }
+  padding: 8px;
 `
 
 const Wrapper = styled.div<{ reportingFormVisibility: ReportingFormVisibility }>`

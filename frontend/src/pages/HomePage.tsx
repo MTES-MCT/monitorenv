@@ -84,7 +84,6 @@ export function HomePage() {
 
 const Wrapper = styled.div`
   font-size: 13px;
-  text-align: center;
   height: 100% - 50px;
   width: 100%;
   overflow-y: hidden;

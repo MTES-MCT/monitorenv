@@ -92,7 +92,7 @@ const MissionZoneSchema = Yup.object().test({
 
 const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
   .shape({
-    closedBy: Yup.string(),
+    closedBy: Yup.string().nullable(),
     controlUnits: Yup.array().of(ControlUnitSchema).ensure().defined().min(1),
     endDateTimeUtc: Yup.date()
       .nullable()
