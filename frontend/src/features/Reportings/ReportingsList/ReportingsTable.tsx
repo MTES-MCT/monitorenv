@@ -1,4 +1,4 @@
-import { Icon, TableWithSelectableRows } from '@mtes-mct/monitor-ui'
+import { Icon, THEME, TableWithSelectableRows } from '@mtes-mct/monitor-ui'
 import { flexRender, getCoreRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { useCallback, useMemo, useRef, useState } from 'react'
@@ -7,7 +7,6 @@ import styled from 'styled-components'
 import { Columns } from './Columns'
 import { GroupActions } from './GroupActions'
 import { StyledSkeletonRow } from '../../commonComponents/Skeleton'
-import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 
 import type { ReportingDetailed } from '../../../domain/entities/reporting'
 
@@ -77,7 +76,7 @@ export function ReportingsTable({
   return (
     <>
       <GroupActions
-        resetSelectionFn={resetSelection}
+        archiveOrDeleteReportingsCallback={resetSelection}
         selectedReportingsIds={selectedIds}
         totalReportings={reportings?.length || 0}
       />
@@ -104,9 +103,11 @@ export function ReportingsTable({
 
                         {header.column.getCanSort() &&
                           ({
-                            asc: <StyledChevronIcon $isOpen={false} $right={false} />,
-                            desc: <StyledChevronIcon $isOpen $right={false} />
-                          }[header.column.getIsSorted() as string] ?? <Icon.SortingArrows size={14} />)}
+                            asc: <Icon.SortSelectedUp size={14} />,
+                            desc: <Icon.SortSelectedDown size={14} />
+                          }[header.column.getIsSorted() as string] ?? (
+                            <Icon.SortingChevrons color={THEME.color.lightGray} size={14} />
+                          ))}
                       </TableWithSelectableRows.SortContainer>
                     )}
                   </TableWithSelectableRows.Th>
@@ -156,8 +157,4 @@ export function ReportingsTable({
 
 const StyledReportingsContainer = styled.div`
   overflow: auto;
-`
-const StyledChevronIcon = styled(ChevronIcon)`
-  margin-top: 0px;
-  margin-right: 0px;
 `

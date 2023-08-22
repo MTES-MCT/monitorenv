@@ -6,15 +6,15 @@ import { deleteMultipleReportings } from '../../../domain/use_cases/reportings/d
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { pluralize } from '../../../utils/pluralize'
 
-export function GroupActions({ resetSelectionFn, selectedReportingsIds, totalReportings }) {
+export function GroupActions({ archiveOrDeleteReportingsCallback, selectedReportingsIds, totalReportings }) {
   const dispatch = useAppDispatch()
 
   const archiveReportings = () => {
-    dispatch(archiveMultipleReportings(selectedReportingsIds, resetSelectionFn))
+    dispatch(archiveMultipleReportings(selectedReportingsIds, archiveOrDeleteReportingsCallback))
   }
 
   const deleteMultiReportings = () => {
-    dispatch(deleteMultipleReportings(selectedReportingsIds, resetSelectionFn))
+    dispatch(deleteMultipleReportings(selectedReportingsIds, archiveOrDeleteReportingsCallback))
   }
 
   return (

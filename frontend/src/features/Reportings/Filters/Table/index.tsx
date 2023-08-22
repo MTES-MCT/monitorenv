@@ -1,11 +1,10 @@
-import { DateRangePicker, useNewWindow, Checkbox } from '@mtes-mct/monitor-ui'
+import { DateRangePicker, useNewWindow, Checkbox, Icon } from '@mtes-mct/monitor-ui'
 import { forwardRef } from 'react'
 import styled from 'styled-components'
 
 import { FilterTags } from './FilterTags'
 import { ReportingsFiltersEnum } from '../../../../domain/shared_slices/ReportingsFilters'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { ReactComponent as ReloadSVG } from '../../../../uiMonitor/icons/Reload.svg'
 import {
   OptionValue,
   StyledCheckPicker,
@@ -205,8 +204,8 @@ export function TableReportingsFiltersWithRef(
 
         {hasFilters && (
           <ResetFiltersButton data-cy="reinitialize-filters" onClick={resetFilters}>
-            <ReloadSVG />
-            Réinitialiser les filtres
+            <Icon.Reset size={20} />
+            <span>Réinitialiser les filtres</span>
           </ResetFiltersButton>
         )}
       </StyledTagsContainer>
@@ -234,10 +233,9 @@ const ResetFiltersButton = styled.div`
   cursor: pointer;
   display: flex;
   align-items: center;
-  svg {
-    width: 20px;
-    height: 20px;
-    margin-right: 5px;
+  gap: 4px;
+  > span {
+    font-size: 13px;
   }
 `
 
