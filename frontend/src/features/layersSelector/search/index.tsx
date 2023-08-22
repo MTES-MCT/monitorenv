@@ -59,15 +59,15 @@ export function LayerSearch({ isVisible }) {
         'properties.type',
         'properties.thematique'
       ],
-      minMatchCharLength: 3,
-      threshold: 0.4
+      minMatchCharLength: 2,
+      threshold: 0.2
     })
     const fuseAMPs = new Fuse((amps?.entities && Object.values(amps?.entities)) || [], {
       ignoreLocation: true,
       includeScore: false,
       keys: ['name', 'type'],
-      minMatchCharLength: 3,
-      threshold: 0.4
+      minMatchCharLength: 2,
+      threshold: 0.2
     })
 
     return async ({
@@ -98,7 +98,7 @@ export function LayerSearch({ isVisible }) {
             const filterWithTextExpression =
               searchedText.length > 0 ? { $path: ['name'], $val: searchedText } : undefined
             const filterWithType =
-              ampTypes.length > 0 ? { $or: ampTypes.map(theme => ({ $path: 'type', $val: `'${theme}` })) } : undefined
+              ampTypes.length > 0 ? { $or: ampTypes.map(theme => ({ $path: 'type', $val: theme })) } : undefined
 
             const filterExpression = [filterWithTextExpression, filterWithType].filter(f => !!f) as Fuse.Expression[]
 
@@ -134,13 +134,14 @@ export function LayerSearch({ isVisible }) {
 
             const filterWithTheme =
               regulatoryThemes.length > 0
-                ? { $or: regulatoryThemes.map(theme => ({ $path: ['properties', 'thematique'], $val: `'${theme}` })) }
+                ? { $or: regulatoryThemes.map(theme => ({ $path: ['properties', 'thematique'], $val: theme })) }
                 : undefined
 
             const filterExpression = [filterWithTextExpression, filterWithTheme].filter(f => !!f) as Fuse.Expression[]
             searchedRegulatory = fuseRegulatory.search<RegulatoryLayerType>({
               $and: filterExpression
             })
+
             itemSchema = { bboxPath: 'item.bbox', idPath: 'item.id' }
           } else {
             searchedRegulatory = regulatoryLayers

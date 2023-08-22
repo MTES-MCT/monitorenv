@@ -1,4 +1,4 @@
-import { SingleTag } from '@mtes-mct/monitor-ui'
+import { Accent, SingleTag } from '@mtes-mct/monitor-ui'
 import { Button, CheckPicker } from 'rsuite'
 import styled from 'styled-components'
 
@@ -45,9 +45,14 @@ export function LayerFilters({
       <TagWrapper>
         {filteredRegulatoryThemes.length > 0 &&
           filteredRegulatoryThemes.map(theme => (
-            <StyledSingleTag key={theme} onDelete={handleDeleteRegulatoryTheme(theme)}>
+            <SingleTag
+              key={theme}
+              accent={Accent.SECONDARY}
+              onDelete={handleDeleteRegulatoryTheme(theme)}
+              title={theme}
+            >
               {theme}
-            </StyledSingleTag>
+            </SingleTag>
           ))}
       </TagWrapper>
 
@@ -64,9 +69,9 @@ export function LayerFilters({
       <TagWrapper>
         {filteredAmpTypes.length > 0 &&
           filteredAmpTypes.map(type => (
-            <StyledSingleTag key={type} onDelete={handleDeleteAmpType(type)}>
+            <SingleTag key={type} accent={Accent.SECONDARY} onDelete={handleDeleteAmpType(type)} title={type}>
               {type}
-            </StyledSingleTag>
+            </SingleTag>
           ))}
       </TagWrapper>
 
@@ -88,6 +93,9 @@ const FiltersWrapper = styled.div`
 const TagWrapper = styled.div`
   margin-top: 4px;
   margin-bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
 `
 const ResetFilters = styled(Button)`
   padding: 0px;
@@ -108,15 +116,4 @@ const OptionValue = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-`
-const StyledSingleTag = styled(SingleTag)`
-  margin-top: 4px;
-  margin-right: 4px;
-  > * {
-    background-color: ${p => p.theme.color.blueYonder['100']};
-    color: ${p => p.theme.color.white};
-  }
-  .Element-IconButton:hover {
-    background-color: ${p => p.theme.color.blueYonder['25']};
-  }
 `

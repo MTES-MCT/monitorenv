@@ -62,7 +62,7 @@ export function MapCoordinatesBox({ map }: BaseMapChildrenProps) {
   }, [clickedOutsideComponent])
 
   return (
-    <div ref={wrapperRef}>
+    <StyledCoordinatesContainer ref={wrapperRef}>
       <CoordinatesTypeSelection isOpen={coordinatesSelectionIsOpen}>
         <Header data-cy="coordinates-selection" onClick={() => setCoordinatesSelectionIsOpen(false)}>
           Unités des coordonnées
@@ -97,7 +97,7 @@ export function MapCoordinatesBox({ map }: BaseMapChildrenProps) {
       <Coordinates onClick={() => setCoordinatesSelectionIsOpen(!coordinatesSelectionIsOpen)}>
         {getShowedCoordinates(coordinates, coordinatesFormat)} ({coordinatesFormat})
       </Coordinates>
-    </div>
+    </StyledCoordinatesContainer>
   )
 }
 
@@ -111,6 +111,9 @@ const getShowedCoordinates = (coordinates, coordinatesFormat) => {
   return ''
 }
 
+const StyledCoordinatesContainer = styled.div`
+  z-index: 2;
+`
 const RadioWrapper = styled(RadioGroup)`
   padding: 6px 12px 12px 12px !important;
 `

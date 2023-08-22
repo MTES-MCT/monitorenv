@@ -74,7 +74,6 @@ const Wrapper = styled.div<{ $regulatoryMetadataPanelIsOpen: boolean }>`
   display: block;
   color: ${p => p.theme.color.charcoal};
   opacity: ${p => (p.$regulatoryMetadataPanelIsOpen ? 1 : 0)};
-  z-index: -1;
   padding: 0;
   transition: all 0.5s;
 `
