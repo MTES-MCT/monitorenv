@@ -118,6 +118,7 @@ export function MapReportingsFiltersWithRef(
                 key={sourceType}
                 accent={Accent.SECONDARY}
                 onDelete={() => onDeleteTag(sourceType, ReportingsFiltersEnum.SOURCE_TYPE_FILTER, sourceTypeFilter)}
+                title={String(`${reportingSourceLabels[sourceType].label}`)}
               >
                 {String(`${reportingSourceLabels[sourceType].label}`)}
               </SingleTag>
@@ -155,8 +156,9 @@ export function MapReportingsFiltersWithRef(
                 key={theme}
                 accent={Accent.SECONDARY}
                 onDelete={() => onDeleteTag(theme, ReportingsFiltersEnum.THEME_FILTER, themeFilter)}
+                title={String(theme)}
               >
-                {String(`${theme}`)}
+                {String(theme)}
               </SingleTag>
             ))}
           </StyledTagsContainer>
@@ -180,6 +182,7 @@ export function MapReportingsFiltersWithRef(
                 key={subTheme}
                 accent={Accent.SECONDARY}
                 onDelete={() => onDeleteTag(subTheme, ReportingsFiltersEnum.SUB_THEMES_FILTER, subThemesFilter)}
+                title={String(subTheme)}
               >
                 {String(subTheme)}
               </SingleTag>

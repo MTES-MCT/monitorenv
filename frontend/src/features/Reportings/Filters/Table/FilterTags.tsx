@@ -17,10 +17,10 @@ export function FilterTags() {
     dispatch(reportingsFiltersActions.updateFilters({ key: filterKey, value: updatedFilter }))
   }
   const hasNoFilterTags =
-    sourceTypeFilter.length === 0 ||
-    sourceFilter.length === 0 ||
-    themeFilter.length === 0 ||
-    subThemesFilter.length === 0 ||
+    sourceTypeFilter.length === 0 &&
+    sourceFilter.length === 0 &&
+    themeFilter.length === 0 &&
+    subThemesFilter.length === 0 &&
     seaFrontFilter.length === 0
 
   if (hasNoFilterTags) {
