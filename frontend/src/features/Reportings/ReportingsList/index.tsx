@@ -4,8 +4,8 @@ import styled from 'styled-components'
 import { ReportingsTable } from './ReportingsTable'
 import { createAndOpenNewReporting } from '../../../domain/use_cases/reportings/createAndOpenNewReporting'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
-import { useGetFilteredReportingsQuery } from '../../../hooks/useGetFilteredReportingsQuery'
 import { ReportingsFilters } from '../Filters'
+import { useGetFilteredReportingsQuery } from '../hooks/useGetFilteredReportingsQuery'
 
 export function ReportingsList() {
   const dispatch = useAppDispatch()

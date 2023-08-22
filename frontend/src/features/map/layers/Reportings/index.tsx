@@ -9,7 +9,7 @@ import { reportingPinStyleFn } from './style'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { reportingStateActions } from '../../../../domain/shared_slices/ReportingState'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useGetFilteredReportingsQuery } from '../../../../hooks/useGetFilteredReportingsQuery'
+import { useGetFilteredReportingsQuery } from '../../../Reportings/hooks/useGetFilteredReportingsQuery'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { Feature } from 'ol'
