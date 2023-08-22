@@ -39,6 +39,12 @@ refresh_materialized_view.flow.schedule = Schedule(
                 "view_name": "analytics_actions",
             },
         ),
+        clocks.CronClock(
+            "35 12 * * *",
+            parameter_defaults={
+                "view_name": "analytics_surveillance_density_map",
+            },
+        ),
     ]
 )
 
