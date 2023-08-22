@@ -7,6 +7,7 @@ export const StyledStatusFilter = styled.div`
   flex-wrap: wrap;
   align-items: end;
   gap: 16px;
+  margin-bottom: 8px;
 `
 
 export const StyledSelect = styled(Select)`
@@ -21,13 +22,13 @@ export const StyledCheckPicker = styled(CheckPicker)`
   }
 `
 export const StyledTagsContainer = styled.div<{ $withMargin: boolean }>`
-  margin-top: ${p => (p.$withMargin ? '50px' : '0px')};
+  margin-top: ${p => (p.$withMargin ? '16px' : '0px')};
   display: flex;
   flex-direction row;
   max-width: 100%;
   flex-wrap: wrap;
-  gap: 8px 16px;
-  align-items: end;
+  gap: 16px;
+  align-items: center;
 `
 export const StyledCustomPeriodContainer = styled.div`
   display: flex;

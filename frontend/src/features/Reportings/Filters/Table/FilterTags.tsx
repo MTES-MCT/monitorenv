@@ -16,6 +16,16 @@ export function FilterTags() {
     const updatedFilter = reportingFilter.filter(unit => unit !== valueToDelete)
     dispatch(reportingsFiltersActions.updateFilters({ key: filterKey, value: updatedFilter }))
   }
+  const hasNoFilterTags =
+    sourceTypeFilter.length === 0 ||
+    sourceFilter.length === 0 ||
+    themeFilter.length === 0 ||
+    subThemesFilter.length === 0 ||
+    seaFrontFilter.length === 0
+
+  if (hasNoFilterTags) {
+    return null
+  }
 
   return (
     <StyledContainer>
@@ -77,4 +87,5 @@ const StyledContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 16px;
+  margin-bottom: 2px;
 `

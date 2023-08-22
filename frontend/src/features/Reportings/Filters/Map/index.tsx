@@ -105,6 +105,7 @@ export function MapReportingsFiltersWithRef(
           onChange={value => updateSourceTypeFilter(value)}
           placeholder="Type de source"
           renderValue={() => sourceTypeFilter && <OptionValue>{`Type (${sourceTypeFilter.length})`}</OptionValue>}
+          searchable={false}
           size="sm"
           value={sourceTypeFilter}
           valueKey="value"
@@ -197,7 +198,6 @@ const FilterWrapper = styled.div`
   gap: 32px;
   flex-direction: column;
   padding: 12px 4px;
-  margin-bottom: 100px;
 `
 export const StyledCustomPeriodContainer = styled.div`
   display: flex;

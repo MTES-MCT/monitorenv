@@ -1,4 +1,4 @@
-import { Accent, Button, Icon, MapMenuModal } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, MapMenuDialog } from '@mtes-mct/monitor-ui'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
@@ -33,28 +33,28 @@ export function SearchReportings() {
 
   return (
     <StyledContainer>
-      <MapMenuModal.Container>
-        <MapMenuModal.Header>
-          <MapMenuModal.CloseButton Icon={Icon.Close} onClick={closeSearchReportings} />
-          <MapMenuModal.Title>Signalements</MapMenuModal.Title>
-          <MapMenuModal.VisibilityButton
+      <MapMenuDialog.Container>
+        <MapMenuDialog.Header>
+          <MapMenuDialog.CloseButton Icon={Icon.Close} onClick={closeSearchReportings} />
+          <MapMenuDialog.Title>Signalements</MapMenuDialog.Title>
+          <MapMenuDialog.VisibilityButton
             accent={Accent.SECONDARY}
             Icon={displayReportingsLayer ? Icon.Display : Icon.Hide}
             onClick={setReportingsVisibilityOnMap}
           />
-        </MapMenuModal.Header>
-        <MapMenuModal.Body>
+        </MapMenuDialog.Header>
+        <MapMenuDialog.Body>
           <ReportingsFilters context={ReportingFilterContext.MAP} />
-        </MapMenuModal.Body>
-        <MapMenuModal.Footer>
+        </MapMenuDialog.Body>
+        <MapMenuDialog.Footer>
           <Button Icon={Icon.Plus} isFullWidth onClick={createReporting}>
             Ajouter un signalement
           </Button>
           <Button accent={Accent.SECONDARY} Icon={Icon.Expand} isFullWidth onClick={toggleReportingsWindow}>
             Voir la vue détaillée des signalements
           </Button>
-        </MapMenuModal.Footer>
-      </MapMenuModal.Container>
+        </MapMenuDialog.Footer>
+      </MapMenuDialog.Container>
     </StyledContainer>
   )
 }
