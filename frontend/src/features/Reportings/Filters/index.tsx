@@ -1,4 +1,4 @@
-import { Option, customDayjs, DateAsStringRange } from '@mtes-mct/monitor-ui'
+import { Option, customDayjs, DateAsStringRange, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import _, { reduce } from 'lodash'
 import { MutableRefObject, useMemo, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -8,15 +8,15 @@ import { TableReportingsFilters } from './Table'
 import { useGetControlThemesQuery } from '../../../api/controlThemesAPI'
 import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
 import { useGetSemaphoresQuery } from '../../../api/semaphoresAPI'
-import { DateRangeEnum, ReportingDateRangeEnum, reportingDateRangeLabels } from '../../../domain/entities/dateRange'
+import { DateRangeEnum, ReportingDateRangeEnum, ReportingDateRangeLabels } from '../../../domain/entities/dateRange'
 import {
   ReportingSourceEnum,
-  // provenFiltersLabels,
-  reportingSourceLabels,
-  reportingTypeLabels,
-  statusFilterLabels
+  // ProvenFiltersLabels,
+  ReportingSourceLabels,
+  ReportingTypeLabels,
+  StatusFilterLabels
 } from '../../../domain/entities/reporting'
-import { seaFrontLabels } from '../../../domain/entities/seaFrontType'
+import { SeaFrontLabels } from '../../../domain/entities/seaFrontType'
 import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../domain/shared_slices/ReportingsFilters'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 
@@ -106,12 +106,12 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
       .value()
   }, [unitListAsOptions, semaphoresAsOptions, sourceTypeFilter])
 
-  const dateRangeOptions = Object.values(reportingDateRangeLabels)
-  const typeOptions = Object.values(reportingTypeLabels)
-  const sourceTypeOptions = Object.values(reportingSourceLabels)
-  const seaFrontsOptions = Object.values(seaFrontLabels)
-  const statusOptions = Object.values(statusFilterLabels)
-  // const isProvenOptions = Object.values(provenFiltersLabels)
+  const dateRangeOptions = getOptionsFromLabelledEnum(ReportingDateRangeLabels)
+  const typeOptions = getOptionsFromLabelledEnum(ReportingTypeLabels)
+  const sourceTypeOptions = getOptionsFromLabelledEnum(ReportingSourceLabels)
+  const seaFrontsOptions = getOptionsFromLabelledEnum(SeaFrontLabels)
+  const statusOptions = getOptionsFromLabelledEnum(StatusFilterLabels)
+  // const isProvenOptions = getOptionsFromLabelledEnum(ProvenFiltersLabels)
 
   const optionsList = {
     dateRangeOptions,

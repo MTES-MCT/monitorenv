@@ -3,7 +3,7 @@ import { forwardRef, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { reportingSourceLabels } from '../../../../domain/entities/reporting'
+import { ReportingSourceLabels } from '../../../../domain/entities/reporting'
 import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../../domain/shared_slices/ReportingsFilters'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { OptionValue, StyledCheckPicker, StyledSelect, StyledStatusFilter } from '../style'
@@ -118,9 +118,9 @@ export function MapReportingsFiltersWithRef(
                 key={sourceType}
                 accent={Accent.SECONDARY}
                 onDelete={() => onDeleteTag(sourceType, ReportingsFiltersEnum.SOURCE_TYPE_FILTER, sourceTypeFilter)}
-                title={String(`${reportingSourceLabels[sourceType].label}`)}
+                title={String(`${ReportingSourceLabels[sourceType]}`)}
               >
-                {String(`${reportingSourceLabels[sourceType].label}`)}
+                {String(`${ReportingSourceLabels[sourceType]}`)}
               </SingleTag>
             ))}
           </StyledTagsContainer>

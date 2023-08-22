@@ -4,7 +4,7 @@ import { isEqual, omit } from 'lodash'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
-import { reportingDateRangeLabels } from '../entities/dateRange'
+import { ReportingDateRangeEnum } from '../entities/dateRange'
 import { /* InfractionProvenEnum, */ StatusFilterEnum } from '../entities/reporting'
 
 export const LAST_24_HOURS = customDayjs.utc().subtract(24, 'hour').toISOString()
@@ -47,7 +47,7 @@ type ReportingsFiltersSliceType = {
 const initialState: ReportingsFiltersSliceType = {
   actionsFilter: [],
   hasFilters: false,
-  periodFilter: reportingDateRangeLabels.DAY.value,
+  periodFilter: ReportingDateRangeEnum.DAY,
   provenFilter: [], // [InfractionProvenEnum.PROVEN, InfractionProvenEnum.NOT_PROVEN],
   seaFrontFilter: [],
   sourceFilter: [],

@@ -1,3 +1,4 @@
+/* eslint-disable typescript-sort-keys/string-enum */
 export enum DateRangeEnum {
   CUSTOM = 'CUSTOM',
   DAY = 'DAY',
@@ -34,28 +35,10 @@ export enum ReportingDateRangeEnum {
   YEAR = 'YEAR'
 }
 
-export const reportingDateRangeLabels = {
-  DAY: {
-    label: '24 dernières heures',
-    value: 'DAY'
-  },
-  WEEK: {
-    label: '7 derniers jours',
-    value: 'WEEK'
-  },
-  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
-  MONTH: {
-    label: '30 derniers jours',
-    value: 'MONTH'
-  },
-  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
-  YEAR: {
-    label: 'Année en cours',
-    value: 'YEAR'
-  },
-  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
-  CUSTOM: {
-    label: 'Période spécifique',
-    value: 'CUSTOM'
-  }
+export enum ReportingDateRangeLabels {
+  DAY = '24 dernières heures',
+  WEEK = '7 derniers jours',
+  MONTH = '30 derniers jours',
+  YEAR = 'Année en cours',
+  CUSTOM = 'Période spécifique'
 }

@@ -1,3 +1,4 @@
+/* eslint-disable typescript-sort-keys/string-enum */
 import { customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 
 import type { TargetTypeEnum } from './targetType'
@@ -43,21 +44,10 @@ export enum ReportingSourceEnum {
   OTHER = 'OTHER',
   SEMAPHORE = 'SEMAPHORE'
 }
-export const reportingSourceLabels = {
-  SEMAPHORE: {
-    label: 'Sémaphore',
-    value: 'SEMAPHORE'
-  },
-  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
-  CONTROL_UNIT: {
-    label: 'Unité',
-    value: 'CONTROL_UNIT'
-  },
-  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
-  OTHER: {
-    label: 'Autre',
-    value: 'OTHER'
-  }
+export enum ReportingSourceLabels {
+  SEMAPHORE = 'Sémaphore',
+  CONTROL_UNIT = 'Unité',
+  OTHER = 'Autre'
 }
 
 export enum ReportingTypeEnum {
@@ -65,15 +55,9 @@ export enum ReportingTypeEnum {
   OBSERVATION = 'OBSERVATION'
 }
 
-export const reportingTypeLabels = {
-  INFRACTION_SUSPICION: {
-    label: 'Infraction (suspicion)',
-    value: 'INFRACTION_SUSPICION'
-  },
-  OBSERVATION: {
-    label: 'Observation',
-    value: 'OBSERVATION'
-  }
+export enum ReportingTypeLabels {
+  INFRACTION_SUSPICION = 'Infraction (suspicion)',
+  OBSERVATION = 'Observation'
 }
 
 export enum InfractionProvenEnum {
@@ -93,16 +77,9 @@ export const infractionProvenLabels = {
   }
 }
 
-export const provenFiltersLabels = {
-  PROVEN: {
-    label: 'Avéré',
-    value: InfractionProvenEnum.PROVEN
-  },
-  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
-  NOT_PROVEN: {
-    label: 'Non avéré',
-    value: InfractionProvenEnum.NOT_PROVEN
-  }
+export enum ProvenFiltersLabels {
+  PROVEN = 'Avéré',
+  NOT_PROVEN = 'Non avéré'
 }
 
 export enum ReportingStatusEnum {
@@ -120,17 +97,11 @@ export enum StatusFilterEnum {
   IN_PROGRESS = 'IN_PROGRESS'
 }
 
-export const statusFilterLabels = {
-  IN_PROGRESS: {
-    label: 'En cours',
-    value: StatusFilterEnum.IN_PROGRESS
-  },
-  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
-  ARCHIVED: {
-    label: 'Archivés',
-    value: StatusFilterEnum.ARCHIVED
-  }
+export enum StatusFilterLabels {
+  IN_PROGRESS = 'En cours',
+  ARCHIVED = 'Archivés'
 }
+
 export const getFormattedReportingId = (reportingId: number) =>
   `${String(reportingId).slice(0, 2)}-${String(reportingId).slice(2)}`
 

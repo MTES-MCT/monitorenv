@@ -1,7 +1,7 @@
 import { THEME } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { ReportingTypeEnum, reportingTypeLabels } from '../../../../domain/entities/reporting'
+import { ReportingTypeEnum, ReportingTypeLabels } from '../../../../domain/entities/reporting'
 
 export function getReportType(reportType: string) {
   if (reportType) {
@@ -12,7 +12,7 @@ export function getReportType(reportType: string) {
             reportType === ReportingTypeEnum.INFRACTION_SUSPICION ? THEME.color.maximumRed : THEME.color.blueGray[100]
           }
         />
-        {reportingTypeLabels[reportType]?.label}
+        {ReportingTypeLabels[reportType]}
       </StyledTypeContainer>
     )
   }

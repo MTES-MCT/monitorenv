@@ -8,7 +8,8 @@ import {
   IconButton,
   MultiRadio,
   OPENLAYERS_PROJECTION,
-  WSG84_PROJECTION
+  WSG84_PROJECTION,
+  getOptionsFromLabelledEnum
 } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import { reduce } from 'lodash'
@@ -18,7 +19,7 @@ import styled from 'styled-components'
 
 import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
 import { useGetSemaphoresQuery } from '../../../api/semaphoresAPI'
-import { Reporting, ReportingSourceEnum, reportingSourceLabels } from '../../../domain/entities/reporting'
+import { Reporting, ReportingSourceEnum, ReportingSourceLabels } from '../../../domain/entities/reporting'
 import { setZoomToCenter } from '../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 
@@ -29,7 +30,7 @@ export function Source() {
   const { data: semaphores } = useGetSemaphoresQuery()
   const { data: units } = useGetControlUnitsQuery()
 
-  const sourceOptions = Object.values(reportingSourceLabels)
+  const sourceOptions = getOptionsFromLabelledEnum(ReportingSourceLabels)
   const { errors, setFieldValue, values } = useFormikContext<Reporting>()
 
   // Semaphores

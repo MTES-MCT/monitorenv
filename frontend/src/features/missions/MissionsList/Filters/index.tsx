@@ -1,4 +1,12 @@
-import { Option, Select, customDayjs, DateRangePicker, DateAsStringRange, useNewWindow } from '@mtes-mct/monitor-ui'
+import {
+  Option,
+  Select,
+  customDayjs,
+  DateRangePicker,
+  DateAsStringRange,
+  useNewWindow,
+  getOptionsFromLabelledEnum
+} from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 import { MutableRefObject, useMemo, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -11,7 +19,7 @@ import { useGetControlUnitsQuery } from '../../../../api/controlUnitsAPI'
 import { COLORS } from '../../../../constants/constants'
 import { DateRangeEnum, dateRangeLabels } from '../../../../domain/entities/dateRange'
 import { missionSourceEnum, missionStatusLabels, missionTypeEnum } from '../../../../domain/entities/missions'
-import { seaFrontLabels } from '../../../../domain/entities/seaFrontType'
+import { SeaFrontLabels } from '../../../../domain/entities/seaFrontType'
 import { MissionFiltersEnum, resetMissionFilters, updateFilters } from '../../../../domain/shared_slices/MissionFilters'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReactComponent as ReloadSVG } from '../../../../uiMonitor/icons/Reload.svg'
@@ -81,7 +89,7 @@ export function MissionsTableFilters() {
   const StatusOptions = Object.values(missionStatusLabels)
   const TypeOptions = Object.values(missionTypeEnum)
   const sourceOptions = Object.values(missionSourceEnum)
-  const seaFrontsOptions = Object.values(seaFrontLabels)
+  const seaFrontsOptions = getOptionsFromLabelledEnum(SeaFrontLabels)
 
   const onUpdatePeriodFilter = period => {
     dispatch(updateFilters({ key: MissionFiltersEnum.PERIOD_FILTER, value: period }))

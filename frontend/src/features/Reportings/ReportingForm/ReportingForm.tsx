@@ -1,4 +1,13 @@
-import { Accent, FieldError, FormikTextarea, Icon, IconButton, Label, MultiRadio } from '@mtes-mct/monitor-ui'
+import {
+  Accent,
+  FieldError,
+  FormikTextarea,
+  Icon,
+  IconButton,
+  Label,
+  MultiRadio,
+  getOptionsFromLabelledEnum
+} from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -18,7 +27,7 @@ import {
   ReportingTypeEnum,
   getFormattedReportingId,
   infractionProvenLabels,
-  reportingTypeLabels,
+  ReportingTypeLabels,
   getReportingStatus
 } from '../../../domain/entities/reporting'
 import { hideSideButtons, setReportingFormVisibility } from '../../../domain/shared_slices/Global'
@@ -59,7 +68,7 @@ export function ReportingForm({ setShouldValidateOnChange }) {
 
   useSyncFormValuesWithRedux(reportingStateActions.setReportingState, reportingStateActions.setIsDirty)
 
-  const reportTypeOptions = Object.values(reportingTypeLabels)
+  const reportTypeOptions = getOptionsFromLabelledEnum(ReportingTypeLabels)
   const infractionProvenOptions = Object.values(infractionProvenLabels)
 
   const reportingStatus = getReportingStatus({

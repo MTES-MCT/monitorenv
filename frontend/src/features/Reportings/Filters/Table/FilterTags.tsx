@@ -2,7 +2,7 @@ import { Accent, SingleTag } from '@mtes-mct/monitor-ui'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { reportingSourceLabels } from '../../../../domain/entities/reporting'
+import { ReportingSourceLabels } from '../../../../domain/entities/reporting'
 import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../../domain/shared_slices/ReportingsFilters'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
@@ -36,7 +36,7 @@ export function FilterTags() {
             accent={Accent.SECONDARY}
             onDelete={() => onDeleteTag(sourceType, ReportingsFiltersEnum.SOURCE_TYPE_FILTER, sourceTypeFilter)}
           >
-            {String(`Type ${reportingSourceLabels[sourceType].label}`)}
+            {String(`Type ${ReportingSourceLabels[sourceType]}`)}
           </SingleTag>
         ))}
       {sourceFilter.length > 0 &&
