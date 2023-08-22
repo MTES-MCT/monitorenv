@@ -88,21 +88,17 @@ export function ReportingsTable({
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map(header => (
                   <TableWithSelectableRows.Th
-                    {...{
-                      key: header.id,
-                      style: {
-                        maxWidth: header.column.getSize(),
-                        minWidth: header.column.getSize(),
-                        width: header.column.getSize()
-                      }
+                    key={header.id}
+                    style={{
+                      maxWidth: header.column.getSize(),
+                      minWidth: header.column.getSize(),
+                      width: header.column.getSize()
                     }}
                   >
                     {header.isPlaceholder ? undefined : (
                       <TableWithSelectableRows.SortContainer
-                        {...{
-                          className: header.column.getCanSort() ? 'cursor-pointer select-none' : '',
-                          onClick: header.column.getToggleSortingHandler()
-                        }}
+                        className={header.column.getCanSort() ? 'cursor-pointer select-none' : ''}
+                        onClick={header.column.getToggleSortingHandler()}
                       >
                         {flexRender(header.column.columnDef.header, header.getContext())}
 
@@ -131,15 +127,13 @@ export function ReportingsTable({
                 <TableWithSelectableRows.BodyTr key={virtualRow.key}>
                   {row?.getVisibleCells().map(cell => (
                     <TableWithSelectableRows.Td
-                      {...{
-                        $hasRightBorder: !!(cell.column.id === 'geom'),
-                        $isCenter: !!(cell.column.id === 'geom' || cell.column.id === 'edit'),
-                        key: cell.id,
-                        style: {
-                          maxWidth: cell.column.getSize(),
-                          minWidth: cell.column.getSize(),
-                          width: cell.column.getSize()
-                        }
+                      key={cell.id}
+                      $hasRightBorder={!!(cell.column.id === 'geom')}
+                      $isCenter={!!(cell.column.id === 'geom' || cell.column.id === 'edit')}
+                      style={{
+                        maxWidth: cell.column.getSize(),
+                        minWidth: cell.column.getSize(),
+                        width: cell.column.getSize()
                       }}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

@@ -34,7 +34,7 @@ export function DeleteModal({
 
       <Dialog.Action>
         <Button accent={Accent.SECONDARY} name={`delete-${context}-modal-cancel`} onClick={onCancel}>
-          {cancelButtonText ?? 'Retourner à l&apos;édition'}
+          {cancelButtonText ?? "Retourner à l'édition"}
         </Button>
         <Button accent={Accent.PRIMARY} name={`delete-${context}-modal-confirm`} onClick={onConfirm}>
           Confirmer la suppression

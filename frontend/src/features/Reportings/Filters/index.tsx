@@ -1,4 +1,4 @@
-import { Option, customDayjs, DateAsStringRange, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
+import { customDayjs, DateAsStringRange, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import _, { reduce } from 'lodash'
 import { MutableRefObject, useMemo, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -19,6 +19,8 @@ import {
 import { SeaFrontLabels } from '../../../domain/entities/seaFrontType'
 import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../domain/shared_slices/ReportingsFilters'
 import { useAppSelector } from '../../../hooks/useAppSelector'
+import { getSubThemesAsListOptions } from '../../../utils/getSubThemesAsListOptions'
+import { getThemesAsListOptions } from '../../../utils/getThemesAsListOptions'
 
 export enum ReportingFilterContext {
   MAP = 'MAP',
@@ -39,28 +41,17 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
   const { data: semaphores } = useGetSemaphoresQuery()
   const controlUnitsOptions = useMemo(() => (controlUnits ? Array.from(controlUnits) : []), [controlUnits])
 
-  const themesListAsOptions: Option[] = _.chain(themes)
-    .map(theme => theme.themeLevel1)
-    .uniq()
-    .sort((a, b) => a?.localeCompare(b))
-    .map(t => ({ label: t, value: t }))
-    .value()
-
-  const subThemesListAsOptions = _.chain(themes)
-    .map(theme => theme.themeLevel2 || '')
-    .sort((a, b) => a?.localeCompare(b))
-    .uniq()
-    .map(t => ({ label: t, value: t }))
-    .value()
+  const themesListAsOptions = getThemesAsListOptions(themes)
+  const subThemesListAsOptions = getSubThemesAsListOptions(themes)
 
   const unitListAsOptions = controlUnitsOptions
-    .filter(u => !u.isArchived)
+    .filter(unit => !unit.isArchived)
     .sort((a, b) => a?.name?.localeCompare(b?.name))
-    .map(t => ({
-      label: t.name,
+    .map(sortedUnits => ({
+      label: sortedUnits.name,
       value: {
-        id: t.id,
-        label: t.name
+        id: sortedUnits.id,
+        label: sortedUnits.name
       }
     }))
 

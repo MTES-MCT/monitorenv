@@ -71,6 +71,7 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
                   }}
                 >
                   {header.isPlaceholder ? undefined : (
+                    // TODO pass props as usual: className={}
                     <SimpleTable.SortContainer
                       {...{
                         className: header.column.getCanSort() ? 'cursor-pointer select-none' : '',

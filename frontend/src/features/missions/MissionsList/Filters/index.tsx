@@ -23,6 +23,7 @@ import { SeaFrontLabels } from '../../../../domain/entities/seaFrontType'
 import { MissionFiltersEnum, resetMissionFilters, updateFilters } from '../../../../domain/shared_slices/MissionFilters'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReactComponent as ReloadSVG } from '../../../../uiMonitor/icons/Reload.svg'
+import { getThemesAsListOptions } from '../../../../utils/getThemesAsListOptions'
 
 export function MissionsTableFilters() {
   const dispatch = useDispatch()
@@ -48,12 +49,7 @@ export function MissionsTableFilters() {
   const controlUnits = useMemo(() => (data ? Array.from(data) : []), [data])
   const { data: controlThemes } = useGetControlThemesQuery()
 
-  const themesListAsOptions: Option[] = _.chain(controlThemes)
-    .map(theme => theme.themeLevel1)
-    .uniq()
-    .sort((a, b) => a?.localeCompare(b))
-    .map(t => ({ label: t, value: t }))
-    .value()
+  const themesListAsOptions = getThemesAsListOptions(controlThemes)
 
   const administrationsWithTheirControlsUnits = _.chain(controlUnits)
     .reduce((acc, curr) => {

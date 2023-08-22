@@ -1,31 +1,19 @@
 import { EntityState, createEntityAdapter } from '@reduxjs/toolkit'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
+import { getQueryString } from '../utils/getQueryStringFormatted'
+
 import type { Reporting, ReportingDetailed } from '../domain/entities/reporting'
 
 type ReportingsFilter = {
   provenStatus?: string[]
-  reportingSourceType?: string[]
   reportingType: string | undefined
   seaFronts: string[]
+  sourcesType?: string[]
   startedAfterDateTime?: string
   startedBeforeDateTime?: string
   status?: string[]
 }
-
-const getStartDateFilter = startedAfterDateTime =>
-  startedAfterDateTime && `startedAfterDateTime=${encodeURIComponent(startedAfterDateTime)}`
-const getEndDateFilter = startedBeforeDateTime =>
-  startedBeforeDateTime && `startedBeforeDateTime=${encodeURIComponent(startedBeforeDateTime)}`
-const getReportingSourcesTypeFilter = reportingSourceType =>
-  reportingSourceType && reportingSourceType?.length > 0 && `sourcesType=${encodeURIComponent(reportingSourceType)}`
-const getReportingTypeFilter = reportingType =>
-  reportingType && reportingType?.length > 0 && `reportingType=${encodeURIComponent(reportingType)}`
-const getSeaFrontsFilter = seaFronts =>
-  seaFronts && seaFronts?.length > 0 && `seaFronts=${encodeURIComponent(seaFronts)}`
-const getStatusFilter = status => status && status?.length > 0 && `status=${encodeURIComponent(status)}`
-const getProvenStatusFilter = provenStatus =>
-  provenStatus && provenStatus.length > 0 && `provenStatus=${encodeURIComponent(provenStatus)}`
 
 const ReportingAdapter = createEntityAdapter<ReportingDetailed>()
 const initialState = ReportingAdapter.getInitialState()
@@ -82,19 +70,7 @@ export const reportingsAPI = createApi({
         result?.ids
           ? [{ id: 'LIST', type: 'Reportings' }, ...result.ids.map(id => ({ id, type: 'Reportings' as const }))]
           : [{ id: 'LIST', type: 'Reportings' }],
-      query: filter =>
-        [
-          'reportings?',
-          getStartDateFilter(filter?.startedAfterDateTime),
-          getEndDateFilter(filter?.startedBeforeDateTime),
-          getReportingSourcesTypeFilter(filter?.reportingSourceType),
-          getReportingTypeFilter(filter?.reportingType),
-          getSeaFrontsFilter(filter?.seaFronts),
-          getStatusFilter(filter?.status),
-          getProvenStatusFilter(filter?.provenStatus)
-        ]
-          .filter(v => v)
-          .join('&'),
+      query: filters => getQueryString('reportings', filters),
       transformResponse: (response: ReportingDetailed[]) => ReportingAdapter.setAll(initialState, response)
     }),
     updateReporting: build.mutation<Reporting, Reporting>({

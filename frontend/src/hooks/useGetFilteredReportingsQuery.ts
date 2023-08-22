@@ -23,11 +23,12 @@ export const useGetFilteredReportingsQuery = () => {
     typeFilter
   } = useAppSelector(state => state.reportingFilters)
   const { data, isError, isFetching, isLoading } = useGetReportingsQuery(
+    // BACK filters
     {
       provenStatus: provenFilter,
-      reportingSourceType: sourceTypeFilter,
       reportingType: typeFilter,
       seaFronts: seaFrontFilter,
+      sourcesType: sourceTypeFilter,
       startedAfterDateTime: startedAfter || undefined,
       startedBeforeDateTime: startedBefore || undefined,
       status: statusFilter
@@ -44,6 +45,7 @@ export const useGetFilteredReportingsQuery = () => {
       data.entities,
       reporting =>
         !!reporting &&
+        // FRONT filters
         themeFilterFunction(reporting, themeFilter) &&
         subThemesFilterFunction(reporting, subThemesFilter) &&
         sourceFilterFunction(reporting, sourceFilter)
