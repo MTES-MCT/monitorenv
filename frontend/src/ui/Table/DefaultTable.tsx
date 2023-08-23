@@ -47,7 +47,7 @@ export function DefaultTable<
                 {table.getHeaderGroups().map(headerGroup => (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map(header => (
-                      <Table.Th header={header} />
+                      <Table.Th key={header.id} header={header} />
                     ))}
                   </tr>
                 ))}
@@ -55,9 +55,9 @@ export function DefaultTable<
 
               <tbody>
                 {rows.map(row => (
-                  <SimpleTable.BodyTr>
+                  <SimpleTable.BodyTr key={row.id}>
                     {row.getVisibleCells().map(cell => (
-                      <Table.Td cell={cell} />
+                      <Table.Td key={cell.id} cell={cell} />
                     ))}
                   </SimpleTable.BodyTr>
                 ))}
