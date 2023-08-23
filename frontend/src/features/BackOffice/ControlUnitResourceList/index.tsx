@@ -3,7 +3,7 @@ import { useReactTable, type SortingState, getCoreRowModel, getSortedRowModel } 
 import { useState } from 'react'
 import styled from 'styled-components'
 
-import { CONTROL_UNIT_RESOURCES_TABLE_COLUMNS } from './constants'
+import { CONTROL_UNIT_RESOURCE_TABLE_COLUMNS } from './constants'
 import { useGetControlUnitResourcesQuery } from '../../../api/controlUnitResource'
 import { NavButton } from '../../../ui/NavButton'
 import { Table } from '../../../ui/Table'
@@ -15,7 +15,7 @@ export function ControlUnitResourceList() {
   const { data: controlUnitResources } = useGetControlUnitResourcesQuery()
 
   const table = useReactTable({
-    columns: CONTROL_UNIT_RESOURCES_TABLE_COLUMNS,
+    columns: CONTROL_UNIT_RESOURCE_TABLE_COLUMNS,
     data: controlUnitResources || [],
     enableSortingRemoval: false,
     getCoreRowModel: getCoreRowModel(),

@@ -13,7 +13,7 @@ import {
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../libs/FrontendError'
 import { DefaultTable } from '../../../ui/Table/DefaultTable'
-import { CONTROL_UNITS_TABLE_COLUMNS } from '../ControlUnitList/constants'
+import { CONTROL_UNIT_TABLE_COLUMNS } from '../ControlUnitList/constants'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenu } from '../Menu/constants'
 
 import type { ControlUnitAdministrationFormValues } from './types'
@@ -99,7 +99,7 @@ export function ControlUnitAdministrationForm() {
       <hr />
 
       <SubTitle>Unités de contrôle</SubTitle>
-      <DefaultTable columns={CONTROL_UNITS_TABLE_COLUMNS as any} data={controlUnitAdministration?.controlUnits} />
+      <DefaultTable columns={CONTROL_UNIT_TABLE_COLUMNS as any} data={controlUnitAdministration?.controlUnits} />
     </div>
   )
 }

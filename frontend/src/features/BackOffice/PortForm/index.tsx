@@ -11,7 +11,7 @@ import { portApi, useGetPortQuery } from '../../../api/port'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../libs/FrontendError'
 import { DefaultTable } from '../../../ui/Table/DefaultTable'
-import { CONTROL_UNIT_RESOURCES_TABLE_COLUMNS } from '../ControlUnitResourceList/constants'
+import { CONTROL_UNIT_RESOURCE_TABLE_COLUMNS } from '../ControlUnitResourceList/constants'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenu } from '../Menu/constants'
 
 import type { PortFormValues } from './types'
@@ -84,7 +84,7 @@ export function PortForm() {
       <hr />
 
       <SubTitle>Moyens</SubTitle>
-      <DefaultTable columns={CONTROL_UNIT_RESOURCES_TABLE_COLUMNS as any} data={port?.controlUnitResources} />
+      <DefaultTable columns={CONTROL_UNIT_RESOURCE_TABLE_COLUMNS as any} data={port?.controlUnitResources} />
     </div>
   )
 }

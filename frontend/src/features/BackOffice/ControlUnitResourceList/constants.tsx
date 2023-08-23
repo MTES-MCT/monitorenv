@@ -4,7 +4,7 @@ import { BACK_OFFICE_MENU_PATH, BackOfficeMenu } from '../Menu/constants'
 import type { ControlUnit } from '../../../domain/entities/controlUnit/types'
 import type { ColumnDef } from '@tanstack/react-table'
 
-export const CONTROL_UNIT_RESOURCES_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.ControlUnitResource>> = [
+export const CONTROL_UNIT_RESOURCE_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.ControlUnitResource>> = [
   {
     accessorFn: row => row.id,
     enableSorting: false,

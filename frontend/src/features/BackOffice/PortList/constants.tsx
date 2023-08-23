@@ -4,7 +4,7 @@ import { BACK_OFFICE_MENU_PATH, BackOfficeMenu } from '../Menu/constants'
 import type { Port } from '../../../domain/entities/port/types'
 import type { ColumnDef } from '@tanstack/react-table'
 
-export const PORTS_TABLE_COLUMNS: Array<ColumnDef<Port.Port>> = [
+export const PORT_TABLE_COLUMNS: Array<ColumnDef<Port.Port>> = [
   {
     accessorFn: row => row.id,
     enableSorting: false,

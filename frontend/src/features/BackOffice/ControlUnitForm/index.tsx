@@ -19,8 +19,8 @@ import { useGetControlUnitAdministrationsQuery } from '../../../api/controlUnitA
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../libs/FrontendError'
 import { DefaultTable } from '../../../ui/Table/DefaultTable'
-import { CONTROL_UNIT_CONTACTS_TABLE_COLUMNS } from '../ControlUnitContactList/constants'
-import { CONTROL_UNIT_RESOURCES_TABLE_COLUMNS } from '../ControlUnitResourceList/constants'
+import { CONTROL_UNIT_CONTACT_TABLE_COLUMNS } from '../ControlUnitContactList/constants'
+import { CONTROL_UNIT_RESOURCE_TABLE_COLUMNS } from '../ControlUnitResourceList/constants'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenu } from '../Menu/constants'
 
 import type { ControlUnitFormValues } from './types'
@@ -114,12 +114,12 @@ export function ControlUnitForm() {
       <hr />
 
       <SubTitle>Contacts</SubTitle>
-      <DefaultTable columns={CONTROL_UNIT_CONTACTS_TABLE_COLUMNS as any} data={controlUnit?.controlUnitContacts} />
+      <DefaultTable columns={CONTROL_UNIT_CONTACT_TABLE_COLUMNS as any} data={controlUnit?.controlUnitContacts} />
 
       <hr />
 
       <SubTitle>Moyens</SubTitle>
-      <DefaultTable columns={CONTROL_UNIT_RESOURCES_TABLE_COLUMNS as any} data={controlUnit?.controlUnitResources} />
+      <DefaultTable columns={CONTROL_UNIT_RESOURCE_TABLE_COLUMNS as any} data={controlUnit?.controlUnitResources} />
     </div>
   )
 }

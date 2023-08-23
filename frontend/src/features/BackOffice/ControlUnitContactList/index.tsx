@@ -3,7 +3,7 @@ import { useReactTable, type SortingState, getCoreRowModel, getSortedRowModel } 
 import { useState } from 'react'
 import styled from 'styled-components'
 
-import { CONTROL_UNIT_CONTACTS_TABLE_COLUMNS } from './constants'
+import { CONTROL_UNIT_CONTACT_TABLE_COLUMNS } from './constants'
 import { useGetControlUnitContactsQuery } from '../../../api/controlUnitContact'
 import { NavButton } from '../../../ui/NavButton'
 import { Table } from '../../../ui/Table'
@@ -15,7 +15,7 @@ export function ControlUnitContactList() {
   const { data: controlUnitContacts } = useGetControlUnitContactsQuery()
 
   const table = useReactTable({
-    columns: CONTROL_UNIT_CONTACTS_TABLE_COLUMNS,
+    columns: CONTROL_UNIT_CONTACT_TABLE_COLUMNS,
     data: controlUnitContacts || [],
     enableSortingRemoval: false,
     getCoreRowModel: getCoreRowModel(),
