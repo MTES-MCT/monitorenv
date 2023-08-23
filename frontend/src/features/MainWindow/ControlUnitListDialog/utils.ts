@@ -1,7 +1,7 @@
+import { pluralize } from '@mtes-mct/monitor-ui'
 import { isEmpty, uniq } from 'lodash/fp'
 
 import { ControlUnit } from '../../../domain/entities/controlUnit/types'
-import { pluralize } from '../../../utils/pluralize'
 
 export function displayControlUnitResourcesFromControlUnit(controlUnit: ControlUnit.ControlUnit): string {
   const controlUnitResourceTypeCounts = controlUnit.controlUnitResources.reduce(

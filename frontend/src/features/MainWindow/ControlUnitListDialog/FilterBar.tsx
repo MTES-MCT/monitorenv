@@ -1,4 +1,5 @@
 import {
+  Filter,
   FormikEffect,
   FormikSelect,
   FormikTextInput,
@@ -16,11 +17,11 @@ import { useGetControlUnitAdministrationsQuery } from '../../../api/controlUnitA
 import { useGetPortsQuery } from '../../../api/port'
 import { ControlUnit } from '../../../domain/entities/controlUnit/types'
 
-import type { Filter, FilterFormValues } from './types'
+import type { FiltersState } from './types'
 import type { Promisable } from 'type-fest'
 
 export type FilterBarProps = {
-  onChange: (nextFilters: Filter[]) => Promisable<void>
+  onChange: (nextFilters: Array<Filter<ControlUnit.ControlUnit>>) => Promisable<void>
 }
 export function FilterBar({ onChange }: FilterBarProps) {
   const { data: controlUnitAdministrations } = useGetControlUnitAdministrationsQuery()
@@ -34,30 +35,30 @@ export function FilterBar({ onChange }: FilterBarProps) {
   const typesAsOptions = useMemo(() => getOptionsFromLabelledEnum(ControlUnit.ControlUnitResourceType), [])
 
   const updateFilters = useCallback(
-    (filterFormValues: FilterFormValues) => {
-      const nextFilters: Filter[] = []
+    (filtersState: FiltersState) => {
+      const nextFilters: Array<Filter<ControlUnit.ControlUnit>> = []
 
-      if (filterFormValues.controlUnitAdministrationId) {
-        const filter: Filter = controlUnits =>
+      if (filtersState.controlUnitAdministrationId) {
+        const filter: Filter<ControlUnit.ControlUnit> = controlUnits =>
           controlUnits.filter(
-            controlUnit => controlUnit.controlUnitAdministrationId === filterFormValues.controlUnitAdministrationId
+            controlUnit => controlUnit.controlUnitAdministrationId === filtersState.controlUnitAdministrationId
           )
 
         nextFilters.push(filter)
       }
 
       // TODO Use a better query matcher (this is temporary).
-      if (filterFormValues.query && filterFormValues.query.trim().length > 0) {
-        const filter: Filter = controlUnits =>
-          controlUnits.filter(controlUnit => controlUnit.name.includes(filterFormValues.query as string))
+      if (filtersState.query && filtersState.query.trim().length > 0) {
+        const filter: Filter<ControlUnit.ControlUnit> = controlUnits =>
+          controlUnits.filter(controlUnit => controlUnit.name.includes(filtersState.query as string))
 
         nextFilters.push(filter)
       }
 
-      if (filterFormValues.portId) {
-        const filter: Filter = controlUnits =>
+      if (filtersState.portId) {
+        const filter: Filter<ControlUnit.ControlUnit> = controlUnits =>
           controlUnits.reduce<ControlUnit.ControlUnit[]>((previousControlUnits, controlUnit) => {
-            const matches = controlUnit.controlUnitResources.filter(({ portId }) => portId === filterFormValues.portId)
+            const matches = controlUnit.controlUnitResources.filter(({ portId }) => portId === filtersState.portId)
 
             return matches.length > 0 ? [...previousControlUnits, controlUnit] : previousControlUnits
           }, [])
@@ -65,10 +66,10 @@ export function FilterBar({ onChange }: FilterBarProps) {
         nextFilters.push(filter)
       }
 
-      if (filterFormValues.type) {
-        const filter: Filter = controlUnits =>
+      if (filtersState.type) {
+        const filter: Filter<ControlUnit.ControlUnit> = controlUnits =>
           controlUnits.reduce<ControlUnit.ControlUnit[]>((previousControlUnits, controlUnit) => {
-            const matches = controlUnit.controlUnitResources.filter(({ type }) => type === filterFormValues.type)
+            const matches = controlUnit.controlUnitResources.filter(({ type }) => type === filtersState.type)
 
             return matches.length > 0 ? [...previousControlUnits, controlUnit] : previousControlUnits
           }, [])

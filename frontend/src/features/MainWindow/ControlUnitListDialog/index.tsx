@@ -1,21 +1,20 @@
-import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Filter, Icon } from '@mtes-mct/monitor-ui'
 import { noop } from 'lodash/fp'
 import { useMemo, useState } from 'react'
-import styled from 'styled-components'
 
 import { FilterBar } from './FilterBar'
-import { displayControlUnitResourcesFromControlUnit, displayPortNamesFromControlUnit } from './utils'
+import { Item } from './Item'
 import { useGetControlUnitsQuery } from '../../../api/controlUnit'
 import { MapMenuDialog } from '../../../ui/MapMenuDialog'
 
-import type { Filter } from './types'
+import type { ControlUnit } from '../../../domain/entities/controlUnit/types'
 import type { Promisable } from 'type-fest'
 
 export type ControlUnitListDialogProps = {
   onClose: () => Promisable<void>
 }
 export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
-  const [filters, setFilters] = useState<Filter[]>([])
+  const [filters, setFilters] = useState<Array<Filter<ControlUnit.ControlUnit>>>([])
 
   const { data: controlUnits } = useGetControlUnitsQuery()
 
@@ -38,14 +37,7 @@ export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
         <FilterBar onChange={setFilters} />
 
         {filteredControlUnits &&
-          filteredControlUnits.map(controlUnit => (
-            <Item>
-              <NameText>{controlUnit.name}</NameText>
-              <AdministrationText>{controlUnit.controlUnitAdministration.name}</AdministrationText>
-              <ResourcesAndPortsText>{displayControlUnitResourcesFromControlUnit(controlUnit)}</ResourcesAndPortsText>
-              <ResourcesAndPortsText>{displayPortNamesFromControlUnit(controlUnit)}</ResourcesAndPortsText>
-            </Item>
-          ))}
+          filteredControlUnits.map(controlUnit => <Item key={controlUnit.id} controlUnit={controlUnit} />)}
       </MapMenuDialog.Body>
       <MapMenuDialog.Footer>
         <Button accent={Accent.SECONDARY} Icon={Icon.Expand} isFullWidth onClick={noop}>
@@ -55,28 +47,3 @@ export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
     </MapMenuDialog.Container>
   )
 }
-
-const Item = styled.div`
-  background-color: ${p => p.theme.color.gainsboro};
-  margin-top: 8px;
-  padding: 8px 12px;
-  /* TODO Check monitor-ui <MapMenuDialog.Body /> alignment. */
-  /* text-align: left; */
-`
-
-const NameText = styled.div`
-  color: ${p => p.theme.color.gunMetal};
-  font-weight: bold;
-  line-height: 18px;
-`
-
-const AdministrationText = styled.div`
-  color: ${p => p.theme.color.gunMetal};
-  line-height: 18px;
-  margin: 2px 0 8px;
-`
-
-const ResourcesAndPortsText = styled.div`
-  color: ${p => p.theme.color.slateGray};
-  line-height: 18px;
-`
