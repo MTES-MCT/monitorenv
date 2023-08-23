@@ -17,14 +17,6 @@ export const controlUnitResourceApi = monitorenvPublicApi.injectEndpoints({
       })
     }),
 
-    deleteControlUnitResource: builder.mutation<void, number>({
-      invalidatesTags: () => [{ type: 'ControlUnits' }, { type: 'Ports' }],
-      query: controlUnitResourceId => ({
-        method: 'DELETE',
-        url: `/control_unit_resources/${controlUnitResourceId}`
-      })
-    }),
-
     getControlUnitResource: builder.query<ControlUnit.ControlUnitResource, number>({
       providesTags: () => [{ type: 'ControlUnits' }],
       query: controlUnitResourceId => `/control_unit_resources/${controlUnitResourceId}`,
@@ -38,7 +30,7 @@ export const controlUnitResourceApi = monitorenvPublicApi.injectEndpoints({
     }),
 
     updateControlUnitResource: builder.mutation<void, ControlUnit.ControlUnitResourceData>({
-      invalidatesTags: () => [{ type: 'ControlUnits' }, { type: 'Ports' }],
+      invalidatesTags: () => [{ type: 'Bases' }, { type: 'ControlUnits' }],
       query: nextControlUnitResourceData => ({
         body: nextControlUnitResourceData,
         method: 'POST',
@@ -50,7 +42,6 @@ export const controlUnitResourceApi = monitorenvPublicApi.injectEndpoints({
 
 export const {
   useCreateControlUnitResourceMutation,
-  useDeleteControlUnitResourceMutation,
   useGetControlUnitResourceQuery,
   useGetControlUnitResourcesQuery,
   useUpdateControlUnitResourceMutation

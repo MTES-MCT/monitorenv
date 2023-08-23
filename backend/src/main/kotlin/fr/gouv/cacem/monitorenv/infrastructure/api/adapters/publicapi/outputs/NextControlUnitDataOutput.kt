@@ -7,7 +7,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.nextControlUnit.NextControlUnitR
 import fr.gouv.cacem.monitorenv.domain.services.ControlUnitAdministrationService
 import fr.gouv.cacem.monitorenv.domain.services.ControlUnitContactService
 import fr.gouv.cacem.monitorenv.domain.services.ControlUnitResourceService
-import fr.gouv.cacem.monitorenv.domain.services.PortService
+import fr.gouv.cacem.monitorenv.domain.services.BaseService
 import fr.gouv.cacem.monitorenv.utils.requireNonNull
 
 data class NextControlUnitDataOutput(
@@ -29,7 +29,7 @@ data class NextControlUnitDataOutput(
             controlUnitAdministrationService: ControlUnitAdministrationService,
             controlUnitContactService: ControlUnitContactService,
             controlUnitResourceService: ControlUnitResourceService,
-            portService: PortService,
+            baseService: BaseService,
         ): NextControlUnitDataOutput {
             val controlUnitAdministration =
                 controlUnitAdministrationService.getById(nextControlUnitEntity.controlUnitAdministrationId)
@@ -37,8 +37,8 @@ data class NextControlUnitDataOutput(
                 controlUnitContactService.getByIds(nextControlUnitEntity.controlUnitContactIds)
             val controlUnitResources =
                 controlUnitResourceService.getByIds(nextControlUnitEntity.controlUnitResourceIds).map {
-                    // TODO Make that non-nullable once all resources will have been attached to a port.
-                    it.copy(port = it.portId?.let { portId -> portService.getById(portId) })
+                    // TODO Make that non-nullable once all resources will have been attached to a base.
+                    it.copy(base = it.baseId?.let { portId -> baseService.getById(portId) })
                 }
 
             return NextControlUnitDataOutput(

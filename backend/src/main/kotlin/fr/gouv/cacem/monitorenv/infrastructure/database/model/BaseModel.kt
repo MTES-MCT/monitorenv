@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
-import fr.gouv.cacem.monitorenv.domain.entities.port.PortEntity
+import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 import fr.gouv.cacem.monitorenv.utils.requireIds
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -9,14 +9,14 @@ import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 
 @Entity
-@Table(name = "ports")
-data class PortModel(
+@Table(name = "bases")
+data class BaseModel(
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null,
 
-    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, mappedBy = "port")
+    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, mappedBy = "base")
     @JsonManagedReference
     var controlUnitResources: List<ControlUnitResourceModel>,
 
@@ -32,22 +32,22 @@ data class PortModel(
     var updatedAt: LocalDateTime? = null,
 ) {
     companion object {
-        fun fromPortEntity(
-            nextPortEntity: PortEntity,
+        fun fromBaseEntity(
+            baseEntity: BaseEntity,
             controlUnitResourceModels: List<ControlUnitResourceModel>,
-        ): PortModel {
-            return PortModel(
-                id = nextPortEntity.id,
+        ): BaseModel {
+            return BaseModel(
+                id = baseEntity.id,
                 controlUnitResources = controlUnitResourceModels,
-                name = nextPortEntity.name,
+                name = baseEntity.name,
             )
         }
     }
 
-    fun toPortEntity(): PortEntity {
+    fun toBaseEntity(): BaseEntity {
         val controlUnitIds = requireIds(controlUnitResources) { it.id }
 
-        return PortEntity(
+        return BaseEntity(
             id = id,
             controlUnitIds,
             name = name,

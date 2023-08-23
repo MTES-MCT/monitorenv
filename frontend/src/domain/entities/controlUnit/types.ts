@@ -1,4 +1,4 @@
-import type { Port } from '../port/types'
+import type { Base } from '../base/types'
 
 export namespace ControlUnit {
   export interface ControlUnit {
@@ -11,7 +11,7 @@ export namespace ControlUnit {
     controlUnitResourceIds: number[]
     controlUnitResources: Array<
       ControlUnitResourceData & {
-        port: Port.PortData
+        port: Base.BaseData
       }
     >
     id: number
@@ -46,8 +46,8 @@ export namespace ControlUnit {
     note: string | undefined
     /** Base64 Data URI. */
     photo: string | undefined
-    // TODO Make that non-undefinable once all resources will have been attached to a port.
-    port: Port.PortData | undefined
+    // TODO Make that non-undefinable once all resources will have been attached to a base.
+    port: Base.BaseData | undefined
     portId: number | undefined
     // TODO Make that non-undefinable once all resources will have been attached to a type.
     type: ControlUnitResourceType | undefined

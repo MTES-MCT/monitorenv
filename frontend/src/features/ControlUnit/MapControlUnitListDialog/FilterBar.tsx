@@ -13,8 +13,8 @@ import { noop } from 'lodash/fp'
 import { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 
+import { useGetBasesQuery } from '../../../api/base'
 import { useGetControlUnitAdministrationsQuery } from '../../../api/controlUnitAdministration'
-import { useGetPortsQuery } from '../../../api/port'
 import { ControlUnit } from '../../../domain/entities/controlUnit/types'
 
 import type { FiltersState } from './types'
@@ -25,13 +25,13 @@ export type FilterBarProps = {
 }
 export function FilterBar({ onChange }: FilterBarProps) {
   const { data: controlUnitAdministrations } = useGetControlUnitAdministrationsQuery()
-  const { data: ports } = useGetPortsQuery()
+  const { data: bases } = useGetBasesQuery()
 
   const controlUnitAdministrationsAsOptions = useMemo(
     () => getOptionsFromIdAndName(controlUnitAdministrations),
     [controlUnitAdministrations]
   )
-  const portsAsOptions = useMemo(() => getOptionsFromIdAndName(ports), [ports])
+  const basesAsOptions = useMemo(() => getOptionsFromIdAndName(bases), [bases])
   const typesAsOptions = useMemo(() => getOptionsFromLabelledEnum(ControlUnit.ControlUnitResourceType), [])
 
   const updateFilters = useCallback(
@@ -82,7 +82,7 @@ export function FilterBar({ onChange }: FilterBarProps) {
     [onChange]
   )
 
-  if (!controlUnitAdministrationsAsOptions || !portsAsOptions) {
+  if (!controlUnitAdministrationsAsOptions || !basesAsOptions) {
     return <p>Chargement en cours...</p>
   }
 
@@ -123,7 +123,7 @@ export function FilterBar({ onChange }: FilterBarProps) {
           isLight
           label="Base du moyen"
           name="portId"
-          options={portsAsOptions as any}
+          options={basesAsOptions as any}
           placeholder="Base du moyen"
           searchable
         />

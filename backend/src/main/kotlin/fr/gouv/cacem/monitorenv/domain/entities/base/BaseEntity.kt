@@ -1,6 +1,6 @@
-package fr.gouv.cacem.monitorenv.domain.entities.port
+package fr.gouv.cacem.monitorenv.domain.entities.base
 
-data class PortEntity(
+data class BaseEntity(
     val id: Int? = null,
     val controlUnitResourceIds: List<Int>,
     val name: String,

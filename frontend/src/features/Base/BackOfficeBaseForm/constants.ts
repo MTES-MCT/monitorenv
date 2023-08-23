@@ -1,12 +1,12 @@
 import { object, string } from 'yup'
 
-import type { PortFormValues } from './types'
+import type { BaseFormValues } from './types'
 
-export const PORT_FORM_SCHEMA = object({
+export const BASE_FORM_SCHEMA = object({
   name: string().required('Le nom est obligatoire.')
 })
 
-export const INITIAL_PORT_FORM_VALUES: PortFormValues = {
+export const INITIAL_BASE_FORM_VALUES: BaseFormValues = {
   controlUnitResourceIds: [],
   name: undefined
 }

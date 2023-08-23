@@ -1,14 +1,14 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs
 
-import fr.gouv.cacem.monitorenv.domain.entities.port.PortEntity
+import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 
-data class CreateOrUpdatePortDataInput(
+data class CreateOrUpdateBaseDataInput(
     val id: Int? = null,
     val controlUnitResourceIds: List<Int>,
     val name: String,
 ) {
-    fun toPortEntity(): PortEntity {
-        return PortEntity(
+    fun toBaseEntity(): BaseEntity {
+        return BaseEntity(
             id = this.id,
             controlUnitResourceIds = this.controlUnitResourceIds,
             name = this.name,

@@ -1,29 +1,29 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.nextControlUnit.NextControlUnitResourceEntity
-import fr.gouv.cacem.monitorenv.domain.entities.port.PortEntity
+import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 import fr.gouv.cacem.monitorenv.domain.services.ControlUnitResourceService
 import fr.gouv.cacem.monitorenv.utils.requireNonNull
 
-data class PortDataOutput(
+data class BaseDataOutput(
     val id: Int,
     val controlUnitResourceIds: List<Int>,
     val controlUnitResources: List<NextControlUnitResourceEntity>,
     val name: String,
 ) {
     companion object {
-        fun fromPortEntity(
-            portEntity: PortEntity,
+        fun fromBaseEntity(
+            baseEntity: BaseEntity,
             controlUnitResourceService: ControlUnitResourceService
-        ): PortDataOutput {
+        ): BaseDataOutput {
             val controlUnitResources =
-                controlUnitResourceService.getByIds(portEntity.controlUnitResourceIds)
+                controlUnitResourceService.getByIds(baseEntity.controlUnitResourceIds)
 
-            return PortDataOutput(
-                id = requireNonNull(portEntity.id),
-                controlUnitResourceIds = portEntity.controlUnitResourceIds,
+            return BaseDataOutput(
+                id = requireNonNull(baseEntity.id),
+                controlUnitResourceIds = baseEntity.controlUnitResourceIds,
                 controlUnitResources,
-                name = portEntity.name,
+                name = baseEntity.name,
             )
         }
     }

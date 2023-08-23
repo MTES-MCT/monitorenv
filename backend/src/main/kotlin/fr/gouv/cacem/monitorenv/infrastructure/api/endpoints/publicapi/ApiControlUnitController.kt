@@ -3,7 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 import fr.gouv.cacem.monitorenv.domain.services.ControlUnitAdministrationService
 import fr.gouv.cacem.monitorenv.domain.services.ControlUnitContactService
 import fr.gouv.cacem.monitorenv.domain.services.ControlUnitResourceService
-import fr.gouv.cacem.monitorenv.domain.services.PortService
+import fr.gouv.cacem.monitorenv.domain.services.BaseService
 import fr.gouv.cacem.monitorenv.domain.use_cases.nextControlUnit.CreateOrUpdateNextControlUnit
 import fr.gouv.cacem.monitorenv.domain.use_cases.nextControlUnit.GetNextControlUnitById
 import fr.gouv.cacem.monitorenv.domain.use_cases.nextControlUnit.GetNextControlUnits
@@ -26,7 +26,7 @@ class ApiControlUnitController(
     private val controlUnitAdministrationService: ControlUnitAdministrationService,
     private val controlUnitContactService: ControlUnitContactService,
     private val controlUnitResourceService: ControlUnitResourceService,
-    private val portService: PortService,
+    private val baseService: BaseService,
 ) {
     companion object {
         val logger: Logger = LoggerFactory.getLogger(ApiControlUnitController::class.java)
@@ -49,7 +49,7 @@ class ApiControlUnitController(
             controlUnitAdministrationService,
             controlUnitContactService,
             controlUnitResourceService,
-            portService
+            baseService
         )
     }
 
@@ -67,7 +67,7 @@ class ApiControlUnitController(
             controlUnitAdministrationService,
             controlUnitContactService,
             controlUnitResourceService,
-            portService
+            baseService
         )
     }
 
@@ -81,7 +81,7 @@ class ApiControlUnitController(
                     controlUnitAdministrationService,
                     controlUnitContactService,
                     controlUnitResourceService,
-                    portService
+                    baseService
                 )
             }
     }
@@ -109,7 +109,7 @@ class ApiControlUnitController(
             controlUnitAdministrationService,
             controlUnitContactService,
             controlUnitResourceService,
-            portService
+            baseService
         )
     }
 }

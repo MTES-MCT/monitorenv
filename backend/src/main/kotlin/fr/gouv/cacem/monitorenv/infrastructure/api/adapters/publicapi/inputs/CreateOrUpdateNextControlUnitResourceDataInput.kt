@@ -2,8 +2,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.nextControlUnit.NextControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.nextControlUnit.NextControlUnitResourceType
-import fr.gouv.cacem.monitorenv.domain.services.ControlUnitService
-import fr.gouv.cacem.monitorenv.domain.services.PortService
 
 data class CreateOrUpdateNextControlUnitResourceDataInput(
     val id: Int? = null,
@@ -51,7 +49,7 @@ data class CreateOrUpdateNextControlUnitResourceDataInput(
             name = this.name,
             note = this.note,
             photo = this.photo,
-            portId = this.portId,
+            baseId = this.portId,
             type = this.type,
         )
     }

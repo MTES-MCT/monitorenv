@@ -48,7 +48,7 @@ VALUES
 SELECT setval('control_unit_contacts_id_seq', 3, true);
 
 INSERT INTO public.control_unit_resources
-  (   id, control_unit_id,           name, port_id,         type)
+  (   id, control_unit_id,           name, base_id,         type)
 VALUES
   (    1,              25,      'Moyen 1',       1,      'BARGE'),
   (    2,              25,      'Moyen 2',       1,      'BARGE'),

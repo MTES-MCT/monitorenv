@@ -1,10 +1,10 @@
 import { Table } from '../../../ui/Table'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/constants'
 
-import type { Port } from '../../../domain/entities/port/types'
+import type { Base } from '../../../domain/entities/base/types'
 import type { ColumnDef } from '@tanstack/react-table'
 
-export const PORT_TABLE_COLUMNS: Array<ColumnDef<Port.Port>> = [
+export const BASE_TABLE_COLUMNS: Array<ColumnDef<Base.Base>> = [
   {
     accessorFn: row => row.id,
     enableSorting: false,
@@ -21,7 +21,7 @@ export const PORT_TABLE_COLUMNS: Array<ColumnDef<Port.Port>> = [
     accessorFn: row => row.id,
     cell: info => (
       <Table.EditButton
-        basePath={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.PORT_LIST]}`}
+        basePath={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.BASE_LIST]}`}
         id={info.getValue<number>()}
         title="Éditer ce port"
       />

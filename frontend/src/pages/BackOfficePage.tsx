@@ -3,12 +3,12 @@ import styled from 'styled-components'
 
 import { BackOfficeMenu } from '../features/BackOfficeMenu'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../features/BackOfficeMenu/constants'
+import { BackOfficeBaseForm } from '../features/Base/BackOfficeBaseForm'
+import { BackOfficeBaseList } from '../features/Base/BackOfficeBaseList'
 import { BackOfficeControlUnitAdministrationForm } from '../features/ControlUnit/BackOfficeControlUnitAdministrationForm'
 import { BackOfficeControlUnitAdministrationList } from '../features/ControlUnit/BackOfficeControlUnitAdministrationList'
 import { BackOfficeControlUnitForm } from '../features/ControlUnit/BackOfficeControlUnitForm'
 import { BackOfficeControlUnitList } from '../features/ControlUnit/BackOfficeControlUnitList'
-import { BackOfficePortForm } from '../features/Port/BackOfficePortForm'
-import { BackOfficePortList } from '../features/Port/BackOfficePortList'
 
 export function BackOfficePage() {
   return (
@@ -18,6 +18,12 @@ export function BackOfficePage() {
       <Body>
         <Routes>
           <Route element={<BackOfficeControlUnitAdministrationList />} path="/" />
+
+          <Route element={<BackOfficeBaseList />} path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.BASE_LIST]} />
+          <Route
+            element={<BackOfficeBaseForm />}
+            path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.BASE_LIST]}/:portId`}
+          />
 
           <Route
             element={<BackOfficeControlUnitAdministrationList />}
@@ -37,12 +43,6 @@ export function BackOfficePage() {
           <Route
             element={<BackOfficeControlUnitForm />}
             path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_LIST]}/:controlUnitId`}
-          />
-
-          <Route element={<BackOfficePortList />} path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.PORT_LIST]} />
-          <Route
-            element={<BackOfficePortForm />}
-            path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.PORT_LIST]}/:portId`}
           />
         </Routes>
       </Body>

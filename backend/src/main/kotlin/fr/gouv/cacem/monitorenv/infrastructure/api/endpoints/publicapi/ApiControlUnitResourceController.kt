@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
 import fr.gouv.cacem.monitorenv.domain.services.ControlUnitService
-import fr.gouv.cacem.monitorenv.domain.services.PortService
+import fr.gouv.cacem.monitorenv.domain.services.BaseService
 import fr.gouv.cacem.monitorenv.domain.use_cases.nextControlUnit.CreateOrUpdateNextControlUnitResource
 import fr.gouv.cacem.monitorenv.domain.use_cases.nextControlUnit.GetNextControlUnitResourceById
 import fr.gouv.cacem.monitorenv.domain.use_cases.nextControlUnit.GetNextControlUnitResources
@@ -19,8 +19,8 @@ class ApiControlUnitResourceController(
     private val createOrUpdateNextControlUnitResource: CreateOrUpdateNextControlUnitResource,
     private val getNextControlUnitResources: GetNextControlUnitResources,
     private val getNextControlUnitResourceById: GetNextControlUnitResourceById,
+    private val baseService: BaseService,
     private val controlUnitService: ControlUnitService,
-    private val portService: PortService,
 ) {
     @PostMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a control unit resource")
@@ -35,8 +35,8 @@ class ApiControlUnitResourceController(
 
         return NextControlUnitResourceDataOutput.fromNextControlUnitResourceEntity(
             createdNextControlUnitResourceEntity,
+            baseService,
             controlUnitService,
-            portService
         )
     }
 
@@ -51,8 +51,8 @@ class ApiControlUnitResourceController(
 
         return NextControlUnitResourceDataOutput.fromNextControlUnitResourceEntity(
             foundNextControlUnitResourceEntity,
+            baseService,
             controlUnitService,
-            portService
         )
     }
 
@@ -63,8 +63,8 @@ class ApiControlUnitResourceController(
             .map {
                 NextControlUnitResourceDataOutput.fromNextControlUnitResourceEntity(
                     it,
+                    baseService,
                     controlUnitService,
-                    portService
                 )
             }
     }
@@ -89,8 +89,8 @@ class ApiControlUnitResourceController(
 
         return NextControlUnitResourceDataOutput.fromNextControlUnitResourceEntity(
             updatedNextControlUnitResourceEntity,
+            baseService,
             controlUnitService,
-            portService
         )
     }
 }

@@ -35,7 +35,7 @@ export function displayControlUnitResourcesFromControlUnit(controlUnit: ControlU
 }
 
 export function displayPortNamesFromControlUnit(controlUnit: ControlUnit.ControlUnit): string {
-  // TODO Make that non-nullable once all resources will have been attached to a port.
+  // TODO Make that non-nullable once all resources will have been attached to a base.
   const portNames = controlUnit.controlUnitResources.map(({ port }) => port?.name).filter(isDefined)
 
   return portNames.length > 0 ? uniq(portNames).sort().join(', ') : 'Aucun port'

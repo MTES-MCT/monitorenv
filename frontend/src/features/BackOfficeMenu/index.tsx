@@ -18,8 +18,8 @@ export function BackOfficeMenu() {
       <NavLink to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_LIST]}`}>
         {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.CONTROL_UNIT_LIST]}
       </NavLink>
-      <NavLink to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.PORT_LIST]}`}>
-        {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.PORT_LIST]}
+      <NavLink to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.BASE_LIST]}`}>
+        {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.BASE_LIST]}
       </NavLink>
     </Wrapper>
   )

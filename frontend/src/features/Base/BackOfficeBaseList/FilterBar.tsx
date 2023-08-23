@@ -5,19 +5,19 @@ import { useCallback } from 'react'
 import styled from 'styled-components'
 
 import type { FiltersState } from './types'
-import type { Port } from '../../../domain/entities/port/types'
+import type { Base } from '../../../domain/entities/base/types'
 
 export type FilterBarProps = {
-  customSearch: CustomSearch<Port.Port> | undefined
-  onChange: (nextFilters: Array<Filter<Port.Port>>) => void
+  customSearch: CustomSearch<Base.Base> | undefined
+  onChange: (nextFilters: Array<Filter<Base.Base>>) => void
 }
 export function FilterBar({ customSearch, onChange }: FilterBarProps) {
   const updateFilters = useCallback(
     (filtersState: FiltersState) => {
-      const nextFilters: Array<Filter<Port.Port>> = []
+      const nextFilters: Array<Filter<Base.Base>> = []
 
       if (customSearch && filtersState.query && filtersState.query.trim().length > 0) {
-        const filter: Filter<Port.Port> = () => customSearch.find(filtersState.query as string)
+        const filter: Filter<Base.Base> = () => customSearch.find(filtersState.query as string)
 
         nextFilters.push(filter)
       }

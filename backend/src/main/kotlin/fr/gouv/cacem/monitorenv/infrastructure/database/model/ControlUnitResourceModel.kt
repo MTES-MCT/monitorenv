@@ -18,6 +18,12 @@ data class ControlUnitResourceModel(
     var id: Int? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "base_id", nullable = false)
+    @JsonBackReference
+    // TODO Make that non-nullable once all resources will have been attached to a base.
+    var base: BaseModel? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "control_unit_id", nullable = false)
     @JsonBackReference
     var controlUnit: ControlUnitModel,
@@ -30,12 +36,6 @@ data class ControlUnitResourceModel(
 
     @Column(name = "photo")
     var photo: ByteArray? = byteArrayOf(),
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "port_id", nullable = false)
-    @JsonBackReference
-    // TODO Make that non-nullable once all resources will have been attached to a port.
-    var port: PortModel? = null,
 
     @Column(name = "type", nullable = false)
     // TODO Make that non-nullable once all resources will have been attached to a type.
@@ -56,6 +56,7 @@ data class ControlUnitResourceModel(
         other as ControlUnitResourceModel
 
         if (id != other.id) return false
+        if (base != other.base) return false
         if (controlUnit != other.controlUnit) return false
         if (name != other.name) return false
         if (note != other.note) return false
@@ -63,7 +64,6 @@ data class ControlUnitResourceModel(
             if (other.photo == null) return false
             if (!photo.contentEquals(other.photo)) return false
         } else if (other.photo != null) return false
-        if (port != other.port) return false
         if (type != other.type) return false
         if (createdAt != other.createdAt) return false
         if (updatedAt != other.updatedAt) return false
@@ -74,17 +74,17 @@ data class ControlUnitResourceModel(
     companion object {
         fun fromNextControlUnitResourceEntity(
             nextControlUnitResourceEntity: NextControlUnitResourceEntity,
+            // TODO Make that non-nullable once all resources will have been attached to a base.
+            baseModel: BaseModel?,
             controlUnitModel: ControlUnitModel,
-            // TODO Make that non-nullable once all resources will have been attached to a port.
-            portModel: PortModel?
         ): ControlUnitResourceModel {
             return ControlUnitResourceModel(
                 id = nextControlUnitResourceEntity.id,
+                base = baseModel,
                 controlUnit = controlUnitModel,
                 name = nextControlUnitResourceEntity.name,
                 note = nextControlUnitResourceEntity.note,
                 photo = nextControlUnitResourceEntity.photo,
-                port = portModel,
                 type = nextControlUnitResourceEntity.type?.name,
             )
         }
@@ -92,11 +92,11 @@ data class ControlUnitResourceModel(
 
     override fun hashCode(): Int {
         var result = id ?: 0
+        result = 31 * result + (base?.hashCode() ?: 0)
         result = 31 * result + controlUnit.hashCode()
         result = 31 * result + name.hashCode()
         result = 31 * result + (note?.hashCode() ?: 0)
         result = 31 * result + (photo?.contentHashCode() ?: 0)
-        result = 31 * result + (port?.hashCode() ?: 0)
         result = 31 * result + (type?.hashCode() ?: 0)
         result = 31 * result + (createdAt?.hashCode() ?: 0)
         result = 31 * result + (updatedAt?.hashCode() ?: 0)
@@ -109,11 +109,12 @@ data class ControlUnitResourceModel(
 
         return NextControlUnitResourceEntity(
             id = id,
+            base = null,
+            baseId = base?.id,
             controlUnitId,
             name = name,
             note = note,
             photo = photo,
-            portId = port?.id,
             type = type?.let { NextControlUnitResourceType.valueOf(it) },
         )
     }

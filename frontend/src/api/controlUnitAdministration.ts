@@ -17,14 +17,6 @@ export const controlUnitAdministrationApi = monitorenvPublicApi.injectEndpoints(
       })
     }),
 
-    deleteControlUnitAdministration: builder.mutation<void, number>({
-      invalidatesTags: () => [{ type: 'ControlUnits' }],
-      query: controlUnitAdministrationId => ({
-        method: 'DELETE',
-        url: `/control_unit_administrations/${controlUnitAdministrationId}`
-      })
-    }),
-
     getControlUnitAdministration: builder.query<ControlUnit.ControlUnitAdministration, number>({
       providesTags: () => [{ type: 'ControlUnits' }],
       query: controlUnitAdministrationId => `/control_unit_administrations/${controlUnitAdministrationId}`,
@@ -50,7 +42,6 @@ export const controlUnitAdministrationApi = monitorenvPublicApi.injectEndpoints(
 
 export const {
   useCreateControlUnitAdministrationMutation,
-  useDeleteControlUnitAdministrationMutation,
   useGetControlUnitAdministrationQuery,
   useGetControlUnitAdministrationsQuery,
   useUpdateControlUnitAdministrationMutation

@@ -13,7 +13,7 @@ ALTER TABLE public.control_units RENAME TO legacy_control_units;
 ALTER TABLE public.legacy_control_units RENAME CONSTRAINT control_units_pkey TO legacy_control_units_pkey;
 ALTER SEQUENCE public.control_units_id_seq RENAME TO legacy_control_units_id_seq;
 
-CREATE TABLE public.ports (
+CREATE TABLE public.bases (
     id SERIAL PRIMARY KEY,
     name VARCHAR NOT NULL UNIQUE,
 
@@ -55,20 +55,20 @@ CREATE TABLE public.control_unit_contacts (
 
 CREATE TABLE public.control_unit_resources (
     id SERIAL PRIMARY KEY,
+    -- TODO Make that non-nullable once all resources will have been attached to a base.
+    base_id INT,
     control_unit_id INT NOT NULL,
     name VARCHAR NOT NULL,
     note VARCHAR,
     photo BYTEA,
-    -- TODO Make that non-nullable once all resources will have been attached to a port via the frontend resources manager?
-    port_id INT,
-    -- TODO Make that non-nullable once all resources will have been attached to a type via the frontend resources manager?
+    -- TODO Make that non-nullable once all resources will have been attached to a type.
     type VARCHAR,
 
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_control_unit FOREIGN KEY (control_unit_id) REFERENCES control_units(id),
-    CONSTRAINT fk_port FOREIGN KEY (port_id) REFERENCES ports(id)
+    CONSTRAINT fk_base FOREIGN KEY (base_id) REFERENCES bases(id),
+    CONSTRAINT fk_control_unit FOREIGN KEY (control_unit_id) REFERENCES control_units(id)
 );
 
 INSERT INTO public.control_units (

@@ -1,19 +1,19 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.PortModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.BaseModel
 import org.hibernate.annotations.DynamicUpdate
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 
 @DynamicUpdate
-interface IDBPortRepository : CrudRepository<PortModel, Int> {
+interface IDBBaseRepository : CrudRepository<BaseModel, Int> {
     @Query(
         value = """
         SELECT *
-        FROM ports
+        FROM bases
         ORDER BY name ASC
         """,
         nativeQuery = true,
     )
-    override fun findAll(): List<PortModel>
+    override fun findAll(): List<BaseModel>
 }

@@ -1,7 +1,7 @@
 import type { ControlUnit } from '../controlUnit/types'
 
-export namespace Port {
-  export interface Port {
+export namespace Base {
+  export interface Base {
     controlUnitResourceIds: number[]
     controlUnitResources: ControlUnit.ControlUnitResourceData[]
     id: number
@@ -11,6 +11,6 @@ export namespace Port {
   // ---------------------------------------------------------------------------
   // Types
 
-  export type PortData = Omit<Port, 'controlUnitResources'>
-  export type NewPortData = Omit<PortData, 'id'>
+  export type BaseData = Omit<Base, 'controlUnitResources'>
+  export type NewBaseData = Omit<BaseData, 'id'>
 }

@@ -6,7 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.INextControlUnitResourceRepo
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlUnitResourceModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBNextControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBNextControlUnitResourceRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBPortRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBBaseRepository
 import fr.gouv.cacem.monitorenv.utils.requirePresent
 import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.stereotype.Repository
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 class JpaNextControlUnitResourceRepository(
     private val dbNextControlUnitRepository: IDBNextControlUnitRepository,
     private val dbNextControlUnitResourceRepository: IDBNextControlUnitResourceRepository,
-    private val dbPortRepository: IDBPortRepository,
+    private val dbPortRepository: IDBBaseRepository,
 ) : INextControlUnitResourceRepository {
     override fun findAll(): List<NextControlUnitResourceEntity> {
         return dbNextControlUnitResourceRepository.findAll()
@@ -33,15 +33,15 @@ class JpaNextControlUnitResourceRepository(
         return try {
             val controlUnitModel =
                 requirePresent(dbNextControlUnitRepository.findById(nextControlUnitResourceEntity.controlUnitId))
-            val portModel = if (nextControlUnitResourceEntity.portId != null) {
-                requirePresent(dbPortRepository.findById(nextControlUnitResourceEntity.portId))
+            val baseModel = if (nextControlUnitResourceEntity.baseId != null) {
+                requirePresent(dbPortRepository.findById(nextControlUnitResourceEntity.baseId))
             } else {
                 null
             }
             val controlUnitResourceModel = ControlUnitResourceModel.fromNextControlUnitResourceEntity(
                 nextControlUnitResourceEntity,
+                baseModel,
                 controlUnitModel,
-                portModel,
             )
 
             dbNextControlUnitResourceRepository.save(controlUnitResourceModel)

@@ -5,19 +5,19 @@ import { useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import styled from 'styled-components'
 
-import { INITIAL_PORT_FORM_VALUES, PORT_FORM_SCHEMA } from './constants'
-import { isPort } from './utils'
-import { portApi, useGetPortQuery } from '../../../api/port'
+import { INITIAL_BASE_FORM_VALUES, BASE_FORM_SCHEMA } from './constants'
+import { isBase } from './utils'
+import { baseApi, useGetBaseQuery } from '../../../api/base'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../libs/FrontendError'
 import { DefaultTable } from '../../../ui/Table/DefaultTable'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/constants'
 import { CONTROL_UNIT_RESOURCE_TABLE_COLUMNS } from '../../ControlUnit/BackOfficeControlUnitForm/constants'
 
-import type { PortFormValues } from './types'
-import type { Port } from '../../../domain/entities/port/types'
+import type { BaseFormValues } from './types'
+import type { Base } from '../../../domain/entities/base/types'
 
-export function BackOfficePortForm() {
+export function BackOfficeBaseForm() {
   const { portId } = useParams()
   if (!portId) {
     throw new FrontendError('`portId` is undefined.')
@@ -27,32 +27,32 @@ export function BackOfficePortForm() {
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const { data: port } = useGetPortQuery(isNew ? skipToken : Number(portId))
+  const { data: port } = useGetBaseQuery(isNew ? skipToken : Number(portId))
 
-  const initialValues: PortFormValues | undefined = isNew ? INITIAL_PORT_FORM_VALUES : port || undefined
+  const initialValues: BaseFormValues | undefined = isNew ? INITIAL_BASE_FORM_VALUES : port || undefined
 
   const goBackToList = useCallback(() => {
-    navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.PORT_LIST]}`)
+    navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.BASE_LIST]}`)
   }, [navigate])
 
   const submit = useCallback(
-    async (portFormValues: PortFormValues) => {
+    async (portFormValues: BaseFormValues) => {
       // Type-enforced by `PORT_FORM_SCHEMA`
-      const portData = portFormValues as Port.PortData
+      const portData = portFormValues as Base.BaseData
 
       if (isNew) {
-        await dispatch(portApi.endpoints.createPort.initiate(portData))
+        await dispatch(baseApi.endpoints.createBase.initiate(portData))
 
         goBackToList()
 
         return
       }
 
-      if (!isPort(portData)) {
+      if (!isBase(portData)) {
         throw new FrontendError('`portData.id` is undefined.')
       }
 
-      await dispatch(portApi.endpoints.updatePort.initiate(portData))
+      await dispatch(baseApi.endpoints.updateBase.initiate(portData))
 
       goBackToList()
     },
@@ -61,11 +61,11 @@ export function BackOfficePortForm() {
 
   return (
     <div>
-      <Title>{`${isNew ? 'Création' : 'Édition'} d’un port`}</Title>
+      <Title>{`${isNew ? 'Création' : 'Édition'} d’une base`}</Title>
 
       {!initialValues && <p>Chargement en cours...</p>}
       {initialValues && (
-        <Formik initialValues={initialValues} onSubmit={submit} validationSchema={PORT_FORM_SCHEMA}>
+        <Formik initialValues={initialValues} onSubmit={submit} validationSchema={BASE_FORM_SCHEMA}>
           {({ handleSubmit }) => (
             <Form onSubmit={handleSubmit}>
               <FormikTextInput label="Nom" name="name" />
