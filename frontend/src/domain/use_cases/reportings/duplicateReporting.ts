@@ -10,7 +10,12 @@ export const duplicateReporting = reportingId => async (dispatch, getState) => {
   try {
     const response = await dispatch(reportingToDuplicate.initiate(reportingId))
     if ('data' in response) {
-      const duplicatedReporting = { ...response.data, id: undefined, reportingId: undefined }
+      const duplicatedReporting = {
+        ...response.data,
+        createdAt: new Date().toISOString(),
+        id: undefined,
+        reportingId: undefined
+      }
       if (isDirty) {
         dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(true))
         dispatch(multiReportingsActions.setNextSelectedReporting(duplicatedReporting))
