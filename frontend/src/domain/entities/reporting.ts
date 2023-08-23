@@ -1,3 +1,4 @@
+/* eslint-disable typescript-sort-keys/string-enum */
 import { customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 
 import type { TargetTypeEnum } from './targetType'
@@ -43,21 +44,10 @@ export enum ReportingSourceEnum {
   OTHER = 'OTHER',
   SEMAPHORE = 'SEMAPHORE'
 }
-export const reportingSourceLabels = {
-  SEMAPHORE: {
-    label: 'Sémaphore',
-    value: 'SEMAPHORE'
-  },
-  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
-  CONTROL_UNIT: {
-    label: 'Unité',
-    value: 'CONTROL_UNIT'
-  },
-  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
-  OTHER: {
-    label: 'Autre',
-    value: 'OTHER'
-  }
+export enum ReportingSourceLabels {
+  SEMAPHORE = 'Sémaphore',
+  CONTROL_UNIT = 'Unité',
+  OTHER = 'Autre'
 }
 
 export enum ReportingTypeEnum {
@@ -65,15 +55,9 @@ export enum ReportingTypeEnum {
   OBSERVATION = 'OBSERVATION'
 }
 
-export const reportingTypeLabels = {
-  INFRACTION_SUSPICION: {
-    label: 'Infraction (suspicion)',
-    value: 'INFRACTION_SUSPICION'
-  },
-  OBSERVATION: {
-    label: 'Observation',
-    value: 'OBSERVATION'
-  }
+export enum ReportingTypeLabels {
+  INFRACTION_SUSPICION = 'Infraction (suspicion)',
+  OBSERVATION = 'Observation'
 }
 
 export enum InfractionProvenEnum {
@@ -93,6 +77,11 @@ export const infractionProvenLabels = {
   }
 }
 
+export enum ProvenFiltersLabels {
+  PROVEN = 'Avéré',
+  NOT_PROVEN = 'Non avéré'
+}
+
 export enum ReportingStatusEnum {
   ARCHIVED = 'ARCHIVED',
   IN_PROGRESS = 'IN_PROGRESS',
@@ -101,6 +90,16 @@ export enum ReportingStatusEnum {
   OBSERVATION = 'OBSERVATION',
   // eslint-disable-next-line typescript-sort-keys/string-enum
   ATTACHED_TO_MISSION = 'ATTACHED_TO_MISSION'
+}
+
+export enum StatusFilterEnum {
+  ARCHIVED = 'ARCHIVED',
+  IN_PROGRESS = 'IN_PROGRESS'
+}
+
+export enum StatusFilterLabels {
+  IN_PROGRESS = 'En cours',
+  ARCHIVED = 'Archivés'
 }
 
 export const getFormattedReportingId = (reportingId: number) =>

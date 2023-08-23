@@ -71,6 +71,7 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
                   }}
                 >
                   {header.isPlaceholder ? undefined : (
+                    // TODO pass props as usual: className={}
                     <SimpleTable.SortContainer
                       {...{
                         className: header.column.getCanSort() ? 'cursor-pointer select-none' : '',
@@ -105,6 +106,7 @@ export function MissionsTable({ isLoading, missions }: { isLoading: boolean; mis
                 {row?.getVisibleCells().map(cell => (
                   <SimpleTable.Td
                     {...{
+                      $isCenter: !!(cell.column.id === 'geom' || cell.column.id === 'edit'),
                       key: cell.id,
                       style: {
                         maxWidth: cell.column.getSize(),

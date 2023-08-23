@@ -4,7 +4,8 @@ import styled from 'styled-components'
 import { ReportingsTable } from './ReportingsTable'
 import { createAndOpenNewReporting } from '../../../domain/use_cases/reportings/createAndOpenNewReporting'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
-import { useGetFilteredReportingsQuery } from '../../../hooks/useGetFilteredReportingsQuery'
+import { ReportingsFilters } from '../Filters'
+import { useGetFilteredReportingsQuery } from '../hooks/useGetFilteredReportingsQuery'
 
 export function ReportingsList() {
   const dispatch = useAppDispatch()
@@ -23,10 +24,7 @@ export function ReportingsList() {
           Ajouter un nouveau signalement
         </StyledButton>
       </StyledHeader>
-      {/* <MissionsTableFilters /> */}
-      <NumberOfDisplayedReportings>
-        {reportings?.length || '0'} Signalement{reportings && reportings.length > 1 ? 's' : ''}
-      </NumberOfDisplayedReportings>
+      <ReportingsFilters />
 
       {isError ? (
         <p data-cy="listReportingWrapper">Erreur au chargement des données</p>
@@ -50,7 +48,7 @@ const StyledHeader = styled.div`
   display: flex;
   flex-direction: row;
   gap: 32px;
-  margin-bottom: 40px;
+  margin-bottom: 32px;
 `
 
 const Title = styled.h1`
@@ -59,10 +57,6 @@ const Title = styled.h1`
   line-height: 50px;
 `
 
-const NumberOfDisplayedReportings = styled.h3`
-  font-size: 13px;
-  margin-top 32px;
-`
 const StyledButton = styled(Button)`
   align-self: center;
 `

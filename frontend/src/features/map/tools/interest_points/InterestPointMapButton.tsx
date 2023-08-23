@@ -68,7 +68,7 @@ export function InterestPointMapButton() {
 
 const Wrapper = styled.div<{ reportingFormVisibility: ReportingFormVisibility }>`
   position: absolute;
-  top: 312px;
+  top: 298px;
   transition: right 0.3s ease-out;
   right: ${p => (p.reportingFormVisibility === ReportingFormVisibility.VISIBLE ? '0' : '10')}px;
 `

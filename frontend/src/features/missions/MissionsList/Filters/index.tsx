@@ -1,4 +1,12 @@
-import { Option, Select, customDayjs, DateRangePicker, DateAsStringRange, useNewWindow } from '@mtes-mct/monitor-ui'
+import {
+  Option,
+  Select,
+  customDayjs,
+  DateRangePicker,
+  DateAsStringRange,
+  useNewWindow,
+  getOptionsFromLabelledEnum
+} from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 import { MutableRefObject, useMemo, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -10,15 +18,12 @@ import { useGetControlThemesQuery } from '../../../../api/controlThemesAPI'
 import { useGetControlUnitsQuery } from '../../../../api/controlUnitsAPI'
 import { COLORS } from '../../../../constants/constants'
 import { DateRangeEnum, dateRangeLabels } from '../../../../domain/entities/dateRange'
-import {
-  missionSourceEnum,
-  missionStatusLabels,
-  missionTypeEnum,
-  seaFrontLabels
-} from '../../../../domain/entities/missions'
+import { missionSourceEnum, missionStatusLabels, missionTypeEnum } from '../../../../domain/entities/missions'
+import { SeaFrontLabels } from '../../../../domain/entities/seaFrontType'
 import { MissionFiltersEnum, resetMissionFilters, updateFilters } from '../../../../domain/shared_slices/MissionFilters'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReactComponent as ReloadSVG } from '../../../../uiMonitor/icons/Reload.svg'
+import { getThemesAsListOptions } from '../../../../utils/getThemesAsListOptions'
 
 export function MissionsTableFilters() {
   const dispatch = useDispatch()
@@ -44,12 +49,7 @@ export function MissionsTableFilters() {
   const controlUnits = useMemo(() => (data ? Array.from(data) : []), [data])
   const { data: controlThemes } = useGetControlThemesQuery()
 
-  const themesListAsOptions: Option[] = _.chain(controlThemes)
-    .map(theme => theme.themeLevel1)
-    .uniq()
-    .sort((a, b) => a?.localeCompare(b))
-    .map(t => ({ label: t, value: t }))
-    .value()
+  const themesListAsOptions = getThemesAsListOptions(controlThemes)
 
   const administrationsWithTheirControlsUnits = _.chain(controlUnits)
     .reduce((acc, curr) => {
@@ -85,7 +85,7 @@ export function MissionsTableFilters() {
   const StatusOptions = Object.values(missionStatusLabels)
   const TypeOptions = Object.values(missionTypeEnum)
   const sourceOptions = Object.values(missionSourceEnum)
-  const seaFrontsOptions = Object.values(seaFrontLabels)
+  const seaFrontsOptions = getOptionsFromLabelledEnum(SeaFrontLabels)
 
   const onUpdatePeriodFilter = period => {
     dispatch(updateFilters({ key: MissionFiltersEnum.PERIOD_FILTER, value: period }))

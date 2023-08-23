@@ -1,12 +1,13 @@
-import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, MapMenuDialog } from '@mtes-mct/monitor-ui'
 import { useDispatch } from 'react-redux'
+import styled from 'styled-components'
 
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setDisplayedItems } from '../../../domain/shared_slices/Global'
 import { createAndOpenNewReporting } from '../../../domain/use_cases/reportings/createAndOpenNewReporting'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
 import { sideWindowActions } from '../../SideWindow/slice'
+import { ReportingFilterContext, ReportingsFilters } from '../Filters'
 
 export function SearchReportings() {
   const dispatch = useDispatch()
@@ -31,29 +32,33 @@ export function SearchReportings() {
   }
 
   return (
-    <MenuWithCloseButton.Container>
-      <MenuWithCloseButton.Header>
-        <MenuWithCloseButton.CloseButton Icon={Icon.Close} onClick={closeSearchReportings} />
-        <MenuWithCloseButton.Title>Signalements</MenuWithCloseButton.Title>
-
-        <MenuWithCloseButton.VisibilityButton
-          accent={Accent.SECONDARY}
-          Icon={displayReportingsLayer ? Icon.Display : Icon.Hide}
-          onClick={setReportingsVisibilityOnMap}
-        />
-      </MenuWithCloseButton.Header>
-      <MenuWithCloseButton.Body>
-        <MenuWithCloseButton.Section>
+    <StyledContainer>
+      <MapMenuDialog.Container>
+        <MapMenuDialog.Header>
+          <MapMenuDialog.CloseButton Icon={Icon.Close} onClick={closeSearchReportings} />
+          <MapMenuDialog.Title>Signalements</MapMenuDialog.Title>
+          <MapMenuDialog.VisibilityButton
+            accent={Accent.SECONDARY}
+            Icon={displayReportingsLayer ? Icon.Display : Icon.Hide}
+            onClick={setReportingsVisibilityOnMap}
+          />
+        </MapMenuDialog.Header>
+        <MapMenuDialog.Body>
+          <ReportingsFilters context={ReportingFilterContext.MAP} />
+        </MapMenuDialog.Body>
+        <MapMenuDialog.Footer>
           <Button Icon={Icon.Plus} isFullWidth onClick={createReporting}>
             Ajouter un signalement
           </Button>
-        </MenuWithCloseButton.Section>
-        <MenuWithCloseButton.Section>
           <Button accent={Accent.SECONDARY} Icon={Icon.Expand} isFullWidth onClick={toggleReportingsWindow}>
             Voir la vue détaillée des signalements
           </Button>
-        </MenuWithCloseButton.Section>
-      </MenuWithCloseButton.Body>
-    </MenuWithCloseButton.Container>
+        </MapMenuDialog.Footer>
+      </MapMenuDialog.Container>
+    </StyledContainer>
   )
 }
+
+const StyledContainer = styled.div`
+  display: flex;
+`

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
+import java.time.Instant
 
 @DynamicUpdate
 interface IDBReportingRepository : CrudRepository<ReportingModel, Int> {
@@ -15,11 +16,49 @@ interface IDBReportingRepository : CrudRepository<ReportingModel, Int> {
         SELECT *
         FROM reportings
         WHERE is_deleted IS FALSE
-        
+        AND created_at >= CAST(CAST(:startedAfter AS text) AS timestamp)
+        AND (CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL OR created_at <= CAST(CAST(:startedBefore AS text) AS timestamp))   
+        AND ((:seaFronts) = '{}' OR CAST(sea_front AS text) = ANY(CAST(:seaFronts as text[])))
+        AND ((:sourcesType) = '{}' OR CAST(source_type AS text) = ANY(CAST(:sourcesType as text[])))
+        AND ((:reportingType) = '{}' OR CAST(report_type AS text) = ANY(CAST(:reportingType as text[])))
+        AND ((:status) = '{}'
+            OR (
+                'ARCHIVED' = ANY(CAST(:status as text[])) AND (
+                    is_archived = true
+                    OR (created_at + make_interval(hours => validity_time)) < NOW() 
+                ))
+            OR ( 
+                'IN_PROGRESS' = ANY(CAST(:status as text[])) AND (
+                    is_archived = false
+                    AND (created_at + make_interval(hours => validity_time)) >= NOW() 
+                )
+            )
+        )
+        AND ((:provenStatus) = '{}'
+            OR (
+                'NOT_PROVEN' = ANY(CAST(:provenStatus as text[])) AND (
+                    is_infraction_proven = false
+                ))
+            OR ( 
+                'PROVEN' = ANY(CAST(:provenStatus as text[])) AND (
+                    is_infraction_proven = true
+                )
+            )
+        )
+        ORDER BY reporting_id DESC
     """,
         nativeQuery = true,
     )
-    fun findAll(pageable: Pageable): List<ReportingModel>
+    fun findAll(
+        pageable: Pageable,
+        provenStatus: String?,
+        reportingType: String?,
+        seaFronts: String?,
+        sourcesType: String?, 
+        startedAfter: Instant,
+        startedBefore: Instant?,
+        status: String?,
+    ): List<ReportingModel>
 
     @Modifying(clearAutomatically = true)
     @Query(

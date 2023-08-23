@@ -1,7 +1,6 @@
 import { Accent, Button, Dialog } from '@mtes-mct/monitor-ui'
 
-type DeleteModalProps = {
-  cancelButtonText?: string
+type ArchiveModalProps = {
   context: string
   isAbsolute?: boolean
   onCancel: () => void
@@ -11,8 +10,7 @@ type DeleteModalProps = {
   title: string
 }
 
-export function DeleteModal({
-  cancelButtonText,
+export function ArchiveModal({
   context,
   isAbsolute = true,
   onCancel,
@@ -20,7 +18,7 @@ export function DeleteModal({
   open,
   subTitle,
   title
-}: DeleteModalProps) {
+}: ArchiveModalProps) {
   if (!open) {
     return null
   }
@@ -33,11 +31,11 @@ export function DeleteModal({
       </Dialog.Body>
 
       <Dialog.Action>
-        <Button accent={Accent.SECONDARY} name={`delete-${context}-modal-cancel`} onClick={onCancel}>
-          {cancelButtonText ?? "Retourner à l'édition"}
+        <Button accent={Accent.SECONDARY} name={`archive-${context}-modal-cancel`} onClick={onCancel}>
+          Annuler l&apos;archivage
         </Button>
-        <Button accent={Accent.PRIMARY} name={`delete-${context}-modal-confirm`} onClick={onConfirm}>
-          Confirmer la suppression
+        <Button accent={Accent.PRIMARY} name={`archive-${context}-modal-confirm`} onClick={onConfirm}>
+          Enregistrer et archiver
         </Button>
       </Dialog.Action>
     </Dialog>

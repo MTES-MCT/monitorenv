@@ -1,4 +1,4 @@
-import { getDateAsLocalizedStringCompact } from '../../../utils/getDateAsLocalizedString'
+import { getDateAsLocalizedStringCompact } from '../../../../utils/getDateAsLocalizedString'
 
 export function getDateCell(date: string) {
   if (!date) {

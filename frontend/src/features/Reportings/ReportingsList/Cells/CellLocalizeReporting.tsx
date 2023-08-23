@@ -3,8 +3,8 @@ import GeoJSON from 'ol/format/GeoJSON'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
-import { setFitToExtent } from '../../../domain/shared_slices/Map'
+import { OPENLAYERS_PROJECTION } from '../../../../domain/entities/map/constants'
+import { setFitToExtent } from '../../../../domain/shared_slices/Map'
 
 export function CellLocalizeReporting({ geom }: { geom: any }) {
   const dispatch = useDispatch()

@@ -20,7 +20,9 @@ INSERT INTO reportings (
     is_unit_available,
     created_at,
     validity_time,
-    is_deleted) VALUES (
+    is_deleted) 
+VALUES
+(
     1,
     2300001,
     'SEMAPHORE',
@@ -43,31 +45,8 @@ INSERT INTO reportings (
     now() - INTERVAL '3 days',
     24,
     false
-);
-
-INSERT INTO reportings (
-    id,
-    reporting_id,
-    source_type ,
-    semaphore_id ,
-    control_unit_id ,
-    source_name ,
-    target_type ,
-    vehicle_type,
-    target_details,
-    geom,
-    sea_front,
-    description,
-    report_type,
-    theme,
-    sub_themes,
-    action_taken,
-    is_infraction_proven,
-    is_control_required,
-    is_unit_available,
-    created_at,
-    validity_time,
-    is_deleted) VALUES (
+    ),
+(
     2,
     2300002,
     'SEMAPHORE',
@@ -90,31 +69,8 @@ INSERT INTO reportings (
     now() - INTERVAL '2 days',
     2,
     false
-);
-
-INSERT INTO reportings (
-    id,
-    reporting_id,
-    source_type ,
-    semaphore_id ,
-    control_unit_id ,
-    source_name ,
-    target_type ,
-    vehicle_type,
-    target_details,
-    geom,
-    sea_front,
-    description,
-    report_type,
-    theme,
-    sub_themes,
-    action_taken,
-    is_infraction_proven,
-    is_control_required,
-    is_unit_available,
-    created_at,
-    validity_time,
-    is_deleted) VALUES (
+),
+(
     3,
     2300003,
     'CONTROL_UNIT',
@@ -137,7 +93,55 @@ INSERT INTO reportings (
     now() - INTERVAL '1 hour',
     1,
     false
+),
+(
+    4,
+    2300004,
+    'OTHER',
+    null,
+    null,
+    'MA SUPER SOCIETE',
+    'INDIVIDUAL',
+    NULL,
+    '[{"operatorName": "Mr le dirigeant" }]',
+    ST_GeomFromText('MULTIPOLYGON(((-2.81383107 49.49805557, -2.63290938 49.59886363, -2.80213877 49.69953506, -2.91683355 49.52263623, -2.81383107 49.49805557)))', 4326),
+    'MED',
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ultrices risus ac arcu pellentesque, et tempor justo tempor. Pellentesque sem nisl, tempor id augue non, interdum sollicitudin felis.',
+    'OBSERVATION',
+    'Pêche à pied',
+    '{"Braconnage"}',
+    NULL,
+    false,
+    true,
+    true,
+    now() - INTERVAL '3 hour',
+    4,
+    false
+),
+(
+    5,
+    2300005,
+    'SEMAPHORE',
+    36,
+    NULL,
+    NULL,
+    'COMPANY',
+    NULL,
+    '[{"operatorName": "Ma société", "vesselName": "Mr le gérant" }]',
+    ST_GeomFromText('MULTIPOINT((-4.18759766312331 47.11281269827924))', 4326),
+    'Guadeloupe',
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    'OBSERVATION',
+    NULL,
+    NULL,
+    NULL,
+    false,
+    true,
+    true,
+    now() - INTERVAL '1 hour',
+    6,
+    false
 );
-SELECT setval('reportings_id_seq', 4, false);
+SELECT setval('reportings_id_seq', 6, false);
 CREATE SEQUENCE IF NOT EXISTS reportings_2023_seq;
-SELECT setval('reportings_2023_seq', 4, false);
+SELECT setval('reportings_2023_seq', 6, false);

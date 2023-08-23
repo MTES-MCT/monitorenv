@@ -13,7 +13,7 @@ import { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { ReportingTypeEnum, getFormattedReportingId, reportingTypeLabels } from '../../../../domain/entities/reporting'
+import { ReportingTypeEnum, getFormattedReportingId, ReportingTypeLabels } from '../../../../domain/entities/reporting'
 import { reportingStateActions } from '../../../../domain/shared_slices/ReportingState'
 import { openReporting } from '../../../../domain/use_cases/reportings/openReporting'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -81,7 +81,7 @@ export function ReportingCard({ feature, selected = false }: { feature: any; sel
                   : THEME.color.blueGray[100]
               }
             />
-            {reportingTypeLabels[reportType]?.label}
+            {ReportingTypeLabels[reportType]}
           </StyledGrayText>
           <StyledGrayText>{creationDate} (UTC)</StyledGrayText>
         </StyledHeaderFirstLine>

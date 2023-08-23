@@ -6,9 +6,12 @@ context('Reporting', () => {
     cy.visit(`/`)
   })
   it('A reporting can be created', () => {
+    // Given
     cy.clickButton('Chercher des signalements')
     cy.clickButton('Ajouter un signalement')
     cy.intercept('PUT', '/bff/v1/reportings').as('createReporting')
+
+    // When
     cy.get('*[data-cy="add-semaphore-source"]').click({ force: true })
     cy.get('div[role="option"]').contains('Sémaphore de Dieppe').click()
 

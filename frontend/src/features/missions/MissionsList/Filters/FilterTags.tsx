@@ -69,5 +69,7 @@ const StyledContainer = styled.div`
   margin-top: 10px;
   display: flex;
   flex-direction: row;
-  gap: 16px;
+  gap: 8px 16px;
+  max-width: 100%;
+  flex-wrap: wrap;
 `
