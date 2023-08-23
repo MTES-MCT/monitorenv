@@ -124,4 +124,7 @@ const StyledDropdown = styled(Dropdown)`
     vertical-align: middle;
     margin-right: 0px;
   }
+  .rs-dropdown-item {
+    line-height: 20px;
+  }
 `
