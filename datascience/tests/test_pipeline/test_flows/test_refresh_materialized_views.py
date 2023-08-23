@@ -48,3 +48,53 @@ def test_refresh_analytics_actions(reset_test_data):
         actions_after_refresh,
         check_dtype=False,
     )
+
+
+def test_refresh_analytics_surveillance_density_map(reset_test_data):
+
+    e = create_engine("monitorenv_remote")
+    query = text(
+        """
+        SELECT *
+        FROM analytics_surveillance_density_map
+        ORDER BY action_id, latitude, longitude
+        """
+    )
+
+    initial_surveillance_density_map = read_query("monitorenv_remote", query)
+
+    with e.begin() as connection:
+        connection.execute(
+            text("DELETE FROM env_actions WHERE mission_id = 12")
+        )
+
+    surveillance_density_map_before_refresh = read_query(
+        "monitorenv_remote", query
+    )
+
+    flow.schedule = None
+    state = flow.run(
+        view_name="analytics_surveillance_density_map", schema="public"
+    )
+
+    assert state.is_successful()
+
+    surveillance_density_map_after_refresh = read_query(
+        "monitorenv_remote", query
+    )
+
+    assert len(initial_surveillance_density_map) == 123
+    assert len(surveillance_density_map_before_refresh) == 123
+    assert len(surveillance_density_map_after_refresh) == 121
+
+    pd.testing.assert_frame_equal(
+        initial_surveillance_density_map,
+        surveillance_density_map_before_refresh,
+    )
+    pd.testing.assert_frame_equal(
+        initial_surveillance_density_map.query("mission_id != 12").reset_index(
+            drop=True
+        ),
+        surveillance_density_map_after_refresh,
+        check_dtype=False,
+    )
