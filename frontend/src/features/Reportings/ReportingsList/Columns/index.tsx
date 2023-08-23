@@ -18,22 +18,18 @@ export const Columns = [
     cell: ({ row }) => (
       <div className="px-1">
         <TableWithSelectableRows.RowCheckbox
-          {...{
-            disabled: !row.getCanSelect(),
-            isChecked: row.getIsSelected(),
-            onChange: row.getToggleSelectedHandler(row)
-          }}
+          disabled={!row.getCanSelect()}
+          isChecked={row.getIsSelected()}
+          onChange={row.getToggleSelectedHandler(row)}
         />
       </div>
     ),
     enableSorting: false,
     header: ({ table }) => (
       <TableWithSelectableRows.RowCheckbox
-        {...{
-          isChecked: table.getIsAllRowsSelected(),
-          isIndeterminate: table.getIsSomeRowsSelected(),
-          onChange: table.getToggleAllRowsSelectedHandler()
-        }}
+        isChecked={table.getIsAllRowsSelected()}
+        isIndeterminate={table.getIsSomeRowsSelected()}
+        onChange={table.getToggleAllRowsSelectedHandler()}
       />
     ),
 

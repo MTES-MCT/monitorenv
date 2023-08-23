@@ -40,7 +40,7 @@ export function ReportingsButton() {
 
 const Wrapper = styled.div<{ reportingFormVisibility: ReportingFormVisibility }>`
   position: absolute;
-  top: 135px;
+  top: 130px;
   right: ${p => (p.reportingFormVisibility === ReportingFormVisibility.VISIBLE ? '0' : '10')}px;
   display: flex;
   justify-content: flex-end;

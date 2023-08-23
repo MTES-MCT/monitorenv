@@ -43,7 +43,7 @@ export function SearchSemaphoreButton() {
 
 const Wrapper = styled.div<{ reportingFormVisibility: ReportingFormVisibility }>`
   position: absolute;
-  top: 185px;
+  top: 178px;
   right: ${p => (p.reportingFormVisibility === ReportingFormVisibility.VISIBLE ? '0' : '10')}px;
   display: flex;
   justify-content: flex-end;
