@@ -1,9 +1,6 @@
-ALTER TABLE public.administrations RENAME TO control_unit_administrations;
-ALTER TABLE public.control_unit_administrations RENAME CONSTRAINT administrations_pkey TO control_unit_administrations_pkey;
-ALTER SEQUENCE public.administrations_id_seq RENAME TO control_unit_administrations_id_seq;
 -- TODO !!! IMPORTANT !!! DOUBLE-CHECK THAT IN PRODUCTION !!!
 -- We shouldn't have to do that but there seems to be an inconsistency (`2003`) in `V0.060__create_administrations.sql`.
-ALTER SEQUENCE public.control_unit_administrations_id_seq RESTART WITH 2007;
+ALTER SEQUENCE public.administrations_id_seq RESTART WITH 2007;
 
 ALTER TABLE public.control_resources RENAME TO legacy_control_resources;
 -- ALTER TABLE public.legacy_control_resources RENAME CONSTRAINT control_resources_pkey TO legacy_control_resources_pkey;
@@ -21,13 +18,13 @@ CREATE TABLE public.bases (
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-ALTER TABLE public.control_unit_administrations
+ALTER TABLE public.administrations
     ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     ADD COLUMN updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 
 CREATE TABLE public.control_units (
     id SERIAL PRIMARY KEY,
-    control_unit_administration_id INT NOT NULL,
+    administration_id INT NOT NULL,
     area_note VARCHAR,
     is_archived BOOLEAN NOT NULL,
     name VARCHAR NOT NULL,
@@ -36,7 +33,7 @@ CREATE TABLE public.control_units (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_control_unit_administration FOREIGN KEY (control_unit_administration_id) REFERENCES control_unit_administrations(id)
+    CONSTRAINT fk_administration FOREIGN KEY (administration_id) REFERENCES administrations(id)
 );
 
 CREATE TABLE public.control_unit_contacts (
@@ -73,7 +70,7 @@ CREATE TABLE public.control_unit_resources (
 
 INSERT INTO public.control_units (
     id,
-    control_unit_administration_id,
+    administration_id,
     is_archived,
     name,
     created_at,
@@ -81,7 +78,7 @@ INSERT INTO public.control_units (
 )
 SELECT
     id,
-    administration_id AS control_unit_administration_id,
+    administration_id,
     archived AS is_archived,
     name,
     CURRENT_TIMESTAMP AS created_at,

@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import { MapReportingsFilters } from './Map'
 import { TableReportingsFilters } from './Table'
 import { useGetControlThemesQuery } from '../../../api/controlThemesAPI'
-import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
+import { useGetLegacyControlUnitsQuery } from '../../../api/legacyControlUnit'
 import { useGetSemaphoresQuery } from '../../../api/semaphoresAPI'
 import { DateRangeEnum, ReportingDateRangeEnum, ReportingDateRangeLabels } from '../../../domain/entities/dateRange'
 import {
@@ -32,7 +32,7 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
   const [isCustomPeriodVisible, setIsCustomPeriodVisible] = useState(periodFilter === DateRangeEnum.CUSTOM)
 
   const { data: themes } = useGetControlThemesQuery()
-  const { data: controlUnits } = useGetControlUnitsQuery()
+  const { data: controlUnits } = useGetLegacyControlUnitsQuery()
   const { data: semaphores } = useGetSemaphoresQuery()
   const controlUnitsOptions = useMemo(() => (controlUnits ? Array.from(controlUnits) : []), [controlUnits])
 

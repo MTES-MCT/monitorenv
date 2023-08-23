@@ -9,7 +9,7 @@ const GET_CONTROL_UNIT_RESOURCES_ERROR_MESSAGE = "Nous n'avons pas pu récupére
 export const controlUnitResourceApi = monitorenvPublicApi.injectEndpoints({
   endpoints: builder => ({
     createControlUnitResource: builder.mutation<void, ControlUnit.NewControlUnitResourceData>({
-      invalidatesTags: () => [{ type: 'ControlUnits' }],
+      invalidatesTags: () => [{ type: 'Bases' }, { type: 'ControlUnits' }],
       query: newControlUnitResourceData => ({
         body: newControlUnitResourceData,
         method: 'POST',

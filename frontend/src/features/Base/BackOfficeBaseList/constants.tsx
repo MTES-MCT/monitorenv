@@ -23,7 +23,7 @@ export const BASE_TABLE_COLUMNS: Array<ColumnDef<Base.Base>> = [
       <Table.EditButton
         basePath={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.BASE_LIST]}`}
         id={info.getValue<number>()}
-        title="Éditer ce port"
+        title="Éditer cette base"
       />
     ),
     enableSorting: false,

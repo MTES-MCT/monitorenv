@@ -3,6 +3,13 @@ import { isEmpty, uniq } from 'lodash/fp'
 
 import { ControlUnit } from '../../../domain/entities/controlUnit/types'
 
+export function displayBaseNamesFromControlUnit(controlUnit: ControlUnit.ControlUnit): string {
+  // TODO Make that non-nullable once all resources will have been attached to a base.
+  const baseNames = controlUnit.controlUnitResources.map(({ base }) => base?.name).filter(isDefined)
+
+  return baseNames.length > 0 ? uniq(baseNames).sort().join(', ') : 'Aucune base'
+}
+
 export function displayControlUnitResourcesFromControlUnit(controlUnit: ControlUnit.ControlUnit): string {
   const controlUnitResourceTypeCounts = controlUnit.controlUnitResources.reduce(
     (previousControlUnitResourceTypeCounts, controlUnitResource) => {
@@ -32,13 +39,6 @@ export function displayControlUnitResourcesFromControlUnit(controlUnit: ControlU
         .map(([type, count]) => `${count} ${pluralize(ControlUnit.ControlUnitResourceType[type], count)}`)
         .join(', ')
     : 'Aucun moyen'
-}
-
-export function displayPortNamesFromControlUnit(controlUnit: ControlUnit.ControlUnit): string {
-  // TODO Make that non-nullable once all resources will have been attached to a base.
-  const portNames = controlUnit.controlUnitResources.map(({ port }) => port?.name).filter(isDefined)
-
-  return portNames.length > 0 ? uniq(portNames).sort().join(', ') : 'Aucun port'
 }
 
 function isDefined<T>(value?: T | null | undefined): value is T {

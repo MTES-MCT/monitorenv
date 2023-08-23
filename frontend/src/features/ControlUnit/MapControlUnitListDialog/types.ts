@@ -1,6 +1,6 @@
 export type FiltersState = {
-  controlUnitAdministrationId?: number
-  portId?: number
+  administrationId?: number
+  baseId?: number
   query?: string
   type?: string
 }

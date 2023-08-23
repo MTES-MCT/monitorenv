@@ -1,10 +1,9 @@
-import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, pluralize } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { archiveReportings } from '../../../domain/use_cases/reporting/archiveReportings'
 import { deleteReportings } from '../../../domain/use_cases/reporting/deleteReportings'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
-import { pluralize } from '../../../utils/pluralize'
 
 export function GroupActions({ archiveOrDeleteReportingsCallback, reportingsIds, totalReportings }) {
   const dispatch = useAppDispatch()

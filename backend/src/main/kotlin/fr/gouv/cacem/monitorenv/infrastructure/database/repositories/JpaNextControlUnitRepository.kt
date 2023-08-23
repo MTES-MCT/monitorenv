@@ -5,7 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.nextControlUnit.NextControlUnitE
 import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.INextControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlUnitModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBNextControlUnitAdministrationRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBAdministrationRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBNextControlUnitContactRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBNextControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBNextControlUnitResourceRepository
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 @Repository
 class JpaNextControlUnitRepository(
     private val dbNextControlUnitRepository: IDBNextControlUnitRepository,
-    private val dbNextControlUnitAdministrationRepository: IDBNextControlUnitAdministrationRepository,
+    private val dbAdministrationRepository: IDBAdministrationRepository,
     private val dbNextControlUnitContactRepository: IDBNextControlUnitContactRepository,
     private val dbNextControlUnitResourceRepository: IDBNextControlUnitResourceRepository,
     private val mapper: ObjectMapper,
@@ -35,8 +35,8 @@ class JpaNextControlUnitRepository(
     @Transactional
     override fun save(nextControlUnitEntity: NextControlUnitEntity): NextControlUnitEntity {
         return try {
-            val controlUnitAdministrationModel =
-                requirePresent(dbNextControlUnitAdministrationRepository.findById(nextControlUnitEntity.controlUnitAdministrationId))
+            val administrationModel =
+                requirePresent(dbAdministrationRepository.findById(nextControlUnitEntity.administrationId))
             val controlUnitContactModels = nextControlUnitEntity.controlUnitContactIds.map {
                 requirePresent(dbNextControlUnitContactRepository.findById(it))
             }
@@ -45,7 +45,7 @@ class JpaNextControlUnitRepository(
             }
             val controlUnitModel = ControlUnitModel.fromNextControlUnitEntity(
                 nextControlUnitEntity,
-                controlUnitAdministrationModel,
+                administrationModel,
                 controlUnitContactModels,
                 controlUnitResourceModels,
             )

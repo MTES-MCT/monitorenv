@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
-import fr.gouv.cacem.monitorenv.domain.services.ControlUnitAdministrationService
+import fr.gouv.cacem.monitorenv.domain.services.AdministrationService
 import fr.gouv.cacem.monitorenv.domain.services.ControlUnitContactService
 import fr.gouv.cacem.monitorenv.domain.services.ControlUnitResourceService
 import fr.gouv.cacem.monitorenv.domain.services.BaseService
@@ -23,7 +23,7 @@ class ApiControlUnitController(
     private val createOrUpdateNextControlUnit: CreateOrUpdateNextControlUnit,
     private val getNextControlUnits: GetNextControlUnits,
     private val getNextControlUnitById: GetNextControlUnitById,
-    private val controlUnitAdministrationService: ControlUnitAdministrationService,
+    private val administrationService: AdministrationService,
     private val controlUnitContactService: ControlUnitContactService,
     private val controlUnitResourceService: ControlUnitResourceService,
     private val baseService: BaseService,
@@ -46,7 +46,7 @@ class ApiControlUnitController(
 
         return NextControlUnitDataOutput.fromNextControlUnitEntity(
             createdNextControlUnitEntity,
-            controlUnitAdministrationService,
+            administrationService,
             controlUnitContactService,
             controlUnitResourceService,
             baseService
@@ -64,7 +64,7 @@ class ApiControlUnitController(
 
         return NextControlUnitDataOutput.fromNextControlUnitEntity(
             foundNextControlUnitEntity,
-            controlUnitAdministrationService,
+            administrationService,
             controlUnitContactService,
             controlUnitResourceService,
             baseService
@@ -78,7 +78,7 @@ class ApiControlUnitController(
             .map {
                 NextControlUnitDataOutput.fromNextControlUnitEntity(
                     it,
-                    controlUnitAdministrationService,
+                    administrationService,
                     controlUnitContactService,
                     controlUnitResourceService,
                     baseService
@@ -106,7 +106,7 @@ class ApiControlUnitController(
 
         return NextControlUnitDataOutput.fromNextControlUnitEntity(
             updatedNextControlUnitEntity,
-            controlUnitAdministrationService,
+            administrationService,
             controlUnitContactService,
             controlUnitResourceService,
             baseService

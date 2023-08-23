@@ -19,8 +19,8 @@ export function BackOfficeControlUnitList() {
   const customSearch = useMemo(
     () =>
       controlUnits
-        ? new CustomSearch(controlUnits, ['controlUnitAdministration.name', 'name'], {
-            cacheKey: 'BACK_OFFICE_CONTROL_UNIT_ADMINISTRATION_LIST',
+        ? new CustomSearch(controlUnits, ['administration.name', 'name'], {
+            cacheKey: 'BACK_OFFICE_ADMINISTRATION_LIST',
             isStrict: true
           })
         : undefined,

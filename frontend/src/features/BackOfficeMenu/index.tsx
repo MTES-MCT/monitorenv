@@ -6,8 +6,8 @@ import { BACK_OFFICE_MENU_LABEL, BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from
 export function BackOfficeMenu() {
   return (
     <Wrapper>
-      <NavLink to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_ADMINISTRATION_LIST]}`}>
-        {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.CONTROL_UNIT_ADMINISTRATION_LIST]}
+      <NavLink to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.ADMINISTRATION_LIST]}`}>
+        {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.ADMINISTRATION_LIST]}
       </NavLink>
       <NavLink to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_CONTACT_LIST]}`}>
         {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.CONTROL_UNIT_CONTACT_LIST]}

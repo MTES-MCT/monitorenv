@@ -19,13 +19,13 @@ data class ControlUnitModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null,
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "administration_id", nullable = false)
+    @JsonBackReference
+    var administration: AdministrationModel,
+
     @Column(name = "area_note")
     var areaNote: String? = null,
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "control_unit_administration_id", nullable = false)
-    @JsonBackReference
-    var controlUnitAdministration: ControlUnitAdministrationModel,
 
     @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, mappedBy = "controlUnit")
     @JsonManagedReference
@@ -55,14 +55,14 @@ data class ControlUnitModel(
     companion object {
         fun fromNextControlUnitEntity(
             nextControlUnitEntity: NextControlUnitEntity,
-            controlUnitAdministrationModel: ControlUnitAdministrationModel,
+            administrationModel: AdministrationModel,
             controlUnitContactModels: List<ControlUnitContactModel>,
             controlUnitResourceModels: List<ControlUnitResourceModel>
         ): ControlUnitModel {
             return ControlUnitModel(
                 id = nextControlUnitEntity.id,
                 areaNote = nextControlUnitEntity.areaNote,
-                controlUnitAdministration = controlUnitAdministrationModel,
+                administration = administrationModel,
                 controlUnitContacts = controlUnitContactModels,
                 controlUnitResources = controlUnitResourceModels,
                 isArchived = nextControlUnitEntity.isArchived,
@@ -73,14 +73,14 @@ data class ControlUnitModel(
     }
 
     fun toNextControlUnitEntity(): NextControlUnitEntity {
-        val controlUnitAdministrationId = requireNonNull(controlUnitAdministration.id)
+        val administrationId = requireNonNull(administration.id)
         val controlUnitContactIds = requireIds(controlUnitContacts) { it.id }
         val controlUnitResourceIds = requireIds(controlUnitResources) { it.id }
 
         return NextControlUnitEntity(
             id = id,
+            administrationId,
             areaNote = areaNote,
-            controlUnitAdministrationId,
             controlUnitContactIds,
             controlUnitResourceIds,
             isArchived = isArchived,

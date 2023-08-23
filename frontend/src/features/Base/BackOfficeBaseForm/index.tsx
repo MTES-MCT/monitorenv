@@ -18,41 +18,41 @@ import type { BaseFormValues } from './types'
 import type { Base } from '../../../domain/entities/base/types'
 
 export function BackOfficeBaseForm() {
-  const { portId } = useParams()
-  if (!portId) {
-    throw new FrontendError('`portId` is undefined.')
+  const { baseId } = useParams()
+  if (!baseId) {
+    throw new FrontendError('`baseId` is undefined.')
   }
 
-  const isNew = portId === 'new'
+  const isNew = baseId === 'new'
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const { data: port } = useGetBaseQuery(isNew ? skipToken : Number(portId))
+  const { data: base } = useGetBaseQuery(isNew ? skipToken : Number(baseId))
 
-  const initialValues: BaseFormValues | undefined = isNew ? INITIAL_BASE_FORM_VALUES : port || undefined
+  const initialValues: BaseFormValues | undefined = isNew ? INITIAL_BASE_FORM_VALUES : base || undefined
 
   const goBackToList = useCallback(() => {
     navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.BASE_LIST]}`)
   }, [navigate])
 
   const submit = useCallback(
-    async (portFormValues: BaseFormValues) => {
-      // Type-enforced by `PORT_FORM_SCHEMA`
-      const portData = portFormValues as Base.BaseData
+    async (baseFormValues: BaseFormValues) => {
+      // Type-enforced by `BASE_FORM_SCHEMA`
+      const baseData = baseFormValues as Base.BaseData
 
       if (isNew) {
-        await dispatch(baseApi.endpoints.createBase.initiate(portData))
+        await dispatch(baseApi.endpoints.createBase.initiate(baseData))
 
         goBackToList()
 
         return
       }
 
-      if (!isBase(portData)) {
-        throw new FrontendError('`portData.id` is undefined.')
+      if (!isBase(baseData)) {
+        throw new FrontendError('`baseData.id` is undefined.')
       }
 
-      await dispatch(baseApi.endpoints.updateBase.initiate(portData))
+      await dispatch(baseApi.endpoints.updateBase.initiate(baseData))
 
       goBackToList()
     },
@@ -84,7 +84,7 @@ export function BackOfficeBaseForm() {
       <hr />
 
       <SubTitle>Moyens</SubTitle>
-      <DefaultTable columns={CONTROL_UNIT_RESOURCE_TABLE_COLUMNS as any} data={port?.controlUnitResources} />
+      <DefaultTable columns={CONTROL_UNIT_RESOURCE_TABLE_COLUMNS as any} data={base?.controlUnitResources} />
     </div>
   )
 }

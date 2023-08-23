@@ -1,10 +1,10 @@
 import { Table } from '../../../ui/Table'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/constants'
 
-import type { ControlUnit } from '../../../domain/entities/controlUnit/types'
+import type { Administration } from '../../../domain/entities/administration/types'
 import type { ColumnDef } from '@tanstack/react-table'
 
-export const CONTROL_UNIT_ADMINISTRATION_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.ControlUnitAdministration>> = [
+export const ADMINISTRATION_TABLE_COLUMNS: Array<ColumnDef<Administration.Administration>> = [
   {
     accessorFn: row => row.id,
     enableSorting: false,
@@ -21,7 +21,7 @@ export const CONTROL_UNIT_ADMINISTRATION_TABLE_COLUMNS: Array<ColumnDef<ControlU
     accessorFn: row => row.id,
     cell: info => (
       <Table.EditButton
-        basePath={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_ADMINISTRATION_LIST]}`}
+        basePath={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.ADMINISTRATION_LIST]}`}
         id={info.getValue<number>()}
         title="Éditer cette administration"
       />

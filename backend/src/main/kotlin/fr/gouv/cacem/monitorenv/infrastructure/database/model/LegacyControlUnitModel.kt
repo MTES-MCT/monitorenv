@@ -22,7 +22,7 @@ data class LegacyControlUnitModel(
     var name: String,
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "administration_id")
-    var administration: ControlUnitAdministrationModel,
+    var administration: AdministrationModel,
     @Column(name = "archived")
     var isArchived: Boolean,
     @OneToMany(

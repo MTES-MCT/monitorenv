@@ -1,12 +1,12 @@
 import { Route, Routes } from 'react-router'
 import styled from 'styled-components'
 
+import { BackOfficeAdministrationForm } from '../features/Administration/BackOfficeAdministrationForm'
+import { BackOfficeAdministrationList } from '../features/Administration/BackOfficeAdministrationList'
 import { BackOfficeMenu } from '../features/BackOfficeMenu'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../features/BackOfficeMenu/constants'
 import { BackOfficeBaseForm } from '../features/Base/BackOfficeBaseForm'
 import { BackOfficeBaseList } from '../features/Base/BackOfficeBaseList'
-import { BackOfficeControlUnitAdministrationForm } from '../features/ControlUnit/BackOfficeControlUnitAdministrationForm'
-import { BackOfficeControlUnitAdministrationList } from '../features/ControlUnit/BackOfficeControlUnitAdministrationList'
 import { BackOfficeControlUnitForm } from '../features/ControlUnit/BackOfficeControlUnitForm'
 import { BackOfficeControlUnitList } from '../features/ControlUnit/BackOfficeControlUnitList'
 
@@ -17,23 +17,21 @@ export function BackOfficePage() {
 
       <Body>
         <Routes>
-          <Route element={<BackOfficeControlUnitAdministrationList />} path="/" />
+          <Route element={<BackOfficeAdministrationList />} path="/" />
 
           <Route element={<BackOfficeBaseList />} path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.BASE_LIST]} />
           <Route
             element={<BackOfficeBaseForm />}
-            path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.BASE_LIST]}/:portId`}
+            path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.BASE_LIST]}/:baseId`}
           />
 
           <Route
-            element={<BackOfficeControlUnitAdministrationList />}
-            path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_ADMINISTRATION_LIST]}
+            element={<BackOfficeAdministrationList />}
+            path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.ADMINISTRATION_LIST]}
           />
           <Route
-            element={<BackOfficeControlUnitAdministrationForm />}
-            path={`${
-              BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_ADMINISTRATION_LIST]
-            }/:controlUnitAdministrationId`}
+            element={<BackOfficeAdministrationForm />}
+            path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.ADMINISTRATION_LIST]}/:administrationId`}
           />
 
           <Route

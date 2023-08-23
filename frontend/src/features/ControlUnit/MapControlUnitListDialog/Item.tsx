@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { displayControlUnitResourcesFromControlUnit, displayPortNamesFromControlUnit } from './utils'
+import { displayControlUnitResourcesFromControlUnit, displayBaseNamesFromControlUnit } from './utils'
 
 import type { ControlUnit } from '../../../domain/entities/controlUnit/types'
 
@@ -11,9 +11,9 @@ export function Item({ controlUnit }: ItemProps) {
   return (
     <Wrapper>
       <NameText>{controlUnit.name}</NameText>
-      <AdministrationText>{controlUnit.controlUnitAdministration.name}</AdministrationText>
+      <AdministrationText>{controlUnit.administration.name}</AdministrationText>
       <ResourcesAndPortsText>{displayControlUnitResourcesFromControlUnit(controlUnit)}</ResourcesAndPortsText>
-      <ResourcesAndPortsText>{displayPortNamesFromControlUnit(controlUnit)}</ResourcesAndPortsText>
+      <ResourcesAndPortsText>{displayBaseNamesFromControlUnit(controlUnit)}</ResourcesAndPortsText>
     </Wrapper>
   )
 }

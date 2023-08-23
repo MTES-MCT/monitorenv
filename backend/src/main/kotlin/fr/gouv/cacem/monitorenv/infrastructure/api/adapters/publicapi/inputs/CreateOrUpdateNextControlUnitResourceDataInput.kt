@@ -5,11 +5,11 @@ import fr.gouv.cacem.monitorenv.domain.entities.nextControlUnit.NextControlUnitR
 
 data class CreateOrUpdateNextControlUnitResourceDataInput(
     val id: Int? = null,
+    val baseId: Int,
     val controlUnitId: Int,
     val name: String,
     val note: String? = null,
     val photo: ByteArray? = byteArrayOf(),
-    val portId: Int,
     val type: NextControlUnitResourceType,
 ) {
     override fun equals(other: Any?): Boolean {
@@ -19,6 +19,7 @@ data class CreateOrUpdateNextControlUnitResourceDataInput(
         other as CreateOrUpdateNextControlUnitResourceDataInput
 
         if (id != other.id) return false
+        if (baseId != other.baseId) return false
         if (controlUnitId != other.controlUnitId) return false
         if (name != other.name) return false
         if (note != other.note) return false
@@ -26,7 +27,6 @@ data class CreateOrUpdateNextControlUnitResourceDataInput(
             if (other.photo == null) return false
             if (!photo.contentEquals(other.photo)) return false
         } else if (other.photo != null) return false
-        if (portId != other.portId) return false
         return type == other.type
     }
 
@@ -36,7 +36,7 @@ data class CreateOrUpdateNextControlUnitResourceDataInput(
         result = 31 * result + name.hashCode()
         result = 31 * result + (note?.hashCode() ?: 0)
         result = 31 * result + (photo?.contentHashCode() ?: 0)
-        result = 31 * result + portId
+        result = 31 * result + baseId
         result = 31 * result + type.hashCode()
 
         return result
@@ -45,11 +45,11 @@ data class CreateOrUpdateNextControlUnitResourceDataInput(
     fun toNextControlUnitResourceEntity(): NextControlUnitResourceEntity {
         return NextControlUnitResourceEntity(
             id = this.id,
+            baseId = this.baseId,
             controlUnitId = this.controlUnitId,
             name = this.name,
             note = this.note,
             photo = this.photo,
-            baseId = this.portId,
             type = this.type,
         )
     }

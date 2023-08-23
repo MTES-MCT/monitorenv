@@ -19,8 +19,8 @@ import {
   CONTROL_UNIT_CONTACT_TABLE_COLUMNS,
   CONTROL_UNIT_RESOURCE_TABLE_COLUMNS
 } from './constants'
+import { useGetAdministrationsQuery } from '../../../api/administration'
 import { controlUnitApi, useGetControlUnitQuery } from '../../../api/controlUnit'
-import { useGetControlUnitAdministrationsQuery } from '../../../api/controlUnitAdministration'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../libs/FrontendError'
 import { DefaultTable } from '../../../ui/Table/DefaultTable'
@@ -40,25 +40,22 @@ export function BackOfficeControlUnitForm() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const { data: controlUnit, error } = useGetControlUnitQuery(isNew ? skipToken : Number(controlUnitId))
-  const { data: controlUnitAdministrations } = useGetControlUnitAdministrationsQuery()
+  const { data: administrations } = useGetAdministrationsQuery()
 
   const initialValues: ControlUnitFormValues | undefined = isNew
     ? INITIAL_CONTROL_UNIT_FORM_VALUES
     : controlUnit || undefined
 
-  const controlUnitAdministrationsAsOptions = useMemo(
-    () => getOptionsFromIdAndName(controlUnitAdministrations),
-    [controlUnitAdministrations]
-  )
+  const administrationsAsOptions = useMemo(() => getOptionsFromIdAndName(administrations), [administrations])
 
   const goBackToList = useCallback(() => {
     navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_LIST]}`)
   }, [navigate])
 
   const submit = useCallback(
-    async (portFormValues: ControlUnitFormValues) => {
+    async (controlUnitFormValues: ControlUnitFormValues) => {
       // Type-enforced by `CONTROL_UNIT_FORM_SCHEMA`
-      const controlUnitData = portFormValues as ControlUnit.NewControlUnitData
+      const controlUnitData = controlUnitFormValues as ControlUnit.NewControlUnitData
 
       if (isNew) {
         await dispatch(controlUnitApi.endpoints.createControlUnit.initiate(controlUnitData))
@@ -84,18 +81,18 @@ export function BackOfficeControlUnitForm() {
     <div>
       <Title>{`${isNew ? 'Nouvelle' : 'Édition d’une'} unité de contrôle`}</Title>
 
-      {!error && (!initialValues || !controlUnitAdministrations) && <p>Chargement en cours...</p>}
+      {!error && (!initialValues || !administrations) && <p>Chargement en cours...</p>}
 
       {error && <p>Cette unité de contrôle n’existe pas ou plus.</p>}
 
-      {!error && initialValues && controlUnitAdministrationsAsOptions && (
+      {!error && initialValues && administrationsAsOptions && (
         <Formik initialValues={initialValues} onSubmit={submit} validationSchema={CONTROL_UNIT_FORM_SCHEMA}>
           {({ handleSubmit }) => (
             <Form onSubmit={handleSubmit}>
               <FormikSelect
                 label="Administration"
-                name="controlUnitAdministrationId"
-                options={controlUnitAdministrationsAsOptions}
+                name="administrationId"
+                options={administrationsAsOptions}
                 searchable
               />
               <FormikTextInput label="Nom" name="name" />

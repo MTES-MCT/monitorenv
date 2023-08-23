@@ -34,7 +34,7 @@ data class MissionControlUnitModel(
                     id = controlUnitEntity.id,
                     name = controlUnitEntity.name,
                     isArchived = controlUnitEntity.isArchived,
-                    administration = ControlUnitAdministrationModel(name = controlUnitEntity.administration),
+                    administration = AdministrationModel(name = controlUnitEntity.administration),
                 ),
                 mission = mission,
                 contact = controlUnitEntity.contact,

@@ -1,17 +1,18 @@
+import type { Administration } from '../administration/types'
 import type { Base } from '../base/types'
 
 export namespace ControlUnit {
   export interface ControlUnit {
+    administration: Administration.AdministrationData
+    administrationId: number
     /** Area of intervention for this unit. */
     areaNote: string
-    controlUnitAdministration: ControlUnitAdministrationData
-    controlUnitAdministrationId: number
     controlUnitContactIds: number[]
     controlUnitContacts: ControlUnitContactData[]
     controlUnitResourceIds: number[]
     controlUnitResources: Array<
       ControlUnitResourceData & {
-        port: Base.BaseData
+        base: Base.BaseData
       }
     >
     id: number
@@ -19,13 +20,6 @@ export namespace ControlUnit {
     name: string
     /** Conditions under which this unit should be contacted. */
     termsNote: string
-  }
-
-  export interface ControlUnitAdministration {
-    controlUnitIds: number[]
-    controlUnits: ControlUnitData[]
-    id: number
-    name: string
   }
 
   export interface ControlUnitContact {
@@ -39,6 +33,9 @@ export namespace ControlUnit {
   }
 
   export interface ControlUnitResource {
+    // TODO Make that non-undefinable once all resources will have been attached to a base.
+    base: Base.BaseData | undefined
+    baseId: number | undefined
     controlUnit: ControlUnitData
     controlUnitId: number
     id: number
@@ -46,9 +43,6 @@ export namespace ControlUnit {
     note: string | undefined
     /** Base64 Data URI. */
     photo: string | undefined
-    // TODO Make that non-undefinable once all resources will have been attached to a base.
-    port: Base.BaseData | undefined
-    portId: number | undefined
     // TODO Make that non-undefinable once all resources will have been attached to a type.
     type: ControlUnitResourceType | undefined
   }
@@ -68,18 +62,12 @@ export namespace ControlUnit {
   // ---------------------------------------------------------------------------
   // Types
 
-  export type ControlUnitData = Omit<
-    ControlUnit,
-    'controlUnitAdministration' | 'controlUnitContacts' | 'controlUnitResources'
-  >
+  export type ControlUnitData = Omit<ControlUnit, 'administration' | 'controlUnitContacts' | 'controlUnitResources'>
   export type NewControlUnitData = Omit<ControlUnitData, 'id'>
-
-  export type ControlUnitAdministrationData = Omit<ControlUnitAdministration, 'controlUnits'>
-  export type NewControlUnitAdministrationData = Omit<ControlUnitAdministrationData, 'id'>
 
   export type ControlUnitContactData = Omit<ControlUnitContact, 'controlUnit'>
   export type NewControlUnitContactData = Omit<ControlUnitContactData, 'id'>
 
-  export type ControlUnitResourceData = Omit<ControlUnitResource, 'controlUnit' | 'port'>
+  export type ControlUnitResourceData = Omit<ControlUnitResource, 'base' | 'controlUnit'>
   export type NewControlUnitResourceData = Omit<ControlUnitResourceData, 'id'>
 }

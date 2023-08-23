@@ -27,5 +27,5 @@ export const monitorenvPublicApi = createApi({
   baseQuery: normalizeRtkBaseQuery(monitorenvPublicApiBaseQuery),
   endpoints: () => ({}),
   reducerPath: 'monitorenvPublicApi',
-  tagTypes: ['Bases', 'ControlUnits']
+  tagTypes: ['Administrations', 'Bases', 'ControlUnits']
 })
