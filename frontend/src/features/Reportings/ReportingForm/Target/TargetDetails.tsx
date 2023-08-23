@@ -12,7 +12,7 @@ import {
 import { useEffect } from 'react'
 import styled from 'styled-components'
 
-import { TargetTypeEnum } from '../../../../domain/entities/targetType'
+import { ReportingTargetTypeEnum } from '../../../../domain/entities/targetType'
 import { VehicleTypeEnum } from '../../../../domain/entities/vehicleType'
 import { StyledEmptyTarget, StyledVesselContainer, StyledVesselForm } from '../../style'
 
@@ -38,7 +38,8 @@ export function TargetDetails({ form, push, remove }) {
 
   return (
     <div>
-      {(!form.values.targetType || (form.values.targetType === TargetTypeEnum.VEHICLE && !form.values.vehicleType)) && (
+      {(!form.values.targetType ||
+        (form.values.targetType === ReportingTargetTypeEnum.VEHICLE && !form.values.vehicleType)) && (
         <>
           <Label>Détail de la cible du signalement</Label>
           <StyledEmptyTarget>
@@ -46,24 +47,24 @@ export function TargetDetails({ form, push, remove }) {
           </StyledEmptyTarget>
         </>
       )}
-      {form.values.targetType && form.values.targetType !== TargetTypeEnum.VEHICLE && (
+      {form.values.targetType && form.values.targetType !== ReportingTargetTypeEnum.VEHICLE && (
         <TargetWrapper>
           <Label>Détail de la cible du signalement </Label>
           <StyledVesselContainer>
-            {form.values.targetType === TargetTypeEnum.COMPANY && (
+            {form.values.targetType === ReportingTargetTypeEnum.COMPANY && (
               <>
                 <FormikTextInput isLight label="Nom de la société" name="targetDetails.0.operatorName" />
                 <FormikTextInput isLight label="Identité de la personne" name="targetDetails.0.vesselName" />
               </>
             )}
-            {form.values.targetType === TargetTypeEnum.INDIVIDUAL && (
+            {form.values.targetType === ReportingTargetTypeEnum.INDIVIDUAL && (
               <FormikTextInput isLight label="Identité de la personne" name="targetDetails.0.operatorName" />
             )}
           </StyledVesselContainer>
         </TargetWrapper>
       )}
 
-      {form.values.targetType === TargetTypeEnum.VEHICLE && form?.values.targetDetails?.length > 0
+      {form.values.targetType === ReportingTargetTypeEnum.VEHICLE && form?.values.targetDetails?.length > 0
         ? form.values.targetDetails.map((_, index) => (
             // eslint-disable-next-line react/no-array-index-key
             <TargetWrapper key={index}>
@@ -116,7 +117,7 @@ export function TargetDetails({ form, push, remove }) {
             </TargetWrapper>
           ))
         : null}
-      {form.values.targetType === TargetTypeEnum.VEHICLE && !!form.values.vehicleType && (
+      {form.values.targetType === ReportingTargetTypeEnum.VEHICLE && !!form.values.vehicleType && (
         <Button accent={Accent.SECONDARY} Icon={Icon.Plus} isFullWidth onClick={handleAddTargetDetails}>
           Ajouter une cible
         </Button>

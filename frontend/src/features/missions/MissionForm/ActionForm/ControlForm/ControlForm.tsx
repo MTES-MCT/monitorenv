@@ -6,14 +6,14 @@ import { useMemo } from 'react'
 import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
-import { ActionTargetSelector } from './ActionTargetSelector'
 import { InfractionsForm } from './InfractionsForm'
 import { COLORS } from '../../../../../constants/constants'
-import { TargetTypeEnum } from '../../../../../domain/entities/targetType'
+import { TargetTypeEnum, TargetTypeLabels } from '../../../../../domain/entities/targetType'
 import { VehicleTypeEnum } from '../../../../../domain/entities/vehicleType'
 import { ReactComponent as ControlIconSVG } from '../../../../../uiMonitor/icons/Control.svg'
 import { ReactComponent as DeleteSVG } from '../../../../../uiMonitor/icons/Delete.svg'
 import { getDateAsLocalizedStringCompact } from '../../../../../utils/getDateAsLocalizedString'
+import { TargetSelector } from '../../../../commonComponents/TargetSelector'
 import { VehicleTypeSelector } from '../../../../commonComponents/VehicleTypeSelector'
 import { MultiPointPicker } from '../../../MultiPointPicker'
 import { ActionTheme } from '../Themes/ActionTheme'
@@ -160,10 +160,11 @@ export function ControlForm({
             />
           </ActionFieldWrapper>
           <ActionFieldWrapper>
-            <ActionTargetSelector
-              currentActionIndex={currentActionIndex}
+            <TargetSelector
               error={actionTargetTypeErrorMessage}
+              name={`envActions.${currentActionIndex}.actionTargetType`}
               onChange={onTargetTypeChange}
+              options={TargetTypeLabels}
               value={actionTargetType}
             />
           </ActionFieldWrapper>
