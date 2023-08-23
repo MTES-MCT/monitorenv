@@ -28,7 +28,7 @@ export const StyledTagsContainer = styled.div<{ $withMargin: boolean }>`
   max-width: 100%;
   flex-wrap: wrap;
   gap: 16px;
-  align-items: center;
+  align-items: end;
 `
 export const StyledCustomPeriodContainer = styled.div`
   display: flex;

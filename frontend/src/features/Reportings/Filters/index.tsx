@@ -45,7 +45,7 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
   const subThemesListAsOptions = getSubThemesAsListOptions(themes)
 
   const unitListAsOptions = controlUnitsOptions
-    .filter(unit => !unit.isArchived)
+    .filter(unit => !unit.isArchived && !unit.name.includes('Sémaphore'))
     .sort((a, b) => a?.name?.localeCompare(b?.name))
     .map(sortedUnits => ({
       label: sortedUnits.name,

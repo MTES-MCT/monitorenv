@@ -112,6 +112,7 @@ const ButtonsGroup = styled.div`
   display: flex;
   flex-direction: row;
   gap: 8px;
+  justify-content: space-evenly;
   > button {
     padding: 0px;
   }

@@ -27,6 +27,7 @@ export const reportingsAPI = createApi({
           ? [{ id: 'LIST', type: 'Reportings' }, ...results.ids.map(id => ({ id, type: 'Reportings' as const }))]
           : [{ id: 'LIST', type: 'Reportings' }],
       queryFn: async ({ ids }, { dispatch }) => {
+        // TODO create api for this use case
         const promises = await ids.map(async id => {
           const { data: reporting } = await dispatch(reportingsAPI.endpoints.getReporting.initiate(id))
           dispatch(reportingsAPI.endpoints.updateReporting.initiate({ ...(reporting as Reporting), isArchived: true }))
@@ -56,6 +57,7 @@ export const reportingsAPI = createApi({
           ? [{ id: 'LIST', type: 'Reportings' }, ...results.ids.map(id => ({ id, type: 'Reportings' as const }))]
           : [{ id: 'LIST', type: 'Reportings' }],
       queryFn: async ({ ids }, { dispatch }) => {
+        // TODO create api for this use case
         const promises = await ids.map(id => dispatch(reportingsAPI.endpoints.deleteReporting.initiate({ id })))
 
         return Promise.all(promises).then(results => ({ data: results }))

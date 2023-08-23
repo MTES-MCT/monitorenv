@@ -48,7 +48,7 @@ const StyledHeader = styled.div`
   display: flex;
   flex-direction: row;
   gap: 32px;
-  margin-bottom: 40px;
+  margin-bottom: 32px;
 `
 
 const Title = styled.h1`

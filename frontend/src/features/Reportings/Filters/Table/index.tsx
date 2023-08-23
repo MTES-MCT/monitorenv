@@ -204,7 +204,7 @@ export function TableReportingsFiltersWithRef(
 
         {hasFilters && (
           <ResetFiltersButton data-cy="reinitialize-filters" onClick={resetFilters}>
-            <Icon.Reset size={20} />
+            <Icon.Reset size={14} />
             <span>Réinitialiser les filtres</span>
           </ResetFiltersButton>
         )}
@@ -232,8 +232,9 @@ const ResetFiltersButton = styled.div`
   text-decoration: underline;
   cursor: pointer;
   display: flex;
-  align-items: center;
+  align-items: end;
   gap: 4px;
+  margin-bottom: 8px;
   > span {
     font-size: 13px;
   }
