@@ -4,7 +4,7 @@ import { Button } from 'rsuite'
 export function CancelEditModal({ onCancel, onConfirm, open }) {
   return (
     open && (
-      <Dialog isAbsolute>
+      <Dialog data-cy="cancel-edit-modal" isAbsolute>
         <Dialog.Title>Enregistrer les modifications ?</Dialog.Title>
         <Dialog.Body>
           <p>Vous êtes en train d&apos;abandonner l&apos;édition d&apos;une mission.</p>
