@@ -7,7 +7,6 @@ import { SideWindowStatus, sideWindowActions } from './slice'
 import { multiMissionsActions } from '../../domain/shared_slices/MultiMissions'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
-import { getMissionPageRoute } from '../../utils/routes'
 
 export function SideWindowLauncher() {
   const dispatch = useAppDispatch()
@@ -19,7 +18,6 @@ export function SideWindowLauncher() {
     multiMissions: { selectedMissions },
     sideWindow
   } = useAppSelector(state => state)
-  const routeParams = !!getMissionPageRoute(sideWindow.currentPath)
 
   useEffect(() => {
     forceUpdate()
@@ -55,7 +53,7 @@ export function SideWindowLauncher() {
           dispatch(multiMissionsActions.setSelectedMissions([]))
         }}
         shouldHaveFocus={sideWindow.status === SideWindowStatus.VISIBLE}
-        showPrompt={routeParams && (hasAtLeastOneMissionFormDirty || missionState.isFormDirty)}
+        showPrompt={hasAtLeastOneMissionFormDirty || missionState.isFormDirty}
         title="MonitorEnv"
       >
         <SideWindow ref={newWindowRef} />
