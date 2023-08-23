@@ -21,6 +21,8 @@ export function BackOfficePage() {
 
       <Body>
         <Routes>
+          <Route element={<ControlUnitAdministrationList />} path="/" />
+
           <Route
             element={<ControlUnitAdministrationList />}
             path={BACK_OFFICE_MENU_PATH[BackOfficeMenu.CONTROL_UNIT_ADMINISTRATION_LIST]}
