@@ -1,4 +1,4 @@
-import type { ControlUnit } from '../controlUnit/types'
+import type { ControlUnit } from '../ControlUnit/types'
 
 export namespace Base {
   export interface Base {

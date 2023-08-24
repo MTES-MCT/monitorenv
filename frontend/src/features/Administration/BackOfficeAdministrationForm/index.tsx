@@ -14,7 +14,7 @@ import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/c
 import { CONTROL_UNIT_TABLE_COLUMNS } from '../../ControlUnit/BackOfficeControlUnitList/constants'
 
 import type { AdministrationFormValues } from './types'
-import type { Administration } from '../../../domain/entities/administration/types'
+import type { Administration } from '../../../domain/entities/Administration/types'
 
 export function BackOfficeAdministrationForm() {
   const { administrationId } = useParams()

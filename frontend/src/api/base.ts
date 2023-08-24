@@ -1,7 +1,7 @@
 import { monitorenvPublicApi } from './api'
 import { ApiError } from '../libs/ApiError'
 
-import type { Base } from '../domain/entities/base/types'
+import type { Base } from '../domain/entities/Base/types'
 
 const GET_BASE_ERROR_MESSAGE = "Nous n'avons pas pu récupérer cette base."
 const GET_BASES_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la liste des bases."

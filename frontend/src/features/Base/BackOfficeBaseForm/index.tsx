@@ -15,7 +15,7 @@ import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/c
 import { CONTROL_UNIT_RESOURCE_TABLE_COLUMNS } from '../../ControlUnit/BackOfficeControlUnitForm/constants'
 
 import type { BaseFormValues } from './types'
-import type { Base } from '../../../domain/entities/base/types'
+import type { Base } from '../../../domain/entities/Base/types'
 
 export function BackOfficeBaseForm() {
   const { baseId } = useParams()

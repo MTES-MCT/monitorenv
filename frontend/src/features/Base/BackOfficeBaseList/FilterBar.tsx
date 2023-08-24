@@ -5,7 +5,7 @@ import { useCallback } from 'react'
 import styled from 'styled-components'
 
 import type { FiltersState } from './types'
-import type { Base } from '../../../domain/entities/base/types'
+import type { Base } from '../../../domain/entities/Base/types'
 
 export type FilterBarProps = {
   customSearch: CustomSearch<Base.Base> | undefined

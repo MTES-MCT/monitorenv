@@ -1,7 +1,7 @@
 import { Table } from '../../../ui/Table'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/constants'
 
-import type { Administration } from '../../../domain/entities/administration/types'
+import type { Administration } from '../../../domain/entities/Administration/types'
 import type { ColumnDef } from '@tanstack/react-table'
 
 export const ADMINISTRATION_TABLE_COLUMNS: Array<ColumnDef<Administration.Administration>> = [

@@ -1,4 +1,4 @@
-import { configureStore, isPlain } from '@reduxjs/toolkit'
+import { AnyAction, ThunkAction, configureStore, isPlain } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist'
 
@@ -36,3 +36,4 @@ export type HomeRootState = ReturnType<typeof homeStore.getState>
 // Inferred type: { global: GlobalState, ... }
 export type AppDispatch = typeof homeStore.dispatch
 export type AppGetState = typeof homeStore.getState
+export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, HomeRootState, undefined, AnyAction>

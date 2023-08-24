@@ -5,7 +5,7 @@ import { useCallback } from 'react'
 import styled from 'styled-components'
 
 import type { FiltersState } from './types'
-import type { ControlUnit } from '../../../domain/entities/controlUnit/types'
+import type { ControlUnit } from '../../../domain/entities/ControlUnit/types'
 
 export type FilterBarProps = {
   customSearch: CustomSearch<ControlUnit.ControlUnit> | undefined

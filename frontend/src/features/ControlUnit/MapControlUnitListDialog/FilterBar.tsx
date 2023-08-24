@@ -15,7 +15,7 @@ import styled from 'styled-components'
 
 import { useGetAdministrationsQuery } from '../../../api/administration'
 import { useGetBasesQuery } from '../../../api/base'
-import { ControlUnit } from '../../../domain/entities/controlUnit/types'
+import { ControlUnit } from '../../../domain/entities/ControlUnit/types'
 
 import type { FiltersState } from './types'
 import type { Promisable } from 'type-fest'

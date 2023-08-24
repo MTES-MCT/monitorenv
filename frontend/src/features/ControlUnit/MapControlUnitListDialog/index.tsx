@@ -7,7 +7,7 @@ import { Item } from './Item'
 import { useGetControlUnitsQuery } from '../../../api/controlUnit'
 import { MapMenuDialog } from '../../../ui/MapMenuDialog'
 
-import type { ControlUnit } from '../../../domain/entities/controlUnit/types'
+import type { ControlUnit } from '../../../domain/entities/ControlUnit/types'
 import type { Promisable } from 'type-fest'
 
 export type MapControlUnitListDialogProps = {

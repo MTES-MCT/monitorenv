@@ -27,7 +27,7 @@ import { DefaultTable } from '../../../ui/Table/DefaultTable'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/constants'
 
 import type { ControlUnitFormValues } from './types'
-import type { ControlUnit } from '../../../domain/entities/controlUnit/types'
+import type { ControlUnit } from '../../../domain/entities/ControlUnit/types'
 
 export function BackOfficeControlUnitForm() {
   const { controlUnitId } = useParams()

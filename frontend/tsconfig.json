@@ -9,11 +9,7 @@
     "incremental": true,
     "importsNotUsedAsValues": "error",
     "isolatedModules": true,
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ES2022"
-    ],
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
@@ -32,15 +28,8 @@
     "target": "ES2022",
     "useUnknownInCatchVariables": true
   },
-  "include": [
-    "**/*.js",
-    "**/*.jsx",
-    "**/*.ts",
-    "**/*.tsx",
-  ],
-  "exclude": [
-    "node_modules/*"
-  ],
+  "include": ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules/*"],
   "ts-node": {
     "swc": true,
     "compilerOptions": {

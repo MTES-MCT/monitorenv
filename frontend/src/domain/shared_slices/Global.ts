@@ -37,8 +37,9 @@ type GlobalStateType = {
   displayInterestPoint: boolean
   displaySearchSemaphoreButton: boolean
   displayReportingsButton: boolean
-  isRightMenuControlUnitListButtonVisible: boolean
+  isControlUnitDialogVisible: boolean
   isControlUnitListDialogVisible: boolean
+  isRightMenuControlUnitListButtonVisible: boolean
 
   // state entry for every layer whose visibility should be controlled
   isSearchMissionsVisible: boolean
@@ -81,6 +82,7 @@ const initialState: GlobalStateType = {
   displayInterestPoint: true,
   displaySearchSemaphoreButton: true,
   displayReportingsButton: true,
+  isControlUnitDialogVisible: false,
   isControlUnitListDialogVisible: false,
   isRightMenuControlUnitListButtonVisible: true,
 
@@ -145,6 +147,16 @@ const globalSlice = createSlice({
       state.healthcheckTextWarning = action.payload
     },
 
+    /**
+     * Toggle map control unit dialog.
+     */
+    setIsControlUnitDialogVisible(state, action: PayloadAction<boolean>) {
+      state.isControlUnitDialogVisible = action.payload
+    },
+
+    /**
+     * Toggle map control unit list dialog.
+     */
     setIsControlUnitListDialogVisible(state, action: PayloadAction<boolean>) {
       state.isControlUnitListDialogVisible = action.payload
     },
@@ -194,4 +206,5 @@ export const {
   setToast
 } = globalSlice.actions
 
+export const globalActions = globalSlice.actions
 export const globalReducer = globalSlice.reducer

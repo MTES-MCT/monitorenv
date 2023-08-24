@@ -1,15 +1,27 @@
+import { useCallback } from 'react'
 import styled from 'styled-components'
 
 import { displayControlUnitResourcesFromControlUnit, displayBaseNamesFromControlUnit } from './utils'
+import { globalActions } from '../../../domain/shared_slices/Global'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
+import { mapControlUnitDialogActions } from '../MapControlUnitDialog/slice'
 
-import type { ControlUnit } from '../../../domain/entities/controlUnit/types'
+import type { ControlUnit } from '../../../domain/entities/ControlUnit/types'
 
 export type ItemProps = {
   controlUnit: ControlUnit.ControlUnit
 }
 export function Item({ controlUnit }: ItemProps) {
+  const dispatch = useAppDispatch()
+
+  const edit = useCallback(() => {
+    dispatch(mapControlUnitDialogActions.setControlUnitId(controlUnit.id))
+    dispatch(globalActions.setIsControlUnitDialogVisible(true))
+    dispatch(globalActions.setIsControlUnitListDialogVisible(false))
+  }, [controlUnit.id, dispatch])
+
   return (
-    <Wrapper>
+    <Wrapper onClick={edit}>
       <NameText>{controlUnit.name}</NameText>
       <AdministrationText>{controlUnit.administration.name}</AdministrationText>
       <ResourcesAndPortsText>{displayControlUnitResourcesFromControlUnit(controlUnit)}</ResourcesAndPortsText>
@@ -20,10 +32,13 @@ export function Item({ controlUnit }: ItemProps) {
 
 const Wrapper = styled.div`
   background-color: ${p => p.theme.color.gainsboro};
+  cursor: pointer;
   margin-top: 8px;
   padding: 8px 12px;
-  /* TODO Check monitor-ui <MapMenuDialog.Body /> alignment. */
-  /* text-align: left; */
+
+  &:hover {
+    background-color: ${p => p.theme.color.lightGray};
+  }
 `
 
 const NameText = styled.div`

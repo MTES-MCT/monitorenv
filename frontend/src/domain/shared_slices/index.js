@@ -27,6 +27,7 @@ import { missionsAPI } from '../../api/missionsAPI'
 import { regulatoryLayersAPI } from '../../api/regulatoryLayersAPI'
 import { reportingsAPI } from '../../api/reportingsAPI'
 import { semaphoresAPI } from '../../api/semaphoresAPI'
+import { mapControlUnitDialogReducer } from '../../features/ControlUnit/MapControlUnitDialog/slice'
 import { layerSearchSliceReducer } from '../../features/layersSelector/search/LayerSearch.slice'
 import { sideWindowReducer } from '../../features/SideWindow/slice'
 
@@ -42,6 +43,7 @@ export const homeReducers = combineReducers({
   interestPoint: interestPointSlicePersistedReducer,
   layerSearch: layerSearchSliceReducer,
   map: mapSliceReducer,
+  mapControlUnitDialog: mapControlUnitDialogReducer,
   measurement: measurementSlicePersistedReducer,
   missionFilters: missionFiltersPersistedReducer,
   missionState: missionStateSliceReducer,

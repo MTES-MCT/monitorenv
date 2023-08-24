@@ -9,7 +9,7 @@ import { NavButton } from '../../../ui/NavButton'
 import { DefaultTable } from '../../../ui/Table/DefaultTable'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/constants'
 
-import type { Administration } from '../../../domain/entities/administration/types'
+import type { Administration } from '../../../domain/entities/Administration/types'
 
 export function BackOfficeAdministrationList() {
   const [filters, setFilters] = useState<Array<Filter<Administration.Administration>>>([])

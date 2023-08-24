@@ -9,7 +9,7 @@ import { NavButton } from '../../../ui/NavButton'
 import { DefaultTable } from '../../../ui/Table/DefaultTable'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/constants'
 
-import type { ControlUnit } from '../../../domain/entities/controlUnit/types'
+import type { ControlUnit } from '../../../domain/entities/ControlUnit/types'
 
 export function BackOfficeControlUnitList() {
   const [filters, setFilters] = useState<Array<Filter<ControlUnit.ControlUnit>>>([])

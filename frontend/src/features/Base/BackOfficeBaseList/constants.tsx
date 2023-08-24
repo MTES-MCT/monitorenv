@@ -1,7 +1,7 @@
 import { Table } from '../../../ui/Table'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/constants'
 
-import type { Base } from '../../../domain/entities/base/types'
+import type { Base } from '../../../domain/entities/Base/types'
 import type { ColumnDef } from '@tanstack/react-table'
 
 export const BASE_TABLE_COLUMNS: Array<ColumnDef<Base.Base>> = [

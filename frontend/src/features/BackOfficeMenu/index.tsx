@@ -9,12 +9,6 @@ export function BackOfficeMenu() {
       <NavLink to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.ADMINISTRATION_LIST]}`}>
         {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.ADMINISTRATION_LIST]}
       </NavLink>
-      <NavLink to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_CONTACT_LIST]}`}>
-        {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.CONTROL_UNIT_CONTACT_LIST]}
-      </NavLink>
-      <NavLink to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_RESOURCE_LIST]}`}>
-        {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.CONTROL_UNIT_RESOURCE_LIST]}
-      </NavLink>
       <NavLink to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_LIST]}`}>
         {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.CONTROL_UNIT_LIST]}
       </NavLink>

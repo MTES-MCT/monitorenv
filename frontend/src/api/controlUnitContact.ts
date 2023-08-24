@@ -1,7 +1,7 @@
 import { monitorenvPublicApi } from './api'
 import { ApiError } from '../libs/ApiError'
 
-import type { ControlUnit } from '../domain/entities/controlUnit/types'
+import type { ControlUnit } from '../domain/entities/ControlUnit/types'
 
 const GET_CONTROL_UNIT_CONTACT_ERROR_MESSAGE = "Nous n'avons pas pu récupérer cette contact."
 const GET_CONTROL_UNIT_CONTACTS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la liste des contacts."

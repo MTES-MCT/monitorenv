@@ -5,6 +5,7 @@ import styled from 'styled-components'
 
 import { APIWorker } from '../api/APIWorker'
 import { ReportingContext } from '../domain/shared_slices/Global'
+import { MapControlUnitDialog } from '../features/ControlUnit/MapControlUnitDialog'
 import Healthcheck from '../features/healthcheck/Healthcheck'
 import { LayersSidebar } from '../features/layersSelector'
 import { LocateOnMap } from '../features/LocateOnMap'
@@ -30,7 +31,8 @@ export function HomePage() {
     displayMissionMenuButton,
     displayReportingsButton,
     displaySearchSemaphoreButton,
-    isRightMenuControlUnitListButtonVisible: isControlUnitListDialogButtonVisible
+    isControlUnitDialogVisible,
+    isRightMenuControlUnitListButtonVisible
   } = useAppSelector(state => state.global)
   const {
     missionState: { isFormDirty, missionState },
@@ -67,11 +69,12 @@ export function HomePage() {
         <RightMenuOnHoverArea />
         {displayDrawModal && <DrawModal />}
         {displayLocateOnMap && <LocateOnMap />}
+        {isControlUnitDialogVisible && <MapControlUnitDialog />}
 
         {displayMissionMenuButton && <MissionsMenu />}
         {displayReportingsButton && <ReportingsButton />}
         {displaySearchSemaphoreButton && <SearchSemaphoreButton />}
-        {isControlUnitListDialogButtonVisible && <ControlUnitListButton />}
+        {isRightMenuControlUnitListButtonVisible && <ControlUnitListButton />}
 
         {displayMeasurement && <MeasurementMapButton />}
         {displayInterestPoint && <InterestPointMapButton />}

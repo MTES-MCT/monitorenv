@@ -1,7 +1,7 @@
 import { pluralize } from '@mtes-mct/monitor-ui'
 import { isEmpty, uniq } from 'lodash/fp'
 
-import { ControlUnit } from '../../../domain/entities/controlUnit/types'
+import { ControlUnit } from '../../../domain/entities/ControlUnit/types'
 
 export function displayBaseNamesFromControlUnit(controlUnit: ControlUnit.ControlUnit): string {
   // TODO Make that non-nullable once all resources will have been attached to a base.

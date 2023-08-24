@@ -1,5 +1,5 @@
-import type { Administration } from '../administration/types'
-import type { Base } from '../base/types'
+import type { Administration } from '../Administration/types'
+import type { Base } from '../Base/types'
 
 export namespace ControlUnit {
   export interface ControlUnit {

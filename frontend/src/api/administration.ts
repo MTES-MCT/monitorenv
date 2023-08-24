@@ -1,7 +1,7 @@
 import { monitorenvPublicApi } from './api'
 import { ApiError } from '../libs/ApiError'
 
-import type { Administration } from '../domain/entities/administration/types'
+import type { Administration } from '../domain/entities/Administration/types'
 
 const GET_ADMINISTRATION_ERROR_MESSAGE = "Nous n'avons pas pu récupérer cette administration."
 const GET_ADMINISTRATIONS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la liste des administrations."
