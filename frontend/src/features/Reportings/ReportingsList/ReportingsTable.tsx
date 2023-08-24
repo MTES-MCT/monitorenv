@@ -48,20 +48,14 @@ export function ReportingsTable({
   const { rows } = table.getRowModel()
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
-    estimateSize: () => 40,
+    estimateSize: () => 2,
     getItemKey: useCallback((index: number) => `${rows[index]?.id}`, [rows]),
     getScrollElement: () => tableContainerRef.current,
     overscan: 10
   })
 
   const virtualRows = rowVirtualizer.getVirtualItems()
-  const [paddingTop, paddingBottom] =
-    virtualRows.length > 0
-      ? [
-          Math.max(0, virtualRows[0]?.start || 0),
-          Math.max(0, rowVirtualizer.getTotalSize() - (virtualRows[virtualRows.length - 1]?.end || 0))
-        ]
-      : [0, 0]
+  const paddingTop = virtualRows.length > 0 ? Math.max(0, virtualRows[0]?.start || 0) : 0
 
   const selectedIds = useMemo(
     () => table.getSelectedRowModel().rows.map(({ original }) => original.id),
@@ -143,11 +137,10 @@ export function ReportingsTable({
                 </TableWithSelectableRows.BodyTr>
               )
             })}
-            {paddingBottom > 0 && (
-              <tr>
-                <td style={{ height: `${paddingBottom}px` }} />
-              </tr>
-            )}
+
+            <tr>
+              <td style={{ height: '50px' }} />
+            </tr>
           </tbody>
         </TableWithSelectableRows.Table>
       </StyledReportingsContainer>

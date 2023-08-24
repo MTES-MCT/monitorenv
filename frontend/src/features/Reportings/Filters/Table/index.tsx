@@ -110,6 +110,7 @@ export function TableReportingsFiltersWithRef(
             onChange={value => updateSourceTypeFilter(value)}
             placeholder="Type de source"
             renderValue={() => sourceTypeFilter && <OptionValue>{`Type (${sourceTypeFilter.length})`}</OptionValue>}
+            searchable={false}
             size="sm"
             style={tagPickerStyle}
             value={sourceTypeFilter}

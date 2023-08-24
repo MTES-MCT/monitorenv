@@ -91,7 +91,7 @@ const FiltersWrapper = styled.div`
   border-top: 2px solid ${p => p.theme.color.lightGray};
 `
 const TagWrapper = styled.div`
-  margin-top: 4px;
+  margin-top: 8px;
   margin-bottom: 16px;
   display: flex;
   flex-wrap: wrap;
