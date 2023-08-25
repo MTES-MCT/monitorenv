@@ -20,6 +20,7 @@ export const getSemaphoreZoneFeature = (semaphore: Semaphore, layername: string)
     base: semaphore.base,
     email: semaphore.email,
     id: semaphore.id,
+    isHighlight: false,
     isSelected: false,
     name: semaphore.name,
     overlayCoordinates: undefined,

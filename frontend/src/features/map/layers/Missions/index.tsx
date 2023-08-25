@@ -17,6 +17,7 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useDispatch()
   const { displayMissionsLayer } = useAppSelector(state => state.global)
   const { missions } = useGetFilteredMissionsQuery()
+  const listener = useAppSelector(state => state.draw.listener)
 
   const missionsMultiPolygons = useMemo(
     () => missions?.filter(f => !!f.geom).map(f => getMissionZoneFeature(f, Layers.MISSIONS.code)),
@@ -67,8 +68,10 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   }, [missionsMultiPolygons])
 
   useEffect(() => {
-    GetVectorLayer()?.setVisible(displayMissionsLayer)
-  }, [displayMissionsLayer, GetVectorLayer])
+    // we don't want to display missions on the map if the user so decides (displaySemaphoresLayer variable)
+    // or if user edits a surveillance zone or a control point (listener variable)
+    GetVectorLayer()?.setVisible(displayMissionsLayer && !listener)
+  }, [displayMissionsLayer, GetVectorLayer, listener])
 
   useEffect(() => {
     if (mapClickEvent?.feature) {

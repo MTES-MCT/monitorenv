@@ -17,7 +17,7 @@ const reportingStyleFactory = (color, src?: string | undefined) =>
     },
     image: new Icon({
       color,
-      displacement: [4, 16],
+      displacement: [5, 18],
       src: src || 'report.svg'
     })
   })
@@ -145,6 +145,11 @@ export const reportingPinStyleFn = feature => {
     case ReportingStatusEnum.IN_PROGRESS:
       return reportingStyleFactory(THEME.color.slateGray)
     case ReportingStatusEnum.ARCHIVED:
+      if (feature.get('reportType') === ReportingTypeEnum.OBSERVATION) {
+        return reportingStyleFactory(THEME.color.white, 'archived_reporting_observation.svg')
+      }
+
+      return reportingStyleFactory(THEME.color.white, 'archived_reporting_infraction.svg')
     default:
       return reportingStyleFactory(THEME.color.white, 'archived_reporting.svg')
   }

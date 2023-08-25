@@ -20,7 +20,9 @@ import styled from 'styled-components'
 import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
 import { useGetSemaphoresQuery } from '../../../api/semaphoresAPI'
 import { Reporting, ReportingSourceEnum, ReportingSourceLabels } from '../../../domain/entities/reporting'
+import { setDisplayedItems } from '../../../domain/shared_slices/Global'
 import { setZoomToCenter } from '../../../domain/shared_slices/Map'
+import { setIsSemaphoreHighlight, setSelectedSemaphore } from '../../../domain/shared_slices/SemaphoresSlice'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 
 import type { Point } from 'ol/geom'
@@ -91,10 +93,17 @@ export function Source() {
     }
   }
 
-  const handleZoomToSemaphore = () => {
-    // Zoom to semaphore
-    if (values.semaphoreId) {
-      const geom = semaphores?.entities[values.semaphoreId]?.geom
+  const zoomToSemaphore = () => {
+    const { semaphoreId } = values
+    dispatch(
+      setDisplayedItems({
+        displaySemaphoresLayer: true
+      })
+    )
+    dispatch(setSelectedSemaphore(semaphoreId))
+    dispatch(setIsSemaphoreHighlight(true))
+    if (semaphoreId) {
+      const geom = semaphores?.entities[semaphoreId]?.geom
       const center = (
         new GeoJSON().readGeometry(geom, {
           dataProjection: WSG84_PROJECTION,
@@ -105,6 +114,9 @@ export function Source() {
         dispatch(setZoomToCenter(center))
       }
     }
+    setTimeout(() => {
+      dispatch(setIsSemaphoreHighlight(false))
+    }, 5000)
   }
 
   return (
@@ -131,7 +143,7 @@ export function Source() {
             searchable
           />
           {values?.semaphoreId && (
-            <IconButton accent={Accent.TERTIARY} Icon={Icon.FocusZones} onClick={handleZoomToSemaphore} />
+            <IconButton accent={Accent.TERTIARY} Icon={Icon.FocusZones} onClick={zoomToSemaphore} />
           )}
         </SemaphoreWrapper>
       )}

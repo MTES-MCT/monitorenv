@@ -45,10 +45,6 @@ const openDrawLayerModal = dispatch => {
       displayLocateOnMap: true,
       displayMeasurement: false,
       displayMissionMenuButton: false,
-      displayMissionSelectedLayer: false,
-      displayMissionsLayer: false,
-      displayMissionsOverlay: false,
-      displayReportingsButton: false,
       displayReportingsOverlay: false,
       displaySearchSemaphoreButton: false
     })
@@ -64,10 +60,6 @@ export const closeDrawLayerModal = dispatch => {
       displayLocateOnMap: true,
       displayMeasurement: true,
       displayMissionMenuButton: true,
-      displayMissionSelectedLayer: true,
-      displayMissionsLayer: true,
-      displayMissionsOverlay: true,
-      displayReportingsButton: true,
       displayReportingsOverlay: true,
       displaySearchSemaphoreButton: true
     })
