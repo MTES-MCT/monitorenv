@@ -8,7 +8,7 @@ context('Mission', () => {
 
   it('Missions should be created and saved in store', () => {
     // We create the first mission and add mission types
-    cy.get('*[data-cy="add-mission"]').click()
+    cy.clickButton('Ajouter une nouvelle mission')
     // because of the NavBar responsive component, we have two navs components mounted
     // so we have double the number of real tabs open
     cy.get('*[data-cy="missions-nav"] > a').should('have.length', 4)
@@ -18,7 +18,7 @@ context('Mission', () => {
 
     // we create a second mission and add administration and unit
     cy.get('[data-cy="mission-0"]').click({ force: true, multiple: true })
-    cy.get('*[data-cy="add-mission"]').click()
+    cy.clickButton('Ajouter une nouvelle mission')
 
     // because of the NavBar responsive component, we have two navs components mounted
     // so we have double the number of real tabs open
