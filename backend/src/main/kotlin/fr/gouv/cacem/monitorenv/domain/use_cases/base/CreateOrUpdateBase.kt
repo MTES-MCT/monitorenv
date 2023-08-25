@@ -6,7 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IBaseRepository
 
 @UseCase
 class CreateOrUpdateBase(private val baseRepository: IBaseRepository) {
-    fun execute(baseEntity: BaseEntity): BaseEntity {
-        return baseRepository.save(baseEntity)
+    fun execute(base: BaseEntity): BaseEntity {
+        return baseRepository.save(base)
     }
 }

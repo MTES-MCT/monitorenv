@@ -1,9 +1,9 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
-import fr.gouv.cacem.monitorenv.domain.entities.controlResource.ControlResourceEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlResource.ControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlResources.GetAllControlUnits
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlResourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlResources.GetLegacyControlUnits
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
@@ -24,19 +24,19 @@ class LegacyControlUnitsControllerITests {
     private lateinit var mockMvc: MockMvc
 
     @MockBean
-    private lateinit var getAllControlUnits: GetAllControlUnits
+    private lateinit var getLegacyControlUnits: GetLegacyControlUnits
 
     @Test
     fun `Should get all control units`() {
         // Given
-        val controlUnit = ControlUnitEntity(
+        val controlUnit = LegacyControlUnitEntity(
             id = 4,
             administration = "Gendarmerie nationale",
             isArchived = false,
             name = "DF 123",
-            resources = listOf(ControlResourceEntity(1, "Vedette")),
+            resources = listOf(LegacyControlResourceEntity(1, "Vedette")),
         )
-        given(getAllControlUnits.execute()).willReturn(listOf(controlUnit))
+        given(getLegacyControlUnits.execute()).willReturn(listOf(controlUnit))
 
         // When
         mockMvc.perform(get("/bff/v1/legacy_control_units"))

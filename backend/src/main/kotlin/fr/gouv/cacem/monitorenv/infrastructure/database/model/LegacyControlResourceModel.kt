@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
-import fr.gouv.cacem.monitorenv.domain.entities.controlResource.ControlResourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlResourceEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -27,17 +27,17 @@ data class LegacyControlResourceModel(
 ) {
     companion object {
         fun fromControlEntity(
-            controlResourceEntity: ControlResourceEntity,
+            legacyControlResourceEntity: LegacyControlResourceEntity,
             legacyControlUnitModel: LegacyControlUnitModel
         ) =
             LegacyControlResourceModel(
-                id = controlResourceEntity.id,
-                name = controlResourceEntity.name,
+                id = legacyControlResourceEntity.id,
+                name = legacyControlResourceEntity.name,
                 controlUnit = legacyControlUnitModel,
             )
     }
 
-    fun toControlResource() = ControlResourceEntity(
+    fun toControlResource() = LegacyControlResourceEntity(
         id = id,
         name = name,
     )

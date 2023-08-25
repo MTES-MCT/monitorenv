@@ -6,7 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IAdministrationRepository
 
 @UseCase
 class CreateOrUpdateAdministration(private val administrationRepository: IAdministrationRepository) {
-    fun execute(administrationEntity: AdministrationEntity): AdministrationEntity {
-        return administrationRepository.save(administrationEntity)
+    fun execute(administration: AdministrationEntity): AdministrationEntity {
+        return administrationRepository.save(administration)
     }
 }

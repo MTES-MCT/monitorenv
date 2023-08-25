@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.base.dtos.FullBaseDTO
 import fr.gouv.cacem.monitorenv.utils.requireIds
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -16,7 +17,7 @@ data class BaseModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null,
 
-    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, mappedBy = "base")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "base")
     @JsonManagedReference
     var controlUnitResources: List<ControlUnitResourceModel>,
 
@@ -33,23 +34,30 @@ data class BaseModel(
 ) {
     companion object {
         fun fromBaseEntity(
-            baseEntity: BaseEntity,
+            base: BaseEntity,
             controlUnitResourceModels: List<ControlUnitResourceModel>,
         ): BaseModel {
             return BaseModel(
-                id = baseEntity.id,
+                id = base.id,
                 controlUnitResources = controlUnitResourceModels,
-                name = baseEntity.name,
+                name = base.name,
             )
         }
     }
 
-    fun toBaseEntity(): BaseEntity {
-        val controlUnitIds = requireIds(controlUnitResources) { it.id }
-
+    fun toBase(): BaseEntity {
         return BaseEntity(
             id = id,
-            controlUnitIds,
+            controlUnitResourceIds = requireIds(controlUnitResources) { it.id },
+            name = name,
+        )
+    }
+
+    fun toFullBase(): FullBaseDTO {
+        return FullBaseDTO(
+            id = id,
+            controlUnitResourceIds = requireIds(controlUnitResources) { it.id },
+            controlUnitResources = controlUnitResources.map { it.toNextControlUnitResourceEntity() },
             name = name,
         )
     }

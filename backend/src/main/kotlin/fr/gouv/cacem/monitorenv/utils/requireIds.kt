@@ -5,5 +5,5 @@ fun <T : Any> requireIds(items: List<T>?, idSelector: (T) -> Int?): List<Int> {
         throw IllegalArgumentException("This collection is null.")
     }
 
-    return items.map { requireNonNull(idSelector(it)) }
+    return items.map { requireNotNull(idSelector(it)) }
 }

@@ -2,11 +2,11 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
 import fr.gouv.cacem.monitorenv.domain.services.ControlUnitService
 import fr.gouv.cacem.monitorenv.domain.services.BaseService
-import fr.gouv.cacem.monitorenv.domain.use_cases.nextControlUnit.CreateOrUpdateNextControlUnitResource
-import fr.gouv.cacem.monitorenv.domain.use_cases.nextControlUnit.GetNextControlUnitResourceById
-import fr.gouv.cacem.monitorenv.domain.use_cases.nextControlUnit.GetNextControlUnitResources
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateNextControlUnitResourceDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.NextControlUnitResourceDataOutput
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnitResource
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitResourceById
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitResources
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitResourceDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.ControlUnitResourceDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/v1/control_unit_resources")
 @Tag(name = "Control Unit Resources")
 class ApiControlUnitResourceController(
-    private val createOrUpdateNextControlUnitResource: CreateOrUpdateNextControlUnitResource,
-    private val getNextControlUnitResources: GetNextControlUnitResources,
-    private val getNextControlUnitResourceById: GetNextControlUnitResourceById,
+    private val createOrUpdateControlUnitResource: CreateOrUpdateControlUnitResource,
+    private val getControlUnitResources: GetControlUnitResources,
+    private val getControlUnitResourceById: GetControlUnitResourceById,
     private val baseService: BaseService,
     private val controlUnitService: ControlUnitService,
 ) {
@@ -26,14 +26,14 @@ class ApiControlUnitResourceController(
     @Operation(summary = "Create a control unit resource")
     fun create(
         @RequestBody
-        createNextControlUnitResourceDataInput: CreateOrUpdateNextControlUnitResourceDataInput,
-    ): NextControlUnitResourceDataOutput {
+        createNextControlUnitResourceDataInput: CreateOrUpdateControlUnitResourceDataInput,
+    ): ControlUnitResourceDataOutput {
         val newNextControlUnitResourceEntity =
             createNextControlUnitResourceDataInput.toNextControlUnitResourceEntity()
         val createdNextControlUnitResourceEntity =
-            createOrUpdateNextControlUnitResource.execute(newNextControlUnitResourceEntity)
+            createOrUpdateControlUnitResource.execute(newNextControlUnitResourceEntity)
 
-        return NextControlUnitResourceDataOutput.fromNextControlUnitResourceEntity(
+        return ControlUnitResourceDataOutput.fromNextControlUnitResourceEntity(
             createdNextControlUnitResourceEntity,
             baseService,
             controlUnitService,
@@ -46,10 +46,10 @@ class ApiControlUnitResourceController(
         @PathParam("Control unit resource ID")
         @PathVariable(name = "controlUnitResourceId")
         controlUnitResourceId: Int,
-    ): NextControlUnitResourceDataOutput {
-        val foundNextControlUnitResourceEntity = getNextControlUnitResourceById.execute(controlUnitResourceId)
+    ): ControlUnitResourceDataOutput {
+        val foundNextControlUnitResourceEntity = getControlUnitResourceById.execute(controlUnitResourceId)
 
-        return NextControlUnitResourceDataOutput.fromNextControlUnitResourceEntity(
+        return ControlUnitResourceDataOutput.fromNextControlUnitResourceEntity(
             foundNextControlUnitResourceEntity,
             baseService,
             controlUnitService,
@@ -58,10 +58,10 @@ class ApiControlUnitResourceController(
 
     @GetMapping("")
     @Operation(summary = "List control unit resources")
-    fun getAll(): List<NextControlUnitResourceDataOutput> {
-        return getNextControlUnitResources.execute()
+    fun getAll(): List<ControlUnitResourceDataOutput> {
+        return getControlUnitResources.execute()
             .map {
-                NextControlUnitResourceDataOutput.fromNextControlUnitResourceEntity(
+                ControlUnitResourceDataOutput.fromNextControlUnitResourceEntity(
                     it,
                     baseService,
                     controlUnitService,
@@ -76,8 +76,8 @@ class ApiControlUnitResourceController(
         @PathVariable(name = "controlUnitResourceId")
         controlUnitResourceId: Int,
         @RequestBody
-        updateNextControlUnitResourceDataInput: CreateOrUpdateNextControlUnitResourceDataInput,
-    ): NextControlUnitResourceDataOutput {
+        updateNextControlUnitResourceDataInput: CreateOrUpdateControlUnitResourceDataInput,
+    ): ControlUnitResourceDataOutput {
         if ((updateNextControlUnitResourceDataInput.id == null) || (controlUnitResourceId != updateNextControlUnitResourceDataInput.id)) {
             throw java.lang.IllegalArgumentException("Unable to find (and update) control unit resource with ID = ${updateNextControlUnitResourceDataInput.id}.")
         }
@@ -85,9 +85,9 @@ class ApiControlUnitResourceController(
         val nextNextControlUnitResourceEntity =
             updateNextControlUnitResourceDataInput.toNextControlUnitResourceEntity()
         val updatedNextControlUnitResourceEntity =
-            createOrUpdateNextControlUnitResource.execute(nextNextControlUnitResourceEntity)
+            createOrUpdateControlUnitResource.execute(nextNextControlUnitResourceEntity)
 
-        return NextControlUnitResourceDataOutput.fromNextControlUnitResourceEntity(
+        return ControlUnitResourceDataOutput.fromNextControlUnitResourceEntity(
             updatedNextControlUnitResourceEntity,
             baseService,
             controlUnitService,

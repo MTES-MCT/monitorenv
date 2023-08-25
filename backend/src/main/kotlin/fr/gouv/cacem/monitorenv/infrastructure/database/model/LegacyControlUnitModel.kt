@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
-import fr.gouv.cacem.monitorenv.domain.entities.controlResource.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -34,7 +34,7 @@ data class LegacyControlUnitModel(
     @JsonManagedReference
     var resources: MutableList<LegacyControlResourceModel>? = ArrayList(),
 ) {
-    fun toControlUnit() = ControlUnitEntity(
+    fun toControlUnit() = LegacyControlUnitEntity(
         id = id,
         administration = administration.name,
         isArchived = isArchived,

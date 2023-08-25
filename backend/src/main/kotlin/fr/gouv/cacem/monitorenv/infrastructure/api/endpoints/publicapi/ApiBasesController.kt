@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
-import fr.gouv.cacem.monitorenv.domain.services.ControlUnitResourceService
 import fr.gouv.cacem.monitorenv.domain.use_cases.base.CreateOrUpdateBase
 import fr.gouv.cacem.monitorenv.domain.use_cases.base.GetBaseById
 import fr.gouv.cacem.monitorenv.domain.use_cases.base.GetBases
@@ -18,7 +17,6 @@ class ApiBasesController(
     private val createOrUpdateBase: CreateOrUpdateBase,
     private val getBases: GetBases,
     private val getBaseById: GetBaseById,
-    private val controlUnitResourceService: ControlUnitResourceService,
 ) {
     @PostMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a base")
@@ -26,10 +24,10 @@ class ApiBasesController(
         @RequestBody
         createBaseDataInput: CreateOrUpdateBaseDataInput,
     ): BaseDataOutput {
-        val newBaseEntity = createBaseDataInput.toBaseEntity()
-        val createdBaseEntity = createOrUpdateBase.execute(newBaseEntity)
+        val newBase = createBaseDataInput.toBaseEntity()
+        val createdBase = createOrUpdateBase.execute(newBase)
 
-        return BaseDataOutput.fromBaseEntity(createdBaseEntity, controlUnitResourceService)
+        return BaseDataOutput.fromBase(createdBase)
     }
 
     @GetMapping("/{baseId}")
@@ -39,18 +37,18 @@ class ApiBasesController(
         @PathVariable(name = "baseId")
         baseId: Int,
     ): BaseDataOutput {
-        val foundBaseEntity = getBaseById.execute(baseId)
+        val foundBase = getBaseById.execute(baseId)
 
-        return BaseDataOutput.fromBaseEntity(foundBaseEntity, controlUnitResourceService)
+        return BaseDataOutput.fromFullBase(foundBase)
     }
 
     @GetMapping("")
     @Operation(summary = "List bases")
     fun getAll(): List<BaseDataOutput> {
-        return getBases.execute().map { BaseDataOutput.fromBaseEntity(it, controlUnitResourceService) }
+        return getBases.execute().map { BaseDataOutput.fromFullBase(it) }
     }
 
-    @PostMapping(value = ["/{baseId}"], consumes = ["application/json"])
+    @PutMapping(value = ["/{baseId}"], consumes = ["application/json"])
     @Operation(summary = "Update a base")
     fun update(
         @PathParam("Base ID")
@@ -59,13 +57,16 @@ class ApiBasesController(
         @RequestBody
         updateBaseDataInput: CreateOrUpdateBaseDataInput,
     ): BaseDataOutput {
-        if ((updateBaseDataInput.id == null) || (baseId != updateBaseDataInput.id)) {
-            throw java.lang.IllegalArgumentException("Unable to find (and update) base with ID = ${updateBaseDataInput.id}.")
+        if (updateBaseDataInput.id == null) {
+            throw java.lang.IllegalArgumentException("`id` can't be null.")
+        }
+        if (baseId != updateBaseDataInput.id) {
+            throw java.lang.IllegalArgumentException("Body ID ('${updateBaseDataInput.id}') doesn't match path ID ('${baseId}').")
         }
 
-        val nextBaseEntity = updateBaseDataInput.toBaseEntity()
-        val updatedBaseEntity = createOrUpdateBase.execute(nextBaseEntity)
+        val nextBase = updateBaseDataInput.toBaseEntity()
+        val updatedBase = createOrUpdateBase.execute(nextBase)
 
-        return BaseDataOutput.fromBaseEntity(updatedBaseEntity, controlUnitResourceService)
+        return BaseDataOutput.fromBase(updatedBase)
     }
 }

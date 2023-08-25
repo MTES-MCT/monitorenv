@@ -1,11 +1,11 @@
 package fr.gouv.cacem.monitorenv.domain.repositories
 
-import fr.gouv.cacem.monitorenv.domain.entities.nextControlUnit.NextControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.NextControlUnitEntity
 
 interface INextControlUnitRepository {
-    fun findById(nextControlUnitId: Int): NextControlUnitEntity
+    fun findById(controlUnitId: Int): NextControlUnitEntity
 
     fun findAll(): List<NextControlUnitEntity>
 
-    fun save(nextControlUnitEntity: NextControlUnitEntity): NextControlUnitEntity
+    fun save(controlUnit: NextControlUnitEntity): NextControlUnitEntity
 }

@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import fr.gouv.cacem.monitorenv.domain.entities.nextControlUnit.NextControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.NextControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.INextControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlUnitModel
@@ -27,24 +27,24 @@ class JpaNextControlUnitRepository(
             .map { it.toNextControlUnitEntity() }
     }
 
-    override fun findById(nextControlUnitId: Int): NextControlUnitEntity {
-        return dbNextControlUnitRepository.findById(nextControlUnitId).get()
+    override fun findById(controlUnitId: Int): NextControlUnitEntity {
+        return dbNextControlUnitRepository.findById(controlUnitId).get()
             .toNextControlUnitEntity()
     }
 
     @Transactional
-    override fun save(nextControlUnitEntity: NextControlUnitEntity): NextControlUnitEntity {
+    override fun save(controlUnit: NextControlUnitEntity): NextControlUnitEntity {
         return try {
             val administrationModel =
-                requirePresent(dbAdministrationRepository.findById(nextControlUnitEntity.administrationId))
-            val controlUnitContactModels = nextControlUnitEntity.controlUnitContactIds.map {
+                requirePresent(dbAdministrationRepository.findById(controlUnit.administrationId))
+            val controlUnitContactModels = controlUnit.controlUnitContactIds.map {
                 requirePresent(dbNextControlUnitContactRepository.findById(it))
             }
-            val controlUnitResourceModels = nextControlUnitEntity.controlUnitResourceIds.map {
+            val controlUnitResourceModels = controlUnit.controlUnitResourceIds.map {
                 requirePresent(dbNextControlUnitResourceRepository.findById(it))
             }
             val controlUnitModel = ControlUnitModel.fromNextControlUnitEntity(
-                nextControlUnitEntity,
+                controlUnit,
                 administrationModel,
                 controlUnitContactModels,
                 controlUnitResourceModels,
@@ -54,7 +54,7 @@ class JpaNextControlUnitRepository(
                 .toNextControlUnitEntity()
         } catch (e: InvalidDataAccessApiUsageException) {
             throw NotFoundException(
-                "Unable to find (and update) control unit administration with `id` = ${nextControlUnitEntity.id}.",
+                "Unable to find (and update) control unit administration with `id` = ${controlUnit.id}.",
                 e
             )
         }

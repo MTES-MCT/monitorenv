@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.controlResource.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
@@ -39,7 +39,7 @@ data class ReportingDetailedDataOutput(
     companion object {
         fun fromReporting(
             reporting: ReportingEntity,
-            controlUnit: ControlUnitEntity?,
+            controlUnit: LegacyControlUnitEntity?,
             semaphore: SemaphoreEntity?,
         ): ReportingDetailedDataOutput {
             requireNotNull(reporting.id) { "ReportingEntity.id cannot be null" }

@@ -1,11 +1,11 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
 import fr.gouv.cacem.monitorenv.domain.services.ControlUnitService
-import fr.gouv.cacem.monitorenv.domain.use_cases.nextControlUnit.CreateOrUpdateNextControlUnitContact
-import fr.gouv.cacem.monitorenv.domain.use_cases.nextControlUnit.GetNextControlUnitContactById
-import fr.gouv.cacem.monitorenv.domain.use_cases.nextControlUnit.GetNextControlUnitContacts
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateNextControlUnitContactDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.NextControlUnitContactDataOutput
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnitContact
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitContactById
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitContacts
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitContactDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.ControlUnitContactDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
@@ -15,22 +15,22 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/v1/control_unit_contacts")
 @Tag(name = "Control Unit Contacts")
 class ApiControlUnitContactController(
-    private val createOrUpdateNextControlUnitContact: CreateOrUpdateNextControlUnitContact,
-    private val getNextControlUnitContacts: GetNextControlUnitContacts,
-    private val getNextControlUnitContactById: GetNextControlUnitContactById,
+    private val createOrUpdateControlUnitContact: CreateOrUpdateControlUnitContact,
+    private val getControlUnitContacts: GetControlUnitContacts,
+    private val getControlUnitContactById: GetControlUnitContactById,
     private val controlUnitService: ControlUnitService,
 ) {
     @PostMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a control unit contact")
     fun create(
-        @RequestBody createNextControlUnitContactDataInput: CreateOrUpdateNextControlUnitContactDataInput,
-    ): NextControlUnitContactDataOutput {
+        @RequestBody createNextControlUnitContactDataInput: CreateOrUpdateControlUnitContactDataInput,
+    ): ControlUnitContactDataOutput {
         val newNextControlUnitContactEntity =
             createNextControlUnitContactDataInput.toNextControlUnitContactEntity()
         val createdNextControlUnitContactEntity =
-            createOrUpdateNextControlUnitContact.execute(newNextControlUnitContactEntity)
+            createOrUpdateControlUnitContact.execute(newNextControlUnitContactEntity)
 
-        return NextControlUnitContactDataOutput.fromNextControlUnitContactEntity(
+        return ControlUnitContactDataOutput.fromNextControlUnitContactEntity(
             createdNextControlUnitContactEntity,
             controlUnitService
         )
@@ -40,10 +40,10 @@ class ApiControlUnitContactController(
     @Operation(summary = "Get a control unit contact by its ID")
     fun get(
         @PathParam("Control unit contact ID") @PathVariable(name = "controlUnitContactId") controlUnitContactId: Int,
-    ): NextControlUnitContactDataOutput {
-        val foundNextControlUnitContactEntity = getNextControlUnitContactById.execute(controlUnitContactId)
+    ): ControlUnitContactDataOutput {
+        val foundNextControlUnitContactEntity = getControlUnitContactById.execute(controlUnitContactId)
 
-        return NextControlUnitContactDataOutput.fromNextControlUnitContactEntity(
+        return ControlUnitContactDataOutput.fromNextControlUnitContactEntity(
             foundNextControlUnitContactEntity,
             controlUnitService
         )
@@ -51,17 +51,17 @@ class ApiControlUnitContactController(
 
     @GetMapping("")
     @Operation(summary = "List control unit contacts")
-    fun getAll(): List<NextControlUnitContactDataOutput> {
-        return getNextControlUnitContacts.execute()
-            .map { NextControlUnitContactDataOutput.fromNextControlUnitContactEntity(it, controlUnitService) }
+    fun getAll(): List<ControlUnitContactDataOutput> {
+        return getControlUnitContacts.execute()
+            .map { ControlUnitContactDataOutput.fromNextControlUnitContactEntity(it, controlUnitService) }
     }
 
     @PostMapping(value = ["/{controlUnitContactId}"], consumes = ["application/json"])
     @Operation(summary = "Update a control unit contact")
     fun update(
         @PathParam("Control unit contact ID") @PathVariable(name = "controlUnitContactId") controlUnitContactId: Int,
-        @RequestBody updateNextControlUnitContactDataInput: CreateOrUpdateNextControlUnitContactDataInput,
-    ): NextControlUnitContactDataOutput {
+        @RequestBody updateNextControlUnitContactDataInput: CreateOrUpdateControlUnitContactDataInput,
+    ): ControlUnitContactDataOutput {
         if ((updateNextControlUnitContactDataInput.id == null) || (controlUnitContactId != updateNextControlUnitContactDataInput.id)) {
             throw java.lang.IllegalArgumentException("Unable to find (and update) control unit contact with ID = ${updateNextControlUnitContactDataInput.id}.")
         }
@@ -69,9 +69,9 @@ class ApiControlUnitContactController(
         val nextNextControlUnitContactEntity =
             updateNextControlUnitContactDataInput.toNextControlUnitContactEntity()
         val updatedNextControlUnitContactEntity =
-            createOrUpdateNextControlUnitContact.execute(nextNextControlUnitContactEntity)
+            createOrUpdateControlUnitContact.execute(nextNextControlUnitContactEntity)
 
-        return NextControlUnitContactDataOutput.fromNextControlUnitContactEntity(
+        return ControlUnitContactDataOutput.fromNextControlUnitContactEntity(
             updatedNextControlUnitContactEntity,
             controlUnitService
         )

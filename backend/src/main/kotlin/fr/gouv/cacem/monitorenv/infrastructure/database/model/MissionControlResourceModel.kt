@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlResource.ControlResourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlResourceEntity
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -28,13 +28,13 @@ data class MissionControlResourceModel(
 ) {
     companion object {
         fun fromControlResourceEntity(
-            controlResourceEntity: ControlResourceEntity,
+            legacyControlResourceEntity: LegacyControlResourceEntity,
             mission: MissionModel,
             legacyControlUnitModel: LegacyControlUnitModel
         ) = MissionControlResourceModel(
             ressource = LegacyControlResourceModel(
-                id = controlResourceEntity.id,
-                name = controlResourceEntity.name,
+                id = legacyControlResourceEntity.id,
+                name = legacyControlResourceEntity.name,
                 controlUnit = legacyControlUnitModel,
             ),
             mission = mission,

@@ -4,11 +4,11 @@ import fr.gouv.cacem.monitorenv.domain.services.AdministrationService
 import fr.gouv.cacem.monitorenv.domain.services.ControlUnitContactService
 import fr.gouv.cacem.monitorenv.domain.services.ControlUnitResourceService
 import fr.gouv.cacem.monitorenv.domain.services.BaseService
-import fr.gouv.cacem.monitorenv.domain.use_cases.nextControlUnit.CreateOrUpdateNextControlUnit
-import fr.gouv.cacem.monitorenv.domain.use_cases.nextControlUnit.GetNextControlUnitById
-import fr.gouv.cacem.monitorenv.domain.use_cases.nextControlUnit.GetNextControlUnits
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateNextControlUnitDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.NextControlUnitDataOutput
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnit
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitById
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnits
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.ControlUnitDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/v1/next_control_units")
 @Tag(name = "Control Units")
 class ApiControlUnitController(
-    private val createOrUpdateNextControlUnit: CreateOrUpdateNextControlUnit,
-    private val getNextControlUnits: GetNextControlUnits,
-    private val getNextControlUnitById: GetNextControlUnitById,
+    private val createOrUpdateControlUnit: CreateOrUpdateControlUnit,
+    private val getControlUnits: GetControlUnits,
+    private val getControlUnitById: GetControlUnitById,
     private val administrationService: AdministrationService,
     private val controlUnitContactService: ControlUnitContactService,
     private val controlUnitResourceService: ControlUnitResourceService,
@@ -36,15 +36,15 @@ class ApiControlUnitController(
     @Operation(summary = "Create a control unit")
     fun create(
         @RequestBody
-        createNextControlUnitDataInput: CreateOrUpdateNextControlUnitDataInput,
-    ): NextControlUnitDataOutput {
+        createNextControlUnitDataInput: CreateOrUpdateControlUnitDataInput,
+    ): ControlUnitDataOutput {
         val newNextControlUnitEntity =
             createNextControlUnitDataInput.toNextControlUnitEntity()
         logger.info("New NextControlUnitEntity: $newNextControlUnitEntity")
         val createdNextControlUnitEntity =
-            createOrUpdateNextControlUnit.execute(newNextControlUnitEntity)
+            createOrUpdateControlUnit.execute(newNextControlUnitEntity)
 
-        return NextControlUnitDataOutput.fromNextControlUnitEntity(
+        return ControlUnitDataOutput.fromNextControlUnitEntity(
             createdNextControlUnitEntity,
             administrationService,
             controlUnitContactService,
@@ -59,10 +59,10 @@ class ApiControlUnitController(
         @PathParam("Control unit ID")
         @PathVariable(name = "controlUnitId")
         controlUnitId: Int,
-    ): NextControlUnitDataOutput {
-        val foundNextControlUnitEntity = getNextControlUnitById.execute(controlUnitId)
+    ): ControlUnitDataOutput {
+        val foundNextControlUnitEntity = getControlUnitById.execute(controlUnitId)
 
-        return NextControlUnitDataOutput.fromNextControlUnitEntity(
+        return ControlUnitDataOutput.fromNextControlUnitEntity(
             foundNextControlUnitEntity,
             administrationService,
             controlUnitContactService,
@@ -73,10 +73,10 @@ class ApiControlUnitController(
 
     @GetMapping("")
     @Operation(summary = "List control units")
-    fun getAll(): List<NextControlUnitDataOutput> {
-        return getNextControlUnits.execute()
+    fun getAll(): List<ControlUnitDataOutput> {
+        return getControlUnits.execute()
             .map {
-                NextControlUnitDataOutput.fromNextControlUnitEntity(
+                ControlUnitDataOutput.fromNextControlUnitEntity(
                     it,
                     administrationService,
                     controlUnitContactService,
@@ -93,8 +93,8 @@ class ApiControlUnitController(
         @PathVariable(name = "controlUnitId")
         controlUnitId: Int,
         @RequestBody
-        updateNextControlUnitDataInput: CreateOrUpdateNextControlUnitDataInput,
-    ): NextControlUnitDataOutput {
+        updateNextControlUnitDataInput: CreateOrUpdateControlUnitDataInput,
+    ): ControlUnitDataOutput {
         if ((updateNextControlUnitDataInput.id == null) || (controlUnitId != updateNextControlUnitDataInput.id)) {
             throw java.lang.IllegalArgumentException("Unable to find (and update) control unit with ID = ${updateNextControlUnitDataInput.id}.")
         }
@@ -102,9 +102,9 @@ class ApiControlUnitController(
         val nextNextControlUnitEntity =
             updateNextControlUnitDataInput.toNextControlUnitEntity()
         val updatedNextControlUnitEntity =
-            createOrUpdateNextControlUnit.execute(nextNextControlUnitEntity)
+            createOrUpdateControlUnit.execute(nextNextControlUnitEntity)
 
-        return NextControlUnitDataOutput.fromNextControlUnitEntity(
+        return ControlUnitDataOutput.fromNextControlUnitEntity(
             updatedNextControlUnitEntity,
             administrationService,
             controlUnitContactService,

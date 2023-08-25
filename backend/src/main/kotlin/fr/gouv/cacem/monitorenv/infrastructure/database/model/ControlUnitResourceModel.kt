@@ -1,8 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
-import fr.gouv.cacem.monitorenv.domain.entities.nextControlUnit.NextControlUnitResourceEntity
-import fr.gouv.cacem.monitorenv.domain.entities.nextControlUnit.NextControlUnitResourceType
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.utils.requireNonNull
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -73,19 +73,19 @@ data class ControlUnitResourceModel(
 
     companion object {
         fun fromNextControlUnitResourceEntity(
-            nextControlUnitResourceEntity: NextControlUnitResourceEntity,
+            controlUnitResource: ControlUnitResourceEntity,
             // TODO Make that non-nullable once all resources will have been attached to a base.
             baseModel: BaseModel?,
             controlUnitModel: ControlUnitModel,
         ): ControlUnitResourceModel {
             return ControlUnitResourceModel(
-                id = nextControlUnitResourceEntity.id,
+                id = controlUnitResource.id,
                 base = baseModel,
                 controlUnit = controlUnitModel,
-                name = nextControlUnitResourceEntity.name,
-                note = nextControlUnitResourceEntity.note,
-                photo = nextControlUnitResourceEntity.photo,
-                type = nextControlUnitResourceEntity.type?.name,
+                name = controlUnitResource.name,
+                note = controlUnitResource.note,
+                photo = controlUnitResource.photo,
+                type = controlUnitResource.type?.name,
             )
         }
     }
@@ -104,10 +104,10 @@ data class ControlUnitResourceModel(
         return result
     }
 
-    fun toNextControlUnitResourceEntity(): NextControlUnitResourceEntity {
+    fun toNextControlUnitResourceEntity(): ControlUnitResourceEntity {
         val controlUnitId = requireNonNull(controlUnit.id)
 
-        return NextControlUnitResourceEntity(
+        return ControlUnitResourceEntity(
             id = id,
             base = null,
             baseId = base?.id,
@@ -115,7 +115,7 @@ data class ControlUnitResourceModel(
             name = name,
             note = note,
             photo = photo,
-            type = type?.let { NextControlUnitResourceType.valueOf(it) },
+            type = type?.let { ControlUnitResourceType.valueOf(it) },
         )
     }
 }

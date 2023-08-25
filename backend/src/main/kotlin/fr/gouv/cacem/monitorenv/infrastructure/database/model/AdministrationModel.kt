@@ -33,13 +33,13 @@ data class AdministrationModel(
 ) {
     companion object {
         fun fromAdministrationEntity(
-            administrationEntity: AdministrationEntity,
+            administration: AdministrationEntity,
             controlUnitModels: List<ControlUnitModel>
         ): AdministrationModel {
             return AdministrationModel(
-                id = administrationEntity.id,
+                id = administration.id,
                 controlUnits = controlUnitModels,
-                name = administrationEntity.name,
+                name = administration.name,
             )
         }
     }

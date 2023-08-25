@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
-import fr.gouv.cacem.monitorenv.domain.entities.nextControlUnit.NextControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.NextControlUnitEntity
 import fr.gouv.cacem.monitorenv.utils.requireNonNull
 import fr.gouv.cacem.monitorenv.utils.requireIds
 import jakarta.persistence.CascadeType
@@ -54,20 +54,20 @@ data class ControlUnitModel(
 ) {
     companion object {
         fun fromNextControlUnitEntity(
-            nextControlUnitEntity: NextControlUnitEntity,
+            controlUnit: NextControlUnitEntity,
             administrationModel: AdministrationModel,
             controlUnitContactModels: List<ControlUnitContactModel>,
             controlUnitResourceModels: List<ControlUnitResourceModel>
         ): ControlUnitModel {
             return ControlUnitModel(
-                id = nextControlUnitEntity.id,
-                areaNote = nextControlUnitEntity.areaNote,
+                id = controlUnit.id,
+                areaNote = controlUnit.areaNote,
                 administration = administrationModel,
                 controlUnitContacts = controlUnitContactModels,
                 controlUnitResources = controlUnitResourceModels,
-                isArchived = nextControlUnitEntity.isArchived,
-                name = nextControlUnitEntity.name,
-                termsNote = nextControlUnitEntity.termsNote,
+                isArchived = controlUnit.isArchived,
+                name = controlUnit.name,
+                termsNote = controlUnit.termsNote,
             )
         }
     }

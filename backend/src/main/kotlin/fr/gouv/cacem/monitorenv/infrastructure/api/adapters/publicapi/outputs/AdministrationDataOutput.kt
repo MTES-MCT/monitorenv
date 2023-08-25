@@ -1,10 +1,10 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
-import fr.gouv.cacem.monitorenv.domain.entities.nextControlUnit.NextControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.NextControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.services.ControlUnitService
 import fr.gouv.cacem.monitorenv.utils.requireNonNull
-import fr.gouv.cacem.monitorenv.utils.requireNonNullList
+import fr.gouv.cacem.monitorenv.utils.requireNotNullList
 
 data class AdministrationDataOutput(
     val id: Int,
@@ -14,17 +14,17 @@ data class AdministrationDataOutput(
 ) {
     companion object {
         fun fromAdministrationEntity(
-            administrationEntity: AdministrationEntity,
+            administration: AdministrationEntity,
             controlUnitService: ControlUnitService
         ): AdministrationDataOutput {
             val controlUnits =
-                controlUnitService.getByIds(requireNonNullList(administrationEntity.controlUnitIds))
+                controlUnitService.getByIds(requireNotNullList(administration.controlUnitIds))
 
             return AdministrationDataOutput(
-                id = requireNonNull(administrationEntity.id),
+                id = requireNonNull(administration.id),
                 controlUnits,
-                controlUnitIds = requireNonNullList(administrationEntity.controlUnitIds),
-                name = administrationEntity.name,
+                controlUnitIds = requireNotNullList(administration.controlUnitIds),
+                name = administration.name,
             )
         }
     }

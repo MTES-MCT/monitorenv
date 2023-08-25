@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
-import fr.gouv.cacem.monitorenv.domain.entities.nextControlUnit.NextControlUnitContactEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
 import fr.gouv.cacem.monitorenv.utils.requireNonNull
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -43,24 +43,24 @@ data class ControlUnitContactModel(
 ) {
     companion object {
         fun fromNextControlUnitContactEntity(
-            nextControlUnitContactEntity: NextControlUnitContactEntity,
+            controlUnitContact: ControlUnitContactEntity,
             controlUnitModel: ControlUnitModel
         ): ControlUnitContactModel {
             return ControlUnitContactModel(
-                id = nextControlUnitContactEntity.id,
+                id = controlUnitContact.id,
                 controlUnit = controlUnitModel,
-                email = nextControlUnitContactEntity.email,
-                name = nextControlUnitContactEntity.name,
-                note = nextControlUnitContactEntity.note,
-                phone = nextControlUnitContactEntity.phone,
+                email = controlUnitContact.email,
+                name = controlUnitContact.name,
+                note = controlUnitContact.note,
+                phone = controlUnitContact.phone,
             )
         }
     }
 
-    fun toNextControlUnitContactEntity(): NextControlUnitContactEntity {
+    fun toNextControlUnitContactEntity(): ControlUnitContactEntity {
         val controlUnitId = requireNonNull(controlUnit.id)
 
-        return NextControlUnitContactEntity(
+        return ControlUnitContactEntity(
             id = id,
             controlUnitId,
             email = email,

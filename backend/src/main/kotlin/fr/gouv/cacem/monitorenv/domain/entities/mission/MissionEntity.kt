@@ -1,12 +1,13 @@
 package fr.gouv.cacem.monitorenv.domain.entities.mission
-import fr.gouv.cacem.monitorenv.domain.entities.controlResource.ControlUnitEntity
+
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
 data class MissionEntity(
     val id: Int? = null,
     val missionTypes: List<MissionTypeEnum>,
-    val controlUnits: List<ControlUnitEntity> = listOf(),
+    val controlUnits: List<LegacyControlUnitEntity> = listOf(),
     val openBy: String? = null,
     val closedBy: String? = null,
     val observationsCacem: String? = null,

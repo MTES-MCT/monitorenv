@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlResource.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -28,16 +28,16 @@ data class MissionControlUnitModel(
     var unit: LegacyControlUnitModel,
 ) {
     companion object {
-        fun fromControlUnitEntity(controlUnitEntity: ControlUnitEntity, mission: MissionModel) =
+        fun fromControlUnitEntity(controlUnit: LegacyControlUnitEntity, mission: MissionModel) =
             MissionControlUnitModel(
                 unit = LegacyControlUnitModel(
-                    id = controlUnitEntity.id,
-                    name = controlUnitEntity.name,
-                    isArchived = controlUnitEntity.isArchived,
-                    administration = AdministrationModel(name = controlUnitEntity.administration),
+                    id = controlUnit.id,
+                    name = controlUnit.name,
+                    isArchived = controlUnit.isArchived,
+                    administration = AdministrationModel(name = controlUnit.administration),
                 ),
                 mission = mission,
-                contact = controlUnitEntity.contact,
+                contact = controlUnit.contact,
             )
     }
 }

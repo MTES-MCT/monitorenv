@@ -4,13 +4,13 @@ import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.controlResource.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
-import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.ILegacyControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.ISemaphoreRepository
@@ -30,7 +30,7 @@ import java.time.ZonedDateTime
 class CreateOrUpdateReportingUTests {
     @MockBean private lateinit var createOrUpdateReportingRepositoty: IReportingRepository
 
-    @MockBean private lateinit var controlUnitRepository: IControlUnitRepository
+    @MockBean private lateinit var controlUnitRepository: ILegacyControlUnitRepository
 
     @MockBean private lateinit var semaphoreRepository: ISemaphoreRepository
 
@@ -115,7 +115,7 @@ class CreateOrUpdateReportingUTests {
                 geom = point,
             )
         val controlUnit =
-            ControlUnitEntity(
+            LegacyControlUnitEntity(
                 id = 1,
                 name = "control unit 1",
                 administration = "administration 1",

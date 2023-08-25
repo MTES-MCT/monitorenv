@@ -1,12 +1,12 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.reportings
 
 import fr.gouv.cacem.monitorenv.config.UseCase
-import fr.gouv.cacem.monitorenv.domain.entities.controlResource.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
-import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.ILegacyControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.ISemaphoreRepository
 import org.slf4j.LoggerFactory
@@ -17,7 +17,7 @@ import java.time.ZonedDateTime
 @UseCase
 class GetReportings(
     private val reportingRepository: IReportingRepository,
-    private val controlUnitRepository: IControlUnitRepository,
+    private val controlUnitRepository: ILegacyControlUnitRepository,
     private val semaphoreRepository: ISemaphoreRepository,
 ) {
     private val logger = LoggerFactory.getLogger(GetReportings::class.java)
@@ -31,7 +31,7 @@ class GetReportings(
         startedAfterDateTime: ZonedDateTime?,
         startedBeforeDateTime: ZonedDateTime?,
         status: List<String>?,
-    ): List<Triple<ReportingEntity, ControlUnitEntity?, SemaphoreEntity?>> {
+    ): List<Triple<ReportingEntity, LegacyControlUnitEntity?, SemaphoreEntity?>> {
         val reports =
             reportingRepository.findAll(
                 reportingType = reportingType,

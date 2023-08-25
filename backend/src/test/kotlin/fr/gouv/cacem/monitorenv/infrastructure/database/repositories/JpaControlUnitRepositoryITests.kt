@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional
 class JpaControlUnitRepositoryITests : AbstractDBTests() {
 
     @Autowired
-    private lateinit var jpaControlUnitRepository: JpaControlUnitRepository
+    private lateinit var jpaControlUnitRepository: JpaLegacyControlUnitRepository
 
     @Test
     @Transactional

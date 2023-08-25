@@ -7,5 +7,5 @@ interface IAdministrationRepository {
 
     fun findAll(): List<AdministrationEntity>
 
-    fun save(administrationEntity: AdministrationEntity): AdministrationEntity
+    fun save(administration: AdministrationEntity): AdministrationEntity
 }

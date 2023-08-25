@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.services.interfaces
 
-import fr.gouv.cacem.monitorenv.domain.entities.nextControlUnit.NextControlUnitContactEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
 
 interface IControlUnitContactService {
-    fun getByIds(controlUnitContactIds: List<Int>): List<NextControlUnitContactEntity>
+    fun getByIds(controlUnitContactIds: List<Int>): List<ControlUnitContactEntity>
 }
