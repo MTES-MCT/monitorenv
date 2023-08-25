@@ -1,5 +1,5 @@
-import { missionStatusLabels } from '../domain/entities/missions'
 import { MissionStatusLabel } from './MissionStatusLabel'
+import { missionStatusLabels } from '../domain/entities/missions'
 
 export default {
   component: MissionStatusLabel,
