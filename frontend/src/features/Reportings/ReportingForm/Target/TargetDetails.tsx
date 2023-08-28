@@ -36,6 +36,10 @@ export function TargetDetails({ form, push, remove }) {
     remove(index)
   }
 
+  if (form.values.targetType === ReportingTargetTypeEnum.OTHER) {
+    return null
+  }
+
   return (
     <div>
       {(!form.values.targetType ||
