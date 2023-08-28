@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.entities.missions
+package fr.gouv.cacem.monitorenv.domain.entities.mission
 
 data class ResourceUnitEntity(
     val administration: String? = null,

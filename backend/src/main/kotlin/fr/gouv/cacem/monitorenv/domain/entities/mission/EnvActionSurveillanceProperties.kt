@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.entities.missions
+package fr.gouv.cacem.monitorenv.domain.entities.mission
 
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime

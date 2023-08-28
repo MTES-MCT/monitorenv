@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryAreas.RegulatoryAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaModel
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

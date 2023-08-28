@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.entities.missions
+package fr.gouv.cacem.monitorenv.domain.entities.mission
 
 data class ThemeEntity(
     val theme: String? = null,

@@ -1,9 +1,9 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlResourceEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.entities.missions.*
+import fr.gouv.cacem.monitorenv.domain.entities.controlResource.ControlResourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlResource.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.*
 import fr.gouv.cacem.monitorenv.domain.exceptions.ControlResourceOrUnitNotFoundException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable

@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.semaphores
 
 import fr.gouv.cacem.monitorenv.config.UseCase
-import fr.gouv.cacem.monitorenv.domain.entities.semaphores.SemaphoreEntity
+import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.ISemaphoreRepository
 
 @UseCase

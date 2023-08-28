@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.entities.missions
+package fr.gouv.cacem.monitorenv.domain.entities.mission
 
 /* ktlint-disable enum-entry-name-case */
 enum class VesselSizeEnum {

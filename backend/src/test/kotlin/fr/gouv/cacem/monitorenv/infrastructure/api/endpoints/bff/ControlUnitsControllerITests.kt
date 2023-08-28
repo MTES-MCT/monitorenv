@@ -1,8 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
-import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlResourceEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlResource.ControlResourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlResource.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlResources.GetAllControlUnits
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test

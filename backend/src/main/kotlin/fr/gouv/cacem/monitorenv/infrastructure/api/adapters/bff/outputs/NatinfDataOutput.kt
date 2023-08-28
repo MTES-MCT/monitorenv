@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
 
-import fr.gouv.cacem.monitorenv.domain.entities.natinfs.NatinfEntity
+import fr.gouv.cacem.monitorenv.domain.entities.natinf.NatinfEntity
 
 data class NatinfDataOutput(
     val natinfCode: Int,

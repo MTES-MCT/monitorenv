@@ -1,11 +1,11 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.reportings
 
 import fr.gouv.cacem.monitorenv.config.UseCase
-import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlResource.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.semaphores.SemaphoreEntity
+import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.ISemaphoreRepository
@@ -46,7 +46,7 @@ class GetReportings(
         val controlUnits = controlUnitRepository.findAll()
         val semaphores = semaphoreRepository.findAll()
 
-        logger.info("Found ${reports.size} reportings, ${controlUnits.size} control units and ${semaphores.size} semaphores")
+        logger.info("Found ${reports.size} reporting(s), ${controlUnits.size} control unit(s) and ${semaphores.size} semaphore(s)")
 
         return reports.map { reporting ->
             return@map Triple(

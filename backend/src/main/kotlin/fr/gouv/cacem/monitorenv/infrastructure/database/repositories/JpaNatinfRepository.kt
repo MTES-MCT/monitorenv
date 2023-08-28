@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import fr.gouv.cacem.monitorenv.domain.entities.natinfs.NatinfEntity
+import fr.gouv.cacem.monitorenv.domain.entities.natinf.NatinfEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.INatinfRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBNatinfRepository
 import org.springframework.stereotype.Repository

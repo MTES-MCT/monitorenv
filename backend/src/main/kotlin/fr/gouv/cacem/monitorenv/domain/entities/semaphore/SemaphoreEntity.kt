@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.entities.semaphores
+package fr.gouv.cacem.monitorenv.domain.entities.semaphore
 
 import org.locationtech.jts.geom.Point
 

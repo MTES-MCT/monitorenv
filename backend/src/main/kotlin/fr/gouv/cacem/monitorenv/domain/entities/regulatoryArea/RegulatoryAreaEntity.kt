@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.entities.regulatoryAreas
+package fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea
 
 import org.locationtech.jts.geom.MultiPolygon
 

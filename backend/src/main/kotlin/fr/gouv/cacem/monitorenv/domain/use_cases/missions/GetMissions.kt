@@ -1,8 +1,8 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions // ktlint-disable package-name
 
 import fr.gouv.cacem.monitorenv.config.UseCase
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.missions.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
@@ -33,7 +33,7 @@ class GetMissions(private val missionRepository: IMissionRepository) {
             pageable = if (pageNumber != null && pageSize != null) PageRequest.of(pageNumber, pageSize) else Pageable.unpaged(),
         )
 
-        logger.info("Found ${missions.size} missions ")
+        logger.info("Found ${missions.size} mission(s)")
 
         return missions
     }

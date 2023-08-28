@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
-import fr.gouv.cacem.monitorenv.domain.entities.semaphores.SemaphoreEntity
+import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.semaphores.GetAllSemaphores
 import fr.gouv.cacem.monitorenv.domain.use_cases.semaphores.GetSemaphoreById
 import org.hamcrest.Matchers.equalTo

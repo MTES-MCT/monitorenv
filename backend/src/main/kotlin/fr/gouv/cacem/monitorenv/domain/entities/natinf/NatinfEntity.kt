@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.entities.natinfs
+package fr.gouv.cacem.monitorenv.domain.entities.natinf
 
 data class NatinfEntity(
     val natinfCode: Int,

@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.entities.missions
+package fr.gouv.cacem.monitorenv.domain.entities.mission
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import org.locationtech.jts.geom.Geometry

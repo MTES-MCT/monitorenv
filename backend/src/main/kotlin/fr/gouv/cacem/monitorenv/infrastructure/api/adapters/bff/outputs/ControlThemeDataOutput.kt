@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlThemes.ControlThemeEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlTheme.ControlThemeEntity
 
 data class ControlThemeDataOutput(
     val id: Int,

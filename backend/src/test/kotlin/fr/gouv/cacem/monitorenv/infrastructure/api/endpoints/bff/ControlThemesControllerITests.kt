@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
-import fr.gouv.cacem.monitorenv.domain.entities.controlThemes.ControlThemeEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlTheme.ControlThemeEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlThemes.GetAllControlThemes
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlThemes.GetControlThemeById
 import org.hamcrest.Matchers.equalTo

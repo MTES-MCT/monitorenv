@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlResource.ControlUnitEntity
 
 data class ControlUnitDataOutput(
     val id: Int,

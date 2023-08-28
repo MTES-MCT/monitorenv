@@ -1,5 +1,5 @@
-package fr.gouv.cacem.monitorenv.domain.entities.missions
-import fr.gouv.cacem.monitorenv.domain.entities.controlResources.ControlUnitEntity
+package fr.gouv.cacem.monitorenv.domain.entities.mission
+import fr.gouv.cacem.monitorenv.domain.entities.controlResource.ControlUnitEntity
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 

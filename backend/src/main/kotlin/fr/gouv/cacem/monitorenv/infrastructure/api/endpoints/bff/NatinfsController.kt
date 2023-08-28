@@ -16,7 +16,7 @@ class NatinfsController(
 ) {
 
     @GetMapping("")
-    @Operation(summary = "Get natinfs")
+    @Operation(summary = "Get all natinfs")
     fun getNatinfsController(): List<NatinfDataOutput> {
         val natinfs = getAllNatinfs.execute()
 
