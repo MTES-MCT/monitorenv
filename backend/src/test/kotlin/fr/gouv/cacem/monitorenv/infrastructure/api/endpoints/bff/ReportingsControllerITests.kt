@@ -11,10 +11,10 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphores.SemaphoreEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.CreateOrUpdateReporting
-import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.DeleteReporting
-import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.GetReportingById
-import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.GetReportings
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.CreateOrUpdateReporting
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReporting
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingById
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportings
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateReportingDataInput
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.Point

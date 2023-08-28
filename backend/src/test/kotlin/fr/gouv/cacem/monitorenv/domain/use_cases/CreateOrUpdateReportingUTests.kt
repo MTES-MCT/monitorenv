@@ -14,7 +14,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.ISemaphoreRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.CreateOrUpdateReporting
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.CreateOrUpdateReporting
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
