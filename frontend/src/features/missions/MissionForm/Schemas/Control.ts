@@ -54,7 +54,7 @@ export const getClosedEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActio
         }),
       actionTargetType: Yup.string().nullable().required('Requis'),
       actionType: Yup.mixed().oneOf([ActionTypeEnum.CONTROL]),
-      geom: Yup.array().ensure(),
+      geom: Yup.array().ensure().min(1, 'Requis'),
       id: Yup.string().required(),
       infractions: Yup.array().of(ClosedInfractionSchema).ensure().required(),
       themes: Yup.array().of(ThemeSchema).ensure().required(),
