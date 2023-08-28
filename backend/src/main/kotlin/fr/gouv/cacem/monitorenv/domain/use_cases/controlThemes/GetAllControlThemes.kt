@@ -6,8 +6,8 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IControlThemeRepository
 import org.slf4j.LoggerFactory
 
 @UseCase
-class GetControlThemes(private val controlThemeRepository: IControlThemeRepository) {
-    private val logger = LoggerFactory.getLogger(GetControlThemes::class.java)
+class GetAllControlThemes(private val controlThemeRepository: IControlThemeRepository) {
+    private val logger = LoggerFactory.getLogger(GetAllControlThemes::class.java)
 
     fun execute(): List<ControlThemeEntity> {
         val controlThemes = controlThemeRepository.findAll()

@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreas
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaById
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreas
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.RegulatoryAreaDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/bff/v1/regulatory")
 @Tag(name = "Regulatory", description = "API regulatory layers")
 class RegulatoryAreasController(
-    private val getRegulatoryAreas: GetRegulatoryAreas,
+    private val getAllRegulatoryAreas: GetAllRegulatoryAreas,
     private val getRegulatoryAreaById: GetRegulatoryAreaById,
 ) {
 
     @GetMapping("")
     @Operation(summary = "Get regulatory Areas")
     fun getRegulatoryAreasController(): List<RegulatoryAreaDataOutput> {
-        val regulatoryAreas = getRegulatoryAreas.execute()
+        val regulatoryAreas = getAllRegulatoryAreas.execute()
         return regulatoryAreas.map { RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(it) }
     }
 

@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.reporting
+package fr.gouv.cacem.monitorenv.domain.use_cases.reportings
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository

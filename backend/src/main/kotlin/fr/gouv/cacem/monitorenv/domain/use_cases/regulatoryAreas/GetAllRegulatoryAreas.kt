@@ -6,8 +6,8 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaRepository
 import org.slf4j.LoggerFactory
 
 @UseCase
-class GetRegulatoryAreas(private val regulatoryAreaRepository: IRegulatoryAreaRepository) {
-    private val logger = LoggerFactory.getLogger(GetRegulatoryAreas::class.java)
+class GetAllRegulatoryAreas(private val regulatoryAreaRepository: IRegulatoryAreaRepository) {
+    private val logger = LoggerFactory.getLogger(GetAllRegulatoryAreas::class.java)
 
     fun execute(): List<RegulatoryAreaEntity> {
         val regulatoryAreas = regulatoryAreaRepository.findAll()

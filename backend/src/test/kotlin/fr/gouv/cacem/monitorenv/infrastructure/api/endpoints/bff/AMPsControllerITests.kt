@@ -4,7 +4,7 @@ import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.amp.AMPEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.amps.GetAMPs
+import fr.gouv.cacem.monitorenv.domain.use_cases.amps.GetAllAMPs
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
@@ -25,7 +25,7 @@ class AMPsControllerITests {
     private lateinit var mockMvc: MockMvc
 
     @MockBean
-    private lateinit var getAMPs: GetAMPs
+    private lateinit var getAllAMPs: GetAllAMPs
 
     @Test
     fun `should return AMPs as json`() {
@@ -41,7 +41,7 @@ class AMPsControllerITests {
             designation = "ma designation",
             type = "mon type",
         )
-        given(getAMPs.execute()).willReturn(listOf(amp))
+        given(getAllAMPs.execute()).willReturn(listOf(amp))
 
         // When
         mockMvc.perform(get("/bff/v1/amps"))

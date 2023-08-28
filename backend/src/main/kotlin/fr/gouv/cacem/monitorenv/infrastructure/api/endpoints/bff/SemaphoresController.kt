@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
+import fr.gouv.cacem.monitorenv.domain.use_cases.semaphores.GetAllSemaphores
 import fr.gouv.cacem.monitorenv.domain.use_cases.semaphores.GetSemaphoreById
-import fr.gouv.cacem.monitorenv.domain.use_cases.semaphores.GetSemaphores
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.SemaphoreDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/bff/v1/semaphores")
 @Tag(description = "API Semaphores", name = "Semaphores")
-class SemaphoresController(private val getSemaphores: GetSemaphores, private val getSemaphoreById: GetSemaphoreById) {
+class SemaphoresController(private val getAllSemaphores: GetAllSemaphores, private val getSemaphoreById: GetSemaphoreById) {
     @GetMapping("")
     @Operation(summary = "Get all semaphores")
     fun getSemaphoresController(): List<SemaphoreDataOutput> {
-        val semaphores = getSemaphores.execute()
+        val semaphores = getAllSemaphores.execute()
         return semaphores.map { SemaphoreDataOutput.fromSemaphoreEntity(it) }
     }
 

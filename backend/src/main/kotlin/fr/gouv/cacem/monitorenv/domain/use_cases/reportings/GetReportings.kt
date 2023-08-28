@@ -15,12 +15,12 @@ import org.springframework.data.domain.Pageable
 import java.time.ZonedDateTime
 
 @UseCase
-class GetAllReportings(
+class GetReportings(
     private val reportingRepository: IReportingRepository,
     private val controlUnitRepository: IControlUnitRepository,
     private val semaphoreRepository: ISemaphoreRepository,
 ) {
-    private val logger = LoggerFactory.getLogger(GetAllReportings::class.java)
+    private val logger = LoggerFactory.getLogger(GetReportings::class.java)
 
     fun execute(
         pageNumber: Int?,
@@ -28,7 +28,7 @@ class GetAllReportings(
         provenStatus: List<String>?,
         reportingType: List<ReportingTypeEnum>?,
         seaFronts: List<String>?,
-        sourcesType: List<SourceTypeEnum>?, 
+        sourcesType: List<SourceTypeEnum>?,
         startedAfterDateTime: ZonedDateTime?,
         startedBeforeDateTime: ZonedDateTime?,
         status: List<String>?,
@@ -37,7 +37,7 @@ class GetAllReportings(
             provenStatus = provenStatus,
             reportingType = reportingType,
             seaFronts = seaFronts,
-            sourcesType = sourcesType, 
+            sourcesType = sourcesType,
             startedAfter = startedAfterDateTime?.toInstant() ?: ZonedDateTime.now().minusDays(30).toInstant(),
             startedBefore = startedBeforeDateTime?.toInstant(),
             status = status,

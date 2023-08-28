@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.natinfs.NatinfEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.natinfs.GetNatinfs
+import fr.gouv.cacem.monitorenv.domain.use_cases.natinfs.GetAllNatinfs
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
@@ -23,7 +23,7 @@ class NatinfsControllerITests {
     private lateinit var mockMvc: MockMvc
 
     @MockBean
-    private lateinit var getNatinfs: GetNatinfs
+    private lateinit var getAllNatinfs: GetAllNatinfs
 
     @Test
     fun `Should get all infractions`() {
@@ -34,7 +34,7 @@ class NatinfsControllerITests {
             infractionCategory = "Pêche",
             infraction = "Debarquement de produits de la peche maritime et de l'aquaculture marine hors d'un port designe",
         )
-        given(getNatinfs.execute()).willReturn(listOf(natinf))
+        given(getAllNatinfs.execute()).willReturn(listOf(natinf))
 
         // When
         mockMvc.perform(get("/bff/v1/natinfs"))

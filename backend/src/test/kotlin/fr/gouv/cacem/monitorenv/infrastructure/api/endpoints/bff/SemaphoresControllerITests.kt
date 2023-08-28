@@ -3,8 +3,8 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.semaphores.SemaphoreEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.semaphores.GetAllSemaphores
 import fr.gouv.cacem.monitorenv.domain.use_cases.semaphores.GetSemaphoreById
-import fr.gouv.cacem.monitorenv.domain.use_cases.semaphores.GetSemaphores
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.Point
@@ -26,7 +26,7 @@ class SemaphoresControllerITests {
     private lateinit var mockMvc: MockMvc
 
     @MockBean
-    private lateinit var getSemaphores: GetSemaphores
+    private lateinit var getAllSemaphores: GetAllSemaphores
 
     @MockBean
     private lateinit var getSemaphoreById: GetSemaphoreById
@@ -42,7 +42,7 @@ class SemaphoresControllerITests {
             name = "Semaphore 1",
             geom = point,
         )
-        given(getSemaphores.execute()).willReturn(listOf(semaphore))
+        given(getAllSemaphores.execute()).willReturn(listOf(semaphore))
         // When
         mockMvc.perform(get("/bff/v1/semaphores"))
             // Then

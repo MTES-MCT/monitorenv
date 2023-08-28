@@ -6,8 +6,8 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IAMPRepository
 import org.slf4j.LoggerFactory
 
 @UseCase
-class GetAMPs(private val ampRepository: IAMPRepository) {
-    private val logger = LoggerFactory.getLogger(GetAMPs::class.java)
+class GetAllAMPs(private val ampRepository: IAMPRepository) {
+    private val logger = LoggerFactory.getLogger(GetAllAMPs::class.java)
 
     fun execute(): List<AMPEntity> {
         val amps = ampRepository.findAll()

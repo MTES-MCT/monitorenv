@@ -2,8 +2,8 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.controlThemes.ControlThemeEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlThemes.GetAllControlThemes
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlThemes.GetControlThemeById
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlThemes.GetControlThemes
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
@@ -24,7 +24,7 @@ class ControlThemesControllerITests {
     private lateinit var mockMvc: MockMvc
 
     @MockBean
-    private lateinit var getControlThemes: GetControlThemes
+    private lateinit var getAllControlThemes: GetAllControlThemes
 
     @MockBean
     private lateinit var getControlThemeById: GetControlThemeById
@@ -38,7 +38,7 @@ class ControlThemesControllerITests {
             themeLevel1 = "Police des mouillages",
             themeLevel2 = "Mouillage individuel",
         )
-        given(getControlThemes.execute()).willReturn(listOf(controlTheme))
+        given(getAllControlThemes.execute()).willReturn(listOf(controlTheme))
 
         // When
         mockMvc.perform(get("/bff/v1/controlthemes"))

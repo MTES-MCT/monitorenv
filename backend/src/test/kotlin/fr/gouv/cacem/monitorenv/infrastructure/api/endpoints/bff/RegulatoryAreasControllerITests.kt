@@ -3,8 +3,8 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryAreas.RegulatoryAreaEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreas
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaById
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreas
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -31,7 +31,7 @@ class RegulatoryAreasControllerITests {
     private lateinit var mockMvc: MockMvc
 
     @MockBean
-    private lateinit var getRegulatoryAreas: GetRegulatoryAreas
+    private lateinit var getAllRegulatoryAreas: GetAllRegulatoryAreas
 
     @MockBean
     private lateinit var getRegulatoryAreaById: GetRegulatoryAreaById
@@ -64,7 +64,7 @@ class RegulatoryAreasControllerITests {
             objet = "",
             signataire = "",
         )
-        given(getRegulatoryAreas.execute()).willReturn(listOf(regulatoryArea))
+        given(getAllRegulatoryAreas.execute()).willReturn(listOf(regulatoryArea))
 
         // When
         mockMvc.perform(get("/bff/v1/regulatory"))
