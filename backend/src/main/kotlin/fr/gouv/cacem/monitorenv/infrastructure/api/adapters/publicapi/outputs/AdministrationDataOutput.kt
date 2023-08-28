@@ -3,7 +3,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.NextControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
-import fr.gouv.cacem.monitorenv.utils.requireNonNull
 import fr.gouv.cacem.monitorenv.utils.requireNotNullList
 
 data class AdministrationDataOutput(
@@ -17,7 +16,7 @@ data class AdministrationDataOutput(
             administration: AdministrationEntity,
         ): AdministrationDataOutput {
             return AdministrationDataOutput(
-                id = requireNonNull(administration.id),
+                id = requireNotNull(administration.id),
                 controlUnitIds = requireNotNullList(administration.controlUnitIds),
                 name = administration.name,
             )
@@ -27,7 +26,7 @@ data class AdministrationDataOutput(
             administration: FullAdministrationDTO,
         ): AdministrationDataOutput {
             return AdministrationDataOutput(
-                id = requireNonNull(administration.id),
+                id = requireNotNull(administration.id),
                 controlUnits = administration.controlUnits,
                 controlUnitIds = administration.controlUnitIds,
                 name = administration.name,

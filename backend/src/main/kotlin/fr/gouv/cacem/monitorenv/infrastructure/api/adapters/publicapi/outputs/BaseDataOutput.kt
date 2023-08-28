@@ -3,7 +3,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs
 import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.base.dtos.FullBaseDTO
-import fr.gouv.cacem.monitorenv.utils.requireNonNull
 
 data class BaseDataOutput(
     val id: Int,
@@ -16,7 +15,7 @@ data class BaseDataOutput(
             base: BaseEntity
         ): BaseDataOutput {
             return BaseDataOutput(
-                id = requireNonNull(base.id),
+                id = requireNotNull(base.id),
                 controlUnitIds = base.controlUnitResourceIds,
                 name = base.name,
             )
@@ -26,7 +25,7 @@ data class BaseDataOutput(
             fullBaseDTO: FullBaseDTO
         ): BaseDataOutput {
             return BaseDataOutput(
-                id = requireNonNull(fullBaseDTO.id),
+                id = requireNotNull(fullBaseDTO.id),
                 controlUnitIds = fullBaseDTO.controlUnitResourceIds,
                 controlUnitResources = fullBaseDTO.controlUnitResources,
                 name = fullBaseDTO.name,

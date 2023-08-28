@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
-import fr.gouv.cacem.monitorenv.utils.requireNonNull
 import jakarta.persistence.*
 import java.time.LocalDateTime
 import org.hibernate.annotations.CreationTimestamp
@@ -58,7 +57,7 @@ data class ControlUnitContactModel(
     }
 
     fun toNextControlUnitContactEntity(): ControlUnitContactEntity {
-        val controlUnitId = requireNonNull(controlUnit.id)
+        val controlUnitId = requireNotNull(controlUnit.id)
 
         return ControlUnitContactEntity(
             id = id,

@@ -3,7 +3,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.NextControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.services.ControlUnitService
-import fr.gouv.cacem.monitorenv.utils.requireNonNull
 
 data class ControlUnitContactDataOutput(
     val id: Int,
@@ -23,7 +22,7 @@ data class ControlUnitContactDataOutput(
                 controlUnitService.getById(controlUnitContact.controlUnitId)
 
             return ControlUnitContactDataOutput(
-                id = requireNonNull(controlUnitContact.id),
+                id = requireNotNull(controlUnitContact.id),
                 controlUnit,
                 controlUnitId = controlUnitContact.controlUnitId,
                 email = controlUnitContact.email,

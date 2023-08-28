@@ -5,5 +5,5 @@ fun <T : Any> requireNotNullList(values: List<T?>?): List<T> {
         throw IllegalArgumentException("This list is null.")
     }
 
-    return values.map { requireNonNull(it) }
+    return values.map { requireNotNull(it) }
 }

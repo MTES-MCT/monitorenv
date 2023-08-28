@@ -3,7 +3,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.NextControlUnitEntity
-import fr.gouv.cacem.monitorenv.utils.requireNonNull
 import fr.gouv.cacem.monitorenv.utils.requireIds
 import jakarta.persistence.CascadeType
 import jakarta.persistence.*
@@ -73,7 +72,7 @@ data class ControlUnitModel(
     }
 
     fun toNextControlUnitEntity(): NextControlUnitEntity {
-        val administrationId = requireNonNull(administration.id)
+        val administrationId = requireNotNull(administration.id)
         val controlUnitContactIds = requireIds(controlUnitContacts) { it.id }
         val controlUnitResourceIds = requireIds(controlUnitResources) { it.id }
 

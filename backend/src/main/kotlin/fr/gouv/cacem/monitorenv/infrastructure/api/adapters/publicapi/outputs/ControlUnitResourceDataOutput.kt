@@ -6,7 +6,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceT
 import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 import fr.gouv.cacem.monitorenv.domain.services.ControlUnitService
 import fr.gouv.cacem.monitorenv.domain.services.BaseService
-import fr.gouv.cacem.monitorenv.utils.requireNonNull
 
 data class ControlUnitResourceDataOutput(
     val id: Int,
@@ -48,7 +47,7 @@ data class ControlUnitResourceDataOutput(
             val controlUnit = controlUnitService.getById(controlUnitResource.controlUnitId)
 
             return ControlUnitResourceDataOutput(
-                id = requireNonNull(controlUnitResource.id),
+                id = requireNotNull(controlUnitResource.id),
                 base,
                 baseId = controlUnitResource.baseId,
                 controlUnit,

@@ -8,7 +8,6 @@ import fr.gouv.cacem.monitorenv.domain.services.AdministrationService
 import fr.gouv.cacem.monitorenv.domain.services.ControlUnitContactService
 import fr.gouv.cacem.monitorenv.domain.services.ControlUnitResourceService
 import fr.gouv.cacem.monitorenv.domain.services.BaseService
-import fr.gouv.cacem.monitorenv.utils.requireNonNull
 
 data class ControlUnitDataOutput(
     val id: Int,
@@ -42,7 +41,7 @@ data class ControlUnitDataOutput(
                 }
 
             return ControlUnitDataOutput(
-                id = requireNonNull(controlUnit.id),
+                id = requireNotNull(controlUnit.id),
                 areaNote = controlUnit.areaNote,
                 administration,
                 administrationId = controlUnit.administrationId,

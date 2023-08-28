@@ -3,7 +3,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 import com.fasterxml.jackson.annotation.JsonBackReference
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
-import fr.gouv.cacem.monitorenv.utils.requireNonNull
 import jakarta.persistence.*
 import java.time.LocalDateTime
 import org.hibernate.annotations.CreationTimestamp
@@ -105,7 +104,7 @@ data class ControlUnitResourceModel(
     }
 
     fun toNextControlUnitResourceEntity(): ControlUnitResourceEntity {
-        val controlUnitId = requireNonNull(controlUnit.id)
+        val controlUnitId = requireNotNull(controlUnit.id)
 
         return ControlUnitResourceEntity(
             id = id,
