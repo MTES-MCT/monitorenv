@@ -1,4 +1,4 @@
-import { Button, Coordinates, CoordinatesInput, Icon, Size } from '@mtes-mct/monitor-ui'
+import { Button, Coordinates, CoordinatesInput } from '@mtes-mct/monitor-ui'
 import Feature from 'ol/Feature'
 import GeoJSON from 'ol/format/GeoJSON'
 import Point from 'ol/geom/Point'
@@ -14,7 +14,7 @@ import {
   OPENLAYERS_PROJECTION,
   WSG84_PROJECTION
 } from '../../../domain/entities/map/constants'
-import { setInteractionType } from '../../../domain/shared_slices/Draw'
+import { setGeometry, setInteractionType } from '../../../domain/shared_slices/Draw'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import { ReportingFormVisibility } from '../../../domain/shared_slices/ReportingState'
 import { addFeatureToDrawedFeature } from '../../../domain/use_cases/draw/addFeatureToDrawedFeature'
@@ -52,7 +52,7 @@ export function DrawModal() {
   const dispatch = useAppDispatch()
 
   const {
-    draw: { geometry, interactionType, isGeometryValid, listener },
+    draw: { geometry, initialGeometry, interactionType, isGeometryValid, listener },
     global,
     map: { coordinatesFormat },
     sideWindow
@@ -119,14 +119,15 @@ export function DrawModal() {
     }
   }, [dispatch, global.reportingFormVisibility, sideWindow.status])
 
-  const handleQuit = () => {
-    dispatch(closeAddZone())
-  }
   const handleSelectInteraction = nextInteraction => () => {
     dispatch(setInteractionType(nextInteraction))
   }
   const handleReset = () => {
-    dispatch(eraseDrawedGeometries(initialFeatureNumberRef.current))
+    if (!initialGeometry) {
+      return dispatch(eraseDrawedGeometries(initialFeatureNumberRef.current))
+    }
+
+    return dispatch(setGeometry(initialGeometry))
   }
   const handleValidate = () => {
     dispatch(validateZone())
@@ -159,9 +160,6 @@ export function DrawModal() {
       <Panel>
         <Header>
           <Title>Vous êtes en train d&apos;ajouter {listener && titlePlaceholder[listener]}</Title>
-          <QuitButton Icon={Icon.Close} onClick={handleQuit} size={Size.SMALL}>
-            Quitter
-          </QuitButton>
         </Header>
 
         <Body>
@@ -286,16 +284,6 @@ const ButtonGroup = styled.div`
   display: inline-block;
   & > :not(:last-child) {
     margin-right: 16px;
-  }
-`
-const QuitButton = styled(Button)`
-  color: ${p => p.theme.color.maximumRed};
-  background: ${p => p.theme.color.cultured};
-  align-self: center;
-  margin-left: 18px;
-  &:hover {
-    color: ${p => p.theme.color.maximumRed};
-    background: ${p => p.theme.color.cultured};
   }
 `
 

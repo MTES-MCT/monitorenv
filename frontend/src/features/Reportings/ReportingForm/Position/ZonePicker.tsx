@@ -56,7 +56,7 @@ export function ZonePicker() {
 
   return (
     <Field>
-      {value?.coordinates && value.type === OLGeometryType.MULTIPOLYGON && (
+      {value?.coordinates?.length > 0 && value.type === OLGeometryType.MULTIPOLYGON && (
         <Row>
           <ZoneWrapper>
             Polygone dessiné

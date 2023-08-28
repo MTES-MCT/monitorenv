@@ -1,5 +1,5 @@
 import { InteractionListener, InteractionType } from '../../entities/map/constants'
-import { setGeometry, setInteractionTypeAndListener } from '../../shared_slices/Draw'
+import { setGeometry, setInitialGeometry, setInteractionTypeAndListener } from '../../shared_slices/Draw'
 import { setDisplayedItems } from '../../shared_slices/Global'
 
 import type { GeoJSON as GeoJSONNamespace } from '../../types/GeoJSON'
@@ -8,6 +8,7 @@ export const drawPolygon =
   (geometry: GeoJSONNamespace.Geometry | undefined, listener: InteractionListener) => dispatch => {
     if (geometry) {
       dispatch(setGeometry(geometry))
+      dispatch(setInitialGeometry(geometry))
     }
 
     dispatch(openDrawLayerModal)
@@ -23,6 +24,7 @@ export const drawPoint =
   (geometry: GeoJSONNamespace.Geometry | undefined, listener?: InteractionListener) => dispatch => {
     if (geometry) {
       dispatch(setGeometry(geometry))
+      dispatch(setInitialGeometry(geometry))
     }
 
     dispatch(openDrawLayerModal)
@@ -46,6 +48,7 @@ const openDrawLayerModal = dispatch => {
       displayMissionSelectedLayer: false,
       displayMissionsLayer: false,
       displayMissionsOverlay: false,
+      displayReportingsButton: false,
       displayReportingsOverlay: false,
       displaySearchSemaphoreButton: false
     })
@@ -64,6 +67,7 @@ export const closeDrawLayerModal = dispatch => {
       displayMissionSelectedLayer: true,
       displayMissionsLayer: true,
       displayMissionsOverlay: true,
+      displayReportingsButton: true,
       displayReportingsOverlay: true,
       displaySearchSemaphoreButton: true
     })
