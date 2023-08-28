@@ -33,7 +33,7 @@ export const controlUnitResourceApi = monitorenvPublicApi.injectEndpoints({
       invalidatesTags: () => [{ type: 'Bases' }, { type: 'ControlUnits' }],
       query: nextControlUnitResourceData => ({
         body: nextControlUnitResourceData,
-        method: 'POST',
+        method: 'PUT',
         url: `/control_unit_resources/${nextControlUnitResourceData.id}`
       })
     })

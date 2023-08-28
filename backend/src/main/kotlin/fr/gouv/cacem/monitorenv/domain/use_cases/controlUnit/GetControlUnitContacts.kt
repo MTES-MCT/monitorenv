@@ -12,7 +12,7 @@ class GetControlUnitContacts(private val controlUnitContactRepository: IControlU
     fun execute(): List<FullControlUnitContactDTO> {
         val controlUnitContacts = controlUnitContactRepository.findAll()
 
-        logger.info("Found ${controlUnitContacts.size} control unit administrations.")
+        logger.info("Found ${controlUnitContacts.size} control unit contacts.")
 
         return controlUnitContacts
     }

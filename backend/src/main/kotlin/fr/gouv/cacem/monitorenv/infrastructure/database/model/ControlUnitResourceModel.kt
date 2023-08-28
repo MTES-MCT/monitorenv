@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 import com.fasterxml.jackson.annotation.JsonBackReference
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 import jakarta.persistence.*
 import java.time.LocalDateTime
 import org.hibernate.annotations.CreationTimestamp
@@ -71,7 +72,7 @@ data class ControlUnitResourceModel(
     }
 
     companion object {
-        fun fromNextControlUnitResourceEntity(
+        fun fromControlUnitResource(
             controlUnitResource: ControlUnitResourceEntity,
             // TODO Make that non-nullable once all resources will have been attached to a base.
             baseModel: BaseModel?,
@@ -103,17 +104,29 @@ data class ControlUnitResourceModel(
         return result
     }
 
-    fun toNextControlUnitResourceEntity(): ControlUnitResourceEntity {
-        val controlUnitId = requireNotNull(controlUnit.id)
-
+    fun toControlUnitResource(): ControlUnitResourceEntity {
         return ControlUnitResourceEntity(
-            id = id,
+            id,
             base = null,
             baseId = base?.id,
-            controlUnitId,
-            name = name,
-            note = note,
-            photo = photo,
+            controlUnitId = requireNotNull(controlUnit.id),
+            name,
+            note,
+            photo,
+            type = type?.let { ControlUnitResourceType.valueOf(it) },
+        )
+    }
+
+    fun toFullControlUnitResource(): FullControlUnitResourceDTO {
+        return FullControlUnitResourceDTO(
+            id,
+            base = base?.toBase(),
+            baseId = base?.id,
+            controlUnit = controlUnit.toNextControlUnitEntity(),
+            controlUnitId = requireNotNull(controlUnit.id),
+            name,
+            note,
+            photo,
             type = type?.let { ControlUnitResourceType.valueOf(it) },
         )
     }

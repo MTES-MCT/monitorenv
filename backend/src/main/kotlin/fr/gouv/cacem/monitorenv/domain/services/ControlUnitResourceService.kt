@@ -9,6 +9,6 @@ import org.springframework.stereotype.Service
 class ControlUnitResourceService(private val controlUnitResourceRepository: IControlUnitResourceRepository) :
     IControlUnitResourceService {
     override fun getByIds(controlUnitResourceIds: List<Int>): List<ControlUnitResourceEntity> {
-        return controlUnitResourceIds.map { controlUnitResourceRepository.findById(it) }
+        return controlUnitResourceIds.map { controlUnitResourceRepository.findById(it).toControlUnitResource() }
     }
 }

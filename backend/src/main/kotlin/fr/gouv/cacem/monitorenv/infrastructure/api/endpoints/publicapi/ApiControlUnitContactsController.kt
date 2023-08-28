@@ -34,15 +34,17 @@ class ApiControlUnitContactsController(
     fun get(
         @PathParam("Control unit contact ID") @PathVariable(name = "controlUnitContactId") controlUnitContactId: Int,
     ): ControlUnitContactDataOutput {
-        val foundControlUnitContact = getControlUnitContactById.execute(controlUnitContactId)
+        val foundFullControlUnitContact = getControlUnitContactById.execute(controlUnitContactId)
 
-        return ControlUnitContactDataOutput.fromFullControlUnitContact(foundControlUnitContact)
+        return ControlUnitContactDataOutput.fromFullControlUnitContact(foundFullControlUnitContact)
     }
 
     @GetMapping("")
     @Operation(summary = "List control unit contacts")
     fun getAll(): List<ControlUnitContactDataOutput> {
-        return getControlUnitContacts.execute().map { ControlUnitContactDataOutput.fromFullControlUnitContact(it) }
+        val foundFullControlUnitContacts = getControlUnitContacts.execute()
+        
+        return foundFullControlUnitContacts.map { ControlUnitContactDataOutput.fromFullControlUnitContact(it) }
     }
 
     @PutMapping(value = ["/{controlUnitContactId}"], consumes = ["application/json"])

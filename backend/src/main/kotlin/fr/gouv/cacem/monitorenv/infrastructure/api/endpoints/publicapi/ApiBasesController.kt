@@ -37,15 +37,17 @@ class ApiBasesController(
         @PathVariable(name = "baseId")
         baseId: Int,
     ): BaseDataOutput {
-        val foundBase = getBaseById.execute(baseId)
+        val foundFullBase = getBaseById.execute(baseId)
 
-        return BaseDataOutput.fromFullBase(foundBase)
+        return BaseDataOutput.fromFullBase(foundFullBase)
     }
 
     @GetMapping("")
     @Operation(summary = "List bases")
     fun getAll(): List<BaseDataOutput> {
-        return getBases.execute().map { BaseDataOutput.fromFullBase(it) }
+        val foundFullBases = getBases.execute()
+        
+        return foundFullBases.map { BaseDataOutput.fromFullBase(it) }
     }
 
     @PutMapping(value = ["/{baseId}"], consumes = ["application/json"])

@@ -22,13 +22,13 @@ data class BaseDataOutput(
         }
 
         fun fromFullBase(
-            fullBaseDTO: FullBaseDTO
+            fullBase: FullBaseDTO
         ): BaseDataOutput {
             return BaseDataOutput(
-                id = requireNotNull(fullBaseDTO.id),
-                controlUnitIds = fullBaseDTO.controlUnitResourceIds,
-                controlUnitResources = fullBaseDTO.controlUnitResources,
-                name = fullBaseDTO.name,
+                id = requireNotNull(fullBase.id),
+                controlUnitIds = fullBase.controlUnitResourceIds,
+                controlUnitResources = fullBase.controlUnitResources,
+                name = fullBase.name,
             )
         }
     }

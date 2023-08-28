@@ -14,11 +14,11 @@ import org.springframework.transaction.annotation.Transactional
 
 @Repository
 class JpaBaseRepository(
-    private val dbNextControlUnitResourceRepository: IDBControlUnitResourceRepository,
+    private val dbControlUnitResourceRepository: IDBControlUnitResourceRepository,
     private val dbBaseRepository: IDBBaseRepository,
 ) : IBaseRepository {
     override fun deleteById(baseId: Int) {
-        dbBaseRepository.findById(baseId).get().let { dbBaseRepository.delete(it) }
+        dbBaseRepository.deleteById(baseId)
     }
 
     override fun findAll(): List<FullBaseDTO> {
@@ -33,7 +33,7 @@ class JpaBaseRepository(
     override fun save(base: BaseEntity): BaseEntity {
         return try {
             val controlUnitResourceModels = base.controlUnitResourceIds.map {
-                requirePresent(dbNextControlUnitResourceRepository.findById(it))
+                requirePresent(dbControlUnitResourceRepository.findById(it))
             }
             val baseModel = BaseModel.fromBase(base, controlUnitResourceModels)
 

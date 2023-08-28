@@ -33,7 +33,7 @@ export const controlUnitContactApi = monitorenvPublicApi.injectEndpoints({
       invalidatesTags: () => [{ type: 'ControlUnits' }],
       query: nextControlUnitContactData => ({
         body: nextControlUnitContactData,
-        method: 'POST',
+        method: 'PUT',
         url: `/control_unit_contacts/${nextControlUnitContactData.id}`
       })
     })

@@ -43,16 +43,22 @@ class ApiControlUnitContactsControllerITests {
     private lateinit var objectMapper: ObjectMapper
 
     @Test
-    fun `Should create a new administration`() {
+    fun `Should create a new contact`() {
         val expectedNewControlUnitContact = ControlUnitContactEntity(
             id = 1,
             controlUnitId = 2,
+            email = null,
             name = "Contact Name",
+            note = null,
+            phone = null,
         )
 
         val request = CreateOrUpdateControlUnitContactDataInput(
             controlUnitId = 2,
+            email = null,
             name = "Contact Name",
+            note = null,
+            phone = null,
         )
         val requestBody = objectMapper.writeValueAsString(request)
 
@@ -70,7 +76,7 @@ class ApiControlUnitContactsControllerITests {
     }
 
     @Test
-    fun `Should get an administration by its ID`() {
+    fun `Should get a contact by its ID`() {
         val expectedFullControlUnitContact = FullControlUnitContactDTO(
             id = 1,
             controlUnit = NextControlUnitEntity(
@@ -101,7 +107,7 @@ class ApiControlUnitContactsControllerITests {
     }
 
     @Test
-    fun `Should get all administrations`() {
+    fun `Should get all contacts`() {
         val expectedControlUnitContacts = listOf(
             FullControlUnitContactDTO(
                 id = 1,
@@ -151,17 +157,23 @@ class ApiControlUnitContactsControllerITests {
     }
 
     @Test
-    fun `Should update an administration`() {
+    fun `Should update a contact`() {
         val updatedControlUnitContact = ControlUnitContactEntity(
             id = 1,
             controlUnitId = 2,
+            email = null,
             name = "Updated Contact Name",
+            note = null,
+            phone = null,
         )
 
         val request = CreateOrUpdateControlUnitContactDataInput(
             id = 1,
+            email = null,
             controlUnitId = 2,
             name = "Updated Contact Name",
+            note = null,
+            phone = null,
         )
         val requestBody = objectMapper.writeValueAsString(request)
 

@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitResourceRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlUnitResourceModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBNextControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
@@ -15,17 +16,19 @@ import org.springframework.transaction.annotation.Transactional
 @Repository
 class JpaControlUnitResourceRepository(
     private val dbNextControlUnitRepository: IDBNextControlUnitRepository,
-    private val dbNextControlUnitResourceRepository: IDBControlUnitResourceRepository,
+    private val dbControlUnitResourceRepository: IDBControlUnitResourceRepository,
     private val dbPortRepository: IDBBaseRepository,
 ) : IControlUnitResourceRepository {
-    override fun findAll(): List<ControlUnitResourceEntity> {
-        return dbNextControlUnitResourceRepository.findAll()
-            .map { it.toNextControlUnitResourceEntity() }
+    override fun deleteById(controlUnitResourceId: Int) {
+        dbControlUnitResourceRepository.deleteById(controlUnitResourceId)
     }
 
-    override fun findById(controlUnitResourceId: Int): ControlUnitResourceEntity {
-        return dbNextControlUnitResourceRepository.findById(controlUnitResourceId).get()
-            .toNextControlUnitResourceEntity()
+    override fun findAll(): List<FullControlUnitResourceDTO> {
+        return dbControlUnitResourceRepository.findAll().map { it.toFullControlUnitResource() }
+    }
+
+    override fun findById(controlUnitResourceId: Int): FullControlUnitResourceDTO {
+        return dbControlUnitResourceRepository.findById(controlUnitResourceId).get().toFullControlUnitResource()
     }
 
     @Transactional
@@ -38,13 +41,13 @@ class JpaControlUnitResourceRepository(
             } else {
                 null
             }
-            val controlUnitResourceModel = ControlUnitResourceModel.fromNextControlUnitResourceEntity(
+            val controlUnitResourceModel = ControlUnitResourceModel.fromControlUnitResource(
                 controlUnitResource,
                 baseModel,
                 controlUnitModel,
             )
 
-            dbNextControlUnitResourceRepository.save(controlUnitResourceModel).toNextControlUnitResourceEntity()
+            dbControlUnitResourceRepository.save(controlUnitResourceModel).toControlUnitResource()
         } catch (e: InvalidDataAccessApiUsageException) {
             throw NotFoundException(
                 "Unable to find (and update) control unit resource with `id` = ${controlUnitResource.id}.",

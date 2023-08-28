@@ -57,7 +57,7 @@ data class BaseModel(
         return FullBaseDTO(
             id,
             controlUnitResourceIds = requireIds(controlUnitResources) { it.id },
-            controlUnitResources = controlUnitResources.map { it.toNextControlUnitResourceEntity() },
+            controlUnitResources = controlUnitResources.map { it.toControlUnitResource() },
             name,
         )
     }

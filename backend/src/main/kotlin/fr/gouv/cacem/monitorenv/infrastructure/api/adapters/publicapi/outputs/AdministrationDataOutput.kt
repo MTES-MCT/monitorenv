@@ -23,13 +23,13 @@ data class AdministrationDataOutput(
         }
 
         fun fromFullAdministration(
-            administration: FullAdministrationDTO,
+            fullAdministration: FullAdministrationDTO,
         ): AdministrationDataOutput {
             return AdministrationDataOutput(
-                id = requireNotNull(administration.id),
-                controlUnits = administration.controlUnits,
-                controlUnitIds = administration.controlUnitIds,
-                name = administration.name,
+                id = requireNotNull(fullAdministration.id),
+                controlUnits = fullAdministration.controlUnits,
+                controlUnitIds = fullAdministration.controlUnitIds,
+                name = fullAdministration.name,
             )
         }
     }

@@ -30,12 +30,6 @@ class ApiAdministrationsController(
         return AdministrationDataOutput.fromAdministration(createdAdministration)
     }
 
-    @GetMapping("")
-    @Operation(summary = "List administrations")
-    fun getAll(): List<AdministrationDataOutput> {
-        return getAdministrations.execute().map { AdministrationDataOutput.fromFullAdministration(it) }
-    }
-
     @GetMapping("/{administrationId}")
     @Operation(summary = "Get a administration by its ID")
     fun get(
@@ -43,9 +37,17 @@ class ApiAdministrationsController(
         @PathVariable(name = "administrationId")
         administrationId: Int,
     ): AdministrationDataOutput {
-        val foundAdministration = getAdministrationById.execute(administrationId)
+        val foundFullAdministration = getAdministrationById.execute(administrationId)
 
-        return AdministrationDataOutput.fromFullAdministration(foundAdministration)
+        return AdministrationDataOutput.fromFullAdministration(foundFullAdministration)
+    }
+
+    @GetMapping("")
+    @Operation(summary = "List administrations")
+    fun getAll(): List<AdministrationDataOutput> {
+        val foundFullAdministrations = getAdministrations.execute()
+
+        return foundFullAdministrations.map { AdministrationDataOutput.fromFullAdministration(it) }
     }
 
     @PutMapping(value = ["/{administrationId}"], consumes = ["application/json"])

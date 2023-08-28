@@ -4,15 +4,14 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.NextControlUnitEntit
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
-import fr.gouv.cacem.monitorenv.domain.services.ControlUnitService
-import fr.gouv.cacem.monitorenv.domain.services.BaseService
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 
 data class ControlUnitResourceDataOutput(
     val id: Int,
     // TODO Make that non-nullable once all resources will have been attached to a base.
     val base: BaseEntity? = null,
     val baseId: Int? = null,
-    val controlUnit: NextControlUnitEntity,
+    val controlUnit: NextControlUnitEntity? = null,
     val controlUnitId: Int,
     val name: String,
     val note: String? = null,
@@ -28,34 +27,44 @@ data class ControlUnitResourceDataOutput(
 
         if (id != other.id) return false
         if (base != other.base) return false
+        if (baseId != other.baseId) return false
+        if (controlUnit != other.controlUnit) return false
+        if (controlUnitId != other.controlUnitId) return false
         if (name != other.name) return false
         if (note != other.note) return false
         if (photo != null) {
             if (other.photo == null) return false
             if (!photo.contentEquals(other.photo)) return false
         } else if (other.photo != null) return false
-        return type == other.type
+        if (type != other.type) return false
+
+        return true
     }
 
     companion object {
-        fun fromNextControlUnitResourceEntity(
-            controlUnitResource: ControlUnitResourceEntity,
-            baseService: BaseService,
-            controlUnitService: ControlUnitService,
-        ): ControlUnitResourceDataOutput {
-            val base = controlUnitResource.baseId?.let { baseService.getById(it).toBase() }
-            val controlUnit = controlUnitService.getById(controlUnitResource.controlUnitId)
-
+        fun fromControlUnitResource(controlUnitResource: ControlUnitResourceEntity): ControlUnitResourceDataOutput {
             return ControlUnitResourceDataOutput(
                 id = requireNotNull(controlUnitResource.id),
-                base,
                 baseId = controlUnitResource.baseId,
-                controlUnit,
                 controlUnitId = controlUnitResource.controlUnitId,
                 name = controlUnitResource.name,
                 note = controlUnitResource.note,
                 photo = controlUnitResource.photo,
                 type = controlUnitResource.type,
+            )
+        }
+
+        fun fromFullControlUnitResource(fullControlUnitResource: FullControlUnitResourceDTO): ControlUnitResourceDataOutput {
+            return ControlUnitResourceDataOutput(
+                id = requireNotNull(fullControlUnitResource.id),
+                base = fullControlUnitResource.base,
+                baseId = fullControlUnitResource.baseId,
+                controlUnit = fullControlUnitResource.controlUnit,
+                controlUnitId = fullControlUnitResource.controlUnitId,
+                name = fullControlUnitResource.name,
+                note = fullControlUnitResource.note,
+                photo = fullControlUnitResource.photo,
+                type = fullControlUnitResource.type,
             )
         }
     }
