@@ -33,7 +33,7 @@ data class ControlUnitDataOutput(
             val administration =
                 administrationService.getById(controlUnit.administrationId).toAdministration()
             val controlUnitContacts =
-                controlUnitContactService.getByIds(controlUnit.controlUnitContactIds)
+                controlUnitContactService.getByIds(controlUnit.controlUnitContactIds).map { it.toControlUnitContact() }
             val controlUnitResources =
                 controlUnitResourceService.getByIds(controlUnit.controlUnitResourceIds).map {
                     // TODO Make that non-nullable once all resources will have been attached to a base.

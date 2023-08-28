@@ -1,14 +1,13 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.NextControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.INextControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlUnitModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBAdministrationRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBNextControlUnitContactRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitContactRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBNextControlUnitRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBNextControlUnitResourceRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
 import fr.gouv.cacem.monitorenv.utils.requirePresent
 import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.stereotype.Repository
@@ -16,11 +15,10 @@ import org.springframework.transaction.annotation.Transactional
 
 @Repository
 class JpaNextControlUnitRepository(
-    private val dbNextControlUnitRepository: IDBNextControlUnitRepository,
     private val dbAdministrationRepository: IDBAdministrationRepository,
-    private val dbNextControlUnitContactRepository: IDBNextControlUnitContactRepository,
-    private val dbNextControlUnitResourceRepository: IDBNextControlUnitResourceRepository,
-    private val mapper: ObjectMapper,
+    private val dbControlUnitContactRepository: IDBControlUnitContactRepository,
+    private val dbControlUnitResourceRepository: IDBControlUnitResourceRepository,
+    private val dbNextControlUnitRepository: IDBNextControlUnitRepository,
 ) : INextControlUnitRepository {
     override fun findAll(): List<NextControlUnitEntity> {
         return dbNextControlUnitRepository.findAll()
@@ -38,10 +36,10 @@ class JpaNextControlUnitRepository(
             val administrationModel =
                 requirePresent(dbAdministrationRepository.findById(controlUnit.administrationId))
             val controlUnitContactModels = controlUnit.controlUnitContactIds.map {
-                requirePresent(dbNextControlUnitContactRepository.findById(it))
+                requirePresent(dbControlUnitContactRepository.findById(it))
             }
             val controlUnitResourceModels = controlUnit.controlUnitResourceIds.map {
-                requirePresent(dbNextControlUnitResourceRepository.findById(it))
+                requirePresent(dbControlUnitResourceRepository.findById(it))
             }
             val controlUnitModel = ControlUnitModel.fromNextControlUnitEntity(
                 controlUnit,

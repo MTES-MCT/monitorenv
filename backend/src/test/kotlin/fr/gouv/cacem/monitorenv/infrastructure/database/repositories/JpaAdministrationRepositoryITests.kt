@@ -8,7 +8,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
-import kotlin.reflect.full.memberProperties
 
 class JpaAdministrationRepositoryITests : AbstractDBTests() {
     @Autowired
@@ -16,7 +15,7 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `delete() should delete a administration by its ID`() {
+    fun `delete() should delete an administration by its ID`() {
         val beforeAdministrationIds = jpaAdministrationRepository.findAll().map { it.id }
 
         assertThat(beforeAdministrationIds).hasSize(33)
@@ -53,10 +52,8 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `findById() should find a administration`() {
+    fun `findById() should find an administration by its ID`() {
         val foundAdministration = jpaAdministrationRepository.findById(6)
-
-        println("${foundAdministration::class.memberProperties.map { it.name }}")
 
         assertThat(foundAdministration.id).isEqualTo(6)
         assertThat(foundAdministration.controlUnitIds).isEqualTo(listOf(22, 23))
@@ -90,7 +87,7 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `save() should create and update a administration`() {
+    fun `save() should create and update an administration`() {
         // ---------------------------------------------------------------------
         // Create
 

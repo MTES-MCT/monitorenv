@@ -15,7 +15,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `delete() should delete a base`() {
+    fun `delete() should delete a base by its ID`() {
         val beforeBaseIds = jpaBaseRepository.findAll().map { it.id }
 
         assertThat(beforeBaseIds).isEqualTo(listOf(1, 2))

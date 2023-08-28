@@ -5,7 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IBaseRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.base.dtos.FullBaseDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.BaseModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBNextControlUnitResourceRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBBaseRepository
 import fr.gouv.cacem.monitorenv.utils.requirePresent
 import org.springframework.dao.InvalidDataAccessApiUsageException
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Repository
 class JpaBaseRepository(
-    private val dbNextControlUnitResourceRepository: IDBNextControlUnitResourceRepository,
+    private val dbNextControlUnitResourceRepository: IDBControlUnitResourceRepository,
     private val dbBaseRepository: IDBBaseRepository,
 ) : IBaseRepository {
     override fun deleteById(baseId: Int) {

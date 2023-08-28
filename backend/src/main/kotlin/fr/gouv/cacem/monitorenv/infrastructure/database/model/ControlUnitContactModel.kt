@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitContactDTO
 import jakarta.persistence.*
 import java.time.LocalDateTime
 import org.hibernate.annotations.CreationTimestamp
@@ -41,7 +42,7 @@ data class ControlUnitContactModel(
     var updatedAt: LocalDateTime? = null,
 ) {
     companion object {
-        fun fromNextControlUnitContactEntity(
+        fun fromControlUnitContact(
             controlUnitContact: ControlUnitContactEntity,
             controlUnitModel: ControlUnitModel
         ): ControlUnitContactModel {
@@ -56,16 +57,26 @@ data class ControlUnitContactModel(
         }
     }
 
-    fun toNextControlUnitContactEntity(): ControlUnitContactEntity {
-        val controlUnitId = requireNotNull(controlUnit.id)
-
+    fun toControlUnitContact(): ControlUnitContactEntity {
         return ControlUnitContactEntity(
-            id = id,
-            controlUnitId,
-            email = email,
-            name = name,
-            note = note,
-            phone = phone,
+            id,
+            controlUnitId = requireNotNull(controlUnit.id),
+            email,
+            name,
+            note,
+            phone,
+        )
+    }
+
+    fun toFullControlUnitContact(): FullControlUnitContactDTO {
+        return FullControlUnitContactDTO(
+            id,
+            controlUnit = controlUnit.toNextControlUnitEntity(),
+            controlUnitId = requireNotNull(controlUnit.id),
+            email,
+            name,
+            note,
+            phone,
         )
     }
 }

@@ -5,7 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitResourceRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlUnitResourceModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBNextControlUnitRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBNextControlUnitResourceRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBBaseRepository
 import fr.gouv.cacem.monitorenv.utils.requirePresent
 import org.springframework.dao.InvalidDataAccessApiUsageException
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional
 @Repository
 class JpaControlUnitResourceRepository(
     private val dbNextControlUnitRepository: IDBNextControlUnitRepository,
-    private val dbNextControlUnitResourceRepository: IDBNextControlUnitResourceRepository,
+    private val dbNextControlUnitResourceRepository: IDBControlUnitResourceRepository,
     private val dbPortRepository: IDBBaseRepository,
 ) : IControlUnitResourceRepository {
     override fun findAll(): List<ControlUnitResourceEntity> {
@@ -44,8 +44,7 @@ class JpaControlUnitResourceRepository(
                 controlUnitModel,
             )
 
-            dbNextControlUnitResourceRepository.save(controlUnitResourceModel)
-                .toNextControlUnitResourceEntity()
+            dbNextControlUnitResourceRepository.save(controlUnitResourceModel).toNextControlUnitResourceEntity()
         } catch (e: InvalidDataAccessApiUsageException) {
             throw NotFoundException(
                 "Unable to find (and update) control unit resource with `id` = ${controlUnitResource.id}.",

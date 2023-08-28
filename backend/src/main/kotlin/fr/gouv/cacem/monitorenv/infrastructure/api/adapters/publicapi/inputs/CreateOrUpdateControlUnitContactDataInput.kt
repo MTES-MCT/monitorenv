@@ -10,7 +10,7 @@ data class CreateOrUpdateControlUnitContactDataInput(
     val note: String? = null,
     val phone: String? = null,
 ) {
-    fun toNextControlUnitContactEntity(): ControlUnitContactEntity {
+    fun toControlUnitContact(): ControlUnitContactEntity {
         return ControlUnitContactEntity(
             id = this.id,
             controlUnitId = this.controlUnitId,

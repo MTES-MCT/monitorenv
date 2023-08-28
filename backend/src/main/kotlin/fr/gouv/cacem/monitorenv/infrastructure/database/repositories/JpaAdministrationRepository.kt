@@ -19,7 +19,7 @@ class JpaAdministrationRepository(
     private val dbAdministrationRepository: IDBAdministrationRepository,
 ) : IAdministrationRepository {
     override fun deleteById(administrationId: Int) {
-        dbAdministrationRepository.findById(administrationId).get().let { dbAdministrationRepository.delete(it) }
+        dbAdministrationRepository.deleteById(administrationId)
     }
 
     override fun findAll(): List<FullAdministrationDTO> {
