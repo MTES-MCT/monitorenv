@@ -69,14 +69,20 @@ export function MissionsNavBar() {
       <StyledResponsiveNav
         activeKey={currentPath}
         appearance="tabs"
+        data-cy="missions-nav"
         moreProps={{ placement: 'bottomEnd' }}
         moreText={<IconButton accent={Accent.TERTIARY} Icon={Icon.More} />}
         onItemRemove={removeTab}
         onSelect={selectTab}
         removable
       >
-        {tabs.map(item => (
-          <ResponsiveNav.Item key={item.nextPath} eventKey={item.nextPath} icon={item.icon}>
+        {tabs.map((item, index) => (
+          <ResponsiveNav.Item
+            key={item.nextPath}
+            data-cy={`mission-${index}`}
+            eventKey={item.nextPath}
+            icon={item.icon}
+          >
             {item.label}
           </ResponsiveNav.Item>
         ))}
