@@ -32,7 +32,7 @@ data class ControlUnitDataOutput(
             baseService: BaseService,
         ): ControlUnitDataOutput {
             val administration =
-                administrationService.getById(controlUnit.administrationId)
+                administrationService.getById(controlUnit.administrationId).toAdministration()
             val controlUnitContacts =
                 controlUnitContactService.getByIds(controlUnit.controlUnitContactIds)
             val controlUnitResources =

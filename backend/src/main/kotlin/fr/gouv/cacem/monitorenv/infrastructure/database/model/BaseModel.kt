@@ -33,7 +33,7 @@ data class BaseModel(
     var updatedAt: LocalDateTime? = null,
 ) {
     companion object {
-        fun fromBaseEntity(
+        fun fromBase(
             base: BaseEntity,
             controlUnitResourceModels: List<ControlUnitResourceModel>,
         ): BaseModel {
@@ -47,18 +47,18 @@ data class BaseModel(
 
     fun toBase(): BaseEntity {
         return BaseEntity(
-            id = id,
+            id,
             controlUnitResourceIds = requireIds(controlUnitResources) { it.id },
-            name = name,
+            name,
         )
     }
 
     fun toFullBase(): FullBaseDTO {
         return FullBaseDTO(
-            id = id,
+            id,
             controlUnitResourceIds = requireIds(controlUnitResources) { it.id },
             controlUnitResources = controlUnitResources.map { it.toNextControlUnitResourceEntity() },
-            name = name,
+            name,
         )
     }
 }

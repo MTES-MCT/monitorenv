@@ -33,7 +33,7 @@ export const administrationApi = monitorenvPublicApi.injectEndpoints({
       invalidatesTags: () => [{ type: 'Administrations' }, { type: 'ControlUnits' }],
       query: nextAdministrationData => ({
         body: nextAdministrationData,
-        method: 'POST',
+        method: 'PUT',
         url: `/administrations/${nextAdministrationData.id}`
       })
     })

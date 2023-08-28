@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IAdministrationRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.AdministrationModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBAdministrationRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBNextControlUnitRepository
@@ -17,15 +18,16 @@ class JpaAdministrationRepository(
     private val dbNextControlUnitRepository: IDBNextControlUnitRepository,
     private val dbAdministrationRepository: IDBAdministrationRepository,
 ) : IAdministrationRepository {
-
-    override fun findAll(): List<AdministrationEntity> {
-        return dbAdministrationRepository.findAll()
-            .map { it.toAdministrationEntity() }
+    override fun deleteById(administrationId: Int) {
+        dbAdministrationRepository.findById(administrationId).get().let { dbAdministrationRepository.delete(it) }
     }
 
-    override fun findById(administrationId: Int): AdministrationEntity {
-        return dbAdministrationRepository.findById(administrationId).get()
-            .toAdministrationEntity()
+    override fun findAll(): List<FullAdministrationDTO> {
+        return dbAdministrationRepository.findAll().map { it.toFullAdministration() }
+    }
+
+    override fun findById(administrationId: Int): FullAdministrationDTO {
+        return dbAdministrationRepository.findById(administrationId).get().toFullAdministration()
     }
 
     @Transactional
@@ -34,13 +36,12 @@ class JpaAdministrationRepository(
             val controlUnitModels = requireNotNullList(administration.controlUnitIds).map {
                 requirePresent(dbNextControlUnitRepository.findById(it))
             }
-            val administrationModel = AdministrationModel.fromAdministrationEntity(
+            val administrationModel = AdministrationModel.fromAdministration(
                 administration,
                 controlUnitModels,
             )
 
-            dbAdministrationRepository.save(administrationModel)
-                .toAdministrationEntity()
+            dbAdministrationRepository.save(administrationModel).toAdministration()
         } catch (e: InvalidDataAccessApiUsageException) {
             throw NotFoundException(
                 "Unable to find (and update) control unit administration with `id` = ${administration.id}.",

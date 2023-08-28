@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.services.interfaces
 
-import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
 
 interface IAdministrationService {
-    fun getById(administrationId: Int): AdministrationEntity
+    fun getById(administrationId: Int): FullAdministrationDTO
 }

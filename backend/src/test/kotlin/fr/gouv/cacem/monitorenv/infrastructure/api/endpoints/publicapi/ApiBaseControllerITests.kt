@@ -5,9 +5,7 @@ import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.base.CreateOrUpdateBase
-import fr.gouv.cacem.monitorenv.domain.use_cases.base.GetBaseById
-import fr.gouv.cacem.monitorenv.domain.use_cases.base.GetBases
+import fr.gouv.cacem.monitorenv.domain.use_cases.base.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.base.dtos.FullBaseDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateBaseDataInput
 import org.hamcrest.Matchers

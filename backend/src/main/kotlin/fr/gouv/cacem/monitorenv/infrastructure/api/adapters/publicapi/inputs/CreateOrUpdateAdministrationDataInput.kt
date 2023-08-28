@@ -7,7 +7,7 @@ data class CreateOrUpdateAdministrationDataInput(
     val controlUnitIds: List<Int>,
     val name: String,
 ) {
-    fun toAdministrationEntity(): AdministrationEntity {
+    fun toAdministration(): AdministrationEntity {
         return AdministrationEntity(
             id = this.id,
             controlUnitIds = this.controlUnitIds,

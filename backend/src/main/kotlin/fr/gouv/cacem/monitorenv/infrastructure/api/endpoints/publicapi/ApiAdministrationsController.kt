@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
-import fr.gouv.cacem.monitorenv.domain.services.ControlUnitService
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.CreateOrUpdateAdministration
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.GetAdministrationById
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.GetAdministrations
@@ -14,11 +13,10 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/v1/administrations")
 @Tag(name = "Administrations")
-class ApiAdministrationController(
+class ApiAdministrationsController(
     private val createOrUpdateAdministration: CreateOrUpdateAdministration,
     private val getAdministrations: GetAdministrations,
     private val getAdministrationById: GetAdministrationById,
-    private val controlUnitService: ControlUnitService,
 ) {
     @PostMapping("", consumes = ["application/json"])
     @Operation(summary = "Create an administration")
@@ -26,27 +24,16 @@ class ApiAdministrationController(
         @RequestBody
         createAdministrationDataInput: CreateOrUpdateAdministrationDataInput,
     ): AdministrationDataOutput {
-        val newAdministrationEntity =
-            createAdministrationDataInput.toAdministrationEntity()
-        val createdAdministrationEntity =
-            createOrUpdateAdministration.execute(newAdministrationEntity)
+        val newAdministration = createAdministrationDataInput.toAdministration()
+        val createdAdministration = createOrUpdateAdministration.execute(newAdministration)
 
-        return AdministrationDataOutput.fromAdministrationEntity(
-            createdAdministrationEntity,
-            controlUnitService
-        )
+        return AdministrationDataOutput.fromAdministration(createdAdministration)
     }
 
     @GetMapping("")
     @Operation(summary = "List administrations")
     fun getAll(): List<AdministrationDataOutput> {
-        return getAdministrations.execute()
-            .map {
-                AdministrationDataOutput.fromAdministrationEntity(
-                    it,
-                    controlUnitService
-                )
-            }
+        return getAdministrations.execute().map { AdministrationDataOutput.fromFullAdministration(it) }
     }
 
     @GetMapping("/{administrationId}")
@@ -56,16 +43,12 @@ class ApiAdministrationController(
         @PathVariable(name = "administrationId")
         administrationId: Int,
     ): AdministrationDataOutput {
-        val foundAdministrationEntity =
-            getAdministrationById.execute(administrationId)
+        val foundAdministration = getAdministrationById.execute(administrationId)
 
-        return AdministrationDataOutput.fromAdministrationEntity(
-            foundAdministrationEntity,
-            controlUnitService
-        )
+        return AdministrationDataOutput.fromFullAdministration(foundAdministration)
     }
 
-    @PostMapping(value = ["/{administrationId}"], consumes = ["application/json"])
+    @PutMapping(value = ["/{administrationId}"], consumes = ["application/json"])
     @Operation(summary = "Update an administration")
     fun update(
         @PathParam("Control unit administration ID")
@@ -78,14 +61,9 @@ class ApiAdministrationController(
             throw java.lang.IllegalArgumentException("Unable to find (and update) administration with ID = ${updateAdministrationDataInput.id}.")
         }
 
-        val nextAdministrationEntity =
-            updateAdministrationDataInput.toAdministrationEntity()
-        val updatedAdministrationEntity =
-            createOrUpdateAdministration.execute(nextAdministrationEntity)
+        val nextAdministration = updateAdministrationDataInput.toAdministration()
+        val updatedAdministration = createOrUpdateAdministration.execute(nextAdministration)
 
-        return AdministrationDataOutput.fromAdministrationEntity(
-            updatedAdministrationEntity,
-            controlUnitService
-        )
+        return AdministrationDataOutput.fromAdministration(updatedAdministration)
     }
 }

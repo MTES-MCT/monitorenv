@@ -95,7 +95,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `findById() should find a base`() {
+    fun `findById() should find a base by its ID`() {
         val foundBase = jpaBaseRepository.findById(2)
 
         assertThat(foundBase).isEqualTo(

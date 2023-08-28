@@ -7,7 +7,7 @@ data class CreateOrUpdateBaseDataInput(
     val controlUnitResourceIds: List<Int>,
     val name: String,
 ) {
-    fun toBaseEntity(): BaseEntity {
+    fun toBase(): BaseEntity {
         return BaseEntity(
             id = this.id,
             controlUnitResourceIds = this.controlUnitResourceIds,

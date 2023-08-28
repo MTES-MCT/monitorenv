@@ -11,9 +11,9 @@ data class FullBaseDTO(
 ) {
     fun toBase(): BaseEntity {
         return BaseEntity(
-            id = id,
-            controlUnitResourceIds = controlUnitResourceIds,
-            name = name,
+            id,
+            controlUnitResourceIds,
+            name,
         )
     }
 }

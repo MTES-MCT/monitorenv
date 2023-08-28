@@ -24,7 +24,7 @@ class ApiBasesController(
         @RequestBody
         createBaseDataInput: CreateOrUpdateBaseDataInput,
     ): BaseDataOutput {
-        val newBase = createBaseDataInput.toBaseEntity()
+        val newBase = createBaseDataInput.toBase()
         val createdBase = createOrUpdateBase.execute(newBase)
 
         return BaseDataOutput.fromBase(createdBase)
@@ -64,7 +64,7 @@ class ApiBasesController(
             throw java.lang.IllegalArgumentException("Body ID ('${updateBaseDataInput.id}') doesn't match path ID ('${baseId}').")
         }
 
-        val nextBase = updateBaseDataInput.toBaseEntity()
+        val nextBase = updateBaseDataInput.toBase()
         val updatedBase = createOrUpdateBase.execute(nextBase)
 
         return BaseDataOutput.fromBase(updatedBase)

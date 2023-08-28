@@ -22,13 +22,11 @@ class JpaBaseRepository(
     }
 
     override fun findAll(): List<FullBaseDTO> {
-        return dbBaseRepository.findAll()
-            .map { it.toFullBase() }
+        return dbBaseRepository.findAll().map { it.toFullBase() }
     }
 
     override fun findById(baseId: Int): FullBaseDTO {
-        return dbBaseRepository.findById(baseId).get()
-            .toFullBase()
+        return dbBaseRepository.findById(baseId).get().toFullBase()
     }
 
     @Transactional
@@ -37,13 +35,9 @@ class JpaBaseRepository(
             val controlUnitResourceModels = base.controlUnitResourceIds.map {
                 requirePresent(dbNextControlUnitResourceRepository.findById(it))
             }
-            val baseModel = BaseModel.fromBaseEntity(
-                base,
-                controlUnitResourceModels,
-            )
+            val baseModel = BaseModel.fromBase(base, controlUnitResourceModels)
 
-            dbBaseRepository.save(baseModel)
-                .toBase()
+            dbBaseRepository.save(baseModel).toBase()
         } catch (e: InvalidDataAccessApiUsageException) {
             throw NotFoundException(
                 "Unable to find (and update) base with `id` = ${base.id}.",

@@ -2,7 +2,9 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
 import fr.gouv.cacem.monitorenv.utils.requireIds
+import fr.gouv.cacem.monitorenv.utils.requireNotNullList
 import jakarta.persistence.*
 import java.time.LocalDateTime
 import org.hibernate.annotations.CreationTimestamp
@@ -16,8 +18,9 @@ data class AdministrationModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null,
 
-    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, mappedBy = "administration")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "administration")
     @JsonManagedReference
+    // TODO This shouldn't be nullable but there because of `MissionControlUnitModel.fromControlUnitEntity()`.
     var controlUnits: List<ControlUnitModel>? = null,
 
     @Column(name = "name", nullable = false, unique = true)
@@ -32,7 +35,7 @@ data class AdministrationModel(
     var updatedAt: LocalDateTime? = null,
 ) {
     companion object {
-        fun fromAdministrationEntity(
+        fun fromAdministration(
             administration: AdministrationEntity,
             controlUnitModels: List<ControlUnitModel>
         ): AdministrationModel {
@@ -44,13 +47,21 @@ data class AdministrationModel(
         }
     }
 
-    fun toAdministrationEntity(): AdministrationEntity {
-        val controlUnitIds = requireIds(controlUnits) { it.id }
-
+    fun toAdministration(): AdministrationEntity {
         return AdministrationEntity(
-            id = id,
-            controlUnitIds,
-            name = name,
+            id,
+            controlUnitIds = requireIds(controlUnits) { it.id },
+            name,
+        )
+    }
+
+    fun toFullAdministration(): FullAdministrationDTO {
+        return FullAdministrationDTO(
+            id,
+            controlUnitIds = requireIds(controlUnits) { it.id },
+            // TODO Remove `requireNotNullList()` once `controlUnits` is non-nullable.
+            controlUnits = requireNotNullList(controlUnits).map { it.toNextControlUnitEntity() },
+            name,
         )
     }
 }

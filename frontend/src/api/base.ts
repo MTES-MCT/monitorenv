@@ -33,7 +33,7 @@ export const baseApi = monitorenvPublicApi.injectEndpoints({
       invalidatesTags: () => [{ type: 'Bases' }, { type: 'ControlUnits' }],
       query: nextBase => ({
         body: nextBase,
-        method: 'POST',
+        method: 'PUT',
         url: `/bases/${nextBase.id}`
       })
     })
