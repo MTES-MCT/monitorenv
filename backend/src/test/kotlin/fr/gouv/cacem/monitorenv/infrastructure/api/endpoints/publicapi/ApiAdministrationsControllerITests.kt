@@ -42,7 +42,7 @@ class ApiAdministrationsControllerITests {
     private lateinit var objectMapper: ObjectMapper
 
     @Test
-    fun `Should create a new administration`() {
+    fun `Should create an administration`() {
         val expectedNewAdministration = AdministrationEntity(
             id = 1,
             controlUnitIds = listOf(),
@@ -75,7 +75,7 @@ class ApiAdministrationsControllerITests {
             name = "Administration Name",
         )
 
-        val requestedId = 0
+        val requestedId = 1
 
         given(getAdministrationById.execute(requestedId)).willReturn(expectedFullAdministration)
 
@@ -94,6 +94,7 @@ class ApiAdministrationsControllerITests {
                 controlUnits = listOf(),
                 name = "Administration Name",
             ),
+
             FullAdministrationDTO(
                 id = 2,
                 controlUnitIds = listOf(),

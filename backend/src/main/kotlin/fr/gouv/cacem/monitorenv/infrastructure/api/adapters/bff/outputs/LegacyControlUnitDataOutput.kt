@@ -10,7 +10,7 @@ data class LegacyControlUnitDataOutput(
     val resources: List<LegacyControlResourceDataOutput>,
 ) {
     companion object {
-        fun fromControlUnitEntity(controlUnit: LegacyControlUnitEntity) = LegacyControlUnitDataOutput(
+        fun fromLegacyControlUnit(controlUnit: LegacyControlUnitEntity) = LegacyControlUnitDataOutput(
             id = controlUnit.id,
             administration = controlUnit.administration,
             name = controlUnit.name,

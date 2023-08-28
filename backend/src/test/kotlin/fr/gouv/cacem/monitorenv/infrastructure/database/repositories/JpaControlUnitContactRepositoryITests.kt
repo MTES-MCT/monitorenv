@@ -3,14 +3,12 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.NextControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitContactDTO
-import okhttp3.internal.wait
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
-import kotlin.reflect.full.memberProperties
 
 class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
     @Autowired
@@ -35,15 +33,15 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `findAll() should find all contacts`() {
-        val foundControlUnitContacts = jpaControlUnitContactRepository.findAll()
+        val foundFullControlUnitContacts = jpaControlUnitContactRepository.findAll()
 
-        assertThat(foundControlUnitContacts).hasSize(3)
+        assertThat(foundFullControlUnitContacts).hasSize(3)
 
-        assertThat(foundControlUnitContacts[0]).isEqualTo(
+        assertThat(foundFullControlUnitContacts[0]).isEqualTo(
             FullControlUnitContactDTO(
                 id = 1,
                 controlUnitId = 25,
-                controlUnit = NextControlUnitEntity(
+                controlUnit = ControlUnitEntity(
                     id = 25,
                     administrationId = 3,
                     areaNote = null,
@@ -59,11 +57,11 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
             )
         )
 
-        assertThat(foundControlUnitContacts[2]).isEqualTo(
+        assertThat(foundFullControlUnitContacts[2]).isEqualTo(
             FullControlUnitContactDTO(
                 id = 3,
                 controlUnitId = 15,
-                controlUnit = NextControlUnitEntity(
+                controlUnit = ControlUnitEntity(
                     id = 15,
                     administrationId = 2,
                     areaNote = null,
@@ -83,13 +81,12 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `findById() should find a contact by its ID`() {
-        val foundControlUnitContact = jpaControlUnitContactRepository.findById(1)
+        val foundFullControlUnitContact = jpaControlUnitContactRepository.findById(1)
 
-        assertThat(foundControlUnitContact).isEqualTo(
+        assertThat(foundFullControlUnitContact).isEqualTo(
             FullControlUnitContactDTO(
                 id = 1,
-                controlUnitId = 25,
-                controlUnit = NextControlUnitEntity(
+                controlUnit = ControlUnitEntity(
                     id = 25,
                     administrationId = 3,
                     areaNote = null,
@@ -99,6 +96,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     name = "A636 Maïto",
                     termsNote = null
                 ),
+                controlUnitId = 25,
                 name = "Contact 1",
                 note = null,
                 phone = null,

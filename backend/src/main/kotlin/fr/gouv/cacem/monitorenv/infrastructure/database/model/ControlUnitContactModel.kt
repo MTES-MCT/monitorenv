@@ -71,7 +71,7 @@ data class ControlUnitContactModel(
     fun toFullControlUnitContact(): FullControlUnitContactDTO {
         return FullControlUnitContactDTO(
             id,
-            controlUnit = controlUnit.toNextControlUnitEntity(),
+            controlUnit = controlUnit.toControlUnit(),
             controlUnitId = requireNotNull(controlUnit.id),
             email,
             name,

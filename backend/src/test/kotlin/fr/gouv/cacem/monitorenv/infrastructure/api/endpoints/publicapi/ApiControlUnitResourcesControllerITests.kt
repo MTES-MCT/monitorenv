@@ -7,7 +7,7 @@ import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.NextControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitResourceDataInput
@@ -45,7 +45,7 @@ class ApiControlUnitResourcesControllerITests {
     private lateinit var objectMapper: ObjectMapper
 
     @Test
-    fun `Should create a new resource`() {
+    fun `Should create a resource`() {
         val expectedNewControlUnitResource = ControlUnitResourceEntity(
             id = 1,
             baseId = 2,
@@ -89,7 +89,7 @@ class ApiControlUnitResourcesControllerITests {
                 name = "Control Unit Name",
             ),
             baseId = 2,
-            controlUnit = NextControlUnitEntity(
+            controlUnit = ControlUnitEntity(
                 id = 3,
                 administrationId = 4,
                 areaNote = null,
@@ -106,7 +106,7 @@ class ApiControlUnitResourcesControllerITests {
             type = ControlUnitResourceType.BARGE,
         )
 
-        val requestedId = 0
+        val requestedId = 1
 
         given(getControlUnitResourceById.execute(requestedId)).willReturn(expectedFullControlUnitResource)
 
@@ -127,7 +127,7 @@ class ApiControlUnitResourcesControllerITests {
                     name = "Control Unit Name",
                 ),
                 baseId = 2,
-                controlUnit = NextControlUnitEntity(
+                controlUnit = ControlUnitEntity(
                     id = 3,
                     administrationId = 4,
                     areaNote = null,
@@ -143,6 +143,7 @@ class ApiControlUnitResourcesControllerITests {
                 photo = null,
                 type = ControlUnitResourceType.BARGE,
             ),
+
             FullControlUnitResourceDTO(
                 id = 5,
                 base = BaseEntity(
@@ -151,7 +152,7 @@ class ApiControlUnitResourcesControllerITests {
                     name = "Control Unit Name",
                 ),
                 baseId = 6,
-                controlUnit = NextControlUnitEntity(
+                controlUnit = ControlUnitEntity(
                     id = 7,
                     administrationId = 8,
                     areaNote = null,

@@ -28,7 +28,7 @@ data class MissionControlUnitModel(
     var unit: LegacyControlUnitModel,
 ) {
     companion object {
-        fun fromControlUnitEntity(controlUnit: LegacyControlUnitEntity, mission: MissionModel) =
+        fun fromLegacyControlUnit(controlUnit: LegacyControlUnitEntity, mission: MissionModel) =
             MissionControlUnitModel(
                 unit = LegacyControlUnitModel(
                     id = controlUnit.id,

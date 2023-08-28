@@ -42,7 +42,7 @@ class ApiBaseControllerITests {
     private lateinit var objectMapper: ObjectMapper
 
     @Test
-    fun `Should create a new base`() {
+    fun `Should create a base`() {
         val expectedNewBase = BaseEntity(
             id = 1,
             controlUnitResourceIds = listOf(),
@@ -75,7 +75,7 @@ class ApiBaseControllerITests {
             name = "Base Name",
         )
 
-        val requestedId = 0
+        val requestedId = 1
 
         given(getBaseById.execute(requestedId)).willReturn(expectedFullBase)
 
@@ -94,6 +94,7 @@ class ApiBaseControllerITests {
                 controlUnitResources = listOf(),
                 name = "Base Name",
             ),
+
             FullBaseDTO(
                 id = 2,
                 controlUnitResourceIds = listOf(),

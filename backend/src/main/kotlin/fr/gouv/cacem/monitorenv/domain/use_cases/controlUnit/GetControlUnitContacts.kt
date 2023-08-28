@@ -10,10 +10,10 @@ class GetControlUnitContacts(private val controlUnitContactRepository: IControlU
     private val logger = LoggerFactory.getLogger(GetControlUnitContacts::class.java)
 
     fun execute(): List<FullControlUnitContactDTO> {
-        val controlUnitContacts = controlUnitContactRepository.findAll()
+        val fullControlUnitContacts = controlUnitContactRepository.findAll()
 
-        logger.info("Found ${controlUnitContacts.size} control unit contacts.")
+        logger.info("Found ${fullControlUnitContacts.size} control unit contacts.")
 
-        return controlUnitContacts
+        return fullControlUnitContacts
     }
 }

@@ -5,7 +5,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.NextControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -35,21 +35,20 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `findAll() should find all contacts`() {
-        val foundControlUnitResources = jpaControlUnitResourceRepository.findAll()
+        val foundFullControlUnitResources = jpaControlUnitResourceRepository.findAll()
 
-        assertThat(foundControlUnitResources).hasSize(4)
+        assertThat(foundFullControlUnitResources).hasSize(4)
 
-        assertThat(foundControlUnitResources[0]).isEqualTo(
+        assertThat(foundFullControlUnitResources[0]).isEqualTo(
             FullControlUnitResourceDTO(
                 id = 1,
-                baseId = 1,
                 base = BaseEntity(
                     id = 1,
                     controlUnitResourceIds = listOf(1, 2, 4),
                     name = "Marseille"
                 ),
-                controlUnitId = 25,
-                controlUnit = NextControlUnitEntity(
+                baseId = 1,
+                controlUnit = ControlUnitEntity(
                     id = 25,
                     administrationId = 3,
                     areaNote = null,
@@ -59,6 +58,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     name = "A636 Maïto",
                     termsNote = null
                 ),
+                controlUnitId = 25,
                 name = "Moyen 1",
                 note = null,
                 photo = null,
@@ -66,17 +66,16 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
             )
         )
 
-        assertThat(foundControlUnitResources[3]).isEqualTo(
+        assertThat(foundFullControlUnitResources[3]).isEqualTo(
             FullControlUnitResourceDTO(
                 id = 4,
-                baseId = 1,
                 base = BaseEntity(
                     id = 1,
                     controlUnitResourceIds = listOf(1, 2, 4),
                     name = "Marseille"
                 ),
-                controlUnitId = 15,
-                controlUnit = NextControlUnitEntity(
+                baseId = 1,
+                controlUnit = ControlUnitEntity(
                     id = 15,
                     administrationId = 2,
                     areaNote = null,
@@ -86,6 +85,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     name = "BGC Ajaccio",
                     termsNote = null
                 ),
+                controlUnitId = 15,
                 name = "Moyen 4",
                 note = null,
                 photo = null,
@@ -97,19 +97,18 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `findById() should find a contact by its ID`() {
-        val foundControlUnitResource = jpaControlUnitResourceRepository.findById(1)
+        val foundFullControlUnitResource = jpaControlUnitResourceRepository.findById(1)
 
-        assertThat(foundControlUnitResource).isEqualTo(
+        assertThat(foundFullControlUnitResource).isEqualTo(
             FullControlUnitResourceDTO(
                 id = 1,
-                baseId = 1,
                 base = BaseEntity(
                     id = 1,
                     controlUnitResourceIds = listOf(1, 2, 4),
                     name = "Marseille"
                 ),
-                controlUnitId = 25,
-                controlUnit = NextControlUnitEntity(
+                baseId = 1,
+                controlUnit = ControlUnitEntity(
                     id = 25,
                     administrationId = 3,
                     areaNote = null,
@@ -119,6 +118,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     name = "A636 Maïto",
                     termsNote = null
                 ),
+                controlUnitId = 25,
                 name = "Moyen 1",
                 note = null,
                 photo = null,

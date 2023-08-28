@@ -135,9 +135,10 @@ data class MissionModel(
                 }
                 ?.map { resource -> resource }
 
-            unit.unit.toControlUnit().copy(
+            unit.unit.toLegacyControlUnit().copy(
                 contact = unit.contact,
-                resources = savedUnitResources?.let { safeUnitResources -> safeUnitResources.map { it.ressource.toControlResource() } } ?: listOf(),
+                resources = savedUnitResources?.let { safeUnitResources -> safeUnitResources.map { it.ressource.toControlResource() } }
+                    ?: listOf(),
             )
         } ?: listOf(),
     )
@@ -168,13 +169,19 @@ data class MissionModel(
             }
 
             mission.controlUnits.map {
-                val controlUnitModel = MissionControlUnitModel.fromControlUnitEntity(
+                val controlUnitModel = MissionControlUnitModel.fromLegacyControlUnit(
                     it,
                     missionModel,
                 )
                 missionModel.controlUnits?.add(controlUnitModel)
 
-                val resources = it.resources.map { resource -> MissionControlResourceModel.fromControlResourceEntity(resource, missionModel, controlUnitModel.unit) }
+                val resources = it.resources.map { resource ->
+                    MissionControlResourceModel.fromLegacyControlResource(
+                        resource,
+                        missionModel,
+                        controlUnitModel.unit
+                    )
+                }
                 missionModel.controlResources?.addAll(resources)
             }
 

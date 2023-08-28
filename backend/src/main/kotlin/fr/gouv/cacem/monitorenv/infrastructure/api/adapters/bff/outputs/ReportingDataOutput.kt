@@ -62,7 +62,7 @@ data class ReportingDataOutput(
                 controlUnit =
                 if (controlUnit != null) {
                     LegacyControlUnitDataOutput
-                        .fromControlUnitEntity(
+                        .fromLegacyControlUnit(
                             controlUnit,
                         )
                 } else {

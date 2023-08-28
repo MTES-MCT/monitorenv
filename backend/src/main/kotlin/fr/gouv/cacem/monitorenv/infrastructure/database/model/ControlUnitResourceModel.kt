@@ -122,7 +122,7 @@ data class ControlUnitResourceModel(
             id,
             base = base?.toBase(),
             baseId = base?.id,
-            controlUnit = controlUnit.toNextControlUnitEntity(),
+            controlUnit = controlUnit.toControlUnit(),
             controlUnitId = requireNotNull(controlUnit.id),
             name,
             note,

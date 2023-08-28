@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.NextControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
@@ -11,7 +11,7 @@ data class ControlUnitResourceDataOutput(
     // TODO Make that non-nullable once all resources will have been attached to a base.
     val base: BaseEntity? = null,
     val baseId: Int? = null,
-    val controlUnit: NextControlUnitEntity? = null,
+    val controlUnit: ControlUnitEntity? = null,
     val controlUnitId: Int,
     val name: String,
     val note: String? = null,

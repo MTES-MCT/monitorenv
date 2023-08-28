@@ -13,7 +13,7 @@ export const controlUnitApi = monitorenvPublicApi.injectEndpoints({
       query: newControlUnitData => ({
         body: newControlUnitData,
         method: 'POST',
-        url: `/next_control_units`
+        url: `/control_units`
       })
     }),
 
@@ -21,19 +21,19 @@ export const controlUnitApi = monitorenvPublicApi.injectEndpoints({
       invalidatesTags: () => [{ type: 'ControlUnits' }],
       query: controlUnitId => ({
         method: 'DELETE',
-        url: `/next_control_units/${controlUnitId}`
+        url: `/control_units/${controlUnitId}`
       })
     }),
 
     getControlUnit: builder.query<ControlUnit.ControlUnit, number>({
       providesTags: () => [{ type: 'ControlUnits' }],
-      query: controlUnitId => `/next_control_units/${controlUnitId}`,
+      query: controlUnitId => `/control_units/${controlUnitId}`,
       transformErrorResponse: response => new ApiError(GET_CONTROL_UNIT_ERROR_MESSAGE, response)
     }),
 
     getControlUnits: builder.query<ControlUnit.ControlUnit[], void>({
       providesTags: () => [{ type: 'ControlUnits' }],
-      query: () => `/next_control_units`,
+      query: () => `/control_units`,
       transformErrorResponse: response => new ApiError(GET_CONTROL_UNITS_ERROR_MESSAGE, response)
     }),
 
@@ -41,8 +41,8 @@ export const controlUnitApi = monitorenvPublicApi.injectEndpoints({
       invalidatesTags: () => [{ type: 'Administrations' }, { type: 'ControlUnits' }],
       query: nextControlUnitData => ({
         body: nextControlUnitData,
-        method: 'POST',
-        url: `/next_control_units/${nextControlUnitData.id}`
+        method: 'PUT',
+        url: `/control_units/${nextControlUnitData.id}`
       })
     })
   })

@@ -1,12 +1,13 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.NextControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
-import fr.gouv.cacem.monitorenv.domain.repositories.INextControlUnitRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlUnitModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBAdministrationRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitContactRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBNextControlUnitRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
 import fr.gouv.cacem.monitorenv.utils.requirePresent
 import org.springframework.dao.InvalidDataAccessApiUsageException
@@ -14,24 +15,26 @@ import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
 @Repository
-class JpaNextControlUnitRepository(
+class JpaControlUnitRepository(
     private val dbAdministrationRepository: IDBAdministrationRepository,
+    private val dbControlUnitRepository: IDBControlUnitRepository,
     private val dbControlUnitContactRepository: IDBControlUnitContactRepository,
     private val dbControlUnitResourceRepository: IDBControlUnitResourceRepository,
-    private val dbNextControlUnitRepository: IDBNextControlUnitRepository,
-) : INextControlUnitRepository {
-    override fun findAll(): List<NextControlUnitEntity> {
-        return dbNextControlUnitRepository.findAll()
-            .map { it.toNextControlUnitEntity() }
+) : IControlUnitRepository {
+    override fun deleteById(controlUnitId: Int) {
+        dbControlUnitRepository.deleteById(controlUnitId)
     }
 
-    override fun findById(controlUnitId: Int): NextControlUnitEntity {
-        return dbNextControlUnitRepository.findById(controlUnitId).get()
-            .toNextControlUnitEntity()
+    override fun findAll(): List<FullControlUnitDTO> {
+        return dbControlUnitRepository.findAll().map { it.toFullControlUnit() }
+    }
+
+    override fun findById(controlUnitId: Int): FullControlUnitDTO {
+        return dbControlUnitRepository.findById(controlUnitId).get().toFullControlUnit()
     }
 
     @Transactional
-    override fun save(controlUnit: NextControlUnitEntity): NextControlUnitEntity {
+    override fun save(controlUnit: ControlUnitEntity): ControlUnitEntity {
         return try {
             val administrationModel =
                 requirePresent(dbAdministrationRepository.findById(controlUnit.administrationId))
@@ -41,18 +44,18 @@ class JpaNextControlUnitRepository(
             val controlUnitResourceModels = controlUnit.controlUnitResourceIds.map {
                 requirePresent(dbControlUnitResourceRepository.findById(it))
             }
-            val controlUnitModel = ControlUnitModel.fromNextControlUnitEntity(
+            val controlUnitModel = ControlUnitModel.fromControlUnit(
                 controlUnit,
                 administrationModel,
                 controlUnitContactModels,
                 controlUnitResourceModels,
             )
 
-            dbNextControlUnitRepository.save(controlUnitModel)
-                .toNextControlUnitEntity()
+            dbControlUnitRepository.save(controlUnitModel)
+                .toControlUnit()
         } catch (e: InvalidDataAccessApiUsageException) {
             throw NotFoundException(
-                "Unable to find (and update) control unit administration with `id` = ${controlUnit.id}.",
+                "Unable to find (and update) control unit with `id` = ${controlUnit.id}.",
                 e
             )
         }

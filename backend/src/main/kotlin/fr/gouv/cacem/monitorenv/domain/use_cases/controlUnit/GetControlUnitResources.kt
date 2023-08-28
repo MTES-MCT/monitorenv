@@ -10,10 +10,10 @@ class GetControlUnitResources(private val controlUnitResourceRepository: IContro
     private val logger = LoggerFactory.getLogger(GetControlUnitResources::class.java)
 
     fun execute(): List<FullControlUnitResourceDTO> {
-        val controlUnitResources = controlUnitResourceRepository.findAll()
+        val fullControlUnitResources = controlUnitResourceRepository.findAll()
 
-        logger.info("Found ${controlUnitResources.size} control unit resources.")
+        logger.info("Found ${fullControlUnitResources.size} control unit resources.")
 
-        return controlUnitResources
+        return fullControlUnitResources
     }
 }

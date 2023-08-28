@@ -3,14 +3,14 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos
 import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.NextControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 
 data class FullControlUnitResourceDTO(
     val id: Int? = null,
     // TODO Make that non-nullable once all resources will have been attached to a base.
     val base: BaseEntity? = null,
     val baseId: Int? = null,
-    val controlUnit: NextControlUnitEntity,
+    val controlUnit: ControlUnitEntity,
     val controlUnitId: Int,
     val name: String,
     val note: String? = null,

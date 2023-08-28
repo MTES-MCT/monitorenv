@@ -17,6 +17,6 @@ class LegacyControlUnitsController(
     @GetMapping("")
     @Operation(summary = "Get legacy control units")
     fun getControlResourcesController(): List<LegacyControlUnitDataOutput> {
-        return getLegacyControlUnits.execute().map { LegacyControlUnitDataOutput.fromControlUnitEntity(it) }
+        return getLegacyControlUnits.execute().map { LegacyControlUnitDataOutput.fromLegacyControlUnit(it) }
     }
 }

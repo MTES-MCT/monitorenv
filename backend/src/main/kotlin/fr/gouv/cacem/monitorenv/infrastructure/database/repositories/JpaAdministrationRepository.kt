@@ -6,7 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IAdministrationRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.AdministrationModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBAdministrationRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBNextControlUnitRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
 import fr.gouv.cacem.monitorenv.utils.requireNotNullList
 import fr.gouv.cacem.monitorenv.utils.requirePresent
 import org.springframework.dao.InvalidDataAccessApiUsageException
@@ -15,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional
 
 @Repository
 class JpaAdministrationRepository(
-    private val dbNextControlUnitRepository: IDBNextControlUnitRepository,
     private val dbAdministrationRepository: IDBAdministrationRepository,
+    private val dbControlUnitRepository: IDBControlUnitRepository,
 ) : IAdministrationRepository {
     override fun deleteById(administrationId: Int) {
         dbAdministrationRepository.deleteById(administrationId)
@@ -34,7 +34,7 @@ class JpaAdministrationRepository(
     override fun save(administration: AdministrationEntity): AdministrationEntity {
         return try {
             val controlUnitModels = requireNotNullList(administration.controlUnitIds).map {
-                requirePresent(dbNextControlUnitRepository.findById(it))
+                requirePresent(dbControlUnitRepository.findById(it))
             }
             val administrationModel = AdministrationModel.fromAdministration(
                 administration,

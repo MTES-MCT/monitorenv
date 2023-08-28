@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.entities.controlUnit
 
-data class NextControlUnitEntity(
+data class ControlUnitEntity(
     val id: Int? = null,
     val administrationId: Int,
     /** Area of intervention for this unit. */

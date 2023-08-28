@@ -1,19 +1,19 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit
 
 import fr.gouv.cacem.monitorenv.config.UseCase
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.NextControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.repositories.INextControlUnitRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import org.slf4j.LoggerFactory
 
 @UseCase
-class GetControlUnits(private val controlUnitRepository: INextControlUnitRepository) {
+class GetControlUnits(private val controlUnitRepository: IControlUnitRepository) {
     private val logger = LoggerFactory.getLogger(GetControlUnits::class.java)
 
-    fun execute(): List<NextControlUnitEntity> {
-        val controlUnits = controlUnitRepository.findAll()
+    fun execute(): List<FullControlUnitDTO> {
+        val fullControlUnits = controlUnitRepository.findAll()
 
-        logger.info("Found ${controlUnits.size} control units.")
+        logger.info("Found ${fullControlUnits.size} control units.")
 
-        return controlUnits
+        return fullControlUnits
     }
 }

@@ -60,7 +60,7 @@ data class AdministrationModel(
             id,
             controlUnitIds = requireIds(controlUnits) { it.id },
             // TODO Remove `requireNotNullList()` once `controlUnits` is non-nullable.
-            controlUnits = requireNotNullList(controlUnits).map { it.toNextControlUnitEntity() },
+            controlUnits = requireNotNullList(controlUnits).map { it.toControlUnit() },
             name,
         )
     }

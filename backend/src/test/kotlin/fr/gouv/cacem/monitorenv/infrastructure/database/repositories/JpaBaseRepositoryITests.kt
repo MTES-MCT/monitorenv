@@ -30,75 +30,77 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `findAll() should find all bases`() {
-        val foundBases = jpaBaseRepository.findAll()
+        val foundFullBases = jpaBaseRepository.findAll()
 
-        assertThat(foundBases).isEqualTo(
-            listOf(
-                FullBaseDTO(
-                    id = 1,
-                    controlUnitResourceIds = listOf(1, 2, 4),
-                    controlUnitResources = listOf(
-                        ControlUnitResourceEntity(
-                            id = 1,
-                            base = null,
-                            baseId = 1,
-                            controlUnitId = 25,
-                            name = "Moyen 1",
-                            note = null,
-                            photo = null,
-                            type = ControlUnitResourceType.BARGE
-                        ),
-                        ControlUnitResourceEntity(
-                            id = 2,
-                            base = null,
-                            baseId = 1,
-                            controlUnitId = 25,
-                            name = "Moyen 2",
-                            note = null,
-                            photo = null,
-                            type = ControlUnitResourceType.BARGE
-                        ),
-                        ControlUnitResourceEntity(
-                            id = 4,
-                            base = null,
-                            baseId = 1,
-                            controlUnitId = 15,
-                            name = "Moyen 4",
-                            note = null,
-                            photo = null,
-                            type = ControlUnitResourceType.FRIGATE
-                        )
-                    ),
-                    name = "Marseille"
-                ),
+        assertThat(foundFullBases).hasSize(2)
 
-                FullBaseDTO(
-                    id = 2,
-                    controlUnitResourceIds = listOf(3),
-                    controlUnitResources = listOf(
-                        ControlUnitResourceEntity(
-                            id = 3,
-                            base = null,
-                            baseId = 2,
-                            controlUnitId = 25,
-                            name = "Moyen 3",
-                            note = null,
-                            photo = null,
-                            type = ControlUnitResourceType.FRIGATE
-                        )
+        assertThat(foundFullBases[0]).isEqualTo(
+            FullBaseDTO(
+                id = 1,
+                controlUnitResourceIds = listOf(1, 2, 4),
+                controlUnitResources = listOf(
+                    ControlUnitResourceEntity(
+                        id = 1,
+                        base = null,
+                        baseId = 1,
+                        controlUnitId = 25,
+                        name = "Moyen 1",
+                        note = null,
+                        photo = null,
+                        type = ControlUnitResourceType.BARGE
                     ),
-                    name = "Saint-Malo"
+                    ControlUnitResourceEntity(
+                        id = 2,
+                        base = null,
+                        baseId = 1,
+                        controlUnitId = 25,
+                        name = "Moyen 2",
+                        note = null,
+                        photo = null,
+                        type = ControlUnitResourceType.BARGE
+                    ),
+                    ControlUnitResourceEntity(
+                        id = 4,
+                        base = null,
+                        baseId = 1,
+                        controlUnitId = 15,
+                        name = "Moyen 4",
+                        note = null,
+                        photo = null,
+                        type = ControlUnitResourceType.FRIGATE
+                    )
                 ),
-            )
+                name = "Marseille"
+            ),
+        )
+
+        assertThat(foundFullBases[1]).isEqualTo(
+            FullBaseDTO(
+                id = 2,
+                controlUnitResourceIds = listOf(3),
+                controlUnitResources = listOf(
+                    ControlUnitResourceEntity(
+                        id = 3,
+                        base = null,
+                        baseId = 2,
+                        controlUnitId = 25,
+                        name = "Moyen 3",
+                        note = null,
+                        photo = null,
+                        type = ControlUnitResourceType.FRIGATE
+                    )
+                ),
+                name = "Saint-Malo"
+            ),
         )
     }
 
     @Test
     @Transactional
     fun `findById() should find a base by its ID`() {
-        val foundBase = jpaBaseRepository.findById(2)
+        val foundFullBase = jpaBaseRepository.findById(2)
 
-        assertThat(foundBase).isEqualTo(
+        assertThat(foundFullBase).isEqualTo(
             FullBaseDTO(
                 id = 2,
                 controlUnitResourceIds = listOf(3),

@@ -34,7 +34,7 @@ data class LegacyControlUnitModel(
     @JsonManagedReference
     var resources: MutableList<LegacyControlResourceModel>? = ArrayList(),
 ) {
-    fun toControlUnit() = LegacyControlUnitEntity(
+    fun toLegacyControlUnit() = LegacyControlUnitEntity(
         id = id,
         administration = administration.name,
         isArchived = isArchived,

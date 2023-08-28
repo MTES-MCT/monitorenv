@@ -43,7 +43,7 @@ class ApiControlUnitContactsController(
     @Operation(summary = "List control unit contacts")
     fun getAll(): List<ControlUnitContactDataOutput> {
         val foundFullControlUnitContacts = getControlUnitContacts.execute()
-        
+
         return foundFullControlUnitContacts.map { ControlUnitContactDataOutput.fromFullControlUnitContact(it) }
     }
 

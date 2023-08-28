@@ -1,9 +1,8 @@
-// TODO There is a hash issue here, we can't compare the full objects at once.
-
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.NextControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -32,56 +31,63 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `findAll() should find all administrations`() {
-        val foundAdministrations = jpaAdministrationRepository.findAll()
+        val foundFullAdministrations = jpaAdministrationRepository.findAll()
 
-        assertThat(foundAdministrations).hasSize(33)
+        assertThat(foundFullAdministrations).hasSize(33)
 
-        // We check the second administration here because the first one is named “-”
-        assertThat(foundAdministrations[1].id).isEqualTo(1007)
-        assertThat(foundAdministrations[1].controlUnitIds).isEqualTo(listOf<Int>())
-        assertThat(foundAdministrations[1].name).isEqualTo("AECP")
+        // We check the second administration instead of the first here because the first one is named “-”
+        assertThat(foundFullAdministrations[1]).isEqualTo(
+            FullAdministrationDTO(
+                id = 1007,
+                controlUnitIds = listOf(),
+                controlUnits = listOf(),
+                name = "AECP"
+            )
+        )
 
-        assertThat(foundAdministrations[1].controlUnits).isEqualTo(listOf<Int>())
-
-        assertThat(foundAdministrations[32].id).isEqualTo(2004)
-        assertThat(foundAdministrations[32].controlUnitIds).isEqualTo(listOf<Int>())
-        assertThat(foundAdministrations[32].name).isEqualTo("Sécurité Civile")
-
-        assertThat(foundAdministrations[1].controlUnits).isEqualTo(listOf<Int>())
+        assertThat(foundFullAdministrations[32]).isEqualTo(
+            FullAdministrationDTO(
+                id = 2004,
+                controlUnitIds = listOf(),
+                controlUnits = listOf(),
+                name = "Sécurité Civile"
+            )
+        )
     }
 
     @Test
     @Transactional
     fun `findById() should find an administration by its ID`() {
-        val foundAdministration = jpaAdministrationRepository.findById(6)
+        val foundFullAdministration = jpaAdministrationRepository.findById(6)
 
-        assertThat(foundAdministration.id).isEqualTo(6)
-        assertThat(foundAdministration.controlUnitIds).isEqualTo(listOf(22, 23))
-        assertThat(foundAdministration.name).isEqualTo("Gendarmerie Nationale")
-
-        assertThat(foundAdministration.controlUnits).isEqualTo(
-            listOf(
-                NextControlUnitEntity(
-                    id = 22,
-                    administrationId = 6,
-                    areaNote = null,
-                    controlUnitContactIds = listOf(),
-                    controlUnitResourceIds = listOf(),
-                    isArchived = false,
-                    name = "BN Toulon",
-                    termsNote = null,
+        assertThat(foundFullAdministration).isEqualTo(
+            FullAdministrationDTO(
+                id = 6,
+                controlUnitIds = listOf(22, 23),
+                controlUnits = listOf(
+                    ControlUnitEntity(
+                        id = 22,
+                        administrationId = 6,
+                        areaNote = null,
+                        controlUnitContactIds = listOf(),
+                        controlUnitResourceIds = listOf(),
+                        isArchived = false,
+                        name = "BN Toulon",
+                        termsNote = null,
+                    ),
+                    ControlUnitEntity(
+                        id = 23,
+                        administrationId = 6,
+                        areaNote = null,
+                        controlUnitContactIds = listOf(),
+                        controlUnitResourceIds = listOf(),
+                        isArchived = false,
+                        name = "Brigade fluviale de Rouen",
+                        termsNote = null,
+                    ),
                 ),
-                NextControlUnitEntity(
-                    id = 23,
-                    administrationId = 6,
-                    areaNote = null,
-                    controlUnitContactIds = listOf(),
-                    controlUnitResourceIds = listOf(),
-                    isArchived = false,
-                    name = "Brigade fluviale de Rouen",
-                    termsNote = null,
-                ),
-            ),
+                name = "Gendarmerie Nationale"
+            )
         )
     }
 

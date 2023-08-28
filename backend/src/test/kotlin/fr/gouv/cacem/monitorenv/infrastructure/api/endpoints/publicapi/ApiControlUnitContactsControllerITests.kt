@@ -5,7 +5,7 @@ import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.NextControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitContactDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitContactDataInput
@@ -43,7 +43,7 @@ class ApiControlUnitContactsControllerITests {
     private lateinit var objectMapper: ObjectMapper
 
     @Test
-    fun `Should create a new contact`() {
+    fun `Should create a contact`() {
         val expectedNewControlUnitContact = ControlUnitContactEntity(
             id = 1,
             controlUnitId = 2,
@@ -79,7 +79,7 @@ class ApiControlUnitContactsControllerITests {
     fun `Should get a contact by its ID`() {
         val expectedFullControlUnitContact = FullControlUnitContactDTO(
             id = 1,
-            controlUnit = NextControlUnitEntity(
+            controlUnit = ControlUnitEntity(
                 id = 3,
                 administrationId = 4,
                 areaNote = null,
@@ -96,7 +96,7 @@ class ApiControlUnitContactsControllerITests {
             phone = null,
         )
 
-        val requestedId = 0
+        val requestedId = 1
 
         given(getControlUnitContactById.execute(requestedId)).willReturn(expectedFullControlUnitContact)
 
@@ -111,7 +111,7 @@ class ApiControlUnitContactsControllerITests {
         val expectedControlUnitContacts = listOf(
             FullControlUnitContactDTO(
                 id = 1,
-                controlUnit = NextControlUnitEntity(
+                controlUnit = ControlUnitEntity(
                     id = 3,
                     administrationId = 4,
                     areaNote = null,
@@ -127,9 +127,10 @@ class ApiControlUnitContactsControllerITests {
                 note = null,
                 phone = null,
             ),
+
             FullControlUnitContactDTO(
                 id = 5,
-                controlUnit = NextControlUnitEntity(
+                controlUnit = ControlUnitEntity(
                     id = 7,
                     administrationId = 8,
                     areaNote = null,

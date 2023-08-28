@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.NextControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 
 data class CreateOrUpdateControlUnitDataInput(
     val id: Int? = null,
@@ -12,9 +12,9 @@ data class CreateOrUpdateControlUnitDataInput(
     val name: String,
     val termsNote: String? = null,
 ) {
-    fun toNextControlUnitEntity(
-    ): NextControlUnitEntity {
-        return NextControlUnitEntity(
+    fun toControlUnit(
+    ): ControlUnitEntity {
+        return ControlUnitEntity(
             id = this.id,
             areaNote = this.areaNote,
             administrationId = this.administrationId,

@@ -2,7 +2,8 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.NextControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.utils.requireIds
 import jakarta.persistence.CascadeType
 import jakarta.persistence.*
@@ -26,11 +27,11 @@ data class ControlUnitModel(
     @Column(name = "area_note")
     var areaNote: String? = null,
 
-    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, mappedBy = "controlUnit")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlUnit")
     @JsonManagedReference
     var controlUnitContacts: List<ControlUnitContactModel>,
 
-    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, mappedBy = "controlUnit")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlUnit")
     @JsonManagedReference
     var controlUnitResources: List<ControlUnitResourceModel>,
 
@@ -52,8 +53,8 @@ data class ControlUnitModel(
     var updatedAt: LocalDateTime? = null,
 ) {
     companion object {
-        fun fromNextControlUnitEntity(
-            controlUnit: NextControlUnitEntity,
+        fun fromControlUnit(
+            controlUnit: ControlUnitEntity,
             administrationModel: AdministrationModel,
             controlUnitContactModels: List<ControlUnitContactModel>,
             controlUnitResourceModels: List<ControlUnitResourceModel>
@@ -71,20 +72,32 @@ data class ControlUnitModel(
         }
     }
 
-    fun toNextControlUnitEntity(): NextControlUnitEntity {
-        val administrationId = requireNotNull(administration.id)
-        val controlUnitContactIds = requireIds(controlUnitContacts) { it.id }
-        val controlUnitResourceIds = requireIds(controlUnitResources) { it.id }
+    fun toControlUnit(): ControlUnitEntity {
+        return ControlUnitEntity(
+            id,
+            administrationId = requireNotNull(administration.id),
+            areaNote,
+            controlUnitContactIds = requireIds(controlUnitContacts) { it.id },
+            controlUnitResourceIds = requireIds(controlUnitResources) { it.id },
+            isArchived,
+            name,
+            termsNote,
+        )
+    }
 
-        return NextControlUnitEntity(
-            id = id,
-            administrationId,
-            areaNote = areaNote,
-            controlUnitContactIds,
-            controlUnitResourceIds,
-            isArchived = isArchived,
-            name = name,
-            termsNote = termsNote,
+    fun toFullControlUnit(): FullControlUnitDTO {
+        return FullControlUnitDTO(
+            id,
+            administration = administration.toAdministration(),
+            administrationId = requireNotNull(administration.id),
+            areaNote,
+            controlUnitContactIds = requireIds(controlUnitContacts) { it.id },
+            controlUnitContacts = controlUnitContacts.map { it.toControlUnitContact() },
+            controlUnitResourceIds = requireIds(controlUnitResources) { it.id },
+            controlUnitResources = controlUnitResources.map { it.toControlUnitResource() },
+            isArchived,
+            name,
+            termsNote,
         )
     }
 }

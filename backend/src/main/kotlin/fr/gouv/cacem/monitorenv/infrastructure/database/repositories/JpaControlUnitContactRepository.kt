@@ -6,7 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitContactRepositor
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitContactDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlUnitContactModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitContactRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBNextControlUnitRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
 import fr.gouv.cacem.monitorenv.utils.requirePresent
 import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.stereotype.Repository
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Repository
 class JpaControlUnitContactRepository(
-    private val dbNextControlUnitRepository: IDBNextControlUnitRepository,
+    private val dbControlUnitRepository: IDBControlUnitRepository,
     private val dbControlUnitContactRepository: IDBControlUnitContactRepository,
 ) : IControlUnitContactRepository {
     override fun deleteById(controlUnitContactId: Int) {
@@ -33,7 +33,7 @@ class JpaControlUnitContactRepository(
     override fun save(controlUnitContact: ControlUnitContactEntity): ControlUnitContactEntity {
         return try {
             val controlUnitModel =
-                requirePresent(dbNextControlUnitRepository.findById(controlUnitContact.controlUnitId))
+                requirePresent(dbControlUnitRepository.findById(controlUnitContact.controlUnitId))
             val controlUnitContactModel = ControlUnitContactModel.fromControlUnitContact(
                 controlUnitContact,
                 controlUnitModel

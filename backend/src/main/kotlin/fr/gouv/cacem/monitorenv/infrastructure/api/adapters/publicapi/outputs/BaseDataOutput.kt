@@ -11,9 +11,7 @@ data class BaseDataOutput(
     val name: String,
 ) {
     companion object {
-        fun fromBase(
-            base: BaseEntity
-        ): BaseDataOutput {
+        fun fromBase(base: BaseEntity): BaseDataOutput {
             return BaseDataOutput(
                 id = requireNotNull(base.id),
                 controlUnitIds = base.controlUnitResourceIds,
@@ -21,9 +19,7 @@ data class BaseDataOutput(
             )
         }
 
-        fun fromFullBase(
-            fullBase: FullBaseDTO
-        ): BaseDataOutput {
+        fun fromFullBase(fullBase: FullBaseDTO): BaseDataOutput {
             return BaseDataOutput(
                 id = requireNotNull(fullBase.id),
                 controlUnitIds = fullBase.controlUnitResourceIds,

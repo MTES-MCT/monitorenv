@@ -27,7 +27,7 @@ data class MissionControlResourceModel(
     var ressource: LegacyControlResourceModel,
 ) {
     companion object {
-        fun fromControlResourceEntity(
+        fun fromLegacyControlResource(
             legacyControlResourceEntity: LegacyControlResourceEntity,
             mission: MissionModel,
             legacyControlUnitModel: LegacyControlUnitModel
