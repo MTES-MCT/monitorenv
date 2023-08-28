@@ -22,7 +22,7 @@ import { useGetSemaphoresQuery } from '../../../api/semaphoresAPI'
 import { Reporting, ReportingSourceEnum, ReportingSourceLabels } from '../../../domain/entities/reporting'
 import { setDisplayedItems } from '../../../domain/shared_slices/Global'
 import { setZoomToCenter } from '../../../domain/shared_slices/Map'
-import { setIsSemaphoreHighlight, setSelectedSemaphore } from '../../../domain/shared_slices/SemaphoresSlice'
+import { setIsSemaphoreHighlighted, setSelectedSemaphore } from '../../../domain/shared_slices/SemaphoresSlice'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 
 import type { Point } from 'ol/geom'
@@ -95,27 +95,33 @@ export function Source() {
 
   const zoomToSemaphore = () => {
     const { semaphoreId } = values
+
+    if (!semaphoreId) {
+      return
+    }
+
     dispatch(
       setDisplayedItems({
         displaySemaphoresLayer: true
       })
     )
     dispatch(setSelectedSemaphore(semaphoreId))
-    dispatch(setIsSemaphoreHighlight(true))
-    if (semaphoreId) {
-      const geom = semaphores?.entities[semaphoreId]?.geom
-      const center = (
-        new GeoJSON().readGeometry(geom, {
-          dataProjection: WSG84_PROJECTION,
-          featureProjection: OPENLAYERS_PROJECTION
-        }) as Point
-      )?.getCoordinates()
-      if (center) {
-        dispatch(setZoomToCenter(center))
-      }
+
+    const geom = semaphores?.entities[semaphoreId]?.geom
+    const center = (
+      new GeoJSON().readGeometry(geom, {
+        dataProjection: WSG84_PROJECTION,
+        featureProjection: OPENLAYERS_PROJECTION
+      }) as Point
+    )?.getCoordinates()
+    if (center) {
+      dispatch(setZoomToCenter(center))
     }
+
+    // we want to highlight the semaphore for 5 seconds
+    dispatch(setIsSemaphoreHighlighted(true))
     setTimeout(() => {
-      dispatch(setIsSemaphoreHighlight(false))
+      dispatch(setIsSemaphoreHighlighted(false))
     }, 5000)
   }
 

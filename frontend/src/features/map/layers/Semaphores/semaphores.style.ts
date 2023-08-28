@@ -58,14 +58,14 @@ const lineStyle = new Style({
   })
 }) */
 export const semaphoresStyleFn = feature => {
-  const isSemaphoreHighlight = feature.get('isHighlight')
+  const isSemaphoreHighlighted = feature.get('isHighlighted')
   let semaphoreStyle = new Style({
     image: new Icon({
       color: THEME.color.charcoal,
       src: 'semaphore.svg'
     })
   })
-  if (isSemaphoreHighlight) {
+  if (isSemaphoreHighlighted) {
     semaphoreStyle = new Style({
       image: new Icon({
         color: THEME.color.blueGray[100],

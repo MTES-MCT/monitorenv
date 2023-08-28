@@ -20,7 +20,7 @@ import type { Geometry } from 'ol/geom'
 export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useDispatch()
   const { displaySemaphoresLayer } = useAppSelector(state => state.global)
-  const { isSemaphoreHighlight, selectedSemaphoreId } = useAppSelector(state => state.semaphoresSlice)
+  const { isSemaphoreHighlighted, selectedSemaphoreId } = useAppSelector(state => state.semaphoresSlice)
   const { overlayCoordinates } = useAppSelector(state => state.global)
   const listener = useAppSelector(state => state.draw.listener)
 
@@ -97,12 +97,12 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
     GetVectorSource().forEachFeature(feature => {
       const selectedSemaphore = `${Layers.SEMAPHORES.code}:${selectedSemaphoreId}`
       feature.setProperties({
-        isHighlight: feature.getId() === selectedSemaphore && isSemaphoreHighlight,
+        isHighlighted: feature.getId() === selectedSemaphore && isSemaphoreHighlighted,
         isSelected: feature.getId() === selectedSemaphore,
         overlayCoordinates: feature.getId() === selectedSemaphore ? overlayCoordinates : undefined
       })
     })
-  }, [overlayCoordinates, selectedSemaphoreId, isSemaphoreHighlight])
+  }, [overlayCoordinates, selectedSemaphoreId, isSemaphoreHighlighted])
 
   useEffect(() => {
     if (map) {
@@ -122,7 +122,7 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   }, [semaphoresPoint])
 
   useEffect(() => {
-    // we don't want to display missions on the map if the user so decides (displayMissionssLayer variable)
+    // we don't want to display semaphores on the map if the user so decides (displaySemaphoresLayer variable)
     // or if user edits a zone or a point (listener variable)
     GetVectorLayer()?.setVisible(displaySemaphoresLayer && !listener)
   }, [displaySemaphoresLayer, GetVectorLayer, listener])

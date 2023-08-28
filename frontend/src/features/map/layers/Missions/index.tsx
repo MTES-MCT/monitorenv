@@ -68,7 +68,7 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   }, [missionsMultiPolygons])
 
   useEffect(() => {
-    // we don't want to display missions on the map if the user so decides (displaySemaphoresLayer variable)
+    // we don't want to display missions on the map if the user so decides (displayMissionsLayer variable)
     // or if user edits a surveillance zone or a control point (listener variable)
     GetVectorLayer()?.setVisible(displayMissionsLayer && !listener)
   }, [displayMissionsLayer, GetVectorLayer, listener])
