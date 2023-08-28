@@ -14,6 +14,8 @@ const initialState: MissionStateSliceType = {
   // selectedMissionId on Map
   selectedMissionId: undefined
 }
+// missionState.missionState is juste a copy of the formik form state
+// it can only be updated by the useSyncFormValuesWithRedux hook
 const missionStateSlice = createSlice({
   initialState,
   name: 'missionState',

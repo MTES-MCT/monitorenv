@@ -25,6 +25,8 @@ const initialState: ReportingState = {
   selectedReportingId: undefined,
   selectedReportingIdOnMap: undefined
 }
+// reportingState.reportingState is juste a copy of the formik form state
+// it can only be updated by the useSyncFormValuesWithRedux hook
 const reportingStateSlice = createSlice({
   initialState,
   name: 'reportingState',
