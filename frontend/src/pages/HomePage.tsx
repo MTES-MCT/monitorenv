@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import { APIWorker } from '../api/APIWorker'
 import { ReportingContext } from '../domain/shared_slices/Global'
-import { MapControlUnitDialog } from '../features/ControlUnit/MapControlUnitDialog'
+import { MapControlUnitDialog } from '../features/ControlUnits/MapControlUnitDialog'
 import Healthcheck from '../features/healthcheck/Healthcheck'
 import { LayersSidebar } from '../features/layersSelector'
 import { LocateOnMap } from '../features/LocateOnMap'

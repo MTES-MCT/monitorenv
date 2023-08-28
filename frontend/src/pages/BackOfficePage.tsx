@@ -1,14 +1,14 @@
 import { Route, Routes } from 'react-router'
 import styled from 'styled-components'
 
-import { BackOfficeAdministrationForm } from '../features/Administration/BackOfficeAdministrationForm'
-import { BackOfficeAdministrationList } from '../features/Administration/BackOfficeAdministrationList'
+import { BackOfficeAdministrationForm } from '../features/Administrations/BackOfficeAdministrationForm'
+import { BackOfficeAdministrationList } from '../features/Administrations/BackOfficeAdministrationList'
 import { BackOfficeMenu } from '../features/BackOfficeMenu'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../features/BackOfficeMenu/constants'
-import { BackOfficeBaseForm } from '../features/Base/BackOfficeBaseForm'
-import { BackOfficeBaseList } from '../features/Base/BackOfficeBaseList'
-import { BackOfficeControlUnitForm } from '../features/ControlUnit/BackOfficeControlUnitForm'
-import { BackOfficeControlUnitList } from '../features/ControlUnit/BackOfficeControlUnitList'
+import { BackOfficeBaseForm } from '../features/Bases/BackOfficeBaseForm'
+import { BackOfficeBaseList } from '../features/Bases/BackOfficeBaseList'
+import { BackOfficeControlUnitForm } from '../features/ControlUnits/BackOfficeControlUnitForm'
+import { BackOfficeControlUnitList } from '../features/ControlUnits/BackOfficeControlUnitList'
 
 export function BackOfficePage() {
   return (

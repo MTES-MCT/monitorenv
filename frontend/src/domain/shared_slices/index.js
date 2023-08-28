@@ -22,12 +22,12 @@ import { ampsAPI, ampsErrorLoggerMiddleware } from '../../api/ampsAPI'
 import { monitorenvPrivateApi, monitorenvPublicApi } from '../../api/api'
 import { controlThemesAPI } from '../../api/controlThemesAPI'
 import { infractionsAPI } from '../../api/infractionsAPI'
-import { legacyControlUnit } from '../../api/legacyControlUnit'
+import { legacyControlUnitsAPI } from '../../api/legacyControlUnitsAPI'
 import { missionsAPI } from '../../api/missionsAPI'
 import { regulatoryLayersAPI } from '../../api/regulatoryLayersAPI'
 import { reportingsAPI } from '../../api/reportingsAPI'
 import { semaphoresAPI } from '../../api/semaphoresAPI'
-import { mapControlUnitDialogReducer } from '../../features/ControlUnit/MapControlUnitDialog/slice'
+import { mapControlUnitDialogReducer } from '../../features/ControlUnits/MapControlUnitDialog/slice'
 import { layerSearchSliceReducer } from '../../features/layersSelector/search/LayerSearch.slice'
 import { sideWindowReducer } from '../../features/SideWindow/slice'
 
@@ -56,7 +56,7 @@ export const homeReducers = combineReducers({
   [regulatoryLayersAPI.reducerPath]: regulatoryLayersAPI.reducer,
   [missionsAPI.reducerPath]: missionsAPI.reducer,
   [controlThemesAPI.reducerPath]: controlThemesAPI.reducer,
-  [legacyControlUnit.reducerPath]: legacyControlUnit.reducer,
+  [legacyControlUnitsAPI.reducerPath]: legacyControlUnitsAPI.reducer,
   [infractionsAPI.reducerPath]: infractionsAPI.reducer,
   [semaphoresAPI.reducerPath]: semaphoresAPI.reducer,
   reportingFilters: reportingFiltersPersistedReducer,
@@ -72,7 +72,7 @@ export const homeMiddlewares = [
   missionsAPI.middleware,
   regulatoryLayersAPI.middleware,
   controlThemesAPI.middleware,
-  legacyControlUnit.middleware,
+  legacyControlUnitsAPI.middleware,
   infractionsAPI.middleware,
   semaphoresAPI.middleware,
   reportingsAPI.middleware

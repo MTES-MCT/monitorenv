@@ -17,7 +17,7 @@ import { GeoJSON } from 'ol/format'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { useGetLegacyControlUnitsQuery } from '../../../../api/legacyControlUnit'
+import { useGetLegacyControlUnitsQuery } from '../../../../api/legacyControlUnitsAPI'
 import { useGetSemaphoresQuery } from '../../../../api/semaphoresAPI'
 import { Reporting, ReportingSourceEnum, ReportingSourceLabels } from '../../../../domain/entities/reporting'
 import { setDisplayedItems } from '../../../../domain/shared_slices/Global'

@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import { FilterTags } from './FilterTags'
 import { useGetControlThemesQuery } from '../../../../api/controlThemesAPI'
-import { useGetLegacyControlUnitsQuery } from '../../../../api/legacyControlUnit'
+import { useGetLegacyControlUnitsQuery } from '../../../../api/legacyControlUnitsAPI'
 import { COLORS } from '../../../../constants/constants'
 import { DateRangeEnum, dateRangeLabels } from '../../../../domain/entities/dateRange'
 import { missionSourceEnum, missionStatusLabels, missionTypeEnum } from '../../../../domain/entities/missions'

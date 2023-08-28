@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import { MapReportingsFilters } from './Map'
 import { TableReportingsFilters } from './Table'
 import { useGetControlThemesQuery } from '../../../api/controlThemesAPI'
-import { useGetLegacyControlUnitsQuery } from '../../../api/legacyControlUnit'
+import { useGetLegacyControlUnitsQuery } from '../../../api/legacyControlUnitsAPI'
 import { useGetSemaphoresQuery } from '../../../api/semaphoresAPI'
 import { DateRangeEnum, ReportingDateRangeEnum, ReportingDateRangeLabels } from '../../../domain/entities/dateRange'
 import {

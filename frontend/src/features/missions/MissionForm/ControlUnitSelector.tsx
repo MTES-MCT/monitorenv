@@ -6,7 +6,7 @@ import { MutableRefObject, useMemo, useRef } from 'react'
 import { Form, IconButton, TagPicker } from 'rsuite'
 import styled from 'styled-components'
 
-import { useGetLegacyControlUnitsQuery } from '../../../api/legacyControlUnit'
+import { useGetLegacyControlUnitsQuery } from '../../../api/legacyControlUnitsAPI'
 import { FormikErrorWrapper } from '../../../uiMonitor/CustomFormikFields/FormikErrorWrapper'
 import { SelectPicker } from '../../../uiMonitor/CustomRsuite/SelectPicker'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'

@@ -6,7 +6,7 @@ import { setIsControlUnitListDialogVisible } from '../../domain/shared_slices/Gl
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { MenuWithCloseButton } from '../commonStyles/map/MenuWithCloseButton'
-import { MapControlUnitListDialog } from '../ControlUnit/MapControlUnitListDialog'
+import { MapControlUnitListDialog } from '../ControlUnits/MapControlUnitListDialog'
 
 export function ControlUnitListButton() {
   const dispatch = useAppDispatch()
