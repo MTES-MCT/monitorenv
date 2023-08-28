@@ -6,7 +6,7 @@ import org.junit.jupiter.api.DisplayName
 import java.util.Optional
 
 @DisplayName("utils/_root_ide_package_.fr.gouv.cacem.monitorenv.utils.requirePresent()")
-class RequirePresentTest {
+class RequirePresentUTest {
     @Test
     fun `Should return the value from the Optional value when it's present`() {
         val value = 42

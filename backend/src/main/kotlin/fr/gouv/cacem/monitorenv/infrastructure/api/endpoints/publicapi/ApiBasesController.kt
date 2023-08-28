@@ -46,7 +46,7 @@ class ApiBasesController(
     @Operation(summary = "List bases")
     fun getAll(): List<BaseDataOutput> {
         val foundFullBases = getBases.execute()
-        
+
         return foundFullBases.map { BaseDataOutput.fromFullBase(it) }
     }
 
@@ -59,11 +59,9 @@ class ApiBasesController(
         @RequestBody
         updateBaseDataInput: CreateOrUpdateBaseDataInput,
     ): BaseDataOutput {
-        if (updateBaseDataInput.id == null) {
-            throw java.lang.IllegalArgumentException("`id` can't be null.")
-        }
-        if (baseId != updateBaseDataInput.id) {
-            throw java.lang.IllegalArgumentException("Body ID ('${updateBaseDataInput.id}') doesn't match path ID ('${baseId}').")
+        requireNotNull(updateBaseDataInput.id) { "`id` can't be null." }
+        require(baseId == updateBaseDataInput.id) {
+            "Body ID ('${updateBaseDataInput.id}') doesn't match path ID ('${baseId}')."
         }
 
         val nextBase = updateBaseDataInput.toBase()

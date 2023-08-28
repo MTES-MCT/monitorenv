@@ -6,7 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdminis
 import fr.gouv.cacem.monitorenv.utils.requireIds
 import fr.gouv.cacem.monitorenv.utils.requireNotNullList
 import jakarta.persistence.*
-import java.time.LocalDateTime
+import java.time.Instant
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 
@@ -26,13 +26,13 @@ data class AdministrationModel(
     @Column(name = "name", nullable = false, unique = true)
     var name: String,
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at_utc", nullable = false, updatable = false)
     @CreationTimestamp
-    var createdAt: LocalDateTime? = null,
+    var createdAtUtc: Instant? = null,
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at_utc", nullable = false)
     @UpdateTimestamp
-    var updatedAt: LocalDateTime? = null,
+    var updatedAtUtc: Instant? = null,
 ) {
     companion object {
         fun fromAdministration(

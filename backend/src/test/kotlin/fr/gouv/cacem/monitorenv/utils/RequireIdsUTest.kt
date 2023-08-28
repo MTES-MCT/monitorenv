@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 
 @DisplayName("utils/requireIds()")
-class RequireIdsTest {
+class RequireIdsUTest {
     @Test
     fun `Should return the collection IDs when none of them is null`() {
         data class Item(val id: Int?)

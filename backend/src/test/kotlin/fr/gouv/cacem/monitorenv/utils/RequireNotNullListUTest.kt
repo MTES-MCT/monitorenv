@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 
 @DisplayName("utils/requireNotNullList()")
-class RequireNotNullListTest {
+class RequireNotNullListUTest {
     @Test
     fun `Should return the values when it's not null and the list doesn't contain any null value`() {
         val values = listOf<Int>(42, 43)

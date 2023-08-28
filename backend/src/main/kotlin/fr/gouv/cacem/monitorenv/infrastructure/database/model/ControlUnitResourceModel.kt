@@ -5,7 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceE
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 import jakarta.persistence.*
-import java.time.LocalDateTime
+import java.time.Instant
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 
@@ -41,13 +41,13 @@ data class ControlUnitResourceModel(
     // TODO Make that non-nullable once all resources will have been attached to a type.
     var type: String? = null,
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at_utc", nullable = false, updatable = false)
     @CreationTimestamp
-    var createdAt: LocalDateTime? = null,
+    var createdAtUtc: Instant? = null,
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at_utc", nullable = false)
     @UpdateTimestamp
-    var updatedAt: LocalDateTime? = null,
+    var updatedAtUtc: Instant? = null,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -65,8 +65,8 @@ data class ControlUnitResourceModel(
             if (!photo.contentEquals(other.photo)) return false
         } else if (other.photo != null) return false
         if (type != other.type) return false
-        if (createdAt != other.createdAt) return false
-        if (updatedAt != other.updatedAt) return false
+        if (createdAtUtc != other.createdAtUtc) return false
+        if (updatedAtUtc != other.updatedAtUtc) return false
 
         return true
     }
@@ -98,8 +98,8 @@ data class ControlUnitResourceModel(
         result = 31 * result + (note?.hashCode() ?: 0)
         result = 31 * result + (photo?.contentHashCode() ?: 0)
         result = 31 * result + (type?.hashCode() ?: 0)
-        result = 31 * result + (createdAt?.hashCode() ?: 0)
-        result = 31 * result + (updatedAt?.hashCode() ?: 0)
+        result = 31 * result + (createdAtUtc?.hashCode() ?: 0)
+        result = 31 * result + (updatedAtUtc?.hashCode() ?: 0)
 
         return result
     }

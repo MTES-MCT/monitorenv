@@ -50,11 +50,14 @@ class ApiControlUnitContactsController(
     @PutMapping(value = ["/{controlUnitContactId}"], consumes = ["application/json"])
     @Operation(summary = "Update a control unit contact")
     fun update(
-        @PathParam("Control unit contact ID") @PathVariable(name = "controlUnitContactId") controlUnitContactId: Int,
+        @PathParam("Control unit contact ID")
+        @PathVariable(name = "controlUnitContactId")
+        controlUnitContactId: Int,
         @RequestBody updateControlUnitContactDataInput: CreateOrUpdateControlUnitContactDataInput,
     ): ControlUnitContactDataOutput {
-        if ((updateControlUnitContactDataInput.id == null) || (controlUnitContactId != updateControlUnitContactDataInput.id)) {
-            throw java.lang.IllegalArgumentException("Unable to find (and update) control unit contact with ID = ${updateControlUnitContactDataInput.id}.")
+        requireNotNull(updateControlUnitContactDataInput.id) { "`id` can't be null." }
+        require(controlUnitContactId == updateControlUnitContactDataInput.id) {
+            "Body ID ('${updateControlUnitContactDataInput.id}') doesn't match path ID ('${controlUnitContactId}')."
         }
 
         val controlUnitContact = updateControlUnitContactDataInput.toControlUnitContact()

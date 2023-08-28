@@ -59,8 +59,9 @@ class ApiAdministrationsController(
         @RequestBody
         updateAdministrationDataInput: CreateOrUpdateAdministrationDataInput,
     ): AdministrationDataOutput {
-        if ((updateAdministrationDataInput.id == null) || (administrationId != updateAdministrationDataInput.id)) {
-            throw java.lang.IllegalArgumentException("Unable to find (and update) administration with ID = ${updateAdministrationDataInput.id}.")
+        requireNotNull(updateAdministrationDataInput.id) { "`id` can't be null." }
+        require(administrationId == updateAdministrationDataInput.id) {
+            "Body ID ('${updateAdministrationDataInput.id}') doesn't match path ID ('${administrationId}')."
         }
 
         val nextAdministration = updateAdministrationDataInput.toAdministration()

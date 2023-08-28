@@ -14,13 +14,13 @@ CREATE TABLE public.bases (
     id SERIAL PRIMARY KEY,
     name VARCHAR NOT NULL UNIQUE,
 
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at_utc TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at_utc TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 ALTER TABLE public.administrations
-    ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    ADD COLUMN updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
+    ADD COLUMN created_at_utc TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    ADD COLUMN updated_at_utc TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 
 CREATE TABLE public.control_units (
     id SERIAL PRIMARY KEY,
@@ -30,8 +30,8 @@ CREATE TABLE public.control_units (
     name VARCHAR NOT NULL,
     terms_note VARCHAR,
 
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at_utc TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at_utc TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_administration FOREIGN KEY (administration_id) REFERENCES administrations(id)
 );
@@ -44,8 +44,8 @@ CREATE TABLE public.control_unit_contacts (
     note VARCHAR,
     phone VARCHAR,
 
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at_utc TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at_utc TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_control_unit FOREIGN KEY (control_unit_id) REFERENCES control_units(id)
       ON DELETE CASCADE
@@ -63,8 +63,8 @@ CREATE TABLE public.control_unit_resources (
     -- TODO Make that non-nullable once all resources will have been attached to a type.
     type VARCHAR,
 
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at_utc TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at_utc TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_base FOREIGN KEY (base_id) REFERENCES bases(id)
       ON DELETE CASCADE
@@ -79,15 +79,15 @@ INSERT INTO public.control_units (
     administration_id,
     is_archived,
     name,
-    created_at,
-    updated_at
+    created_at_utc,
+    updated_at_utc
 )
 SELECT
     id,
     administration_id,
     archived AS is_archived,
     name,
-    CURRENT_TIMESTAMP AS created_at,
-    CURRENT_TIMESTAMP AS updated_at
+    CURRENT_TIMESTAMP AS created_at_utc,
+    CURRENT_TIMESTAMP AS updated_at_utc
 FROM
     public.legacy_control_units;

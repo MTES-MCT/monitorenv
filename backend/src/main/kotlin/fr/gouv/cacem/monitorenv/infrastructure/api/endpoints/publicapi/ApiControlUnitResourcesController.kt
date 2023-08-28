@@ -57,8 +57,9 @@ class ApiControlUnitResourcesController(
         @RequestBody
         updateControlUnitResourceDataInput: CreateOrUpdateControlUnitResourceDataInput,
     ): ControlUnitResourceDataOutput {
-        if ((updateControlUnitResourceDataInput.id == null) || (controlUnitResourceId != updateControlUnitResourceDataInput.id)) {
-            throw java.lang.IllegalArgumentException("Unable to find (and update) control unit resource with ID = ${updateControlUnitResourceDataInput.id}.")
+        requireNotNull(updateControlUnitResourceDataInput.id) { "`id` can't be null." }
+        require(controlUnitResourceId == updateControlUnitResourceDataInput.id) {
+            "Body ID ('${updateControlUnitResourceDataInput.id}') doesn't match path ID ('${controlUnitResourceId}')."
         }
 
         val controlUnitResource = updateControlUnitResourceDataInput.toControlUnitResource()

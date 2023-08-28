@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitContactDTO
 import jakarta.persistence.*
-import java.time.LocalDateTime
+import java.time.Instant
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 
@@ -33,13 +33,13 @@ data class ControlUnitContactModel(
     @Column(name = "phone")
     var phone: String? = null,
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at_utc", nullable = false, updatable = false)
     @CreationTimestamp
-    var createdAt: LocalDateTime? = null,
+    var createdAtUtc: Instant? = null,
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at_utc", nullable = false)
     @UpdateTimestamp
-    var updatedAt: LocalDateTime? = null,
+    var updatedAtUtc: Instant? = null,
 ) {
     companion object {
         fun fromControlUnitContact(

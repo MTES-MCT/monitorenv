@@ -5,9 +5,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.utils.requireIds
-import jakarta.persistence.CascadeType
 import jakarta.persistence.*
-import java.time.LocalDateTime
+import java.time.Instant
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 
@@ -44,13 +43,13 @@ data class ControlUnitModel(
     @Column(name = "terms_note")
     var termsNote: String? = null,
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at_utc", nullable = false, updatable = false)
     @CreationTimestamp
-    var createdAt: LocalDateTime? = null,
+    var createdAtUtc: Instant? = null,
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at_utc", nullable = false)
     @UpdateTimestamp
-    var updatedAt: LocalDateTime? = null,
+    var updatedAtUtc: Instant? = null,
 ) {
     companion object {
         fun fromControlUnit(
