@@ -25,7 +25,6 @@ class GetReportings(
     fun execute(
         pageNumber: Int?,
         pageSize: Int?,
-        provenStatus: List<String>?,
         reportingType: List<ReportingTypeEnum>?,
         seaFronts: List<String>?,
         sourcesType: List<SourceTypeEnum>?,
@@ -33,20 +32,28 @@ class GetReportings(
         startedBeforeDateTime: ZonedDateTime?,
         status: List<String>?,
     ): List<Triple<ReportingEntity, ControlUnitEntity?, SemaphoreEntity?>> {
-        val reports = reportingRepository.findAll(
-            provenStatus = provenStatus,
-            reportingType = reportingType,
-            seaFronts = seaFronts,
-            sourcesType = sourcesType,
-            startedAfter = startedAfterDateTime?.toInstant() ?: ZonedDateTime.now().minusDays(30).toInstant(),
-            startedBefore = startedBeforeDateTime?.toInstant(),
-            status = status,
-            pageable = if (pageNumber != null && pageSize != null) PageRequest.of(pageNumber, pageSize) else Pageable.unpaged(),
-        )
+        val reports =
+            reportingRepository.findAll(
+                reportingType = reportingType,
+                seaFronts = seaFronts,
+                sourcesType = sourcesType,
+                startedAfter = startedAfterDateTime?.toInstant()
+                    ?: ZonedDateTime.now().minusDays(30).toInstant(),
+                startedBefore = startedBeforeDateTime?.toInstant(),
+                status = status,
+                pageable =
+                if (pageNumber != null && pageSize != null) {
+                    PageRequest.of(pageNumber, pageSize)
+                } else {
+                    Pageable.unpaged()
+                },
+            )
         val controlUnits = controlUnitRepository.findAll()
         val semaphores = semaphoreRepository.findAll()
 
-        logger.info("Found ${reports.size} reporting(s), ${controlUnits.size} control unit(s) and ${semaphores.size} semaphore(s)")
+        logger.info(
+            "Found ${reports.size} reporting(s), ${controlUnits.size} control unit(s) and ${semaphores.size} semaphore(s)",
+        )
 
         return reports.map { reporting ->
             return@map Triple(

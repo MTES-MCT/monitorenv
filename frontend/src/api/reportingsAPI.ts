@@ -6,7 +6,6 @@ import { getQueryString } from '../utils/getQueryStringFormatted'
 import type { Reporting, ReportingDetailed } from '../domain/entities/reporting'
 
 type ReportingsFilter = {
-  provenStatus?: string[]
   reportingType: string | undefined
   seaFronts: string[]
   sourcesType?: string[]

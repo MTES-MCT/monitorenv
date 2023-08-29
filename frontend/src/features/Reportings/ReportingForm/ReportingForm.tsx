@@ -1,13 +1,4 @@
-import {
-  Accent,
-  FieldError,
-  FormikTextarea,
-  Icon,
-  IconButton,
-  Label,
-  MultiRadio,
-  getOptionsFromLabelledEnum
-} from '@mtes-mct/monitor-ui'
+import { Accent, FieldError, FormikTextarea, Icon, IconButton, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -26,7 +17,6 @@ import {
   ReportingStatusEnum,
   ReportingTypeEnum,
   getFormattedReportingId,
-  infractionProvenLabels,
   ReportingTypeLabels,
   getReportingStatus
 } from '../../../domain/entities/reporting'
@@ -42,14 +32,14 @@ import {
   StyledForm,
   StyledFormContainer,
   StyledHeader,
-  StyledInfractionProven,
   StyledThemeContainer,
   StyledToggle,
   StyledHeaderButtons,
   StyledTitle,
   StyledChevronIcon,
   ReportTypeMultiRadio,
-  StyledArchivedTag
+  StyledArchivedTag,
+  StyledFormikTextInput
 } from '../style'
 
 export function ReportingForm({ setShouldValidateOnChange }) {
@@ -69,7 +59,6 @@ export function ReportingForm({ setShouldValidateOnChange }) {
   useSyncFormValuesWithRedux(reportingStateActions.setReportingState, reportingStateActions.setIsDirty)
 
   const reportTypeOptions = getOptionsFromLabelledEnum(ReportingTypeLabels)
-  const infractionProvenOptions = Object.values(infractionProvenLabels)
 
   const reportingStatus = getReportingStatus({
     createdAt: values.createdAt,
@@ -81,18 +70,12 @@ export function ReportingForm({ setShouldValidateOnChange }) {
   const changeReportType = reportType => {
     setFieldValue('reportType', reportType)
     if (reportType === ReportingTypeEnum.OBSERVATION) {
-      setFieldValue('isInfractionProven', undefined)
       setFieldValue('isControlRequired', undefined)
     }
   }
 
   const changeNeedControlValue = checked => {
     setFieldValue('isControlRequired', checked)
-  }
-
-  const changeIsInfractionProven = value => {
-    setFieldValue('isInfractionProven', value)
-    setFieldValue('isControlRequired', value)
   }
 
   const closeReporting = () => {
@@ -220,20 +203,7 @@ export function ReportingForm({ setShouldValidateOnChange }) {
         <Validity mustIncreaseValidity={mustIncreaseValidity} />
         <Separator />
         <FormikTextarea label="Actions effectuées" name="actionTaken" />
-        <StyledInfractionProven>
-          <Label>La suspicion d&apos;infraction est </Label>
-          <MultiRadio
-            disabled={values.reportType === ReportingTypeEnum.OBSERVATION}
-            isErrorMessageHidden
-            isInline
-            isLabelHidden
-            label="La suspicion d'infraction est"
-            name="isInfractionProven"
-            onChange={changeIsInfractionProven}
-            options={infractionProvenOptions}
-            value={values.isInfractionProven}
-          />
-        </StyledInfractionProven>
+
         <StyledToggle>
           <Toggle
             checked={values.isControlRequired || false}
@@ -242,6 +212,8 @@ export function ReportingForm({ setShouldValidateOnChange }) {
           />
           <span>Le signalement nécessite un contrôle</span>
         </StyledToggle>
+        <Separator />
+        <StyledFormikTextInput label="Saisi par" name="openBy" />
       </StyledForm>
       <Footer
         onCancel={cancelNewReporting}

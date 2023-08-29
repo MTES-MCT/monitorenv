@@ -33,7 +33,6 @@ export function TableReportingsFiltersWithRef(
   const {
     hasFilters,
     periodFilter,
-    // provenFilter,
     seaFrontFilter,
     sourceFilter,
     sourceTypeFilter,
@@ -72,19 +71,6 @@ export function TableReportingsFiltersWithRef(
                 }
               />
             ))}
-            {/* TODO  awaiting validation Ariane and Adeline              
-            <StyledVerticalSeparator />
-            {isProvenOptions.map(provenStatus => (
-              <Checkbox
-                key={provenStatus.label}
-                checked={provenFilter?.includes(String(provenStatus.value))}
-                label={provenStatus.label}
-                name={provenStatus.label}
-                onChange={isChecked =>
-                  updateCheckboxFilter(isChecked, provenStatus.value, ReportingsFiltersEnum.PROVEN_FILTER, provenFilter)
-                }
-              />
-            ))} */}
           </StyledStatusFilter>
         </StyledFiltersFirstLine>
         <StyledFiltersSecondLine>

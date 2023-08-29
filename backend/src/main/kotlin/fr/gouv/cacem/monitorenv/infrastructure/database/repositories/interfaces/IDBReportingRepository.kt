@@ -12,7 +12,8 @@ import java.time.Instant
 interface IDBReportingRepository : CrudRepository<ReportingModel, Int> {
 
     @Query(
-        value = """
+        value =
+        """
         SELECT *
         FROM reportings
         WHERE is_deleted IS FALSE
@@ -34,24 +35,12 @@ interface IDBReportingRepository : CrudRepository<ReportingModel, Int> {
                 )
             )
         )
-        AND ((:provenStatus) = '{}'
-            OR (
-                'NOT_PROVEN' = ANY(CAST(:provenStatus as text[])) AND (
-                    is_infraction_proven = false
-                ))
-            OR ( 
-                'PROVEN' = ANY(CAST(:provenStatus as text[])) AND (
-                    is_infraction_proven = true
-                )
-            )
-        )
         ORDER BY reporting_id DESC
     """,
         nativeQuery = true,
     )
     fun findAll(
         pageable: Pageable,
-        provenStatus: String?,
         reportingType: String?,
         seaFronts: String?,
         sourcesType: String?,
@@ -62,7 +51,8 @@ interface IDBReportingRepository : CrudRepository<ReportingModel, Int> {
 
     @Modifying(clearAutomatically = true)
     @Query(
-        value = """
+        value =
+        """
         UPDATE reportings
         SET is_deleted = TRUE
         WHERE id = :id
@@ -73,7 +63,8 @@ interface IDBReportingRepository : CrudRepository<ReportingModel, Int> {
 
     @Modifying(clearAutomatically = true)
     @Query(
-        value = """
+        value =
+        """
         UPDATE reportings
         SET is_archived = TRUE
         WHERE (created_at + make_interval(hours => validity_time)) < NOW() AND is_archived IS FALSE  

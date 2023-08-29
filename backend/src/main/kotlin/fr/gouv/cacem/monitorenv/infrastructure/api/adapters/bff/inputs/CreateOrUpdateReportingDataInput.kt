@@ -25,12 +25,12 @@ data class CreateOrUpdateReportingDataInput(
     val theme: String? = null,
     val subThemes: List<String>? = listOf(),
     val actionTaken: String? = null,
-    val isInfractionProven: Boolean? = null,
     val isControlRequired: Boolean? = null,
     val isUnitAvailable: Boolean? = null,
     val createdAt: ZonedDateTime,
     val validityTime: Int? = null,
     val isArchived: Boolean,
+    val openBy: String? = null,
 ) {
     fun toReportingEntity(): ReportingEntity {
         return ReportingEntity(
@@ -49,13 +49,13 @@ data class CreateOrUpdateReportingDataInput(
             theme = this.theme,
             subThemes = this.subThemes,
             actionTaken = this.actionTaken,
-            isInfractionProven = this.isInfractionProven,
             isControlRequired = this.isControlRequired,
             isUnitAvailable = this.isUnitAvailable,
             createdAt = this.createdAt,
             validityTime = this.validityTime,
             isArchived = this.isArchived,
             isDeleted = false,
+            openBy = this.openBy,
         )
     }
 }

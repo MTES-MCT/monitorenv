@@ -18,6 +18,7 @@ export const ReportingSchema: Yup.SchemaOf<Reporting> = Yup.object()
       return schema.nullable()
     }),
     geom: ReportingZoneSchema,
+    openBy: Yup.string().nullable().required('Requis'),
     reportType: Yup.string().nullable().required('Veuillez définir le type de signalement'),
     semaphoreId: Yup.number().when('sourceType', (sourceType, schema) => {
       if (sourceType === ReportingSourceEnum.SEMAPHORE) {

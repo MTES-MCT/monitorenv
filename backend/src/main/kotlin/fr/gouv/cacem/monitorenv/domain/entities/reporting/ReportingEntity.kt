@@ -21,13 +21,13 @@ data class ReportingEntity(
     val theme: String? = null,
     val subThemes: List<String>? = listOf(),
     val actionTaken: String? = null,
-    val isInfractionProven: Boolean? = null,
     val isControlRequired: Boolean? = null,
     val isUnitAvailable: Boolean? = null,
     val createdAt: ZonedDateTime,
     val validityTime: Int? = null,
     val isArchived: Boolean,
     val isDeleted: Boolean,
+    val openBy: String? = null,
 ) {
     fun checkValidity() {
         when (sourceType) {

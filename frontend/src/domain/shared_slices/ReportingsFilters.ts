@@ -5,7 +5,7 @@ import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 import { ReportingDateRangeEnum } from '../entities/dateRange'
-import { /* InfractionProvenEnum, */ StatusFilterEnum } from '../entities/reporting'
+import { StatusFilterEnum } from '../entities/reporting'
 
 export const LAST_24_HOURS = customDayjs.utc().subtract(24, 'hour').toISOString()
 
@@ -16,7 +16,6 @@ export type SourceFilterProps = {
 export enum ReportingsFiltersEnum {
   ACTIONS = 'actionsFilter',
   PERIOD_FILTER = 'periodFilter',
-  PROVEN_FILTER = 'provenFilter',
   SEA_FRONT_FILTER = 'seaFrontFilter',
   SOURCE_FILTER = 'sourceFilter',
   SOURCE_TYPE_FILTER = 'sourceTypeFilter',
@@ -32,7 +31,6 @@ type ReportingsFiltersSliceType = {
   actionsFilter?: string[]
   hasFilters: boolean
   periodFilter: string
-  provenFilter: string[]
   seaFrontFilter: string[]
   sourceFilter: SourceFilterProps[]
   sourceTypeFilter: string[]
@@ -48,7 +46,6 @@ const initialState: ReportingsFiltersSliceType = {
   actionsFilter: [],
   hasFilters: false,
   periodFilter: ReportingDateRangeEnum.DAY,
-  provenFilter: [], // [InfractionProvenEnum.PROVEN, InfractionProvenEnum.NOT_PROVEN],
   seaFrontFilter: [],
   sourceFilter: [],
   sourceTypeFilter: [],

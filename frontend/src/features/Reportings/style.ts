@@ -1,4 +1,4 @@
-import { Button, IconButton, MultiRadio, Tag } from '@mtes-mct/monitor-ui'
+import { Button, FormikTextInput, IconButton, MultiRadio, Tag } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 export const StyledFormContainer = styled.div`
@@ -134,13 +134,6 @@ export const StyledThemeContainer = styled.div`
   flex: 1;
   gap: 8px;
 `
-
-export const StyledInfractionProven = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex: 1;
-  gap: 4px;
-`
 export const StyledToggle = styled.div`
   display: flex;
   flex-direction: row;
@@ -149,6 +142,9 @@ export const StyledToggle = styled.div`
   > .rs-toggle-checked .rs-toggle-presentation {
     background-color: ${p => p.theme.color.gunMetal};
   }
+`
+export const StyledFormikTextInput = styled(FormikTextInput)`
+  width: 120px;
 `
 export const StyledFooter = styled.div<{ $justify?: string | undefined }>`
   background-color: ${p => p.theme.color.charcoal};

@@ -29,18 +29,20 @@ data class ReportingDetailedDataOutput(
     val theme: String? = null,
     val subThemes: List<String>? = listOf(),
     val actionTaken: String? = null,
-    val isInfractionProven: Boolean? = null,
     val isControlRequired: Boolean? = null,
     val isUnitAvailable: Boolean? = null,
     val createdAt: ZonedDateTime,
     val validityTime: Int? = null,
     val isArchived: Boolean,
+    val openBy: String? = null,
 ) {
     companion object {
-        fun fromReporting(reporting: ReportingEntity, controlUnit: ControlUnitEntity?, semaphore: SemaphoreEntity?): ReportingDetailedDataOutput {
-            requireNotNull(reporting.id) {
-                "ReportingEntity.id cannot be null"
-            }
+        fun fromReporting(
+            reporting: ReportingEntity,
+            controlUnit: ControlUnitEntity?,
+            semaphore: SemaphoreEntity?,
+        ): ReportingDetailedDataOutput {
+            requireNotNull(reporting.id) { "ReportingEntity.id cannot be null" }
             return ReportingDetailedDataOutput(
                 id = reporting.id,
                 reportingId = reporting.reportingId,
@@ -48,7 +50,8 @@ data class ReportingDetailedDataOutput(
                 semaphoreId = reporting.semaphoreId,
                 controlUnitId = reporting.controlUnitId,
                 sourceName = reporting.sourceName,
-                displayedSource = when (reporting.sourceType) {
+                displayedSource =
+                when (reporting.sourceType) {
                     SourceTypeEnum.SEMAPHORE -> semaphore?.unit ?: semaphore?.name
                     SourceTypeEnum.CONTROL_UNIT -> controlUnit?.name
                     SourceTypeEnum.OTHER -> reporting.sourceName
@@ -64,12 +67,12 @@ data class ReportingDetailedDataOutput(
                 theme = reporting.theme,
                 subThemes = reporting.subThemes,
                 actionTaken = reporting.actionTaken,
-                isInfractionProven = reporting.isInfractionProven,
                 isControlRequired = reporting.isControlRequired,
                 isUnitAvailable = reporting.isUnitAvailable,
                 createdAt = reporting.createdAt,
                 validityTime = reporting.validityTime,
                 isArchived = reporting.isArchived,
+                openBy = reporting.openBy,
             )
         }
     }

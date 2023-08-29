@@ -23,7 +23,6 @@ class JpaReportingRepository(
 
     override fun findAll(
         pageable: Pageable,
-        provenStatus: List<String>?,
         reportingType: List<ReportingTypeEnum>?,
         seaFronts: List<String>?,
         sourcesType: List<SourceTypeEnum>?,
@@ -35,7 +34,6 @@ class JpaReportingRepository(
         val reportingTypeAsStringArray = reportingType?.map { it.name }
         return dbReportingRepository.findAll(
             pageable,
-            provenStatus = convertToString(provenStatus),
             reportingType = convertToString(reportingTypeAsStringArray),
             seaFronts = convertToString(seaFronts),
             sourcesType = convertToString(sourcesTypeAsStringArray),
