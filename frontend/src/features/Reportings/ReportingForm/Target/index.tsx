@@ -1,3 +1,4 @@
+import { getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import { FieldArray, useFormikContext } from 'formik'
 
 import { TargetDetails } from './TargetDetails'
@@ -10,6 +11,8 @@ import type { Reporting } from '../../../../domain/entities/reporting'
 
 export function Target() {
   const { setFieldValue, values } = useFormikContext<Reporting>()
+
+  const targetTypeOptions = getOptionsFromLabelledEnum(ReportingTargetTypeLabels)
 
   const onTargetTypeChange = selectedTarget => {
     setFieldValue('targetType', selectedTarget)
@@ -28,7 +31,7 @@ export function Target() {
           dataCy="reporting-target-type"
           name="targetType"
           onChange={onTargetTypeChange}
-          options={ReportingTargetTypeLabels}
+          options={targetTypeOptions}
           value={values.targetType}
         />
         <VehicleTypeSelector

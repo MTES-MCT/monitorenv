@@ -1,5 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { FormikDatePicker, FormikNumberInput, FormikTextarea, useNewWindow } from '@mtes-mct/monitor-ui'
+import {
+  FormikDatePicker,
+  FormikNumberInput,
+  FormikTextarea,
+  getOptionsFromLabelledEnum,
+  useNewWindow
+} from '@mtes-mct/monitor-ui'
 import { FieldArray, useFormikContext, getIn } from 'formik'
 import _ from 'lodash'
 import { useMemo } from 'react'
@@ -37,6 +43,8 @@ export function ControlForm({
     values: { envActions }
   } = useFormikContext<Mission<EnvActionControl>>()
   const currentAction = envActions[currentActionIndex]
+
+  const targetTypeOptions = getOptionsFromLabelledEnum(TargetTypeLabels)
 
   const { actionNumberOfControls, actionTargetType, vehicleType } = currentAction || {}
 
@@ -164,7 +172,7 @@ export function ControlForm({
               error={actionTargetTypeErrorMessage}
               name={`envActions.${currentActionIndex}.actionTargetType`}
               onChange={onTargetTypeChange}
-              options={TargetTypeLabels}
+              options={targetTypeOptions}
               value={actionTargetType}
             />
           </ActionFieldWrapper>
