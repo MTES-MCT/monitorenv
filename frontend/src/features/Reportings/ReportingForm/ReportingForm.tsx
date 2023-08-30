@@ -1,6 +1,6 @@
 import { Accent, FieldError, FormikTextarea, Icon, IconButton, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Toggle } from 'rsuite'
 
@@ -12,17 +12,11 @@ import { Target } from './Target'
 import { ThemeSelector } from './ThemeSelector'
 import { SubThemesSelector } from './ThemeSelector/SubThemesSelector'
 import { Validity } from './Validity'
-import {
-  Reporting,
-  ReportingStatusEnum,
-  ReportingTypeEnum,
-  getFormattedReportingId,
-  ReportingTypeLabels,
-  getReportingStatus
-} from '../../../domain/entities/reporting'
+import { Reporting, ReportingTypeEnum, ReportingTypeLabels } from '../../../domain/entities/reporting'
 import { hideSideButtons, setReportingFormVisibility } from '../../../domain/shared_slices/Global'
+import { multiReportingsActions } from '../../../domain/shared_slices/MultiReportings'
 import { ReportingFormVisibility, reportingStateActions } from '../../../domain/shared_slices/ReportingState'
-import { addReporting } from '../../../domain/use_cases/reportings/addReporting'
+import { closeReporting } from '../../../domain/use_cases/reportings/closeReporting'
 import { deleteReporting } from '../../../domain/use_cases/reportings/deleteReporting'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useSyncFormValuesWithRedux } from '../../../hooks/useSyncFormValuesWithRedux'
@@ -37,20 +31,19 @@ import {
   StyledHeaderButtons,
   StyledTitle,
   StyledChevronIcon,
-  ReportTypeMultiRadio,
-  StyledArchivedTag,
-  StyledFormikTextInput
+  StyledFormikTextInput,
+  ReportTypeMultiRadio
 } from '../style'
+import { getReportingInitialValues, getReportingTitle } from '../utils'
 
-export function ReportingForm({ setShouldValidateOnChange }) {
+export function ReportingForm({ selectedReporting, setShouldValidateOnChange }) {
   const dispatch = useDispatch()
   const {
     global: { reportingFormVisibility },
-    multiReportings: { nextSelectedReporting },
     reportingState: { isConfirmCancelDialogVisible }
   } = useAppSelector(state => state)
 
-  const { dirty, errors, setFieldValue, values } = useFormikContext<Partial<Reporting>>()
+  const { dirty, errors, setFieldValue, setValues, values } = useFormikContext<Partial<Reporting>>()
   const [themeField] = useField('theme')
 
   const [isDeleteModalOpen, setIsDeletModalOpen] = useState(false)
@@ -58,14 +51,13 @@ export function ReportingForm({ setShouldValidateOnChange }) {
 
   useSyncFormValuesWithRedux(reportingStateActions.setReportingState, reportingStateActions.setIsDirty)
 
-  const reportTypeOptions = getOptionsFromLabelledEnum(ReportingTypeLabels)
+  useEffect(() => {
+    if (selectedReporting) {
+      setValues(getReportingInitialValues(selectedReporting))
+    }
+  }, [setValues, selectedReporting])
 
-  const reportingStatus = getReportingStatus({
-    createdAt: values.createdAt,
-    isArchived: values.isArchived,
-    reportType: values.reportType as ReportingTypeEnum,
-    validityTime: values.validityTime
-  })
+  const reportTypeOptions = getOptionsFromLabelledEnum(ReportingTypeLabels)
 
   const changeReportType = reportType => {
     setFieldValue('reportType', reportType)
@@ -78,20 +70,11 @@ export function ReportingForm({ setShouldValidateOnChange }) {
     setFieldValue('isControlRequired', checked)
   }
 
-  const closeReporting = () => {
-    if (dirty) {
-      dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(true))
-    } else {
-      confirmCloseReporting()
-    }
-  }
-
   const reduceOrExpandReporting = () => {
     dispatch(hideSideButtons())
     if (reportingFormVisibility === ReportingFormVisibility.VISIBLE) {
       dispatch(setReportingFormVisibility(ReportingFormVisibility.REDUCED))
     } else {
-      dispatch(hideSideButtons())
       dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
     }
   }
@@ -101,13 +84,7 @@ export function ReportingForm({ setShouldValidateOnChange }) {
 
   const confirmCloseReporting = () => {
     dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(false))
-
-    if (nextSelectedReporting) {
-      dispatch(addReporting(nextSelectedReporting))
-    } else {
-      dispatch(reportingStateActions.setSelectedReportingId(undefined))
-      dispatch(setReportingFormVisibility(ReportingFormVisibility.NONE))
-    }
+    dispatch(multiReportingsActions.deleteSelectedReporting(selectedReporting.id))
   }
 
   const deleteCurrentReporting = () => {
@@ -150,16 +127,7 @@ export function ReportingForm({ setShouldValidateOnChange }) {
       <StyledHeader>
         <StyledTitle>
           <Icon.Report />
-          {values.reportingId ? (
-            <>
-              {`SIGNALEMENT ${getFormattedReportingId(values.reportingId)}`}
-              {reportingStatus === ReportingStatusEnum.ARCHIVED && (
-                <StyledArchivedTag accent={Accent.PRIMARY}>Archivé</StyledArchivedTag>
-              )}
-            </>
-          ) : (
-            'NOUVEAU SIGNALEMENT'
-          )}
+          {getReportingTitle(selectedReporting)}
         </StyledTitle>
 
         <StyledHeaderButtons>
@@ -169,7 +137,11 @@ export function ReportingForm({ setShouldValidateOnChange }) {
             Icon={Icon.Chevron}
             onClick={reduceOrExpandReporting}
           />
-          <IconButton accent={Accent.TERTIARY} Icon={Icon.Close} onClick={closeReporting} />
+          <IconButton
+            accent={Accent.TERTIARY}
+            Icon={Icon.Close}
+            onClick={() => dispatch(closeReporting(selectedReporting.id))}
+          />
         </StyledHeaderButtons>
       </StyledHeader>
       <StyledForm>

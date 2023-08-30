@@ -4,7 +4,8 @@ import styled from 'styled-components'
 
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setDisplayedItems } from '../../../domain/shared_slices/Global'
-import { createAndOpenNewReporting } from '../../../domain/use_cases/reportings/createAndOpenNewReporting'
+import { ReportingContext } from '../../../domain/shared_slices/ReportingState'
+import { addReporting } from '../../../domain/use_cases/reportings/addReporting'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { sideWindowActions } from '../../SideWindow/slice'
 import { ReportingFilterContext, ReportingsFilters } from '../Filters'
@@ -24,7 +25,7 @@ export function SearchReportings() {
   }
 
   const createReporting = () => {
-    dispatch(createAndOpenNewReporting())
+    dispatch(addReporting(ReportingContext.MAP))
   }
 
   const toggleReportingsWindow = () => {

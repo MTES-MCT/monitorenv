@@ -5,8 +5,9 @@ import styled from 'styled-components'
 
 import { ReportingSourceEnum } from '../../../../domain/entities/reporting'
 import { setOverlayCoordinates } from '../../../../domain/shared_slices/Global'
+import { ReportingContext } from '../../../../domain/shared_slices/ReportingState'
 import { resetSelectedSemaphore } from '../../../../domain/shared_slices/SemaphoresSlice'
-import { createAndOpenNewReporting } from '../../../../domain/use_cases/reportings/createAndOpenNewReporting'
+import { addReporting } from '../../../../domain/use_cases/reportings/addReporting'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
@@ -69,7 +70,7 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
   }
 
   const createSemaphoreReporting = () => {
-    dispatch(createAndOpenNewReporting({ semaphoreId: id, sourceType: ReportingSourceEnum.SEMAPHORE }))
+    dispatch(addReporting(ReportingContext.MAP, { semaphoreId: id, sourceType: ReportingSourceEnum.SEMAPHORE }))
   }
 
   if (!displaySemaphoresLayer) {

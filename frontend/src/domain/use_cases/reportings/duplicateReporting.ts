@@ -2,7 +2,7 @@ import { addReporting } from './addReporting'
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { hideSideButtons, setReportingFormVisibility, setToast } from '../../shared_slices/Global'
 import { multiReportingsActions } from '../../shared_slices/MultiReportings'
-import { ReportingFormVisibility, reportingStateActions } from '../../shared_slices/ReportingState'
+import { ReportingContext, ReportingFormVisibility, reportingStateActions } from '../../shared_slices/ReportingState'
 
 export const duplicateReporting = reportingId => async (dispatch, getState) => {
   const { isDirty } = getState().reportingState
@@ -20,7 +20,7 @@ export const duplicateReporting = reportingId => async (dispatch, getState) => {
         dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(true))
         dispatch(multiReportingsActions.setNextSelectedReporting(duplicatedReporting))
       } else {
-        dispatch(addReporting(duplicatedReporting))
+        dispatch(addReporting(ReportingContext.SIDE_WINDOW, duplicatedReporting))
         dispatch(
           setToast({
             containerId: 'sideWindow',
