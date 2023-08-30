@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlThemes.GetAllControlThemes
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlThemes.GetControlThemeById
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlThemes.GetControlThemes
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ControlThemeDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/bff/v1/controlthemes")
 @Tag(name = "Control Themes", description = "API control themes")
 class ControlThemesController(
-    private val getControlThemes: GetControlThemes,
+    private val getAllControlThemes: GetAllControlThemes,
     private val getControlThemeById: GetControlThemeById,
 ) {
 
     @GetMapping("")
     @Operation(summary = "Get control themes")
     fun getControlThemesController(): List<ControlThemeDataOutput> {
-        val controlThemes = getControlThemes.execute()
+        val controlThemes = getAllControlThemes.execute()
         return controlThemes.map { ControlThemeDataOutput.fromControlThemeEntity(it) }
     }
 

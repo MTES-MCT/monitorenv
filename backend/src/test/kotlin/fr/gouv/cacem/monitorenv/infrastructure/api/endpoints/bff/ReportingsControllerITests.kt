@@ -10,13 +10,12 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.semaphores.SemaphoreEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.CreateOrUpdateReporting
-import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.DeleteReporting
-import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.GetAllReportings
-import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.GetReportingById
+import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.CreateOrUpdateReporting
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReporting
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingById
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportings
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateReportingDataInput
-import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.Point
 import org.locationtech.jts.io.WKTReader
@@ -49,7 +48,7 @@ class ReportingsControllerITests {
     private lateinit var createOrUpdateReporting: CreateOrUpdateReporting
 
     @MockBean
-    private lateinit var getAllReportings: GetAllReportings
+    private lateinit var getReportings: GetReportings
 
     @MockBean
     private lateinit var getReportingById: GetReportingById
@@ -224,14 +223,14 @@ class ReportingsControllerITests {
             geom = WKTReader().read("POINT (-61.0 14.0)") as Point,
         )
         given(
-            getAllReportings.execute(
+            getReportings.execute(
                 pageNumber = anyOrNull(),
                 pageSize = anyOrNull(),
                 startedAfterDateTime = any(),
                 startedBeforeDateTime = any(),
                 provenStatus = any(),
                 reportingType = any(),
-                seaFronts = any(), 
+                seaFronts = any(),
                 sourcesType = any(),
                 status = any(),
             ),

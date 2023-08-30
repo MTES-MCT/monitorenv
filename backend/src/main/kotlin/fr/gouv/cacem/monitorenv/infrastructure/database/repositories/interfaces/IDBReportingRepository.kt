@@ -54,7 +54,7 @@ interface IDBReportingRepository : CrudRepository<ReportingModel, Int> {
         provenStatus: String?,
         reportingType: String?,
         seaFronts: String?,
-        sourcesType: String?, 
+        sourcesType: String?,
         startedAfter: Instant,
         startedBefore: Instant?,
         status: String?,

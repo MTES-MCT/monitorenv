@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases // ktlint-disable package-name
 
 import com.nhaarman.mockitokotlin2.*
-import fr.gouv.cacem.monitorenv.domain.entities.missions.*
+import fr.gouv.cacem.monitorenv.domain.entities.mission.*
 import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository

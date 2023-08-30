@@ -13,7 +13,7 @@ interface IReportingRepository {
         provenStatus: List<String>?,
         reportingType: List<ReportingTypeEnum>?,
         seaFronts: List<String>?,
-        sourcesType: List<SourceTypeEnum>?, 
+        sourcesType: List<SourceTypeEnum>?,
         startedAfter: Instant,
         startedBefore: Instant?,
         status: List<String>?,

@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas // ktlint-disable package-name
 
 import fr.gouv.cacem.monitorenv.config.UseCase
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryAreas.RegulatoryAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaRepository
 import org.slf4j.LoggerFactory
 

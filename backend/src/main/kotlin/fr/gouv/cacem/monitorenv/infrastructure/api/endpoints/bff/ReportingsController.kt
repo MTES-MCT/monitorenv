@@ -1,20 +1,20 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
-import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.CreateOrUpdateReporting
-import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.DeleteReporting
-import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.GetAllReportings
-import fr.gouv.cacem.monitorenv.domain.use_cases.reporting.GetReportingById
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.CreateOrUpdateReporting
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReporting
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingById
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportings
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateReportingDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ReportingDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ReportingDetailedDataOutput
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
-import org.springframework.http.HttpStatus
 import org.springframework.format.annotation.DateTimeFormat
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -32,7 +32,7 @@ import java.time.ZonedDateTime
 class ReportingsController(
     private val createOrUpdateReporting: CreateOrUpdateReporting,
     private val getReportingById: GetReportingById,
-    private val getAllReportings: GetAllReportings,
+    private val getReportings: GetReportings,
     private val deleteReporting: DeleteReporting,
 ) {
 
@@ -64,18 +64,18 @@ class ReportingsController(
         seaFronts: List<String>?,
         @Parameter(description = "Reporting source types")
         @RequestParam(name = "sourcesType", required = false)
-        sourcesType: List<SourceTypeEnum>?, 
+        sourcesType: List<SourceTypeEnum>?,
         @Parameter(description = "Reporting status")
         @RequestParam(name = "status", required = false)
         status: List<String>?,
     ): List<ReportingDetailedDataOutput> {
-        return getAllReportings.execute(
+        return getReportings.execute(
             pageNumber = pageNumber,
             pageSize = pageSize,
             provenStatus = provenStatus,
             reportingType = reportingType,
             seaFronts = seaFronts,
-            sourcesType = sourcesType, 
+            sourcesType = sourcesType,
             startedAfterDateTime = startedAfterDateTime,
             startedBeforeDateTime = startedBeforeDateTime,
             status = status,

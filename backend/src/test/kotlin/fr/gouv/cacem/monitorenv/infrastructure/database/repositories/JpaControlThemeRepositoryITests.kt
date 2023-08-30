@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlThemes.ControlThemeEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlTheme.ControlThemeEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlThemeModel
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

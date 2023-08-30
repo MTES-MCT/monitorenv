@@ -126,6 +126,5 @@ class JpaReportingITests : AbstractDBTests() {
         // Then
         val archivedReporting = jpaReportingRepository.findById(1)
         assertThat(archivedReporting.isArchived).isEqualTo(true)
-
     }
 }
