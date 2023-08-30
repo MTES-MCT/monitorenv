@@ -28,8 +28,9 @@ export const StyledHeader = styled.div`
   color: ${p => p.theme.color.white};
   font-size: 16px;
   font-weight: 500;
-  padding: 16px 24px;
+  padding: 10px 24px;
   gap: 8px;
+  flex: 1;
 `
 export const StyledTitle = styled.div`
   display: flex;

@@ -10,36 +10,42 @@ import { useGetReportingQuery } from '../../../api/reportingsAPI'
 import { ReportingFormVisibility } from '../../../domain/shared_slices/ReportingState'
 import { saveReporting } from '../../../domain/use_cases/reportings/saveReporting'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { getReportingInitialValues } from '../utils'
+import { getReportingInitialValues, isNewReporting } from '../utils'
 
 export function Reporting() {
   const {
     global: { reportingFormVisibility },
-    multiReportings: { selectedReportings },
-    reportingState: { selectedReportingId }
+    multiReportings: { activeReportingId, selectedReportings }
   } = useAppSelector(state => state)
 
   const dispatch = useDispatch()
   const [shouldValidateOnChange, setShouldValidateOnChange] = useState(false)
 
-  const { data: reportingToEdit } = useGetReportingQuery(selectedReportingId || skipToken)
+  const isReportingNew = useMemo(() => activeReportingId && isNewReporting(activeReportingId), [activeReportingId])
+
+  const { data: reportingToEdit } = useGetReportingQuery(isReportingNew ? skipToken : Number(activeReportingId))
 
   const submitReportForm = async values => {
     await dispatch(saveReporting(values))
   }
+  const selectedReporting = useMemo(
+    () => selectedReportings.find(reporting => reporting.reporting.id === activeReportingId),
+    [selectedReportings, activeReportingId]
+  )
 
   const reportingInitialValues = useMemo(() => {
-    if (selectedReportings[0]?.reporting) {
-      return getReportingInitialValues(selectedReportings[0]?.reporting)
+    if (isReportingNew) {
+      return getReportingInitialValues({ id: activeReportingId })
     }
 
     return getReportingInitialValues(reportingToEdit)
-  }, [reportingToEdit, selectedReportings])
+  }, [reportingToEdit, isReportingNew, activeReportingId])
 
   return (
-    <StyledContainer reportingFormVisibility={reportingFormVisibility}>
+    <FormContainer $position={selectedReportings.length} $reportingFormVisibility={reportingFormVisibility}>
       {reportingFormVisibility !== ReportingFormVisibility.NONE && (
         <Formik
+          key={activeReportingId}
           enableReinitialize
           initialValues={reportingInitialValues}
           onSubmit={submitReportForm}
@@ -47,15 +53,18 @@ export function Reporting() {
           validationSchema={ReportingSchema}
         >
           <StyledForm>
-            <ReportingForm setShouldValidateOnChange={setShouldValidateOnChange} />
+            <ReportingForm
+              selectedReporting={selectedReporting?.reporting}
+              setShouldValidateOnChange={setShouldValidateOnChange}
+            />
           </StyledForm>
         </Formik>
       )}
-    </StyledContainer>
+    </FormContainer>
   )
 }
 
-const StyledContainer = styled.div<{ reportingFormVisibility: ReportingFormVisibility }>`
+const FormContainer = styled.div<{ $position: number; $reportingFormVisibility?: ReportingFormVisibility }>`
   background-color: ${p => p.theme.color.white};
   position: absolute;
   top: 0;
@@ -66,18 +75,19 @@ const StyledContainer = styled.div<{ reportingFormVisibility: ReportingFormVisib
   z-index: 100;
 
   ${p => {
-    switch (p.reportingFormVisibility) {
+    switch (p.$reportingFormVisibility) {
       case ReportingFormVisibility.VISIBLE:
         return 'right: 8px;'
       case ReportingFormVisibility.VISIBLE_LEFT:
         return 'right: 56px;'
       case ReportingFormVisibility.REDUCED:
-        return 'right: 12px; top: calc(100vh - 52px);'
+        return `right: 12px; top: calc(100vh - ${p.$position * 52}px);`
       default:
         return 'right: -500px;'
     }
   }}
 `
+
 const StyledForm = styled(Form)`
   width: 100%;
 `

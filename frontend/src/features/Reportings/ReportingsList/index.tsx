@@ -2,7 +2,8 @@ import { Button, Icon } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { ReportingsTable } from './ReportingsTable'
-import { createAndOpenNewReporting } from '../../../domain/use_cases/reportings/createAndOpenNewReporting'
+import { ReportingContext } from '../../../domain/shared_slices/ReportingState'
+import { addReporting } from '../../../domain/use_cases/reportings/addReporting'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { ReportingsFilters } from '../Filters'
 import { useGetFilteredReportingsQuery } from '../hooks/useGetFilteredReportingsQuery'
@@ -13,7 +14,7 @@ export function ReportingsList() {
   const { isError, isFetching, isLoading, reportings } = useGetFilteredReportingsQuery()
 
   const createReporting = () => {
-    dispatch(createAndOpenNewReporting())
+    dispatch(addReporting(ReportingContext.SIDE_WINDOW))
   }
 
   return (

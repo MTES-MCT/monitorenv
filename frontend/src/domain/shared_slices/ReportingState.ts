@@ -10,17 +10,24 @@ export enum ReportingFormVisibility {
   VISIBLE_LEFT = 'visible_left'
 }
 
+export enum ReportingContext {
+  MAP = 'map',
+  SIDE_WINDOW = 'side_window'
+}
+
 type ReportingState = {
+  context: ReportingContext
   isConfirmCancelDialogVisible: boolean
-  isDirty: boolean
+  isFormDirty: boolean
   reportingState: Reporting | undefined
-  selectedReportingId: number | undefined
+  selectedReportingId: number | string | undefined
   selectedReportingIdOnMap: number | undefined
 }
 
 const initialState: ReportingState = {
+  context: ReportingContext.MAP,
   isConfirmCancelDialogVisible: false,
-  isDirty: false,
+  isFormDirty: false,
   reportingState: undefined,
   selectedReportingId: undefined,
   selectedReportingIdOnMap: undefined
@@ -35,12 +42,12 @@ const reportingStateSlice = createSlice({
       state.isConfirmCancelDialogVisible = action.payload
     },
     setIsDirty(state, action) {
-      state.isDirty = action.payload
+      state.isFormDirty = action.payload
     },
     setReportingState(state, action) {
       state.reportingState = action.payload
     },
-    setSelectedReportingId(state, action: PayloadAction<number | undefined>) {
+    setSelectedReportingId(state, action: PayloadAction<number | string | undefined>) {
       state.selectedReportingId = action.payload
     },
     setSelectedReportingIdOnMap(state, action: PayloadAction<number | undefined>) {
