@@ -12,7 +12,7 @@ export type Reporting = {
   id?: number
   isArchived?: boolean
   isControlRequired?: boolean | undefined
-  isInfractionProven?: boolean | undefined
+  openBy: string
   reportType: ReportingTypeEnum
   reportingId?: number
   semaphoreId?: number
@@ -58,28 +58,6 @@ export enum ReportingTypeEnum {
 export enum ReportingTypeLabels {
   INFRACTION_SUSPICION = 'Infraction (suspicion)',
   OBSERVATION = 'Observation'
-}
-
-export enum InfractionProvenEnum {
-  NOT_PROVEN = 'NOT_PROVEN',
-  PROVEN = 'PROVEN'
-}
-
-export const infractionProvenLabels = {
-  PROVEN: {
-    label: 'Avérée',
-    value: true
-  },
-  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
-  NOT_PROVEN: {
-    label: 'Non avérée',
-    value: false
-  }
-}
-
-export enum ProvenFiltersLabels {
-  PROVEN = 'Avéré',
-  NOT_PROVEN = 'Non avéré'
 }
 
 export enum ReportingStatusEnum {

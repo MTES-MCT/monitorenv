@@ -30,26 +30,44 @@ data class ReportingDataOutput(
     val theme: String? = null,
     val subThemes: List<String>? = listOf(),
     val actionTaken: String? = null,
-    val isInfractionProven: Boolean? = null,
     val isControlRequired: Boolean? = null,
     val isUnitAvailable: Boolean? = null,
     val createdAt: ZonedDateTime,
     val validityTime: Int? = null,
     val isArchived: Boolean,
+    val openBy: String? = null,
 ) {
     companion object {
-        fun fromReporting(reporting: ReportingEntity, controlUnit: ControlUnitEntity?, semaphore: SemaphoreEntity?): ReportingDataOutput {
-            requireNotNull(reporting.id) {
-                "ReportingEntity.id cannot be null"
-            }
+        fun fromReporting(
+            reporting: ReportingEntity,
+            controlUnit: ControlUnitEntity?,
+            semaphore: SemaphoreEntity?,
+        ): ReportingDataOutput {
+            requireNotNull(reporting.id) { "ReportingEntity.id cannot be null" }
             return ReportingDataOutput(
                 id = reporting.id,
                 reportingId = reporting.reportingId,
                 sourceType = reporting.sourceType,
                 semaphoreId = reporting.semaphoreId,
-                semaphore = if (semaphore != null) SemaphoreDataOutput.fromSemaphoreEntity(semaphore) else null,
+                semaphore =
+                if (semaphore != null) {
+                    SemaphoreDataOutput
+                        .fromSemaphoreEntity(
+                            semaphore,
+                        )
+                } else {
+                    null
+                },
                 controlUnitId = reporting.controlUnitId,
-                controlUnit = if (controlUnit != null) ControlUnitDataOutput.fromControlUnitEntity(controlUnit) else null,
+                controlUnit =
+                if (controlUnit != null) {
+                    ControlUnitDataOutput
+                        .fromControlUnitEntity(
+                            controlUnit,
+                        )
+                } else {
+                    null
+                },
                 sourceName = reporting.sourceName,
                 targetType = reporting.targetType,
                 vehicleType = reporting.vehicleType,
@@ -61,12 +79,12 @@ data class ReportingDataOutput(
                 theme = reporting.theme,
                 subThemes = reporting.subThemes,
                 actionTaken = reporting.actionTaken,
-                isInfractionProven = reporting.isInfractionProven,
                 isControlRequired = reporting.isControlRequired,
                 isUnitAvailable = reporting.isUnitAvailable,
                 createdAt = reporting.createdAt,
                 validityTime = reporting.validityTime,
                 isArchived = reporting.isArchived,
+                openBy = reporting.openBy,
             )
         }
     }

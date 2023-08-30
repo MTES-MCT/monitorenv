@@ -11,7 +11,6 @@ const TWO_MINUTES = 2 * 60 * 1000
 
 export const useGetFilteredReportingsQuery = () => {
   const {
-    provenFilter,
     seaFrontFilter,
     sourceFilter,
     sourceTypeFilter,
@@ -25,7 +24,6 @@ export const useGetFilteredReportingsQuery = () => {
   const { data, isError, isFetching, isLoading } = useGetReportingsQuery(
     // BACK filters
     {
-      provenStatus: provenFilter,
       reportingType: typeFilter,
       seaFronts: seaFrontFilter,
       sourcesType: sourceTypeFilter,

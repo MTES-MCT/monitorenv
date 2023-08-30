@@ -53,9 +53,6 @@ class ReportingsController(
         @RequestParam(name = "startedBeforeDateTime", required = false)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         startedBeforeDateTime: ZonedDateTime?,
-        @Parameter(description = "Is the reporting infraction proven")
-        @RequestParam(name = "provenStatus", required = false)
-        provenStatus: List<String>?,
         @Parameter(description = "Reporting type")
         @RequestParam(name = "reportingType", required = false)
         reportingType: List<ReportingTypeEnum>?,
@@ -72,28 +69,29 @@ class ReportingsController(
         return getReportings.execute(
             pageNumber = pageNumber,
             pageSize = pageSize,
-            provenStatus = provenStatus,
             reportingType = reportingType,
             seaFronts = seaFronts,
             sourcesType = sourcesType,
             startedAfterDateTime = startedAfterDateTime,
             startedBeforeDateTime = startedBeforeDateTime,
             status = status,
-        ).map {
-            ReportingDetailedDataOutput.fromReporting(it.first, it.second, it.third)
-        }
+        )
+            .map { ReportingDetailedDataOutput.fromReporting(it.first, it.second, it.third) }
     }
 
     @PutMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a new reporting")
     @ResponseStatus(HttpStatus.CREATED)
     fun createReportingController(
-        @RequestBody
-        createReporting: CreateOrUpdateReportingDataInput,
+        @RequestBody createReporting: CreateOrUpdateReportingDataInput,
     ): ReportingDataOutput {
         val newReporting = createReporting.toReportingEntity()
         val createdReporting = createOrUpdateReporting.execute(newReporting)
-        return ReportingDataOutput.fromReporting(createdReporting.first, createdReporting.second, createdReporting.third)
+        return ReportingDataOutput.fromReporting(
+            createdReporting.first,
+            createdReporting.second,
+            createdReporting.third,
+        )
     }
 
     @GetMapping("/{id}")
@@ -114,15 +112,13 @@ class ReportingsController(
         @PathParam("reporting id")
         @PathVariable(name = "id")
         id: Int,
-        @RequestBody
-        reporting: CreateOrUpdateReportingDataInput,
+        @RequestBody reporting: CreateOrUpdateReportingDataInput,
     ): ReportingDataOutput {
         require(id == reporting.id) { "id in path and body must be the same" }
         return createOrUpdateReporting.execute(
             reporting.toReportingEntity(),
-        ).let {
-            ReportingDataOutput.fromReporting(it.first, it.second, it.third)
-        }
+        )
+            .let { ReportingDataOutput.fromReporting(it.first, it.second, it.third) }
     }
 
     @DeleteMapping(value = ["/{id}"])

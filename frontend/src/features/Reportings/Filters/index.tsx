@@ -11,7 +11,6 @@ import { useGetSemaphoresQuery } from '../../../api/semaphoresAPI'
 import { DateRangeEnum, ReportingDateRangeEnum, ReportingDateRangeLabels } from '../../../domain/entities/dateRange'
 import {
   ReportingSourceEnum,
-  // ProvenFiltersLabels,
   ReportingSourceLabels,
   ReportingTypeLabels,
   StatusFilterLabels
@@ -28,11 +27,7 @@ export enum ReportingFilterContext {
 }
 export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { context?: string }) {
   const dispatch = useDispatch()
-  const {
-    periodFilter,
-    // provenFilter,
-    sourceTypeFilter
-  } = useAppSelector(state => state.reportingFilters)
+  const { periodFilter, sourceTypeFilter } = useAppSelector(state => state.reportingFilters)
   const wrapperRef = useRef() as MutableRefObject<HTMLDivElement>
   const [isCustomPeriodVisible, setIsCustomPeriodVisible] = useState(periodFilter === DateRangeEnum.CUSTOM)
 
@@ -102,7 +97,6 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
   const sourceTypeOptions = getOptionsFromLabelledEnum(ReportingSourceLabels)
   const seaFrontsOptions = Object.values(seaFrontLabels)
   const statusOptions = getOptionsFromLabelledEnum(StatusFilterLabels)
-  // const isProvenOptions = getOptionsFromLabelledEnum(ProvenFiltersLabels)
 
   const optionsList = {
     dateRangeOptions,

@@ -10,7 +10,6 @@ interface IReportingRepository {
     fun findById(reportingId: Int): ReportingEntity
     fun findAll(
         pageable: Pageable,
-        provenStatus: List<String>?,
         reportingType: List<ReportingTypeEnum>?,
         seaFronts: List<String>?,
         sourcesType: List<SourceTypeEnum>?,
