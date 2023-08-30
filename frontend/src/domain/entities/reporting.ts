@@ -1,7 +1,7 @@
 /* eslint-disable typescript-sort-keys/string-enum */
 import { customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 
-import type { TargetTypeEnum } from './targetType'
+import type { ReportingTargetTypeEnum } from './targetType'
 
 export type Reporting = {
   actionTaken?: string
@@ -20,7 +20,7 @@ export type Reporting = {
   sourceType: ReportingSourceEnum
   subThemes?: string[]
   targetDetails?: TargetDetails
-  targetType?: TargetTypeEnum
+  targetType?: ReportingTargetTypeEnum
   theme?: string
   validityTime?: number
   vehicleType?: string

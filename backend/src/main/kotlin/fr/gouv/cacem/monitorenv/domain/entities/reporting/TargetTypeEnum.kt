@@ -4,4 +4,5 @@ enum class TargetTypeEnum {
     VEHICLE,
     COMPANY,
     INDIVIDUAL,
+    OTHER,
 }

@@ -13,7 +13,7 @@ import {
   EnvActionControl,
   Infraction
 } from '../../../../../domain/entities/missions'
-import { TargetTypeEnum, targetTypeLabels } from '../../../../../domain/entities/targetType'
+import { TargetTypeEnum, TargetTypeLabels } from '../../../../../domain/entities/targetType'
 import { vehicleTypeLabels, VehicleTypeEnum } from '../../../../../domain/entities/vehicleType'
 import { ReactComponent as DeleteSVG } from '../../../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as DuplicateSVG } from '../../../../../uiMonitor/icons/Duplicate.svg'
@@ -75,7 +75,7 @@ export function InfractionCard({
           <Identification>{registrationNumber?.value || ' sans immatriculation'}</Identification>
         ) : (
           <Identification>
-            {companyName?.value || controlledPersonIdentity?.value || targetTypeLabels[targetTypeField.value]?.label}
+            {companyName?.value || controlledPersonIdentity?.value || TargetTypeLabels[targetTypeField.value]}
           </Identification>
         )}
         <SummaryDetails>

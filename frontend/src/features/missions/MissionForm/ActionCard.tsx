@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
 import { ActionTypeEnum, EnvAction } from '../../../domain/entities/missions'
-import { targetTypeLabels } from '../../../domain/entities/targetType'
+import { TargetTypeLabels } from '../../../domain/entities/targetType'
 import { ControlInfractionsTags } from '../../../ui/ControlInfractionsTags'
 import { ReactComponent as ControlIconSVG } from '../../../uiMonitor/icons/Control.svg'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
@@ -58,8 +58,7 @@ export function ActionCard({
                     {` contrôle${action.actionNumberOfControls > 1 ? 's' : ''}`}
                     {` réalisé${action.actionNumberOfControls > 1 ? 's' : ''} sur des cibles de type `}
                     <Accented>
-                      {(!!action.actionTargetType && targetTypeLabels[action.actionTargetType]?.label) ||
-                        'non spécifié'}
+                      {(!!action.actionTargetType && TargetTypeLabels[action.actionTargetType]) || 'non spécifié'}
                     </Accented>
                   </ControlSummary>
                 )}

@@ -16,7 +16,7 @@ import {
   ReportingTypeLabels,
   StatusFilterLabels
 } from '../../../domain/entities/reporting'
-import { SeaFrontLabels } from '../../../domain/entities/seaFrontType'
+import { seaFrontLabels } from '../../../domain/entities/seaFrontType'
 import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../domain/shared_slices/ReportingsFilters'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getSubThemesAsListOptions } from '../../../utils/getSubThemesAsListOptions'
@@ -100,7 +100,7 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
   const dateRangeOptions = getOptionsFromLabelledEnum(ReportingDateRangeLabels)
   const typeOptions = getOptionsFromLabelledEnum(ReportingTypeLabels)
   const sourceTypeOptions = getOptionsFromLabelledEnum(ReportingSourceLabels)
-  const seaFrontsOptions = getOptionsFromLabelledEnum(SeaFrontLabels)
+  const seaFrontsOptions = Object.values(seaFrontLabels)
   const statusOptions = getOptionsFromLabelledEnum(StatusFilterLabels)
   // const isProvenOptions = getOptionsFromLabelledEnum(ProvenFiltersLabels)
 

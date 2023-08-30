@@ -2,7 +2,7 @@ import { getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
-import { targetTypeLabels } from '../../../../domain/entities/targetType'
+import { TargetTypeLabels } from '../../../../domain/entities/targetType'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ControlInfractionsTags } from '../../../../ui/ControlInfractionsTags'
 import { extractThemesAsText } from '../../../../utils/extractThemesAsText'
@@ -29,8 +29,8 @@ export function ControlCard({ feature }: { feature: any }) {
         )}{' '}
         <Accented>
           {actionNumberOfControls} {pluralize('contrôle', actionNumberOfControls)}{' '}
-          {targetTypeLabels[actionTargetType]?.label ? (
-            <>({targetTypeLabels[actionTargetType]?.label})</>
+          {TargetTypeLabels[actionTargetType] ? (
+            <>({TargetTypeLabels[actionTargetType]})</>
           ) : (
             <StyledGrayText>(cible non renseignée)</StyledGrayText>
           )}
