@@ -15,13 +15,13 @@ import jakarta.persistence.Table
 data class ControlResourceModel(
     @Id
     @Column(name = "id")
-    var id: Int,
+    val id: Int,
     @Column(name = "name")
-    var name: String,
+    val name: String,
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "unit_id")
     @JsonBackReference
-    var controlUnit: ControlUnitModel? = null,
+    val controlUnit: ControlUnitModel? = null,
 ) {
     companion object {
         fun fromControlEntity(controlResourceEntity: ControlResourceEntity, controlUnitModel: ControlUnitModel) = ControlResourceModel(

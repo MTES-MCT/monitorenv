@@ -16,45 +16,45 @@ import org.n52.jackson.datatype.jts.GeometrySerializer
 data class RegulatoryAreaModel(
     @Id
     @Column(name = "id")
-    var id: Int,
+    val id: Int,
     @JsonSerialize(using = GeometrySerializer::class)
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
-    var geom: MultiPolygon?,
+    val geom: MultiPolygon?,
     @Column(name = "entity_name")
-    var entity_name: String?,
+    val entity_name: String?,
     @Column(name = "url")
-    var url: String?,
+    val url: String?,
     @Column(name = "layer_name")
-    var layer_name: String?,
+    val layer_name: String?,
     @Column(name = "facade")
-    var facade: String?,
+    val facade: String?,
     @Column(name = "ref_reg")
-    var ref_reg: String?,
+    val ref_reg: String?,
     @Column(name = "edition")
-    var edition: String?,
+    val edition: String?,
     @Column(name = "editeur")
-    var editeur: String?,
+    val editeur: String?,
     @Column(name = "source")
-    var source: String?,
+    val source: String?,
     @Column(name = "observation")
-    var observation: String?,
+    val observation: String?,
     @Column(name = "thematique")
-    var thematique: String?,
+    val thematique: String?,
     @Column(name = "echelle")
-    var echelle: String?,
+    val echelle: String?,
     @Column(name = "date")
-    var date: String?,
+    val date: String?,
     @Column(name = "duree_validite")
-    var duree_validite: String?,
+    val duree_validite: String?,
     @Column(name = "date_fin")
-    var date_fin: String?,
+    val date_fin: String?,
     @Column(name = "temporalite")
-    var temporalite: String?,
+    val temporalite: String?,
     @Column(name = "objet")
-    var objet: String?,
+    val objet: String?,
     @Column(name = "signataire")
-    var signataire: String?,
+    val signataire: String?,
 ) {
     fun toRegulatoryArea() = RegulatoryAreaEntity(
         id = id,

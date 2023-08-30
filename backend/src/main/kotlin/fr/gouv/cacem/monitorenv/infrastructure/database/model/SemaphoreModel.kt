@@ -12,25 +12,25 @@ import org.locationtech.jts.geom.Point
 data class SemaphoreModel(
     @Id
     @Column(name = "id")
-    var id: Int,
+    val id: Int,
     @Column(name = "geom")
-    var geom: Point,
+    val geom: Point,
     @Column(name = "nom")
-    var name: String,
+    val name: String,
     @Column(name = "dept")
-    var department: String? = null,
+    val department: String? = null,
     @Column(name = "facade")
-    var facade: String? = null,
+    val facade: String? = null,
     @Column(name = "administration")
-    var administration: String? = null,
+    val administration: String? = null,
     @Column(name = "unite")
-    var unit: String? = null,
+    val unit: String? = null,
     @Column(name = "email")
-    var email: String? = null,
+    val email: String? = null,
     @Column(name = "telephone")
-    var phoneNumber: String? = null,
+    val phoneNumber: String? = null,
     @Column(name = "base")
-    var base: String? = null,
+    val base: String? = null,
 ) {
     fun toSemaphore() = SemaphoreEntity(
         id = id,

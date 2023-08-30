@@ -11,13 +11,13 @@ import jakarta.persistence.Table
 data class NatinfModel(
     @Id
     @Column(name = "natinf_code")
-    var natinfCode: Int,
+    val natinfCode: Int,
     @Column(name = "regulation")
-    var regulation: String?,
+    val regulation: String?,
     @Column(name = "infraction_category")
-    var infractionCategory: String?,
+    val infractionCategory: String?,
     @Column(name = "infraction")
-    var infraction: String?,
+    val infraction: String?,
 ) {
     fun toNatinf() = NatinfEntity(
         natinfCode = natinfCode,
