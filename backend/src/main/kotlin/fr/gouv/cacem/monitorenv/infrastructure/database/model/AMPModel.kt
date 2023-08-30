@@ -12,15 +12,15 @@ import org.locationtech.jts.geom.MultiPolygon
 data class AMPModel(
     @Id
     @Column(name = "id")
-    var id: Int,
+    val id: Int,
     @Column(name = "geom")
-    var geom: MultiPolygon,
+    val geom: MultiPolygon,
     @Column(name = "mpa_oriname")
-    var name: String,
+    val name: String,
     @Column(name = "des_desigfr")
-    var designation: String,
+    val designation: String,
     @Column(name = "mpa_type")
-    var type: String,
+    val type: String,
 ) {
     fun toAMP() = AMPEntity(
         id = id,

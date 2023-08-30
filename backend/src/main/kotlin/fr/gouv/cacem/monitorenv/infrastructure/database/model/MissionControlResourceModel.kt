@@ -18,13 +18,13 @@ data class MissionControlResourceModel(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    var id: Int? = null,
+    val id: Int? = null,
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "mission_id")
-    var mission: MissionModel,
+    val mission: MissionModel,
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = [CascadeType.MERGE])
     @JoinColumn(name = "control_resource_id")
-    var ressource: ControlResourceModel,
+    val ressource: ControlResourceModel,
 ) {
     companion object {
         fun fromControlResourceEntity(controlResourceEntity: ControlResourceEntity, mission: MissionModel, controlUnitModel: ControlUnitModel) = MissionControlResourceModel(

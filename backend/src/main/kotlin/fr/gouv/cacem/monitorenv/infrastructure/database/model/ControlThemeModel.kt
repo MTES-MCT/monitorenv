@@ -11,11 +11,11 @@ import jakarta.persistence.Table
 data class ControlThemeModel(
     @Id
     @Column(name = "id")
-    var id: Int,
+    val id: Int,
     @Column(name = "theme_level_1")
-    var themeLevel1: String,
+    val themeLevel1: String,
     @Column(name = "theme_level_2")
-    var themeLevel2: String?,
+    val themeLevel2: String?,
 ) {
     fun toControlTheme() = ControlThemeEntity(
         id = id,

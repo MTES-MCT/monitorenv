@@ -45,31 +45,31 @@ data class MissionModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", unique = true, nullable = false)
-    var id: Int? = null,
+    val id: Int? = null,
     @Type(
         ListArrayType::class,
         parameters = [Parameter(name = SQL_ARRAY_TYPE, value = "text")],
     )
     @Column(name = "mission_types", columnDefinition = "text[]")
-    var missionTypes: List<MissionTypeEnum>,
+    val missionTypes: List<MissionTypeEnum>,
     @Column(name = "open_by")
-    var openBy: String? = null,
+    val openBy: String? = null,
     @Column(name = "closed_by")
-    var closedBy: String? = null,
+    val closedBy: String? = null,
     @Column(name = "observations_cacem")
-    var observationsCacem: String? = null,
+    val observationsCacem: String? = null,
     @Column(name = "observations_cnsp")
-    var observationsCnsp: String? = null,
+    val observationsCnsp: String? = null,
     @Column(name = "facade")
-    var facade: String? = null,
+    val facade: String? = null,
     @JsonSerialize(using = GeometrySerializer::class)
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
-    var geom: MultiPolygon? = null,
+    val geom: MultiPolygon? = null,
     @Column(name = "start_datetime_utc")
-    var startDateTimeUtc: Instant,
+    val startDateTimeUtc: Instant,
     @Column(name = "end_datetime_utc")
-    var endDateTimeUtc: Instant? = null,
+    val endDateTimeUtc: Instant? = null,
     @Column(name = "closed", nullable = false)
     val isClosed: Boolean,
     @Column(name = "deleted", nullable = false)
@@ -79,11 +79,11 @@ data class MissionModel(
     @Type(PostgreSQLEnumType::class)
     val missionSource: MissionSourceEnum,
     @Column(name = "has_mission_order", nullable = false)
-    var hasMissionOrder: Boolean,
+    val hasMissionOrder: Boolean,
     @Column(name = "is_geometry_computed_from_controls", nullable = false)
-    var isGeometryComputedFromControls: Boolean,
+    val isGeometryComputedFromControls: Boolean,
     @Column(name = "is_under_jdp", nullable = false)
-    var isUnderJdp: Boolean,
+    val isUnderJdp: Boolean,
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
@@ -91,7 +91,7 @@ data class MissionModel(
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
-    var envActions: MutableList<EnvActionModel>? = ArrayList(),
+    val envActions: MutableList<EnvActionModel>? = ArrayList(),
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
@@ -99,7 +99,7 @@ data class MissionModel(
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
-    var controlResources: MutableList<MissionControlResourceModel>? = ArrayList(),
+    val controlResources: MutableList<MissionControlResourceModel>? = ArrayList(),
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
@@ -107,7 +107,7 @@ data class MissionModel(
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
-    var controlUnits: MutableList<MissionControlUnitModel>? = ArrayList(),
+    val controlUnits: MutableList<MissionControlUnitModel>? = ArrayList(),
 ) {
 
     fun toMissionEntity(mapper: ObjectMapper) = MissionEntity(

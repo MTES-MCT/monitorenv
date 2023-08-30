@@ -11,11 +11,11 @@ import org.locationtech.jts.geom.MultiPolygon
 data class DepartmentsAreasModel(
     @Id
     @Column(name = "insee_dep")
-    var inseeDep: String,
+    val inseeDep: String,
 
     @Column(name = "name")
-    var name: String,
+    val name: String,
 
     @Column(name = "geometry")
-    var geometry: MultiPolygon? = null,
+    val geometry: MultiPolygon? = null,
 )

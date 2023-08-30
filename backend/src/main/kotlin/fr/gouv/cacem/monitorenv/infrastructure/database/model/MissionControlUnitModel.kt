@@ -17,15 +17,15 @@ data class MissionControlUnitModel(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    var id: Int? = null,
+    val id: Int? = null,
     @Column(name = "contact")
-    var contact: String?,
+    val contact: String?,
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "mission_id")
-    var mission: MissionModel,
+    val mission: MissionModel,
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "control_unit_id")
-    var unit: ControlUnitModel,
+    val unit: ControlUnitModel,
 ) {
     companion object {
         fun fromControlUnitEntity(controlUnitEntity: ControlUnitEntity, mission: MissionModel) = MissionControlUnitModel(

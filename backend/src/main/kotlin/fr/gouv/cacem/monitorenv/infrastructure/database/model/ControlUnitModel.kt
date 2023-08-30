@@ -17,14 +17,14 @@ import jakarta.persistence.Table
 data class ControlUnitModel(
     @Id
     @Column(name = "id")
-    var id: Int,
+    val id: Int,
     @Column(name = "name")
-    var name: String,
+    val name: String,
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "administration_id")
-    var administration: AdministrationModel,
+    val administration: AdministrationModel,
     @Column(name = "archived")
-    var isArchived: Boolean,
+    val isArchived: Boolean,
     @OneToMany(
         fetch = FetchType.EAGER,
         mappedBy = "controlUnit",
@@ -32,7 +32,7 @@ data class ControlUnitModel(
         orphanRemoval = true,
     )
     @JsonManagedReference
-    var resources: MutableList<ControlResourceModel>? = ArrayList(),
+    val resources: MutableList<ControlResourceModel>? = ArrayList(),
 ) {
     fun toControlUnit() = ControlUnitEntity(
         id = id,

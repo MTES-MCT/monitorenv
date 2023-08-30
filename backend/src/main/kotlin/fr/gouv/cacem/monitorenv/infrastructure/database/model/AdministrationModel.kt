@@ -10,7 +10,7 @@ import jakarta.persistence.Table
 data class AdministrationModel(
     @Id
     @Column(name = "id")
-    var id: Int? = null,
+    val id: Int? = null,
     @Column(name = "name")
-    var name: String,
+    val name: String,
 )

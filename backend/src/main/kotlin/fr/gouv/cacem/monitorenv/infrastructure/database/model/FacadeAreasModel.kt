@@ -11,11 +11,11 @@ import org.locationtech.jts.geom.MultiPolygon
 data class FacadeAreasModel(
     @Id
     @Column(name = "id")
-    var id: Int,
+    val id: Int,
 
     @Column(name = "facade")
-    var facade: String,
+    val facade: String,
 
     @Column(name = "geometry")
-    var geometry: MultiPolygon? = null,
+    val geometry: MultiPolygon? = null,
 )

@@ -32,7 +32,7 @@ data class ReportingModel(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
-    var id: Int? = null,
+    val id: Int? = null,
     @Column(
         name = "reporting_id",
         unique = true,
@@ -44,43 +44,57 @@ data class ReportingModel(
     @Column(name = "source_type", columnDefinition = "reportings_source_type")
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
-    var sourceType: SourceTypeEnum? = null,
-    @Column(name = "semaphore_id") var semaphoreId: Int? = null,
-    @Column(name = "control_unit_id") var controlUnitId: Int? = null,
-    @Column(name = "source_name") var sourceName: String? = null,
+    val sourceType: SourceTypeEnum? = null,
+    @Column(name = "semaphore_id")
+    val semaphoreId: Int? = null,
+    @Column(name = "control_unit_id")
+    val controlUnitId: Int? = null,
+    @Column(name = "source_name")
+    val sourceName: String? = null,
     @Column(name = "target_type", columnDefinition = "reportings_target_type")
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
-    var targetType: TargetTypeEnum? = null,
+    val targetType: TargetTypeEnum? = null,
     @Column(name = "vehicle_type", columnDefinition = "reportings_vehicle_type")
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
-    var vehicleType: VehicleTypeEnum? = null,
+    val vehicleType: VehicleTypeEnum? = null,
     @Column(name = "target_details", columnDefinition = "jsonb")
     @Type(JsonBinaryType::class)
-    var targetDetails: List<TargetDetailsEntity>? = listOf(),
+    val targetDetails: List<TargetDetailsEntity>? = listOf(),
     @JsonSerialize(using = GeometrySerializer::class)
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
-    var geom: Geometry? = null,
-    @Column(name = "sea_front") var seaFront: String? = null,
-    @Column(name = "description") var description: String? = null,
+    val geom: Geometry? = null,
+    @Column(name = "sea_front")
+    val seaFront: String? = null,
+    @Column(name = "description")
+    val description: String? = null,
     @Column(name = "report_type", columnDefinition = "reportings_report_type")
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
-    var reportType: ReportingTypeEnum? = null,
-    @Column(name = "theme") var theme: String? = null,
+    val reportType: ReportingTypeEnum? = null,
+    @Column(name = "theme")
+    val theme: String? = null,
     @Column(name = "sub_themes")
     @Type(ListArrayType::class)
-    var subThemes: List<String>? = listOf(),
-    @Column(name = "action_taken") var actionTaken: String? = null,
-    @Column(name = "is_control_required") var isControlRequired: Boolean? = null,
-    @Column(name = "is_unit_available") var isUnitAvailable: Boolean? = null,
-    @Column(name = "created_at") var createdAt: Instant,
-    @Column(name = "validity_time") var validityTime: Int? = null,
-    @Column(name = "is_archived", nullable = false) val isArchived: Boolean,
-    @Column(name = "is_deleted", nullable = false) val isDeleted: Boolean,
-    @Column(name = "open_by") val openBy: String? = null,
+    val subThemes: List<String>? = listOf(),
+    @Column(name = "action_taken")
+    val actionTaken: String? = null,
+    @Column(name = "is_control_required")
+    val isControlRequired: Boolean? = null,
+    @Column(name = "is_unit_available")
+    val isUnitAvailable: Boolean? = null,
+    @Column(name = "created_at")
+    val createdAt: Instant,
+    @Column(name = "validity_time")
+    val validityTime: Int? = null,
+    @Column(name = "is_archived", nullable = false)
+    val isArchived: Boolean,
+    @Column(name = "is_deleted", nullable = false)
+    val isDeleted: Boolean,
+    @Column(name = "open_by")
+    val openBy: String? = null,
 ) {
 
     fun toReporting() =

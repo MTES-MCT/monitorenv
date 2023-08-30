@@ -40,35 +40,35 @@ data class EnvActionModel(
     @Id
     @JdbcType(UUIDJdbcType::class)
     @Column(name = "id", nullable = false, updatable = false, columnDefinition = "uuid")
-    var id: UUID,
+    val id: UUID,
 
     @Column(name = "action_start_datetime_utc")
-    var actionStartDateTime: Instant? = null,
+    val actionStartDateTime: Instant? = null,
 
     @Column(name = "action_end_datetime_utc")
-    var actionEndDateTime: Instant? = null,
+    val actionEndDateTime: Instant? = null,
 
     @JsonSerialize(using = GeometrySerializer::class)
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
-    var geom: Geometry? = null,
+    val geom: Geometry? = null,
 
     @Column(name = "action_type")
     @Enumerated(EnumType.STRING)
-    var actionType: ActionTypeEnum,
+    val actionType: ActionTypeEnum,
 
     @Type(JsonBinaryType::class)
     @Column(name = "value", columnDefinition = "jsonb")
-    var value: String,
+    val value: String,
     @Column(name = "facade")
-    var facade: String? = null,
+    val facade: String? = null,
     @Column(name = "department")
-    var department: String? = null,
+    val department: String? = null,
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "mission_id")
     @JsonBackReference
-    var mission: MissionModel,
+    val mission: MissionModel,
 ) {
 
     fun toActionEntity(mapper: ObjectMapper): EnvActionEntity {
