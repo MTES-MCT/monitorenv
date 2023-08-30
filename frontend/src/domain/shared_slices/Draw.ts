@@ -8,12 +8,14 @@ import type { InteractionTypeAndListener } from '../types/map'
 
 type DrawState = {
   geometry: GeoJSON.Geometry | undefined
+  initialGeometry: GeoJSON.Geometry | undefined
   interactionType: InteractionType | undefined
   isGeometryValid: boolean | undefined
   listener: InteractionListener | undefined
 }
 const INITIAL_STATE: DrawState = {
   geometry: undefined,
+  initialGeometry: undefined,
   interactionType: undefined,
   isGeometryValid: undefined,
   listener: undefined
@@ -35,11 +37,18 @@ const drawReducerSlice = createSlice({
       state.interactionType = undefined
       state.listener = undefined
       state.geometry = undefined
+      state.initialGeometry = undefined
     },
 
     setGeometry(state, action: PayloadAction<GeoJSON.Geometry>) {
       state.geometry = action.payload
       state.isGeometryValid = isGeometryValid(action.payload)
+    },
+    /**
+     * Save the initial geometry value from form if user want to reinitialize the geometry
+     */
+    setInitialGeometry(state, action: PayloadAction<GeoJSON.Geometry>) {
+      state.initialGeometry = action.payload
     },
 
     /**
@@ -60,7 +69,13 @@ const drawReducerSlice = createSlice({
   }
 })
 
-export const { resetGeometry, resetInteraction, setGeometry, setInteractionType, setInteractionTypeAndListener } =
-  drawReducerSlice.actions
+export const {
+  resetGeometry,
+  resetInteraction,
+  setGeometry,
+  setInitialGeometry,
+  setInteractionType,
+  setInteractionTypeAndListener
+} = drawReducerSlice.actions
 
 export const drawReducer = drawReducerSlice.reducer

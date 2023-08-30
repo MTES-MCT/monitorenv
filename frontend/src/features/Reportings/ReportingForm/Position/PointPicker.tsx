@@ -60,7 +60,7 @@ export function PointPicker() {
 
   return (
     <Field>
-      {value?.coordinates && value.type === OLGeometryType.MULTIPOINT && (
+      {value?.coordinates?.length > 0 && value.type === OLGeometryType.MULTIPOINT && (
         <Row>
           <ZoneWrapper>
             {formatCoordinates(value.coordinates[0] as Coordinate, coordinatesFormat)}

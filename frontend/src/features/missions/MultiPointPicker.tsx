@@ -1,4 +1,4 @@
-import { Accent, Button, Icon, IconButton, Label } from '@mtes-mct/monitor-ui'
+import { Accent, Button, FieldError, Icon, IconButton, Label } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import _ from 'lodash'
 import { boundingExtent } from 'ol/extent'
@@ -33,7 +33,7 @@ export function MultiPointPicker({ addButtonLabel, label = undefined, name }: Mu
   const { coordinatesFormat } = useAppSelector(state => state.map)
   const { geometry } = useListenForDrawedGeometry(InteractionListener.CONTROL_POINT)
 
-  const [field, , helpers] = useField(name)
+  const [field, meta, helpers] = useField(name)
   const { value } = field
   const { setValue } = helpers
 
@@ -79,7 +79,7 @@ export function MultiPointPicker({ addButtonLabel, label = undefined, name }: Mu
 
   return (
     <Field>
-      {label && <Label>{label}</Label>}
+      {label && <Label hasError={!!meta.error}>{label}</Label>}
 
       <Button
         accent={Accent.SECONDARY}
@@ -90,6 +90,7 @@ export function MultiPointPicker({ addButtonLabel, label = undefined, name }: Mu
       >
         {addButtonLabel}
       </Button>
+      {!!meta.error && <FieldError>Veuillez définir un point de contrôle</FieldError>}
 
       <>
         {points.map((coordinates, index) => (
