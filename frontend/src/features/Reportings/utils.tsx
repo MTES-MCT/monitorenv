@@ -24,7 +24,10 @@ export function isNewReporting(id: string | number) {
 }
 
 export const getReportingTitle = reporting => {
-  const { id, reportingId } = reporting
+  if (!reporting) {
+    return undefined
+  }
+  const { id, reportingId } = reporting || {}
   const reportingStatus = getReportingStatus(reporting)
   if (isNewReporting(id)) {
     return `NOUVEAU SIGNALEMENT (${String(id).slice(4)})`

@@ -11,7 +11,7 @@ export const StyledFormContainer = styled.div`
 `
 export const StyledForm = styled.div`
   padding: 32px;
-  padding-right: calc(32px - var(--scrollbar-width));
+  padding-right: calc(32px - var(--scrollbar-width || 0px));
   display: flex;
   flex-direction: column;
   gap: 24px;

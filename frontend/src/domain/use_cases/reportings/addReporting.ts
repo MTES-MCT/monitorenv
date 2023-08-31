@@ -1,22 +1,27 @@
 import _ from 'lodash'
 
+import { SideWindowReportingFormVisibility } from '../../../features/Reportings/sideWindowContext/context'
 import { getReportingInitialValues, isNewReporting } from '../../../features/Reportings/utils'
 import { setReportingFormVisibility } from '../../shared_slices/Global'
 import { multiReportingsActions } from '../../shared_slices/MultiReportings'
-import { type ReportingContext, ReportingFormVisibility } from '../../shared_slices/ReportingState'
+import { ReportingContext, ReportingFormVisibility } from '../../shared_slices/ReportingState'
 
 import type { Reporting } from '../../entities/reporting'
 
 export const addReporting =
-  (reportingContext: ReportingContext, partialReporting?: Partial<Reporting> | undefined) =>
+  (
+    reportingContext: ReportingContext,
+    partialReporting?: Partial<Reporting> | undefined,
+    setContextVisibility?: (nextVisibility: SideWindowReportingFormVisibility) => void
+  ) =>
   async (dispatch, getState) => {
     const {
       multiReportings: { selectedReportings },
       reportingState: { context, isFormDirty, reportingState }
     } = getState()
-
     const reportings = [...selectedReportings]
 
+    // first we want to save the active reporting in multiReportings state
     if (reportingState) {
       const selectedReportingId = reportings.findIndex(reporting => reporting.reporting.id === reportingState.id)
       const reportingFormatted = {
@@ -53,5 +58,10 @@ export const addReporting =
     await dispatch(
       multiReportingsActions.setSelectedReportings({ activeReportingId: id, selectedReportings: updatedReportings })
     )
-    await dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
+
+    if (setContextVisibility) {
+      setContextVisibility(SideWindowReportingFormVisibility.VISIBLE)
+    } else {
+      await dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
+    }
   }

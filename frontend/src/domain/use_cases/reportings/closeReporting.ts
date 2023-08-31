@@ -1,16 +1,17 @@
+import { setReportingFormVisibility } from '../../shared_slices/Global'
 import { multiReportingsActions } from '../../shared_slices/MultiReportings'
-import { reportingStateActions } from '../../shared_slices/ReportingState'
+import { ReportingFormVisibility, reportingStateActions } from '../../shared_slices/ReportingState'
 
-export const closeReporting = (id: number | string | undefined) => async (dispatch, getState) => {
+export const closeReporting = (reportingIdToClose: number | string | undefined) => async (dispatch, getState) => {
   const {
     multiReportings: { selectedReportings },
     reportingState: { context, isFormDirty, reportingState }
   } = getState()
-  if (!id) {
+  if (!reportingIdToClose) {
     return
   }
 
-  const indexToClose = selectedReportings.findIndex(reporting => reporting.reporting.id === id)
+  const indexToClose = selectedReportings.findIndex(reporting => reporting.reporting.id === reportingIdToClose)
 
   // if we want to close a reporting with a form that has changes
   if (
@@ -25,7 +26,7 @@ export const closeReporting = (id: number | string | undefined) => async (dispat
         selectedReportings,
         isFormDirty,
         dispatch,
-        id
+        reportingIdToClose
       )
 
       return
@@ -36,7 +37,8 @@ export const closeReporting = (id: number | string | undefined) => async (dispat
     return
   }
 
-  await dispatch(multiReportingsActions.deleteSelectedReporting(id))
+  await dispatch(multiReportingsActions.deleteSelectedReporting(reportingIdToClose))
+  await dispatch(setReportingFormVisibility(ReportingFormVisibility.NONE))
 }
 
 async function saveCurrentReportingInMultiMissionsState(
@@ -45,7 +47,7 @@ async function saveCurrentReportingInMultiMissionsState(
   selectedReportings,
   isFormDirty,
   dispatch,
-  id
+  reportingIdToClose
 ) {
   const updatedReportings = [...selectedReportings]
   const reportingIndex = updatedReportings.findIndex(reporting => reporting.reporting.id === reportingState?.id)
@@ -61,9 +63,10 @@ async function saveCurrentReportingInMultiMissionsState(
   }
   await dispatch(
     multiReportingsActions.setSelectedReportings({
-      activeReportingId: id,
+      activeReportingId: reportingIdToClose,
       selectedReportings: updatedReportings
     })
   )
+  dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
   await dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(true))
 }

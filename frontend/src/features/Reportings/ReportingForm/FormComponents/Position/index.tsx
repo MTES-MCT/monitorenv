@@ -5,9 +5,9 @@ import { useDispatch } from 'react-redux'
 
 import { PointPicker } from './PointPicker'
 import { ZonePicker } from './ZonePicker'
-import { InteractionListener } from '../../../../domain/entities/map/constants'
-import { drawPoint, drawPolygon } from '../../../../domain/use_cases/draw/drawGeometry'
-import { StyledPositionContainer } from '../../style'
+import { InteractionListener } from '../../../../../domain/entities/map/constants'
+import { drawPoint, drawPolygon } from '../../../../../domain/use_cases/draw/drawGeometry'
+import { StyledPositionContainer } from '../../../style'
 
 export function Position() {
   const dispatch = useDispatch()

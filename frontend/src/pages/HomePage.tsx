@@ -13,7 +13,7 @@ import { RightMenuOnHoverArea } from '../features/map/shared/RightMenuOnHoverAre
 import { InterestPointMapButton } from '../features/map/tools/interest_points/InterestPointMapButton'
 import { MeasurementMapButton } from '../features/map/tools/measurements/MeasurementMapButton'
 import { MissionsMenu } from '../features/missions/MissionsButton'
-import { Reportings } from '../features/Reportings'
+import { ReportingsOnMap } from '../features/Reportings/mapContext'
 import { ReportingsButton } from '../features/Reportings/ReportingsButton'
 import { SearchSemaphoreButton } from '../features/Semaphores/SearchSemaphoreButton'
 import { SideWindowLauncher } from '../features/SideWindow/SideWindowLauncher'
@@ -72,7 +72,7 @@ export function HomePage() {
         {displayMeasurement && <MeasurementMapButton />}
         {displayInterestPoint && <InterestPointMapButton />}
 
-        <Reportings />
+        <ReportingsOnMap />
 
         <SideWindowLauncher />
 

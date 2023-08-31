@@ -3,29 +3,36 @@ import { useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { Reporting } from './ReportingForm'
-import { StyledChevronIcon, StyledHeader, StyledHeaderButtons, StyledTitle } from './style'
-import { getReportingTitle } from './utils'
-import { hideSideButtons, setReportingFormVisibility } from '../../domain/shared_slices/Global'
-import { ReportingContext, ReportingFormVisibility } from '../../domain/shared_slices/ReportingState'
-import { closeReporting } from '../../domain/use_cases/reportings/closeReporting'
-import { switchReporting } from '../../domain/use_cases/reportings/switchReporting'
-import { useAppSelector } from '../../hooks/useAppSelector'
+import { ReportingFormOnMap } from './Form'
+import { hideSideButtons, setReportingFormVisibility } from '../../../domain/shared_slices/Global'
+import { ReportingContext, ReportingFormVisibility } from '../../../domain/shared_slices/ReportingState'
+import { closeReporting } from '../../../domain/use_cases/reportings/closeReporting'
+import { switchReporting } from '../../../domain/use_cases/reportings/switchReporting'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+import { StyledChevronIcon, StyledHeader, StyledHeaderButtons, StyledTitle } from '../style'
+import { getReportingTitle } from '../utils'
 
-import type { Reporting as ReportingType } from '../../domain/entities/reporting'
+import type { Reporting as ReportingType } from '../../../domain/entities/reporting'
 
-export function Reportings() {
+export function ReportingsOnMap() {
   const {
     global: { reportingFormVisibility },
     multiReportings: { activeReportingId, selectedReportings }
   } = useAppSelector(state => state)
   const dispatch = useDispatch()
 
+  const selectedReporting = useMemo(
+    () => selectedReportings.find(reporting => reporting.reporting.id === activeReportingId),
+    [selectedReportings, activeReportingId]
+  )
+
   const reportingsOnMap = useMemo(
     () =>
-      selectedReportings.filter(
-        reporting => reporting.context === ReportingContext.MAP && activeReportingId !== reporting.reporting.id
-      ),
+      (selectedReportings.length > 0 &&
+        selectedReportings.filter(
+          reporting => reporting.context === ReportingContext.MAP && activeReportingId !== reporting.reporting.id
+        )) ||
+      [],
     [selectedReportings, activeReportingId]
   )
 
@@ -43,13 +50,19 @@ export function Reportings() {
 
   return (
     <>
-      {activeReportingId && <Reporting />}
+      {activeReportingId && selectedReporting?.context === ReportingContext.MAP && (
+        <ReportingFormOnMap totalMapReportings={reportingsOnMap.length + 1} />
+      )}
 
       {reportingsOnMap.map((reporting, index) => {
         const reducedReporting: Partial<ReportingType> = reporting.reporting
 
         return (
-          <StyledContainer key={reducedReporting.id} $position={index}>
+          <StyledContainer
+            key={reducedReporting.id}
+            $position={index}
+            $reportingFormVisibility={reportingFormVisibility}
+          >
             <StyledHeader>
               <StyledTitle>
                 <Icon.Report />
@@ -77,8 +90,8 @@ export function Reportings() {
   )
 }
 
-const StyledContainer = styled.div<{ $position: number }>`
-  background-color: ${p => p.theme.color.white};
+const StyledContainer = styled.div<{ $position: number; $reportingFormVisibility: ReportingFormVisibility }>`
+  background-color: transparent;
   position: absolute;
   bottom: ${p => p.$position * 52}px;
   width: 500px;
@@ -87,6 +100,15 @@ const StyledContainer = styled.div<{ $position: number }>`
   display: flex;
   transition: right 0.5s ease-out, top 0.5s ease-out;
   z-index: 100;
-  right: 12px;
-  top: calc(100vh - 52px);
+  padding-top: 4px;
+  ${p => {
+    switch (p.$reportingFormVisibility) {
+      case ReportingFormVisibility.VISIBLE_LEFT:
+        return 'right: 56px;'
+      case ReportingFormVisibility.REDUCED:
+        return 'right: 12px;'
+      default:
+        return 'right: 8px;'
+    }
+  }}
 `
