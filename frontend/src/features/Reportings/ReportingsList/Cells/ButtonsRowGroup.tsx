@@ -2,10 +2,11 @@ import { Accent, Dropdown, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { useState } from 'react'
 import styled from 'styled-components'
 
+import { ReportingContext } from '../../../../domain/shared_slices/ReportingState'
 import { archiveReportingFromTable } from '../../../../domain/use_cases/reportings/archiveReporting'
 import { deleteReporting } from '../../../../domain/use_cases/reportings/deleteReporting'
 import { duplicateReporting } from '../../../../domain/use_cases/reportings/duplicateReporting'
-import { openReporting } from '../../../../domain/use_cases/reportings/openReporting'
+import { editReportingInLocalStore } from '../../../../domain/use_cases/reportings/editReportingInLocalStore'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ArchiveModal } from '../../../commonComponents/Modals/Archive'
@@ -25,7 +26,7 @@ export function ButtonsGroupRow({ id }) {
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false)
 
   const edit = () => {
-    dispatch(openReporting(id))
+    dispatch(editReportingInLocalStore(id, ReportingContext.SIDE_WINDOW))
   }
 
   const duplicate = () => {

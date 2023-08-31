@@ -12,9 +12,9 @@ import {
 import { useEffect } from 'react'
 import styled from 'styled-components'
 
-import { ReportingTargetTypeEnum } from '../../../../domain/entities/targetType'
-import { VehicleTypeEnum } from '../../../../domain/entities/vehicleType'
-import { StyledEmptyTarget, StyledVesselContainer, StyledVesselForm } from '../../style'
+import { ReportingTargetTypeEnum } from '../../../../../domain/entities/targetType'
+import { VehicleTypeEnum } from '../../../../../domain/entities/vehicleType'
+import { StyledEmptyTarget, StyledVesselContainer, StyledVesselForm } from '../../../style'
 
 export function TargetDetails({ form, push, remove }) {
   // Ensure that the component is re-rendered when the number of targets changes

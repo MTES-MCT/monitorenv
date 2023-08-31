@@ -27,6 +27,7 @@ const multiReportingsSlice = createSlice({
       state.selectedReportings = [...state.selectedReportings].filter(
         reporting => action.payload !== reporting.reporting.id
       )
+      state.activeReportingId = undefined
     },
     setNextSelectedReporting(state, action) {
       state.nextSelectedReporting = action.payload

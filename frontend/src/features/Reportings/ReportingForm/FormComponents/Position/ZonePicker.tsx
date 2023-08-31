@@ -11,12 +11,12 @@ import {
   OLGeometryType,
   OPENLAYERS_PROJECTION,
   WSG84_PROJECTION
-} from '../../../../domain/entities/map/constants'
-import { setFitToExtent } from '../../../../domain/shared_slices/Map'
-import { drawPolygon } from '../../../../domain/use_cases/draw/drawGeometry'
-import { useAppDispatch } from '../../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useListenForDrawedGeometry } from '../../../../hooks/useListenForDrawing'
+} from '../../../../../domain/entities/map/constants'
+import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
+import { drawPolygon } from '../../../../../domain/use_cases/draw/drawGeometry'
+import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../../../hooks/useAppSelector'
+import { useListenForDrawedGeometry } from '../../../../../hooks/useListenForDrawing'
 
 export function ZonePicker() {
   const dispatch = useAppDispatch()

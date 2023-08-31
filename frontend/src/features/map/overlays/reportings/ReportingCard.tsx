@@ -14,8 +14,8 @@ import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { ReportingTypeEnum, getFormattedReportingId, ReportingTypeLabels } from '../../../../domain/entities/reporting'
-import { reportingStateActions } from '../../../../domain/shared_slices/ReportingState'
-import { openReporting } from '../../../../domain/use_cases/reportings/openReporting'
+import { ReportingContext, reportingStateActions } from '../../../../domain/shared_slices/ReportingState'
+import { editReportingInLocalStore } from '../../../../domain/use_cases/reportings/editReportingInLocalStore'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 export function ReportingCard({
@@ -66,7 +66,7 @@ export function ReportingCard({
   }, [timeLeft, isArchived])
 
   const editReporting = () => {
-    dispatch(openReporting(id))
+    dispatch(editReportingInLocalStore(id, ReportingContext.MAP))
   }
 
   const closeReportingCard = useCallback(() => {

@@ -2,12 +2,12 @@ import { getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import { FieldArray, useFormikContext } from 'formik'
 
 import { TargetDetails } from './TargetDetails'
-import { ReportingTargetTypeLabels, ReportingTargetTypeEnum } from '../../../../domain/entities/targetType'
-import { TargetSelector } from '../../../commonComponents/TargetSelector'
-import { VehicleTypeSelector } from '../../../commonComponents/VehicleTypeSelector'
-import { StyledInlineContainer } from '../../style'
+import { ReportingTargetTypeLabels, ReportingTargetTypeEnum } from '../../../../../domain/entities/targetType'
+import { TargetSelector } from '../../../../commonComponents/TargetSelector'
+import { VehicleTypeSelector } from '../../../../commonComponents/VehicleTypeSelector'
+import { StyledInlineContainer } from '../../../style'
 
-import type { Reporting } from '../../../../domain/entities/reporting'
+import type { Reporting } from '../../../../../domain/entities/reporting'
 
 export function Target() {
   const { setFieldValue, values } = useFormikContext<Reporting>()

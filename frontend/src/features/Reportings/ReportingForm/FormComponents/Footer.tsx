@@ -3,9 +3,9 @@ import { useFormikContext } from 'formik'
 import _ from 'lodash'
 import { useDispatch } from 'react-redux'
 
-import { ReportingStatusEnum, type Reporting, getReportingStatus } from '../../../domain/entities/reporting'
-import { reopenReporting } from '../../../domain/use_cases/reportings/reopenReporting'
-import { StyledButton, StyledSubmitButton, StyledDeleteButton, StyledFooter } from '../style'
+import { ReportingStatusEnum, type Reporting, getReportingStatus } from '../../../../domain/entities/reporting'
+import { reopenReporting } from '../../../../domain/use_cases/reportings/reopenReporting'
+import { StyledButton, StyledSubmitButton, StyledDeleteButton, StyledFooter } from '../../style'
 
 export function Footer({ onCancel, onDelete, setMustIncreaseValidity, setShouldValidateOnChange }) {
   const dispatch = useDispatch()

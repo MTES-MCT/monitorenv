@@ -44,6 +44,9 @@ const reportingStateSlice = createSlice({
     setIsDirty(state, action) {
       state.isFormDirty = action.payload
     },
+    setReportingContext(state, action) {
+      state.context = action.payload
+    },
     setReportingState(state, action) {
       state.reportingState = action.payload
     },

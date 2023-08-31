@@ -45,7 +45,6 @@ export const homeReducers = combineReducers({
   [layerSidebarSlice.name]: layerSidebarSlice.reducer,
   [ampsAPI.reducerPath]: ampsAPI.reducer,
   [regulatoryLayersAPI.reducerPath]: regulatoryLayersAPI.reducer,
-  [regulatoryLayersAPI.reducerPath]: regulatoryLayersAPI.reducer,
   [missionsAPI.reducerPath]: missionsAPI.reducer,
   [controlThemesAPI.reducerPath]: controlThemesAPI.reducer,
   [controlUnitsAPI.reducerPath]: controlUnitsAPI.reducer,

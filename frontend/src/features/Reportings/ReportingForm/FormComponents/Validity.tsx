@@ -3,7 +3,7 @@ import { useFormikContext } from 'formik'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { ReportingStatusEnum, type Reporting, getReportingStatus } from '../../../domain/entities/reporting'
+import { ReportingStatusEnum, type Reporting, getReportingStatus } from '../../../../domain/entities/reporting'
 
 export function Validity({ mustIncreaseValidity }: { mustIncreaseValidity: boolean }) {
   const { values } = useFormikContext<Reporting>()

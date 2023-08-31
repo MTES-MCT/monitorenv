@@ -3,9 +3,9 @@ import _ from 'lodash'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { useGetControlThemesQuery } from '../../../../api/controlThemesAPI'
+import { useGetControlThemesQuery } from '../../../../../api/controlThemesAPI'
 
-import type { ControlTheme } from '../../../../domain/entities/controlThemes'
+import type { ControlTheme } from '../../../../../domain/entities/controlThemes'
 
 export function SubThemesSelector({ isLight = false, label, name, theme }) {
   const { data: controlThemes, isError, isLoading } = useGetControlThemesQuery()
