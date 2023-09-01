@@ -16,7 +16,7 @@ import { useDispatch } from 'react-redux'
 
 import { measurementStyle, measurementStyleWithCenter } from './styles/measurement.style'
 import { Layers } from '../../../domain/entities/layers/constants'
-import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map/constants'
+import { DistanceUnit, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map/constants'
 import {
   removeMeasurementDrawed,
   resetMeasurementTypeToAdd,
@@ -39,27 +39,37 @@ const DRAW_START_EVENT = 'drawstart'
 const DRAW_ABORT_EVENT = 'drawabort'
 const DRAW_END_EVENT = 'drawend'
 
-const getNauticalMilesRadiusOfCircle = circle => {
+const getNauticalMilesRadiusOfCircle = (circle, distanceUnit) => {
   const polygon = fromCircle(circle)
 
-  return getNauticalMilesRadiusOfCircularPolygon(polygon)
+  return getNauticalMilesRadiusOfCircularPolygon(polygon, distanceUnit)
 }
 
-const getNauticalMilesOfLine = line => {
+const getNauticalMilesOfLine = (line, distanceUnit) => {
   const length = getLength(line)
+
+  if (distanceUnit === DistanceUnit.METRIC) {
+    return `r = ${Math.round(length) / 1000} km`
+  }
 
   return `${getNauticalMilesFromMeters(length)} nm`
 }
 
-function getNauticalMilesRadiusOfCircularPolygon(polygon) {
+function getNauticalMilesRadiusOfCircularPolygon(polygon, distanceUnit) {
   const length = getLength(polygon)
   const radius = length / (2 * Math.PI)
+
+  if (distanceUnit === DistanceUnit.METRIC) {
+    return `r = ${Math.round(radius) / 1000} km`
+  }
 
   return `r = ${getNauticalMilesFromMeters(radius)} nm`
 }
 
 export function MeasurementLayer({ map }: BaseMapChildrenProps) {
   const dispatch = useDispatch()
+
+  const { distanceUnit } = useAppSelector(state => state.map)
 
   const { circleMeasurementToAdd, measurementsDrawed, measurementTypeToAdd } = useAppSelector(
     state => state.measurement
@@ -138,7 +148,7 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
           let coordinates = tooltipCoordinates
 
           if (geom instanceof LineString) {
-            const nextMeasurementOutput = getNauticalMilesOfLine(geom)
+            const nextMeasurementOutput = getNauticalMilesOfLine(geom, distanceUnit)
             coordinates = geom.getLastCoordinate()
 
             setMeasurementInProgress({
@@ -146,7 +156,7 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
               measurement: nextMeasurementOutput
             })
           } else if (geom instanceof Circle) {
-            const nextMeasurementOutput = getNauticalMilesRadiusOfCircle(geom)
+            const nextMeasurementOutput = getNauticalMilesRadiusOfCircle(geom, distanceUnit)
             coordinates = geom.getLastCoordinate()
 
             setMeasurementInProgress({
@@ -197,7 +207,7 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
       addEmptyNextMeasurement()
       drawNewFeatureOnMap()
     }
-  }, [dispatch, map, measurementTypeToAdd])
+  }, [dispatch, map, measurementTypeToAdd, distanceUnit])
 
   useEffect(() => {
     if (!measurementTypeToAdd) {
@@ -233,8 +243,12 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
         return circleMeasurementToAdd?.circleRadiusToAdd && measurementInProgressRef.current?.center?.length === 2
       }
 
-      const radiusInMeters =
+      let radiusInMeters =
         METERS_PER_UNIT.m * (circleMeasurementToAdd?.circleRadiusToAdd || 0) * metersForOneNauticalMile
+
+      if (distanceUnit === DistanceUnit.METRIC) {
+        radiusInMeters = METERS_PER_UNIT.m * (circleMeasurementToAdd?.circleRadiusToAdd || 0) * 1000
+      }
       let coordinates = [] as any[]
       if (circleMeasurementHasCoordinatesAndRadiusFromForm()) {
         coordinates = [
@@ -252,10 +266,16 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
         ),
         style: [measurementStyle, measurementStyleWithCenter]
       })
-      dispatch(saveMeasurement(circleFeature, `r = ${circleMeasurementToAdd?.circleRadiusToAdd} nm`))
+      let nextMeasurementOutput = `r = ${circleMeasurementToAdd?.circleRadiusToAdd} nm`
+      if (distanceUnit === DistanceUnit.METRIC) {
+        nextMeasurementOutput = `r = ${circleMeasurementToAdd?.circleRadiusToAdd} km`
+      }
+      dispatch(saveMeasurement(circleFeature, nextMeasurementOutput))
     }
 
     addCustomCircleMeasurement()
+    // we don't want to add the circle measurement if the user changes the distance unit
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, circleMeasurementToAdd])
 
   useEffect(() => {
