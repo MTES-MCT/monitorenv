@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { SearchReportings } from './SearchReportings'
 import { setDisplayedItems } from '../../../domain/shared_slices/Global'
 import { ReportingContext, VisibilityState } from '../../../domain/shared_slices/ReportingState'
-import { reduceReportingForm } from '../../../domain/use_cases/reduceReportingForm'
+import { reduceReportingFormOnMap } from '../../../domain/use_cases/reportings/reduceReportingFormOnMap'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
@@ -22,7 +22,7 @@ export function ReportingsButton() {
         isSearchSemaphoreVisible: false
       })
     )
-    dispatch(reduceReportingForm())
+    dispatch(reduceReportingFormOnMap())
   }
 
   return (

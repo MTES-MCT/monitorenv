@@ -18,6 +18,7 @@ import { multiReportingsActions } from '../../../domain/shared_slices/MultiRepor
 import { ReportingContext, VisibilityState, reportingStateActions } from '../../../domain/shared_slices/ReportingState'
 import { closeReporting } from '../../../domain/use_cases/reportings/closeReporting'
 import { deleteReporting } from '../../../domain/use_cases/reportings/deleteReporting'
+import { reduceOrExpandReportingForm } from '../../../domain/use_cases/reportings/reduceOrExpandReportingForm'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useSyncFormValuesWithRedux } from '../../../hooks/useSyncFormValuesWithRedux'
 import { DeleteModal } from '../../commonComponents/Modals/Delete'
@@ -77,22 +78,7 @@ export function ReportingForm({ selectedReporting, setShouldValidateOnChange }) 
     if (!isSideWindowContext) {
       dispatch(hideSideButtons())
     }
-
-    if (reportingFormVisibility.visibility === VisibilityState.VISIBLE) {
-      dispatch(
-        setReportingFormVisibility({
-          context: selectedReporting.context,
-          visibility: VisibilityState.REDUCED
-        })
-      )
-    } else {
-      dispatch(
-        setReportingFormVisibility({
-          context: selectedReporting.context,
-          visibility: VisibilityState.VISIBLE
-        })
-      )
-    }
+    dispatch(reduceOrExpandReportingForm(selectedReporting.context))
   }
 
   const returnToEdition = () => {
@@ -102,10 +88,12 @@ export function ReportingForm({ selectedReporting, setShouldValidateOnChange }) 
   const confirmCloseReporting = () => {
     dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(false))
     dispatch(multiReportingsActions.deleteSelectedReporting(selectedReporting.reporting.id))
-    setReportingFormVisibility({
-      context: selectedReporting.context,
-      visibility: VisibilityState.NONE
-    })
+    dispatch(
+      setReportingFormVisibility({
+        context: selectedReporting.context,
+        visibility: VisibilityState.NONE
+      })
+    )
   }
 
   const deleteCurrentReporting = () => {
@@ -129,10 +117,6 @@ export function ReportingForm({ selectedReporting, setShouldValidateOnChange }) 
 
   const confirmDeleteReporting = () => {
     dispatch(deleteReporting(values.id))
-    setReportingFormVisibility({
-      context: selectedReporting.context,
-      visibility: VisibilityState.NONE
-    })
   }
 
   return (

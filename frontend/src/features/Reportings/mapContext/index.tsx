@@ -4,9 +4,10 @@ import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { ReportingFormOnMap } from './Form'
-import { hideSideButtons, setReportingFormVisibility } from '../../../domain/shared_slices/Global'
+import { hideSideButtons } from '../../../domain/shared_slices/Global'
 import { ReportingContext, VisibilityState } from '../../../domain/shared_slices/ReportingState'
 import { closeReporting } from '../../../domain/use_cases/reportings/closeReporting'
+import { reduceOrExpandReportingForm } from '../../../domain/use_cases/reportings/reduceOrExpandReportingForm'
 import { switchReporting } from '../../../domain/use_cases/reportings/switchReporting'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { StyledChevronIcon, StyledHeader, StyledHeaderButtons, StyledTitle } from '../style'
@@ -36,21 +37,9 @@ export function ReportingsOnMap() {
     [selectedReportings, activeReportingId]
   )
 
-  const reduceOrExpandReporting = id => {
+  const reduceOrExpandReporting = async id => {
     if (activeReportingId === id && reportingFormVisibility.context === ReportingContext.MAP) {
-      return reportingFormVisibility.visibility === VisibilityState.VISIBLE
-        ? dispatch(
-            setReportingFormVisibility({
-              context: ReportingContext.MAP,
-              visibility: VisibilityState.REDUCED
-            })
-          )
-        : dispatch(
-            setReportingFormVisibility({
-              context: ReportingContext.MAP,
-              visibility: VisibilityState.VISIBLE
-            })
-          )
+      await dispatch(reduceOrExpandReportingForm(ReportingContext.MAP))
     }
 
     dispatch(hideSideButtons())
@@ -61,7 +50,9 @@ export function ReportingsOnMap() {
   return (
     <>
       {activeReportingId && selectedReporting?.context === ReportingContext.MAP && (
-        <ReportingFormOnMap totalMapReportings={reportingsOnMap.length + 1} />
+        <div>
+          <ReportingFormOnMap totalMapReportings={reportingsOnMap.length + 1} />
+        </div>
       )}
 
       {reportingsOnMap.map((reporting, index) => {

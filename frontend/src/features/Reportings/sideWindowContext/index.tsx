@@ -4,9 +4,9 @@ import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { ReportingFormOnSideWindow } from './Form'
-import { setReportingFormVisibility } from '../../../domain/shared_slices/Global'
-import { ReportingContext, VisibilityState } from '../../../domain/shared_slices/ReportingState'
+import { ReportingContext } from '../../../domain/shared_slices/ReportingState'
 import { closeReporting } from '../../../domain/use_cases/reportings/closeReporting'
+import { reduceOrExpandReportingForm } from '../../../domain/use_cases/reportings/reduceOrExpandReportingForm'
 import { switchReporting } from '../../../domain/use_cases/reportings/switchReporting'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { StyledChevronIcon, StyledHeader, StyledHeaderButtons, StyledTitle } from '../style'
@@ -16,7 +16,6 @@ import type { Reporting as ReportingType } from '../../../domain/entities/report
 
 export function ReportingsOnSideWindow() {
   const {
-    global: { reportingFormVisibility },
     multiReportings: { activeReportingId, selectedReportings }
   } = useAppSelector(state => state)
   const dispatch = useDispatch()
@@ -37,21 +36,9 @@ export function ReportingsOnSideWindow() {
     [selectedReportings, activeReportingId]
   )
 
-  const reduceOrExpandReporting = id => {
+  const reduceOrExpandReporting = async id => {
     if (activeReportingId === id) {
-      return reportingFormVisibility.visibility === VisibilityState.VISIBLE
-        ? dispatch(
-            setReportingFormVisibility({
-              context: ReportingContext.SIDE_WINDOW,
-              visibility: VisibilityState.REDUCED
-            })
-          )
-        : dispatch(
-            setReportingFormVisibility({
-              context: ReportingContext.SIDE_WINDOW,
-              visibility: VisibilityState.VISIBLE
-            })
-          )
+      await dispatch(reduceOrExpandReportingForm(ReportingContext.SIDE_WINDOW))
     }
 
     return dispatch(switchReporting(id, ReportingContext.SIDE_WINDOW))
