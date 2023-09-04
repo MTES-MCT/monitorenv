@@ -5,7 +5,7 @@ export function ReopenModal({ onCancel, onConfirm, open }) {
   return (
     open && (
       <Dialog isAbsolute>
-        <Dialog.Title>Rouvrir la mission et enregister les modifications ?</Dialog.Title>
+        <Dialog.Title>Rouvrir la mission et enregistrer les modifications ?</Dialog.Title>
         <Dialog.Body>
           <p>Des modifications ont été apportées au formulaire.</p>
           <p>

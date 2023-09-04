@@ -1,6 +1,5 @@
-import _ from 'lodash'
-
-import { getReportingInitialValues, isNewReporting } from '../../../features/Reportings/utils'
+import { saveReportingInMultiReportingsState } from './saveReportingInMultiReportingsState'
+import { getReportingInitialValues, createIdForNewReporting } from '../../../features/Reportings/utils'
 import { setReportingFormVisibility } from '../../shared_slices/Global'
 import { multiReportingsActions } from '../../shared_slices/MultiReportings'
 import { ReportingContext, VisibilityState } from '../../shared_slices/ReportingState'
@@ -12,41 +11,22 @@ export const addReporting =
   async (dispatch, getState) => {
     const {
       multiReportings: { selectedReportings },
-      reportingState: { context, isFormDirty, reportingState }
+      reportingState: { reportingState }
     } = getState()
-    const reportings = [...selectedReportings]
+    let reportings = [...selectedReportings]
 
     // first we want to save the active reporting in multiReportings state
     if (reportingState) {
-      const selectedReportingId = reportings.findIndex(reporting => reporting.reporting.id === reportingState.id)
-      const reportingFormatted = {
-        context,
-        isFormDirty,
-        reporting: reportingState
-      }
-
-      if (selectedReportingId !== -1) {
-        reportings[selectedReportingId] = reportingFormatted
-      } else {
-        reportings.push(reportingFormatted)
-      }
+      reportings = await dispatch(saveReportingInMultiReportingsState())
     }
-    const maxNewReportingId = _.chain(reportings)
-      .filter(newReporting => isNewReporting(newReporting.reporting.id))
-      .maxBy(filteredNewReporting => Number(filteredNewReporting?.reporting?.id?.split('new-')[1]))
-      .value()
-
-    const id =
-      maxNewReportingId && maxNewReportingId.reporting.id
-        ? `new-${Number(maxNewReportingId?.reporting?.id?.split('new-')[1]) + 1}`
-        : 'new-1'
+    const id = createIdForNewReporting(reportings)
 
     const updatedReportings = [
       ...reportings,
       {
         context: reportingContext,
         isFormDirty: false,
-        reporting: getReportingInitialValues({ ...partialReporting, id })
+        reporting: getReportingInitialValues({ createdAt: new Date().toISOString(), id, ...partialReporting })
       }
     ]
 

@@ -1,34 +1,40 @@
-import { addReporting } from './addReporting'
 import { reportingsAPI } from '../../../api/reportingsAPI'
-import { hideSideButtons, setReportingFormVisibility, setToast } from '../../shared_slices/Global'
+import { getReportingInitialValues, createIdForNewReporting } from '../../../features/Reportings/utils'
+import { setReportingFormVisibility, setToast } from '../../shared_slices/Global'
 import { multiReportingsActions } from '../../shared_slices/MultiReportings'
-import { ReportingContext, VisibilityState, reportingStateActions } from '../../shared_slices/ReportingState'
+import { ReportingContext, VisibilityState } from '../../shared_slices/ReportingState'
 
 export const duplicateReporting = reportingId => async (dispatch, getState) => {
-  const { isDirty } = getState().reportingState
+  const {
+    multiReportings: { selectedReportings }
+  } = getState()
+  const reportings = [...selectedReportings]
+
   const reportingToDuplicate = reportingsAPI.endpoints.getReporting
   try {
     const response = await dispatch(reportingToDuplicate.initiate(reportingId))
     if ('data' in response) {
-      const duplicatedReporting = {
-        ...response.data,
-        createdAt: new Date().toISOString(),
-        id: undefined,
-        reportingId: undefined
-      }
-      if (isDirty) {
-        dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(true))
-        dispatch(multiReportingsActions.setNextSelectedReporting(duplicatedReporting))
-      } else {
-        dispatch(addReporting(ReportingContext.SIDE_WINDOW, duplicatedReporting))
-        dispatch(
-          setToast({
-            containerId: 'sideWindow',
-            message: 'Le signalement a bien été dupliqué',
-            type: 'success'
-          })
-        )
-      }
+      const id = createIdForNewReporting(reportings)
+
+      const updatedReportings = [
+        ...reportings,
+        {
+          context: ReportingContext.SIDE_WINDOW,
+          isFormDirty: false,
+          reporting: getReportingInitialValues({ ...response.data, createdAt: new Date().toISOString(), id })
+        }
+      ]
+
+      await dispatch(
+        multiReportingsActions.setSelectedReportings({ activeReportingId: id, selectedReportings: updatedReportings })
+      )
+
+      await dispatch(
+        setReportingFormVisibility({
+          context: ReportingContext.SIDE_WINDOW,
+          visibility: VisibilityState.VISIBLE
+        })
+      )
     } else {
       throw Error('Erreur à la récupération du signalement')
     }
@@ -36,7 +42,6 @@ export const duplicateReporting = reportingId => async (dispatch, getState) => {
     dispatch(setToast({ containerId: 'sideWindow', message: error }))
   }
 
-  dispatch(hideSideButtons())
   dispatch(
     setReportingFormVisibility({
       context: ReportingContext.SIDE_WINDOW,

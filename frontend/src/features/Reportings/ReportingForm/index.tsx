@@ -35,9 +35,9 @@ import {
   StyledFormikTextInput,
   ReportTypeMultiRadio
 } from '../style'
-import { getReportingInitialValues, getReportingTitle } from '../utils'
+import { getReportingTitle } from '../utils'
 
-export function ReportingForm({ selectedReporting, setShouldValidateOnChange }) {
+export function ReportingForm({ reducedReportingsOnContext, selectedReporting, setShouldValidateOnChange }) {
   const dispatch = useDispatch()
   const {
     global: { reportingFormVisibility },
@@ -56,7 +56,7 @@ export function ReportingForm({ selectedReporting, setShouldValidateOnChange }) 
 
   useEffect(() => {
     if (selectedReporting.reporting) {
-      setValues(getReportingInitialValues(selectedReporting.reporting))
+      setValues(selectedReporting.reporting)
       dispatch(reportingStateActions.setReportingContext(selectedReporting.context))
     }
   }, [setValues, selectedReporting, dispatch])
@@ -122,11 +122,13 @@ export function ReportingForm({ selectedReporting, setShouldValidateOnChange }) 
   return (
     <StyledFormContainer>
       <CancelEditDialog
+        key={selectedReporting.id}
         onCancel={returnToEdition}
         onConfirm={confirmCloseReporting}
         open={isConfirmCancelDialogVisible}
       />
       <DeleteModal
+        key={selectedReporting.id}
         context="reporting"
         isAbsolute={false}
         onCancel={cancelDeleteReporting}
@@ -158,7 +160,7 @@ export function ReportingForm({ selectedReporting, setShouldValidateOnChange }) 
           />
         </StyledHeaderButtons>
       </StyledHeader>
-      <StyledForm>
+      <StyledForm $totalReducedReportings={reducedReportingsOnContext}>
         <Source />
         <Target />
         <Position />

@@ -20,11 +20,6 @@ export function ReportingsOnSideWindow() {
   } = useAppSelector(state => state)
   const dispatch = useDispatch()
 
-  const selectedReporting = useMemo(
-    () => selectedReportings.find(reporting => reporting.reporting.id === activeReportingId),
-    [selectedReportings, activeReportingId]
-  )
-
   const reportingsOnTable = useMemo(
     () =>
       (selectedReportings.length > 0 &&
@@ -38,25 +33,22 @@ export function ReportingsOnSideWindow() {
 
   const reduceOrExpandReporting = async id => {
     if (activeReportingId === id) {
-      await dispatch(reduceOrExpandReportingForm(ReportingContext.SIDE_WINDOW))
+      return dispatch(reduceOrExpandReportingForm(ReportingContext.SIDE_WINDOW))
     }
 
     return dispatch(switchReporting(id, ReportingContext.SIDE_WINDOW))
   }
 
-  // console.log('reportingsOnTable', reportingsOnTable)
-
   return (
     <>
-      {activeReportingId && selectedReporting?.context === ReportingContext.SIDE_WINDOW && (
-        <ReportingFormOnSideWindow totalTableReportings={reportingsOnTable.length + 1} />
-      )}
+      <ReportingFormOnSideWindow totalTableReportings={reportingsOnTable.length} />
 
       {reportingsOnTable.map((reporting, index) => {
         const reducedReporting: Partial<ReportingType> = reporting.reporting
 
         return (
           <StyledContainer key={reducedReporting.id} $position={index}>
+            <Separator $visible={index + 1 < reportingsOnTable.length} />
             <StyledHeader>
               <StyledTitle>
                 <Icon.Report />
@@ -84,6 +76,14 @@ export function ReportingsOnSideWindow() {
   )
 }
 
+const Separator = styled.div<{ $visible: boolean }>`
+  height: 4px;
+  width: 100%;
+  background-color: white;
+  position: absolute;
+  display: ${p => (p.$visible ? 'block' : 'none')};
+`
+
 const StyledContainer = styled.div<{ $position: number }>`
   background-color: transparent;
   position: absolute;
@@ -93,7 +93,7 @@ const StyledContainer = styled.div<{ $position: number }>`
   height: 52px;
   overflow: hidden;
   display: flex;
-  transition: right 0.5s ease-out, top 0.5s ease-out;
+  transition: top 0.5s ease-out;
   z-index: 100;
   padding-top: 4px;
 `

@@ -21,12 +21,14 @@ export function ReportingFormOnMap({ totalMapReportings }) {
 
   const [shouldValidateOnChange, setShouldValidateOnChange] = useState(false)
 
-  const isReportingNew = useMemo(() => activeReportingId && isNewReporting(activeReportingId), [activeReportingId])
+  const isReportingNew = useMemo(() => isNewReporting(activeReportingId), [activeReportingId])
 
-  const { data: reportingToEdit } = useGetReportingQuery(isReportingNew ? skipToken : Number(activeReportingId))
+  const { data: reportingToEdit } = useGetReportingQuery(
+    isReportingNew || !activeReportingId ? skipToken : Number(activeReportingId)
+  )
 
-  const submitReportForm = async values => {
-    await dispatch(saveReporting(ReportingContext.MAP, values))
+  const submitReportForm = values => {
+    dispatch(saveReporting(values, ReportingContext.MAP))
   }
   const selectedReporting = useMemo(
     () => selectedReportings.find(reporting => reporting.reporting.id === activeReportingId),
@@ -35,35 +37,34 @@ export function ReportingFormOnMap({ totalMapReportings }) {
 
   const reportingInitialValues = useMemo(() => {
     if (isReportingNew) {
-      return getReportingInitialValues({ id: activeReportingId })
+      return getReportingInitialValues({ createdAt: selectedReporting?.reporting.createdAt, id: activeReportingId })
     }
 
     return getReportingInitialValues(reportingToEdit)
-  }, [reportingToEdit, isReportingNew, activeReportingId])
-
-  if (reportingFormVisibility.context !== ReportingContext.MAP) {
-    return null
-  }
+  }, [reportingToEdit, isReportingNew, selectedReporting, activeReportingId])
 
   return (
-    <FormContainer $position={totalMapReportings} $reportingFormVisibility={reportingFormVisibility.visibility}>
-      {reportingFormVisibility.visibility !== VisibilityState.NONE && (
-        <Formik
-          key={activeReportingId}
-          enableReinitialize
-          initialValues={reportingInitialValues}
-          onSubmit={submitReportForm}
-          validateOnChange={shouldValidateOnChange}
-          validationSchema={ReportingSchema}
-        >
-          <StyledForm>
-            <ReportingForm
-              selectedReporting={selectedReporting}
-              setShouldValidateOnChange={setShouldValidateOnChange}
-            />
-          </StyledForm>
-        </Formik>
-      )}
+    <FormContainer $position={totalMapReportings + 1} $reportingFormVisibility={reportingFormVisibility.visibility}>
+      {activeReportingId &&
+        reportingFormVisibility.context === ReportingContext.MAP &&
+        reportingFormVisibility.visibility !== VisibilityState.NONE && (
+          <Formik
+            key={activeReportingId}
+            enableReinitialize
+            initialValues={reportingInitialValues}
+            onSubmit={submitReportForm}
+            validateOnChange={shouldValidateOnChange}
+            validationSchema={ReportingSchema}
+          >
+            <StyledForm>
+              <ReportingForm
+                reducedReportingsOnContext={totalMapReportings}
+                selectedReporting={selectedReporting}
+                setShouldValidateOnChange={setShouldValidateOnChange}
+              />
+            </StyledForm>
+          </Formik>
+        )}
     </FormContainer>
   )
 }
@@ -72,10 +73,11 @@ const FormContainer = styled.div<{ $position: number; $reportingFormVisibility?:
   background-color: ${p => p.theme.color.white};
   position: absolute;
   top: 0;
+  right: -500px;
   width: 500px;
   overflow: hidden;
   display: flex;
-  transition: right 0.5s ease-out, top 0.5s ease-out;
+  transition: top 0.5s ease-out;
   z-index: 100;
 
   ${p => {

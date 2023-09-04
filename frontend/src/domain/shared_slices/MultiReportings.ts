@@ -10,13 +10,11 @@ export type SelectedReporting = {
 }
 type MultiReportingsState = {
   activeReportingId: number | string | undefined
-  nextSelectedReporting: Partial<Reporting> | undefined
   selectedReportings: SelectedReporting[]
 }
 
 const initialState: MultiReportingsState = {
   activeReportingId: undefined,
-  nextSelectedReporting: undefined,
   selectedReportings: []
 }
 const multiReportingsSlice = createSlice({
@@ -28,9 +26,6 @@ const multiReportingsSlice = createSlice({
         reporting => action.payload !== reporting.reporting.id
       )
       state.activeReportingId = undefined
-    },
-    setNextSelectedReporting(state, action) {
-      state.nextSelectedReporting = action.payload
     },
     setSelectedReportings(state, action) {
       state.selectedReportings = action.payload.selectedReportings

@@ -103,8 +103,8 @@ export function ButtonsGroupRow({ id }) {
         onCancel={cancelArchiveReporting}
         onConfirm={confirmArchiveReporting}
         open={isArchiveModalOpen}
-        subTitle="Voulez-vous enregister les modifications en cours et archiver le signalement&nbsp;?"
-        title="Enregister et archiver le signalement&nbsp;?"
+        subTitle="Voulez-vous enregistrer les modifications en cours et archiver le signalement&nbsp;?"
+        title="Enregistrer et archiver le signalement&nbsp;?"
       />
     </>
   )
