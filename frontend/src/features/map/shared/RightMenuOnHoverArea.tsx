@@ -3,24 +3,29 @@ import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { setReportingFormVisibility } from '../../../domain/shared_slices/Global'
-import { ReportingFormVisibility } from '../../../domain/shared_slices/ReportingState'
+import { ReportingContext, VisibilityState } from '../../../domain/shared_slices/ReportingState'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useClickOutsideWhenOpened } from '../../../hooks/useClickOutsideWhenOpened'
 
 export function RightMenuOnHoverArea() {
   const dispatch = useDispatch()
-  const { reportingFormVisibility } = useAppSelector(state => state.global)
+  const {
+    reportingFormVisibility: { context, visibility }
+  } = useAppSelector(state => state.global)
 
-  const isReportingFormVisible =
-    reportingFormVisibility === ReportingFormVisibility.VISIBLE ||
-    reportingFormVisibility === ReportingFormVisibility.VISIBLE_LEFT
+  const isReportingFormVisible = visibility === VisibilityState.VISIBLE || visibility === VisibilityState.VISIBLE_LEFT
 
   const areaRef = useRef(null)
 
   const clickedOutsideComponent = useClickOutsideWhenOpened(areaRef, isReportingFormVisible)
   useEffect(() => {
-    if (clickedOutsideComponent && reportingFormVisibility === ReportingFormVisibility.VISIBLE_LEFT) {
-      dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
+    if (clickedOutsideComponent && context === ReportingContext.MAP && visibility === VisibilityState.VISIBLE_LEFT) {
+      dispatch(
+        setReportingFormVisibility({
+          context: ReportingContext.MAP,
+          visibility: VisibilityState.VISIBLE
+        })
+      )
     }
 
     // to prevent re-render
@@ -28,8 +33,13 @@ export function RightMenuOnHoverArea() {
   }, [clickedOutsideComponent])
 
   const onMouseEnter = () => {
-    if (reportingFormVisibility === ReportingFormVisibility.VISIBLE) {
-      dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE_LEFT))
+    if (context === ReportingContext.MAP && visibility === VisibilityState.VISIBLE) {
+      dispatch(
+        setReportingFormVisibility({
+          context: ReportingContext.MAP,
+          visibility: VisibilityState.VISIBLE_LEFT
+        })
+      )
     }
   }
 

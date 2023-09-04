@@ -3,16 +3,21 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { Reporting } from '../entities/reporting'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
-export enum ReportingFormVisibility {
+export enum ReportingContext {
+  MAP = 'map',
+  SIDE_WINDOW = 'sideWindow'
+}
+
+export enum VisibilityState {
   NONE = 'none',
   REDUCED = 'reduced',
   VISIBLE = 'visible',
   VISIBLE_LEFT = 'visible_left'
 }
 
-export enum ReportingContext {
-  MAP = 'map',
-  SIDE_WINDOW = 'side_window'
+export type ReportingFormVisibilityProps = {
+  context: ReportingContext
+  visibility: VisibilityState
 }
 
 type ReportingState = {

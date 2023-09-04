@@ -1,5 +1,4 @@
 import { Button, Icon } from '@mtes-mct/monitor-ui'
-import { useContext } from 'react'
 import styled from 'styled-components'
 
 import { ReportingsTable } from './ReportingsTable'
@@ -8,16 +7,14 @@ import { addReporting } from '../../../domain/use_cases/reportings/addReporting'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { ReportingsFilters } from '../Filters'
 import { useGetFilteredReportingsQuery } from '../hooks/useGetFilteredReportingsQuery'
-import { SideWindowReportingsContext } from '../sideWindowContext/context'
 
 export function ReportingsList() {
   const dispatch = useAppDispatch()
-  const reportingFormVisibility = useContext(SideWindowReportingsContext)
 
   const { isError, isFetching, isLoading, reportings } = useGetFilteredReportingsQuery()
 
   const createReporting = () => {
-    dispatch(addReporting(ReportingContext.SIDE_WINDOW, undefined, reportingFormVisibility.setContextVisibility))
+    dispatch(addReporting(ReportingContext.SIDE_WINDOW, undefined))
   }
 
   return (

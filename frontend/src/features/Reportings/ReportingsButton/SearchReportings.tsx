@@ -25,6 +25,7 @@ export function SearchReportings() {
   }
 
   const createReporting = () => {
+    dispatch(setDisplayedItems({ isSearchReportingsVisible: false }))
     dispatch(addReporting(ReportingContext.MAP))
   }
 

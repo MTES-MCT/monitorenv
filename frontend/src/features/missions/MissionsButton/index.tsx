@@ -4,9 +4,10 @@ import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
-import { setDisplayedItems, setReportingFormVisibility } from '../../../domain/shared_slices/Global'
-import { ReportingFormVisibility } from '../../../domain/shared_slices/ReportingState'
+import { setDisplayedItems } from '../../../domain/shared_slices/Global'
+import { ReportingContext, VisibilityState } from '../../../domain/shared_slices/ReportingState'
 import { addMission } from '../../../domain/use_cases/missions/addMission'
+import { reduceReportingForm } from '../../../domain/use_cases/reduceReportingForm'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { isMissionOrMissionsPage } from '../../../utils/routes'
 import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
@@ -39,16 +40,20 @@ export function MissionsMenu() {
         isSearchSemaphoreVisible: false
       })
     )
-    if (reportingFormVisibility !== ReportingFormVisibility.NONE) {
-      dispatch(setReportingFormVisibility(ReportingFormVisibility.REDUCED))
-    }
+    dispatch(reduceReportingForm())
   }
   const handleAddNewMission = () => {
     dispatch(addMission())
   }
 
   return (
-    <Wrapper reportingFormVisibility={reportingFormVisibility}>
+    <Wrapper
+      reportingFormVisibility={
+        reportingFormVisibility.context === ReportingContext.MAP
+          ? reportingFormVisibility.visibility
+          : VisibilityState.NONE
+      }
+    >
       {isSearchMissionsVisible && (
         <MenuWithCloseButton.Container>
           <MenuWithCloseButton.Header>
@@ -83,10 +88,10 @@ export function MissionsMenu() {
   )
 }
 
-const Wrapper = styled.div<{ reportingFormVisibility: ReportingFormVisibility }>`
+const Wrapper = styled.div<{ reportingFormVisibility: VisibilityState }>`
   position: absolute;
   top: 82px;
-  right: ${p => (p.reportingFormVisibility === ReportingFormVisibility.VISIBLE ? '0' : '10')}px;
+  right: ${p => (p.reportingFormVisibility === VisibilityState.VISIBLE ? '0' : '10')}px;
   display: flex;
   justify-content: flex-end;
   transition: right 0.3s ease-out;

@@ -6,7 +6,7 @@ import { CustomCircleRange } from './CustomCircleRange'
 import { MapToolType, MeasurementType } from '../../../../domain/entities/map/constants'
 import { setisMapToolVisible } from '../../../../domain/shared_slices/Global'
 import { setMeasurementTypeToAdd } from '../../../../domain/shared_slices/Measurement'
-import { ReportingFormVisibility } from '../../../../domain/shared_slices/ReportingState'
+import { ReportingContext, VisibilityState } from '../../../../domain/shared_slices/ReportingState'
 import { reduceReportingForm } from '../../../../domain/use_cases/reduceReportingForm'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -68,7 +68,14 @@ export function MeasurementMapButton() {
   }, [dispatch, measurementTypeToAdd])
 
   return (
-    <Wrapper ref={wrapperRef} reportingFormVisibility={reportingFormVisibility}>
+    <Wrapper
+      ref={wrapperRef}
+      reportingFormVisibility={
+        reportingFormVisibility.context === ReportingContext.MAP
+          ? reportingFormVisibility.visibility
+          : VisibilityState.NONE
+      }
+    >
       <MapToolButton
         dataCy="measurement"
         icon={measurementIcon}
@@ -112,9 +119,9 @@ const MeasurementItem = styled.div`
   padding: 8px;
 `
 
-const Wrapper = styled.div<{ reportingFormVisibility: ReportingFormVisibility }>`
+const Wrapper = styled.div<{ reportingFormVisibility: VisibilityState }>`
   position: absolute;
-  right: ${p => (p.reportingFormVisibility === ReportingFormVisibility.VISIBLE ? '0' : '10')}px;
+  right: ${p => (p.reportingFormVisibility === VisibilityState.VISIBLE ? '0' : '10')}px;
   top: 250px;
   transition: right 0.3s ease-out;
 `

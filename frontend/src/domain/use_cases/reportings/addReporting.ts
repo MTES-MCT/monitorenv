@@ -1,19 +1,14 @@
 import _ from 'lodash'
 
-import { SideWindowReportingFormVisibility } from '../../../features/Reportings/sideWindowContext/context'
 import { getReportingInitialValues, isNewReporting } from '../../../features/Reportings/utils'
 import { setReportingFormVisibility } from '../../shared_slices/Global'
 import { multiReportingsActions } from '../../shared_slices/MultiReportings'
-import { ReportingContext, ReportingFormVisibility } from '../../shared_slices/ReportingState'
+import { ReportingContext, VisibilityState } from '../../shared_slices/ReportingState'
 
 import type { Reporting } from '../../entities/reporting'
 
 export const addReporting =
-  (
-    reportingContext: ReportingContext,
-    partialReporting?: Partial<Reporting> | undefined,
-    setContextVisibility?: (nextVisibility: SideWindowReportingFormVisibility) => void
-  ) =>
+  (reportingContext: ReportingContext, partialReporting?: Partial<Reporting> | undefined) =>
   async (dispatch, getState) => {
     const {
       multiReportings: { selectedReportings },
@@ -59,9 +54,10 @@ export const addReporting =
       multiReportingsActions.setSelectedReportings({ activeReportingId: id, selectedReportings: updatedReportings })
     )
 
-    if (setContextVisibility) {
-      setContextVisibility(SideWindowReportingFormVisibility.VISIBLE)
-    } else {
-      await dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
-    }
+    await dispatch(
+      setReportingFormVisibility({
+        context: reportingContext,
+        visibility: VisibilityState.VISIBLE
+      })
+    )
   }

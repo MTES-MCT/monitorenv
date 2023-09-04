@@ -1,14 +1,19 @@
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { setReportingFormVisibility, setToast } from '../../shared_slices/Global'
-import { ReportingFormVisibility } from '../../shared_slices/ReportingState'
+import { VisibilityState } from '../../shared_slices/ReportingState'
 import { closeAddZone } from '../missions/closeAddZone'
 
-export const saveReporting = values => async dispatch => {
+export const saveReporting = (reportingContext, values) => async dispatch => {
   const endpoint = values.id ? reportingsAPI.endpoints.updateReporting : reportingsAPI.endpoints.createReporting
   try {
     const response = await dispatch(endpoint.initiate(values))
     if ('data' in response) {
-      dispatch(setReportingFormVisibility(ReportingFormVisibility.NONE))
+      dispatch(
+        setReportingFormVisibility({
+          context: reportingContext,
+          visibility: VisibilityState.NONE
+        })
+      )
       dispatch(closeAddZone())
     } else {
       throw Error('Erreur à la création ou à la modification du signalement')

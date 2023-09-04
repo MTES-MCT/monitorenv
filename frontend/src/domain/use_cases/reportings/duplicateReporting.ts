@@ -2,7 +2,7 @@ import { addReporting } from './addReporting'
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { hideSideButtons, setReportingFormVisibility, setToast } from '../../shared_slices/Global'
 import { multiReportingsActions } from '../../shared_slices/MultiReportings'
-import { ReportingContext, ReportingFormVisibility, reportingStateActions } from '../../shared_slices/ReportingState'
+import { ReportingContext, VisibilityState, reportingStateActions } from '../../shared_slices/ReportingState'
 
 export const duplicateReporting = reportingId => async (dispatch, getState) => {
   const { isDirty } = getState().reportingState
@@ -37,5 +37,10 @@ export const duplicateReporting = reportingId => async (dispatch, getState) => {
   }
 
   dispatch(hideSideButtons())
-  dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
+  dispatch(
+    setReportingFormVisibility({
+      context: ReportingContext.SIDE_WINDOW,
+      visibility: VisibilityState.VISIBLE
+    })
+  )
 }
