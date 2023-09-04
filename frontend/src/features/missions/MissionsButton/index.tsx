@@ -7,7 +7,7 @@ import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setDisplayedItems } from '../../../domain/shared_slices/Global'
 import { ReportingContext, VisibilityState } from '../../../domain/shared_slices/ReportingState'
 import { addMission } from '../../../domain/use_cases/missions/addMission'
-import { reduceReportingForm } from '../../../domain/use_cases/reduceReportingForm'
+import { reduceReportingFormOnMap } from '../../../domain/use_cases/reportings/reduceReportingFormOnMap'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { isMissionOrMissionsPage } from '../../../utils/routes'
 import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
@@ -40,7 +40,7 @@ export function MissionsMenu() {
         isSearchSemaphoreVisible: false
       })
     )
-    dispatch(reduceReportingForm())
+    dispatch(reduceReportingFormOnMap())
   }
   const handleAddNewMission = () => {
     dispatch(addMission())

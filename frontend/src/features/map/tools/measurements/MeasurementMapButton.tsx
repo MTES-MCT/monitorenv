@@ -7,7 +7,7 @@ import { MapToolType, MeasurementType } from '../../../../domain/entities/map/co
 import { setisMapToolVisible } from '../../../../domain/shared_slices/Global'
 import { setMeasurementTypeToAdd } from '../../../../domain/shared_slices/Measurement'
 import { ReportingContext, VisibilityState } from '../../../../domain/shared_slices/ReportingState'
-import { reduceReportingForm } from '../../../../domain/use_cases/reduceReportingForm'
+import { reduceReportingFormOnMap } from '../../../../domain/use_cases/reportings/reduceReportingFormOnMap'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useClickOutsideWhenOpenedAndExecute } from '../../../../hooks/useClickOutsideWhenOpenedAndExecute'
@@ -64,7 +64,7 @@ export function MeasurementMapButton() {
     } else {
       dispatch(setisMapToolVisible(MapToolType.MEASUREMENT_MENU))
     }
-    dispatch(reduceReportingForm())
+    dispatch(reduceReportingFormOnMap())
   }, [dispatch, measurementTypeToAdd])
 
   return (

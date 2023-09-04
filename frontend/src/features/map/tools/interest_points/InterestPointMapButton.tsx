@@ -11,7 +11,7 @@ import {
   endInterestPointDraw
 } from '../../../../domain/shared_slices/InterestPoint'
 import { ReportingContext, VisibilityState } from '../../../../domain/shared_slices/ReportingState'
-import { reduceReportingForm } from '../../../../domain/use_cases/reduceReportingForm'
+import { reduceReportingFormOnMap } from '../../../../domain/use_cases/reportings/reduceReportingFormOnMap'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useEscapeFromKeyboardAndExecute } from '../../../../hooks/useEscapeFromKeyboardAndExecute'
@@ -45,7 +45,7 @@ export function InterestPointMapButton() {
     } else {
       close()
     }
-    dispatch(reduceReportingForm())
+    dispatch(reduceReportingFormOnMap())
   }, [dispatch, isOpen, close])
 
   return (
