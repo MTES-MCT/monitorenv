@@ -1,12 +1,13 @@
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { setToast } from '../../shared_slices/Global'
 
-export const reopenReporting = values => async dispatch => {
+export const reopenReporting = (values, reportingContext) => async dispatch => {
   try {
     const response = await dispatch(reportingsAPI.endpoints.updateReporting.initiate(values))
     if ('data' in response) {
       dispatch(
         setToast({
+          containerId: reportingContext,
           message: 'Le signalement a bien été réouvert',
           type: 'success'
         })

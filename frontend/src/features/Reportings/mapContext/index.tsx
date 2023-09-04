@@ -22,11 +22,6 @@ export function ReportingsOnMap() {
   } = useAppSelector(state => state)
   const dispatch = useDispatch()
 
-  const selectedReporting = useMemo(
-    () => selectedReportings.find(reporting => reporting.reporting.id === activeReportingId),
-    [selectedReportings, activeReportingId]
-  )
-
   const reportingsOnMap = useMemo(
     () =>
       (selectedReportings.length > 0 &&
@@ -39,7 +34,7 @@ export function ReportingsOnMap() {
 
   const reduceOrExpandReporting = async id => {
     if (activeReportingId === id && reportingFormVisibility.context === ReportingContext.MAP) {
-      await dispatch(reduceOrExpandReportingForm(ReportingContext.MAP))
+      return dispatch(reduceOrExpandReportingForm(ReportingContext.MAP))
     }
 
     dispatch(hideSideButtons())
@@ -49,11 +44,7 @@ export function ReportingsOnMap() {
 
   return (
     <>
-      {activeReportingId && selectedReporting?.context === ReportingContext.MAP && (
-        <div>
-          <ReportingFormOnMap totalMapReportings={reportingsOnMap.length + 1} />
-        </div>
-      )}
+      <ReportingFormOnMap totalMapReportings={reportingsOnMap.length} />
 
       {reportingsOnMap.map((reporting, index) => {
         const reducedReporting: Partial<ReportingType> = reporting.reporting
@@ -64,6 +55,7 @@ export function ReportingsOnMap() {
             $position={index}
             $reportingFormVisibility={reportingFormVisibility.visibility}
           >
+            <Separator />
             <StyledHeader>
               <StyledTitle>
                 <Icon.Report />
@@ -91,6 +83,12 @@ export function ReportingsOnMap() {
   )
 }
 
+const Separator = styled.div`
+  height: 4px;
+  width: 100%;
+  background-color: white;
+  position: absolute;
+`
 const StyledContainer = styled.div<{ $position: number; $reportingFormVisibility: VisibilityState }>`
   background-color: transparent;
   position: absolute;
@@ -99,9 +97,9 @@ const StyledContainer = styled.div<{ $position: number; $reportingFormVisibility
   height: 52px;
   overflow: hidden;
   display: flex;
-  transition: right 0.5s ease-out, top 0.5s ease-out;
+  flex-direction: column;
+  transition: top 0.5s ease-out;
   z-index: 100;
-  padding-top: 4px;
   ${p => {
     switch (p.$reportingFormVisibility) {
       case VisibilityState.VISIBLE_LEFT:

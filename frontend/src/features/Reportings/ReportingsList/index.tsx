@@ -14,7 +14,7 @@ export function ReportingsList() {
   const { isError, isFetching, isLoading, reportings } = useGetFilteredReportingsQuery()
 
   const createReporting = () => {
-    dispatch(addReporting(ReportingContext.SIDE_WINDOW, undefined))
+    dispatch(addReporting(ReportingContext.SIDE_WINDOW))
   }
 
   return (

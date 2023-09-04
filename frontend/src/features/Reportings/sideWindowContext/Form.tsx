@@ -21,10 +21,11 @@ export function ReportingFormOnSideWindow({ totalTableReportings }) {
   const dispatch = useDispatch()
   const [shouldValidateOnChange, setShouldValidateOnChange] = useState(false)
 
-  const isReportingNew = useMemo(() => activeReportingId && isNewReporting(activeReportingId), [activeReportingId])
+  const isReportingNew = useMemo(() => isNewReporting(activeReportingId), [activeReportingId])
 
-  const { data: reportingToEdit } = useGetReportingQuery(isReportingNew ? skipToken : Number(activeReportingId))
-
+  const { data: reportingToEdit } = useGetReportingQuery(
+    isReportingNew || !activeReportingId ? skipToken : Number(activeReportingId)
+  )
   const submitReportForm = async values => {
     await dispatch(saveReporting(values, ReportingContext.SIDE_WINDOW))
   }
@@ -35,16 +36,17 @@ export function ReportingFormOnSideWindow({ totalTableReportings }) {
 
   const reportingInitialValues = useMemo(() => {
     if (isReportingNew) {
-      return getReportingInitialValues({ id: activeReportingId })
+      return getReportingInitialValues({ createdAt: selectedReporting?.reporting.createdAt, id: activeReportingId })
     }
 
     return getReportingInitialValues(reportingToEdit)
-  }, [reportingToEdit, isReportingNew, activeReportingId])
+  }, [reportingToEdit, isReportingNew, selectedReporting, activeReportingId])
 
   return (
     <>
-      <FormContainer $position={totalTableReportings} $reportingFormVisibility={reportingFormVisibility.visibility}>
-        {reportingFormVisibility.context === ReportingContext.SIDE_WINDOW &&
+      <FormContainer $position={totalTableReportings + 1} $reportingFormVisibility={reportingFormVisibility.visibility}>
+        {activeReportingId &&
+          reportingFormVisibility.context === ReportingContext.SIDE_WINDOW &&
           reportingFormVisibility.visibility !== VisibilityState.NONE && (
             <Formik
               key={activeReportingId}
@@ -56,6 +58,7 @@ export function ReportingFormOnSideWindow({ totalTableReportings }) {
             >
               <StyledForm>
                 <ReportingForm
+                  reducedReportingsOnContext={totalTableReportings}
                   selectedReporting={selectedReporting}
                   setShouldValidateOnChange={setShouldValidateOnChange}
                 />
@@ -85,7 +88,7 @@ const FormContainer = styled.div<{ $position: number; $reportingFormVisibility?:
   width: 500px;
   overflow: hidden;
   display: flex;
-  transition: right 0.5s ease-out, top 0.5s ease-out;
+  transition: top 0.5s ease-out;
   z-index: 6;
 
   ${p => {

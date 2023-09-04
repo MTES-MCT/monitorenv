@@ -1,3 +1,4 @@
+import { saveReportingInMultiReportingsState } from './saveReportingInMultiReportingsState'
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { setReportingFormVisibility, setToast } from '../../shared_slices/Global'
 import { multiReportingsActions } from '../../shared_slices/MultiReportings'
@@ -9,48 +10,58 @@ export const editReportingInLocalStore =
     try {
       const {
         multiReportings: { selectedReportings },
-        reportingState: { context, isFormDirty, reportingState }
+        reportingState: { reportingState }
       } = getState()
 
-      const response = await dispatch(reportingToEdit.initiate(reportingId))
+      let updatedReportings = [...selectedReportings]
 
-      if ('data' in response) {
-        const reportings = [...selectedReportings]
-        // first we want to save the active reporting in multiReportings state
-        if (reportingState) {
-          const selectedReportingIndex = reportings.findIndex(reporting => reporting.reporting.id === reportingState.id)
+      // first we want to save the active reporting in multiReportings state
+      if (reportingState) {
+        updatedReportings = await dispatch(saveReportingInMultiReportingsState())
+      }
 
-          const formattedReporting = {
-            context,
-            isFormDirty,
-            reporting: reportingState
-          }
+      const newSelectedReportingIndex = updatedReportings.findIndex(reporting => reporting.reporting.id === reportingId)
 
-          if (selectedReportingIndex !== -1) {
-            reportings[selectedReportingIndex] = formattedReporting
-          } else {
-            reportings.push(formattedReporting)
-          }
-        }
-
-        // now we want to save in multiReportings state the reporting we want to edit
-        const reportingToSave = response.data
-        const newSelectedReportingIndex = reportings.findIndex(
-          reporting => reporting.reporting.id === reportingToSave?.id
-        )
-        const formattedReporting = {
-          context: reportingContext,
-          isFormDirty: false,
-          reporting: reportingToSave
-        }
-        if (newSelectedReportingIndex === -1) {
-          reportings.push(formattedReporting)
+      // if the reporting is already in multiReportings state (newSelectedReportingIndex !== -1)
+      // we want to update it with local values and update context with the new one
+      if (newSelectedReportingIndex !== -1) {
+        updatedReportings[newSelectedReportingIndex] = {
+          ...updatedReportings[newSelectedReportingIndex],
+          context: reportingContext
         }
 
         await dispatch(
           multiReportingsActions.setSelectedReportings({
+            activeReportingId: reportingId,
+            selectedReportings: updatedReportings
+          })
+        )
+        dispatch(
+          setReportingFormVisibility({
+            context: reportingContext,
+            visibility: VisibilityState.VISIBLE
+          })
+        )
+
+        return
+      }
+
+      // if the reporting not already in multiReportings state
+      const response = await dispatch(reportingToEdit.initiate(reportingId))
+      if ('data' in response) {
+        const reportingToSave = response.data
+
+        await dispatch(
+          multiReportingsActions.setSelectedReportings({
             activeReportingId: reportingToSave?.id,
-            selectedReportings: reportings
+            selectedReportings: [
+              ...updatedReportings,
+              {
+                context: reportingContext,
+                isFormDirty: false,
+                reporting: reportingToSave
+              }
+            ]
           })
         )
         dispatch(

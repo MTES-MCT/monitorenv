@@ -9,13 +9,13 @@ export const StyledFormContainer = styled.div`
     text-align: start;
   }
 `
-export const StyledForm = styled.div`
+export const StyledForm = styled.div<{ $totalReducedReportings: number }>`
   padding: 32px;
   padding-right: calc(32px - var(--scrollbar-width || 0px));
   display: flex;
   flex-direction: column;
   gap: 24px;
-  height: calc(100vh - 108px);
+  height: calc(100vh - 108px - ${p => p.$totalReducedReportings * 52}px);
   overflow-y: auto;
 `
 

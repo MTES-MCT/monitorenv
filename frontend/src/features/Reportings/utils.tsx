@@ -1,4 +1,5 @@
 import { Accent } from '@mtes-mct/monitor-ui'
+import _ from 'lodash'
 
 import { StyledArchivedTag } from './style'
 import {
@@ -11,7 +12,7 @@ import {
 
 export function getReportingInitialValues(reporting?: Partial<Reporting | undefined>) {
   return {
-    createdAt: new Date().toISOString(),
+    // createdAt: new Date().toISOString(),
     geom: undefined,
     sourceType: ReportingSourceEnum.SEMAPHORE,
     validityTime: 24,
@@ -19,7 +20,11 @@ export function getReportingInitialValues(reporting?: Partial<Reporting | undefi
   }
 }
 
-export function isNewReporting(id: string | number) {
+export function isNewReporting(id: string | number | undefined) {
+  if (!id) {
+    return false
+  }
+
   return id?.toString().includes('new') ?? false
 }
 
@@ -41,4 +46,18 @@ export const getReportingTitle = reporting => {
       )}
     </>
   )
+}
+
+export const createIdForNewReporting = reportings => {
+  const maxNewReportingId = _.chain(reportings)
+    .filter(newReporting => isNewReporting(newReporting.reporting.id))
+    .maxBy(filteredNewReporting => Number(filteredNewReporting?.reporting?.id?.split('new-')[1]))
+    .value()
+
+  const id =
+    maxNewReportingId && maxNewReportingId.reporting.id
+      ? `new-${Number(maxNewReportingId?.reporting?.id?.split('new-')[1]) + 1}`
+      : 'new-1'
+
+  return id
 }

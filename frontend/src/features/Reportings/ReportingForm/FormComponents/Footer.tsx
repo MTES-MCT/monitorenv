@@ -5,9 +5,13 @@ import { useDispatch } from 'react-redux'
 
 import { ReportingStatusEnum, type Reporting, getReportingStatus } from '../../../../domain/entities/reporting'
 import { reopenReporting } from '../../../../domain/use_cases/reportings/reopenReporting'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { StyledButton, StyledSubmitButton, StyledDeleteButton, StyledFooter } from '../../style'
 
 export function Footer({ onCancel, onDelete, setMustIncreaseValidity, setShouldValidateOnChange }) {
+  const {
+    reportingState: { context }
+  } = useAppSelector(state => state)
   const dispatch = useDispatch()
   const { handleSubmit, setFieldValue, validateForm, values } = useFormikContext<Reporting>()
 
@@ -25,7 +29,7 @@ export function Footer({ onCancel, onDelete, setMustIncreaseValidity, setShouldV
     setMustIncreaseValidity(false)
     validateForm({ ...values, isArchived: false }).then(async errors => {
       if (_.isEmpty(errors)) {
-        await dispatch(reopenReporting({ ...values, isArchived: false }))
+        await dispatch(reopenReporting({ ...values, isArchived: false }, context))
 
         return
       }
