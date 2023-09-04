@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import { ReportingFormOnMap } from './Form'
 import { hideSideButtons, setReportingFormVisibility } from '../../../domain/shared_slices/Global'
-import { ReportingContext, ReportingFormVisibility } from '../../../domain/shared_slices/ReportingState'
+import { ReportingContext, VisibilityState } from '../../../domain/shared_slices/ReportingState'
 import { closeReporting } from '../../../domain/use_cases/reportings/closeReporting'
 import { switchReporting } from '../../../domain/use_cases/reportings/switchReporting'
 import { useAppSelector } from '../../../hooks/useAppSelector'
@@ -37,15 +37,25 @@ export function ReportingsOnMap() {
   )
 
   const reduceOrExpandReporting = id => {
-    if (activeReportingId === id) {
-      return reportingFormVisibility === ReportingFormVisibility.VISIBLE
-        ? dispatch(setReportingFormVisibility(ReportingFormVisibility.REDUCED))
-        : dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
+    if (activeReportingId === id && reportingFormVisibility.context === ReportingContext.MAP) {
+      return reportingFormVisibility.visibility === VisibilityState.VISIBLE
+        ? dispatch(
+            setReportingFormVisibility({
+              context: ReportingContext.MAP,
+              visibility: VisibilityState.REDUCED
+            })
+          )
+        : dispatch(
+            setReportingFormVisibility({
+              context: ReportingContext.MAP,
+              visibility: VisibilityState.VISIBLE
+            })
+          )
     }
 
     dispatch(hideSideButtons())
 
-    return dispatch(switchReporting(id))
+    return dispatch(switchReporting(id, ReportingContext.MAP))
   }
 
   return (
@@ -61,7 +71,7 @@ export function ReportingsOnMap() {
           <StyledContainer
             key={reducedReporting.id}
             $position={index}
-            $reportingFormVisibility={reportingFormVisibility}
+            $reportingFormVisibility={reportingFormVisibility.visibility}
           >
             <StyledHeader>
               <StyledTitle>
@@ -79,7 +89,7 @@ export function ReportingsOnMap() {
                 <IconButton
                   accent={Accent.TERTIARY}
                   Icon={Icon.Close}
-                  onClick={() => dispatch(closeReporting(reducedReporting.id))}
+                  onClick={() => dispatch(closeReporting(reducedReporting.id, ReportingContext.MAP))}
                 />
               </StyledHeaderButtons>
             </StyledHeader>
@@ -90,7 +100,7 @@ export function ReportingsOnMap() {
   )
 }
 
-const StyledContainer = styled.div<{ $position: number; $reportingFormVisibility: ReportingFormVisibility }>`
+const StyledContainer = styled.div<{ $position: number; $reportingFormVisibility: VisibilityState }>`
   background-color: transparent;
   position: absolute;
   bottom: ${p => p.$position * 52}px;
@@ -103,9 +113,9 @@ const StyledContainer = styled.div<{ $position: number; $reportingFormVisibility
   padding-top: 4px;
   ${p => {
     switch (p.$reportingFormVisibility) {
-      case ReportingFormVisibility.VISIBLE_LEFT:
+      case VisibilityState.VISIBLE_LEFT:
         return 'right: 56px;'
-      case ReportingFormVisibility.REDUCED:
+      case VisibilityState.REDUCED:
         return 'right: 12px;'
       default:
         return 'right: 8px;'

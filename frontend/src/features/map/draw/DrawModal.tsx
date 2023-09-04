@@ -16,7 +16,7 @@ import {
 } from '../../../domain/entities/map/constants'
 import { setGeometry, setInteractionType } from '../../../domain/shared_slices/Draw'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
-import { ReportingFormVisibility } from '../../../domain/shared_slices/ReportingState'
+import { VisibilityState } from '../../../domain/shared_slices/ReportingState'
 import { addFeatureToDrawedFeature } from '../../../domain/use_cases/draw/addFeatureToDrawedFeature'
 import { eraseDrawedGeometries } from '../../../domain/use_cases/draw/eraseDrawedGeometries'
 import { closeAddZone } from '../../../domain/use_cases/missions/closeAddZone'
@@ -113,7 +113,7 @@ export function DrawModal() {
   useEffect(() => {
     if (
       sideWindow.status === SideWindowStatus.CLOSED &&
-      global.reportingFormVisibility === ReportingFormVisibility.NONE
+      global.reportingFormVisibility.visibility === VisibilityState.NONE
     ) {
       dispatch(closeAddZone())
     }

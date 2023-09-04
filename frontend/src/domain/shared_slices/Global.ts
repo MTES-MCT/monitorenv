@@ -2,7 +2,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { ReportingFormVisibility } from './ReportingState'
+import { VisibilityState, ReportingContext, ReportingFormVisibilityProps } from './ReportingState'
 
 import type { MapToolType } from '../entities/map/constants'
 
@@ -11,6 +11,7 @@ type Toast = {
   type?: string
   containerId?: string
 }
+
 type GlobalStateType = {
   // state entry for every component /menu displayed on map whose visibility should be controlled
   displayMissionMenuButton: boolean
@@ -36,7 +37,8 @@ type GlobalStateType = {
   displaySemaphoreOverlay: boolean
 
   isSearchReportingsVisible: boolean
-  reportingFormVisibility: ReportingFormVisibility
+  reportingFormVisibility: ReportingFormVisibilityProps
+
   displayReportingsLayer: boolean
   displayReportingsOverlay: boolean
   displayReportingEditingLayer: boolean
@@ -78,7 +80,10 @@ const initialState: GlobalStateType = {
   displaySemaphoreOverlay: true,
 
   isSearchReportingsVisible: false,
-  reportingFormVisibility: ReportingFormVisibility.NONE,
+  reportingFormVisibility: {
+    context: ReportingContext.MAP,
+    visibility: VisibilityState.NONE
+  },
   displayReportingsLayer: true,
   displayReportingsOverlay: true,
   displayReportingEditingLayer: true,

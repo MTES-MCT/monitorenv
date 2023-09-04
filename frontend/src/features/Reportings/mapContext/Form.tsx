@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { useGetReportingQuery } from '../../../api/reportingsAPI'
-import { ReportingFormVisibility } from '../../../domain/shared_slices/ReportingState'
+import { ReportingContext, VisibilityState } from '../../../domain/shared_slices/ReportingState'
 import { saveReporting } from '../../../domain/use_cases/reportings/saveReporting'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ReportingForm } from '../ReportingForm'
@@ -26,7 +26,7 @@ export function ReportingFormOnMap({ totalMapReportings }) {
   const { data: reportingToEdit } = useGetReportingQuery(isReportingNew ? skipToken : Number(activeReportingId))
 
   const submitReportForm = async values => {
-    await dispatch(saveReporting(values))
+    await dispatch(saveReporting(ReportingContext.MAP, values))
   }
   const selectedReporting = useMemo(
     () => selectedReportings.find(reporting => reporting.reporting.id === activeReportingId),
@@ -41,9 +41,13 @@ export function ReportingFormOnMap({ totalMapReportings }) {
     return getReportingInitialValues(reportingToEdit)
   }, [reportingToEdit, isReportingNew, activeReportingId])
 
+  if (reportingFormVisibility.context !== ReportingContext.MAP) {
+    return null
+  }
+
   return (
-    <FormContainer $position={totalMapReportings} $reportingFormVisibility={reportingFormVisibility}>
-      {reportingFormVisibility !== ReportingFormVisibility.NONE && (
+    <FormContainer $position={totalMapReportings} $reportingFormVisibility={reportingFormVisibility.visibility}>
+      {reportingFormVisibility.visibility !== VisibilityState.NONE && (
         <Formik
           key={activeReportingId}
           enableReinitialize
@@ -64,7 +68,7 @@ export function ReportingFormOnMap({ totalMapReportings }) {
   )
 }
 
-const FormContainer = styled.div<{ $position: number; $reportingFormVisibility?: ReportingFormVisibility }>`
+const FormContainer = styled.div<{ $position: number; $reportingFormVisibility?: VisibilityState }>`
   background-color: ${p => p.theme.color.white};
   position: absolute;
   top: 0;
@@ -76,13 +80,13 @@ const FormContainer = styled.div<{ $position: number; $reportingFormVisibility?:
 
   ${p => {
     switch (p.$reportingFormVisibility) {
-      case ReportingFormVisibility.VISIBLE:
+      case VisibilityState.VISIBLE:
         return 'right: 8px;'
-      case ReportingFormVisibility.VISIBLE_LEFT:
+      case VisibilityState.VISIBLE_LEFT:
         return 'right: 56px;'
-      case ReportingFormVisibility.REDUCED:
+      case VisibilityState.REDUCED:
         return `right: 12px; top: calc(100vh - ${p.$position * 52}px);`
-      case ReportingFormVisibility.NONE:
+      case VisibilityState.NONE:
       default:
         return 'right: -500px;'
     }

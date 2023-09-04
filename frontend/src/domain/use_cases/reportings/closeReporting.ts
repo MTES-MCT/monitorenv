@@ -1,45 +1,56 @@
 import { setReportingFormVisibility } from '../../shared_slices/Global'
 import { multiReportingsActions } from '../../shared_slices/MultiReportings'
-import { ReportingFormVisibility, reportingStateActions } from '../../shared_slices/ReportingState'
+import { ReportingContext, VisibilityState, reportingStateActions } from '../../shared_slices/ReportingState'
 
-export const closeReporting = (reportingIdToClose: number | string | undefined) => async (dispatch, getState) => {
-  const {
-    multiReportings: { selectedReportings },
-    reportingState: { context, isFormDirty, reportingState }
-  } = getState()
-  if (!reportingIdToClose) {
-    return
-  }
-
-  const indexToClose = selectedReportings.findIndex(reporting => reporting.reporting.id === reportingIdToClose)
-
-  // if we want to close a reporting with a form that has changes
-  if (
-    selectedReportings[indexToClose]?.isFormDirty ||
-    (selectedReportings.length === 1 && isFormDirty) ||
-    (selectedReportings[indexToClose].reporting?.id === reportingState?.id && isFormDirty)
-  ) {
-    if (reportingState) {
-      await saveCurrentReportingInMultiMissionsState(
-        reportingState,
-        context,
-        selectedReportings,
-        isFormDirty,
-        dispatch,
-        reportingIdToClose
-      )
-
+export const closeReporting =
+  (reportingIdToClose: number | string | undefined, reportingContextToClose: ReportingContext) =>
+  async (dispatch, getState) => {
+    const {
+      multiReportings: { selectedReportings },
+      reportingState: { context, isFormDirty, reportingState }
+    } = getState()
+    if (!reportingIdToClose) {
       return
     }
 
-    dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(true))
+    const indexToClose = selectedReportings.findIndex(reporting => reporting.reporting.id === reportingIdToClose)
 
-    return
+    // if we want to close a reporting with a form that has changes
+    if (
+      selectedReportings[indexToClose]?.isFormDirty ||
+      (selectedReportings.length === 1 && isFormDirty) ||
+      (selectedReportings[indexToClose].reporting?.id === reportingState?.id && isFormDirty)
+    ) {
+      if (reportingState) {
+        await saveCurrentReportingInMultiMissionsState(
+          reportingState,
+          context,
+          selectedReportings,
+          isFormDirty,
+          dispatch,
+          reportingIdToClose
+        )
+
+        await dispatch(
+          setReportingFormVisibility({
+            context,
+            visibility: VisibilityState.VISIBLE
+          })
+        )
+        await dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(true))
+
+        return
+      }
+    }
+
+    await dispatch(multiReportingsActions.deleteSelectedReporting(reportingIdToClose))
+    await dispatch(
+      setReportingFormVisibility({
+        context: reportingContextToClose,
+        visibility: VisibilityState.NONE
+      })
+    )
   }
-
-  await dispatch(multiReportingsActions.deleteSelectedReporting(reportingIdToClose))
-  await dispatch(setReportingFormVisibility(ReportingFormVisibility.NONE))
-}
 
 async function saveCurrentReportingInMultiMissionsState(
   reportingState,
@@ -67,6 +78,4 @@ async function saveCurrentReportingInMultiMissionsState(
       selectedReportings: updatedReportings
     })
   )
-  dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
-  await dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(true))
 }

@@ -1,6 +1,6 @@
 import { Accent, FieldError, FormikTextarea, Icon, IconButton, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Toggle } from 'rsuite'
 
@@ -15,17 +15,12 @@ import { Validity } from './FormComponents/Validity'
 import { Reporting, ReportingTypeEnum, ReportingTypeLabels } from '../../../domain/entities/reporting'
 import { hideSideButtons, setReportingFormVisibility } from '../../../domain/shared_slices/Global'
 import { multiReportingsActions } from '../../../domain/shared_slices/MultiReportings'
-import {
-  ReportingContext,
-  ReportingFormVisibility,
-  reportingStateActions
-} from '../../../domain/shared_slices/ReportingState'
+import { ReportingContext, VisibilityState, reportingStateActions } from '../../../domain/shared_slices/ReportingState'
 import { closeReporting } from '../../../domain/use_cases/reportings/closeReporting'
 import { deleteReporting } from '../../../domain/use_cases/reportings/deleteReporting'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useSyncFormValuesWithRedux } from '../../../hooks/useSyncFormValuesWithRedux'
 import { DeleteModal } from '../../commonComponents/Modals/Delete'
-import { SideWindowReportingFormVisibility, SideWindowReportingsContext } from '../sideWindowContext/context'
 import {
   Separator,
   StyledForm,
@@ -47,7 +42,6 @@ export function ReportingForm({ selectedReporting, setShouldValidateOnChange }) 
     global: { reportingFormVisibility },
     reportingState: { isConfirmCancelDialogVisible }
   } = useAppSelector(state => state)
-  const { contextVisibility, setContextVisibility } = useContext(SideWindowReportingsContext)
 
   const { dirty, errors, setFieldValue, setValues, values } = useFormikContext<Partial<Reporting>>()
   const [themeField] = useField('theme')
@@ -80,21 +74,27 @@ export function ReportingForm({ selectedReporting, setShouldValidateOnChange }) 
   }
 
   const reduceOrExpandReporting = () => {
-    if (isSideWindowContext) {
-      if (contextVisibility === SideWindowReportingFormVisibility.VISIBLE) {
-        setContextVisibility(SideWindowReportingFormVisibility.REDUCED)
-      } else {
-        setContextVisibility(SideWindowReportingFormVisibility.VISIBLE)
-      }
-    } else {
+    if (!isSideWindowContext) {
       dispatch(hideSideButtons())
-      if (reportingFormVisibility === ReportingFormVisibility.VISIBLE) {
-        dispatch(setReportingFormVisibility(ReportingFormVisibility.REDUCED))
-      } else {
-        dispatch(setReportingFormVisibility(ReportingFormVisibility.VISIBLE))
-      }
+    }
+
+    if (reportingFormVisibility.visibility === VisibilityState.VISIBLE) {
+      dispatch(
+        setReportingFormVisibility({
+          context: selectedReporting.context,
+          visibility: VisibilityState.REDUCED
+        })
+      )
+    } else {
+      dispatch(
+        setReportingFormVisibility({
+          context: selectedReporting.context,
+          visibility: VisibilityState.VISIBLE
+        })
+      )
     }
   }
+
   const returnToEdition = () => {
     dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(false))
   }
@@ -102,11 +102,10 @@ export function ReportingForm({ selectedReporting, setShouldValidateOnChange }) 
   const confirmCloseReporting = () => {
     dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(false))
     dispatch(multiReportingsActions.deleteSelectedReporting(selectedReporting.reporting.id))
-    if (isSideWindowContext) {
-      setContextVisibility(SideWindowReportingFormVisibility.NONE)
-    } else {
-      dispatch(setReportingFormVisibility(ReportingFormVisibility.NONE))
-    }
+    setReportingFormVisibility({
+      context: selectedReporting.context,
+      visibility: VisibilityState.NONE
+    })
   }
 
   const deleteCurrentReporting = () => {
@@ -116,10 +115,11 @@ export function ReportingForm({ selectedReporting, setShouldValidateOnChange }) 
   const cancelNewReporting = () => {
     if (dirty) {
       dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(true))
-    } else if (isSideWindowContext) {
-      setContextVisibility(SideWindowReportingFormVisibility.NONE)
     } else {
-      dispatch(setReportingFormVisibility(ReportingFormVisibility.NONE))
+      setReportingFormVisibility({
+        context: selectedReporting.context,
+        visibility: VisibilityState.NONE
+      })
     }
   }
 
@@ -129,11 +129,10 @@ export function ReportingForm({ selectedReporting, setShouldValidateOnChange }) 
 
   const confirmDeleteReporting = () => {
     dispatch(deleteReporting(values.id))
-    if (isSideWindowContext) {
-      setContextVisibility(SideWindowReportingFormVisibility.NONE)
-    } else {
-      dispatch(setReportingFormVisibility(ReportingFormVisibility.NONE))
-    }
+    setReportingFormVisibility({
+      context: selectedReporting.context,
+      visibility: VisibilityState.NONE
+    })
   }
 
   return (
@@ -161,8 +160,8 @@ export function ReportingForm({ selectedReporting, setShouldValidateOnChange }) 
         <StyledHeaderButtons>
           <StyledChevronIcon
             $isOpen={
-              (!isSideWindowContext && reportingFormVisibility === ReportingFormVisibility.REDUCED) ||
-              (isSideWindowContext && contextVisibility === SideWindowReportingFormVisibility.REDUCED)
+              reportingFormVisibility.context === selectedReporting.context &&
+              reportingFormVisibility.visibility === VisibilityState.REDUCED
             }
             accent={Accent.TERTIARY}
             Icon={Icon.Chevron}
@@ -171,7 +170,7 @@ export function ReportingForm({ selectedReporting, setShouldValidateOnChange }) 
           <IconButton
             accent={Accent.TERTIARY}
             Icon={Icon.Close}
-            onClick={() => dispatch(closeReporting(selectedReporting.reporting.id))}
+            onClick={() => dispatch(closeReporting(selectedReporting.reporting.id, selectedReporting.context))}
           />
         </StyledHeaderButtons>
       </StyledHeader>

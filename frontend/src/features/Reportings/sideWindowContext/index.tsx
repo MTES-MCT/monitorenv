@@ -1,11 +1,11 @@
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
-import { useContext, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { SideWindowReportingFormVisibility, SideWindowReportingsContext } from './context'
 import { ReportingFormOnSideWindow } from './Form'
-import { ReportingContext } from '../../../domain/shared_slices/ReportingState'
+import { setReportingFormVisibility } from '../../../domain/shared_slices/Global'
+import { ReportingContext, VisibilityState } from '../../../domain/shared_slices/ReportingState'
 import { closeReporting } from '../../../domain/use_cases/reportings/closeReporting'
 import { switchReporting } from '../../../domain/use_cases/reportings/switchReporting'
 import { useAppSelector } from '../../../hooks/useAppSelector'
@@ -16,10 +16,10 @@ import type { Reporting as ReportingType } from '../../../domain/entities/report
 
 export function ReportingsOnSideWindow() {
   const {
+    global: { reportingFormVisibility },
     multiReportings: { activeReportingId, selectedReportings }
   } = useAppSelector(state => state)
   const dispatch = useDispatch()
-  const { contextVisibility, setContextVisibility } = useContext(SideWindowReportingsContext)
 
   const selectedReporting = useMemo(
     () => selectedReportings.find(reporting => reporting.reporting.id === activeReportingId),
@@ -39,13 +39,25 @@ export function ReportingsOnSideWindow() {
 
   const reduceOrExpandReporting = id => {
     if (activeReportingId === id) {
-      return contextVisibility === SideWindowReportingFormVisibility.VISIBLE
-        ? setContextVisibility(SideWindowReportingFormVisibility.REDUCED)
-        : setContextVisibility(SideWindowReportingFormVisibility.VISIBLE)
+      return reportingFormVisibility.visibility === VisibilityState.VISIBLE
+        ? dispatch(
+            setReportingFormVisibility({
+              context: ReportingContext.SIDE_WINDOW,
+              visibility: VisibilityState.REDUCED
+            })
+          )
+        : dispatch(
+            setReportingFormVisibility({
+              context: ReportingContext.SIDE_WINDOW,
+              visibility: VisibilityState.VISIBLE
+            })
+          )
     }
 
-    return dispatch(switchReporting(id, setContextVisibility))
+    return dispatch(switchReporting(id, ReportingContext.SIDE_WINDOW))
   }
+
+  // console.log('reportingsOnTable', reportingsOnTable)
 
   return (
     <>
@@ -74,7 +86,7 @@ export function ReportingsOnSideWindow() {
                 <IconButton
                   accent={Accent.TERTIARY}
                   Icon={Icon.Close}
-                  onClick={() => dispatch(closeReporting(reducedReporting.id))}
+                  onClick={() => dispatch(closeReporting(reducedReporting.id, ReportingContext.SIDE_WINDOW))}
                 />
               </StyledHeaderButtons>
             </StyledHeader>

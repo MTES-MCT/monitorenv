@@ -22,6 +22,7 @@ export function ButtonsGroupRow({ id }) {
   const {
     reportingState: { isFormDirty, selectedReportingId }
   } = useAppSelector(state => state)
+
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false)
 

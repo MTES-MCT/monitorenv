@@ -3,7 +3,8 @@ import styled from 'styled-components'
 
 import { SearchReportings } from './SearchReportings'
 import { setDisplayedItems } from '../../../domain/shared_slices/Global'
-import { ReportingFormVisibility } from '../../../domain/shared_slices/ReportingState'
+import { ReportingContext, VisibilityState } from '../../../domain/shared_slices/ReportingState'
+import { reduceReportingForm } from '../../../domain/use_cases/reduceReportingForm'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
@@ -21,10 +22,17 @@ export function ReportingsButton() {
         isSearchSemaphoreVisible: false
       })
     )
+    dispatch(reduceReportingForm())
   }
 
   return (
-    <Wrapper reportingFormVisibility={reportingFormVisibility}>
+    <Wrapper
+      reportingFormVisibility={
+        reportingFormVisibility.context === ReportingContext.MAP
+          ? reportingFormVisibility.visibility
+          : VisibilityState.NONE
+      }
+    >
       {isSearchReportingsVisible && <SearchReportings />}
       <MenuWithCloseButton.ButtonOnMap
         className={isSearchReportingsVisible ? '_active' : undefined}
@@ -38,10 +46,10 @@ export function ReportingsButton() {
   )
 }
 
-const Wrapper = styled.div<{ reportingFormVisibility: ReportingFormVisibility }>`
+const Wrapper = styled.div<{ reportingFormVisibility: VisibilityState }>`
   position: absolute;
   top: 130px;
-  right: ${p => (p.reportingFormVisibility === ReportingFormVisibility.VISIBLE ? '0' : '10')}px;
+  right: ${p => (p.reportingFormVisibility === VisibilityState.VISIBLE ? '0' : '10')}px;
   display: flex;
   justify-content: flex-end;
   transition: right 0.3s ease-out;
