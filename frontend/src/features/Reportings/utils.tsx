@@ -10,9 +10,8 @@ import {
   getReportingStatus
 } from '../../domain/entities/reporting'
 
-export function getReportingInitialValues(reporting?: Partial<Reporting | undefined>) {
+export function getReportingInitialValues(reporting: Partial<Reporting> | Reporting | undefined) {
   return {
-    // createdAt: new Date().toISOString(),
     geom: undefined,
     sourceType: ReportingSourceEnum.SEMAPHORE,
     validityTime: 24,
