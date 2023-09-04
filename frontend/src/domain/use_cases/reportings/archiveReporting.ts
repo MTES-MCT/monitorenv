@@ -3,7 +3,7 @@ import { setToast } from '../../shared_slices/Global'
 
 import type { Reporting } from '../../entities/reporting'
 
-export const archiveReportingFromTable = id => async (dispatch, getState) => {
+export const archiveReportingFromTable = (id: number) => async (dispatch, getState) => {
   const {
     reportingState: { reportingState, selectedReportingId }
   } = getState()

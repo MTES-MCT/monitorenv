@@ -1,7 +1,7 @@
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { setToast } from '../../shared_slices/Global'
 
-export const archiveMultipleReportings = (ids, resetSelectionFn) => async dispatch => {
+export const archiveMultipleReportings = (ids: number[], resetSelectionFn: () => void) => async dispatch => {
   try {
     const response = await dispatch(reportingsAPI.endpoints.archiveReportings.initiate({ ids }))
 

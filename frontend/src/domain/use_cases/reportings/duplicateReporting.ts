@@ -4,7 +4,7 @@ import { setReportingFormVisibility, setToast } from '../../shared_slices/Global
 import { multiReportingsActions } from '../../shared_slices/MultiReportings'
 import { ReportingContext, VisibilityState } from '../../shared_slices/ReportingState'
 
-export const duplicateReporting = reportingId => async (dispatch, getState) => {
+export const duplicateReporting = (reportingId: number) => async (dispatch, getState) => {
   const {
     multiReportings: { selectedReportings }
   } = getState()

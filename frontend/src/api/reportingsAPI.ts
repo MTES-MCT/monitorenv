@@ -35,7 +35,7 @@ export const reportingsAPI = createApi({
         return Promise.all(promises).then(results => ({ data: results }))
       }
     }),
-    createReporting: build.mutation<Reporting, Partial<Reporting>>({
+    createReporting: build.mutation<Partial<Reporting>, Partial<Reporting>>({
       invalidatesTags: [{ id: 'LIST', type: 'Reportings' }],
       query: reporting => ({
         body: reporting,
@@ -74,7 +74,7 @@ export const reportingsAPI = createApi({
       query: filters => getQueryString('reportings', filters),
       transformResponse: (response: ReportingDetailed[]) => ReportingAdapter.setAll(initialState, response)
     }),
-    updateReporting: build.mutation<Reporting, Reporting>({
+    updateReporting: build.mutation<Reporting, Partial<Reporting>>({
       invalidatesTags: (_, __, { id }) => [
         { id, type: 'Reportings' },
         { id: 'LIST', type: 'Reportings' }
