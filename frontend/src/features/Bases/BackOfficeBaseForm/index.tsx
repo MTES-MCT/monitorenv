@@ -96,13 +96,13 @@ const Title = styled.h1`
 `
 
 const Form = styled.form`
-  > div:not(:first-child) {
+  > div:not(:first-child, :last-child) {
     margin-top: 16px;
   }
 `
 
 const ActionGroup = styled.div`
-  margin-top: 24px !important;
+  margin-top: 24px;
 
   > button:not(:first-child) {
     margin-left: 16px;

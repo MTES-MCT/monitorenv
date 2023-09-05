@@ -74,7 +74,7 @@ export function BackOfficeAdministrationForm() {
       {!getAdministrationQueryError && initialValues && (
         <Formik initialValues={initialValues} onSubmit={submit} validationSchema={ADMINISTRATION_FORM_SCHEMA}>
           {({ handleSubmit }) => (
-            <Form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}>
               <FormikTextInput label="Nom" name="name" />
 
               <ActionGroup>
@@ -83,7 +83,7 @@ export function BackOfficeAdministrationForm() {
                 </Button>
                 <Button type="submit">{isNew ? 'Créer' : 'Mettre à jour'}</Button>
               </ActionGroup>
-            </Form>
+            </form>
           )}
         </Formik>
       )}
@@ -102,14 +102,8 @@ const Title = styled.h1`
   margin: 0 0 24px;
 `
 
-const Form = styled.form`
-  > div:not(:first-child) {
-    margin-top: 16px;
-  }
-`
-
 const ActionGroup = styled.div`
-  margin-top: 24px !important;
+  margin-top: 24px;
 
   > button:not(:first-child) {
     margin-left: 16px;
