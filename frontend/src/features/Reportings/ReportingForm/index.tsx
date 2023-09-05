@@ -138,7 +138,7 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
         title="Supprimer le signalement&nbsp;?"
       />
       <StyledHeader>
-        <StyledTitle>
+        <StyledTitle data-cy="reporting-title">
           <Icon.Report />
           {getReportingTitle(selectedReporting.reporting)}
         </StyledTitle>
@@ -150,6 +150,7 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
               reportingFormVisibility.visibility === VisibilityState.REDUCED
             }
             accent={Accent.TERTIARY}
+            data-cy="reporting-reduce-or-expand-button"
             Icon={Icon.Chevron}
             onClick={reduceOrExpandReporting}
           />

@@ -129,6 +129,7 @@ export function Source() {
     <>
       <div>
         <MultiRadio
+          data-cy="reporting-source-selector"
           isInline
           label="Source"
           name="sourceType"

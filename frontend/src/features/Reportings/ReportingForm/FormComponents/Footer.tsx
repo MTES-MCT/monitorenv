@@ -69,7 +69,12 @@ export function Footer({ onCancel, onDelete, setMustIncreaseValidity, setShouldV
               Enregistrer et archiver
             </StyledButton>
           )}
-          <StyledSubmitButton accent={Accent.SECONDARY} Icon={Icon.Save} onClick={() => handleSubmit()}>
+          <StyledSubmitButton
+            accent={Accent.SECONDARY}
+            data-cy="save-reporting"
+            Icon={Icon.Save}
+            onClick={() => handleSubmit()}
+          >
             Enregistrer et quitter
           </StyledSubmitButton>
         </div>
