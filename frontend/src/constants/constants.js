@@ -50,4 +50,4 @@ export const COLORS = {
   yellowGreen: '#8CC800'
 }
 
-export const HIT_PIXEL_TO_TOLERANCE = 15
+export const HIT_PIXEL_TO_TOLERANCE = 20

@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import { ReportingCard } from './ReportingCard'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -12,11 +14,13 @@ const MARGINS = {
   xRight: -55,
   yBottom: 50,
   yMiddle: 50,
-  yTop: -280
+  yTop: -55
 }
 export function ReportingOverlay({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const { selectedReportingIdOnMap } = useAppSelector(state => state.reportingState)
   const { displayReportingsOverlay } = useAppSelector(state => state.global)
+  const [hoveredMargins, setHoveredMargins] = useState(MARGINS)
+  const [selectedMargins, setSelectedMargins] = useState(MARGINS)
 
   const feature = map
     ?.getLayers()
@@ -33,6 +37,18 @@ export function ReportingOverlay({ currentFeatureOver, map }: BaseMapChildrenPro
     currentfeatureId.startsWith(Layers.REPORTINGS.code) &&
     currentfeatureId !== `${Layers.REPORTINGS.code}:${selectedReportingIdOnMap}`
 
+  const updateHoveredMargins = (cardHeight: number) => {
+    if (MARGINS.yTop - cardHeight !== hoveredMargins.yTop) {
+      setHoveredMargins({ ...hoveredMargins, yTop: MARGINS.yTop - cardHeight })
+    }
+  }
+
+  const updateSelectedMargins = (cardHeight: number) => {
+    if (MARGINS.yTop - cardHeight !== selectedMargins.yTop) {
+      setSelectedMargins({ ...selectedMargins, yTop: MARGINS.yTop - cardHeight })
+    }
+  }
+
   return (
     <>
       <OverlayPositionOnCentroid
@@ -40,17 +56,17 @@ export function ReportingOverlay({ currentFeatureOver, map }: BaseMapChildrenPro
         feature={displayReportingsOverlay ? feature : undefined}
         featureIsShowed
         map={map}
-        options={{ margins: MARGINS }}
+        options={{ margins: selectedMargins }}
       >
-        <ReportingCard feature={feature} selected />
+        <ReportingCard feature={feature} selected updateMargins={updateSelectedMargins} />
       </OverlayPositionOnCentroid>
       <OverlayPositionOnCentroid
         appClassName="overlay-reporting-hover"
         feature={displayReportingsOverlay && displayHoveredFeature ? currentFeatureOver : undefined}
         map={map}
-        options={{ margins: MARGINS }}
+        options={{ margins: hoveredMargins }}
       >
-        <ReportingCard feature={currentFeatureOver} />
+        <ReportingCard feature={currentFeatureOver} updateMargins={updateHoveredMargins} />
       </OverlayPositionOnCentroid>
     </>
   )

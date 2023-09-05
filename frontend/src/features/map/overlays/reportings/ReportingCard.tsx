@@ -9,7 +9,7 @@ import {
   customDayjs,
   getLocalizedDayjs
 } from '@mtes-mct/monitor-ui'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
@@ -18,11 +18,21 @@ import { reportingStateActions } from '../../../../domain/shared_slices/Reportin
 import { openReporting } from '../../../../domain/use_cases/reportings/openReporting'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
-export function ReportingCard({ feature, selected = false }: { feature: any; selected?: boolean }) {
+export function ReportingCard({
+  feature,
+  selected = false,
+  updateMargins
+}: {
+  feature: any
+  selected?: boolean
+  updateMargins: (margin: number) => void
+}) {
   const dispatch = useDispatch()
   const {
     global: { displayReportingsLayer }
   } = useAppSelector(state => state)
+
+  const ref = useRef<HTMLDivElement>(null)
 
   const {
     createdAt,
@@ -63,12 +73,19 @@ export function ReportingCard({ feature, selected = false }: { feature: any; sel
     dispatch(reportingStateActions.setSelectedReportingIdOnMap(undefined))
   }, [dispatch])
 
+  useEffect(() => {
+    if (feature && ref.current) {
+      const cardHeight = ref.current.offsetHeight
+      updateMargins(cardHeight === 0 ? 200 : cardHeight)
+    }
+  }, [feature, updateMargins])
+
   if (!displayReportingsLayer) {
     return null
   }
 
   return (
-    <Wrapper data-cy="reporting-overlay">
+    <Wrapper ref={ref} data-cy="reporting-overlay">
       <StyledHeader>
         <StyledHeaderFirstLine>
           <StyledBoldText>{`SIGNALEMENT ${getFormattedReportingId(reportingId)}`}</StyledBoldText>

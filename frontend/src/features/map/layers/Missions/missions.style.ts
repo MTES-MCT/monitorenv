@@ -74,6 +74,7 @@ export const selectedMissionActionsStyle = [
       return undefined
     },
     image: new Icon({
+      color: THEME.color.charcoal,
       scale: 0.6,
       src: 'Close.svg'
     })
