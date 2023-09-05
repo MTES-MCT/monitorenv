@@ -33,7 +33,7 @@ export function ControlUnitListButton() {
 
 const Wrapper = styled.div`
   position: absolute;
-  top: 235px;
+  top: 226px;
   right: 10px;
   display: flex;
   justify-content: flex-end;

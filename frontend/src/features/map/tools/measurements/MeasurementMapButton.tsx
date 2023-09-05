@@ -121,7 +121,7 @@ const MeasurementItem = styled.div`
 const Wrapper = styled.div<{ reportingFormVisibility: VisibilityState }>`
   position: absolute;
   right: ${p => (p.reportingFormVisibility === VisibilityState.VISIBLE ? '0' : '10')}px;
-  top: 310px;
+  top: 298px;
   transition: right 0.3s ease-out;
 `
 
