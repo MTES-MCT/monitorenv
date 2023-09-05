@@ -88,7 +88,7 @@
     "@storybook/react-webpack5": "7.1.1",
     "@storybook/testing-library": "^0.2.0",
     "@swc/core": "1.2.207",
-    "@swc/jest": "0.2.21",
+    "@swc/jest": "0.2.29",
     "@tsconfig/create-react-app": "1.0.2",
     "@types/google.maps": "^3.52.2",
     "@types/jest": "28.1.6",
