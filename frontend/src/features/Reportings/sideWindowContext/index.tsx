@@ -16,6 +16,7 @@ import type { Reporting as ReportingType } from '../../../domain/entities/report
 
 export function ReportingsOnSideWindow() {
   const {
+    global: { reportingFormVisibility },
     multiReportings: { activeReportingId, selectedReportings }
   } = useAppSelector(state => state)
   const dispatch = useDispatch()
@@ -45,10 +46,19 @@ export function ReportingsOnSideWindow() {
 
       {reportingsOnTable.map((reporting, index) => {
         const reducedReporting: Partial<ReportingType> = reporting.reporting
+        const isSeparatorVisible = !!(
+          (index < reportingsOnTable.length &&
+            activeReportingId &&
+            reportingFormVisibility.context === ReportingContext.SIDE_WINDOW) ||
+          !(
+            index + 1 === reportingsOnTable.length &&
+            (!activeReportingId || reportingFormVisibility.context === ReportingContext.MAP)
+          )
+        )
 
         return (
           <StyledContainer key={reducedReporting.id} $position={index}>
-            <Separator $visible={index + 1 < reportingsOnTable.length} />
+            <Separator $visible={isSeparatorVisible} />
             <StyledHeader>
               <StyledTitle>
                 <Icon.Report />
@@ -95,5 +105,4 @@ const StyledContainer = styled.div<{ $position: number }>`
   display: flex;
   transition: top 0.5s ease-out;
   z-index: 100;
-  padding-top: 4px;
 `
