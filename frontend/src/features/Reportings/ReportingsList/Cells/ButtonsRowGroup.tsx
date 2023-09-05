@@ -62,8 +62,20 @@ export function ButtonsGroupRow({ id }) {
   return (
     <>
       <ButtonsGroup>
-        <IconButton accent={Accent.TERTIARY} Icon={Icon.Duplicate} onClick={duplicate} title="Dupliquer" />
-        <IconButton accent={Accent.TERTIARY} Icon={Icon.Edit} onClick={edit} title="Editer" />
+        <IconButton
+          accent={Accent.TERTIARY}
+          data-cy={`duplicate-reporting-${id}`}
+          Icon={Icon.Duplicate}
+          onClick={duplicate}
+          title="Dupliquer"
+        />
+        <IconButton
+          accent={Accent.TERTIARY}
+          data-cy={`edit-reporting-${id}`}
+          Icon={Icon.Edit}
+          onClick={edit}
+          title="Editer"
+        />
 
         <StyledDropdown
           accent={Accent.SECONDARY}
