@@ -8,7 +8,7 @@ export enum TargetTypeEnum {
 }
 export enum TargetTypeLabels {
   VEHICLE = 'Véhicule',
-  COMPANY = 'Société',
+  COMPANY = 'Personne morale',
   INDIVIDUAL = 'Personne physique'
 }
 
@@ -22,7 +22,7 @@ export enum ReportingTargetTypeEnum {
 
 export enum ReportingTargetTypeLabels {
   VEHICLE = 'Véhicule',
-  COMPANY = 'Société',
+  COMPANY = 'Personne morale',
   INDIVIDUAL = 'Personne physique',
   OTHER = 'Autre'
 }

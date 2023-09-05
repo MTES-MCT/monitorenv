@@ -45,7 +45,7 @@ export function InfractionForm({
 
       <Form.Group>
         <FormikTextInput
-          label="Identité de la personne controlée"
+          label="Identité de la personne contrôlée"
           name={`${infractionPath}.controlledPersonIdentity`}
         />
       </Form.Group>
