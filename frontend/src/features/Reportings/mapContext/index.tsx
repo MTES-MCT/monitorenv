@@ -48,6 +48,15 @@ export function ReportingsOnMap() {
 
       {reportingsOnMap.map((reporting, index) => {
         const reducedReporting: Partial<ReportingType> = reporting.reporting
+        const isSeparatorVisible = !!(
+          (index < reportingsOnMap.length &&
+            activeReportingId &&
+            reportingFormVisibility.context === ReportingContext.MAP) ||
+          !(
+            index + 1 === reportingsOnMap.length &&
+            (!activeReportingId || reportingFormVisibility.context === ReportingContext.SIDE_WINDOW)
+          )
+        )
 
         return (
           <StyledContainer
@@ -55,7 +64,7 @@ export function ReportingsOnMap() {
             $position={index}
             $reportingFormVisibility={reportingFormVisibility.visibility}
           >
-            <Separator />
+            <Separator $visible={isSeparatorVisible} />
             <StyledHeader>
               <StyledTitle>
                 <Icon.Report />
@@ -83,12 +92,14 @@ export function ReportingsOnMap() {
   )
 }
 
-const Separator = styled.div`
+const Separator = styled.div<{ $visible: boolean }>`
   height: 4px;
   width: 100%;
   background-color: white;
   position: absolute;
+  display: ${p => (p.$visible ? 'block' : 'none')};
 `
+
 const StyledContainer = styled.div<{ $position: number; $reportingFormVisibility: VisibilityState }>`
   background-color: transparent;
   position: absolute;
