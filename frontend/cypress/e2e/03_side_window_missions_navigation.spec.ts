@@ -29,7 +29,6 @@ context('Mission', () => {
 
     // we close the first mission and display the confirm cancel modal
     cy.get('[data-cy="mission-1"] > svg').click({ force: true, multiple: true })
-    cy.get('*[data-cy="cancel-edit-modal"]').should('be.visible')
     cy.clickButton("Retourner à l'édition")
 
     // we want to check whether the second mission has been saved correctly

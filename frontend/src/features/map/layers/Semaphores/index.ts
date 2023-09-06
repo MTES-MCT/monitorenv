@@ -4,7 +4,7 @@ import VectorSource from 'ol/source/Vector'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { semaphoreStyles } from './semaphores.style'
+import { semaphoresStyleFn } from './semaphores.style'
 import { getSemaphoreZoneFeature } from './semaphoresGeometryHelpers'
 import { useGetReportingsQuery } from '../../../../api/reportingsAPI'
 import { useGetSemaphoresQuery } from '../../../../api/semaphoresAPI'
@@ -20,7 +20,7 @@ import type { Geometry } from 'ol/geom'
 export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useDispatch()
   const { displaySemaphoresLayer } = useAppSelector(state => state.global)
-  const { selectedSemaphoreId } = useAppSelector(state => state.semaphoresSlice)
+  const { isSemaphoreHighlighted, selectedSemaphoreId } = useAppSelector(state => state.semaphoresSlice)
   const { overlayCoordinates } = useAppSelector(state => state.global)
   const listener = useAppSelector(state => state.draw.listener)
 
@@ -82,7 +82,7 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       vectorLayerRef.current = new VectorLayer({
         renderBuffer: 7,
         source: GetVectorSource(),
-        style: semaphoreStyles,
+        style: semaphoresStyleFn,
         updateWhileAnimating: true,
         updateWhileInteracting: true,
         zIndex: Layers.SEMAPHORES.zIndex
@@ -97,11 +97,12 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
     GetVectorSource().forEachFeature(feature => {
       const selectedSemaphore = `${Layers.SEMAPHORES.code}:${selectedSemaphoreId}`
       feature.setProperties({
+        isHighlighted: feature.getId() === selectedSemaphore && isSemaphoreHighlighted,
         isSelected: feature.getId() === selectedSemaphore,
         overlayCoordinates: feature.getId() === selectedSemaphore ? overlayCoordinates : undefined
       })
     })
-  }, [overlayCoordinates, selectedSemaphoreId])
+  }, [overlayCoordinates, selectedSemaphoreId, isSemaphoreHighlighted])
 
   useEffect(() => {
     if (map) {
@@ -122,7 +123,7 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
 
   useEffect(() => {
     // we don't want to display semaphores on the map if the user so decides (displaySemaphoresLayer variable)
-    // or if user edits a surveillance zone or a control point (listener variable)
+    // or if user edits a zone or a point (listener variable)
     GetVectorLayer()?.setVisible(displaySemaphoresLayer && !listener)
   }, [displaySemaphoresLayer, GetVectorLayer, listener])
 

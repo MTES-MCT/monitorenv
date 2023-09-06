@@ -5,17 +5,19 @@ import storage from 'redux-persist/lib/storage'
 import type { Semaphore } from '../entities/semaphore'
 
 const persistConfig = {
-  blacklist: ['selectedSemaphoreId'],
+  blacklist: ['selectedSemaphoreId', 'isSemaphoreHighlighted'],
   key: 'semaphores',
   storage
 }
 
 type SemaphoresState = {
+  isSemaphoreHighlighted: boolean
   selectedSemaphoreId: number | undefined
   semaphoresResearchHistory: Semaphore[]
 }
 
 const INITIAL_STATE: SemaphoresState = {
+  isSemaphoreHighlighted: false,
   selectedSemaphoreId: undefined,
   semaphoresResearchHistory: []
 }
@@ -35,12 +37,16 @@ const semaphoresSlice = createSlice({
     resetSelectedSemaphore(state) {
       state.selectedSemaphoreId = undefined
     },
+    setIsSemaphoreHighlighted(state, action) {
+      state.isSemaphoreHighlighted = action.payload
+    },
     setSelectedSemaphore(state, action) {
       state.selectedSemaphoreId = action.payload
     }
   }
 })
 
-export const { addSemaphore, resetSelectedSemaphore, setSelectedSemaphore } = semaphoresSlice.actions
+export const { addSemaphore, resetSelectedSemaphore, setIsSemaphoreHighlighted, setSelectedSemaphore } =
+  semaphoresSlice.actions
 
 export const semaphoresPersistedReducer = persistReducer(persistConfig, semaphoresSlice.reducer)

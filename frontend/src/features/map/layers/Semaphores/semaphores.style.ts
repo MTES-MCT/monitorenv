@@ -2,6 +2,7 @@
 import { isEmpty } from 'lodash'
 import { getCenter } from 'ol/extent'
 import { GeoJSON } from 'ol/format' */
+import { THEME } from '@mtes-mct/monitor-ui'
 import { LineString, /* MultiLineString, */ Point } from 'ol/geom'
 import { Icon, Stroke, Style } from 'ol/style'
 
@@ -56,11 +57,22 @@ const lineStyle = new Style({
     width: 1
   })
 }) */
-
-const semaphoreStyle = new Style({
-  image: new Icon({
-    src: 'semaphore.svg'
+export const semaphoresStyleFn = feature => {
+  const isSemaphoreHighlighted = feature.get('isHighlighted')
+  let semaphoreStyle = new Style({
+    image: new Icon({
+      color: THEME.color.charcoal,
+      src: 'semaphore.svg'
+    })
   })
-})
+  if (isSemaphoreHighlighted) {
+    semaphoreStyle = new Style({
+      image: new Icon({
+        color: THEME.color.blueGray[100],
+        src: 'semaphore.svg'
+      })
+    })
+  }
 
-export const semaphoreStyles = [lineStyle, semaphoreStyle]
+  return [lineStyle, semaphoreStyle]
+}
