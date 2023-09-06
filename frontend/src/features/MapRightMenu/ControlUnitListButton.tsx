@@ -2,7 +2,7 @@ import { Icon, Size } from '@mtes-mct/monitor-ui'
 import { useCallback } from 'react'
 import styled from 'styled-components'
 
-import { setIsControlUnitListDialogVisible } from '../../domain/shared_slices/Global'
+import { globalActions } from '../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { MenuWithCloseButton } from '../commonStyles/map/MenuWithCloseButton'
@@ -13,7 +13,8 @@ export function ControlUnitListButton() {
   const { isControlUnitListDialogVisible } = useAppSelector(state => state.global)
 
   const toggleDialog = useCallback(() => {
-    dispatch(setIsControlUnitListDialogVisible(!isControlUnitListDialogVisible))
+    dispatch(globalActions.hideSideButtons())
+    dispatch(globalActions.setDisplayedItems({ isControlUnitListDialogVisible: !isControlUnitListDialogVisible }))
   }, [dispatch, isControlUnitListDialogVisible])
 
   return (

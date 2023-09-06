@@ -16,8 +16,12 @@ export function Item({ controlUnit }: ItemProps) {
 
   const edit = useCallback(() => {
     dispatch(mapControlUnitDialogActions.setControlUnitId(controlUnit.id))
-    dispatch(globalActions.setIsControlUnitDialogVisible(true))
-    dispatch(globalActions.setIsControlUnitListDialogVisible(false))
+    dispatch(
+      globalActions.setDisplayedItems({
+        isControlUnitDialogVisible: true,
+        isControlUnitListDialogVisible: false
+      })
+    )
   }, [controlUnit.id, dispatch])
 
   return (

@@ -30,9 +30,9 @@ export function HomePage() {
     displayMeasurement,
     displayMissionMenuButton,
     displayReportingsButton,
+    displayRightMenuControlUnitListButton: isRightMenuControlUnitListButtonVisible,
     displaySearchSemaphoreButton,
-    isControlUnitDialogVisible,
-    isRightMenuControlUnitListButtonVisible
+    isControlUnitDialogVisible
   } = useAppSelector(state => state.global)
   const {
     missionState: { isFormDirty, missionState },

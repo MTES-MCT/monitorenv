@@ -2,7 +2,7 @@ import { Icon, Size } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { SearchReportings } from './SearchReportings'
-import { setDisplayedItems, ReportingContext, VisibilityState } from '../../../domain/shared_slices/Global'
+import { globalActions, ReportingContext, VisibilityState } from '../../../domain/shared_slices/Global'
 import { reduceReportingFormOnMap } from '../../../domain/use_cases/reporting/reduceReportingFormOnMap'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
@@ -13,15 +13,9 @@ export function ReportingsButton() {
   const { isSearchReportingsVisible, reportingFormVisibility } = useAppSelector(state => state.global)
 
   const toggleSearchReportings = () => {
-    dispatch(
-      setDisplayedItems({
-        isMapToolVisible: undefined,
-        isSearchMissionsVisible: false,
-        isSearchReportingsVisible: !isSearchReportingsVisible,
-        isSearchSemaphoreVisible: false
-      })
-    )
+    dispatch(globalActions.hideSideButtons())
     dispatch(reduceReportingFormOnMap())
+    dispatch(globalActions.setDisplayedItems({ isSearchReportingsVisible: !isSearchReportingsVisible }))
   }
 
   return (

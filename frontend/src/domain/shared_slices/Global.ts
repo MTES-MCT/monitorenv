@@ -1,4 +1,4 @@
-// TODO It may be a good thing to either call this slice 'mainWindowSlice' since it targets the main window.
+// TODO It may be a good thing to either call this slice 'mainWindowSlice' (or something with "map"?) since it targets the main window.
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
@@ -37,9 +37,7 @@ type GlobalStateType = {
   displayInterestPoint: boolean
   displaySearchSemaphoreButton: boolean
   displayReportingsButton: boolean
-  isControlUnitDialogVisible: boolean
-  isControlUnitListDialogVisible: boolean
-  isRightMenuControlUnitListButtonVisible: boolean
+  displayRightMenuControlUnitListButton: boolean
 
   // state entry for every layer whose visibility should be controlled
   isSearchMissionsVisible: boolean
@@ -49,6 +47,9 @@ type GlobalStateType = {
   displayMissionSelectedLayer: boolean
 
   // state entry for other children components whom visibility is already handled by parent components
+
+  isControlUnitDialogVisible: boolean
+  isControlUnitListDialogVisible: boolean
 
   isSearchSemaphoreVisible: boolean
   displaySemaphoresLayer: boolean
@@ -82,9 +83,7 @@ const initialState: GlobalStateType = {
   displayInterestPoint: true,
   displaySearchSemaphoreButton: true,
   displayReportingsButton: true,
-  isControlUnitDialogVisible: false,
-  isControlUnitListDialogVisible: false,
-  isRightMenuControlUnitListButtonVisible: true,
+  displayRightMenuControlUnitListButton: true,
 
   // state entry for every layer whose visibility should be controlled
   isSearchMissionsVisible: false,
@@ -95,6 +94,9 @@ const initialState: GlobalStateType = {
 
   // state entry for other children components whom visibility is already handled by parent components
   isLayersSidebarVisible: false,
+
+  isControlUnitDialogVisible: false,
+  isControlUnitListDialogVisible: false,
 
   isSearchSemaphoreVisible: false,
   displaySemaphoresLayer: true,
@@ -125,11 +127,15 @@ const globalSlice = createSlice({
   name: 'global',
   reducers: {
     hideSideButtons(state) {
+      state.isControlUnitDialogVisible = false
+      state.isControlUnitListDialogVisible = false
+      state.isSearchReportingsVisible = false
       state.isSearchReportingsVisible = false
       state.isSearchSemaphoreVisible = false
       state.isSearchMissionsVisible = false
       state.isMapToolVisible = undefined
     },
+
     removeToast(state) {
       state.toast = undefined
     },
@@ -148,20 +154,6 @@ const globalSlice = createSlice({
     },
 
     /**
-     * Toggle map control unit dialog.
-     */
-    setIsControlUnitDialogVisible(state, action: PayloadAction<boolean>) {
-      state.isControlUnitDialogVisible = action.payload
-    },
-
-    /**
-     * Toggle map control unit list dialog.
-     */
-    setIsControlUnitListDialogVisible(state, action: PayloadAction<boolean>) {
-      state.isControlUnitListDialogVisible = action.payload
-    },
-
-    /**
      * Set the map tool opened
      */
     setIsMapToolVisible(state, action: PayloadAction<MapToolType | undefined>) {
@@ -173,10 +165,6 @@ const globalSlice = createSlice({
      */
     setisMapToolVisible(state, action: PayloadAction<MapToolType | undefined>) {
       state.isMapToolVisible = action.payload
-    },
-
-    setIsRightMenuControlUnitListButtonVisible(state, action: PayloadAction<boolean>) {
-      state.isRightMenuControlUnitListButtonVisible = action.payload
     },
 
     setOverlayCoordinates(state, action) {
@@ -198,9 +186,7 @@ export const {
   removeToast,
   setDisplayedItems,
   setHealthcheckTextWarning,
-  setIsControlUnitListDialogVisible,
   setisMapToolVisible,
-  setIsRightMenuControlUnitListButtonVisible,
   setOverlayCoordinates,
   setReportingFormVisibility,
   setToast

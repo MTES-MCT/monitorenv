@@ -24,7 +24,11 @@ export function MapControlUnitDialog() {
   const { data: controlUnit } = useGetControlUnitQuery(mapControlUnitDialog.controlUnitId)
 
   const close = useCallback(() => {
-    dispatch(globalActions.setIsControlUnitDialogVisible(false))
+    dispatch(
+      globalActions.setDisplayedItems({
+        isControlUnitListDialogVisible: false
+      })
+    )
   }, [dispatch])
 
   if (!controlUnit) {

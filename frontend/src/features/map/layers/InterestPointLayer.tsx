@@ -17,7 +17,7 @@ import {
 } from '../../../domain/entities/interestPoints'
 import { Layers } from '../../../domain/entities/layers/constants'
 import { MapToolType, OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
-import { setIsMapToolVisible } from '../../../domain/shared_slices/Global'
+import { globalActions } from '../../../domain/shared_slices/Global'
 import {
   deleteInterestPointBeingDrawed,
   editInterestPoint,
@@ -119,8 +119,9 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
 
   const modifyInterestPoint = useCallback(
     uuid => {
+      dispatch(globalActions.hideSideButtons())
       dispatch(editInterestPoint(uuid))
-      dispatch(setIsMapToolVisible(MapToolType.INTEREST_POINT))
+      dispatch(globalActions.setIsMapToolVisible(MapToolType.INTEREST_POINT))
     },
     [dispatch]
   )
