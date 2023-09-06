@@ -27,7 +27,11 @@ import { missionsAPI } from '../../api/missionsAPI'
 import { regulatoryLayersAPI } from '../../api/regulatoryLayersAPI'
 import { reportingsAPI } from '../../api/reportingsAPI'
 import { semaphoresAPI } from '../../api/semaphoresAPI'
+import { backOfficeAdministrationListPersistedReducer } from '../../features/Administrations/BackOfficeAdministrationList/slice'
+import { backOfficeBaseListPersistedReducer } from '../../features/Bases/BackOfficeBaseList/slice'
+import { backOfficeControlUnitListPersistedReducer } from '../../features/ControlUnits/BackOfficeControlUnitList/slice'
 import { mapControlUnitDialogReducer } from '../../features/ControlUnits/MapControlUnitDialog/slice'
+import { mapControlUnitListDialogPersistedReducer } from '../../features/ControlUnits/MapControlUnitListDialog/slice'
 import { layerSearchSliceReducer } from '../../features/layersSelector/search/LayerSearch.slice'
 import { sideWindowReducer } from '../../features/SideWindow/slice'
 
@@ -38,12 +42,16 @@ export const homeReducers = combineReducers({
   [monitorenvPublicApi.reducerPath]: monitorenvPublicApi.reducer,
 
   administrative: administrativeSlicePersistedReducer,
+  backOfficeAdministrationList: backOfficeAdministrationListPersistedReducer,
+  backOfficeBaseList: backOfficeBaseListPersistedReducer,
+  backOfficeControlUnitList: backOfficeControlUnitListPersistedReducer,
   draw: drawReducer,
   global: globalReducer,
   interestPoint: interestPointSlicePersistedReducer,
   layerSearch: layerSearchSliceReducer,
   map: mapSliceReducer,
   mapControlUnitDialog: mapControlUnitDialogReducer,
+  mapControlUnitListDialog: mapControlUnitListDialogPersistedReducer,
   measurement: measurementSlicePersistedReducer,
   missionFilters: missionFiltersPersistedReducer,
   missionState: missionStateSliceReducer,

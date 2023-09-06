@@ -1,45 +1,34 @@
-import { CustomSearch, Filter } from '@mtes-mct/monitor-ui'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { ADMINISTRATION_TABLE_COLUMNS } from './constants'
 import { FilterBar } from './FilterBar'
+import { getFilters } from './utils'
 import { useGetAdministrationsQuery } from '../../../api/administrationsAPI'
+import { useAppSelector } from '../../../hooks/useAppSelector'
 import { NavButton } from '../../../ui/NavButton'
 import { DefaultTable } from '../../../ui/Table/DefaultTable'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/constants'
 
-import type { Administration } from '../../../domain/entities/administration'
-
 export function BackOfficeAdministrationList() {
-  const [filters, setFilters] = useState<Array<Filter<Administration.Administration>>>([])
-
+  const backOfficeAdministrationList = useAppSelector(store => store.backOfficeAdministrationList)
   const { data: administrations } = useGetAdministrationsQuery()
 
-  const customSearch = useMemo(
-    () =>
-      administrations
-        ? new CustomSearch(administrations, ['name'], {
-            cacheKey: 'BACK_OFFICE_ADMINISTRATION_LIST',
-            isStrict: true
-          })
-        : undefined,
-    [administrations]
-  )
+  const filteredAdministrations = useMemo(() => {
+    if (!administrations) {
+      return undefined
+    }
 
-  const filteredAdministrations = useMemo(
-    () =>
-      administrations
-        ? filters.reduce((previousControlUnits, filter) => filter(previousControlUnits), administrations)
-        : undefined,
-    [administrations, filters]
-  )
+    const filters = getFilters(administrations, backOfficeAdministrationList.filtersState)
+
+    return filters.reduce((previousAdministrations, filter) => filter(previousAdministrations), administrations)
+  }, [backOfficeAdministrationList.filtersState, administrations])
 
   return (
     <>
       <Title>Administration des administrations</Title>
 
-      <FilterBar customSearch={customSearch} onChange={setFilters} />
+      <FilterBar />
 
       <ActionGroup>
         <NavButton to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.ADMINISTRATION_LIST]}/new`}>

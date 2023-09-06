@@ -1,30 +1,32 @@
-import { Accent, Button, Filter, Icon } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
 import { noop } from 'lodash/fp'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
 import { FilterBar } from './FilterBar'
 import { Item } from './Item'
+import { getFilters } from './utils'
 import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
+import { useAppSelector } from '../../../hooks/useAppSelector'
 import { MapMenuDialog } from '../../../ui/MapMenuDialog'
 
-import type { ControlUnit } from '../../../domain/entities/controlUnit'
 import type { Promisable } from 'type-fest'
 
 export type MapControlUnitListDialogProps = {
   onClose: () => Promisable<void>
 }
 export function MapControlUnitListDialog({ onClose }: MapControlUnitListDialogProps) {
-  const [filters, setFilters] = useState<Array<Filter<ControlUnit.ControlUnit>>>([])
-
+  const mapControlUnitListDialog = useAppSelector(store => store.mapControlUnitListDialog)
   const { data: controlUnits } = useGetControlUnitsQuery()
 
-  const filteredControlUnits = useMemo(
-    () =>
-      controlUnits
-        ? filters.reduce((previousControlUnits, filter) => filter(previousControlUnits), controlUnits)
-        : undefined,
-    [controlUnits, filters]
-  )
+  const filteredControlUnits = useMemo(() => {
+    if (!controlUnits) {
+      return undefined
+    }
+
+    const filters = getFilters(controlUnits, mapControlUnitListDialog.filtersState)
+
+    return filters.reduce((previousControlUnits, filter) => filter(previousControlUnits), controlUnits)
+  }, [controlUnits, mapControlUnitListDialog.filtersState])
 
   return (
     <MapMenuDialog.Container style={{ height: 480 }}>
@@ -34,7 +36,7 @@ export function MapControlUnitListDialog({ onClose }: MapControlUnitListDialogPr
         <MapMenuDialog.VisibilityButton accent={Accent.SECONDARY} Icon={Icon.Display} />
       </MapMenuDialog.Header>
       <MapMenuDialog.Body>
-        <FilterBar onChange={setFilters} />
+        <FilterBar />
 
         {filteredControlUnits &&
           filteredControlUnits.map(controlUnit => <Item key={controlUnit.id} controlUnit={controlUnit} />)}

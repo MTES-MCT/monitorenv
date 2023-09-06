@@ -1,29 +1,24 @@
 import {
-  Filter,
-  FormikEffect,
-  FormikSelect,
-  FormikTextInput,
   Icon,
+  Select,
   Size,
+  TextInput,
   getOptionsFromIdAndName,
   getOptionsFromLabelledEnum
 } from '@mtes-mct/monitor-ui'
-import { Formik } from 'formik'
-import { noop } from 'lodash/fp'
 import { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 
+import { mapControlUnitListDialogActions } from './slice'
 import { useGetAdministrationsQuery } from '../../../api/administrationsAPI'
 import { useGetBasesQuery } from '../../../api/basesAPI'
 import { ControlUnit } from '../../../domain/entities/controlUnit'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../hooks/useAppSelector'
 
-import type { FiltersState } from './types'
-import type { Promisable } from 'type-fest'
-
-export type FilterBarProps = {
-  onChange: (nextFilters: Array<Filter<ControlUnit.ControlUnit>>) => Promisable<void>
-}
-export function FilterBar({ onChange }: FilterBarProps) {
+export function FilterBar() {
+  const dispatch = useAppDispatch()
+  const mapControlUnitListDialog = useAppSelector(store => store.mapControlUnitListDialog)
   const { data: administrations } = useGetAdministrationsQuery()
   const { data: bases } = useGetBasesQuery()
 
@@ -31,50 +26,32 @@ export function FilterBar({ onChange }: FilterBarProps) {
   const basesAsOptions = useMemo(() => getOptionsFromIdAndName(bases), [bases])
   const typesAsOptions = useMemo(() => getOptionsFromLabelledEnum(ControlUnit.ControlUnitResourceType), [])
 
-  const updateFilters = useCallback(
-    (filtersState: FiltersState) => {
-      const nextFilters: Array<Filter<ControlUnit.ControlUnit>> = []
-
-      if (filtersState.administrationId) {
-        const filter: Filter<ControlUnit.ControlUnit> = controlUnits =>
-          controlUnits.filter(controlUnit => controlUnit.administrationId === filtersState.administrationId)
-
-        nextFilters.push(filter)
-      }
-
-      // TODO Use a better query matcher (this is temporary).
-      if (filtersState.query && filtersState.query.trim().length > 0) {
-        const filter: Filter<ControlUnit.ControlUnit> = controlUnits =>
-          controlUnits.filter(controlUnit => controlUnit.name.includes(filtersState.query as string))
-
-        nextFilters.push(filter)
-      }
-
-      if (filtersState.baseId) {
-        const filter: Filter<ControlUnit.ControlUnit> = controlUnits =>
-          controlUnits.reduce<ControlUnit.ControlUnit[]>((previousControlUnits, controlUnit) => {
-            const matches = controlUnit.controlUnitResources.filter(({ baseId }) => baseId === filtersState.baseId)
-
-            return matches.length > 0 ? [...previousControlUnits, controlUnit] : previousControlUnits
-          }, [])
-
-        nextFilters.push(filter)
-      }
-
-      if (filtersState.type) {
-        const filter: Filter<ControlUnit.ControlUnit> = controlUnits =>
-          controlUnits.reduce<ControlUnit.ControlUnit[]>((previousControlUnits, controlUnit) => {
-            const matches = controlUnit.controlUnitResources.filter(({ type }) => type === filtersState.type)
-
-            return matches.length > 0 ? [...previousControlUnits, controlUnit] : previousControlUnits
-          }, [])
-
-        nextFilters.push(filter)
-      }
-
-      onChange(nextFilters)
+  const updateAdministrationId = useCallback(
+    (nextValue: number | undefined) => {
+      dispatch(mapControlUnitListDialogActions.setFilter({ key: 'administrationId', value: nextValue }))
     },
-    [onChange]
+    [dispatch]
+  )
+
+  const updateBaseId = useCallback(
+    (nextValue: number | undefined) => {
+      dispatch(mapControlUnitListDialogActions.setFilter({ key: 'baseId', value: nextValue }))
+    },
+    [dispatch]
+  )
+
+  const updateQuery = useCallback(
+    (nextValue: string | undefined) => {
+      dispatch(mapControlUnitListDialogActions.setFilter({ key: 'query', value: nextValue }))
+    },
+    [dispatch]
+  )
+
+  const updateType = useCallback(
+    (nextValue: string | undefined) => {
+      dispatch(mapControlUnitListDialogActions.setFilter({ key: 'type', value: nextValue }))
+    },
+    [dispatch]
   )
 
   if (!administrationsAsOptions || !basesAsOptions) {
@@ -82,48 +59,52 @@ export function FilterBar({ onChange }: FilterBarProps) {
   }
 
   return (
-    <Formik initialValues={{}} onSubmit={noop}>
-      <Wrapper>
-        <FormikEffect onChange={updateFilters} />
-
-        <FormikTextInput
-          Icon={Icon.Search}
-          isLabelHidden
-          isLight
-          label="Rechercher une unité"
-          name="query"
-          placeholder="Rechercher une unité"
-          size={Size.LARGE}
-        />
-        <FormikSelect
-          isLabelHidden
-          isLight
-          label="Administration"
-          name="administrationId"
-          options={administrationsAsOptions as any}
-          placeholder="Administration"
-          searchable
-        />
-        <FormikSelect
-          isLabelHidden
-          isLight
-          label="Type de moyen"
-          name="type"
-          options={typesAsOptions}
-          placeholder="Type de moyen"
-          searchable
-        />
-        <FormikSelect
-          isLabelHidden
-          isLight
-          label="Base du moyen"
-          name="baseId"
-          options={basesAsOptions as any}
-          placeholder="Base du moyen"
-          searchable
-        />
-      </Wrapper>
-    </Formik>
+    <Wrapper>
+      <TextInput
+        Icon={Icon.Search}
+        isLabelHidden
+        isLight
+        label="Rechercher une unité"
+        name="query"
+        onChange={updateQuery}
+        placeholder="Rechercher une unité"
+        size={Size.LARGE}
+        value={mapControlUnitListDialog.filtersState.query}
+      />
+      <Select
+        isLabelHidden
+        isLight
+        label="Administration"
+        name="administrationId"
+        onChange={updateAdministrationId}
+        options={administrationsAsOptions}
+        placeholder="Administration"
+        searchable
+        value={mapControlUnitListDialog.filtersState.administrationId}
+      />
+      <Select
+        isLabelHidden
+        isLight
+        label="Type de moyen"
+        name="type"
+        onChange={updateType}
+        options={typesAsOptions}
+        placeholder="Type de moyen"
+        searchable
+        value={mapControlUnitListDialog.filtersState.type}
+      />
+      <Select
+        isLabelHidden
+        isLight
+        label="Base du moyen"
+        name="baseId"
+        onChange={updateBaseId}
+        options={basesAsOptions}
+        placeholder="Base du moyen"
+        searchable
+        value={mapControlUnitListDialog.filtersState.baseId}
+      />
+    </Wrapper>
   )
 }
 

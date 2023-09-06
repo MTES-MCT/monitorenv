@@ -1,46 +1,34 @@
-import { CustomSearch, Filter, FormikEffect, FormikTextInput, Icon } from '@mtes-mct/monitor-ui'
-import { Formik } from 'formik'
-import { noop } from 'lodash/fp'
+import { Icon, TextInput } from '@mtes-mct/monitor-ui'
 import { useCallback } from 'react'
 import styled from 'styled-components'
 
-import type { FiltersState } from './types'
-import type { ControlUnit } from '../../../domain/entities/controlUnit'
+import { backOfficeControlUnitListActions } from './slice'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../hooks/useAppSelector'
 
-export type FilterBarProps = {
-  customSearch: CustomSearch<ControlUnit.ControlUnit> | undefined
-  onChange: (nextFilters: Array<Filter<ControlUnit.ControlUnit>>) => void
-}
-export function FilterBar({ customSearch, onChange }: FilterBarProps) {
-  const updateFilters = useCallback(
-    (filtersState: FiltersState) => {
-      const nextFilters: Array<Filter<ControlUnit.ControlUnit>> = []
+export function FilterBar() {
+  const dispatch = useAppDispatch()
+  const backOfficeControlUnitList = useAppSelector(store => store.backOfficeControlUnitList)
 
-      if (customSearch && filtersState.query && filtersState.query.trim().length > 0) {
-        const filter: Filter<ControlUnit.ControlUnit> = () => customSearch.find(filtersState.query as string)
-
-        nextFilters.push(filter)
-      }
-
-      onChange(nextFilters)
+  const updateQuery = useCallback(
+    (nextValue: string | undefined) => {
+      dispatch(backOfficeControlUnitListActions.setFilter({ key: 'query', value: nextValue }))
     },
-    [customSearch, onChange]
+    [dispatch]
   )
 
   return (
-    <Formik initialValues={{}} onSubmit={noop}>
-      <Wrapper>
-        <FormikEffect onChange={updateFilters} />
-
-        <FormikTextInput
-          Icon={Icon.Search}
-          isLabelHidden
-          label="Rechercher..."
-          name="query"
-          placeholder="Rechercher..."
-        />
-      </Wrapper>
-    </Formik>
+    <Wrapper>
+      <TextInput
+        Icon={Icon.Search}
+        isLabelHidden
+        label="Rechercher..."
+        name="query"
+        onChange={updateQuery}
+        placeholder="Rechercher..."
+        value={backOfficeControlUnitList.filtersState.query}
+      />
+    </Wrapper>
   )
 }
 

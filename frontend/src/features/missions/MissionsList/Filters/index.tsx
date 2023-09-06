@@ -332,7 +332,7 @@ const StyledCheckPicker = styled(CheckPicker)`
 `
 const StyledTagsContainer = styled.div`
   display: flex;
-  flex-direction row;
+  flex-direction: row;
   gap: 16px;
   align-items: baseline;
 `
