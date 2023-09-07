@@ -7,6 +7,7 @@ import { ReportingStatusEnum, type Reporting, getReportingStatus } from '../../.
 import { reopenReporting } from '../../../../domain/use_cases/reportings/reopenReporting'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { StyledButton, StyledSubmitButton, StyledDeleteButton, StyledFooter } from '../../style'
+import { isNewReporting } from '../../utils'
 
 export function Footer({ onCancel, onDelete, setMustIncreaseValidity, setShouldValidateOnChange }) {
   const {
@@ -49,45 +50,45 @@ export function Footer({ onCancel, onDelete, setMustIncreaseValidity, setShouldV
     })
   }
 
-  if (values.id) {
+  if (isNewReporting(values.id)) {
     return (
-      <StyledFooter>
-        <StyledDeleteButton
-          accent={Accent.SECONDARY}
-          color={THEME.color.maximumRed}
-          Icon={Icon.Delete}
-          onClick={onDelete}
-        />
-
-        <div>
-          {reportingStatus === ReportingStatusEnum.ARCHIVED || values.isArchived ? (
-            <StyledButton Icon={Icon.Unlock} onClick={handleReopen}>
-              Rouvrir le signalement
-            </StyledButton>
-          ) : (
-            <StyledButton Icon={Icon.Archive} onClick={handleArchive}>
-              Enregistrer et archiver
-            </StyledButton>
-          )}
-          <StyledSubmitButton
-            accent={Accent.SECONDARY}
-            data-cy="save-reporting"
-            Icon={Icon.Save}
-            onClick={() => handleSubmit()}
-          >
-            Enregistrer et quitter
-          </StyledSubmitButton>
-        </div>
+      <StyledFooter $justify="end">
+        <StyledButton onClick={onCancel}>Annuler</StyledButton>
+        <StyledSubmitButton accent={Accent.SECONDARY} Icon={Icon.Save} onClick={() => handleSubmit()}>
+          Valider le signalement
+        </StyledSubmitButton>
       </StyledFooter>
     )
   }
 
   return (
-    <StyledFooter $justify="end">
-      <StyledButton onClick={onCancel}>Annuler</StyledButton>
-      <StyledSubmitButton accent={Accent.SECONDARY} Icon={Icon.Save} onClick={() => handleSubmit()}>
-        Valider le signalement
-      </StyledSubmitButton>
+    <StyledFooter>
+      <StyledDeleteButton
+        accent={Accent.SECONDARY}
+        color={THEME.color.maximumRed}
+        Icon={Icon.Delete}
+        onClick={onDelete}
+      />
+
+      <div>
+        {reportingStatus === ReportingStatusEnum.ARCHIVED || values.isArchived ? (
+          <StyledButton Icon={Icon.Unlock} onClick={handleReopen}>
+            Rouvrir le signalement
+          </StyledButton>
+        ) : (
+          <StyledButton Icon={Icon.Archive} onClick={handleArchive}>
+            Enregistrer et archiver
+          </StyledButton>
+        )}
+        <StyledSubmitButton
+          accent={Accent.SECONDARY}
+          data-cy="save-reporting"
+          Icon={Icon.Save}
+          onClick={() => handleSubmit()}
+        >
+          Enregistrer et quitter
+        </StyledSubmitButton>
+      </div>
     </StyledFooter>
   )
 }

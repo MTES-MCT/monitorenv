@@ -93,7 +93,7 @@ export function ReportingsOnMap() {
 }
 
 const Separator = styled.div<{ $visible: boolean }>`
-  height: 4px;
+  height: 2px;
   width: 100%;
   background-color: white;
   position: absolute;
