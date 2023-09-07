@@ -1,4 +1,4 @@
-import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, MapMenuDialog } from '@mtes-mct/monitor-ui'
 import { noop } from 'lodash/fp'
 import { useMemo } from 'react'
 
@@ -7,7 +7,6 @@ import { Item } from './Item'
 import { getFilters } from './utils'
 import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { MapMenuDialog } from '../../../ui/MapMenuDialog'
 
 import type { Promisable } from 'type-fest'
 

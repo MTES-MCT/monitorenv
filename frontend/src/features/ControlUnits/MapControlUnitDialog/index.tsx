@@ -1,4 +1,4 @@
-import { Icon } from '@mtes-mct/monitor-ui'
+import { Icon, MapMenuDialog } from '@mtes-mct/monitor-ui'
 import { Formik } from 'formik'
 import { noop } from 'lodash/fp'
 import { useCallback } from 'react'
@@ -12,7 +12,6 @@ import { globalActions } from '../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { FrontendError } from '../../../libs/FrontendError'
-import { MapMenuDialog } from '../../../ui/MapMenuDialog'
 
 export function MapControlUnitDialog() {
   const dispatch = useAppDispatch()
