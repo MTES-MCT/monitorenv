@@ -98,10 +98,10 @@ export const hoveredReportingStyleFn = feature => {
       return hoveredReportingZoneStyleFactory(THEME.color.maximumRed, getColorWithAlpha(THEME.color.maximumRed, 0.2))
     case ReportingStatusEnum.ARCHIVED:
       if (feature.get('reportType') === ReportingTypeEnum.OBSERVATION) {
-        return hoveredReportingZoneStyleFactory(THEME.color.blueGray[100], getColorWithAlpha(THEME.color.white, 0.2))
+        return hoveredReportingZoneStyleFactory(THEME.color.blueGray[100], getColorWithAlpha(THEME.color.white, 0.6))
       }
 
-      return hoveredReportingZoneStyleFactory(THEME.color.maximumRed, getColorWithAlpha(THEME.color.white, 0.2))
+      return hoveredReportingZoneStyleFactory(THEME.color.maximumRed, getColorWithAlpha(THEME.color.white, 0.6))
     case ReportingStatusEnum.IN_PROGRESS:
     default:
       return hoveredReportingZoneStyleFactory(THEME.color.slateGray, getColorWithAlpha(THEME.color.slateGray, 0.2))
@@ -127,10 +127,10 @@ export const selectedReportingStyleFn = feature => {
 
     case ReportingStatusEnum.ARCHIVED:
       if (feature.get('reportType') === ReportingTypeEnum.OBSERVATION) {
-        return selectedReportingStyleFactory(THEME.color.blueGray[100], getColorWithAlpha(THEME.color.white, 0.25))
+        return selectedReportingStyleFactory(THEME.color.blueGray[100], getColorWithAlpha(THEME.color.white, 0.6))
       }
 
-      return selectedReportingStyleFactory(THEME.color.maximumRed, getColorWithAlpha(THEME.color.white, 0.25))
+      return selectedReportingStyleFactory(THEME.color.maximumRed, getColorWithAlpha(THEME.color.white, 0.6))
 
     case ReportingStatusEnum.IN_PROGRESS:
     default:
@@ -152,16 +152,16 @@ export const reportingPinStyleFn = feature => {
       return reportingStyleFactory(THEME.color.blueGray[100])
     case ReportingStatusEnum.INFRACTION_SUSPICION:
       return reportingStyleFactory(THEME.color.maximumRed)
-    case ReportingStatusEnum.IN_PROGRESS:
-      return reportingStyleFactory(THEME.color.slateGray)
+
     case ReportingStatusEnum.ARCHIVED:
       if (feature.get('reportType') === ReportingTypeEnum.OBSERVATION) {
         return reportingStyleFactory(THEME.color.white, 'archived_reporting_observation.svg')
       }
 
       return reportingStyleFactory(THEME.color.white, 'archived_reporting_infraction.svg')
+    case ReportingStatusEnum.IN_PROGRESS:
     default:
-      return reportingStyleFactory(THEME.color.white, 'archived_reporting.svg')
+      return reportingStyleFactory(THEME.color.slateGray)
   }
 }
 
