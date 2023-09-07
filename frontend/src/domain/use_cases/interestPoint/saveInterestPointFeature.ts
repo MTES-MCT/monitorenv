@@ -5,33 +5,31 @@ import Point from 'ol/geom/Point'
 import { OPENLAYERS_PROJECTION } from '../../entities/map/constants'
 import { updateInterestPointKeyBeingDrawed } from '../../shared_slices/InterestPoint'
 
-export const saveInterestPointFeature = feature => (dispatch, getState) => {
+export const saveInterestPointFeature = (feature?: Feature | undefined) => (dispatch, getState) => {
   const { interestPointBeingDrawed } = getState().interestPoint
 
   if (interestPointBeingDrawed?.feature) {
     return
   }
 
-  if (!feature) {
-    feature = new Feature({
+  const featureToSave =
+    feature ||
+    new Feature({
       geometry: new Point(interestPointBeingDrawed.coordinates),
       properties: interestPointBeingDrawed
     })
-  }
 
-  if (feature) {
-    feature.setId(interestPointBeingDrawed.uuid)
-    feature.setProperties(interestPointBeingDrawed)
+  featureToSave.setId(interestPointBeingDrawed.uuid)
+  featureToSave.setProperties(interestPointBeingDrawed)
 
-    const geoJSONFeature = getGeoJSONFromFeature(feature)
+  const geoJSONFeature = getGeoJSONFromFeature(featureToSave)
 
-    dispatch(
-      updateInterestPointKeyBeingDrawed({
-        key: 'feature',
-        value: geoJSONFeature
-      })
-    )
-  }
+  dispatch(
+    updateInterestPointKeyBeingDrawed({
+      key: 'feature',
+      value: geoJSONFeature
+    })
+  )
 }
 
 function getGeoJSONFromFeature(feature) {

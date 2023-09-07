@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { CustomCircleRange } from './CustomCircleRange'
 import { MapToolType, MeasurementType } from '../../../../domain/entities/map/constants'
-import { setisMapToolVisible, ReportingContext, VisibilityState } from '../../../../domain/shared_slices/Global'
+import { setIsMapToolVisible, ReportingContext, VisibilityState } from '../../../../domain/shared_slices/Global'
 import { setMeasurementTypeToAdd } from '../../../../domain/shared_slices/Measurement'
 import { reduceReportingFormOnMap } from '../../../../domain/use_cases/reporting/reduceReportingFormOnMap'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
@@ -26,12 +26,12 @@ export function MeasurementMapButton() {
   const wrapperRef = useRef(null)
 
   useClickOutsideWhenOpenedAndExecute(wrapperRef, isOpen, () => {
-    dispatch(setisMapToolVisible(undefined))
+    dispatch(setIsMapToolVisible(undefined))
   })
 
   useEscapeFromKeyboardAndExecute(() => {
     dispatch(setMeasurementTypeToAdd(undefined))
-    dispatch(setisMapToolVisible(undefined))
+    dispatch(setIsMapToolVisible(undefined))
   })
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export function MeasurementMapButton() {
 
   const makeMeasurement = nextMeasurementTypeToAdd => {
     dispatch(setMeasurementTypeToAdd(nextMeasurementTypeToAdd))
-    dispatch(setisMapToolVisible(MapToolType.MEASUREMENT))
+    dispatch(setIsMapToolVisible(MapToolType.MEASUREMENT))
   }
 
   const measurementIcon = useMemo(() => {
@@ -59,9 +59,9 @@ export function MeasurementMapButton() {
   const openOrCloseMeasurementMenu = useCallback(() => {
     if (measurementTypeToAdd) {
       dispatch(setMeasurementTypeToAdd(undefined))
-      dispatch(setisMapToolVisible(undefined))
+      dispatch(setIsMapToolVisible(undefined))
     } else {
-      dispatch(setisMapToolVisible(MapToolType.MEASUREMENT_MENU))
+      dispatch(setIsMapToolVisible(MapToolType.MEASUREMENT_MENU))
     }
     dispatch(reduceReportingFormOnMap())
   }, [dispatch, measurementTypeToAdd])

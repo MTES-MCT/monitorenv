@@ -140,7 +140,7 @@ const globalSlice = createSlice({
     /**
      * Set the map tool opened
      */
-    setisMapToolVisible(state, action: PayloadAction<MapToolType | undefined>) {
+    setIsMapToolVisible(state, action: PayloadAction<MapToolType | undefined>) {
       state.isMapToolVisible = action.payload
     },
 
@@ -163,7 +163,7 @@ export const {
   removeToast,
   setDisplayedItems,
   setHealthcheckTextWarning,
-  setisMapToolVisible,
+  setIsMapToolVisible,
   setOverlayCoordinates,
   setReportingFormVisibility,
   setToast
