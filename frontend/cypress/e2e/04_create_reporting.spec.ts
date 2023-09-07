@@ -16,7 +16,7 @@ context('Reporting', () => {
     cy.get('div[role="option"]').contains('Sémaphore de Dieppe').click()
 
     cy.get('*[data-cy="reporting-target-type"]').click({ force: true })
-    cy.get('div[role="option"]').contains('Société').click()
+    cy.get('div[role="option"]').contains('Personne morale').click()
 
     cy.clickButton('Ajouter un point')
     cy.get('#root').click(250, 690, { timeout: 10000 })

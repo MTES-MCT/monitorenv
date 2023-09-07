@@ -4,7 +4,7 @@ import styled from 'styled-components'
 export function InfractionFormHeaderCompany({ infractionPath }) {
   return (
     <SubGroup>
-      <FormikTextInput label="Nom de la société" name={`${infractionPath}.companyName`} />
+      <FormikTextInput label="Nom de la personne morale" name={`${infractionPath}.companyName`} />
     </SubGroup>
   )
 }

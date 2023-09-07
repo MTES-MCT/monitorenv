@@ -57,8 +57,8 @@ export function TargetDetails({ form, push, remove }) {
           <StyledVesselContainer>
             {form.values.targetType === ReportingTargetTypeEnum.COMPANY && (
               <>
-                <FormikTextInput isLight label="Nom de la société" name="targetDetails.0.operatorName" />
-                <FormikTextInput isLight label="Identité de la personne" name="targetDetails.0.vesselName" />
+                <FormikTextInput isLight label="Nom de la personne morale" name="targetDetails.0.operatorName" />
+                <FormikTextInput isLight label="Identité de la personne contrôlée" name="targetDetails.0.vesselName" />
               </>
             )}
             {form.values.targetType === ReportingTargetTypeEnum.INDIVIDUAL && (

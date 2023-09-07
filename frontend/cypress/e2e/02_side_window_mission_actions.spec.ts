@@ -330,7 +330,7 @@ context('Mission actions', () => {
     cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
 
     cy.get('*[data-cy="control-form-number-controls"]').type('{backspace}2')
-    cy.fill('Type de cible', 'Société')
+    cy.fill('Type de cible', 'Personne morale')
 
     // Date is before start date of mission
     cy.fill('Date et heure du contrôle (UTC)', [2024, 5, 25, 23, 35])
