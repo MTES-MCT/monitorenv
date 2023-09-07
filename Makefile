@@ -20,7 +20,7 @@ dev-run-front:
 dev-run-storybook:
 	cd frontend && npm run storybook
 
-.PHONY: test-front dev-lint-frontend
+.PHONY: test-front dev-lint-frontend test-back
 
 dev-lint-frontend:
 	cd frontend && npm run test:lint:partial
@@ -73,8 +73,6 @@ dev-lint-backend:
 		-e "Wildcard import"
 
 clean: dev-erase-db dev-clean-target-env
-
-dev: clean dev-run-back-with-infra
 
 test: test-back
 	cd frontend && CI=true npm run test:unit
@@ -214,3 +212,7 @@ logs-geoserver:
 	docker container logs -f monitorenv_geoserver
 logs-db:
 	docker container logs -f monitorenv_database
+
+# ALIASES
+
+dev: dev-run-back-with-infra
