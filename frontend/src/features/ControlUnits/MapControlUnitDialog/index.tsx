@@ -25,7 +25,7 @@ export function MapControlUnitDialog() {
   const close = useCallback(() => {
     dispatch(
       globalActions.setDisplayedItems({
-        isControlUnitListDialogVisible: false
+        isControlUnitDialogVisible: false
       })
     )
   }, [dispatch])
