@@ -61,7 +61,7 @@ context('Missions', () => {
     cy.fill('Nom, société ...', 'Reporting dupliqué')
     cy.fill('Saisi par', 'CDA')
 
-    cy.clickButton('Enregistrer et quitter')
+    cy.clickButton('Valider le signalement')
 
     cy.wait('@createReporting').then(({ response }) => {
       expect(response && response.body.id).equal(6)
