@@ -13,6 +13,7 @@ import { HIT_PIXEL_TO_TOLERANCE } from '../../constants/constants'
 import { SelectableLayers, HoverableLayers } from '../../domain/entities/layers/constants'
 import { DistanceUnit, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map/constants'
 import { setDistanceUnit } from '../../domain/shared_slices/Map'
+import { updateMeasurementsWithNewDistanceUnit } from '../../domain/use_cases/map/updateMeasurementsWithNewDistanceUnit'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { useClickOutsideWhenOpened } from '../../hooks/useClickOutsideWhenOpened'
@@ -76,7 +77,7 @@ export function BaseMap({ children }) {
 
   const control = useRef<ScaleLine>()
 
-  const scaleControl = useCallback(() => {
+  const updateScaleControl = useCallback(() => {
     control.current = new ScaleLine({
       className: 'ol-scale-line',
       target: document.getElementById('scale-line') || undefined,
@@ -87,31 +88,33 @@ export function BaseMap({ children }) {
   }, [distanceUnit])
 
   useEffect(() => {
-    if (!currentMap) {
-      const centeredOnFrance = [2.99049, 46.82801]
-      const initialMap = new OpenLayerMap({
-        controls: defaultControls().extend([
-          scaleControl(),
-          new Zoom({
-            className: 'zoom'
-          })
-        ]),
-        keyboardEventTarget: document,
-        layers: [],
-        target: mapElement.current,
-        view: new View({
-          center: transform(centeredOnFrance, WSG84_PROJECTION, OPENLAYERS_PROJECTION),
-          minZoom: 3,
-          projection: OPENLAYERS_PROJECTION,
-          zoom: 6
-        })
-      })
-      initialMap.on('click', event => handleMapClick(event, initialMap))
-      initialMap.on('pointermove', event => handleMouseOverFeature(event, initialMap))
-
-      setCurrentMap(initialMap)
+    if (currentMap) {
+      return
     }
-  }, [currentMap, handleMapClick, handleMouseOverFeature, scaleControl])
+
+    const centeredOnFrance = [2.99049, 46.82801]
+    const initialMap = new OpenLayerMap({
+      controls: defaultControls().extend([
+        updateScaleControl(),
+        new Zoom({
+          className: 'zoom'
+        })
+      ]),
+      keyboardEventTarget: document,
+      layers: [],
+      target: mapElement.current,
+      view: new View({
+        center: transform(centeredOnFrance, WSG84_PROJECTION, OPENLAYERS_PROJECTION),
+        minZoom: 3,
+        projection: OPENLAYERS_PROJECTION,
+        zoom: 6
+      })
+    })
+    initialMap.on('click', event => handleMapClick(event, initialMap))
+    initialMap.on('pointermove', event => handleMouseOverFeature(event, initialMap))
+
+    setCurrentMap(initialMap)
+  }, [currentMap, handleMapClick, handleMouseOverFeature, updateScaleControl])
 
   const updateDistanceUnit = (value: DistanceUnit | undefined) => {
     if (!value) {
@@ -119,6 +122,7 @@ export function BaseMap({ children }) {
     }
     control?.current?.setUnits(value)
     dispatch(setDistanceUnit(value))
+    dispatch(updateMeasurementsWithNewDistanceUnit())
   }
 
   useEffect(() => {

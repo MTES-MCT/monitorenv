@@ -33,7 +33,8 @@ import type { Geometry } from 'ol/geom'
 type Measurement = {
   center: any
   coordinates: any
-  measurement: any
+  distanceUnit: DistanceUnit
+  measurement: number
 }
 const DRAW_START_EVENT = 'drawstart'
 const DRAW_ABORT_EVENT = 'drawabort'
@@ -49,10 +50,10 @@ const getNauticalMilesOfLine = (line, distanceUnit) => {
   const length = getLength(line)
 
   if (distanceUnit === DistanceUnit.METRIC) {
-    return `r = ${Math.round(length) / 1000} km`
+    return Math.round(length)
   }
 
-  return `${getNauticalMilesFromMeters(length)} nm`
+  return getNauticalMilesFromMeters(length)
 }
 
 function getNauticalMilesRadiusOfCircularPolygon(polygon, distanceUnit) {
@@ -60,10 +61,10 @@ function getNauticalMilesRadiusOfCircularPolygon(polygon, distanceUnit) {
   const radius = length / (2 * Math.PI)
 
   if (distanceUnit === DistanceUnit.METRIC) {
-    return `r = ${Math.round(radius) / 1000} km`
+    return Math.round(radius)
   }
 
-  return `r = ${getNauticalMilesFromMeters(radius)} nm`
+  return getNauticalMilesFromMeters(radius)
 }
 
 export function MeasurementLayer({ map }: BaseMapChildrenProps) {
@@ -128,6 +129,7 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
     function addEmptyNextMeasurement() {
       setMeasurementInProgress({
         coordinates: null,
+        distanceUnit: null,
         feature: null,
         measurement: null
       })
@@ -139,6 +141,7 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
       setMeasurementInProgress({
         center: getCenter(event.feature.getGeometry().getExtent()),
         coordinates: event.feature.getGeometry().getLastCoordinate(),
+        distanceUnit,
         measurement: 0
       })
 
@@ -153,6 +156,7 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
 
             setMeasurementInProgress({
               coordinates: tooltipCoordinates,
+              distanceUnit,
               measurement: nextMeasurementOutput
             })
           } else if (geom instanceof Circle) {
@@ -162,6 +166,7 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
             setMeasurementInProgress({
               center: getCenter(geom.getExtent()),
               coordinates,
+              distanceUnit,
               measurement: nextMeasurementOutput
             })
           }
@@ -194,7 +199,7 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
       })
 
       draw.on(DRAW_END_EVENT, event => {
-        dispatch(saveMeasurement(event.feature, measurementInProgressRef.current?.measurement))
+        dispatch(saveMeasurement(event.feature, measurementInProgressRef.current?.measurement, distanceUnit))
         unByKey(listener)
         dispatch(resetMeasurementTypeToAdd())
         setMeasurementInProgress(null)
@@ -247,7 +252,7 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
         METERS_PER_UNIT.m * (circleMeasurementToAdd?.circleRadiusToAdd || 0) * metersForOneNauticalMile
 
       if (distanceUnit === DistanceUnit.METRIC) {
-        radiusInMeters = METERS_PER_UNIT.m * (circleMeasurementToAdd?.circleRadiusToAdd || 0) * 1000
+        radiusInMeters = METERS_PER_UNIT.m * (circleMeasurementToAdd?.circleRadiusToAdd || 0)
       }
       let coordinates = [] as any[]
       if (circleMeasurementHasCoordinatesAndRadiusFromForm()) {
@@ -266,11 +271,8 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
         ),
         style: [measurementStyle, measurementStyleWithCenter]
       })
-      let nextMeasurementOutput = `r = ${circleMeasurementToAdd?.circleRadiusToAdd} nm`
-      if (distanceUnit === DistanceUnit.METRIC) {
-        nextMeasurementOutput = `r = ${circleMeasurementToAdd?.circleRadiusToAdd} km`
-      }
-      dispatch(saveMeasurement(circleFeature, nextMeasurementOutput))
+
+      dispatch(saveMeasurement(circleFeature, circleMeasurementToAdd?.circleRadiusToAdd, distanceUnit))
     }
 
     addCustomCircleMeasurement()
@@ -312,6 +314,7 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
           id={measurement.feature.id}
           map={map}
           measurement={measurement.measurement}
+          type={measurement.feature.geometry.type}
         />
       ))}
 

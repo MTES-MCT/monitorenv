@@ -1,9 +1,12 @@
 import Overlay from 'ol/Overlay'
-import { MutableRefObject, useEffect, useCallback, useRef } from 'react'
+import { MutableRefObject, useEffect, useCallback, useRef, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../constants/constants'
+import { DistanceUnit, OLGeometryType } from '../../../domain/entities/map/constants'
+import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ReactComponent as CloseIconSVG } from '../../../uiMonitor/icons/Close.svg'
+import { pluralize } from '../../../utils/pluralize'
 
 type MeasurementOverlayProps = {
   coordinates: any[]
@@ -11,9 +14,19 @@ type MeasurementOverlayProps = {
   id?: String
   map: any
   measurement: any
+  type?: string
 }
 
-export function MeasurementOverlay({ coordinates, deleteFeature, id, map, measurement }: MeasurementOverlayProps) {
+export function MeasurementOverlay({
+  coordinates,
+  deleteFeature,
+  id,
+  map,
+  measurement,
+  type
+}: MeasurementOverlayProps) {
+  const { distanceUnit } = useAppSelector(state => state.map)
+
   const overlayRef = useRef()
   const olOverlayObjectRef = useRef() as MutableRefObject<Overlay>
   const overlayCallback = useCallback(
@@ -32,6 +45,22 @@ export function MeasurementOverlay({ coordinates, deleteFeature, id, map, measur
     [overlayRef, olOverlayObjectRef, coordinates]
   )
 
+  const measurementWithUnitDistance = useMemo(() => {
+    const prefixe = type === OLGeometryType.POLYGON ? 'r = ' : ''
+    if (distanceUnit === DistanceUnit.METRIC) {
+      if (measurement < 1000) {
+        return `${prefixe}${Math.round(measurement * 100) / 100} mètres`
+      }
+
+      return `${prefixe}${Math.round((measurement / 1000) * 100) / 100} ${pluralize(
+        'km',
+        Math.round(measurement / 1000)
+      )}`
+    }
+
+    return `${prefixe}${measurement} nm`
+  }, [distanceUnit, measurement, type])
+
   useEffect(() => {
     if (map) {
       map.addOverlay(olOverlayObjectRef.current)
@@ -48,7 +77,7 @@ export function MeasurementOverlay({ coordinates, deleteFeature, id, map, measur
     <div>
       <MeasurementOverlayElement ref={overlayCallback}>
         <ZoneSelected>
-          <ZoneText data-cy="measurement-value">{measurement}</ZoneText>
+          <ZoneText data-cy="measurement-value">{measurementWithUnitDistance}</ZoneText>
           <CloseIcon data-cy="close-measurement" onClick={() => deleteFeature && deleteFeature(id)} />
         </ZoneSelected>
         <TrianglePointer>

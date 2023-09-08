@@ -3,10 +3,10 @@ import Circle from 'ol/geom/Circle'
 import { fromCircle } from 'ol/geom/Polygon'
 import { batch } from 'react-redux'
 
-import { OPENLAYERS_PROJECTION } from '../../entities/map/constants'
+import { DistanceUnit, OPENLAYERS_PROJECTION } from '../../entities/map/constants'
 import { addMeasurementDrawed, resetCircleMeasurementInDrawing } from '../../shared_slices/Measurement'
 
-export const saveMeasurement = (feature, measurement) => dispatch => {
+export const saveMeasurement = (feature, measurement, distanceUnit) => dispatch => {
   feature.setId(feature.ol_uid)
 
   if (feature.getGeometry() instanceof Circle) {
@@ -20,6 +20,7 @@ export const saveMeasurement = (feature, measurement) => dispatch => {
     dispatch(
       addMeasurementDrawed({
         coordinates: tooltipCoordinates,
+        distanceUnit: distanceUnit || DistanceUnit.NAUTICAL,
         feature: geoJSONFeature,
         measurement
       })
