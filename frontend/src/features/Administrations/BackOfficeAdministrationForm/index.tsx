@@ -1,4 +1,4 @@
-import { Accent, Button, FormikTextInput } from '@mtes-mct/monitor-ui'
+import { Accent, Button, DataTable, FormikTextInput } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Formik } from 'formik'
 import { useCallback } from 'react'
@@ -9,7 +9,6 @@ import { ADMINISTRATION_FORM_SCHEMA, INITIAL_ADMINISTRATION_FORM_VALUES } from '
 import { administrationsAPI, useGetAdministrationQuery } from '../../../api/administrationsAPI'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../libs/FrontendError'
-import { DefaultTable } from '../../../ui/Table/DefaultTable'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/constants'
 import { CONTROL_UNIT_TABLE_COLUMNS } from '../../ControlUnits/BackOfficeControlUnitList/constants'
 
@@ -91,7 +90,11 @@ export function BackOfficeAdministrationForm() {
       <hr />
 
       <SubTitle>Unités de contrôle</SubTitle>
-      <DefaultTable columns={CONTROL_UNIT_TABLE_COLUMNS as any} data={administration?.controlUnits} />
+      <DataTable
+        columns={CONTROL_UNIT_TABLE_COLUMNS}
+        data={administration?.controlUnits}
+        initialSorting={[{ desc: false, id: 'name' }]}
+      />
     </div>
   )
 }

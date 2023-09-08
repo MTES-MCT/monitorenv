@@ -1,6 +1,7 @@
 import {
   Accent,
   Button,
+  DataTable,
   FormikCheckbox,
   FormikSelect,
   FormikTextInput,
@@ -23,7 +24,6 @@ import { useGetAdministrationsQuery } from '../../../api/administrationsAPI'
 import { controlUnitsAPI, useGetControlUnitQuery } from '../../../api/controlUnitsAPI'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../libs/FrontendError'
-import { DefaultTable } from '../../../ui/Table/DefaultTable'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/constants'
 
 import type { ControlUnitFormValues } from './types'
@@ -114,12 +114,20 @@ export function BackOfficeControlUnitForm() {
       <hr />
 
       <SubTitle>Contacts</SubTitle>
-      <DefaultTable columns={CONTROL_UNIT_CONTACT_TABLE_COLUMNS as any} data={controlUnit?.controlUnitContacts} />
+      <DataTable
+        columns={CONTROL_UNIT_CONTACT_TABLE_COLUMNS}
+        data={controlUnit?.controlUnitContacts}
+        initialSorting={[{ desc: false, id: 'name' }]}
+      />
 
       <hr />
 
       <SubTitle>Moyens</SubTitle>
-      <DefaultTable columns={CONTROL_UNIT_RESOURCE_TABLE_COLUMNS as any} data={controlUnit?.controlUnitResources} />
+      <DataTable
+        columns={CONTROL_UNIT_RESOURCE_TABLE_COLUMNS}
+        data={controlUnit?.controlUnitResources}
+        initialSorting={[{ desc: false, id: 'name' }]}
+      />
     </div>
   )
 }

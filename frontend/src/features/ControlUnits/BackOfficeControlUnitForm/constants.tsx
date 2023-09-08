@@ -1,13 +1,14 @@
+import { Icon, Size } from '@mtes-mct/monitor-ui'
 import { number, object, string } from 'yup'
 
-import { Table } from '../../../ui/Table'
+import { NavIconButton } from '../../../ui/NavIconButton'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/constants'
 
 import type { ControlUnitFormValues } from './types'
 import type { ControlUnit } from '../../../domain/entities/controlUnit'
 import type { ColumnDef } from '@tanstack/react-table'
 
-export const CONTROL_UNIT_CONTACT_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.ControlUnitContact>> = [
+export const CONTROL_UNIT_CONTACT_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.ControlUnitContactData>> = [
   {
     accessorFn: row => row.id,
     enableSorting: false,
@@ -23,10 +24,13 @@ export const CONTROL_UNIT_CONTACT_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.Con
   {
     accessorFn: row => row.id,
     cell: info => (
-      <Table.EditButton
-        basePath={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_CONTACT_LIST]}`}
-        id={info.getValue<number>()}
+      <NavIconButton
+        Icon={Icon.Edit}
+        size={Size.SMALL}
         title="Éditer cette administration"
+        to={`/backoffice${
+          BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_CONTACT_LIST]
+        }/${info.getValue<number>()}`}
       />
     ),
     enableSorting: false,
@@ -36,7 +40,7 @@ export const CONTROL_UNIT_CONTACT_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.Con
   }
 ]
 
-export const CONTROL_UNIT_RESOURCE_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.ControlUnitResource>> = [
+export const CONTROL_UNIT_RESOURCE_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.ControlUnitResourceData>> = [
   {
     accessorFn: row => row.id,
     enableSorting: false,
@@ -52,10 +56,13 @@ export const CONTROL_UNIT_RESOURCE_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.Co
   {
     accessorFn: row => row.id,
     cell: info => (
-      <Table.EditButton
-        basePath={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_RESOURCE_LIST]}`}
-        id={info.getValue<number>()}
+      <NavIconButton
+        Icon={Icon.Edit}
+        size={Size.SMALL}
         title="Éditer cette administration"
+        to={`/backoffice${
+          BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_RESOURCE_LIST]
+        }/${info.getValue<number>()}`}
       />
     ),
     enableSorting: false,

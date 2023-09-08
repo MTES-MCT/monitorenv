@@ -1,4 +1,6 @@
-import { Table } from '../../../ui/Table'
+import { Icon, Size } from '@mtes-mct/monitor-ui'
+
+import { NavIconButton } from '../../../ui/NavIconButton'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/constants'
 
 import type { Base } from '../../../domain/entities/base'
@@ -20,10 +22,11 @@ export const BASE_TABLE_COLUMNS: Array<ColumnDef<Base.Base>> = [
   {
     accessorFn: row => row.id,
     cell: info => (
-      <Table.EditButton
-        basePath={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.BASE_LIST]}`}
-        id={info.getValue<number>()}
+      <NavIconButton
+        Icon={Icon.Edit}
+        size={Size.SMALL}
         title="Éditer cette base"
+        to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.BASE_LIST]}/${info.getValue<number>()}`}
       />
     ),
     enableSorting: false,

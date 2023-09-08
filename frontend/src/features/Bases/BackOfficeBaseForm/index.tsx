@@ -1,4 +1,4 @@
-import { Accent, Button, FormikTextInput } from '@mtes-mct/monitor-ui'
+import { Accent, Button, DataTable, FormikTextInput } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Formik } from 'formik'
 import { useCallback } from 'react'
@@ -10,7 +10,6 @@ import { isBase } from './utils'
 import { basesAPI, useGetBaseQuery } from '../../../api/basesAPI'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../libs/FrontendError'
-import { DefaultTable } from '../../../ui/Table/DefaultTable'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/constants'
 import { CONTROL_UNIT_RESOURCE_TABLE_COLUMNS } from '../../ControlUnits/BackOfficeControlUnitForm/constants'
 
@@ -84,7 +83,11 @@ export function BackOfficeBaseForm() {
       <hr />
 
       <SubTitle>Moyens</SubTitle>
-      <DefaultTable columns={CONTROL_UNIT_RESOURCE_TABLE_COLUMNS as any} data={base?.controlUnitResources} />
+      <DataTable
+        columns={CONTROL_UNIT_RESOURCE_TABLE_COLUMNS}
+        data={base?.controlUnitResources}
+        initialSorting={[{ desc: false, id: 'name' }]}
+      />
     </div>
   )
 }

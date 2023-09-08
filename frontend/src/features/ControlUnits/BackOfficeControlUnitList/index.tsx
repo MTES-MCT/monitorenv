@@ -1,3 +1,4 @@
+import { DataTable } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -7,7 +8,6 @@ import { getFilters } from './utils'
 import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { NavButton } from '../../../ui/NavButton'
-import { DefaultTable } from '../../../ui/Table/DefaultTable'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/constants'
 
 export function BackOfficeControlUnitList() {
@@ -36,7 +36,11 @@ export function BackOfficeControlUnitList() {
         </NavButton>
       </ActionGroup>
 
-      <DefaultTable columns={CONTROL_UNIT_TABLE_COLUMNS} data={filteredControlUnits} />
+      <DataTable
+        columns={CONTROL_UNIT_TABLE_COLUMNS}
+        data={filteredControlUnits}
+        initialSorting={[{ desc: false, id: 'name' }]}
+      />
     </>
   )
 }

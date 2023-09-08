@@ -1,3 +1,4 @@
+import { DataTable } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -7,7 +8,6 @@ import { getFilters } from './utils'
 import { useGetBasesQuery } from '../../../api/basesAPI'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { NavButton } from '../../../ui/NavButton'
-import { DefaultTable } from '../../../ui/Table/DefaultTable'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/constants'
 
 export function BackOfficeBaseList() {
@@ -34,7 +34,7 @@ export function BackOfficeBaseList() {
         <NavButton to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.BASE_LIST]}/new`}>Nouvelle base</NavButton>
       </ActionGroup>
 
-      <DefaultTable columns={BASE_TABLE_COLUMNS} data={filteredBases} />
+      <DataTable columns={BASE_TABLE_COLUMNS} data={filteredBases} initialSorting={[{ desc: false, id: 'name' }]} />
     </>
   )
 }
