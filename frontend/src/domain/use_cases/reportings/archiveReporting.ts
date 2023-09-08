@@ -1,15 +1,17 @@
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { setToast } from '../../shared_slices/Global'
 
+import type { AppGetState } from '../../../store'
 import type { Reporting } from '../../entities/reporting'
 
-export const archiveReportingFromTable = (id: number) => async (dispatch, getState) => {
+export const archiveReportingFromTable = (id: number) => async (dispatch, getState: AppGetState) => {
   const {
-    reportingState: { reportingState, selectedReportingId }
+    multiReportings: { selectedReportings }
   } = getState()
+  const reportingState = selectedReportings.find(reporting => reporting.reporting.id === id)?.reporting
   try {
     let reportingToArchive = reportingState || {}
-    if (id !== selectedReportingId) {
+    if (!reportingState) {
       const { data: reporting } = await dispatch(reportingsAPI.endpoints.getReporting.initiate(id))
       reportingToArchive = reporting
     }

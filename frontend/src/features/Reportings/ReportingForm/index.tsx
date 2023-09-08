@@ -1,6 +1,6 @@
 import { Accent, FieldError, FormikTextarea, Icon, IconButton, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Toggle } from 'rsuite'
 
@@ -15,7 +15,7 @@ import { Validity } from './FormComponents/Validity'
 import { Reporting, ReportingTypeEnum, ReportingTypeLabels } from '../../../domain/entities/reporting'
 import { hideSideButtons, setReportingFormVisibility } from '../../../domain/shared_slices/Global'
 import { multiReportingsActions } from '../../../domain/shared_slices/MultiReportings'
-import { ReportingContext, VisibilityState, reportingStateActions } from '../../../domain/shared_slices/ReportingState'
+import { ReportingContext, VisibilityState } from '../../../domain/shared_slices/ReportingState'
 import { closeReporting } from '../../../domain/use_cases/reportings/closeReporting'
 import { deleteReporting } from '../../../domain/use_cases/reportings/deleteReporting'
 import { reduceOrExpandReportingForm } from '../../../domain/use_cases/reportings/reduceOrExpandReportingForm'
@@ -40,11 +40,13 @@ import { getReportingTitle } from '../utils'
 export function ReportingForm({ reducedReportingsOnContext, selectedReporting, setShouldValidateOnChange }) {
   const dispatch = useDispatch()
   const {
-    global: { reportingFormVisibility },
-    reportingState: { isConfirmCancelDialogVisible }
-  } = useAppSelector(state => state)
+    reportingFormVisibility
+    // reportingState: { isConfirmCancelDialogVisible }
+  } = useAppSelector(state => state.global)
+  // TODO: fix this
+  const isConfirmCancelDialogVisible = false
 
-  const { dirty, errors, setFieldValue, setValues, values } = useFormikContext<Partial<Reporting>>()
+  const { dirty, errors, setFieldValue, values } = useFormikContext<Partial<Reporting>>()
   const [themeField] = useField('theme')
 
   const [isDeleteModalOpen, setIsDeletModalOpen] = useState(false)
@@ -52,14 +54,10 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
 
   const isSideWindowContext = selectedReporting.context === ReportingContext.SIDE_WINDOW
 
-  useSyncFormValuesWithRedux(reportingStateActions.setReportingState, reportingStateActions.setIsDirty)
-
-  useEffect(() => {
-    if (selectedReporting.reporting) {
-      setValues(selectedReporting.reporting)
-      dispatch(reportingStateActions.setReportingContext(selectedReporting.context))
-    }
-  }, [setValues, selectedReporting, dispatch])
+  useSyncFormValuesWithRedux(
+    multiReportingsActions.setReportingState,
+    multiReportingsActions.setIsDirty(selectedReporting.reporting.id)
+  )
 
   const reportTypeOptions = getOptionsFromLabelledEnum(ReportingTypeLabels)
 
@@ -82,11 +80,11 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
   }
 
   const returnToEdition = () => {
-    dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(false))
+    // dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(false))
   }
 
   const confirmCloseReporting = () => {
-    dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(false))
+    // dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(false))
     dispatch(multiReportingsActions.deleteSelectedReporting(selectedReporting.reporting.id))
     dispatch(
       setReportingFormVisibility({
@@ -102,7 +100,7 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
 
   const cancelNewReporting = () => {
     if (dirty) {
-      dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(true))
+      // dispatch(reportingStateActions.setIsConfirmCancelDialogVisible(true))
     } else {
       setReportingFormVisibility({
         context: selectedReporting.context,

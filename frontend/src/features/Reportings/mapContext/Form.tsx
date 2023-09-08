@@ -39,6 +39,9 @@ export function ReportingFormOnMap({ totalMapReportings }) {
     if (isReportingNew) {
       return getReportingInitialValues({ createdAt: selectedReporting?.reporting.createdAt, id: activeReportingId })
     }
+    if (selectedReporting?.reporting.id === activeReportingId) {
+      return getReportingInitialValues(selectedReporting?.reporting)
+    }
 
     return getReportingInitialValues(reportingToEdit)
   }, [reportingToEdit, isReportingNew, selectedReporting, activeReportingId])

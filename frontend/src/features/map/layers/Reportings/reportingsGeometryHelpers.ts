@@ -37,7 +37,7 @@ export const getReportingZoneFeature = (reporting: ReportingDetailed, layername:
   return feature
 }
 
-export const getEditingReportingZoneFeature = (reporting: Reporting, layername: string) => {
+export const getEditingReportingZoneFeature = (reporting: Partial<Reporting>, layername: string) => {
   const geoJSON = new GeoJSON()
   const geometry = geoJSON.readGeometry(reporting.geom, {
     dataProjection: WSG84_PROJECTION,

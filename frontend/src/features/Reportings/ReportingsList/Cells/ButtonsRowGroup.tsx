@@ -19,10 +19,8 @@ const ACTIONS = {
 
 export function ButtonsGroupRow({ id }) {
   const dispatch = useAppDispatch()
-  const {
-    reportingState: { isFormDirty, selectedReportingId }
-  } = useAppSelector(state => state)
-
+  const { activeReportingId, selectedReportings } = useAppSelector(state => state.multiReportings)
+  const isFormDirty = selectedReportings.find(reporting => reporting.reporting.id === activeReportingId)?.isFormDirty
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false)
 
@@ -36,7 +34,7 @@ export function ButtonsGroupRow({ id }) {
 
   const archiveOrDelete = action => {
     if (action === ACTIONS.ARCHIVE) {
-      if (id === selectedReportingId && isFormDirty) {
+      if (id === activeReportingId && isFormDirty) {
         return setIsArchiveModalOpen(true)
       }
 

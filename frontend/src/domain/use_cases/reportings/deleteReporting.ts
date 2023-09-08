@@ -1,10 +1,13 @@
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { setReportingFormVisibility, setToast } from '../../shared_slices/Global'
-import { VisibilityState, reportingStateActions } from '../../shared_slices/ReportingState'
+import { multiReportingsActions } from '../../shared_slices/MultiReportings'
+import { ReportingContext, VisibilityState } from '../../shared_slices/ReportingState'
 
-export const deleteReporting = (id: number | string | undefined) => async (dispatch, getState) => {
+import type { AppGetState } from '../../../store'
+
+export const deleteReporting = (id: number | string | undefined) => async (dispatch, getState: AppGetState) => {
   const {
-    reportingState: { context, selectedReportingIdOnMap }
+    multiReportings: { selectedReportingIdOnMap }
   } = getState()
   try {
     if (!id) {
@@ -15,13 +18,14 @@ export const deleteReporting = (id: number | string | undefined) => async (dispa
       throw Error('Erreur à la suppression du signalement')
     } else {
       if (id === selectedReportingIdOnMap) {
-        dispatch(reportingStateActions.setSelectedReportingIdOnMap(undefined))
+        dispatch(multiReportingsActions.setSelectedReportingIdOnMap(undefined))
       }
 
-      dispatch(reportingStateActions.setSelectedReportingId(undefined))
+      dispatch(multiReportingsActions.setSelectedReportingId(undefined))
       dispatch(
         setReportingFormVisibility({
-          context,
+          // fixme: reportingContext is not defined
+          context: ReportingContext.MAP,
           visibility: VisibilityState.NONE
         })
       )

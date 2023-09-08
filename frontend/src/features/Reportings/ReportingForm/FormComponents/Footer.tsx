@@ -4,15 +4,17 @@ import _ from 'lodash'
 import { useDispatch } from 'react-redux'
 
 import { ReportingStatusEnum, type Reporting, getReportingStatus } from '../../../../domain/entities/reporting'
+import { ReportingContext } from '../../../../domain/shared_slices/ReportingState'
 import { reopenReporting } from '../../../../domain/use_cases/reportings/reopenReporting'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { StyledButton, StyledSubmitButton, StyledDeleteButton, StyledFooter } from '../../style'
 import { isNewReporting } from '../../utils'
 
 export function Footer({ onCancel, onDelete, setMustIncreaseValidity, setShouldValidateOnChange }) {
-  const {
-    reportingState: { context }
-  } = useAppSelector(state => state)
+  const { activeReportingId, selectedReportings } = useAppSelector(state => state.multiReportings)
+  // fixme: this is not the best way to get the context
+  const context =
+    selectedReportings.find(reporting => reporting.reporting.id === activeReportingId)?.context || ReportingContext.MAP
   const dispatch = useDispatch()
   const { handleSubmit, setFieldValue, validateForm, values } = useFormikContext<Reporting>()
 

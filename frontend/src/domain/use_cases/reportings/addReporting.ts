@@ -1,38 +1,27 @@
-import { saveReportingInMultiReportingsState } from './saveReportingInMultiReportingsState'
 import { getReportingInitialValues, createIdForNewReporting } from '../../../features/Reportings/utils'
 import { setReportingFormVisibility } from '../../shared_slices/Global'
 import { multiReportingsActions } from '../../shared_slices/MultiReportings'
 import { ReportingContext, VisibilityState } from '../../shared_slices/ReportingState'
 
+import type { AppGetState } from '../../../store'
 import type { Reporting } from '../../entities/reporting'
 
 export const addReporting =
   (reportingContext: ReportingContext, partialReporting?: Partial<Reporting> | undefined) =>
-  async (dispatch, getState) => {
+  async (dispatch, getState: AppGetState) => {
     const {
-      multiReportings: { selectedReportings },
-      reportingState: { reportingState }
+      multiReportings: { selectedReportings }
     } = getState()
-    let reportings = [...selectedReportings]
 
-    // first we want to save the active reporting in multiReportings state
-    if (reportingState) {
-      reportings = await dispatch(saveReportingInMultiReportingsState())
+    const id = createIdForNewReporting(selectedReportings)
+
+    const newReport = {
+      context: reportingContext,
+      isFormDirty: false,
+      reporting: getReportingInitialValues({ createdAt: new Date().toISOString(), id, ...partialReporting })
     }
-    const id = createIdForNewReporting(reportings)
 
-    const updatedReportings = [
-      ...reportings,
-      {
-        context: reportingContext,
-        isFormDirty: false,
-        reporting: getReportingInitialValues({ createdAt: new Date().toISOString(), id, ...partialReporting })
-      }
-    ]
-
-    await dispatch(
-      multiReportingsActions.setSelectedReportings({ activeReportingId: id, selectedReportings: updatedReportings })
-    )
+    await dispatch(multiReportingsActions.setReporting(newReport))
 
     await dispatch(
       setReportingFormVisibility({

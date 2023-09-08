@@ -6,17 +6,16 @@ import { useAppDispatch } from './useAppDispatch'
 
 import type { ActionCreatorWithPayload } from '@reduxjs/toolkit'
 
-export const useSyncFormValuesWithRedux = (
-  setState: ActionCreatorWithPayload<any, string>,
-  setIsDirty: ActionCreatorWithPayload<any, string>
-) => {
+export const useSyncFormValuesWithRedux = (setState: ActionCreatorWithPayload<any, string>, setIsDirty) => {
   const { dirty, values } = useFormikContext()
   const dispatch = useAppDispatch()
 
   const dispatchFormUpdate = useMemo(() => {
     const throttled = newValues => {
       dispatch(setState(newValues))
-      dispatch(setIsDirty(newValues ? dirty : false))
+      if (newValues && dirty) {
+        dispatch(setIsDirty)
+      }
     }
 
     return _.throttle(throttled, 500)
