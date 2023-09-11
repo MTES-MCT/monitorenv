@@ -2,7 +2,7 @@ import { Button, Icon } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { ReportingsTable } from './ReportingsTable'
-import { ReportingContext } from '../../../domain/shared_slices/ReportingState'
+import { ReportingContext } from '../../../domain/shared_slices/Global'
 import { addReporting } from '../../../domain/use_cases/reportings/addReporting'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { ReportingsFilters } from '../Filters'

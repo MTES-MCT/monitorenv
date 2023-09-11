@@ -2,10 +2,24 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { VisibilityState, ReportingContext, ReportingFormVisibilityProps } from './ReportingState'
-
 import type { MapToolType } from '../entities/map/constants'
 
+export enum ReportingContext {
+  MAP = 'map',
+  SIDE_WINDOW = 'sideWindow'
+}
+
+export enum VisibilityState {
+  NONE = 'none',
+  REDUCED = 'reduced',
+  VISIBLE = 'visible',
+  VISIBLE_LEFT = 'visible_left'
+}
+
+export type ReportingFormVisibilityProps = {
+  context: ReportingContext
+  visibility: VisibilityState
+}
 type Toast = {
   message: any
   type?: string

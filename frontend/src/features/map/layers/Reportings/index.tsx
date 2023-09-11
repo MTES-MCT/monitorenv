@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux'
 import { getReportingZoneFeature } from './reportingsGeometryHelpers'
 import { reportingPinStyleFn } from './style'
 import { Layers } from '../../../../domain/entities/layers/constants'
-import { reportingStateActions } from '../../../../domain/shared_slices/ReportingState'
+import { multiReportingsActions } from '../../../../domain/shared_slices/MultiReportings'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useGetFilteredReportingsQuery } from '../../../Reportings/hooks/useGetFilteredReportingsQuery'
 
@@ -18,7 +18,7 @@ import type { Geometry } from 'ol/geom'
 export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useDispatch()
   const { displayReportingsLayer, overlayCoordinates } = useAppSelector(state => state.global)
-  const { selectedReportingId } = useAppSelector(state => state.reportingState)
+  const { activeReportingId } = useAppSelector(state => state.multiReportings)
   const listener = useAppSelector(state => state.draw.listener)
 
   const { reportings } = useGetFilteredReportingsQuery()
@@ -65,13 +65,13 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
 
   useEffect(() => {
     GetVectorSource().forEachFeature(feature => {
-      const selectedReporting = `${Layers.REPORTINGS.code}:${selectedReportingId}`
+      const selectedReporting = `${Layers.REPORTINGS.code}:${activeReportingId}`
       feature.setProperties({
         isSelected: feature.getId() === selectedReporting,
         overlayCoordinates: feature.getId() === selectedReporting ? overlayCoordinates : undefined
       })
     })
-  }, [overlayCoordinates, selectedReportingId])
+  }, [overlayCoordinates, activeReportingId])
 
   useEffect(() => {
     if (map) {
@@ -99,7 +99,7 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       const feature = mapClickEvent?.feature
       if (feature.getId()?.toString()?.includes(Layers.REPORTINGS.code)) {
         const { id } = feature.getProperties()
-        dispatch(reportingStateActions.setSelectedReportingIdOnMap(id))
+        dispatch(multiReportingsActions.setSelectedReportingIdOnMap(id))
       }
     }
   }, [dispatch, mapClickEvent])

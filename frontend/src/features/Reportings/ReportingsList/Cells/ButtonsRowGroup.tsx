@@ -2,7 +2,7 @@ import { Accent, Dropdown, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { useState } from 'react'
 import styled from 'styled-components'
 
-import { ReportingContext } from '../../../../domain/shared_slices/ReportingState'
+import { ReportingContext } from '../../../../domain/shared_slices/Global'
 import { archiveReportingFromTable } from '../../../../domain/use_cases/reportings/archiveReporting'
 import { deleteReporting } from '../../../../domain/use_cases/reportings/deleteReporting'
 import { duplicateReporting } from '../../../../domain/use_cases/reportings/duplicateReporting'
@@ -20,7 +20,7 @@ const ACTIONS = {
 export function ButtonsGroupRow({ id }) {
   const dispatch = useAppDispatch()
   const {
-    reportingState: { isFormDirty, selectedReportingId }
+    multiReportings: { activeReportingId, selectedReportings = { isFormDirty: false } }
   } = useAppSelector(state => state)
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -36,7 +36,7 @@ export function ButtonsGroupRow({ id }) {
 
   const archiveOrDelete = action => {
     if (action === ACTIONS.ARCHIVE) {
-      if (id === selectedReportingId && isFormDirty) {
+      if (activeReportingId && id === activeReportingId && selectedReportings[activeReportingId].isFormDirty) {
         return setIsArchiveModalOpen(true)
       }
 

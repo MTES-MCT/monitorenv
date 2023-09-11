@@ -1,10 +1,10 @@
 import { reportingsAPI } from '../../../api/reportingsAPI'
-import { setReportingFormVisibility, setToast } from '../../shared_slices/Global'
-import { VisibilityState, reportingStateActions } from '../../shared_slices/ReportingState'
+import { setReportingFormVisibility, setToast, VisibilityState } from '../../shared_slices/Global'
+import { multiReportingsActions } from '../../shared_slices/MultiReportings'
 
 export const deleteMultipleReportings = (ids: number[], resetSelectionFn: () => void) => async (dispatch, getState) => {
   const {
-    reportingState: { context, selectedReportingId, selectedReportingIdOnMap }
+    multiReportings: { activeReportingId, context, selectedReportingIdOnMap }
   } = getState()
 
   try {
@@ -13,11 +13,11 @@ export const deleteMultipleReportings = (ids: number[], resetSelectionFn: () => 
       throw Error('Erreur à la suppression des signalements')
     } else {
       if (ids.includes(selectedReportingIdOnMap)) {
-        dispatch(reportingStateActions.setSelectedReportingIdOnMap(undefined))
+        dispatch(multiReportingsActions.setSelectedReportingIdOnMap(undefined))
       }
 
-      if (ids.includes(selectedReportingId)) {
-        dispatch(reportingStateActions.setSelectedReportingId(undefined))
+      if (ids.includes(activeReportingId)) {
+        dispatch(multiReportingsActions.setActiveReportingId(undefined))
         dispatch(
           setReportingFormVisibility({
             context,

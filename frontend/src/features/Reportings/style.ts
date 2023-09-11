@@ -1,6 +1,8 @@
 import { Button, FormikTextInput, IconButton, MultiRadio, Tag } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
+import { ReportingContext, VisibilityState } from '../../domain/shared_slices/Global'
+
 export const StyledFormContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -169,4 +171,57 @@ export const StyledButton = styled(Button)`
 
 export const StyledDeleteButton = styled(IconButton)`
   background-color: ${p => p.theme.color.white};
+`
+
+export const FormContainer = styled.div<{
+  $context: ReportingContext
+  $position: number
+  $reportingFormVisibility?: VisibilityState
+}>`
+  background-color: ${p => p.theme.color.white};
+  position: absolute;
+  top: 0;
+  right: -500px;
+  width: 500px;
+  overflow: hidden;
+  display: flex;
+  transition: right 0.5s ease-out, top 0.5s ease-out;
+  z-index: ${p => (p.$context === ReportingContext.SIDE_WINDOW ? '6' : '100')};
+
+  ${p => {
+    if (p.$context === ReportingContext.SIDE_WINDOW) {
+      switch (p.$reportingFormVisibility) {
+        case VisibilityState.VISIBLE:
+        case VisibilityState.VISIBLE_LEFT:
+          return 'right: 0px;'
+        case VisibilityState.REDUCED:
+          return `right: 0px; top: calc(100vh - ${p.$position * 52}px);`
+        case VisibilityState.NONE:
+        default:
+          return 'right: -500px;'
+      }
+    } else {
+      switch (p.$reportingFormVisibility) {
+        case VisibilityState.VISIBLE:
+          return 'right: 8px;'
+        case VisibilityState.VISIBLE_LEFT:
+          return 'right: 56px;'
+        case VisibilityState.REDUCED:
+          return `right: 12px; top: calc(100vh - ${p.$position * 52}px);`
+        case VisibilityState.NONE:
+        default:
+          return 'right: -500px;'
+      }
+    }
+  }}
+`
+
+export const SideWindowBackground = styled.div`
+  position: absolute;
+  background-color: ${p => p.theme.color.charcoal};
+  opacity: 0.6;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  z-index: 5;
 `

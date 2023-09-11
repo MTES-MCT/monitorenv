@@ -1,8 +1,7 @@
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { isNewReporting } from '../../../features/Reportings/utils'
-import { setReportingFormVisibility, setToast } from '../../shared_slices/Global'
+import { setReportingFormVisibility, setToast, ReportingContext, VisibilityState } from '../../shared_slices/Global'
 import { multiReportingsActions } from '../../shared_slices/MultiReportings'
-import { ReportingContext, VisibilityState } from '../../shared_slices/ReportingState'
 import { closeAddZone } from '../missions/closeAddZone'
 
 import type { Reporting } from '../../entities/reporting'

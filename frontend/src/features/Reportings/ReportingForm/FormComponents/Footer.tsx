@@ -11,7 +11,7 @@ import { isNewReporting } from '../../utils'
 
 export function Footer({ onCancel, onDelete, setMustIncreaseValidity, setShouldValidateOnChange }) {
   const {
-    reportingState: { context }
+    multiReportings: { activeReportingId, selectedReportings = { context: undefined } }
   } = useAppSelector(state => state)
   const dispatch = useDispatch()
   const { handleSubmit, setFieldValue, validateForm, values } = useFormikContext<Reporting>()
@@ -29,8 +29,11 @@ export function Footer({ onCancel, onDelete, setMustIncreaseValidity, setShouldV
     }
     setMustIncreaseValidity(false)
     validateForm({ ...values, isArchived: false }).then(async errors => {
+      if (!activeReportingId || !selectedReportings) {
+        return
+      }
       if (_.isEmpty(errors)) {
-        await dispatch(reopenReporting({ ...values, isArchived: false }, context))
+        await dispatch(reopenReporting({ ...values, isArchived: false }, selectedReportings[activeReportingId].context))
 
         return
       }

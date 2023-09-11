@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify'
 import styled from 'styled-components'
 
 import { APIWorker } from '../api/APIWorker'
+import { ReportingContext } from '../domain/shared_slices/Global'
 import Healthcheck from '../features/healthcheck/Healthcheck'
 import { LayersSidebar } from '../features/layersSelector'
 import { LocateOnMap } from '../features/LocateOnMap'
@@ -13,7 +14,7 @@ import { RightMenuOnHoverArea } from '../features/map/shared/RightMenuOnHoverAre
 import { InterestPointMapButton } from '../features/map/tools/interest_points/InterestPointMapButton'
 import { MeasurementMapButton } from '../features/map/tools/measurements/MeasurementMapButton'
 import { MissionsMenu } from '../features/missions/MissionsButton'
-import { ReportingsOnMap } from '../features/Reportings/mapContext'
+import { Reportings } from '../features/Reportings'
 import { ReportingsButton } from '../features/Reportings/ReportingsButton'
 import { SearchSemaphoreButton } from '../features/Semaphores/SearchSemaphoreButton'
 import { SideWindowLauncher } from '../features/SideWindow/SideWindowLauncher'
@@ -72,7 +73,7 @@ export function HomePage() {
         {displayMeasurement && <MeasurementMapButton />}
         {displayInterestPoint && <InterestPointMapButton />}
 
-        <ReportingsOnMap />
+        <Reportings context={ReportingContext.MAP} />
 
         <SideWindowLauncher />
 

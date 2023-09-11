@@ -15,8 +15,8 @@ import {
   WSG84_PROJECTION
 } from '../../../domain/entities/map/constants'
 import { setGeometry, setInteractionType } from '../../../domain/shared_slices/Draw'
+import { VisibilityState } from '../../../domain/shared_slices/Global'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
-import { VisibilityState } from '../../../domain/shared_slices/ReportingState'
 import { addFeatureToDrawedFeature } from '../../../domain/use_cases/draw/addFeatureToDrawedFeature'
 import { eraseDrawedGeometries } from '../../../domain/use_cases/draw/eraseDrawedGeometries'
 import { closeAddZone } from '../../../domain/use_cases/missions/closeAddZone'

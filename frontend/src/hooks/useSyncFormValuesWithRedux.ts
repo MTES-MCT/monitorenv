@@ -12,7 +12,6 @@ export const useSyncFormValuesWithRedux = (
 ) => {
   const { dirty, values } = useFormikContext()
   const dispatch = useAppDispatch()
-
   const dispatchFormUpdate = useMemo(() => {
     const throttled = newValues => {
       dispatch(setState(newValues))

@@ -1,8 +1,7 @@
 import { reportingsAPI } from '../../../api/reportingsAPI'
-import { setToast } from '../../shared_slices/Global'
+import { setToast, ReportingContext } from '../../shared_slices/Global'
 
 import type { Reporting } from '../../entities/reporting'
-import type { ReportingContext } from '../../shared_slices/ReportingState'
 
 export const reopenReporting = (values: Reporting, reportingContext: ReportingContext) => async dispatch => {
   try {

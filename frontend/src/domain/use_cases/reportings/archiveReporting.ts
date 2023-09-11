@@ -5,11 +5,11 @@ import type { Reporting } from '../../entities/reporting'
 
 export const archiveReportingFromTable = (id: number) => async (dispatch, getState) => {
   const {
-    reportingState: { reportingState, selectedReportingId }
+    multiReportings: { activeReportingId, selectedReportings }
   } = getState()
   try {
-    let reportingToArchive = reportingState || {}
-    if (id !== selectedReportingId) {
+    let reportingToArchive = selectedReportings[id].reporting
+    if (id !== activeReportingId || !reportingToArchive) {
       const { data: reporting } = await dispatch(reportingsAPI.endpoints.getReporting.initiate(id))
       reportingToArchive = reporting
     }

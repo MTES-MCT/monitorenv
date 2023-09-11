@@ -6,8 +6,8 @@ import styled from 'styled-components'
 
 import { getPlaceCoordinates, useGooglePlacesAPI } from '../../api/googlePlacesAPI/googlePlacesAPI'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map/constants'
+import { ReportingContext, VisibilityState } from '../../domain/shared_slices/Global'
 import { setFitToExtent } from '../../domain/shared_slices/Map'
-import { ReportingContext, VisibilityState } from '../../domain/shared_slices/ReportingState'
 import { useAppSelector } from '../../hooks/useAppSelector'
 
 export function LocateOnMap() {

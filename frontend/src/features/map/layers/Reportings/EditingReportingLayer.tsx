@@ -11,8 +11,10 @@ import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../BaseMap'
 
 export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
-  const { reportingState } = useAppSelector(state => state.reportingState)
+  const { activeReportingId, selectedReportings = { reporting: {} } } = useAppSelector(state => state.multiReportings)
   const { displayReportingEditingLayer } = useAppSelector(state => state.global)
+
+  const editingReporting = activeReportingId ? selectedReportings[activeReportingId].reporting : undefined
 
   const editingReportingVectorSourceRef = useRef() as MutableRefObject<VectorSource>
   const GetEditingReportingVectorSource = () => {
@@ -70,12 +72,12 @@ export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
   useEffect(() => {
     GetEditingReportingVectorSource()?.clear(true)
     GetEditingReportingActionsVectorSource()?.clear(true)
-    if (reportingState) {
+    if (editingReporting) {
       GetEditingReportingVectorSource()?.addFeature(
-        getEditingReportingZoneFeature(reportingState, Layers.REPORTING_SELECTED.code)
+        getEditingReportingZoneFeature(editingReporting, Layers.REPORTING_SELECTED.code)
       )
     }
-  }, [reportingState])
+  }, [editingReporting])
 
   return null
 }
