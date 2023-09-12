@@ -25,7 +25,7 @@ export const CONTROL_UNIT_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.ControlUnit
       <NavIconButton
         Icon={Icon.Edit}
         size={Size.SMALL}
-        title="Éditer cette administration"
+        title="Éditer cette unité de contrôle"
         to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_LIST]}/${info.getValue<number>()}`}
       />
     ),

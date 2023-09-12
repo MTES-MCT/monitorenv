@@ -25,8 +25,8 @@ export function Item({ controlUnit }: ItemProps) {
   }, [controlUnit.id, dispatch])
 
   return (
-    <Wrapper onClick={edit}>
-      <NameText>{controlUnit.name}</NameText>
+    <Wrapper data-cy="control-unit-list-item" onClick={edit}>
+      <NameText data-cy={`control-unit-${controlUnit.id}`}>{controlUnit.name}</NameText>
       <AdministrationText>{controlUnit.administration.name}</AdministrationText>
       <ResourcesAndPortsText>{displayControlUnitResourcesFromControlUnit(controlUnit)}</ResourcesAndPortsText>
       <ResourcesAndPortsText>{displayBaseNamesFromControlUnit(controlUnit)}</ResourcesAndPortsText>

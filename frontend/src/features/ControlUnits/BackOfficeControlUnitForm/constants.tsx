@@ -27,7 +27,7 @@ export const CONTROL_UNIT_CONTACT_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.Con
       <NavIconButton
         Icon={Icon.Edit}
         size={Size.SMALL}
-        title="Éditer cette administration"
+        title="Éditer ce contact"
         to={`/backoffice${
           BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_CONTACT_LIST]
         }/${info.getValue<number>()}`}
@@ -59,7 +59,7 @@ export const CONTROL_UNIT_RESOURCE_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.Co
       <NavIconButton
         Icon={Icon.Edit}
         size={Size.SMALL}
-        title="Éditer cette administration"
+        title="Éditer ce moyen"
         to={`/backoffice${
           BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_RESOURCE_LIST]
         }/${info.getValue<number>()}`}
