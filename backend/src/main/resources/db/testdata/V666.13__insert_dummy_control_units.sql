@@ -1,5 +1,5 @@
 INSERT INTO public.control_units
-  (   id, administration_id, is_archived,           name)
+  (   id, administration_id,    archived,                                     name)
 VALUES
   (    1,              1005,       false,             'Cultures marines – DDTM 30'),
   (    2,              1005,       false,             'Cultures marines – DDTM 40'),

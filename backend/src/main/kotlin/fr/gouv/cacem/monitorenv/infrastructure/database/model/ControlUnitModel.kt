@@ -34,7 +34,7 @@ data class ControlUnitModel(
     @JsonManagedReference
     var controlUnitResources: List<ControlUnitResourceModel>,
 
-    @Column(name = "is_archived")
+    @Column(name = "archived")
     var isArchived: Boolean,
 
     @Column(name = "name", nullable = false)

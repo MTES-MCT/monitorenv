@@ -12,7 +12,7 @@ interface IDBControlUnitRepository : CrudRepository<ControlUnitModel, Int> {
     @Query(
         value = """
         UPDATE control_units
-        SET is_archived = TRUE
+        SET archived = TRUE
         WHERE id = :id
         """,
         nativeQuery = true,

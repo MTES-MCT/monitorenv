@@ -26,7 +26,7 @@ CREATE TABLE public.control_units (
     id SERIAL PRIMARY KEY,
     administration_id INT NOT NULL,
     area_note VARCHAR,
-    is_archived BOOLEAN NOT NULL,
+    archived BOOLEAN NOT NULL,
     name VARCHAR NOT NULL,
     terms_note VARCHAR,
 
@@ -77,7 +77,7 @@ CREATE TABLE public.control_unit_resources (
 INSERT INTO public.control_units (
     id,
     administration_id,
-    is_archived,
+    archived,
     name,
     created_at_utc,
     updated_at_utc
@@ -85,7 +85,7 @@ INSERT INTO public.control_units (
 SELECT
     id,
     administration_id,
-    archived AS is_archived,
+    archived,
     name,
     CURRENT_TIMESTAMP AS created_at_utc,
     CURRENT_TIMESTAMP AS updated_at_utc
