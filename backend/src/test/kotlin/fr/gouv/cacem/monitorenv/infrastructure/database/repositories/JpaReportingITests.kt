@@ -108,7 +108,7 @@ class JpaReportingITests : AbstractDBTests() {
         val secondReporting = jpaReportingRepository.findById(3)
         assertThat(secondReporting.isArchived).isEqualTo(false)
         // When
-        jpaReportingRepository.archiveReportings(listOf(1, 2))
+        jpaReportingRepository.archiveReportings(listOf(2, 3))
         // Then
         val firstArchivedReporting = jpaReportingRepository.findById(2)
         assertThat(firstArchivedReporting.isArchived).isEqualTo(true)

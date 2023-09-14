@@ -11,6 +11,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.ArchiveReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.CreateOrUpdateReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReportings
@@ -52,6 +53,8 @@ class ReportingsControllerITests {
     @MockBean private lateinit var deleteReporting: DeleteReporting
 
     @MockBean private lateinit var deleteReportings: DeleteReportings
+
+    @MockBean private lateinit var archiveReportings: ArchiveReportings
 
     @Test
     fun `Should create a new Reporting`() {
@@ -414,6 +417,21 @@ class ReportingsControllerITests {
                 .andExpect(status().isOk)
 
         Mockito.verify(deleteReporting).execute(123)
+    }
+
+    @Test
+    fun `Should archive multiple reportings`() {
+        // When
+        mockedApi
+                .perform(
+                        put("/bff/v1/reportings/archive")
+                                .content(objectMapper.writeValueAsString(listOf(1, 2, 3)))
+                                .contentType(MediaType.APPLICATION_JSON),
+                )
+                // Then
+                .andExpect(status().isOk)
+
+        Mockito.verify(archiveReportings).execute(listOf(1, 2, 3))
     }
 
     @Test

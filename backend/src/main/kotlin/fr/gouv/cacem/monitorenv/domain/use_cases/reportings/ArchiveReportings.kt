@@ -14,9 +14,9 @@ class ArchiveReportings(
 
   @Throws(IllegalArgumentException::class)
   fun execute(ids: List<Int>) {
-    logger.info("Delete reportings: $ids")
+    logger.info("Archive reportings: $ids")
 
-    require(ids.isNotEmpty()) { "No reportings to delete" }
+    require(ids.isNotEmpty()) { "No reportings to archive" }
     return reportingRepository.archiveReportings(ids)
   }
 }
