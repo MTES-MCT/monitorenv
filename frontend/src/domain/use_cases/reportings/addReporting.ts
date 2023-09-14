@@ -1,16 +1,13 @@
 import { getReportingInitialValues, createIdForNewReporting } from '../../../features/Reportings/utils'
 import { setReportingFormVisibility, ReportingContext, VisibilityState } from '../../shared_slices/Global'
-import { multiReportingsActions } from '../../shared_slices/MultiReportings'
+import { reportingActions } from '../../shared_slices/reporting'
 
 import type { Reporting } from '../../entities/reporting'
 
 export const addReporting =
   (reportingContext: ReportingContext, partialReporting?: Partial<Reporting> | undefined) =>
   async (dispatch, getState) => {
-    const {
-      multiReportings: { selectedReportings }
-    } = getState()
-    const reportings = { ...selectedReportings }
+    const { reportings } = getState().reporting
 
     const id = createIdForNewReporting(reportings)
 
@@ -27,6 +24,6 @@ export const addReporting =
       })
     )
 
-    await dispatch(multiReportingsActions.setReporting(newReporting))
-    await dispatch(multiReportingsActions.setActiveReportingId(id))
+    await dispatch(reportingActions.setReporting(newReporting))
+    await dispatch(reportingActions.setActiveReportingId(id))
   }

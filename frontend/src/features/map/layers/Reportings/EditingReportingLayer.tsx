@@ -11,10 +11,10 @@ import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../BaseMap'
 
 export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
-  const { activeReportingId, selectedReportings = { reporting: {} } } = useAppSelector(state => state.multiReportings)
+  const { activeReportingId, reportings = { reporting: {} } } = useAppSelector(state => state.reporting)
   const { displayReportingEditingLayer } = useAppSelector(state => state.global)
 
-  const editingReporting = activeReportingId ? selectedReportings[activeReportingId].reporting : undefined
+  const editingReporting = activeReportingId ? reportings[activeReportingId].reporting : undefined
 
   const editingReportingVectorSourceRef = useRef() as MutableRefObject<VectorSource>
   const GetEditingReportingVectorSource = () => {

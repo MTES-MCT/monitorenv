@@ -1,10 +1,10 @@
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { setToast } from '../../shared_slices/Global'
-import { multiReportingsActions } from '../../shared_slices/MultiReportings'
+import { reportingActions } from '../../shared_slices/reporting'
 
 export const archiveMultipleReportings =
   (ids: number[], resetSelectionFn: () => void) => async (dispatch, getState) => {
-    const reportings = getState().multiReportings.selectedReportings
+    const { reportings } = getState().reporting
     try {
       const response = await dispatch(reportingsAPI.endpoints.archiveReportings.initiate({ ids }))
 
@@ -14,7 +14,7 @@ export const archiveMultipleReportings =
         ids.map(id => {
           if (reportings[id]) {
             dispatch(
-              multiReportingsActions.setReporting({
+              reportingActions.setReporting({
                 ...reportings[id],
                 reporting: {
                   ...reportings[id].reporting,

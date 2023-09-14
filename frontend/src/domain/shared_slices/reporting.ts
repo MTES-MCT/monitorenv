@@ -13,26 +13,26 @@ export type ReportingType = {
 export type SelectedReportingType = {
   [key: string]: ReportingType
 }
-type MultiReportingsState = {
+type ReportingState = {
   activeReportingId: number | string | undefined
   isConfirmCancelDialogVisible: boolean
+  reportings: SelectedReportingType
   selectedReportingIdOnMap: number | undefined
-  selectedReportings: SelectedReportingType
 }
 
-const initialState: MultiReportingsState = {
+const initialState: ReportingState = {
   activeReportingId: undefined,
   isConfirmCancelDialogVisible: false,
-  selectedReportingIdOnMap: undefined,
-  selectedReportings: {}
+  reportings: {},
+  selectedReportingIdOnMap: undefined
 }
-const multiReportingsSlice = createSlice({
+const reportingSlice = createSlice({
   initialState,
-  name: 'multiReportings',
+  name: 'reporting',
   reducers: {
     deleteSelectedReporting(state, action) {
-      if (state.selectedReportings) {
-        delete state.selectedReportings[action.payload]
+      if (state.reportings) {
+        delete state.reportings[action.payload]
       }
 
       state.activeReportingId = undefined
@@ -48,10 +48,10 @@ const multiReportingsSlice = createSlice({
       if (!id) {
         return
       }
-      const reporting = state.selectedReportings[id]
+      const reporting = state.reportings[id]
 
       if (reporting) {
-        state.selectedReportings[id] = {
+        state.reportings[id] = {
           ...reporting,
           isFormDirty: action.payload
         }
@@ -59,10 +59,10 @@ const multiReportingsSlice = createSlice({
     },
     setReporting(state, action: PayloadAction<ReportingType>) {
       const { id } = action.payload.reporting
-      if (!state.selectedReportings) {
-        state.selectedReportings = { [id]: action.payload }
+      if (!state.reportings) {
+        state.reportings = { [id]: action.payload }
       } else {
-        state.selectedReportings[id] = action.payload
+        state.reportings[id] = action.payload
       }
     },
     setReportingContext(state, action: PayloadAction<ReportingContext>) {
@@ -70,10 +70,10 @@ const multiReportingsSlice = createSlice({
       if (!id) {
         return
       }
-      const reporting = state.selectedReportings[id]
+      const reporting = state.reportings[id]
 
       if (reporting) {
-        state.selectedReportings[id] = {
+        state.reportings[id] = {
           ...reporting,
           context: action.payload
         }
@@ -84,10 +84,10 @@ const multiReportingsSlice = createSlice({
       if (!id) {
         return
       }
-      const reporting = state.selectedReportings[id]
+      const reporting = state.reportings[id]
 
       if (reporting) {
-        state.selectedReportings[id] = {
+        state.reportings[id] = {
           ...reporting,
           reporting: action.payload
         }
@@ -98,6 +98,6 @@ const multiReportingsSlice = createSlice({
     }
   }
 })
-export const multiReportingsActions = multiReportingsSlice.actions
+export const reportingActions = reportingSlice.actions
 
-export const multiReportingsSliceReducer = multiReportingsSlice.reducer
+export const reportingSliceReducer = reportingSlice.reducer

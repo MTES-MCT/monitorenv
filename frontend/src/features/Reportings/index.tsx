@@ -12,20 +12,22 @@ import { reduceOrExpandReportingForm } from '../../domain/use_cases/reportings/r
 import { switchReporting } from '../../domain/use_cases/reportings/switchReporting'
 import { useAppSelector } from '../../hooks/useAppSelector'
 
+import type { ReportingType } from '../../domain/shared_slices/reporting'
+
 export function Reportings({ context }: { context: ReportingContext }) {
-  const {
-    global: { reportingFormVisibility },
-    multiReportings: { activeReportingId, selectedReportings }
-  } = useAppSelector(state => state)
+  const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
+  const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
+  const reportings = useAppSelector(state => state.reporting.reportings)
+
   const dispatch = useDispatch()
   const reportingsTabs = useMemo(
     () =>
-      (selectedReportings &&
-        Object.values(selectedReportings).filter(
-          reporting => reporting.context === context && activeReportingId !== reporting?.reporting?.id
+      (reportings &&
+        Object.values(reportings).filter(
+          (reporting: ReportingType) => reporting.context === context && activeReportingId !== reporting?.reporting?.id
         )) ||
       [],
-    [selectedReportings, activeReportingId, context]
+    [reportings, activeReportingId, context]
   )
 
   const reduceOrExpandReporting = async reporting => {

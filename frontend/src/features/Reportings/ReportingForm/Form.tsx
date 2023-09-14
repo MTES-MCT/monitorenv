@@ -19,7 +19,7 @@ import {
   ReportingContext,
   VisibilityState
 } from '../../../domain/shared_slices/Global'
-import { multiReportingsActions } from '../../../domain/shared_slices/MultiReportings'
+import { reportingActions } from '../../../domain/shared_slices/reporting'
 import { closeReporting } from '../../../domain/use_cases/reportings/closeReporting'
 import { deleteReporting } from '../../../domain/use_cases/reportings/deleteReporting'
 import { reduceOrExpandReportingForm } from '../../../domain/use_cases/reportings/reduceOrExpandReportingForm'
@@ -45,12 +45,11 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
   const dispatch = useDispatch()
   const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
 
-  const isConfirmCancelDialogVisible = useAppSelector(state => state.multiReportings.isConfirmCancelDialogVisible)
-  const activeReportingId = useAppSelector(state => state.multiReportings.activeReportingId)
+  const isConfirmCancelDialogVisible = useAppSelector(state => state.reporting.isConfirmCancelDialogVisible)
+  const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const reportingContext =
-    useAppSelector(state =>
-      activeReportingId ? state.multiReportings.selectedReportings[activeReportingId]?.context : undefined
-    ) || ReportingContext.MAP
+    useAppSelector(state => (activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined)) ||
+    ReportingContext.MAP
 
   const { dirty, errors, setFieldValue, setValues, values } = useFormikContext<Partial<Reporting>>()
   const [themeField] = useField('theme')
@@ -60,12 +59,12 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
 
   const isMapContext = reportingContext === ReportingContext.MAP
 
-  useSyncFormValuesWithRedux(multiReportingsActions.setReportingState, multiReportingsActions.setIsDirty)
+  useSyncFormValuesWithRedux(reportingActions.setReportingState, reportingActions.setIsDirty)
 
   useEffect(() => {
     if (selectedReporting) {
       setValues(selectedReporting)
-      dispatch(multiReportingsActions.setReportingContext(reportingContext))
+      dispatch(reportingActions.setReportingContext(reportingContext))
     }
   }, [selectedReporting, dispatch, setValues, reportingContext])
 
@@ -90,12 +89,12 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
   }
 
   const returnToEdition = () => {
-    dispatch(multiReportingsActions.setIsConfirmCancelDialogVisible(false))
+    dispatch(reportingActions.setIsConfirmCancelDialogVisible(false))
   }
 
   const confirmCloseReporting = () => {
-    dispatch(multiReportingsActions.setIsConfirmCancelDialogVisible(false))
-    dispatch(multiReportingsActions.deleteSelectedReporting(selectedReporting.id))
+    dispatch(reportingActions.setIsConfirmCancelDialogVisible(false))
+    dispatch(reportingActions.deleteSelectedReporting(selectedReporting.id))
     dispatch(
       setReportingFormVisibility({
         context: reportingContext,
@@ -110,7 +109,7 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
 
   const cancelNewReporting = () => {
     if (dirty) {
-      dispatch(multiReportingsActions.setIsConfirmCancelDialogVisible(true))
+      dispatch(reportingActions.setIsConfirmCancelDialogVisible(true))
     } else {
       setReportingFormVisibility({
         context: reportingContext,

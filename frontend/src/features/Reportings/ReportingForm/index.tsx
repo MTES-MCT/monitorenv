@@ -15,10 +15,10 @@ import { getReportingInitialValues, isNewReporting } from '../utils'
 
 export function ReportingFormWithContext({ context, totalReportings }) {
   const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
-  const selectedReportings = useAppSelector(state => state.multiReportings.selectedReportings)
-  const activeReportingId = useAppSelector(state => state.multiReportings.activeReportingId)
+  const reportings = useAppSelector(state => state.reporting.reportings)
+  const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const reportingContext = useAppSelector(state =>
-    activeReportingId ? state.multiReportings.selectedReportings[activeReportingId]?.context : undefined
+    activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined
   )
 
   const dispatch = useDispatch()
@@ -36,7 +36,7 @@ export function ReportingFormWithContext({ context, totalReportings }) {
   }
 
   const selectedReporting = useMemo(
-    () => (activeReportingId && selectedReportings ? selectedReportings[activeReportingId]?.reporting : undefined),
+    () => (activeReportingId && reportings ? reportings[activeReportingId]?.reporting : undefined),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [activeReportingId]
   )

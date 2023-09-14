@@ -1,20 +1,18 @@
 import { setReportingFormVisibility, ReportingContext, VisibilityState } from '../../shared_slices/Global'
-import { multiReportingsActions } from '../../shared_slices/MultiReportings'
+import { reportingActions } from '../../shared_slices/reporting'
 
 export const closeReporting =
   (reportingIdToClose: number | string, reportingContextToClose: ReportingContext) => async (dispatch, getState) => {
-    const {
-      multiReportings: { selectedReportings }
-    } = getState()
+    const { reportings } = getState().reporting
     if (!reportingIdToClose) {
       return
     }
 
-    if (selectedReportings[reportingIdToClose].isFormDirty) {
-      await dispatch(multiReportingsActions.setReporting(selectedReportings[reportingIdToClose]))
-      await dispatch(multiReportingsActions.setActiveReportingId(reportingIdToClose))
+    if (reportings[reportingIdToClose].isFormDirty) {
+      await dispatch(reportingActions.setReporting(reportings[reportingIdToClose]))
+      await dispatch(reportingActions.setActiveReportingId(reportingIdToClose))
 
-      await dispatch(multiReportingsActions.setIsConfirmCancelDialogVisible(true))
+      await dispatch(reportingActions.setIsConfirmCancelDialogVisible(true))
       await dispatch(
         setReportingFormVisibility({
           context: reportingContextToClose,
@@ -25,7 +23,7 @@ export const closeReporting =
       return
     }
 
-    await dispatch(multiReportingsActions.deleteSelectedReporting(reportingIdToClose))
+    await dispatch(reportingActions.deleteSelectedReporting(reportingIdToClose))
     await dispatch(
       setReportingFormVisibility({
         context: reportingContextToClose,

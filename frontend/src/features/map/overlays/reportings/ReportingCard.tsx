@@ -15,7 +15,7 @@ import styled from 'styled-components'
 
 import { ReportingTypeEnum, getFormattedReportingId, ReportingTypeLabels } from '../../../../domain/entities/reporting'
 import { ReportingContext } from '../../../../domain/shared_slices/Global'
-import { multiReportingsActions } from '../../../../domain/shared_slices/MultiReportings'
+import { reportingActions } from '../../../../domain/shared_slices/reporting'
 import { editReportingInLocalStore } from '../../../../domain/use_cases/reportings/editReportingInLocalStore'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
@@ -71,7 +71,7 @@ export function ReportingCard({
   }
 
   const closeReportingCard = useCallback(() => {
-    dispatch(multiReportingsActions.setSelectedReportingIdOnMap(undefined))
+    dispatch(reportingActions.setSelectedReportingIdOnMap(undefined))
   }, [dispatch])
 
   useEffect(() => {

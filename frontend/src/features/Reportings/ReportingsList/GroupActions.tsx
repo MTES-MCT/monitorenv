@@ -6,15 +6,15 @@ import { deleteMultipleReportings } from '../../../domain/use_cases/reportings/d
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { pluralize } from '../../../utils/pluralize'
 
-export function GroupActions({ archiveOrDeleteReportingsCallback, selectedReportingsIds, totalReportings }) {
+export function GroupActions({ archiveOrDeleteReportingsCallback, reportingsIds, totalReportings }) {
   const dispatch = useAppDispatch()
 
   const archiveReportings = () => {
-    dispatch(archiveMultipleReportings(selectedReportingsIds, archiveOrDeleteReportingsCallback))
+    dispatch(archiveMultipleReportings(reportingsIds, archiveOrDeleteReportingsCallback))
   }
 
-  const deleteMultiReportings = () => {
-    dispatch(deleteMultipleReportings(selectedReportingsIds, archiveOrDeleteReportingsCallback))
+  const deleteReportings = () => {
+    dispatch(deleteMultipleReportings(reportingsIds, archiveOrDeleteReportingsCallback))
   }
 
   return (
@@ -22,16 +22,16 @@ export function GroupActions({ archiveOrDeleteReportingsCallback, selectedReport
       <StyledButtonsContainer>
         <IconButton
           accent={Accent.SECONDARY}
-          disabled={selectedReportingsIds.length === 0}
+          disabled={reportingsIds.length === 0}
           Icon={Icon.Archive}
           onClick={archiveReportings}
           title="Archiver"
         />
         <IconButton
           accent={Accent.SECONDARY}
-          disabled={selectedReportingsIds.length === 0}
+          disabled={reportingsIds.length === 0}
           Icon={Icon.Delete}
-          onClick={deleteMultiReportings}
+          onClick={deleteReportings}
           title="Supprimer"
         />
       </StyledButtonsContainer>

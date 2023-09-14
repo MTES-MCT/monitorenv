@@ -11,7 +11,7 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 import type { BaseMapChildrenProps } from '../../BaseMap'
 
 export function SelectedReportingLayer({ map }: BaseMapChildrenProps) {
-  const { activeReportingId, selectedReportingIdOnMap } = useAppSelector(state => state.multiReportings)
+  const { activeReportingId, selectedReportingIdOnMap } = useAppSelector(state => state.reporting)
   const { displayReportingSelectedLayer } = useAppSelector(state => state.global)
   const { selectedReporting } = useGetReportingsQuery(undefined, {
     selectFromResult: ({ data }) => ({

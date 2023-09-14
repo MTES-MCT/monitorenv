@@ -1,13 +1,10 @@
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { getReportingInitialValues, createIdForNewReporting } from '../../../features/Reportings/utils'
 import { setReportingFormVisibility, setToast, ReportingContext, VisibilityState } from '../../shared_slices/Global'
-import { multiReportingsActions } from '../../shared_slices/MultiReportings'
+import { reportingActions } from '../../shared_slices/reporting'
 
 export const duplicateReporting = (reportingId: number) => async (dispatch, getState) => {
-  const {
-    multiReportings: { selectedReportings }
-  } = getState()
-  const reportings = { ...selectedReportings }
+  const { reportings } = getState().reporting
 
   const reportingToDuplicate = reportingsAPI.endpoints.getReporting
   try {
@@ -21,8 +18,8 @@ export const duplicateReporting = (reportingId: number) => async (dispatch, getS
         reporting: getReportingInitialValues({ ...response.data, createdAt: new Date().toISOString(), id })
       }
 
-      await dispatch(multiReportingsActions.setReporting(duplicatedReporting))
-      await dispatch(multiReportingsActions.setActiveReportingId(id))
+      await dispatch(reportingActions.setReporting(duplicatedReporting))
+      await dispatch(reportingActions.setActiveReportingId(id))
 
       await dispatch(
         setReportingFormVisibility({

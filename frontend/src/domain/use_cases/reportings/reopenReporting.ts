@@ -1,24 +1,22 @@
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { setToast, ReportingContext } from '../../shared_slices/Global'
-import { multiReportingsActions } from '../../shared_slices/MultiReportings'
+import { reportingActions } from '../../shared_slices/reporting'
 
 import type { Reporting } from '../../entities/reporting'
 
 export const reopenReporting =
   (values: Reporting, reportingContext: ReportingContext) => async (dispatch, getState) => {
-    const {
-      multiReportings: { selectedReportings }
-    } = getState()
+    const { reportings } = getState().erporting
     try {
       const response = await dispatch(reportingsAPI.endpoints.updateReporting.initiate(values))
       if ('data' in response) {
         const updatedReporting = {
-          ...selectedReportings[response.data.id],
+          ...reportings[response.data.id],
           context: reportingContext,
           reporting: response.data
         }
 
-        await dispatch(multiReportingsActions.setReporting(updatedReporting))
+        await dispatch(reportingActions.setReporting(updatedReporting))
         dispatch(
           setToast({
             containerId: reportingContext,

@@ -1,8 +1,8 @@
 import { setReportingFormVisibility, ReportingContext, VisibilityState } from '../../shared_slices/Global'
-import { multiReportingsActions } from '../../shared_slices/MultiReportings'
+import { reportingActions } from '../../shared_slices/reporting'
 
 export const switchReporting = (nextReportingId: number, reportingContext: ReportingContext) => async dispatch => {
-  dispatch(multiReportingsActions.setActiveReportingId(nextReportingId))
+  dispatch(reportingActions.setActiveReportingId(nextReportingId))
 
   dispatch(
     setReportingFormVisibility({

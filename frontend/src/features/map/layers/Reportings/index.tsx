@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux'
 import { getReportingZoneFeature } from './reportingsGeometryHelpers'
 import { reportingPinStyleFn } from './style'
 import { Layers } from '../../../../domain/entities/layers/constants'
-import { multiReportingsActions } from '../../../../domain/shared_slices/MultiReportings'
+import { reportingActions } from '../../../../domain/shared_slices/reporting'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useGetFilteredReportingsQuery } from '../../../Reportings/hooks/useGetFilteredReportingsQuery'
 
@@ -18,7 +18,7 @@ import type { Geometry } from 'ol/geom'
 export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useDispatch()
   const { displayReportingsLayer, overlayCoordinates } = useAppSelector(state => state.global)
-  const { activeReportingId } = useAppSelector(state => state.multiReportings)
+  const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const listener = useAppSelector(state => state.draw.listener)
 
   const { reportings } = useGetFilteredReportingsQuery()
@@ -99,7 +99,7 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       const feature = mapClickEvent?.feature
       if (feature.getId()?.toString()?.includes(Layers.REPORTINGS.code)) {
         const { id } = feature.getProperties()
-        dispatch(multiReportingsActions.setSelectedReportingIdOnMap(id))
+        dispatch(reportingActions.setSelectedReportingIdOnMap(id))
       }
     }
   }, [dispatch, mapClickEvent])

@@ -71,7 +71,7 @@ export function ReportingsTable({
     <>
       <GroupActions
         archiveOrDeleteReportingsCallback={resetSelection}
-        selectedReportingsIds={selectedIds}
+        reportingsIds={selectedIds}
         totalReportings={reportings?.length || 0}
       />
       <StyledReportingsContainer ref={tableContainerRef}>
