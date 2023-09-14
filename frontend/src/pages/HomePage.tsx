@@ -73,11 +73,11 @@ export function HomePage() {
         {displayMeasurement && <MeasurementMapButton />}
         {displayInterestPoint && <InterestPointMapButton />}
 
-        <Reportings context={ReportingContext.MAP} />
+        <Reportings key="reportings-on-map" context={ReportingContext.MAP} />
 
         <SideWindowLauncher />
 
-        <ToastContainer containerId="default" enableMultiContainer />
+        <ToastContainer containerId="map" enableMultiContainer />
       </Wrapper>
     </>
   )

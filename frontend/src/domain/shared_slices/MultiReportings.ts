@@ -16,7 +16,6 @@ export type SelectedReportingType = {
 type MultiReportingsState = {
   activeReportingId: number | string | undefined
   isConfirmCancelDialogVisible: boolean
-  selectedReportingId: number | string | undefined
   selectedReportingIdOnMap: number | undefined
   selectedReportings: SelectedReportingType
 }
@@ -24,7 +23,6 @@ type MultiReportingsState = {
 const initialState: MultiReportingsState = {
   activeReportingId: undefined,
   isConfirmCancelDialogVisible: false,
-  selectedReportingId: undefined,
   selectedReportingIdOnMap: undefined,
   selectedReportings: {}
 }
@@ -66,7 +64,6 @@ const multiReportingsSlice = createSlice({
       } else {
         state.selectedReportings[id] = action.payload
       }
-      state.activeReportingId = id
     },
     setReportingContext(state, action: PayloadAction<ReportingContext>) {
       const id = state.activeReportingId

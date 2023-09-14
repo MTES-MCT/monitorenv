@@ -13,7 +13,7 @@ export const editReportingInLocalStore =
       const reportings = { ...selectedReportings }
       let newReporting
 
-      if (reportings[reportingId] !== undefined) {
+      if (reportings[reportingId]) {
         newReporting = {
           ...reportings[reportingId],
           context: reportingContext
@@ -33,16 +33,15 @@ export const editReportingInLocalStore =
           throw Error('Erreur à la récupération du signalement')
         }
       }
-
-      await dispatch(multiReportingsActions.setReporting(newReporting))
-      await dispatch(multiReportingsActions.setActiveReportingId(reportingId))
-
       await dispatch(
         setReportingFormVisibility({
           context: reportingContext,
           visibility: VisibilityState.VISIBLE
         })
       )
+
+      await dispatch(multiReportingsActions.setReporting(newReporting))
+      await dispatch(multiReportingsActions.setActiveReportingId(reportingId))
     } catch (error) {
       dispatch(setToast({ message: error }))
     }

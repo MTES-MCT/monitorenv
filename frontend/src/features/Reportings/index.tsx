@@ -18,7 +18,7 @@ export function Reportings({ context }: { context: ReportingContext }) {
     multiReportings: { activeReportingId, selectedReportings }
   } = useAppSelector(state => state)
   const dispatch = useDispatch()
-  const reportingsOnMap = useMemo(
+  const reportingsTabs = useMemo(
     () =>
       (selectedReportings &&
         Object.values(selectedReportings).filter(
@@ -28,12 +28,16 @@ export function Reportings({ context }: { context: ReportingContext }) {
     [selectedReportings, activeReportingId, context]
   )
 
-  const reduceOrExpandReporting = async id => {
+  const reduceOrExpandReporting = async reporting => {
+    const { id } = reporting.reporting
+
     if (activeReportingId === id && reportingFormVisibility.context === context) {
       return dispatch(reduceOrExpandReportingForm(context))
     }
 
-    dispatch(hideSideButtons())
+    if (reporting.context === ReportingContext.MAP) {
+      dispatch(hideSideButtons())
+    }
 
     return dispatch(switchReporting(id, context))
   }
@@ -41,21 +45,21 @@ export function Reportings({ context }: { context: ReportingContext }) {
   return (
     <>
       {reportingFormVisibility.context === context && (
-        <ReportingFormWithContext key={context} context={context} totalMapReportings={reportingsOnMap.length} />
+        <ReportingFormWithContext key={context} context={context} totalReportings={reportingsTabs.length} />
       )}
 
-      {reportingsOnMap.map((reporting, index) => {
+      {reportingsTabs.map((reporting, index) => {
         const reducedReporting = reporting.reporting
         const isSeparatorVisible = !!(
-          (index < reportingsOnMap.length && activeReportingId && reportingFormVisibility.context === context) ||
-          !(index + 1 === reportingsOnMap.length && (!activeReportingId || reportingFormVisibility.context !== context))
+          (index < reportingsTabs.length && activeReportingId && reportingFormVisibility.context === context) ||
+          !(index + 1 === reportingsTabs.length && (!activeReportingId || reportingFormVisibility.context !== context))
         )
 
         return (
           <StyledContainer
-            key={reducedReporting?.id}
-            $context={context}
+            key={`${reducedReporting?.id}-${context}`}
             $position={index}
+            $reportingContext={reporting.context}
             $reportingFormVisibility={reportingFormVisibility.visibility}
           >
             <Separator $visible={isSeparatorVisible} />
@@ -70,7 +74,7 @@ export function Reportings({ context }: { context: ReportingContext }) {
                   $isOpen
                   accent={Accent.TERTIARY}
                   Icon={Icon.Chevron}
-                  onClick={() => reduceOrExpandReporting(reducedReporting?.id)}
+                  onClick={() => reduceOrExpandReporting(reporting)}
                 />
                 <IconButton
                   accent={Accent.TERTIARY}
@@ -95,8 +99,8 @@ const Separator = styled.div<{ $visible: boolean }>`
 `
 
 const StyledContainer = styled.div<{
-  $context: ReportingContext
   $position: number
+  $reportingContext: ReportingContext
   $reportingFormVisibility: VisibilityState
 }>`
   background-color: transparent;
@@ -107,16 +111,24 @@ const StyledContainer = styled.div<{
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: right 0.5s ease-out, top 0.5s ease-out;
+  transition: top 0.5s ease-out;
   z-index: 100;
+
   ${p => {
-    switch (p.$reportingFormVisibility) {
-      case VisibilityState.VISIBLE_LEFT:
-        return 'right: 56px;'
-      case VisibilityState.REDUCED:
-        return 'right: 12px;'
-      default:
-        return `right: ${p.$context === ReportingContext.MAP ? '8px' : '0px'};`
+    if (p.$reportingContext === ReportingContext.MAP) {
+      switch (p.$reportingFormVisibility) {
+        case VisibilityState.VISIBLE:
+          return 'right: 8px;'
+        case VisibilityState.VISIBLE_LEFT:
+          return 'right: 56px;'
+        case VisibilityState.REDUCED:
+          return `right: 12px;`
+        case VisibilityState.NONE:
+        default:
+          return 'right: -500px;'
+      }
     }
+
+    return 'right: 0px;'
   }}
 `

@@ -2,8 +2,7 @@ import { setReportingFormVisibility, ReportingContext, VisibilityState } from '.
 import { multiReportingsActions } from '../../shared_slices/MultiReportings'
 
 export const closeReporting =
-  (reportingIdToClose: number | string | undefined, reportingContextToClose: ReportingContext) =>
-  async (dispatch, getState) => {
+  (reportingIdToClose: number | string, reportingContextToClose: ReportingContext) => async (dispatch, getState) => {
     const {
       multiReportings: { selectedReportings }
     } = getState()

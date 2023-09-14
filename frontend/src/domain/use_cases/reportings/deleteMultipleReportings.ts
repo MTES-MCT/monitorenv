@@ -26,6 +26,8 @@ export const deleteMultipleReportings = (ids: number[], resetSelectionFn: () => 
         )
       }
 
+      ids.map(id => dispatch(multiReportingsActions.deleteSelectedReporting(id)))
+
       dispatch(
         setToast({
           containerId: 'sideWindow',

@@ -83,7 +83,7 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
             </StyledRouteContainer>
           </NewWindowContext.Provider>
         )}
-        <Reportings context={ReportingContext.SIDE_WINDOW} />
+        <Reportings key="reportings-on-side-window" context={ReportingContext.SIDE_WINDOW} />
         <ToastContainer containerId="sideWindow" enableMultiContainer />
       </Wrapper>
     </ErrorBoundary>

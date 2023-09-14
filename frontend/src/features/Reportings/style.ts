@@ -189,18 +189,7 @@ export const FormContainer = styled.div<{
   z-index: ${p => (p.$context === ReportingContext.SIDE_WINDOW ? '6' : '100')};
 
   ${p => {
-    if (p.$context === ReportingContext.SIDE_WINDOW) {
-      switch (p.$reportingFormVisibility) {
-        case VisibilityState.VISIBLE:
-        case VisibilityState.VISIBLE_LEFT:
-          return 'right: 0px;'
-        case VisibilityState.REDUCED:
-          return `right: 0px; top: calc(100vh - ${p.$position * 52}px);`
-        case VisibilityState.NONE:
-        default:
-          return 'right: -500px;'
-      }
-    } else {
+    if (p.$context === ReportingContext.MAP) {
       switch (p.$reportingFormVisibility) {
         case VisibilityState.VISIBLE:
           return 'right: 8px;'
@@ -208,6 +197,16 @@ export const FormContainer = styled.div<{
           return 'right: 56px;'
         case VisibilityState.REDUCED:
           return `right: 12px; top: calc(100vh - ${p.$position * 52}px);`
+        case VisibilityState.NONE:
+        default:
+          return 'right: -500px;'
+      }
+    } else {
+      switch (p.$reportingFormVisibility) {
+        case VisibilityState.VISIBLE:
+          return 'right: 0px;'
+        case VisibilityState.REDUCED:
+          return `right: 0px; top: calc(100vh - ${p.$position * 52}px);`
         case VisibilityState.NONE:
         default:
           return 'right: -500px;'

@@ -43,10 +43,14 @@ import { getReportingTitle } from '../utils'
 
 export function ReportingForm({ reducedReportingsOnContext, selectedReporting, setShouldValidateOnChange }) {
   const dispatch = useDispatch()
-  const {
-    global: { reportingFormVisibility },
-    multiReportings: { isConfirmCancelDialogVisible }
-  } = useAppSelector(state => state)
+  const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
+
+  const isConfirmCancelDialogVisible = useAppSelector(state => state.multiReportings.isConfirmCancelDialogVisible)
+  const activeReportingId = useAppSelector(state => state.multiReportings.activeReportingId)
+  const reportingContext =
+    useAppSelector(state =>
+      activeReportingId ? state.multiReportings.selectedReportings[activeReportingId]?.context : undefined
+    ) || ReportingContext.MAP
 
   const { dirty, errors, setFieldValue, setValues, values } = useFormikContext<Partial<Reporting>>()
   const [themeField] = useField('theme')
@@ -54,17 +58,16 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
   const [isDeleteModalOpen, setIsDeletModalOpen] = useState(false)
   const [mustIncreaseValidity, setMustIncreaseValidity] = useState(false)
 
-  const isSideWindowContext = selectedReporting?.context === ReportingContext.SIDE_WINDOW
+  const isMapContext = reportingContext === ReportingContext.MAP
 
   useSyncFormValuesWithRedux(multiReportingsActions.setReportingState, multiReportingsActions.setIsDirty)
 
   useEffect(() => {
-    if (selectedReporting?.reporting) {
-      setValues(selectedReporting.reporting)
-      dispatch(multiReportingsActions.setReportingContext(selectedReporting.context))
+    if (selectedReporting) {
+      setValues(selectedReporting)
+      dispatch(multiReportingsActions.setReportingContext(reportingContext))
     }
-    setValues(selectedReporting.reporting)
-  }, [selectedReporting, dispatch, setValues])
+  }, [selectedReporting, dispatch, setValues, reportingContext])
 
   const reportTypeOptions = getOptionsFromLabelledEnum(ReportingTypeLabels)
 
@@ -80,10 +83,10 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
   }
 
   const reduceOrExpandReporting = () => {
-    if (!isSideWindowContext) {
+    if (isMapContext) {
       dispatch(hideSideButtons())
     }
-    dispatch(reduceOrExpandReportingForm(selectedReporting?.context || ReportingContext.MAP))
+    dispatch(reduceOrExpandReportingForm(reportingContext))
   }
 
   const returnToEdition = () => {
@@ -92,10 +95,10 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
 
   const confirmCloseReporting = () => {
     dispatch(multiReportingsActions.setIsConfirmCancelDialogVisible(false))
-    dispatch(multiReportingsActions.deleteSelectedReporting(selectedReporting?.reporting.id))
+    dispatch(multiReportingsActions.deleteSelectedReporting(selectedReporting.id))
     dispatch(
       setReportingFormVisibility({
-        context: selectedReporting?.context,
+        context: reportingContext,
         visibility: VisibilityState.NONE
       })
     )
@@ -110,7 +113,7 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
       dispatch(multiReportingsActions.setIsConfirmCancelDialogVisible(true))
     } else {
       setReportingFormVisibility({
-        context: selectedReporting?.context,
+        context: reportingContext,
         visibility: VisibilityState.NONE
       })
     }
@@ -127,13 +130,13 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
   return (
     <StyledFormContainer>
       <CancelEditDialog
-        key={`cancel-edit-modal-${selectedReporting?.reporting?.id}`}
+        key={`cancel-edit-modal-${selectedReporting?.id}`}
         onCancel={returnToEdition}
         onConfirm={confirmCloseReporting}
         open={isConfirmCancelDialogVisible}
       />
       <DeleteModal
-        key={`delete-modal-${selectedReporting?.reporting?.id}`}
+        key={`delete-modal-${selectedReporting?.id}`}
         context="reporting"
         isAbsolute={false}
         onCancel={cancelDeleteReporting}
@@ -145,13 +148,13 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
       <StyledHeader>
         <StyledTitle data-cy="reporting-title">
           <Icon.Report />
-          {getReportingTitle(selectedReporting?.reporting)}
+          {getReportingTitle(values)}
         </StyledTitle>
 
         <StyledHeaderButtons>
           <StyledChevronIcon
             $isOpen={
-              reportingFormVisibility.context === selectedReporting?.context &&
+              reportingFormVisibility.context === reportingContext &&
               reportingFormVisibility.visibility === VisibilityState.REDUCED
             }
             accent={Accent.TERTIARY}
@@ -162,7 +165,7 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
           <IconButton
             accent={Accent.TERTIARY}
             Icon={Icon.Close}
-            onClick={() => dispatch(closeReporting(selectedReporting?.reporting.id, selectedReporting?.context))}
+            onClick={() => dispatch(closeReporting(selectedReporting.id, reportingContext))}
           />
         </StyledHeaderButtons>
       </StyledHeader>

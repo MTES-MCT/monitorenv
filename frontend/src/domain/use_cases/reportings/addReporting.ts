@@ -20,13 +20,13 @@ export const addReporting =
       reporting: getReportingInitialValues({ createdAt: new Date().toISOString(), id, ...partialReporting })
     }
 
-    await dispatch(multiReportingsActions.setReporting(newReporting))
-    // await dispatch(multiReportingsActions.setActiveReportingId(id))
-
     await dispatch(
       setReportingFormVisibility({
         context: reportingContext,
         visibility: VisibilityState.VISIBLE
       })
     )
+
+    await dispatch(multiReportingsActions.setReporting(newReporting))
+    await dispatch(multiReportingsActions.setActiveReportingId(id))
   }

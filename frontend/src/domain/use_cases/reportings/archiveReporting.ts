@@ -1,5 +1,6 @@
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { setToast } from '../../shared_slices/Global'
+import { multiReportingsActions } from '../../shared_slices/MultiReportings'
 
 import type { Reporting } from '../../entities/reporting'
 
@@ -8,7 +9,8 @@ export const archiveReportingFromTable = (id: number) => async (dispatch, getSta
     multiReportings: { activeReportingId, selectedReportings }
   } = getState()
   try {
-    let reportingToArchive = selectedReportings[id].reporting
+    const isReportingExistInLocalStore = selectedReportings[id] || undefined
+    let reportingToArchive = isReportingExistInLocalStore ? selectedReportings[id].reporting : undefined
     if (id !== activeReportingId || !reportingToArchive) {
       const { data: reporting } = await dispatch(reportingsAPI.endpoints.getReporting.initiate(id))
       reportingToArchive = reporting
@@ -27,6 +29,9 @@ export const archiveReportingFromTable = (id: number) => async (dispatch, getSta
           type: 'success'
         })
       )
+      if (isReportingExistInLocalStore) {
+        dispatch(multiReportingsActions.setReporting({ ...selectedReportings[id].reporting, reporting: response.data }))
+      }
     }
   } catch (error) {
     dispatch(setToast({ containerId: 'sideWindow', message: error }))
