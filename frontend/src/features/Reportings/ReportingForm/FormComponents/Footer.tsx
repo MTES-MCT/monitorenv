@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 
 import { ReportingStatusEnum, type Reporting, getReportingStatus } from '../../../../domain/entities/reporting'
 import { ReportingContext } from '../../../../domain/shared_slices/Global'
-import { reopenReporting } from '../../../../domain/use_cases/reportings/reopenReporting'
+import { reopenReporting } from '../../../../domain/use_cases/reporting/reopenReporting'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { StyledButton, StyledSubmitButton, StyledDeleteButton, StyledFooter } from '../../style'
 import { isNewReporting } from '../../utils'

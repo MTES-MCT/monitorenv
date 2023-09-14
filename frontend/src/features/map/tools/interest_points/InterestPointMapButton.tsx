@@ -10,7 +10,7 @@ import {
   drawInterestPoint,
   endInterestPointDraw
 } from '../../../../domain/shared_slices/InterestPoint'
-import { reduceReportingFormOnMap } from '../../../../domain/use_cases/reportings/reduceReportingFormOnMap'
+import { reduceReportingFormOnMap } from '../../../../domain/use_cases/reporting/reduceReportingFormOnMap'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useEscapeFromKeyboardAndExecute } from '../../../../hooks/useEscapeFromKeyboardAndExecute'

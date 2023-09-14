@@ -20,9 +20,9 @@ import {
   VisibilityState
 } from '../../../domain/shared_slices/Global'
 import { reportingActions } from '../../../domain/shared_slices/reporting'
-import { closeReporting } from '../../../domain/use_cases/reportings/closeReporting'
-import { deleteReporting } from '../../../domain/use_cases/reportings/deleteReporting'
-import { reduceOrExpandReportingForm } from '../../../domain/use_cases/reportings/reduceOrExpandReportingForm'
+import { closeReporting } from '../../../domain/use_cases/reporting/closeReporting'
+import { deleteReporting } from '../../../domain/use_cases/reporting/deleteReporting'
+import { reduceOrExpandReportingForm } from '../../../domain/use_cases/reporting/reduceOrExpandReportingForm'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useSyncFormValuesWithRedux } from '../../../hooks/useSyncFormValuesWithRedux'
 import { DeleteModal } from '../../commonComponents/Modals/Delete'
@@ -59,14 +59,14 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
 
   const isMapContext = reportingContext === ReportingContext.MAP
 
-  useSyncFormValuesWithRedux(reportingActions.setReportingState, reportingActions.setIsDirty)
-
   useEffect(() => {
     if (selectedReporting) {
       setValues(selectedReporting)
       dispatch(reportingActions.setReportingContext(reportingContext))
     }
   }, [selectedReporting, dispatch, setValues, reportingContext])
+
+  useSyncFormValuesWithRedux(reportingActions.setReportingState, reportingActions.setIsDirty)
 
   const reportTypeOptions = getOptionsFromLabelledEnum(ReportingTypeLabels)
 

@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { ReportingSourceEnum } from '../../../../domain/entities/reporting'
 import { setOverlayCoordinates, ReportingContext } from '../../../../domain/shared_slices/Global'
 import { resetSelectedSemaphore } from '../../../../domain/shared_slices/SemaphoresSlice'
-import { addReporting } from '../../../../domain/use_cases/reportings/addReporting'
+import { addReporting } from '../../../../domain/use_cases/reporting/addReporting'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 

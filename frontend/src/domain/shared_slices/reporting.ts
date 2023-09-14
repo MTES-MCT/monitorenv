@@ -48,8 +48,8 @@ const reportingSlice = createSlice({
       if (!id) {
         return
       }
-      const reporting = state.reportings[id]
 
+      const reporting = state.reportings[id]
       if (reporting) {
         state.reportings[id] = {
           ...reporting,
@@ -59,10 +59,15 @@ const reportingSlice = createSlice({
     },
     setReporting(state, action: PayloadAction<ReportingType>) {
       const { id } = action.payload.reporting
-      if (!state.reportings) {
-        state.reportings = { [id]: action.payload }
-      } else {
+      if (!id) {
+        return
+      }
+
+      const reporting = state.reportings[id]
+      if (reporting) {
         state.reportings[id] = action.payload
+      } else {
+        state.reportings = { ...state.reportings, [id]: action.payload }
       }
     },
     setReportingContext(state, action: PayloadAction<ReportingContext>) {
@@ -70,8 +75,8 @@ const reportingSlice = createSlice({
       if (!id) {
         return
       }
-      const reporting = state.reportings[id]
 
+      const reporting = state.reportings[id]
       if (reporting) {
         state.reportings[id] = {
           ...reporting,
@@ -79,8 +84,8 @@ const reportingSlice = createSlice({
         }
       }
     },
-    setReportingState(state, action: PayloadAction<Reporting>) {
-      const id = state.activeReportingId
+    setReportingState(state, action: PayloadAction<AtLeast<Reporting, 'id'>>) {
+      const { id } = action.payload
       if (!id) {
         return
       }

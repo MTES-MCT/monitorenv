@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setDisplayedItems, ReportingContext } from '../../../domain/shared_slices/Global'
-import { addReporting } from '../../../domain/use_cases/reportings/addReporting'
+import { addReporting } from '../../../domain/use_cases/reporting/addReporting'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { sideWindowActions } from '../../SideWindow/slice'
 import { ReportingFilterContext, ReportingsFilters } from '../Filters'

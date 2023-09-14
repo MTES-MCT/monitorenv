@@ -1,4 +1,5 @@
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
+import _ from 'lodash'
 import { useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
@@ -7,26 +8,26 @@ import { ReportingFormWithContext } from './ReportingForm'
 import { StyledChevronIcon, StyledHeader, StyledHeaderButtons, StyledTitle } from './style'
 import { getReportingTitle } from './utils'
 import { hideSideButtons, ReportingContext, VisibilityState } from '../../domain/shared_slices/Global'
-import { closeReporting } from '../../domain/use_cases/reportings/closeReporting'
-import { reduceOrExpandReportingForm } from '../../domain/use_cases/reportings/reduceOrExpandReportingForm'
-import { switchReporting } from '../../domain/use_cases/reportings/switchReporting'
+import { closeReporting } from '../../domain/use_cases/reporting/closeReporting'
+import { reduceOrExpandReportingForm } from '../../domain/use_cases/reporting/reduceOrExpandReportingForm'
+import { switchReporting } from '../../domain/use_cases/reporting/switchReporting'
 import { useAppSelector } from '../../hooks/useAppSelector'
-
-import type { ReportingType } from '../../domain/shared_slices/reporting'
 
 export function Reportings({ context }: { context: ReportingContext }) {
   const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const reportings = useAppSelector(state => state.reporting.reportings)
+  const reportingContext = useAppSelector(state =>
+    activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined
+  )
 
   const dispatch = useDispatch()
   const reportingsTabs = useMemo(
     () =>
-      (reportings &&
-        Object.values(reportings).filter(
-          (reporting: ReportingType) => reporting.context === context && activeReportingId !== reporting?.reporting?.id
-        )) ||
-      [],
+      _.chain(Object.entries(reportings))
+        .filter(([key, reporting]) => reporting.context === context && String(activeReportingId) !== key)
+        .map(filteredReportings => filteredReportings[1])
+        .value(),
     [reportings, activeReportingId, context]
   )
 
@@ -47,7 +48,11 @@ export function Reportings({ context }: { context: ReportingContext }) {
   return (
     <>
       {reportingFormVisibility.context === context && (
-        <ReportingFormWithContext key={context} context={context} totalReportings={reportingsTabs.length} />
+        <ReportingFormWithContext
+          key={reportingContext}
+          context={reportingContext}
+          totalReportings={reportingsTabs.length}
+        />
       )}
 
       {reportingsTabs.map((reporting, index) => {
@@ -81,7 +86,7 @@ export function Reportings({ context }: { context: ReportingContext }) {
                 <IconButton
                   accent={Accent.TERTIARY}
                   Icon={Icon.Close}
-                  onClick={() => dispatch(closeReporting(reducedReporting?.id, context))}
+                  onClick={() => dispatch(closeReporting(reducedReporting?.id, reporting.context))}
                 />
               </StyledHeaderButtons>
             </StyledHeader>
@@ -113,7 +118,7 @@ const StyledContainer = styled.div<{
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: top 0.5s ease-out;
+  transition: right 0.5s ease-out, top 0.5s ease-out;
   z-index: 100;
 
   ${p => {
@@ -127,7 +132,7 @@ const StyledContainer = styled.div<{
           return `right: 12px;`
         case VisibilityState.NONE:
         default:
-          return 'right: -500px;'
+          return 'right: 8px;'
       }
     }
 

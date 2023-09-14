@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { SearchSemaphores } from './SearchSemaphores'
 import { setDisplayedItems, ReportingContext, VisibilityState } from '../../../domain/shared_slices/Global'
-import { reduceReportingFormOnMap } from '../../../domain/use_cases/reportings/reduceReportingFormOnMap'
+import { reduceReportingFormOnMap } from '../../../domain/use_cases/reporting/reduceReportingFormOnMap'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'

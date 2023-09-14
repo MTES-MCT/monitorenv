@@ -16,7 +16,7 @@ import styled from 'styled-components'
 import { ReportingTypeEnum, getFormattedReportingId, ReportingTypeLabels } from '../../../../domain/entities/reporting'
 import { ReportingContext } from '../../../../domain/shared_slices/Global'
 import { reportingActions } from '../../../../domain/shared_slices/reporting'
-import { editReportingInLocalStore } from '../../../../domain/use_cases/reportings/editReportingInLocalStore'
+import { editReportingInLocalStore } from '../../../../domain/use_cases/reporting/editReportingInLocalStore'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 export function ReportingCard({

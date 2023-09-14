@@ -1,20 +1,20 @@
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { archiveMultipleReportings } from '../../../domain/use_cases/reportings/archiveMultipleReportings'
-import { deleteMultipleReportings } from '../../../domain/use_cases/reportings/deleteMultipleReportings'
+import { archiveReportings } from '../../../domain/use_cases/reporting/archiveReportings'
+import { deleteReportings } from '../../../domain/use_cases/reporting/deleteReportings'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { pluralize } from '../../../utils/pluralize'
 
 export function GroupActions({ archiveOrDeleteReportingsCallback, reportingsIds, totalReportings }) {
   const dispatch = useAppDispatch()
 
-  const archiveReportings = () => {
-    dispatch(archiveMultipleReportings(reportingsIds, archiveOrDeleteReportingsCallback))
+  const archiveSeveralReportings = () => {
+    dispatch(archiveReportings(reportingsIds, archiveOrDeleteReportingsCallback))
   }
 
-  const deleteReportings = () => {
-    dispatch(deleteMultipleReportings(reportingsIds, archiveOrDeleteReportingsCallback))
+  const deleteSeveralReportings = () => {
+    dispatch(deleteReportings(reportingsIds, archiveOrDeleteReportingsCallback))
   }
 
   return (
@@ -24,14 +24,14 @@ export function GroupActions({ archiveOrDeleteReportingsCallback, reportingsIds,
           accent={Accent.SECONDARY}
           disabled={reportingsIds.length === 0}
           Icon={Icon.Archive}
-          onClick={archiveReportings}
+          onClick={archiveSeveralReportings}
           title="Archiver"
         />
         <IconButton
           accent={Accent.SECONDARY}
           disabled={reportingsIds.length === 0}
           Icon={Icon.Delete}
-          onClick={deleteReportings}
+          onClick={deleteSeveralReportings}
           title="Supprimer"
         />
       </StyledButtonsContainer>

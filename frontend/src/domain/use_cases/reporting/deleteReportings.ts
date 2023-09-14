@@ -2,7 +2,7 @@ import { reportingsAPI } from '../../../api/reportingsAPI'
 import { setReportingFormVisibility, setToast, VisibilityState } from '../../shared_slices/Global'
 import { reportingActions } from '../../shared_slices/reporting'
 
-export const deleteMultipleReportings = (ids: number[], resetSelectionFn: () => void) => async (dispatch, getState) => {
+export const deleteReportings = (ids: number[], resetSelectionFn: () => void) => async (dispatch, getState) => {
   const { activeReportingId, context, selectedReportingIdOnMap } = getState().reporting
 
   try {
