@@ -21,7 +21,6 @@ export function Mission() {
     sideWindow
   } = useAppSelector(state => state)
   const dispatch = useDispatch()
-
   const [shouldValidateOnChange, setShouldValidateOnChange] = useState(false)
 
   const routeParams = getMissionPageRoute(sideWindow.currentPath)
@@ -36,6 +35,7 @@ export function Mission() {
     () => selectedMissions.find(mis => mis.mission.id === idTyped),
     [idTyped, selectedMissions]
   )
+
   const missionFormikValues = useMemo(() => {
     if (missionIsNewMission) {
       return missionFactory(undefined, idTyped)

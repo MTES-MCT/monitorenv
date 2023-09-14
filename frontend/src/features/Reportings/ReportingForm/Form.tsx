@@ -24,8 +24,8 @@ import { closeReporting } from '../../../domain/use_cases/reporting/closeReporti
 import { deleteReporting } from '../../../domain/use_cases/reporting/deleteReporting'
 import { reduceOrExpandReportingForm } from '../../../domain/use_cases/reporting/reduceOrExpandReportingForm'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { useSyncFormValuesWithRedux } from '../../../hooks/useSyncFormValuesWithRedux'
 import { DeleteModal } from '../../commonComponents/Modals/Delete'
+import { useSyncFormValuesWithRedux } from '../hooks/useSyncFormValuesWithRedux'
 import {
   Separator,
   StyledForm,
