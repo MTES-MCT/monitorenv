@@ -6,7 +6,7 @@ import type { Reporting } from '../../entities/reporting'
 
 export const reopenReporting =
   (values: Reporting, reportingContext: ReportingContext) => async (dispatch, getState) => {
-    const { reportings } = getState().erporting
+    const { reportings } = getState().reporting
     try {
       const response = await dispatch(reportingsAPI.endpoints.updateReporting.initiate(values))
       if ('data' in response) {
