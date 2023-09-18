@@ -10,7 +10,7 @@ class ArchiveReportings(
     private val reportingRepository: IReportingRepository,
 ) {
 
-  private val logger: Logger = LoggerFactory.getLogger(DeleteReporting::class.java)
+  private val logger: Logger = LoggerFactory.getLogger(ArchiveReportings::class.java)
 
   @Throws(IllegalArgumentException::class)
   fun execute(ids: List<Int>) {

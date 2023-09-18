@@ -32,124 +32,113 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/bff/v1/reportings")
 @Tag(description = "API des Signalements", name = "Reportings")
 class ReportingsController(
-                private val createOrUpdateReporting: CreateOrUpdateReporting,
-                private val getReportingById: GetReportingById,
-                private val getReportings: GetReportings,
-                private val deleteReporting: DeleteReporting,
-                private val deleteReportings: DeleteReportings,
-                private val archiveReportings: ArchiveReportings,
+        private val createOrUpdateReporting: CreateOrUpdateReporting,
+        private val getReportingById: GetReportingById,
+        private val getReportings: GetReportings,
+        private val deleteReporting: DeleteReporting,
+        private val deleteReportings: DeleteReportings,
+        private val archiveReportings: ArchiveReportings,
 ) {
 
-        @GetMapping("")
-        @Operation(summary = "Get reportings")
-        fun getReportingsController(
-                        @Parameter(description = "page number")
-                        @RequestParam(name = "pageNumber")
-                        pageNumber: Int?,
-                        @Parameter(description = "page size")
-                        @RequestParam(name = "pageSize")
-                        pageSize: Int?,
-                        @Parameter(description = "Reporting created after date")
-                        @RequestParam(name = "startedAfterDateTime", required = false)
-                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-                        startedAfterDateTime: ZonedDateTime?,
-                        @Parameter(description = "Reporting created before date")
-                        @RequestParam(name = "startedBeforeDateTime", required = false)
-                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-                        startedBeforeDateTime: ZonedDateTime?,
-                        @Parameter(description = "Reporting type")
-                        @RequestParam(name = "reportingType", required = false)
-                        reportingType: List<ReportingTypeEnum>?,
-                        @Parameter(description = "Facades")
-                        @RequestParam(name = "seaFronts", required = false)
-                        seaFronts: List<String>?,
-                        @Parameter(description = "Reporting source types")
-                        @RequestParam(name = "sourcesType", required = false)
-                        sourcesType: List<SourceTypeEnum>?,
-                        @Parameter(description = "Reporting status")
-                        @RequestParam(name = "status", required = false)
-                        status: List<String>?,
-        ): List<ReportingDetailedDataOutput> {
-                return getReportings.execute(
-                                                pageNumber = pageNumber,
-                                                pageSize = pageSize,
-                                                reportingType = reportingType,
-                                                seaFronts = seaFronts,
-                                                sourcesType = sourcesType,
-                                                startedAfterDateTime = startedAfterDateTime,
-                                                startedBeforeDateTime = startedBeforeDateTime,
-                                                status = status,
-                                )
-                                .map {
-                                        ReportingDetailedDataOutput.fromReporting(
-                                                        it.first,
-                                                        it.second,
-                                                        it.third
-                                        )
-                                }
-        }
-
-        @PutMapping("", consumes = ["application/json"])
-        @Operation(summary = "Create a new reporting")
-        @ResponseStatus(HttpStatus.CREATED)
-        fun createReportingController(
-                        @RequestBody createReporting: CreateOrUpdateReportingDataInput,
-        ): ReportingDataOutput {
-                val newReporting = createReporting.toReportingEntity()
-                val createdReporting = createOrUpdateReporting.execute(newReporting)
-                return ReportingDataOutput.fromReporting(
-                                createdReporting.first,
-                                createdReporting.second,
-                                createdReporting.third,
+    @GetMapping("")
+    @Operation(summary = "Get reportings")
+    fun getReportingsController(
+            @Parameter(description = "page number")
+            @RequestParam(name = "pageNumber")
+            pageNumber: Int?,
+            @Parameter(description = "page size") @RequestParam(name = "pageSize") pageSize: Int?,
+            @Parameter(description = "Reporting created after date")
+            @RequestParam(name = "startedAfterDateTime", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            startedAfterDateTime: ZonedDateTime?,
+            @Parameter(description = "Reporting created before date")
+            @RequestParam(name = "startedBeforeDateTime", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            startedBeforeDateTime: ZonedDateTime?,
+            @Parameter(description = "Reporting type")
+            @RequestParam(name = "reportingType", required = false)
+            reportingType: List<ReportingTypeEnum>?,
+            @Parameter(description = "Facades")
+            @RequestParam(name = "seaFronts", required = false)
+            seaFronts: List<String>?,
+            @Parameter(description = "Reporting source types")
+            @RequestParam(name = "sourcesType", required = false)
+            sourcesType: List<SourceTypeEnum>?,
+            @Parameter(description = "Reporting status")
+            @RequestParam(name = "status", required = false)
+            status: List<String>?,
+    ): List<ReportingDetailedDataOutput> {
+        return getReportings.execute(
+                        pageNumber = pageNumber,
+                        pageSize = pageSize,
+                        reportingType = reportingType,
+                        seaFronts = seaFronts,
+                        sourcesType = sourcesType,
+                        startedAfterDateTime = startedAfterDateTime,
+                        startedBeforeDateTime = startedBeforeDateTime,
+                        status = status,
                 )
-        }
+                .map { ReportingDetailedDataOutput.fromReporting(it.first, it.second, it.third) }
+    }
 
-        @GetMapping("/{id}")
-        @Operation(summary = "Get reporting by id")
-        fun getReportingByIdController(
-                        @PathParam("reporting id") @PathVariable(name = "id") id: Int,
-        ): ReportingDataOutput {
-                return getReportingById.execute(id).let {
-                        ReportingDataOutput.fromReporting(it.first, it.second, it.third)
-                }
-        }
+    @PutMapping("", consumes = ["application/json"])
+    @Operation(summary = "Create a new reporting")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun createReportingController(
+            @RequestBody createReporting: CreateOrUpdateReportingDataInput,
+    ): ReportingDataOutput {
+        val newReporting = createReporting.toReportingEntity()
+        val createdReporting = createOrUpdateReporting.execute(newReporting)
+        return ReportingDataOutput.fromReporting(
+                createdReporting.first,
+                createdReporting.second,
+                createdReporting.third,
+        )
+    }
 
-        @PutMapping(value = ["/{id}"], consumes = ["application/json"])
-        @Operation(summary = "update a reporting")
-        fun updateReportingController(
-                        @PathParam("reporting id") @PathVariable(name = "id") id: Int,
-                        @RequestBody reporting: CreateOrUpdateReportingDataInput,
-        ): ReportingDataOutput {
-                require(id == reporting.id) { "id in path and body must be the same" }
-                return createOrUpdateReporting.execute(
-                                                reporting.toReportingEntity(),
-                                )
-                                .let {
-                                        ReportingDataOutput.fromReporting(
-                                                        it.first,
-                                                        it.second,
-                                                        it.third
-                                        )
-                                }
+    @GetMapping("/{id}")
+    @Operation(summary = "Get reporting by id")
+    fun getReportingByIdController(
+            @PathParam("reporting id") @PathVariable(name = "id") id: Int,
+    ): ReportingDataOutput {
+        return getReportingById.execute(id).let {
+            ReportingDataOutput.fromReporting(it.first, it.second, it.third)
         }
+    }
 
-        @DeleteMapping(value = ["/{id}"])
-        @Operation(summary = "Delete a reporting")
-        fun deleteController(
-                        @PathParam("Id") @PathVariable(name = "id") id: Int,
-        ) {
-                deleteReporting.execute(id = id)
-        }
+    @PutMapping(value = ["/{id}"], consumes = ["application/json"])
+    @Operation(summary = "update a reporting")
+    fun updateReportingController(
+            @PathParam("reporting id") @PathVariable(name = "id") id: Int,
+            @RequestBody reporting: CreateOrUpdateReportingDataInput,
+    ): ReportingDataOutput {
+        require(id == reporting.id) { "id in path and body must be the same" }
+        return createOrUpdateReporting.execute(
+                        reporting.toReportingEntity(),
+                )
+                .let { ReportingDataOutput.fromReporting(it.first, it.second, it.third) }
+    }
 
-        @PutMapping(value = ["/delete"])
-        @Operation(summary = "Delete multiple reportings")
-        fun deleteReportingsController(@RequestBody ids: List<Int>) {
-                deleteReportings.execute(ids)
-        }
+    @DeleteMapping(value = ["/{id}"])
+    @Operation(summary = "Delete a reporting")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteController(
+            @PathParam("Id") @PathVariable(name = "id") id: Int,
+    ) {
+        deleteReporting.execute(id = id)
+    }
 
-        @PutMapping(value = ["/archive"])
-        @Operation(summary = "Archive multiple reportings")
-        fun archiveReportingsController(@RequestBody ids: List<Int>) {
-                archiveReportings.execute(ids)
-        }
+    @PutMapping(value = ["/delete"])
+    @Operation(summary = "Delete multiple reportings")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteReportingsController(@RequestBody ids: List<Int>) {
+        deleteReportings.execute(ids)
+    }
+
+    @PutMapping(value = ["/archive"])
+    @Operation(summary = "Archive multiple reportings")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun archiveReportingsController(@RequestBody ids: List<Int>) {
+        archiveReportings.execute(ids)
+    }
 }

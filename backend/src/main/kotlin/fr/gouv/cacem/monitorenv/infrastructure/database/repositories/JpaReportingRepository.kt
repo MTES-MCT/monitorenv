@@ -76,6 +76,11 @@ class JpaReportingRepository(
         dbReportingRepository.archiveReportings(ids)
     }
 
+    @Transactional
+    override fun deleteReportings(ids: List<Int>) {
+        dbReportingRepository.deleteReportings(ids)
+    }
+
     private fun convertToString(array: List<String>?): String {
         return array?.joinToString(separator = ",", prefix = "{", postfix = "}") ?: "{}"
     }

@@ -22,4 +22,5 @@ interface IReportingRepository {
     fun count(): Long
     fun archiveOutdatedReportings(): Int
     fun archiveReportings(ids: List<Int>)
+    fun deleteReportings(ids: List<Int>)
 }
