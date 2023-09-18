@@ -34,7 +34,7 @@ infractions.flow.schedule = CronSchedule("2 8,14 * * *")
 refresh_materialized_view.flow.schedule = Schedule(
     clocks=[
         clocks.CronClock(
-            "30 12 * * *",
+            "30 * * * *",
             parameter_defaults={
                 "view_name": "analytics_actions",
             },
