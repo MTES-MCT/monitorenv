@@ -107,14 +107,17 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
     setIsDeletModalOpen(true)
   }
 
-  const cancelNewReporting = () => {
+  const cancelNewReporting = async () => {
     if (dirty) {
       dispatch(reportingActions.setIsConfirmCancelDialogVisible(true))
     } else {
-      setReportingFormVisibility({
-        context: reportingContext,
-        visibility: VisibilityState.NONE
-      })
+      await dispatch(reportingActions.deleteSelectedReporting(selectedReporting.id))
+      dispatch(
+        setReportingFormVisibility({
+          context: reportingContext,
+          visibility: VisibilityState.NONE
+        })
+      )
     }
   }
 

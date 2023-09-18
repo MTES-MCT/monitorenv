@@ -140,7 +140,7 @@ export function Source() {
         {errors.sourceType && <FieldError>{errors.sourceType}</FieldError>}
       </div>
       {values?.sourceType === ReportingSourceEnum.SEMAPHORE && (
-        <SemaphoreWrapper>
+        <SemaphoreWrapper $hasError={!!errors.semaphoreId}>
           <FormikSelect
             customSearch={customSearchSemaphore}
             data-cy="add-semaphore-source"
@@ -171,13 +171,13 @@ export function Source() {
   )
 }
 
-const SemaphoreWrapper = styled.div`
+const SemaphoreWrapper = styled.div<{ $hasError: boolean }>`
   display: flex;
   gap: 8px;
   > div {
     flex: 1;
   }
   > button {
-    align-self: self-end;
+    align-self: ${p => (p.$hasError ? 'center' : 'self-end')};
   }
 `
