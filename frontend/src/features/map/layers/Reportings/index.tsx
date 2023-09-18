@@ -55,7 +55,7 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
         style: reportingPinStyleFn,
         updateWhileAnimating: true,
         updateWhileInteracting: true,
-        zIndex: Layers.REPORTINGS.zIndex
+        zIndex: Layers.REPORTING_SELECTED.zIndex
       })
       vectorLayerRef.current.name = Layers.REPORTINGS.code
     }

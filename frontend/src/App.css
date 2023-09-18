@@ -57,3 +57,15 @@
   width: 0;
   height: 0;
 }
+
+.overlay-reporting-hover {
+  z-index: 5000;
+  width: 0;
+  height: 0;
+}
+
+.overlay-reporting-selected {
+  z-index: 4000;
+  width: 0;
+  height: 0;
+}

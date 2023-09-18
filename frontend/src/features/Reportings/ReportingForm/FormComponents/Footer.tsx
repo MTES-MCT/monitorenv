@@ -46,12 +46,13 @@ export function Footer({ onCancel, onDelete, setMustIncreaseValidity, setShouldV
 
   const handleArchive = async () => {
     await setFieldValue('isArchived', true)
-    validateForm().then(errors => {
+    validateForm().then(async errors => {
       if (_.isEmpty(errors)) {
         handleSubmit()
 
         return
       }
+      await setFieldValue('isArchived', false)
       setShouldValidateOnChange(true)
     })
   }
