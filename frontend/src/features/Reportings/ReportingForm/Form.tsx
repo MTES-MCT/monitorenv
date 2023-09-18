@@ -66,7 +66,7 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
     }
   }, [selectedReporting, dispatch, setValues, reportingContext])
 
-  useSyncFormValuesWithRedux(reportingActions.setReportingState, reportingActions.setIsDirty)
+  useSyncFormValuesWithRedux()
 
   const reportTypeOptions = getOptionsFromLabelledEnum(ReportingTypeLabels)
 
