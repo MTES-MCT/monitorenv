@@ -6,7 +6,9 @@ import { batch } from 'react-redux'
 import { DistanceUnit, OPENLAYERS_PROJECTION } from '../../entities/map/constants'
 import { addMeasurementDrawed, resetCircleMeasurementInDrawing } from '../../shared_slices/Measurement'
 
-export const saveMeasurement = (feature, measurement, distanceUnit) => dispatch => {
+export const saveMeasurement = (feature, measurement) => (dispatch, getState) => {
+  const { distanceUnit } = getState().map
+
   feature.setId(feature.ol_uid)
 
   if (feature.getGeometry() instanceof Circle) {

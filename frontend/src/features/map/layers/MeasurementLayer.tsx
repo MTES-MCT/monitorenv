@@ -199,7 +199,7 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
       })
 
       draw.on(DRAW_END_EVENT, event => {
-        dispatch(saveMeasurement(event.feature, measurementInProgressRef.current?.measurement, distanceUnit))
+        dispatch(saveMeasurement(event.feature, measurementInProgressRef.current?.measurement))
         unByKey(listener)
         dispatch(resetMeasurementTypeToAdd())
         setMeasurementInProgress(null)
@@ -212,7 +212,9 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
       addEmptyNextMeasurement()
       drawNewFeatureOnMap()
     }
-  }, [dispatch, map, measurementTypeToAdd, distanceUnit])
+    // we don't want to draw  multiple circle if the user changes the distance unit
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, map, measurementTypeToAdd])
 
   useEffect(() => {
     if (!measurementTypeToAdd) {
@@ -272,7 +274,7 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
         style: [measurementStyle, measurementStyleWithCenter]
       })
 
-      dispatch(saveMeasurement(circleFeature, circleMeasurementToAdd?.circleRadiusToAdd, distanceUnit))
+      dispatch(saveMeasurement(circleFeature, circleMeasurementToAdd?.circleRadiusToAdd))
     }
 
     addCustomCircleMeasurement()
