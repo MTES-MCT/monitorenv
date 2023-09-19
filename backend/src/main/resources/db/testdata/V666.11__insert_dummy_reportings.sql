@@ -19,7 +19,8 @@ INSERT INTO reportings (
     is_unit_available,
     created_at,
     validity_time,
-    is_deleted) 
+    is_deleted,
+    is_archived) 
 VALUES
 (
     1,
@@ -42,6 +43,7 @@ VALUES
     true,
     now() - INTERVAL '3 days',
     24,
+    false,
     false
     ),
 (
@@ -65,6 +67,7 @@ VALUES
     true,
     now() - INTERVAL '2 days',
     2,
+    false,
     false
 ),
 (
@@ -88,6 +91,7 @@ VALUES
     true,
     now() - INTERVAL '1 hour',
     1,
+    false,
     false
 ),
 (
@@ -111,6 +115,7 @@ VALUES
     true,
     now() - INTERVAL '3 hour',
     4,
+    false,
     false
 ),
 (
@@ -134,6 +139,7 @@ VALUES
     true,
     now() - INTERVAL '1 hour',
     6,
+    false,
     false
 );
 SELECT setval('reportings_id_seq', 6, false);

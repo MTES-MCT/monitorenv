@@ -10,7 +10,7 @@ const DEFAULT_TOAST_TYPE = 'error'
 
 const DEFAULT_TOAST_OPTIONS: ToastOptions = {
   autoClose: 3000,
-  containerId: 'default',
+  containerId: 'map',
   position: 'bottom-right'
 }
 

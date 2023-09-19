@@ -3,8 +3,8 @@ import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
-import { setDisplayedItems } from '../../../domain/shared_slices/Global'
-import { createAndOpenNewReporting } from '../../../domain/use_cases/reportings/createAndOpenNewReporting'
+import { setDisplayedItems, ReportingContext } from '../../../domain/shared_slices/Global'
+import { addReporting } from '../../../domain/use_cases/reporting/addReporting'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { sideWindowActions } from '../../SideWindow/slice'
 import { ReportingFilterContext, ReportingsFilters } from '../Filters'
@@ -24,7 +24,8 @@ export function SearchReportings() {
   }
 
   const createReporting = () => {
-    dispatch(createAndOpenNewReporting())
+    dispatch(setDisplayedItems({ isSearchReportingsVisible: false }))
+    dispatch(addReporting(ReportingContext.MAP))
   }
 
   const toggleReportingsWindow = () => {

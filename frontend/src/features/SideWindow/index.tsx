@@ -9,11 +9,13 @@ import { sideWindowActions } from './slice'
 import { StyledRouteContainer, Wrapper } from './style'
 import { ErrorBoundary } from '../../components/ErrorBoundary'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
+import { ReportingContext } from '../../domain/shared_slices/Global'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { isMissionOrMissionsPage, isReportingsPage } from '../../utils/routes'
 import { Mission } from '../missions/MissionForm'
 import { Missions } from '../missions/MissionsList'
 import { MissionsNavBar } from '../missions/MissionsNavBar'
+import { Reportings } from '../Reportings'
 import { ReportingsList } from '../Reportings/ReportingsList'
 
 import type { ForwardedRef, MutableRefObject } from 'react'
@@ -81,6 +83,7 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
             </StyledRouteContainer>
           </NewWindowContext.Provider>
         )}
+        <Reportings key="reportings-on-side-window" context={ReportingContext.SIDE_WINDOW} />
         <ToastContainer containerId="sideWindow" enableMultiContainer />
       </Wrapper>
     </ErrorBoundary>

@@ -2,10 +2,11 @@ import { Accent, Dropdown, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { useState } from 'react'
 import styled from 'styled-components'
 
-import { archiveReportingFromTable } from '../../../../domain/use_cases/reportings/archiveReporting'
-import { deleteReporting } from '../../../../domain/use_cases/reportings/deleteReporting'
-import { duplicateReporting } from '../../../../domain/use_cases/reportings/duplicateReporting'
-import { openReporting } from '../../../../domain/use_cases/reportings/openReporting'
+import { ReportingContext } from '../../../../domain/shared_slices/Global'
+import { archiveReportingFromTable } from '../../../../domain/use_cases/reporting/archiveReporting'
+import { deleteReporting } from '../../../../domain/use_cases/reporting/deleteReporting'
+import { duplicateReporting } from '../../../../domain/use_cases/reporting/duplicateReporting'
+import { editReportingInLocalStore } from '../../../../domain/use_cases/reporting/editReportingInLocalStore'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ArchiveModal } from '../../../commonComponents/Modals/Archive'
@@ -18,14 +19,16 @@ const ACTIONS = {
 
 export function ButtonsGroupRow({ id }) {
   const dispatch = useAppDispatch()
-  const {
-    reportingState: { isDirty, selectedReportingId }
-  } = useAppSelector(state => state)
+  const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
+  const isReportingFormDirty = useAppSelector(state =>
+    activeReportingId ? state.reporting.reportings[activeReportingId]?.isFormDirty : false
+  )
+
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false)
 
   const edit = () => {
-    dispatch(openReporting(id))
+    dispatch(editReportingInLocalStore(id, ReportingContext.SIDE_WINDOW))
   }
 
   const duplicate = () => {
@@ -34,7 +37,7 @@ export function ButtonsGroupRow({ id }) {
 
   const archiveOrDelete = action => {
     if (action === ACTIONS.ARCHIVE) {
-      if (id === selectedReportingId && isDirty) {
+      if (activeReportingId && id === activeReportingId && isReportingFormDirty) {
         return setIsArchiveModalOpen(true)
       }
 
@@ -60,8 +63,20 @@ export function ButtonsGroupRow({ id }) {
   return (
     <>
       <ButtonsGroup>
-        <IconButton accent={Accent.TERTIARY} Icon={Icon.Duplicate} onClick={duplicate} title="Dupliquer" />
-        <IconButton accent={Accent.TERTIARY} Icon={Icon.Edit} onClick={edit} title="Editer" />
+        <IconButton
+          accent={Accent.TERTIARY}
+          data-cy={`duplicate-reporting-${id}`}
+          Icon={Icon.Duplicate}
+          onClick={duplicate}
+          title="Dupliquer"
+        />
+        <IconButton
+          accent={Accent.TERTIARY}
+          data-cy={`edit-reporting-${id}`}
+          Icon={Icon.Edit}
+          onClick={edit}
+          title="Editer"
+        />
 
         <StyledDropdown
           accent={Accent.SECONDARY}
@@ -101,8 +116,8 @@ export function ButtonsGroupRow({ id }) {
         onCancel={cancelArchiveReporting}
         onConfirm={confirmArchiveReporting}
         open={isArchiveModalOpen}
-        subTitle="Voulez-vous enregister les modifications en cours et archiver le signalement&nbsp;?"
-        title="Enregister et archiver le signalement&nbsp;?"
+        subTitle="Voulez-vous enregistrer les modifications en cours et archiver le signalement&nbsp;?"
+        title="Enregistrer et archiver le signalement&nbsp;?"
       />
     </>
   )

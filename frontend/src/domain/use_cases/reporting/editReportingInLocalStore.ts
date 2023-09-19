@@ -1,0 +1,45 @@
+import { reportingsAPI } from '../../../api/reportingsAPI'
+import { setReportingFormVisibility, setToast, ReportingContext, VisibilityState } from '../../shared_slices/Global'
+import { reportingActions } from '../../shared_slices/reporting'
+
+export const editReportingInLocalStore =
+  (reportingId: number, reportingContext: ReportingContext) => async (dispatch, getState) => {
+    const reportingToEdit = reportingsAPI.endpoints.getReporting
+    try {
+      const { reportings } = getState().reporting
+
+      let newReporting
+
+      if (reportings[reportingId]) {
+        newReporting = {
+          ...reportings[reportingId],
+          context: reportingContext
+        }
+      } else {
+        // if the reporting not already in reporting state
+        const response = await dispatch(reportingToEdit.initiate(reportingId))
+        if ('data' in response) {
+          const reportingToSave = response.data
+
+          newReporting = {
+            context: reportingContext,
+            isFormDirty: false,
+            reporting: reportingToSave
+          }
+        } else {
+          throw Error('Erreur à la récupération du signalement')
+        }
+      }
+      await dispatch(
+        setReportingFormVisibility({
+          context: reportingContext,
+          visibility: VisibilityState.VISIBLE
+        })
+      )
+
+      await dispatch(reportingActions.setReporting(newReporting))
+      await dispatch(reportingActions.setActiveReportingId(reportingId))
+    } catch (error) {
+      dispatch(setToast({ message: error }))
+    }
+  }

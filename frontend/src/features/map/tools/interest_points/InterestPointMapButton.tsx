@@ -4,13 +4,13 @@ import styled from 'styled-components'
 
 import { EditInterestPoint } from './EditInterestPoint'
 import { MapToolType } from '../../../../domain/entities/map/constants'
-import { setisMapToolVisible, setReportingFormVisibility } from '../../../../domain/shared_slices/Global'
+import { setisMapToolVisible, ReportingContext, VisibilityState } from '../../../../domain/shared_slices/Global'
 import {
   deleteInterestPointBeingDrawed,
   drawInterestPoint,
   endInterestPointDraw
 } from '../../../../domain/shared_slices/InterestPoint'
-import { ReportingFormVisibility } from '../../../../domain/shared_slices/ReportingState'
+import { reduceReportingFormOnMap } from '../../../../domain/use_cases/reporting/reduceReportingFormOnMap'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useEscapeFromKeyboardAndExecute } from '../../../../hooks/useEscapeFromKeyboardAndExecute'
@@ -44,13 +44,18 @@ export function InterestPointMapButton() {
     } else {
       close()
     }
-    if (reportingFormVisibility !== ReportingFormVisibility.NONE) {
-      dispatch(setReportingFormVisibility(ReportingFormVisibility.REDUCED))
-    }
-  }, [dispatch, isOpen, close, reportingFormVisibility])
+    dispatch(reduceReportingFormOnMap())
+  }, [dispatch, isOpen, close])
 
   return (
-    <Wrapper ref={wrapperRef} reportingFormVisibility={reportingFormVisibility}>
+    <Wrapper
+      ref={wrapperRef}
+      reportingFormVisibility={
+        reportingFormVisibility.context === ReportingContext.MAP
+          ? reportingFormVisibility.visibility
+          : VisibilityState.NONE
+      }
+    >
       <MapToolButton
         dataCy="interest-point"
         icon={Icon.Landmark}
@@ -66,9 +71,9 @@ export function InterestPointMapButton() {
   )
 }
 
-const Wrapper = styled.div<{ reportingFormVisibility: ReportingFormVisibility }>`
+const Wrapper = styled.div<{ reportingFormVisibility: VisibilityState }>`
   position: absolute;
   top: 298px;
   transition: right 0.3s ease-out;
-  right: ${p => (p.reportingFormVisibility === ReportingFormVisibility.VISIBLE ? '0' : '10')}px;
+  right: ${p => (p.reportingFormVisibility === VisibilityState.VISIBLE ? '0' : '10')}px;
 `

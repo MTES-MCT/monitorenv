@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled
 
 @UseCase
 class ArchiveOutdatedReportings(
-    private val reportingRepository: IReportingRepository,
+        private val reportingRepository: IReportingRepository,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(ArchiveOutdatedReportings::class.java)
 

@@ -9,7 +9,7 @@ export type Reporting = {
   createdAt: string
   description?: string
   geom: Record<string, any>[]
-  id?: number
+  id: number | string
   isArchived?: boolean
   isControlRequired?: boolean | undefined
   openBy: string

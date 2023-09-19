@@ -6,8 +6,8 @@ import styled from 'styled-components'
 
 import { getPlaceCoordinates, useGooglePlacesAPI } from '../../api/googlePlacesAPI/googlePlacesAPI'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map/constants'
+import { ReportingContext, VisibilityState } from '../../domain/shared_slices/Global'
 import { setFitToExtent } from '../../domain/shared_slices/Map'
-import { ReportingFormVisibility } from '../../domain/shared_slices/ReportingState'
 import { useAppSelector } from '../../hooks/useAppSelector'
 
 export function LocateOnMap() {
@@ -27,7 +27,13 @@ export function LocateOnMap() {
   }
 
   return (
-    <Wrapper reportingFormVisibility={reportingFormVisibility}>
+    <Wrapper
+      $reportingFormVisibility={
+        reportingFormVisibility.context === ReportingContext.MAP
+          ? reportingFormVisibility.visibility
+          : VisibilityState.NONE
+      }
+    >
       <StyledSearch
         data-cy="location-search-input"
         isLabelHidden
@@ -45,14 +51,14 @@ export function LocateOnMap() {
   )
 }
 
-const Wrapper = styled.div<{ reportingFormVisibility: ReportingFormVisibility }>`
+const Wrapper = styled.div<{ $reportingFormVisibility: VisibilityState }>`
   position: absolute;
   top: 10px;
   right: ${p => {
-    switch (p.reportingFormVisibility) {
-      case ReportingFormVisibility.VISIBLE:
+    switch (p.$reportingFormVisibility) {
+      case VisibilityState.VISIBLE:
         return '512'
-      case ReportingFormVisibility.VISIBLE_LEFT:
+      case VisibilityState.VISIBLE_LEFT:
         return '560'
       default:
         return '10'

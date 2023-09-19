@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import { ActionForm } from './ActionForm/ActionForm'
 import { ActionsForm } from './ActionsForm'
 import { GeneralInformationsForm } from './GeneralInformationsForm'
+import { useSyncFormValuesWithRedux } from './hooks/useSyncFormValuesWithRedux'
 import { useUpdateSurveillance } from './hooks/useUpdateSurveillance'
 import { MissionFormBottomBar } from './MissionFormBottomBar'
 import { CancelEditModal } from './modals/CancelEditModal'
@@ -16,12 +17,10 @@ import { ReopenModal } from './modals/ReopenModal'
 import { Mission, MissionSourceEnum, NewMission } from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setToast } from '../../../domain/shared_slices/Global'
-import { setMissionState, setIsFormDirty } from '../../../domain/shared_slices/MissionsState'
 import { multiMissionsActions } from '../../../domain/shared_slices/MultiMissions'
 import { deleteMissionAndGoToMissionsList } from '../../../domain/use_cases/missions/deleteMission'
 import { saveMission } from '../../../domain/use_cases/missions/saveMission'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { useSyncFormValuesWithRedux } from '../../../hooks/useSyncFormValuesWithRedux'
 import { sideWindowActions } from '../../SideWindow/slice'
 import { missionFactory } from '../Missions.helpers'
 
@@ -31,7 +30,7 @@ export function MissionForm({ id, isAlreadyClosed, isNewMission, selectedMission
   const { dirty, handleSubmit, setFieldValue, setValues, validateForm, values } =
     useFormikContext<Partial<Mission | NewMission>>()
 
-  useSyncFormValuesWithRedux(setMissionState, setIsFormDirty)
+  useSyncFormValuesWithRedux()
   useUpdateSurveillance()
 
   useEffect(() => {
