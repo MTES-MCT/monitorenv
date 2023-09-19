@@ -1,5 +1,6 @@
-import { transform } from 'ol/proj'
-import { useCallback, useMemo } from 'react'
+import { boundingExtent } from 'ol/extent'
+import { transform, transformExtent } from 'ol/proj'
+import { useCallback, useMemo, useState } from 'react'
 import { Radio, RadioGroup } from 'rsuite'
 import styled, { css } from 'styled-components'
 
@@ -7,6 +8,7 @@ import { COLORS } from '../../../../constants/constants'
 import { interestPointType } from '../../../../domain/entities/interestPoints'
 import { CoordinatesFormat, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map/constants'
 import { addInterestPoint, updateInterestPointKeyBeingDrawed } from '../../../../domain/shared_slices/InterestPoint'
+import { setFitToExtent } from '../../../../domain/shared_slices/Map'
 import { saveInterestPointFeature } from '../../../../domain/use_cases/interestPoint/saveInterestPointFeature'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -16,6 +18,8 @@ import { ReactComponent as OtherSVG } from '../../../../uiMonitor/icons/Point_in
 import { coordinatesAreDistinct, getCoordinates } from '../../../../utils/coordinates'
 import { SetCoordinates } from '../../../coordinates/SetCoordinates'
 import { MapToolBox } from '../MapToolBox'
+
+import type { Coordinate } from 'ol/coordinate'
 
 // TODO Refactor this component
 // - Move the state logic to the reducer
@@ -27,6 +31,7 @@ type EditInterestPointProps = {
 }
 export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: EditInterestPointProps) {
   const dispatch = useAppDispatch()
+  const [localCoordinates, setLocalCoordinates] = useState<Coordinate>([0, 0])
 
   const { interestPointBeingDrawed, isEditing } = useAppSelector(state => state.interestPoint)
   /** Coordinates formatted in DD [latitude, longitude] */
@@ -92,11 +97,11 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
 
   /**
    * Compare with previous coordinates and update interest point coordinates
-   * @param {number[]} nextCoordinates - Coordinates ([latitude, longitude]) to update, in decimal format.
-   * @param {number[]} coordinates - Previous coordinates ([latitude, longitude]), in decimal format.
+   * @param {Coordinate} nextCoordinates - Coordinates ([latitude, longitude]) to update, in decimal format.
+   * @param {Coordinate} coordinates - Previous coordinates ([latitude, longitude]), in decimal format.
    */
   const updateCoordinates = useCallback(
-    (nextCoordinates: number[], previousCoordinates: number[]) => {
+    (nextCoordinates: Coordinate, previousCoordinates: Coordinate) => {
       if (nextCoordinates?.length) {
         if (!previousCoordinates?.length || coordinatesAreDistinct(nextCoordinates, previousCoordinates)) {
           const [latitude, longitude] = nextCoordinates
@@ -104,6 +109,7 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
             return
           }
 
+          setLocalCoordinates(nextCoordinates)
           // Convert to [longitude, latitude] and OpenLayers projection
           const updatedCoordinates = transform([longitude, latitude], WSG84_PROJECTION, OPENLAYERS_PROJECTION)
           dispatch(
@@ -119,10 +125,14 @@ export function EditInterestPoint({ close, healthcheckTextWarning, isOpen }: Edi
   )
 
   const saveInterestPoint = () => {
-    if (coordinates?.length) {
-      dispatch(saveInterestPointFeature() as any)
+    if (coordinates?.length > 0) {
+      dispatch(saveInterestPointFeature())
       dispatch(addInterestPoint())
       close()
+
+      const formattedCoordinates = [localCoordinates[1], localCoordinates[0]] as Coordinate
+      const extent = transformExtent(boundingExtent([formattedCoordinates]), WSG84_PROJECTION, OPENLAYERS_PROJECTION)
+      dispatch(setFitToExtent(extent))
     }
   }
 

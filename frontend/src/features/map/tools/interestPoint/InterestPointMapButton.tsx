@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { EditInterestPoint } from './EditInterestPoint'
 import { MapToolType } from '../../../../domain/entities/map/constants'
-import { setisMapToolVisible, ReportingContext, VisibilityState } from '../../../../domain/shared_slices/Global'
+import { setIsMapToolVisible, ReportingContext, VisibilityState } from '../../../../domain/shared_slices/Global'
 import {
   deleteInterestPointBeingDrawed,
   drawInterestPoint,
@@ -25,7 +25,7 @@ export function InterestPointMapButton() {
   const wrapperRef = useRef(null)
 
   const close = useCallback(() => {
-    dispatch(setisMapToolVisible(undefined))
+    dispatch(setIsMapToolVisible(undefined))
   }, [dispatch])
 
   useEscapeFromKeyboardAndExecute(close)
@@ -40,7 +40,7 @@ export function InterestPointMapButton() {
   const openOrCloseInterestPoint = useCallback(() => {
     if (!isOpen) {
       dispatch(drawInterestPoint())
-      dispatch(setisMapToolVisible(MapToolType.INTEREST_POINT))
+      dispatch(setIsMapToolVisible(MapToolType.INTEREST_POINT))
     } else {
       close()
     }
