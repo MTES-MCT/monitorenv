@@ -81,7 +81,7 @@ context('Missions', () => {
     cy.clickButton('Confirmer la suppression')
 
     cy.wait('@deleteReporting').then(({ response }) => {
-      expect(response && response.statusCode).equal(200)
+      expect(response && response.statusCode).equal(204)
     })
   })
   it('Can open multiple reportings', () => {
