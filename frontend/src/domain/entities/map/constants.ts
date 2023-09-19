@@ -30,6 +30,11 @@ export enum CoordinatesFormat {
   DEGREES_MINUTES_SECONDS = 'DMS'
 }
 
+export enum DistanceUnit {
+  METRIC = 'metric',
+  NAUTICAL = 'nautical'
+}
+
 export enum MapToolType {
   FILTERS = 'FILTERS',
   INTEREST_POINT = 'INTEREST_POINT',

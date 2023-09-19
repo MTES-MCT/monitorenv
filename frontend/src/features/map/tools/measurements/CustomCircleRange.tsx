@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { COLORS } from '../../../../constants/constants'
 import {
   CoordinatesFormat,
+  DistanceUnit,
   MeasurementType,
   OPENLAYERS_PROJECTION,
   WSG84_PROJECTION
@@ -26,6 +27,7 @@ export function CustomCircleRange() {
   const dispatch = useAppDispatch()
   const { circleMeasurementInDrawing, measurementTypeToAdd } = useAppSelector(state => state.measurement)
   const { healthcheckTextWarning } = useAppSelector(state => state.global)
+  const { distanceUnit } = useAppSelector(state => state.map)
 
   const circleCoordinates = useMemo(() => {
     if (measurementTypeToAdd !== MeasurementType.CIRCLE_RANGE || !circleMeasurementInDrawing?.coordinates?.length) {
@@ -117,7 +119,7 @@ export function CustomCircleRange() {
           type="text"
           value={circleRadius}
         />
-        <span>(Nm)</span>
+        <span>{distanceUnit === DistanceUnit.METRIC ? '(Km)' : '(Nm)'}</span>
         <br />
         <OkButton
           data-cy="measurement-circle-add"

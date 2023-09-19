@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 import { BaseLayers } from '../entities/layers/constants'
-import { CoordinatesFormat } from '../entities/map/constants'
+import { CoordinatesFormat, DistanceUnit } from '../entities/map/constants'
 
 import type { Coordinate } from 'ol/coordinate'
 import type { Extent } from 'ol/extent'
@@ -9,6 +9,7 @@ import type { Extent } from 'ol/extent'
 type MapSliceStateType = {
   coordinatesFormat: CoordinatesFormat
   currentMapExtentTracker?: number[]
+  distanceUnit: DistanceUnit
   fitToExtent?: Extent
   selectedBaseLayer: string
   zoomToCenter?: Coordinate
@@ -16,6 +17,7 @@ type MapSliceStateType = {
 const initialState: MapSliceStateType = {
   coordinatesFormat: CoordinatesFormat.DEGREES_MINUTES_SECONDS,
   currentMapExtentTracker: undefined,
+  distanceUnit: DistanceUnit.NAUTICAL,
   fitToExtent: undefined,
   selectedBaseLayer: BaseLayers.LIGHT.code,
   zoomToCenter: undefined
@@ -50,6 +52,16 @@ const mapSlice = createSlice({
     },
 
     /**
+     * Set the distance unit in the whole application (as metrics, nautical)
+     * @param {Object} state
+     * @param {{
+     * payload: DistanceUnit}} action - The distance unit
+     */
+    setDistanceUnit(state, action) {
+      state.distanceUnit = action.payload
+    },
+
+    /**
      *
      * @param {*} state
      * @param {object} action.payload.extent
@@ -64,7 +76,13 @@ const mapSlice = createSlice({
   }
 })
 
-export const { selectBaseLayer, setCoordinatesFormat, setCurrentMapExtentTracker, setFitToExtent, setZoomToCenter } =
-  mapSlice.actions
+export const {
+  selectBaseLayer,
+  setCoordinatesFormat,
+  setCurrentMapExtentTracker,
+  setDistanceUnit,
+  setFitToExtent,
+  setZoomToCenter
+} = mapSlice.actions
 
 export const mapSliceReducer = mapSlice.reducer

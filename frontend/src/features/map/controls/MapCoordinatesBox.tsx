@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import { Radio, RadioGroup } from 'rsuite'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../constants/constants'
 import { CoordinatesFormat, OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
 import { setCoordinatesFormat } from '../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
@@ -119,7 +118,7 @@ const RadioWrapper = styled(RadioGroup)`
 `
 
 const Header = styled.span`
-  background-color: ${COLORS.charcoal};
+  background-color: ${p => p.theme.color.charcoal};
   color: ${p => p.theme.color.gainsboro};
   padding: 5px 0;
   width: 100%;
@@ -136,14 +135,9 @@ const CoordinatesTypeSelection = styled.span<{ isOpen: boolean }>`
   left: 40px;
   display: inline-block;
   margin: 1px;
-  color: ${COLORS.slateGray};
-  font-size: 13px;
-  font-weight: 300;
-  text-decoration: none;
+  color: ${p => p.theme.color.slateGray};
   text-align: center;
-  background-color: ${COLORS.white};
-  border: none;
-  border-radius: 2px;
+  background-color: ${p => p.theme.color.white};
   width: 237px;
   opacity: ${props => (props.isOpen ? 1 : 0)};
   visibility: ${props => (props.isOpen ? 'visible' : 'hidden')};
@@ -160,14 +154,9 @@ const Coordinates = styled.span`
   display: inline-block;
   padding: 2px 0 6px 2px;
   color: ${p => p.theme.color.gainsboro};
-  font-size: 13px;
-  font-weight: 300;
-  text-decoration: none;
   text-align: center;
   height: 17px;
-  background-color: ${COLORS.charcoal};
-  border: none;
-  border-radius: 2px;
+  background-color: ${p => p.theme.color.charcoal};
   width: 235px;
   cursor: pointer;
 `
