@@ -98,7 +98,7 @@ export function MultiZonePicker({
         {addButtonLabel}
       </Button>
 
-      {!!meta.error && <ErrorMessage>Veuillez définir une zone de mission</ErrorMessage>}
+      {!!meta.error && <ErrorMessage>Veuillez définir une zone</ErrorMessage>}
 
       <>
         {polygons.map((polygonCoordinates, index) => (

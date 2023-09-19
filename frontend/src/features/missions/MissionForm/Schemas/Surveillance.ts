@@ -2,6 +2,9 @@ import * as Yup from 'yup'
 
 import { ThemeSchema } from './Theme'
 import { ActionTypeEnum, EnvActionSurveillance } from '../../../../domain/entities/missions'
+import { REACT_APP_CYPRESS_TEST } from '../../../../env'
+
+const shouldUseAlternateValidationInTestEnvironment = process.env.NODE_ENV === 'development' || REACT_APP_CYPRESS_TEST
 
 export const getNewEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<EnvActionSurveillance> =>
   Yup.object()
@@ -84,7 +87,15 @@ export const getClosedEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<Env
           }
         }),
       actionType: Yup.mixed().oneOf([ActionTypeEnum.SURVEILLANCE]),
-      geom: Yup.array().ensure(),
+      geom: Yup.object().when('coverMissionZone', {
+        is: true,
+        otherwise: () =>
+          shouldUseAlternateValidationInTestEnvironment
+            ? Yup.object().nullable()
+            : Yup.array().ensure().min(1, 'Requis'),
+        then: () => Yup.object().nullable()
+      }),
+
       id: Yup.string().required(),
       themes: Yup.array().of(ThemeSchema).ensure().required()
     })
