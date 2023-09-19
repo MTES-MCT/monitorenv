@@ -2,9 +2,9 @@ import { filter } from 'lodash'
 import { useMemo } from 'react'
 
 import { useGetReportingsQuery } from '../../../api/reportingsAPI'
-import { sourceFilterFunction } from '../../../domain/use_cases/reportings/filters/sourceFilterFunction'
-import { subThemesFilterFunction } from '../../../domain/use_cases/reportings/filters/subThemesFilterFunction'
-import { themeFilterFunction } from '../../../domain/use_cases/reportings/filters/themeFilterFunction'
+import { sourceFilterFunction } from '../../../domain/use_cases/reporting/filters/sourceFilterFunction'
+import { subThemesFilterFunction } from '../../../domain/use_cases/reporting/filters/subThemesFilterFunction'
+import { themeFilterFunction } from '../../../domain/use_cases/reporting/filters/themeFilterFunction'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 
 const TWO_MINUTES = 2 * 60 * 1000

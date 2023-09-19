@@ -4,21 +4,24 @@ import _ from 'lodash'
 import { useDispatch } from 'react-redux'
 
 import { ReportingStatusEnum, type Reporting, getReportingStatus } from '../../../../domain/entities/reporting'
-import { reopenReporting } from '../../../../domain/use_cases/reportings/reopenReporting'
+import { ReportingContext } from '../../../../domain/shared_slices/Global'
+import { reopenReporting } from '../../../../domain/use_cases/reporting/reopenReporting'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { StyledButton, StyledSubmitButton, StyledDeleteButton, StyledFooter } from '../../style'
 import { isNewReporting } from '../../utils'
 
 export function Footer({ onCancel, onDelete, setMustIncreaseValidity, setShouldValidateOnChange }) {
-  const {
-    reportingState: { context }
-  } = useAppSelector(state => state)
+  const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
+  const reportings = useAppSelector(state => state.reporting.reportings)
+  const reportingContext = useAppSelector(state =>
+    activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined
+  )
   const dispatch = useDispatch()
   const { handleSubmit, setFieldValue, validateForm, values } = useFormikContext<Reporting>()
 
   const reportingStatus = getReportingStatus(values)
 
-  const handleReopen = async () => {
+  const handleReopen = () => {
     const endOfValidity = getLocalizedDayjs(values?.createdAt).add(values?.validityTime || 0, 'hour')
     const timeLeft = customDayjs(endOfValidity).diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour', true)
 
@@ -30,7 +33,10 @@ export function Footer({ onCancel, onDelete, setMustIncreaseValidity, setShouldV
     setMustIncreaseValidity(false)
     validateForm({ ...values, isArchived: false }).then(async errors => {
       if (_.isEmpty(errors)) {
-        await dispatch(reopenReporting({ ...values, isArchived: false }, context))
+        if (!activeReportingId || !reportings || !reportings[activeReportingId]) {
+          return
+        }
+        dispatch(reopenReporting({ ...values, isArchived: false }, reportingContext || ReportingContext.MAP))
 
         return
       }
@@ -40,12 +46,13 @@ export function Footer({ onCancel, onDelete, setMustIncreaseValidity, setShouldV
 
   const handleArchive = async () => {
     await setFieldValue('isArchived', true)
-    validateForm().then(errors => {
+    validateForm().then(async errors => {
       if (_.isEmpty(errors)) {
         handleSubmit()
 
         return
       }
+      await setFieldValue('isArchived', false)
       setShouldValidateOnChange(true)
     })
   }

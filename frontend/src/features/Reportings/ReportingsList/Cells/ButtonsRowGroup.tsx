@@ -2,11 +2,11 @@ import { Accent, Dropdown, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { useState } from 'react'
 import styled from 'styled-components'
 
-import { ReportingContext } from '../../../../domain/shared_slices/ReportingState'
-import { archiveReportingFromTable } from '../../../../domain/use_cases/reportings/archiveReporting'
-import { deleteReporting } from '../../../../domain/use_cases/reportings/deleteReporting'
-import { duplicateReporting } from '../../../../domain/use_cases/reportings/duplicateReporting'
-import { editReportingInLocalStore } from '../../../../domain/use_cases/reportings/editReportingInLocalStore'
+import { ReportingContext } from '../../../../domain/shared_slices/Global'
+import { archiveReportingFromTable } from '../../../../domain/use_cases/reporting/archiveReporting'
+import { deleteReporting } from '../../../../domain/use_cases/reporting/deleteReporting'
+import { duplicateReporting } from '../../../../domain/use_cases/reporting/duplicateReporting'
+import { editReportingInLocalStore } from '../../../../domain/use_cases/reporting/editReportingInLocalStore'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ArchiveModal } from '../../../commonComponents/Modals/Archive'
@@ -19,9 +19,10 @@ const ACTIONS = {
 
 export function ButtonsGroupRow({ id }) {
   const dispatch = useAppDispatch()
-  const {
-    reportingState: { isFormDirty, selectedReportingId }
-  } = useAppSelector(state => state)
+  const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
+  const isReportingFormDirty = useAppSelector(state =>
+    activeReportingId ? state.reporting.reportings[activeReportingId]?.isFormDirty : false
+  )
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false)
@@ -36,7 +37,7 @@ export function ButtonsGroupRow({ id }) {
 
   const archiveOrDelete = action => {
     if (action === ACTIONS.ARCHIVE) {
-      if (id === selectedReportingId && isFormDirty) {
+      if (activeReportingId && id === activeReportingId && isReportingFormDirty) {
         return setIsArchiveModalOpen(true)
       }
 

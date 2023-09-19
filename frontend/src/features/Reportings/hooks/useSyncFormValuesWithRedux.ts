@@ -2,25 +2,24 @@ import { useFormikContext } from 'formik'
 import _ from 'lodash'
 import { useEffect, useMemo } from 'react'
 
-import { useAppDispatch } from './useAppDispatch'
+import { reportingActions } from '../../../domain/shared_slices/reporting'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 
-import type { ActionCreatorWithPayload } from '@reduxjs/toolkit'
-
-export const useSyncFormValuesWithRedux = (
-  setState: ActionCreatorWithPayload<any, string>,
-  setIsDirty: ActionCreatorWithPayload<any, string>
-) => {
+export const useSyncFormValuesWithRedux = () => {
   const { dirty, values } = useFormikContext()
-  const dispatch = useAppDispatch()
 
+  const dispatch = useAppDispatch()
   const dispatchFormUpdate = useMemo(() => {
     const throttled = newValues => {
-      dispatch(setState(newValues))
-      dispatch(setIsDirty(newValues ? dirty : false))
+      if (!newValues) {
+        return
+      }
+      dispatch(reportingActions.setReportingState(newValues))
+      dispatch(reportingActions.setIsDirty(newValues ? dirty : false))
     }
 
     return _.throttle(throttled, 500)
-  }, [setState, dispatch, dirty, setIsDirty])
+  }, [dispatch, dirty])
 
   useEffect(() => {
     dispatchFormUpdate(values)

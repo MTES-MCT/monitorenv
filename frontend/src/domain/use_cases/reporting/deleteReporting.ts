@@ -1,11 +1,9 @@
 import { reportingsAPI } from '../../../api/reportingsAPI'
-import { setReportingFormVisibility, setToast } from '../../shared_slices/Global'
-import { VisibilityState, reportingStateActions } from '../../shared_slices/ReportingState'
+import { setReportingFormVisibility, setToast, VisibilityState } from '../../shared_slices/Global'
+import { reportingActions } from '../../shared_slices/reporting'
 
 export const deleteReporting = (id: number | string | undefined) => async (dispatch, getState) => {
-  const {
-    reportingState: { context, selectedReportingIdOnMap }
-  } = getState()
+  const { reportings, selectedReportingIdOnMap } = getState().reporting
   try {
     if (!id) {
       throw Error('Erreur à la suppression du signalement')
@@ -15,13 +13,13 @@ export const deleteReporting = (id: number | string | undefined) => async (dispa
       throw Error('Erreur à la suppression du signalement')
     } else {
       if (id === selectedReportingIdOnMap) {
-        dispatch(reportingStateActions.setSelectedReportingIdOnMap(undefined))
+        dispatch(reportingActions.setSelectedReportingIdOnMap(undefined))
       }
 
-      dispatch(reportingStateActions.setSelectedReportingId(undefined))
+      await dispatch(reportingActions.deleteSelectedReporting(id))
       dispatch(
         setReportingFormVisibility({
-          context,
+          context: reportings[id].context,
           visibility: VisibilityState.NONE
         })
       )

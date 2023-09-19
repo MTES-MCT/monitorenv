@@ -13,9 +13,7 @@ class DeleteReporting(private val reportingRepository: IReportingRepository) {
     fun execute(id: Int?) {
         logger.info("Delete reporting: $id")
 
-        require(id != null) {
-            "No reporting to delete"
-        }
+        require(id != null) { "No reporting to delete" }
         reportingRepository.delete(id)
     }
 }

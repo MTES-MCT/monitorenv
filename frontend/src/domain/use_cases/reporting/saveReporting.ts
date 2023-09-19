@@ -1,8 +1,7 @@
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { isNewReporting } from '../../../features/Reportings/utils'
-import { setReportingFormVisibility, setToast } from '../../shared_slices/Global'
-import { multiReportingsActions } from '../../shared_slices/MultiReportings'
-import { ReportingContext, VisibilityState } from '../../shared_slices/ReportingState'
+import { setReportingFormVisibility, setToast, ReportingContext, VisibilityState } from '../../shared_slices/Global'
+import { reportingActions } from '../../shared_slices/reporting'
 import { closeAddZone } from '../missions/closeAddZone'
 
 import type { Reporting } from '../../entities/reporting'
@@ -24,7 +23,7 @@ export const saveReporting =
           })
         )
         dispatch(closeAddZone())
-        dispatch(multiReportingsActions.deleteSelectedReporting(values.id))
+        dispatch(reportingActions.deleteSelectedReporting(values.id))
       } else {
         throw Error('Erreur à la création ou à la modification du signalement')
       }

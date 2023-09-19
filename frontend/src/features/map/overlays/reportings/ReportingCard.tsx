@@ -14,8 +14,9 @@ import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { ReportingTypeEnum, getFormattedReportingId, ReportingTypeLabels } from '../../../../domain/entities/reporting'
-import { ReportingContext, reportingStateActions } from '../../../../domain/shared_slices/ReportingState'
-import { editReportingInLocalStore } from '../../../../domain/use_cases/reportings/editReportingInLocalStore'
+import { ReportingContext } from '../../../../domain/shared_slices/Global'
+import { reportingActions } from '../../../../domain/shared_slices/reporting'
+import { editReportingInLocalStore } from '../../../../domain/use_cases/reporting/editReportingInLocalStore'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 export function ReportingCard({
@@ -70,7 +71,7 @@ export function ReportingCard({
   }
 
   const closeReportingCard = useCallback(() => {
-    dispatch(reportingStateActions.setSelectedReportingIdOnMap(undefined))
+    dispatch(reportingActions.setSelectedReportingIdOnMap(undefined))
   }, [dispatch])
 
   useEffect(() => {

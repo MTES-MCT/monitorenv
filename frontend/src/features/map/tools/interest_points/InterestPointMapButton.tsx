@@ -4,14 +4,13 @@ import styled from 'styled-components'
 
 import { EditInterestPoint } from './EditInterestPoint'
 import { MapToolType } from '../../../../domain/entities/map/constants'
-import { setisMapToolVisible } from '../../../../domain/shared_slices/Global'
+import { setisMapToolVisible, ReportingContext, VisibilityState } from '../../../../domain/shared_slices/Global'
 import {
   deleteInterestPointBeingDrawed,
   drawInterestPoint,
   endInterestPointDraw
 } from '../../../../domain/shared_slices/InterestPoint'
-import { ReportingContext, VisibilityState } from '../../../../domain/shared_slices/ReportingState'
-import { reduceReportingFormOnMap } from '../../../../domain/use_cases/reportings/reduceReportingFormOnMap'
+import { reduceReportingFormOnMap } from '../../../../domain/use_cases/reporting/reduceReportingFormOnMap'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useEscapeFromKeyboardAndExecute } from '../../../../hooks/useEscapeFromKeyboardAndExecute'

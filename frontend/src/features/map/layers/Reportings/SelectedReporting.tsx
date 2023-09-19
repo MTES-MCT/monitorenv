@@ -11,18 +11,14 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 import type { BaseMapChildrenProps } from '../../BaseMap'
 
 export function SelectedReportingLayer({ map }: BaseMapChildrenProps) {
-  const { reportingState: selectedReportingEditedState, selectedReportingIdOnMap } = useAppSelector(
-    state => state.reportingState
-  )
+  const { activeReportingId, selectedReportingIdOnMap } = useAppSelector(state => state.reporting)
   const { displayReportingSelectedLayer } = useAppSelector(state => state.global)
   const { selectedReporting } = useGetReportingsQuery(undefined, {
     selectFromResult: ({ data }) => ({
       selectedReporting: selectedReportingIdOnMap && data?.entities[selectedReportingIdOnMap]
     })
   })
-
-  const displaySelectedReporting =
-    displayReportingSelectedLayer && selectedReportingIdOnMap !== selectedReportingEditedState?.id
+  const displaySelectedReporting = displayReportingSelectedLayer && selectedReportingIdOnMap !== activeReportingId
 
   const selectedReportingVectorSourceRef = useRef() as MutableRefObject<VectorSource>
   const GetSelectedReportingVectorSource = () => {

@@ -17,8 +17,8 @@ const MARGINS = {
   yTop: -55
 }
 export function ReportingOverlay({ currentFeatureOver, map }: BaseMapChildrenProps) {
-  const { selectedReportingIdOnMap } = useAppSelector(state => state.reportingState)
-  const { displayReportingsOverlay } = useAppSelector(state => state.global)
+  const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
+  const displayReportingsOverlay = useAppSelector(state => state.global.displayReportingsOverlay)
   const [hoveredMargins, setHoveredMargins] = useState(MARGINS)
   const [selectedMargins, setSelectedMargins] = useState(MARGINS)
 

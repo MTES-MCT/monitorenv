@@ -1,5 +1,4 @@
-import { setReportingFormVisibility } from '../../shared_slices/Global'
-import { ReportingContext, VisibilityState } from '../../shared_slices/ReportingState'
+import { setReportingFormVisibility, ReportingContext, VisibilityState } from '../../shared_slices/Global'
 
 export const reduceOrExpandReportingForm = (reportingContext: ReportingContext) => (dispatch, getState) => {
   const { reportingFormVisibility } = getState().global

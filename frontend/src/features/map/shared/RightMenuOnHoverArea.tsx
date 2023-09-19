@@ -2,8 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { setReportingFormVisibility } from '../../../domain/shared_slices/Global'
-import { ReportingContext, VisibilityState } from '../../../domain/shared_slices/ReportingState'
+import { setReportingFormVisibility, ReportingContext, VisibilityState } from '../../../domain/shared_slices/Global'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useClickOutsideWhenOpened } from '../../../hooks/useClickOutsideWhenOpened'
 

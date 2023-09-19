@@ -25,15 +25,11 @@ export const reportingsAPI = createApi({
         results?.ids
           ? [{ id: 'LIST', type: 'Reportings' }, ...results.ids.map(id => ({ id, type: 'Reportings' as const }))]
           : [{ id: 'LIST', type: 'Reportings' }],
-      queryFn: async ({ ids }, { dispatch }) => {
-        // TODO create api for this use case
-        const promises = await ids.map(async id => {
-          const { data: reporting } = await dispatch(reportingsAPI.endpoints.getReporting.initiate(id))
-          dispatch(reportingsAPI.endpoints.updateReporting.initiate({ ...(reporting as Reporting), isArchived: true }))
-        })
-
-        return Promise.all(promises).then(results => ({ data: results }))
-      }
+      query: ({ ids }: { ids: number[] }) => ({
+        body: ids,
+        method: 'PUT',
+        url: `reportings/archive`
+      })
     }),
     createReporting: build.mutation<Partial<Reporting>, Partial<Reporting>>({
       invalidatesTags: [{ id: 'LIST', type: 'Reportings' }],
@@ -55,12 +51,11 @@ export const reportingsAPI = createApi({
         results?.ids
           ? [{ id: 'LIST', type: 'Reportings' }, ...results.ids.map(id => ({ id, type: 'Reportings' as const }))]
           : [{ id: 'LIST', type: 'Reportings' }],
-      queryFn: async ({ ids }, { dispatch }) => {
-        // TODO create api for this use case
-        const promises = await ids.map(id => dispatch(reportingsAPI.endpoints.deleteReporting.initiate({ id })))
-
-        return Promise.all(promises).then(results => ({ data: results }))
-      }
+      query: ({ ids }: { ids: number[] }) => ({
+        body: ids,
+        method: 'PUT',
+        url: `reportings/delete`
+      })
     }),
     getReporting: build.query<Reporting, number>({
       providesTags: (_, __, id) => [{ id, type: 'Reportings' }],

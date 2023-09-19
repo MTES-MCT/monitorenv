@@ -1,11 +1,9 @@
 import { reportingsAPI } from '../../../api/reportingsAPI'
-import { setReportingFormVisibility, setToast } from '../../shared_slices/Global'
-import { VisibilityState, reportingStateActions } from '../../shared_slices/ReportingState'
+import { setReportingFormVisibility, setToast, VisibilityState } from '../../shared_slices/Global'
+import { reportingActions } from '../../shared_slices/reporting'
 
-export const deleteMultipleReportings = (ids: number[], resetSelectionFn: () => void) => async (dispatch, getState) => {
-  const {
-    reportingState: { context, selectedReportingId, selectedReportingIdOnMap }
-  } = getState()
+export const deleteReportings = (ids: number[], resetSelectionFn: () => void) => async (dispatch, getState) => {
+  const { activeReportingId, context, selectedReportingIdOnMap } = getState().reporting
 
   try {
     const response = await dispatch(reportingsAPI.endpoints.deleteReportings.initiate({ ids }))
@@ -13,11 +11,11 @@ export const deleteMultipleReportings = (ids: number[], resetSelectionFn: () => 
       throw Error('Erreur à la suppression des signalements')
     } else {
       if (ids.includes(selectedReportingIdOnMap)) {
-        dispatch(reportingStateActions.setSelectedReportingIdOnMap(undefined))
+        dispatch(reportingActions.setSelectedReportingIdOnMap(undefined))
       }
 
-      if (ids.includes(selectedReportingId)) {
-        dispatch(reportingStateActions.setSelectedReportingId(undefined))
+      if (ids.includes(activeReportingId)) {
+        dispatch(reportingActions.setActiveReportingId(undefined))
         dispatch(
           setReportingFormVisibility({
             context,
@@ -25,6 +23,8 @@ export const deleteMultipleReportings = (ids: number[], resetSelectionFn: () => 
           })
         )
       }
+
+      ids.map(id => dispatch(reportingActions.deleteSelectedReporting(id)))
 
       dispatch(
         setToast({

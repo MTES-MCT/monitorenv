@@ -10,7 +10,9 @@ import {
   getReportingStatus
 } from '../../domain/entities/reporting'
 
-export function getReportingInitialValues(reporting: Partial<Reporting> | Reporting | undefined) {
+import type { AtLeast } from '../../types'
+
+export function getReportingInitialValues(reporting: AtLeast<Reporting, 'id'> | Reporting): AtLeast<Reporting, 'id'> {
   return {
     geom: undefined,
     sourceType: ReportingSourceEnum.SEMAPHORE,
