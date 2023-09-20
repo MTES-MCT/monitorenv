@@ -18,26 +18,33 @@ data class MissionControlUnitModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     val id: Int? = null,
+
     @Column(name = "contact")
     val contact: String?,
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "mission_id")
     val mission: MissionModel,
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "control_unit_id")
-    var unit: LegacyControlUnitModel,
+    var unit: ControlUnitModel,
 ) {
     companion object {
-        fun fromLegacyControlUnit(controlUnit: LegacyControlUnitEntity, mission: MissionModel) =
+        fun fromLegacyControlUnit(legacyControlUnit: LegacyControlUnitEntity, missionModel: MissionModel) =
             MissionControlUnitModel(
-                unit = LegacyControlUnitModel(
-                    id = controlUnit.id,
-                    name = controlUnit.name,
-                    isArchived = controlUnit.isArchived,
-                    administration = AdministrationModel(name = controlUnit.administration),
+                unit = ControlUnitModel(
+                    id = legacyControlUnit.id,
+                    administration = AdministrationModel(name = legacyControlUnit.administration),
+                    areaNote = null,
+                    controlUnitContacts = listOf(),
+                    controlUnitResources = listOf(),
+                    isArchived = legacyControlUnit.isArchived,
+                    name = legacyControlUnit.name,
+                    termsNote = null,
                 ),
-                mission = mission,
-                contact = controlUnit.contact,
+                mission = missionModel,
+                contact = legacyControlUnit.contact,
             )
     }
 }

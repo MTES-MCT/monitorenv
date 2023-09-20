@@ -1,14 +1,15 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.reportings
 
 import fr.gouv.cacem.monitorenv.config.UseCase
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
-import fr.gouv.cacem.monitorenv.domain.repositories.ILegacyControlUnitRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.ISemaphoreRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -17,7 +18,7 @@ import java.time.ZonedDateTime
 @UseCase
 class GetReportings(
     private val reportingRepository: IReportingRepository,
-    private val controlUnitRepository: ILegacyControlUnitRepository,
+    private val controlUnitRepository: IControlUnitRepository,
     private val semaphoreRepository: ISemaphoreRepository,
 ) {
     private val logger = LoggerFactory.getLogger(GetReportings::class.java)
@@ -31,7 +32,7 @@ class GetReportings(
         startedAfterDateTime: ZonedDateTime?,
         startedBeforeDateTime: ZonedDateTime?,
         status: List<String>?,
-    ): List<Triple<ReportingEntity, LegacyControlUnitEntity?, SemaphoreEntity?>> {
+    ): List<Triple<ReportingEntity, FullControlUnitDTO?, SemaphoreEntity?>> {
         val reports =
             reportingRepository.findAll(
                 reportingType = reportingType,
@@ -48,17 +49,17 @@ class GetReportings(
                     Pageable.unpaged()
                 },
             )
-        val controlUnits = controlUnitRepository.findAll()
+        val fullControlUnits = controlUnitRepository.findAll()
         val semaphores = semaphoreRepository.findAll()
 
         logger.info(
-            "Found ${reports.size} reporting(s), ${controlUnits.size} control unit(s) and ${semaphores.size} semaphore(s)",
+            "Found ${reports.size} reporting(s), ${fullControlUnits.size} control unit(s) and ${semaphores.size} semaphore(s)",
         )
 
         return reports.map { reporting ->
             return@map Triple(
                 reporting,
-                controlUnits.find { it.id == reporting.controlUnitId },
+                fullControlUnits.find { it.id == reporting.controlUnitId },
                 semaphores.find { it.id == reporting.semaphoreId },
             )
         }

@@ -8,10 +8,11 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.Co
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/v1/control_units")
+@RequestMapping("/api/v2/control_units")
 @Tag(name = "Control Units")
 class ApiControlUnitsController(
     private val createOrUpdateControlUnit: CreateOrUpdateControlUnit,
@@ -20,6 +21,7 @@ class ApiControlUnitsController(
 ) {
     @PostMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a control unit")
+    @ResponseStatus(HttpStatus.CREATED)
     fun create(
         @RequestBody
         createControlUnitDataInput: CreateOrUpdateControlUnitDataInput,

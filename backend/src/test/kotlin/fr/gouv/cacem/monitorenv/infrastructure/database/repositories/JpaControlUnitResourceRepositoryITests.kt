@@ -18,75 +18,76 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `delete() should delete a contact by its ID`() {
+    fun `deleteById() should delete a contact by its ID`() {
         val beforeControlUnitResourceIds = jpaControlUnitResourceRepository.findAll().map { it.id }
 
-        assertThat(beforeControlUnitResourceIds).hasSize(4)
+        assertThat(beforeControlUnitResourceIds).hasSize(12)
         assertThat(beforeControlUnitResourceIds).contains(1)
 
         jpaControlUnitResourceRepository.deleteById(1)
 
         val afterControlUnitResourceIds = jpaControlUnitResourceRepository.findAll().map { it.id }
 
-        assertThat(afterControlUnitResourceIds).hasSize(3)
+        assertThat(afterControlUnitResourceIds).hasSize(11)
         assertThat(afterControlUnitResourceIds).doesNotContain(1)
     }
 
     @Test
     @Transactional
     fun `findAll() should find all contacts`() {
-        val foundFullControlUnitResources = jpaControlUnitResourceRepository.findAll()
+        val foundFullControlUnitResources =
+            jpaControlUnitResourceRepository.findAll().sortedBy { requireNotNull(it.id) }
 
-        assertThat(foundFullControlUnitResources).hasSize(4)
+        assertThat(foundFullControlUnitResources).hasSize(12)
 
         assertThat(foundFullControlUnitResources[0]).isEqualTo(
             FullControlUnitResourceDTO(
                 id = 1,
                 base = BaseEntity(
                     id = 1,
-                    controlUnitResourceIds = listOf(1, 2, 4),
+                    controlUnitResourceIds = listOf(1, 2),
                     name = "Marseille"
                 ),
                 baseId = 1,
                 controlUnit = ControlUnitEntity(
-                    id = 25,
-                    administrationId = 3,
+                    id = 1,
+                    administrationId = 1005,
                     areaNote = null,
                     controlUnitContactIds = listOf(1, 2),
-                    controlUnitResourceIds = listOf(1, 2, 3),
+                    controlUnitResourceIds = listOf(1, 2),
                     isArchived = false,
-                    name = "A636 Maïto",
+                    name = "Cultures marines – DDTM 40",
                     termsNote = null
                 ),
-                controlUnitId = 25,
-                name = "Moyen 1",
+                controlUnitId = 1,
+                name = "Semi-rigide 1",
                 note = null,
                 photo = null,
                 type = ControlUnitResourceType.BARGE,
             )
         )
 
-        assertThat(foundFullControlUnitResources[3]).isEqualTo(
+        assertThat(foundFullControlUnitResources[11]).isEqualTo(
             FullControlUnitResourceDTO(
-                id = 4,
+                id = 12,
                 base = BaseEntity(
-                    id = 1,
-                    controlUnitResourceIds = listOf(1, 2, 4),
-                    name = "Marseille"
+                    id = 3,
+                    controlUnitResourceIds = listOf(5, 7, 8, 9, 10, 11, 12),
+                    name = "Dunkerque"
                 ),
-                baseId = 1,
+                baseId = 3,
                 controlUnit = ControlUnitEntity(
-                    id = 15,
-                    administrationId = 2,
+                    id = 19,
+                    administrationId = 1008,
                     areaNote = null,
-                    controlUnitContactIds = listOf(3),
-                    controlUnitResourceIds = listOf(4),
-                    isArchived = true,
-                    name = "BGC Ajaccio",
+                    controlUnitContactIds = listOf(),
+                    controlUnitResourceIds = listOf(10, 11, 12),
+                    isArchived = false,
+                    name = "DREAL Pays-de-La-Loire",
                     termsNote = null
                 ),
-                controlUnitId = 15,
-                name = "Moyen 4",
+                controlUnitId = 19,
+                name = "ARIOLA",
                 note = null,
                 photo = null,
                 type = ControlUnitResourceType.FRIGATE,
@@ -104,22 +105,22 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                 id = 1,
                 base = BaseEntity(
                     id = 1,
-                    controlUnitResourceIds = listOf(1, 2, 4),
+                    controlUnitResourceIds = listOf(1, 2),
                     name = "Marseille"
                 ),
                 baseId = 1,
                 controlUnit = ControlUnitEntity(
-                    id = 25,
-                    administrationId = 3,
+                    id = 1,
+                    administrationId = 1005,
                     areaNote = null,
                     controlUnitContactIds = listOf(1, 2),
-                    controlUnitResourceIds = listOf(1, 2, 3),
+                    controlUnitResourceIds = listOf(1, 2),
                     isArchived = false,
-                    name = "A636 Maïto",
+                    name = "Cultures marines – DDTM 40",
                     termsNote = null
                 ),
-                controlUnitId = 25,
-                name = "Moyen 1",
+                controlUnitId = 1,
+                name = "Semi-rigide 1",
                 note = null,
                 photo = null,
                 type = ControlUnitResourceType.BARGE,
@@ -144,13 +145,13 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
 
         val createdControlUnitResource = jpaControlUnitResourceRepository.save(newControlUnitResource)
 
-        assertThat(createdControlUnitResource).isEqualTo(newControlUnitResource.copy(id = 5))
+        assertThat(createdControlUnitResource).isEqualTo(newControlUnitResource.copy(id = 13))
 
         // ---------------------------------------------------------------------
         // Update
 
         val nextControlUnitResource = ControlUnitResourceEntity(
-            id = 5,
+            id = 13,
             baseId = 2,
             controlUnitId = 2,
             name = "Updated Resource Name",

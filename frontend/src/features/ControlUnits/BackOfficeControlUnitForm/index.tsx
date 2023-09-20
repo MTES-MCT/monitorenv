@@ -2,7 +2,6 @@ import {
   Accent,
   Button,
   DataTable,
-  FormikCheckbox,
   FormikSelect,
   FormikTextInput,
   FormikTextarea,
@@ -98,7 +97,6 @@ export function BackOfficeControlUnitForm() {
               <FormikTextInput label="Nom" name="name" />
               <FormikTextarea label="Zone d'intervention" name="areaNote" />
               <FormikTextarea label="Modalités de contact avec l’unité" name="termsNote" />
-              <FormikCheckbox label="Archivée" name="isArchived" />
 
               <ActionGroup>
                 <Button accent={Accent.SECONDARY} onClick={goBackToList}>

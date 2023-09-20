@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.utils.requireIds
 import jakarta.persistence.*
@@ -97,6 +98,17 @@ data class ControlUnitModel(
             isArchived,
             name,
             termsNote,
+        )
+    }
+
+    fun toLegacyControlUnit(): LegacyControlUnitEntity {
+        return LegacyControlUnitEntity(
+            id = requireNotNull(id),
+            administration = administration.name,
+            isArchived,
+            name,
+            resources = controlUnitResources.map { it.toControlUnitResource() },
+            contact = "",
         )
     }
 }

@@ -13,19 +13,19 @@ export const basesAPI = monitorenvPublicApi.injectEndpoints({
       query: newBaseData => ({
         body: newBaseData,
         method: 'POST',
-        url: `/bases`
+        url: `/v1/bases`
       })
     }),
 
     getBase: builder.query<Base.Base, number>({
       providesTags: () => [{ type: 'Bases' }],
-      query: baseId => `/bases/${baseId}`,
+      query: baseId => `/v1/bases/${baseId}`,
       transformErrorResponse: response => new ApiError(GET_BASE_ERROR_MESSAGE, response)
     }),
 
     getBases: builder.query<Base.Base[], void>({
       providesTags: () => [{ type: 'Bases' }],
-      query: () => `/bases`,
+      query: () => `/v1/bases`,
       transformErrorResponse: response => new ApiError(GET_BASES_ERROR_MESSAGE, response)
     }),
 
@@ -34,7 +34,7 @@ export const basesAPI = monitorenvPublicApi.injectEndpoints({
       query: nextBase => ({
         body: nextBase,
         method: 'PUT',
-        url: `/bases/${nextBase.id}`
+        url: `/v1/bases/${nextBase.id}`
       })
     })
   })

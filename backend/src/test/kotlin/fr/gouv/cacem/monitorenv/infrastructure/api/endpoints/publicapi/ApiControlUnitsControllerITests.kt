@@ -71,12 +71,12 @@ class ApiControlUnitsControllerITests {
         )
 
         mockMvc.perform(
-            post("/api/v1/control_units")
+            post("/api/v2/control_units")
                 .content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON),
         )
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().isOk)
+            .andExpect(status().isCreated)
     }
 
     @Test
@@ -103,7 +103,7 @@ class ApiControlUnitsControllerITests {
 
         given(getControlUnitById.execute(requestedId)).willReturn(expectedFullControlUnit)
 
-        mockMvc.perform(get("/api/v1/control_units/$requestedId"))
+        mockMvc.perform(get("/api/v2/control_units/$requestedId"))
             .andExpect(status().isOk)
 
         BDDMockito.verify(getControlUnitById).execute(requestedId)
@@ -151,7 +151,7 @@ class ApiControlUnitsControllerITests {
 
         given(getControlUnits.execute()).willReturn(expectedControlUnits)
 
-        mockMvc.perform(get("/api/v1/control_units"))
+        mockMvc.perform(get("/api/v2/control_units"))
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize<Any>(2)))
 
@@ -186,7 +186,7 @@ class ApiControlUnitsControllerITests {
         given(createOrUpdateControlUnit.execute(controlUnit = any())).willReturn(updatedControlUnit)
 
         mockMvc.perform(
-            put("/api/v1/control_units/1")
+            put("/api/v2/control_units/1")
                 .content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON),
         )

@@ -25,7 +25,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
 @WebMvcTest(value = [(ApiBasesController::class)])
-class ApiBaseControllerITests {
+class ApiBasesControllerITests {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -63,7 +63,7 @@ class ApiBaseControllerITests {
                 .contentType(MediaType.APPLICATION_JSON),
         )
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().isOk)
+            .andExpect(status().isCreated)
     }
 
     @Test

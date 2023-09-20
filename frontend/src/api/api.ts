@@ -21,7 +21,7 @@ export const monitorenvPrivateApi = createApi({
 
 // We'll need that later on for authentication.
 const monitorenvPublicApiBaseQuery = fetchBaseQuery({
-  baseUrl: '/api/v1'
+  baseUrl: '/api'
 })
 export const monitorenvPublicApi = createApi({
   baseQuery: normalizeRtkBaseQuery(monitorenvPublicApiBaseQuery),

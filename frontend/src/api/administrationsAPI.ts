@@ -13,19 +13,19 @@ export const administrationsAPI = monitorenvPublicApi.injectEndpoints({
       query: newAdministrationData => ({
         body: newAdministrationData,
         method: 'POST',
-        url: `/administrations`
+        url: `/v1/administrations`
       })
     }),
 
     getAdministration: builder.query<Administration.Administration, number>({
       providesTags: () => [{ type: 'Administrations' }],
-      query: administrationId => `/administrations/${administrationId}`,
+      query: administrationId => `/v1/administrations/${administrationId}`,
       transformErrorResponse: response => new ApiError(GET_ADMINISTRATION_ERROR_MESSAGE, response)
     }),
 
     getAdministrations: builder.query<Administration.Administration[], void>({
       providesTags: () => [{ type: 'Administrations' }],
-      query: () => `/administrations`,
+      query: () => `/v1/administrations`,
       transformErrorResponse: response => new ApiError(GET_ADMINISTRATIONS_ERROR_MESSAGE, response)
     }),
 
@@ -34,7 +34,7 @@ export const administrationsAPI = monitorenvPublicApi.injectEndpoints({
       query: nextAdministrationData => ({
         body: nextAdministrationData,
         method: 'PUT',
-        url: `/administrations/${nextAdministrationData.id}`
+        url: `/v1/administrations/${nextAdministrationData.id}`
       })
     })
   })

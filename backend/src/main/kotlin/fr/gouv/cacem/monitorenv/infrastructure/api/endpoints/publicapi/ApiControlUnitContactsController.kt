@@ -8,6 +8,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.Co
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -20,6 +21,7 @@ class ApiControlUnitContactsController(
 ) {
     @PostMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a control unit contact")
+    @ResponseStatus(HttpStatus.CREATED)
     fun create(
         @RequestBody createControlUnitContactDataInput: CreateOrUpdateControlUnitContactDataInput,
     ): ControlUnitContactDataOutput {

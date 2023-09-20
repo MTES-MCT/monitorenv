@@ -54,110 +54,102 @@ INSERT INTO public.missions (id, open_by, observations_cacem, facade, start_date
 INSERT INTO public.missions (id, open_by, observations_cacem, facade, start_datetime_utc, end_datetime_utc, geom, closed_by, deleted, observations_cnsp, mission_source, closed, mission_order, mission_types) VALUES (39, 'KEI', 'Without black box common. More reduce many trial.', 'MED', '2022-03-02 05:42:47.588693', '2022-05-03 09:16:22.588693', NULL, 'ELI', false, NULL, 'MONITORENV', true, NULL, '{LAND}');
 INSERT INTO public.missions (id, open_by, observations_cacem, facade, start_datetime_utc, end_datetime_utc, geom, closed_by, deleted, observations_cnsp, mission_source, closed, mission_order, mission_types) VALUES (40, 'TAM', 'Idea tonight interesting value.', 'NAMO', '2022-03-17 13:29:55.588693', '2022-05-27 02:14:48.588693', NULL, 'RAN', false, NULL, 'MONITORENV', true, NULL, '{LAND}');
 
-
---
--- Name: missions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
 SELECT pg_catalog.setval('public.missions_id_seq', 53, true);
 
+INSERT INTO missions_control_units
+    (mission_id, control_unit_id)
+VALUES
+    (         0,               3),
+    (         1,              12),
+    (         2,               3),
+    (         3,               5),
+    (         4,               4),
+    (         5,               4),
+    (         6,               3),
+    (         7,               3),
+    (         8,              19),
+    (         9,              19),
+    (        10,               3),
+    (        11,              23),
+    (        12,              19),
+    (        12,              18),
+    (        13,              19),
+    (        14,               3),
+    (        15,               4),
+    (        16,              20),
+    (        17,               4),
+    (        18,               4),
+    (        19,              19),
+    (        20,               3),
+    (        21,              19),
+    (        22,              11),
+    (        23,              11),
+    (        24,               1),
+    (        26,              12),
+    (        27,               4),
+    (        28,              20),
+    (        29,              19),
+    (        30,               3),
+    (        31,               4),
+    (        32,               4),
+    (        33,               3),
+    (        35,               4),
+    (        36,               3),
+    (        37,               4),
+    (        38,               3),
+    (        39,               4),
+    (        40,               4),
+    (        41,               3),
+    (        42,               4),
+    (        43,              19),
+    (        44,               4),
+    (        45,              15),
+    (        46,              19),
+    (        48,              12),
+    (        49,               3),
+    (        50,               3),
+    (        51,               3),
+    (        52,               3);
 
---
--- PostgreSQL database dump complete
---
+INSERT INTO missions_control_units
+    (mission_id, control_unit_id,                       contact)
+VALUES
+    (        34,              16,                 '01234567890'),
+    (        34,              17,          'M. Capitaine Flame'),
+    (        34,              18,          'Popeye 06789012345'),
+    (        47,               3,  'A Team - Gimme your number'),
+    (        25,               3,                'Full contact');
 
-
-
--- Control units keys starts at 10000
-INSERT INTO missions_control_units (mission_id, control_unit_id) VALUES
-(0, 10003),
-(1, 10012),
-(2, 10003),
-(3, 10005),
-(4, 10004),
-(5, 10004),
-(6, 10003),
-(7, 10003),
-(8, 10019),
-(9, 10019),
-(10, 10003),
-(11, 10023),
-(12, 10019),
-(12, 10018),
-(13, 10019),
-(14, 10003),
-(15, 10004),
-(16, 10020),
-(17, 10004),
-(18, 10004),
-(19, 10019),
-(20, 10003),
-(21, 10019),
-(22, 10011),
-(23, 10011),
-(24, 10001),
-(26, 10012),
-(27, 10004),
-(28, 10020),
-(29, 10019),
-(30, 10003),
-(31, 10004),
-(32, 10004),
-(33, 10003),
-(35, 10004),
-(36, 10003),
-(37, 10004),
-(38, 10003),
-(39, 10004),
-(40, 10004),
-(41, 10003),
-(42, 10004),
-(43, 10019),
-(44, 10004),
-(45, 10015),
-(46, 10019),
-(48, 10012),
-(49, 10003),
-(50, 10003),
-(51, 10003),
-(52, 10003);
-
-INSERT INTO missions_control_units (mission_id, control_unit_id, contact) VALUES
-(34, 10016, '01234567890'),
-(34, 10017, 'M. Capitaine Flame'),
-(34, 10018, 'Popeye 06789012345'),
-(47, 10003, 'A Team - Gimme your number'),
-(25, 10003, 'Full contact');
-
-INSERT INTO missions_control_resources (mission_id, control_resource_id) VALUES
-(10, 3),
-(10, 4),
-(10, 5),
-(12, 10),
-(13, 8),
-(14, 3),
-(15, 6),
-(17, 7),
-(6, 3),
-(7, 3),
-(2, 3),
-(24, 1),
-(23, 8),
-(26, 12),
-(21, 10),
-(42, 6),
-(31, 6),
-(37, 6),
-(48, 12),
-(46, 12),
-(43, 8),
-(34, 11),
-(25, 3),
-(39, 7),
-(40, 7);
+INSERT INTO missions_control_resources
+    (mission_id, control_resource_id)
+VALUES
+    (        10,                   3),
+    (        10,                   4),
+    (        10,                   5),
+    (        12,                  10),
+    (        13,                   8),
+    (        14,                   3),
+    (        15,                   6),
+    (        17,                   7),
+    (         6,                   3),
+    (         7,                   3),
+    (         2,                   3),
+    (        24,                   1),
+    (        23,                   8),
+    (        26,                  12),
+    (        21,                  10),
+    (        42,                   6),
+    (        31,                   6),
+    (        37,                   6),
+    (        48,                  12),
+    (        46,                  12),
+    (        43,                   8),
+    (        34,                  11),
+    (        25,                   3),
+    (        39,                   7),
+    (        40,                   7);
 
 UPDATE public.missions SET
   start_datetime_utc = start_datetime_utc + (now() - '2022-06-01 23:00:00'),
   end_datetime_utc = end_datetime_utc + (now() - '2022-06-01 23:00:00')
-  WHERE id >20;
-  ;
+WHERE id > 20;

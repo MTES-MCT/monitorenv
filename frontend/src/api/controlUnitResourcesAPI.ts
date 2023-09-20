@@ -13,19 +13,19 @@ export const controlUnitResourcesAPI = monitorenvPublicApi.injectEndpoints({
       query: newControlUnitResourceData => ({
         body: newControlUnitResourceData,
         method: 'POST',
-        url: `/control_unit_resources`
+        url: `/v1/control_unit_resources`
       })
     }),
 
     getControlUnitResource: builder.query<ControlUnit.ControlUnitResource, number>({
       providesTags: () => [{ type: 'ControlUnits' }],
-      query: controlUnitResourceId => `/control_unit_resources/${controlUnitResourceId}`,
+      query: controlUnitResourceId => `/v1/control_unit_resources/${controlUnitResourceId}`,
       transformErrorResponse: response => new ApiError(GET_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE, response)
     }),
 
     getControlUnitResources: builder.query<ControlUnit.ControlUnitResource[], void>({
       providesTags: () => [{ type: 'ControlUnits' }],
-      query: () => `/control_unit_resources`,
+      query: () => `/v1/control_unit_resources`,
       transformErrorResponse: response => new ApiError(GET_CONTROL_UNIT_RESOURCES_ERROR_MESSAGE, response)
     }),
 
@@ -34,7 +34,7 @@ export const controlUnitResourcesAPI = monitorenvPublicApi.injectEndpoints({
       query: nextControlUnitResourceData => ({
         body: nextControlUnitResourceData,
         method: 'PUT',
-        url: `/control_unit_resources/${nextControlUnitResourceData.id}`
+        url: `/v1/control_unit_resources/${nextControlUnitResourceData.id}`
       })
     })
   })

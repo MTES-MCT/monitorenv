@@ -20,7 +20,7 @@ INSERT INTO reportings (
     created_at,
     validity_time,
     is_deleted,
-    is_archived) 
+    is_archived)
 VALUES
 (
     1,
@@ -75,7 +75,7 @@ VALUES
     2300003,
     'CONTROL_UNIT',
     null,
-    10000,
+    1,
     null,
     'VEHICLE',
     'VESSEL',

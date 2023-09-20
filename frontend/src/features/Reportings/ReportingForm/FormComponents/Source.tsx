@@ -17,7 +17,7 @@ import { GeoJSON } from 'ol/format'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { useGetLegacyControlUnitsQuery } from '../../../../api/legacyControlUnitsAPI'
+import { useGetControlUnitsQuery } from '../../../../api/controlUnitsAPI'
 import { useGetSemaphoresQuery } from '../../../../api/semaphoresAPI'
 import { Reporting, ReportingSourceEnum, ReportingSourceLabels } from '../../../../domain/entities/reporting'
 import { setDisplayedItems } from '../../../../domain/shared_slices/Global'
@@ -30,7 +30,7 @@ import type { Point } from 'ol/geom'
 export function Source() {
   const dispatch = useAppDispatch()
   const { data: semaphores } = useGetSemaphoresQuery()
-  const { data: units } = useGetLegacyControlUnitsQuery()
+  const { data: units } = useGetControlUnitsQuery()
 
   const sourceOptions = getOptionsFromLabelledEnum(ReportingSourceLabels)
   const { errors, setFieldValue, values } = useFormikContext<Reporting>()
@@ -79,7 +79,7 @@ export function Source() {
     [controlUnitsOptions]
   )
 
-  const changeSourceType = sourceType => {
+  const changeSourceType = (sourceType: string | undefined) => {
     setFieldValue('sourceType', sourceType)
     if (sourceType === ReportingSourceEnum.SEMAPHORE) {
       setFieldValue('controlUnitId', undefined)

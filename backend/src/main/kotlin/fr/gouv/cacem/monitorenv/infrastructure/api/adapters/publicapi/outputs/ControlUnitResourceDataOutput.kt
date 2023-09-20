@@ -19,28 +19,6 @@ data class ControlUnitResourceDataOutput(
     // TODO Make that non-nullable once all resources will have been attached to a type.
     val type: ControlUnitResourceType? = null,
 ) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as ControlUnitResourceDataOutput
-
-        if (id != other.id) return false
-        if (base != other.base) return false
-        if (baseId != other.baseId) return false
-        if (controlUnit != other.controlUnit) return false
-        if (controlUnitId != other.controlUnitId) return false
-        if (name != other.name) return false
-        if (note != other.note) return false
-        if (photo != null) {
-            if (other.photo == null) return false
-            if (!photo.contentEquals(other.photo)) return false
-        } else if (other.photo != null) return false
-        if (type != other.type) return false
-
-        return true
-    }
-
     companion object {
         fun fromControlUnitResource(controlUnitResource: ControlUnitResourceEntity): ControlUnitResourceDataOutput {
             return ControlUnitResourceDataOutput(
@@ -67,16 +45,5 @@ data class ControlUnitResourceDataOutput(
                 type = fullControlUnitResource.type,
             )
         }
-    }
-
-    override fun hashCode(): Int {
-        var result = id
-        result = 31 * result + (base?.hashCode() ?: 0)
-        result = 31 * result + name.hashCode()
-        result = 31 * result + (note?.hashCode() ?: 0)
-        result = 31 * result + (photo?.contentHashCode() ?: 0)
-        result = 31 * result + (type?.hashCode() ?: 0)
-
-        return result
     }
 }

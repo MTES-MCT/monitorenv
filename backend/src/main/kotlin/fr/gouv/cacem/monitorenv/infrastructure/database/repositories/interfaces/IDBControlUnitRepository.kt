@@ -17,7 +17,7 @@ interface IDBControlUnitRepository : CrudRepository<ControlUnitModel, Int> {
         """,
         nativeQuery = true,
     )
-    override fun deleteById(id: Int)
+    fun archiveById(id: Int)
 
     @Query(
         value = """

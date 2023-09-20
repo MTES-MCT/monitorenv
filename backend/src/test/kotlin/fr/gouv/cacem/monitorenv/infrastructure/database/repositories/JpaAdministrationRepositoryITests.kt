@@ -14,7 +14,7 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `delete() should delete an administration by its ID`() {
+    fun `deleteById() should delete an administration by its ID`() {
         val beforeAdministrationIds = jpaAdministrationRepository.findAll().map { it.id }
 
         assertThat(beforeAdministrationIds).hasSize(33)
@@ -63,10 +63,10 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
         assertThat(foundFullAdministration).isEqualTo(
             FullAdministrationDTO(
                 id = 6,
-                controlUnitIds = listOf(22, 23),
+                controlUnitIds = listOf(21, 22),
                 controlUnits = listOf(
                     ControlUnitEntity(
-                        id = 22,
+                        id = 21,
                         administrationId = 6,
                         areaNote = null,
                         controlUnitContactIds = listOf(),
@@ -76,7 +76,7 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
                         termsNote = null,
                     ),
                     ControlUnitEntity(
-                        id = 23,
+                        id = 22,
                         administrationId = 6,
                         areaNote = null,
                         controlUnitContactIds = listOf(),

@@ -6,7 +6,7 @@ import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/c
 import type { ControlUnit } from '../../../domain/entities/controlUnit'
 import type { ColumnDef } from '@tanstack/react-table'
 
-export const CONTROL_UNIT_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.ControlUnitData>> = [
+export const CONTROL_UNIT_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.ControlUnit>> = [
   {
     accessorFn: row => row.id,
     enableSorting: false,
@@ -15,9 +15,26 @@ export const CONTROL_UNIT_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.ControlUnit
     size: 64
   },
   {
+    accessorFn: row => row.administration.name,
+    header: () => 'Administration',
+    id: 'administrationName'
+  },
+  {
     accessorFn: row => row.name,
     header: () => 'Nom',
     id: 'name'
+  },
+  {
+    accessorFn: row => row.controlUnitResources.length,
+    header: () => 'Moyens',
+    id: 'controlUnitResourcesCount',
+    size: 96
+  },
+  {
+    accessorFn: row => row.controlUnitContacts.length,
+    header: () => 'Contacts',
+    id: 'controlUnitContactsCount',
+    size: 96
   },
   {
     accessorFn: row => row.id,

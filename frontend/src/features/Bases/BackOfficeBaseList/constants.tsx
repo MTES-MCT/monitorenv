@@ -20,6 +20,12 @@ export const BASE_TABLE_COLUMNS: Array<ColumnDef<Base.Base>> = [
     id: 'name'
   },
   {
+    accessorFn: row => row.controlUnitResources.length,
+    header: () => 'Moyens',
+    id: 'controlUnitResourcesCount',
+    size: 96
+  },
+  {
     accessorFn: row => row.id,
     cell: info => (
       <NavIconButton

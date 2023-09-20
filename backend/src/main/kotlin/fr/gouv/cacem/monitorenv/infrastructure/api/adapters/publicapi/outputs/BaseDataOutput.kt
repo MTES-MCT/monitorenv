@@ -6,7 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.base.dtos.FullBaseDTO
 
 data class BaseDataOutput(
     val id: Int,
-    val controlUnitIds: List<Int>,
+    val controlUnitResourceIds: List<Int>,
     val controlUnitResources: List<ControlUnitResourceEntity>? = null,
     val name: String,
 ) {
@@ -14,7 +14,7 @@ data class BaseDataOutput(
         fun fromBase(base: BaseEntity): BaseDataOutput {
             return BaseDataOutput(
                 id = requireNotNull(base.id),
-                controlUnitIds = base.controlUnitResourceIds,
+                controlUnitResourceIds = base.controlUnitResourceIds,
                 name = base.name,
             )
         }
@@ -22,7 +22,7 @@ data class BaseDataOutput(
         fun fromFullBase(fullBase: FullBaseDTO): BaseDataOutput {
             return BaseDataOutput(
                 id = requireNotNull(fullBase.id),
-                controlUnitIds = fullBase.controlUnitResourceIds,
+                controlUnitResourceIds = fullBase.controlUnitResourceIds,
                 controlUnitResources = fullBase.controlUnitResources,
                 name = fullBase.name,
             )

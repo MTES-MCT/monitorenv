@@ -1,12 +1,18 @@
 import { Icon, Size } from '@mtes-mct/monitor-ui'
+import { object, string } from 'yup'
 
 import { NavIconButton } from '../../../ui/NavIconButton'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/constants'
 
-import type { Administration } from '../../../domain/entities/administration'
+import type { AdministrationFormValues } from './types'
+import type { ControlUnit } from '../../../domain/entities/controlUnit'
 import type { ColumnDef } from '@tanstack/react-table'
 
-export const ADMINISTRATION_TABLE_COLUMNS: Array<ColumnDef<Administration.Administration>> = [
+export const ADMINISTRATION_FORM_SCHEMA = object({
+  name: string().required('Le nom est obligatoire.')
+})
+
+export const CONTROL_UNIT_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.ControlUnitData>> = [
   {
     accessorFn: row => row.id,
     enableSorting: false,
@@ -20,19 +26,13 @@ export const ADMINISTRATION_TABLE_COLUMNS: Array<ColumnDef<Administration.Admini
     id: 'name'
   },
   {
-    accessorFn: row => row.controlUnits.length,
-    header: () => 'Unités',
-    id: 'controlUnitsCount',
-    size: 96
-  },
-  {
     accessorFn: row => row.id,
     cell: info => (
       <NavIconButton
         Icon={Icon.Edit}
         size={Size.SMALL}
-        title="Éditer cette administration"
-        to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.ADMINISTRATION_LIST]}/${info.getValue<number>()}`}
+        title="Éditer cette unité de contrôle"
+        to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_LIST]}/${info.getValue<number>()}`}
       />
     ),
     enableSorting: false,
@@ -41,3 +41,8 @@ export const ADMINISTRATION_TABLE_COLUMNS: Array<ColumnDef<Administration.Admini
     size: 44
   }
 ]
+
+export const INITIAL_ADMINISTRATION_FORM_VALUES: AdministrationFormValues = {
+  controlUnitIds: [],
+  name: undefined
+}

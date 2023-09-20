@@ -63,7 +63,7 @@ class ApiAdministrationsControllerITests {
                 .contentType(MediaType.APPLICATION_JSON),
         )
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().isOk)
+            .andExpect(status().isCreated)
     }
 
     @Test

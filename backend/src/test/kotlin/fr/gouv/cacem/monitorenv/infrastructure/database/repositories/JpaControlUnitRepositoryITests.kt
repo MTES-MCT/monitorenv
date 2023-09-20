@@ -19,12 +19,12 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `delete() should archive a control unit by its ID`() {
+    fun `archiveById() should archive a control unit by its ID`() {
         val beforeFullControlUnit = jpaControlUnitRepository.findById(1)
 
         assertThat(beforeFullControlUnit.isArchived).isFalse()
 
-        jpaControlUnitRepository.deleteById(1)
+        jpaControlUnitRepository.archiveById(1)
 
         val afterFullControlUnit = jpaControlUnitRepository.findById(1)
 
@@ -40,65 +40,17 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
 
         assertThat(foundFullControlUnits[0]).isEqualTo(
             FullControlUnitDTO(
-                id = 25,
+                id = 24,
                 administration = AdministrationEntity(
                     id = 3,
-                    controlUnitIds = listOf(25),
+                    controlUnitIds = listOf(24),
                     name = "Marine Nationale"
                 ),
                 administrationId = 3,
-                controlUnitContactIds = listOf(1, 2),
-                controlUnitContacts = listOf(
-                    ControlUnitContactEntity(
-                        id = 1,
-                        controlUnitId = 25,
-                        email = null,
-                        name = "Contact 1",
-                        note = null,
-                        phone = null
-                    ),
-                    ControlUnitContactEntity(
-                        id = 2,
-                        controlUnitId = 25,
-                        email = null,
-                        name = "Contact 2",
-                        note = null,
-                        phone = null
-                    )
-                ),
-                controlUnitResourceIds = listOf(1, 2, 3),
-                controlUnitResources = listOf(
-                    ControlUnitResourceEntity(
-                        id = 1,
-                        base = null,
-                        baseId = 1,
-                        controlUnitId = 25,
-                        name = "Moyen 1",
-                        note = null,
-                        photo = null,
-                        type = ControlUnitResourceType.BARGE
-                    ),
-                    ControlUnitResourceEntity(
-                        id = 2,
-                        base = null,
-                        baseId = 1,
-                        controlUnitId = 25,
-                        name = "Moyen 2",
-                        note = null,
-                        photo = null,
-                        type = ControlUnitResourceType.BARGE
-                    ),
-                    ControlUnitResourceEntity(
-                        id = 3,
-                        base = null,
-                        baseId = 2,
-                        controlUnitId = 25,
-                        name = "Moyen 3",
-                        note = null,
-                        photo = null,
-                        type = ControlUnitResourceType.FRIGATE
-                    )
-                ),
+                controlUnitContactIds = listOf(),
+                controlUnitContacts = listOf(),
+                controlUnitResourceIds = listOf(),
+                controlUnitResources = listOf(),
                 areaNote = null,
                 isArchived = false,
                 name = "A636 Maïto",
@@ -108,10 +60,10 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
 
         assertThat(foundFullControlUnits[32]).isEqualTo(
             FullControlUnitDTO(
-                id = 9,
+                id = 8,
                 administration = AdministrationEntity(
                     id = 1005,
-                    controlUnitIds = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+                    controlUnitIds = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 33),
                     name = "DDTM"
                 ),
                 administrationId = 1005,
@@ -130,22 +82,22 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `findById() should find a control unit by its ID`() {
-        val foundFullControlUnit = jpaControlUnitRepository.findById(25)
+        val foundFullControlUnit = jpaControlUnitRepository.findById(1)
 
         assertThat(foundFullControlUnit).isEqualTo(
             FullControlUnitDTO(
-                id = 25,
+                id = 1,
                 administration = AdministrationEntity(
-                    id = 3,
-                    controlUnitIds = listOf(25),
-                    name = "Marine Nationale"
+                    id = 1005,
+                    controlUnitIds = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 33),
+                    name = "DDTM"
                 ),
-                administrationId = 3,
+                administrationId = 1005,
                 controlUnitContactIds = listOf(1, 2),
                 controlUnitContacts = listOf(
                     ControlUnitContactEntity(
                         id = 1,
-                        controlUnitId = 25,
+                        controlUnitId = 1,
                         email = null,
                         name = "Contact 1",
                         note = null,
@@ -153,21 +105,21 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                     ),
                     ControlUnitContactEntity(
                         id = 2,
-                        controlUnitId = 25,
+                        controlUnitId = 1,
                         email = null,
                         name = "Contact 2",
                         note = null,
                         phone = null
                     )
                 ),
-                controlUnitResourceIds = listOf(1, 2, 3),
+                controlUnitResourceIds = listOf(1, 2),
                 controlUnitResources = listOf(
                     ControlUnitResourceEntity(
                         id = 1,
                         base = null,
                         baseId = 1,
-                        controlUnitId = 25,
-                        name = "Moyen 1",
+                        controlUnitId = 1,
+                        name = "Semi-rigide 1",
                         note = null,
                         photo = null,
                         type = ControlUnitResourceType.BARGE
@@ -176,26 +128,16 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                         id = 2,
                         base = null,
                         baseId = 1,
-                        controlUnitId = 25,
-                        name = "Moyen 2",
+                        controlUnitId = 1,
+                        name = "Semi-rigide 2",
                         note = null,
                         photo = null,
                         type = ControlUnitResourceType.BARGE
                     ),
-                    ControlUnitResourceEntity(
-                        id = 3,
-                        base = null,
-                        baseId = 2,
-                        controlUnitId = 25,
-                        name = "Moyen 3",
-                        note = null,
-                        photo = null,
-                        type = ControlUnitResourceType.FRIGATE
-                    )
                 ),
                 areaNote = null,
                 isArchived = false,
-                name = "A636 Maïto",
+                name = "Cultures marines – DDTM 40",
                 termsNote = null,
             )
         )

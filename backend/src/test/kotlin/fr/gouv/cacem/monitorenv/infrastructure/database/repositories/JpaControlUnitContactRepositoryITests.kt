@@ -1,5 +1,3 @@
-// TODO There is a hash issue here, we can't compare the full objects at once.
-
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
@@ -16,7 +14,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `delete() should delete a contact by its ID`() {
+    fun `deleteById() should delete a contact by its ID`() {
         val beforeControlUnitContactIds = jpaControlUnitContactRepository.findAll().map { it.id }
 
         assertThat(beforeControlUnitContactIds).hasSize(3)
@@ -33,24 +31,24 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `findAll() should find all contacts`() {
-        val foundFullControlUnitContacts = jpaControlUnitContactRepository.findAll()
+        val foundFullControlUnitContacts = jpaControlUnitContactRepository.findAll().sortedBy { requireNotNull(it.id) }
 
         assertThat(foundFullControlUnitContacts).hasSize(3)
 
         assertThat(foundFullControlUnitContacts[0]).isEqualTo(
             FullControlUnitContactDTO(
                 id = 1,
-                controlUnitId = 25,
                 controlUnit = ControlUnitEntity(
-                    id = 25,
-                    administrationId = 3,
+                    id = 1,
+                    administrationId = 1005,
                     areaNote = null,
                     controlUnitContactIds = listOf(1, 2),
-                    controlUnitResourceIds = listOf(1, 2, 3),
+                    controlUnitResourceIds = listOf(1, 2),
                     isArchived = false,
-                    name = "A636 Maïto",
+                    name = "Cultures marines – DDTM 40",
                     termsNote = null
                 ),
+                controlUnitId = 1,
                 name = "Contact 1",
                 note = null,
                 phone = null,
@@ -60,17 +58,17 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
         assertThat(foundFullControlUnitContacts[2]).isEqualTo(
             FullControlUnitContactDTO(
                 id = 3,
-                controlUnitId = 15,
                 controlUnit = ControlUnitEntity(
-                    id = 15,
-                    administrationId = 2,
+                    id = 4,
+                    administrationId = 1005,
                     areaNote = null,
                     controlUnitContactIds = listOf(3),
-                    controlUnitResourceIds = listOf(4),
-                    isArchived = true,
-                    name = "BGC Ajaccio",
+                    controlUnitResourceIds = listOf(6, 7),
+                    isArchived = false,
+                    name = "DPM – DDTM 14",
                     termsNote = null
                 ),
+                controlUnitId = 4,
                 name = "Contact 3",
                 note = null,
                 phone = null,
@@ -87,16 +85,16 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
             FullControlUnitContactDTO(
                 id = 1,
                 controlUnit = ControlUnitEntity(
-                    id = 25,
-                    administrationId = 3,
+                    id = 1,
+                    administrationId = 1005,
                     areaNote = null,
                     controlUnitContactIds = listOf(1, 2),
-                    controlUnitResourceIds = listOf(1, 2, 3),
+                    controlUnitResourceIds = listOf(1, 2),
                     isArchived = false,
-                    name = "A636 Maïto",
+                    name = "Cultures marines – DDTM 40",
                     termsNote = null
                 ),
-                controlUnitId = 25,
+                controlUnitId = 1,
                 name = "Contact 1",
                 note = null,
                 phone = null,

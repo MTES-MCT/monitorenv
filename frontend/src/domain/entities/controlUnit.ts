@@ -56,6 +56,7 @@ export namespace ControlUnit {
   export enum ControlUnitResourceType {
     BARGE = 'Barge',
     FRIGATE = 'Frégate',
+    LAND_VEHICLE = 'Véhicule terrestre',
     SCHOOL_BOAT = 'Bâtiment-École'
   }
 

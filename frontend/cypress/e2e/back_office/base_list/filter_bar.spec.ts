@@ -8,8 +8,8 @@ context('Back Office > Base List > Filter Bar', () => {
   })
 
   it('Should show all bases by default', () => {
-    cy.get('tbody > tr').should('have.length', 2)
-    cy.get('tbody > tr:first-child > td:nth-child(2)').should('have.text', 'Marseille')
+    cy.get('tbody > tr').should('have.length', 3)
+    cy.get('tbody > tr:first-child > td:nth-child(2)').should('have.text', 'Dunkerque')
     cy.get('tbody > tr:last-child > td:nth-child(2)').should('have.text', 'Saint-Malo')
   })
 

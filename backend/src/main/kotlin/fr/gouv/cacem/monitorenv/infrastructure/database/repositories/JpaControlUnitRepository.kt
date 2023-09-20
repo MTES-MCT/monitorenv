@@ -21,8 +21,8 @@ class JpaControlUnitRepository(
     private val dbControlUnitContactRepository: IDBControlUnitContactRepository,
     private val dbControlUnitResourceRepository: IDBControlUnitResourceRepository,
 ) : IControlUnitRepository {
-    override fun deleteById(controlUnitId: Int) {
-        dbControlUnitRepository.deleteById(controlUnitId)
+    override fun archiveById(controlUnitId: Int) {
+        dbControlUnitRepository.archiveById(controlUnitId)
     }
 
     override fun findAll(): List<FullControlUnitDTO> {

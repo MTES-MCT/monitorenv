@@ -1,6 +1,6 @@
 context('Back Office > Control Unit List > Filter Bar', () => {
   beforeEach(() => {
-    cy.intercept('GET', `/api/v1/control_units`).as('getControlUnits')
+    cy.intercept('GET', `/api/v2/control_units`).as('getControlUnits')
 
     cy.visit(`/backoffice/control_units`)
 

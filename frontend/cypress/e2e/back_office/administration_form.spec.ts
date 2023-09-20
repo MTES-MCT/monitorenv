@@ -23,17 +23,18 @@ context('Back Office > Administration Form', () => {
         assert.fail('`interception.response` is undefined.')
       }
 
-      assert.deepInclude(interception.request.body, {
+      assert.deepEqual(interception.request.body, {
+        controlUnitIds: [],
         name: 'Administration 1'
       })
     })
   })
 
   it('Should edit an administration', () => {
-    cy.intercept('PUT', `/api/v1/administrations/1001`, FAKE_API_PUT_RESPONSE).as('updateAdministration')
+    cy.intercept('PUT', `/api/v1/administrations/1002`, FAKE_API_PUT_RESPONSE).as('updateAdministration')
 
     cy.clickButton('Éditer cette administration', {
-      withinSelector: 'tbody > tr:first-child'
+      withinSelector: 'tbody > tr:nth-child(4)'
     })
 
     cy.fill('Nom', 'Administration 2')
@@ -46,7 +47,8 @@ context('Back Office > Administration Form', () => {
       }
 
       assert.deepInclude(interception.request.body, {
-        id: 1001,
+        controlUnitIds: [24],
+        id: 1002,
         name: 'Administration 2'
       })
     })

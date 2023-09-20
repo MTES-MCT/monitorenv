@@ -13,19 +13,19 @@ export const controlUnitContactsAPI = monitorenvPublicApi.injectEndpoints({
       query: newControlUnitContactData => ({
         body: newControlUnitContactData,
         method: 'POST',
-        url: `/control_unit_contacts`
+        url: `/v1/control_unit_contacts`
       })
     }),
 
     getControlUnitContact: builder.query<ControlUnit.ControlUnitContact, number>({
       providesTags: () => [{ type: 'ControlUnits' }],
-      query: controlUnitContactId => `/control_unit_contacts/${controlUnitContactId}`,
+      query: controlUnitContactId => `/v1/control_unit_contacts/${controlUnitContactId}`,
       transformErrorResponse: response => new ApiError(GET_CONTROL_UNIT_CONTACT_ERROR_MESSAGE, response)
     }),
 
     getControlUnitContacts: builder.query<ControlUnit.ControlUnitContact[], void>({
       providesTags: () => [{ type: 'ControlUnits' }],
-      query: () => `/control_unit_contacts`,
+      query: () => `/v1/control_unit_contacts`,
       transformErrorResponse: response => new ApiError(GET_CONTROL_UNIT_CONTACTS_ERROR_MESSAGE, response)
     }),
 
@@ -34,7 +34,7 @@ export const controlUnitContactsAPI = monitorenvPublicApi.injectEndpoints({
       query: nextControlUnitContactData => ({
         body: nextControlUnitContactData,
         method: 'PUT',
-        url: `/control_unit_contacts/${nextControlUnitContactData.id}`
+        url: `/v1/control_unit_contacts/${nextControlUnitContactData.id}`
       })
     })
   })

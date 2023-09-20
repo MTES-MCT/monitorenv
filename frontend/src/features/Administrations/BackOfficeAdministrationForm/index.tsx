@@ -5,12 +5,11 @@ import { useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import styled from 'styled-components'
 
-import { ADMINISTRATION_FORM_SCHEMA, INITIAL_ADMINISTRATION_FORM_VALUES } from './constants'
+import { ADMINISTRATION_FORM_SCHEMA, CONTROL_UNIT_TABLE_COLUMNS, INITIAL_ADMINISTRATION_FORM_VALUES } from './constants'
 import { administrationsAPI, useGetAdministrationQuery } from '../../../api/administrationsAPI'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../libs/FrontendError'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/constants'
-import { CONTROL_UNIT_TABLE_COLUMNS } from '../../ControlUnits/BackOfficeControlUnitList/constants'
 
 import type { AdministrationFormValues } from './types'
 import type { Administration } from '../../../domain/entities/administration'

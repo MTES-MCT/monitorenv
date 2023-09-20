@@ -7,7 +7,7 @@ data class LegacyControlUnitDataOutput(
     val administration: String,
     val isArchived: Boolean,
     val name: String,
-    val resources: List<LegacyControlResourceDataOutput>,
+    val resources: List<LegacyControlUnitResourceDataOutput>,
 ) {
     companion object {
         fun fromLegacyControlUnit(controlUnit: LegacyControlUnitEntity) = LegacyControlUnitDataOutput(
@@ -16,7 +16,7 @@ data class LegacyControlUnitDataOutput(
             name = controlUnit.name,
             isArchived = controlUnit.isArchived,
             resources = controlUnit.resources.map {
-                LegacyControlResourceDataOutput.fromControlResourceEntity(it)
+                LegacyControlUnitResourceDataOutput.fromControlResourceEntity(it)
             },
         )
     }

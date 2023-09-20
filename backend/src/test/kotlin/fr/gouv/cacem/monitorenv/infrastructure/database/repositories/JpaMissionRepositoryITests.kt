@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlResourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.*
 import fr.gouv.cacem.monitorenv.domain.exceptions.ControlResourceOrUnitNotFoundException
@@ -77,11 +77,17 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             ),
             controlUnits = listOf(
                 LegacyControlUnitEntity(
-                    id = 10006,
+                    id = 6,
                     name = "DPM – DDTM 35",
                     administration = "DDTM",
                     isArchived = false,
-                    resources = listOf(LegacyControlResourceEntity(id = 8, name = "PAM Jeanne Barret")),
+                    resources = listOf(
+                        ControlUnitResourceEntity(
+                            id = 8,
+                            controlUnitId = 1,
+                            name = "PAM Jeanne Barret",
+                        )
+                    ),
                 ),
             ),
             isGeometryComputedFromControls = false,
@@ -92,7 +98,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
         // Then
         assertThat(newMissionCreated.controlUnits).hasSize(1)
-        assertThat(newMissionCreated.controlUnits.first().id).isEqualTo(10006)
+        assertThat(newMissionCreated.controlUnits.first().id).isEqualTo(6)
         assertThat(newMissionCreated.controlUnits.first().name).isEqualTo("DPM – DDTM 35")
         assertThat(newMissionCreated.controlUnits.first().administration).isEqualTo("DDTM")
         assertThat(newMissionCreated.controlUnits.first().resources).hasSize(1)
@@ -133,11 +139,17 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             isUnderJdp = false,
             controlUnits = listOf(
                 LegacyControlUnitEntity(
-                    id = 10006,
+                    id = 6,
                     name = "DPM – DDTM 35",
                     administration = "DDTM",
                     isArchived = false,
-                    resources = listOf(LegacyControlResourceEntity(id = 8, name = "PAM Jeanne Barret")),
+                    resources = listOf(
+                        ControlUnitResourceEntity(
+                            id = 8,
+                            controlUnitId = 1,
+                            name = "PAM Jeanne Barret",
+                        )
+                    ),
                 ),
             ),
             isGeometryComputedFromControls = false,
@@ -149,13 +161,13 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             newMission.copy(
                 controlUnits = listOf(
                     LegacyControlUnitEntity(
-                        id = 10006,
+                        id = 6,
                         name = "DPM – DDTM 35",
                         administration = "DDTM",
                         isArchived = false,
                         resources = listOf(
-                            LegacyControlResourceEntity(id = 8, name = "PAM Jeanne Barret"),
-                            LegacyControlResourceEntity(id = 5, name = "Voiture"),
+                            ControlUnitResourceEntity(id = 8, controlUnitId = 1, name = "PAM Jeanne Barret"),
+                            ControlUnitResourceEntity(id = 5, controlUnitId = 1, name = "Voiture"),
                         ),
                     ),
                 ),
@@ -164,7 +176,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
         // Then
         assertThat(newMissionUpdated.controlUnits).hasSize(1)
-        assertThat(newMissionUpdated.controlUnits.first().id).isEqualTo(10006)
+        assertThat(newMissionUpdated.controlUnits.first().id).isEqualTo(6)
         assertThat(newMissionUpdated.controlUnits.first().name).isEqualTo("DPM – DDTM 35")
         assertThat(newMissionUpdated.controlUnits.first().administration).isEqualTo("DDTM")
         assertThat(newMissionUpdated.controlUnits.first().resources).hasSize(2)
@@ -188,11 +200,17 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             isUnderJdp = false,
             controlUnits = listOf(
                 LegacyControlUnitEntity(
-                    id = 10006,
+                    id = 6,
                     name = "DPM – DDTM 35",
                     administration = "DDTM",
                     isArchived = false,
-                    resources = listOf(LegacyControlResourceEntity(id = 123456, name = "PAM Jeanne Barret")),
+                    resources = listOf(
+                        ControlUnitResourceEntity(
+                            id = 123456,
+                            controlUnitId = 1,
+                            name = "PAM Jeanne Barret",
+                        )
+                    ),
                 ),
             ),
             isGeometryComputedFromControls = false,
@@ -468,14 +486,14 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             isUnderJdp = false,
             controlUnits = listOf(
                 LegacyControlUnitEntity(
-                    id = 10003,
+                    id = 3,
                     administration = "DDTM",
                     isArchived = false,
                     name = "DML 2A",
                     resources = listOf(
-                        LegacyControlResourceEntity(id = 3, name = "Semi-rigide 1"),
-                        LegacyControlResourceEntity(id = 4, name = "Semi-rigide 2"),
-                        LegacyControlResourceEntity(id = 5, name = "Voiture"),
+                        ControlUnitResourceEntity(id = 3, controlUnitId = 3, name = "Semi-rigide 1"),
+                        ControlUnitResourceEntity(id = 4, controlUnitId = 3, name = "Semi-rigide 2"),
+                        ControlUnitResourceEntity(id = 5, controlUnitId = 3, name = "Voiture"),
                     ),
                     contact = null,
                 ),

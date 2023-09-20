@@ -2,7 +2,7 @@ import { FAKE_API_POST_RESPONSE, FAKE_API_PUT_RESPONSE } from '../contants'
 
 context('Back Office > Control Unit Form', () => {
   beforeEach(() => {
-    cy.intercept('GET', `/api/v1/control_units`).as('getControlUnits')
+    cy.intercept('GET', `/api/v2/control_units`).as('getControlUnits')
 
     cy.visit(`/backoffice/control_units`)
 
@@ -10,7 +10,7 @@ context('Back Office > Control Unit Form', () => {
   })
 
   it('Should create a control unit', () => {
-    cy.intercept('POST', `/api/v1/control_units`, FAKE_API_POST_RESPONSE).as('createControlUnit')
+    cy.intercept('POST', `/api/v2/control_units`, FAKE_API_POST_RESPONSE).as('createControlUnit')
 
     cy.clickButton('Nouvelle unité de contrôle')
 
@@ -26,9 +26,12 @@ context('Back Office > Control Unit Form', () => {
         assert.fail('`interception.response` is undefined.')
       }
 
-      assert.deepInclude(interception.request.body, {
+      assert.deepEqual(interception.request.body, {
         administrationId: 1007,
         areaNote: 'Une zone.',
+        controlUnitContactIds: [],
+        controlUnitResourceIds: [],
+        isArchived: false,
         name: 'Unité 1',
         termsNote: 'Des modalités.'
       })
@@ -36,10 +39,10 @@ context('Back Office > Control Unit Form', () => {
   })
 
   it('Should edit a control unit', () => {
-    cy.intercept('PUT', `/api/v1/control_units/25`, FAKE_API_PUT_RESPONSE).as('updateControlUnit')
+    cy.intercept('PUT', `/api/v2/control_units/1`, FAKE_API_PUT_RESPONSE).as('updateControlUnit')
 
     cy.clickButton('Éditer cette unité de contrôle', {
-      withinSelector: 'tbody > tr:first-child'
+      withinSelector: 'tbody > tr:nth-child(9)'
     })
 
     cy.fill('Administration', 'AFB')
@@ -57,7 +60,10 @@ context('Back Office > Control Unit Form', () => {
       assert.deepInclude(interception.request.body, {
         administrationId: 1002,
         areaNote: 'Une autre zone.',
-        id: 25,
+        controlUnitContactIds: [1, 2],
+        controlUnitResourceIds: [1, 2],
+        id: 1,
+        isArchived: false,
         name: 'Unité 2',
         termsNote: "D'autres modalités."
       })

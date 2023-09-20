@@ -1,9 +1,9 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlResourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlResources.GetLegacyControlUnits
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetLegacyControlUnits
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
@@ -17,9 +17,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @Import(WebSecurityConfig::class)
-@WebMvcTest(value = [(LegacyControlUnitsController::class)])
-class LegacyControlUnitsControllerITests {
-
+@WebMvcTest(value = [(ApiLegacyControlUnitsController::class)])
+class ApiLegacyControlUnitsControllerITests {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -34,12 +33,18 @@ class LegacyControlUnitsControllerITests {
             administration = "Gendarmerie nationale",
             isArchived = false,
             name = "DF 123",
-            resources = listOf(LegacyControlResourceEntity(1, "Vedette")),
+            resources = listOf(
+                ControlUnitResourceEntity(
+                    id = 1,
+                    controlUnitId = 2,
+                    name = "Vedette",
+                )
+            ),
         )
         given(getLegacyControlUnits.execute()).willReturn(listOf(controlUnit))
 
         // When
-        mockMvc.perform(get("/bff/v1/legacy_control_units"))
+        mockMvc.perform(get("/api/v1/control_units"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].id", equalTo(controlUnit.id)))

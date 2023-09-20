@@ -4,6 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEnt
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 
 data class FullControlUnitDTO(
     val id: Int? = null,
@@ -20,16 +21,13 @@ data class FullControlUnitDTO(
     /** Conditions under which this unit should be contacted. */
     val termsNote: String? = null,
 ) {
-    fun toControlUnit(): ControlUnitEntity {
-        return ControlUnitEntity(
-            id,
-            administrationId,
-            areaNote,
-            controlUnitContactIds,
-            controlUnitResourceIds,
+    fun toLegacyControlUnit(): LegacyControlUnitEntity {
+        return LegacyControlUnitEntity(
+            id = requireNotNull(id),
+            administration = administration.name,
             isArchived,
             name,
-            termsNote,
+            resources = controlUnitResources,
         )
     }
 }
