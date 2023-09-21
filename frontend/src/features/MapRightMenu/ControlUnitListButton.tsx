@@ -23,7 +23,7 @@ export function ControlUnitListButton() {
 
       <MenuWithCloseButton.ButtonOnMap
         $isActive={isControlUnitListDialogVisible}
-        Icon={Icon.Alert}
+        Icon={Icon.ControlUnit}
         onClick={toggleDialog}
         size={Size.LARGE}
         title="Liste des unités de contrôle"
