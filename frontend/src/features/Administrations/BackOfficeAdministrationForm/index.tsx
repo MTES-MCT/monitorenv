@@ -88,12 +88,16 @@ export function BackOfficeAdministrationForm() {
 
       <hr />
 
-      <SubTitle>Unités de contrôle</SubTitle>
-      <DataTable
-        columns={CONTROL_UNIT_TABLE_COLUMNS}
-        data={administration?.controlUnits}
-        initialSorting={[{ desc: false, id: 'name' }]}
-      />
+      {!isNew && (
+        <>
+          <SubTitle>Unités de contrôle</SubTitle>
+          <DataTable
+            columns={CONTROL_UNIT_TABLE_COLUMNS}
+            data={administration?.controlUnits}
+            initialSorting={[{ desc: false, id: 'name' }]}
+          />
+        </>
+      )}
     </div>
   )
 }

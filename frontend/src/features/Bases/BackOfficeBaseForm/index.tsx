@@ -82,12 +82,16 @@ export function BackOfficeBaseForm() {
 
       <hr />
 
-      <SubTitle>Moyens</SubTitle>
-      <DataTable
-        columns={CONTROL_UNIT_RESOURCE_TABLE_COLUMNS}
-        data={base?.controlUnitResources}
-        initialSorting={[{ desc: false, id: 'name' }]}
-      />
+      {!isNew && (
+        <>
+          <SubTitle>Moyens</SubTitle>
+          <DataTable
+            columns={CONTROL_UNIT_RESOURCE_TABLE_COLUMNS}
+            data={base?.controlUnitResources}
+            initialSorting={[{ desc: false, id: 'name' }]}
+          />
+        </>
+      )}
     </div>
   )
 }

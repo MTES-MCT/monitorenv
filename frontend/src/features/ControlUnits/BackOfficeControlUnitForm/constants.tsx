@@ -1,8 +1,4 @@
-import { Icon, Size } from '@mtes-mct/monitor-ui'
 import { number, object, string } from 'yup'
-
-import { NavIconButton } from '../../../ui/NavIconButton'
-import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/constants'
 
 import type { ControlUnitFormValues } from './types'
 import type { ControlUnit } from '../../../domain/entities/controlUnit'
@@ -20,23 +16,6 @@ export const CONTROL_UNIT_CONTACT_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.Con
     accessorFn: row => row.name,
     header: () => 'Nom',
     id: 'name'
-  },
-  {
-    accessorFn: row => row.id,
-    cell: info => (
-      <NavIconButton
-        Icon={Icon.Edit}
-        size={Size.SMALL}
-        title="Éditer ce contact"
-        to={`/backoffice${
-          BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_CONTACT_LIST]
-        }/${info.getValue<number>()}`}
-      />
-    ),
-    enableSorting: false,
-    header: () => '',
-    id: 'edit',
-    size: 44
   }
 ]
 
@@ -52,23 +31,6 @@ export const CONTROL_UNIT_RESOURCE_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.Co
     accessorFn: row => row.name,
     header: () => 'Nom',
     id: 'name'
-  },
-  {
-    accessorFn: row => row.id,
-    cell: info => (
-      <NavIconButton
-        Icon={Icon.Edit}
-        size={Size.SMALL}
-        title="Éditer ce moyen"
-        to={`/backoffice${
-          BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_RESOURCE_LIST]
-        }/${info.getValue<number>()}`}
-      />
-    ),
-    enableSorting: false,
-    header: () => '',
-    id: 'edit',
-    size: 44
   }
 ]
 

@@ -111,21 +111,25 @@ export function BackOfficeControlUnitForm() {
 
       <hr />
 
-      <SubTitle>Contacts</SubTitle>
-      <DataTable
-        columns={CONTROL_UNIT_CONTACT_TABLE_COLUMNS}
-        data={controlUnit?.controlUnitContacts}
-        initialSorting={[{ desc: false, id: 'name' }]}
-      />
+      {!isNew && (
+        <>
+          <SubTitle>Contacts</SubTitle>
+          <DataTable
+            columns={CONTROL_UNIT_CONTACT_TABLE_COLUMNS}
+            data={controlUnit?.controlUnitContacts}
+            initialSorting={[{ desc: false, id: 'name' }]}
+          />
 
-      <hr />
+          <hr />
 
-      <SubTitle>Moyens</SubTitle>
-      <DataTable
-        columns={CONTROL_UNIT_RESOURCE_TABLE_COLUMNS}
-        data={controlUnit?.controlUnitResources}
-        initialSorting={[{ desc: false, id: 'name' }]}
-      />
+          <SubTitle>Moyens</SubTitle>
+          <DataTable
+            columns={CONTROL_UNIT_RESOURCE_TABLE_COLUMNS}
+            data={controlUnit?.controlUnitResources}
+            initialSorting={[{ desc: false, id: 'name' }]}
+          />
+        </>
+      )}
     </div>
   )
 }
