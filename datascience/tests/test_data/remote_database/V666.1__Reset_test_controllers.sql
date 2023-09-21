@@ -1,5 +1,5 @@
 DELETE FROM missions_control_resources;
-DELETE FROM control_resources;
+DELETE FROM control_unit_resources;
 DELETE FROM missions_control_units;
 DELETE FROM control_units;
 
@@ -41,9 +41,9 @@ INSERT INTO public.control_units (
     (             1004, 'Réserve Naturelle  de L''Ilot M''Bouzi'),
     (             1004,               'Réserve Naturelle 7 Iles');
 
-ALTER SEQUENCE public.control_resources_id_seq RESTART WITH 1;
+ALTER SEQUENCE public.control_unit_resources_id_seq RESTART WITH 1;
 
-INSERT INTO public.control_resources (unit_id, name) VALUES
+INSERT INTO public.control_unit_resources (control_unit_id, name) VALUES
     (10001, 'Semi-rigide 1'),
     (10001, 'Semi-rigide 2'),
     (10003, 'Semi-rigide 1'),
