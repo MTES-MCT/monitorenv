@@ -26,12 +26,12 @@ export function MeasurementMapButton() {
   const wrapperRef = useRef(null)
 
   useClickOutsideWhenOpenedAndExecute(wrapperRef, isOpen, () => {
-    dispatch(globalActions.setisMapToolVisible(undefined))
+    dispatch(globalActions.setIsMapToolVisible(undefined))
   })
 
   useEscapeFromKeyboardAndExecute(() => {
     dispatch(setMeasurementTypeToAdd(undefined))
-    dispatch(globalActions.setisMapToolVisible(undefined))
+    dispatch(globalActions.setIsMapToolVisible(undefined))
   })
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export function MeasurementMapButton() {
   const makeMeasurement = nextMeasurementTypeToAdd => {
     dispatch(globalActions.hideSideButtons())
     dispatch(setMeasurementTypeToAdd(nextMeasurementTypeToAdd))
-    dispatch(globalActions.setisMapToolVisible(MapToolType.MEASUREMENT))
+    dispatch(globalActions.setIsMapToolVisible(MapToolType.MEASUREMENT))
   }
 
   const measurementIcon = useMemo(() => {

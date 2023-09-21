@@ -1,3 +1,4 @@
+import { pluralize } from '@mtes-mct/monitor-ui'
 import Overlay from 'ol/Overlay'
 import { MutableRefObject, useEffect, useCallback, useRef, useMemo } from 'react'
 import styled from 'styled-components'
@@ -6,7 +7,6 @@ import { COLORS } from '../../../constants/constants'
 import { DistanceUnit, OLGeometryType } from '../../../domain/entities/map/constants'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ReactComponent as CloseIconSVG } from '../../../uiMonitor/icons/Close.svg'
-import { pluralize } from '../../../utils/pluralize'
 
 type MeasurementOverlayProps = {
   coordinates: any[]

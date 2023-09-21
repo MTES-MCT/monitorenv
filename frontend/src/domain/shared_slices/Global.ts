@@ -130,7 +130,6 @@ const globalSlice = createSlice({
       state.isControlUnitDialogVisible = false
       state.isControlUnitListDialogVisible = false
       state.isSearchReportingsVisible = false
-      state.isSearchReportingsVisible = false
       state.isSearchSemaphoreVisible = false
       state.isSearchMissionsVisible = false
       state.isMapToolVisible = undefined
@@ -160,13 +159,6 @@ const globalSlice = createSlice({
       state.isMapToolVisible = action.payload
     },
 
-    /**
-     * Set the map tool opened
-     */
-    setisMapToolVisible(state, action: PayloadAction<MapToolType | undefined>) {
-      state.isMapToolVisible = action.payload
-    },
-
     setOverlayCoordinates(state, action) {
       state.overlayCoordinates = action.payload
     },
@@ -186,7 +178,7 @@ export const {
   removeToast,
   setDisplayedItems,
   setHealthcheckTextWarning,
-  setisMapToolVisible,
+  setIsMapToolVisible,
   setOverlayCoordinates,
   setReportingFormVisibility,
   setToast

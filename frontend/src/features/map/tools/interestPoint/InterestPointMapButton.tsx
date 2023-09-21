@@ -40,11 +40,11 @@ export function InterestPointMapButton() {
   const openOrCloseInterestPoint = useCallback(() => {
     if (!isOpen) {
       dispatch(drawInterestPoint())
-      dispatch(reduceReportingFormOnMap())
       dispatch(globalActions.setIsMapToolVisible(MapToolType.INTEREST_POINT))
     } else {
       close()
     }
+    dispatch(reduceReportingFormOnMap())
   }, [close, dispatch, isOpen])
 
   return (
