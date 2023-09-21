@@ -35,6 +35,7 @@ import { controlUnitListDialogPersistedReducer } from '../../features/ControlUni
 import { controlUnitTablePersistedReducer } from '../../features/ControlUnit/components/ControlUnitTable/slice'
 import { layerSearchSliceReducer } from '../../features/layersSelector/search/slice'
 import { mainWindowReducer } from '../../features/MainWindow/slice'
+import { attachMissionToReportingSliceReducer } from '../../features/Reportings/ReportingForm/AttachMission/slice'
 import { sideWindowReducer } from '../../features/SideWindow/slice'
 
 // TODO Maybe add a specifc store for the backoffice?
@@ -42,8 +43,8 @@ import { sideWindowReducer } from '../../features/SideWindow/slice'
 export const homeReducers = combineReducers({
   [monitorenvPrivateApi.reducerPath]: monitorenvPrivateApi.reducer,
   [monitorenvPublicApi.reducerPath]: monitorenvPublicApi.reducer,
-
   administrative: administrativeSlicePersistedReducer,
+  attachReportingToMission: attachMissionToReportingSliceReducer,
   backOffice: backOfficeReducer,
   backOfficeAdministrationList: administrationTablePersistedReducer,
   backOfficeBaseList: baseTablePersistedReducer,
@@ -62,7 +63,6 @@ export const homeReducers = combineReducers({
   multiMissions: multiMissionsSliceReducer,
   regulatory: regulatorySlicePersistedReducer,
   regulatoryMetadata: regulatoryMetadataSliceReducer,
-  reporting: reportingSliceReducer,
   [layerSidebarSlice.name]: layerSidebarSlice.reducer,
   [ampsAPI.reducerPath]: ampsAPI.reducer,
   [regulatoryLayersAPI.reducerPath]: regulatoryLayersAPI.reducer,
@@ -71,8 +71,9 @@ export const homeReducers = combineReducers({
   [legacyControlUnitsAPI.reducerPath]: legacyControlUnitsAPI.reducer,
   [infractionsAPI.reducerPath]: infractionsAPI.reducer,
   [semaphoresAPI.reducerPath]: semaphoresAPI.reducer,
-  reportingFilters: reportingFiltersPersistedReducer,
+  reporting: reportingSliceReducer,
   [reportingsAPI.reducerPath]: reportingsAPI.reducer,
+  reportingFilters: reportingFiltersPersistedReducer,
   selectedAmp: selectedAmpSlicePersistedReducer,
   semaphoresSlice: semaphoresPersistedReducer,
   sideWindow: sideWindowReducer

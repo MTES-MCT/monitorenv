@@ -29,13 +29,13 @@
 
 /* classNames added via ol component */
 
-.overlay-mission-hover {
+.overlay-mission-hover .overlay-mission-to-attach-hover {
   z-index: 5000;
   width: 0;
   height: 0;
 }
 
-.overlay-mission-selected {
+.overlay-mission-selected .overlay-mission-to-attach-selected {
   z-index: 4000;
   width: 0;
   height: 0;

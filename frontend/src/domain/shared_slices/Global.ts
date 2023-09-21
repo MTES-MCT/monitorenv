@@ -45,6 +45,7 @@ type GlobalStateType = {
   displayMissionEditingLayer: boolean
   displayMissionsLayer: boolean
   displayMissionSelectedLayer: boolean
+  displayMissionToAttachLayer: boolean
 
   // state entry for other children components whom visibility is already handled by parent components
 
@@ -91,6 +92,7 @@ const initialState: GlobalStateType = {
   displayMissionsOverlay: true,
   displayMissionEditingLayer: true,
   displayMissionSelectedLayer: true,
+  displayMissionToAttachLayer: true,
 
   // state entry for other children components whom visibility is already handled by parent components
   isLayersSidebarVisible: false,

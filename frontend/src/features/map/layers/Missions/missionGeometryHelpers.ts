@@ -10,6 +10,8 @@ import {
   type EnvActionControl,
   type EnvActionSurveillance,
   getMissionStatus,
+  getTotalOfControls,
+  getTotalOfSurveillances,
   type Mission
 } from '../../../../domain/entities/missions'
 
@@ -47,14 +49,6 @@ export const getMissionZoneFeature = (mission: Partial<Mission>, layername: stri
     featureProjection: OPENLAYERS_PROJECTION
   })
 
-  const numberOfControls = mission.envActions
-    ?.map(control => (control.actionType === ActionTypeEnum.CONTROL && control.actionNumberOfControls) || 0)
-    .reduce((acc, curr) => acc + curr, 0)
-
-  const numberOfSurveillance = mission.envActions?.filter(
-    action => action.actionType === ActionTypeEnum.SURVEILLANCE
-  ).length
-
   const feature = new Feature({
     geometry
   })
@@ -68,8 +62,8 @@ export const getMissionZoneFeature = (mission: Partial<Mission>, layername: stri
     missionStatus: getMissionStatus(mission),
     missionTypes: mission.missionTypes,
     numberOfActions: mission.envActions?.length || 0,
-    numberOfControls,
-    numberOfSurveillance,
+    numberOfControls: getTotalOfControls(mission),
+    numberOfSurveillance: getTotalOfSurveillances(mission),
     startDateTimeUtc: mission.startDateTimeUtc
   })
 

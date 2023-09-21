@@ -5,6 +5,7 @@ import type { ReportingTargetTypeEnum } from './targetType'
 
 export type Reporting = {
   actionTaken?: string
+  attachedMissionId?: number
   controlUnitId?: number
   createdAt: string
   description?: string

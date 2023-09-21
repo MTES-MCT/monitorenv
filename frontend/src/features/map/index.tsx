@@ -26,6 +26,9 @@ import { MissionOverlays } from './overlays/missions'
 import { ReportingOverlay } from './overlays/reportings'
 import { SemaphoreOverlay } from './overlays/semaphores'
 import { ShowRegulatoryMetadata } from './ShowRegulatoryMetadata'
+import { MissionToAttachLayer } from '../Reportings/Layers/missionToAttach'
+import { SelectedMissionToAttachLayer } from '../Reportings/Layers/selectedMissionToAttach'
+import { MissionToAttachOverlays } from '../Reportings/Overlays/missionToAttach'
 
 export function Map() {
   return (
@@ -63,6 +66,9 @@ export function Map() {
       <HoveredReportingLayer />
       <ReportingsLayer />
       <ReportingOverlay />
+      <MissionToAttachLayer />
+      <SelectedMissionToAttachLayer />
+      <MissionToAttachOverlays />
     </BaseMap>
   )
 }
