@@ -2,52 +2,61 @@ import { useMemo } from 'react'
 
 import { useAppSelector } from './useAppSelector'
 import { useGetMissionsQuery } from '../api/missionsAPI'
-import { administrationFilterFunction } from '../domain/use_cases/missions/filters/administrationFilterFunction'
-import { themeFilterFunction } from '../domain/use_cases/missions/filters/themeFilterFunction'
-import { unitFilterFunction } from '../domain/use_cases/missions/filters/unitFilterFunction'
+import { isMissionPartOfSelectedAdministrationNames } from '../domain/use_cases/missions/filters/isMissionPartOfSelectedAdministrationNames'
+import { isMissionPartOfSelectedControlUnitIds } from '../domain/use_cases/missions/filters/isMissionPartOfSelectedControlUnitIds'
+import { isMissionPartOfSelectedThemes } from '../domain/use_cases/missions/filters/isMissionPartOfSelectedThemes'
 
 const TWO_MINUTES = 2 * 60 * 1000
 
 export const useGetFilteredMissionsQuery = () => {
   const {
-    administrationFilter,
-    seaFrontFilter,
-    sourceFilter,
+    selectedAdministrationNames,
+    selectedControlUnitIds,
+    selectedMissionSource,
+    selectedMissionTypes,
+    selectedSeaFronts,
+    selectedStatuses,
+    selectedThemes,
     startedAfter,
-    startedBefore,
-    statusFilter,
-    themeFilter,
-    typeFilter,
-    unitFilter
+    startedBefore
   } = useAppSelector(state => state.missionFilters)
-  const { data, isError, isFetching, isLoading } = useGetMissionsQuery(
+  const {
+    data: missions,
+    isError,
+    isFetching,
+    isLoading
+  } = useGetMissionsQuery(
     {
-      missionSource: sourceFilter,
-      missionStatus: statusFilter,
-      missionTypes: typeFilter,
-      seaFronts: seaFrontFilter,
+      missionSource: selectedMissionSource,
+      missionStatus: selectedStatuses,
+      missionTypes: selectedMissionTypes,
+      seaFronts: selectedSeaFronts,
       startedAfterDateTime: startedAfter || undefined,
       startedBeforeDateTime: startedBefore || undefined
     },
     { pollingInterval: TWO_MINUTES }
   )
 
-  const missions = useMemo(() => {
-    if (!data) {
+  const filteredMissions = useMemo(() => {
+    if (!missions) {
       return []
     }
 
-    if (administrationFilter.length === 0 && unitFilter.length === 0 && themeFilter.length === 0) {
-      return data
+    if (
+      selectedAdministrationNames.length === 0 &&
+      selectedControlUnitIds.length === 0 &&
+      selectedThemes.length === 0
+    ) {
+      return missions
     }
 
-    return data.filter(
+    return missions.filter(
       mission =>
-        administrationFilterFunction(mission, administrationFilter) &&
-        unitFilterFunction(mission, unitFilter) &&
-        themeFilterFunction(mission, themeFilter)
+        isMissionPartOfSelectedAdministrationNames(mission, selectedAdministrationNames) &&
+        isMissionPartOfSelectedControlUnitIds(mission, selectedControlUnitIds) &&
+        isMissionPartOfSelectedThemes(mission, selectedThemes)
     )
-  }, [data, administrationFilter, themeFilter, unitFilter])
+  }, [missions, selectedAdministrationNames, selectedControlUnitIds, selectedThemes])
 
-  return { isError, isFetching, isLoading, missions }
+  return { isError, isFetching, isLoading, missions: filteredMissions }
 }

@@ -10,12 +10,12 @@ data class LegacyControlUnitDataOutput(
     val resources: List<LegacyControlUnitResourceDataOutput>,
 ) {
     companion object {
-        fun fromLegacyControlUnit(controlUnit: LegacyControlUnitEntity) = LegacyControlUnitDataOutput(
-            id = controlUnit.id,
-            administration = controlUnit.administration,
-            name = controlUnit.name,
-            isArchived = controlUnit.isArchived,
-            resources = controlUnit.resources.map {
+        fun fromLegacyControlUnit(legacyControlUnit: LegacyControlUnitEntity) = LegacyControlUnitDataOutput(
+            id = legacyControlUnit.id,
+            administration = legacyControlUnit.administration,
+            name = legacyControlUnit.name,
+            isArchived = legacyControlUnit.isArchived,
+            resources = legacyControlUnit.resources.map {
                 LegacyControlUnitResourceDataOutput.fromControlResourceEntity(it)
             },
         )

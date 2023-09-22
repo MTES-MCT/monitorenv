@@ -11,7 +11,7 @@ import { FormikErrorWrapper } from '../../../uiMonitor/CustomFormikFields/Formik
 import { SelectPicker } from '../../../uiMonitor/CustomRsuite/SelectPicker'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
 
-import type { ControlResource } from '../../../domain/entities/legacyControlUnit'
+import type { ControlUnit } from '../../../domain/entities/controlUnit'
 
 export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeControlUnit, ...props }) {
   const [administrationField, , administrationHelpers] = useField<string>(
@@ -19,7 +19,9 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
   )
   const [unitField, , unitHelpers] = useField<number | undefined>(`controlUnits.${controlUnitIndex}.id`)
   const [, , unitNameHelpers] = useField<string | undefined>(`controlUnits.${controlUnitIndex}.name`)
-  const [resourcesField, , resourcesHelpers] = useField<ControlResource[]>(`controlUnits.${controlUnitIndex}.resources`)
+  const [resourcesField, , resourcesHelpers] = useField<ControlUnit.ControlUnitResource[]>(
+    `controlUnits.${controlUnitIndex}.resources`
+  )
 
   const resourcesRef = useRef() as MutableRefObject<HTMLDivElement>
   const { data, isError, isLoading } = useGetLegacyControlUnitsQuery()

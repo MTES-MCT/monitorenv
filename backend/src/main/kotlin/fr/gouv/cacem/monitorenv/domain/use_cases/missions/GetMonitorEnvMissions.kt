@@ -30,7 +30,10 @@ class GetMonitorEnvMissions(private val missionRepository: IMissionRepository) {
             missionStatuses = missionStatuses,
             missionSources = missionSources ?: listOf(MissionSourceEnum.MONITORENV, MissionSourceEnum.MONITORFISH),
             seaFronts = seaFronts,
-            pageable = if (pageNumber != null && pageSize != null) PageRequest.of(pageNumber, pageSize) else Pageable.unpaged(),
+            pageable = if (pageNumber != null && pageSize != null) PageRequest.of(
+                pageNumber,
+                pageSize
+            ) else Pageable.unpaged(),
         )
 
         logger.info("Found ${missions.size} mission(s)")

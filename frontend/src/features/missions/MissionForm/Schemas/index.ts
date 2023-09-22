@@ -6,7 +6,8 @@ import { getClosedEnvActionSurveillanceSchema, getNewEnvActionSurveillanceSchema
 import { ActionTypeEnum, EnvActionNote, MissionTypeEnum, NewMission } from '../../../../domain/entities/missions'
 import { REACT_APP_CYPRESS_TEST } from '../../../../env'
 
-import type { ControlResource, ControlUnit } from '../../../../domain/entities/legacyControlUnit'
+import type { ControlUnit } from '../../../../domain/entities/controlUnit'
+import type { LegacyControlUnit } from '../../../../domain/entities/legacyControlUnit'
 
 const shouldUseAlternateValidationInTestEnvironment = process.env.NODE_ENV === 'development' || REACT_APP_CYPRESS_TEST
 
@@ -15,14 +16,14 @@ const MissionTypesSchema = Yup.array()
   .ensure()
   .min(1, 'Requis')
 
-const ControlResourceSchema: Yup.SchemaOf<ControlResource> = Yup.object()
+const ControlResourceSchema: Yup.SchemaOf<ControlUnit.ControlUnitResource> = Yup.object()
   .shape({
     id: Yup.number().required(),
     name: Yup.string().required()
   })
   .required()
 
-const ControlUnitSchema: Yup.SchemaOf<ControlUnit> = Yup.object()
+const ControlUnitSchema: Yup.SchemaOf<LegacyControlUnit> = Yup.object()
   .shape({
     administration: Yup.string().required(),
     contact: Yup.string()
@@ -44,7 +45,7 @@ const ControlUnitSchema: Yup.SchemaOf<ControlUnit> = Yup.object()
   })
   .defined()
 
-const ClosedControlUnitSchema: Yup.SchemaOf<ControlUnit> = ControlUnitSchema.shape({
+const ClosedControlUnitSchema: Yup.SchemaOf<LegacyControlUnit> = ControlUnitSchema.shape({
   contact: Yup.string().nullable().notRequired()
 }).defined()
 

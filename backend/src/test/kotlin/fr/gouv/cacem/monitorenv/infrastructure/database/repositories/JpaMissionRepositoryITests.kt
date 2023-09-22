@@ -77,14 +77,14 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             ),
             controlUnits = listOf(
                 LegacyControlUnitEntity(
-                    id = 6,
+                    id = 5,
                     name = "DPM – DDTM 35",
                     administration = "DDTM",
                     isArchived = false,
                     resources = listOf(
                         ControlUnitResourceEntity(
                             id = 8,
-                            controlUnitId = 1,
+                            controlUnitId = 5,
                             name = "PAM Jeanne Barret",
                         )
                     ),
@@ -98,7 +98,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
         // Then
         assertThat(newMissionCreated.controlUnits).hasSize(1)
-        assertThat(newMissionCreated.controlUnits.first().id).isEqualTo(6)
+        assertThat(newMissionCreated.controlUnits.first().id).isEqualTo(5)
         assertThat(newMissionCreated.controlUnits.first().name).isEqualTo("DPM – DDTM 35")
         assertThat(newMissionCreated.controlUnits.first().administration).isEqualTo("DDTM")
         assertThat(newMissionCreated.controlUnits.first().resources).hasSize(1)
@@ -139,14 +139,14 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             isUnderJdp = false,
             controlUnits = listOf(
                 LegacyControlUnitEntity(
-                    id = 6,
+                    id = 5,
                     name = "DPM – DDTM 35",
                     administration = "DDTM",
                     isArchived = false,
                     resources = listOf(
                         ControlUnitResourceEntity(
                             id = 8,
-                            controlUnitId = 1,
+                            controlUnitId = 5,
                             name = "PAM Jeanne Barret",
                         )
                     ),
@@ -161,13 +161,13 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             newMission.copy(
                 controlUnits = listOf(
                     LegacyControlUnitEntity(
-                        id = 6,
+                        id = 5,
                         name = "DPM – DDTM 35",
                         administration = "DDTM",
                         isArchived = false,
                         resources = listOf(
-                            ControlUnitResourceEntity(id = 8, controlUnitId = 1, name = "PAM Jeanne Barret"),
-                            ControlUnitResourceEntity(id = 5, controlUnitId = 1, name = "Voiture"),
+                            ControlUnitResourceEntity(id = 8, controlUnitId = 5, name = "PAM Jeanne Barret"),
+                            ControlUnitResourceEntity(id = 5, controlUnitId = 5, name = "Voiture"),
                         ),
                     ),
                 ),
@@ -176,7 +176,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
         // Then
         assertThat(newMissionUpdated.controlUnits).hasSize(1)
-        assertThat(newMissionUpdated.controlUnits.first().id).isEqualTo(6)
+        assertThat(newMissionUpdated.controlUnits.first().id).isEqualTo(5)
         assertThat(newMissionUpdated.controlUnits.first().name).isEqualTo("DPM – DDTM 35")
         assertThat(newMissionUpdated.controlUnits.first().administration).isEqualTo("DDTM")
         assertThat(newMissionUpdated.controlUnits.first().resources).hasSize(2)
@@ -200,14 +200,14 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             isUnderJdp = false,
             controlUnits = listOf(
                 LegacyControlUnitEntity(
-                    id = 6,
+                    id = 5,
                     name = "DPM – DDTM 35",
                     administration = "DDTM",
                     isArchived = false,
                     resources = listOf(
                         ControlUnitResourceEntity(
                             id = 123456,
-                            controlUnitId = 1,
+                            controlUnitId = 5,
                             name = "PAM Jeanne Barret",
                         )
                     ),

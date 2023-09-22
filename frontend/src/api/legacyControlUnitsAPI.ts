@@ -1,10 +1,11 @@
 import { monitorenvPublicApi } from './api'
 
-import type { ControlUnit } from '../domain/entities/legacyControlUnit'
+import type { LegacyControlUnit } from '../domain/entities/legacyControlUnit'
 
 export const legacyControlUnitsAPI = monitorenvPublicApi.injectEndpoints({
   endpoints: builder => ({
-    getLegacyControlUnits: builder.query<ControlUnit[], void>({
+    getLegacyControlUnits: builder.query<LegacyControlUnit[], void>({
+      providesTags: () => [{ type: 'ControlUnits' }],
       query: () => `/v1/control_units`
     })
   })

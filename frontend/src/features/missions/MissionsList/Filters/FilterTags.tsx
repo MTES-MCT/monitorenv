@@ -8,56 +8,74 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 export function FilterTags() {
   const dispatch = useDispatch()
-  const { administrationFilter, seaFrontFilter, statusFilter, themeFilter, typeFilter, unitFilter } = useAppSelector(
-    state => state.missionFilters
-  )
+  const {
+    selectedAdministrationNames,
+    selectedControlUnitIds,
+    selectedMissionTypes,
+    selectedSeaFronts,
+    selectedStatuses,
+    selectedThemes
+  } = useAppSelector(state => state.missionFilters)
 
-  const onDeleteTag = (valueToDelete: string, filterKey: MissionFiltersEnum, missionFilter) => {
-    const updatedFilter = missionFilter.filter(unit => unit !== valueToDelete)
-    dispatch(updateFilters({ key: filterKey, value: updatedFilter }))
+  const onDeleteTag = (
+    valueToDelete: number | string,
+    filterKey: MissionFiltersEnum,
+    selectedValues: Array<number | string>
+  ) => {
+    const nextSelectedValues = selectedValues.filter(selectedValue => selectedValue !== valueToDelete)
+    dispatch(updateFilters({ key: filterKey, value: nextSelectedValues }))
   }
 
   return (
     <StyledContainer>
-      {administrationFilter.length > 0 &&
-        administrationFilter.map(admin => (
+      {selectedAdministrationNames.length > 0 &&
+        selectedAdministrationNames.map(admin => (
           <SingleTag
             key={admin}
-            onDelete={() => onDeleteTag(admin, MissionFiltersEnum.ADMINISTRATION_FILTER, administrationFilter)}
+            onDelete={() => onDeleteTag(admin, MissionFiltersEnum.ADMINISTRATION_FILTER, selectedAdministrationNames)}
           >
             {String(`Admin. ${admin}`)}
           </SingleTag>
         ))}
-      {unitFilter.length > 0 &&
-        unitFilter.map(unit => (
-          <SingleTag key={unit} onDelete={() => onDeleteTag(unit, MissionFiltersEnum.UNIT_FILTER, unitFilter)}>
+      {selectedControlUnitIds.length > 0 &&
+        selectedControlUnitIds.map(unit => (
+          <SingleTag
+            key={unit}
+            onDelete={() => onDeleteTag(unit, MissionFiltersEnum.UNIT_FILTER, selectedControlUnitIds)}
+          >
             {String(`Unité ${unit}`)}
           </SingleTag>
         ))}
-      {typeFilter.length > 0 &&
-        typeFilter.map(type => (
-          <SingleTag key={type} onDelete={() => onDeleteTag(type, MissionFiltersEnum.TYPE_FILTER, typeFilter)}>
+      {selectedMissionTypes.length > 0 &&
+        selectedMissionTypes.map(type => (
+          <SingleTag
+            key={type}
+            onDelete={() => onDeleteTag(type, MissionFiltersEnum.TYPE_FILTER, selectedMissionTypes)}
+          >
             {String(`Type ${missionTypeEnum[type].libelle}`)}
           </SingleTag>
         ))}
-      {seaFrontFilter.length > 0 &&
-        seaFrontFilter.map(seaFront => (
+      {selectedSeaFronts.length > 0 &&
+        selectedSeaFronts.map(seaFront => (
           <SingleTag
             key={seaFront}
-            onDelete={() => onDeleteTag(seaFront, MissionFiltersEnum.SEA_FRONT_FILTER, seaFrontFilter)}
+            onDelete={() => onDeleteTag(seaFront, MissionFiltersEnum.SEA_FRONT_FILTER, selectedSeaFronts)}
           >
             {String(`Facade ${seaFront}`)}
           </SingleTag>
         ))}
-      {statusFilter.length > 0 &&
-        statusFilter.map(status => (
-          <SingleTag key={status} onDelete={() => onDeleteTag(status, MissionFiltersEnum.STATUS_FILTER, statusFilter)}>
+      {selectedStatuses.length > 0 &&
+        selectedStatuses.map(status => (
+          <SingleTag
+            key={status}
+            onDelete={() => onDeleteTag(status, MissionFiltersEnum.STATUS_FILTER, selectedStatuses)}
+          >
             {String(`Mission ${missionStatusLabels[status].libelle.toLowerCase()}`)}
           </SingleTag>
         ))}
-      {themeFilter.length > 0 &&
-        themeFilter.map(theme => (
-          <SingleTag key={theme} onDelete={() => onDeleteTag(theme, MissionFiltersEnum.THEME_FILTER, themeFilter)}>
+      {selectedThemes.length > 0 &&
+        selectedThemes.map(theme => (
+          <SingleTag key={theme} onDelete={() => onDeleteTag(theme, MissionFiltersEnum.THEME_FILTER, selectedThemes)}>
             {String(`Thème ${theme}`)}
           </SingleTag>
         ))}

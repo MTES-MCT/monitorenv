@@ -51,6 +51,7 @@ class ApiLegacyControlUnitsControllerITests {
             .andExpect(jsonPath("$[0].administration", equalTo(controlUnit.administration)))
             .andExpect(jsonPath("$[0].name", equalTo(controlUnit.name)))
             .andExpect(jsonPath("$[0].isArchived", equalTo(false)))
+            .andExpect(jsonPath("$[0].resources[0].id", equalTo(controlUnit.resources.first().id)))
             .andExpect(jsonPath("$[0].resources[0].name", equalTo(controlUnit.resources.first().name)))
     }
 }

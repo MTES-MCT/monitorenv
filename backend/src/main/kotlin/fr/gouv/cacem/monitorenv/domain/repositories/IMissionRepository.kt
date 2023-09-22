@@ -16,6 +16,7 @@ interface IMissionRepository {
         seaFronts: List<String>?,
         pageable: Pageable,
     ): List<MissionEntity>
+
     fun save(mission: MissionEntity): MissionEntity
     fun delete(missionId: Int)
     fun count(): Long
