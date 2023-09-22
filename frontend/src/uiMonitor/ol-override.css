@@ -3,7 +3,7 @@
 }
 
 .ol-control button {
-  background-color: #3B4559;
+  background-color: #3b4559;
 }
 
 .ol-control {
@@ -17,7 +17,7 @@
 .ol-control button,
 .ol-control button:hover,
 .ol-control button:focus {
-  background-color: #3B4559;
+  background-color: #3b4559;
   border-radius: 2px;
   font-size: 15px;
   padding-bottom: 5px;
@@ -36,7 +36,7 @@
   text-decoration: none;
   text-align: center;
   height: 18px;
-  background-color: #3B4559;
+  background-color: #3b4559;
   border: none;
   border-radius: 2px;
 }
@@ -46,15 +46,17 @@
   line-height: 11px;
   padding-bottom: 4px;
 }
-
+.ol-control.ol-zoom {
+  display: none;
+}
 .ol-control.zoom {
   bottom: 38px;
-  left: .5em;
+  left: 0.5em;
   width: 25px;
   height: 53px;
 }
 
-.ol-control.zoom>button {
+.ol-control.zoom > button {
   width: 25px;
   height: 25px;
 }
