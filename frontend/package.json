@@ -76,7 +76,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@ivangabriele/eslint-config-typescript-react": "4.2.0",
+    "@ivangabriele/eslint-config-typescript-react": "6.0.1",
     "@ivangabriele/prettier-config": "3.1.0",
     "@jest/globals": "28.1.3",
     "@storybook/addon-actions": "7.1.1",
