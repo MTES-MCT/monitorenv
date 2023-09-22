@@ -35,7 +35,6 @@ CREATE TABLE public.control_unit_contacts (
         FOREIGN KEY (control_unit_id)
         REFERENCES control_units(id)
         ON DELETE CASCADE
-        ON UPDATE CASCADE
 );
 
 CREATE TABLE public.control_unit_resources (
@@ -55,13 +54,11 @@ CREATE TABLE public.control_unit_resources (
     CONSTRAINT fk_control_unit_resources_base_id_bases
         FOREIGN KEY (base_id)
         REFERENCES bases(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
+        ON DELETE CASCADE,
     CONSTRAINT fk_control_unit_resources_control_unit_id_control_units
         FOREIGN KEY (control_unit_id)
         REFERENCES control_units(id)
         ON DELETE CASCADE
-        ON UPDATE CASCADE
 );
 
 -- Copy the old `public.control_resources` data into the new `public.control_unit_resources` table,
@@ -92,8 +89,7 @@ ALTER TABLE public.missions_control_resources
     ADD CONSTRAINT fk_missions_control_resources_control_resource_id_control_unit_resources
         FOREIGN KEY (control_resource_id)
         REFERENCES public.control_unit_resources(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE;
+        ON DELETE CASCADE;
 
 -- Drop old `public.control_resources` table
 DROP TABLE public.control_resources;
