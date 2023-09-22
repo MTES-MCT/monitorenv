@@ -1,12 +1,11 @@
-/// <reference types="cypress" />
-
 context('Missions', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
     cy.visit(`/side_window`)
   })
+
   it('Control Unit filter should not contain archived control units', () => {
-    cy.intercept('GET', `/bff/v1/legacy_control_units`).as('getControlUnits')
+    cy.intercept('GET', `/api/v1/control_units`).as('getControlUnits')
     cy.wait('@getControlUnits').then(({ response }) => {
       expect(response && response.statusCode).to.equal(200)
       const archivedControlUnit = response && response.body.find(controlUnit => controlUnit.name === 'BGC Ajaccio')
@@ -28,7 +27,7 @@ context('Missions', () => {
     cy.log('Administrations should be filtered')
     cy.get('*[data-cy="edit-mission-48"]').should('exist')
     cy.get('*[data-cy="select-administration-filter"]').click()
-    cy.get('div[role="option"]').find('label').contains('DDTM').click()
+    cy.get('div[role="option"]').find('label').contains('DDTM').forceClick()
     cy.get('*[data-cy="edit-mission-48"]').should('not.exist')
 
     cy.log('Initialize filters')

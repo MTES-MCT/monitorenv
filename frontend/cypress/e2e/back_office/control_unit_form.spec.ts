@@ -39,10 +39,10 @@ context('Back Office > Control Unit Form', () => {
   })
 
   it('Should edit a control unit', () => {
-    cy.intercept('PUT', `/api/v2/control_units/1`, FAKE_API_PUT_RESPONSE).as('updateControlUnit')
+    cy.intercept('PUT', `/api/v2/control_units/12`, FAKE_API_PUT_RESPONSE).as('updateControlUnit')
 
     cy.clickButton('Éditer cette unité de contrôle', {
-      withinSelector: 'tbody > tr:nth-child(9)'
+      withinSelector: 'tbody > tr:nth-child(7)'
     })
 
     cy.fill('Administration', 'AFB')
@@ -60,9 +60,9 @@ context('Back Office > Control Unit Form', () => {
       assert.deepInclude(interception.request.body, {
         administrationId: 1002,
         areaNote: 'Une autre zone.',
-        controlUnitContactIds: [1, 2],
-        controlUnitResourceIds: [1, 2],
-        id: 1,
+        controlUnitContactIds: [],
+        controlUnitResourceIds: [9],
+        id: 12,
         isArchived: false,
         name: 'Unité 2',
         termsNote: "D'autres modalités."

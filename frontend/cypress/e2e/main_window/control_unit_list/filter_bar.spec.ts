@@ -18,8 +18,8 @@ context('Main Window > Control Unit List > Filter Bar', () => {
 
     cy.getDataCy('control-unit-list-item').should('have.length', 4)
 
-    cy.getDataCy('control-unit-1').should('exist')
-    cy.getDataCy('control-unit-25').should('exist')
+    cy.getDataCy('control-unit-33').should('exist')
+    cy.getDataCy('control-unit-24').should('exist')
   })
 
   it('Should find control units matching the selected administration', () => {
@@ -27,24 +27,24 @@ context('Main Window > Control Unit List > Filter Bar', () => {
 
     cy.getDataCy('control-unit-list-item').should('have.length', 5)
 
-    cy.getDataCy('control-unit-15').should('exist')
-    cy.getDataCy('control-unit-19').should('exist')
+    cy.getDataCy('control-unit-14').should('exist')
+    cy.getDataCy('control-unit-18').should('exist')
   })
 
   it('Should find control units matching the selected resource type', () => {
     cy.fill('Type de moyen', 'Barge')
 
-    cy.getDataCy('control-unit-list-item').should('have.length', 1)
+    cy.getDataCy('control-unit-list-item').should('have.length', 3)
 
-    cy.getDataCy('control-unit-25').should('exist')
+    cy.getDataCy('control-unit-1').should('exist')
+    cy.getDataCy('control-unit-4').should('exist')
   })
 
   it('Should find control units matching the selected base', () => {
     cy.fill('Base du moyen', 'Marseille')
 
-    cy.getDataCy('control-unit-list-item').should('have.length', 2)
+    cy.getDataCy('control-unit-list-item').should('have.length', 1)
 
-    cy.getDataCy('control-unit-25').should('exist')
-    cy.getDataCy('control-unit-15').should('exist')
+    cy.getDataCy('control-unit-1').should('exist')
   })
 })

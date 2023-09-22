@@ -1,5 +1,3 @@
-/// <reference types="cypress" />
-
 context('Mission', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
@@ -58,7 +56,7 @@ context('Mission', () => {
       expect(request.body.controlUnits.length).equal(1)
       const controlUnit = request.body.controlUnits[0]
       expect(controlUnit.administration).equal('DIRM / DM')
-      expect(controlUnit.id).equal(10012)
+      expect(controlUnit.id).equal(12)
       expect(controlUnit.name).equal('Cross Etel')
     })
     cy.wait('@getMissions')

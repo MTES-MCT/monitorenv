@@ -1,5 +1,3 @@
-/// <reference types="cypress" />
-
 context('Mission', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
