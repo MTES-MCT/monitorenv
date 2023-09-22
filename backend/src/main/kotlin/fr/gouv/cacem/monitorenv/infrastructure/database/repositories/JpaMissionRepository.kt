@@ -7,6 +7,7 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.ControlResourceOrUnitNotFoundE
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
@@ -18,7 +19,6 @@ class JpaMissionRepository(
     private val dbMissionRepository: IDBMissionRepository,
     private val mapper: ObjectMapper,
 ) : IMissionRepository {
-
     override fun findAll(
         startedAfter: Instant,
         startedBefore: Instant?,
@@ -53,8 +53,18 @@ class JpaMissionRepository(
         return try {
             val missionModel = MissionModel.fromMissionEntity(mission, mapper)
             dbMissionRepository.save(missionModel).toMissionEntity(mapper)
-        } catch (e: InvalidDataAccessApiUsageException) {
-            throw ControlResourceOrUnitNotFoundException("Invalid control unit or resource id: not found in referential", e)
+        } catch (e: Exception) {
+            when (e) {
+                // TODO Is `InvalidDataAccessApiUsageException` necessary?
+                is DataIntegrityViolationException, is InvalidDataAccessApiUsageException -> {
+                    throw ControlResourceOrUnitNotFoundException(
+                        "Invalid control unit or resource id: not found in referential.",
+                        e
+                    )
+                }
+
+                else -> throw e
+            }
         }
     }
 

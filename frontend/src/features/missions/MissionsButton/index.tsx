@@ -34,6 +34,8 @@ export function MissionsMenu() {
     e.preventDefault()
     dispatch(
       setDisplayedItems({
+        isControlUnitDialogVisible: false,
+        isControlUnitListDialogVisible: false,
         isSearchMissionsVisible: !isSearchMissionsVisible,
         isSearchReportingsVisible: false,
         isSearchSemaphoreVisible: false

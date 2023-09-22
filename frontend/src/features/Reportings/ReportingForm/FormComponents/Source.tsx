@@ -79,7 +79,7 @@ export function Source() {
     [controlUnitsOptions]
   )
 
-  const changeSourceType = sourceType => {
+  const changeSourceType = (sourceType: string | undefined) => {
     setFieldValue('sourceType', sourceType)
     if (sourceType === ReportingSourceEnum.SEMAPHORE) {
       setFieldValue('controlUnitId', undefined)

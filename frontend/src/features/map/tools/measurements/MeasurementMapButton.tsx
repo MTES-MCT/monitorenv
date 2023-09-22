@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { CustomCircleRange } from './CustomCircleRange'
 import { MapToolType, MeasurementType } from '../../../../domain/entities/map/constants'
-import { setIsMapToolVisible, ReportingContext, VisibilityState } from '../../../../domain/shared_slices/Global'
+import { ReportingContext, VisibilityState, globalActions } from '../../../../domain/shared_slices/Global'
 import { setMeasurementTypeToAdd } from '../../../../domain/shared_slices/Measurement'
 import { reduceReportingFormOnMap } from '../../../../domain/use_cases/reporting/reduceReportingFormOnMap'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
@@ -26,12 +26,12 @@ export function MeasurementMapButton() {
   const wrapperRef = useRef(null)
 
   useClickOutsideWhenOpenedAndExecute(wrapperRef, isOpen, () => {
-    dispatch(setIsMapToolVisible(undefined))
+    dispatch(globalActions.setIsMapToolVisible(undefined))
   })
 
   useEscapeFromKeyboardAndExecute(() => {
     dispatch(setMeasurementTypeToAdd(undefined))
-    dispatch(setIsMapToolVisible(undefined))
+    dispatch(globalActions.setIsMapToolVisible(undefined))
   })
 
   useEffect(() => {
@@ -41,8 +41,9 @@ export function MeasurementMapButton() {
   }, [dispatch, isOpen, isMeasurementToolOpen, measurementTypeToAdd])
 
   const makeMeasurement = nextMeasurementTypeToAdd => {
+    dispatch(globalActions.hideSideButtons())
     dispatch(setMeasurementTypeToAdd(nextMeasurementTypeToAdd))
-    dispatch(setIsMapToolVisible(MapToolType.MEASUREMENT))
+    dispatch(globalActions.setIsMapToolVisible(MapToolType.MEASUREMENT))
   }
 
   const measurementIcon = useMemo(() => {
@@ -59,9 +60,10 @@ export function MeasurementMapButton() {
   const openOrCloseMeasurementMenu = useCallback(() => {
     if (measurementTypeToAdd) {
       dispatch(setMeasurementTypeToAdd(undefined))
-      dispatch(setIsMapToolVisible(undefined))
+      dispatch(globalActions.setIsMapToolVisible(undefined))
     } else {
-      dispatch(setIsMapToolVisible(MapToolType.MEASUREMENT_MENU))
+      dispatch(globalActions.hideSideButtons())
+      dispatch(globalActions.setIsMapToolVisible(MapToolType.MEASUREMENT_MENU))
     }
     dispatch(reduceReportingFormOnMap())
   }, [dispatch, measurementTypeToAdd])
@@ -121,7 +123,7 @@ const MeasurementItem = styled.div`
 const Wrapper = styled.div<{ reportingFormVisibility: VisibilityState }>`
   position: absolute;
   right: ${p => (p.reportingFormVisibility === VisibilityState.VISIBLE ? '0' : '10')}px;
-  top: 250px;
+  top: 298px;
   transition: right 0.3s ease-out;
 `
 

@@ -10,7 +10,7 @@ endif
 # DEV commands
 
 # Frontend
-.PHONY: dev-install dev-run-front dev-run-storybook 
+.PHONY: dev-install dev-run-front dev-run-storybook
 dev-install:
 	cd frontend && npm install
 
@@ -20,14 +20,17 @@ dev-run-front:
 dev-run-storybook:
 	cd frontend && npm run storybook
 
-.PHONY: test-front dev-lint-frontend 
+.PHONY: test-front dev-lint-frontend test-back
 
 dev-lint-frontend:
 	cd frontend && npm run test:lint:partial
 
+test-back:
+	cd backend && ./mvnw clean && ./mvnw test
+
 test-front:
 	cd frontend && npm run test:unit
-	
+
 # Backend
 .PHONY: dev-check-config dev-run-back-with-infra dev-run-back dev-run-infra dev-erase-db dev-clean-target-env
 dev-check-config:
@@ -47,7 +50,7 @@ dev-run-infra:
 			echo waiting...; \
 			sleep 5; \
 	done
-  
+
 	@echo "Database Ready for connections!"
 
 dev-erase-db:
@@ -62,33 +65,19 @@ dev-erase-db:
 dev-clean-target-env:
 	rm -rf $(shell pwd)/backend/target
 
-.PHONY: test dev-lint-backend 
+.PHONY: test dev-lint-backend
 dev-lint-backend:
 	cd ./backend && ./mvnw antrun:run@ktlint-format | grep -v \
 		-e "Exceeded max line length" \
 		-e "Package name must not contain underscore" \
 		-e "Wildcard import"
 
-clean:
-	make dev-erase-db
-	make dev-clean-target-env
+clean: dev-erase-db dev-clean-target-env
 
-dev: clean
-	docker network inspect monitorenv_network >/dev/null 2>&1 || docker network create monitorenv_network
-	# This will start db at the same time since geoserver depends on it
-	docker compose \
-		--project-name $(PROJECT_NAME) \
-		--project-directory ./infra/docker \
-		--env-file='./infra/.env' \
-		-f ./infra/docker/docker-compose.yml  -f ./infra/docker/docker-compose.dev.yml \
-		up -d --wait geoserver
-	make dev-run-back
-
-test:
-	cd backend && ./mvnw clean && ./mvnw test
+test: test-back
 	cd frontend && CI=true npm run test:unit
 
-.PHONY: docker-build-app 
+.PHONY: docker-build-app
 docker-build-app:
 	docker build --no-cache -f infra/docker/app/Dockerfile . -t monitorenv-app:$(VERSION) \
 		--build-arg VERSION=$(VERSION) \
@@ -105,14 +94,14 @@ load-sig-data:
 	set -a
 	. ./infra/.env
 	set +a
-	echo ${PROJECT_NAME} 
-	./infra/init/postgis_insert_layers.sh 
+	echo ${PROJECT_NAME}
+	./infra/init/postgis_insert_layers.sh
 
 prod-load-sig-data:
 	set -a
 	. ./infra/.env
 	set +a
-	echo ${PROJECT_NAME} 
+	echo ${PROJECT_NAME}
 	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='./infra/.env' \
 		-f ./infra/docker/docker-compose.yml \
 		-f ./infra/docker/docker-compose.prod.yml \
@@ -130,12 +119,12 @@ prod-load-sig-data:
 		-f ./infra/docker/docker-compose.override.yml \
 		exec db \
 		psql -U $(POSTGRES_USER) -d $(POSTGRES_DB) -f /opt/data/control_resources_admin_and_units_data.sql
-	
+
 prod-add-metabase-user:
 	set -a
 	. ./infra/.env
 	set +a
-	echo ${PROJECT_NAME} 
+	echo ${PROJECT_NAME}
 	docker compose --project-name $(PROJECT_NAME) --project-directory ./infra/docker --env-file='./infra/.env' \
 		-f ./infra/docker/docker-compose.yml \
 		-f ./infra/docker/docker-compose.prod.yml \
@@ -198,9 +187,9 @@ docker-push-pipeline:
 init-environment:
 ifeq (,$(wildcard ./infra/.env))
 	@echo "Pas de fichier '.env'. Création d'un nouveau fichier."
-	@echo "source ~/monitorenv/infra/init/init_env.sh" >> ~/.bashrc 
+	@echo "source ~/monitorenv/infra/init/init_env.sh" >> ~/.bashrc
 	@cp infra/.env.template infra/.env
-else 
+else
 	@echo "Un fichier .env existe déjà. Editez ou supprimez le fichier existant."
 endif
 check-config:
@@ -223,3 +212,7 @@ logs-geoserver:
 	docker container logs -f monitorenv_geoserver
 logs-db:
 	docker container logs -f monitorenv_database
+
+# ALIASES
+
+dev: dev-run-back-with-infra

@@ -37,9 +37,19 @@ const CloseButton = styled(IconButton)`
 `
 
 // TODO delete padding when Monitor-ui component have good padding
-const ButtonOnMap = styled(IconButton)`
+const ButtonOnMap = styled(IconButton)<{
+  $isActive?: boolean
+}>`
   height: fit-content;
   padding: 6px;
+
+  ${p =>
+    p.$isActive &&
+    `
+    background-color: ${p.theme.color.blueGray['100']};
+    border: 1px solid ${p.theme.color.blueGray['100']};
+    color: ${p.theme.color.white};
+  `}
 `
 
 const Footer = styled.div`

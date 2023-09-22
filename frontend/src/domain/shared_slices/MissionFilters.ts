@@ -8,7 +8,7 @@ import { dateRangeLabels } from '../entities/dateRange'
 export const SEVEN_DAYS_AGO = dayjs().subtract(7, 'days').toISOString()
 
 export enum MissionFiltersEnum {
-  ADMINISTRATION_FILTER = 'administrationFilter',
+  ADMINISTRATION_FILTER = 'selectedAdministrationNames',
   PERIOD_FILTER = 'periodFilter',
   SEA_FRONT_FILTER = 'seaFrontFilter',
   SOURCE_FILTER = 'sourceFilter',
@@ -17,35 +17,35 @@ export enum MissionFiltersEnum {
   STATUS_FILTER = 'statusFilter',
   THEME_FILTER = 'themeFilter',
   TYPE_FILTER = 'typeFilter',
-  UNIT_FILTER = 'unitFilter'
+  UNIT_FILTER = 'selectedControlUnitIds'
 }
 
 type MissionFiltersSliceType = {
-  administrationFilter: string[]
   hasFilters: boolean
-  periodFilter: string
-  seaFrontFilter: string[]
-  sourceFilter: string | undefined
+  selectedAdministrationNames: string[]
+  selectedControlUnitIds: number[]
+  selectedMissionSource: string | undefined
+  selectedMissionTypes: string[]
+  selectedPeriod: string
+  selectedSeaFronts: string[]
+  selectedStatuses: string[]
+  selectedThemes: string[]
   startedAfter?: string
   startedBefore?: string
-  statusFilter: string[]
-  themeFilter: string[]
-  typeFilter: string[]
-  unitFilter: string[]
 }
 
 const initialState: MissionFiltersSliceType = {
-  administrationFilter: [],
   hasFilters: false,
-  periodFilter: dateRangeLabels.WEEK.value,
-  seaFrontFilter: [],
-  sourceFilter: undefined,
+  selectedAdministrationNames: [],
+  selectedControlUnitIds: [],
+  selectedMissionSource: undefined,
+  selectedMissionTypes: [],
+  selectedPeriod: dateRangeLabels.WEEK.value,
+  selectedSeaFronts: [],
+  selectedStatuses: [],
+  selectedThemes: [],
   startedAfter: SEVEN_DAYS_AGO,
-  startedBefore: undefined,
-  statusFilter: [],
-  themeFilter: [],
-  typeFilter: [],
-  unitFilter: []
+  startedBefore: undefined
 }
 
 const persistConfig = {
@@ -66,13 +66,13 @@ const missionFiltersSlice = createSlice({
         [action.payload.key]: action.payload.value,
         hasFilters:
           (action.payload.value && action.payload.value.length > 0) ||
-          state.periodFilter !== dateRangeLabels.WEEK.value ||
-          state.administrationFilter.length > 0 ||
-          state.unitFilter.length > 0 ||
-          state.typeFilter.length > 0 ||
-          state.seaFrontFilter.length > 0 ||
-          state.statusFilter.length > 0 ||
-          state.themeFilter.length > 0
+          state.selectedPeriod !== dateRangeLabels.WEEK.value ||
+          state.selectedAdministrationNames.length > 0 ||
+          state.selectedControlUnitIds.length > 0 ||
+          state.selectedMissionTypes.length > 0 ||
+          state.selectedSeaFronts.length > 0 ||
+          state.selectedStatuses.length > 0 ||
+          state.selectedThemes.length > 0
       }
     }
   }

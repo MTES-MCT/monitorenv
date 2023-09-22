@@ -4,16 +4,15 @@ import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.controlResource.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
-import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.ISemaphoreRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.*
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.CreateOrUpdateReporting
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
@@ -28,13 +27,17 @@ import java.time.ZonedDateTime
 
 @ExtendWith(SpringExtension::class)
 class CreateOrUpdateReportingUTests {
-    @MockBean private lateinit var createOrUpdateReportingRepositoty: IReportingRepository
+    @MockBean
+    private lateinit var createOrUpdateReportingRepositoty: IReportingRepository
 
-    @MockBean private lateinit var controlUnitRepository: IControlUnitRepository
+    @MockBean
+    private lateinit var controlUnitRepository: IControlUnitRepository
 
-    @MockBean private lateinit var semaphoreRepository: ISemaphoreRepository
+    @MockBean
+    private lateinit var semaphoreRepository: ISemaphoreRepository
 
-    @MockBean private lateinit var facadeRepository: IFacadeAreasRepository
+    @MockBean
+    private lateinit var facadeRepository: IFacadeAreasRepository
 
     @Test
     fun `Should throw an exception when input is null`() {
@@ -114,13 +117,21 @@ class CreateOrUpdateReportingUTests {
                 name = "semaphore 1",
                 geom = point,
             )
-        val controlUnit =
-            ControlUnitEntity(
+        val fullControlUnit =
+            FullControlUnitDTO(
                 id = 1,
-                name = "control unit 1",
-                administration = "administration 1",
+                administration = AdministrationEntity(
+                    id = 1,
+                    controlUnitIds = listOf(),
+                    name = "administration 1",
+                ),
+                administrationId = 2,
+                controlUnitContactIds = listOf(),
+                controlUnitContacts = listOf(),
+                controlUnitResourceIds = listOf(),
+                controlUnitResources = listOf(),
                 isArchived = false,
-                resources = listOf(),
+                name = "control unit 1",
             )
 
         given(createOrUpdateReportingRepositoty.save(reportingWithSemaphore))
@@ -129,7 +140,7 @@ class CreateOrUpdateReportingUTests {
             .willReturn(reportingWithControlUnit)
         given(facadeRepository.findFacadeFromGeometry(polygon)).willReturn("Facade 1")
         given(semaphoreRepository.findById(1)).willReturn(semaphore)
-        given(controlUnitRepository.findById(1)).willReturn(controlUnit)
+        given(controlUnitRepository.findById(1)).willReturn(fullControlUnit)
 
         // When
         val createdReportingWithSemaphore =
@@ -159,7 +170,7 @@ class CreateOrUpdateReportingUTests {
         // Then
         verify(createOrUpdateReportingRepositoty, times(1)).save(reportingWithControlUnit)
         assertThat(createdReportingWithControlUnit)
-            .isEqualTo(Triple(reportingWithControlUnit, controlUnit, null))
+            .isEqualTo(Triple(reportingWithControlUnit, fullControlUnit, null))
     }
 
     @Test

@@ -39,18 +39,23 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
 @WebMvcTest(value = [(ReportingsController::class)])
 class ReportingsControllerITests {
+    @Autowired
+    private lateinit var mockedApi: MockMvc
 
-  @Autowired private lateinit var mockedApi: MockMvc
+    @Autowired
+    private lateinit var objectMapper: ObjectMapper
 
-  @Autowired private lateinit var objectMapper: ObjectMapper
+    @MockBean
+    private lateinit var createOrUpdateReporting: CreateOrUpdateReporting
 
-  @MockBean private lateinit var createOrUpdateReporting: CreateOrUpdateReporting
+    @MockBean
+    private lateinit var getReportings: GetReportings
 
-  @MockBean private lateinit var getReportings: GetReportings
+    @MockBean
+    private lateinit var getReportingById: GetReportingById
 
-  @MockBean private lateinit var getReportingById: GetReportingById
-
-  @MockBean private lateinit var deleteReporting: DeleteReporting
+    @MockBean
+    private lateinit var deleteReporting: DeleteReporting
 
   @MockBean private lateinit var deleteReportings: DeleteReportings
 

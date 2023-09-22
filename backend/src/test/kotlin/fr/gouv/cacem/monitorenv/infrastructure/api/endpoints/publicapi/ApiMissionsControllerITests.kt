@@ -40,7 +40,6 @@ import java.util.UUID
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
 @WebMvcTest(value = [(ApiMissionsController::class)])
 class ApiMissionsControllerITests {
-
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -61,10 +60,10 @@ class ApiMissionsControllerITests {
 
     @Test
     fun `Should create a new mission`() {
-        val WKTreader = WKTReader()
+        val wktReader = WKTReader()
         val multipolygonString =
             "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
-        val polygon = WKTreader.read(multipolygonString) as MultiPolygon
+        val polygon = wktReader.read(multipolygonString) as MultiPolygon
         // Given
         val expectedNewMission = MissionEntity(
             id = 10,
@@ -110,10 +109,10 @@ class ApiMissionsControllerITests {
     @Test
     fun `Should get all missions`() {
         // Given
-        val WKTreader = WKTReader()
+        val wktReader = WKTReader()
         val multipolygonString =
             "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
-        val polygon = WKTreader.read(multipolygonString) as MultiPolygon
+        val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
         val expectedFirstMission = MissionEntity(
             id = 10,

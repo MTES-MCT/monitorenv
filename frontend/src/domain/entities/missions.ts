@@ -1,6 +1,6 @@
 import { THEME, customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 
-import type { ControlUnit } from './controlUnit'
+import type { LegacyControlUnit } from './legacyControlUnit'
 import type { SeaFrontEnum } from './seaFrontType'
 
 export enum ActionTypeEnum {
@@ -251,7 +251,7 @@ export type ResourceUnit = {
 
 export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote> = {
   closedBy: string
-  controlUnits: Omit<ControlUnit, 'id'>[]
+  controlUnits: LegacyControlUnit[]
   endDateTimeUtc?: string
   envActions: EnvAction[]
   facade: SeaFrontEnum
@@ -268,7 +268,9 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
   startDateTimeUtc: string
 }
 
-export type NewMission = Omit<Mission, 'facade' | 'missionSource'>
+export type NewMission = Omit<Mission, 'controlUnits' | 'facade' | 'id' | 'missionSource'> & {
+  controlUnits: Array<Omit<LegacyControlUnit, 'administrationId' | 'id'>>
+}
 
 export type EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote
 export type NewEnvAction = NewEnvActionControl | EnvActionSurveillance | EnvActionNote

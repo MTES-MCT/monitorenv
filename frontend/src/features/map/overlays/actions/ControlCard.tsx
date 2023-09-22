@@ -1,4 +1,4 @@
-import { getLocalizedDayjs } from '@mtes-mct/monitor-ui'
+import { getLocalizedDayjs, pluralize } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { COLORS } from '../../../../constants/constants'
@@ -6,7 +6,6 @@ import { TargetTypeLabels } from '../../../../domain/entities/targetType'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ControlInfractionsTags } from '../../../../ui/ControlInfractionsTags'
 import { extractThemesAsText } from '../../../../utils/extractThemesAsText'
-import { pluralize } from '../../../../utils/pluralize'
 
 export function ControlCard({ feature }: { feature: any }) {
   const listener = useAppSelector(state => state.draw.listener)

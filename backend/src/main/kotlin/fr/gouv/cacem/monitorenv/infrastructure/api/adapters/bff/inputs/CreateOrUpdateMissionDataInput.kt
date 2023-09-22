@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlResource.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
@@ -11,7 +11,7 @@ import java.time.ZonedDateTime
 data class CreateOrUpdateMissionDataInput(
     val id: Int? = null,
     val missionTypes: List<MissionTypeEnum>,
-    val controlUnits: List<ControlUnitEntity> = listOf(),
+    val controlUnits: List<LegacyControlUnitEntity> = listOf(),
     val openBy: String? = null,
     val closedBy: String? = null,
     val observationsCacem: String? = null,

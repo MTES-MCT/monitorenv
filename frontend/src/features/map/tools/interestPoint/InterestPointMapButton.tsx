@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { EditInterestPoint } from './EditInterestPoint'
 import { MapToolType } from '../../../../domain/entities/map/constants'
-import { setIsMapToolVisible, ReportingContext, VisibilityState } from '../../../../domain/shared_slices/Global'
+import { globalActions, ReportingContext, VisibilityState } from '../../../../domain/shared_slices/Global'
 import {
   deleteInterestPointBeingDrawed,
   drawInterestPoint,
@@ -25,7 +25,7 @@ export function InterestPointMapButton() {
   const wrapperRef = useRef(null)
 
   const close = useCallback(() => {
-    dispatch(setIsMapToolVisible(undefined))
+    dispatch(globalActions.setIsMapToolVisible(undefined))
   }, [dispatch])
 
   useEscapeFromKeyboardAndExecute(close)
@@ -40,12 +40,12 @@ export function InterestPointMapButton() {
   const openOrCloseInterestPoint = useCallback(() => {
     if (!isOpen) {
       dispatch(drawInterestPoint())
-      dispatch(setIsMapToolVisible(MapToolType.INTEREST_POINT))
+      dispatch(globalActions.setIsMapToolVisible(MapToolType.INTEREST_POINT))
     } else {
       close()
     }
     dispatch(reduceReportingFormOnMap())
-  }, [dispatch, isOpen, close])
+  }, [close, dispatch, isOpen])
 
   return (
     <Wrapper
@@ -73,7 +73,7 @@ export function InterestPointMapButton() {
 
 const Wrapper = styled.div<{ reportingFormVisibility: VisibilityState }>`
   position: absolute;
-  top: 298px;
+  top: 346px;
   transition: right 0.3s ease-out;
   right: ${p => (p.reportingFormVisibility === VisibilityState.VISIBLE ? '0' : '10')}px;
 `

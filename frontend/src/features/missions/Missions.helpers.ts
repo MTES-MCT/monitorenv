@@ -13,7 +13,7 @@ import {
   EnvActionSurveillance
 } from '../../domain/entities/missions'
 
-import type { ControlUnit } from '../../domain/entities/controlUnit'
+import type { LegacyControlUnit } from '../../domain/entities/legacyControlUnit'
 
 export const infractionFactory = ({ id, ...infraction } = { id: '' }) => ({
   id: uuidv4(),
@@ -69,7 +69,7 @@ export const missionFactory = (
   const startDate = new Date()
   startDate.setSeconds(0, 0)
 
-  let formattedMission = {
+  let formattedMission: NewMission = {
     closedBy: '',
     controlUnits: [controlUnitFactory()],
     endDateTimeUtc: '',
@@ -122,7 +122,7 @@ export const missionFactory = (
   return formattedMission as Mission
 }
 
-export const controlUnitFactory = ({ ...resourceUnit } = {}): Omit<ControlUnit, 'id'> => ({
+export const controlUnitFactory = ({ ...resourceUnit } = {}): Omit<LegacyControlUnit, 'administrationId' | 'id'> => ({
   administration: '',
   isArchived: false,
   name: '',

@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlResource.ControlResourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -19,21 +19,44 @@ data class MissionControlResourceModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     val id: Int? = null,
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "mission_id")
     val mission: MissionModel,
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = [CascadeType.MERGE])
     @JoinColumn(name = "control_resource_id")
-    val ressource: ControlResourceModel,
+    var ressource: ControlUnitResourceModel,
 ) {
     companion object {
-        fun fromControlResourceEntity(controlResourceEntity: ControlResourceEntity, mission: MissionModel, controlUnitModel: ControlUnitModel) = MissionControlResourceModel(
-            ressource = ControlResourceModel(
-                id = controlResourceEntity.id,
-                name = controlResourceEntity.name,
+        fun fromControlUnitResource(
+            controlUnitResource: ControlUnitResourceEntity,
+            missionModel: MissionModel,
+            controlUnitModel: ControlUnitModel
+        ) = MissionControlResourceModel(
+            ressource = ControlUnitResourceModel(
+                id = requireNotNull(controlUnitResource.id),
+                base = null,
                 controlUnit = controlUnitModel,
+                name = controlUnitResource.name,
+                note = null,
+                photo = byteArrayOf(),
+                type = null,
             ),
-            mission = mission,
+            mission = missionModel,
+        )
+    }
+
+    fun toControlUnitResource(): ControlUnitResourceEntity {
+        return ControlUnitResourceEntity(
+            id = ressource.id,
+            base = null,
+            baseId = null,
+            controlUnitId = requireNotNull(ressource.controlUnit.id),
+            name = ressource.name,
+            note = null,
+            photo = byteArrayOf(),
+            type = null,
         )
     }
 }

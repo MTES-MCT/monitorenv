@@ -5,6 +5,7 @@ import styled from 'styled-components'
 
 import { APIWorker } from '../api/APIWorker'
 import { ReportingContext } from '../domain/shared_slices/Global'
+import { MapControlUnitDialog } from '../features/ControlUnits/MapControlUnitDialog'
 import Healthcheck from '../features/healthcheck/Healthcheck'
 import { LayersSidebar } from '../features/layersSelector'
 import { LocateOnMap } from '../features/LocateOnMap'
@@ -13,6 +14,7 @@ import { DrawModal } from '../features/map/draw/DrawModal'
 import { RightMenuOnHoverArea } from '../features/map/shared/RightMenuOnHoverArea'
 import { InterestPointMapButton } from '../features/map/tools/interestPoint/InterestPointMapButton'
 import { MeasurementMapButton } from '../features/map/tools/measurements/MeasurementMapButton'
+import { ControlUnitListButton } from '../features/MapRightMenu/ControlUnitListButton'
 import { MissionsMenu } from '../features/missions/MissionsButton'
 import { Reportings } from '../features/Reportings'
 import { ReportingsButton } from '../features/Reportings/ReportingsButton'
@@ -28,7 +30,9 @@ export function HomePage() {
     displayMeasurement,
     displayMissionMenuButton,
     displayReportingsButton,
-    displaySearchSemaphoreButton
+    displayRightMenuControlUnitListButton: isRightMenuControlUnitListButtonVisible,
+    displaySearchSemaphoreButton,
+    isControlUnitDialogVisible
   } = useAppSelector(state => state.global)
   const {
     missionState: { isFormDirty, missionState },
@@ -65,10 +69,12 @@ export function HomePage() {
         <RightMenuOnHoverArea />
         {displayDrawModal && <DrawModal />}
         {displayLocateOnMap && <LocateOnMap />}
+        {isControlUnitDialogVisible && <MapControlUnitDialog />}
 
         {displayMissionMenuButton && <MissionsMenu />}
         {displayReportingsButton && <ReportingsButton />}
         {displaySearchSemaphoreButton && <SearchSemaphoreButton />}
+        {isRightMenuControlUnitListButtonVisible && <ControlUnitListButton />}
 
         {displayMeasurement && <MeasurementMapButton />}
         {displayInterestPoint && <InterestPointMapButton />}

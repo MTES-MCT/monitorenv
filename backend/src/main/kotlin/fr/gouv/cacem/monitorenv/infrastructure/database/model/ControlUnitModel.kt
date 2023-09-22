@@ -1,44 +1,114 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
-import fr.gouv.cacem.monitorenv.domain.entities.controlResource.ControlUnitEntity
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.OneToMany
-import jakarta.persistence.OneToOne
-import jakarta.persistence.Table
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
+import fr.gouv.cacem.monitorenv.utils.requireIds
+import jakarta.persistence.*
+import java.time.Instant
+import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.UpdateTimestamp
 
 @Entity
 @Table(name = "control_units")
 data class ControlUnitModel(
     @Id
-    @Column(name = "id")
-    val id: Int,
-    @Column(name = "name")
-    val name: String,
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "administration_id")
-    val administration: AdministrationModel,
-    @Column(name = "archived")
-    val isArchived: Boolean,
-    @OneToMany(
-        fetch = FetchType.EAGER,
-        mappedBy = "controlUnit",
-        cascade = [CascadeType.ALL],
-        orphanRemoval = true,
-    )
+    @Column(name = "id", nullable = false, unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Int? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "administration_id", nullable = false)
+    @JsonBackReference
+    var administration: AdministrationModel,
+
+    @Column(name = "area_note")
+    var areaNote: String? = null,
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlUnit")
     @JsonManagedReference
-    val resources: MutableList<ControlResourceModel>? = ArrayList(),
+    var controlUnitContacts: List<ControlUnitContactModel>,
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlUnit")
+    @JsonManagedReference
+    var controlUnitResources: List<ControlUnitResourceModel>,
+
+    @Column(name = "archived")
+    var isArchived: Boolean,
+
+    @Column(name = "name", nullable = false)
+    var name: String,
+
+    @Column(name = "terms_note")
+    var termsNote: String? = null,
+
+    @Column(name = "created_at_utc", nullable = false, updatable = false)
+    @CreationTimestamp
+    var createdAtUtc: Instant? = null,
+
+    @Column(name = "updated_at_utc", nullable = false)
+    @UpdateTimestamp
+    var updatedAtUtc: Instant? = null,
 ) {
-    fun toControlUnit() = ControlUnitEntity(
-        id = id,
-        administration = administration.name,
-        isArchived = isArchived,
-        name = name,
-        resources = resources?.map { it.toControlResource() } ?: listOf(),
-    )
+    companion object {
+        fun fromControlUnit(
+            controlUnit: ControlUnitEntity,
+            administrationModel: AdministrationModel,
+            controlUnitContactModels: List<ControlUnitContactModel>,
+            controlUnitResourceModels: List<ControlUnitResourceModel>
+        ): ControlUnitModel {
+            return ControlUnitModel(
+                id = controlUnit.id,
+                areaNote = controlUnit.areaNote,
+                administration = administrationModel,
+                controlUnitContacts = controlUnitContactModels,
+                controlUnitResources = controlUnitResourceModels,
+                isArchived = controlUnit.isArchived,
+                name = controlUnit.name,
+                termsNote = controlUnit.termsNote,
+            )
+        }
+    }
+
+    fun toControlUnit(): ControlUnitEntity {
+        return ControlUnitEntity(
+            id,
+            administrationId = requireNotNull(administration.id),
+            areaNote,
+            controlUnitContactIds = requireIds(controlUnitContacts) { it.id },
+            controlUnitResourceIds = requireIds(controlUnitResources) { it.id },
+            isArchived,
+            name,
+            termsNote,
+        )
+    }
+
+    fun toFullControlUnit(): FullControlUnitDTO {
+        return FullControlUnitDTO(
+            id,
+            administration = administration.toAdministration(),
+            administrationId = requireNotNull(administration.id),
+            areaNote,
+            controlUnitContactIds = requireIds(controlUnitContacts) { it.id },
+            controlUnitContacts = controlUnitContacts.map { it.toControlUnitContact() },
+            controlUnitResourceIds = requireIds(controlUnitResources) { it.id },
+            controlUnitResources = controlUnitResources.map { it.toControlUnitResource() },
+            isArchived,
+            name,
+            termsNote,
+        )
+    }
+
+    fun toLegacyControlUnit(): LegacyControlUnitEntity {
+        return LegacyControlUnitEntity(
+            id = requireNotNull(id),
+            administration = administration.name,
+            isArchived,
+            name,
+            resources = controlUnitResources.map { it.toControlUnitResource() },
+            contact = "",
+        )
+    }
 }

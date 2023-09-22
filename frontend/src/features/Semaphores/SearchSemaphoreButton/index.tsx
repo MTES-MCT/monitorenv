@@ -2,7 +2,7 @@ import { Icon, Size } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { SearchSemaphores } from './SearchSemaphores'
-import { setDisplayedItems, ReportingContext, VisibilityState } from '../../../domain/shared_slices/Global'
+import { ReportingContext, VisibilityState, globalActions } from '../../../domain/shared_slices/Global'
 import { reduceReportingFormOnMap } from '../../../domain/use_cases/reporting/reduceReportingFormOnMap'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
@@ -12,15 +12,9 @@ export function SearchSemaphoreButton() {
   const dispatch = useAppDispatch()
   const { isSearchSemaphoreVisible, reportingFormVisibility } = useAppSelector(state => state.global)
   const openOrCloseSearchSemaphore = () => {
-    dispatch(
-      setDisplayedItems({
-        isMapToolVisible: undefined,
-        isSearchMissionsVisible: false,
-        isSearchReportingsVisible: false,
-        isSearchSemaphoreVisible: !isSearchSemaphoreVisible
-      })
-    )
+    dispatch(globalActions.hideSideButtons())
     dispatch(reduceReportingFormOnMap())
+    dispatch(globalActions.setDisplayedItems({ isSearchSemaphoreVisible: !isSearchSemaphoreVisible }))
   }
 
   return (

@@ -1,3 +1,5 @@
+// TODO We should move that into `/frontend/src/store` directory.
+
 import { combineReducers } from '@reduxjs/toolkit'
 
 import { administrativeSlicePersistedReducer } from './Administrative'
@@ -17,23 +19,39 @@ import { reportingFiltersPersistedReducer } from './ReportingsFilters'
 import { selectedAmpSlicePersistedReducer } from './SelectedAmp'
 import { semaphoresPersistedReducer } from './SemaphoresSlice'
 import { ampsAPI, ampsErrorLoggerMiddleware } from '../../api/ampsAPI'
+import { monitorenvPrivateApi, monitorenvPublicApi } from '../../api/api'
 import { controlThemesAPI } from '../../api/controlThemesAPI'
-import { controlUnitsAPI } from '../../api/controlUnitsAPI'
 import { infractionsAPI } from '../../api/infractionsAPI'
+import { legacyControlUnitsAPI } from '../../api/legacyControlUnitsAPI'
 import { missionsAPI } from '../../api/missionsAPI'
 import { regulatoryLayersAPI } from '../../api/regulatoryLayersAPI'
 import { reportingsAPI } from '../../api/reportingsAPI'
 import { semaphoresAPI } from '../../api/semaphoresAPI'
+import { backOfficeAdministrationListPersistedReducer } from '../../features/Administrations/BackOfficeAdministrationList/slice'
+import { backOfficeBaseListPersistedReducer } from '../../features/Bases/BackOfficeBaseList/slice'
+import { backOfficeControlUnitListPersistedReducer } from '../../features/ControlUnits/BackOfficeControlUnitList/slice'
+import { mapControlUnitDialogReducer } from '../../features/ControlUnits/MapControlUnitDialog/slice'
+import { mapControlUnitListDialogPersistedReducer } from '../../features/ControlUnits/MapControlUnitListDialog/slice'
 import { layerSearchSliceReducer } from '../../features/layersSelector/search/LayerSearch.slice'
 import { sideWindowReducer } from '../../features/SideWindow/slice'
 
+// TODO Maybe add a specifc store for the backoffice?
+// But it won't be necessarily cleaner since current APIs are also needed in the home anyway.
 export const homeReducers = combineReducers({
+  [monitorenvPrivateApi.reducerPath]: monitorenvPrivateApi.reducer,
+  [monitorenvPublicApi.reducerPath]: monitorenvPublicApi.reducer,
+
   administrative: administrativeSlicePersistedReducer,
+  backOfficeAdministrationList: backOfficeAdministrationListPersistedReducer,
+  backOfficeBaseList: backOfficeBaseListPersistedReducer,
+  backOfficeControlUnitList: backOfficeControlUnitListPersistedReducer,
   draw: drawReducer,
   global: globalReducer,
   interestPoint: interestPointSlicePersistedReducer,
   layerSearch: layerSearchSliceReducer,
   map: mapSliceReducer,
+  mapControlUnitDialog: mapControlUnitDialogReducer,
+  mapControlUnitListDialog: mapControlUnitListDialogPersistedReducer,
   measurement: measurementSlicePersistedReducer,
   missionFilters: missionFiltersPersistedReducer,
   missionState: missionStateSliceReducer,
@@ -46,7 +64,7 @@ export const homeReducers = combineReducers({
   [regulatoryLayersAPI.reducerPath]: regulatoryLayersAPI.reducer,
   [missionsAPI.reducerPath]: missionsAPI.reducer,
   [controlThemesAPI.reducerPath]: controlThemesAPI.reducer,
-  [controlUnitsAPI.reducerPath]: controlUnitsAPI.reducer,
+  [legacyControlUnitsAPI.reducerPath]: legacyControlUnitsAPI.reducer,
   [infractionsAPI.reducerPath]: infractionsAPI.reducer,
   [semaphoresAPI.reducerPath]: semaphoresAPI.reducer,
   reportingFilters: reportingFiltersPersistedReducer,
@@ -62,7 +80,7 @@ export const homeMiddlewares = [
   missionsAPI.middleware,
   regulatoryLayersAPI.middleware,
   controlThemesAPI.middleware,
-  controlUnitsAPI.middleware,
+  legacyControlUnitsAPI.middleware,
   infractionsAPI.middleware,
   semaphoresAPI.middleware,
   reportingsAPI.middleware

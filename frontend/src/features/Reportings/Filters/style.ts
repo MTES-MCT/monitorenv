@@ -24,7 +24,7 @@ export const StyledCheckPicker = styled(CheckPicker)`
 export const StyledTagsContainer = styled.div<{ $withMargin: boolean }>`
   margin-top: ${p => (p.$withMargin ? '16px' : '0px')};
   display: flex;
-  flex-direction row;
+  flex-direction: row;
   max-width: 100%;
   flex-wrap: wrap;
   gap: 16px;

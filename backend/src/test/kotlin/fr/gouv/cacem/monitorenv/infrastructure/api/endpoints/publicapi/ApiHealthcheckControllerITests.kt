@@ -18,7 +18,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @Import(WebSecurityConfig::class)
 @WebMvcTest(value = [(ApiHealthcheckController::class)])
 class ApiHealthcheckControllerITests {
-
     @Autowired
     private lateinit var mockMvc: MockMvc
 

@@ -1,4 +1,11 @@
-import { FieldError, FormikCheckbox, FormikDatePicker, FormikTextarea, useNewWindow } from '@mtes-mct/monitor-ui'
+import {
+  FieldError,
+  FormikCheckbox,
+  FormikDatePicker,
+  FormikTextarea,
+  pluralize,
+  useNewWindow
+} from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { useMemo } from 'react'
 import { Form, IconButton } from 'rsuite'
@@ -11,7 +18,6 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReactComponent as DeleteSVG } from '../../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as SurveillanceIconSVG } from '../../../../uiMonitor/icons/Observation.svg'
 import { dateDifferenceInHours } from '../../../../utils/dateDifferenceInHours'
-import { pluralize } from '../../../../utils/pluralize'
 import { MultiZonePicker } from '../../MultiZonePicker'
 
 export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionIndex }) {

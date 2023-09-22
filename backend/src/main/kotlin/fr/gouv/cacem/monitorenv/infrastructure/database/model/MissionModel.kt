@@ -12,6 +12,7 @@ import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.utils.mapOrElseEmpty
 import jakarta.persistence.Basic
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
@@ -46,44 +47,60 @@ data class MissionModel(
     @Basic(optional = false)
     @Column(name = "id", unique = true, nullable = false)
     val id: Int? = null,
+
     @Type(
         ListArrayType::class,
         parameters = [Parameter(name = SQL_ARRAY_TYPE, value = "text")],
     )
     @Column(name = "mission_types", columnDefinition = "text[]")
     val missionTypes: List<MissionTypeEnum>,
+
     @Column(name = "open_by")
     val openBy: String? = null,
+
     @Column(name = "closed_by")
     val closedBy: String? = null,
+
     @Column(name = "observations_cacem")
     val observationsCacem: String? = null,
+
     @Column(name = "observations_cnsp")
     val observationsCnsp: String? = null,
+
     @Column(name = "facade")
     val facade: String? = null,
+
     @JsonSerialize(using = GeometrySerializer::class)
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
     val geom: MultiPolygon? = null,
+
     @Column(name = "start_datetime_utc")
     val startDateTimeUtc: Instant,
+
     @Column(name = "end_datetime_utc")
     val endDateTimeUtc: Instant? = null,
+
     @Column(name = "closed", nullable = false)
     val isClosed: Boolean,
+
     @Column(name = "deleted", nullable = false)
     val isDeleted: Boolean,
+
     @Column(name = "mission_source", nullable = false, columnDefinition = "mission_source_type")
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
     val missionSource: MissionSourceEnum,
+
     @Column(name = "has_mission_order", nullable = false)
     val hasMissionOrder: Boolean,
+
     @Column(name = "is_geometry_computed_from_controls", nullable = false)
     val isGeometryComputedFromControls: Boolean,
+
     @Column(name = "is_under_jdp", nullable = false)
     val isUnderJdp: Boolean,
+
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
@@ -92,6 +109,7 @@ data class MissionModel(
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
     val envActions: MutableList<EnvActionModel>? = ArrayList(),
+
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
@@ -100,6 +118,7 @@ data class MissionModel(
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
     val controlResources: MutableList<MissionControlResourceModel>? = ArrayList(),
+
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
@@ -109,38 +128,42 @@ data class MissionModel(
     @Fetch(value = FetchMode.SUBSELECT)
     val controlUnits: MutableList<MissionControlUnitModel>? = ArrayList(),
 ) {
-
-    fun toMissionEntity(mapper: ObjectMapper) = MissionEntity(
-        id = id,
-        missionTypes = missionTypes,
-        openBy = openBy,
-        closedBy = closedBy,
-        observationsCacem = observationsCacem,
-        observationsCnsp = observationsCnsp,
-        facade = facade,
-        geom = geom,
-        startDateTimeUtc = startDateTimeUtc.atZone(UTC),
-        endDateTimeUtc = endDateTimeUtc?.atZone(UTC),
-        isClosed = isClosed,
-        isDeleted = isDeleted,
-        missionSource = missionSource,
-        hasMissionOrder = hasMissionOrder,
-        isUnderJdp = isUnderJdp,
-        isGeometryComputedFromControls = isGeometryComputedFromControls,
-        envActions = envActions!!.map { it.toActionEntity(mapper) },
-        controlUnits = controlUnits?.map { unit ->
-            val savedUnitResources = controlResources
-                ?.filter { resource ->
-                    resource.ressource.controlUnit?.id == unit.unit.id
+    fun toMissionEntity(objectMapper: ObjectMapper): MissionEntity {
+        val controlUnits = controlUnits.mapOrElseEmpty { missionControlUnitModel ->
+            val maybeMissionControlResourceModels = controlResources
+                ?.filter { missionControlResourceModel ->
+                    missionControlResourceModel.ressource.controlUnit.id == missionControlUnitModel.unit.id
                 }
-                ?.map { resource -> resource }
 
-            unit.unit.toControlUnit().copy(
-                contact = unit.contact,
-                resources = savedUnitResources?.let { safeUnitResources -> safeUnitResources.map { it.ressource.toControlResource() } } ?: listOf(),
+            val controlUnitResources = maybeMissionControlResourceModels.mapOrElseEmpty { it.toControlUnitResource() }
+
+            missionControlUnitModel.unit.toLegacyControlUnit().copy(
+                contact = missionControlUnitModel.contact,
+                resources = controlUnitResources
             )
-        } ?: listOf(),
-    )
+        }
+
+        return MissionEntity(
+            id,
+            missionTypes,
+            controlUnits,
+            openBy,
+            closedBy,
+            observationsCacem,
+            observationsCnsp,
+            facade,
+            geom,
+            startDateTimeUtc = startDateTimeUtc.atZone(UTC),
+            endDateTimeUtc = endDateTimeUtc?.atZone(UTC),
+            envActions = envActions!!.map { it.toActionEntity(objectMapper) },
+            isClosed,
+            isDeleted,
+            isGeometryComputedFromControls,
+            missionSource,
+            hasMissionOrder,
+            isUnderJdp,
+        )
+    }
 
     companion object {
         fun fromMissionEntity(mission: MissionEntity, mapper: ObjectMapper): MissionModel {
@@ -168,13 +191,19 @@ data class MissionModel(
             }
 
             mission.controlUnits.map {
-                val controlUnitModel = MissionControlUnitModel.fromControlUnitEntity(
+                val controlUnitModel = MissionControlUnitModel.fromLegacyControlUnit(
                     it,
                     missionModel,
                 )
                 missionModel.controlUnits?.add(controlUnitModel)
 
-                val resources = it.resources.map { resource -> MissionControlResourceModel.fromControlResourceEntity(resource, missionModel, controlUnitModel.unit) }
+                val resources = it.resources.map { resource ->
+                    MissionControlResourceModel.fromControlUnitResource(
+                        resource,
+                        missionModel,
+                        controlUnitModel.unit
+                    )
+                }
                 missionModel.controlResources?.addAll(resources)
             }
 

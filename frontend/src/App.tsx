@@ -8,6 +8,7 @@ import { CustomProvider } from 'rsuite'
 import { AlertUnsupportedBrowser } from './components/AlertUnsupportedBrowser'
 import { ToastNotification } from './components/ToastNotification'
 import { SideWindow } from './features/SideWindow'
+import { BackOfficePage } from './pages/BackOfficePage'
 import { HomePage } from './pages/HomePage'
 import { homeStore } from './store'
 import frFR from './uiMonitor/locale_frFR'
@@ -28,6 +29,7 @@ export function App() {
           <PersistGate loading={undefined} persistor={persistor}>
             <Router>
               <Routes>
+                <Route element={<BackOfficePage />} path="/backoffice/*" />
                 <Route element={<SideWindow />} path="/side_window" />
                 <Route element={<HomePage />} path="/" />
               </Routes>

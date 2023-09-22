@@ -20,18 +20,19 @@ abstract class AbstractDBTests {
 
     companion object {
         @JvmStatic
-        val container: GenericContainer<Nothing> = GenericContainer<Nothing>("ghcr.io/mtes-mct/monitorenv/monitorenv-database:pg11-ts1.7.4-postgis3.3.2")
-            .apply {
-                withExposedPorts(5432)
-                withEnv("POSTGRES_DB", "testdb")
-                withEnv("POSTGRES_USER", "postgres")
-                withEnv("POSTGRES_PASSWORD", "postgres")
-                waitingFor(
-                    Wait.forLogMessage(".*ready to accept connections.*\\s", 2),
-                )
-                withStartupTimeout(Duration.of(60L, ChronoUnit.SECONDS))
-                this.start()
-            }
+        val container: GenericContainer<Nothing> =
+            GenericContainer<Nothing>("ghcr.io/mtes-mct/monitorenv/monitorenv-database:pg11-ts1.7.4-postgis3.3.2")
+                .apply {
+                    withExposedPorts(5432)
+                    withEnv("POSTGRES_DB", "testdb")
+                    withEnv("POSTGRES_USER", "postgres")
+                    withEnv("POSTGRES_PASSWORD", "postgres")
+                    waitingFor(
+                        Wait.forLogMessage(".*ready to accept connections.*\\s", 2),
+                    )
+                    withStartupTimeout(Duration.of(60L, ChronoUnit.SECONDS))
+                    this.start()
+                }
 
         @JvmStatic
         @DynamicPropertySource
@@ -44,7 +45,7 @@ abstract class AbstractDBTests {
             container.followOutput(toStringConsumer, OutputFrame.OutputType.STDOUT)
             println(toStringConsumer.toUtf8String())
 
-            return "jdbc:postgresql://" + container.containerIpAddress + ":" + container.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT)
+            return "jdbc:postgresql://" + container.host + ":" + container.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT)
                 .toString() + "/testdb?user=postgres&password=postgres"
         }
     }

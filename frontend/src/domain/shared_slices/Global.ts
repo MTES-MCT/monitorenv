@@ -1,5 +1,5 @@
-/* eslint-disable typescript-sort-keys/interface */
-/* eslint-disable sort-keys-fix/sort-keys-fix */
+// TODO It may be a good thing to either call this slice 'mainWindowSlice' (or something with "map"?) since it targets the main window.
+
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import type { MapToolType } from '../entities/map/constants'
@@ -21,11 +21,12 @@ export type ReportingFormVisibilityProps = {
   visibility: VisibilityState
 }
 type Toast = {
+  containerId?: string
   message: any
   type?: string
-  containerId?: string
 }
 
+/* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 type GlobalStateType = {
   // state entry for every component /menu displayed on map whose visibility should be controlled
   displayMissionMenuButton: boolean
@@ -36,6 +37,7 @@ type GlobalStateType = {
   displayInterestPoint: boolean
   displaySearchSemaphoreButton: boolean
   displayReportingsButton: boolean
+  displayRightMenuControlUnitListButton: boolean
 
   // state entry for every layer whose visibility should be controlled
   isSearchMissionsVisible: boolean
@@ -45,6 +47,9 @@ type GlobalStateType = {
   displayMissionSelectedLayer: boolean
 
   // state entry for other children components whom visibility is already handled by parent components
+
+  isControlUnitDialogVisible: boolean
+  isControlUnitListDialogVisible: boolean
 
   isSearchSemaphoreVisible: boolean
   displaySemaphoresLayer: boolean
@@ -78,6 +83,7 @@ const initialState: GlobalStateType = {
   displayInterestPoint: true,
   displaySearchSemaphoreButton: true,
   displayReportingsButton: true,
+  displayRightMenuControlUnitListButton: true,
 
   // state entry for every layer whose visibility should be controlled
   isSearchMissionsVisible: false,
@@ -88,6 +94,9 @@ const initialState: GlobalStateType = {
 
   // state entry for other children components whom visibility is already handled by parent components
   isLayersSidebarVisible: false,
+
+  isControlUnitDialogVisible: false,
+  isControlUnitListDialogVisible: false,
 
   isSearchSemaphoreVisible: false,
   displaySemaphoresLayer: true,
@@ -111,37 +120,27 @@ const initialState: GlobalStateType = {
 
   toast: undefined
 }
+/* eslint-enable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 
 const globalSlice = createSlice({
   initialState,
   name: 'global',
   reducers: {
     hideSideButtons(state) {
+      state.isControlUnitDialogVisible = false
+      state.isControlUnitListDialogVisible = false
       state.isSearchReportingsVisible = false
       state.isSearchSemaphoreVisible = false
       state.isSearchMissionsVisible = false
       state.isMapToolVisible = undefined
     },
+
     removeToast(state) {
       state.toast = undefined
     },
 
-    setToast(state, action) {
-      state.toast = action.payload
-    },
-
     setDisplayedItems(state, action: PayloadAction<Partial<GlobalStateType>>) {
       return { ...state, ...action.payload }
-    },
-
-    setReportingFormVisibility(state, action) {
-      state.reportingFormVisibility = action.payload
-    },
-    /**
-     * Set the map tool opened
-     */
-    setIsMapToolVisible(state, action: PayloadAction<MapToolType | undefined>) {
-      state.isMapToolVisible = action.payload
     },
 
     /**
@@ -152,8 +151,24 @@ const globalSlice = createSlice({
     setHealthcheckTextWarning(state, action) {
       state.healthcheckTextWarning = action.payload
     },
+
+    /**
+     * Set the map tool opened
+     */
+    setIsMapToolVisible(state, action: PayloadAction<MapToolType | undefined>) {
+      state.isMapToolVisible = action.payload
+    },
+
     setOverlayCoordinates(state, action) {
       state.overlayCoordinates = action.payload
+    },
+
+    setReportingFormVisibility(state, action) {
+      state.reportingFormVisibility = action.payload
+    },
+
+    setToast(state, action) {
+      state.toast = action.payload
     }
   }
 })
@@ -169,4 +184,5 @@ export const {
   setToast
 } = globalSlice.actions
 
+export const globalActions = globalSlice.actions
 export const globalReducer = globalSlice.reducer
