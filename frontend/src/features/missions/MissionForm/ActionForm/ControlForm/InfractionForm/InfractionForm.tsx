@@ -7,7 +7,6 @@ import { InfractionFormHeaderCompany } from './InfractionFormHeaderCompany'
 import { InfractionFormHeaderVehicle } from './InfractionFormHeaderVehicle'
 import { NatinfSelector } from './NatinfSelector'
 import { RelevantCourtSelector } from './RelevantCourtSelector'
-import { COLORS } from '../../../../../../constants/constants'
 import { infractionTypeLabels, formalNoticeLabels } from '../../../../../../domain/entities/missions'
 import { TargetTypeEnum } from '../../../../../../domain/entities/targetType'
 
@@ -102,12 +101,12 @@ export function InfractionForm({
 }
 
 const ErrorMessage = styled.div`
-  color: ${COLORS.maximumRed};
+  color: ${p => p.theme.color.maximumRed};
   font: italic normal normal 13px/18px Marianne;
 `
 
 const FormWrapper = styled.div`
-  background: ${COLORS.white};
+  background: ${p => p.theme.color.white};
   padding: 32px;
 `
 const FormGroupFixedHeight = styled(Form.Group)`

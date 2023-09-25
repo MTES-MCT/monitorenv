@@ -15,7 +15,6 @@ import { FilterTags } from './FilterTags'
 import { useGetAdministrationsQuery } from '../../../../api/administrationsAPI'
 import { useGetControlThemesQuery } from '../../../../api/controlThemesAPI'
 import { useGetLegacyControlUnitsQuery } from '../../../../api/legacyControlUnitsAPI'
-import { COLORS } from '../../../../constants/constants'
 import { DateRangeEnum, dateRangeLabels } from '../../../../domain/entities/dateRange'
 import { missionSourceEnum, missionStatusLabels, missionTypeEnum } from '../../../../domain/entities/missions'
 import { seaFrontLabels } from '../../../../domain/entities/seaFrontType'
@@ -330,7 +329,7 @@ const StyledCustomPeriodContainer = styled.div`
 `
 const StyledCutomPeriodLabel = styled.span`
   font-size: 13px;
-  color: ${COLORS.slateGray};
+  color: ${p => p.theme.color.slateGray};
   margin-top: 16px;
 `
 

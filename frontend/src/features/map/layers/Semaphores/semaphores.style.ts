@@ -6,8 +6,6 @@ import { THEME } from '@mtes-mct/monitor-ui'
 import { LineString, /* MultiLineString, */ Point } from 'ol/geom'
 import { Icon, Stroke, Style } from 'ol/style'
 
-import { COLORS } from '../../../../constants/constants'
-
 const lineStyle = new Style({
   geometry: feature => {
     const overlayPostion = feature.get('overlayCoordinates')
@@ -19,7 +17,7 @@ const lineStyle = new Style({
     return new LineString([overlayPostion, featureGeometry])
   },
   stroke: new Stroke({
-    color: COLORS.slateGray,
+    color: THEME.color.slateGray,
     lineDash: [4, 4],
     width: 2
   })
@@ -53,7 +51,7 @@ const lineStyle = new Style({
     return undefined
   },
   stroke: new Stroke({
-    color: COLORS.slateGray,
+    color: THEME.color.slateGray,
     width: 1
   })
 }) */
@@ -68,7 +66,7 @@ export const semaphoresStyleFn = feature => {
   if (isSemaphoreHighlighted) {
     semaphoreStyle = new Style({
       image: new Icon({
-        color: THEME.color.blueGray[100],
+        color: THEME.color.blueGray,
         src: 'semaphore.svg'
       })
     })

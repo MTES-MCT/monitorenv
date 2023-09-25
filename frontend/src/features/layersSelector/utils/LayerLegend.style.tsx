@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 
-import { COLORS } from '../../../constants/constants'
 import { getAMPColorWithAlpha } from '../../map/layers/AMP/AMPLayers.style'
 import { getRegulatoryEnvColorWithAlpha } from '../../map/layers/styles/administrativeAndRegulatoryLayers.style'
 
@@ -18,8 +17,8 @@ export function AMPLayerLegend({ name, type }) {
 const Rectangle = styled.div<{ $vectorLayerColor?: string }>`
   width: 14px;
   height: 14px;
-  background: ${props => props.$vectorLayerColor || COLORS.gainsboro};
-  border: 1px solid ${COLORS.slateGray};
+  background: ${p => p.$vectorLayerColor || p.theme.color.gainsboro};
+  border: 1px solid ${p => p.theme.color.slateGray};
   display: inline-block;
   margin-right: 10px;
   flex-shrink: 0;

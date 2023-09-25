@@ -1,20 +1,18 @@
 import styled from 'styled-components'
 
-import { COLORS } from '../../../../constants/constants'
-
 export const Elem = styled.li``
 
 export const List = styled.ul`
   display: flex;
   flex-direction: column;
   font-size: 13px;
-  color: ${COLORS.gunMetal};
+  color: ${p => p.theme.color.gunMetal};
   padding-bottom: 20px;
   margin: 0;
 `
 
 export const Key = styled.th`
-  color: ${COLORS.slateGray};
+  color: ${p => p.theme.color.slateGray};
   flex: initial;
   display: inline-block;
   margin: 0;
@@ -29,7 +27,7 @@ export const Key = styled.th`
 `
 
 export const Value = styled.td`
-  color: ${COLORS.gunMetal};
+  color: ${p => p.theme.color.gunMetal};
   margin: 0;
   text-align: left;
   padding: 1px 5px 5px 5px;
@@ -43,18 +41,18 @@ export const Value = styled.td`
 export const Section = styled.div`
   display: flex;
   flex-direction: column;
-  color: ${COLORS.gunMetal};
+  color: ${p => p.theme.color.gunMetal};
   font-size: 13px;
   font-weight: 500;
   padding: 15px 45px 15px 20px;
   text-align: left;
-  border-bottom: 1px solid ${COLORS.lightGray};
+  border-bottom: 1px solid ${p => p.theme.color.lightGray};
 `
 
 export const SectionTitle = styled.span`
   display: flex;
   flex-direction: row;
-  color: ${COLORS.slateGray};
+  color: ${p => p.theme.color.slateGray};
   font-size: 13px;
   align-items: center;
 `

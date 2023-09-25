@@ -75,7 +75,7 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
         <IconButton
           accent={Accent.TERTIARY}
           aria-label="Sélectionner la zone"
-          color={isZoneSelected ? THEME.color.blueGray[100] : THEME.color.gunMetal}
+          color={isZoneSelected ? THEME.color.blueGray : THEME.color.gunMetal}
           Icon={isZoneSelected ? Icon.PinFilled : Icon.Pin}
           iconSize={20}
           onClick={handleSelectRegulatoryZone}

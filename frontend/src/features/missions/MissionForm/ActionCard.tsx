@@ -1,7 +1,6 @@
 import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../constants/constants'
 import { ActionTypeEnum, EnvAction } from '../../../domain/entities/missions'
 import { TargetTypeLabels } from '../../../domain/entities/targetType'
 import { ControlInfractionsTags } from '../../../ui/ControlInfractionsTags'
@@ -151,19 +150,23 @@ const ActionSummaryWrapper = styled.div<{ $type: string; hasError: boolean; sele
   display: flex;
   border-color: ${p =>
     // eslint-disable-next-line no-nested-ternary
-    p.hasError ? `${COLORS.maximumRed}` : p.selected ? `${COLORS.blueYonder}` : `${COLORS.lightGray}`};
+    p.hasError
+      ? `${p.theme.color.maximumRed}`
+      : p.selected
+      ? `${p.theme.color.blueYonder}`
+      : `${p.theme.color.lightGray}`};
   border-size: ${p => (p.selected ? `3px` : `1px`)};
   border-style: solid;
   background: ${p => {
     switch (p.$type) {
       case ActionTypeEnum.CONTROL:
-        return COLORS.white
+        return p.theme.color.white
       case ActionTypeEnum.SURVEILLANCE:
-        return COLORS.gainsboro
+        return p.theme.color.gainsboro
       case ActionTypeEnum.NOTE:
-        return COLORS.blueGray25
+        return p.theme.color.blueGray25
       default:
-        return COLORS.white
+        return p.theme.color.white
     }
   }};
   padding: ${p => (p.selected ? `4px` : '6px')};
@@ -173,7 +176,7 @@ const Title = styled.span`
   font: normal normal normal 14px/20px Marianne;
 `
 const ControlIcon = styled(ControlIconSVG)`
-  color: ${COLORS.gunMetal};
+  color: ${p => p.theme.color.gunMetal};
   width: 20px;
   height: 20px;
   margin-top: 18px;
@@ -181,7 +184,7 @@ const ControlIcon = styled(ControlIconSVG)`
   margin-right: 8px;
 `
 const SurveillanceIcon = styled(SurveillanceIconSVG)`
-  color: ${COLORS.gunMetal};
+  color: ${p => p.theme.color.gunMetal};
   width: 16px;
   height: 16px;
   margin-top: 20px;
@@ -190,7 +193,7 @@ const SurveillanceIcon = styled(SurveillanceIconSVG)`
 `
 
 const NoteIcon = styled(NoteSVG)`
-  color: ${COLORS.gunMetal};
+  color: ${p => p.theme.color.gunMetal};
   width: 16px;
   height: 16px;
   margin-top: 20px;
@@ -200,7 +203,7 @@ const NoteIcon = styled(NoteSVG)`
 `
 const ControlSummary = styled.div`
   font: normal normal normal 13px/18px Marianne;
-  color: ${COLORS.slateGray};
+  color: ${p => p.theme.color.slateGray};
   margin-bottom: 16px;
 `
 
@@ -208,7 +211,7 @@ const SummaryContent = styled.div`
   margin-top: 18px;
   margin-bottom: 18px;
   flex: 1;
-  color: ${COLORS.gunMetal};
+  color: ${p => p.theme.color.gunMetal};
 `
 
 const NoteContent = styled.div`
@@ -217,7 +220,7 @@ const NoteContent = styled.div`
   max-height: 54px;
   overflow: hidden;
   font: normal normal normal 14px/20px Marianne;
-  color: ${COLORS.gunMetal};
+  color: ${p => p.theme.color.gunMetal};
 `
 
 const ButtonsWrapper = styled.div`
@@ -231,13 +234,13 @@ const Accented = styled.span`
 `
 
 const DeleteIcon = styled(DeleteSVG)`
-  color: ${COLORS.maximumRed};
+  color: ${p => p.theme.color.maximumRed};
 `
 const DurationWrapper = styled.div`
   font: normal normal normal 13px/18px Marianne;
-  color: ${COLORS.slateGray};
+  color: ${p => p.theme.color.slateGray};
 `
 
 const ErrorMessage = styled.div`
-  color: ${COLORS.maximumRed};
+  color: ${p => p.theme.color.maximumRed};
 `

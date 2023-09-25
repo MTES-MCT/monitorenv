@@ -65,7 +65,7 @@ export function RegulatoryLayerZone({ regulatoryZone }) {
       <LayerSelector.IconGroup>
         <IconButton
           accent={Accent.TERTIARY}
-          color={metadataIsShown ? THEME.color.blueGray[100] : THEME.color.slateGray}
+          color={metadataIsShown ? THEME.color.blueGray : THEME.color.slateGray}
           Icon={Icon.Summary}
           iconSize={20}
           onClick={toggleRegulatoryZoneMetadata}
@@ -75,7 +75,7 @@ export function RegulatoryLayerZone({ regulatoryZone }) {
 
         <IconButton
           accent={Accent.TERTIARY}
-          color={regulatoryZoneIsShowed ? THEME.color.blueGray[100] : THEME.color.slateGray}
+          color={regulatoryZoneIsShowed ? THEME.color.blueGray : THEME.color.slateGray}
           data-cy={regulatoryZoneIsShowed ? 'regulatory-my-zones-zone-hide' : 'regulatory-my-zones-zone-show'}
           Icon={Icon.Display}
           iconSize={20}

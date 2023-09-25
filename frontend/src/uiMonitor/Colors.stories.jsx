@@ -1,6 +1,5 @@
+import { THEME } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
-
-import { COLORS } from '../constants/constants'
 
 const Wrapper = styled.div`
   display: flex;
@@ -23,7 +22,7 @@ export default {
 function Template() {
   return (
     <Wrapper>
-      {Object.entries(COLORS).map(([key, value]) => (
+      {Object.entries(THEME.color).map(([key, value]) => (
         <ColorSample key={key} color={value}>
           {key}-{value}
         </ColorSample>

@@ -1,9 +1,9 @@
+import { THEME } from '@mtes-mct/monitor-ui'
 import { Icon, Style } from 'ol/style'
 import CircleStyle from 'ol/style/Circle'
 import Fill from 'ol/style/Fill'
 import Stroke from 'ol/style/Stroke'
 
-import { COLORS } from '../../../../constants/constants'
 import { InterestPointLine } from '../../../../domain/entities/interestPointLine'
 import { INTEREST_POINT_STYLE, interestPointType } from '../../../../domain/entities/interestPoints'
 
@@ -11,7 +11,7 @@ const interestPointStylesCache = new Map()
 
 const lineStyle = new Style({
   stroke: new Stroke({
-    color: COLORS.slateGray,
+    color: THEME.color.slateGray,
     lineDash: [4, 4],
     width: 2
   })
@@ -60,15 +60,15 @@ const getFilename = type => {
 export const POIStyle = new Style({
   image: new CircleStyle({
     fill: new Fill({
-      color: COLORS.slateGray
+      color: THEME.color.slateGray
     }),
     radius: 2,
     stroke: new Stroke({
-      color: COLORS.slateGray
+      color: THEME.color.slateGray
     })
   }),
   stroke: new Stroke({
-    color: COLORS.slateGray,
+    color: THEME.color.slateGray,
     lineDash: [4, 4],
     width: 2
   })

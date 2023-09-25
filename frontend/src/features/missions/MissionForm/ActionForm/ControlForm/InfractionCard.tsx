@@ -3,7 +3,6 @@ import { useField } from 'formik'
 import { IconButton } from 'rsuite'
 import styled, { css } from 'styled-components'
 
-import { COLORS } from '../../../../../constants/constants'
 import {
   FormalNoticeEnum,
   InfractionTypeEnum,
@@ -108,7 +107,7 @@ export function InfractionCard({
 }
 
 const Wrapper = styled.div<{ $hasError: boolean }>`
-  background: ${COLORS.white};
+  background: ${p => p.theme.color.white};
   margin-top: 8px;
   margin-bottom: 8px;
   padding: 12px;
@@ -134,12 +133,12 @@ const ButtonsWrapper = styled.div`
 
 const VehicleType = styled.span`
   font-weight: 500;
-  color: ${COLORS.gunMetal};
+  color: ${p => p.theme.color.gunMetal};
 `
 
 const Identification = styled.span`
   font-weight: 500;
-  color: ${COLORS.gunMetal};
+  color: ${p => p.theme.color.gunMetal};
 `
 
 const SummaryDetails = styled.div`
@@ -153,5 +152,5 @@ const Info = styled(Tag)`
 const EditIcon = styled(EditIconSVG)``
 
 const DeleteIcon = styled(DeleteSVG)`
-  color: ${COLORS.maximumRed};
+  color: ${p => p.theme.color.maximumRed};
 `

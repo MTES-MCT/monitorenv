@@ -1,7 +1,6 @@
 import { getLocalizedDayjs, customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../../constants/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { dateDifferenceInHours } from '../../../../utils/dateDifferenceInHours'
 import { extractThemesAsText } from '../../../../utils/extractThemesAsText'
@@ -41,7 +40,7 @@ export function SurveillanceCard({ feature }) {
 }
 
 const StyledSurveillanceCard = styled.div`
-  background: ${COLORS.white};
+  background: ${p => p.theme.color.white};
   display: flex;
   flex-direction: column;
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3);
@@ -58,5 +57,5 @@ const StyledDuration = styled.div`
 `
 
 const StyledDate = styled.div`
-  color: ${COLORS.slateGray};
+  color: ${p => p.theme.color.slateGray};
 `

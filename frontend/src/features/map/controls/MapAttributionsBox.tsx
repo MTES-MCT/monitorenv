@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../constants/constants'
-
 export function MapAttributionsBox() {
   const [isVisible, setIsVisible] = useState(false)
 
@@ -45,7 +43,7 @@ const ButtonText = styled.span`
 
 const List = styled.ul`
   font-size: 0.9em;
-  background-color: ${COLORS.gainsboro};
+  background-color: ${p => p.theme.color.gainsboro};
   height: 1.5em;
   border: none;
   border-radius: 0;
@@ -60,5 +58,5 @@ const ListItem = styled.li`
 `
 
 const Link = styled.a`
-  color: ${COLORS.slateGray};
+  color: ${p => p.theme.color.slateGray};
 `

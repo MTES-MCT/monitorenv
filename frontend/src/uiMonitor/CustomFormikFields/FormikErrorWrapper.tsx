@@ -2,8 +2,6 @@
 import { useField } from 'formik'
 import styled from 'styled-components'
 
-import { COLORS } from '../../constants/constants'
-
 type FormikErrorWrapperProps = {
   children: React.ReactNode
   name: string
@@ -25,9 +23,9 @@ const ErrorWrapper = styled.div<{ error: boolean }>`
   .rs-input,
   .rs-input:hover,
   .rs-picker-toggle {
-    ${p => (p.error ? `border: 1px solid ${COLORS.maximumRed};` : '')}
+    ${p => (p.error ? `border: 1px solid ${p.theme.color.maximumRed};` : '')}
   }
   label {
-    ${p => (p.error ? `color: ${COLORS.maximumRed};` : '')}
+    ${p => (p.error ? `color: ${p.theme.color.maximumRed};` : '')}
   }
 `

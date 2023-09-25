@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 
 import { Key, Value, Fields, Field } from './RegulatoryMetadata.style'
-import { COLORS } from '../../../../constants/constants'
 
 export function Identification({ entity_name, facade, thematique, type }) {
   return (
@@ -31,7 +30,7 @@ export function Identification({ entity_name, facade, thematique, type }) {
 }
 
 const NoValue = styled.span`
-  color: ${COLORS.slateGray};
+  color: ${p => p.theme.color.slateGray};
   font-weight: 300;
   line-height: normal;
   font-size: 13px;
@@ -46,5 +45,5 @@ const Zone = styled.div`
   text-align: left;
   display: flex;
   flex-wrap: wrap;
-  border-bottom: 1px solid ${COLORS.lightGray};
+  border-bottom: 1px solid ${p => p.theme.color.lightGray};
 `

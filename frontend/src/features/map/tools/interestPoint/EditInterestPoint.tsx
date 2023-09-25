@@ -4,7 +4,6 @@ import { useCallback, useMemo, useState } from 'react'
 import { Radio, RadioGroup } from 'rsuite'
 import styled, { css } from 'styled-components'
 
-import { COLORS } from '../../../../constants/constants'
 import { interestPointType } from '../../../../domain/entities/interestPoints'
 import { CoordinatesFormat, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map/constants'
 import { addInterestPoint, updateInterestPointKeyBeingDrawed } from '../../../../domain/shared_slices/InterestPoint'
@@ -196,22 +195,22 @@ const RadioWrapper = styled.div`
 `
 
 const CancelButton = styled.button`
-  border: 1px solid ${COLORS.lightGray};
-  color: ${COLORS.gunMetal};
+  border: 1px solid ${p => p.theme.color.lightGray};
+  color: ${p => p.theme.color.gunMetal};
   font-size: 13px;
   margin: 15px 0 0 15px;
   padding: 5px 12px;
   width: 130px;
 
   :disabled {
-    border: 1px solid ${COLORS.lightGray};
-    color: ${COLORS.slateGray};
+    border: 1px solid ${p => p.theme.color.lightGray};
+    color: ${p => p.theme.color.slateGray};
   }
 `
 
 const OkButton = styled.button`
-  background: ${COLORS.charcoal};
-  color: ${COLORS.gainsboro};
+  background: ${p => p.theme.color.charcoal};
+  color: ${p => p.theme.color.gainsboro};
   font-size: 13px;
   margin: 15px 0 0;
   padding: 5px 12px;
@@ -219,12 +218,12 @@ const OkButton = styled.button`
 
   :hover,
   :focus {
-    background: ${COLORS.charcoal};
+    background: ${p => p.theme.color.charcoal};
   }
 `
 
 const Body = styled.div`
-  color: ${COLORS.slateGray};
+  color: ${p => p.theme.color.slateGray};
   font-size: 13px;
   margin: 10px 15px;
   text-align: left;
@@ -250,18 +249,18 @@ const Body = styled.div`
   }
 
   input {
-    background: ${COLORS.gainsboro};
+    background: ${p => p.theme.color.gainsboro};
     border: none;
-    color: ${COLORS.gunMetal};
+    color: ${p => p.theme.color.gunMetal};
     height: 27px;
     margin-top: 7px;
     padding-left: 8px;
   }
 
   textarea {
-    background: ${COLORS.gainsboro};
+    background: ${p => p.theme.color.gainsboro};
     border: none;
-    color: ${COLORS.gunMetal};
+    color: ${p => p.theme.color.gunMetal};
     margin-top: 7px;
     min-height: 50px;
     padding-left: 8px;
@@ -272,10 +271,10 @@ const Body = styled.div`
 `
 
 const Header = styled.div`
-  background: ${COLORS.charcoal};
+  background: ${p => p.theme.color.charcoal};
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
-  color: ${COLORS.gainsboro};
+  color: ${p => p.theme.color.gainsboro};
   font-size: 16px;
   padding: 9px 0 7px 15px;
   text-align: left;

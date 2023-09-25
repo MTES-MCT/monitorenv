@@ -3,7 +3,6 @@ import Overlay from 'ol/Overlay'
 import { MutableRefObject, useEffect, useCallback, useRef, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../constants/constants'
 import { DistanceUnit, OLGeometryType } from '../../../domain/entities/map/constants'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ReactComponent as CloseIconSVG } from '../../../uiMonitor/icons/Close.svg'
@@ -100,7 +99,7 @@ const TriangleShadow = styled.div`
   height: 0;
   border-style: solid;
   border-width: 11px 6px 0 6px;
-  border-color: ${COLORS.gainsboro} transparent;
+  border-color: ${p => p.theme.color.gainsboro} transparent;
   text-align: center;
   margin: auto;
   margin-top: -3px;
@@ -117,9 +116,9 @@ const ZoneText = styled.span`
 `
 
 const ZoneSelected = styled.div`
-  background: ${COLORS.gainsboro};
+  background: ${p => p.theme.color.gainsboro};
   border-radius: 2px;
-  color: ${COLORS.slateGray};
+  color: ${p => p.theme.color.slateGray};
   margin-left: 0;
   font-size: 13px;
   padding: 0px 3px 0px 7px;

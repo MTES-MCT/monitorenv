@@ -109,7 +109,7 @@ export function MeasurementMapButton() {
 }
 
 const MeasurementItem = styled.div`
-  background: ${p => p.theme.color.blueGray[100]};
+  background: ${p => p.theme.color.blueGray};
   border-radius: 2px;
   cursor: pointer;
   float: right;

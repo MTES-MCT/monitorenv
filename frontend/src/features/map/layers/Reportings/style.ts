@@ -90,15 +90,12 @@ export const hoveredReportingStyleFn = feature => {
 
   switch (status) {
     case ReportingStatusEnum.OBSERVATION:
-      return hoveredReportingZoneStyleFactory(
-        THEME.color.blueGray[100],
-        getColorWithAlpha(THEME.color.blueGray[100], 0.2)
-      )
+      return hoveredReportingZoneStyleFactory(THEME.color.blueGray, getColorWithAlpha(THEME.color.blueGray, 0.2))
     case ReportingStatusEnum.INFRACTION_SUSPICION:
       return hoveredReportingZoneStyleFactory(THEME.color.maximumRed, getColorWithAlpha(THEME.color.maximumRed, 0.2))
     case ReportingStatusEnum.ARCHIVED:
       if (feature.get('reportType') === ReportingTypeEnum.OBSERVATION) {
-        return hoveredReportingZoneStyleFactory(THEME.color.blueGray[100], getColorWithAlpha(THEME.color.white, 0.6))
+        return hoveredReportingZoneStyleFactory(THEME.color.blueGray, getColorWithAlpha(THEME.color.white, 0.6))
       }
 
       return hoveredReportingZoneStyleFactory(THEME.color.maximumRed, getColorWithAlpha(THEME.color.white, 0.6))
@@ -118,16 +115,13 @@ export const selectedReportingStyleFn = feature => {
 
   switch (status) {
     case ReportingStatusEnum.OBSERVATION:
-      return selectedReportingStyleFactory(
-        THEME.color.blueGray[100],
-        getColorWithAlpha(THEME.color.blueGray[100], 0.25)
-      )
+      return selectedReportingStyleFactory(THEME.color.blueGray, getColorWithAlpha(THEME.color.blueGray, 0.25))
     case ReportingStatusEnum.INFRACTION_SUSPICION:
       return selectedReportingStyleFactory(THEME.color.maximumRed, getColorWithAlpha(THEME.color.maximumRed, 0.25))
 
     case ReportingStatusEnum.ARCHIVED:
       if (feature.get('reportType') === ReportingTypeEnum.OBSERVATION) {
-        return selectedReportingStyleFactory(THEME.color.blueGray[100], getColorWithAlpha(THEME.color.white, 0.6))
+        return selectedReportingStyleFactory(THEME.color.blueGray, getColorWithAlpha(THEME.color.white, 0.6))
       }
 
       return selectedReportingStyleFactory(THEME.color.maximumRed, getColorWithAlpha(THEME.color.white, 0.6))
@@ -149,7 +143,7 @@ export const reportingPinStyleFn = feature => {
 
   switch (status) {
     case ReportingStatusEnum.OBSERVATION:
-      return reportingStyleFactory(THEME.color.blueGray[100])
+      return reportingStyleFactory(THEME.color.blueGray)
     case ReportingStatusEnum.INFRACTION_SUSPICION:
       return reportingStyleFactory(THEME.color.maximumRed)
 

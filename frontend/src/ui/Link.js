@@ -1,10 +1,8 @@
 import styled from 'styled-components'
 
-import { COLORS } from '../constants/constants'
-
 export const Link = styled.a`
-  color: ${props => (props.tagUrl ? COLORS.gainsboro : COLORS.gunMetal)};
+  color: ${p => (p.tagUrl ? p.theme.color.gainsboro : p.theme.color.gunMetal)};
   font-size: 13px;
   cursor: pointer;
-  ${props => (!props.tagUrl ? 'font-weight: 500;' : '')}
+  ${p => (!p.tagUrl ? 'font-weight: 500;' : '')}
 `

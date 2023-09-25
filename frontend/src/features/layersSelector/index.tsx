@@ -118,8 +118,8 @@ const SidebarLayersIcon = styled(IconButton)<{ $isActive: boolean; $isVisible: b
   position: absolute;
   top: 10px;
   left: 12px;
-  ${p => (p.$isActive ? `background: ${p.theme.color.blueGray[100]};` : '')}
-  ${p => (p.$isActive ? `border-color: ${p.theme.color.blueGray[100]};` : '')}
+  ${p => (p.$isActive ? `background: ${p.theme.color.blueGray};` : '')}
+  ${p => (p.$isActive ? `border-color: ${p.theme.color.blueGray};` : '')}
   ${p => (p.$isVisible ? '' : 'display: none;')}
 `
 

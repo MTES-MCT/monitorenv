@@ -4,7 +4,6 @@ import styled from 'styled-components'
 
 import { InfractionCard } from './InfractionCard'
 import { InfractionForm } from './InfractionForm/InfractionForm'
-import { COLORS } from '../../../../../constants/constants'
 import { infractionFactory } from '../../../Missions.helpers'
 
 import type { Infraction } from '../../../../../domain/entities/missions'
@@ -91,13 +90,13 @@ const Title = styled.h3`
   font-size: 13px;
   line-height: 22px;
   display: inline-block;
-  color: ${COLORS.slateGray};
+  color: ${p => p.theme.color.slateGray};
 `
 const InfractionsWrapper = styled.div`
   flex: 1;
 `
 const NoActionWrapper = styled.div`
-  background: ${COLORS.white};
+  background: ${p => p.theme.color.white};
   flex: 1;
   display: flex;
   align-items: center;
