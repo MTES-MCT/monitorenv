@@ -7,10 +7,10 @@ import { Layers } from '../../../../domain/entities/layers/constants'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map/constants'
 import {
   ActionTypeEnum,
-  EnvActionControl,
-  EnvActionSurveillance,
+  type EnvActionControl,
+  type EnvActionSurveillance,
   getMissionStatus,
-  Mission
+  type Mission
 } from '../../../../domain/entities/missions'
 
 import type { Geometry } from 'ol/geom'

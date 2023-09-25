@@ -19,9 +19,13 @@ if (!(process.env.NODE_ENV === 'development')) {
     dsn: SENTRY_DSN || '',
     environment: SENTRY_ENV,
     integrations: [
-      new BrowserTracing({
-        tracingOrigins: SENTRY_TRACING_ORIGINS ? [SENTRY_TRACING_ORIGINS] : undefined
-      })
+      new BrowserTracing(
+        SENTRY_TRACING_ORIGINS
+          ? {
+              tracingOrigins: [SENTRY_TRACING_ORIGINS]
+            }
+          : {}
+      )
     ],
     release: `${MONITORENV_VERSION}`,
 

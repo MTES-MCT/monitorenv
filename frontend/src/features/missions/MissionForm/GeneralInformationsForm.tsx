@@ -14,7 +14,7 @@ import styled from 'styled-components'
 import { ControlUnitsForm } from './ControlUnitsForm'
 import { InteractionListener } from '../../../domain/entities/map/constants'
 import {
-  Mission,
+  type Mission,
   MissionSourceEnum,
   getMissionStatus,
   hasMissionOrderLabels,

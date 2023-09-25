@@ -1,4 +1,4 @@
-import { CustomSearch, Filter } from '@mtes-mct/monitor-ui'
+import { CustomSearch, type Filter } from '@mtes-mct/monitor-ui'
 
 import type { FiltersState } from './types'
 import type { Base } from '../../../domain/entities/base'

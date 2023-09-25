@@ -1,4 +1,4 @@
-import { IconButton, IconProps, Size } from '@mtes-mct/monitor-ui'
+import { IconButton, type IconProps, Size } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { useAppSelector } from '../../../hooks/useAppSelector'

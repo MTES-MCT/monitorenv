@@ -1,5 +1,5 @@
-import { MutableRefObject, useRef } from 'react'
-import { SelectPicker as RSuiteSelectPicker, SelectPickerProps } from 'rsuite'
+import { type MutableRefObject, useRef } from 'react'
+import { SelectPicker as RSuiteSelectPicker, type SelectPickerProps } from 'rsuite'
 import styled from 'styled-components'
 
 type CustomSelectPickerProps<T> = SelectPickerProps<T> & { dataCy?: string | undefined }

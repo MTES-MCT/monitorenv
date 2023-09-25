@@ -3,7 +3,7 @@ import * as Yup from 'yup'
 import {
   FormalNoticeEnum,
   InfractionTypeEnum,
-  Infraction,
+  type Infraction,
   VesselSizeEnum,
   VesselTypeEnum
 } from '../../../../domain/entities/missions'

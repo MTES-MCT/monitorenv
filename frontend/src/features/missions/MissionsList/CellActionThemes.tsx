@@ -1,7 +1,12 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { useMemo } from 'react'
 
-import { ActionTypeEnum, EnvAction, EnvActionControl, EnvActionSurveillance } from '../../../domain/entities/missions'
+import {
+  ActionTypeEnum,
+  type EnvAction,
+  type EnvActionControl,
+  type EnvActionSurveillance
+} from '../../../domain/entities/missions'
 
 const getAllThemesAndSubThemesAsString = (envactions: EnvAction[]) => {
   const uniqueThemesAndSubthemes = envactions

@@ -1,7 +1,7 @@
 import { MultiSelect, useNewWindow } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 
-import { Mission, protectedSpeciesEnum } from '../../../../../domain/entities/missions'
+import { type Mission, protectedSpeciesEnum } from '../../../../../domain/entities/missions'
 import { updateProtectedSpecies } from '../../formikUseCases/updateActionThemes'
 
 export function ProtectedSpeciesSelector({ actionIndex, themeIndex }) {

@@ -4,7 +4,7 @@ import { Dropdown } from 'rsuite'
 import styled from 'styled-components'
 
 import { ActionCard } from './ActionCard'
-import { ActionTypeEnum, EnvAction } from '../../../domain/entities/missions'
+import { ActionTypeEnum, type EnvAction } from '../../../domain/entities/missions'
 import { ReactComponent as ControlSVG } from '../../../uiMonitor/icons/Control.svg'
 import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/Note_libre.svg'
 import { ReactComponent as SurveillanceSVG } from '../../../uiMonitor/icons/Observation.svg'

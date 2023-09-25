@@ -1,7 +1,7 @@
 import { IconButton } from 'rsuite'
 import styled from 'styled-components'
 
-import { ActionTypeEnum, EnvAction } from '../../../domain/entities/missions'
+import { ActionTypeEnum, type EnvAction } from '../../../domain/entities/missions'
 import { TargetTypeLabels } from '../../../domain/entities/targetType'
 import { ControlInfractionsTags } from '../../../ui/ControlInfractionsTags'
 import { ReactComponent as ControlIconSVG } from '../../../uiMonitor/icons/Control.svg'

@@ -1,6 +1,6 @@
-import { customDayjs, DateAsStringRange, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
+import { customDayjs, type DateAsStringRange, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import _, { reduce } from 'lodash'
-import { MutableRefObject, useMemo, useRef, useState } from 'react'
+import { type MutableRefObject, useMemo, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { MapReportingsFilters } from './Map'

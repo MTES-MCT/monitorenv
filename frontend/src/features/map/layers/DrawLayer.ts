@@ -1,10 +1,10 @@
 import { isEmpty } from 'lodash'
 import GeoJSON from 'ol/format/GeoJSON'
 import { Modify } from 'ol/interaction'
-import Draw, { createBox, createRegularPolygon, GeometryFunction } from 'ol/interaction/Draw'
+import Draw, { createBox, createRegularPolygon, type GeometryFunction } from 'ol/interaction/Draw'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import React, { MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { type MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { dottedLayerStyle } from './styles/dottedLayer.style'
 import { drawStyle, editStyle } from './styles/draw.style'

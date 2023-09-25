@@ -1,4 +1,4 @@
-import { AnyAction, ThunkAction, configureStore, isPlain } from '@reduxjs/toolkit'
+import { type AnyAction, type ThunkAction, configureStore, isPlain } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist'
 

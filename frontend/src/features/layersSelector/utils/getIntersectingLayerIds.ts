@@ -1,6 +1,6 @@
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
-import { Extent, intersects } from 'ol/extent'
+import { type Extent, intersects } from 'ol/extent'
 import { transformExtent } from 'ol/proj'
 
 export const getIntersectingLayerIds = <T>(

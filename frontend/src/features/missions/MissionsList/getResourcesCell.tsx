@@ -1,4 +1,4 @@
-import { LegacyControlUnit, getControlUnitsAsText } from '../../../domain/entities/legacyControlUnit'
+import { type LegacyControlUnit, getControlUnitsAsText } from '../../../domain/entities/legacyControlUnit'
 
 export function getResourcesCell(controlUnits: LegacyControlUnit[]) {
   const controlUnitsAsText = controlUnits && getControlUnitsAsText(controlUnits)

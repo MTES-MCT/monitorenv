@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { ControlForm } from './ControlForm/ControlForm'
 import { NoteForm } from './NoteForm'
 import { SurveillanceForm } from './SurveillanceForm'
-import { ActionTypeEnum, EnvAction } from '../../../../domain/entities/missions'
+import { ActionTypeEnum, type EnvAction } from '../../../../domain/entities/missions'
 
 type ActionFormProps = {
   currentActionIndex: number | undefined

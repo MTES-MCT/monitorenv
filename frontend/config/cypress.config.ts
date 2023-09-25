@@ -1,22 +1,23 @@
 import { defineConfig } from 'cypress'
+import initCypressMousePositionPlugin from 'cypress-mouse-position/plugin'
+import { initPlugin } from 'cypress-plugin-snapshots/plugin'
 import { platform } from 'os'
 
-import cypressPlugins from './cypress/plugins'
-
 const IS_CI = Boolean(process.env.CI)
-const DEFAULT_PORT = IS_CI || platform() === 'darwin' ? 8880 : 3000
+const IS_DARWIN = platform() === 'darwin'
+const WEBAPP_PORT = IS_CI || IS_DARWIN ? 8880 : 3000
+const WEBAPP_HOST = IS_DARWIN ? '0.0.0.0' : 'localhost'
 
 export default defineConfig({
-  // We do that to avoid e2e logs pollution with useless`GET /security-state-staging/intermediates/` lines
-  // Despite the name, this aso applies to Firefox
-  chromeWebSecurity: false,
   e2e: {
-    baseUrl: IS_CI ? `http://localhost:${DEFAULT_PORT}` : `http://0.0.0.0:3000`,
+    baseUrl: `http://${WEBAPP_HOST}:${WEBAPP_PORT}`,
+    // We do that to avoid e2e logs pollution with useless`GET /security-state-staging/intermediates/` lines.
+    // Despite the name, this also applies to Firefox.
+    chromeWebSecurity: false,
     excludeSpecPattern: ['**/__snapshots__/*', '**/__image_snapshots__/*'],
-    // We've imported your old cypress plugins here.
-    // You may want to clean this up later by importing these.
     setupNodeEvents(on, config) {
-      return cypressPlugins(on, config) as any
+      initCypressMousePositionPlugin(on)
+      initPlugin(on, config)
     },
     specPattern: [
       'cypress/e2e/00_side_window_missions.spec.ts',
@@ -37,7 +38,6 @@ export default defineConfig({
       updateSnapshots: false
     }
   },
-  port: 3002,
   projectId: 's1fr1i',
   retries: {
     openMode: 0,

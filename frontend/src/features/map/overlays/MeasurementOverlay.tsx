@@ -1,6 +1,6 @@
 import { pluralize } from '@mtes-mct/monitor-ui'
 import Overlay from 'ol/Overlay'
-import { MutableRefObject, useEffect, useCallback, useRef, useMemo } from 'react'
+import { type MutableRefObject, useEffect, useCallback, useRef, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { DistanceUnit, OLGeometryType } from '../../../domain/entities/map/constants'

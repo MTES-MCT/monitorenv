@@ -1,6 +1,6 @@
 // TODO It may be a good thing to either call this slice 'mainWindowSlice' (or something with "map"?) since it targets the main window.
 
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 import type { MapToolType } from '../entities/map/constants'
 

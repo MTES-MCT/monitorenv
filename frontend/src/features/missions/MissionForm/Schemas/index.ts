@@ -3,7 +3,12 @@ import * as Yup from 'yup'
 
 import { getClosedEnvActionControlSchema, getNewEnvActionControlSchema } from './Control'
 import { getClosedEnvActionSurveillanceSchema, getNewEnvActionSurveillanceSchema } from './Surveillance'
-import { ActionTypeEnum, EnvActionNote, MissionTypeEnum, NewMission } from '../../../../domain/entities/missions'
+import {
+  ActionTypeEnum,
+  type EnvActionNote,
+  MissionTypeEnum,
+  type NewMission
+} from '../../../../domain/entities/missions'
 import { REACT_APP_CYPRESS_TEST } from '../../../../env'
 
 import type { ControlUnit } from '../../../../domain/entities/controlUnit'

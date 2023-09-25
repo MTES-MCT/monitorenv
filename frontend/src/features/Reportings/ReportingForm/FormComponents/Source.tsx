@@ -19,7 +19,7 @@ import styled from 'styled-components'
 
 import { useGetControlUnitsQuery } from '../../../../api/controlUnitsAPI'
 import { useGetSemaphoresQuery } from '../../../../api/semaphoresAPI'
-import { Reporting, ReportingSourceEnum, ReportingSourceLabels } from '../../../../domain/entities/reporting'
+import { type Reporting, ReportingSourceEnum, ReportingSourceLabels } from '../../../../domain/entities/reporting'
 import { setDisplayedItems } from '../../../../domain/shared_slices/Global'
 import { setZoomToCenter } from '../../../../domain/shared_slices/Map'
 import { setIsSemaphoreHighlighted, setSelectedSemaphore } from '../../../../domain/shared_slices/SemaphoresSlice'

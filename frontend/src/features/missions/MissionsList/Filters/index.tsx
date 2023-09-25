@@ -2,11 +2,11 @@ import {
   Select,
   customDayjs,
   DateRangePicker,
-  DateAsStringRange,
+  type DateAsStringRange,
   useNewWindow,
   getOptionsFromIdAndName
 } from '@mtes-mct/monitor-ui'
-import { MutableRefObject, useMemo, useRef, useState } from 'react'
+import { type MutableRefObject, useMemo, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { CheckPicker } from 'rsuite'
 import styled from 'styled-components'

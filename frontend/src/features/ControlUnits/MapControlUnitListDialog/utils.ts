@@ -1,4 +1,4 @@
-import { CustomSearch, Filter, isDefined, pluralize } from '@mtes-mct/monitor-ui'
+import { CustomSearch, type Filter, isDefined, pluralize } from '@mtes-mct/monitor-ui'
 import { isEmpty, uniq } from 'lodash/fp'
 
 import { ControlUnit } from '../../../domain/entities/controlUnit'

@@ -1,5 +1,5 @@
 import { NewWindow, useForceUpdate } from '@mtes-mct/monitor-ui'
-import { MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react'
+import { type MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react'
 import { StyleSheetManager } from 'styled-components'
 
 import { SideWindow } from '.'

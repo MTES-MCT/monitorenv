@@ -44,7 +44,8 @@ COPY infra/ /tmp/infra/
 WORKDIR /tmp/frontend
 
 # Files are expected to be in /tmp/frontend/dist/monitorenv-frontend
-RUN npm ci
+# TODO Remove `--legacy-peer-deps` option as soon as we replace `react-scripts` by something else.
+RUN npm ci --legacy-peer-deps
 RUN npm run build
 
 ######################

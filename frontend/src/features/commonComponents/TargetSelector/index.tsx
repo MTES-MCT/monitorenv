@@ -1,4 +1,4 @@
-import { Option, Select, useNewWindow } from '@mtes-mct/monitor-ui'
+import { type Option, Select, useNewWindow } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import type { Promisable } from 'type-fest'

@@ -9,8 +9,8 @@ import {
   infractionTypeLabels,
   VesselTypeEnum,
   vesselTypeLabels,
-  EnvActionControl,
-  Infraction
+  type EnvActionControl,
+  type Infraction
 } from '../../../../../domain/entities/missions'
 import { TargetTypeEnum, TargetTypeLabels } from '../../../../../domain/entities/targetType'
 import { vehicleTypeLabels, VehicleTypeEnum } from '../../../../../domain/entities/vehicleType'

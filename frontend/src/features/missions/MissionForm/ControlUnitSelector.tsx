@@ -2,7 +2,7 @@
 import { FormikTextInput } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import _ from 'lodash'
-import { MutableRefObject, useMemo, useRef } from 'react'
+import { type MutableRefObject, useMemo, useRef } from 'react'
 import { Form, IconButton, TagPicker } from 'rsuite'
 import styled from 'styled-components'
 

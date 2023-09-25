@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { useEffect, useState, useMemo, useRef, MutableRefObject } from 'react'
+import { useEffect, useState, useMemo, useRef, type MutableRefObject } from 'react'
 
 import { loadGoogleMapScript } from './utils'
 import { GOOGLEMAPS_API_KEY } from '../../env'
