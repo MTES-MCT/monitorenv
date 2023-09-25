@@ -1,4 +1,3 @@
-import { THEME } from '@mtes-mct/monitor-ui'
 import LineString from 'ol/geom/LineString'
 import Overlay from 'ol/Overlay'
 import { getLength } from 'ol/sphere'
@@ -150,20 +149,20 @@ const Body = styled.div`
   font-size: 13px;
   font-weight: 500;
   text-align: left;
-  border-bottom: 1px solid ${THEME.color.lightGray};
+  border-bottom: 1px solid ${p => p.theme.color.lightGray};
 `
 
 const Footer = styled.div`
   padding: 3px;
   font-size: 12px;
   text-align: center;
-  color: ${THEME.color.slateGray};
+  color: ${p => p.theme.color.slateGray};
 `
 
 const Header = styled.div`
   display: flex;
   height: 30px;
-  background ${THEME.color.gainsboro};
+  background ${p => p.theme.color.gainsboro};
   text-align: left;
   border: none;
   border-top-left-radius: 2px;
@@ -173,7 +172,7 @@ const Header = styled.div`
 const Delete = styled(DeleteSVG)`
   height: 30px;
   width: 22px;
-  border-left: 1px solid ${THEME.color.lightGray};
+  border-left: 1px solid ${p => p.theme.color.lightGray};
   padding-left: 6px;
   margin-left: auto;
   margin-right: 8px;
@@ -183,7 +182,7 @@ const Delete = styled(DeleteSVG)`
 const Edit = styled(EditSVG)`
   height: 30px;
   width: 22px;
-  border-left: 1px solid ${THEME.color.lightGray};
+  border-left: 1px solid ${p => p.theme.color.lightGray};
   padding-left: 6px;
   margin-left: auto;
   margin-right: 6px;
@@ -195,10 +194,10 @@ const WrapperToBeKeptForDOMManagement = styled.div`
 `
 
 const InterestPointOverlayElement = styled.div`
-  background: ${THEME.color.white};
+  background: ${p => p.theme.color.white};
   cursor: grabbing;
   width: 183px;
-  color: ${THEME.color.gunMetal};
+  color: ${p => p.theme.color.gunMetal};
   border: none;
   border-radius: 2px;
 `
