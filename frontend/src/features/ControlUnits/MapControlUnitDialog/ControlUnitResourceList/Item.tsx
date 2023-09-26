@@ -1,14 +1,11 @@
 import { Accent, FormikTextarea, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import type { Base } from '../../../../domain/entities/base'
 import type { ControlUnit } from '../../../../domain/entities/controlUnit'
 import type { Promisable } from 'type-fest'
 
 export type ItemProps = {
-  controlUnitResource: ControlUnit.ControlUnitResourceData & {
-    base: Base.BaseData
-  }
+  controlUnitResource: ControlUnit.ControlUnitResource
   onEdit: (controlUnitResourceId: number) => Promisable<void>
 }
 export function Item({ controlUnitResource, onEdit }: ItemProps) {
@@ -19,7 +16,8 @@ export function Item({ controlUnitResource, onEdit }: ItemProps) {
         <RightHeader>
           <div>
             <Name>{controlUnitResource.name}</Name>
-            <span>{controlUnitResource.base.name}</span>
+            {/* TODO Make that non-undefinable once all resources will have been attached to a base. */}
+            <span>{controlUnitResource.base?.name}</span>
           </div>
           <div>
             <IconButton accent={Accent.TERTIARY} Icon={Icon.Edit} onClick={() => onEdit(controlUnitResource.id)} />

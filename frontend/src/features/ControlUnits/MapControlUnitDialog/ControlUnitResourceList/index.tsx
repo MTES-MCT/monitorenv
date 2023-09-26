@@ -9,15 +9,10 @@ import { Item } from './Item'
 import { Section } from '../shared/Section'
 
 import type { ControlUnitResourceFormValues } from './types'
-import type { Base } from '../../../../domain/entities/base'
 import type { ControlUnit } from '../../../../domain/entities/controlUnit'
 
 export type ControlUnitResourceListProps = {
-  controlUnitResources: Array<
-    ControlUnit.ControlUnitResourceData & {
-      base: Base.BaseData
-    }
-  >
+  controlUnitResources: ControlUnit.ControlUnitResource[]
 }
 export function ControlUnitResourceList({ controlUnitResources }: ControlUnitResourceListProps) {
   const [editedControlUnitResourceId, setEditedControlUnitResourceId] = useState<number | undefined>(undefined)

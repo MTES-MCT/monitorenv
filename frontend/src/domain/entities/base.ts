@@ -11,6 +11,6 @@ export namespace Base {
   // ---------------------------------------------------------------------------
   // Types
 
-  export type BaseData = Omit<Base, 'controlUnitResources'>
+  export type BaseData = Omit<Base, 'controlUnitResourceIds' | 'controlUnitResources'>
   export type NewBaseData = Omit<BaseData, 'id'>
 }

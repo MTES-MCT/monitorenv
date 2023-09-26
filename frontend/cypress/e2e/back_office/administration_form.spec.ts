@@ -24,7 +24,6 @@ context('Back Office > Administration Form', () => {
       }
 
       assert.deepEqual(interception.request.body, {
-        controlUnitIds: [],
         name: 'Administration 1'
       })
     })
@@ -47,7 +46,6 @@ context('Back Office > Administration Form', () => {
       }
 
       assert.deepInclude(interception.request.body, {
-        controlUnitIds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 33],
         id: 1005,
         name: 'Administration 2'
       })

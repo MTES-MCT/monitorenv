@@ -5,9 +5,9 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceE
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 import jakarta.persistence.*
-import java.time.Instant
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
+import java.time.Instant
 
 @Entity
 @Table(name = "control_unit_resources")
@@ -107,7 +107,6 @@ data class ControlUnitResourceModel(
     fun toControlUnitResource(): ControlUnitResourceEntity {
         return ControlUnitResourceEntity(
             id,
-            base = null,
             baseId = base?.id,
             controlUnitId = requireNotNull(controlUnit.id),
             name,

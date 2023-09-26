@@ -1,7 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.reportings
 
 import fr.gouv.cacem.monitorenv.config.UseCase
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum

@@ -6,7 +6,9 @@ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.*
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnit
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitById
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnits
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitDataInput
 import org.hamcrest.Matchers
@@ -44,30 +46,26 @@ class ApiControlUnitsControllerITests {
 
     @Test
     fun `Should create a control unit`() {
-        val expectedNewControlUnit = ControlUnitEntity(
+        val expectedCreatedControlUnit = ControlUnitEntity(
             id = 1,
-            administrationId = 2,
-            controlUnitContactIds = listOf(),
-            controlUnitResourceIds = listOf(),
+            administrationId = 0,
             areaNote = null,
             isArchived = false,
-            name = "Control Unit Name",
+            name = "Unit Name",
             termsNote = null,
         )
 
-        val request = CreateOrUpdateControlUnitDataInput(
+        val newControlUnitData = CreateOrUpdateControlUnitDataInput(
             administrationId = 2,
-            controlUnitContactIds = listOf(),
-            controlUnitResourceIds = listOf(),
             areaNote = null,
             isArchived = false,
-            name = "Control Unit Name",
+            name = "Unit Name",
             termsNote = null,
         )
-        val requestBody = objectMapper.writeValueAsString(request)
+        val requestBody = objectMapper.writeValueAsString(newControlUnitData)
 
         given(createOrUpdateControlUnit.execute(controlUnit = any())).willReturn(
-            expectedNewControlUnit
+            expectedCreatedControlUnit
         )
 
         mockMvc.perform(
@@ -84,18 +82,17 @@ class ApiControlUnitsControllerITests {
         val expectedFullControlUnit = FullControlUnitDTO(
             id = 1,
             administration = AdministrationEntity(
-                id = 2,
-                controlUnitIds = listOf(),
+                id = 0,
                 name = "Administration Name",
             ),
-            administrationId = 2,
+            administrationId = 0,
             areaNote = null,
             controlUnitContactIds = listOf(),
             controlUnitContacts = listOf(),
             controlUnitResourceIds = listOf(),
             controlUnitResources = listOf(),
             isArchived = false,
-            name = "Contact Name",
+            name = "Unit Name",
             termsNote = null,
         )
 
@@ -115,36 +112,34 @@ class ApiControlUnitsControllerITests {
             FullControlUnitDTO(
                 id = 1,
                 administration = AdministrationEntity(
-                    id = 2,
-                    controlUnitIds = listOf(),
+                    id = 0,
                     name = "Administration Name",
                 ),
-                administrationId = 2,
+                administrationId = 0,
                 areaNote = null,
                 controlUnitContactIds = listOf(),
                 controlUnitContacts = listOf(),
                 controlUnitResourceIds = listOf(),
                 controlUnitResources = listOf(),
                 isArchived = false,
-                name = "Contact Name",
+                name = "Unit Name",
                 termsNote = null,
             ),
 
             FullControlUnitDTO(
-                id = 3,
+                id = 2,
                 administration = AdministrationEntity(
-                    id = 4,
-                    controlUnitIds = listOf(),
-                    name = "Administration Name 2",
+                    id = 0,
+                    name = "Administration Name",
                 ),
-                administrationId = 4,
+                administrationId = 0,
                 areaNote = null,
                 controlUnitContactIds = listOf(),
                 controlUnitContacts = listOf(),
                 controlUnitResourceIds = listOf(),
                 controlUnitResources = listOf(),
                 isArchived = false,
-                name = "Contact Name 2",
+                name = "Unit Name 2",
                 termsNote = null,
             )
         )
@@ -160,30 +155,26 @@ class ApiControlUnitsControllerITests {
 
     @Test
     fun `Should update a control unit`() {
-        val updatedControlUnit = ControlUnitEntity(
+        val expectedUpdatedControlUnit = ControlUnitEntity(
             id = 1,
-            administrationId = 2,
-            controlUnitContactIds = listOf(),
-            controlUnitResourceIds = listOf(),
+            administrationId = 0,
             areaNote = null,
             isArchived = false,
-            name = "Updated Control Unit Name",
+            name = "Updated Unit Name",
             termsNote = null,
         )
 
-        val request = CreateOrUpdateControlUnitDataInput(
+        val nextControlUnitData = CreateOrUpdateControlUnitDataInput(
             id = 1,
-            administrationId = 2,
-            controlUnitContactIds = listOf(),
-            controlUnitResourceIds = listOf(),
+            administrationId = 0,
             areaNote = null,
             isArchived = false,
-            name = "Updated Control Unit Name",
+            name = "Updated Unit Name",
             termsNote = null,
         )
-        val requestBody = objectMapper.writeValueAsString(request)
+        val requestBody = objectMapper.writeValueAsString(nextControlUnitData)
 
-        given(createOrUpdateControlUnit.execute(controlUnit = any())).willReturn(updatedControlUnit)
+        given(createOrUpdateControlUnit.execute(controlUnit = any())).willReturn(expectedUpdatedControlUnit)
 
         mockMvc.perform(
             put("/api/v2/control_units/1")

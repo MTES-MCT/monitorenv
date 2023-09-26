@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional
 class JpaAdministrationRepositoryITests : AbstractDBTests() {
     @Autowired
     private lateinit var jpaAdministrationRepository: JpaAdministrationRepository
-
+ 
     @Test
     @Transactional
     fun `deleteById() should delete an administration by its ID`() {
@@ -69,8 +69,6 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
                         id = 21,
                         administrationId = 6,
                         areaNote = null,
-                        controlUnitContactIds = listOf(),
-                        controlUnitResourceIds = listOf(),
                         isArchived = false,
                         name = "BN Toulon",
                         termsNote = null,
@@ -79,8 +77,6 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
                         id = 22,
                         administrationId = 6,
                         areaNote = null,
-                        controlUnitContactIds = listOf(),
-                        controlUnitResourceIds = listOf(),
                         isArchived = false,
                         name = "Brigade fluviale de Rouen",
                         termsNote = null,
@@ -98,7 +94,6 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
         // Create
 
         val newAdministration = AdministrationEntity(
-            controlUnitIds = listOf(1, 2),
             name = "Administration Name"
         )
 
@@ -111,12 +106,16 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
 
         val nextAdministration = AdministrationEntity(
             id = 2007,
-            controlUnitIds = listOf(3),
             name = "Updated Administration Name"
         )
 
         val updatedAdministration = jpaAdministrationRepository.save(nextAdministration)
 
         assertThat(updatedAdministration).isEqualTo(nextAdministration)
+
+        // ---------------------------------------------------------------------
+        // Reset
+
+        jpaAdministrationRepository.deleteById(2007)
     }
 }

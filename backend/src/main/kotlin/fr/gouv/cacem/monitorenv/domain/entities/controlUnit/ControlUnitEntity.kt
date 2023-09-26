@@ -5,8 +5,6 @@ data class ControlUnitEntity(
     val administrationId: Int,
     /** Area of intervention for this unit. */
     val areaNote: String? = null,
-    val controlUnitContactIds: List<Int>,
-    val controlUnitResourceIds: List<Int>,
     val isArchived: Boolean,
     val name: String,
     /** Conditions under which this unit should be contacted. */

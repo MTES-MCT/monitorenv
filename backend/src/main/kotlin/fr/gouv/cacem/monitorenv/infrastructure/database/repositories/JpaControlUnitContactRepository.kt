@@ -32,12 +32,9 @@ class JpaControlUnitContactRepository(
     @Transactional
     override fun save(controlUnitContact: ControlUnitContactEntity): ControlUnitContactEntity {
         return try {
-            val controlUnitModel =
-                requirePresent(dbControlUnitRepository.findById(controlUnitContact.controlUnitId))
-            val controlUnitContactModel = ControlUnitContactModel.fromControlUnitContact(
-                controlUnitContact,
-                controlUnitModel
-            )
+            val controlUnitModel = requirePresent(dbControlUnitRepository.findById(controlUnitContact.controlUnitId))
+            val controlUnitContactModel =
+                ControlUnitContactModel.fromControlUnitContact(controlUnitContact, controlUnitModel)
 
             dbControlUnitContactRepository.save(controlUnitContactModel).toControlUnitContact()
         } catch (e: InvalidDataAccessApiUsageException) {

@@ -5,6 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.administration.GetAdministratio
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.GetAdministrations
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateAdministrationDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.AdministrationDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.FullAdministrationDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
@@ -38,18 +39,18 @@ class ApiAdministrationsController(
         @PathParam("Administration ID")
         @PathVariable(name = "administrationId")
         administrationId: Int,
-    ): AdministrationDataOutput {
+    ): FullAdministrationDataOutput {
         val foundFullAdministration = getAdministrationById.execute(administrationId)
 
-        return AdministrationDataOutput.fromFullAdministration(foundFullAdministration)
+        return FullAdministrationDataOutput.fromFullAdministration(foundFullAdministration)
     }
 
     @GetMapping("")
     @Operation(summary = "List administrations")
-    fun getAll(): List<AdministrationDataOutput> {
+    fun getAll(): List<FullAdministrationDataOutput> {
         val foundFullAdministrations = getAdministrations.execute()
 
-        return foundFullAdministrations.map { AdministrationDataOutput.fromFullAdministration(it) }
+        return foundFullAdministrations.map { FullAdministrationDataOutput.fromFullAdministration(it) }
     }
 
     @PutMapping(value = ["/{administrationId}"], consumes = ["application/json"])

@@ -5,6 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitById
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnits
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.ControlUnitDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.FullControlUnitDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
@@ -38,18 +39,18 @@ class ApiControlUnitsController(
         @PathParam("Control unit ID")
         @PathVariable(name = "controlUnitId")
         controlUnitId: Int,
-    ): ControlUnitDataOutput {
+    ): FullControlUnitDataOutput {
         val foundFullControlUnit = getControlUnitById.execute(controlUnitId)
 
-        return ControlUnitDataOutput.fromFullControlUnit(foundFullControlUnit)
+        return FullControlUnitDataOutput.fromFullControlUnit(foundFullControlUnit)
     }
 
     @GetMapping("")
     @Operation(summary = "List control units")
-    fun getAll(): List<ControlUnitDataOutput> {
+    fun getAll(): List<FullControlUnitDataOutput> {
         val foundFullControlUnits = getControlUnits.execute()
 
-        return foundFullControlUnits.map { ControlUnitDataOutput.fromFullControlUnit(it) }
+        return foundFullControlUnits.map { FullControlUnitDataOutput.fromFullControlUnit(it) }
     }
 
     @PutMapping(value = ["/{controlUnitId}"], consumes = ["application/json"])

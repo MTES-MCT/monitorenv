@@ -5,7 +5,9 @@ import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.administration.*
+import fr.gouv.cacem.monitorenv.domain.use_cases.administration.CreateOrUpdateAdministration
+import fr.gouv.cacem.monitorenv.domain.use_cases.administration.GetAdministrationById
+import fr.gouv.cacem.monitorenv.domain.use_cases.administration.GetAdministrations
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateAdministrationDataInput
 import org.hamcrest.Matchers
@@ -43,19 +45,17 @@ class ApiAdministrationsControllerITests {
 
     @Test
     fun `Should create an administration`() {
-        val expectedNewAdministration = AdministrationEntity(
+        val expectedCreatedAdministration = AdministrationEntity(
             id = 1,
-            controlUnitIds = listOf(),
             name = "Administration Name",
         )
 
-        val request = CreateOrUpdateAdministrationDataInput(
-            controlUnitIds = listOf(),
+        val newAdministrationData = CreateOrUpdateAdministrationDataInput(
             name = "Administration Name",
         )
-        val requestBody = objectMapper.writeValueAsString(request)
+        val requestBody = objectMapper.writeValueAsString(newAdministrationData)
 
-        given(createOrUpdateAdministration.execute(administration = any())).willReturn(expectedNewAdministration)
+        given(createOrUpdateAdministration.execute(administration = any())).willReturn(expectedCreatedAdministration)
 
         mockMvc.perform(
             post("/api/v1/administrations")
@@ -87,7 +87,7 @@ class ApiAdministrationsControllerITests {
 
     @Test
     fun `Should get all administrations`() {
-        val expectedAdministrations = listOf(
+        val expectedAFulldministrations = listOf(
             FullAdministrationDTO(
                 id = 1,
                 controlUnitIds = listOf(),
@@ -103,7 +103,7 @@ class ApiAdministrationsControllerITests {
             )
         )
 
-        given(getAdministrations.execute()).willReturn(expectedAdministrations)
+        given(getAdministrations.execute()).willReturn(expectedAFulldministrations)
 
         mockMvc.perform(get("/api/v1/administrations"))
             .andExpect(status().isOk)
@@ -114,20 +114,18 @@ class ApiAdministrationsControllerITests {
 
     @Test
     fun `Should update an administration`() {
-        val updatedAdministration = AdministrationEntity(
+        val expectedUpdatedAdministration = AdministrationEntity(
             id = 1,
-            controlUnitIds = listOf(),
             name = "Updated Administration Name",
         )
 
-        val request = CreateOrUpdateAdministrationDataInput(
+        val nextAdministrationData = CreateOrUpdateAdministrationDataInput(
             id = 1,
-            controlUnitIds = listOf(),
             name = "Updated Administration Name",
         )
-        val requestBody = objectMapper.writeValueAsString(request)
+        val requestBody = objectMapper.writeValueAsString(nextAdministrationData)
 
-        given(createOrUpdateAdministration.execute(administration = any())).willReturn(updatedAdministration)
+        given(createOrUpdateAdministration.execute(administration = any())).willReturn(expectedUpdatedAdministration)
 
         mockMvc.perform(
             put("/api/v1/administrations/1")

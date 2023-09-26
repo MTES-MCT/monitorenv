@@ -24,7 +24,6 @@ context('Back Office > Base Form', () => {
       }
 
       assert.deepEqual(interception.request.body, {
-        controlUnitResourceIds: [],
         name: 'Base 1'
       })
     })
@@ -47,7 +46,6 @@ context('Back Office > Base Form', () => {
       }
 
       assert.deepInclude(interception.request.body, {
-        controlUnitResourceIds: [5, 7, 8, 9, 10, 11, 12],
         id: 3,
         name: 'Base 2'
       })

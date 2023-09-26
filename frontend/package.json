@@ -20,7 +20,7 @@
     "start": "react-scripts start",
     "storybook": "storybook dev",
     "build-storybook": "storybook build",
-    "test:e2e": "npm run cypress:run  --config-file ./cypress.config.ts --e2e",
+    "test:e2e": "npm run cypress:run --browser firefox --config-file ./cypress.config.ts --e2e",
     "test:lint": "eslint ./src",
     "test:lint:fix": "npm run test:lint -- --fix",
     "test:lint:partial": "eslint --config=./.eslintrc.partial.js ./src",

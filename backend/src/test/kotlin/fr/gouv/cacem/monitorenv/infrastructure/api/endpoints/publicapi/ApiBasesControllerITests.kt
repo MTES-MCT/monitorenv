@@ -5,7 +5,9 @@ import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.base.*
+import fr.gouv.cacem.monitorenv.domain.use_cases.base.CreateOrUpdateBase
+import fr.gouv.cacem.monitorenv.domain.use_cases.base.GetBaseById
+import fr.gouv.cacem.monitorenv.domain.use_cases.base.GetBases
 import fr.gouv.cacem.monitorenv.domain.use_cases.base.dtos.FullBaseDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateBaseDataInput
 import org.hamcrest.Matchers
@@ -43,19 +45,17 @@ class ApiBasesControllerITests {
 
     @Test
     fun `Should create a base`() {
-        val expectedNewBase = BaseEntity(
+        val expectedCreatedBase = BaseEntity(
             id = 1,
-            controlUnitResourceIds = listOf(),
             name = "Base Name",
         )
 
-        val request = CreateOrUpdateBaseDataInput(
-            controlUnitResourceIds = listOf(),
+        val newBaseData = CreateOrUpdateBaseDataInput(
             name = "Base Name",
         )
-        val requestBody = objectMapper.writeValueAsString(request)
+        val requestBody = objectMapper.writeValueAsString(newBaseData)
 
-        given(createOrUpdateBase.execute(base = any())).willReturn(expectedNewBase)
+        given(createOrUpdateBase.execute(base = any())).willReturn(expectedCreatedBase)
 
         mockMvc.perform(
             post("/api/v1/bases")
@@ -87,7 +87,7 @@ class ApiBasesControllerITests {
 
     @Test
     fun `Should get all bases`() {
-        val expectedBases = listOf(
+        val expectedFullBases = listOf(
             FullBaseDTO(
                 id = 1,
                 controlUnitResourceIds = listOf(),
@@ -103,7 +103,7 @@ class ApiBasesControllerITests {
             )
         )
 
-        given(getBases.execute()).willReturn(expectedBases)
+        given(getBases.execute()).willReturn(expectedFullBases)
 
         mockMvc.perform(get("/api/v1/bases"))
             .andExpect(status().isOk)
@@ -114,20 +114,18 @@ class ApiBasesControllerITests {
 
     @Test
     fun `Should update a base`() {
-        val updatedBase = BaseEntity(
+        val expectedUpdatedBase = BaseEntity(
             id = 1,
-            controlUnitResourceIds = listOf(),
             name = "Updated Base Name",
         )
 
-        val request = CreateOrUpdateBaseDataInput(
+        val nextBaseData = CreateOrUpdateBaseDataInput(
             id = 1,
-            controlUnitResourceIds = listOf(),
             name = "Updated Base Name",
         )
-        val requestBody = objectMapper.writeValueAsString(request)
+        val requestBody = objectMapper.writeValueAsString(nextBaseData)
 
-        given(createOrUpdateBase.execute(base = any())).willReturn(updatedBase)
+        given(createOrUpdateBase.execute(base = any())).willReturn(expectedUpdatedBase)
 
         mockMvc.perform(
             put("/api/v1/bases/1")

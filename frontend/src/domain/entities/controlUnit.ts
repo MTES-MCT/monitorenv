@@ -10,11 +10,8 @@ export namespace ControlUnit {
     controlUnitContactIds: number[]
     controlUnitContacts: ControlUnitContactData[]
     controlUnitResourceIds: number[]
-    controlUnitResources: Array<
-      ControlUnitResourceData & {
-        base: Base.BaseData
-      }
-    >
+    // `ControlUnitResource` and not `ControlUnitResourceData` because we need `base` data for each resource
+    controlUnitResources: ControlUnitResource[]
     id: number
     isArchived: boolean
     name: string
@@ -63,7 +60,14 @@ export namespace ControlUnit {
   // ---------------------------------------------------------------------------
   // Types
 
-  export type ControlUnitData = Omit<ControlUnit, 'administration' | 'controlUnitContacts' | 'controlUnitResources'>
+  export type ControlUnitData = Omit<
+    ControlUnit,
+    | 'administration'
+    | 'controlUnitContactIds'
+    | 'controlUnitContacts'
+    | 'controlUnitResourceIds'
+    | 'controlUnitResources'
+  >
   export type NewControlUnitData = Omit<ControlUnitData, 'id'>
 
   export type ControlUnitContactData = Omit<ControlUnitContact, 'controlUnit'>

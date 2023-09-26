@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional
 class JpaBaseRepositoryITests : AbstractDBTests() {
     @Autowired
     private lateinit var jpaBaseRepository: JpaBaseRepository
-
+ 
     @Test
     @Transactional
     fun `deleteById() should delete a base by its ID`() {
@@ -41,7 +41,6 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                 controlUnitResources = listOf(
                     ControlUnitResourceEntity(
                         id = 1,
-                        base = null,
                         baseId = 1,
                         controlUnitId = 1,
                         name = "Semi-rigide 1",
@@ -51,7 +50,6 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ),
                     ControlUnitResourceEntity(
                         id = 2,
-                        base = null,
                         baseId = 1,
                         controlUnitId = 1,
                         name = "Semi-rigide 2",
@@ -71,7 +69,6 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                 controlUnitResources = listOf(
                     ControlUnitResourceEntity(
                         id = 3,
-                        base = null,
                         baseId = 2,
                         controlUnitId = 3,
                         name = "Semi-rigide 1",
@@ -81,7 +78,6 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ),
                     ControlUnitResourceEntity(
                         id = 4,
-                        base = null,
                         baseId = 2,
                         controlUnitId = 3,
                         name = "Semi-rigide 2",
@@ -91,7 +87,6 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ),
                     ControlUnitResourceEntity(
                         id = 6,
-                        base = null,
                         baseId = 2,
                         controlUnitId = 4,
                         name = "AR VECHEN",
@@ -117,7 +112,6 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                 controlUnitResources = listOf(
                     ControlUnitResourceEntity(
                         id = 3,
-                        base = null,
                         baseId = 2,
                         controlUnitId = 3,
                         name = "Semi-rigide 1",
@@ -127,7 +121,6 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ),
                     ControlUnitResourceEntity(
                         id = 4,
-                        base = null,
                         baseId = 2,
                         controlUnitId = 3,
                         name = "Semi-rigide 2",
@@ -137,7 +130,6 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ),
                     ControlUnitResourceEntity(
                         id = 6,
-                        base = null,
                         baseId = 2,
                         controlUnitId = 4,
                         name = "AR VECHEN",
@@ -158,7 +150,6 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
         // Create
 
         val newBase = BaseEntity(
-            controlUnitResourceIds = listOf(1, 2),
             name = "Base Name"
         )
 
@@ -171,12 +162,16 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
 
         val nextBase = BaseEntity(
             id = 4,
-            controlUnitResourceIds = listOf(3),
             name = "Updated Base Name"
         )
 
         val updatedBase = jpaBaseRepository.save(nextBase)
 
         assertThat(updatedBase).isEqualTo(nextBase)
+
+        // ---------------------------------------------------------------------
+        // Reset
+
+        jpaBaseRepository.deleteById(4)
     }
 }

@@ -5,16 +5,13 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IBaseRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.base.dtos.FullBaseDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.BaseModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBBaseRepository
-import fr.gouv.cacem.monitorenv.utils.requirePresent
 import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
 @Repository
 class JpaBaseRepository(
-    private val dbControlUnitResourceRepository: IDBControlUnitResourceRepository,
     private val dbBaseRepository: IDBBaseRepository,
 ) : IBaseRepository {
     override fun deleteById(baseId: Int) {
@@ -32,10 +29,7 @@ class JpaBaseRepository(
     @Transactional
     override fun save(base: BaseEntity): BaseEntity {
         return try {
-            val controlUnitResourceModels = base.controlUnitResourceIds.map {
-                requirePresent(dbControlUnitResourceRepository.findById(it))
-            }
-            val baseModel = BaseModel.fromBase(base, controlUnitResourceModels)
+            val baseModel = BaseModel.fromBase(base)
 
             dbBaseRepository.save(baseModel).toBase()
         } catch (e: InvalidDataAccessApiUsageException) {

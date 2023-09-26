@@ -29,11 +29,11 @@ data class ControlUnitModel(
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlUnit")
     @JsonManagedReference
-    var controlUnitContacts: List<ControlUnitContactModel>,
+    var controlUnitContacts: List<ControlUnitContactModel>? = mutableListOf(),
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlUnit")
     @JsonManagedReference
-    var controlUnitResources: List<ControlUnitResourceModel>,
+    var controlUnitResources: List<ControlUnitResourceModel>? = mutableListOf(),
 
     @Column(name = "archived")
     var isArchived: Boolean,
@@ -53,11 +53,15 @@ data class ControlUnitModel(
     var updatedAtUtc: Instant? = null,
 ) {
     companion object {
+        /**
+         * @param controlUnitResourceModels Return control unit contacts relations when provided.
+         * @param controlUnitResourceModels Return control unit resources relations when provided.
+         */
         fun fromControlUnit(
             controlUnit: ControlUnitEntity,
             administrationModel: AdministrationModel,
-            controlUnitContactModels: List<ControlUnitContactModel>,
-            controlUnitResourceModels: List<ControlUnitResourceModel>
+            controlUnitContactModels: List<ControlUnitContactModel>? = null,
+            controlUnitResourceModels: List<ControlUnitResourceModel>? = null
         ): ControlUnitModel {
             return ControlUnitModel(
                 id = controlUnit.id,
@@ -77,8 +81,6 @@ data class ControlUnitModel(
             id,
             administrationId = requireNotNull(administration.id),
             areaNote,
-            controlUnitContactIds = requireIds(controlUnitContacts) { it.id },
-            controlUnitResourceIds = requireIds(controlUnitResources) { it.id },
             isArchived,
             name,
             termsNote,
@@ -92,9 +94,9 @@ data class ControlUnitModel(
             administrationId = requireNotNull(administration.id),
             areaNote,
             controlUnitContactIds = requireIds(controlUnitContacts) { it.id },
-            controlUnitContacts = controlUnitContacts.map { it.toControlUnitContact() },
+            controlUnitContacts = requireNotNull(controlUnitContacts).map { it.toControlUnitContact() },
             controlUnitResourceIds = requireIds(controlUnitResources) { it.id },
-            controlUnitResources = controlUnitResources.map { it.toControlUnitResource() },
+            controlUnitResources = requireNotNull(controlUnitResources).map { it.toFullControlUnitResource() },
             isArchived,
             name,
             termsNote,
@@ -107,7 +109,7 @@ data class ControlUnitModel(
             administration = administration.name,
             isArchived,
             name,
-            resources = controlUnitResources.map { it.toControlUnitResource() },
+            resources = requireNotNull(controlUnitResources).map { it.toControlUnitResource() },
             contact = "",
         )
     }

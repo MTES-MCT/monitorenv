@@ -11,6 +11,6 @@ export namespace Administration {
   // ---------------------------------------------------------------------------
   // Types
 
-  export type AdministrationData = Omit<Administration, 'controlUnits'>
+  export type AdministrationData = Omit<Administration, 'controlUnitIds' | 'controlUnits'>
   export type NewAdministrationData = Omit<AdministrationData, 'id'>
 }

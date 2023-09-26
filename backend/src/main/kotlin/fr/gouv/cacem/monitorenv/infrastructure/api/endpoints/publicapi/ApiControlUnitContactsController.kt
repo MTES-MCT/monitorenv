@@ -5,6 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitConta
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitContacts
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitContactDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.ControlUnitContactDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.FullControlUnitContactDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
@@ -26,27 +27,27 @@ class ApiControlUnitContactsController(
         @RequestBody createControlUnitContactDataInput: CreateOrUpdateControlUnitContactDataInput,
     ): ControlUnitContactDataOutput {
         val newControlUnitContact = createControlUnitContactDataInput.toControlUnitContact()
-        val createControlUnitContact = createOrUpdateControlUnitContact.execute(newControlUnitContact)
+        val createdControlUnitContact = createOrUpdateControlUnitContact.execute(newControlUnitContact)
 
-        return ControlUnitContactDataOutput.fromControlUnitContact(createControlUnitContact)
+        return ControlUnitContactDataOutput.fromControlUnitContact(createdControlUnitContact)
     }
 
     @GetMapping("/{controlUnitContactId}")
     @Operation(summary = "Get a control unit contact by its ID")
     fun get(
         @PathParam("Control unit contact ID") @PathVariable(name = "controlUnitContactId") controlUnitContactId: Int,
-    ): ControlUnitContactDataOutput {
+    ): FullControlUnitContactDataOutput {
         val foundFullControlUnitContact = getControlUnitContactById.execute(controlUnitContactId)
 
-        return ControlUnitContactDataOutput.fromFullControlUnitContact(foundFullControlUnitContact)
+        return FullControlUnitContactDataOutput.fromFullControlUnitContact(foundFullControlUnitContact)
     }
 
     @GetMapping("")
     @Operation(summary = "List control unit contacts")
-    fun getAll(): List<ControlUnitContactDataOutput> {
+    fun getAll(): List<FullControlUnitContactDataOutput> {
         val foundFullControlUnitContacts = getControlUnitContacts.execute()
 
-        return foundFullControlUnitContacts.map { ControlUnitContactDataOutput.fromFullControlUnitContact(it) }
+        return foundFullControlUnitContacts.map { FullControlUnitContactDataOutput.fromFullControlUnitContact(it) }
     }
 
     @PutMapping(value = ["/{controlUnitContactId}"], consumes = ["application/json"])
@@ -62,8 +63,8 @@ class ApiControlUnitContactsController(
             "Body ID ('${updateControlUnitContactDataInput.id}') doesn't match path ID ('${controlUnitContactId}')."
         }
 
-        val controlUnitContact = updateControlUnitContactDataInput.toControlUnitContact()
-        val updatedControlUnitContact = createOrUpdateControlUnitContact.execute(controlUnitContact)
+        val nextControlUnitContact = updateControlUnitContactDataInput.toControlUnitContact()
+        val updatedControlUnitContact = createOrUpdateControlUnitContact.execute(nextControlUnitContact)
 
         return ControlUnitContactDataOutput.fromControlUnitContact(updatedControlUnitContact)
     }

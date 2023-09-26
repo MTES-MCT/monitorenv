@@ -42,8 +42,6 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     id = 1,
                     administrationId = 1005,
                     areaNote = null,
-                    controlUnitContactIds = listOf(1, 2),
-                    controlUnitResourceIds = listOf(1, 2),
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
                     termsNote = null
@@ -62,8 +60,6 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     id = 4,
                     administrationId = 1005,
                     areaNote = null,
-                    controlUnitContactIds = listOf(3),
-                    controlUnitResourceIds = listOf(6, 7),
                     isArchived = false,
                     name = "DPM – DDTM 14",
                     termsNote = null
@@ -88,8 +84,6 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     id = 1,
                     administrationId = 1005,
                     areaNote = null,
-                    controlUnitContactIds = listOf(1, 2),
-                    controlUnitResourceIds = listOf(1, 2),
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
                     termsNote = null
@@ -118,7 +112,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
         val createdControlUnitContact = jpaControlUnitContactRepository.save(newControlUnitContact)
 
         assertThat(createdControlUnitContact).isEqualTo(newControlUnitContact.copy(id = 4))
-
+ 
         // ---------------------------------------------------------------------
         // Update
 
@@ -133,5 +127,10 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
         val updatedControlUnitContact = jpaControlUnitContactRepository.save(nextControlUnitContact)
 
         assertThat(updatedControlUnitContact).isEqualTo(nextControlUnitContact)
+
+        // ---------------------------------------------------------------------
+        // Reset
+
+        jpaControlUnitContactRepository.deleteById(4)
     }
 }

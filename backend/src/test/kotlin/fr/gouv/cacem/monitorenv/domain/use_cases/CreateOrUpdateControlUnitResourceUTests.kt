@@ -1,6 +1,8 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases
 
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.given
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitResourceRepository
@@ -18,7 +20,7 @@ class CreateOrUpdateControlUnitResourceUTests {
 
     @Test
     fun `execute() should return save() result`() {
-        val controlUnitResource = ControlUnitResourceEntity(
+        val newControlUnitResource = ControlUnitResourceEntity(
             baseId = 2,
             controlUnitId = 3,
             name = "Control Unit Resource Name",
@@ -27,16 +29,13 @@ class CreateOrUpdateControlUnitResourceUTests {
             type = ControlUnitResourceType.BARGE,
         )
 
-        val expectation = controlUnitResource.copy(id = 1)
+        val expectedControlUnitResource = newControlUnitResource.copy(id = 0)
 
-        given(controlUnitResourceRepository.save(controlUnitResource)).willReturn(expectation)
+        given(controlUnitResourceRepository.save(newControlUnitResource)).willReturn(expectedControlUnitResource)
 
-        val result =
-            CreateOrUpdateControlUnitResource(controlUnitResourceRepository).execute(
-                controlUnitResource
-            )
+        val result = CreateOrUpdateControlUnitResource(controlUnitResourceRepository).execute(newControlUnitResource)
 
-        verify(controlUnitResourceRepository, times(1)).save(controlUnitResource)
-        assertThat(result).isEqualTo(expectation)
+        verify(controlUnitResourceRepository, times(1)).save(newControlUnitResource)
+        assertThat(result).isEqualTo(expectedControlUnitResource)
     }
 }

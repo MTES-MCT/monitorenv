@@ -5,13 +5,15 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
-import fr.gouv.cacem.monitorenv.domain.repositories.*
+import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.ISemaphoreRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.CreateOrUpdateReporting
 import org.assertj.core.api.Assertions
@@ -122,7 +124,6 @@ class CreateOrUpdateReportingUTests {
                 id = 1,
                 administration = AdministrationEntity(
                     id = 1,
-                    controlUnitIds = listOf(),
                     name = "administration 1",
                 ),
                 administrationId = 2,

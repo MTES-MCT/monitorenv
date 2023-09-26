@@ -3,11 +3,12 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
+import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -43,7 +44,6 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                 id = 24,
                 administration = AdministrationEntity(
                     id = 3,
-                    controlUnitIds = listOf(24),
                     name = "Marine Nationale"
                 ),
                 administrationId = 3,
@@ -63,7 +63,6 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                 id = 8,
                 administration = AdministrationEntity(
                     id = 1005,
-                    controlUnitIds = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 33),
                     name = "DDTM"
                 ),
                 administrationId = 1005,
@@ -89,7 +88,6 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                 id = 1,
                 administration = AdministrationEntity(
                     id = 1005,
-                    controlUnitIds = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 33),
                     name = "DDTM"
                 ),
                 administrationId = 1005,
@@ -114,25 +112,47 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                 ),
                 controlUnitResourceIds = listOf(1, 2),
                 controlUnitResources = listOf(
-                    ControlUnitResourceEntity(
+                    FullControlUnitResourceDTO(
                         id = 1,
-                        base = null,
+                        base = BaseEntity(
+                            id = 1,
+                            name = "Marseille",
+                        ),
                         baseId = 1,
+                        controlUnit = ControlUnitEntity(
+                            id = 1,
+                            administrationId = 1005,
+                            areaNote = null,
+                            isArchived = false,
+                            name = "Cultures marines – DDTM 40",
+                            termsNote = null,
+                        ),
                         controlUnitId = 1,
                         name = "Semi-rigide 1",
                         note = null,
                         photo = null,
-                        type = ControlUnitResourceType.BARGE
+                        type = ControlUnitResourceType.BARGE,
                     ),
-                    ControlUnitResourceEntity(
+                    FullControlUnitResourceDTO(
                         id = 2,
-                        base = null,
+                        base = BaseEntity(
+                            id = 1,
+                            name = "Marseille",
+                        ),
                         baseId = 1,
+                        controlUnit = ControlUnitEntity(
+                            id = 1,
+                            administrationId = 1005,
+                            areaNote = null,
+                            isArchived = false,
+                            name = "Cultures marines – DDTM 40",
+                            termsNote = null,
+                        ),
                         controlUnitId = 1,
                         name = "Semi-rigide 2",
                         note = null,
                         photo = null,
-                        type = ControlUnitResourceType.BARGE
+                        type = ControlUnitResourceType.BARGE,
                     ),
                 ),
                 areaNote = null,
@@ -152,8 +172,6 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
         val newControlUnit = ControlUnitEntity(
             administrationId = 1,
             areaNote = "Area Note",
-            controlUnitContactIds = listOf(1, 2),
-            controlUnitResourceIds = listOf(2, 3),
             isArchived = false,
             name = "Control Unit Name",
             termsNote = "Terms Note",
@@ -170,8 +188,6 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
             id = 34,
             administrationId = 1,
             areaNote = "Updated Area Note",
-            controlUnitContactIds = listOf(3),
-            controlUnitResourceIds = listOf(1),
             isArchived = false,
             name = "Updated Control Unit Name",
             termsNote = "Updated Terms Note",
@@ -180,5 +196,10 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
         val updatedControlUnit = jpaControlUnitRepository.save(nextControlUnit)
 
         assertThat(updatedControlUnit).isEqualTo(nextControlUnit)
+
+        // ---------------------------------------------------------------------
+        // Reset
+
+        jpaControlUnitRepository.deleteById(34)
     }
 }

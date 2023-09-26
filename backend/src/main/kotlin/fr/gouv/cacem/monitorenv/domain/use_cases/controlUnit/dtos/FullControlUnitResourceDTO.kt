@@ -1,9 +1,9 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos
 
 import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 
 data class FullControlUnitResourceDTO(
     val id: Int? = null,
@@ -18,7 +18,6 @@ data class FullControlUnitResourceDTO(
     // TODO Make that non-nullable once all resources will have been attached to a type.
     val type: ControlUnitResourceType? = null
 ) {
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -57,7 +56,6 @@ data class FullControlUnitResourceDTO(
     fun toControlUnitResource(): ControlUnitResourceEntity {
         return ControlUnitResourceEntity(
             id,
-            base = null,
             baseId,
             controlUnitId,
             name,

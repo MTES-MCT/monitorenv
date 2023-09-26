@@ -3,9 +3,9 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -45,7 +45,6 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                 id = 1,
                 base = BaseEntity(
                     id = 1,
-                    controlUnitResourceIds = listOf(1, 2),
                     name = "Marseille"
                 ),
                 baseId = 1,
@@ -53,8 +52,6 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     id = 1,
                     administrationId = 1005,
                     areaNote = null,
-                    controlUnitContactIds = listOf(1, 2),
-                    controlUnitResourceIds = listOf(1, 2),
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
                     termsNote = null
@@ -72,7 +69,6 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                 id = 12,
                 base = BaseEntity(
                     id = 3,
-                    controlUnitResourceIds = listOf(5, 7, 8, 9, 10, 11, 12),
                     name = "Dunkerque"
                 ),
                 baseId = 3,
@@ -80,8 +76,6 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     id = 19,
                     administrationId = 1008,
                     areaNote = null,
-                    controlUnitContactIds = listOf(),
-                    controlUnitResourceIds = listOf(10, 11, 12),
                     isArchived = false,
                     name = "DREAL Pays-de-La-Loire",
                     termsNote = null
@@ -105,7 +99,6 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                 id = 1,
                 base = BaseEntity(
                     id = 1,
-                    controlUnitResourceIds = listOf(1, 2),
                     name = "Marseille"
                 ),
                 baseId = 1,
@@ -113,8 +106,6 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     id = 1,
                     administrationId = 1005,
                     areaNote = null,
-                    controlUnitContactIds = listOf(1, 2),
-                    controlUnitResourceIds = listOf(1, 2),
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
                     termsNote = null
@@ -163,5 +154,10 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
         val updatedControlUnitResource = jpaControlUnitResourceRepository.save(nextControlUnitResource)
 
         assertThat(updatedControlUnitResource).isEqualTo(nextControlUnitResource)
+
+        // ---------------------------------------------------------------------
+        // Reset
+
+        jpaControlUnitResourceRepository.deleteById(13)
     }
 }

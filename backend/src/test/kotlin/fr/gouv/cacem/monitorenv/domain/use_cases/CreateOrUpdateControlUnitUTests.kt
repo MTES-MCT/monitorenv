@@ -1,6 +1,8 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases
 
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.given
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnit
@@ -17,26 +19,24 @@ class CreateOrUpdateControlUnitUTests {
 
     @Test
     fun `execute() should return save() result`() {
-        val controlUnit = ControlUnitEntity(
+        val newControlUnit = ControlUnitEntity(
             administrationId = 2,
             areaNote = null,
-            controlUnitContactIds = listOf(),
-            controlUnitResourceIds = listOf(),
             isArchived = false,
             name = "Control Unit Name",
             termsNote = null,
         )
 
-        val expectation = controlUnit.copy(id = 1)
+        val expectatedControlUnit = newControlUnit.copy(id = 0)
 
-        given(controlUnitRepository.save(controlUnit)).willReturn(expectation)
+        given(controlUnitRepository.save(newControlUnit)).willReturn(expectatedControlUnit)
 
         val result =
             CreateOrUpdateControlUnit(controlUnitRepository).execute(
-                controlUnit
+                newControlUnit
             )
 
-        verify(controlUnitRepository, times(1)).save(controlUnit)
-        assertThat(result).isEqualTo(expectation)
+        verify(controlUnitRepository, times(1)).save(newControlUnit)
+        assertThat(result).isEqualTo(expectatedControlUnit)
     }
 }

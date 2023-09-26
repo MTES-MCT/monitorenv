@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos
 
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 
 data class FullControlUnitDTO(
@@ -14,7 +13,8 @@ data class FullControlUnitDTO(
     val controlUnitContactIds: List<Int>,
     val controlUnitContacts: List<ControlUnitContactEntity>,
     val controlUnitResourceIds: List<Int>,
-    val controlUnitResources: List<ControlUnitResourceEntity>,
+    // `FullControlUnitResourceDTO` and not `ControlUnitResourceEntity` because we need `base` data for each resource
+    val controlUnitResources: List<FullControlUnitResourceDTO>,
     val isArchived: Boolean,
     val name: String,
     /** Conditions under which this unit should be contacted. */
@@ -26,7 +26,7 @@ data class FullControlUnitDTO(
             administration = administration.name,
             isArchived,
             name,
-            resources = controlUnitResources,
+            resources = controlUnitResources.map { it.toControlUnitResource() },
         )
     }
 }

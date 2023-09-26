@@ -6,7 +6,9 @@ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.*
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnitContact
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitContactById
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitContacts
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitContactDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitContactDataInput
 import org.hamcrest.Matchers
@@ -44,26 +46,26 @@ class ApiControlUnitContactsControllerITests {
 
     @Test
     fun `Should create a contact`() {
-        val expectedNewControlUnitContact = ControlUnitContactEntity(
+        val expectedCreatedControlUnitContact = ControlUnitContactEntity(
             id = 1,
-            controlUnitId = 2,
+            controlUnitId = 0,
             email = null,
             name = "Contact Name",
             note = null,
             phone = null,
         )
 
-        val request = CreateOrUpdateControlUnitContactDataInput(
-            controlUnitId = 2,
+        val newControlUnitContactData = CreateOrUpdateControlUnitContactDataInput(
+            controlUnitId = 0,
             email = null,
             name = "Contact Name",
             note = null,
             phone = null,
         )
-        val requestBody = objectMapper.writeValueAsString(request)
+        val requestBody = objectMapper.writeValueAsString(newControlUnitContactData)
 
         given(createOrUpdateControlUnitContact.execute(controlUnitContact = any())).willReturn(
-            expectedNewControlUnitContact
+            expectedCreatedControlUnitContact
         )
 
         mockMvc.perform(
@@ -80,16 +82,14 @@ class ApiControlUnitContactsControllerITests {
         val expectedFullControlUnitContact = FullControlUnitContactDTO(
             id = 1,
             controlUnit = ControlUnitEntity(
-                id = 3,
-                administrationId = 4,
+                id = 0,
+                administrationId = 0,
                 areaNote = null,
-                controlUnitContactIds = listOf(),
-                controlUnitResourceIds = listOf(),
                 isArchived = false,
-                name = "Control Unit Name",
+                name = "Unit Name",
                 termsNote = null,
             ),
-            controlUnitId = 2,
+            controlUnitId = 0,
             email = null,
             name = "Contact Name",
             note = null,
@@ -108,20 +108,18 @@ class ApiControlUnitContactsControllerITests {
 
     @Test
     fun `Should get all contacts`() {
-        val expectedControlUnitContacts = listOf(
+        val expectedFullControlUnitContacts = listOf(
             FullControlUnitContactDTO(
                 id = 1,
                 controlUnit = ControlUnitEntity(
-                    id = 3,
-                    administrationId = 4,
+                    id = 0,
+                    administrationId = 0,
                     areaNote = null,
-                    controlUnitContactIds = listOf(),
-                    controlUnitResourceIds = listOf(),
                     isArchived = false,
-                    name = "Control Unit Name",
+                    name = "Unit Name",
                     termsNote = null,
                 ),
-                controlUnitId = 2,
+                controlUnitId = 0,
                 email = null,
                 name = "Contact Name",
                 note = null,
@@ -129,18 +127,16 @@ class ApiControlUnitContactsControllerITests {
             ),
 
             FullControlUnitContactDTO(
-                id = 5,
+                id = 2,
                 controlUnit = ControlUnitEntity(
-                    id = 7,
-                    administrationId = 8,
+                    id = 0,
+                    administrationId = 0,
                     areaNote = null,
-                    controlUnitContactIds = listOf(),
-                    controlUnitResourceIds = listOf(),
                     isArchived = false,
-                    name = "Control Unit Name 2",
+                    name = "Unit Name",
                     termsNote = null,
                 ),
-                controlUnitId = 6,
+                controlUnitId = 0,
                 email = null,
                 name = "Contact Name 2",
                 note = null,
@@ -148,7 +144,7 @@ class ApiControlUnitContactsControllerITests {
             )
         )
 
-        given(getControlUnitContacts.execute()).willReturn(expectedControlUnitContacts)
+        given(getControlUnitContacts.execute()).willReturn(expectedFullControlUnitContacts)
 
         mockMvc.perform(get("/api/v1/control_unit_contacts"))
             .andExpect(status().isOk)
@@ -159,26 +155,28 @@ class ApiControlUnitContactsControllerITests {
 
     @Test
     fun `Should update a contact`() {
-        val updatedControlUnitContact = ControlUnitContactEntity(
+        val expectedUpdatedControlUnitContact = ControlUnitContactEntity(
             id = 1,
-            controlUnitId = 2,
+            controlUnitId = 0,
             email = null,
             name = "Updated Contact Name",
             note = null,
             phone = null,
         )
 
-        val request = CreateOrUpdateControlUnitContactDataInput(
+        val nextControlUnitContactData = CreateOrUpdateControlUnitContactDataInput(
             id = 1,
             email = null,
-            controlUnitId = 2,
+            controlUnitId = 0,
             name = "Updated Contact Name",
             note = null,
             phone = null,
         )
-        val requestBody = objectMapper.writeValueAsString(request)
+        val requestBody = objectMapper.writeValueAsString(nextControlUnitContactData)
 
-        given(createOrUpdateControlUnitContact.execute(controlUnitContact = any())).willReturn(updatedControlUnitContact)
+        given(createOrUpdateControlUnitContact.execute(controlUnitContact = any())).willReturn(
+            expectedUpdatedControlUnitContact
+        )
 
         mockMvc.perform(
             put("/api/v1/control_unit_contacts/1")

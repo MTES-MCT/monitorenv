@@ -1,11 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.entities.controlUnit
 
-import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
-
 data class ControlUnitResourceEntity(
     val id: Int? = null,
-    // Only used for deep resolution of the base attached to each control unit resource when outputting control units.
-    val base: BaseEntity? = null,
     // TODO Make that non-nullable once all resources will have been attached to a base.
     val baseId: Int? = null,
     val controlUnitId: Int,
@@ -22,7 +18,6 @@ data class ControlUnitResourceEntity(
         other as ControlUnitResourceEntity
 
         if (id != other.id) return false
-        if (base != other.base) return false
         if (baseId != other.baseId) return false
         if (controlUnitId != other.controlUnitId) return false
         if (name != other.name) return false
@@ -38,7 +33,6 @@ data class ControlUnitResourceEntity(
 
     override fun hashCode(): Int {
         var result = id ?: 0
-        result = 31 * result + (base?.hashCode() ?: 0)
         result = 31 * result + (baseId ?: 0)
         result = 31 * result + controlUnitId
         result = 31 * result + name.hashCode()
