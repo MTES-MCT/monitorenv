@@ -1,4 +1,4 @@
-import { FAKE_MAPBOX_RESPONSE } from 'cypress/e2e/contants'
+import { FAKE_MAPBOX_RESPONSE } from '../../constants'
 
 context('Main Window > Control Unit List > Filter Bar', () => {
   beforeEach(() => {

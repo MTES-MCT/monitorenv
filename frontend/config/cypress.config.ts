@@ -5,13 +5,13 @@ import { platform } from 'os'
 
 const IS_CI = Boolean(process.env.CI)
 const IS_DARWIN = platform() === 'darwin'
-const WEBAPP_PORT = IS_CI || IS_DARWIN ? 8880 : 3000
+const WEBAPP_PORT = IS_CI ? 8880 : 3000
 const WEBAPP_HOST = IS_DARWIN ? '0.0.0.0' : 'localhost'
 
 export default defineConfig({
   e2e: {
     baseUrl: `http://${WEBAPP_HOST}:${WEBAPP_PORT}`,
-    // We do that to avoid e2e logs pollution with useless`GET /security-state-staging/intermediates/` lines.
+    // We do that to avoid e2e logs pollution with useless `GET /security-state-staging/intermediates/` lines.
     // Despite the name, this also applies to Firefox.
     chromeWebSecurity: false,
     excludeSpecPattern: ['**/__snapshots__/*', '**/__image_snapshots__/*'],
@@ -24,8 +24,8 @@ export default defineConfig({
       'cypress/e2e/01_side_window_mission.spec.ts',
       'cypress/e2e/02_side_window_mission_actions.spec.ts',
       'cypress/e2e/03_side_window_missions_navigation.spec.ts',
-      // 'cypress/e2e/04_create_reporting.spec.ts',
       'cypress/e2e/05_side_window_reportings.spec.ts',
+      // 'cypress/e2e/04_create_reporting.spec.ts',
       'cypress/e2e/**/*.spec.ts'
     ]
   },
