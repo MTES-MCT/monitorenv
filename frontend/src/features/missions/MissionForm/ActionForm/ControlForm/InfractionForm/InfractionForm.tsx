@@ -1,4 +1,4 @@
-import { FormikCheckbox, FormikMultiRadio, FormikTextarea, FormikTextInput } from '@mtes-mct/monitor-ui'
+import { FieldError, FormikCheckbox, FormikMultiRadio, FormikTextarea, FormikTextInput } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { Form, Button, ButtonToolbar } from 'rsuite'
 import styled from 'styled-components'
@@ -16,26 +16,26 @@ const infractionTypeOptions = Object.values(infractionTypeLabels).map(o => ({ la
 const formalNoticeOPtions = Object.values(formalNoticeLabels).map(o => ({ label: o.libelle, value: o.code }))
 
 type InfractionFormProps = {
-  currentActionIndex: number
   currentInfractionIndex: number
+  envActionIndex: number
   removeInfraction: MouseEventHandler
   validateInfraction: MouseEventHandler
 }
 export function InfractionForm({
-  currentActionIndex,
   currentInfractionIndex,
+  envActionIndex,
   removeInfraction,
   validateInfraction
 }: InfractionFormProps) {
-  const infractionPath = `envActions[${currentActionIndex}].infractions[${currentInfractionIndex}]`
+  const infractionPath = `envActions[${envActionIndex}].infractions[${currentInfractionIndex}]`
 
-  const [actionTargetField] = useField<string>(`envActions.${currentActionIndex}.actionTargetType`)
+  const [actionTargetField] = useField<string>(`envActions.${envActionIndex}.actionTargetType`)
   const [, meta] = useField(infractionPath)
 
   return (
     <FormWrapper data-cy="infraction-form">
       {actionTargetField.value === TargetTypeEnum.VEHICLE && (
-        <InfractionFormHeaderVehicle currentActionIndex={currentActionIndex} infractionPath={infractionPath} />
+        <InfractionFormHeaderVehicle envActionIndex={envActionIndex} infractionPath={infractionPath} />
       )}
 
       {actionTargetField.value === TargetTypeEnum.COMPANY && (
@@ -93,17 +93,10 @@ export function InfractionForm({
           Valider l&apos;infraction
         </Button>
       </ButtonToolbarRight>
-      {!!meta.error && (
-        <ErrorMessage>Veuillez compléter les champs en rouge pour valider l&apos;infraction</ErrorMessage>
-      )}
+      {!!meta.error && <FieldError>Veuillez compléter les champs en rouge pour valider l&apos;infraction</FieldError>}
     </FormWrapper>
   )
 }
-
-const ErrorMessage = styled.div`
-  color: ${p => p.theme.color.maximumRed};
-  font: italic normal normal 13px/18px Marianne;
-`
 
 const FormWrapper = styled.div`
   background: ${p => p.theme.color.white};

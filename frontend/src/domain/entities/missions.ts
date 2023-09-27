@@ -1,11 +1,13 @@
 import { THEME, customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 
 import type { LegacyControlUnit } from './legacyControlUnit'
+import type { Reporting } from './reporting'
 import type { SeaFrontEnum } from './seaFrontType'
 
 export enum ActionTypeEnum {
   CONTROL = 'CONTROL',
   NOTE = 'NOTE',
+  REPORTING = 'REPORTING',
   SURVEILLANCE = 'SURVEILLANCE'
 }
 export const actionTypeLabels = {
@@ -265,6 +267,7 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
   observationsCacem?: string
   observationsCnsp?: string
   openBy: string
+  reportings?: Reporting[]
   startDateTimeUtc: string
 }
 
@@ -334,6 +337,10 @@ export type NewInfraction = {
 export type Infraction = NewInfraction & {
   formalNotice: FormalNoticeEnum
   infractionType: InfractionTypeEnum
+}
+
+export type EnvActionForTimeline = Partial<EnvAction> & {
+  timelineDate?: string
 }
 
 export const getMissionStatus = ({

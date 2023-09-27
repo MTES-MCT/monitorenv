@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { AttachedMissionCard } from './AttachedMissionCard'
 import { attachMissionToReportingSliceActions } from './slice'
 import { resetInteraction } from '../../../../domain/shared_slices/Draw'
+import { addMission } from '../../../../domain/use_cases/missions/addMission'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
@@ -25,15 +26,23 @@ export function AttachMission() {
   const unattachMission = () => {
     dispatch(attachMissionToReportingSliceActions.setAttachedMissionId(undefined))
   }
+  const createMission = () => {
+    dispatch(addMission())
+  }
 
   useEffect(() => {
     setFieldValue('attachedMissionId', attachedMissionId)
   }, [attachedMissionId, setFieldValue])
 
   return !values.attachedMissionId ? (
-    <Button accent={Accent.SECONDARY} Icon={Icon.Plus} onClick={attachMission}>
-      Lier à une mission existante
-    </Button>
+    <ButtonsContainer>
+      <Button accent={Accent.SECONDARY} Icon={Icon.Link} isFullWidth onClick={attachMission}>
+        Lier à une mission existante
+      </Button>
+      <Button accent={Accent.SECONDARY} Icon={Icon.Plus} isFullWidth onClick={createMission}>
+        Créer une mission pour ce signalement
+      </Button>
+    </ButtonsContainer>
   ) : (
     <div>
       <AttachedMissionText>
@@ -43,15 +52,20 @@ export function AttachMission() {
 
       <AttachedMissionCard id={attachedMissionId} />
 
-      <ButtonContainer>
+      <UnattachButtonContainer>
         <Button accent={Accent.SECONDARY} Icon={Icon.Unlink} isFullWidth={false} onClick={unattachMission}>
           Délier de la mission
         </Button>
-      </ButtonContainer>
+      </UnattachButtonContainer>
     </div>
   )
 }
 
+const ButtonsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`
 const AttachedMissionText = styled.div`
   display: flex;
   align-items: center;
@@ -60,7 +74,7 @@ const AttachedMissionText = styled.div`
   padding-bottom: 8px;
 `
 
-const ButtonContainer = styled.div`
+const UnattachButtonContainer = styled.div`
   text-align: end;
   padding-top: 16px;
 `

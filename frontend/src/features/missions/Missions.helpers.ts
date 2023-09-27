@@ -10,10 +10,12 @@ import {
   type NewMission,
   InfractionTypeEnum,
   type EnvAction,
-  type EnvActionSurveillance
+  type EnvActionSurveillance,
+  type EnvActionForTimeline
 } from '../../domain/entities/missions'
 
 import type { LegacyControlUnit } from '../../domain/entities/legacyControlUnit'
+import type { Reporting, ReportingForTimeline } from '../../domain/entities/reporting'
 
 export const infractionFactory = ({ id, ...infraction } = { id: '' }) => ({
   id: uuidv4(),
@@ -154,4 +156,40 @@ export const getControlInfractionsTags = (actionNumberOfControls, infractions) =
   const med = infractions?.filter(inf => inf.formalNotice === FormalNoticeEnum.YES)?.length || 0
 
   return { infractionsWithoutReport, infractionsWithReport, infractionsWithWaitingReport, med, ras, totalInfractions }
+}
+
+type ActionsForTimeLine = Record<string, ReportingForTimeline | EnvActionForTimeline>
+
+const formattedEnvActionsForTimeline = envActions =>
+  envActions?.reduce(
+    (newEnvActionsCollection, action) => ({
+      ...newEnvActionsCollection,
+      [action.id]: {
+        ...action,
+        timelineDate: action.actionStartDateTimeUtc
+      }
+    }),
+    {} as EnvActionForTimeline
+  )
+
+const formattedReportingsForTimeline = reportings =>
+  reportings?.reduce(
+    (newReportingsCollection, reporting) => ({
+      ...newReportingsCollection,
+      [reporting.id]: {
+        ...reporting,
+        actionType: ActionTypeEnum.REPORTING,
+        timelineDate: reporting.attachedToMissionAtUtc
+      }
+    }),
+    {} as ReportingForTimeline
+  )
+export const getEnvActionsAndReportingsForTimeline = (
+  envActions: EnvAction[] | undefined,
+  reportings: Reporting[] | undefined
+): ActionsForTimeLine => {
+  const formattedEnvActions = formattedEnvActionsForTimeline(envActions)
+  const formattedReportings = formattedReportingsForTimeline(reportings)
+
+  return { ...formattedEnvActions, ...formattedReportings }
 }

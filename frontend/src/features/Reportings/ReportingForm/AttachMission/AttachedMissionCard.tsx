@@ -1,13 +1,11 @@
-import { customDayjs as dayjs } from '@mtes-mct/monitor-ui'
+import { customDayjs as dayjs, pluralize } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import styled from 'styled-components'
 
 import { useGetMissionQuery } from '../../../../api/missionsAPI'
-import { COLORS } from '../../../../constants/constants'
 import { getMissionStatus, getTotalOfControls, getTotalOfSurveillances } from '../../../../domain/entities/missions'
 import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
 import { missionTypesToString } from '../../../../utils/missionTypes'
-import { pluralize } from '../../../../utils/pluralize'
 
 export function AttachedMissionCard({ id }: { id: number | undefined }) {
   const { data: attachedMission } = useGetMissionQuery(id || skipToken)
@@ -91,16 +89,16 @@ const Header = styled.div`
   justify-content: space-between;
 `
 const MultipleControlUnits = styled.div`
-  color: ${COLORS.slateGray};
+  color: ${p => p.theme.color.slateGray};
 `
 const NoContact = styled.div`
-  color: ${COLORS.slateGray};
+  color: ${p => p.theme.color.slateGray};
   font-weight: 400;
   font-style: italic;
 `
 const Details = styled.div`
   > div {
-    color: ${COLORS.slateGray};
+    color: ${p => p.theme.color.slateGray};
     white-space: nowrap;
   }
 `
@@ -108,5 +106,5 @@ const Details = styled.div`
 const Title = styled.div`
   white-space: nowrap;
   font: normal normal bold 13px/18px Marianne;
-  color: ${COLORS.gunMetal};
+  color: ${p => p.theme.color.gunMetal};
 `

@@ -1,4 +1,4 @@
-import { FieldArray, useFormikContext } from 'formik'
+import { useFormikContext } from 'formik'
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
 import { generatePath } from 'react-router'
@@ -153,32 +153,10 @@ export function MissionForm({ id, isAlreadyClosed, isNewMission, selectedMission
           <GeneralInformationsForm />
         </FirstColumn>
         <SecondColumn>
-          <FieldArray
-            name="envActions"
-            render={({ form, remove, unshift }) => (
-              <ActionsForm
-                currentActionIndex={currentActionIndex}
-                form={form}
-                remove={remove}
-                setCurrentActionIndex={handleSetCurrentActionIndex}
-                unshift={unshift}
-              />
-            )}
-            validateOnChange={false}
-          />
+          <ActionsForm currentActionIndex={currentActionIndex} setCurrentActionIndex={handleSetCurrentActionIndex} />
         </SecondColumn>
         <ThirdColumn>
-          <FieldArray
-            name="envActions"
-            render={({ remove }) => (
-              <ActionForm
-                currentActionIndex={currentActionIndex}
-                remove={remove}
-                setCurrentActionIndex={handleSetCurrentActionIndex}
-              />
-            )}
-            validateOnChange={false}
-          />
+          <ActionForm currentActionIndex={currentActionIndex} setCurrentActionIndex={handleSetCurrentActionIndex} />
         </ThirdColumn>
       </Wrapper>
 
@@ -220,7 +198,5 @@ const SecondColumn = styled.div`
   flex: 1;
 `
 const ThirdColumn = styled.div`
-  background: ${p => p.theme.color.gainsboro};
   flex: 1;
-  overflow-y: auto;
 `
