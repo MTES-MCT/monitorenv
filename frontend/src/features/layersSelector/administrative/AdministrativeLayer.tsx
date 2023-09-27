@@ -50,7 +50,7 @@ const Row = styled.span<{ $isGrouped: boolean }>`
   min-height: 36px;
 
   :hover {
-    background: ${p => p.theme.color.blueYonder[25]};
+    background: ${p => p.theme.color.blueYonder25};
   }
   & > :last-child {
     margin-left: auto;

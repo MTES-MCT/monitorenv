@@ -7,8 +7,7 @@
     "checkJs": true,
     "exactOptionalPropertyTypes": false,
     "incremental": true,
-    "importsNotUsedAsValues": "error",
-    "isolatedModules": true,
+    "isolatedModules": false,
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
@@ -26,14 +25,9 @@
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
     "target": "ES2022",
-    "useUnknownInCatchVariables": true
+    "useUnknownInCatchVariables": true,
+    "verbatimModuleSyntax": true
   },
   "include": ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules/*"],
-  "ts-node": {
-    "swc": true,
-    "compilerOptions": {
-      "module": "CommonJS"
-    }
-  }
+  "exclude": ["node_modules/*"]
 }

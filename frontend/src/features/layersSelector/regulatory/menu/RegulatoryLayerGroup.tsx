@@ -51,7 +51,7 @@ export function RegulatoryLayerGroup({ groupName, layers }) {
           <Tag accent={Accent.PRIMARY}>{`${layers?.length}`}</Tag>
           <IconButton
             accent={Accent.TERTIARY}
-            color={regulatoryZonesAreShowed ? THEME.color.blueGray[100] : THEME.color.slateGray}
+            color={regulatoryZonesAreShowed ? THEME.color.blueGray : THEME.color.slateGray}
             data-cy={regulatoryZonesAreShowed ? 'regulatory-my-zones-zone-hide' : 'regulatory-my-zones-zone-show'}
             Icon={Icon.Display}
             iconSize={20}

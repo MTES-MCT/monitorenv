@@ -1,7 +1,6 @@
-import { getLocalizedDayjs, pluralize } from '@mtes-mct/monitor-ui'
+import { THEME, getLocalizedDayjs, pluralize } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../../constants/constants'
 import { TargetTypeLabels } from '../../../../domain/entities/targetType'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ControlInfractionsTags } from '../../../../ui/ControlInfractionsTags'
@@ -33,7 +32,7 @@ export function ControlCard({ feature }: { feature: any }) {
           ) : (
             <StyledGrayText>(cible non renseignée)</StyledGrayText>
           )}
-          <Bullet color={infractions.length > 0 ? COLORS.maximumRed : COLORS.mediumSeaGreen} />
+          <Bullet color={infractions.length > 0 ? THEME.color.maximumRed : THEME.color.mediumSeaGreen} />
         </Accented>
       </StyledControlThemes>
       {infractions && (
@@ -45,7 +44,7 @@ export function ControlCard({ feature }: { feature: any }) {
 }
 
 const StyledControlCardHeader = styled.div`
-  background: ${COLORS.white};
+  background: ${p => p.theme.color.white};
   padding: 12px;
   display: flex;
   flex-direction: column;
@@ -81,5 +80,5 @@ const Bullet = styled.div<{ color: string }>`
 `
 
 const StyledGrayText = styled.p`
-  color: ${COLORS.slateGray};
+  color: ${p => p.theme.color.slateGray};
 `

@@ -1,4 +1,4 @@
-import { FAKE_API_POST_RESPONSE, FAKE_API_PUT_RESPONSE } from '../contants'
+import { FAKE_API_POST_RESPONSE, FAKE_API_PUT_RESPONSE } from '../constants'
 
 context('Back Office > Control Unit Form', () => {
   beforeEach(() => {

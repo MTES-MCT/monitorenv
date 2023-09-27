@@ -5,7 +5,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { getOverlayPositionForExtent, getTopLeftMarginForFeature } from './position'
-import { COLORS } from '../../../constants/constants'
 
 const OVERLAY_HEIGHT = 124
 const OVERLAY_WIDTH = 365
@@ -102,6 +101,6 @@ const OverlayComponent = styled.div`
   top: ${props => props.overlayTopLeftMargin[0]}px;
   left: ${props => props.overlayTopLeftMargin[1]}px;
   text-align: left;
-  background-color: ${COLORS.white};
+  background-color: ${p => p.theme.color.white};
   border-radius: 2px;
 `

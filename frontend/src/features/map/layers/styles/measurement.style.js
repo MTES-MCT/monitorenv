@@ -1,11 +1,10 @@
+import { THEME } from '@mtes-mct/monitor-ui'
 import { getCenter } from 'ol/extent'
 import Point from 'ol/geom/Point'
 import CircleStyle from 'ol/style/Circle'
 import Fill from 'ol/style/Fill'
 import Stroke from 'ol/style/Stroke'
 import Style from 'ol/style/Style'
-
-import { COLORS } from '../../../../constants/constants'
 
 export const measurementStyleWithCenter = new Style({
   geometry: feature => {
@@ -16,7 +15,7 @@ export const measurementStyleWithCenter = new Style({
   },
   image: new CircleStyle({
     fill: new Fill({
-      color: COLORS.slateGray
+      color: THEME.color.slateGray
     }),
     radius: 2
   })
@@ -24,7 +23,7 @@ export const measurementStyleWithCenter = new Style({
 
 export const measurementStyle = new Style({
   stroke: new Stroke({
-    color: COLORS.slateGray,
+    color: THEME.color.slateGray,
     lineDash: [4, 4],
     width: 2
   })

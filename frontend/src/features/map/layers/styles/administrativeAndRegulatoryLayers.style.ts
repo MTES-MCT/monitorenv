@@ -1,9 +1,9 @@
+import { THEME } from '@mtes-mct/monitor-ui'
 import { Style } from 'ol/style'
 import Fill from 'ol/style/Fill'
 import Stroke from 'ol/style/Stroke'
 import Text from 'ol/style/Text'
 
-import { COLORS } from '../../../../constants/constants'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { getColorWithAlpha, stringToColorInGroup } from '../../../../utils/utils'
 /**
@@ -21,7 +21,7 @@ export const getAdministrativeLayersStyle = code => {
             width: 1
           }),
           text: new Text({
-            fill: new Fill({ color: COLORS.gunMetal }),
+            fill: new Fill({ color: THEME.color.gunMetal }),
             font: '12px Marianne',
             stroke: new Stroke({ color: 'rgba(255,255,255,0.9)', width: 2 }),
             text: `${feature.get(Layers.EEZ.subZoneFieldKey) ? feature.get(Layers.EEZ.subZoneFieldKey) : ''}`
@@ -35,7 +35,7 @@ export const getAdministrativeLayersStyle = code => {
             width: 1
           }),
           text: new Text({
-            fill: new Fill({ color: COLORS.gunMetal }),
+            fill: new Fill({ color: THEME.color.gunMetal }),
             font: '12px Marianne',
             overflow: true,
             stroke: new Stroke({ color: 'rgba(255,255,255,0.4)', width: 2 }),
@@ -50,7 +50,7 @@ export const getAdministrativeLayersStyle = code => {
             width: 1
           }),
           text: new Text({
-            fill: new Fill({ color: COLORS.gunMetal }),
+            fill: new Fill({ color: THEME.color.gunMetal }),
             font: '12px Marianne',
             stroke: new Stroke({ color: 'rgba(255,255,255,0.4)', width: 2 }),
             text: `${feature.get(Layers.AEM.subZoneFieldKey) ? feature.get(Layers.AEM.subZoneFieldKey) : ''}`
@@ -106,7 +106,7 @@ const getStyle = (color, metadataIsShowed) =>
       color
     }),
     stroke: new Stroke({
-      color: getColorWithAlpha(COLORS.charcoal, 0.7),
+      color: getColorWithAlpha(THEME.color.charcoal, 0.7),
       width: metadataIsShowed ? 3 : 1
     })
   })

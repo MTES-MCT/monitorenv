@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { useEffect, useState, useMemo, useRef, MutableRefObject } from 'react'
+import { useEffect, useState, useMemo, useRef, type MutableRefObject } from 'react'
 
 const NOMINATIM_API_URL = 'https://nominatim.openstreetmap.org/search'
 

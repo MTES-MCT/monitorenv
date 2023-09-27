@@ -1,10 +1,10 @@
+import { THEME } from '@mtes-mct/monitor-ui'
 import MultiPoint from 'ol/geom/MultiPoint'
 import { Icon, Style } from 'ol/style'
 import Circle from 'ol/style/Circle'
 import Fill from 'ol/style/Fill'
 import Stroke from 'ol/style/Stroke'
 
-import { COLORS } from '../../../../constants/constants'
 import { OLGeometryType } from '../../../../domain/entities/map/constants'
 
 import type { MultiPolygon } from 'ol/geom'
@@ -19,7 +19,7 @@ export const drawStyle = new Style({
     src: 'Pointeur_selection_zone.svg'
   }),
   stroke: new Stroke({
-    color: COLORS.slateGray,
+    color: THEME.color.slateGray,
     lineDash: [5, 5]
   })
 })
@@ -59,7 +59,7 @@ export const editStyle = new Style({
   },
   image: new Circle({
     fill: new Fill({
-      color: COLORS.charcoal
+      color: THEME.color.charcoal
     }),
     radius: 5
   })

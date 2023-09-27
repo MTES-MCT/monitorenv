@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { MutableRefObject, useRef } from 'react'
+import { type MutableRefObject, useRef } from 'react'
 import { Form, SelectPicker } from 'rsuite'
 import styled from 'styled-components'
 

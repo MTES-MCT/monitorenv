@@ -12,7 +12,7 @@ import { Target } from './FormComponents/Target'
 import { ThemeSelector } from './FormComponents/ThemeSelector'
 import { SubThemesSelector } from './FormComponents/ThemeSelector/SubThemesSelector'
 import { Validity } from './FormComponents/Validity'
-import { Reporting, ReportingTypeEnum, ReportingTypeLabels } from '../../../domain/entities/reporting'
+import { type Reporting, ReportingTypeEnum, ReportingTypeLabels } from '../../../domain/entities/reporting'
 import {
   hideSideButtons,
   setReportingFormVisibility,

@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { type PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { set } from 'lodash/fp'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'

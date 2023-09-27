@@ -5,7 +5,6 @@ import React, { createRef, useCallback, useEffect, useRef, useState } from 'reac
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../constants/constants'
 import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
 import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
 import { usePrevious } from '../../../hooks/usePrevious'
@@ -150,20 +149,20 @@ const Body = styled.div`
   font-size: 13px;
   font-weight: 500;
   text-align: left;
-  border-bottom: 1px solid ${COLORS.lightGray};
+  border-bottom: 1px solid ${p => p.theme.color.lightGray};
 `
 
 const Footer = styled.div`
   padding: 3px;
   font-size: 12px;
   text-align: center;
-  color: ${COLORS.slateGray};
+  color: ${p => p.theme.color.slateGray};
 `
 
 const Header = styled.div`
   display: flex;
   height: 30px;
-  background ${COLORS.gainsboro};
+  background ${p => p.theme.color.gainsboro};
   text-align: left;
   border: none;
   border-top-left-radius: 2px;
@@ -173,7 +172,7 @@ const Header = styled.div`
 const Delete = styled(DeleteSVG)`
   height: 30px;
   width: 22px;
-  border-left: 1px solid ${COLORS.lightGray};
+  border-left: 1px solid ${p => p.theme.color.lightGray};
   padding-left: 6px;
   margin-left: auto;
   margin-right: 8px;
@@ -183,7 +182,7 @@ const Delete = styled(DeleteSVG)`
 const Edit = styled(EditSVG)`
   height: 30px;
   width: 22px;
-  border-left: 1px solid ${COLORS.lightGray};
+  border-left: 1px solid ${p => p.theme.color.lightGray};
   padding-left: 6px;
   margin-left: auto;
   margin-right: 6px;
@@ -195,10 +194,10 @@ const WrapperToBeKeptForDOMManagement = styled.div`
 `
 
 const InterestPointOverlayElement = styled.div`
-  background: ${COLORS.background};
+  background: ${p => p.theme.color.white};
   cursor: grabbing;
   width: 183px;
-  color: ${COLORS.gunMetal};
+  color: ${p => p.theme.color.gunMetal};
   border: none;
   border-radius: 2px;
 `

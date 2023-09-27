@@ -20,8 +20,7 @@ const Wrapper = styled.div<{ $hasPinnedLayers?: boolean; $isExpanded: boolean }>
   border-bottom-right-radius: ${props => (props.$isExpanded ? '0' : '2px')};
   background: ${p => p.theme.color.charcoal};
 
-  ${props =>
-    props.$hasPinnedLayers && `.Element-IconBox:first-of-type svg { color: ${props.theme.color.blueGray[100]}; }`}
+  ${props => props.$hasPinnedLayers && `.Element-IconBox:first-of-type svg { color: ${props.theme.color.blueGray}; }`}
 `
 const Title = styled.span`
   flex: 1;

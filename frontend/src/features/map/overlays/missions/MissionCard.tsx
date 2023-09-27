@@ -3,7 +3,6 @@ import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../../constants/constants'
 import { editMissionInLocalStore } from '../../../../domain/use_cases/missions/editMissionInLocalStore'
 import { clearSelectedMissionOnMap } from '../../../../domain/use_cases/missions/selectMissionOnMap'
 import { MissionSourceTag } from '../../../../ui/MissionSourceTag'
@@ -107,7 +106,7 @@ export function MissionCard({ feature, selected = false }: { feature: any; selec
 const Wrapper = styled.div`
   padding: 10px;
   box-shadow: 0px 3px 6px #70778540;
-  background-color: ${COLORS.white};
+  background-color: ${p => p.theme.color.white};
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -121,10 +120,10 @@ const Header = styled.div`
   justify-content: space-between;
 `
 const MultipleControlUnits = styled.div`
-  color: ${COLORS.slateGray};
+  color: ${p => p.theme.color.slateGray};
 `
 const NoContact = styled.div`
-  color: ${COLORS.slateGray};
+  color: ${p => p.theme.color.slateGray};
   font-weight: 400;
   font-style: italic;
 `
@@ -137,7 +136,7 @@ const CloseButton = styled(IconButton)<{ $isVisible: boolean }>`
 
 const Details = styled.div`
   > div {
-    color: ${COLORS.slateGray};
+    color: ${p => p.theme.color.slateGray};
     white-space: nowrap;
   }
 `
@@ -145,7 +144,7 @@ const Details = styled.div`
 const Title = styled.div`
   white-space: nowrap;
   font: normal normal bold 13px/18px Marianne;
-  color: ${COLORS.gunMetal};
+  color: ${p => p.theme.color.gunMetal};
 `
 
 const EditButton = styled(Button)`

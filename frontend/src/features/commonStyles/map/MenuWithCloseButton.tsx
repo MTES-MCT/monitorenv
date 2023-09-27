@@ -46,8 +46,8 @@ const ButtonOnMap = styled(IconButton)<{
   ${p =>
     p.$isActive &&
     `
-    background-color: ${p.theme.color.blueGray['100']};
-    border: 1px solid ${p.theme.color.blueGray['100']};
+    background-color: ${p.theme.color.blueGray};
+    border: 1px solid ${p.theme.color.blueGray};
     color: ${p.theme.color.white};
   `}
 `

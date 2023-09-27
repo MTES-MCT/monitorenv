@@ -105,7 +105,7 @@ const StyledResponsiveNav = styled(ResponsiveNav)`
     align-items: center;
 
     &.rs-nav-item-active {
-      background-color: ${p => p.theme.color.blueGray[25]};
+      background-color: ${p => p.theme.color.blueGray25};
       color: ${p => p.theme.color.gunMetal};
       font-weight: 500;
       border-radius: 0px;
@@ -126,7 +126,7 @@ const StyledResponsiveNav = styled(ResponsiveNav)`
     }
     &:hover {
       border-radius: 0px !important;
-      background-color: ${p => p.theme.color.blueYonder[25]};
+      background-color: ${p => p.theme.color.blueYonder25};
     }
     &:first-child {
       > svg {
@@ -149,10 +149,10 @@ const StyledResponsiveNav = styled(ResponsiveNav)`
         flex-direction: row;
         align-items: center;
         &:hover {
-          background-color: ${p => p.theme.color.blueYonder[25]};
+          background-color: ${p => p.theme.color.blueYonder25};
         }
         &.rs-dropdown-item-active {
-          background-color: ${p => p.theme.color.blueGray[25]};
+          background-color: ${p => p.theme.color.blueGray25};
           color: ${p => p.theme.color.gunMetal};
         }
       }

@@ -4,8 +4,7 @@ import { Dropdown } from 'rsuite'
 import styled from 'styled-components'
 
 import { ActionCard } from './ActionCard'
-import { COLORS } from '../../../constants/constants'
-import { ActionTypeEnum, EnvAction } from '../../../domain/entities/missions'
+import { ActionTypeEnum, type EnvAction } from '../../../domain/entities/missions'
 import { ReactComponent as ControlSVG } from '../../../uiMonitor/icons/Control.svg'
 import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/Note_libre.svg'
 import { ReactComponent as SurveillanceSVG } from '../../../uiMonitor/icons/Observation.svg'
@@ -128,7 +127,7 @@ const FormWrapper = styled.div`
   padding-left: 32px;
   padding-top: 32px;
   padding-right: 48px;
-  color: ${COLORS.slateGray};
+  color: ${p => p.theme.color.slateGray};
 `
 const TitleWrapper = styled.div`
   margin-bottom: 30px;
@@ -136,7 +135,7 @@ const TitleWrapper = styled.div`
 const Title = styled.h2`
   font-size: 16px;
   line-height: 22px;
-  color: ${COLORS.charcoal};
+  color: ${p => p.theme.color.charcoal};
   display: inline-block;
   margin-right: 16px;
 `

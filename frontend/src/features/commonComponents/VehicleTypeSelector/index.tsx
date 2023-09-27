@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { Select, useNewWindow } from '@mtes-mct/monitor-ui'
-import { MutableRefObject, useRef } from 'react'
+import { type MutableRefObject, useRef } from 'react'
 import styled from 'styled-components'
 
 import { vehicleTypeLabels } from '../../../domain/entities/vehicleType'

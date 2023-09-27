@@ -8,9 +8,7 @@ export function getReportType(reportType: string) {
     return (
       <StyledTypeContainer>
         <StyledBullet
-          color={
-            reportType === ReportingTypeEnum.INFRACTION_SUSPICION ? THEME.color.maximumRed : THEME.color.blueGray[100]
-          }
+          color={reportType === ReportingTypeEnum.INFRACTION_SUSPICION ? THEME.color.maximumRed : THEME.color.blueGray}
         />
         {ReportingTypeLabels[reportType]}
       </StyledTypeContainer>

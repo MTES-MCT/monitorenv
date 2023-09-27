@@ -1,4 +1,4 @@
-import { FAKE_API_PUT_RESPONSE, FAKE_MAPBOX_RESPONSE } from './contants'
+import { FAKE_API_PUT_RESPONSE, FAKE_MAPBOX_RESPONSE } from './constants'
 
 context('Reporting', () => {
   beforeEach(() => {

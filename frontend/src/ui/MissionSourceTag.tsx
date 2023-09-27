@@ -1,7 +1,6 @@
 import { Tag } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { COLORS } from '../constants/constants'
 import { MissionSourceEnum, missionSourceEnum } from '../domain/entities/missions'
 
 import type { CSSProperties } from 'react'
@@ -31,5 +30,6 @@ const SourceTag = styled(Tag)<{
 }>`
   align-self: end;
   color: ${p => p.theme.color.white};
-  background-color: ${p => (p.source === missionSourceEnum.MONITORENV.value ? COLORS.mediumSeaGreen : COLORS.blueGray)};
+  background-color: ${p =>
+    p.source === missionSourceEnum.MONITORENV.value ? p.theme.color.mediumSeaGreen : p.theme.color.blueGray};
 `

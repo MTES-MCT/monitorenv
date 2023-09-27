@@ -161,7 +161,9 @@ const Row = styled.div`
   }
 `
 
-const ZoneWrapper = styled.div<{ isLight?: boolean }>`
+const ZoneWrapper = styled.div<{
+  isLight: boolean | undefined
+}>`
   background-color: ${p => (p.isLight ? p.theme.color.white : p.theme.color.gainsboro)};
   display: flex;
   flex-grow: 1;

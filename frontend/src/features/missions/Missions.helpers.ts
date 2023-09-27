@@ -3,14 +3,14 @@ import { v4 as uuidv4 } from 'uuid'
 
 import {
   ActionTypeEnum,
-  NewEnvAction,
+  type NewEnvAction,
   FormalNoticeEnum,
   MissionSourceEnum,
-  Mission,
-  NewMission,
+  type Mission,
+  type NewMission,
   InfractionTypeEnum,
-  EnvAction,
-  EnvActionSurveillance
+  type EnvAction,
+  type EnvActionSurveillance
 } from '../../domain/entities/missions'
 
 import type { LegacyControlUnit } from '../../domain/entities/legacyControlUnit'

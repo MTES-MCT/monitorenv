@@ -3,7 +3,6 @@ import { useField } from 'formik'
 import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
-import { COLORS } from '../../../../constants/constants'
 import { ActionTypeEnum, actionTypeLabels } from '../../../../domain/entities/missions'
 import { ReactComponent as DeleteSVG } from '../../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as NoteSVG } from '../../../../uiMonitor/icons/Note_libre.svg'
@@ -48,18 +47,18 @@ const Title = styled.h2`
   font-size: 16px;
   line-height: 22px;
   display: inline-block;
-  color: ${COLORS.charcoal};
+  color: ${p => p.theme.color.charcoal};
 `
 
 const NoteIcon = styled(NoteSVG)`
-  color: ${COLORS.gunMetal};
+  color: ${p => p.theme.color.gunMetal};
   margin-right: 8px;
   margin-top: 2px;
   width: 18px;
 `
 
 const DeleteIcon = styled(DeleteSVG)`
-  color: ${COLORS.maximumRed};
+  color: ${p => p.theme.color.maximumRed};
 `
 
 const IconButtonRight = styled(IconButton)`

@@ -187,13 +187,13 @@ const StyledCopyButton = styled(IconButton)`
   padding: 0px;
   .Element-IconBox {
     :hover {
-      color: ${p => p.theme.color.blueYonder[100]};
+      color: ${p => p.theme.color.blueYonder};
     }
   }
 `
 
 const StyledTooltip = styled(Tooltip)`
-  background-color: ${p => p.theme.color.blueYonder[100]};
+  background-color: ${p => p.theme.color.blueYonder};
   height: 32px;
   padding: 2px 16px;
   line-height: 2;
@@ -204,7 +204,7 @@ const StyledTooltip = styled(Tooltip)`
   }
 
   &.rs-tooltip.placement-left:after {
-    border-left-color: ${p => p.theme.color.blueYonder[100]};
+    border-left-color: ${p => p.theme.color.blueYonder};
   }
   &.greenTooltip.rs-tooltip.placement-left:after {
     border-left-color: ${p => p.theme.color.mediumSeaGreen};

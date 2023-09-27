@@ -42,7 +42,7 @@ export function AMPLayerGroup({ groupName, layers, showedAmpLayerIds }) {
           <Tag accent={Accent.PRIMARY}>{layers?.length}</Tag>
           <IconButton
             accent={Accent.TERTIARY}
-            color={ampZonesAreShowed ? THEME.color.blueGray[100] : THEME.color.slateGray}
+            color={ampZonesAreShowed ? THEME.color.blueGray : THEME.color.slateGray}
             data-cy={ampZonesAreShowed ? 'amp-my-zones-zone-hide' : 'amp-my-zones-zone-show'}
             Icon={Icon.Display}
             iconSize={20}

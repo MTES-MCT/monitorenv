@@ -1,7 +1,7 @@
 import * as Yup from 'yup'
 
 import { ThemeSchema } from './Theme'
-import { ActionTypeEnum, EnvActionSurveillance } from '../../../../domain/entities/missions'
+import { ActionTypeEnum, type EnvActionSurveillance } from '../../../../domain/entities/missions'
 import { REACT_APP_CYPRESS_TEST } from '../../../../env'
 
 const shouldUseAlternateValidationInTestEnvironment = process.env.NODE_ENV === 'development' || REACT_APP_CYPRESS_TEST

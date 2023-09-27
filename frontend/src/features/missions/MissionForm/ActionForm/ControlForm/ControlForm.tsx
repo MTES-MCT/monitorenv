@@ -13,7 +13,6 @@ import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { InfractionsForm } from './InfractionsForm'
-import { COLORS } from '../../../../../constants/constants'
 import { TargetTypeEnum, TargetTypeLabels } from '../../../../../domain/entities/targetType'
 import { VehicleTypeEnum } from '../../../../../domain/entities/vehicleType'
 import { ReactComponent as ControlIconSVG } from '../../../../../uiMonitor/icons/Control.svg'
@@ -218,11 +217,11 @@ const Title = styled.h2`
   font-size: 16px;
   line-height: 22px;
   display: inline-block;
-  color: ${COLORS.charcoal};
+  color: ${p => p.theme.color.charcoal};
 `
 
 const Separator = styled.hr`
-  border-color: ${COLORS.slateGray};
+  border-color: ${p => p.theme.color.slateGray};
 `
 
 const ActionSummary = styled(Form.Group)`
@@ -238,7 +237,7 @@ const ActionFieldWrapper = styled.div`
 `
 
 const ControlIcon = styled(ControlIconSVG)`
-  color: ${COLORS.gunMetal};
+  color: ${p => p.theme.color.gunMetal};
   margin-right: 8px;
   margin-top: 2px;
   width: 24px;
@@ -249,7 +248,7 @@ const SubTitle = styled.div`
   display: inline-block;
 `
 const DeleteIcon = styled(DeleteSVG)`
-  color: ${COLORS.maximumRed};
+  color: ${p => p.theme.color.maximumRed};
 `
 
 const IconButtonRight = styled(IconButton)`

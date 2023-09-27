@@ -1,6 +1,5 @@
+import { THEME } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
-
-import { COLORS } from '../../constants/constants'
 
 const reqSvgs = require.context('../icons', true, /\.svg$/)
 
@@ -24,13 +23,13 @@ function Template({ background, color }) {
 export const NoBackground = Template.bind({})
 export const WithBackground = Template.bind({})
 WithBackground.args = {
-  background: COLORS.charcoal,
-  color: 'white'
+  background: THEME.color.charcoal,
+  color: THEME.color.white
 }
 
 const Img = styled.img`
-  background: ${({ $background }) => $background || COLORS.white};
-  color: ${({ color }) => color || COLORS.charcoal};
+  background: ${p => p.$background || p.theme.color.white};
+  color: ${p => p.color || p.theme.color.charcoal};
   width: 50px;
   margin: 3px;
 `

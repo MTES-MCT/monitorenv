@@ -126,7 +126,7 @@ export const ReportTypeMultiRadio = styled(MultiRadio)`
     content: ' ●';
   }
   > div > div > div:last-child label::after {
-    color: ${({ theme }) => theme.color.blueGray[100]};
+    color: ${({ theme }) => theme.color.blueGray};
     content: ' ●';
   }
 `

@@ -90,6 +90,6 @@ const ListItem = styled.li`
   line-height: 1.9em;
 
   :hover {
-    background: ${p => p.theme.color.blueYonder[25]};
+    background: ${p => p.theme.color.blueYonder25};
   }
 `

@@ -1,4 +1,4 @@
-import { Button, Coordinates, CoordinatesInput } from '@mtes-mct/monitor-ui'
+import { Button, type Coordinates, CoordinatesInput } from '@mtes-mct/monitor-ui'
 import Feature from 'ol/Feature'
 import GeoJSON from 'ol/format/GeoJSON'
 import Point from 'ol/geom/Point'

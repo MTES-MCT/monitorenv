@@ -1,8 +1,6 @@
-import { MutableRefObject, useRef } from 'react'
-import { SelectPicker as RSuiteSelectPicker, SelectPickerProps } from 'rsuite'
+import { type MutableRefObject, useRef } from 'react'
+import { SelectPicker as RSuiteSelectPicker, type SelectPickerProps } from 'rsuite'
 import styled from 'styled-components'
-
-import { COLORS } from '../../constants/constants'
 
 type CustomSelectPickerProps<T> = SelectPickerProps<T> & { dataCy?: string | undefined }
 
@@ -79,11 +77,11 @@ const Wrapper = styled.div`
     min-width: 100px;
     width: calc(100% - 16px);
     border-radius: 0;
-    background: ${COLORS.white};
-    border: 1px solid ${COLORS.lightGray};
+    background: ${p => p.theme.color.white};
+    border: 1px solid ${p => p.theme.color.lightGray};
   }
   .rs-picker-menu .rs-picker-search-bar .rs-picker-search-bar-search-icon {
-    color: ${COLORS.lightGray};
+    color: ${p => p.theme.color.lightGray};
     width: 11px;
     top: 13px;
   }

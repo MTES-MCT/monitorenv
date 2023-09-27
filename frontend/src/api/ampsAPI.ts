@@ -1,11 +1,10 @@
-import { EntityState, createEntityAdapter } from '@reduxjs/toolkit'
+import { type EntityState, createEntityAdapter, type Middleware } from '@reduxjs/toolkit'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { boundingExtent } from 'ol/extent'
 
 import { setToast } from '../domain/shared_slices/Global'
 
 import type { AMP, AMPFromAPI } from '../domain/entities/AMPs'
-import type { Middleware } from '@reduxjs/toolkit'
 import type { Coordinate } from 'ol/coordinate'
 
 const AMPAdapter = createEntityAdapter<AMP>()

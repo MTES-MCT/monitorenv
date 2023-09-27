@@ -1,6 +1,6 @@
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { MutableRefObject, useEffect, useRef } from 'react'
+import { type MutableRefObject, useEffect, useRef } from 'react'
 
 import { missionZoneStyle } from './missions.style'
 import { Layers } from '../../../../domain/entities/layers/constants'

@@ -2,8 +2,6 @@ import { useState } from 'react'
 import { Checkbox, CheckboxGroup } from 'rsuite'
 import styled from 'styled-components'
 
-import { COLORS } from '../../constants/constants'
-
 export default {
   title: 'RsuiteMonitor/Selecteurs'
 }
@@ -85,5 +83,5 @@ function TemplateCheckboxGrouped() {
 export const CheckboxGrouped = TemplateCheckboxGrouped.bind({})
 
 const GreyContainer = styled.div`
-  background: ${COLORS.lightGray};
+  background: ${p => p.theme.color.lightGray};
 `

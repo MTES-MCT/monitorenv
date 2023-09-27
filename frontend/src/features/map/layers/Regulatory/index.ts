@@ -2,7 +2,7 @@ import GeoJSON from 'ol/format/GeoJSON'
 import { Vector } from 'ol/layer'
 import VectorSource from 'ol/source/Vector'
 import { getArea } from 'ol/sphere'
-import { MutableRefObject, useEffect, useRef } from 'react'
+import { type MutableRefObject, useEffect, useRef } from 'react'
 
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { OPENLAYERS_PROJECTION } from '../../../../domain/entities/map/constants'
