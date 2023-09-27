@@ -7,4 +7,5 @@ enum class ControlUnitResourceType {
     FRIGATE,
     LAND_VEHICLE,
     SCHOOL_BOAT,
+    UNKNOWN,
 }

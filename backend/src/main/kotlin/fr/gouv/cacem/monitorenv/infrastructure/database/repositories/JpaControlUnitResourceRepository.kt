@@ -5,9 +5,9 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitResourceRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlUnitResourceModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBBaseRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBBaseRepository
 import fr.gouv.cacem.monitorenv.utils.requirePresent
 import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.stereotype.Repository
@@ -36,11 +36,7 @@ class JpaControlUnitResourceRepository(
         return try {
             val controlUnitModel =
                 requirePresent(dbControlUnitRepository.findById(controlUnitResource.controlUnitId))
-            val baseModel = if (controlUnitResource.baseId != null) {
-                requirePresent(dbPortRepository.findById(controlUnitResource.baseId))
-            } else {
-                null
-            }
+            val baseModel = requirePresent(dbPortRepository.findById(controlUnitResource.baseId))
             val controlUnitResourceModel = ControlUnitResourceModel.fromControlUnitResource(
                 controlUnitResource,
                 baseModel,

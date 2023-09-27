@@ -6,8 +6,7 @@ import { ControlUnit } from '../../../domain/entities/controlUnit'
 import type { FiltersState } from './types'
 
 export function displayBaseNamesFromControlUnit(controlUnit: ControlUnit.ControlUnit): string {
-  // TODO Make that non-nullable once all resources will have been attached to a base.
-  const baseNames = controlUnit.controlUnitResources.map(({ base }) => base?.name).filter(isDefined)
+  const baseNames = controlUnit.controlUnitResources.map(({ base }) => base.name).filter(isDefined)
 
   return baseNames.length > 0 ? uniq(baseNames).sort().join(', ') : 'Aucune base'
 }
@@ -15,11 +14,6 @@ export function displayBaseNamesFromControlUnit(controlUnit: ControlUnit.Control
 export function displayControlUnitResourcesFromControlUnit(controlUnit: ControlUnit.ControlUnit): string {
   const controlUnitResourceTypeCounts = controlUnit.controlUnitResources.reduce(
     (previousControlUnitResourceTypeCounts, controlUnitResource) => {
-      // TODO Make that non-nullable once all resources will have been attached to a type.
-      if (!controlUnitResource.type) {
-        return previousControlUnitResourceTypeCounts
-      }
-
       const controlUnitResourceTypeCount = previousControlUnitResourceTypeCounts[controlUnitResource.type]
       if (!controlUnitResourceTypeCount) {
         return {

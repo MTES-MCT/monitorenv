@@ -12,19 +12,19 @@ import org.springframework.transaction.annotation.Transactional
 class JpaBaseRepositoryITests : AbstractDBTests() {
     @Autowired
     private lateinit var jpaBaseRepository: JpaBaseRepository
- 
+
     @Test
     @Transactional
     fun `deleteById() should delete a base by its ID`() {
         val beforeBaseIds = jpaBaseRepository.findAll().map { requireNotNull(it.id) }.sorted()
 
-        assertThat(beforeBaseIds).isEqualTo(listOf(1, 2, 3))
+        assertThat(beforeBaseIds).isEqualTo(listOf(0, 1, 2, 3))
 
         jpaBaseRepository.deleteById(2)
 
         val afterBaseIds = jpaBaseRepository.findAll().map { requireNotNull(it.id) }.sorted()
 
-        assertThat(afterBaseIds).isEqualTo(listOf(1, 3))
+        assertThat(afterBaseIds).isEqualTo(listOf(0, 1, 3))
     }
 
     @Test
@@ -32,9 +32,9 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
     fun `findAll() should find all bases`() {
         val foundFullBases = jpaBaseRepository.findAll().sortedBy { requireNotNull(it.id) }
 
-        assertThat(foundFullBases).hasSize(3)
+        assertThat(foundFullBases).hasSize(4)
 
-        assertThat(foundFullBases[0]).isEqualTo(
+        assertThat(foundFullBases[1]).isEqualTo(
             FullBaseDTO(
                 id = 1,
                 controlUnitResourceIds = listOf(1, 2),
@@ -62,7 +62,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
             ),
         )
 
-        assertThat(foundFullBases[1]).isEqualTo(
+        assertThat(foundFullBases[2]).isEqualTo(
             FullBaseDTO(
                 id = 2,
                 controlUnitResourceIds = listOf(3, 4, 6),

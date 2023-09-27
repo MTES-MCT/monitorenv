@@ -16,8 +16,7 @@ export function Item({ controlUnitResource, onEdit }: ItemProps) {
         <RightHeader>
           <div>
             <Name>{controlUnitResource.name}</Name>
-            {/* TODO Make that non-undefinable once all resources will have been attached to a base. */}
-            <span>{controlUnitResource.base?.name}</span>
+            <span>{controlUnitResource.base.name}</span>
           </div>
           <div>
             <IconButton accent={Accent.TERTIARY} Icon={Icon.Edit} onClick={() => onEdit(controlUnitResource.id)} />

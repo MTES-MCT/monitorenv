@@ -12,18 +12,9 @@ import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.services.BaseService
 import fr.gouv.cacem.monitorenv.utils.mapOrElseEmpty
-import jakarta.persistence.Basic
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.OneToMany
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
@@ -166,7 +157,7 @@ data class MissionModel(
     }
 
     companion object {
-        fun fromMissionEntity(mission: MissionEntity, mapper: ObjectMapper): MissionModel {
+        fun fromMissionEntity(mission: MissionEntity, mapper: ObjectMapper, baseService: BaseService): MissionModel {
             val missionModel = MissionModel(
                 id = mission.id,
                 missionTypes = mission.missionTypes,
@@ -197,14 +188,17 @@ data class MissionModel(
                 )
                 missionModel.controlUnits?.add(controlUnitModel)
 
-                val resources = it.resources.map { resource ->
+                val missionControlUnitResourceModels = it.resources.map { controlUnitResource ->
+                    val baseModel = baseService.getBaseModelFromControlUnitResource(controlUnitResource)
+
                     MissionControlResourceModel.fromControlUnitResource(
-                        resource,
+                        controlUnitResource,
+                        baseModel,
                         missionModel,
                         controlUnitModel.unit
                     )
                 }
-                missionModel.controlResources?.addAll(resources)
+                missionModel.controlResources?.addAll(missionControlUnitResourceModels)
             }
 
             return missionModel

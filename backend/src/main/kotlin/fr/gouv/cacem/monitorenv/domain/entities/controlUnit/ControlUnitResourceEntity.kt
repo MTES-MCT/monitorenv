@@ -2,14 +2,12 @@ package fr.gouv.cacem.monitorenv.domain.entities.controlUnit
 
 data class ControlUnitResourceEntity(
     val id: Int? = null,
-    // TODO Make that non-nullable once all resources will have been attached to a base.
-    val baseId: Int? = null,
+    val baseId: Int,
     val controlUnitId: Int,
     val name: String,
     val note: String? = null,
     val photo: ByteArray? = byteArrayOf(),
-    // TODO Make that non-nullable once all resources will have been attached to a type.
-    val type: ControlUnitResourceType? = null,
+    val type: ControlUnitResourceType,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -33,12 +31,12 @@ data class ControlUnitResourceEntity(
 
     override fun hashCode(): Int {
         var result = id ?: 0
-        result = 31 * result + (baseId ?: 0)
+        result = 31 * result + baseId
         result = 31 * result + controlUnitId
         result = 31 * result + name.hashCode()
         result = 31 * result + (note?.hashCode() ?: 0)
         result = 31 * result + (photo?.contentHashCode() ?: 0)
-        result = 31 * result + (type?.hashCode() ?: 0)
+        result = 31 * result + type.hashCode()
 
         return result
     }

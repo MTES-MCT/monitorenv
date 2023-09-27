@@ -30,8 +30,7 @@ export namespace ControlUnit {
   }
 
   export interface ControlUnitResource {
-    // TODO Make that non-undefinable once all resources will have been attached to a base.
-    base: Base.BaseData | undefined
+    base: Base.BaseData
     baseId: number | undefined
     controlUnit: ControlUnitData
     controlUnitId: number
@@ -40,8 +39,7 @@ export namespace ControlUnit {
     note: string | undefined
     /** Base64 Data URI. */
     photo: string | undefined
-    // TODO Make that non-undefinable once all resources will have been attached to a type.
-    type: ControlUnitResourceType | undefined
+    type: ControlUnitResourceType
   }
 
   // ---------------------------------------------------------------------------
@@ -54,7 +52,8 @@ export namespace ControlUnit {
     BARGE = 'Barge',
     FRIGATE = 'Frégate',
     LAND_VEHICLE = 'Véhicule terrestre',
-    SCHOOL_BOAT = 'Bâtiment-École'
+    SCHOOL_BOAT = 'Bâtiment-École',
+    UNKNOWN = 'Type inconnu'
   }
 
   // ---------------------------------------------------------------------------

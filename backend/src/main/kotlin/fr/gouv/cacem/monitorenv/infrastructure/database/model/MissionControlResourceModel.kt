@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import jakarta.persistence.*
 
 @Entity
@@ -22,17 +23,18 @@ data class MissionControlResourceModel(
     companion object {
         fun fromControlUnitResource(
             controlUnitResource: ControlUnitResourceEntity,
+            baseModel: BaseModel,
             missionModel: MissionModel,
             controlUnitModel: ControlUnitModel
         ) = MissionControlResourceModel(
             ressource = ControlUnitResourceModel(
                 id = requireNotNull(controlUnitResource.id),
-                base = null,
+                base = baseModel,
                 controlUnit = controlUnitModel,
                 name = controlUnitResource.name,
-                note = null,
-                photo = byteArrayOf(),
-                type = null,
+                note = controlUnitResource.note,
+                photo = controlUnitResource.photo,
+                type = controlUnitResource.type.name,
             ),
             mission = missionModel,
         )
@@ -41,12 +43,12 @@ data class MissionControlResourceModel(
     fun toControlUnitResource(): ControlUnitResourceEntity {
         return ControlUnitResourceEntity(
             id = ressource.id,
-            baseId = null,
+            baseId = requireNotNull(ressource.base.id),
             controlUnitId = requireNotNull(ressource.controlUnit.id),
             name = ressource.name,
-            note = null,
+            note = ressource.note,
             photo = byteArrayOf(),
-            type = null,
+            type = ControlUnitResourceType.valueOf(ressource.type),
         )
     }
 }

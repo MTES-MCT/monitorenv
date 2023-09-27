@@ -33,7 +33,7 @@ context('Back Office > Base Form', () => {
     cy.intercept('PUT', `/api/v1/bases/3`, FAKE_API_PUT_RESPONSE).as('updateBase')
 
     cy.clickButton('Éditer cette base', {
-      withinSelector: 'tbody > tr:first-child'
+      withinSelector: 'tbody > tr:nth-child(2)'
     })
 
     cy.fill('Nom', 'Base 2')

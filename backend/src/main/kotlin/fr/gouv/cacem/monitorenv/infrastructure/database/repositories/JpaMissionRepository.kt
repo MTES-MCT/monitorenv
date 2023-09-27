@@ -7,6 +7,7 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.ControlResourceOrUnitNotFoundE
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.services.BaseService
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.data.domain.Pageable
@@ -16,6 +17,7 @@ import java.time.Instant
 
 @Repository
 class JpaMissionRepository(
+    private val baseService: BaseService,
     private val dbMissionRepository: IDBMissionRepository,
     private val mapper: ObjectMapper,
 ) : IMissionRepository {
@@ -51,7 +53,7 @@ class JpaMissionRepository(
     @Transactional
     override fun save(mission: MissionEntity): MissionEntity {
         return try {
-            val missionModel = MissionModel.fromMissionEntity(mission, mapper)
+            val missionModel = MissionModel.fromMissionEntity(mission, mapper, baseService)
             dbMissionRepository.save(missionModel).toMissionEntity(mapper)
         } catch (e: Exception) {
             when (e) {

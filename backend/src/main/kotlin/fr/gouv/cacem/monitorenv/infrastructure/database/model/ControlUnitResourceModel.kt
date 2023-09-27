@@ -20,8 +20,7 @@ data class ControlUnitResourceModel(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "base_id", nullable = false)
     @JsonBackReference
-    // TODO Make that non-nullable once all resources will have been attached to a base.
-    var base: BaseModel? = null,
+    var base: BaseModel,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "control_unit_id", nullable = false)
@@ -38,8 +37,7 @@ data class ControlUnitResourceModel(
     var photo: ByteArray? = byteArrayOf(),
 
     @Column(name = "type", nullable = false)
-    // TODO Make that non-nullable once all resources will have been attached to a type.
-    var type: String? = null,
+    var type: String,
 
     @Column(name = "created_at_utc", nullable = false, updatable = false)
     @CreationTimestamp
@@ -74,8 +72,7 @@ data class ControlUnitResourceModel(
     companion object {
         fun fromControlUnitResource(
             controlUnitResource: ControlUnitResourceEntity,
-            // TODO Make that non-nullable once all resources will have been attached to a base.
-            baseModel: BaseModel?,
+            baseModel: BaseModel,
             controlUnitModel: ControlUnitModel,
         ): ControlUnitResourceModel {
             return ControlUnitResourceModel(
@@ -85,19 +82,19 @@ data class ControlUnitResourceModel(
                 name = controlUnitResource.name,
                 note = controlUnitResource.note,
                 photo = controlUnitResource.photo,
-                type = controlUnitResource.type?.name,
+                type = controlUnitResource.type.name,
             )
         }
     }
 
     override fun hashCode(): Int {
         var result = id ?: 0
-        result = 31 * result + (base?.hashCode() ?: 0)
+        result = 31 * result + base.hashCode()
         result = 31 * result + controlUnit.hashCode()
         result = 31 * result + name.hashCode()
         result = 31 * result + (note?.hashCode() ?: 0)
         result = 31 * result + (photo?.contentHashCode() ?: 0)
-        result = 31 * result + (type?.hashCode() ?: 0)
+        result = 31 * result + type.hashCode()
         result = 31 * result + (createdAtUtc?.hashCode() ?: 0)
         result = 31 * result + (updatedAtUtc?.hashCode() ?: 0)
 
@@ -107,26 +104,26 @@ data class ControlUnitResourceModel(
     fun toControlUnitResource(): ControlUnitResourceEntity {
         return ControlUnitResourceEntity(
             id,
-            baseId = base?.id,
+            baseId = requireNotNull(base.id),
             controlUnitId = requireNotNull(controlUnit.id),
             name,
             note,
             photo,
-            type = type?.let { ControlUnitResourceType.valueOf(it) },
+            type = ControlUnitResourceType.valueOf(type),
         )
     }
 
     fun toFullControlUnitResource(): FullControlUnitResourceDTO {
         return FullControlUnitResourceDTO(
             id,
-            base = base?.toBase(),
-            baseId = base?.id,
+            base = requireNotNull(base).toBase(),
+            baseId = requireNotNull(base.id),
             controlUnit = controlUnit.toControlUnit(),
             controlUnitId = requireNotNull(controlUnit.id),
             name,
             note,
             photo,
-            type = type?.let { ControlUnitResourceType.valueOf(it) },
+            type = ControlUnitResourceType.valueOf(type),
         )
     }
 }

@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.*
 import fr.gouv.cacem.monitorenv.domain.exceptions.ControlResourceOrUnitNotFoundException
@@ -83,8 +84,10 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     resources = listOf(
                         ControlUnitResourceEntity(
                             id = 8,
+                            baseId = 0,
                             controlUnitId = 5,
                             name = "PAM Jeanne Barret",
+                            type = ControlUnitResourceType.BARGE,
                         )
                     ),
                 ),
@@ -145,8 +148,10 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     resources = listOf(
                         ControlUnitResourceEntity(
                             id = 8,
+                            baseId = 0,
                             controlUnitId = 5,
                             name = "PAM Jeanne Barret",
+                            type = ControlUnitResourceType.BARGE,
                         )
                     ),
                 ),
@@ -165,8 +170,20 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                         administration = "DDTM",
                         isArchived = false,
                         resources = listOf(
-                            ControlUnitResourceEntity(id = 8, controlUnitId = 5, name = "PAM Jeanne Barret"),
-                            ControlUnitResourceEntity(id = 5, controlUnitId = 5, name = "Voiture"),
+                            ControlUnitResourceEntity(
+                                id = 8,
+                                baseId = 0,
+                                controlUnitId = 5,
+                                name = "PAM Jeanne Barret",
+                                type = ControlUnitResourceType.BARGE,
+                            ),
+                            ControlUnitResourceEntity(
+                                id = 5,
+                                baseId = 0,
+                                controlUnitId = 5,
+                                name = "Voiture",
+                                type = ControlUnitResourceType.BARGE,
+                            ),
                         ),
                     ),
                 ),
@@ -206,8 +223,10 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     resources = listOf(
                         ControlUnitResourceEntity(
                             id = 123456,
+                            baseId = 0,
                             controlUnitId = 5,
                             name = "PAM Jeanne Barret",
+                            type = ControlUnitResourceType.BARGE,
                         )
                     ),
                 ),
@@ -490,9 +509,27 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     isArchived = false,
                     name = "DML 2A",
                     resources = listOf(
-                        ControlUnitResourceEntity(id = 3, controlUnitId = 3, name = "Semi-rigide 1"),
-                        ControlUnitResourceEntity(id = 4, controlUnitId = 3, name = "Semi-rigide 2"),
-                        ControlUnitResourceEntity(id = 5, controlUnitId = 3, name = "Voiture"),
+                        ControlUnitResourceEntity(
+                            id = 3,
+                            baseId = 2,
+                            controlUnitId = 3,
+                            name = "Semi-rigide 1",
+                            type = ControlUnitResourceType.BARGE,
+                        ),
+                        ControlUnitResourceEntity(
+                            id = 4,
+                            baseId = 2,
+                            controlUnitId = 3,
+                            name = "Semi-rigide 2",
+                            type = ControlUnitResourceType.BARGE,
+                        ),
+                        ControlUnitResourceEntity(
+                            id = 5,
+                            baseId = 3,
+                            controlUnitId = 3,
+                            name = "Voiture",
+                            type = ControlUnitResourceType.LAND_VEHICLE,
+                        ),
                     ),
                     contact = null,
                 ),

@@ -46,6 +46,20 @@ data class BaseModel(
                 name = base.name,
             )
         }
+
+        /**
+         * @param controlUnitResourceModels Return control unit resources relations when provided.
+         */
+        fun fromFullBase(
+            fullBase: FullBaseDTO,
+            controlUnitResourceModels: List<ControlUnitResourceModel>? = null,
+        ): BaseModel {
+            return BaseModel(
+                id = fullBase.id,
+                controlUnitResources = controlUnitResourceModels,
+                name = fullBase.name,
+            )
+        }
     }
 
     fun toBase(): BaseEntity {

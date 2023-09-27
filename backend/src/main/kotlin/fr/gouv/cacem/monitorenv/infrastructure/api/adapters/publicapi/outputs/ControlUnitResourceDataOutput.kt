@@ -5,13 +5,12 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceT
 
 data class ControlUnitResourceDataOutput(
     val id: Int,
-    val baseId: Int? = null,
+    val baseId: Int,
     val controlUnitId: Int,
     val name: String,
     val note: String? = null,
     val photo: ByteArray? = byteArrayOf(),
-    // TODO Make that non-nullable once all resources will have been attached to a type.
-    val type: ControlUnitResourceType? = null,
+    val type: ControlUnitResourceType,
 ) {
     companion object {
         fun fromControlUnitResource(controlUnitResource: ControlUnitResourceEntity): ControlUnitResourceDataOutput {
