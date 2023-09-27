@@ -17,6 +17,7 @@ class JpaControlUnitRepository(
     private val dbAdministrationRepository: IDBAdministrationRepository,
     private val dbControlUnitRepository: IDBControlUnitRepository,
 ) : IControlUnitRepository {
+    @Transactional
     override fun archiveById(controlUnitId: Int) {
         dbControlUnitRepository.archiveById(controlUnitId)
     }

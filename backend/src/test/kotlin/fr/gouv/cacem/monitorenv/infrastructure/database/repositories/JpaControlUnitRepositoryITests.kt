@@ -165,7 +165,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `save() should create and update a control unit`() {
+    fun `save() should create and update a control unit, deleteById() should delete a control unit`() {
         // ---------------------------------------------------------------------
         // Create
 
@@ -198,8 +198,12 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
         assertThat(updatedControlUnit).isEqualTo(nextControlUnit)
 
         // ---------------------------------------------------------------------
-        // Reset
+        // Delete
 
         jpaControlUnitRepository.deleteById(34)
+
+        val controlUnitIds = jpaControlUnitRepository.findAll().map { requireNotNull(it.id) }.sorted()
+
+        assertThat(controlUnitIds).doesNotContain(34)
     }
 }

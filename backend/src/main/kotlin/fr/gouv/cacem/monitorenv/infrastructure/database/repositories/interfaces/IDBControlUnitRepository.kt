@@ -13,11 +13,11 @@ interface IDBControlUnitRepository : CrudRepository<ControlUnitModel, Int> {
         value = """
         UPDATE control_units
         SET archived = TRUE
-        WHERE id = :id
+        WHERE id = :controlUnitId
         """,
         nativeQuery = true,
     )
-    fun archiveById(id: Int)
+    fun archiveById(controlUnitId: Int)
 
     @Query(
         value = """

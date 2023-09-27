@@ -17,7 +17,8 @@ export const CONTROL_UNIT_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.ControlUnit
   {
     accessorFn: row => row.administration.name,
     header: () => 'Administration',
-    id: 'administrationName'
+    id: 'administrationName',
+    size: 240
   },
   {
     accessorFn: row => row.name,

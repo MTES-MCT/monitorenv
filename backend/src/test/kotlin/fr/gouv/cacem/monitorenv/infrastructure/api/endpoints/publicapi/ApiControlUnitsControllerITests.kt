@@ -6,9 +6,7 @@ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnit
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitById
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnits
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitDataInput
 import org.hamcrest.Matchers
@@ -33,7 +31,13 @@ class ApiControlUnitsControllerITests {
     private lateinit var mockMvc: MockMvc
 
     @MockBean
+    private lateinit var archiveControlUnit: ArchiveControlUnit
+
+    @MockBean
     private lateinit var createOrUpdateControlUnit: CreateOrUpdateControlUnit
+
+    @MockBean
+    private lateinit var deleteControlUnit: DeleteControlUnit
 
     @MockBean
     private lateinit var getControlUnitById: GetControlUnitById

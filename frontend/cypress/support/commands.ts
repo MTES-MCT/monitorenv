@@ -1,5 +1,7 @@
 import { registerMonitorUiCustomCommands } from '@mtes-mct/monitor-ui/cypress'
 
+import { getTableRowByText } from './commands/getTableRowByText'
+
 registerMonitorUiCustomCommands()
 function unquote(str: string): string {
   return str.replace(/(^")|("$)/g, '')
@@ -29,3 +31,5 @@ Cypress.Commands.add(
 Cypress.Commands.add('cleanScreenshots', (fromNumber: number): void => {
   cy.exec(`cd cypress/e2e/__image_snapshots__/ && find . | grep -P "[${fromNumber}-7]\\.png" | xargs -i rm {}\n`)
 })
+
+Cypress.Commands.add('getTableRowByText', { prevSubject: 'optional' } as any, getTableRowByText)

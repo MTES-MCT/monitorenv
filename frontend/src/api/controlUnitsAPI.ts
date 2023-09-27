@@ -8,6 +8,14 @@ const GET_CONTROL_UNITS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la list
 
 export const controlUnitsAPI = monitorenvPublicApi.injectEndpoints({
   endpoints: builder => ({
+    archiveControlUnit: builder.mutation<void, number>({
+      invalidatesTags: () => [{ type: 'Administrations' }, { type: 'ControlUnits' }],
+      query: controlUnitId => ({
+        method: 'POST',
+        url: `/v2/control_units/${controlUnitId}/archive`
+      })
+    }),
+
     createControlUnit: builder.mutation<void, ControlUnit.NewControlUnitData>({
       invalidatesTags: () => [{ type: 'Administrations' }, { type: 'ControlUnits' }],
       query: newControlUnitData => ({
@@ -49,6 +57,7 @@ export const controlUnitsAPI = monitorenvPublicApi.injectEndpoints({
 })
 
 export const {
+  useArchiveControlUnitMutation,
   useCreateControlUnitMutation,
   useDeleteControlUnitMutation,
   useGetControlUnitQuery,

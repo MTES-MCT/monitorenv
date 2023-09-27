@@ -1,4 +1,4 @@
-import { FAKE_API_POST_RESPONSE, FAKE_API_PUT_RESPONSE } from '../constants'
+import { expectPathToBe } from '../utils'
 
 context('Back Office > Control Unit Form', () => {
   beforeEach(() => {
@@ -9,15 +9,18 @@ context('Back Office > Control Unit Form', () => {
     cy.wait('@getControlUnits')
   })
 
-  it('Should create a control unit', () => {
-    cy.intercept('POST', `/api/v2/control_units`, FAKE_API_POST_RESPONSE).as('createControlUnit')
+  it('Should create, edit, archive and delete a control unit', () => {
+    // -------------------------------------------------------------------------
+    // Create
+
+    cy.intercept('POST', `/api/v2/control_units`).as('createControlUnit')
 
     cy.clickButton('Nouvelle unité de contrôle')
 
+    expectPathToBe('/backoffice/control_units/new')
+
     cy.fill('Administration', 'AECP')
     cy.fill('Nom', 'Unité 1')
-    cy.fill("Zone d'intervention", 'Une zone.')
-    cy.fill('Modalités de contact avec l’unité', 'Des modalités.')
 
     cy.clickButton('Créer')
 
@@ -28,25 +31,24 @@ context('Back Office > Control Unit Form', () => {
 
       assert.deepEqual(interception.request.body, {
         administrationId: 1007,
-        areaNote: 'Une zone.',
+        areaNote: null,
         isArchived: false,
         name: 'Unité 1',
-        termsNote: 'Des modalités.'
+        termsNote: null
       })
     })
-  })
 
-  it('Should edit a control unit', () => {
-    cy.intercept('PUT', `/api/v2/control_units/12`, FAKE_API_PUT_RESPONSE).as('updateControlUnit')
+    // -------------------------------------------------------------------------
+    // Edit
 
-    cy.clickButton('Éditer cette unité de contrôle', {
-      withinSelector: 'tbody > tr:nth-child(7)'
-    })
+    cy.intercept('PUT', `/api/v2/control_units/34`).as('updateControlUnit')
+
+    cy.getTableRowById(34).clickButton('Éditer cette unité de contrôle')
+
+    expectPathToBe('/backoffice/control_units/34')
 
     cy.fill('Administration', 'AFB')
     cy.fill('Nom', 'Unité 2')
-    cy.fill("Zone d'intervention", 'Une autre zone.')
-    cy.fill('Modalités de contact avec l’unité', "D'autres modalités.")
 
     cy.clickButton('Mettre à jour')
 
@@ -57,12 +59,40 @@ context('Back Office > Control Unit Form', () => {
 
       assert.deepInclude(interception.request.body, {
         administrationId: 1002,
-        areaNote: 'Une autre zone.',
-        id: 12,
+        areaNote: null,
+        id: 34,
         isArchived: false,
         name: 'Unité 2',
-        termsNote: "D'autres modalités."
+        termsNote: null
       })
     })
+
+    // -------------------------------------------------------------------------
+    // Archive
+
+    cy.intercept('POST', `/api/v2/control_units/34/archive`).as('archiveControlUnit')
+
+    cy.getTableRowById(34).clickButton('Archiver cette unité de contrôle')
+    cy.clickButton('Confirmer')
+
+    cy.wait('@archiveControlUnit')
+
+    cy.getTableRowById(34).should('not.exist')
+    cy.clickButton('Unités archivées')
+    cy.getTableRowById(34).should('exist')
+
+    // -------------------------------------------------------------------------
+    // Delete
+
+    cy.intercept('DELETE', `/api/v2/control_units/34`).as('deleteControlUnit')
+
+    cy.getTableRowById(34).clickButton('Supprimer cette unité de contrôle')
+    cy.clickButton('Confirmer')
+
+    cy.wait('@deleteControlUnit')
+
+    cy.getTableRowById(34).should('not.exist')
+    cy.clickButton('Unités actives')
+    cy.getTableRowById(34).should('not.exist')
   })
 })
