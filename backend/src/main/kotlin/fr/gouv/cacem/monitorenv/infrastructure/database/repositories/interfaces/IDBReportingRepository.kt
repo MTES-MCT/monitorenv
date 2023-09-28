@@ -1,41 +1,41 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel
+import java.time.Instant
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
-import java.time.Instant
 
 interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     @Modifying(clearAutomatically = true)
     @Query(
-        value =
-        """
+            value =
+                    """
         UPDATE reportings
         SET is_archived = TRUE
         WHERE (created_at + make_interval(hours => validity_time)) < NOW() AND is_archived IS FALSE
     """,
-        nativeQuery = true,
+            nativeQuery = true,
     )
     fun archiveOutdatedReportings(): Int
 
     @Modifying(clearAutomatically = true)
     @Query(
-        value =
-        """
+            value =
+                    """
         UPDATE reportings
         SET is_archived = TRUE
         WHERE id in (:ids)
     """,
-        nativeQuery = true,
+            nativeQuery = true,
     )
     fun archiveReportings(ids: List<Int>)
 
     @Modifying(clearAutomatically = true)
     @Query(
-        value =
-        """
+            value =
+                    """
         UPDATE reportings
         SET
             mission_id =  :missionId,
@@ -43,37 +43,37 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
             detached_from_mission_at_utc = CASE WHEN id not in (:reportingIds) THEN NOW() ELSE CAST(null as timestamp ) END
         WHERE id in (:reportingIds) or mission_id = :missionId
         """,
-        nativeQuery = true,
+            nativeQuery = true,
     )
     fun attachReportingsToMission(reportingIds: List<Int>, missionId: Int)
 
     @Modifying(clearAutomatically = true)
     @Query(
-        value =
-        """
+            value =
+                    """
         UPDATE reportings
         SET is_deleted = TRUE
         WHERE id = :id
     """,
-        nativeQuery = true,
+            nativeQuery = true,
     )
     fun delete(id: Int)
 
     @Modifying(clearAutomatically = true)
     @Query(
-        value =
-        """
+            value =
+                    """
         UPDATE reportings
         SET is_deleted = TRUE
         WHERE id in (:ids)
     """,
-        nativeQuery = true,
+            nativeQuery = true,
     )
     fun deleteReportings(ids: List<Int>)
 
     @Query(
-        value =
-        """
+            value =
+                    """
         SELECT *
         FROM reportings
         WHERE is_deleted IS FALSE
@@ -97,21 +97,21 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         )
         ORDER BY reporting_id DESC
     """,
-        nativeQuery = true,
+            nativeQuery = true,
     )
     fun findAll(
-        pageable: Pageable,
-        reportingType: String?,
-        seaFronts: String?,
-        sourcesType: String?,
-        startedAfter: Instant,
-        startedBefore: Instant?,
-        status: String?,
+            pageable: Pageable,
+            reportingType: String?,
+            seaFronts: String?,
+            sourcesType: String?,
+            startedAfter: Instant,
+            startedBefore: Instant?,
+            status: String?,
     ): List<ReportingModel>
 
     @Query(
-        value =
-        """
+            value =
+                    """
         SELECT *
         FROM reportings
         WHERE control_unit_id = :controlUnitId
@@ -129,9 +129,9 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         FROM reportings
         WHERE mission_id = :missionId
         """,
-        nativeQuery = true,
+            nativeQuery = true,
     )
     fun findByMissionId(
-        missionId: Int,
+            missionId: Int,
     ): List<ReportingModel>
 }

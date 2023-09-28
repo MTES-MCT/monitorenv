@@ -1,0 +1,260 @@
+{
+  "mission": {
+    "id": 34,
+    "missionTypes": ["SEA"],
+    "controlUnits": [
+      {
+        "id": 16,
+        "administration": "Douane",
+        "isArchived": false,
+        "name": "BSN Ste Maxime",
+        "resources": [],
+        "contact": "01234567890"
+      },
+      {
+        "id": 17,
+        "administration": "Douane",
+        "isArchived": false,
+        "name": "DF 25 Libecciu",
+        "resources": [],
+        "contact": "M. Capitaine Flame"
+      },
+      {
+        "id": 18,
+        "administration": "Douane",
+        "isArchived": false,
+        "name": "DF 61 Port-de-Bouc",
+        "resources": [],
+        "contact": "Popeye 06789012345"
+      }
+    ],
+    "openBy": "STS",
+    "closedBy": "JAM",
+    "observationsCacem": "Surface different shoulder interview. Job together area probably. Of alone class capital determine machine always.",
+    "observationsCnsp": null,
+    "facade": "MEMN",
+    "geom": {
+      "type": "MultiPolygon",
+      "coordinates": [
+        [
+          [
+            [-0.63780295, 49.47775876],
+            [-0.62730058, 49.35133213],
+            [-0.40769229, 49.34599875],
+            [-0.22179846, 49.2940188],
+            [0.00683004, 49.33779656],
+            [0.07874359, 49.46756946],
+            [-0.22010001, 49.60456891],
+            [-0.54074987, 49.63043863],
+            [-0.63780295, 49.47775876]
+          ]
+        ]
+      ]
+    },
+    "startDateTimeUtc": "2023-11-09T12:42:50.055526Z",
+    "endDateTimeUtc": "2023-11-10T13:42:50.055526Z",
+    "envActions": [
+      {
+        "actionType": "SURVEILLANCE",
+        "id": "b8007c8a-5135-4bc3-816f-c69c7b75d807",
+        "actionStartDateTimeUtc": "2023-11-10T01:42:50.239358Z",
+        "actionEndDateTimeUtc": "2023-11-10T03:42:50.239358Z",
+        "geom": null,
+        "facade": null,
+        "department": null,
+        "themes": [
+          {
+            "theme": "Police des espèces protégées et de leurs habitats (faune et flore)",
+            "subThemes": ["Destruction, capture, arrachage", "Atteinte aux habitats d'espèces protégées"],
+            "protectedSpecies": ["FLORA", "BIRDS"]
+          },
+          {
+            "theme": "Police des mouillages",
+            "subThemes": ["Mouillage individuel", "ZMEL"],
+            "protectedSpecies": []
+          }
+        ],
+        "observations": "RAS",
+        "coverMissionZone": true
+      },
+      {
+        "id": "c52c6f20-e495-4b29-b3df-d7edfb67fdd7",
+        "actionStartDateTimeUtc": "2023-11-10T00:42:50.239358Z",
+        "actionEndDateTimeUtc": "2023-11-10T03:42:50.239358Z",
+        "geom": {
+          "type": "MultiPoint",
+          "coordinates": [[-0.48262439, 49.54216518]]
+        },
+        "facade": null,
+        "department": null,
+        "themes": [
+          {
+            "theme": "Police des mouillages",
+            "subThemes": ["Mouillage individuel", "ZMEL"],
+            "protectedSpecies": []
+          }
+        ],
+        "observations": "RAS",
+        "actionNumberOfControls": 1,
+        "actionTargetType": "VEHICLE",
+        "vehicleType": "VESSEL",
+        "infractions": [
+          {
+            "id": "5d5b7829-68cd-4436-8c0b-1cc8db7788a0",
+            "natinf": ["10038", "10231"],
+            "observations": "Pas d'observations",
+            "registrationNumber": "BALTIK",
+            "companyName": null,
+            "relevantCourt": "LOCAL_COURT",
+            "infractionType": "WITH_REPORT",
+            "formalNotice": "PENDING",
+            "toProcess": false,
+            "controlledPersonIdentity": "John Doe",
+            "vesselType": "COMMERCIAL",
+            "vesselSize": "FROM_24_TO_46m"
+          }
+        ],
+        "actionType": "CONTROL"
+      }
+    ],
+    "reportings": [
+      {
+        "id": 5,
+        "reportingId": 2300005,
+        "sourceType": "SEMAPHORE",
+        "semaphoreId": 36,
+        "controlUnitId": null,
+        "sourceName": null,
+        "displayedSource": "Sémaphore de Fécamp",
+        "targetType": "COMPANY",
+        "vehicleType": null,
+        "targetDetails": [
+          {
+            "mmsi": null,
+            "imo": null,
+            "externalReferenceNumber": null,
+            "vesselName": "Mr le gérant",
+            "operatorName": "Ma société",
+            "size": null
+          }
+        ],
+        "geom": {
+          "type": "MultiPoint",
+          "coordinates": [[-4.18759766, 47.1128127]]
+        },
+        "seaFront": "Guadeloupe",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        "reportType": "OBSERVATION",
+        "theme": null,
+        "subThemes": null,
+        "actionTaken": null,
+        "isControlRequired": true,
+        "isUnitAvailable": true,
+        "createdAt": "2023-09-25T15:17:32.847553Z",
+        "validityTime": 6,
+        "isArchived": false,
+        "openBy": null,
+        "attachedToMissionAtUtc": "2023-09-25T15:17:32.847553Z"
+      },
+      {
+        "id": 4,
+        "reportingId": 2300004,
+        "sourceType": "OTHER",
+        "semaphoreId": null,
+        "controlUnitId": null,
+        "sourceName": "MA SUPER SOCIETE",
+        "displayedSource": "MA SUPER SOCIETE",
+        "targetType": "INDIVIDUAL",
+        "vehicleType": null,
+        "targetDetails": [
+          {
+            "mmsi": null,
+            "imo": null,
+            "externalReferenceNumber": null,
+            "vesselName": null,
+            "operatorName": "Mr le dirigeant",
+            "size": null
+          }
+        ],
+        "geom": {
+          "type": "MultiPolygon",
+          "coordinates": [
+            [
+              [
+                [-2.81383107, 49.49805557],
+                [-2.63290938, 49.59886363],
+                [-2.80213877, 49.69953506],
+                [-2.91683355, 49.52263623],
+                [-2.81383107, 49.49805557]
+              ]
+            ]
+          ]
+        },
+        "seaFront": "MED",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ultrices risus ac arcu pellentesque, et tempor justo tempor. Pellentesque sem nisl, tempor id augue non, interdum sollicitudin felis.",
+        "reportType": "OBSERVATION",
+        "theme": "Pêche à pied",
+        "subThemes": ["Braconnage"],
+        "actionTaken": null,
+        "isControlRequired": true,
+        "isUnitAvailable": true,
+        "createdAt": "2023-09-25T13:17:32.847553Z",
+        "validityTime": 4,
+        "isArchived": false,
+        "openBy": null,
+        "attachedToMissionAtUtc": "2023-09-21T12:17:32.847553Z"
+      },
+      {
+        "id": 3,
+        "reportingId": 2300003,
+        "sourceType": "CONTROL_UNIT",
+        "semaphoreId": null,
+        "controlUnitId": 1,
+        "sourceName": null,
+        "displayedSource": "Cultures marines – DDTM 40",
+        "targetType": "VEHICLE",
+        "vehicleType": "VESSEL",
+        "targetDetails": [
+          {
+            "mmsi": "012314231345",
+            "imo": null,
+            "externalReferenceNumber": null,
+            "vesselName": "Vessel 3",
+            "operatorName": null,
+            "size": null
+          }
+        ],
+        "geom": {
+          "type": "MultiPolygon",
+          "coordinates": [
+            [
+              [
+                [-3.50463204, 48.93860679],
+                [-3.24829507, 48.95623935],
+                [-3.48444629, 48.99696455],
+                [-3.50463204, 48.93860679]
+              ]
+            ]
+          ]
+        },
+        "seaFront": "NAMO",
+        "description": "Description 3",
+        "reportType": "INFRACTION_SUSPICION",
+        "theme": "Police des mouillages",
+        "subThemes": ["ZMEL"],
+        "actionTaken": "ACTION TAKEN",
+        "isControlRequired": true,
+        "isUnitAvailable": true,
+        "createdAt": "2023-09-25T15:17:32.847553Z",
+        "validityTime": 1,
+        "isArchived": true,
+        "openBy": null,
+        "attachedToMissionAtUtc": "2023-06-02T11:17:32.847553Z"
+      }
+    ],
+    "missionSource": "MONITORENV",
+    "isClosed": false,
+    "hasMissionOrder": false,
+    "isUnderJdp": false
+  }
+}

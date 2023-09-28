@@ -7,7 +7,9 @@ import { isNewMission } from '../../../utils/isNewMission'
 import { sideWindowPaths } from '../../entities/sideWindow'
 import { multiMissionsActions } from '../../shared_slices/MultiMissions'
 
-export const addMission = () => async (dispatch, getState) => {
+import type { Reporting } from '../../entities/reporting'
+
+export const addMission = (attachedReporting?: Reporting) => async (dispatch, getState) => {
   const {
     missionState: { isFormDirty, missionState },
     multiMissions: { selectedMissions }
@@ -38,7 +40,10 @@ export const addMission = () => async (dispatch, getState) => {
       ? `new-${Number(maxNewMissionId?.mission?.id?.split('new-')[1]) + 1}`
       : 'new-1'
 
-  const missionsUpdated = [...missions, { isFormDirty: false, mission: missionFactory(undefined, id) }]
+  const missionsUpdated = [
+    ...missions,
+    { isFormDirty: false, mission: missionFactory(undefined, id, attachedReporting) }
+  ]
 
   await dispatch(multiMissionsActions.setSelectedMissions(missionsUpdated))
 

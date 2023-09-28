@@ -271,7 +271,7 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
   startDateTimeUtc: string
 }
 
-export type NewMission = Omit<Mission, 'controlUnits' | 'facade' | 'id' | 'missionSource'> & {
+export type NewMission = Omit<Mission, 'controlUnits' | 'facade' | 'id'> & {
   controlUnits: Array<Omit<LegacyControlUnit, 'administrationId' | 'id'>>
 }
 
