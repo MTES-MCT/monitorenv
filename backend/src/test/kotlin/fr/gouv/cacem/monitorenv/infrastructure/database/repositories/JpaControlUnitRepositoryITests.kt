@@ -44,6 +44,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                 id = 24,
                 administration = AdministrationEntity(
                     id = 3,
+                    isArchived = false,
                     name = "Marine Nationale"
                 ),
                 administrationId = 3,
@@ -63,6 +64,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                 id = 8,
                 administration = AdministrationEntity(
                     id = 1005,
+                    isArchived = false,
                     name = "DDTM"
                 ),
                 administrationId = 1005,
@@ -88,6 +90,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                 id = 1,
                 administration = AdministrationEntity(
                     id = 1005,
+                    isArchived = false,
                     name = "DDTM"
                 ),
                 administrationId = 1005,

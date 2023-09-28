@@ -10,7 +10,10 @@ export type BackOfficeAdministrationListState = {
 }
 
 const INITIAL_STATE: BackOfficeAdministrationListState = {
-  filtersState: {}
+  filtersState: {
+    isArchived: false,
+    query: undefined
+  }
 }
 
 const persistConfig = {

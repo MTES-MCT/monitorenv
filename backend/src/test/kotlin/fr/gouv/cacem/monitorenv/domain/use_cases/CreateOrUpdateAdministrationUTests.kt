@@ -20,6 +20,7 @@ class CreateOrUpdateAdministrationUTests {
     @Test
     fun `execute() should return save() result`() {
         val newAdministration = AdministrationEntity(
+            isArchived = false,
             name = "Administration Name"
         )
 

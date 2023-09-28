@@ -8,12 +8,28 @@ const GET_ADMINISTRATIONS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la li
 
 export const administrationsAPI = monitorenvPublicApi.injectEndpoints({
   endpoints: builder => ({
+    archiveAdministration: builder.mutation<void, number>({
+      invalidatesTags: () => [{ type: 'Administrations' }],
+      query: administrationId => ({
+        method: 'POST',
+        url: `/v1/administrations/${administrationId}/archive`
+      })
+    }),
+
     createAdministration: builder.mutation<void, Administration.NewAdministrationData>({
       invalidatesTags: () => [{ type: 'Administrations' }],
       query: newAdministrationData => ({
         body: newAdministrationData,
         method: 'POST',
         url: `/v1/administrations`
+      })
+    }),
+
+    deleteAdministration: builder.mutation<void, number>({
+      invalidatesTags: () => [{ type: 'Administrations' }],
+      query: administrationId => ({
+        method: 'DELETE',
+        url: `/v1/administrations/${administrationId}`
       })
     }),
 
@@ -41,7 +57,9 @@ export const administrationsAPI = monitorenvPublicApi.injectEndpoints({
 })
 
 export const {
+  useArchiveAdministrationMutation,
   useCreateAdministrationMutation,
+  useDeleteAdministrationMutation,
   useGetAdministrationQuery,
   useGetAdministrationsQuery,
   useUpdateAdministrationMutation

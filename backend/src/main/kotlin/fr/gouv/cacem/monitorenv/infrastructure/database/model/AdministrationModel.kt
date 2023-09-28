@@ -22,6 +22,9 @@ data class AdministrationModel(
     @JsonManagedReference
     var controlUnits: List<ControlUnitModel>? = mutableListOf(),
 
+    @Column(name = "is_archived")
+    var isArchived: Boolean,
+
     @Column(name = "name", nullable = false, unique = true)
     var name: String,
 
@@ -44,6 +47,7 @@ data class AdministrationModel(
             return AdministrationModel(
                 id = administration.id,
                 controlUnits = controlUnitModels,
+                isArchived = administration.isArchived,
                 name = administration.name,
             )
         }
@@ -52,6 +56,7 @@ data class AdministrationModel(
     fun toAdministration(): AdministrationEntity {
         return AdministrationEntity(
             id,
+            isArchived,
             name,
         )
     }
@@ -62,6 +67,7 @@ data class AdministrationModel(
             controlUnitIds = requireIds(controlUnits) { it.id },
             // TODO Remove `requireNotNullList()` once `controlUnits` is non-nullable.
             controlUnits = requireNotNullList(controlUnits).map { it.toControlUnit() },
+            isArchived,
             name,
         )
     }

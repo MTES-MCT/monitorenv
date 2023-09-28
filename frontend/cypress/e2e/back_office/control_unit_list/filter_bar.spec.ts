@@ -8,16 +8,17 @@ context('Back Office > Control Unit List > Filter Bar', () => {
   })
 
   it('Should show all control units by default', () => {
-    cy.get('tbody > tr').should('have.length', 33)
-    cy.get('tbody > tr:first-child > td:nth-child(3)').should('have.text', 'A636 Maïto')
-    cy.get('tbody > tr:last-child > td:nth-child(3)').should('have.text', 'SML 50')
+    cy.get('tbody > tr').should('have.length', 31)
+    cy.getTableRowByText('A636 Maïto').should('exist', 'A636 Maïto')
+    cy.getTableRowByText('A636 Maïto').should('exist', 'SML 50')
+    cy.getTableRowByText('BGC Ajaccio').should('not.exist')
   })
 
   it('Should find control units matching the search query', () => {
     cy.fill('Rechercher...', 'marine')
 
     cy.get('tbody > tr').should('have.length', 4)
-    cy.get('tbody > tr:first-child > td:nth-child(3)').should('have.text', 'A636 Maïto')
-    cy.get('tbody > tr:last-child > td:nth-child(3)').should('have.text', 'Natura 2000 Côte Bleue Marine')
+    cy.getTableRowByText('A636 Maïto').should('exist', 'A636 Maïto')
+    cy.getTableRowByText('SML 50').should('not.exist')
   })
 })

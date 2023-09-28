@@ -4,11 +4,13 @@ import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEnt
 
 data class CreateOrUpdateAdministrationDataInput(
     val id: Int? = null,
+    val isArchived: Boolean,
     val name: String,
 ) {
     fun toAdministration(): AdministrationEntity {
         return AdministrationEntity(
             id = this.id,
+            isArchived = this.isArchived,
             name = this.name,
         )
     }

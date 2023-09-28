@@ -14,7 +14,7 @@ export const deleteControlUnit = (): AppThunk<Promise<void>> => async (dispatch,
     }
   } catch (err) {
     logSoftError({
-      message: `An error happened while archiving a control unit (ID=${controlUnitId}").`,
+      message: `An error happened while deleting a control unit (ID=${controlUnitId}").`,
       originalError: err,
       userMessage: "Une erreur est survenue pendant la suppression de l'unité de contrôle."
     })

@@ -26,7 +26,7 @@ export const controlUnitsAPI = monitorenvPublicApi.injectEndpoints({
     }),
 
     deleteControlUnit: builder.mutation<void, number>({
-      invalidatesTags: () => [{ type: 'ControlUnits' }],
+      invalidatesTags: () => [{ type: 'Administrations' }, { type: 'ControlUnits' }],
       query: controlUnitId => ({
         method: 'DELETE',
         url: `/v2/control_units/${controlUnitId}`

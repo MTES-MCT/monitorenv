@@ -87,6 +87,7 @@ class ApiControlUnitsControllerITests {
             id = 1,
             administration = AdministrationEntity(
                 id = 0,
+                isArchived = false,
                 name = "Administration Name",
             ),
             administrationId = 0,
@@ -117,6 +118,7 @@ class ApiControlUnitsControllerITests {
                 id = 1,
                 administration = AdministrationEntity(
                     id = 0,
+                    isArchived = false,
                     name = "Administration Name",
                 ),
                 administrationId = 0,
@@ -134,6 +136,7 @@ class ApiControlUnitsControllerITests {
                 id = 2,
                 administration = AdministrationEntity(
                     id = 0,
+                    isArchived = false,
                     name = "Administration Name",
                 ),
                 administrationId = 0,

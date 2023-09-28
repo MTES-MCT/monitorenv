@@ -43,5 +43,6 @@ export const CONTROL_UNIT_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.ControlUnit
 ]
 
 export const INITIAL_ADMINISTRATION_FORM_VALUES: AdministrationFormValues = {
+  isArchived: false,
   name: undefined
 }

@@ -1,5 +1,3 @@
-import { FAKE_API_POST_RESPONSE, FAKE_API_PUT_RESPONSE } from '../constants'
-
 context('Back Office > Administration Form', () => {
   beforeEach(() => {
     cy.intercept('GET', `/api/v1/administrations`).as('getAdministrations')
@@ -9,8 +7,11 @@ context('Back Office > Administration Form', () => {
     cy.wait('@getAdministrations')
   })
 
-  it('Should create an administration', () => {
-    cy.intercept('POST', `/api/v1/administrations`, FAKE_API_POST_RESPONSE).as('createAdministration')
+  it('Should create, edit, archive and delete an administration', () => {
+    // -------------------------------------------------------------------------
+    // Create
+
+    cy.intercept('POST', `/api/v1/administrations`).as('createAdministration')
 
     cy.clickButton('Nouvelle administration')
 
@@ -24,17 +25,17 @@ context('Back Office > Administration Form', () => {
       }
 
       assert.deepEqual(interception.request.body, {
+        isArchived: false,
         name: 'Administration 1'
       })
     })
-  })
 
-  it('Should edit an administration', () => {
-    cy.intercept('PUT', `/api/v1/administrations/1005`, FAKE_API_PUT_RESPONSE).as('updateAdministration')
+    // -------------------------------------------------------------------------
+    // Edit
 
-    cy.clickButton('Éditer cette administration', {
-      withinSelector: 'tbody > tr:nth-child(10)'
-    })
+    cy.intercept('PUT', `/api/v1/administrations/2007`).as('updateAdministration')
+
+    cy.getTableRowById(2007).clickButton('Éditer cette administration')
 
     cy.fill('Nom', 'Administration 2')
 
@@ -46,9 +47,38 @@ context('Back Office > Administration Form', () => {
       }
 
       assert.deepInclude(interception.request.body, {
-        id: 1005,
+        id: 2007,
+        isArchived: false,
         name: 'Administration 2'
       })
     })
+
+    // -------------------------------------------------------------------------
+    // Archive
+
+    cy.intercept('POST', `/api/v1/administrations/2007/archive`).as('archiveAdministration')
+
+    cy.getTableRowById(2007).clickButton('Archiver cette administration')
+    cy.clickButton('Confirmer')
+
+    cy.wait('@archiveAdministration')
+
+    cy.getTableRowById(2007).should('not.exist')
+    cy.clickButton('Administrations archivées')
+    cy.getTableRowById(2007).should('exist')
+
+    // -------------------------------------------------------------------------
+    // Delete
+
+    cy.intercept('DELETE', `/api/v1/administrations/2007`).as('deleteAdministration')
+
+    cy.getTableRowById(2007).clickButton('Supprimer cette administration')
+    cy.clickButton('Confirmer')
+
+    cy.wait('@deleteAdministration')
+
+    cy.getTableRowById(2007).should('not.exist')
+    cy.clickButton('Administrations actives')
+    cy.getTableRowById(2007).should('not.exist')
   })
 })

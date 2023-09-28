@@ -14,6 +14,11 @@ import org.springframework.transaction.annotation.Transactional
 class JpaAdministrationRepository(
     private val dbAdministrationRepository: IDBAdministrationRepository,
 ) : IAdministrationRepository {
+    @Transactional
+    override fun archiveById(administrationId: Int) {
+        dbAdministrationRepository.archiveById(administrationId)
+    }
+
     override fun deleteById(administrationId: Int) {
         dbAdministrationRepository.deleteById(administrationId)
     }

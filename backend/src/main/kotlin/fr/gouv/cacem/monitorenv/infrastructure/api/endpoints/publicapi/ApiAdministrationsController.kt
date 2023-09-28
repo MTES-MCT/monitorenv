@@ -1,8 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
-import fr.gouv.cacem.monitorenv.domain.use_cases.administration.CreateOrUpdateAdministration
-import fr.gouv.cacem.monitorenv.domain.use_cases.administration.GetAdministrationById
-import fr.gouv.cacem.monitorenv.domain.use_cases.administration.GetAdministrations
+import fr.gouv.cacem.monitorenv.domain.use_cases.administration.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateAdministrationDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.AdministrationDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.FullAdministrationDataOutput
@@ -16,10 +14,22 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/v1/administrations")
 @Tag(name = "Administrations")
 class ApiAdministrationsController(
+    private val archiveAdministration: ArchiveAdministration,
     private val createOrUpdateAdministration: CreateOrUpdateAdministration,
+    private val deleteAdministration: DeleteAdministration,
     private val getAdministrations: GetAdministrations,
     private val getAdministrationById: GetAdministrationById,
 ) {
+    @PostMapping("/{administrationId}/archive")
+    @Operation(summary = "Archive an administration")
+    fun archive(
+        @PathParam("Administration ID")
+        @PathVariable(name = "administrationId")
+        administrationId: Int,
+    ) {
+        archiveAdministration.execute(administrationId)
+    }
+
     @PostMapping("", consumes = ["application/json"])
     @Operation(summary = "Create an administration")
     @ResponseStatus(HttpStatus.CREATED)
@@ -33,8 +43,18 @@ class ApiAdministrationsController(
         return AdministrationDataOutput.fromAdministration(createdAdministration)
     }
 
+    @DeleteMapping("/{administrationId}")
+    @Operation(summary = "Delete an administration")
+    fun delete(
+        @PathParam("Administration ID")
+        @PathVariable(name = "administrationId")
+        controlUnitId: Int,
+    ) {
+        deleteAdministration.execute(controlUnitId)
+    }
+
     @GetMapping("/{administrationId}")
-    @Operation(summary = "Get a administration by its ID")
+    @Operation(summary = "Get an administration by its ID")
     fun get(
         @PathParam("Administration ID")
         @PathVariable(name = "administrationId")
@@ -56,7 +76,7 @@ class ApiAdministrationsController(
     @PutMapping(value = ["/{administrationId}"], consumes = ["application/json"])
     @Operation(summary = "Update an administration")
     fun update(
-        @PathParam("Control unit administration ID")
+        @PathParam("Administration ID")
         @PathVariable(name = "administrationId")
         administrationId: Int,
         @RequestBody

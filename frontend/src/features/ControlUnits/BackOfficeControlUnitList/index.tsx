@@ -36,6 +36,7 @@ export function BackOfficeControlUnitList() {
       <Title>Administration des unités de contrôle</Title>
 
       <TabMenu />
+
       <FilterBar />
 
       <ActionGroup>

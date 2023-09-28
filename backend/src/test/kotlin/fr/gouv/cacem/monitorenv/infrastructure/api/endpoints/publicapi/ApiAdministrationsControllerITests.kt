@@ -5,9 +5,7 @@ import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.administration.CreateOrUpdateAdministration
-import fr.gouv.cacem.monitorenv.domain.use_cases.administration.GetAdministrationById
-import fr.gouv.cacem.monitorenv.domain.use_cases.administration.GetAdministrations
+import fr.gouv.cacem.monitorenv.domain.use_cases.administration.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateAdministrationDataInput
 import org.hamcrest.Matchers
@@ -32,7 +30,13 @@ class ApiAdministrationsControllerITests {
     private lateinit var mockMvc: MockMvc
 
     @MockBean
+    private lateinit var archiveAdministration: ArchiveAdministration
+
+    @MockBean
     private lateinit var createOrUpdateAdministration: CreateOrUpdateAdministration
+
+    @MockBean
+    private lateinit var deleteAdministration: DeleteAdministration
 
     @MockBean
     private lateinit var getAdministrationById: GetAdministrationById
@@ -47,10 +51,12 @@ class ApiAdministrationsControllerITests {
     fun `Should create an administration`() {
         val expectedCreatedAdministration = AdministrationEntity(
             id = 1,
+            isArchived = false,
             name = "Administration Name",
         )
 
         val newAdministrationData = CreateOrUpdateAdministrationDataInput(
+            isArchived = false,
             name = "Administration Name",
         )
         val requestBody = objectMapper.writeValueAsString(newAdministrationData)
@@ -72,6 +78,7 @@ class ApiAdministrationsControllerITests {
             id = 1,
             controlUnitIds = listOf(),
             controlUnits = listOf(),
+            isArchived = false,
             name = "Administration Name",
         )
 
@@ -92,6 +99,7 @@ class ApiAdministrationsControllerITests {
                 id = 1,
                 controlUnitIds = listOf(),
                 controlUnits = listOf(),
+                isArchived = false,
                 name = "Administration Name",
             ),
 
@@ -99,6 +107,7 @@ class ApiAdministrationsControllerITests {
                 id = 2,
                 controlUnitIds = listOf(),
                 controlUnits = listOf(),
+                isArchived = false,
                 name = "Administration Name 2",
             )
         )
@@ -116,11 +125,13 @@ class ApiAdministrationsControllerITests {
     fun `Should update an administration`() {
         val expectedUpdatedAdministration = AdministrationEntity(
             id = 1,
+            isArchived = false,
             name = "Updated Administration Name",
         )
 
         val nextAdministrationData = CreateOrUpdateAdministrationDataInput(
             id = 1,
+            isArchived = false,
             name = "Updated Administration Name",
         )
         val requestBody = objectMapper.writeValueAsString(nextAdministrationData)

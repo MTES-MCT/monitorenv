@@ -124,6 +124,7 @@ class CreateOrUpdateReportingUTests {
                 id = 1,
                 administration = AdministrationEntity(
                     id = 1,
+                    isArchived = false,
                     name = "administration 1",
                 ),
                 administrationId = 2,

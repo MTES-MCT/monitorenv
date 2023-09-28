@@ -5,6 +5,7 @@ export namespace Administration {
     controlUnitIds: number[]
     controlUnits: ControlUnit.ControlUnitData[]
     id: number
+    isArchived: boolean
     name: string
   }
 

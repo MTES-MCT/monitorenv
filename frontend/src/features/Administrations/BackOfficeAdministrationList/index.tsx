@@ -2,17 +2,24 @@ import { DataTable } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { ADMINISTRATION_TABLE_COLUMNS } from './constants'
 import { FilterBar } from './FilterBar'
-import { getFilters } from './utils'
+import { TabMenu } from './TabMenu'
+import { getAdministrationTableColumns, getFilters } from './utils'
 import { useGetAdministrationsQuery } from '../../../api/administrationsAPI'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { NavButton } from '../../../ui/NavButton'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/constants'
 
 export function BackOfficeAdministrationList() {
   const backOfficeAdministrationList = useAppSelector(store => store.backOfficeAdministrationList)
+  const dispatch = useAppDispatch()
   const { data: administrations } = useGetAdministrationsQuery()
+
+  const administrationTableColumns = useMemo(
+    () => getAdministrationTableColumns(dispatch, backOfficeAdministrationList.filtersState.isArchived),
+    [backOfficeAdministrationList.filtersState.isArchived, dispatch]
+  )
 
   const filteredAdministrations = useMemo(() => {
     if (!administrations) {
@@ -28,6 +35,8 @@ export function BackOfficeAdministrationList() {
     <>
       <Title>Administration des administrations</Title>
 
+      <TabMenu />
+
       <FilterBar />
 
       <ActionGroup>
@@ -37,7 +46,7 @@ export function BackOfficeAdministrationList() {
       </ActionGroup>
 
       <DataTable
-        columns={ADMINISTRATION_TABLE_COLUMNS}
+        columns={administrationTableColumns}
         data={filteredAdministrations}
         initialSorting={[{ desc: false, id: 'name' }]}
       />

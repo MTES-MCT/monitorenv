@@ -6,5 +6,6 @@ data class FullAdministrationDTO(
     val id: Int? = null,
     val controlUnitIds: List<Int>,
     val controlUnits: List<ControlUnitEntity>,
+    val isArchived: Boolean,
     val name: String,
 )

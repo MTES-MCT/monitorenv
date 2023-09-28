@@ -11,21 +11,19 @@ import org.springframework.transaction.annotation.Transactional
 class JpaAdministrationRepositoryITests : AbstractDBTests() {
     @Autowired
     private lateinit var jpaAdministrationRepository: JpaAdministrationRepository
- 
+
     @Test
     @Transactional
-    fun `deleteById() should delete an administration by its ID`() {
-        val beforeAdministrationIds = jpaAdministrationRepository.findAll().map { it.id }
+    fun `archiveById() should archive an administration by its ID`() {
+        val beforeFullAdministration = jpaAdministrationRepository.findById(2006)
 
-        assertThat(beforeAdministrationIds).hasSize(33)
-        assertThat(beforeAdministrationIds).contains(1)
+        assertThat(beforeFullAdministration.isArchived).isFalse()
 
-        jpaAdministrationRepository.deleteById(1)
+        jpaAdministrationRepository.archiveById(2006)
 
-        val afterAdministrationIds = jpaAdministrationRepository.findAll().map { it.id }
+        val afterFullAdministration = jpaAdministrationRepository.findById(2006)
 
-        assertThat(afterAdministrationIds).hasSize(32)
-        assertThat(afterAdministrationIds).doesNotContain(1)
+        assertThat(afterFullAdministration.isArchived).isTrue()
     }
 
     @Test
@@ -41,6 +39,7 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
                 id = 1007,
                 controlUnitIds = listOf(),
                 controlUnits = listOf(),
+                isArchived = false,
                 name = "AECP"
             )
         )
@@ -50,6 +49,7 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
                 id = 2004,
                 controlUnitIds = listOf(),
                 controlUnits = listOf(),
+                isArchived = false,
                 name = "Sécurité Civile"
             )
         )
@@ -82,6 +82,7 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
                         termsNote = null,
                     ),
                 ),
+                isArchived = false,
                 name = "Gendarmerie Nationale"
             )
         )
@@ -89,11 +90,12 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `save() should create and update an administration`() {
+    fun `save() should create and update an administration, deleteById() should delete an administration`() {
         // ---------------------------------------------------------------------
         // Create
 
         val newAdministration = AdministrationEntity(
+            isArchived = false,
             name = "Administration Name"
         )
 
@@ -106,6 +108,7 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
 
         val nextAdministration = AdministrationEntity(
             id = 2007,
+            isArchived = false,
             name = "Updated Administration Name"
         )
 
@@ -114,8 +117,12 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
         assertThat(updatedAdministration).isEqualTo(nextAdministration)
 
         // ---------------------------------------------------------------------
-        // Reset
+        // Delete
 
         jpaAdministrationRepository.deleteById(2007)
+
+        val administrationIds = jpaAdministrationRepository.findAll().map { requireNotNull(it.id) }.sorted()
+
+        assertThat(administrationIds).doesNotContain(2007)
     }
 }

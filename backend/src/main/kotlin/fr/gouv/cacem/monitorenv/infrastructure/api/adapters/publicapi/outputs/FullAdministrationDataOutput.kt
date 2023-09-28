@@ -7,6 +7,7 @@ data class FullAdministrationDataOutput(
     val id: Int,
     val controlUnitIds: List<Int>,
     val controlUnits: List<ControlUnitEntity>,
+    val isArchived: Boolean,
     val name: String,
 ) {
     companion object {
@@ -15,6 +16,7 @@ data class FullAdministrationDataOutput(
                 id = requireNotNull(fullAdministration.id),
                 controlUnits = fullAdministration.controlUnits,
                 controlUnitIds = fullAdministration.controlUnitIds,
+                isArchived = fullAdministration.isArchived,
                 name = fullAdministration.name,
             )
         }
