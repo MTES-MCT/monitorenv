@@ -9,14 +9,14 @@ export const SEVEN_DAYS_AGO = dayjs().subtract(7, 'days').toISOString()
 
 export enum MissionFiltersEnum {
   ADMINISTRATION_FILTER = 'selectedAdministrationNames',
-  PERIOD_FILTER = 'periodFilter',
-  SEA_FRONT_FILTER = 'seaFrontFilter',
-  SOURCE_FILTER = 'sourceFilter',
+  PERIOD_FILTER = 'selectedPeriodFilter',
+  SEA_FRONT_FILTER = 'selectedSeaFronts',
+  SOURCE_FILTER = 'selectedMissionSource',
   STARTED_AFTER_FILTER = 'startedAfter',
   STARTED_BEFORE_FILTER = 'startedBefore',
-  STATUS_FILTER = 'statusFilter',
-  THEME_FILTER = 'themeFilter',
-  TYPE_FILTER = 'typeFilter',
+  STATUS_FILTER = 'selectedStatuses',
+  THEME_FILTER = 'selectedThemes',
+  TYPE_FILTER = 'selectedMissionTypes',
   UNIT_FILTER = 'selectedControlUnitIds'
 }
 
@@ -60,6 +60,7 @@ const missionFiltersSlice = createSlice({
     resetMissionFilters() {
       return { ...initialState }
     },
+
     updateFilters(state, action) {
       return {
         ...state,

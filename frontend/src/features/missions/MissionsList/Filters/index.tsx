@@ -126,7 +126,10 @@ export function MissionsTableFilters() {
     )
   }
 
-  const onUpdateSimpleFilter = (nextSelectedValues: Array<number | string> | undefined, filterKey: string) => {
+  const onUpdateSimpleFilter = (
+    nextSelectedValues: string | number[] | string[] | undefined,
+    filterKey: MissionFiltersEnum
+  ) => {
     dispatch(updateFilters({ key: filterKey, value: nextSelectedValues }))
   }
 
