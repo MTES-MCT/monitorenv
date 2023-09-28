@@ -41,7 +41,10 @@ export const addMission = (attachedReporting?: Reporting) => async (dispatch, ge
       ? `new-${Number(maxNewMissionId?.mission?.id?.split('new-')[1]) + 1}`
       : 'new-1'
 
-  const missionsUpdated = [...missions, { isFormDirty: false, mission: missionFactory(undefined, id) }]
+  const missionsUpdated = [
+    ...missions,
+    { isFormDirty: false, mission: missionFactory(undefined, id, attachedReporting) }
+  ]
 
   await dispatch(multiMissionsActions.setSelectedMissions(missionsUpdated))
 
