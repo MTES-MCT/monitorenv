@@ -14,22 +14,6 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `deleteById() should delete a contact by its ID`() {
-        val beforeControlUnitContactIds = jpaControlUnitContactRepository.findAll().map { it.controlUnitContact.id }
-
-        assertThat(beforeControlUnitContactIds).hasSize(3)
-        assertThat(beforeControlUnitContactIds).contains(1)
-
-        jpaControlUnitContactRepository.deleteById(1)
-
-        val afterControlUnitContactIds = jpaControlUnitContactRepository.findAll().map { it.controlUnitContact.id }
-
-        assertThat(afterControlUnitContactIds).hasSize(2)
-        assertThat(afterControlUnitContactIds).doesNotContain(1)
-    }
-
-    @Test
-    @Transactional
     fun `findAll() should find all contacts`() {
         val foundFullControlUnitContacts =
             jpaControlUnitContactRepository.findAll().sortedBy { requireNotNull(it.controlUnitContact.id) }
@@ -105,7 +89,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `save() should create and update a contact`() {
+    fun `save() should create and update a contact, deleteById() should delete a contact`() {
         // ---------------------------------------------------------------------
         // Create
 
@@ -136,8 +120,13 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
         assertThat(updatedControlUnitContact).isEqualTo(nextControlUnitContact)
 
         // ---------------------------------------------------------------------
-        // Reset
+        // Delete
 
         jpaControlUnitContactRepository.deleteById(4)
+
+        val controlUnitContactIds =
+            jpaControlUnitContactRepository.findAll().map { requireNotNull(it.controlUnitContact.id) }.sorted()
+
+        assertThat(controlUnitContactIds).doesNotContain(4)
     }
 }

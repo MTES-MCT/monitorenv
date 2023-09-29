@@ -18,23 +18,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `deleteById() should delete a contact by its ID`() {
-        val beforeControlUnitResourceIds = jpaControlUnitResourceRepository.findAll().map { it.controlUnitResource.id }
-
-        assertThat(beforeControlUnitResourceIds).hasSize(12)
-        assertThat(beforeControlUnitResourceIds).contains(1)
-
-        jpaControlUnitResourceRepository.deleteById(1)
-
-        val afterControlUnitResourceIds = jpaControlUnitResourceRepository.findAll().map { it.controlUnitResource.id }
-
-        assertThat(afterControlUnitResourceIds).hasSize(11)
-        assertThat(afterControlUnitResourceIds).doesNotContain(1)
-    }
-
-    @Test
-    @Transactional
-    fun `findAll() should find all contacts`() {
+    fun `findAll() should find all resources`() {
         val foundFullControlUnitResources =
             jpaControlUnitResourceRepository.findAll().sortedBy { requireNotNull(it.controlUnitResource.id) }
 
@@ -95,7 +79,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `findById() should find a contact by its ID`() {
+    fun `findById() should find a resource by its ID`() {
         val foundFullControlUnitResource = jpaControlUnitResourceRepository.findById(1)
 
         assertThat(foundFullControlUnitResource).isEqualTo(
@@ -127,7 +111,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `save() should create and update a contact`() {
+    fun `save() should create and update a resource, deleteById() should delete a resource`() {
         // ---------------------------------------------------------------------
         // Create
 
@@ -162,8 +146,13 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
         assertThat(updatedControlUnitResource).isEqualTo(nextControlUnitResource)
 
         // ---------------------------------------------------------------------
-        // Reset
+        // Delete
 
         jpaControlUnitResourceRepository.deleteById(13)
+
+        val controlUnitResourceIds =
+            jpaControlUnitResourceRepository.findAll().map { requireNotNull(it.controlUnitResource.id) }.sorted()
+
+        assertThat(controlUnitResourceIds).doesNotContain(13)
     }
 }

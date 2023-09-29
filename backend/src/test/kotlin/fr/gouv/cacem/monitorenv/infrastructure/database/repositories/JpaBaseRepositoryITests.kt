@@ -15,20 +15,6 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `deleteById() should delete a base by its ID`() {
-        val beforeBaseIds = jpaBaseRepository.findAll().map { requireNotNull(it.base.id) }.sorted()
-
-        assertThat(beforeBaseIds).isEqualTo(listOf(0, 1, 2, 3))
-
-        jpaBaseRepository.deleteById(2)
-
-        val afterBaseIds = jpaBaseRepository.findAll().map { requireNotNull(it.base.id) }.sorted()
-
-        assertThat(afterBaseIds).isEqualTo(listOf(0, 1, 3))
-    }
-
-    @Test
-    @Transactional
     fun `findAll() should find all bases`() {
         val foundFullBases = jpaBaseRepository.findAll().sortedBy { requireNotNull(it.base.id) }
 
@@ -148,7 +134,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `save() should create and update a base`() {
+    fun `save() should create and update a base, deleteById() should delete a base`() {
         // ---------------------------------------------------------------------
         // Create
 
@@ -173,8 +159,12 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
         assertThat(updatedBase).isEqualTo(nextBase)
 
         // ---------------------------------------------------------------------
-        // Reset
+        // Delete
 
         jpaBaseRepository.deleteById(4)
+
+        val baseIds = jpaBaseRepository.findAll().map { requireNotNull(it.base.id) }.sorted()
+
+        assertThat(baseIds).doesNotContain(4)
     }
 }
