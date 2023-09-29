@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.base.dtos.FullBaseDTO
+import fr.gouv.cacem.monitorenv.utils.requireIds
 
 data class FullBaseDataOutput(
     val id: Int,
@@ -12,10 +13,10 @@ data class FullBaseDataOutput(
     companion object {
         fun fromFullBase(fullBase: FullBaseDTO): FullBaseDataOutput {
             return FullBaseDataOutput(
-                id = requireNotNull(fullBase.id),
-                controlUnitResourceIds = fullBase.controlUnitResourceIds,
+                id = requireNotNull(fullBase.base.id),
+                controlUnitResourceIds = requireIds(fullBase.controlUnitResources) { it.id },
                 controlUnitResources = fullBase.controlUnitResources,
-                name = fullBase.name,
+                name = fullBase.base.name,
             )
         }
     }

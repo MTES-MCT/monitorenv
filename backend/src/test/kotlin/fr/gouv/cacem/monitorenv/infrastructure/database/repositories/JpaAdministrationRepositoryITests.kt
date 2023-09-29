@@ -17,13 +17,13 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
     fun `archiveById() should archive an administration by its ID`() {
         val beforeFullAdministration = jpaAdministrationRepository.findById(2006)
 
-        assertThat(beforeFullAdministration.isArchived).isFalse()
+        assertThat(beforeFullAdministration.administration.isArchived).isFalse()
 
         jpaAdministrationRepository.archiveById(2006)
 
         val afterFullAdministration = jpaAdministrationRepository.findById(2006)
 
-        assertThat(afterFullAdministration.isArchived).isTrue()
+        assertThat(afterFullAdministration.administration.isArchived).isTrue()
     }
 
     @Test
@@ -36,21 +36,23 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
         // We check the second administration instead of the first here because the first one is named “-”
         assertThat(foundFullAdministrations[1]).isEqualTo(
             FullAdministrationDTO(
-                id = 1007,
-                controlUnitIds = listOf(),
+                administration = AdministrationEntity(
+                    id = 1007,
+                    isArchived = false,
+                    name = "AECP"
+                ),
                 controlUnits = listOf(),
-                isArchived = false,
-                name = "AECP"
             )
         )
 
         assertThat(foundFullAdministrations[32]).isEqualTo(
             FullAdministrationDTO(
-                id = 2004,
-                controlUnitIds = listOf(),
+                administration = AdministrationEntity(
+                    id = 2004,
+                    isArchived = false,
+                    name = "Sécurité Civile"
+                ),
                 controlUnits = listOf(),
-                isArchived = false,
-                name = "Sécurité Civile"
             )
         )
     }
@@ -62,8 +64,11 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
 
         assertThat(foundFullAdministration).isEqualTo(
             FullAdministrationDTO(
-                id = 6,
-                controlUnitIds = listOf(21, 22),
+                administration = AdministrationEntity(
+                    id = 6,
+                    isArchived = false,
+                    name = "Gendarmerie Nationale"
+                ),
                 controlUnits = listOf(
                     ControlUnitEntity(
                         id = 21,
@@ -82,8 +87,6 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
                         termsNote = null,
                     ),
                 ),
-                isArchived = false,
-                name = "Gendarmerie Nationale"
             )
         )
     }
@@ -121,7 +124,8 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
 
         jpaAdministrationRepository.deleteById(2007)
 
-        val administrationIds = jpaAdministrationRepository.findAll().map { requireNotNull(it.id) }.sorted()
+        val administrationIds =
+            jpaAdministrationRepository.findAll().map { requireNotNull(it.administration.id) }.sorted()
 
         assertThat(administrationIds).doesNotContain(2007)
     }

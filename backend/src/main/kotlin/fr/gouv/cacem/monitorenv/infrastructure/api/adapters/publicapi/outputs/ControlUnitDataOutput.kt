@@ -25,12 +25,12 @@ data class ControlUnitDataOutput(
 
         fun fromFullControlUnit(fullControlUnit: FullControlUnitDTO): ControlUnitDataOutput {
             return ControlUnitDataOutput(
-                id = requireNotNull(fullControlUnit.id),
-                areaNote = fullControlUnit.areaNote,
-                administrationId = fullControlUnit.administrationId,
-                isArchived = fullControlUnit.isArchived,
-                name = fullControlUnit.name,
-                termsNote = fullControlUnit.termsNote,
+                id = requireNotNull(fullControlUnit.controlUnit.id),
+                areaNote = fullControlUnit.controlUnit.areaNote,
+                administrationId = fullControlUnit.controlUnit.administrationId,
+                isArchived = fullControlUnit.controlUnit.isArchived,
+                name = fullControlUnit.controlUnit.name,
+                termsNote = fullControlUnit.controlUnit.termsNote,
             )
         }
     }

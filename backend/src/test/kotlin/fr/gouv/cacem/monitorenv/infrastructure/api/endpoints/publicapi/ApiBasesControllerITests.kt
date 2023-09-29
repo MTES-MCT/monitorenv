@@ -69,10 +69,11 @@ class ApiBasesControllerITests {
     @Test
     fun `Should get a base by its ID`() {
         val expectedFullBase = FullBaseDTO(
-            id = 1,
-            controlUnitResourceIds = listOf(),
+            base = BaseEntity(
+                id = 1,
+                name = "Base Name",
+            ),
             controlUnitResources = listOf(),
-            name = "Base Name",
         )
 
         val requestedId = 1
@@ -89,17 +90,19 @@ class ApiBasesControllerITests {
     fun `Should get all bases`() {
         val expectedFullBases = listOf(
             FullBaseDTO(
-                id = 1,
-                controlUnitResourceIds = listOf(),
+                base = BaseEntity(
+                    id = 1,
+                    name = "Base Name",
+                ),
                 controlUnitResources = listOf(),
-                name = "Base Name",
             ),
 
             FullBaseDTO(
-                id = 2,
-                controlUnitResourceIds = listOf(),
+                base = BaseEntity(
+                    id = 2,
+                    name = "Base Name 2",
+                ),
                 controlUnitResources = listOf(),
-                name = "Base Name 2",
             )
         )
 

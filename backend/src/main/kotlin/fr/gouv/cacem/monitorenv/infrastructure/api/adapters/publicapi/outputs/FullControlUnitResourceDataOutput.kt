@@ -19,15 +19,15 @@ data class FullControlUnitResourceDataOutput(
     companion object {
         fun fromFullControlUnitResource(fullControlUnitResource: FullControlUnitResourceDTO): FullControlUnitResourceDataOutput {
             return FullControlUnitResourceDataOutput(
-                id = requireNotNull(fullControlUnitResource.id),
+                id = requireNotNull(fullControlUnitResource.controlUnitResource.id),
                 base = fullControlUnitResource.base,
-                baseId = fullControlUnitResource.baseId,
+                baseId = fullControlUnitResource.controlUnitResource.baseId,
                 controlUnit = fullControlUnitResource.controlUnit,
-                controlUnitId = fullControlUnitResource.controlUnitId,
-                name = fullControlUnitResource.name,
-                note = fullControlUnitResource.note,
-                photo = fullControlUnitResource.photo,
-                type = fullControlUnitResource.type,
+                controlUnitId = fullControlUnitResource.controlUnitResource.controlUnitId,
+                name = fullControlUnitResource.controlUnitResource.name,
+                note = fullControlUnitResource.controlUnitResource.note,
+                photo = fullControlUnitResource.controlUnitResource.photo,
+                type = fullControlUnitResource.controlUnitResource.type,
             )
         }
     }

@@ -5,11 +5,10 @@ import com.fasterxml.jackson.annotation.JsonManagedReference
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
-import fr.gouv.cacem.monitorenv.utils.requireIds
 import jakarta.persistence.*
-import java.time.Instant
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
+import java.time.Instant
 
 @Entity
 @Table(name = "control_units")
@@ -54,7 +53,7 @@ data class ControlUnitModel(
 ) {
     companion object {
         /**
-         * @param controlUnitResourceModels Return control unit contacts relations when provided.
+         * @param controlUnitContactModels Return control unit contacts relations when provided.
          * @param controlUnitResourceModels Return control unit resources relations when provided.
          */
         fun fromControlUnit(
@@ -89,17 +88,10 @@ data class ControlUnitModel(
 
     fun toFullControlUnit(): FullControlUnitDTO {
         return FullControlUnitDTO(
-            id,
             administration = administration.toAdministration(),
-            administrationId = requireNotNull(administration.id),
-            areaNote,
-            controlUnitContactIds = requireIds(controlUnitContacts) { it.id },
+            controlUnit = toControlUnit(),
             controlUnitContacts = requireNotNull(controlUnitContacts).map { it.toControlUnitContact() },
-            controlUnitResourceIds = requireIds(controlUnitResources) { it.id },
             controlUnitResources = requireNotNull(controlUnitResources).map { it.toFullControlUnitResource() },
-            isArchived,
-            name,
-            termsNote,
         )
     }
 

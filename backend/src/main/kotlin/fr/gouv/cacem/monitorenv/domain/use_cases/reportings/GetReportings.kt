@@ -58,7 +58,7 @@ class GetReportings(
         return reports.map { reporting ->
             return@map Triple(
                 reporting,
-                fullControlUnits.find { it.id == reporting.controlUnitId },
+                fullControlUnits.find { it.controlUnit.id == reporting.controlUnitId },
                 semaphores.find { it.id == reporting.semaphoreId },
             )
         }

@@ -4,6 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEnt
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
+import fr.gouv.cacem.monitorenv.utils.requireIds
 
 data class FullControlUnitDataOutput(
     val id: Int,
@@ -22,17 +23,17 @@ data class FullControlUnitDataOutput(
     companion object {
         fun fromFullControlUnit(fullControlUnit: FullControlUnitDTO): FullControlUnitDataOutput {
             return FullControlUnitDataOutput(
-                id = requireNotNull(fullControlUnit.id),
-                areaNote = fullControlUnit.areaNote,
+                id = requireNotNull(fullControlUnit.controlUnit.id),
+                areaNote = fullControlUnit.controlUnit.areaNote,
                 administration = fullControlUnit.administration,
-                administrationId = fullControlUnit.administrationId,
-                controlUnitContactIds = fullControlUnit.controlUnitContactIds,
+                administrationId = fullControlUnit.controlUnit.administrationId,
+                controlUnitContactIds = requireIds(fullControlUnit.controlUnitContacts) { it.id },
                 controlUnitContacts = fullControlUnit.controlUnitContacts,
-                controlUnitResourceIds = fullControlUnit.controlUnitResourceIds,
+                controlUnitResourceIds = requireIds(fullControlUnit.controlUnitResources) { it.controlUnit.id },
                 controlUnitResources = fullControlUnit.controlUnitResources,
-                isArchived = fullControlUnit.isArchived,
-                name = fullControlUnit.name,
-                termsNote = fullControlUnit.termsNote,
+                isArchived = fullControlUnit.controlUnit.isArchived,
+                name = fullControlUnit.controlUnit.name,
+                termsNote = fullControlUnit.controlUnit.termsNote,
             )
         }
     }

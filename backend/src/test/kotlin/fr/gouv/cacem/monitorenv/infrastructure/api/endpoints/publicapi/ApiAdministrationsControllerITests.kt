@@ -75,11 +75,12 @@ class ApiAdministrationsControllerITests {
     @Test
     fun `Should get an administration by its ID`() {
         val expectedFullAdministration = FullAdministrationDTO(
-            id = 1,
-            controlUnitIds = listOf(),
+            administration = AdministrationEntity(
+                id = 1,
+                isArchived = false,
+                name = "Administration Name",
+            ),
             controlUnits = listOf(),
-            isArchived = false,
-            name = "Administration Name",
         )
 
         val requestedId = 1
@@ -96,19 +97,21 @@ class ApiAdministrationsControllerITests {
     fun `Should get all administrations`() {
         val expectedAFulldministrations = listOf(
             FullAdministrationDTO(
-                id = 1,
-                controlUnitIds = listOf(),
+                administration = AdministrationEntity(
+                    id = 1,
+                    isArchived = false,
+                    name = "Administration Name",
+                ),
                 controlUnits = listOf(),
-                isArchived = false,
-                name = "Administration Name",
             ),
 
             FullAdministrationDTO(
-                id = 2,
-                controlUnitIds = listOf(),
+                administration = AdministrationEntity(
+                    id = 2,
+                    isArchived = false,
+                    name = "Administration Name 2",
+                ),
                 controlUnits = listOf(),
-                isArchived = false,
-                name = "Administration Name 2",
             )
         )
 

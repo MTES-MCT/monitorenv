@@ -19,14 +19,14 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `deleteById() should delete a contact by its ID`() {
-        val beforeControlUnitResourceIds = jpaControlUnitResourceRepository.findAll().map { it.id }
+        val beforeControlUnitResourceIds = jpaControlUnitResourceRepository.findAll().map { it.controlUnitResource.id }
 
         assertThat(beforeControlUnitResourceIds).hasSize(12)
         assertThat(beforeControlUnitResourceIds).contains(1)
 
         jpaControlUnitResourceRepository.deleteById(1)
 
-        val afterControlUnitResourceIds = jpaControlUnitResourceRepository.findAll().map { it.id }
+        val afterControlUnitResourceIds = jpaControlUnitResourceRepository.findAll().map { it.controlUnitResource.id }
 
         assertThat(afterControlUnitResourceIds).hasSize(11)
         assertThat(afterControlUnitResourceIds).doesNotContain(1)
@@ -36,18 +36,16 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAll() should find all contacts`() {
         val foundFullControlUnitResources =
-            jpaControlUnitResourceRepository.findAll().sortedBy { requireNotNull(it.id) }
+            jpaControlUnitResourceRepository.findAll().sortedBy { requireNotNull(it.controlUnitResource.id) }
 
         assertThat(foundFullControlUnitResources).hasSize(12)
 
         assertThat(foundFullControlUnitResources[0]).isEqualTo(
             FullControlUnitResourceDTO(
-                id = 1,
                 base = BaseEntity(
                     id = 1,
                     name = "Marseille"
                 ),
-                baseId = 1,
                 controlUnit = ControlUnitEntity(
                     id = 1,
                     administrationId = 1005,
@@ -56,22 +54,24 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     name = "Cultures marines – DDTM 40",
                     termsNote = null
                 ),
-                controlUnitId = 1,
-                name = "Semi-rigide 1",
-                note = null,
-                photo = null,
-                type = ControlUnitResourceType.BARGE,
+                controlUnitResource = ControlUnitResourceEntity(
+                    id = 1,
+                    baseId = 1,
+                    controlUnitId = 1,
+                    name = "Semi-rigide 1",
+                    note = null,
+                    photo = null,
+                    type = ControlUnitResourceType.BARGE,
+                ),
             )
         )
 
         assertThat(foundFullControlUnitResources[11]).isEqualTo(
             FullControlUnitResourceDTO(
-                id = 12,
                 base = BaseEntity(
                     id = 3,
                     name = "Dunkerque"
                 ),
-                baseId = 3,
                 controlUnit = ControlUnitEntity(
                     id = 19,
                     administrationId = 1008,
@@ -80,11 +80,15 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     name = "DREAL Pays-de-La-Loire",
                     termsNote = null
                 ),
-                controlUnitId = 19,
-                name = "ARIOLA",
-                note = null,
-                photo = null,
-                type = ControlUnitResourceType.FRIGATE,
+                controlUnitResource = ControlUnitResourceEntity(
+                    id = 12,
+                    baseId = 3,
+                    controlUnitId = 19,
+                    name = "ARIOLA",
+                    note = null,
+                    photo = null,
+                    type = ControlUnitResourceType.FRIGATE,
+                ),
             )
         )
     }
@@ -96,12 +100,10 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
 
         assertThat(foundFullControlUnitResource).isEqualTo(
             FullControlUnitResourceDTO(
-                id = 1,
                 base = BaseEntity(
                     id = 1,
                     name = "Marseille"
                 ),
-                baseId = 1,
                 controlUnit = ControlUnitEntity(
                     id = 1,
                     administrationId = 1005,
@@ -110,11 +112,15 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     name = "Cultures marines – DDTM 40",
                     termsNote = null
                 ),
-                controlUnitId = 1,
-                name = "Semi-rigide 1",
-                note = null,
-                photo = null,
-                type = ControlUnitResourceType.BARGE,
+                controlUnitResource = ControlUnitResourceEntity(
+                    id = 1,
+                    baseId = 1,
+                    controlUnitId = 1,
+                    name = "Semi-rigide 1",
+                    note = null,
+                    photo = null,
+                    type = ControlUnitResourceType.BARGE,
+                ),
             )
         )
     }

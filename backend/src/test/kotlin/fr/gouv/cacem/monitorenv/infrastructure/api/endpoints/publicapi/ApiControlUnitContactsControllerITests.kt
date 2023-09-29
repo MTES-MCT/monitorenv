@@ -80,7 +80,6 @@ class ApiControlUnitContactsControllerITests {
     @Test
     fun `Should get a contact by its ID`() {
         val expectedFullControlUnitContact = FullControlUnitContactDTO(
-            id = 1,
             controlUnit = ControlUnitEntity(
                 id = 0,
                 administrationId = 0,
@@ -89,11 +88,14 @@ class ApiControlUnitContactsControllerITests {
                 name = "Unit Name",
                 termsNote = null,
             ),
-            controlUnitId = 0,
-            email = null,
-            name = "Contact Name",
-            note = null,
-            phone = null,
+            controlUnitContact = ControlUnitContactEntity(
+                id = 1,
+                controlUnitId = 0,
+                email = null,
+                name = "Contact Name",
+                note = null,
+                phone = null,
+            )
         )
 
         val requestedId = 1
@@ -110,7 +112,6 @@ class ApiControlUnitContactsControllerITests {
     fun `Should get all contacts`() {
         val expectedFullControlUnitContacts = listOf(
             FullControlUnitContactDTO(
-                id = 1,
                 controlUnit = ControlUnitEntity(
                     id = 0,
                     administrationId = 0,
@@ -119,15 +120,17 @@ class ApiControlUnitContactsControllerITests {
                     name = "Unit Name",
                     termsNote = null,
                 ),
-                controlUnitId = 0,
-                email = null,
-                name = "Contact Name",
-                note = null,
-                phone = null,
+                controlUnitContact = ControlUnitContactEntity(
+                    id = 1,
+                    controlUnitId = 0,
+                    email = null,
+                    name = "Contact Name",
+                    note = null,
+                    phone = null,
+                ),
             ),
 
             FullControlUnitContactDTO(
-                id = 2,
                 controlUnit = ControlUnitEntity(
                     id = 0,
                     administrationId = 0,
@@ -136,11 +139,14 @@ class ApiControlUnitContactsControllerITests {
                     name = "Unit Name",
                     termsNote = null,
                 ),
-                controlUnitId = 0,
-                email = null,
-                name = "Contact Name 2",
-                note = null,
-                phone = null,
+                controlUnitContact = ControlUnitContactEntity(
+                    id = 2,
+                    controlUnitId = 0,
+                    email = null,
+                    name = "Contact Name 2",
+                    note = null,
+                    phone = null,
+                ),
             )
         )
 

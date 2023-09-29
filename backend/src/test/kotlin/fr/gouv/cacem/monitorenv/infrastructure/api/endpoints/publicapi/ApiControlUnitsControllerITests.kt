@@ -84,21 +84,21 @@ class ApiControlUnitsControllerITests {
     @Test
     fun `Should get a control unit by its ID`() {
         val expectedFullControlUnit = FullControlUnitDTO(
-            id = 1,
             administration = AdministrationEntity(
                 id = 0,
                 isArchived = false,
                 name = "Administration Name",
             ),
-            administrationId = 0,
-            areaNote = null,
-            controlUnitContactIds = listOf(),
+            controlUnit = ControlUnitEntity(
+                id = 1,
+                administrationId = 0,
+                areaNote = null,
+                isArchived = false,
+                name = "Unit Name",
+                termsNote = null,
+            ),
             controlUnitContacts = listOf(),
-            controlUnitResourceIds = listOf(),
             controlUnitResources = listOf(),
-            isArchived = false,
-            name = "Unit Name",
-            termsNote = null,
         )
 
         val requestedId = 1
@@ -115,39 +115,39 @@ class ApiControlUnitsControllerITests {
     fun `Should get all control units`() {
         val expectedControlUnits = listOf(
             FullControlUnitDTO(
-                id = 1,
                 administration = AdministrationEntity(
                     id = 0,
                     isArchived = false,
                     name = "Administration Name",
                 ),
-                administrationId = 0,
-                areaNote = null,
-                controlUnitContactIds = listOf(),
+                controlUnit = ControlUnitEntity(
+                    id = 1,
+                    administrationId = 0,
+                    areaNote = null,
+                    isArchived = false,
+                    name = "Unit Name",
+                    termsNote = null,
+                ),
                 controlUnitContacts = listOf(),
-                controlUnitResourceIds = listOf(),
                 controlUnitResources = listOf(),
-                isArchived = false,
-                name = "Unit Name",
-                termsNote = null,
             ),
 
             FullControlUnitDTO(
-                id = 2,
                 administration = AdministrationEntity(
                     id = 0,
                     isArchived = false,
                     name = "Administration Name",
                 ),
-                administrationId = 0,
-                areaNote = null,
-                controlUnitContactIds = listOf(),
+                controlUnit = ControlUnitEntity(
+                    id = 2,
+                    administrationId = 0,
+                    areaNote = null,
+                    isArchived = false,
+                    name = "Unit Name 2",
+                    termsNote = null,
+                ),
                 controlUnitContacts = listOf(),
-                controlUnitResourceIds = listOf(),
                 controlUnitResources = listOf(),
-                isArchived = false,
-                name = "Unit Name 2",
-                termsNote = null,
             )
         )
 

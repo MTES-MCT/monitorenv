@@ -115,15 +115,9 @@ data class ControlUnitResourceModel(
 
     fun toFullControlUnitResource(): FullControlUnitResourceDTO {
         return FullControlUnitResourceDTO(
-            id,
-            base = requireNotNull(base).toBase(),
-            baseId = requireNotNull(base.id),
+            base = base.toBase(),
             controlUnit = controlUnit.toControlUnit(),
-            controlUnitId = requireNotNull(controlUnit.id),
-            name,
-            note,
-            photo,
-            type = ControlUnitResourceType.valueOf(type),
+            controlUnitResource = toControlUnitResource(),
         )
     }
 }

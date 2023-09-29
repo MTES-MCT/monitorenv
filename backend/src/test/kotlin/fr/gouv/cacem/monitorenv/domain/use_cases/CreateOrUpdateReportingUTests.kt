@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
@@ -121,19 +122,19 @@ class CreateOrUpdateReportingUTests {
             )
         val fullControlUnit =
             FullControlUnitDTO(
-                id = 1,
                 administration = AdministrationEntity(
                     id = 1,
                     isArchived = false,
                     name = "administration 1",
                 ),
-                administrationId = 2,
-                controlUnitContactIds = listOf(),
+                controlUnit = ControlUnitEntity(
+                    id = 1,
+                    administrationId = 2,
+                    isArchived = false,
+                    name = "control unit 1",
+                ),
                 controlUnitContacts = listOf(),
-                controlUnitResourceIds = listOf(),
                 controlUnitResources = listOf(),
-                isArchived = false,
-                name = "control unit 1",
             )
 
         given(createOrUpdateReportingRepositoty.save(reportingWithSemaphore))

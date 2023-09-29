@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitContactDTO
 import jakarta.persistence.*
-import java.time.Instant
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
+import java.time.Instant
 
 @Entity
 @Table(name = "control_unit_contacts")
@@ -70,13 +70,8 @@ data class ControlUnitContactModel(
 
     fun toFullControlUnitContact(): FullControlUnitContactDTO {
         return FullControlUnitContactDTO(
-            id,
             controlUnit = controlUnit.toControlUnit(),
-            controlUnitId = requireNotNull(controlUnit.id),
-            email,
-            name,
-            note,
-            phone,
+            controlUnitContact = toControlUnitContact(),
         )
     }
 }

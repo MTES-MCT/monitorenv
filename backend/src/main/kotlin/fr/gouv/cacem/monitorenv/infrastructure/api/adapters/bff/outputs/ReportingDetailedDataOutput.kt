@@ -1,11 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.*
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import org.locationtech.jts.geom.Geometry
@@ -53,7 +49,8 @@ data class ReportingDetailedDataOutput(
                 displayedSource =
                 when (reporting.sourceType) {
                     SourceTypeEnum.SEMAPHORE -> semaphore?.unit ?: semaphore?.name
-                    SourceTypeEnum.CONTROL_UNIT -> fullControlUnit?.name
+                    // TODO This is really strange : `fullControlUnit?.controlUnit` can't be null and I have to add another `?`...
+                    SourceTypeEnum.CONTROL_UNIT -> fullControlUnit?.controlUnit?.name
                     SourceTypeEnum.OTHER -> reporting.sourceName
                     else -> ""
                 },

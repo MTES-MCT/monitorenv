@@ -3,7 +3,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
-import fr.gouv.cacem.monitorenv.utils.requireIds
 import fr.gouv.cacem.monitorenv.utils.requireNotNullList
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
@@ -63,12 +62,8 @@ data class AdministrationModel(
 
     fun toFullAdministration(): FullAdministrationDTO {
         return FullAdministrationDTO(
-            id,
-            controlUnitIds = requireIds(controlUnits) { it.id },
-            // TODO Remove `requireNotNullList()` once `controlUnits` is non-nullable.
+            administration = toAdministration(),
             controlUnits = requireNotNullList(controlUnits).map { it.toControlUnit() },
-            isArchived,
-            name,
         )
     }
 }

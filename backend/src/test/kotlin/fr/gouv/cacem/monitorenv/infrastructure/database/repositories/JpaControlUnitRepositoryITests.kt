@@ -1,11 +1,10 @@
-// TODO There is a hash issue here, we can't compare the full objects at once.
-
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
 import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
@@ -23,13 +22,13 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
     fun `archiveById() should archive a control unit by its ID`() {
         val beforeFullControlUnit = jpaControlUnitRepository.findById(1)
 
-        assertThat(beforeFullControlUnit.isArchived).isFalse()
+        assertThat(beforeFullControlUnit.controlUnit.isArchived).isFalse()
 
         jpaControlUnitRepository.archiveById(1)
 
         val afterFullControlUnit = jpaControlUnitRepository.findById(1)
 
-        assertThat(afterFullControlUnit.isArchived).isTrue()
+        assertThat(afterFullControlUnit.controlUnit.isArchived).isTrue()
     }
 
     @Test
@@ -41,41 +40,41 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
 
         assertThat(foundFullControlUnits[0]).isEqualTo(
             FullControlUnitDTO(
-                id = 24,
                 administration = AdministrationEntity(
                     id = 3,
                     isArchived = false,
                     name = "Marine Nationale"
                 ),
-                administrationId = 3,
-                controlUnitContactIds = listOf(),
+                controlUnit = ControlUnitEntity(
+                    id = 24,
+                    administrationId = 3,
+                    areaNote = null,
+                    isArchived = false,
+                    name = "A636 Maïto",
+                    termsNote = null,
+                ),
                 controlUnitContacts = listOf(),
-                controlUnitResourceIds = listOf(),
                 controlUnitResources = listOf(),
-                areaNote = null,
-                isArchived = false,
-                name = "A636 Maïto",
-                termsNote = null,
             )
         )
 
         assertThat(foundFullControlUnits[32]).isEqualTo(
             FullControlUnitDTO(
-                id = 8,
                 administration = AdministrationEntity(
                     id = 1005,
                     isArchived = false,
                     name = "DDTM"
                 ),
-                administrationId = 1005,
-                controlUnitContactIds = listOf(),
+                controlUnit = ControlUnitEntity(
+                    id = 8,
+                    administrationId = 1005,
+                    areaNote = null,
+                    isArchived = false,
+                    name = "SML 50",
+                    termsNote = null,
+                ),
                 controlUnitContacts = listOf(),
-                controlUnitResourceIds = listOf(),
                 controlUnitResources = listOf(),
-                areaNote = null,
-                isArchived = false,
-                name = "SML 50",
-                termsNote = null,
             )
         )
     }
@@ -87,14 +86,19 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
 
         assertThat(foundFullControlUnit).isEqualTo(
             FullControlUnitDTO(
-                id = 1,
                 administration = AdministrationEntity(
                     id = 1005,
                     isArchived = false,
                     name = "DDTM"
                 ),
-                administrationId = 1005,
-                controlUnitContactIds = listOf(1, 2),
+                controlUnit = ControlUnitEntity(
+                    id = 1,
+                    administrationId = 1005,
+                    areaNote = null,
+                    isArchived = false,
+                    name = "Cultures marines – DDTM 40",
+                    termsNote = null,
+                ),
                 controlUnitContacts = listOf(
                     ControlUnitContactEntity(
                         id = 1,
@@ -113,15 +117,12 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                         phone = null
                     )
                 ),
-                controlUnitResourceIds = listOf(1, 2),
                 controlUnitResources = listOf(
                     FullControlUnitResourceDTO(
-                        id = 1,
                         base = BaseEntity(
                             id = 1,
                             name = "Marseille",
                         ),
-                        baseId = 1,
                         controlUnit = ControlUnitEntity(
                             id = 1,
                             administrationId = 1005,
@@ -130,19 +131,21 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             name = "Cultures marines – DDTM 40",
                             termsNote = null,
                         ),
-                        controlUnitId = 1,
-                        name = "Semi-rigide 1",
-                        note = null,
-                        photo = null,
-                        type = ControlUnitResourceType.BARGE,
+                        controlUnitResource = ControlUnitResourceEntity(
+                            id = 1,
+                            baseId = 1,
+                            controlUnitId = 1,
+                            name = "Semi-rigide 1",
+                            note = null,
+                            photo = null,
+                            type = ControlUnitResourceType.BARGE,
+                        )
                     ),
                     FullControlUnitResourceDTO(
-                        id = 2,
                         base = BaseEntity(
                             id = 1,
                             name = "Marseille",
                         ),
-                        baseId = 1,
                         controlUnit = ControlUnitEntity(
                             id = 1,
                             administrationId = 1005,
@@ -151,17 +154,17 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             name = "Cultures marines – DDTM 40",
                             termsNote = null,
                         ),
-                        controlUnitId = 1,
-                        name = "Semi-rigide 2",
-                        note = null,
-                        photo = null,
-                        type = ControlUnitResourceType.BARGE,
+                        controlUnitResource = ControlUnitResourceEntity(
+                            id = 2,
+                            baseId = 1,
+                            controlUnitId = 1,
+                            name = "Semi-rigide 2",
+                            note = null,
+                            photo = null,
+                            type = ControlUnitResourceType.BARGE,
+                        ),
                     ),
                 ),
-                areaNote = null,
-                isArchived = false,
-                name = "Cultures marines – DDTM 40",
-                termsNote = null,
             )
         )
     }
@@ -205,7 +208,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
 
         jpaControlUnitRepository.deleteById(34)
 
-        val controlUnitIds = jpaControlUnitRepository.findAll().map { requireNotNull(it.id) }.sorted()
+        val controlUnitIds = jpaControlUnitRepository.findAll().map { requireNotNull(it.controlUnit.id) }.sorted()
 
         assertThat(controlUnitIds).doesNotContain(34)
     }

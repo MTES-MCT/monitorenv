@@ -3,7 +3,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.base.dtos.FullBaseDTO
-import fr.gouv.cacem.monitorenv.utils.requireIds
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
@@ -55,9 +54,9 @@ data class BaseModel(
             controlUnitResourceModels: List<ControlUnitResourceModel>? = null,
         ): BaseModel {
             return BaseModel(
-                id = fullBase.id,
+                id = fullBase.base.id,
                 controlUnitResources = controlUnitResourceModels,
-                name = fullBase.name,
+                name = fullBase.base.name,
             )
         }
     }
@@ -71,10 +70,8 @@ data class BaseModel(
 
     fun toFullBase(): FullBaseDTO {
         return FullBaseDTO(
-            id,
-            controlUnitResourceIds = requireIds(controlUnitResources) { it.id },
+            base = toBase(),
             controlUnitResources = requireNotNull(controlUnitResources).map { it.toControlUnitResource() },
-            name,
         )
     }
 }

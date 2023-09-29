@@ -84,12 +84,10 @@ class ApiControlUnitResourcesControllerITests {
     @Test
     fun `Should get a resource by its ID`() {
         val expectedFullControlUnitResource = FullControlUnitResourceDTO(
-            id = 1,
             base = BaseEntity(
                 id = 0,
                 name = "Control Unit Name",
             ),
-            baseId = 0,
             controlUnit = ControlUnitEntity(
                 id = 0,
                 administrationId = 0,
@@ -98,11 +96,15 @@ class ApiControlUnitResourcesControllerITests {
                 name = "Control Unit Name",
                 termsNote = null,
             ),
-            controlUnitId = 0,
-            name = "Resource Name",
-            note = null,
-            photo = null,
-            type = ControlUnitResourceType.BARGE,
+            controlUnitResource = ControlUnitResourceEntity(
+                id = 1,
+                baseId = 0,
+                controlUnitId = 0,
+                name = "Resource Name",
+                note = null,
+                photo = null,
+                type = ControlUnitResourceType.BARGE,
+            ),
         )
 
         val requestedId = 1
@@ -119,12 +121,10 @@ class ApiControlUnitResourcesControllerITests {
     fun `Should get all resources`() {
         val expectedFullControlUnitResources = listOf(
             FullControlUnitResourceDTO(
-                id = 1,
                 base = BaseEntity(
                     id = 0,
                     name = "Control Unit Name",
                 ),
-                baseId = 0,
                 controlUnit = ControlUnitEntity(
                     id = 0,
                     administrationId = 0,
@@ -133,20 +133,22 @@ class ApiControlUnitResourcesControllerITests {
                     name = "Unit Name",
                     termsNote = null,
                 ),
-                controlUnitId = 3,
-                name = "Resource Name",
-                note = null,
-                photo = null,
-                type = ControlUnitResourceType.BARGE,
+                controlUnitResource = ControlUnitResourceEntity(
+                    id = 1,
+                    baseId = 0,
+                    controlUnitId = 3,
+                    name = "Resource Name",
+                    note = null,
+                    photo = null,
+                    type = ControlUnitResourceType.BARGE,
+                ),
             ),
 
             FullControlUnitResourceDTO(
-                id = 2,
                 base = BaseEntity(
                     id = 0,
                     name = "Control Unit Name",
                 ),
-                baseId = 0,
                 controlUnit = ControlUnitEntity(
                     id = 0,
                     administrationId = 0,
@@ -155,11 +157,15 @@ class ApiControlUnitResourcesControllerITests {
                     name = "Unit Name",
                     termsNote = null,
                 ),
-                controlUnitId = 0,
-                name = "Resource Name 2",
-                note = null,
-                photo = null,
-                type = ControlUnitResourceType.BARGE,
+                controlUnitResource = ControlUnitResourceEntity(
+                    id = 2,
+                    baseId = 0,
+                    controlUnitId = 0,
+                    name = "Resource Name 2",
+                    note = null,
+                    photo = null,
+                    type = ControlUnitResourceType.BARGE,
+                ),
             )
         )
 

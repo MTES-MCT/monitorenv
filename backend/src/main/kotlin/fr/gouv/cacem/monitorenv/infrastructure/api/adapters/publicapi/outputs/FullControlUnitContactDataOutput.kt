@@ -15,13 +15,13 @@ data class FullControlUnitContactDataOutput(
     companion object {
         fun fromFullControlUnitContact(fullControlUnitContact: FullControlUnitContactDTO): FullControlUnitContactDataOutput {
             return FullControlUnitContactDataOutput(
-                id = requireNotNull(fullControlUnitContact.id),
+                id = requireNotNull(fullControlUnitContact.controlUnitContact.id),
                 controlUnit = fullControlUnitContact.controlUnit,
-                controlUnitId = fullControlUnitContact.controlUnitId,
-                email = fullControlUnitContact.email,
-                name = fullControlUnitContact.name,
-                note = fullControlUnitContact.note,
-                phone = fullControlUnitContact.phone,
+                controlUnitId = fullControlUnitContact.controlUnitContact.controlUnitId,
+                email = fullControlUnitContact.controlUnitContact.email,
+                name = fullControlUnitContact.controlUnitContact.name,
+                note = fullControlUnitContact.controlUnitContact.note,
+                phone = fullControlUnitContact.controlUnitContact.phone,
             )
         }
     }

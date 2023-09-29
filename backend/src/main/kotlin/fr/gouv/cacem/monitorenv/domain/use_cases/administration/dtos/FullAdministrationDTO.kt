@@ -1,11 +1,9 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos
 
+import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 
 data class FullAdministrationDTO(
-    val id: Int? = null,
-    val controlUnitIds: List<Int>,
+    val administration: AdministrationEntity,
     val controlUnits: List<ControlUnitEntity>,
-    val isArchived: Boolean,
-    val name: String,
 )
