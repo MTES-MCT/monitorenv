@@ -221,6 +221,10 @@ export const missionSourceEnum = {
   MONITORFISH: {
     label: 'CNSP',
     value: 'MONITORFISH'
+  },
+  RAPPORTNAV: {
+    label: 'unité',
+    value: 'RAPPORTNAV'
   }
 }
 
