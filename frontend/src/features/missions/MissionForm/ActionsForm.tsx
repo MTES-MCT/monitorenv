@@ -49,27 +49,30 @@ export function ActionsForm({ currentActionIndex, setCurrentActionIndex }) {
       })
     })
     setFieldValue('envActions', [newSurveillance, ...(envActions || [])])
-    setCurrentActionIndex(0)
+    setCurrentActionIndex(newSurveillance.id)
   }
 
   const handleAddControlAction = () => {
     const newControl = actionFactory({ actionType: ActionTypeEnum.CONTROL })
     setFieldValue('envActions', [newControl, ...(envActions || [])])
-    setCurrentActionIndex(0)
+    setCurrentActionIndex(newControl.id)
   }
   const handleAddNoteAction = () => {
     const newNote = actionFactory({ actionType: ActionTypeEnum.NOTE })
     setFieldValue('envActions', [newNote, ...(envActions || [])])
-    setCurrentActionIndex(0)
+    setCurrentActionIndex(newNote.id)
   }
-  const handleSelectAction = id => () => {
+  const handleSelectAction = id => {
     setCurrentActionIndex(actions && Object.keys(actions).find(key => key === String(id)))
   }
 
-  const handleRemoveAction = id => e => {
-    e.stopPropagation()
-    const actionToDeleteIndex = envActions && envActions.findIndex(action => action.id === id)
-    if (actionToDeleteIndex && actionToDeleteIndex !== -1) {
+  const handleRemoveAction = id => {
+    if (!envActions) {
+      return
+    }
+
+    const actionToDeleteIndex = envActions.findIndex(action => action.id === String(id))
+    if (actionToDeleteIndex !== -1) {
       const actionsToUpdate = [...(envActions || [])]
       actionsToUpdate.splice(actionToDeleteIndex, 1)
       setFieldValue('envActions', actionsToUpdate)
@@ -77,8 +80,9 @@ export function ActionsForm({ currentActionIndex, setCurrentActionIndex }) {
     setCurrentActionIndex(undefined)
   }
 
-  const handleDuplicateAction = id => () => {
+  const handleDuplicateAction = id => {
     const envAction = envActions && envActions.find(action => action.id === id)
+
     if (envAction) {
       const duplicatedAction = actionFactory(envAction)
       setFieldValue('envActions', [duplicatedAction, ...(envActions || [])])
@@ -114,11 +118,12 @@ export function ActionsForm({ currentActionIndex, setCurrentActionIndex }) {
               <ActionCards
                 key={action.id}
                 action={action}
-                duplicateAction={handleDuplicateAction(action.id)}
+                duplicateAction={() => handleDuplicateAction(action.id)}
                 hasError={!!envActionsErrors}
-                removeAction={handleRemoveAction(action.id)}
-                selectAction={handleSelectAction(action.id)}
+                removeAction={() => handleRemoveAction(action.id)}
+                selectAction={() => handleSelectAction(action.id)}
                 selected={String(action.id) === String(currentActionIndex)}
+                setCurrentActionIndex={setCurrentActionIndex}
               />
             )
           })

@@ -6,7 +6,7 @@ import { ControlUnit } from '../../../../../domain/entities/controlUnit'
 
 import type { Mission } from '../../../../../domain/entities/missions'
 
-export function OtherControlTypesForm({ currentActionIndex }: { currentActionIndex: number }) {
+export function OtherControlTypesForm({ currentActionIndex }: { currentActionIndex: string }) {
   const {
     values: { controlUnits }
   } = useFormikContext<Mission>()

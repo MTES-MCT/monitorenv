@@ -6,7 +6,7 @@ import type { ReportingTargetTypeEnum } from './targetType'
 
 export type Reporting = {
   actionTaken?: string
-  attachedEnvActionId?: number
+  attachedEnvActionId?: string
   attachedMissionId?: number
   attachedToMissionAtUtc?: string
   controlUnitId?: number
@@ -44,7 +44,7 @@ type TargetDetails = {
   vesselName?: string
 }
 
-export type ReportingForTimeline = Partial<Reporting> & {
+export type ReportingForTimeline = Partial<ReportingDetailed> & {
   actionType: ActionTypeEnum.REPORTING
   timelineDate: string
 }

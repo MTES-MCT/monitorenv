@@ -4,11 +4,12 @@ import { useEffect, useState } from 'react'
 import { generatePath } from 'react-router'
 import styled from 'styled-components'
 
-import { ActionForm } from './ActionForm/ActionForm'
+import { ActionForm } from './ActionForm'
 import { ActionsForm } from './ActionsForm'
 import { GeneralInformationsForm } from './GeneralInformationsForm'
 import { useSyncFormValuesWithRedux } from './hooks/useSyncFormValuesWithRedux'
 import { useUpdateOtherControlTypes } from './hooks/useUpdateOtherControlTypes'
+import { useUpdateReportingsAndEnvActions } from './hooks/useUpdateReportingsAndEnvActions'
 import { useUpdateSurveillance } from './hooks/useUpdateSurveillance'
 import { MissionFormBottomBar } from './MissionFormBottomBar'
 import { CancelEditModal } from './modals/CancelEditModal'
@@ -34,6 +35,7 @@ export function MissionForm({ id, isAlreadyClosed, isNewMission, selectedMission
   useSyncFormValuesWithRedux()
   useUpdateSurveillance()
   useUpdateOtherControlTypes()
+  useUpdateReportingsAndEnvActions()
 
   useEffect(() => {
     if (selectedMission) {
@@ -41,7 +43,7 @@ export function MissionForm({ id, isAlreadyClosed, isNewMission, selectedMission
     }
   }, [setValues, selectedMission])
 
-  const [currentActionIndex, setCurrentActionIndex] = useState(undefined)
+  const [currentActionIndex, setCurrentActionIndex] = useState<string | undefined>(undefined)
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
   const [isReopenModalOpen, setIsReopenModalOpen] = useState(false)
 

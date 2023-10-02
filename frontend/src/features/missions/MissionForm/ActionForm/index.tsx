@@ -10,18 +10,16 @@ import { ActionTypeEnum, type EnvAction } from '../../../../domain/entities/miss
 import type { Reporting } from '../../../../domain/entities/reporting'
 
 type ActionFormProps = {
-  currentActionIndex: number | undefined
+  currentActionIndex: string | undefined
   setCurrentActionIndex: (index: number | undefined) => void
 }
 export function ActionForm({ currentActionIndex, setCurrentActionIndex }: ActionFormProps) {
   const [reportingsField] = useField<Reporting[]>('reportings')
-  const reportingActionIndex = reportingsField.value.findIndex(
-    reporting => String(reporting.id) === String(currentActionIndex)
-  )
+  const reportingActionIndex = reportingsField.value.findIndex(reporting => String(reporting.id) === currentActionIndex)
   const [reportingField] = useField<Reporting>(`reportings.${reportingActionIndex}`)
 
   const [envActionsField, , envActionsHelper] = useField<EnvAction[]>('envActions')
-  const envActionIndex = envActionsField.value.findIndex(envAction => envAction.id === String(currentActionIndex))
+  const envActionIndex = envActionsField.value.findIndex(envAction => envAction.id === currentActionIndex)
   const [actionTypeField] = useField<ActionTypeEnum>(`envActions.${envActionIndex}.actionType`)
   const [actionIdField] = useField<EnvAction['id']>(`envActions.${envActionIndex}.id`)
 
