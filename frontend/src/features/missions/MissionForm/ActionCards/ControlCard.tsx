@@ -30,6 +30,7 @@ export function ControlCard({ action }) {
               </Accented>
             </ControlSummary>
           )}
+
           {!!action.actionNumberOfControls && action.actionNumberOfControls > 0 && (
             <ControlInfractionsTags
               actionNumberOfControls={action.actionNumberOfControls}

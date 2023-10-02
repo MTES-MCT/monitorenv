@@ -8,6 +8,7 @@ export type Reporting = {
   actionTaken?: string
   attachedEnvActionId?: string
   attachedMission?: Mission
+  attachedMissionId?: number
   attachedToMissionAtUtc?: string
   controlStatus: ControlStatusEnum
   controlUnitId?: number
@@ -67,7 +68,7 @@ type TargetDetails = {
   vesselName?: string
 }
 
-export type ReportingForTimeline = Partial<Reporting> & {
+export type ReportingForTimeline = Partial<ReportingDetailed> & {
   actionType: ActionTypeEnum.REPORTING
   timelineDate: string
 }
