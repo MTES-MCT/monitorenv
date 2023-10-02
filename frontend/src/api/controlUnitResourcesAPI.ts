@@ -1,5 +1,5 @@
 import { monitorenvPublicApi } from './api'
-import { ApiError } from '../libs/ApiError'
+import { FrontendApiError } from '../libs/FrontendApiError'
 
 import type { ControlUnit } from '../domain/entities/controlUnit'
 
@@ -20,13 +20,13 @@ export const controlUnitResourcesAPI = monitorenvPublicApi.injectEndpoints({
     getControlUnitResource: builder.query<ControlUnit.ControlUnitResource, number>({
       providesTags: () => [{ type: 'ControlUnits' }],
       query: controlUnitResourceId => `/v1/control_unit_resources/${controlUnitResourceId}`,
-      transformErrorResponse: response => new ApiError(GET_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE, response)
+      transformErrorResponse: response => new FrontendApiError(GET_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE, response)
     }),
 
     getControlUnitResources: builder.query<ControlUnit.ControlUnitResource[], void>({
       providesTags: () => [{ type: 'ControlUnits' }],
       query: () => `/v1/control_unit_resources`,
-      transformErrorResponse: response => new ApiError(GET_CONTROL_UNIT_RESOURCES_ERROR_MESSAGE, response)
+      transformErrorResponse: response => new FrontendApiError(GET_CONTROL_UNIT_RESOURCES_ERROR_MESSAGE, response)
     }),
 
     updateControlUnitResource: builder.mutation<void, ControlUnit.ControlUnitResourceData>({

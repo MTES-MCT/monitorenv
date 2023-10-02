@@ -1,6 +1,8 @@
 import { logSoftError } from '@mtes-mct/monitor-ui'
 
 import { controlUnitsAPI } from '../../../api/controlUnitsAPI'
+import { isUserError } from '../../../libs/UserError'
+import { backOfficeActions } from '../../shared_slices/BackOffice'
 
 import type { AppThunk } from '../../../store'
 
@@ -13,6 +15,16 @@ export const deleteControlUnit = (): AppThunk<Promise<void>> => async (dispatch,
       throw error
     }
   } catch (err) {
+    if (isUserError(err)) {
+      dispatch(
+        backOfficeActions.openDialog({
+          message: err.userMessage
+        })
+      )
+
+      return
+    }
+
     logSoftError({
       message: `An error happened while deleting a control unit (ID=${controlUnitId}").`,
       originalError: err,

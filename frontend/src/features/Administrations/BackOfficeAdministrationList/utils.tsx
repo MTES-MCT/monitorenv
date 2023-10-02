@@ -23,9 +23,9 @@ export function getAdministrationTableColumns(
             openConfirmationModal({
               actionId: info.getValue<Administration.Administration>().id,
               actionType: BackOfficeConfirmationModalActionType.ARCHIVE_ADMINISTRATION,
-              message: `Êtes-vous sûr de vouloir archiver l'administration "${
+              message: `Confirmez-vous l'archivage de l'administration "${
                 info.getValue<Administration.Administration>().name
-              }" ?`
+              }" ? Elle n'apparaîtra plus dans MonitorEnv, elle ne sera plus utilisée que pour les statistiques.`
             })
           )
         }
@@ -49,7 +49,7 @@ export function getAdministrationTableColumns(
             openConfirmationModal({
               actionId: info.getValue<Administration.Administration>().id,
               actionType: BackOfficeConfirmationModalActionType.DELETE_ADMINISTRATION,
-              message: `Êtes-vous sûr de vouloir supprimer l'administration "${
+              message: `Confirmez-vous la suppression de l'administration "${
                 info.getValue<Administration.Administration>().name
               }" ?`
             })

@@ -23,9 +23,9 @@ export function getControlUnitTableColumns(
             openConfirmationModal({
               actionId: info.getValue<ControlUnit.ControlUnit>().id,
               actionType: BackOfficeConfirmationModalActionType.ARCHIVE_CONTROL_UNIT,
-              message: `Êtes-vous sûr de vouloir archiver l'unité de contrôle "${
+              message: `Confirmez-vous l'archivage de l'unité "${
                 info.getValue<ControlUnit.ControlUnit>().name
-              }" ?`
+              }" ? Elle n'apparaîtra plus dans MonitorEnv, elle ne sera plus utilisée que pour les statistiques.`
             })
           )
         }
@@ -49,9 +49,9 @@ export function getControlUnitTableColumns(
             openConfirmationModal({
               actionId: info.getValue<ControlUnit.ControlUnit>().id,
               actionType: BackOfficeConfirmationModalActionType.DELETE_CONTROL_UNIT,
-              message: `Êtes-vous sûr de vouloir supprimer l'unité de contrôle "${
+              message: `Confirmez-vous la suppression de l'unité "${
                 info.getValue<ControlUnit.ControlUnit>().name
-              }" ?`
+              }" ? Ceci entraînera la suppression de toutes ses informations (moyens, contacts...).`
             })
           )
         }

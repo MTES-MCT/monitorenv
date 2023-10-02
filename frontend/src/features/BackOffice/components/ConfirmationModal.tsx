@@ -1,7 +1,7 @@
 import { Accent, Button, Dialog } from '@mtes-mct/monitor-ui'
 import { useCallback } from 'react'
 
-import { closeConfirmationModal } from '../../../domain/shared_slices/BackOffice'
+import { backOfficeActions } from '../../../domain/shared_slices/BackOffice'
 import { handleModalConfirmation } from '../../../domain/use_cases/backOffice/handleModalConfirmation'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
@@ -11,7 +11,7 @@ export function ConfirmationModal() {
   const backOffice = useAppSelector(store => store.backOffice)
 
   const cancel = useCallback(() => {
-    dispatch(closeConfirmationModal())
+    dispatch(backOfficeActions.closeConfirmationModal())
   }, [dispatch])
 
   const confirm = useCallback(() => {

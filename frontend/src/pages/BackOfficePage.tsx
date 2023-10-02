@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { BackOfficeAdministrationForm } from '../features/Administrations/BackOfficeAdministrationForm'
 import { BackOfficeAdministrationList } from '../features/Administrations/BackOfficeAdministrationList'
 import { ConfirmationModal } from '../features/BackOffice/components/ConfirmationModal'
+import { Dialog } from '../features/BackOffice/components/Dialog'
 import { BackOfficeMenu } from '../features/BackOfficeMenu'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../features/BackOfficeMenu/constants'
 import { BackOfficeBaseForm } from '../features/Bases/BackOfficeBaseForm'
@@ -51,6 +52,7 @@ export function BackOfficePage() {
       </Body>
 
       {backOffice.isConfirmationModalOpen && <ConfirmationModal />}
+      {backOffice.isDialogOpen && <Dialog />}
 
       <Notifier />
     </Wrapper>

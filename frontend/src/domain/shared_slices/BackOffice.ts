@@ -7,14 +7,20 @@ type BackOfficeState = {
   confirmationModalActionType: BackOfficeConfirmationModalActionType | undefined
   confirmationModalMessage: string | undefined
 
+  dialogMessage: string | undefined
+
   isConfirmationModalOpen: boolean
+  isDialogOpen: boolean
 }
 const INITIAL_STATE: BackOfficeState = {
   confirmationModalActionId: -1,
   confirmationModalActionType: undefined,
   confirmationModalMessage: undefined,
 
-  isConfirmationModalOpen: false
+  dialogMessage: undefined,
+
+  isConfirmationModalOpen: false,
+  isDialogOpen: false
 }
 
 const backOfficeSlice = createSlice({
@@ -26,6 +32,11 @@ const backOfficeSlice = createSlice({
       state.confirmationModalActionType = undefined
       state.confirmationModalMessage = undefined
       state.isConfirmationModalOpen = false
+    },
+
+    closeDialog(state) {
+      state.dialogMessage = undefined
+      state.isDialogOpen = false
     },
 
     openConfirmationModal(
@@ -40,6 +51,16 @@ const backOfficeSlice = createSlice({
       state.confirmationModalActionType = action.payload.actionType
       state.confirmationModalMessage = action.payload.message
       state.isConfirmationModalOpen = true
+    },
+
+    openDialog(
+      state,
+      action: PayloadAction<{
+        message: string
+      }>
+    ) {
+      state.dialogMessage = action.payload.message
+      state.isDialogOpen = true
     }
   }
 })

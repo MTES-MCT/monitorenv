@@ -2,6 +2,8 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 import { normalizeRtkBaseQuery } from '../utils/normalizeRtkBaseQuery'
 
+import type { BackendApiErrorResponse } from './types'
+
 // =============================================================================
 // Monitorenv Private API
 
@@ -24,7 +26,19 @@ const monitorenvPublicApiBaseQuery = fetchBaseQuery({
   baseUrl: '/api'
 })
 export const monitorenvPublicApi = createApi({
-  baseQuery: normalizeRtkBaseQuery(monitorenvPublicApiBaseQuery),
+  baseQuery: async (args, api, extraOptions) => {
+    const result = await normalizeRtkBaseQuery(monitorenvPublicApiBaseQuery)(args, api, extraOptions)
+    if (result.error) {
+      return {
+        error: {
+          data: result.error.data as BackendApiErrorResponse,
+          status: result.error.status
+        }
+      }
+    }
+
+    return result
+  },
   endpoints: () => ({}),
   reducerPath: 'monitorenvPublicApi',
   tagTypes: ['Administrations', 'Bases', 'ControlUnits']
