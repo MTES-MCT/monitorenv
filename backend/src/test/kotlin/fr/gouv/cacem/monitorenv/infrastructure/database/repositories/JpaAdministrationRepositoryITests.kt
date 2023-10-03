@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional
 class JpaAdministrationRepositoryITests : AbstractDBTests() {
     @Autowired
     private lateinit var jpaAdministrationRepository: JpaAdministrationRepository
-    
+
     @Test
     @Transactional
     fun `archiveById() should archive an administration by its ID`() {
@@ -95,7 +95,7 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
                 ),
                 controlUnits = listOf(
                     ControlUnitEntity(
-                        id = 21,
+                        id = 10020,
                         administrationId = 6,
                         areaNote = null,
                         isArchived = false,
@@ -103,7 +103,7 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
                         termsNote = null,
                     ),
                     ControlUnitEntity(
-                        id = 22,
+                        id = 10021,
                         administrationId = 6,
                         areaNote = null,
                         isArchived = false,

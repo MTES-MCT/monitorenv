@@ -1,4 +1,4 @@
-context('Back Office > Control Unit List > Filter Bar', () => {
+context('Back Office > Control Unit List > Filters', () => {
   beforeEach(() => {
     cy.intercept('GET', `/api/v2/control_units`).as('getControlUnits')
 

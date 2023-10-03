@@ -1,4 +1,4 @@
-context('Back Office > Administration List > Filter Bar', () => {
+context('Back Office > Administration List > Filters', () => {
   beforeEach(() => {
     cy.intercept('GET', `/api/v1/administrations`).as('getAdministrations')
 

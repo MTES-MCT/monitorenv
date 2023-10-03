@@ -56,7 +56,7 @@ context('Mission', () => {
       expect(request.body.controlUnits.length).equal(1)
       const controlUnit = request.body.controlUnits[0]
       expect(controlUnit.administration).equal('DIRM / DM')
-      expect(controlUnit.id).equal(12)
+      expect(controlUnit.id).equal(10011)
       expect(controlUnit.name).equal('Cross Etel')
     })
     cy.wait('@getMissions')

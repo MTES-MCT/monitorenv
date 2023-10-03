@@ -30,7 +30,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ControlUnitResourceEntity(
                         id = 1,
                         baseId = 1,
-                        controlUnitId = 1,
+                        controlUnitId = 10000,
                         name = "Semi-rigide 1",
                         note = null,
                         photo = null,
@@ -39,7 +39,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ControlUnitResourceEntity(
                         id = 2,
                         baseId = 1,
-                        controlUnitId = 1,
+                        controlUnitId = 10000,
                         name = "Semi-rigide 2",
                         note = null,
                         photo = null,
@@ -59,7 +59,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ControlUnitResourceEntity(
                         id = 3,
                         baseId = 2,
-                        controlUnitId = 3,
+                        controlUnitId = 10002,
                         name = "Semi-rigide 1",
                         note = null,
                         photo = null,
@@ -68,7 +68,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ControlUnitResourceEntity(
                         id = 4,
                         baseId = 2,
-                        controlUnitId = 3,
+                        controlUnitId = 10002,
                         name = "Semi-rigide 2",
                         note = null,
                         photo = null,
@@ -77,7 +77,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ControlUnitResourceEntity(
                         id = 6,
                         baseId = 2,
-                        controlUnitId = 4,
+                        controlUnitId = 10003,
                         name = "AR VECHEN",
                         note = null,
                         photo = null,
@@ -103,7 +103,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ControlUnitResourceEntity(
                         id = 3,
                         baseId = 2,
-                        controlUnitId = 3,
+                        controlUnitId = 10002,
                         name = "Semi-rigide 1",
                         note = null,
                         photo = null,
@@ -112,7 +112,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ControlUnitResourceEntity(
                         id = 4,
                         baseId = 2,
-                        controlUnitId = 3,
+                        controlUnitId = 10002,
                         name = "Semi-rigide 2",
                         note = null,
                         photo = null,
@@ -121,7 +121,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ControlUnitResourceEntity(
                         id = 6,
                         baseId = 2,
-                        controlUnitId = 4,
+                        controlUnitId = 10003,
                         name = "AR VECHEN",
                         note = null,
                         photo = null,

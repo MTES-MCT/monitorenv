@@ -23,13 +23,13 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `archiveById() should archive a control unit by its ID`() {
-        val beforeFullControlUnit = jpaControlUnitRepository.findById(1)
+        val beforeFullControlUnit = jpaControlUnitRepository.findById(10000)
 
         assertThat(beforeFullControlUnit.controlUnit.isArchived).isFalse()
 
-        jpaControlUnitRepository.archiveById(1)
+        jpaControlUnitRepository.archiveById(10000)
 
-        val afterFullControlUnit = jpaControlUnitRepository.findById(1)
+        val afterFullControlUnit = jpaControlUnitRepository.findById(10000)
 
         assertThat(afterFullControlUnit.controlUnit.isArchived).isTrue()
     }
@@ -40,7 +40,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
     @Disabled
     fun `deleteById() should throw an exception when the control unit is linked to some missions`() {
         val throwable = catchThrowable {
-            jpaControlUnitRepository.deleteById(1005)
+            jpaControlUnitRepository.deleteById(10002)
         }
 
         assertThat(throwable).isInstanceOf(ForeignKeyConstraintException::class.java)
@@ -52,7 +52,8 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
     @Disabled
     fun `deleteById() should throw an exception when the control unit is linked to some reportings`() {
         val throwable = catchThrowable {
-            jpaControlUnitRepository.deleteById(1005)
+            // TODO Link a control unit to a reporting without linking it to any mission
+            jpaControlUnitRepository.deleteById(0)
         }
 
         assertThat(throwable).isInstanceOf(ForeignKeyConstraintException::class.java)
@@ -73,7 +74,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                     name = "Marine Nationale"
                 ),
                 controlUnit = ControlUnitEntity(
-                    id = 24,
+                    id = 10023,
                     administrationId = 3,
                     areaNote = null,
                     isArchived = false,
@@ -93,7 +94,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                     name = "DDTM"
                 ),
                 controlUnit = ControlUnitEntity(
-                    id = 8,
+                    id = 10007,
                     administrationId = 1005,
                     areaNote = null,
                     isArchived = false,
@@ -109,7 +110,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `findById() should find a control unit by its ID`() {
-        val foundFullControlUnit = jpaControlUnitRepository.findById(1)
+        val foundFullControlUnit = jpaControlUnitRepository.findById(10000)
 
         assertThat(foundFullControlUnit).isEqualTo(
             FullControlUnitDTO(
@@ -119,7 +120,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                     name = "DDTM"
                 ),
                 controlUnit = ControlUnitEntity(
-                    id = 1,
+                    id = 10000,
                     administrationId = 1005,
                     areaNote = null,
                     isArchived = false,
@@ -129,7 +130,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                 controlUnitContacts = listOf(
                     ControlUnitContactEntity(
                         id = 1,
-                        controlUnitId = 1,
+                        controlUnitId = 10000,
                         email = null,
                         name = "Contact 1",
                         note = null,
@@ -137,7 +138,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                     ),
                     ControlUnitContactEntity(
                         id = 2,
-                        controlUnitId = 1,
+                        controlUnitId = 10000,
                         email = null,
                         name = "Contact 2",
                         note = null,
@@ -151,7 +152,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             name = "Marseille",
                         ),
                         controlUnit = ControlUnitEntity(
-                            id = 1,
+                            id = 10000,
                             administrationId = 1005,
                             areaNote = null,
                             isArchived = false,
@@ -161,7 +162,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                         controlUnitResource = ControlUnitResourceEntity(
                             id = 1,
                             baseId = 1,
-                            controlUnitId = 1,
+                            controlUnitId = 10000,
                             name = "Semi-rigide 1",
                             note = null,
                             photo = null,
@@ -174,7 +175,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             name = "Marseille",
                         ),
                         controlUnit = ControlUnitEntity(
-                            id = 1,
+                            id = 10000,
                             administrationId = 1005,
                             areaNote = null,
                             isArchived = false,
@@ -184,7 +185,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                         controlUnitResource = ControlUnitResourceEntity(
                             id = 2,
                             baseId = 1,
-                            controlUnitId = 1,
+                            controlUnitId = 10000,
                             name = "Semi-rigide 2",
                             note = null,
                             photo = null,
@@ -212,13 +213,13 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
 
         val createdControlUnit = jpaControlUnitRepository.save(newControlUnit)
 
-        assertThat(createdControlUnit).isEqualTo(newControlUnit.copy(id = 34))
+        assertThat(createdControlUnit).isEqualTo(newControlUnit.copy(id = 10033))
 
         // ---------------------------------------------------------------------
         // Update
 
         val nextControlUnit = ControlUnitEntity(
-            id = 34,
+            id = 10033,
             administrationId = 1,
             areaNote = "Updated Area Note",
             isArchived = false,
@@ -233,10 +234,10 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
         // ---------------------------------------------------------------------
         // Delete
 
-        jpaControlUnitRepository.deleteById(34)
+        jpaControlUnitRepository.deleteById(10033)
 
         val controlUnitIds = jpaControlUnitRepository.findAll().map { requireNotNull(it.controlUnit.id) }.sorted()
 
-        assertThat(controlUnitIds).doesNotContain(34)
+        assertThat(controlUnitIds).doesNotContain(10033)
     }
 }

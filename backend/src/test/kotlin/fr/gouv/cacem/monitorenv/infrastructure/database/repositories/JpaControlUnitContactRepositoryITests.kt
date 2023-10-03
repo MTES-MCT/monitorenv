@@ -23,7 +23,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
         assertThat(foundFullControlUnitContacts[0]).isEqualTo(
             FullControlUnitContactDTO(
                 controlUnit = ControlUnitEntity(
-                    id = 1,
+                    id = 10000,
                     administrationId = 1005,
                     areaNote = null,
                     isArchived = false,
@@ -32,7 +32,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                 ),
                 controlUnitContact = ControlUnitContactEntity(
                     id = 1,
-                    controlUnitId = 1,
+                    controlUnitId = 10000,
                     name = "Contact 1",
                     note = null,
                     phone = null,
@@ -43,7 +43,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
         assertThat(foundFullControlUnitContacts[2]).isEqualTo(
             FullControlUnitContactDTO(
                 controlUnit = ControlUnitEntity(
-                    id = 4,
+                    id = 10003,
                     administrationId = 1005,
                     areaNote = null,
                     isArchived = false,
@@ -52,7 +52,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                 ),
                 controlUnitContact = ControlUnitContactEntity(
                     id = 3,
-                    controlUnitId = 4,
+                    controlUnitId = 10003,
                     name = "Contact 3",
                     note = null,
                     phone = null,
@@ -69,7 +69,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
         assertThat(foundFullControlUnitContact).isEqualTo(
             FullControlUnitContactDTO(
                 controlUnit = ControlUnitEntity(
-                    id = 1,
+                    id = 10000,
                     administrationId = 1005,
                     areaNote = null,
                     isArchived = false,
@@ -78,7 +78,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                 ),
                 controlUnitContact = ControlUnitContactEntity(
                     id = 1,
-                    controlUnitId = 1,
+                    controlUnitId = 10000,
                     name = "Contact 1",
                     note = null,
                     phone = null,
@@ -94,7 +94,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
         // Create
 
         val newControlUnitContact = ControlUnitContactEntity(
-            controlUnitId = 1,
+            controlUnitId = 10000,
             name = "Contact Name",
             note = "Contact Note",
             phone = "0123456789",
@@ -109,7 +109,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
 
         val nextControlUnitContact = ControlUnitContactEntity(
             id = 4,
-            controlUnitId = 2,
+            controlUnitId = 10001,
             name = "Updated Contact Name",
             note = "Updated Contact Note",
             phone = "9876543210",

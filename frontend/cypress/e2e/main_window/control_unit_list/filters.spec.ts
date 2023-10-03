@@ -1,6 +1,6 @@
 import { FAKE_MAPBOX_RESPONSE } from '../../constants'
 
-context('Main Window > Control Unit List > Filter Bar', () => {
+context('Main Window > Control Unit List > Filters', () => {
   beforeEach(() => {
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
 
@@ -18,8 +18,8 @@ context('Main Window > Control Unit List > Filter Bar', () => {
 
     cy.getDataCy('control-unit-list-item').should('have.length', 4)
 
-    cy.getDataCy('control-unit-33').should('exist')
-    cy.getDataCy('control-unit-24').should('exist')
+    cy.getDataCy('control-unit-10032').should('exist')
+    cy.getDataCy('control-unit-10023').should('exist')
   })
 
   it('Should find control units matching the selected administration', () => {
@@ -27,8 +27,8 @@ context('Main Window > Control Unit List > Filter Bar', () => {
 
     cy.getDataCy('control-unit-list-item').should('have.length', 5)
 
-    cy.getDataCy('control-unit-14').should('exist')
-    cy.getDataCy('control-unit-18').should('exist')
+    cy.getDataCy('control-unit-10013').should('exist')
+    cy.getDataCy('control-unit-10017').should('exist')
   })
 
   it('Should find control units matching the selected resource type', () => {
@@ -36,8 +36,8 @@ context('Main Window > Control Unit List > Filter Bar', () => {
 
     cy.getDataCy('control-unit-list-item').should('have.length', 3)
 
-    cy.getDataCy('control-unit-1').should('exist')
-    cy.getDataCy('control-unit-4').should('exist')
+    cy.getDataCy('control-unit-10000').should('exist')
+    cy.getDataCy('control-unit-10003').should('exist')
   })
 
   it('Should find control units matching the selected base', () => {
@@ -45,6 +45,6 @@ context('Main Window > Control Unit List > Filter Bar', () => {
 
     cy.getDataCy('control-unit-list-item').should('have.length', 1)
 
-    cy.getDataCy('control-unit-1').should('exist')
+    cy.getDataCy('control-unit-10000').should('exist')
   })
 })

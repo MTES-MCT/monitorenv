@@ -41,11 +41,11 @@ context('Back Office > Control Unit Form', () => {
     // -------------------------------------------------------------------------
     // Edit
 
-    cy.intercept('PUT', `/api/v2/control_units/34`).as('updateControlUnit')
+    cy.intercept('PUT', `/api/v2/control_units/10033`).as('updateControlUnit')
 
-    cy.getTableRowById(34).clickButton('Éditer cette unité de contrôle')
+    cy.getTableRowById(10033).clickButton('Éditer cette unité de contrôle')
 
-    expectPathToBe('/backoffice/control_units/34')
+    expectPathToBe('/backoffice/control_units/10033')
 
     cy.fill('Administration', 'AFB')
     cy.fill('Nom', 'Unité 2')
@@ -60,7 +60,7 @@ context('Back Office > Control Unit Form', () => {
       assert.deepInclude(interception.request.body, {
         administrationId: 1002,
         areaNote: null,
-        id: 34,
+        id: 10033,
         isArchived: false,
         name: 'Unité 2',
         termsNote: null
@@ -70,29 +70,29 @@ context('Back Office > Control Unit Form', () => {
     // -------------------------------------------------------------------------
     // Archive
 
-    cy.intercept('POST', `/api/v2/control_units/34/archive`).as('archiveControlUnit')
+    cy.intercept('POST', `/api/v2/control_units/10033/archive`).as('archiveControlUnit')
 
-    cy.getTableRowById(34).clickButton('Archiver cette unité de contrôle')
+    cy.getTableRowById(10033).clickButton('Archiver cette unité de contrôle')
     cy.clickButton('Confirmer')
 
     cy.wait('@archiveControlUnit')
 
-    cy.getTableRowById(34).should('not.exist')
+    cy.getTableRowById(10033).should('not.exist')
     cy.clickButton('Unités archivées')
-    cy.getTableRowById(34).should('exist')
+    cy.getTableRowById(10033).should('exist')
 
     // -------------------------------------------------------------------------
     // Delete
 
-    cy.intercept('DELETE', `/api/v2/control_units/34`).as('deleteControlUnit')
+    cy.intercept('DELETE', `/api/v2/control_units/10033`).as('deleteControlUnit')
 
-    cy.getTableRowById(34).clickButton('Supprimer cette unité de contrôle')
+    cy.getTableRowById(10033).clickButton('Supprimer cette unité de contrôle')
     cy.clickButton('Confirmer')
 
     cy.wait('@deleteControlUnit')
 
-    cy.getTableRowById(34).should('not.exist')
+    cy.getTableRowById(10033).should('not.exist')
     cy.clickButton('Unités actives')
-    cy.getTableRowById(34).should('not.exist')
+    cy.getTableRowById(10033).should('not.exist')
   })
 })

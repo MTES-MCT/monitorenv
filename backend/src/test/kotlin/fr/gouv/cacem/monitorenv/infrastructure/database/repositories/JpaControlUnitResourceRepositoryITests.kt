@@ -31,7 +31,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     name = "Marseille"
                 ),
                 controlUnit = ControlUnitEntity(
-                    id = 1,
+                    id = 10000,
                     administrationId = 1005,
                     areaNote = null,
                     isArchived = false,
@@ -41,7 +41,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                 controlUnitResource = ControlUnitResourceEntity(
                     id = 1,
                     baseId = 1,
-                    controlUnitId = 1,
+                    controlUnitId = 10000,
                     name = "Semi-rigide 1",
                     note = null,
                     photo = null,
@@ -57,7 +57,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     name = "Dunkerque"
                 ),
                 controlUnit = ControlUnitEntity(
-                    id = 19,
+                    id = 10018,
                     administrationId = 1008,
                     areaNote = null,
                     isArchived = false,
@@ -67,7 +67,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                 controlUnitResource = ControlUnitResourceEntity(
                     id = 12,
                     baseId = 3,
-                    controlUnitId = 19,
+                    controlUnitId = 10018,
                     name = "ARIOLA",
                     note = null,
                     photo = null,
@@ -89,7 +89,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     name = "Marseille"
                 ),
                 controlUnit = ControlUnitEntity(
-                    id = 1,
+                    id = 10000,
                     administrationId = 1005,
                     areaNote = null,
                     isArchived = false,
@@ -99,7 +99,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                 controlUnitResource = ControlUnitResourceEntity(
                     id = 1,
                     baseId = 1,
-                    controlUnitId = 1,
+                    controlUnitId = 10000,
                     name = "Semi-rigide 1",
                     note = null,
                     photo = null,
@@ -117,7 +117,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
 
         val newControlUnitResource = ControlUnitResourceEntity(
             baseId = 1,
-            controlUnitId = 1,
+            controlUnitId = 10000,
             name = "Resource Name",
             note = "Resource Note",
             photo = null,
@@ -134,7 +134,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
         val nextControlUnitResource = ControlUnitResourceEntity(
             id = 13,
             baseId = 2,
-            controlUnitId = 2,
+            controlUnitId = 10001,
             name = "Updated Resource Name",
             note = "Updated Resource Note",
             photo = null,
