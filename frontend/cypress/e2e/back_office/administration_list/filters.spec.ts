@@ -7,17 +7,27 @@ context('Back Office > Administration List > Filters', () => {
     cy.wait('@getAdministrations')
   })
 
-  it('Should show all administrations by default', () => {
+  it('Should show all active (unarchived) administrations by default', () => {
     cy.get('tbody > tr').should('have.length', 33)
-    cy.get('tbody > tr:first-child > td:nth-child(2)').should('have.text', '-')
-    cy.get('tbody > tr:last-child > td:nth-child(2)').should('have.text', 'Sécurité Civile')
+    cy.getTableRowByText('-').should('be.visible')
+    cy.getTableRowByText('Sécurité Civile').should('exist')
+    cy.getTableRowByText('Administion Archivée 1').should('not.exist')
+  })
+
+  it('Should show all archived administrations when clicking on "Administrations archivées" tab', () => {
+    cy.clickButton('Administrations archivées')
+
+    cy.get('tbody > tr').should('have.length', 2)
+    cy.getTableRowByText('Administion Archivée 1').should('be.visible')
+    cy.getTableRowByText('Administion Archivée 2').should('be.visible')
+    cy.getTableRowByText('-').should('not.exist')
   })
 
   it('Should find administrations matching the search query', () => {
     cy.fill('Rechercher...', 'arm')
 
     cy.get('tbody > tr').should('have.length', 3)
-    cy.get('tbody > tr:first-child > td:nth-child(2)').should('have.text', 'Armée Air')
-    cy.get('tbody > tr:last-child > td:nth-child(2)').should('have.text', 'Gendarmerie Nationale')
+    cy.getTableRowByText('Armée Air').should('be.visible')
+    cy.getTableRowByText('Gendarmerie Nationale').should('be.visible')
   })
 })
