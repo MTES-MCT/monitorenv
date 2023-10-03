@@ -12,7 +12,6 @@ import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.services.BaseService
 import fr.gouv.cacem.monitorenv.utils.mapOrElseEmpty
 import jakarta.persistence.*
 import org.hibernate.Hibernate
@@ -157,7 +156,11 @@ data class MissionModel(
     }
 
     companion object {
-        fun fromMissionEntity(mission: MissionEntity, mapper: ObjectMapper, baseService: BaseService): MissionModel {
+        fun fromMissionEntity(
+            mission: MissionEntity,
+            mapper: ObjectMapper,
+            baseModelMap: Map<Int, BaseModel>
+        ): MissionModel {
             val missionModel = MissionModel(
                 id = mission.id,
                 missionTypes = mission.missionTypes,
@@ -189,7 +192,7 @@ data class MissionModel(
                 missionModel.controlUnits?.add(controlUnitModel)
 
                 val missionControlUnitResourceModels = it.resources.map { controlUnitResource ->
-                    val baseModel = baseService.getBaseModelFromControlUnitResource(controlUnitResource)
+                    val baseModel = requireNotNull(baseModelMap[controlUnitResource.baseId])
 
                     MissionControlResourceModel.fromControlUnitResource(
                         controlUnitResource,

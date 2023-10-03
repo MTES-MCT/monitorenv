@@ -22,6 +22,10 @@ class JpaBaseRepository(
         return dbBaseRepository.findAll().map { it.toFullBase() }
     }
 
+    override fun findAllById(baseIds: List<Int>): List<FullBaseDTO> {
+        return dbBaseRepository.findAllById(baseIds).map { it.toFullBase() }
+    }
+
     override fun findById(baseId: Int): FullBaseDTO {
         return dbBaseRepository.findById(baseId).get().toFullBase()
     }
