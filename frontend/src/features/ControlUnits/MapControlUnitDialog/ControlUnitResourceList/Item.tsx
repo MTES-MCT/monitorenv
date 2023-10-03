@@ -1,14 +1,11 @@
 import { Accent, FormikTextarea, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import type { Base } from '../../../../domain/entities/base'
 import type { ControlUnit } from '../../../../domain/entities/controlUnit'
 import type { Promisable } from 'type-fest'
 
 export type ItemProps = {
-  controlUnitResource: ControlUnit.ControlUnitResourceData & {
-    base: Base.BaseData
-  }
+  controlUnitResource: ControlUnit.ControlUnitResource
   onEdit: (controlUnitResourceId: number) => Promisable<void>
 }
 export function Item({ controlUnitResource, onEdit }: ItemProps) {

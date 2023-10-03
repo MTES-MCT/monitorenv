@@ -4,6 +4,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEnt
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
 
 interface IAdministrationRepository {
+    fun archiveById(administrationId: Int)
+
     fun deleteById(administrationId: Int)
 
     fun findById(administrationId: Int): FullAdministrationDTO

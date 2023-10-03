@@ -14,64 +14,49 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `deleteById() should delete a contact by its ID`() {
-        val beforeControlUnitContactIds = jpaControlUnitContactRepository.findAll().map { it.id }
-
-        assertThat(beforeControlUnitContactIds).hasSize(3)
-        assertThat(beforeControlUnitContactIds).contains(1)
-
-        jpaControlUnitContactRepository.deleteById(1)
-
-        val afterControlUnitContactIds = jpaControlUnitContactRepository.findAll().map { it.id }
-
-        assertThat(afterControlUnitContactIds).hasSize(2)
-        assertThat(afterControlUnitContactIds).doesNotContain(1)
-    }
-
-    @Test
-    @Transactional
     fun `findAll() should find all contacts`() {
-        val foundFullControlUnitContacts = jpaControlUnitContactRepository.findAll().sortedBy { requireNotNull(it.id) }
+        val foundFullControlUnitContacts =
+            jpaControlUnitContactRepository.findAll().sortedBy { requireNotNull(it.controlUnitContact.id) }
 
         assertThat(foundFullControlUnitContacts).hasSize(3)
 
         assertThat(foundFullControlUnitContacts[0]).isEqualTo(
             FullControlUnitContactDTO(
-                id = 1,
                 controlUnit = ControlUnitEntity(
-                    id = 1,
+                    id = 10000,
                     administrationId = 1005,
                     areaNote = null,
-                    controlUnitContactIds = listOf(1, 2),
-                    controlUnitResourceIds = listOf(1, 2),
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
                     termsNote = null
                 ),
-                controlUnitId = 1,
-                name = "Contact 1",
-                note = null,
-                phone = null,
+                controlUnitContact = ControlUnitContactEntity(
+                    id = 1,
+                    controlUnitId = 10000,
+                    name = "Contact 1",
+                    note = null,
+                    phone = null,
+                ),
             )
         )
 
         assertThat(foundFullControlUnitContacts[2]).isEqualTo(
             FullControlUnitContactDTO(
-                id = 3,
                 controlUnit = ControlUnitEntity(
-                    id = 4,
+                    id = 10003,
                     administrationId = 1005,
                     areaNote = null,
-                    controlUnitContactIds = listOf(3),
-                    controlUnitResourceIds = listOf(6, 7),
                     isArchived = false,
                     name = "DPM – DDTM 14",
                     termsNote = null
                 ),
-                controlUnitId = 4,
-                name = "Contact 3",
-                note = null,
-                phone = null,
+                controlUnitContact = ControlUnitContactEntity(
+                    id = 3,
+                    controlUnitId = 10003,
+                    name = "Contact 3",
+                    note = null,
+                    phone = null,
+                ),
             )
         )
     }
@@ -83,33 +68,33 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
 
         assertThat(foundFullControlUnitContact).isEqualTo(
             FullControlUnitContactDTO(
-                id = 1,
                 controlUnit = ControlUnitEntity(
-                    id = 1,
+                    id = 10000,
                     administrationId = 1005,
                     areaNote = null,
-                    controlUnitContactIds = listOf(1, 2),
-                    controlUnitResourceIds = listOf(1, 2),
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
                     termsNote = null
                 ),
-                controlUnitId = 1,
-                name = "Contact 1",
-                note = null,
-                phone = null,
+                controlUnitContact = ControlUnitContactEntity(
+                    id = 1,
+                    controlUnitId = 10000,
+                    name = "Contact 1",
+                    note = null,
+                    phone = null,
+                ),
             )
         )
     }
 
     @Test
     @Transactional
-    fun `save() should create and update a contact`() {
+    fun `save() should create and update a contact, deleteById() should delete a contact`() {
         // ---------------------------------------------------------------------
         // Create
 
         val newControlUnitContact = ControlUnitContactEntity(
-            controlUnitId = 1,
+            controlUnitId = 10000,
             name = "Contact Name",
             note = "Contact Note",
             phone = "0123456789",
@@ -124,7 +109,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
 
         val nextControlUnitContact = ControlUnitContactEntity(
             id = 4,
-            controlUnitId = 2,
+            controlUnitId = 10001,
             name = "Updated Contact Name",
             note = "Updated Contact Note",
             phone = "9876543210",
@@ -133,5 +118,15 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
         val updatedControlUnitContact = jpaControlUnitContactRepository.save(nextControlUnitContact)
 
         assertThat(updatedControlUnitContact).isEqualTo(nextControlUnitContact)
+
+        // ---------------------------------------------------------------------
+        // Delete
+
+        jpaControlUnitContactRepository.deleteById(4)
+
+        val controlUnitContactIds =
+            jpaControlUnitContactRepository.findAll().map { requireNotNull(it.controlUnitContact.id) }.sorted()
+
+        assertThat(controlUnitContactIds).doesNotContain(4)
     }
 }

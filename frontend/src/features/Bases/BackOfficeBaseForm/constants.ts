@@ -7,6 +7,5 @@ export const BASE_FORM_SCHEMA = object({
 })
 
 export const INITIAL_BASE_FORM_VALUES: BaseFormValues = {
-  controlUnitResourceIds: [],
   name: undefined
 }

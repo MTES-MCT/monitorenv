@@ -1,10 +1,9 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnit
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitById
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnits
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.ControlUnitDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.FullControlUnitDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
@@ -15,10 +14,22 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/v2/control_units")
 @Tag(name = "Control Units")
 class ApiControlUnitsController(
+    private val archiveControlUnit: ArchiveControlUnit,
     private val createOrUpdateControlUnit: CreateOrUpdateControlUnit,
+    private val deleteControlUnit: DeleteControlUnit,
     private val getControlUnits: GetControlUnits,
     private val getControlUnitById: GetControlUnitById,
 ) {
+    @PostMapping("/{controlUnitId}/archive")
+    @Operation(summary = "Archive a control unit")
+    fun archive(
+        @PathParam("Control unit ID")
+        @PathVariable(name = "controlUnitId")
+        controlUnitId: Int,
+    ) {
+        archiveControlUnit.execute(controlUnitId)
+    }
+
     @PostMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a control unit")
     @ResponseStatus(HttpStatus.CREATED)
@@ -32,24 +43,34 @@ class ApiControlUnitsController(
         return ControlUnitDataOutput.fromControlUnit(createdControlUnit)
     }
 
+    @DeleteMapping("/{controlUnitId}")
+    @Operation(summary = "Delete a control unit")
+    fun delete(
+        @PathParam("Control unit ID")
+        @PathVariable(name = "controlUnitId")
+        controlUnitId: Int,
+    ) {
+        deleteControlUnit.execute(controlUnitId)
+    }
+
     @GetMapping("/{controlUnitId}")
     @Operation(summary = "Get a control unit by its ID")
     fun get(
         @PathParam("Control unit ID")
         @PathVariable(name = "controlUnitId")
         controlUnitId: Int,
-    ): ControlUnitDataOutput {
+    ): FullControlUnitDataOutput {
         val foundFullControlUnit = getControlUnitById.execute(controlUnitId)
 
-        return ControlUnitDataOutput.fromFullControlUnit(foundFullControlUnit)
+        return FullControlUnitDataOutput.fromFullControlUnit(foundFullControlUnit)
     }
 
     @GetMapping("")
     @Operation(summary = "List control units")
-    fun getAll(): List<ControlUnitDataOutput> {
+    fun getAll(): List<FullControlUnitDataOutput> {
         val foundFullControlUnits = getControlUnits.execute()
 
-        return foundFullControlUnits.map { ControlUnitDataOutput.fromFullControlUnit(it) }
+        return foundFullControlUnits.map { FullControlUnitDataOutput.fromFullControlUnit(it) }
     }
 
     @PutMapping(value = ["/{controlUnitId}"], consumes = ["application/json"])

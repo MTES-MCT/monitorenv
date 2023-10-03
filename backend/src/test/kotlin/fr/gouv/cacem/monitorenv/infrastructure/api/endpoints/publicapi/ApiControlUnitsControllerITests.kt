@@ -31,7 +31,13 @@ class ApiControlUnitsControllerITests {
     private lateinit var mockMvc: MockMvc
 
     @MockBean
+    private lateinit var archiveControlUnit: ArchiveControlUnit
+
+    @MockBean
     private lateinit var createOrUpdateControlUnit: CreateOrUpdateControlUnit
+
+    @MockBean
+    private lateinit var deleteControlUnit: DeleteControlUnit
 
     @MockBean
     private lateinit var getControlUnitById: GetControlUnitById
@@ -44,30 +50,26 @@ class ApiControlUnitsControllerITests {
 
     @Test
     fun `Should create a control unit`() {
-        val expectedNewControlUnit = ControlUnitEntity(
+        val expectedCreatedControlUnit = ControlUnitEntity(
             id = 1,
-            administrationId = 2,
-            controlUnitContactIds = listOf(),
-            controlUnitResourceIds = listOf(),
+            administrationId = 0,
             areaNote = null,
             isArchived = false,
-            name = "Control Unit Name",
+            name = "Unit Name",
             termsNote = null,
         )
 
-        val request = CreateOrUpdateControlUnitDataInput(
+        val newControlUnitData = CreateOrUpdateControlUnitDataInput(
             administrationId = 2,
-            controlUnitContactIds = listOf(),
-            controlUnitResourceIds = listOf(),
             areaNote = null,
             isArchived = false,
-            name = "Control Unit Name",
+            name = "Unit Name",
             termsNote = null,
         )
-        val requestBody = objectMapper.writeValueAsString(request)
+        val requestBody = objectMapper.writeValueAsString(newControlUnitData)
 
         given(createOrUpdateControlUnit.execute(controlUnit = any())).willReturn(
-            expectedNewControlUnit
+            expectedCreatedControlUnit
         )
 
         mockMvc.perform(
@@ -82,21 +84,21 @@ class ApiControlUnitsControllerITests {
     @Test
     fun `Should get a control unit by its ID`() {
         val expectedFullControlUnit = FullControlUnitDTO(
-            id = 1,
             administration = AdministrationEntity(
-                id = 2,
-                controlUnitIds = listOf(),
+                id = 0,
+                isArchived = false,
                 name = "Administration Name",
             ),
-            administrationId = 2,
-            areaNote = null,
-            controlUnitContactIds = listOf(),
+            controlUnit = ControlUnitEntity(
+                id = 1,
+                administrationId = 0,
+                areaNote = null,
+                isArchived = false,
+                name = "Unit Name",
+                termsNote = null,
+            ),
             controlUnitContacts = listOf(),
-            controlUnitResourceIds = listOf(),
             controlUnitResources = listOf(),
-            isArchived = false,
-            name = "Contact Name",
-            termsNote = null,
         )
 
         val requestedId = 1
@@ -113,39 +115,39 @@ class ApiControlUnitsControllerITests {
     fun `Should get all control units`() {
         val expectedControlUnits = listOf(
             FullControlUnitDTO(
-                id = 1,
                 administration = AdministrationEntity(
-                    id = 2,
-                    controlUnitIds = listOf(),
+                    id = 0,
+                    isArchived = false,
                     name = "Administration Name",
                 ),
-                administrationId = 2,
-                areaNote = null,
-                controlUnitContactIds = listOf(),
+                controlUnit = ControlUnitEntity(
+                    id = 1,
+                    administrationId = 0,
+                    areaNote = null,
+                    isArchived = false,
+                    name = "Unit Name",
+                    termsNote = null,
+                ),
                 controlUnitContacts = listOf(),
-                controlUnitResourceIds = listOf(),
                 controlUnitResources = listOf(),
-                isArchived = false,
-                name = "Contact Name",
-                termsNote = null,
             ),
 
             FullControlUnitDTO(
-                id = 3,
                 administration = AdministrationEntity(
-                    id = 4,
-                    controlUnitIds = listOf(),
-                    name = "Administration Name 2",
+                    id = 0,
+                    isArchived = false,
+                    name = "Administration Name",
                 ),
-                administrationId = 4,
-                areaNote = null,
-                controlUnitContactIds = listOf(),
+                controlUnit = ControlUnitEntity(
+                    id = 2,
+                    administrationId = 0,
+                    areaNote = null,
+                    isArchived = false,
+                    name = "Unit Name 2",
+                    termsNote = null,
+                ),
                 controlUnitContacts = listOf(),
-                controlUnitResourceIds = listOf(),
                 controlUnitResources = listOf(),
-                isArchived = false,
-                name = "Contact Name 2",
-                termsNote = null,
             )
         )
 
@@ -160,30 +162,26 @@ class ApiControlUnitsControllerITests {
 
     @Test
     fun `Should update a control unit`() {
-        val updatedControlUnit = ControlUnitEntity(
+        val expectedUpdatedControlUnit = ControlUnitEntity(
             id = 1,
-            administrationId = 2,
-            controlUnitContactIds = listOf(),
-            controlUnitResourceIds = listOf(),
+            administrationId = 0,
             areaNote = null,
             isArchived = false,
-            name = "Updated Control Unit Name",
+            name = "Updated Unit Name",
             termsNote = null,
         )
 
-        val request = CreateOrUpdateControlUnitDataInput(
+        val nextControlUnitData = CreateOrUpdateControlUnitDataInput(
             id = 1,
-            administrationId = 2,
-            controlUnitContactIds = listOf(),
-            controlUnitResourceIds = listOf(),
+            administrationId = 0,
             areaNote = null,
             isArchived = false,
-            name = "Updated Control Unit Name",
+            name = "Updated Unit Name",
             termsNote = null,
         )
-        val requestBody = objectMapper.writeValueAsString(request)
+        val requestBody = objectMapper.writeValueAsString(nextControlUnitData)
 
-        given(createOrUpdateControlUnit.execute(controlUnit = any())).willReturn(updatedControlUnit)
+        given(createOrUpdateControlUnit.execute(controlUnit = any())).willReturn(expectedUpdatedControlUnit)
 
         mockMvc.perform(
             put("/api/v2/control_units/1")

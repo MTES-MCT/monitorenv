@@ -1,5 +1,5 @@
 import { monitorenvPublicApi } from './api'
-import { ApiError } from '../libs/ApiError'
+import { FrontendApiError } from '../libs/FrontendApiError'
 
 import type { Base } from '../domain/entities/base'
 
@@ -20,13 +20,13 @@ export const basesAPI = monitorenvPublicApi.injectEndpoints({
     getBase: builder.query<Base.Base, number>({
       providesTags: () => [{ type: 'Bases' }],
       query: baseId => `/v1/bases/${baseId}`,
-      transformErrorResponse: response => new ApiError(GET_BASE_ERROR_MESSAGE, response)
+      transformErrorResponse: response => new FrontendApiError(GET_BASE_ERROR_MESSAGE, response)
     }),
 
     getBases: builder.query<Base.Base[], void>({
       providesTags: () => [{ type: 'Bases' }],
       query: () => `/v1/bases`,
-      transformErrorResponse: response => new ApiError(GET_BASES_ERROR_MESSAGE, response)
+      transformErrorResponse: response => new FrontendApiError(GET_BASES_ERROR_MESSAGE, response)
     }),
 
     updateBase: builder.mutation<void, Base.Base>({

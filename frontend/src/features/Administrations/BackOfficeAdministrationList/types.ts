@@ -1,3 +1,4 @@
 export type FiltersState = {
-  query?: string
+  isArchived: boolean
+  query: string | undefined
 }

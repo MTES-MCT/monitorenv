@@ -25,13 +25,4 @@ data class NatinfModel(
         infractionCategory = infractionCategory,
         infraction = infraction,
     )
-
-    companion object {
-        fun fromNatinfEntity(natinf: NatinfEntity) = NatinfModel(
-            natinfCode = natinf.natinfCode,
-            regulation = natinf.regulation,
-            infractionCategory = natinf.infractionCategory,
-            infraction = natinf.infraction,
-        )
-    }
 }

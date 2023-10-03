@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.*
 import fr.gouv.cacem.monitorenv.domain.exceptions.ControlResourceOrUnitNotFoundException
@@ -16,10 +17,9 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 class JpaMissionRepositoryITests : AbstractDBTests() {
-
     @Autowired
     private lateinit var jpaMissionRepository: JpaMissionRepository
 
@@ -77,15 +77,17 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             ),
             controlUnits = listOf(
                 LegacyControlUnitEntity(
-                    id = 5,
+                    id = 10004,
                     name = "DPM – DDTM 35",
                     administration = "DDTM",
                     isArchived = false,
                     resources = listOf(
                         ControlUnitResourceEntity(
                             id = 8,
-                            controlUnitId = 5,
+                            baseId = 0,
+                            controlUnitId = 10004,
                             name = "PAM Jeanne Barret",
+                            type = ControlUnitResourceType.BARGE,
                         )
                     ),
                 ),
@@ -98,11 +100,12 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
         // Then
         assertThat(newMissionCreated.controlUnits).hasSize(1)
-        assertThat(newMissionCreated.controlUnits.first().id).isEqualTo(5)
+        assertThat(newMissionCreated.controlUnits.first().id).isEqualTo(10004)
         assertThat(newMissionCreated.controlUnits.first().name).isEqualTo("DPM – DDTM 35")
         assertThat(newMissionCreated.controlUnits.first().administration).isEqualTo("DDTM")
         assertThat(newMissionCreated.controlUnits.first().resources).hasSize(1)
         assertThat(newMissionCreated.controlUnits.first().resources.first().id).isEqualTo(8)
+        assertThat(newMissionCreated.controlUnits.first().resources.first().baseId).isEqualTo(0)
         assertThat(newMissionCreated.controlUnits.first().resources.first().name).isEqualTo("PAM Jeanne Barret")
         assertThat(newMissionCreated.envActions).hasSize(3)
         assertThat(newMissionCreated.envActions?.first()?.facade).isEqualTo("Facade 1")
@@ -139,15 +142,17 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             isUnderJdp = false,
             controlUnits = listOf(
                 LegacyControlUnitEntity(
-                    id = 5,
+                    id = 10004,
                     name = "DPM – DDTM 35",
                     administration = "DDTM",
                     isArchived = false,
                     resources = listOf(
                         ControlUnitResourceEntity(
                             id = 8,
-                            controlUnitId = 5,
+                            baseId = 0,
+                            controlUnitId = 10004,
                             name = "PAM Jeanne Barret",
+                            type = ControlUnitResourceType.BARGE,
                         )
                     ),
                 ),
@@ -161,13 +166,25 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             newMission.copy(
                 controlUnits = listOf(
                     LegacyControlUnitEntity(
-                        id = 5,
+                        id = 10004,
                         name = "DPM – DDTM 35",
                         administration = "DDTM",
                         isArchived = false,
                         resources = listOf(
-                            ControlUnitResourceEntity(id = 8, controlUnitId = 5, name = "PAM Jeanne Barret"),
-                            ControlUnitResourceEntity(id = 5, controlUnitId = 5, name = "Voiture"),
+                            ControlUnitResourceEntity(
+                                id = 8,
+                                baseId = 0,
+                                controlUnitId = 5,
+                                name = "PAM Jeanne Barret",
+                                type = ControlUnitResourceType.BARGE,
+                            ),
+                            ControlUnitResourceEntity(
+                                id = 5,
+                                baseId = 0,
+                                controlUnitId = 5,
+                                name = "Voiture",
+                                type = ControlUnitResourceType.BARGE,
+                            ),
                         ),
                     ),
                 ),
@@ -176,11 +193,12 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
         // Then
         assertThat(newMissionUpdated.controlUnits).hasSize(1)
-        assertThat(newMissionUpdated.controlUnits.first().id).isEqualTo(5)
+        assertThat(newMissionUpdated.controlUnits.first().id).isEqualTo(10004)
         assertThat(newMissionUpdated.controlUnits.first().name).isEqualTo("DPM – DDTM 35")
         assertThat(newMissionUpdated.controlUnits.first().administration).isEqualTo("DDTM")
         assertThat(newMissionUpdated.controlUnits.first().resources).hasSize(2)
         assertThat(newMissionUpdated.controlUnits.first().resources.first().id).isEqualTo(8)
+        assertThat(newMissionUpdated.controlUnits.first().resources.first().baseId).isEqualTo(0)
         assertThat(newMissionUpdated.controlUnits.first().resources.first().name).isEqualTo("PAM Jeanne Barret")
         assertThat(newMissionUpdated.controlUnits.first().resources.last().id).isEqualTo(5)
         assertThat(newMissionUpdated.controlUnits.first().resources.last().name).isEqualTo("Voiture")
@@ -207,8 +225,10 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     resources = listOf(
                         ControlUnitResourceEntity(
                             id = 123456,
+                            baseId = 0,
                             controlUnitId = 5,
                             name = "PAM Jeanne Barret",
+                            type = ControlUnitResourceType.BARGE,
                         )
                     ),
                 ),
@@ -486,14 +506,32 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             isUnderJdp = false,
             controlUnits = listOf(
                 LegacyControlUnitEntity(
-                    id = 3,
+                    id = 10002,
                     administration = "DDTM",
                     isArchived = false,
                     name = "DML 2A",
                     resources = listOf(
-                        ControlUnitResourceEntity(id = 3, controlUnitId = 3, name = "Semi-rigide 1"),
-                        ControlUnitResourceEntity(id = 4, controlUnitId = 3, name = "Semi-rigide 2"),
-                        ControlUnitResourceEntity(id = 5, controlUnitId = 3, name = "Voiture"),
+                        ControlUnitResourceEntity(
+                            id = 3,
+                            baseId = 2,
+                            controlUnitId = 10002,
+                            name = "Semi-rigide 1",
+                            type = ControlUnitResourceType.BARGE,
+                        ),
+                        ControlUnitResourceEntity(
+                            id = 4,
+                            baseId = 2,
+                            controlUnitId = 10002,
+                            name = "Semi-rigide 2",
+                            type = ControlUnitResourceType.BARGE,
+                        ),
+                        ControlUnitResourceEntity(
+                            id = 5,
+                            baseId = 3,
+                            controlUnitId = 10002,
+                            name = "Voiture",
+                            type = ControlUnitResourceType.LAND_VEHICLE,
+                        ),
                     ),
                     contact = null,
                 ),

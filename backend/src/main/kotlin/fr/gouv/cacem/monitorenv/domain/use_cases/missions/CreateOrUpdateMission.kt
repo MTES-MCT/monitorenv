@@ -2,17 +2,19 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.missions // ktlint-disable pac
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.mission.*
+import fr.gouv.cacem.monitorenv.domain.repositories.IBaseRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 
 @UseCase
 class CreateOrUpdateMission(
+    private val baseRepository: IBaseRepository,
     private val departmentRepository: IDepartmentAreasRepository,
     private val missionRepository: IMissionRepository,
     private val facadeRepository: IFacadeAreasRepository,
 
-) {
+    ) {
     @Throws(IllegalArgumentException::class)
     fun execute(mission: MissionEntity?): MissionEntity {
         require(mission != null) {
@@ -22,10 +24,13 @@ class CreateOrUpdateMission(
             when (it.actionType) {
                 ActionTypeEnum.CONTROL -> {
                     (it as EnvActionControlEntity).copy(
-                        facade = (it.geom ?: mission.geom)?.let { geom -> facadeRepository.findFacadeFromGeometry(geom) },
-                        department = (it.geom ?: mission.geom)?.let { geom -> departmentRepository.findDepartmentFromGeometry(geom) },
+                        facade = (it.geom
+                            ?: mission.geom)?.let { geom -> facadeRepository.findFacadeFromGeometry(geom) },
+                        department = (it.geom
+                            ?: mission.geom)?.let { geom -> departmentRepository.findDepartmentFromGeometry(geom) },
                     )
                 }
+
                 ActionTypeEnum.SURVEILLANCE -> {
                     val surveillance = it as EnvActionSurveillanceEntity
                     /*
@@ -35,12 +40,14 @@ class CreateOrUpdateMission(
                     is null, or if coverMissionZone is false and the action geom is null, then rather that nothing,
                     better use the geometry that is available, if any.
                     */
-                    val geometry = if (surveillance.coverMissionZone == true) (mission.geom ?: surveillance.geom) else (surveillance.geom ?: mission.geom)
+                    val geometry = if (surveillance.coverMissionZone == true) (mission.geom
+                        ?: surveillance.geom) else (surveillance.geom ?: mission.geom)
                     surveillance.copy(
                         facade = geometry?.let { geom -> facadeRepository.findFacadeFromGeometry(geom) },
                         department = geometry?.let { geom -> departmentRepository.findDepartmentFromGeometry(geom) },
                     )
                 }
+
                 ActionTypeEnum.NOTE -> {
                     (it as EnvActionNoteEntity).copy()
                 }

@@ -5,11 +5,10 @@ import com.fasterxml.jackson.annotation.JsonManagedReference
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
-import fr.gouv.cacem.monitorenv.utils.requireIds
 import jakarta.persistence.*
-import java.time.Instant
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
+import java.time.Instant
 
 @Entity
 @Table(name = "control_units")
@@ -29,11 +28,11 @@ data class ControlUnitModel(
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlUnit")
     @JsonManagedReference
-    var controlUnitContacts: List<ControlUnitContactModel>,
+    var controlUnitContacts: List<ControlUnitContactModel>? = mutableListOf(),
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlUnit")
     @JsonManagedReference
-    var controlUnitResources: List<ControlUnitResourceModel>,
+    var controlUnitResources: List<ControlUnitResourceModel>? = mutableListOf(),
 
     @Column(name = "archived")
     var isArchived: Boolean,
@@ -53,11 +52,15 @@ data class ControlUnitModel(
     var updatedAtUtc: Instant? = null,
 ) {
     companion object {
+        /**
+         * @param controlUnitContactModels Return control unit contacts relations when provided.
+         * @param controlUnitResourceModels Return control unit resources relations when provided.
+         */
         fun fromControlUnit(
             controlUnit: ControlUnitEntity,
             administrationModel: AdministrationModel,
-            controlUnitContactModels: List<ControlUnitContactModel>,
-            controlUnitResourceModels: List<ControlUnitResourceModel>
+            controlUnitContactModels: List<ControlUnitContactModel>? = null,
+            controlUnitResourceModels: List<ControlUnitResourceModel>? = null
         ): ControlUnitModel {
             return ControlUnitModel(
                 id = controlUnit.id,
@@ -77,8 +80,6 @@ data class ControlUnitModel(
             id,
             administrationId = requireNotNull(administration.id),
             areaNote,
-            controlUnitContactIds = requireIds(controlUnitContacts) { it.id },
-            controlUnitResourceIds = requireIds(controlUnitResources) { it.id },
             isArchived,
             name,
             termsNote,
@@ -87,17 +88,10 @@ data class ControlUnitModel(
 
     fun toFullControlUnit(): FullControlUnitDTO {
         return FullControlUnitDTO(
-            id,
             administration = administration.toAdministration(),
-            administrationId = requireNotNull(administration.id),
-            areaNote,
-            controlUnitContactIds = requireIds(controlUnitContacts) { it.id },
-            controlUnitContacts = controlUnitContacts.map { it.toControlUnitContact() },
-            controlUnitResourceIds = requireIds(controlUnitResources) { it.id },
-            controlUnitResources = controlUnitResources.map { it.toControlUnitResource() },
-            isArchived,
-            name,
-            termsNote,
+            controlUnit = toControlUnit(),
+            controlUnitContacts = requireNotNull(controlUnitContacts).map { it.toControlUnitContact() },
+            controlUnitResources = requireNotNull(controlUnitResources).map { it.toFullControlUnitResource() },
         )
     }
 
@@ -107,7 +101,7 @@ data class ControlUnitModel(
             administration = administration.name,
             isArchived,
             name,
-            resources = controlUnitResources.map { it.toControlUnitResource() },
+            resources = requireNotNull(controlUnitResources).map { it.toControlUnitResource() },
             contact = "",
         )
     }

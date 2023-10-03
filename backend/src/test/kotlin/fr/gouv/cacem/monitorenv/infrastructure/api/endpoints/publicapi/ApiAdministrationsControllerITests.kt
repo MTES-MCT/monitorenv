@@ -30,7 +30,13 @@ class ApiAdministrationsControllerITests {
     private lateinit var mockMvc: MockMvc
 
     @MockBean
+    private lateinit var archiveAdministration: ArchiveAdministration
+
+    @MockBean
     private lateinit var createOrUpdateAdministration: CreateOrUpdateAdministration
+
+    @MockBean
+    private lateinit var deleteAdministration: DeleteAdministration
 
     @MockBean
     private lateinit var getAdministrationById: GetAdministrationById
@@ -43,19 +49,19 @@ class ApiAdministrationsControllerITests {
 
     @Test
     fun `Should create an administration`() {
-        val expectedNewAdministration = AdministrationEntity(
+        val expectedCreatedAdministration = AdministrationEntity(
             id = 1,
-            controlUnitIds = listOf(),
+            isArchived = false,
             name = "Administration Name",
         )
 
-        val request = CreateOrUpdateAdministrationDataInput(
-            controlUnitIds = listOf(),
+        val newAdministrationData = CreateOrUpdateAdministrationDataInput(
+            isArchived = false,
             name = "Administration Name",
         )
-        val requestBody = objectMapper.writeValueAsString(request)
+        val requestBody = objectMapper.writeValueAsString(newAdministrationData)
 
-        given(createOrUpdateAdministration.execute(administration = any())).willReturn(expectedNewAdministration)
+        given(createOrUpdateAdministration.execute(administration = any())).willReturn(expectedCreatedAdministration)
 
         mockMvc.perform(
             post("/api/v1/administrations")
@@ -69,10 +75,12 @@ class ApiAdministrationsControllerITests {
     @Test
     fun `Should get an administration by its ID`() {
         val expectedFullAdministration = FullAdministrationDTO(
-            id = 1,
-            controlUnitIds = listOf(),
+            administration = AdministrationEntity(
+                id = 1,
+                isArchived = false,
+                name = "Administration Name",
+            ),
             controlUnits = listOf(),
-            name = "Administration Name",
         )
 
         val requestedId = 1
@@ -87,23 +95,27 @@ class ApiAdministrationsControllerITests {
 
     @Test
     fun `Should get all administrations`() {
-        val expectedAdministrations = listOf(
+        val expectedAFulldministrations = listOf(
             FullAdministrationDTO(
-                id = 1,
-                controlUnitIds = listOf(),
+                administration = AdministrationEntity(
+                    id = 1,
+                    isArchived = false,
+                    name = "Administration Name",
+                ),
                 controlUnits = listOf(),
-                name = "Administration Name",
             ),
 
             FullAdministrationDTO(
-                id = 2,
-                controlUnitIds = listOf(),
+                administration = AdministrationEntity(
+                    id = 2,
+                    isArchived = false,
+                    name = "Administration Name 2",
+                ),
                 controlUnits = listOf(),
-                name = "Administration Name 2",
             )
         )
 
-        given(getAdministrations.execute()).willReturn(expectedAdministrations)
+        given(getAdministrations.execute()).willReturn(expectedAFulldministrations)
 
         mockMvc.perform(get("/api/v1/administrations"))
             .andExpect(status().isOk)
@@ -114,20 +126,20 @@ class ApiAdministrationsControllerITests {
 
     @Test
     fun `Should update an administration`() {
-        val updatedAdministration = AdministrationEntity(
+        val expectedUpdatedAdministration = AdministrationEntity(
             id = 1,
-            controlUnitIds = listOf(),
+            isArchived = false,
             name = "Updated Administration Name",
         )
 
-        val request = CreateOrUpdateAdministrationDataInput(
+        val nextAdministrationData = CreateOrUpdateAdministrationDataInput(
             id = 1,
-            controlUnitIds = listOf(),
+            isArchived = false,
             name = "Updated Administration Name",
         )
-        val requestBody = objectMapper.writeValueAsString(request)
+        val requestBody = objectMapper.writeValueAsString(nextAdministrationData)
 
-        given(createOrUpdateAdministration.execute(administration = any())).willReturn(updatedAdministration)
+        given(createOrUpdateAdministration.execute(administration = any())).willReturn(expectedUpdatedAdministration)
 
         mockMvc.perform(
             put("/api/v1/administrations/1")

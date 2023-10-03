@@ -53,6 +53,9 @@ dev-run-infra:
 
 	@echo "Database Ready for connections!"
 
+dev-dump-db:
+	sh ./infra/scripts/backup_dev_db.sh
+
 dev-erase-db:
 	docker compose \
 		--project-name $(PROJECT_NAME) \
@@ -87,6 +90,9 @@ docker-build-app:
 		--build-arg SENTRY_AUTH_TOKEN=$(SENTRY_AUTH_TOKEN) \
 		--build-arg SENTRY_ORG=$(SENTRY_ORG) \
 		--build-arg SENTRY_PROJECT=$(SENTRY_PROJECT)
+
+reset:
+	sh ./infra/scripts/restore_dev_db.sh
 
 # INIT commands
 .PHONY: load-sig-data prod-load-sig-data init-geoserver

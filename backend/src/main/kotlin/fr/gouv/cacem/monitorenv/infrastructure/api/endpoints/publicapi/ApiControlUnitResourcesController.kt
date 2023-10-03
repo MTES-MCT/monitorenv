@@ -5,6 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitResou
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitResources
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitResourceDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.ControlUnitResourceDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.FullControlUnitResourceDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
@@ -38,16 +39,17 @@ class ApiControlUnitResourcesController(
         @PathParam("Control unit resource ID")
         @PathVariable(name = "controlUnitResourceId")
         controlUnitResourceId: Int,
-    ): ControlUnitResourceDataOutput {
+    ): FullControlUnitResourceDataOutput {
         val foundFullControlUnitResource = getControlUnitResourceById.execute(controlUnitResourceId)
 
-        return ControlUnitResourceDataOutput.fromFullControlUnitResource(foundFullControlUnitResource)
+        return FullControlUnitResourceDataOutput.fromFullControlUnitResource(foundFullControlUnitResource)
     }
 
     @GetMapping("")
     @Operation(summary = "List control unit resources")
-    fun getAll(): List<ControlUnitResourceDataOutput> {
-        return getControlUnitResources.execute().map { ControlUnitResourceDataOutput.fromFullControlUnitResource(it) }
+    fun getAll(): List<FullControlUnitResourceDataOutput> {
+        return getControlUnitResources.execute()
+            .map { FullControlUnitResourceDataOutput.fromFullControlUnitResource(it) }
     }
 
     @PutMapping(value = ["/{controlUnitResourceId}"], consumes = ["application/json"])

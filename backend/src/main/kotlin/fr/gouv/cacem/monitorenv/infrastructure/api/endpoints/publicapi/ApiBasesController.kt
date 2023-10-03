@@ -5,6 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.base.GetBaseById
 import fr.gouv.cacem.monitorenv.domain.use_cases.base.GetBases
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateBaseDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.BaseDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.FullBaseDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
@@ -38,18 +39,18 @@ class ApiBasesController(
         @PathParam("Base ID")
         @PathVariable(name = "baseId")
         baseId: Int,
-    ): BaseDataOutput {
+    ): FullBaseDataOutput {
         val foundFullBase = getBaseById.execute(baseId)
 
-        return BaseDataOutput.fromFullBase(foundFullBase)
+        return FullBaseDataOutput.fromFullBase(foundFullBase)
     }
 
     @GetMapping("")
     @Operation(summary = "List bases")
-    fun getAll(): List<BaseDataOutput> {
+    fun getAll(): List<FullBaseDataOutput> {
         val foundFullBases = getBases.execute()
 
-        return foundFullBases.map { BaseDataOutput.fromFullBase(it) }
+        return foundFullBases.map { FullBaseDataOutput.fromFullBase(it) }
     }
 
     @PutMapping(value = ["/{baseId}"], consumes = ["application/json"])

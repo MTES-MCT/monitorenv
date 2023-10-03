@@ -43,19 +43,21 @@ INSERT INTO public.control_units (
 
 ALTER SEQUENCE public.control_unit_resources_id_seq RESTART WITH 1;
 
-INSERT INTO public.control_unit_resources (control_unit_id, name) VALUES
-    (10001, 'Semi-rigide 1'),
-    (10001, 'Semi-rigide 2'),
-    (10003, 'Semi-rigide 1'),
-    (10003, 'Semi-rigide 2'),
-    (10003, 'Voiture'),
-    (10004, 'AR VECHEN'),
-    (10004, 'Semi-rigide'),
-    (10011, 'PAM Jeanne Barret'),
-    (10012, 'PAM Themis'),
-    (10019, 'ALTAIR'),
-    (10019, 'PHEROUSA'),
-    (10019, 'ARIOLA');
+INSERT INTO public.control_unit_resources
+    (control_unit_id,  base_id,                name,         type)
+VALUES
+    (          10001,        0,     'Semi-rigide 1',    'UNKNOWN'),
+    (          10001,        0,     'Semi-rigide 2',    'UNKNOWN'),
+    (          10003,        0,     'Semi-rigide 1',    'UNKNOWN'),
+    (          10003,        0,     'Semi-rigide 2',    'UNKNOWN'),
+    (          10003,        0,           'Voiture',    'UNKNOWN'),
+    (          10004,        0,         'AR VECHEN',    'UNKNOWN'),
+    (          10004,        0,       'Semi-rigide',    'UNKNOWN'),
+    (          10011,        0, 'PAM Jeanne Barret',    'UNKNOWN'),
+    (          10012,        0,        'PAM Themis',    'UNKNOWN'),
+    (          10019,        0,            'ALTAIR',    'UNKNOWN'),
+    (          10019,        0,          'PHEROUSA',    'UNKNOWN'),
+    (          10019,        0,            'ARIOLA',    'UNKNOWN');
 
 
 

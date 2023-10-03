@@ -3,12 +3,11 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
-import fr.gouv.cacem.monitorenv.utils.requireIds
 import fr.gouv.cacem.monitorenv.utils.requireNotNullList
 import jakarta.persistence.*
-import java.time.Instant
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
+import java.time.Instant
 
 @Entity
 @Table(name = "administrations")
@@ -20,8 +19,10 @@ data class AdministrationModel(
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "administration")
     @JsonManagedReference
-    // TODO This shouldn't be nullable but there because of `MissionControlUnitModel.fromControlUnitEntity()`.
-    var controlUnits: List<ControlUnitModel>? = null,
+    var controlUnits: List<ControlUnitModel>? = mutableListOf(),
+
+    @Column(name = "is_archived")
+    var isArchived: Boolean,
 
     @Column(name = "name", nullable = false, unique = true)
     var name: String,
@@ -35,13 +36,17 @@ data class AdministrationModel(
     var updatedAtUtc: Instant? = null,
 ) {
     companion object {
+        /**
+         * @param controlUnitModels Return control units relations when provided.
+         */
         fun fromAdministration(
             administration: AdministrationEntity,
-            controlUnitModels: List<ControlUnitModel>
+            controlUnitModels: List<ControlUnitModel>? = mutableListOf()
         ): AdministrationModel {
             return AdministrationModel(
                 id = administration.id,
                 controlUnits = controlUnitModels,
+                isArchived = administration.isArchived,
                 name = administration.name,
             )
         }
@@ -50,18 +55,15 @@ data class AdministrationModel(
     fun toAdministration(): AdministrationEntity {
         return AdministrationEntity(
             id,
-            controlUnitIds = requireIds(controlUnits) { it.id },
+            isArchived,
             name,
         )
     }
 
     fun toFullAdministration(): FullAdministrationDTO {
         return FullAdministrationDTO(
-            id,
-            controlUnitIds = requireIds(controlUnits) { it.id },
-            // TODO Remove `requireNotNullList()` once `controlUnits` is non-nullable.
+            administration = toAdministration(),
             controlUnits = requireNotNullList(controlUnits).map { it.toControlUnit() },
-            name,
         )
     }
 }

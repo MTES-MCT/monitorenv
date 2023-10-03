@@ -11,13 +11,13 @@ interface IDBAdministrationRepository : CrudRepository<AdministrationModel, Int>
     @Modifying(clearAutomatically = true)
     @Query(
         value = """
-        DELETE
-        FROM administrations
-        WHERE id = :id
+        UPDATE administrations
+        SET is_archived = TRUE
+        WHERE id = :administrationId
         """,
         nativeQuery = true,
     )
-    override fun deleteById(id: Int)
+    fun archiveById(administrationId: Int)
 
     @Query(
         value = """

@@ -1,7 +1,11 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases // ktlint-disable package-name
 
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.given
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.entities.mission.*
+import fr.gouv.cacem.monitorenv.domain.repositories.IBaseRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
@@ -20,6 +24,8 @@ import java.util.*
 
 @ExtendWith(SpringExtension::class)
 class CreateOrUpdateMissionUTests {
+    @MockBean
+    private lateinit var baseRepository: IBaseRepository
 
     @MockBean
     private lateinit var departmentRepository: IDepartmentAreasRepository
@@ -34,7 +40,7 @@ class CreateOrUpdateMissionUTests {
     fun `execute Should throw an exception When input mission is null`() {
         // When
         val throwable = Assertions.catchThrowable {
-            CreateOrUpdateMission(departmentRepository, missionRepository, facadeAreasRepository)
+            CreateOrUpdateMission(baseRepository, departmentRepository, missionRepository, facadeAreasRepository)
                 .execute(null)
         }
 
@@ -48,7 +54,8 @@ class CreateOrUpdateMissionUTests {
         // Given
         val wktReader = WKTReader()
 
-        val multipolygonString = "MULTIPOLYGON(((-2.7335 47.6078, -2.7335 47.8452, -3.6297 47.8452, -3.6297 47.6078, -2.7335 47.6078)))"
+        val multipolygonString =
+            "MULTIPOLYGON(((-2.7335 47.6078, -2.7335 47.8452, -3.6297 47.8452, -3.6297 47.6078, -2.7335 47.6078)))"
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
         val multipointString = "MULTIPOINT((49.354105 -0.427455))"
@@ -108,7 +115,15 @@ class CreateOrUpdateMissionUTests {
         given(departmentRepository.findDepartmentFromGeometry(anyOrNull())).willReturn("Quequ'part")
 
         // When
-        val createdMission = CreateOrUpdateMission(departmentRepository, missionRepository, facadeAreasRepository).execute(missionToCreate)
+        val createdMission =
+            CreateOrUpdateMission(
+                baseRepository,
+                departmentRepository,
+                missionRepository,
+                facadeAreasRepository
+            ).execute(
+                missionToCreate
+            )
 
         // Then
         verify(missionRepository, times(1)).save(expectedCreatedMission)

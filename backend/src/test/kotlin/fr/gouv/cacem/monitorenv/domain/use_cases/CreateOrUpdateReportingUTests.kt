@@ -11,7 +11,10 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
-import fr.gouv.cacem.monitorenv.domain.repositories.*
+import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.ISemaphoreRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.CreateOrUpdateReporting
 import org.assertj.core.api.Assertions
@@ -119,19 +122,19 @@ class CreateOrUpdateReportingUTests {
             )
         val fullControlUnit =
             FullControlUnitDTO(
-                id = 1,
                 administration = AdministrationEntity(
                     id = 1,
-                    controlUnitIds = listOf(),
+                    isArchived = false,
                     name = "administration 1",
                 ),
-                administrationId = 2,
-                controlUnitContactIds = listOf(),
+                controlUnit = ControlUnitEntity(
+                    id = 1,
+                    administrationId = 2,
+                    isArchived = false,
+                    name = "control unit 1",
+                ),
                 controlUnitContacts = listOf(),
-                controlUnitResourceIds = listOf(),
                 controlUnitResources = listOf(),
-                isArchived = false,
-                name = "control unit 1",
             )
 
         given(createOrUpdateReportingRepositoty.save(reportingWithSemaphore))

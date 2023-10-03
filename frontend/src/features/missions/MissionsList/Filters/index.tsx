@@ -47,6 +47,11 @@ export function MissionsTableFilters() {
   const { data: legacyControlUnits } = useGetLegacyControlUnitsQuery()
   const { data: controlThemes } = useGetControlThemesQuery()
 
+  const activedAdministrations = useMemo(
+    () => (administrations || []).filter(administration => !administration.isArchived),
+    [administrations]
+  )
+
   const themesAsOptions = useMemo(() => getThemesAsListOptions(controlThemes), [controlThemes])
 
   const controlUnitsAsOptions = useMemo(() => {
@@ -169,7 +174,7 @@ export function MissionsTableFilters() {
         />
         <StyledCheckPicker
           container={newWindowContainerRef.current}
-          data={administrations || []}
+          data={activedAdministrations || []}
           data-cy="select-administration-filter"
           labelKey="name"
           onChange={onUpdateAdministrationFilter as any}

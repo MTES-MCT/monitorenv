@@ -2,17 +2,24 @@ import { DataTable } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { CONTROL_UNIT_TABLE_COLUMNS } from './constants'
 import { FilterBar } from './FilterBar'
-import { getFilters } from './utils'
+import { TabMenu } from './TabMenu'
+import { getControlUnitTableColumns, getFilters } from './utils'
 import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { NavButton } from '../../../ui/NavButton'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/constants'
 
 export function BackOfficeControlUnitList() {
   const backOfficeControlUnitList = useAppSelector(store => store.backOfficeControlUnitList)
+  const dispatch = useAppDispatch()
   const { data: controlUnits } = useGetControlUnitsQuery()
+
+  const controlUnitTableColumns = useMemo(
+    () => getControlUnitTableColumns(dispatch, backOfficeControlUnitList.filtersState.isArchived),
+    [backOfficeControlUnitList.filtersState.isArchived, dispatch]
+  )
 
   const filteredControlUnits = useMemo(() => {
     if (!controlUnits) {
@@ -28,6 +35,8 @@ export function BackOfficeControlUnitList() {
     <>
       <Title>Administration des unités de contrôle</Title>
 
+      <TabMenu />
+
       <FilterBar />
 
       <ActionGroup>
@@ -37,7 +46,7 @@ export function BackOfficeControlUnitList() {
       </ActionGroup>
 
       <DataTable
-        columns={CONTROL_UNIT_TABLE_COLUMNS}
+        columns={controlUnitTableColumns}
         data={filteredControlUnits}
         initialSorting={[{ desc: false, id: 'name' }]}
       />

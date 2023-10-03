@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetLegacyControlUnits
 import org.hamcrest.Matchers.equalTo
@@ -35,9 +36,11 @@ class ApiLegacyControlUnitsControllerITests {
             name = "DF 123",
             resources = listOf(
                 ControlUnitResourceEntity(
-                    id = 1,
-                    controlUnitId = 2,
+                    id = 0,
+                    baseId = 0,
+                    controlUnitId = 0,
                     name = "Vedette",
+                    type = ControlUnitResourceType.BARGE,
                 )
             ),
         )

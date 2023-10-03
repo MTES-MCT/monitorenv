@@ -13,9 +13,11 @@ github_token.txt
 # Coverage reports
 datascience/htmlcov/
 datascience/.coverage
+frontend/cypress/screenshots/
 frontend/cypress/videos/
 
 # Local data
+/.backups
 /data
 /datascience/data
 /datascience/src/pipeline/data/control_objectives.csv

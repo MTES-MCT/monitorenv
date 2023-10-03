@@ -42,8 +42,6 @@ export const CONTROL_UNIT_FORM_SCHEMA = object({
 export const INITIAL_CONTROL_UNIT_FORM_VALUES: ControlUnitFormValues = {
   administrationId: undefined,
   areaNote: undefined,
-  controlUnitContactIds: [],
-  controlUnitResourceIds: [],
   isArchived: false,
   name: undefined,
   termsNote: undefined

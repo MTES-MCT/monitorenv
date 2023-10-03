@@ -11,6 +11,7 @@ on:
       - "Makefile"
   schedule:
     - cron: "38 11 */3 * *"
+  workflow_dispatch:
 
 jobs:
   build:

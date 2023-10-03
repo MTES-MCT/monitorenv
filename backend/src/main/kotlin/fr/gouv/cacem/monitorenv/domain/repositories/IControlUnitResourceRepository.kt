@@ -5,7 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUni
 
 interface IControlUnitResourceRepository {
     fun deleteById(controlUnitResourceId: Int)
-    
+
     fun findById(controlUnitResourceId: Int): FullControlUnitResourceDTO
 
     fun findAll(): List<FullControlUnitResourceDTO>

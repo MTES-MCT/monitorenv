@@ -5,20 +5,34 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IAdministrationRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.AdministrationModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ForeignKeyConstraintException
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.UnarchivedChildException
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBAdministrationRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
-import fr.gouv.cacem.monitorenv.utils.requireNotNullList
-import fr.gouv.cacem.monitorenv.utils.requirePresent
 import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
+
 @Repository
 class JpaAdministrationRepository(
     private val dbAdministrationRepository: IDBAdministrationRepository,
-    private val dbControlUnitRepository: IDBControlUnitRepository,
 ) : IAdministrationRepository {
+    @Transactional
+    override fun archiveById(administrationId: Int) {
+        val fullAdministration = findById(administrationId)
+        if (fullAdministration.controlUnits.any { !it.isArchived }) {
+            throw UnarchivedChildException("Cannot archive administration (ID=$administrationId) due to some of its control units not being archived.")
+        }
+
+        dbAdministrationRepository.archiveById(administrationId)
+    }
+
     override fun deleteById(administrationId: Int) {
+        val fullAdministration = findById(administrationId)
+        if (fullAdministration.controlUnits.isNotEmpty()) {
+            throw ForeignKeyConstraintException("Cannot delete administration (ID=$administrationId) due to existing relationships.")
+        }
+
         dbAdministrationRepository.deleteById(administrationId)
     }
 
@@ -33,13 +47,7 @@ class JpaAdministrationRepository(
     @Transactional
     override fun save(administration: AdministrationEntity): AdministrationEntity {
         return try {
-            val controlUnitModels = requireNotNullList(administration.controlUnitIds).map {
-                requirePresent(dbControlUnitRepository.findById(it))
-            }
-            val administrationModel = AdministrationModel.fromAdministration(
-                administration,
-                controlUnitModels,
-            )
+            val administrationModel = AdministrationModel.fromAdministration(administration)
 
             dbAdministrationRepository.save(administrationModel).toAdministration()
         } catch (e: InvalidDataAccessApiUsageException) {

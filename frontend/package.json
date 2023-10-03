@@ -20,7 +20,7 @@
     "start": "react-scripts start",
     "storybook": "storybook dev",
     "build-storybook": "storybook build",
-    "test:e2e": "npm run cypress:run  --config-file ./cypress.config.ts --e2e",
+    "test:e2e": "npm run cypress:run --browser firefox --config-file ./cypress.config.ts --e2e",
     "test:lint": "eslint ./src",
     "test:lint:fix": "npm run test:lint -- --fix",
     "test:lint:partial": "eslint --config=./.eslintrc.partial.js ./src",
@@ -33,7 +33,7 @@
   "dependencies": {
     "@dnd-kit/core": "^4.0.3",
     "@dnd-kit/modifiers": "^4.0.0",
-    "@mtes-mct/monitor-ui": "10.0.0",
+    "@mtes-mct/monitor-ui": "10.1.1",
     "@reduxjs/toolkit": "1.9.5",
     "@rsuite/responsive-nav": "5.0.1",
     "@sentry/browser": "7.60.0",

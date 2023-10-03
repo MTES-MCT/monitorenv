@@ -2,9 +2,9 @@ import {
   Accent,
   Button,
   DataTable,
+  FormikCheckbox,
   FormikSelect,
   FormikTextInput,
-  FormikTextarea,
   getOptionsFromIdAndName
 } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/dist/query'
@@ -95,8 +95,8 @@ export function BackOfficeControlUnitForm() {
                 searchable
               />
               <FormikTextInput label="Nom" name="name" />
-              <FormikTextarea label="Zone d'intervention" name="areaNote" />
-              <FormikTextarea label="Modalités de contact avec l’unité" name="termsNote" />
+              {/* This is a quick way to implement "unarchiving" for users in case of human error. */}
+              {initialValues.isArchived && <FormikCheckbox label="Unité archivée" name="isArchived" />}
 
               <ActionGroup>
                 <Button accent={Accent.SECONDARY} onClick={goBackToList}>

@@ -10,11 +10,8 @@ export namespace ControlUnit {
     controlUnitContactIds: number[]
     controlUnitContacts: ControlUnitContactData[]
     controlUnitResourceIds: number[]
-    controlUnitResources: Array<
-      ControlUnitResourceData & {
-        base: Base.BaseData
-      }
-    >
+    // `ControlUnitResource` and not `ControlUnitResourceData` because we need `base` data for each resource
+    controlUnitResources: ControlUnitResource[]
     id: number
     isArchived: boolean
     name: string
@@ -33,8 +30,7 @@ export namespace ControlUnit {
   }
 
   export interface ControlUnitResource {
-    // TODO Make that non-undefinable once all resources will have been attached to a base.
-    base: Base.BaseData | undefined
+    base: Base.BaseData
     baseId: number | undefined
     controlUnit: ControlUnitData
     controlUnitId: number
@@ -43,8 +39,7 @@ export namespace ControlUnit {
     note: string | undefined
     /** Base64 Data URI. */
     photo: string | undefined
-    // TODO Make that non-undefinable once all resources will have been attached to a type.
-    type: ControlUnitResourceType | undefined
+    type: ControlUnitResourceType
   }
 
   // ---------------------------------------------------------------------------
@@ -57,13 +52,21 @@ export namespace ControlUnit {
     BARGE = 'Barge',
     FRIGATE = 'Frégate',
     LAND_VEHICLE = 'Véhicule terrestre',
-    SCHOOL_BOAT = 'Bâtiment-École'
+    SCHOOL_BOAT = 'Bâtiment-École',
+    UNKNOWN = 'Type inconnu'
   }
 
   // ---------------------------------------------------------------------------
   // Types
 
-  export type ControlUnitData = Omit<ControlUnit, 'administration' | 'controlUnitContacts' | 'controlUnitResources'>
+  export type ControlUnitData = Omit<
+    ControlUnit,
+    | 'administration'
+    | 'controlUnitContactIds'
+    | 'controlUnitContacts'
+    | 'controlUnitResourceIds'
+    | 'controlUnitResources'
+  >
   export type NewControlUnitData = Omit<ControlUnitData, 'id'>
 
   export type ControlUnitContactData = Omit<ControlUnitContact, 'controlUnit'>

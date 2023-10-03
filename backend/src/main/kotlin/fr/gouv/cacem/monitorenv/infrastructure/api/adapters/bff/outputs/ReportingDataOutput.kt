@@ -1,12 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.*
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.ControlUnitDataOutput
@@ -46,30 +41,28 @@ data class ReportingDataOutput(
             semaphore: SemaphoreEntity?,
         ): ReportingDataOutput {
             requireNotNull(reporting.id) { "ReportingEntity.id cannot be null" }
+
+            val semaphoreDataOutput =
+                if (semaphore != null) {
+                    SemaphoreDataOutput.fromSemaphoreEntity(semaphore)
+                } else {
+                    null
+                }
+            val controlUnitDataOutput =
+                if (fullControlUnit != null) {
+                    ControlUnitDataOutput.fromFullControlUnit(fullControlUnit)
+                } else {
+                    null
+                }
+
             return ReportingDataOutput(
                 id = reporting.id,
                 reportingId = reporting.reportingId,
                 sourceType = reporting.sourceType,
                 semaphoreId = reporting.semaphoreId,
-                semaphore =
-                if (semaphore != null) {
-                    SemaphoreDataOutput
-                        .fromSemaphoreEntity(
-                            semaphore,
-                        )
-                } else {
-                    null
-                },
+                semaphore = semaphoreDataOutput,
                 controlUnitId = reporting.controlUnitId,
-                controlUnit =
-                if (fullControlUnit != null) {
-                    ControlUnitDataOutput
-                        .fromFullControlUnit(
-                            fullControlUnit,
-                        )
-                } else {
-                    null
-                },
+                controlUnit = controlUnitDataOutput,
                 sourceName = reporting.sourceName,
                 targetType = reporting.targetType,
                 vehicleType = reporting.vehicleType,

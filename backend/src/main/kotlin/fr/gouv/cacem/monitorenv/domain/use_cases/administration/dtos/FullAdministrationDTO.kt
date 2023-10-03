@@ -4,16 +4,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEnt
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 
 data class FullAdministrationDTO(
-    val id: Int? = null,
-    val controlUnitIds: List<Int>,
+    val administration: AdministrationEntity,
     val controlUnits: List<ControlUnitEntity>,
-    val name: String,
-) {
-    fun toAdministration(): AdministrationEntity {
-        return AdministrationEntity(
-            id,
-            controlUnitIds,
-            name,
-        )
-    }
-}
+)

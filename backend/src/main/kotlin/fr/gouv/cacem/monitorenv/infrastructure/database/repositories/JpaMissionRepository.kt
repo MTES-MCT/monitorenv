@@ -5,6 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.exceptions.ControlResourceOrUnitNotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.BaseModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
 import org.springframework.dao.DataIntegrityViolationException
@@ -16,6 +17,7 @@ import java.time.Instant
 
 @Repository
 class JpaMissionRepository(
+    private val dbBaseRepository: JpaBaseRepository,
     private val dbMissionRepository: IDBMissionRepository,
     private val mapper: ObjectMapper,
 ) : IMissionRepository {
@@ -51,7 +53,16 @@ class JpaMissionRepository(
     @Transactional
     override fun save(mission: MissionEntity): MissionEntity {
         return try {
-            val missionModel = MissionModel.fromMissionEntity(mission, mapper)
+            // Extract all control units resources unique baseIds
+            val uniqueBaseIds = mission.controlUnits.flatMap { controlUnit ->
+                controlUnit.resources.map { it.baseId }
+            }.distinct()
+            // Fetch all of them as models
+            val baseModels = dbBaseRepository.findAllById(uniqueBaseIds).map { BaseModel.fromFullBase(it) }
+            // Create a `[baseId] → BaseModel` map
+            val baseModelMap = baseModels.associateBy { requireNotNull(it.id) }
+
+            val missionModel = MissionModel.fromMissionEntity(mission, mapper, baseModelMap)
             dbMissionRepository.save(missionModel).toMissionEntity(mapper)
         } catch (e: Exception) {
             when (e) {

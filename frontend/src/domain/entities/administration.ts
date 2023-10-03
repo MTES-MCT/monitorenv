@@ -5,12 +5,13 @@ export namespace Administration {
     controlUnitIds: number[]
     controlUnits: ControlUnit.ControlUnitData[]
     id: number
+    isArchived: boolean
     name: string
   }
 
   // ---------------------------------------------------------------------------
   // Types
 
-  export type AdministrationData = Omit<Administration, 'controlUnits'>
+  export type AdministrationData = Omit<Administration, 'controlUnitIds' | 'controlUnits'>
   export type NewAdministrationData = Omit<AdministrationData, 'id'>
 }

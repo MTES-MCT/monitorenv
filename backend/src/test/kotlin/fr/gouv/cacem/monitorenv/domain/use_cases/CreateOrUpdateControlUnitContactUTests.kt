@@ -1,6 +1,8 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases
 
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.given
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitContactRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnitContact
@@ -17,7 +19,7 @@ class CreateOrUpdateControlUnitContactUTests {
 
     @Test
     fun `execute() should return save() result`() {
-        val controlUnitContact = ControlUnitContactEntity(
+        val newControlUnitContact = ControlUnitContactEntity(
             controlUnitId = 2,
             email = null,
             name = "Control Unit Contact Name",
@@ -25,16 +27,13 @@ class CreateOrUpdateControlUnitContactUTests {
             phone = null,
         )
 
-        val expectation = controlUnitContact.copy(id = 1)
+        val expectedControlUnitContact = newControlUnitContact.copy(id = 0)
 
-        given(controlUnitContactRepository.save(controlUnitContact)).willReturn(expectation)
+        given(controlUnitContactRepository.save(newControlUnitContact)).willReturn(expectedControlUnitContact)
 
-        val result =
-            CreateOrUpdateControlUnitContact(controlUnitContactRepository).execute(
-                controlUnitContact
-            )
+        val result = CreateOrUpdateControlUnitContact(controlUnitContactRepository).execute(newControlUnitContact)
 
-        verify(controlUnitContactRepository, times(1)).save(controlUnitContact)
-        assertThat(result).isEqualTo(expectation)
+        verify(controlUnitContactRepository, times(1)).save(newControlUnitContact)
+        assertThat(result).isEqualTo(expectedControlUnitContact)
     }
 }

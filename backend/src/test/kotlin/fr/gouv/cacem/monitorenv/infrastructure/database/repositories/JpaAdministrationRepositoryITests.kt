@@ -3,7 +3,10 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ForeignKeyConstraintException
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.UnarchivedChildException
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.catchThrowable
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
@@ -14,43 +17,67 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `deleteById() should delete an administration by its ID`() {
-        val beforeAdministrationIds = jpaAdministrationRepository.findAll().map { it.id }
+    fun `archiveById() should archive an administration by its ID`() {
+        val beforeFullAdministration = jpaAdministrationRepository.findById(2006)
 
-        assertThat(beforeAdministrationIds).hasSize(33)
-        assertThat(beforeAdministrationIds).contains(1)
+        assertThat(beforeFullAdministration.administration.isArchived).isFalse()
 
-        jpaAdministrationRepository.deleteById(1)
+        jpaAdministrationRepository.archiveById(2006)
 
-        val afterAdministrationIds = jpaAdministrationRepository.findAll().map { it.id }
+        val afterFullAdministration = jpaAdministrationRepository.findById(2006)
 
-        assertThat(afterAdministrationIds).hasSize(32)
-        assertThat(afterAdministrationIds).doesNotContain(1)
+        assertThat(afterFullAdministration.administration.isArchived).isTrue()
+    }
+
+    @Test
+    @Transactional
+    fun `archiveById() should throw the expected exception when the administration is linked to unarchived control units`() {
+        val throwable = catchThrowable {
+            jpaAdministrationRepository.archiveById(1005)
+        }
+
+        // Then
+        assertThat(throwable).isInstanceOf(UnarchivedChildException::class.java)
+    }
+
+    @Test
+    @Transactional
+    fun `deleteById() should throw the expected exception when the administration is linked to some control units`() {
+        val throwable = catchThrowable {
+            jpaAdministrationRepository.deleteById(1005)
+        }
+
+        assertThat(throwable).isInstanceOf(ForeignKeyConstraintException::class.java)
     }
 
     @Test
     @Transactional
     fun `findAll() should find all administrations`() {
-        val foundFullAdministrations = jpaAdministrationRepository.findAll()
+        val foundFullAdministrations =
+            jpaAdministrationRepository.findAll().sortedBy { requireNotNull(it.administration.id) }
 
-        assertThat(foundFullAdministrations).hasSize(33)
+        assertThat(foundFullAdministrations).hasSize(35)
 
         // We check the second administration instead of the first here because the first one is named “-”
-        assertThat(foundFullAdministrations[1]).isEqualTo(
+        assertThat(foundFullAdministrations[0]).isEqualTo(
             FullAdministrationDTO(
-                id = 1007,
-                controlUnitIds = listOf(),
+                administration = AdministrationEntity(
+                    id = 1,
+                    isArchived = false,
+                    name = "Affaires Maritimes"
+                ),
                 controlUnits = listOf(),
-                name = "AECP"
             )
         )
 
-        assertThat(foundFullAdministrations[32]).isEqualTo(
+        assertThat(foundFullAdministrations[34]).isEqualTo(
             FullAdministrationDTO(
-                id = 2004,
-                controlUnitIds = listOf(),
+                administration = AdministrationEntity(
+                    id = 2006,
+                    isArchived = false,
+                    name = "FOSIT"
+                ),
                 controlUnits = listOf(),
-                name = "Sécurité Civile"
             )
         )
     }
@@ -62,43 +89,41 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
 
         assertThat(foundFullAdministration).isEqualTo(
             FullAdministrationDTO(
-                id = 6,
-                controlUnitIds = listOf(21, 22),
+                administration = AdministrationEntity(
+                    id = 6,
+                    isArchived = false,
+                    name = "Gendarmerie Nationale"
+                ),
                 controlUnits = listOf(
                     ControlUnitEntity(
-                        id = 21,
+                        id = 10020,
                         administrationId = 6,
                         areaNote = null,
-                        controlUnitContactIds = listOf(),
-                        controlUnitResourceIds = listOf(),
                         isArchived = false,
                         name = "BN Toulon",
                         termsNote = null,
                     ),
                     ControlUnitEntity(
-                        id = 22,
+                        id = 10021,
                         administrationId = 6,
                         areaNote = null,
-                        controlUnitContactIds = listOf(),
-                        controlUnitResourceIds = listOf(),
                         isArchived = false,
                         name = "Brigade fluviale de Rouen",
                         termsNote = null,
                     ),
                 ),
-                name = "Gendarmerie Nationale"
             )
         )
     }
 
     @Test
     @Transactional
-    fun `save() should create and update an administration`() {
+    fun `save() should create and update an administration, deleteById() should delete an administration`() {
         // ---------------------------------------------------------------------
         // Create
 
         val newAdministration = AdministrationEntity(
-            controlUnitIds = listOf(1, 2),
+            isArchived = false,
             name = "Administration Name"
         )
 
@@ -111,12 +136,22 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
 
         val nextAdministration = AdministrationEntity(
             id = 2007,
-            controlUnitIds = listOf(3),
+            isArchived = false,
             name = "Updated Administration Name"
         )
 
         val updatedAdministration = jpaAdministrationRepository.save(nextAdministration)
 
         assertThat(updatedAdministration).isEqualTo(nextAdministration)
+
+        // ---------------------------------------------------------------------
+        // Delete
+
+        jpaAdministrationRepository.deleteById(2007)
+
+        val administrationIds =
+            jpaAdministrationRepository.findAll().map { requireNotNull(it.administration.id) }.sorted()
+
+        assertThat(administrationIds).doesNotContain(2007)
     }
 }

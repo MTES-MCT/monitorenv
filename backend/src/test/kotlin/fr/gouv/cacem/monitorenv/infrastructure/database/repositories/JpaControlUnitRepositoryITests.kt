@@ -1,14 +1,17 @@
-// TODO There is a hash issue here, we can't compare the full objects at once.
-
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
+import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ForeignKeyConstraintException
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.catchThrowable
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
@@ -20,61 +23,150 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `archiveById() should archive a control unit by its ID`() {
-        val beforeFullControlUnit = jpaControlUnitRepository.findById(1)
+        val beforeFullControlUnit = jpaControlUnitRepository.findById(10000)
 
-        assertThat(beforeFullControlUnit.isArchived).isFalse()
+        assertThat(beforeFullControlUnit.controlUnit.isArchived).isFalse()
 
-        jpaControlUnitRepository.archiveById(1)
+        jpaControlUnitRepository.archiveById(10000)
 
-        val afterFullControlUnit = jpaControlUnitRepository.findById(1)
+        val afterFullControlUnit = jpaControlUnitRepository.findById(10000)
 
-        assertThat(afterFullControlUnit.isArchived).isTrue()
+        assertThat(afterFullControlUnit.controlUnit.isArchived).isTrue()
+    }
+
+    // TODO Find how to test that
+    @Test
+    @Transactional
+    @Disabled
+    fun `deleteById() should throw an exception when the control unit is linked to some missions`() {
+        val throwable = catchThrowable {
+            jpaControlUnitRepository.deleteById(10002)
+        }
+
+        assertThat(throwable).isInstanceOf(ForeignKeyConstraintException::class.java)
+    }
+
+    // TODO Find how to test that
+    @Test
+    @Transactional
+    @Disabled
+    fun `deleteById() should throw an exception when the control unit is linked to some reportings`() {
+        val throwable = catchThrowable {
+            // TODO Link a control unit to a reporting without linking it to any mission
+            jpaControlUnitRepository.deleteById(0)
+        }
+
+        assertThat(throwable).isInstanceOf(ForeignKeyConstraintException::class.java)
     }
 
     @Test
     @Transactional
     fun `findAll() should find all control units`() {
-        val foundFullControlUnits = jpaControlUnitRepository.findAll()
+        val foundFullControlUnits = jpaControlUnitRepository.findAll().sortedBy { requireNotNull(it.controlUnit.id) }
 
         assertThat(foundFullControlUnits).hasSize(33)
 
         assertThat(foundFullControlUnits[0]).isEqualTo(
             FullControlUnitDTO(
-                id = 24,
                 administration = AdministrationEntity(
-                    id = 3,
-                    controlUnitIds = listOf(24),
-                    name = "Marine Nationale"
+                    id = 1005,
+                    isArchived = false,
+                    name = "DDTM",
                 ),
-                administrationId = 3,
-                controlUnitContactIds = listOf(),
-                controlUnitContacts = listOf(),
-                controlUnitResourceIds = listOf(),
-                controlUnitResources = listOf(),
-                areaNote = null,
-                isArchived = false,
-                name = "A636 Maïto",
-                termsNote = null,
+                controlUnit = ControlUnitEntity(
+                    id = 10000,
+                    administrationId = 1005,
+                    areaNote = null,
+                    isArchived = false,
+                    name = "Cultures marines – DDTM 40",
+                    termsNote = null,
+                ),
+                controlUnitContacts = listOf(
+                    ControlUnitContactEntity(
+                        id = 1,
+                        controlUnitId = 10000,
+                        email = null,
+                        name = "Contact 1",
+                        note = null,
+                        phone = null,
+                    ),
+                    ControlUnitContactEntity(
+                        id = 2,
+                        controlUnitId = 10000,
+                        email = null,
+                        name = "Contact 2",
+                        note = null,
+                        phone = null,
+                    ),
+                ),
+                controlUnitResources = listOf(
+                    FullControlUnitResourceDTO(
+                        base = BaseEntity(
+                            id = 1,
+                            name = "Marseille",
+                        ),
+                        controlUnit = ControlUnitEntity(
+                            id = 10000,
+                            administrationId = 1005,
+                            areaNote = null,
+                            isArchived = false,
+                            name = "Cultures marines – DDTM 40",
+                            termsNote = null,
+                        ),
+                        controlUnitResource = ControlUnitResourceEntity(
+                            id = 1,
+                            baseId = 1,
+                            controlUnitId = 10000,
+                            name = "Semi-rigide 1",
+                            note = null,
+                            photo = null,
+                            type = ControlUnitResourceType.BARGE,
+                        )
+                    ),
+                    FullControlUnitResourceDTO(
+                        base = BaseEntity(
+                            id = 1,
+                            name = "Marseille",
+                        ),
+                        controlUnit = ControlUnitEntity(
+                            id = 10000,
+                            administrationId = 1005,
+                            areaNote = null,
+                            isArchived = false,
+                            name = "Cultures marines – DDTM 40",
+                            termsNote = null,
+                        ),
+                        controlUnitResource = ControlUnitResourceEntity(
+                            id = 2,
+                            baseId = 1,
+                            controlUnitId = 10000,
+                            name = "Semi-rigide 2",
+                            note = null,
+                            photo = null,
+                            type = ControlUnitResourceType.BARGE,
+                        )
+                    )
+                ),
             )
         )
 
         assertThat(foundFullControlUnits[32]).isEqualTo(
             FullControlUnitDTO(
-                id = 8,
                 administration = AdministrationEntity(
                     id = 1005,
-                    controlUnitIds = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 33),
-                    name = "DDTM"
+                    isArchived = false,
+                    name = "DDTM",
                 ),
-                administrationId = 1005,
-                controlUnitContactIds = listOf(),
+                controlUnit = ControlUnitEntity(
+                    id = 10032,
+                    administrationId = 1005,
+                    areaNote = null,
+                    isArchived = false,
+                    name = "Cultures marines – DDTM 30",
+                    termsNote = null,
+                ),
                 controlUnitContacts = listOf(),
-                controlUnitResourceIds = listOf(),
                 controlUnitResources = listOf(),
-                areaNote = null,
-                isArchived = false,
-                name = "SML 50",
-                termsNote = null,
             )
         )
     }
@@ -82,22 +174,27 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `findById() should find a control unit by its ID`() {
-        val foundFullControlUnit = jpaControlUnitRepository.findById(1)
+        val foundFullControlUnit = jpaControlUnitRepository.findById(10000)
 
         assertThat(foundFullControlUnit).isEqualTo(
             FullControlUnitDTO(
-                id = 1,
                 administration = AdministrationEntity(
                     id = 1005,
-                    controlUnitIds = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 33),
+                    isArchived = false,
                     name = "DDTM"
                 ),
-                administrationId = 1005,
-                controlUnitContactIds = listOf(1, 2),
+                controlUnit = ControlUnitEntity(
+                    id = 10000,
+                    administrationId = 1005,
+                    areaNote = null,
+                    isArchived = false,
+                    name = "Cultures marines – DDTM 40",
+                    termsNote = null,
+                ),
                 controlUnitContacts = listOf(
                     ControlUnitContactEntity(
                         id = 1,
-                        controlUnitId = 1,
+                        controlUnitId = 10000,
                         email = null,
                         name = "Contact 1",
                         note = null,
@@ -105,55 +202,74 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                     ),
                     ControlUnitContactEntity(
                         id = 2,
-                        controlUnitId = 1,
+                        controlUnitId = 10000,
                         email = null,
                         name = "Contact 2",
                         note = null,
                         phone = null
                     )
                 ),
-                controlUnitResourceIds = listOf(1, 2),
                 controlUnitResources = listOf(
-                    ControlUnitResourceEntity(
-                        id = 1,
-                        base = null,
-                        baseId = 1,
-                        controlUnitId = 1,
-                        name = "Semi-rigide 1",
-                        note = null,
-                        photo = null,
-                        type = ControlUnitResourceType.BARGE
+                    FullControlUnitResourceDTO(
+                        base = BaseEntity(
+                            id = 1,
+                            name = "Marseille",
+                        ),
+                        controlUnit = ControlUnitEntity(
+                            id = 10000,
+                            administrationId = 1005,
+                            areaNote = null,
+                            isArchived = false,
+                            name = "Cultures marines – DDTM 40",
+                            termsNote = null,
+                        ),
+                        controlUnitResource = ControlUnitResourceEntity(
+                            id = 1,
+                            baseId = 1,
+                            controlUnitId = 10000,
+                            name = "Semi-rigide 1",
+                            note = null,
+                            photo = null,
+                            type = ControlUnitResourceType.BARGE,
+                        )
                     ),
-                    ControlUnitResourceEntity(
-                        id = 2,
-                        base = null,
-                        baseId = 1,
-                        controlUnitId = 1,
-                        name = "Semi-rigide 2",
-                        note = null,
-                        photo = null,
-                        type = ControlUnitResourceType.BARGE
+                    FullControlUnitResourceDTO(
+                        base = BaseEntity(
+                            id = 1,
+                            name = "Marseille",
+                        ),
+                        controlUnit = ControlUnitEntity(
+                            id = 10000,
+                            administrationId = 1005,
+                            areaNote = null,
+                            isArchived = false,
+                            name = "Cultures marines – DDTM 40",
+                            termsNote = null,
+                        ),
+                        controlUnitResource = ControlUnitResourceEntity(
+                            id = 2,
+                            baseId = 1,
+                            controlUnitId = 10000,
+                            name = "Semi-rigide 2",
+                            note = null,
+                            photo = null,
+                            type = ControlUnitResourceType.BARGE,
+                        ),
                     ),
                 ),
-                areaNote = null,
-                isArchived = false,
-                name = "Cultures marines – DDTM 40",
-                termsNote = null,
             )
         )
     }
 
     @Test
     @Transactional
-    fun `save() should create and update a control unit`() {
+    fun `save() should create and update a control unit, deleteById() should delete a control unit`() {
         // ---------------------------------------------------------------------
         // Create
 
         val newControlUnit = ControlUnitEntity(
             administrationId = 1,
             areaNote = "Area Note",
-            controlUnitContactIds = listOf(1, 2),
-            controlUnitResourceIds = listOf(2, 3),
             isArchived = false,
             name = "Control Unit Name",
             termsNote = "Terms Note",
@@ -161,17 +277,15 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
 
         val createdControlUnit = jpaControlUnitRepository.save(newControlUnit)
 
-        assertThat(createdControlUnit).isEqualTo(newControlUnit.copy(id = 34))
+        assertThat(createdControlUnit).isEqualTo(newControlUnit.copy(id = 10033))
 
         // ---------------------------------------------------------------------
         // Update
 
         val nextControlUnit = ControlUnitEntity(
-            id = 34,
+            id = 10033,
             administrationId = 1,
             areaNote = "Updated Area Note",
-            controlUnitContactIds = listOf(3),
-            controlUnitResourceIds = listOf(1),
             isArchived = false,
             name = "Updated Control Unit Name",
             termsNote = "Updated Terms Note",
@@ -180,5 +294,14 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
         val updatedControlUnit = jpaControlUnitRepository.save(nextControlUnit)
 
         assertThat(updatedControlUnit).isEqualTo(nextControlUnit)
+
+        // ---------------------------------------------------------------------
+        // Delete
+
+        jpaControlUnitRepository.deleteById(10033)
+
+        val controlUnitIds = jpaControlUnitRepository.findAll().map { requireNotNull(it.controlUnit.id) }.sorted()
+
+        assertThat(controlUnitIds).doesNotContain(10033)
     }
 }

@@ -1,6 +1,8 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases
 
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.given
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IBaseRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.base.CreateOrUpdateBase
@@ -17,21 +19,17 @@ class CreateOrUpdateBaseUTests {
 
     @Test
     fun `execute() should return save() result`() {
-        val base = BaseEntity(
-            controlUnitResourceIds = listOf(3),
+        val newBase = BaseEntity(
             name = "Base Name"
         )
 
-        val expectation = base.copy(id = 3)
+        val expectedBase = newBase.copy(id = 0)
 
-        given(baseRepository.save(base)).willReturn(expectation)
+        given(baseRepository.save(newBase)).willReturn(expectedBase)
 
-        val result =
-            CreateOrUpdateBase(baseRepository).execute(
-                base
-            )
+        val result = CreateOrUpdateBase(baseRepository).execute(newBase)
 
-        verify(baseRepository, times(1)).save(base)
-        assertThat(result).isEqualTo(expectation)
+        verify(baseRepository, times(1)).save(newBase)
+        assertThat(result).isEqualTo(expectedBase)
     }
 }

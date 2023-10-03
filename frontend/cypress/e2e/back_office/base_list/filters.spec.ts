@@ -1,4 +1,4 @@
-context('Back Office > Base List > Filter Bar', () => {
+context('Back Office > Base List > Filters', () => {
   beforeEach(() => {
     cy.intercept('GET', `/api/v1/bases`).as('getBases')
 
@@ -8,8 +8,8 @@ context('Back Office > Base List > Filter Bar', () => {
   })
 
   it('Should show all bases by default', () => {
-    cy.get('tbody > tr').should('have.length', 3)
-    cy.get('tbody > tr:first-child > td:nth-child(2)').should('have.text', 'Dunkerque')
+    cy.get('tbody > tr').should('have.length', 4)
+    cy.get('tbody > tr:nth-child(2) > td:nth-child(2)').should('have.text', 'Dunkerque')
     cy.get('tbody > tr:last-child > td:nth-child(2)').should('have.text', 'Saint-Malo')
   })
 

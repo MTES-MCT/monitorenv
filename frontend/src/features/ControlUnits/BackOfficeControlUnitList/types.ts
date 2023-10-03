@@ -1,3 +1,5 @@
 export type FiltersState = {
-  query?: string
+  administrationId: number | undefined
+  isArchived: boolean
+  query: string | undefined
 }

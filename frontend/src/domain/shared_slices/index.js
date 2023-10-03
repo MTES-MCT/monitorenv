@@ -3,6 +3,7 @@
 import { combineReducers } from '@reduxjs/toolkit'
 
 import { administrativeSlicePersistedReducer } from './Administrative'
+import { backOfficeReducer } from './BackOffice'
 import { drawReducer } from './Draw'
 import { globalReducer } from './Global'
 import { interestPointSlicePersistedReducer } from './InterestPoint'
@@ -42,6 +43,7 @@ export const homeReducers = combineReducers({
   [monitorenvPublicApi.reducerPath]: monitorenvPublicApi.reducer,
 
   administrative: administrativeSlicePersistedReducer,
+  backOffice: backOfficeReducer,
   backOfficeAdministrationList: backOfficeAdministrationListPersistedReducer,
   backOfficeBaseList: backOfficeBaseListPersistedReducer,
   backOfficeControlUnitList: backOfficeControlUnitListPersistedReducer,

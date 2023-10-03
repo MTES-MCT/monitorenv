@@ -1,4 +1,4 @@
-import { Accent, Button, DataTable, FormikTextInput } from '@mtes-mct/monitor-ui'
+import { Accent, Button, DataTable, FormikCheckbox, FormikTextInput } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Formik } from 'formik'
 import { useCallback } from 'react'
@@ -72,8 +72,10 @@ export function BackOfficeAdministrationForm() {
       {!getAdministrationQueryError && initialValues && (
         <Formik initialValues={initialValues} onSubmit={submit} validationSchema={ADMINISTRATION_FORM_SCHEMA}>
           {({ handleSubmit }) => (
-            <form onSubmit={handleSubmit}>
+            <Form onSubmit={handleSubmit}>
               <FormikTextInput label="Nom" name="name" />
+              {/* This is a quick way to implement "unarchiving" for users in case of human error. */}
+              {initialValues.isArchived && <FormikCheckbox label="Administration archivée" name="isArchived" />}
 
               <ActionGroup>
                 <Button accent={Accent.SECONDARY} onClick={goBackToList}>
@@ -81,7 +83,7 @@ export function BackOfficeAdministrationForm() {
                 </Button>
                 <Button type="submit">{isNew ? 'Créer' : 'Mettre à jour'}</Button>
               </ActionGroup>
-            </form>
+            </Form>
           )}
         </Formik>
       )}
@@ -106,6 +108,12 @@ const Title = styled.h1`
   line-height: 1;
   font-size: 24px;
   margin: 0 0 24px;
+`
+
+const Form = styled.form`
+  > div:not(:first-child, :last-child) {
+    margin-top: 16px;
+  }
 `
 
 const ActionGroup = styled.div`

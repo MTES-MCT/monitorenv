@@ -1,16 +1,22 @@
+import { Notifier } from '@mtes-mct/monitor-ui'
 import { Route, Routes } from 'react-router'
 import styled from 'styled-components'
 
 import { BackOfficeAdministrationForm } from '../features/Administrations/BackOfficeAdministrationForm'
 import { BackOfficeAdministrationList } from '../features/Administrations/BackOfficeAdministrationList'
+import { ConfirmationModal } from '../features/BackOffice/components/ConfirmationModal'
+import { Dialog } from '../features/BackOffice/components/Dialog'
 import { BackOfficeMenu } from '../features/BackOfficeMenu'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../features/BackOfficeMenu/constants'
 import { BackOfficeBaseForm } from '../features/Bases/BackOfficeBaseForm'
 import { BackOfficeBaseList } from '../features/Bases/BackOfficeBaseList'
 import { BackOfficeControlUnitForm } from '../features/ControlUnits/BackOfficeControlUnitForm'
 import { BackOfficeControlUnitList } from '../features/ControlUnits/BackOfficeControlUnitList'
+import { useAppSelector } from '../hooks/useAppSelector'
 
 export function BackOfficePage() {
+  const backOffice = useAppSelector(store => store.backOffice)
+
   return (
     <Wrapper>
       <BackOfficeMenu />
@@ -44,6 +50,11 @@ export function BackOfficePage() {
           />
         </Routes>
       </Body>
+
+      {backOffice.isConfirmationModalOpen && <ConfirmationModal />}
+      {backOffice.isDialogOpen && <Dialog />}
+
+      <Notifier />
     </Wrapper>
   )
 }

@@ -6,6 +6,8 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUni
 interface IControlUnitRepository {
     fun archiveById(controlUnitId: Int)
 
+    fun deleteById(controlUnitId: Int)
+
     fun findById(controlUnitId: Int): FullControlUnitDTO
 
     fun findAll(): List<FullControlUnitDTO>

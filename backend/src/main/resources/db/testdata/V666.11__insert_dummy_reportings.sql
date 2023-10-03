@@ -75,7 +75,7 @@ VALUES
     2300003,
     'CONTROL_UNIT',
     null,
-    1,
+    10000,
     null,
     'VEHICLE',
     'VESSEL',

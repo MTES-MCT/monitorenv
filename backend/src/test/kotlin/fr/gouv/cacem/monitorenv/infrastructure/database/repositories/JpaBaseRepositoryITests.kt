@@ -15,35 +15,22 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `deleteById() should delete a base by its ID`() {
-        val beforeBaseIds = jpaBaseRepository.findAll().map { requireNotNull(it.id) }.sorted()
-
-        assertThat(beforeBaseIds).isEqualTo(listOf(1, 2, 3))
-
-        jpaBaseRepository.deleteById(2)
-
-        val afterBaseIds = jpaBaseRepository.findAll().map { requireNotNull(it.id) }.sorted()
-
-        assertThat(afterBaseIds).isEqualTo(listOf(1, 3))
-    }
-
-    @Test
-    @Transactional
     fun `findAll() should find all bases`() {
-        val foundFullBases = jpaBaseRepository.findAll().sortedBy { requireNotNull(it.id) }
+        val foundFullBases = jpaBaseRepository.findAll().sortedBy { requireNotNull(it.base.id) }
 
-        assertThat(foundFullBases).hasSize(3)
+        assertThat(foundFullBases).hasSize(4)
 
-        assertThat(foundFullBases[0]).isEqualTo(
+        assertThat(foundFullBases[1]).isEqualTo(
             FullBaseDTO(
-                id = 1,
-                controlUnitResourceIds = listOf(1, 2),
+                base = BaseEntity(
+                    id = 1,
+                    name = "Marseille"
+                ),
                 controlUnitResources = listOf(
                     ControlUnitResourceEntity(
                         id = 1,
-                        base = null,
                         baseId = 1,
-                        controlUnitId = 1,
+                        controlUnitId = 10000,
                         name = "Semi-rigide 1",
                         note = null,
                         photo = null,
@@ -51,29 +38,28 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ),
                     ControlUnitResourceEntity(
                         id = 2,
-                        base = null,
                         baseId = 1,
-                        controlUnitId = 1,
+                        controlUnitId = 10000,
                         name = "Semi-rigide 2",
                         note = null,
                         photo = null,
                         type = ControlUnitResourceType.BARGE
                     ),
                 ),
-                name = "Marseille"
             ),
         )
 
-        assertThat(foundFullBases[1]).isEqualTo(
+        assertThat(foundFullBases[2]).isEqualTo(
             FullBaseDTO(
-                id = 2,
-                controlUnitResourceIds = listOf(3, 4, 6),
+                base = BaseEntity(
+                    id = 2,
+                    name = "Saint-Malo"
+                ),
                 controlUnitResources = listOf(
                     ControlUnitResourceEntity(
                         id = 3,
-                        base = null,
                         baseId = 2,
-                        controlUnitId = 3,
+                        controlUnitId = 10002,
                         name = "Semi-rigide 1",
                         note = null,
                         photo = null,
@@ -81,9 +67,8 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ),
                     ControlUnitResourceEntity(
                         id = 4,
-                        base = null,
                         baseId = 2,
-                        controlUnitId = 3,
+                        controlUnitId = 10002,
                         name = "Semi-rigide 2",
                         note = null,
                         photo = null,
@@ -91,16 +76,14 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ),
                     ControlUnitResourceEntity(
                         id = 6,
-                        base = null,
                         baseId = 2,
-                        controlUnitId = 4,
+                        controlUnitId = 10003,
                         name = "AR VECHEN",
                         note = null,
                         photo = null,
                         type = ControlUnitResourceType.FRIGATE
                     ),
                 ),
-                name = "Saint-Malo"
             ),
         )
     }
@@ -112,14 +95,15 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
 
         assertThat(foundFullBase).isEqualTo(
             FullBaseDTO(
-                id = 2,
-                controlUnitResourceIds = listOf(3, 4, 6),
+                base = BaseEntity(
+                    id = 2,
+                    name = "Saint-Malo"
+                ),
                 controlUnitResources = listOf(
                     ControlUnitResourceEntity(
                         id = 3,
-                        base = null,
                         baseId = 2,
-                        controlUnitId = 3,
+                        controlUnitId = 10002,
                         name = "Semi-rigide 1",
                         note = null,
                         photo = null,
@@ -127,9 +111,8 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ),
                     ControlUnitResourceEntity(
                         id = 4,
-                        base = null,
                         baseId = 2,
-                        controlUnitId = 3,
+                        controlUnitId = 10002,
                         name = "Semi-rigide 2",
                         note = null,
                         photo = null,
@@ -137,28 +120,25 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ),
                     ControlUnitResourceEntity(
                         id = 6,
-                        base = null,
                         baseId = 2,
-                        controlUnitId = 4,
+                        controlUnitId = 10003,
                         name = "AR VECHEN",
                         note = null,
                         photo = null,
                         type = ControlUnitResourceType.FRIGATE
                     ),
                 ),
-                name = "Saint-Malo"
             ),
         )
     }
 
     @Test
     @Transactional
-    fun `save() should create and update a base`() {
+    fun `save() should create and update a base, deleteById() should delete a base`() {
         // ---------------------------------------------------------------------
         // Create
 
         val newBase = BaseEntity(
-            controlUnitResourceIds = listOf(1, 2),
             name = "Base Name"
         )
 
@@ -171,12 +151,20 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
 
         val nextBase = BaseEntity(
             id = 4,
-            controlUnitResourceIds = listOf(3),
             name = "Updated Base Name"
         )
 
         val updatedBase = jpaBaseRepository.save(nextBase)
 
         assertThat(updatedBase).isEqualTo(nextBase)
+
+        // ---------------------------------------------------------------------
+        // Delete
+
+        jpaBaseRepository.deleteById(4)
+
+        val baseIds = jpaBaseRepository.findAll().map { requireNotNull(it.base.id) }.sorted()
+
+        assertThat(baseIds).doesNotContain(4)
     }
 }
