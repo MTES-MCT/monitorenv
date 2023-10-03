@@ -7,7 +7,31 @@ import { BackOfficeConfirmationModalActionType } from '../../../domain/use_cases
 import type { FiltersState } from './types'
 import type { ControlUnit } from '../../../domain/entities/controlUnit'
 import type { AppDispatch } from '../../../store'
-import type { ColumnDef } from '@tanstack/react-table'
+import type { CellContext, ColumnDef } from '@tanstack/react-table'
+
+function archiveControlUnit(info: CellContext<ControlUnit.ControlUnit, unknown>, dispatch: AppDispatch) {
+  const controlUnit = info.getValue<ControlUnit.ControlUnit>()
+
+  dispatch(
+    openConfirmationModal({
+      actionId: controlUnit.id,
+      actionType: BackOfficeConfirmationModalActionType.ARCHIVE_CONTROL_UNIT,
+      message: `Confirmez-vous l'archivage de l'unité "${controlUnit.name}" ? Elle n'apparaîtra plus dans MonitorEnv, elle ne sera plus utilisée que pour les statistiques.`
+    })
+  )
+}
+
+function deleteControlUnit(info: CellContext<ControlUnit.ControlUnit, unknown>, dispatch: AppDispatch) {
+  const controlUnit = info.getValue<ControlUnit.ControlUnit>()
+
+  dispatch(
+    openConfirmationModal({
+      actionId: controlUnit.id,
+      actionType: BackOfficeConfirmationModalActionType.DELETE_CONTROL_UNIT,
+      message: `Confirmez-vous la suppression de l'unité "${controlUnit.name}" ? Ceci entraînera la suppression de toutes ses informations (moyens, contacts...).`
+    })
+  )
+}
 
 export function getControlUnitTableColumns(
   dispatch: AppDispatch,
@@ -18,17 +42,7 @@ export function getControlUnitTableColumns(
     cell: info => (
       <IconButton
         Icon={Icon.Archive}
-        onClick={() =>
-          dispatch(
-            openConfirmationModal({
-              actionId: info.getValue<ControlUnit.ControlUnit>().id,
-              actionType: BackOfficeConfirmationModalActionType.ARCHIVE_CONTROL_UNIT,
-              message: `Confirmez-vous l'archivage de l'unité "${
-                info.getValue<ControlUnit.ControlUnit>().name
-              }" ? Elle n'apparaîtra plus dans MonitorEnv, elle ne sera plus utilisée que pour les statistiques.`
-            })
-          )
-        }
+        onClick={() => archiveControlUnit(info, dispatch)}
         size={Size.SMALL}
         title="Archiver cette unité de contrôle"
       />
@@ -44,17 +58,7 @@ export function getControlUnitTableColumns(
     cell: info => (
       <IconButton
         Icon={Icon.Delete}
-        onClick={() =>
-          dispatch(
-            openConfirmationModal({
-              actionId: info.getValue<ControlUnit.ControlUnit>().id,
-              actionType: BackOfficeConfirmationModalActionType.DELETE_CONTROL_UNIT,
-              message: `Confirmez-vous la suppression de l'unité "${
-                info.getValue<ControlUnit.ControlUnit>().name
-              }" ? Ceci entraînera la suppression de toutes ses informations (moyens, contacts...).`
-            })
-          )
-        }
+        onClick={() => deleteControlUnit(info, dispatch)}
         size={Size.SMALL}
         title="Supprimer cette unité de contrôle"
       />

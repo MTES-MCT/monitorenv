@@ -7,7 +7,31 @@ import { BackOfficeConfirmationModalActionType } from '../../../domain/use_cases
 import type { FiltersState } from './types'
 import type { Administration } from '../../../domain/entities/administration'
 import type { AppDispatch } from '../../../store'
-import type { ColumnDef } from '@tanstack/react-table'
+import type { CellContext, ColumnDef } from '@tanstack/react-table'
+
+function archiveAdministration(info: CellContext<Administration.Administration, unknown>, dispatch: AppDispatch) {
+  const administration = info.getValue<Administration.Administration>()
+
+  dispatch(
+    openConfirmationModal({
+      actionId: administration.id,
+      actionType: BackOfficeConfirmationModalActionType.ARCHIVE_ADMINISTRATION,
+      message: `Confirmez-vous l'archivage de l'administration "${administration.name}" ? Elle n'apparaîtra plus dans MonitorEnv, elle ne sera plus utilisée que pour les statistiques.`
+    })
+  )
+}
+
+function deleteAdministration(info: CellContext<Administration.Administration, unknown>, dispatch: AppDispatch) {
+  const administration = info.getValue<Administration.Administration>()
+
+  dispatch(
+    openConfirmationModal({
+      actionId: administration.id,
+      actionType: BackOfficeConfirmationModalActionType.DELETE_ADMINISTRATION,
+      message: `Confirmez-vous la suppression de l'administration "${administration.name}" ?`
+    })
+  )
+}
 
 export function getAdministrationTableColumns(
   dispatch: AppDispatch,
@@ -18,17 +42,7 @@ export function getAdministrationTableColumns(
     cell: info => (
       <IconButton
         Icon={Icon.Archive}
-        onClick={() =>
-          dispatch(
-            openConfirmationModal({
-              actionId: info.getValue<Administration.Administration>().id,
-              actionType: BackOfficeConfirmationModalActionType.ARCHIVE_ADMINISTRATION,
-              message: `Confirmez-vous l'archivage de l'administration "${
-                info.getValue<Administration.Administration>().name
-              }" ? Elle n'apparaîtra plus dans MonitorEnv, elle ne sera plus utilisée que pour les statistiques.`
-            })
-          )
-        }
+        onClick={() => archiveAdministration(info, dispatch)}
         size={Size.SMALL}
         title="Archiver cette administration"
       />
@@ -44,17 +58,7 @@ export function getAdministrationTableColumns(
     cell: info => (
       <IconButton
         Icon={Icon.Delete}
-        onClick={() =>
-          dispatch(
-            openConfirmationModal({
-              actionId: info.getValue<Administration.Administration>().id,
-              actionType: BackOfficeConfirmationModalActionType.DELETE_ADMINISTRATION,
-              message: `Confirmez-vous la suppression de l'administration "${
-                info.getValue<Administration.Administration>().name
-              }" ?`
-            })
-          )
-        }
+        onClick={() => deleteAdministration(info, dispatch)}
         size={Size.SMALL}
         title="Supprimer cette administration"
       />
