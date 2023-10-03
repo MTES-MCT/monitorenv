@@ -62,7 +62,7 @@ const Title = styled.h1`
 
 const NumberOfDisplayedMissions = styled.h3`
   font-size: 13px;
-  margin-top 32px;
+  margin-top: 32px;
 `
 const StyledButton = styled(Button)`
   align-self: center;

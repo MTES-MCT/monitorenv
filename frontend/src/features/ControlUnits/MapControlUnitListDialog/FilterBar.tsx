@@ -22,7 +22,10 @@ export function FilterBar() {
   const { data: administrations } = useGetAdministrationsQuery()
   const { data: bases } = useGetBasesQuery()
 
-  const administrationsAsOptions = useMemo(() => getOptionsFromIdAndName(administrations), [administrations])
+  const administrationsAsOptions = useMemo(
+    () => getOptionsFromIdAndName((administrations || []).filter(administration => !administration.isArchived)),
+    [administrations]
+  )
   const basesAsOptions = useMemo(() => getOptionsFromIdAndName(bases), [bases])
   const typesAsOptions = useMemo(() => getOptionsFromLabelledEnum(ControlUnit.ControlUnitResourceType), [])
 
