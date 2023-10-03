@@ -53,28 +53,29 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `findAll() should find all administrations`() {
-        val foundFullAdministrations = jpaAdministrationRepository.findAll()
+        val foundFullAdministrations =
+            jpaAdministrationRepository.findAll().sortedBy { requireNotNull(it.administration.id) }
 
-        assertThat(foundFullAdministrations).hasSize(33)
+        assertThat(foundFullAdministrations).hasSize(35)
 
         // We check the second administration instead of the first here because the first one is named “-”
-        assertThat(foundFullAdministrations[1]).isEqualTo(
+        assertThat(foundFullAdministrations[0]).isEqualTo(
             FullAdministrationDTO(
                 administration = AdministrationEntity(
-                    id = 1007,
+                    id = 1,
                     isArchived = false,
-                    name = "AECP"
+                    name = "Affaires Maritimes"
                 ),
                 controlUnits = listOf(),
             )
         )
 
-        assertThat(foundFullAdministrations[32]).isEqualTo(
+        assertThat(foundFullAdministrations[34]).isEqualTo(
             FullAdministrationDTO(
                 administration = AdministrationEntity(
-                    id = 2004,
+                    id = 2006,
                     isArchived = false,
-                    name = "Sécurité Civile"
+                    name = "FOSIT"
                 ),
                 controlUnits = listOf(),
             )

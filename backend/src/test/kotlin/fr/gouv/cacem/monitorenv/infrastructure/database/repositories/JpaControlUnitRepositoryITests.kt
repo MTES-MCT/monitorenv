@@ -62,27 +62,91 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `findAll() should find all control units`() {
-        val foundFullControlUnits = jpaControlUnitRepository.findAll()
+        val foundFullControlUnits = jpaControlUnitRepository.findAll().sortedBy { requireNotNull(it.controlUnit.id) }
 
         assertThat(foundFullControlUnits).hasSize(33)
 
         assertThat(foundFullControlUnits[0]).isEqualTo(
             FullControlUnitDTO(
                 administration = AdministrationEntity(
-                    id = 3,
+                    id = 1005,
                     isArchived = false,
-                    name = "Marine Nationale"
+                    name = "DDTM",
                 ),
                 controlUnit = ControlUnitEntity(
-                    id = 10023,
-                    administrationId = 3,
+                    id = 10000,
+                    administrationId = 1005,
                     areaNote = null,
                     isArchived = false,
-                    name = "A636 Maïto",
+                    name = "Cultures marines – DDTM 40",
                     termsNote = null,
                 ),
-                controlUnitContacts = listOf(),
-                controlUnitResources = listOf(),
+                controlUnitContacts = listOf(
+                    ControlUnitContactEntity(
+                        id = 1,
+                        controlUnitId = 10000,
+                        email = null,
+                        name = "Contact 1",
+                        note = null,
+                        phone = null,
+                    ),
+                    ControlUnitContactEntity(
+                        id = 2,
+                        controlUnitId = 10000,
+                        email = null,
+                        name = "Contact 2",
+                        note = null,
+                        phone = null,
+                    ),
+                ),
+                controlUnitResources = listOf(
+                    FullControlUnitResourceDTO(
+                        base = BaseEntity(
+                            id = 1,
+                            name = "Marseille",
+                        ),
+                        controlUnit = ControlUnitEntity(
+                            id = 10000,
+                            administrationId = 1005,
+                            areaNote = null,
+                            isArchived = false,
+                            name = "Cultures marines – DDTM 40",
+                            termsNote = null,
+                        ),
+                        controlUnitResource = ControlUnitResourceEntity(
+                            id = 1,
+                            baseId = 1,
+                            controlUnitId = 10000,
+                            name = "Semi-rigide 1",
+                            note = null,
+                            photo = null,
+                            type = ControlUnitResourceType.BARGE,
+                        )
+                    ),
+                    FullControlUnitResourceDTO(
+                        base = BaseEntity(
+                            id = 1,
+                            name = "Marseille",
+                        ),
+                        controlUnit = ControlUnitEntity(
+                            id = 10000,
+                            administrationId = 1005,
+                            areaNote = null,
+                            isArchived = false,
+                            name = "Cultures marines – DDTM 40",
+                            termsNote = null,
+                        ),
+                        controlUnitResource = ControlUnitResourceEntity(
+                            id = 2,
+                            baseId = 1,
+                            controlUnitId = 10000,
+                            name = "Semi-rigide 2",
+                            note = null,
+                            photo = null,
+                            type = ControlUnitResourceType.BARGE,
+                        )
+                    )
+                ),
             )
         )
 
@@ -91,14 +155,14 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                 administration = AdministrationEntity(
                     id = 1005,
                     isArchived = false,
-                    name = "DDTM"
+                    name = "DDTM",
                 ),
                 controlUnit = ControlUnitEntity(
-                    id = 10007,
+                    id = 10032,
                     administrationId = 1005,
                     areaNote = null,
                     isArchived = false,
-                    name = "SML 50",
+                    name = "Cultures marines – DDTM 30",
                     termsNote = null,
                 ),
                 controlUnitContacts = listOf(),
