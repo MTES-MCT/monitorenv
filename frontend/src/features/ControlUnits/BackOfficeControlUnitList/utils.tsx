@@ -88,6 +88,14 @@ export function getFilters(
     filters.push(queryFilter)
   }
 
+  // Administration
+  if (filtersState.administrationId) {
+    const administrationIdFilter: Filter<ControlUnit.ControlUnit> = controlUnits =>
+      controlUnits.filter(controlUnit => controlUnit.administrationId === filtersState.administrationId)
+
+    filters.push(administrationIdFilter)
+  }
+
   // Archived or not archived?
   const isArchivedFilter: Filter<ControlUnit.ControlUnit> = controlUnits =>
     controlUnits.filter(controlUnit => controlUnit.isArchived === filtersState.isArchived)

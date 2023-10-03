@@ -9,7 +9,7 @@ context('Back Office > Control Unit List > Filters', () => {
 
   it('Should show all active (unarchived) control units by default', () => {
     cy.get('tbody > tr').should('have.length', 31)
-    cy.getTableRowByText('A636 Maïto').should('be.visible', 'A636 Maïto')
+    cy.getTableRowByText('A636 Maïto').should('be.visible')
     cy.getTableRowByText('SML 50').should('exist')
     cy.getTableRowByText('BGC Ajaccio').should('not.exist')
   })
@@ -27,7 +27,16 @@ context('Back Office > Control Unit List > Filters', () => {
     cy.fill('Rechercher...', 'marine')
 
     cy.get('tbody > tr').should('have.length', 4)
-    cy.getTableRowByText('A636 Maïto').should('be.visible', 'A636 Maïto')
+    cy.getTableRowByText('A636 Maïto').should('be.visible')
     cy.getTableRowByText('SML 50').should('not.exist')
+  })
+
+  it('Should find control units matching the selected administration', () => {
+    cy.fill('Administration', 'DDTM')
+
+    cy.get('tbody > tr').should('have.length', 10)
+    cy.getTableRowByText('Cultures marines – DDTM 30').should('be.visible')
+    cy.getTableRowByText('SML 50').should('be.visible')
+    cy.getTableRowByText('A636 Maïto').should('not.exist')
   })
 })
