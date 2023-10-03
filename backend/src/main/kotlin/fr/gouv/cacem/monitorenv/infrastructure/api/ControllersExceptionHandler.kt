@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ApiError
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.MissingParameterApiError
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ForeignKeyConstraintException
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.UnarchivedChildException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.Ordered.HIGHEST_PRECEDENCE
@@ -44,5 +45,11 @@ class ControllersExceptionHandler {
     fun handleNoParameter(e: HttpMessageNotReadableException): ApiError {
         logger.error(e.message, e.cause)
         return ApiError(e)
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(UnarchivedChildException::class)
+    fun handleUnarchivedChildException(e: UnarchivedChildException): ApiError {
+        return ApiError(ErrorCode.UNARCHIVED_CHILD.name)
     }
 }

@@ -1,11 +1,15 @@
 import { monitorenvPublicApi } from './api'
-import { DELETE_GENERIC_ERROR_MESSAGE } from './constants'
+import { ARCHIVE_GENERIC_ERROR_MESSAGE, DELETE_GENERIC_ERROR_MESSAGE } from './constants'
 import { ApiErrorCode } from './types'
 import { FrontendApiError } from '../libs/FrontendApiError'
 import { newUserError } from '../libs/UserError'
 
 import type { Administration } from '../domain/entities/administration'
 
+const ARCHIVE_ADMINISTRATION_ERROR_MESSAGE = [
+  'Certaines unités de cette administration ne sont pas archivées.',
+  'Veuillez les archiver pour pouvoir archiver cette administration.'
+].join(' ')
 const DELETE_ADMINISTRATION_ERROR_MESSAGE = [
   'Cette administration est rattachée à des missions ou des signalements.',
   "Veuillez l'en détacher avant de la supprimer ou bien l'archiver."
@@ -20,7 +24,14 @@ export const administrationsAPI = monitorenvPublicApi.injectEndpoints({
       query: administrationId => ({
         method: 'POST',
         url: `/v1/administrations/${administrationId}/archive`
-      })
+      }),
+      transformErrorResponse: response => {
+        if (response.data.type === ApiErrorCode.UNARCHIVED_CHILD) {
+          return newUserError(ARCHIVE_ADMINISTRATION_ERROR_MESSAGE)
+        }
+
+        return new FrontendApiError(ARCHIVE_GENERIC_ERROR_MESSAGE, response)
+      }
     }),
 
     createAdministration: builder.mutation<void, Administration.NewAdministrationData>({

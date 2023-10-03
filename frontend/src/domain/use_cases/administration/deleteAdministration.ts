@@ -18,11 +18,7 @@ export const deleteAdministration = (): AppThunk<Promise<void>> => async (dispat
     }
   } catch (err) {
     if (isUserError(err)) {
-      dispatch(
-        backOfficeActions.openDialog({
-          message: err.userMessage
-        })
-      )
+      dispatch(backOfficeActions.openDialog({ message: err.userMessage }))
 
       return
     }

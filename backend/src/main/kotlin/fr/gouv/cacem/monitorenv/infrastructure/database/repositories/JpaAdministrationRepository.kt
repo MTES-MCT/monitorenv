@@ -6,11 +6,12 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IAdministrationRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.AdministrationModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ForeignKeyConstraintException
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.UnarchivedChildException
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBAdministrationRepository
-import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+
 
 @Repository
 class JpaAdministrationRepository(
@@ -18,15 +19,21 @@ class JpaAdministrationRepository(
 ) : IAdministrationRepository {
     @Transactional
     override fun archiveById(administrationId: Int) {
+        val fullAdministration = findById(administrationId)
+        if (fullAdministration.controlUnits.any { !it.isArchived }) {
+            throw UnarchivedChildException("Cannot archive administration (ID=$administrationId) due to some of its control units not being archived.")
+        }
+
         dbAdministrationRepository.archiveById(administrationId)
     }
 
     override fun deleteById(administrationId: Int) {
-        try {
-            dbAdministrationRepository.deleteById(administrationId)
-        } catch (e: DataIntegrityViolationException) {
-            throw ForeignKeyConstraintException("Cannot delete administration due to existing relationships.")
+        val fullAdministration = findById(administrationId)
+        if (fullAdministration.controlUnits.isNotEmpty()) {
+            throw ForeignKeyConstraintException("Cannot delete administration (ID=$administrationId) due to existing relationships.")
         }
+
+        dbAdministrationRepository.deleteById(administrationId)
     }
 
     override fun findAll(): List<FullAdministrationDTO> {

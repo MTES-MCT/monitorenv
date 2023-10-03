@@ -8,7 +8,10 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceE
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ForeignKeyConstraintException
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.catchThrowable
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
@@ -29,6 +32,30 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
         val afterFullControlUnit = jpaControlUnitRepository.findById(1)
 
         assertThat(afterFullControlUnit.controlUnit.isArchived).isTrue()
+    }
+
+    // TODO Find how to test that
+    @Test
+    @Transactional
+    @Disabled
+    fun `deleteById() should throw an exception when the control unit is linked to some missions`() {
+        val throwable = catchThrowable {
+            jpaControlUnitRepository.deleteById(1005)
+        }
+
+        assertThat(throwable).isInstanceOf(ForeignKeyConstraintException::class.java)
+    }
+
+    // TODO Find how to test that
+    @Test
+    @Transactional
+    @Disabled
+    fun `deleteById() should throw an exception when the control unit is linked to some reportings`() {
+        val throwable = catchThrowable {
+            jpaControlUnitRepository.deleteById(1005)
+        }
+
+        assertThat(throwable).isInstanceOf(ForeignKeyConstraintException::class.java)
     }
 
     @Test

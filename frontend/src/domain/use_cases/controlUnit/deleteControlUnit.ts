@@ -16,11 +16,7 @@ export const deleteControlUnit = (): AppThunk<Promise<void>> => async (dispatch,
     }
   } catch (err) {
     if (isUserError(err)) {
-      dispatch(
-        backOfficeActions.openDialog({
-          message: err.userMessage
-        })
-      )
+      dispatch(backOfficeActions.openDialog({ message: err.userMessage }))
 
       return
     }
