@@ -11,6 +11,8 @@ import { getMissionZoneFeature } from '../../map/layers/Missions/missionGeometry
 import type { BaseMapChildrenProps } from '../../map/BaseMap'
 
 export function SelectedMissionToAttachLayer({ map }: BaseMapChildrenProps) {
+  const attachMissionListener = useAppSelector(state => state.attachReportingToMission.attachMissionListener)
+
   const attachedMissionId = useAppSelector(state => state.attachReportingToMission.attachedMissionId)
   const { selectedMission: attachedMission } = useGetMissionsQuery(undefined, {
     selectFromResult: ({ data }) => ({
@@ -60,8 +62,8 @@ export function SelectedMissionToAttachLayer({ map }: BaseMapChildrenProps) {
   }, [map, GetSelectedMissionVectorLayer])
 
   useEffect(() => {
-    GetSelectedMissionVectorLayer()?.setVisible(!!attachedMissionId)
-  }, [attachedMissionId, GetSelectedMissionVectorLayer])
+    GetSelectedMissionVectorLayer()?.setVisible(!!attachedMissionId && attachMissionListener)
+  }, [attachedMissionId, attachMissionListener, GetSelectedMissionVectorLayer])
 
   useEffect(() => {
     GetSelectedMissionVectorSource()?.clear(true)

@@ -1,7 +1,8 @@
-import { THEME } from '@mtes-mct/monitor-ui'
+import { OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { getCenter } from 'ol/extent'
-import { Point } from 'ol/geom'
-import { Fill, Icon, Stroke, Style } from 'ol/style'
+import { GeoJSON } from 'ol/format'
+import { LineString, Point } from 'ol/geom'
+import { Fill, Icon, Stroke, Style, Circle } from 'ol/style'
 
 import { OLGeometryType } from '../../../../domain/entities/map/constants'
 import { ReportingStatusEnum, ReportingTypeEnum, getReportingStatus } from '../../../../domain/entities/reporting'
@@ -141,6 +142,10 @@ export const reportingPinStyleFn = feature => {
     validityTime: feature.get('validityTime')
   })
 
+  if (feature.get('attachedMissionId')) {
+    return reportingStyleFactory(THEME.color.mediumSeaGreen)
+  }
+
   switch (status) {
     case ReportingStatusEnum.OBSERVATION:
       return reportingStyleFactory(THEME.color.blueGray)
@@ -159,4 +164,65 @@ export const reportingPinStyleFn = feature => {
   }
 }
 
-export const editingReportingStyleFn = feature => [reportingPinStyleFn(feature), ...selectedReportingStyleFn(feature)]
+const reportingToMissionLinkStyle = feature =>
+  new Style({
+    geometry: () => {
+      const attachedMissionId = feature.get('attachedMissionId')
+      if (!attachedMissionId) {
+        return undefined
+      }
+      const reportingExtent = feature?.getGeometry()?.getExtent()
+      const reportingCenter = reportingExtent && getCenter(reportingExtent)
+
+      const missionGeom = feature.get('attachedMission')?.geom
+      const geoJSON = new GeoJSON()
+      const formattedMissionGeometry = geoJSON.readGeometry(missionGeom, {
+        dataProjection: WSG84_PROJECTION,
+        featureProjection: OPENLAYERS_PROJECTION
+      })
+
+      const missionExtent = formattedMissionGeometry?.getExtent()
+      const missionCenter = missionExtent && getCenter(missionExtent)
+
+      return new LineString([reportingCenter, missionCenter])
+    },
+    stroke: new Stroke({
+      color: THEME.color.charcoal,
+      width: 1
+    })
+  })
+
+const reportingToMissionCircleStyle = feature =>
+  new Style({
+    geometry: () => {
+      if (!feature.get('attachedMission')) {
+        return undefined
+      }
+
+      const missionGeom = feature.get('attachedMission')?.geom
+      const geoJSON = new GeoJSON()
+      const formattedMissionGeometry = geoJSON.readGeometry(missionGeom, {
+        dataProjection: WSG84_PROJECTION,
+        featureProjection: OPENLAYERS_PROJECTION
+      })
+
+      const missionExtent = formattedMissionGeometry?.getExtent()
+      const missionCenter = missionExtent && getCenter(missionExtent)
+
+      return missionCenter && new Point(missionCenter)
+    },
+    image: new Circle({
+      radius: 20,
+      stroke: new Stroke({
+        color: THEME.color.charcoal,
+        width: 2
+      })
+    })
+  })
+
+export const editingReportingStyleFn = feature => [
+  reportingPinStyleFn(feature),
+  ...selectedReportingStyleFn(feature),
+  reportingToMissionLinkStyle(feature),
+  reportingToMissionCircleStyle(feature)
+]

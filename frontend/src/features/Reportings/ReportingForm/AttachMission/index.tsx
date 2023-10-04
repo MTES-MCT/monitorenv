@@ -1,10 +1,12 @@
 import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
+import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { useFormikContext } from 'formik'
 import { useEffect } from 'react'
 import styled from 'styled-components'
 
 import { AttachedMissionCard } from './AttachedMissionCard'
 import { attachMissionToReportingSliceActions } from './slice'
+import { useGetMissionQuery } from '../../../../api/missionsAPI'
 import { resetInteraction } from '../../../../domain/shared_slices/Draw'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -16,15 +18,23 @@ export function AttachMission({ setIsAttachNewMission }) {
   const dispatch = useAppDispatch()
   const attachedMissionId = useAppSelector(state => state.attachReportingToMission.attachedMissionId)
 
+  const hasMissionAttached =
+    !!values.attachedMissionId && !!values.attachedMission && values.attachedMission.id === attachedMissionId
+  const { data: missionToAttach } = useGetMissionQuery(
+    !hasMissionAttached && attachedMissionId ? attachedMissionId : skipToken
+  )
+
   const attachMission = () => {
     dispatch(resetInteraction())
-    dispatch(attachMissionToReportingSliceActions.setInitialAttachedMissionId(values.attachedMissionId))
+    dispatch(attachMissionToReportingSliceActions.setInitialAttachedMission(values.attachedMission))
     dispatch(attachMissionToReportingSliceActions.setAttachMissionListener(true))
   }
 
   const unattachMission = () => {
-    dispatch(attachMissionToReportingSliceActions.setAttachedMissionId(undefined))
+    setFieldValue('attachedMissionId', undefined)
+    setFieldValue('attachedMission', undefined)
   }
+
   const createMission = async () => {
     await setFieldValue('attachedToMissionAtUtc', new Date().toISOString())
     setIsAttachNewMission(true)
@@ -32,15 +42,31 @@ export function AttachMission({ setIsAttachNewMission }) {
   }
 
   useEffect(() => {
-    setFieldValue('attachedMissionId', attachedMissionId)
-  }, [attachedMissionId, setFieldValue])
+    if (attachedMissionId !== values.attachedMissionId && missionToAttach) {
+      setFieldValue('attachedMissionId', attachedMissionId)
+      setFieldValue('attachedMission', attachedMissionId ? missionToAttach : undefined)
+      setFieldValue('attachedToMissionAtUtc', new Date().toISOString())
+    }
+  }, [attachedMissionId, setFieldValue, dispatch, missionToAttach, values.attachedMissionId])
 
   return !values.attachedMissionId ? (
     <ButtonsContainer>
-      <Button accent={Accent.SECONDARY} Icon={Icon.Link} isFullWidth onClick={attachMission}>
+      <Button
+        accent={Accent.SECONDARY}
+        disabled={!values.isControlRequired}
+        Icon={Icon.Link}
+        isFullWidth
+        onClick={attachMission}
+      >
         Lier à une mission existante
       </Button>
-      <Button accent={Accent.SECONDARY} Icon={Icon.Plus} isFullWidth onClick={createMission}>
+      <Button
+        accent={Accent.SECONDARY}
+        disabled={!values.isControlRequired}
+        Icon={Icon.Plus}
+        isFullWidth
+        onClick={createMission}
+      >
         Créer une mission pour ce signalement
       </Button>
     </ButtonsContainer>
@@ -51,11 +77,11 @@ export function AttachMission({ setIsAttachNewMission }) {
         <span>Signalement lié à une mission</span>
       </AttachedMissionText>
 
-      <AttachedMissionCard id={attachedMissionId} />
+      <AttachedMissionCard attachedMission={values.attachedMission} />
 
       <UnattachButtonContainer>
         <Button accent={Accent.SECONDARY} Icon={Icon.Unlink} isFullWidth={false} onClick={unattachMission}>
-          Délier de la mission
+          Délier la mission
         </Button>
       </UnattachButtonContainer>
     </div>

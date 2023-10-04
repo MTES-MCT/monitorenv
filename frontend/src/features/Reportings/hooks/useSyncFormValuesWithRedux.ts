@@ -4,11 +4,15 @@ import { useEffect, useMemo } from 'react'
 
 import { reportingActions } from '../../../domain/shared_slices/reporting'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
+import { attachMissionToReportingSliceActions } from '../ReportingForm/AttachMission/slice'
+
+import type { Reporting } from '../../../domain/entities/reporting'
 
 export const useSyncFormValuesWithRedux = () => {
-  const { dirty, values } = useFormikContext()
+  const { dirty, values } = useFormikContext<Reporting>()
 
   const dispatch = useAppDispatch()
+
   const dispatchFormUpdate = useMemo(() => {
     const throttled = newValues => {
       if (!newValues) {
@@ -16,6 +20,8 @@ export const useSyncFormValuesWithRedux = () => {
       }
       dispatch(reportingActions.setReportingState(newValues))
       dispatch(reportingActions.setIsDirty(newValues ? dirty : false))
+      dispatch(attachMissionToReportingSliceActions.setAttachedMissionId(newValues?.attachedMissionId))
+      dispatch(attachMissionToReportingSliceActions.setAttachedMission(newValues?.attachedMission))
     }
 
     return _.throttle(throttled, 500)

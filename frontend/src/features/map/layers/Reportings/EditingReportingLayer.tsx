@@ -25,15 +25,6 @@ export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
     return editingReportingVectorSourceRef.current
   }
 
-  const editingReportingActionsVectorSourceRef = useRef() as MutableRefObject<VectorSource>
-  const GetEditingReportingActionsVectorSource = () => {
-    if (editingReportingActionsVectorSourceRef.current === undefined) {
-      editingReportingActionsVectorSourceRef.current = new VectorSource()
-    }
-
-    return editingReportingActionsVectorSourceRef.current
-  }
-
   const editingReportingVectorLayerRef = useRef() as MutableRefObject<VectorLayerWithName>
 
   const GetSelectedReportingVectorLayer = useCallback(() => {
@@ -71,7 +62,6 @@ export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
 
   useEffect(() => {
     GetEditingReportingVectorSource()?.clear(true)
-    GetEditingReportingActionsVectorSource()?.clear(true)
     if (editingReporting) {
       GetEditingReportingVectorSource()?.addFeature(
         getEditingReportingZoneFeature(editingReporting, Layers.REPORTING_SELECTED.code)

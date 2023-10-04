@@ -9,9 +9,9 @@ export function SelectMissionModal() {
   const dispatch = useAppDispatch()
   const attachMissionListener = useAppSelector(state => state.attachReportingToMission.attachMissionListener)
 
-  const initialAttachedMissionId = useAppSelector(state => state.attachReportingToMission.initialAttachedMissionId)
+  const initialAttachedMission = useAppSelector(state => state.attachReportingToMission.initialAttachedMission)
   const resetMissionToAttach = () => {
-    dispatch(attachMissionToReportingSliceActions.setAttachedMissionId(initialAttachedMissionId))
+    dispatch(attachMissionToReportingSliceActions.setAttachedMission(initialAttachedMission))
   }
 
   const validateMissionToAttach = () => {
