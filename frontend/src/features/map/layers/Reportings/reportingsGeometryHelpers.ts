@@ -57,6 +57,7 @@ export const getEditingReportingZoneFeature = (reporting: Reporting, layername: 
     actionTaken: reporting.actionTaken,
     attachedEnvActionId: reporting.attachedEnvActionId,
     attachedMission: reporting.attachedMission,
+    attachedMissionId: reporting.attachedMissionId,
     controlStatus: reporting.controlStatus,
     controlUnitId: reporting.controlUnitId,
     createdAt: reporting.createdAt,

@@ -8,6 +8,7 @@ import type { Reporting } from '../../entities/reporting'
 export const addReporting =
   (reportingContext: ReportingContext, partialReporting?: Partial<Reporting> | undefined) =>
   async (dispatch, getState) => {
+    dispatch(attachMissionToReportingSliceActions.resetAttachMissionState())
     const { reportings } = getState().reporting
 
     const id = createIdForNewReporting(reportings)
