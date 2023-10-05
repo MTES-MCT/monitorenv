@@ -19,8 +19,17 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const { displayReportingsLayer, overlayCoordinates } = useAppSelector(state => state.global)
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
-  const listener = useAppSelector(state => state.draw.listener)
 
+  const listener = useAppSelector(state => state.draw.listener)
+  const attachMissionListener = useAppSelector(state => state.attachMissionToReporting.attachMissionListener)
+  const attachReportingListener = useAppSelector(state => state.attachReportingToMission.attachReportingListener)
+
+  // we don't want to display reportings on the map if the user so decides (displayReportingsLayer variable)
+  // or if user have interaction on map (edit mission zone, attach reporting or mission)
+  const isLayerVisible = useMemo(
+    () => displayReportingsLayer && !listener && !attachMissionListener && !attachReportingListener,
+    [displayReportingsLayer, listener, attachMissionListener, attachReportingListener]
+  )
   const { reportings } = useGetFilteredReportingsQuery()
 
   const reportingsPointOrZone = useMemo(
@@ -55,7 +64,7 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
         style: reportingPinStyleFn,
         updateWhileAnimating: true,
         updateWhileInteracting: true,
-        zIndex: Layers.REPORTING_SELECTED.zIndex
+        zIndex: Layers.REPORTINGS.zIndex
       })
       vectorLayerRef.current.name = Layers.REPORTINGS.code
     }
@@ -91,8 +100,8 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   }, [reportingsPointOrZone])
 
   useEffect(() => {
-    GetVectorLayer()?.setVisible(displayReportingsLayer)
-  }, [displayReportingsLayer, GetVectorLayer, listener])
+    GetVectorLayer()?.setVisible(isLayerVisible)
+  }, [GetVectorLayer, isLayerVisible])
 
   useEffect(() => {
     if (mapClickEvent?.feature) {

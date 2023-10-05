@@ -50,7 +50,7 @@ export function HoveredReportingLayer({ currentFeatureOver, map }: BaseMapChildr
 
   useEffect(() => {
     GetVectorSource()?.clear(true)
-    if (currentFeatureOver) {
+    if (currentFeatureOver && currentFeatureOver.getId()?.toString()?.includes(Layers.REPORTINGS.code)) {
       GetVectorSource()?.addFeature(currentFeatureOver)
     }
   }, [currentFeatureOver])

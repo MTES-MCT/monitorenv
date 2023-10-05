@@ -1,21 +1,25 @@
 import styled from 'styled-components'
 
 import { attachMissionToReportingSliceActions } from './slice'
+import {
+  MapInteractionListenerEnum,
+  updateMapInteractionListeners
+} from '../../../../domain/use_cases/map/updateMapInteractionListeners'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { MapInteraction } from '../../../commonComponents/Modals/MapInteraction'
 
-export function SelectMissionModal() {
+export function AttachMissionToReportingModal() {
   const dispatch = useAppDispatch()
-  const attachMissionListener = useAppSelector(state => state.attachReportingToMission.attachMissionListener)
+  const attachMissionListener = useAppSelector(state => state.attachMissionToReporting.attachMissionListener)
 
-  const initialAttachedMission = useAppSelector(state => state.attachReportingToMission.initialAttachedMission)
+  const initialAttachedMission = useAppSelector(state => state.attachMissionToReporting.initialAttachedMission)
   const resetMissionToAttach = () => {
     dispatch(attachMissionToReportingSliceActions.setAttachedMission(initialAttachedMission))
   }
 
   const validateMissionToAttach = () => {
-    dispatch(attachMissionToReportingSliceActions.setAttachMissionListener(false))
+    dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
   }
 
   if (!attachMissionListener) {

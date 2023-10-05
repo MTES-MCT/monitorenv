@@ -19,8 +19,10 @@ import { VisibilityState } from '../../../domain/shared_slices/Global'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import { addFeatureToDrawedFeature } from '../../../domain/use_cases/draw/addFeatureToDrawedFeature'
 import { eraseDrawedGeometries } from '../../../domain/use_cases/draw/eraseDrawedGeometries'
-import { closeAddZone } from '../../../domain/use_cases/missions/closeAddZone'
-import { validateZone } from '../../../domain/use_cases/missions/validateZone'
+import {
+  MapInteractionListenerEnum,
+  updateMapInteractionListeners
+} from '../../../domain/use_cases/map/updateMapInteractionListeners'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { usePrevious } from '../../../hooks/usePrevious'
@@ -107,7 +109,7 @@ export function DrawModal() {
         listener === InteractionListener.CONTROL_POINT ||
         listener === InteractionListener.SURVEILLANCE_ZONE)
     ) {
-      dispatch(closeAddZone())
+      dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
     }
   }, [listener, dispatch, previousMissionId, routeParams])
 
@@ -116,7 +118,7 @@ export function DrawModal() {
       sideWindow.status === SideWindowStatus.CLOSED &&
       global.reportingFormVisibility.visibility === VisibilityState.NONE
     ) {
-      dispatch(closeAddZone())
+      dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
     }
   }, [dispatch, global.reportingFormVisibility, sideWindow.status])
 
@@ -131,7 +133,7 @@ export function DrawModal() {
     return dispatch(setGeometry(initialGeometry))
   }
   const handleValidate = () => {
-    dispatch(validateZone())
+    dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
   }
 
   const handleSelectCoordinates = useCallback(

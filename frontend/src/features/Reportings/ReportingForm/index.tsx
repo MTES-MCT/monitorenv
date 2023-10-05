@@ -3,7 +3,6 @@ import { Form, Formik } from 'formik'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { SelectMissionModal } from './AttachMission/SelectMissionModal'
 import { ReportingForm } from './Form'
 import { ReportingSchema } from './Schema'
 import { useGetReportingQuery } from '../../../api/reportingsAPI'
@@ -93,7 +92,6 @@ export function ReportingFormWithContext({ context, totalReportings }) {
             </Formik>
           )}
       </FormContainer>
-      <SelectMissionModal />
       {reportingFormVisibility.context === ReportingContext.SIDE_WINDOW &&
         reportingFormVisibility.visibility === VisibilityState.VISIBLE && <SideWindowBackground />}
     </>

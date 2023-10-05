@@ -26,8 +26,13 @@ import { MissionOverlays } from './overlays/missions'
 import { ReportingOverlay } from './overlays/reportings'
 import { SemaphoreOverlay } from './overlays/semaphores'
 import { ShowRegulatoryMetadata } from './ShowRegulatoryMetadata'
-import { MissionToAttachLayer } from '../Reportings/Layers/missionToAttach'
-import { SelectedMissionToAttachLayer } from '../Reportings/Layers/selectedMissionToAttach'
+import { ReportingToAttachLayer } from '../missions/Layers/ReportingToAttach'
+import { HoveredReportingToAttachLayer } from '../missions/Layers/ReportingToAttach/HoveredReportingToAttachLayer'
+import { SelectedReportingToAttachLayer } from '../missions/Layers/ReportingToAttach/SelectedReportingToAttachLayer'
+import { ReportingToAttachOverlays } from '../missions/Overlays/reportingToAttach'
+import { MissionToAttachLayer } from '../Reportings/Layers'
+import { HoveredMissionToAttachLayer } from '../Reportings/Layers/HoveredMissionToAttachLayer'
+import { SelectedMissionToAttachLayer } from '../Reportings/Layers/SelectedMissionToAttachLayer'
 import { MissionToAttachOverlays } from '../Reportings/Overlays/missionToAttach'
 
 export function Map() {
@@ -42,31 +47,45 @@ export function Map() {
       <MapAttributionsBox />
       <MapCoordinatesBox />
       <BaseLayer />
+
+      {/* ZONE */}
       <AMPLayers />
       <AMPPreviewLayer />
       <RegulatoryLayers />
       <RegulatoryPreviewLayer />
       <ShowRegulatoryMetadata />
       <AdministrativeLayers />
+
       <MeasurementLayer />
       <InterestPointLayer />
       <MapExtentController />
       <MapHistory />
       <DrawLayer />
+
+      {/* MISSION */}
       <MissionsLayer />
       <SelectedMissionLayer />
       <EditingMissionLayer />
       <HoveredMissionLayer />
       <MissionOverlays />
       <ActionOverlay />
+      <ReportingToAttachLayer />
+      <SelectedReportingToAttachLayer />
+      <HoveredReportingToAttachLayer />
+      <ReportingToAttachOverlays />
+
+      {/* SEMAPHORE */}
       <SemaphoresLayer />
       <SemaphoreOverlay />
+
+      {/* REPORTING */}
       <EditingReportingLayer />
       <SelectedReportingLayer />
       <HoveredReportingLayer />
       <ReportingsLayer />
       <ReportingOverlay />
       <MissionToAttachLayer />
+      <HoveredMissionToAttachLayer />
       <SelectedMissionToAttachLayer />
       <MissionToAttachOverlays />
     </BaseMap>

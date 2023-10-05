@@ -35,6 +35,7 @@ import { controlUnitListDialogPersistedReducer } from '../../features/ControlUni
 import { controlUnitTablePersistedReducer } from '../../features/ControlUnit/components/ControlUnitTable/slice'
 import { layerSearchSliceReducer } from '../../features/layersSelector/search/slice'
 import { mainWindowReducer } from '../../features/MainWindow/slice'
+import { attachReportingToMissionsSliceReducer } from '../../features/missions/MissionForm/AttachReporting/slice'
 import { attachMissionToReportingSliceReducer } from '../../features/Reportings/ReportingForm/AttachMission/slice'
 import { sideWindowReducer } from '../../features/SideWindow/slice'
 
@@ -44,7 +45,8 @@ export const homeReducers = combineReducers({
   [monitorenvPrivateApi.reducerPath]: monitorenvPrivateApi.reducer,
   [monitorenvPublicApi.reducerPath]: monitorenvPublicApi.reducer,
   administrative: administrativeSlicePersistedReducer,
-  attachReportingToMission: attachMissionToReportingSliceReducer,
+  attachMissionToReporting: attachMissionToReportingSliceReducer,
+  attachReportingToMission: attachReportingToMissionsSliceReducer,
   backOffice: backOfficeReducer,
   backOfficeAdministrationList: administrationTablePersistedReducer,
   backOfficeBaseList: baseTablePersistedReducer,

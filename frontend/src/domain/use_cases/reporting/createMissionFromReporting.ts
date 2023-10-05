@@ -2,8 +2,8 @@ import { reportingsAPI } from '../../../api/reportingsAPI'
 import { isNewReporting } from '../../../features/Reportings/utils'
 import { setReportingFormVisibility, setToast, VisibilityState } from '../../shared_slices/Global'
 import { reportingActions } from '../../shared_slices/reporting'
+import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../map/updateMapInteractionListeners'
 import { addMission } from '../missions/addMission'
-import { closeAddZone } from '../missions/closeAddZone'
 
 import type { Reporting } from '../../entities/reporting'
 
@@ -26,7 +26,7 @@ export const createMissionFromReporting = (values: Reporting | Partial<Reporting
           visibility: VisibilityState.NONE
         })
       )
-      await dispatch(closeAddZone())
+      await dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
       await dispatch(reportingActions.deleteSelectedReporting(values.id))
       await dispatch(addMission(response.data))
     } else {

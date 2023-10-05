@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Toggle } from 'rsuite'
 
 import { AttachMission } from './AttachMission'
+import { attachMissionToReportingSliceActions } from './AttachMission/slice'
 import { CancelEditDialog } from './FormComponents/Dialog/CancelEditDialog'
 import { Footer } from './FormComponents/Footer'
 import { Position } from './FormComponents/Position'
@@ -99,6 +100,7 @@ export function ReportingForm({
   const confirmCloseReporting = () => {
     dispatch(reportingActions.setIsConfirmCancelDialogVisible(false))
     dispatch(reportingActions.deleteSelectedReporting(selectedReporting.id))
+    dispatch(attachMissionToReportingSliceActions.setAttachMissionListener(false))
     dispatch(
       setReportingFormVisibility({
         context: reportingContext,

@@ -7,7 +7,10 @@ import styled from 'styled-components'
 import { AttachedMissionCard } from './AttachedMissionCard'
 import { attachMissionToReportingSliceActions } from './slice'
 import { useGetMissionQuery } from '../../../../api/missionsAPI'
-import { resetInteraction } from '../../../../domain/shared_slices/Draw'
+import {
+  MapInteractionListenerEnum,
+  updateMapInteractionListeners
+} from '../../../../domain/use_cases/map/updateMapInteractionListeners'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
@@ -16,7 +19,7 @@ import type { Reporting } from '../../../../domain/entities/reporting'
 export function AttachMission({ setIsAttachNewMission }) {
   const { handleSubmit, setFieldValue, values } = useFormikContext<Reporting>()
   const dispatch = useAppDispatch()
-  const attachedMissionId = useAppSelector(state => state.attachReportingToMission.attachedMissionId)
+  const attachedMissionId = useAppSelector(state => state.attachMissionToReporting.attachedMissionId)
 
   const hasMissionAttached =
     !!values.attachedMissionId && !!values.attachedMission && values.attachedMission.id === attachedMissionId
@@ -25,9 +28,8 @@ export function AttachMission({ setIsAttachNewMission }) {
   )
 
   const attachMission = () => {
-    dispatch(resetInteraction())
     dispatch(attachMissionToReportingSliceActions.setInitialAttachedMission(values.attachedMission))
-    dispatch(attachMissionToReportingSliceActions.setAttachMissionListener(true))
+    dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.ATTACH_MISSION))
   }
 
   const unattachMission = () => {

@@ -30,6 +30,8 @@ export const getMissionCentroid = (mission: Partial<Mission>, layername: string)
   })
   pointFeature.setId(`${layername}:${mission.id}`)
   pointFeature.setProperties({
+    attachedReportingIds: mission.attachedReportingIds,
+    attachedReportings: mission.attachedReportings,
     controlUnits: mission.controlUnits,
     endDateTimeUtc: mission.endDateTimeUtc,
     missionId: mission.id,
@@ -54,6 +56,8 @@ export const getMissionZoneFeature = (mission: Partial<Mission>, layername: stri
   })
   feature.setId(`${layername}:${mission.id}`)
   feature.setProperties({
+    attachedReportingIds: mission.attachedReportingIds,
+    attachedReportings: mission.attachedReportings,
     controlUnits: mission.controlUnits,
     endDateTimeUtc: mission.endDateTimeUtc,
     envActions: mission.envActions,

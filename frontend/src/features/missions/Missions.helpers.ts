@@ -85,6 +85,8 @@ export const missionFactory = (
   startDate.setSeconds(0, 0)
 
   let formattedMission: NewMission = {
+    attachedReportingIds: attachedReporting ? [attachedReporting.id as number] : [],
+    attachedReportings: attachedReporting ? [attachedReporting] : [],
     closedBy: '',
     controlUnits: [controlUnitFactory()],
     endDateTimeUtc: '',
@@ -96,7 +98,6 @@ export const missionFactory = (
     observationsCacem: '',
     observationsCnsp: '',
     openBy: '',
-    reportings: attachedReporting ? [attachedReporting] : [],
     startDateTimeUtc: startDate.toISOString(),
     ...mission
   }

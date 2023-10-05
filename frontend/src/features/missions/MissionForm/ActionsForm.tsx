@@ -5,6 +5,7 @@ import { Dropdown } from 'rsuite'
 import styled from 'styled-components'
 
 import { ActionCards } from './ActionCards'
+import { AttachReporting } from './AttachReporting'
 import { ActionTypeEnum, type EnvAction, type Mission, type NewMission } from '../../../domain/entities/missions'
 import { ReactComponent as ControlSVG } from '../../../uiMonitor/icons/Control.svg'
 import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/Note_libre.svg'
@@ -18,10 +19,13 @@ export function ActionsForm({ currentActionIndex, setCurrentActionIndex }) {
   const { errors, setFieldValue, values } = useFormikContext<Partial<Mission | NewMission>>()
 
   const envActions = values?.envActions as EnvAction[] | undefined
-  const reportings = values?.reportings as Reporting[] | undefined
+  const attachedReportings = values?.attachedReportings as Reporting[] | undefined
   const isFirstSurveillanceAction = !envActions?.find(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
 
-  const actions = useMemo(() => getEnvActionsAndReportingsForTimeline(envActions, reportings), [envActions, reportings])
+  const actions = useMemo(
+    () => getEnvActionsAndReportingsForTimeline(envActions, attachedReportings),
+    [envActions, attachedReportings]
+  )
 
   const sortedActions = useMemo(
     () =>
@@ -94,18 +98,21 @@ export function ActionsForm({ currentActionIndex, setCurrentActionIndex }) {
   return (
     <FormWrapper>
       <TitleWrapper>
-        <Title>Actions réalisées en mission</Title>
-        <Dropdown appearance="primary" icon={<PlusSVG className="rs-icon" />} noCaret title="Ajouter">
-          <Dropdown.Item icon={<ControlSVG />} onClick={handleAddControlAction}>
-            Ajouter des contrôles
-          </Dropdown.Item>
-          <Dropdown.Item icon={<SurveillanceSVG />} onClick={handleAddSurveillanceAction}>
-            Ajouter une surveillance
-          </Dropdown.Item>
-          <Dropdown.Item icon={<NoteSVG />} onClick={handleAddNoteAction}>
-            Ajouter une note libre
-          </Dropdown.Item>
-        </Dropdown>
+        <div>
+          <Title>Actions réalisées en mission</Title>
+          <Dropdown appearance="primary" icon={<PlusSVG className="rs-icon" />} noCaret title="Ajouter">
+            <Dropdown.Item icon={<ControlSVG />} onClick={handleAddControlAction}>
+              Ajouter des contrôles
+            </Dropdown.Item>
+            <Dropdown.Item icon={<SurveillanceSVG />} onClick={handleAddSurveillanceAction}>
+              Ajouter une surveillance
+            </Dropdown.Item>
+            <Dropdown.Item icon={<NoteSVG />} onClick={handleAddNoteAction}>
+              Ajouter une note libre
+            </Dropdown.Item>
+          </Dropdown>
+        </div>
+        <AttachReporting />
       </TitleWrapper>
       <ActionsTimeline>
         {sortedActions ? (
@@ -148,6 +155,8 @@ const FormWrapper = styled.div`
 `
 const TitleWrapper = styled.div`
   margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
 `
 const Title = styled.h2`
   font-size: 16px;

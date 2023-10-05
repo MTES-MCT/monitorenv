@@ -33,8 +33,7 @@ export function BaseMap({ children }) {
   const [currentMap, setCurrentMap] = useState<OpenLayerMap>()
   const [mapClickEvent, setMapClickEvent] = useState({ ctrlKeyPressed: false, feature: undefined })
 
-  /** @type {currentFeatureOver} feature */
-  const [currentFeatureOver, setCurrentFeatureOver] = useState(null)
+  const [currentFeatureOver, setCurrentFeatureOver] = useState<Feature<Geometry> | null>(null)
 
   const mapElement = useRef() as MutableRefObject<HTMLDivElement>
 
