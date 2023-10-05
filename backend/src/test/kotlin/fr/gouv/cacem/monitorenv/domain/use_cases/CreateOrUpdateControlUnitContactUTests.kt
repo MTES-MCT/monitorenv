@@ -23,7 +23,6 @@ class CreateOrUpdateControlUnitContactUTests {
             controlUnitId = 2,
             email = null,
             name = "Control Unit Contact Name",
-            note = null,
             phone = null,
         )
 

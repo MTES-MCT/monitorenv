@@ -4,6 +4,5 @@ export const INITIAL_CONTROL_UNIT_CONTACT_FORM_VALUES: ControlUnitContactFormVal
   controlUnitId: undefined,
   email: undefined,
   name: undefined,
-  note: undefined,
   phone: undefined
 }

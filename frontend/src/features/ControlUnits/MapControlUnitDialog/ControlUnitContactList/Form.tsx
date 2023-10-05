@@ -1,4 +1,4 @@
-import { Accent, Button, FormikTextInput, FormikTextarea, useKey } from '@mtes-mct/monitor-ui'
+import { Accent, Button, FormikTextInput, useKey } from '@mtes-mct/monitor-ui'
 import { Formik } from 'formik'
 import styled from 'styled-components'
 
@@ -23,7 +23,6 @@ export function Form({ initialValues = INITIAL_CONTROL_UNIT_CONTACT_FORM_VALUES,
           <FormikTextInput isLight label="Nom du contact" name="name" />
           <FormikTextInput isLight label="Numéro de téléphone" name="phone" />
           <FormikTextInput isLight label="Adresse mail" name="email" />
-          <FormikTextarea isLight label="Note" name="note" />
 
           <div>
             <Button type="submit">Enregistrer</Button>

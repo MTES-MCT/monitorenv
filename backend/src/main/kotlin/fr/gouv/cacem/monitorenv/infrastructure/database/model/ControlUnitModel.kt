@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
+import fr.gouv.cacem.monitorenv.domain.entities.SeaFront
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
@@ -34,11 +35,19 @@ data class ControlUnitModel(
     @JsonManagedReference
     var controlUnitResources: List<ControlUnitResourceModel>? = mutableListOf(),
 
-    @Column(name = "archived")
+    // TODO Make that non-nullable once we get rid of `LegacyControlUnitEntity`.
+    @Column(name = "department", nullable = false)
+    var department: String? = null,
+
+    @Column(name = "archived", nullable = false)
     var isArchived: Boolean,
 
     @Column(name = "name", nullable = false)
     var name: String,
+
+    // TODO Make that non-nullable once we get rid of `LegacyControlUnitEntity`.
+    @Column(name = "sea_front", nullable = false)
+    var seaFront: String? = null,
 
     @Column(name = "terms_note")
     var termsNote: String? = null,
@@ -68,8 +77,10 @@ data class ControlUnitModel(
                 administration = administrationModel,
                 controlUnitContacts = controlUnitContactModels,
                 controlUnitResources = controlUnitResourceModels,
+                department = controlUnit.department,
                 isArchived = controlUnit.isArchived,
                 name = controlUnit.name,
+                seaFront = controlUnit.seaFront.name,
                 termsNote = controlUnit.termsNote,
             )
         }
@@ -80,8 +91,10 @@ data class ControlUnitModel(
             id,
             administrationId = requireNotNull(administration.id),
             areaNote,
+            department = requireNotNull(department),
             isArchived,
             name,
+            seaFront = SeaFront.valueOf(requireNotNull(seaFront)),
             termsNote,
         )
     }

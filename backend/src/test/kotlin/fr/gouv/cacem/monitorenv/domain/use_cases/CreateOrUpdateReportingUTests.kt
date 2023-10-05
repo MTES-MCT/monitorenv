@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import fr.gouv.cacem.monitorenv.domain.entities.SeaFront
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
@@ -130,8 +131,12 @@ class CreateOrUpdateReportingUTests {
                 controlUnit = ControlUnitEntity(
                     id = 1,
                     administrationId = 2,
+                    areaNote = null,
+                    department = "",
                     isArchived = false,
                     name = "control unit 1",
+                    seaFront = SeaFront.UNKNOWN,
+                    termsNote = null,
                 ),
                 controlUnitContacts = listOf(),
                 controlUnitResources = listOf(),

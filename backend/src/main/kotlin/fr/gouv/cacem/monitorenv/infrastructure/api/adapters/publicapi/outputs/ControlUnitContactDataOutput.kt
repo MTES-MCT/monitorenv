@@ -7,7 +7,6 @@ data class ControlUnitContactDataOutput(
     val controlUnitId: Int,
     val email: String? = null,
     val name: String,
-    val note: String? = null,
     val phone: String? = null,
 ) {
     companion object {
@@ -17,7 +16,6 @@ data class ControlUnitContactDataOutput(
                 controlUnitId = controlUnitContact.controlUnitId,
                 email = controlUnitContact.email,
                 name = controlUnitContact.name,
-                note = controlUnitContact.note,
                 phone = controlUnitContact.phone,
             )
         }

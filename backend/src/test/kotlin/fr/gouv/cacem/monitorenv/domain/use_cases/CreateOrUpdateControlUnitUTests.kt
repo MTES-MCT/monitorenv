@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import fr.gouv.cacem.monitorenv.domain.entities.SeaFront
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnit
@@ -22,8 +23,10 @@ class CreateOrUpdateControlUnitUTests {
         val newControlUnit = ControlUnitEntity(
             administrationId = 2,
             areaNote = null,
+            department = "",
             isArchived = false,
             name = "Control Unit Name",
+            seaFront = SeaFront.UNKNOWN,
             termsNote = null,
         )
 

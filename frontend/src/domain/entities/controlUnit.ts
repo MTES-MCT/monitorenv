@@ -1,5 +1,6 @@
 import type { Administration } from './administration'
 import type { Base } from './base'
+import type { SeaFrontEnum } from './seaFrontType'
 
 export namespace ControlUnit {
   export interface ControlUnit {
@@ -12,9 +13,11 @@ export namespace ControlUnit {
     controlUnitResourceIds: number[]
     // `ControlUnitResource` and not `ControlUnitResourceData` because we need `base` data for each resource
     controlUnitResources: ControlUnitResource[]
+    department: string
     id: number
     isArchived: boolean
     name: string
+    seaFront: SeaFrontEnum
     /** Conditions under which this unit should be contacted. */
     termsNote: string
   }
@@ -25,7 +28,6 @@ export namespace ControlUnit {
     email: string | undefined
     id: number
     name: string
-    note: string | undefined
     phone: string | undefined
   }
 
@@ -53,7 +55,7 @@ export namespace ControlUnit {
     FRIGATE = 'Frégate',
     LAND_VEHICLE = 'Véhicule terrestre',
     SCHOOL_BOAT = 'Bâtiment-École',
-    UNKNOWN = 'Type inconnu'
+    UNKNOWN = 'Type non renseigné'
   }
 
   // ---------------------------------------------------------------------------

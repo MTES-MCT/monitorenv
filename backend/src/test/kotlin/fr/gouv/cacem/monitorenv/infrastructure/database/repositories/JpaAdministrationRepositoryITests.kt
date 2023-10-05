@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
+import fr.gouv.cacem.monitorenv.domain.entities.SeaFront
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
@@ -99,16 +100,20 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
                         id = 10020,
                         administrationId = 6,
                         areaNote = null,
+                        department = "",
                         isArchived = false,
                         name = "BN Toulon",
+                        seaFront = SeaFront.UNKNOWN,
                         termsNote = null,
                     ),
                     ControlUnitEntity(
                         id = 10021,
                         administrationId = 6,
                         areaNote = null,
+                        department = "",
                         isArchived = false,
                         name = "Brigade fluviale de Rouen",
+                        seaFront = SeaFront.UNKNOWN,
                         termsNote = null,
                     ),
                 ),

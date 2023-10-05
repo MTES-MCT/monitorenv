@@ -8,7 +8,6 @@ data class FullControlUnitContactDataOutput(
     val controlUnitId: Int,
     val email: String? = null,
     val name: String,
-    val note: String? = null,
     val phone: String? = null,
 ) {
     companion object {
@@ -21,7 +20,6 @@ data class FullControlUnitContactDataOutput(
                 controlUnitId = controlUnit.id,
                 email = fullControlUnitContact.controlUnitContact.email,
                 name = fullControlUnitContact.controlUnitContact.name,
-                note = fullControlUnitContact.controlUnitContact.note,
                 phone = fullControlUnitContact.controlUnitContact.phone,
             )
         }

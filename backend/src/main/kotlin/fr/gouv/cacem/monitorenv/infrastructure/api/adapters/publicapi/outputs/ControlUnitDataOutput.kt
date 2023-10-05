@@ -7,8 +7,10 @@ data class ControlUnitDataOutput(
     val id: Int,
     val areaNote: String? = null,
     val administrationId: Int,
+    val department: String,
     val isArchived: Boolean,
     val name: String,
+    val seaFront: String,
     val termsNote: String? = null,
 ) {
     companion object {
@@ -17,8 +19,10 @@ data class ControlUnitDataOutput(
                 id = requireNotNull(controlUnit.id),
                 areaNote = controlUnit.areaNote,
                 administrationId = controlUnit.administrationId,
+                department = controlUnit.department,
                 isArchived = controlUnit.isArchived,
                 name = controlUnit.name,
+                seaFront = controlUnit.seaFront.name,
                 termsNote = controlUnit.termsNote,
             )
         }
@@ -28,8 +32,10 @@ data class ControlUnitDataOutput(
                 id = requireNotNull(fullControlUnit.controlUnit.id),
                 areaNote = fullControlUnit.controlUnit.areaNote,
                 administrationId = fullControlUnit.controlUnit.administrationId,
+                department = fullControlUnit.controlUnit.department,
                 isArchived = fullControlUnit.controlUnit.isArchived,
                 name = fullControlUnit.controlUnit.name,
+                seaFront = fullControlUnit.controlUnit.seaFront.name,
                 termsNote = fullControlUnit.controlUnit.termsNote,
             )
         }

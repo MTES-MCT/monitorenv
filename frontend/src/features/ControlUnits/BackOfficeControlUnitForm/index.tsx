@@ -5,7 +5,8 @@ import {
   FormikCheckbox,
   FormikSelect,
   FormikTextInput,
-  getOptionsFromIdAndName
+  getOptionsFromIdAndName,
+  getOptionsFromLabelledEnum
 } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Formik } from 'formik'
@@ -21,6 +22,7 @@ import {
 } from './constants'
 import { useGetAdministrationsQuery } from '../../../api/administrationsAPI'
 import { controlUnitsAPI, useGetControlUnitQuery } from '../../../api/controlUnitsAPI'
+import { SeaFrontLabel } from '../../../domain/entities/seaFrontType'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../libs/FrontendError'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/constants'
@@ -46,6 +48,7 @@ export function BackOfficeControlUnitForm() {
     : controlUnit || undefined
 
   const administrationsAsOptions = useMemo(() => getOptionsFromIdAndName(administrations), [administrations])
+  const seaFrontAsOptions = useMemo(() => getOptionsFromLabelledEnum(SeaFrontLabel), [])
 
   const goBackToList = useCallback(() => {
     navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_LIST]}`)
@@ -95,6 +98,8 @@ export function BackOfficeControlUnitForm() {
                 searchable
               />
               <FormikTextInput label="Nom" name="name" />
+              <FormikSelect label="Façade" name="seaFront" options={seaFrontAsOptions} />
+              <FormikTextInput label="Département" name="department" />
               {/* This is a quick way to implement "unarchiving" for users in case of human error. */}
               {initialValues.isArchived && <FormikCheckbox label="Unité archivée" name="isArchived" />}
 

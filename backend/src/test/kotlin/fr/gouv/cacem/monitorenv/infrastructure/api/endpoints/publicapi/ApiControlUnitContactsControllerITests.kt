@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
+import fr.gouv.cacem.monitorenv.domain.entities.SeaFront
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnitContact
@@ -51,7 +52,6 @@ class ApiControlUnitContactsControllerITests {
             controlUnitId = 0,
             email = null,
             name = "Contact Name",
-            note = null,
             phone = null,
         )
 
@@ -59,7 +59,6 @@ class ApiControlUnitContactsControllerITests {
             controlUnitId = 0,
             email = null,
             name = "Contact Name",
-            note = null,
             phone = null,
         )
         val requestBody = objectMapper.writeValueAsString(newControlUnitContactData)
@@ -84,8 +83,10 @@ class ApiControlUnitContactsControllerITests {
                 id = 0,
                 administrationId = 0,
                 areaNote = null,
+                department = "",
                 isArchived = false,
                 name = "Unit Name",
+                seaFront = SeaFront.UNKNOWN,
                 termsNote = null,
             ),
             controlUnitContact = ControlUnitContactEntity(
@@ -93,7 +94,6 @@ class ApiControlUnitContactsControllerITests {
                 controlUnitId = 0,
                 email = null,
                 name = "Contact Name",
-                note = null,
                 phone = null,
             )
         )
@@ -116,8 +116,10 @@ class ApiControlUnitContactsControllerITests {
                     id = 0,
                     administrationId = 0,
                     areaNote = null,
+                    department = "",
                     isArchived = false,
                     name = "Unit Name",
+                    seaFront = SeaFront.UNKNOWN,
                     termsNote = null,
                 ),
                 controlUnitContact = ControlUnitContactEntity(
@@ -125,7 +127,6 @@ class ApiControlUnitContactsControllerITests {
                     controlUnitId = 0,
                     email = null,
                     name = "Contact Name",
-                    note = null,
                     phone = null,
                 ),
             ),
@@ -135,8 +136,10 @@ class ApiControlUnitContactsControllerITests {
                     id = 0,
                     administrationId = 0,
                     areaNote = null,
+                    department = "",
                     isArchived = false,
                     name = "Unit Name",
+                    seaFront = SeaFront.UNKNOWN,
                     termsNote = null,
                 ),
                 controlUnitContact = ControlUnitContactEntity(
@@ -144,7 +147,6 @@ class ApiControlUnitContactsControllerITests {
                     controlUnitId = 0,
                     email = null,
                     name = "Contact Name 2",
-                    note = null,
                     phone = null,
                 ),
             )
@@ -166,7 +168,6 @@ class ApiControlUnitContactsControllerITests {
             controlUnitId = 0,
             email = null,
             name = "Updated Contact Name",
-            note = null,
             phone = null,
         )
 
@@ -175,7 +176,6 @@ class ApiControlUnitContactsControllerITests {
             email = null,
             controlUnitId = 0,
             name = "Updated Contact Name",
-            note = null,
             phone = null,
         )
         val requestBody = objectMapper.writeValueAsString(nextControlUnitContactData)
