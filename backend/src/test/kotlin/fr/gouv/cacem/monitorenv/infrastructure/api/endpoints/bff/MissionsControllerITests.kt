@@ -5,15 +5,13 @@ import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionById
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMonitorEnvMissions
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateMissionDataInput
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
@@ -55,6 +53,9 @@ class MissionsControllerITests {
 
     @MockBean
     private lateinit var deleteMission: DeleteMission
+
+    @MockBean
+    private lateinit var getControlUnitsInvolvedInMissions: GetControlUnitsInvolvedInMissions
 
     @Autowired
     private lateinit var objectMapper: ObjectMapper
@@ -222,5 +223,25 @@ class MissionsControllerITests {
             // Then
             .andExpect(status().isOk)
         Mockito.verify(deleteMission).execute(20)
+    }
+
+    @Test
+    fun `Should get all control units involved in missions`() {
+        // Given
+        given(getControlUnitsInvolvedInMissions.execute()).willReturn(listOf(
+            LegacyControlUnitEntity(
+                id = 123,
+                administration = "Admin",
+                resources = listOf(),
+                isArchived = false,
+                name = "Control Unit Name"
+            )
+        ))
+
+        // When
+        mockMvc.perform(get("/bff/v1/missions/involved_control_units"))
+            // Then
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$[0].name", equalTo("Control Unit Name")))
     }
 }

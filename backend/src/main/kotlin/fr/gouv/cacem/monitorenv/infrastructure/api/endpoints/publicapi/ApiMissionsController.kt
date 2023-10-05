@@ -1,10 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionById
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissions
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.MissionDataOutput
 import io.swagger.v3.oas.annotations.Operation
@@ -12,14 +10,7 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
 import org.springframework.format.annotation.DateTimeFormat
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.time.ZonedDateTime
 
 @RestController
@@ -30,6 +21,7 @@ class ApiMissionsController(
     private val getMissions: GetMissions,
     private val getMissionById: GetMissionById,
     private val deleteMission: DeleteMission,
+    private val getControlUnitsInvolvedInMissions: GetControlUnitsInvolvedInMissions,
 ) {
 
     @GetMapping("")
@@ -125,5 +117,12 @@ class ApiMissionsController(
         missionId: Int,
     ) {
         deleteMission.execute(missionId = missionId)
+    }
+
+    // TODO Return a ControlUnitDataOutput once the LegacyControlUnitEntity to ControlUnitEntity migration is done
+    @GetMapping("/involved_control_units")
+    @Operation(summary = "Get control units involved in missions")
+    fun getMissionsController(): List<LegacyControlUnitEntity> {
+        return getControlUnitsInvolvedInMissions.execute()
     }
 }
