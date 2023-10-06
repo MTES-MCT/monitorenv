@@ -1,4 +1,5 @@
-import { transform } from 'ol/proj'
+import { boundingExtent } from 'ol/extent'
+import { transform, transformExtent } from 'ol/proj'
 import { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -10,6 +11,7 @@ import {
   WSG84_PROJECTION
 } from '../../../../domain/entities/map/constants'
 import { setIsMapToolVisible } from '../../../../domain/shared_slices/Global'
+import { setFitToExtent } from '../../../../domain/shared_slices/Map'
 import {
   resetCircleMeasurementInDrawing,
   setCircleMeasurementInDrawing,
@@ -21,6 +23,8 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { coordinatesAreDistinct, getCoordinates } from '../../../../utils/coordinates'
 import { SetCoordinates } from '../../../coordinates/SetCoordinates'
 import { MapToolBox } from '../MapToolBox'
+
+import type { Coordinate } from 'ol/coordinate'
 
 export function CustomCircleRange() {
   const dispatch = useAppDispatch()
@@ -91,6 +95,11 @@ export function CustomCircleRange() {
           circleRadiusToAdd: nextCircleRadius
         })
       )
+
+      const formattedCoordinates = [nextCoordinates[1], nextCoordinates[0]] as Coordinate
+      const extent = transformExtent(boundingExtent([formattedCoordinates]), WSG84_PROJECTION, OPENLAYERS_PROJECTION)
+      dispatch(setFitToExtent(extent))
+      dispatch(setMeasurementTypeToAdd(undefined))
     },
     [dispatch]
   )
@@ -118,7 +127,7 @@ export function CustomCircleRange() {
           type="text"
           value={circleRadius}
         />
-        <span>{distanceUnit === DistanceUnit.METRIC ? '(Km)' : '(Nm)'}</span>
+        <span>{distanceUnit === DistanceUnit.METRIC ? '(Mètres)' : '(Nm)'}</span>
         <br />
         <OkButton
           data-cy="measurement-circle-add"
