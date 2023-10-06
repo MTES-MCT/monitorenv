@@ -13,7 +13,7 @@ import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 export function SelectedReportingToAttachLayer({ map }: BaseMapChildrenProps) {
   const attachReportingListener = useAppSelector(state => state.attachReportingToMission.attachReportingListener)
 
-  const attachedReportingIds = useAppSelector(state => state.attachReportingToMission.attachedReportingIds)
+  const attachedReportingIds = useAppSelector(state => state.missionState.missionState?.attachedReportingIds || [])
   const { attachedReportings } = useGetReportingsQuery(undefined, {
     selectFromResult: ({ data }) => ({
       attachedReportings:

@@ -29,6 +29,8 @@ import { missionFactory } from '../Missions.helpers'
 export function MissionForm({ id, isAlreadyClosed, isNewMission, selectedMission, setShouldValidateOnChange }) {
   const dispatch = useAppDispatch()
   const { sideWindow } = useAppSelector(state => state)
+  const attachedReportingIds = useAppSelector(state => state.attachReportingToMission.attachedReportingIds)
+  const attachedReportings = useAppSelector(state => state.attachReportingToMission.attachedReportings)
   const { dirty, handleSubmit, setFieldValue, setValues, validateForm, values } =
     useFormikContext<Partial<Mission | NewMission>>()
 
@@ -53,6 +55,13 @@ export function MissionForm({ id, isAlreadyClosed, isNewMission, selectedMission
     selectedMission?.missionSource === MissionSourceEnum.MONITORFISH
   const allowDeleteMission = !isNewMission && allowEditMission
   const allowCloseMission = !selectedMission?.isClosed || !values?.isClosed
+
+  useEffect(() => {
+    if (attachedReportingIds.length !== values?.attachedReportingIds?.length) {
+      setFieldValue('attachedReportingIds', attachedReportingIds)
+      setFieldValue('attachedReportings', attachedReportings)
+    }
+  }, [attachedReportingIds, values?.attachedReportingIds?.length, setFieldValue, attachedReportings])
 
   const handleSetCurrentActionIndex = index => {
     setCurrentActionIndex(index)

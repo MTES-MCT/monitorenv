@@ -6,9 +6,7 @@ import { getFormattedReportingId } from '../../../../domain/entities/reporting'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 export function ReportingCard({ feature, updateMargins }: { feature: any; updateMargins: (margin: number) => void }) {
-  const {
-    global: { displayReportingsLayer }
-  } = useAppSelector(state => state)
+  const attachReportingListener = useAppSelector(state => state.attachReportingToMission.attachReportingListener)
 
   const ref = useRef<HTMLDivElement>(null)
 
@@ -40,7 +38,7 @@ export function ReportingCard({ feature, updateMargins }: { feature: any; update
     }
   }, [feature, updateMargins])
 
-  if (!displayReportingsLayer) {
+  if (!attachReportingListener) {
     return null
   }
 

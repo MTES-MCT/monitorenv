@@ -15,11 +15,18 @@ import {
 } from '../../../../../domain/entities/reporting'
 import { ReportingTargetTypeLabels } from '../../../../../domain/entities/targetType'
 import { vehicleTypeLabels } from '../../../../../domain/entities/vehicleType'
+import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../../../hooks/useAppSelector'
+import { attachReportingToMissionSliceActions } from '../../AttachReporting/slice'
 
 const EMPTY_VALUE = '--'
 
 export function ReportingForm({ reportingActionIndex }: { reportingActionIndex: number }) {
+  const dispatch = useAppDispatch()
   const [reportingField] = useField<ReportingDetailed>(`attachedReportings.${reportingActionIndex}`)
+
+  const attachedReportings = useAppSelector(state => state.attachReportingToMission.attachedReportings)
+  const attachedReportingIds = useAppSelector(state => state.attachReportingToMission.attachedReportingIds)
 
   const reporting = reportingField.value
   const sourceOptions = getOptionsFromLabelledEnum(ReportingSourceLabels)
@@ -39,11 +46,23 @@ export function ReportingForm({ reportingActionIndex }: { reportingActionIndex: 
     return 'Nom, société ...'
   }, [reporting.sourceType])
 
+  const unattachReporting = () => {
+    const reportings = [...attachedReportings]
+    const reportingToDeleteIndex = reportings.findIndex(r => r.id === reporting.id)
+    reportings.splice(reportingToDeleteIndex, 1)
+    dispatch(attachReportingToMissionSliceActions.setAttachedReportings(reportings))
+
+    const reportingIds = [...attachedReportingIds]
+    const reportingIdToDeleteIndex = reportingIds.findIndex(id => id === reporting.id)
+    reportingIds.splice(reportingIdToDeleteIndex, 1)
+    dispatch(attachReportingToMissionSliceActions.setAttachedReportingIds(reportingIds))
+  }
+
   return (
     <>
       <Header>
         <Title>{`Signalement ${getFormattedReportingId(reporting.reportingId)}`}</Title>
-        <Button accent={Accent.SECONDARY} Icon={Icon.Unlink}>
+        <Button accent={Accent.SECONDARY} Icon={Icon.Unlink} onClick={unattachReporting}>
           Délier de la mission
         </Button>
       </Header>

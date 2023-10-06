@@ -1,7 +1,7 @@
 import { OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { getCenter } from 'ol/extent'
 import { GeoJSON } from 'ol/format'
-import { MultiPoint, MultiPolygon } from 'ol/geom'
+import { LineString, MultiPoint, MultiPolygon } from 'ol/geom'
 import Point from 'ol/geom/Point'
 import { Circle, Icon, Style } from 'ol/style'
 import Fill from 'ol/style/Fill'
@@ -111,10 +111,9 @@ export const selectedMissionZoneStyle = new Style({
   })
 })
 
-/* const missionToReportingsLinkStyle = feature => {
-  console.log('feature', feature)
+const missionToReportingsLinkStyle = feature => {
   if (!feature.get('attachedReportings') || feature.get('attachedReportings').length === 0) {
-    return undefined
+    return [new Style({})]
   }
   const missionExtent = feature?.getGeometry()?.getExtent()
   const missionCenter = missionExtent && getCenter(missionExtent)
@@ -141,11 +140,11 @@ export const selectedMissionZoneStyle = new Style({
         })
       })
   )
-} */
+}
 
 const attachedMissionCircleStyle = feature => {
   if (!feature.get('attachedReportings') || feature.get('attachedReportings').length === 0) {
-    return new Style({})
+    return [new Style({})]
   }
 
   return feature.get('attachedReportings').map(
@@ -176,6 +175,6 @@ const attachedMissionCircleStyle = feature => {
 }
 export const selectedMissionStyle = feature => [
   selectedMissionZoneStyle,
-  // missionToReportingsLinkStyle(feature),
-  attachedMissionCircleStyle(feature)
+  ...missionToReportingsLinkStyle(feature),
+  ...attachedMissionCircleStyle(feature)
 ]
