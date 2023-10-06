@@ -47,6 +47,30 @@ export namespace ControlUnit {
   // ---------------------------------------------------------------------------
   // Constants
 
+  export enum ControlUnitContactName {
+    ADJUNCT = 'Adjoint',
+    BRIDGE = 'Passerelle',
+    CHIEF = 'Chef',
+    COMMANDER = 'Commandant',
+    COMMANDER_A = 'Commandant bordée A',
+    COMMANDER_B = 'Commandant bordée B',
+    CREW_A = 'Équipage A',
+    CREW_B = 'Équipage B',
+    DML = 'DML',
+    DOCK = 'Quai',
+    LAND = 'Terre',
+    LAND_ON_CALL = 'Permanence terre',
+    NEAR_COAST = 'Proche côte',
+    OFFICE = 'Bureau',
+    ONBOARD_PHONE = 'Téléphone de bord',
+    ON_CALL = 'Permanence',
+    SEA = 'Mer',
+    SECRETARIAT = 'Secrétariat',
+    SERVICE_CHIEF = 'Chef de service',
+    UNIT_CHIEF = 'Chef d’unité',
+    UNKNOWN = 'Nom de contact non renseigné'
+  }
+
   // Don't forget to mirror any update here in the backend enum.
   export enum ControlUnitResourceType {
     AIRPLANE = 'Avion',
