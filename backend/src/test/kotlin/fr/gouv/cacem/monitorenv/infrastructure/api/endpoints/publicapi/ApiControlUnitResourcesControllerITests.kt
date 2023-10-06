@@ -87,6 +87,8 @@ class ApiControlUnitResourcesControllerITests {
         val expectedFullControlUnitResource = FullControlUnitResourceDTO(
             base = BaseEntity(
                 id = 0,
+                latitude = 0.0,
+                longitude = 0.0,
                 name = "Control Unit Name",
             ),
             controlUnit = ControlUnitEntity(
@@ -126,7 +128,9 @@ class ApiControlUnitResourcesControllerITests {
             FullControlUnitResourceDTO(
                 base = BaseEntity(
                     id = 0,
-                    name = "Control Unit Name",
+                    latitude = 0.0,
+                    longitude = 0.0,
+                    name = "Base Name",
                 ),
                 controlUnit = ControlUnitEntity(
                     id = 0,
@@ -152,7 +156,9 @@ class ApiControlUnitResourcesControllerITests {
             FullControlUnitResourceDTO(
                 base = BaseEntity(
                     id = 0,
-                    name = "Control Unit Name",
+                    latitude = 0.0,
+                    longitude = 0.0,
+                    name = "Base Name",
                 ),
                 controlUnit = ControlUnitEntity(
                     id = 0,

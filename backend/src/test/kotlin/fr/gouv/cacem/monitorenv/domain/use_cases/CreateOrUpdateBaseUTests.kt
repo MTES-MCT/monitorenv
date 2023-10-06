@@ -20,7 +20,9 @@ class CreateOrUpdateBaseUTests {
     @Test
     fun `execute() should return save() result`() {
         val newBase = BaseEntity(
-            name = "Base Name"
+            latitude = 0.0,
+            longitude = 0.0,
+            name = "Base Name",
         )
 
         val expectedBase = newBase.copy(id = 0)

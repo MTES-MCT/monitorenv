@@ -24,6 +24,8 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
             FullBaseDTO(
                 base = BaseEntity(
                     id = 1,
+                    latitude = 0.0,
+                    longitude = 0.0,
                     name = "Marseille"
                 ),
                 controlUnitResources = listOf(
@@ -53,6 +55,8 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
             FullBaseDTO(
                 base = BaseEntity(
                     id = 2,
+                    latitude = 0.0,
+                    longitude = 0.0,
                     name = "Saint-Malo"
                 ),
                 controlUnitResources = listOf(
@@ -97,6 +101,8 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
             FullBaseDTO(
                 base = BaseEntity(
                     id = 2,
+                    latitude = 0.0,
+                    longitude = 0.0,
                     name = "Saint-Malo"
                 ),
                 controlUnitResources = listOf(
@@ -139,6 +145,8 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
         // Create
 
         val newBase = BaseEntity(
+            latitude = 1.2,
+            longitude = 3.4,
             name = "Base Name"
         )
 
@@ -151,6 +159,8 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
 
         val nextBase = BaseEntity(
             id = 4,
+            latitude = 5.6,
+            longitude = 7.8,
             name = "Updated Base Name"
         )
 

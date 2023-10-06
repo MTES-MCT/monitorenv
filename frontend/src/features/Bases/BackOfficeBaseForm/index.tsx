@@ -68,6 +68,9 @@ export function BackOfficeBaseForm() {
           {({ handleSubmit }) => (
             <Form onSubmit={handleSubmit}>
               <FormikTextInput label="Nom" name="name" />
+              {/* TODO Use `FormikCoordinatesInput` here after fixing `FormikCoordinatesInput.type` typing error in MUI including it in `cy.fill()` command. */}
+              <FormikTextInput label="Latitude" name="latitude" />
+              <FormikTextInput label="Longitude" name="longitude" />
 
               <ActionGroup>
                 <Button accent={Accent.SECONDARY} onClick={goBackToList}>

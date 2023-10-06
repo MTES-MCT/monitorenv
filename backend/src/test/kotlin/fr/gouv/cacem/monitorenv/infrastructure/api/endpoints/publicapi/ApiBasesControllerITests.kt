@@ -47,10 +47,14 @@ class ApiBasesControllerITests {
     fun `Should create a base`() {
         val expectedCreatedBase = BaseEntity(
             id = 1,
+            latitude = 0.0,
+            longitude = 0.0,
             name = "Base Name",
         )
 
         val newBaseData = CreateOrUpdateBaseDataInput(
+            latitude = "0.0",
+            longitude = "0.0",
             name = "Base Name",
         )
         val requestBody = objectMapper.writeValueAsString(newBaseData)
@@ -71,6 +75,8 @@ class ApiBasesControllerITests {
         val expectedFullBase = FullBaseDTO(
             base = BaseEntity(
                 id = 1,
+                latitude = 0.0,
+                longitude = 0.0,
                 name = "Base Name",
             ),
             controlUnitResources = listOf(),
@@ -92,6 +98,8 @@ class ApiBasesControllerITests {
             FullBaseDTO(
                 base = BaseEntity(
                     id = 1,
+                    latitude = 0.0,
+                    longitude = 0.0,
                     name = "Base Name",
                 ),
                 controlUnitResources = listOf(),
@@ -100,6 +108,8 @@ class ApiBasesControllerITests {
             FullBaseDTO(
                 base = BaseEntity(
                     id = 2,
+                    latitude = 0.0,
+                    longitude = 0.0,
                     name = "Base Name 2",
                 ),
                 controlUnitResources = listOf(),
@@ -119,11 +129,15 @@ class ApiBasesControllerITests {
     fun `Should update a base`() {
         val expectedUpdatedBase = BaseEntity(
             id = 1,
+            latitude = 0.0,
+            longitude = 0.0,
             name = "Updated Base Name",
         )
 
         val nextBaseData = CreateOrUpdateBaseDataInput(
             id = 1,
+            latitude = "0.0",
+            longitude = "0.0",
             name = "Updated Base Name",
         )
         val requestBody = objectMapper.writeValueAsString(nextBaseData)
