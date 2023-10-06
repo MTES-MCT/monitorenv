@@ -530,7 +530,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                             baseId = 3,
                             controlUnitId = 10002,
                             name = "Voiture",
-                            type = ControlUnitResourceType.LAND_VEHICLE,
+                            type = ControlUnitResourceType.CAR,
                         ),
                     ),
                     contact = null,

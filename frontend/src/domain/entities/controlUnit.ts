@@ -47,14 +47,34 @@ export namespace ControlUnit {
   // ---------------------------------------------------------------------------
   // Constants
 
-  // TODO Complete that with the first types list once it's ready.
-  // TODO Keys in French or English?
   // Don't forget to mirror any update here in the backend enum.
   export enum ControlUnitResourceType {
+    AIRPLANE = 'Avion',
     BARGE = 'Barge',
+    CANOE = 'Canoë',
+    CAR = 'Voiture',
+    DRONE = 'Drône',
+    EQUESTRIAN = 'Équestre',
+    FAST_BOAT = 'Vedette',
     FRIGATE = 'Frégate',
-    LAND_VEHICLE = 'Véhicule terrestre',
-    SCHOOL_BOAT = 'Bâtiment-École',
+    HELICOPTER = 'Hélicoptère',
+    HYDROGRAPHIC_SHIP = 'Bâtiment hydrographique',
+    JET_SKI = 'Jet-ski',
+    KAYAK = 'Kayak',
+    LIGHT_FAST_BOAT = 'Vedette légère',
+    MINE_DIVER = 'Plongeur démineur',
+    MOTORCYCLE = 'Moto',
+    NET_LIFTER = 'Remonte-filets',
+    PATROL_BOAT = 'Patrouilleur',
+    PEDESTRIAN = 'Piéton',
+    PIROGUE = 'Pirogue',
+    RESEARCH_SHIP = 'Navire de recherche',
+    RIGID_HULL = 'Coque rigide',
+    SEA_SCOOTER = 'Scooter de mer',
+    SEMI_RIGID = 'Semi-rigide',
+    SUPPORT_SHIP = 'Bâtiment de soutien',
+    TRAINING_SHIP = 'Bâtiment-école',
+    TUGBOAT = 'Remorqueur',
     UNKNOWN = 'Type non renseigné'
   }
 
