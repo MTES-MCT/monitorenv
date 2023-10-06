@@ -55,7 +55,7 @@ VALUES
     (    2,             10000,         'Semi-rigide 2',       1,           'BARGE'),
     (    3,             10002,         'Semi-rigide 1',       2,           'BARGE'),
     (    4,             10002,         'Semi-rigide 2',       2,           'BARGE'),
-    (    5,             10002,               'Voiture',       3,    'LAND_VEHICLE'),
+    (    5,             10002,               'Voiture',       3,             'CAR'),
     (    6,             10003,             'AR VECHEN',       2,         'FRIGATE'),
     (    7,             10003,           'Semi-rigide',       3,           'BARGE'),
     (    8,             10010,     'PAM Jeanne Barret',       3,         'FRIGATE'),
