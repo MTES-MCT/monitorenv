@@ -13,7 +13,12 @@ import {
   type EnvActionSurveillance,
   type EnvActionForTimeline
 } from '../../domain/entities/missions'
-import { getFormattedReportingId, type Reporting, type ReportingForTimeline } from '../../domain/entities/reporting'
+import {
+  getFormattedReportingId,
+  type Reporting,
+  type ReportingDetailed,
+  type ReportingForTimeline
+} from '../../domain/entities/reporting'
 
 import type { LegacyControlUnit } from '../../domain/entities/legacyControlUnit'
 
@@ -79,7 +84,7 @@ export const actionFactory = ({
 export const missionFactory = (
   mission?: Mission | undefined,
   id?: number | string | undefined,
-  attachedReporting?: Reporting | undefined
+  attachedReporting?: ReportingDetailed | undefined
 ): Mission | NewMission => {
   const startDate = new Date()
   startDate.setSeconds(0, 0)

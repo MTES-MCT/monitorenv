@@ -18,6 +18,35 @@ import { reportingActions } from '../../../../domain/shared_slices/reporting'
 import { editReportingInLocalStore } from '../../../../domain/use_cases/reporting/editReportingInLocalStore'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { LinkToMissionTag } from '../../../Reportings/components/LinkToMissionTag'
+import { StatusActionTag } from '../../../Reportings/components/StatusActionTag'
+
+function StatusTag({
+  attachedEnvActionId,
+  isArchived,
+  isAttachToMission
+}: {
+  attachedEnvActionId: string | undefined
+  isArchived: boolean
+  isAttachToMission: boolean
+}) {
+  if (isArchived) {
+    return (
+      <Tag borderColor={THEME.color.slateGray} color={THEME.color.slateGray}>
+        Archivé
+      </Tag>
+    )
+  }
+  if (isAttachToMission) {
+    return (
+      <>
+        <LinkToMissionTag /> {attachedEnvActionId && <StatusActionTag attachedEnvActionId={attachedEnvActionId} />}
+      </>
+    )
+  }
+
+  return null
+}
 
 export function ReportingCard({
   feature,
@@ -36,6 +65,8 @@ export function ReportingCard({
   const ref = useRef<HTMLDivElement>(null)
 
   const {
+    attachedEnvActionId,
+    attachedMissionId,
     createdAt,
     description,
     displayedSource,
@@ -120,7 +151,6 @@ export function ReportingCard({
           />
         </StyledHeaderSecondLine>
       </StyledHeader>
-
       <div>
         <StyledThemeContainer>
           {theme && <StyledBoldText>{theme}</StyledBoldText>}
@@ -128,7 +158,11 @@ export function ReportingCard({
         </StyledThemeContainer>
         {description && <StyledDescription title={description}>{description}</StyledDescription>}
       </div>
-      {(timeLeft < 0 || isArchived) && <StyledTag isLight>Archivé</StyledTag>}
+      <StatusTag
+        attachedEnvActionId={attachedEnvActionId}
+        isArchived={timeLeft < 0 || isArchived}
+        isAttachToMission={!!attachedMissionId}
+      />
       <StyledButton Icon={Icon.Edit} onClick={editReporting} size={Size.SMALL}>
         Editer le signalement
       </StyledButton>
@@ -214,11 +248,6 @@ const StyledThemeContainer = styled.div`
   -webkit-line-clamp: 2;
   overflow: hidden;
   padding-right: 32px;
-`
-const StyledTag = styled(Tag)`
-  align-self: start;
-  color: ${p => p.theme.color.slateGray};
-  border: 1px solid ${p => p.theme.color.slateGray};
 `
 
 // TODO delete when Monitor-ui component have good padding

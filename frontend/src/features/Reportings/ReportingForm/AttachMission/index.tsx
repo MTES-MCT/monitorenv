@@ -1,4 +1,4 @@
-import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
+import { Accent, Button, FormikCheckbox, Icon } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { useFormikContext } from 'formik'
 import { useEffect } from 'react'
@@ -71,6 +71,7 @@ export function AttachMission({ setIsAttachNewMission }) {
       >
         Créer une mission pour ce signalement
       </Button>
+      <FormikCheckbox disabled={!values.isControlRequired} label="Aucune unité disponible" name="isUnitAvailable" />
     </ButtonsContainer>
   ) : (
     <div>
@@ -79,7 +80,7 @@ export function AttachMission({ setIsAttachNewMission }) {
         <span>Signalement lié à une mission</span>
       </AttachedMissionText>
 
-      <AttachedMissionCard attachedMission={values.attachedMission} />
+      <AttachedMissionCard attachedEnvActionId={values?.attachedEnvActionId} attachedMission={values.attachedMission} />
 
       <UnattachButtonContainer>
         <Button accent={Accent.SECONDARY} Icon={Icon.Unlink} isFullWidth={false} onClick={unattachMission}>
