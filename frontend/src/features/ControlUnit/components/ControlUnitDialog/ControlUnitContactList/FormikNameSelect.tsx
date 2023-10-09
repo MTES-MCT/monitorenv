@@ -1,21 +1,13 @@
-import { FormikTextInput, Select, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
+import { FormikTextInput, Select } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
-import { ControlUnit } from '../../../../../domain/entities/controlUnit'
+import { CONTROL_UNIT_CONTACT_NAMES, CONTROL_UNIT_CONTACT_NAMES_AS_OPTIONS } from './constants'
 
 export function FormikNameSelect() {
   const [isCustomName, setIsCustomName] = useState<boolean>(false)
 
   const [field, meta, helpers] = useField<string | undefined>('name')
-
-  const namesAsOptions = [
-    ...getOptionsFromLabelledEnum(ControlUnit.ControlUnitContactName),
-    {
-      label: 'Ajouter un nom personnalisé',
-      value: 'SWITCH_TO_CUSTOM_NAME'
-    }
-  ]
 
   const handleChange = useCallback(
     (nextName: string | undefined) => {
@@ -33,6 +25,12 @@ export function FormikNameSelect() {
     [setIsCustomName]
   )
 
+  useEffect(() => {
+    if (!isCustomName && field.value && CONTROL_UNIT_CONTACT_NAMES.includes(field.value)) {
+      setIsCustomName(false)
+    }
+  }, [field.value, isCustomName])
+
   return isCustomName ? (
     <FormikTextInput isLight label="Nom du contact" name="name" />
   ) : (
@@ -42,7 +40,7 @@ export function FormikNameSelect() {
       label="Nom du contact"
       name="name"
       onChange={handleChange}
-      options={namesAsOptions}
+      options={CONTROL_UNIT_CONTACT_NAMES_AS_OPTIONS}
       value={field.value}
     />
   )
