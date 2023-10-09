@@ -7,6 +7,7 @@ import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnitContact
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.DeleteControlUnitContact
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitContactById
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitContacts
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitContactDTO
@@ -34,6 +35,9 @@ class ApiControlUnitContactsControllerITests {
 
     @MockBean
     private lateinit var createOrUpdateControlUnitContact: CreateOrUpdateControlUnitContact
+
+    @MockBean
+    private lateinit var deleteControlUnitContact: DeleteControlUnitContact
 
     @MockBean
     private lateinit var getControlUnitContactById: GetControlUnitContactById

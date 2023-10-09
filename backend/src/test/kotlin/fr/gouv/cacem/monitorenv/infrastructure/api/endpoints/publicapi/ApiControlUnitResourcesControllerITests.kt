@@ -9,6 +9,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnitResource
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.DeleteControlUnitResource
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitResourceById
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitResources
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
@@ -36,6 +37,9 @@ class ApiControlUnitResourcesControllerITests {
 
     @MockBean
     private lateinit var createOrUpdateControlUnitResource: CreateOrUpdateControlUnitResource
+
+    @MockBean
+    private lateinit var deleteControlUnitResource: DeleteControlUnitResource
 
     @MockBean
     private lateinit var getControlUnitResourceById: GetControlUnitResourceById
