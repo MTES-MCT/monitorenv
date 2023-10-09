@@ -8,16 +8,14 @@ import {
   IconButton,
   THEME,
   getOptionsFromIdAndName,
-  getOptionsFromLabelledEnum,
   useKey
 } from '@mtes-mct/monitor-ui'
 import { Formik } from 'formik'
 import { useCallback } from 'react'
 import styled from 'styled-components'
 
-import { CONTROL_UNIT_RESOURCE_FORM_SCHEMA } from './constants'
+import { CONTROL_UNIT_RESOURCE_FORM_SCHEMA, CONTROL_UNIT_RESOURCE_TYPES_AS_OPTIONS } from './constants'
 import { useGetBasesQuery } from '../../../../../api/basesAPI'
-import { ControlUnit } from '../../../../../domain/entities/controlUnit'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { mainWindowActions } from '../../../../MainWindow/slice'
 import { MainWindowConfirmationModalActionType } from '../../../../MainWindow/types'
@@ -37,13 +35,6 @@ export function Form({ initialValues, isNew, onCancel, onSubmit }: FormProps) {
   const { data: bases } = useGetBasesQuery()
 
   const basesAsOptions = getOptionsFromIdAndName(bases)?.filter(baseAsOption => baseAsOption.value !== 0)
-  const controlUnitResourceTypesAsOptions = getOptionsFromLabelledEnum(
-    ControlUnit.ControlUnitResourceType,
-    true
-  ).filter(
-    controlUnitResourceTypeAsOption =>
-      controlUnitResourceTypeAsOption.label !== ControlUnit.ControlUnitResourceType.UNKNOWN
-  )
 
   const askForDeletionConfirmation = useCallback(async () => {
     if (!initialValues.id) {
@@ -80,8 +71,8 @@ export function Form({ initialValues, isNew, onCancel, onSubmit }: FormProps) {
         <>
           <Title>Ajouter un moyen</Title>
           <StyledForm onSubmit={handleSubmit}>
+            <FormikSelect isLight label="Type de moyen" name="type" options={CONTROL_UNIT_RESOURCE_TYPES_AS_OPTIONS} />
             <FormikTextInput isLight label="Nom du moyen" name="name" />
-            <FormikSelect isLight label="Type de moyen" name="type" options={controlUnitResourceTypesAsOptions} />
             <FormikSelect isLight label="Base du moyen" name="baseId" options={basesAsOptions} />
             <FormikTextarea isLight label="Commentaire" name="note" />
 

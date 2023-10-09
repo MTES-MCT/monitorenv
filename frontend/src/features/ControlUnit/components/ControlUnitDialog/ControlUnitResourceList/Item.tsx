@@ -21,7 +21,9 @@ export function Item({ controlUnitResource, onEdit }: ItemProps) {
       <InfoBox>
         <InfoBoxHeader>
           <div>
-            <Name>{ControlUnit.ControlUnitResourceType[controlUnitResource.type]}</Name>
+            <Name>
+              {ControlUnit.ControlUnitResourceType[controlUnitResource.type]} – {controlUnitResource.name}
+            </Name>
             <p>{controlUnitResource.base.name}</p>
           </div>
           <div>

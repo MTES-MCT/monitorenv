@@ -40,10 +40,18 @@ export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceList
 
   const createOrUpdateControlUnitResource = useCallback(
     async (controlUnitResourceFormValues: ControlUnitResourceFormValues) => {
+      const controlledControlUnitResourceFormValues = {
+        ...controlUnitResourceFormValues,
+        // We set the resource type as the resource name if no name has been provided by the user
+        name: controlUnitResourceFormValues.name || controlUnitResourceFormValues.type
+      }
+
       if (isNewControlUnitResourceFormOpen) {
-        await createControlUnitResource(controlUnitResourceFormValues as ControlUnit.NewControlUnitResourceData)
+        await createControlUnitResource(
+          controlledControlUnitResourceFormValues as ControlUnit.NewControlUnitResourceData
+        )
       } else {
-        await updateControlUnitResource(controlUnitResourceFormValues as ControlUnit.ControlUnitResourceData)
+        await updateControlUnitResource(controlledControlUnitResourceFormValues as ControlUnit.ControlUnitResourceData)
       }
 
       closeForm()
