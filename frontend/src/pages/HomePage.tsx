@@ -5,16 +5,18 @@ import styled from 'styled-components'
 
 import { APIWorker } from '../api/APIWorker'
 import { ReportingContext } from '../domain/shared_slices/Global'
-import { MapControlUnitDialog } from '../features/ControlUnits/MapControlUnitDialog'
+import { ControlUnitDialog } from '../features/ControlUnit/components/ControlUnitDialog'
 import Healthcheck from '../features/healthcheck/Healthcheck'
 import { LayersSidebar } from '../features/layersSelector'
 import { LocateOnMap } from '../features/LocateOnMap'
+import { MainWindowConfirmationModal } from '../features/MainWindow/components/MainWindowConfirmationModal'
+import { MainWindowDialog } from '../features/MainWindow/components/MainWindowDialog'
+import { ControlUnitListButton } from '../features/MainWindow/components/RightMenu/ControlUnitListButton'
 import { Map } from '../features/map'
 import { DrawModal } from '../features/map/draw/DrawModal'
 import { RightMenuOnHoverArea } from '../features/map/shared/RightMenuOnHoverArea'
 import { InterestPointMapButton } from '../features/map/tools/interestPoint/InterestPointMapButton'
 import { MeasurementMapButton } from '../features/map/tools/measurements/MeasurementMapButton'
-import { ControlUnitListButton } from '../features/MapRightMenu/ControlUnitListButton'
 import { MissionsMenu } from '../features/missions/MissionsButton'
 import { Reportings } from '../features/Reportings'
 import { ReportingsButton } from '../features/Reportings/ReportingsButton'
@@ -34,6 +36,7 @@ export function HomePage() {
     displaySearchSemaphoreButton,
     isControlUnitDialogVisible
   } = useAppSelector(state => state.global)
+  const { isConfirmationModalOpen, isDialogOpen } = useAppSelector(state => state.mainWindow)
   const {
     missionState: { isFormDirty, missionState },
     multiMissions: { selectedMissions }
@@ -69,7 +72,7 @@ export function HomePage() {
         <RightMenuOnHoverArea />
         {displayDrawModal && <DrawModal />}
         {displayLocateOnMap && <LocateOnMap />}
-        {isControlUnitDialogVisible && <MapControlUnitDialog />}
+        {isControlUnitDialogVisible && <ControlUnitDialog />}
 
         {displayMissionMenuButton && <MissionsMenu />}
         {displayReportingsButton && <ReportingsButton />}
@@ -82,6 +85,9 @@ export function HomePage() {
         <Reportings key="reportings-on-map" context={ReportingContext.MAP} />
 
         <SideWindowLauncher />
+
+        {isConfirmationModalOpen && <MainWindowConfirmationModal />}
+        {isDialogOpen && <MainWindowDialog />}
 
         <ToastContainer containerId="map" enableMultiContainer />
       </Wrapper>

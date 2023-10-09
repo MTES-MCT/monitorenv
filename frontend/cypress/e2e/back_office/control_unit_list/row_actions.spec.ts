@@ -12,10 +12,11 @@ context('Back Office > Control Unit List > Row Actions', () => {
     cy.intercept('DELETE', `/api/v2/control_units/10000`).as('deleteControlUnit')
 
     cy.getTableRowById(10000).clickButton('Supprimer cette unité de contrôle')
-    cy.clickButton('Confirmer')
+    cy.clickButton('Supprimer')
 
     cy.wait('@deleteControlUnit')
 
     cy.get('.Component-Dialog').should('be.visible')
+    cy.contains('Suppression impossible').should('be.visible')
   })
 })

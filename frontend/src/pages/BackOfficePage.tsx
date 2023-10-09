@@ -2,16 +2,16 @@ import { Notifier } from '@mtes-mct/monitor-ui'
 import { Route, Routes } from 'react-router'
 import styled from 'styled-components'
 
-import { BackOfficeAdministrationForm } from '../features/Administrations/BackOfficeAdministrationForm'
-import { BackOfficeAdministrationList } from '../features/Administrations/BackOfficeAdministrationList'
-import { ConfirmationModal } from '../features/BackOffice/components/ConfirmationModal'
-import { Dialog } from '../features/BackOffice/components/Dialog'
+import { AdministrationForm } from '../features/Administration/components/AdministrationForm'
+import { AdministrationTable } from '../features/Administration/components/AdministrationTable'
+import { BackOfficeConfirmationModal } from '../features/BackOffice/components/BackOfficeConfirmationModal'
+import { BackOfficeDialog } from '../features/BackOffice/components/BackOfficeDialog'
 import { BackOfficeMenu } from '../features/BackOfficeMenu'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../features/BackOfficeMenu/constants'
-import { BackOfficeBaseForm } from '../features/Bases/BackOfficeBaseForm'
-import { BackOfficeBaseList } from '../features/Bases/BackOfficeBaseList'
-import { BackOfficeControlUnitForm } from '../features/ControlUnits/BackOfficeControlUnitForm'
-import { BackOfficeControlUnitList } from '../features/ControlUnits/BackOfficeControlUnitList'
+import { BaseForm } from '../features/Base/components/BaseForm'
+import { BaseTable } from '../features/Base/components/BaseTable'
+import { ControlUnitForm } from '../features/ControlUnit/components/ControlUnitForm'
+import { ControlUnitTable } from '../features/ControlUnit/components/ControlUnitTable'
 import { useAppSelector } from '../hooks/useAppSelector'
 
 export function BackOfficePage() {
@@ -23,36 +23,30 @@ export function BackOfficePage() {
 
       <Body>
         <Routes>
-          <Route element={<BackOfficeAdministrationList />} path="/" />
+          <Route element={<AdministrationTable />} path="/" />
 
-          <Route element={<BackOfficeBaseList />} path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.BASE_LIST]} />
-          <Route
-            element={<BackOfficeBaseForm />}
-            path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.BASE_LIST]}/:baseId`}
-          />
+          <Route element={<BaseTable />} path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.BASE_LIST]} />
+          <Route element={<BaseForm />} path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.BASE_LIST]}/:baseId`} />
 
           <Route
-            element={<BackOfficeAdministrationList />}
+            element={<AdministrationTable />}
             path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.ADMINISTRATION_LIST]}
           />
           <Route
-            element={<BackOfficeAdministrationForm />}
+            element={<AdministrationForm />}
             path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.ADMINISTRATION_LIST]}/:administrationId`}
           />
 
+          <Route element={<ControlUnitTable />} path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_LIST]} />
           <Route
-            element={<BackOfficeControlUnitList />}
-            path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_LIST]}
-          />
-          <Route
-            element={<BackOfficeControlUnitForm />}
+            element={<ControlUnitForm />}
             path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_LIST]}/:controlUnitId`}
           />
         </Routes>
       </Body>
 
-      {backOffice.isConfirmationModalOpen && <ConfirmationModal />}
-      {backOffice.isDialogOpen && <Dialog />}
+      {backOffice.isConfirmationModalOpen && <BackOfficeConfirmationModal />}
+      {backOffice.isDialogOpen && <BackOfficeDialog />}
 
       <Notifier />
     </Wrapper>

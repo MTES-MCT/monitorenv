@@ -59,7 +59,7 @@ context('Back Office > Administration Form', () => {
     cy.intercept('POST', `/api/v1/administrations/2007/archive`).as('archiveAdministration')
 
     cy.getTableRowById(2007).clickButton('Archiver cette administration')
-    cy.clickButton('Confirmer')
+    cy.clickButton('Archiver')
 
     cy.wait('@archiveAdministration')
 
@@ -73,7 +73,7 @@ context('Back Office > Administration Form', () => {
     cy.intercept('DELETE', `/api/v1/administrations/2007`).as('deleteAdministration')
 
     cy.getTableRowById(2007).clickButton('Supprimer cette administration')
-    cy.clickButton('Confirmer')
+    cy.clickButton('Supprimer')
 
     cy.wait('@deleteAdministration')
 

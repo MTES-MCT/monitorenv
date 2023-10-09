@@ -17,6 +17,14 @@ export const controlUnitContactsAPI = monitorenvPublicApi.injectEndpoints({
       })
     }),
 
+    deleteControlUnitContact: builder.mutation<void, number>({
+      invalidatesTags: () => [{ type: 'ControlUnits' }],
+      query: controlUnitContactId => ({
+        method: 'DELETE',
+        url: `/v1/control_unit_contacts/${controlUnitContactId}`
+      })
+    }),
+
     getControlUnitContact: builder.query<ControlUnit.ControlUnitContact, number>({
       providesTags: () => [{ type: 'ControlUnits' }],
       query: controlUnitContactId => `/v1/control_unit_contacts/${controlUnitContactId}`,
@@ -42,6 +50,7 @@ export const controlUnitContactsAPI = monitorenvPublicApi.injectEndpoints({
 
 export const {
   useCreateControlUnitContactMutation,
+  useDeleteControlUnitContactMutation,
   useGetControlUnitContactQuery,
   useGetControlUnitContactsQuery,
   useUpdateControlUnitContactMutation
