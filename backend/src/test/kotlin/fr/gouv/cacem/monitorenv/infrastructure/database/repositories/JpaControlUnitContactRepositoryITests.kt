@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import fr.gouv.cacem.monitorenv.domain.entities.SeaFront
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitContactDTO
@@ -27,10 +26,9 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     id = 10000,
                     administrationId = 1005,
                     areaNote = null,
-                    department = "",
+                    department = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
-                    seaFront = SeaFront.UNKNOWN,
                     termsNote = null
                 ),
                 controlUnitContact = ControlUnitContactEntity(
@@ -48,10 +46,9 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     id = 10003,
                     administrationId = 1005,
                     areaNote = null,
-                    department = "",
+                    department = null,
                     isArchived = false,
                     name = "DPM – DDTM 14",
-                    seaFront = SeaFront.UNKNOWN,
                     termsNote = null
                 ),
                 controlUnitContact = ControlUnitContactEntity(
@@ -75,10 +72,9 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     id = 10000,
                     administrationId = 1005,
                     areaNote = null,
-                    department = "",
+                    department = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
-                    seaFront = SeaFront.UNKNOWN,
                     termsNote = null
                 ),
                 controlUnitContact = ControlUnitContactEntity(

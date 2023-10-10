@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
-import fr.gouv.cacem.monitorenv.domain.entities.SeaFront
 import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
@@ -95,10 +94,9 @@ class ApiControlUnitResourcesControllerITests {
                 id = 0,
                 administrationId = 0,
                 areaNote = null,
-                department = "",
+                department = null,
                 isArchived = false,
                 name = "Control Unit Name",
-                seaFront = SeaFront.UNKNOWN,
                 termsNote = null,
             ),
             controlUnitResource = ControlUnitResourceEntity(
@@ -136,10 +134,9 @@ class ApiControlUnitResourcesControllerITests {
                     id = 0,
                     administrationId = 0,
                     areaNote = null,
-                    department = "",
+                    department = null,
                     isArchived = false,
                     name = "Unit Name",
-                    seaFront = SeaFront.UNKNOWN,
                     termsNote = null,
                 ),
                 controlUnitResource = ControlUnitResourceEntity(
@@ -164,10 +161,9 @@ class ApiControlUnitResourcesControllerITests {
                     id = 0,
                     administrationId = 0,
                     areaNote = null,
-                    department = "",
+                    department = null,
                     isArchived = false,
                     name = "Unit Name",
-                    seaFront = SeaFront.UNKNOWN,
                     termsNote = null,
                 ),
                 controlUnitResource = ControlUnitResourceEntity(

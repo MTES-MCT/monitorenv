@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import fr.gouv.cacem.monitorenv.domain.entities.SeaFront
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
 import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
@@ -78,10 +77,9 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                     id = 10000,
                     administrationId = 1005,
                     areaNote = null,
-                    department = "",
+                    department = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
-                    seaFront = SeaFront.UNKNOWN,
                     termsNote = null,
                 ),
                 controlUnitContacts = listOf(
@@ -112,10 +110,9 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             id = 10000,
                             administrationId = 1005,
                             areaNote = null,
-                            department = "",
+                            department = null,
                             isArchived = false,
                             name = "Cultures marines – DDTM 40",
-                            seaFront = SeaFront.UNKNOWN,
                             termsNote = null,
                         ),
                         controlUnitResource = ControlUnitResourceEntity(
@@ -139,10 +136,9 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             id = 10000,
                             administrationId = 1005,
                             areaNote = null,
-                            department = "",
+                            department = null,
                             isArchived = false,
                             name = "Cultures marines – DDTM 40",
-                            seaFront = SeaFront.UNKNOWN,
                             termsNote = null,
                         ),
                         controlUnitResource = ControlUnitResourceEntity(
@@ -170,10 +166,9 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                     id = 10032,
                     administrationId = 1005,
                     areaNote = null,
-                    department = "",
+                    department = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 30",
-                    seaFront = SeaFront.UNKNOWN,
                     termsNote = null,
                 ),
                 controlUnitContacts = listOf(),
@@ -198,10 +193,9 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                     id = 10000,
                     administrationId = 1005,
                     areaNote = null,
-                    department = "",
+                    department = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
-                    seaFront = SeaFront.UNKNOWN,
                     termsNote = null,
                 ),
                 controlUnitContacts = listOf(
@@ -232,10 +226,9 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             id = 10000,
                             administrationId = 1005,
                             areaNote = null,
-                            department = "",
+                            department = null,
                             isArchived = false,
                             name = "Cultures marines – DDTM 40",
-                            seaFront = SeaFront.UNKNOWN,
                             termsNote = null,
                         ),
                         controlUnitResource = ControlUnitResourceEntity(
@@ -259,10 +252,9 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             id = 10000,
                             administrationId = 1005,
                             areaNote = null,
-                            department = "",
+                            department = null,
                             isArchived = false,
                             name = "Cultures marines – DDTM 40",
-                            seaFront = SeaFront.UNKNOWN,
                             termsNote = null,
                         ),
                         controlUnitResource = ControlUnitResourceEntity(
@@ -292,7 +284,6 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
             department = "50",
             isArchived = false,
             name = "Control Unit Name",
-            seaFront = SeaFront.NAMO,
             termsNote = "Terms Note",
         )
 
@@ -310,7 +301,6 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
             department = "40",
             isArchived = false,
             name = "Updated Control Unit Name",
-            seaFront = SeaFront.SA,
             termsNote = "Updated Terms Note",
         )
 

@@ -2,7 +2,6 @@
 
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import fr.gouv.cacem.monitorenv.domain.entities.SeaFront
 import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
@@ -37,10 +36,9 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     id = 10000,
                     administrationId = 1005,
                     areaNote = null,
-                    department = "",
+                    department = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
-                    seaFront = SeaFront.UNKNOWN,
                     termsNote = null
                 ),
                 controlUnitResource = ControlUnitResourceEntity(
@@ -67,10 +65,9 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     id = 10018,
                     administrationId = 1008,
                     areaNote = null,
-                    department = "",
+                    department = null,
                     isArchived = false,
                     name = "DREAL Pays-de-La-Loire",
-                    seaFront = SeaFront.UNKNOWN,
                     termsNote = null
                 ),
                 controlUnitResource = ControlUnitResourceEntity(
@@ -103,10 +100,9 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     id = 10000,
                     administrationId = 1005,
                     areaNote = null,
-                    department = "",
+                    department = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
-                    seaFront = SeaFront.UNKNOWN,
                     termsNote = null
                 ),
                 controlUnitResource = ControlUnitResourceEntity(

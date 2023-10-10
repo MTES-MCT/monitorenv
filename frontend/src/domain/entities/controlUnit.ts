@@ -1,25 +1,23 @@
 import type { Administration } from './administration'
 import type { Base } from './base'
-import type { SeaFrontEnum } from './seaFrontType'
 
 export namespace ControlUnit {
   export interface ControlUnit {
     administration: Administration.AdministrationData
     administrationId: number
     /** Area of intervention for this unit. */
-    areaNote: string
+    areaNote: string | undefined
     controlUnitContactIds: number[]
     controlUnitContacts: ControlUnitContactData[]
     controlUnitResourceIds: number[]
     // `ControlUnitResource` and not `ControlUnitResourceData` because we need `base` data for each resource
     controlUnitResources: ControlUnitResource[]
-    department: string
+    department: string | undefined
     id: number
     isArchived: boolean
     name: string
-    seaFront: SeaFrontEnum
     /** Conditions under which this unit should be contacted. */
-    termsNote: string
+    termsNote: string | undefined
   }
 
   export interface ControlUnitContact {

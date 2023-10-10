@@ -47,6 +47,5 @@ export const INITIAL_CONTROL_UNIT_FORM_VALUES: ControlUnitFormValues = {
   department: undefined,
   isArchived: false,
   name: undefined,
-  seaFront: undefined,
   termsNote: undefined
 }
