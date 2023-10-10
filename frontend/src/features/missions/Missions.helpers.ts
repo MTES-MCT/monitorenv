@@ -185,23 +185,24 @@ const formattedEnvActionsForTimeline = (envActions, reportings) =>
       [action.id]: {
         ...action,
         formattedReportingId: getFormattedReportingId(attachedReporting?.reportingId),
-        timelineDate: action.actionStartDateTimeUtc
+        timelineDate: action?.actionStartDateTimeUtc
       }
     }
   }, {} as EnvActionForTimeline)
 
 const formattedReportingsForTimeline = reportings =>
-  reportings?.reduce(
+  reportings.reduce(
     (newReportingsCollection, reporting) => ({
       ...newReportingsCollection,
       [reporting.id]: {
         ...reporting,
         actionType: ActionTypeEnum.REPORTING,
-        timelineDate: reporting.attachedToMissionAtUtc
+        timelineDate: reporting?.attachedToMissionAtUtc
       }
     }),
     {} as ReportingForTimeline
   )
+
 export const getEnvActionsAndReportingsForTimeline = (
   envActions: EnvAction[] | undefined,
   reportings: Reporting[] | undefined

@@ -5,12 +5,18 @@ import styled from 'styled-components'
 import { editMissionInLocalStore } from '../../../../domain/use_cases/missions/editMissionInLocalStore'
 import { clearSelectedMissionOnMap } from '../../../../domain/use_cases/missions/selectMissionOnMap'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { useHasMapListener } from '../../../../hooks/useHasMapListener'
 import { MissionSourceTag } from '../../../../ui/MissionSourceTag'
 import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
 import { missionTypesToString } from '../../../../utils/missionTypes'
 
 export function MissionCard({ feature, selected = false }: { feature: any; selected?: boolean }) {
   const dispatch = useAppDispatch()
+  const hasMapListener = useHasMapListener()
+  const {
+    global: { displayMissionsLayer }
+  } = useAppSelector(state => state)
   const {
     controlUnits,
     endDateTimeUtc,
@@ -42,13 +48,17 @@ export function MissionCard({ feature, selected = false }: { feature: any; selec
     dispatch(clearSelectedMissionOnMap())
   }, [dispatch])
 
+  if (!displayMissionsLayer || hasMapListener) {
+    return null
+  }
+
   return (
     <Wrapper data-cy="mission-overlay">
       <Header>
         <Title>
-          {controlUnits.length === 1 && (
+          {controlUnits?.length === 1 && (
             <>
-              <div>{controlUnits[0].name.toUpperCase()}</div>
+              <div>{controlUnits[0].name?.toUpperCase()}</div>
               {controlUnits[0].contact ? (
                 <div>{controlUnits[0].contact}</div>
               ) : (
@@ -56,7 +66,7 @@ export function MissionCard({ feature, selected = false }: { feature: any; selec
               )}
             </>
           )}
-          {controlUnits.length > 1 && controlUnits[0] && (
+          {controlUnits?.length > 1 && controlUnits[0] && (
             <>
               <div>{controlUnits[0].name.toUpperCase()}</div>
               <MultipleControlUnits>

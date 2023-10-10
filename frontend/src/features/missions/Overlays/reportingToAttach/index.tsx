@@ -18,7 +18,7 @@ const MARGINS = {
 }
 
 export function ReportingToAttachOverlays({ currentFeatureOver, map }: BaseMapChildrenProps) {
-  const attachedReportingIds = useAppSelector(state => state.attachReportingToMission.attachedReportingIds)
+  const attachedReportingIds = useAppSelector(state => state.attachReportingToMission.attachedReportingIds || [])
   const { displayReportingToAttachLayer } = useAppSelector(state => state.global)
 
   const [hoveredMargins, setHoveredMargins] = useState(MARGINS)

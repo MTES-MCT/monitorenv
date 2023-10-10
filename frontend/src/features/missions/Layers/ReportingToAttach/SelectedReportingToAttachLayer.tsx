@@ -23,6 +23,7 @@ export function SelectedReportingToAttachLayer({ map }: BaseMapChildrenProps) {
         )
     })
   })
+
   const selectedAttachedReportingVectorSourceRef = useRef() as MutableRefObject<VectorSource>
   const GetSelectedReportingVectorSource = () => {
     if (selectedAttachedReportingVectorSourceRef.current === undefined) {

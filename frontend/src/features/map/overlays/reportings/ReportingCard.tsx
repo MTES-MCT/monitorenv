@@ -18,6 +18,7 @@ import { reportingActions } from '../../../../domain/shared_slices/reporting'
 import { editReportingInLocalStore } from '../../../../domain/use_cases/reporting/editReportingInLocalStore'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { useHasMapListener } from '../../../../hooks/useHasMapListener'
 import { LinkToMissionTag } from '../../../Reportings/components/LinkToMissionTag'
 import { StatusActionTag } from '../../../Reportings/components/StatusActionTag'
 
@@ -58,6 +59,7 @@ export function ReportingCard({
   updateMargins: (margin: number) => void
 }) {
   const dispatch = useAppDispatch()
+  const hasMapListener = useHasMapListener()
   const {
     global: { displayReportingsLayer }
   } = useAppSelector(state => state)
@@ -112,7 +114,7 @@ export function ReportingCard({
     }
   }, [feature, updateMargins])
 
-  if (!displayReportingsLayer) {
+  if (!displayReportingsLayer || hasMapListener) {
     return null
   }
 

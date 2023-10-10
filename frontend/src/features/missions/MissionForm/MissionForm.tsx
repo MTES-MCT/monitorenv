@@ -57,7 +57,7 @@ export function MissionForm({ id, isAlreadyClosed, isNewMission, selectedMission
   const allowCloseMission = !selectedMission?.isClosed || !values?.isClosed
 
   useEffect(() => {
-    if (attachedReportingIds.length !== values?.attachedReportingIds?.length) {
+    if (attachedReportingIds && attachedReportingIds.length !== values?.attachedReportingIds?.length) {
       setFieldValue('attachedReportingIds', attachedReportingIds)
       setFieldValue('attachedReportings', attachedReportings)
     }
