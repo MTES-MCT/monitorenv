@@ -6,17 +6,23 @@ import { editMissionInLocalStore } from '../../../../domain/use_cases/missions/e
 import { clearSelectedMissionOnMap } from '../../../../domain/use_cases/missions/selectMissionOnMap'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useHasMapListener } from '../../../../hooks/useHasMapListener'
 import { MissionSourceTag } from '../../../../ui/MissionSourceTag'
 import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
 import { missionTypesToString } from '../../../../utils/missionTypes'
 
-export function MissionCard({ feature, selected = false }: { feature: any; selected?: boolean }) {
+type MissionCardProps = {
+  feature: any
+  isOnlyHoverable?: boolean
+  selected?: boolean
+}
+export function MissionCard({ feature, isOnlyHoverable = false, selected = false }: MissionCardProps) {
   const dispatch = useAppDispatch()
-  const hasMapListener = useHasMapListener()
   const {
     global: { displayMissionsLayer }
   } = useAppSelector(state => state)
+  const listener = useAppSelector(state => state.draw.listener)
+  const attachReportingListener = useAppSelector(state => state.attachReportingToMission.attachReportingListener)
+
   const {
     controlUnits,
     endDateTimeUtc,
@@ -48,7 +54,7 @@ export function MissionCard({ feature, selected = false }: { feature: any; selec
     dispatch(clearSelectedMissionOnMap())
   }, [dispatch])
 
-  if (!displayMissionsLayer || hasMapListener) {
+  if (!displayMissionsLayer || listener || attachReportingListener) {
     return null
   }
 
@@ -100,15 +106,17 @@ export function MissionCard({ feature, selected = false }: { feature: any; selec
       </Details>
       <MissionStatusLabel missionStatus={missionStatus} />
 
-      <EditButton
-        accent={Accent.PRIMARY}
-        disabled={!selected}
-        Icon={Icon.Edit}
-        onClick={handleEditMission}
-        size={Size.SMALL}
-      >
-        Editer la mission
-      </EditButton>
+      {!isOnlyHoverable && (
+        <EditButton
+          accent={Accent.PRIMARY}
+          disabled={!selected}
+          Icon={Icon.Edit}
+          onClick={handleEditMission}
+          size={Size.SMALL}
+        >
+          Editer la mission
+        </EditButton>
+      )}
     </Wrapper>
   )
 }

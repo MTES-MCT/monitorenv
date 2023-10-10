@@ -1,5 +1,6 @@
 import { setReportingFormVisibility, ReportingContext, VisibilityState } from '../../shared_slices/Global'
 import { reportingActions } from '../../shared_slices/reporting'
+import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../map/updateMapInteractionListeners'
 
 export const closeReporting =
   (reportingIdToClose: number | string, reportingContextToClose: ReportingContext) => async (dispatch, getState) => {
@@ -24,6 +25,7 @@ export const closeReporting =
     }
 
     await dispatch(reportingActions.deleteSelectedReporting(reportingIdToClose))
+    dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
     await dispatch(
       setReportingFormVisibility({
         context: reportingContextToClose,

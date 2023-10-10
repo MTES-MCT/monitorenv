@@ -3,12 +3,12 @@ import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useCallback, useEffect, useRef } from 'react'
 
 import { attachedMissionStyle } from './style'
-import { useGetMissionsQuery } from '../../../api/missionsAPI'
-import { Layers } from '../../../domain/entities/layers/constants'
-import { useAppSelector } from '../../../hooks/useAppSelector'
-import { getMissionZoneFeature } from '../../map/layers/Missions/missionGeometryHelpers'
+import { useGetMissionsQuery } from '../../../../api/missionsAPI'
+import { Layers } from '../../../../domain/entities/layers/constants'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { getMissionZoneFeature } from '../../../map/layers/Missions/missionGeometryHelpers'
 
-import type { BaseMapChildrenProps } from '../../map/BaseMap'
+import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 
 export function SelectedMissionToAttachLayer({ map }: BaseMapChildrenProps) {
   const attachMissionListener = useAppSelector(state => state.attachMissionToReporting.attachMissionListener)

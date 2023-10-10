@@ -1,9 +1,9 @@
 import { useState } from 'react'
 
-import { ReportingCard } from './ReportingCard'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { OverlayPositionOnCentroid } from '../../../map/overlays/OverlayPositionOnCentroid'
+import { ReportingCard } from '../../../map/overlays/reportings/ReportingCard'
 
 import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 
@@ -38,7 +38,7 @@ export function ReportingToAttachOverlays({ currentFeatureOver, map }: BaseMapCh
       map={map}
       options={{ margins: hoveredMargins }}
     >
-      <ReportingCard feature={currentFeatureOver} updateMargins={updateHoveredMargins} />
+      <ReportingCard feature={currentFeatureOver} isOnlyHoverable updateMargins={updateHoveredMargins} />
     </OverlayPositionOnCentroid>
   )
 }

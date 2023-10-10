@@ -102,7 +102,7 @@ export const Columns = [
     enableSorting: true,
     header: () => 'Statut',
     id: 'isArchived',
-    size: 80,
+    size: 90,
     sortingFn: (rowA: Row<any>, rowB: Row<any>, columnId: string) => {
       if (rowA.original[columnId] > rowB.original[columnId]) {
         return -1

@@ -2,11 +2,11 @@ import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useRef } from 'react'
 
-import { Layers } from '../../../domain/entities/layers/constants'
-import { missionZoneStyle } from '../../map/layers/Missions/missions.style'
+import { Layers } from '../../../../domain/entities/layers/constants'
+import { missionZoneStyle } from '../../../map/layers/Missions/missions.style'
 
-import type { VectorLayerWithName } from '../../../domain/types/layer'
-import type { BaseMapChildrenProps } from '../../map/BaseMap'
+import type { VectorLayerWithName } from '../../../../domain/types/layer'
+import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 
 export function HoveredMissionToAttachLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const vectorSourceRef = useRef() as MutableRefObject<VectorSource>

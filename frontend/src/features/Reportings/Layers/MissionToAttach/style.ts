@@ -3,7 +3,7 @@ import { getCenter } from 'ol/extent'
 import Point from 'ol/geom/Point'
 import { Stroke, Style, Circle } from 'ol/style'
 
-import { selectedMissionStyle } from '../../map/layers/Missions/missions.style'
+import { selectedMissionStyle } from '../../../map/layers/Missions/missions.style'
 
 export const selectedMissionToAttachStyle = new Style({
   geometry: feature => {

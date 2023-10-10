@@ -3,14 +3,14 @@ import VectorSource from 'ol/source/Vector'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { useGetMissionsQuery } from '../../../api/missionsAPI'
-import { Layers } from '../../../domain/entities/layers/constants'
-import { useAppSelector } from '../../../hooks/useAppSelector'
-import { getMissionZoneFeature } from '../../map/layers/Missions/missionGeometryHelpers'
-import { missionWithCentroidStyleFn } from '../../map/layers/Missions/missions.style'
-import { attachMissionToReportingSliceActions } from '../ReportingForm/AttachMission/slice'
+import { useGetMissionsQuery } from '../../../../api/missionsAPI'
+import { Layers } from '../../../../domain/entities/layers/constants'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { getMissionZoneFeature } from '../../../map/layers/Missions/missionGeometryHelpers'
+import { missionWithCentroidStyleFn } from '../../../map/layers/Missions/missions.style'
+import { attachMissionToReportingSliceActions } from '../../ReportingForm/AttachMission/slice'
 
-import type { BaseMapChildrenProps } from '../../map/BaseMap'
+import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 import type { Geometry } from 'ol/geom'
 
 export function MissionToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
