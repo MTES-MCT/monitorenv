@@ -1,13 +1,7 @@
-INSERT INTO public.bases
-  (   id,           name)
-VALUES
-  (    0,    'Base non affectée');
+ALTER TABLE public.missions_control_resources
+DROP CONSTRAINT fk_missions_control_resources_control_resource_id_control_unit_resources;
 
--- Set a default `base_id` and `type` for all existing null values
-UPDATE public.control_unit_resources
-SET
-    base_id = COALESCE(base_id, 1),
-    type = COALESCE(type, 'UNKNOWN');
+TRUNCATE public.control_unit_resources;
 
 ALTER TABLE public.control_unit_resources
     ALTER COLUMN base_id SET NOT NULL,
