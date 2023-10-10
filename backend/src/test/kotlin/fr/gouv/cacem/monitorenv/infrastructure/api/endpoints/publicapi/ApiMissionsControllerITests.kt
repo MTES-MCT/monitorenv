@@ -48,7 +48,7 @@ class ApiMissionsControllerITests {
     private lateinit var deleteMission: DeleteMission
 
     @MockBean
-    private lateinit var getControlUnitsInvolvedInMissions: GetControlUnitsInvolvedInMissions
+    private lateinit var getEngagedControlUnits: GetEngagedControlUnits
 
     @Autowired
     private lateinit var objectMapper: ObjectMapper
@@ -228,9 +228,9 @@ class ApiMissionsControllerITests {
     }
 
     @Test
-    fun `Should get all control units involved in missions`() {
+    fun `Should get all engaged control units`() {
         // Given
-        given(getControlUnitsInvolvedInMissions.execute()).willReturn(listOf(
+        given(getEngagedControlUnits.execute()).willReturn(listOf(
             LegacyControlUnitEntity(
             id = 123,
             administration = "Admin",
@@ -240,7 +240,7 @@ class ApiMissionsControllerITests {
         )))
 
         // When
-        mockMvc.perform(get("/api/v1/missions/involved_control_units"))
+        mockMvc.perform(get("/api/v1/missions/engaged_control_units"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].name", equalTo("Control Unit Name")))

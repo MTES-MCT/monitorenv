@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory
 import java.time.ZonedDateTime
 
 @UseCase
-class GetControlUnitsInvolvedInMissions(private val getMissions: GetMissions) {
-    private val logger = LoggerFactory.getLogger(GetControlUnitsInvolvedInMissions::class.java)
+class GetEngagedControlUnits(private val getMissions: GetMissions) {
+    private val logger = LoggerFactory.getLogger(GetEngagedControlUnits::class.java)
 
     fun execute(): List<LegacyControlUnitEntity> {
         val openedMissions = getMissions.execute(
@@ -26,7 +26,7 @@ class GetControlUnitsInvolvedInMissions(private val getMissions: GetMissions) {
             .flatten()
             .distinctBy { it.id }
 
-        logger.info("Found ${controlUnits.size} control unit(s) involved in a mission.")
+        logger.info("Found ${controlUnits.size} engaged control unit(s).")
 
         return controlUnits
     }

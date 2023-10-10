@@ -14,12 +14,12 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
 
 @ExtendWith(SpringExtension::class)
-class GetControlUnitsInvolvedInMissionsUTests {
+class GetEngagedControlUnitsUTests {
     @MockBean
     private lateinit var getMissions: GetMissions
 
     @Test
-    fun `execute() should return involved control units`() {
+    fun `execute() should return engaged control units`() {
         val expectedControlUnit = LegacyControlUnitEntity(
             id = 123,
             administration = "Admin",
@@ -47,7 +47,7 @@ class GetControlUnitsInvolvedInMissionsUTests {
         given(getMissions.execute(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()))
             .willReturn(listOf(expectedMission, expectedMission))
 
-        val controlUnits = GetControlUnitsInvolvedInMissions(getMissions).execute()
+        val controlUnits = GetEngagedControlUnits(getMissions).execute()
 
         assertThat(controlUnits).hasSize(1)
         assertThat(controlUnits.first().name).isEqualTo("Control Unit Name")

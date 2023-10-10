@@ -21,7 +21,7 @@ class MissionsController(
     private val getMonitorEnvMissions: GetMonitorEnvMissions,
     private val getMissionById: GetMissionById,
     private val deleteMission: DeleteMission,
-    private val getControlUnitsInvolvedInMissions: GetControlUnitsInvolvedInMissions,
+    private val getEngagedControlUnits: GetEngagedControlUnits,
 ) {
 
     @GetMapping("")
@@ -120,9 +120,9 @@ class MissionsController(
     }
 
     // TODO Return a ControlUnitDataOutput once the LegacyControlUnitEntity to ControlUnitEntity migration is done
-    @GetMapping("/involved_control_units")
-    @Operation(summary = "Get control units involved in missions")
-    fun getMissionsController(): List<LegacyControlUnitEntity> {
-        return getControlUnitsInvolvedInMissions.execute()
+    @GetMapping("/engaged_control_units")
+    @Operation(summary = "Get engaged control units")
+    fun getEngagedControlUnitsController(): List<LegacyControlUnitEntity> {
+        return getEngagedControlUnits.execute()
     }
 }
