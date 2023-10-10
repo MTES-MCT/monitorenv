@@ -8,6 +8,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlUnitModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ForeignKeyConstraintException
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBAdministrationRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBDepartmentAreaRepository
 import fr.gouv.cacem.monitorenv.utils.requirePresent
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.dao.InvalidDataAccessApiUsageException
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional
 class JpaControlUnitRepository(
     private val dbAdministrationRepository: IDBAdministrationRepository,
     private val dbControlUnitRepository: IDBControlUnitRepository,
+    private val dbDepartmentAreaRepository: IDBDepartmentAreaRepository,
 ) : IControlUnitRepository {
     @Transactional
     override fun archiveById(controlUnitId: Int) {
@@ -44,7 +46,10 @@ class JpaControlUnitRepository(
     override fun save(controlUnit: ControlUnitEntity): ControlUnitEntity {
         return try {
             val administrationModel = requirePresent(dbAdministrationRepository.findById(controlUnit.administrationId))
-            val controlUnitModel = ControlUnitModel.fromControlUnit(controlUnit, administrationModel)
+            val departmentAreaModel =
+                controlUnit.departmentAreaInseeDep?.let { dbDepartmentAreaRepository.findByInseeDep(it) }
+            val controlUnitModel =
+                ControlUnitModel.fromControlUnit(controlUnit, administrationModel, departmentAreaModel)
 
             dbControlUnitRepository.save(controlUnitModel).toControlUnit()
         } catch (e: InvalidDataAccessApiUsageException) {

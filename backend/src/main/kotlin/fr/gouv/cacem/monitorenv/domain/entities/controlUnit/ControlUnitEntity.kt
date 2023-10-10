@@ -5,7 +5,8 @@ data class ControlUnitEntity(
     val administrationId: Int,
     /** Area of intervention for this unit. */
     val areaNote: String? = null,
-    val department: String? = null,
+    /** `departmentAreaInseeDep` is the `departmentArea` ID. */
+    val departmentAreaInseeDep: String? = null,
     val isArchived: Boolean,
     val name: String,
     /** Conditions under which this unit should be contacted. */

@@ -6,7 +6,7 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.entities.mission.*
 import fr.gouv.cacem.monitorenv.domain.repositories.IBaseRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreasRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreaRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
@@ -28,7 +28,7 @@ class CreateOrUpdateMissionUTests {
     private lateinit var baseRepository: IBaseRepository
 
     @MockBean
-    private lateinit var departmentRepository: IDepartmentAreasRepository
+    private lateinit var departmentRepository: IDepartmentAreaRepository
 
     @MockBean
     private lateinit var missionRepository: IMissionRepository

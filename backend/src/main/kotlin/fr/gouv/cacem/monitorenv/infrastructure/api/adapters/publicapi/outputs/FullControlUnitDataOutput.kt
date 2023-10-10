@@ -12,6 +12,8 @@ data class FullControlUnitDataOutput(
     val controlUnitResourceIds: List<Int>,
     // `FullControlUnitResourceDataOutput` and not `ControlUnitResourceDataOutput` because we need `base` data for each resource
     val controlUnitResources: List<FullControlUnitResourceDataOutput>,
+    val departmentArea: DepartmentAreaDataOutput? = null,
+    val departmentAreaInseeDep: String? = null,
     val isArchived: Boolean,
     val name: String,
     val termsNote: String? = null,
@@ -27,6 +29,7 @@ data class FullControlUnitDataOutput(
             val controlUnitResources = fullControlUnit.controlUnitResources.map {
                 FullControlUnitResourceDataOutput.fromFullControlUnitResource(it)
             }
+            val departmentArea = fullControlUnit.departmentArea?.let { DepartmentAreaDataOutput.fromDepartmentArea(it) }
 
 
             return FullControlUnitDataOutput(
@@ -38,6 +41,8 @@ data class FullControlUnitDataOutput(
                 controlUnitContacts,
                 controlUnitResourceIds = controlUnitResources.map { it.id },
                 controlUnitResources,
+                departmentArea,
+                departmentAreaInseeDep = departmentArea?.inseeDep,
                 isArchived = fullControlUnit.controlUnit.isArchived,
                 name = fullControlUnit.controlUnit.name,
                 termsNote = fullControlUnit.controlUnit.termsNote,

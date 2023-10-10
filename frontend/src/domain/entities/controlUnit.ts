@@ -1,5 +1,6 @@
 import type { Administration } from './administration'
 import type { Base } from './base'
+import type { DepartmentArea } from './departmentArea'
 
 export namespace ControlUnit {
   export interface ControlUnit {
@@ -12,7 +13,9 @@ export namespace ControlUnit {
     controlUnitResourceIds: number[]
     // `ControlUnitResource` and not `ControlUnitResourceData` because we need `base` data for each resource
     controlUnitResources: ControlUnitResource[]
-    department: string | undefined
+    departmentArea: DepartmentArea.DepartmentArea | undefined
+    /** `departmentAreaInseeDep` is the `departmentArea` ID. */
+    departmentAreaInseeDep: string | undefined
     id: number
     isArchived: boolean
     name: string
@@ -110,6 +113,7 @@ export namespace ControlUnit {
     | 'controlUnitContacts'
     | 'controlUnitResourceIds'
     | 'controlUnitResources'
+    | 'departmentArea'
   >
   export type NewControlUnitData = Omit<ControlUnitData, 'id'>
 

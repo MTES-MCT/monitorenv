@@ -36,7 +36,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     id = 10000,
                     administrationId = 1005,
                     areaNote = null,
-                    department = null,
+                    departmentAreaInseeDep = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
                     termsNote = null
@@ -65,7 +65,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     id = 10018,
                     administrationId = 1008,
                     areaNote = null,
-                    department = null,
+                    departmentAreaInseeDep = null,
                     isArchived = false,
                     name = "DREAL Pays-de-La-Loire",
                     termsNote = null
@@ -100,7 +100,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     id = 10000,
                     administrationId = 1005,
                     areaNote = null,
-                    department = null,
+                    departmentAreaInseeDep = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
                     termsNote = null

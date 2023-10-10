@@ -1,17 +1,27 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.DepartmentsAreasModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.DepartmentAreaModel
 import org.locationtech.jts.geom.Geometry
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 
-interface IDBDepartmentAreasRepository : CrudRepository<DepartmentsAreasModel, Int> {
+interface IDBDepartmentAreaRepository : CrudRepository<DepartmentAreaModel, Int> {
+    @Query(
+        value = """
+        SELECT *
+        FROM departments_areas
+        WHERE insee_dep = :inseeDep
+        """,
+        nativeQuery = true,
+    )
+    fun findByInseeDep(inseeDep: String): DepartmentAreaModel
+
     @Query(
         """
         WITH geom AS (
             SELECT st_setsrid(:geometry, 4326) AS geom
         ),
-        
+
         departments_intersection_areas AS (
             SELECT
                 insee_dep,
@@ -30,7 +40,7 @@ interface IDBDepartmentAreasRepository : CrudRepository<DepartmentsAreasModel, I
             ON ST_Intersects(geom.geom, departments_areas.geometry)
             GROUP BY insee_dep
         )
-        
+
         SELECT insee_dep
         FROM departments_intersection_areas
         ORDER BY intersection_area DESC
@@ -38,6 +48,5 @@ interface IDBDepartmentAreasRepository : CrudRepository<DepartmentsAreasModel, I
      """,
         nativeQuery = true,
     )
-    fun findDepartmentFromGeometry(geometry: Geometry): String
-        ?
+    fun findDepartmentFromGeometry(geometry: Geometry): String?
 }

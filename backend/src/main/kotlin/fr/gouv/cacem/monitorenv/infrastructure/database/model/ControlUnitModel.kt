@@ -34,8 +34,10 @@ data class ControlUnitModel(
     @JsonManagedReference
     var controlUnitResources: List<ControlUnitResourceModel>? = mutableListOf(),
 
-    @Column(name = "department")
-    var department: String? = null,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_area_insee_dep")
+    @JsonBackReference
+    var departmentArea: DepartmentAreaModel? = null,
 
     @Column(name = "archived", nullable = false)
     var isArchived: Boolean,
@@ -62,6 +64,7 @@ data class ControlUnitModel(
         fun fromControlUnit(
             controlUnit: ControlUnitEntity,
             administrationModel: AdministrationModel,
+            departmentAreaModel: DepartmentAreaModel? = null,
             controlUnitContactModels: List<ControlUnitContactModel>? = null,
             controlUnitResourceModels: List<ControlUnitResourceModel>? = null
         ): ControlUnitModel {
@@ -71,7 +74,7 @@ data class ControlUnitModel(
                 administration = administrationModel,
                 controlUnitContacts = controlUnitContactModels,
                 controlUnitResources = controlUnitResourceModels,
-                department = controlUnit.department,
+                departmentArea = departmentAreaModel,
                 isArchived = controlUnit.isArchived,
                 name = controlUnit.name,
                 termsNote = controlUnit.termsNote,
@@ -84,7 +87,7 @@ data class ControlUnitModel(
             id,
             administrationId = requireNotNull(administration.id),
             areaNote,
-            department,
+            departmentAreaInseeDep = departmentArea?.inseeDep,
             isArchived,
             name,
             termsNote,
@@ -94,6 +97,7 @@ data class ControlUnitModel(
     fun toFullControlUnit(): FullControlUnitDTO {
         return FullControlUnitDTO(
             administration = administration.toAdministration(),
+            departmentArea = departmentArea?.toDepartmentArea(),
             controlUnit = toControlUnit(),
             controlUnitContacts = requireNotNull(controlUnitContacts).map { it.toControlUnitContact() },
             controlUnitResources = requireNotNull(controlUnitResources).map { it.toFullControlUnitResource() },
