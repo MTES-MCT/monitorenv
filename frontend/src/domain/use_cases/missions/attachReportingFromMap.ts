@@ -20,8 +20,7 @@ export const attachReportingFromMap = (id: number) => async (dispatch, getState)
           ...attachedReportings,
           {
             ...response.data,
-            attachedMissionId: missionId,
-            attachedToMissionAtUtc: new Date().toISOString()
+            attachedMissionId: missionId
           }
         ])
       )

@@ -2,11 +2,11 @@ import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useCallback, useEffect, useRef } from 'react'
 
-import { attachedReportingStyle } from './style'
 import { useGetReportingsQuery } from '../../../../api/reportingsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { getReportingZoneFeature } from '../../../map/layers/Reportings/reportingsGeometryHelpers'
+import { reportingPinStyleFn } from '../../../map/layers/Reportings/style'
 
 import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 
@@ -42,7 +42,7 @@ export function SelectedReportingToAttachLayer({ map }: BaseMapChildrenProps) {
       selectedAttachedReportingVectorLayerRef.current = new VectorLayer({
         renderBuffer: 7,
         source: GetSelectedReportingVectorSource(),
-        style: attachedReportingStyle,
+        style: reportingPinStyleFn,
         updateWhileAnimating: true,
         updateWhileInteracting: true,
         zIndex: Layers.SELECTED_REPORTING_TO_ATTACH_ON_MISSION.zIndex

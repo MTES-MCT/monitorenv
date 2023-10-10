@@ -17,7 +17,7 @@ import {
 
 import type { Geometry } from 'ol/geom'
 
-export const getMissionCentroid = (mission: Partial<Mission>, layername: string) => {
+export const getMissionCentroid = (mission: Partial<Mission> | Mission, layername: string) => {
   const geoJSON = new GeoJSON()
   const { geom } = mission
   const geometry = geoJSON.readGeometry(geom, {

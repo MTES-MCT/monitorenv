@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import type { Reporting } from '../../../../domain/entities/reporting'
+import type { Reporting, ReportingDetailed } from '../../../../domain/entities/reporting'
 
 type AttachedReportingToMissionSliceState = {
   attachReportingListener: boolean
   attachedReportingIds: number[]
-  attachedReportings: Reporting[]
+  attachedReportings: ReportingDetailed[]
   initialAttachedReportingIds: number[]
   initialAttachedReportings: Reporting[]
 }

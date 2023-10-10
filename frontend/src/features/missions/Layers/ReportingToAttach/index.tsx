@@ -4,13 +4,13 @@ import VectorSource from 'ol/source/Vector'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { reportingToAttachStyle } from './style'
 import { useGetReportingsQuery } from '../../../../api/reportingsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { StatusFilterEnum } from '../../../../domain/entities/reporting'
 import { attachReportingFromMap } from '../../../../domain/use_cases/missions/attachReportingFromMap'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { getReportingZoneFeature } from '../../../map/layers/Reportings/reportingsGeometryHelpers'
+import { reportingPinStyleFn } from '../../../map/layers/Reportings/style'
 
 import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 import type { Feature } from 'ol'
@@ -19,25 +19,33 @@ import type { Geometry } from 'ol/geom'
 export function ReportingToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useDispatch()
   const attachReportingListener = useAppSelector(state => state.attachReportingToMission.attachReportingListener)
+  const attachedReportings = useAppSelector(state => state.attachReportingToMission.attachedReportings)
   const { data: reportings } = useGetReportingsQuery({
     status: [StatusFilterEnum.IN_PROGRESS]
   })
 
-  const reportingsPointOrZone = useMemo(
+  const attachedReportingsFeatures = useMemo(
     () =>
-      reduce(
-        reportings?.entities,
-        (features, reporting) => {
-          if (reporting && reporting.geom) {
-            features.push(getReportingZoneFeature(reporting, Layers.REPORTING_TO_ATTACH_ON_MISSION.code))
-          }
-
-          return features
-        },
-        [] as Feature[]
+      attachedReportings.map(reporting =>
+        getReportingZoneFeature(reporting, Layers.REPORTING_TO_ATTACH_ON_MISSION.code)
       ),
-    [reportings]
+    [attachedReportings]
   )
+  const reportingsPointOrZone = useMemo(() => {
+    const filteredReportings = reduce(
+      reportings?.entities,
+      (features, reporting) => {
+        if (reporting && reporting.geom) {
+          features.push(getReportingZoneFeature(reporting, Layers.REPORTING_TO_ATTACH_ON_MISSION.code))
+        }
+
+        return features
+      },
+      [] as Feature[]
+    )
+
+    return [...filteredReportings, ...attachedReportingsFeatures]
+  }, [reportings, attachedReportingsFeatures])
 
   const vectorSourceRef = useRef() as React.MutableRefObject<VectorSource<Geometry>>
   const GetVectorSource = () => {
@@ -54,7 +62,7 @@ export function ReportingToAttachLayer({ map, mapClickEvent }: BaseMapChildrenPr
       vectorLayerRef.current = new VectorLayer({
         renderBuffer: 7,
         source: GetVectorSource(),
-        style: reportingToAttachStyle,
+        style: reportingPinStyleFn,
         updateWhileAnimating: true,
         updateWhileInteracting: true,
         zIndex: Layers.REPORTING_TO_ATTACH_ON_MISSION.zIndex

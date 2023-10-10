@@ -18,6 +18,9 @@ export const getReportingZoneFeature = (reporting: ReportingDetailed, layername:
   feature.setId(`${layername}:${reporting.id}`)
   feature.setProperties({
     actionTaken: reporting.actionTaken,
+    attachedEnvActionId: reporting.attachedEnvActionId,
+    attachedMission: reporting.attachedMission,
+    attachedMissionId: reporting.attachedMissionId,
     controlUnitId: reporting.controlUnitId,
     createdAt: reporting.createdAt,
     description: reporting.description,
@@ -50,6 +53,7 @@ export const getEditingReportingZoneFeature = (reporting: Reporting, layername: 
   feature.setId(`${layername}:${reporting.id}`)
   feature.setProperties({
     actionTaken: reporting.actionTaken,
+    attachedEnvActionId: reporting.attachedEnvActionId,
     attachedMission: reporting.attachedMission,
     attachedMissionId: reporting.attachedMissionId,
     controlUnitId: reporting.controlUnitId,
