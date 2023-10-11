@@ -11,10 +11,11 @@ import {
   useCreateControlUnitResourceMutation,
   useUpdateControlUnitResourceMutation
 } from '../../../../../api/controlUnitResourcesAPI'
+import { ControlUnit } from '../../../../../domain/entities/controlUnit'
+import { isEmptyish } from '../../../../../utils/isEmptyish'
 import { Section } from '../shared/Section'
 
 import type { ControlUnitResourceFormValues } from './types'
-import type { ControlUnit } from '../../../../../domain/entities/controlUnit'
 
 type ControlUnitResourceListProps = {
   controlUnit: ControlUnit.ControlUnit
@@ -43,7 +44,9 @@ export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceList
       const controlledControlUnitResourceFormValues = {
         ...controlUnitResourceFormValues,
         // We set the resource type as the resource name if no name has been provided by the user
-        name: controlUnitResourceFormValues.name || controlUnitResourceFormValues.type
+        name: isEmptyish(controlUnitResourceFormValues.name)
+          ? ControlUnit.ControlUnitResourceType[controlUnitResourceFormValues.type as string]
+          : controlUnitResourceFormValues.name
       }
 
       if (isNewControlUnitResourceFormOpen) {

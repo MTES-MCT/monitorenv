@@ -46,11 +46,13 @@ export function Form({ initialValues, isNew, onCancel, onSubmit }: FormProps) {
       key={key}
       initialValues={initialValues}
       onSubmit={onSubmit}
+      validateOnBlur={false}
+      validateOnChange={false}
       validationSchema={CONTROL_UNIT_CONTACT_FORM_SCHEMA}
     >
       {({ handleSubmit }) => (
         <>
-          <Title>Ajouter un contact</Title>
+          <Title>{isNew ? 'Ajouter un contact' : 'Éditer un contact'}</Title>
           <StyledForm onSubmit={handleSubmit}>
             <FormikNameSelect />
             <FormikTextInput isLight label="Numéro de téléphone" name="phone" type="tel" />

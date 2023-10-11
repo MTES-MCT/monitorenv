@@ -1,5 +1,5 @@
 // Successful archiving and deleting use cases are tested in `control_unit_form.spec.ts` for Test Idempotency purpose
-context('Back Office > Control Unit List > Row Actions', () => {
+context('Back Office > Control Unit Table > Row Actions', () => {
   beforeEach(() => {
     cy.intercept('GET', `/api/v2/control_units`).as('getControlUnits')
 

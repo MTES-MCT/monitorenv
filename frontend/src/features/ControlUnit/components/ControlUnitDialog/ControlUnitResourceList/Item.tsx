@@ -16,7 +16,7 @@ export function Item({ controlUnitResource, onEdit }: ItemProps) {
   }, [controlUnitResource.id, onEdit])
 
   return (
-    <Wrapper>
+    <Wrapper data-cy="ControlUnitDialog-control-unit-resource" data-id={controlUnitResource.id}>
       <Placeholder />
       <InfoBox>
         <InfoBoxHeader>

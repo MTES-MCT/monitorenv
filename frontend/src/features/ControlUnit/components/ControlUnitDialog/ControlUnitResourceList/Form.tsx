@@ -65,11 +65,13 @@ export function Form({ initialValues, isNew, onCancel, onSubmit }: FormProps) {
       key={key}
       initialValues={initialValues}
       onSubmit={onSubmit}
+      validateOnBlur={false}
+      validateOnChange={false}
       validationSchema={CONTROL_UNIT_RESOURCE_FORM_SCHEMA}
     >
       {({ handleSubmit }) => (
         <>
-          <Title>Ajouter un moyen</Title>
+          <Title>{isNew ? 'Ajouter un moyen' : 'Éditer un moyen'}</Title>
           <StyledForm onSubmit={handleSubmit}>
             <FormikSelect isLight label="Type de moyen" name="type" options={CONTROL_UNIT_RESOURCE_TYPES_AS_OPTIONS} />
             <FormikTextInput isLight label="Nom du moyen" name="name" />

@@ -1,4 +1,4 @@
-context('Back Office > Base List > Filters', () => {
+context('Back Office > Base Table > Filters', () => {
   beforeEach(() => {
     cy.intercept('GET', `/api/v1/bases`).as('getBases')
 
