@@ -1,3 +1,4 @@
+-- TODO : add constraint back when new control_unit_resources have been loaded
 ALTER TABLE public.missions_control_resources
 DROP CONSTRAINT fk_missions_control_resources_control_resource_id_control_unit_resources;
 
