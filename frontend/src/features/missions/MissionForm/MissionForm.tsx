@@ -96,10 +96,9 @@ export function MissionForm({ id, isAlreadyClosed, isNewMission, selectedMission
     validateForm().then(errors => {
       if (_.isEmpty(errors)) {
         handleSubmit()
-
-        return
+      } else {
+        setShouldValidateOnChange(true)
       }
-      setShouldValidateOnChange(true)
     })
   }
 

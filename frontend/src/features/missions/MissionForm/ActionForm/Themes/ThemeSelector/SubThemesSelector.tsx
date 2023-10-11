@@ -14,7 +14,9 @@ export function SubThemesSelector({ actionIndex, label, theme, themeIndex }) {
   const { data: controlThemes, isError, isLoading } = useGetControlThemesQuery()
   const { newWindowContainerRef } = useNewWindow()
   const { setFieldValue } = useFormikContext<Mission>()
-  const [currentSubThemesField] = useField<string[]>(`envActions[${actionIndex}].themes[${themeIndex}].subThemes`)
+  const [currentSubThemesField, currentSubThemesProps] = useField<string[]>(
+    `envActions[${actionIndex}].themes[${themeIndex}].subThemes`
+  )
 
   const availableThemes = useMemo(
     () =>
@@ -41,7 +43,7 @@ export function SubThemesSelector({ actionIndex, label, theme, themeIndex }) {
           baseContainer={newWindowContainerRef.current}
           data-cy="envaction-subtheme-selector"
           disabled={!theme}
-          isErrorMessageHidden
+          error={currentSubThemesProps.error}
           isLight
           label={label}
           name={`${actionIndex}-${themeIndex}`}

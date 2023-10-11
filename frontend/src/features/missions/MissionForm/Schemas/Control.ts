@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import * as Yup from 'yup'
 
 import { ClosedInfractionSchema, NewInfractionSchema } from './Infraction'
@@ -7,6 +8,12 @@ import { TargetTypeEnum } from '../../../../domain/entities/targetType'
 import { REACT_APP_CYPRESS_TEST } from '../../../../env'
 
 const shouldUseAlternateValidationInTestEnvironment = process.env.NODE_ENV === 'development' || REACT_APP_CYPRESS_TEST
+
+const ControlPointSchema = Yup.object().test({
+  message: 'Veuillez définir un point de contrôle',
+  name: 'has-geom',
+  test: val => val && !_.isEmpty(val?.coordinates)
+})
 
 export const getNewEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActionControl> =>
   Yup.object()
@@ -59,10 +66,10 @@ export const getClosedEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActio
       actionType: Yup.mixed().oneOf([ActionTypeEnum.CONTROL]),
       geom: shouldUseAlternateValidationInTestEnvironment
         ? Yup.object().nullable()
-        : Yup.array().ensure().min(1, 'Requis'),
+        : Yup.array().of(ControlPointSchema).ensure().min(1, 'Veuillez définir un point de contrôle'),
       id: Yup.string().required(),
       infractions: Yup.array().of(ClosedInfractionSchema).ensure().required(),
-      themes: Yup.array().of(ThemeSchema).ensure().required(),
+      themes: Yup.array().of(ThemeSchema).ensure().required().min(1),
       vehicleType: Yup.string().when('actionTargetType', (actionTargetType, schema) => {
         if (!actionTargetType || actionTargetType === TargetTypeEnum.VEHICLE) {
           return schema.nullable().required('Requis')

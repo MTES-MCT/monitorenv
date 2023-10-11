@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import * as Yup from 'yup'
 
 import { ThemeSchema } from './Theme'
@@ -5,6 +6,12 @@ import { ActionTypeEnum, type EnvActionSurveillance } from '../../../../domain/e
 import { REACT_APP_CYPRESS_TEST } from '../../../../env'
 
 const shouldUseAlternateValidationInTestEnvironment = process.env.NODE_ENV === 'development' || REACT_APP_CYPRESS_TEST
+
+const SurveillanceZoneSchema = Yup.object().test({
+  message: 'Veuillez définir une zone de surveillance',
+  name: 'has-geom',
+  test: val => val && !_.isEmpty(val?.coordinates)
+})
 
 export const getNewEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<EnvActionSurveillance> =>
   Yup.object()
@@ -92,7 +99,8 @@ export const getClosedEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<Env
         otherwise: () =>
           shouldUseAlternateValidationInTestEnvironment
             ? Yup.object().nullable()
-            : Yup.array().ensure().min(1, 'Requis'),
+            : Yup.array().of(SurveillanceZoneSchema).ensure().min(1, 'Veuillez définir une zone de surveillance'),
+
         then: () => Yup.object().nullable()
       }),
 

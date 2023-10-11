@@ -110,7 +110,9 @@ const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
     envActions: Yup.array()
       .of(NewEnvActionSchema as any)
       .nullable(),
-    geom: shouldUseAlternateValidationInTestEnvironment ? Yup.object().nullable() : MissionZoneSchema,
+    geom: shouldUseAlternateValidationInTestEnvironment
+      ? Yup.object().nullable()
+      : Yup.array().of(MissionZoneSchema).ensure().min(1, 'Veuillez définir une zone de mission'),
     isClosed: Yup.boolean().oneOf([false]).required(),
     missionTypes: MissionTypesSchema,
     openBy: Yup.string()
