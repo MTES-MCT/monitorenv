@@ -128,4 +128,3 @@ def test_flow(reset_test_data):
     assert len(final_bases_1) == 7
     assert len(final_control_unit_resources_1) == 17
     assert len(final_control_unit_contacts_1) == 9
-    breakpoint()
