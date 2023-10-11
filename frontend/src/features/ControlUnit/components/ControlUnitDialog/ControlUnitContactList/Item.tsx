@@ -2,7 +2,8 @@ import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { useCallback } from 'react'
 import styled from 'styled-components'
 
-import type { ControlUnit } from '../../../../../domain/entities/controlUnit'
+import { ControlUnit } from '../../../../../domain/entities/controlUnit'
+
 import type { Promisable } from 'type-fest'
 
 export type ItemProps = {
@@ -18,7 +19,7 @@ export function Item({ controlUnitContact, onEdit }: ItemProps) {
     <Wrapper>
       <Left>
         <p>
-          <Name>{controlUnitContact.name}</Name>
+          <Name>{ControlUnit.ControlUnitContactName[controlUnitContact.name] || controlUnitContact.name}</Name>
           <Phone>{controlUnitContact.phone}</Phone>
         </p>
         <p>
