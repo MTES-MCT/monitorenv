@@ -10,7 +10,7 @@ import { REACT_APP_CYPRESS_TEST } from '../../../../env'
 const shouldUseAlternateValidationInTestEnvironment = process.env.NODE_ENV === 'development' || REACT_APP_CYPRESS_TEST
 
 const ControlPointSchema = Yup.object().test({
-  message: 'Veuillez définir un point de contrôle',
+  message: 'Point de contrôle requis',
   name: 'has-geom',
   test: val => val && !_.isEmpty(val?.coordinates)
 })
@@ -66,7 +66,7 @@ export const getClosedEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActio
       actionType: Yup.mixed().oneOf([ActionTypeEnum.CONTROL]),
       geom: shouldUseAlternateValidationInTestEnvironment
         ? Yup.object().nullable()
-        : Yup.array().of(ControlPointSchema).ensure().min(1, 'Veuillez définir un point de contrôle'),
+        : Yup.array().of(ControlPointSchema).ensure().min(1, 'Point de contrôle requis'),
       id: Yup.string().required(),
       infractions: Yup.array().of(ClosedInfractionSchema).ensure().required(),
       themes: Yup.array().of(ThemeSchema).ensure().required().min(1),
