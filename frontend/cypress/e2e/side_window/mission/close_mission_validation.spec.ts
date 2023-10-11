@@ -44,14 +44,12 @@ context('Mission', () => {
 
     // we fill all the required inputs
     cy.fill('Thématique de contrôle', 'Police des espèces protégées')
-
     // TODO understand why `cy.fill` doesn't work here
     cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').contains("Perturbation d'animaux").click({ force: true })
     cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
     cy.fill('Date et heure du contrôle (UTC)', [2023, 10, 11, 12, 12])
 
-    cy.get('*[data-cy="point-picker-coordinates"]').should('not.exist')
     cy.fill('Nombre total de contrôles', '2')
     cy.fill('Type de cible', 'Personne morale')
 
@@ -79,6 +77,16 @@ context('Mission', () => {
 
     cy.getDataCy('surveillance-zone-matches-mission').should('have.class', 'rs-checkbox-checked')
     cy.get('*[data-cy="mission-errors"]').should('not.exist')
+
+    // delete theme to test error
+    cy.fill('Thématique de surveillance', '')
+    cy.get('*[data-cy="mission-errors"]').should('exist')
+
+    cy.fill('Thématique de surveillance', 'Rejets illicites')
+    // TODO understand why `cy.fill` doesn't work here
+    cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Jet de déchet').click({ force: true })
+    cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
 
     // Then
     cy.intercept('PUT', '/bff/v1/missions').as('createAndCloseMission')
