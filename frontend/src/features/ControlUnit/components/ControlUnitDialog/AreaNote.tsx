@@ -1,16 +1,35 @@
-// import styled from 'styled-components'
-
-import { FormikTextarea } from '@mtes-mct/monitor-ui'
+import styled from 'styled-components'
 
 import { Section } from './shared/Section'
+import { TextareaForm } from './shared/TextareaForm'
 
-export function AreaNote() {
+import type { ControlUnit } from '../../../../domain/entities/controlUnit'
+
+type AreaNoteProps = {
+  controlUnit: ControlUnit.ControlUnit
+  onSubmit: (nextControlUnit: ControlUnit.ControlUnit) => any
+}
+export function AreaNote({ controlUnit, onSubmit }: AreaNoteProps) {
   return (
     <Section>
       <Section.Title>Secteur d’intervention</Section.Title>
-      <Section.Body>
-        <FormikTextarea isLabelHidden label="Secteur d’intervention" name="areaNote" />
-      </Section.Body>
+      <StyledSectionBody>
+        <TextareaForm
+          controlUnit={controlUnit}
+          isLabelHidden
+          label="Secteur d’intervention"
+          name="areaNote"
+          onSubmit={onSubmit}
+        />
+      </StyledSectionBody>
     </Section>
   )
 }
+
+const StyledSectionBody = styled(Section.Body)`
+  padding: 24px 32px;
+
+  > div:not(:first-child) {
+    margin-top: 8px;
+  }
+`

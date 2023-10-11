@@ -16,7 +16,7 @@ import { Section } from '../shared/Section'
 import type { ControlUnitResourceFormValues } from './types'
 import type { ControlUnit } from '../../../../../domain/entities/controlUnit'
 
-export type ControlUnitResourceListProps = {
+type ControlUnitResourceListProps = {
   controlUnit: ControlUnit.ControlUnit
 }
 export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceListProps) {

@@ -1,6 +1,4 @@
-// import styled from 'styled-components'
-
-import { Accent, Button, FormikTextarea } from '@mtes-mct/monitor-ui'
+import { Accent, Button } from '@mtes-mct/monitor-ui'
 import { useCallback, useState } from 'react'
 import styled from 'styled-components'
 
@@ -12,14 +10,16 @@ import {
   useUpdateControlUnitContactMutation
 } from '../../../../../api/controlUnitContactsAPI'
 import { Section } from '../shared/Section'
+import { TextareaForm } from '../shared/TextareaForm'
 
 import type { ControlUnitContactFormValues } from './types'
 import type { ControlUnit } from '../../../../../domain/entities/controlUnit'
 
-export type ControlUnitContactListProps = {
+type ControlUnitContactListProps = {
   controlUnit: ControlUnit.ControlUnit
+  onSubmit: (nextControlUnit: ControlUnit.ControlUnit) => any
 }
-export function ControlUnitContactList({ controlUnit }: ControlUnitContactListProps) {
+export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitContactListProps) {
   const [createControlUnitContact] = useCreateControlUnitContactMutation()
   const [updateControlUnitContact] = useUpdateControlUnitContactMutation()
 
@@ -59,7 +59,12 @@ export function ControlUnitContactList({ controlUnit }: ControlUnitContactListPr
     <Section>
       <Section.Title>Contacts</Section.Title>
       <StyledSectionBody>
-        <FormikTextarea label="Modalités de contact avec l’unité" name="termsNote" />
+        <TextareaForm
+          controlUnit={controlUnit}
+          label="Modalités de contact avec l’unité"
+          name="termsNote"
+          onSubmit={onSubmit}
+        />
 
         {controlUnitContacts.map(controlUnitContact => (
           <Item

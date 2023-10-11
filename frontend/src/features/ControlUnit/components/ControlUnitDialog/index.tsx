@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import { AreaNote } from './AreaNote'
 import { ControlUnitContactList } from './ControlUnitContactList'
 import { ControlUnitResourceList } from './ControlUnitResourceList'
-import { useGetControlUnitQuery } from '../../../../api/controlUnitsAPI'
+import { useGetControlUnitQuery, useUpdateControlUnitMutation } from '../../../../api/controlUnitsAPI'
 import { globalActions } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -21,6 +21,7 @@ export function ControlUnitDialog() {
   }
 
   const { data: controlUnit } = useGetControlUnitQuery(mapControlUnitDialog.controlUnitId)
+  const [updateControlUnit] = useUpdateControlUnitMutation()
 
   const close = useCallback(() => {
     dispatch(
@@ -29,6 +30,17 @@ export function ControlUnitDialog() {
       })
     )
   }, [dispatch])
+
+  if (!controlUnit) {
+    return (
+      <MapMenuDialog.Container>
+        <MapMenuDialog.Header>
+          <MapMenuDialog.Title>Chargement en cours...</MapMenuDialog.Title>
+          <MapMenuDialog.CloseButton Icon={Icon.Close} onClick={close} />
+        </MapMenuDialog.Header>
+      </MapMenuDialog.Container>
+    )
+  }
 
   if (!controlUnit) {
     return (
@@ -51,9 +63,9 @@ export function ControlUnitDialog() {
       </MapMenuDialog.Header>
       <Formik initialValues={controlUnit} onSubmit={noop}>
         <StyledMapMenuDialogBody>
-          <ControlUnitContactList controlUnit={controlUnit} />
+          <ControlUnitContactList controlUnit={controlUnit} onSubmit={updateControlUnit} />
           <ControlUnitResourceList controlUnit={controlUnit} />
-          <AreaNote />
+          <AreaNote controlUnit={controlUnit} onSubmit={updateControlUnit} />
         </StyledMapMenuDialogBody>
       </Formik>
     </Wrapper>

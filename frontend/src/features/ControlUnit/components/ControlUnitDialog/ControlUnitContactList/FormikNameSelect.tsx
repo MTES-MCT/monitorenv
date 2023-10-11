@@ -22,7 +22,7 @@ export function FormikNameSelect() {
 
     // We don't want to trigger infinite re-rendering since `helpers.setValue` changes after each rendering
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [setIsCustomName]
+    []
   )
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export function FormikNameSelect() {
   }, [field.value, isCustomName])
 
   return isCustomName ? (
-    <FormikTextInput isLight label="Nom du contact" name="name" />
+    <FormikTextInput autoFocus isLight label="Nom du contact" name="name" />
   ) : (
     <Select
       error={meta.error}

@@ -8,7 +8,7 @@ import type { AppThunk } from '../../../store'
 export const archiveControlUnit = (): AppThunk<Promise<void>> => async (dispatch, getState) => {
   const { confirmationModal } = getState().backOffice
   if (!confirmationModal) {
-    throw new FrontendError('`confirmationModal` is indefined.')
+    throw new FrontendError('`confirmationModal` is undefined.')
   }
 
   try {

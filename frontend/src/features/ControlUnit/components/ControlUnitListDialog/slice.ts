@@ -14,13 +14,13 @@ const INITIAL_STATE: ControlUnitListDialogState = {
 }
 
 const persistConfig = {
-  key: 'ontrolUnitListDialog',
+  key: 'controlUnitListDialog',
   storage
 }
 
 const controlUnitListDialogSlice = createSlice({
   initialState: INITIAL_STATE,
-  name: 'ontrolUnitListDialog',
+  name: 'controlUnitListDialog',
   reducers: {
     setFilter(
       state,
