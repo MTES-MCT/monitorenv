@@ -2,6 +2,7 @@ import { SingleTag } from '@mtes-mct/monitor-ui'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
+import { useGetControlUnitsQuery } from '../../../../api/controlUnitsAPI'
 import { missionStatusLabels, missionTypeEnum } from '../../../../domain/entities/missions'
 import { MissionFiltersEnum, updateFilters } from '../../../../domain/shared_slices/MissionFilters'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -16,6 +17,8 @@ export function FilterTags() {
     selectedStatuses,
     selectedThemes
   } = useAppSelector(state => state.missionFilters)
+
+  const controlUnits = useGetControlUnitsQuery()
 
   const onDeleteTag = (
     valueToDelete: number | string,
@@ -43,7 +46,7 @@ export function FilterTags() {
             key={unit}
             onDelete={() => onDeleteTag(unit, MissionFiltersEnum.UNIT_FILTER, selectedControlUnitIds)}
           >
-            {String(`Unité ${unit}`)}
+            {String(`Unité ${controlUnits.currentData?.find(controlUnit => controlUnit.id === unit)?.name || unit}`)}
           </SingleTag>
         ))}
       {selectedMissionTypes.length > 0 &&
