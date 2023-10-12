@@ -31,7 +31,9 @@
     "test:unit:watch": "npm run test:unit -- --watch"
   },
   "dependencies": {
-    "@mtes-mct/monitor-ui": "10.1.1",
+    "@dnd-kit/core": "^4.0.3",
+    "@dnd-kit/modifiers": "^4.0.0",
+    "@mtes-mct/monitor-ui": "10.4.0",
     "@reduxjs/toolkit": "1.9.5",
     "@rsuite/responsive-nav": "5.0.1",
     "@sentry/browser": "7.73.0",

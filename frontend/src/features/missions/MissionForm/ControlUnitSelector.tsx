@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { FieldError, FormikTextInput } from '@mtes-mct/monitor-ui'
+import { FormikTextInput, FieldError, Message, Level } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import _ from 'lodash'
 import { type MutableRefObject, useMemo, useRef } from 'react'
@@ -13,7 +13,7 @@ import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg
 
 import type { ControlUnit } from '../../../domain/entities/controlUnit'
 
-export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeControlUnit, ...props }) {
+export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, isEngaged, removeControlUnit, ...props }) {
   const [administrationField, administrationMeta, administrationHelpers] = useField<string>(
     `controlUnits.${controlUnitIndex}.administration`
   )
@@ -138,6 +138,11 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
           />
         </FormikErrorWrapper>
         {unitNameMeta.error && <FieldError>{unitNameMeta.error}</FieldError>}
+        {isEngaged && (
+          <StyledMessage level={Level.WARNING}>
+            Cette unité est actuellement sélectionnée dans une autre mission en cours.
+          </StyledMessage>
+        )}
       </FormGroupFixed>
       <FormGroupFixed>
         <RefWrapper ref={resourcesRef} data-cy="unit-tag-picker">
@@ -168,6 +173,10 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
     </RessourceUnitWrapper>
   )
 }
+
+const StyledMessage = styled(Message)`
+  margin-top: 8px;
+`
 
 const RessourceUnitWrapper = styled.div`
   margin-bottom: 14px;

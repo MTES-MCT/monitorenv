@@ -1,9 +1,21 @@
 import { Accent, Button, Icon, Size } from '@mtes-mct/monitor-ui'
+import { useMemo } from 'react'
 
 import { ControlUnitSelector } from './ControlUnitSelector'
+import { useGetEngagedControlUnitsQuery } from '../../../api/missionsAPI'
 import { controlUnitFactory } from '../Missions.helpers'
 
 export function ControlUnitsForm({ form, push, remove }) {
+  const { data: engagedControlUnitsData } = useGetEngagedControlUnitsQuery(undefined)
+
+  const engagedControlUnits = useMemo(() => {
+    if (!engagedControlUnitsData) {
+      return []
+    }
+
+    return engagedControlUnitsData
+  }, [engagedControlUnitsData])
+
   const handleAddControlUnit = () => {
     push(controlUnitFactory())
   }
@@ -16,12 +28,13 @@ export function ControlUnitsForm({ form, push, remove }) {
     <div>
       {form?.values.controlUnits?.length > 0 && (
         <>
-          {form.values.controlUnits.map((_, index) => (
+          {form.values.controlUnits.map(({ id }, index) => (
             <ControlUnitSelector
               // eslint-disable-next-line react/no-array-index-key
               key={index}
               controlUnitIndex={index}
               controlUnitPath={`controlUnits[${index}]`}
+              isEngaged={!!engagedControlUnits.find(engaged => engaged.id === id)}
               removeControlUnit={handleRemoveControlUnit(index)}
             />
           ))}

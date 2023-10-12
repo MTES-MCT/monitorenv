@@ -1,5 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
+import { monitorenvPublicApi } from './api'
+import { ControlUnit } from '../domain/entities/controlUnit'
+
 import type { Mission } from '../domain/entities/missions'
 
 type MissionsResponse = Mission[]
@@ -83,6 +86,14 @@ export const missionsAPI = createApi({
   tagTypes: ['Missions']
 })
 
+export const publicMissionsAPI = monitorenvPublicApi.injectEndpoints({
+  endpoints: builder => ({
+    getEngagedControlUnits: builder.query<ControlUnit.ControlUnit[], void>({
+      query: () => `/v1/missions/engaged_control_units`
+    })
+  })
+})
+
 export const {
   useCreateMissionMutation,
   useDeleteMissionMutation,
@@ -90,3 +101,5 @@ export const {
   useGetMissionsQuery,
   useUpdateMissionMutation
 } = missionsAPI
+
+export const { useGetEngagedControlUnitsQuery } = publicMissionsAPI
