@@ -1,4 +1,7 @@
 services:
+  db:
+    volumes:
+      - "../../.backups/:/opt/monitorenv_backups"
   geoserver:
     restart: unless-stopped
     links:
