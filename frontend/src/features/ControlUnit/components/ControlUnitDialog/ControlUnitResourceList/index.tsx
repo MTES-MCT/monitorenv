@@ -45,7 +45,7 @@ export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceList
         ...controlUnitResourceFormValues,
         // We set the resource type as the resource name if no name has been provided by the user
         name: isEmptyish(controlUnitResourceFormValues.name)
-          ? ControlUnit.ControlUnitResourceType[controlUnitResourceFormValues.type as string]
+          ? ControlUnit.ControlUnitResourceTypeLabel[controlUnitResourceFormValues.type as string]
           : controlUnitResourceFormValues.name
       }
 

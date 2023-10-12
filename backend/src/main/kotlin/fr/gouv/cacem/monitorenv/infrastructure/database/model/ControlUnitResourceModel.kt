@@ -1,12 +1,13 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
+import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 import jakarta.persistence.*
-import org.hibernate.annotations.ColumnTransformer
 import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.Type
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.Instant
 
@@ -37,9 +38,9 @@ data class ControlUnitResourceModel(
     @Column(name = "photo")
     var photo: ByteArray? = byteArrayOf(),
 
+    @Column(name = "type", nullable = false, columnDefinition = "control_unit_resource_type")
     @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false)
-    @ColumnTransformer(write = "?::control_unit_resource_type")
+    @Type(PostgreSQLEnumType::class)
     var type: ControlUnitResourceType,
 
     @Column(name = "created_at_utc", nullable = false, updatable = false)

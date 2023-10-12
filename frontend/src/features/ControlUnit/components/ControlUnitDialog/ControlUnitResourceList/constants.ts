@@ -11,11 +11,8 @@ export const CONTROL_UNIT_RESOURCE_FORM_SCHEMA = object().shape({
 })
 
 export const CONTROL_UNIT_RESOURCE_TYPES_AS_OPTIONS = getOptionsFromLabelledEnum(
-  ControlUnit.ControlUnitResourceType,
+  ControlUnit.ControlUnitResourceTypeLabel,
   true
-).filter(
-  controlUnitResourceTypeAsOption =>
-    controlUnitResourceTypeAsOption.label !== ControlUnit.ControlUnitResourceType.UNKNOWN
 )
 
 export const INITIAL_CONTROL_UNIT_RESOURCE_FORM_VALUES: ControlUnitResourceFormValues = {
