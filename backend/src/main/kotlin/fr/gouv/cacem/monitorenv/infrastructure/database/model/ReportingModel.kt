@@ -19,7 +19,11 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import org.hibernate.annotations.Generated
+import org.hibernate.annotations.GenerationTime
+import org.hibernate.annotations.JdbcType
 import org.hibernate.annotations.Type
+import org.hibernate.type.descriptor.jdbc.UUIDJdbcType
 import org.locationtech.jts.geom.Geometry
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
@@ -34,7 +38,7 @@ data class ReportingModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     val id: Int? = null,
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Generated(GenerationTime.INSERT)
     @Column(
         name = "reporting_id",
         unique = true,
@@ -103,7 +107,8 @@ data class ReportingModel(
     val attachedToMissionAtUtc: Instant? = null,
     @Column(name = "detached_from_mission_at_utc")
     val detachedFromMissionAtUtc: Instant? = null,
-    @Column(name = "attached_env_action_id")
+    @JdbcType(UUIDJdbcType::class)
+    @Column(name = "attached_env_action_id", columnDefinition = "uuid")
     val attachedEnvActionId: UUID? = null,
 ) {
 

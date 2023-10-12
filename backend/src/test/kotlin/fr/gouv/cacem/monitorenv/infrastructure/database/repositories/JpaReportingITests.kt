@@ -34,8 +34,6 @@ class JpaReportingITests : AbstractDBTests() {
             "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
-
-
         val newReporting =
             ReportingEntity(
                 sourceType = SourceTypeEnum.SEMAPHORE,
@@ -58,32 +56,30 @@ class JpaReportingITests : AbstractDBTests() {
                 openBy = "CDA",
             )
         val createdReporting = jpaReportingRepository.save(newReporting)
-        println(createdReporting)
+
         val reporting = jpaReportingRepository.findById(8)
-        println(reporting)
 
         // Then
-        assertThat(createdReporting.id).isNotNull()
-        assertThat(createdReporting.reportingId).isNotNull()
-        assertThat(createdReporting.sourceType).isEqualTo(SourceTypeEnum.SEMAPHORE)
-        assertThat(createdReporting.semaphoreId).isEqualTo(21)
-        assertThat(createdReporting.targetType).isEqualTo(TargetTypeEnum.VEHICLE)
-        assertThat(createdReporting.vehicleType).isEqualTo(VehicleTypeEnum.VESSEL)
-        assertThat(createdReporting.geom).isEqualTo(polygon)
-        assertThat(createdReporting.seaFront).isEqualTo("NAMO")
-        assertThat(createdReporting.description).isEqualTo("Test reporting")
-        assertThat(createdReporting.reportType).isEqualTo(ReportingTypeEnum.INFRACTION_SUSPICION)
-        assertThat(createdReporting.theme).isEqualTo("Police des mouillages")
-        assertThat(createdReporting.subThemes).isEqualTo(listOf("ZMEL"))
-        assertThat(createdReporting.actionTaken).isEqualTo("Aucune")
-        assertThat(createdReporting.isControlRequired).isEqualTo(false)
-        assertThat(createdReporting.isUnitAvailable).isEqualTo(false)
-        assertThat(createdReporting.createdAt).isEqualTo(ZonedDateTime.parse("2023-04-01T00:00:00Z"))
-        assertThat(createdReporting.validityTime).isEqualTo(24)
-        assertThat(createdReporting.isArchived).isEqualTo(false)
-        assertThat(createdReporting.isDeleted).isEqualTo(false)
-        assertThat(createdReporting.openBy).isEqualTo("CDA")
-
+        assertThat(reporting.id).isEqualTo(8)
+        assertThat(reporting.reportingId).isEqualTo(2300008)
+        assertThat(reporting.sourceType).isEqualTo(SourceTypeEnum.SEMAPHORE)
+        assertThat(reporting.semaphoreId).isEqualTo(21)
+        assertThat(reporting.targetType).isEqualTo(TargetTypeEnum.VEHICLE)
+        assertThat(reporting.vehicleType).isEqualTo(VehicleTypeEnum.VESSEL)
+        assertThat(reporting.geom).isEqualTo(polygon)
+        assertThat(reporting.seaFront).isEqualTo("NAMO")
+        assertThat(reporting.description).isEqualTo("Test reporting")
+        assertThat(reporting.reportType).isEqualTo(ReportingTypeEnum.INFRACTION_SUSPICION)
+        assertThat(reporting.theme).isEqualTo("Police des mouillages")
+        assertThat(reporting.subThemes).isEqualTo(listOf("ZMEL"))
+        assertThat(reporting.actionTaken).isEqualTo("Aucune")
+        assertThat(reporting.isControlRequired).isEqualTo(false)
+        assertThat(reporting.isUnitAvailable).isEqualTo(false)
+        assertThat(reporting.createdAt).isEqualTo(ZonedDateTime.parse("2023-04-01T00:00:00Z"))
+        assertThat(reporting.validityTime).isEqualTo(24)
+        assertThat(reporting.isArchived).isEqualTo(false)
+        assertThat(reporting.isDeleted).isEqualTo(false)
+        assertThat(reporting.openBy).isEqualTo("CDA")
 
         val numberOfExistingReportingsAfterSave = jpaReportingRepository.count()
         assertThat(numberOfExistingReportingsAfterSave).isEqualTo(8)
@@ -239,12 +235,11 @@ class JpaReportingITests : AbstractDBTests() {
         // When
 
         val exception = assertThrows<Exception> {
-            val reporting = jpaReportingRepository.save(existingReporting.copy(attachedEnvActionId = UUID.fromString("74c54cb3-195f-4231-99db-772aebe7a66f")))
-            println(reporting)
+            jpaReportingRepository.save(existingReporting.copy(attachedEnvActionId = UUID.fromString("74c54cb3-195f-4231-99db-772aebe7a66f")))
         }
 
         // Then
-        assertThat(exception.message).isEqualTo("An envAction cannot be attach to a reporting without a mission")
+        assertThat(exception.message).isEqualTo("could not execute statement; SQL [n/a]; constraint [attached_mission_id_not_null_if_attached_env_action_id_not_null]")
     }
 
     @Test
@@ -261,7 +256,7 @@ class JpaReportingITests : AbstractDBTests() {
         }
 
         // Then
-        println(exception.message)
+        assertThat(exception.message).isEqualTo("could not execute statement; SQL [n/a]; constraint [reportings_env_actions_fk]")
     }
 
     @Test
@@ -275,7 +270,7 @@ class JpaReportingITests : AbstractDBTests() {
             jpaReportingRepository.save(existingReporting.copy(attachedMissionId = 100, attachedToMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z")))
         }
         // Then
-        println(exception.message)
+        assertThat(exception.message).isEqualTo("could not execute statement; SQL [n/a]; constraint [reportings_attached_mission_id_fkey]")
     }
 
     @Test
@@ -289,6 +284,6 @@ class JpaReportingITests : AbstractDBTests() {
             jpaReportingRepository.save(existingReporting.copy(detachedFromMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z")))
         }
         // Then
-        println(exception.message)
+        assertThat(exception.message).isEqualTo("could not execute statement; SQL [n/a]; constraint [attached_mission_id_not_null_if_attached_env_action_id_not_null]")
     }
 }

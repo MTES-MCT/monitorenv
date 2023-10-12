@@ -8,6 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
+import java.util.UUID
 
 data class CreateOrUpdateReportingDataInput(
     val id: Int? = null,
@@ -31,6 +32,10 @@ data class CreateOrUpdateReportingDataInput(
     val validityTime: Int? = null,
     val isArchived: Boolean,
     val openBy: String? = null,
+    val attachedMissionId: Int? = null,
+    val attachedToMissionAtUtc: ZonedDateTime? = null,
+    val detachedFromMissionAtUtc: ZonedDateTime? = null,
+    val attachedEnvActionId: UUID? = null,
 ) {
     fun toReportingEntity(): ReportingEntity {
         return ReportingEntity(
@@ -56,6 +61,10 @@ data class CreateOrUpdateReportingDataInput(
             isArchived = this.isArchived,
             isDeleted = false,
             openBy = this.openBy,
+            attachedMissionId = this.attachedMissionId,
+            attachedToMissionAtUtc = this.attachedToMissionAtUtc,
+            detachedFromMissionAtUtc = this.detachedFromMissionAtUtc,
+            attachedEnvActionId = this.attachedEnvActionId,
         )
     }
 }

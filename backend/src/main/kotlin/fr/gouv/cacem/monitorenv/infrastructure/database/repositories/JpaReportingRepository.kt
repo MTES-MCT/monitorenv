@@ -9,6 +9,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBReportingRepository
 import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
@@ -49,10 +50,11 @@ class JpaReportingRepository(
     }
 
     @Transactional
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     override fun save(reporting: ReportingEntity): ReportingEntity {
         return try {
             val reportingModel = ReportingModel.fromReportingEntity(reporting)
-            dbReportingRepository.save(reportingModel).toReporting()
+            dbReportingRepository.saveAndFlush(reportingModel).toReporting()
         } catch (e: InvalidDataAccessApiUsageException) {
             throw ControlResourceOrUnitNotFoundException(
                 "Invalid control unit or resource id: not found in referential",
