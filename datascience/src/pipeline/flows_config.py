@@ -88,7 +88,10 @@ for flow in flows_to_register:
 for flow in flows_to_register:
     host_config = None
 
-    if flow.name == "Control objectives":
+    if flow.name in (
+        "Control objectives",
+        "Control resources, bases and contacts",
+    ):
         host_config = {
             "mounts": [
                 Mount(
