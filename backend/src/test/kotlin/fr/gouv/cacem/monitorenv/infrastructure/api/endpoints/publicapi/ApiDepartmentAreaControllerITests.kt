@@ -34,7 +34,6 @@ class ApiDepartmentAreaControllerITests {
     fun `Should get an departmentArea by its ID`() {
         val expectedDepartmentArea = DepartmentAreaEntity(
             inseeDep = "1",
-            geometry = null,
             name = "Department Area Name",
         )
 
@@ -53,13 +52,11 @@ class ApiDepartmentAreaControllerITests {
         val expectedAFulldministrations = listOf(
             DepartmentAreaEntity(
                 inseeDep = "1",
-                geometry = null,
                 name = "Department Area Name",
             ),
 
             DepartmentAreaEntity(
                 inseeDep = "2",
-                geometry = null,
                 name = "Department Area Name 2",
             )
         )
