@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.vladmihalcea.hibernate.type.array.ListArrayType
-import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
@@ -53,10 +52,9 @@ data class ReportingModel(
         updatable = false,
         insertable = false,
     )
-    val reportingId: Int? = null,
+    val reportingId: Long? = null,
     @Column(name = "source_type", columnDefinition = "reportings_source_type")
     @Enumerated(EnumType.STRING)
-    @Type(PostgreSQLEnumType::class)
     val sourceType: SourceTypeEnum? = null,
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "semaphore_id", nullable = true)
@@ -70,11 +68,9 @@ data class ReportingModel(
     val sourceName: String? = null,
     @Column(name = "target_type", columnDefinition = "reportings_target_type")
     @Enumerated(EnumType.STRING)
-    @Type(PostgreSQLEnumType::class)
     val targetType: TargetTypeEnum? = null,
     @Column(name = "vehicle_type", columnDefinition = "reportings_vehicle_type")
     @Enumerated(EnumType.STRING)
-    @Type(PostgreSQLEnumType::class)
     val vehicleType: VehicleTypeEnum? = null,
     @Column(name = "target_details", columnDefinition = "jsonb")
     @Type(JsonBinaryType::class)
@@ -89,7 +85,6 @@ data class ReportingModel(
     val description: String? = null,
     @Column(name = "report_type", columnDefinition = "reportings_report_type")
     @Enumerated(EnumType.STRING)
-    @Type(PostgreSQLEnumType::class)
     val reportType: ReportingTypeEnum? = null,
     @Column(name = "theme")
     val theme: String? = null,
