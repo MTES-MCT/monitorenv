@@ -86,20 +86,24 @@ export function GeneralInformationsForm() {
           {errors.endDateTimeUtc && <FieldError>{errors.endDateTimeUtc}</FieldError>}
         </div>
 
-        <StyledMissionType>
-          <FormikMultiCheckbox
-            data-cy="mission-types"
-            isErrorMessageHidden
-            isInline
-            label="Type de mission"
-            name="missionTypes"
-            options={missionTypeOptions}
-          />
-          {(missionSourceField.value === MissionSourceEnum.MONITORFISH ||
-            missionSourceField.value === MissionSourceEnum.POSEIDON_CNSP) && (
-            <FormikCheckbox disabled label="Mission sous JDP" name="isUnderJdp" />
-          )}
-        </StyledMissionType>
+        <div>
+          <StyledMissionType>
+            <FormikMultiCheckbox
+              data-cy="mission-types"
+              isErrorMessageHidden
+              isInline
+              label="Type de mission"
+              name="missionTypes"
+              options={missionTypeOptions}
+            />
+
+            {(missionSourceField.value === MissionSourceEnum.MONITORFISH ||
+              missionSourceField.value === MissionSourceEnum.POSEIDON_CNSP) && (
+              <FormikCheckbox disabled label="Mission sous JDP" name="isUnderJdp" />
+            )}
+          </StyledMissionType>
+          {errors.missionTypes && <FieldError>{errors.missionTypes}</FieldError>}
+        </div>
         {(missionSourceField.value === MissionSourceEnum.MONITORFISH ||
           missionSourceField.value === MissionSourceEnum.POSEIDON_CNSP) && (
           <MultiRadio

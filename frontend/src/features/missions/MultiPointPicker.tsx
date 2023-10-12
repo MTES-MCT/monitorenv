@@ -90,7 +90,7 @@ export function MultiPointPicker({ addButtonLabel, label = undefined, name }: Mu
       >
         {addButtonLabel}
       </Button>
-      {!!meta.error && <FieldError>Veuillez définir un point de contrôle</FieldError>}
+      {!!meta.error && <FieldError>{meta.error}</FieldError>}
 
       <>
         {points.map((coordinates, index) => (

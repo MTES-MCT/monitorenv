@@ -13,7 +13,9 @@ import type { Mission } from '../../../../../../domain/entities/missions'
 export function ThemeSelector({ actionIndex, label, themeIndex }) {
   const { data: controlThemes, isError, isLoading } = useGetControlThemesQuery()
   const { newWindowContainerRef } = useNewWindow()
-  const [currentThemeField] = useField<string>(`envActions[${actionIndex}].themes[${themeIndex}].theme`)
+  const [currentThemeField, currentThemeProps] = useField<string>(
+    `envActions[${actionIndex}].themes[${themeIndex}].theme`
+  )
   const { setFieldValue, values } = useFormikContext<Mission>()
 
   const availableThemes = useMemo(
@@ -37,7 +39,7 @@ export function ThemeSelector({ actionIndex, label, themeIndex }) {
           key={`${actionIndex}-${themeIndex}`}
           baseContainer={newWindowContainerRef.current}
           data-cy="envaction-theme-selector"
-          isErrorMessageHidden
+          error={currentThemeProps.error}
           isLight
           label={label}
           name={`${actionIndex}-${themeIndex}`}

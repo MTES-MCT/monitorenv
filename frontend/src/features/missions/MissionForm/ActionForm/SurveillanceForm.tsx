@@ -125,6 +125,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
           name={`envActions[${currentActionIndex}].geom`}
         />
         <StyledFormikCheckbox
+          data-cy="surveillance-zone-matches-mission"
           disabled={hasCustomZone || isEditingZone}
           inline
           label="Zone de surveillance équivalente à la zone de mission"

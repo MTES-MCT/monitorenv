@@ -9,7 +9,7 @@ export const updateTheme =
     const currentThemeValue = get(mission, themesPath) as EnvActionTheme[]
 
     const newValue = [...currentThemeValue]
-    newValue.splice(themeIndex, 1, { theme: value })
+    newValue.splice(themeIndex, 1, { protectedSpecies: [], subThemes: [], theme: value })
 
     setFieldValue(themesPath, newValue)
   }

@@ -19,7 +19,7 @@ const shouldUseAlternateValidationInTestEnvironment = process.env.NODE_ENV === '
 const MissionTypesSchema = Yup.array()
   .of(Yup.mixed<MissionTypeEnum>().oneOf(Object.values(MissionTypeEnum)).required())
   .ensure()
-  .min(1, 'Requis')
+  .min(1, 'Type de mission requis')
 
 const ControlResourceSchema: Yup.SchemaOf<ControlUnit.ControlUnitResource> = Yup.object()
   .shape({
@@ -30,7 +30,7 @@ const ControlResourceSchema: Yup.SchemaOf<ControlUnit.ControlUnitResource> = Yup
 
 const ControlUnitSchema: Yup.SchemaOf<LegacyControlUnit> = Yup.object()
   .shape({
-    administration: Yup.string().required(),
+    administration: Yup.string().required('Administration requise'),
     contact: Yup.string()
       .nullable()
       .test({
@@ -45,7 +45,7 @@ const ControlUnitSchema: Yup.SchemaOf<LegacyControlUnit> = Yup.object()
         }
       }),
     id: Yup.number().required(),
-    name: Yup.string().required(),
+    name: Yup.string().required('Unité requise'),
     resources: Yup.array().ensure().of(ControlResourceSchema).required()
   })
   .defined()
@@ -110,14 +110,16 @@ const NewMissionSchema: Yup.SchemaOf<NewMission> = Yup.object()
     envActions: Yup.array()
       .of(NewEnvActionSchema as any)
       .nullable(),
-    geom: shouldUseAlternateValidationInTestEnvironment ? Yup.object().nullable() : MissionZoneSchema,
+    geom: shouldUseAlternateValidationInTestEnvironment
+      ? Yup.object().nullable()
+      : Yup.array().of(MissionZoneSchema).ensure().min(1, 'Veuillez définir une zone de mission'),
     isClosed: Yup.boolean().oneOf([false]).required(),
     missionTypes: MissionTypesSchema,
     openBy: Yup.string()
       .min(3, 'le Trigramme doit comporter 3 lettres')
       .max(3, 'le Trigramme doit comporter 3 lettres')
       .nullable()
-      .required('Trigramme requis'),
+      .required("Trigramme d'ouverture requis"),
     startDateTimeUtc: Yup.date().required('Date de début requise')
   })
   .required()
@@ -127,7 +129,7 @@ const ClosedMissionSchema = NewMissionSchema.shape({
     .min(3, 'Minimum 3 lettres pour le Trigramme')
     .max(3, 'Maximum 3 lettres pour le Trigramme')
     .nullable()
-    .required('Trigramme requis'),
+    .required('Trigramme de clôture requis'),
   controlUnits: Yup.array().of(ClosedControlUnitSchema).ensure().defined().min(1),
   envActions: Yup.array()
     .of(ClosedEnvActionSchema as any)

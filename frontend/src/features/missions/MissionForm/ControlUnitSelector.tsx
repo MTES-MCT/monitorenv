@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { FormikTextInput } from '@mtes-mct/monitor-ui'
+import { FieldError, FormikTextInput } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import _ from 'lodash'
 import { type MutableRefObject, useMemo, useRef } from 'react'
@@ -14,11 +14,11 @@ import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg
 import type { ControlUnit } from '../../../domain/entities/controlUnit'
 
 export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeControlUnit, ...props }) {
-  const [administrationField, , administrationHelpers] = useField<string>(
+  const [administrationField, administrationMeta, administrationHelpers] = useField<string>(
     `controlUnits.${controlUnitIndex}.administration`
   )
   const [unitField, , unitHelpers] = useField<number | undefined>(`controlUnits.${controlUnitIndex}.id`)
-  const [, , unitNameHelpers] = useField<string | undefined>(`controlUnits.${controlUnitIndex}.name`)
+  const [, unitNameMeta, unitNameHelpers] = useField<string | undefined>(`controlUnits.${controlUnitIndex}.name`)
   const [resourcesField, , resourcesHelpers] = useField<ControlUnit.ControlUnitResource[]>(
     `controlUnits.${controlUnitIndex}.resources`
   )
@@ -118,6 +118,7 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
             )}
           </StyledAdministartionContainer>
         </FormikErrorWrapper>
+        {administrationMeta.error && <FieldError>{administrationMeta.error}</FieldError>}
       </FormGroupFixed>
       <FormGroupFixed>
         <FormikErrorWrapper name={`controlUnits.${controlUnitIndex}.id`} noMessage>
@@ -136,6 +137,7 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
             key={unitField.value}
           />
         </FormikErrorWrapper>
+        {unitNameMeta.error && <FieldError>{unitNameMeta.error}</FieldError>}
       </FormGroupFixed>
       <FormGroupFixed>
         <RefWrapper ref={resourcesRef} data-cy="unit-tag-picker">
@@ -176,8 +178,7 @@ const RessourceUnitWrapper = styled.div`
 
 const FormGroupFixed = styled.div`
   display: flex;
-  flex-direction: row;
-  height: 52px;
+  flex-direction: column;
   width: 100%;
 
   :not(:last-child) {
