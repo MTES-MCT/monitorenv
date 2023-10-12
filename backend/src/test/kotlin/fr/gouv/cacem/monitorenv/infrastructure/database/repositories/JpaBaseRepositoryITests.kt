@@ -18,14 +18,14 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
     fun `findAll() should find all bases`() {
         val foundFullBases = jpaBaseRepository.findAll().sortedBy { requireNotNull(it.base.id) }
 
-        assertThat(foundFullBases).hasSize(4)
+        assertThat(foundFullBases).hasSize(3)
 
-        assertThat(foundFullBases[1]).isEqualTo(
+        assertThat(foundFullBases[0]).isEqualTo(
             FullBaseDTO(
                 base = BaseEntity(
                     id = 1,
-                    latitude = 0.0,
-                    longitude = 0.0,
+                    latitude = 43.295765,
+                    longitude = 5.375486,
                     name = "Marseille"
                 ),
                 controlUnitResources = listOf(
@@ -54,35 +54,71 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
         assertThat(foundFullBases[2]).isEqualTo(
             FullBaseDTO(
                 base = BaseEntity(
-                    id = 2,
-                    latitude = 0.0,
-                    longitude = 0.0,
-                    name = "Saint-Malo"
+                    id = 3,
+                    latitude = 51.035534,
+                    longitude = 2.372845,
+                    name = "Dunkerque"
                 ),
                 controlUnitResources = listOf(
                     ControlUnitResourceEntity(
-                        id = 3,
-                        baseId = 2,
+                        id = 5,
+                        baseId = 3,
                         controlUnitId = 10002,
-                        name = "Semi-rigide 1",
+                        name = "Voiture",
                         note = null,
                         photo = null,
-                        type = ControlUnitResourceType.BARGE
+                        type = ControlUnitResourceType.CAR
                     ),
                     ControlUnitResourceEntity(
-                        id = 4,
-                        baseId = 2,
-                        controlUnitId = 10002,
-                        name = "Semi-rigide 2",
-                        note = null,
-                        photo = null,
-                        type = ControlUnitResourceType.BARGE
-                    ),
-                    ControlUnitResourceEntity(
-                        id = 6,
-                        baseId = 2,
+                        id = 7,
+                        baseId = 3,
                         controlUnitId = 10003,
-                        name = "AR VECHEN",
+                        name = "Semi-rigide",
+                        note = null,
+                        photo = null,
+                        type = ControlUnitResourceType.BARGE
+                    ),
+                    ControlUnitResourceEntity(
+                        id = 8,
+                        baseId = 3,
+                        controlUnitId = 10010,
+                        name = "PAM Jeanne Barret",
+                        note = null,
+                        photo = null,
+                        type = ControlUnitResourceType.FRIGATE
+                    ),
+                    ControlUnitResourceEntity(
+                        id = 9,
+                        baseId = 3,
+                        controlUnitId = 10011,
+                        name = "PAM Themis",
+                        note = null,
+                        photo = null,
+                        type = ControlUnitResourceType.FRIGATE
+                    ),
+                    ControlUnitResourceEntity(
+                        id = 10,
+                        baseId = 3,
+                        controlUnitId = 10018,
+                        name = "ALTAIR",
+                        note = null,
+                        photo = null,
+                        type = ControlUnitResourceType.FRIGATE
+                    ),
+                    ControlUnitResourceEntity(
+                        id = 11,
+                        baseId = 3,
+                        controlUnitId = 10018,
+                        name = "PHEROUSA",
+                        note = null,
+                        photo = null,
+                        type = ControlUnitResourceType.FRIGATE
+                    ),
+                    ControlUnitResourceEntity(
+                        id = 12,
+                        baseId = 3,
+                        controlUnitId = 10018,
+                        name = "ARIOLA",
                         note = null,
                         photo = null,
                         type = ControlUnitResourceType.FRIGATE
@@ -101,8 +137,8 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
             FullBaseDTO(
                 base = BaseEntity(
                     id = 2,
-                    latitude = 0.0,
-                    longitude = 0.0,
+                    latitude = 48.648105,
+                    longitude = -2.013144,
                     name = "Saint-Malo"
                 ),
                 controlUnitResources = listOf(

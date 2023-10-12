@@ -72,8 +72,35 @@ export namespace ControlUnit {
     UNKNOWN = 'Nom de contact non renseigné'
   }
 
-  // Don't forget to mirror any update here in the backend enum.
+  // Don't forget to mirror any update here in both Postgre & Backend enums.
   export enum ControlUnitResourceType {
+    AIRPLANE = 'AIRPLANE',
+    BARGE = 'BARGE',
+    CAR = 'CAR',
+    DRONE = 'DRONE',
+    EQUESTRIAN = 'EQUESTRIAN',
+    FAST_BOAT = 'FAST_BOAT',
+    FRIGATE = 'FRIGATE',
+    HELICOPTER = 'HELICOPTER',
+    HYDROGRAPHIC_SHIP = 'HYDROGRAPHIC_SHIP',
+    KAYAK = 'KAYAK',
+    LIGHT_FAST_BOAT = 'LIGHT_FAST_BOAT',
+    MINE_DIVER = 'MINE_DIVER',
+    MOTORCYCLE = 'MOTORCYCLE',
+    NET_LIFTER = 'NET_LIFTER',
+    NO_RESOURCE = 'NO_RESOURCE',
+    OTHER = 'OTHER',
+    PATROL_BOAT = 'PATROL_BOAT',
+    PEDESTRIAN = 'PEDESTRIAN',
+    PIROGUE = 'PIROGUE',
+    RIGID_HULL = 'RIGID_HULL',
+    SEA_SCOOTER = 'SEA_SCOOTER',
+    SEMI_RIGID = 'SEMI_RIGID',
+    SUPPORT_SHIP = 'SUPPORT_SHIP',
+    TRAINING_SHIP = 'TRAINING_SHIP',
+    TUGBOAT = 'TUGBOAT'
+  }
+  export enum ControlUnitResourceTypeLabel {
     AIRPLANE = 'Avion',
     BARGE = 'Barge',
     CAR = 'Voiture',

@@ -5,6 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceE
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 import jakarta.persistence.*
+import org.hibernate.annotations.ColumnTransformer
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.Instant
@@ -36,8 +37,10 @@ data class ControlUnitResourceModel(
     @Column(name = "photo")
     var photo: ByteArray? = byteArrayOf(),
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
-    var type: String,
+    @ColumnTransformer(write = "?::control_unit_resource_type")
+    var type: ControlUnitResourceType,
 
     @Column(name = "created_at_utc", nullable = false, updatable = false)
     @CreationTimestamp
@@ -82,7 +85,7 @@ data class ControlUnitResourceModel(
                 name = controlUnitResource.name,
                 note = controlUnitResource.note,
                 photo = controlUnitResource.photo,
-                type = controlUnitResource.type.name,
+                type = controlUnitResource.type,
             )
         }
     }
@@ -109,7 +112,7 @@ data class ControlUnitResourceModel(
             name,
             note,
             photo,
-            type = ControlUnitResourceType.valueOf(type),
+            type,
         )
     }
 

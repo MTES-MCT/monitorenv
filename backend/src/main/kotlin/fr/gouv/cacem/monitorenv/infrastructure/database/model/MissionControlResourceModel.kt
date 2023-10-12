@@ -1,7 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import jakarta.persistence.*
 
 @Entity
@@ -34,7 +33,7 @@ data class MissionControlResourceModel(
                 name = controlUnitResource.name,
                 note = controlUnitResource.note,
                 photo = controlUnitResource.photo,
-                type = controlUnitResource.type.name,
+                type = controlUnitResource.type,
             ),
             mission = missionModel,
         )
@@ -48,7 +47,7 @@ data class MissionControlResourceModel(
             name = ressource.name,
             note = ressource.note,
             photo = byteArrayOf(),
-            type = ControlUnitResourceType.valueOf(ressource.type),
+            type = ressource.type,
         )
     }
 }

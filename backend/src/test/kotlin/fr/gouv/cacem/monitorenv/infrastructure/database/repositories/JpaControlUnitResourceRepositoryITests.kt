@@ -28,8 +28,8 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
             FullControlUnitResourceDTO(
                 base = BaseEntity(
                     id = 1,
-                    latitude = 0.0,
-                    longitude = 0.0,
+                    latitude = 43.295765,
+                    longitude = 5.375486,
                     name = "Marseille"
                 ),
                 controlUnit = ControlUnitEntity(
@@ -57,8 +57,8 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
             FullControlUnitResourceDTO(
                 base = BaseEntity(
                     id = 3,
-                    latitude = 0.0,
-                    longitude = 0.0,
+                    latitude = 51.035534,
+                    longitude = 2.372845,
                     name = "Dunkerque"
                 ),
                 controlUnit = ControlUnitEntity(
@@ -92,8 +92,8 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
             FullControlUnitResourceDTO(
                 base = BaseEntity(
                     id = 1,
-                    latitude = 0.0,
-                    longitude = 0.0,
+                    latitude = 43.295765,
+                    longitude = 5.375486,
                     name = "Marseille"
                 ),
                 controlUnit = ControlUnitEntity(

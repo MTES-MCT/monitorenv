@@ -102,8 +102,8 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                     FullControlUnitResourceDTO(
                         base = BaseEntity(
                             id = 1,
-                            latitude = 0.0,
-                            longitude = 0.0,
+                            latitude = 43.295765,
+                            longitude = 5.375486,
                             name = "Marseille",
                         ),
                         controlUnit = ControlUnitEntity(
@@ -128,8 +128,8 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                     FullControlUnitResourceDTO(
                         base = BaseEntity(
                             id = 1,
-                            latitude = 0.0,
-                            longitude = 0.0,
+                            latitude = 43.295765,
+                            longitude = 5.375486,
                             name = "Marseille",
                         ),
                         controlUnit = ControlUnitEntity(
@@ -218,8 +218,8 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                     FullControlUnitResourceDTO(
                         base = BaseEntity(
                             id = 1,
-                            latitude = 0.0,
-                            longitude = 0.0,
+                            latitude = 43.295765,
+                            longitude = 5.375486,
                             name = "Marseille",
                         ),
                         controlUnit = ControlUnitEntity(
@@ -244,8 +244,8 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                     FullControlUnitResourceDTO(
                         base = BaseEntity(
                             id = 1,
-                            latitude = 0.0,
-                            longitude = 0.0,
+                            latitude = 43.295765,
+                            longitude = 5.375486,
                             name = "Marseille",
                         ),
                         controlUnit = ControlUnitEntity(
