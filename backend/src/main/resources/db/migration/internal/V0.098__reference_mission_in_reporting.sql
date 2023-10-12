@@ -3,7 +3,7 @@ ALTER TABLE public.env_actions
 
 ALTER TABLE public.reportings
   ADD COLUMN attached_mission_id integer REFERENCES missions(id),
-  ADD COLUMN attached_to_mission_at_utc TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  ADD COLUMN attached_to_mission_at_utc TIMESTAMP,
   ADD COLUMN detached_from_mission_at_utc TIMESTAMP,
   ADD COLUMN attached_env_action_id uuid,
   ADD CONSTRAINT reportings_env_actions_fk FOREIGN KEY (attached_mission_id, attached_env_action_id) REFERENCES env_actions(mission_id, id) MATCH SIMPLE

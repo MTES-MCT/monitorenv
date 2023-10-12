@@ -34,6 +34,7 @@ data class ReportingModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     val id: Int? = null,
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(
         name = "reporting_id",
         unique = true,

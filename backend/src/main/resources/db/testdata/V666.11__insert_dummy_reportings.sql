@@ -227,6 +227,6 @@ VALUES
     null
     );
 
-SELECT setval('reportings_id_seq', 6, false);
+SELECT setval('reportings_id_seq', (SELECT max(id) FROM reportings), true);
 CREATE SEQUENCE IF NOT EXISTS reportings_2023_seq;
-SELECT setval('reportings_2023_seq', 6, false);
+SELECT setval('reportings_2023_seq', (SELECT max(id) FROM reportings), true);
