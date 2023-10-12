@@ -10,13 +10,13 @@ class ArchiveReportings(
     private val reportingRepository: IReportingRepository,
 ) {
 
-  private val logger: Logger = LoggerFactory.getLogger(ArchiveReportings::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(ArchiveReportings::class.java)
 
-  @Throws(IllegalArgumentException::class)
-  fun execute(ids: List<Int>) {
-    logger.info("Archive reportings: $ids")
+    @Throws(IllegalArgumentException::class)
+    fun execute(ids: List<Int>) {
+        logger.info("Archive reportings: $ids")
 
-    require(ids.isNotEmpty()) { "No reportings to archive" }
-    return reportingRepository.archiveReportings(ids)
-  }
+        require(ids.isNotEmpty()) { "No reportings to archive" }
+        return reportingRepository.archiveReportings(ids)
+    }
 }

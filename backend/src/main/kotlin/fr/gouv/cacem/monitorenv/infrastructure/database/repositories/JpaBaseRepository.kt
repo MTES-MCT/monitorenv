@@ -39,7 +39,7 @@ class JpaBaseRepository(
         } catch (e: InvalidDataAccessApiUsageException) {
             throw NotFoundException(
                 "Unable to find (and update) base with `id` = ${base.id}.",
-                e
+                e,
             )
         }
     }

@@ -66,7 +66,7 @@ data class ControlUnitModel(
             administrationModel: AdministrationModel,
             departmentAreaModel: DepartmentAreaModel? = null,
             controlUnitContactModels: List<ControlUnitContactModel>? = null,
-            controlUnitResourceModels: List<ControlUnitResourceModel>? = null
+            controlUnitResourceModels: List<ControlUnitResourceModel>? = null,
         ): ControlUnitModel {
             return ControlUnitModel(
                 id = controlUnit.id,

@@ -70,7 +70,7 @@ class JpaMissionRepository(
                 is DataIntegrityViolationException, is InvalidDataAccessApiUsageException -> {
                     throw ControlResourceOrUnitNotFoundException(
                         "Invalid control unit or resource id: not found in referential.",
-                        e
+                        e,
                     )
                 }
 

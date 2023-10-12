@@ -1,4 +1,6 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.missions // ktlint-disable package-name
+@file:Suppress("ktlint:standard:package-name")
+
+package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository

@@ -123,7 +123,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             note = null,
                             photo = null,
                             type = ControlUnitResourceType.BARGE,
-                        )
+                        ),
                     ),
                     FullControlUnitResourceDTO(
                         base = BaseEntity(
@@ -149,10 +149,10 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             note = null,
                             photo = null,
                             type = ControlUnitResourceType.BARGE,
-                        )
-                    )
+                        ),
+                    ),
                 ),
-            )
+            ),
         )
 
         assertThat(foundFullControlUnits[32]).isEqualTo(
@@ -173,7 +173,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                 ),
                 controlUnitContacts = listOf(),
                 controlUnitResources = listOf(),
-            )
+            ),
         )
     }
 
@@ -187,7 +187,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                 administration = AdministrationEntity(
                     id = 1005,
                     isArchived = false,
-                    name = "DDTM"
+                    name = "DDTM",
                 ),
                 controlUnit = ControlUnitEntity(
                     id = 10000,
@@ -204,15 +204,15 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                         controlUnitId = 10000,
                         email = null,
                         name = "Contact 1",
-                        phone = null
+                        phone = null,
                     ),
                     ControlUnitContactEntity(
                         id = 2,
                         controlUnitId = 10000,
                         email = null,
                         name = "Contact 2",
-                        phone = null
-                    )
+                        phone = null,
+                    ),
                 ),
                 controlUnitResources = listOf(
                     FullControlUnitResourceDTO(
@@ -239,7 +239,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             note = null,
                             photo = null,
                             type = ControlUnitResourceType.BARGE,
-                        )
+                        ),
                     ),
                     FullControlUnitResourceDTO(
                         base = BaseEntity(
@@ -268,7 +268,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                         ),
                     ),
                 ),
-            )
+            ),
         )
     }
 

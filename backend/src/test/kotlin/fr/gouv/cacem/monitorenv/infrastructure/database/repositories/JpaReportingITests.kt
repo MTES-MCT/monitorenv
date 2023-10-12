@@ -4,13 +4,13 @@ import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import java.time.ZonedDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.Pageable
 import org.springframework.transaction.annotation.Transactional
+import java.time.ZonedDateTime
 
 @SpringBootTest(properties = ["monitorenv.scheduling.enable=false"])
 class JpaReportingITests : AbstractDBTests() {
@@ -25,12 +25,12 @@ class JpaReportingITests : AbstractDBTests() {
 
         // When
         val newReporting =
-                ReportingEntity(
-                        createdAt = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
-                        isArchived = false,
-                        isDeleted = false,
-                        openBy = "CDA",
-                )
+            ReportingEntity(
+                createdAt = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+                isArchived = false,
+                isDeleted = false,
+                openBy = "CDA",
+            )
         val createdReporting = jpaReportingRepository.save(newReporting)
 
         // Then
@@ -58,15 +58,15 @@ class JpaReportingITests : AbstractDBTests() {
     @Test
     fun `findAll should return all reportings`() {
         val reportings =
-                jpaReportingRepository.findAll(
-                        Pageable.unpaged(),
-                        startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
-                        startedBefore = null,
-                        reportingType = null,
-                        seaFronts = null,
-                        sourcesType = null,
-                        status = null,
-                )
+            jpaReportingRepository.findAll(
+                Pageable.unpaged(),
+                startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
+                startedBefore = null,
+                reportingType = null,
+                seaFronts = null,
+                sourcesType = null,
+                status = null,
+            )
         assertThat(reportings.size).isEqualTo(5)
     }
 
@@ -80,14 +80,14 @@ class JpaReportingITests : AbstractDBTests() {
         // When
         val existingReporting = jpaReportingRepository.findById(1)
         val updatedReporting =
-                existingReporting.copy(
-                        sourceType = SourceTypeEnum.SEMAPHORE,
-                        semaphoreId = 23,
-                        createdAt = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
-                        isArchived = false,
-                        isDeleted = false,
-                        openBy = "CDA",
-                )
+            existingReporting.copy(
+                sourceType = SourceTypeEnum.SEMAPHORE,
+                semaphoreId = 23,
+                createdAt = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+                isArchived = false,
+                isDeleted = false,
+                openBy = "CDA",
+            )
         val savedReporting = jpaReportingRepository.save(updatedReporting)
 
         // Then

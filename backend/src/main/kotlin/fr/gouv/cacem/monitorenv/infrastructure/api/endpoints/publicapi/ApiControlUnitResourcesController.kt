@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnitResource
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.DeleteControlUnitResource
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitResourceById
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitResources
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitResourceDataInput
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*
 @Tag(name = "Control Unit Resources")
 class ApiControlUnitResourcesController(
     private val createOrUpdateControlUnitResource: CreateOrUpdateControlUnitResource,
+    private val deleteControlUnitResource: DeleteControlUnitResource,
     private val getControlUnitResources: GetControlUnitResources,
     private val getControlUnitResourceById: GetControlUnitResourceById,
 ) {
@@ -31,6 +33,16 @@ class ApiControlUnitResourcesController(
         val createdControlUnitResource = createOrUpdateControlUnitResource.execute(newControlUnitResource)
 
         return ControlUnitResourceDataOutput.fromControlUnitResource(createdControlUnitResource)
+    }
+
+    @DeleteMapping("/{controlUnitResourceId}")
+    @Operation(summary = "Delete a control unit resource")
+    fun delete(
+        @PathParam("Control unit resource ID")
+        @PathVariable(name = "controlUnitResourceId")
+        controlUnitResourceId: Int,
+    ) {
+        deleteControlUnitResource.execute(controlUnitResourceId)
     }
 
     @GetMapping("/{controlUnitResourceId}")
@@ -63,7 +75,7 @@ class ApiControlUnitResourcesController(
     ): ControlUnitResourceDataOutput {
         requireNotNull(updateControlUnitResourceDataInput.id) { "`id` can't be null." }
         require(controlUnitResourceId == updateControlUnitResourceDataInput.id) {
-            "Body ID ('${updateControlUnitResourceDataInput.id}') doesn't match path ID ('${controlUnitResourceId}')."
+            "Body ID ('${updateControlUnitResourceDataInput.id}') doesn't match path ID ('$controlUnitResourceId')."
         }
 
         val controlUnitResource = updateControlUnitResourceDataInput.toControlUnitResource()

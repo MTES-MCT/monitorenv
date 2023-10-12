@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnitContact
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.DeleteControlUnitContact
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitContactById
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitContacts
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitContactDataInput
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*
 @Tag(name = "Control Unit Contacts")
 class ApiControlUnitContactsController(
     private val createOrUpdateControlUnitContact: CreateOrUpdateControlUnitContact,
+    private val deleteControlUnitContact: DeleteControlUnitContact,
     private val getControlUnitContacts: GetControlUnitContacts,
     private val getControlUnitContactById: GetControlUnitContactById,
 ) {
@@ -30,6 +32,16 @@ class ApiControlUnitContactsController(
         val createdControlUnitContact = createOrUpdateControlUnitContact.execute(newControlUnitContact)
 
         return ControlUnitContactDataOutput.fromControlUnitContact(createdControlUnitContact)
+    }
+
+    @DeleteMapping("/{controlUnitContactId}")
+    @Operation(summary = "Delete a control unit contact")
+    fun delete(
+        @PathParam("Control unit contact ID")
+        @PathVariable(name = "controlUnitContactId")
+        controlUnitContactId: Int,
+    ) {
+        deleteControlUnitContact.execute(controlUnitContactId)
     }
 
     @GetMapping("/{controlUnitContactId}")
@@ -60,7 +72,7 @@ class ApiControlUnitContactsController(
     ): ControlUnitContactDataOutput {
         requireNotNull(updateControlUnitContactDataInput.id) { "`id` can't be null." }
         require(controlUnitContactId == updateControlUnitContactDataInput.id) {
-            "Body ID ('${updateControlUnitContactDataInput.id}') doesn't match path ID ('${controlUnitContactId}')."
+            "Body ID ('${updateControlUnitContactDataInput.id}') doesn't match path ID ('$controlUnitContactId')."
         }
 
         val nextControlUnitContact = updateControlUnitContactDataInput.toControlUnitContact()

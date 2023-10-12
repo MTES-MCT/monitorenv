@@ -9,6 +9,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnitResource
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.DeleteControlUnitResource
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitResourceById
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitResources
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
@@ -36,6 +37,9 @@ class ApiControlUnitResourcesControllerITests {
 
     @MockBean
     private lateinit var createOrUpdateControlUnitResource: CreateOrUpdateControlUnitResource
+
+    @MockBean
+    private lateinit var deleteControlUnitResource: DeleteControlUnitResource
 
     @MockBean
     private lateinit var getControlUnitResourceById: GetControlUnitResourceById
@@ -69,7 +73,7 @@ class ApiControlUnitResourcesControllerITests {
         val requestBody = objectMapper.writeValueAsString(newControlUnitData)
 
         given(createOrUpdateControlUnitResource.execute(controlUnitResource = any())).willReturn(
-            expectedCreatedControlUnitResource
+            expectedCreatedControlUnitResource,
         )
 
         mockMvc.perform(
@@ -175,7 +179,7 @@ class ApiControlUnitResourcesControllerITests {
                     photo = null,
                     type = ControlUnitResourceType.BARGE,
                 ),
-            )
+            ),
         )
 
         given(getControlUnitResources.execute()).willReturn(expectedFullControlUnitResources)
@@ -211,7 +215,7 @@ class ApiControlUnitResourcesControllerITests {
         val requestBody = objectMapper.writeValueAsString(nextControlUnitData)
 
         given(createOrUpdateControlUnitResource.execute(controlUnitResource = any())).willReturn(
-            expectedUpdatedControlUnitResource
+            expectedUpdatedControlUnitResource,
         )
 
         mockMvc.perform(

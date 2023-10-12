@@ -38,6 +38,5 @@ interface IDBFacadeAreasRepository : CrudRepository<FacadeAreasModel, Int> {
      """,
         nativeQuery = true,
     )
-    fun findFacadeFromGeometry(geometry: Geometry): String
-        ?
+    fun findFacadeFromGeometry(geometry: Geometry): String?
 }

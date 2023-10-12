@@ -29,7 +29,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
-                    termsNote = null
+                    termsNote = null,
                 ),
                 controlUnitContact = ControlUnitContactEntity(
                     id = 1,
@@ -37,7 +37,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     name = "Contact 1",
                     phone = null,
                 ),
-            )
+            ),
         )
 
         assertThat(foundFullControlUnitContacts[2]).isEqualTo(
@@ -49,7 +49,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "DPM – DDTM 14",
-                    termsNote = null
+                    termsNote = null,
                 ),
                 controlUnitContact = ControlUnitContactEntity(
                     id = 3,
@@ -57,7 +57,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     name = "Contact 3",
                     phone = null,
                 ),
-            )
+            ),
         )
     }
 
@@ -75,7 +75,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
-                    termsNote = null
+                    termsNote = null,
                 ),
                 controlUnitContact = ControlUnitContactEntity(
                     id = 1,
@@ -83,7 +83,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     name = "Contact 1",
                     phone = null,
                 ),
-            )
+            ),
         )
     }
 

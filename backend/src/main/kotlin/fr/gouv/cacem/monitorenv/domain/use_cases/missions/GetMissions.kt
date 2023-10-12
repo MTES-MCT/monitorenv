@@ -1,4 +1,6 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.missions // ktlint-disable package-name
+@file:Suppress("ktlint:standard:package-name")
+
+package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
@@ -30,7 +32,14 @@ class GetMissions(private val missionRepository: IMissionRepository) {
             missionTypes = missionTypes,
             missionStatuses = missionStatuses,
             seaFronts = seaFronts,
-            pageable = if (pageNumber != null && pageSize != null) PageRequest.of(pageNumber, pageSize) else Pageable.unpaged(),
+            pageable = if (pageNumber != null && pageSize != null) {
+                PageRequest.of(
+                    pageNumber,
+                    pageSize,
+                )
+            } else {
+                Pageable.unpaged()
+            },
         )
 
         logger.info("Found ${missions.size} mission(s)")

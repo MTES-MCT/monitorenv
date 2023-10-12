@@ -12,7 +12,6 @@ import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
-
 @Repository
 class JpaAdministrationRepository(
     private val dbAdministrationRepository: IDBAdministrationRepository,
@@ -21,7 +20,9 @@ class JpaAdministrationRepository(
     override fun archiveById(administrationId: Int) {
         val fullAdministration = findById(administrationId)
         if (fullAdministration.controlUnits.any { !it.isArchived }) {
-            throw UnarchivedChildException("Cannot archive administration (ID=$administrationId) due to some of its control units not being archived.")
+            throw UnarchivedChildException(
+                "Cannot archive administration (ID=$administrationId) due to some of its control units not being archived.",
+            )
         }
 
         dbAdministrationRepository.archiveById(administrationId)
@@ -30,7 +31,9 @@ class JpaAdministrationRepository(
     override fun deleteById(administrationId: Int) {
         val fullAdministration = findById(administrationId)
         if (fullAdministration.controlUnits.isNotEmpty()) {
-            throw ForeignKeyConstraintException("Cannot delete administration (ID=$administrationId) due to existing relationships.")
+            throw ForeignKeyConstraintException(
+                "Cannot delete administration (ID=$administrationId) due to existing relationships.",
+            )
         }
 
         dbAdministrationRepository.deleteById(administrationId)
@@ -53,7 +56,7 @@ class JpaAdministrationRepository(
         } catch (e: InvalidDataAccessApiUsageException) {
             throw NotFoundException(
                 "Unable to find (and update) control unit administration with `id` = ${administration.id}.",
-                e
+                e,
             )
         }
     }

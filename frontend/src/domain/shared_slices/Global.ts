@@ -1,4 +1,4 @@
-// TODO It may be a good thing to either call this slice 'mainWindowSlice' (or something with "map"?) since it targets the main window.
+// TODO This slice should disappear in favor of `features/MainWindow/slice.ts`.
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
@@ -95,6 +95,7 @@ const initialState: GlobalStateType = {
   // state entry for other children components whom visibility is already handled by parent components
   isLayersSidebarVisible: false,
 
+  // TODO Use `MainWindowDialog` or `MainWindowConfirmationModal`.
   isControlUnitDialogVisible: false,
   isControlUnitListDialogVisible: false,
 

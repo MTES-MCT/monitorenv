@@ -1,8 +1,8 @@
 package fr.gouv.cacem.monitorenv.utils
 
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 
 @DisplayName("utils/mapOrElseEmpty()")
 class MapOrElseEmptyUTest {

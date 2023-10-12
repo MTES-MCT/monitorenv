@@ -112,7 +112,7 @@ class ApiAdministrationsControllerITests {
                     name = "Administration Name 2",
                 ),
                 controlUnits = listOf(),
-            )
+            ),
         )
 
         given(getAdministrations.execute()).willReturn(expectedAFulldministrations)

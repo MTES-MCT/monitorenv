@@ -77,7 +77,7 @@ context('Back Office > Control Unit Form', () => {
     cy.intercept('POST', `/api/v2/control_units/10033/archive`).as('archiveControlUnit')
 
     cy.getTableRowById(10033).clickButton('Archiver cette unité de contrôle')
-    cy.clickButton('Confirmer')
+    cy.clickButton('Archiver')
 
     cy.wait('@archiveControlUnit')
 
@@ -91,7 +91,7 @@ context('Back Office > Control Unit Form', () => {
     cy.intercept('DELETE', `/api/v2/control_units/10033`).as('deleteControlUnit')
 
     cy.getTableRowById(10033).clickButton('Supprimer cette unité de contrôle')
-    cy.clickButton('Confirmer')
+    cy.clickButton('Supprimer')
 
     cy.wait('@deleteControlUnit')
 

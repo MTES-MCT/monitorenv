@@ -1,4 +1,6 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.healthcheck // ktlint-disable package-name
+@file:Suppress("ktlint:standard:package-name")
+
+package fr.gouv.cacem.monitorenv.domain.use_cases.healthcheck
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.health.Health

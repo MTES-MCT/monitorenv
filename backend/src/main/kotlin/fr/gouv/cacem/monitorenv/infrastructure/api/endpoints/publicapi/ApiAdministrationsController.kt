@@ -84,7 +84,7 @@ class ApiAdministrationsController(
     ): AdministrationDataOutput {
         requireNotNull(updateAdministrationDataInput.id) { "`id` can't be null." }
         require(administrationId == updateAdministrationDataInput.id) {
-            "Body ID ('${updateAdministrationDataInput.id}') doesn't match path ID ('${administrationId}')."
+            "Body ID ('${updateAdministrationDataInput.id}') doesn't match path ID ('$administrationId')."
         }
 
         val nextAdministration = updateAdministrationDataInput.toAdministration()

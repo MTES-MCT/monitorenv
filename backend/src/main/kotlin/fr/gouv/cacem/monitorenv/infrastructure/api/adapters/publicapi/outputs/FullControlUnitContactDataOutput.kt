@@ -11,7 +11,9 @@ data class FullControlUnitContactDataOutput(
     val phone: String? = null,
 ) {
     companion object {
-        fun fromFullControlUnitContact(fullControlUnitContact: FullControlUnitContactDTO): FullControlUnitContactDataOutput {
+        fun fromFullControlUnitContact(
+            fullControlUnitContact: FullControlUnitContactDTO,
+        ): FullControlUnitContactDataOutput {
             val controlUnit = ControlUnitDataOutput.fromControlUnit(fullControlUnitContact.controlUnit)
 
             return FullControlUnitContactDataOutput(

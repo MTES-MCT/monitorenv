@@ -1,8 +1,12 @@
 import { monitorenvPublicApi } from './api'
+import { ApiErrorCode } from './types'
 import { FrontendApiError } from '../libs/FrontendApiError'
+import { newUserError } from '../libs/UserError'
 
 import type { ControlUnit } from '../domain/entities/controlUnit'
 
+const DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE =
+  "Ce moyen est rattaché à des missions. Veuillez l'en détacher avant de la supprimer."
 const GET_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE = "Nous n'avons pas pu récupérer cette resource."
 const GET_CONTROL_UNIT_RESOURCES_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la liste des resources."
 
@@ -15,6 +19,21 @@ export const controlUnitResourcesAPI = monitorenvPublicApi.injectEndpoints({
         method: 'POST',
         url: `/v1/control_unit_resources`
       })
+    }),
+
+    deleteControlUnitResource: builder.mutation<void, number>({
+      invalidatesTags: () => [{ type: 'Bases' }, { type: 'ControlUnits' }],
+      query: controlUnitResourceId => ({
+        method: 'DELETE',
+        url: `/v1/control_unit_resources/${controlUnitResourceId}`
+      }),
+      transformErrorResponse: response => {
+        if (response.data.type === ApiErrorCode.FOREIGN_KEY_CONSTRAINT) {
+          return newUserError(DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE)
+        }
+
+        return new FrontendApiError(DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE, response)
+      }
     }),
 
     getControlUnitResource: builder.query<ControlUnit.ControlUnitResource, number>({
@@ -42,6 +61,7 @@ export const controlUnitResourcesAPI = monitorenvPublicApi.injectEndpoints({
 
 export const {
   useCreateControlUnitResourceMutation,
+  useDeleteControlUnitResourceMutation,
   useGetControlUnitResourceQuery,
   useGetControlUnitResourcesQuery,
   useUpdateControlUnitResourceMutation

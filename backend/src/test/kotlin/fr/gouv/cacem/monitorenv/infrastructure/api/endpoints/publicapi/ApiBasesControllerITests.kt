@@ -113,7 +113,7 @@ class ApiBasesControllerITests {
                     name = "Base Name 2",
                 ),
                 controlUnitResources = listOf(),
-            )
+            ),
         )
 
         given(getBases.execute()).willReturn(expectedFullBases)

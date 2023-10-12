@@ -15,7 +15,9 @@ data class FullControlUnitResourceDataOutput(
     val type: ControlUnitResourceType,
 ) {
     companion object {
-        fun fromFullControlUnitResource(fullControlUnitResource: FullControlUnitResourceDTO): FullControlUnitResourceDataOutput {
+        fun fromFullControlUnitResource(
+            fullControlUnitResource: FullControlUnitResourceDTO,
+        ): FullControlUnitResourceDataOutput {
             val base = BaseDataOutput.fromBase(fullControlUnitResource.base)
             val controlUnit = ControlUnitDataOutput.fromControlUnit(fullControlUnitResource.controlUnit)
 

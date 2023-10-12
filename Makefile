@@ -221,4 +221,7 @@ logs-db:
 
 # ALIASES
 
+.PHONY: dev lint-back
+
 dev: dev-run-back-with-infra
+lint-back: dev-lint-backend

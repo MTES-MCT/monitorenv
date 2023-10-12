@@ -7,6 +7,7 @@ import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnitContact
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.DeleteControlUnitContact
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitContactById
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitContacts
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitContactDTO
@@ -36,6 +37,9 @@ class ApiControlUnitContactsControllerITests {
     private lateinit var createOrUpdateControlUnitContact: CreateOrUpdateControlUnitContact
 
     @MockBean
+    private lateinit var deleteControlUnitContact: DeleteControlUnitContact
+
+    @MockBean
     private lateinit var getControlUnitContactById: GetControlUnitContactById
 
     @MockBean
@@ -63,7 +67,7 @@ class ApiControlUnitContactsControllerITests {
         val requestBody = objectMapper.writeValueAsString(newControlUnitContactData)
 
         given(createOrUpdateControlUnitContact.execute(controlUnitContact = any())).willReturn(
-            expectedCreatedControlUnitContact
+            expectedCreatedControlUnitContact,
         )
 
         mockMvc.perform(
@@ -93,7 +97,7 @@ class ApiControlUnitContactsControllerITests {
                 email = null,
                 name = "Contact Name",
                 phone = null,
-            )
+            ),
         )
 
         val requestedId = 1
@@ -145,7 +149,7 @@ class ApiControlUnitContactsControllerITests {
                     name = "Contact Name 2",
                     phone = null,
                 ),
-            )
+            ),
         )
 
         given(getControlUnitContacts.execute()).willReturn(expectedFullControlUnitContacts)
@@ -177,7 +181,7 @@ class ApiControlUnitContactsControllerITests {
         val requestBody = objectMapper.writeValueAsString(nextControlUnitContactData)
 
         given(createOrUpdateControlUnitContact.execute(controlUnitContact = any())).willReturn(
-            expectedUpdatedControlUnitContact
+            expectedUpdatedControlUnitContact,
         )
 
         mockMvc.perform(

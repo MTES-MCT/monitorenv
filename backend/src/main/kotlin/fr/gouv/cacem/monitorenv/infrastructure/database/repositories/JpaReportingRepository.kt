@@ -7,41 +7,41 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.ControlResourceOrUnitNotFoundE
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBReportingRepository
-import java.time.Instant
 import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import java.time.Instant
 
 @Repository
 class JpaReportingRepository(
-        private val dbReportingRepository: IDBReportingRepository,
+    private val dbReportingRepository: IDBReportingRepository,
 ) : IReportingRepository {
     override fun findById(reportingId: Int): ReportingEntity {
         return dbReportingRepository.findById(reportingId).get().toReporting()
     }
 
     override fun findAll(
-            pageable: Pageable,
-            reportingType: List<ReportingTypeEnum>?,
-            seaFronts: List<String>?,
-            sourcesType: List<SourceTypeEnum>?,
-            startedAfter: Instant,
-            startedBefore: Instant?,
-            status: List<String>?,
+        pageable: Pageable,
+        reportingType: List<ReportingTypeEnum>?,
+        seaFronts: List<String>?,
+        sourcesType: List<SourceTypeEnum>?,
+        startedAfter: Instant,
+        startedBefore: Instant?,
+        status: List<String>?,
     ): List<ReportingEntity> {
         val sourcesTypeAsStringArray = sourcesType?.map { it.name }
         val reportingTypeAsStringArray = reportingType?.map { it.name }
         return dbReportingRepository.findAll(
-                        pageable,
-                        reportingType = convertToString(reportingTypeAsStringArray),
-                        seaFronts = convertToString(seaFronts),
-                        sourcesType = convertToString(sourcesTypeAsStringArray),
-                        startedAfter = startedAfter,
-                        startedBefore = startedBefore,
-                        status = convertToString(status),
-                )
-                .map { it.toReporting() }
+            pageable,
+            reportingType = convertToString(reportingTypeAsStringArray),
+            seaFronts = convertToString(seaFronts),
+            sourcesType = convertToString(sourcesTypeAsStringArray),
+            startedAfter = startedAfter,
+            startedBefore = startedBefore,
+            status = convertToString(status),
+        )
+            .map { it.toReporting() }
     }
 
     @Transactional
@@ -51,8 +51,8 @@ class JpaReportingRepository(
             dbReportingRepository.save(reportingModel).toReporting()
         } catch (e: InvalidDataAccessApiUsageException) {
             throw ControlResourceOrUnitNotFoundException(
-                    "Invalid control unit or resource id: not found in referential",
-                    e,
+                "Invalid control unit or resource id: not found in referential",
+                e,
             )
         }
     }
