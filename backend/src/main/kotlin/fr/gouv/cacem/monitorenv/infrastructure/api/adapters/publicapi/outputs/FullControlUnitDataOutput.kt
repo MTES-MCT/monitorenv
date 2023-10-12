@@ -24,14 +24,13 @@ data class FullControlUnitDataOutput(
             val administration = AdministrationDataOutput.fromAdministration(fullControlUnit.administration)
             val controlUnitContacts = fullControlUnit.controlUnitContacts.map {
                 ControlUnitContactDataOutput.fromControlUnitContact(
-                    it
+                    it,
                 )
             }
             val controlUnitResources = fullControlUnit.controlUnitResources.map {
                 FullControlUnitResourceDataOutput.fromFullControlUnitResource(it)
             }
             val departmentArea = fullControlUnit.departmentArea?.let { DepartmentAreaDataOutput.fromDepartmentArea(it) }
-
 
             return FullControlUnitDataOutput(
                 id = requireNotNull(fullControlUnit.controlUnit.id),

@@ -73,7 +73,7 @@ class ApiControlUnitResourcesControllerITests {
         val requestBody = objectMapper.writeValueAsString(newControlUnitData)
 
         given(createOrUpdateControlUnitResource.execute(controlUnitResource = any())).willReturn(
-            expectedCreatedControlUnitResource
+            expectedCreatedControlUnitResource,
         )
 
         mockMvc.perform(
@@ -179,7 +179,7 @@ class ApiControlUnitResourcesControllerITests {
                     photo = null,
                     type = ControlUnitResourceType.BARGE,
                 ),
-            )
+            ),
         )
 
         given(getControlUnitResources.execute()).willReturn(expectedFullControlUnitResources)
@@ -215,7 +215,7 @@ class ApiControlUnitResourcesControllerITests {
         val requestBody = objectMapper.writeValueAsString(nextControlUnitData)
 
         given(createOrUpdateControlUnitResource.execute(controlUnitResource = any())).willReturn(
-            expectedUpdatedControlUnitResource
+            expectedUpdatedControlUnitResource,
         )
 
         mockMvc.perform(

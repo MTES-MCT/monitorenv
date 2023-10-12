@@ -23,9 +23,32 @@ object EnvActionMapper {
         return try {
             if (!value.isNullOrEmpty() && value != jsonbNullString) {
                 when (actionType) {
-                    ActionTypeEnum.SURVEILLANCE -> mapper.readValue(value, EnvActionSurveillanceProperties::class.java).toEnvActionSurveillanceEntity(id, actionStartDateTimeUtc, actionEndDateTimeUtc, facade, department, geom)
-                    ActionTypeEnum.CONTROL -> mapper.readValue(value, EnvActionControlProperties::class.java).toEnvActionControlEntity(id, actionStartDateTimeUtc, actionEndDateTimeUtc, facade, department, geom)
-                    ActionTypeEnum.NOTE -> mapper.readValue(value, EnvActionNoteProperties::class.java).toEnvActionNoteEntity(id, actionStartDateTimeUtc, actionEndDateTimeUtc)
+                    ActionTypeEnum.SURVEILLANCE -> mapper.readValue(
+                        value,
+                        EnvActionSurveillanceProperties::class.java,
+                    ).toEnvActionSurveillanceEntity(
+                        id,
+                        actionStartDateTimeUtc,
+                        actionEndDateTimeUtc,
+                        facade,
+                        department,
+                        geom,
+                    )
+                    ActionTypeEnum.CONTROL -> mapper.readValue(
+                        value,
+                        EnvActionControlProperties::class.java,
+                    ).toEnvActionControlEntity(
+                        id,
+                        actionStartDateTimeUtc,
+                        actionEndDateTimeUtc,
+                        facade,
+                        department,
+                        geom,
+                    )
+                    ActionTypeEnum.NOTE -> mapper.readValue(
+                        value,
+                        EnvActionNoteProperties::class.java,
+                    ).toEnvActionNoteEntity(id, actionStartDateTimeUtc, actionEndDateTimeUtc)
                 }
             } else {
                 throw EntityConversionException("No action value found.")

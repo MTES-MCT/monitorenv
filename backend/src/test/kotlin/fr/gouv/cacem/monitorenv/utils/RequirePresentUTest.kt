@@ -1,8 +1,8 @@
 package fr.gouv.cacem.monitorenv.utils
 
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 import java.util.Optional
 
 @DisplayName("utils/_root_ide_package_.fr.gouv.cacem.monitorenv.utils.requirePresent()")

@@ -47,7 +47,7 @@ class JpaControlUnitResourceRepository(
         } catch (e: InvalidDataAccessApiUsageException) {
             throw NotFoundException(
                 "Unable to find (and update) control unit resource with `id` = ${controlUnitResource.id}.",
-                e
+                e,
             )
         }
     }

@@ -41,7 +41,7 @@ data class ControlUnitContactModel(
     companion object {
         fun fromControlUnitContact(
             controlUnitContact: ControlUnitContactEntity,
-            controlUnitModel: ControlUnitModel
+            controlUnitModel: ControlUnitModel,
         ): ControlUnitContactModel {
             return ControlUnitContactModel(
                 id = controlUnitContact.id,

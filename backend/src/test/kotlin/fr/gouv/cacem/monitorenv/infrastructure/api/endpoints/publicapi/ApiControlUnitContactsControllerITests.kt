@@ -67,7 +67,7 @@ class ApiControlUnitContactsControllerITests {
         val requestBody = objectMapper.writeValueAsString(newControlUnitContactData)
 
         given(createOrUpdateControlUnitContact.execute(controlUnitContact = any())).willReturn(
-            expectedCreatedControlUnitContact
+            expectedCreatedControlUnitContact,
         )
 
         mockMvc.perform(
@@ -97,7 +97,7 @@ class ApiControlUnitContactsControllerITests {
                 email = null,
                 name = "Contact Name",
                 phone = null,
-            )
+            ),
         )
 
         val requestedId = 1
@@ -149,7 +149,7 @@ class ApiControlUnitContactsControllerITests {
                     name = "Contact Name 2",
                     phone = null,
                 ),
-            )
+            ),
         )
 
         given(getControlUnitContacts.execute()).willReturn(expectedFullControlUnitContacts)
@@ -181,7 +181,7 @@ class ApiControlUnitContactsControllerITests {
         val requestBody = objectMapper.writeValueAsString(nextControlUnitContactData)
 
         given(createOrUpdateControlUnitContact.execute(controlUnitContact = any())).willReturn(
-            expectedUpdatedControlUnitContact
+            expectedUpdatedControlUnitContact,
         )
 
         mockMvc.perform(

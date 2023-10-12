@@ -88,7 +88,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                             controlUnitId = 10004,
                             name = "PAM Jeanne Barret",
                             type = ControlUnitResourceType.BARGE,
-                        )
+                        ),
                     ),
                 ),
             ),
@@ -113,7 +113,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(newMissionCreated.envActions?.get(1)?.facade).isEqualTo("Facade 2")
         assertThat(newMissionCreated.envActions?.get(1)?.department).isEqualTo("Department 2")
         assertThat((newMissionCreated.envActions?.get(2) as EnvActionNoteEntity).observations).isEqualTo(
-            noteObservations
+            noteObservations,
         )
 
         val missions = jpaMissionRepository.findAll(
@@ -153,7 +153,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                             controlUnitId = 10004,
                             name = "PAM Jeanne Barret",
                             type = ControlUnitResourceType.BARGE,
-                        )
+                        ),
                     ),
                 ),
             ),
@@ -229,7 +229,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                             controlUnitId = 5,
                             name = "PAM Jeanne Barret",
                             type = ControlUnitResourceType.BARGE,
-                        )
+                        ),
                     ),
                 ),
             ),
@@ -264,8 +264,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     name = "PAM Jeanne Barret",
                     administration = "",
                     isArchived = false,
-                    resources = listOf()
-                )
+                    resources = listOf(),
+                ),
             ),
             isGeometryComputedFromControls = false,
         )
@@ -473,7 +473,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             missionSources = listOf(
                 MissionSourceEnum.MONITORFISH,
                 MissionSourceEnum.POSEIDON_CACEM,
-                MissionSourceEnum.POSEIDON_CNSP
+                MissionSourceEnum.POSEIDON_CNSP,
             ),
             pageable = Pageable.unpaged(),
         )

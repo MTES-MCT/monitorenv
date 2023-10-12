@@ -71,7 +71,7 @@ class ApiControlUnitsControllerITests {
         val requestBody = objectMapper.writeValueAsString(newControlUnitData)
 
         given(createOrUpdateControlUnit.execute(controlUnit = any())).willReturn(
-            expectedCreatedControlUnit
+            expectedCreatedControlUnit,
         )
 
         mockMvc.perform(
@@ -153,7 +153,7 @@ class ApiControlUnitsControllerITests {
                 ),
                 controlUnitContacts = listOf(),
                 controlUnitResources = listOf(),
-            )
+            ),
         )
 
         given(getControlUnits.execute()).willReturn(expectedControlUnits)

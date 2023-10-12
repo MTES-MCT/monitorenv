@@ -41,7 +41,7 @@ class ApiLegacyControlUnitsControllerITests {
                     controlUnitId = 0,
                     name = "Vedette",
                     type = ControlUnitResourceType.BARGE,
-                )
+                ),
             ),
         )
         given(getLegacyControlUnits.execute()).willReturn(listOf(controlUnit))

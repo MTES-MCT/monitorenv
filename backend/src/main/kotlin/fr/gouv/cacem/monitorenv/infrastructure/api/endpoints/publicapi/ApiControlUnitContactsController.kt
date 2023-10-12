@@ -72,7 +72,7 @@ class ApiControlUnitContactsController(
     ): ControlUnitContactDataOutput {
         requireNotNull(updateControlUnitContactDataInput.id) { "`id` can't be null." }
         require(controlUnitContactId == updateControlUnitContactDataInput.id) {
-            "Body ID ('${updateControlUnitContactDataInput.id}') doesn't match path ID ('${controlUnitContactId}')."
+            "Body ID ('${updateControlUnitContactDataInput.id}') doesn't match path ID ('$controlUnitContactId')."
         }
 
         val nextControlUnitContact = updateControlUnitContactDataInput.toControlUnitContact()

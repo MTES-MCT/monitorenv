@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class JpaDepartmentAreaRepository(
-    private val dbDepartmentAreasRepository: IDBDepartmentAreaRepository
+    private val dbDepartmentAreasRepository: IDBDepartmentAreaRepository,
 ) : IDepartmentAreaRepository {
     override fun findAll(): List<DepartmentAreaEntity> {
         return dbDepartmentAreasRepository.findAll().map { it.toDepartmentArea() }

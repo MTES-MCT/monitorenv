@@ -129,7 +129,7 @@ data class MissionModel(
 
             missionControlUnitModel.unit.toLegacyControlUnit().copy(
                 contact = missionControlUnitModel.contact,
-                resources = controlUnitResources
+                resources = controlUnitResources,
             )
         }
 
@@ -159,7 +159,7 @@ data class MissionModel(
         fun fromMissionEntity(
             mission: MissionEntity,
             mapper: ObjectMapper,
-            baseModelMap: Map<Int, BaseModel>
+            baseModelMap: Map<Int, BaseModel>,
         ): MissionModel {
             val missionModel = MissionModel(
                 id = mission.id,
@@ -198,7 +198,7 @@ data class MissionModel(
                         controlUnitResource,
                         baseModel,
                         missionModel,
-                        controlUnitModel.unit
+                        controlUnitModel.unit,
                     )
                 }
                 missionModel.controlResources?.addAll(missionControlUnitResourceModels)

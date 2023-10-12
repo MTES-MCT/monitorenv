@@ -26,7 +26,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     id = 1,
                     latitude = 43.295765,
                     longitude = 5.375486,
-                    name = "Marseille"
+                    name = "Marseille",
                 ),
                 controlUnitResources = listOf(
                     ControlUnitResourceEntity(
@@ -36,7 +36,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                         name = "Semi-rigide 1",
                         note = null,
                         photo = null,
-                        type = ControlUnitResourceType.BARGE
+                        type = ControlUnitResourceType.BARGE,
                     ),
                     ControlUnitResourceEntity(
                         id = 2,
@@ -45,7 +45,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                         name = "Semi-rigide 2",
                         note = null,
                         photo = null,
-                        type = ControlUnitResourceType.BARGE
+                        type = ControlUnitResourceType.BARGE,
                     ),
                 ),
             ),
@@ -57,7 +57,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     id = 3,
                     latitude = 51.035534,
                     longitude = 2.372845,
-                    name = "Dunkerque"
+                    name = "Dunkerque",
                 ),
                 controlUnitResources = listOf(
                     ControlUnitResourceEntity(
@@ -67,7 +67,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                         name = "Voiture",
                         note = null,
                         photo = null,
-                        type = ControlUnitResourceType.CAR
+                        type = ControlUnitResourceType.CAR,
                     ),
                     ControlUnitResourceEntity(
                         id = 7,
@@ -76,7 +76,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                         name = "Semi-rigide",
                         note = null,
                         photo = null,
-                        type = ControlUnitResourceType.BARGE
+                        type = ControlUnitResourceType.BARGE,
                     ),
                     ControlUnitResourceEntity(
                         id = 8,
@@ -85,7 +85,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                         name = "PAM Jeanne Barret",
                         note = null,
                         photo = null,
-                        type = ControlUnitResourceType.FRIGATE
+                        type = ControlUnitResourceType.FRIGATE,
                     ),
                     ControlUnitResourceEntity(
                         id = 9,
@@ -94,7 +94,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                         name = "PAM Themis",
                         note = null,
                         photo = null,
-                        type = ControlUnitResourceType.FRIGATE
+                        type = ControlUnitResourceType.FRIGATE,
                     ),
                     ControlUnitResourceEntity(
                         id = 10,
@@ -103,7 +103,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                         name = "ALTAIR",
                         note = null,
                         photo = null,
-                        type = ControlUnitResourceType.FRIGATE
+                        type = ControlUnitResourceType.FRIGATE,
                     ),
                     ControlUnitResourceEntity(
                         id = 11,
@@ -112,7 +112,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                         name = "PHEROUSA",
                         note = null,
                         photo = null,
-                        type = ControlUnitResourceType.FRIGATE
+                        type = ControlUnitResourceType.FRIGATE,
                     ),
                     ControlUnitResourceEntity(
                         id = 12,
@@ -121,7 +121,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                         name = "ARIOLA",
                         note = null,
                         photo = null,
-                        type = ControlUnitResourceType.FRIGATE
+                        type = ControlUnitResourceType.FRIGATE,
                     ),
                 ),
             ),
@@ -139,7 +139,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     id = 2,
                     latitude = 48.648105,
                     longitude = -2.013144,
-                    name = "Saint-Malo"
+                    name = "Saint-Malo",
                 ),
                 controlUnitResources = listOf(
                     ControlUnitResourceEntity(
@@ -149,7 +149,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                         name = "Semi-rigide 1",
                         note = null,
                         photo = null,
-                        type = ControlUnitResourceType.BARGE
+                        type = ControlUnitResourceType.BARGE,
                     ),
                     ControlUnitResourceEntity(
                         id = 4,
@@ -158,7 +158,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                         name = "Semi-rigide 2",
                         note = null,
                         photo = null,
-                        type = ControlUnitResourceType.BARGE
+                        type = ControlUnitResourceType.BARGE,
                     ),
                     ControlUnitResourceEntity(
                         id = 6,
@@ -167,7 +167,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                         name = "AR VECHEN",
                         note = null,
                         photo = null,
-                        type = ControlUnitResourceType.FRIGATE
+                        type = ControlUnitResourceType.FRIGATE,
                     ),
                 ),
             ),
@@ -183,7 +183,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
         val newBase = BaseEntity(
             latitude = 1.2,
             longitude = 3.4,
-            name = "Base Name"
+            name = "Base Name",
         )
 
         val createdBase = jpaBaseRepository.save(newBase)
@@ -197,7 +197,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
             id = 4,
             latitude = 5.6,
             longitude = 7.8,
-            name = "Updated Base Name"
+            name = "Updated Base Name",
         )
 
         val updatedBase = jpaBaseRepository.save(nextBase)

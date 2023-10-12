@@ -1,7 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 
 data class ControlUnitResourceDataOutput(
     val id: Int,

@@ -58,7 +58,7 @@ class DepartmentAreaControllerITests {
             DepartmentAreaEntity(
                 inseeCode = "2",
                 name = "Department Area Name 2",
-            )
+            ),
         )
 
         given(getDepartmentAreas.execute()).willReturn(expectedAFulldministrations)
@@ -69,5 +69,4 @@ class DepartmentAreaControllerITests {
 
         BDDMockito.verify(getDepartmentAreas).execute()
     }
-
 }

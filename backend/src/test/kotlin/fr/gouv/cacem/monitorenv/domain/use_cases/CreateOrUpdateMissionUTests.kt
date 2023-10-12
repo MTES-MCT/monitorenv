@@ -1,4 +1,6 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases // ktlint-disable package-name
+@file:Suppress("ktlint:standard:package-name")
+
+package fr.gouv.cacem.monitorenv.domain.use_cases
 
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.given
@@ -120,9 +122,9 @@ class CreateOrUpdateMissionUTests {
                 baseRepository,
                 departmentRepository,
                 missionRepository,
-                facadeAreasRepository
+                facadeAreasRepository,
             ).execute(
-                missionToCreate
+                missionToCreate,
             )
 
         // Then

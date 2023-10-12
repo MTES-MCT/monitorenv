@@ -64,7 +64,7 @@ class ApiBasesController(
     ): BaseDataOutput {
         requireNotNull(updateBaseDataInput.id) { "`id` can't be null." }
         require(baseId == updateBaseDataInput.id) {
-            "Body ID ('${updateBaseDataInput.id}') doesn't match path ID ('${baseId}')."
+            "Body ID ('${updateBaseDataInput.id}') doesn't match path ID ('$baseId')."
         }
 
         val nextBase = updateBaseDataInput.toBase()

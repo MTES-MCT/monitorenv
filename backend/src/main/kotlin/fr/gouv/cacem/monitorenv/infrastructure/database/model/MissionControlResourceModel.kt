@@ -24,7 +24,7 @@ data class MissionControlResourceModel(
             controlUnitResource: ControlUnitResourceEntity,
             baseModel: BaseModel,
             missionModel: MissionModel,
-            controlUnitModel: ControlUnitModel
+            controlUnitModel: ControlUnitModel,
         ) = MissionControlResourceModel(
             ressource = ControlUnitResourceModel(
                 id = requireNotNull(controlUnitResource.id),

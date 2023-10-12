@@ -10,13 +10,13 @@ class DeleteReportings(
     private val reportingRepository: IReportingRepository,
 ) {
 
-  private val logger: Logger = LoggerFactory.getLogger(DeleteReportings::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(DeleteReportings::class.java)
 
-  @Throws(IllegalArgumentException::class)
-  fun execute(ids: List<Int>) {
-    logger.info("Delete reportings: $ids")
+    @Throws(IllegalArgumentException::class)
+    fun execute(ids: List<Int>) {
+        logger.info("Delete reportings: $ids")
 
-    require(ids.isNotEmpty()) { "No reportings to delete" }
-    return reportingRepository.deleteReportings(ids)
-  }
+        require(ids.isNotEmpty()) { "No reportings to delete" }
+        return reportingRepository.deleteReportings(ids)
+    }
 }

@@ -41,7 +41,7 @@ data class AdministrationModel(
          */
         fun fromAdministration(
             administration: AdministrationEntity,
-            controlUnitModels: List<ControlUnitModel>? = mutableListOf()
+            controlUnitModels: List<ControlUnitModel>? = mutableListOf(),
         ): AdministrationModel {
             return AdministrationModel(
                 id = administration.id,
@@ -67,4 +67,3 @@ data class AdministrationModel(
         )
     }
 }
-

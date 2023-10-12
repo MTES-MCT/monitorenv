@@ -75,7 +75,7 @@ class ApiControlUnitResourcesController(
     ): ControlUnitResourceDataOutput {
         requireNotNull(updateControlUnitResourceDataInput.id) { "`id` can't be null." }
         require(controlUnitResourceId == updateControlUnitResourceDataInput.id) {
-            "Body ID ('${updateControlUnitResourceDataInput.id}') doesn't match path ID ('${controlUnitResourceId}')."
+            "Body ID ('${updateControlUnitResourceDataInput.id}') doesn't match path ID ('$controlUnitResourceId')."
         }
 
         val controlUnitResource = updateControlUnitResourceDataInput.toControlUnitResource()

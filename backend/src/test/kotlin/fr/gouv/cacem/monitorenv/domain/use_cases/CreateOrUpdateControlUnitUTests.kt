@@ -34,7 +34,7 @@ class CreateOrUpdateControlUnitUTests {
 
         val result =
             CreateOrUpdateControlUnit(controlUnitRepository).execute(
-                newControlUnit
+                newControlUnit,
             )
 
         verify(controlUnitRepository, times(1)).save(newControlUnit)
