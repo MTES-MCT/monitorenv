@@ -133,13 +133,13 @@ export const controlUnitFactory = ({ ...resourceUnit } = {}): Omit<LegacyControl
 export const getControlInfractionsTags = (actionNumberOfControls, infractions) => {
   const totalInfractions = infractions.length || 0
   const ras = (actionNumberOfControls || 0) - totalInfractions
-  const infractionsWithPV =
+  const infractionsWithReport =
     infractions?.filter(inf => inf.infractionType === InfractionTypeEnum.WITH_REPORT)?.length || 0
-  const infractionsWithoutPV =
+  const infractionsWithoutReport =
     infractions?.filter(inf => inf.infractionType === InfractionTypeEnum.WITHOUT_REPORT)?.length || 0
-  const infractionsWithWaitingPv =
+  const infractionsWithWaitingReport =
     infractions?.filter(inf => inf.infractionType === InfractionTypeEnum.WAITING)?.length || 0
   const med = infractions?.filter(inf => inf.formalNotice === FormalNoticeEnum.YES)?.length || 0
 
-  return { infractionsWithoutPV, infractionsWithPV, infractionsWithWaitingPv, med, ras, totalInfractions }
+  return { infractionsWithoutReport, infractionsWithReport, infractionsWithWaitingReport, med, ras, totalInfractions }
 }
