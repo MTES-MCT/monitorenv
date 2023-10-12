@@ -56,8 +56,8 @@ class GetEngagedControlUnitsUTests {
                 anyOrNull(),
                 anyOrNull(),
                 anyOrNull(),
-                anyOrNull()
-            )
+                anyOrNull(),
+            ),
         )
             .willReturn(listOf(expectedMission, expectedMission))
 

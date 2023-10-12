@@ -184,8 +184,20 @@ data class ReportingModel(
         reporting = this.toReporting(),
         controlUnit = controlUnit?.toFullControlUnit(),
         semaphore = semaphore?.toSemaphore(),
-        attachedMission = if (detachedFromMissionAtUtc != null) attachedMission?.toMissionEntity(objectMapper) else null,
-        detachedMission = if (detachedFromMissionAtUtc == null) attachedMission?.toMissionEntity(objectMapper) else null,
+        attachedMission = if (detachedFromMissionAtUtc != null) {
+            attachedMission?.toMissionEntity(
+                objectMapper,
+            )
+        } else {
+            null
+        },
+        detachedMission = if (detachedFromMissionAtUtc == null) {
+            attachedMission?.toMissionEntity(
+                objectMapper,
+            )
+        } else {
+            null
+        },
     )
 
     override fun equals(other: Any?): Boolean {
