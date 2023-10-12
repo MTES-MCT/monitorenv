@@ -44,6 +44,10 @@ class JpaReportingRepository(
             .map { it.toReporting() }
     }
 
+    override fun findByAttachedMissionId(missionId: Int): List<ReportingEntity> {
+        return dbReportingRepository.findByAttachedMissionId(missionId).map { it.toReporting() }
+    }
+
     @Transactional
     override fun save(reporting: ReportingEntity): ReportingEntity {
         return try {

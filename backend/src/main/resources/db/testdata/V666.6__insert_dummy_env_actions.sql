@@ -1,7 +1,7 @@
 --
 -- Data for Name: env_actions; Type: TABLE DATA; Schema: public; Owner: postgres
 --
-TRUNCATE public.env_actions;
+DELETE FROM public.env_actions;
 
 INSERT INTO public.env_actions VALUES ('e2257638-ddef-4611-960c-7675a3254c38', 38, 'SURVEILLANCE', '{"themes": [{"theme": "Police des activités de cultures marines", "subThemes": ["Contrôle du schéma des structures"], "protectedSpecies": []}], "observations": "", "coverMissionZone": true}', '2022-09-22 22:35:03.423648', NULL, NULL, '56', '2022-09-28 02:06:59');
 INSERT INTO public.env_actions VALUES ('f3e90d3a-6ba4-4bb3-805e-d391508aa46d', 38, 'CONTROL', '{"themes": [{"theme": "Police des épaves", "subThemes": ["Épave/navire abandonné", "Contrôle administratif"], "protectedSpecies": []}], "infractions": [{"id": "6670e718-3ecd-46c1-8149-8b963c6f72dd", "natinf": ["10041"], "toProcess": false, "vesselSize": null, "vesselType": null, "companyName": "MASOCIETE", "formalNotice": "YES", "observations": "RAS", "relevantCourt": "LOCAL_COURT", "infractionType": "WITH_REPORT", "registrationNumber": null, "controlledPersonIdentity": null}], "vehicleType": null, "observations": null, "actionTargetType": "COMPANY", "actionNumberOfControls": 1}', '2022-09-27 03:00:00', '0104000020E6100000010000000101000000399291D4BE1805C09E1A585CD6154840', NULL, NULL, NULL);

@@ -1,3 +1,5 @@
+DELETE FROM reportings;
+
 INSERT INTO reportings (
     id,
     reporting_id,
@@ -142,6 +144,89 @@ VALUES
     false,
     false
 );
+
+
+-- Signalements rattachés à des missions
+INSERT INTO reportings (
+    id,
+    reporting_id,
+    source_type ,
+    semaphore_id ,
+    control_unit_id ,
+    source_name ,
+    target_type ,
+    vehicle_type,
+    target_details,
+    geom,
+    sea_front,
+    description,
+    report_type,
+    theme,
+    sub_themes,
+    action_taken,
+    is_control_required,
+    is_unit_available,
+    created_at,
+    validity_time,
+    is_deleted,
+    attached_mission_id,
+    attached_to_mission_at_utc,
+    detached_from_mission_at_utc,
+    attached_env_action_id)
+VALUES
+    (6,
+   2300006,
+   'SEMAPHORE',
+   36,
+   NULL,
+   NULL,
+   'COMPANY',
+   NULL,
+   '[{"operatorName": "La sociéter", "vesselName": "Héron" }]',
+   ST_GeomFromText('MULTIPOINT((-4.18759766312331 47.11281269827924))', 4326),
+   'Guadeloupe',
+   'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+   'OBSERVATION',
+   NULL,
+   NULL,
+   NULL,
+   true,
+   true,
+   now() - INTERVAL '75 minutes',
+   6,
+   false,
+    34,
+    now() - INTERVAL '15 minutes',
+    null,
+    'b8007c8a-5135-4bc3-816f-c69c7b75d807'
+    ),
+    (7,
+   2300007,
+    'CONTROL_UNIT',
+    null,
+    10000,
+   NULL,
+   'COMPANY',
+   NULL,
+   '[{"operatorName": "Good Company", "vesselName": "Mr le gérant" }]',
+   ST_GeomFromText('MULTIPOINT((-4.18759766312331 47.11281269827924))', 4326),
+   'NAMO',
+   'Lorem LoremLorem ipsum dolor sit amet, consectetur adipiscing elit.',
+   'OBSERVATION',
+   NULL,
+   NULL,
+   NULL,
+   true,
+   true,
+   now() - INTERVAL '90 minutes',
+   6,
+   false,
+    34,
+    now() - INTERVAL '25 minutes',
+    null,
+    null
+    );
+
 SELECT setval('reportings_id_seq', 6, false);
 CREATE SEQUENCE IF NOT EXISTS reportings_2023_seq;
 SELECT setval('reportings_2023_seq', 6, false);

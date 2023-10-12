@@ -49,6 +49,19 @@ interface IDBReportingRepository : CrudRepository<ReportingModel, Int> {
         status: String?,
     ): List<ReportingModel>
 
+    @Query(
+        value =
+        """
+        SELECT *
+        FROM reportings
+        WHERE attached_mission_id = :attachedMissionId
+        """,
+        nativeQuery = true,
+    )
+    fun findByAttachedMissionId(
+        attachedMissionId: Int,
+    ): List<ReportingModel>
+
     @Modifying(clearAutomatically = true)
     @Query(
         value =

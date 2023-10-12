@@ -25,6 +25,7 @@ import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
 import java.time.Instant
 import java.time.ZoneOffset.UTC
+import java.util.UUID
 
 @Entity
 @Table(name = "reportings")
@@ -95,6 +96,14 @@ data class ReportingModel(
     val isDeleted: Boolean,
     @Column(name = "open_by")
     val openBy: String? = null,
+    @Column(name = "attached_mission_id")
+    val attachedMissionId: Int? = null,
+    @Column(name = "attached_to_mission_at_utc")
+    val attachedToMissionAtUtc: Instant? = null,
+    @Column(name = "detached_from_mission_at_utc")
+    val detachedFromMissionAtUtc: Instant? = null,
+    @Column(name = "attached_env_action_id")
+    val attachedEnvActionId: UUID? = null,
 ) {
 
     fun toReporting() =
@@ -122,6 +131,10 @@ data class ReportingModel(
             isArchived = isArchived,
             isDeleted = isDeleted,
             openBy = openBy,
+            attachedMissionId = attachedMissionId,
+            attachedToMissionAtUtc = attachedToMissionAtUtc?.atZone(UTC),
+            detachedFromMissionAtUtc = detachedFromMissionAtUtc?.atZone(UTC),
+            attachedEnvActionId = attachedEnvActionId,
         )
 
     companion object {
@@ -150,6 +163,10 @@ data class ReportingModel(
                 isArchived = reporting.isArchived,
                 isDeleted = reporting.isDeleted,
                 openBy = reporting.openBy,
+                attachedMissionId = reporting.attachedMissionId,
+                attachedToMissionAtUtc = reporting.attachedToMissionAtUtc?.toInstant(),
+                detachedFromMissionAtUtc = reporting.detachedFromMissionAtUtc?.toInstant(),
+                attachedEnvActionId = reporting.attachedEnvActionId,
             )
     }
 }

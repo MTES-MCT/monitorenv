@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.domain.entities.reporting
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
+import java.util.UUID
 
 data class ReportingEntity(
     val id: Int? = null,
@@ -28,6 +29,10 @@ data class ReportingEntity(
     val isArchived: Boolean,
     val isDeleted: Boolean,
     val openBy: String? = null,
+    val attachedMissionId: Int? = null,
+    val attachedToMissionAtUtc: ZonedDateTime? = null,
+    val detachedFromMissionAtUtc: ZonedDateTime? = null,
+    val attachedEnvActionId: UUID? = null,
 ) {
     fun checkValidity() {
         when (sourceType) {
