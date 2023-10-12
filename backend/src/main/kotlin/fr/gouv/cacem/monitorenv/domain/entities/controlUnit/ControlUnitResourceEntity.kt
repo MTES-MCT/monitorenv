@@ -1,7 +1,5 @@
 package fr.gouv.cacem.monitorenv.domain.entities.controlUnit
 
-import org.hibernate.Hibernate
-
 data class ControlUnitResourceEntity(
     val id: Int? = null,
     val baseId: Int,

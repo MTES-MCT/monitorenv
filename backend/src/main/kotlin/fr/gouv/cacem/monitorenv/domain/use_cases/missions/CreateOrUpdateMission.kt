@@ -48,7 +48,7 @@ class CreateOrUpdateMission(
                     Ideally the fallbacks should not be needed, but if coverMissionZone is true and the mission geom
                     is null, or if coverMissionZone is false and the action geom is null, then rather that nothing,
                     better use the geometry that is available, if any.
-                     */
+                    */
                     val geometry = if (surveillance.coverMissionZone == true) {
                         (
                             mission.geom
