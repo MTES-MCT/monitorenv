@@ -3,7 +3,8 @@
 context('Mission actions', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
-    cy.visit(`/side_window`)
+
+    cy.visit(`/side_window`).wait(1000)
   })
 
   it('An infraction Should be duplicated', () => {

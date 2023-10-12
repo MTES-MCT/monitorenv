@@ -10,7 +10,7 @@ data class ControlUnitResourceDataOutput(
     val name: String,
     val note: String? = null,
     val photo: ByteArray? = byteArrayOf(),
-    val type: ControlUnitResourceType,
+    val type: String,
 ) {
     companion object {
         fun fromControlUnitResource(controlUnitResource: ControlUnitResourceEntity): ControlUnitResourceDataOutput {
@@ -21,7 +21,7 @@ data class ControlUnitResourceDataOutput(
                 name = controlUnitResource.name,
                 note = controlUnitResource.note,
                 photo = controlUnitResource.photo,
-                type = controlUnitResource.type,
+                type = controlUnitResource.type.name,
             )
         }
     }

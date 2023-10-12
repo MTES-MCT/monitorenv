@@ -5,6 +5,8 @@ export namespace Base {
     controlUnitResourceIds: number[]
     controlUnitResources: ControlUnit.ControlUnitResourceData[]
     id: number
+    latitude: string
+    longitude: string
     name: string
   }
 

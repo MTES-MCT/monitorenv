@@ -3,14 +3,14 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.missions // ktlint-disable pac
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.mission.*
 import fr.gouv.cacem.monitorenv.domain.repositories.IBaseRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreasRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreaRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 
 @UseCase
 class CreateOrUpdateMission(
     private val baseRepository: IBaseRepository,
-    private val departmentRepository: IDepartmentAreasRepository,
+    private val departmentRepository: IDepartmentAreaRepository,
     private val missionRepository: IMissionRepository,
     private val facadeRepository: IFacadeAreasRepository,
 

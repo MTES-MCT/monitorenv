@@ -84,7 +84,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     resources = listOf(
                         ControlUnitResourceEntity(
                             id = 8,
-                            baseId = 0,
+                            baseId = 3,
                             controlUnitId = 10004,
                             name = "PAM Jeanne Barret",
                             type = ControlUnitResourceType.BARGE,
@@ -105,7 +105,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(newMissionCreated.controlUnits.first().administration).isEqualTo("DDTM")
         assertThat(newMissionCreated.controlUnits.first().resources).hasSize(1)
         assertThat(newMissionCreated.controlUnits.first().resources.first().id).isEqualTo(8)
-        assertThat(newMissionCreated.controlUnits.first().resources.first().baseId).isEqualTo(0)
+        assertThat(newMissionCreated.controlUnits.first().resources.first().baseId).isEqualTo(3)
         assertThat(newMissionCreated.controlUnits.first().resources.first().name).isEqualTo("PAM Jeanne Barret")
         assertThat(newMissionCreated.envActions).hasSize(3)
         assertThat(newMissionCreated.envActions?.first()?.facade).isEqualTo("Facade 1")
@@ -149,7 +149,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     resources = listOf(
                         ControlUnitResourceEntity(
                             id = 8,
-                            baseId = 0,
+                            baseId = 3,
                             controlUnitId = 10004,
                             name = "PAM Jeanne Barret",
                             type = ControlUnitResourceType.BARGE,
@@ -173,14 +173,14 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                         resources = listOf(
                             ControlUnitResourceEntity(
                                 id = 8,
-                                baseId = 0,
+                                baseId = 3,
                                 controlUnitId = 5,
                                 name = "PAM Jeanne Barret",
                                 type = ControlUnitResourceType.BARGE,
                             ),
                             ControlUnitResourceEntity(
                                 id = 5,
-                                baseId = 0,
+                                baseId = 3,
                                 controlUnitId = 5,
                                 name = "Voiture",
                                 type = ControlUnitResourceType.BARGE,
@@ -198,7 +198,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(newMissionUpdated.controlUnits.first().administration).isEqualTo("DDTM")
         assertThat(newMissionUpdated.controlUnits.first().resources).hasSize(2)
         assertThat(newMissionUpdated.controlUnits.first().resources.first().id).isEqualTo(8)
-        assertThat(newMissionUpdated.controlUnits.first().resources.first().baseId).isEqualTo(0)
+        assertThat(newMissionUpdated.controlUnits.first().resources.first().baseId).isEqualTo(3)
         assertThat(newMissionUpdated.controlUnits.first().resources.first().name).isEqualTo("PAM Jeanne Barret")
         assertThat(newMissionUpdated.controlUnits.first().resources.last().id).isEqualTo(5)
         assertThat(newMissionUpdated.controlUnits.first().resources.last().name).isEqualTo("Voiture")
@@ -225,7 +225,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     resources = listOf(
                         ControlUnitResourceEntity(
                             id = 123456,
-                            baseId = 0,
+                            baseId = 1,
                             controlUnitId = 5,
                             name = "PAM Jeanne Barret",
                             type = ControlUnitResourceType.BARGE,
@@ -530,7 +530,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                             baseId = 3,
                             controlUnitId = 10002,
                             name = "Voiture",
-                            type = ControlUnitResourceType.LAND_VEHICLE,
+                            type = ControlUnitResourceType.CAR,
                         ),
                     ),
                     contact = null,

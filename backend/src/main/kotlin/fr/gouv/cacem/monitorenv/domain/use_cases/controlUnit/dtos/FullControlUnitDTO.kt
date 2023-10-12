@@ -4,9 +4,11 @@ import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEnt
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.departmentArea.DepartmentAreaEntity
 
 data class FullControlUnitDTO(
     val administration: AdministrationEntity,
+    val departmentArea: DepartmentAreaEntity? = null,
     val controlUnit: ControlUnitEntity,
     val controlUnitContacts: List<ControlUnitContactEntity>,
     // `FullControlUnitResourceDTO` and not `ControlUnitResourceEntity` because we need `base` data for each resource

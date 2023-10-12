@@ -10,41 +10,44 @@ context('Main Window > Control Unit List > Filters', () => {
   })
 
   it('Should show all control units by default', () => {
-    cy.getDataCy('control-unit-list-item').should('have.length', 33)
+    cy.getDataCy('ControlUnitListDialog-control-unit').should('have.length', 33)
+
+    cy.contains('A636 Maïto').should('exist')
+    cy.contains('SML 50').should('exist')
   })
 
   it('Should find control units matching the search query', () => {
     cy.fill('Rechercher une unité', 'marine')
 
-    cy.getDataCy('control-unit-list-item').should('have.length', 4)
+    cy.getDataCy('ControlUnitListDialog-control-unit').should('have.length', 4)
 
-    cy.getDataCy('control-unit-10032').should('exist')
-    cy.getDataCy('control-unit-10023').should('exist')
+    cy.contains('Cultures marines – DDTM 30').should('exist')
+    cy.contains('A636 Maïto').should('exist')
   })
 
   it('Should find control units matching the selected administration', () => {
     cy.fill('Administration', 'Douane')
 
-    cy.getDataCy('control-unit-list-item').should('have.length', 5)
+    cy.getDataCy('ControlUnitListDialog-control-unit').should('have.length', 5)
 
-    cy.getDataCy('control-unit-10013').should('exist')
-    cy.getDataCy('control-unit-10017').should('exist')
+    cy.contains('BGC Ajaccio').should('exist')
+    cy.contains('DF 61 Port-de-Bouc').should('exist')
   })
 
   it('Should find control units matching the selected resource type', () => {
     cy.fill('Type de moyen', 'Barge')
 
-    cy.getDataCy('control-unit-list-item').should('have.length', 3)
+    cy.getDataCy('ControlUnitListDialog-control-unit').should('have.length', 3)
 
-    cy.getDataCy('control-unit-10000').should('exist')
-    cy.getDataCy('control-unit-10003').should('exist')
+    cy.contains('Cultures marines – DDTM 40').should('exist')
+    cy.contains('DPM – DDTM 14').should('exist')
   })
 
   it('Should find control units matching the selected base', () => {
     cy.fill('Base du moyen', 'Marseille')
 
-    cy.getDataCy('control-unit-list-item').should('have.length', 1)
+    cy.getDataCy('ControlUnitListDialog-control-unit').should('have.length', 1)
 
-    cy.getDataCy('control-unit-10000').should('exist')
+    cy.contains('Cultures marines – DDTM 40').should('exist')
   })
 })

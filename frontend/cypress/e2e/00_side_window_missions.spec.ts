@@ -1,11 +1,13 @@
 context('Missions', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
-    cy.visit(`/side_window`)
   })
 
   it('Control Unit filter should not contain archived control units', () => {
     cy.intercept('GET', `/api/v1/control_units`).as('getControlUnits')
+
+    cy.visit(`/side_window`).wait(1000)
+
     cy.wait('@getControlUnits').then(({ response }) => {
       expect(response && response.statusCode).to.equal(200)
       const archivedControlUnit = response && response.body.find(controlUnit => controlUnit.name === 'BGC Ajaccio')
@@ -16,6 +18,8 @@ context('Missions', () => {
   })
 
   it('Missions should be displayed in Missions Table and filterable', () => {
+    cy.visit(`/side_window`).wait(1000)
+
     cy.get('*[data-cy="SideWindowHeader-title"]').contains('Missions et contrôles')
 
     cy.log('A default period filter should be set')
@@ -50,6 +54,8 @@ context('Missions', () => {
   })
 
   it('Missions table should display all themes and subthemes of all the actions of the mission', () => {
+    cy.visit(`/side_window`).wait(1000)
+
     cy.log('Should filter by theme')
     cy.get('*[data-cy="select-theme-filter"]').click()
     cy.get('div[role="option"]').find('label').contains('Police des épaves').click({ force: true })

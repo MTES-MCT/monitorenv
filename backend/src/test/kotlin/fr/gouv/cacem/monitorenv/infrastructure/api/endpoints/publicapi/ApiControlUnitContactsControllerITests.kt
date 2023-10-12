@@ -51,7 +51,6 @@ class ApiControlUnitContactsControllerITests {
             controlUnitId = 0,
             email = null,
             name = "Contact Name",
-            note = null,
             phone = null,
         )
 
@@ -59,7 +58,6 @@ class ApiControlUnitContactsControllerITests {
             controlUnitId = 0,
             email = null,
             name = "Contact Name",
-            note = null,
             phone = null,
         )
         val requestBody = objectMapper.writeValueAsString(newControlUnitContactData)
@@ -84,6 +82,7 @@ class ApiControlUnitContactsControllerITests {
                 id = 0,
                 administrationId = 0,
                 areaNote = null,
+                departmentAreaInseeCode = null,
                 isArchived = false,
                 name = "Unit Name",
                 termsNote = null,
@@ -93,7 +92,6 @@ class ApiControlUnitContactsControllerITests {
                 controlUnitId = 0,
                 email = null,
                 name = "Contact Name",
-                note = null,
                 phone = null,
             )
         )
@@ -116,6 +114,7 @@ class ApiControlUnitContactsControllerITests {
                     id = 0,
                     administrationId = 0,
                     areaNote = null,
+                    departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Unit Name",
                     termsNote = null,
@@ -125,7 +124,6 @@ class ApiControlUnitContactsControllerITests {
                     controlUnitId = 0,
                     email = null,
                     name = "Contact Name",
-                    note = null,
                     phone = null,
                 ),
             ),
@@ -135,6 +133,7 @@ class ApiControlUnitContactsControllerITests {
                     id = 0,
                     administrationId = 0,
                     areaNote = null,
+                    departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Unit Name",
                     termsNote = null,
@@ -144,7 +143,6 @@ class ApiControlUnitContactsControllerITests {
                     controlUnitId = 0,
                     email = null,
                     name = "Contact Name 2",
-                    note = null,
                     phone = null,
                 ),
             )
@@ -166,7 +164,6 @@ class ApiControlUnitContactsControllerITests {
             controlUnitId = 0,
             email = null,
             name = "Updated Contact Name",
-            note = null,
             phone = null,
         )
 
@@ -175,7 +172,6 @@ class ApiControlUnitContactsControllerITests {
             email = null,
             controlUnitId = 0,
             name = "Updated Contact Name",
-            note = null,
             phone = null,
         )
         val requestBody = objectMapper.writeValueAsString(nextControlUnitContactData)

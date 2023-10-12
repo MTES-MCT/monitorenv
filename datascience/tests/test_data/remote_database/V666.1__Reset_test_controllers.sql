@@ -41,26 +41,6 @@ INSERT INTO public.control_units (
     (             1004, 'Réserve Naturelle  de L''Ilot M''Bouzi'),
     (             1004,               'Réserve Naturelle 7 Iles');
 
-ALTER SEQUENCE public.control_unit_resources_id_seq RESTART WITH 1;
-
-INSERT INTO public.control_unit_resources
-    (control_unit_id,  base_id,                name,         type)
-VALUES
-    (          10001,        0,     'Semi-rigide 1',    'UNKNOWN'),
-    (          10001,        0,     'Semi-rigide 2',    'UNKNOWN'),
-    (          10003,        0,     'Semi-rigide 1',    'UNKNOWN'),
-    (          10003,        0,     'Semi-rigide 2',    'UNKNOWN'),
-    (          10003,        0,           'Voiture',    'UNKNOWN'),
-    (          10004,        0,         'AR VECHEN',    'UNKNOWN'),
-    (          10004,        0,       'Semi-rigide',    'UNKNOWN'),
-    (          10011,        0, 'PAM Jeanne Barret',    'UNKNOWN'),
-    (          10012,        0,        'PAM Themis',    'UNKNOWN'),
-    (          10019,        0,            'ALTAIR',    'UNKNOWN'),
-    (          10019,        0,          'PHEROUSA',    'UNKNOWN'),
-    (          10019,        0,            'ARIOLA',    'UNKNOWN');
-
-
-
 --
 -- Add historic control units
 --

@@ -22,6 +22,7 @@ class CreateOrUpdateControlUnitUTests {
         val newControlUnit = ControlUnitEntity(
             administrationId = 2,
             areaNote = null,
+            departmentAreaInseeCode = null,
             isArchived = false,
             name = "Control Unit Name",
             termsNote = null,

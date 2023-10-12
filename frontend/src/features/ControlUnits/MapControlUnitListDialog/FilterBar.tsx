@@ -27,7 +27,7 @@ export function FilterBar() {
     [administrations]
   )
   const basesAsOptions = useMemo(() => getOptionsFromIdAndName(bases), [bases])
-  const typesAsOptions = useMemo(() => getOptionsFromLabelledEnum(ControlUnit.ControlUnitResourceType), [])
+  const typesAsOptions = useMemo(() => getOptionsFromLabelledEnum(ControlUnit.ControlUnitResourceTypeLabel), [])
 
   const updateAdministrationId = useCallback(
     (nextValue: number | undefined) => {

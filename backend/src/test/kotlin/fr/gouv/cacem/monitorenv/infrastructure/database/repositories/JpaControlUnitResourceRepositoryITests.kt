@@ -28,12 +28,15 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
             FullControlUnitResourceDTO(
                 base = BaseEntity(
                     id = 1,
+                    latitude = 43.295765,
+                    longitude = 5.375486,
                     name = "Marseille"
                 ),
                 controlUnit = ControlUnitEntity(
                     id = 10000,
                     administrationId = 1005,
                     areaNote = null,
+                    departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
                     termsNote = null
@@ -54,12 +57,15 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
             FullControlUnitResourceDTO(
                 base = BaseEntity(
                     id = 3,
+                    latitude = 51.035534,
+                    longitude = 2.372845,
                     name = "Dunkerque"
                 ),
                 controlUnit = ControlUnitEntity(
                     id = 10018,
                     administrationId = 1008,
                     areaNote = null,
+                    departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "DREAL Pays-de-La-Loire",
                     termsNote = null
@@ -86,12 +92,15 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
             FullControlUnitResourceDTO(
                 base = BaseEntity(
                     id = 1,
+                    latitude = 43.295765,
+                    longitude = 5.375486,
                     name = "Marseille"
                 ),
                 controlUnit = ControlUnitEntity(
                     id = 10000,
                     administrationId = 1005,
                     areaNote = null,
+                    departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
                     termsNote = null

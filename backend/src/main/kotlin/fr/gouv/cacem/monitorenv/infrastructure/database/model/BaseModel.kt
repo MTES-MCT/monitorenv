@@ -20,6 +20,12 @@ data class BaseModel(
     @JsonManagedReference
     var controlUnitResources: List<ControlUnitResourceModel>? = mutableListOf(),
 
+    @Column(name = "latitude", nullable = false)
+    var latitude: Double,
+
+    @Column(name = "longitude", nullable = false)
+    var longitude: Double,
+
     @Column(name = "name", nullable = false, unique = true)
     var name: String,
 
@@ -42,6 +48,8 @@ data class BaseModel(
             return BaseModel(
                 id = base.id,
                 controlUnitResources = controlUnitResourceModels,
+                latitude = base.latitude,
+                longitude = base.longitude,
                 name = base.name,
             )
         }
@@ -56,6 +64,8 @@ data class BaseModel(
             return BaseModel(
                 id = fullBase.base.id,
                 controlUnitResources = controlUnitResourceModels,
+                latitude = fullBase.base.latitude,
+                longitude = fullBase.base.longitude,
                 name = fullBase.base.name,
             )
         }
@@ -64,6 +74,8 @@ data class BaseModel(
     fun toBase(): BaseEntity {
         return BaseEntity(
             id,
+            latitude,
+            longitude,
             name,
         )
     }

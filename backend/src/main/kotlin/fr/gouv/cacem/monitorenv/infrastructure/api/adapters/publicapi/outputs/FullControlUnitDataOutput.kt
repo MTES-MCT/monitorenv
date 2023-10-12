@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.DepartmentAreaDataOutput
 
 data class FullControlUnitDataOutput(
     val id: Int,
@@ -12,6 +13,8 @@ data class FullControlUnitDataOutput(
     val controlUnitResourceIds: List<Int>,
     // `FullControlUnitResourceDataOutput` and not `ControlUnitResourceDataOutput` because we need `base` data for each resource
     val controlUnitResources: List<FullControlUnitResourceDataOutput>,
+    val departmentArea: DepartmentAreaDataOutput? = null,
+    val departmentAreaInseeCode: String? = null,
     val isArchived: Boolean,
     val name: String,
     val termsNote: String? = null,
@@ -27,6 +30,7 @@ data class FullControlUnitDataOutput(
             val controlUnitResources = fullControlUnit.controlUnitResources.map {
                 FullControlUnitResourceDataOutput.fromFullControlUnitResource(it)
             }
+            val departmentArea = fullControlUnit.departmentArea?.let { DepartmentAreaDataOutput.fromDepartmentArea(it) }
 
 
             return FullControlUnitDataOutput(
@@ -38,6 +42,8 @@ data class FullControlUnitDataOutput(
                 controlUnitContacts,
                 controlUnitResourceIds = controlUnitResources.map { it.id },
                 controlUnitResources,
+                departmentArea,
+                departmentAreaInseeCode = departmentArea?.inseeCode,
                 isArchived = fullControlUnit.controlUnit.isArchived,
                 name = fullControlUnit.controlUnit.name,
                 termsNote = fullControlUnit.controlUnit.termsNote,

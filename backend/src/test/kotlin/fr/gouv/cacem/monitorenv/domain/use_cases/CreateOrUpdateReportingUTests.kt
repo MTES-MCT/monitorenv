@@ -130,8 +130,11 @@ class CreateOrUpdateReportingUTests {
                 controlUnit = ControlUnitEntity(
                     id = 1,
                     administrationId = 2,
+                    areaNote = null,
+                    departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "control unit 1",
+                    termsNote = null,
                 ),
                 controlUnitContacts = listOf(),
                 controlUnitResources = listOf(),

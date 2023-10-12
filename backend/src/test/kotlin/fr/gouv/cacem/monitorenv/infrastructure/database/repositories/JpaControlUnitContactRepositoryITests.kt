@@ -26,6 +26,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     id = 10000,
                     administrationId = 1005,
                     areaNote = null,
+                    departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
                     termsNote = null
@@ -34,7 +35,6 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     id = 1,
                     controlUnitId = 10000,
                     name = "Contact 1",
-                    note = null,
                     phone = null,
                 ),
             )
@@ -46,6 +46,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     id = 10003,
                     administrationId = 1005,
                     areaNote = null,
+                    departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "DPM – DDTM 14",
                     termsNote = null
@@ -54,7 +55,6 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     id = 3,
                     controlUnitId = 10003,
                     name = "Contact 3",
-                    note = null,
                     phone = null,
                 ),
             )
@@ -72,6 +72,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     id = 10000,
                     administrationId = 1005,
                     areaNote = null,
+                    departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
                     termsNote = null
@@ -80,7 +81,6 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     id = 1,
                     controlUnitId = 10000,
                     name = "Contact 1",
-                    note = null,
                     phone = null,
                 ),
             )
@@ -96,7 +96,6 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
         val newControlUnitContact = ControlUnitContactEntity(
             controlUnitId = 10000,
             name = "Contact Name",
-            note = "Contact Note",
             phone = "0123456789",
         )
 
@@ -111,7 +110,6 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
             id = 4,
             controlUnitId = 10001,
             name = "Updated Contact Name",
-            note = "Updated Contact Note",
             phone = "9876543210",
         )
 

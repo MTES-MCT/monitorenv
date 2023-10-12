@@ -77,6 +77,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                     id = 10000,
                     administrationId = 1005,
                     areaNote = null,
+                    departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
                     termsNote = null,
@@ -87,7 +88,6 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                         controlUnitId = 10000,
                         email = null,
                         name = "Contact 1",
-                        note = null,
                         phone = null,
                     ),
                     ControlUnitContactEntity(
@@ -95,7 +95,6 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                         controlUnitId = 10000,
                         email = null,
                         name = "Contact 2",
-                        note = null,
                         phone = null,
                     ),
                 ),
@@ -103,12 +102,15 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                     FullControlUnitResourceDTO(
                         base = BaseEntity(
                             id = 1,
+                            latitude = 43.295765,
+                            longitude = 5.375486,
                             name = "Marseille",
                         ),
                         controlUnit = ControlUnitEntity(
                             id = 10000,
                             administrationId = 1005,
                             areaNote = null,
+                            departmentAreaInseeCode = null,
                             isArchived = false,
                             name = "Cultures marines – DDTM 40",
                             termsNote = null,
@@ -126,12 +128,15 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                     FullControlUnitResourceDTO(
                         base = BaseEntity(
                             id = 1,
+                            latitude = 43.295765,
+                            longitude = 5.375486,
                             name = "Marseille",
                         ),
                         controlUnit = ControlUnitEntity(
                             id = 10000,
                             administrationId = 1005,
                             areaNote = null,
+                            departmentAreaInseeCode = null,
                             isArchived = false,
                             name = "Cultures marines – DDTM 40",
                             termsNote = null,
@@ -161,6 +166,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                     id = 10032,
                     administrationId = 1005,
                     areaNote = null,
+                    departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 30",
                     termsNote = null,
@@ -187,6 +193,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                     id = 10000,
                     administrationId = 1005,
                     areaNote = null,
+                    departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
                     termsNote = null,
@@ -197,7 +204,6 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                         controlUnitId = 10000,
                         email = null,
                         name = "Contact 1",
-                        note = null,
                         phone = null
                     ),
                     ControlUnitContactEntity(
@@ -205,7 +211,6 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                         controlUnitId = 10000,
                         email = null,
                         name = "Contact 2",
-                        note = null,
                         phone = null
                     )
                 ),
@@ -213,12 +218,15 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                     FullControlUnitResourceDTO(
                         base = BaseEntity(
                             id = 1,
+                            latitude = 43.295765,
+                            longitude = 5.375486,
                             name = "Marseille",
                         ),
                         controlUnit = ControlUnitEntity(
                             id = 10000,
                             administrationId = 1005,
                             areaNote = null,
+                            departmentAreaInseeCode = null,
                             isArchived = false,
                             name = "Cultures marines – DDTM 40",
                             termsNote = null,
@@ -236,12 +244,15 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                     FullControlUnitResourceDTO(
                         base = BaseEntity(
                             id = 1,
+                            latitude = 43.295765,
+                            longitude = 5.375486,
                             name = "Marseille",
                         ),
                         controlUnit = ControlUnitEntity(
                             id = 10000,
                             administrationId = 1005,
                             areaNote = null,
+                            departmentAreaInseeCode = null,
                             isArchived = false,
                             name = "Cultures marines – DDTM 40",
                             termsNote = null,
@@ -270,6 +281,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
         val newControlUnit = ControlUnitEntity(
             administrationId = 1,
             areaNote = "Area Note",
+            departmentAreaInseeCode = "50",
             isArchived = false,
             name = "Control Unit Name",
             termsNote = "Terms Note",
@@ -286,6 +298,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
             id = 10033,
             administrationId = 1,
             areaNote = "Updated Area Note",
+            departmentAreaInseeCode = "85",
             isArchived = false,
             name = "Updated Control Unit Name",
             termsNote = "Updated Terms Note",

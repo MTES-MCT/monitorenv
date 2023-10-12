@@ -9,6 +9,7 @@ import {
 } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Formik } from 'formik'
+import { sortBy } from 'lodash/fp'
 import { useCallback, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import styled from 'styled-components'
@@ -21,6 +22,7 @@ import {
 } from './constants'
 import { useGetAdministrationsQuery } from '../../../api/administrationsAPI'
 import { controlUnitsAPI, useGetControlUnitQuery } from '../../../api/controlUnitsAPI'
+import { useGetDepartmentAreasQuery } from '../../../api/departmentAreasAPI'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../libs/FrontendError'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../BackOfficeMenu/constants'
@@ -39,6 +41,7 @@ export function BackOfficeControlUnitForm() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const { data: controlUnit, error } = useGetControlUnitQuery(isNew ? skipToken : Number(controlUnitId))
+  const { data: departmentAreas } = useGetDepartmentAreasQuery()
   const { data: administrations } = useGetAdministrationsQuery()
 
   const initialValues: ControlUnitFormValues | undefined = isNew
@@ -46,6 +49,19 @@ export function BackOfficeControlUnitForm() {
     : controlUnit || undefined
 
   const administrationsAsOptions = useMemo(() => getOptionsFromIdAndName(administrations), [administrations])
+  const departmentAreasAsOptions = useMemo(
+    () =>
+      departmentAreas
+        ? sortBy(
+            ['label'],
+            departmentAreas.map(departmentArea => ({
+              label: departmentArea.name,
+              value: departmentArea.inseeCode
+            }))
+          )
+        : undefined,
+    [departmentAreas]
+  )
 
   const goBackToList = useCallback(() => {
     navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_LIST]}`)
@@ -53,7 +69,6 @@ export function BackOfficeControlUnitForm() {
 
   const submit = useCallback(
     async (controlUnitFormValues: ControlUnitFormValues) => {
-      // Type-enforced by `CONTROL_UNIT_FORM_SCHEMA`
       const controlUnitData = controlUnitFormValues as ControlUnit.NewControlUnitData
 
       if (isNew) {
@@ -84,7 +99,7 @@ export function BackOfficeControlUnitForm() {
 
       {error && <p>Cette unité de contrôle n’existe pas ou plus.</p>}
 
-      {!error && initialValues && administrationsAsOptions && (
+      {!error && initialValues && administrationsAsOptions && departmentAreasAsOptions && (
         <Formik initialValues={initialValues} onSubmit={submit} validationSchema={CONTROL_UNIT_FORM_SCHEMA}>
           {({ handleSubmit }) => (
             <Form onSubmit={handleSubmit}>
@@ -95,6 +110,7 @@ export function BackOfficeControlUnitForm() {
                 searchable
               />
               <FormikTextInput label="Nom" name="name" />
+              <FormikSelect label="Département" name="departmentAreaInseeCode" options={departmentAreasAsOptions} />
               {/* This is a quick way to implement "unarchiving" for users in case of human error. */}
               {initialValues.isArchived && <FormikCheckbox label="Unité archivée" name="isArchived" />}
 

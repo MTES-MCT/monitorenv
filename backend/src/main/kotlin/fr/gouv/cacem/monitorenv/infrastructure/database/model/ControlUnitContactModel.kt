@@ -27,9 +27,6 @@ data class ControlUnitContactModel(
     @Column(name = "name")
     var name: String,
 
-    @Column(name = "note")
-    var note: String? = null,
-
     @Column(name = "phone")
     var phone: String? = null,
 
@@ -51,7 +48,6 @@ data class ControlUnitContactModel(
                 controlUnit = controlUnitModel,
                 email = controlUnitContact.email,
                 name = controlUnitContact.name,
-                note = controlUnitContact.note,
                 phone = controlUnitContact.phone,
             )
         }
@@ -63,7 +59,6 @@ data class ControlUnitContactModel(
             controlUnitId = requireNotNull(controlUnit.id),
             email,
             name,
-            note,
             phone,
         )
     }

@@ -21,6 +21,7 @@ context('Back Office > Control Unit Form', () => {
 
     cy.fill('Administration', 'AECP')
     cy.fill('Nom', 'Unité 1')
+    cy.fill('Département', 'Manche')
 
     cy.clickButton('Créer')
 
@@ -32,6 +33,7 @@ context('Back Office > Control Unit Form', () => {
       assert.deepEqual(interception.request.body, {
         administrationId: 1007,
         areaNote: null,
+        departmentAreaInseeCode: '50',
         isArchived: false,
         name: 'Unité 1',
         termsNote: null
@@ -49,6 +51,7 @@ context('Back Office > Control Unit Form', () => {
 
     cy.fill('Administration', 'AFB')
     cy.fill('Nom', 'Unité 2')
+    cy.fill('Département', 'Vendée')
 
     cy.clickButton('Mettre à jour')
 
@@ -60,6 +63,7 @@ context('Back Office > Control Unit Form', () => {
       assert.deepInclude(interception.request.body, {
         administrationId: 1002,
         areaNote: null,
+        departmentAreaInseeCode: '85',
         id: 10033,
         isArchived: false,
         name: 'Unité 2',

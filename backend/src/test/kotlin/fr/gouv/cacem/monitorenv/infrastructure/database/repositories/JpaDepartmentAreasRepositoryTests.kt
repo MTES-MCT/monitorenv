@@ -9,9 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 
 class JpaDepartmentAreasRepositoryTests : AbstractDBTests() {
-
     @Autowired
-    private lateinit var jpaDepartmentAreasRepository: JpaDepartmentAreasRepository
+    private lateinit var jpaDepartmentAreasRepository: JpaDepartmentAreaRepository
 
     @Test
     @Transactional

@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 class JpaControlUnitResourceRepository(
     private val dbControlUnitRepository: IDBControlUnitRepository,
     private val dbControlUnitResourceRepository: IDBControlUnitResourceRepository,
-    private val dbPortRepository: IDBBaseRepository,
+    private val dbBaseRepository: IDBBaseRepository,
 ) : IControlUnitResourceRepository {
     override fun deleteById(controlUnitResourceId: Int) {
         dbControlUnitResourceRepository.deleteById(controlUnitResourceId)
@@ -36,7 +36,7 @@ class JpaControlUnitResourceRepository(
         return try {
             val controlUnitModel =
                 requirePresent(dbControlUnitRepository.findById(controlUnitResource.controlUnitId))
-            val baseModel = requirePresent(dbPortRepository.findById(controlUnitResource.baseId))
+            val baseModel = requirePresent(dbBaseRepository.findById(controlUnitResource.baseId))
             val controlUnitResourceModel = ControlUnitResourceModel.fromControlUnitResource(
                 controlUnitResource,
                 baseModel,
