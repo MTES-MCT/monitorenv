@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 import java.util.UUID
 
-@SpringBootTest(properties = ["monitorenv.scheduling.enable=false"])
+@SpringBootTest(properties = ["monitorenv.scheduling.enabled=false"])
 class JpaReportingITests : AbstractDBTests() {
     @Autowired private lateinit var jpaReportingRepository: JpaReportingRepository
 

@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.scheduling.annotation.EnableScheduling
 
 @ConditionalOnProperty(
-    value = ["monitorenv.scheduling.enable"],
+    value = ["monitorenv.scheduling.enabled"],
     havingValue = "true",
     matchIfMissing = true,
 )
