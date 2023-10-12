@@ -1,7 +1,6 @@
 import { FieldArray, useFormikContext } from 'formik'
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { generatePath } from 'react-router'
 import styled from 'styled-components'
 
@@ -20,12 +19,13 @@ import { setToast } from '../../../domain/shared_slices/Global'
 import { multiMissionsActions } from '../../../domain/shared_slices/MultiMissions'
 import { deleteMissionAndGoToMissionsList } from '../../../domain/use_cases/missions/deleteMission'
 import { saveMission } from '../../../domain/use_cases/missions/saveMission'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { sideWindowActions } from '../../SideWindow/slice'
 import { missionFactory } from '../Missions.helpers'
 
 export function MissionForm({ id, isAlreadyClosed, isNewMission, selectedMission, setShouldValidateOnChange }) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { sideWindow } = useAppSelector(state => state)
   const { dirty, handleSubmit, setFieldValue, setValues, validateForm, values } =
     useFormikContext<Partial<Mission | NewMission>>()

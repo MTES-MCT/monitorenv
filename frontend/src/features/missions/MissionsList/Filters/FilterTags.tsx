@@ -1,13 +1,13 @@
 import { SingleTag } from '@mtes-mct/monitor-ui'
-import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { missionStatusLabels, missionTypeEnum } from '../../../../domain/entities/missions'
 import { MissionFiltersEnum, updateFilters } from '../../../../domain/shared_slices/MissionFilters'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 export function FilterTags() {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const {
     selectedAdministrationNames,
     selectedControlUnitIds,

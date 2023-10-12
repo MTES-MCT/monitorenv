@@ -1,7 +1,6 @@
 import { Accent, FieldError, FormikTextarea, Icon, IconButton, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { Toggle } from 'rsuite'
 
 import { CancelEditDialog } from './FormComponents/Dialog/CancelEditDialog'
@@ -23,6 +22,7 @@ import { reportingActions } from '../../../domain/shared_slices/reporting'
 import { closeReporting } from '../../../domain/use_cases/reporting/closeReporting'
 import { deleteReporting } from '../../../domain/use_cases/reporting/deleteReporting'
 import { reduceOrExpandReportingForm } from '../../../domain/use_cases/reporting/reduceOrExpandReportingForm'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { DeleteModal } from '../../commonComponents/Modals/Delete'
 import { useSyncFormValuesWithRedux } from '../hooks/useSyncFormValuesWithRedux'
@@ -42,7 +42,7 @@ import {
 import { getReportingTitle } from '../utils'
 
 export function ReportingForm({ reducedReportingsOnContext, selectedReporting, setShouldValidateOnChange }) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
 
   const isConfirmCancelDialogVisible = useAppSelector(state => state.reporting.isConfirmCancelDialogVisible)

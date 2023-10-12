@@ -1,17 +1,17 @@
 import { Accent, Button, Icon, MapMenuDialog } from '@mtes-mct/monitor-ui'
-import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setDisplayedItems, ReportingContext } from '../../../domain/shared_slices/Global'
 import { saveMissionInLocalStore } from '../../../domain/use_cases/missions/saveMissionInLocalStore'
 import { addReporting } from '../../../domain/use_cases/reporting/addReporting'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { sideWindowActions } from '../../SideWindow/slice'
 import { ReportingFilterContext, ReportingsFilters } from '../Filters'
 
 export function SearchReportings() {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const {
     global: { displayReportingsLayer }
   } = useAppSelector(state => state)

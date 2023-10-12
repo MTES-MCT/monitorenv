@@ -1,12 +1,12 @@
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { useDispatch } from 'react-redux'
 
 import { getMissionZoneFeature } from './missionGeometryHelpers'
 import { missionWithCentroidStyleFn } from './missions.style'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { selectMissionOnMap } from '../../../../domain/use_cases/missions/selectMissionOnMap'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useGetFilteredMissionsQuery } from '../../../../hooks/useGetFilteredMissionsQuery'
 
@@ -14,7 +14,7 @@ import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { Geometry } from 'ol/geom'
 
 export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { displayMissionsLayer } = useAppSelector(state => state.global)
   const { missions } = useGetFilteredMissionsQuery()
   const listener = useAppSelector(state => state.draw.listener)

@@ -7,7 +7,6 @@ import {
   getOptionsFromIdAndName
 } from '@mtes-mct/monitor-ui'
 import { type MutableRefObject, useMemo, useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { CheckPicker } from 'rsuite'
 import styled from 'styled-components'
 
@@ -19,12 +18,13 @@ import { DateRangeEnum, dateRangeLabels } from '../../../../domain/entities/date
 import { missionSourceEnum, missionStatusLabels, missionTypeEnum } from '../../../../domain/entities/missions'
 import { seaFrontLabels } from '../../../../domain/entities/seaFrontType'
 import { MissionFiltersEnum, resetMissionFilters, updateFilters } from '../../../../domain/shared_slices/MissionFilters'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReactComponent as ReloadSVG } from '../../../../uiMonitor/icons/Reload.svg'
 import { getThemesAsListOptions } from '../../../../utils/getThemesAsListOptions'
 
 export function MissionsTableFilters() {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { newWindowContainerRef } = useNewWindow()
   const {
     hasFilters,

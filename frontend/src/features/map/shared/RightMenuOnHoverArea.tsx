@@ -1,13 +1,13 @@
 import { useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { setReportingFormVisibility, ReportingContext, VisibilityState } from '../../../domain/shared_slices/Global'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useClickOutsideWhenOpened } from '../../../hooks/useClickOutsideWhenOpened'
 
 export function RightMenuOnHoverArea() {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const {
     reportingFormVisibility: { context, visibility }
   } = useAppSelector(state => state.global)

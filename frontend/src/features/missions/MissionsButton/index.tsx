@@ -1,6 +1,5 @@
 import { Accent, Button, Icon, Size } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
-import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
@@ -8,13 +7,14 @@ import { setDisplayedItems, ReportingContext, VisibilityState } from '../../../d
 import { addMission } from '../../../domain/use_cases/missions/addMission'
 import { saveMissionInLocalStore } from '../../../domain/use_cases/missions/saveMissionInLocalStore'
 import { reduceReportingFormOnMap } from '../../../domain/use_cases/reporting/reduceReportingFormOnMap'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { isMissionOrMissionsPage } from '../../../utils/routes'
 import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
 import { sideWindowActions, SideWindowStatus } from '../../SideWindow/slice'
 
 export function MissionsMenu() {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { displayMissionsLayer, isSearchMissionsVisible, reportingFormVisibility } = useAppSelector(
     state => state.global
   )

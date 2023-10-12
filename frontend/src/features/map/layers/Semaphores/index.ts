@@ -2,7 +2,6 @@ import { cloneDeep, reduce } from 'lodash'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { useDispatch } from 'react-redux'
 
 import { semaphoresStyleFn } from './semaphores.style'
 import { getSemaphoreZoneFeature } from './semaphoresGeometryHelpers'
@@ -11,6 +10,7 @@ import { useGetSemaphoresQuery } from '../../../../api/semaphoresAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { setOverlayCoordinates } from '../../../../domain/shared_slices/Global'
 import { setSelectedSemaphore } from '../../../../domain/shared_slices/SemaphoresSlice'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
@@ -18,7 +18,7 @@ import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
 export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { displaySemaphoresLayer } = useAppSelector(state => state.global)
   const { isSemaphoreHighlighted, selectedSemaphoreId } = useAppSelector(state => state.semaphoresSlice)
   const { overlayCoordinates } = useAppSelector(state => state.global)

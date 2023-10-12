@@ -1,4 +1,3 @@
-import { useDispatch } from 'react-redux'
 import { RadioGroup } from 'rsuite'
 import styled from 'styled-components'
 
@@ -6,6 +5,7 @@ import { BaseLayerItem } from './BaseLayerItem'
 import { BaseLayers } from '../../../domain/entities/layers/constants'
 import { toggleBaseLayer } from '../../../domain/shared_slices/LayerSidebar'
 import { selectBaseLayer } from '../../../domain/shared_slices/Map'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 import { LayerSelectorMenu } from '../utils/LayerSelectorMenu.style'
@@ -13,7 +13,7 @@ import { LayerSelectorMenu } from '../utils/LayerSelectorMenu.style'
 const baseLayersKeys = Object.keys(BaseLayers).filter(key => key !== BaseLayers.DARK.code)
 
 export function BaseLayerList() {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { baselayerIsOpen } = useAppSelector(state => state.layerSidebar)
   const { selectedBaseLayer } = useAppSelector(state => state.map)
   const onSectionTitleClicked = () => {

@@ -1,16 +1,16 @@
 import { Accent, Button, Icon, IconButton, Size, customDayjs as dayjs, pluralize } from '@mtes-mct/monitor-ui'
 import { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { editMissionInLocalStore } from '../../../../domain/use_cases/missions/editMissionInLocalStore'
 import { clearSelectedMissionOnMap } from '../../../../domain/use_cases/missions/selectMissionOnMap'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { MissionSourceTag } from '../../../../ui/MissionSourceTag'
 import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
 import { missionTypesToString } from '../../../../utils/missionTypes'
 
 export function MissionCard({ feature, selected = false }: { feature: any; selected?: boolean }) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const {
     controlUnits,
     endDateTimeUtc,

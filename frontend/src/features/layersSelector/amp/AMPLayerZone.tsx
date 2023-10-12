@@ -1,18 +1,18 @@
 import { Accent, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
-import { useDispatch } from 'react-redux'
 
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../domain/entities/map/constants'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import { hideAmpLayer, removeAmpZonesFromMyLayers, showAmpLayer } from '../../../domain/shared_slices/SelectedAmp'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { AMPLayerLegend } from '../utils/LayerLegend.style'
 import { LayerSelector } from '../utils/LayerSelector.style'
 
 import type { AMP } from '../../../domain/entities/AMPs'
 
 export function AMPLayerZone({ amp, isDisplayed }: { amp: AMP; isDisplayed: boolean }) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const handleRemoveZone = () => dispatch(removeAmpZonesFromMyLayers([amp.id]))
   const zoomToLayerExtent = () => {

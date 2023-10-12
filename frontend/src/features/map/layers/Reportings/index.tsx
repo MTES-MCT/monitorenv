@@ -2,12 +2,12 @@ import { reduce } from 'lodash'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { useDispatch } from 'react-redux'
 
 import { getReportingZoneFeature } from './reportingsGeometryHelpers'
 import { reportingPinStyleFn } from './style'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { reportingActions } from '../../../../domain/shared_slices/reporting'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useGetFilteredReportingsQuery } from '../../../Reportings/hooks/useGetFilteredReportingsQuery'
 
@@ -16,7 +16,7 @@ import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
 export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { displayReportingsLayer, overlayCoordinates } = useAppSelector(state => state.global)
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const listener = useAppSelector(state => state.draw.listener)

@@ -1,7 +1,6 @@
 import { IconButton, Accent, Size, Icon, THEME } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
-import { useDispatch } from 'react-redux'
 
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map/constants'
 import { setFitToExtent } from '../../../../domain/shared_slices/Map'
@@ -12,12 +11,13 @@ import {
 } from '../../../../domain/shared_slices/Regulatory'
 import { closeRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
 import { showRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/showRegulatoryZoneMetadata'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { RegulatoryLayerLegend } from '../../utils/LayerLegend.style'
 import { LayerSelector } from '../../utils/LayerSelector.style'
 
 export function RegulatoryLayerZone({ regulatoryZone }) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { showedRegulatoryLayerIds } = useAppSelector(state => state.regulatory)
   const { regulatoryMetadataLayerId, regulatoryMetadataPanelIsOpen } = useAppSelector(state => state.regulatoryMetadata)
   const regulatoryZoneIsShowed = showedRegulatoryLayerIds.includes(regulatoryZone.id)

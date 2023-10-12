@@ -12,7 +12,6 @@ import { METERS_PER_UNIT } from 'ol/proj/Units'
 import VectorSource from 'ol/source/Vector'
 import { getLength } from 'ol/sphere'
 import { useCallback, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
 
 import { measurementStyle, measurementStyleWithCenter } from './styles/measurement.style'
 import { Layers } from '../../../domain/entities/layers/constants'
@@ -23,6 +22,7 @@ import {
   setCircleMeasurementInDrawing
 } from '../../../domain/shared_slices/Measurement'
 import { saveMeasurement } from '../../../domain/use_cases/measurement/saveMeasurement'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getNauticalMilesFromMeters } from '../../../utils/utils'
 import { MeasurementOverlay } from '../overlays/MeasurementOverlay'
@@ -68,7 +68,7 @@ function getNauticalMilesRadiusOfCircularPolygon(polygon, distanceUnit) {
 }
 
 export function MeasurementLayer({ map }: BaseMapChildrenProps) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const { distanceUnit } = useAppSelector(state => state.map)
 

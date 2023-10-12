@@ -1,7 +1,6 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Form, Formik } from 'formik'
 import { useMemo, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { ReportingForm } from './Form'
@@ -9,6 +8,7 @@ import { ReportingSchema } from './Schema'
 import { useGetReportingQuery } from '../../../api/reportingsAPI'
 import { ReportingContext, VisibilityState } from '../../../domain/shared_slices/Global'
 import { saveReporting } from '../../../domain/use_cases/reporting/saveReporting'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { SideWindowBackground, FormContainer } from '../style'
 import { getReportingInitialValues, isNewReporting } from '../utils'
@@ -21,7 +21,7 @@ export function ReportingFormWithContext({ context, totalReportings }) {
     activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined
   )
 
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const isReportingNew = useMemo(() => isNewReporting(activeReportingId), [activeReportingId])
 
