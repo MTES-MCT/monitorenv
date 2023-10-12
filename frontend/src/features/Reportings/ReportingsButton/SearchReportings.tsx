@@ -4,6 +4,7 @@ import styled from 'styled-components'
 
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setDisplayedItems, ReportingContext } from '../../../domain/shared_slices/Global'
+import { saveMissionInLocalStore } from '../../../domain/use_cases/missions/saveMissionInLocalStore'
 import { addReporting } from '../../../domain/use_cases/reporting/addReporting'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { sideWindowActions } from '../../SideWindow/slice'
@@ -28,7 +29,8 @@ export function SearchReportings() {
     dispatch(addReporting(ReportingContext.MAP))
   }
 
-  const toggleReportingsWindow = () => {
+  const toggleReportingsWindow = async () => {
+    await dispatch(saveMissionInLocalStore())
     dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.REPORTINGS))
   }
 

@@ -10,8 +10,9 @@ import { StyledRouteContainer, Wrapper } from './style'
 import { ErrorBoundary } from '../../components/ErrorBoundary'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { ReportingContext } from '../../domain/shared_slices/Global'
+import { switchTab } from '../../domain/use_cases/missions/switchTab'
 import { useAppSelector } from '../../hooks/useAppSelector'
-import { isMissionOrMissionsPage, isReportingsPage } from '../../utils/routes'
+import { isMissionOrMissionsPage, isMissionPage, isReportingsPage } from '../../utils/routes'
 import { Mission } from '../missions/MissionForm'
 import { Missions } from '../missions/MissionsList'
 import { MissionsNavBar } from '../missions/MissionsNavBar'
@@ -34,7 +35,13 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
   const isReportingsButtonIsActive = useMemo(() => isReportingsPage(currentPath), [currentPath])
 
   const navigate = nextPath => {
-    if (nextPath) {
+    if (!nextPath) {
+      return
+    }
+    const isCurrentPathIsMissionPage = isMissionPage(currentPath)
+    if (isCurrentPathIsMissionPage) {
+      dispatch(switchTab(nextPath))
+    } else {
       dispatch(sideWindowActions.setCurrentPath(nextPath))
     }
   }
@@ -83,7 +90,9 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
             </StyledRouteContainer>
           </NewWindowContext.Provider>
         )}
-        <Reportings key="reportings-on-side-window" context={ReportingContext.SIDE_WINDOW} />
+        {isReportingsButtonIsActive && (
+          <Reportings key="reportings-on-side-window" context={ReportingContext.SIDE_WINDOW} />
+        )}
         <ToastContainer containerId="sideWindow" enableMultiContainer />
       </Wrapper>
     </ErrorBoundary>

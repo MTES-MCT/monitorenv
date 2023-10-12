@@ -30,6 +30,10 @@ context('Mission', () => {
     cy.get('[data-cy="mission-1"] > svg').first().click({ force: true }).wait(250)
     cy.clickButton("Retourner à l'édition")
 
+    // navigate between reportings and missions
+    cy.clickButton('signalements')
+    cy.clickButton('missions')
+
     // we want to check whether the second mission has been saved correctly
     cy.get('[data-cy="mission-2"]').first().forceClick().wait(250)
     cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')

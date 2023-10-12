@@ -11,16 +11,17 @@ export function getMissionPageRoute(path: string) {
     path as string
   )
 }
-
-export function isMissionOrMissionsPage(path: string) {
-  const isMissionPage = !!matchPath<'id', string>(
+export function isMissionPage(path: string) {
+  return !!matchPath<'id', string>(
     {
       end: true,
       path: sideWindowPaths.MISSION
     },
     path as string
   )
+}
 
+export function isMissionOrMissionsPage(path: string) {
   const isMissionsPage = !!matchPath(
     {
       end: true,
@@ -29,7 +30,7 @@ export function isMissionOrMissionsPage(path: string) {
     path as string
   )
 
-  return isMissionPage || isMissionsPage
+  return isMissionPage(path) || isMissionsPage
 }
 
 export function isReportingsPage(path: string) {

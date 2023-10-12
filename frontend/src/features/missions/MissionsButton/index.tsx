@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setDisplayedItems, ReportingContext, VisibilityState } from '../../../domain/shared_slices/Global'
 import { addMission } from '../../../domain/use_cases/missions/addMission'
+import { saveMissionInLocalStore } from '../../../domain/use_cases/missions/saveMissionInLocalStore'
 import { reduceReportingFormOnMap } from '../../../domain/use_cases/reporting/reduceReportingFormOnMap'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { isMissionOrMissionsPage } from '../../../utils/routes'
@@ -24,12 +25,15 @@ export function MissionsMenu() {
     [sideWindow.currentPath, sideWindow.status]
   )
 
-  const toggleMissionsWindow = () => {
-    dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSIONS))
+  const toggleMissionsWindow = async () => {
+    await dispatch(saveMissionInLocalStore())
+    await dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSIONS))
   }
+
   const toggleMissionsLayer = () => {
     dispatch(setDisplayedItems({ displayMissionsLayer: !displayMissionsLayer }))
   }
+
   const toggleMissionsMenu = e => {
     e.preventDefault()
     dispatch(
