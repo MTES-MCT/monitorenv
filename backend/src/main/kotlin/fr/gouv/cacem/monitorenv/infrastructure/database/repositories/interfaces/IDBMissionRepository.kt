@@ -3,20 +3,20 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import org.hibernate.annotations.DynamicUpdate
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.CrudRepository
 import java.time.Instant
 
 @DynamicUpdate
-interface IDBMissionRepository : CrudRepository<MissionModel, Int> {
+interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
     // see https://github.com/spring-projects/spring-data-jpa/issues/2491
     // and https://stackoverflow.com/questions/55169797/pass-liststring-into-postgres-function-as-parameter
     // for ugly casting of passed parameters
     @Query(
         value = """
-        SELECT * 
-        FROM missions 
+        SELECT *
+        FROM missions
         WHERE
             deleted IS FALSE
             AND (
@@ -35,16 +35,16 @@ interface IDBMissionRepository : CrudRepository<MissionModel, Int> {
                     start_datetime_utc >= now()
                     AND closed = FALSE
                     ))
-                OR ( 
+                OR (
                     'PENDING' = ANY(CAST(:missionStatuses as text[])) AND (
                     (end_datetime_utc IS NULL OR end_datetime_utc >= now())
                     AND (start_datetime_utc <= now())
                     AND closed = FALSE
                     )
                 )
-                OR ( 
+                OR (
                     'ENDED' = ANY(CAST(:missionStatuses as text[])) AND (
-                    end_datetime_utc < now() 
+                    end_datetime_utc < now()
                     AND closed = FALSE
                     )
                 )
@@ -52,7 +52,7 @@ interface IDBMissionRepository : CrudRepository<MissionModel, Int> {
                     'CLOSED' = ANY(CAST(:missionStatuses as text[])) AND (
                     closed = TRUE
                     )
-                ) 
+                )
             )
             AND ((:missionSources) = '{}' OR CAST(mission_source AS text) = ANY(CAST(:missionSources as text[])))
         ORDER BY start_datetime_utc DESC

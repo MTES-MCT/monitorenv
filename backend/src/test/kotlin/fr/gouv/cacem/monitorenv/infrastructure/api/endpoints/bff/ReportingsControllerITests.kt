@@ -17,6 +17,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingById
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportings
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.FullReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateReportingDataInput
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.Point
@@ -70,9 +71,20 @@ class ReportingsControllerITests {
                     "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
                 )
         val reporting =
-            ReportingEntity(
+            FullReportingDTO(
                 id = 1,
                 sourceType = SourceTypeEnum.SEMAPHORE,
+                semaphoreId = 1,
+                semaphore = SemaphoreEntity(
+                    id = 1,
+                    name = "name",
+                    geom =
+                    WKTReader()
+                        .read(
+                            "POINT (-61.0 14.0)",
+                        ) as
+                        Point,
+                ),
                 targetType = TargetTypeEnum.VEHICLE,
                 vehicleType = VehicleTypeEnum.VESSEL,
                 geom = polygon,
@@ -92,17 +104,6 @@ class ReportingsControllerITests {
                 isArchived = false,
                 isDeleted = false,
                 openBy = "CDA",
-            )
-        val semaphore =
-            SemaphoreEntity(
-                id = 1,
-                name = "name",
-                geom =
-                WKTReader()
-                    .read(
-                        "POINT (-61.0 14.0)",
-                    ) as
-                    Point,
             )
 
         val request =
@@ -128,7 +129,7 @@ class ReportingsControllerITests {
                 openBy = "CDA",
             )
 
-        given(createOrUpdateReporting.execute(any())).willReturn(Triple(reporting, null, semaphore))
+        given(createOrUpdateReporting.execute(any())).willReturn(reporting)
         // When
         mockedApi
             .perform(
@@ -174,9 +175,20 @@ class ReportingsControllerITests {
                     "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
                 )
         val reporting =
-            ReportingEntity(
+            FullReportingDTO(
                 id = 1,
                 sourceType = SourceTypeEnum.SEMAPHORE,
+                semaphoreId = 1,
+                semaphore = SemaphoreEntity(
+                    id = 1,
+                    name = "name",
+                    geom =
+                    WKTReader()
+                        .read(
+                            "POINT (-61.0 14.0)",
+                        ) as
+                        Point,
+                ),
                 targetType = TargetTypeEnum.VEHICLE,
                 vehicleType = VehicleTypeEnum.VESSEL,
                 geom = polygon,
@@ -197,19 +209,8 @@ class ReportingsControllerITests {
                 isDeleted = false,
                 openBy = "CDA",
             )
-        val semaphore =
-            SemaphoreEntity(
-                id = 1,
-                name = "name",
-                geom =
-                WKTReader()
-                    .read(
-                        "POINT (-61.0 14.0)",
-                    ) as
-                    Point,
-            )
 
-        given(getReportingById.execute(any())).willReturn(Triple(reporting, null, semaphore))
+        given(getReportingById.execute(any())).willReturn(reporting)
 
         // When
         mockedApi
@@ -315,9 +316,20 @@ class ReportingsControllerITests {
                     "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
                 )
         val updatedReporting =
-            ReportingEntity(
+            FullReportingDTO(
                 id = 1,
                 sourceType = SourceTypeEnum.SEMAPHORE,
+                semaphoreId = 1,
+                semaphore = SemaphoreEntity(
+                    id = 1,
+                    name = "name",
+                    geom =
+                    WKTReader()
+                        .read(
+                            "POINT (-61.0 14.0)",
+                        ) as
+                        Point,
+                ),
                 targetType = TargetTypeEnum.VEHICLE,
                 vehicleType = VehicleTypeEnum.VESSEL,
                 geom = polygon,
@@ -337,17 +349,6 @@ class ReportingsControllerITests {
                 isArchived = false,
                 isDeleted = false,
                 openBy = "CDA",
-            )
-        val semaphore =
-            SemaphoreEntity(
-                id = 1,
-                name = "name",
-                geom =
-                WKTReader()
-                    .read(
-                        "POINT (-61.0 14.0)",
-                    ) as
-                    Point,
             )
         val updateRequestBody =
             objectMapper.writeValueAsString(
@@ -379,7 +380,7 @@ class ReportingsControllerITests {
             )
 
         given(createOrUpdateReporting.execute(any()))
-            .willReturn(Triple(updatedReporting, null, semaphore))
+            .willReturn(updatedReporting)
 
         // When
         mockedApi

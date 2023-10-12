@@ -103,7 +103,7 @@ data class EnvActionModel(
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
         other as EnvActionModel
 
-        return id == other.id
+        return id != null && id == other.id
     }
 
     override fun hashCode(): Int = javaClass.hashCode()

@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.ArchiveReportings
@@ -38,6 +39,7 @@ class ReportingsController(
     private val deleteReporting: DeleteReporting,
     private val deleteReportings: DeleteReportings,
     private val archiveReportings: ArchiveReportings,
+    private val mapper: ObjectMapper,
 ) {
 
     @GetMapping("")
@@ -46,7 +48,9 @@ class ReportingsController(
         @Parameter(description = "page number")
         @RequestParam(name = "pageNumber")
         pageNumber: Int?,
-        @Parameter(description = "page size") @RequestParam(name = "pageSize") pageSize: Int?,
+        @Parameter(description = "page size")
+        @RequestParam(name = "pageSize")
+        pageSize: Int?,
         @Parameter(description = "Reporting created after date")
         @RequestParam(name = "startedAfterDateTime", required = false)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -89,41 +93,55 @@ class ReportingsController(
     ): ReportingDataOutput {
         val newReporting = createReporting.toReportingEntity()
         val createdReporting = createOrUpdateReporting.execute(newReporting)
-        return ReportingDataOutput.fromReporting(
-            createdReporting.first,
-            createdReporting.second,
-            createdReporting.third,
+        return ReportingDataOutput.fromFullReportingDTO(
+            objectMapper = mapper,
+            reporting = createdReporting,
+
         )
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get reporting by id")
     fun getReportingByIdController(
-        @PathParam("reporting id") @PathVariable(name = "id") id: Int,
+        @PathParam("reporting id")
+        @PathVariable(name = "id")
+        id: Int,
     ): ReportingDataOutput {
         return getReportingById.execute(id).let {
-            ReportingDataOutput.fromReporting(it.first, it.second, it.third)
+            ReportingDataOutput.fromFullReportingDTO(
+                objectMapper = mapper,
+                reporting = it,
+            )
         }
     }
 
     @PutMapping(value = ["/{id}"], consumes = ["application/json"])
     @Operation(summary = "update a reporting")
     fun updateReportingController(
-        @PathParam("reporting id") @PathVariable(name = "id") id: Int,
+        @PathParam("reporting id")
+        @PathVariable(name = "id")
+        id: Int,
         @RequestBody reporting: CreateOrUpdateReportingDataInput,
     ): ReportingDataOutput {
         require(id == reporting.id) { "id in path and body must be the same" }
         return createOrUpdateReporting.execute(
             reporting.toReportingEntity(),
         )
-            .let { ReportingDataOutput.fromReporting(it.first, it.second, it.third) }
+            .let {
+                ReportingDataOutput.fromFullReportingDTO(
+                    objectMapper = mapper,
+                    reporting = it,
+                )
+            }
     }
 
     @DeleteMapping(value = ["/{id}"])
     @Operation(summary = "Delete a reporting")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteController(
-        @PathParam("Id") @PathVariable(name = "id") id: Int,
+        @PathParam("Id")
+        @PathVariable(name = "id")
+        id: Int,
     ) {
         deleteReporting.execute(id = id)
     }

@@ -1,5 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
+import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.vladmihalcea.hibernate.type.array.ListArrayType
@@ -11,14 +13,19 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.FullReportingDTO
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import org.hibernate.Hibernate
 import org.hibernate.annotations.Generated
 import org.hibernate.annotations.GenerationTime
 import org.hibernate.annotations.JdbcType
@@ -51,10 +58,14 @@ data class ReportingModel(
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
     val sourceType: SourceTypeEnum? = null,
-    @Column(name = "semaphore_id")
-    val semaphoreId: Int? = null,
-    @Column(name = "control_unit_id")
-    val controlUnitId: Int? = null,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "semaphore_id", nullable = true)
+    @JsonBackReference
+    val semaphore: SemaphoreModel? = null,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "control_unit_id", nullable = true)
+    @JsonBackReference
+    val controlUnit: ControlUnitModel? = null,
     @Column(name = "source_name")
     val sourceName: String? = null,
     @Column(name = "target_type", columnDefinition = "reportings_target_type")
@@ -101,8 +112,10 @@ data class ReportingModel(
     val isDeleted: Boolean,
     @Column(name = "open_by")
     val openBy: String? = null,
-    @Column(name = "attached_mission_id")
-    val attachedMissionId: Int? = null,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "attached_mission_id", nullable = true)
+    @JsonBackReference
+    val attachedMission: MissionModel? = null,
     @Column(name = "attached_to_mission_at_utc")
     val attachedToMissionAtUtc: Instant? = null,
     @Column(name = "detached_from_mission_at_utc")
@@ -117,8 +130,8 @@ data class ReportingModel(
             id = id,
             reportingId = reportingId,
             sourceType = sourceType,
-            semaphoreId = semaphoreId,
-            controlUnitId = controlUnitId,
+            semaphoreId = semaphore?.id,
+            controlUnitId = controlUnit?.id,
             sourceName = sourceName,
             targetType = targetType,
             vehicleType = vehicleType,
@@ -137,20 +150,65 @@ data class ReportingModel(
             isArchived = isArchived,
             isDeleted = isDeleted,
             openBy = openBy,
-            attachedMissionId = attachedMissionId,
+            attachedMissionId = attachedMission?.id,
             attachedToMissionAtUtc = attachedToMissionAtUtc?.atZone(UTC),
             detachedFromMissionAtUtc = detachedFromMissionAtUtc?.atZone(UTC),
             attachedEnvActionId = attachedEnvActionId,
         )
+    fun toFullReporting(objectMapper: ObjectMapper) = FullReportingDTO(
+        id = id,
+        reportingId = reportingId,
+        sourceType = sourceType,
+        semaphoreId = semaphore?.id,
+        controlUnitId = controlUnit?.id,
+        sourceName = sourceName,
+        targetType = targetType,
+        vehicleType = vehicleType,
+        targetDetails = targetDetails,
+        geom = geom,
+        seaFront = seaFront,
+        description = description,
+        reportType = reportType,
+        theme = theme,
+        subThemes = subThemes,
+        actionTaken = actionTaken,
+        isControlRequired = isControlRequired,
+        isUnitAvailable = isUnitAvailable,
+        createdAt = createdAt.atZone(UTC),
+        validityTime = validityTime,
+        isArchived = isArchived,
+        isDeleted = isDeleted,
+        openBy = openBy,
+        attachedMission = attachedMission?.toMissionEntity(objectMapper),
+        attachedMissionId = attachedMission?.id,
+        attachedToMissionAtUtc = attachedToMissionAtUtc?.atZone(UTC),
+        detachedFromMissionAtUtc = detachedFromMissionAtUtc?.atZone(UTC),
+        attachedEnvActionId = attachedEnvActionId,
+    )
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as ReportingModel
+
+        return id != null && id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
 
     companion object {
-        fun fromReportingEntity(reporting: ReportingEntity) =
+        fun fromReportingEntity(
+            reporting: ReportingEntity,
+            semaphoreReference: SemaphoreModel?,
+            controlUnitReference: ControlUnitModel?,
+            attachedMissionReference: MissionModel?,
+        ) =
             ReportingModel(
                 id = reporting.id,
                 reportingId = reporting.reportingId,
                 sourceType = reporting.sourceType,
-                semaphoreId = reporting.semaphoreId,
-                controlUnitId = reporting.controlUnitId,
+                semaphore = semaphoreReference,
+                controlUnit = controlUnitReference,
                 sourceName = reporting.sourceName,
                 targetType = reporting.targetType,
                 vehicleType = reporting.vehicleType,
@@ -169,7 +227,7 @@ data class ReportingModel(
                 isArchived = reporting.isArchived,
                 isDeleted = reporting.isDeleted,
                 openBy = reporting.openBy,
-                attachedMissionId = reporting.attachedMissionId,
+                attachedMission = attachedMissionReference,
                 attachedToMissionAtUtc = reporting.attachedToMissionAtUtc?.toInstant(),
                 detachedFromMissionAtUtc = reporting.detachedFromMissionAtUtc?.toInstant(),
                 attachedEnvActionId = reporting.attachedEnvActionId,

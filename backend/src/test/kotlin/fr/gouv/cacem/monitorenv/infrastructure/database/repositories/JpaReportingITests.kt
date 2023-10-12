@@ -5,6 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
+import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -78,7 +79,6 @@ class JpaReportingITests : AbstractDBTests() {
         assertThat(reporting.createdAt).isEqualTo(ZonedDateTime.parse("2023-04-01T00:00:00Z"))
         assertThat(reporting.validityTime).isEqualTo(24)
         assertThat(reporting.isArchived).isEqualTo(false)
-        assertThat(reporting.isDeleted).isEqualTo(false)
         assertThat(reporting.openBy).isEqualTo("CDA")
 
         val numberOfExistingReportingsAfterSave = jpaReportingRepository.count()
@@ -97,7 +97,6 @@ class JpaReportingITests : AbstractDBTests() {
         assertThat(reporting.targetType).isEqualTo(TargetTypeEnum.VEHICLE)
         assertThat(reporting.vehicleType).isEqualTo(VehicleTypeEnum.VESSEL)
         assertThat(reporting.validityTime).isEqualTo(24)
-        assertThat(reporting.isDeleted).isEqualTo(false)
     }
 
     @Test
@@ -130,11 +129,9 @@ class JpaReportingITests : AbstractDBTests() {
                 semaphoreId = 23,
                 createdAt = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
                 isArchived = false,
-                isDeleted = false,
                 openBy = "CDA",
             )
-        val savedReporting = jpaReportingRepository.save(updatedReporting)
-
+        val savedReporting = jpaReportingRepository.save(updatedReporting.toReportingEntity())
         // Then
         assertThat(savedReporting.id).isEqualTo(1)
         assertThat(savedReporting.sourceType).isEqualTo(SourceTypeEnum.SEMAPHORE)
@@ -168,7 +165,6 @@ class JpaReportingITests : AbstractDBTests() {
         val numberOfExistingReportings = jpaReportingRepository.count()
         assertThat(numberOfExistingReportings).isEqualTo(7)
         val existingReporting = jpaReportingRepository.findById(1)
-        assertThat(existingReporting.isDeleted).isEqualTo(false)
         // When
         jpaReportingRepository.delete(1)
 
@@ -201,7 +197,12 @@ class JpaReportingITests : AbstractDBTests() {
         assertThat(existingReporting.attachedMissionId).isNull()
         // When
 
-        jpaReportingRepository.save(existingReporting.copy(attachedMissionId = 43, attachedToMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z")))
+        jpaReportingRepository.save(
+            existingReporting.copy(
+                attachedMissionId = 43,
+                attachedToMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+            ).toReportingEntity(),
+        )
 
         // Then
         val attachedReporting = jpaReportingRepository.findById(1)
@@ -214,15 +215,25 @@ class JpaReportingITests : AbstractDBTests() {
     fun `attach an existing envAction to a reporting`() {
         // Given
         val existingReporting = jpaReportingRepository.findById(1)
-        val reportingWithMission = jpaReportingRepository.save(existingReporting.copy(attachedMissionId = 43, attachedToMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z")))
+        val reportingWithMission = jpaReportingRepository.save(
+            existingReporting.copy(
+                attachedMissionId = 43,
+                attachedToMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+            ).toReportingEntity(),
+        )
         assertThat(reportingWithMission.attachedEnvActionId).isNull()
+        assertThat(reportingWithMission.attachedMissionId).isEqualTo(43)
         // When
 
-        jpaReportingRepository.save(reportingWithMission.copy(attachedEnvActionId = UUID.fromString("74c54cb3-195f-4231-99db-772aebe7a66f")))
+        jpaReportingRepository.save(
+            reportingWithMission.copy(attachedEnvActionId = UUID.fromString("74c54cb3-195f-4231-99db-772aebe7a66f")).toReportingEntity(),
+        )
 
         // Then
         val attachedReporting = jpaReportingRepository.findById(1)
-        assertThat(attachedReporting.attachedEnvActionId).isEqualTo(UUID.fromString("74c54cb3-195f-4231-99db-772aebe7a66f"))
+        assertThat(attachedReporting.attachedEnvActionId).isEqualTo(
+            UUID.fromString("74c54cb3-195f-4231-99db-772aebe7a66f"),
+        )
     }
 
     @Test
@@ -235,11 +246,15 @@ class JpaReportingITests : AbstractDBTests() {
         // When
 
         val exception = assertThrows<Exception> {
-            jpaReportingRepository.save(existingReporting.copy(attachedEnvActionId = UUID.fromString("74c54cb3-195f-4231-99db-772aebe7a66f")))
+            jpaReportingRepository.save(
+                existingReporting.copy(attachedEnvActionId = UUID.fromString("74c54cb3-195f-4231-99db-772aebe7a66f")).toReportingEntity(),
+            )
         }
 
         // Then
-        assertThat(exception.message).isEqualTo("could not execute statement; SQL [n/a]; constraint [attached_mission_id_not_null_if_attached_env_action_id_not_null]")
+        assertThat(exception.message).isEqualTo(
+            "could not execute statement; SQL [n/a]; constraint [attached_mission_id_not_null_if_attached_env_action_id_not_null]",
+        )
     }
 
     @Test
@@ -252,11 +267,18 @@ class JpaReportingITests : AbstractDBTests() {
         // When
 
         val exception = assertThrows<Exception> {
-            jpaReportingRepository.save(existingReporting.copy(attachedEnvActionId = UUID.fromString("74c54cb3-195f-4231-99db-772aebe7a66f"), attachedMissionId = 42))
+            jpaReportingRepository.save(
+                existingReporting.copy(
+                    attachedMissionId = 42,
+                    attachedEnvActionId = UUID.fromString("74c54cb3-195f-4231-99db-772aebe7a66f"),
+                ).toReportingEntity(),
+            )
         }
 
         // Then
-        assertThat(exception.message).isEqualTo("could not execute statement; SQL [n/a]; constraint [reportings_env_actions_fk]")
+        assertThat(exception.message).isEqualTo(
+            "could not execute statement; SQL [n/a]; constraint [reportings_env_actions_fk]",
+        )
     }
 
     @Test
@@ -266,11 +288,18 @@ class JpaReportingITests : AbstractDBTests() {
         val existingReporting = jpaReportingRepository.findById(1)
         assertThat(existingReporting.attachedMissionId).isNull()
         // When
-        val exception = assertThrows<Exception> {
-            jpaReportingRepository.save(existingReporting.copy(attachedMissionId = 100, attachedToMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z")))
+        val exception = assertThrows<NotFoundException> {
+            jpaReportingRepository.save(
+                existingReporting.copy(
+                    attachedMissionId = 100,
+                    attachedToMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+                ).toReportingEntity(),
+            )
         }
         // Then
-        assertThat(exception.message).isEqualTo("could not execute statement; SQL [n/a]; constraint [reportings_attached_mission_id_fkey]")
+        assertThat(exception.message).isEqualTo(
+            "Invalid reference to semaphore, control unit or mission: not found in referential",
+        )
     }
 
     @Test
@@ -281,9 +310,13 @@ class JpaReportingITests : AbstractDBTests() {
         assertThat(existingReporting.detachedFromMissionAtUtc).isNull()
         // When
         val exception = assertThrows<Exception> {
-            jpaReportingRepository.save(existingReporting.copy(detachedFromMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z")))
+            jpaReportingRepository.save(
+                existingReporting.copy(detachedFromMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z")).toReportingEntity(),
+            )
         }
         // Then
-        assertThat(exception.message).isEqualTo("could not execute statement; SQL [n/a]; constraint [attached_mission_id_not_null_if_attached_env_action_id_not_null]")
+        assertThat(exception.message).isEqualTo(
+            "could not execute statement; SQL [n/a]; constraint [attached_mission_id_not_null_if_attached_env_action_id_not_null]",
+        )
     }
 }

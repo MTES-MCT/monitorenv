@@ -204,7 +204,7 @@ VALUES
    2300007,
     'CONTROL_UNIT',
     null,
-    10000,
+    11,
    NULL,
    'COMPANY',
    NULL,

@@ -19,7 +19,17 @@ import java.util.UUID
 object EnvActionMapper {
     private const val jsonbNullString = "null"
 
-    fun getEnvActionEntityFromJSON(mapper: ObjectMapper, id: UUID, actionStartDateTimeUtc: ZonedDateTime?, actionEndDateTimeUtc: ZonedDateTime?, geom: Geometry?, actionType: ActionTypeEnum, facade: String?, department: String?, value: String?): EnvActionEntity {
+    fun getEnvActionEntityFromJSON(
+        mapper: ObjectMapper,
+        id: UUID,
+        actionStartDateTimeUtc: ZonedDateTime?,
+        actionEndDateTimeUtc: ZonedDateTime?,
+        geom: Geometry?,
+        actionType: ActionTypeEnum,
+        facade: String?,
+        department: String?,
+        value: String?,
+    ): EnvActionEntity {
         return try {
             if (!value.isNullOrEmpty() && value != jsonbNullString) {
                 when (actionType) {
