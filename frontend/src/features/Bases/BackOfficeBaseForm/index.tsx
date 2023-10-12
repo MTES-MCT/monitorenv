@@ -1,4 +1,4 @@
-import { Accent, Button, DataTable, FormikTextInput } from '@mtes-mct/monitor-ui'
+import { Accent, Button, DataTable, FormikNumberInput, FormikTextInput } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Formik } from 'formik'
 import { useCallback } from 'react'
@@ -69,8 +69,8 @@ export function BackOfficeBaseForm() {
             <Form onSubmit={handleSubmit}>
               <FormikTextInput label="Nom" name="name" />
               {/* TODO Use `FormikCoordinatesInput` here after fixing `FormikCoordinatesInput.type` typing error in MUI including it in `cy.fill()` command. */}
-              <FormikTextInput label="Latitude" name="latitude" />
-              <FormikTextInput label="Longitude" name="longitude" />
+              <FormikNumberInput label="Latitude" name="latitude" step="any" />
+              <FormikNumberInput label="Longitude" name="longitude" step="any" />
 
               <ActionGroup>
                 <Button accent={Accent.SECONDARY} onClick={goBackToList}>

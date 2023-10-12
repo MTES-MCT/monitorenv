@@ -15,8 +15,8 @@ context('Back Office > Base Form', () => {
     cy.clickButton('Nouvelle base')
 
     cy.fill('Nom', 'Base 1')
-    cy.fill('Latitude', '1.2')
-    cy.fill('Longitude', '3.4')
+    cy.fill('Latitude', 1.2)
+    cy.fill('Longitude', 3.4)
 
     cy.clickButton('Créer')
 
@@ -26,8 +26,8 @@ context('Back Office > Base Form', () => {
       }
 
       assert.deepEqual(interception.request.body, {
-        latitude: '1.2',
-        longitude: '3.4',
+        latitude: 1.2,
+        longitude: 3.4,
         name: 'Base 1'
       })
     })
@@ -41,8 +41,8 @@ context('Back Office > Base Form', () => {
     })
 
     cy.fill('Nom', 'Base 2')
-    cy.fill('Latitude', '5.6')
-    cy.fill('Longitude', '7.8')
+    cy.fill('Latitude', 5.6)
+    cy.fill('Longitude', 7.8)
 
     cy.clickButton('Mettre à jour')
 
@@ -53,8 +53,8 @@ context('Back Office > Base Form', () => {
 
       assert.deepInclude(interception.request.body, {
         id: 1,
-        latitude: '5.6',
-        longitude: '7.8',
+        latitude: 5.6,
+        longitude: 7.8,
         name: 'Base 2'
       })
     })

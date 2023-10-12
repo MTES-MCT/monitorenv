@@ -53,8 +53,8 @@ class ApiBasesControllerITests {
         )
 
         val newBaseData = CreateOrUpdateBaseDataInput(
-            latitude = "0.0",
-            longitude = "0.0",
+            latitude = 0.0,
+            longitude = 0.0,
             name = "Base Name",
         )
         val requestBody = objectMapper.writeValueAsString(newBaseData)
@@ -136,8 +136,8 @@ class ApiBasesControllerITests {
 
         val nextBaseData = CreateOrUpdateBaseDataInput(
             id = 1,
-            latitude = "0.0",
-            longitude = "0.0",
+            latitude = 0.0,
+            longitude = 0.0,
             name = "Updated Base Name",
         )
         val requestBody = objectMapper.writeValueAsString(nextBaseData)
