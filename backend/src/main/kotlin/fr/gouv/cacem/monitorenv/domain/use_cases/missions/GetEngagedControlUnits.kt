@@ -22,7 +22,7 @@ class GetEngagedControlUnits(private val getMissions: GetMissions) {
         )
 
         val controlUnits = openedMissions
-            .map { it.controlUnits }
+            .map { it.mission.controlUnits }
             .flatten()
             .distinctBy { it.id }
 

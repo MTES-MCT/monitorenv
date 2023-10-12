@@ -123,7 +123,6 @@ class ReportingsController(
             .let {
                 ReportingDataOutput.fromReportingDTO(it)
             }
-
     }
 
     @DeleteMapping(value = ["/{id}"])

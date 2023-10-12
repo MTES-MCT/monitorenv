@@ -13,6 +13,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetEngagedControlUnits
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionById
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissions
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
@@ -257,14 +258,17 @@ class ApiMissionsControllerITests {
     @Test
     fun `Should get all engaged control units`() {
         // Given
-        given(getEngagedControlUnits.execute()).willReturn(listOf(
-            LegacyControlUnitEntity(
-            id = 123,
-            administration = "Admin",
-            resources = listOf(),
-            isArchived = false,
-            name = "Control Unit Name"
-        )))
+        given(getEngagedControlUnits.execute()).willReturn(
+            listOf(
+                LegacyControlUnitEntity(
+                    id = 123,
+                    administration = "Admin",
+                    resources = listOf(),
+                    isArchived = false,
+                    name = "Control Unit Name",
+                ),
+            ),
+        )
 
         // When
         mockMvc.perform(get("/api/v1/missions/engaged_control_units"))
