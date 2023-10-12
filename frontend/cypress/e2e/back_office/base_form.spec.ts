@@ -34,7 +34,7 @@ context('Back Office > Base Form', () => {
   })
 
   it('Should edit a base', () => {
-    cy.intercept('PUT', `/api/v1/bases/3`, FAKE_API_PUT_RESPONSE).as('updateBase')
+    cy.intercept('PUT', `/api/v1/bases/1`, FAKE_API_PUT_RESPONSE).as('updateBase')
 
     cy.clickButton('Éditer cette base', {
       withinSelector: 'tbody > tr:nth-child(2)'
@@ -52,7 +52,7 @@ context('Back Office > Base Form', () => {
       }
 
       assert.deepInclude(interception.request.body, {
-        id: 3,
+        id: 1,
         latitude: '5.6',
         longitude: '7.8',
         name: 'Base 2'
