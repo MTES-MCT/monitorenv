@@ -19,6 +19,7 @@ data class ControlUnitResourceModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null,
 
+    // TODO Make that non-nullable once all resources will have been attached to a base.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "base_id", nullable = false)
     @JsonBackReference
