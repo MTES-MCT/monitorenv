@@ -2,12 +2,12 @@ context('Missions', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
     cy.visit(`/side_window`)
-    // cy.intercept('GET', '/bff/v1/reportings*').as('getReportings')
   })
 
   it('Reportings should be displayed in Reportings Table and filterable', () => {
+    cy.intercept('GET', '/bff/v1/reportings*').as('getReportings')
     cy.clickButton('signalements')
-
+    cy.wait('@getReportings')
     cy.log('A default period filter should be set')
     cy.fill('Période', '24 dernières heures')
     cy.get('*[data-cy="totalReportings"]').contains('4')
@@ -23,6 +23,7 @@ context('Missions', () => {
     cy.get('*[data-cy="totalReportings"]').click('topLeft')
     cy.get('*[data-cy="totalReportings"]').contains('2')
 
+    cy.wait('@getReportings')
     cy.get('*[data-cy="reinitialize-filters"]').click()
     cy.get('*[data-cy="totalReportings"]').contains('4')
 
