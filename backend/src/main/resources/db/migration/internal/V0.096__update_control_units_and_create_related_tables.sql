@@ -3,6 +3,8 @@ SELECT setval('public.administrations_id_seq', (SELECT MAX(id) FROM public.admin
 
 CREATE TABLE public.bases (
     id SERIAL PRIMARY KEY,
+    latitude DOUBLE PRECISION NOT NULL,
+    longitude DOUBLE PRECISION NOT NULL,
     name VARCHAR NOT NULL UNIQUE,
 
     created_at_utc TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -10,22 +12,28 @@ CREATE TABLE public.bases (
 );
 
 ALTER TABLE public.administrations
+    ADD COLUMN is_archived BOOLEAN NOT NULL DEFAULT FALSE,
     ADD COLUMN created_at_utc TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     ADD COLUMN updated_at_utc TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 
 ALTER TABLE public.control_units
     ADD COLUMN area_note VARCHAR,
+    ADD COLUMN department_area_insee_dep VARCHAR,
     ADD COLUMN terms_note VARCHAR,
 
     ADD COLUMN created_at_utc TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    ADD COLUMN updated_at_utc TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
+    ADD COLUMN updated_at_utc TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    ADD CONSTRAINT fk_control_units_department_area_insee_dep_departments_areas
+        FOREIGN KEY (department_area_insee_dep)
+        REFERENCES departments_areas(insee_dep)
+        ON DELETE SET NULL;
 
 CREATE TABLE public.control_unit_contacts (
     id SERIAL PRIMARY KEY,
     control_unit_id INT NOT NULL,
     email VARCHAR,
     name VARCHAR NOT NULL,
-    note VARCHAR,
     phone VARCHAR,
 
     created_at_utc TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -39,13 +47,11 @@ CREATE TABLE public.control_unit_contacts (
 
 CREATE TABLE public.control_unit_resources (
     id SERIAL PRIMARY KEY,
-    -- TODO Make that non-nullable once all resources will have been attached to a base.
     base_id INT,
     control_unit_id INT NOT NULL,
     name VARCHAR NOT NULL,
     note VARCHAR,
     photo BYTEA,
-    -- TODO Make that non-nullable once all resources will have been attached to a type.
     type VARCHAR,
 
     created_at_utc TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -53,8 +59,7 @@ CREATE TABLE public.control_unit_resources (
 
     CONSTRAINT fk_control_unit_resources_base_id_bases
         FOREIGN KEY (base_id)
-        REFERENCES bases(id)
-        ON DELETE CASCADE,
+        REFERENCES bases(id),
     CONSTRAINT fk_control_unit_resources_control_unit_id_control_units
         FOREIGN KEY (control_unit_id)
         REFERENCES control_units(id)
