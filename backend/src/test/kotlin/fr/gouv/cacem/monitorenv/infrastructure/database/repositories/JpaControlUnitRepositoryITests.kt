@@ -204,7 +204,6 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                         controlUnitId = 10000,
                         email = null,
                         name = "Contact 1",
-                        note = null,
                         phone = null,
                     ),
                     ControlUnitContactEntity(
@@ -212,7 +211,6 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                         controlUnitId = 10000,
                         email = null,
                         name = "Contact 2",
-                        note = null,
                         phone = null,
                     ),
                 ),

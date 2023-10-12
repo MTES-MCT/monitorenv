@@ -16,45 +16,45 @@ data class ControlUnitModel(
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int? = null,
+    val id: Int? = null,
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "administration_id", nullable = false)
     @JsonBackReference
-    var administration: AdministrationModel,
+    val administration: AdministrationModel,
 
     @Column(name = "area_note")
-    var areaNote: String? = null,
+    val areaNote: String? = null,
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "controlUnit")
     @JsonManagedReference
-    var controlUnitContacts: List<ControlUnitContactModel>? = mutableListOf(),
+    val controlUnitContacts: List<ControlUnitContactModel>? = mutableListOf(),
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "controlUnit")
     @JsonManagedReference
-    var controlUnitResources: List<ControlUnitResourceModel>? = mutableListOf(),
+    val controlUnitResources: List<ControlUnitResourceModel>? = mutableListOf(),
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_area_insee_dep")
     @JsonBackReference
-    var departmentArea: DepartmentAreaModel? = null,
+    val departmentArea: DepartmentAreaModel? = null,
 
     @Column(name = "archived", nullable = false)
-    var isArchived: Boolean,
+    val isArchived: Boolean,
 
     @Column(name = "name", nullable = false)
-    var name: String,
+    val name: String,
 
     @Column(name = "terms_note")
-    var termsNote: String? = null,
+    val termsNote: String? = null,
 
     @Column(name = "created_at_utc", nullable = false, updatable = false)
     @CreationTimestamp
-    var createdAtUtc: Instant? = null,
+    val createdAtUtc: Instant? = null,
 
     @Column(name = "updated_at_utc", nullable = false)
     @UpdateTimestamp
-    var updatedAtUtc: Instant? = null,
+    val updatedAtUtc: Instant? = null,
 ) {
     companion object {
         /**

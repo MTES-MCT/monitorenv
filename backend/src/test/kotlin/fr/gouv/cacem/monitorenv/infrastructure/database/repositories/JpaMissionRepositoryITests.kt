@@ -106,7 +106,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(newMissionCreated.mission.controlUnits.first().administration).isEqualTo("DDTM")
         assertThat(newMissionCreated.mission.controlUnits.first().resources).hasSize(1)
         assertThat(newMissionCreated.mission.controlUnits.first().resources.first().id).isEqualTo(8)
-        assertThat(newMissionCreated.mission.controlUnits.first().resources.first().baseId).isEqualTo(0)
+        assertThat(newMissionCreated.mission.controlUnits.first().resources.first().baseId).isEqualTo(3)
         assertThat(newMissionCreated.mission.controlUnits.first().resources.first().name).isEqualTo("PAM Jeanne Barret")
         assertThat(newMissionCreated.mission.envActions).hasSize(3)
         assertThat(newMissionCreated.mission.envActions?.first()?.facade).isEqualTo("Facade 1")
@@ -199,7 +199,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(newMissionUpdated.mission.controlUnits.first().administration).isEqualTo("DDTM")
         assertThat(newMissionUpdated.mission.controlUnits.first().resources).hasSize(2)
         assertThat(newMissionUpdated.mission.controlUnits.first().resources.first().id).isEqualTo(8)
-        assertThat(newMissionUpdated.mission.controlUnits.first().resources.first().baseId).isEqualTo(0)
+        assertThat(newMissionUpdated.mission.controlUnits.first().resources.first().baseId).isEqualTo(3)
         assertThat(newMissionUpdated.mission.controlUnits.first().resources.first().name).isEqualTo("PAM Jeanne Barret")
         assertThat(newMissionUpdated.mission.controlUnits.first().resources.last().id).isEqualTo(5)
         assertThat(newMissionUpdated.mission.controlUnits.first().resources.last().name).isEqualTo("Voiture")
@@ -532,7 +532,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                                 baseId = 3,
                                 controlUnitId = 10002,
                                 name = "Voiture",
-                                type = ControlUnitResourceType.LAND_VEHICLE,
+                                type = ControlUnitResourceType.CAR,
                             ),
                         ),
                     ),
