@@ -142,11 +142,6 @@ class MissionsControllerITests {
                         resources = listOf(
                             ControlUnitResourceEntity(
                                 id = 2,
-                                base = BaseEntity(
-                                    id = 3,
-                                    name = "Base 3",
-                                    controlUnitResourceIds = listOf(1, 2, 3),
-                                ),
                                 baseId = 3,
                                 name = "Ressource 2",
                                 type = ControlUnitResourceType.BARGE,

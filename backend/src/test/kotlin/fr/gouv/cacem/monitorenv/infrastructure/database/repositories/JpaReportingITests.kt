@@ -27,7 +27,7 @@ class JpaReportingITests : AbstractDBTests() {
     fun `save should create a new Reporting`() {
         // Given
         val numberOfExistingReportings = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportings).isEqualTo(7)
+        assertThat(numberOfExistingReportings).isEqualTo(8)
 
         // When
         val wktReader = WKTReader()
@@ -58,11 +58,11 @@ class JpaReportingITests : AbstractDBTests() {
             )
         val createdReporting = jpaReportingRepository.save(newReporting)
 
-        val reportingDTO = jpaReportingRepository.findById(8)
+        val reportingDTO = jpaReportingRepository.findById(9)
 
         // Then
-        assertThat(reportingDTO.reporting.id).isEqualTo(8)
-        assertThat(reportingDTO.reporting.reportingId).isEqualTo(2300008)
+        assertThat(reportingDTO.reporting.id).isEqualTo(9)
+        assertThat(reportingDTO.reporting.reportingId).isEqualTo(2300009)
         assertThat(reportingDTO.reporting.sourceType).isEqualTo(SourceTypeEnum.SEMAPHORE)
         assertThat(reportingDTO.reporting.semaphoreId).isEqualTo(21)
         assertThat(reportingDTO.reporting.targetType).isEqualTo(TargetTypeEnum.VEHICLE)
@@ -82,7 +82,7 @@ class JpaReportingITests : AbstractDBTests() {
         assertThat(reportingDTO.reporting.openBy).isEqualTo("CDA")
 
         val numberOfExistingReportingsAfterSave = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(8)
+        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(9)
     }
 
     @Test
@@ -111,7 +111,7 @@ class JpaReportingITests : AbstractDBTests() {
                 sourcesType = null,
                 status = null,
             )
-        assertThat(reportings.size).isEqualTo(7)
+        assertThat(reportings.size).isEqualTo(8)
     }
 
     @Test
@@ -119,7 +119,7 @@ class JpaReportingITests : AbstractDBTests() {
     fun `save should update an existing Reporting`() {
         // Given
         val numberOfExistingReportings = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportings).isEqualTo(7)
+        assertThat(numberOfExistingReportings).isEqualTo(8)
 
         // When
         val existingReportingDTO = jpaReportingRepository.findById(1)
@@ -138,7 +138,7 @@ class JpaReportingITests : AbstractDBTests() {
         assertThat(savedReportingDTO.reporting.semaphoreId).isEqualTo(23)
 
         val numberOfExistingReportingsAfterSave = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(7)
+        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(8)
     }
 
     @Test
@@ -163,14 +163,14 @@ class JpaReportingITests : AbstractDBTests() {
     fun `delete should soft delete reporting`() {
         // Given
         val numberOfExistingReportings = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportings).isEqualTo(7)
+        assertThat(numberOfExistingReportings).isEqualTo(8)
         val existingReporting = jpaReportingRepository.findById(1)
         // When
         jpaReportingRepository.delete(1)
 
         // Then
         val numberOfExistingReportingsAfterSave = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(7)
+        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(8)
 
         val deletedReportingDTO = jpaReportingRepository.findById(1)
         assertThat(deletedReportingDTO.reporting.isDeleted).isEqualTo(true)

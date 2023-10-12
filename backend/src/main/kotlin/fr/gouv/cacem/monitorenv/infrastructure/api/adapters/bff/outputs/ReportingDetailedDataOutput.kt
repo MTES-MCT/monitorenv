@@ -58,7 +58,7 @@ data class ReportingDetailedDataOutput(
                 when (dto.reporting.sourceType) {
                     SourceTypeEnum.SEMAPHORE -> dto?.semaphore?.unit ?: dto?.semaphore?.name
                     // TODO This is really strange : `fullControlUnit?.controlUnit` can't be null and I have to add another `?`...
-                    SourceTypeEnum.CONTROL_UNIT -> dto?.controlUnit?.name
+                    SourceTypeEnum.CONTROL_UNIT -> dto?.controlUnit?.controlUnit?.name
                     SourceTypeEnum.OTHER -> dto.reporting.sourceName
                     else -> ""
                 },

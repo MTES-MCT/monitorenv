@@ -3,6 +3,7 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases
 
 import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.argThat
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
@@ -226,6 +227,7 @@ class CreateOrUpdateMissionUTests {
 
         // When
         val createdMissionDTO = CreateOrUpdateMission(
+            baseRepository = baseRepository,
             departmentRepository = departmentRepository,
             missionRepository = missionRepository,
             facadeRepository = facadeAreasRepository,

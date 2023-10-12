@@ -534,6 +534,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                                 name = "Voiture",
                                 type = ControlUnitResourceType.LAND_VEHICLE,
                             ),
+                        ),
                     ),
                 ),
                 isGeometryComputedFromControls = false,
