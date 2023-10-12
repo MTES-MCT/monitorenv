@@ -5,8 +5,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.departmentArea.DepartmentAreaEnt
 import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreaRepository
 
 @UseCase
-class GetDepartmentAreaByInseeDep(private val departmentAreaRepository: IDepartmentAreaRepository) {
-    fun execute(departmentAreaInseeDep: String): DepartmentAreaEntity {
-        return departmentAreaRepository.findByInseeDep(departmentAreaInseeDep)
+class GetDepartmentAreaByInseeCode(private val departmentAreaRepository: IDepartmentAreaRepository) {
+    fun execute(departmentAreaInseeCode: String): DepartmentAreaEntity {
+        return departmentAreaRepository.findByInseeCode(departmentAreaInseeCode)
     }
 }

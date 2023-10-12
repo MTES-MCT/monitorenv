@@ -3,7 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.departmentArea.DepartmentAreaEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.departmentArea.GetDepartmentAreaByInseeDep
+import fr.gouv.cacem.monitorenv.domain.use_cases.departmentArea.GetDepartmentAreaByInseeCode
 import fr.gouv.cacem.monitorenv.domain.use_cases.departmentArea.GetDepartmentAreas
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
@@ -25,7 +25,7 @@ class DepartmentAreaControllerITests {
     private lateinit var mockMvc: MockMvc
 
     @MockBean
-    private lateinit var getDepartmentAreaByInseeDep: GetDepartmentAreaByInseeDep
+    private lateinit var getDepartmentAreaByInseeCode: GetDepartmentAreaByInseeCode
 
     @MockBean
     private lateinit var getDepartmentAreas: GetDepartmentAreas
@@ -33,30 +33,30 @@ class DepartmentAreaControllerITests {
     @Test
     fun `Should get an departmentArea by its ID`() {
         val expectedDepartmentArea = DepartmentAreaEntity(
-            inseeDep = "1",
+            inseeCode = "1",
             name = "Department Area Name",
         )
 
         val requestedId = "1"
 
-        given(getDepartmentAreaByInseeDep.execute(requestedId)).willReturn(expectedDepartmentArea)
+        given(getDepartmentAreaByInseeCode.execute(requestedId)).willReturn(expectedDepartmentArea)
 
         mockMvc.perform(get("/bff/v1/department_areas/$requestedId"))
             .andExpect(status().isOk)
 
-        BDDMockito.verify(getDepartmentAreaByInseeDep).execute(requestedId)
+        BDDMockito.verify(getDepartmentAreaByInseeCode).execute(requestedId)
     }
 
     @Test
     fun `Should get all departmentAreas`() {
         val expectedAFulldministrations = listOf(
             DepartmentAreaEntity(
-                inseeDep = "1",
+                inseeCode = "1",
                 name = "Department Area Name",
             ),
 
             DepartmentAreaEntity(
-                inseeDep = "2",
+                inseeCode = "2",
                 name = "Department Area Name 2",
             )
         )

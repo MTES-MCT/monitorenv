@@ -131,7 +131,7 @@ class CreateOrUpdateReportingUTests {
                     id = 1,
                     administrationId = 2,
                     areaNote = null,
-                    departmentAreaInseeDep = null,
+                    departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "control unit 1",
                     termsNote = null,

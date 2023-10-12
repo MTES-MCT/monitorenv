@@ -10,11 +10,11 @@ interface IDBDepartmentAreaRepository : CrudRepository<DepartmentAreaModel, Int>
         value = """
         SELECT *
         FROM departments_areas
-        WHERE insee_dep = :inseeDep
+        WHERE insee_dep = :inseeCode
         """,
         nativeQuery = true,
     )
-    fun findByInseeDep(inseeDep: String): DepartmentAreaModel
+    fun findByInseeCode(inseeCode: String): DepartmentAreaModel
 
     @Query(
         """

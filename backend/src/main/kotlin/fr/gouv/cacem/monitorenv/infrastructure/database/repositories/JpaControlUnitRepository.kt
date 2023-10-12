@@ -47,7 +47,7 @@ class JpaControlUnitRepository(
         return try {
             val administrationModel = requirePresent(dbAdministrationRepository.findById(controlUnit.administrationId))
             val departmentAreaModel =
-                controlUnit.departmentAreaInseeDep?.let { dbDepartmentAreaRepository.findByInseeDep(it) }
+                controlUnit.departmentAreaInseeCode?.let { dbDepartmentAreaRepository.findByInseeCode(it) }
             val controlUnitModel =
                 ControlUnitModel.fromControlUnit(controlUnit, administrationModel, departmentAreaModel)
 

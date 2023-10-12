@@ -33,7 +33,7 @@ context('Back Office > Control Unit Form', () => {
       assert.deepEqual(interception.request.body, {
         administrationId: 1007,
         areaNote: null,
-        departmentAreaInseeDep: '50',
+        departmentAreaInseeCode: '50',
         isArchived: false,
         name: 'Unité 1',
         termsNote: null
@@ -63,7 +63,7 @@ context('Back Office > Control Unit Form', () => {
       assert.deepInclude(interception.request.body, {
         administrationId: 1002,
         areaNote: null,
-        departmentAreaInseeDep: '85',
+        departmentAreaInseeCode: '85',
         id: 10033,
         isArchived: false,
         name: 'Unité 2',

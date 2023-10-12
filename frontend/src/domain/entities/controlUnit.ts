@@ -14,8 +14,8 @@ export namespace ControlUnit {
     // `ControlUnitResource` and not `ControlUnitResourceData` because we need `base` data for each resource
     controlUnitResources: ControlUnitResource[]
     departmentArea: DepartmentArea.DepartmentArea | undefined
-    /** `departmentAreaInseeDep` is the `departmentArea` ID. */
-    departmentAreaInseeDep: string | undefined
+    /** `departmentAreaInseeCode` is the `departmentArea` ID. */
+    departmentAreaInseeCode: string | undefined
     id: number
     isArchived: boolean
     name: string

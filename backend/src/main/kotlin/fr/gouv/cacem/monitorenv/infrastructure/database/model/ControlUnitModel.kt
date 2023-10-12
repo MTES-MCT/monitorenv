@@ -87,7 +87,7 @@ data class ControlUnitModel(
             id,
             administrationId = requireNotNull(administration.id),
             areaNote,
-            departmentAreaInseeDep = departmentArea?.inseeDep,
+            departmentAreaInseeCode = departmentArea?.inseeCode,
             isArchived,
             name,
             termsNote,

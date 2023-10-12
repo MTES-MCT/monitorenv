@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
-import fr.gouv.cacem.monitorenv.domain.use_cases.departmentArea.GetDepartmentAreaByInseeDep
+import fr.gouv.cacem.monitorenv.domain.use_cases.departmentArea.GetDepartmentAreaByInseeCode
 import fr.gouv.cacem.monitorenv.domain.use_cases.departmentArea.GetDepartmentAreas
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.DepartmentAreaDataOutput
 import io.swagger.v3.oas.annotations.Operation
@@ -16,22 +16,22 @@ import org.springframework.web.bind.annotation.RestController
 @Tag(name = "DepartmentAreas")
 class DepartmentAreasController(
     private val getDepartmentAreas: GetDepartmentAreas,
-    private val getDepartmentAreaById: GetDepartmentAreaByInseeDep,
+    private val getDepartmentAreaById: GetDepartmentAreaByInseeCode,
 ) {
-    @GetMapping("/{departmentAreaInseeDep}")
-    @Operation(summary = "Get an departmentArea by its ID")
+    @GetMapping("/{departmentAreaInseeCode}")
+    @Operation(summary = "Get an department area by its ID (INSEE code)")
     fun get(
         @PathParam("DepartmentArea ID")
-        @PathVariable(name = "departmentAreaInseeDep")
-        departmentAreaInseeDep: String,
+        @PathVariable(name = "departmentAreaInseeCode")
+        departmentAreaInseeCode: String,
     ): DepartmentAreaDataOutput {
-        val foundDepartmentArea = getDepartmentAreaById.execute(departmentAreaInseeDep)
+        val foundDepartmentArea = getDepartmentAreaById.execute(departmentAreaInseeCode)
 
         return DepartmentAreaDataOutput.fromDepartmentArea(foundDepartmentArea)
     }
 
     @GetMapping("")
-    @Operation(summary = "List departmentAreas")
+    @Operation(summary = "List department areas")
     fun getAll(): List<DepartmentAreaDataOutput> {
         val foundDepartmentAreas = getDepartmentAreas.execute()
 

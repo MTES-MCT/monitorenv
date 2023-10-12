@@ -14,8 +14,8 @@ class JpaDepartmentAreaRepository(
         return dbDepartmentAreasRepository.findAll().map { it.toDepartmentArea() }
     }
 
-    override fun findByInseeDep(inseeDep: String): DepartmentAreaEntity {
-        return dbDepartmentAreasRepository.findByInseeDep(inseeDep).toDepartmentArea()
+    override fun findByInseeCode(inseeCode: String): DepartmentAreaEntity {
+        return dbDepartmentAreasRepository.findByInseeCode(inseeCode).toDepartmentArea()
     }
 
     override fun findDepartmentFromGeometry(geometry: Geometry): String? {

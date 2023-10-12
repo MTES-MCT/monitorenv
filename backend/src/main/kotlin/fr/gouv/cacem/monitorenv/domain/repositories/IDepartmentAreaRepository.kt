@@ -6,7 +6,7 @@ import org.locationtech.jts.geom.Geometry
 interface IDepartmentAreaRepository {
     fun findAll(): List<DepartmentAreaEntity>
 
-    fun findByInseeDep(inseeDep: String): DepartmentAreaEntity
+    fun findByInseeCode(inseeCode: String): DepartmentAreaEntity
 
     fun findDepartmentFromGeometry(geometry: Geometry): String?
 }

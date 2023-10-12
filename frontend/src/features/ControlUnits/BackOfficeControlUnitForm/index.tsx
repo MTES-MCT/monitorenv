@@ -56,7 +56,7 @@ export function BackOfficeControlUnitForm() {
             ['label'],
             departmentAreas.map(departmentArea => ({
               label: departmentArea.name,
-              value: departmentArea.inseeDep
+              value: departmentArea.inseeCode
             }))
           )
         : undefined,
@@ -110,7 +110,7 @@ export function BackOfficeControlUnitForm() {
                 searchable
               />
               <FormikTextInput label="Nom" name="name" />
-              <FormikSelect label="Département" name="departmentAreaInseeDep" options={departmentAreasAsOptions} />
+              <FormikSelect label="Département" name="departmentAreaInseeCode" options={departmentAreasAsOptions} />
               {/* This is a quick way to implement "unarchiving" for users in case of human error. */}
               {initialValues.isArchived && <FormikCheckbox label="Unité archivée" name="isArchived" />}
 

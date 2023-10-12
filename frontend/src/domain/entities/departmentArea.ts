@@ -1,7 +1,7 @@
 export namespace DepartmentArea {
   export interface DepartmentArea {
-    /** `inseeDep` is the ID. */
-    inseeDep: string
+    /** `inseeCode` is the ID. */
+    inseeCode: string
     name: string
   }
 }

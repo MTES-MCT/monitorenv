@@ -26,7 +26,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     id = 10000,
                     administrationId = 1005,
                     areaNote = null,
-                    departmentAreaInseeDep = null,
+                    departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
                     termsNote = null
@@ -46,7 +46,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     id = 10003,
                     administrationId = 1005,
                     areaNote = null,
-                    departmentAreaInseeDep = null,
+                    departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "DPM – DDTM 14",
                     termsNote = null
@@ -72,7 +72,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     id = 10000,
                     administrationId = 1005,
                     areaNote = null,
-                    departmentAreaInseeDep = null,
+                    departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
                     termsNote = null

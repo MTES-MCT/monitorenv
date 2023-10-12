@@ -12,7 +12,7 @@ import org.locationtech.jts.geom.MultiPolygon
 data class DepartmentAreaModel(
     @Id
     @Column(name = "insee_dep", nullable = false, unique = true)
-    val inseeDep: String,
+    val inseeCode: String,
 
     @Column(name = "geometry")
     val geometry: MultiPolygon? = null,
@@ -25,7 +25,7 @@ data class DepartmentAreaModel(
             departmentArea: DepartmentAreaEntity,
         ): DepartmentAreaModel {
             return DepartmentAreaModel(
-                inseeDep = departmentArea.inseeDep,
+                inseeCode = departmentArea.inseeCode,
                 geometry = departmentArea.geometry,
                 name = departmentArea.name,
             )
@@ -34,7 +34,7 @@ data class DepartmentAreaModel(
 
     fun toDepartmentArea(): DepartmentAreaEntity {
         return DepartmentAreaEntity(
-            inseeDep,
+            inseeCode,
             geometry,
             name,
         )
