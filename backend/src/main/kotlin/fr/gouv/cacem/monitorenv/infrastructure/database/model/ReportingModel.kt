@@ -10,7 +10,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.FullReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import io.hypersistence.utils.hibernate.type.array.ListArrayType
 import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
@@ -180,35 +180,9 @@ data class ReportingModel(
             detachedFromMissionAtUtc = detachedFromMissionAtUtc?.atZone(UTC),
             attachedEnvActionId = attachedEnvActionId,
         )
-    fun toFullReporting(objectMapper: ObjectMapper) = FullReportingDTO(
-        id = id,
-        reportingId = reportingId,
-        sourceType = sourceType,
-        semaphoreId = semaphore?.id,
-        controlUnitId = controlUnit?.id,
-        sourceName = sourceName,
-        targetType = targetType,
-        vehicleType = vehicleType,
-        targetDetails = targetDetails,
-        geom = geom,
-        seaFront = seaFront,
-        description = description,
-        reportType = reportType,
-        theme = theme,
-        subThemes = subThemes,
-        actionTaken = actionTaken,
-        isControlRequired = isControlRequired,
-        isUnitAvailable = isUnitAvailable,
-        createdAt = createdAt.atZone(UTC),
-        validityTime = validityTime,
-        isArchived = isArchived,
-        isDeleted = isDeleted,
-        openBy = openBy,
+    fun toReportingDTO(objectMapper: ObjectMapper) = ReportingDTO(
+        reporting = this.toReporting(),
         attachedMission = attachedMission?.toMissionEntity(objectMapper),
-        attachedMissionId = attachedMission?.id,
-        attachedToMissionAtUtc = attachedToMissionAtUtc?.atZone(UTC),
-        detachedFromMissionAtUtc = detachedFromMissionAtUtc?.atZone(UTC),
-        attachedEnvActionId = attachedEnvActionId,
     )
 
     override fun equals(other: Any?): Boolean {

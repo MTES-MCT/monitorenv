@@ -5,7 +5,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.FullMissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -24,7 +24,7 @@ class GetMissions(private val missionRepository: IMissionRepository) {
         pageNumber: Int?,
         pageSize: Int?,
         seaFronts: List<String>?,
-    ): List<FullMissionDTO> {
+    ): List<MissionDTO> {
         val missions = missionRepository.findAll(
             startedAfter = startedAfterDateTime?.toInstant() ?: ZonedDateTime.now().minusDays(30).toInstant(),
             startedBefore = startedBeforeDateTime?.toInstant(),

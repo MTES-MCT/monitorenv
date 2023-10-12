@@ -93,9 +93,7 @@ class ReportingsController(
     ): ReportingDataOutput {
         val newReporting = createReporting.toReportingEntity()
         val createdReporting = createOrUpdateReporting.execute(newReporting)
-        return ReportingDataOutput.fromFullReportingDTO(
-            reporting = createdReporting,
-        )
+        return ReportingDataOutput.fromReportingDTO(createdReporting)
     }
 
     @GetMapping("/{id}")
@@ -106,9 +104,7 @@ class ReportingsController(
         id: Int,
     ): ReportingDataOutput {
         return getReportingById.execute(id).let {
-            ReportingDataOutput.fromFullReportingDTO(
-                reporting = it,
-            )
+            ReportingDataOutput.fromReportingDTO(it)
         }
     }
 
@@ -125,9 +121,7 @@ class ReportingsController(
             reporting.toReportingEntity(),
         )
             .let {
-                ReportingDataOutput.fromFullReportingDTO(
-                    reporting = it,
-                )
+                ReportingDataOutput.fromReportingDTO(it)
             }
     }
 

@@ -16,7 +16,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.ISemaphoreRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.CreateOrUpdateReporting
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.FullReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -97,25 +97,27 @@ class CreateOrUpdateReportingUTests {
                 openBy = "CDA",
             )
         val reportingWithSemaphoreDTO =
-            FullReportingDTO(
-                sourceType = SourceTypeEnum.SEMAPHORE,
-                semaphoreId = 1,
-                targetType = TargetTypeEnum.VEHICLE,
-                vehicleType = VehicleTypeEnum.VESSEL,
-                geom = polygon,
-                seaFront = "Facade 1",
-                description = "description",
-                reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                theme = "theme",
-                subThemes = listOf("subTheme1", "subTheme2"),
-                actionTaken = "actions effectuées blabal ",
-                isControlRequired = true,
-                isUnitAvailable = true,
-                createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                validityTime = 10,
-                isArchived = false,
-                isDeleted = false,
-                openBy = "CDA",
+            ReportingDTO(
+                reporting = ReportingEntity(
+                    sourceType = SourceTypeEnum.SEMAPHORE,
+                    semaphoreId = 1,
+                    targetType = TargetTypeEnum.VEHICLE,
+                    vehicleType = VehicleTypeEnum.VESSEL,
+                    geom = polygon,
+                    seaFront = "Facade 1",
+                    description = "description",
+                    reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                    theme = "theme",
+                    subThemes = listOf("subTheme1", "subTheme2"),
+                    actionTaken = "actions effectuées blabal ",
+                    isControlRequired = true,
+                    isUnitAvailable = true,
+                    createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                    validityTime = 10,
+                    isArchived = false,
+                    isDeleted = false,
+                    openBy = "CDA",
+                ),
             )
         val reportingWithControlUnit =
             ReportingEntity(
@@ -138,8 +140,8 @@ class CreateOrUpdateReportingUTests {
                 isDeleted = false,
                 openBy = "CDA",
             )
-        val reportingWithControlUnitDTO =
-            FullReportingDTO(
+        val reportingWithControlUnitDTO = ReportingDTO(
+            reporting = ReportingEntity(
                 sourceType = SourceTypeEnum.CONTROL_UNIT,
                 controlUnitId = 1,
                 targetType = TargetTypeEnum.VEHICLE,
@@ -158,7 +160,8 @@ class CreateOrUpdateReportingUTests {
                 isArchived = false,
                 isDeleted = false,
                 openBy = "CDA",
-            )
+            ),
+        )
 
         val semaphore =
             SemaphoreEntity(

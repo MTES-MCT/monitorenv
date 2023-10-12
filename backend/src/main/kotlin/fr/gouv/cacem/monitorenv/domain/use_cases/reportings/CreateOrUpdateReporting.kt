@@ -3,7 +3,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.reportings
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.*
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.FullReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -18,7 +18,7 @@ class CreateOrUpdateReporting(
     private val logger: Logger = LoggerFactory.getLogger(CreateOrUpdateReporting::class.java)
 
     @Throws(IllegalArgumentException::class)
-    fun execute(reporting: ReportingEntity?): FullReportingDTO {
+    fun execute(reporting: ReportingEntity?): ReportingDTO {
         require(reporting != null) {
             "No reporting to create or update"
         }

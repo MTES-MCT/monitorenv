@@ -1,7 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
@@ -11,8 +10,10 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceT
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.EnvActionControlEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
@@ -21,8 +22,8 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionById
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMonitorEnvMissions
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.FullMissionDTO
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.FullReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateMissionDataInput
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
@@ -76,23 +77,25 @@ class MissionsControllerITests {
     fun `Should create a new mission`() {
         val wktReader = WKTReader()
         val multipolygonString =
-            "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
+            "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))"
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
         // Given
-        val expectedNewMission = FullMissionDTO(
-            id = 10,
-            missionTypes = listOf(MissionTypeEnum.LAND),
-            facade = "Outre-Mer",
-            geom = polygon,
-            observationsCacem = null,
-            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-            endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-            isDeleted = false,
-            isClosed = false,
-            missionSource = MissionSourceEnum.MONITORENV,
-            hasMissionOrder = false,
-            isUnderJdp = false,
-            isGeometryComputedFromControls = false,
+        val expectedNewMission = MissionDTO(
+            mission = MissionEntity(
+                id = 10,
+                missionTypes = listOf(MissionTypeEnum.LAND),
+                facade = "Outre-Mer",
+                geom = polygon,
+                observationsCacem = null,
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                isDeleted = false,
+                isClosed = false,
+                missionSource = MissionSourceEnum.MONITORENV,
+                hasMissionOrder = false,
+                isUnderJdp = false,
+                isGeometryComputedFromControls = false,
+            ),
         )
         val newMissionRequest = CreateOrUpdateMissionDataInput(
             missionTypes = listOf(MissionTypeEnum.LAND),
@@ -105,7 +108,7 @@ class MissionsControllerITests {
             missionSource = MissionSourceEnum.MONITORENV,
         )
         val requestbody = objectMapper.writeValueAsString(newMissionRequest)
-        given(createOrUpdateMission.execute(mission = any())).willReturn(expectedNewMission)
+        given(createOrUpdateMission.execute(newMissionRequest.toMissionEntity(), null)).willReturn(expectedNewMission)
         // When
         mockMvc.perform(
             put("/bff/v1/missions")
@@ -122,57 +125,79 @@ class MissionsControllerITests {
         // Given
         val wktReader = WKTReader()
         val multipolygonString =
-            "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
+            "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))"
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
         var point = wktReader.read("POINT (-4.54877816747593 48.305559876971)") as Point
 
-        val expectedFirstMission = FullMissionDTO(
-            id = 10,
-            missionTypes = listOf(MissionTypeEnum.SEA),
-            controlUnits = listOf(
-                LegacyControlUnitEntity(
-                    id = 1,
-                    name = "CU1",
-                    administration = "Admin 1",
-                    resources = listOf(
-                        ControlUnitResourceEntity(
-                            id = 2,
-                            base = BaseEntity(
-                                id = 3,
-                                name = "Base 3",
-                                controlUnitResourceIds = listOf(1, 2, 3),
+        val expectedFirstMission = MissionDTO(
+            mission = MissionEntity(
+                id = 10,
+                missionTypes = listOf(MissionTypeEnum.SEA),
+                controlUnits = listOf(
+                    LegacyControlUnitEntity(
+                        id = 1,
+                        name = "CU1",
+                        administration = "Admin 1",
+                        resources = listOf(
+                            ControlUnitResourceEntity(
+                                id = 2,
+                                base = BaseEntity(
+                                    id = 3,
+                                    name = "Base 3",
+                                    controlUnitResourceIds = listOf(1, 2, 3),
+                                ),
+                                baseId = 3,
+                                name = "Ressource 2",
+                                type = ControlUnitResourceType.BARGE,
+                                controlUnitId = 1,
                             ),
-                            baseId = 3,
-                            name = "Ressource 2",
-                            type = ControlUnitResourceType.BARGE,
-                            controlUnitId = 1,
                         ),
+                        isArchived = false,
                     ),
-                    isArchived = false,
                 ),
+                openBy = "OpenBy",
+                closedBy = "ClosedBy",
+                facade = "Outre-Mer",
+                geom = polygon,
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                observationsCacem = "obs cacem",
+                observationsCnsp = "obs cnsp",
+                isClosed = false,
+                isDeleted = false,
+                missionSource = MissionSourceEnum.MONITORENV,
+                hasMissionOrder = false,
+                isUnderJdp = false,
+                isGeometryComputedFromControls = false,
             ),
-            openBy = "OpenBy",
-            closedBy = "ClosedBy",
-            facade = "Outre-Mer",
-            geom = polygon,
-            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-            endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-            observationsCacem = "obs cacem",
-            observationsCnsp = "obs cnsp",
-            isClosed = false,
-            isDeleted = false,
-            missionSource = MissionSourceEnum.MONITORENV,
-            hasMissionOrder = false,
-            isUnderJdp = false,
-            isGeometryComputedFromControls = false,
             attachedReportingIds = listOf(1),
             attachedReportings = listOf(
-                FullReportingDTO(
-                    id = 1,
-                    reportingId = 2300001,
-                    sourceType = SourceTypeEnum.SEMAPHORE,
-                    semaphoreId = 1,
+                ReportingDTO(
+                    reporting = ReportingEntity(
+                        id = 1,
+                        reportingId = 2300001,
+                        sourceType = SourceTypeEnum.SEMAPHORE,
+                        semaphoreId = 1,
+
+                        targetType = TargetTypeEnum.VEHICLE,
+                        vehicleType = VehicleTypeEnum.VEHICLE_LAND,
+                        geom = polygon,
+                        seaFront = "SeaFront",
+                        description = "Description",
+                        reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                        theme = "Theme",
+                        subThemes = listOf("SubTheme"),
+                        actionTaken = "ActionTaken",
+                        isControlRequired = true,
+                        isUnitAvailable = true,
+                        createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        validityTime = 4,
+                        isArchived = false,
+                        isDeleted = false,
+                        openBy = "OpenBy",
+
+                    ),
                     semaphore = SemaphoreEntity(
                         id = 1,
                         name = "Semaphore 1",
@@ -185,24 +210,6 @@ class MissionsControllerITests {
                         phoneNumber = "0299999999",
                         base = "Base 1",
                     ),
-                    displayedSource = "Semaphore 1",
-                    targetType = TargetTypeEnum.VEHICLE,
-                    vehicleType = VehicleTypeEnum.VEHICLE_LAND,
-                    geom = polygon,
-                    seaFront = "SeaFront",
-                    description = "Description",
-                    reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                    theme = "Theme",
-                    subThemes = listOf("SubTheme"),
-                    actionTaken = "ActionTaken",
-                    isControlRequired = true,
-                    isUnitAvailable = true,
-                    createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                    validityTime = 4,
-                    isArchived = false,
-                    isDeleted = false,
-                    openBy = "OpenBy",
-
                 ),
             ),
         )
@@ -276,16 +283,18 @@ class MissionsControllerITests {
     fun `Should get specific mission when requested by Id`() {
         // Given
         val requestedId = 0
-        val expectedFirstMission = FullMissionDTO(
-            id = 10,
-            missionTypes = listOf(MissionTypeEnum.SEA),
-            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-            isClosed = false,
-            isDeleted = false,
-            missionSource = MissionSourceEnum.MONITORENV,
-            hasMissionOrder = false,
-            isUnderJdp = false,
-            isGeometryComputedFromControls = false,
+        val expectedFirstMission = MissionDTO(
+            mission = MissionEntity(
+                id = 10,
+                missionTypes = listOf(MissionTypeEnum.SEA),
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                isClosed = false,
+                isDeleted = false,
+                missionSource = MissionSourceEnum.MONITORENV,
+                hasMissionOrder = false,
+                isUnderJdp = false,
+                isGeometryComputedFromControls = false,
+            ),
         )
         // we test only if the route is called with the right arg
         given(getMissionById.execute(requestedId)).willReturn(expectedFirstMission)
@@ -301,17 +310,19 @@ class MissionsControllerITests {
     @Test
     fun `update mission should return updated mission`() {
         // Given
-        val expectedUpdatedMission = FullMissionDTO(
-            id = 14,
-            missionTypes = listOf(MissionTypeEnum.SEA),
-            observationsCacem = "updated observationsCacem",
-            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-            isClosed = false,
-            isDeleted = false,
-            missionSource = MissionSourceEnum.MONITORENV,
-            hasMissionOrder = false,
-            isUnderJdp = false,
-            isGeometryComputedFromControls = false,
+        val expectedUpdatedMission = MissionDTO(
+            mission = MissionEntity(
+                id = 14,
+                missionTypes = listOf(MissionTypeEnum.SEA),
+                observationsCacem = "updated observationsCacem",
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                isClosed = false,
+                isDeleted = false,
+                missionSource = MissionSourceEnum.MONITORENV,
+                hasMissionOrder = false,
+                isUnderJdp = false,
+                isGeometryComputedFromControls = false,
+            ),
         )
         val envAction = EnvActionControlEntity(
             id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
@@ -328,7 +339,7 @@ class MissionsControllerITests {
             missionSource = MissionSourceEnum.MONITORENV,
             isClosed = false,
         )
-        given(createOrUpdateMission.execute(any())).willReturn(expectedUpdatedMission)
+        given(createOrUpdateMission.execute(requestBody.toMissionEntity(), null)).willReturn(expectedUpdatedMission)
         // When
         mockMvc.perform(
             put("/bff/v1/missions/14")
@@ -337,7 +348,7 @@ class MissionsControllerITests {
         )
             // Then
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$.observationsCacem", equalTo(expectedUpdatedMission.observationsCacem)))
+            .andExpect(jsonPath("$.observationsCacem", equalTo(expectedUpdatedMission.mission.observationsCacem)))
     }
 
     @Test

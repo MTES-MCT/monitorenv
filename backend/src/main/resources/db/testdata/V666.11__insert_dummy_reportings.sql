@@ -225,6 +225,32 @@ VALUES
     now() - INTERVAL '25 minutes',
     null,
     null
+    ),
+    (8,
+     2300008,
+     'CONTROL_UNIT',
+     null,
+     11,
+     NULL,
+     'COMPANY',
+     NULL,
+     '[{"operatorName": "Good Company", "vesselName": "Mr le gérant" }]',
+     ST_GeomFromText('MULTIPOINT((-4.18759766312331 47.11281269827924))', 4326),
+     'NAMO',
+     'Lorem LoremLorem ipsum dolor sit amet, consectetur adipiscing elit.',
+     'OBSERVATION',
+     NULL,
+     NULL,
+     NULL,
+     true,
+     true,
+     now() - INTERVAL '90 minutes',
+     6,
+     false,
+     38,
+     now() - INTERVAL '25 minutes',
+     null,
+     null
     );
 
 SELECT setval('reportings_id_seq', (SELECT max(id) FROM reportings), true);

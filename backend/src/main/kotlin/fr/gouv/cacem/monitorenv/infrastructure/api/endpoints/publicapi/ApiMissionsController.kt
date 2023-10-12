@@ -64,7 +64,7 @@ class ApiMissionsController(
             pageNumber = pageNumber,
             pageSize = pageSize,
         )
-        return missions.map { MissionDataOutput.fromFullMissionDTO(it) }
+        return missions.map { MissionDataOutput.fromMissionDTO(it) }
     }
 
     @PostMapping("", consumes = ["application/json"])
@@ -75,7 +75,7 @@ class ApiMissionsController(
     ): MissionDataOutput {
         val newMission = createMissionDataInput.toMissionEntity()
         val createdMission = createOrUpdateMission.execute(mission = newMission)
-        return MissionDataOutput.fromFullMissionDTO(createdMission)
+        return MissionDataOutput.fromMissionDTO(createdMission)
     }
 
     @GetMapping("/{missionId}")
@@ -87,7 +87,7 @@ class ApiMissionsController(
     ): MissionDataOutput {
         val mission = getMissionById.execute(missionId = missionId)
 
-        return MissionDataOutput.fromFullMissionDTO(mission)
+        return MissionDataOutput.fromMissionDTO(mission)
     }
 
     @PostMapping(value = ["/{missionId}"], consumes = ["application/json"])
@@ -105,7 +105,7 @@ class ApiMissionsController(
         return createOrUpdateMission.execute(
             mission = updateMissionDataInput.toMissionEntity(),
         ).let {
-            MissionDataOutput.fromFullMissionDTO(it)
+            MissionDataOutput.fromMissionDTO(it)
         }
     }
 

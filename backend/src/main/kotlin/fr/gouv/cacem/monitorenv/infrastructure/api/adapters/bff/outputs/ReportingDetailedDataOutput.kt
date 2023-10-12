@@ -7,7 +7,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.FullReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -43,45 +43,45 @@ data class ReportingDetailedDataOutput(
 ) {
     companion object {
         fun fromReporting(
-            reporting: FullReportingDTO,
+            dto: ReportingDTO,
 
         ): ReportingDetailedDataOutput {
-            requireNotNull(reporting.id) { "ReportingEntity.id cannot be null" }
+            requireNotNull(dto.reporting.id) { "ReportingEntity.id cannot be null" }
             return ReportingDetailedDataOutput(
-                id = reporting.id,
-                reportingId = reporting.reportingId,
-                sourceType = reporting.sourceType,
-                semaphoreId = reporting.semaphoreId,
-                controlUnitId = reporting.controlUnitId,
-                sourceName = reporting.sourceName,
+                id = dto.reporting.id,
+                reportingId = dto.reporting.reportingId,
+                sourceType = dto.reporting.sourceType,
+                semaphoreId = dto.reporting.semaphoreId,
+                controlUnitId = dto.reporting.controlUnitId,
+                sourceName = dto.reporting.sourceName,
                 displayedSource =
-                when (reporting.sourceType) {
-                    SourceTypeEnum.SEMAPHORE -> semaphore?.unit ?: semaphore?.name
+                when (dto.reporting.sourceType) {
+                    SourceTypeEnum.SEMAPHORE -> dto?.semaphore?.unit ?: dto?.semaphore?.name
                     // TODO This is really strange : `fullControlUnit?.controlUnit` can't be null and I have to add another `?`...
-                    SourceTypeEnum.CONTROL_UNIT -> fullControlUnit?.controlUnit?.name
-                    SourceTypeEnum.OTHER -> reporting.sourceName
+                    SourceTypeEnum.CONTROL_UNIT -> dto?.controlUnit?.name
+                    SourceTypeEnum.OTHER -> dto.reporting.sourceName
                     else -> ""
                 },
-                targetType = reporting.targetType,
-                vehicleType = reporting.vehicleType,
-                targetDetails = reporting.targetDetails,
-                geom = reporting.geom,
-                seaFront = reporting.seaFront,
-                description = reporting.description,
-                reportType = reporting.reportType,
-                theme = reporting.theme,
-                subThemes = reporting.subThemes,
-                actionTaken = reporting.actionTaken,
-                isControlRequired = reporting.isControlRequired,
-                isUnitAvailable = reporting.isUnitAvailable,
-                createdAt = reporting.createdAt,
-                validityTime = reporting.validityTime,
-                isArchived = reporting.isArchived,
-                openBy = reporting.openBy,
-                attachedMissionId = reporting.attachedMissionId,
-                attachedToMissionAtUtc = reporting.attachedToMissionAtUtc,
-                detachedFromMissionAtUtc = reporting.detachedFromMissionAtUtc,
-                attachedEnvActionId = reporting.attachedEnvActionId,
+                targetType = dto.reporting.targetType,
+                vehicleType = dto.reporting.vehicleType,
+                targetDetails = dto.reporting.targetDetails,
+                geom = dto.reporting.geom,
+                seaFront = dto.reporting.seaFront,
+                description = dto.reporting.description,
+                reportType = dto.reporting.reportType,
+                theme = dto.reporting.theme,
+                subThemes = dto.reporting.subThemes,
+                actionTaken = dto.reporting.actionTaken,
+                isControlRequired = dto.reporting.isControlRequired,
+                isUnitAvailable = dto.reporting.isUnitAvailable,
+                createdAt = dto.reporting.createdAt,
+                validityTime = dto.reporting.validityTime,
+                isArchived = dto.reporting.isArchived,
+                openBy = dto.reporting.openBy,
+                attachedMissionId = dto.reporting.attachedMissionId,
+                attachedToMissionAtUtc = dto.reporting.attachedToMissionAtUtc,
+                detachedFromMissionAtUtc = dto.reporting.detachedFromMissionAtUtc,
+                attachedEnvActionId = dto.reporting.attachedEnvActionId,
             )
         }
     }

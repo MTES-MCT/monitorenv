@@ -5,7 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.FullReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.ControlUnitDataOutput
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
@@ -43,56 +43,56 @@ data class ReportingDataOutput(
     val attachedMission: MissionDataOutput? = null,
 ) {
     companion object {
-        fun fromFullReportingDTO(
-            reporting: FullReportingDTO,
+        fun fromReportingDTO(
+            dto: ReportingDTO,
         ): ReportingDataOutput {
-            requireNotNull(reporting.id) { "ReportingEntity.id cannot be null" }
+            requireNotNull(dto.reporting.id) { "ReportingEntity.id cannot be null" }
             return ReportingDataOutput(
-                id = reporting.id,
-                reportingId = reporting.reportingId,
-                sourceType = reporting.sourceType,
-                semaphoreId = reporting.semaphoreId,
-                semaphore = if (reporting.semaphore != null) {
+                id = dto.reporting.id!!,
+                reportingId = dto.reporting.reportingId,
+                sourceType = dto.reporting.sourceType,
+                semaphoreId = dto.reporting.semaphoreId,
+                semaphore = if (dto.semaphore != null) {
                     SemaphoreDataOutput.fromSemaphoreEntity(
-                        reporting.semaphore,
+                        dto.semaphore,
                     )
                 } else {
                     null
                 },
-                controlUnitId = reporting.controlUnitId,
+                controlUnitId = dto.reporting.controlUnitId,
                 controlUnit =
-                if (reporting.controlUnit != null) {
+                if (dto.controlUnit != null) {
                     ControlUnitDataOutput
                         .fromFullControlUnit(
-                            reporting.controlUnit,
+                            dto.controlUnit,
                         )
                 } else {
                     null
                 },
-                sourceName = reporting.sourceName,
-                targetType = reporting.targetType,
-                vehicleType = reporting.vehicleType,
-                targetDetails = reporting.targetDetails,
-                geom = reporting.geom,
-                seaFront = reporting.seaFront,
-                description = reporting.description,
-                reportType = reporting.reportType,
-                theme = reporting.theme,
-                subThemes = reporting.subThemes,
-                actionTaken = reporting.actionTaken,
-                isControlRequired = reporting.isControlRequired,
-                isUnitAvailable = reporting.isUnitAvailable,
-                createdAt = reporting.createdAt,
-                validityTime = reporting.validityTime,
-                isArchived = reporting.isArchived,
-                openBy = reporting.openBy,
-                attachedMissionId = reporting.attachedMissionId,
-                attachedToMissionAtUtc = reporting.attachedToMissionAtUtc,
-                detachedFromMissionAtUtc = reporting.detachedFromMissionAtUtc,
-                attachedEnvActionId = reporting.attachedEnvActionId,
-                attachedMission = if (reporting.attachedMission != null) {
+                sourceName = dto.reporting.sourceName,
+                targetType = dto.reporting.targetType,
+                vehicleType = dto.reporting.vehicleType,
+                targetDetails = dto.reporting.targetDetails,
+                geom = dto.reporting.geom,
+                seaFront = dto.reporting.seaFront,
+                description = dto.reporting.description,
+                reportType = dto.reporting.reportType,
+                theme = dto.reporting.theme,
+                subThemes = dto.reporting.subThemes,
+                actionTaken = dto.reporting.actionTaken,
+                isControlRequired = dto.reporting.isControlRequired,
+                isUnitAvailable = dto.reporting.isUnitAvailable,
+                createdAt = dto.reporting.createdAt,
+                validityTime = dto.reporting.validityTime,
+                isArchived = dto.reporting.isArchived,
+                openBy = dto.reporting.openBy,
+                attachedMissionId = dto.reporting.attachedMissionId,
+                attachedToMissionAtUtc = dto.reporting.attachedToMissionAtUtc,
+                detachedFromMissionAtUtc = dto.reporting.detachedFromMissionAtUtc,
+                attachedEnvActionId = dto.reporting.attachedEnvActionId,
+                attachedMission = if (dto.attachedMission != null) {
                     MissionDataOutput.fromMission(
-                        reporting.attachedMission,
+                        dto.attachedMission,
                     )
                 } else {
                     null

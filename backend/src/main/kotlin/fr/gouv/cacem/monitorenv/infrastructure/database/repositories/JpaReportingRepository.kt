@@ -6,7 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.FullReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
@@ -28,8 +28,16 @@ class JpaReportingRepository(
     private val dbControlUnitRepository: IDBControlUnitRepository,
     private val mapper: ObjectMapper,
 ) : IReportingRepository {
-    override fun findById(reportingId: Int): FullReportingDTO {
-        return dbReportingRepository.findById(reportingId).get().toFullReporting(mapper)
+
+    @Transactional
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    override fun attachReportingsToMission(reportingIds: List<Int>, missionId: Int) {
+        dbReportingRepository.attachReportingsToMission(reportingIds, missionId)
+        dbReportingRepository.flush()
+    }
+
+    override fun findById(reportingId: Int): ReportingDTO {
+        return dbReportingRepository.findById(reportingId).get().toReportingDTO(mapper)
     }
 
     override fun findAll(
@@ -40,7 +48,7 @@ class JpaReportingRepository(
         startedAfter: Instant,
         startedBefore: Instant?,
         status: List<String>?,
-    ): List<FullReportingDTO> {
+    ): List<ReportingDTO> {
         val sourcesTypeAsStringArray = sourcesType?.map { it.name }
         val reportingTypeAsStringArray = reportingType?.map { it.name }
         return dbReportingRepository.findAll(
@@ -52,16 +60,16 @@ class JpaReportingRepository(
             startedBefore = startedBefore,
             status = convertToString(status),
         )
-            .map { it.toFullReporting(mapper) }
+            .map { it.toReportingDTO(mapper) }
     }
 
-    override fun findByAttachedMissionId(missionId: Int): List<FullReportingDTO> {
-        return dbReportingRepository.findByAttachedMissionId(missionId).map { it.toFullReporting(mapper) }
+    override fun findByAttachedMissionId(missionId: Int): List<ReportingDTO> {
+        return dbReportingRepository.findByAttachedMissionId(missionId).map { it.toReportingDTO(mapper) }
     }
 
     @Transactional
     @Modifying(clearAutomatically = true, flushAutomatically = true)
-    override fun save(reporting: ReportingEntity): FullReportingDTO {
+    override fun save(reporting: ReportingEntity): ReportingDTO {
         return try {
             val semaphoreReference = if (reporting.semaphoreId != null) {
                 dbSemaphoreRepository.getReferenceById(
@@ -90,7 +98,7 @@ class JpaReportingRepository(
                 controlUnitReference = controlUnitReference,
                 attachedMissionReference = attachedMissionReference,
             )
-            dbReportingRepository.saveAndFlush(reportingModel).toFullReporting(mapper)
+            dbReportingRepository.saveAndFlush(reportingModel).toReportingDTO(mapper)
         } catch (e: JpaObjectRetrievalFailureException) {
             throw NotFoundException(
                 "Invalid reference to semaphore, control unit or mission: not found in referential",

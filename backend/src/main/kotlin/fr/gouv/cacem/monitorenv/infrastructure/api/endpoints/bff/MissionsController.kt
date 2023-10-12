@@ -64,7 +64,7 @@ class MissionsController(
             pageSize = pageSize,
             seaFronts = seaFronts,
         )
-        return missions.map { FullMissionDataOutput.fromFullMissionDTO(it) }
+        return missions.map { FullMissionDataOutput.fromMissionDTO(it) }
     }
 
     @PutMapping("", consumes = ["application/json"])
@@ -73,9 +73,11 @@ class MissionsController(
         @RequestBody
         createMissionDataInput: CreateOrUpdateMissionDataInput,
     ): FullMissionDataOutput {
-        val newMission = createMissionDataInput.toMissionEntity()
-        val createdMission = createOrUpdateMission.execute(mission = newMission)
-        return FullMissionDataOutput.fromFullMissionDTO(createdMission)
+        val createdMission = createOrUpdateMission.execute(
+            mission = createMissionDataInput.toMissionEntity(),
+            attachedReportingIds = createMissionDataInput.attachedReportingIds,
+        )
+        return FullMissionDataOutput.fromMissionDTO(createdMission)
     }
 
     @GetMapping("/{missionId}")
@@ -87,12 +89,12 @@ class MissionsController(
     ): FullMissionDataOutput {
         val mission = getMissionById.execute(missionId = missionId)
 
-        return FullMissionDataOutput.fromFullMissionDTO(mission)
+        return FullMissionDataOutput.fromMissionDTO(mission)
     }
 
     @PutMapping(value = ["/{missionId}"], consumes = ["application/json"])
     @Operation(summary = "Update a mission")
-    fun updateOperationController(
+    fun updateMissionController(
         @PathParam("Mission Id")
         @PathVariable(name = "missionId")
         missionId: Int,
@@ -104,14 +106,15 @@ class MissionsController(
         }
         return createOrUpdateMission.execute(
             mission = updateMissionDataInput.toMissionEntity(),
+            attachedReportingIds = updateMissionDataInput.attachedReportingIds,
         ).let {
-            FullMissionDataOutput.fromFullMissionDTO(it)
+            FullMissionDataOutput.fromMissionDTO(it)
         }
     }
 
     @DeleteMapping(value = ["/{missionId}"])
     @Operation(summary = "Delete a mission")
-    fun deleteOperationController(
+    fun deleteMissionController(
         @PathParam("Mission Id")
         @PathVariable(name = "missionId")
         missionId: Int,

@@ -11,8 +11,9 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IBaseRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreaRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.FullMissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -39,11 +40,20 @@ class CreateOrUpdateMissionUTests {
     @MockBean
     private lateinit var facadeAreasRepository: IFacadeAreasRepository
 
+    @MockBean
+    private lateinit var reportingRepository: IReportingRepository
+
     @Test
     fun `execute Should throw an exception When input mission is null`() {
         // When
         val throwable = Assertions.catchThrowable {
-            CreateOrUpdateMission(baseRepository, departmentRepository, missionRepository, facadeAreasRepository)
+            CreateOrUpdateMission(
+                baseRepository = baseRepository,
+                departmentRepository = departmentRepository,
+                missionRepository = missionRepository,
+                facadeRepository = facadeAreasRepository,
+                reportingRepository = reportingRepository,
+            )
                 .execute(null)
         }
 
@@ -92,7 +102,8 @@ class CreateOrUpdateMissionUTests {
             isGeometryComputedFromControls = false,
         )
 
-        val expectedCreatedMission = FullMissionDTO(
+        val expectedCreatedMission = MissionEntity(
+            id = 100,
             missionTypes = listOf(MissionTypeEnum.LAND),
             facade = "Outre-Mer",
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
@@ -125,18 +136,19 @@ class CreateOrUpdateMissionUTests {
 
         given(facadeAreasRepository.findFacadeFromGeometry(anyOrNull())).willReturn("La Face Ade")
         given(departmentRepository.findDepartmentFromGeometry(anyOrNull())).willReturn("Quequ'part")
-        given(missionRepository.save(anyOrNull())).willReturn(expectedCreatedMission)
+        given(missionRepository.save(anyOrNull())).willReturn(MissionDTO(mission = expectedCreatedMission))
+        given(missionRepository.findById(100)).willReturn(MissionDTO(mission = expectedCreatedMission))
 
         // When
-        val createdMission =
-            CreateOrUpdateMission(
-                baseRepository,
-                departmentRepository,
-                missionRepository,
-                facadeAreasRepository,
-            ).execute(
-                missionToCreate,
-            )
+        val createdMissionDTO = CreateOrUpdateMission(
+            baseRepository = baseRepository,
+            departmentRepository = departmentRepository,
+            missionRepository = missionRepository,
+            facadeRepository = facadeAreasRepository,
+            reportingRepository = reportingRepository,
+        ).execute(
+            missionToCreate,
+        )
 
         // Then
         verify(facadeAreasRepository, times(2)).findFacadeFromGeometry(argThat { this == polygon })
@@ -163,6 +175,70 @@ class CreateOrUpdateMissionUTests {
                     )
                 },
             )
-        assertThat(createdMission).isEqualTo(expectedCreatedMission)
+        verify(missionRepository, times(1)).findById(100)
+        assertThat(createdMissionDTO.mission).isEqualTo(expectedCreatedMission)
+    }
+
+    @Test
+    fun `should attach mission to specified reportings`() {
+        // Given
+        val wktReader = WKTReader()
+
+        val multipolygonString = "MULTIPOLYGON(((-2.7335 47.6078, -2.7335 47.8452, -3.6297 47.8452, -3.6297 47.6078, -2.7335 47.6078)))"
+        val polygon = wktReader.read(multipolygonString) as MultiPolygon
+
+        val missionToCreate = MissionEntity(
+            missionTypes = listOf(MissionTypeEnum.LAND),
+            facade = "Outre-Mer",
+            geom = polygon,
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+            isClosed = false,
+            isDeleted = false,
+            missionSource = MissionSourceEnum.MONITORENV,
+            hasMissionOrder = false,
+            isUnderJdp = false,
+            isGeometryComputedFromControls = false,
+
+        )
+        val attachedReportingIds = listOf(1, 2, 3)
+
+        val expectedCreatedMission =
+            MissionDTO(
+                mission = MissionEntity(
+                    id = 100,
+                    missionTypes = listOf(MissionTypeEnum.LAND),
+                    facade = "Outre-Mer",
+                    startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                    endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                    isClosed = false,
+                    isDeleted = false,
+                    missionSource = MissionSourceEnum.MONITORENV,
+                    hasMissionOrder = false,
+                    isUnderJdp = false,
+                    isGeometryComputedFromControls = false,
+                ),
+                attachedReportingIds = attachedReportingIds,
+            )
+
+        given(missionRepository.save(anyOrNull())).willReturn(MissionDTO(mission = missionToCreate.copy(id = 100)))
+        given(missionRepository.findById(100)).willReturn(expectedCreatedMission)
+
+        // When
+        val createdMissionDTO = CreateOrUpdateMission(
+            departmentRepository = departmentRepository,
+            missionRepository = missionRepository,
+            facadeRepository = facadeAreasRepository,
+            reportingRepository = reportingRepository,
+        ).execute(
+            mission = missionToCreate,
+            attachedReportingIds = attachedReportingIds,
+        )
+
+        // Then
+
+        verify(reportingRepository, times(1)).attachReportingsToMission(attachedReportingIds, 100)
+        verify(missionRepository, times(1)).findById(100)
+        assertThat(createdMissionDTO).isEqualTo(expectedCreatedMission)
     }
 }

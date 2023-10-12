@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.anyOrNull
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
@@ -16,7 +17,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingById
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportings
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.FullReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateReportingDataInput
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.Point
@@ -70,10 +71,31 @@ class ReportingsControllerITests {
                     "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
                 )
         val reporting =
-            FullReportingDTO(
-                id = 1,
-                sourceType = SourceTypeEnum.SEMAPHORE,
-                semaphoreId = 1,
+            ReportingDTO(
+                reporting = ReportingEntity(
+                    id = 1,
+                    sourceType = SourceTypeEnum.SEMAPHORE,
+                    semaphoreId = 1,
+                    targetType = TargetTypeEnum.VEHICLE,
+                    vehicleType = VehicleTypeEnum.VESSEL,
+                    geom = polygon,
+                    seaFront = "Facade 1",
+                    description = "description",
+                    reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                    theme = "theme",
+                    subThemes = listOf("subTheme1", "subTheme2"),
+                    actionTaken = "actions effectuées blabla",
+                    isControlRequired = true,
+                    isUnitAvailable = true,
+                    createdAt =
+                    ZonedDateTime.parse(
+                        "2022-01-15T04:50:09Z",
+                    ),
+                    validityTime = 10,
+                    isArchived = false,
+                    isDeleted = false,
+                    openBy = "CDA",
+                ),
                 semaphore = SemaphoreEntity(
                     id = 1,
                     name = "name",
@@ -84,25 +106,6 @@ class ReportingsControllerITests {
                         ) as
                         Point,
                 ),
-                targetType = TargetTypeEnum.VEHICLE,
-                vehicleType = VehicleTypeEnum.VESSEL,
-                geom = polygon,
-                seaFront = "Facade 1",
-                description = "description",
-                reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                theme = "theme",
-                subThemes = listOf("subTheme1", "subTheme2"),
-                actionTaken = "actions effectuées blabla",
-                isControlRequired = true,
-                isUnitAvailable = true,
-                createdAt =
-                ZonedDateTime.parse(
-                    "2022-01-15T04:50:09Z",
-                ),
-                validityTime = 10,
-                isArchived = false,
-                isDeleted = false,
-                openBy = "CDA",
             )
 
         val request =
@@ -174,10 +177,31 @@ class ReportingsControllerITests {
                     "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
                 )
         val reporting =
-            FullReportingDTO(
-                id = 1,
-                sourceType = SourceTypeEnum.SEMAPHORE,
-                semaphoreId = 1,
+            ReportingDTO(
+                reporting = ReportingEntity(
+                    id = 1,
+                    sourceType = SourceTypeEnum.SEMAPHORE,
+                    semaphoreId = 1,
+                    targetType = TargetTypeEnum.VEHICLE,
+                    vehicleType = VehicleTypeEnum.VESSEL,
+                    geom = polygon,
+                    seaFront = "Facade 1",
+                    description = "description",
+                    reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                    theme = "theme",
+                    subThemes = listOf("subTheme1", "subTheme2"),
+                    actionTaken = "actions effectuées blabla",
+                    isControlRequired = true,
+                    isUnitAvailable = true,
+                    createdAt =
+                    ZonedDateTime.parse(
+                        "2022-01-15T04:50:09Z",
+                    ),
+                    validityTime = 10,
+                    isArchived = false,
+                    isDeleted = false,
+                    openBy = "CDA",
+                ),
                 semaphore = SemaphoreEntity(
                     id = 1,
                     name = "name",
@@ -188,25 +212,6 @@ class ReportingsControllerITests {
                         ) as
                         Point,
                 ),
-                targetType = TargetTypeEnum.VEHICLE,
-                vehicleType = VehicleTypeEnum.VESSEL,
-                geom = polygon,
-                seaFront = "Facade 1",
-                description = "description",
-                reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                theme = "theme",
-                subThemes = listOf("subTheme1", "subTheme2"),
-                actionTaken = "actions effectuées blabla",
-                isControlRequired = true,
-                isUnitAvailable = true,
-                createdAt =
-                ZonedDateTime.parse(
-                    "2022-01-15T04:50:09Z",
-                ),
-                validityTime = 10,
-                isArchived = false,
-                isDeleted = false,
-                openBy = "CDA",
             )
 
         given(getReportingById.execute(any())).willReturn(reporting)
@@ -251,28 +256,30 @@ class ReportingsControllerITests {
                     "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
                 )
         val reporting =
-            FullReportingDTO(
-                id = 1,
-                sourceType = SourceTypeEnum.SEMAPHORE,
-                targetType = TargetTypeEnum.VEHICLE,
-                vehicleType = VehicleTypeEnum.VESSEL,
-                geom = polygon,
-                seaFront = "Facade 1",
-                description = "description",
-                reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                theme = "theme",
-                subThemes = listOf("subTheme1", "subTheme2"),
-                actionTaken = "actions effectuées blabla",
-                isControlRequired = true,
-                isUnitAvailable = true,
-                createdAt =
-                ZonedDateTime.parse(
-                    "2022-01-15T04:50:09Z",
+            ReportingDTO(
+                reporting = ReportingEntity(
+                    id = 1,
+                    sourceType = SourceTypeEnum.SEMAPHORE,
+                    targetType = TargetTypeEnum.VEHICLE,
+                    vehicleType = VehicleTypeEnum.VESSEL,
+                    geom = polygon,
+                    seaFront = "Facade 1",
+                    description = "description",
+                    reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                    theme = "theme",
+                    subThemes = listOf("subTheme1", "subTheme2"),
+                    actionTaken = "actions effectuées blabla",
+                    isControlRequired = true,
+                    isUnitAvailable = true,
+                    createdAt =
+                    ZonedDateTime.parse(
+                        "2022-01-15T04:50:09Z",
+                    ),
+                    validityTime = 10,
+                    isArchived = false,
+                    isDeleted = false,
+                    openBy = "CDA",
                 ),
-                validityTime = 10,
-                isArchived = false,
-                isDeleted = false,
-                openBy = "CDA",
             )
 
         given(
@@ -305,10 +312,32 @@ class ReportingsControllerITests {
                     "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
                 )
         val updatedReporting =
-            FullReportingDTO(
-                id = 1,
-                sourceType = SourceTypeEnum.SEMAPHORE,
-                semaphoreId = 1,
+            ReportingDTO(
+                reporting = ReportingEntity(
+                    id = 1,
+                    sourceType = SourceTypeEnum.SEMAPHORE,
+                    semaphoreId = 1,
+
+                    targetType = TargetTypeEnum.VEHICLE,
+                    vehicleType = VehicleTypeEnum.VESSEL,
+                    geom = polygon,
+                    seaFront = "Facade 1",
+                    description = "description",
+                    reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                    theme = "theme",
+                    subThemes = listOf("subTheme1", "subTheme2"),
+                    actionTaken = "actions effectuées blabla",
+                    isControlRequired = true,
+                    isUnitAvailable = true,
+                    createdAt =
+                    ZonedDateTime.parse(
+                        "2022-01-15T04:50:09Z",
+                    ),
+                    validityTime = 10,
+                    isArchived = false,
+                    isDeleted = false,
+                    openBy = "CDA",
+                ),
                 semaphore = SemaphoreEntity(
                     id = 1,
                     name = "name",
@@ -319,25 +348,6 @@ class ReportingsControllerITests {
                         ) as
                         Point,
                 ),
-                targetType = TargetTypeEnum.VEHICLE,
-                vehicleType = VehicleTypeEnum.VESSEL,
-                geom = polygon,
-                seaFront = "Facade 1",
-                description = "description",
-                reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                theme = "theme",
-                subThemes = listOf("subTheme1", "subTheme2"),
-                actionTaken = "actions effectuées blabla",
-                isControlRequired = true,
-                isUnitAvailable = true,
-                createdAt =
-                ZonedDateTime.parse(
-                    "2022-01-15T04:50:09Z",
-                ),
-                validityTime = 10,
-                isArchived = false,
-                isDeleted = false,
-                openBy = "CDA",
             )
         val updateRequestBody =
             objectMapper.writeValueAsString(

@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.FullMissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.utils.mapOrElseEmpty
 import io.hypersistence.utils.hibernate.type.array.ListArrayType
 import io.hypersistence.utils.hibernate.type.array.internal.AbstractArrayType.SQL_ARRAY_TYPE
@@ -136,7 +136,7 @@ data class MissionModel(
     @OneToMany(mappedBy = "attachedMission")
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
-    val attachedReportings: MutableList<ReportingModel>? = ArrayList(),
+    val attachedReportings: List<ReportingModel>? = listOf(),
 ) {
     fun toMissionEntity(objectMapper: ObjectMapper): MissionEntity {
         val controlUnits = controlUnits.mapOrElseEmpty { missionControlUnitModel ->
@@ -175,40 +175,10 @@ data class MissionModel(
         )
     }
 
-    fun toFullMissionDTO(objectMapper: ObjectMapper): FullMissionDTO {
-        val controlUnits = controlUnits.mapOrElseEmpty { missionControlUnitModel ->
-            val maybeMissionControlResourceModels = controlResources
-                ?.filter { missionControlResourceModel ->
-                    missionControlResourceModel.ressource.controlUnit.id == missionControlUnitModel.unit.id
-                }
-
-            val controlUnitResources = maybeMissionControlResourceModels.mapOrElseEmpty { it.toControlUnitResource() }
-
-            missionControlUnitModel.unit.toLegacyControlUnit().copy(
-                contact = missionControlUnitModel.contact,
-                resources = controlUnitResources,
-            )
-        }
-
-        return FullMissionDTO(
-            id,
-            missionTypes,
-            controlUnits,
-            openBy,
-            closedBy,
-            observationsCacem,
-            observationsCnsp,
-            facade,
-            geom,
-            startDateTimeUtc = startDateTimeUtc.atZone(UTC),
-            endDateTimeUtc = endDateTimeUtc?.atZone(UTC),
-            envActions = envActions!!.map { it.toActionEntity(objectMapper) },
-            isClosed,
-            isDeleted,
-            isGeometryComputedFromControls,
-            missionSource,
-            hasMissionOrder,
-            isUnderJdp,
+    fun toMissionDTO(objectMapper: ObjectMapper): MissionDTO {
+        return MissionDTO(
+            mission = this.toMissionEntity(objectMapper),
+            attachedReportings = this.attachedReportings?.map { it.toReportingDTO(objectMapper) } ?: listOf(),
         )
     }
 
