@@ -2,15 +2,15 @@ context('Missions', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
     cy.visit(`/side_window`)
-  })
-
-  it('Reportings should be displayed in Reportings Table and filterable', () => {
     cy.intercept('GET', '/bff/v1/reportings*').as('getReportings')
     cy.clickButton('signalements')
     cy.wait('@getReportings')
+  })
+
+  it('Reportings should be displayed in Reportings Table and filterable', () => {
     cy.log('A default period filter should be set')
     cy.fill('Période', '24 dernières heures')
-    cy.get('*[data-cy="totalReportings"]').contains('4')
+    cy.get('*[data-cy="totalReportings"]').contains('5')
 
     cy.log('Source type should be filtered')
     cy.get('*[data-cy="select-source-type-filter"]').click()
@@ -25,7 +25,7 @@ context('Missions', () => {
 
     cy.wait('@getReportings')
     cy.get('*[data-cy="reinitialize-filters"]').click()
-    cy.get('*[data-cy="totalReportings"]').contains('4')
+    cy.get('*[data-cy="totalReportings"]').contains('5')
 
     cy.get('*[data-cy="status-filter-Archivés"]').click()
     cy.fill('Période', '30 derniers jours')
@@ -33,9 +33,6 @@ context('Missions', () => {
   })
 
   it('Reportings should be archived in Reportings Table', () => {
-    cy.clickButton('signalements')
-
-    cy.wait(400)
     cy.intercept('PUT', '/bff/v1/reportings/5').as('archiveReporting')
     cy.get('*[data-cy="status-filter-Archivés"]').click()
     cy.get('*[data-cy="more-actions-reporting-5"]').scrollIntoView().click({ force: true })
@@ -48,9 +45,6 @@ context('Missions', () => {
   })
 
   it('Reporting should be duplicate and editable in Reportings Table', () => {
-    cy.clickButton('signalements')
-
-    cy.wait(400)
     cy.intercept('PUT', '/bff/v1/reportings').as('createReporting')
     cy.get('*[data-cy="status-filter-Archivés"]').click()
     cy.get('*[data-cy="duplicate-reporting-5"]').click({ force: true })
@@ -69,9 +63,6 @@ context('Missions', () => {
   })
 
   it('Reporting should be delete in Reportings Table', () => {
-    cy.clickButton('signalements')
-
-    cy.wait(400)
     cy.intercept('DELETE', '/bff/v1/reportings/6').as('deleteReporting')
     cy.get('*[data-cy="status-filter-Archivés"]').click()
     cy.get('*[data-cy="more-actions-reporting-6"]').scrollIntoView().click({ force: true })
@@ -84,9 +75,6 @@ context('Missions', () => {
     })
   })
   it('Can open multiple reportings', () => {
-    cy.clickButton('signalements')
-
-    cy.wait(400)
     cy.get('*[data-cy="status-filter-Archivés"]').click()
 
     cy.get('*[data-cy="edit-reporting-5"]').click({ force: true })
