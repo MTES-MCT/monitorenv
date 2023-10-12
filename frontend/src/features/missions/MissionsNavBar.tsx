@@ -60,7 +60,7 @@ export function MissionsNavBar() {
   }
 
   const removeTab = nextPath => {
-    if (nextPath) {
+    if (!nextPath) {
       return
     }
     dispatch(deleteTab(nextPath))
