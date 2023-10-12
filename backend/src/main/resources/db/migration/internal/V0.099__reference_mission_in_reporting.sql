@@ -1,6 +1,8 @@
 ALTER TABLE public.env_actions
   ADD CONSTRAINT unique_mission_id_and_id UNIQUE (mission_id, id);
 
+ALTER TABLE public.reportings RENAME COLUMN is_unit_available TO has_no_unit_available;
+UPDATE public.reportings SET has_no_unit_available = NOT has_no_unit_available;
 
 ALTER TABLE public.reportings ALTER COLUMN semaphore_id TYPE integer USING semaphore_id::integer;
 ALTER TABLE public.reportings ALTER COLUMN control_unit_id TYPE integer USING control_unit_id::integer;

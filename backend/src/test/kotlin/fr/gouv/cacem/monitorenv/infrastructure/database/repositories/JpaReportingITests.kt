@@ -49,7 +49,7 @@ class JpaReportingITests : AbstractDBTests() {
                 subThemes = listOf("ZMEL"),
                 actionTaken = "Aucune",
                 isControlRequired = false,
-                isUnitAvailable = false,
+                hasNoUnitAvailable = false,
                 createdAt = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
                 validityTime = 24,
                 isArchived = false,
@@ -75,7 +75,7 @@ class JpaReportingITests : AbstractDBTests() {
         assertThat(reportingDTO.reporting.subThemes).isEqualTo(listOf("ZMEL"))
         assertThat(reportingDTO.reporting.actionTaken).isEqualTo("Aucune")
         assertThat(reportingDTO.reporting.isControlRequired).isEqualTo(false)
-        assertThat(reportingDTO.reporting.isUnitAvailable).isEqualTo(false)
+        assertThat(reportingDTO.reporting.hasNoUnitAvailable).isEqualTo(false)
         assertThat(reportingDTO.reporting.createdAt).isEqualTo(ZonedDateTime.parse("2023-04-01T00:00:00Z"))
         assertThat(reportingDTO.reporting.validityTime).isEqualTo(24)
         assertThat(reportingDTO.reporting.isArchived).isEqualTo(false)

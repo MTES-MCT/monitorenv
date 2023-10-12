@@ -23,7 +23,7 @@ data class ReportingEntity(
     val subThemes: List<String>? = listOf(),
     val actionTaken: String? = null,
     val isControlRequired: Boolean? = null,
-    val isUnitAvailable: Boolean? = null,
+    val hasNoUnitAvailable: Boolean? = null,
     val createdAt: ZonedDateTime,
     val validityTime: Int? = null,
     val isArchived: Boolean,

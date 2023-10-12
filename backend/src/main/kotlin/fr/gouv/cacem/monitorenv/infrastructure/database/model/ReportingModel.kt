@@ -116,8 +116,8 @@ data class ReportingModel(
     @Column(name = "is_control_required")
     val isControlRequired: Boolean? = null,
 
-    @Column(name = "is_unit_available")
-    val isUnitAvailable: Boolean? = null,
+    @Column(name = "has_no_unit_available")
+    val hasNoUnitAvailable: Boolean? = null,
 
     @Column(name = "created_at")
     val createdAt: Instant,
@@ -169,7 +169,7 @@ data class ReportingModel(
             subThemes = subThemes,
             actionTaken = actionTaken,
             isControlRequired = isControlRequired,
-            isUnitAvailable = isUnitAvailable,
+            hasNoUnitAvailable = hasNoUnitAvailable,
             createdAt = createdAt.atZone(UTC),
             validityTime = validityTime,
             isArchived = isArchived,
@@ -223,7 +223,7 @@ data class ReportingModel(
                 subThemes = reporting.subThemes,
                 actionTaken = reporting.actionTaken,
                 isControlRequired = reporting.isControlRequired,
-                isUnitAvailable = reporting.isUnitAvailable,
+                hasNoUnitAvailable = reporting.hasNoUnitAvailable,
                 createdAt = reporting.createdAt.toInstant(),
                 validityTime = reporting.validityTime,
                 isArchived = reporting.isArchived,

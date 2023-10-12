@@ -86,7 +86,7 @@ class ReportingsControllerITests {
                     subThemes = listOf("subTheme1", "subTheme2"),
                     actionTaken = "actions effectuées blabla",
                     isControlRequired = true,
-                    isUnitAvailable = true,
+                    hasNoUnitAvailable = true,
                     createdAt =
                     ZonedDateTime.parse(
                         "2022-01-15T04:50:09Z",
@@ -121,7 +121,7 @@ class ReportingsControllerITests {
                 subThemes = listOf("subTheme1", "subTheme2"),
                 actionTaken = "actions effectuées blabla",
                 isControlRequired = true,
-                isUnitAvailable = true,
+                hasNoUnitAvailable = true,
                 createdAt =
                 ZonedDateTime.parse(
                     "2022-01-15T04:50:09Z",
@@ -162,7 +162,7 @@ class ReportingsControllerITests {
                 jsonPath("$.actionTaken").value("actions effectuées blabla"),
             )
             .andExpect(jsonPath("$.isControlRequired").value(true))
-            .andExpect(jsonPath("$.isUnitAvailable").value(true))
+            .andExpect(jsonPath("$.hasNoUnitAvailable").value(true))
             .andExpect(jsonPath("$.createdAt").value("2022-01-15T04:50:09Z"))
             .andExpect(jsonPath("$.validityTime").value(10))
             .andExpect(jsonPath("$.isArchived").value(false))
@@ -192,7 +192,7 @@ class ReportingsControllerITests {
                     subThemes = listOf("subTheme1", "subTheme2"),
                     actionTaken = "actions effectuées blabla",
                     isControlRequired = true,
-                    isUnitAvailable = true,
+                    hasNoUnitAvailable = true,
                     createdAt =
                     ZonedDateTime.parse(
                         "2022-01-15T04:50:09Z",
@@ -241,7 +241,7 @@ class ReportingsControllerITests {
                 jsonPath("$.actionTaken").value("actions effectuées blabla"),
             )
             .andExpect(jsonPath("$.isControlRequired").value(true))
-            .andExpect(jsonPath("$.isUnitAvailable").value(true))
+            .andExpect(jsonPath("$.hasNoUnitAvailable").value(true))
             .andExpect(jsonPath("$.createdAt").value("2022-01-15T04:50:09Z"))
             .andExpect(jsonPath("$.validityTime").value(10))
             .andExpect(jsonPath("$.isArchived").value(false))
@@ -270,7 +270,7 @@ class ReportingsControllerITests {
                     subThemes = listOf("subTheme1", "subTheme2"),
                     actionTaken = "actions effectuées blabla",
                     isControlRequired = true,
-                    isUnitAvailable = true,
+                    hasNoUnitAvailable = true,
                     createdAt =
                     ZonedDateTime.parse(
                         "2022-01-15T04:50:09Z",
@@ -328,7 +328,7 @@ class ReportingsControllerITests {
                     subThemes = listOf("subTheme1", "subTheme2"),
                     actionTaken = "actions effectuées blabla",
                     isControlRequired = true,
-                    isUnitAvailable = true,
+                    hasNoUnitAvailable = true,
                     createdAt =
                     ZonedDateTime.parse(
                         "2022-01-15T04:50:09Z",
@@ -367,7 +367,7 @@ class ReportingsControllerITests {
                     ),
                     actionTaken = "actions effectuées blabla",
                     isControlRequired = true,
-                    isUnitAvailable = true,
+                    hasNoUnitAvailable = true,
                     createdAt =
                     ZonedDateTime.parse(
                         "2022-01-15T04:50:09Z",
@@ -407,7 +407,7 @@ class ReportingsControllerITests {
                 jsonPath("$.actionTaken").value("actions effectuées blabla"),
             )
             .andExpect(jsonPath("$.isControlRequired").value(true))
-            .andExpect(jsonPath("$.isUnitAvailable").value(true))
+            .andExpect(jsonPath("$.hasNoUnitAvailable").value(true))
             .andExpect(jsonPath("$.createdAt").value("2022-01-15T04:50:09Z"))
             .andExpect(jsonPath("$.validityTime").value(10))
             .andExpect(jsonPath("$.isArchived").value(false))

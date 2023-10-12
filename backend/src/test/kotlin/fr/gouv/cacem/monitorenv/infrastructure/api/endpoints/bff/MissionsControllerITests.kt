@@ -185,7 +185,7 @@ class MissionsControllerITests {
                         subThemes = listOf("SubTheme"),
                         actionTaken = "ActionTaken",
                         isControlRequired = true,
-                        isUnitAvailable = true,
+                        hasNoUnitAvailable = true,
                         createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                         validityTime = 4,
                         isArchived = false,
