@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.EnvActionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.FullMissionDTO
@@ -52,7 +51,9 @@ data class FullMissionDataOutput(
                 isClosed = mission.isClosed,
                 hasMissionOrder = mission.hasMissionOrder,
                 isUnderJdp = mission.isUnderJdp,
-                attachedReportings = mission.attachedReportings?.map { AttachedReportingDataOutput.fromFullReportingDTO(it) },
+                attachedReportings = mission.attachedReportings?.map {
+                    AttachedReportingDataOutput.fromFullReportingDTO(it)
+                },
                 attachedReportingIds = mission.attachedReportingIds,
             )
         }

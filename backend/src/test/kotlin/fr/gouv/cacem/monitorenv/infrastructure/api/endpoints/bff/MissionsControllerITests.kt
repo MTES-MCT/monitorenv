@@ -5,21 +5,29 @@ import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.EnvActionControlEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionById
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMonitorEnvMissions
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.FullMissionDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.FullReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateMissionDataInput
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
+import org.locationtech.jts.geom.Point
 import org.locationtech.jts.io.WKTReader
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.verify
@@ -117,31 +125,97 @@ class MissionsControllerITests {
             "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
+        var point = wktReader.read("POINT (-4.54877816747593 48.305559876971)") as Point
+
         val expectedFirstMission = FullMissionDTO(
             id = 10,
             missionTypes = listOf(MissionTypeEnum.SEA),
+            controlUnits = listOf(
+                LegacyControlUnitEntity(
+                    id = 1,
+                    name = "CU1",
+                    administration = "Admin 1",
+                    resources = listOf(
+                        ControlUnitResourceEntity(
+                            id = 2,
+                            base = BaseEntity(
+                                id = 3,
+                                name = "Base 3",
+                                controlUnitResourceIds = listOf(1, 2, 3),
+                            ),
+                            baseId = 3,
+                            name = "Ressource 2",
+                            type = ControlUnitResourceType.BARGE,
+                            controlUnitId = 1,
+                        ),
+                    ),
+                    isArchived = false,
+                ),
+            ),
+            openBy = "OpenBy",
+            closedBy = "ClosedBy",
             facade = "Outre-Mer",
             geom = polygon,
-            observationsCacem = null,
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+            observationsCacem = "obs cacem",
+            observationsCnsp = "obs cnsp",
             isClosed = false,
             isDeleted = false,
             missionSource = MissionSourceEnum.MONITORENV,
             hasMissionOrder = false,
             isUnderJdp = false,
             isGeometryComputedFromControls = false,
+            attachedReportingIds = listOf(1),
+            attachedReportings = listOf(
+                FullReportingDTO(
+                    id = 1,
+                    reportingId = 2300001,
+                    sourceType = SourceTypeEnum.SEMAPHORE,
+                    semaphoreId = 1,
+                    semaphore = SemaphoreEntity(
+                        id = 1,
+                        name = "Semaphore 1",
+                        geom = point,
+                        department = "29",
+                        facade = "Outre-Mer",
+                        administration = "Admin 1",
+                        unit = "Unit 1",
+                        email = "semaphore@",
+                        phoneNumber = "0299999999",
+                        base = "Base 1",
+                    ),
+                    displayedSource = "Semaphore 1",
+                    targetType = TargetTypeEnum.VEHICLE,
+                    vehicleType = VehicleTypeEnum.VEHICLE_LAND,
+                    geom = polygon,
+                    seaFront = "SeaFront",
+                    description = "Description",
+                    reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                    theme = "Theme",
+                    subThemes = listOf("SubTheme"),
+                    actionTaken = "ActionTaken",
+                    isControlRequired = true,
+                    isUnitAvailable = true,
+                    createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                    validityTime = 4,
+                    isArchived = false,
+                    isDeleted = false,
+                    openBy = "OpenBy",
+
+                ),
+            ),
         )
         given(
             getMonitorEnvMissions.execute(
-                startedAfterDateTime = any(),
-                startedBeforeDateTime = any(),
-                seaFronts = any(),
-                missionSources = any(),
-                missionTypes = any(),
-                missionStatuses = any(),
-                pageNumber = any(),
-                pageSize = any(),
+                startedAfterDateTime = null,
+                startedBeforeDateTime = null,
+                seaFronts = null,
+                missionSources = null,
+                missionTypes = null,
+                missionStatuses = null,
+                pageNumber = null,
+                pageSize = null,
             ),
         ).willReturn(listOf(expectedFirstMission))
 
@@ -152,18 +226,50 @@ class MissionsControllerITests {
             .andExpect(jsonPath("$.length()", equalTo(1)))
             .andExpect(jsonPath("$[0].id", equalTo(10)))
             .andExpect(jsonPath("$[0].missionTypes[0]", equalTo(MissionTypeEnum.SEA.toString())))
+            .andExpect(jsonPath("$[0].controlUnits[0].id", equalTo(1)))
+            .andExpect(jsonPath("$[0].openBy", equalTo("OpenBy")))
+            .andExpect(jsonPath("$[0].closedBy", equalTo("ClosedBy")))
             .andExpect(jsonPath("$[0].facade", equalTo("Outre-Mer")))
-            .andExpect(jsonPath("$[0].geom", equalTo(multipolygonString)))
+            .andExpect(jsonPath("$[0].geom.type", equalTo("MultiPolygon")))
             .andExpect(jsonPath("$[0].startDateTimeUtc", equalTo("2022-01-15T04:50:09Z")))
             .andExpect(jsonPath("$[0].endDateTimeUtc", equalTo("2022-01-23T20:29:03Z")))
+            .andExpect(jsonPath("$[0].observationsCacem", equalTo("obs cacem")))
+            .andExpect(jsonPath("$[0].observationsCnsp", equalTo("obs cnsp")))
             .andExpect(jsonPath("$[0].isClosed", equalTo(false)))
-            .andExpect(jsonPath("$[0].isDeleted", equalTo(false)))
+            .andExpect(jsonPath("$[0].isDeleted").doesNotExist())
             .andExpect(jsonPath("$[0].missionSource", equalTo(MissionSourceEnum.MONITORENV.toString())))
             .andExpect(jsonPath("$[0].hasMissionOrder", equalTo(false)))
             .andExpect(jsonPath("$[0].isUnderJdp", equalTo(false)))
-            .andExpect(jsonPath("$[0].isGeometryComputedFromControls", equalTo(false)))
-            .andExpect(jsonPath("$[0].observationsCacem").doesNotExist())
-            .andExpect(jsonPath("$[0].missionStatus").doesNotExist())
+            .andExpect(jsonPath("$[0].attachedReportings[0].id", equalTo(1)))
+            .andExpect(jsonPath("$[0].attachedReportings[0].reportingId", equalTo(2300001)))
+            .andExpect(jsonPath("$[0].attachedReportings[0].sourceType", equalTo("SEMAPHORE")))
+            .andExpect(jsonPath("$[0].attachedReportings[0].semaphoreId", equalTo(1)))
+            .andExpect(jsonPath("$[0].attachedReportings[0].semaphore.id", equalTo(1)))
+            .andExpect(jsonPath("$[0].attachedReportings[0].semaphore.geom.type", equalTo("Point")))
+            .andExpect(jsonPath("$[0].attachedReportings[0].semaphore.name", equalTo("Semaphore 1")))
+            .andExpect(jsonPath("$[0].attachedReportings[0].semaphore.department", equalTo("29")))
+            .andExpect(jsonPath("$[0].attachedReportings[0].semaphore.facade", equalTo("Outre-Mer")))
+            .andExpect(jsonPath("$[0].attachedReportings[0].semaphore.administration", equalTo("Admin 1")))
+            .andExpect(jsonPath("$[0].attachedReportings[0].semaphore.unit", equalTo("Unit 1")))
+            .andExpect(jsonPath("$[0].attachedReportings[0].semaphore.email", equalTo("semaphore@")))
+            .andExpect(jsonPath("$[0].attachedReportings[0].semaphore.phoneNumber", equalTo("0299999999")))
+            .andExpect(jsonPath("$[0].attachedReportings[0].semaphore.base", equalTo("Base 1")))
+            .andExpect(jsonPath("$[0].attachedReportings[0].targetType", equalTo("VEHICLE")))
+            .andExpect(jsonPath("$[0].attachedReportings[0].vehicleType", equalTo("VEHICLE_LAND")))
+            .andExpect(jsonPath("$[0].attachedReportings[0].geom.type", equalTo("MultiPolygon")))
+            .andExpect(jsonPath("$[0].attachedReportings[0].seaFront", equalTo("SeaFront")))
+            .andExpect(jsonPath("$[0].attachedReportings[0].description", equalTo("Description")))
+            .andExpect(jsonPath("$[0].attachedReportings[0].reportType", equalTo("INFRACTION_SUSPICION")))
+            .andExpect(jsonPath("$[0].attachedReportings[0].theme", equalTo("Theme")))
+            .andExpect(jsonPath("$[0].attachedReportings[0].subThemes[0]", equalTo("SubTheme")))
+            .andExpect(jsonPath("$[0].attachedReportings[0].actionTaken", equalTo("ActionTaken")))
+            .andExpect(jsonPath("$[0].attachedReportings[0].isControlRequired", equalTo(true)))
+            .andExpect(jsonPath("$[0].attachedReportings[0].isUnitAvailable", equalTo(true)))
+            .andExpect(jsonPath("$[0].attachedReportings[0].createdAt", equalTo("2022-01-15T04:50:09Z")))
+            .andExpect(jsonPath("$[0].attachedReportings[0].validityTime", equalTo(4)))
+            .andExpect(jsonPath("$[0].attachedReportings[0].isArchived", equalTo(false)))
+            .andExpect(jsonPath("$[0].attachedReportings[0].openBy", equalTo("OpenBy")))
+            .andExpect(jsonPath("$[0].attachedReportingIds", equalTo(listOf(1))))
     }
 
     @Test

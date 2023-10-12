@@ -1,9 +1,12 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.*
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.FullReportingDTO
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime

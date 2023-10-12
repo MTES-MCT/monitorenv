@@ -43,7 +43,6 @@ class GetReportings(
                 },
             )
 
-
         logger.info(
             "Found ${reports.size} reporting(s)",
         )
@@ -51,5 +50,3 @@ class GetReportings(
         return reports
     }
 }
-
-

@@ -6,10 +6,10 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.mappers.EnvActionMapper
+import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType

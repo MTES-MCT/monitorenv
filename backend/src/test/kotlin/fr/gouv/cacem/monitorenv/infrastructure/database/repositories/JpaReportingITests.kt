@@ -245,7 +245,7 @@ class JpaReportingITests : AbstractDBTests() {
         assertThat(existingReporting.attachedMissionId).isNull()
         // When
 
-        val exception = assertThrows<Exception> {
+        val exception = assertThrows<NotFoundException> {
             jpaReportingRepository.save(
                 existingReporting.copy(attachedEnvActionId = UUID.fromString("74c54cb3-195f-4231-99db-772aebe7a66f")).toReportingEntity(),
             )
@@ -253,7 +253,7 @@ class JpaReportingITests : AbstractDBTests() {
 
         // Then
         assertThat(exception.message).isEqualTo(
-            "could not execute statement; SQL [n/a]; constraint [attached_mission_id_not_null_if_attached_env_action_id_not_null]",
+            "Invalid combination of mission and/or envAction",
         )
     }
 
@@ -266,7 +266,7 @@ class JpaReportingITests : AbstractDBTests() {
         assertThat(existingReporting.attachedMissionId).isNull()
         // When
 
-        val exception = assertThrows<Exception> {
+        val exception = assertThrows<NotFoundException> {
             jpaReportingRepository.save(
                 existingReporting.copy(
                     attachedMissionId = 42,
@@ -277,7 +277,7 @@ class JpaReportingITests : AbstractDBTests() {
 
         // Then
         assertThat(exception.message).isEqualTo(
-            "could not execute statement; SQL [n/a]; constraint [fk_reportings_env_actions]",
+            "Invalid combination of mission and/or envAction",
         )
     }
 
@@ -309,14 +309,14 @@ class JpaReportingITests : AbstractDBTests() {
         val existingReporting = jpaReportingRepository.findById(6)
         assertThat(existingReporting.detachedFromMissionAtUtc).isNull()
         // When
-        val exception = assertThrows<Exception> {
+        val exception = assertThrows<NotFoundException> {
             jpaReportingRepository.save(
                 existingReporting.copy(detachedFromMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z")).toReportingEntity(),
             )
         }
         // Then
         assertThat(exception.message).isEqualTo(
-            "could not execute statement; SQL [n/a]; constraint [attached_mission_id_not_null_if_attached_env_action_id_not_null]",
+            "Invalid combination of mission and/or envAction",
         )
     }
 }

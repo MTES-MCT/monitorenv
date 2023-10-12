@@ -88,7 +88,7 @@ data class AttachedReportingDataOutput(
                 attachedToMissionAtUtc = reporting.attachedToMissionAtUtc,
                 detachedFromMissionAtUtc = reporting.detachedFromMissionAtUtc,
                 attachedEnvActionId = reporting.attachedEnvActionId,
-                )
+            )
         }
     }
 }

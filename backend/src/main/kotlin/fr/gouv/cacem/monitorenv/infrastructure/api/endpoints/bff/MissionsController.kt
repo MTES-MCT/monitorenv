@@ -5,7 +5,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.FullMissionDataOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.MissionDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag

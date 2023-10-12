@@ -12,6 +12,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBReportingRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBSemaphoreRepository
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException
@@ -95,6 +96,8 @@ class JpaReportingRepository(
                 "Invalid reference to semaphore, control unit or mission: not found in referential",
                 e,
             )
+        } catch (e: DataIntegrityViolationException) {
+            throw NotFoundException("Invalid combination of mission and/or envAction", e)
         }
     }
 

@@ -30,7 +30,7 @@ data class FullMissionDTO(
     val isUnderJdp: Boolean,
     val attachedReportings: List<FullReportingDTO>? = listOf(),
     val attachedReportingIds: List<Int>? = listOf(),
-    ) {
+) {
     fun toMissionEntity(): MissionEntity =
         MissionEntity(
             id = id,

@@ -6,13 +6,14 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.vladmihalcea.hibernate.type.array.ListArrayType
-import com.vladmihalcea.hibernate.type.array.internal.AbstractArrayType.SQL_ARRAY_TYPE
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.FullMissionDTO
 import fr.gouv.cacem.monitorenv.utils.mapOrElseEmpty
+import io.hypersistence.utils.hibernate.type.array.ListArrayType
+import io.hypersistence.utils.hibernate.type.array.internal.AbstractArrayType.SQL_ARRAY_TYPE
+import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType
 import jakarta.persistence.Basic
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
@@ -90,6 +91,7 @@ data class MissionModel(
 
     @Column(name = "mission_source", nullable = false, columnDefinition = "mission_source_type")
     @Enumerated(EnumType.STRING)
+    @Type(PostgreSQLEnumType::class)
     val missionSource: MissionSourceEnum,
 
     @Column(name = "has_mission_order", nullable = false)
