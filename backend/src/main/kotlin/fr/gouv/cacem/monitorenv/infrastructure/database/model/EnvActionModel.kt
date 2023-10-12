@@ -65,7 +65,7 @@ data class EnvActionModel(
     @Column(name = "department")
     val department: String? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "mission_id")
     @JsonBackReference
     val mission: MissionModel,

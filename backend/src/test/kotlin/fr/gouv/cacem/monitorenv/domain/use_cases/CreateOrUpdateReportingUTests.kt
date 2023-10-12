@@ -208,7 +208,7 @@ class CreateOrUpdateReportingUTests {
         // Then
         verify(reportingRepository, times(1)).save(reportingWithSemaphore)
         assertThat(createdReportingWithSemaphore)
-            .isEqualTo(Triple(reportingWithSemaphore, null, semaphore))
+            .isEqualTo(reportingWithSemaphoreDTO)
 
         // When
         val createdReportingWithControlUnit =
@@ -224,7 +224,7 @@ class CreateOrUpdateReportingUTests {
         // Then
         verify(reportingRepository, times(1)).save(reportingWithControlUnit)
         assertThat(createdReportingWithControlUnit)
-            .isEqualTo(Triple(reportingWithControlUnit, fullControlUnit, null))
+            .isEqualTo(reportingWithControlUnitDTO)
     }
 
     @Test

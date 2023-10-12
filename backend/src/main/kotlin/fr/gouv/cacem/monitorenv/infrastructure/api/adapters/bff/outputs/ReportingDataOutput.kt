@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
@@ -10,7 +9,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
-import fr.gouv.cacem.monitorenv.domain.mappers.EnvActionMapper
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.FullReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.ControlUnitDataOutput
@@ -20,7 +18,7 @@ import java.util.UUID
 
 data class ReportingDataOutput(
     val id: Int,
-    val reportingId: Int? = null,
+    val reportingId: Long? = null,
     val sourceType: SourceTypeEnum? = null,
     val semaphoreId: Int? = null,
     val semaphore: SemaphoreDataOutput? = null,
@@ -48,11 +46,9 @@ data class ReportingDataOutput(
     val detachedFromMissionAtUtc: ZonedDateTime? = null,
     val attachedEnvActionId: UUID? = null,
     val attachedMission: MissionDataOutput? = null,
-    val attachedEnvAction: String? = null,
 ) {
     companion object {
         fun fromFullReportingDTO(
-            objectMapper: ObjectMapper,
             reporting: FullReportingDTO,
         ): ReportingDataOutput {
             requireNotNull(reporting.id) { "ReportingEntity.id cannot be null" }

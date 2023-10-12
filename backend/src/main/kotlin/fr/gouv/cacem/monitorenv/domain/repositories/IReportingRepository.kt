@@ -17,8 +17,8 @@ interface IReportingRepository {
         startedAfter: Instant,
         startedBefore: Instant?,
         status: List<String>?,
-    ): List<ReportingEntity>
-    fun findByAttachedMissionId(missionId: Int): List<ReportingEntity>
+    ): List<FullReportingDTO>
+    fun findByAttachedMissionId(missionId: Int): List<FullReportingDTO>
     fun save(reporting: ReportingEntity): FullReportingDTO
     fun delete(reportingId: Int)
     fun count(): Long

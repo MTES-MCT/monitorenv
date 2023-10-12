@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.EnvActionEntity
@@ -9,7 +9,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.FullMissionDTO
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
-data class MissionDataOutput(
+data class FullMissionDataOutput(
     val id: Int,
     val missionTypes: List<MissionTypeEnum>,
     val controlUnits: List<LegacyControlUnitEntity>? = listOf(),
@@ -26,15 +26,16 @@ data class MissionDataOutput(
     val isClosed: Boolean,
     val hasMissionOrder: Boolean,
     val isUnderJdp: Boolean,
-    val isGeometryComputedFromControls: Boolean,
+    val attachedReportings: List<AttachedReportingDataOutput>? = listOf(),
+    val attachedReportingIds: List<Int>? = listOf(),
 ) {
     companion object {
-        fun fromFullMissionDTO(mission: FullMissionDTO): MissionDataOutput {
+        fun fromFullMissionDTO(mission: FullMissionDTO): FullMissionDataOutput {
             requireNotNull(mission.id) {
                 "a mission must have an id"
             }
 
-            return MissionDataOutput(
+            return FullMissionDataOutput(
                 id = mission.id,
                 missionTypes = mission.missionTypes,
                 controlUnits = mission.controlUnits,
@@ -51,7 +52,8 @@ data class MissionDataOutput(
                 isClosed = mission.isClosed,
                 hasMissionOrder = mission.hasMissionOrder,
                 isUnderJdp = mission.isUnderJdp,
-                isGeometryComputedFromControls = mission.isGeometryComputedFromControls,
+                attachedReportings = mission.attachedReportings?.map { AttachedReportingDataOutput.fromFullReportingDTO(it) },
+                attachedReportingIds = mission.attachedReportingIds,
             )
         }
     }

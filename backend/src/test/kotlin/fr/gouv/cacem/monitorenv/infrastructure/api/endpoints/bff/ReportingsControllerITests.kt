@@ -252,7 +252,7 @@ class ReportingsControllerITests {
                     "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
                 )
         val reporting =
-            ReportingEntity(
+            FullReportingDTO(
                 id = 1,
                 sourceType = SourceTypeEnum.SEMAPHORE,
                 targetType = TargetTypeEnum.VEHICLE,
@@ -275,17 +275,7 @@ class ReportingsControllerITests {
                 isDeleted = false,
                 openBy = "CDA",
             )
-        val semaphore =
-            SemaphoreEntity(
-                id = 1,
-                name = "semaphore name",
-                geom =
-                WKTReader()
-                    .read(
-                        "POINT (-61.0 14.0)",
-                    ) as
-                    Point,
-            )
+
         given(
             getReportings.execute(
                 pageNumber = anyOrNull(),
@@ -298,7 +288,7 @@ class ReportingsControllerITests {
                 status = any(),
             ),
         )
-            .willReturn(listOf(Triple(reporting, null, semaphore)))
+            .willReturn(listOf(reporting))
 
         // When
         mockedApi

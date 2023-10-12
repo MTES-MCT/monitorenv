@@ -39,7 +39,7 @@ class JpaReportingRepository(
         startedAfter: Instant,
         startedBefore: Instant?,
         status: List<String>?,
-    ): List<ReportingEntity> {
+    ): List<FullReportingDTO> {
         val sourcesTypeAsStringArray = sourcesType?.map { it.name }
         val reportingTypeAsStringArray = reportingType?.map { it.name }
         return dbReportingRepository.findAll(
@@ -51,11 +51,11 @@ class JpaReportingRepository(
             startedBefore = startedBefore,
             status = convertToString(status),
         )
-            .map { it.toReporting() }
+            .map { it.toFullReporting(mapper) }
     }
 
-    override fun findByAttachedMissionId(missionId: Int): List<ReportingEntity> {
-        return dbReportingRepository.findByAttachedMissionId(missionId).map { it.toReporting() }
+    override fun findByAttachedMissionId(missionId: Int): List<FullReportingDTO> {
+        return dbReportingRepository.findByAttachedMissionId(missionId).map { it.toFullReporting(mapper) }
     }
 
     @Transactional

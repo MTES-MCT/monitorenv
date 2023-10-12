@@ -11,7 +11,11 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionById
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMonitorEnvMissions
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.FullMissionDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateMissionDataInput
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
@@ -67,7 +71,7 @@ class MissionsControllerITests {
             "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
         // Given
-        val expectedNewMission = MissionEntity(
+        val expectedNewMission = FullMissionDTO(
             id = 10,
             missionTypes = listOf(MissionTypeEnum.LAND),
             facade = "Outre-Mer",
@@ -113,7 +117,7 @@ class MissionsControllerITests {
             "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
-        val expectedFirstMission = MissionEntity(
+        val expectedFirstMission = FullMissionDTO(
             id = 10,
             missionTypes = listOf(MissionTypeEnum.SEA),
             facade = "Outre-Mer",
@@ -145,13 +149,28 @@ class MissionsControllerITests {
         mockMvc.perform(get("/bff/v1/missions"))
             // Then
             .andExpect(status().isOk)
+            .andExpect(jsonPath("$.length()", equalTo(1)))
+            .andExpect(jsonPath("$[0].id", equalTo(10)))
+            .andExpect(jsonPath("$[0].missionTypes[0]", equalTo(MissionTypeEnum.SEA.toString())))
+            .andExpect(jsonPath("$[0].facade", equalTo("Outre-Mer")))
+            .andExpect(jsonPath("$[0].geom", equalTo(multipolygonString)))
+            .andExpect(jsonPath("$[0].startDateTimeUtc", equalTo("2022-01-15T04:50:09Z")))
+            .andExpect(jsonPath("$[0].endDateTimeUtc", equalTo("2022-01-23T20:29:03Z")))
+            .andExpect(jsonPath("$[0].isClosed", equalTo(false)))
+            .andExpect(jsonPath("$[0].isDeleted", equalTo(false)))
+            .andExpect(jsonPath("$[0].missionSource", equalTo(MissionSourceEnum.MONITORENV.toString())))
+            .andExpect(jsonPath("$[0].hasMissionOrder", equalTo(false)))
+            .andExpect(jsonPath("$[0].isUnderJdp", equalTo(false)))
+            .andExpect(jsonPath("$[0].isGeometryComputedFromControls", equalTo(false)))
+            .andExpect(jsonPath("$[0].observationsCacem").doesNotExist())
+            .andExpect(jsonPath("$[0].missionStatus").doesNotExist())
     }
 
     @Test
     fun `Should get specific mission when requested by Id`() {
         // Given
         val requestedId = 0
-        val expectedFirstMission = MissionEntity(
+        val expectedFirstMission = FullMissionDTO(
             id = 10,
             missionTypes = listOf(MissionTypeEnum.SEA),
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
@@ -176,7 +195,7 @@ class MissionsControllerITests {
     @Test
     fun `update mission should return updated mission`() {
         // Given
-        val expectedUpdatedMission = MissionEntity(
+        val expectedUpdatedMission = FullMissionDTO(
             id = 14,
             missionTypes = listOf(MissionTypeEnum.SEA),
             observationsCacem = "updated observationsCacem",

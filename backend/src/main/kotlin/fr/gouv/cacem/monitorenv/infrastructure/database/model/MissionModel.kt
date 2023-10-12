@@ -12,8 +12,20 @@ import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.FullMissionDTO
 import fr.gouv.cacem.monitorenv.utils.mapOrElseEmpty
-import jakarta.persistence.*
+import jakarta.persistence.Basic
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
+import jakarta.persistence.Table
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
@@ -95,6 +107,7 @@ data class MissionModel(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
+        fetch = FetchType.EAGER,
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
@@ -104,6 +117,7 @@ data class MissionModel(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
+        fetch = FetchType.EAGER,
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
@@ -113,10 +127,16 @@ data class MissionModel(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
+        fetch = FetchType.EAGER,
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
     val controlUnits: MutableList<MissionControlUnitModel>? = ArrayList(),
+
+    @OneToMany(mappedBy = "attachedMission")
+    @JsonManagedReference
+    @Fetch(value = FetchMode.SUBSELECT)
+    val attachedReportings: MutableList<ReportingModel>? = ArrayList(),
 ) {
     fun toMissionEntity(objectMapper: ObjectMapper): MissionEntity {
         val controlUnits = controlUnits.mapOrElseEmpty { missionControlUnitModel ->
@@ -134,6 +154,43 @@ data class MissionModel(
         }
 
         return MissionEntity(
+            id,
+            missionTypes,
+            controlUnits,
+            openBy,
+            closedBy,
+            observationsCacem,
+            observationsCnsp,
+            facade,
+            geom,
+            startDateTimeUtc = startDateTimeUtc.atZone(UTC),
+            endDateTimeUtc = endDateTimeUtc?.atZone(UTC),
+            envActions = envActions!!.map { it.toActionEntity(objectMapper) },
+            isClosed,
+            isDeleted,
+            isGeometryComputedFromControls,
+            missionSource,
+            hasMissionOrder,
+            isUnderJdp,
+        )
+    }
+
+    fun toFullMissionDTO(objectMapper: ObjectMapper): FullMissionDTO {
+        val controlUnits = controlUnits.mapOrElseEmpty { missionControlUnitModel ->
+            val maybeMissionControlResourceModels = controlResources
+                ?.filter { missionControlResourceModel ->
+                    missionControlResourceModel.ressource.controlUnit.id == missionControlUnitModel.unit.id
+                }
+
+            val controlUnitResources = maybeMissionControlResourceModels.mapOrElseEmpty { it.toControlUnitResource() }
+
+            missionControlUnitModel.unit.toLegacyControlUnit().copy(
+                contact = missionControlUnitModel.contact,
+                resources = controlUnitResources,
+            )
+        }
+
+        return FullMissionDTO(
             id,
             missionTypes,
             controlUnits,

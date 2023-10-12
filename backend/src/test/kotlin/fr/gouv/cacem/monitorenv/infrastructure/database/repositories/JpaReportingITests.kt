@@ -277,7 +277,7 @@ class JpaReportingITests : AbstractDBTests() {
 
         // Then
         assertThat(exception.message).isEqualTo(
-            "could not execute statement; SQL [n/a]; constraint [reportings_env_actions_fk]",
+            "could not execute statement; SQL [n/a]; constraint [fk_reportings_env_actions]",
         )
     }
 

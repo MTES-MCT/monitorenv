@@ -12,6 +12,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreaRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.FullMissionDTO
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -66,6 +67,7 @@ class CreateOrUpdateMissionUTests {
         val missionToCreate = MissionEntity(
             missionTypes = listOf(MissionTypeEnum.LAND),
             facade = "Outre-Mer",
+            geom = polygon,
             startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
             isClosed = false,
@@ -90,8 +92,17 @@ class CreateOrUpdateMissionUTests {
             isGeometryComputedFromControls = false,
         )
 
-        val expectedCreatedMission = missionToCreate.copy(
-            facade = null,
+        val expectedCreatedMission = FullMissionDTO(
+            missionTypes = listOf(MissionTypeEnum.LAND),
+            facade = "Outre-Mer",
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+            isClosed = false,
+            isDeleted = false,
+            missionSource = MissionSourceEnum.MONITORENV,
+            hasMissionOrder = false,
+            isUnderJdp = false,
+            isGeometryComputedFromControls = false,
             envActions = listOf(
                 EnvActionControlEntity(
                     id = UUID.fromString("33310163-4e22-4d3d-b585-dac4431eb4b5"),
@@ -112,9 +123,9 @@ class CreateOrUpdateMissionUTests {
             ),
         )
 
-        given(missionRepository.save(expectedCreatedMission)).willReturn(expectedCreatedMission)
         given(facadeAreasRepository.findFacadeFromGeometry(anyOrNull())).willReturn("La Face Ade")
         given(departmentRepository.findDepartmentFromGeometry(anyOrNull())).willReturn("Quequ'part")
+        given(missionRepository.save(anyOrNull())).willReturn(expectedCreatedMission)
 
         // When
         val createdMission =
@@ -128,7 +139,30 @@ class CreateOrUpdateMissionUTests {
             )
 
         // Then
-        verify(missionRepository, times(1)).save(expectedCreatedMission)
+        verify(facadeAreasRepository, times(2)).findFacadeFromGeometry(argThat { this == polygon })
+        verify(facadeAreasRepository, times(1)).findFacadeFromGeometry(argThat { this == point })
+
+        verify(missionRepository, times(1))
+            .save(
+                argThat {
+                    this == missionToCreate.copy(
+                        facade = "La Face Ade",
+                        envActions = missionToCreate.envActions?.map {
+                            when (it) {
+                                is EnvActionControlEntity -> it.copy(
+                                    facade = "La Face Ade",
+                                    department = "Quequ'part",
+                                )
+                                is EnvActionSurveillanceEntity -> it.copy(
+                                    facade = "La Face Ade",
+                                    department = "Quequ'part",
+                                )
+                                else -> it
+                            }
+                        },
+                    )
+                },
+            )
         assertThat(createdMission).isEqualTo(expectedCreatedMission)
     }
 }

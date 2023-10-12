@@ -1,22 +1,25 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.*
-import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.FullReportingDTO
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.ControlUnitDataOutput
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.UUID
 
-data class ReportingDetailedDataOutput(
+data class AttachedReportingDataOutput(
     val id: Int,
     val reportingId: Long? = null,
     val sourceType: SourceTypeEnum? = null,
     val semaphoreId: Int? = null,
+    val semaphore: SemaphoreDataOutput? = null,
     val controlUnitId: Int? = null,
+    val controlUnit: ControlUnitDataOutput? = null,
     val sourceName: String? = null,
-    val displayedSource: String? = null,
     val targetType: TargetTypeEnum? = null,
     val vehicleType: VehicleTypeEnum? = null,
     val targetDetails: List<TargetDetailsEntity>? = listOf(),
@@ -39,26 +42,33 @@ data class ReportingDetailedDataOutput(
     val attachedEnvActionId: UUID? = null,
 ) {
     companion object {
-        fun fromReporting(
+        fun fromFullReportingDTO(
             reporting: FullReportingDTO,
-
-        ): ReportingDetailedDataOutput {
+        ): AttachedReportingDataOutput {
             requireNotNull(reporting.id) { "ReportingEntity.id cannot be null" }
-            return ReportingDetailedDataOutput(
+            return AttachedReportingDataOutput(
                 id = reporting.id,
                 reportingId = reporting.reportingId,
                 sourceType = reporting.sourceType,
                 semaphoreId = reporting.semaphoreId,
-                controlUnitId = reporting.controlUnitId,
-                sourceName = reporting.sourceName,
-                displayedSource =
-                when (reporting.sourceType) {
-                    SourceTypeEnum.SEMAPHORE -> semaphore?.unit ?: semaphore?.name
-                    // TODO This is really strange : `fullControlUnit?.controlUnit` can't be null and I have to add another `?`...
-                    SourceTypeEnum.CONTROL_UNIT -> fullControlUnit?.controlUnit?.name
-                    SourceTypeEnum.OTHER -> reporting.sourceName
-                    else -> ""
+                semaphore = if (reporting.semaphore != null) {
+                    SemaphoreDataOutput.fromSemaphoreEntity(
+                        reporting.semaphore,
+                    )
+                } else {
+                    null
                 },
+                controlUnitId = reporting.controlUnitId,
+                controlUnit =
+                if (reporting.controlUnit != null) {
+                    ControlUnitDataOutput
+                        .fromFullControlUnit(
+                            reporting.controlUnit,
+                        )
+                } else {
+                    null
+                },
+                sourceName = reporting.sourceName,
                 targetType = reporting.targetType,
                 vehicleType = reporting.vehicleType,
                 targetDetails = reporting.targetDetails,
@@ -75,11 +85,10 @@ data class ReportingDetailedDataOutput(
                 validityTime = reporting.validityTime,
                 isArchived = reporting.isArchived,
                 openBy = reporting.openBy,
-                attachedMissionId = reporting.attachedMissionId,
                 attachedToMissionAtUtc = reporting.attachedToMissionAtUtc,
                 detachedFromMissionAtUtc = reporting.detachedFromMissionAtUtc,
                 attachedEnvActionId = reporting.attachedEnvActionId,
-            )
+                )
         }
     }
 }

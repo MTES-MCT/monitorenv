@@ -12,7 +12,7 @@ import java.util.UUID
 
 data class CreateOrUpdateReportingDataInput(
     val id: Int? = null,
-    val reportingId: Int? = null,
+    val reportingId: Long? = null,
     val sourceType: SourceTypeEnum? = null,
     val semaphoreId: Int? = null,
     val controlUnitId: Int? = null,

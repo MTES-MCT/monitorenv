@@ -1,7 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
@@ -16,7 +15,7 @@ import java.util.UUID
 
 data class FullReportingDTO(
     val id: Int? = null,
-    val reportingId: Int? = null,
+    val reportingId: Long? = null,
     val sourceType: SourceTypeEnum? = null,
     val semaphoreId: Int? = null,
     val semaphore: SemaphoreEntity? = null,
@@ -46,7 +45,6 @@ data class FullReportingDTO(
     val detachedFromMissionAtUtc: ZonedDateTime? = null,
     val attachedEnvActionId: UUID? = null,
     val attachedMission: MissionEntity? = null,
-    val attachedEnvAction: EnvActionEntity? = null,
 ) {
     fun toReportingEntity(): ReportingEntity =
         ReportingEntity(

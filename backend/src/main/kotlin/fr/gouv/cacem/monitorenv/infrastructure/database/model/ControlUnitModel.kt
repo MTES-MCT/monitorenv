@@ -18,7 +18,7 @@ data class ControlUnitModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "administration_id", nullable = false)
     @JsonBackReference
     var administration: AdministrationModel,
@@ -26,11 +26,11 @@ data class ControlUnitModel(
     @Column(name = "area_note")
     var areaNote: String? = null,
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlUnit")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "controlUnit")
     @JsonManagedReference
     var controlUnitContacts: List<ControlUnitContactModel>? = mutableListOf(),
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlUnit")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "controlUnit")
     @JsonManagedReference
     var controlUnitResources: List<ControlUnitResourceModel>? = mutableListOf(),
 

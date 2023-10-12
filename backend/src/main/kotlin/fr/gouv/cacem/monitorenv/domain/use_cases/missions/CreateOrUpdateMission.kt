@@ -8,6 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IBaseRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreaRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.FullMissionDTO
 
 @UseCase
 class CreateOrUpdateMission(
@@ -18,7 +19,7 @@ class CreateOrUpdateMission(
 
 ) {
     @Throws(IllegalArgumentException::class)
-    fun execute(mission: MissionEntity?): MissionEntity {
+    fun execute(mission: MissionEntity?): FullMissionDTO {
         require(mission != null) {
             "No mission to create or update"
         }

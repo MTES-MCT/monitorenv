@@ -6,6 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.exceptions.ControlResourceOrUnitNotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.BaseModel
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.FullMissionDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
 import org.springframework.dao.DataIntegrityViolationException
@@ -29,7 +30,7 @@ class JpaMissionRepository(
         missionSources: List<MissionSourceEnum>?,
         seaFronts: List<String>?,
         pageable: Pageable,
-    ): List<MissionEntity> {
+    ): List<FullMissionDTO> {
         val missionSourcesAsStringArray = missionSources?.map { it.name }
         return dbMissionRepository.findAll(
             startedAfter = startedAfter,
@@ -39,11 +40,11 @@ class JpaMissionRepository(
             missionSources = convertToPGArray(missionSourcesAsStringArray),
             seaFronts = convertToPGArray(seaFronts),
             pageable = pageable,
-        ).map { it.toMissionEntity(mapper) }
+        ).map { it.toFullMissionDTO(mapper) }
     }
 
-    override fun findById(missionId: Int): MissionEntity {
-        return dbMissionRepository.findById(missionId).get().toMissionEntity(mapper)
+    override fun findById(missionId: Int): FullMissionDTO {
+        return dbMissionRepository.findById(missionId).get().toFullMissionDTO(mapper)
     }
 
     override fun count(): Long {
@@ -51,7 +52,7 @@ class JpaMissionRepository(
     }
 
     @Transactional
-    override fun save(mission: MissionEntity): MissionEntity {
+    override fun save(mission: MissionEntity): FullMissionDTO {
         return try {
             // Extract all control units resources unique baseIds
             val uniqueBaseIds = mission.controlUnits.flatMap { controlUnit ->
@@ -63,7 +64,7 @@ class JpaMissionRepository(
             val baseModelMap = baseModels.associateBy { requireNotNull(it.id) }
 
             val missionModel = MissionModel.fromMissionEntity(mission, mapper, baseModelMap)
-            dbMissionRepository.save(missionModel).toMissionEntity(mapper)
+            dbMissionRepository.save(missionModel).toFullMissionDTO(mapper)
         } catch (e: Exception) {
             when (e) {
                 // TODO Is `InvalidDataAccessApiUsageException` necessary?

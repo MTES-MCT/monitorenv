@@ -58,11 +58,11 @@ data class ReportingModel(
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
     val sourceType: SourceTypeEnum? = null,
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "semaphore_id", nullable = true)
     @JsonBackReference
     val semaphore: SemaphoreModel? = null,
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "control_unit_id", nullable = true)
     @JsonBackReference
     val controlUnit: ControlUnitModel? = null,
@@ -112,7 +112,7 @@ data class ReportingModel(
     val isDeleted: Boolean,
     @Column(name = "open_by")
     val openBy: String? = null,
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "attached_mission_id", nullable = true)
     @JsonBackReference
     val attachedMission: MissionModel? = null,

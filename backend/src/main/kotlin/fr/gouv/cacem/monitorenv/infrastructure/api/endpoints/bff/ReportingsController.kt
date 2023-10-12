@@ -82,7 +82,7 @@ class ReportingsController(
             startedBeforeDateTime = startedBeforeDateTime,
             status = status,
         )
-            .map { ReportingDetailedDataOutput.fromReporting(it.first, it.second, it.third) }
+            .map { ReportingDetailedDataOutput.fromReporting(it) }
     }
 
     @PutMapping("", consumes = ["application/json"])
@@ -94,9 +94,7 @@ class ReportingsController(
         val newReporting = createReporting.toReportingEntity()
         val createdReporting = createOrUpdateReporting.execute(newReporting)
         return ReportingDataOutput.fromFullReportingDTO(
-            objectMapper = mapper,
             reporting = createdReporting,
-
         )
     }
 
@@ -109,7 +107,6 @@ class ReportingsController(
     ): ReportingDataOutput {
         return getReportingById.execute(id).let {
             ReportingDataOutput.fromFullReportingDTO(
-                objectMapper = mapper,
                 reporting = it,
             )
         }
@@ -129,7 +126,6 @@ class ReportingsController(
         )
             .let {
                 ReportingDataOutput.fromFullReportingDTO(
-                    objectMapper = mapper,
                     reporting = it,
                 )
             }
