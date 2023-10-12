@@ -6,8 +6,8 @@ import styled from 'styled-components'
 
 import { getMissionStatus, missionStatusLabels } from '../../domain/entities/missions'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
-import { deleteTab } from '../../domain/use_cases/navigation/deleteTab'
-import { switchTab } from '../../domain/use_cases/navigation/switchTab'
+import { deleteTab } from '../../domain/use_cases/missions/deleteTab'
+import { switchTab } from '../../domain/use_cases/missions/switchTab'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { getMissionTitle } from '../../utils/getMissionTitle'
@@ -53,15 +53,17 @@ export function MissionsNavBar() {
   }, [selectedMissions])
 
   const selectTab = nextPath => {
-    if (nextPath) {
-      dispatch(switchTab(nextPath))
+    if (!nextPath) {
+      return
     }
+    dispatch(switchTab(nextPath))
   }
 
   const removeTab = nextPath => {
-    if (nextPath) {
-      dispatch(deleteTab(nextPath))
+    if (!nextPath) {
+      return
     }
+    dispatch(deleteTab(nextPath))
   }
 
   return (
