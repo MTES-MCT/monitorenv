@@ -33,7 +33,7 @@ import { baseTablePersistedReducer } from '../../features/Base/components/BaseTa
 import { controlUnitDialogReducer } from '../../features/ControlUnit/components/ControlUnitDialog/slice'
 import { controlUnitListDialogPersistedReducer } from '../../features/ControlUnit/components/ControlUnitListDialog/slice'
 import { controlUnitTablePersistedReducer } from '../../features/ControlUnit/components/ControlUnitTable/slice'
-import { layerSearchSliceReducer } from '../../features/layersSelector/search/LayerSearch.slice'
+import { layerSearchSliceReducer } from '../../features/layersSelector/search/slice'
 import { mainWindowReducer } from '../../features/MainWindow/slice'
 import { sideWindowReducer } from '../../features/SideWindow/slice'
 

@@ -5,14 +5,9 @@ import { useState, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
 import { LayerFilters } from './LayerFilters'
-import {
-  resetSearchExtent,
-  setAMPsSearchResult,
-  setRegulatoryLayersSearchResult,
-  setSearchExtent
-} from './LayerSearch.slice'
 import { ResultList } from './ResultsList'
 import { SearchInput } from './SearchInput'
+import { resetSearchExtent, setAMPsSearchResult, setRegulatoryLayersSearchResult, setSearchExtent } from './slice'
 import { useGetAMPsQuery } from '../../../api/ampsAPI'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
