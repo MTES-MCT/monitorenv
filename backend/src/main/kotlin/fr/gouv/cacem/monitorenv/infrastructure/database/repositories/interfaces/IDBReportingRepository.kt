@@ -38,9 +38,9 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         """
         UPDATE reportings
         SET
-            attached_mission_id = CASE WHEN id in (:reportingIds) THEN :missionId ELSE null END,
+            attached_mission_id =  :missionId,
             attached_to_mission_at_utc = CASE WHEN attached_mission_id is null AND id in (:reportingIds) THEN NOW() ELSE attached_to_mission_at_utc END,
-            detached_from_mission_at_utc = CASE WHEN id not in (:reportingIds) THEN NOW() ELSE detached_from_mission_at_utc END
+            detached_from_mission_at_utc = CASE WHEN id not in (:reportingIds) THEN NOW() ELSE CAST(null as timestamp ) END
         WHERE id in (:reportingIds) or attached_mission_id = :missionId
         """,
         nativeQuery = true,

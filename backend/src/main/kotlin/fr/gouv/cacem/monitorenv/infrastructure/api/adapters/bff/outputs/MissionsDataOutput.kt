@@ -8,7 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
-data class FullMissionDataOutput(
+data class MissionsDataOutput(
     val id: Int,
     val missionTypes: List<MissionTypeEnum>,
     val controlUnits: List<LegacyControlUnitEntity>? = listOf(),
@@ -25,16 +25,15 @@ data class FullMissionDataOutput(
     val isClosed: Boolean,
     val hasMissionOrder: Boolean,
     val isUnderJdp: Boolean,
-    val attachedReportings: List<AttachedReportingDataOutput>? = listOf(),
     val attachedReportingIds: List<Int>? = listOf(),
 ) {
     companion object {
-        fun fromMissionDTO(dto: MissionDTO): FullMissionDataOutput {
+        fun fromMissionDTO(dto: MissionDTO): MissionsDataOutput {
             requireNotNull(dto.mission.id) {
                 "a mission must have an id"
             }
 
-            return FullMissionDataOutput(
+            return MissionsDataOutput(
                 id = dto.mission.id,
                 missionTypes = dto.mission.missionTypes,
                 controlUnits = dto.mission.controlUnits,
@@ -51,9 +50,6 @@ data class FullMissionDataOutput(
                 isClosed = dto.mission.isClosed,
                 hasMissionOrder = dto.mission.hasMissionOrder,
                 isUnderJdp = dto.mission.isUnderJdp,
-                attachedReportings = dto.attachedReportings?.map {
-                    AttachedReportingDataOutput.fromReportingDTO(it)
-                },
                 attachedReportingIds = dto.attachedReportingIds,
             )
         }

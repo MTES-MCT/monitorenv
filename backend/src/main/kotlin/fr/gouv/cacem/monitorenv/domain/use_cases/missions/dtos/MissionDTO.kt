@@ -7,4 +7,6 @@ data class MissionDTO(
     val mission: MissionEntity,
     val attachedReportings: List<ReportingDTO>? = listOf(),
     val attachedReportingIds: List<Int>? = listOf(),
+    val detachedReportings: List<ReportingDTO>? = listOf(),
+    val detachedReportingIds: List<Int>? = listOf(),
 )

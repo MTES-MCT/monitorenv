@@ -6,18 +6,20 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.ControlUnitDataOutput
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.UUID
 
-data class ReportingDetailedDataOutput(
+data class MissionAttachedReportingDataOutput(
     val id: Int,
     val reportingId: Long? = null,
     val sourceType: SourceTypeEnum? = null,
     val semaphoreId: Int? = null,
+    val semaphore: SemaphoreDataOutput? = null,
     val controlUnitId: Int? = null,
-    val sourceName: String? = null,
+    val controlUnit: ControlUnitDataOutput? = null,
     val displayedSource: String? = null,
+    val sourceName: String? = null,
     val targetType: TargetTypeEnum? = null,
     val vehicleType: VehicleTypeEnum? = null,
     val targetDetails: List<TargetDetailsEntity>? = listOf(),
@@ -34,24 +36,34 @@ data class ReportingDetailedDataOutput(
     val validityTime: Int? = null,
     val isArchived: Boolean,
     val openBy: String? = null,
-    val attachedMissionId: Int? = null,
-    val attachedToMissionAtUtc: ZonedDateTime? = null,
-    val detachedFromMissionAtUtc: ZonedDateTime? = null,
-    val attachedEnvActionId: UUID? = null,
 ) {
     companion object {
-        fun fromReporting(
+        fun fromReportingDTO(
             dto: ReportingDTO,
-
-        ): ReportingDetailedDataOutput {
+        ): MissionAttachedReportingDataOutput {
             requireNotNull(dto.reporting.id) { "ReportingEntity.id cannot be null" }
-            return ReportingDetailedDataOutput(
-                id = dto.reporting.id,
+            return MissionAttachedReportingDataOutput(
+                id = dto.reporting.id!!,
                 reportingId = dto.reporting.reportingId,
                 sourceType = dto.reporting.sourceType,
                 semaphoreId = dto.reporting.semaphoreId,
+                semaphore = if (dto.semaphore != null) {
+                    SemaphoreDataOutput.fromSemaphoreEntity(
+                        dto.semaphore,
+                    )
+                } else {
+                    null
+                },
                 controlUnitId = dto.reporting.controlUnitId,
-                sourceName = dto.reporting.sourceName,
+                controlUnit =
+                if (dto.controlUnit != null) {
+                    ControlUnitDataOutput
+                        .fromFullControlUnit(
+                            dto.controlUnit,
+                        )
+                } else {
+                    null
+                },
                 displayedSource =
                 when (dto.reporting.sourceType) {
                     SourceTypeEnum.SEMAPHORE -> dto?.semaphore?.unit ?: dto?.semaphore?.name
@@ -60,6 +72,7 @@ data class ReportingDetailedDataOutput(
                     SourceTypeEnum.OTHER -> dto.reporting.sourceName
                     else -> ""
                 },
+                sourceName = dto.reporting.sourceName,
                 targetType = dto.reporting.targetType,
                 vehicleType = dto.reporting.vehicleType,
                 targetDetails = dto.reporting.targetDetails,
@@ -76,10 +89,6 @@ data class ReportingDetailedDataOutput(
                 validityTime = dto.reporting.validityTime,
                 isArchived = dto.reporting.isArchived,
                 openBy = dto.reporting.openBy,
-                attachedMissionId = dto.reporting.attachedMissionId,
-                attachedToMissionAtUtc = dto.reporting.attachedToMissionAtUtc,
-                detachedFromMissionAtUtc = dto.reporting.detachedFromMissionAtUtc,
-                attachedEnvActionId = dto.reporting.attachedEnvActionId,
             )
         }
     }

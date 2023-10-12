@@ -11,7 +11,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingById
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportings
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateReportingDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ReportingDataOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ReportingDetailedDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ReportingsDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -71,7 +71,7 @@ class ReportingsController(
         @Parameter(description = "Reporting status")
         @RequestParam(name = "status", required = false)
         status: List<String>?,
-    ): List<ReportingDetailedDataOutput> {
+    ): List<ReportingsDataOutput> {
         return getReportings.execute(
             pageNumber = pageNumber,
             pageSize = pageSize,
@@ -82,7 +82,7 @@ class ReportingsController(
             startedBeforeDateTime = startedBeforeDateTime,
             status = status,
         )
-            .map { ReportingDetailedDataOutput.fromReporting(it) }
+            .map { ReportingsDataOutput.fromReportingDTO(it) }
     }
 
     @PutMapping("", consumes = ["application/json"])
@@ -123,6 +123,7 @@ class ReportingsController(
             .let {
                 ReportingDataOutput.fromReportingDTO(it)
             }
+
     }
 
     @DeleteMapping(value = ["/{id}"])

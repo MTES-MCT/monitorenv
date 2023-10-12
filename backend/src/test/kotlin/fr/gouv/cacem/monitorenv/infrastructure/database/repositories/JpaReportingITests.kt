@@ -351,8 +351,19 @@ class JpaReportingITests : AbstractDBTests() {
         val attachedReportingToOtherMissionNotAttachedToMission = jpaReportingRepository.findById(8)
 
         assertThat(reportingAttachedToMission.reporting.attachedMissionId).isEqualTo(34)
+        assertThat(reportingAttachedToMission.reporting.attachedToMissionAtUtc).isNotNull()
+        assertThat(reportingAttachedToMission.reporting.detachedFromMissionAtUtc).isNull()
+
         assertThat(alreadyAttachedReportingAttachedToMission.reporting.attachedMissionId).isEqualTo(34)
-        assertThat(secondAlreadyAttachedReportingDetachedFromMission.reporting.attachedMissionId).isNull()
+        assertThat(alreadyAttachedReportingAttachedToMission.reporting.attachedToMissionAtUtc).isNotNull()
+        assertThat(alreadyAttachedReportingAttachedToMission.reporting.detachedFromMissionAtUtc).isNull()
+
+        assertThat(secondAlreadyAttachedReportingDetachedFromMission.reporting.attachedMissionId).isEqualTo(34)
+        assertThat(secondAlreadyAttachedReportingDetachedFromMission.reporting.attachedToMissionAtUtc).isNotNull()
+        assertThat(secondAlreadyAttachedReportingDetachedFromMission.reporting.detachedFromMissionAtUtc).isNotNull()
+
         assertThat(attachedReportingToOtherMissionNotAttachedToMission.reporting.attachedMissionId).isEqualTo(38)
+        assertThat(attachedReportingToOtherMissionNotAttachedToMission.reporting.attachedToMissionAtUtc).isNotNull()
+        assertThat(attachedReportingToOtherMissionNotAttachedToMission.reporting.detachedFromMissionAtUtc).isNull()
     }
 }
