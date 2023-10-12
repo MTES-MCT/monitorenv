@@ -1,8 +1,8 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.departmentArea.GetDepartmentAreaByInseeDep
 import fr.gouv.cacem.monitorenv.domain.use_cases.departmentArea.GetDepartmentAreas
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.DepartmentAreaDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.DepartmentAreaDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/v1/department_areas")
+@RequestMapping("/bff/v1/department_areas")
 @Tag(name = "DepartmentAreas")
-class ApiDepartmentAreasController(
+class DepartmentAreasController(
     private val getDepartmentAreas: GetDepartmentAreas,
     private val getDepartmentAreaById: GetDepartmentAreaByInseeDep,
 ) {

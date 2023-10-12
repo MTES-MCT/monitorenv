@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
@@ -19,8 +19,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
-@WebMvcTest(value = [(ApiDepartmentAreasController::class)])
-class ApiDepartmentAreaControllerITests {
+@WebMvcTest(value = [(DepartmentAreasController::class)])
+class DepartmentAreaControllerITests {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -41,7 +41,7 @@ class ApiDepartmentAreaControllerITests {
 
         given(getDepartmentAreaByInseeDep.execute(requestedId)).willReturn(expectedDepartmentArea)
 
-        mockMvc.perform(get("/api/v1/department_areas/$requestedId"))
+        mockMvc.perform(get("/bff/v1/department_areas/$requestedId"))
             .andExpect(status().isOk)
 
         BDDMockito.verify(getDepartmentAreaByInseeDep).execute(requestedId)
@@ -63,7 +63,7 @@ class ApiDepartmentAreaControllerITests {
 
         given(getDepartmentAreas.execute()).willReturn(expectedAFulldministrations)
 
-        mockMvc.perform(get("/api/v1/department_areas"))
+        mockMvc.perform(get("/bff/v1/department_areas"))
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize<Any>(2)))
 

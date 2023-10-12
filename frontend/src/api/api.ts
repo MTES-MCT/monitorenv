@@ -12,7 +12,19 @@ const monitorenvPrivateApiBaseQuery = fetchBaseQuery({
   baseUrl: '/bff/v1'
 })
 export const monitorenvPrivateApi = createApi({
-  baseQuery: normalizeRtkBaseQuery(monitorenvPrivateApiBaseQuery),
+  baseQuery: async (args, api, extraOptions) => {
+    const result = await normalizeRtkBaseQuery(monitorenvPrivateApiBaseQuery)(args, api, extraOptions)
+    if (result.error) {
+      return {
+        error: {
+          data: result.error.data as BackendApiErrorResponse,
+          status: result.error.status
+        }
+      }
+    }
+
+    return result
+  },
   endpoints: () => ({}),
   reducerPath: 'monitorenvPrivateApi',
   tagTypes: []
