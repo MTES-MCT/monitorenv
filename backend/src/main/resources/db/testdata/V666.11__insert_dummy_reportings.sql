@@ -169,7 +169,7 @@ INSERT INTO reportings (
     created_at,
     validity_time,
     is_deleted,
-    attached_mission_id,
+    mission_id,
     attached_to_mission_at_utc,
     detached_from_mission_at_utc,
     attached_env_action_id)

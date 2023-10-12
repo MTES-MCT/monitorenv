@@ -194,19 +194,19 @@ class JpaReportingITests : AbstractDBTests() {
     fun `attach an existing mission to a reporting`() {
         // Given
         val existingReportingDTO = jpaReportingRepository.findById(1)
-        assertThat(existingReportingDTO.reporting.attachedMissionId).isNull()
+        assertThat(existingReportingDTO.reporting.missionId).isNull()
         // When
 
         jpaReportingRepository.save(
             existingReportingDTO.reporting.copy(
-                attachedMissionId = 38,
+                missionId = 38,
                 attachedToMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
             ),
         )
 
         // Then
         val attachedReportingDTO = jpaReportingRepository.findById(1)
-        assertThat(attachedReportingDTO.reporting.attachedMissionId).isEqualTo(38)
+        assertThat(attachedReportingDTO.reporting.missionId).isEqualTo(38)
         assertThat(attachedReportingDTO.reporting.attachedToMissionAtUtc).isEqualTo(
             ZonedDateTime.parse("2023-04-01T00:00:00Z"),
         )
@@ -219,12 +219,12 @@ class JpaReportingITests : AbstractDBTests() {
         val existingReportingDTO = jpaReportingRepository.findById(1)
         val reportingWithMissionDTO = jpaReportingRepository.save(
             existingReportingDTO.reporting.copy(
-                attachedMissionId = 38,
+                missionId = 38,
                 attachedToMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
             ),
         )
         assertThat(reportingWithMissionDTO.reporting.attachedEnvActionId).isNull()
-        assertThat(reportingWithMissionDTO.reporting.attachedMissionId).isEqualTo(38)
+        assertThat(reportingWithMissionDTO.reporting.missionId).isEqualTo(38)
         // When
 
         jpaReportingRepository.save(
@@ -246,7 +246,7 @@ class JpaReportingITests : AbstractDBTests() {
         // Given
         val existingReportingDTO = jpaReportingRepository.findById(1)
         assertThat(existingReportingDTO.reporting.attachedEnvActionId).isNull()
-        assertThat(existingReportingDTO.reporting.attachedMissionId).isNull()
+        assertThat(existingReportingDTO.reporting.missionId).isNull()
         // When
 
         val exception = assertThrows<NotFoundException> {
@@ -269,13 +269,13 @@ class JpaReportingITests : AbstractDBTests() {
         // Given
         val existingReportingDTO = jpaReportingRepository.findById(1)
         assertThat(existingReportingDTO.reporting.attachedEnvActionId).isNull()
-        assertThat(existingReportingDTO.reporting.attachedMissionId).isNull()
+        assertThat(existingReportingDTO.reporting.missionId).isNull()
         // When
 
         val exception = assertThrows<NotFoundException> {
             jpaReportingRepository.save(
                 existingReportingDTO.reporting.copy(
-                    attachedMissionId = 42,
+                    missionId = 42,
                     attachedEnvActionId = UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
                 ),
             )
@@ -292,12 +292,12 @@ class JpaReportingITests : AbstractDBTests() {
     fun `a reporting cannot be attached to a non existing mission`() {
         // Given
         val existingReportingDTO = jpaReportingRepository.findById(1)
-        assertThat(existingReportingDTO.reporting.attachedMissionId).isNull()
+        assertThat(existingReportingDTO.reporting.missionId).isNull()
         // When
         val exception = assertThrows<NotFoundException> {
             jpaReportingRepository.save(
                 existingReportingDTO.reporting.copy(
-                    attachedMissionId = 100,
+                    missionId = 100,
                     attachedToMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
                 ),
             )
@@ -336,10 +336,10 @@ class JpaReportingITests : AbstractDBTests() {
         val secondAlreadyAttachedReporting = jpaReportingRepository.findById(7)
         val attachedReportingToOtherMission = jpaReportingRepository.findById(8)
 
-        assertThat(reportingNotAttachedYet.reporting.attachedMissionId).isNull()
-        assertThat(alreadyAttachedReporting.reporting.attachedMissionId).isEqualTo(34)
-        assertThat(secondAlreadyAttachedReporting.reporting.attachedMissionId).isEqualTo(34)
-        assertThat(attachedReportingToOtherMission.reporting.attachedMissionId).isEqualTo(38)
+        assertThat(reportingNotAttachedYet.reporting.missionId).isNull()
+        assertThat(alreadyAttachedReporting.reporting.missionId).isEqualTo(34)
+        assertThat(secondAlreadyAttachedReporting.reporting.missionId).isEqualTo(34)
+        assertThat(attachedReportingToOtherMission.reporting.missionId).isEqualTo(38)
         jpaReportingRepository.attachReportingsToMission(
             reportingIds = listOf(1, 6),
             missionId = 34,
@@ -350,19 +350,19 @@ class JpaReportingITests : AbstractDBTests() {
         val secondAlreadyAttachedReportingDetachedFromMission = jpaReportingRepository.findById(7)
         val attachedReportingToOtherMissionNotAttachedToMission = jpaReportingRepository.findById(8)
 
-        assertThat(reportingAttachedToMission.reporting.attachedMissionId).isEqualTo(34)
+        assertThat(reportingAttachedToMission.reporting.missionId).isEqualTo(34)
         assertThat(reportingAttachedToMission.reporting.attachedToMissionAtUtc).isNotNull()
         assertThat(reportingAttachedToMission.reporting.detachedFromMissionAtUtc).isNull()
 
-        assertThat(alreadyAttachedReportingAttachedToMission.reporting.attachedMissionId).isEqualTo(34)
+        assertThat(alreadyAttachedReportingAttachedToMission.reporting.missionId).isEqualTo(34)
         assertThat(alreadyAttachedReportingAttachedToMission.reporting.attachedToMissionAtUtc).isNotNull()
         assertThat(alreadyAttachedReportingAttachedToMission.reporting.detachedFromMissionAtUtc).isNull()
 
-        assertThat(secondAlreadyAttachedReportingDetachedFromMission.reporting.attachedMissionId).isEqualTo(34)
+        assertThat(secondAlreadyAttachedReportingDetachedFromMission.reporting.missionId).isEqualTo(34)
         assertThat(secondAlreadyAttachedReportingDetachedFromMission.reporting.attachedToMissionAtUtc).isNotNull()
         assertThat(secondAlreadyAttachedReportingDetachedFromMission.reporting.detachedFromMissionAtUtc).isNotNull()
 
-        assertThat(attachedReportingToOtherMissionNotAttachedToMission.reporting.attachedMissionId).isEqualTo(38)
+        assertThat(attachedReportingToOtherMissionNotAttachedToMission.reporting.missionId).isEqualTo(38)
         assertThat(attachedReportingToOtherMissionNotAttachedToMission.reporting.attachedToMissionAtUtc).isNotNull()
         assertThat(attachedReportingToOtherMissionNotAttachedToMission.reporting.detachedFromMissionAtUtc).isNull()
     }

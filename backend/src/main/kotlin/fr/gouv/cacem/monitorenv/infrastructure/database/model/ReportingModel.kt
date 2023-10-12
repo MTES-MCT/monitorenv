@@ -135,9 +135,9 @@ data class ReportingModel(
     val openBy: String? = null,
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "attached_mission_id", nullable = true)
+    @JoinColumn(name = "mission_id", nullable = true)
     @JsonBackReference
-    val attachedMission: MissionModel? = null,
+    val mission: MissionModel? = null,
 
     @Column(name = "attached_to_mission_at_utc")
     val attachedToMissionAtUtc: Instant? = null,
@@ -175,7 +175,7 @@ data class ReportingModel(
             isArchived = isArchived,
             isDeleted = isDeleted,
             openBy = openBy,
-            attachedMissionId = attachedMission?.id,
+            missionId = mission?.id,
             attachedToMissionAtUtc = attachedToMissionAtUtc?.atZone(UTC),
             detachedFromMissionAtUtc = detachedFromMissionAtUtc?.atZone(UTC),
             attachedEnvActionId = attachedEnvActionId,
@@ -185,14 +185,14 @@ data class ReportingModel(
         controlUnit = controlUnit?.toFullControlUnit(),
         semaphore = semaphore?.toSemaphore(),
         attachedMission = if (detachedFromMissionAtUtc != null) {
-            attachedMission?.toMissionEntity(
+            mission?.toMissionEntity(
                 objectMapper,
             )
         } else {
             null
         },
         detachedMission = if (detachedFromMissionAtUtc == null) {
-            attachedMission?.toMissionEntity(
+            mission?.toMissionEntity(
                 objectMapper,
             )
         } else {
@@ -215,7 +215,7 @@ data class ReportingModel(
             reporting: ReportingEntity,
             semaphoreReference: SemaphoreModel?,
             controlUnitReference: ControlUnitModel?,
-            attachedMissionReference: MissionModel?,
+            missionReference: MissionModel?,
         ) =
             ReportingModel(
                 id = reporting.id,
@@ -241,7 +241,7 @@ data class ReportingModel(
                 isArchived = reporting.isArchived,
                 isDeleted = reporting.isDeleted,
                 openBy = reporting.openBy,
-                attachedMission = attachedMissionReference,
+                mission = missionReference,
                 attachedToMissionAtUtc = reporting.attachedToMissionAtUtc?.toInstant(),
                 detachedFromMissionAtUtc = reporting.detachedFromMissionAtUtc?.toInstant(),
                 attachedEnvActionId = reporting.attachedEnvActionId,

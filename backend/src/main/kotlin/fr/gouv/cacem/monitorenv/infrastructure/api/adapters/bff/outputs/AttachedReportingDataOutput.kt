@@ -36,7 +36,7 @@ data class AttachedReportingDataOutput(
     val validityTime: Int? = null,
     val isArchived: Boolean,
     val openBy: String? = null,
-    val attachedMissionId: Int? = null,
+    val missionId: Int? = null,
     val attachedToMissionAtUtc: ZonedDateTime? = null,
     val detachedFromMissionAtUtc: ZonedDateTime? = null,
     val attachedEnvActionId: UUID? = null,

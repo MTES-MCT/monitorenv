@@ -29,7 +29,7 @@ data class ReportingEntity(
     val isArchived: Boolean,
     val isDeleted: Boolean,
     val openBy: String? = null,
-    val attachedMissionId: Int? = null,
+    val missionId: Int? = null,
     val attachedToMissionAtUtc: ZonedDateTime? = null,
     val detachedFromMissionAtUtc: ZonedDateTime? = null,
     val attachedEnvActionId: UUID? = null,

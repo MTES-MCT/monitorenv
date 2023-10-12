@@ -62,8 +62,8 @@ class JpaReportingRepository(
             .map { it.toReportingDTO(mapper) }
     }
 
-    override fun findByAttachedMissionId(missionId: Int): List<ReportingDTO> {
-        return dbReportingRepository.findByAttachedMissionId(missionId).map { it.toReportingDTO(mapper) }
+    override fun findByMissionId(missionId: Int): List<ReportingDTO> {
+        return dbReportingRepository.findByMissionId(missionId).map { it.toReportingDTO(mapper) }
     }
 
     @Transactional
@@ -84,9 +84,9 @@ class JpaReportingRepository(
             } else {
                 null
             }
-            val attachedMissionReference = if (reporting.attachedMissionId != null) {
+            val missionReference = if (reporting.missionId != null) {
                 dbMissionRepository.getReferenceById(
-                    reporting.attachedMissionId,
+                    reporting.missionId,
                 )
             } else {
                 null
@@ -95,7 +95,7 @@ class JpaReportingRepository(
                 reporting = reporting,
                 semaphoreReference = semaphoreReference,
                 controlUnitReference = controlUnitReference,
-                attachedMissionReference = attachedMissionReference,
+                missionReference = missionReference,
             )
             dbReportingRepository.saveAndFlush(reportingModel).toReportingDTO(mapper)
         } catch (e: JpaObjectRetrievalFailureException) {

@@ -133,7 +133,7 @@ data class MissionModel(
     @Fetch(value = FetchMode.SUBSELECT)
     val controlUnits: MutableList<MissionControlUnitModel>? = ArrayList(),
 
-    @OneToMany(mappedBy = "attachedMission")
+    @OneToMany(mappedBy = "mission")
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
     val attachedReportings: List<ReportingModel>? = listOf(),
