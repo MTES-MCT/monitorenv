@@ -1,10 +1,10 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
-import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
+import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.Type
@@ -17,39 +17,40 @@ data class ControlUnitResourceModel(
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int? = null,
+    val id: Int? = null,
 
+    // TODO Make that non-nullable once all resources will have been attached to a base.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "base_id", nullable = false)
     @JsonBackReference
-    var base: BaseModel,
+    val base: BaseModel,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "control_unit_id", nullable = false)
     @JsonBackReference
-    var controlUnit: ControlUnitModel,
+    val controlUnit: ControlUnitModel,
 
     @Column(name = "name", nullable = false)
-    var name: String,
+    val name: String,
 
     @Column(name = "note")
-    var note: String? = null,
+    val note: String? = null,
 
     @Column(name = "photo")
-    var photo: ByteArray? = byteArrayOf(),
+    val photo: ByteArray? = byteArrayOf(),
 
     @Column(name = "type", nullable = false, columnDefinition = "control_unit_resource_type")
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
-    var type: ControlUnitResourceType,
+    val type: ControlUnitResourceType,
 
     @Column(name = "created_at_utc", nullable = false, updatable = false)
     @CreationTimestamp
-    var createdAtUtc: Instant? = null,
+    val createdAtUtc: Instant? = null,
 
     @Column(name = "updated_at_utc", nullable = false)
     @UpdateTimestamp
-    var updatedAtUtc: Instant? = null,
+    val updatedAtUtc: Instant? = null,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

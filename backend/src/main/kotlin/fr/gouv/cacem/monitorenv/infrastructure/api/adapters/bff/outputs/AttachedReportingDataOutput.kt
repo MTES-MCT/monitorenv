@@ -11,7 +11,7 @@ import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.UUID
 
-data class ReportingDataOutput(
+data class AttachedReportingDataOutput(
     val id: Int,
     val reportingId: Long? = null,
     val sourceType: SourceTypeEnum? = null,
@@ -19,7 +19,6 @@ data class ReportingDataOutput(
     val semaphore: SemaphoreDataOutput? = null,
     val controlUnitId: Int? = null,
     val controlUnit: ControlUnitDataOutput? = null,
-    val displayedSource: String? = null,
     val sourceName: String? = null,
     val targetType: TargetTypeEnum? = null,
     val vehicleType: VehicleTypeEnum? = null,
@@ -41,15 +40,14 @@ data class ReportingDataOutput(
     val attachedToMissionAtUtc: ZonedDateTime? = null,
     val detachedFromMissionAtUtc: ZonedDateTime? = null,
     val attachedEnvActionId: UUID? = null,
-    val attachedMission: ReportingMissionDataOutput? = null,
 ) {
     companion object {
         fun fromReportingDTO(
             dto: ReportingDTO,
-        ): ReportingDataOutput {
+        ): AttachedReportingDataOutput {
             requireNotNull(dto.reporting.id) { "ReportingEntity.id cannot be null" }
-            return ReportingDataOutput(
-                id = dto.reporting.id!!,
+            return AttachedReportingDataOutput(
+                id = dto.reporting.id,
                 reportingId = dto.reporting.reportingId,
                 sourceType = dto.reporting.sourceType,
                 semaphoreId = dto.reporting.semaphoreId,
@@ -70,14 +68,6 @@ data class ReportingDataOutput(
                 } else {
                     null
                 },
-                displayedSource =
-                when (dto.reporting.sourceType) {
-                    SourceTypeEnum.SEMAPHORE -> dto?.semaphore?.unit ?: dto?.semaphore?.name
-                    // TODO This is really strange : `fullControlUnit?.controlUnit` can't be null and I have to add another `?`...
-                    SourceTypeEnum.CONTROL_UNIT -> dto?.controlUnit?.controlUnit?.name
-                    SourceTypeEnum.OTHER -> dto.reporting.sourceName
-                    else -> ""
-                },
                 sourceName = dto.reporting.sourceName,
                 targetType = dto.reporting.targetType,
                 vehicleType = dto.reporting.vehicleType,
@@ -95,17 +85,9 @@ data class ReportingDataOutput(
                 validityTime = dto.reporting.validityTime,
                 isArchived = dto.reporting.isArchived,
                 openBy = dto.reporting.openBy,
-                missionId = dto.reporting.missionId,
                 attachedToMissionAtUtc = dto.reporting.attachedToMissionAtUtc,
                 detachedFromMissionAtUtc = dto.reporting.detachedFromMissionAtUtc,
                 attachedEnvActionId = dto.reporting.attachedEnvActionId,
-                attachedMission = if (dto.attachedMission != null) {
-                    ReportingMissionDataOutput.fromMission(
-                        dto.attachedMission,
-                    )
-                } else {
-                    null
-                },
             )
         }
     }

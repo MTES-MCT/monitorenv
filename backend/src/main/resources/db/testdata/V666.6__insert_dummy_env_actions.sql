@@ -1,7 +1,7 @@
 --
 -- Data for Name: env_actions; Type: TABLE DATA; Schema: public; Owner: postgres
 --
-TRUNCATE public.env_actions;
+DELETE FROM public.env_actions;
 
 INSERT INTO public.env_actions VALUES ('e2257638-ddef-4611-960c-7675a3254c38', 38, 'SURVEILLANCE', '{"themes": [{"theme": "Police des activités de cultures marines", "subThemes": ["Contrôle du schéma des structures"], "protectedSpecies": []}], "observations": "", "coverMissionZone": true}', '2022-09-22 22:35:03.423648', NULL, NULL, '56', '2022-09-28 02:06:59');
 INSERT INTO public.env_actions VALUES ('f3e90d3a-6ba4-4bb3-805e-d391508aa46d', 38, 'CONTROL', '{"themes": [{"theme": "Police des épaves", "subThemes": ["Épave/navire abandonné", "Contrôle administratif"], "protectedSpecies": []}], "infractions": [{"id": "6670e718-3ecd-46c1-8149-8b963c6f72dd", "natinf": ["10041"], "toProcess": false, "vesselSize": null, "vesselType": null, "companyName": "MASOCIETE", "formalNotice": "YES", "observations": "RAS", "relevantCourt": "LOCAL_COURT", "infractionType": "WITH_REPORT", "registrationNumber": null, "controlledPersonIdentity": null}], "vehicleType": null, "observations": null, "actionTargetType": "COMPANY", "actionNumberOfControls": 1}', '2022-09-27 03:00:00', '0104000020E6100000010000000101000000399291D4BE1805C09E1A585CD6154840', NULL, NULL, NULL);
@@ -12,7 +12,6 @@ INSERT INTO public.env_actions VALUES ('6d4b7d0a-79ce-47cf-ac26-2024d2b27f28', 4
 
 INSERT INTO public.env_actions VALUES ('b8007c8a-5135-4bc3-816f-c69c7b75d807', 34, 'SURVEILLANCE', '{"themes": [{"theme": "Police des espèces protégées et de leurs habitats (faune et flore)", "subThemes": ["Destruction, capture, arrachage", "Atteinte aux habitats d''espèces protégées"], "protectedSpecies": ["FLORA", "BIRDS"]}, {"theme": "Police des mouillages", "subThemes": ["Mouillage individuel", "ZMEL"], "protectedSpecies": []}], "duration": 0.0, "observations": "RAS", "coverMissionZone": true, "protectedSpecies": []}', '2022-07-16 10:03:12.588693', NULL, NULL, NULL,  '2022-07-16 12:03:12.588693');
 INSERT INTO public.env_actions VALUES ('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 34, 'CONTROL', '{"themes": [{"theme": "Police des mouillages", "subThemes": ["Mouillage individuel", "ZMEL"], "protectedSpecies": []}], "observations": "RAS", "infractions": [{"id": "5d5b7829-68cd-4436-8c0b-1cc8db7788a0", "natinf": ["10038","10231"], "toProcess": false, "vesselSize": "FROM_24_TO_46m", "vesselType": "COMMERCIAL", "companyName": null, "formalNotice": "PENDING", "observations": "Pas d''observations", "relevantCourt": "LOCAL_COURT", "infractionType": "WITH_REPORT", "registrationNumber": "BALTIK", "controlledPersonIdentity": "John Doe"}], "vehicleType": "VESSEL", "actionTargetType": "VEHICLE", "actionNumberOfControls": 1}', '2022-07-16 09:03:12.588693', '0104000020E610000001000000010100000047A07E6651E3DEBF044620AB65C54840', NULL, NULL,  '2022-07-16 12:03:12.588693');
-
 
 UPDATE public.env_actions SET
   action_start_datetime_utc = action_start_datetime_utc + (now() - '2022-06-01 23:00:00'),

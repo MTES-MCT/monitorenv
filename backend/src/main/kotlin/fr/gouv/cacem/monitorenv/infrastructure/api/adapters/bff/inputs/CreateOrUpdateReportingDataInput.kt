@@ -8,10 +8,11 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
+import java.util.UUID
 
 data class CreateOrUpdateReportingDataInput(
     val id: Int? = null,
-    val reportingId: Int? = null,
+    val reportingId: Long? = null,
     val sourceType: SourceTypeEnum? = null,
     val semaphoreId: Int? = null,
     val controlUnitId: Int? = null,
@@ -26,11 +27,15 @@ data class CreateOrUpdateReportingDataInput(
     val subThemes: List<String>? = listOf(),
     val actionTaken: String? = null,
     val isControlRequired: Boolean? = null,
-    val isUnitAvailable: Boolean? = null,
+    val hasNoUnitAvailable: Boolean? = null,
     val createdAt: ZonedDateTime,
     val validityTime: Int? = null,
     val isArchived: Boolean,
     val openBy: String? = null,
+    val missionId: Int? = null,
+    val attachedToMissionAtUtc: ZonedDateTime? = null,
+    val detachedFromMissionAtUtc: ZonedDateTime? = null,
+    val attachedEnvActionId: UUID? = null,
 ) {
     fun toReportingEntity(): ReportingEntity {
         return ReportingEntity(
@@ -50,12 +55,16 @@ data class CreateOrUpdateReportingDataInput(
             subThemes = this.subThemes,
             actionTaken = this.actionTaken,
             isControlRequired = this.isControlRequired,
-            isUnitAvailable = this.isUnitAvailable,
+            hasNoUnitAvailable = this.hasNoUnitAvailable,
             createdAt = this.createdAt,
             validityTime = this.validityTime,
             isArchived = this.isArchived,
             isDeleted = false,
             openBy = this.openBy,
+            missionId = this.missionId,
+            attachedToMissionAtUtc = this.attachedToMissionAtUtc,
+            detachedFromMissionAtUtc = this.detachedFromMissionAtUtc,
+            attachedEnvActionId = this.attachedEnvActionId,
         )
     }
 }

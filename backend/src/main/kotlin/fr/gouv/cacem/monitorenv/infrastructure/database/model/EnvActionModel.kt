@@ -6,10 +6,10 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.mappers.EnvActionMapper
+import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -65,7 +65,7 @@ data class EnvActionModel(
     @Column(name = "department")
     val department: String? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "mission_id")
     @JsonBackReference
     val mission: MissionModel,
@@ -103,7 +103,7 @@ data class EnvActionModel(
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
         other as EnvActionModel
 
-        return id == other.id
+        return id != null && id == other.id
     }
 
     override fun hashCode(): Int = javaClass.hashCode()

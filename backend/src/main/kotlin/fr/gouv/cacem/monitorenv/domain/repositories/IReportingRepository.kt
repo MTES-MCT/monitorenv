@@ -3,11 +3,23 @@ package fr.gouv.cacem.monitorenv.domain.repositories
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import org.springframework.data.domain.Pageable
 import java.time.Instant
 
 interface IReportingRepository {
-    fun findById(reportingId: Int): ReportingEntity
+    fun archiveOutdatedReportings(): Int
+
+    fun archiveReportings(ids: List<Int>)
+
+    fun attachReportingsToMission(reportingIds: List<Int>, missionId: Int)
+
+    fun count(): Long
+
+    fun delete(reportingId: Int)
+
+    fun deleteReportings(ids: List<Int>)
+
     fun findAll(
         pageable: Pageable,
         reportingType: List<ReportingTypeEnum>?,
@@ -16,11 +28,11 @@ interface IReportingRepository {
         startedAfter: Instant,
         startedBefore: Instant?,
         status: List<String>?,
-    ): List<ReportingEntity>
-    fun save(reporting: ReportingEntity): ReportingEntity
-    fun delete(reportingId: Int)
-    fun count(): Long
-    fun archiveOutdatedReportings(): Int
-    fun archiveReportings(ids: List<Int>)
-    fun deleteReportings(ids: List<Int>)
+    ): List<ReportingDTO>
+
+    fun findByMissionId(missionId: Int): List<ReportingDTO>
+
+    fun findById(reportingId: Int): ReportingDTO
+
+    fun save(reporting: ReportingEntity): ReportingDTO
 }

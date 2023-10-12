@@ -14,28 +14,28 @@ data class BaseModel(
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int? = null,
+    val id: Int? = null,
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "base")
     @JsonManagedReference
-    var controlUnitResources: List<ControlUnitResourceModel>? = mutableListOf(),
+    val controlUnitResources: List<ControlUnitResourceModel>? = mutableListOf(),
 
     @Column(name = "latitude", nullable = false)
-    var latitude: Double,
+    val latitude: Double,
 
     @Column(name = "longitude", nullable = false)
-    var longitude: Double,
+    val longitude: Double,
 
     @Column(name = "name", nullable = false, unique = true)
-    var name: String,
+    val name: String,
 
     @Column(name = "created_at_utc", nullable = false, updatable = false)
     @CreationTimestamp
-    var createdAtUtc: Instant? = null,
+    val createdAtUtc: Instant? = null,
 
     @Column(name = "updated_at_utc", nullable = false)
     @UpdateTimestamp
-    var updatedAtUtc: Instant? = null,
+    val updatedAtUtc: Instant? = null,
 ) {
     companion object {
         /**

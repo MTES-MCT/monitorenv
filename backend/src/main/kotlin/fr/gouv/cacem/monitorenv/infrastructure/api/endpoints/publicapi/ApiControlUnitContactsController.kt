@@ -47,7 +47,9 @@ class ApiControlUnitContactsController(
     @GetMapping("/{controlUnitContactId}")
     @Operation(summary = "Get a control unit contact by its ID")
     fun get(
-        @PathParam("Control unit contact ID") @PathVariable(name = "controlUnitContactId") controlUnitContactId: Int,
+        @PathParam("Control unit contact ID")
+        @PathVariable(name = "controlUnitContactId")
+        controlUnitContactId: Int,
     ): FullControlUnitContactDataOutput {
         val foundFullControlUnitContact = getControlUnitContactById.execute(controlUnitContactId)
 

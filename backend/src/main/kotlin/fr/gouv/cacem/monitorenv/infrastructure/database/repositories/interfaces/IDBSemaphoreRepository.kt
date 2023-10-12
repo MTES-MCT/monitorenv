@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.SemaphoreModel
-import org.springframework.data.repository.CrudRepository
+import org.springframework.data.jpa.repository.JpaRepository
 
-interface IDBSemaphoreRepository : CrudRepository<SemaphoreModel, Int>
+interface IDBSemaphoreRepository : JpaRepository<SemaphoreModel, Int>

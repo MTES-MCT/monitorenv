@@ -8,6 +8,8 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IBaseRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreaRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 
 @UseCase
 class CreateOrUpdateMission(
@@ -15,10 +17,11 @@ class CreateOrUpdateMission(
     private val departmentRepository: IDepartmentAreaRepository,
     private val missionRepository: IMissionRepository,
     private val facadeRepository: IFacadeAreasRepository,
+    private val reportingRepository: IReportingRepository,
 
 ) {
     @Throws(IllegalArgumentException::class)
-    fun execute(mission: MissionEntity?): MissionEntity {
+    fun execute(mission: MissionEntity?, attachedReportingIds: List<Int>? = null): MissionDTO {
         require(mission != null) {
             "No mission to create or update"
         }
@@ -76,7 +79,16 @@ class CreateOrUpdateMission(
             facade = facade,
             envActions = envActions,
         )
+        val savedMission = missionRepository.save(missionToSave)
 
-        return missionRepository.save(missionToSave)
+        if (savedMission.mission.id == null) {
+            throw IllegalArgumentException("Mission id is null")
+        }
+
+        if (attachedReportingIds != null) {
+            reportingRepository.attachReportingsToMission(attachedReportingIds, savedMission.mission.id)
+        }
+
+        return missionRepository.findById(savedMission.mission.id)
     }
 }

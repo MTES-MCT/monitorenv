@@ -13,10 +13,12 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.ISemaphoreRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.CreateOrUpdateReporting
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -31,7 +33,7 @@ import java.time.ZonedDateTime
 @ExtendWith(SpringExtension::class)
 class CreateOrUpdateReportingUTests {
     @MockBean
-    private lateinit var createOrUpdateReportingRepositoty: IReportingRepository
+    private lateinit var reportingRepository: IReportingRepository
 
     @MockBean
     private lateinit var controlUnitRepository: IControlUnitRepository
@@ -42,16 +44,20 @@ class CreateOrUpdateReportingUTests {
     @MockBean
     private lateinit var facadeRepository: IFacadeAreasRepository
 
+    @MockBean
+    private lateinit var missionRepository: IMissionRepository
+
     @Test
     fun `Should throw an exception when input is null`() {
         // When
         val throwable =
             Assertions.catchThrowable {
                 CreateOrUpdateReporting(
-                    createOrUpdateReportingRepositoty,
-                    controlUnitRepository,
-                    semaphoreRepository,
-                    facadeRepository,
+                    reportingRepository = reportingRepository,
+                    controlUnitRepository = controlUnitRepository,
+                    semaphoreRepository = semaphoreRepository,
+                    facadeRepository = facadeRepository,
+                    missionRepository = missionRepository,
                 )
                     .execute(null)
             }
@@ -85,12 +91,35 @@ class CreateOrUpdateReportingUTests {
                 subThemes = listOf("subTheme1", "subTheme2"),
                 actionTaken = "actions effectuées blabal ",
                 isControlRequired = true,
-                isUnitAvailable = true,
+                hasNoUnitAvailable = true,
                 createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 validityTime = 10,
                 isArchived = false,
                 isDeleted = false,
                 openBy = "CDA",
+            )
+        val reportingWithSemaphoreDTO =
+            ReportingDTO(
+                reporting = ReportingEntity(
+                    sourceType = SourceTypeEnum.SEMAPHORE,
+                    semaphoreId = 1,
+                    targetType = TargetTypeEnum.VEHICLE,
+                    vehicleType = VehicleTypeEnum.VESSEL,
+                    geom = polygon,
+                    seaFront = "Facade 1",
+                    description = "description",
+                    reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                    theme = "theme",
+                    subThemes = listOf("subTheme1", "subTheme2"),
+                    actionTaken = "actions effectuées blabal ",
+                    isControlRequired = true,
+                    hasNoUnitAvailable = true,
+                    createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                    validityTime = 10,
+                    isArchived = false,
+                    isDeleted = false,
+                    openBy = "CDA",
+                ),
             )
         val reportingWithControlUnit =
             ReportingEntity(
@@ -106,13 +135,35 @@ class CreateOrUpdateReportingUTests {
                 subThemes = listOf("subTheme1", "subTheme2"),
                 actionTaken = "actions effectuées blabal ",
                 isControlRequired = true,
-                isUnitAvailable = true,
+                hasNoUnitAvailable = true,
                 createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 validityTime = 10,
                 isArchived = false,
                 isDeleted = false,
                 openBy = "CDA",
             )
+        val reportingWithControlUnitDTO = ReportingDTO(
+            reporting = ReportingEntity(
+                sourceType = SourceTypeEnum.CONTROL_UNIT,
+                controlUnitId = 1,
+                targetType = TargetTypeEnum.VEHICLE,
+                vehicleType = VehicleTypeEnum.VESSEL,
+                geom = polygon,
+                seaFront = "Facade 1",
+                description = "description",
+                reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                theme = "theme",
+                subThemes = listOf("subTheme1", "subTheme2"),
+                actionTaken = "actions effectuées blabal ",
+                isControlRequired = true,
+                hasNoUnitAvailable = true,
+                createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                validityTime = 10,
+                isArchived = false,
+                isDeleted = false,
+                openBy = "CDA",
+            ),
+        )
 
         val semaphore =
             SemaphoreEntity(
@@ -140,10 +191,10 @@ class CreateOrUpdateReportingUTests {
                 controlUnitResources = listOf(),
             )
 
-        given(createOrUpdateReportingRepositoty.save(reportingWithSemaphore))
-            .willReturn(reportingWithSemaphore)
-        given(createOrUpdateReportingRepositoty.save(reportingWithControlUnit))
-            .willReturn(reportingWithControlUnit)
+        given(reportingRepository.save(reportingWithSemaphore))
+            .willReturn(reportingWithSemaphoreDTO)
+        given(reportingRepository.save(reportingWithControlUnit))
+            .willReturn(reportingWithControlUnitDTO)
         given(facadeRepository.findFacadeFromGeometry(polygon)).willReturn("Facade 1")
         given(semaphoreRepository.findById(1)).willReturn(semaphore)
         given(controlUnitRepository.findById(1)).willReturn(fullControlUnit)
@@ -151,32 +202,34 @@ class CreateOrUpdateReportingUTests {
         // When
         val createdReportingWithSemaphore =
             CreateOrUpdateReporting(
-                createOrUpdateReportingRepositoty,
-                controlUnitRepository,
-                semaphoreRepository,
-                facadeRepository,
+                reportingRepository = reportingRepository,
+                controlUnitRepository = controlUnitRepository,
+                semaphoreRepository = semaphoreRepository,
+                facadeRepository = facadeRepository,
+                missionRepository = missionRepository,
             )
                 .execute(reportingWithSemaphore)
 
         // Then
-        verify(createOrUpdateReportingRepositoty, times(1)).save(reportingWithSemaphore)
+        verify(reportingRepository, times(1)).save(reportingWithSemaphore)
         assertThat(createdReportingWithSemaphore)
-            .isEqualTo(Triple(reportingWithSemaphore, null, semaphore))
+            .isEqualTo(reportingWithSemaphoreDTO)
 
         // When
         val createdReportingWithControlUnit =
             CreateOrUpdateReporting(
-                createOrUpdateReportingRepositoty,
-                controlUnitRepository,
-                semaphoreRepository,
-                facadeRepository,
+                reportingRepository = reportingRepository,
+                controlUnitRepository = controlUnitRepository,
+                semaphoreRepository = semaphoreRepository,
+                facadeRepository = facadeRepository,
+                missionRepository = missionRepository,
             )
                 .execute(reportingWithControlUnit)
 
         // Then
-        verify(createOrUpdateReportingRepositoty, times(1)).save(reportingWithControlUnit)
+        verify(reportingRepository, times(1)).save(reportingWithControlUnit)
         assertThat(createdReportingWithControlUnit)
-            .isEqualTo(Triple(reportingWithControlUnit, fullControlUnit, null))
+            .isEqualTo(reportingWithControlUnitDTO)
     }
 
     @Test
@@ -201,7 +254,7 @@ class CreateOrUpdateReportingUTests {
                 subThemes = listOf("subTheme1", "subTheme2"),
                 actionTaken = "actions effectuées blabal ",
                 isControlRequired = true,
-                isUnitAvailable = true,
+                hasNoUnitAvailable = true,
                 createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 validityTime = 10,
                 isArchived = false,
@@ -213,10 +266,11 @@ class CreateOrUpdateReportingUTests {
         val throwable =
             Assertions.catchThrowable {
                 CreateOrUpdateReporting(
-                    createOrUpdateReportingRepositoty,
-                    controlUnitRepository,
-                    semaphoreRepository,
-                    facadeRepository,
+                    reportingRepository = reportingRepository,
+                    controlUnitRepository = controlUnitRepository,
+                    semaphoreRepository = semaphoreRepository,
+                    facadeRepository = facadeRepository,
+                    missionRepository = missionRepository,
                 )
                     .execute(reporting)
             }
@@ -249,7 +303,7 @@ class CreateOrUpdateReportingUTests {
                 subThemes = listOf("subTheme1", "subTheme2"),
                 actionTaken = "actions effectuées blabal ",
                 isControlRequired = true,
-                isUnitAvailable = true,
+                hasNoUnitAvailable = true,
                 createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 validityTime = 10,
                 isArchived = false,
@@ -261,10 +315,11 @@ class CreateOrUpdateReportingUTests {
         val throwable =
             Assertions.catchThrowable {
                 CreateOrUpdateReporting(
-                    createOrUpdateReportingRepositoty,
-                    controlUnitRepository,
-                    semaphoreRepository,
-                    facadeRepository,
+                    reportingRepository = reportingRepository,
+                    controlUnitRepository = controlUnitRepository,
+                    semaphoreRepository = semaphoreRepository,
+                    facadeRepository = facadeRepository,
+                    missionRepository = missionRepository,
                 )
                     .execute(reporting)
             }
@@ -297,7 +352,7 @@ class CreateOrUpdateReportingUTests {
                 subThemes = listOf("subTheme1", "subTheme2"),
                 actionTaken = "actions effectuées blabal ",
                 isControlRequired = true,
-                isUnitAvailable = true,
+                hasNoUnitAvailable = true,
                 createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 validityTime = 10,
                 isArchived = false,
@@ -318,7 +373,7 @@ class CreateOrUpdateReportingUTests {
                 subThemes = listOf("subTheme1", "subTheme2"),
                 actionTaken = "actions effectuées blabal ",
                 isControlRequired = true,
-                isUnitAvailable = true,
+                hasNoUnitAvailable = true,
                 createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 validityTime = 10,
                 isArchived = false,
@@ -337,7 +392,7 @@ class CreateOrUpdateReportingUTests {
                 subThemes = listOf("subTheme1", "subTheme2"),
                 actionTaken = "actions effectuées blabal ",
                 isControlRequired = true,
-                isUnitAvailable = true,
+                hasNoUnitAvailable = true,
                 createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 validityTime = 10,
                 isArchived = false,
@@ -349,12 +404,12 @@ class CreateOrUpdateReportingUTests {
         val throwableReportingWithControlUnitId =
             Assertions.catchThrowable {
                 CreateOrUpdateReporting(
-                    createOrUpdateReportingRepositoty,
-                    controlUnitRepository,
-                    semaphoreRepository,
-                    facadeRepository,
-                )
-                    .execute(reportingWithControlUnitId)
+                    reportingRepository = reportingRepository,
+                    controlUnitRepository = controlUnitRepository,
+                    semaphoreRepository = semaphoreRepository,
+                    facadeRepository = facadeRepository,
+                    missionRepository = missionRepository,
+                ).execute(reportingWithControlUnitId)
             }
 
         // Then
@@ -366,12 +421,12 @@ class CreateOrUpdateReportingUTests {
         val throwableReportingWithSemaphoreId =
             Assertions.catchThrowable {
                 CreateOrUpdateReporting(
-                    createOrUpdateReportingRepositoty,
-                    controlUnitRepository,
-                    semaphoreRepository,
-                    facadeRepository,
-                )
-                    .execute(reportingWithSemaphoreId)
+                    reportingRepository = reportingRepository,
+                    controlUnitRepository = controlUnitRepository,
+                    semaphoreRepository = semaphoreRepository,
+                    facadeRepository = facadeRepository,
+                    missionRepository = missionRepository,
+                ).execute(reportingWithSemaphoreId)
             }
 
         // Then
@@ -383,12 +438,12 @@ class CreateOrUpdateReportingUTests {
         val throwableReportingWithoutSourceName =
             Assertions.catchThrowable {
                 CreateOrUpdateReporting(
-                    createOrUpdateReportingRepositoty,
-                    controlUnitRepository,
-                    semaphoreRepository,
-                    facadeRepository,
-                )
-                    .execute(reportingWithoutSourceName)
+                    reportingRepository = reportingRepository,
+                    controlUnitRepository = controlUnitRepository,
+                    semaphoreRepository = semaphoreRepository,
+                    facadeRepository = facadeRepository,
+                    missionRepository = missionRepository,
+                ).execute(reportingWithoutSourceName)
             }
 
         // Then

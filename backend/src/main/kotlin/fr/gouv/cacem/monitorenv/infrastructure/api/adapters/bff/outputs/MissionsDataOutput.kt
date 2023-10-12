@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.EnvActionEntity
@@ -8,7 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
-data class MissionDataOutput(
+data class MissionsDataOutput(
     val id: Int,
     val missionTypes: List<MissionTypeEnum>,
     val controlUnits: List<LegacyControlUnitEntity>? = listOf(),
@@ -25,15 +25,15 @@ data class MissionDataOutput(
     val isClosed: Boolean,
     val hasMissionOrder: Boolean,
     val isUnderJdp: Boolean,
-    val isGeometryComputedFromControls: Boolean,
+    val attachedReportingIds: List<Int>? = listOf(),
 ) {
     companion object {
-        fun fromMissionDTO(dto: MissionDTO): MissionDataOutput {
+        fun fromMissionDTO(dto: MissionDTO): MissionsDataOutput {
             requireNotNull(dto.mission.id) {
                 "a mission must have an id"
             }
 
-            return MissionDataOutput(
+            return MissionsDataOutput(
                 id = dto.mission.id,
                 missionTypes = dto.mission.missionTypes,
                 controlUnits = dto.mission.controlUnits,
@@ -50,7 +50,7 @@ data class MissionDataOutput(
                 isClosed = dto.mission.isClosed,
                 hasMissionOrder = dto.mission.hasMissionOrder,
                 isUnderJdp = dto.mission.isUnderJdp,
-                isGeometryComputedFromControls = dto.mission.isGeometryComputedFromControls,
+                attachedReportingIds = dto.attachedReportingIds,
             )
         }
     }

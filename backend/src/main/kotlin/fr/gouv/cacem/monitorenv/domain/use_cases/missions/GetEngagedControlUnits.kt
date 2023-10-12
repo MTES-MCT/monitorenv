@@ -1,4 +1,6 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.missions // ktlint-disable package-name
+@file:Suppress("ktlint:standard:package-name")
+
+package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
@@ -22,7 +24,7 @@ class GetEngagedControlUnits(private val getMissions: GetMissions) {
         )
 
         val controlUnits = openedMissions
-            .map { it.controlUnits }
+            .map { it.mission.controlUnits }
             .flatten()
             .distinctBy { it.id }
 

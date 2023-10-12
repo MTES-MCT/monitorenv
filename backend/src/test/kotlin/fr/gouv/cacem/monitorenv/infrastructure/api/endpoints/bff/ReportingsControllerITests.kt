@@ -17,6 +17,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingById
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportings
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateReportingDataInput
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.Point
@@ -70,39 +71,41 @@ class ReportingsControllerITests {
                     "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
                 )
         val reporting =
-            ReportingEntity(
-                id = 1,
-                sourceType = SourceTypeEnum.SEMAPHORE,
-                targetType = TargetTypeEnum.VEHICLE,
-                vehicleType = VehicleTypeEnum.VESSEL,
-                geom = polygon,
-                seaFront = "Facade 1",
-                description = "description",
-                reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                theme = "theme",
-                subThemes = listOf("subTheme1", "subTheme2"),
-                actionTaken = "actions effectuées blabla",
-                isControlRequired = true,
-                isUnitAvailable = true,
-                createdAt =
-                ZonedDateTime.parse(
-                    "2022-01-15T04:50:09Z",
+            ReportingDTO(
+                reporting = ReportingEntity(
+                    id = 1,
+                    sourceType = SourceTypeEnum.SEMAPHORE,
+                    semaphoreId = 1,
+                    targetType = TargetTypeEnum.VEHICLE,
+                    vehicleType = VehicleTypeEnum.VESSEL,
+                    geom = polygon,
+                    seaFront = "Facade 1",
+                    description = "description",
+                    reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                    theme = "theme",
+                    subThemes = listOf("subTheme1", "subTheme2"),
+                    actionTaken = "actions effectuées blabla",
+                    isControlRequired = true,
+                    hasNoUnitAvailable = true,
+                    createdAt =
+                    ZonedDateTime.parse(
+                        "2022-01-15T04:50:09Z",
+                    ),
+                    validityTime = 10,
+                    isArchived = false,
+                    isDeleted = false,
+                    openBy = "CDA",
                 ),
-                validityTime = 10,
-                isArchived = false,
-                isDeleted = false,
-                openBy = "CDA",
-            )
-        val semaphore =
-            SemaphoreEntity(
-                id = 1,
-                name = "name",
-                geom =
-                WKTReader()
-                    .read(
-                        "POINT (-61.0 14.0)",
-                    ) as
-                    Point,
+                semaphore = SemaphoreEntity(
+                    id = 1,
+                    name = "name",
+                    geom =
+                    WKTReader()
+                        .read(
+                            "POINT (-61.0 14.0)",
+                        ) as
+                        Point,
+                ),
             )
 
         val request =
@@ -118,7 +121,7 @@ class ReportingsControllerITests {
                 subThemes = listOf("subTheme1", "subTheme2"),
                 actionTaken = "actions effectuées blabla",
                 isControlRequired = true,
-                isUnitAvailable = true,
+                hasNoUnitAvailable = true,
                 createdAt =
                 ZonedDateTime.parse(
                     "2022-01-15T04:50:09Z",
@@ -128,7 +131,7 @@ class ReportingsControllerITests {
                 openBy = "CDA",
             )
 
-        given(createOrUpdateReporting.execute(any())).willReturn(Triple(reporting, null, semaphore))
+        given(createOrUpdateReporting.execute(any())).willReturn(reporting)
         // When
         mockedApi
             .perform(
@@ -159,7 +162,7 @@ class ReportingsControllerITests {
                 jsonPath("$.actionTaken").value("actions effectuées blabla"),
             )
             .andExpect(jsonPath("$.isControlRequired").value(true))
-            .andExpect(jsonPath("$.isUnitAvailable").value(true))
+            .andExpect(jsonPath("$.hasNoUnitAvailable").value(true))
             .andExpect(jsonPath("$.createdAt").value("2022-01-15T04:50:09Z"))
             .andExpect(jsonPath("$.validityTime").value(10))
             .andExpect(jsonPath("$.isArchived").value(false))
@@ -174,42 +177,44 @@ class ReportingsControllerITests {
                     "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
                 )
         val reporting =
-            ReportingEntity(
-                id = 1,
-                sourceType = SourceTypeEnum.SEMAPHORE,
-                targetType = TargetTypeEnum.VEHICLE,
-                vehicleType = VehicleTypeEnum.VESSEL,
-                geom = polygon,
-                seaFront = "Facade 1",
-                description = "description",
-                reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                theme = "theme",
-                subThemes = listOf("subTheme1", "subTheme2"),
-                actionTaken = "actions effectuées blabla",
-                isControlRequired = true,
-                isUnitAvailable = true,
-                createdAt =
-                ZonedDateTime.parse(
-                    "2022-01-15T04:50:09Z",
+            ReportingDTO(
+                reporting = ReportingEntity(
+                    id = 1,
+                    sourceType = SourceTypeEnum.SEMAPHORE,
+                    semaphoreId = 1,
+                    targetType = TargetTypeEnum.VEHICLE,
+                    vehicleType = VehicleTypeEnum.VESSEL,
+                    geom = polygon,
+                    seaFront = "Facade 1",
+                    description = "description",
+                    reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                    theme = "theme",
+                    subThemes = listOf("subTheme1", "subTheme2"),
+                    actionTaken = "actions effectuées blabla",
+                    isControlRequired = true,
+                    hasNoUnitAvailable = true,
+                    createdAt =
+                    ZonedDateTime.parse(
+                        "2022-01-15T04:50:09Z",
+                    ),
+                    validityTime = 10,
+                    isArchived = false,
+                    isDeleted = false,
+                    openBy = "CDA",
                 ),
-                validityTime = 10,
-                isArchived = false,
-                isDeleted = false,
-                openBy = "CDA",
-            )
-        val semaphore =
-            SemaphoreEntity(
-                id = 1,
-                name = "name",
-                geom =
-                WKTReader()
-                    .read(
-                        "POINT (-61.0 14.0)",
-                    ) as
-                    Point,
+                semaphore = SemaphoreEntity(
+                    id = 1,
+                    name = "name",
+                    geom =
+                    WKTReader()
+                        .read(
+                            "POINT (-61.0 14.0)",
+                        ) as
+                        Point,
+                ),
             )
 
-        given(getReportingById.execute(any())).willReturn(Triple(reporting, null, semaphore))
+        given(getReportingById.execute(any())).willReturn(reporting)
 
         // When
         mockedApi
@@ -236,7 +241,7 @@ class ReportingsControllerITests {
                 jsonPath("$.actionTaken").value("actions effectuées blabla"),
             )
             .andExpect(jsonPath("$.isControlRequired").value(true))
-            .andExpect(jsonPath("$.isUnitAvailable").value(true))
+            .andExpect(jsonPath("$.hasNoUnitAvailable").value(true))
             .andExpect(jsonPath("$.createdAt").value("2022-01-15T04:50:09Z"))
             .andExpect(jsonPath("$.validityTime").value(10))
             .andExpect(jsonPath("$.isArchived").value(false))
@@ -251,40 +256,32 @@ class ReportingsControllerITests {
                     "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
                 )
         val reporting =
-            ReportingEntity(
-                id = 1,
-                sourceType = SourceTypeEnum.SEMAPHORE,
-                targetType = TargetTypeEnum.VEHICLE,
-                vehicleType = VehicleTypeEnum.VESSEL,
-                geom = polygon,
-                seaFront = "Facade 1",
-                description = "description",
-                reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                theme = "theme",
-                subThemes = listOf("subTheme1", "subTheme2"),
-                actionTaken = "actions effectuées blabla",
-                isControlRequired = true,
-                isUnitAvailable = true,
-                createdAt =
-                ZonedDateTime.parse(
-                    "2022-01-15T04:50:09Z",
+            ReportingDTO(
+                reporting = ReportingEntity(
+                    id = 1,
+                    sourceType = SourceTypeEnum.SEMAPHORE,
+                    targetType = TargetTypeEnum.VEHICLE,
+                    vehicleType = VehicleTypeEnum.VESSEL,
+                    geom = polygon,
+                    seaFront = "Facade 1",
+                    description = "description",
+                    reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                    theme = "theme",
+                    subThemes = listOf("subTheme1", "subTheme2"),
+                    actionTaken = "actions effectuées blabla",
+                    isControlRequired = true,
+                    hasNoUnitAvailable = true,
+                    createdAt =
+                    ZonedDateTime.parse(
+                        "2022-01-15T04:50:09Z",
+                    ),
+                    validityTime = 10,
+                    isArchived = false,
+                    isDeleted = false,
+                    openBy = "CDA",
                 ),
-                validityTime = 10,
-                isArchived = false,
-                isDeleted = false,
-                openBy = "CDA",
             )
-        val semaphore =
-            SemaphoreEntity(
-                id = 1,
-                name = "semaphore name",
-                geom =
-                WKTReader()
-                    .read(
-                        "POINT (-61.0 14.0)",
-                    ) as
-                    Point,
-            )
+
         given(
             getReportings.execute(
                 pageNumber = anyOrNull(),
@@ -297,7 +294,7 @@ class ReportingsControllerITests {
                 status = any(),
             ),
         )
-            .willReturn(listOf(Triple(reporting, null, semaphore)))
+            .willReturn(listOf(reporting))
 
         // When
         mockedApi
@@ -315,39 +312,42 @@ class ReportingsControllerITests {
                     "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
                 )
         val updatedReporting =
-            ReportingEntity(
-                id = 1,
-                sourceType = SourceTypeEnum.SEMAPHORE,
-                targetType = TargetTypeEnum.VEHICLE,
-                vehicleType = VehicleTypeEnum.VESSEL,
-                geom = polygon,
-                seaFront = "Facade 1",
-                description = "description",
-                reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                theme = "theme",
-                subThemes = listOf("subTheme1", "subTheme2"),
-                actionTaken = "actions effectuées blabla",
-                isControlRequired = true,
-                isUnitAvailable = true,
-                createdAt =
-                ZonedDateTime.parse(
-                    "2022-01-15T04:50:09Z",
+            ReportingDTO(
+                reporting = ReportingEntity(
+                    id = 1,
+                    sourceType = SourceTypeEnum.SEMAPHORE,
+                    semaphoreId = 1,
+
+                    targetType = TargetTypeEnum.VEHICLE,
+                    vehicleType = VehicleTypeEnum.VESSEL,
+                    geom = polygon,
+                    seaFront = "Facade 1",
+                    description = "description",
+                    reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                    theme = "theme",
+                    subThemes = listOf("subTheme1", "subTheme2"),
+                    actionTaken = "actions effectuées blabla",
+                    isControlRequired = true,
+                    hasNoUnitAvailable = true,
+                    createdAt =
+                    ZonedDateTime.parse(
+                        "2022-01-15T04:50:09Z",
+                    ),
+                    validityTime = 10,
+                    isArchived = false,
+                    isDeleted = false,
+                    openBy = "CDA",
                 ),
-                validityTime = 10,
-                isArchived = false,
-                isDeleted = false,
-                openBy = "CDA",
-            )
-        val semaphore =
-            SemaphoreEntity(
-                id = 1,
-                name = "name",
-                geom =
-                WKTReader()
-                    .read(
-                        "POINT (-61.0 14.0)",
-                    ) as
-                    Point,
+                semaphore = SemaphoreEntity(
+                    id = 1,
+                    name = "name",
+                    geom =
+                    WKTReader()
+                        .read(
+                            "POINT (-61.0 14.0)",
+                        ) as
+                        Point,
+                ),
             )
         val updateRequestBody =
             objectMapper.writeValueAsString(
@@ -367,7 +367,7 @@ class ReportingsControllerITests {
                     ),
                     actionTaken = "actions effectuées blabla",
                     isControlRequired = true,
-                    isUnitAvailable = true,
+                    hasNoUnitAvailable = true,
                     createdAt =
                     ZonedDateTime.parse(
                         "2022-01-15T04:50:09Z",
@@ -379,7 +379,7 @@ class ReportingsControllerITests {
             )
 
         given(createOrUpdateReporting.execute(any()))
-            .willReturn(Triple(updatedReporting, null, semaphore))
+            .willReturn(updatedReporting)
 
         // When
         mockedApi
@@ -407,7 +407,7 @@ class ReportingsControllerITests {
                 jsonPath("$.actionTaken").value("actions effectuées blabla"),
             )
             .andExpect(jsonPath("$.isControlRequired").value(true))
-            .andExpect(jsonPath("$.isUnitAvailable").value(true))
+            .andExpect(jsonPath("$.hasNoUnitAvailable").value(true))
             .andExpect(jsonPath("$.createdAt").value("2022-01-15T04:50:09Z"))
             .andExpect(jsonPath("$.validityTime").value(10))
             .andExpect(jsonPath("$.isArchived").value(false))

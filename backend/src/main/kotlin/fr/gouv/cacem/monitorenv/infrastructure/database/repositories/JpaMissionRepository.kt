@@ -5,6 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.exceptions.ControlResourceOrUnitNotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.BaseModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
@@ -21,6 +22,15 @@ class JpaMissionRepository(
     private val dbMissionRepository: IDBMissionRepository,
     private val mapper: ObjectMapper,
 ) : IMissionRepository {
+    override fun count(): Long {
+        return dbMissionRepository.count()
+    }
+
+    @Transactional
+    override fun delete(missionId: Int) {
+        dbMissionRepository.delete(missionId)
+    }
+
     override fun findAll(
         startedAfter: Instant,
         startedBefore: Instant?,
@@ -29,7 +39,7 @@ class JpaMissionRepository(
         missionSources: List<MissionSourceEnum>?,
         seaFronts: List<String>?,
         pageable: Pageable,
-    ): List<MissionEntity> {
+    ): List<MissionDTO> {
         val missionSourcesAsStringArray = missionSources?.map { it.name }
         return dbMissionRepository.findAll(
             startedAfter = startedAfter,
@@ -39,19 +49,15 @@ class JpaMissionRepository(
             missionSources = convertToPGArray(missionSourcesAsStringArray),
             seaFronts = convertToPGArray(seaFronts),
             pageable = pageable,
-        ).map { it.toMissionEntity(mapper) }
+        ).map { it.toMissionDTO(mapper) }
     }
 
-    override fun findById(missionId: Int): MissionEntity {
-        return dbMissionRepository.findById(missionId).get().toMissionEntity(mapper)
-    }
-
-    override fun count(): Long {
-        return dbMissionRepository.count()
+    override fun findById(missionId: Int): MissionDTO {
+        return dbMissionRepository.findById(missionId).get().toMissionDTO(mapper)
     }
 
     @Transactional
-    override fun save(mission: MissionEntity): MissionEntity {
+    override fun save(mission: MissionEntity): MissionDTO {
         return try {
             // Extract all control units resources unique baseIds
             val uniqueBaseIds = mission.controlUnits.flatMap { controlUnit ->
@@ -63,7 +69,7 @@ class JpaMissionRepository(
             val baseModelMap = baseModels.associateBy { requireNotNull(it.id) }
 
             val missionModel = MissionModel.fromMissionEntity(mission, mapper, baseModelMap)
-            dbMissionRepository.save(missionModel).toMissionEntity(mapper)
+            dbMissionRepository.save(missionModel).toMissionDTO(mapper)
         } catch (e: Exception) {
             when (e) {
                 // TODO Is `InvalidDataAccessApiUsageException` necessary?
@@ -77,11 +83,6 @@ class JpaMissionRepository(
                 else -> throw e
             }
         }
-    }
-
-    @Transactional
-    override fun delete(missionId: Int) {
-        dbMissionRepository.delete(missionId)
     }
 
     private fun convertToPGArray(array: List<String>?): String {

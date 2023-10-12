@@ -14,11 +14,11 @@ data class MissionControlUnitModel(
     @Column(name = "contact")
     val contact: String?,
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "mission_id")
     val mission: MissionModel,
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "control_unit_id")
     var unit: ControlUnitModel,
 ) {

@@ -5,6 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.MissionDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.MissionsDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -53,7 +54,7 @@ class MissionsController(
         @Parameter(description = "Facades")
         @RequestParam(name = "seaFronts", required = false)
         seaFronts: List<String>?,
-    ): List<MissionDataOutput> {
+    ): List<MissionsDataOutput> {
         val missions = getMonitorEnvMissions.execute(
             startedAfterDateTime = startedAfterDateTime,
             startedBeforeDateTime = startedBeforeDateTime,
@@ -64,7 +65,7 @@ class MissionsController(
             pageSize = pageSize,
             seaFronts = seaFronts,
         )
-        return missions.map { MissionDataOutput.fromMission(it) }
+        return missions.map { MissionsDataOutput.fromMissionDTO(it) }
     }
 
     @PutMapping("", consumes = ["application/json"])
@@ -73,9 +74,11 @@ class MissionsController(
         @RequestBody
         createMissionDataInput: CreateOrUpdateMissionDataInput,
     ): MissionDataOutput {
-        val newMission = createMissionDataInput.toMissionEntity()
-        val createdMission = createOrUpdateMission.execute(mission = newMission)
-        return MissionDataOutput.fromMission(createdMission)
+        val createdMission = createOrUpdateMission.execute(
+            mission = createMissionDataInput.toMissionEntity(),
+            attachedReportingIds = createMissionDataInput.attachedReportingIds,
+        )
+        return MissionDataOutput.fromMissionDTO(createdMission)
     }
 
     @GetMapping("/{missionId}")
@@ -87,12 +90,12 @@ class MissionsController(
     ): MissionDataOutput {
         val mission = getMissionById.execute(missionId = missionId)
 
-        return MissionDataOutput.fromMission(mission)
+        return MissionDataOutput.fromMissionDTO(mission)
     }
 
     @PutMapping(value = ["/{missionId}"], consumes = ["application/json"])
     @Operation(summary = "Update a mission")
-    fun updateOperationController(
+    fun updateMissionController(
         @PathParam("Mission Id")
         @PathVariable(name = "missionId")
         missionId: Int,
@@ -104,14 +107,15 @@ class MissionsController(
         }
         return createOrUpdateMission.execute(
             mission = updateMissionDataInput.toMissionEntity(),
+            attachedReportingIds = updateMissionDataInput.attachedReportingIds,
         ).let {
-            MissionDataOutput.fromMission(it)
+            MissionDataOutput.fromMissionDTO(it)
         }
     }
 
     @DeleteMapping(value = ["/{missionId}"])
     @Operation(summary = "Delete a mission")
-    fun deleteOperationController(
+    fun deleteMissionController(
         @PathParam("Mission Id")
         @PathVariable(name = "missionId")
         missionId: Int,

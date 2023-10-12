@@ -6,14 +6,26 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.vladmihalcea.hibernate.type.array.ListArrayType
-import com.vladmihalcea.hibernate.type.array.internal.AbstractArrayType.SQL_ARRAY_TYPE
-import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.utils.mapOrElseEmpty
-import jakarta.persistence.*
+import io.hypersistence.utils.hibernate.type.array.ListArrayType
+import io.hypersistence.utils.hibernate.type.array.internal.AbstractArrayType.SQL_ARRAY_TYPE
+import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType
+import jakarta.persistence.Basic
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
+import jakarta.persistence.Table
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
@@ -95,6 +107,7 @@ data class MissionModel(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
+        fetch = FetchType.EAGER,
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
@@ -104,6 +117,7 @@ data class MissionModel(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
+        fetch = FetchType.EAGER,
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
@@ -113,10 +127,16 @@ data class MissionModel(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
+        fetch = FetchType.EAGER,
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
     val controlUnits: MutableList<MissionControlUnitModel>? = ArrayList(),
+
+    @OneToMany(mappedBy = "mission")
+    @JsonManagedReference
+    @Fetch(value = FetchMode.SUBSELECT)
+    val attachedReportings: List<ReportingModel>? = listOf(),
 ) {
     fun toMissionEntity(objectMapper: ObjectMapper): MissionEntity {
         val controlUnits = controlUnits.mapOrElseEmpty { missionControlUnitModel ->
@@ -152,6 +172,13 @@ data class MissionModel(
             missionSource,
             hasMissionOrder,
             isUnderJdp,
+        )
+    }
+
+    fun toMissionDTO(objectMapper: ObjectMapper): MissionDTO {
+        return MissionDTO(
+            mission = this.toMissionEntity(objectMapper),
+            attachedReportings = this.attachedReportings?.map { it.toReportingDTO(objectMapper) } ?: listOf(),
         )
     }
 

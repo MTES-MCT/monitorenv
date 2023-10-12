@@ -9,9 +9,8 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.ControlUnitDataOutput
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.UUID
 
-data class ReportingDataOutput(
+data class MissionAttachedReportingDataOutput(
     val id: Int,
     val reportingId: Long? = null,
     val sourceType: SourceTypeEnum? = null,
@@ -37,18 +36,13 @@ data class ReportingDataOutput(
     val validityTime: Int? = null,
     val isArchived: Boolean,
     val openBy: String? = null,
-    val missionId: Int? = null,
-    val attachedToMissionAtUtc: ZonedDateTime? = null,
-    val detachedFromMissionAtUtc: ZonedDateTime? = null,
-    val attachedEnvActionId: UUID? = null,
-    val attachedMission: ReportingMissionDataOutput? = null,
 ) {
     companion object {
         fun fromReportingDTO(
             dto: ReportingDTO,
-        ): ReportingDataOutput {
+        ): MissionAttachedReportingDataOutput {
             requireNotNull(dto.reporting.id) { "ReportingEntity.id cannot be null" }
-            return ReportingDataOutput(
+            return MissionAttachedReportingDataOutput(
                 id = dto.reporting.id!!,
                 reportingId = dto.reporting.reportingId,
                 sourceType = dto.reporting.sourceType,
@@ -95,17 +89,6 @@ data class ReportingDataOutput(
                 validityTime = dto.reporting.validityTime,
                 isArchived = dto.reporting.isArchived,
                 openBy = dto.reporting.openBy,
-                missionId = dto.reporting.missionId,
-                attachedToMissionAtUtc = dto.reporting.attachedToMissionAtUtc,
-                detachedFromMissionAtUtc = dto.reporting.detachedFromMissionAtUtc,
-                attachedEnvActionId = dto.reporting.attachedEnvActionId,
-                attachedMission = if (dto.attachedMission != null) {
-                    ReportingMissionDataOutput.fromMission(
-                        dto.attachedMission,
-                    )
-                } else {
-                    null
-                },
             )
         }
     }

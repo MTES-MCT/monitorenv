@@ -14,29 +14,29 @@ data class ControlUnitContactModel(
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int? = null,
+    val id: Int? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "control_unit_id", nullable = false)
     @JsonBackReference
-    var controlUnit: ControlUnitModel,
+    val controlUnit: ControlUnitModel,
 
     @Column(name = "email")
-    var email: String? = null,
+    val email: String? = null,
 
     @Column(name = "name")
-    var name: String,
+    val name: String,
 
     @Column(name = "phone")
-    var phone: String? = null,
+    val phone: String? = null,
 
     @Column(name = "created_at_utc", nullable = false, updatable = false)
     @CreationTimestamp
-    var createdAtUtc: Instant? = null,
+    val createdAtUtc: Instant? = null,
 
     @Column(name = "updated_at_utc", nullable = false)
     @UpdateTimestamp
-    var updatedAtUtc: Instant? = null,
+    val updatedAtUtc: Instant? = null,
 ) {
     companion object {
         fun fromControlUnitContact(

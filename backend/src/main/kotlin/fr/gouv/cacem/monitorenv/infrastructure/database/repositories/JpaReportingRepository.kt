@@ -1,14 +1,21 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
-import fr.gouv.cacem.monitorenv.domain.exceptions.ControlResourceOrUnitNotFoundException
+import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBReportingRepository
-import org.springframework.dao.InvalidDataAccessApiUsageException
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBSemaphoreRepository
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.Modifying
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
@@ -16,9 +23,20 @@ import java.time.Instant
 @Repository
 class JpaReportingRepository(
     private val dbReportingRepository: IDBReportingRepository,
+    private val dbMissionRepository: IDBMissionRepository,
+    private val dbSemaphoreRepository: IDBSemaphoreRepository,
+    private val dbControlUnitRepository: IDBControlUnitRepository,
+    private val mapper: ObjectMapper,
 ) : IReportingRepository {
-    override fun findById(reportingId: Int): ReportingEntity {
-        return dbReportingRepository.findById(reportingId).get().toReporting()
+
+    @Transactional
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    override fun attachReportingsToMission(reportingIds: List<Int>, missionId: Int) {
+        dbReportingRepository.attachReportingsToMission(reportingIds, missionId)
+    }
+
+    override fun findById(reportingId: Int): ReportingDTO {
+        return dbReportingRepository.findById(reportingId).get().toReportingDTO(mapper)
     }
 
     override fun findAll(
@@ -29,7 +47,7 @@ class JpaReportingRepository(
         startedAfter: Instant,
         startedBefore: Instant?,
         status: List<String>?,
-    ): List<ReportingEntity> {
+    ): List<ReportingDTO> {
         val sourcesTypeAsStringArray = sourcesType?.map { it.name }
         val reportingTypeAsStringArray = reportingType?.map { it.name }
         return dbReportingRepository.findAll(
@@ -41,19 +59,52 @@ class JpaReportingRepository(
             startedBefore = startedBefore,
             status = convertToString(status),
         )
-            .map { it.toReporting() }
+            .map { it.toReportingDTO(mapper) }
+    }
+
+    override fun findByMissionId(missionId: Int): List<ReportingDTO> {
+        return dbReportingRepository.findByMissionId(missionId).map { it.toReportingDTO(mapper) }
     }
 
     @Transactional
-    override fun save(reporting: ReportingEntity): ReportingEntity {
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    override fun save(reporting: ReportingEntity): ReportingDTO {
         return try {
-            val reportingModel = ReportingModel.fromReportingEntity(reporting)
-            dbReportingRepository.save(reportingModel).toReporting()
-        } catch (e: InvalidDataAccessApiUsageException) {
-            throw ControlResourceOrUnitNotFoundException(
-                "Invalid control unit or resource id: not found in referential",
+            val semaphoreReference = if (reporting.semaphoreId != null) {
+                dbSemaphoreRepository.getReferenceById(
+                    reporting.semaphoreId,
+                )
+            } else {
+                null
+            }
+            val controlUnitReference = if (reporting.controlUnitId != null) {
+                dbControlUnitRepository.getReferenceById(
+                    reporting.controlUnitId,
+                )
+            } else {
+                null
+            }
+            val missionReference = if (reporting.missionId != null) {
+                dbMissionRepository.getReferenceById(
+                    reporting.missionId,
+                )
+            } else {
+                null
+            }
+            val reportingModel = ReportingModel.fromReportingEntity(
+                reporting = reporting,
+                semaphoreReference = semaphoreReference,
+                controlUnitReference = controlUnitReference,
+                missionReference = missionReference,
+            )
+            dbReportingRepository.saveAndFlush(reportingModel).toReportingDTO(mapper)
+        } catch (e: JpaObjectRetrievalFailureException) {
+            throw NotFoundException(
+                "Invalid reference to semaphore, control unit or mission: not found in referential",
                 e,
             )
+        } catch (e: DataIntegrityViolationException) {
+            throw NotFoundException("Invalid combination of mission and/or envAction", e)
         }
     }
 

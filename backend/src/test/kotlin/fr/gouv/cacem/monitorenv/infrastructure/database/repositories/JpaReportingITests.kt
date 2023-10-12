@@ -2,17 +2,23 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
+import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.locationtech.jts.geom.MultiPolygon
+import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.Pageable
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
+import java.util.UUID
 
-@SpringBootTest(properties = ["monitorenv.scheduling.enable=false"])
+@SpringBootTest(properties = ["monitorenv.scheduling.enabled=false"])
 class JpaReportingITests : AbstractDBTests() {
     @Autowired private lateinit var jpaReportingRepository: JpaReportingRepository
 
@@ -21,38 +27,76 @@ class JpaReportingITests : AbstractDBTests() {
     fun `save should create a new Reporting`() {
         // Given
         val numberOfExistingReportings = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportings).isEqualTo(5)
+        assertThat(numberOfExistingReportings).isEqualTo(8)
 
         // When
+        val wktReader = WKTReader()
+        val multipolygonString =
+            "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
+        val polygon = wktReader.read(multipolygonString) as MultiPolygon
+
         val newReporting =
             ReportingEntity(
+                sourceType = SourceTypeEnum.SEMAPHORE,
+                semaphoreId = 21,
+                targetType = TargetTypeEnum.VEHICLE,
+                vehicleType = VehicleTypeEnum.VESSEL,
+                geom = polygon,
+                seaFront = "NAMO",
+                description = "Test reporting",
+                reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                theme = "Police des mouillages",
+                subThemes = listOf("ZMEL"),
+                actionTaken = "Aucune",
+                isControlRequired = false,
+                hasNoUnitAvailable = false,
                 createdAt = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+                validityTime = 24,
                 isArchived = false,
                 isDeleted = false,
                 openBy = "CDA",
             )
         val createdReporting = jpaReportingRepository.save(newReporting)
 
+        val reportingDTO = jpaReportingRepository.findById(9)
+
         // Then
-        assertThat(createdReporting.id).isNotNull()
+        assertThat(reportingDTO.reporting.id).isEqualTo(9)
+        assertThat(reportingDTO.reporting.reportingId).isEqualTo(2300009)
+        assertThat(reportingDTO.reporting.sourceType).isEqualTo(SourceTypeEnum.SEMAPHORE)
+        assertThat(reportingDTO.reporting.semaphoreId).isEqualTo(21)
+        assertThat(reportingDTO.reporting.targetType).isEqualTo(TargetTypeEnum.VEHICLE)
+        assertThat(reportingDTO.reporting.vehicleType).isEqualTo(VehicleTypeEnum.VESSEL)
+        assertThat(reportingDTO.reporting.geom).isEqualTo(polygon)
+        assertThat(reportingDTO.reporting.seaFront).isEqualTo("NAMO")
+        assertThat(reportingDTO.reporting.description).isEqualTo("Test reporting")
+        assertThat(reportingDTO.reporting.reportType).isEqualTo(ReportingTypeEnum.INFRACTION_SUSPICION)
+        assertThat(reportingDTO.reporting.theme).isEqualTo("Police des mouillages")
+        assertThat(reportingDTO.reporting.subThemes).isEqualTo(listOf("ZMEL"))
+        assertThat(reportingDTO.reporting.actionTaken).isEqualTo("Aucune")
+        assertThat(reportingDTO.reporting.isControlRequired).isEqualTo(false)
+        assertThat(reportingDTO.reporting.hasNoUnitAvailable).isEqualTo(false)
+        assertThat(reportingDTO.reporting.createdAt).isEqualTo(ZonedDateTime.parse("2023-04-01T00:00:00Z"))
+        assertThat(reportingDTO.reporting.validityTime).isEqualTo(24)
+        assertThat(reportingDTO.reporting.isArchived).isEqualTo(false)
+        assertThat(reportingDTO.reporting.openBy).isEqualTo("CDA")
 
         val numberOfExistingReportingsAfterSave = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(6)
+        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(9)
     }
 
     @Test
     fun `findById should return specified reporting`() {
-        val reporting = jpaReportingRepository.findById(1)
-        assertThat(reporting.id).isEqualTo(1)
-        assertThat(reporting.reportingId).isEqualTo(2300001)
-        assertThat(reporting.sourceType).isEqualTo(SourceTypeEnum.SEMAPHORE)
-        assertThat(reporting.semaphoreId).isEqualTo(21)
-        assertThat(reporting.controlUnitId).isNull()
-        assertThat(reporting.sourceName).isNull()
-        assertThat(reporting.targetType).isEqualTo(TargetTypeEnum.VEHICLE)
-        assertThat(reporting.vehicleType).isEqualTo(VehicleTypeEnum.VESSEL)
-        assertThat(reporting.validityTime).isEqualTo(24)
-        assertThat(reporting.isDeleted).isEqualTo(false)
+        val reportingDTO = jpaReportingRepository.findById(1)
+        assertThat(reportingDTO.reporting.id).isEqualTo(1)
+        assertThat(reportingDTO.reporting.reportingId).isEqualTo(2300001)
+        assertThat(reportingDTO.reporting.sourceType).isEqualTo(SourceTypeEnum.SEMAPHORE)
+        assertThat(reportingDTO.reporting.semaphoreId).isEqualTo(21)
+        assertThat(reportingDTO.reporting.controlUnitId).isNull()
+        assertThat(reportingDTO.reporting.sourceName).isNull()
+        assertThat(reportingDTO.reporting.targetType).isEqualTo(TargetTypeEnum.VEHICLE)
+        assertThat(reportingDTO.reporting.vehicleType).isEqualTo(VehicleTypeEnum.VESSEL)
+        assertThat(reportingDTO.reporting.validityTime).isEqualTo(24)
     }
 
     @Test
@@ -67,7 +111,7 @@ class JpaReportingITests : AbstractDBTests() {
                 sourcesType = null,
                 status = null,
             )
-        assertThat(reportings.size).isEqualTo(5)
+        assertThat(reportings.size).isEqualTo(8)
     }
 
     @Test
@@ -75,45 +119,43 @@ class JpaReportingITests : AbstractDBTests() {
     fun `save should update an existing Reporting`() {
         // Given
         val numberOfExistingReportings = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportings).isEqualTo(5)
+        assertThat(numberOfExistingReportings).isEqualTo(8)
 
         // When
-        val existingReporting = jpaReportingRepository.findById(1)
+        val existingReportingDTO = jpaReportingRepository.findById(1)
         val updatedReporting =
-            existingReporting.copy(
+            existingReportingDTO.reporting.copy(
                 sourceType = SourceTypeEnum.SEMAPHORE,
                 semaphoreId = 23,
                 createdAt = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
                 isArchived = false,
-                isDeleted = false,
                 openBy = "CDA",
             )
-        val savedReporting = jpaReportingRepository.save(updatedReporting)
-
+        val savedReportingDTO = jpaReportingRepository.save(updatedReporting)
         // Then
-        assertThat(savedReporting.id).isEqualTo(1)
-        assertThat(savedReporting.sourceType).isEqualTo(SourceTypeEnum.SEMAPHORE)
-        assertThat(savedReporting.semaphoreId).isEqualTo(23)
+        assertThat(savedReportingDTO.reporting.id).isEqualTo(1)
+        assertThat(savedReportingDTO.reporting.sourceType).isEqualTo(SourceTypeEnum.SEMAPHORE)
+        assertThat(savedReportingDTO.reporting.semaphoreId).isEqualTo(23)
 
         val numberOfExistingReportingsAfterSave = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(5)
+        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(8)
     }
 
     @Test
     @Transactional
     fun `archiveReportings should archive multiples reportings`() {
         // Given
-        val firstReporting = jpaReportingRepository.findById(2)
-        assertThat(firstReporting.isArchived).isEqualTo(false)
-        val secondReporting = jpaReportingRepository.findById(3)
-        assertThat(secondReporting.isArchived).isEqualTo(false)
+        val firstReportingDTO = jpaReportingRepository.findById(2)
+        assertThat(firstReportingDTO.reporting.isArchived).isEqualTo(false)
+        val secondReportingDTO = jpaReportingRepository.findById(3)
+        assertThat(secondReportingDTO.reporting.isArchived).isEqualTo(false)
         // When
         jpaReportingRepository.archiveReportings(listOf(2, 3))
         // Then
-        val firstArchivedReporting = jpaReportingRepository.findById(2)
-        assertThat(firstArchivedReporting.isArchived).isEqualTo(true)
-        val secondArchivedReporting = jpaReportingRepository.findById(3)
-        assertThat(secondArchivedReporting.isArchived).isEqualTo(true)
+        val firstArchivedReportingDTO = jpaReportingRepository.findById(2)
+        assertThat(firstArchivedReportingDTO.reporting.isArchived).isEqualTo(true)
+        val secondArchivedReportingDTO = jpaReportingRepository.findById(3)
+        assertThat(secondArchivedReportingDTO.reporting.isArchived).isEqualTo(true)
     }
 
     @Test
@@ -121,30 +163,207 @@ class JpaReportingITests : AbstractDBTests() {
     fun `delete should soft delete reporting`() {
         // Given
         val numberOfExistingReportings = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportings).isEqualTo(5)
+        assertThat(numberOfExistingReportings).isEqualTo(8)
         val existingReporting = jpaReportingRepository.findById(1)
-        assertThat(existingReporting.isDeleted).isEqualTo(false)
         // When
         jpaReportingRepository.delete(1)
 
         // Then
         val numberOfExistingReportingsAfterSave = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(5)
+        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(8)
 
-        val deletedReporting = jpaReportingRepository.findById(1)
-        assertThat(deletedReporting.isDeleted).isEqualTo(true)
+        val deletedReportingDTO = jpaReportingRepository.findById(1)
+        assertThat(deletedReportingDTO.reporting.isDeleted).isEqualTo(true)
     }
 
     @Test
     @Transactional
     fun `archive should archive outdated reporting`() {
         // Given
-        val existingReporting = jpaReportingRepository.findById(1)
-        assertThat(existingReporting.isArchived).isEqualTo(false)
+        val existingReportingDTO = jpaReportingRepository.findById(1)
+        assertThat(existingReportingDTO.reporting.isArchived).isEqualTo(false)
         // When
         jpaReportingRepository.archiveOutdatedReportings()
         // Then
-        val archivedReporting = jpaReportingRepository.findById(1)
-        assertThat(archivedReporting.isArchived).isEqualTo(true)
+        val archivedReportingDTO = jpaReportingRepository.findById(1)
+        assertThat(archivedReportingDTO.reporting.isArchived).isEqualTo(true)
+    }
+
+    @Test
+    @Transactional
+    fun `attach an existing mission to a reporting`() {
+        // Given
+        val existingReportingDTO = jpaReportingRepository.findById(1)
+        assertThat(existingReportingDTO.reporting.missionId).isNull()
+        // When
+
+        jpaReportingRepository.save(
+            existingReportingDTO.reporting.copy(
+                missionId = 38,
+                attachedToMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+            ),
+        )
+
+        // Then
+        val attachedReportingDTO = jpaReportingRepository.findById(1)
+        assertThat(attachedReportingDTO.reporting.missionId).isEqualTo(38)
+        assertThat(attachedReportingDTO.reporting.attachedToMissionAtUtc).isEqualTo(
+            ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+        )
+    }
+
+    @Test
+    @Transactional
+    fun `attach an existing envAction to a reporting`() {
+        // Given
+        val existingReportingDTO = jpaReportingRepository.findById(1)
+        val reportingWithMissionDTO = jpaReportingRepository.save(
+            existingReportingDTO.reporting.copy(
+                missionId = 38,
+                attachedToMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+            ),
+        )
+        assertThat(reportingWithMissionDTO.reporting.attachedEnvActionId).isNull()
+        assertThat(reportingWithMissionDTO.reporting.missionId).isEqualTo(38)
+        // When
+
+        jpaReportingRepository.save(
+            reportingWithMissionDTO.reporting.copy(
+                attachedEnvActionId = UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
+            ),
+        )
+
+        // Then
+        val attachedReportingDTO = jpaReportingRepository.findById(1)
+        assertThat(attachedReportingDTO.reporting.attachedEnvActionId).isEqualTo(
+            UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
+        )
+    }
+
+    @Test
+    @Transactional
+    fun `an envAction cannot be attached to a reporting without a mission`() {
+        // Given
+        val existingReportingDTO = jpaReportingRepository.findById(1)
+        assertThat(existingReportingDTO.reporting.attachedEnvActionId).isNull()
+        assertThat(existingReportingDTO.reporting.missionId).isNull()
+        // When
+
+        val exception = assertThrows<NotFoundException> {
+            jpaReportingRepository.save(
+                existingReportingDTO.reporting.copy(
+                    attachedEnvActionId = UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
+                ),
+            )
+        }
+
+        // Then
+        assertThat(exception.message).isEqualTo(
+            "Invalid combination of mission and/or envAction",
+        )
+    }
+
+    @Test
+    @Transactional
+    fun `an envAction cannot be attached to a reporting from another mission`() {
+        // Given
+        val existingReportingDTO = jpaReportingRepository.findById(1)
+        assertThat(existingReportingDTO.reporting.attachedEnvActionId).isNull()
+        assertThat(existingReportingDTO.reporting.missionId).isNull()
+        // When
+
+        val exception = assertThrows<NotFoundException> {
+            jpaReportingRepository.save(
+                existingReportingDTO.reporting.copy(
+                    missionId = 42,
+                    attachedEnvActionId = UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
+                ),
+            )
+        }
+
+        // Then
+        assertThat(exception.message).isEqualTo(
+            "Invalid combination of mission and/or envAction",
+        )
+    }
+
+    @Test
+    @Transactional
+    fun `a reporting cannot be attached to a non existing mission`() {
+        // Given
+        val existingReportingDTO = jpaReportingRepository.findById(1)
+        assertThat(existingReportingDTO.reporting.missionId).isNull()
+        // When
+        val exception = assertThrows<NotFoundException> {
+            jpaReportingRepository.save(
+                existingReportingDTO.reporting.copy(
+                    missionId = 100,
+                    attachedToMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+                ),
+            )
+        }
+        // Then
+        assertThat(exception.message).isEqualTo(
+            "Invalid reference to semaphore, control unit or mission: not found in referential",
+        )
+    }
+
+    @Test
+    @Transactional
+    fun `a mission cannot be detached from a reporting if an envAction is still attached`() {
+        // Given
+        val existingReportingDTO = jpaReportingRepository.findById(6)
+        assertThat(existingReportingDTO.reporting.detachedFromMissionAtUtc).isNull()
+        // When
+        val exception = assertThrows<NotFoundException> {
+            jpaReportingRepository.save(
+                existingReportingDTO.reporting.copy(
+                    detachedFromMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+                ),
+            )
+        }
+        // Then
+        assertThat(exception.message).isEqualTo(
+            "Invalid combination of mission and/or envAction",
+        )
+    }
+
+    @Test
+    @Transactional
+    fun `a mission can be attached to one or several reportings`() {
+        val reportingNotAttachedYet = jpaReportingRepository.findById(1)
+        val alreadyAttachedReporting = jpaReportingRepository.findById(6)
+        val secondAlreadyAttachedReporting = jpaReportingRepository.findById(7)
+        val attachedReportingToOtherMission = jpaReportingRepository.findById(8)
+
+        assertThat(reportingNotAttachedYet.reporting.missionId).isNull()
+        assertThat(alreadyAttachedReporting.reporting.missionId).isEqualTo(34)
+        assertThat(secondAlreadyAttachedReporting.reporting.missionId).isEqualTo(34)
+        assertThat(attachedReportingToOtherMission.reporting.missionId).isEqualTo(38)
+        jpaReportingRepository.attachReportingsToMission(
+            reportingIds = listOf(1, 6),
+            missionId = 34,
+        )
+
+        val reportingAttachedToMission = jpaReportingRepository.findById(1)
+        val alreadyAttachedReportingAttachedToMission = jpaReportingRepository.findById(6)
+        val secondAlreadyAttachedReportingDetachedFromMission = jpaReportingRepository.findById(7)
+        val attachedReportingToOtherMissionNotAttachedToMission = jpaReportingRepository.findById(8)
+
+        assertThat(reportingAttachedToMission.reporting.missionId).isEqualTo(34)
+        assertThat(reportingAttachedToMission.reporting.attachedToMissionAtUtc).isNotNull()
+        assertThat(reportingAttachedToMission.reporting.detachedFromMissionAtUtc).isNull()
+
+        assertThat(alreadyAttachedReportingAttachedToMission.reporting.missionId).isEqualTo(34)
+        assertThat(alreadyAttachedReportingAttachedToMission.reporting.attachedToMissionAtUtc).isNotNull()
+        assertThat(alreadyAttachedReportingAttachedToMission.reporting.detachedFromMissionAtUtc).isNull()
+
+        assertThat(secondAlreadyAttachedReportingDetachedFromMission.reporting.missionId).isEqualTo(34)
+        assertThat(secondAlreadyAttachedReportingDetachedFromMission.reporting.attachedToMissionAtUtc).isNotNull()
+        assertThat(secondAlreadyAttachedReportingDetachedFromMission.reporting.detachedFromMissionAtUtc).isNotNull()
+
+        assertThat(attachedReportingToOtherMissionNotAttachedToMission.reporting.missionId).isEqualTo(38)
+        assertThat(attachedReportingToOtherMissionNotAttachedToMission.reporting.attachedToMissionAtUtc).isNotNull()
+        assertThat(attachedReportingToOtherMissionNotAttachedToMission.reporting.detachedFromMissionAtUtc).isNull()
     }
 }
