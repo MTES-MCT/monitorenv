@@ -199,14 +199,14 @@ class JpaReportingITests : AbstractDBTests() {
 
         jpaReportingRepository.save(
             existingReporting.copy(
-                attachedMissionId = 43,
+                attachedMissionId = 38,
                 attachedToMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
             ).toReportingEntity(),
         )
 
         // Then
         val attachedReporting = jpaReportingRepository.findById(1)
-        assertThat(attachedReporting.attachedMissionId).isEqualTo(43)
+        assertThat(attachedReporting.attachedMissionId).isEqualTo(38)
         assertThat(attachedReporting.attachedToMissionAtUtc).isEqualTo(ZonedDateTime.parse("2023-04-01T00:00:00Z"))
     }
 
@@ -217,22 +217,22 @@ class JpaReportingITests : AbstractDBTests() {
         val existingReporting = jpaReportingRepository.findById(1)
         val reportingWithMission = jpaReportingRepository.save(
             existingReporting.copy(
-                attachedMissionId = 43,
+                attachedMissionId = 38,
                 attachedToMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
             ).toReportingEntity(),
         )
         assertThat(reportingWithMission.attachedEnvActionId).isNull()
-        assertThat(reportingWithMission.attachedMissionId).isEqualTo(43)
+        assertThat(reportingWithMission.attachedMissionId).isEqualTo(38)
         // When
 
         jpaReportingRepository.save(
-            reportingWithMission.copy(attachedEnvActionId = UUID.fromString("74c54cb3-195f-4231-99db-772aebe7a66f")).toReportingEntity(),
+            reportingWithMission.copy(attachedEnvActionId = UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38")).toReportingEntity(),
         )
 
         // Then
         val attachedReporting = jpaReportingRepository.findById(1)
         assertThat(attachedReporting.attachedEnvActionId).isEqualTo(
-            UUID.fromString("74c54cb3-195f-4231-99db-772aebe7a66f"),
+            UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
         )
     }
 
@@ -247,7 +247,7 @@ class JpaReportingITests : AbstractDBTests() {
 
         val exception = assertThrows<NotFoundException> {
             jpaReportingRepository.save(
-                existingReporting.copy(attachedEnvActionId = UUID.fromString("74c54cb3-195f-4231-99db-772aebe7a66f")).toReportingEntity(),
+                existingReporting.copy(attachedEnvActionId = UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38")).toReportingEntity(),
             )
         }
 
@@ -270,7 +270,7 @@ class JpaReportingITests : AbstractDBTests() {
             jpaReportingRepository.save(
                 existingReporting.copy(
                     attachedMissionId = 42,
-                    attachedEnvActionId = UUID.fromString("74c54cb3-195f-4231-99db-772aebe7a66f"),
+                    attachedEnvActionId = UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
                 ).toReportingEntity(),
             )
         }
