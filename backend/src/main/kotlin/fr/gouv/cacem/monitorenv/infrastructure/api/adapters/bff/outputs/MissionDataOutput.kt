@@ -59,7 +59,7 @@ data class MissionDataOutput(
                 },
                 detachedReportingIds = dto.detachedReportingIds,
                 detachedReportings = dto.detachedReportings?.map {
-                    MissionDetachedReportingDataOutput.fromReportingDTO(it)
+                    MissionDetachedReportingDataOutput.fromReporting(it.reporting)
                 },
             )
         }

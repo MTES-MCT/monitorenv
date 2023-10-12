@@ -33,7 +33,6 @@ class JpaReportingRepository(
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     override fun attachReportingsToMission(reportingIds: List<Int>, missionId: Int) {
         dbReportingRepository.attachReportingsToMission(reportingIds, missionId)
-        dbReportingRepository.flush()
     }
 
     override fun findById(reportingId: Int): ReportingDTO {
