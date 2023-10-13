@@ -6,7 +6,6 @@ import { ampsAPI, ampsErrorLoggerMiddleware } from '../api/ampsAPI'
 import { monitorenvPrivateApi, monitorenvPublicApi } from '../api/api'
 import { controlThemesAPI } from '../api/controlThemesAPI'
 import { infractionsAPI } from '../api/infractionsAPI'
-import { legacyControlUnitsAPI } from '../api/legacyControlUnitsAPI'
 import { regulatoryLayersAPI } from '../api/regulatoryLayersAPI'
 import { semaphoresAPI } from '../api/semaphoresAPI'
 import { administrativeSlicePersistedReducer } from '../domain/shared_slices/Administrative'
@@ -81,7 +80,6 @@ export const homeMiddlewares = [
   ampsErrorLoggerMiddleware,
   regulatoryLayersAPI.middleware,
   controlThemesAPI.middleware,
-  legacyControlUnitsAPI.middleware,
   infractionsAPI.middleware,
   semaphoresAPI.middleware
 ]
