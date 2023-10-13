@@ -6,7 +6,7 @@ import { useGetEngagedControlUnitsQuery } from '../../../api/missionsAPI'
 import { controlUnitFactory } from '../Missions.helpers'
 
 export function ControlUnitsForm({ form, push, remove }) {
-  const { data: engagedControlUnitsData } = useGetEngagedControlUnitsQuery(undefined)
+  const { data: engagedControlUnitsData } = useGetEngagedControlUnitsQuery()
 
   const engagedControlUnits = useMemo(() => {
     if (!engagedControlUnitsData) {
