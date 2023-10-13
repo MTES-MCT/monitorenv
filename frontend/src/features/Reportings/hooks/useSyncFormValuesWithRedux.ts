@@ -4,28 +4,27 @@ import { useEffect, useMemo } from 'react'
 
 import { reportingActions } from '../../../domain/shared_slices/reporting'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
-import { attachMissionToReportingSliceActions } from '../ReportingForm/AttachMission/slice'
+import { useAppSelector } from '../../../hooks/useAppSelector'
 
 import type { Reporting } from '../../../domain/entities/reporting'
 
 export const useSyncFormValuesWithRedux = () => {
   const { dirty, values } = useFormikContext<Reporting>()
+  const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
 
   const dispatch = useAppDispatch()
 
   const dispatchFormUpdate = useMemo(() => {
     const throttled = newValues => {
-      if (!newValues) {
+      if (!newValues || newValues.id !== activeReportingId) {
         return
       }
       dispatch(reportingActions.setReportingState(newValues))
       dispatch(reportingActions.setIsDirty(newValues ? dirty : false))
-      dispatch(attachMissionToReportingSliceActions.setMissionId(newValues?.missionId))
-      dispatch(attachMissionToReportingSliceActions.setAttachedMission(newValues?.missionId))
     }
 
     return _.throttle(throttled, 500)
-  }, [dispatch, dirty])
+  }, [dispatch, dirty, activeReportingId])
 
   useEffect(() => {
     dispatchFormUpdate(values)

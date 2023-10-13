@@ -82,8 +82,12 @@ export function ReportingForm({
     setFieldValue('isControlRequired', reportType === ReportingTypeEnum.INFRACTION_SUSPICION)
   }
 
-  const changeNeedControlValue = checked => {
+  const changeNeedControlValue = async checked => {
     setFieldValue('isControlRequired', checked)
+    if (!checked) {
+      setFieldValue('hasNoUnitAvailable', false)
+      await dispatch(attachMissionToReportingSliceActions.resetAttachMissionState())
+    }
   }
 
   const reduceOrExpandReporting = () => {

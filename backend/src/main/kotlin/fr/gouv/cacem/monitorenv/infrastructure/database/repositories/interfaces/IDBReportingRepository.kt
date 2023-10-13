@@ -41,7 +41,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
             mission_id =  :missionId,
             attached_to_mission_at_utc = CASE WHEN mission_id is null AND id in (:reportingIds) THEN NOW() ELSE attached_to_mission_at_utc END,
             detached_from_mission_at_utc = CASE WHEN id not in (:reportingIds) THEN NOW() ELSE CAST(null as timestamp ) END
-        WHERE id in (:reportingIds) or mission_id = :missionId
+        WHERE id in (:reportingIds)
         """,
         nativeQuery = true,
     )

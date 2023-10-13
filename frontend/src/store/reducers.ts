@@ -1,5 +1,3 @@
-// TODO We should move that into `/frontend/src/store` directory.
-
 import { combineReducers } from '@reduxjs/toolkit'
 
 import { ampsAPI, ampsErrorLoggerMiddleware } from '../api/ampsAPI'

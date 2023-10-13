@@ -56,8 +56,10 @@ export function MissionForm({ id, isAlreadyClosed, isNewMission, selectedMission
   const allowDeleteMission = !isNewMission && allowEditMission
   const allowCloseMission = !selectedMission?.isClosed || !values?.isClosed
 
+  // the form listens to the redux store to update the attached reportings
+  // because of the map interaction to attach reportings
   useEffect(() => {
-    if (attachedReportingIds && attachedReportingIds.length !== values?.attachedReportingIds?.length) {
+    if (attachedReportingIds.length !== values?.attachedReportingIds?.length) {
       setFieldValue('attachedReportingIds', attachedReportingIds)
       setFieldValue('attachedReportings', attachedReportings)
     }

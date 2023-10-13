@@ -36,7 +36,7 @@ export function ReportingToAttachLayer({ map, mapClickEvent }: BaseMapChildrenPr
     const filteredReportings = reduce(
       reportings?.entities,
       (features, reporting) => {
-        if (reporting && reporting.geom) {
+        if (reporting && reporting.geom && !reporting.missionId) {
           features.push(getReportingZoneFeature(reporting, Layers.REPORTING_TO_ATTACH_ON_MISSION.code))
         }
 

@@ -26,8 +26,7 @@ export function AttachMission({ setIsAttachNewMission }) {
   }
 
   const unattachMission = () => {
-    dispatch(attachMissionToReportingSliceActions.setMissionId(undefined))
-    dispatch(attachMissionToReportingSliceActions.setAttachedMission(undefined))
+    dispatch(attachMissionToReportingSliceActions.resetAttachMissionState())
   }
 
   const createMission = async () => {
@@ -35,6 +34,8 @@ export function AttachMission({ setIsAttachNewMission }) {
     handleSubmit()
   }
 
+  // the form listens to the redux store to update the attached mission
+  // because of the map interaction to attach mission
   useEffect(() => {
     if (missionId !== values.missionId) {
       setFieldValue('missionId', missionId)

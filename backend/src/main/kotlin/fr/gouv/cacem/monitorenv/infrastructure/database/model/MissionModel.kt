@@ -49,60 +49,33 @@ data class MissionModel(
     @Basic(optional = false)
     @Column(name = "id", unique = true, nullable = false)
     val id: Int? = null,
-
     @Type(
         ListArrayType::class,
         parameters = [Parameter(name = SQL_ARRAY_TYPE, value = "text")],
     )
     @Column(name = "mission_types", columnDefinition = "text[]")
     val missionTypes: List<MissionTypeEnum>,
-
-    @Column(name = "open_by")
-    val openBy: String? = null,
-
-    @Column(name = "closed_by")
-    val closedBy: String? = null,
-
-    @Column(name = "observations_cacem")
-    val observationsCacem: String? = null,
-
-    @Column(name = "observations_cnsp")
-    val observationsCnsp: String? = null,
-
-    @Column(name = "facade")
-    val facade: String? = null,
-
+    @Column(name = "open_by") val openBy: String? = null,
+    @Column(name = "closed_by") val closedBy: String? = null,
+    @Column(name = "observations_cacem") val observationsCacem: String? = null,
+    @Column(name = "observations_cnsp") val observationsCnsp: String? = null,
+    @Column(name = "facade") val facade: String? = null,
     @JsonSerialize(using = GeometrySerializer::class)
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
     val geom: MultiPolygon? = null,
-
-    @Column(name = "start_datetime_utc")
-    val startDateTimeUtc: Instant,
-
-    @Column(name = "end_datetime_utc")
-    val endDateTimeUtc: Instant? = null,
-
-    @Column(name = "closed", nullable = false)
-    val isClosed: Boolean,
-
-    @Column(name = "deleted", nullable = false)
-    val isDeleted: Boolean,
-
+    @Column(name = "start_datetime_utc") val startDateTimeUtc: Instant,
+    @Column(name = "end_datetime_utc") val endDateTimeUtc: Instant? = null,
+    @Column(name = "closed", nullable = false) val isClosed: Boolean,
+    @Column(name = "deleted", nullable = false) val isDeleted: Boolean,
     @Column(name = "mission_source", nullable = false, columnDefinition = "mission_source_type")
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
     val missionSource: MissionSourceEnum,
-
-    @Column(name = "has_mission_order", nullable = false)
-    val hasMissionOrder: Boolean,
-
+    @Column(name = "has_mission_order", nullable = false) val hasMissionOrder: Boolean,
     @Column(name = "is_geometry_computed_from_controls", nullable = false)
     val isGeometryComputedFromControls: Boolean,
-
-    @Column(name = "is_under_jdp", nullable = false)
-    val isUnderJdp: Boolean,
-
+    @Column(name = "is_under_jdp", nullable = false) val isUnderJdp: Boolean,
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
@@ -112,7 +85,6 @@ data class MissionModel(
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
     val envActions: MutableList<EnvActionModel>? = ArrayList(),
-
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
@@ -122,7 +94,6 @@ data class MissionModel(
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
     val controlResources: MutableList<MissionControlResourceModel>? = ArrayList(),
-
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
@@ -132,26 +103,33 @@ data class MissionModel(
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
     val controlUnits: MutableList<MissionControlUnitModel>? = ArrayList(),
-
     @OneToMany(mappedBy = "mission")
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
     val attachedReportings: List<ReportingModel>? = listOf(),
 ) {
     fun toMissionEntity(objectMapper: ObjectMapper): MissionEntity {
-        val controlUnits = controlUnits.mapOrElseEmpty { missionControlUnitModel ->
-            val maybeMissionControlResourceModels = controlResources
-                ?.filter { missionControlResourceModel ->
-                    missionControlResourceModel.ressource.controlUnit.id == missionControlUnitModel.unit.id
-                }
+        val controlUnits =
+            controlUnits.mapOrElseEmpty { missionControlUnitModel ->
+                val maybeMissionControlResourceModels =
+                    controlResources?.filter { missionControlResourceModel ->
+                        missionControlResourceModel.ressource.controlUnit.id ==
+                            missionControlUnitModel.unit.id
+                    }
 
-            val controlUnitResources = maybeMissionControlResourceModels.mapOrElseEmpty { it.toControlUnitResource() }
+                val controlUnitResources =
+                    maybeMissionControlResourceModels.mapOrElseEmpty {
+                        it.toControlUnitResource()
+                    }
 
-            missionControlUnitModel.unit.toLegacyControlUnit().copy(
-                contact = missionControlUnitModel.contact,
-                resources = controlUnitResources,
-            )
-        }
+                missionControlUnitModel
+                    .unit
+                    .toLegacyControlUnit()
+                    .copy(
+                        contact = missionControlUnitModel.contact,
+                        resources = controlUnitResources,
+                    )
+            }
 
         return MissionEntity(
             id,
@@ -178,7 +156,10 @@ data class MissionModel(
     fun toMissionDTO(objectMapper: ObjectMapper): MissionDTO {
         return MissionDTO(
             mission = this.toMissionEntity(objectMapper),
-            attachedReportings = this.attachedReportings?.map { it.toReportingDTO(objectMapper) } ?: listOf(),
+            attachedReportingIds = this.attachedReportings?.map { it.id as Int } ?: listOf(),
+            attachedReportings =
+            this.attachedReportings?.map { it.toReportingDTO(objectMapper) }
+                ?: listOf(),
         )
     }
 
@@ -188,46 +169,51 @@ data class MissionModel(
             mapper: ObjectMapper,
             baseModelMap: Map<Int, BaseModel>,
         ): MissionModel {
-            val missionModel = MissionModel(
-                id = mission.id,
-                missionTypes = mission.missionTypes,
-                openBy = mission.openBy,
-                closedBy = mission.closedBy,
-                observationsCacem = mission.observationsCacem,
-                observationsCnsp = mission.observationsCnsp,
-                facade = mission.facade,
-                geom = mission.geom,
-                startDateTimeUtc = mission.startDateTimeUtc.toInstant(),
-                endDateTimeUtc = mission.endDateTimeUtc?.toInstant(),
-                isClosed = mission.isClosed,
-                isDeleted = false,
-                missionSource = mission.missionSource,
-                hasMissionOrder = mission.hasMissionOrder,
-                isUnderJdp = mission.isUnderJdp,
-                isGeometryComputedFromControls = mission.isGeometryComputedFromControls,
-            )
+            val missionModel =
+                MissionModel(
+                    id = mission.id,
+                    missionTypes = mission.missionTypes,
+                    openBy = mission.openBy,
+                    closedBy = mission.closedBy,
+                    observationsCacem = mission.observationsCacem,
+                    observationsCnsp = mission.observationsCnsp,
+                    facade = mission.facade,
+                    geom = mission.geom,
+                    startDateTimeUtc = mission.startDateTimeUtc.toInstant(),
+                    endDateTimeUtc = mission.endDateTimeUtc?.toInstant(),
+                    isClosed = mission.isClosed,
+                    isDeleted = false,
+                    missionSource = mission.missionSource,
+                    hasMissionOrder = mission.hasMissionOrder,
+                    isUnderJdp = mission.isUnderJdp,
+                    isGeometryComputedFromControls = mission.isGeometryComputedFromControls,
+                )
 
             mission.envActions?.map {
-                missionModel.envActions?.add(EnvActionModel.fromEnvActionEntity(it, missionModel, mapper))
+                missionModel.envActions?.add(
+                    EnvActionModel.fromEnvActionEntity(it, missionModel, mapper),
+                )
             }
 
             mission.controlUnits.map {
-                val controlUnitModel = MissionControlUnitModel.fromLegacyControlUnit(
-                    it,
-                    missionModel,
-                )
+                val controlUnitModel =
+                    MissionControlUnitModel.fromLegacyControlUnit(
+                        it,
+                        missionModel,
+                    )
                 missionModel.controlUnits?.add(controlUnitModel)
 
-                val missionControlUnitResourceModels = it.resources.map { controlUnitResource ->
-                    val baseModel = requireNotNull(baseModelMap[controlUnitResource.baseId])
+                val missionControlUnitResourceModels =
+                    it.resources.map { controlUnitResource ->
+                        val baseModel = requireNotNull(baseModelMap[controlUnitResource.baseId])
 
-                    MissionControlResourceModel.fromControlUnitResource(
-                        controlUnitResource,
-                        baseModel,
-                        missionModel,
-                        controlUnitModel.unit,
-                    )
-                }
+                        MissionControlResourceModel.fromControlUnitResource(
+                            controlUnitResource,
+                            baseModel,
+                            missionModel,
+                            controlUnitModel.unit,
+                        )
+                    }
                 missionModel.controlResources?.addAll(missionControlUnitResourceModels)
             }
 
@@ -247,6 +233,7 @@ data class MissionModel(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , missionTypes = $missionTypes , openBy = $openBy , closedBy = $closedBy , observationsCacem = $observationsCacem, observationsCnsp = $observationsCnsp , facade = $facade , geom = $geom , startDateTimeUtc = $startDateTimeUtc , endDateTimeUtc = $endDateTimeUtc, isClosed = $isClosed, isDeleted = $isDeleted, missionSource = $missionSource )"
+        return this::class.simpleName +
+            "(id = $id , missionTypes = $missionTypes , openBy = $openBy , closedBy = $closedBy , observationsCacem = $observationsCacem, observationsCnsp = $observationsCnsp , facade = $facade , geom = $geom , startDateTimeUtc = $startDateTimeUtc , endDateTimeUtc = $endDateTimeUtc, isClosed = $isClosed, isDeleted = $isDeleted, missionSource = $missionSource )"
     }
 }

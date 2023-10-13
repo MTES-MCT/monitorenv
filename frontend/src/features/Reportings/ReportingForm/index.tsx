@@ -15,14 +15,14 @@ import { SideWindowBackground, FormContainer } from '../style'
 import { getReportingInitialValues, isNewReporting } from '../utils'
 
 export function ReportingFormWithContext({ context, totalReportings }) {
+  const dispatch = useAppDispatch()
+
   const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
   const reportings = useAppSelector(state => state.reporting.reportings)
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const reportingContext = useAppSelector(state =>
     activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined
   )
-
-  const dispatch = useAppDispatch()
 
   const [isAttachNewMission, setIsAttachNewMission] = useState(false)
 
@@ -38,6 +38,8 @@ export function ReportingFormWithContext({ context, totalReportings }) {
     if (isAttachNewMission) {
       await dispatch(createMissionFromReporting(values))
       setIsAttachNewMission(false)
+
+      return
     }
     dispatch(saveReporting(values, context))
   }

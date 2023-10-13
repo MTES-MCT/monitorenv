@@ -2,7 +2,6 @@ import { generatePath } from 'react-router'
 
 import { missionsAPI } from '../../../api/missionsAPI'
 import { attachReportingToMissionSliceActions } from '../../../features/missions/MissionForm/AttachReporting/slice'
-// import * as mockMission from '../../../features/missions/MissionForm/mission.json'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { sideWindowPaths } from '../../entities/sideWindow'
 import { setToast } from '../../shared_slices/Global'
@@ -37,7 +36,6 @@ export const editMissionInLocalStore = missionId => async (dispatch, getState) =
 
       // now we want to save in multiMissions state the mission we want to edit
       const missionToSave = response.data
-      // const { mission: missionToSave } = mockMission
       const newSelectedMissionIndex = missions.findIndex(mission => mission.mission.id === missionToSave?.id)
       const missionFormatted = {
         isFormDirty: false,

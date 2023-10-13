@@ -29,11 +29,11 @@ import { ShowRegulatoryMetadata } from './ShowRegulatoryMetadata'
 import { ReportingToAttachLayer } from '../missions/Layers/ReportingToAttach'
 import { HoveredReportingToAttachLayer } from '../missions/Layers/ReportingToAttach/HoveredReportingToAttachLayer'
 import { SelectedReportingToAttachLayer } from '../missions/Layers/ReportingToAttach/SelectedReportingToAttachLayer'
-import { ReportingToAttachOverlays } from '../missions/Overlays/ReportingToAttach'
+import { ReportingToAttachOverlays } from '../missions/Overlays/ReportingToAttachToMission'
 import { MissionToAttachLayer } from '../Reportings/Layers/MissionToAttach'
 import { HoveredMissionToAttachLayer } from '../Reportings/Layers/MissionToAttach/HoveredMissionToAttachLayer'
 import { SelectedMissionToAttachLayer } from '../Reportings/Layers/MissionToAttach/SelectedMissionToAttachLayer'
-import { MissionToAttachOverlays } from '../Reportings/Overlays/MissionToAttach'
+import { MissionToAttachOverlays } from '../Reportings/Overlays/MissionToAttachToReporting'
 
 export function Map() {
   return (
