@@ -1,11 +1,13 @@
 import { StatusActionTag } from '../../components/StatusActionTag'
 
+import type { ControlStatusEnum } from '../../../../domain/entities/reporting'
+
 export function CellActionStatus({
-  attachedEnvActionId,
+  controlStatus,
   isControlRequired,
   missionId
 }: {
-  attachedEnvActionId: string
+  controlStatus: ControlStatusEnum
   isControlRequired: boolean
   missionId: string
 }) {
@@ -13,5 +15,5 @@ export function CellActionStatus({
     return null
   }
 
-  return <StatusActionTag attachedEnvActionId={attachedEnvActionId} />
+  return <StatusActionTag controlStatus={controlStatus} />
 }

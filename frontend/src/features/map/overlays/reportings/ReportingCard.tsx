@@ -12,7 +12,12 @@ import {
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
-import { ReportingTypeEnum, getFormattedReportingId, ReportingTypeLabels } from '../../../../domain/entities/reporting'
+import {
+  ReportingTypeEnum,
+  getFormattedReportingId,
+  ReportingTypeLabels,
+  ControlStatusEnum
+} from '../../../../domain/entities/reporting'
 import { ReportingContext } from '../../../../domain/shared_slices/Global'
 import { reportingActions } from '../../../../domain/shared_slices/reporting'
 import { editReportingInLocalStore } from '../../../../domain/use_cases/reporting/editReportingInLocalStore'
@@ -28,11 +33,11 @@ type ReportingCardProps = {
   updateMargins: (margin: number) => void
 }
 function StatusTag({
-  attachedEnvActionId,
+  controlStatus,
   isArchived,
   isAttachToMission
 }: {
-  attachedEnvActionId: string | undefined
+  controlStatus: ControlStatusEnum
   isArchived: boolean
   isAttachToMission: boolean
 }) {
@@ -45,9 +50,10 @@ function StatusTag({
   }
   if (isAttachToMission) {
     return (
-      <>
-        <LinkToMissionTag /> {attachedEnvActionId && <StatusActionTag attachedEnvActionId={attachedEnvActionId} />}
-      </>
+      <AttachedMissionContainer>
+        <LinkToMissionTag />
+        <StatusActionTag controlStatus={controlStatus} />
+      </AttachedMissionContainer>
     )
   }
 
@@ -70,7 +76,7 @@ export function ReportingCard({
   const ref = useRef<HTMLDivElement>(null)
 
   const {
-    attachedEnvActionId,
+    controlStatus,
     createdAt,
     description,
     displayedSource,
@@ -164,7 +170,7 @@ export function ReportingCard({
         {description && <StyledDescription title={description}>{description}</StyledDescription>}
       </div>
       <StatusTag
-        attachedEnvActionId={attachedEnvActionId}
+        controlStatus={controlStatus}
         isArchived={timeLeft < 0 || isArchived}
         isAttachToMission={!!missionId}
       />
@@ -262,4 +268,10 @@ const StyledButton = styled(Button)`
   padding: 4px 12px;
   align-self: start;
   width: inherit;
+`
+
+const AttachedMissionContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
 `

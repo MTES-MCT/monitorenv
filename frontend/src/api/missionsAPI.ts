@@ -28,9 +28,10 @@ const getSeaFrontsFilter = seaFronts =>
 export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: builder => ({
     createMission: builder.mutation<Mission, MissionForApi>({
-      invalidatesTags: [
+      invalidatesTags: (_, __, { attachedReportingIds = [] }) => [
         { id: 'LIST', type: 'Missions' },
-        { id: 'LIST', type: 'Reportings' }
+        { id: 'LIST', type: 'Reportings' },
+        ...attachedReportingIds.map(reportingId => ({ id: reportingId, type: 'Reportings' as const }))
       ],
       query: mission => ({
         body: mission,
@@ -70,11 +71,12 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
           .join('&')
     }),
     updateMission: builder.mutation<Mission, MissionForApi>({
-      invalidatesTags: (_, __, { id }) => [
+      invalidatesTags: (_, __, { attachedReportingIds = [], id }) => [
         { id, type: 'Missions' },
-        { id: 'LIST', type: 'Missions' }
+        { id: 'LIST', type: 'Missions' },
+        { id: 'LIST', type: 'Reportings' },
+        ...attachedReportingIds.map(reportingId => ({ id: reportingId, type: 'Reportings' as const }))
       ],
-
       query: ({ id, ...patch }) => ({
         body: { id, ...patch },
         method: 'PUT',

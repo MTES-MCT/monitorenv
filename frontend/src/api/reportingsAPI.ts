@@ -31,9 +31,10 @@ export const reportingsAPI = monitorenvPrivateApi.injectEndpoints({
       })
     }),
     createReporting: build.mutation<Partial<Reporting>, Partial<Reporting>>({
-      invalidatesTags: [
+      invalidatesTags: (_, __, { missionId }) => [
         { id: 'LIST', type: 'Reportings' },
-        { id: 'LIST', type: 'Missions' }
+        { id: 'LIST', type: 'Missions' },
+        { id: missionId, type: 'Missions' }
       ],
       query: reporting => ({
         body: reporting,
@@ -72,9 +73,11 @@ export const reportingsAPI = monitorenvPrivateApi.injectEndpoints({
       transformResponse: (response: ReportingDetailed[]) => ReportingAdapter.setAll(initialState, response)
     }),
     updateReporting: build.mutation<Reporting, Partial<Reporting>>({
-      invalidatesTags: (_, __, { id }) => [
+      invalidatesTags: (_, __, { id, missionId }) => [
         { id, type: 'Reportings' },
-        { id: 'LIST', type: 'Reportings' }
+        { id: 'LIST', type: 'Reportings' },
+        { id: 'LIST', type: 'Missions' },
+        { id: missionId, type: 'Missions' }
       ],
       query: ({ id, ...patch }) => ({
         body: { id, ...patch },
