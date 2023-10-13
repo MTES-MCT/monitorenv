@@ -23,6 +23,7 @@ from src.pipeline.flows import (
     infractions,
     refresh_materialized_view,
     regulations,
+    remove_broken_missions_resources_links,
     semaphores,
     update_departments_and_facades,
 )
@@ -66,6 +67,7 @@ flows_to_register = [
     infractions.flow,
     refresh_materialized_view.flow,
     regulations.flow,
+    remove_broken_missions_resources_links.flow,
     semaphores.flow,
     update_departments_and_facades.flow,
 ]
