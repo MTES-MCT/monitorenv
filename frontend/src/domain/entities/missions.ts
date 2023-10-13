@@ -276,6 +276,7 @@ export type NewMission = Omit<Mission, 'controlUnits' | 'facade' | 'id'> & {
   controlUnits: Array<Omit<LegacyControlUnit, 'administrationId' | 'id'>>
 }
 
+export type MissionForApi = Omit<Partial<Mission>, 'attachedReportings'>
 export type EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote
 export type NewEnvAction = NewEnvActionControl | EnvActionSurveillance | EnvActionNote
 

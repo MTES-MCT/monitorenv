@@ -1,9 +1,7 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-
-import { monitorenvPublicApi } from './api'
+import { monitorenvPublicApi, monitorenvPrivateApi } from './api'
 import { ControlUnit } from '../domain/entities/controlUnit'
 
-import type { Mission } from '../domain/entities/missions'
+import type { Mission, MissionForApi } from '../domain/entities/missions'
 
 type MissionsResponse = Mission[]
 type MissionsFilter = {
@@ -27,29 +25,31 @@ const getMissionTypesFilter = missionTypes =>
 const getSeaFrontsFilter = seaFronts =>
   seaFronts && seaFronts?.length > 0 && `seaFronts=${encodeURIComponent(seaFronts)}`
 
-export const missionsAPI = createApi({
-  baseQuery: fetchBaseQuery({ baseUrl: '/bff/v1' }),
-  endpoints: build => ({
-    createMission: build.mutation<Mission, Partial<Mission>>({
-      invalidatesTags: [{ id: 'LIST', type: 'Missions' }],
+export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
+  endpoints: builder => ({
+    createMission: builder.mutation<Mission, MissionForApi>({
+      invalidatesTags: [
+        { id: 'LIST', type: 'Missions' },
+        { id: 'LIST', type: 'Reportings' }
+      ],
       query: mission => ({
         body: mission,
         method: 'PUT',
         url: `missions`
       })
     }),
-    deleteMission: build.mutation({
+    deleteMission: builder.mutation({
       invalidatesTags: [{ id: 'LIST', type: 'Missions' }],
       query: ({ id }) => ({
         method: 'DELETE',
         url: `missions/${id}`
       })
     }),
-    getMission: build.query<Mission, number>({
+    getMission: builder.query<Mission, number>({
       providesTags: (_, __, id) => [{ id, type: 'Missions' }],
       query: id => `missions/${id}`
     }),
-    getMissions: build.query<MissionsResponse, MissionsFilter | void>({
+    getMissions: builder.query<MissionsResponse, MissionsFilter | void>({
       providesTags: result =>
         result
           ? // successful query
@@ -69,7 +69,7 @@ export const missionsAPI = createApi({
           .filter(v => v)
           .join('&')
     }),
-    updateMission: build.mutation<Mission, Mission>({
+    updateMission: builder.mutation<Mission, MissionForApi>({
       invalidatesTags: (_, __, { id }) => [
         { id, type: 'Missions' },
         { id: 'LIST', type: 'Missions' }
@@ -81,9 +81,7 @@ export const missionsAPI = createApi({
         url: `missions/${id}`
       })
     })
-  }),
-  reducerPath: 'missions',
-  tagTypes: ['Missions']
+  })
 })
 
 export const publicMissionsAPI = monitorenvPublicApi.injectEndpoints({

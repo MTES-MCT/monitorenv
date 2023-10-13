@@ -1,10 +1,10 @@
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { useDispatch } from 'react-redux'
 
 import { useGetMissionsQuery } from '../../../../api/missionsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { getMissionZoneFeature } from '../../../map/layers/Missions/missionGeometryHelpers'
 import { missionWithCentroidStyleFn } from '../../../map/layers/Missions/missions.style'
@@ -14,7 +14,7 @@ import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 import type { Geometry } from 'ol/geom'
 
 export function MissionToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const attachMissionListener = useAppSelector(state => state.attachMissionToReporting.attachMissionListener)
   const { data: missions } = useGetMissionsQuery({
     missionStatus: ['PENDING']
@@ -78,7 +78,7 @@ export function MissionToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProp
       const feature = mapClickEvent?.feature
       if (feature.getId()?.toString()?.includes(Layers.MISSION_TO_ATTACH_ON_REPORTING.code)) {
         const { missionId } = feature.getProperties()
-        dispatch(attachMissionToReportingSliceActions.setAttachedMissionId(missionId))
+        dispatch(attachMissionToReportingSliceActions.setMissionId(missionId))
       }
     }
   }, [dispatch, mapClickEvent])

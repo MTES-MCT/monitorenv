@@ -89,7 +89,7 @@ export const hoveredReportingStyleFn = feature => {
     validityTime: feature.get('validityTime')
   })
 
-  if (feature.get('attachedMissionId')) {
+  if (feature.get('missionId')) {
     if (status === ReportingStatusEnum.ARCHIVED) {
       return hoveredReportingZoneStyleFactory(THEME.color.mediumSeaGreen, getColorWithAlpha(THEME.color.white, 0.2))
     }
@@ -125,7 +125,7 @@ export const selectedReportingStyleFn = feature => {
     validityTime: feature.get('validityTime')
   })
 
-  if (feature.get('attachedMissionId')) {
+  if (feature.get('missionId')) {
     if (status === ReportingStatusEnum.ARCHIVED) {
       return selectedReportingStyleFactory(THEME.color.mediumSeaGreen, getColorWithAlpha(THEME.color.white, 0.25))
     }
@@ -163,7 +163,7 @@ export const reportingPinStyleFn = feature => {
     validityTime: feature.get('validityTime')
   })
 
-  if (feature.get('attachedMissionId')) {
+  if (feature.get('missionId')) {
     if (status === ReportingStatusEnum.ARCHIVED) {
       return reportingStyleFactory(THEME.color.white, 'archived_reporting_with_mission_attached.svg')
     }
@@ -192,8 +192,8 @@ export const reportingPinStyleFn = feature => {
 const reportingToMissionLinkStyle = feature =>
   new Style({
     geometry: () => {
-      const attachedMissionId = feature.get('attachedMissionId')
-      if (!attachedMissionId) {
+      const missionId = feature.get('missionId')
+      if (!missionId) {
         return undefined
       }
       const reportingExtent = feature?.getGeometry()?.getExtent()

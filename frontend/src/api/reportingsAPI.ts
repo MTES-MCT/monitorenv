@@ -1,6 +1,6 @@
 import { type EntityState, createEntityAdapter } from '@reduxjs/toolkit'
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
+import { monitorenvPrivateApi } from './api'
 import { getQueryString } from '../utils/getQueryStringFormatted'
 
 import type { Reporting, ReportingDetailed } from '../domain/entities/reporting'
@@ -17,8 +17,7 @@ type ReportingsFilter = {
 const ReportingAdapter = createEntityAdapter<ReportingDetailed>()
 const initialState = ReportingAdapter.getInitialState()
 
-export const reportingsAPI = createApi({
-  baseQuery: fetchBaseQuery({ baseUrl: '/bff/v1' }),
+export const reportingsAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: build => ({
     archiveReportings: build.mutation({
       invalidatesTags: (_, __, results) =>
@@ -32,7 +31,10 @@ export const reportingsAPI = createApi({
       })
     }),
     createReporting: build.mutation<Partial<Reporting>, Partial<Reporting>>({
-      invalidatesTags: [{ id: 'LIST', type: 'Reportings' }],
+      invalidatesTags: [
+        { id: 'LIST', type: 'Reportings' },
+        { id: 'LIST', type: 'Missions' }
+      ],
       query: reporting => ({
         body: reporting,
         method: 'PUT',
@@ -80,9 +82,7 @@ export const reportingsAPI = createApi({
         url: `reportings/${id}`
       })
     })
-  }),
-  reducerPath: 'reportings',
-  tagTypes: ['Reportings']
+  })
 })
 
 export const {

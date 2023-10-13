@@ -2,14 +2,14 @@ import { StatusActionTag } from '../../components/StatusActionTag'
 
 export function CellActionStatus({
   attachedEnvActionId,
-  attachedMissionId,
-  isControlRequired
+  isControlRequired,
+  missionId
 }: {
   attachedEnvActionId: string
-  attachedMissionId: string
   isControlRequired: boolean
+  missionId: string
 }) {
-  if (!attachedMissionId || !isControlRequired) {
+  if (!missionId || !isControlRequired) {
     return null
   }
 

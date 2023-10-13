@@ -2,8 +2,8 @@ import { type AnyAction, type ThunkAction, configureStore, isPlain } from '@redu
 import { setupListeners } from '@reduxjs/toolkit/query'
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist'
 
+import { homeMiddlewares, homeReducers } from './reducers'
 import { monitorenvPrivateApi, monitorenvPublicApi } from '../api/api'
-import { homeReducers, homeMiddlewares } from '../domain/shared_slices'
 import { regulatoryActionSanitizer } from '../domain/shared_slices/Regulatory'
 
 const homeStore = configureStore({
