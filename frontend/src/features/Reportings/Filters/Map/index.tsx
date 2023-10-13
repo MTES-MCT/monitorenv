@@ -1,10 +1,10 @@
 import { DateRangePicker, Checkbox, SingleTag, Accent } from '@mtes-mct/monitor-ui'
 import { forwardRef, useRef } from 'react'
-import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { ReportingSourceLabels } from '../../../../domain/entities/reporting'
 import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../../domain/shared_slices/ReportingsFilters'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { OptionValue, StyledCheckPicker, StyledSelect, StyledStatusFilter } from '../style'
 
@@ -20,7 +20,7 @@ export function MapReportingsFiltersWithRef(
   },
   ref
 ) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const {
     periodFilter,
     sourceTypeFilter,

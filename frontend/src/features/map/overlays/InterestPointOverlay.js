@@ -2,10 +2,10 @@ import LineString from 'ol/geom/LineString'
 import Overlay from 'ol/Overlay'
 import { getLength } from 'ol/sphere'
 import React, { createRef, useCallback, useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
+import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
 import { usePrevious } from '../../../hooks/usePrevious'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
@@ -27,7 +27,7 @@ function InterestPointOverlay({
   observations,
   uuid
 }) {
-  const { coordinatesFormat } = useSelector(state => state.map)
+  const { coordinatesFormat } = useAppSelector(state => state.map)
 
   const ref = createRef()
   const currentOffset = useRef(initialOffsetValue)
@@ -79,13 +79,13 @@ function InterestPointOverlay({
   useMoveOverlayWhenDragging(overlayRef.current, map, currentOffset, moveInterestPointWithThrottle, showed)
   const previousCoordinates = usePrevious(coordinates)
 
-  function coordinatesAreModified(coordinates, previousCoordinates) {
+  function coordinatesAreModified(nextCoordinates, previousCoordinates) {
     return (
-      !isNaN(coordinates[0]) &&
-      !isNaN(coordinates[1]) &&
+      !isNaN(nextCoordinates[0]) &&
+      !isNaN(nextCoordinates[1]) &&
       !isNaN(previousCoordinates[0]) &&
       !isNaN(previousCoordinates[1]) &&
-      (coordinates[0] !== previousCoordinates[0] || coordinates[1] !== previousCoordinates[1])
+      (nextCoordinates[0] !== previousCoordinates[0] || nextCoordinates[1] !== previousCoordinates[1])
     )
   }
 

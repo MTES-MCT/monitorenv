@@ -1,16 +1,16 @@
 import { Accent, Button, Label, Icon, FieldError } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
 
 import { PointPicker } from './PointPicker'
 import { ZonePicker } from './ZonePicker'
 import { InteractionListener } from '../../../../../domain/entities/map/constants'
 import { drawPoint, drawPolygon } from '../../../../../domain/use_cases/draw/drawGeometry'
+import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { StyledPositionContainer } from '../../../style'
 
 export function Position() {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const [field, meta] = useField('geom')
   const { value } = field
 

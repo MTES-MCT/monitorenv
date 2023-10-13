@@ -1,17 +1,17 @@
 import { Accent, Icon, IconButton, Search, Size } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { getPlaceCoordinates, useGooglePlacesAPI } from '../../api/googlePlacesAPI/googlePlacesAPI'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map/constants'
 import { ReportingContext, VisibilityState } from '../../domain/shared_slices/Global'
 import { setFitToExtent } from '../../domain/shared_slices/Map'
+import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 
 export function LocateOnMap() {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { reportingFormVisibility } = useAppSelector(state => state.global)
   const [searchedLocation, setSearchedLocation] = useState<string | undefined>('')
   const results = useGooglePlacesAPI(searchedLocation)

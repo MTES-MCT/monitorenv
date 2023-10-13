@@ -1,7 +1,6 @@
 import { Tag, IconButton, Accent, Icon, Size, THEME } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
 
 import { RegulatoryLayerZone } from './RegulatoryLayerZone'
 import {
@@ -9,11 +8,12 @@ import {
   removeRegulatoryZonesFromMyLayers,
   showRegulatoryLayer
 } from '../../../../domain/shared_slices/Regulatory'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { LayerSelector } from '../../utils/LayerSelector.style'
 
 export function RegulatoryLayerGroup({ groupName, layers }) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { showedRegulatoryLayerIds } = useAppSelector(state => state.regulatory)
   const { regulatoryMetadataLayerId } = useAppSelector(state => state.regulatoryMetadata)
   const groupLayerIds = layers.map(l => l.id)

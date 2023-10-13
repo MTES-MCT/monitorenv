@@ -2,20 +2,15 @@ import { Accent, Icon, IconButton, Button, Size } from '@mtes-mct/monitor-ui'
 import Fuse from 'fuse.js'
 import _ from 'lodash'
 import { useState, useEffect, useMemo, useRef } from 'react'
-import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { LayerFilters } from './LayerFilters'
-import {
-  resetSearchExtent,
-  setAMPsSearchResult,
-  setRegulatoryLayersSearchResult,
-  setSearchExtent
-} from './LayerSearch.slice'
 import { ResultList } from './ResultsList'
 import { SearchInput } from './SearchInput'
+import { resetSearchExtent, setAMPsSearchResult, setRegulatoryLayersSearchResult, setSearchExtent } from './slice'
 import { useGetAMPsQuery } from '../../../api/ampsAPI'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getIntersectingLayerIds } from '../utils/getIntersectingLayerIds'
 
@@ -23,7 +18,7 @@ import type { AMP } from '../../../domain/entities/AMPs'
 import type { RegulatoryLayerType } from '../../../types'
 
 export function LayerSearch({ isVisible }) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { data: amps } = useGetAMPsQuery()
   const { regulatoryLayers } = useAppSelector(state => state.regulatory)
   const { ampsSearchResult, regulatoryLayersSearchResult } = useAppSelector(state => state.layerSearch)

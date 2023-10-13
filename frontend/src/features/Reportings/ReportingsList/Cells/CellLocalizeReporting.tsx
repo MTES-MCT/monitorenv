@@ -1,13 +1,13 @@
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import GeoJSON from 'ol/format/GeoJSON'
-import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { OPENLAYERS_PROJECTION } from '../../../../domain/entities/map/constants'
 import { setFitToExtent } from '../../../../domain/shared_slices/Map'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 
 export function CellLocalizeReporting({ geom }: { geom: any }) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   if (!geom) {
     return <StyledEmptyContainer>-</StyledEmptyContainer>

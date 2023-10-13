@@ -1,7 +1,6 @@
 import { customDayjs, type DateAsStringRange, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import _, { reduce } from 'lodash'
 import { type MutableRefObject, useMemo, useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
 
 import { MapReportingsFilters } from './Map'
 import { TableReportingsFilters } from './Table'
@@ -17,6 +16,7 @@ import {
 } from '../../../domain/entities/reporting'
 import { seaFrontLabels } from '../../../domain/entities/seaFrontType'
 import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../domain/shared_slices/ReportingsFilters'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getSubThemesAsListOptions } from '../../../utils/getSubThemesAsListOptions'
 import { getThemesAsListOptions } from '../../../utils/getThemesAsListOptions'
@@ -26,7 +26,7 @@ export enum ReportingFilterContext {
   TABLE = 'TABLE'
 }
 export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { context?: string }) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { periodFilter, sourceTypeFilter } = useAppSelector(state => state.reportingFilters)
   const wrapperRef = useRef() as MutableRefObject<HTMLDivElement>
   const [isCustomPeriodVisible, setIsCustomPeriodVisible] = useState(periodFilter === DateRangeEnum.CUSTOM)

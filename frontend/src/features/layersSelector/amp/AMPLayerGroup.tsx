@@ -1,14 +1,14 @@
 import { Accent, Icon, IconButton, Size, Tag, THEME } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
 
 import { AMPLayerZone } from './AMPLayerZone'
 import { hideAmpLayers, removeAmpZonesFromMyLayers, showAmpLayer } from '../../../domain/shared_slices/SelectedAmp'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { LayerSelector } from '../utils/LayerSelector.style'
 
 export function AMPLayerGroup({ groupName, layers, showedAmpLayerIds }) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const groupLayerIds = layers.map(l => l.id)
   const [zonesAreOpen, setZonesAreOpen] = useState(false)

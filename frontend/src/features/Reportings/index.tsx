@@ -1,7 +1,6 @@
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 import { useMemo } from 'react'
-import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { ReportingFormWithContext } from './ReportingForm'
@@ -11,6 +10,7 @@ import { hideSideButtons, ReportingContext, VisibilityState } from '../../domain
 import { closeReporting } from '../../domain/use_cases/reporting/closeReporting'
 import { reduceOrExpandReportingForm } from '../../domain/use_cases/reporting/reduceOrExpandReportingForm'
 import { switchReporting } from '../../domain/use_cases/reporting/switchReporting'
+import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 
 export function Reportings({ context }: { context: ReportingContext }) {
@@ -21,7 +21,7 @@ export function Reportings({ context }: { context: ReportingContext }) {
     activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined
   )
 
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const reportingsTabs = useMemo(
     () =>
       _.chain(Object.entries(reportings))

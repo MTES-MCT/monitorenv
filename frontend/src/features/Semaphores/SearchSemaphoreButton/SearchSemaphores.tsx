@@ -2,7 +2,6 @@ import { Accent, CustomSearch, Icon, Search } from '@mtes-mct/monitor-ui'
 import { reduce } from 'lodash'
 import { GeoJSON } from 'ol/format'
 import { useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { useGetSemaphoresQuery } from '../../../api/semaphoresAPI'
@@ -10,13 +9,14 @@ import { OPENLAYERS_PROJECTION } from '../../../domain/entities/map/constants'
 import { setDisplayedItems } from '../../../domain/shared_slices/Global'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import { addSemaphore, setSelectedSemaphore } from '../../../domain/shared_slices/SemaphoresSlice'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
 
 import type { Semaphore } from '../../../domain/entities/semaphore'
 
 export function SearchSemaphores() {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const { displaySemaphoresLayer } = useAppSelector(state => state.global)
   const { semaphoresResearchHistory } = useAppSelector(state => state.semaphoresSlice)

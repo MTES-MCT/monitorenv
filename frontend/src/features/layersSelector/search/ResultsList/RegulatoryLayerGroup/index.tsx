@@ -2,13 +2,13 @@ import { IconButton, Icon, Accent, Size, THEME } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 import { useState } from 'react'
 import Highlighter from 'react-highlight-words'
-import { useDispatch } from 'react-redux'
 
 import { RegulatoryLayer } from './RegulatoryLayer'
 import {
   addRegulatoryZonesToMyLayers,
   removeRegulatoryZonesFromMyLayers
 } from '../../../../../domain/shared_slices/Regulatory'
+import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
 import { LayerSelector } from '../../../utils/LayerSelector.style'
 
@@ -21,7 +21,7 @@ export function RegulatoryLayerGroup({
   layerIds: number[]
   searchedText: string
 }) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const { selectedRegulatoryLayerIds } = useAppSelector(state => state.regulatory)
   const { regulatoryMetadataLayerId } = useAppSelector(state => state.regulatoryMetadata)

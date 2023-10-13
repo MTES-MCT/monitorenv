@@ -1,13 +1,13 @@
 import { Accent, SingleTag } from '@mtes-mct/monitor-ui'
-import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { ReportingSourceLabels } from '../../../../domain/entities/reporting'
 import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../../domain/shared_slices/ReportingsFilters'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 export function FilterTags() {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { seaFrontFilter, sourceFilter, sourceTypeFilter, subThemesFilter, themeFilter } = useAppSelector(
     state => state.reportingFilters
   )

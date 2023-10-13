@@ -1,11 +1,11 @@
 import { Accent, Icon, THEME, customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import _ from 'lodash'
-import { useDispatch } from 'react-redux'
 
 import { ReportingStatusEnum, type Reporting, getReportingStatus } from '../../../../domain/entities/reporting'
 import { ReportingContext } from '../../../../domain/shared_slices/Global'
 import { reopenReporting } from '../../../../domain/use_cases/reporting/reopenReporting'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { StyledButton, StyledSubmitButton, StyledDeleteButton, StyledFooter } from '../../style'
 import { isNewReporting } from '../../utils'
@@ -16,7 +16,7 @@ export function Footer({ onCancel, onDelete, setMustIncreaseValidity, setShouldV
   const reportingContext = useAppSelector(state =>
     activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined
   )
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { handleSubmit, setFieldValue, validateForm, values } = useFormikContext<Reporting>()
 
   const reportingStatus = getReportingStatus(values)

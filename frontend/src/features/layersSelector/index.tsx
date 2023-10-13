@@ -1,6 +1,5 @@
 import { IconButton, Accent, Size, Icon, THEME } from '@mtes-mct/monitor-ui'
 import { FulfillingBouncingCircleSpinner } from 'react-epic-spinners'
-import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { AdministrativeLayers } from './administrative'
@@ -12,6 +11,7 @@ import { LayerSearch } from './search'
 import { useGetAMPsQuery } from '../../api/ampsAPI'
 import { setDisplayedItems } from '../../domain/shared_slices/Global'
 import { closeRegulatoryZoneMetadata } from '../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
+import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 
 export function LayersSidebar() {
@@ -20,7 +20,7 @@ export function LayersSidebar() {
   const { regulatoryLayers } = useAppSelector(state => state.regulatory)
   const amps = useGetAMPsQuery()
 
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const toggleLayerSidebar = () => {
     if (isLayersSidebarVisible) {

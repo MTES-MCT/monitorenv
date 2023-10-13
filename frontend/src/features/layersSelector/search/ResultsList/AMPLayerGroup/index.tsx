@@ -2,7 +2,6 @@ import { IconButton, Icon, Accent, Size, THEME } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 import { useState } from 'react'
 import Highlighter from 'react-highlight-words'
-import { useDispatch } from 'react-redux'
 
 import { AMPLayer } from './AMPLayer'
 import {
@@ -10,6 +9,7 @@ import {
   removeAmpZonesFromMyLayers,
   setSelectedAmpLayerId
 } from '../../../../../domain/shared_slices/SelectedAmp'
+import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
 import { LayerSelector } from '../../../utils/LayerSelector.style'
 
@@ -26,7 +26,7 @@ export function AMPLayerGroup({
   layerIds: number[]
   searchedText: string
 }) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const { selectedAmpLayerId, selectedAmpLayerIds } = useAppSelector(state => state.selectedAmp)
   const totalNumberOfZones = groups[groupName]?.length

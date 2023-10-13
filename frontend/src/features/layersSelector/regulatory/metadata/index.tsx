@@ -1,7 +1,6 @@
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { useCallback } from 'react'
 import { FingerprintSpinner } from 'react-epic-spinners'
-import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { Identification } from './Identification'
@@ -9,6 +8,7 @@ import { MetadataRegulatoryReferences } from './MetadataRegulatoryReferences'
 import { useGetRegulatoryLayerQuery } from '../../../../api/regulatoryLayersAPI'
 import { getTitle } from '../../../../domain/entities/regulatory'
 import { closeRegulatoryZoneMetadata } from '../../../../domain/use_cases/regulatory/closeRegulatoryZoneMetadata'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReactComponent as AlertSVG } from '../../../../uiMonitor/icons/Attention_controles.svg'
 import { RegulatoryLayerLegend } from '../../utils/LayerLegend.style'
@@ -16,7 +16,7 @@ import { RegulatoryLayerLegend } from '../../utils/LayerLegend.style'
 const FOUR_HOURS = 4 * 60 * 60 * 1000
 
 export function RegulatoryLayerZoneMetadata() {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { regulatoryMetadataLayerId, regulatoryMetadataPanelIsOpen } = useAppSelector(state => state.regulatoryMetadata)
   const { currentData } = useGetRegulatoryLayerQuery({ id: regulatoryMetadataLayerId }, { pollingInterval: FOUR_HOURS })
   const regulatoryMetadata = currentData?.properties

@@ -1,12 +1,12 @@
-import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { hideAdministrativeLayer, showAdministrativeLayer } from '../../../domain/shared_slices/Administrative'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ReactComponent as DisplaySVG } from '../../../uiMonitor/icons/Display.svg'
 
 export function AdministrativeLayer({ isGrouped, layer }) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { showedAdministrativeLayerIds } = useAppSelector(state => state.administrative)
 
   const isLayerVisible = showedAdministrativeLayerIds.includes(layer.code as number)

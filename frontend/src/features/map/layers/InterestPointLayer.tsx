@@ -5,7 +5,6 @@ import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { getLength } from 'ol/sphere'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid'
 
 import { getInterestPointStyle, POIStyle } from './styles/interestPoint.style'
@@ -28,6 +27,7 @@ import {
   updateInterestPointKeyBeingDrawed
 } from '../../../domain/shared_slices/InterestPoint'
 import { saveInterestPointFeature } from '../../../domain/use_cases/interestPoint/saveInterestPointFeature'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { usePrevious } from '../../../hooks/usePrevious'
 import InterestPointOverlay from '../overlays/InterestPointOverlay'
@@ -48,7 +48,7 @@ type InterestPoint = {
   uuid: string
 }
 export function InterestPointLayer({ map }: BaseMapChildrenProps) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const {
     interestPointBeingDrawed,

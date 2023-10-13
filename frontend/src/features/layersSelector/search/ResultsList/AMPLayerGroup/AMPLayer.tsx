@@ -3,7 +3,6 @@ import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { createRef, useEffect } from 'react'
 import Highlighter from 'react-highlight-words'
-import { useDispatch } from 'react-redux'
 
 import { useGetAMPsQuery } from '../../../../../api/ampsAPI'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../../domain/entities/map/constants'
@@ -13,12 +12,13 @@ import {
   removeAmpZonesFromMyLayers,
   setSelectedAmpLayerId
 } from '../../../../../domain/shared_slices/SelectedAmp'
+import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
 import { AMPLayerLegend } from '../../../utils/LayerLegend.style'
 import { LayerSelector } from '../../../utils/LayerSelector.style'
 
 export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedText: string }) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const ref = createRef<HTMLSpanElement>()
 
   const { layer } = useGetAMPsQuery(undefined, {

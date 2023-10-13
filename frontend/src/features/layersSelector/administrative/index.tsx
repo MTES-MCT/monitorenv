@@ -1,15 +1,15 @@
-import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { AdministrativeLayer } from './AdministrativeLayer'
 import { administrativeLayers } from '../../../domain/entities/administrativeLayers'
 import { toggleAdministrativeZones } from '../../../domain/shared_slices/LayerSidebar'
+import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 import { LayerSelectorMenu } from '../utils/LayerSelectorMenu.style'
 
 export function AdministrativeLayers() {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { administrativeZonesIsOpen } = useAppSelector(state => state.layerSidebar)
 
   const onSectionTitleClicked = () => {

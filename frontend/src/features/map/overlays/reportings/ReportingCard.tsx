@@ -10,13 +10,13 @@ import {
   getLocalizedDayjs
 } from '@mtes-mct/monitor-ui'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
 import { ReportingTypeEnum, getFormattedReportingId, ReportingTypeLabels } from '../../../../domain/entities/reporting'
 import { ReportingContext } from '../../../../domain/shared_slices/Global'
 import { reportingActions } from '../../../../domain/shared_slices/reporting'
 import { editReportingInLocalStore } from '../../../../domain/use_cases/reporting/editReportingInLocalStore'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 export function ReportingCard({
@@ -28,7 +28,7 @@ export function ReportingCard({
   selected?: boolean
   updateMargins: (margin: number) => void
 }) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const {
     global: { displayReportingsLayer }
   } = useAppSelector(state => state)

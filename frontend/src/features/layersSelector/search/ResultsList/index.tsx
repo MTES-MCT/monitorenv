@@ -12,7 +12,7 @@ import {
   setIsAmpSearchResultsVisible,
   setIsRegulatorySearchResultsExpanded,
   setIsRegulatorySearchResultsVisible
-} from '../LayerSearch.slice'
+} from '../slice'
 
 export function ResultList({ searchedText }) {
   const {

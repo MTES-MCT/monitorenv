@@ -1,11 +1,11 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
+import { useAppSelector } from '../../hooks/useAppSelector'
 import { ReactComponent as WarningSVG } from '../../uiMonitor/icons/Alert.svg'
 
 function Healthcheck() {
-  const { healthcheckTextWarning } = useSelector(state => state.global)
+  const { healthcheckTextWarning } = useAppSelector(state => state.global)
 
   return (
     <>
