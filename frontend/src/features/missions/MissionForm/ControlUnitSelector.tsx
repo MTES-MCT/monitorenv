@@ -1,19 +1,21 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { FormikTextInput, FieldError, Message, Level } from '@mtes-mct/monitor-ui'
+import { FieldError, FormikTextInput, Level, Message } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import _ from 'lodash'
 import { type MutableRefObject, useMemo, useRef } from 'react'
 import { Form, IconButton, TagPicker } from 'rsuite'
 import styled from 'styled-components'
 
+import { FIVE_MINUTES } from '../../../api/APIWorker'
 import { useGetLegacyControlUnitsQuery } from '../../../api/legacyControlUnitsAPI'
+import { useGetEngagedControlUnitsQuery } from '../../../api/missionsAPI'
 import { FormikErrorWrapper } from '../../../uiMonitor/CustomFormikFields/FormikErrorWrapper'
 import { SelectPicker } from '../../../uiMonitor/CustomRsuite/SelectPicker'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
 
 import type { ControlUnit } from '../../../domain/entities/controlUnit'
 
-export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, isEngaged, removeControlUnit, ...props }) {
+export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeControlUnit, ...props }) {
   const [administrationField, administrationMeta, administrationHelpers] = useField<string>(
     `controlUnits.${controlUnitIndex}.administration`
   )
@@ -24,9 +26,22 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, isEngag
   )
 
   const resourcesRef = useRef() as MutableRefObject<HTMLDivElement>
-  const { data, isError, isLoading } = useGetLegacyControlUnitsQuery()
+  const { data: controlUnitsData, isError, isLoading } = useGetLegacyControlUnitsQuery()
 
-  const filteredControlUnits = useMemo(() => data?.filter(unit => !unit.isArchived) || [], [data])
+  const filteredControlUnits = useMemo(
+    () => controlUnitsData?.filter(unit => !unit.isArchived) || [],
+    [controlUnitsData]
+  )
+
+  const { data: engagedControlUnitsData } = useGetEngagedControlUnitsQuery(undefined, { pollingInterval: FIVE_MINUTES })
+
+  const engagedControlUnits = useMemo(() => {
+    if (!engagedControlUnitsData) {
+      return []
+    }
+
+    return engagedControlUnitsData
+  }, [engagedControlUnitsData])
 
   const administrationList = _.chain(filteredControlUnits)
     .map(unit => unit.administration)
@@ -91,9 +106,12 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, isEngag
   if (isError) {
     return <div>Erreur</div>
   }
+
   if (isLoading) {
     return <div>Chargement</div>
   }
+
+  const isEngaged = !!engagedControlUnits.find(engaged => engaged.id === unitField.value)
   const resourceUnitIndexDisplayed = controlUnitIndex + 1
 
   return (
