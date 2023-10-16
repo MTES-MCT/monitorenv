@@ -31,8 +31,7 @@ class CreateOrUpdateReporting(
 
         var attachedToMissionAtUtc: ZonedDateTime? = null
         var detachedFromMissionAtUtc: ZonedDateTime? = null
-        if (reporting.missionId != null) {
-            // TO CHECK if the date is with or without UTC
+        if (reporting.missionId != null && reporting.attachedToMissionAtUtc == null) {
             attachedToMissionAtUtc = ZonedDateTime.now()
             detachedFromMissionAtUtc = null
         }
