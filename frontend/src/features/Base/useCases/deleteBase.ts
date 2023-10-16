@@ -37,7 +37,7 @@ export const deleteBase = (): AppThunk<Promise<void>> => async (dispatch, getSta
     logSoftError({
       message: `An error happened while deleting an base (ID=${confirmationModal.entityId}").`,
       originalError: err,
-      userMessage: "Une erreur est survenue pendant la suppression de l'base."
+      userMessage: 'Une erreur est survenue pendant la suppression de la base.'
     })
   }
 }
