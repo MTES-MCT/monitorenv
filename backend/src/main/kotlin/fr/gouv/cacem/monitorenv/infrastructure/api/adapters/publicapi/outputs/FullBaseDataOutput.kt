@@ -6,6 +6,8 @@ data class FullBaseDataOutput(
     val id: Int,
     val controlUnitResourceIds: List<Int>,
     val controlUnitResources: List<ControlUnitResourceDataOutput>,
+    val latitude: Double,
+    val longitude: Double,
     val name: String,
 ) {
     companion object {
@@ -17,6 +19,8 @@ data class FullBaseDataOutput(
                 id = requireNotNull(fullBase.base.id),
                 controlUnitResourceIds = controlUnitResources.map { it.id },
                 controlUnitResources,
+                latitude = fullBase.base.latitude,
+                longitude = fullBase.base.longitude,
                 name = fullBase.base.name,
             )
         }

@@ -48,9 +48,9 @@ class ApiAdministrationsController(
     fun delete(
         @PathParam("Administration ID")
         @PathVariable(name = "administrationId")
-        controlUnitId: Int,
+        administrationId: Int,
     ) {
-        deleteAdministration.execute(controlUnitId)
+        deleteAdministration.execute(administrationId)
     }
 
     @GetMapping("/{administrationId}")

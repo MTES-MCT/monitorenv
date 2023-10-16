@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.base.CreateOrUpdateBase
+import fr.gouv.cacem.monitorenv.domain.use_cases.base.DeleteBase
 import fr.gouv.cacem.monitorenv.domain.use_cases.base.GetBaseById
 import fr.gouv.cacem.monitorenv.domain.use_cases.base.GetBases
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateBaseDataInput
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*
 @Tag(name = "Bases", description = "API bases")
 class ApiBasesController(
     private val createOrUpdateBase: CreateOrUpdateBase,
+    private val deleteBase: DeleteBase,
     private val getBases: GetBases,
     private val getBaseById: GetBaseById,
 ) {
@@ -31,6 +33,16 @@ class ApiBasesController(
         val createdBase = createOrUpdateBase.execute(newBase)
 
         return BaseDataOutput.fromBase(createdBase)
+    }
+
+    @DeleteMapping("/{baseId}")
+    @Operation(summary = "Delete a base")
+    fun delete(
+        @PathParam("Administration ID")
+        @PathVariable(name = "baseId")
+        baseId: Int,
+    ) {
+        deleteBase.execute(baseId)
     }
 
     @GetMapping("/{baseId}")

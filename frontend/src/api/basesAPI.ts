@@ -1,20 +1,40 @@
 import { monitorenvPublicApi } from './api'
+import { DELETE_GENERIC_ERROR_MESSAGE } from './constants'
+import { ApiErrorCode } from './types'
 import { FrontendApiError } from '../libs/FrontendApiError'
+import { newUserError } from '../libs/UserError'
 
 import type { Base } from '../domain/entities/base'
 
+const DELETE_BASE_ERROR_MESSAGE =
+  "Cette base est rattachée à des moyens. Veuillez l'en détacher avant de la supprimer ou bien l'archiver."
 const GET_BASE_ERROR_MESSAGE = "Nous n'avons pas pu récupérer cette base."
 const GET_BASES_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la liste des bases."
 
 export const basesAPI = monitorenvPublicApi.injectEndpoints({
   endpoints: builder => ({
     createBase: builder.mutation<void, Base.BaseData>({
-      invalidatesTags: () => [{ type: 'ControlUnits' }, { type: 'Bases' }],
+      invalidatesTags: () => [{ type: 'Bases' }],
       query: newBaseData => ({
         body: newBaseData,
         method: 'POST',
         url: `/v1/bases`
       })
+    }),
+
+    deleteBase: builder.mutation<void, number>({
+      invalidatesTags: () => [{ type: 'Bases' }],
+      query: baseId => ({
+        method: 'DELETE',
+        url: `/v1/bases/${baseId}`
+      }),
+      transformErrorResponse: response => {
+        if (response.data.type === ApiErrorCode.FOREIGN_KEY_CONSTRAINT) {
+          return newUserError(DELETE_BASE_ERROR_MESSAGE)
+        }
+
+        return new FrontendApiError(DELETE_GENERIC_ERROR_MESSAGE, response)
+      }
     }),
 
     getBase: builder.query<Base.Base, number>({

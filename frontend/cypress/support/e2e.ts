@@ -19,7 +19,6 @@ declare global {
           isSmooth: boolean
         }>
       ): void
-      getTableRowByText(path: string): Chainable<JQuery<HTMLElement>>
       loadPath(path: string): void
       toMatchImageSnapshot(settings: any): Chainable<Element>
     }
