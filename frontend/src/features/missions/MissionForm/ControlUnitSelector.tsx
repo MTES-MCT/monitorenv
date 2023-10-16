@@ -1,12 +1,14 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { FieldError, FormikTextInput } from '@mtes-mct/monitor-ui'
+import { FieldError, FormikTextInput, Level, Message } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import _ from 'lodash'
 import { type MutableRefObject, useMemo, useRef } from 'react'
 import { Form, IconButton, TagPicker } from 'rsuite'
 import styled from 'styled-components'
 
+import { FIVE_MINUTES } from '../../../api/APIWorker'
 import { useGetLegacyControlUnitsQuery } from '../../../api/legacyControlUnitsAPI'
+import { useGetEngagedControlUnitsQuery } from '../../../api/missionsAPI'
 import { FormikErrorWrapper } from '../../../uiMonitor/CustomFormikFields/FormikErrorWrapper'
 import { SelectPicker } from '../../../uiMonitor/CustomRsuite/SelectPicker'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
@@ -24,9 +26,22 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
   )
 
   const resourcesRef = useRef() as MutableRefObject<HTMLDivElement>
-  const { data, isError, isLoading } = useGetLegacyControlUnitsQuery()
+  const { data: controlUnitsData, isError, isLoading } = useGetLegacyControlUnitsQuery()
 
-  const filteredControlUnits = useMemo(() => data?.filter(unit => !unit.isArchived) || [], [data])
+  const filteredControlUnits = useMemo(
+    () => controlUnitsData?.filter(unit => !unit.isArchived) || [],
+    [controlUnitsData]
+  )
+
+  const { data: engagedControlUnitsData } = useGetEngagedControlUnitsQuery(undefined, { pollingInterval: FIVE_MINUTES })
+
+  const engagedControlUnits = useMemo(() => {
+    if (!engagedControlUnitsData) {
+      return []
+    }
+
+    return engagedControlUnitsData
+  }, [engagedControlUnitsData])
 
   const administrationList = _.chain(filteredControlUnits)
     .map(unit => unit.administration)
@@ -91,9 +106,12 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
   if (isError) {
     return <div>Erreur</div>
   }
+
   if (isLoading) {
     return <div>Chargement</div>
   }
+
+  const isEngaged = !!engagedControlUnits.find(engaged => engaged.id === unitField.value)
   const resourceUnitIndexDisplayed = controlUnitIndex + 1
 
   return (
@@ -138,6 +156,11 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
           />
         </FormikErrorWrapper>
         {unitNameMeta.error && <FieldError>{unitNameMeta.error}</FieldError>}
+        {isEngaged && (
+          <StyledMessage level={Level.WARNING}>
+            Cette unité est actuellement sélectionnée dans une autre mission en cours.
+          </StyledMessage>
+        )}
       </FormGroupFixed>
       <FormGroupFixed>
         <RefWrapper ref={resourcesRef} data-cy="unit-tag-picker">
@@ -168,6 +191,10 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
     </RessourceUnitWrapper>
   )
 }
+
+const StyledMessage = styled(Message)`
+  margin-top: 8px;
+`
 
 const RessourceUnitWrapper = styled.div`
   margin-bottom: 14px;
