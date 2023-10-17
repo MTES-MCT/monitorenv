@@ -8,27 +8,21 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
-import fr.gouv.cacem.monitorenv.domain.repositories.IBaseRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreaRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.EnvActionAttachedToReportingIds
 
 @UseCase
 class CreateOrUpdateMission(
-    private val baseRepository: IBaseRepository,
     private val departmentRepository: IDepartmentAreaRepository,
-    private val missionRepository: IMissionRepository,
     private val facadeRepository: IFacadeAreasRepository,
-    private val reportingRepository: IReportingRepository,
+    private val missionRepository: IMissionRepository,
 ) {
     @Throws(IllegalArgumentException::class)
     fun execute(
         mission: MissionEntity?,
         attachedReportingIds: List<Int>? = null,
-        envActionsAttachedToReportingIds: EnvActionAttachedToReportingIds? = null,
     ): MissionDTO {
         require(mission != null) {
             "No mission to create or update"
@@ -92,13 +86,6 @@ class CreateOrUpdateMission(
 
         if (savedMission.mission.id == null) {
             throw IllegalArgumentException("Mission id is null")
-        }
-
-        if (attachedReportingIds != null) {
-            reportingRepository.attachReportingsToMission(attachedReportingIds, savedMission.mission.id)
-        }
-        if (envActionsAttachedToReportingIds != null) {
-            reportingRepository.attachEnvActionsToReportings(envActionsAttachedToReportingIds)
         }
 
         return missionRepository.findById(savedMission.mission.id)
