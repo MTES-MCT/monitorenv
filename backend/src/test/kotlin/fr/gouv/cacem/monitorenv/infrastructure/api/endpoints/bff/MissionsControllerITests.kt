@@ -21,7 +21,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMissionW
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetEngagedControlUnits
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionById
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMonitorEnvMissions
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissions
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionDataInput
@@ -61,7 +61,7 @@ class MissionsControllerITests {
     private lateinit var createOrUpdateMissionWithAttachedReporting: CreateOrUpdateMissionWithAttachedReporting
 
     @MockBean
-    private lateinit var getMonitorEnvMissions: GetMonitorEnvMissions
+    private lateinit var getMissions: GetMissions
 
     @MockBean
     private lateinit var getMissionById: GetMissionById
@@ -217,7 +217,7 @@ class MissionsControllerITests {
             ),
         )
         given(
-            getMonitorEnvMissions.execute(
+            getMissions.execute(
                 startedAfterDateTime = null,
                 startedBeforeDateTime = null,
                 seaFronts = null,
