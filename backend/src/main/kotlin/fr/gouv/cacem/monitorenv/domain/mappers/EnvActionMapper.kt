@@ -31,8 +31,8 @@ object EnvActionMapper {
         value: String?,
         isAdministrativeControl: Boolean?,
         isComplianceWithWaterRegulationsControl: Boolean?,
-        isSeafarersControl: Boolean?,
         isSafetyEquipmentAndStandardsComplianceControl: Boolean?,
+        isSeafarersControl: Boolean?,
     ): EnvActionEntity {
         return try {
             if (!value.isNullOrEmpty() && value != jsonbNullString) {
@@ -58,6 +58,10 @@ object EnvActionMapper {
                         facade,
                         department,
                         geom,
+                        isAdministrativeControl,
+                        isComplianceWithWaterRegulationsControl,
+                        isSafetyEquipmentAndStandardsComplianceControl,
+                        isSeafarersControl,
                     )
                     ActionTypeEnum.NOTE -> mapper.readValue(
                         value,

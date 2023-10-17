@@ -87,19 +87,19 @@ data class EnvActionModel(
 
     fun toActionEntity(mapper: ObjectMapper): EnvActionEntity {
         return EnvActionMapper.getEnvActionEntityFromJSON(
-            mapper,
-            id,
-            actionStartDateTime?.atZone(UTC),
-            actionEndDateTime?.atZone(UTC),
-            geom,
-            actionType,
-            facade,
-            department,
-            value,
-            isAdministrativeControl,
-            isComplianceWithWaterRegulationsControl,
-            isSafetyEquipmentAndStandardsComplianceControl,
-            isSeafarersControl,
+            mapper = mapper,
+            id = id,
+            actionStartDateTimeUtc = actionStartDateTime?.atZone(UTC),
+            actionEndDateTimeUtc = actionEndDateTime?.atZone(UTC),
+            geom = geom,
+            actionType = actionType,
+            facade = facade,
+            department = department,
+            value = value,
+            isAdministrativeControl = isAdministrativeControl,
+            isComplianceWithWaterRegulationsControl = isComplianceWithWaterRegulationsControl,
+            isSafetyEquipmentAndStandardsComplianceControl = isSafetyEquipmentAndStandardsComplianceControl,
+            isSeafarersControl = isSeafarersControl,
         )
     }
     companion object {

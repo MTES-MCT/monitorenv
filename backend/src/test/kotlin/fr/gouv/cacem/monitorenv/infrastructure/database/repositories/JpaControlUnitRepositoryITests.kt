@@ -174,14 +174,19 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                 controlUnitContacts = listOf(),
                 controlUnitResources = listOf(
                     FullControlUnitResourceDTO(
-                        base = BaseEntity(id = 3, name = "Dunkerque"),
+                        base = BaseEntity(
+                            id = 3,
+                            name = "Dunkerque",
+                            latitude = 51.035534,
+                            longitude = 2.372845,
+                        ),
                         controlUnit = ControlUnitEntity(
                             id = 10121,
                             administrationId = 1009,
                             areaNote = null,
                             isArchived = false,
                             name = "PAM Jeanne Barret",
-                            termsNote = null
+                            termsNote = null,
                         ),
                         controlUnitResource = ControlUnitResourceEntity(
                             id = 8,
@@ -190,8 +195,8 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             name = "PAM Jeanne Barret",
                             note = null,
                             photo = null,
-                            type = ControlUnitResourceType.FRIGATE
-                        )
+                            type = ControlUnitResourceType.FRIGATE,
+                        ),
                     ),
                 ),
             ),
