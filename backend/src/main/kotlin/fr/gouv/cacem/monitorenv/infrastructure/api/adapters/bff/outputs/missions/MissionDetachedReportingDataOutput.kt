@@ -1,4 +1,5 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions
+
 
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import java.time.ZonedDateTime
