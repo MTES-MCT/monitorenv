@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.base.dtos.FullBaseDTO
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ForeignKeyConstraintException
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
@@ -18,7 +19,7 @@ data class BaseModel(
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "base")
     @JsonManagedReference
-    val controlUnitResources: List<ControlUnitResourceModel>? = mutableListOf(),
+    val controlUnitResources: List<ControlUnitResourceModel> = listOf(),
 
     @Column(name = "latitude", nullable = false)
     val latitude: Double,
@@ -37,6 +38,15 @@ data class BaseModel(
     @UpdateTimestamp
     val updatedAtUtc: Instant? = null,
 ) {
+    @PreRemove
+    fun canBeDeleted() {
+        if (controlUnitResources.isNotEmpty()) {
+            throw ForeignKeyConstraintException(
+                "Cannot delete base (ID=$id) due to existing relationships.",
+            )
+        }
+    }
+
     companion object {
         /**
          * @param controlUnitResourceModels Return control unit resources relations when provided.
@@ -47,7 +57,7 @@ data class BaseModel(
         ): BaseModel {
             return BaseModel(
                 id = base.id,
-                controlUnitResources = controlUnitResourceModels,
+                controlUnitResources = controlUnitResourceModels ?: listOf(),
                 latitude = base.latitude,
                 longitude = base.longitude,
                 name = base.name,
@@ -63,7 +73,7 @@ data class BaseModel(
         ): BaseModel {
             return BaseModel(
                 id = fullBase.base.id,
-                controlUnitResources = controlUnitResourceModels,
+                controlUnitResources = controlUnitResourceModels ?: listOf(),
                 latitude = fullBase.base.latitude,
                 longitude = fullBase.base.longitude,
                 name = fullBase.base.name,
@@ -81,9 +91,11 @@ data class BaseModel(
     }
 
     fun toFullBase(): FullBaseDTO {
+        val controlUnitResourceModels = controlUnitResources
+
         return FullBaseDTO(
             base = toBase(),
-            controlUnitResources = requireNotNull(controlUnitResources).map { it.toControlUnitResource() },
+            controlUnitResources = controlUnitResourceModels.map { it.toControlUnitResource() },
         )
     }
 }

@@ -1,6 +1,7 @@
 import { FrontendError } from '../../../libs/FrontendError'
 import { archiveAdministration } from '../../Administration/useCases/archiveAdministration'
 import { deleteAdministration } from '../../Administration/useCases/deleteAdministration'
+import { deleteBase } from '../../Base/useCases/deleteBase'
 import { archiveControlUnit } from '../../ControlUnit/usesCases/archiveControlUnit'
 import { deleteControlUnit } from '../../ControlUnit/usesCases/deleteControlUnit'
 import { backOfficeActions } from '../slice'
@@ -25,6 +26,10 @@ export const handleModalConfirmation = (): AppThunk<void> => async (dispatch, ge
 
     case BackOfficeConfirmationModalActionType.DELETE_ADMINISTRATION:
       await dispatch(deleteAdministration())
+      break
+
+    case BackOfficeConfirmationModalActionType.DELETE_BASE:
+      await dispatch(deleteBase())
       break
 
     case BackOfficeConfirmationModalActionType.DELETE_CONTROL_UNIT:

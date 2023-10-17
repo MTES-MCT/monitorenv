@@ -2,17 +2,20 @@ import { DataTable } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { BASE_TABLE_COLUMNS } from './constants'
 import { FilterBar } from './FilterBar'
-import { getFilters } from './utils'
+import { getBaseTableColumns, getFilters } from './utils'
 import { useGetBasesQuery } from '../../../../api/basesAPI'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { NavButton } from '../../../../ui/NavButton'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../../BackOfficeMenu/constants'
 
 export function BaseTable() {
   const backOfficeBaseList = useAppSelector(store => store.backOfficeBaseList)
+  const dispatch = useAppDispatch()
   const { data: bases } = useGetBasesQuery()
+
+  const baseTableColumns = useMemo(() => getBaseTableColumns(dispatch), [dispatch])
 
   const filteredBases = useMemo(() => {
     if (!bases) {
@@ -34,7 +37,7 @@ export function BaseTable() {
         <NavButton to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.BASE_LIST]}/new`}>Nouvelle base</NavButton>
       </ActionGroup>
 
-      <DataTable columns={BASE_TABLE_COLUMNS} data={filteredBases} initialSorting={[{ desc: false, id: 'name' }]} />
+      <DataTable columns={baseTableColumns} data={filteredBases} initialSorting={[{ desc: false, id: 'name' }]} />
     </>
   )
 }

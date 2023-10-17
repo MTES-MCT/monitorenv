@@ -31,7 +31,7 @@
     "test:unit:watch": "npm run test:unit -- --watch"
   },
   "dependencies": {
-    "@mtes-mct/monitor-ui": "10.4.0",
+    "@mtes-mct/monitor-ui": "10.5.0",
     "@reduxjs/toolkit": "1.9.5",
     "@rsuite/responsive-nav": "5.0.1",
     "@sentry/browser": "7.73.0",
@@ -74,6 +74,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@faker-js/faker": "8.2.0",
     "@jest/globals": "29.7.0",
     "@storybook/addon-actions": "7.1.1",
     "@storybook/addon-essentials": "7.1.1",

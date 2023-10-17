@@ -1,12 +1,19 @@
-import { Accent, Button, DataTable, FormikNumberInput, FormikTextInput } from '@mtes-mct/monitor-ui'
+import {
+  Accent,
+  Button,
+  CoordinatesFormat,
+  DataTable,
+  FormikCoordinatesInput,
+  FormikTextInput
+} from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Formik } from 'formik'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import styled from 'styled-components'
 
 import { INITIAL_BASE_FORM_VALUES, BASE_FORM_SCHEMA } from './constants'
-import { isBase } from './utils'
+import { getBaseFormValuesFromBase, getBaseDataFromBaseFormValues, isBase } from './utils'
 import { basesAPI, useGetBaseQuery } from '../../../../api/basesAPI'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../../libs/FrontendError'
@@ -14,7 +21,6 @@ import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../../BackOfficeMen
 import { CONTROL_UNIT_RESOURCE_TABLE_COLUMNS } from '../../../ControlUnit/components/ControlUnitForm/constants'
 
 import type { BaseFormValues } from './types'
-import type { Base } from '../../../../domain/entities/base'
 
 export function BaseForm() {
   const { baseId } = useParams()
@@ -28,7 +34,13 @@ export function BaseForm() {
   const navigate = useNavigate()
   const { data: base } = useGetBaseQuery(isNew ? skipToken : Number(baseId))
 
-  const initialValues: BaseFormValues | undefined = isNew ? INITIAL_BASE_FORM_VALUES : base || undefined
+  const initialValues: BaseFormValues | undefined = useMemo(() => {
+    if (isNew) {
+      return INITIAL_BASE_FORM_VALUES
+    }
+
+    return base ? getBaseFormValuesFromBase(base) : undefined
+  }, [base, isNew])
 
   const goBackToList = useCallback(() => {
     navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.BASE_LIST]}`)
@@ -36,8 +48,7 @@ export function BaseForm() {
 
   const submit = useCallback(
     async (baseFormValues: BaseFormValues) => {
-      // Type-enforced by `BASE_FORM_SCHEMA`
-      const baseData = baseFormValues as Base.BaseData
+      const baseData = getBaseDataFromBaseFormValues(baseFormValues)
 
       if (isNew) {
         await dispatch(basesAPI.endpoints.createBase.initiate(baseData))
@@ -68,9 +79,11 @@ export function BaseForm() {
           {({ handleSubmit }) => (
             <Form onSubmit={handleSubmit}>
               <FormikTextInput label="Nom" name="name" />
-              {/* TODO Use `FormikCoordinatesInput` here after fixing `FormikCoordinatesInput.type` typing error in MUI including it in `cy.fill()` command. */}
-              <FormikNumberInput label="Latitude" name="latitude" step="any" />
-              <FormikNumberInput label="Longitude" name="longitude" step="any" />
+              <FormikCoordinatesInput
+                coordinatesFormat={CoordinatesFormat.DECIMAL_DEGREES}
+                label="Coordonnées"
+                name="coordinates"
+              />
 
               <ActionGroup>
                 <Button accent={Accent.SECONDARY} onClick={goBackToList}>

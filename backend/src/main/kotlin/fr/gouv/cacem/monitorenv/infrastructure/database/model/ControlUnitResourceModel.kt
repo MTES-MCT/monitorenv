@@ -19,13 +19,12 @@ data class ControlUnitResourceModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null,
 
-    // TODO Make that non-nullable once all resources will have been attached to a base.
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "base_id", nullable = false)
     @JsonBackReference
     val base: BaseModel,
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "control_unit_id", nullable = false)
     @JsonBackReference
     val controlUnit: ControlUnitModel,

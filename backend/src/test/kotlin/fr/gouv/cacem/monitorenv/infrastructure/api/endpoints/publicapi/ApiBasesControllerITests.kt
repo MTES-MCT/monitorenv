@@ -6,6 +6,7 @@ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.base.CreateOrUpdateBase
+import fr.gouv.cacem.monitorenv.domain.use_cases.base.DeleteBase
 import fr.gouv.cacem.monitorenv.domain.use_cases.base.GetBaseById
 import fr.gouv.cacem.monitorenv.domain.use_cases.base.GetBases
 import fr.gouv.cacem.monitorenv.domain.use_cases.base.dtos.FullBaseDTO
@@ -33,6 +34,9 @@ class ApiBasesControllerITests {
 
     @MockBean
     private lateinit var createOrUpdateBase: CreateOrUpdateBase
+
+    @MockBean
+    private lateinit var deleteBase: DeleteBase
 
     @MockBean
     private lateinit var getBaseById: GetBaseById

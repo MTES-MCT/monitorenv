@@ -17,7 +17,6 @@ data class AdministrationModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null,
 
-    // TODO This shouldn't be nullable but there because of `MissionControlUnitModel.fromControlUnitEntity()`.
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "administration")
     @JsonManagedReference
     val controlUnits: List<ControlUnitModel>? = mutableListOf(),
