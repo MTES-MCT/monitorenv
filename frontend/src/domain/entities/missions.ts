@@ -292,6 +292,10 @@ export type NewEnvActionControl = EnvActionCommonProperties & {
   actionTargetType?: string
   actionType: ActionTypeEnum.CONTROL
   infractions: Infraction[]
+  isAdministrativeControl?: boolean
+  isComplianceWithWaterRegulationsControl?: boolean
+  isSafetyEquipmentAndStandardsComplianceControl?: boolean
+  isSeafarersControl?: boolean
   observations: string | null
   themes: EnvActionTheme[]
   vehicleType?: string

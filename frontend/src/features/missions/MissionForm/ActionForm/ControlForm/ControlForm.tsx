@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import {
+  FormikCheckbox,
   FormikDatePicker,
   FormikNumberInput,
   FormikTextarea,
@@ -199,7 +200,26 @@ export function ControlForm({
           )}
           validateOnChange={false}
         />
-        <FormikTextarea isLight label="Observations" name={`envActions[${currentActionIndex}].observations`} />
+        <StyledFormikTextareaWithMargin
+          isLight
+          label="Observations"
+          name={`envActions[${currentActionIndex}].observations`}
+        />
+
+        <Label>Autre(s) contrôle(s) effectué(s) par l’unité sur le navire</Label>
+        <StyledFormikCheckbox
+          label="Contrôle administratif"
+          name={`envActions[${currentActionIndex}].isAdministrativeControl`}
+        />
+        <StyledFormikCheckbox
+          label="Respect du code de la navigation sur le plan d’eau"
+          name={`envActions[${currentActionIndex}].isComplianceWithWaterRegulationsControl`}
+        />
+        <StyledFormikCheckbox label="Gens de mer" name={`envActions[${currentActionIndex}].isSeafarersControl`} />
+        <StyledFormikCheckbox
+          label="Equipement de sécurité et respect des normes"
+          name={`envActions[${currentActionIndex}].isSafetyEquipmentAndStandardsComplianceControl`}
+        />
       </FormBody>
     </>
   )
@@ -212,12 +232,20 @@ const Header = styled.div`
 const FormBody = styled.div`
   display: flex;
   flex-direction: column;
+  padding-bottom: 48px;
 `
 const Title = styled.h2`
   font-size: 16px;
   line-height: 22px;
   display: inline-block;
   color: ${p => p.theme.color.charcoal};
+`
+const Label = styled.span`
+  margin-top: 24px;
+  font-size: 13px;
+  line-height: 22px;
+  display: inline-block;
+  color: ${p => p.theme.color.slateGray};
 `
 
 const Separator = styled.hr`
@@ -253,4 +281,16 @@ const DeleteIcon = styled(DeleteSVG)`
 
 const IconButtonRight = styled(IconButton)`
   margin-left: auto;
+`
+
+const StyledFormikCheckbox = styled(FormikCheckbox)`
+  height: 50px;
+  background-color: ${p => p.theme.color.white};
+  margin-bottom: 4px;
+  justify-content: center;
+  padding: 16px;
+`
+
+const StyledFormikTextareaWithMargin = styled(FormikTextarea)`
+  margin-top: 24px;
 `

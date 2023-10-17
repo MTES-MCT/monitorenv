@@ -203,4 +203,39 @@ context('Mission dates', () => {
       expect(response && response.statusCode).equal(200)
     })
   })
+
+  it('save other control actions', () => {
+    // Given
+    cy.get('*[data-cy="edit-mission-41"]').click({ force: true })
+    cy.get('*[data-cy="action-card"]').eq(0).click()
+
+    // When
+    cy.fill('Contrôle administratif', false)
+    cy.fill('Respect du code de la navigation sur le plan d’eau', false)
+    cy.fill('Gens de mer', false)
+    cy.fill('Equipement de sécurité et respect des normes', false)
+
+    cy.intercept('PUT', `/bff/v1/missions/41`).as('updateMission')
+    cy.get('form').submit()
+
+    // Then
+    cy.wait('@updateMission').then(({ request, response }) => {
+      expect(response && response.statusCode).equal(200)
+
+      const controlAction = request.body.envActions[0]
+      expect(controlAction.isAdministrativeControl).equal(false)
+      expect(controlAction.isComplianceWithWaterRegulationsControl).equal(false)
+      expect(controlAction.isSeafarersControl).equal(false)
+      expect(controlAction.isSafetyEquipmentAndStandardsComplianceControl).equal(false)
+    })
+
+    // Revert
+    cy.get('*[data-cy="edit-mission-41"]').click({ force: true })
+    cy.get('*[data-cy="action-card"]').eq(0).click()
+    cy.fill('Contrôle administratif', true)
+    cy.fill('Respect du code de la navigation sur le plan d’eau', true)
+    cy.fill('Gens de mer', true)
+    cy.fill('Equipement de sécurité et respect des normes', true)
+    cy.get('form').submit()
+  })
 })
