@@ -26,7 +26,7 @@ export function AttachMission({ setIsAttachNewMission }) {
   }
 
   const unattachMission = () => {
-    dispatch(attachMissionToReportingSliceActions.resetAttachMissionState())
+    setFieldValue('detachedFromMissionAtUtc', new Date().toISOString())
   }
 
   const createMission = async () => {
@@ -40,10 +40,12 @@ export function AttachMission({ setIsAttachNewMission }) {
     if (missionId !== values.missionId) {
       setFieldValue('missionId', missionId)
       setFieldValue('attachedMission', attachedMission)
+      setFieldValue('attachedToMissionAtUtc', new Date().toISOString())
+      setFieldValue('detachedFromMissionAtUtc', undefined)
     }
   }, [missionId, setFieldValue, dispatch, values.missionId, attachedMission])
 
-  return !values.missionId ? (
+  return !values.missionId || (values.missionId && values.detachedFromMissionAtUtc) ? (
     <ButtonsContainer>
       <Button
         accent={Accent.SECONDARY}

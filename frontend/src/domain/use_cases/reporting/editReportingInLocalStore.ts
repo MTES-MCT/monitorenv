@@ -41,6 +41,10 @@ export const editReportingInLocalStore =
 
       await dispatch(reportingActions.setReporting(newReporting))
       await dispatch(reportingActions.setActiveReportingId(reportingId))
+      if (newReporting.reporting.attachedMission) {
+        dispatch(attachMissionToReportingSliceActions.setAttachedMission(newReporting.reporting.attachedMission))
+        dispatch(attachMissionToReportingSliceActions.setMissionId(newReporting.reporting.missionId))
+      }
     } catch (error) {
       dispatch(setToast({ message: error }))
     }

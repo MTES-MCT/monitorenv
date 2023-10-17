@@ -116,7 +116,12 @@ export const Columns = [
   },
   {
     accessorFn: row => row.missionId,
-    cell: info => <CellAttachedtoMission missionId={info.getValue()} />,
+    cell: ({ row }) => (
+      <CellAttachedtoMission
+        detachedFromMissionAtUtc={row.original.detachedFromMissionAtUtc}
+        missionId={row.original.missionId}
+      />
+    ),
     enableSorting: false,
     header: () => '',
     id: 'missionId',
@@ -127,6 +132,7 @@ export const Columns = [
     cell: ({ row }) => (
       <CellActionStatus
         controlStatus={row.original.controlStatus}
+        detachedFromMissionAtUtc={row.original.detachedFromMissionAtUtc}
         isControlRequired={row.original.isControlRequired}
         missionId={row.original.missionId}
       />
