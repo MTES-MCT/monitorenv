@@ -41,7 +41,7 @@ context('Missions', () => {
     cy.log('Units should be filtered')
     cy.get('*[data-cy="edit-mission-38"]').should('exist')
     cy.get('*[data-cy="select-units-filter"]').click()
-    cy.get('div[role="option"]').find('label').contains('Cross Etel').click()
+    cy.get('div[role="option"]').find('label').contains('PAM Themis').click({ force: true })
     cy.get('*[data-cy="edit-mission-48"]').should('exist')
     cy.get('*[data-cy="edit-mission-38"]').should('not.exist')
 
