@@ -6,7 +6,6 @@ import fr.gouv.cacem.monitorenv.domain.repositories.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.time.ZonedDateTime
 
 @UseCase
 class CreateOrUpdateReporting(
@@ -29,23 +28,10 @@ class CreateOrUpdateReporting(
             seaFront = facadeRepository.findFacadeFromGeometry(reporting.geom)
         }
 
-        var attachedToMissionAtUtc: ZonedDateTime? = null
-        var detachedFromMissionAtUtc: ZonedDateTime? = null
-        if (reporting.missionId != null && reporting.attachedToMissionAtUtc == null) {
-            attachedToMissionAtUtc = ZonedDateTime.now()
-            detachedFromMissionAtUtc = null
-        }
-
-        if (reporting.missionId == null && reporting.attachedToMissionAtUtc != null) {
-            detachedFromMissionAtUtc = ZonedDateTime.now()
-        }
-
         val savedReport =
             reportingRepository.save(
                 reporting.copy(
                     seaFront = seaFront,
-                    attachedToMissionAtUtc = attachedToMissionAtUtc,
-                    detachedFromMissionAtUtc = detachedFromMissionAtUtc,
                 ),
             )
 

@@ -116,6 +116,7 @@ class JpaReportingRepository(
     }
 
     @Transactional
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     override fun delete(reportingId: Int) {
         dbReportingRepository.delete(reportingId)
     }
@@ -125,16 +126,19 @@ class JpaReportingRepository(
     }
 
     @Transactional
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     override fun archiveOutdatedReportings(): Int {
         return dbReportingRepository.archiveOutdatedReportings()
     }
 
     @Transactional
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     override fun archiveReportings(ids: List<Int>) {
         dbReportingRepository.archiveReportings(ids)
     }
 
     @Transactional
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     override fun deleteReportings(ids: List<Int>) {
         dbReportingRepository.deleteReportings(ids)
     }

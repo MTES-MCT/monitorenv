@@ -156,9 +156,25 @@ data class MissionModel(
     fun toMissionDTO(objectMapper: ObjectMapper): MissionDTO {
         return MissionDTO(
             mission = this.toMissionEntity(objectMapper),
-            attachedReportingIds = this.attachedReportings?.map { it.id as Int } ?: listOf(),
+            attachedReportingIds =
+            this.attachedReportings
+                ?.filter { it.detachedFromMissionAtUtc == null }
+                ?.map { it.id as Int }
+                ?: listOf(),
             attachedReportings =
-            this.attachedReportings?.map { it.toReportingDTO(objectMapper) }
+            this.attachedReportings
+                ?.filter { it.detachedFromMissionAtUtc == null }
+                ?.map { it.toReportingDTO(objectMapper) }
+                ?: listOf(),
+            detachedReportings =
+            this.attachedReportings
+                ?.filter { it.detachedFromMissionAtUtc != null }
+                ?.map { it.toReportingDTO(objectMapper) }
+                ?: listOf(),
+            detachedReportingIds =
+            this.attachedReportings
+                ?.filter { it.detachedFromMissionAtUtc != null }
+                ?.map { it.id as Int }
                 ?: listOf(),
         )
     }
