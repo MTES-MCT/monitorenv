@@ -29,6 +29,10 @@ object EnvActionMapper {
         facade: String?,
         department: String?,
         value: String?,
+        isAdministrativeControl: Boolean?,
+        isComplianceWithWaterRegulationsControl: Boolean?,
+        isSeafarersControl: Boolean?,
+        isSafetyEquipmentAndStandardsComplianceControl: Boolean?,
     ): EnvActionEntity {
         return try {
             if (!value.isNullOrEmpty() && value != jsonbNullString) {
@@ -67,6 +71,7 @@ object EnvActionMapper {
             throw EntityConversionException("Error while converting 'action'. $value", e)
         }
     }
+
     fun envActionEntityToJSON(mapper: ObjectMapper, envAction: EnvActionEntity): String {
         return try {
             when (envAction.actionType) {

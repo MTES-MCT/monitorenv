@@ -1,4 +1,5 @@
 package fr.gouv.cacem.monitorenv.domain.entities.mission
+
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import org.locationtech.jts.geom.Geometry
@@ -24,4 +25,8 @@ abstract class EnvActionEntity(
     open val department: String? = null,
     open val facade: String? = null,
     open val geom: Geometry? = null,
+    open val isAdministrativeControl: Boolean? = null,
+    open val isComplianceWithWaterRegulationsControl: Boolean? = null,
+    open val isSafetyEquipmentAndStandardsComplianceControl: Boolean? = null,
+    open val isSeafarersControl: Boolean? = null,
 )

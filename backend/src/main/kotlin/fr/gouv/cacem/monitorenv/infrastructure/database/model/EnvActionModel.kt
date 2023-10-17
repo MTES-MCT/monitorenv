@@ -60,8 +60,10 @@ data class EnvActionModel(
     @Type(JsonBinaryType::class)
     @Column(name = "value", columnDefinition = "jsonb")
     val value: String,
+
     @Column(name = "facade")
     val facade: String? = null,
+
     @Column(name = "department")
     val department: String? = null,
 
@@ -69,6 +71,18 @@ data class EnvActionModel(
     @JoinColumn(name = "mission_id")
     @JsonBackReference
     val mission: MissionModel,
+
+    @Column(name = "is_administrative_control")
+    val isAdministrativeControl: Boolean? = null,
+
+    @Column(name = "is_compliance_with_water_regulations_control")
+    val isComplianceWithWaterRegulationsControl: Boolean? = null,
+
+    @Column(name = "is_safety_equipment_and_standards_compliance_control")
+    val isSafetyEquipmentAndStandardsComplianceControl: Boolean? = null,
+
+    @Column(name = "is_seafarers_control")
+    val isSeafarersControl: Boolean? = null,
 ) {
 
     fun toActionEntity(mapper: ObjectMapper): EnvActionEntity {
@@ -82,6 +96,10 @@ data class EnvActionModel(
             facade,
             department,
             value,
+            isAdministrativeControl,
+            isComplianceWithWaterRegulationsControl,
+            isSafetyEquipmentAndStandardsComplianceControl,
+            isSeafarersControl,
         )
     }
     companion object {
@@ -95,6 +113,10 @@ data class EnvActionModel(
             value = EnvActionMapper.envActionEntityToJSON(mapper, action),
             mission = mission,
             geom = action.geom,
+            isAdministrativeControl = action.isAdministrativeControl,
+            isComplianceWithWaterRegulationsControl = action.isComplianceWithWaterRegulationsControl,
+            isSafetyEquipmentAndStandardsComplianceControl = action.isSafetyEquipmentAndStandardsComplianceControl,
+            isSeafarersControl = action.isSeafarersControl,
         )
     }
 
@@ -110,6 +132,6 @@ data class EnvActionModel(
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , geom = $geom , actionStartDateTime = $actionStartDateTime, actionEndDateTime = $actionEndDateTime, actionType = $actionType , value = $value )"
+        return this::class.simpleName + "(id = $id , geom = $geom , actionStartDateTime = $actionStartDateTime, actionEndDateTime = $actionEndDateTime, actionType = $actionType , value = $value, facade = $facade, department = $department, isAdministrativeControl = $isAdministrativeControl, isComplianceWithWaterRegulationsControl = $isComplianceWithWaterRegulationsControl, isSeafarersControl = $isSeafarersControl, isSafetyEquipmentAndStandardsComplianceControl = $isSafetyEquipmentAndStandardsComplianceControl )"
     }
 }
