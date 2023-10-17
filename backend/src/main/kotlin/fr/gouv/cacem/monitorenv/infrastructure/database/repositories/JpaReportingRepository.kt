@@ -9,6 +9,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBEnvActionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBReportingRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBSemaphoreRepository
@@ -27,6 +28,7 @@ class JpaReportingRepository(
         private val dbMissionRepository: IDBMissionRepository,
         private val dbSemaphoreRepository: IDBSemaphoreRepository,
         private val dbControlUnitRepository: IDBControlUnitRepository,
+        private val dbEnvActionRepository: IDBEnvActionRepository,
         private val mapper: ObjectMapper,
 ) : IReportingRepository {
 
@@ -103,12 +105,22 @@ class JpaReportingRepository(
                     } else {
                         null
                     }
+            val envActionReference =
+                    if (reporting.attachedEnvActionId != null) {
+                        dbEnvActionRepository.getReferenceById(
+                                reporting.attachedEnvActionId,
+                        )
+                    } else {
+                        null
+                    }
+
             val reportingModel =
                     ReportingModel.fromReportingEntity(
                             reporting = reporting,
                             semaphoreReference = semaphoreReference,
                             controlUnitReference = controlUnitReference,
                             missionReference = missionReference,
+                            envActionReference = envActionReference,
                     )
             dbReportingRepository.saveAndFlush(reportingModel).toReportingDTO(mapper)
         } catch (e: JpaObjectRetrievalFailureException) {

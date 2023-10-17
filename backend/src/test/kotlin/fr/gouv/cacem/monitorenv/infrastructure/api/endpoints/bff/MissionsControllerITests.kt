@@ -10,14 +10,14 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEnt
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMissionWithAttachedReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetEngagedControlUnits
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionById
@@ -25,6 +25,8 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMonitorEnvMissions
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.EnvActionAttachedToReportingIds
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.MissionEnvActionDataInput
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
@@ -56,7 +58,7 @@ class MissionsControllerITests {
     private lateinit var mockMvc: MockMvc
 
     @MockBean
-    private lateinit var createOrUpdateMission: CreateOrUpdateMission
+    private lateinit var createOrUpdateMissionWithAttachedReporting: CreateOrUpdateMissionWithAttachedReporting
 
     @MockBean
     private lateinit var getMonitorEnvMissions: GetMonitorEnvMissions
@@ -108,7 +110,13 @@ class MissionsControllerITests {
             missionSource = MissionSourceEnum.MONITORENV,
         )
         val requestbody = objectMapper.writeValueAsString(newMissionRequest)
-        given(createOrUpdateMission.execute(newMissionRequest.toMissionEntity(), null)).willReturn(expectedNewMission)
+        given(
+            createOrUpdateMissionWithAttachedReporting.execute(
+                mission = newMissionRequest.toMissionEntity(),
+                attachedReportingIds = null,
+                envActionsAttachedToReportingIds = listOf(),
+            ),
+        ).willReturn(expectedNewMission)
         // When
         mockMvc.perform(
             put("/bff/v1/missions")
@@ -290,11 +298,14 @@ class MissionsControllerITests {
                 isGeometryComputedFromControls = false,
             ),
         )
-        val envAction = EnvActionControlEntity(
+        val envAction = MissionEnvActionDataInput(
             id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
+            actionType = ActionTypeEnum.CONTROL,
+            actionStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             actionTargetType = ActionTargetTypeEnum.VEHICLE,
             vehicleType = VehicleTypeEnum.VESSEL,
             actionNumberOfControls = 4,
+            reportingIds = listOf(1),
         )
         val requestBody = CreateOrUpdateMissionDataInput(
             id = 14,
@@ -304,8 +315,19 @@ class MissionsControllerITests {
             envActions = listOf(envAction),
             missionSource = MissionSourceEnum.MONITORENV,
             isClosed = false,
+            attachedReportingIds = listOf(1),
         )
-        given(createOrUpdateMission.execute(requestBody.toMissionEntity(), null)).willReturn(expectedUpdatedMission)
+
+        val envActionsAttachedToReportingIds = listOf(
+            Pair(UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"), listOf(1)),
+        ) as List<EnvActionAttachedToReportingIds>
+        given(
+            createOrUpdateMissionWithAttachedReporting.execute(
+                mission = requestBody.toMissionEntity(),
+                attachedReportingIds = listOf(1),
+                envActionsAttachedToReportingIds = envActionsAttachedToReportingIds,
+            ),
+        ).willReturn(expectedUpdatedMission)
         // When
         mockMvc.perform(
             put("/bff/v1/missions/14")
