@@ -12,8 +12,6 @@ VALUES
     (10006,              1005,       false,                                 'SML 33'),
     (10007,              1005,       false,                                 'SML 50'),
     (10008,              1005,       false,             'Police de l''eau – DDTM 11'),
-    (10009,              1009,       false,                      'PAM Jeanne Barret'),
-    (10010,              1009,       false,                             'PAM Themis'),
     (10011,              1009,       false,                             'Cross Etel'),
     (10012,              1009,       false,                         'Cross Gris Nez'),
     (10013,                 2,        true,                            'BGC Ajaccio'),
@@ -37,7 +35,13 @@ VALUES
     (10031,              1004,       false,               'Réserve Naturelle 7 Iles'),
     (10032,              1005,       false,             'Cultures marines – DDTM 30');
 
-SELECT setval('control_units_id_seq', 10032, true);
+INSERT INTO public.control_units(
+    id, administration_id,                    name) VALUES
+    (         10121,              1009,     'PAM Jeanne Barret'),
+    (         10080,              1009,            'PAM Themis');
+
+
+SELECT setval('control_units_id_seq', (SELECT max(id) FROM control_units), true);
 
 INSERT INTO public.control_unit_contacts
     (   id, control_unit_id,           name)
@@ -58,8 +62,8 @@ VALUES
     (    5,             10002,               'Voiture',       3,             'CAR'),
     (    6,             10003,             'AR VECHEN',       2,         'FRIGATE'),
     (    7,             10003,           'Semi-rigide',       3,           'BARGE'),
-    (    8,             10010,     'PAM Jeanne Barret',       3,         'FRIGATE'),
-    (    9,             10011,            'PAM Themis',       3,         'FRIGATE'),
+    (    8,             10121,     'PAM Jeanne Barret',       3,         'FRIGATE'),
+    (    9,             10080,            'PAM Themis',       3,         'FRIGATE'),
     (   10,             10018,                'ALTAIR',       3,         'FRIGATE'),
     (   11,             10018,              'PHEROUSA',       3,         'FRIGATE'),
     (   12,             10018,                'ARIOLA',       3,         'FRIGATE');

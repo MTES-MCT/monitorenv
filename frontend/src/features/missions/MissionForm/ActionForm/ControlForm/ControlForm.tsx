@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import {
-  FormikCheckbox,
   FormikDatePicker,
   FormikNumberInput,
   FormikTextarea,
@@ -14,6 +13,7 @@ import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { InfractionsForm } from './InfractionsForm'
+import { OtherControlTypesForm } from './OtherControlTypesForm'
 import { TargetTypeEnum, TargetTypeLabels } from '../../../../../domain/entities/targetType'
 import { VehicleTypeEnum } from '../../../../../domain/entities/vehicleType'
 import { ReactComponent as ControlIconSVG } from '../../../../../uiMonitor/icons/Control.svg'
@@ -205,21 +205,7 @@ export function ControlForm({
           label="Observations"
           name={`envActions[${currentActionIndex}].observations`}
         />
-
-        <Label>Autre(s) contrôle(s) effectué(s) par l’unité sur le navire</Label>
-        <StyledFormikCheckbox
-          label="Contrôle administratif"
-          name={`envActions[${currentActionIndex}].isAdministrativeControl`}
-        />
-        <StyledFormikCheckbox
-          label="Respect du code de la navigation sur le plan d’eau"
-          name={`envActions[${currentActionIndex}].isComplianceWithWaterRegulationsControl`}
-        />
-        <StyledFormikCheckbox label="Gens de mer" name={`envActions[${currentActionIndex}].isSeafarersControl`} />
-        <StyledFormikCheckbox
-          label="Equipement de sécurité et respect des normes"
-          name={`envActions[${currentActionIndex}].isSafetyEquipmentAndStandardsComplianceControl`}
-        />
+        <OtherControlTypesForm currentActionIndex={currentActionIndex} />
       </FormBody>
     </>
   )
@@ -239,13 +225,6 @@ const Title = styled.h2`
   line-height: 22px;
   display: inline-block;
   color: ${p => p.theme.color.charcoal};
-`
-const Label = styled.span`
-  margin-top: 24px;
-  font-size: 13px;
-  line-height: 22px;
-  display: inline-block;
-  color: ${p => p.theme.color.slateGray};
 `
 
 const Separator = styled.hr`
@@ -281,14 +260,6 @@ const DeleteIcon = styled(DeleteSVG)`
 
 const IconButtonRight = styled(IconButton)`
   margin-left: auto;
-`
-
-const StyledFormikCheckbox = styled(FormikCheckbox)`
-  height: 50px;
-  background-color: ${p => p.theme.color.white};
-  margin-bottom: 4px;
-  justify-content: center;
-  padding: 16px;
 `
 
 const StyledFormikTextareaWithMargin = styled(FormikTextarea)`
