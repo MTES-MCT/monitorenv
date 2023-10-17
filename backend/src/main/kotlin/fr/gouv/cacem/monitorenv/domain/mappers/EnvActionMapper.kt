@@ -1,14 +1,14 @@
 package fr.gouv.cacem.monitorenv.domain.mappers
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.EnvActionControlEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.EnvActionControlProperties
-import fr.gouv.cacem.monitorenv.domain.entities.mission.EnvActionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.EnvActionNoteEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.EnvActionNoteProperties
-import fr.gouv.cacem.monitorenv.domain.entities.mission.EnvActionSurveillanceEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.EnvActionSurveillanceProperties
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteProperties
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceProperties
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlProperties
 import fr.gouv.cacem.monitorenv.domain.exceptions.EntityConversionException
 import org.locationtech.jts.geom.Geometry
 import org.springframework.stereotype.Component

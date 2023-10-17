@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions
 
-
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import java.time.ZonedDateTime
 
@@ -12,7 +11,9 @@ data class MissionDetachedReportingDataOutput(
 ) {
     companion object {
         fun fromReporting(reporting: ReportingEntity): MissionDetachedReportingDataOutput {
-            requireNotNull(reporting.id) { "an attached reporting must have an id" }
+            requireNotNull(reporting.id) {
+                "an attached reporting must have an id"
+            }
             requireNotNull(reporting.reportingId) {
                 "an attached reporting must have a reportingId"
             }

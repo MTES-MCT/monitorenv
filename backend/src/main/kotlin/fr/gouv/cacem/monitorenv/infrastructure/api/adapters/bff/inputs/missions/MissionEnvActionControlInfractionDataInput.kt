@@ -6,7 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionContr
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.VesselSizeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.VesselTypeEnum
 
-data class InfractionDataInput(
+data class MissionEnvActionControlInfractionDataInput(
     val id: String,
     val natinf: List<String>? = listOf(),
     val observations: String? = null,
