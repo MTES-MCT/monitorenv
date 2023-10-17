@@ -17,8 +17,6 @@ INSERT INTO public.control_units (
     (             1005,                                 'SML 33'),
     (             1005,                                 'SML 50'),
     (             1005,             'Police de l''eau – DDTM 11'),
-    (             1009,                      'PAM Jeanne Barret'),
-    (             1009,                             'PAM Themis'),
     (             1009,                             'Cross Etel'),
     (             1009,                         'Cross Gris Nez'),
     (                2,                            'BGC Ajaccio'),
@@ -40,6 +38,13 @@ INSERT INTO public.control_units (
     (             1015,         'Police Municipale Le Marin 972'),
     (             1004, 'Réserve Naturelle  de L''Ilot M''Bouzi'),
     (             1004,               'Réserve Naturelle 7 Iles');
+
+INSERT INTO public.control_units(
+    id, administration_id,                    name) VALUES
+    (         10121,              1009,     'PAM Jeanne Barret'),
+    (         10080,              1009,            'PAM Themis');
+
+
 
 --
 -- Add historic control units

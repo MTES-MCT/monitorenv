@@ -203,4 +203,52 @@ context('Mission dates', () => {
       expect(response && response.statusCode).equal(200)
     })
   })
+
+  it('save other control actions', () => {
+    // Given
+    cy.get('*[data-cy="edit-mission-41"]').click({ force: true })
+    cy.get('*[data-cy="action-card"]').eq(0).click()
+
+    cy.get('*[data-cy="add-control-administration"]').click()
+    cy.get('.rs-picker-search-bar-input').type('DIRM{enter}')
+
+    cy.get('*[data-cy="add-control-unit"]').click()
+    cy.get('*[data-key="10080"]').click()
+    cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
+
+    // When
+    cy.fill('Contrôle administratif', false)
+    cy.fill('Respect du code de la navigation sur le plan d’eau', false)
+    cy.fill('Gens de mer', false)
+    cy.fill('Equipement de sécurité et respect des normes', false)
+
+    cy.intercept('PUT', `/bff/v1/missions/41`).as('updateMission')
+    cy.get('form').submit()
+
+    // Then
+    cy.wait('@updateMission').then(({ request, response }) => {
+      expect(response && response.statusCode).equal(200)
+
+      const controlActionRequest = request.body.envActions[0]
+      expect(controlActionRequest.isAdministrativeControl).equal(false)
+      expect(controlActionRequest.isComplianceWithWaterRegulationsControl).equal(false)
+      expect(controlActionRequest.isSeafarersControl).equal(false)
+      expect(controlActionRequest.isSafetyEquipmentAndStandardsComplianceControl).equal(false)
+
+      const controlActionResponse = response?.body.envActions[0]
+      expect(controlActionResponse.isAdministrativeControl).equal(false)
+      expect(controlActionResponse.isComplianceWithWaterRegulationsControl).equal(false)
+      expect(controlActionResponse.isSeafarersControl).equal(false)
+      expect(controlActionResponse.isSafetyEquipmentAndStandardsComplianceControl).equal(false)
+    })
+
+    // Revert
+    cy.get('*[data-cy="edit-mission-41"]').click({ force: true })
+    cy.get('*[data-cy="action-card"]').eq(0).click()
+    cy.fill('Contrôle administratif', true)
+    cy.fill('Respect du code de la navigation sur le plan d’eau', true)
+    cy.fill('Gens de mer', true)
+    cy.fill('Equipement de sécurité et respect des normes', true)
+    cy.get('form').submit()
+  })
 })

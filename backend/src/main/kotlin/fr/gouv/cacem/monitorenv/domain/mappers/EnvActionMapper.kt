@@ -29,6 +29,10 @@ object EnvActionMapper {
         facade: String?,
         department: String?,
         value: String?,
+        isAdministrativeControl: Boolean?,
+        isComplianceWithWaterRegulationsControl: Boolean?,
+        isSafetyEquipmentAndStandardsComplianceControl: Boolean?,
+        isSeafarersControl: Boolean?,
     ): EnvActionEntity {
         return try {
             if (!value.isNullOrEmpty() && value != jsonbNullString) {
@@ -54,6 +58,10 @@ object EnvActionMapper {
                         facade,
                         department,
                         geom,
+                        isAdministrativeControl,
+                        isComplianceWithWaterRegulationsControl,
+                        isSafetyEquipmentAndStandardsComplianceControl,
+                        isSeafarersControl,
                     )
                     ActionTypeEnum.NOTE -> mapper.readValue(
                         value,
@@ -67,6 +75,7 @@ object EnvActionMapper {
             throw EntityConversionException("Error while converting 'action'. $value", e)
         }
     }
+
     fun envActionEntityToJSON(mapper: ObjectMapper, envAction: EnvActionEntity): String {
         return try {
             when (envAction.actionType) {

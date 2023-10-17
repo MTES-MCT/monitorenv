@@ -158,21 +158,47 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
         assertThat(foundFullControlUnits[32]).isEqualTo(
             FullControlUnitDTO(
                 administration = AdministrationEntity(
-                    id = 1005,
+                    id = 1009,
                     isArchived = false,
-                    name = "DDTM",
+                    name = "DIRM / DM",
                 ),
                 controlUnit = ControlUnitEntity(
-                    id = 10032,
-                    administrationId = 1005,
+                    id = 10121,
+                    administrationId = 1009,
                     areaNote = null,
                     departmentAreaInseeCode = null,
                     isArchived = false,
-                    name = "Cultures marines – DDTM 30",
+                    name = "PAM Jeanne Barret",
                     termsNote = null,
                 ),
                 controlUnitContacts = listOf(),
-                controlUnitResources = listOf(),
+                controlUnitResources = listOf(
+                    FullControlUnitResourceDTO(
+                        base = BaseEntity(
+                            id = 3,
+                            name = "Dunkerque",
+                            latitude = 51.035534,
+                            longitude = 2.372845,
+                        ),
+                        controlUnit = ControlUnitEntity(
+                            id = 10121,
+                            administrationId = 1009,
+                            areaNote = null,
+                            isArchived = false,
+                            name = "PAM Jeanne Barret",
+                            termsNote = null,
+                        ),
+                        controlUnitResource = ControlUnitResourceEntity(
+                            id = 8,
+                            baseId = 3,
+                            controlUnitId = 10121,
+                            name = "PAM Jeanne Barret",
+                            note = null,
+                            photo = null,
+                            type = ControlUnitResourceType.FRIGATE,
+                        ),
+                    ),
+                ),
             ),
         )
     }
@@ -289,13 +315,13 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
 
         val createdControlUnit = jpaControlUnitRepository.save(newControlUnit)
 
-        assertThat(createdControlUnit).isEqualTo(newControlUnit.copy(id = 10033))
+        assertThat(createdControlUnit).isEqualTo(newControlUnit.copy(id = 10122))
 
         // ---------------------------------------------------------------------
         // Update
 
         val nextControlUnit = ControlUnitEntity(
-            id = 10033,
+            id = 10122,
             administrationId = 1,
             areaNote = "Updated Area Note",
             departmentAreaInseeCode = "85",
@@ -311,10 +337,10 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
         // ---------------------------------------------------------------------
         // Delete
 
-        jpaControlUnitRepository.deleteById(10033)
+        jpaControlUnitRepository.deleteById(10122)
 
         val controlUnitIds = jpaControlUnitRepository.findAll().map { requireNotNull(it.controlUnit.id) }.sorted()
 
-        assertThat(controlUnitIds).doesNotContain(10033)
+        assertThat(controlUnitIds).doesNotContain(10122)
     }
 }

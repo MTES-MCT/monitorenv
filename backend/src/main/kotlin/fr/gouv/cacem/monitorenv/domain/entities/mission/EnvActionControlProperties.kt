@@ -20,6 +20,10 @@ data class EnvActionControlProperties(
         facade: String?,
         department: String?,
         geom: Geometry?,
+        isAdministrativeControl: Boolean?,
+        isComplianceWithWaterRegulationsControl: Boolean?,
+        isSafetyEquipmentAndStandardsComplianceControl: Boolean?,
+        isSeafarersControl: Boolean?,
     ) = EnvActionControlEntity(
         id = id,
         actionStartDateTimeUtc = actionStartDateTimeUtc,
@@ -33,7 +37,12 @@ data class EnvActionControlProperties(
         actionTargetType = actionTargetType,
         vehicleType = vehicleType,
         infractions = infractions,
+        isAdministrativeControl = isAdministrativeControl,
+        isComplianceWithWaterRegulationsControl = isComplianceWithWaterRegulationsControl,
+        isSafetyEquipmentAndStandardsComplianceControl = isSafetyEquipmentAndStandardsComplianceControl,
+        isSeafarersControl = isSeafarersControl,
     )
+
     companion object {
         fun fromEnvActionControlEntity(envAction: EnvActionControlEntity) = EnvActionControlProperties(
             themes = envAction.themes,

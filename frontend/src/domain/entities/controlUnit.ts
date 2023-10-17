@@ -128,6 +128,14 @@ export namespace ControlUnit {
     TUGBOAT = 'Remorqueur'
   }
 
+  // List of PAM units identifiers
+  // 10141 PAM Gyptis
+  // 10404 PAM Iris
+  // 10121 PAM Jeanne Barret
+  // 10345 PAM Osiris
+  // 10080 PAM Themis
+  export const PAMControlUnitIds = [10141, 10404, 10121, 10345, 10080]
+
   // ---------------------------------------------------------------------------
   // Types
 

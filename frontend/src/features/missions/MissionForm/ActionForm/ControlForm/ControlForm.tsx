@@ -13,6 +13,7 @@ import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
 import { InfractionsForm } from './InfractionsForm'
+import { OtherControlTypesForm } from './OtherControlTypesForm'
 import { TargetTypeEnum, TargetTypeLabels } from '../../../../../domain/entities/targetType'
 import { VehicleTypeEnum } from '../../../../../domain/entities/vehicleType'
 import { ReactComponent as ControlIconSVG } from '../../../../../uiMonitor/icons/Control.svg'
@@ -199,7 +200,12 @@ export function ControlForm({
           )}
           validateOnChange={false}
         />
-        <FormikTextarea isLight label="Observations" name={`envActions[${currentActionIndex}].observations`} />
+        <StyledFormikTextareaWithMargin
+          isLight
+          label="Observations"
+          name={`envActions[${currentActionIndex}].observations`}
+        />
+        <OtherControlTypesForm currentActionIndex={currentActionIndex} />
       </FormBody>
     </>
   )
@@ -212,6 +218,7 @@ const Header = styled.div`
 const FormBody = styled.div`
   display: flex;
   flex-direction: column;
+  padding-bottom: 48px;
 `
 const Title = styled.h2`
   font-size: 16px;
@@ -253,4 +260,8 @@ const DeleteIcon = styled(DeleteSVG)`
 
 const IconButtonRight = styled(IconButton)`
   margin-left: auto;
+`
+
+const StyledFormikTextareaWithMargin = styled(FormikTextarea)`
+  margin-top: 24px;
 `

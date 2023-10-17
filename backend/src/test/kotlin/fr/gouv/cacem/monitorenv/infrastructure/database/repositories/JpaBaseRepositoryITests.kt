@@ -93,7 +93,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ControlUnitResourceEntity(
                         id = 8,
                         baseId = 3,
-                        controlUnitId = 10010,
+                        controlUnitId = 10121,
                         name = "PAM Jeanne Barret",
                         note = null,
                         photo = null,
@@ -102,7 +102,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ControlUnitResourceEntity(
                         id = 9,
                         baseId = 3,
-                        controlUnitId = 10011,
+                        controlUnitId = 10080,
                         name = "PAM Themis",
                         note = null,
                         photo = null,

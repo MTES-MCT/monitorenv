@@ -64,6 +64,12 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     facade = "Facade 1",
                     department = "Department 1",
                     geom = point,
+                    vehicleType = VehicleTypeEnum.VEHICLE_LAND,
+                    isAdministrativeControl = true,
+                    isComplianceWithWaterRegulationsControl = true,
+                    isSafetyEquipmentAndStandardsComplianceControl = true,
+                    isSeafarersControl = true,
+
                 ),
                 EnvActionSurveillanceEntity(
                     id = UUID.fromString("a6c4bd17-eb45-4504-ab15-7a18ea714a10"),
