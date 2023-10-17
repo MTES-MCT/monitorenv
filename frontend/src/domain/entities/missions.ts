@@ -6,6 +6,7 @@ import type { SeaFrontEnum } from './seaFrontType'
 
 export enum ActionTypeEnum {
   CONTROL = 'CONTROL',
+  DETACHED_REPORTING = 'DETACHED_REPORTING',
   NOTE = 'NOTE',
   REPORTING = 'REPORTING',
   SURVEILLANCE = 'SURVEILLANCE'
@@ -256,6 +257,8 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
   attachedReportings: ReportingDetailed[]
   closedBy: string
   controlUnits: LegacyControlUnit[]
+  detachedReportingIds?: number[]
+  detachedReportings?: []
   endDateTimeUtc?: string
   envActions: EnvAction[]
   facade: SeaFrontEnum

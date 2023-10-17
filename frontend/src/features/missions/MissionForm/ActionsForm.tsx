@@ -13,18 +13,19 @@ import { ReactComponent as SurveillanceSVG } from '../../../uiMonitor/icons/Obse
 import { ReactComponent as PlusSVG } from '../../../uiMonitor/icons/Plus.svg'
 import { actionFactory, getEnvActionsAndReportingsForTimeline } from '../Missions.helpers'
 
-import type { Reporting } from '../../../domain/entities/reporting'
+import type { DetachedReporting, Reporting } from '../../../domain/entities/reporting'
 
 export function ActionsForm({ currentActionIndex, setCurrentActionIndex }) {
   const { errors, setFieldValue, values } = useFormikContext<Partial<Mission | NewMission>>()
 
   const envActions = values?.envActions as EnvAction[]
   const attachedReportings = values?.attachedReportings as Reporting[]
+  const detachedReportings = values?.detachedReportings as DetachedReporting[]
   const isFirstSurveillanceAction = !envActions?.find(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
 
   const actions = useMemo(
-    () => getEnvActionsAndReportingsForTimeline(envActions, attachedReportings),
-    [envActions, attachedReportings]
+    () => getEnvActionsAndReportingsForTimeline(envActions, attachedReportings, detachedReportings),
+    [envActions, attachedReportings, detachedReportings]
   )
 
   const sortedActions = useMemo(
@@ -116,14 +117,18 @@ export function ActionsForm({ currentActionIndex, setCurrentActionIndex }) {
       </TitleWrapper>
       <ActionsTimeline>
         {sortedActions ? (
-          sortedActions.map(action => {
-            const index = envActions?.findIndex(a => a.id === action.id)
+          sortedActions.map((action, index) => {
+            const envActionsIndex = envActions?.findIndex(a => a.id === action.id)
             const envActionsErrors =
-              errors?.envActions && index !== undefined && index >= 0 && errors?.envActions[index]
+              errors?.envActions &&
+              envActionsIndex !== undefined &&
+              envActionsIndex >= 0 &&
+              errors?.envActions[envActionsIndex]
 
             return (
               <ActionCards
-                key={action.id}
+                // eslint-disable-next-line react/no-array-index-key
+                key={index}
                 action={action}
                 duplicateAction={() => handleDuplicateAction(action.id)}
                 hasError={!!envActionsErrors}

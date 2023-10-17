@@ -11,9 +11,7 @@ data class MissionDetachedReportingDataOutput(
 ) {
     companion object {
         fun fromReporting(reporting: ReportingEntity): MissionDetachedReportingDataOutput {
-            requireNotNull(reporting.id) {
-                "an attached reporting must have an id"
-            }
+            requireNotNull(reporting.id) { "an attached reporting must have an id" }
             requireNotNull(reporting.reportingId) {
                 "an attached reporting must have a reportingId"
             }

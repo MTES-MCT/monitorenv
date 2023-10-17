@@ -173,7 +173,7 @@ export function ReportingCard({
       <StatusTag
         controlStatus={controlStatus}
         isArchived={timeLeft < 0 || isArchived}
-        isAttachToMission={!!missionId || (missionId && !detachedFromMissionAtUtc)}
+        isAttachToMission={missionId && !detachedFromMissionAtUtc}
       />
       {!isOnlyHoverable && (
         <StyledButton Icon={Icon.Edit} onClick={editReporting} size={Size.SMALL}>
