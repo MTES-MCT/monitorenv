@@ -95,9 +95,10 @@ publishing {
     register<MavenPublication>("gpr") {
       groupId = "fr.gouv.monitor"
       artifactId = "api"
-      version = "v0.0.1"
+      version = "v0.0.2"
 
       from(components["java"])
+      exclude("fr.gouv.cacem.monitorenv.domain/**")
     }
   }
 }
