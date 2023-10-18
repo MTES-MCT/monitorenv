@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import { FilterBar } from './FilterBar'
 import { Item } from './Item'
 import { getFilters } from './utils'
+import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { useGetControlUnitsQuery } from '../../../../api/controlUnitsAPI'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
@@ -14,7 +15,7 @@ type ControlUnitListDialogProps = {
 }
 export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
   const mapControlUnitListDialog = useAppSelector(store => store.mapControlUnitListDialog)
-  const { data: controlUnits } = useGetControlUnitsQuery()
+  const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const filteredControlUnits = useMemo(() => {
     if (!controlUnits) {

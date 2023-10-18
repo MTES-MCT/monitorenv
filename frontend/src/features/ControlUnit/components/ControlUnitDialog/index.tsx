@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import { AreaNote } from './AreaNote'
 import { ControlUnitContactList } from './ControlUnitContactList'
 import { ControlUnitResourceList } from './ControlUnitResourceList'
+import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { useGetControlUnitQuery, useUpdateControlUnitMutation } from '../../../../api/controlUnitsAPI'
 import { globalActions } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
@@ -20,7 +21,7 @@ export function ControlUnitDialog() {
     throw new FrontendError('`mapControlUnitDialog.controlUnitId` is undefined.')
   }
 
-  const { data: controlUnit } = useGetControlUnitQuery(mapControlUnitDialog.controlUnitId)
+  const { data: controlUnit } = useGetControlUnitQuery(mapControlUnitDialog.controlUnitId, RTK_DEFAULT_QUERY_OPTIONS)
   const [updateControlUnit] = useUpdateControlUnitMutation()
 
   const close = useCallback(() => {

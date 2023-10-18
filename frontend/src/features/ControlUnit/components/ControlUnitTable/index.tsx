@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { FilterBar } from './FilterBar'
 import { TabMenu } from './TabMenu'
 import { getControlUnitTableColumns, getFilters } from './utils'
+import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import {
   DELETE_CONTROL_UNIT_ERROR_MESSAGE,
   controlUnitsAPI,
@@ -28,7 +29,7 @@ export function ControlUnitTable() {
 
   const backOfficeControlUnitList = useAppSelector(store => store.backOfficeControlUnitList)
   const dispatch = useAppDispatch()
-  const { data: controlUnits } = useGetControlUnitsQuery()
+  const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const filteredControlUnits = useMemo(() => {
     if (!controlUnits) {

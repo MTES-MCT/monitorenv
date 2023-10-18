@@ -21,10 +21,12 @@ import {
   CONTROL_UNIT_RESOURCE_TABLE_COLUMNS
 } from './constants'
 import { useGetAdministrationsQuery } from '../../../../api/administrationsAPI'
+import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { controlUnitsAPI, useGetControlUnitQuery } from '../../../../api/controlUnitsAPI'
 import { useGetDepartmentAreasQuery } from '../../../../api/departmentAreasAPI'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../../libs/FrontendError'
+import { isNotArchived } from '../../../../utils/isNotArchived'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../../BackOfficeMenu/constants'
 
 import type { ControlUnitFormValues } from './types'
@@ -40,15 +42,21 @@ export function ControlUnitForm() {
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const { data: controlUnit, error } = useGetControlUnitQuery(isNew ? skipToken : Number(controlUnitId))
-  const { data: departmentAreas } = useGetDepartmentAreasQuery()
-  const { data: administrations } = useGetAdministrationsQuery()
+  const { data: controlUnit, error } = useGetControlUnitQuery(
+    isNew ? skipToken : Number(controlUnitId),
+    RTK_DEFAULT_QUERY_OPTIONS
+  )
+  const { data: departmentAreas } = useGetDepartmentAreasQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
+  const { data: administrations } = useGetAdministrationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const initialValues: ControlUnitFormValues | undefined = isNew
     ? INITIAL_CONTROL_UNIT_FORM_VALUES
     : controlUnit || undefined
 
-  const administrationsAsOptions = useMemo(() => getOptionsFromIdAndName(administrations), [administrations])
+  const administrationsAsOptions = useMemo(
+    () => getOptionsFromIdAndName(administrations?.filter(isNotArchived)),
+    [administrations]
+  )
   const departmentAreasAsOptions = useMemo(
     () =>
       departmentAreas

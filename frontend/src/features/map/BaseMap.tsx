@@ -9,7 +9,7 @@ import View from 'ol/View'
 import { Children, cloneElement, useCallback, useMemo, useEffect, useRef, useState, type MutableRefObject } from 'react'
 import styled from 'styled-components'
 
-import { HIT_PIXEL_TO_TOLERANCE } from '../../constants/constants'
+import { HIT_PIXEL_TO_TOLERANCE } from '../../constants'
 import { SelectableLayers, HoverableLayers } from '../../domain/entities/layers/constants'
 import { DistanceUnit, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map/constants'
 import { setDistanceUnit } from '../../domain/shared_slices/Map'

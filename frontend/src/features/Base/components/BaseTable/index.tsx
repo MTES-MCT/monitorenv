@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { FilterBar } from './FilterBar'
 import { getBaseTableColumns, getFilters } from './utils'
 import { DELETE_BASE_ERROR_MESSAGE, basesAPI, useGetBasesQuery } from '../../../../api/basesAPI'
+import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { ConfirmationModal } from '../../../../components/ConfirmationModal'
 import { Dialog } from '../../../../components/Dialog'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
@@ -22,7 +23,7 @@ export function BaseTable() {
 
   const backOfficeBaseList = useAppSelector(store => store.backOfficeBaseList)
   const dispatch = useAppDispatch()
-  const { data: bases } = useGetBasesQuery()
+  const { data: bases } = useGetBasesQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const filteredBases = useMemo(() => {
     if (!bases) {

@@ -6,12 +6,13 @@ import { type MutableRefObject, useMemo, useRef } from 'react'
 import { Form, IconButton, TagPicker } from 'rsuite'
 import styled from 'styled-components'
 
-import { FIVE_MINUTES } from '../../../api/APIWorker'
+import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../api/constants'
 import { useGetLegacyControlUnitsQuery } from '../../../api/legacyControlUnitsAPI'
 import { useGetEngagedControlUnitsQuery } from '../../../api/missionsAPI'
 import { FormikErrorWrapper } from '../../../uiMonitor/CustomFormikFields/FormikErrorWrapper'
 import { SelectPicker } from '../../../uiMonitor/CustomRsuite/SelectPicker'
 import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
+import { isNotArchived } from '../../../utils/isNotArchived'
 
 import type { ControlUnit } from '../../../domain/entities/controlUnit'
 
@@ -26,14 +27,15 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
   )
 
   const resourcesRef = useRef() as MutableRefObject<HTMLDivElement>
-  const { data: controlUnitsData, isError, isLoading } = useGetLegacyControlUnitsQuery()
+  const {
+    data: controlUnitsData,
+    isError,
+    isLoading
+  } = useGetLegacyControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
-  const filteredControlUnits = useMemo(
-    () => controlUnitsData?.filter(unit => !unit.isArchived) || [],
-    [controlUnitsData]
-  )
+  const filteredControlUnits = useMemo(() => controlUnitsData?.filter(isNotArchived) || [], [controlUnitsData])
 
-  const { data: engagedControlUnitsData } = useGetEngagedControlUnitsQuery(undefined, { pollingInterval: FIVE_MINUTES })
+  const { data: engagedControlUnitsData } = useGetEngagedControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const engagedControlUnits = useMemo(() => {
     if (!engagedControlUnitsData) {
