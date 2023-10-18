@@ -32,7 +32,7 @@ export function displayControlUnitResourcesFromControlUnit(controlUnit: ControlU
 
   return !isEmpty(controlUnitResourceTypeCounts)
     ? Object.entries(controlUnitResourceTypeCounts)
-        .map(([type, count]) => `${count} ${pluralize(ControlUnit.ControlUnitResourceType[type], count)}`)
+        .map(([type, count]) => `${count} ${pluralize(ControlUnit.ControlUnitResourceTypeLabel[type], count)}`)
         .join(', ')
     : 'Aucun moyen'
 }
