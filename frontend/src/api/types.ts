@@ -9,6 +9,10 @@ export interface BackendApiErrorResponse {
   type: ApiErrorCode | null
 }
 
+export interface BackendApiBooleanResponse {
+  value: boolean
+}
+
 export interface CustomRTKErrorResponse {
   data: BackendApiErrorResponse
   status: number | 'FETCH_ERROR' | 'PARSING_ERROR' | 'TIMEOUT_ERROR' | 'CUSTOM_ERROR'

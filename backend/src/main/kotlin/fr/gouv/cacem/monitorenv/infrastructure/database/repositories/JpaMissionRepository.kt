@@ -52,6 +52,10 @@ class JpaMissionRepository(
         ).map { it.toMissionDTO(mapper) }
     }
 
+    override fun findByControlUnitId(controlUnitId: Int): List<MissionEntity> {
+        return dbMissionRepository.findByControlUnitId(controlUnitId).map { it.toMissionEntity(mapper) }
+    }
+
     override fun findById(missionId: Int): MissionDTO {
         return dbMissionRepository.findById(missionId).get().toMissionDTO(mapper)
     }

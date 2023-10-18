@@ -10,6 +10,17 @@ import java.time.Instant
 
 @DynamicUpdate
 interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
+    @Modifying(clearAutomatically = true)
+    @Query(
+        value = """
+        UPDATE missions
+        SET deleted = TRUE
+        WHERE id = :id
+    """,
+        nativeQuery = true,
+    )
+    fun delete(id: Int)
+
     // see https://github.com/spring-projects/spring-data-jpa/issues/2491
     // and https://stackoverflow.com/questions/55169797/pass-liststring-into-postgres-function-as-parameter
     // for ugly casting of passed parameters
@@ -69,14 +80,6 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
         pageable: Pageable,
     ): List<MissionModel>
 
-    @Modifying(clearAutomatically = true)
-    @Query(
-        value = """
-        UPDATE missions
-        SET deleted = TRUE
-        WHERE id = :id
-    """,
-        nativeQuery = true,
-    )
-    fun delete(id: Int)
+    @Query("SELECT mm FROM MissionModel mm JOIN mm.controlUnits mmcu WHERE mmcu.unit.id = :controlUnitId")
+    fun findByControlUnitId(controlUnitId: Int): List<MissionModel>
 }

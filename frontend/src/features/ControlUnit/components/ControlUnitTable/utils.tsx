@@ -1,54 +1,15 @@
 import { CustomSearch, type Filter, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
 
 import { CONTROL_UNIT_TABLE_COLUMNS } from './constants'
-import { backOfficeActions } from '../../../BackOffice/slice'
-import { BackOfficeConfirmationModalActionType } from '../../../BackOffice/types'
 
 import type { FiltersState } from './types'
 import type { ControlUnit } from '../../../../domain/entities/controlUnit'
-import type { AppDispatch } from '../../../../store'
 import type { CellContext, ColumnDef } from '@tanstack/react-table'
-
-function archiveControlUnit(info: CellContext<ControlUnit.ControlUnit, unknown>, dispatch: AppDispatch) {
-  const controlUnit = info.getValue<ControlUnit.ControlUnit>()
-
-  dispatch(
-    backOfficeActions.openConfirmationModal({
-      actionType: BackOfficeConfirmationModalActionType.ARCHIVE_CONTROL_UNIT,
-      entityId: controlUnit.id,
-      modalProps: {
-        confirmationButtonLabel: 'Archiver',
-        message: [
-          `Êtes-vous sûr de vouloir archiver l'unité "${controlUnit.name}" ?`,
-          `Elle n'apparaîtra plus dans MonitorEnv, elle ne sera plus utilisée que pour les statistiques.`
-        ].join(' '),
-        title: `Archivage de l'unité`
-      }
-    })
-  )
-}
-
-function deleteControlUnit(info: CellContext<ControlUnit.ControlUnit, unknown>, dispatch: AppDispatch) {
-  const controlUnit = info.getValue<ControlUnit.ControlUnit>()
-
-  dispatch(
-    backOfficeActions.openConfirmationModal({
-      actionType: BackOfficeConfirmationModalActionType.DELETE_CONTROL_UNIT,
-      entityId: controlUnit.id,
-      modalProps: {
-        confirmationButtonLabel: 'Supprimer',
-        message: [
-          `Êtes-vous sûr de vouloir supprimer l'unité "${controlUnit.name}" ?`,
-          `Ceci entraînera la suppression de toutes ses informations (moyens, contacts...).`
-        ].join(' '),
-        title: `Suppression de l'unité`
-      }
-    })
-  )
-}
+import type { Promisable } from 'type-fest'
 
 export function getControlUnitTableColumns(
-  dispatch: AppDispatch,
+  askForArchivingConfirmation: (cell: CellContext<ControlUnit.ControlUnit, unknown>) => Promisable<void>,
+  askForDeletionConfirmation: (cell: CellContext<ControlUnit.ControlUnit, unknown>) => Promisable<void>,
   isArchived: boolean = false
 ): Array<ColumnDef<ControlUnit.ControlUnit>> {
   const archiveColumn: ColumnDef<ControlUnit.ControlUnit> = {
@@ -56,7 +17,7 @@ export function getControlUnitTableColumns(
     cell: info => (
       <IconButton
         Icon={Icon.Archive}
-        onClick={() => archiveControlUnit(info, dispatch)}
+        onClick={() => askForArchivingConfirmation(info)}
         size={Size.SMALL}
         title="Archiver cette unité de contrôle"
       />
@@ -72,7 +33,7 @@ export function getControlUnitTableColumns(
     cell: info => (
       <IconButton
         Icon={Icon.Delete}
-        onClick={() => deleteControlUnit(info, dispatch)}
+        onClick={() => askForDeletionConfirmation(info)}
         size={Size.SMALL}
         title="Supprimer cette unité de contrôle"
       />

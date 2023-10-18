@@ -1,14 +1,15 @@
 import { monitorenvPublicApi } from './api'
-import { ApiErrorCode } from './types'
+import { ApiErrorCode, type BackendApiBooleanResponse } from './types'
 import { FrontendApiError } from '../libs/FrontendApiError'
 import { newUserError } from '../libs/UserError'
 
 import type { ControlUnit } from '../domain/entities/controlUnit'
 
-const DELETE_CONTROL_UNIT_ERROR_MESSAGE = [
+export const DELETE_CONTROL_UNIT_ERROR_MESSAGE = [
   'Cette unité est rattachée à des missions ou des signalements.',
   "Veuillez l'en détacher avant de la supprimer ou bien l'archiver."
 ].join(' ')
+const CAN_DELETE_CONTROL_UNIT_ERROR_MESSAGE = "Nous n'avons pas pu vérifier si cette unité de contrôle est supprimable."
 const GET_CONTROL_UNIT_ERROR_MESSAGE = "Nous n'avons pas pu récupérer cette unité de contrôle."
 const GET_CONTROL_UNITS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la liste des unités de contrôle."
 
@@ -20,6 +21,13 @@ export const controlUnitsAPI = monitorenvPublicApi.injectEndpoints({
         method: 'POST',
         url: `/v2/control_units/${controlUnitId}/archive`
       })
+    }),
+
+    canDeleteControlUnit: builder.query<boolean, number>({
+      providesTags: () => [{ type: 'ControlUnits' }],
+      query: controlUnitId => `/v2/control_units/${controlUnitId}/can_delete`,
+      transformErrorResponse: response => new FrontendApiError(CAN_DELETE_CONTROL_UNIT_ERROR_MESSAGE, response),
+      transformResponse: (response: BackendApiBooleanResponse) => response.value
     }),
 
     createControlUnit: builder.mutation<void, ControlUnit.NewControlUnitData>({
@@ -71,6 +79,7 @@ export const controlUnitsAPI = monitorenvPublicApi.injectEndpoints({
 
 export const {
   useArchiveControlUnitMutation,
+  useCanDeleteControlUnitQuery,
   useCreateControlUnitMutation,
   useDeleteControlUnitMutation,
   useGetControlUnitQuery,

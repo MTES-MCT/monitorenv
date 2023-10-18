@@ -34,6 +34,9 @@ class ApiControlUnitsControllerITests {
     private lateinit var archiveControlUnit: ArchiveControlUnit
 
     @MockBean
+    private lateinit var canDeleteControlUnit: CanDeleteControlUnit
+
+    @MockBean
     private lateinit var createOrUpdateControlUnit: CreateOrUpdateControlUnit
 
     @MockBean
@@ -49,7 +52,47 @@ class ApiControlUnitsControllerITests {
     private lateinit var objectMapper: ObjectMapper
 
     @Test
-    fun `Should create a control unit`() {
+    fun `archive() should archive a control unit`() {
+        val controlUnitId = 1
+
+        mockMvc.perform(
+            post("/api/v2/control_units/$controlUnitId/archive"),
+        )
+            .andExpect(status().isOk)
+
+        BDDMockito.verify(archiveControlUnit).execute(controlUnitId)
+    }
+
+    @Test
+    fun `canDelete() should check if a control unit can be deleted`() {
+        val controlUnitId = 1
+        val canDelete = true
+
+        given(canDeleteControlUnit.execute(controlUnitId)).willReturn(canDelete)
+
+        mockMvc.perform(
+            get("/api/v2/control_units/$controlUnitId/can_delete"),
+        )
+            .andExpect(status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.value").value(canDelete))
+
+        BDDMockito.verify(canDeleteControlUnit).execute(controlUnitId)
+    }
+
+    @Test
+    fun `delete() should delete a control unit`() {
+        val controlUnitId = 1
+
+        mockMvc.perform(
+            delete("/api/v2/control_units/$controlUnitId"),
+        )
+            .andExpect(status().isOk)
+
+        BDDMockito.verify(deleteControlUnit).execute(controlUnitId)
+    }
+
+    @Test
+    fun `create() should create a control unit`() {
         val expectedCreatedControlUnit = ControlUnitEntity(
             id = 1,
             administrationId = 0,
@@ -84,7 +127,7 @@ class ApiControlUnitsControllerITests {
     }
 
     @Test
-    fun `Should get a control unit by its ID`() {
+    fun `get() should get a control unit by its ID`() {
         val expectedFullControlUnit = FullControlUnitDTO(
             administration = AdministrationEntity(
                 id = 0,
@@ -115,7 +158,7 @@ class ApiControlUnitsControllerITests {
     }
 
     @Test
-    fun `Should get all control units`() {
+    fun `getAll() should get all control units`() {
         val expectedControlUnits = listOf(
             FullControlUnitDTO(
                 administration = AdministrationEntity(
@@ -166,7 +209,7 @@ class ApiControlUnitsControllerITests {
     }
 
     @Test
-    fun `Should update a control unit`() {
+    fun `update() should update a control unit`() {
         val expectedUpdatedControlUnit = ControlUnitEntity(
             id = 1,
             administrationId = 0,

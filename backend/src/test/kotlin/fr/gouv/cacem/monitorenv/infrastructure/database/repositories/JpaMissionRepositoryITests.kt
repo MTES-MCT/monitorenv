@@ -26,6 +26,14 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
+    fun `findByControlUnitId() should find the matching missions`() {
+        val foundMissions = jpaMissionRepository.findByControlUnitId(10002)
+
+        assertThat(foundMissions).hasSize(18)
+    }
+
+    @Test
+    @Transactional
     fun `save should create a new mission`() {
         // Given
         val existingMissions = jpaMissionRepository.findAll(
