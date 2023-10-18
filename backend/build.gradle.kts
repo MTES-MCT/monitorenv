@@ -86,16 +86,10 @@ description = "MonitorEnv"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
 sourceSets {
-  create("apiSupport") {
+  create("publicApi") {
     java {
-      srcDir("src/main/kotlin/fr/gouv/cacem/monitorenv/infrastructure")
+      srcDir("src/main/kotlin/fr/gouv/cacem/monitorenv/infrastructure/api/adapters/publicapi")
     }
-  }
-}
-
-java {
-  registerFeature("apiSupport") {
-    usingSourceSet(sourceSets["apiSupport"])
   }
 }
 
@@ -112,18 +106,16 @@ publishing {
     }
   }
   publications {
-    val apiSourceJar by tasks.registering(Jar::class) {
-      from(sourceSets["apiSupport"].allSource)
+    val publicApiSourceJar by tasks.registering(Jar::class) {
+      from(sourceSets["publicApi"].allSource)
     }
 
     register<MavenPublication>("gpr") {
       groupId = "fr.gouv.monitor"
       artifactId = "api"
-      version = "v0.0.2"
+      version = "VERSION_TO_CHANGE"
 
-      // from(components["apiSupport"])
-      artifact(apiSourceJar.get())
-      // exclude(listOf("**/domain/**"))
+      artifact(publicApiSourceJar.get())
     }
   }
 }
