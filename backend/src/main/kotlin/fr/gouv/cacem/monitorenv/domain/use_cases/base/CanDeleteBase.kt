@@ -4,9 +4,7 @@ import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.repositories.IBaseRepository
 
 @UseCase
-class CanDeleteBase(
-    private val baseRepository: IBaseRepository,
-) {
+class CanDeleteBase(private val baseRepository: IBaseRepository) {
     fun execute(baseId: Int): Boolean {
         val fullBase = baseRepository.findById(baseId)
 
