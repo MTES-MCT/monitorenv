@@ -1,20 +1,11 @@
 plugins {
+  id("java")
   `maven-publish`
 }
 
 publishing {
   repositories {
     maven {
-      groupId = 'fr.gouv.monitor'
-      artifactId = 'api'
-      version = "VERSION_TO_CHANGE"
-      from components.java
-
-      pom {
-        name = 'Monitor APIs'
-        description = 'API contracts'
-      }
-
       name = "GitHubPackages"
       url = uri("https://maven.pkg.github.com/mtes-mct/monitorenv")
       credentials {
@@ -24,7 +15,11 @@ publishing {
     }
   }
   publications {
-    register<MavenPublication>("gpr") {
+    register<MavenPublication>("monitorenv") {
+      groupId = "fr.gouv.monitor"
+      artifactId = "api"
+      version = "VERSION_TO_CHANGE"
+
       from(components["java"])
     }
   }
