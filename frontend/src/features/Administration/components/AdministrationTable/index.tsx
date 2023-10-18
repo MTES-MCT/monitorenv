@@ -119,7 +119,7 @@ export function AdministrationTable() {
 
   return (
     <>
-      <Title>Administration des administrations</Title>
+      <Title>Gestion des administrations</Title>
 
       <TabMenu />
 

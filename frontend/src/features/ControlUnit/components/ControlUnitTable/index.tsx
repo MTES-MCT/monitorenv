@@ -105,7 +105,7 @@ export function ControlUnitTable() {
 
   return (
     <>
-      <Title>Administration des unités de contrôle</Title>
+      <Title>Gestion des unités de contrôle</Title>
 
       <TabMenu />
 

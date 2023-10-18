@@ -69,7 +69,7 @@ export function BaseTable() {
 
   return (
     <>
-      <Title>Administration des bases</Title>
+      <Title>Gestion des bases</Title>
 
       <FilterBar />
 

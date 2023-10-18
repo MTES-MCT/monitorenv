@@ -9,6 +9,20 @@ context('Back Office > Control Unit Form', () => {
     cy.wait('@getControlUnits')
   })
 
+  it('Should validate the form', () => {
+    cy.clickButton('Nouvelle unité de contrôle')
+
+    cy.clickButton('Créer')
+
+    cy.contains('L’administration est obligatoire.').should('be.visible')
+    cy.contains('Le nom est obligatoire.').should('be.visible')
+    cy.contains('Le département est obligatoire.').should('be.visible')
+
+    cy.clickButton('Annuler')
+
+    cy.get('h1').contains('Gestion des unités de contrôle').should('be.visible')
+  })
+
   it('Should create, edit, archive and delete a control unit', () => {
     // -------------------------------------------------------------------------
     // Create

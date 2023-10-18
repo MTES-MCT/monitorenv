@@ -19,7 +19,7 @@ context('Back Office > Base Form', () => {
 
     cy.clickButton('Annuler')
 
-    cy.get('h1').contains('Administration des bases').should('be.visible')
+    cy.get('h1').contains('Gestion des bases').should('be.visible')
   })
 
   it('Should create, edit and delete a base', () => {
