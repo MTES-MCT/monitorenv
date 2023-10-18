@@ -4,6 +4,7 @@ import { type MutableRefObject, useMemo, useRef, useState } from 'react'
 
 import { MapReportingsFilters } from './Map'
 import { TableReportingsFilters } from './Table'
+import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../api/constants'
 import { useGetControlThemesQuery } from '../../../api/controlThemesAPI'
 import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
 import { useGetSemaphoresQuery } from '../../../api/semaphoresAPI'
@@ -32,7 +33,7 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
   const [isCustomPeriodVisible, setIsCustomPeriodVisible] = useState(periodFilter === DateRangeEnum.CUSTOM)
 
   const { data: themes } = useGetControlThemesQuery()
-  const { data: controlUnits } = useGetControlUnitsQuery()
+  const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
   const { data: semaphores } = useGetSemaphoresQuery()
   const controlUnitsOptions = useMemo(() => (controlUnits ? Array.from(controlUnits) : []), [controlUnits])
 

@@ -9,7 +9,7 @@ import { ADMINISTRATION_FORM_SCHEMA, CONTROL_UNIT_TABLE_COLUMNS, INITIAL_ADMINIS
 import { administrationsAPI, useGetAdministrationQuery } from '../../../../api/administrationsAPI'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../../libs/FrontendError'
-import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../../BackOfficeMenu/constants'
+import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../../BackOffice/components/BackofficeMenu/constants'
 
 import type { AdministrationFormValues } from './types'
 import type { Administration } from '../../../../domain/entities/administration'

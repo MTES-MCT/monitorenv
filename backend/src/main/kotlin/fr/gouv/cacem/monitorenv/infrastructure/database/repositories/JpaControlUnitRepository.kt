@@ -5,12 +5,10 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlUnitModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ForeignKeyConstraintException
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBAdministrationRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBDepartmentAreaRepository
 import fr.gouv.cacem.monitorenv.utils.requirePresent
-import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -27,11 +25,7 @@ class JpaControlUnitRepository(
     }
 
     override fun deleteById(controlUnitId: Int) {
-        try {
-            dbControlUnitRepository.deleteById(controlUnitId)
-        } catch (e: DataIntegrityViolationException) {
-            throw ForeignKeyConstraintException("Cannot delete control unit due to existing relationships.")
-        }
+        dbControlUnitRepository.deleteById(controlUnitId)
     }
 
     override fun findAll(): List<FullControlUnitDTO> {

@@ -32,7 +32,7 @@ export function displayControlUnitResourcesFromControlUnit(controlUnit: ControlU
 
   return !isEmpty(controlUnitResourceTypeCounts)
     ? Object.entries(controlUnitResourceTypeCounts)
-        .map(([type, count]) => `${count} ${pluralize(ControlUnit.ControlUnitResourceType[type], count)}`)
+        .map(([type, count]) => `${count} ${pluralize(ControlUnit.ControlUnitResourceTypeLabel[type], count)}`)
         .join(', ')
     : 'Aucun moyen'
 }
@@ -54,6 +54,15 @@ export function getFilters(
   )
   const filters: Array<Filter<ControlUnit.ControlUnit>> = []
 
+  // Search query
+  // ⚠️ Order matters! Search query should be kept before other filters.
+  if (filtersState.query && filtersState.query.trim().length > 0) {
+    const filter: Filter<ControlUnit.ControlUnit> = () => customSearch.find(filtersState.query as string)
+
+    filters.push(filter)
+  }
+
+  // Administration
   if (filtersState.administrationId) {
     const filter: Filter<ControlUnit.ControlUnit> = controlUnits =>
       controlUnits.filter(controlUnit => controlUnit.administrationId === filtersState.administrationId)
@@ -61,12 +70,7 @@ export function getFilters(
     filters.push(filter)
   }
 
-  if (filtersState.query && filtersState.query.trim().length > 0) {
-    const filter: Filter<ControlUnit.ControlUnit> = () => customSearch.find(filtersState.query as string)
-
-    filters.push(filter)
-  }
-
+  // Base
   if (filtersState.baseId) {
     const filter: Filter<ControlUnit.ControlUnit> = controlUnits =>
       controlUnits.reduce<ControlUnit.ControlUnit[]>((previousControlUnits, controlUnit) => {
@@ -78,6 +82,7 @@ export function getFilters(
     filters.push(filter)
   }
 
+  // Control Unit Resource Type
   if (filtersState.type) {
     const filter: Filter<ControlUnit.ControlUnit> = controlUnits =>
       controlUnits.reduce<ControlUnit.ControlUnit[]>((previousControlUnits, controlUnit) => {

@@ -1,6 +1,7 @@
 import { SingleTag } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
+import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { useGetControlUnitsQuery } from '../../../../api/controlUnitsAPI'
 import { missionStatusLabels, missionTypeEnum } from '../../../../domain/entities/missions'
 import { MissionFiltersEnum, updateFilters } from '../../../../domain/shared_slices/MissionFilters'
@@ -18,7 +19,7 @@ export function FilterTags() {
     selectedThemes
   } = useAppSelector(state => state.missionFilters)
 
-  const controlUnits = useGetControlUnitsQuery()
+  const controlUnits = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const onDeleteTag = (
     valueToDelete: number | string,

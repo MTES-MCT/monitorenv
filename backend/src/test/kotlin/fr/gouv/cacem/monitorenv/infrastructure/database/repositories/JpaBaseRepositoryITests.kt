@@ -4,8 +4,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.use_cases.base.dtos.FullBaseDTO
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ForeignKeyConstraintException
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,16 +12,6 @@ import org.springframework.transaction.annotation.Transactional
 class JpaBaseRepositoryITests : AbstractDBTests() {
     @Autowired
     private lateinit var jpaBaseRepository: JpaBaseRepository
-
-    @Test
-    @Transactional
-    fun `deleteById() should throw the expected exception when the base is linked to some control unit resources`() {
-        val throwable = Assertions.catchThrowable {
-            jpaBaseRepository.deleteById(1)
-        }
-
-        assertThat(throwable).isInstanceOf(ForeignKeyConstraintException::class.java)
-    }
 
     @Test
     @Transactional

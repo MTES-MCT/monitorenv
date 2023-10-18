@@ -4,6 +4,7 @@ export type TabProps = {
   $isActive?: boolean
 }
 export const Tab = styled.button.attrs<TabProps>(props => ({
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   'aria-selected': !!props.$isActive,
   role: 'tab'
 }))<TabProps>`

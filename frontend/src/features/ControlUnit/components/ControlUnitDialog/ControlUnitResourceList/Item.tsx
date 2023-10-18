@@ -2,6 +2,7 @@ import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { useCallback } from 'react'
 import styled from 'styled-components'
 
+import { Placeholder } from './Placeholder'
 import { ControlUnit } from '../../../../../domain/entities/controlUnit'
 
 import type { Promisable } from 'type-fest'
@@ -17,7 +18,7 @@ export function Item({ controlUnitResource, onEdit }: ItemProps) {
 
   return (
     <Wrapper data-cy="ControlUnitDialog-control-unit-resource" data-id={controlUnitResource.id}>
-      <Placeholder />
+      <Placeholder type={controlUnitResource.type} />
       <InfoBox>
         <InfoBoxHeader>
           <div>
@@ -58,14 +59,6 @@ const InfoBoxHeader = styled.div`
     flex-direction: column;
     flex-grow: 1;
   }
-`
-
-const Placeholder = styled.div`
-  background-color: ${p => p.theme.color.lightGray};
-  height: 94px;
-  min-height: 94px;
-  min-width: 116px;
-  width: 116px;
 `
 
 const Name = styled.p`

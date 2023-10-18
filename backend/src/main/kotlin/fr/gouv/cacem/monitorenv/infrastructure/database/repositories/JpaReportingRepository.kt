@@ -28,7 +28,6 @@ class JpaReportingRepository(
     private val dbControlUnitRepository: IDBControlUnitRepository,
     private val mapper: ObjectMapper,
 ) : IReportingRepository {
-
     @Transactional
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     override fun attachReportingsToMission(reportingIds: List<Int>, missionId: Int) {
@@ -60,6 +59,10 @@ class JpaReportingRepository(
             status = convertToString(status),
         )
             .map { it.toReportingDTO(mapper) }
+    }
+
+    override fun findByControlUnitId(controlUnitId: Int): List<ReportingEntity> {
+        return dbReportingRepository.findByControlUnitId(controlUnitId).map { it.toReporting() }
     }
 
     override fun findByMissionId(missionId: Int): List<ReportingDTO> {

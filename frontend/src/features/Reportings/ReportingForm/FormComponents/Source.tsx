@@ -17,6 +17,7 @@ import { GeoJSON } from 'ol/format'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
+import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { useGetControlUnitsQuery } from '../../../../api/controlUnitsAPI'
 import { useGetSemaphoresQuery } from '../../../../api/semaphoresAPI'
 import { type Reporting, ReportingSourceEnum, ReportingSourceLabels } from '../../../../domain/entities/reporting'
@@ -30,7 +31,7 @@ import type { Point } from 'ol/geom'
 export function Source() {
   const dispatch = useAppDispatch()
   const { data: semaphores } = useGetSemaphoresQuery()
-  const { data: units } = useGetControlUnitsQuery()
+  const { data: units } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const sourceOptions = getOptionsFromLabelledEnum(ReportingSourceLabels)
   const { errors, setFieldValue, values } = useFormikContext<Reporting>()

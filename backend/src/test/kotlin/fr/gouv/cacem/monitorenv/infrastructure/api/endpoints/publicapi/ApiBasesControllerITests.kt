@@ -5,10 +5,7 @@ import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.base.CreateOrUpdateBase
-import fr.gouv.cacem.monitorenv.domain.use_cases.base.DeleteBase
-import fr.gouv.cacem.monitorenv.domain.use_cases.base.GetBaseById
-import fr.gouv.cacem.monitorenv.domain.use_cases.base.GetBases
+import fr.gouv.cacem.monitorenv.domain.use_cases.base.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.base.dtos.FullBaseDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateBaseDataInput
 import org.hamcrest.Matchers
@@ -33,6 +30,9 @@ class ApiBasesControllerITests {
     private lateinit var mockMvc: MockMvc
 
     @MockBean
+    private lateinit var canDeleteBase: CanDeleteBase
+
+    @MockBean
     private lateinit var createOrUpdateBase: CreateOrUpdateBase
 
     @MockBean
@@ -48,7 +48,20 @@ class ApiBasesControllerITests {
     private lateinit var objectMapper: ObjectMapper
 
     @Test
-    fun `Should create a base`() {
+    fun `canDelete() should check if a base can be deleted`() {
+        val baseId = 1
+
+        given(canDeleteBase.execute(baseId)).willReturn(true)
+
+        mockMvc.perform(get("/api/v1/bases/$baseId/can_delete"))
+            .andExpect(status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.value").value(true))
+
+        BDDMockito.verify(canDeleteBase).execute(baseId)
+    }
+
+    @Test
+    fun `create() should create a base`() {
         val expectedCreatedBase = BaseEntity(
             id = 1,
             latitude = 0.0,
@@ -75,7 +88,20 @@ class ApiBasesControllerITests {
     }
 
     @Test
-    fun `Should get a base by its ID`() {
+    fun `delete() should delete a base`() {
+        val baseId = 1
+
+        mockMvc.perform(
+            delete("/api/v1/bases/$baseId"),
+        )
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk)
+
+        BDDMockito.verify(deleteBase).execute(baseId)
+    }
+
+    @Test
+    fun `get() should get a base by its ID`() {
         val expectedFullBase = FullBaseDTO(
             base = BaseEntity(
                 id = 1,
@@ -97,7 +123,7 @@ class ApiBasesControllerITests {
     }
 
     @Test
-    fun `Should get all bases`() {
+    fun `getAll() should get all bases`() {
         val expectedFullBases = listOf(
             FullBaseDTO(
                 base = BaseEntity(
@@ -130,7 +156,7 @@ class ApiBasesControllerITests {
     }
 
     @Test
-    fun `Should update a base`() {
+    fun `update() should update a base`() {
         val expectedUpdatedBase = BaseEntity(
             id = 1,
             latitude = 0.0,

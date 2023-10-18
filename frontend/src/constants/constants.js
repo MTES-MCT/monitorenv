@@ -1,1 +1,0 @@
-export const HIT_PIXEL_TO_TOLERANCE = 20

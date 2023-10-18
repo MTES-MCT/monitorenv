@@ -30,6 +30,8 @@ interface IReportingRepository {
         status: List<String>?,
     ): List<ReportingDTO>
 
+    fun findByControlUnitId(controlUnitId: Int): List<ReportingEntity>
+
     fun findByMissionId(missionId: Int): List<ReportingDTO>
 
     fun findById(reportingId: Int): ReportingDTO

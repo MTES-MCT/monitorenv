@@ -1,16 +1,18 @@
 import { monitorenvPublicApi } from './api'
 import { ARCHIVE_GENERIC_ERROR_MESSAGE, DELETE_GENERIC_ERROR_MESSAGE } from './constants'
-import { ApiErrorCode } from './types'
+import { ApiErrorCode, type BackendApiBooleanResponse } from './types'
 import { FrontendApiError } from '../libs/FrontendApiError'
 import { newUserError } from '../libs/UserError'
 
 import type { Administration } from '../domain/entities/administration'
 
-const ARCHIVE_ADMINISTRATION_ERROR_MESSAGE = [
+export const ARCHIVE_ADMINISTRATION_ERROR_MESSAGE = [
   'Certaines unités de cette administration ne sont pas archivées.',
   'Veuillez les archiver pour pouvoir archiver cette administration.'
 ].join(' ')
-const DELETE_ADMINISTRATION_ERROR_MESSAGE = [
+const CAN_ARCHIVE_ADMINISTRATION_ERROR_MESSAGE = "Nous n'avons pas pu vérifier si cette administration est archivable."
+const CAN_DELETE_ADMINISTRATION_ERROR_MESSAGE = "Nous n'avons pas pu vérifier si cette administration est supprimable."
+export const DELETE_ADMINISTRATION_ERROR_MESSAGE = [
   'Cette administration est rattachée à des missions ou des signalements.',
   "Veuillez l'en détacher avant de la supprimer ou bien l'archiver."
 ].join(' ')
@@ -32,6 +34,18 @@ export const administrationsAPI = monitorenvPublicApi.injectEndpoints({
 
         return new FrontendApiError(ARCHIVE_GENERIC_ERROR_MESSAGE, response)
       }
+    }),
+
+    canArchiveAdministration: builder.query<boolean, number>({
+      query: administrationId => `/v1/administrations/${administrationId}/can_archive`,
+      transformErrorResponse: response => new FrontendApiError(CAN_ARCHIVE_ADMINISTRATION_ERROR_MESSAGE, response),
+      transformResponse: (response: BackendApiBooleanResponse) => response.value
+    }),
+
+    canDeleteAdministration: builder.query<boolean, number>({
+      query: administrationId => `/v1/administrations/${administrationId}/can_delete`,
+      transformErrorResponse: response => new FrontendApiError(CAN_DELETE_ADMINISTRATION_ERROR_MESSAGE, response),
+      transformResponse: (response: BackendApiBooleanResponse) => response.value
     }),
 
     createAdministration: builder.mutation<void, Administration.NewAdministrationData>({
@@ -83,6 +97,8 @@ export const administrationsAPI = monitorenvPublicApi.injectEndpoints({
 
 export const {
   useArchiveAdministrationMutation,
+  useCanArchiveAdministrationQuery,
+  useCanDeleteAdministrationQuery,
   useCreateAdministrationMutation,
   useDeleteAdministrationMutation,
   useGetAdministrationQuery,

@@ -5,7 +5,6 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IAdministrationRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.AdministrationModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ForeignKeyConstraintException
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.UnarchivedChildException
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBAdministrationRepository
 import org.springframework.dao.InvalidDataAccessApiUsageException
@@ -29,13 +28,6 @@ class JpaAdministrationRepository(
     }
 
     override fun deleteById(administrationId: Int) {
-        val fullAdministration = findById(administrationId)
-        if (fullAdministration.controlUnits.isNotEmpty()) {
-            throw ForeignKeyConstraintException(
-                "Cannot delete administration (ID=$administrationId) due to existing relationships.",
-            )
-        }
-
         dbAdministrationRepository.deleteById(administrationId)
     }
 

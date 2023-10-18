@@ -16,6 +16,7 @@ import styled from 'styled-components'
 
 import { CONTROL_UNIT_RESOURCE_FORM_SCHEMA, CONTROL_UNIT_RESOURCE_TYPES_AS_OPTIONS } from './constants'
 import { useGetBasesQuery } from '../../../../../api/basesAPI'
+import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../../api/constants'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { mainWindowActions } from '../../../../MainWindow/slice'
 import { MainWindowConfirmationModalActionType } from '../../../../MainWindow/types'
@@ -32,7 +33,7 @@ export function Form({ initialValues, isNew, onCancel, onSubmit }: FormProps) {
   const dispatch = useAppDispatch()
   const key = useKey([initialValues])
 
-  const { data: bases } = useGetBasesQuery()
+  const { data: bases } = useGetBasesQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const basesAsOptions = getOptionsFromIdAndName(bases)?.filter(baseAsOption => baseAsOption.value !== 0)
 

@@ -7,6 +7,18 @@ context('Back Office > Administration Form', () => {
     cy.wait('@getAdministrations')
   })
 
+  it('Should validate the form', () => {
+    cy.clickButton('Nouvelle administration')
+
+    cy.clickButton('Créer')
+
+    cy.contains('Le nom est obligatoire.').should('be.visible')
+
+    cy.clickButton('Annuler')
+
+    cy.get('h1').contains('Gestion des administrations').should('be.visible')
+  })
+
   it('Should create, edit, archive and delete an administration', () => {
     // -------------------------------------------------------------------------
     // Create

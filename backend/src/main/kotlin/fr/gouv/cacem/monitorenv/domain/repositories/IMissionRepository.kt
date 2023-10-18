@@ -7,7 +7,10 @@ import org.springframework.data.domain.Pageable
 import java.time.Instant
 
 interface IMissionRepository {
-    fun findById(missionId: Int): MissionDTO
+    fun count(): Long
+
+    fun delete(missionId: Int)
+
     fun findAll(
         startedAfter: Instant,
         startedBefore: Instant?,
@@ -18,7 +21,9 @@ interface IMissionRepository {
         pageable: Pageable,
     ): List<MissionDTO>
 
+    fun findByControlUnitId(controlUnitId: Int): List<MissionEntity>
+
+    fun findById(missionId: Int): MissionDTO
+
     fun save(mission: MissionEntity): MissionDTO
-    fun delete(missionId: Int)
-    fun count(): Long
 }

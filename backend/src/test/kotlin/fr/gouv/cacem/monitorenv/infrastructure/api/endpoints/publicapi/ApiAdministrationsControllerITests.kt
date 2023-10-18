@@ -33,6 +33,12 @@ class ApiAdministrationsControllerITests {
     private lateinit var archiveAdministration: ArchiveAdministration
 
     @MockBean
+    private lateinit var canArchiveAdministration: CanArchiveAdministration
+
+    @MockBean
+    private lateinit var canDeleteAdministration: CanDeleteAdministration
+
+    @MockBean
     private lateinit var createOrUpdateAdministration: CreateOrUpdateAdministration
 
     @MockBean
@@ -48,7 +54,46 @@ class ApiAdministrationsControllerITests {
     private lateinit var objectMapper: ObjectMapper
 
     @Test
-    fun `Should create an administration`() {
+    fun `archive() should archive an administration`() {
+        val administrationId = 1
+
+        mockMvc.perform(
+            post("/api/v1/administrations/$administrationId/archive"),
+        )
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk)
+
+        BDDMockito.verify(archiveAdministration).execute(administrationId)
+    }
+
+    @Test
+    fun `canArchive() should check if an administration can be archived`() {
+        val administrationId = 1
+
+        given(canArchiveAdministration.execute(administrationId)).willReturn(true)
+
+        mockMvc.perform(get("/api/v1/administrations/$administrationId/can_archive"))
+            .andExpect(status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.value").value(true))
+
+        BDDMockito.verify(canArchiveAdministration).execute(administrationId)
+    }
+
+    @Test
+    fun `canDelete() should check if an administration can be deleted`() {
+        val administrationId = 1
+
+        given(canDeleteAdministration.execute(administrationId)).willReturn(true)
+
+        mockMvc.perform(get("/api/v1/administrations/$administrationId/can_delete"))
+            .andExpect(status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.value").value(true))
+
+        BDDMockito.verify(canDeleteAdministration).execute(administrationId)
+    }
+
+    @Test
+    fun `create() should create an administration`() {
         val expectedCreatedAdministration = AdministrationEntity(
             id = 1,
             isArchived = false,
@@ -73,7 +118,20 @@ class ApiAdministrationsControllerITests {
     }
 
     @Test
-    fun `Should get an administration by its ID`() {
+    fun `delete() should delete an administration`() {
+        val administrationId = 1
+
+        mockMvc.perform(
+            delete("/api/v1/administrations/$administrationId"),
+        )
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk)
+
+        BDDMockito.verify(deleteAdministration).execute(administrationId)
+    }
+
+    @Test
+    fun `get() should get an administration by its ID`() {
         val expectedFullAdministration = FullAdministrationDTO(
             administration = AdministrationEntity(
                 id = 1,
@@ -94,7 +152,7 @@ class ApiAdministrationsControllerITests {
     }
 
     @Test
-    fun `Should get all administrations`() {
+    fun `getAll() should get all administrations`() {
         val expectedAFulldministrations = listOf(
             FullAdministrationDTO(
                 administration = AdministrationEntity(
@@ -125,7 +183,7 @@ class ApiAdministrationsControllerITests {
     }
 
     @Test
-    fun `Should update an administration`() {
+    fun `update() should update an administration`() {
         val expectedUpdatedAdministration = AdministrationEntity(
             id = 1,
             isArchived = false,

@@ -1,10 +1,10 @@
-import { Accent, Button, Icon, MapMenuDialog } from '@mtes-mct/monitor-ui'
-import { noop } from 'lodash/fp'
+import { Accent, Icon, MapMenuDialog } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
 
 import { FilterBar } from './FilterBar'
 import { Item } from './Item'
 import { getFilters } from './utils'
+import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { useGetControlUnitsQuery } from '../../../../api/controlUnitsAPI'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
@@ -15,7 +15,7 @@ type ControlUnitListDialogProps = {
 }
 export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
   const mapControlUnitListDialog = useAppSelector(store => store.mapControlUnitListDialog)
-  const { data: controlUnits } = useGetControlUnitsQuery()
+  const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const filteredControlUnits = useMemo(() => {
     if (!controlUnits) {
@@ -40,11 +40,11 @@ export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
         {filteredControlUnits &&
           filteredControlUnits.map(controlUnit => <Item key={controlUnit.id} controlUnit={controlUnit} />)}
       </MapMenuDialog.Body>
-      <MapMenuDialog.Footer>
+      {/* <MapMenuDialog.Footer>
         <Button accent={Accent.SECONDARY} Icon={Icon.Expand} isFullWidth onClick={noop}>
           Voir la vue détaillée des unités
         </Button>
-      </MapMenuDialog.Footer>
+      </MapMenuDialog.Footer> */}
     </MapMenuDialog.Container>
   )
 }

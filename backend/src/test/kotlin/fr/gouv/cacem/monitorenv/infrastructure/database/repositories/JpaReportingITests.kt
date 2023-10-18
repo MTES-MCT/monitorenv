@@ -16,11 +16,20 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.domain.Pageable
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 @SpringBootTest(properties = ["monitorenv.scheduling.enabled=false"])
 class JpaReportingITests : AbstractDBTests() {
-    @Autowired private lateinit var jpaReportingRepository: JpaReportingRepository
+    @Autowired
+    private lateinit var jpaReportingRepository: JpaReportingRepository
+
+    @Test
+    @Transactional
+    fun `findByControlUnitId() should find the matching reportings`() {
+        val foundReportings = jpaReportingRepository.findByControlUnitId(10000)
+
+        assertThat(foundReportings).hasSize(1)
+    }
 
     @Test
     @Transactional

@@ -1,59 +1,23 @@
 import { CustomSearch, IconButton, type Filter, Icon, Size } from '@mtes-mct/monitor-ui'
 
 import { ADMINISTRATION_TABLE_COLUMNS } from './constants'
-import { backOfficeActions } from '../../../BackOffice/slice'
-import { BackOfficeConfirmationModalActionType } from '../../../BackOffice/types'
 
 import type { FiltersState } from './types'
 import type { Administration } from '../../../../domain/entities/administration'
-import type { AppDispatch } from '../../../../store'
 import type { CellContext, ColumnDef } from '@tanstack/react-table'
-
-function archiveAdministration(info: CellContext<Administration.Administration, unknown>, dispatch: AppDispatch) {
-  const administration = info.getValue<Administration.Administration>()
-
-  dispatch(
-    backOfficeActions.openConfirmationModal({
-      actionType: BackOfficeConfirmationModalActionType.ARCHIVE_ADMINISTRATION,
-      entityId: administration.id,
-      modalProps: {
-        confirmationButtonLabel: 'Archiver',
-        message: [
-          `Êtes-vous sûr de vouloir archiver l'administration "${administration.name}" ?`,
-          `Elle n'apparaîtra plus dans MonitorEnv, elle ne sera plus utilisée que pour les statistiques.`
-        ].join(' '),
-        title: `Archivage de l'administration`
-      }
-    })
-  )
-}
-
-function deleteAdministration(info: CellContext<Administration.Administration, unknown>, dispatch: AppDispatch) {
-  const administration = info.getValue<Administration.Administration>()
-
-  dispatch(
-    backOfficeActions.openConfirmationModal({
-      actionType: BackOfficeConfirmationModalActionType.DELETE_ADMINISTRATION,
-      entityId: administration.id,
-      modalProps: {
-        confirmationButtonLabel: 'Supprimer',
-        message: `Êtes-vous sûr de vouloir supprimer l'administration "${administration.name}" ?`,
-        title: `Suppression de l'administration`
-      }
-    })
-  )
-}
+import type { Promisable } from 'type-fest'
 
 export function getAdministrationTableColumns(
-  dispatch: AppDispatch,
+  askForArchivingConfirmation: (cellContext: CellContext<Administration.Administration, unknown>) => Promisable<void>,
+  askForDeletionConfirmation: (cellContext: CellContext<Administration.Administration, unknown>) => Promisable<void>,
   isArchived: boolean = false
 ): Array<ColumnDef<Administration.Administration>> {
   const archiveColumn: ColumnDef<Administration.Administration> = {
     accessorFn: row => row,
-    cell: info => (
+    cell: cellContext => (
       <IconButton
         Icon={Icon.Archive}
-        onClick={() => archiveAdministration(info, dispatch)}
+        onClick={() => askForArchivingConfirmation(cellContext)}
         size={Size.SMALL}
         title="Archiver cette administration"
       />
@@ -66,10 +30,10 @@ export function getAdministrationTableColumns(
 
   const deleteColumn: ColumnDef<Administration.Administration> = {
     accessorFn: row => row,
-    cell: info => (
+    cell: cellContext => (
       <IconButton
         Icon={Icon.Delete}
-        onClick={() => deleteAdministration(info, dispatch)}
+        onClick={() => askForDeletionConfirmation(cellContext)}
         size={Size.SMALL}
         title="Supprimer cette administration"
       />
@@ -96,7 +60,7 @@ export function getFilters(
   const filters: Array<Filter<Administration.Administration>> = []
 
   // Search query
-  // ⚠️ Order matters! Search query should be before other filters.
+  // ⚠️ Order matters! Search query should be kept before other filters.
   if (filtersState.query && filtersState.query.trim().length > 0) {
     const queryFilter: Filter<Administration.Administration> = () => customSearch.find(filtersState.query as string)
 

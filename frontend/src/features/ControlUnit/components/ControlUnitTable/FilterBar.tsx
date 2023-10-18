@@ -4,13 +4,14 @@ import styled from 'styled-components'
 
 import { controlUnitTableActions } from './slice'
 import { useGetAdministrationsQuery } from '../../../../api/administrationsAPI'
+import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 export function FilterBar() {
   const dispatch = useAppDispatch()
   const backOfficeControlUnitList = useAppSelector(store => store.backOfficeControlUnitList)
-  const { data: administrations } = useGetAdministrationsQuery()
+  const { data: administrations } = useGetAdministrationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const administrationsAsOptions = useMemo(() => getOptionsFromIdAndName(administrations), [administrations])
 

@@ -12,6 +12,7 @@ import styled from 'styled-components'
 
 import { FilterTags } from './FilterTags'
 import { useGetAdministrationsQuery } from '../../../../api/administrationsAPI'
+import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { useGetControlThemesQuery } from '../../../../api/controlThemesAPI'
 import { useGetLegacyControlUnitsQuery } from '../../../../api/legacyControlUnitsAPI'
 import { DateRangeEnum, dateRangeLabels } from '../../../../domain/entities/dateRange'
@@ -22,6 +23,7 @@ import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReactComponent as ReloadSVG } from '../../../../uiMonitor/icons/Reload.svg'
 import { getThemesAsListOptions } from '../../../../utils/getThemesAsListOptions'
+import { isNotArchived } from '../../../../utils/isNotArchived'
 
 export function MissionsTableFilters() {
   const dispatch = useAppDispatch()
@@ -43,19 +45,16 @@ export function MissionsTableFilters() {
 
   const unitPickerRef = useRef() as MutableRefObject<HTMLDivElement>
 
-  const { data: administrations } = useGetAdministrationsQuery()
-  const { data: legacyControlUnits } = useGetLegacyControlUnitsQuery()
+  const { data: administrations } = useGetAdministrationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
+  const { data: legacyControlUnits } = useGetLegacyControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
   const { data: controlThemes } = useGetControlThemesQuery()
 
-  const activedAdministrations = useMemo(
-    () => (administrations || []).filter(administration => !administration.isArchived),
-    [administrations]
-  )
+  const activeAdministrations = useMemo(() => (administrations || []).filter(isNotArchived), [administrations])
 
   const themesAsOptions = useMemo(() => getThemesAsListOptions(controlThemes), [controlThemes])
 
   const controlUnitsAsOptions = useMemo(() => {
-    const activeControlUnits = (legacyControlUnits || []).filter(legacyControlUnit => !legacyControlUnit.isArchived)
+    const activeControlUnits = (legacyControlUnits || []).filter(isNotArchived)
     const selectableControlUnits = activeControlUnits.filter(activeControlUnit =>
       selectedAdministrationNames.length ? selectedAdministrationNames.includes(activeControlUnit.administration) : true
     )
@@ -174,7 +173,7 @@ export function MissionsTableFilters() {
         />
         <StyledCheckPicker
           container={newWindowContainerRef.current}
-          data={activedAdministrations || []}
+          data={activeAdministrations || []}
           data-cy="select-administration-filter"
           labelKey="name"
           onChange={onUpdateAdministrationFilter as any}

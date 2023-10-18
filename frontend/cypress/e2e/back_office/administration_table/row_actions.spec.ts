@@ -12,9 +12,6 @@ context('Back Office > Administration Table > Row Actions', () => {
     cy.intercept('POST', `/api/v1/administrations/1005/archive`).as('archiveAdministration')
 
     cy.getTableRowById(1005).clickButton('Archiver cette administration')
-    cy.clickButton('Archiver')
-
-    cy.wait('@archiveAdministration')
 
     cy.get('.Component-Dialog').should('be.visible')
     cy.contains('Archivage impossible').should('be.visible')
@@ -24,9 +21,6 @@ context('Back Office > Administration Table > Row Actions', () => {
     cy.intercept('DELETE', `/api/v1/administrations/1005`).as('deleteAdministration')
 
     cy.getTableRowById(1005).clickButton('Supprimer cette administration')
-    cy.clickButton('Supprimer')
-
-    cy.wait('@deleteAdministration')
 
     cy.get('.Component-Dialog').should('be.visible')
     cy.contains('Suppression impossible').should('be.visible')

@@ -114,6 +114,19 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         """
         SELECT *
         FROM reportings
+        WHERE control_unit_id = :controlUnitId
+        """,
+        nativeQuery = true,
+    )
+    fun findByControlUnitId(
+        controlUnitId: Int,
+    ): List<ReportingModel>
+
+    @Query(
+        value =
+        """
+        SELECT *
+        FROM reportings
         WHERE mission_id = :missionId
         """,
         nativeQuery = true,
