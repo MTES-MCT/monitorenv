@@ -8,7 +8,7 @@ context('Back Office > Administration Form', () => {
   })
 
   it('Should validate the form', () => {
-    cy.clickButton('Nouvelle base')
+    cy.clickButton('Nouvelle administration')
 
     cy.clickButton('Créer')
 
@@ -16,7 +16,7 @@ context('Back Office > Administration Form', () => {
 
     cy.clickButton('Annuler')
 
-    cy.get('h1').contains('Gestion des bases').should('be.visible')
+    cy.get('h1').contains('Gestion des administrations').should('be.visible')
   })
 
   it('Should create, edit, archive and delete an administration', () => {
