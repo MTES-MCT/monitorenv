@@ -15,7 +15,7 @@ const GET_BASES_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la liste des ba
 export const basesAPI = monitorenvPublicApi.injectEndpoints({
   endpoints: builder => ({
     canDeleteBase: builder.query<boolean, number>({
-      query: administrationId => `/v1/administrations/${administrationId}/can_delete`,
+      query: baseId => `/v1/base/${baseId}/can_delete`,
       transformErrorResponse: response => new FrontendApiError(CAN_DELETE_BASE_ERROR_MESSAGE, response),
       transformResponse: (response: BackendApiBooleanResponse) => response.value
     }),
