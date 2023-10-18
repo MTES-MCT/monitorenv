@@ -12,9 +12,6 @@ context('Back Office > Base Table > Row Actions', () => {
     cy.intercept('DELETE', `/api/v1/bases/3`).as('deleteBase')
 
     cy.getTableRowById(3).clickButton('Supprimer cette base')
-    cy.clickButton('Supprimer')
-
-    cy.wait('@deleteBase')
 
     cy.get('.Component-Dialog').should('be.visible')
     cy.contains('Suppression impossible').should('be.visible')

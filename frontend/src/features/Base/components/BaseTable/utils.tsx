@@ -1,37 +1,21 @@
 import { CustomSearch, IconButton, type Filter, Size, Icon } from '@mtes-mct/monitor-ui'
 
 import { BASE_TABLE_COLUMNS } from './constants'
-import { backOfficeActions } from '../../../BackOffice/slice'
-import { BackOfficeConfirmationModalActionType } from '../../../BackOffice/types'
 
 import type { FiltersState } from './types'
 import type { Base } from '../../../../domain/entities/base'
-import type { AppDispatch } from '../../../../store'
 import type { CellContext, ColumnDef } from '@tanstack/react-table'
+import type { Promisable } from 'type-fest'
 
-function deleteBase(info: CellContext<Base.Base, unknown>, dispatch: AppDispatch) {
-  const base = info.getValue<Base.Base>()
-
-  dispatch(
-    backOfficeActions.openConfirmationModal({
-      actionType: BackOfficeConfirmationModalActionType.DELETE_BASE,
-      entityId: base.id,
-      modalProps: {
-        confirmationButtonLabel: 'Supprimer',
-        message: `Êtes-vous sûr de vouloir supprimer la base "${base.name}" ?`,
-        title: `Suppression de la base`
-      }
-    })
-  )
-}
-
-export function getBaseTableColumns(dispatch: AppDispatch): Array<ColumnDef<Base.Base>> {
+export function getBaseTableColumns(
+  askForDeletionConfirmation: (cellContext: CellContext<Base.Base, unknown>) => Promisable<void>
+): Array<ColumnDef<Base.Base>> {
   const deleteColumn: ColumnDef<Base.Base> = {
     accessorFn: row => row,
-    cell: info => (
+    cell: cellContext => (
       <IconButton
         Icon={Icon.Delete}
-        onClick={() => deleteBase(info, dispatch)}
+        onClick={() => askForDeletionConfirmation(cellContext)}
         size={Size.SMALL}
         title="Supprimer cette base"
       />

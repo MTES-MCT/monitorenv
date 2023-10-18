@@ -4,7 +4,6 @@ import styled from 'styled-components'
 
 import { AdministrationForm } from '../features/Administration/components/AdministrationForm'
 import { AdministrationTable } from '../features/Administration/components/AdministrationTable'
-import { BackOfficeConfirmationModal } from '../features/BackOffice/components/BackOfficeConfirmationModal'
 import { BackOfficeDialog } from '../features/BackOffice/components/BackOfficeDialog'
 import { BackOfficeMenu } from '../features/BackOfficeMenu'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../features/BackOfficeMenu/constants'
@@ -45,7 +44,6 @@ export function BackOfficePage() {
         </Routes>
       </Body>
 
-      {backOffice.isConfirmationModalOpen && <BackOfficeConfirmationModal />}
       {backOffice.isDialogOpen && <BackOfficeDialog />}
 
       <Notifier />

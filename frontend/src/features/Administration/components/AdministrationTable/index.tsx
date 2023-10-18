@@ -45,8 +45,8 @@ export function AdministrationTable() {
   }, [backOfficeAdministrationList.filtersState, administrations])
 
   const askForArchivingConfirmation = useCallback(
-    async (cell: CellContext<Administration.Administration, unknown>) => {
-      const administration = cell.getValue<Administration.Administration>()
+    async (cellContext: CellContext<Administration.Administration, unknown>) => {
+      const administration = cellContext.getValue<Administration.Administration>()
 
       const { data: canArchiveAdministration } = await dispatch(
         administrationsAPI.endpoints.canArchiveAdministration.initiate(administration.id)
@@ -64,8 +64,8 @@ export function AdministrationTable() {
   )
 
   const askForDeletionConfirmation = useCallback(
-    async (cell: CellContext<Administration.Administration, unknown>) => {
-      const administration = cell.getValue<Administration.Administration>()
+    async (cellContext: CellContext<Administration.Administration, unknown>) => {
+      const administration = cellContext.getValue<Administration.Administration>()
 
       const { data: canDeleteAdministration } = await dispatch(
         administrationsAPI.endpoints.canDeleteAdministration.initiate(administration.id)

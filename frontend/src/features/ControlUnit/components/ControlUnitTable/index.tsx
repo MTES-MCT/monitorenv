@@ -40,16 +40,19 @@ export function ControlUnitTable() {
     return filters.reduce((previousControlUnits, filter) => filter(previousControlUnits), controlUnits)
   }, [controlUnits, backOfficeControlUnitList.filtersState])
 
-  const askForArchivingConfirmation = useCallback(async (cell: CellContext<ControlUnit.ControlUnit, unknown>) => {
-    const controlUnit = cell.getValue<ControlUnit.ControlUnit>()
+  const askForArchivingConfirmation = useCallback(
+    async (cellContext: CellContext<ControlUnit.ControlUnit, unknown>) => {
+      const controlUnit = cellContext.getValue<ControlUnit.ControlUnit>()
 
-    setTargettedControlUnit(controlUnit)
-    setIsArchivingConfirnationModalOpen(true)
-  }, [])
+      setTargettedControlUnit(controlUnit)
+      setIsArchivingConfirnationModalOpen(true)
+    },
+    []
+  )
 
   const askForDeletionConfirmation = useCallback(
-    async (cell: CellContext<ControlUnit.ControlUnit, unknown>) => {
-      const controlUnit = cell.getValue<ControlUnit.ControlUnit>()
+    async (cellContext: CellContext<ControlUnit.ControlUnit, unknown>) => {
+      const controlUnit = cellContext.getValue<ControlUnit.ControlUnit>()
 
       const { data: canDeleteControlUnit } = await dispatch(
         controlUnitsAPI.endpoints.canDeleteControlUnit.initiate(controlUnit.id)

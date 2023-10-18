@@ -1,18 +1,25 @@
 import { monitorenvPublicApi } from './api'
 import { DELETE_GENERIC_ERROR_MESSAGE } from './constants'
-import { ApiErrorCode } from './types'
+import { ApiErrorCode, type BackendApiBooleanResponse } from './types'
 import { FrontendApiError } from '../libs/FrontendApiError'
 import { newUserError } from '../libs/UserError'
 
 import type { Base } from '../domain/entities/base'
 
-const DELETE_BASE_ERROR_MESSAGE =
+const CAN_DELETE_BASE_ERROR_MESSAGE = "Nous n'avons pas pu vérifier si cette base est supprimable."
+export const DELETE_BASE_ERROR_MESSAGE =
   "Cette base est rattachée à des moyens. Veuillez l'en détacher avant de la supprimer ou bien l'archiver."
 const GET_BASE_ERROR_MESSAGE = "Nous n'avons pas pu récupérer cette base."
 const GET_BASES_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la liste des bases."
 
 export const basesAPI = monitorenvPublicApi.injectEndpoints({
   endpoints: builder => ({
+    canDeleteBase: builder.query<boolean, number>({
+      query: administrationId => `/v1/administrations/${administrationId}/can_delete`,
+      transformErrorResponse: response => new FrontendApiError(CAN_DELETE_BASE_ERROR_MESSAGE, response),
+      transformResponse: (response: BackendApiBooleanResponse) => response.value
+    }),
+
     createBase: builder.mutation<void, Base.BaseData>({
       invalidatesTags: () => [{ type: 'Bases' }],
       query: newBaseData => ({
@@ -60,4 +67,10 @@ export const basesAPI = monitorenvPublicApi.injectEndpoints({
   })
 })
 
-export const { useCreateBaseMutation, useGetBaseQuery, useGetBasesQuery, useUpdateBaseMutation } = basesAPI
+export const {
+  useCanDeleteBaseQuery,
+  useCreateBaseMutation,
+  useGetBaseQuery,
+  useGetBasesQuery,
+  useUpdateBaseMutation
+} = basesAPI

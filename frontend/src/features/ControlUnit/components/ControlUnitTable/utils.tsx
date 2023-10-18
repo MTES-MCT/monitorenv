@@ -8,16 +8,16 @@ import type { CellContext, ColumnDef } from '@tanstack/react-table'
 import type { Promisable } from 'type-fest'
 
 export function getControlUnitTableColumns(
-  askForArchivingConfirmation: (cell: CellContext<ControlUnit.ControlUnit, unknown>) => Promisable<void>,
-  askForDeletionConfirmation: (cell: CellContext<ControlUnit.ControlUnit, unknown>) => Promisable<void>,
+  askForArchivingConfirmation: (cellContext: CellContext<ControlUnit.ControlUnit, unknown>) => Promisable<void>,
+  askForDeletionConfirmation: (cellContext: CellContext<ControlUnit.ControlUnit, unknown>) => Promisable<void>,
   isArchived: boolean = false
 ): Array<ColumnDef<ControlUnit.ControlUnit>> {
   const archiveColumn: ColumnDef<ControlUnit.ControlUnit> = {
     accessorFn: row => row,
-    cell: info => (
+    cell: cellContext => (
       <IconButton
         Icon={Icon.Archive}
-        onClick={() => askForArchivingConfirmation(info)}
+        onClick={() => askForArchivingConfirmation(cellContext)}
         size={Size.SMALL}
         title="Archiver cette unité de contrôle"
       />
@@ -30,10 +30,10 @@ export function getControlUnitTableColumns(
 
   const deleteColumn: ColumnDef<ControlUnit.ControlUnit> = {
     accessorFn: row => row,
-    cell: info => (
+    cell: cellContext => (
       <IconButton
         Icon={Icon.Delete}
-        onClick={() => askForDeletionConfirmation(info)}
+        onClick={() => askForDeletionConfirmation(cellContext)}
         size={Size.SMALL}
         title="Supprimer cette unité de contrôle"
       />

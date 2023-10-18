@@ -8,16 +8,16 @@ import type { CellContext, ColumnDef } from '@tanstack/react-table'
 import type { Promisable } from 'type-fest'
 
 export function getAdministrationTableColumns(
-  askForArchivingConfirmation: (cell: CellContext<Administration.Administration, unknown>) => Promisable<void>,
-  askForDeletionConfirmation: (cell: CellContext<Administration.Administration, unknown>) => Promisable<void>,
+  askForArchivingConfirmation: (cellContext: CellContext<Administration.Administration, unknown>) => Promisable<void>,
+  askForDeletionConfirmation: (cellContext: CellContext<Administration.Administration, unknown>) => Promisable<void>,
   isArchived: boolean = false
 ): Array<ColumnDef<Administration.Administration>> {
   const archiveColumn: ColumnDef<Administration.Administration> = {
     accessorFn: row => row,
-    cell: info => (
+    cell: cellContext => (
       <IconButton
         Icon={Icon.Archive}
-        onClick={() => askForArchivingConfirmation(info)}
+        onClick={() => askForArchivingConfirmation(cellContext)}
         size={Size.SMALL}
         title="Archiver cette administration"
       />
@@ -30,10 +30,10 @@ export function getAdministrationTableColumns(
 
   const deleteColumn: ColumnDef<Administration.Administration> = {
     accessorFn: row => row,
-    cell: info => (
+    cell: cellContext => (
       <IconButton
         Icon={Icon.Delete}
-        onClick={() => askForDeletionConfirmation(info)}
+        onClick={() => askForDeletionConfirmation(cellContext)}
         size={Size.SMALL}
         title="Supprimer cette administration"
       />
