@@ -26,7 +26,7 @@ export function AdministrationTable() {
   const [isDeletionConfirnationModalOpen, setIsDeletionConfirnationModalOpen] = useState(false)
   const [isImpossibleArchivingDialogOpen, setIsImpossibleArchivingDialogOpen] = useState(false)
   const [isImpossibleDeletionDialogOpen, setIsImpossibleDeletionDialogOpen] = useState(false)
-  const [targettedAdministration, setTargettedAdministration] = useState<Administration.Administration | undefined>(
+  const [targetedAdministration, setTargettedAdministration] = useState<Administration.Administration | undefined>(
     undefined
   )
 
@@ -137,25 +137,25 @@ export function AdministrationTable() {
         initialSorting={[{ desc: false, id: 'name' }]}
       />
 
-      {isArchivingConfirnationModalOpen && targettedAdministration && (
+      {isArchivingConfirnationModalOpen && targetedAdministration && (
         <ConfirmationModal
           confirmationButtonLabel="Archiver"
           message={[
-            `Êtes-vous sûr de vouloir archiver l'administration "${targettedAdministration.name}" ?`,
+            `Êtes-vous sûr de vouloir archiver l'administration "${targetedAdministration.name}" ?`,
             `Elle n'apparaîtra plus dans MonitorEnv, elle ne sera plus utilisée que pour les statistiques.`
           ].join(' ')}
           onCancel={close}
-          onConfirm={() => confirmArchiving(targettedAdministration.id)}
+          onConfirm={() => confirmArchiving(targetedAdministration.id)}
           title="Archivage de l'administration"
         />
       )}
 
-      {isDeletionConfirnationModalOpen && targettedAdministration && (
+      {isDeletionConfirnationModalOpen && targetedAdministration && (
         <ConfirmationModal
           confirmationButtonLabel="Supprimer"
-          message={`Êtes-vous sûr de vouloir supprimer l'administration "${targettedAdministration.name}" ?`}
+          message={`Êtes-vous sûr de vouloir supprimer l'administration "${targetedAdministration.name}" ?`}
           onCancel={close}
-          onConfirm={() => confirmDeletion(targettedAdministration.id)}
+          onConfirm={() => confirmDeletion(targetedAdministration.id)}
           title="Suppression de l'administration"
         />
       )}

@@ -24,7 +24,7 @@ export function ControlUnitTable() {
   const [isArchivingConfirnationModalOpen, setIsArchivingConfirnationModalOpen] = useState(false)
   const [isDeletionConfirnationModalOpen, setIsDeletionConfirnationModalOpen] = useState(false)
   const [isImpossibleDeletionDialogOpen, setIsImpossibleDeletionDialogOpen] = useState(false)
-  const [targettedControlUnit, setTargettedControlUnit] = useState<ControlUnit.ControlUnit | undefined>(undefined)
+  const [targetedControlUnit, setTargettedControlUnit] = useState<ControlUnit.ControlUnit | undefined>(undefined)
 
   const backOfficeControlUnitList = useAppSelector(store => store.backOfficeControlUnitList)
   const dispatch = useAppDispatch()
@@ -123,28 +123,28 @@ export function ControlUnitTable() {
         initialSorting={[{ desc: false, id: 'name' }]}
       />
 
-      {isArchivingConfirnationModalOpen && targettedControlUnit && (
+      {isArchivingConfirnationModalOpen && targetedControlUnit && (
         <ConfirmationModal
           confirmationButtonLabel="Archiver"
           message={[
-            `Êtes-vous sûr de vouloir archiver l'unité "${targettedControlUnit.name}" ?`,
+            `Êtes-vous sûr de vouloir archiver l'unité "${targetedControlUnit.name}" ?`,
             `Elle n'apparaîtra plus dans MonitorEnv, elle ne sera plus utilisée que pour les statistiques.`
           ].join(' ')}
           onCancel={close}
-          onConfirm={() => confirmArchiving(targettedControlUnit.id)}
+          onConfirm={() => confirmArchiving(targetedControlUnit.id)}
           title="Archivage de l'unité"
         />
       )}
 
-      {isDeletionConfirnationModalOpen && targettedControlUnit && (
+      {isDeletionConfirnationModalOpen && targetedControlUnit && (
         <ConfirmationModal
           confirmationButtonLabel="Supprimer"
           message={[
-            `Êtes-vous sûr de vouloir supprimer l'unité "${targettedControlUnit.name}" ?`,
+            `Êtes-vous sûr de vouloir supprimer l'unité "${targetedControlUnit.name}" ?`,
             `Ceci entraînera la suppression de toutes ses informations (moyens, contacts...).`
           ].join(' ')}
           onCancel={close}
-          onConfirm={() => confirmDeletion(targettedControlUnit.id)}
+          onConfirm={() => confirmDeletion(targetedControlUnit.id)}
           title="Suppression de l'unité"
         />
       )}

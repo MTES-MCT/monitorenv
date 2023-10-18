@@ -18,7 +18,7 @@ import type { CellContext } from '@tanstack/react-table'
 export function BaseTable() {
   const [isDeletionConfirnationModalOpen, setIsDeletionConfirnationModalOpen] = useState(false)
   const [isImpossibleDeletionDialogOpen, setIsImpossibleDeletionDialogOpen] = useState(false)
-  const [targettedBase, setTargettedBase] = useState<Base.Base | undefined>(undefined)
+  const [targetedBase, setTargettedBase] = useState<Base.Base | undefined>(undefined)
 
   const backOfficeBaseList = useAppSelector(store => store.backOfficeBaseList)
   const dispatch = useAppDispatch()
@@ -79,12 +79,12 @@ export function BaseTable() {
 
       <DataTable columns={baseTableColumns} data={filteredBases} initialSorting={[{ desc: false, id: 'name' }]} />
 
-      {isDeletionConfirnationModalOpen && targettedBase && (
+      {isDeletionConfirnationModalOpen && targetedBase && (
         <ConfirmationModal
           confirmationButtonLabel="Supprimer"
-          message={`Êtes-vous sûr de vouloir supprimer la base "${targettedBase.name}" ?`}
+          message={`Êtes-vous sûr de vouloir supprimer la base "${targetedBase.name}" ?`}
           onCancel={close}
-          onConfirm={() => confirmDeletion(targettedBase.id)}
+          onConfirm={() => confirmDeletion(targetedBase.id)}
           title="Suppression de la base"
         />
       )}
