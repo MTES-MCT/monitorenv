@@ -10,7 +10,6 @@
 
 name: Publish package to GitHub Packages
 on:
-  push:
   workflow_dispatch:
     version:
       description: 'Version number'
