@@ -76,8 +76,8 @@ const Wrapper = styled(MapMenuDialog.Container)`
   height: 640px;
   max-height: 640px;
   position: absolute;
-  right: 12px;
-  top: 12px;
+  right: 50px;
+  top: 82px;
   z-index: 2;
   width: 500px;
 `
