@@ -13,7 +13,5 @@ export type DialogState = {
 }
 
 export enum BackOfficeConfirmationModalActionType {
-  'ARCHIVE_ADMINISTRATION' = 'ARCHIVE_ADMINISTRATION',
-  'DELETE_ADMINISTRATION' = 'DELETE_ADMINISTRATION',
   'DELETE_BASE' = 'DELETE_BASE'
 }

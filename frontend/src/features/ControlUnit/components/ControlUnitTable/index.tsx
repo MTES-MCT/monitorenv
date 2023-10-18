@@ -97,7 +97,7 @@ export function ControlUnitTable() {
         askForDeletionConfirmation,
         backOfficeControlUnitList.filtersState.isArchived
       ),
-    [backOfficeControlUnitList.filtersState.isArchived, askForArchivingConfirmation, askForDeletionConfirmation]
+    [askForArchivingConfirmation, askForDeletionConfirmation, backOfficeControlUnitList.filtersState.isArchived]
   )
 
   return (

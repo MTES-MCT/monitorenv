@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateAdministrationDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.AdministrationDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.BooleanDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.FullAdministrationDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.*
 @Tag(name = "Administrations")
 class ApiAdministrationsController(
     private val archiveAdministration: ArchiveAdministration,
+    private val canArchiveAdministration: CanArchiveAdministration,
+    private val canDeleteAdministration: CanDeleteAdministration,
     private val createOrUpdateAdministration: CreateOrUpdateAdministration,
     private val deleteAdministration: DeleteAdministration,
     private val getAdministrations: GetAdministrations,
@@ -28,6 +31,26 @@ class ApiAdministrationsController(
         administrationId: Int,
     ) {
         archiveAdministration.execute(administrationId)
+    }
+
+    @GetMapping("/{administrationId}/can_archive")
+    @Operation(summary = "Can this administration be archived?")
+    fun canArchive(
+        @PathParam("Administration ID")
+        @PathVariable(name = "administrationId")
+        administrationId: Int,
+    ): BooleanDataOutput {
+        return canArchiveAdministration.execute(administrationId).let { BooleanDataOutput.get(it) }
+    }
+
+    @GetMapping("/{administrationId}/can_delete")
+    @Operation(summary = "Can this administration be deleted?")
+    fun canDelete(
+        @PathParam("Administration ID")
+        @PathVariable(name = "administrationId")
+        administrationId: Int,
+    ): BooleanDataOutput {
+        return canDeleteAdministration.execute(administrationId).let { BooleanDataOutput.get(it) }
     }
 
     @PostMapping("", consumes = ["application/json"])

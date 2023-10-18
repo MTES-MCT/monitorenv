@@ -1,6 +1,4 @@
 import { FrontendError } from '../../../libs/FrontendError'
-import { archiveAdministration } from '../../Administration/useCases/archiveAdministration'
-import { deleteAdministration } from '../../Administration/useCases/deleteAdministration'
 import { deleteBase } from '../../Base/useCases/deleteBase'
 import { backOfficeActions } from '../slice'
 import { BackOfficeConfirmationModalActionType } from '../types'
@@ -14,14 +12,6 @@ export const handleModalConfirmation = (): AppThunk<void> => async (dispatch, ge
   }
 
   switch (confirmationModal.actionType) {
-    case BackOfficeConfirmationModalActionType.ARCHIVE_ADMINISTRATION:
-      await dispatch(archiveAdministration())
-      break
-
-    case BackOfficeConfirmationModalActionType.DELETE_ADMINISTRATION:
-      await dispatch(deleteAdministration())
-      break
-
     case BackOfficeConfirmationModalActionType.DELETE_BASE:
       await dispatch(deleteBase())
       break

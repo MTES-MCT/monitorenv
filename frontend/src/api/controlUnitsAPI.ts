@@ -24,7 +24,6 @@ export const controlUnitsAPI = monitorenvPublicApi.injectEndpoints({
     }),
 
     canDeleteControlUnit: builder.query<boolean, number>({
-      providesTags: () => [{ type: 'ControlUnits' }],
       query: controlUnitId => `/v2/control_units/${controlUnitId}/can_delete`,
       transformErrorResponse: response => new FrontendApiError(CAN_DELETE_CONTROL_UNIT_ERROR_MESSAGE, response),
       transformResponse: (response: BackendApiBooleanResponse) => response.value
