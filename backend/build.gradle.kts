@@ -7,7 +7,7 @@ publishing {
     maven {
       groupId = 'fr.gouv.monitor'
       artifactId = 'api'
-      version = "test"
+      version = "VERSION_TO_CHANGE"
       from components.java
 
       pom {
