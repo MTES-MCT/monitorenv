@@ -15,10 +15,10 @@ publishing {
     }
   }
   publications {
-    register<MavenPublication>("monitorenv") {
+    register<MavenPublication>("gpr") {
       groupId = "fr.gouv.monitor"
       artifactId = "api"
-      version = "VERSION_TO_CHANGE"
+      version = "v0.0.1"
 
       from(components["java"])
     }
