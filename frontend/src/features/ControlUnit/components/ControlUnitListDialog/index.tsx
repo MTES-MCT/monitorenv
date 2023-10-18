@@ -1,5 +1,4 @@
-import { Accent, Button, Icon, MapMenuDialog } from '@mtes-mct/monitor-ui'
-import { noop } from 'lodash/fp'
+import { Accent, Icon, MapMenuDialog } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
 
 import { FilterBar } from './FilterBar'
@@ -40,11 +39,11 @@ export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
         {filteredControlUnits &&
           filteredControlUnits.map(controlUnit => <Item key={controlUnit.id} controlUnit={controlUnit} />)}
       </MapMenuDialog.Body>
-      <MapMenuDialog.Footer>
+      {/* <MapMenuDialog.Footer>
         <Button accent={Accent.SECONDARY} Icon={Icon.Expand} isFullWidth onClick={noop}>
           Voir la vue détaillée des unités
         </Button>
-      </MapMenuDialog.Footer>
+      </MapMenuDialog.Footer> */}
     </MapMenuDialog.Container>
   )
 }
