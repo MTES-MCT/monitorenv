@@ -1,4 +1,3 @@
-import { Icon } from '@mtes-mct/monitor-ui'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -8,16 +7,13 @@ export function BackOfficeMenu() {
   return (
     <Wrapper>
       <StyledNavLink to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.ADMINISTRATION_LIST]}`}>
-        <Icon.Car />
-        <NavText>{BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.ADMINISTRATION_LIST]}</NavText>
+        {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.ADMINISTRATION_LIST]}
       </StyledNavLink>
       <StyledNavLink to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_LIST]}`}>
-        <Icon.ControlUnit />
-        <NavText>{BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.CONTROL_UNIT_LIST]}</NavText>
+        {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.CONTROL_UNIT_LIST]}
       </StyledNavLink>
       <StyledNavLink to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.BASE_LIST]}`}>
-        <Icon.Car />
-        <NavText>{BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.BASE_LIST]}</NavText>
+        {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.BASE_LIST]}
       </StyledNavLink>
     </Wrapper>
   )
@@ -29,8 +25,10 @@ const Wrapper = styled.div`
   color: ${p => p.theme.color.gainsboro};
   display: flex;
   flex-direction: column;
-  padding: 15px;
-  width: 240px;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  padding: 16px 24px;
+  width: 200px;
 `
 
 const StyledNavLink = styled(NavLink)`
@@ -38,7 +36,6 @@ const StyledNavLink = styled(NavLink)`
   color: ${p => p.theme.color.gainsboro};
   display: flex;
   height: 45px;
-  padding: 0 5px;
   text-align: left;
 
   && {
@@ -50,10 +47,4 @@ const StyledNavLink = styled(NavLink)`
   &:before {
     color: ${p => p.theme.color.gainsboro};
   }
-`
-
-const NavText = styled.span`
-  line-height: 9px;
-  margin: 0 0 0 8px;
-  letter-spacing: 0.5px;
 `
