@@ -60,7 +60,7 @@ export function getFilters(
   const filters: Array<Filter<Administration.Administration>> = []
 
   // Search query
-  // ⚠️ Order matters! Search query should be before other filters.
+  // ⚠️ Order matters! Search query should be kept before other filters.
   if (filtersState.query && filtersState.query.trim().length > 0) {
     const queryFilter: Filter<Administration.Administration> = () => customSearch.find(filtersState.query as string)
 
