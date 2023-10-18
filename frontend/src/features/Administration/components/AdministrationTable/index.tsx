@@ -16,7 +16,7 @@ import { Dialog } from '../../../../components/Dialog'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { NavButton } from '../../../../ui/NavButton'
-import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../../BackOfficeMenu/constants'
+import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../../BackOffice/components/BackofficeMenu/constants'
 
 import type { Administration } from '../../../../domain/entities/administration'
 import type { CellContext } from '@tanstack/react-table'

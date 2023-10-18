@@ -17,7 +17,7 @@ import { getBaseFormValuesFromBase, getBaseDataFromBaseFormValues, isBase } from
 import { basesAPI, useGetBaseQuery } from '../../../../api/basesAPI'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../../libs/FrontendError'
-import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../../BackOfficeMenu/constants'
+import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../../BackOffice/components/BackofficeMenu/constants'
 import { CONTROL_UNIT_RESOURCE_TABLE_COLUMNS } from '../../../ControlUnit/components/ControlUnitForm/constants'
 
 import type { BaseFormValues } from './types'

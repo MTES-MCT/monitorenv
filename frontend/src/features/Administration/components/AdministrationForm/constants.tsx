@@ -2,7 +2,7 @@ import { Icon, Size } from '@mtes-mct/monitor-ui'
 import { object, string } from 'yup'
 
 import { NavIconButton } from '../../../../ui/NavIconButton'
-import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../../BackOfficeMenu/constants'
+import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../../BackOffice/components/BackofficeMenu/constants'
 
 import type { AdministrationFormValues } from './types'
 import type { ControlUnit } from '../../../../domain/entities/controlUnit'

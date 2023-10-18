@@ -27,7 +27,7 @@ import { useGetDepartmentAreasQuery } from '../../../../api/departmentAreasAPI'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../../libs/FrontendError'
 import { isNotArchived } from '../../../../utils/isNotArchived'
-import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../../BackOfficeMenu/constants'
+import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../../BackOffice/components/BackofficeMenu/constants'
 
 import type { ControlUnitFormValues } from './types'
 import type { ControlUnit } from '../../../../domain/entities/controlUnit'
