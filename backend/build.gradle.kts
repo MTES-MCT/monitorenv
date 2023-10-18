@@ -19,6 +19,11 @@ kotlin {
   jvmToolchain(17)
 }
 
+java {
+  withJavadocJar()
+  withSourcesJar()
+}
+
 noArg {
   invokeInitializers = true
 }
@@ -34,6 +39,7 @@ tasks.named("compileKotlin", org.jetbrains.kotlin.gradle.tasks.KotlinCompilation
     // javaParameters.set(true)
   }
 }
+
 dependencies {
     api("org.springframework.boot:spring-boot-starter-web:3.1.4")
     api("org.hibernate.validator:hibernate-validator:8.0.1.Final")
@@ -79,6 +85,20 @@ version = "VERSION_TO_CHANGE"
 description = "MonitorEnv"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
+sourceSets {
+  create("apiSupport") {
+    java {
+      srcDir("src/main/kotlin/fr/gouv/cacem/monitorenv/infrastructure")
+    }
+  }
+}
+
+java {
+  registerFeature("apiSupport") {
+    usingSourceSet(sourceSets["apiSupport"])
+  }
+}
+
 // This publication is only runned from the CI in Github Actions
 publishing {
   repositories {
@@ -92,13 +112,18 @@ publishing {
     }
   }
   publications {
+    val apiSourceJar by tasks.registering(Jar::class) {
+      from(sourceSets["apiSupport"].allSource)
+    }
+
     register<MavenPublication>("gpr") {
       groupId = "fr.gouv.monitor"
       artifactId = "api"
       version = "v0.0.2"
 
-      from(components["java"])
-      exclude("fr.gouv.cacem.monitorenv.domain/**")
+      // from(components["apiSupport"])
+      artifact(apiSourceJar.get())
+      // exclude(listOf("**/domain/**"))
     }
   }
 }
