@@ -10,6 +10,6 @@ class CanArchiveAdministration(
     fun execute(administrationId: Int): Boolean {
         val fullAdministration = administrationRepository.findById(administrationId)
 
-        return fullAdministration.controlUnits.none { it.isArchived }
+        return fullAdministration.controlUnits.all { it.isArchived }
     }
 }
