@@ -40,3 +40,9 @@ datascience/docs/build
 
 # TypeScript cache
 *.tsbuildinfo
+
+# Ignore Gradle project-specific cache directory
+backend/.gradle
+
+# Ignore Gradle build output directory
+backend/build
