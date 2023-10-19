@@ -5,7 +5,6 @@ import { reportingActions } from '../../shared_slices/reporting'
 
 export const editReportingInLocalStore =
   (reportingId: number, reportingContext: ReportingContext) => async (dispatch, getState) => {
-    dispatch(attachMissionToReportingSliceActions.resetAttachMissionState())
     const reportingToEdit = reportingsAPI.endpoints.getReporting
     try {
       const { reportings } = getState().reporting
@@ -32,6 +31,7 @@ export const editReportingInLocalStore =
           throw Error('Erreur à la récupération du signalement')
         }
       }
+
       await dispatch(
         setReportingFormVisibility({
           context: reportingContext,
@@ -41,10 +41,12 @@ export const editReportingInLocalStore =
 
       await dispatch(reportingActions.setReporting(newReporting))
       await dispatch(reportingActions.setActiveReportingId(reportingId))
-      if (newReporting.reporting.attachedMission) {
-        dispatch(attachMissionToReportingSliceActions.setAttachedMission(newReporting.reporting.attachedMission))
-        dispatch(attachMissionToReportingSliceActions.setMissionId(newReporting.reporting.missionId))
-      }
+      // if (newReporting.reporting.attachedMission) {
+      await dispatch(
+        attachMissionToReportingSliceActions.setAttachedMission(newReporting.reporting.attachedMission || undefined)
+      )
+      await dispatch(attachMissionToReportingSliceActions.setMissionId(newReporting.reporting.missionId || undefined))
+      // }
     } catch (error) {
       dispatch(setToast({ message: error }))
     }
