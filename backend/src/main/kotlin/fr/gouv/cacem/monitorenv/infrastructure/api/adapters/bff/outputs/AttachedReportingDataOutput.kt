@@ -9,6 +9,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.ControlUnitDataOutput
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
+import java.util.UUID
 
 data class AttachedReportingDataOutput(
     val id: Int,
@@ -38,6 +39,7 @@ data class AttachedReportingDataOutput(
     val missionId: Int? = null,
     val attachedToMissionAtUtc: ZonedDateTime? = null,
     val detachedFromMissionAtUtc: ZonedDateTime? = null,
+    val attachedEnvActionId: UUID? = null,
 ) {
     companion object {
         fun fromReportingDTO(

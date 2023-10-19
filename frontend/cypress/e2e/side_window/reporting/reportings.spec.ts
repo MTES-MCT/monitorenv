@@ -10,6 +10,7 @@ context('Missions', () => {
   it('Reportings should be displayed in Reportings Table and filterable', () => {
     cy.log('A default period filter should be set')
     cy.fill('Période', '24 dernières heures')
+
     cy.get('*[data-cy="totalReportings"]').contains('5')
 
     cy.log('Source type should be filtered')
@@ -74,18 +75,30 @@ context('Missions', () => {
       expect(response && response.statusCode).equal(204)
     })
   })
-  it('Can open multiple reportings', () => {
+  it('Multiples reportings can be opened or created and saved in store', () => {
     cy.get('*[data-cy="status-filter-Archivés"]').click()
 
     cy.get('*[data-cy="edit-reporting-5"]').click({ force: true })
     cy.get('*[data-cy="reporting-reduce-or-expand-button"]').click()
 
+    // create new reporting
     cy.clickButton('Ajouter un nouveau signalement')
     cy.get('*[data-cy="reporting-title"]').contains('NOUVEAU SIGNALEMENT (1)')
+
+    cy.get('*[data-cy="add-semaphore-source"]').click({ force: true })
+    cy.get('div[role="option"]').contains('Sémaphore de Dieppe').click()
+    cy.get('*[data-cy="reporting-target-type"]').click({ force: true })
+    cy.get('div[role="option"]').contains('Personne morale').click()
+
     cy.get('*[data-cy="reporting-reduce-or-expand-button"]').click()
 
+    // create another new reporting
     cy.clickButton('Ajouter un nouveau signalement')
     cy.get('*[data-cy="reporting-title"]').contains('NOUVEAU SIGNALEMENT (2)')
-    cy.get('*[data-cy="reporting-reduce-or-expand-button"]').click()
+    cy.get('*[data-cy="reporting-reduce-or-expand-button-new-1"]').click()
+
+    cy.get('*[data-cy="reporting-title"]').contains('NOUVEAU SIGNALEMENT (1)')
+    cy.get('*[data-cy="add-semaphore-source"]').contains('Sémaphore de Dieppe')
+    cy.get('*[data-cy="reporting-target-type"]').contains('Personne morale')
   })
 })
