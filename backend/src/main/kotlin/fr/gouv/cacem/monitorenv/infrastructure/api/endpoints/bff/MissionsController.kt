@@ -19,8 +19,8 @@ import java.time.ZonedDateTime
 @Tag(description = "API Missions", name = "Missions")
 class MissionsController(
     private val createOrUpdateMissionWithAttachedReporting: CreateOrUpdateMissionWithAttachedReporting,
-    private val getMissions: GetMissions,
-    private val getMissionById: GetMissionById,
+    private val getFullMissions: GetFullMissions,
+    private val getFullMissionById: GetFullMissionById,
     private val deleteMission: DeleteMission,
     private val getEngagedControlUnits: GetEngagedControlUnits,
 ) {
@@ -55,7 +55,7 @@ class MissionsController(
         @RequestParam(name = "seaFronts", required = false)
         seaFronts: List<String>?,
     ): List<MissionsDataOutput> {
-        val missions = getMissions.execute(
+        val missions = getFullMissions.execute(
             startedAfterDateTime = startedAfterDateTime,
             startedBeforeDateTime = startedBeforeDateTime,
             missionSources = missionSources,
@@ -89,7 +89,7 @@ class MissionsController(
         @PathVariable(name = "missionId")
         missionId: Int,
     ): MissionDataOutput {
-        val mission = getMissionById.execute(missionId = missionId)
+        val mission = getFullMissionById.execute(missionId = missionId)
 
         return MissionDataOutput.fromMissionDTO(mission)
     }

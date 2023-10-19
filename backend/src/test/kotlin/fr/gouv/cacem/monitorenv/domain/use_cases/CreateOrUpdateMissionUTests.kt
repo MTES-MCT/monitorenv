@@ -2,12 +2,10 @@
 
 package fr.gouv.cacem.monitorenv.domain.use_cases
 
-import com.nhaarman.mockitokotlin2.anyOrNull
-import com.nhaarman.mockitokotlin2.argThat
-import com.nhaarman.mockitokotlin2.given
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import fr.gouv.cacem.monitorenv.domain.entities.mission.*
+import com.nhaarman.mockitokotlin2.*
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
@@ -132,10 +130,10 @@ class CreateOrUpdateMissionUTests {
         given(facadeAreasRepository.findFacadeFromGeometry(anyOrNull())).willReturn("La Face Ade")
         given(departmentRepository.findDepartmentFromGeometry(anyOrNull())).willReturn("Quequ'part")
         given(missionRepository.save(anyOrNull())).willReturn(MissionDTO(mission = expectedCreatedMission))
-        given(missionRepository.findById(100)).willReturn(MissionDTO(mission = expectedCreatedMission))
+        given(missionRepository.findById(100)).willReturn(expectedCreatedMission)
 
         // When
-        val createdMissionDTO = CreateOrUpdateMission(
+        val createdMission = CreateOrUpdateMission(
             departmentRepository = departmentRepository,
             missionRepository = missionRepository,
             facadeRepository = facadeAreasRepository,
@@ -169,6 +167,6 @@ class CreateOrUpdateMissionUTests {
                 },
             )
         verify(missionRepository, times(1)).findById(100)
-        assertThat(createdMissionDTO.mission).isEqualTo(expectedCreatedMission)
+        assertThat(createdMission).isEqualTo(expectedCreatedMission)
     }
 }

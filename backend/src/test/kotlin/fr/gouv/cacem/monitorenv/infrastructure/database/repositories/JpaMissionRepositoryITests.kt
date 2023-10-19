@@ -46,7 +46,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `save should create a new mission`() {
         // Given
-        val existingMissions = jpaMissionRepository.findAll(
+        val existingMissions = jpaMissionRepository.findAllFullMissions(
             startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
             startedBefore = ZonedDateTime.parse("2022-08-08T00:00:00Z").toInstant(),
             missionTypes = null,
@@ -141,7 +141,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             noteObservations,
         )
 
-        val missions = jpaMissionRepository.findAll(
+        val missions = jpaMissionRepository.findAllFullMissions(
             startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
             startedBefore = ZonedDateTime.parse("2022-08-08T00:00:00Z").toInstant(),
             missionTypes = null,
@@ -309,7 +309,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAll Should return all missions when only required startedAfter is set to a very old date`() {
         // When
-        val missions = jpaMissionRepository.findAll(
+        val missions = jpaMissionRepository.findAllFullMissions(
             startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
             startedBefore = null,
             missionTypes = null,
@@ -324,7 +324,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAll Should return filtered missions when startedAfter & startedBefore are set`() {
         // When
-        val missions = jpaMissionRepository.findAll(
+        val missions = jpaMissionRepository.findAllFullMissions(
             startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
             startedBefore = ZonedDateTime.parse("2022-08-08T00:00:00Z").toInstant(),
             missionTypes = null,
@@ -339,7 +339,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAll Should return filtered missions when missionTypes is set`() {
         // When
-        val missions = jpaMissionRepository.findAll(
+        val missions = jpaMissionRepository.findAllFullMissions(
             startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
             startedBefore = null,
             missionTypes = listOf("SEA"),
@@ -354,7 +354,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAll Should return filtered missions when multiple missionTypes are set`() {
         // When
-        val missions = jpaMissionRepository.findAll(
+        val missions = jpaMissionRepository.findAllFullMissions(
             startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
             startedBefore = null,
             missionTypes = listOf("SEA", "LAND"),
@@ -369,7 +369,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAll Should return filtered missions when seaFront is set to MEMN`() {
         // When
-        val missions = jpaMissionRepository.findAll(
+        val missions = jpaMissionRepository.findAllFullMissions(
             startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
             startedBefore = null,
             missionTypes = null,
@@ -384,7 +384,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAll Should return filtered missions when seaFront is set to MEMN and NAMO`() {
         // When
-        val missions = jpaMissionRepository.findAll(
+        val missions = jpaMissionRepository.findAllFullMissions(
             startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
             startedBefore = null,
             missionTypes = null,
@@ -399,7 +399,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAll Should return filtered missions when status is set to UPCOMING`() {
         // When
-        val missions = jpaMissionRepository.findAll(
+        val missions = jpaMissionRepository.findAllFullMissions(
             startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
             startedBefore = null,
             missionTypes = null,
@@ -414,7 +414,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAll Should return filtered missions when status is set to PENDING`() {
         // When
-        val missions = jpaMissionRepository.findAll(
+        val missions = jpaMissionRepository.findAllFullMissions(
             startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
             startedBefore = null,
             missionTypes = null,
@@ -429,7 +429,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAll Should return filtered missions when status is set to ENDED`() {
         // When
-        val missions = jpaMissionRepository.findAll(
+        val missions = jpaMissionRepository.findAllFullMissions(
             startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
             startedBefore = null,
             missionTypes = null,
@@ -444,7 +444,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAll Should return filtered missions when status is set to CLOSED`() {
         // When
-        val missions = jpaMissionRepository.findAll(
+        val missions = jpaMissionRepository.findAllFullMissions(
             startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
             startedBefore = null,
             missionTypes = null,
@@ -459,7 +459,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAll Should return filtered missions when status is set to CLOSED or UPCOMING`() {
         // When
-        val missions = jpaMissionRepository.findAll(
+        val missions = jpaMissionRepository.findAllFullMissions(
             startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
             startedBefore = null,
             missionTypes = null,
@@ -474,7 +474,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAll with pagenumber and pagesize Should return subset of missions`() {
         // When
-        val missions = jpaMissionRepository.findAll(
+        val missions = jpaMissionRepository.findAllFullMissions(
             startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
             startedBefore = null,
             missionTypes = null,
@@ -489,7 +489,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAll should filter missions based on MissionSources`() {
         // When
-        val missions = jpaMissionRepository.findAll(
+        val missions = jpaMissionRepository.findAllFullMissions(
             startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
             startedBefore = null,
             missionTypes = null,
@@ -564,7 +564,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 isGeometryComputedFromControls = false,
             ),
         )
-        val mission = jpaMissionRepository.findById(10)
+        val mission = jpaMissionRepository.findFullMissionById(10)
 
         assertThat(mission).isEqualTo(firstMission)
     }
@@ -573,7 +573,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findById Should return specified mission and associated env actions`() {
         // When
-        val missionDTO = jpaMissionRepository.findById(34)
+        val missionDTO = jpaMissionRepository.findFullMissionById(34)
         assertThat(missionDTO.mission.id).isEqualTo(34)
         assertThat(missionDTO.mission.envActions).hasSize(2)
     }
@@ -661,7 +661,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         )
         // When
         jpaMissionRepository.save(missionToUpdate)
-        assertThat(jpaMissionRepository.findById(10)).isEqualTo(expectedUpdatedMission)
+        assertThat(jpaMissionRepository.findFullMissionById(10)).isEqualTo(expectedUpdatedMission)
     }
 
     @Test
@@ -717,7 +717,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         )
         // When
         jpaMissionRepository.save(missionToUpdate)
-        val updatedMission = jpaMissionRepository.findById(10)
+        val updatedMission = jpaMissionRepository.findFullMissionById(10)
         assertThat(updatedMission).isEqualTo(expectedUpdatedMission)
     }
 
@@ -725,7 +725,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `delete Should set the deleted flag as true`() {
         // Given
-        val missionsList = jpaMissionRepository.findAll(
+        val missionsList = jpaMissionRepository.findAllFullMissions(
             startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
             startedBefore = ZonedDateTime.parse("2022-08-08T00:00:00Z").toInstant(),
             missionTypes = null,
@@ -739,7 +739,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         jpaMissionRepository.delete(3)
 
         // Then
-        val nextMissionList = jpaMissionRepository.findAll(
+        val nextMissionList = jpaMissionRepository.findAllFullMissions(
             startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
             startedBefore = ZonedDateTime.parse("2022-08-08T00:00:00Z").toInstant(),
             missionTypes = null,

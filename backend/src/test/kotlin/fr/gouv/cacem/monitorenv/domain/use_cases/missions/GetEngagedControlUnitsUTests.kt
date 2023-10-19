@@ -17,7 +17,7 @@ import java.time.ZonedDateTime
 @ExtendWith(SpringExtension::class)
 class GetEngagedControlUnitsUTests {
     @MockBean
-    private lateinit var getMissions: GetMissions
+    private lateinit var getFullMissions: GetFullMissions
 
     @Test
     fun `execute() should return engaged control units`() {
@@ -48,7 +48,7 @@ class GetEngagedControlUnitsUTests {
         )
 
         given(
-            getMissions.execute(
+            getFullMissions.execute(
                 anyOrNull(),
                 anyOrNull(),
                 anyOrNull(),
@@ -61,7 +61,7 @@ class GetEngagedControlUnitsUTests {
         )
             .willReturn(listOf(expectedMission, expectedMission))
 
-        val controlUnits = GetEngagedControlUnits(getMissions).execute()
+        val controlUnits = GetEngagedControlUnits(getFullMissions).execute()
 
         assertThat(controlUnits).hasSize(1)
         assertThat(controlUnits.first().name).isEqualTo("Control Unit Name")
