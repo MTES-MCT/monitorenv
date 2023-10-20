@@ -4,12 +4,12 @@ import java.time.ZonedDateTime
 import java.util.UUID
 
 data class EnvActionNoteEntity(
-        override val id: UUID,
-        override val actionStartDateTimeUtc: ZonedDateTime? = null,
-        override val actionEndDateTimeUtc: ZonedDateTime? = null,
-        val observations: String? = null,
+    override val id: UUID,
+    override val actionStartDateTimeUtc: ZonedDateTime? = null,
+    override val actionEndDateTimeUtc: ZonedDateTime? = null,
+    val observations: String? = null,
 ) :
-        EnvActionEntity(
-                actionType = ActionTypeEnum.NOTE,
-                id = id,
-        )
+    EnvActionEntity(
+        actionType = ActionTypeEnum.NOTE,
+        id = id,
+    )

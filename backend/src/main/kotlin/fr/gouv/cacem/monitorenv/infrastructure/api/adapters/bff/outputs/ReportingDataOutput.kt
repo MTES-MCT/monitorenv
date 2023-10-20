@@ -51,7 +51,7 @@ data class ReportingDataOutput(
         ): ReportingDataOutput {
             requireNotNull(dto.reporting.id) { "ReportingEntity.id cannot be null" }
             return ReportingDataOutput(
-                id = dto.reporting.id!!,
+                id = dto.reporting.id,
                 reportingId = dto.reporting.reportingId,
                 sourceType = dto.reporting.sourceType,
                 semaphoreId = dto.reporting.semaphoreId,
@@ -75,11 +75,11 @@ data class ReportingDataOutput(
                 displayedSource =
                 when (dto.reporting.sourceType) {
                     SourceTypeEnum.SEMAPHORE ->
-                        dto?.semaphore?.unit
-                            ?: dto?.semaphore?.name
+                        dto.semaphore?.unit
+                            ?: dto.semaphore?.name
                     // TODO This is really strange : `fullControlUnit?.controlUnit`
                     // can't be null and I have to add another `?`...
-                    SourceTypeEnum.CONTROL_UNIT -> dto?.controlUnit?.controlUnit?.name
+                    SourceTypeEnum.CONTROL_UNIT -> dto.controlUnit?.controlUnit?.name
                     SourceTypeEnum.OTHER -> dto.reporting.sourceName
                     else -> ""
                 },

@@ -9,19 +9,19 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.BaseModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
-import java.time.Instant
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import java.time.Instant
 
 @Repository
 class JpaMissionRepository(
-        private val dbBaseRepository: JpaBaseRepository,
-        private val dbMissionRepository: IDBMissionRepository,
-        private val mapper: ObjectMapper,
+    private val dbBaseRepository: JpaBaseRepository,
+    private val dbMissionRepository: IDBMissionRepository,
+    private val mapper: ObjectMapper,
 ) : IMissionRepository {
     override fun count(): Long {
         return dbMissionRepository.count()
@@ -34,25 +34,25 @@ class JpaMissionRepository(
     }
 
     override fun findAllFullMissions(
-            startedAfter: Instant,
-            startedBefore: Instant?,
-            missionTypes: List<String>?,
-            missionStatuses: List<String>?,
-            missionSources: List<MissionSourceEnum>?,
-            seaFronts: List<String>?,
-            pageable: Pageable,
+        startedAfter: Instant,
+        startedBefore: Instant?,
+        missionTypes: List<String>?,
+        missionStatuses: List<String>?,
+        missionSources: List<MissionSourceEnum>?,
+        seaFronts: List<String>?,
+        pageable: Pageable,
     ): List<MissionDTO> {
         val missionSourcesAsStringArray = missionSources?.map { it.name }
         return dbMissionRepository.findAll(
-                        startedAfter = startedAfter,
-                        startedBefore = startedBefore,
-                        missionTypes = convertToPGArray(missionTypes),
-                        missionStatuses = convertToPGArray(missionStatuses),
-                        missionSources = convertToPGArray(missionSourcesAsStringArray),
-                        seaFronts = convertToPGArray(seaFronts),
-                        pageable = pageable,
-                )
-                .map { it.toMissionDTO(mapper) }
+            startedAfter = startedAfter,
+            startedBefore = startedBefore,
+            missionTypes = convertToPGArray(missionTypes),
+            missionStatuses = convertToPGArray(missionStatuses),
+            missionSources = convertToPGArray(missionSourcesAsStringArray),
+            seaFronts = convertToPGArray(seaFronts),
+            pageable = pageable,
+        )
+            .map { it.toMissionDTO(mapper) }
     }
 
     override fun findByControlUnitId(controlUnitId: Int): List<MissionEntity> {
@@ -62,25 +62,25 @@ class JpaMissionRepository(
     }
 
     override fun findAll(
-            startedAfter: Instant,
-            startedBefore: Instant?,
-            missionTypes: List<String>?,
-            missionStatuses: List<String>?,
-            missionSources: List<MissionSourceEnum>?,
-            seaFronts: List<String>?,
-            pageable: Pageable,
+        startedAfter: Instant,
+        startedBefore: Instant?,
+        missionTypes: List<String>?,
+        missionStatuses: List<String>?,
+        missionSources: List<MissionSourceEnum>?,
+        seaFronts: List<String>?,
+        pageable: Pageable,
     ): List<MissionEntity> {
         val missionSourcesAsStringArray = missionSources?.map { it.name }
         return dbMissionRepository.findAll(
-                        startedAfter = startedAfter,
-                        startedBefore = startedBefore,
-                        missionTypes = convertToPGArray(missionTypes),
-                        missionStatuses = convertToPGArray(missionStatuses),
-                        missionSources = convertToPGArray(missionSourcesAsStringArray),
-                        seaFronts = convertToPGArray(seaFronts),
-                        pageable = pageable,
-                )
-                .map { it.toMissionEntity(mapper) }
+            startedAfter = startedAfter,
+            startedBefore = startedBefore,
+            missionTypes = convertToPGArray(missionTypes),
+            missionStatuses = convertToPGArray(missionStatuses),
+            missionSources = convertToPGArray(missionSourcesAsStringArray),
+            seaFronts = convertToPGArray(seaFronts),
+            pageable = pageable,
+        )
+            .map { it.toMissionEntity(mapper) }
     }
 
     override fun findFullMissionById(missionId: Int): MissionDTO {
@@ -97,12 +97,12 @@ class JpaMissionRepository(
         return try {
             // Extract all control units resources unique baseIds
             val uniqueBaseIds =
-                    mission.controlUnits
-                            .flatMap { controlUnit -> controlUnit.resources.map { it.baseId } }
-                            .distinct()
+                mission.controlUnits
+                    .flatMap { controlUnit -> controlUnit.resources.map { it.baseId } }
+                    .distinct()
             // Fetch all of them as models
             val baseModels =
-                    dbBaseRepository.findAllById(uniqueBaseIds).map { BaseModel.fromFullBase(it) }
+                dbBaseRepository.findAllById(uniqueBaseIds).map { BaseModel.fromFullBase(it) }
             // Create a `[baseId] → BaseModel` map
             val baseModelMap = baseModels.associateBy { requireNotNull(it.id) }
 
@@ -112,10 +112,11 @@ class JpaMissionRepository(
             when (e) {
                 // TODO Is `InvalidDataAccessApiUsageException` necessary?
                 is DataIntegrityViolationException,
-                is InvalidDataAccessApiUsageException, -> {
+                is InvalidDataAccessApiUsageException,
+                -> {
                     throw ControlResourceOrUnitNotFoundException(
-                            "Invalid control unit or resource id: not found in referential.",
-                            e,
+                        "Invalid control unit or resource id: not found in referential.",
+                        e,
                     )
                 }
                 else -> throw e
