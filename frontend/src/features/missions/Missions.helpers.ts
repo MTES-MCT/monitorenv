@@ -143,7 +143,7 @@ export const controlUnitFactory = ({ ...resourceUnit } = {}): Omit<LegacyControl
 })
 
 export const getControlInfractionsTags = (actionNumberOfControls, infractions) => {
-  const totalInfractions = infractions.length || 0
+  const totalInfractions = infractions?.length || 0
   const ras = (actionNumberOfControls || 0) - totalInfractions
   const infractionsWithReport =
     infractions?.filter(inf => inf.infractionType === InfractionTypeEnum.WITH_REPORT)?.length || 0
