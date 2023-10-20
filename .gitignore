@@ -24,6 +24,8 @@ frontend/cypress/videos/
 /datascience/src/pipeline/data/control_unit_resources.csv
 /datascience/src/pipeline/data/control_unit_contacts.csv
 /datascience/src/pipeline/data/bases.csv
+/datascience/src/pipeline/data/area_notes.csv
+/datascience/src/pipeline/data/terms_notes.csv
 
 # Python
 *.pyc
