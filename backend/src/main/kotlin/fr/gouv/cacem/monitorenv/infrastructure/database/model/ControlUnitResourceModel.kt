@@ -29,6 +29,9 @@ data class ControlUnitResourceModel(
     @JsonBackReference
     val controlUnit: ControlUnitModel,
 
+    @Column(name = "is_archived", nullable = false)
+    val isArchived: Boolean,
+
     @Column(name = "name", nullable = false)
     val name: String,
 
@@ -60,6 +63,7 @@ data class ControlUnitResourceModel(
         if (id != other.id) return false
         if (base != other.base) return false
         if (controlUnit != other.controlUnit) return false
+        if (isArchived != other.isArchived) return false
         if (name != other.name) return false
         if (note != other.note) return false
         if (photo != null) {
@@ -83,6 +87,7 @@ data class ControlUnitResourceModel(
                 id = controlUnitResource.id,
                 base = baseModel,
                 controlUnit = controlUnitModel,
+                isArchived = controlUnitResource.isArchived,
                 name = controlUnitResource.name,
                 note = controlUnitResource.note,
                 photo = controlUnitResource.photo,
@@ -95,6 +100,7 @@ data class ControlUnitResourceModel(
         var result = id ?: 0
         result = 31 * result + base.hashCode()
         result = 31 * result + controlUnit.hashCode()
+        result = 31 * result + isArchived.hashCode()
         result = 31 * result + name.hashCode()
         result = 31 * result + (note?.hashCode() ?: 0)
         result = 31 * result + (photo?.contentHashCode() ?: 0)
@@ -110,6 +116,7 @@ data class ControlUnitResourceModel(
             id,
             baseId = requireNotNull(base.id),
             controlUnitId = requireNotNull(controlUnit.id),
+            isArchived,
             name,
             note,
             photo,
