@@ -95,10 +95,11 @@ export function MissionForm({ id, isAlreadyClosed, isNewMission, selectedMission
 
   const closeMission = async () => {
     await setFieldValue('isClosed', true)
-    validateForm().then(errors => {
+    validateForm().then(async errors => {
       if (_.isEmpty(errors)) {
         handleSubmit()
       } else {
+        await setFieldValue('isClosed', false)
         setShouldValidateOnChange(true)
       }
     })
