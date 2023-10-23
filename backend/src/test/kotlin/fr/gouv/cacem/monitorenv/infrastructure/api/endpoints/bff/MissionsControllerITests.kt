@@ -4,9 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.*
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
@@ -118,7 +117,7 @@ class MissionsControllerITests {
             "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))"
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
-        var point = wktReader.read("POINT (-4.54877816747593 48.305559876971)") as Point
+        val point = wktReader.read("POINT (-4.54877816747593 48.305559876971)") as Point
 
         val expectedFirstMission = MissionDTO(
             mission = MissionEntity(
@@ -130,13 +129,9 @@ class MissionsControllerITests {
                         name = "CU1",
                         administration = "Admin 1",
                         resources = listOf(
-                            ControlUnitResourceEntity(
+                            LegacyControlUnitResourceEntity(
                                 id = 2,
-                                baseId = 3,
-                                isArchived = false,
                                 name = "Ressource 2",
-                                type = ControlUnitResourceType.BARGE,
-                                controlUnitId = 1,
                             ),
                         ),
                         isArchived = false,
@@ -183,7 +178,7 @@ class MissionsControllerITests {
                         isDeleted = false,
                         openBy = "OpenBy",
 
-                        ),
+                    ),
                     semaphore = SemaphoreEntity(
                         id = 1,
                         name = "Semaphore 1",

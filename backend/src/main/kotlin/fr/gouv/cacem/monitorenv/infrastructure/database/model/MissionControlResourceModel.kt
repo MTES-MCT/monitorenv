@@ -17,39 +17,18 @@ data class MissionControlResourceModel(
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = [CascadeType.MERGE])
     @JoinColumn(name = "control_resource_id")
-    var ressource: ControlUnitResourceModel,
+    var resource: ControlUnitResourceModel,
 ) {
-    companion object {
-        fun fromControlUnitResource(
-            controlUnitResource: ControlUnitResourceEntity,
-            baseModel: BaseModel,
-            missionModel: MissionModel,
-            controlUnitModel: ControlUnitModel,
-        ) = MissionControlResourceModel(
-            ressource = ControlUnitResourceModel(
-                id = requireNotNull(controlUnitResource.id),
-                base = baseModel,
-                controlUnit = controlUnitModel,
-                isArchived = controlUnitResource.isArchived,
-                name = controlUnitResource.name,
-                note = controlUnitResource.note,
-                photo = controlUnitResource.photo,
-                type = controlUnitResource.type,
-            ),
-            mission = missionModel,
-        )
-    }
-
     fun toControlUnitResource(): ControlUnitResourceEntity {
         return ControlUnitResourceEntity(
-            id = ressource.id,
-            baseId = requireNotNull(ressource.base.id),
-            controlUnitId = requireNotNull(ressource.controlUnit.id),
-            isArchived = ressource.isArchived,
-            name = ressource.name,
-            note = ressource.note,
+            id = resource.id,
+            baseId = requireNotNull(resource.base.id),
+            controlUnitId = requireNotNull(resource.controlUnit.id),
+            isArchived = resource.isArchived,
+            name = resource.name,
+            note = resource.note,
             photo = byteArrayOf(),
-            type = ressource.type,
+            type = resource.type,
         )
     }
 }

@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 import com.fasterxml.jackson.annotation.JsonBackReference
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType
 import jakarta.persistence.*
@@ -129,6 +130,13 @@ data class ControlUnitResourceModel(
             base = base.toBase(),
             controlUnit = controlUnit.toControlUnit(),
             controlUnitResource = toControlUnitResource(),
+        )
+    }
+
+    fun toLegacyControlUnitResource(): LegacyControlUnitResourceEntity {
+        return LegacyControlUnitResourceEntity(
+            id = requireNotNull(id),
+            name,
         )
     }
 }

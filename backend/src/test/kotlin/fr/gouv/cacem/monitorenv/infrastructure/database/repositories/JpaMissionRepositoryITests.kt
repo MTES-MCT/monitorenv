@@ -1,11 +1,9 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.*
-import fr.gouv.cacem.monitorenv.domain.exceptions.ControlResourceOrUnitNotFoundException
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
@@ -14,6 +12,8 @@ import org.locationtech.jts.geom.MultiPoint
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.transaction.annotation.Transactional
@@ -78,7 +78,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     isSafetyEquipmentAndStandardsComplianceControl = true,
                     isSeafarersControl = true,
 
-                    ),
+                ),
                 EnvActionSurveillanceEntity(
                     id = UUID.fromString("a6c4bd17-eb45-4504-ab15-7a18ea714a10"),
                     facade = "Facade 2",
@@ -97,13 +97,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     administration = "DDTM",
                     isArchived = false,
                     resources = listOf(
-                        ControlUnitResourceEntity(
+                        LegacyControlUnitResourceEntity(
                             id = 8,
-                            baseId = 3,
-                            controlUnitId = 10004,
-                            isArchived = false,
                             name = "PAM Jeanne Barret",
-                            type = ControlUnitResourceType.BARGE,
                         ),
                     ),
                 ),
@@ -121,7 +117,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(newMissionCreated.mission.controlUnits.first().administration).isEqualTo("DDTM")
         assertThat(newMissionCreated.mission.controlUnits.first().resources).hasSize(1)
         assertThat(newMissionCreated.mission.controlUnits.first().resources.first().id).isEqualTo(8)
-        assertThat(newMissionCreated.mission.controlUnits.first().resources.first().baseId).isEqualTo(3)
         assertThat(newMissionCreated.mission.controlUnits.first().resources.first().name).isEqualTo("PAM Jeanne Barret")
         assertThat(newMissionCreated.mission.envActions).hasSize(3)
         assertThat(newMissionCreated.mission.envActions?.first()?.facade).isEqualTo("Facade 1")
@@ -163,13 +158,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     administration = "DDTM",
                     isArchived = false,
                     resources = listOf(
-                        ControlUnitResourceEntity(
+                        LegacyControlUnitResourceEntity(
                             id = 8,
-                            baseId = 3,
-                            controlUnitId = 10004,
-                            isArchived = false,
                             name = "PAM Jeanne Barret",
-                            type = ControlUnitResourceType.BARGE,
                         ),
                     ),
                 ),
@@ -188,21 +179,13 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                         administration = "DDTM",
                         isArchived = false,
                         resources = listOf(
-                            ControlUnitResourceEntity(
+                            LegacyControlUnitResourceEntity(
                                 id = 8,
-                                baseId = 3,
-                                controlUnitId = 5,
-                                isArchived = false,
                                 name = "PAM Jeanne Barret",
-                                type = ControlUnitResourceType.BARGE,
                             ),
-                            ControlUnitResourceEntity(
+                            LegacyControlUnitResourceEntity(
                                 id = 5,
-                                baseId = 3,
-                                controlUnitId = 5,
-                                isArchived = false,
                                 name = "Voiture",
-                                type = ControlUnitResourceType.BARGE,
                             ),
                         ),
                     ),
@@ -217,7 +200,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(newMissionUpdated.mission.controlUnits.first().administration).isEqualTo("DDTM")
         assertThat(newMissionUpdated.mission.controlUnits.first().resources).hasSize(2)
         assertThat(newMissionUpdated.mission.controlUnits.first().resources.first().id).isEqualTo(8)
-        assertThat(newMissionUpdated.mission.controlUnits.first().resources.first().baseId).isEqualTo(3)
         assertThat(newMissionUpdated.mission.controlUnits.first().resources.first().name).isEqualTo("PAM Jeanne Barret")
         assertThat(newMissionUpdated.mission.controlUnits.first().resources.last().id).isEqualTo(5)
         assertThat(newMissionUpdated.mission.controlUnits.first().resources.last().name).isEqualTo("Voiture")
@@ -242,13 +224,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     administration = "DDTM",
                     isArchived = false,
                     resources = listOf(
-                        ControlUnitResourceEntity(
+                        LegacyControlUnitResourceEntity(
                             id = 123456,
-                            baseId = 1,
-                            controlUnitId = 5,
-                            isArchived = false,
                             name = "PAM Jeanne Barret",
-                            type = ControlUnitResourceType.BARGE,
                         ),
                     ),
                 ),
@@ -262,8 +240,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         }
 
         // Then
-        assertThat(throwable).isInstanceOf(ControlResourceOrUnitNotFoundException::class.java)
-        assertThat(throwable.message).contains("Invalid control unit or resource id: not found in referential")
+        assertThat(throwable).isInstanceOf(InvalidDataAccessApiUsageException::class.java)
     }
 
     @Test
@@ -296,8 +273,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         }
 
         // Then
-        assertThat(throwable).isInstanceOf(ControlResourceOrUnitNotFoundException::class.java)
-        assertThat(throwable.message).contains("Invalid control unit or resource id: not found in referential")
+        assertThat(throwable).isInstanceOf(DataIntegrityViolationException::class.java)
     }
 
     @Test
@@ -532,29 +508,17 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                         isArchived = false,
                         name = "DML 2A",
                         resources = listOf(
-                            ControlUnitResourceEntity(
+                            LegacyControlUnitResourceEntity(
                                 id = 3,
-                                baseId = 2,
-                                controlUnitId = 10002,
-                                isArchived = false,
                                 name = "Semi-rigide 1",
-                                type = ControlUnitResourceType.BARGE,
                             ),
-                            ControlUnitResourceEntity(
+                            LegacyControlUnitResourceEntity(
                                 id = 4,
-                                baseId = 2,
-                                controlUnitId = 10002,
-                                isArchived = false,
                                 name = "Semi-rigide 2",
-                                type = ControlUnitResourceType.BARGE,
                             ),
-                            ControlUnitResourceEntity(
+                            LegacyControlUnitResourceEntity(
                                 id = 5,
-                                baseId = 3,
-                                controlUnitId = 10002,
-                                isArchived = false,
                                 name = "Voiture",
-                                type = ControlUnitResourceType.CAR,
                             ),
                         ),
                     ),

@@ -174,7 +174,7 @@ class JpaReportingITests : AbstractDBTests() {
         // Given
         val numberOfExistingReportings = jpaReportingRepository.count()
         assertThat(numberOfExistingReportings).isEqualTo(8)
-        
+
         // When
         jpaReportingRepository.delete(1)
 

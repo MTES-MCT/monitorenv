@@ -10,5 +10,7 @@ interface IControlUnitResourceRepository {
 
     fun findAll(): List<FullControlUnitResourceDTO>
 
+    fun findAllById(controlUnitResourceIds: List<Int>): List<FullControlUnitResourceDTO>
+
     fun save(controlUnitResource: ControlUnitResourceEntity): ControlUnitResourceEntity
 }
