@@ -81,6 +81,8 @@ context('Mission', () => {
 
     // delete theme to test error
     cy.fill('Thématique de surveillance', '')
+    cy.clickButton(' Enregistrer et clôturer')
+    cy.wait(100)
     cy.get('*[data-cy="mission-errors"]').should('exist')
 
     cy.fill('Thématique de surveillance', 'Rejets illicites')
