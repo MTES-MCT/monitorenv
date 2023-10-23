@@ -25,11 +25,10 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { sideWindowActions } from '../../SideWindow/slice'
 import { missionFactory } from '../Missions.helpers'
 
-export function MissionForm({ id, isAlreadyClosed, isNewMission, selectedMission, setShouldValidateOnChange }) {
+export function MissionForm({ id, isNewMission, selectedMission, setShouldValidateOnChange }) {
   const dispatch = useAppDispatch()
   const { sideWindow } = useAppSelector(state => state)
-  const { dirty, handleSubmit, setFieldValue, setValues, validateForm, values } =
-    useFormikContext<Partial<Mission | NewMission>>()
+  const { dirty, setFieldValue, setValues, validateForm, values } = useFormikContext<Partial<Mission | NewMission>>()
 
   useSyncFormValuesWithRedux()
   useUpdateSurveillance()
@@ -75,17 +74,12 @@ export function MissionForm({ id, isAlreadyClosed, isNewMission, selectedMission
     dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.MISSIONS)))
   }
 
-  const submitMission = async () => {
+  const submitMission = () => {
     setShouldValidateOnChange(false)
 
-    // If the mission is not already closed (from the API), we want the `isClosed` field to be set to false.
-    // if the user has already tried to close the mission and the `isClosed` field is set to true.
-    if (!isAlreadyClosed) {
-      await setFieldValue('isClosed', false)
-    }
-    validateForm().then(errors => {
+    validateForm({ ...values, isClosed: false }).then(errors => {
       if (_.isEmpty(errors)) {
-        handleSubmit()
+        dispatch(saveMission({ ...values, isClosed: true }))
 
         return
       }
@@ -93,23 +87,21 @@ export function MissionForm({ id, isAlreadyClosed, isNewMission, selectedMission
     })
   }
 
-  const closeMission = async () => {
-    await setFieldValue('isClosed', false)
-    validateForm({ ...values, isClosed: true }).then(async errors => {
+  const closeMission = () => {
+    validateForm({ ...values, isClosed: true }).then(errors => {
       if (_.isEmpty(errors)) {
-        await setFieldValue('isClosed', true)
+        dispatch(saveMission({ ...values, isClosed: true }))
 
-        return handleSubmit()
+        return
       }
-
-      return setShouldValidateOnChange(true)
+      setShouldValidateOnChange(true)
     })
   }
 
   const reopenMission = () => {
-    validateForm({ ...values, isClosed: false }).then(async errors => {
+    validateForm({ ...values, isClosed: false }).then(errors => {
       if (_.isEmpty(errors)) {
-        await setFieldValue('isClosed', false)
+        setFieldValue('isClosed', false)
         if (dirty) {
           return setIsReopenModalOpen(true)
         }

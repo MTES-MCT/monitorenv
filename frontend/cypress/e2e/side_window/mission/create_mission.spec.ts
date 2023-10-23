@@ -7,7 +7,6 @@ context('Mission', () => {
   it('A mission should be created', () => {
     // Given
     cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
-    cy.wait('@getMissions')
     cy.wait(400)
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').then($el => {
       const numberOfMissions = parseInt($el.text(), 10)
@@ -44,7 +43,7 @@ context('Mission', () => {
     cy.get('[name="openBy"]').scrollIntoView().type('PCF')
 
     cy.intercept('PUT', '/bff/v1/missions').as('createMission')
-    cy.get('form').submit()
+    cy.clickButton('Enregistrer et quitter')
 
     // Then
     cy.wait('@createMission').then(({ request, response }) => {
@@ -72,7 +71,6 @@ context('Mission', () => {
   it('A mission should be deleted', () => {
     // Given
     cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
-    cy.wait('@getMissions')
     cy.wait(400)
     cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').then($el => {
       const numberOfMissions = parseInt($el.text(), 10)
@@ -111,7 +109,7 @@ context('Mission', () => {
 
     cy.get('*[data-cy="reopen-mission"]').click()
     cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
-    cy.get('form').submit()
+    cy.clickButton('Enregistrer et quitter')
 
     // Then
     cy.wait('@updateMission').then(({ response }) => {
@@ -125,14 +123,15 @@ context('Mission', () => {
     // Given
     cy.wait(200)
     cy.get('*[data-cy="edit-mission-43"]').click({ force: true })
-    cy.intercept('PUT', `/bff/v1/missions/43`).as('updateMission')
+    cy.intercept('PUT', '/bff/v1/missions/43').as('updateMission')
 
+    cy.fill("Contact de l'unité 1", '')
+    cy.wait(300)
     cy.clickButton('Enregistrer et clôturer')
-
     // Then
     cy.wait('@updateMission').then(({ request, response }) => {
       expect(response && response.statusCode).equal(200)
-      expect(request.body.controlUnits[0].contact).equal(null)
+      expect(request.body.controlUnits[0].contact).equal(undefined)
     })
     cy.get('*[data-cy="SideWindowHeader-title"]').contains('Missions et contrôles')
   })
