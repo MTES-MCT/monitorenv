@@ -16,8 +16,11 @@ export const updateTheme =
 export const updateSubThemes =
   (setFieldValue: (field: string, value: any) => void) => (value: string, actionIndex: number, themeIndex: number) => {
     const subThemesPath = `envActions[${actionIndex}].themes.${themeIndex}.subThemes`
-
+    const protectedSpeciesPath = `envActions[${actionIndex}].themes.${themeIndex}.protectedSpecies`
     setFieldValue(subThemesPath, value)
+    if (!value || value?.length === 0) {
+      setFieldValue(protectedSpeciesPath, value)
+    }
   }
 export const updateProtectedSpecies =
   (setFieldValue: (field: string, value: any) => void) => (value: string, actionIndex: number, themeIndex: number) => {

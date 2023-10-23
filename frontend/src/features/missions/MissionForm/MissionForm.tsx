@@ -94,27 +94,28 @@ export function MissionForm({ id, isAlreadyClosed, isNewMission, selectedMission
   }
 
   const closeMission = async () => {
-    await setFieldValue('isClosed', true)
-    validateForm().then(async errors => {
+    await setFieldValue('isClosed', false)
+    validateForm({ ...values, isClosed: true }).then(async errors => {
       if (_.isEmpty(errors)) {
-        handleSubmit()
-      } else {
-        await setFieldValue('isClosed', false)
-        setShouldValidateOnChange(true)
+        await setFieldValue('isClosed', true)
+
+        return handleSubmit()
       }
+
+      return setShouldValidateOnChange(true)
     })
   }
 
   const reopenMission = () => {
-    validateForm({ ...values, isClosed: false }).then(errors => {
+    validateForm({ ...values, isClosed: false }).then(async errors => {
       if (_.isEmpty(errors)) {
+        await setFieldValue('isClosed', false)
         if (dirty) {
           return setIsReopenModalOpen(true)
         }
 
         return validateReopenMission()
       }
-      setFieldValue('isClosed', true)
 
       return setShouldValidateOnChange(true)
     })

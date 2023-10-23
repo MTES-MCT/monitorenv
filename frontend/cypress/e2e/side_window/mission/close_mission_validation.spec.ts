@@ -7,7 +7,7 @@ context('Mission', () => {
   it('A new mission with control and surveillance can be closed with all required values', () => {
     // Given
     cy.get('*[data-cy="add-mission"]').click()
-    cy.clickButton(' Enregistrer et clôturer')
+    cy.clickButton('Enregistrer et clôturer')
     cy.wait(100)
 
     cy.get('*[data-cy="mission-errors"]').should('exist')
@@ -24,6 +24,7 @@ context('Mission', () => {
     cy.fill('Type de mission', ['Air'])
     cy.get('*[data-cy="add-control-unit"]').click()
     cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
+    cy.fill("Contact de l'unité 1", 'contact').scrollIntoView()
     cy.fill('Ouvert par', 'PCF').scrollIntoView()
     cy.fill('Clôturé par', 'PCF').scrollIntoView()
 
@@ -32,7 +33,7 @@ context('Mission', () => {
     // we add a control
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter des contrôles')
-    cy.clickButton(' Enregistrer et clôturer')
+    cy.clickButton('Enregistrer et clôturer')
     cy.wait(100)
 
     cy.get('*[data-cy="mission-errors"]').should('exist')
