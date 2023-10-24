@@ -5,6 +5,7 @@ import { reportingActions } from '../../shared_slices/reporting'
 
 export const editReportingInLocalStore =
   (reportingId: number, reportingContext: ReportingContext) => async (dispatch, getState) => {
+    dispatch(attachMissionToReportingSliceActions.resetAttachMissionState())
     const reportingToEdit = reportingsAPI.endpoints.getReporting
     try {
       const { reportings } = getState().reporting
