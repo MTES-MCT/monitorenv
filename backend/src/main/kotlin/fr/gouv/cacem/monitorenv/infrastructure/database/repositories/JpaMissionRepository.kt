@@ -49,6 +49,10 @@ class JpaMissionRepository(
         ).map { it.toMissionDTO(mapper) }
     }
 
+    override fun findAllIncludedIn(ids: List<Int>): List<MissionEntity> {
+        return dbMissionRepository.findAllIncludedIn(ids).map { it.toMissionEntity(mapper) }
+    }
+
     override fun findByControlUnitId(controlUnitId: Int): List<MissionEntity> {
         return dbMissionRepository.findByControlUnitId(controlUnitId).map { it.toMissionEntity(mapper) }
     }

@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.EnvActionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
@@ -51,6 +52,32 @@ data class MissionDataOutput(
                 hasMissionOrder = dto.mission.hasMissionOrder,
                 isUnderJdp = dto.mission.isUnderJdp,
                 isGeometryComputedFromControls = dto.mission.isGeometryComputedFromControls,
+            )
+        }
+
+        fun fromMissionEntity(mission: MissionEntity): MissionDataOutput {
+            requireNotNull(mission.id) {
+                "a mission must have an id"
+            }
+
+            return MissionDataOutput(
+                id = mission.id,
+                missionTypes = mission.missionTypes,
+                controlUnits = mission.controlUnits,
+                openBy = mission.openBy,
+                closedBy = mission.closedBy,
+                observationsCacem = mission.observationsCacem,
+                observationsCnsp = mission.observationsCnsp,
+                facade = mission.facade,
+                geom = mission.geom,
+                startDateTimeUtc = mission.startDateTimeUtc,
+                endDateTimeUtc = mission.endDateTimeUtc,
+                envActions = mission.envActions,
+                missionSource = mission.missionSource,
+                isClosed = mission.isClosed,
+                hasMissionOrder = mission.hasMissionOrder,
+                isUnderJdp = mission.isUnderJdp,
+                isGeometryComputedFromControls = mission.isGeometryComputedFromControls,
             )
         }
     }

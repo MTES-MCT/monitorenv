@@ -49,6 +49,9 @@ class ApiMissionsControllerITests {
     private lateinit var deleteMission: DeleteMission
 
     @MockBean
+    private lateinit var getMissionsIncludedIn: GetMissionsIncludedIn
+
+    @MockBean
     private lateinit var getEngagedControlUnits: GetEngagedControlUnits
 
     @Autowired
@@ -150,6 +153,40 @@ class ApiMissionsControllerITests {
 
         // When
         mockMvc.perform(get("/api/v1/missions"))
+            // Then
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk)
+    }
+
+    @Test
+    fun `Should get all missions included in ids`() {
+        // Given
+        val wktReader = WKTReader()
+        val multipolygonString =
+            "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))"
+        val polygon = wktReader.read(multipolygonString) as MultiPolygon
+
+        val expectedFirstMission = MissionEntity(
+            id = 10,
+            missionTypes = listOf(MissionTypeEnum.SEA),
+            facade = "Outre-Mer",
+            geom = polygon,
+            observationsCnsp = null,
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+            isDeleted = false,
+            missionSource = MissionSourceEnum.MONITORFISH,
+            isClosed = false,
+            hasMissionOrder = false,
+            isUnderJdp = false,
+            isGeometryComputedFromControls = false,
+        )
+        given(
+            getMissionsIncludedIn.execute(any()),
+        ).willReturn(listOf(expectedFirstMission))
+
+        // When
+        mockMvc.perform(get("/api/v1/missions/find?ids=55,52"))
             // Then
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
