@@ -79,7 +79,7 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
 
     validateForm({ ...values, isClosed: false }).then(errors => {
       if (_.isEmpty(errors)) {
-        dispatch(saveMission({ ...values, isClosed: true }))
+        dispatch(saveMission({ ...values, isClosed: false }))
 
         return
       }

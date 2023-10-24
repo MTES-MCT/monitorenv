@@ -53,6 +53,7 @@ context('Mission', () => {
       expect(request.body.missionTypes[0]).equal('SEA')
       expect(request.body.missionTypes[1]).equal('LAND')
       expect(request.body.controlUnits.length).equal(1)
+      expect(request.body.isClosed).to.be.false
       const controlUnit = request.body.controlUnits[0]
       expect(controlUnit.administration).equal('DIRM / DM')
       expect(controlUnit.id).equal(10011)
@@ -132,6 +133,7 @@ context('Mission', () => {
     cy.wait('@updateMission').then(({ request, response }) => {
       expect(response && response.statusCode).equal(200)
       expect(request.body.controlUnits[0].contact).equal(undefined)
+      expect(request.body.isClosed).to.be.true
     })
     cy.get('*[data-cy="SideWindowHeader-title"]').contains('Missions et contrôles')
   })
