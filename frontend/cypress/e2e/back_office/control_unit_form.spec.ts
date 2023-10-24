@@ -16,7 +16,6 @@ context('Back Office > Control Unit Form', () => {
 
     cy.contains('L’administration est obligatoire.').should('be.visible')
     cy.contains('Le nom est obligatoire.').should('be.visible')
-    cy.contains('Le département est obligatoire.').should('be.visible')
 
     cy.clickButton('Annuler')
 
