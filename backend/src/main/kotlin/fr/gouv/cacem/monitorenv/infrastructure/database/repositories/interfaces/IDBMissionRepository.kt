@@ -91,7 +91,7 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
         """,
         nativeQuery = true,
     )
-    fun findAllIncludedIn(ids: List<Int>): List<MissionModel>
+    fun findNotDeletedByIds(ids: List<Int>): List<MissionModel>
 
     @Query("SELECT mm FROM MissionModel mm JOIN mm.controlUnits mmcu WHERE mmcu.unit.id = :controlUnitId")
     fun findByControlUnitId(controlUnitId: Int): List<MissionModel>

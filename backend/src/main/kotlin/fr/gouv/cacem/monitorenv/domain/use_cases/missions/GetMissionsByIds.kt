@@ -7,8 +7,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 
 @UseCase
-class GetMissionsIncludedIn(private val missionRepository: IMissionRepository) {
+class GetMissionsByIds(private val missionRepository: IMissionRepository) {
     fun execute(ids: List<Int>): List<MissionEntity> {
-        return missionRepository.findAllIncludedIn(ids)
+        return missionRepository.findByIds(ids)
     }
 }

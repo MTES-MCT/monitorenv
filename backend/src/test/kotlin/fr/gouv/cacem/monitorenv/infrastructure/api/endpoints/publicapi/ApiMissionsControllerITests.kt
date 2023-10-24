@@ -49,7 +49,7 @@ class ApiMissionsControllerITests {
     private lateinit var deleteMission: DeleteMission
 
     @MockBean
-    private lateinit var getMissionsIncludedIn: GetMissionsIncludedIn
+    private lateinit var getMissionsByIds: GetMissionsByIds
 
     @MockBean
     private lateinit var getEngagedControlUnits: GetEngagedControlUnits
@@ -182,7 +182,7 @@ class ApiMissionsControllerITests {
             isGeometryComputedFromControls = false,
         )
         given(
-            getMissionsIncludedIn.execute(any()),
+            getMissionsByIds.execute(any()),
         ).willReturn(listOf(expectedFirstMission))
 
         // When

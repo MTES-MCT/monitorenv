@@ -21,7 +21,7 @@ interface IMissionRepository {
         pageable: Pageable,
     ): List<MissionDTO>
 
-    fun findAllIncludedIn(ids: List<Int>): List<MissionEntity>
+    fun findByIds(ids: List<Int>): List<MissionEntity>
 
     fun findByControlUnitId(controlUnitId: Int): List<MissionEntity>
 

@@ -714,8 +714,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `findAllIncludedIn() should find the matching missions`() {
-        val foundMissions = jpaMissionRepository.findAllIncludedIn(listOf(50, 51, 52))
+    fun `findByIds() should find the matching missions`() {
+        val foundMissions = jpaMissionRepository.findByIds(listOf(50, 51, 52))
 
         assertThat(foundMissions).hasSize(3)
     }

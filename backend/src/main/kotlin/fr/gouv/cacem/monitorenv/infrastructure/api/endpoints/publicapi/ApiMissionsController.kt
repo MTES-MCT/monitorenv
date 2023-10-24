@@ -22,7 +22,7 @@ class ApiMissionsController(
     private val getMissionById: GetMissionById,
     private val deleteMission: DeleteMission,
     private val getEngagedControlUnits: GetEngagedControlUnits,
-    private val getMissionsIncludedIn: GetMissionsIncludedIn
+    private val getMissionsByIds: GetMissionsByIds
 ) {
 
     @GetMapping("")
@@ -75,7 +75,7 @@ class ApiMissionsController(
         @RequestParam(name = "ids")
         ids: List<Int>,
     ): List<MissionDataOutput> {
-        val missions = getMissionsIncludedIn.execute(ids)
+        val missions = getMissionsByIds.execute(ids)
         return missions.map { MissionDataOutput.fromMissionEntity(it) }
     }
 
