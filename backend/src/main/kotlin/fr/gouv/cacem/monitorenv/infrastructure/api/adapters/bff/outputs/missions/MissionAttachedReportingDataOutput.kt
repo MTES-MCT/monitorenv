@@ -52,8 +52,7 @@ data class MissionAttachedReportingDataOutput(
                 reportingId = dto.reporting.reportingId,
                 sourceType = dto.reporting.sourceType,
                 semaphoreId = dto.reporting.semaphoreId,
-                semaphore =
-                if (dto.semaphore != null) {
+                semaphore = if (dto.semaphore != null) {
                     SemaphoreDataOutput.fromSemaphoreEntity(
                         dto.semaphore,
                     )
@@ -71,11 +70,8 @@ data class MissionAttachedReportingDataOutput(
                 },
                 displayedSource =
                 when (dto.reporting.sourceType) {
-                    SourceTypeEnum.SEMAPHORE ->
-                        dto?.semaphore?.unit
-                            ?: dto?.semaphore?.name
-                    // TODO This is really strange : `fullControlUnit?.controlUnit`
-                    // can't be null and I have to add another `?`...
+                    SourceTypeEnum.SEMAPHORE -> dto?.semaphore?.unit ?: dto?.semaphore?.name
+                    // TODO This is really strange : `fullControlUnit?.controlUnit` can't be null and I have to add another `?`...
                     SourceTypeEnum.CONTROL_UNIT -> dto?.controlUnit?.controlUnit?.name
                     SourceTypeEnum.OTHER -> dto.reporting.sourceName
                     else -> ""

@@ -3,9 +3,9 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateMissionDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.MissionDataOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.MissionsDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions.MissionDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions.MissionsDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -108,6 +108,7 @@ class MissionsController(
         return createOrUpdateMission.execute(
             mission = updateMissionDataInput.toMissionEntity(),
             attachedReportingIds = updateMissionDataInput.attachedReportingIds,
+            envActionsAttachedToReportingIds = updateMissionDataInput.getEnvActionsAttachedToReportings(),
         ).let {
             MissionDataOutput.fromMissionDTO(it)
         }

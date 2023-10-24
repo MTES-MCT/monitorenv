@@ -28,9 +28,9 @@ class GetMonitorEnvMissions(private val missionRepository: IMissionRepository) {
         val missions = missionRepository.findAll(
             startedAfter = startedAfterDateTime?.toInstant() ?: ZonedDateTime.now().minusDays(30).toInstant(),
             startedBefore = startedBeforeDateTime?.toInstant(),
+            missionSources = missionSources ?: listOf(MissionSourceEnum.MONITORENV, MissionSourceEnum.MONITORFISH),
             missionTypes = missionTypes,
             missionStatuses = missionStatuses,
-            missionSources = missionSources ?: listOf(MissionSourceEnum.MONITORENV, MissionSourceEnum.MONITORFISH),
             seaFronts = seaFronts,
             pageable = if (pageNumber != null && pageSize != null) {
                 PageRequest.of(

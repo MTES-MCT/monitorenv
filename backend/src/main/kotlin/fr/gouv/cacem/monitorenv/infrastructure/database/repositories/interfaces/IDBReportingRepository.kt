@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel
 import java.time.Instant
 import org.springframework.data.domain.Pageable
@@ -46,6 +47,44 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
             nativeQuery = true,
     )
     fun attachReportingsToMission(reportingIds: List<Int>, missionId: Int)
+
+    // ['envActionUUID' ,[reportingIds]]
+    // [['uu1', [1,2]]]
+
+    // reporting_id, attached_env_action_id
+    // 1, 'uu1'
+    // 2, 'uu2'
+    // 3, null
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query(
+        value =
+        """
+        WITH request as (
+            SELECT
+        ),
+        reportings_to_update as (
+            SELECT id,
+                 CASE WHEN
+                    id in (:reportingIds) THEN :envActionId
+                    ELSE null
+                 END
+                    as attached_env_action_id
+                FROM reportings
+                WHERE
+                    -- attach env action to reporting
+                    id in (:reportingIds)
+                    -- detach  env action from reporting
+                    OR attached_env_action_id = in (:envActionIds)
+            )
+        UPDATE reportings
+            SET attached_env_action_id = reportings_to_update.attached_env_action_id
+            FROM reportings_to_update
+            WHERE reportings_to_update.id = reportings.id
+        """,
+        nativeQuery = true,
+    )
+    fun attachReportingsToEnvAction(envActionAttachedToReportingIds: EnvActionAttachedToReportingIds)
 
     @Modifying(clearAutomatically = true)
     @Query(

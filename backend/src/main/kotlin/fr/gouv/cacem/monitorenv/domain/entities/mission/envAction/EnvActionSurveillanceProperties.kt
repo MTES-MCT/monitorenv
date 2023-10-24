@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction
 
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 import org.locationtech.jts.geom.Geometry
 
 data class EnvActionSurveillanceProperties(
