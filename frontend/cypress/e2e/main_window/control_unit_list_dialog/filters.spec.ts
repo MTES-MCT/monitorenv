@@ -10,7 +10,7 @@ context('Main Window > Control Unit List Dialog > Filters', () => {
   })
 
   it('Should show all control units by default', () => {
-    cy.getDataCy('ControlUnitListDialog-control-unit').should('have.length', 33)
+    cy.getDataCy('ControlUnitListDialog-control-unit').should('have.length', 31)
 
     cy.contains('A636 Maïto').should('exist')
     cy.contains('SML 50').should('exist')
@@ -28,9 +28,9 @@ context('Main Window > Control Unit List Dialog > Filters', () => {
   it('Should find control units matching the selected administration', () => {
     cy.fill('Administration', 'Douane')
 
-    cy.getDataCy('ControlUnitListDialog-control-unit').should('have.length', 5)
+    cy.getDataCy('ControlUnitListDialog-control-unit').should('have.length', 3)
 
-    cy.contains('BGC Ajaccio').should('exist')
+    cy.contains('BSN Ste Maxime').should('exist')
     cy.contains('DF 61 Port-de-Bouc').should('exist')
   })
 
