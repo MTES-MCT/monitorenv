@@ -129,7 +129,7 @@ export function ControlUnitTable() {
           confirmationButtonLabel="Archiver"
           message={[
             `Êtes-vous sûr de vouloir archiver l'unité "${targetedControlUnit.name}" ?`,
-            `Elle n'apparaîtra plus dans MonitorEnv, elle ne sera plus utilisée que pour les statistiques.`
+            `Elle n'apparaîtra plus dans MonitorEnv, elle ne sera plus utilisée pour les statistiques.`
           ].join(' ')}
           onCancel={close}
           onConfirm={() => confirmArchiving(targetedControlUnit.id)}
