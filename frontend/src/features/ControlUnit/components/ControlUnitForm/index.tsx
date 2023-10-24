@@ -63,7 +63,7 @@ export function ControlUnitForm() {
         ? sortBy(
             ['label'],
             departmentAreas.map(departmentArea => ({
-              label: departmentArea.name,
+              label: `${departmentArea.inseeCode} - ${departmentArea.name}`,
               value: departmentArea.inseeCode
             }))
           )
@@ -118,7 +118,12 @@ export function ControlUnitForm() {
                 searchable
               />
               <FormikTextInput label="Nom" name="name" />
-              <FormikSelect label="Département" name="departmentAreaInseeCode" options={departmentAreasAsOptions} />
+              <FormikSelect
+                label="Département"
+                name="departmentAreaInseeCode"
+                options={departmentAreasAsOptions}
+                searchable
+              />
               {/* This is a quick way to implement "unarchiving" for users in case of human error. */}
               {initialValues.isArchived && <FormikCheckbox label="Unité archivée" name="isArchived" />}
 

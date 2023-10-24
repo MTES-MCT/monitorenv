@@ -4,6 +4,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceE
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 
 interface IControlUnitResourceRepository {
+    fun archiveById(controlUnitResourceId: Int)
+
     fun deleteById(controlUnitResourceId: Int)
 
     fun findById(controlUnitResourceId: Int): FullControlUnitResourceDTO

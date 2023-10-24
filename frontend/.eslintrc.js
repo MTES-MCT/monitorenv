@@ -155,6 +155,7 @@ module.exports = {
       rules: {
         // TODO Check why either Prettier or ESLint auto-formatting does that and why this rule is not enabled.
         // 'max-len': ['warn', { code: 120 }],
+        'prefer-destructuring': 'off',
 
         '@typescript-eslint/naming-convention': 'off',
         '@typescript-eslint/no-unused-expressions': 'off',

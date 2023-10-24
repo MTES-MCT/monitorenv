@@ -13,6 +13,7 @@ import {
 } from '../../../../../api/controlUnitResourcesAPI'
 import { ControlUnit } from '../../../../../domain/entities/controlUnit'
 import { isEmptyish } from '../../../../../utils/isEmptyish'
+import { isNotArchived } from '../../../../../utils/isNotArchived'
 import { Section } from '../shared/Section'
 
 import type { ControlUnitResourceFormValues } from './types'
@@ -28,7 +29,8 @@ export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceList
   const [isNewControlUnitResourceFormOpen, setIsNewControlUnitResourceFormOpen] = useState(false)
 
   const { controlUnitResources } = controlUnit
-  const editedControlUnitResource = controlUnitResources.find(({ id }) => id === editedControlUnitResourceId) || {
+  const activeControlUnitResources = controlUnitResources.filter(isNotArchived)
+  const editedControlUnitResource = activeControlUnitResources.find(({ id }) => id === editedControlUnitResourceId) || {
     ...INITIAL_CONTROL_UNIT_RESOURCE_FORM_VALUES,
     controlUnitId: controlUnit.id
   }
@@ -69,8 +71,8 @@ export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceList
   return (
     <Section>
       <Section.Title>Moyens</Section.Title>
-      <StyledSectionBody $isEmpty={!controlUnitResources.length}>
-        {controlUnitResources.map(controlUnitResource => (
+      <StyledSectionBody $isEmpty={!activeControlUnitResources.length}>
+        {activeControlUnitResources.map(controlUnitResource => (
           <Item
             key={controlUnitResource.id}
             controlUnitResource={controlUnitResource}

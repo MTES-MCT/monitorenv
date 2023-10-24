@@ -49,7 +49,7 @@ class ApiControlUnitContactsControllerITests {
     private lateinit var objectMapper: ObjectMapper
 
     @Test
-    fun `Should create a contact`() {
+    fun `create() should create a contact`() {
         val expectedCreatedControlUnitContact = ControlUnitContactEntity(
             id = 1,
             controlUnitId = 0,
@@ -80,7 +80,7 @@ class ApiControlUnitContactsControllerITests {
     }
 
     @Test
-    fun `Should get a contact by its ID`() {
+    fun `get() should get a contact by its ID`() {
         val expectedFullControlUnitContact = FullControlUnitContactDTO(
             controlUnit = ControlUnitEntity(
                 id = 0,
@@ -111,7 +111,7 @@ class ApiControlUnitContactsControllerITests {
     }
 
     @Test
-    fun `Should get all contacts`() {
+    fun `getAll() should get all contacts`() {
         val expectedFullControlUnitContacts = listOf(
             FullControlUnitContactDTO(
                 controlUnit = ControlUnitEntity(
@@ -162,7 +162,7 @@ class ApiControlUnitContactsControllerITests {
     }
 
     @Test
-    fun `Should update a contact`() {
+    fun `update() should update a contact`() {
         val expectedUpdatedControlUnitContact = ControlUnitContactEntity(
             id = 1,
             controlUnitId = 0,

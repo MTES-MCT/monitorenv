@@ -1,9 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnitResource
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.DeleteControlUnitResource
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitResourceById
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitResources
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitResourceDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.ControlUnitResourceDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.FullControlUnitResourceDataOutput
@@ -17,11 +14,22 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/v1/control_unit_resources")
 @Tag(name = "Control Unit Resources")
 class ApiControlUnitResourcesController(
+    private val archiveControlUnitResource: ArchiveControlUnitResource,
     private val createOrUpdateControlUnitResource: CreateOrUpdateControlUnitResource,
     private val deleteControlUnitResource: DeleteControlUnitResource,
     private val getControlUnitResources: GetControlUnitResources,
     private val getControlUnitResourceById: GetControlUnitResourceById,
 ) {
+    @PutMapping("/{controlUnitResourceId}/archive")
+    @Operation(summary = "Archive a control unit resource")
+    fun archive(
+        @PathParam("Control unit resource ID")
+        @PathVariable(name = "controlUnitResourceId")
+        controlUnitResourceId: Int,
+    ) {
+        archiveControlUnitResource.execute(controlUnitResourceId)
+    }
+
     @PostMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a control unit resource")
     @ResponseStatus(HttpStatus.CREATED)

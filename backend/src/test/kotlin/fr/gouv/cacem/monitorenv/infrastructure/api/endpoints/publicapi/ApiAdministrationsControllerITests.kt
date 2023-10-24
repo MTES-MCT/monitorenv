@@ -58,7 +58,7 @@ class ApiAdministrationsControllerITests {
         val administrationId = 1
 
         mockMvc.perform(
-            post("/api/v1/administrations/$administrationId/archive"),
+            put("/api/v1/administrations/$administrationId/archive"),
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)

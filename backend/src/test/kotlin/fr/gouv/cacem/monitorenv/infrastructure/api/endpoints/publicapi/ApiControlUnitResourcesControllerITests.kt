@@ -8,10 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnitResource
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.DeleteControlUnitResource
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitResourceById
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitResources
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitResourceDataInput
 import org.hamcrest.Matchers
@@ -36,6 +33,9 @@ class ApiControlUnitResourcesControllerITests {
     private lateinit var mockMvc: MockMvc
 
     @MockBean
+    private lateinit var archiveControlUnitResource: ArchiveControlUnitResource
+
+    @MockBean
     private lateinit var createOrUpdateControlUnitResource: CreateOrUpdateControlUnitResource
 
     @MockBean
@@ -51,7 +51,19 @@ class ApiControlUnitResourcesControllerITests {
     private lateinit var objectMapper: ObjectMapper
 
     @Test
-    fun `Should create a resource`() {
+    fun `archive() should archive a control unit resource`() {
+        val controlUnitResourceId = 1
+
+        mockMvc.perform(
+            put("/api/v1/control_unit_resources/$controlUnitResourceId/archive"),
+        )
+            .andExpect(status().isOk)
+
+        BDDMockito.verify(archiveControlUnitResource).execute(controlUnitResourceId)
+    }
+
+    @Test
+    fun `create() should create a resource`() {
         val expectedCreatedControlUnitResource = ControlUnitResourceEntity(
             id = 1,
             baseId = 0,
@@ -88,7 +100,19 @@ class ApiControlUnitResourcesControllerITests {
     }
 
     @Test
-    fun `Should get a resource by its ID`() {
+    fun `delete() should delete a control unit resource`() {
+        val controlUnitResourceId = 1
+
+        mockMvc.perform(
+            delete("/api/v1/control_unit_resources/$controlUnitResourceId"),
+        )
+            .andExpect(status().isOk)
+
+        BDDMockito.verify(deleteControlUnitResource).execute(controlUnitResourceId)
+    }
+
+    @Test
+    fun `get() should get a control unit resource by its ID`() {
         val expectedFullControlUnitResource = FullControlUnitResourceDTO(
             base = BaseEntity(
                 id = 0,
@@ -128,7 +152,7 @@ class ApiControlUnitResourcesControllerITests {
     }
 
     @Test
-    fun `Should get all resources`() {
+    fun `getAll() should get all control unit resources`() {
         val expectedFullControlUnitResources = listOf(
             FullControlUnitResourceDTO(
                 base = BaseEntity(
@@ -197,7 +221,7 @@ class ApiControlUnitResourcesControllerITests {
     }
 
     @Test
-    fun `Should update a resource`() {
+    fun `update() should update a control unit resource`() {
         val expectedUpdatedControlUnitResource = ControlUnitResourceEntity(
             id = 1,
             baseId = 0,

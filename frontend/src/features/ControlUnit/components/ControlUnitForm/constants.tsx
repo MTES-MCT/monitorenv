@@ -36,7 +36,6 @@ export const CONTROL_UNIT_RESOURCE_TABLE_COLUMNS: Array<ColumnDef<ControlUnit.Co
 
 export const CONTROL_UNIT_FORM_SCHEMA = object({
   administrationId: number().required('L’administration est obligatoire.'),
-  departmentAreaInseeCode: string().trim().min(1).required('Le département est obligatoire.'),
   name: string().trim().min(1).required('Le nom est obligatoire.')
 })
 
