@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import java.time.Instant
+import java.util.UUID
 
 interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     @Modifying(clearAutomatically = true)
@@ -46,6 +47,18 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         nativeQuery = true,
     )
     fun attachReportingsToMission(reportingIds: List<Int>, missionId: Int)
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query(
+        value =
+        """
+        UPDATE reportings
+            SET attached_env_action_id = CASE WHEN id in (:reportingIds) THEN :envActionId ELSE NULL END
+            WHERE id in (:reportingIds) or attached_env_action_id = :envActionId
+        """,
+        nativeQuery = true,
+    )
+    fun attachEnvActionsToReportings(envActionId: UUID, reportingIds: List<Int>)
 
     @Modifying(clearAutomatically = true)
     @Query(

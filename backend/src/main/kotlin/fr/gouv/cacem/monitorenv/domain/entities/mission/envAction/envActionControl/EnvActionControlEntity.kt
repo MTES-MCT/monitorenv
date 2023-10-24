@@ -1,9 +1,13 @@
-package fr.gouv.cacem.monitorenv.domain.entities.mission
+package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ThemeEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 data class EnvActionControlEntity(
     override val id: UUID,
@@ -22,7 +26,8 @@ data class EnvActionControlEntity(
     val actionTargetType: ActionTargetTypeEnum? = null,
     val vehicleType: VehicleTypeEnum? = null,
     val infractions: List<InfractionEntity>? = listOf(),
-) : EnvActionEntity(
-    id = id,
-    actionType = ActionTypeEnum.CONTROL,
-)
+) :
+    EnvActionEntity(
+        id = id,
+        actionType = ActionTypeEnum.CONTROL,
+    )

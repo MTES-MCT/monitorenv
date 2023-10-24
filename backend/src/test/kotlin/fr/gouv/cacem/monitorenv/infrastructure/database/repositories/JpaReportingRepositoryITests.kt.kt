@@ -19,9 +19,8 @@ import java.time.ZonedDateTime
 import java.util.*
 
 @SpringBootTest(properties = ["monitorenv.scheduling.enabled=false"])
-class JpaReportingITests : AbstractDBTests() {
-    @Autowired
-    private lateinit var jpaReportingRepository: JpaReportingRepository
+class JpaReportingRepositoryITests : AbstractDBTests() {
+    @Autowired private lateinit var jpaReportingRepository: JpaReportingRepository
 
     @Test
     @Transactional
@@ -80,13 +79,15 @@ class JpaReportingITests : AbstractDBTests() {
         assertThat(reportingDTO.reporting.geom).isEqualTo(polygon)
         assertThat(reportingDTO.reporting.seaFront).isEqualTo("NAMO")
         assertThat(reportingDTO.reporting.description).isEqualTo("Test reporting")
-        assertThat(reportingDTO.reporting.reportType).isEqualTo(ReportingTypeEnum.INFRACTION_SUSPICION)
+        assertThat(reportingDTO.reporting.reportType)
+            .isEqualTo(ReportingTypeEnum.INFRACTION_SUSPICION)
         assertThat(reportingDTO.reporting.theme).isEqualTo("Police des mouillages")
         assertThat(reportingDTO.reporting.subThemes).isEqualTo(listOf("ZMEL"))
         assertThat(reportingDTO.reporting.actionTaken).isEqualTo("Aucune")
         assertThat(reportingDTO.reporting.isControlRequired).isEqualTo(false)
         assertThat(reportingDTO.reporting.hasNoUnitAvailable).isEqualTo(false)
-        assertThat(reportingDTO.reporting.createdAt).isEqualTo(ZonedDateTime.parse("2023-04-01T00:00:00Z"))
+        assertThat(reportingDTO.reporting.createdAt)
+            .isEqualTo(ZonedDateTime.parse("2023-04-01T00:00:00Z"))
         assertThat(reportingDTO.reporting.validityTime).isEqualTo(24)
         assertThat(reportingDTO.reporting.isArchived).isEqualTo(false)
         assertThat(reportingDTO.reporting.openBy).isEqualTo("CDA")
@@ -217,9 +218,46 @@ class JpaReportingITests : AbstractDBTests() {
         // Then
         val attachedReportingDTO = jpaReportingRepository.findById(1)
         assertThat(attachedReportingDTO.reporting.missionId).isEqualTo(38)
-        assertThat(attachedReportingDTO.reporting.attachedToMissionAtUtc).isEqualTo(
-            ZonedDateTime.parse("2023-04-01T00:00:00Z"),
-        )
+        assertThat(attachedReportingDTO.reporting.attachedToMissionAtUtc)
+            .isEqualTo(
+                ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+            )
+    }
+
+    @Test
+    @Transactional
+    fun `attachEnvActionsToReportings should attach action to a second reporting`() {
+        // Given
+        val envActionUUID = UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807")
+        val alreadyAttachedReporting = jpaReportingRepository.findById(6)
+        val reportingToAttach = jpaReportingRepository.findById(7)
+        assertThat(alreadyAttachedReporting.reporting.attachedEnvActionId).isEqualTo(envActionUUID)
+        assertThat(reportingToAttach.reporting.attachedEnvActionId).isNull()
+
+        val attachToReportingIds = listOf(6, 7)
+        jpaReportingRepository.attachEnvActionsToReportings(envActionUUID, attachToReportingIds)
+
+        val stillAttachedReporting = jpaReportingRepository.findById(6)
+        val newlyAttachedReporting = jpaReportingRepository.findById(7)
+
+        assertThat(stillAttachedReporting.reporting.attachedEnvActionId).isEqualTo(envActionUUID)
+        assertThat(newlyAttachedReporting.reporting.attachedEnvActionId).isEqualTo(envActionUUID)
+    }
+
+    @Test
+    @Transactional
+    fun `attachEnvActionsToReportings should detach action from reporting`() {
+        // Given
+        val envActionUUID = UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807")
+
+        val alreadyAttachedReporting = jpaReportingRepository.findById(6)
+        assertThat(alreadyAttachedReporting.reporting.attachedEnvActionId).isEqualTo(envActionUUID)
+
+        jpaReportingRepository.attachEnvActionsToReportings(envActionUUID, listOf())
+
+        val stillAttachedReporting = jpaReportingRepository.findById(6)
+
+        assertThat(stillAttachedReporting.reporting.attachedEnvActionId).isNull()
     }
 
     @Test
@@ -227,29 +265,34 @@ class JpaReportingITests : AbstractDBTests() {
     fun `attach an existing envAction to a reporting`() {
         // Given
         val existingReportingDTO = jpaReportingRepository.findById(1)
-        val reportingWithMissionDTO = jpaReportingRepository.save(
-            existingReportingDTO.reporting.copy(
-                missionId = 38,
-                attachedToMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
-            ),
-        )
+        val reportingWithMissionDTO =
+            jpaReportingRepository.save(
+                existingReportingDTO.reporting.copy(
+                    missionId = 38,
+                    attachedToMissionAtUtc =
+                    ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+                ),
+            )
         assertThat(reportingWithMissionDTO.reporting.attachedEnvActionId).isNull()
         assertThat(reportingWithMissionDTO.reporting.missionId).isEqualTo(38)
         // When
 
         jpaReportingRepository.save(
             reportingWithMissionDTO.reporting.copy(
-                attachedEnvActionId = UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
+                attachedEnvActionId =
+                UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
             ),
         )
 
         // Then
         val attachedReportingDTO = jpaReportingRepository.findById(1)
-        assertThat(attachedReportingDTO.reporting.attachedEnvActionId).isEqualTo(
-            UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
-        )
+        assertThat(attachedReportingDTO.reporting.attachedEnvActionId)
+            .isEqualTo(
+                UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
+            )
     }
 
+    // Test of db constraints, not specific to repository implementations
     @Test
     @Transactional
     fun `an envAction cannot be attached to a reporting without a mission`() {
@@ -259,18 +302,21 @@ class JpaReportingITests : AbstractDBTests() {
         assertThat(existingReportingDTO.reporting.missionId).isNull()
         // When
 
-        val exception = assertThrows<NotFoundException> {
-            jpaReportingRepository.save(
-                existingReportingDTO.reporting.copy(
-                    attachedEnvActionId = UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
-                ),
-            )
-        }
+        val exception =
+            assertThrows<NotFoundException> {
+                jpaReportingRepository.save(
+                    existingReportingDTO.reporting.copy(
+                        attachedEnvActionId =
+                        UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
+                    ),
+                )
+            }
 
         // Then
-        assertThat(exception.message).isEqualTo(
-            "Invalid combination of mission and/or envAction",
-        )
+        assertThat(exception.message)
+            .isEqualTo(
+                "Invalid combination of mission and/or envAction",
+            )
     }
 
     @Test
@@ -282,19 +328,22 @@ class JpaReportingITests : AbstractDBTests() {
         assertThat(existingReportingDTO.reporting.missionId).isNull()
         // When
 
-        val exception = assertThrows<NotFoundException> {
-            jpaReportingRepository.save(
-                existingReportingDTO.reporting.copy(
-                    missionId = 42,
-                    attachedEnvActionId = UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
-                ),
-            )
-        }
+        val exception =
+            assertThrows<NotFoundException> {
+                jpaReportingRepository.save(
+                    existingReportingDTO.reporting.copy(
+                        missionId = 42,
+                        attachedEnvActionId =
+                        UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
+                    ),
+                )
+            }
 
         // Then
-        assertThat(exception.message).isEqualTo(
-            "Invalid combination of mission and/or envAction",
-        )
+        assertThat(exception.message)
+            .isEqualTo(
+                "Invalid combination of mission and/or envAction",
+            )
     }
 
     @Test
@@ -304,18 +353,21 @@ class JpaReportingITests : AbstractDBTests() {
         val existingReportingDTO = jpaReportingRepository.findById(1)
         assertThat(existingReportingDTO.reporting.missionId).isNull()
         // When
-        val exception = assertThrows<NotFoundException> {
-            jpaReportingRepository.save(
-                existingReportingDTO.reporting.copy(
-                    missionId = 100,
-                    attachedToMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
-                ),
-            )
-        }
+        val exception =
+            assertThrows<NotFoundException> {
+                jpaReportingRepository.save(
+                    existingReportingDTO.reporting.copy(
+                        missionId = 100,
+                        attachedToMissionAtUtc =
+                        ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+                    ),
+                )
+            }
         // Then
-        assertThat(exception.message).isEqualTo(
-            "Invalid reference to semaphore, control unit or mission: not found in referential",
-        )
+        assertThat(exception.message)
+            .isEqualTo(
+                "Invalid reference to semaphore, control unit or mission: not found in referential",
+            )
     }
 
     @Test
@@ -325,17 +377,20 @@ class JpaReportingITests : AbstractDBTests() {
         val existingReportingDTO = jpaReportingRepository.findById(6)
         assertThat(existingReportingDTO.reporting.detachedFromMissionAtUtc).isNull()
         // When
-        val exception = assertThrows<NotFoundException> {
-            jpaReportingRepository.save(
-                existingReportingDTO.reporting.copy(
-                    detachedFromMissionAtUtc = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
-                ),
-            )
-        }
+        val exception =
+            assertThrows<NotFoundException> {
+                jpaReportingRepository.save(
+                    existingReportingDTO.reporting.copy(
+                        detachedFromMissionAtUtc =
+                        ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+                    ),
+                )
+            }
         // Then
-        assertThat(exception.message).isEqualTo(
-            "Invalid combination of mission and/or envAction",
-        )
+        assertThat(exception.message)
+            .isEqualTo(
+                "Invalid combination of mission and/or envAction",
+            )
     }
 
     @Test
@@ -365,15 +420,39 @@ class JpaReportingITests : AbstractDBTests() {
         assertThat(reportingAttachedToMission.reporting.detachedFromMissionAtUtc).isNull()
 
         assertThat(alreadyAttachedReportingAttachedToMission.reporting.missionId).isEqualTo(34)
-        assertThat(alreadyAttachedReportingAttachedToMission.reporting.attachedToMissionAtUtc).isNotNull()
-        assertThat(alreadyAttachedReportingAttachedToMission.reporting.detachedFromMissionAtUtc).isNull()
+        assertThat(alreadyAttachedReportingAttachedToMission.reporting.attachedToMissionAtUtc)
+            .isNotNull()
+        assertThat(alreadyAttachedReportingAttachedToMission.reporting.detachedFromMissionAtUtc)
+            .isNull()
 
-        assertThat(secondAlreadyAttachedReportingDetachedFromMission.reporting.missionId).isEqualTo(34)
-        assertThat(secondAlreadyAttachedReportingDetachedFromMission.reporting.attachedToMissionAtUtc).isNotNull()
-        assertThat(secondAlreadyAttachedReportingDetachedFromMission.reporting.detachedFromMissionAtUtc).isNotNull()
+        assertThat(secondAlreadyAttachedReportingDetachedFromMission.reporting.missionId)
+            .isEqualTo(34)
+        assertThat(
+            secondAlreadyAttachedReportingDetachedFromMission
+                .reporting
+                .attachedToMissionAtUtc,
+        )
+            .isNotNull()
+        assertThat(
+            secondAlreadyAttachedReportingDetachedFromMission
+                .reporting
+                .detachedFromMissionAtUtc,
+        )
+            .isNotNull()
 
-        assertThat(attachedReportingToOtherMissionNotAttachedToMission.reporting.missionId).isEqualTo(38)
-        assertThat(attachedReportingToOtherMissionNotAttachedToMission.reporting.attachedToMissionAtUtc).isNotNull()
-        assertThat(attachedReportingToOtherMissionNotAttachedToMission.reporting.detachedFromMissionAtUtc).isNull()
+        assertThat(attachedReportingToOtherMissionNotAttachedToMission.reporting.missionId)
+            .isEqualTo(38)
+        assertThat(
+            attachedReportingToOtherMissionNotAttachedToMission
+                .reporting
+                .attachedToMissionAtUtc,
+        )
+            .isNotNull()
+        assertThat(
+            attachedReportingToOtherMissionNotAttachedToMission
+                .reporting
+                .detachedFromMissionAtUtc,
+        )
+            .isNull()
     }
 }

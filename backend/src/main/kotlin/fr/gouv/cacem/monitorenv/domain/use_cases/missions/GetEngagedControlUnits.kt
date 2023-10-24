@@ -8,25 +8,24 @@ import org.slf4j.LoggerFactory
 import java.time.ZonedDateTime
 
 @UseCase
-class GetEngagedControlUnits(private val getMissions: GetMissions) {
+class GetEngagedControlUnits(private val getFullMissions: GetFullMissions) {
     private val logger = LoggerFactory.getLogger(GetEngagedControlUnits::class.java)
 
     fun execute(): List<LegacyControlUnitEntity> {
-        val openedMissions = getMissions.execute(
-            startedAfterDateTime = ZonedDateTime.now().minusMonths(2),
-            startedBeforeDateTime = null,
-            missionSources = null,
-            missionTypes = null,
-            missionStatuses = listOf("PENDING"),
-            pageNumber = null,
-            pageSize = null,
-            seaFronts = null,
-        )
+        val openedMissions =
+            getFullMissions.execute(
+                startedAfterDateTime = ZonedDateTime.now().minusMonths(2),
+                startedBeforeDateTime = null,
+                missionSources = null,
+                missionTypes = null,
+                missionStatuses = listOf("PENDING"),
+                pageNumber = null,
+                pageSize = null,
+                seaFronts = null,
+            )
 
-        val controlUnits = openedMissions
-            .map { it.mission.controlUnits }
-            .flatten()
-            .distinctBy { it.id }
+        val controlUnits =
+            openedMissions.map { it.mission.controlUnits }.flatten().distinctBy { it.id }
 
         logger.info("Found ${controlUnits.size} engaged control unit(s).")
 

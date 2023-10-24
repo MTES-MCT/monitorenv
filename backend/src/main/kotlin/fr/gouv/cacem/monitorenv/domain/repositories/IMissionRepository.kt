@@ -11,7 +11,11 @@ interface IMissionRepository {
 
     fun delete(missionId: Int)
 
-    fun findAll(
+    fun findFullMissionById(missionId: Int): MissionDTO
+
+    fun findById(missionId: Int): MissionEntity
+
+    fun findAllFullMissions(
         startedAfter: Instant,
         startedBefore: Instant?,
         missionTypes: List<String>?,
@@ -21,11 +25,19 @@ interface IMissionRepository {
         pageable: Pageable,
     ): List<MissionDTO>
 
+    fun findAll(
+        startedAfter: Instant,
+        startedBefore: Instant?,
+        missionTypes: List<String>?,
+        missionStatuses: List<String>?,
+        missionSources: List<MissionSourceEnum>? = null,
+        seaFronts: List<String>?,
+        pageable: Pageable,
+    ): List<MissionEntity>
+
     fun findByIds(ids: List<Int>): List<MissionEntity>
 
     fun findByControlUnitId(controlUnitId: Int): List<MissionEntity>
-
-    fun findById(missionId: Int): MissionDTO
 
     fun save(mission: MissionEntity): MissionDTO
 }

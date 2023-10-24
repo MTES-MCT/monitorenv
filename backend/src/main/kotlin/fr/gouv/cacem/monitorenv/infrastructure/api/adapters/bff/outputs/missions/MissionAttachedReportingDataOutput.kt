@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
@@ -6,6 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.SemaphoreDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.ControlUnitDataOutput
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
@@ -43,11 +44,12 @@ data class MissionAttachedReportingDataOutput(
         ): MissionAttachedReportingDataOutput {
             requireNotNull(dto.reporting.id) { "ReportingEntity.id cannot be null" }
             return MissionAttachedReportingDataOutput(
-                id = dto.reporting.id!!,
+                id = dto.reporting.id,
                 reportingId = dto.reporting.reportingId,
                 sourceType = dto.reporting.sourceType,
                 semaphoreId = dto.reporting.semaphoreId,
-                semaphore = if (dto.semaphore != null) {
+                semaphore =
+                if (dto.semaphore != null) {
                     SemaphoreDataOutput.fromSemaphoreEntity(
                         dto.semaphore,
                     )
@@ -57,18 +59,20 @@ data class MissionAttachedReportingDataOutput(
                 controlUnitId = dto.reporting.controlUnitId,
                 controlUnit =
                 if (dto.controlUnit != null) {
-                    ControlUnitDataOutput
-                        .fromFullControlUnit(
-                            dto.controlUnit,
-                        )
+                    ControlUnitDataOutput.fromFullControlUnit(
+                        dto.controlUnit,
+                    )
                 } else {
                     null
                 },
                 displayedSource =
                 when (dto.reporting.sourceType) {
-                    SourceTypeEnum.SEMAPHORE -> dto?.semaphore?.unit ?: dto?.semaphore?.name
-                    // TODO This is really strange : `fullControlUnit?.controlUnit` can't be null and I have to add another `?`...
-                    SourceTypeEnum.CONTROL_UNIT -> dto?.controlUnit?.controlUnit?.name
+                    SourceTypeEnum.SEMAPHORE ->
+                        dto.semaphore?.unit
+                            ?: dto.semaphore?.name
+                    // TODO This is really strange : `fullControlUnit?.controlUnit`
+                    // can't be null and I have to add another `?`...
+                    SourceTypeEnum.CONTROL_UNIT -> dto.controlUnit?.controlUnit?.name
                     SourceTypeEnum.OTHER -> dto.reporting.sourceName
                     else -> ""
                 },

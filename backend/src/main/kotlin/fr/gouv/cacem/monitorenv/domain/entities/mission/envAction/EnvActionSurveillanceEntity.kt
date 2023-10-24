@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.entities.mission
+package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction
 
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
@@ -14,7 +14,8 @@ data class EnvActionSurveillanceEntity(
     val themes: List<ThemeEntity>? = listOf(),
     val observations: String? = null,
     val coverMissionZone: Boolean? = null,
-) : EnvActionEntity(
-    actionType = ActionTypeEnum.SURVEILLANCE,
-    id = id,
-)
+) :
+    EnvActionEntity(
+        actionType = ActionTypeEnum.SURVEILLANCE,
+        id = id,
+    )
