@@ -9,11 +9,11 @@ import org.slf4j.LoggerFactory
 
 @UseCase
 class CreateOrUpdateReporting(
-    private val reportingRepository: IReportingRepository,
-    private val controlUnitRepository: IControlUnitRepository,
-    private val semaphoreRepository: ISemaphoreRepository,
-    private val facadeRepository: IFacadeAreasRepository,
-    private val missionRepository: IMissionRepository,
+        private val reportingRepository: IReportingRepository,
+        private val controlUnitRepository: IControlUnitRepository,
+        private val semaphoreRepository: ISemaphoreRepository,
+        private val facadeRepository: IFacadeAreasRepository,
+        private val missionRepository: IMissionRepository,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(CreateOrUpdateReporting::class.java)
 
@@ -29,11 +29,11 @@ class CreateOrUpdateReporting(
         }
 
         val savedReport =
-            reportingRepository.save(
-                reporting.copy(
-                    seaFront = seaFront,
-                ),
-            )
+                reportingRepository.save(
+                        reporting.copy(
+                                seaFront = seaFront,
+                        ),
+                )
 
         return savedReport
     }
