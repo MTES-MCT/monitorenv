@@ -1,13 +1,12 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Formik } from 'formik'
+import { noop } from 'lodash'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { MissionForm } from './MissionForm'
 import { MissionSchema } from './Schemas'
 import { useGetMissionQuery } from '../../../api/missionsAPI'
-import { saveMission } from '../../../domain/use_cases/missions/saveMission'
-import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { FormikForm } from '../../../uiMonitor/CustomFormikFields/FormikForm'
 import { getIdTyped } from '../../../utils/getIdTyped'
@@ -20,7 +19,6 @@ export function Mission() {
     multiMissions: { selectedMissions },
     sideWindow
   } = useAppSelector(state => state)
-  const dispatch = useAppDispatch()
   const [shouldValidateOnChange, setShouldValidateOnChange] = useState(false)
 
   const routeParams = getMissionPageRoute(sideWindow.currentPath)
@@ -44,10 +42,6 @@ export function Mission() {
     return missionFactory(missionToEdit)
   }, [idTyped, missionIsNewMission, missionToEdit])
 
-  const handleSubmitForm = values => {
-    dispatch(saveMission(values))
-  }
-
   if (isLoading) {
     return <div>Chargement en cours</div>
   }
@@ -58,7 +52,7 @@ export function Mission() {
         key={idTyped}
         enableReinitialize
         initialValues={missionFormikValues}
-        onSubmit={handleSubmitForm}
+        onSubmit={noop}
         validateOnBlur={false}
         validateOnChange={shouldValidateOnChange}
         validateOnMount={false}
@@ -67,7 +61,6 @@ export function Mission() {
         <FormikForm>
           <MissionForm
             id={idTyped}
-            isAlreadyClosed={missionToEdit?.isClosed}
             isNewMission={missionIsNewMission}
             selectedMission={selectedMission?.mission}
             setShouldValidateOnChange={setShouldValidateOnChange}

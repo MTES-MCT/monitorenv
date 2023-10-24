@@ -101,7 +101,6 @@ VALUES
     (        40,           10003),
     (        41,           10002),
     (        42,           10003),
-    (        43,           10018),
     (        44,           10003),
     (        45,           10014),
     (        46,           10018),
@@ -118,7 +117,8 @@ VALUES
     (        34,           10016,          'M. Capitaine Flame'),
     (        34,           10017,          'Popeye 06789012345'),
     (        47,           10002,  'A Team - Gimme your number'),
-    (        25,           10002,                'Full contact');
+    (        25,           10002,                'Full contact'),
+    (        43,           10018,                'Full contact');
 
 INSERT INTO missions_control_resources
     (mission_id, control_resource_id)

@@ -88,8 +88,12 @@ export function CustomCircleRange() {
   )
 
   const addCustomCircleRange = useCallback(
-    (nextCoordinates, nextCircleRadius) => {
-      dispatch(
+    async (nextCoordinates, nextCircleRadius) => {
+      if (!nextCoordinates?.length || !nextCircleRadius?.length) {
+        return
+      }
+
+      await dispatch(
         setCircleMeasurementToAdd({
           circleCoordinatesToAdd: nextCoordinates,
           circleRadiusToAdd: nextCircleRadius
@@ -100,6 +104,7 @@ export function CustomCircleRange() {
       const extent = transformExtent(boundingExtent([formattedCoordinates]), WSG84_PROJECTION, OPENLAYERS_PROJECTION)
       dispatch(setFitToExtent(extent))
       dispatch(setMeasurementTypeToAdd(undefined))
+      dispatch(resetCircleMeasurementInDrawing())
     },
     [dispatch]
   )
@@ -131,6 +136,7 @@ export function CustomCircleRange() {
         <br />
         <OkButton
           data-cy="measurement-circle-add"
+          disabled={!circleCoordinates?.length || !circleRadius?.length}
           onClick={() => addCustomCircleRange(circleCoordinates, circleRadius)}
         >
           OK

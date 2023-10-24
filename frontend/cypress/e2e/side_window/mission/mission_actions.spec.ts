@@ -20,7 +20,7 @@ context('Mission actions', () => {
     cy.get('*[data-cy="duplicate-infraction"]').eq(1).should('be.disabled')
 
     cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
-    cy.get('form').submit()
+    cy.clickButton('Enregistrer et quitter')
 
     // Then
     cy.wait('@updateMission').then(({ request, response }) => {
@@ -70,7 +70,7 @@ context('Mission actions', () => {
     cy.get('*[data-cy="envaction-add-theme"]').should('not.exist')
 
     cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
-    cy.get('form').submit()
+    cy.clickButton('Enregistrer et quitter')
 
     // Then
     cy.wait('@updateMission').then(({ request, response }) => {
@@ -100,7 +100,7 @@ context('Mission actions', () => {
     })
 
     cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
-    cy.get('form').submit()
+    cy.clickButton('Enregistrer et quitter')
 
     // Then
     cy.wait('@updateMission').then(({ request, response }) => {
@@ -138,7 +138,7 @@ context('Mission actions', () => {
     cy.get('*[data-cy="envaction-protected-species-selector"]').should('have.length', 0)
 
     cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
-    cy.get('form').submit()
+    cy.clickButton('Enregistrer et quitter')
 
     // Then
     cy.wait('@updateMission').then(({ response }) => {

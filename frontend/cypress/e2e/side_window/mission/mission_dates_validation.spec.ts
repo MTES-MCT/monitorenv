@@ -223,7 +223,7 @@ context('Mission dates', () => {
     cy.fill('Equipement de sécurité et respect des normes', false)
 
     cy.intercept('PUT', `/bff/v1/missions/41`).as('updateMission')
-    cy.get('form').submit()
+    cy.clickButton('Enregistrer et quitter')
 
     // Then
     cy.wait('@updateMission').then(({ request, response }) => {
@@ -249,6 +249,6 @@ context('Mission dates', () => {
     cy.fill('Respect du code de la navigation sur le plan d’eau', true)
     cy.fill('Gens de mer', true)
     cy.fill('Equipement de sécurité et respect des normes', true)
-    cy.get('form').submit()
+    cy.clickButton('Enregistrer et quitter')
   })
 })
