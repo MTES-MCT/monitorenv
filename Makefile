@@ -26,7 +26,7 @@ dev-lint-frontend:
 	cd frontend && npm run test:lint:partial
 
 test-back:
-	cd backend && ./mvnw clean && ./mvnw test
+	cd backend && ./gradlew clean test
 
 test-front:
 	cd frontend && npm run test:unit
@@ -223,5 +223,5 @@ logs-db:
 
 .PHONY: dev lint-back
 
-dev: dev-run-back-with-infra
+dev: dev-run-back
 lint-back: dev-lint-backend
