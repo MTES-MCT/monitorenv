@@ -29,7 +29,7 @@ class JpaMissionRepository(
         dbMissionRepository.delete(missionId)
     }
 
-    override fun findAll(
+    override fun findAllFullMissions(
             startedAfter: Instant,
             startedBefore: Instant?,
             missionTypes: List<String>?,
@@ -57,8 +57,34 @@ class JpaMissionRepository(
         }
     }
 
-    override fun findById(missionId: Int): MissionDTO {
+    override fun findAll(
+            startedAfter: Instant,
+            startedBefore: Instant?,
+            missionTypes: List<String>?,
+            missionStatuses: List<String>?,
+            missionSources: List<MissionSourceEnum>?,
+            seaFronts: List<String>?,
+            pageable: Pageable,
+    ): List<MissionEntity> {
+        val missionSourcesAsStringArray = missionSources?.map { it.name }
+        return dbMissionRepository.findAll(
+                        startedAfter = startedAfter,
+                        startedBefore = startedBefore,
+                        missionTypes = convertToPGArray(missionTypes),
+                        missionStatuses = convertToPGArray(missionStatuses),
+                        missionSources = convertToPGArray(missionSourcesAsStringArray),
+                        seaFronts = convertToPGArray(seaFronts),
+                        pageable = pageable,
+                )
+                .map { it.toMissionEntity(mapper) }
+    }
+
+    override fun findFullMissionById(missionId: Int): MissionDTO {
         return dbMissionRepository.findById(missionId).get().toMissionDTO(mapper)
+    }
+
+    override fun findById(missionId: Int): MissionEntity {
+        return dbMissionRepository.findById(missionId).get().toMissionEntity(mapper)
     }
 
     @Transactional

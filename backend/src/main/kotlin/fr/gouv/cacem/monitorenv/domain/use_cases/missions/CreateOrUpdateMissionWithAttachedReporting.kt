@@ -4,12 +4,6 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.mission.*
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
-import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreaRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
@@ -17,8 +11,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.
 
 @UseCase
 class CreateOrUpdateMissionWithAttachedReporting(
-    private val departmentRepository: IDepartmentAreaRepository,
-    private val facadeRepository: IFacadeAreasRepository,
+    private val createOrUpdateMission: CreateOrUpdateMission,
     private val missionRepository: IMissionRepository,
     private val reportingRepository: IReportingRepository,
 
@@ -26,83 +19,21 @@ class CreateOrUpdateMissionWithAttachedReporting(
     @Throws(IllegalArgumentException::class)
     fun execute(
         mission: MissionEntity?,
-        attachedReportingIds: List<Int>? = null,
+        attachedReportingIds: List<Int>,
         envActionsAttachedToReportingIds: List<EnvActionAttachedToReportingIds>,
 
     ): MissionDTO {
-        require(mission != null) {
-            "No mission to create or update"
-        }
-        val envActions = mission.envActions?.map {
-            when (it.actionType) {
-                ActionTypeEnum.CONTROL -> {
-                    (it as EnvActionControlEntity).copy(
-                        facade = (
-                            it.geom
-                                ?: mission.geom
-                            )?.let { geom -> facadeRepository.findFacadeFromGeometry(geom) },
-                        department = (
-                            it.geom
-                                ?: mission.geom
-                            )?.let { geom -> departmentRepository.findDepartmentFromGeometry(geom) },
-                    )
-                }
-
-                ActionTypeEnum.SURVEILLANCE -> {
-                    val surveillance = it as EnvActionSurveillanceEntity
-                    /*
-                    When coverMissionZone is true, use mission geometry in priority, fall back to action geometry.
-                    When coverMissionZone is not true, prioritize the other way around.
-                    Ideally the fallbacks should not be needed, but if coverMissionZone is true and the mission geom
-                    is null, or if coverMissionZone is false and the action geom is null, then rather that nothing,
-                    better use the geometry that is available, if any.
-                     */
-                    val geometry = if (surveillance.coverMissionZone == true) {
-                        (
-                            mission.geom
-                                ?: surveillance.geom
-                            )
-                    } else {
-                        (surveillance.geom ?: mission.geom)
-                    }
-                    surveillance.copy(
-                        facade = geometry?.let { geom -> facadeRepository.findFacadeFromGeometry(geom) },
-                        department = geometry?.let { geom -> departmentRepository.findDepartmentFromGeometry(geom) },
-                    )
-                }
-
-                ActionTypeEnum.NOTE -> {
-                    (it as EnvActionNoteEntity).copy()
-                }
-            }
+        val savedMission = createOrUpdateMission.execute(mission)
+        require(savedMission.id != null) {
+            "The mission id is null"
         }
 
-        var facade: String? = null
+        reportingRepository.attachReportingsToMission(attachedReportingIds, savedMission.id)
 
-        if (mission.geom != null) {
-            facade = facadeRepository.findFacadeFromGeometry(mission.geom)
+        envActionsAttachedToReportingIds.forEach {
+            reportingRepository.attachEnvActionsToReportings(it.first, it.second)
         }
 
-        val missionToSave = mission.copy(
-            facade = facade,
-            envActions = envActions,
-        )
-        val savedMission = missionRepository.save(missionToSave)
-
-        if (savedMission.mission.id == null) {
-            throw IllegalArgumentException("Mission id is null")
-        }
-
-        if (attachedReportingIds != null) {
-            reportingRepository.attachReportingsToMission(attachedReportingIds, savedMission.mission.id)
-        }
-
-        if (envActionsAttachedToReportingIds != null) {
-            envActionsAttachedToReportingIds.forEach {
-                reportingRepository.attachEnvActionsToReportings(it.first, it.second)
-            }
-        }
-
-        return missionRepository.findById(savedMission.mission.id)
+        return missionRepository.findFullMissionById(savedMission.id)
     }
 }

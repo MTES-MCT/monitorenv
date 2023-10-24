@@ -8,11 +8,11 @@ import org.slf4j.LoggerFactory
 import java.time.ZonedDateTime
 
 @UseCase
-class GetEngagedControlUnits(private val getMissions: GetMissions) {
+class GetEngagedControlUnits(private val getFullMissions: GetFullMissions) {
     private val logger = LoggerFactory.getLogger(GetEngagedControlUnits::class.java)
 
     fun execute(): List<LegacyControlUnitEntity> {
-        val openedMissions = getMissions.execute(
+        val openedMissions = getFullMissions.execute(
             startedAfterDateTime = ZonedDateTime.now().minusMonths(2),
             startedBeforeDateTime = null,
             missionSources = null,

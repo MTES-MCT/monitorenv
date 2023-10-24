@@ -61,22 +61,20 @@ class ApiMissionsControllerITests {
             "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))"
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
         // Given
-        val expectedNewMission = MissionDTO(
-            mission = MissionEntity(
-                id = 10,
-                missionTypes = listOf(MissionTypeEnum.LAND),
-                facade = "Outre-Mer",
-                geom = polygon,
-                observationsCnsp = null,
-                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                isClosed = false,
-                isDeleted = false,
-                missionSource = MissionSourceEnum.MONITORFISH,
-                hasMissionOrder = true,
-                isUnderJdp = true,
-                isGeometryComputedFromControls = false,
-            ),
+        val expectedNewMission = MissionEntity(
+            id = 10,
+            missionTypes = listOf(MissionTypeEnum.LAND),
+            facade = "Outre-Mer",
+            geom = polygon,
+            observationsCnsp = null,
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+            isClosed = false,
+            isDeleted = false,
+            missionSource = MissionSourceEnum.MONITORFISH,
+            hasMissionOrder = true,
+            isUnderJdp = true,
+            isGeometryComputedFromControls = false,
         )
         val newMissionRequest = CreateOrUpdateMissionDataInput(
             missionTypes = listOf(MissionTypeEnum.LAND),
@@ -95,7 +93,6 @@ class ApiMissionsControllerITests {
         given(
             createOrUpdateMission.execute(
                 mission = newMissionRequest.toMissionEntity(),
-                attachedReportingIds = null,
             ),
         )
             .willReturn(expectedNewMission)
@@ -118,22 +115,20 @@ class ApiMissionsControllerITests {
             "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))"
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
-        val expectedFirstMission = MissionDTO(
-            mission = MissionEntity(
-                id = 10,
-                missionTypes = listOf(MissionTypeEnum.SEA),
-                facade = "Outre-Mer",
-                geom = polygon,
-                observationsCnsp = null,
-                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                isDeleted = false,
-                missionSource = MissionSourceEnum.MONITORFISH,
-                isClosed = false,
-                hasMissionOrder = false,
-                isUnderJdp = false,
-                isGeometryComputedFromControls = false,
-            ),
+        val expectedFirstMission = MissionEntity(
+            id = 10,
+            missionTypes = listOf(MissionTypeEnum.SEA),
+            facade = "Outre-Mer",
+            geom = polygon,
+            observationsCnsp = null,
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+            isDeleted = false,
+            missionSource = MissionSourceEnum.MONITORFISH,
+            isClosed = false,
+            hasMissionOrder = false,
+            isUnderJdp = false,
+            isGeometryComputedFromControls = false,
         )
         given(
             getMissions.execute(
@@ -159,18 +154,16 @@ class ApiMissionsControllerITests {
     fun `Should get specific mission when requested by Id`() {
         // Given
         val requestedId = 0
-        val expectedFirstMission = MissionDTO(
-            mission = MissionEntity(
-                id = 10,
-                missionTypes = listOf(MissionTypeEnum.SEA),
-                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                isDeleted = false,
-                missionSource = MissionSourceEnum.MONITORFISH,
-                isClosed = false,
-                hasMissionOrder = false,
-                isUnderJdp = false,
-                isGeometryComputedFromControls = false,
-            ),
+        val expectedFirstMission = MissionEntity(
+            id = 10,
+            missionTypes = listOf(MissionTypeEnum.SEA),
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            isDeleted = false,
+            missionSource = MissionSourceEnum.MONITORFISH,
+            isClosed = false,
+            hasMissionOrder = false,
+            isUnderJdp = false,
+            isGeometryComputedFromControls = false,
         )
         // we test only if the route is called with the right arg
         given(getMissionById.execute(requestedId)).willReturn(expectedFirstMission)
@@ -186,20 +179,18 @@ class ApiMissionsControllerITests {
     @Test
     fun `update mission should return updated mission`() {
         // Given
-        val expectedUpdatedMission = MissionDTO(
-            mission = MissionEntity(
-                id = 14,
-                missionTypes = listOf(MissionTypeEnum.SEA),
-                observationsCacem = "updated observations",
-                observationsCnsp = "updated observations",
-                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                isClosed = false,
-                isDeleted = false,
-                missionSource = MissionSourceEnum.MONITORFISH,
-                hasMissionOrder = true,
-                isUnderJdp = true,
-                isGeometryComputedFromControls = false,
-            ),
+        val expectedUpdatedMission = MissionEntity(
+            id = 14,
+            missionTypes = listOf(MissionTypeEnum.SEA),
+            observationsCacem = "updated observations",
+            observationsCnsp = "updated observations",
+            startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+            isClosed = false,
+            isDeleted = false,
+            missionSource = MissionSourceEnum.MONITORFISH,
+            hasMissionOrder = true,
+            isUnderJdp = true,
+            isGeometryComputedFromControls = false,
         )
         val envAction = EnvActionControlEntity(
             id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
@@ -223,7 +214,6 @@ class ApiMissionsControllerITests {
         given(
             createOrUpdateMission.execute(
                 mission = requestBody.toMissionEntity(),
-                attachedReportingIds = null,
             ),
         ).willReturn(expectedUpdatedMission)
         // When
@@ -234,7 +224,7 @@ class ApiMissionsControllerITests {
         )
             // Then
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$.observationsCnsp", equalTo(expectedUpdatedMission.mission.observationsCnsp)))
+            .andExpect(jsonPath("$.observationsCnsp", equalTo(expectedUpdatedMission.observationsCnsp)))
     }
 
     @Test

@@ -50,10 +50,10 @@ class MissionsControllerITests {
     private lateinit var createOrUpdateMissionWithAttachedReporting: CreateOrUpdateMissionWithAttachedReporting
 
     @MockBean
-    private lateinit var getMissions: GetMissions
+    private lateinit var getFullMissions: GetFullMissions
 
     @MockBean
-    private lateinit var getMissionById: GetMissionById
+    private lateinit var getFullMissionById: GetFullMissionById
 
     @MockBean
     private lateinit var deleteMission: DeleteMission
@@ -97,12 +97,13 @@ class MissionsControllerITests {
             endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
             isClosed = false,
             missionSource = MissionSourceEnum.MONITORENV,
+            attachedReportingIds = listOf(),
         )
         val requestbody = objectMapper.writeValueAsString(newMissionRequest)
         given(
             createOrUpdateMissionWithAttachedReporting.execute(
                 mission = newMissionRequest.toMissionEntity(),
-                attachedReportingIds = null,
+                attachedReportingIds = listOf(),
                 envActionsAttachedToReportingIds = listOf(),
             ),
         ).willReturn(expectedNewMission)
@@ -203,7 +204,7 @@ class MissionsControllerITests {
             ),
         )
         given(
-            getMissions.execute(
+            getFullMissions.execute(
                 startedAfterDateTime = null,
                 startedBeforeDateTime = null,
                 seaFronts = null,
@@ -257,14 +258,14 @@ class MissionsControllerITests {
             ),
         )
         // we test only if the route is called with the right arg
-        given(getMissionById.execute(requestedId)).willReturn(expectedFirstMission)
+        given(getFullMissionById.execute(requestedId)).willReturn(expectedFirstMission)
 
         // When
         mockMvc.perform(get("/bff/v1/missions/$requestedId"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.missionTypes[0]", equalTo(MissionTypeEnum.SEA.toString())))
-        verify(getMissionById).execute(requestedId)
+        verify(getFullMissionById).execute(requestedId)
     }
 
     @Test
