@@ -19,6 +19,11 @@ class JpaControlUnitResourceRepository(
     private val dbControlUnitResourceRepository: IDBControlUnitResourceRepository,
     private val dbBaseRepository: IDBBaseRepository,
 ) : IControlUnitResourceRepository {
+    @Transactional
+    override fun archiveById(controlUnitResourceId: Int) {
+        dbControlUnitResourceRepository.archiveById(controlUnitResourceId)
+    }
+
     override fun deleteById(controlUnitResourceId: Int) {
         dbControlUnitResourceRepository.deleteById(controlUnitResourceId)
     }

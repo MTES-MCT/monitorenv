@@ -38,6 +38,7 @@ export namespace ControlUnit {
     controlUnit: ControlUnitData
     controlUnitId: number
     id: number
+    isArchived: boolean
     name: string
     note: string | undefined
     /** Base64 Data URI. */

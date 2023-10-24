@@ -2,6 +2,7 @@ import { CustomSearch, type Filter, isDefined, pluralize } from '@mtes-mct/monit
 import { isEmpty, uniq } from 'lodash/fp'
 
 import { ControlUnit } from '../../../../domain/entities/controlUnit'
+import { isNotArchived } from '../../../../utils/isNotArchived'
 
 import type { FiltersState } from './types'
 
@@ -12,8 +13,9 @@ export function displayBaseNamesFromControlUnit(controlUnit: ControlUnit.Control
 }
 
 export function displayControlUnitResourcesFromControlUnit(controlUnit: ControlUnit.ControlUnit): string {
-  const controlUnitResourceTypeCounts = controlUnit.controlUnitResources.reduce(
-    (previousControlUnitResourceTypeCounts, controlUnitResource) => {
+  const controlUnitResourceTypeCounts = controlUnit.controlUnitResources
+    .filter(isNotArchived)
+    .reduce((previousControlUnitResourceTypeCounts, controlUnitResource) => {
       const controlUnitResourceTypeCount = previousControlUnitResourceTypeCounts[controlUnitResource.type]
       if (!controlUnitResourceTypeCount) {
         return {
@@ -26,9 +28,7 @@ export function displayControlUnitResourcesFromControlUnit(controlUnit: ControlU
         ...previousControlUnitResourceTypeCounts,
         [controlUnitResource.type]: controlUnitResourceTypeCount + 1
       }
-    },
-    {} as Record<string, number>
-  )
+    }, {} as Record<string, number>)
 
   return !isEmpty(controlUnitResourceTypeCounts)
     ? Object.entries(controlUnitResourceTypeCounts)

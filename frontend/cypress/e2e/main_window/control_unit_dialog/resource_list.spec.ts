@@ -1,3 +1,5 @@
+import { faker } from '@faker-js/faker'
+
 import { gotToMainWindowAndOpenControlUnit } from './utils'
 
 context('Main Window > Control Unit Dialog > Resource List', () => {
@@ -23,7 +25,7 @@ context('Main Window > Control Unit Dialog > Resource List', () => {
     cy.get('p').contains('Ajouter un moyen').should('not.exist')
   })
 
-  it('Should add, edit and delete a resource', () => {
+  it('Should add, edit, archive and delete a resource', () => {
     // -------------------------------------------------------------------------
     // Create
 
@@ -31,9 +33,10 @@ context('Main Window > Control Unit Dialog > Resource List', () => {
 
     cy.clickButton('Ajouter un moyen')
 
-    cy.fill('Type de moyen', 'Avion')
     // On ne met pas de nom de moyen ici
     // pour tester que ce soit bien le type qui soit utilisé comme nom lorsque le nom est vide.
+    const createdResourceName = 'Drône'
+    cy.fill('Type de moyen', 'Drône')
     cy.fill('Base du moyen', 'Dunkerque')
     cy.fill('Commentaire', 'Un commentaire sur le moyen.')
 
@@ -46,9 +49,9 @@ context('Main Window > Control Unit Dialog > Resource List', () => {
 
       assert.deepInclude(interception.request.body, {
         baseId: 3,
-        name: 'Avion',
+        name: createdResourceName,
         note: 'Un commentaire sur le moyen.',
-        type: 'AIRPLANE'
+        type: 'DRONE'
       })
     })
 
@@ -58,12 +61,15 @@ context('Main Window > Control Unit Dialog > Resource List', () => {
     // -------------------------------------------------------------------------
     // Edit
 
-    cy.intercept('PUT', `/api/v1/control_unit_resources/13`).as('updateControlUnitResource')
+    cy.intercept('PUT', `/api/v1/control_unit_resources/*`).as('updateControlUnitResource')
 
-    cy.getDataCy('ControlUnitDialog-control-unit-resource').filter('[data-id="13"]').clickButton('Éditer ce moyen')
+    cy.contains(createdResourceName)
+      .parents('[data-cy="ControlUnitDialog-control-unit-resource"]')
+      .clickButton('Éditer ce moyen')
 
-    cy.fill('Type de moyen', 'Bâtiment de soutien')
-    cy.fill('Nom du moyen', 'Super Moyen')
+    const editedResourceName = faker.vehicle.vehicle()
+    cy.fill('Type de moyen', 'Voiture')
+    cy.fill('Nom du moyen', editedResourceName)
     cy.fill('Base du moyen', 'Saint-Malo')
     cy.fill('Commentaire', 'Un autre commentaire sur le moyen.')
 
@@ -76,28 +82,84 @@ context('Main Window > Control Unit Dialog > Resource List', () => {
 
       assert.deepInclude(interception.request.body, {
         baseId: 2,
-        id: 13,
-        name: 'Super Moyen',
+        name: editedResourceName,
         note: 'Un autre commentaire sur le moyen.',
-        type: 'SUPPORT_SHIP'
+        type: 'CAR'
       })
     })
 
     cy.get('p').contains('Éditer un moyen').should('not.exist')
     cy.contains('Enregistrer les modifications').should('not.exist')
-    cy.contains('Bâtiment de soutien – Super Moyen').should('be.visible')
+    cy.contains(editedResourceName).should('be.visible')
 
     // -------------------------------------------------------------------------
     // Delete
 
-    cy.intercept('DELETE', `/api/v1/control_unit_resources/13`).as('deleteControlUnitResource')
+    cy.intercept('DELETE', `/api/v1/control_unit_resources/*`).as('deleteControlUnitResource')
 
-    cy.getDataCy('ControlUnitDialog-control-unit-resource').filter('[data-id="13"]').clickButton('Éditer ce moyen')
+    cy.contains(editedResourceName)
+      .parents('[data-cy="ControlUnitDialog-control-unit-resource"]')
+      .clickButton('Éditer ce moyen')
     cy.clickButton('Supprimer ce moyen')
     cy.clickButton('Supprimer')
 
     cy.wait('@deleteControlUnitResource')
 
     cy.contains('Bâtiment de soutien – Super Moyen').should('not.exist')
+  })
+
+  it('Should add and archive a resource', () => {
+    // -------------------------------------------------------------------------
+    // Create
+
+    cy.intercept('POST', `/api/v1/control_unit_resources`).as('createControlUnitResource')
+
+    cy.clickButton('Ajouter un moyen')
+
+    const newResourceName = faker.vehicle.vehicle()
+    cy.fill('Type de moyen', 'Voiture')
+    cy.fill('Nom du moyen', newResourceName)
+    cy.fill('Base du moyen', 'Dunkerque')
+    cy.fill('Commentaire', 'Un commentaire sur le moyen.')
+
+    cy.clickButton('Ajouter')
+
+    cy.wait('@createControlUnitResource').then(interception => {
+      if (!interception.response) {
+        assert.fail('`interception.response` is undefined.')
+      }
+
+      assert.deepInclude(interception.request.body, {
+        baseId: 3,
+        name: newResourceName,
+        note: 'Un commentaire sur le moyen.',
+        type: 'CAR'
+      })
+    })
+
+    cy.get('p').contains('Ajouter un moyen').should('not.exist')
+    cy.contains(newResourceName).should('be.visible')
+
+    // -------------------------------------------------------------------------
+    // Archive
+
+    cy.intercept('POST', `/api/v1/control_unit_resources/*/archive`).as('archivedControlUnitResource')
+
+    cy.contains(newResourceName)
+      .parents('[data-cy="ControlUnitDialog-control-unit-resource"]')
+      .clickButton('Éditer ce moyen')
+    cy.clickButton('Archiver ce moyen')
+    cy.clickButton('Archiver')
+
+    cy.wait('@archivedControlUnitResource').then(interception => {
+      const archivedResourceId = interception.request.url.split('/')[6]
+
+      cy.contains('Bâtiment de soutien – Super Moyen').should('not.exist')
+
+      // -------------------------------------------------------------------------
+      // Reset
+
+      cy.request('DELETE', `/api/v1/control_unit_resources/${archivedResourceId}`)
+    })
   })
 })

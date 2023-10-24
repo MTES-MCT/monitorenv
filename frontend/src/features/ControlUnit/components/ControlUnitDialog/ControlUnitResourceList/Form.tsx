@@ -11,13 +11,16 @@ import {
   useKey
 } from '@mtes-mct/monitor-ui'
 import { Formik } from 'formik'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import styled from 'styled-components'
 
 import { CONTROL_UNIT_RESOURCE_FORM_SCHEMA, CONTROL_UNIT_RESOURCE_TYPES_AS_OPTIONS } from './constants'
 import { useGetBasesQuery } from '../../../../../api/basesAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../../api/constants'
+import { controlUnitResourcesAPI } from '../../../../../api/controlUnitResourcesAPI'
+import { ConfirmationModal } from '../../../../../components/ConfirmationModal'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
+import { FrontendError } from '../../../../../libs/FrontendError'
 import { mainWindowActions } from '../../../../MainWindow/slice'
 import { MainWindowConfirmationModalActionType } from '../../../../MainWindow/types'
 
@@ -30,12 +33,18 @@ export type FormProps = {
   onSubmit: (controlUnitResourceFormValues: ControlUnitResourceFormValues) => void
 }
 export function Form({ initialValues, isNew, onCancel, onSubmit }: FormProps) {
+  const [isArchivingConfirnationModalOpen, setIsArchivingConfirnationModalOpen] = useState(false)
+
   const dispatch = useAppDispatch()
   const key = useKey([initialValues])
 
   const { data: bases } = useGetBasesQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const basesAsOptions = getOptionsFromIdAndName(bases)?.filter(baseAsOption => baseAsOption.value !== 0)
+
+  const askForArchivingConfirmation = useCallback(async () => {
+    setIsArchivingConfirnationModalOpen(true)
+  }, [])
 
   const askForDeletionConfirmation = useCallback(async () => {
     if (!initialValues.id) {
@@ -56,6 +65,20 @@ export function Form({ initialValues, isNew, onCancel, onSubmit }: FormProps) {
       })
     )
   }, [initialValues.id, dispatch])
+
+  const close = useCallback(() => {
+    setIsArchivingConfirnationModalOpen(false)
+  }, [])
+
+  const confirmArchiving = useCallback(async () => {
+    if (!initialValues.id) {
+      throw new FrontendError('`initialValues.id` is undefined.')
+    }
+
+    await dispatch(controlUnitResourcesAPI.endpoints.archiveControlUnitResource.initiate(initialValues.id))
+
+    onCancel()
+  }, [dispatch, initialValues.id, onCancel])
 
   if (!basesAsOptions) {
     return <div>Chargement en cours...</div>
@@ -87,18 +110,36 @@ export function Form({ initialValues, isNew, onCancel, onSubmit }: FormProps) {
                 </Button>
               </div>
               {!isNew && (
-                <IconButton
-                  accent={Accent.SECONDARY}
-                  color={THEME.color.maximumRed}
-                  Icon={Icon.Delete}
-                  onClick={askForDeletionConfirmation}
-                  // TODO Add `borderColor` in Monitor UI.
-                  style={{ borderColor: THEME.color.maximumRed }}
-                  title="Supprimer ce moyen"
-                />
+                <>
+                  <IconButton
+                    accent={Accent.SECONDARY}
+                    Icon={Icon.Archive}
+                    onClick={askForArchivingConfirmation}
+                    title="Archiver ce moyen"
+                  />
+                  <IconButton
+                    accent={Accent.SECONDARY}
+                    color={THEME.color.maximumRed}
+                    Icon={Icon.Delete}
+                    onClick={askForDeletionConfirmation}
+                    // TODO Add `borderColor` in Monitor UI.
+                    style={{ borderColor: THEME.color.maximumRed }}
+                    title="Supprimer ce moyen"
+                  />
+                </>
               )}
             </ActionBar>
           </StyledForm>
+
+          {isArchivingConfirnationModalOpen && initialValues && (
+            <ConfirmationModal
+              confirmationButtonLabel="Archiver"
+              message={`Êtes-vous sûr de vouloir archiver le moyen "${initialValues.name}" ?`}
+              onCancel={close}
+              onConfirm={confirmArchiving}
+              title="Archivage du moyen"
+            />
+          )}
         </>
       )}
     </Formik>

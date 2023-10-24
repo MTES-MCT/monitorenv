@@ -18,6 +18,20 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
+    fun `archiveById() should archive a control unit resource by its ID`() {
+        val beforeFullControlUnitResource = jpaControlUnitResourceRepository.findById(1)
+
+        assertThat(beforeFullControlUnitResource.controlUnitResource.isArchived).isFalse()
+
+        jpaControlUnitResourceRepository.archiveById(1)
+
+        val afterFullControlUnitResource = jpaControlUnitResourceRepository.findById(1)
+
+        assertThat(afterFullControlUnitResource.controlUnitResource.isArchived).isTrue()
+    }
+
+    @Test
+    @Transactional
     fun `findAll() should find all resources`() {
         val foundFullControlUnitResources =
             jpaControlUnitResourceRepository.findAll().sortedBy { requireNotNull(it.controlUnitResource.id) }

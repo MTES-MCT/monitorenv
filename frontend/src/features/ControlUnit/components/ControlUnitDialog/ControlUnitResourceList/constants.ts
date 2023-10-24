@@ -18,6 +18,7 @@ export const CONTROL_UNIT_RESOURCE_TYPES_AS_OPTIONS = getOptionsFromLabelledEnum
 export const INITIAL_CONTROL_UNIT_RESOURCE_FORM_VALUES: ControlUnitResourceFormValues = {
   baseId: undefined,
   controlUnitId: undefined,
+  isArchived: false,
   name: undefined,
   note: undefined,
   photo: undefined,
