@@ -50,7 +50,7 @@ class MissionsControllerITests {
     private lateinit var createOrUpdateMissionWithAttachedReporting: CreateOrUpdateMissionWithAttachedReporting
 
     @MockBean
-    private lateinit var getMonitorEnvMissions: GetMonitorEnvMissions
+    private lateinit var getMissions: GetMissions
 
     @MockBean
     private lateinit var getMissionById: GetMissionById
@@ -203,7 +203,7 @@ class MissionsControllerITests {
             ),
         )
         given(
-            getMonitorEnvMissions.execute(
+            getMissions.execute(
                 startedAfterDateTime = null,
                 startedBeforeDateTime = null,
                 seaFronts = null,
