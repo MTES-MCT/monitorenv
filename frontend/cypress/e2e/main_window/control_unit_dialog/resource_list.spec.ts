@@ -143,7 +143,7 @@ context('Main Window > Control Unit Dialog > Resource List', () => {
     // -------------------------------------------------------------------------
     // Archive
 
-    cy.intercept('POST', `/api/v1/control_unit_resources/*/archive`).as('archivedControlUnitResource')
+    cy.intercept('PUT', `/api/v1/control_unit_resources/*/archive`).as('archiveControlUnitResource')
 
     cy.contains(newResourceName)
       .parents('[data-cy="ControlUnitDialog-control-unit-resource"]')
@@ -151,7 +151,7 @@ context('Main Window > Control Unit Dialog > Resource List', () => {
     cy.clickButton('Archiver ce moyen')
     cy.clickButton('Archiver')
 
-    cy.wait('@archivedControlUnitResource').then(interception => {
+    cy.wait('@archiveControlUnitResource').then(interception => {
       const archivedResourceId = interception.request.url.split('/')[6]
 
       cy.contains('Bâtiment de soutien – Super Moyen').should('not.exist')

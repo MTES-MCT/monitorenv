@@ -23,7 +23,7 @@ class ApiAdministrationsController(
     private val getAdministrations: GetAdministrations,
     private val getAdministrationById: GetAdministrationById,
 ) {
-    @PostMapping("/{administrationId}/archive")
+    @PutMapping("/{administrationId}/archive")
     @Operation(summary = "Archive an administration")
     fun archive(
         @PathParam("Administration ID")

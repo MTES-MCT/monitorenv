@@ -20,7 +20,7 @@ export const controlUnitResourcesAPI = monitorenvPublicApi.injectEndpoints({
     archiveControlUnitResource: builder.mutation<void, number>({
       invalidatesTags: () => [{ type: 'Bases' }, { type: 'ControlUnits' }],
       query: controlUnitResourceId => ({
-        method: 'POST',
+        method: 'PUT',
         url: `/v1/control_unit_resources/${controlUnitResourceId}/archive`
       }),
       transformErrorResponse: response => {

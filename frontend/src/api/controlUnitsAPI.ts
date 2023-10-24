@@ -18,7 +18,7 @@ export const controlUnitsAPI = monitorenvPublicApi.injectEndpoints({
     archiveControlUnit: builder.mutation<void, number>({
       invalidatesTags: () => [{ type: 'Administrations' }, { type: 'ControlUnits' }],
       query: controlUnitId => ({
-        method: 'POST',
+        method: 'PUT',
         url: `/v2/control_units/${controlUnitId}/archive`
       })
     }),

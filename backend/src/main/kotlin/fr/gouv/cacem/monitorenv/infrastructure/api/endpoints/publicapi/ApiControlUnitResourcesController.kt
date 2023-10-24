@@ -20,7 +20,7 @@ class ApiControlUnitResourcesController(
     private val getControlUnitResources: GetControlUnitResources,
     private val getControlUnitResourceById: GetControlUnitResourceById,
 ) {
-    @PostMapping("/{controlUnitResourceId}/archive")
+    @PutMapping("/{controlUnitResourceId}/archive")
     @Operation(summary = "Archive a control unit resource")
     fun archive(
         @PathParam("Control unit resource ID")

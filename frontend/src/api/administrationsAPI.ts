@@ -24,7 +24,7 @@ export const administrationsAPI = monitorenvPublicApi.injectEndpoints({
     archiveAdministration: builder.mutation<void, number>({
       invalidatesTags: () => [{ type: 'Administrations' }],
       query: administrationId => ({
-        method: 'POST',
+        method: 'PUT',
         url: `/v1/administrations/${administrationId}/archive`
       }),
       transformErrorResponse: response => {

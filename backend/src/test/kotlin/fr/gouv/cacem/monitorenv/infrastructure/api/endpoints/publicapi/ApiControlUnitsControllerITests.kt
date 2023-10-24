@@ -56,7 +56,7 @@ class ApiControlUnitsControllerITests {
         val controlUnitId = 1
 
         mockMvc.perform(
-            post("/api/v2/control_units/$controlUnitId/archive"),
+            put("/api/v2/control_units/$controlUnitId/archive"),
         )
             .andExpect(status().isOk)
 

@@ -87,7 +87,7 @@ context('Back Office > Control Unit Form', () => {
     // -------------------------------------------------------------------------
     // Archive
 
-    cy.intercept('POST', `/api/v2/control_units/10122/archive`).as('archiveControlUnit')
+    cy.intercept('PUT', `/api/v2/control_units/10122/archive`).as('archiveControlUnit')
 
     cy.getTableRowById(10122).clickButton('Archiver cette unité de contrôle')
     cy.clickButton('Archiver')

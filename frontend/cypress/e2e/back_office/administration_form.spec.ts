@@ -68,7 +68,7 @@ context('Back Office > Administration Form', () => {
     // -------------------------------------------------------------------------
     // Archive
 
-    cy.intercept('POST', `/api/v1/administrations/2007/archive`).as('archiveAdministration')
+    cy.intercept('PUT', `/api/v1/administrations/2007/archive`).as('archiveAdministration')
 
     cy.getTableRowById(2007).clickButton('Archiver cette administration')
     cy.clickButton('Archiver')
