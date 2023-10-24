@@ -1,7 +1,7 @@
 import { THEME, customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 
 import type { LegacyControlUnit } from './legacyControlUnit'
-import type { ReportingDetailed } from './reporting'
+import type { Reporting } from './reporting'
 import type { SeaFrontEnum } from './seaFrontType'
 
 export enum ActionTypeEnum {
@@ -254,7 +254,7 @@ export type ResourceUnit = {
 
 export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote> = {
   attachedReportingIds: number[]
-  attachedReportings: ReportingDetailed[]
+  attachedReportings: Reporting[]
   closedBy: string
   controlUnits: LegacyControlUnit[]
   detachedReportingIds?: number[]
@@ -272,6 +272,7 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
   observationsCacem?: string
   observationsCnsp?: string
   openBy: string
+  reportings?: Reporting[]
   startDateTimeUtc: string
 }
 

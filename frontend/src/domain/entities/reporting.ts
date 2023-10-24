@@ -14,6 +14,7 @@ export type Reporting = {
   createdAt: string
   description?: string
   detachedFromMissionAtUtc?: string
+  displayedSource: string
   geom: Record<string, any>[]
   hasNoUnitAvailable?: boolean | undefined
   id: number | string
@@ -66,7 +67,7 @@ type TargetDetails = {
   vesselName?: string
 }
 
-export type ReportingForTimeline = Partial<ReportingDetailed> & {
+export type ReportingForTimeline = Partial<Reporting> & {
   actionType: ActionTypeEnum.REPORTING
   timelineDate: string
 }
