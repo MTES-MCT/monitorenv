@@ -23,6 +23,7 @@ class CreateOrUpdateControlUnitResourceUTests {
         val newControlUnitResource = ControlUnitResourceEntity(
             baseId = 2,
             controlUnitId = 3,
+            isArchived = false,
             name = "Control Unit Resource Name",
             note = null,
             photo = null,

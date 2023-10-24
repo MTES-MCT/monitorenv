@@ -39,6 +39,7 @@ class ApiLegacyControlUnitsControllerITests {
                     id = 0,
                     baseId = 0,
                     controlUnitId = 0,
+                    isArchived = false,
                     name = "Vedette",
                     type = ControlUnitResourceType.BARGE,
                 ),

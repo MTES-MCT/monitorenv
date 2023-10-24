@@ -14,6 +14,7 @@ data class FullControlUnitResourceDTO(
             id = controlUnitResource.id,
             baseId = controlUnitResource.baseId,
             controlUnitId = controlUnitResource.controlUnitId,
+            isArchived = controlUnitResource.isArchived,
             name = controlUnitResource.name,
             note = controlUnitResource.note,
             photo = controlUnitResource.photo,
