@@ -3,6 +3,10 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.mission
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
@@ -47,7 +51,21 @@ data class MissionDataOutput(
                 geom = dto.mission.geom,
                 startDateTimeUtc = dto.mission.startDateTimeUtc,
                 endDateTimeUtc = dto.mission.endDateTimeUtc,
-                envActions = dto.mission.envActions?.map { MissionEnvActionDataOutput.fromEnvActionEntity(it) },
+                envActions = dto.mission.envActions?.map {
+                    when (it.actionType) {
+                        ActionTypeEnum.CONTROL -> MissionEnvActionControlDataOutput.fromEnvActionControlEntity(
+                            it as EnvActionControlEntity,
+                        )
+
+                        ActionTypeEnum.SURVEILLANCE -> MissionEnvActionSurveillanceDataOutput.fromEnvActionSurveillanceEntity(
+                            it as EnvActionSurveillanceEntity,
+                        )
+
+                        ActionTypeEnum.NOTE -> MissionEnvActionNoteDataOutput.fromEnvActionNoteEntity(
+                            it as EnvActionNoteEntity,
+                        )
+                    }
+                },
                 missionSource = dto.mission.missionSource,
                 isClosed = dto.mission.isClosed,
                 hasMissionOrder = dto.mission.hasMissionOrder,

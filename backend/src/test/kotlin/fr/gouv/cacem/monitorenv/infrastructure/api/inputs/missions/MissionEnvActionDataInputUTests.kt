@@ -14,7 +14,7 @@ import java.time.ZonedDateTime
 import java.util.UUID
 
 @ExtendWith(SpringExtension::class)
-class MissionEnvActionDataInputUTest {
+class MissionEnvActionDataInputUTests {
 
     @MockBean private lateinit var missionEnvActionDataInput: MissionEnvActionDataInput
 
