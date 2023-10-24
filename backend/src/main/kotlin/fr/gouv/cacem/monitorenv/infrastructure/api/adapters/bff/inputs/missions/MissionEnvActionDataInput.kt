@@ -10,6 +10,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionContr
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
+import java.util.Optional
 import java.util.UUID
 
 data class MissionEnvActionDataInput(
@@ -37,9 +38,25 @@ data class MissionEnvActionDataInput(
     val coverMissionZone: Boolean? = null,
 
     // complementary properties
-    val reportingIds: List<Int>,
+    val reportingIds: Optional<List<Int>>,
 ) {
+    fun checkValidity() {
+        when (actionType) {
+            ActionTypeEnum.CONTROL -> require(this.reportingIds.isPresent && this.reportingIds.get().size < 2) {
+                "ReportingIds must not be empty and maximum 1 id for Controls"
+            }
+            ActionTypeEnum.SURVEILLANCE -> require(this.reportingIds.isPresent) {
+                "ReportingIds must not be empty for Surveillance"
+            }
+            ActionTypeEnum.NOTE -> require(
+                !this.reportingIds.isPresent,
+            ) { "ReportingIds must not be present for Notes" }
+        }
+    }
+
     fun toEnvActionEntity(): EnvActionEntity {
+        this.checkValidity()
+
         when (this.actionType) {
             ActionTypeEnum.CONTROL -> return EnvActionControlEntity(
                 id = this.id,

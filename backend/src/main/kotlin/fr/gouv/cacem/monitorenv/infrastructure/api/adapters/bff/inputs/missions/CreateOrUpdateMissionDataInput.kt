@@ -54,7 +54,7 @@ data class CreateOrUpdateMissionDataInput(
     }
 
     fun getEnvActionsAttachedToReportings(): List<EnvActionAttachedToReportingIds> {
-        return this.envActions?.map { Pair(it.id, it.reportingIds) } ?: listOf()
+        return this.envActions?.map { Pair(it.id, it.reportingIds.get()) } ?: listOf()
     }
 }
 

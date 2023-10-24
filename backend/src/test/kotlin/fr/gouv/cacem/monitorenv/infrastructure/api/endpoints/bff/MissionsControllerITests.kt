@@ -550,7 +550,7 @@ class MissionsControllerITests {
             actionTargetType = ActionTargetTypeEnum.VEHICLE,
             vehicleType = VehicleTypeEnum.VESSEL,
             actionNumberOfControls = 4,
-            reportingIds = listOf(1),
+            reportingIds = Optional.of(listOf(1)),
         )
         val requestBody = CreateOrUpdateMissionDataInput(
             id = 14,
