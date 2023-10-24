@@ -56,7 +56,7 @@ context('Main Window > Control Unit Dialog > Resource List', () => {
     })
 
     cy.get('p').contains('Ajouter un moyen').should('not.exist')
-    cy.contains('Avion – Avion').should('be.visible')
+    cy.contains(createdResourceName).should('be.visible')
 
     // -------------------------------------------------------------------------
     // Edit
