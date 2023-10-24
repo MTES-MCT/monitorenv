@@ -9,22 +9,23 @@ ARG VERSION=NO_VERSION
 ########################################
 # Build monitorenv backend with maven #
 ########################################
-FROM maven:3.8.5-openjdk-17-slim as buildBack
+FROM gradle:8.4-jdk17 as buildBack
 
 ARG GITHUB_SHA
 ARG VERSION
 
 WORKDIR /tmp/
-COPY backend/pom.xml /tmp/pom.xml
-RUN mvn dependency:go-offline -B
 
-COPY backend/ /tmp/
-COPY backend/pom.xml /tmp/POM_WITH_ENV_VARS
-RUN sed -e 's/COMMIT_TO_CHANGE/${GITHUB_SHA}/' \
-  -e 's/VERSION_TO_CHANGE/${VERSION}/' \
-  POM_WITH_ENV_VARS > pom.xml
+COPY --chown=gradle:gradle backend/ /tmp/
+COPY --chown=gradle:gradle backend/build.gradle.kts /tmp/BUILD_GRADLE_WITH_ENV_VARS
+RUN chown -R gradle /tmp/*
 
-RUN mvn clean package -DskipTests=true
+USER gradle
+RUN sed -e "s/COMMIT_TO_CHANGE/$GITHUB_SHA/g" \
+  -e "s/VERSION_TO_CHANGE/${VERSION}/g" \
+  BUILD_GRADLE_WITH_ENV_VARS > build.gradle.kts
+
+RUN gradle assemble
 
 ###########################
 # Build frontend with npm #
@@ -104,7 +105,7 @@ ENV JAVA_TOOL_OPTIONS="-Dcom.sun.management.jmxremote.ssl=false \
   -Djava.rmi.server.hostname=0.0.0.0"
 
 # Copy files for the back
-COPY --from=buildBack /tmp/target/monitorenv-${VERSION}.jar /home/monitorenv
+COPY --from=buildBack /tmp/build/libs/monitorenv-{VERSION}.jar /home/monitorenv
 COPY infra/configurations/backend /home/monitorenv/configurations/
 
 USER monitorenv

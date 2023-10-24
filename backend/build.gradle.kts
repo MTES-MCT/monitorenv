@@ -85,6 +85,8 @@ version = "VERSION_TO_CHANGE"
 description = "MonitorEnv"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
+/*
+// TODO Re-add this library When there will be no more IDE conflicts
 sourceSets {
   create("publicApi") {
     java {
@@ -119,6 +121,7 @@ publishing {
     }
   }
 }
+ */
 
 springBoot {
   mainClass.set("fr.gouv.cacem.monitorenv.MonitorenvApplicationKt")

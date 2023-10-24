@@ -39,7 +39,7 @@ dev-check-config:
 dev-run-back-with-infra: dev-erase-db dev-run-infra dev-clean-target-env dev-run-back
 
 dev-run-back:
-	cd backend && ./mvnw spring-boot:run -Dspring-boot.run.arguments="--spring.config.additional-location="$(BACKEND_CONFIGURATION_FOLDER)"" -Dspring-boot.run.profiles="dev"
+	cd backend && ./gradlew bootRun --args='--spring.profiles.active=dev --spring.config.additional-location=$(BACKEND_CONFIGURATION_FOLDER)'
 
 dev-run-infra:
 	@echo "Preparing database"
