@@ -7,6 +7,7 @@ import { getFilters } from './utils'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { useGetControlUnitsQuery } from '../../../../api/controlUnitsAPI'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { isNotArchived } from '../../../../utils/isNotArchived'
 
 import type { Promisable } from 'type-fest'
 
@@ -17,15 +18,17 @@ export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
   const mapControlUnitListDialog = useAppSelector(store => store.mapControlUnitListDialog)
   const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
+  const activeControlUnits = useMemo(() => controlUnits?.filter(isNotArchived), [controlUnits])
+
   const filteredControlUnits = useMemo(() => {
-    if (!controlUnits) {
+    if (!activeControlUnits) {
       return undefined
     }
 
-    const filters = getFilters(controlUnits, mapControlUnitListDialog.filtersState)
+    const filters = getFilters(activeControlUnits, mapControlUnitListDialog.filtersState)
 
-    return filters.reduce((previousControlUnits, filter) => filter(previousControlUnits), controlUnits)
-  }, [controlUnits, mapControlUnitListDialog.filtersState])
+    return filters.reduce((previousControlUnits, filter) => filter(previousControlUnits), activeControlUnits)
+  }, [activeControlUnits, mapControlUnitListDialog.filtersState])
 
   return (
     <MapMenuDialog.Container style={{ height: 480 }}>
