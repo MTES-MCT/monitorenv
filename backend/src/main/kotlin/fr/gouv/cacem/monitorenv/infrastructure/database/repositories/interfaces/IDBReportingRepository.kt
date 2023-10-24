@@ -14,9 +14,9 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         value =
         """
         UPDATE reportings
-        SET is_archived = TRUE
-        WHERE (created_at + make_interval(hours => validity_time)) < NOW() AND is_archived IS FALSE
-    """,
+            SET is_archived = TRUE
+            WHERE (created_at + make_interval(hours => validity_time)) < NOW() AND is_archived IS FALSE
+        """,
         nativeQuery = true,
     )
     fun archiveOutdatedReportings(): Int
@@ -26,9 +26,9 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         value =
         """
         UPDATE reportings
-        SET is_archived = TRUE
-        WHERE id in (:ids)
-    """,
+            SET is_archived = TRUE
+            WHERE id in (:ids)
+        """,
         nativeQuery = true,
     )
     fun archiveReportings(ids: List<Int>)
@@ -38,12 +38,12 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         value =
         """
         UPDATE reportings
-        SET
-            mission_id = :missionId,
-            attached_to_mission_at_utc = CASE WHEN (mission_id IS NULL OR mission_id = (:missionId)) AND id IN (:reportingIds) THEN NOW() ELSE attached_to_mission_at_utc END,
-            detached_from_mission_at_utc = CASE WHEN (id NOT IN (:reportingIds) OR (:reportingIds) IS NULL ) THEN NOW() ELSE NULL END
+            SET
+                mission_id = :missionId,
+                attached_to_mission_at_utc = CASE WHEN (mission_id IS NULL OR mission_id = (:missionId)) AND id IN (:reportingIds) THEN NOW() ELSE attached_to_mission_at_utc END,
+                detached_from_mission_at_utc = CASE WHEN (id NOT IN (:reportingIds) OR (:reportingIds) IS NULL ) THEN NOW() ELSE NULL END
             WHERE id IN (:reportingIds) OR (mission_id = :missionId AND detached_from_mission_at_utc IS NULL)
-            """,
+        """,
         nativeQuery = true,
     )
     fun attachReportingsToMission(reportingIds: List<Int>, missionId: Int)
@@ -65,9 +65,9 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         value =
         """
         UPDATE reportings
-        SET is_deleted = TRUE
-        WHERE id = :id
-    """,
+            SET is_deleted = TRUE
+            WHERE id = :id
+        """,
         nativeQuery = true,
     )
     fun delete(id: Int)
@@ -77,9 +77,9 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         value =
         """
         UPDATE reportings
-        SET is_deleted = TRUE
-        WHERE id in (:ids)
-    """,
+            SET is_deleted = TRUE
+            WHERE id in (:ids)
+        """,
         nativeQuery = true,
     )
     fun deleteReportings(ids: List<Int>)
@@ -88,28 +88,28 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         value =
         """
         SELECT *
-        FROM reportings
-        WHERE is_deleted IS FALSE
-        AND created_at >= CAST(CAST(:startedAfter AS text) AS timestamp)
-        AND (CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL OR created_at <= CAST(CAST(:startedBefore AS text) AS timestamp))
-        AND ((:seaFronts) = '{}' OR CAST(sea_front AS text) = ANY(CAST(:seaFronts as text[])))
-        AND ((:sourcesType) = '{}' OR CAST(source_type AS text) = ANY(CAST(:sourcesType as text[])))
-        AND ((:reportingType) = '{}' OR CAST(report_type AS text) = ANY(CAST(:reportingType as text[])))
-        AND ((:status) = '{}'
-            OR (
-                'ARCHIVED' = ANY(CAST(:status as text[])) AND (
-                    is_archived = true
-                    OR (created_at + make_interval(hours => validity_time)) < NOW()
-                ))
-            OR (
-                'IN_PROGRESS' = ANY(CAST(:status as text[])) AND (
-                    is_archived = false
-                    AND (created_at + make_interval(hours => validity_time)) >= NOW()
+            FROM reportings
+            WHERE is_deleted IS FALSE
+                AND created_at >= CAST(CAST(:startedAfter AS text) AS timestamp)
+                AND (CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL OR created_at <= CAST(CAST(:startedBefore AS text) AS timestamp))
+                AND ((:seaFronts) = '{}' OR CAST(sea_front AS text) = ANY(CAST(:seaFronts as text[])))
+                AND ((:sourcesType) = '{}' OR CAST(source_type AS text) = ANY(CAST(:sourcesType as text[])))
+                AND ((:reportingType) = '{}' OR CAST(report_type AS text) = ANY(CAST(:reportingType as text[])))
+                AND ((:status) = '{}'
+                    OR (
+                        'ARCHIVED' = ANY(CAST(:status as text[])) AND (
+                            is_archived = true
+                            OR (created_at + make_interval(hours => validity_time)) < NOW()
+                        ))
+                    OR (
+                        'IN_PROGRESS' = ANY(CAST(:status as text[])) AND (
+                            is_archived = false
+                            AND (created_at + make_interval(hours => validity_time)) >= NOW()
+                        )
+                    )
                 )
-            )
-        )
-        ORDER BY reporting_id DESC
-    """,
+            ORDER BY reporting_id DESC
+        """,
         nativeQuery = true,
     )
     fun findAll(
@@ -126,8 +126,8 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         value =
         """
         SELECT *
-        FROM reportings
-        WHERE control_unit_id = :controlUnitId
+            FROM reportings
+            WHERE control_unit_id = :controlUnitId
         """,
         nativeQuery = true,
     )
@@ -139,8 +139,8 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         value =
         """
         SELECT *
-        FROM reportings
-        WHERE mission_id = :missionId
+            FROM reportings
+            WHERE mission_id = :missionId
         """,
         nativeQuery = true,
     )

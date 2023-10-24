@@ -19,7 +19,7 @@ import java.time.ZonedDateTime
 import java.util.*
 
 @SpringBootTest(properties = ["monitorenv.scheduling.enabled=false"])
-class JpaReportingITests : AbstractDBTests() {
+class JpaReportingRepositoryITests : AbstractDBTests() {
     @Autowired
     private lateinit var jpaReportingRepository: JpaReportingRepository
 
@@ -224,6 +224,42 @@ class JpaReportingITests : AbstractDBTests() {
 
     @Test
     @Transactional
+    fun `attachEnvActionsToReportings should attach action to a second reporting`() {
+        // Given
+        val envActionUUID = UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807")
+        val alreadyAttachedReporting = jpaReportingRepository.findById(6)
+        val reportingToAttach = jpaReportingRepository.findById(7)
+        assertThat(alreadyAttachedReporting.reporting.attachedEnvActionId).isEqualTo(envActionUUID)
+        assertThat(reportingToAttach.reporting.attachedEnvActionId).isNull()
+
+        val attachToReportingIds = listOf(6, 7)
+        jpaReportingRepository.attachEnvActionsToReportings(envActionUUID, attachToReportingIds)
+
+        val stillAttachedReporting = jpaReportingRepository.findById(6)
+        val newlyAttachedReporting = jpaReportingRepository.findById(7)
+
+        assertThat(stillAttachedReporting.reporting.attachedEnvActionId).isEqualTo(envActionUUID)
+        assertThat(newlyAttachedReporting.reporting.attachedEnvActionId).isEqualTo(envActionUUID)
+    }
+
+    @Test
+    @Transactional
+    fun `attachEnvActionsToReportings should detach action from reporting`() {
+        // Given
+        val envActionUUID = UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807")
+
+        val alreadyAttachedReporting = jpaReportingRepository.findById(6)
+        assertThat(alreadyAttachedReporting.reporting.attachedEnvActionId).isEqualTo(envActionUUID)
+
+        jpaReportingRepository.attachEnvActionsToReportings(envActionUUID, listOf())
+
+        val stillAttachedReporting = jpaReportingRepository.findById(6)
+
+        assertThat(stillAttachedReporting.reporting.attachedEnvActionId).isNull()
+    }
+
+    @Test
+    @Transactional
     fun `attach an existing envAction to a reporting`() {
         // Given
         val existingReportingDTO = jpaReportingRepository.findById(1)
@@ -272,6 +308,8 @@ class JpaReportingITests : AbstractDBTests() {
             "Invalid combination of mission and/or envAction",
         )
     }
+
+    // Test of db constraints, not specific to repository implementations
 
     @Test
     @Transactional
