@@ -105,7 +105,7 @@ ENV JAVA_TOOL_OPTIONS="-Dcom.sun.management.jmxremote.ssl=false \
   -Djava.rmi.server.hostname=0.0.0.0"
 
 # Copy files for the back
-COPY --from=buildBack /tmp/build/libs/monitorenv-{VERSION}.jar /home/monitorenv
+COPY --from=buildBack /tmp/build/libs/monitorenv-${VERSION}.jar /home/monitorenv
 COPY infra/configurations/backend /home/monitorenv/configurations/
 
 USER monitorenv
