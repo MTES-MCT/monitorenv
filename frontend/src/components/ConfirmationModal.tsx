@@ -53,7 +53,7 @@ const StyledDialog = styled(Dialog)`
 
     /* Dialog.Body */
     > div:nth-child(2) {
-      padding-top: 24px;
+      padding: 24px 40px 8px;
     }
 
     /* Dialog.Action */

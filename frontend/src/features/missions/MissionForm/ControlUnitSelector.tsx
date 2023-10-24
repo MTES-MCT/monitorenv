@@ -56,9 +56,10 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
     .filter(unit => (administrationField.value ? administrationField.value === unit.administration : true))
     .sort((a, b) => a?.name?.localeCompare(b?.name))
 
-  const resourcesList =
+  const resourcesList = (
     filteredControlUnits?.find(unit => unit.administration === administrationField.value && unit.id === unitField.value)
       ?.resources || []
+  ).filter(isNotArchived)
 
   // Add any resource from Mission not present in list from API (as the resource might be historized)
   // See: https://github.com/MTES-MCT/monitorenv/issues/103

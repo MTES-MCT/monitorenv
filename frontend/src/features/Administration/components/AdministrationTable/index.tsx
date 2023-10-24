@@ -142,7 +142,7 @@ export function AdministrationTable() {
           confirmationButtonLabel="Archiver"
           message={[
             `Êtes-vous sûr de vouloir archiver l'administration "${targetedAdministration.name}" ?`,
-            `Elle n'apparaîtra plus dans MonitorEnv, elle ne sera plus utilisée que pour les statistiques.`
+            `Elle n'apparaîtra plus dans MonitorEnv, elle ne sera utilisée que pour les statistiques.`
           ].join(' ')}
           onCancel={close}
           onConfirm={() => confirmArchiving(targetedAdministration.id)}
