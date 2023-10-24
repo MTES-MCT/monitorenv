@@ -74,11 +74,11 @@ export function ControlUnitDialog() {
 }
 
 const Wrapper = styled(MapMenuDialog.Container)`
-  height: 640px;
-  max-height: 640px;
+  bottom: 10px;
+  max-height: none;
   position: absolute;
   right: 50px;
-  top: 82px;
+  top: 10px;
   z-index: 2;
   width: 500px;
 `
