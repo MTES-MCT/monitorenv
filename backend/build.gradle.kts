@@ -121,7 +121,7 @@ publishing {
 }
 
 springBoot {
-  mainClass.set("fr.gouv.cacem.monitorenv.MonitorEnvApplicationKt")
+  mainClass.set("fr.gouv.cacem.monitorenv.MonitorenvApplicationKt")
 
   buildInfo {
     properties {
