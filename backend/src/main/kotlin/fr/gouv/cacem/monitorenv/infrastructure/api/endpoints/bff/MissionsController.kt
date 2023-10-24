@@ -18,7 +18,7 @@ import java.time.ZonedDateTime
 @RequestMapping("/bff/v1/missions")
 @Tag(description = "API Missions", name = "Missions")
 class MissionsController(
-    private val createOrUpdateMission: CreateOrUpdateMission,
+    private val createOrUpdateMissionWithAttachedReporting: CreateOrUpdateMissionWithAttachedReporting,
     private val getMonitorEnvMissions: GetMonitorEnvMissions,
     private val getMissionById: GetMissionById,
     private val deleteMission: DeleteMission,
@@ -74,9 +74,10 @@ class MissionsController(
         @RequestBody
         createMissionDataInput: CreateOrUpdateMissionDataInput,
     ): MissionDataOutput {
-        val createdMission = createOrUpdateMission.execute(
+        val createdMission = createOrUpdateMissionWithAttachedReporting.execute(
             mission = createMissionDataInput.toMissionEntity(),
             attachedReportingIds = createMissionDataInput.attachedReportingIds,
+            envActionsAttachedToReportingIds = createMissionDataInput.getEnvActionsAttachedToReportings(),
         )
         return MissionDataOutput.fromMissionDTO(createdMission)
     }
@@ -105,7 +106,7 @@ class MissionsController(
         if ((updateMissionDataInput.id != null) && (missionId != updateMissionDataInput.id)) {
             throw java.lang.IllegalArgumentException("missionId doesn't match with request param")
         }
-        return createOrUpdateMission.execute(
+        return createOrUpdateMissionWithAttachedReporting.execute(
             mission = updateMissionDataInput.toMissionEntity(),
             attachedReportingIds = updateMissionDataInput.attachedReportingIds,
             envActionsAttachedToReportingIds = updateMissionDataInput.getEnvActionsAttachedToReportings(),

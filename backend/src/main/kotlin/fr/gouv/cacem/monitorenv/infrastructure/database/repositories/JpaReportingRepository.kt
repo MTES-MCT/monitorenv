@@ -7,13 +7,13 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBReportingRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBSemaphoreRepository
 import java.time.Instant
+import java.util.UUID
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Modifying
@@ -29,12 +29,9 @@ class JpaReportingRepository(
         private val dbControlUnitRepository: IDBControlUnitRepository,
         private val mapper: ObjectMapper,
 ) : IReportingRepository {
-    @Transactional
-    @Modifying(clearAutomatically = true, flushAutomatically = true)
-    override fun attachEnvActionsToReportings(
-            envActionAttachedToReportingIds: EnvActionAttachedToReportingIds
-    ) {
-        dbReportingRepository.attachEnvActionsToReportings(envActionAttachedToReportingIds)
+
+    override fun attachEnvActionsToReportings(envActionId: UUID, reportingIds: List<Int>) {
+        dbReportingRepository.attachEnvActionsToReportings(envActionId, reportingIds)
     }
 
     @Transactional
