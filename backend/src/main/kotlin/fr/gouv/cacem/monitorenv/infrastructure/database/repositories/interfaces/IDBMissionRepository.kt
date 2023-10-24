@@ -80,6 +80,19 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
         pageable: Pageable,
     ): List<MissionModel>
 
+    @Query(
+        value = """
+        SELECT *
+        FROM missions
+        WHERE
+            deleted IS FALSE AND
+            id IN :ids
+        ORDER BY start_datetime_utc DESC
+        """,
+        nativeQuery = true,
+    )
+    fun findNotDeletedByIds(ids: List<Int>): List<MissionModel>
+
     @Query("SELECT mm FROM MissionModel mm JOIN mm.controlUnits mmcu WHERE mmcu.unit.id = :controlUnitId")
     fun findByControlUnitId(controlUnitId: Int): List<MissionModel>
 }

@@ -22,6 +22,7 @@ class ApiMissionsController(
     private val getMissionById: GetMissionById,
     private val deleteMission: DeleteMission,
     private val getEngagedControlUnits: GetEngagedControlUnits,
+    private val getMissionsByIds: GetMissionsByIds
 ) {
 
     @GetMapping("")
@@ -65,6 +66,17 @@ class ApiMissionsController(
             pageSize = pageSize,
         )
         return missions.map { MissionDataOutput.fromMissionDTO(it) }
+    }
+
+    @GetMapping("/find")
+    @Operation(summary = "Get missions of specified identifiers")
+    fun getMissionsOfIdsController(
+        @Parameter(description = "Requested identifiers")
+        @RequestParam(name = "ids")
+        ids: List<Int>,
+    ): List<MissionDataOutput> {
+        val missions = getMissionsByIds.execute(ids)
+        return missions.map { MissionDataOutput.fromMissionEntity(it) }
     }
 
     @PostMapping("", consumes = ["application/json"])
