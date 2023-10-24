@@ -26,7 +26,7 @@ dev-lint-frontend:
 	cd frontend && npm run test:lint:partial
 
 test-back:
-	cd backend && ./gradlew clean test
+	cd backend && ./mvnw clean && ./mvnw test
 
 test-front:
 	cd frontend && npm run test:unit

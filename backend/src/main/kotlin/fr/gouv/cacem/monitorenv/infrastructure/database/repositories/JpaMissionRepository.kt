@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import java.time.Instant
 
 @Repository
 class JpaMissionRepository(
@@ -30,25 +31,25 @@ class JpaMissionRepository(
     }
 
     override fun findAllFullMissions(
-            startedAfter: Instant,
-            startedBefore: Instant?,
-            missionTypes: List<String>?,
-            missionStatuses: List<String>?,
-            missionSources: List<MissionSourceEnum>?,
-            seaFronts: List<String>?,
-            pageable: Pageable,
+        startedAfter: Instant,
+        startedBefore: Instant?,
+        missionTypes: List<String>?,
+        missionStatuses: List<String>?,
+        missionSources: List<MissionSourceEnum>?,
+        seaFronts: List<String>?,
+        pageable: Pageable,
     ): List<MissionDTO> {
         val missionSourcesAsStringArray = missionSources?.map { it.name }
         return dbMissionRepository.findAll(
-                        startedAfter = startedAfter,
-                        startedBefore = startedBefore,
-                        missionTypes = convertToPGArray(missionTypes),
-                        missionStatuses = convertToPGArray(missionStatuses),
-                        missionSources = convertToPGArray(missionSourcesAsStringArray),
-                        seaFronts = convertToPGArray(seaFronts),
-                        pageable = pageable,
-                )
-                .map { it.toMissionDTO(mapper) }
+            startedAfter = startedAfter,
+            startedBefore = startedBefore,
+            missionTypes = convertToPGArray(missionTypes),
+            missionStatuses = convertToPGArray(missionStatuses),
+            missionSources = convertToPGArray(missionSourcesAsStringArray),
+            seaFronts = convertToPGArray(seaFronts),
+            pageable = pageable,
+        )
+            .map { it.toMissionDTO(mapper) }
     }
 
     override fun findByControlUnitId(controlUnitId: Int): List<MissionEntity> {
@@ -58,25 +59,25 @@ class JpaMissionRepository(
     }
 
     override fun findAll(
-            startedAfter: Instant,
-            startedBefore: Instant?,
-            missionTypes: List<String>?,
-            missionStatuses: List<String>?,
-            missionSources: List<MissionSourceEnum>?,
-            seaFronts: List<String>?,
-            pageable: Pageable,
+        startedAfter: Instant,
+        startedBefore: Instant?,
+        missionTypes: List<String>?,
+        missionStatuses: List<String>?,
+        missionSources: List<MissionSourceEnum>?,
+        seaFronts: List<String>?,
+        pageable: Pageable,
     ): List<MissionEntity> {
         val missionSourcesAsStringArray = missionSources?.map { it.name }
         return dbMissionRepository.findAll(
-                        startedAfter = startedAfter,
-                        startedBefore = startedBefore,
-                        missionTypes = convertToPGArray(missionTypes),
-                        missionStatuses = convertToPGArray(missionStatuses),
-                        missionSources = convertToPGArray(missionSourcesAsStringArray),
-                        seaFronts = convertToPGArray(seaFronts),
-                        pageable = pageable,
-                )
-                .map { it.toMissionEntity(mapper) }
+            startedAfter = startedAfter,
+            startedBefore = startedBefore,
+            missionTypes = convertToPGArray(missionTypes),
+            missionStatuses = convertToPGArray(missionStatuses),
+            missionSources = convertToPGArray(missionSourcesAsStringArray),
+            seaFronts = convertToPGArray(seaFronts),
+            pageable = pageable,
+        )
+            .map { it.toMissionEntity(mapper) }
     }
 
     override fun findFullMissionById(missionId: Int): MissionDTO {
