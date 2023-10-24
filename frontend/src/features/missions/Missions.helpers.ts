@@ -17,7 +17,6 @@ import {
   getFormattedReportingId,
   type DetachedReporting,
   type Reporting,
-  type ReportingDetailed,
   type ReportingForTimeline,
   type DetachedReportingForTimeline
 } from '../../domain/entities/reporting'
@@ -86,7 +85,7 @@ export const actionFactory = ({
 export const missionFactory = (
   mission?: Mission | undefined,
   id?: number | string | undefined,
-  attachedReporting?: ReportingDetailed | undefined
+  attachedReporting?: Reporting | undefined
 ): Mission | NewMission => {
   const startDate = new Date()
   startDate.setSeconds(0, 0)
@@ -105,6 +104,7 @@ export const missionFactory = (
     observationsCacem: '',
     observationsCnsp: '',
     openBy: '',
+    reportings: attachedReporting ? [attachedReporting] : [],
     startDateTimeUtc: startDate.toISOString(),
     ...mission
   }
