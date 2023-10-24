@@ -18,8 +18,8 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.
 @UseCase
 class CreateOrUpdateMissionWithAttachedReporting(
     private val departmentRepository: IDepartmentAreaRepository,
-    private val missionRepository: IMissionRepository,
     private val facadeRepository: IFacadeAreasRepository,
+    private val missionRepository: IMissionRepository,
     private val reportingRepository: IReportingRepository,
 
 ) {

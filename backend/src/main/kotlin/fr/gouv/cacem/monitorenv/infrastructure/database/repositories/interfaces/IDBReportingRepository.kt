@@ -48,14 +48,6 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     )
     fun attachReportingsToMission(reportingIds: List<Int>, missionId: Int)
 
-    // ['envActionUUID' ,[reportingIds]]
-    // [['uu1', [1,2]]]
-
-    // reporting_id, attached_env_action_id
-    // 1, 'uu1'
-    // 2, 'uu2'
-    // 3, null
-
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
             value =
