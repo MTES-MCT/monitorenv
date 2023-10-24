@@ -14,6 +14,12 @@ interface MainWindowState {
 
   isConfirmationModalOpen: boolean
   isDialogOpen: boolean
+
+  // -----------------------------------
+  // Layout
+
+  isRightMenuHovered: boolean
+  isSideDialogOpen: boolean
 }
 const INITIAL_STATE: MainWindowState = {
   confirmationModal: undefined,
@@ -23,7 +29,13 @@ const INITIAL_STATE: MainWindowState = {
   // Components Visibility
 
   isConfirmationModalOpen: false,
-  isDialogOpen: false
+  isDialogOpen: false,
+
+  // -----------------------------------
+  // Layout
+
+  isRightMenuHovered: false,
+  isSideDialogOpen: false
 }
 
 const mainWindowSlice = createSlice({
@@ -40,6 +52,14 @@ const mainWindowSlice = createSlice({
       state.isDialogOpen = false
     },
 
+    enterSideMenu(state) {
+      state.isRightMenuHovered = true
+    },
+
+    leaveSideMenu(state) {
+      state.isRightMenuHovered = false
+    },
+
     openConfirmationModal(state, action: PayloadAction<ConfirmationModalState>) {
       state.confirmationModal = action.payload
       state.isConfirmationModalOpen = true
@@ -48,6 +68,10 @@ const mainWindowSlice = createSlice({
     openDialog(state, action: PayloadAction<DialogState>) {
       state.dialog = action.payload
       state.isDialogOpen = true
+    },
+
+    setIsSideWindowOpen(state, action: PayloadAction<boolean>) {
+      state.isSideDialogOpen = action.payload
     }
   }
 })

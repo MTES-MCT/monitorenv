@@ -13,7 +13,7 @@ import { SubThemesSelector } from './FormComponents/ThemeSelector/SubThemesSelec
 import { Validity } from './FormComponents/Validity'
 import { type Reporting, ReportingTypeEnum, ReportingTypeLabels } from '../../../domain/entities/reporting'
 import {
-  hideSideButtons,
+  hideDialogs,
   setReportingFormVisibility,
   ReportingContext,
   VisibilityState
@@ -83,7 +83,7 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
 
   const reduceOrExpandReporting = () => {
     if (isMapContext) {
-      dispatch(hideSideButtons())
+      dispatch(hideDialogs())
     }
     dispatch(reduceOrExpandReportingForm(reportingContext))
   }

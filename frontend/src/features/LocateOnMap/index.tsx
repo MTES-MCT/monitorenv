@@ -3,18 +3,21 @@ import { transformExtent } from 'ol/proj'
 import { useState } from 'react'
 import styled from 'styled-components'
 
+import { getVisibilityState } from './utils'
 import { getPlaceCoordinates, useGooglePlacesAPI } from '../../api/googlePlacesAPI/googlePlacesAPI'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../domain/entities/map/constants'
-import { ReportingContext, VisibilityState } from '../../domain/shared_slices/Global'
+import { VisibilityState } from '../../domain/shared_slices/Global'
 import { setFitToExtent } from '../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 
 export function LocateOnMap() {
   const dispatch = useAppDispatch()
-  const { reportingFormVisibility } = useAppSelector(state => state.global)
+  const global = useAppSelector(state => state.global)
   const [searchedLocation, setSearchedLocation] = useState<string | undefined>('')
   const results = useGooglePlacesAPI(searchedLocation)
+
+  const visibilityState = getVisibilityState(global)
 
   const handleSelectLocation = async placeId => {
     if (!placeId) {
@@ -27,13 +30,7 @@ export function LocateOnMap() {
   }
 
   return (
-    <Wrapper
-      $reportingFormVisibility={
-        reportingFormVisibility.context === ReportingContext.MAP
-          ? reportingFormVisibility.visibility
-          : VisibilityState.NONE
-      }
-    >
+    <Wrapper $visibilityState={visibilityState}>
       <StyledSearch
         data-cy="location-search-input"
         isLabelHidden
@@ -51,11 +48,11 @@ export function LocateOnMap() {
   )
 }
 
-const Wrapper = styled.div<{ $reportingFormVisibility: VisibilityState }>`
+const Wrapper = styled.div<{ $visibilityState: VisibilityState }>`
   position: absolute;
   top: 10px;
   right: ${p => {
-    switch (p.$reportingFormVisibility) {
+    switch (p.$visibilityState) {
       case VisibilityState.VISIBLE:
         return '512'
       case VisibilityState.VISIBLE_LEFT:

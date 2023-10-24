@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { ReportingFormWithContext } from './ReportingForm'
 import { StyledChevronIcon, StyledHeader, StyledHeaderButtons, StyledTitle } from './style'
 import { getReportingTitle } from './utils'
-import { hideSideButtons, ReportingContext, VisibilityState } from '../../domain/shared_slices/Global'
+import { hideDialogs, ReportingContext, VisibilityState } from '../../domain/shared_slices/Global'
 import { closeReporting } from '../../domain/use_cases/reporting/closeReporting'
 import { reduceOrExpandReportingForm } from '../../domain/use_cases/reporting/reduceOrExpandReportingForm'
 import { switchReporting } from '../../domain/use_cases/reporting/switchReporting'
@@ -39,7 +39,7 @@ export function Reportings({ context }: { context: ReportingContext }) {
     }
 
     if (reporting.context === ReportingContext.MAP) {
-      dispatch(hideSideButtons())
+      dispatch(hideDialogs())
     }
 
     return dispatch(switchReporting(id, context))

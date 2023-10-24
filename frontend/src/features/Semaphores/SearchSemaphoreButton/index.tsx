@@ -10,24 +10,25 @@ import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
 
 export function SearchSemaphoreButton() {
   const dispatch = useAppDispatch()
-  const { isSearchSemaphoreVisible, reportingFormVisibility } = useAppSelector(state => state.global)
+  const global = useAppSelector(state => state.global)
+  const mainWindow = useAppSelector(state => state.mainWindow)
   const openOrCloseSearchSemaphore = () => {
-    dispatch(globalActions.hideSideButtons())
+    dispatch(globalActions.hideDialogs())
     dispatch(reduceReportingFormOnMap())
-    dispatch(globalActions.setDisplayedItems({ isSearchSemaphoreVisible: !isSearchSemaphoreVisible }))
+    dispatch(globalActions.setDisplayedItems({ isSearchSemaphoreVisible: !global.isSearchSemaphoreVisible }))
   }
 
   return (
     <Wrapper
-      reportingFormVisibility={
-        reportingFormVisibility.context === ReportingContext.MAP
-          ? reportingFormVisibility.visibility
-          : VisibilityState.NONE
+      $isShrinked={
+        mainWindow.isSideDialogOpen ||
+        (global.reportingFormVisibility.context === ReportingContext.MAP &&
+          global.reportingFormVisibility.visibility !== VisibilityState.NONE)
       }
     >
-      {isSearchSemaphoreVisible && <SearchSemaphores />}
+      {global.isSearchSemaphoreVisible && <SearchSemaphores />}
       <MenuWithCloseButton.ButtonOnMap
-        className={isSearchSemaphoreVisible ? '_active' : undefined}
+        className={global.isSearchSemaphoreVisible ? '_active' : undefined}
         data-cy="semaphores-button"
         Icon={Icon.Semaphore}
         onClick={openOrCloseSearchSemaphore}
@@ -38,10 +39,12 @@ export function SearchSemaphoreButton() {
   )
 }
 
-const Wrapper = styled.div<{ reportingFormVisibility: VisibilityState }>`
+const Wrapper = styled.div<{
+  $isShrinked: boolean
+}>`
   position: absolute;
   top: 178px;
-  right: ${p => (p.reportingFormVisibility === VisibilityState.VISIBLE ? '0' : '10')}px;
+  right: ${p => (p.$isShrinked ? 0 : '10px')};
   display: flex;
   justify-content: flex-end;
   transition: right 0.3s ease-out;

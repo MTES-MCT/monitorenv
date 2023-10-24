@@ -14,7 +14,7 @@ export type ItemProps = {
 export function Item({ controlUnit }: ItemProps) {
   const dispatch = useAppDispatch()
 
-  const edit = useCallback(() => {
+  const open = useCallback(() => {
     dispatch(controlUnitDialogActions.setControlUnitId(controlUnit.id))
     dispatch(
       globalActions.setDisplayedItems({
@@ -25,7 +25,7 @@ export function Item({ controlUnit }: ItemProps) {
   }, [controlUnit.id, dispatch])
 
   return (
-    <Wrapper data-cy="ControlUnitListDialog-control-unit" data-id={controlUnit.id} onClick={edit}>
+    <Wrapper data-cy="ControlUnitListDialog-control-unit" data-id={controlUnit.id} onClick={open}>
       <NameText>{controlUnit.name}</NameText>
       <AdministrationText>{controlUnit.administration.name}</AdministrationText>
       <ResourcesAndPortsText>{displayControlUnitResourcesFromControlUnit(controlUnit)}</ResourcesAndPortsText>

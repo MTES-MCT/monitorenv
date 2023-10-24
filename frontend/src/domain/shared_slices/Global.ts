@@ -4,6 +4,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 import type { MapToolType } from '../entities/map/constants'
 
+// TODO Refactor this entire concept to make it more generic.
 export enum ReportingContext {
   MAP = 'map',
   SIDE_WINDOW = 'sideWindow'
@@ -27,7 +28,7 @@ type Toast = {
 }
 
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
-type GlobalStateType = {
+export type GlobalState = {
   // state entry for every component /menu displayed on map whose visibility should be controlled
   displayMissionMenuButton: boolean
   displayDrawModal: boolean
@@ -73,7 +74,7 @@ type GlobalStateType = {
 
   toast: Toast | undefined
 }
-const initialState: GlobalStateType = {
+const initialState: GlobalState = {
   // state entry for every component /menu displayed on map whose visibility should be controlled
   displayMissionMenuButton: true,
   displayDrawModal: false,
@@ -127,20 +128,20 @@ const globalSlice = createSlice({
   initialState,
   name: 'global',
   reducers: {
-    hideSideButtons(state) {
+    hideDialogs(state) {
       state.isControlUnitDialogVisible = false
       state.isControlUnitListDialogVisible = false
+      state.isMapToolVisible = undefined
+      state.isSearchMissionsVisible = false
       state.isSearchReportingsVisible = false
       state.isSearchSemaphoreVisible = false
-      state.isSearchMissionsVisible = false
-      state.isMapToolVisible = undefined
     },
 
     removeToast(state) {
       state.toast = undefined
     },
 
-    setDisplayedItems(state, action: PayloadAction<Partial<GlobalStateType>>) {
+    setDisplayedItems(state, action: PayloadAction<Partial<GlobalState>>) {
       return { ...state, ...action.payload }
     },
 
@@ -175,7 +176,7 @@ const globalSlice = createSlice({
 })
 
 export const {
-  hideSideButtons,
+  hideDialogs,
   removeToast,
   setDisplayedItems,
   setHealthcheckTextWarning,

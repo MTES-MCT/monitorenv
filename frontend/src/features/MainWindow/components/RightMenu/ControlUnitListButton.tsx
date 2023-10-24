@@ -13,7 +13,7 @@ export function ControlUnitListButton() {
   const { isControlUnitListDialogVisible } = useAppSelector(state => state.global)
 
   const toggleDialog = useCallback(() => {
-    dispatch(globalActions.hideSideButtons())
+    dispatch(globalActions.hideDialogs())
     dispatch(globalActions.setDisplayedItems({ isControlUnitListDialogVisible: !isControlUnitListDialogVisible }))
   }, [dispatch, isControlUnitListDialogVisible])
 

@@ -15,9 +15,8 @@ import { sideWindowActions, SideWindowStatus } from '../../SideWindow/slice'
 
 export function MissionsMenu() {
   const dispatch = useAppDispatch()
-  const { displayMissionsLayer, isSearchMissionsVisible, reportingFormVisibility } = useAppSelector(
-    state => state.global
-  )
+  const global = useAppSelector(state => state.global)
+  const mainWindow = useAppSelector(state => state.mainWindow)
   const { sideWindow } = useAppSelector(state => state)
 
   const isMissionButtonIsActive = useMemo(
@@ -31,7 +30,7 @@ export function MissionsMenu() {
   }
 
   const toggleMissionsLayer = () => {
-    dispatch(setDisplayedItems({ displayMissionsLayer: !displayMissionsLayer }))
+    dispatch(setDisplayedItems({ displayMissionsLayer: !global.displayMissionsLayer }))
   }
 
   const toggleMissionsMenu = e => {
@@ -40,7 +39,7 @@ export function MissionsMenu() {
       setDisplayedItems({
         isControlUnitDialogVisible: false,
         isControlUnitListDialogVisible: false,
-        isSearchMissionsVisible: !isSearchMissionsVisible,
+        isSearchMissionsVisible: !global.isSearchMissionsVisible,
         isSearchReportingsVisible: false,
         isSearchSemaphoreVisible: false
       })
@@ -53,20 +52,20 @@ export function MissionsMenu() {
 
   return (
     <Wrapper
-      reportingFormVisibility={
-        reportingFormVisibility.context === ReportingContext.MAP
-          ? reportingFormVisibility.visibility
-          : VisibilityState.NONE
+      $isShrinked={
+        mainWindow.isSideDialogOpen ||
+        (global.reportingFormVisibility.context === ReportingContext.MAP &&
+          global.reportingFormVisibility.visibility !== VisibilityState.NONE)
       }
     >
-      {isSearchMissionsVisible && (
+      {global.isSearchMissionsVisible && (
         <MenuWithCloseButton.Container>
           <MenuWithCloseButton.Header>
             <MenuWithCloseButton.CloseButton Icon={Icon.Close} onClick={toggleMissionsMenu} />
             <MenuWithCloseButton.Title>Missions et contrôles</MenuWithCloseButton.Title>
             <MenuWithCloseButton.VisibilityButton
               accent={Accent.SECONDARY}
-              Icon={displayMissionsLayer ? Icon.Display : Icon.Hide}
+              Icon={global.displayMissionsLayer ? Icon.Display : Icon.Hide}
               onClick={toggleMissionsLayer}
             />
           </MenuWithCloseButton.Header>
@@ -93,10 +92,12 @@ export function MissionsMenu() {
   )
 }
 
-const Wrapper = styled.div<{ reportingFormVisibility: VisibilityState }>`
+const Wrapper = styled.div<{
+  $isShrinked: boolean
+}>`
   position: absolute;
   top: 82px;
-  right: ${p => (p.reportingFormVisibility === VisibilityState.VISIBLE ? '0' : '10')}px;
+  right: ${p => (p.$isShrinked ? 0 : '10px')};
   display: flex;
   justify-content: flex-end;
   transition: right 0.3s ease-out;

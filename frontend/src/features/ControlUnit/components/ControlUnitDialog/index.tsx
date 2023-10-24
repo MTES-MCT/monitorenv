@@ -13,6 +13,7 @@ import { globalActions } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { FrontendError } from '../../../../libs/FrontendError'
+import { MainWindowSideDialog } from '../../../MainWindow/components/MainWindowSideDialog'
 
 export function ControlUnitDialog() {
   const dispatch = useAppDispatch()
@@ -25,6 +26,7 @@ export function ControlUnitDialog() {
   const [updateControlUnit] = useUpdateControlUnitMutation()
 
   const close = useCallback(() => {
+    dispatch(globalActions.hideDialogs())
     dispatch(
       globalActions.setDisplayedItems({
         isControlUnitDialogVisible: false
@@ -55,7 +57,7 @@ export function ControlUnitDialog() {
   }
 
   return (
-    <Wrapper>
+    <MainWindowSideDialog>
       <MapMenuDialog.Header>
         <MapMenuDialog.Title>
           <b>{controlUnit.name}</b> ({controlUnit.administration.name})
@@ -69,19 +71,9 @@ export function ControlUnitDialog() {
           <AreaNote controlUnit={controlUnit} onSubmit={updateControlUnit} />
         </StyledMapMenuDialogBody>
       </Formik>
-    </Wrapper>
+    </MainWindowSideDialog>
   )
 }
-
-const Wrapper = styled(MapMenuDialog.Container)`
-  height: 640px;
-  max-height: 640px;
-  position: absolute;
-  right: 50px;
-  top: 82px;
-  z-index: 2;
-  width: 500px;
-`
 
 const StyledMapMenuDialogBody = styled(MapMenuDialog.Body)`
   background-color: ${p => p.theme.color.gainsboro};

@@ -119,7 +119,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
 
   const modifyInterestPoint = useCallback(
     uuid => {
-      dispatch(globalActions.hideSideButtons())
+      dispatch(globalActions.hideDialogs())
       dispatch(editInterestPoint(uuid))
       dispatch(globalActions.setIsMapToolVisible(MapToolType.INTEREST_POINT))
     },

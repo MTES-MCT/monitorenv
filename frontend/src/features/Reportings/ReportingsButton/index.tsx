@@ -10,25 +10,26 @@ import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
 
 export function ReportingsButton() {
   const dispatch = useAppDispatch()
-  const { isSearchReportingsVisible, reportingFormVisibility } = useAppSelector(state => state.global)
+  const global = useAppSelector(state => state.global)
+  const mainWindow = useAppSelector(state => state.mainWindow)
 
   const toggleSearchReportings = () => {
-    dispatch(globalActions.hideSideButtons())
+    dispatch(globalActions.hideDialogs())
     dispatch(reduceReportingFormOnMap())
-    dispatch(globalActions.setDisplayedItems({ isSearchReportingsVisible: !isSearchReportingsVisible }))
+    dispatch(globalActions.setDisplayedItems({ isSearchReportingsVisible: !global.isSearchReportingsVisible }))
   }
 
   return (
     <Wrapper
-      reportingFormVisibility={
-        reportingFormVisibility.context === ReportingContext.MAP
-          ? reportingFormVisibility.visibility
-          : VisibilityState.NONE
+      $isShrinked={
+        mainWindow.isSideDialogOpen ||
+        (global.reportingFormVisibility.context === ReportingContext.MAP &&
+          global.reportingFormVisibility.visibility !== VisibilityState.NONE)
       }
     >
-      {isSearchReportingsVisible && <SearchReportings />}
+      {global.isSearchReportingsVisible && <SearchReportings />}
       <MenuWithCloseButton.ButtonOnMap
-        className={isSearchReportingsVisible ? '_active' : undefined}
+        className={global.isSearchReportingsVisible ? '_active' : undefined}
         data-cy="reportings-button"
         Icon={Icon.Report}
         onClick={toggleSearchReportings}
@@ -39,10 +40,12 @@ export function ReportingsButton() {
   )
 }
 
-const Wrapper = styled.div<{ reportingFormVisibility: VisibilityState }>`
+const Wrapper = styled.div<{
+  $isShrinked: boolean
+}>`
   position: absolute;
   top: 130px;
-  right: ${p => (p.reportingFormVisibility === VisibilityState.VISIBLE ? '0' : '10')}px;
+  right: ${p => (p.$isShrinked ? 0 : '10px')};
   display: flex;
   justify-content: flex-end;
   transition: right 0.3s ease-out;
