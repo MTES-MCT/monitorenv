@@ -4,6 +4,7 @@ data class ControlUnitResourceEntity(
     val id: Int? = null,
     val baseId: Int,
     val controlUnitId: Int,
+    val isArchived: Boolean,
     val name: String,
     val note: String? = null,
     val photo: ByteArray? = byteArrayOf(),
@@ -17,6 +18,7 @@ data class ControlUnitResourceEntity(
         if (id != other.id) return false
         if (baseId != other.baseId) return false
         if (controlUnitId != other.controlUnitId) return false
+        if (isArchived != other.isArchived) return false
         if (name != other.name) return false
         if (note != other.note) return false
         if (photo != null) {
@@ -32,11 +34,19 @@ data class ControlUnitResourceEntity(
         var result = id ?: 0
         result = 31 * result + baseId
         result = 31 * result + controlUnitId
+        result = 31 * result + isArchived.hashCode()
         result = 31 * result + name.hashCode()
         result = 31 * result + (note?.hashCode() ?: 0)
         result = 31 * result + (photo?.contentHashCode() ?: 0)
         result = 31 * result + type.hashCode()
 
         return result
+    }
+
+    fun toLegacyControlUnitEntity(): LegacyControlUnitResourceEntity {
+        return LegacyControlUnitResourceEntity(
+            id = requireNotNull(id),
+            name,
+        )
     }
 }

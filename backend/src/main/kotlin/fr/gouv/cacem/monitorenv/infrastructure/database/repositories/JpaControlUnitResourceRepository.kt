@@ -27,6 +27,12 @@ class JpaControlUnitResourceRepository(
         return dbControlUnitResourceRepository.findAll().map { it.toFullControlUnitResource() }
     }
 
+    override fun findAllById(controlUnitResourceIds: List<Int>): List<FullControlUnitResourceDTO> {
+        return dbControlUnitResourceRepository.findAllById(controlUnitResourceIds).map {
+            it.toFullControlUnitResource()
+        }
+    }
+
     override fun findById(controlUnitResourceId: Int): FullControlUnitResourceDTO {
         return dbControlUnitResourceRepository.findById(controlUnitResourceId).get().toFullControlUnitResource()
     }

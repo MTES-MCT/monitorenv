@@ -65,7 +65,8 @@ class JpaReportingITests : AbstractDBTests() {
                 isDeleted = false,
                 openBy = "CDA",
             )
-        val createdReporting = jpaReportingRepository.save(newReporting)
+
+        jpaReportingRepository.save(newReporting)
 
         val reportingDTO = jpaReportingRepository.findById(9)
 
@@ -173,7 +174,7 @@ class JpaReportingITests : AbstractDBTests() {
         // Given
         val numberOfExistingReportings = jpaReportingRepository.count()
         assertThat(numberOfExistingReportings).isEqualTo(8)
-        val existingReporting = jpaReportingRepository.findById(1)
+
         // When
         jpaReportingRepository.delete(1)
 

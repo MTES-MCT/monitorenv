@@ -14,18 +14,7 @@ import fr.gouv.cacem.monitorenv.utils.mapOrElseEmpty
 import io.hypersistence.utils.hibernate.type.array.ListArrayType
 import io.hypersistence.utils.hibernate.type.array.internal.AbstractArrayType.SQL_ARRAY_TYPE
 import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType
-import jakarta.persistence.Basic
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.FetchType
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.OneToMany
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
@@ -140,16 +129,11 @@ data class MissionModel(
 ) {
     fun toMissionEntity(objectMapper: ObjectMapper): MissionEntity {
         val controlUnits = controlUnits.mapOrElseEmpty { missionControlUnitModel ->
-            val maybeMissionControlResourceModels = controlResources
-                ?.filter { missionControlResourceModel ->
-                    missionControlResourceModel.ressource.controlUnit.id == missionControlUnitModel.unit.id
-                }
-
-            val controlUnitResources = maybeMissionControlResourceModels.mapOrElseEmpty { it.toControlUnitResource() }
+            val controlUnitResources = controlResources.mapOrElseEmpty { it.toControlUnitResource() }
 
             missionControlUnitModel.unit.toLegacyControlUnit().copy(
                 contact = missionControlUnitModel.contact,
-                resources = controlUnitResources,
+                resources = controlUnitResources.map { it.toLegacyControlUnitEntity() },
             )
         }
 
@@ -186,7 +170,7 @@ data class MissionModel(
         fun fromMissionEntity(
             mission: MissionEntity,
             mapper: ObjectMapper,
-            baseModelMap: Map<Int, BaseModel>,
+            controlUnitResourceModelMap: Map<Int, ControlUnitResourceModel>,
         ): MissionModel {
             val missionModel = MissionModel(
                 id = mission.id,
@@ -212,20 +196,19 @@ data class MissionModel(
             }
 
             mission.controlUnits.map {
-                val controlUnitModel = MissionControlUnitModel.fromLegacyControlUnit(
+                val missionControlUnitModel = MissionControlUnitModel.fromLegacyControlUnit(
                     it,
                     missionModel,
                 )
-                missionModel.controlUnits?.add(controlUnitModel)
+                missionModel.controlUnits?.add(missionControlUnitModel)
 
                 val missionControlUnitResourceModels = it.resources.map { controlUnitResource ->
-                    val baseModel = requireNotNull(baseModelMap[controlUnitResource.baseId])
+                    val controlUnitResourceModel = requireNotNull(controlUnitResourceModelMap[controlUnitResource.id])
 
-                    MissionControlResourceModel.fromControlUnitResource(
-                        controlUnitResource,
-                        baseModel,
-                        missionModel,
-                        controlUnitModel.unit,
+                    MissionControlResourceModel(
+                        id = mission.id,
+                        resource = controlUnitResourceModel,
+                        mission = missionModel,
                     )
                 }
                 missionModel.controlResources?.addAll(missionControlUnitResourceModels)

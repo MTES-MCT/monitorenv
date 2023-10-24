@@ -4,24 +4,15 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionTargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.EnvActionControlEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.*
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetEngagedControlUnits
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionById
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMonitorEnvMissions
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateMissionDataInput
@@ -39,14 +30,12 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
 @WebMvcTest(value = [(MissionsController::class)])
@@ -128,7 +117,7 @@ class MissionsControllerITests {
             "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))"
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
-        var point = wktReader.read("POINT (-4.54877816747593 48.305559876971)") as Point
+        val point = wktReader.read("POINT (-4.54877816747593 48.305559876971)") as Point
 
         val expectedFirstMission = MissionDTO(
             mission = MissionEntity(
@@ -140,12 +129,9 @@ class MissionsControllerITests {
                         name = "CU1",
                         administration = "Admin 1",
                         resources = listOf(
-                            ControlUnitResourceEntity(
+                            LegacyControlUnitResourceEntity(
                                 id = 2,
-                                baseId = 3,
                                 name = "Ressource 2",
-                                type = ControlUnitResourceType.BARGE,
-                                controlUnitId = 1,
                             ),
                         ),
                         isArchived = false,
