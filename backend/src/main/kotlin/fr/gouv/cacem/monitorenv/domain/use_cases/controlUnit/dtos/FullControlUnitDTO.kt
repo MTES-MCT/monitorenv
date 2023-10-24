@@ -20,7 +20,7 @@ data class FullControlUnitDTO(
             administration = administration.name,
             isArchived = controlUnit.isArchived,
             name = controlUnit.name,
-            resources = controlUnitResources.map { it.toControlUnitResource() },
+            resources = controlUnitResources.map { it.toLegacyControlUnitResource() },
         )
     }
 }

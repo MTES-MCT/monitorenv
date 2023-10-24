@@ -3,14 +3,11 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
-import fr.gouv.cacem.monitorenv.domain.exceptions.ControlResourceOrUnitNotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.BaseModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
-import org.springframework.dao.DataIntegrityViolationException
-import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.stereotype.Repository
@@ -19,7 +16,7 @@ import java.time.Instant
 
 @Repository
 class JpaMissionRepository(
-    private val dbBaseRepository: JpaBaseRepository,
+    private val dbControlUnitResourceRepository: IDBControlUnitResourceRepository,
     private val dbMissionRepository: IDBMissionRepository,
     private val mapper: ObjectMapper,
 ) : IMissionRepository {
@@ -66,34 +63,18 @@ class JpaMissionRepository(
     @Transactional
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     override fun save(mission: MissionEntity): MissionDTO {
-        return try {
-            // Extract all control units resources unique baseIds
-            val uniqueBaseIds =
-                mission.controlUnits
-                    .flatMap { controlUnit -> controlUnit.resources.map { it.baseId } }
-                    .distinct()
-            // Fetch all of them as models
-            val baseModels =
-                dbBaseRepository.findAllById(uniqueBaseIds).map { BaseModel.fromFullBase(it) }
-            // Create a `[baseId] → BaseModel` map
-            val baseModelMap = baseModels.associateBy { requireNotNull(it.id) }
+        // Extract all control units resources unique control unit resource IDs
+        val uniqueControlUnitResourceIds = mission.controlUnits.flatMap { controlUnit ->
+            controlUnit.resources.map { it.id }
+        }.distinct()
+        // Fetch all of them as models
+        val controlUnitResourceModels = dbControlUnitResourceRepository.findAllById(uniqueControlUnitResourceIds)
+        // Create an `[id] → ControlUnitResourceModel` map
+        val controlUnitResourceModelMap = controlUnitResourceModels.associateBy { requireNotNull(it.id) }
 
-            val missionModel = MissionModel.fromMissionEntity(mission, mapper, baseModelMap)
-            dbMissionRepository.save(missionModel).toMissionDTO(mapper)
-        } catch (e: Exception) {
-            when (e) {
-                // TODO Is `InvalidDataAccessApiUsageException` necessary?
-                is DataIntegrityViolationException,
-                is InvalidDataAccessApiUsageException,
-                -> {
-                    throw ControlResourceOrUnitNotFoundException(
-                        "Invalid control unit or resource id: not found in referential.",
-                        e,
-                    )
-                }
-                else -> throw e
-            }
-        }
+        val missionModel = MissionModel.fromMissionEntity(mission, mapper, controlUnitResourceModelMap)
+
+        return dbMissionRepository.save(missionModel).toMissionDTO(mapper)
     }
 
     private fun convertToPGArray(array: List<String>?): String {

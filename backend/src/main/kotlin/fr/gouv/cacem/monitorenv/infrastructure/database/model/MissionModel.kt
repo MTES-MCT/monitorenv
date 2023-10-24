@@ -14,18 +14,7 @@ import fr.gouv.cacem.monitorenv.utils.mapOrElseEmpty
 import io.hypersistence.utils.hibernate.type.array.ListArrayType
 import io.hypersistence.utils.hibernate.type.array.internal.AbstractArrayType.SQL_ARRAY_TYPE
 import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType
-import jakarta.persistence.Basic
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.FetchType
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.OneToMany
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
@@ -109,27 +98,14 @@ data class MissionModel(
     val attachedReportings: List<ReportingModel>? = listOf(),
 ) {
     fun toMissionEntity(objectMapper: ObjectMapper): MissionEntity {
-        val controlUnits =
-            controlUnits.mapOrElseEmpty { missionControlUnitModel ->
-                val maybeMissionControlResourceModels =
-                    controlResources?.filter { missionControlResourceModel ->
-                        missionControlResourceModel.ressource.controlUnit.id ==
-                            missionControlUnitModel.unit.id
-                    }
+        val controlUnits = controlUnits.mapOrElseEmpty { missionControlUnitModel ->
+            val controlUnitResources = controlResources.mapOrElseEmpty { it.toControlUnitResource() }
 
-                val controlUnitResources =
-                    maybeMissionControlResourceModels.mapOrElseEmpty {
-                        it.toControlUnitResource()
-                    }
-
-                missionControlUnitModel
-                    .unit
-                    .toLegacyControlUnit()
-                    .copy(
-                        contact = missionControlUnitModel.contact,
-                        resources = controlUnitResources,
-                    )
-            }
+            missionControlUnitModel.unit.toLegacyControlUnit().copy(
+                contact = missionControlUnitModel.contact,
+                resources = controlUnitResources.map { it.toLegacyControlUnitEntity() },
+            )
+        }
 
         return MissionEntity(
             id,
@@ -183,7 +159,7 @@ data class MissionModel(
         fun fromMissionEntity(
             mission: MissionEntity,
             mapper: ObjectMapper,
-            baseModelMap: Map<Int, BaseModel>,
+            controlUnitResourceModelMap: Map<Int, ControlUnitResourceModel>,
         ): MissionModel {
             val missionModel =
                 MissionModel(
@@ -212,24 +188,21 @@ data class MissionModel(
             }
 
             mission.controlUnits.map {
-                val controlUnitModel =
-                    MissionControlUnitModel.fromLegacyControlUnit(
-                        it,
-                        missionModel,
+                val missionControlUnitModel = MissionControlUnitModel.fromLegacyControlUnit(
+                    it,
+                    missionModel,
+                )
+                missionModel.controlUnits?.add(missionControlUnitModel)
+
+                val missionControlUnitResourceModels = it.resources.map { controlUnitResource ->
+                    val controlUnitResourceModel = requireNotNull(controlUnitResourceModelMap[controlUnitResource.id])
+
+                    MissionControlResourceModel(
+                        id = mission.id,
+                        resource = controlUnitResourceModel,
+                        mission = missionModel,
                     )
-                missionModel.controlUnits?.add(controlUnitModel)
-
-                val missionControlUnitResourceModels =
-                    it.resources.map { controlUnitResource ->
-                        val baseModel = requireNotNull(baseModelMap[controlUnitResource.baseId])
-
-                        MissionControlResourceModel.fromControlUnitResource(
-                            controlUnitResource,
-                            baseModel,
-                            missionModel,
-                            controlUnitModel.unit,
-                        )
-                    }
+                }
                 missionModel.controlResources?.addAll(missionControlUnitResourceModels)
             }
 
