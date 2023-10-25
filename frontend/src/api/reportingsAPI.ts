@@ -1,6 +1,6 @@
 import { type EntityState, createEntityAdapter } from '@reduxjs/toolkit'
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
+import { monitorenvPrivateApi } from './api'
 import { getQueryString } from '../utils/getQueryStringFormatted'
 
 import type { Reporting, ReportingDetailed } from '../domain/entities/reporting'
@@ -17,8 +17,7 @@ type ReportingsFilter = {
 const ReportingAdapter = createEntityAdapter<ReportingDetailed>()
 const initialState = ReportingAdapter.getInitialState()
 
-export const reportingsAPI = createApi({
-  baseQuery: fetchBaseQuery({ baseUrl: '/bff/v1' }),
+export const reportingsAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: build => ({
     archiveReportings: build.mutation({
       invalidatesTags: (_, __, results) =>
@@ -28,7 +27,7 @@ export const reportingsAPI = createApi({
       query: ({ ids }: { ids: number[] }) => ({
         body: ids,
         method: 'PUT',
-        url: `reportings/archive`
+        url: `/v1/reportings/archive`
       })
     }),
     createReporting: build.mutation<Partial<Reporting>, Partial<Reporting>>({
@@ -36,14 +35,14 @@ export const reportingsAPI = createApi({
       query: reporting => ({
         body: reporting,
         method: 'PUT',
-        url: 'reportings'
+        url: '/v1/reportings'
       })
     }),
     deleteReporting: build.mutation({
       invalidatesTags: [{ id: 'LIST', type: 'Reportings' }],
       query: ({ id }) => ({
         method: 'DELETE',
-        url: `reportings/${id}`
+        url: `/v1/reportings/${id}`
       })
     }),
     deleteReportings: build.mutation({
@@ -54,19 +53,19 @@ export const reportingsAPI = createApi({
       query: ({ ids }: { ids: number[] }) => ({
         body: ids,
         method: 'PUT',
-        url: `reportings/delete`
+        url: `/v1/reportings/delete`
       })
     }),
     getReporting: build.query<Reporting, number>({
       providesTags: (_, __, id) => [{ id, type: 'Reportings' }],
-      query: id => `reportings/${id}`
+      query: id => `/v1/reportings/${id}`
     }),
     getReportings: build.query<EntityState<ReportingDetailed>, ReportingsFilter | void>({
       providesTags: result =>
         result?.ids
           ? [{ id: 'LIST', type: 'Reportings' }, ...result.ids.map(id => ({ id, type: 'Reportings' as const }))]
           : [{ id: 'LIST', type: 'Reportings' }],
-      query: filters => getQueryString('reportings', filters),
+      query: filters => getQueryString('/v1/reportings', filters),
       transformResponse: (response: ReportingDetailed[]) => ReportingAdapter.setAll(initialState, response)
     }),
     updateReporting: build.mutation<Reporting, Partial<Reporting>>({
@@ -77,12 +76,10 @@ export const reportingsAPI = createApi({
       query: ({ id, ...patch }) => ({
         body: { id, ...patch },
         method: 'PUT',
-        url: `reportings/${id}`
+        url: `/v1/reportings/${id}`
       })
     })
-  }),
-  reducerPath: 'reportings',
-  tagTypes: ['Reportings']
+  })
 })
 
 export const {

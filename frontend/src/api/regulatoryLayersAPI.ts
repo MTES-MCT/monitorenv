@@ -1,5 +1,4 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-
+import { geoserverApi } from './api'
 import { Layers } from '../domain/entities/layers/constants'
 import { GEOSERVER_NAMESPACE, GEOSERVER_REMOTE_URL } from '../env'
 
@@ -18,18 +17,21 @@ export function getAllRegulatoryLayersFromAPI() {
         return response.json()
       }
       response.text().then(text => {
+        // TODO Is this console log necessary?
+        // eslint-disable-next-line no-console
         console.error(text)
       })
       throw Error(REGULATORY_ZONES_ERROR_MESSAGE)
     })
     .catch(error => {
+      // TODO Is this console log necessary?
+      // eslint-disable-next-line no-console
       console.error(error)
       throw Error(REGULATORY_ZONES_ERROR_MESSAGE)
     })
 }
 
-export const regulatoryLayersAPI = createApi({
-  baseQuery: fetchBaseQuery({ baseUrl: `${GEOSERVER_REMOTE_URL}/geoserver/` }),
+export const regulatoryLayersAPI = geoserverApi.injectEndpoints({
   endpoints: build => ({
     getRegulatoryLayer: build.query({
       query: ({ id }) => ({
@@ -44,14 +46,14 @@ export const regulatoryLayersAPI = createApi({
         },
         url: 'wfs'
       }),
-      transformResponse: response => response?.features[0]
+      // TODO Type that.
+      transformResponse: (response: any) => response?.features[0]
     }),
     getRegulatoryLayers: build.query({
       query: () =>
         `&propertyName=entity_name,url,layer_name,facade,ref_reg,observation,thematique,echelle,date,duree_validite,date_fin,temporalite,action,objet,type,signataire,geom`
     })
-  }),
-  reducerPath: 'regulatoryLayers'
+  })
 })
 
 export const { useGetRegulatoryLayerQuery, useGetRegulatoryLayersQuery } = regulatoryLayersAPI

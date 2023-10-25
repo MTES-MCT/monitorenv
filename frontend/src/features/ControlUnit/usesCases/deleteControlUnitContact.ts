@@ -5,9 +5,9 @@ import { FrontendError } from '../../../libs/FrontendError'
 import { isUserError } from '../../../libs/UserError'
 import { mainWindowActions } from '../../MainWindow/slice'
 
-import type { AppThunk } from '../../../store'
+import type { HomeAppThunk } from '../../../store'
 
-export const deleteControlUnitContact = (): AppThunk<Promise<void>> => async (dispatch, getState) => {
+export const deleteControlUnitContact = (): HomeAppThunk<Promise<void>> => async (dispatch, getState) => {
   const { confirmationModal } = getState().mainWindow
   if (!confirmationModal) {
     throw new FrontendError('`confirmationModal` is undefined.')

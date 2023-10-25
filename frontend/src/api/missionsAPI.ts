@@ -1,6 +1,4 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-
-import { monitorenvPublicApi } from './api'
+import { monitorenvPrivateApi, monitorenvPublicApi } from './api'
 import { ControlUnit } from '../domain/entities/controlUnit'
 
 import type { Mission } from '../domain/entities/missions'
@@ -27,27 +25,26 @@ const getMissionTypesFilter = missionTypes =>
 const getSeaFrontsFilter = seaFronts =>
   seaFronts && seaFronts?.length > 0 && `seaFronts=${encodeURIComponent(seaFronts)}`
 
-export const missionsAPI = createApi({
-  baseQuery: fetchBaseQuery({ baseUrl: '/bff/v1' }),
+export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: build => ({
     createMission: build.mutation<Mission, Partial<Mission>>({
       invalidatesTags: [{ id: 'LIST', type: 'Missions' }],
       query: mission => ({
         body: mission,
         method: 'PUT',
-        url: `missions`
+        url: `/v1/missions`
       })
     }),
     deleteMission: build.mutation({
       invalidatesTags: [{ id: 'LIST', type: 'Missions' }],
       query: ({ id }) => ({
         method: 'DELETE',
-        url: `missions/${id}`
+        url: `/v1/missions/${id}`
       })
     }),
     getMission: build.query<Mission, number>({
       providesTags: (_, __, id) => [{ id, type: 'Missions' }],
-      query: id => `missions/${id}`
+      query: id => `/v1/missions/${id}`
     }),
     getMissions: build.query<MissionsResponse, MissionsFilter | void>({
       providesTags: result =>
@@ -58,7 +55,7 @@ export const missionsAPI = createApi({
             [{ id: 'LIST', type: 'Missions' }],
       query: filter =>
         [
-          'missions?',
+          '/v1/missions?',
           getStartDateFilter(filter?.startedAfterDateTime),
           getEndDateFilter(filter?.startedBeforeDateTime),
           getMissionSourceFilter(filter?.missionSource),
@@ -78,12 +75,10 @@ export const missionsAPI = createApi({
       query: ({ id, ...patch }) => ({
         body: { id, ...patch },
         method: 'PUT',
-        url: `missions/${id}`
+        url: `/v1/missions/${id}`
       })
     })
-  }),
-  reducerPath: 'missions',
-  tagTypes: ['Missions']
+  })
 })
 
 export const publicMissionsAPI = monitorenvPublicApi.injectEndpoints({

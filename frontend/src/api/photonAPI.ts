@@ -7,7 +7,7 @@ export const usePhotonAPI = (search, { lang = 'fr', latlon = undefined, limit = 
 
   useEffect(() => {
     if (search) {
-      let searchParams = {
+      let searchParams: Record<string, any> = {
         lang,
         limit,
         q: search

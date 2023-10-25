@@ -4,9 +4,9 @@ import { deleteControlUnitResource } from '../../ControlUnit/usesCases/deleteCon
 import { mainWindowActions } from '../slice'
 import { MainWindowConfirmationModalActionType } from '../types'
 
-import type { AppThunk } from '../../../store'
+import type { HomeAppThunk } from '../../../store'
 
-export const handleModalConfirmation = (): AppThunk<void> => async (dispatch, getState) => {
+export const handleModalConfirmation = (): HomeAppThunk<void> => async (dispatch, getState) => {
   const { confirmationModal } = getState().mainWindow
   if (!confirmationModal) {
     throw new FrontendError('`confirmationModal` is undefined.')

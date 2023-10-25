@@ -22,7 +22,7 @@ class ApiMissionsController(
     private val getMissionById: GetMissionById,
     private val deleteMission: DeleteMission,
     private val getEngagedControlUnits: GetEngagedControlUnits,
-    private val getMissionsByIds: GetMissionsByIds
+    private val getMissionsByIds: GetMissionsByIds,
 ) {
 
     @GetMapping("")

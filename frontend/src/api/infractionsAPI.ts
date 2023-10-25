@@ -1,15 +1,13 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { monitorenvPrivateApi } from './api'
 
 import type { NatinfType } from '../domain/entities/natinfs'
 
-export const infractionsAPI = createApi({
-  baseQuery: fetchBaseQuery({ baseUrl: '/bff/v1' }),
+export const infractionsAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: build => ({
     getInfractions: build.query<NatinfType[], void>({
-      query: () => `natinfs`
+      query: () => `/v1/natinfs`
     })
-  }),
-  reducerPath: 'natinfs'
+  })
 })
 
 export const { useGetInfractionsQuery } = infractionsAPI
