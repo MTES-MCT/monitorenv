@@ -55,12 +55,18 @@ data class MissionDataOutput(
                         ActionTypeEnum.CONTROL ->
                             MissionEnvActionControlDataOutput
                                 .fromEnvActionControlEntity(
-                                    it as EnvActionControlEntity,
+                                    envActionControlEntity = it as EnvActionControlEntity,
+                                    reportingIds = dto.envActionsAttachedToReportingIds?.find { id ->
+                                        id.first == it.id
+                                    }?.second ?: listOf(),
                                 )
                         ActionTypeEnum.SURVEILLANCE ->
                             MissionEnvActionSurveillanceDataOutput
                                 .fromEnvActionSurveillanceEntity(
-                                    it as EnvActionSurveillanceEntity,
+                                    envActionSurveillanceEntity = it as EnvActionSurveillanceEntity,
+                                    reportingIds = dto.envActionsAttachedToReportingIds?.find { id ->
+                                        id.first == it.id
+                                    }?.second ?: listOf(),
                                 )
                         ActionTypeEnum.NOTE ->
                             MissionEnvActionNoteDataOutput.fromEnvActionNoteEntity(

@@ -33,6 +33,10 @@ data class MissionEnvActionDataInput(
     val actionTargetType: ActionTargetTypeEnum? = null,
     val vehicleType: VehicleTypeEnum? = null,
     val infractions: List<MissionEnvActionControlInfractionDataInput>? = listOf(),
+    val isAdministrativeControl: Boolean? = null,
+    val isComplianceWithWaterRegulationsControl: Boolean? = null,
+    val isSafetyEquipmentAndStandardsComplianceControl: Boolean? = null,
+    val isSeafarersControl: Boolean? = null,
 
     // EnvActionSurveillance Properties
     val coverMissionZone: Boolean? = null,
@@ -75,6 +79,10 @@ data class MissionEnvActionDataInput(
                     vehicleType = this.vehicleType,
                     infractions = this.infractions?.map { it.toInfractionEntity() },
                     observations = this.observations,
+                    isAdministrativeControl = this.isAdministrativeControl,
+                    isComplianceWithWaterRegulationsControl = this.isComplianceWithWaterRegulationsControl,
+                    isSafetyEquipmentAndStandardsComplianceControl = this.isSafetyEquipmentAndStandardsComplianceControl,
+                    isSeafarersControl = this.isSeafarersControl,
                 )
             ActionTypeEnum.SURVEILLANCE ->
                 return EnvActionSurveillanceEntity(

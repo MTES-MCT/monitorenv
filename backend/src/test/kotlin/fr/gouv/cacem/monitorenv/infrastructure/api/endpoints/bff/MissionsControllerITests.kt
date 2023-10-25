@@ -682,6 +682,7 @@ class MissionsControllerITests {
                     equalTo(ActionTargetTypeEnum.VEHICLE.toString()),
                 ),
             )
+            .andExpect(jsonPath("$.envActions[0].reportingIds.length()", equalTo(0)))
             .andExpect(
                 jsonPath(
                     "$.envActions[0].vehicleType",

@@ -26,6 +26,7 @@ data class MissionEnvActionControlDataOutput(
     val isSafetyEquipmentAndStandardsComplianceControl: Boolean? = null,
     val isSeafarersControl: Boolean? = null,
     val observations: String? = null,
+    val reportingIds: List<Int>,
     val themes: List<ThemeEntity>? = listOf(),
     val vehicleType: VehicleTypeEnum? = null,
 ) :
@@ -41,6 +42,7 @@ data class MissionEnvActionControlDataOutput(
     companion object {
         fun fromEnvActionControlEntity(
             envActionControlEntity: EnvActionControlEntity,
+            reportingIds: List<Int>,
         ) =
             MissionEnvActionControlDataOutput(
                 id = envActionControlEntity.id,
@@ -62,6 +64,7 @@ data class MissionEnvActionControlDataOutput(
                 observations = envActionControlEntity.observations,
                 themes = envActionControlEntity.themes,
                 vehicleType = envActionControlEntity.vehicleType,
+                reportingIds = reportingIds,
             )
     }
 }
