@@ -40,15 +40,15 @@ data class MissionEnvActionDataInput(
     // complementary properties
     val reportingIds: Optional<List<Int>>,
 ) {
-    fun checkValidity() {
+    fun validate() {
         when (actionType) {
             ActionTypeEnum.CONTROL ->
                 require(this.reportingIds.isPresent && this.reportingIds.get().size < 2) {
-                    "ReportingIds must not be empty and maximum 1 id for Controls"
+                    "ReportingIds must not be null and maximum 1 id for Controls"
                 }
             ActionTypeEnum.SURVEILLANCE ->
                 require(this.reportingIds.isPresent) {
-                    "ReportingIds must not be empty for Surveillance"
+                    "ReportingIds must not be null for Surveillance Action"
                 }
             ActionTypeEnum.NOTE ->
                 require(
@@ -58,7 +58,7 @@ data class MissionEnvActionDataInput(
     }
 
     fun toEnvActionEntity(): EnvActionEntity {
-        this.checkValidity()
+        this.validate()
 
         when (this.actionType) {
             ActionTypeEnum.CONTROL ->

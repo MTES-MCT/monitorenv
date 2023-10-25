@@ -34,7 +34,7 @@ data class ReportingEntity(
     val detachedFromMissionAtUtc: ZonedDateTime? = null,
     val attachedEnvActionId: UUID? = null,
 ) {
-    fun checkValidity() {
+    fun validate() {
         when (sourceType) {
             SourceTypeEnum.SEMAPHORE -> {
                 require(semaphoreId != null && controlUnitId == null && sourceName == null) {
