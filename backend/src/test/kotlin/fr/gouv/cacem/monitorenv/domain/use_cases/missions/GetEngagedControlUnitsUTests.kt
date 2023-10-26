@@ -16,39 +16,43 @@ import java.time.ZonedDateTime
 
 @ExtendWith(SpringExtension::class)
 class GetEngagedControlUnitsUTests {
-    @MockBean
-    private lateinit var getMissions: GetMissions
+    @MockBean private lateinit var getFullMissions: GetFullMissions
 
     @Test
     fun `execute() should return engaged control units`() {
-        val expectedControlUnit = LegacyControlUnitEntity(
-            id = 123,
-            administration = "Admin",
-            resources = listOf(),
-            isArchived = false,
-            name = "Control Unit Name",
-        )
-        val expectedMission = MissionDTO(
-            mission = MissionEntity(
-                id = 10,
-                controlUnits = listOf(expectedControlUnit),
-                missionTypes = listOf(MissionTypeEnum.LAND),
-                facade = "Outre-Mer",
-                geom = null,
-                observationsCacem = null,
-                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                isDeleted = false,
-                isClosed = false,
-                missionSource = MissionSourceEnum.MONITORENV,
-                hasMissionOrder = false,
-                isUnderJdp = false,
-                isGeometryComputedFromControls = false,
-            ),
-        )
+        val expectedControlUnit =
+            LegacyControlUnitEntity(
+                id = 123,
+                administration = "Admin",
+                resources = listOf(),
+                isArchived = false,
+                name = "Control Unit Name",
+            )
+        val expectedMission =
+            MissionDTO(
+                mission =
+                MissionEntity(
+                    id = 10,
+                    controlUnits = listOf(expectedControlUnit),
+                    missionTypes = listOf(MissionTypeEnum.LAND),
+                    facade = "Outre-Mer",
+                    geom = null,
+                    observationsCacem = null,
+                    startDateTimeUtc =
+                    ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                    endDateTimeUtc =
+                    ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                    isDeleted = false,
+                    isClosed = false,
+                    missionSource = MissionSourceEnum.MONITORENV,
+                    hasMissionOrder = false,
+                    isUnderJdp = false,
+                    isGeometryComputedFromControls = false,
+                ),
+            )
 
         given(
-            getMissions.execute(
+            getFullMissions.execute(
                 anyOrNull(),
                 anyOrNull(),
                 anyOrNull(),
@@ -61,7 +65,7 @@ class GetEngagedControlUnitsUTests {
         )
             .willReturn(listOf(expectedMission, expectedMission))
 
-        val controlUnits = GetEngagedControlUnits(getMissions).execute()
+        val controlUnits = GetEngagedControlUnits(getFullMissions).execute()
 
         assertThat(controlUnits).hasSize(1)
         assertThat(controlUnits.first().name).isEqualTo("Control Unit Name")

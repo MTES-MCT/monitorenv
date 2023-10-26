@@ -1,6 +1,6 @@
 @file:Suppress("ktlint:standard:enum-entry-name-case")
 
-package fr.gouv.cacem.monitorenv.domain.entities.mission
+package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction
 
 enum class VesselSizeEnum {
     LESS_THAN_12m,

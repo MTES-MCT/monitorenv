@@ -22,7 +22,7 @@ class ApiMissionsController(
     private val getMissionById: GetMissionById,
     private val deleteMission: DeleteMission,
     private val getEngagedControlUnits: GetEngagedControlUnits,
-    private val getMissionsByIds: GetMissionsByIds
+    private val getMissionsByIds: GetMissionsByIds,
 ) {
 
     @GetMapping("")
@@ -31,9 +31,7 @@ class ApiMissionsController(
         @Parameter(description = "page number")
         @RequestParam(name = "pageNumber")
         pageNumber: Int?,
-        @Parameter(description = "page size")
-        @RequestParam(name = "pageSize")
-        pageSize: Int?,
+        @Parameter(description = "page size") @RequestParam(name = "pageSize") pageSize: Int?,
         @Parameter(description = "Mission started after date")
         @RequestParam(name = "startedAfterDateTime", required = false)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -55,17 +53,18 @@ class ApiMissionsController(
         @RequestParam(name = "seaFronts", required = false)
         seaFronts: List<String>?,
     ): List<MissionDataOutput> {
-        val missions = getMissions.execute(
-            startedAfterDateTime = startedAfterDateTime,
-            startedBeforeDateTime = startedBeforeDateTime,
-            missionSources = missionSources,
-            missionStatuses = missionStatuses,
-            missionTypes = missionTypes,
-            seaFronts = seaFronts,
-            pageNumber = pageNumber,
-            pageSize = pageSize,
-        )
-        return missions.map { MissionDataOutput.fromMissionDTO(it) }
+        val missions =
+            getMissions.execute(
+                startedAfterDateTime = startedAfterDateTime,
+                startedBeforeDateTime = startedBeforeDateTime,
+                missionSources = missionSources,
+                missionStatuses = missionStatuses,
+                missionTypes = missionTypes,
+                seaFronts = seaFronts,
+                pageNumber = pageNumber,
+                pageSize = pageSize,
+            )
+        return missions.map { MissionDataOutput.fromMissionEntity(it) }
     }
 
     @GetMapping("/find")
@@ -82,56 +81,48 @@ class ApiMissionsController(
     @PostMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a new mission")
     fun createMissionController(
-        @RequestBody
-        createMissionDataInput: CreateOrUpdateMissionDataInput,
+        @RequestBody createMissionDataInput: CreateOrUpdateMissionDataInput,
     ): MissionDataOutput {
         val newMission = createMissionDataInput.toMissionEntity()
         val createdMission = createOrUpdateMission.execute(mission = newMission)
-        return MissionDataOutput.fromMissionDTO(createdMission)
+        return MissionDataOutput.fromMissionEntity(createdMission)
     }
 
     @GetMapping("/{missionId}")
     @Operation(summary = "Get mission by Id")
     fun getMissionByIdController(
-        @PathParam("Mission id")
-        @PathVariable(name = "missionId")
-        missionId: Int,
+        @PathParam("Mission id") @PathVariable(name = "missionId") missionId: Int,
     ): MissionDataOutput {
         val mission = getMissionById.execute(missionId = missionId)
 
-        return MissionDataOutput.fromMissionDTO(mission)
+        return MissionDataOutput.fromMissionEntity(mission)
     }
 
     @PostMapping(value = ["/{missionId}"], consumes = ["application/json"])
     @Operation(summary = "Update a mission")
     fun updateOperationController(
-        @PathParam("Mission Id")
-        @PathVariable(name = "missionId")
-        missionId: Int,
-        @RequestBody
-        updateMissionDataInput: CreateOrUpdateMissionDataInput,
+        @PathParam("Mission Id") @PathVariable(name = "missionId") missionId: Int,
+        @RequestBody updateMissionDataInput: CreateOrUpdateMissionDataInput,
     ): MissionDataOutput {
         if ((updateMissionDataInput.id == null) || (missionId != updateMissionDataInput.id)) {
             throw java.lang.IllegalArgumentException("missionId doesn't match with request param")
         }
         return createOrUpdateMission.execute(
             mission = updateMissionDataInput.toMissionEntity(),
-        ).let {
-            MissionDataOutput.fromMissionDTO(it)
-        }
+        )
+            .let { MissionDataOutput.fromMissionEntity(it) }
     }
 
     @DeleteMapping(value = ["/{missionId}"])
     @Operation(summary = "Delete a mission")
     fun deleteOperationController(
-        @PathParam("Mission Id")
-        @PathVariable(name = "missionId")
-        missionId: Int,
+        @PathParam("Mission Id") @PathVariable(name = "missionId") missionId: Int,
     ) {
         deleteMission.execute(missionId = missionId)
     }
 
-    // TODO Return a ControlUnitDataOutput once the LegacyControlUnitEntity to ControlUnitEntity migration is done
+    // TODO Return a ControlUnitDataOutput once the LegacyControlUnitEntity to ControlUnitEntity
+    // migration is done
     @GetMapping("/engaged_control_units")
     @Operation(summary = "Get engaged control units")
     fun getEngagedControlUnitsController(): List<LegacyControlUnitEntity> {

@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.entities.mission
+package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction
 
 enum class ActionTypeEnum {
     SURVEILLANCE,

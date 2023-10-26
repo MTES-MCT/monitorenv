@@ -49,11 +49,12 @@ data class ReportingDataOutput(
         ): ReportingDataOutput {
             requireNotNull(dto.reporting.id) { "ReportingEntity.id cannot be null" }
             return ReportingDataOutput(
-                id = dto.reporting.id!!,
+                id = dto.reporting.id,
                 reportingId = dto.reporting.reportingId,
                 sourceType = dto.reporting.sourceType,
                 semaphoreId = dto.reporting.semaphoreId,
-                semaphore = if (dto.semaphore != null) {
+                semaphore =
+                if (dto.semaphore != null) {
                     SemaphoreDataOutput.fromSemaphoreEntity(
                         dto.semaphore,
                     )
@@ -63,18 +64,20 @@ data class ReportingDataOutput(
                 controlUnitId = dto.reporting.controlUnitId,
                 controlUnit =
                 if (dto.controlUnit != null) {
-                    ControlUnitDataOutput
-                        .fromFullControlUnit(
-                            dto.controlUnit,
-                        )
+                    ControlUnitDataOutput.fromFullControlUnit(
+                        dto.controlUnit,
+                    )
                 } else {
                     null
                 },
                 displayedSource =
                 when (dto.reporting.sourceType) {
-                    SourceTypeEnum.SEMAPHORE -> dto?.semaphore?.unit ?: dto?.semaphore?.name
-                    // TODO This is really strange : `fullControlUnit?.controlUnit` can't be null and I have to add another `?`...
-                    SourceTypeEnum.CONTROL_UNIT -> dto?.controlUnit?.controlUnit?.name
+                    SourceTypeEnum.SEMAPHORE ->
+                        dto.semaphore?.unit
+                            ?: dto.semaphore?.name
+                    // TODO This is really strange : `fullControlUnit?.controlUnit`
+                    // can't be null and I have to add another `?`...
+                    SourceTypeEnum.CONTROL_UNIT -> dto.controlUnit?.controlUnit?.name
                     SourceTypeEnum.OTHER -> dto.reporting.sourceName
                     else -> ""
                 },
@@ -99,7 +102,8 @@ data class ReportingDataOutput(
                 attachedToMissionAtUtc = dto.reporting.attachedToMissionAtUtc,
                 detachedFromMissionAtUtc = dto.reporting.detachedFromMissionAtUtc,
                 attachedEnvActionId = dto.reporting.attachedEnvActionId,
-                attachedMission = if (dto.attachedMission != null) {
+                attachedMission =
+                if (dto.attachedMission != null) {
                     ReportingMissionDataOutput.fromMission(
                         dto.attachedMission,
                     )

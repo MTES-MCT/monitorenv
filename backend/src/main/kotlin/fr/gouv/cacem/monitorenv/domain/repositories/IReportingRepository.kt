@@ -6,11 +6,14 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import org.springframework.data.domain.Pageable
 import java.time.Instant
+import java.util.UUID
 
 interface IReportingRepository {
     fun archiveOutdatedReportings(): Int
 
     fun archiveReportings(ids: List<Int>)
+
+    fun attachEnvActionsToReportings(envActionId: UUID, reportingIds: List<Int>)
 
     fun attachReportingsToMission(reportingIds: List<Int>, missionId: Int)
 

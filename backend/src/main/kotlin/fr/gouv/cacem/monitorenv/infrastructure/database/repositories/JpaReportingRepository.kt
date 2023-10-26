@@ -9,6 +9,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBEnvActionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBReportingRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBSemaphoreRepository
@@ -19,6 +20,7 @@ import org.springframework.orm.jpa.JpaObjectRetrievalFailureException
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
+import java.util.UUID
 
 @Repository
 class JpaReportingRepository(
@@ -26,8 +28,16 @@ class JpaReportingRepository(
     private val dbMissionRepository: IDBMissionRepository,
     private val dbSemaphoreRepository: IDBSemaphoreRepository,
     private val dbControlUnitRepository: IDBControlUnitRepository,
+    private val dbEnvActionRepository: IDBEnvActionRepository,
     private val mapper: ObjectMapper,
 ) : IReportingRepository {
+
+    @Transactional
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    override fun attachEnvActionsToReportings(envActionId: UUID, reportingIds: List<Int>) {
+        dbReportingRepository.attachEnvActionsToReportings(envActionId, reportingIds)
+    }
+
     @Transactional
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     override fun attachReportingsToMission(reportingIds: List<Int>, missionId: Int) {
@@ -73,33 +83,46 @@ class JpaReportingRepository(
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     override fun save(reporting: ReportingEntity): ReportingDTO {
         return try {
-            val semaphoreReference = if (reporting.semaphoreId != null) {
-                dbSemaphoreRepository.getReferenceById(
-                    reporting.semaphoreId,
+            val semaphoreReference =
+                if (reporting.semaphoreId != null) {
+                    dbSemaphoreRepository.getReferenceById(
+                        reporting.semaphoreId,
+                    )
+                } else {
+                    null
+                }
+            val controlUnitReference =
+                if (reporting.controlUnitId != null) {
+                    dbControlUnitRepository.getReferenceById(
+                        reporting.controlUnitId,
+                    )
+                } else {
+                    null
+                }
+            val missionReference =
+                if (reporting.missionId != null) {
+                    dbMissionRepository.getReferenceById(
+                        reporting.missionId,
+                    )
+                } else {
+                    null
+                }
+            val envActionReference =
+                if (reporting.attachedEnvActionId != null) {
+                    dbEnvActionRepository.getReferenceById(
+                        reporting.attachedEnvActionId,
+                    )
+                } else {
+                    null
+                }
+            val reportingModel =
+                ReportingModel.fromReportingEntity(
+                    reporting = reporting,
+                    semaphoreReference = semaphoreReference,
+                    controlUnitReference = controlUnitReference,
+                    missionReference = missionReference,
+                    envActionReference = envActionReference,
                 )
-            } else {
-                null
-            }
-            val controlUnitReference = if (reporting.controlUnitId != null) {
-                dbControlUnitRepository.getReferenceById(
-                    reporting.controlUnitId,
-                )
-            } else {
-                null
-            }
-            val missionReference = if (reporting.missionId != null) {
-                dbMissionRepository.getReferenceById(
-                    reporting.missionId,
-                )
-            } else {
-                null
-            }
-            val reportingModel = ReportingModel.fromReportingEntity(
-                reporting = reporting,
-                semaphoreReference = semaphoreReference,
-                controlUnitReference = controlUnitReference,
-                missionReference = missionReference,
-            )
             dbReportingRepository.saveAndFlush(reportingModel).toReportingDTO(mapper)
         } catch (e: JpaObjectRetrievalFailureException) {
             throw NotFoundException(

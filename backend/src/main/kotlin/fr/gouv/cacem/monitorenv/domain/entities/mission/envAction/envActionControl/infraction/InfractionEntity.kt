@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.entities.mission
+package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction
 
 data class InfractionEntity(
     val id: String,

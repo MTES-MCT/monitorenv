@@ -1,14 +1,14 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionTargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.EnvActionControlEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.EnvActionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.EnvActionNoteEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.EnvActionSurveillanceEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.InfractionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.ThemeEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ThemeEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -34,8 +34,6 @@ data class CreateOrUpdateEnvActionDataInput(
     val coverMissionZone: Boolean? = null,
 ) {
     fun toEnvActionEntity(): EnvActionEntity {
-        if (this.actionType == null) throw IllegalArgumentException("actionType is required")
-
         when (actionType) {
             ActionTypeEnum.CONTROL -> {
                 return EnvActionControlEntity(
@@ -46,8 +44,10 @@ data class CreateOrUpdateEnvActionDataInput(
                     facade = facade,
                     geom = geom,
                     isAdministrativeControl = isAdministrativeControl ?: false,
-                    isComplianceWithWaterRegulationsControl = isComplianceWithWaterRegulationsControl ?: false,
-                    isSafetyEquipmentAndStandardsComplianceControl = isSafetyEquipmentAndStandardsComplianceControl ?: false,
+                    isComplianceWithWaterRegulationsControl =
+                    isComplianceWithWaterRegulationsControl ?: false,
+                    isSafetyEquipmentAndStandardsComplianceControl =
+                    isSafetyEquipmentAndStandardsComplianceControl ?: false,
                     isSeafarersControl = isSeafarersControl ?: false,
                     themes = themes,
                     observations = observations,

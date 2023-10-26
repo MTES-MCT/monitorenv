@@ -28,7 +28,7 @@ class JpaMissionRepository(
         dbMissionRepository.delete(missionId)
     }
 
-    override fun findAll(
+    override fun findAllFullMissions(
         startedAfter: Instant,
         startedBefore: Instant?,
         missionTypes: List<String>?,
@@ -46,7 +46,8 @@ class JpaMissionRepository(
             missionSources = convertToPGArray(missionSourcesAsStringArray),
             seaFronts = convertToPGArray(seaFronts),
             pageable = pageable,
-        ).map { it.toMissionDTO(mapper) }
+        )
+            .map { it.toMissionDTO(mapper) }
     }
 
     override fun findByIds(ids: List<Int>): List<MissionEntity> {
@@ -54,25 +55,57 @@ class JpaMissionRepository(
     }
 
     override fun findByControlUnitId(controlUnitId: Int): List<MissionEntity> {
-        return dbMissionRepository.findByControlUnitId(controlUnitId).map { it.toMissionEntity(mapper) }
+        return dbMissionRepository.findByControlUnitId(controlUnitId).map {
+            it.toMissionEntity(mapper)
+        }
     }
 
-    override fun findById(missionId: Int): MissionDTO {
+    override fun findAll(
+        startedAfter: Instant,
+        startedBefore: Instant?,
+        missionTypes: List<String>?,
+        missionStatuses: List<String>?,
+        missionSources: List<MissionSourceEnum>?,
+        seaFronts: List<String>?,
+        pageable: Pageable,
+    ): List<MissionEntity> {
+        val missionSourcesAsStringArray = missionSources?.map { it.name }
+        return dbMissionRepository.findAll(
+            startedAfter = startedAfter,
+            startedBefore = startedBefore,
+            missionTypes = convertToPGArray(missionTypes),
+            missionStatuses = convertToPGArray(missionStatuses),
+            missionSources = convertToPGArray(missionSourcesAsStringArray),
+            seaFronts = convertToPGArray(seaFronts),
+            pageable = pageable,
+        )
+            .map { it.toMissionEntity(mapper) }
+    }
+
+    override fun findFullMissionById(missionId: Int): MissionDTO {
         return dbMissionRepository.findById(missionId).get().toMissionDTO(mapper)
+    }
+
+    override fun findById(missionId: Int): MissionEntity {
+        return dbMissionRepository.findById(missionId).get().toMissionEntity(mapper)
     }
 
     @Transactional
     override fun save(mission: MissionEntity): MissionDTO {
         // Extract all control units resources unique control unit resource IDs
-        val uniqueControlUnitResourceIds = mission.controlUnits.flatMap { controlUnit ->
-            controlUnit.resources.map { it.id }
-        }.distinct()
+        val uniqueControlUnitResourceIds =
+            mission.controlUnits
+                .flatMap { controlUnit -> controlUnit.resources.map { it.id } }
+                .distinct()
         // Fetch all of them as models
-        val controlUnitResourceModels = dbControlUnitResourceRepository.findAllById(uniqueControlUnitResourceIds)
+        val controlUnitResourceModels =
+            dbControlUnitResourceRepository.findAllById(uniqueControlUnitResourceIds)
         // Create an `[id] → ControlUnitResourceModel` map
-        val controlUnitResourceModelMap = controlUnitResourceModels.associateBy { requireNotNull(it.id) }
+        val controlUnitResourceModelMap =
+            controlUnitResourceModels.associateBy { requireNotNull(it.id) }
 
-        val missionModel = MissionModel.fromMissionEntity(mission, mapper, controlUnitResourceModelMap)
+        val missionModel =
+            MissionModel.fromMissionEntity(mission, mapper, controlUnitResourceModelMap)
 
         return dbMissionRepository.save(missionModel).toMissionDTO(mapper)
     }

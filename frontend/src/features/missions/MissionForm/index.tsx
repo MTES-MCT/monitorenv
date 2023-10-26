@@ -41,7 +41,6 @@ export function Mission() {
 
     return missionFactory(missionToEdit)
   }, [idTyped, missionIsNewMission, missionToEdit])
-
   if (isLoading) {
     return <div>Chargement en cours</div>
   }

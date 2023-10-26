@@ -37,6 +37,7 @@ export const actionFactory = ({
         id: uuidv4(),
         infractions: [],
         observations: '',
+        reportingIds: [],
         themes: [
           {
             protectedSpecies: undefined,
@@ -62,6 +63,7 @@ export const actionFactory = ({
         durationMatchesMission: true,
         id: uuidv4(),
         observations: '',
+        reportingIds: [],
         themes: [
           {
             protectedSpecies: undefined,
@@ -82,6 +84,7 @@ export const missionFactory = (
   startDate.setSeconds(0, 0)
 
   let formattedMission: NewMission = {
+    attachedReportingIds: [],
     closedBy: '',
     controlUnits: [controlUnitFactory()],
     endDateTimeUtc: '',

@@ -19,11 +19,9 @@ class CreateOrUpdateReporting(
 
     @Throws(IllegalArgumentException::class)
     fun execute(reporting: ReportingEntity?): ReportingDTO {
-        require(reporting != null) {
-            "No reporting to create or update"
-        }
+        require(reporting != null) { "No reporting to create or update" }
         logger.info("Create or update reporting: $reporting.id")
-        reporting.checkValidity()
+        reporting.validate()
 
         var seaFront: String? = null
         if (reporting.geom != null) {

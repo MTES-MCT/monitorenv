@@ -3,9 +3,9 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateMissionDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.MissionDataOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.MissionsDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions.MissionDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions.MissionsDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -18,9 +18,10 @@ import java.time.ZonedDateTime
 @RequestMapping("/bff/v1/missions")
 @Tag(description = "API Missions", name = "Missions")
 class MissionsController(
-    private val createOrUpdateMission: CreateOrUpdateMission,
-    private val getMonitorEnvMissions: GetMonitorEnvMissions,
-    private val getMissionById: GetMissionById,
+    private val createOrUpdateMissionWithAttachedReporting:
+    CreateOrUpdateMissionWithAttachedReporting,
+    private val getFullMissions: GetFullMissions,
+    private val getFullMissionById: GetFullMissionById,
     private val deleteMission: DeleteMission,
     private val getEngagedControlUnits: GetEngagedControlUnits,
 ) {
@@ -31,9 +32,7 @@ class MissionsController(
         @Parameter(description = "page number")
         @RequestParam(name = "pageNumber")
         pageNumber: Int?,
-        @Parameter(description = "page size")
-        @RequestParam(name = "pageSize")
-        pageSize: Int?,
+        @Parameter(description = "page size") @RequestParam(name = "pageSize") pageSize: Int?,
         @Parameter(description = "Mission started after date")
         @RequestParam(name = "startedAfterDateTime", required = false)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -55,40 +54,41 @@ class MissionsController(
         @RequestParam(name = "seaFronts", required = false)
         seaFronts: List<String>?,
     ): List<MissionsDataOutput> {
-        val missions = getMonitorEnvMissions.execute(
-            startedAfterDateTime = startedAfterDateTime,
-            startedBeforeDateTime = startedBeforeDateTime,
-            missionSources = missionSources,
-            missionStatuses = missionStatuses,
-            missionTypes = missionTypes,
-            pageNumber = pageNumber,
-            pageSize = pageSize,
-            seaFronts = seaFronts,
-        )
+        val missions =
+            getFullMissions.execute(
+                startedAfterDateTime = startedAfterDateTime,
+                startedBeforeDateTime = startedBeforeDateTime,
+                missionSources = missionSources,
+                missionStatuses = missionStatuses,
+                missionTypes = missionTypes,
+                pageNumber = pageNumber,
+                pageSize = pageSize,
+                seaFronts = seaFronts,
+            )
         return missions.map { MissionsDataOutput.fromMissionDTO(it) }
     }
 
     @PutMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a new mission")
     fun createMissionController(
-        @RequestBody
-        createMissionDataInput: CreateOrUpdateMissionDataInput,
+        @RequestBody createMissionDataInput: CreateOrUpdateMissionDataInput,
     ): MissionDataOutput {
-        val createdMission = createOrUpdateMission.execute(
-            mission = createMissionDataInput.toMissionEntity(),
-            attachedReportingIds = createMissionDataInput.attachedReportingIds,
-        )
+        val createdMission =
+            createOrUpdateMissionWithAttachedReporting.execute(
+                mission = createMissionDataInput.toMissionEntity(),
+                attachedReportingIds = createMissionDataInput.attachedReportingIds,
+                envActionsAttachedToReportingIds =
+                createMissionDataInput.getEnvActionsAttachedToReportings(),
+            )
         return MissionDataOutput.fromMissionDTO(createdMission)
     }
 
     @GetMapping("/{missionId}")
     @Operation(summary = "Get mission by Id")
     fun getMissionByIdController(
-        @PathParam("Mission id")
-        @PathVariable(name = "missionId")
-        missionId: Int,
+        @PathParam("Mission id") @PathVariable(name = "missionId") missionId: Int,
     ): MissionDataOutput {
-        val mission = getMissionById.execute(missionId = missionId)
+        val mission = getFullMissionById.execute(missionId = missionId)
 
         return MissionDataOutput.fromMissionDTO(mission)
     }
@@ -96,34 +96,31 @@ class MissionsController(
     @PutMapping(value = ["/{missionId}"], consumes = ["application/json"])
     @Operation(summary = "Update a mission")
     fun updateMissionController(
-        @PathParam("Mission Id")
-        @PathVariable(name = "missionId")
-        missionId: Int,
-        @RequestBody
-        updateMissionDataInput: CreateOrUpdateMissionDataInput,
+        @PathParam("Mission Id") @PathVariable(name = "missionId") missionId: Int,
+        @RequestBody updateMissionDataInput: CreateOrUpdateMissionDataInput,
     ): MissionDataOutput {
         if ((updateMissionDataInput.id != null) && (missionId != updateMissionDataInput.id)) {
             throw java.lang.IllegalArgumentException("missionId doesn't match with request param")
         }
-        return createOrUpdateMission.execute(
+        return createOrUpdateMissionWithAttachedReporting.execute(
             mission = updateMissionDataInput.toMissionEntity(),
             attachedReportingIds = updateMissionDataInput.attachedReportingIds,
-        ).let {
-            MissionDataOutput.fromMissionDTO(it)
-        }
+            envActionsAttachedToReportingIds =
+            updateMissionDataInput.getEnvActionsAttachedToReportings(),
+        )
+            .let { MissionDataOutput.fromMissionDTO(it) }
     }
 
     @DeleteMapping(value = ["/{missionId}"])
     @Operation(summary = "Delete a mission")
     fun deleteMissionController(
-        @PathParam("Mission Id")
-        @PathVariable(name = "missionId")
-        missionId: Int,
+        @PathParam("Mission Id") @PathVariable(name = "missionId") missionId: Int,
     ) {
         deleteMission.execute(missionId = missionId)
     }
 
-    // TODO Return a ControlUnitDataOutput once the LegacyControlUnitEntity to ControlUnitEntity migration is done
+    // TODO Return a ControlUnitDataOutput once the LegacyControlUnitEntity to ControlUnitEntity
+    // migration is done
     @GetMapping("/engaged_control_units")
     @Operation(summary = "Get engaged control units")
     fun getEngagedControlUnitsController(): List<LegacyControlUnitEntity> {
