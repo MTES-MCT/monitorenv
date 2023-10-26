@@ -32,6 +32,8 @@ class JpaReportingRepository(
     private val mapper: ObjectMapper,
 ) : IReportingRepository {
 
+    @Transactional
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     override fun attachEnvActionsToReportings(envActionId: UUID, reportingIds: List<Int>) {
         dbReportingRepository.attachEnvActionsToReportings(envActionId, reportingIds)
     }

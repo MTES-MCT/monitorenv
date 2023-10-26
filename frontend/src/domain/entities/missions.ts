@@ -250,6 +250,7 @@ export type ResourceUnit = {
 }
 
 export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote> = {
+  attachedReportingIds?: number[]
   closedBy: string
   controlUnits: LegacyControlUnit[]
   endDateTimeUtc?: string
@@ -297,6 +298,7 @@ export type NewEnvActionControl = EnvActionCommonProperties & {
   isSafetyEquipmentAndStandardsComplianceControl?: boolean
   isSeafarersControl?: boolean
   observations: string | null
+  reportingIds?: number[]
   themes: EnvActionTheme[]
   vehicleType?: string
 }
@@ -309,6 +311,7 @@ export type EnvActionSurveillance = EnvActionCommonProperties & {
   coverMissionZone?: boolean
   durationMatchesMission?: boolean
   observations: string | null
+  reportingIds?: number[]
   themes: EnvActionTheme[]
 }
 
