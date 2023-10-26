@@ -34,6 +34,13 @@ class ControllersExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NoSuchElementException::class)
+    fun handleNoSuchElementException(e: Exception): ApiError {
+        logger.error(e.message, e)
+        return ApiError(NoSuchElementException(e.message.toString(), e))
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MissingServletRequestParameterException::class)
     fun handleNoParameter(e: MissingServletRequestParameterException): MissingParameterApiError {
         logger.error(e.message, e.cause)

@@ -4,6 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEnt
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -54,7 +55,9 @@ data class CreateOrUpdateMissionDataInput(
     }
 
     fun getEnvActionsAttachedToReportings(): List<EnvActionAttachedToReportingIds> {
-        return this.envActions?.map { Pair(it.id, it.reportingIds.get()) } ?: listOf()
+        return this.envActions?.filter {
+            it.actionType == ActionTypeEnum.SURVEILLANCE || it.actionType == ActionTypeEnum.CONTROL
+        }?.map { Pair(it.id, it.reportingIds.get()) } ?: listOf()
     }
 }
 
