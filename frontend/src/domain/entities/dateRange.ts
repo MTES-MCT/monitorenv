@@ -6,25 +6,31 @@ export enum DateRangeEnum {
   WEEK = 'WEEK'
 }
 
-export const dateRangeLabels = {
+export type DateRangeLabel = {
+  [K in DateRangeEnum]: {
+    label: string
+    value: K
+  }
+}
+export const DATE_RANGE_LABEL: DateRangeLabel = {
+  /* eslint-disable sort-keys-fix/sort-keys-fix */
   DAY: {
     label: 'Aujourd’hui',
-    value: 'DAY'
+    value: DateRangeEnum.DAY
   },
   WEEK: {
     label: 'Une semaine',
-    value: 'WEEK'
+    value: DateRangeEnum.WEEK
   },
-  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
   MONTH: {
     label: 'Un mois',
-    value: 'MONTH'
+    value: DateRangeEnum.MONTH
   },
-  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
   CUSTOM: {
     label: 'Période spécifique',
-    value: 'CUSTOM'
+    value: DateRangeEnum.CUSTOM
   }
+  /* eslint-enable sort-keys-fix/sort-keys-fix */
 }
 
 export enum ReportingDateRangeEnum {

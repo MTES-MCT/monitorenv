@@ -4,9 +4,14 @@ import styled from 'styled-components'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { useGetControlUnitsQuery } from '../../../../api/controlUnitsAPI'
 import { missionStatusLabels, missionTypeEnum } from '../../../../domain/entities/missions'
-import { MissionFiltersEnum, updateFilters } from '../../../../domain/shared_slices/MissionFilters'
+import {
+  MissionFiltersEnum,
+  updateFilters,
+  type MissionFiltersState
+} from '../../../../domain/shared_slices/MissionFilters'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { FrontendError } from '../../../../libs/FrontendError'
 
 export function FilterTags() {
   const dispatch = useAppDispatch()
@@ -21,12 +26,18 @@ export function FilterTags() {
 
   const controlUnits = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
-  const onDeleteTag = (
+  const onDeleteTag = <K extends MissionFiltersEnum>(
     valueToDelete: number | string,
-    filterKey: MissionFiltersEnum,
-    selectedValues: Array<number | string>
+    filterKey: K,
+    selectedValues: MissionFiltersState[K]
   ) => {
-    const nextSelectedValues = selectedValues.filter(selectedValue => selectedValue !== valueToDelete)
+    if (!Array.isArray(selectedValues)) {
+      throw new FrontendError('`selectedValues` should be an array.')
+    }
+
+    const nextSelectedValues = selectedValues.filter(selectedValue => selectedValue !== valueToDelete) as
+      | string[]
+      | number[]
     dispatch(updateFilters({ key: filterKey, value: nextSelectedValues }))
   }
 

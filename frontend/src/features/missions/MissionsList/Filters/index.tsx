@@ -15,7 +15,7 @@ import { useGetAdministrationsQuery } from '../../../../api/administrationsAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { useGetControlThemesQuery } from '../../../../api/controlThemesAPI'
 import { useGetLegacyControlUnitsQuery } from '../../../../api/legacyControlUnitsAPI'
-import { DateRangeEnum, dateRangeLabels } from '../../../../domain/entities/dateRange'
+import { DateRangeEnum, DATE_RANGE_LABEL } from '../../../../domain/entities/dateRange'
 import { missionSourceEnum, missionStatusLabels, missionTypeEnum } from '../../../../domain/entities/missions'
 import { seaFrontLabels } from '../../../../domain/entities/seaFrontType'
 import { MissionFiltersEnum, resetMissionFilters, updateFilters } from '../../../../domain/shared_slices/MissionFilters'
@@ -62,16 +62,17 @@ export function MissionsTableFilters() {
     return getOptionsFromIdAndName(selectableControlUnits) || []
   }, [legacyControlUnits, selectedAdministrationNames])
 
-  const dateRangesAsOptions = Object.values(dateRangeLabels)
+  const dateRangesAsOptions = Object.values(DATE_RANGE_LABEL)
   const missionStatusesAsOptions = Object.values(missionStatusLabels)
   const missionTypesAsOptions = Object.values(missionTypeEnum)
   const missionSourcesAsOptions = Object.values(missionSourceEnum)
   const seaFrontsAsOptions = Object.values(seaFrontLabels)
 
-  const onUpdatePeriodFilter = period => {
-    dispatch(updateFilters({ key: MissionFiltersEnum.PERIOD_FILTER, value: period }))
+  const onUpdatePeriodFilter = (nextDateRange: DateRangeEnum | undefined) => {
+    dispatch(updateFilters({ key: MissionFiltersEnum.PERIOD_FILTER, value: nextDateRange }))
     setIsCustomPeriodVisible(false)
-    switch (period) {
+
+    switch (nextDateRange) {
       case DateRangeEnum.DAY:
         dispatch(
           updateFilters({
@@ -117,6 +118,7 @@ export function MissionsTableFilters() {
         break
     }
   }
+
   const onUpdateAdministrationFilter = (nextSelectedAdministrationIds: string[] | undefined) => {
     dispatch(updateFilters({ key: MissionFiltersEnum.ADMINISTRATION_FILTER, value: nextSelectedAdministrationIds }))
   }
@@ -152,7 +154,7 @@ export function MissionsTableFilters() {
           isLabelHidden
           label="Période"
           name="Période"
-          onChange={onUpdatePeriodFilter}
+          onChange={onUpdatePeriodFilter as any}
           options={dateRangesAsOptions}
           placeholder="Date de mission depuis"
           style={tagPickerStyle}
@@ -208,6 +210,7 @@ export function MissionsTableFilters() {
         <StyledCheckPicker
           container={newWindowContainerRef.current}
           data={missionTypesAsOptions}
+          data-cy="select-types-filter"
           labelKey="libelle"
           onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.TYPE_FILTER)}
           placeholder="Type de mission"
@@ -223,6 +226,7 @@ export function MissionsTableFilters() {
         <StyledCheckPicker
           container={newWindowContainerRef.current}
           data={seaFrontsAsOptions}
+          data-cy="select-seaFronts-filter"
           labelKey="label"
           onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.SEA_FRONT_FILTER)}
           placeholder="Facade"
@@ -236,6 +240,7 @@ export function MissionsTableFilters() {
         <StyledCheckPicker
           container={newWindowContainerRef.current}
           data={missionStatusesAsOptions}
+          data-cy="select-statuses-filter"
           labelKey="libelle"
           onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.STATUS_FILTER)}
           placeholder="Statut"
@@ -260,7 +265,6 @@ export function MissionsTableFilters() {
           valueKey="value"
         />
       </FilterWrapper>
-      {isCustomPeriodVisible && <StyledCutomPeriodLabel>Période spécifique</StyledCutomPeriodLabel>}
       <StyledTagsContainer>
         {isCustomPeriodVisible && (
           <StyledCustomPeriodContainer>
@@ -271,9 +275,8 @@ export function MissionsTableFilters() {
               defaultValue={
                 startedAfter && startedBefore ? [new Date(startedAfter), new Date(startedBefore)] : undefined
               }
-              isLabelHidden
               isStringDate
-              label="Date de début entre le et le"
+              label="Période spécifique"
               onChange={onUpdateDateRangeFilter}
             />
           </StyledCustomPeriodContainer>
@@ -323,21 +326,17 @@ const StyledCheckPicker = styled(CheckPicker)`
   }
 `
 const StyledTagsContainer = styled.div`
+  align-items: baseline;
   display: flex;
   flex-direction: row;
   gap: 16px;
-  align-items: baseline;
+  margin-top: 16px;
 `
 const StyledCustomPeriodContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 5px;
   margin-top: 5px;
-`
-const StyledCutomPeriodLabel = styled.span`
-  font-size: 13px;
-  color: ${p => p.theme.color.slateGray};
-  margin-top: 16px;
 `
 
 const OptionValue = styled.span`

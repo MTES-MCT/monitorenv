@@ -1,15 +1,15 @@
 import { customDayjs as dayjs } from '@mtes-mct/monitor-ui'
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
-import { dateRangeLabels } from '../entities/dateRange'
+import { DATE_RANGE_LABEL } from '../entities/dateRange'
 
 export const SEVEN_DAYS_AGO = dayjs().subtract(7, 'days').toISOString()
 
 export enum MissionFiltersEnum {
   ADMINISTRATION_FILTER = 'selectedAdministrationNames',
-  PERIOD_FILTER = 'selectedPeriodFilter',
+  PERIOD_FILTER = 'selectedPeriod',
   SEA_FRONT_FILTER = 'selectedSeaFronts',
   SOURCE_FILTER = 'selectedMissionSource',
   STARTED_AFTER_FILTER = 'startedAfter',
@@ -20,7 +20,7 @@ export enum MissionFiltersEnum {
   UNIT_FILTER = 'selectedControlUnitIds'
 }
 
-type MissionFiltersSliceType = {
+type MissionFilterValues = {
   hasFilters: boolean
   selectedAdministrationNames: string[]
   selectedControlUnitIds: number[]
@@ -34,13 +34,19 @@ type MissionFiltersSliceType = {
   startedBefore?: string
 }
 
-const initialState: MissionFiltersSliceType = {
+export type MissionFiltersState = {
+  [K in MissionFiltersEnum]: MissionFilterValues[K]
+} & {
+  hasFilters: boolean
+}
+
+const INITIAL_STATE: MissionFiltersState = {
   hasFilters: false,
   selectedAdministrationNames: [],
   selectedControlUnitIds: [],
   selectedMissionSource: undefined,
   selectedMissionTypes: [],
-  selectedPeriod: dateRangeLabels.WEEK.value,
+  selectedPeriod: DATE_RANGE_LABEL.WEEK.value,
   selectedSeaFronts: [],
   selectedStatuses: [],
   selectedThemes: [],
@@ -54,20 +60,28 @@ const persistConfig = {
 }
 
 const missionFiltersSlice = createSlice({
-  initialState,
+  initialState: INITIAL_STATE,
   name: 'missionFilters',
   reducers: {
     resetMissionFilters() {
-      return { ...initialState }
+      return { ...INITIAL_STATE }
     },
 
-    updateFilters(state, action) {
+    updateFilters<K extends MissionFiltersEnum>(
+      // TODO There is not `MissionFiltersState` type inference in `createSlice()`.
+      // Investigate why (this should be automatic).
+      state: MissionFiltersState,
+      action: PayloadAction<{
+        key: K
+        value: MissionFiltersState[K]
+      }>
+    ) {
       return {
         ...state,
         [action.payload.key]: action.payload.value,
         hasFilters:
           (action.payload.value && action.payload.value.length > 0) ||
-          state.selectedPeriod !== dateRangeLabels.WEEK.value ||
+          state.selectedPeriod !== DATE_RANGE_LABEL.WEEK.value ||
           state.selectedAdministrationNames.length > 0 ||
           state.selectedControlUnitIds.length > 0 ||
           state.selectedMissionTypes.length > 0 ||
