@@ -16,7 +16,7 @@ import java.util.UUID
 data class MissionEnvActionDataInput(
     val id: UUID,
     val actionType: ActionTypeEnum,
-    val actionStartDateTimeUtc: ZonedDateTime,
+    val actionStartDateTimeUtc: ZonedDateTime? = null,
     val actionEndDateTimeUtc: ZonedDateTime? = null,
     val department: String? = null,
     val facade: String? = null,
@@ -80,8 +80,10 @@ data class MissionEnvActionDataInput(
                     infractions = this.infractions?.map { it.toInfractionEntity() },
                     observations = this.observations,
                     isAdministrativeControl = this.isAdministrativeControl,
-                    isComplianceWithWaterRegulationsControl = this.isComplianceWithWaterRegulationsControl,
-                    isSafetyEquipmentAndStandardsComplianceControl = this.isSafetyEquipmentAndStandardsComplianceControl,
+                    isComplianceWithWaterRegulationsControl =
+                    this.isComplianceWithWaterRegulationsControl,
+                    isSafetyEquipmentAndStandardsComplianceControl =
+                    this.isSafetyEquipmentAndStandardsComplianceControl,
                     isSeafarersControl = this.isSeafarersControl,
                 )
             ActionTypeEnum.SURVEILLANCE ->
