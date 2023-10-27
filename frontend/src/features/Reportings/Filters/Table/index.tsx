@@ -1,4 +1,4 @@
-import { DateRangePicker, useNewWindow, Checkbox, Icon } from '@mtes-mct/monitor-ui'
+import { CheckPicker, DateRangePicker, useNewWindow, Checkbox, Icon } from '@mtes-mct/monitor-ui'
 import { forwardRef } from 'react'
 import styled from 'styled-components'
 
@@ -7,7 +7,6 @@ import { ReportingsFiltersEnum } from '../../../../domain/shared_slices/Reportin
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import {
   OptionValue,
-  StyledCheckPicker,
   StyledCustomPeriodContainer,
   StyledCutomPeriodLabel,
   StyledSelect,
@@ -33,15 +32,15 @@ export function TableReportingsFiltersWithRef(
   const {
     hasFilters,
     periodFilter,
-    seaFrontFilter,
-    sourceFilter,
-    sourceTypeFilter,
+    seaFrontFilter = [],
+    sourceFilter = [],
+    sourceTypeFilter = [],
     startedAfter,
     startedBefore,
-    statusFilter,
-    subThemesFilter,
-    themeFilter,
-    typeFilter
+    statusFilter = [],
+    subThemesFilter = [],
+    themeFilter = [],
+    typeFilter = []
   } = useAppSelector(state => state.reportingFilters)
   const {
     dateRangeOptions,
@@ -88,33 +87,31 @@ export function TableReportingsFiltersWithRef(
             value={periodFilter}
           />
 
-          <StyledCheckPicker
-            container={newWindowContainerRef.current}
-            data={sourceTypeOptions}
+          <CheckPicker
             data-cy="select-source-type-filter"
-            labelKey="label"
+            isLabelHidden
+            label="Type de source"
+            name="sourceType"
             onChange={value => updateSourceTypeFilter(value)}
+            options={sourceTypeOptions}
             placeholder="Type de source"
             renderValue={() => sourceTypeFilter && <OptionValue>{`Type (${sourceTypeFilter.length})`}</OptionValue>}
             searchable={false}
-            size="sm"
             style={tagPickerStyle}
             value={sourceTypeFilter}
-            valueKey="value"
           />
 
-          <StyledCheckPicker
-            container={newWindowContainerRef.current}
-            data={sourceOptions}
+          <CheckPicker
             data-cy="select-source-filter"
-            labelKey="label"
+            isLabelHidden
+            label="Source"
+            name="source"
             onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SOURCE_FILTER)}
+            options={sourceOptions}
             placeholder="Source"
             renderValue={() => sourceFilter && <OptionValue>{`Source (${sourceFilter.length})`}</OptionValue>}
-            size="sm"
             style={tagPickerStyle}
             value={sourceFilter}
-            valueKey="value"
           />
 
           <StyledSelect
@@ -129,42 +126,40 @@ export function TableReportingsFiltersWithRef(
             style={tagPickerStyle}
             value={typeFilter}
           />
-          <StyledCheckPicker
-            container={newWindowContainerRef.current}
-            data={themesListAsOptions}
-            labelKey="label"
+          <CheckPicker
+            isLabelHidden
+            label="Thématiques"
+            name="themes"
             onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.THEME_FILTER)}
+            options={themesListAsOptions}
             placeholder="Thématiques"
             renderValue={() => themeFilter && <OptionValue>{`Thème (${themeFilter.length})`}</OptionValue>}
-            size="sm"
             style={{ width: 311 }}
             value={themeFilter}
-            valueKey="value"
           />
-          <StyledCheckPicker
-            container={newWindowContainerRef.current}
-            data={subThemesListAsOptions}
-            labelKey="label"
+          <CheckPicker
+            isLabelHidden
+            label="Sous-thématiques"
+            name="subThemes"
             onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SUB_THEMES_FILTER)}
+            options={subThemesListAsOptions}
             placeholder="Sous-thématiques"
             renderValue={() => subThemesFilter && <OptionValue>{`Sous-thème (${subThemesFilter.length})`}</OptionValue>}
-            size="sm"
             style={{ width: 311 }}
             value={subThemesFilter}
-            valueKey="value"
           />
-          <StyledCheckPicker
-            container={newWindowContainerRef.current}
-            data={seaFrontsOptions}
-            labelKey="label"
+          <CheckPicker
+            isLabelHidden
+            label="Facade"
+            name="seaFront"
             onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SEA_FRONT_FILTER)}
+            options={seaFrontsOptions}
             placeholder="Facade"
             renderValue={() => seaFrontFilter && <OptionValue>{`Facade (${seaFrontFilter.length})`}</OptionValue>}
             searchable={false}
             size="sm"
             style={tagPickerStyle}
             value={seaFrontFilter}
-            valueKey="value"
           />
         </StyledFiltersSecondLine>
       </FilterWrapper>

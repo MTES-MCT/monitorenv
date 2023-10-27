@@ -86,14 +86,14 @@ export function LayerSearch({ isVisible }) {
       setTimeout(() => {
         isSearchThrottled.current = false
 
-        if (searchedText.length > 2 || ampTypes.length > 0 || geofilter) {
+        if (searchedText.length > 2 || ampTypes?.length > 0 || geofilter) {
           let searchedAMPS
           let itemSchema
-          if (searchedText.length > 2 || ampTypes.length > 0) {
+          if (searchedText.length > 2 || ampTypes?.length > 0) {
             const filterWithTextExpression =
               searchedText.length > 0 ? { $path: ['name'], $val: searchedText } : undefined
             const filterWithType =
-              ampTypes.length > 0 ? { $or: ampTypes.map(theme => ({ $path: 'type', $val: theme })) } : undefined
+              ampTypes?.length > 0 ? { $or: ampTypes.map(theme => ({ $path: 'type', $val: theme })) } : undefined
 
             const filterExpression = [filterWithTextExpression, filterWithType].filter(f => !!f) as Fuse.Expression[]
 

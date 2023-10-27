@@ -1,4 +1,4 @@
-import { DateRangePicker, Checkbox, SingleTag, Accent } from '@mtes-mct/monitor-ui'
+import { CheckPicker, DateRangePicker, Checkbox, SingleTag, Accent } from '@mtes-mct/monitor-ui'
 import { forwardRef, useRef } from 'react'
 import styled from 'styled-components'
 
@@ -6,7 +6,7 @@ import { ReportingSourceLabels } from '../../../../domain/entities/reporting'
 import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../../domain/shared_slices/ReportingsFilters'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { OptionValue, StyledCheckPicker, StyledSelect, StyledStatusFilter } from '../style'
+import { OptionValue, StyledSelect, StyledStatusFilter } from '../style'
 
 export function MapReportingsFiltersWithRef(
   {
@@ -23,13 +23,13 @@ export function MapReportingsFiltersWithRef(
   const dispatch = useAppDispatch()
   const {
     periodFilter,
-    sourceTypeFilter,
+    sourceTypeFilter = [],
     startedAfter,
     startedBefore,
-    statusFilter,
-    subThemesFilter,
-    themeFilter,
-    typeFilter
+    statusFilter = [],
+    subThemesFilter = [],
+    themeFilter = [],
+    typeFilter = []
   } = useAppSelector(state => state.reportingFilters)
 
   const {
@@ -98,17 +98,17 @@ export function MapReportingsFiltersWithRef(
       </StyledBloc>
 
       <StyledBloc>
-        <StyledCheckPicker
-          data={sourceTypeOptions}
+        <CheckPicker
           data-cy="select-source-type-filter"
-          labelKey="label"
+          isLabelHidden
+          label="Type de source"
+          name="sourceType"
           onChange={value => updateSourceTypeFilter(value)}
+          options={sourceTypeOptions}
           placeholder="Type de source"
           renderValue={() => sourceTypeFilter && <OptionValue>{`Type (${sourceTypeFilter.length})`}</OptionValue>}
           searchable={false}
-          size="sm"
           value={sourceTypeFilter}
-          valueKey="value"
         />
 
         {sourceTypeFilter.length > 0 && (
@@ -138,15 +138,15 @@ export function MapReportingsFiltersWithRef(
         />
       </StyledBloc>
       <StyledBloc>
-        <StyledCheckPicker
-          data={themesListAsOptions}
-          labelKey="label"
+        <CheckPicker
+          isLabelHidden
+          label="Thématiques"
+          name="themes"
           onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.THEME_FILTER)}
+          options={themesListAsOptions}
           placeholder="Thématiques"
           renderValue={() => themeFilter && <OptionValue>{`Thème (${themeFilter.length})`}</OptionValue>}
-          size="sm"
           value={themeFilter}
-          valueKey="value"
         />
 
         {themeFilter.length > 0 && (
@@ -164,15 +164,14 @@ export function MapReportingsFiltersWithRef(
           </StyledTagsContainer>
         )}
 
-        <StyledCheckPicker
-          data={subThemesListAsOptions}
-          labelKey="label"
+        <CheckPicker
+          label="Sous-thématiques"
+          name="subThemes"
           onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SUB_THEMES_FILTER)}
+          options={subThemesListAsOptions}
           placeholder="Sous-thématiques"
           renderValue={() => subThemesFilter && <OptionValue>{`Sous-thème (${subThemesFilter.length})`}</OptionValue>}
-          size="sm"
           value={subThemesFilter}
-          valueKey="value"
         />
 
         {subThemesFilter.length > 0 && (

@@ -1,5 +1,5 @@
-import { Accent, SingleTag } from '@mtes-mct/monitor-ui'
-import { Button, CheckPicker } from 'rsuite'
+import { Accent, CheckPicker, SingleTag } from '@mtes-mct/monitor-ui'
+import { Button } from 'rsuite'
 import styled from 'styled-components'
 
 export function LayerFilters({
@@ -28,10 +28,12 @@ export function LayerFilters({
 
   return (
     <FiltersWrapper>
-      <StyledCheckPicker
-        data={regulatoryThemes}
-        labelKey="label"
+      <CheckPicker
+        isLabelHidden
+        label="Thématique réglementaire"
+        name="regulatoryThemes"
         onChange={handleSetFilteredRegulatoryThemes}
+        options={regulatoryThemes || []}
         placeholder="Thématique réglementaire"
         renderValue={() =>
           filteredRegulatoryThemes && (
@@ -43,8 +45,9 @@ export function LayerFilters({
         valueKey="value"
       />
       <TagWrapper>
-        {filteredRegulatoryThemes.length > 0 &&
-          filteredRegulatoryThemes.map(theme => (
+        {filteredRegulatoryThemes &&
+          filteredRegulatoryThemes?.length > 0 &&
+          filteredRegulatoryThemes?.map(theme => (
             <SingleTag
               key={theme}
               accent={Accent.SECONDARY}
@@ -56,10 +59,11 @@ export function LayerFilters({
           ))}
       </TagWrapper>
 
-      <StyledCheckPicker
-        data={ampTypes}
-        labelKey="label"
+      <CheckPicker
+        label="Type d'AMP"
+        name="ampTypes"
         onChange={handleSetFilteredAmpTypes}
+        options={ampTypes}
         placeholder="Type d'AMP"
         renderValue={() => filteredAmpTypes && <OptionValue>{`Type d'AMP (${filteredAmpTypes.length})`}</OptionValue>}
         size="sm"
@@ -67,15 +71,15 @@ export function LayerFilters({
         valueKey="value"
       />
       <TagWrapper>
-        {filteredAmpTypes.length > 0 &&
-          filteredAmpTypes.map(type => (
+        {filteredAmpTypes?.length > 0 &&
+          filteredAmpTypes?.map(type => (
             <SingleTag key={type} accent={Accent.SECONDARY} onDelete={handleDeleteAmpType(type)} title={type}>
               {type}
             </SingleTag>
           ))}
       </TagWrapper>
 
-      {(filteredRegulatoryThemes?.length > 0 || filteredAmpTypes.length > 0) && (
+      {(filteredRegulatoryThemes?.length > 0 || filteredAmpTypes?.length > 0) && (
         <ResetFilters appearance="link" onClick={handleResetFilters}>
           Réinitialiser les filtres
         </ResetFilters>
@@ -99,16 +103,6 @@ const TagWrapper = styled.div`
 `
 const ResetFilters = styled(Button)`
   padding: 0px;
-`
-
-const StyledCheckPicker = styled(CheckPicker)`
-  width: 100%;
-  .rs-picker-toggle {
-    background-color: ${p => p.theme.color.white} !important;
-  }
-  .rs-picker-toggle-placeholder {
-    font-size: 13px !important;
-  }
 `
 
 const OptionValue = styled.span`

@@ -1,5 +1,4 @@
 import { Select } from '@mtes-mct/monitor-ui'
-import { CheckPicker } from 'rsuite'
 import styled from 'styled-components'
 
 export const StyledStatusFilter = styled.div`
@@ -16,11 +15,7 @@ export const StyledSelect = styled(Select)`
     top: 5px !important;
   }
 `
-export const StyledCheckPicker = styled(CheckPicker)`
-  .rs-picker-toggle-placeholder {
-    font-size: 13px !important;
-  }
-`
+
 export const StyledTagsContainer = styled.div<{ $withMargin: boolean }>`
   margin-top: ${p => (p.$withMargin ? '16px' : '0px')};
   display: flex;
