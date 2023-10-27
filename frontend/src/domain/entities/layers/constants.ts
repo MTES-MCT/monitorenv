@@ -42,6 +42,10 @@ export const Layers = {
     subZoneFieldKey: null,
     type: LayerType.BASE_LAYER
   },
+  BASES: {
+    code: 'bases',
+    zIndex: 1200
+  },
   DRAW: {
     code: 'draw_layer',
     zIndex: 1500
@@ -197,12 +201,14 @@ export const SelectableLayers = [
   Layers.REGULATORY_ENV_PREVIEW.code,
   Layers.REGULATORY_ENV.code,
   Layers.AMP.code,
+  Layers.BASES.code,
   Layers.SEMAPHORES.code,
   Layers.REPORTINGS.code
 ]
 export const HoverableLayers = [
   Layers.MISSIONS.code,
   Layers.ACTIONS.code,
+  Layers.BASES.code,
   Layers.SEMAPHORES.code,
   Layers.REPORTINGS.code
 ]

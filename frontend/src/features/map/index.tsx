@@ -4,9 +4,9 @@ import { MapCoordinatesBox } from './controls/MapCoordinatesBox'
 import { AdministrativeLayers } from './layers/AdministrativeLayers'
 import { AMPLayers } from './layers/AMP'
 import { AMPPreviewLayer } from './layers/AMP/AMPPreviewLayer'
-import { BaseLayer } from './layers/BaseLayer'
 import { DrawLayer } from './layers/DrawLayer'
 import { InterestPointLayer } from './layers/InterestPointLayer'
+import { MapLayer } from './layers/MapLayer'
 import { MeasurementLayer } from './layers/MeasurementLayer'
 import { MissionsLayer } from './layers/Missions'
 import { EditingMissionLayer } from './layers/Missions/EditingMissionLayer'
@@ -26,6 +26,8 @@ import { MissionOverlays } from './overlays/missions'
 import { ReportingOverlay } from './overlays/reportings'
 import { SemaphoreOverlay } from './overlays/semaphores'
 import { ShowRegulatoryMetadata } from './ShowRegulatoryMetadata'
+import { BaseLayer } from '../Base/components/BaseLayer'
+import { BaseOverlay } from '../Base/components/BaseOverlay'
 
 export function Map() {
   return (
@@ -38,7 +40,7 @@ export function Map() {
     >
       <MapAttributionsBox />
       <MapCoordinatesBox />
-      <BaseLayer />
+      <MapLayer />
       <AMPLayers />
       <AMPPreviewLayer />
       <RegulatoryLayers />
@@ -63,6 +65,8 @@ export function Map() {
       <HoveredReportingLayer />
       <ReportingsLayer />
       <ReportingOverlay />
+      <BaseLayer />
+      <BaseOverlay />
     </BaseMap>
   )
 }

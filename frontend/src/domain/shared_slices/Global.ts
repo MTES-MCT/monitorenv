@@ -1,4 +1,5 @@
-// TODO This slice should disappear in favor of `features/MainWindow/slice.ts`.
+// TODO This slice should disappear in favor of `features/MainWindow/slice.ts` and "Map" feature should have its own slice.
+// TODO "Map" feature should have its own slice where we would transfer the related `display...` props.
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
@@ -63,6 +64,9 @@ type GlobalStateType = {
   displayReportingEditingLayer: boolean
   displayReportingSelectedLayer: boolean
 
+  displayBaseLayer: boolean
+  displayBaseOverlay: boolean
+
   isLayersSidebarVisible: boolean
 
   isMapToolVisible: MapToolType | undefined
@@ -112,6 +116,9 @@ const initialState: GlobalStateType = {
   displayReportingsOverlay: true,
   displayReportingEditingLayer: true,
   displayReportingSelectedLayer: true,
+
+  displayBaseLayer: true,
+  displayBaseOverlay: true,
 
   isMapToolVisible: undefined,
 

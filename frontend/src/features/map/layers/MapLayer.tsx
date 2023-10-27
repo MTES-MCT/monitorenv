@@ -9,10 +9,10 @@ import { Layers } from '../../../domain/entities/layers/constants'
 import { MAPBOX_KEY, SHOM_KEY } from '../../../env'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 
-export type BaseLayerProps = {
+type MapLayerProps = {
   map?: any
 }
-function UnmemoizedBaseLayer({ map }: BaseLayerProps) {
+function UnmemoizedMapLayer({ map }: MapLayerProps) {
   const selectedBaseLayer = useAppSelector(state => state.map.selectedBaseLayer)
 
   const [baseLayersObjects] = useState({
@@ -83,6 +83,6 @@ function UnmemoizedBaseLayer({ map }: BaseLayerProps) {
   return null
 }
 
-export const BaseLayer = React.memo(UnmemoizedBaseLayer)
+export const MapLayer = React.memo(UnmemoizedMapLayer)
 
-BaseLayer.displayName = 'BaseLayer'
+MapLayer.displayName = 'MapLayer'
