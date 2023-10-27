@@ -45,8 +45,7 @@ export function LayerFilters({
         valueKey="value"
       />
       <TagWrapper>
-        {filteredRegulatoryThemes &&
-          filteredRegulatoryThemes?.length > 0 &&
+        {filteredRegulatoryThemes?.length > 0 &&
           filteredRegulatoryThemes?.map(theme => (
             <SingleTag
               key={theme}

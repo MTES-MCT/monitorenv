@@ -30,7 +30,7 @@
     "test:unit": "jest --config=./config/jest.config.js --detectOpenHandles",
     "test:unit:watch": "npm run test:unit -- --watch"
   },
-  "dependencies": {xs
+  "dependencies": {
     "@mtes-mct/monitor-ui": "10.9.3",
     "@reduxjs/toolkit": "1.9.5",
     "@rsuite/responsive-nav": "5.0.1",
