@@ -138,6 +138,33 @@ context('Mission', () => {
     cy.get('*[data-cy="SideWindowHeader-title"]').contains('Missions et contrôles')
   })
 
+  it('A closed mission can be saved and stay closed', () => {
+    // Given
+    cy.wait(200)
+    cy.get('*[data-cy="edit-mission-43"]').click({ force: true })
+    cy.intercept('PUT', '/bff/v1/missions/43').as('updateMission')
+    cy.clickButton('Enregistrer et quitter')
+
+    // Then
+    cy.wait('@updateMission').then(({ response }) => {
+      expect(response && response.statusCode).equal(200)
+      expect(response && response.body.isClosed).equal(true)
+    })
+  })
+
+  it('A warning should be displayed When a control unit is already engaged in a mission ', () => {
+    // Given
+    cy.wait(200)
+    cy.intercept('GET', '/api/v1/missions/engaged_control_units').as('getEngagedControlUnits')
+
+    // When
+    cy.get('*[data-cy="edit-mission-43"]').click({ force: true })
+    cy.wait('@getEngagedControlUnits')
+
+    // Then
+    cy.get('body').contains('Cette unité est actuellement sélectionnée dans une autre mission en cours.')
+  })
+
   it('A mission from monitorFish cannot be deleted', () => {
     // Given
     cy.wait(200)

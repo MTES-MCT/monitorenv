@@ -77,9 +77,9 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
   const submitMission = () => {
     setShouldValidateOnChange(false)
 
-    validateForm({ ...values, isClosed: false }).then(errors => {
+    validateForm().then(errors => {
       if (_.isEmpty(errors)) {
-        dispatch(saveMission({ ...values, isClosed: false }))
+        dispatch(saveMission(values))
 
         return
       }
