@@ -4,10 +4,12 @@ import {
   DateRangePicker,
   type DateAsStringRange,
   useNewWindow,
-  getOptionsFromIdAndName
+  getOptionsFromIdAndName,
+  CheckPicker,
+  getOptionsFromLabelledEnum,
+  CustomSearch
 } from '@mtes-mct/monitor-ui'
 import { type MutableRefObject, useMemo, useRef, useState } from 'react'
-import { CheckPicker } from 'rsuite'
 import styled from 'styled-components'
 
 import { FilterTags } from './FilterTags'
@@ -16,7 +18,7 @@ import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { useGetControlThemesQuery } from '../../../../api/controlThemesAPI'
 import { useGetLegacyControlUnitsQuery } from '../../../../api/legacyControlUnitsAPI'
 import { DateRangeEnum, DATE_RANGE_LABEL } from '../../../../domain/entities/dateRange'
-import { missionSourceEnum, missionStatusLabels, missionTypeEnum } from '../../../../domain/entities/missions'
+import { MissionSourceLabel, MissionTypeLabel, MissionStatusLabel } from '../../../../domain/entities/missions'
 import { seaFrontLabels } from '../../../../domain/entities/seaFrontType'
 import { MissionFiltersEnum, resetMissionFilters, updateFilters } from '../../../../domain/shared_slices/MissionFilters'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
@@ -46,10 +48,17 @@ export function MissionsTableFilters() {
   const unitPickerRef = useRef() as MutableRefObject<HTMLDivElement>
 
   const { data: administrations } = useGetAdministrationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
-  const { data: legacyControlUnits } = useGetLegacyControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
+  const { data: legacyControlUnits, isLoading } = useGetLegacyControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
   const { data: controlThemes } = useGetControlThemesQuery()
 
-  const activeAdministrations = useMemo(() => (administrations || []).filter(isNotArchived), [administrations])
+  const activeAdministrations = useMemo(
+    () =>
+      (administrations || []).filter(isNotArchived).map(admin => ({
+        label: admin.name,
+        value: admin.name
+      })),
+    [administrations]
+  )
 
   const themesAsOptions = useMemo(() => getThemesAsListOptions(controlThemes), [controlThemes])
 
@@ -62,10 +71,15 @@ export function MissionsTableFilters() {
     return getOptionsFromIdAndName(selectableControlUnits) || []
   }, [legacyControlUnits, selectedAdministrationNames])
 
+  const controlUnitCustomSearch = useMemo(
+    () => new CustomSearch(controlUnitsAsOptions, ['label']),
+    [controlUnitsAsOptions]
+  )
+
   const dateRangesAsOptions = Object.values(DATE_RANGE_LABEL)
-  const missionStatusesAsOptions = Object.values(missionStatusLabels)
-  const missionTypesAsOptions = Object.values(missionTypeEnum)
-  const missionSourcesAsOptions = Object.values(missionSourceEnum)
+  const missionStatusesAsOptions = getOptionsFromLabelledEnum(MissionStatusLabel)
+  const missionTypesAsOptions = getOptionsFromLabelledEnum(MissionTypeLabel)
+  const missionSourcesAsOptions = getOptionsFromLabelledEnum(MissionSourceLabel)
   const seaFrontsAsOptions = Object.values(seaFrontLabels)
 
   const onUpdatePeriodFilter = (nextDateRange: DateRangeEnum | undefined) => {
@@ -143,6 +157,9 @@ export function MissionsTableFilters() {
     setIsCustomPeriodVisible(false)
     dispatch(resetMissionFilters())
   }
+  if (isLoading) {
+    return <div>Chargement</div>
+  }
 
   return (
     <>
@@ -173,30 +190,32 @@ export function MissionsTableFilters() {
           style={tagPickerStyle}
           value={selectedMissionSource}
         />
-        <StyledCheckPicker
-          container={newWindowContainerRef.current}
-          data={activeAdministrations || []}
+        <CheckPicker
           data-cy="select-administration-filter"
-          labelKey="name"
+          isLabelHidden
+          label="Administration"
+          menuStyle={{ maxWidth: '200%' }}
+          name="administration"
           onChange={onUpdateAdministrationFilter as any}
+          options={activeAdministrations || []}
           placeholder="Administration"
           renderValue={() =>
             selectedAdministrationNames && (
               <OptionValue>{`Administration (${selectedAdministrationNames.length})`}</OptionValue>
             )
           }
-          searchable
-          size="sm"
           style={tagPickerStyle}
           value={selectedAdministrationNames}
-          valueKey="name"
         />
-        <StyledCheckPicker
-          container={newWindowContainerRef.current}
-          data={controlUnitsAsOptions as any}
+        <CheckPicker
+          customSearch={controlUnitCustomSearch}
           data-cy="select-units-filter"
-          labelKey="label"
+          isLabelHidden
+          label="Unité"
+          menuStyle={{ maxWidth: '200%' }}
+          name="controlUnit"
           onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.UNIT_FILTER)}
+          options={controlUnitsAsOptions as any}
           placeholder="Unité"
           renderValue={() =>
             selectedControlUnitIds && <OptionValue>{`Unité (${selectedControlUnitIds.length})`}</OptionValue>
@@ -204,15 +223,15 @@ export function MissionsTableFilters() {
           searchable
           size="sm"
           style={tagPickerStyle}
-          value={selectedControlUnitIds}
-          valueKey="value"
+          value={selectedControlUnitIds as any}
         />
-        <StyledCheckPicker
-          container={newWindowContainerRef.current}
-          data={missionTypesAsOptions}
+        <CheckPicker
           data-cy="select-types-filter"
-          labelKey="libelle"
+          isLabelHidden
+          label="Type de mission"
+          name="missionType"
           onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.TYPE_FILTER)}
+          options={missionTypesAsOptions}
           placeholder="Type de mission"
           renderValue={() =>
             selectedMissionTypes && <OptionValue>{`Type (${selectedMissionTypes.length})`}</OptionValue>
@@ -221,48 +240,47 @@ export function MissionsTableFilters() {
           size="sm"
           style={tagPickerStyle}
           value={selectedMissionTypes}
-          valueKey="code"
         />
-        <StyledCheckPicker
-          container={newWindowContainerRef.current}
-          data={seaFrontsAsOptions}
+        <CheckPicker
           data-cy="select-seaFronts-filter"
-          labelKey="label"
+          isLabelHidden
+          label="Facade"
+          name="seaFront"
           onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.SEA_FRONT_FILTER)}
+          options={seaFrontsAsOptions}
           placeholder="Facade"
           renderValue={() => selectedSeaFronts && <OptionValue>{`Facade (${selectedSeaFronts.length})`}</OptionValue>}
           searchable={false}
           size="sm"
           style={tagPickerStyle}
           value={selectedSeaFronts}
-          valueKey="value"
         />
-        <StyledCheckPicker
-          container={newWindowContainerRef.current}
-          data={missionStatusesAsOptions}
+        <CheckPicker
           data-cy="select-statuses-filter"
-          labelKey="libelle"
+          isLabelHidden
+          label="Statut"
+          name="status"
           onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.STATUS_FILTER)}
+          options={missionStatusesAsOptions}
           placeholder="Statut"
           renderValue={() => selectedStatuses && <OptionValue>{`Statut (${selectedStatuses.length})`}</OptionValue>}
           searchable={false}
           size="sm"
           style={tagPickerStyle}
           value={selectedStatuses}
-          valueKey="code"
         />
-        <StyledCheckPicker
-          container={newWindowContainerRef.current}
-          data={themesAsOptions}
+        <CheckPicker
           data-cy="select-theme-filter"
-          labelKey="label"
+          isLabelHidden
+          label="Thématique"
+          name="theme"
           onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.THEME_FILTER)}
+          options={themesAsOptions}
           placeholder="Thématique"
           renderValue={() => selectedThemes && <OptionValue>{`Theme (${selectedThemes.length})`}</OptionValue>}
           size="sm"
           style={tagPickerStyle}
           value={selectedThemes}
-          valueKey="value"
         />
       </FilterWrapper>
       <StyledTagsContainer>
@@ -320,11 +338,7 @@ const StyledSelect = styled(Select)`
     top: 5px !important;
   }
 `
-const StyledCheckPicker = styled(CheckPicker)`
-  .rs-picker-toggle-placeholder {
-    font-size: 13px !important;
-  }
-`
+
 const StyledTagsContainer = styled.div`
   align-items: baseline;
   display: flex;

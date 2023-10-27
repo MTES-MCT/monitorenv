@@ -45,6 +45,12 @@ export const missionTypeEnum = {
   }
 }
 
+export enum MissionTypeLabel {
+  AIR = 'Air',
+  LAND = 'Terre',
+  SEA = 'Merre'
+}
+
 export enum InfractionTypeEnum {
   WAITING = 'WAITING',
   WITHOUT_REPORT = 'WITHOUT_REPORT',
@@ -182,6 +188,14 @@ export enum MissionStatusEnum {
   PENDING = 'PENDING',
   UPCOMING = 'UPCOMING'
 }
+
+export enum MissionStatusLabel {
+  CLOSED = 'Cloturée',
+  ENDED = 'Terminée',
+  PENDING = 'En cours',
+  UPCOMING = 'À venir'
+}
+
 export const missionStatusLabels = {
   CLOSED: {
     borderColor: THEME.color.slateGray,
@@ -222,6 +236,11 @@ export const missionSourceEnum = {
     label: 'CNSP',
     value: 'MONITORFISH'
   }
+}
+
+export enum MissionSourceLabel {
+  MONITORENV = 'CACEM',
+  MONITORFISH = 'CNSP'
 }
 
 export const THEME_REQUIRE_PROTECTED_SPECIES = ['Police des espèces protégées et de leurs habitats (faune et flore)']
