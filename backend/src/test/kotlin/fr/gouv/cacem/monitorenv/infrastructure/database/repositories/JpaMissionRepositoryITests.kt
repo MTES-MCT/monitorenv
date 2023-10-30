@@ -33,10 +33,18 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `findByControlUnitId() should find the matching missions`() {
+    fun `findByControlUnitId should find the matching missions`() {
         val foundMissions = jpaMissionRepository.findByControlUnitId(10002)
 
         assertThat(foundMissions).hasSize(18)
+    }
+
+    @Test
+    @Transactional
+    fun `findByControlUnitResourceId should find the matching missions`() {
+        val foundMissions = jpaMissionRepository.findByControlUnitResourceId(8)
+
+        assertThat(foundMissions).hasSize(3)
     }
 
     @Test

@@ -60,6 +60,12 @@ class JpaMissionRepository(
         }
     }
 
+    override fun findByControlUnitResourceId(controlUnitResourceId: Int): List<MissionEntity> {
+        return dbMissionRepository.findByControlUnitResourceId(controlUnitResourceId).map {
+            it.toMissionEntity(mapper)
+        }
+    }
+
     override fun findAll(
         startedAfter: Instant,
         startedBefore: Instant?,

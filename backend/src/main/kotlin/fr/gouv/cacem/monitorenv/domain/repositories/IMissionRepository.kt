@@ -39,5 +39,7 @@ interface IMissionRepository {
 
     fun findByControlUnitId(controlUnitId: Int): List<MissionEntity>
 
+    fun findByControlUnitResourceId(controlUnitResourceId: Int): List<MissionEntity>
+
     fun save(mission: MissionEntity): MissionDTO
 }

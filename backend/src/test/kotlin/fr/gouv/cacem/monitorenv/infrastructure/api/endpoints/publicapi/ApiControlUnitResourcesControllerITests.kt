@@ -36,6 +36,9 @@ class ApiControlUnitResourcesControllerITests {
     private lateinit var archiveControlUnitResource: ArchiveControlUnitResource
 
     @MockBean
+    private lateinit var canDeleteControlUnitResource: CanDeleteControlUnitResource
+
+    @MockBean
     private lateinit var createOrUpdateControlUnitResource: CreateOrUpdateControlUnitResource
 
     @MockBean
@@ -51,7 +54,7 @@ class ApiControlUnitResourcesControllerITests {
     private lateinit var objectMapper: ObjectMapper
 
     @Test
-    fun `archive() should archive a control unit resource`() {
+    fun `archive should archive a control unit resource`() {
         val controlUnitResourceId = 1
 
         mockMvc.perform(
@@ -63,7 +66,20 @@ class ApiControlUnitResourcesControllerITests {
     }
 
     @Test
-    fun `create() should create a resource`() {
+    fun `canDelete should check if a control unit resource can be deleted`() {
+        val controlUnitResourceId = 1
+
+        given(canDeleteControlUnitResource.execute(controlUnitResourceId)).willReturn(true)
+
+        mockMvc.perform(get("/api/v1/control_unit_resources/$controlUnitResourceId/can_delete"))
+            .andExpect(status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.value").value(true))
+
+        BDDMockito.verify(canDeleteControlUnitResource).execute(controlUnitResourceId)
+    }
+
+    @Test
+    fun `create should create a control unit resource`() {
         val expectedCreatedControlUnitResource = ControlUnitResourceEntity(
             id = 1,
             baseId = 0,
@@ -100,7 +116,7 @@ class ApiControlUnitResourcesControllerITests {
     }
 
     @Test
-    fun `delete() should delete a control unit resource`() {
+    fun `delete should delete a control unit resource`() {
         val controlUnitResourceId = 1
 
         mockMvc.perform(
@@ -112,7 +128,7 @@ class ApiControlUnitResourcesControllerITests {
     }
 
     @Test
-    fun `get() should get a control unit resource by its ID`() {
+    fun `get should get a control unit resource by its ID`() {
         val expectedFullControlUnitResource = FullControlUnitResourceDTO(
             base = BaseEntity(
                 id = 0,
@@ -152,7 +168,7 @@ class ApiControlUnitResourcesControllerITests {
     }
 
     @Test
-    fun `getAll() should get all control unit resources`() {
+    fun `getAll should get all control unit resources`() {
         val expectedFullControlUnitResources = listOf(
             FullControlUnitResourceDTO(
                 base = BaseEntity(
@@ -221,7 +237,7 @@ class ApiControlUnitResourcesControllerITests {
     }
 
     @Test
-    fun `update() should update a control unit resource`() {
+    fun `update should update a control unit resource`() {
         val expectedUpdatedControlUnitResource = ControlUnitResourceEntity(
             id = 1,
             baseId = 0,
