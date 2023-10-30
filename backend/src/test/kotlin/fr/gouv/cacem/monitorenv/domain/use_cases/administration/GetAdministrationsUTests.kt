@@ -40,7 +40,7 @@ class GetAdministrationsUTests {
 
         val result = GetAdministrations(administrationRepository).execute()
 
-        assertThat(result.size).isEqualTo(1)
+        assertThat(result.size).isEqualTo(2)
         assertThat(result).isEqualTo(fullAdministrations)
     }
 }

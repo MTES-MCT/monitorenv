@@ -42,7 +42,7 @@ class GetBasesUTests {
 
         val result = GetBases(baseRepository).execute()
 
-        assertThat(result.size).isEqualTo(1)
+        assertThat(result.size).isEqualTo(2)
         assertThat(result).isEqualTo(bases)
     }
 }
