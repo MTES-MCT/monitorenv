@@ -5,11 +5,11 @@ import { newUserError } from '../libs/UserError'
 
 import type { ControlUnit } from '../domain/entities/controlUnit'
 
+const CAN_DELETE_CONTROL_UNIT_ERROR_MESSAGE = "Nous n'avons pas pu vérifier si cette unité de contrôle est supprimable."
 export const DELETE_CONTROL_UNIT_ERROR_MESSAGE = [
   'Cette unité est rattachée à des missions ou des signalements.',
   "Veuillez l'en détacher avant de la supprimer ou bien l'archiver."
 ].join(' ')
-const CAN_DELETE_CONTROL_UNIT_ERROR_MESSAGE = "Nous n'avons pas pu vérifier si cette unité de contrôle est supprimable."
 const GET_CONTROL_UNIT_ERROR_MESSAGE = "Nous n'avons pas pu récupérer cette unité de contrôle."
 const GET_CONTROL_UNITS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la liste des unités de contrôle."
 

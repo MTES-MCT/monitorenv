@@ -2,6 +2,8 @@ import { logSoftError } from '@mtes-mct/monitor-ui'
 
 import { controlUnitResourcesAPI } from '../../../api/controlUnitResourcesAPI'
 import { FrontendError } from '../../../libs/FrontendError'
+import { isUserError } from '../../../libs/UserError'
+import { mainWindowActions } from '../../MainWindow/slice'
 
 import type { HomeAppThunk } from '../../../store'
 
@@ -19,10 +21,16 @@ export const deleteControlUnitResource = (): HomeAppThunk<Promise<void>> => asyn
       throw error
     }
   } catch (err) {
+    if (isUserError(err)) {
+      dispatch(mainWindowActions.openDialog({ message: err.userMessage }))
+
+      return
+    }
+
     logSoftError({
-      message: `An error happened while deleting a control unit contact (ID=${confirmationModal.entityId}").`,
+      message: `An error happened while deleting a control unit resource (ID=${confirmationModal.entityId}").`,
       originalError: err,
-      userMessage: "Une erreur est survenue pendant la suppression de l'unité de contrôle."
+      userMessage: 'Une erreur est survenue pendant la suppression du moyen.'
     })
   }
 }

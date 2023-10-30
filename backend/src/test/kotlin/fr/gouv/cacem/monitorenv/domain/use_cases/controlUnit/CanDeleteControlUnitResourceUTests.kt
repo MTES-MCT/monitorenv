@@ -20,7 +20,7 @@ class CanDeleteControlUnitResourceUTests {
     fun `execute should return true when missions are empty`() {
         val controlUnitResourceId = 1
 
-        given(missionRepository.findByControlUnitId(controlUnitResourceId)).willReturn(listOf())
+        given(missionRepository.findByControlUnitResourceId(controlUnitResourceId)).willReturn(listOf())
 
         val result = CanDeleteControlUnitResource(missionRepository).execute(controlUnitResourceId)
 
@@ -31,7 +31,7 @@ class CanDeleteControlUnitResourceUTests {
     fun `execute should return false when missions are not empty`() {
         val controlUnitResourceId = 1
 
-        given(missionRepository.findByControlUnitId(controlUnitResourceId)).willReturn(
+        given(missionRepository.findByControlUnitResourceId(controlUnitResourceId)).willReturn(
             listOf(
                 MissionEntity(
                     id = 1,
