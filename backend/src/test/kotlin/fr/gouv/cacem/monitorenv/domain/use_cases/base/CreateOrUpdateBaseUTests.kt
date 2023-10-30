@@ -17,7 +17,7 @@ class CreateOrUpdateBaseUTests {
     private lateinit var baseRepository: IBaseRepository
 
     @Test
-    fun `execute() should return save() result`() {
+    fun `execute should return save() result`() {
         val newBase = BaseEntity(
             latitude = 0.0,
             longitude = 0.0,

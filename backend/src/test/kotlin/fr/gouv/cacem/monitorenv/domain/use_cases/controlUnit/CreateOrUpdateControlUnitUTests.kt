@@ -17,7 +17,7 @@ class CreateOrUpdateControlUnitUTests {
     private lateinit var controlUnitRepository: IControlUnitRepository
 
     @Test
-    fun `execute() should return save() result`() {
+    fun `execute should return save() result`() {
         val newControlUnit = ControlUnitEntity(
             administrationId = 2,
             areaNote = null,
