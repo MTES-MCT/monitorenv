@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
 import jakarta.persistence.*
 
 @Entity
@@ -19,16 +19,11 @@ data class MissionControlResourceModel(
     @JoinColumn(name = "control_resource_id")
     var resource: ControlUnitResourceModel,
 ) {
-    fun toControlUnitResource(): ControlUnitResourceEntity {
-        return ControlUnitResourceEntity(
-            id = resource.id,
-            baseId = requireNotNull(resource.base.id),
+    fun toLegacyControlUnitResource(): LegacyControlUnitResourceEntity {
+        return LegacyControlUnitResourceEntity(
+            id = requireNotNull(resource.id),
             controlUnitId = requireNotNull(resource.controlUnit.id),
-            isArchived = resource.isArchived,
             name = resource.name,
-            note = resource.note,
-            photo = byteArrayOf(),
-            type = resource.type,
         )
     }
 }

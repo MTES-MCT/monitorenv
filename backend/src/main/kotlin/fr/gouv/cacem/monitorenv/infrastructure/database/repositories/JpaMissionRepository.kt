@@ -107,7 +107,11 @@ class JpaMissionRepository(
         val missionModel =
             MissionModel.fromMissionEntity(mission, mapper, controlUnitResourceModelMap)
 
-        return dbMissionRepository.save(missionModel).toMissionDTO(mapper)
+        val a = dbMissionRepository.save(missionModel)
+        val b = a.toMissionDTO(mapper)
+        print(b)
+
+        return b
     }
 
     private fun convertToPGArray(array: List<String>?): String {

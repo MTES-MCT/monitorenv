@@ -42,11 +42,4 @@ data class ControlUnitResourceEntity(
 
         return result
     }
-
-    fun toLegacyControlUnitEntity(): LegacyControlUnitResourceEntity {
-        return LegacyControlUnitResourceEntity(
-            id = requireNotNull(id),
-            name,
-        )
-    }
 }

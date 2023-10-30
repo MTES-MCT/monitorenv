@@ -3,17 +3,15 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.*
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.FormalNoticeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.VesselSizeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.VesselTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
@@ -114,14 +112,14 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 controlUnits =
                 listOf(
                     LegacyControlUnitEntity(
-                        id = 10004,
-                        name = "DPM – DDTM 35",
-                        administration = "DDTM",
+                        id = 10121,
+                        name = "PAM Jeanne Barret",
+                        administration = "DIRM / DM",
                         isArchived = false,
-                        resources =
-                        listOf(
+                        resources = listOf(
                             LegacyControlUnitResourceEntity(
                                 id = 8,
+                                controlUnitId = 10121,
                                 name = "PAM Jeanne Barret",
                             ),
                         ),
@@ -135,11 +133,12 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
         // Then
         assertThat(newMissionCreated.mission.controlUnits).hasSize(1)
-        assertThat(newMissionCreated.mission.controlUnits.first().id).isEqualTo(10004)
-        assertThat(newMissionCreated.mission.controlUnits.first().name).isEqualTo("DPM – DDTM 35")
-        assertThat(newMissionCreated.mission.controlUnits.first().administration).isEqualTo("DDTM")
+        assertThat(newMissionCreated.mission.controlUnits.first().id).isEqualTo(10121)
+        assertThat(newMissionCreated.mission.controlUnits.first().name).isEqualTo("PAM Jeanne Barret")
+        assertThat(newMissionCreated.mission.controlUnits.first().administration).isEqualTo("DIRM / DM")
         assertThat(newMissionCreated.mission.controlUnits.first().resources).hasSize(1)
         assertThat(newMissionCreated.mission.controlUnits.first().resources.first().id).isEqualTo(8)
+        assertThat(newMissionCreated.mission.controlUnits.first().resources.first().controlUnitId).isEqualTo(10121)
         assertThat(newMissionCreated.mission.controlUnits.first().resources.first().name)
             .isEqualTo("PAM Jeanne Barret")
         assertThat(newMissionCreated.mission.envActions).hasSize(3)
@@ -190,10 +189,10 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                         name = "DPM – DDTM 35",
                         administration = "DDTM",
                         isArchived = false,
-                        resources =
-                        listOf(
+                        resources = listOf(
                             LegacyControlUnitResourceEntity(
                                 id = 8,
+                                controlUnitId = 10004,
                                 name = "PAM Jeanne Barret",
                             ),
                         ),
@@ -210,19 +209,19 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     controlUnits =
                     listOf(
                         LegacyControlUnitEntity(
-                            id = 10004,
-                            name = "DPM – DDTM 35",
-                            administration = "DDTM",
+                            id = 10002,
+                            name = "DML 2A",
+                            administration = "DIRM / DM",
                             isArchived = false,
-                            resources =
-                            listOf(
+                            resources = listOf(
                                 LegacyControlUnitResourceEntity(
-                                    id = 8,
-                                    name =
-                                    "PAM Jeanne Barret",
+                                    id = 3,
+                                    controlUnitId = 10002,
+                                    name = "Semi-rigide 1",
                                 ),
                                 LegacyControlUnitResourceEntity(
                                     id = 5,
+                                    controlUnitId = 10002,
                                     name = "Voiture",
                                 ),
                             ),
@@ -233,16 +232,16 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
         // Then
         assertThat(newMissionUpdated.mission.controlUnits).hasSize(1)
-        assertThat(newMissionUpdated.mission.controlUnits.first().id).isEqualTo(10004)
-        assertThat(newMissionUpdated.mission.controlUnits.first().name).isEqualTo("DPM – DDTM 35")
-        assertThat(newMissionUpdated.mission.controlUnits.first().administration).isEqualTo("DDTM")
+        assertThat(newMissionUpdated.mission.controlUnits.first().id).isEqualTo(10002)
+        assertThat(newMissionUpdated.mission.controlUnits.first().name).isEqualTo("DML 2A")
+        assertThat(newMissionUpdated.mission.controlUnits.first().administration).isEqualTo("DIRM / DM")
         assertThat(newMissionUpdated.mission.controlUnits.first().resources).hasSize(2)
-        assertThat(newMissionUpdated.mission.controlUnits.first().resources.first().id).isEqualTo(8)
-        assertThat(newMissionUpdated.mission.controlUnits.first().resources.first().name)
-            .isEqualTo("PAM Jeanne Barret")
+        assertThat(newMissionUpdated.mission.controlUnits.first().resources.first().id).isEqualTo(3)
+        assertThat(newMissionUpdated.mission.controlUnits.first().resources.first().controlUnitId).isEqualTo(10002)
+        assertThat(newMissionUpdated.mission.controlUnits.first().resources.first().name).isEqualTo("Semi-rigide 1")
         assertThat(newMissionUpdated.mission.controlUnits.first().resources.last().id).isEqualTo(5)
-        assertThat(newMissionUpdated.mission.controlUnits.first().resources.last().name)
-            .isEqualTo("Voiture")
+        assertThat(newMissionUpdated.mission.controlUnits.first().resources.last().controlUnitId).isEqualTo(10002)
+        assertThat(newMissionUpdated.mission.controlUnits.first().resources.last().name).isEqualTo("Voiture")
     }
 
     @Test
@@ -265,10 +264,10 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                         name = "DPM – DDTM 35",
                         administration = "DDTM",
                         isArchived = false,
-                        resources =
-                        listOf(
+                        resources = listOf(
                             LegacyControlUnitResourceEntity(
                                 id = 123456,
+                                controlUnitId = 5,
                                 name = "PAM Jeanne Barret",
                             ),
                         ),
@@ -297,8 +296,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionSource = MissionSourceEnum.MONITORENV,
                 hasMissionOrder = false,
                 isUnderJdp = false,
-                controlUnits =
-                listOf(
+                controlUnits = listOf(
                     LegacyControlUnitEntity(
                         id = 123456,
                         name = "PAM Jeanne Barret",
@@ -571,18 +569,18 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                             listOf(
                                 LegacyControlUnitResourceEntity(
                                     id = 3,
-                                    name =
-                                    "Semi-rigide 1",
+                                    controlUnitId = 10002,
+                                    name = "Semi-rigide 1",
                                 ),
                                 LegacyControlUnitResourceEntity(
                                     id = 4,
-                                    name =
-                                    "Semi-rigide 2",
+                                    controlUnitId = 10002,
+                                    name = "Semi-rigide 2",
                                 ),
                                 LegacyControlUnitResourceEntity(
                                     id = 5,
-                                    name =
-                                    "Voiture",
+                                    controlUnitId = 10002,
+                                    name = "Voiture",
                                 ),
                             ),
                         ),

@@ -13,6 +13,7 @@ data class FullControlUnitResourceDTO(
     fun toLegacyControlUnitResource(): LegacyControlUnitResourceEntity {
         return LegacyControlUnitResourceEntity(
             id = requireNotNull(controlUnitResource.id),
+            controlUnitId = requireNotNull(controlUnit.id),
             name = controlUnitResource.name,
         )
     }
