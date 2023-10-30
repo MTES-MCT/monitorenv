@@ -25,7 +25,7 @@ export function displayControlUnitResourcesFromControlUnit(controlUnit: ControlU
 
   return !isEmpty(controlUnitResourceTypeCounts)
     ? Object.entries(controlUnitResourceTypeCounts).map(([type, count]) => (
-        <Tag Icon={getIconFromControlUnitResourceType(type as ControlUnit.ControlUnitResourceType)} isLight>
+        <Tag key={type} Icon={getIconFromControlUnitResourceType(type as ControlUnit.ControlUnitResourceType)} isLight>
           {`${count} ${pluralize(ControlUnit.ControlUnitResourceTypeLabel[type], count)}`}
         </Tag>
       ))

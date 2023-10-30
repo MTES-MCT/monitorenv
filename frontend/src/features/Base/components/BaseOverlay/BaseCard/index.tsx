@@ -71,7 +71,7 @@ export function BaseCard({ feature, selected = false }: { feature: Feature; sele
     >
       <StyledMapMenuDialogBody>
         {controlUnitsRef.current.map(controlUnit => (
-          <Item controlUnit={controlUnit} />
+          <Item key={controlUnit.id} controlUnit={controlUnit} />
         ))}
       </StyledMapMenuDialogBody>
     </OverlayCard>
