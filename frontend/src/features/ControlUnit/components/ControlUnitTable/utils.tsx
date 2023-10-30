@@ -55,7 +55,8 @@ export function getFilters(
 ): Filter<ControlUnit.ControlUnit>[] {
   const customSearch = new CustomSearch(data, ['administration.name', 'name'], {
     cacheKey: 'BACK_OFFICE_CONTROL_UNIT_LIST',
-    isStrict: true
+    isStrict: true,
+    withCacheInvalidation: true
   })
   const filters: Array<Filter<ControlUnit.ControlUnit>> = []
 

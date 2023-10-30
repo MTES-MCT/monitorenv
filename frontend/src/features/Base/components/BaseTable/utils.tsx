@@ -32,7 +32,8 @@ export function getBaseTableColumns(
 export function getFilters(data: Base.Base[], filtersState: FiltersState): Filter<Base.Base>[] {
   const customSearch = new CustomSearch(data, ['name'], {
     cacheKey: 'BACK_OFFICE_BASE_LIST',
-    isStrict: true
+    isStrict: true,
+    withCacheInvalidation: true
   })
   const filters: Array<Filter<Base.Base>> = []
 

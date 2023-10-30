@@ -49,7 +49,8 @@ export function getFilters(
     ],
     {
       cacheKey: 'MAP_CONTROL_UNIT_LIST',
-      isStrict: true
+      isStrict: true,
+      withCacheInvalidation: true
     }
   )
   const filters: Array<Filter<ControlUnit.ControlUnit>> = []
