@@ -3,9 +3,9 @@ import { logSoftError } from '@mtes-mct/monitor-ui'
 import { controlUnitResourcesAPI } from '../../../api/controlUnitResourcesAPI'
 import { FrontendError } from '../../../libs/FrontendError'
 
-import type { AppThunk } from '../../../store'
+import type { HomeAppThunk } from '../../../store'
 
-export const deleteControlUnitResource = (): AppThunk<Promise<void>> => async (dispatch, getState) => {
+export const deleteControlUnitResource = (): HomeAppThunk<Promise<void>> => async (dispatch, getState) => {
   const { confirmationModal } = getState().mainWindow
   if (!confirmationModal) {
     throw new FrontendError('`confirmationModal` is undefined.')

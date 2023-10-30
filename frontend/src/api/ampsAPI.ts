@@ -1,7 +1,7 @@
 import { type EntityState, createEntityAdapter, type Middleware } from '@reduxjs/toolkit'
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { boundingExtent } from 'ol/extent'
 
+import { monitorenvPrivateApi } from './api'
 import { setToast } from '../domain/shared_slices/Global'
 
 import type { AMP, AMPFromAPI } from '../domain/entities/AMPs'
@@ -11,11 +11,10 @@ const AMPAdapter = createEntityAdapter<AMP>()
 
 const initialState = AMPAdapter.getInitialState()
 
-export const ampsAPI = createApi({
-  baseQuery: fetchBaseQuery({ baseUrl: '/bff/v1' }),
-  endpoints: build => ({
-    getAMPs: build.query<EntityState<AMP>, void>({
-      query: () => `amps`,
+export const ampsAPI = monitorenvPrivateApi.injectEndpoints({
+  endpoints: builder => ({
+    getAMPs: builder.query<EntityState<AMP>, void>({
+      query: () => `/v1/amps`,
       transformResponse: (response: AMPFromAPI[]) =>
         AMPAdapter.setAll(
           initialState,
@@ -29,10 +28,10 @@ export const ampsAPI = createApi({
           })
         )
     })
-  }),
-  reducerPath: 'amps'
+  })
 })
 
+// TODO Migrate this middleware.
 export const ampsErrorLoggerMiddleware: Middleware = store => next => action => {
   if (ampsAPI.endpoints.getAMPs.matchRejected(action)) {
     store.dispatch(setToast({ message: "Nous n'avons pas pu récupérer les Zones AMP" }))

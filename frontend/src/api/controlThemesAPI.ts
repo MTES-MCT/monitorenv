@@ -1,18 +1,16 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { monitorenvPrivateApi } from './api'
 
 import type { ControlTheme } from '../domain/entities/controlThemes'
 
-export const controlThemesAPI = createApi({
-  baseQuery: fetchBaseQuery({ baseUrl: '/bff/v1' }),
+export const controlThemesAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: build => ({
     getControlTheme: build.query<ControlTheme, { id: number }>({
-      query: ({ id }) => `controlthemes/${id}`
+      query: ({ id }) => `/v1/controlthemes/${id}`
     }),
     getControlThemes: build.query<ControlTheme[], void>({
-      query: () => `controlthemes`
+      query: () => `/v1/controlthemes`
     })
-  }),
-  reducerPath: 'controlThemes'
+  })
 })
 
 export const { useGetControlThemesQuery } = controlThemesAPI
