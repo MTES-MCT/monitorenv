@@ -136,6 +136,7 @@ data class ControlUnitResourceModel(
     fun toLegacyControlUnitResource(): LegacyControlUnitResourceEntity {
         return LegacyControlUnitResourceEntity(
             id = requireNotNull(id),
+            controlUnitId = requireNotNull(controlUnit.id),
             name,
         )
     }

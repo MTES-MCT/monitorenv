@@ -93,19 +93,15 @@ class JpaMissionRepository(
     @Transactional
     override fun save(mission: MissionEntity): MissionDTO {
         // Extract all control units resources unique control unit resource IDs
-        val uniqueControlUnitResourceIds =
-            mission.controlUnits
-                .flatMap { controlUnit -> controlUnit.resources.map { it.id } }
-                .distinct()
+        val uniqueControlUnitResourceIds = mission.controlUnits
+            .flatMap { controlUnit -> controlUnit.resources.map { it.id } }
+            .distinct()
         // Fetch all of them as models
-        val controlUnitResourceModels =
-            dbControlUnitResourceRepository.findAllById(uniqueControlUnitResourceIds)
+        val controlUnitResourceModels = dbControlUnitResourceRepository.findAllById(uniqueControlUnitResourceIds)
         // Create an `[id] → ControlUnitResourceModel` map
-        val controlUnitResourceModelMap =
-            controlUnitResourceModels.associateBy { requireNotNull(it.id) }
+        val controlUnitResourceModelMap = controlUnitResourceModels.associateBy { requireNotNull(it.id) }
 
-        val missionModel =
-            MissionModel.fromMissionEntity(mission, mapper, controlUnitResourceModelMap)
+        val missionModel = MissionModel.fromMissionEntity(mission, mapper, controlUnitResourceModelMap)
 
         return dbMissionRepository.save(missionModel).toMissionDTO(mapper)
     }

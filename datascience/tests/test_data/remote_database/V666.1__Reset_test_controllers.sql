@@ -2,6 +2,7 @@ DELETE FROM missions_control_resources;
 DELETE FROM control_unit_resources;
 DELETE FROM missions_control_units;
 DELETE FROM control_units;
+DELETE FROM bases;
 
 ALTER SEQUENCE public.control_units_id_seq RESTART WITH 10000;
 
@@ -44,7 +45,14 @@ INSERT INTO public.control_units(
     (         10121,              1009,     'PAM Jeanne Barret'),
     (         10080,              1009,            'PAM Themis');
 
+INSERT INTO public.bases(
+     id, latitude, longitude, name) VALUES
+    ( 1,   45.569,    -2.569, 'L''Etoile Noire');
 
+INSERT INTO public.control_unit_resources(
+        id, base_id, control_unit_id,                name,          type) VALUES
+    (    8,       1,           10019, 'PAM Jeanne Barret', 'PATROL_BOAT'),
+    (   10,       1,           10018,        'PAM Themis', 'PATROL_BOAT');
 
 --
 -- Add historic control units

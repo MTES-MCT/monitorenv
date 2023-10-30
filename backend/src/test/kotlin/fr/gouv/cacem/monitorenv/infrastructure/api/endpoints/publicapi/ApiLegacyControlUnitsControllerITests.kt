@@ -36,6 +36,7 @@ class ApiLegacyControlUnitsControllerITests {
             resources = listOf(
                 LegacyControlUnitResourceEntity(
                     id = 0,
+                    controlUnitId = 4,
                     name = "Vedette",
                 ),
             ),

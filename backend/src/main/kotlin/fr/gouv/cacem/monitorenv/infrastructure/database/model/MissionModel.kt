@@ -129,11 +129,13 @@ data class MissionModel(
 ) {
     fun toMissionEntity(objectMapper: ObjectMapper): MissionEntity {
         val controlUnits = controlUnits.mapOrElseEmpty { missionControlUnitModel ->
-            val controlUnitResources = controlResources.mapOrElseEmpty { it.toControlUnitResource() }
+            val controlUnitResources = controlResources.mapOrElseEmpty {
+                it.toLegacyControlUnitResource()
+            }.filter { it.controlUnitId == missionControlUnitModel.unit.id }
 
             missionControlUnitModel.unit.toLegacyControlUnit().copy(
                 contact = missionControlUnitModel.contact,
-                resources = controlUnitResources.map { it.toLegacyControlUnitEntity() },
+                resources = controlUnitResources,
             )
         }
 
@@ -195,14 +197,14 @@ data class MissionModel(
                 missionModel.envActions?.add(EnvActionModel.fromEnvActionEntity(it, missionModel, mapper))
             }
 
-            mission.controlUnits.map {
+            mission.controlUnits.map { controlUnit ->
                 val missionControlUnitModel = MissionControlUnitModel.fromLegacyControlUnit(
-                    it,
+                    controlUnit,
                     missionModel,
                 )
                 missionModel.controlUnits?.add(missionControlUnitModel)
 
-                val missionControlUnitResourceModels = it.resources.map { controlUnitResource ->
+                val missionControlUnitResourceModels = controlUnit.resources.map { controlUnitResource ->
                     val controlUnitResourceModel = requireNotNull(controlUnitResourceModelMap[controlUnitResource.id])
 
                     MissionControlResourceModel(
