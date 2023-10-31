@@ -8,18 +8,14 @@ context('Back Office > Administration Table > Row Actions', () => {
     cy.wait('@getAdministrations')
   })
 
-  it('Should show a dialog when trying to archive an administration linked to unarchived control units', () => {
-    cy.intercept('POST', `/api/v1/administrations/1005/archive`).as('archiveAdministration')
-
+  it('Should show an error dialog when trying to archive an administration linked to unarchived control units', () => {
     cy.getTableRowById(1005).clickButton('Archiver cette administration')
 
     cy.get('.Component-Dialog').should('be.visible')
     cy.contains('Archivage impossible').should('be.visible')
   })
 
-  it('Should show a dialog when trying to delete an administration linked to some control units', () => {
-    cy.intercept('DELETE', `/api/v1/administrations/1005`).as('deleteAdministration')
-
+  it('Should show an error dialog when trying to delete an administration linked to some control units', () => {
     cy.getTableRowById(1005).clickButton('Supprimer cette administration')
 
     cy.get('.Component-Dialog').should('be.visible')

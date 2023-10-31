@@ -8,9 +8,7 @@ context('Back Office > Base Table > Row Actions', () => {
     cy.wait('@getBases')
   })
 
-  it('Should show a dialog when trying to delete a base linked to some control unit resources', () => {
-    cy.intercept('DELETE', `/api/v1/bases/3`).as('deleteBase')
-
+  it('Should show an error dialog when trying to delete a base linked to some control unit resources', () => {
     cy.getTableRowById(3).clickButton('Supprimer cette base')
 
     cy.get('.Component-Dialog').should('be.visible')

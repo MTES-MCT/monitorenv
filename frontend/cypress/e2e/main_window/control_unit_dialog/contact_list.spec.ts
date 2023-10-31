@@ -1,8 +1,8 @@
-import { gotToMainWindowAndOpenControlUnit } from './utils'
+import { goToMainWindowAndOpenControlUnit } from './utils'
 
 context('Main Window > Control Unit Dialog > Contact List', () => {
   beforeEach(() => {
-    gotToMainWindowAndOpenControlUnit(10000)
+    goToMainWindowAndOpenControlUnit(10000)
   })
 
   it('Should show all contacts by default', () => {

@@ -1,6 +1,6 @@
 import { goToMainWindow } from '../utils'
 
-export function gotToMainWindowAndOpenControlUnit(controlUnitId: number) {
+export function goToMainWindowAndOpenControlUnit(controlUnitId: number) {
   goToMainWindow()
 
   cy.clickButton('Liste des unités de contrôle')
