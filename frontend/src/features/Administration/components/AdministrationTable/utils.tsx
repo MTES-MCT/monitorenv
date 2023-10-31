@@ -55,7 +55,8 @@ export function getFilters(
 ): Filter<Administration.Administration>[] {
   const customSearch = new CustomSearch(data, ['name'], {
     cacheKey: 'BACK_OFFICE_ADMINISTRATION_LIST',
-    isStrict: true
+    isStrict: true,
+    withCacheInvalidation: true
   })
   const filters: Array<Filter<Administration.Administration>> = []
 

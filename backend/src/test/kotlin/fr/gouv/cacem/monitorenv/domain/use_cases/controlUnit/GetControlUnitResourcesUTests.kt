@@ -1,0 +1,88 @@
+package fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit
+
+import com.nhaarman.mockitokotlin2.given
+import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
+import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitResourceRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.junit.jupiter.SpringExtension
+
+@ExtendWith(SpringExtension::class)
+class GetControlUnitResourcesUTests {
+
+    @MockBean
+    private lateinit var controlUnitResourceRepository: IControlUnitResourceRepository
+
+    @Test
+    fun `execute should return all control unit resources`() {
+        val controlUnitResources = listOf(
+            FullControlUnitResourceDTO(
+                base = BaseEntity(
+                    id = 1,
+                    latitude = 40.7128,
+                    longitude = -74.0060,
+                    name = "Base 1",
+                ),
+                controlUnit = ControlUnitEntity(
+                    id = 1,
+                    administrationId = 101,
+                    areaNote = "Area 1",
+                    departmentAreaInseeCode = "A1",
+                    isArchived = false,
+                    name = "Control Unit 1",
+                    termsNote = "Terms 1",
+                ),
+                controlUnitResource = ControlUnitResourceEntity(
+                    id = 1,
+                    baseId = 1,
+                    controlUnitId = 1,
+                    isArchived = false,
+                    name = "Resource 1",
+                    note = "Note 1",
+                    photo = null,
+                    type = ControlUnitResourceType.BARGE,
+                ),
+            ),
+            FullControlUnitResourceDTO(
+                base = BaseEntity(
+                    id = 2,
+                    latitude = 34.0522,
+                    longitude = -118.2437,
+                    name = "Base 2",
+                ),
+                controlUnit = ControlUnitEntity(
+                    id = 2,
+                    administrationId = 102,
+                    areaNote = "Area 2",
+                    departmentAreaInseeCode = "A2",
+                    isArchived = false,
+                    name = "Control Unit 2",
+                    termsNote = "Terms 2",
+                ),
+                controlUnitResource = ControlUnitResourceEntity(
+                    id = 2,
+                    baseId = 2,
+                    controlUnitId = 2,
+                    isArchived = false,
+                    name = "Resource 2",
+                    note = "Note 2",
+                    photo = null,
+                    type = ControlUnitResourceType.BARGE,
+                ),
+            ),
+        )
+
+        given(controlUnitResourceRepository.findAll()).willReturn(controlUnitResources)
+
+        val result = GetControlUnitResources(controlUnitResourceRepository).execute()
+
+        assertThat(result).isEqualTo(controlUnitResources)
+        assertThat(result.size).isEqualTo(2)
+    }
+}

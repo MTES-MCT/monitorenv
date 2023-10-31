@@ -1,18 +1,16 @@
 import { monitorenvPublicApi } from './api'
 import { ARCHIVE_GENERIC_ERROR_MESSAGE } from './constants'
-import { ApiErrorCode } from './types'
+import { ApiErrorCode, type BackendApiBooleanResponse } from './types'
 import { FrontendApiError } from '../libs/FrontendApiError'
 import { newUserError } from '../libs/UserError'
 
 import type { ControlUnit } from '../domain/entities/controlUnit'
 
-export const ARCHIVE_CONTROL_UNITE_RESOURCE_ERROR_MESSAGE = [
-  'Certaines unités de cette administration ne sont pas archivées.',
-  'Veuillez les archiver pour pouvoir archiver cette administration.'
-].join(' ')
-const DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE =
+export const ARCHIVE_CONTROL_UNITE_RESOURCE_ERROR_MESSAGE = "Nous n'avons pas pu archiver ce moyen."
+const CAN_DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE = "Nous n'avons pas pu vérifier si ce moyen est supprimable."
+export const DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE =
   "Ce moyen est rattaché à des missions. Veuillez l'en détacher avant de la supprimer."
-const GET_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE = "Nous n'avons pas pu récupérer cette resource."
+const GET_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE = "Nous n'avons pas pu récupérer ce moyen."
 const GET_CONTROL_UNIT_RESOURCES_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la liste des resources."
 
 export const controlUnitResourcesAPI = monitorenvPublicApi.injectEndpoints({
@@ -30,6 +28,13 @@ export const controlUnitResourcesAPI = monitorenvPublicApi.injectEndpoints({
 
         return new FrontendApiError(ARCHIVE_GENERIC_ERROR_MESSAGE, response)
       }
+    }),
+
+    canDeleteControlUnitResource: builder.query<boolean, number>({
+      query: controlUnitResourceId => `/v1/control_unit_resources/${controlUnitResourceId}/can_delete`,
+      transformErrorResponse: response =>
+        new FrontendApiError(CAN_DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE, response),
+      transformResponse: (response: BackendApiBooleanResponse) => response.value
     }),
 
     createControlUnitResource: builder.mutation<void, ControlUnit.NewControlUnitResourceData>({
@@ -81,6 +86,7 @@ export const controlUnitResourcesAPI = monitorenvPublicApi.injectEndpoints({
 
 export const {
   useArchiveControlUnitResourceMutation,
+  useCanDeleteControlUnitResourceQuery,
   useCreateControlUnitResourceMutation,
   useDeleteControlUnitResourceMutation,
   useGetControlUnitResourceQuery,

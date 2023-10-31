@@ -95,4 +95,9 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
 
     @Query("SELECT mm FROM MissionModel mm JOIN mm.controlUnits mmcu WHERE mmcu.unit.id = :controlUnitId")
     fun findByControlUnitId(controlUnitId: Int): List<MissionModel>
+
+    @Query(
+        "SELECT mm FROM MissionModel mm JOIN mm.controlResources mmcr WHERE mmcr.resource.id = :controlUnitResourceId",
+    )
+    fun findByControlUnitResourceId(controlUnitResourceId: Int): List<MissionModel>
 }

@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitResourceDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.BooleanDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.ControlUnitResourceDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.FullControlUnitResourceDataOutput
 import io.swagger.v3.oas.annotations.Operation
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*
 @Tag(name = "Control Unit Resources")
 class ApiControlUnitResourcesController(
     private val archiveControlUnitResource: ArchiveControlUnitResource,
+    private val canDeleteControlUnitResource: CanDeleteControlUnitResource,
     private val createOrUpdateControlUnitResource: CreateOrUpdateControlUnitResource,
     private val deleteControlUnitResource: DeleteControlUnitResource,
     private val getControlUnitResources: GetControlUnitResources,
@@ -28,6 +30,16 @@ class ApiControlUnitResourcesController(
         controlUnitResourceId: Int,
     ) {
         archiveControlUnitResource.execute(controlUnitResourceId)
+    }
+
+    @GetMapping("/{controlUnitResourceId}/can_delete")
+    @Operation(summary = "Can this control unit resource be deleted?")
+    fun canDelete(
+        @PathParam("Control unit resource ID")
+        @PathVariable(name = "controlUnitResourceId")
+        controlUnitResourceId: Int,
+    ): BooleanDataOutput {
+        return canDeleteControlUnitResource.execute(controlUnitResourceId).let { BooleanDataOutput.get(it) }
     }
 
     @PostMapping("", consumes = ["application/json"])

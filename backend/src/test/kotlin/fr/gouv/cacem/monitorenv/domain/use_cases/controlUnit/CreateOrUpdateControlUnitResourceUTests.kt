@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases
+package fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit
 
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.times
@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitResourceRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnitResource
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -19,7 +18,7 @@ class CreateOrUpdateControlUnitResourceUTests {
     private lateinit var controlUnitResourceRepository: IControlUnitResourceRepository
 
     @Test
-    fun `execute() should return save() result`() {
+    fun `execute should return save() result`() {
         val newControlUnitResource = ControlUnitResourceEntity(
             baseId = 2,
             controlUnitId = 3,

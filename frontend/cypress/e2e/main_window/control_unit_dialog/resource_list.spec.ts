@@ -1,18 +1,18 @@
 import { faker } from '@faker-js/faker'
 
-import { gotToMainWindowAndOpenControlUnit } from './utils'
+import { goToMainWindowAndOpenControlUnit } from './utils'
 
 context('Main Window > Control Unit Dialog > Resource List', () => {
-  beforeEach(() => {
-    gotToMainWindowAndOpenControlUnit(10000)
-  })
-
   it('Should show all resources by default', () => {
+    goToMainWindowAndOpenControlUnit(10000)
+
     cy.contains('Barge – Semi-rigide 1').should('be.visible')
     cy.contains('Barge – Semi-rigide 2').should('be.visible')
   })
 
   it('Should validate the form', () => {
+    goToMainWindowAndOpenControlUnit(10000)
+
     cy.clickButton('Ajouter un moyen')
 
     cy.clickButton('Ajouter')
@@ -25,7 +25,21 @@ context('Main Window > Control Unit Dialog > Resource List', () => {
     cy.get('p').contains('Ajouter un moyen').should('not.exist')
   })
 
+  it('Should show an error dialog when trying to delete a resource linked to some missions', () => {
+    goToMainWindowAndOpenControlUnit(10121)
+
+    cy.contains('Frégate – PAM Jeanne Barret')
+      .parents('[data-cy="ControlUnitDialog-control-unit-resource"]')
+      .clickButton('Éditer ce moyen')
+    cy.clickButton('Supprimer ce moyen')
+
+    cy.get('.Component-Dialog').should('be.visible')
+    cy.contains('Suppression impossible').should('be.visible')
+  })
+
   it('Should add, edit, archive and delete a resource', () => {
+    goToMainWindowAndOpenControlUnit(10000)
+
     // -------------------------------------------------------------------------
     // Create
 
@@ -109,6 +123,8 @@ context('Main Window > Control Unit Dialog > Resource List', () => {
   })
 
   it('Should add and archive a resource', () => {
+    goToMainWindowAndOpenControlUnit(10000)
+
     // -------------------------------------------------------------------------
     // Create
 

@@ -1,11 +1,10 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases
+package fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit
 
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnit
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -18,7 +17,7 @@ class CreateOrUpdateControlUnitUTests {
     private lateinit var controlUnitRepository: IControlUnitRepository
 
     @Test
-    fun `execute() should return save() result`() {
+    fun `execute should return save() result`() {
         val newControlUnit = ControlUnitEntity(
             administrationId = 2,
             areaNote = null,

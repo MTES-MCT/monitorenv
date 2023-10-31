@@ -19,7 +19,7 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   it('Should filter missions for the current month', () => {
-    const currentDay = encodeURIComponent(customDayjs().utc().subtract(1, 'month').startOf('day').toISOString())
+    const currentDay = encodeURIComponent(customDayjs().utc().startOf('month').toISOString())
     cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${currentDay}*`).as('getMissions')
 
     cy.fill('Période', 'Un mois')

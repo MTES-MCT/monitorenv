@@ -17,8 +17,12 @@ import styled from 'styled-components'
 import { CONTROL_UNIT_RESOURCE_FORM_SCHEMA, CONTROL_UNIT_RESOURCE_TYPES_AS_OPTIONS } from './constants'
 import { useGetBasesQuery } from '../../../../../api/basesAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../../api/constants'
-import { controlUnitResourcesAPI } from '../../../../../api/controlUnitResourcesAPI'
+import {
+  DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE,
+  controlUnitResourcesAPI
+} from '../../../../../api/controlUnitResourcesAPI'
 import { ConfirmationModal } from '../../../../../components/ConfirmationModal'
+import { Dialog } from '../../../../../components/Dialog'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../../../libs/FrontendError'
 import { mainWindowActions } from '../../../../MainWindow/slice'
@@ -34,6 +38,7 @@ export type FormProps = {
 }
 export function Form({ initialValues, isNew, onCancel, onSubmit }: FormProps) {
   const [isArchivingConfirnationModalOpen, setIsArchivingConfirnationModalOpen] = useState(false)
+  const [isImpossibleDeletionDialogOpen, setIsImpossibleDeletionDialogOpen] = useState(false)
 
   const dispatch = useAppDispatch()
   const key = useKey([initialValues])
@@ -48,6 +53,15 @@ export function Form({ initialValues, isNew, onCancel, onSubmit }: FormProps) {
 
   const askForDeletionConfirmation = useCallback(async () => {
     if (!initialValues.id) {
+      throw new FrontendError('`initialValues.id` is undefined.')
+    }
+
+    const { data: canDeleteControlUnit } = await dispatch(
+      controlUnitResourcesAPI.endpoints.canDeleteControlUnitResource.initiate(initialValues.id, { forceRefetch: true })
+    )
+    if (!canDeleteControlUnit) {
+      setIsImpossibleDeletionDialogOpen(true)
+
       return
     }
 
@@ -68,6 +82,7 @@ export function Form({ initialValues, isNew, onCancel, onSubmit }: FormProps) {
 
   const close = useCallback(() => {
     setIsArchivingConfirnationModalOpen(false)
+    setIsImpossibleDeletionDialogOpen(false)
   }, [])
 
   const confirmArchiving = useCallback(async () => {
@@ -138,6 +153,16 @@ export function Form({ initialValues, isNew, onCancel, onSubmit }: FormProps) {
               onCancel={close}
               onConfirm={confirmArchiving}
               title="Archivage du moyen"
+            />
+          )}
+
+          {isImpossibleDeletionDialogOpen && (
+            <Dialog
+              color={THEME.color.maximumRed}
+              message={DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE}
+              onClose={close}
+              title="Suppression impossible"
+              titleBackgroundColor={THEME.color.maximumRed}
             />
           )}
         </>

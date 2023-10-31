@@ -1,8 +1,8 @@
-import { gotToMainWindowAndOpenControlUnit } from './utils'
+import { goToMainWindowAndOpenControlUnit } from './utils'
 
 context('Main Window > Control Unit Dialog > Resource List', () => {
   beforeEach(() => {
-    gotToMainWindowAndOpenControlUnit(10000)
+    goToMainWindowAndOpenControlUnit(10000)
   })
 
   it('Should edit a control unit', () => {

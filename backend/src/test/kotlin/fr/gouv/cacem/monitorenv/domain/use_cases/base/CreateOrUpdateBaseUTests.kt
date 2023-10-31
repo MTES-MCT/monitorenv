@@ -1,11 +1,10 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases
+package fr.gouv.cacem.monitorenv.domain.use_cases.base
 
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IBaseRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.base.CreateOrUpdateBase
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -18,7 +17,7 @@ class CreateOrUpdateBaseUTests {
     private lateinit var baseRepository: IBaseRepository
 
     @Test
-    fun `execute() should return save() result`() {
+    fun `execute should return save() result`() {
         val newBase = BaseEntity(
             latitude = 0.0,
             longitude = 0.0,

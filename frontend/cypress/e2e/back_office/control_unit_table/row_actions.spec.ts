@@ -8,9 +8,7 @@ context('Back Office > Control Unit Table > Row Actions', () => {
     cy.wait('@getControlUnits')
   })
 
-  it('Should show a dialog when trying to delete a control unit linked to some missions or reportings', () => {
-    cy.intercept('DELETE', `/api/v2/control_units/10000`).as('deleteControlUnit')
-
+  it('Should show an error dialog when trying to delete a control unit linked to some missions or reportings', () => {
     cy.getTableRowById(10000).clickButton('Supprimer cette unité de contrôle')
 
     cy.get('.Component-Dialog').should('be.visible')
