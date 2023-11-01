@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory
 
 @UseCase
 class ArchiveReportings(
-    private val reportingRepository: IReportingRepository,
+    private val reportingRepository: IReportingRepository
 ) {
 
     private val logger: Logger = LoggerFactory.getLogger(ArchiveReportings::class.java)

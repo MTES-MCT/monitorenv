@@ -24,7 +24,7 @@ data class ReportingMissionDataOutput(
     val missionSource: MissionSourceEnum,
     val isClosed: Boolean,
     val hasMissionOrder: Boolean,
-    val isUnderJdp: Boolean,
+    val isUnderJdp: Boolean
 ) {
     companion object {
         fun fromMission(mission: MissionEntity): ReportingMissionDataOutput {
@@ -46,7 +46,7 @@ data class ReportingMissionDataOutput(
                 missionSource = mission.missionSource,
                 isClosed = mission.isClosed,
                 hasMissionOrder = mission.hasMissionOrder,
-                isUnderJdp = mission.isUnderJdp,
+                isUnderJdp = mission.isUnderJdp
             )
         }
     }

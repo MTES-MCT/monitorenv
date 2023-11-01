@@ -39,7 +39,7 @@ class ReportingsController(
     private val deleteReporting: DeleteReporting,
     private val deleteReportings: DeleteReportings,
     private val archiveReportings: ArchiveReportings,
-    private val mapper: ObjectMapper,
+    private val mapper: ObjectMapper
 ) {
 
     @GetMapping("")
@@ -70,7 +70,7 @@ class ReportingsController(
         sourcesType: List<SourceTypeEnum>?,
         @Parameter(description = "Reporting status")
         @RequestParam(name = "status", required = false)
-        status: List<String>?,
+        status: List<String>?
     ): List<ReportingsDataOutput> {
         return getReportings.execute(
             pageNumber = pageNumber,
@@ -80,7 +80,7 @@ class ReportingsController(
             sourcesType = sourcesType,
             startedAfterDateTime = startedAfterDateTime,
             startedBeforeDateTime = startedBeforeDateTime,
-            status = status,
+            status = status
         )
             .map { ReportingsDataOutput.fromReportingDTO(it) }
     }
@@ -89,7 +89,7 @@ class ReportingsController(
     @Operation(summary = "Create a new reporting")
     @ResponseStatus(HttpStatus.CREATED)
     fun createReportingController(
-        @RequestBody createReporting: CreateOrUpdateReportingDataInput,
+        @RequestBody createReporting: CreateOrUpdateReportingDataInput
     ): ReportingDataOutput {
         val newReporting = createReporting.toReportingEntity()
         val createdReporting = createOrUpdateReporting.execute(newReporting)
@@ -101,7 +101,7 @@ class ReportingsController(
     fun getReportingByIdController(
         @PathParam("reporting id")
         @PathVariable(name = "id")
-        id: Int,
+        id: Int
     ): ReportingDataOutput {
         return getReportingById.execute(id).let {
             ReportingDataOutput.fromReportingDTO(it)
@@ -114,11 +114,11 @@ class ReportingsController(
         @PathParam("reporting id")
         @PathVariable(name = "id")
         id: Int,
-        @RequestBody reporting: CreateOrUpdateReportingDataInput,
+        @RequestBody reporting: CreateOrUpdateReportingDataInput
     ): ReportingDataOutput {
         require(id == reporting.id) { "id in path and body must be the same" }
         return createOrUpdateReporting.execute(
-            reporting.toReportingEntity(),
+            reporting.toReportingEntity()
         )
             .let {
                 ReportingDataOutput.fromReportingDTO(it)
@@ -131,7 +131,7 @@ class ReportingsController(
     fun deleteController(
         @PathParam("Id")
         @PathVariable(name = "id")
-        id: Int,
+        id: Int
     ) {
         deleteReporting.execute(id = id)
     }

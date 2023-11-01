@@ -25,9 +25,9 @@ data class EnvActionControlEntity(
     val actionNumberOfControls: Int? = null,
     val actionTargetType: ActionTargetTypeEnum? = null,
     val vehicleType: VehicleTypeEnum? = null,
-    val infractions: List<InfractionEntity>? = listOf(),
+    val infractions: List<InfractionEntity>? = listOf()
 ) :
     EnvActionEntity(
         id = id,
-        actionType = ActionTypeEnum.CONTROL,
+        actionType = ActionTypeEnum.CONTROL
     )

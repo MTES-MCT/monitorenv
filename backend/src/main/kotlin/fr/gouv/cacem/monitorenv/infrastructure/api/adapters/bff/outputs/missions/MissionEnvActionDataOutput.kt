@@ -12,5 +12,5 @@ abstract class MissionEnvActionDataOutput(
     open val actionType: ActionTypeEnum,
     open val department: String? = null,
     open val facade: String? = null,
-    open val geom: Geometry? = null,
+    open val geom: Geometry? = null
 )

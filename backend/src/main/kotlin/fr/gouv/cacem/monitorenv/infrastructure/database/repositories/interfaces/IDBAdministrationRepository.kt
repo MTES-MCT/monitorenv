@@ -15,7 +15,7 @@ interface IDBAdministrationRepository : CrudRepository<AdministrationModel, Int>
         SET is_archived = TRUE
         WHERE id = :administrationId
         """,
-        nativeQuery = true,
+        nativeQuery = true
     )
     fun archiveById(administrationId: Int)
 
@@ -25,7 +25,7 @@ interface IDBAdministrationRepository : CrudRepository<AdministrationModel, Int>
         FROM administrations
         ORDER BY name ASC
         """,
-        nativeQuery = true,
+        nativeQuery = true
     )
     override fun findAll(): List<AdministrationModel>
 }

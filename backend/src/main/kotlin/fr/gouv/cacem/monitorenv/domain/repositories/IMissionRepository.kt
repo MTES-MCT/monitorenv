@@ -22,7 +22,7 @@ interface IMissionRepository {
         missionStatuses: List<String>?,
         missionSources: List<MissionSourceEnum>? = null,
         seaFronts: List<String>?,
-        pageable: Pageable,
+        pageable: Pageable
     ): List<MissionDTO>
 
     fun findAll(
@@ -32,7 +32,7 @@ interface IMissionRepository {
         missionStatuses: List<String>?,
         missionSources: List<MissionSourceEnum>? = null,
         seaFronts: List<String>?,
-        pageable: Pageable,
+        pageable: Pageable
     ): List<MissionEntity>
 
     fun findByIds(ids: List<Int>): List<MissionEntity>

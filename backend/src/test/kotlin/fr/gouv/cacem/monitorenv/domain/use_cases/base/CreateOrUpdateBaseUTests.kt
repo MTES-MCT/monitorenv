@@ -21,7 +21,7 @@ class CreateOrUpdateBaseUTests {
         val newBase = BaseEntity(
             latitude = 0.0,
             longitude = 0.0,
-            name = "Base Name",
+            name = "Base Name"
         )
 
         val expectedBase = newBase.copy(id = 0)

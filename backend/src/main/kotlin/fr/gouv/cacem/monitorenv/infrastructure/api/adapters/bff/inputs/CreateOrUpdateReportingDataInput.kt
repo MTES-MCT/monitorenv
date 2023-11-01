@@ -35,7 +35,7 @@ data class CreateOrUpdateReportingDataInput(
     val missionId: Int? = null,
     val attachedToMissionAtUtc: ZonedDateTime? = null,
     val detachedFromMissionAtUtc: ZonedDateTime? = null,
-    val attachedEnvActionId: UUID? = null,
+    val attachedEnvActionId: UUID? = null
 ) {
     fun toReportingEntity(): ReportingEntity {
         return ReportingEntity(
@@ -64,7 +64,7 @@ data class CreateOrUpdateReportingDataInput(
             missionId = this.missionId,
             attachedToMissionAtUtc = this.attachedToMissionAtUtc,
             detachedFromMissionAtUtc = this.detachedFromMissionAtUtc,
-            attachedEnvActionId = this.attachedEnvActionId,
+            attachedEnvActionId = this.attachedEnvActionId
         )
     }
 }

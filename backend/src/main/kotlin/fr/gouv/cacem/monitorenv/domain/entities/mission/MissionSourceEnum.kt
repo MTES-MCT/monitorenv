@@ -4,5 +4,5 @@ enum class MissionSourceEnum {
     MONITORENV,
     MONITORFISH,
     POSEIDON_CACEM,
-    POSEIDON_CNSP,
+    POSEIDON_CNSP
 }

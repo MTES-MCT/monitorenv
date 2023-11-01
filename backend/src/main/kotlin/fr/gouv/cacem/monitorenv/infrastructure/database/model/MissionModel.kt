@@ -28,7 +28,7 @@ import java.time.ZoneOffset.UTC
 
 @JsonIdentityInfo(
     generator = ObjectIdGenerators.PropertyGenerator::class,
-    property = "id",
+    property = "id"
 )
 @Entity
 @Table(name = "missions")
@@ -41,7 +41,7 @@ data class MissionModel(
 
     @Type(
         ListArrayType::class,
-        parameters = [Parameter(name = SQL_ARRAY_TYPE, value = "text")],
+        parameters = [Parameter(name = SQL_ARRAY_TYPE, value = "text")]
     )
     @Column(name = "mission_types", columnDefinition = "text[]")
     val missionTypes: List<MissionTypeEnum>,
@@ -96,7 +96,7 @@ data class MissionModel(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
-        fetch = FetchType.EAGER,
+        fetch = FetchType.EAGER
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
@@ -106,7 +106,7 @@ data class MissionModel(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
-        fetch = FetchType.EAGER,
+        fetch = FetchType.EAGER
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
@@ -116,7 +116,7 @@ data class MissionModel(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
-        fetch = FetchType.EAGER,
+        fetch = FetchType.EAGER
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
@@ -125,7 +125,7 @@ data class MissionModel(
     @OneToMany(mappedBy = "mission")
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
-    val attachedReportings: List<ReportingModel>? = listOf(),
+    val attachedReportings: List<ReportingModel>? = listOf()
 ) {
     fun toMissionEntity(objectMapper: ObjectMapper): MissionEntity {
         val controlUnits = controlUnits.mapOrElseEmpty { missionControlUnitModel ->
@@ -135,7 +135,7 @@ data class MissionModel(
 
             missionControlUnitModel.unit.toLegacyControlUnit().copy(
                 contact = missionControlUnitModel.contact,
-                resources = controlUnitResources,
+                resources = controlUnitResources
             )
         }
 
@@ -157,14 +157,14 @@ data class MissionModel(
             isGeometryComputedFromControls,
             missionSource,
             hasMissionOrder,
-            isUnderJdp,
+            isUnderJdp
         )
     }
 
     fun toMissionDTO(objectMapper: ObjectMapper): MissionDTO {
         return MissionDTO(
             mission = this.toMissionEntity(objectMapper),
-            attachedReportings = this.attachedReportings?.map { it.toReportingDTO(objectMapper) } ?: listOf(),
+            attachedReportings = this.attachedReportings?.map { it.toReportingDTO(objectMapper) } ?: listOf()
         )
     }
 
@@ -172,7 +172,7 @@ data class MissionModel(
         fun fromMissionEntity(
             mission: MissionEntity,
             mapper: ObjectMapper,
-            controlUnitResourceModelMap: Map<Int, ControlUnitResourceModel>,
+            controlUnitResourceModelMap: Map<Int, ControlUnitResourceModel>
         ): MissionModel {
             val missionModel = MissionModel(
                 id = mission.id,
@@ -190,7 +190,7 @@ data class MissionModel(
                 missionSource = mission.missionSource,
                 hasMissionOrder = mission.hasMissionOrder,
                 isUnderJdp = mission.isUnderJdp,
-                isGeometryComputedFromControls = mission.isGeometryComputedFromControls,
+                isGeometryComputedFromControls = mission.isGeometryComputedFromControls
             )
 
             mission.envActions?.map {
@@ -200,7 +200,7 @@ data class MissionModel(
             mission.controlUnits.map { controlUnit ->
                 val missionControlUnitModel = MissionControlUnitModel.fromLegacyControlUnit(
                     controlUnit,
-                    missionModel,
+                    missionModel
                 )
                 missionModel.controlUnits?.add(missionControlUnitModel)
 
@@ -210,7 +210,7 @@ data class MissionModel(
                     MissionControlResourceModel(
                         id = mission.id,
                         resource = controlUnitResourceModel,
-                        mission = missionModel,
+                        mission = missionModel
                     )
                 }
                 missionModel.controlResources?.addAll(missionControlUnitResourceModels)

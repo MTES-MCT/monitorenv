@@ -18,7 +18,7 @@ data class MissionEnvActionSurveillanceDataOutput(
     override val geom: Geometry? = null,
     val observations: String? = null,
     val reportingIds: List<Int>,
-    val themes: List<ThemeEntity>? = listOf(),
+    val themes: List<ThemeEntity>? = listOf()
 ) :
     MissionEnvActionDataOutput(
         id = id,
@@ -27,12 +27,12 @@ data class MissionEnvActionSurveillanceDataOutput(
         actionType = ActionTypeEnum.SURVEILLANCE,
         department = department,
         facade = facade,
-        geom = geom,
+        geom = geom
     ) {
     companion object {
         fun fromEnvActionSurveillanceEntity(
             envActionSurveillanceEntity: EnvActionSurveillanceEntity,
-            reportingIds: List<Int>,
+            reportingIds: List<Int>
         ) =
             MissionEnvActionSurveillanceDataOutput(
                 id = envActionSurveillanceEntity.id,
@@ -44,7 +44,7 @@ data class MissionEnvActionSurveillanceDataOutput(
                 coverMissionZone = envActionSurveillanceEntity.coverMissionZone,
                 observations = envActionSurveillanceEntity.observations,
                 reportingIds = reportingIds,
-                themes = envActionSurveillanceEntity.themes,
+                themes = envActionSurveillanceEntity.themes
             )
     }
 }

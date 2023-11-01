@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 class JpaControlUnitResourceRepository(
     private val dbControlUnitRepository: IDBControlUnitRepository,
     private val dbControlUnitResourceRepository: IDBControlUnitResourceRepository,
-    private val dbBaseRepository: IDBBaseRepository,
+    private val dbBaseRepository: IDBBaseRepository
 ) : IControlUnitResourceRepository {
     @Transactional
     override fun archiveById(controlUnitResourceId: Int) {
@@ -51,14 +51,14 @@ class JpaControlUnitResourceRepository(
             val controlUnitResourceModel = ControlUnitResourceModel.fromControlUnitResource(
                 controlUnitResource,
                 baseModel,
-                controlUnitModel,
+                controlUnitModel
             )
 
             dbControlUnitResourceRepository.save(controlUnitResourceModel).toControlUnitResource()
         } catch (e: InvalidDataAccessApiUsageException) {
             throw NotFoundException(
                 "Unable to find (and update) control unit resource with `id` = ${controlUnitResource.id}.",
-                e,
+                e
             )
         }
     }

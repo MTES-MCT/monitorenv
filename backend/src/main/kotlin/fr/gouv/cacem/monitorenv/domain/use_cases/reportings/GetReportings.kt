@@ -12,7 +12,7 @@ import java.time.ZonedDateTime
 
 @UseCase
 class GetReportings(
-    private val reportingRepository: IReportingRepository,
+    private val reportingRepository: IReportingRepository
 ) {
     private val logger = LoggerFactory.getLogger(GetReportings::class.java)
 
@@ -24,7 +24,7 @@ class GetReportings(
         sourcesType: List<SourceTypeEnum>?,
         startedAfterDateTime: ZonedDateTime?,
         startedBeforeDateTime: ZonedDateTime?,
-        status: List<String>?,
+        status: List<String>?
     ): List<ReportingDTO> {
         val reports =
             reportingRepository.findAll(
@@ -40,11 +40,11 @@ class GetReportings(
                     PageRequest.of(pageNumber, pageSize)
                 } else {
                     Pageable.unpaged()
-                },
+                }
             )
 
         logger.info(
-            "Found ${reports.size} reporting(s)",
+            "Found ${reports.size} reporting(s)"
         )
 
         return reports

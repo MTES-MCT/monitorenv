@@ -12,5 +12,5 @@ data class InfractionEntity(
     val toProcess: Boolean,
     val controlledPersonIdentity: String? = null,
     val vesselType: VesselTypeEnum? = null,
-    val vesselSize: VesselSizeEnum? = null,
+    val vesselSize: VesselSizeEnum? = null
 )

@@ -17,5 +17,5 @@ data class FacadeAreasModel(
     val facade: String,
 
     @Column(name = "geometry")
-    val geometry: MultiPolygon? = null,
+    val geometry: MultiPolygon? = null
 )

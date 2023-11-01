@@ -13,7 +13,7 @@ data class EnvActionControlProperties(
     val actionNumberOfControls: Int? = null,
     val actionTargetType: ActionTargetTypeEnum? = null,
     val vehicleType: VehicleTypeEnum? = null,
-    val infractions: List<InfractionEntity>? = listOf(),
+    val infractions: List<InfractionEntity>? = listOf()
 ) {
     fun toEnvActionControlEntity(
         id: UUID,
@@ -25,7 +25,7 @@ data class EnvActionControlProperties(
         isAdministrativeControl: Boolean?,
         isComplianceWithWaterRegulationsControl: Boolean?,
         isSafetyEquipmentAndStandardsComplianceControl: Boolean?,
-        isSeafarersControl: Boolean?,
+        isSeafarersControl: Boolean?
     ) =
         EnvActionControlEntity(
             id = id,
@@ -45,7 +45,7 @@ data class EnvActionControlProperties(
             isComplianceWithWaterRegulationsControl,
             isSafetyEquipmentAndStandardsComplianceControl =
             isSafetyEquipmentAndStandardsComplianceControl,
-            isSeafarersControl = isSeafarersControl,
+            isSeafarersControl = isSeafarersControl
         )
 
     companion object {
@@ -56,7 +56,7 @@ data class EnvActionControlProperties(
                 actionNumberOfControls = envAction.actionNumberOfControls,
                 actionTargetType = envAction.actionTargetType,
                 vehicleType = envAction.vehicleType,
-                infractions = envAction.infractions,
+                infractions = envAction.infractions
             )
     }
 }

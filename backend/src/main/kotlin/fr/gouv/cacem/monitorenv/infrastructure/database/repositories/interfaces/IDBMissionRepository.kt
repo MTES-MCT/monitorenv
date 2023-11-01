@@ -17,7 +17,7 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
         SET deleted = TRUE
         WHERE id = :id
     """,
-        nativeQuery = true,
+        nativeQuery = true
     )
     fun delete(id: Int)
 
@@ -68,7 +68,7 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
             AND ((:missionSources) = '{}' OR CAST(mission_source AS text) = ANY(CAST(:missionSources as text[])))
         ORDER BY start_datetime_utc DESC
         """,
-        nativeQuery = true,
+        nativeQuery = true
     )
     fun findAll(
         startedAfter: Instant,
@@ -77,7 +77,7 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
         missionStatuses: String,
         missionSources: String,
         seaFronts: String,
-        pageable: Pageable,
+        pageable: Pageable
     ): List<MissionModel>
 
     @Query(
@@ -89,7 +89,7 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
             id IN :ids
         ORDER BY start_datetime_utc DESC
         """,
-        nativeQuery = true,
+        nativeQuery = true
     )
     fun findNotDeletedByIds(ids: List<Int>): List<MissionModel>
 
@@ -97,7 +97,7 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
     fun findByControlUnitId(controlUnitId: Int): List<MissionModel>
 
     @Query(
-        "SELECT mm FROM MissionModel mm JOIN mm.controlResources mmcr WHERE mmcr.resource.id = :controlUnitResourceId",
+        "SELECT mm FROM MissionModel mm JOIN mm.controlResources mmcr WHERE mmcr.resource.id = :controlUnitResourceId"
     )
     fun findByControlUnitResourceId(controlUnitResourceId: Int): List<MissionModel>
 }

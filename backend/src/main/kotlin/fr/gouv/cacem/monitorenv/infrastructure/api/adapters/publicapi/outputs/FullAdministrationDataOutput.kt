@@ -7,7 +7,7 @@ data class FullAdministrationDataOutput(
     val controlUnitIds: List<Int>,
     val controlUnits: List<ControlUnitDataOutput>,
     val isArchived: Boolean,
-    val name: String,
+    val name: String
 ) {
     companion object {
         fun fromFullAdministration(fullAdministration: FullAdministrationDTO): FullAdministrationDataOutput {
@@ -18,7 +18,7 @@ data class FullAdministrationDataOutput(
                 controlUnitIds = controlUnits.map { it.id },
                 controlUnits,
                 isArchived = fullAdministration.administration.isArchived,
-                name = fullAdministration.administration.name,
+                name = fullAdministration.administration.name
             )
         }
     }

@@ -6,7 +6,7 @@ data class BaseDataOutput(
     val id: Int,
     val latitude: Double,
     val longitude: Double,
-    val name: String,
+    val name: String
 ) {
     companion object {
         fun fromBase(base: BaseEntity): BaseDataOutput {
@@ -14,7 +14,7 @@ data class BaseDataOutput(
                 id = requireNotNull(base.id),
                 latitude = base.latitude,
                 longitude = base.longitude,
-                name = base.name,
+                name = base.name
             )
         }
     }

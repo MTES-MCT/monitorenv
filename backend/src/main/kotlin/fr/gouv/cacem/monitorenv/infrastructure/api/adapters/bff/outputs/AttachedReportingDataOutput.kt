@@ -39,11 +39,11 @@ data class AttachedReportingDataOutput(
     val missionId: Int? = null,
     val attachedToMissionAtUtc: ZonedDateTime? = null,
     val detachedFromMissionAtUtc: ZonedDateTime? = null,
-    val attachedEnvActionId: UUID? = null,
+    val attachedEnvActionId: UUID? = null
 ) {
     companion object {
         fun fromReportingDTO(
-            dto: ReportingDTO,
+            dto: ReportingDTO
         ): AttachedReportingDataOutput {
             requireNotNull(dto.reporting.id) { "ReportingEntity.id cannot be null" }
             return AttachedReportingDataOutput(
@@ -53,7 +53,7 @@ data class AttachedReportingDataOutput(
                 semaphoreId = dto.reporting.semaphoreId,
                 semaphore = if (dto.semaphore != null) {
                     SemaphoreDataOutput.fromSemaphoreEntity(
-                        dto.semaphore,
+                        dto.semaphore
                     )
                 } else {
                     null
@@ -63,7 +63,7 @@ data class AttachedReportingDataOutput(
                 if (dto.controlUnit != null) {
                     ControlUnitDataOutput
                         .fromFullControlUnit(
-                            dto.controlUnit,
+                            dto.controlUnit
                         )
                 } else {
                     null
@@ -87,7 +87,7 @@ data class AttachedReportingDataOutput(
                 openBy = dto.reporting.openBy,
                 attachedToMissionAtUtc = dto.reporting.attachedToMissionAtUtc,
                 detachedFromMissionAtUtc = dto.reporting.detachedFromMissionAtUtc,
-                attachedEnvActionId = dto.reporting.attachedEnvActionId,
+                attachedEnvActionId = dto.reporting.attachedEnvActionId
             )
         }
     }

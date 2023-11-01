@@ -9,7 +9,7 @@ data class CreateOrUpdateControlUnitDataInput(
     val departmentAreaInseeCode: String? = null,
     val isArchived: Boolean,
     val name: String,
-    val termsNote: String? = null,
+    val termsNote: String? = null
 ) {
     fun toControlUnit(): ControlUnitEntity {
         return ControlUnitEntity(
@@ -19,7 +19,7 @@ data class CreateOrUpdateControlUnitDataInput(
             departmentAreaInseeCode = this.departmentAreaInseeCode,
             isArchived = this.isArchived,
             name = this.name,
-            termsNote = this.termsNote,
+            termsNote = this.termsNote
         )
     }
 }

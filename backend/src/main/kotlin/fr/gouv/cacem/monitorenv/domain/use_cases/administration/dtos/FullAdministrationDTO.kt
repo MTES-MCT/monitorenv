@@ -5,5 +5,5 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 
 data class FullAdministrationDTO(
     val administration: AdministrationEntity,
-    val controlUnits: List<ControlUnitEntity>,
+    val controlUnits: List<ControlUnitEntity>
 )

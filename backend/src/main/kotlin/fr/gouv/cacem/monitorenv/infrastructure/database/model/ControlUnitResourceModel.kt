@@ -53,7 +53,7 @@ data class ControlUnitResourceModel(
 
     @Column(name = "updated_at_utc", nullable = false)
     @UpdateTimestamp
-    val updatedAtUtc: Instant? = null,
+    val updatedAtUtc: Instant? = null
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -82,7 +82,7 @@ data class ControlUnitResourceModel(
         fun fromControlUnitResource(
             controlUnitResource: ControlUnitResourceEntity,
             baseModel: BaseModel,
-            controlUnitModel: ControlUnitModel,
+            controlUnitModel: ControlUnitModel
         ): ControlUnitResourceModel {
             return ControlUnitResourceModel(
                 id = controlUnitResource.id,
@@ -92,7 +92,7 @@ data class ControlUnitResourceModel(
                 name = controlUnitResource.name,
                 note = controlUnitResource.note,
                 photo = controlUnitResource.photo,
-                type = controlUnitResource.type,
+                type = controlUnitResource.type
             )
         }
     }
@@ -121,7 +121,7 @@ data class ControlUnitResourceModel(
             name,
             note,
             photo,
-            type,
+            type
         )
     }
 
@@ -129,7 +129,7 @@ data class ControlUnitResourceModel(
         return FullControlUnitResourceDTO(
             base = base.toBase(),
             controlUnit = controlUnit.toControlUnit(),
-            controlUnitResource = toControlUnitResource(),
+            controlUnitResource = toControlUnitResource()
         )
     }
 
@@ -137,7 +137,7 @@ data class ControlUnitResourceModel(
         return LegacyControlUnitResourceEntity(
             id = requireNotNull(id),
             controlUnitId = requireNotNull(controlUnit.id),
-            name,
+            name
         )
     }
 }

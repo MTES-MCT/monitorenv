@@ -42,7 +42,7 @@ data class MissionEnvActionDataInput(
     val coverMissionZone: Boolean? = null,
 
     // complementary properties
-    val reportingIds: Optional<List<Int>>,
+    val reportingIds: Optional<List<Int>>
 ) {
     fun validate() {
         when (actionType) {
@@ -56,7 +56,7 @@ data class MissionEnvActionDataInput(
                 }
             ActionTypeEnum.NOTE ->
                 require(
-                    !this.reportingIds.isPresent,
+                    !this.reportingIds.isPresent
                 ) { "ReportingIds must not be present for Notes" }
         }
     }
@@ -84,7 +84,7 @@ data class MissionEnvActionDataInput(
                     this.isComplianceWithWaterRegulationsControl,
                     isSafetyEquipmentAndStandardsComplianceControl =
                     this.isSafetyEquipmentAndStandardsComplianceControl,
-                    isSeafarersControl = this.isSeafarersControl,
+                    isSeafarersControl = this.isSeafarersControl
                 )
             ActionTypeEnum.SURVEILLANCE ->
                 return EnvActionSurveillanceEntity(
@@ -96,14 +96,14 @@ data class MissionEnvActionDataInput(
                     geom = this.geom,
                     themes = this.themes,
                     coverMissionZone = this.coverMissionZone,
-                    observations = this.observations,
+                    observations = this.observations
                 )
             ActionTypeEnum.NOTE ->
                 return EnvActionNoteEntity(
                     id = this.id,
                     actionStartDateTimeUtc = this.actionStartDateTimeUtc,
                     actionEndDateTimeUtc = this.actionEndDateTimeUtc,
-                    observations = this.observations,
+                    observations = this.observations
                 )
             else -> throw Exception("Action type not supported")
         }

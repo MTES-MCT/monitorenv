@@ -23,9 +23,9 @@ class CanDeleteAdministrationUTests {
             administration = AdministrationEntity(
                 id = 1,
                 name = "Administration Name",
-                isArchived = false,
+                isArchived = false
             ),
-            controlUnits = listOf(),
+            controlUnits = listOf()
         )
 
         given(administrationRepository.findById(administrationId)).willReturn(fullAdministration)
@@ -42,7 +42,7 @@ class CanDeleteAdministrationUTests {
             administration = AdministrationEntity(
                 id = 1,
                 name = "Administration Name",
-                isArchived = false,
+                isArchived = false
             ),
             controlUnits = listOf(
                 ControlUnitEntity(
@@ -52,9 +52,9 @@ class CanDeleteAdministrationUTests {
                     departmentAreaInseeCode = null,
                     isArchived = true,
                     name = "Control Unit Name",
-                    termsNote = null,
-                ),
-            ),
+                    termsNote = null
+                )
+            )
         )
 
         given(administrationRepository.findById(administrationId)).willReturn(fullAdministration)

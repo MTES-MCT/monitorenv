@@ -24,7 +24,7 @@ class CreateOrUpdateControlUnitUTests {
             departmentAreaInseeCode = null,
             isArchived = false,
             name = "Control Unit Name",
-            termsNote = null,
+            termsNote = null
         )
 
         val expectatedControlUnit = newControlUnit.copy(id = 0)
@@ -33,7 +33,7 @@ class CreateOrUpdateControlUnitUTests {
 
         val result =
             CreateOrUpdateControlUnit(controlUnitRepository).execute(
-                newControlUnit,
+                newControlUnit
             )
 
         verify(controlUnitRepository, times(1)).save(newControlUnit)

@@ -26,7 +26,7 @@ class GetControlUnitResourceByIdUTests {
                 id = 0,
                 latitude = 0.0,
                 longitude = 0.0,
-                name = "Base Name",
+                name = "Base Name"
             ),
             controlUnit = ControlUnitEntity(
                 id = 0,
@@ -35,7 +35,7 @@ class GetControlUnitResourceByIdUTests {
                 departmentAreaInseeCode = null,
                 isArchived = false,
                 name = "Control Unit Name",
-                termsNote = null,
+                termsNote = null
             ),
             controlUnitResource = ControlUnitResourceEntity(
                 id = 1,
@@ -45,8 +45,8 @@ class GetControlUnitResourceByIdUTests {
                 name = "Control Unit Resource Name",
                 note = null,
                 photo = null,
-                type = ControlUnitResourceType.BARGE,
-            ),
+                type = ControlUnitResourceType.BARGE
+            )
         )
 
         given(controlUnitResourceRepository.findById(controlUnitResourceId)).willReturn(fullControlUnitResource)

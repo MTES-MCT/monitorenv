@@ -29,7 +29,7 @@ class JpaReportingRepository(
     private val dbSemaphoreRepository: IDBSemaphoreRepository,
     private val dbControlUnitRepository: IDBControlUnitRepository,
     private val dbEnvActionRepository: IDBEnvActionRepository,
-    private val mapper: ObjectMapper,
+    private val mapper: ObjectMapper
 ) : IReportingRepository {
 
     @Transactional
@@ -55,7 +55,7 @@ class JpaReportingRepository(
         sourcesType: List<SourceTypeEnum>?,
         startedAfter: Instant,
         startedBefore: Instant?,
-        status: List<String>?,
+        status: List<String>?
     ): List<ReportingDTO> {
         val sourcesTypeAsStringArray = sourcesType?.map { it.name }
         val reportingTypeAsStringArray = reportingType?.map { it.name }
@@ -66,7 +66,7 @@ class JpaReportingRepository(
             sourcesType = convertToString(sourcesTypeAsStringArray),
             startedAfter = startedAfter,
             startedBefore = startedBefore,
-            status = convertToString(status),
+            status = convertToString(status)
         )
             .map { it.toReportingDTO(mapper) }
     }
@@ -86,7 +86,7 @@ class JpaReportingRepository(
             val semaphoreReference =
                 if (reporting.semaphoreId != null) {
                     dbSemaphoreRepository.getReferenceById(
-                        reporting.semaphoreId,
+                        reporting.semaphoreId
                     )
                 } else {
                     null
@@ -94,7 +94,7 @@ class JpaReportingRepository(
             val controlUnitReference =
                 if (reporting.controlUnitId != null) {
                     dbControlUnitRepository.getReferenceById(
-                        reporting.controlUnitId,
+                        reporting.controlUnitId
                     )
                 } else {
                     null
@@ -102,7 +102,7 @@ class JpaReportingRepository(
             val missionReference =
                 if (reporting.missionId != null) {
                     dbMissionRepository.getReferenceById(
-                        reporting.missionId,
+                        reporting.missionId
                     )
                 } else {
                     null
@@ -110,7 +110,7 @@ class JpaReportingRepository(
             val envActionReference =
                 if (reporting.attachedEnvActionId != null) {
                     dbEnvActionRepository.getReferenceById(
-                        reporting.attachedEnvActionId,
+                        reporting.attachedEnvActionId
                     )
                 } else {
                     null
@@ -121,13 +121,13 @@ class JpaReportingRepository(
                     semaphoreReference = semaphoreReference,
                     controlUnitReference = controlUnitReference,
                     missionReference = missionReference,
-                    envActionReference = envActionReference,
+                    envActionReference = envActionReference
                 )
             dbReportingRepository.saveAndFlush(reportingModel).toReportingDTO(mapper)
         } catch (e: JpaObjectRetrievalFailureException) {
             throw NotFoundException(
                 "Invalid reference to semaphore, control unit or mission: not found in referential",
-                e,
+                e
             )
         } catch (e: DataIntegrityViolationException) {
             throw NotFoundException("Invalid combination of mission and/or envAction", e)

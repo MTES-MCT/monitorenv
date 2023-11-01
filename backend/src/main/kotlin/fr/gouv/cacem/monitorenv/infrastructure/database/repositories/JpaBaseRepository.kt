@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Repository
 class JpaBaseRepository(
-    private val dbBaseRepository: IDBBaseRepository,
+    private val dbBaseRepository: IDBBaseRepository
 ) : IBaseRepository {
     override fun deleteById(baseId: Int) {
         dbBaseRepository.deleteById(baseId)
@@ -39,7 +39,7 @@ class JpaBaseRepository(
         } catch (e: InvalidDataAccessApiUsageException) {
             throw NotFoundException(
                 "Unable to find (and update) base with `id` = ${base.id}.",
-                e,
+                e
             )
         }
     }

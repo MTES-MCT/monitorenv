@@ -7,5 +7,5 @@ data class LegacyControlUnitEntity(
     val isArchived: Boolean,
     val name: String,
     val resources: List<LegacyControlUnitResourceEntity>,
-    val contact: String? = null,
+    val contact: String? = null
 )

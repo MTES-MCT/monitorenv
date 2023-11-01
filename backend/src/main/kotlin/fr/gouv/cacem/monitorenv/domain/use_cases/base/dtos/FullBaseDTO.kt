@@ -5,5 +5,5 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceE
 
 data class FullBaseDTO(
     val base: BaseEntity,
-    val controlUnitResources: List<ControlUnitResourceEntity>,
+    val controlUnitResources: List<ControlUnitResourceEntity>
 )

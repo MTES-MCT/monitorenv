@@ -25,7 +25,7 @@ data class MissionsDataOutput(
     val isClosed: Boolean,
     val hasMissionOrder: Boolean,
     val isUnderJdp: Boolean,
-    val attachedReportingIds: List<Int>? = listOf(),
+    val attachedReportingIds: List<Int>? = listOf()
 ) {
     companion object {
         fun fromMissionDTO(dto: MissionDTO): MissionsDataOutput {
@@ -48,7 +48,7 @@ data class MissionsDataOutput(
                 isClosed = dto.mission.isClosed,
                 hasMissionOrder = dto.mission.hasMissionOrder,
                 isUnderJdp = dto.mission.isUnderJdp,
-                attachedReportingIds = dto.attachedReportingIds,
+                attachedReportingIds = dto.attachedReportingIds
             )
         }
     }

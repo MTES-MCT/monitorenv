@@ -54,7 +54,7 @@ data class RegulatoryAreaModel(
     @Column(name = "objet")
     val objet: String?,
     @Column(name = "signataire")
-    val signataire: String?,
+    val signataire: String?
 ) {
     fun toRegulatoryArea() = RegulatoryAreaEntity(
         id = id,
@@ -75,7 +75,7 @@ data class RegulatoryAreaModel(
         date_fin = date_fin,
         temporalite = temporalite,
         objet = objet,
-        signataire = signataire,
+        signataire = signataire
     )
 
     companion object {
@@ -98,7 +98,7 @@ data class RegulatoryAreaModel(
             date_fin = regulatoryArea.date_fin,
             temporalite = regulatoryArea.temporalite,
             objet = regulatoryArea.objet,
-            signataire = regulatoryArea.signataire,
+            signataire = regulatoryArea.signataire
         )
     }
 }

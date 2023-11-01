@@ -39,11 +39,11 @@ data class ReportingsDataOutput(
     val attachedToMissionAtUtc: ZonedDateTime? = null,
     val detachedFromMissionAtUtc: ZonedDateTime? = null,
     val attachedEnvActionId: UUID? = null,
-    val controlStatus: ControlStatusEnum? = null,
+    val controlStatus: ControlStatusEnum? = null
 ) {
     companion object {
         fun fromReportingDTO(
-            dto: ReportingDTO,
+            dto: ReportingDTO
         ): ReportingsDataOutput {
             requireNotNull(dto.reporting.id) { "ReportingEntity.id cannot be null" }
             return ReportingsDataOutput(
@@ -81,7 +81,7 @@ data class ReportingsDataOutput(
                 attachedToMissionAtUtc = dto.reporting.attachedToMissionAtUtc,
                 detachedFromMissionAtUtc = dto.reporting.detachedFromMissionAtUtc,
                 attachedEnvActionId = dto.reporting.attachedEnvActionId,
-                controlStatus = dto.controlStatus,
+                controlStatus = dto.controlStatus
             )
         }
     }

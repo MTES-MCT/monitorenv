@@ -13,7 +13,7 @@ interface IDBControlUnitContactRepository : CrudRepository<ControlUnitContactMod
         FROM control_unit_contacts
         ORDER BY name ASC
         """,
-        nativeQuery = true,
+        nativeQuery = true
     )
     override fun findAll(): List<ControlUnitContactModel>
 }

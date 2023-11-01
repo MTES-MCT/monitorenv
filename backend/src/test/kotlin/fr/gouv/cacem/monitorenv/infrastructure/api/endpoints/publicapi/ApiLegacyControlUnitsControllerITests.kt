@@ -37,9 +37,9 @@ class ApiLegacyControlUnitsControllerITests {
                 LegacyControlUnitResourceEntity(
                     id = 0,
                     controlUnitId = 4,
-                    name = "Vedette",
-                ),
-            ),
+                    name = "Vedette"
+                )
+            )
         )
         given(getLegacyControlUnits.execute()).willReturn(listOf(controlUnit))
 

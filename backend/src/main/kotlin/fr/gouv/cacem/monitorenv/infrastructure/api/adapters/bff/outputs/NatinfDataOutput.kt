@@ -6,14 +6,14 @@ data class NatinfDataOutput(
     val natinfCode: Int,
     val regulation: String?,
     val infractionCategory: String?,
-    val infraction: String?,
+    val infraction: String?
 ) {
     companion object {
         fun fromNatinfEntity(natinf: NatinfEntity) = NatinfDataOutput(
             natinfCode = natinf.natinfCode,
             regulation = natinf.regulation,
             infractionCategory = natinf.infractionCategory,
-            infraction = natinf.infraction,
+            infraction = natinf.infraction
         )
     }
 }

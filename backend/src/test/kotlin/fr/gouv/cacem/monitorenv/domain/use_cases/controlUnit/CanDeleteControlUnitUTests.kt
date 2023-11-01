@@ -57,10 +57,10 @@ class CanDeleteControlUnitUTests {
                     isGeometryComputedFromControls = false,
                     missionSource = MissionSourceEnum.MONITORENV,
                     hasMissionOrder = false,
-                    isUnderJdp = false,
+                    isUnderJdp = false
 
-                ),
-            ),
+                )
+            )
         )
         given(reportingRepository.findByControlUnitId(controlUnitId)).willReturn(listOf())
 
@@ -103,10 +103,10 @@ class CanDeleteControlUnitUTests {
                     missionId = null,
                     attachedToMissionAtUtc = null,
                     detachedFromMissionAtUtc = null,
-                    attachedEnvActionId = null,
+                    attachedEnvActionId = null
 
-                ),
-            ),
+                )
+            )
         )
 
         val result = CanDeleteControlUnit(missionRepository, reportingRepository).execute(controlUnitId)

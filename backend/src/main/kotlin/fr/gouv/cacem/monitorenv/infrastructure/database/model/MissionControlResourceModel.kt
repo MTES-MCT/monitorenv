@@ -17,13 +17,13 @@ data class MissionControlResourceModel(
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = [CascadeType.MERGE])
     @JoinColumn(name = "control_resource_id")
-    var resource: ControlUnitResourceModel,
+    var resource: ControlUnitResourceModel
 ) {
     fun toLegacyControlUnitResource(): LegacyControlUnitResourceEntity {
         return LegacyControlUnitResourceEntity(
             id = requireNotNull(resource.id),
             controlUnitId = requireNotNull(resource.controlUnit.id),
-            name = resource.name,
+            name = resource.name
         )
     }
 }

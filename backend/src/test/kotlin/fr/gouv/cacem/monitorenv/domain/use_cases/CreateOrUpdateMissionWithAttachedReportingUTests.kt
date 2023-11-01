@@ -53,7 +53,7 @@ class CreateOrUpdateMissionWithAttachedReportingUTests {
                 missionSource = MissionSourceEnum.MONITORENV,
                 hasMissionOrder = false,
                 isUnderJdp = false,
-                isGeometryComputedFromControls = false,
+                isGeometryComputedFromControls = false
             )
         val attachedReportingIds = listOf(1, 2, 3)
 
@@ -73,9 +73,9 @@ class CreateOrUpdateMissionWithAttachedReportingUTests {
                     missionSource = MissionSourceEnum.MONITORENV,
                     hasMissionOrder = false,
                     isUnderJdp = false,
-                    isGeometryComputedFromControls = false,
+                    isGeometryComputedFromControls = false
                 ),
-                attachedReportingIds = attachedReportingIds,
+                attachedReportingIds = attachedReportingIds
             )
 
         given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate.copy(id = 100))
@@ -88,12 +88,12 @@ class CreateOrUpdateMissionWithAttachedReportingUTests {
             CreateOrUpdateMissionWithAttachedReporting(
                 createOrUpdateMission = createOrUpdateMission,
                 missionRepository = missionRepository,
-                reportingRepository = reportingRepository,
+                reportingRepository = reportingRepository
             )
                 .execute(
                     mission = missionToCreate,
                     attachedReportingIds = attachedReportingIds,
-                    envActionsAttachedToReportingIds = listOf(),
+                    envActionsAttachedToReportingIds = listOf()
                 )
 
         // Then
@@ -114,7 +114,7 @@ class CreateOrUpdateMissionWithAttachedReportingUTests {
         val envActionControl =
             EnvActionControlEntity(
                 id = UUID.fromString("33310163-4e22-4d3d-b585-dac4431eb4b5"),
-                geom = polygon,
+                geom = polygon
             )
 
         val missionToCreate =
@@ -130,7 +130,7 @@ class CreateOrUpdateMissionWithAttachedReportingUTests {
                 hasMissionOrder = false,
                 isUnderJdp = false,
                 isGeometryComputedFromControls = false,
-                envActions = listOf(envActionControl),
+                envActions = listOf(envActionControl)
             )
         val attachedReportingIds = listOf(1, 2, 3)
 
@@ -150,9 +150,9 @@ class CreateOrUpdateMissionWithAttachedReportingUTests {
                     missionSource = MissionSourceEnum.MONITORENV,
                     hasMissionOrder = false,
                     isUnderJdp = false,
-                    isGeometryComputedFromControls = false,
+                    isGeometryComputedFromControls = false
                 ),
-                attachedReportingIds = attachedReportingIds,
+                attachedReportingIds = attachedReportingIds
             )
         val envActionAttachedToReportingIds = Pair(envActionControl.id, listOf(1))
 
@@ -166,15 +166,15 @@ class CreateOrUpdateMissionWithAttachedReportingUTests {
             CreateOrUpdateMissionWithAttachedReporting(
                 createOrUpdateMission = createOrUpdateMission,
                 missionRepository = missionRepository,
-                reportingRepository = reportingRepository,
+                reportingRepository = reportingRepository
             )
                 .execute(
                     mission = missionToCreate,
                     attachedReportingIds = attachedReportingIds,
                     envActionsAttachedToReportingIds =
                     listOf(
-                        envActionAttachedToReportingIds,
-                    ),
+                        envActionAttachedToReportingIds
+                    )
                 )
 
         // Then
@@ -182,11 +182,11 @@ class CreateOrUpdateMissionWithAttachedReportingUTests {
         verify(reportingRepository, times(1)).attachReportingsToMission(attachedReportingIds, 100)
         verify(
             reportingRepository,
-            times(1),
+            times(1)
         )
             .attachEnvActionsToReportings(
                 envActionAttachedToReportingIds.first,
-                envActionAttachedToReportingIds.second,
+                envActionAttachedToReportingIds.second
             )
         verify(missionRepository, times(1)).findFullMissionById(100)
         assertThat(createdMissionDTO).isEqualTo(expectedCreatedMission)

@@ -5,5 +5,5 @@ data class ControlUnitContactEntity(
     val controlUnitId: Int,
     val email: String? = null,
     val name: String,
-    val phone: String? = null,
+    val phone: String? = null
 )

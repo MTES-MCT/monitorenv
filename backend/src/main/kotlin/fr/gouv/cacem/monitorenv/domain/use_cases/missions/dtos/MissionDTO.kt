@@ -11,7 +11,7 @@ data class MissionDTO(
     val attachedReportingIds: List<Int>? = listOf(),
     val detachedReportings: List<ReportingDTO>? = listOf(),
     val detachedReportingIds: List<Int>? = listOf(),
-    val envActionsAttachedToReportingIds: List<EnvActionAttachedToReportingIds>? = listOf(),
+    val envActionsAttachedToReportingIds: List<EnvActionAttachedToReportingIds>? = listOf()
 )
 
 typealias EnvActionAttachedToReportingIds = Pair<UUID, List<Int>>

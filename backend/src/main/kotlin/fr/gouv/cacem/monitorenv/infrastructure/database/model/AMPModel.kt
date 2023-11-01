@@ -20,13 +20,13 @@ data class AMPModel(
     @Column(name = "des_desigfr")
     val designation: String,
     @Column(name = "mpa_type")
-    val type: String,
+    val type: String
 ) {
     fun toAMP() = AMPEntity(
         id = id,
         geom = geom,
         name = name,
         designation = designation,
-        type = type,
+        type = type
     )
 }

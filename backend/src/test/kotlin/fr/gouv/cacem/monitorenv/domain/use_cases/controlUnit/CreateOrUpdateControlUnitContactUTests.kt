@@ -22,7 +22,7 @@ class CreateOrUpdateControlUnitContactUTests {
             controlUnitId = 2,
             email = null,
             name = "Control Unit Contact Name",
-            phone = null,
+            phone = null
         )
 
         val expectedControlUnitContact = newControlUnitContact.copy(id = 0)

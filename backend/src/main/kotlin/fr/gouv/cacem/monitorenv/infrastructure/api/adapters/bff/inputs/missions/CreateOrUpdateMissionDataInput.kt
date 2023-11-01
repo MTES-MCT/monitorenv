@@ -26,7 +26,7 @@ data class CreateOrUpdateMissionDataInput(
     val envActions: List<MissionEnvActionDataInput>? = null,
     val hasMissionOrder: Boolean? = false,
     val isUnderJdp: Boolean? = false,
-    val attachedReportingIds: List<Int>,
+    val attachedReportingIds: List<Int>
 ) {
     fun toMissionEntity(): MissionEntity {
         val hasMissionOrder = this.hasMissionOrder ?: false
@@ -50,7 +50,7 @@ data class CreateOrUpdateMissionDataInput(
             envActions = this.envActions?.map { it.toEnvActionEntity() },
             hasMissionOrder = hasMissionOrder,
             isUnderJdp = isUnderJdp,
-            isGeometryComputedFromControls = false,
+            isGeometryComputedFromControls = false
         )
     }
 

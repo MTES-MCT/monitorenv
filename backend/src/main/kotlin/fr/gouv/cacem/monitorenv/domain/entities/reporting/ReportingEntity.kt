@@ -32,7 +32,7 @@ data class ReportingEntity(
     val missionId: Int? = null,
     val attachedToMissionAtUtc: ZonedDateTime? = null,
     val detachedFromMissionAtUtc: ZonedDateTime? = null,
-    val attachedEnvActionId: UUID? = null,
+    val attachedEnvActionId: UUID? = null
 ) {
     fun validate() {
         when (sourceType) {

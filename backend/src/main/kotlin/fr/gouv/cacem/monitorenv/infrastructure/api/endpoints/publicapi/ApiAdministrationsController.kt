@@ -21,14 +21,14 @@ class ApiAdministrationsController(
     private val createOrUpdateAdministration: CreateOrUpdateAdministration,
     private val deleteAdministration: DeleteAdministration,
     private val getAdministrations: GetAdministrations,
-    private val getAdministrationById: GetAdministrationById,
+    private val getAdministrationById: GetAdministrationById
 ) {
     @PutMapping("/{administrationId}/archive")
     @Operation(summary = "Archive an administration")
     fun archive(
         @PathParam("Administration ID")
         @PathVariable(name = "administrationId")
-        administrationId: Int,
+        administrationId: Int
     ) {
         archiveAdministration.execute(administrationId)
     }
@@ -38,7 +38,7 @@ class ApiAdministrationsController(
     fun canArchive(
         @PathParam("Administration ID")
         @PathVariable(name = "administrationId")
-        administrationId: Int,
+        administrationId: Int
     ): BooleanDataOutput {
         return canArchiveAdministration.execute(administrationId).let { BooleanDataOutput.get(it) }
     }
@@ -48,7 +48,7 @@ class ApiAdministrationsController(
     fun canDelete(
         @PathParam("Administration ID")
         @PathVariable(name = "administrationId")
-        administrationId: Int,
+        administrationId: Int
     ): BooleanDataOutput {
         return canDeleteAdministration.execute(administrationId).let { BooleanDataOutput.get(it) }
     }
@@ -58,7 +58,7 @@ class ApiAdministrationsController(
     @ResponseStatus(HttpStatus.CREATED)
     fun create(
         @RequestBody
-        createAdministrationDataInput: CreateOrUpdateAdministrationDataInput,
+        createAdministrationDataInput: CreateOrUpdateAdministrationDataInput
     ): AdministrationDataOutput {
         val newAdministration = createAdministrationDataInput.toAdministration()
         val createdAdministration = createOrUpdateAdministration.execute(newAdministration)
@@ -71,7 +71,7 @@ class ApiAdministrationsController(
     fun delete(
         @PathParam("Administration ID")
         @PathVariable(name = "administrationId")
-        administrationId: Int,
+        administrationId: Int
     ) {
         deleteAdministration.execute(administrationId)
     }
@@ -81,7 +81,7 @@ class ApiAdministrationsController(
     fun get(
         @PathParam("Administration ID")
         @PathVariable(name = "administrationId")
-        administrationId: Int,
+        administrationId: Int
     ): FullAdministrationDataOutput {
         val foundFullAdministration = getAdministrationById.execute(administrationId)
 
@@ -103,7 +103,7 @@ class ApiAdministrationsController(
         @PathVariable(name = "administrationId")
         administrationId: Int,
         @RequestBody
-        updateAdministrationDataInput: CreateOrUpdateAdministrationDataInput,
+        updateAdministrationDataInput: CreateOrUpdateAdministrationDataInput
     ): AdministrationDataOutput {
         requireNotNull(updateAdministrationDataInput.id) { "`id` can't be null." }
         require(administrationId == updateAdministrationDataInput.id) {

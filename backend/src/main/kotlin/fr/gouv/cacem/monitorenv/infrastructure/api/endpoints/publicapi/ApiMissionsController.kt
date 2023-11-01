@@ -22,7 +22,7 @@ class ApiMissionsController(
     private val getMissionById: GetMissionById,
     private val deleteMission: DeleteMission,
     private val getEngagedControlUnits: GetEngagedControlUnits,
-    private val getMissionsByIds: GetMissionsByIds,
+    private val getMissionsByIds: GetMissionsByIds
 ) {
 
     @GetMapping("")
@@ -31,7 +31,9 @@ class ApiMissionsController(
         @Parameter(description = "page number")
         @RequestParam(name = "pageNumber")
         pageNumber: Int?,
-        @Parameter(description = "page size") @RequestParam(name = "pageSize") pageSize: Int?,
+        @Parameter(description = "page size")
+        @RequestParam(name = "pageSize")
+        pageSize: Int?,
         @Parameter(description = "Mission started after date")
         @RequestParam(name = "startedAfterDateTime", required = false)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -51,7 +53,7 @@ class ApiMissionsController(
         missionStatuses: List<String>?,
         @Parameter(description = "Facades")
         @RequestParam(name = "seaFronts", required = false)
-        seaFronts: List<String>?,
+        seaFronts: List<String>?
     ): List<MissionDataOutput> {
         val missions =
             getMissions.execute(
@@ -62,7 +64,7 @@ class ApiMissionsController(
                 missionTypes = missionTypes,
                 seaFronts = seaFronts,
                 pageNumber = pageNumber,
-                pageSize = pageSize,
+                pageSize = pageSize
             )
         return missions.map { MissionDataOutput.fromMissionEntity(it) }
     }
@@ -72,7 +74,7 @@ class ApiMissionsController(
     fun getMissionsOfIdsController(
         @Parameter(description = "Requested identifiers")
         @RequestParam(name = "ids")
-        ids: List<Int>,
+        ids: List<Int>
     ): List<MissionDataOutput> {
         val missions = getMissionsByIds.execute(ids)
         return missions.map { MissionDataOutput.fromMissionEntity(it) }
@@ -81,7 +83,7 @@ class ApiMissionsController(
     @PostMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a new mission")
     fun createMissionController(
-        @RequestBody createMissionDataInput: CreateOrUpdateMissionDataInput,
+        @RequestBody createMissionDataInput: CreateOrUpdateMissionDataInput
     ): MissionDataOutput {
         val newMission = createMissionDataInput.toMissionEntity()
         val createdMission = createOrUpdateMission.execute(mission = newMission)
@@ -91,7 +93,9 @@ class ApiMissionsController(
     @GetMapping("/{missionId}")
     @Operation(summary = "Get mission by Id")
     fun getMissionByIdController(
-        @PathParam("Mission id") @PathVariable(name = "missionId") missionId: Int,
+        @PathParam("Mission id")
+        @PathVariable(name = "missionId")
+        missionId: Int
     ): MissionDataOutput {
         val mission = getMissionById.execute(missionId = missionId)
 
@@ -101,14 +105,16 @@ class ApiMissionsController(
     @PostMapping(value = ["/{missionId}"], consumes = ["application/json"])
     @Operation(summary = "Update a mission")
     fun updateOperationController(
-        @PathParam("Mission Id") @PathVariable(name = "missionId") missionId: Int,
-        @RequestBody updateMissionDataInput: CreateOrUpdateMissionDataInput,
+        @PathParam("Mission Id")
+        @PathVariable(name = "missionId")
+        missionId: Int,
+        @RequestBody updateMissionDataInput: CreateOrUpdateMissionDataInput
     ): MissionDataOutput {
         if ((updateMissionDataInput.id == null) || (missionId != updateMissionDataInput.id)) {
             throw java.lang.IllegalArgumentException("missionId doesn't match with request param")
         }
         return createOrUpdateMission.execute(
-            mission = updateMissionDataInput.toMissionEntity(),
+            mission = updateMissionDataInput.toMissionEntity()
         )
             .let { MissionDataOutput.fromMissionEntity(it) }
     }
@@ -116,7 +122,9 @@ class ApiMissionsController(
     @DeleteMapping(value = ["/{missionId}"])
     @Operation(summary = "Delete a mission")
     fun deleteOperationController(
-        @PathParam("Mission Id") @PathVariable(name = "missionId") missionId: Int,
+        @PathParam("Mission Id")
+        @PathVariable(name = "missionId")
+        missionId: Int
     ) {
         deleteMission.execute(missionId = missionId)
     }

@@ -10,13 +10,13 @@ data class MissionEnvActionNoteDataOutput(
     override val actionEndDateTimeUtc: ZonedDateTime? = null,
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
     override val actionType: ActionTypeEnum = ActionTypeEnum.NOTE,
-    val observations: String? = null,
+    val observations: String? = null
 ) :
     MissionEnvActionDataOutput(
         id = id,
         actionEndDateTimeUtc = actionEndDateTimeUtc,
         actionStartDateTimeUtc = actionStartDateTimeUtc,
-        actionType = ActionTypeEnum.CONTROL,
+        actionType = ActionTypeEnum.CONTROL
     ) {
     companion object {
         fun fromEnvActionNoteEntity(envActionNoteEntity: EnvActionNoteEntity) =
@@ -24,7 +24,7 @@ data class MissionEnvActionNoteDataOutput(
                 id = envActionNoteEntity.id,
                 actionStartDateTimeUtc = envActionNoteEntity.actionStartDateTimeUtc,
                 actionEndDateTimeUtc = envActionNoteEntity.actionEndDateTimeUtc,
-                observations = envActionNoteEntity.observations,
+                observations = envActionNoteEntity.observations
             )
     }
 }

@@ -7,12 +7,12 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.
 @UseCase
 class ArchiveAdministration(
     private val administrationRepository: IAdministrationRepository,
-    private val canArchiveAdministration: CanArchiveAdministration,
+    private val canArchiveAdministration: CanArchiveAdministration
 ) {
     fun execute(administrationId: Int) {
         if (!canArchiveAdministration.execute(administrationId)) {
             throw UnarchivedChildException(
-                "Cannot archive administration (ID=$administrationId) due to some of its control units not being archived.",
+                "Cannot archive administration (ID=$administrationId) due to some of its control units not being archived."
             )
         }
 

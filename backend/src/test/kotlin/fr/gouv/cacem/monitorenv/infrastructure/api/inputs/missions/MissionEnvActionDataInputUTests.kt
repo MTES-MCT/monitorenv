@@ -35,7 +35,7 @@ class MissionEnvActionDataInputUTests {
                 vehicleType = VehicleTypeEnum.VESSEL,
                 infractions = listOf(),
                 observations = "Observations",
-                reportingIds = Optional.of(listOf(1)),
+                reportingIds = Optional.of(listOf(1))
             )
 
         val entity = input.toEnvActionEntity()
@@ -57,7 +57,7 @@ class MissionEnvActionDataInputUTests {
                 themes = listOf(),
                 coverMissionZone = true,
                 observations = "Observations",
-                reportingIds = Optional.of(listOf()),
+                reportingIds = Optional.of(listOf())
             )
 
         val entity = input.toEnvActionEntity()
@@ -74,7 +74,7 @@ class MissionEnvActionDataInputUTests {
                 actionType = ActionTypeEnum.NOTE,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
                 observations = "Observations",
-                reportingIds = Optional.empty(),
+                reportingIds = Optional.empty()
             )
 
         val entity = input.toEnvActionEntity()
@@ -91,7 +91,7 @@ class MissionEnvActionDataInputUTests {
                 actionType = ActionTypeEnum.NOTE,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
                 observations = "Observations",
-                reportingIds = Optional.of(listOf(1, 2, 3)),
+                reportingIds = Optional.of(listOf(1, 2, 3))
             )
 
         assertThrows(IllegalArgumentException::class.java) { input.toEnvActionEntity() }
@@ -110,7 +110,7 @@ class MissionEnvActionDataInputUTests {
                 themes = listOf(),
                 coverMissionZone = true,
                 observations = "Observations",
-                reportingIds = Optional.empty(),
+                reportingIds = Optional.empty()
             )
 
         assertThrows(IllegalArgumentException::class.java) { input.toEnvActionEntity() }
@@ -132,7 +132,7 @@ class MissionEnvActionDataInputUTests {
                 vehicleType = VehicleTypeEnum.VESSEL,
                 infractions = listOf(),
                 observations = "Observations",
-                reportingIds = Optional.empty(),
+                reportingIds = Optional.empty()
             )
 
         assertThrows(IllegalArgumentException::class.java) { input.toEnvActionEntity() }
@@ -154,7 +154,7 @@ class MissionEnvActionDataInputUTests {
                 vehicleType = VehicleTypeEnum.VESSEL,
                 infractions = listOf(),
                 observations = "Observations",
-                reportingIds = Optional.of(listOf(1, 2)),
+                reportingIds = Optional.of(listOf(1, 2))
             )
 
         assertThrows(IllegalArgumentException::class.java) { input.toEnvActionEntity() }

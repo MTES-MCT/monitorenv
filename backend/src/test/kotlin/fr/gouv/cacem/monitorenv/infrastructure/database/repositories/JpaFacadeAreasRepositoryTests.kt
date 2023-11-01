@@ -56,4 +56,5 @@ class JpaFacadeAreasRepositoryTests : AbstractDBTests() {
         val requestedFacade = jpaFacadeAreasRepository.findFacadeFromGeometry(geometry)
         // Then
         assertThat(requestedFacade).isNull()
-    } }
+    }
+}

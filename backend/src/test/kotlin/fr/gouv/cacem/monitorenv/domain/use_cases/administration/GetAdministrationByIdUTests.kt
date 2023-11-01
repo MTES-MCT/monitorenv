@@ -22,9 +22,9 @@ class GetAdministrationByIdUTests {
             administration = AdministrationEntity(
                 id = 1,
                 name = "Administration Name",
-                isArchived = false,
+                isArchived = false
             ),
-            controlUnits = listOf(),
+            controlUnits = listOf()
         )
 
         given(administrationRepository.findById(administrationId)).willReturn(fullAdministration)

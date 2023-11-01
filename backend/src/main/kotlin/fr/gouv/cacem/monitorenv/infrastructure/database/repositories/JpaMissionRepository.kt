@@ -17,7 +17,7 @@ import java.time.Instant
 class JpaMissionRepository(
     private val dbControlUnitResourceRepository: IDBControlUnitResourceRepository,
     private val dbMissionRepository: IDBMissionRepository,
-    private val mapper: ObjectMapper,
+    private val mapper: ObjectMapper
 ) : IMissionRepository {
     override fun count(): Long {
         return dbMissionRepository.count()
@@ -35,7 +35,7 @@ class JpaMissionRepository(
         missionStatuses: List<String>?,
         missionSources: List<MissionSourceEnum>?,
         seaFronts: List<String>?,
-        pageable: Pageable,
+        pageable: Pageable
     ): List<MissionDTO> {
         val missionSourcesAsStringArray = missionSources?.map { it.name }
         return dbMissionRepository.findAll(
@@ -45,7 +45,7 @@ class JpaMissionRepository(
             missionStatuses = convertToPGArray(missionStatuses),
             missionSources = convertToPGArray(missionSourcesAsStringArray),
             seaFronts = convertToPGArray(seaFronts),
-            pageable = pageable,
+            pageable = pageable
         )
             .map { it.toMissionDTO(mapper) }
     }
@@ -73,7 +73,7 @@ class JpaMissionRepository(
         missionStatuses: List<String>?,
         missionSources: List<MissionSourceEnum>?,
         seaFronts: List<String>?,
-        pageable: Pageable,
+        pageable: Pageable
     ): List<MissionEntity> {
         val missionSourcesAsStringArray = missionSources?.map { it.name }
         return dbMissionRepository.findAll(
@@ -83,7 +83,7 @@ class JpaMissionRepository(
             missionStatuses = convertToPGArray(missionStatuses),
             missionSources = convertToPGArray(missionSourcesAsStringArray),
             seaFronts = convertToPGArray(seaFronts),
-            pageable = pageable,
+            pageable = pageable
         )
             .map { it.toMissionEntity(mapper) }
     }

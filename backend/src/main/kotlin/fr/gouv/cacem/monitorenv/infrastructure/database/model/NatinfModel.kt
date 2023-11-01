@@ -17,12 +17,12 @@ data class NatinfModel(
     @Column(name = "infraction_category")
     val infractionCategory: String?,
     @Column(name = "infraction")
-    val infraction: String?,
+    val infraction: String?
 ) {
     fun toNatinf() = NatinfEntity(
         natinfCode = natinfCode,
         regulation = regulation,
         infractionCategory = infractionCategory,
-        infraction = infraction,
+        infraction = infraction
     )
 }

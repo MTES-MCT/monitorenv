@@ -5,5 +5,5 @@ enum class ErrorCode {
     FOREIGN_KEY_CONSTRAINT,
 
     /** Thrown when attempting to archive an entity linked to non-archived child(ren). */
-    UNARCHIVED_CHILD,
+    UNARCHIVED_CHILD
 }

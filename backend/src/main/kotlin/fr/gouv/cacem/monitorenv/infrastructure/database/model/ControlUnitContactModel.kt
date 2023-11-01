@@ -36,19 +36,19 @@ data class ControlUnitContactModel(
 
     @Column(name = "updated_at_utc", nullable = false)
     @UpdateTimestamp
-    val updatedAtUtc: Instant? = null,
+    val updatedAtUtc: Instant? = null
 ) {
     companion object {
         fun fromControlUnitContact(
             controlUnitContact: ControlUnitContactEntity,
-            controlUnitModel: ControlUnitModel,
+            controlUnitModel: ControlUnitModel
         ): ControlUnitContactModel {
             return ControlUnitContactModel(
                 id = controlUnitContact.id,
                 controlUnit = controlUnitModel,
                 email = controlUnitContact.email,
                 name = controlUnitContact.name,
-                phone = controlUnitContact.phone,
+                phone = controlUnitContact.phone
             )
         }
     }
@@ -59,14 +59,14 @@ data class ControlUnitContactModel(
             controlUnitId = requireNotNull(controlUnit.id),
             email,
             name,
-            phone,
+            phone
         )
     }
 
     fun toFullControlUnitContact(): FullControlUnitContactDTO {
         return FullControlUnitContactDTO(
             controlUnit = controlUnit.toControlUnit(),
-            controlUnitContact = toControlUnitContact(),
+            controlUnitContact = toControlUnitContact()
         )
     }
 }

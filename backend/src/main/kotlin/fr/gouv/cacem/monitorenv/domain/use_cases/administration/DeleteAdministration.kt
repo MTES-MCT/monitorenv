@@ -7,12 +7,12 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.
 @UseCase
 class DeleteAdministration(
     private val administrationRepository: IAdministrationRepository,
-    private val canDeleteAdministration: CanDeleteAdministration,
+    private val canDeleteAdministration: CanDeleteAdministration
 ) {
     fun execute(administrationId: Int) {
         if (!canDeleteAdministration.execute(administrationId)) {
             throw ForeignKeyConstraintException(
-                "Cannot delete administration (ID=$administrationId) due to existing relationships.",
+                "Cannot delete administration (ID=$administrationId) due to existing relationships."
             )
         }
 

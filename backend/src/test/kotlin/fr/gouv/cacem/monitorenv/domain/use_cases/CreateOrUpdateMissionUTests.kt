@@ -42,7 +42,7 @@ class CreateOrUpdateMissionUTests {
                 CreateOrUpdateMission(
                     departmentRepository = departmentRepository,
                     missionRepository = missionRepository,
-                    facadeRepository = facadeAreasRepository,
+                    facadeRepository = facadeAreasRepository
                 )
                     .execute(null)
             }
@@ -81,27 +81,27 @@ class CreateOrUpdateMissionUTests {
                     EnvActionControlEntity(
                         id =
                         UUID.fromString(
-                            "33310163-4e22-4d3d-b585-dac4431eb4b5",
+                            "33310163-4e22-4d3d-b585-dac4431eb4b5"
                         ),
-                        geom = point,
+                        geom = point
                     ),
                     EnvActionSurveillanceEntity(
                         id =
                         UUID.fromString(
-                            "a6c4bd17-eb45-4504-ab15-7a18ea714a10",
+                            "a6c4bd17-eb45-4504-ab15-7a18ea714a10"
                         ),
-                        geom = polygon,
+                        geom = polygon
                     ),
                     EnvActionNoteEntity(
                         id =
                         UUID.fromString(
-                            "a6c4bd17-eb45-4504-ab15-7a18ea714a10",
+                            "a6c4bd17-eb45-4504-ab15-7a18ea714a10"
                         ),
                         observations =
-                        "Quelqu'un aurait vu quelque chose quelque part à un certain moment.",
-                    ),
+                        "Quelqu'un aurait vu quelque chose quelque part à un certain moment."
+                    )
                 ),
-                isGeometryComputedFromControls = false,
+                isGeometryComputedFromControls = false
             )
 
         val expectedCreatedMission =
@@ -122,30 +122,30 @@ class CreateOrUpdateMissionUTests {
                     EnvActionControlEntity(
                         id =
                         UUID.fromString(
-                            "33310163-4e22-4d3d-b585-dac4431eb4b5",
+                            "33310163-4e22-4d3d-b585-dac4431eb4b5"
                         ),
                         geom = point,
                         facade = "La Face Ade",
-                        department = "Quequ'part",
+                        department = "Quequ'part"
                     ),
                     EnvActionSurveillanceEntity(
                         id =
                         UUID.fromString(
-                            "a6c4bd17-eb45-4504-ab15-7a18ea714a10",
+                            "a6c4bd17-eb45-4504-ab15-7a18ea714a10"
                         ),
                         geom = polygon,
                         facade = "La Face Ade",
-                        department = "Quequ'part",
+                        department = "Quequ'part"
                     ),
                     EnvActionNoteEntity(
                         id =
                         UUID.fromString(
-                            "a6c4bd17-eb45-4504-ab15-7a18ea714a10",
+                            "a6c4bd17-eb45-4504-ab15-7a18ea714a10"
                         ),
                         observations =
-                        "Quelqu'un aurait vu quelque chose quelque part à un certain moment.",
-                    ),
-                ),
+                        "Quelqu'un aurait vu quelque chose quelque part à un certain moment."
+                    )
+                )
             )
 
         given(facadeAreasRepository.findFacadeFromGeometry(anyOrNull())).willReturn("La Face Ade")
@@ -159,10 +159,10 @@ class CreateOrUpdateMissionUTests {
             CreateOrUpdateMission(
                 departmentRepository = departmentRepository,
                 missionRepository = missionRepository,
-                facadeRepository = facadeAreasRepository,
+                facadeRepository = facadeAreasRepository
             )
                 .execute(
-                    missionToCreate,
+                    missionToCreate
                 )
 
         // Then
@@ -182,19 +182,19 @@ class CreateOrUpdateMissionUTests {
                                         it.copy(
                                             facade = "La Face Ade",
                                             department =
-                                            "Quequ'part",
+                                            "Quequ'part"
                                         )
                                     is EnvActionSurveillanceEntity ->
                                         it.copy(
                                             facade = "La Face Ade",
                                             department =
-                                            "Quequ'part",
+                                            "Quequ'part"
                                         )
                                     else -> it
                                 }
-                            },
+                            }
                         )
-                },
+                }
             )
         verify(missionRepository, times(1)).findById(100)
         assertThat(createdMission).isEqualTo(expectedCreatedMission)

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/v1/control_units")
 @Tag(name = "Legacy Control Units")
 class ApiLegacyControlUnitsController(
-    private val getLegacyControlUnits: GetLegacyControlUnits,
+    private val getLegacyControlUnits: GetLegacyControlUnits
 ) {
     @GetMapping("")
     @Operation(summary = "Get legacy control units")

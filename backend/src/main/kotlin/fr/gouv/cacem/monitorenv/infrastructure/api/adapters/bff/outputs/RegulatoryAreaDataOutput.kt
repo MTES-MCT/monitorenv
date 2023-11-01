@@ -22,7 +22,7 @@ data class RegulatoryAreaDataOutput(
     val date_fin: String? = null,
     val temporalite: String? = null,
     val objet: String? = null,
-    val signataire: String? = null,
+    val signataire: String? = null
 ) {
     companion object {
         fun fromRegulatoryAreaEntity(regulatoryArea: RegulatoryAreaEntity) = RegulatoryAreaDataOutput(
@@ -44,7 +44,7 @@ data class RegulatoryAreaDataOutput(
             temporalite = regulatoryArea.temporalite,
             objet = regulatoryArea.objet,
             signataire = regulatoryArea.signataire,
-            geom = regulatoryArea.geom,
+            geom = regulatoryArea.geom
         )
     }
 }

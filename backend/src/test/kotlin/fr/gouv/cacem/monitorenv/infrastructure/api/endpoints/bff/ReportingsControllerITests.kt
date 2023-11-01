@@ -68,7 +68,7 @@ class ReportingsControllerITests {
         val polygon =
             WKTReader()
                 .read(
-                    "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
+                    "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))"
                 )
         val reporting =
             ReportingDTO(
@@ -89,12 +89,12 @@ class ReportingsControllerITests {
                     hasNoUnitAvailable = true,
                     createdAt =
                     ZonedDateTime.parse(
-                        "2022-01-15T04:50:09Z",
+                        "2022-01-15T04:50:09Z"
                     ),
                     validityTime = 10,
                     isArchived = false,
                     isDeleted = false,
-                    openBy = "CDA",
+                    openBy = "CDA"
                 ),
                 semaphore = SemaphoreEntity(
                     id = 1,
@@ -102,10 +102,10 @@ class ReportingsControllerITests {
                     geom =
                     WKTReader()
                         .read(
-                            "POINT (-61.0 14.0)",
+                            "POINT (-61.0 14.0)"
                         ) as
-                        Point,
-                ),
+                        Point
+                )
             )
 
         val request =
@@ -124,11 +124,11 @@ class ReportingsControllerITests {
                 hasNoUnitAvailable = true,
                 createdAt =
                 ZonedDateTime.parse(
-                    "2022-01-15T04:50:09Z",
+                    "2022-01-15T04:50:09Z"
                 ),
                 validityTime = 10,
                 isArchived = false,
-                openBy = "CDA",
+                openBy = "CDA"
             )
 
         given(createOrUpdateReporting.execute(any())).willReturn(reporting)
@@ -137,13 +137,13 @@ class ReportingsControllerITests {
             .perform(
                 put("/bff/v1/reportings")
                     .contentType(
-                        MediaType.APPLICATION_JSON,
+                        MediaType.APPLICATION_JSON
                     )
                     .content(
                         objectMapper.writeValueAsString(
-                            request,
-                        ),
-                    ),
+                            request
+                        )
+                    )
             )
             // Then
             .andExpect(status().isCreated)
@@ -159,7 +159,7 @@ class ReportingsControllerITests {
             .andExpect(jsonPath("$.subThemes[0]").value("subTheme1"))
             .andExpect(jsonPath("$.subThemes[1]").value("subTheme2"))
             .andExpect(
-                jsonPath("$.actionTaken").value("actions effectuées blabla"),
+                jsonPath("$.actionTaken").value("actions effectuées blabla")
             )
             .andExpect(jsonPath("$.isControlRequired").value(true))
             .andExpect(jsonPath("$.hasNoUnitAvailable").value(true))
@@ -174,7 +174,7 @@ class ReportingsControllerITests {
         val polygon =
             WKTReader()
                 .read(
-                    "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
+                    "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))"
                 )
         val reporting =
             ReportingDTO(
@@ -195,12 +195,12 @@ class ReportingsControllerITests {
                     hasNoUnitAvailable = true,
                     createdAt =
                     ZonedDateTime.parse(
-                        "2022-01-15T04:50:09Z",
+                        "2022-01-15T04:50:09Z"
                     ),
                     validityTime = 10,
                     isArchived = false,
                     isDeleted = false,
-                    openBy = "CDA",
+                    openBy = "CDA"
                 ),
                 semaphore = SemaphoreEntity(
                     id = 1,
@@ -208,10 +208,10 @@ class ReportingsControllerITests {
                     geom =
                     WKTReader()
                         .read(
-                            "POINT (-61.0 14.0)",
+                            "POINT (-61.0 14.0)"
                         ) as
-                        Point,
-                ),
+                        Point
+                )
             )
 
         given(getReportingById.execute(any())).willReturn(reporting)
@@ -221,8 +221,8 @@ class ReportingsControllerITests {
             .perform(
                 get("/bff/v1/reportings/1")
                     .contentType(
-                        MediaType.APPLICATION_JSON,
-                    ),
+                        MediaType.APPLICATION_JSON
+                    )
             )
             // Then
             .andExpect(status().isOk)
@@ -238,7 +238,7 @@ class ReportingsControllerITests {
             .andExpect(jsonPath("$.subThemes[0]").value("subTheme1"))
             .andExpect(jsonPath("$.subThemes[1]").value("subTheme2"))
             .andExpect(
-                jsonPath("$.actionTaken").value("actions effectuées blabla"),
+                jsonPath("$.actionTaken").value("actions effectuées blabla")
             )
             .andExpect(jsonPath("$.isControlRequired").value(true))
             .andExpect(jsonPath("$.hasNoUnitAvailable").value(true))
@@ -253,7 +253,7 @@ class ReportingsControllerITests {
         val polygon =
             WKTReader()
                 .read(
-                    "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
+                    "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))"
                 )
         val reporting =
             ReportingDTO(
@@ -273,13 +273,13 @@ class ReportingsControllerITests {
                     hasNoUnitAvailable = true,
                     createdAt =
                     ZonedDateTime.parse(
-                        "2022-01-15T04:50:09Z",
+                        "2022-01-15T04:50:09Z"
                     ),
                     validityTime = 10,
                     isArchived = false,
                     isDeleted = false,
-                    openBy = "CDA",
-                ),
+                    openBy = "CDA"
+                )
             )
 
         given(
@@ -291,8 +291,8 @@ class ReportingsControllerITests {
                 reportingType = any(),
                 seaFronts = any(),
                 sourcesType = any(),
-                status = any(),
-            ),
+                status = any()
+            )
         )
             .willReturn(listOf(reporting))
 
@@ -309,7 +309,7 @@ class ReportingsControllerITests {
         val polygon =
             WKTReader()
                 .read(
-                    "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
+                    "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))"
                 )
         val updatedReporting =
             ReportingDTO(
@@ -331,12 +331,12 @@ class ReportingsControllerITests {
                     hasNoUnitAvailable = true,
                     createdAt =
                     ZonedDateTime.parse(
-                        "2022-01-15T04:50:09Z",
+                        "2022-01-15T04:50:09Z"
                     ),
                     validityTime = 10,
                     isArchived = false,
                     isDeleted = false,
-                    openBy = "CDA",
+                    openBy = "CDA"
                 ),
                 semaphore = SemaphoreEntity(
                     id = 1,
@@ -344,10 +344,10 @@ class ReportingsControllerITests {
                     geom =
                     WKTReader()
                         .read(
-                            "POINT (-61.0 14.0)",
+                            "POINT (-61.0 14.0)"
                         ) as
-                        Point,
-                ),
+                        Point
+                )
             )
         val updateRequestBody =
             objectMapper.writeValueAsString(
@@ -363,19 +363,19 @@ class ReportingsControllerITests {
                     subThemes =
                     listOf(
                         "subTheme1",
-                        "subTheme2",
+                        "subTheme2"
                     ),
                     actionTaken = "actions effectuées blabla",
                     isControlRequired = true,
                     hasNoUnitAvailable = true,
                     createdAt =
                     ZonedDateTime.parse(
-                        "2022-01-15T04:50:09Z",
+                        "2022-01-15T04:50:09Z"
                     ),
                     validityTime = 10,
                     isArchived = false,
-                    openBy = "CDA",
-                ),
+                    openBy = "CDA"
+                )
             )
 
         given(createOrUpdateReporting.execute(any()))
@@ -387,8 +387,8 @@ class ReportingsControllerITests {
                 put("/bff/v1/reportings/1")
                     .content(updateRequestBody)
                     .contentType(
-                        MediaType.APPLICATION_JSON,
-                    ),
+                        MediaType.APPLICATION_JSON
+                    )
             )
             // Then
             .andExpect(status().isOk)
@@ -404,7 +404,7 @@ class ReportingsControllerITests {
             .andExpect(jsonPath("$.subThemes[0]").value("subTheme1"))
             .andExpect(jsonPath("$.subThemes[1]").value("subTheme2"))
             .andExpect(
-                jsonPath("$.actionTaken").value("actions effectuées blabla"),
+                jsonPath("$.actionTaken").value("actions effectuées blabla")
             )
             .andExpect(jsonPath("$.isControlRequired").value(true))
             .andExpect(jsonPath("$.hasNoUnitAvailable").value(true))
@@ -431,7 +431,7 @@ class ReportingsControllerITests {
             .perform(
                 put("/bff/v1/reportings/archive")
                     .content(objectMapper.writeValueAsString(listOf(1, 2, 3)))
-                    .contentType(MediaType.APPLICATION_JSON),
+                    .contentType(MediaType.APPLICATION_JSON)
             )
             // Then
             .andExpect(status().isNoContent())
@@ -446,7 +446,7 @@ class ReportingsControllerITests {
             .perform(
                 put("/bff/v1/reportings/delete")
                     .content(objectMapper.writeValueAsString(listOf(1, 2, 3)))
-                    .contentType(MediaType.APPLICATION_JSON),
+                    .contentType(MediaType.APPLICATION_JSON)
             )
             // Then
             .andExpect(status().isNoContent())

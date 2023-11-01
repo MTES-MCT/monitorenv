@@ -57,7 +57,7 @@ class CreateOrUpdateReportingUTests {
                     controlUnitRepository = controlUnitRepository,
                     semaphoreRepository = semaphoreRepository,
                     facadeRepository = facadeRepository,
-                    missionRepository = missionRepository,
+                    missionRepository = missionRepository
                 )
                     .execute(null)
             }
@@ -96,7 +96,7 @@ class CreateOrUpdateReportingUTests {
                 validityTime = 10,
                 isArchived = false,
                 isDeleted = false,
-                openBy = "CDA",
+                openBy = "CDA"
             )
         val reportingWithSemaphoreDTO =
             ReportingDTO(
@@ -118,8 +118,8 @@ class CreateOrUpdateReportingUTests {
                     validityTime = 10,
                     isArchived = false,
                     isDeleted = false,
-                    openBy = "CDA",
-                ),
+                    openBy = "CDA"
+                )
             )
         val reportingWithControlUnit =
             ReportingEntity(
@@ -140,7 +140,7 @@ class CreateOrUpdateReportingUTests {
                 validityTime = 10,
                 isArchived = false,
                 isDeleted = false,
-                openBy = "CDA",
+                openBy = "CDA"
             )
         val reportingWithControlUnitDTO = ReportingDTO(
             reporting = ReportingEntity(
@@ -161,22 +161,22 @@ class CreateOrUpdateReportingUTests {
                 validityTime = 10,
                 isArchived = false,
                 isDeleted = false,
-                openBy = "CDA",
-            ),
+                openBy = "CDA"
+            )
         )
 
         val semaphore =
             SemaphoreEntity(
                 id = 1,
                 name = "semaphore 1",
-                geom = point,
+                geom = point
             )
         val fullControlUnit =
             FullControlUnitDTO(
                 administration = AdministrationEntity(
                     id = 1,
                     isArchived = false,
-                    name = "administration 1",
+                    name = "administration 1"
                 ),
                 controlUnit = ControlUnitEntity(
                     id = 1,
@@ -185,10 +185,10 @@ class CreateOrUpdateReportingUTests {
                     departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "control unit 1",
-                    termsNote = null,
+                    termsNote = null
                 ),
                 controlUnitContacts = listOf(),
-                controlUnitResources = listOf(),
+                controlUnitResources = listOf()
             )
 
         given(reportingRepository.save(reportingWithSemaphore))
@@ -206,7 +206,7 @@ class CreateOrUpdateReportingUTests {
                 controlUnitRepository = controlUnitRepository,
                 semaphoreRepository = semaphoreRepository,
                 facadeRepository = facadeRepository,
-                missionRepository = missionRepository,
+                missionRepository = missionRepository
             )
                 .execute(reportingWithSemaphore)
 
@@ -222,7 +222,7 @@ class CreateOrUpdateReportingUTests {
                 controlUnitRepository = controlUnitRepository,
                 semaphoreRepository = semaphoreRepository,
                 facadeRepository = facadeRepository,
-                missionRepository = missionRepository,
+                missionRepository = missionRepository
             )
                 .execute(reportingWithControlUnit)
 
@@ -259,7 +259,7 @@ class CreateOrUpdateReportingUTests {
                 validityTime = 10,
                 isArchived = false,
                 isDeleted = false,
-                openBy = "CDA",
+                openBy = "CDA"
             )
 
         // When
@@ -270,7 +270,7 @@ class CreateOrUpdateReportingUTests {
                     controlUnitRepository = controlUnitRepository,
                     semaphoreRepository = semaphoreRepository,
                     facadeRepository = facadeRepository,
-                    missionRepository = missionRepository,
+                    missionRepository = missionRepository
                 )
                     .execute(reporting)
             }
@@ -308,7 +308,7 @@ class CreateOrUpdateReportingUTests {
                 validityTime = 10,
                 isArchived = false,
                 isDeleted = false,
-                openBy = "CDA",
+                openBy = "CDA"
             )
 
         // When
@@ -319,7 +319,7 @@ class CreateOrUpdateReportingUTests {
                     controlUnitRepository = controlUnitRepository,
                     semaphoreRepository = semaphoreRepository,
                     facadeRepository = facadeRepository,
-                    missionRepository = missionRepository,
+                    missionRepository = missionRepository
                 )
                     .execute(reporting)
             }
@@ -357,7 +357,7 @@ class CreateOrUpdateReportingUTests {
                 validityTime = 10,
                 isArchived = false,
                 isDeleted = false,
-                openBy = "CDA",
+                openBy = "CDA"
             )
 
         val reportingWithSemaphoreId =
@@ -378,7 +378,7 @@ class CreateOrUpdateReportingUTests {
                 validityTime = 10,
                 isArchived = false,
                 isDeleted = false,
-                openBy = "CDA",
+                openBy = "CDA"
             )
         val reportingWithoutSourceName =
             ReportingEntity(
@@ -397,7 +397,7 @@ class CreateOrUpdateReportingUTests {
                 validityTime = 10,
                 isArchived = false,
                 isDeleted = false,
-                openBy = "CDA",
+                openBy = "CDA"
             )
 
         // When
@@ -408,7 +408,7 @@ class CreateOrUpdateReportingUTests {
                     controlUnitRepository = controlUnitRepository,
                     semaphoreRepository = semaphoreRepository,
                     facadeRepository = facadeRepository,
-                    missionRepository = missionRepository,
+                    missionRepository = missionRepository
                 ).execute(reportingWithControlUnitId)
             }
 
@@ -425,7 +425,7 @@ class CreateOrUpdateReportingUTests {
                     controlUnitRepository = controlUnitRepository,
                     semaphoreRepository = semaphoreRepository,
                     facadeRepository = facadeRepository,
-                    missionRepository = missionRepository,
+                    missionRepository = missionRepository
                 ).execute(reportingWithSemaphoreId)
             }
 
@@ -442,7 +442,7 @@ class CreateOrUpdateReportingUTests {
                     controlUnitRepository = controlUnitRepository,
                     semaphoreRepository = semaphoreRepository,
                     facadeRepository = facadeRepository,
-                    missionRepository = missionRepository,
+                    missionRepository = missionRepository
                 ).execute(reportingWithoutSourceName)
             }
 

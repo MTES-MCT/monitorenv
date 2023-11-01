@@ -55,25 +55,25 @@ class ApiControlUnitContactsControllerITests {
             controlUnitId = 0,
             email = null,
             name = "Contact Name",
-            phone = null,
+            phone = null
         )
 
         val newControlUnitContactData = CreateOrUpdateControlUnitContactDataInput(
             controlUnitId = 0,
             email = null,
             name = "Contact Name",
-            phone = null,
+            phone = null
         )
         val requestBody = objectMapper.writeValueAsString(newControlUnitContactData)
 
         given(createOrUpdateControlUnitContact.execute(controlUnitContact = any())).willReturn(
-            expectedCreatedControlUnitContact,
+            expectedCreatedControlUnitContact
         )
 
         mockMvc.perform(
             post("/api/v1/control_unit_contacts")
                 .content(requestBody)
-                .contentType(MediaType.APPLICATION_JSON),
+                .contentType(MediaType.APPLICATION_JSON)
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isCreated)
@@ -89,15 +89,15 @@ class ApiControlUnitContactsControllerITests {
                 departmentAreaInseeCode = null,
                 isArchived = false,
                 name = "Unit Name",
-                termsNote = null,
+                termsNote = null
             ),
             controlUnitContact = ControlUnitContactEntity(
                 id = 1,
                 controlUnitId = 0,
                 email = null,
                 name = "Contact Name",
-                phone = null,
-            ),
+                phone = null
+            )
         )
 
         val requestedId = 1
@@ -121,15 +121,15 @@ class ApiControlUnitContactsControllerITests {
                     departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Unit Name",
-                    termsNote = null,
+                    termsNote = null
                 ),
                 controlUnitContact = ControlUnitContactEntity(
                     id = 1,
                     controlUnitId = 0,
                     email = null,
                     name = "Contact Name",
-                    phone = null,
-                ),
+                    phone = null
+                )
             ),
 
             FullControlUnitContactDTO(
@@ -140,16 +140,16 @@ class ApiControlUnitContactsControllerITests {
                     departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Unit Name",
-                    termsNote = null,
+                    termsNote = null
                 ),
                 controlUnitContact = ControlUnitContactEntity(
                     id = 2,
                     controlUnitId = 0,
                     email = null,
                     name = "Contact Name 2",
-                    phone = null,
-                ),
-            ),
+                    phone = null
+                )
+            )
         )
 
         given(getControlUnitContacts.execute()).willReturn(expectedFullControlUnitContacts)
@@ -168,7 +168,7 @@ class ApiControlUnitContactsControllerITests {
             controlUnitId = 0,
             email = null,
             name = "Updated Contact Name",
-            phone = null,
+            phone = null
         )
 
         val nextControlUnitContactData = CreateOrUpdateControlUnitContactDataInput(
@@ -176,18 +176,18 @@ class ApiControlUnitContactsControllerITests {
             email = null,
             controlUnitId = 0,
             name = "Updated Contact Name",
-            phone = null,
+            phone = null
         )
         val requestBody = objectMapper.writeValueAsString(nextControlUnitContactData)
 
         given(createOrUpdateControlUnitContact.execute(controlUnitContact = any())).willReturn(
-            expectedUpdatedControlUnitContact,
+            expectedUpdatedControlUnitContact
         )
 
         mockMvc.perform(
             put("/api/v1/control_unit_contacts/1")
                 .content(requestBody)
-                .contentType(MediaType.APPLICATION_JSON),
+                .contentType(MediaType.APPLICATION_JSON)
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)

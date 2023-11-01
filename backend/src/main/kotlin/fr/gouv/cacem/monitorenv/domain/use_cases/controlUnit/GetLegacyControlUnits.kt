@@ -15,7 +15,7 @@ class GetLegacyControlUnits(private val controlUnitRepository: IControlUnitRepos
             controlUnit.copy(
                 controlUnitResources = controlUnit.controlUnitResources.filter {
                     !it.controlUnitResource.isArchived
-                },
+                }
             )
         }
         logger.info("Found ${controlUnitsWithActiveControlUnitResources.size} control units.")

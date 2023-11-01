@@ -32,8 +32,8 @@ class ApiHealthcheckControllerITests {
                 numberOfMissions = 50,
                 numberOfNatinfs = 50,
                 numberOfSemaphores = 10,
-                numberOfReportings = 50,
-            ),
+                numberOfReportings = 50
+            )
         )
         mockMvc.perform(get("/api/v1/healthcheck"))
             // Then

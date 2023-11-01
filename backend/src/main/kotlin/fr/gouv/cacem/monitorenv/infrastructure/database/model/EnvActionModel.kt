@@ -34,7 +34,7 @@ import java.util.UUID
 
 @JsonIdentityInfo(
     generator = ObjectIdGenerators.PropertyGenerator::class,
-    property = "id",
+    property = "id"
 )
 @Entity
 @Table(name = "env_actions")
@@ -49,7 +49,9 @@ data class EnvActionModel(
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
     val geom: Geometry? = null,
-    @Column(name = "action_type") @Enumerated(EnumType.STRING) val actionType: ActionTypeEnum,
+    @Column(name = "action_type")
+    @Enumerated(EnumType.STRING)
+    val actionType: ActionTypeEnum,
     @Type(JsonBinaryType::class)
     @Column(name = "value", columnDefinition = "jsonb")
     val value: String,
@@ -67,7 +69,7 @@ data class EnvActionModel(
     @Column(name = "is_seafarers_control") val isSeafarersControl: Boolean? = null,
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "attachedEnvAction")
     @JsonManagedReference
-    val attachedReporting: List<ReportingModel>? = listOf(),
+    val attachedReporting: List<ReportingModel>? = listOf()
 ) {
 
     fun toActionEntity(mapper: ObjectMapper): EnvActionEntity {
@@ -85,14 +87,14 @@ data class EnvActionModel(
             isComplianceWithWaterRegulationsControl = isComplianceWithWaterRegulationsControl,
             isSafetyEquipmentAndStandardsComplianceControl =
             isSafetyEquipmentAndStandardsComplianceControl,
-            isSeafarersControl = isSeafarersControl,
+            isSeafarersControl = isSeafarersControl
         )
     }
     companion object {
         fun fromEnvActionEntity(
             action: EnvActionEntity,
             mission: MissionModel,
-            mapper: ObjectMapper,
+            mapper: ObjectMapper
         ) =
             EnvActionModel(
                 id = action.id,
@@ -109,7 +111,7 @@ data class EnvActionModel(
                 action.isComplianceWithWaterRegulationsControl,
                 isSafetyEquipmentAndStandardsComplianceControl =
                 action.isSafetyEquipmentAndStandardsComplianceControl,
-                isSeafarersControl = action.isSeafarersControl,
+                isSeafarersControl = action.isSeafarersControl
             )
     }
 

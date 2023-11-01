@@ -36,11 +36,11 @@ data class MissionAttachedReportingDataOutput(
     val createdAt: ZonedDateTime,
     val validityTime: Int? = null,
     val isArchived: Boolean,
-    val openBy: String? = null,
+    val openBy: String? = null
 ) {
     companion object {
         fun fromReportingDTO(
-            dto: ReportingDTO,
+            dto: ReportingDTO
         ): MissionAttachedReportingDataOutput {
             requireNotNull(dto.reporting.id) { "ReportingEntity.id cannot be null" }
             return MissionAttachedReportingDataOutput(
@@ -51,7 +51,7 @@ data class MissionAttachedReportingDataOutput(
                 semaphore =
                 if (dto.semaphore != null) {
                     SemaphoreDataOutput.fromSemaphoreEntity(
-                        dto.semaphore,
+                        dto.semaphore
                     )
                 } else {
                     null
@@ -60,7 +60,7 @@ data class MissionAttachedReportingDataOutput(
                 controlUnit =
                 if (dto.controlUnit != null) {
                     ControlUnitDataOutput.fromFullControlUnit(
-                        dto.controlUnit,
+                        dto.controlUnit
                     )
                 } else {
                     null
@@ -92,7 +92,7 @@ data class MissionAttachedReportingDataOutput(
                 createdAt = dto.reporting.createdAt,
                 validityTime = dto.reporting.validityTime,
                 isArchived = dto.reporting.isArchived,
-                openBy = dto.reporting.openBy,
+                openBy = dto.reporting.openBy
             )
         }
     }

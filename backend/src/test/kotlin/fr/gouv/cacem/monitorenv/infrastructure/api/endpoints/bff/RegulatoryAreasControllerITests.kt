@@ -62,7 +62,7 @@ class RegulatoryAreasControllerITests {
             date_fin = "2035-07-01",
             temporalite = "temporaire",
             objet = "",
-            signataire = "",
+            signataire = ""
         )
         given(getAllRegulatoryAreas.execute()).willReturn(listOf(regulatoryArea))
 
@@ -108,7 +108,7 @@ class RegulatoryAreasControllerITests {
             date_fin = "2035-07-01",
             temporalite = "temporaire",
             objet = "",
-            signataire = "",
+            signataire = ""
         )
 
         given(getRegulatoryAreaById.execute(17)).willReturn(regulatoryArea)

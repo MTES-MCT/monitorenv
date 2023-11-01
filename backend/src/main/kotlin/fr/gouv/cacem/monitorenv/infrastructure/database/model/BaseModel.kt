@@ -36,13 +36,13 @@ data class BaseModel(
 
     @Column(name = "updated_at_utc", nullable = false)
     @UpdateTimestamp
-    val updatedAtUtc: Instant? = null,
+    val updatedAtUtc: Instant? = null
 ) {
     @PreRemove
     fun canBeDeleted() {
         if (controlUnitResources.isNotEmpty()) {
             throw ForeignKeyConstraintException(
-                "Cannot delete base (ID=$id) due to existing relationships.",
+                "Cannot delete base (ID=$id) due to existing relationships."
             )
         }
     }
@@ -53,14 +53,14 @@ data class BaseModel(
          */
         fun fromBase(
             base: BaseEntity,
-            controlUnitResourceModels: List<ControlUnitResourceModel>? = null,
+            controlUnitResourceModels: List<ControlUnitResourceModel>? = null
         ): BaseModel {
             return BaseModel(
                 id = base.id,
                 controlUnitResources = controlUnitResourceModels ?: listOf(),
                 latitude = base.latitude,
                 longitude = base.longitude,
-                name = base.name,
+                name = base.name
             )
         }
 
@@ -69,14 +69,14 @@ data class BaseModel(
          */
         fun fromFullBase(
             fullBase: FullBaseDTO,
-            controlUnitResourceModels: List<ControlUnitResourceModel>? = null,
+            controlUnitResourceModels: List<ControlUnitResourceModel>? = null
         ): BaseModel {
             return BaseModel(
                 id = fullBase.base.id,
                 controlUnitResources = controlUnitResourceModels ?: listOf(),
                 latitude = fullBase.base.latitude,
                 longitude = fullBase.base.longitude,
-                name = fullBase.base.name,
+                name = fullBase.base.name
             )
         }
     }
@@ -86,7 +86,7 @@ data class BaseModel(
             id,
             latitude,
             longitude,
-            name,
+            name
         )
     }
 
@@ -95,7 +95,7 @@ data class BaseModel(
 
         return FullBaseDTO(
             base = toBase(),
-            controlUnitResources = controlUnitResourceModels.map { it.toControlUnitResource() },
+            controlUnitResources = controlUnitResourceModels.map { it.toControlUnitResource() }
         )
     }
 }

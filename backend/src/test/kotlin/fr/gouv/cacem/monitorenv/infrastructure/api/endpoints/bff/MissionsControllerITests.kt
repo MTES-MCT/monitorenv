@@ -89,8 +89,8 @@ class MissionsControllerITests {
                     missionSource = MissionSourceEnum.MONITORENV,
                     hasMissionOrder = false,
                     isUnderJdp = false,
-                    isGeometryComputedFromControls = false,
-                ),
+                    isGeometryComputedFromControls = false
+                )
             )
         val newMissionRequest =
             CreateOrUpdateMissionDataInput(
@@ -102,22 +102,22 @@ class MissionsControllerITests {
                 endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                 isClosed = false,
                 missionSource = MissionSourceEnum.MONITORENV,
-                attachedReportingIds = listOf(),
+                attachedReportingIds = listOf()
             )
         val requestbody = objectMapper.writeValueAsString(newMissionRequest)
         given(
             createOrUpdateMissionWithAttachedReporting.execute(
                 mission = newMissionRequest.toMissionEntity(),
                 attachedReportingIds = listOf(),
-                envActionsAttachedToReportingIds = listOf(),
-            ),
+                envActionsAttachedToReportingIds = listOf()
+            )
         )
             .willReturn(expectedNewMission)
         // When
         mockMvc.perform(
             put("/bff/v1/missions")
                 .content(requestbody)
-                .contentType(MediaType.APPLICATION_JSON),
+                .contentType(MediaType.APPLICATION_JSON)
         )
             // Then
             .andDo(MockMvcResultHandlers.print())
@@ -150,8 +150,8 @@ class MissionsControllerITests {
                 listOf(
                     ThemeEntity(
                         theme = "Theme 1",
-                        subThemes = listOf("sous theme 1", "sous theme 2"),
-                    ),
+                        subThemes = listOf("sous theme 1", "sous theme 2")
+                    )
                 ),
                 observations = "Observations de l'action de contrôle",
                 actionNumberOfControls = 2,
@@ -171,9 +171,9 @@ class MissionsControllerITests {
                         toProcess = false,
                         controlledPersonIdentity = "Captain Flame",
                         vesselType = VesselTypeEnum.COMMERCIAL,
-                        vesselSize = VesselSizeEnum.FROM_12_TO_24m,
-                    ),
-                ),
+                        vesselSize = VesselSizeEnum.FROM_12_TO_24m
+                    )
+                )
             )
 
         val expectedFirstMission =
@@ -194,11 +194,11 @@ class MissionsControllerITests {
                                     id = 2,
                                     controlUnitId = 1,
                                     name =
-                                    "Ressource 2",
-                                ),
+                                    "Ressource 2"
+                                )
                             ),
-                            isArchived = false,
-                        ),
+                            isArchived = false
+                        )
                     ),
                     openBy = "OpenBy",
                     closedBy = "ClosedBy",
@@ -216,7 +216,7 @@ class MissionsControllerITests {
                     hasMissionOrder = false,
                     isUnderJdp = false,
                     isGeometryComputedFromControls = false,
-                    envActions = listOf(controlEnvAction),
+                    envActions = listOf(controlEnvAction)
                 ),
                 attachedReportingIds = listOf(1),
                 attachedReportings =
@@ -246,12 +246,12 @@ class MissionsControllerITests {
                             hasNoUnitAvailable = true,
                             createdAt =
                             ZonedDateTime.parse(
-                                "2022-01-15T04:50:09Z",
+                                "2022-01-15T04:50:09Z"
                             ),
                             validityTime = 4,
                             isArchived = false,
                             isDeleted = false,
-                            openBy = "OpenBy",
+                            openBy = "OpenBy"
                         ),
                         semaphore =
                         SemaphoreEntity(
@@ -264,10 +264,10 @@ class MissionsControllerITests {
                             unit = "Unit 1",
                             email = "semaphore@",
                             phoneNumber = "0299999999",
-                            base = "Base 1",
-                        ),
-                    ),
-                ),
+                            base = "Base 1"
+                        )
+                    )
+                )
             )
         given(
             getFullMissions.execute(
@@ -278,8 +278,8 @@ class MissionsControllerITests {
                 missionTypes = null,
                 missionStatuses = null,
                 pageNumber = null,
-                pageSize = null,
-            ),
+                pageSize = null
+            )
         )
             .willReturn(listOf(expectedFirstMission))
 
@@ -290,7 +290,7 @@ class MissionsControllerITests {
             .andExpect(jsonPath("$.length()", equalTo(1)))
             .andExpect(jsonPath("$[0].id", equalTo(10)))
             .andExpect(
-                jsonPath("$[0].missionTypes[0]", equalTo(MissionTypeEnum.SEA.toString())),
+                jsonPath("$[0].missionTypes[0]", equalTo(MissionTypeEnum.SEA.toString()))
             )
             .andExpect(jsonPath("$[0].controlUnits[0].id", equalTo(1)))
             .andExpect(jsonPath("$[0].openBy", equalTo("OpenBy")))
@@ -306,8 +306,8 @@ class MissionsControllerITests {
             .andExpect(
                 jsonPath(
                     "$[0].missionSource",
-                    equalTo(MissionSourceEnum.MONITORENV.toString()),
-                ),
+                    equalTo(MissionSourceEnum.MONITORENV.toString())
+                )
             )
             .andExpect(jsonPath("$[0].hasMissionOrder", equalTo(false)))
             .andExpect(jsonPath("$[0].isUnderJdp", equalTo(false)))
@@ -316,21 +316,21 @@ class MissionsControllerITests {
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].id",
-                    equalTo("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b"),
-                ),
+                    equalTo("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b")
+                )
             )
             .andExpect(jsonPath("$[0].envActions[0].actionType", equalTo("CONTROL")))
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].actionStartDateTimeUtc",
-                    equalTo("2022-01-15T04:50:09Z"),
-                ),
+                    equalTo("2022-01-15T04:50:09Z")
+                )
             )
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].actionEndDateTimeUtc",
-                    equalTo("2022-01-23T20:29:03Z"),
-                ),
+                    equalTo("2022-01-23T20:29:03Z")
+                )
             )
             .andExpect(jsonPath("$[0].envActions[0].geom.type", equalTo("Point")))
             .andExpect(jsonPath("$[0].envActions[0].facade", equalTo("Outre-Mer")))
@@ -339,111 +339,111 @@ class MissionsControllerITests {
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].isComplianceWithWaterRegulationsControl",
-                    equalTo(false),
-                ),
+                    equalTo(false)
+                )
             )
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].isSafetyEquipmentAndStandardsComplianceControl",
-                    equalTo(false),
-                ),
+                    equalTo(false)
+                )
             )
             .andExpect(jsonPath("$[0].envActions[0].isSeafarersControl", equalTo(false)))
             .andExpect(jsonPath("$[0].envActions[0].themes[0].theme", equalTo("Theme 1")))
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].themes[0].subThemes[0]",
-                    equalTo("sous theme 1"),
-                ),
+                    equalTo("sous theme 1")
+                )
             )
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].themes[0].subThemes[1]",
-                    equalTo("sous theme 2"),
-                ),
+                    equalTo("sous theme 2")
+                )
             )
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].observations",
-                    equalTo("Observations de l'action de contrôle"),
-                ),
+                    equalTo("Observations de l'action de contrôle")
+                )
             )
             .andExpect(jsonPath("$[0].envActions[0].actionNumberOfControls", equalTo(2)))
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].actionTargetType",
-                    equalTo(ActionTargetTypeEnum.VEHICLE.toString()),
-                ),
+                    equalTo(ActionTargetTypeEnum.VEHICLE.toString())
+                )
             )
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].vehicleType",
-                    equalTo(VehicleTypeEnum.VEHICLE_LAND.toString()),
-                ),
+                    equalTo(VehicleTypeEnum.VEHICLE_LAND.toString())
+                )
             )
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].infractions[0].id",
-                    equalTo("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b"),
-                ),
+                    equalTo("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b")
+                )
             )
             .andExpect(
-                jsonPath("$[0].envActions[0].infractions[0].natinf[0]", equalTo("27001")),
+                jsonPath("$[0].envActions[0].infractions[0].natinf[0]", equalTo("27001"))
             )
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].infractions[0].observations",
-                    equalTo("Observations de l'infraction"),
-                ),
+                    equalTo("Observations de l'infraction")
+                )
             )
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].infractions[0].registrationNumber",
-                    equalTo("AB-123-CD"),
-                ),
+                    equalTo("AB-123-CD")
+                )
             )
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].infractions[0].companyName",
-                    equalTo("Company Name"),
-                ),
+                    equalTo("Company Name")
+                )
             )
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].infractions[0].relevantCourt",
-                    equalTo("LOCAL_COURT"),
-                ),
+                    equalTo("LOCAL_COURT")
+                )
             )
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].infractions[0].infractionType",
-                    equalTo(InfractionTypeEnum.WAITING.toString()),
-                ),
+                    equalTo(InfractionTypeEnum.WAITING.toString())
+                )
             )
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].infractions[0].formalNotice",
-                    equalTo(FormalNoticeEnum.NO.toString()),
-                ),
+                    equalTo(FormalNoticeEnum.NO.toString())
+                )
             )
             .andExpect(jsonPath("$[0].envActions[0].infractions[0].toProcess", equalTo(false)))
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].infractions[0].controlledPersonIdentity",
-                    equalTo("Captain Flame"),
-                ),
+                    equalTo("Captain Flame")
+                )
             )
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].infractions[0].vesselType",
-                    equalTo(VesselTypeEnum.COMMERCIAL.toString()),
-                ),
+                    equalTo(VesselTypeEnum.COMMERCIAL.toString())
+                )
             )
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].infractions[0].vesselSize",
-                    equalTo(VesselSizeEnum.FROM_12_TO_24m.toString()),
-                ),
+                    equalTo(VesselSizeEnum.FROM_12_TO_24m.toString())
+                )
             )
     }
 
@@ -474,8 +474,8 @@ class MissionsControllerITests {
                 listOf(
                     ThemeEntity(
                         theme = "Theme 1",
-                        subThemes = listOf("sous theme 1", "sous theme 2"),
-                    ),
+                        subThemes = listOf("sous theme 1", "sous theme 2")
+                    )
                 ),
                 observations = "Observations de l'action de contrôle",
                 actionNumberOfControls = 2,
@@ -495,9 +495,9 @@ class MissionsControllerITests {
                         toProcess = false,
                         controlledPersonIdentity = "Captain Flame",
                         vesselType = VesselTypeEnum.COMMERCIAL,
-                        vesselSize = VesselSizeEnum.FROM_12_TO_24m,
-                    ),
-                ),
+                        vesselSize = VesselSizeEnum.FROM_12_TO_24m
+                    )
+                )
             )
 
         val expectedFirstMission =
@@ -517,11 +517,11 @@ class MissionsControllerITests {
                                 LegacyControlUnitResourceEntity(
                                     id = 2,
                                     controlUnitId = 1,
-                                    name = "Ressource 2",
-                                ),
+                                    name = "Ressource 2"
+                                )
                             ),
-                            isArchived = false,
-                        ),
+                            isArchived = false
+                        )
                     ),
                     openBy = "OpenBy",
                     closedBy = "ClosedBy",
@@ -539,7 +539,7 @@ class MissionsControllerITests {
                     hasMissionOrder = false,
                     isUnderJdp = false,
                     isGeometryComputedFromControls = false,
-                    envActions = listOf(controlEnvAction),
+                    envActions = listOf(controlEnvAction)
                 ),
                 attachedReportingIds = listOf(1),
                 attachedReportings =
@@ -569,12 +569,12 @@ class MissionsControllerITests {
                             hasNoUnitAvailable = true,
                             createdAt =
                             ZonedDateTime.parse(
-                                "2022-01-15T04:50:09Z",
+                                "2022-01-15T04:50:09Z"
                             ),
                             validityTime = 4,
                             isArchived = false,
                             isDeleted = false,
-                            openBy = "OpenBy",
+                            openBy = "OpenBy"
                         ),
                         semaphore =
                         SemaphoreEntity(
@@ -587,10 +587,10 @@ class MissionsControllerITests {
                             unit = "Unit 1",
                             email = "semaphore@",
                             phoneNumber = "0299999999",
-                            base = "Base 1",
-                        ),
-                    ),
-                ),
+                            base = "Base 1"
+                        )
+                    )
+                )
             )
 
         // we test only if the route is called with the right arg
@@ -616,8 +616,8 @@ class MissionsControllerITests {
             .andExpect(
                 jsonPath(
                     "$.missionSource",
-                    equalTo(MissionSourceEnum.MONITORENV.toString()),
-                ),
+                    equalTo(MissionSourceEnum.MONITORENV.toString())
+                )
             )
             .andExpect(jsonPath("$.hasMissionOrder", equalTo(false)))
             .andExpect(jsonPath("$.isUnderJdp", equalTo(false)))
@@ -626,21 +626,21 @@ class MissionsControllerITests {
             .andExpect(
                 jsonPath(
                     "$.envActions[0].id",
-                    equalTo("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b"),
-                ),
+                    equalTo("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b")
+                )
             )
             .andExpect(jsonPath("$.envActions[0].actionType", equalTo("CONTROL")))
             .andExpect(
                 jsonPath(
                     "$.envActions[0].actionStartDateTimeUtc",
-                    equalTo("2022-01-15T04:50:09Z"),
-                ),
+                    equalTo("2022-01-15T04:50:09Z")
+                )
             )
             .andExpect(
                 jsonPath(
                     "$.envActions[0].actionEndDateTimeUtc",
-                    equalTo("2022-01-23T20:29:03Z"),
-                ),
+                    equalTo("2022-01-23T20:29:03Z")
+                )
             )
             .andExpect(jsonPath("$.envActions[0].geom.type", equalTo("Point")))
             .andExpect(jsonPath("$.envActions[0].facade", equalTo("Outre-Mer")))
@@ -649,104 +649,104 @@ class MissionsControllerITests {
             .andExpect(
                 jsonPath(
                     "$.envActions[0].isComplianceWithWaterRegulationsControl",
-                    equalTo(false),
-                ),
+                    equalTo(false)
+                )
             )
             .andExpect(
                 jsonPath(
                     "$.envActions[0].isSafetyEquipmentAndStandardsComplianceControl",
-                    equalTo(false),
-                ),
+                    equalTo(false)
+                )
             )
             .andExpect(jsonPath("$.envActions[0].isSeafarersControl", equalTo(false)))
             .andExpect(jsonPath("$.envActions[0].themes[0].theme", equalTo("Theme 1")))
             .andExpect(
-                jsonPath("$.envActions[0].themes[0].subThemes[0]", equalTo("sous theme 1")),
+                jsonPath("$.envActions[0].themes[0].subThemes[0]", equalTo("sous theme 1"))
             )
             .andExpect(
-                jsonPath("$.envActions[0].themes[0].subThemes[1]", equalTo("sous theme 2")),
+                jsonPath("$.envActions[0].themes[0].subThemes[1]", equalTo("sous theme 2"))
             )
             .andExpect(
                 jsonPath(
                     "$.envActions[0].observations",
-                    equalTo("Observations de l'action de contrôle"),
-                ),
+                    equalTo("Observations de l'action de contrôle")
+                )
             )
             .andExpect(jsonPath("$.envActions[0].actionNumberOfControls", equalTo(2)))
             .andExpect(
                 jsonPath(
                     "$.envActions[0].actionTargetType",
-                    equalTo(ActionTargetTypeEnum.VEHICLE.toString()),
-                ),
+                    equalTo(ActionTargetTypeEnum.VEHICLE.toString())
+                )
             )
             .andExpect(jsonPath("$.envActions[0].reportingIds.length()", equalTo(0)))
             .andExpect(
                 jsonPath(
                     "$.envActions[0].vehicleType",
-                    equalTo(VehicleTypeEnum.VEHICLE_LAND.toString()),
-                ),
+                    equalTo(VehicleTypeEnum.VEHICLE_LAND.toString())
+                )
             )
             .andExpect(
                 jsonPath(
                     "$.envActions[0].infractions[0].id",
-                    equalTo("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b"),
-                ),
+                    equalTo("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b")
+                )
             )
             .andExpect(jsonPath("$.envActions[0].infractions[0].natinf[0]", equalTo("27001")))
             .andExpect(
                 jsonPath(
                     "$.envActions[0].infractions[0].observations",
-                    equalTo("Observations de l'infraction"),
-                ),
+                    equalTo("Observations de l'infraction")
+                )
             )
             .andExpect(
                 jsonPath(
                     "$.envActions[0].infractions[0].registrationNumber",
-                    equalTo("AB-123-CD"),
-                ),
+                    equalTo("AB-123-CD")
+                )
             )
             .andExpect(
                 jsonPath(
                     "$.envActions[0].infractions[0].companyName",
-                    equalTo("Company Name"),
-                ),
+                    equalTo("Company Name")
+                )
             )
             .andExpect(
                 jsonPath(
                     "$.envActions[0].infractions[0].relevantCourt",
-                    equalTo("LOCAL_COURT"),
-                ),
+                    equalTo("LOCAL_COURT")
+                )
             )
             .andExpect(
                 jsonPath(
                     "$.envActions[0].infractions[0].infractionType",
-                    equalTo(InfractionTypeEnum.WAITING.toString()),
-                ),
+                    equalTo(InfractionTypeEnum.WAITING.toString())
+                )
             )
             .andExpect(
                 jsonPath(
                     "$.envActions[0].infractions[0].formalNotice",
-                    equalTo(FormalNoticeEnum.NO.toString()),
-                ),
+                    equalTo(FormalNoticeEnum.NO.toString())
+                )
             )
             .andExpect(jsonPath("$.envActions[0].infractions[0].toProcess", equalTo(false)))
             .andExpect(
                 jsonPath(
                     "$.envActions[0].infractions[0].controlledPersonIdentity",
-                    equalTo("Captain Flame"),
-                ),
+                    equalTo("Captain Flame")
+                )
             )
             .andExpect(
                 jsonPath(
                     "$.envActions[0].infractions[0].vesselType",
-                    equalTo(VesselTypeEnum.COMMERCIAL.toString()),
-                ),
+                    equalTo(VesselTypeEnum.COMMERCIAL.toString())
+                )
             )
             .andExpect(
                 jsonPath(
                     "$.envActions[0].infractions[0].vesselSize",
-                    equalTo(VesselSizeEnum.FROM_12_TO_24m.toString()),
-                ),
+                    equalTo(VesselSizeEnum.FROM_12_TO_24m.toString())
+                )
             )
 
         verify(getFullMissionById).execute(requestedId)
@@ -769,8 +769,8 @@ class MissionsControllerITests {
                     missionSource = MissionSourceEnum.MONITORENV,
                     hasMissionOrder = false,
                     isUnderJdp = false,
-                    isGeometryComputedFromControls = false,
-                ),
+                    isGeometryComputedFromControls = false
+                )
             )
         val envAction =
             MissionEnvActionDataInput(
@@ -780,7 +780,7 @@ class MissionsControllerITests {
                 actionTargetType = ActionTargetTypeEnum.VEHICLE,
                 vehicleType = VehicleTypeEnum.VESSEL,
                 actionNumberOfControls = 4,
-                reportingIds = Optional.of(listOf(1)),
+                reportingIds = Optional.of(listOf(1))
             )
 
         val requestBody =
@@ -792,34 +792,34 @@ class MissionsControllerITests {
                 envActions = listOf(envAction),
                 missionSource = MissionSourceEnum.MONITORENV,
                 isClosed = false,
-                attachedReportingIds = listOf(1),
+                attachedReportingIds = listOf(1)
             )
         val envActionsAttachedToReportingIds =
             listOf(
-                Pair(UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"), listOf(1)),
+                Pair(UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"), listOf(1))
             ) as
                 List<EnvActionAttachedToReportingIds>
         given(
             createOrUpdateMissionWithAttachedReporting.execute(
                 mission = requestBody.toMissionEntity(),
                 attachedReportingIds = listOf(1),
-                envActionsAttachedToReportingIds = envActionsAttachedToReportingIds,
-            ),
+                envActionsAttachedToReportingIds = envActionsAttachedToReportingIds
+            )
         )
             .willReturn(expectedUpdatedMission)
         // When
         mockMvc.perform(
             put("/bff/v1/missions/14")
                 .content(objectMapper.writeValueAsString(requestBody))
-                .contentType(MediaType.APPLICATION_JSON),
+                .contentType(MediaType.APPLICATION_JSON)
         )
             // Then
             .andExpect(status().isOk)
             .andExpect(
                 jsonPath(
                     "$.observationsCacem",
-                    equalTo(expectedUpdatedMission.mission.observationsCacem),
-                ),
+                    equalTo(expectedUpdatedMission.mission.observationsCacem)
+                )
             )
     }
 
@@ -844,9 +844,9 @@ class MissionsControllerITests {
                         administration = "Admin",
                         resources = listOf(),
                         isArchived = false,
-                        name = "Control Unit Name",
-                    ),
-                ),
+                        name = "Control Unit Name"
+                    )
+                )
             )
 
         // When

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 @Tag(name = "Regulatory", description = "API regulatory layers")
 class RegulatoryAreasController(
     private val getAllRegulatoryAreas: GetAllRegulatoryAreas,
-    private val getRegulatoryAreaById: GetRegulatoryAreaById,
+    private val getRegulatoryAreaById: GetRegulatoryAreaById
 ) {
 
     @GetMapping("")
@@ -31,10 +31,10 @@ class RegulatoryAreasController(
     fun getRegulatoryAreaByIdController(
         @PathParam("regulatoryArea id")
         @PathVariable(name = "regulatoryAreaId")
-        regulatoryAreaId: Int,
+        regulatoryAreaId: Int
     ): RegulatoryAreaDataOutput {
         return RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(
-            getRegulatoryAreaById.execute(regulatoryAreaId = regulatoryAreaId),
+            getRegulatoryAreaById.execute(regulatoryAreaId = regulatoryAreaId)
         )
     }
 }

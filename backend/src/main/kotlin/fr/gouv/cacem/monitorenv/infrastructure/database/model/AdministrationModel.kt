@@ -33,7 +33,7 @@ data class AdministrationModel(
 
     @Column(name = "updated_at_utc", nullable = false)
     @UpdateTimestamp
-    val updatedAtUtc: Instant? = null,
+    val updatedAtUtc: Instant? = null
 ) {
     companion object {
         /**
@@ -41,13 +41,13 @@ data class AdministrationModel(
          */
         fun fromAdministration(
             administration: AdministrationEntity,
-            controlUnitModels: List<ControlUnitModel>? = mutableListOf(),
+            controlUnitModels: List<ControlUnitModel>? = mutableListOf()
         ): AdministrationModel {
             return AdministrationModel(
                 id = administration.id,
                 controlUnits = controlUnitModels,
                 isArchived = administration.isArchived,
-                name = administration.name,
+                name = administration.name
             )
         }
     }
@@ -56,14 +56,14 @@ data class AdministrationModel(
         return AdministrationEntity(
             id,
             isArchived,
-            name,
+            name
         )
     }
 
     fun toFullAdministration(): FullAdministrationDTO {
         return FullAdministrationDTO(
             administration = toAdministration(),
-            controlUnits = requireNotNullList(controlUnits).map { it.toControlUnit() },
+            controlUnits = requireNotNullList(controlUnits).map { it.toControlUnit() }
         )
     }
 }

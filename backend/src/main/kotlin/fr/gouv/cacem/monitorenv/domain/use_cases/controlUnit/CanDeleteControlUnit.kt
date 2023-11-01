@@ -7,7 +7,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 @UseCase
 class CanDeleteControlUnit(
     private val missionRepository: IMissionRepository,
-    private val reportingRepository: IReportingRepository,
+    private val reportingRepository: IReportingRepository
 ) {
     fun execute(controlUnitId: Int): Boolean {
         val missions = missionRepository.findByControlUnitId(controlUnitId)

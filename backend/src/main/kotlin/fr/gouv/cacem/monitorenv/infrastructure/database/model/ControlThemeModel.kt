@@ -15,19 +15,19 @@ data class ControlThemeModel(
     @Column(name = "theme_level_1")
     val themeLevel1: String,
     @Column(name = "theme_level_2")
-    val themeLevel2: String?,
+    val themeLevel2: String?
 ) {
     fun toControlTheme() = ControlThemeEntity(
         id = id,
         themeLevel1 = themeLevel1,
-        themeLevel2 = themeLevel2,
+        themeLevel2 = themeLevel2
     )
 
     companion object {
         fun fromControlThemeEntity(controlTheme: ControlThemeEntity) = ControlThemeModel(
             id = controlTheme.id,
             themeLevel1 = controlTheme.themeLevel1,
-            themeLevel2 = controlTheme.themeLevel2,
+            themeLevel2 = controlTheme.themeLevel2
         )
     }
 }

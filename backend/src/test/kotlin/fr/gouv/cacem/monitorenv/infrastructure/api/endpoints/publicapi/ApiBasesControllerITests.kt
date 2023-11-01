@@ -66,13 +66,13 @@ class ApiBasesControllerITests {
             id = 1,
             latitude = 0.0,
             longitude = 0.0,
-            name = "Base Name",
+            name = "Base Name"
         )
 
         val newBaseData = CreateOrUpdateBaseDataInput(
             latitude = 0.0,
             longitude = 0.0,
-            name = "Base Name",
+            name = "Base Name"
         )
         val requestBody = objectMapper.writeValueAsString(newBaseData)
 
@@ -81,7 +81,7 @@ class ApiBasesControllerITests {
         mockMvc.perform(
             post("/api/v1/bases")
                 .content(requestBody)
-                .contentType(MediaType.APPLICATION_JSON),
+                .contentType(MediaType.APPLICATION_JSON)
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isCreated)
@@ -92,7 +92,7 @@ class ApiBasesControllerITests {
         val baseId = 1
 
         mockMvc.perform(
-            delete("/api/v1/bases/$baseId"),
+            delete("/api/v1/bases/$baseId")
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
@@ -107,9 +107,9 @@ class ApiBasesControllerITests {
                 id = 1,
                 latitude = 0.0,
                 longitude = 0.0,
-                name = "Base Name",
+                name = "Base Name"
             ),
-            controlUnitResources = listOf(),
+            controlUnitResources = listOf()
         )
 
         val requestedId = 1
@@ -130,9 +130,9 @@ class ApiBasesControllerITests {
                     id = 1,
                     latitude = 0.0,
                     longitude = 0.0,
-                    name = "Base Name",
+                    name = "Base Name"
                 ),
-                controlUnitResources = listOf(),
+                controlUnitResources = listOf()
             ),
 
             FullBaseDTO(
@@ -140,10 +140,10 @@ class ApiBasesControllerITests {
                     id = 2,
                     latitude = 0.0,
                     longitude = 0.0,
-                    name = "Base Name 2",
+                    name = "Base Name 2"
                 ),
-                controlUnitResources = listOf(),
-            ),
+                controlUnitResources = listOf()
+            )
         )
 
         given(getBases.execute()).willReturn(expectedFullBases)
@@ -161,14 +161,14 @@ class ApiBasesControllerITests {
             id = 1,
             latitude = 0.0,
             longitude = 0.0,
-            name = "Updated Base Name",
+            name = "Updated Base Name"
         )
 
         val nextBaseData = CreateOrUpdateBaseDataInput(
             id = 1,
             latitude = 0.0,
             longitude = 0.0,
-            name = "Updated Base Name",
+            name = "Updated Base Name"
         )
         val requestBody = objectMapper.writeValueAsString(nextBaseData)
 
@@ -177,7 +177,7 @@ class ApiBasesControllerITests {
         mockMvc.perform(
             put("/api/v1/bases/1")
                 .content(requestBody)
-                .contentType(MediaType.APPLICATION_JSON),
+                .contentType(MediaType.APPLICATION_JSON)
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)

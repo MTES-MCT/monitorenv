@@ -8,13 +8,13 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitRes
 data class FullControlUnitResourceDTO(
     val base: BaseEntity,
     val controlUnit: ControlUnitEntity,
-    val controlUnitResource: ControlUnitResourceEntity,
+    val controlUnitResource: ControlUnitResourceEntity
 ) {
     fun toLegacyControlUnitResource(): LegacyControlUnitResourceEntity {
         return LegacyControlUnitResourceEntity(
             id = requireNotNull(controlUnitResource.id),
             controlUnitId = requireNotNull(controlUnit.id),
-            name = controlUnitResource.name,
+            name = controlUnitResource.name
         )
     }
 }

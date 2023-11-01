@@ -28,15 +28,15 @@ class GetControlUnitContactsUTests {
                     departmentAreaInseeCode = "A1",
                     isArchived = false,
                     name = "Control Unit 1",
-                    termsNote = "Terms 1",
+                    termsNote = "Terms 1"
                 ),
                 controlUnitContact = ControlUnitContactEntity(
                     id = 1,
                     controlUnitId = 1,
                     email = "contact1@example.com",
                     name = "Contact 1",
-                    phone = "123-456-7890",
-                ),
+                    phone = "123-456-7890"
+                )
             ),
             FullControlUnitContactDTO(
                 controlUnit = ControlUnitEntity(
@@ -46,16 +46,16 @@ class GetControlUnitContactsUTests {
                     departmentAreaInseeCode = "A2",
                     isArchived = false,
                     name = "Control Unit 2",
-                    termsNote = "Terms 2",
+                    termsNote = "Terms 2"
                 ),
                 controlUnitContact = ControlUnitContactEntity(
                     id = 2,
                     controlUnitId = 2,
                     email = "contact2@example.com",
                     name = "Contact 2",
-                    phone = "098-765-4321",
-                ),
-            ),
+                    phone = "098-765-4321"
+                )
+            )
         )
 
         given(controlUnitContactRepository.findAll()).willReturn(controlUnitContacts)

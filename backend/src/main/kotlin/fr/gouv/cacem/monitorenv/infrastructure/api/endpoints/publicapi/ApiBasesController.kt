@@ -19,14 +19,14 @@ class ApiBasesController(
     private val createOrUpdateBase: CreateOrUpdateBase,
     private val deleteBase: DeleteBase,
     private val getBases: GetBases,
-    private val getBaseById: GetBaseById,
+    private val getBaseById: GetBaseById
 ) {
     @GetMapping("/{baseId}/can_delete")
     @Operation(summary = "Can this base be deleted?")
     fun canDelete(
         @PathParam("Base ID")
         @PathVariable(name = "baseId")
-        baseId: Int,
+        baseId: Int
     ): BooleanDataOutput {
         return canDeleteBase.execute(baseId).let { BooleanDataOutput.get(it) }
     }
@@ -36,7 +36,7 @@ class ApiBasesController(
     @ResponseStatus(HttpStatus.CREATED)
     fun create(
         @RequestBody
-        createBaseDataInput: CreateOrUpdateBaseDataInput,
+        createBaseDataInput: CreateOrUpdateBaseDataInput
     ): BaseDataOutput {
         val newBase = createBaseDataInput.toBase()
         val createdBase = createOrUpdateBase.execute(newBase)
@@ -49,7 +49,7 @@ class ApiBasesController(
     fun delete(
         @PathParam("Administration ID")
         @PathVariable(name = "baseId")
-        baseId: Int,
+        baseId: Int
     ) {
         deleteBase.execute(baseId)
     }
@@ -59,7 +59,7 @@ class ApiBasesController(
     fun get(
         @PathParam("Base ID")
         @PathVariable(name = "baseId")
-        baseId: Int,
+        baseId: Int
     ): FullBaseDataOutput {
         val foundFullBase = getBaseById.execute(baseId)
 
@@ -81,7 +81,7 @@ class ApiBasesController(
         @PathVariable(name = "baseId")
         baseId: Int,
         @RequestBody
-        updateBaseDataInput: CreateOrUpdateBaseDataInput,
+        updateBaseDataInput: CreateOrUpdateBaseDataInput
     ): BaseDataOutput {
         requireNotNull(updateBaseDataInput.id) { "`id` can't be null." }
         require(baseId == updateBaseDataInput.id) {

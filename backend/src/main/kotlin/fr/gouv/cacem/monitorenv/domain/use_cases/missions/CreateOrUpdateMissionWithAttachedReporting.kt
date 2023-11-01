@@ -13,13 +13,13 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.
 class CreateOrUpdateMissionWithAttachedReporting(
     private val createOrUpdateMission: CreateOrUpdateMission,
     private val missionRepository: IMissionRepository,
-    private val reportingRepository: IReportingRepository,
+    private val reportingRepository: IReportingRepository
 ) {
     @Throws(IllegalArgumentException::class)
     fun execute(
         mission: MissionEntity?,
         attachedReportingIds: List<Int>,
-        envActionsAttachedToReportingIds: List<EnvActionAttachedToReportingIds>,
+        envActionsAttachedToReportingIds: List<EnvActionAttachedToReportingIds>
     ): MissionDTO {
         val savedMission = createOrUpdateMission.execute(mission)
         require(savedMission.id != null) { "The mission id is null" }

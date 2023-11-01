@@ -25,7 +25,7 @@ class DeleteControlUnitResourceUTests {
         given(canDeleteControlUnitResource.execute(controlUnitResourceId)).willReturn(true)
 
         DeleteControlUnitResource(canDeleteControlUnitResource, controlUnitResourceRepository).execute(
-            controlUnitResourceId,
+            controlUnitResourceId
         )
 
         verify(controlUnitResourceRepository).deleteById(controlUnitResourceId)
@@ -39,7 +39,7 @@ class DeleteControlUnitResourceUTests {
 
         assertThatThrownBy {
             DeleteControlUnitResource(canDeleteControlUnitResource, controlUnitResourceRepository).execute(
-                controlUnitResourceId,
+                controlUnitResourceId
             )
         }
             .isInstanceOf(ForeignKeyConstraintException::class.java)

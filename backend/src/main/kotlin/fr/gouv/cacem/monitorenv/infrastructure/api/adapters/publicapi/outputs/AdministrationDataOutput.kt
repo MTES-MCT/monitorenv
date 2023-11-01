@@ -5,14 +5,14 @@ import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEnt
 data class AdministrationDataOutput(
     val id: Int,
     val isArchived: Boolean,
-    val name: String,
+    val name: String
 ) {
     companion object {
         fun fromAdministration(administration: AdministrationEntity): AdministrationDataOutput {
             return AdministrationDataOutput(
                 id = requireNotNull(administration.id),
                 isArchived = administration.isArchived,
-                name = administration.name,
+                name = administration.name
             )
         }
     }

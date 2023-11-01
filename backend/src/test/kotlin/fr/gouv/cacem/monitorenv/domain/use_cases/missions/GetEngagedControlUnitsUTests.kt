@@ -26,7 +26,7 @@ class GetEngagedControlUnitsUTests {
                 administration = "Admin",
                 resources = listOf(),
                 isArchived = false,
-                name = "Control Unit Name",
+                name = "Control Unit Name"
             )
         val expectedMission =
             MissionDTO(
@@ -47,8 +47,8 @@ class GetEngagedControlUnitsUTests {
                     missionSource = MissionSourceEnum.MONITORENV,
                     hasMissionOrder = false,
                     isUnderJdp = false,
-                    isGeometryComputedFromControls = false,
-                ),
+                    isGeometryComputedFromControls = false
+                )
             )
 
         given(
@@ -60,8 +60,8 @@ class GetEngagedControlUnitsUTests {
                 anyOrNull(),
                 anyOrNull(),
                 anyOrNull(),
-                anyOrNull(),
-            ),
+                anyOrNull()
+            )
         )
             .willReturn(listOf(expectedMission, expectedMission))
 

@@ -13,9 +13,9 @@ data class EnvActionSurveillanceEntity(
     override val department: String? = null,
     val themes: List<ThemeEntity>? = listOf(),
     val observations: String? = null,
-    val coverMissionZone: Boolean? = null,
+    val coverMissionZone: Boolean? = null
 ) :
     EnvActionEntity(
         actionType = ActionTypeEnum.SURVEILLANCE,
-        id = id,
+        id = id
     )

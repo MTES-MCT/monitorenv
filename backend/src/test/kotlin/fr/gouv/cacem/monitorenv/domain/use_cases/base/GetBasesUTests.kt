@@ -23,19 +23,19 @@ class GetBasesUTests {
                     id = 1,
                     latitude = 0.0,
                     longitude = 0.0,
-                    name = "Base Name",
+                    name = "Base Name"
                 ),
-                controlUnitResources = listOf(),
+                controlUnitResources = listOf()
             ),
             FullBaseDTO(
                 base = BaseEntity(
                     id = 2,
                     latitude = 0.0,
                     longitude = 0.0,
-                    name = "Base Name 2",
+                    name = "Base Name 2"
                 ),
-                controlUnitResources = listOf(),
-            ),
+                controlUnitResources = listOf()
+            )
         )
 
         given(baseRepository.findAll()).willReturn(bases)

@@ -23,13 +23,13 @@ class SwaggerConfig {
                     .version("v0.0.1")
                     .license(
                         License().name("Apache 2.0")
-                            .url("https://github.com/MTES-MCT/monitorenv/blob/master/LICENCE"),
-                    ),
+                            .url("https://github.com/MTES-MCT/monitorenv/blob/master/LICENCE")
+                    )
             )
             .externalDocs(
                 ExternalDocumentation()
                     .description("SpringShop Wiki Documentation")
-                    .url("https://springshop.wiki.github.org/docs"),
+                    .url("https://springshop.wiki.github.org/docs")
             )
     }
 }

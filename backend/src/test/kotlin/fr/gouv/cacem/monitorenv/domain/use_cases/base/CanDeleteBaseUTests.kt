@@ -25,9 +25,9 @@ class CanDeleteBaseUTests {
                 id = 1,
                 latitude = 0.0,
                 longitude = 0.0,
-                name = "Base Name",
+                name = "Base Name"
             ),
-            controlUnitResources = listOf(),
+            controlUnitResources = listOf()
         )
 
         given(baseRepository.findById(baseId)).willReturn(fullBase)
@@ -45,7 +45,7 @@ class CanDeleteBaseUTests {
                 id = 1,
                 latitude = 0.0,
                 longitude = 0.0,
-                name = "Base Name",
+                name = "Base Name"
             ),
             controlUnitResources = listOf(
                 ControlUnitResourceEntity(
@@ -56,10 +56,10 @@ class CanDeleteBaseUTests {
                     name = "Control Unit Resource Name",
                     note = null,
                     photo = null,
-                    type = ControlUnitResourceType.BARGE,
+                    type = ControlUnitResourceType.BARGE
 
-                ),
-            ),
+                )
+            )
         )
 
         given(baseRepository.findById(baseId)).willReturn(fullBase)

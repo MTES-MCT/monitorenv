@@ -30,7 +30,7 @@ data class SemaphoreModel(
     @Column(name = "telephone")
     val phoneNumber: String? = null,
     @Column(name = "base")
-    val base: String? = null,
+    val base: String? = null
 ) {
     fun toSemaphore() = SemaphoreEntity(
         id = id,
@@ -42,6 +42,6 @@ data class SemaphoreModel(
         unit = unit,
         email = email,
         phoneNumber = phoneNumber,
-        base = base,
+        base = base
     )
 }

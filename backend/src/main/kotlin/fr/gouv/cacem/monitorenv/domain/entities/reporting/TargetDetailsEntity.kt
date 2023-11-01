@@ -6,5 +6,5 @@ data class TargetDetailsEntity(
     val externalReferenceNumber: String? = null,
     val vesselName: String? = null,
     val operatorName: String? = null,
-    val size: Int? = null,
+    val size: Int? = null
 )

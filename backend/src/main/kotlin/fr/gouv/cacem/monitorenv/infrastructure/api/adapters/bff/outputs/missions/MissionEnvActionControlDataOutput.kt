@@ -28,7 +28,7 @@ data class MissionEnvActionControlDataOutput(
     val observations: String? = null,
     val reportingIds: List<Int>,
     val themes: List<ThemeEntity>? = listOf(),
-    val vehicleType: VehicleTypeEnum? = null,
+    val vehicleType: VehicleTypeEnum? = null
 ) :
     MissionEnvActionDataOutput(
         id = id,
@@ -37,12 +37,12 @@ data class MissionEnvActionControlDataOutput(
         actionType = ActionTypeEnum.CONTROL,
         department = department,
         facade = facade,
-        geom = geom,
+        geom = geom
     ) {
     companion object {
         fun fromEnvActionControlEntity(
             envActionControlEntity: EnvActionControlEntity,
-            reportingIds: List<Int>,
+            reportingIds: List<Int>
         ) =
             MissionEnvActionControlDataOutput(
                 id = envActionControlEntity.id,
@@ -64,7 +64,7 @@ data class MissionEnvActionControlDataOutput(
                 observations = envActionControlEntity.observations,
                 themes = envActionControlEntity.themes,
                 vehicleType = envActionControlEntity.vehicleType,
-                reportingIds = reportingIds,
+                reportingIds = reportingIds
             )
     }
 }

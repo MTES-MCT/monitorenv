@@ -21,5 +21,5 @@ data class RegulatoryAreaEntity(
     val date_fin: String? = null,
     val temporalite: String? = null,
     val objet: String? = null,
-    val signataire: String? = null,
+    val signataire: String? = null
 )

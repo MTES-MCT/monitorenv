@@ -13,7 +13,7 @@ interface IDBBaseRepository : CrudRepository<BaseModel, Int> {
         FROM bases
         ORDER BY name ASC
         """,
-        nativeQuery = true,
+        nativeQuery = true
     )
     override fun findAll(): List<BaseModel>
 }

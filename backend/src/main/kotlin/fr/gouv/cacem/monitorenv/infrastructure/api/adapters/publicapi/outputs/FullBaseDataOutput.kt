@@ -8,7 +8,7 @@ data class FullBaseDataOutput(
     val controlUnitResources: List<ControlUnitResourceDataOutput>,
     val latitude: Double,
     val longitude: Double,
-    val name: String,
+    val name: String
 ) {
     companion object {
         fun fromFullBase(fullBase: FullBaseDTO): FullBaseDataOutput {
@@ -21,7 +21,7 @@ data class FullBaseDataOutput(
                 controlUnitResources,
                 latitude = fullBase.base.latitude,
                 longitude = fullBase.base.longitude,
-                name = fullBase.base.name,
+                name = fullBase.base.name
             )
         }
     }

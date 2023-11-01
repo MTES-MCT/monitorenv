@@ -12,7 +12,7 @@ data class FullControlUnitDTO(
     val controlUnit: ControlUnitEntity,
     val controlUnitContacts: List<ControlUnitContactEntity>,
     // `FullControlUnitResourceDTO` and not `ControlUnitResourceEntity` because we need `base` data for each resource
-    val controlUnitResources: List<FullControlUnitResourceDTO>,
+    val controlUnitResources: List<FullControlUnitResourceDTO>
 ) {
     fun toLegacyControlUnit(): LegacyControlUnitEntity {
         return LegacyControlUnitEntity(
@@ -20,7 +20,7 @@ data class FullControlUnitDTO(
             administration = administration.name,
             isArchived = controlUnit.isArchived,
             name = controlUnit.name,
-            resources = controlUnitResources.map { it.toLegacyControlUnitResource() },
+            resources = controlUnitResources.map { it.toLegacyControlUnitResource() }
         )
     }
 }

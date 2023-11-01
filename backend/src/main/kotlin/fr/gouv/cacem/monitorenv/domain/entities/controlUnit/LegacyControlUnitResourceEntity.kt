@@ -4,5 +4,5 @@ package fr.gouv.cacem.monitorenv.domain.entities.controlUnit
 data class LegacyControlUnitResourceEntity(
     val id: Int,
     val controlUnitId: Int,
-    val name: String,
+    val name: String
 )

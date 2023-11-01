@@ -8,7 +8,7 @@ data class ControlUnitResourceEntity(
     val name: String,
     val note: String? = null,
     val photo: ByteArray? = byteArrayOf(),
-    val type: ControlUnitResourceType,
+    val type: ControlUnitResourceType
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

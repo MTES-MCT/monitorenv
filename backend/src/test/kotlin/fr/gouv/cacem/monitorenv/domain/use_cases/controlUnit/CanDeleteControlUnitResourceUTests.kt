@@ -51,10 +51,10 @@ class CanDeleteControlUnitResourceUTests {
                     isGeometryComputedFromControls = false,
                     missionSource = MissionSourceEnum.MONITORENV,
                     hasMissionOrder = false,
-                    isUnderJdp = false,
+                    isUnderJdp = false
 
-                ),
-            ),
+                )
+            )
         )
 
         val result = CanDeleteControlUnitResource(missionRepository).execute(controlUnitResourceId)

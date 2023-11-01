@@ -30,7 +30,7 @@ interface IReportingRepository {
         sourcesType: List<SourceTypeEnum>?,
         startedAfter: Instant,
         startedBefore: Instant?,
-        status: List<String>?,
+        status: List<String>?
     ): List<ReportingDTO>
 
     fun findByControlUnitId(controlUnitId: Int): List<ReportingEntity>

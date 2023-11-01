@@ -23,7 +23,7 @@ class GetMissions(private val missionRepository: IMissionRepository) {
         missionStatuses: List<String>?,
         pageNumber: Int?,
         pageSize: Int?,
-        seaFronts: List<String>?,
+        seaFronts: List<String>?
     ): List<MissionEntity> {
         val missions =
             missionRepository.findAll(
@@ -33,7 +33,7 @@ class GetMissions(private val missionRepository: IMissionRepository) {
                 missionSources = missionSources
                     ?: listOf(
                         MissionSourceEnum.MONITORENV,
-                        MissionSourceEnum.MONITORFISH,
+                        MissionSourceEnum.MONITORFISH
                     ),
                 missionTypes = missionTypes,
                 missionStatuses = missionStatuses,
@@ -42,11 +42,11 @@ class GetMissions(private val missionRepository: IMissionRepository) {
                 if (pageNumber != null && pageSize != null) {
                     PageRequest.of(
                         pageNumber,
-                        pageSize,
+                        pageSize
                     )
                 } else {
                     Pageable.unpaged()
-                },
+                }
             )
 
         logger.info("Found ${missions.size} mission(s)")

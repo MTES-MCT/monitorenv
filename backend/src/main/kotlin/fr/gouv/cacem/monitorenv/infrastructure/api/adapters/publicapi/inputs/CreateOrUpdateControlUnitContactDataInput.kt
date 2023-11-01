@@ -7,7 +7,7 @@ data class CreateOrUpdateControlUnitContactDataInput(
     val controlUnitId: Int,
     val email: String? = null,
     val name: String,
-    val phone: String? = null,
+    val phone: String? = null
 ) {
     fun toControlUnitContact(): ControlUnitContactEntity {
         return ControlUnitContactEntity(
@@ -15,7 +15,7 @@ data class CreateOrUpdateControlUnitContactDataInput(
             controlUnitId = this.controlUnitId,
             email = this.email,
             name = this.name,
-            phone = this.phone,
+            phone = this.phone
         )
     }
 }

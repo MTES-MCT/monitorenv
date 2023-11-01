@@ -22,18 +22,18 @@ class GetAdministrationsUTests {
                 administration = AdministrationEntity(
                     id = 1,
                     name = "Administration Name",
-                    isArchived = false,
+                    isArchived = false
                 ),
-                controlUnits = listOf(),
+                controlUnits = listOf()
             ),
             FullAdministrationDTO(
                 administration = AdministrationEntity(
                     id = 2,
                     name = "Administration Name 2",
-                    isArchived = false,
+                    isArchived = false
                 ),
-                controlUnits = listOf(),
-            ),
+                controlUnits = listOf()
+            )
         )
 
         given(administrationRepository.findAll()).willReturn(fullAdministrations)

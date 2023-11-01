@@ -10,7 +10,7 @@ data class ControlUnitDataOutput(
     val departmentAreaInseeCode: String? = null,
     val isArchived: Boolean,
     val name: String,
-    val termsNote: String? = null,
+    val termsNote: String? = null
 ) {
     companion object {
         fun fromControlUnit(controlUnit: ControlUnitEntity): ControlUnitDataOutput {
@@ -21,7 +21,7 @@ data class ControlUnitDataOutput(
                 departmentAreaInseeCode = controlUnit.departmentAreaInseeCode,
                 isArchived = controlUnit.isArchived,
                 name = controlUnit.name,
-                termsNote = controlUnit.termsNote,
+                termsNote = controlUnit.termsNote
             )
         }
 
@@ -33,7 +33,7 @@ data class ControlUnitDataOutput(
                 departmentAreaInseeCode = fullControlUnit.controlUnit.departmentAreaInseeCode,
                 isArchived = fullControlUnit.controlUnit.isArchived,
                 name = fullControlUnit.controlUnit.name,
-                termsNote = fullControlUnit.controlUnit.termsNote,
+                termsNote = fullControlUnit.controlUnit.termsNote
             )
         }
     }
