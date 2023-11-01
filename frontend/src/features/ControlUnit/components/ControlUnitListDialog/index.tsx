@@ -1,13 +1,16 @@
 import { Accent, Icon, MapMenuDialog } from '@mtes-mct/monitor-ui'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 
 import { FilterBar } from './FilterBar'
 import { Item } from './Item'
 import { getFilters } from './utils'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { useGetControlUnitsQuery } from '../../../../api/controlUnitsAPI'
+import { globalActions } from '../../../../domain/shared_slices/Global'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { isNotArchived } from '../../../../utils/isNotArchived'
+import { baseActions } from '../../../Base/slice'
 
 import type { Promisable } from 'type-fest'
 
@@ -15,6 +18,8 @@ type ControlUnitListDialogProps = {
   onClose: () => Promisable<void>
 }
 export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
+  const dispatch = useAppDispatch()
+  const global = useAppSelector(store => store.global)
   const mapControlUnitListDialog = useAppSelector(store => store.mapControlUnitListDialog)
   const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
@@ -30,12 +35,25 @@ export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
     return filters.reduce((previousControlUnits, filter) => filter(previousControlUnits), activeControlUnits)
   }, [activeControlUnits, mapControlUnitListDialog.filtersState])
 
+  const toggleBaseLayer = useCallback(() => {
+    dispatch(baseActions.selectBaseFeatureId(undefined))
+    dispatch(
+      globalActions.setDisplayedItems({
+        displayBaseLayer: !global.displayBaseLayer
+      })
+    )
+  }, [dispatch, global.displayBaseLayer])
+
   return (
     <MapMenuDialog.Container style={{ height: 480 }}>
       <MapMenuDialog.Header>
         <MapMenuDialog.CloseButton Icon={Icon.Close} onClick={onClose} />
         <MapMenuDialog.Title>Unités de contrôle</MapMenuDialog.Title>
-        <MapMenuDialog.VisibilityButton accent={Accent.SECONDARY} Icon={Icon.Display} />
+        <MapMenuDialog.VisibilityButton
+          accent={Accent.SECONDARY}
+          Icon={global.displayBaseLayer ? Icon.Display : Icon.Hide}
+          onClick={toggleBaseLayer}
+        />
       </MapMenuDialog.Header>
       <MapMenuDialog.Body>
         <FilterBar />

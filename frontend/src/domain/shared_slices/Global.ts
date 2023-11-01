@@ -117,7 +117,8 @@ const initialState: GlobalStateType = {
   displayReportingEditingLayer: true,
   displayReportingSelectedLayer: true,
 
-  displayBaseLayer: true,
+  displayBaseLayer: false,
+  // TODO Is it useful?
   displayBaseOverlay: true,
 
   isMapToolVisible: undefined,
@@ -134,6 +135,7 @@ const globalSlice = createSlice({
   initialState,
   name: 'global',
   reducers: {
+    // TODO Rename to `hideAllDialogs`.
     hideSideButtons(state) {
       state.isControlUnitDialogVisible = false
       state.isControlUnitListDialogVisible = false
