@@ -71,9 +71,9 @@ dev-erase-db:
 dev-clean-target-env:
 	rm -rf $(shell pwd)/backend/target
 
-.PHONY: test dev-lint-backend
-dev-lint-backend:
-	cd ./backend && ./mvnw antrun:run@ktlint-format | grep -v \
+.PHONY: clean lint-back test
+lint-back:
+	cd ./backend && ./gradlew ktlintFormat | grep -v \
 		-e "Exceeded max line length" \
 		-e "Package name must not contain underscore" \
 		-e "Wildcard import"
@@ -224,4 +224,3 @@ logs-db:
 .PHONY: dev lint-back
 
 dev: dev-run-back
-lint-back: dev-lint-backend
