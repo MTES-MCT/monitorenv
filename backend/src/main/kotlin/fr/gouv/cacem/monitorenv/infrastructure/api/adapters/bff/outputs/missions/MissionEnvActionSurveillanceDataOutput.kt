@@ -41,6 +41,7 @@ data class MissionEnvActionSurveillanceDataOutput(
                 department = envActionSurveillanceEntity.department,
                 facade = envActionSurveillanceEntity.facade,
                 geom = envActionSurveillanceEntity.geom,
+                coverMissionZone = envActionSurveillanceEntity.coverMissionZone,
                 observations = envActionSurveillanceEntity.observations,
                 reportingIds = reportingIds,
                 themes = envActionSurveillanceEntity.themes,
