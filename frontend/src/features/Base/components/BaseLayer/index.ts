@@ -10,6 +10,7 @@ import { Layers } from '../../../../domain/entities/layers/constants'
 import { setOverlayCoordinates } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { controlUnitListDialogActions } from '../../../ControlUnit/components/ControlUnitListDialog/slice'
 import { baseActions } from '../../slice'
 
 import type { BaseMapChildrenProps } from '../../../map/BaseMap'
@@ -73,6 +74,7 @@ export function BaseLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
     }
 
     const featureId = feature.getId()?.toString()
+    const featureProps = feature.getProperties()
     if (!featureId?.includes(Layers.BASES.code)) {
       return
     }
@@ -80,6 +82,12 @@ export function BaseLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
     if (feature.getId()?.toString()?.startsWith(Layers.BASES.code)) {
       dispatch(baseActions.selectBaseFeatureId(featureId))
       dispatch(setOverlayCoordinates(undefined))
+      dispatch(
+        controlUnitListDialogActions.setFilter({
+          key: 'baseId',
+          value: featureProps.base.id
+        })
+      )
     }
   }, [dispatch, mapClickEvent])
 
