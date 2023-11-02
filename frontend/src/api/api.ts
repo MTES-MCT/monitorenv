@@ -11,8 +11,7 @@ import type { BackendApiErrorResponse } from './types'
 export const geoserverApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: `${GEOSERVER_REMOTE_URL}/geoserver` }),
   endpoints: () => ({}),
-  reducerPath: 'monitorenvPrivateApi',
-  tagTypes: ['Missions', 'Reportings']
+  reducerPath: 'geoserverApi'
 })
 
 // =============================================================================
