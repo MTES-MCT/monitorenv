@@ -5,7 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurve
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ThemeEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 data class MissionEnvActionSurveillanceDataOutput(
     override val id: UUID,
@@ -41,6 +41,7 @@ data class MissionEnvActionSurveillanceDataOutput(
                 department = envActionSurveillanceEntity.department,
                 facade = envActionSurveillanceEntity.facade,
                 geom = envActionSurveillanceEntity.geom,
+                coverMissionZone = envActionSurveillanceEntity.coverMissionZone,
                 observations = envActionSurveillanceEntity.observations,
                 reportingIds = reportingIds,
                 themes = envActionSurveillanceEntity.themes,

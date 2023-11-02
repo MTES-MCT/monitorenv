@@ -1,18 +1,15 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ThemeEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.*
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
+// TODO It's unused, do we keep it?
 data class CreateOrUpdateEnvActionDataInput(
     val id: UUID,
     val actionType: ActionTypeEnum,
@@ -31,7 +28,7 @@ data class CreateOrUpdateEnvActionDataInput(
     val actionTargetType: ActionTargetTypeEnum? = null,
     val vehicleType: VehicleTypeEnum? = null,
     val infractions: List<InfractionEntity>? = listOf(),
-    val coverMissionZone: Boolean? = null,
+    val coverMissionZone: Boolean,
 ) {
     fun toEnvActionEntity(): EnvActionEntity {
         when (actionType) {
