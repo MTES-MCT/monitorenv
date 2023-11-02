@@ -7,7 +7,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionContr
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 // TODO It's unused, do we keep it?
 data class CreateOrUpdateEnvActionDataInput(
@@ -28,7 +28,7 @@ data class CreateOrUpdateEnvActionDataInput(
     val actionTargetType: ActionTargetTypeEnum? = null,
     val vehicleType: VehicleTypeEnum? = null,
     val infractions: List<InfractionEntity>? = listOf(),
-    val coverMissionZone: Boolean,
+    val coverMissionZone: Boolean? = null,
 ) {
     fun toEnvActionEntity(): EnvActionEntity {
         when (actionType) {
