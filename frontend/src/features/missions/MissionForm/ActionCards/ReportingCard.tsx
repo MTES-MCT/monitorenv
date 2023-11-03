@@ -22,7 +22,7 @@ export function ReportingCard({
     const newControl = actionFactory({
       actionTargetType: action.targetType,
       actionType: ActionTypeEnum.CONTROL,
-      attachedReportingId: Number(action.id),
+      reportingIds: [Number(action.id)],
       vehicleType: action.vehicleType,
       ...(action.theme && {
         themes: [

@@ -318,14 +318,13 @@ export type NewEnvActionControl = EnvActionCommonProperties & {
   actionNumberOfControls?: number
   actionTargetType?: string
   actionType: ActionTypeEnum.CONTROL
-  attachedReportingId?: number | undefined
   infractions: Infraction[]
   isAdministrativeControl?: boolean
   isComplianceWithWaterRegulationsControl?: boolean
   isSafetyEquipmentAndStandardsComplianceControl?: boolean
   isSeafarersControl?: boolean
   observations: string | null
-  reportingIds?: number[]
+  reportingIds: number[]
   themes: EnvActionTheme[]
   vehicleType?: string
 }
@@ -335,11 +334,10 @@ export type EnvActionControl = NewEnvActionControl & {
 
 export type EnvActionSurveillance = EnvActionCommonProperties & {
   actionType: ActionTypeEnum.SURVEILLANCE
-  attachedReportingId?: number | undefined
   coverMissionZone?: boolean
   durationMatchesMission?: boolean
   observations: string | null
-  reportingIds?: number[]
+  reportingIds: number[]
   themes: EnvActionTheme[]
 }
 

@@ -28,7 +28,12 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const reportings = useAppSelector(state => state.reporting.reportings)
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const missionAttachedToReporting = useMemo(() => {
-    if (reportings === undefined || !activeReportingId || !reportings[activeReportingId]) {
+    if (
+      reportings === undefined ||
+      !activeReportingId ||
+      !reportings[activeReportingId] ||
+      reportings[activeReportingId]?.reporting.detachedFromMissionAtUtc
+    ) {
       return undefined
     }
 

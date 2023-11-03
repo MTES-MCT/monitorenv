@@ -9,7 +9,6 @@ import { ActionsForm } from './ActionsForm'
 import { GeneralInformationsForm } from './GeneralInformationsForm'
 import { useSyncFormValuesWithRedux } from './hooks/useSyncFormValuesWithRedux'
 import { useUpdateOtherControlTypes } from './hooks/useUpdateOtherControlTypes'
-import { useUpdateReportingsAndEnvActions } from './hooks/useUpdateReportingsAndEnvActions'
 import { useUpdateSurveillance } from './hooks/useUpdateSurveillance'
 import { MissionFormBottomBar } from './MissionFormBottomBar'
 import { CancelEditModal } from './modals/CancelEditModal'
@@ -36,7 +35,6 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
   useSyncFormValuesWithRedux()
   useUpdateSurveillance()
   useUpdateOtherControlTypes()
-  useUpdateReportingsAndEnvActions()
 
   useEffect(() => {
     if (selectedMission) {

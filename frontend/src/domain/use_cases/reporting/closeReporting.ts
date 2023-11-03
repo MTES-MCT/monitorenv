@@ -11,15 +11,21 @@ export const closeReporting =
     }
 
     if (reportings[reportingIdToClose].isFormDirty) {
-      await dispatch(reportingActions.setReporting(reportings[reportingIdToClose]))
+      const reportingToClose = reportings[reportingIdToClose]
+      await dispatch(reportingActions.setReporting(reportingToClose))
       await dispatch(reportingActions.setActiveReportingId(reportingIdToClose))
+
+      const hasAttachedMission =
+        !!reportingToClose.reporting.attachedMission && !reportingToClose.reporting.detachedFromMissionAtUtc
       await dispatch(
         attachMissionToReportingSliceActions.setAttachedMission(
-          reportings[reportingIdToClose].reporting.attachedMission
+          hasAttachedMission ? reportings[reportingIdToClose].reporting.attachedMission : undefined
         )
       )
       await dispatch(
-        attachMissionToReportingSliceActions.setMissionId(reportings[reportingIdToClose].reporting.missionId)
+        attachMissionToReportingSliceActions.setMissionId(
+          hasAttachedMission ? reportings[reportingIdToClose].reporting.missionId : undefined
+        )
       )
       await dispatch(reportingActions.setIsConfirmCancelDialogVisible(true))
       await dispatch(

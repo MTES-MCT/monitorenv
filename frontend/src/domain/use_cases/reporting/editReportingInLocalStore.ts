@@ -52,10 +52,14 @@ async function setReporting(dispatch, reportingId, reportingContext, newReportin
 
   await dispatch(reportingActions.setReporting(newReporting))
   await dispatch(reportingActions.setActiveReportingId(reportingId))
-  // if (newReporting.reporting.attachedMission) {
+  const hasAttachedMission =
+    !!newReporting.reporting.attachedMission && !newReporting.reporting.detachedFromMissionAtUtc
   await dispatch(
-    attachMissionToReportingSliceActions.setAttachedMission(newReporting.reporting.attachedMission || undefined)
+    attachMissionToReportingSliceActions.setAttachedMission(
+      hasAttachedMission ? newReporting.reporting.attachedMission : undefined
+    )
   )
-  await dispatch(attachMissionToReportingSliceActions.setMissionId(newReporting.reporting.missionId || undefined))
-  // }
+  await dispatch(
+    attachMissionToReportingSliceActions.setMissionId(hasAttachedMission ? newReporting.reporting.missionId : undefined)
+  )
 }

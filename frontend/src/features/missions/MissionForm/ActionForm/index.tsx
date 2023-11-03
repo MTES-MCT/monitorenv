@@ -43,7 +43,11 @@ export function ActionForm({ currentActionIndex, setCurrentActionIndex }: Action
   if (reportingActionIndex !== -1) {
     return (
       <ReportingFormWrapper>
-        <ReportingForm key={reportingField.value.id} reportingActionIndex={reportingActionIndex} />
+        <ReportingForm
+          key={reportingField.value.id}
+          reportingActionIndex={reportingActionIndex}
+          setCurrentActionIndex={setCurrentActionIndex}
+        />
       </ReportingFormWrapper>
     )
   }

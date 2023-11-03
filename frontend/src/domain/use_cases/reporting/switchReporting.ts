@@ -8,8 +8,18 @@ export const switchReporting =
 
     await dispatch(reportingActions.setActiveReportingId(nextReportingId))
     const nextReporting = reportings[nextReportingId]
-    await dispatch(attachMissionToReportingSliceActions.setAttachedMission(nextReporting.reporting.attachedMission))
-    await dispatch(attachMissionToReportingSliceActions.setMissionId(nextReporting.reporting.missionId))
+    const hasAttachedMission =
+      !!nextReporting.reporting.attachedMission && !nextReporting.reporting.detachedFromMissionAtUtc
+    await dispatch(
+      attachMissionToReportingSliceActions.setAttachedMission(
+        hasAttachedMission ? nextReporting.reporting.attachedMission : undefined
+      )
+    )
+    await dispatch(
+      attachMissionToReportingSliceActions.setMissionId(
+        hasAttachedMission ? nextReporting.reporting.missionId : undefined
+      )
+    )
 
     dispatch(
       setReportingFormVisibility({

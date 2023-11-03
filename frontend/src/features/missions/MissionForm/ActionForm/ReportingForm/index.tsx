@@ -21,7 +21,13 @@ import { attachReportingToMissionSliceActions } from '../../AttachReporting/slic
 
 const EMPTY_VALUE = '--'
 
-export function ReportingForm({ reportingActionIndex }: { reportingActionIndex: number }) {
+export function ReportingForm({
+  reportingActionIndex,
+  setCurrentActionIndex
+}: {
+  reportingActionIndex: number
+  setCurrentActionIndex: (string) => void
+}) {
   const dispatch = useAppDispatch()
   const [reportingField] = useField<ReportingDetailed>(`attachedReportings.${reportingActionIndex}`)
 
@@ -56,6 +62,8 @@ export function ReportingForm({ reportingActionIndex }: { reportingActionIndex: 
     const reportingIdToDeleteIndex = reportingIds.findIndex(id => id === reporting.id)
     reportingIds.splice(reportingIdToDeleteIndex, 1)
     dispatch(attachReportingToMissionSliceActions.setAttachedReportingIds(reportingIds))
+
+    setCurrentActionIndex(undefined)
   }
 
   return (

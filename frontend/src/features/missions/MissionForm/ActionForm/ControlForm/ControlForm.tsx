@@ -52,8 +52,8 @@ export function ControlForm({
 
   const targetTypeOptions = getOptionsFromLabelledEnum(TargetTypeLabels)
 
-  const { actionNumberOfControls, actionTargetType, attachedReportingId, vehicleType } = currentAction || {}
-  const [isReportingListVisible, setIsReportingListVisible] = useState<boolean>(!!attachedReportingId)
+  const { actionNumberOfControls, actionTargetType, reportingIds, vehicleType } = currentAction || {}
+  const [isReportingListVisible, setIsReportingListVisible] = useState<boolean>(reportingIds?.length === 1)
 
   const actionTargetTypeErrorMessage = useMemo(
     () => getIn(errors, `envActions[${envActionIndex}].actionTargetType`) || '',
@@ -139,7 +139,14 @@ export function ControlForm({
   const updateIsContralAttachedToReporting = (checked: boolean) => {
     setIsReportingListVisible(checked)
     if (!checked) {
-      setFieldValue(`envActions[${envActionIndex}].attachedReportingId`, undefined)
+      const reportingToDetachIndex = attachedReportings?.findIndex(
+        reporting => reporting.attachedEnvActionId === currentAction?.id
+      )
+
+      if (reportingToDetachIndex !== -1) {
+        setFieldValue(`attachedReportings[${reportingToDetachIndex}].attachedEnvActionId`, undefined)
+      }
+      setFieldValue(`envActions[${envActionIndex}].reportingIds`, [])
     }
   }
 
@@ -147,7 +154,12 @@ export function ControlForm({
     if (!reportingId) {
       return
     }
-    setFieldValue(`envActions[${envActionIndex}].attachedReportingId`, reportingId)
+    setFieldValue(`envActions[${envActionIndex}].reportingIds`, [reportingId])
+    const reportingToAttachIndex = attachedReportings?.findIndex(reporting => reporting.id === reportingId)
+
+    if (reportingToAttachIndex !== -1) {
+      setFieldValue(`attachedReportings[${reportingToAttachIndex}].attachedEnvActionId`, currentAction?.id)
+    }
   }
 
   return (
@@ -176,7 +188,7 @@ export function ControlForm({
             <Toggle
               checked={isReportingListVisible}
               onChange={updateIsContralAttachedToReporting}
-              readOnly={areAllReportingsAttachedToAControl && !currentAction?.attachedReportingId}
+              readOnly={areAllReportingsAttachedToAControl && currentAction?.reportingIds?.length === 0}
             />
             <span>Le contrôle est rattaché à un signalement</span>
           </StyledToggle>
@@ -184,10 +196,10 @@ export function ControlForm({
             <StyledMultiRadio
               isLabelHidden
               label="Signalements"
-              name="attachedReportingId"
+              name="reportingIds"
               onChange={selectReporting}
               options={reportingAsOptions}
-              value={currentAction?.attachedReportingId}
+              value={currentAction?.reportingIds[0]}
             />
           )}
         </ReportingsContainer>

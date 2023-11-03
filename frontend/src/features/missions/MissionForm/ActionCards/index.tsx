@@ -64,7 +64,7 @@ export function ActionCards({
                     title="supprimer"
                   />
                 </ActionButtons>
-                {action.actionType === ActionTypeEnum.CONTROL && action.attachedReportingId && (
+                {action.actionType === ActionTypeEnum.CONTROL && action.formattedReportingId && (
                   <StyledTag Icon={Icon.Link}>{`Signalement ${action.formattedReportingId}`}</StyledTag>
                 )}
               </ButtonsWrapper>

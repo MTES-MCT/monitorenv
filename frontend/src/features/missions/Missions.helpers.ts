@@ -179,16 +179,24 @@ type ActionsForTimeLine = Record<string, ReportingForTimeline | EnvActionForTime
 
 const formattedEnvActionsForTimeline = (envActions, reportings) =>
   envActions?.reduce((newEnvActionsCollection, action) => {
-    let attachedReporting
-    if (action.actionType === ActionTypeEnum.CONTROL && action.attachedReportingId) {
-      attachedReporting = reportings?.find(reporting => reporting.id === action.attachedReportingId)
+    if (action.actionType === ActionTypeEnum.CONTROL && action.reportingIds.length === 1) {
+      const attachedReporting = reportings?.find(reporting => reporting.id === action.reportingIds[0])
+
+      return {
+        ...newEnvActionsCollection,
+        [action.id]: {
+          ...action,
+          formattedReportingId: getFormattedReportingId(attachedReporting?.reportingId),
+          timelineDate: action?.actionStartDateTimeUtc
+        }
+      }
     }
 
     return {
       ...newEnvActionsCollection,
       [action.id]: {
         ...action,
-        formattedReportingId: getFormattedReportingId(attachedReporting?.reportingId),
+        formattedReportingId: undefined,
         timelineDate: action?.actionStartDateTimeUtc
       }
     }
