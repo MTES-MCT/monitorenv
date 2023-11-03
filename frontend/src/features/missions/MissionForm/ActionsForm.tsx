@@ -18,8 +18,8 @@ import type { Reporting } from '../../../domain/entities/reporting'
 export function ActionsForm({ currentActionIndex, setCurrentActionIndex }) {
   const { errors, setFieldValue, values } = useFormikContext<Partial<Mission | NewMission>>()
 
-  const envActions = values?.envActions as EnvAction[] | undefined
-  const attachedReportings = values?.attachedReportings as Reporting[] | undefined
+  const envActions = values?.envActions as EnvAction[]
+  const attachedReportings = values?.attachedReportings as Reporting[]
   const isFirstSurveillanceAction = !envActions?.find(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
 
   const actions = useMemo(

@@ -10,8 +10,10 @@ import { removeOverlayCoordinatesByName } from '../../../../domain/shared_slices
 import { reportingActions } from '../../../../domain/shared_slices/reporting'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { useHasMapListener } from '../../../../hooks/useHasMapListener'
 import { useGetFilteredReportingsQuery } from '../../../Reportings/hooks/useGetFilteredReportingsQuery'
 
+import type { ReportingDetailed } from '../../../../domain/entities/reporting'
 import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
@@ -19,35 +21,66 @@ import type { Geometry } from 'ol/geom'
 export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const { displayReportingsLayer, overlayCoordinates } = useAppSelector(state => state.global)
+  const { reportings: reportingsInStore } = useAppSelector(state => state.reporting)
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
 
-  const listener = useAppSelector(state => state.draw.listener)
-  const attachMissionListener = useAppSelector(state => state.attachMissionToReporting.attachMissionListener)
-  const attachReportingListener = useAppSelector(state => state.attachReportingToMission.attachReportingListener)
-
   // we don't want to display reportings on the map if the user so decides (displayReportingsLayer variable)
-  // or if user have interaction on map (edit mission zone, attach reporting or mission)
+  // or if user have interaction on map (edit mission zone, attach mission or reporting)
+  const hasMapListener = useHasMapListener()
   const isLayerVisible = useMemo(
-    () => displayReportingsLayer && !listener && !attachMissionListener && !attachReportingListener,
-    [displayReportingsLayer, listener, attachMissionListener, attachReportingListener]
+    () => displayReportingsLayer && !hasMapListener,
+    [displayReportingsLayer, hasMapListener]
   )
+
+  // Active reporting
+  const activeReporting = useMemo(() => {
+    if (reportingsInStore === undefined || !activeReportingId || !reportingsInStore[activeReportingId]) {
+      return undefined
+    }
+
+    return reportingsInStore[activeReportingId]?.reporting as ReportingDetailed
+  }, [activeReportingId, reportingsInStore])
+
+  const activeReportingFeature = useMemo(() => {
+    if (!activeReporting) {
+      return []
+    }
+
+    return [getReportingZoneFeature(activeReporting, Layers.REPORTINGS.code)]
+  }, [activeReporting])
+
+  // Attached reportings to active mission
+  const attachedReportingsToActiveMission = useAppSelector(state => state.missionState.missionState?.attachedReportings)
+  const attachedReportingsToActiveMissionFeature = useMemo(() => {
+    if (!attachedReportingsToActiveMission || attachedReportingsToActiveMission?.length === 0) {
+      return []
+    }
+
+    return attachedReportingsToActiveMission.map(reporting =>
+      getReportingZoneFeature(reporting, Layers.REPORTINGS.code)
+    )
+  }, [attachedReportingsToActiveMission])
+
   const { reportings } = useGetFilteredReportingsQuery()
 
-  const reportingsPointOrZone = useMemo(
-    () =>
-      reduce(
-        reportings,
-        (features, reporting) => {
-          if (reporting && reporting.geom) {
-            features.push(getReportingZoneFeature(reporting, Layers.REPORTINGS.code))
-          }
+  // we want to display reportings from API (with active filters), active reporting
+  // and reportings attached to active mission
+  const reportingsPointOrZone = useMemo(() => {
+    const reportingsFromApiFeatures = reduce(
+      reportings,
+      (features, reporting) => {
+        if (reporting && reporting.geom && reporting.id !== activeReportingId) {
+          features.push(getReportingZoneFeature(reporting, Layers.REPORTINGS.code))
+        }
 
-          return features
-        },
-        [] as Feature[]
-      ),
-    [reportings]
-  )
+        return features
+      },
+      [] as Feature[]
+    )
+
+    return [...reportingsFromApiFeatures, ...attachedReportingsToActiveMissionFeature, ...activeReportingFeature]
+  }, [reportings, attachedReportingsToActiveMissionFeature, activeReportingFeature, activeReportingId])
+
   const vectorSourceRef = useRef() as React.MutableRefObject<VectorSource<Geometry>>
   const GetVectorSource = () => {
     if (vectorSourceRef.current === undefined) {
@@ -72,6 +105,16 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
 
     return vectorLayerRef.current
   }, [])
+
+  useEffect(() => {
+    GetVectorSource().forEachFeature(feature => {
+      const selectedReportingId = `${Layers.REPORTINGS.code}:${activeReportingId}`
+      feature.setProperties({
+        isSelected: feature.getId() === selectedReportingId,
+        overlayCoordinates: feature.getId() === selectedReportingId ? overlayCoordinates : undefined
+      })
+    })
+  }, [overlayCoordinates, activeReportingId])
 
   useEffect(() => {
     if (map) {

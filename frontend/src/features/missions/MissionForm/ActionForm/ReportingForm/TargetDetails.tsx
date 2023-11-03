@@ -21,14 +21,14 @@ export function TargetDetails({ reporting }) {
                   label="Nom de la personne morale"
                   name="operatorName"
                   plaintext
-                  value={reporting.targetDetails[0].operatorName || EMPTY_VALUE}
+                  value={reporting.targetDetails.length > 0 ? reporting.targetDetails[0].operatorName : EMPTY_VALUE}
                 />
                 <TextInput
                   isLight
                   label="Identité de la personne contrôlée"
                   name="vesselName"
                   plaintext
-                  value={reporting.targetDetails[0].vesselName || EMPTY_VALUE}
+                  value={reporting.targetDetails.length > 0 ? reporting.targetDetails[0].vesselName : EMPTY_VALUE}
                 />
               </>
             )}
@@ -38,7 +38,7 @@ export function TargetDetails({ reporting }) {
                 label="Identité de la personne"
                 name="operatorName"
                 plaintext
-                value={reporting.targetDetails[0].operatorName || EMPTY_VALUE}
+                value={reporting.targetDetails.length > 0 ? reporting.targetDetails[0].operatorName : EMPTY_VALUE}
               />
             )}
           </StyledVesselContainer>

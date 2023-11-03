@@ -1,6 +1,6 @@
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { type MutableRefObject, useCallback, useEffect, useRef } from 'react'
+import { type MutableRefObject, useCallback, useEffect, useRef, useMemo } from 'react'
 
 import { getEditingReportingZoneFeature } from './reportingsGeometryHelpers'
 import { editingReportingStyleFn } from './style'
@@ -20,8 +20,19 @@ export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
   const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
 
   const editingReporting = activeReportingId ? reportings[activeReportingId].reporting : undefined
-  const displayEditingLayer = displayReportingEditingLayer && selectedReportingIdOnMap === activeReportingId
+  const listener = useAppSelector(state => state.draw.listener)
+  const attachReportingListener = useAppSelector(state => state.attachReportingToMission.attachReportingListener)
 
+  // we don't want to display reportings on the map if the user so decides (displayMissionEditingLayer variable)
+  // or if user have interaction on map (edit mission zone, attach reporting to mission)
+  const isLayerVisible = useMemo(
+    () =>
+      displayReportingEditingLayer &&
+      !listener &&
+      !attachReportingListener &&
+      selectedReportingIdOnMap === activeReportingId,
+    [displayReportingEditingLayer, listener, attachReportingListener, activeReportingId, selectedReportingIdOnMap]
+  )
   const editingReportingVectorSourceRef = useRef() as MutableRefObject<VectorSource>
   const GetEditingReportingVectorSource = () => {
     if (editingReportingVectorSourceRef.current === undefined) {
@@ -73,8 +84,8 @@ export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
   }, [map, GetSelectedReportingVectorLayer])
 
   useEffect(() => {
-    GetSelectedReportingVectorLayer()?.setVisible(displayEditingLayer)
-  }, [displayEditingLayer, GetSelectedReportingVectorLayer])
+    GetSelectedReportingVectorLayer()?.setVisible(isLayerVisible)
+  }, [isLayerVisible, GetSelectedReportingVectorLayer])
 
   useEffect(() => {
     GetEditingReportingVectorSource()?.clear(true)

@@ -44,8 +44,10 @@ export const addMission = (attachedReporting?: Reporting) => async (dispatch, ge
   const missionsUpdated = [...missions, { isFormDirty: false, mission: missionFactory(undefined, id) }]
 
   await dispatch(multiMissionsActions.setSelectedMissions(missionsUpdated))
-  await dispatch(attachReportingToMissionSliceActions.setAttachedReportings([attachedReporting]))
-  await dispatch(attachReportingToMissionSliceActions.setAttachedReportingIds([attachedReporting?.id]))
+  if (attachedReporting) {
+    await dispatch(attachReportingToMissionSliceActions.setAttachedReportings([attachedReporting]))
+    await dispatch(attachReportingToMissionSliceActions.setAttachedReportingIds([attachedReporting?.id]))
+  }
 
   dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.MISSION, { id })))
 }

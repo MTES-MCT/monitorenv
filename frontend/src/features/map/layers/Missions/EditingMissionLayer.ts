@@ -1,6 +1,6 @@
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { type MutableRefObject, useCallback, useEffect, useRef } from 'react'
+import { type MutableRefObject, useCallback, useEffect, useRef, useMemo } from 'react'
 
 import { getMissionZoneFeature, getActionsFeatures } from './missionGeometryHelpers'
 import { selectedMissionStyle, selectedMissionActionsStyle } from './missions.style'
@@ -13,6 +13,15 @@ import type { BaseMapChildrenProps } from '../../BaseMap'
 export function EditingMissionLayer({ map }: BaseMapChildrenProps) {
   const { missionState } = useAppSelector(state => state.missionState)
   const { displayMissionEditingLayer } = useAppSelector(state => state.global)
+  const listener = useAppSelector(state => state.draw.listener)
+  const attachMissionListener = useAppSelector(state => state.attachMissionToReporting.attachMissionListener)
+
+  // we don't want to display missions on the map if the user so decides (displayMissionEditingLayer variable)
+  // or if user have interaction on map (edit mission zone, attach mission to reporting)
+  const isLayerVisible = useMemo(
+    () => displayMissionEditingLayer && !listener && !attachMissionListener,
+    [displayMissionEditingLayer, listener, attachMissionListener]
+  )
 
   const editingMissionVectorSourceRef = useRef() as MutableRefObject<VectorSource>
   const GetEditingMissionVectorSource = () => {
@@ -83,9 +92,9 @@ export function EditingMissionLayer({ map }: BaseMapChildrenProps) {
   }, [map, GetSelectedMissionVectorLayer, GetSelectedMissionActionsVectorLayer])
 
   useEffect(() => {
-    GetSelectedMissionVectorLayer()?.setVisible(displayMissionEditingLayer)
-    GetSelectedMissionActionsVectorLayer()?.setVisible(displayMissionEditingLayer)
-  }, [displayMissionEditingLayer, GetSelectedMissionVectorLayer, GetSelectedMissionActionsVectorLayer])
+    GetSelectedMissionVectorLayer()?.setVisible(isLayerVisible)
+    GetSelectedMissionActionsVectorLayer()?.setVisible(isLayerVisible)
+  }, [isLayerVisible, GetSelectedMissionVectorLayer, GetSelectedMissionActionsVectorLayer])
 
   useEffect(() => {
     GetEditingMissionVectorSource()?.clear(true)
