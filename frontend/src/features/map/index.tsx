@@ -26,8 +26,13 @@ import { MissionOverlays } from './overlays/missions'
 import { ReportingOverlay } from './overlays/reportings'
 import { SemaphoreOverlay } from './overlays/semaphores'
 import { ShowRegulatoryMetadata } from './ShowRegulatoryMetadata'
-import { MissionToAttachLayer } from '../Reportings/Layers/missionToAttach'
-import { SelectedMissionToAttachLayer } from '../Reportings/Layers/selectedMissionToAttach'
+import { ReportingToAttachLayer } from '../missions/Layers/ReportingToAttach'
+import { HoveredReportingToAttachLayer } from '../missions/Layers/ReportingToAttach/HoveredReportingToAttachLayer'
+import { SelectedReportingToAttachLayer } from '../missions/Layers/ReportingToAttach/SelectedReportingToAttachLayer'
+import { ReportingToAttachOverlays } from '../missions/Overlays/reportingToAttach'
+import { MissionToAttachLayer } from '../Reportings/Layers'
+import { HoveredMissionToAttachLayer } from '../Reportings/Layers/HoveredMissionToAttachLayer'
+import { SelectedMissionToAttachLayer } from '../Reportings/Layers/SelectedMissionToAttachLayer'
 import { MissionToAttachOverlays } from '../Reportings/Overlays/missionToAttach'
 import { StationLayer } from '../Station/components/StationLayer'
 import { StationOverlay } from '../Station/components/StationOverlay'
@@ -50,6 +55,10 @@ export function Map() {
       {/* @ts-ignore */}
       <MapLayer />
       {/* @ts-ignore */}
+      <BaseLayer />
+
+      {/* ZONE */}
+      {/* @ts-ignore */}
       <AMPLayers />
       {/* @ts-ignore */}
       <AMPPreviewLayer />
@@ -71,6 +80,8 @@ export function Map() {
       <MapHistory />
       {/* @ts-ignore */}
       <DrawLayer />
+
+      {/* MISSION */}
       {/* @ts-ignore */}
       <MissionsLayer />
       {/* @ts-ignore */}
@@ -84,9 +95,21 @@ export function Map() {
       {/* @ts-ignore */}
       <ActionOverlay />
       {/* @ts-ignore */}
+      <ReportingToAttachLayer />
+      {/* @ts-ignore */}
+      <SelectedReportingToAttachLayer />
+      {/* @ts-ignore */}
+      <HoveredReportingToAttachLayer />
+      {/* @ts-ignore */}
+      <ReportingToAttachOverlays />
+
+      {/* SEMAPHORE */}
+      {/* @ts-ignore */}
       <SemaphoresLayer />
       {/* @ts-ignore */}
       <SemaphoreOverlay />
+
+      {/* REPORTING */}
       {/* @ts-ignore */}
       <EditingReportingLayer />
       {/* @ts-ignore */}
@@ -103,6 +126,8 @@ export function Map() {
       <StationOverlay />
       {/* @ts-ignore */}
       <MissionToAttachLayer />
+      {/* @ts-ignore */}
+      <HoveredMissionToAttachLayer />
       {/* @ts-ignore */}
       <SelectedMissionToAttachLayer />
       {/* @ts-ignore */}

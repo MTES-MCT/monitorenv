@@ -1,23 +1,26 @@
 import { customDayjs as dayjs, pluralize } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { MissionSourceTag } from '../../../../ui/MissionSourceTag'
+import {
+  getMissionStatus,
+  getTotalOfControls,
+  getTotalOfSurveillances,
+  type Mission
+} from '../../../../domain/entities/missions'
 import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
 import { missionTypesToString } from '../../../../utils/missionTypes'
 
-export function MissionCard({ feature }: { feature: any }) {
-  const { attachMissionListener } = useAppSelector(state => state.attachMissionToReporting)
-  const {
-    controlUnits,
-    endDateTimeUtc,
-    missionSource,
-    missionStatus,
-    missionTypes,
-    numberOfControls,
-    numberOfSurveillance,
-    startDateTimeUtc
-  } = feature.getProperties()
+export function AttachedReportingCard({ attachedMission }: { attachedMission: Mission | undefined }) {
+  if (!attachedMission) {
+    return null
+  }
+
+  const { controlUnits, endDateTimeUtc, missionTypes, startDateTimeUtc } = attachedMission || {}
+  const numberOfControls = getTotalOfControls(attachedMission) || 0
+  const numberOfSurveillance = getTotalOfSurveillances(attachedMission) || 0
+
+  const firstControlUnit = controlUnits[0]
+  const missionStatus = getMissionStatus(attachedMission)
 
   const startDate = dayjs(startDateTimeUtc)
   const endDate = dayjs(endDateTimeUtc)
@@ -30,27 +33,23 @@ export function MissionCard({ feature }: { feature: any }) {
     ? formattedStartDate
     : `du ${formattedStartDate} au ${formattedEndDate}`
 
-  if (!attachMissionListener) {
-    return null
-  }
-
   return (
     <Wrapper data-cy="attach-mission-to-reporting-overlay">
       <Header>
         <Title>
-          {controlUnits.length === 1 && (
+          {controlUnits && controlUnits?.length === 1 && (
             <>
-              <div>{controlUnits[0].name.toUpperCase()}</div>
-              {controlUnits[0].contact ? (
-                <div>{controlUnits[0].contact}</div>
+              <div>{firstControlUnit?.name.toUpperCase()}</div>
+              {firstControlUnit?.contact ? (
+                <div>{firstControlUnit?.contact}</div>
               ) : (
                 <NoContact>Aucun contact renseigné</NoContact>
               )}
             </>
           )}
-          {controlUnits.length > 1 && controlUnits[0] && (
+          {controlUnits?.length > 1 && firstControlUnit && (
             <>
-              <div>{controlUnits[0].name.toUpperCase()}</div>
+              <div>{firstControlUnit?.name.toUpperCase()}</div>
               <MultipleControlUnits>
                 et {controlUnits.length - 1} {pluralize('autre', controlUnits.length - 1)}{' '}
                 {pluralize('unité', controlUnits.length - 1)}
@@ -60,7 +59,6 @@ export function MissionCard({ feature }: { feature: any }) {
         </Title>
       </Header>
 
-      <MissionSourceTag source={missionSource} styleProps={{ alignSelf: 'start' }} />
       <Details>
         <div>
           {' '}
@@ -78,12 +76,11 @@ export function MissionCard({ feature }: { feature: any }) {
 
 const Wrapper = styled.div`
   padding: 10px;
-  box-shadow: 0px 3px 6px #70778540;
-  background-color: ${p => p.theme.color.white};
+  box-shadow: 0px 3px 6px #70778529;
+  background-color: ${p => p.theme.color.cultured};
   display: flex;
   flex-direction: column;
   gap: 12px;
-  flex: 0 0 260px;
 `
 
 const Header = styled.div`
@@ -100,7 +97,6 @@ const NoContact = styled.div`
   font-weight: 400;
   font-style: italic;
 `
-
 const Details = styled.div`
   > div {
     color: ${p => p.theme.color.slateGray};

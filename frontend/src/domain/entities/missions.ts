@@ -272,6 +272,7 @@ export type ResourceUnit = {
 
 export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote> = {
   attachedReportingIds?: number[]
+  attachedReportings?: Reporting[]
   closedBy: string
   controlUnits: LegacyControlUnit[]
   endDateTimeUtc?: string
@@ -287,7 +288,6 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
   observationsCacem?: string
   observationsCnsp?: string
   openBy: string
-  reportings?: Reporting[]
   startDateTimeUtc: string
 }
 

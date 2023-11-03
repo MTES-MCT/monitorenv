@@ -15,7 +15,7 @@ import type { Geometry } from 'ol/geom'
 
 export function MissionToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useDispatch()
-  const attachMissionListener = useAppSelector(state => state.attachReportingToMission.attachMissionListener)
+  const attachMissionListener = useAppSelector(state => state.attachMissionToReporting.attachMissionListener)
   const { data: missions } = useGetMissionsQuery({
     missionStatus: ['PENDING']
   })

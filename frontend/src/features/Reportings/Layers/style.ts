@@ -21,4 +21,4 @@ export const selectedMissionToAttachStyle = new Style({
   })
 })
 
-export const attachedMissionStyle = [selectedMissionStyle, selectedMissionToAttachStyle]
+export const attachedMissionStyle = feature => [...selectedMissionStyle(feature), selectedMissionToAttachStyle]

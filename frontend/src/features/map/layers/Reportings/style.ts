@@ -155,7 +155,6 @@ export const selectedReportingStyleFn = feature => {
   }
 }
 
-// TODO handle case when reporting is attach to a mission
 export const reportingPinStyleFn = feature => {
   const status = getReportingStatus({
     createdAt: feature.get('createdAt'),
@@ -214,7 +213,7 @@ const reportingToMissionLinkStyle = feature =>
     })
   })
 
-const reportingToMissionCircleStyle = feature =>
+const attachedMissionCircleStyle = feature =>
   new Style({
     geometry: () => {
       if (!feature.get('attachedMission')) {
@@ -246,5 +245,5 @@ export const editingReportingStyleFn = feature => [
   reportingPinStyleFn(feature),
   ...selectedReportingStyleFn(feature),
   reportingToMissionLinkStyle(feature),
-  reportingToMissionCircleStyle(feature)
+  attachedMissionCircleStyle(feature)
 ]

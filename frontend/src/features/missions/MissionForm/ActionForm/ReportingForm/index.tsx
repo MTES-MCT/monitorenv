@@ -19,7 +19,7 @@ import { vehicleTypeLabels } from '../../../../../domain/entities/vehicleType'
 const EMPTY_VALUE = '--'
 
 export function ReportingForm({ reportingActionIndex }: { reportingActionIndex: number }) {
-  const [reportingField] = useField<ReportingDetailed>(`reportings.${reportingActionIndex}`)
+  const [reportingField] = useField<ReportingDetailed>(`attachedReportings.${reportingActionIndex}`)
 
   const reporting = reportingField.value
   const sourceOptions = getOptionsFromLabelledEnum(ReportingSourceLabels)

@@ -11,9 +11,9 @@ import { getMissionZoneFeature } from '../../map/layers/Missions/missionGeometry
 import type { BaseMapChildrenProps } from '../../map/BaseMap'
 
 export function SelectedMissionToAttachLayer({ map }: BaseMapChildrenProps) {
-  const attachMissionListener = useAppSelector(state => state.attachReportingToMission.attachMissionListener)
+  const attachMissionListener = useAppSelector(state => state.attachMissionToReporting.attachMissionListener)
 
-  const attachedMissionId = useAppSelector(state => state.attachReportingToMission.attachedMissionId)
+  const attachedMissionId = useAppSelector(state => state.attachMissionToReporting.attachedMissionId)
   const { selectedMission: attachedMission } = useGetMissionsQuery(undefined, {
     selectFromResult: ({ data }) => ({
       selectedMission: data?.find(op => op.id === attachedMissionId)
@@ -40,9 +40,9 @@ export function SelectedMissionToAttachLayer({ map }: BaseMapChildrenProps) {
         style: attachedMissionStyle,
         updateWhileAnimating: true,
         updateWhileInteracting: true,
-        zIndex: Layers.MISSION_TO_ATTACH_ON_REPORTING_SELECTED.zIndex
+        zIndex: Layers.SELECTED_MISSION_TO_ATTACH_ON_REPORTING.zIndex
       })
-      selectedAttachedMissionVectorLayerRef.current.name = Layers.MISSION_TO_ATTACH_ON_REPORTING_SELECTED.code
+      selectedAttachedMissionVectorLayerRef.current.name = Layers.SELECTED_MISSION_TO_ATTACH_ON_REPORTING.code
     }
 
     return selectedAttachedMissionVectorLayerRef.current
@@ -69,7 +69,7 @@ export function SelectedMissionToAttachLayer({ map }: BaseMapChildrenProps) {
     GetSelectedMissionVectorSource()?.clear(true)
     if (attachedMission) {
       GetSelectedMissionVectorSource()?.addFeature(
-        getMissionZoneFeature(attachedMission, Layers.MISSION_TO_ATTACH_ON_REPORTING_SELECTED.code)
+        getMissionZoneFeature(attachedMission, Layers.SELECTED_MISSION_TO_ATTACH_ON_REPORTING.code)
       )
     }
   }, [attachedMission])

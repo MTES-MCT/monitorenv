@@ -2,7 +2,7 @@ import { reportingsAPI } from '../../../api/reportingsAPI'
 import { isNewReporting } from '../../../features/Reportings/utils'
 import { setReportingFormVisibility, setToast, ReportingContext, VisibilityState } from '../../shared_slices/Global'
 import { reportingActions } from '../../shared_slices/reporting'
-import { closeAddZone } from '../missions/closeAddZone'
+import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../map/updateMapInteractionListeners'
 
 import type { Reporting } from '../../entities/reporting'
 
@@ -22,7 +22,7 @@ export const saveReporting =
             visibility: VisibilityState.NONE
           })
         )
-        dispatch(closeAddZone())
+        await dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
         dispatch(reportingActions.deleteSelectedReporting(values.id))
       } else {
         throw Error('Erreur à la création ou à la modification du signalement')

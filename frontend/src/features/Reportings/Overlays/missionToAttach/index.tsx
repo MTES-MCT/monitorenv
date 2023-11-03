@@ -7,7 +7,7 @@ import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 
 export function MissionToAttachOverlays({ currentFeatureOver, map }: BaseMapChildrenProps) {
-  const attachedMissionId = useAppSelector(state => state.attachReportingToMission.attachedMissionId)
+  const attachedMissionId = useAppSelector(state => state.attachMissionToReporting.attachedMissionId)
 
   const { displayMissionToAttachLayer } = useAppSelector(state => state.global)
   const feature = map

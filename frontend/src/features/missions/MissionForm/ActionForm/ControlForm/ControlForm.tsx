@@ -44,7 +44,7 @@ export function ControlForm({
     errors,
     setFieldValue,
     setValues,
-    values: { envActions, reportings }
+    values: { attachedReportings, envActions }
   } = useFormikContext<Mission<EnvActionControl>>()
 
   const envActionIndex = envActions.findIndex(envAction => envAction.id === String(currentActionIndex))
@@ -72,7 +72,7 @@ export function ControlForm({
 
   const reportingAsOptions = useMemo(
     () =>
-      reportings?.map(reporting => ({
+      attachedReportings?.map(reporting => ({
         isDisabled:
           reporting.isControlRequired &&
           !!reporting.attachedEnvActionId &&
@@ -81,12 +81,14 @@ export function ControlForm({
         label: `Signalement ${getFormattedReportingId(reporting.reportingId)}`,
         value: reporting.id
       })) || [],
-    [reportings, currentAction]
+    [attachedReportings, currentAction]
   )
 
   const areAllReportingsAttachedToAControl = useMemo(
-    () => reportings && reportings.every(reporting => reporting.isControlRequired && reporting.attachedEnvActionId),
-    [reportings]
+    () =>
+      attachedReportings &&
+      attachedReportings.every(reporting => reporting.isControlRequired && reporting.attachedEnvActionId),
+    [attachedReportings]
   )
 
   const onVehicleTypeChange = selectedVehicleType => {

@@ -2,13 +2,13 @@ import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useRef } from 'react'
 
-import { missionZoneStyle } from './missions.style'
-import { Layers } from '../../../../domain/entities/layers/constants'
+import { Layers } from '../../../domain/entities/layers/constants'
+import { missionZoneStyle } from '../../map/layers/Missions/missions.style'
 
-import type { VectorLayerWithName } from '../../../../domain/types/layer'
-import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { VectorLayerWithName } from '../../../domain/types/layer'
+import type { BaseMapChildrenProps } from '../../map/BaseMap'
 
-export function HoveredMissionLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
+export function HoveredMissionToAttachLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
   const vectorSourceRef = useRef() as MutableRefObject<VectorSource>
   const GetVectorSource = () => {
     if (vectorSourceRef.current === undefined) {
@@ -29,9 +29,9 @@ export function HoveredMissionLayer({ currentFeatureOver, map }: BaseMapChildren
           style: missionZoneStyle,
           updateWhileAnimating: true,
           updateWhileInteracting: true,
-          zIndex: Layers.MISSIONS.zIndex
+          zIndex: Layers.MISSION_TO_ATTACH_ON_REPORTING.zIndex
         }) as VectorLayerWithName
-        vectorLayerRef.current.name = Layers.MISSION_SELECTED.code
+        vectorLayerRef.current.name = Layers.SELECTED_MISSION_TO_ATTACH_ON_REPORTING.code
       }
 
       return vectorLayerRef.current
@@ -50,7 +50,11 @@ export function HoveredMissionLayer({ currentFeatureOver, map }: BaseMapChildren
 
   useEffect(() => {
     GetVectorSource()?.clear(true)
-    if (currentFeatureOver && currentFeatureOver.getId()?.toString()?.includes(Layers.MISSIONS.code)) {
+
+    if (
+      currentFeatureOver &&
+      currentFeatureOver.getId()?.toString()?.includes(Layers.MISSION_TO_ATTACH_ON_REPORTING.code)
+    ) {
       GetVectorSource()?.addFeature(currentFeatureOver)
     }
   }, [currentFeatureOver])

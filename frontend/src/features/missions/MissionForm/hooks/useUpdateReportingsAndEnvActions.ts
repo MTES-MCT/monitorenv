@@ -10,18 +10,18 @@ export const useUpdateReportingsAndEnvActions = () => {
     const updateEnvActions = attachedReportingToEnvActions => {
       const attachedReportingsId = attachedReportingToEnvActions.map(envAction => envAction.attachedReportingId)
 
-      return values?.reportings?.map((reporting, index) => {
+      return values?.attachedReportings?.map((reporting, index) => {
         if (!attachedReportingsId.includes(reporting.id)) {
-          return setFieldValue(`reportings[${index}].attachedEnvActionId`, undefined)
+          return setFieldValue(`attachedReportings[${index}].attachedEnvActionId`, undefined)
         }
         const envAction = attachedReportingToEnvActions.find(action => action.attachedReportingId === reporting.id)
 
-        return setFieldValue(`reportings[${index}].attachedEnvActionId`, envAction.id)
+        return setFieldValue(`attachedReportings[${index}].attachedEnvActionId`, envAction.id)
       })
     }
 
     return updateEnvActions
-  }, [setFieldValue, values?.reportings])
+  }, [setFieldValue, values?.attachedReportings])
 
   useEffect(() => {
     const attachedReportingToEnvActions = values?.envActions.filter(

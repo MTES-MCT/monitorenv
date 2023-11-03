@@ -104,10 +104,6 @@ export const Layers = {
     code: 'mission_to_attach_on_reporting',
     zIndex: 1100
   },
-  MISSION_TO_ATTACH_ON_REPORTING_SELECTED: {
-    code: 'mission_to_attach_on_reporting_selected',
-    zIndex: 1100
-  },
   MISSIONS: {
     code: 'missions',
     zIndex: 1050
@@ -138,9 +134,21 @@ export const Layers = {
     code: 'reporting_selected',
     zIndex: 1025
   },
+  REPORTING_TO_ATTACH_ON_MISSION: {
+    code: 'reporting_to_attach_on_mission',
+    zIndex: 1025
+  },
   REPORTINGS: {
     code: 'reportings',
-    zIndex: 1025
+    zIndex: 1050
+  },
+  SELECTED_MISSION_TO_ATTACH_ON_REPORTING: {
+    code: 'SELECTED_MISSION_TO_ATTACH_ON_REPORTING',
+    zIndex: 1000
+  },
+  SELECTED_REPORTING_TO_ATTACH_ON_MISSION: {
+    code: 'SELECTED_REPORTING_TO_ATTACH_ON_MISSION',
+    zIndex: 1000
   },
   SEMAPHORES: {
     code: 'semaphores',
@@ -214,7 +222,8 @@ export const SelectableLayers = [
   Layers.STATIONS.code,
   Layers.SEMAPHORES.code,
   Layers.REPORTINGS.code,
-  Layers.MISSION_TO_ATTACH_ON_REPORTING.code
+  Layers.MISSION_TO_ATTACH_ON_REPORTING.code,
+  Layers.REPORTING_TO_ATTACH_ON_MISSION.code
 ]
 export const HoverableLayers = [
   Layers.MISSIONS.code,
@@ -222,5 +231,6 @@ export const HoverableLayers = [
   Layers.STATIONS.code,
   Layers.SEMAPHORES.code,
   Layers.REPORTINGS.code,
-  Layers.MISSION_TO_ATTACH_ON_REPORTING.code
+  Layers.MISSION_TO_ATTACH_ON_REPORTING.code,
+  Layers.REPORTING_TO_ATTACH_ON_MISSION.code
 ]
