@@ -4,5 +4,5 @@ data class BaseEntity(
     val id: Int? = null,
     val latitude: Double,
     val longitude: Double,
-    val name: String
+    val name: String,
 )

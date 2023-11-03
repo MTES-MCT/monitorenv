@@ -4,5 +4,5 @@ enum class VesselTypeEnum {
     FISHING,
     SAILING,
     MOTOR,
-    COMMERCIAL
+    COMMERCIAL,
 }

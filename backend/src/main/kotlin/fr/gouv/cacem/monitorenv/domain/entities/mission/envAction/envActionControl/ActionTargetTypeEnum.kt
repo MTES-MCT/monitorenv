@@ -3,5 +3,5 @@ package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionCont
 enum class ActionTargetTypeEnum {
     VEHICLE,
     COMPANY,
-    INDIVIDUAL
+    INDIVIDUAL,
 }

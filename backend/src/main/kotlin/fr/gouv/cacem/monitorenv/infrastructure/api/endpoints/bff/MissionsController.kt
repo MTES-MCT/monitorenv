@@ -23,7 +23,7 @@ class MissionsController(
     private val getFullMissions: GetFullMissions,
     private val getFullMissionById: GetFullMissionById,
     private val deleteMission: DeleteMission,
-    private val getEngagedControlUnits: GetEngagedControlUnits
+    private val getEngagedControlUnits: GetEngagedControlUnits,
 ) {
 
     @GetMapping("")
@@ -54,7 +54,7 @@ class MissionsController(
         missionStatuses: List<String>?,
         @Parameter(description = "Facades")
         @RequestParam(name = "seaFronts", required = false)
-        seaFronts: List<String>?
+        seaFronts: List<String>?,
     ): List<MissionsDataOutput> {
         val missions =
             getFullMissions.execute(
@@ -65,7 +65,7 @@ class MissionsController(
                 missionTypes = missionTypes,
                 pageNumber = pageNumber,
                 pageSize = pageSize,
-                seaFronts = seaFronts
+                seaFronts = seaFronts,
             )
         return missions.map { MissionsDataOutput.fromMissionDTO(it) }
     }
@@ -73,14 +73,14 @@ class MissionsController(
     @PutMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a new mission")
     fun createMissionController(
-        @RequestBody createMissionDataInput: CreateOrUpdateMissionDataInput
+        @RequestBody createMissionDataInput: CreateOrUpdateMissionDataInput,
     ): MissionDataOutput {
         val createdMission =
             createOrUpdateMissionWithAttachedReporting.execute(
                 mission = createMissionDataInput.toMissionEntity(),
                 attachedReportingIds = createMissionDataInput.attachedReportingIds,
                 envActionsAttachedToReportingIds =
-                createMissionDataInput.getEnvActionsAttachedToReportings()
+                createMissionDataInput.getEnvActionsAttachedToReportings(),
             )
         return MissionDataOutput.fromMissionDTO(createdMission)
     }
@@ -90,7 +90,7 @@ class MissionsController(
     fun getMissionByIdController(
         @PathParam("Mission id")
         @PathVariable(name = "missionId")
-        missionId: Int
+        missionId: Int,
     ): MissionDataOutput {
         val mission = getFullMissionById.execute(missionId = missionId)
 
@@ -103,7 +103,7 @@ class MissionsController(
         @PathParam("Mission Id")
         @PathVariable(name = "missionId")
         missionId: Int,
-        @RequestBody updateMissionDataInput: CreateOrUpdateMissionDataInput
+        @RequestBody updateMissionDataInput: CreateOrUpdateMissionDataInput,
     ): MissionDataOutput {
         if ((updateMissionDataInput.id != null) && (missionId != updateMissionDataInput.id)) {
             throw java.lang.IllegalArgumentException("missionId doesn't match with request param")
@@ -112,7 +112,7 @@ class MissionsController(
             mission = updateMissionDataInput.toMissionEntity(),
             attachedReportingIds = updateMissionDataInput.attachedReportingIds,
             envActionsAttachedToReportingIds =
-            updateMissionDataInput.getEnvActionsAttachedToReportings()
+            updateMissionDataInput.getEnvActionsAttachedToReportings(),
         )
             .let { MissionDataOutput.fromMissionDTO(it) }
     }
@@ -122,7 +122,7 @@ class MissionsController(
     fun deleteMissionController(
         @PathParam("Mission Id")
         @PathVariable(name = "missionId")
-        missionId: Int
+        missionId: Int,
     ) {
         deleteMission.execute(missionId = missionId)
     }

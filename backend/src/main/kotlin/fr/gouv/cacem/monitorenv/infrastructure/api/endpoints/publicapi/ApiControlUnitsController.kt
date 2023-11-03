@@ -20,14 +20,14 @@ class ApiControlUnitsController(
     private val canDeleteControlUnit: CanDeleteControlUnit,
     private val deleteControlUnit: DeleteControlUnit,
     private val getControlUnits: GetControlUnits,
-    private val getControlUnitById: GetControlUnitById
+    private val getControlUnitById: GetControlUnitById,
 ) {
     @PutMapping("/{controlUnitId}/archive")
     @Operation(summary = "Archive a control unit")
     fun archive(
         @PathParam("Control unit ID")
         @PathVariable(name = "controlUnitId")
-        controlUnitId: Int
+        controlUnitId: Int,
     ) {
         archiveControlUnit.execute(controlUnitId)
     }
@@ -37,7 +37,7 @@ class ApiControlUnitsController(
     fun canDelete(
         @PathParam("Control unit ID")
         @PathVariable(name = "controlUnitId")
-        controlUnitId: Int
+        controlUnitId: Int,
     ): BooleanDataOutput {
         return canDeleteControlUnit.execute(controlUnitId).let { BooleanDataOutput.get(it) }
     }
@@ -47,7 +47,7 @@ class ApiControlUnitsController(
     @ResponseStatus(HttpStatus.CREATED)
     fun create(
         @RequestBody
-        createControlUnitDataInput: CreateOrUpdateControlUnitDataInput
+        createControlUnitDataInput: CreateOrUpdateControlUnitDataInput,
     ): ControlUnitDataOutput {
         val newControlUnit = createControlUnitDataInput.toControlUnit()
         val createdControlUnit = createOrUpdateControlUnit.execute(newControlUnit)
@@ -60,7 +60,7 @@ class ApiControlUnitsController(
     fun delete(
         @PathParam("Control unit ID")
         @PathVariable(name = "controlUnitId")
-        controlUnitId: Int
+        controlUnitId: Int,
     ) {
         deleteControlUnit.execute(controlUnitId)
     }
@@ -70,7 +70,7 @@ class ApiControlUnitsController(
     fun get(
         @PathParam("Control unit ID")
         @PathVariable(name = "controlUnitId")
-        controlUnitId: Int
+        controlUnitId: Int,
     ): FullControlUnitDataOutput {
         val foundFullControlUnit = getControlUnitById.execute(controlUnitId)
 
@@ -92,7 +92,7 @@ class ApiControlUnitsController(
         @PathVariable(name = "controlUnitId")
         controlUnitId: Int,
         @RequestBody
-        updateControlUnitDataInput: CreateOrUpdateControlUnitDataInput
+        updateControlUnitDataInput: CreateOrUpdateControlUnitDataInput,
     ): ControlUnitDataOutput {
         requireNotNull(updateControlUnitDataInput.id) { "`id` can't be null." }
         require(controlUnitId == updateControlUnitDataInput.id) {

@@ -16,11 +16,11 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 class CreateOrUpdateMission(
     private val departmentRepository: IDepartmentAreaRepository,
     private val facadeRepository: IFacadeAreasRepository,
-    private val missionRepository: IMissionRepository
+    private val missionRepository: IMissionRepository,
 ) {
     @Throws(IllegalArgumentException::class)
     fun execute(
-        mission: MissionEntity?
+        mission: MissionEntity?,
     ): MissionEntity {
         require(mission != null) { "No mission to create or update" }
         val envActions =
@@ -35,9 +35,9 @@ class CreateOrUpdateMission(
                             department =
                             (it.geom ?: mission.geom)?.let { geom ->
                                 departmentRepository.findDepartmentFromGeometry(
-                                    geom
+                                    geom,
                                 )
-                            }
+                            },
                         )
                     }
                     ActionTypeEnum.SURVEILLANCE -> {
@@ -63,9 +63,9 @@ class CreateOrUpdateMission(
                             department =
                             geometry?.let { geom ->
                                 departmentRepository.findDepartmentFromGeometry(
-                                    geom
+                                    geom,
                                 )
-                            }
+                            },
                         )
                     }
                     ActionTypeEnum.NOTE -> {
@@ -83,7 +83,7 @@ class CreateOrUpdateMission(
         val missionToSave =
             mission.copy(
                 facade = facade,
-                envActions = envActions
+                envActions = envActions,
             )
         val savedMission = missionRepository.save(missionToSave)
 

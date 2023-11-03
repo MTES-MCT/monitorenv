@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.RestController
 @Tag(name = "DepartmentAreas")
 class DepartmentAreasController(
     private val getDepartmentAreas: GetDepartmentAreas,
-    private val getDepartmentAreaById: GetDepartmentAreaByInseeCode
+    private val getDepartmentAreaById: GetDepartmentAreaByInseeCode,
 ) {
     @GetMapping("/{departmentAreaInseeCode}")
     @Operation(summary = "Get an department area by its ID (INSEE code)")
     fun get(
         @PathParam("DepartmentArea ID")
         @PathVariable(name = "departmentAreaInseeCode")
-        departmentAreaInseeCode: String
+        departmentAreaInseeCode: String,
     ): DepartmentAreaDataOutput {
         val foundDepartmentArea = getDepartmentAreaById.execute(departmentAreaInseeCode)
 

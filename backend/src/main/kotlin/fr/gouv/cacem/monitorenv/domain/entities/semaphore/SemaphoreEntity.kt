@@ -12,5 +12,5 @@ data class SemaphoreEntity(
     val unit: String? = null,
     val email: String? = null,
     val phoneNumber: String? = null,
-    val base: String? = null
+    val base: String? = null,
 )

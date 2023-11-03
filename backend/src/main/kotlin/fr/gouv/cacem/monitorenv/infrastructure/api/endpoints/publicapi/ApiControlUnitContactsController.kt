@@ -20,13 +20,13 @@ class ApiControlUnitContactsController(
     private val createOrUpdateControlUnitContact: CreateOrUpdateControlUnitContact,
     private val deleteControlUnitContact: DeleteControlUnitContact,
     private val getControlUnitContacts: GetControlUnitContacts,
-    private val getControlUnitContactById: GetControlUnitContactById
+    private val getControlUnitContactById: GetControlUnitContactById,
 ) {
     @PostMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a control unit contact")
     @ResponseStatus(HttpStatus.CREATED)
     fun create(
-        @RequestBody createControlUnitContactDataInput: CreateOrUpdateControlUnitContactDataInput
+        @RequestBody createControlUnitContactDataInput: CreateOrUpdateControlUnitContactDataInput,
     ): ControlUnitContactDataOutput {
         val newControlUnitContact = createControlUnitContactDataInput.toControlUnitContact()
         val createdControlUnitContact = createOrUpdateControlUnitContact.execute(newControlUnitContact)
@@ -39,7 +39,7 @@ class ApiControlUnitContactsController(
     fun delete(
         @PathParam("Control unit contact ID")
         @PathVariable(name = "controlUnitContactId")
-        controlUnitContactId: Int
+        controlUnitContactId: Int,
     ) {
         deleteControlUnitContact.execute(controlUnitContactId)
     }
@@ -49,7 +49,7 @@ class ApiControlUnitContactsController(
     fun get(
         @PathParam("Control unit contact ID")
         @PathVariable(name = "controlUnitContactId")
-        controlUnitContactId: Int
+        controlUnitContactId: Int,
     ): FullControlUnitContactDataOutput {
         val foundFullControlUnitContact = getControlUnitContactById.execute(controlUnitContactId)
 
@@ -70,7 +70,7 @@ class ApiControlUnitContactsController(
         @PathParam("Control unit contact ID")
         @PathVariable(name = "controlUnitContactId")
         controlUnitContactId: Int,
-        @RequestBody updateControlUnitContactDataInput: CreateOrUpdateControlUnitContactDataInput
+        @RequestBody updateControlUnitContactDataInput: CreateOrUpdateControlUnitContactDataInput,
     ): ControlUnitContactDataOutput {
         requireNotNull(updateControlUnitContactDataInput.id) { "`id` can't be null." }
         require(controlUnitContactId == updateControlUnitContactDataInput.id) {

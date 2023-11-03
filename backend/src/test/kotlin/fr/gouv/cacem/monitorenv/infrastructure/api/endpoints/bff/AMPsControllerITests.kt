@@ -39,7 +39,7 @@ class AMPsControllerITests {
             geom = polygon,
             name = "mon nom",
             designation = "ma designation",
-            type = "mon type"
+            type = "mon type",
         )
         given(getAllAMPs.execute()).willReturn(listOf(amp))
 

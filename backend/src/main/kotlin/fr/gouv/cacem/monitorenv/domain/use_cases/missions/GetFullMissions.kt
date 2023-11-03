@@ -22,7 +22,7 @@ class GetFullMissions(private val missionRepository: IMissionRepository) {
         missionStatuses: List<String>?,
         pageNumber: Int?,
         pageSize: Int?,
-        seaFronts: List<String>?
+        seaFronts: List<String>?,
     ): List<MissionDTO> {
         val missions =
             missionRepository.findAllFullMissions(
@@ -34,18 +34,18 @@ class GetFullMissions(private val missionRepository: IMissionRepository) {
                 missionSources = missionSources
                     ?: listOf(
                         MissionSourceEnum.MONITORENV,
-                        MissionSourceEnum.MONITORFISH
+                        MissionSourceEnum.MONITORFISH,
                     ),
                 seaFronts = seaFronts,
                 pageable =
                 if (pageNumber != null && pageSize != null) {
                     PageRequest.of(
                         pageNumber,
-                        pageSize
+                        pageSize,
                     )
                 } else {
                     Pageable.unpaged()
-                }
+                },
             )
 
         logger.info("Found ${missions.size} mission(s)")

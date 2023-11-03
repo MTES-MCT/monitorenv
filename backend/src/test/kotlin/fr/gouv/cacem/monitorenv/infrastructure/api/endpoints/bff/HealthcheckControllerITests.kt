@@ -33,8 +33,8 @@ class HealthcheckControllerITests {
                 numberOfMissions = 50,
                 numberOfNatinfs = 50,
                 numberOfSemaphores = 10,
-                numberOfReportings = 50
-            )
+                numberOfReportings = 50,
+            ),
         )
         mockMvc.perform(get("/bff/v1/healthcheck"))
             // Then

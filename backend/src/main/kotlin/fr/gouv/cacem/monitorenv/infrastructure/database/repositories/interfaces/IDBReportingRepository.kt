@@ -17,7 +17,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         SET is_archived = TRUE
         WHERE (created_at + make_interval(hours => validity_time)) < NOW() AND is_archived IS FALSE
     """,
-        nativeQuery = true
+        nativeQuery = true,
     )
     fun archiveOutdatedReportings(): Int
 
@@ -29,7 +29,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         SET is_archived = TRUE
         WHERE id in (:ids)
     """,
-        nativeQuery = true
+        nativeQuery = true,
     )
     fun archiveReportings(ids: List<Int>)
 
@@ -44,7 +44,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
             detached_from_mission_at_utc = CASE WHEN id not in (:reportingIds) THEN NOW() ELSE CAST(null as timestamp ) END
         WHERE id in (:reportingIds) or mission_id = :missionId
         """,
-        nativeQuery = true
+        nativeQuery = true,
     )
     fun attachReportingsToMission(reportingIds: List<Int>, missionId: Int)
 
@@ -56,7 +56,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
             SET attached_env_action_id = CASE WHEN id in (:reportingIds) THEN :envActionId ELSE NULL END
             WHERE id in (:reportingIds) or attached_env_action_id = :envActionId
         """,
-        nativeQuery = true
+        nativeQuery = true,
     )
     fun attachEnvActionsToReportings(envActionId: UUID, reportingIds: List<Int>)
 
@@ -68,7 +68,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         SET is_deleted = TRUE
         WHERE id = :id
     """,
-        nativeQuery = true
+        nativeQuery = true,
     )
     fun delete(id: Int)
 
@@ -80,7 +80,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         SET is_deleted = TRUE
         WHERE id in (:ids)
     """,
-        nativeQuery = true
+        nativeQuery = true,
     )
     fun deleteReportings(ids: List<Int>)
 
@@ -110,7 +110,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         )
         ORDER BY reporting_id DESC
     """,
-        nativeQuery = true
+        nativeQuery = true,
     )
     fun findAll(
         pageable: Pageable,
@@ -119,7 +119,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         sourcesType: String?,
         startedAfter: Instant,
         startedBefore: Instant?,
-        status: String?
+        status: String?,
     ): List<ReportingModel>
 
     @Query(
@@ -129,10 +129,10 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         FROM reportings
         WHERE control_unit_id = :controlUnitId
         """,
-        nativeQuery = true
+        nativeQuery = true,
     )
     fun findByControlUnitId(
-        controlUnitId: Int
+        controlUnitId: Int,
     ): List<ReportingModel>
 
     @Query(
@@ -142,9 +142,9 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         FROM reportings
         WHERE mission_id = :missionId
         """,
-        nativeQuery = true
+        nativeQuery = true,
     )
     fun findByMissionId(
-        missionId: Int
+        missionId: Int,
     ): List<ReportingModel>
 }

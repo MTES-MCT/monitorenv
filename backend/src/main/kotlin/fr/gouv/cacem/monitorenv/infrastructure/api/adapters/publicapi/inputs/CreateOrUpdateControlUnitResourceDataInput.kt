@@ -11,7 +11,7 @@ data class CreateOrUpdateControlUnitResourceDataInput(
     val name: String,
     val note: String? = null,
     val photo: ByteArray? = byteArrayOf(),
-    val type: ControlUnitResourceType
+    val type: ControlUnitResourceType,
 ) {
     fun toControlUnitResource(): ControlUnitResourceEntity {
         return ControlUnitResourceEntity(
@@ -22,7 +22,7 @@ data class CreateOrUpdateControlUnitResourceDataInput(
             name = this.name,
             note = this.note,
             photo = this.photo,
-            type = this.type
+            type = this.type,
         )
     }
 }

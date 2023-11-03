@@ -58,7 +58,7 @@ class ApiAdministrationsControllerITests {
         val administrationId = 1
 
         mockMvc.perform(
-            put("/api/v1/administrations/$administrationId/archive")
+            put("/api/v1/administrations/$administrationId/archive"),
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
@@ -97,12 +97,12 @@ class ApiAdministrationsControllerITests {
         val expectedCreatedAdministration = AdministrationEntity(
             id = 1,
             isArchived = false,
-            name = "Administration Name"
+            name = "Administration Name",
         )
 
         val newAdministrationData = CreateOrUpdateAdministrationDataInput(
             isArchived = false,
-            name = "Administration Name"
+            name = "Administration Name",
         )
         val requestBody = objectMapper.writeValueAsString(newAdministrationData)
 
@@ -111,7 +111,7 @@ class ApiAdministrationsControllerITests {
         mockMvc.perform(
             post("/api/v1/administrations")
                 .content(requestBody)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON),
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isCreated)
@@ -122,7 +122,7 @@ class ApiAdministrationsControllerITests {
         val administrationId = 1
 
         mockMvc.perform(
-            delete("/api/v1/administrations/$administrationId")
+            delete("/api/v1/administrations/$administrationId"),
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
@@ -136,9 +136,9 @@ class ApiAdministrationsControllerITests {
             administration = AdministrationEntity(
                 id = 1,
                 isArchived = false,
-                name = "Administration Name"
+                name = "Administration Name",
             ),
-            controlUnits = listOf()
+            controlUnits = listOf(),
         )
 
         val requestedId = 1
@@ -158,19 +158,19 @@ class ApiAdministrationsControllerITests {
                 administration = AdministrationEntity(
                     id = 1,
                     isArchived = false,
-                    name = "Administration Name"
+                    name = "Administration Name",
                 ),
-                controlUnits = listOf()
+                controlUnits = listOf(),
             ),
 
             FullAdministrationDTO(
                 administration = AdministrationEntity(
                     id = 2,
                     isArchived = false,
-                    name = "Administration Name 2"
+                    name = "Administration Name 2",
                 ),
-                controlUnits = listOf()
-            )
+                controlUnits = listOf(),
+            ),
         )
 
         given(getAdministrations.execute()).willReturn(expectedAFulldministrations)
@@ -187,13 +187,13 @@ class ApiAdministrationsControllerITests {
         val expectedUpdatedAdministration = AdministrationEntity(
             id = 1,
             isArchived = false,
-            name = "Updated Administration Name"
+            name = "Updated Administration Name",
         )
 
         val nextAdministrationData = CreateOrUpdateAdministrationDataInput(
             id = 1,
             isArchived = false,
-            name = "Updated Administration Name"
+            name = "Updated Administration Name",
         )
         val requestBody = objectMapper.writeValueAsString(nextAdministrationData)
 
@@ -202,7 +202,7 @@ class ApiAdministrationsControllerITests {
         mockMvc.perform(
             put("/api/v1/administrations/1")
                 .content(requestBody)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON),
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)

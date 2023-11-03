@@ -11,12 +11,12 @@ import java.util.UUID
     use = JsonTypeInfo.Id.NAME,
     include = JsonTypeInfo.As.PROPERTY,
     property = "actionType",
-    visible = true
+    visible = true,
 )
 @JsonSubTypes(
     JsonSubTypes.Type(EnvActionControlEntity::class, name = "CONTROL"),
     JsonSubTypes.Type(EnvActionSurveillanceEntity::class, name = "SURVEILLANCE"),
-    JsonSubTypes.Type(EnvActionNoteEntity::class, name = "NOTE")
+    JsonSubTypes.Type(EnvActionNoteEntity::class, name = "NOTE"),
 )
 abstract class EnvActionEntity(
     open val id: UUID,
@@ -29,5 +29,5 @@ abstract class EnvActionEntity(
     open val isAdministrativeControl: Boolean? = null,
     open val isComplianceWithWaterRegulationsControl: Boolean? = null,
     open val isSafetyEquipmentAndStandardsComplianceControl: Boolean? = null,
-    open val isSeafarersControl: Boolean? = null
+    open val isSeafarersControl: Boolean? = null,
 )

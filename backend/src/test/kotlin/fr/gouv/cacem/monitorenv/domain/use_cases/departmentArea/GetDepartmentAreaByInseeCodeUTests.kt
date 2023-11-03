@@ -20,7 +20,7 @@ class GetDepartmentAreaByInseeCodeUTests {
         val departmentArea = DepartmentAreaEntity(
             inseeCode = "1",
             geometry = null,
-            name = "Department Area Name"
+            name = "Department Area Name",
         )
 
         given(departmentAreaRepository.findByInseeCode(departmentAreaId)).willReturn(departmentArea)

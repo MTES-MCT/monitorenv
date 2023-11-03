@@ -20,7 +20,7 @@ data class MissionControlUnitModel(
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "control_unit_id")
-    var unit: ControlUnitModel
+    var unit: ControlUnitModel,
 ) {
     companion object {
         fun fromLegacyControlUnit(legacyControlUnit: LegacyControlUnitEntity, missionModel: MissionModel) =
@@ -33,10 +33,10 @@ data class MissionControlUnitModel(
                     controlUnitResources = listOf(),
                     isArchived = legacyControlUnit.isArchived,
                     name = legacyControlUnit.name,
-                    termsNote = null
+                    termsNote = null,
                 ),
                 mission = missionModel,
-                contact = legacyControlUnit.contact
+                contact = legacyControlUnit.contact,
             )
     }
 }

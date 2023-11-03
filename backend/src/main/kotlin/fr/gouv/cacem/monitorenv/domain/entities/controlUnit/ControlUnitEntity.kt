@@ -10,5 +10,5 @@ data class ControlUnitEntity(
     val isArchived: Boolean,
     val name: String,
     /** Conditions under which this unit should be contacted. */
-    val termsNote: String? = null
+    val termsNote: String? = null,
 )

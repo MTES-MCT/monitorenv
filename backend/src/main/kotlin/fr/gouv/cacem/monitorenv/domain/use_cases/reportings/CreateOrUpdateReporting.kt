@@ -13,7 +13,7 @@ class CreateOrUpdateReporting(
     private val controlUnitRepository: IControlUnitRepository,
     private val semaphoreRepository: ISemaphoreRepository,
     private val facadeRepository: IFacadeAreasRepository,
-    private val missionRepository: IMissionRepository
+    private val missionRepository: IMissionRepository,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(CreateOrUpdateReporting::class.java)
 

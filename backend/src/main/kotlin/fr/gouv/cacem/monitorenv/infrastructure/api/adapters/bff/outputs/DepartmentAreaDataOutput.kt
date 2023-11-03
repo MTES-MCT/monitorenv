@@ -5,13 +5,13 @@ import fr.gouv.cacem.monitorenv.domain.entities.departmentArea.DepartmentAreaEnt
 data class DepartmentAreaDataOutput(
     /** `inseeCode` is the ID. */
     val inseeCode: String,
-    val name: String
+    val name: String,
 ) {
     companion object {
         fun fromDepartmentArea(departmentArea: DepartmentAreaEntity): DepartmentAreaDataOutput {
             return DepartmentAreaDataOutput(
                 inseeCode = departmentArea.inseeCode,
-                name = departmentArea.name
+                name = departmentArea.name,
             )
         }
     }

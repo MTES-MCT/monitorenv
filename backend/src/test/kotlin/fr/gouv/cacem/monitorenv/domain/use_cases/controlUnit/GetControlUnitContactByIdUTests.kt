@@ -27,15 +27,15 @@ class GetControlUnitContactByIdUTests {
                 departmentAreaInseeCode = null,
                 isArchived = false,
                 name = "Control Unit Name",
-                termsNote = null
+                termsNote = null,
             ),
             controlUnitContact = ControlUnitContactEntity(
                 id = 1,
                 controlUnitId = 0,
                 email = null,
                 name = "Control Unit Contact Name",
-                phone = null
-            )
+                phone = null,
+            ),
         )
 
         given(controlUnitContactRepository.findById(controlUnitContactId)).willReturn(fullControlUnitContact)

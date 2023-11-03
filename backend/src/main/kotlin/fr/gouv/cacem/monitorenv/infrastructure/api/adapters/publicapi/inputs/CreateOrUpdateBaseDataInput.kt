@@ -6,14 +6,14 @@ data class CreateOrUpdateBaseDataInput(
     val id: Int? = null,
     val latitude: Double,
     val longitude: Double,
-    val name: String
+    val name: String,
 ) {
     fun toBase(): BaseEntity {
         return BaseEntity(
             id = this.id,
             latitude = this.latitude,
             longitude = this.longitude,
-            name = this.name
+            name = this.name,
         )
     }
 }

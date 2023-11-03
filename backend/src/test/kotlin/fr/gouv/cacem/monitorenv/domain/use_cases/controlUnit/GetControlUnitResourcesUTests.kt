@@ -27,7 +27,7 @@ class GetControlUnitResourcesUTests {
                     id = 1,
                     latitude = 40.7128,
                     longitude = -74.0060,
-                    name = "Base 1"
+                    name = "Base 1",
                 ),
                 controlUnit = ControlUnitEntity(
                     id = 1,
@@ -36,7 +36,7 @@ class GetControlUnitResourcesUTests {
                     departmentAreaInseeCode = "A1",
                     isArchived = false,
                     name = "Control Unit 1",
-                    termsNote = "Terms 1"
+                    termsNote = "Terms 1",
                 ),
                 controlUnitResource = ControlUnitResourceEntity(
                     id = 1,
@@ -46,15 +46,15 @@ class GetControlUnitResourcesUTests {
                     name = "Resource 1",
                     note = "Note 1",
                     photo = null,
-                    type = ControlUnitResourceType.BARGE
-                )
+                    type = ControlUnitResourceType.BARGE,
+                ),
             ),
             FullControlUnitResourceDTO(
                 base = BaseEntity(
                     id = 2,
                     latitude = 34.0522,
                     longitude = -118.2437,
-                    name = "Base 2"
+                    name = "Base 2",
                 ),
                 controlUnit = ControlUnitEntity(
                     id = 2,
@@ -63,7 +63,7 @@ class GetControlUnitResourcesUTests {
                     departmentAreaInseeCode = "A2",
                     isArchived = false,
                     name = "Control Unit 2",
-                    termsNote = "Terms 2"
+                    termsNote = "Terms 2",
                 ),
                 controlUnitResource = ControlUnitResourceEntity(
                     id = 2,
@@ -73,9 +73,9 @@ class GetControlUnitResourcesUTests {
                     name = "Resource 2",
                     note = "Note 2",
                     photo = null,
-                    type = ControlUnitResourceType.BARGE
-                )
-            )
+                    type = ControlUnitResourceType.BARGE,
+                ),
+            ),
         )
 
         given(controlUnitResourceRepository.findAll()).willReturn(controlUnitResources)

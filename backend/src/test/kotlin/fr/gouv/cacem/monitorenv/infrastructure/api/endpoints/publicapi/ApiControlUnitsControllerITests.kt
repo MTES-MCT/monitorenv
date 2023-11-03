@@ -56,7 +56,7 @@ class ApiControlUnitsControllerITests {
         val controlUnitId = 1
 
         mockMvc.perform(
-            put("/api/v2/control_units/$controlUnitId/archive")
+            put("/api/v2/control_units/$controlUnitId/archive"),
         )
             .andExpect(status().isOk)
 
@@ -71,7 +71,7 @@ class ApiControlUnitsControllerITests {
         given(canDeleteControlUnit.execute(controlUnitId)).willReturn(canDelete)
 
         mockMvc.perform(
-            get("/api/v2/control_units/$controlUnitId/can_delete")
+            get("/api/v2/control_units/$controlUnitId/can_delete"),
         )
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.value").value(canDelete))
@@ -84,7 +84,7 @@ class ApiControlUnitsControllerITests {
         val controlUnitId = 1
 
         mockMvc.perform(
-            delete("/api/v2/control_units/$controlUnitId")
+            delete("/api/v2/control_units/$controlUnitId"),
         )
             .andExpect(status().isOk)
 
@@ -100,7 +100,7 @@ class ApiControlUnitsControllerITests {
             departmentAreaInseeCode = null,
             isArchived = false,
             name = "Unit Name",
-            termsNote = null
+            termsNote = null,
         )
 
         val newControlUnitData = CreateOrUpdateControlUnitDataInput(
@@ -109,18 +109,18 @@ class ApiControlUnitsControllerITests {
             departmentAreaInseeCode = null,
             isArchived = false,
             name = "Unit Name",
-            termsNote = null
+            termsNote = null,
         )
         val requestBody = objectMapper.writeValueAsString(newControlUnitData)
 
         given(createOrUpdateControlUnit.execute(controlUnit = any())).willReturn(
-            expectedCreatedControlUnit
+            expectedCreatedControlUnit,
         )
 
         mockMvc.perform(
             post("/api/v2/control_units")
                 .content(requestBody)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON),
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isCreated)
@@ -132,7 +132,7 @@ class ApiControlUnitsControllerITests {
             administration = AdministrationEntity(
                 id = 0,
                 isArchived = false,
-                name = "Administration Name"
+                name = "Administration Name",
             ),
             controlUnit = ControlUnitEntity(
                 id = 1,
@@ -141,10 +141,10 @@ class ApiControlUnitsControllerITests {
                 departmentAreaInseeCode = null,
                 isArchived = false,
                 name = "Unit Name",
-                termsNote = null
+                termsNote = null,
             ),
             controlUnitContacts = listOf(),
-            controlUnitResources = listOf()
+            controlUnitResources = listOf(),
         )
 
         val requestedId = 1
@@ -164,7 +164,7 @@ class ApiControlUnitsControllerITests {
                 administration = AdministrationEntity(
                     id = 0,
                     isArchived = false,
-                    name = "Administration Name"
+                    name = "Administration Name",
                 ),
                 controlUnit = ControlUnitEntity(
                     id = 1,
@@ -173,17 +173,17 @@ class ApiControlUnitsControllerITests {
                     departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Unit Name",
-                    termsNote = null
+                    termsNote = null,
                 ),
                 controlUnitContacts = listOf(),
-                controlUnitResources = listOf()
+                controlUnitResources = listOf(),
             ),
 
             FullControlUnitDTO(
                 administration = AdministrationEntity(
                     id = 0,
                     isArchived = false,
-                    name = "Administration Name"
+                    name = "Administration Name",
                 ),
                 controlUnit = ControlUnitEntity(
                     id = 2,
@@ -192,11 +192,11 @@ class ApiControlUnitsControllerITests {
                     departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Unit Name 2",
-                    termsNote = null
+                    termsNote = null,
                 ),
                 controlUnitContacts = listOf(),
-                controlUnitResources = listOf()
-            )
+                controlUnitResources = listOf(),
+            ),
         )
 
         given(getControlUnits.execute()).willReturn(expectedControlUnits)
@@ -217,7 +217,7 @@ class ApiControlUnitsControllerITests {
             departmentAreaInseeCode = null,
             isArchived = false,
             name = "Updated Unit Name",
-            termsNote = null
+            termsNote = null,
         )
 
         val nextControlUnitData = CreateOrUpdateControlUnitDataInput(
@@ -227,7 +227,7 @@ class ApiControlUnitsControllerITests {
             departmentAreaInseeCode = null,
             isArchived = false,
             name = "Updated Unit Name",
-            termsNote = null
+            termsNote = null,
         )
         val requestBody = objectMapper.writeValueAsString(nextControlUnitData)
 
@@ -236,7 +236,7 @@ class ApiControlUnitsControllerITests {
         mockMvc.perform(
             put("/api/v2/control_units/1")
                 .content(requestBody)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON),
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)

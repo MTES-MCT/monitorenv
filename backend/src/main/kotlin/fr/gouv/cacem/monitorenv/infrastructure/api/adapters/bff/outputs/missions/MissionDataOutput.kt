@@ -31,7 +31,7 @@ data class MissionDataOutput(
     val attachedReportingIds: List<Int>? = listOf(),
     val attachedReportings: List<MissionAttachedReportingDataOutput>? = listOf(),
     val detachedReportingIds: List<Int>? = listOf(),
-    val detachedReportings: List<MissionDetachedReportingDataOutput>? = listOf()
+    val detachedReportings: List<MissionDetachedReportingDataOutput>? = listOf(),
 ) {
     companion object {
         fun fromMissionDTO(dto: MissionDTO): MissionDataOutput {
@@ -58,7 +58,7 @@ data class MissionDataOutput(
                                     envActionControlEntity = it as EnvActionControlEntity,
                                     reportingIds = dto.envActionsAttachedToReportingIds?.find { id ->
                                         id.first == it.id
-                                    }?.second ?: listOf()
+                                    }?.second ?: listOf(),
                                 )
                         ActionTypeEnum.SURVEILLANCE ->
                             MissionEnvActionSurveillanceDataOutput
@@ -66,11 +66,11 @@ data class MissionDataOutput(
                                     envActionSurveillanceEntity = it as EnvActionSurveillanceEntity,
                                     reportingIds = dto.envActionsAttachedToReportingIds?.find { id ->
                                         id.first == it.id
-                                    }?.second ?: listOf()
+                                    }?.second ?: listOf(),
                                 )
                         ActionTypeEnum.NOTE ->
                             MissionEnvActionNoteDataOutput.fromEnvActionNoteEntity(
-                                it as EnvActionNoteEntity
+                                it as EnvActionNoteEntity,
                             )
                     }
                 },
@@ -87,7 +87,7 @@ data class MissionDataOutput(
                 detachedReportings =
                 dto.detachedReportings?.map {
                     MissionDetachedReportingDataOutput.fromReporting(it.reporting)
-                }
+                },
             )
         }
     }

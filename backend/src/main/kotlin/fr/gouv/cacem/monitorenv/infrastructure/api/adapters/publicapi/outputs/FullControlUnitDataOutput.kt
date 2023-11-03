@@ -17,14 +17,14 @@ data class FullControlUnitDataOutput(
     val departmentAreaInseeCode: String? = null,
     val isArchived: Boolean,
     val name: String,
-    val termsNote: String? = null
+    val termsNote: String? = null,
 ) {
     companion object {
         fun fromFullControlUnit(fullControlUnit: FullControlUnitDTO): FullControlUnitDataOutput {
             val administration = AdministrationDataOutput.fromAdministration(fullControlUnit.administration)
             val controlUnitContacts = fullControlUnit.controlUnitContacts.map {
                 ControlUnitContactDataOutput.fromControlUnitContact(
-                    it
+                    it,
                 )
             }
             val controlUnitResources = fullControlUnit.controlUnitResources.map {
@@ -45,7 +45,7 @@ data class FullControlUnitDataOutput(
                 departmentAreaInseeCode = departmentArea?.inseeCode,
                 isArchived = fullControlUnit.controlUnit.isArchived,
                 name = fullControlUnit.controlUnit.name,
-                termsNote = fullControlUnit.controlUnit.termsNote
+                termsNote = fullControlUnit.controlUnit.termsNote,
             )
         }
     }

@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional
 @Repository
 class JpaControlUnitContactRepository(
     private val dbControlUnitRepository: IDBControlUnitRepository,
-    private val dbControlUnitContactRepository: IDBControlUnitContactRepository
+    private val dbControlUnitContactRepository: IDBControlUnitContactRepository,
 ) : IControlUnitContactRepository {
     override fun deleteById(controlUnitContactId: Int) {
         dbControlUnitContactRepository.deleteById(controlUnitContactId)
@@ -40,7 +40,7 @@ class JpaControlUnitContactRepository(
         } catch (e: InvalidDataAccessApiUsageException) {
             throw NotFoundException(
                 "Unable to find (and update) control unit contact with `id` = ${controlUnitContact.id}.",
-                e
+                e,
             )
         }
     }

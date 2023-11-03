@@ -29,15 +29,15 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
-                    termsNote = null
+                    termsNote = null,
                 ),
                 controlUnitContact = ControlUnitContactEntity(
                     id = 1,
                     controlUnitId = 10000,
                     name = "Contact 1",
-                    phone = null
-                )
-            )
+                    phone = null,
+                ),
+            ),
         )
 
         assertThat(foundFullControlUnitContacts[2]).isEqualTo(
@@ -49,15 +49,15 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "DPM – DDTM 14",
-                    termsNote = null
+                    termsNote = null,
                 ),
                 controlUnitContact = ControlUnitContactEntity(
                     id = 3,
                     controlUnitId = 10003,
                     name = "Contact 3",
-                    phone = null
-                )
-            )
+                    phone = null,
+                ),
+            ),
         )
     }
 
@@ -75,15 +75,15 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                     departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
-                    termsNote = null
+                    termsNote = null,
                 ),
                 controlUnitContact = ControlUnitContactEntity(
                     id = 1,
                     controlUnitId = 10000,
                     name = "Contact 1",
-                    phone = null
-                )
-            )
+                    phone = null,
+                ),
+            ),
         )
     }
 
@@ -96,7 +96,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
         val newControlUnitContact = ControlUnitContactEntity(
             controlUnitId = 10000,
             name = "Contact Name",
-            phone = "0123456789"
+            phone = "0123456789",
         )
 
         val createdControlUnitContact = jpaControlUnitContactRepository.save(newControlUnitContact)
@@ -110,7 +110,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
             id = 4,
             controlUnitId = 10001,
             name = "Updated Contact Name",
-            phone = "9876543210"
+            phone = "9876543210",
         )
 
         val updatedControlUnitContact = jpaControlUnitContactRepository.save(nextControlUnitContact)

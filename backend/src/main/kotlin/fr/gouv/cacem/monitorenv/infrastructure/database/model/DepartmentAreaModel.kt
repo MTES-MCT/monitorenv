@@ -18,16 +18,16 @@ data class DepartmentAreaModel(
     val geometry: MultiPolygon? = null,
 
     @Column(name = "name", nullable = false)
-    val name: String
+    val name: String,
 ) {
     companion object {
         fun fromDepartmentArea(
-            departmentArea: DepartmentAreaEntity
+            departmentArea: DepartmentAreaEntity,
         ): DepartmentAreaModel {
             return DepartmentAreaModel(
                 inseeCode = departmentArea.inseeCode,
                 geometry = departmentArea.geometry,
-                name = departmentArea.name
+                name = departmentArea.name,
             )
         }
     }
@@ -36,7 +36,7 @@ data class DepartmentAreaModel(
         return DepartmentAreaEntity(
             inseeCode,
             geometry,
-            name
+            name,
         )
     }
 }

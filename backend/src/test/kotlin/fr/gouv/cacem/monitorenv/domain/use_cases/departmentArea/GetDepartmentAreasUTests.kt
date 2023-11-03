@@ -20,13 +20,13 @@ class GetDepartmentAreasUTests {
             DepartmentAreaEntity(
                 inseeCode = "1",
                 geometry = null,
-                name = "DepartmentArea Name"
+                name = "DepartmentArea Name",
             ),
             DepartmentAreaEntity(
                 inseeCode = "2",
                 geometry = null,
-                name = "DepartmentArea Name 2"
-            )
+                name = "DepartmentArea Name 2",
+            ),
         )
 
         given(departmentAreaRepository.findAll()).willReturn(departmentAreas)

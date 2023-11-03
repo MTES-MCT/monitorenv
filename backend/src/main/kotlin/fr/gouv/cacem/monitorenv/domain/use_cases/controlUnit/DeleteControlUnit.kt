@@ -7,12 +7,12 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.
 @UseCase
 class DeleteControlUnit(
     private val controlUnitRepository: IControlUnitRepository,
-    private val canDeleteControlUnit: CanDeleteControlUnit
+    private val canDeleteControlUnit: CanDeleteControlUnit,
 ) {
     fun execute(controlUnitId: Int) {
         if (!canDeleteControlUnit.execute(controlUnitId)) {
             throw ForeignKeyConstraintException(
-                "Cannot delete control unit  (ID=$controlUnitId) due to existing relationships."
+                "Cannot delete control unit  (ID=$controlUnitId) due to existing relationships.",
             )
         }
 

@@ -20,14 +20,14 @@ class ApiControlUnitResourcesController(
     private val createOrUpdateControlUnitResource: CreateOrUpdateControlUnitResource,
     private val deleteControlUnitResource: DeleteControlUnitResource,
     private val getControlUnitResources: GetControlUnitResources,
-    private val getControlUnitResourceById: GetControlUnitResourceById
+    private val getControlUnitResourceById: GetControlUnitResourceById,
 ) {
     @PutMapping("/{controlUnitResourceId}/archive")
     @Operation(summary = "Archive a control unit resource")
     fun archive(
         @PathParam("Control unit resource ID")
         @PathVariable(name = "controlUnitResourceId")
-        controlUnitResourceId: Int
+        controlUnitResourceId: Int,
     ) {
         archiveControlUnitResource.execute(controlUnitResourceId)
     }
@@ -37,7 +37,7 @@ class ApiControlUnitResourcesController(
     fun canDelete(
         @PathParam("Control unit resource ID")
         @PathVariable(name = "controlUnitResourceId")
-        controlUnitResourceId: Int
+        controlUnitResourceId: Int,
     ): BooleanDataOutput {
         return canDeleteControlUnitResource.execute(controlUnitResourceId).let { BooleanDataOutput.get(it) }
     }
@@ -47,7 +47,7 @@ class ApiControlUnitResourcesController(
     @ResponseStatus(HttpStatus.CREATED)
     fun create(
         @RequestBody
-        createControlUnitResourceDataInput: CreateOrUpdateControlUnitResourceDataInput
+        createControlUnitResourceDataInput: CreateOrUpdateControlUnitResourceDataInput,
     ): ControlUnitResourceDataOutput {
         val newControlUnitResource = createControlUnitResourceDataInput.toControlUnitResource()
         val createdControlUnitResource = createOrUpdateControlUnitResource.execute(newControlUnitResource)
@@ -60,7 +60,7 @@ class ApiControlUnitResourcesController(
     fun delete(
         @PathParam("Control unit resource ID")
         @PathVariable(name = "controlUnitResourceId")
-        controlUnitResourceId: Int
+        controlUnitResourceId: Int,
     ) {
         deleteControlUnitResource.execute(controlUnitResourceId)
     }
@@ -70,7 +70,7 @@ class ApiControlUnitResourcesController(
     fun get(
         @PathParam("Control unit resource ID")
         @PathVariable(name = "controlUnitResourceId")
-        controlUnitResourceId: Int
+        controlUnitResourceId: Int,
     ): FullControlUnitResourceDataOutput {
         val foundFullControlUnitResource = getControlUnitResourceById.execute(controlUnitResourceId)
 
@@ -91,7 +91,7 @@ class ApiControlUnitResourcesController(
         @PathVariable(name = "controlUnitResourceId")
         controlUnitResourceId: Int,
         @RequestBody
-        updateControlUnitResourceDataInput: CreateOrUpdateControlUnitResourceDataInput
+        updateControlUnitResourceDataInput: CreateOrUpdateControlUnitResourceDataInput,
     ): ControlUnitResourceDataOutput {
         requireNotNull(updateControlUnitResourceDataInput.id) { "`id` can't be null." }
         require(controlUnitResourceId == updateControlUnitResourceDataInput.id) {

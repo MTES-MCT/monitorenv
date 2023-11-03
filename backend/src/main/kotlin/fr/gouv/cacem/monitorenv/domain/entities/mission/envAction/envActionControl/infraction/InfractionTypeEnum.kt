@@ -3,5 +3,5 @@ package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionCont
 enum class InfractionTypeEnum {
     WAITING,
     WITH_REPORT,
-    WITHOUT_REPORT
+    WITHOUT_REPORT,
 }

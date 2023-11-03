@@ -13,14 +13,14 @@ import org.springframework.transaction.annotation.Transactional
 
 @Repository
 class JpaAdministrationRepository(
-    private val dbAdministrationRepository: IDBAdministrationRepository
+    private val dbAdministrationRepository: IDBAdministrationRepository,
 ) : IAdministrationRepository {
     @Transactional
     override fun archiveById(administrationId: Int) {
         val fullAdministration = findById(administrationId)
         if (fullAdministration.controlUnits.any { !it.isArchived }) {
             throw UnarchivedChildException(
-                "Cannot archive administration (ID=$administrationId) due to some of its control units not being archived."
+                "Cannot archive administration (ID=$administrationId) due to some of its control units not being archived.",
             )
         }
 
@@ -48,7 +48,7 @@ class JpaAdministrationRepository(
         } catch (e: InvalidDataAccessApiUsageException) {
             throw NotFoundException(
                 "Unable to find (and update) control unit administration with `id` = ${administration.id}.",
-                e
+                e,
             )
         }
     }

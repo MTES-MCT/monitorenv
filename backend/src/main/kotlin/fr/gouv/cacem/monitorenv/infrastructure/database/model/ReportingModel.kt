@@ -50,7 +50,7 @@ data class ReportingModel(
         unique = true,
         nullable = false,
         updatable = false,
-        insertable = false
+        insertable = false,
     )
     val reportingId: Long? = null,
     @Column(name = "source_type", columnDefinition = "reportings_source_type")
@@ -111,9 +111,9 @@ data class ReportingModel(
     @JoinColumn(
         name = "attached_env_action_id",
         columnDefinition = "uuid",
-        referencedColumnName = "id"
+        referencedColumnName = "id",
     )
-    val attachedEnvAction: EnvActionModel? = null
+    val attachedEnvAction: EnvActionModel? = null,
 ) {
 
     fun toReporting() =
@@ -144,7 +144,7 @@ data class ReportingModel(
             missionId = mission?.id,
             attachedToMissionAtUtc = attachedToMissionAtUtc?.atZone(UTC),
             detachedFromMissionAtUtc = detachedFromMissionAtUtc?.atZone(UTC),
-            attachedEnvActionId = attachedEnvAction?.id
+            attachedEnvActionId = attachedEnvAction?.id,
         )
     fun toReportingDTO(objectMapper: ObjectMapper) =
         ReportingDTO(
@@ -154,7 +154,7 @@ data class ReportingModel(
             attachedMission =
             if (detachedFromMissionAtUtc != null) {
                 mission?.toMissionEntity(
-                    objectMapper
+                    objectMapper,
                 )
             } else {
                 null
@@ -162,11 +162,11 @@ data class ReportingModel(
             detachedMission =
             if (detachedFromMissionAtUtc == null) {
                 mission?.toMissionEntity(
-                    objectMapper
+                    objectMapper,
                 )
             } else {
                 null
-            }
+            },
         )
 
     override fun equals(other: Any?): Boolean {
@@ -185,7 +185,7 @@ data class ReportingModel(
             semaphoreReference: SemaphoreModel?,
             controlUnitReference: ControlUnitModel?,
             missionReference: MissionModel?,
-            envActionReference: EnvActionModel?
+            envActionReference: EnvActionModel?,
         ) =
             ReportingModel(
                 id = reporting.id,
@@ -214,7 +214,7 @@ data class ReportingModel(
                 mission = missionReference,
                 attachedToMissionAtUtc = reporting.attachedToMissionAtUtc?.toInstant(),
                 detachedFromMissionAtUtc = reporting.detachedFromMissionAtUtc?.toInstant(),
-                attachedEnvAction = envActionReference
+                attachedEnvAction = envActionReference,
             )
     }
 }

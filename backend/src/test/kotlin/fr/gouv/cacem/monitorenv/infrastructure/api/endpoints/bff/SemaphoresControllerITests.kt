@@ -40,7 +40,7 @@ class SemaphoresControllerITests {
         val semaphore = SemaphoreEntity(
             id = 1,
             name = "Semaphore 1",
-            geom = point
+            geom = point,
         )
         given(getAllSemaphores.execute()).willReturn(listOf(semaphore))
         // When
@@ -63,7 +63,7 @@ class SemaphoresControllerITests {
         val semaphore = SemaphoreEntity(
             id = 21,
             name = "Semaphore 1",
-            geom = point
+            geom = point,
         )
         given(getSemaphoreById.execute(21)).willReturn(semaphore)
         // When

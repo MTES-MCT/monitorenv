@@ -20,7 +20,7 @@ class CreateOrUpdateAdministrationUTests {
     fun `execute should return save result`() {
         val newAdministration = AdministrationEntity(
             isArchived = false,
-            name = "Administration Name"
+            name = "Administration Name",
         )
 
         val expectedAdministration = newAdministration.copy(id = 0)

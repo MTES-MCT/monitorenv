@@ -43,7 +43,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                 administration = AdministrationEntity(
                     id = 1005,
                     isArchived = false,
-                    name = "DDTM"
+                    name = "DDTM",
                 ),
                 controlUnit = ControlUnitEntity(
                     id = 10000,
@@ -52,7 +52,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                     departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
-                    termsNote = null
+                    termsNote = null,
                 ),
                 controlUnitContacts = listOf(
                     ControlUnitContactEntity(
@@ -60,15 +60,15 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                         controlUnitId = 10000,
                         email = null,
                         name = "Contact 1",
-                        phone = null
+                        phone = null,
                     ),
                     ControlUnitContactEntity(
                         id = 2,
                         controlUnitId = 10000,
                         email = null,
                         name = "Contact 2",
-                        phone = null
-                    )
+                        phone = null,
+                    ),
                 ),
                 controlUnitResources = listOf(
                     FullControlUnitResourceDTO(
@@ -76,7 +76,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             id = 1,
                             latitude = 43.295765,
                             longitude = 5.375486,
-                            name = "Marseille"
+                            name = "Marseille",
                         ),
                         controlUnit = ControlUnitEntity(
                             id = 10000,
@@ -85,7 +85,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             departmentAreaInseeCode = null,
                             isArchived = false,
                             name = "Cultures marines – DDTM 40",
-                            termsNote = null
+                            termsNote = null,
                         ),
                         controlUnitResource = ControlUnitResourceEntity(
                             id = 1,
@@ -95,15 +95,15 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             name = "Semi-rigide 1",
                             note = null,
                             photo = null,
-                            type = ControlUnitResourceType.BARGE
-                        )
+                            type = ControlUnitResourceType.BARGE,
+                        ),
                     ),
                     FullControlUnitResourceDTO(
                         base = BaseEntity(
                             id = 1,
                             latitude = 43.295765,
                             longitude = 5.375486,
-                            name = "Marseille"
+                            name = "Marseille",
                         ),
                         controlUnit = ControlUnitEntity(
                             id = 10000,
@@ -112,7 +112,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             departmentAreaInseeCode = null,
                             isArchived = false,
                             name = "Cultures marines – DDTM 40",
-                            termsNote = null
+                            termsNote = null,
                         ),
                         controlUnitResource = ControlUnitResourceEntity(
                             id = 2,
@@ -122,11 +122,11 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             name = "Semi-rigide 2",
                             note = null,
                             photo = null,
-                            type = ControlUnitResourceType.BARGE
-                        )
-                    )
-                )
-            )
+                            type = ControlUnitResourceType.BARGE,
+                        ),
+                    ),
+                ),
+            ),
         )
 
         assertThat(foundFullControlUnits[32]).isEqualTo(
@@ -134,7 +134,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                 administration = AdministrationEntity(
                     id = 1009,
                     isArchived = false,
-                    name = "DIRM / DM"
+                    name = "DIRM / DM",
                 ),
                 controlUnit = ControlUnitEntity(
                     id = 10121,
@@ -143,7 +143,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                     departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "PAM Jeanne Barret",
-                    termsNote = null
+                    termsNote = null,
                 ),
                 controlUnitContacts = listOf(),
                 controlUnitResources = listOf(
@@ -152,7 +152,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             id = 3,
                             name = "Dunkerque",
                             latitude = 51.035534,
-                            longitude = 2.372845
+                            longitude = 2.372845,
                         ),
                         controlUnit = ControlUnitEntity(
                             id = 10121,
@@ -160,7 +160,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             areaNote = null,
                             isArchived = false,
                             name = "PAM Jeanne Barret",
-                            termsNote = null
+                            termsNote = null,
                         ),
                         controlUnitResource = ControlUnitResourceEntity(
                             id = 8,
@@ -170,11 +170,11 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             name = "PAM Jeanne Barret",
                             note = null,
                             photo = null,
-                            type = ControlUnitResourceType.FRIGATE
-                        )
-                    )
-                )
-            )
+                            type = ControlUnitResourceType.FRIGATE,
+                        ),
+                    ),
+                ),
+            ),
         )
     }
 
@@ -188,7 +188,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                 administration = AdministrationEntity(
                     id = 1005,
                     isArchived = false,
-                    name = "DDTM"
+                    name = "DDTM",
                 ),
                 controlUnit = ControlUnitEntity(
                     id = 10000,
@@ -197,7 +197,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                     departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
-                    termsNote = null
+                    termsNote = null,
                 ),
                 controlUnitContacts = listOf(
                     ControlUnitContactEntity(
@@ -205,15 +205,15 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                         controlUnitId = 10000,
                         email = null,
                         name = "Contact 1",
-                        phone = null
+                        phone = null,
                     ),
                     ControlUnitContactEntity(
                         id = 2,
                         controlUnitId = 10000,
                         email = null,
                         name = "Contact 2",
-                        phone = null
-                    )
+                        phone = null,
+                    ),
                 ),
                 controlUnitResources = listOf(
                     FullControlUnitResourceDTO(
@@ -221,7 +221,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             id = 1,
                             latitude = 43.295765,
                             longitude = 5.375486,
-                            name = "Marseille"
+                            name = "Marseille",
                         ),
                         controlUnit = ControlUnitEntity(
                             id = 10000,
@@ -230,7 +230,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             departmentAreaInseeCode = null,
                             isArchived = false,
                             name = "Cultures marines – DDTM 40",
-                            termsNote = null
+                            termsNote = null,
                         ),
                         controlUnitResource = ControlUnitResourceEntity(
                             id = 1,
@@ -240,15 +240,15 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             name = "Semi-rigide 1",
                             note = null,
                             photo = null,
-                            type = ControlUnitResourceType.BARGE
-                        )
+                            type = ControlUnitResourceType.BARGE,
+                        ),
                     ),
                     FullControlUnitResourceDTO(
                         base = BaseEntity(
                             id = 1,
                             latitude = 43.295765,
                             longitude = 5.375486,
-                            name = "Marseille"
+                            name = "Marseille",
                         ),
                         controlUnit = ControlUnitEntity(
                             id = 10000,
@@ -257,7 +257,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             departmentAreaInseeCode = null,
                             isArchived = false,
                             name = "Cultures marines – DDTM 40",
-                            termsNote = null
+                            termsNote = null,
                         ),
                         controlUnitResource = ControlUnitResourceEntity(
                             id = 2,
@@ -267,11 +267,11 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                             name = "Semi-rigide 2",
                             note = null,
                             photo = null,
-                            type = ControlUnitResourceType.BARGE
-                        )
-                    )
-                )
-            )
+                            type = ControlUnitResourceType.BARGE,
+                        ),
+                    ),
+                ),
+            ),
         )
     }
 
@@ -287,7 +287,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
             departmentAreaInseeCode = "50",
             isArchived = false,
             name = "Control Unit Name",
-            termsNote = "Terms Note"
+            termsNote = "Terms Note",
         )
 
         val createdControlUnit = jpaControlUnitRepository.save(newControlUnit)
@@ -304,7 +304,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
             departmentAreaInseeCode = "85",
             isArchived = false,
             name = "Updated Control Unit Name",
-            termsNote = "Updated Terms Note"
+            termsNote = "Updated Terms Note",
         )
 
         val updatedControlUnit = jpaControlUnitRepository.save(nextControlUnit)

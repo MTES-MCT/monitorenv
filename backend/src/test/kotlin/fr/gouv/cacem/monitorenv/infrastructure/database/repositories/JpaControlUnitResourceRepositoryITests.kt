@@ -44,7 +44,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     id = 1,
                     latitude = 43.295765,
                     longitude = 5.375486,
-                    name = "Marseille"
+                    name = "Marseille",
                 ),
                 controlUnit = ControlUnitEntity(
                     id = 10000,
@@ -53,7 +53,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
-                    termsNote = null
+                    termsNote = null,
                 ),
                 controlUnitResource = ControlUnitResourceEntity(
                     id = 1,
@@ -63,9 +63,9 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     name = "Semi-rigide 1",
                     note = null,
                     photo = null,
-                    type = ControlUnitResourceType.BARGE
-                )
-            )
+                    type = ControlUnitResourceType.BARGE,
+                ),
+            ),
         )
 
         assertThat(foundFullControlUnitResources[11]).isEqualTo(
@@ -74,7 +74,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     id = 3,
                     latitude = 51.035534,
                     longitude = 2.372845,
-                    name = "Dunkerque"
+                    name = "Dunkerque",
                 ),
                 controlUnit = ControlUnitEntity(
                     id = 10018,
@@ -83,7 +83,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "DREAL Pays-de-La-Loire",
-                    termsNote = null
+                    termsNote = null,
                 ),
                 controlUnitResource = ControlUnitResourceEntity(
                     id = 12,
@@ -93,9 +93,9 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     name = "ARIOLA",
                     note = null,
                     photo = null,
-                    type = ControlUnitResourceType.FRIGATE
-                )
-            )
+                    type = ControlUnitResourceType.FRIGATE,
+                ),
+            ),
         )
     }
 
@@ -110,7 +110,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     id = 1,
                     latitude = 43.295765,
                     longitude = 5.375486,
-                    name = "Marseille"
+                    name = "Marseille",
                 ),
                 controlUnit = ControlUnitEntity(
                     id = 10000,
@@ -119,7 +119,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Cultures marines – DDTM 40",
-                    termsNote = null
+                    termsNote = null,
                 ),
                 controlUnitResource = ControlUnitResourceEntity(
                     id = 1,
@@ -129,9 +129,9 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     name = "Semi-rigide 1",
                     note = null,
                     photo = null,
-                    type = ControlUnitResourceType.BARGE
-                )
-            )
+                    type = ControlUnitResourceType.BARGE,
+                ),
+            ),
         )
     }
 
@@ -148,7 +148,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
             name = "Resource Name",
             note = "Resource Note",
             photo = null,
-            type = ControlUnitResourceType.BARGE
+            type = ControlUnitResourceType.BARGE,
         )
 
         val createdControlUnitResource = jpaControlUnitResourceRepository.save(newControlUnitResource)
@@ -166,7 +166,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
             name = "Updated Resource Name",
             note = "Updated Resource Note",
             photo = null,
-            type = ControlUnitResourceType.FRIGATE
+            type = ControlUnitResourceType.FRIGATE,
         )
 
         val updatedControlUnitResource = jpaControlUnitResourceRepository.save(nextControlUnitResource)

@@ -7,9 +7,9 @@ data class EnvActionNoteEntity(
     override val id: UUID,
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
     override val actionEndDateTimeUtc: ZonedDateTime? = null,
-    val observations: String? = null
+    val observations: String? = null,
 ) :
     EnvActionEntity(
         actionType = ActionTypeEnum.NOTE,
-        id = id
+        id = id,
     )

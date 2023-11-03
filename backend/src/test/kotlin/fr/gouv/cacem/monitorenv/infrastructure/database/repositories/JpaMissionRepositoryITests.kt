@@ -58,7 +58,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 missionStatuses = null,
                 seaFronts = null,
-                pageable = Pageable.unpaged()
+                pageable = Pageable.unpaged(),
             )
 
         assertThat(existingMissions).hasSize(21)
@@ -88,7 +88,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     EnvActionControlEntity(
                         id =
                         UUID.fromString(
-                            "33310163-4e22-4d3d-b585-dac4431eb4b5"
+                            "33310163-4e22-4d3d-b585-dac4431eb4b5",
                         ),
                         facade = "Facade 1",
                         department = "Department 1",
@@ -98,24 +98,24 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                         isComplianceWithWaterRegulationsControl = true,
                         isSafetyEquipmentAndStandardsComplianceControl =
                         true,
-                        isSeafarersControl = true
+                        isSeafarersControl = true,
                     ),
                     EnvActionSurveillanceEntity(
                         id =
                         UUID.fromString(
-                            "a6c4bd17-eb45-4504-ab15-7a18ea714a10"
+                            "a6c4bd17-eb45-4504-ab15-7a18ea714a10",
                         ),
                         facade = "Facade 2",
                         department = "Department 2",
-                        geom = polygon
+                        geom = polygon,
                     ),
                     EnvActionNoteEntity(
                         id =
                         UUID.fromString(
-                            "126ded89-2dc0-4c77-9bf2-49f86b9a71a1"
+                            "126ded89-2dc0-4c77-9bf2-49f86b9a71a1",
                         ),
-                        observations = noteObservations
-                    )
+                        observations = noteObservations,
+                    ),
                 ),
                 controlUnits =
                 listOf(
@@ -128,12 +128,12 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                             LegacyControlUnitResourceEntity(
                                 id = 8,
                                 controlUnitId = 10121,
-                                name = "PAM Jeanne Barret"
-                            )
-                        )
-                    )
+                                name = "PAM Jeanne Barret",
+                            ),
+                        ),
+                    ),
                 ),
-                isGeometryComputedFromControls = false
+                isGeometryComputedFromControls = false,
             )
 
         // When
@@ -158,10 +158,10 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             .isEqualTo("Department 2")
         assertThat(
             (newMissionCreated.mission.envActions?.get(2) as EnvActionNoteEntity)
-                .observations
+                .observations,
         )
             .isEqualTo(
-                noteObservations
+                noteObservations,
             )
 
         val missions =
@@ -171,7 +171,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 missionStatuses = null,
                 seaFronts = null,
-                pageable = Pageable.unpaged()
+                pageable = Pageable.unpaged(),
             )
 
         assertThat(missions).hasSize(22)
@@ -201,12 +201,12 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                             LegacyControlUnitResourceEntity(
                                 id = 8,
                                 controlUnitId = 10004,
-                                name = "PAM Jeanne Barret"
-                            )
-                        )
-                    )
+                                name = "PAM Jeanne Barret",
+                            ),
+                        ),
+                    ),
                 ),
-                isGeometryComputedFromControls = false
+                isGeometryComputedFromControls = false,
             )
         jpaMissionRepository.save(newMission)
 
@@ -225,17 +225,17 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                                 LegacyControlUnitResourceEntity(
                                     id = 3,
                                     controlUnitId = 10002,
-                                    name = "Semi-rigide 1"
+                                    name = "Semi-rigide 1",
                                 ),
                                 LegacyControlUnitResourceEntity(
                                     id = 5,
                                     controlUnitId = 10002,
-                                    name = "Voiture"
-                                )
-                            )
-                        )
-                    )
-                )
+                                    name = "Voiture",
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
             )
 
         // Then
@@ -276,12 +276,12 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                             LegacyControlUnitResourceEntity(
                                 id = 123456,
                                 controlUnitId = 5,
-                                name = "PAM Jeanne Barret"
-                            )
-                        )
-                    )
+                                name = "PAM Jeanne Barret",
+                            ),
+                        ),
+                    ),
                 ),
-                isGeometryComputedFromControls = false
+                isGeometryComputedFromControls = false,
             )
 
         // When
@@ -310,10 +310,10 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                         name = "PAM Jeanne Barret",
                         administration = "",
                         isArchived = false,
-                        resources = listOf()
-                    )
+                        resources = listOf(),
+                    ),
                 ),
-                isGeometryComputedFromControls = false
+                isGeometryComputedFromControls = false,
             )
 
         // When
@@ -334,7 +334,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 missionStatuses = null,
                 seaFronts = null,
-                pageable = Pageable.unpaged()
+                pageable = Pageable.unpaged(),
             )
         assertThat(missions).hasSize(53)
     }
@@ -350,7 +350,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 missionStatuses = null,
                 seaFronts = null,
-                pageable = Pageable.unpaged()
+                pageable = Pageable.unpaged(),
             )
         assertThat(missions).hasSize(21)
     }
@@ -366,7 +366,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = listOf("SEA"),
                 missionStatuses = null,
                 seaFronts = null,
-                pageable = Pageable.unpaged()
+                pageable = Pageable.unpaged(),
             )
         assertThat(missions).hasSize(21)
     }
@@ -382,7 +382,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = listOf("SEA", "LAND"),
                 missionStatuses = null,
                 seaFronts = null,
-                pageable = Pageable.unpaged()
+                pageable = Pageable.unpaged(),
             )
         assertThat(missions).hasSize(44)
     }
@@ -398,7 +398,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 missionStatuses = null,
                 seaFronts = listOf("MEMN"),
-                pageable = Pageable.unpaged()
+                pageable = Pageable.unpaged(),
             )
         assertThat(missions).hasSize(9)
     }
@@ -414,7 +414,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 missionStatuses = null,
                 seaFronts = listOf("MEMN", "NAMO"),
-                pageable = Pageable.unpaged()
+                pageable = Pageable.unpaged(),
             )
         assertThat(missions).hasSize(26)
     }
@@ -430,7 +430,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 seaFronts = null,
                 missionStatuses = listOf("UPCOMING"),
-                pageable = Pageable.unpaged()
+                pageable = Pageable.unpaged(),
             )
         assertThat(missions).hasSize(6)
     }
@@ -446,7 +446,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 seaFronts = null,
                 missionStatuses = listOf("PENDING"),
-                pageable = Pageable.unpaged()
+                pageable = Pageable.unpaged(),
             )
         assertThat(missions).hasSize(14)
     }
@@ -462,7 +462,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 seaFronts = null,
                 missionStatuses = listOf("ENDED"),
-                pageable = Pageable.unpaged()
+                pageable = Pageable.unpaged(),
             )
         assertThat(missions).hasSize(15)
     }
@@ -478,7 +478,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 seaFronts = null,
                 missionStatuses = listOf("CLOSED"),
-                pageable = Pageable.unpaged()
+                pageable = Pageable.unpaged(),
             )
         assertThat(missions).hasSize(18)
     }
@@ -494,7 +494,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 seaFronts = null,
                 missionStatuses = listOf("CLOSED", "UPCOMING"),
-                pageable = Pageable.unpaged()
+                pageable = Pageable.unpaged(),
             )
         assertThat(missions).hasSize(24)
     }
@@ -510,7 +510,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 missionStatuses = null,
                 seaFronts = null,
-                pageable = PageRequest.of(1, 10)
+                pageable = PageRequest.of(1, 10),
             )
         assertThat(missions).hasSize(10)
     }
@@ -530,9 +530,9 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 listOf(
                     MissionSourceEnum.MONITORFISH,
                     MissionSourceEnum.POSEIDON_CACEM,
-                    MissionSourceEnum.POSEIDON_CNSP
+                    MissionSourceEnum.POSEIDON_CNSP,
                 ),
-                pageable = Pageable.unpaged()
+                pageable = Pageable.unpaged(),
             )
         assertThat(missions).hasSize(3)
     }
@@ -578,23 +578,23 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                                 LegacyControlUnitResourceEntity(
                                     id = 3,
                                     controlUnitId = 10002,
-                                    name = "Semi-rigide 1"
+                                    name = "Semi-rigide 1",
                                 ),
                                 LegacyControlUnitResourceEntity(
                                     id = 4,
                                     controlUnitId = 10002,
-                                    name = "Semi-rigide 2"
+                                    name = "Semi-rigide 2",
                                 ),
                                 LegacyControlUnitResourceEntity(
                                     id = 5,
                                     controlUnitId = 10002,
-                                    name = "Voiture"
-                                )
-                            )
-                        )
+                                    name = "Voiture",
+                                ),
+                            ),
+                        ),
                     ),
-                    isGeometryComputedFromControls = false
-                )
+                    isGeometryComputedFromControls = false,
+                ),
             )
         val mission = jpaMissionRepository.findFullMissionById(10)
 
@@ -631,7 +631,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 toProcess = false,
                 controlledPersonIdentity = "Dick Hoover",
                 vesselType = VesselTypeEnum.FISHING,
-                vesselSize = VesselSizeEnum.FROM_12_TO_24m
+                vesselSize = VesselSizeEnum.FROM_12_TO_24m,
             )
         val controlAction =
             EnvActionControlEntity(
@@ -641,14 +641,14 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     ThemeEntity(
                         theme = "5",
                         subThemes = listOf("4"),
-                        protectedSpecies = listOf("5")
-                    )
+                        protectedSpecies = listOf("5"),
+                    ),
                 ),
                 observations = "RAS",
                 actionNumberOfControls = 12,
                 actionTargetType = ActionTargetTypeEnum.VEHICLE,
                 vehicleType = VehicleTypeEnum.VESSEL,
-                infractions = listOf(infraction)
+                infractions = listOf(infraction),
             )
         val surveillanceAction =
             EnvActionSurveillanceEntity(
@@ -658,15 +658,15 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     ThemeEntity(
                         theme = "6",
                         subThemes = listOf("7"),
-                        protectedSpecies = listOf("8")
-                    )
+                        protectedSpecies = listOf("8"),
+                    ),
                 ),
-                observations = "This is a surveillance action"
+                observations = "This is a surveillance action",
             )
         val noteAction =
             EnvActionNoteEntity(
                 id = UUID.randomUUID(),
-                observations = "This is a note"
+                observations = "This is a note",
             )
 
         val missionToUpdate =
@@ -687,7 +687,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionSource = MissionSourceEnum.MONITORENV,
                 hasMissionOrder = false,
                 isUnderJdp = false,
-                isGeometryComputedFromControls = false
+                isGeometryComputedFromControls = false,
             )
         val expectedUpdatedMission =
             MissionDTO(
@@ -711,13 +711,13 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     listOf(
                         controlAction,
                         surveillanceAction,
-                        noteAction
+                        noteAction,
                     ),
                     missionSource = MissionSourceEnum.MONITORENV,
                     hasMissionOrder = false,
                     isUnderJdp = false,
-                    isGeometryComputedFromControls = false
-                )
+                    isGeometryComputedFromControls = false,
+                ),
             )
         // When
         jpaMissionRepository.save(missionToUpdate)
@@ -738,7 +738,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
                 actionTargetType = ActionTargetTypeEnum.VEHICLE,
                 vehicleType = VehicleTypeEnum.VESSEL,
-                actionNumberOfControls = 4
+                actionNumberOfControls = 4,
             )
         val missionToUpdate =
             MissionEntity(
@@ -756,7 +756,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionSource = MissionSourceEnum.MONITORENV,
                 hasMissionOrder = false,
                 isUnderJdp = false,
-                isGeometryComputedFromControls = false
+                isGeometryComputedFromControls = false,
             )
         val expectedUpdatedMission =
             MissionDTO(
@@ -778,8 +778,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     missionSource = MissionSourceEnum.MONITORENV,
                     hasMissionOrder = false,
                     isUnderJdp = false,
-                    isGeometryComputedFromControls = false
-                )
+                    isGeometryComputedFromControls = false,
+                ),
             )
         // When
         jpaMissionRepository.save(missionToUpdate)
@@ -798,7 +798,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 missionStatuses = null,
                 seaFronts = null,
-                pageable = Pageable.unpaged()
+                pageable = Pageable.unpaged(),
             )
         assertThat(missionsList).hasSize(21)
 
@@ -813,7 +813,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionTypes = null,
                 missionStatuses = null,
                 seaFronts = null,
-                pageable = Pageable.unpaged()
+                pageable = Pageable.unpaged(),
             )
         assertThat(nextMissionList).hasSize(20)
     }

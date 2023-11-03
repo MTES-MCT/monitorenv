@@ -58,7 +58,7 @@ class ApiControlUnitResourcesControllerITests {
         val controlUnitResourceId = 1
 
         mockMvc.perform(
-            put("/api/v1/control_unit_resources/$controlUnitResourceId/archive")
+            put("/api/v1/control_unit_resources/$controlUnitResourceId/archive"),
         )
             .andExpect(status().isOk)
 
@@ -88,7 +88,7 @@ class ApiControlUnitResourcesControllerITests {
             name = "Resource Name",
             note = null,
             photo = null,
-            type = ControlUnitResourceType.BARGE
+            type = ControlUnitResourceType.BARGE,
         )
 
         val newControlUnitData = CreateOrUpdateControlUnitResourceDataInput(
@@ -98,18 +98,18 @@ class ApiControlUnitResourcesControllerITests {
             name = "Resource Name",
             note = null,
             photo = null,
-            type = ControlUnitResourceType.BARGE
+            type = ControlUnitResourceType.BARGE,
         )
         val requestBody = objectMapper.writeValueAsString(newControlUnitData)
 
         given(createOrUpdateControlUnitResource.execute(controlUnitResource = any())).willReturn(
-            expectedCreatedControlUnitResource
+            expectedCreatedControlUnitResource,
         )
 
         mockMvc.perform(
             post("/api/v1/control_unit_resources")
                 .content(requestBody)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON),
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isCreated)
@@ -120,7 +120,7 @@ class ApiControlUnitResourcesControllerITests {
         val controlUnitResourceId = 1
 
         mockMvc.perform(
-            delete("/api/v1/control_unit_resources/$controlUnitResourceId")
+            delete("/api/v1/control_unit_resources/$controlUnitResourceId"),
         )
             .andExpect(status().isOk)
 
@@ -134,7 +134,7 @@ class ApiControlUnitResourcesControllerITests {
                 id = 0,
                 latitude = 0.0,
                 longitude = 0.0,
-                name = "Control Unit Name"
+                name = "Control Unit Name",
             ),
             controlUnit = ControlUnitEntity(
                 id = 0,
@@ -143,7 +143,7 @@ class ApiControlUnitResourcesControllerITests {
                 departmentAreaInseeCode = null,
                 isArchived = false,
                 name = "Control Unit Name",
-                termsNote = null
+                termsNote = null,
             ),
             controlUnitResource = ControlUnitResourceEntity(
                 id = 1,
@@ -153,8 +153,8 @@ class ApiControlUnitResourcesControllerITests {
                 name = "Resource Name",
                 note = null,
                 photo = null,
-                type = ControlUnitResourceType.BARGE
-            )
+                type = ControlUnitResourceType.BARGE,
+            ),
         )
 
         val requestedId = 1
@@ -175,7 +175,7 @@ class ApiControlUnitResourcesControllerITests {
                     id = 0,
                     latitude = 0.0,
                     longitude = 0.0,
-                    name = "Base Name"
+                    name = "Base Name",
                 ),
                 controlUnit = ControlUnitEntity(
                     id = 0,
@@ -184,7 +184,7 @@ class ApiControlUnitResourcesControllerITests {
                     departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Unit Name",
-                    termsNote = null
+                    termsNote = null,
                 ),
                 controlUnitResource = ControlUnitResourceEntity(
                     id = 1,
@@ -194,8 +194,8 @@ class ApiControlUnitResourcesControllerITests {
                     name = "Resource Name",
                     note = null,
                     photo = null,
-                    type = ControlUnitResourceType.BARGE
-                )
+                    type = ControlUnitResourceType.BARGE,
+                ),
             ),
 
             FullControlUnitResourceDTO(
@@ -203,7 +203,7 @@ class ApiControlUnitResourcesControllerITests {
                     id = 0,
                     latitude = 0.0,
                     longitude = 0.0,
-                    name = "Base Name"
+                    name = "Base Name",
                 ),
                 controlUnit = ControlUnitEntity(
                     id = 0,
@@ -212,7 +212,7 @@ class ApiControlUnitResourcesControllerITests {
                     departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Unit Name",
-                    termsNote = null
+                    termsNote = null,
                 ),
                 controlUnitResource = ControlUnitResourceEntity(
                     id = 2,
@@ -222,9 +222,9 @@ class ApiControlUnitResourcesControllerITests {
                     name = "Resource Name 2",
                     note = null,
                     photo = null,
-                    type = ControlUnitResourceType.BARGE
-                )
-            )
+                    type = ControlUnitResourceType.BARGE,
+                ),
+            ),
         )
 
         given(getControlUnitResources.execute()).willReturn(expectedFullControlUnitResources)
@@ -246,7 +246,7 @@ class ApiControlUnitResourcesControllerITests {
             name = "Updated Resource Name",
             note = null,
             photo = null,
-            type = ControlUnitResourceType.BARGE
+            type = ControlUnitResourceType.BARGE,
         )
 
         val nextControlUnitData = CreateOrUpdateControlUnitResourceDataInput(
@@ -257,18 +257,18 @@ class ApiControlUnitResourcesControllerITests {
             name = "Updated Resource Name",
             note = null,
             photo = null,
-            type = ControlUnitResourceType.BARGE
+            type = ControlUnitResourceType.BARGE,
         )
         val requestBody = objectMapper.writeValueAsString(nextControlUnitData)
 
         given(createOrUpdateControlUnitResource.execute(controlUnitResource = any())).willReturn(
-            expectedUpdatedControlUnitResource
+            expectedUpdatedControlUnitResource,
         )
 
         mockMvc.perform(
             put("/api/v1/control_unit_resources/1")
                 .content(requestBody)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON),
         )
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)

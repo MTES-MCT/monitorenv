@@ -13,11 +13,11 @@ data class FullControlUnitResourceDataOutput(
     val name: String,
     val note: String? = null,
     val photo: ByteArray? = byteArrayOf(),
-    val type: ControlUnitResourceType
+    val type: ControlUnitResourceType,
 ) {
     companion object {
         fun fromFullControlUnitResource(
-            fullControlUnitResource: FullControlUnitResourceDTO
+            fullControlUnitResource: FullControlUnitResourceDTO,
         ): FullControlUnitResourceDataOutput {
             val base = BaseDataOutput.fromBase(fullControlUnitResource.base)
             val controlUnit = ControlUnitDataOutput.fromControlUnit(fullControlUnitResource.controlUnit)
@@ -32,7 +32,7 @@ data class FullControlUnitResourceDataOutput(
                 name = fullControlUnitResource.controlUnitResource.name,
                 note = fullControlUnitResource.controlUnitResource.note,
                 photo = fullControlUnitResource.controlUnitResource.photo,
-                type = fullControlUnitResource.controlUnitResource.type
+                type = fullControlUnitResource.controlUnitResource.type,
             )
         }
     }

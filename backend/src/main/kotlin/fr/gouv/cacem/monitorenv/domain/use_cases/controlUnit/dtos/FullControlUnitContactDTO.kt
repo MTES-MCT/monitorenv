@@ -5,5 +5,5 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 
 data class FullControlUnitContactDTO(
     val controlUnit: ControlUnitEntity,
-    val controlUnitContact: ControlUnitContactEntity
+    val controlUnitContact: ControlUnitContactEntity,
 )

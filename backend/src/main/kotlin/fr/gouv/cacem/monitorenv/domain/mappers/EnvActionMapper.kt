@@ -32,7 +32,7 @@ object EnvActionMapper {
         isAdministrativeControl: Boolean?,
         isComplianceWithWaterRegulationsControl: Boolean?,
         isSafetyEquipmentAndStandardsComplianceControl: Boolean?,
-        isSeafarersControl: Boolean?
+        isSeafarersControl: Boolean?,
     ): EnvActionEntity {
         return try {
             if (!value.isNullOrEmpty() && value != jsonbNullString) {
@@ -40,7 +40,7 @@ object EnvActionMapper {
                     ActionTypeEnum.SURVEILLANCE ->
                         mapper.readValue(
                             value,
-                            EnvActionSurveillanceProperties::class.java
+                            EnvActionSurveillanceProperties::class.java,
                         )
                             .toEnvActionSurveillanceEntity(
                                 id,
@@ -48,12 +48,12 @@ object EnvActionMapper {
                                 actionEndDateTimeUtc,
                                 facade,
                                 department,
-                                geom
+                                geom,
                             )
                     ActionTypeEnum.CONTROL ->
                         mapper.readValue(
                             value,
-                            EnvActionControlProperties::class.java
+                            EnvActionControlProperties::class.java,
                         )
                             .toEnvActionControlEntity(
                                 id,
@@ -65,17 +65,17 @@ object EnvActionMapper {
                                 isAdministrativeControl,
                                 isComplianceWithWaterRegulationsControl,
                                 isSafetyEquipmentAndStandardsComplianceControl,
-                                isSeafarersControl
+                                isSeafarersControl,
                             )
                     ActionTypeEnum.NOTE ->
                         mapper.readValue(
                             value,
-                            EnvActionNoteProperties::class.java
+                            EnvActionNoteProperties::class.java,
                         )
                             .toEnvActionNoteEntity(
                                 id,
                                 actionStartDateTimeUtc,
-                                actionEndDateTimeUtc
+                                actionEndDateTimeUtc,
                             )
                 }
             } else {
@@ -92,20 +92,20 @@ object EnvActionMapper {
                 ActionTypeEnum.SURVEILLANCE ->
                     mapper.writeValueAsString(
                         EnvActionSurveillanceProperties.fromEnvActionSurveillanceEntity(
-                            envAction as EnvActionSurveillanceEntity
-                        )
+                            envAction as EnvActionSurveillanceEntity,
+                        ),
                     )
                 ActionTypeEnum.CONTROL ->
                     mapper.writeValueAsString(
                         EnvActionControlProperties.fromEnvActionControlEntity(
-                            envAction as EnvActionControlEntity
-                        )
+                            envAction as EnvActionControlEntity,
+                        ),
                     )
                 ActionTypeEnum.NOTE ->
                     mapper.writeValueAsString(
                         EnvActionNoteProperties.fromEnvActionNoteEntity(
-                            envAction as EnvActionNoteEntity
-                        )
+                            envAction as EnvActionNoteEntity,
+                        ),
                     )
             }
         } catch (e: Exception) {

@@ -26,5 +26,5 @@ enum class ControlUnitResourceType(val label: String) {
     SEMI_RIGID("Semi-rigide"),
     SUPPORT_SHIP("Bâtiment de soutien"),
     TRAINING_SHIP("Bâtiment-école"),
-    TUGBOAT("Remorqueur")
+    TUGBOAT("Remorqueur"),
 }

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 @Tag(description = "API Semaphores", name = "Semaphores")
 class SemaphoresController(
     private val getAllSemaphores: GetAllSemaphores,
-    private val getSemaphoreById: GetSemaphoreById
+    private val getSemaphoreById: GetSemaphoreById,
 ) {
     @GetMapping("")
     @Operation(summary = "Get all semaphores")
@@ -30,7 +30,7 @@ class SemaphoresController(
     fun getSemaphoreByIdController(
         @PathParam("semaphore id")
         @PathVariable(name = "semaphoreId")
-        semaphoreId: Int
+        semaphoreId: Int,
     ): SemaphoreDataOutput {
         val semaphore = getSemaphoreById.execute(semaphoreId)
         return SemaphoreDataOutput.fromSemaphoreEntity(semaphore)

@@ -32,7 +32,7 @@ class NatinfsControllerITests {
             natinfCode = 27718,
             regulation = "ART.L.945-4 AL.1, ART.L.945-5 1°, 2°, 3°, 4° C.RUR",
             infractionCategory = "Pêche",
-            infraction = "Debarquement de produits de la peche maritime et de l'aquaculture marine hors d'un port designe"
+            infraction = "Debarquement de produits de la peche maritime et de l'aquaculture marine hors d'un port designe",
         )
         given(getAllNatinfs.execute()).willReturn(listOf(natinf))
 

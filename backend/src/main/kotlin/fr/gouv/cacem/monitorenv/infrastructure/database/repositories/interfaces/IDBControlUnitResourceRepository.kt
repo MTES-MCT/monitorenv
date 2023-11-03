@@ -15,7 +15,7 @@ interface IDBControlUnitResourceRepository : CrudRepository<ControlUnitResourceM
         SET is_archived = TRUE
         WHERE id = :controlUnitResourceId
         """,
-        nativeQuery = true
+        nativeQuery = true,
     )
     fun archiveById(controlUnitResourceId: Int)
 
@@ -25,7 +25,7 @@ interface IDBControlUnitResourceRepository : CrudRepository<ControlUnitResourceM
         FROM control_unit_resources
         ORDER BY name ASC
         """,
-        nativeQuery = true
+        nativeQuery = true,
     )
     override fun findAll(): List<ControlUnitResourceModel>
 }

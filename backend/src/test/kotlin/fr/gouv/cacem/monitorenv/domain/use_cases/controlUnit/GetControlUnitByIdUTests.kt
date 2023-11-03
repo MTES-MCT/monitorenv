@@ -23,7 +23,7 @@ class GetControlUnitByIdUTests {
             administration = AdministrationEntity(
                 id = 0,
                 name = "Administration Name",
-                isArchived = false
+                isArchived = false,
             ),
             controlUnit = ControlUnitEntity(
                 id = 1,
@@ -32,11 +32,11 @@ class GetControlUnitByIdUTests {
                 departmentAreaInseeCode = null,
                 isArchived = false,
                 name = "Control Unit Name",
-                termsNote = null
+                termsNote = null,
             ),
             departmentArea = null,
             controlUnitContacts = listOf(),
-            controlUnitResources = listOf()
+            controlUnitResources = listOf(),
         )
 
         given(controlUnitRepository.findById(controlUnitId)).willReturn(fullControlUnit)

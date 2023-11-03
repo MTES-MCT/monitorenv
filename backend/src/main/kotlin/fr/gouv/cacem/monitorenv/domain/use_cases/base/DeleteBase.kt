@@ -7,12 +7,12 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.
 @UseCase
 class DeleteBase(
     private val baseRepository: IBaseRepository,
-    private val canDeleteBase: CanDeleteBase
+    private val canDeleteBase: CanDeleteBase,
 ) {
     fun execute(baseId: Int) {
         if (!canDeleteBase.execute(baseId)) {
             throw ForeignKeyConstraintException(
-                "Cannot delete base (ID=$baseId) due to existing relationships."
+                "Cannot delete base (ID=$baseId) due to existing relationships.",
             )
         }
 

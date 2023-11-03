@@ -54,7 +54,7 @@ data class ControlUnitModel(
 
     @Column(name = "updated_at_utc", nullable = false)
     @UpdateTimestamp
-    val updatedAtUtc: Instant? = null
+    val updatedAtUtc: Instant? = null,
 ) {
     companion object {
         /**
@@ -66,7 +66,7 @@ data class ControlUnitModel(
             administrationModel: AdministrationModel,
             departmentAreaModel: DepartmentAreaModel? = null,
             controlUnitContactModels: List<ControlUnitContactModel>? = null,
-            controlUnitResourceModels: List<ControlUnitResourceModel>? = null
+            controlUnitResourceModels: List<ControlUnitResourceModel>? = null,
         ): ControlUnitModel {
             return ControlUnitModel(
                 id = controlUnit.id,
@@ -77,7 +77,7 @@ data class ControlUnitModel(
                 departmentArea = departmentAreaModel,
                 isArchived = controlUnit.isArchived,
                 name = controlUnit.name,
-                termsNote = controlUnit.termsNote
+                termsNote = controlUnit.termsNote,
             )
         }
 
@@ -88,7 +88,7 @@ data class ControlUnitModel(
         fun fromFullControlUnit(
             fullControlUnit: FullControlUnitDTO,
             controlUnitContactModels: List<ControlUnitContactModel>? = null,
-            controlUnitResourceModels: List<ControlUnitResourceModel>? = null
+            controlUnitResourceModels: List<ControlUnitResourceModel>? = null,
         ): ControlUnitModel {
             return ControlUnitModel(
                 id = fullControlUnit.controlUnit.id,
@@ -99,7 +99,7 @@ data class ControlUnitModel(
                 departmentArea = fullControlUnit.departmentArea?.let { DepartmentAreaModel.fromDepartmentArea(it) },
                 isArchived = fullControlUnit.controlUnit.isArchived,
                 name = fullControlUnit.controlUnit.name,
-                termsNote = fullControlUnit.controlUnit.termsNote
+                termsNote = fullControlUnit.controlUnit.termsNote,
             )
         }
     }
@@ -112,7 +112,7 @@ data class ControlUnitModel(
             departmentAreaInseeCode = departmentArea?.inseeCode,
             isArchived,
             name,
-            termsNote
+            termsNote,
         )
     }
 
@@ -122,7 +122,7 @@ data class ControlUnitModel(
             departmentArea = departmentArea?.toDepartmentArea(),
             controlUnit = toControlUnit(),
             controlUnitContacts = requireNotNull(controlUnitContacts).map { it.toControlUnitContact() },
-            controlUnitResources = requireNotNull(controlUnitResources).map { it.toFullControlUnitResource() }
+            controlUnitResources = requireNotNull(controlUnitResources).map { it.toFullControlUnitResource() },
         )
     }
 
@@ -133,7 +133,7 @@ data class ControlUnitModel(
             isArchived,
             name,
             resources = requireNotNull(controlUnitResources).map { it.toLegacyControlUnitResource() },
-            contact = ""
+            contact = "",
         )
     }
 }

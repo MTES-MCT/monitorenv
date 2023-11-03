@@ -26,7 +26,7 @@ class CreateOrUpdateControlUnitResourceUTests {
             name = "Control Unit Resource Name",
             note = null,
             photo = null,
-            type = ControlUnitResourceType.BARGE
+            type = ControlUnitResourceType.BARGE,
         )
 
         val expectedControlUnitResource = newControlUnitResource.copy(id = 0)

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 @Tag(name = "Control Themes", description = "API control themes")
 class ControlThemesController(
     private val getAllControlThemes: GetAllControlThemes,
-    private val getControlThemeById: GetControlThemeById
+    private val getControlThemeById: GetControlThemeById,
 ) {
 
     @GetMapping("")
@@ -31,7 +31,7 @@ class ControlThemesController(
     fun getControlThemeByIdController(
         @PathParam("controlTheme id")
         @PathVariable(name = "controlThemeId")
-        controlThemeId: Int
+        controlThemeId: Int,
     ): ControlThemeDataOutput {
         val controlTheme = getControlThemeById.execute(controlThemeId = controlThemeId)
         return ControlThemeDataOutput.fromControlThemeEntity(controlTheme)

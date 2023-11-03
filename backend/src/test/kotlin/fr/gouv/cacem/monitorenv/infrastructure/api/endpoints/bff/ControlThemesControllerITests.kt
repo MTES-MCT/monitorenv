@@ -36,7 +36,7 @@ class ControlThemesControllerITests {
         val controlTheme = ControlThemeEntity(
             id = 1,
             themeLevel1 = "Police des mouillages",
-            themeLevel2 = "Mouillage individuel"
+            themeLevel2 = "Mouillage individuel",
         )
         given(getAllControlThemes.execute()).willReturn(listOf(controlTheme))
 
@@ -56,7 +56,7 @@ class ControlThemesControllerITests {
         val controlTheme = ControlThemeEntity(
             id = 1,
             themeLevel1 = "Police des mouillages",
-            themeLevel2 = "Mouillage individuel"
+            themeLevel2 = "Mouillage individuel",
         )
 
         given(getControlThemeById.execute(3)).willReturn(controlTheme)

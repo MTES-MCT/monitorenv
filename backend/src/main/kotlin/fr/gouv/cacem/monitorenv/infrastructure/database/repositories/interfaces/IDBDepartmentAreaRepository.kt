@@ -12,7 +12,7 @@ interface IDBDepartmentAreaRepository : CrudRepository<DepartmentAreaModel, Int>
         FROM departments_areas
         WHERE insee_dep = :inseeCode
         """,
-        nativeQuery = true
+        nativeQuery = true,
     )
     fun findByInseeCode(inseeCode: String): DepartmentAreaModel
 
@@ -46,7 +46,7 @@ interface IDBDepartmentAreaRepository : CrudRepository<DepartmentAreaModel, Int>
         ORDER BY intersection_area DESC
         LIMIT 1
      """,
-        nativeQuery = true
+        nativeQuery = true,
     )
     fun findDepartmentFromGeometry(geometry: Geometry): String?
 }

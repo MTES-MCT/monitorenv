@@ -12,7 +12,7 @@ data class ReportingDTO(
     val semaphore: SemaphoreEntity? = null,
     val controlUnit: FullControlUnitDTO? = null,
     val attachedMission: MissionEntity? = null,
-    val detachedMission: MissionEntity? = null
+    val detachedMission: MissionEntity? = null,
 ) {
     val controlStatus: ControlStatusEnum?
         get() =

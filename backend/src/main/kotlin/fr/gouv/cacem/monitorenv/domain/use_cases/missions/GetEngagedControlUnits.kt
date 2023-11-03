@@ -21,7 +21,7 @@ class GetEngagedControlUnits(private val getFullMissions: GetFullMissions) {
                 missionStatuses = listOf("PENDING"),
                 pageNumber = null,
                 pageSize = null,
-                seaFronts = null
+                seaFronts = null,
             )
 
         val controlUnits =

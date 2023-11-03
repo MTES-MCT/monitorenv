@@ -18,7 +18,7 @@ data class MissionEnvActionControlInfractionDataInput(
     val toProcess: Boolean,
     val controlledPersonIdentity: String? = null,
     val vesselType: VesselTypeEnum? = null,
-    val vesselSize: VesselSizeEnum? = null
+    val vesselSize: VesselSizeEnum? = null,
 ) {
     fun toInfractionEntity() =
         InfractionEntity(
@@ -33,6 +33,6 @@ data class MissionEnvActionControlInfractionDataInput(
             toProcess = toProcess,
             controlledPersonIdentity = controlledPersonIdentity,
             vesselType = vesselType,
-            vesselSize = vesselSize
+            vesselSize = vesselSize,
         )
 }

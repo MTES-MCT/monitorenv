@@ -15,7 +15,7 @@ interface IDBControlUnitRepository : JpaRepository<ControlUnitModel, Int> {
         SET archived = TRUE
         WHERE id = :controlUnitId
         """,
-        nativeQuery = true
+        nativeQuery = true,
     )
     fun archiveById(controlUnitId: Int)
 
@@ -25,7 +25,7 @@ interface IDBControlUnitRepository : JpaRepository<ControlUnitModel, Int> {
         FROM control_units
         ORDER BY name ASC
         """,
-        nativeQuery = true
+        nativeQuery = true,
     )
     override fun findAll(): List<ControlUnitModel>
 }

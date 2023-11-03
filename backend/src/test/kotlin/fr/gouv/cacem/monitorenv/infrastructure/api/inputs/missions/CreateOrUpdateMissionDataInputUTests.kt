@@ -38,7 +38,7 @@ class CreateOrUpdateMissionDataInputUTests {
                 vehicleType = VehicleTypeEnum.VESSEL,
                 infractions = listOf(),
                 observations = "Observations",
-                reportingIds = Optional.of(listOf(1))
+                reportingIds = Optional.of(listOf(1)),
             )
         val envActionSurveillance =
             MissionEnvActionDataInput(
@@ -51,7 +51,7 @@ class CreateOrUpdateMissionDataInputUTests {
                 themes = listOf(),
                 coverMissionZone = true,
                 observations = "Observations",
-                reportingIds = Optional.of(listOf(2, 3))
+                reportingIds = Optional.of(listOf(2, 3)),
             )
         val envActionNote =
             MissionEnvActionDataInput(
@@ -60,7 +60,7 @@ class CreateOrUpdateMissionDataInputUTests {
                 actionStartDateTimeUtc = ZonedDateTime.now(),
                 actionEndDateTimeUtc = ZonedDateTime.now().plusHours(1),
                 observations = "Observations",
-                reportingIds = Optional.empty()
+                reportingIds = Optional.empty(),
             )
         val missionDataInput =
             CreateOrUpdateMissionDataInput(
@@ -72,13 +72,13 @@ class CreateOrUpdateMissionDataInputUTests {
                 isClosed = false,
                 missionSource = MissionSourceEnum.MONITORENV,
                 attachedReportingIds = listOf(),
-                envActions = listOf(envActionControl, envActionSurveillance, envActionNote)
+                envActions = listOf(envActionControl, envActionSurveillance, envActionNote),
             )
 
         // when
         val result = missionDataInput.getEnvActionsAttachedToReportings()
         assertThat(
-            result
+            result,
         ).isEqualTo(listOf(Pair(envActionControl.id, listOf(1)), Pair(envActionSurveillance.id, listOf(2, 3))))
     }
 }

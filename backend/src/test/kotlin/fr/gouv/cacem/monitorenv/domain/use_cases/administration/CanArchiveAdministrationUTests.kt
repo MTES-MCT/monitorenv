@@ -23,7 +23,7 @@ class CanArchiveAdministrationUTests {
             administration = AdministrationEntity(
                 id = 1,
                 name = "Administration Name",
-                isArchived = false
+                isArchived = false,
             ),
             controlUnits = listOf(
                 ControlUnitEntity(
@@ -33,9 +33,9 @@ class CanArchiveAdministrationUTests {
                     departmentAreaInseeCode = null,
                     isArchived = true,
                     name = "Control Unit Name",
-                    termsNote = null
-                )
-            )
+                    termsNote = null,
+                ),
+            ),
         )
 
         given(administrationRepository.findById(administrationId)).willReturn(fullAdministration)
@@ -52,7 +52,7 @@ class CanArchiveAdministrationUTests {
             administration = AdministrationEntity(
                 id = 1,
                 name = "Administration Name",
-                isArchived = false
+                isArchived = false,
             ),
             controlUnits = listOf(
                 ControlUnitEntity(
@@ -62,9 +62,9 @@ class CanArchiveAdministrationUTests {
                     departmentAreaInseeCode = null,
                     isArchived = false,
                     name = "Control Unit Name",
-                    termsNote = null
-                )
-            )
+                    termsNote = null,
+                ),
+            ),
         )
 
         given(administrationRepository.findById(administrationId)).willReturn(fullAdministration)

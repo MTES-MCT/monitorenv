@@ -23,5 +23,5 @@ data class MissionEntity(
     val isGeometryComputedFromControls: Boolean,
     val missionSource: MissionSourceEnum,
     val hasMissionOrder: Boolean,
-    val isUnderJdp: Boolean
+    val isUnderJdp: Boolean,
 )

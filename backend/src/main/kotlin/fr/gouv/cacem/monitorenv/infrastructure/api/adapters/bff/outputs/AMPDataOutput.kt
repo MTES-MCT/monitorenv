@@ -8,7 +8,7 @@ data class AMPDataOutput(
     val geom: MultiPolygon,
     val name: String,
     val designation: String,
-    val type: String
+    val type: String,
 ) {
     companion object {
         fun fromAMPEntity(amp: AMPEntity) = AMPDataOutput(
@@ -16,7 +16,7 @@ data class AMPDataOutput(
             geom = amp.geom,
             name = amp.name,
             designation = amp.designation,
-            type = amp.type
+            type = amp.type,
         )
     }
 }

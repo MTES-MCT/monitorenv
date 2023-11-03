@@ -23,9 +23,9 @@ class GetBaseByIdUTests {
                 id = 1,
                 latitude = 0.0,
                 longitude = 0.0,
-                name = "Base Name"
+                name = "Base Name",
             ),
-            controlUnitResources = listOf()
+            controlUnitResources = listOf(),
         )
 
         given(baseRepository.findById(baseId)).willReturn(fullBase)

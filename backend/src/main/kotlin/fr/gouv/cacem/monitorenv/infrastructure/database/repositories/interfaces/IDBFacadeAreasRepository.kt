@@ -36,7 +36,7 @@ interface IDBFacadeAreasRepository : CrudRepository<FacadeAreasModel, Int> {
         ORDER BY intersection_area DESC
         LIMIT 1
      """,
-        nativeQuery = true
+        nativeQuery = true,
     )
     fun findFacadeFromGeometry(geometry: Geometry): String?
 }

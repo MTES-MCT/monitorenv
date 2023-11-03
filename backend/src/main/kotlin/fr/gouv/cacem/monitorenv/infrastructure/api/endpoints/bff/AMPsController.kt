@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 @Tag(name = "AMP", description = "API des Aires Marines Protégées (AMP)")
 class AMPsController(
     private val getAllAMPs: GetAllAMPs,
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
 ) {
 
     @GetMapping("")

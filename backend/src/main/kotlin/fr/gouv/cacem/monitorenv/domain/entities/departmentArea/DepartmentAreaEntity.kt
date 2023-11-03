@@ -6,5 +6,5 @@ data class DepartmentAreaEntity(
     /** `inseeCode` is the ID. */
     val inseeCode: String,
     val geometry: MultiPolygon? = null,
-    val name: String
+    val name: String,
 )
