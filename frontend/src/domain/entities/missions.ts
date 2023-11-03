@@ -1,4 +1,4 @@
-import { THEME, customDayjs as dayjs } from '@mtes-mct/monitor-ui'
+import { THEME, customDayjs } from '@mtes-mct/monitor-ui'
 
 import type { LegacyControlUnit } from './legacyControlUnit'
 import type { SeaFrontEnum } from './seaFrontType'
@@ -348,19 +348,23 @@ export const getMissionStatus = ({
   isClosed?: Boolean
   startDateTimeUtc?: string | null
 }) => {
+  if (!startDateTimeUtc) {
+    return 'ERROR'
+  }
+
   if (isClosed) {
     return MissionStatusEnum.CLOSED
   }
-  if (startDateTimeUtc) {
-    if (dayjs().isBefore(dayjs(startDateTimeUtc)) || dayjs().isSame(dayjs(startDateTimeUtc))) {
-      return MissionStatusEnum.UPCOMING
-    }
-    if (dayjs().isAfter(dayjs(endDateTimeUtc)) || dayjs().isSame(dayjs(endDateTimeUtc))) {
-      return MissionStatusEnum.ENDED
-    }
 
-    return MissionStatusEnum.PENDING
+  const now = customDayjs()
+
+  if (customDayjs(startDateTimeUtc).isAfter(now)) {
+    return MissionStatusEnum.UPCOMING
   }
 
-  return 'ERROR'
+  if (endDateTimeUtc && customDayjs(endDateTimeUtc).isBefore(now)) {
+    return MissionStatusEnum.ENDED
+  }
+
+  return MissionStatusEnum.PENDING
 }
