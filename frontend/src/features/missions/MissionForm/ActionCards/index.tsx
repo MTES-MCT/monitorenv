@@ -1,9 +1,10 @@
-import { Accent, FieldError, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
+import { Accent, FieldError, Icon, IconButton, THEME, Tag } from '@mtes-mct/monitor-ui'
+import styled from 'styled-components'
 
 import { ControlCard } from './ControlCard'
 import { NoteCard } from './NoteCard'
 import { ReportingCard } from './ReportingCard'
-import { Action, ActionSummaryWrapper, ButtonsWrapper, Card, TimeLine } from './style'
+import { Action, ActionButtons, ActionSummaryWrapper, ButtonsWrapper, Card, TimeLine } from './style'
 import { SurveillanceCard } from './SurveillanceCard'
 import { ActionTypeEnum, type EnvActionForTimeline } from '../../../../domain/entities/missions'
 import { getDateAsLocalizedStringExpanded } from '../../../../utils/getDateAsLocalizedString'
@@ -18,6 +19,7 @@ type ActionCardProps = {
   removeAction: MouseEventHandler
   selectAction: MouseEventHandler
   selected: boolean
+  setCurrentActionIndex: (string) => void
 }
 
 export function ActionCards({
@@ -26,7 +28,8 @@ export function ActionCards({
   hasError,
   removeAction,
   selectAction,
-  selected
+  selected,
+  setCurrentActionIndex
 }: ActionCardProps) {
   return (
     <Action data-cy="action-card" onClick={selectAction}>
@@ -36,18 +39,30 @@ export function ActionCards({
           {action.actionType === ActionTypeEnum.CONTROL && <ControlCard action={action} />}
           {action.actionType === ActionTypeEnum.SURVEILLANCE && <SurveillanceCard action={action} />}
           {action.actionType === ActionTypeEnum.NOTE && <NoteCard action={action} />}
-          {action.actionType === ActionTypeEnum.REPORTING && <ReportingCard action={action} />}
+          {action.actionType === ActionTypeEnum.REPORTING && (
+            <ReportingCard action={action} setCurrentActionIndex={setCurrentActionIndex} />
+          )}
 
           {action.actionType !== ActionTypeEnum.REPORTING && (
             <ButtonsWrapper>
-              <IconButton accent={Accent.TERTIARY} Icon={Icon.Duplicate} onClick={duplicateAction} title="dupliquer" />
-              <IconButton
-                accent={Accent.TERTIARY}
-                color={THEME.color.maximumRed}
-                Icon={Icon.Delete}
-                onClick={removeAction}
-                title="supprimer"
-              />
+              <ActionButtons>
+                <IconButton
+                  accent={Accent.TERTIARY}
+                  Icon={Icon.Duplicate}
+                  onClick={duplicateAction}
+                  title="dupliquer"
+                />
+                <IconButton
+                  accent={Accent.TERTIARY}
+                  color={THEME.color.maximumRed}
+                  Icon={Icon.Delete}
+                  onClick={removeAction}
+                  title="supprimer"
+                />
+              </ActionButtons>
+              {action.actionType === ActionTypeEnum.CONTROL && action.attachedReportingId && (
+                <StyledTag Icon={Icon.Link}>{`Signalement ${action.formattedReportingId}`}</StyledTag>
+              )}
             </ButtonsWrapper>
           )}
         </ActionSummaryWrapper>
@@ -56,3 +71,7 @@ export function ActionCards({
     </Action>
   )
 }
+
+const StyledTag = styled(Tag)`
+  background-color: ${p => p.theme.color.maximumRed15};
+`

@@ -13,9 +13,9 @@ import {
   type EnvActionSurveillance,
   type EnvActionForTimeline
 } from '../../domain/entities/missions'
+import { getFormattedReportingId, type Reporting, type ReportingForTimeline } from '../../domain/entities/reporting'
 
 import type { LegacyControlUnit } from '../../domain/entities/legacyControlUnit'
-import type { Reporting, ReportingForTimeline } from '../../domain/entities/reporting'
 
 export const infractionFactory = ({ id, ...infraction } = { id: '' }) => ({
   id: uuidv4(),
@@ -170,17 +170,22 @@ export const getControlInfractionsTags = (actionNumberOfControls, infractions) =
 
 type ActionsForTimeLine = Record<string, ReportingForTimeline | EnvActionForTimeline>
 
-const formattedEnvActionsForTimeline = envActions =>
-  envActions?.reduce(
-    (newEnvActionsCollection, action) => ({
+const formattedEnvActionsForTimeline = (envActions, reportings) =>
+  envActions?.reduce((newEnvActionsCollection, action) => {
+    let attachedReporting
+    if (action.actionType === ActionTypeEnum.CONTROL && action.attachedReportingId) {
+      attachedReporting = reportings?.find(reporting => reporting.id === action.attachedReportingId)
+    }
+
+    return {
       ...newEnvActionsCollection,
       [action.id]: {
         ...action,
+        formattedReportingId: getFormattedReportingId(attachedReporting?.reportingId),
         timelineDate: action.actionStartDateTimeUtc
       }
-    }),
-    {} as EnvActionForTimeline
-  )
+    }
+  }, {} as EnvActionForTimeline)
 
 const formattedReportingsForTimeline = reportings =>
   reportings?.reduce(
@@ -198,7 +203,7 @@ export const getEnvActionsAndReportingsForTimeline = (
   envActions: EnvAction[] | undefined,
   reportings: Reporting[] | undefined
 ): ActionsForTimeLine => {
-  const formattedEnvActions = formattedEnvActionsForTimeline(envActions)
+  const formattedEnvActions = formattedEnvActionsForTimeline(envActions, reportings)
   const formattedReportings = formattedReportingsForTimeline(reportings)
 
   return { ...formattedEnvActions, ...formattedReportings }

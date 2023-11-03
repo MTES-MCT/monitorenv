@@ -206,6 +206,7 @@ export function ReportingForm({
           />
         </StyledThemeContainer>
         <Validity mustIncreaseValidity={mustIncreaseValidity} />
+        <StyledFormikTextInput label="Saisi par" name="openBy" />
         <Separator />
         <FormikTextarea label="Actions effectuées" name="actionTaken" />
 
@@ -218,9 +219,6 @@ export function ReportingForm({
           <span>Le signalement nécessite un contrôle</span>
         </StyledToggle>
         {values.isControlRequired && <AttachMission setIsAttachNewMission={setIsAttachNewMission} />}
-
-        <Separator />
-        <StyledFormikTextInput label="Saisi par" name="openBy" />
       </StyledForm>
       <Footer
         onCancel={cancelNewReporting}

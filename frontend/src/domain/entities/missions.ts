@@ -314,6 +314,7 @@ export type NewEnvActionControl = EnvActionCommonProperties & {
   actionNumberOfControls?: number
   actionTargetType?: string
   actionType: ActionTypeEnum.CONTROL
+  attachedReportingId?: number | undefined
   infractions: Infraction[]
   isAdministrativeControl?: boolean
   isComplianceWithWaterRegulationsControl?: boolean
@@ -330,6 +331,7 @@ export type EnvActionControl = NewEnvActionControl & {
 
 export type EnvActionSurveillance = EnvActionCommonProperties & {
   actionType: ActionTypeEnum.SURVEILLANCE
+  attachedReportingId?: number | undefined
   coverMissionZone?: boolean
   durationMatchesMission?: boolean
   observations: string | null
@@ -362,6 +364,7 @@ export type Infraction = NewInfraction & {
 }
 
 export type EnvActionForTimeline = Partial<EnvAction> & {
+  formattedReportingId?: string
   timelineDate?: string
 }
 

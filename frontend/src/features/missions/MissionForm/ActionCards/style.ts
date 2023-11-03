@@ -84,13 +84,19 @@ export const NoteContent = styled.div`
 
 export const ButtonsWrapper = styled.div`
   display: flex;
+  flex-direction: column;
+  align-items: end;
+  justify-content: inherit;
+  gap: 16px;
+`
+export const ActionButtons = styled.div`
+  display: flex;
+  flex-direction: row;
   gap: 4px;
-  align-items: baseline;
   > button {
     padding: 0px;
   }
 `
-
 export const Accented = styled.span`
   font-weight: bold;
 `

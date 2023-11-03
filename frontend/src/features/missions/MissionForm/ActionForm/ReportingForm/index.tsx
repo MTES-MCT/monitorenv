@@ -18,7 +18,7 @@ import { vehicleTypeLabels } from '../../../../../domain/entities/vehicleType'
 
 const EMPTY_VALUE = '--'
 
-export function ReportingForm({ reportingActionIndex }) {
+export function ReportingForm({ reportingActionIndex }: { reportingActionIndex: number }) {
   const [reportingField] = useField<ReportingDetailed>(`reportings.${reportingActionIndex}`)
 
   const reporting = reportingField.value

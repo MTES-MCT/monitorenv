@@ -8,7 +8,7 @@ import { extractThemesAsText } from '../../../../utils/extractThemesAsText'
 export function ControlCard({ action }) {
   return (
     <>
-      <Icon.Control color={THEME.color.charcoal} size={20} />
+      <Icon.ControlUnit color={THEME.color.charcoal} size={20} />
       <SummaryContent>
         <Title>
           Contrôle{!!action.actionNumberOfControls && action.actionNumberOfControls > 1 ? 's ' : ' '}
@@ -30,6 +30,7 @@ export function ControlCard({ action }) {
               </Accented>
             </ControlSummary>
           )}
+
           {!!action.actionNumberOfControls && action.actionNumberOfControls > 0 && (
             <ControlInfractionsTags
               actionNumberOfControls={action.actionNumberOfControls}

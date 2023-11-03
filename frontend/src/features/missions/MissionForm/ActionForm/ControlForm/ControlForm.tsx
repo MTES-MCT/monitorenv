@@ -3,17 +3,20 @@ import {
   FormikDatePicker,
   FormikNumberInput,
   FormikTextarea,
+  MultiRadio,
   getOptionsFromLabelledEnum,
-  useNewWindow
+  useNewWindow,
+  type OptionValueType
 } from '@mtes-mct/monitor-ui'
 import { FieldArray, useFormikContext, getIn } from 'formik'
 import _ from 'lodash'
-import { useMemo } from 'react'
-import { Form, IconButton } from 'rsuite'
+import { useMemo, useState } from 'react'
+import { Form, IconButton, Toggle } from 'rsuite'
 import styled from 'styled-components'
 
 import { InfractionsForm } from './InfractionsForm'
 import { OtherControlTypesForm } from './OtherControlTypesForm'
+import { getFormattedReportingId } from '../../../../../domain/entities/reporting'
 import { TargetTypeEnum, TargetTypeLabels } from '../../../../../domain/entities/targetType'
 import { VehicleTypeEnum } from '../../../../../domain/entities/vehicleType'
 import { ReactComponent as ControlIconSVG } from '../../../../../uiMonitor/icons/Control.svg'
@@ -31,16 +34,17 @@ export function ControlForm({
   removeControlAction,
   setCurrentActionIndex
 }: {
-  currentActionIndex: number
+  currentActionIndex: string
   removeControlAction: () => void
-  setCurrentActionIndex: (number) => void
+  setCurrentActionIndex: (string) => void
 }) {
   const { newWindowContainerRef } = useNewWindow()
 
   const {
     errors,
+    setFieldValue,
     setValues,
-    values: { envActions }
+    values: { envActions, reportings }
   } = useFormikContext<Mission<EnvActionControl>>()
 
   const envActionIndex = envActions.findIndex(envAction => envAction.id === String(currentActionIndex))
@@ -48,7 +52,8 @@ export function ControlForm({
 
   const targetTypeOptions = getOptionsFromLabelledEnum(TargetTypeLabels)
 
-  const { actionNumberOfControls, actionTargetType, vehicleType } = currentAction || {}
+  const { actionNumberOfControls, actionTargetType, attachedReportingId, vehicleType } = currentAction || {}
+  const [isReportingListVisible, setIsReportingListVisible] = useState<boolean>(!!attachedReportingId)
 
   const actionTargetTypeErrorMessage = useMemo(
     () => getIn(errors, `envActions[${envActionIndex}].actionTargetType`) || '',
@@ -64,6 +69,25 @@ export function ControlForm({
     ((actionTargetType === TargetTypeEnum.VEHICLE && vehicleType !== undefined) ||
       (actionTargetType !== undefined && actionTargetType !== TargetTypeEnum.VEHICLE)) &&
     actionNumberOfControls > (envActions[envActionIndex]?.infractions?.length || 0)
+
+  const reportingAsOptions = useMemo(
+    () =>
+      reportings?.map(reporting => ({
+        isDisabled:
+          reporting.isControlRequired &&
+          !!reporting.attachedEnvActionId &&
+          !!currentAction &&
+          currentAction?.id !== reporting.attachedEnvActionId,
+        label: `Signalement ${getFormattedReportingId(reporting.reportingId)}`,
+        value: reporting.id
+      })) || [],
+    [reportings, currentAction]
+  )
+
+  const areAllReportingsAttachedToAControl = useMemo(
+    () => reportings && reportings.every(reporting => reporting.isControlRequired && reporting.attachedEnvActionId),
+    [reportings]
+  )
 
   const onVehicleTypeChange = selectedVehicleType => {
     if (
@@ -110,6 +134,19 @@ export function ControlForm({
     setCurrentActionIndex(undefined)
     removeControlAction()
   }
+  const updateIsContralAttachedToReporting = (checked: boolean) => {
+    setIsReportingListVisible(checked)
+    if (!checked) {
+      setFieldValue(`envActions[${envActionIndex}].attachedReportingId`, undefined)
+    }
+  }
+
+  const selectReporting = (reportingId: OptionValueType | undefined) => {
+    if (!reportingId) {
+      return
+    }
+    setFieldValue(`envActions[${envActionIndex}].attachedReportingId`, reportingId)
+  }
 
   return (
     <>
@@ -132,6 +169,26 @@ export function ControlForm({
         </IconButtonRight>
       </Header>
       <FormBody>
+        <ReportingsContainer>
+          <StyledToggle>
+            <Toggle
+              checked={isReportingListVisible}
+              onChange={updateIsContralAttachedToReporting}
+              readOnly={areAllReportingsAttachedToAControl && !currentAction?.attachedReportingId}
+            />
+            <span>Le contrôle est rattaché à un signalement</span>
+          </StyledToggle>
+          {isReportingListVisible && (
+            <StyledMultiRadio
+              isLabelHidden
+              label="Signalements"
+              name="attachedReportingId"
+              onChange={selectReporting}
+              options={reportingAsOptions}
+              value={currentAction?.attachedReportingId}
+            />
+          )}
+        </ReportingsContainer>
         <ActionTheme
           actionIndex={envActionIndex}
           labelSubTheme="Sous-thématiques de contrôle"
@@ -227,6 +284,27 @@ const Title = styled.h2`
   line-height: 22px;
   display: inline-block;
   color: ${p => p.theme.color.charcoal};
+`
+const ReportingsContainer = styled.div`
+  padding-bottom: 32px;
+  gap: 16px;
+`
+const StyledToggle = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  gap: 8px;
+  > .rs-toggle-checked .rs-toggle-presentation {
+    background-color: ${p => p.theme.color.gunMetal};
+  }
+  > span {
+    color: ${p => p.theme.color.gunMetal};
+    font-weight: bold;
+  }
+`
+
+const StyledMultiRadio = styled(MultiRadio)`
+  margin-left: 48px;
 `
 
 const Separator = styled.hr`
