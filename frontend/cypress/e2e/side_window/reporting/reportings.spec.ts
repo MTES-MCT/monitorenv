@@ -38,10 +38,10 @@ context('Reportings', () => {
   })
 
   it('Reporting should be delete in Reportings Table', () => {
-    cy.intercept('DELETE', '/bff/v1/reportings/6').as('deleteReporting')
+    cy.intercept('DELETE', '/bff/v1/reportings/4').as('deleteReporting')
     cy.get('*[data-cy="status-filter-Archivés"]').click()
-    cy.get('*[data-cy="more-actions-reporting-6"]').scrollIntoView().click({ force: true })
-    cy.get('*[data-cy="delete-reporting-6"]').scrollIntoView().click({ force: true })
+    cy.get('*[data-cy="more-actions-reporting-4"]').scrollIntoView().click({ force: true })
+    cy.get('*[data-cy="delete-reporting-4"]').scrollIntoView().click({ force: true })
 
     cy.clickButton('Confirmer la suppression')
 
@@ -74,5 +74,19 @@ context('Reportings', () => {
     cy.get('*[data-cy="reporting-title"]').contains('NOUVEAU SIGNALEMENT (1)')
     cy.get('*[data-cy="add-semaphore-source"]').contains('Sémaphore de Dieppe')
     cy.get('*[data-cy="reporting-target-type"]').contains('Personne morale')
+  })
+
+  it('Mission with attached env_action can be detached', () => {
+    cy.intercept('PUT', '/bff/v1/reportings/6').as('updateReporting')
+    cy.get('*[data-cy="status-filter-Archivés"]').click()
+
+    cy.get('*[data-cy="edit-reporting-6"]').click({ force: true })
+    cy.clickButton('Délier la mission')
+    cy.clickButton('Enregistrer et quitter')
+
+    cy.wait('@updateReporting').then(({ response }) => {
+      expect(response && response.statusCode).equal(200)
+      expect(response && response.body?.attachedEnvActionId).equal(null)
+    })
   })
 })

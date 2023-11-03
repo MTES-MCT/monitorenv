@@ -27,6 +27,7 @@ export function AttachMission({ setIsAttachNewMission }) {
 
   const unattachMission = () => {
     setFieldValue('detachedFromMissionAtUtc', new Date().toISOString())
+    setFieldValue('attachedEnvActionId', null)
   }
 
   const createMission = async () => {

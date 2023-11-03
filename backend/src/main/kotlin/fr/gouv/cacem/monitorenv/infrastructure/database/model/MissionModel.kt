@@ -66,6 +66,7 @@ data class MissionModel(
     @Column(name = "is_geometry_computed_from_controls", nullable = false)
     val isGeometryComputedFromControls: Boolean,
     @Column(name = "is_under_jdp", nullable = false) val isUnderJdp: Boolean,
+
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
@@ -75,6 +76,7 @@ data class MissionModel(
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
     val envActions: MutableList<EnvActionModel>? = ArrayList(),
+
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
@@ -84,6 +86,7 @@ data class MissionModel(
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
     val controlResources: MutableList<MissionControlResourceModel>? = ArrayList(),
+
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
@@ -93,6 +96,7 @@ data class MissionModel(
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
     val controlUnits: MutableList<MissionControlUnitModel>? = ArrayList(),
+
     @OneToMany(mappedBy = "mission")
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)

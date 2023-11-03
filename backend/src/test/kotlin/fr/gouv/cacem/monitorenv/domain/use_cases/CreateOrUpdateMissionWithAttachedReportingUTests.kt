@@ -119,6 +119,7 @@ class CreateOrUpdateMissionWithAttachedReportingUTests {
 
         val missionToCreate =
             MissionEntity(
+                id = 100,
                 missionTypes = listOf(MissionTypeEnum.LAND),
                 facade = "Outre-Mer",
                 geom = polygon,
@@ -156,7 +157,7 @@ class CreateOrUpdateMissionWithAttachedReportingUTests {
             )
         val envActionAttachedToReportingIds = Pair(envActionControl.id, listOf(1))
 
-        given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate.copy(id = 100))
+        given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate)
         given(missionRepository.save(anyOrNull()))
             .willReturn(MissionDTO(mission = missionToCreate.copy(id = 100)))
         given(missionRepository.findFullMissionById(100)).willReturn(expectedCreatedMission)
@@ -178,7 +179,7 @@ class CreateOrUpdateMissionWithAttachedReportingUTests {
                 )
 
         // Then
-
+        verify(reportingRepository,times(1)).detachDanglingEnvActions(missionId = 100, envActionIds = listOf(envActionControl.id))
         verify(reportingRepository, times(1)).attachReportingsToMission(attachedReportingIds, 100)
         verify(
             reportingRepository,

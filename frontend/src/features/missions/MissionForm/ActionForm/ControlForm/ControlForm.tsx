@@ -276,9 +276,9 @@ export function ControlForm({
         <StyledFormikTextareaWithMargin
           isLight
           label="Observations"
-          name={`envActions[${currentActionIndex}].observations`}
+          name={`envActions[${envActionIndex}].observations`}
         />
-        <OtherControlTypesForm currentActionIndex={currentActionIndex} />
+        <OtherControlTypesForm currentActionIndex={envActionIndex} />
       </FormBody>
     </>
   )

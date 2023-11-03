@@ -8,6 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.EnvActionAttachedToReportingIds
+import java.util.UUID
 
 @UseCase
 class CreateOrUpdateMissionWithAttachedReporting(
@@ -17,10 +18,15 @@ class CreateOrUpdateMissionWithAttachedReporting(
 ) {
     @Throws(IllegalArgumentException::class)
     fun execute(
-        mission: MissionEntity?,
+        mission: MissionEntity,
         attachedReportingIds: List<Int>,
         envActionsAttachedToReportingIds: List<EnvActionAttachedToReportingIds>,
     ): MissionDTO {
+
+        if (mission.id != null) {
+            reportingRepository.detachDanglingEnvActions(mission.id, getListOfEnvActionIds(mission))
+        }
+
         val savedMission = createOrUpdateMission.execute(mission)
         require(savedMission.id != null) { "The mission id is null" }
 
@@ -31,5 +37,9 @@ class CreateOrUpdateMissionWithAttachedReporting(
         }
 
         return missionRepository.findFullMissionById(savedMission.id)
+    }
+
+    private fun getListOfEnvActionIds(mission: MissionEntity?) : List<UUID>{
+        return mission?.envActions?.map { it.id } ?: emptyList()
     }
 }

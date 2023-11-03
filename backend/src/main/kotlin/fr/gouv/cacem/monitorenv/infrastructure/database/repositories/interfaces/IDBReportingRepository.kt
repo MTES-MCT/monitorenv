@@ -9,7 +9,7 @@ import java.time.Instant
 import java.util.UUID
 
 interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
         value =
         """
@@ -21,7 +21,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     )
     fun archiveOutdatedReportings(): Int
 
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
         value =
         """
@@ -33,7 +33,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     )
     fun archiveReportings(ids: List<Int>)
 
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
         value =
         """
@@ -60,7 +60,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     )
     fun attachEnvActionsToReportings(envActionId: UUID, reportingIds: List<Int>)
 
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
         value =
         """
@@ -72,7 +72,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     )
     fun delete(id: Int)
 
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
         value =
         """
@@ -83,6 +83,18 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         nativeQuery = true,
     )
     fun deleteReportings(ids: List<Int>)
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query(
+        value =
+        """
+        UPDATE reportings
+        SET attached_env_action_id = NULL
+        WHERE mission_id = :missionId AND (:envActionIds IS NULL OR attached_env_action_id NOT IN (:envActionIds))
+        """,
+        nativeQuery = true,
+    )
+    fun detachDanglingEnvActions(missionId: Int, envActionIds: List<UUID>)
 
     @Query(
         value =

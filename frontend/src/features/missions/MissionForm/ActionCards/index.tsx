@@ -59,6 +59,7 @@ export function ActionCards({
                   <IconButton
                     accent={Accent.TERTIARY}
                     color={THEME.color.maximumRed}
+                    data-cy={`actioncard-delete-button-${action.id}`}
                     Icon={Icon.Delete}
                     onClick={removeAction}
                     title="supprimer"
