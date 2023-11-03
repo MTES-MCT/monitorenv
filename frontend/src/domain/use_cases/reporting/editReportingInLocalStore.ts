@@ -5,7 +5,6 @@ import { reportingActions } from '../../shared_slices/reporting'
 
 export const editReportingInLocalStore =
   (reportingId: number, reportingContext: ReportingContext) => async (dispatch, getState) => {
-    dispatch(attachMissionToReportingSliceActions.resetAttachMissionState())
     const reportingToEdit = reportingsAPI.endpoints.getReporting
 
     const { reportings } = getState().reporting
@@ -53,8 +52,10 @@ async function setReporting(dispatch, reportingId, reportingContext, newReportin
 
   await dispatch(reportingActions.setReporting(newReporting))
   await dispatch(reportingActions.setActiveReportingId(reportingId))
-  if (newReporting.reporting.attachedMission) {
-    dispatch(attachMissionToReportingSliceActions.setAttachedMission(newReporting.reporting.attachedMission))
-    dispatch(attachMissionToReportingSliceActions.setMissionId(newReporting.reporting.missionId))
-  }
+  // if (newReporting.reporting.attachedMission) {
+  await dispatch(
+    attachMissionToReportingSliceActions.setAttachedMission(newReporting.reporting.attachedMission || undefined)
+  )
+  await dispatch(attachMissionToReportingSliceActions.setMissionId(newReporting.reporting.missionId || undefined))
+  // }
 }

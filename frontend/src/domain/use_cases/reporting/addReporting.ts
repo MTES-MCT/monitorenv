@@ -8,7 +8,6 @@ import type { Reporting } from '../../entities/reporting'
 export const addReporting =
   (reportingContext: ReportingContext, partialReporting?: Partial<Reporting> | undefined) =>
   async (dispatch, getState) => {
-    dispatch(attachMissionToReportingSliceActions.resetAttachMissionState())
     const { reportings } = getState().reporting
 
     const id = createIdForNewReporting(reportings)
@@ -28,4 +27,6 @@ export const addReporting =
 
     await dispatch(reportingActions.setReporting(newReporting))
     await dispatch(reportingActions.setActiveReportingId(id))
+
+    await dispatch(attachMissionToReportingSliceActions.resetAttachMissionState())
   }
