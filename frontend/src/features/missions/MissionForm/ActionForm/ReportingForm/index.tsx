@@ -1,15 +1,15 @@
 import { Accent, Button, Icon, MultiRadio, TextInput, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
-import { useField } from 'formik'
-import { useMemo } from 'react'
+import { useFormikContext } from 'formik'
 import { Toggle } from 'rsuite'
 import styled from 'styled-components'
 
 import { Localization } from './Localization'
 import { TargetDetails } from './TargetDetails'
 import { Validity } from './Validity'
-import { ReportingSourceEnum, ReportingTypeLabels } from '../../../../../domain/entities/reporting'
+import { ActionTypeEnum, type Mission, type NewMission } from '../../../../../domain/entities/missions'
 import {
-  type ReportingDetailed,
+  ReportingSourceEnum,
+  ReportingTypeLabels,
   ReportingSourceLabels,
   getFormattedReportingId
 } from '../../../../../domain/entities/reporting'
@@ -29,19 +29,25 @@ export function ReportingForm({
   setCurrentActionIndex: (string) => void
 }) {
   const dispatch = useAppDispatch()
-  const [reportingField] = useField<ReportingDetailed>(`attachedReportings.${reportingActionIndex}`)
+
+  const { setFieldValue, values } = useFormikContext<Partial<Mission | NewMission>>()
+
+  const reporting = values?.attachedReportings && values.attachedReportings[reportingActionIndex]
 
   const attachedReportings = useAppSelector(state => state.attachReportingToMission.attachedReportings)
   const attachedReportingIds = useAppSelector(state => state.attachReportingToMission.attachedReportingIds)
 
-  const reporting = reportingField.value
   const sourceOptions = getOptionsFromLabelledEnum(ReportingSourceLabels)
   const reportTypeOptions = getOptionsFromLabelledEnum(ReportingTypeLabels)
+
+  if (!reporting) {
+    return null
+  }
 
   const subThemes =
     reporting.subThemes && reporting.subThemes?.length > 0 ? reporting.subThemes.join(', ') : EMPTY_VALUE
 
-  const sourceTypeText = useMemo(() => {
+  const sourceTypeText = (() => {
     if (reporting.sourceType === ReportingSourceEnum.SEMAPHORE) {
       return 'Nom du sémpahore'
     }
@@ -50,7 +56,7 @@ export function ReportingForm({
     }
 
     return 'Nom, société ...'
-  }, [reporting.sourceType])
+  })()
 
   const unattachReporting = () => {
     const reportings = [...attachedReportings]
@@ -62,6 +68,18 @@ export function ReportingForm({
     const reportingIdToDeleteIndex = reportingIds.findIndex(id => id === reporting.id)
     reportingIds.splice(reportingIdToDeleteIndex, 1)
     dispatch(attachReportingToMissionSliceActions.setAttachedReportingIds(reportingIds))
+
+    const envActionsToUpdate = values.envActions?.map(action => {
+      if (
+        (action.actionType === ActionTypeEnum.CONTROL || action.actionType === ActionTypeEnum.SURVEILLANCE) &&
+        action.reportingIds.map(id => String(id)).includes(String(reporting.id))
+      ) {
+        return { ...action, reportingIds: action.reportingIds.filter(id => id !== reporting.id) }
+      }
+
+      return action
+    })
+    setFieldValue('envActions', envActionsToUpdate)
 
     setCurrentActionIndex(undefined)
   }
