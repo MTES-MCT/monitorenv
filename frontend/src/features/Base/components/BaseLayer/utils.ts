@@ -16,17 +16,18 @@ export const getFeatureStyle = ((feature: Feature) => {
 
   const iconStyle = new Style({
     image: new Icon({
+      displacement: [0, 19],
       src: `/icons/base-layer-icon${featureProps.isHighlighted ? '-highlighted' : ''}.svg`
     })
   })
 
   const badgeStyle = new Style({
     image: new CircleStyle({
-      displacement: [16, 16],
+      displacement: [16, 36],
       fill: new Fill({
         color: THEME.color.charcoal
       }),
-      radius: 8.5
+      radius: 9
     })
   })
 
@@ -36,8 +37,8 @@ export const getFeatureStyle = ((feature: Feature) => {
         color: THEME.color.white
       }),
       font: '13px Marianne',
-      offsetX: 16,
-      offsetY: -15,
+      offsetX: featureProps.controlUnitsCount === 1 ? 16.5 : 16,
+      offsetY: -35,
       text: featureProps.controlUnitsCount.toString()
     })
   })
