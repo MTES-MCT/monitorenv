@@ -641,11 +641,15 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `findById Should return specified mission and associated env actions`() {
+    fun `findById Should return specified mission and associated env actions and associated envActionReportingIds`() {
         // When
         val missionDTO = jpaMissionRepository.findFullMissionById(34)
         assertThat(missionDTO.mission.id).isEqualTo(34)
         assertThat(missionDTO.mission.envActions).hasSize(2)
+        assertThat(
+            missionDTO.envActionsAttachedToReportingIds?.get(0)?.first,
+        ).isEqualTo(UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807"))
+        assertThat(missionDTO.envActionsAttachedToReportingIds?.get(0)?.second).isEqualTo(listOf(6))
     }
 
     @Test

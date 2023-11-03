@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.utils.mapOrElseEmpty
 import io.hypersistence.utils.hibernate.type.array.ListArrayType
@@ -25,6 +26,7 @@ import org.hibernate.annotations.Type
 import org.locationtech.jts.geom.MultiPolygon
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
+import java.util.UUID
 
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator::class,
@@ -137,28 +139,52 @@ data class MissionModel(
     }
 
     fun toMissionDTO(objectMapper: ObjectMapper): MissionDTO {
+        val envActionsAttachedToReportingIds = attachedReportings
+            ?.filter { it.attachedEnvAction != null }
+            ?.fold(mutableListOf<EnvActionAttachedToReportingIds>()) { acc, reduced ->
+                if (reduced.attachedEnvAction?.id != null &&
+                    reduced.id != null &&
+                    acc.find { it.first == reduced.attachedEnvAction.id } != null
+                ) {
+                    acc.map {
+                        if (it.first == reduced.attachedEnvAction?.id && reduced.id != null) {
+                            it.copy(second = it.second.plus(reduced.id))
+                        } else {
+                            it
+                        }
+                    }
+                } else {
+                    if (reduced.attachedEnvAction?.id != null && reduced.id != null) {
+                        val newPair = Pair(reduced.attachedEnvAction.id, mutableListOf(reduced.id))
+                        acc.add(newPair)
+                    }
+                }
+                acc
+            }
+            ?: listOf()
         return MissionDTO(
-                mission = this.toMissionEntity(objectMapper),
-                attachedReportingIds =
-                        this.attachedReportings
-                                ?.filter { it.detachedFromMissionAtUtc == null }
-                                ?.map { it.id as Int }
-                                ?: listOf(),
-                attachedReportings =
-                        this.attachedReportings
-                                ?.filter { it.detachedFromMissionAtUtc == null }
-                                ?.map { it.toReportingDTO(objectMapper) }
-                                ?: listOf(),
-                detachedReportings =
-                        this.attachedReportings
-                                ?.filter { it.detachedFromMissionAtUtc != null }
-                                ?.map { it.toReportingDTO(objectMapper) }
-                                ?: listOf(),
-                detachedReportingIds =
-                        this.attachedReportings
-                                ?.filter { it.detachedFromMissionAtUtc != null }
-                                ?.map { it.id as Int }
-                                ?: listOf(),
+            mission = this.toMissionEntity(objectMapper),
+            attachedReportingIds =
+            this.attachedReportings
+                ?.filter { it.detachedFromMissionAtUtc == null }
+                ?.map { it.id as Int }
+                ?: listOf(),
+            attachedReportings =
+            this.attachedReportings
+                ?.filter { it.detachedFromMissionAtUtc == null }
+                ?.map { it.toReportingDTO(objectMapper) }
+                ?: listOf(),
+            detachedReportings =
+            this.attachedReportings
+                ?.filter { it.detachedFromMissionAtUtc != null }
+                ?.map { it.toReportingDTO(objectMapper) }
+                ?: listOf(),
+            detachedReportingIds =
+            this.attachedReportings
+                ?.filter { it.detachedFromMissionAtUtc != null }
+                ?.map { it.id as Int }
+                ?: listOf(),
+            envActionsAttachedToReportingIds = envActionsAttachedToReportingIds,
         )
     }
 
