@@ -1,12 +1,53 @@
+import { THEME } from '@mtes-mct/monitor-ui'
+import { uniq } from 'lodash/fp'
 import { Feature } from 'ol'
 import { GeoJSON } from 'ol/format'
+import { Fill, Icon, Style, Text } from 'ol/style'
+import CircleStyle from 'ol/style/Circle'
 
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map/constants'
 
 import type { Base } from '../../../../domain/entities/base'
+import type { StyleFunction } from 'ol/style/Style'
 
-export const getBasePointFeature = (base: Base.Base) => {
+export const getFeatureStyle = ((feature: Feature) => {
+  const featureProps = feature.getProperties()
+
+  const iconStyle = new Style({
+    image: new Icon({
+      src: `/icons/base-layer-icon${featureProps.isHighlighted ? '-highlighted' : ''}.svg`
+    })
+  })
+
+  const badgeStyle = new Style({
+    image: new CircleStyle({
+      displacement: [16, 16],
+      fill: new Fill({
+        color: THEME.color.charcoal
+      }),
+      radius: 8.5
+    })
+  })
+
+  const counterStyle = new Style({
+    text: new Text({
+      fill: new Fill({
+        color: THEME.color.white
+      }),
+      font: '13px Marianne',
+      offsetX: 16,
+      offsetY: -15,
+      text: featureProps.controlUnitsCount.toString()
+    })
+  })
+
+  return [iconStyle, badgeStyle, counterStyle]
+}) as StyleFunction
+
+export function getBasePointFeature(base: Base.Base) {
+  const controlUnitsCount = uniq(base.controlUnitResources.map(({ controlUnitId }) => controlUnitId)).length
+
   const geoJSON = new GeoJSON()
   const geometry = geoJSON.readGeometry(
     {
@@ -25,6 +66,7 @@ export const getBasePointFeature = (base: Base.Base) => {
   feature.setId(`${Layers.BASES.code}:${base.id}`)
   feature.setProperties({
     base,
+    controlUnitsCount,
     isHighlighted: false,
     isSelected: false
   })

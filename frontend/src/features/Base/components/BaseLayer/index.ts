@@ -1,10 +1,9 @@
-import { THEME } from '@mtes-mct/monitor-ui'
+import { noop } from 'lodash/fp'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { Icon, Style } from 'ol/style'
 import { useEffect, useMemo, useRef } from 'react'
 
-import { getBasePointFeature } from './utils'
+import { getBasePointFeature, getFeatureStyle } from './utils'
 import { useGetBasesQuery } from '../../../../api/basesAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { setOverlayCoordinates } from '../../../../domain/shared_slices/Global'
@@ -21,7 +20,7 @@ export function BaseLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
     new VectorLayer({
       renderBuffer: 7,
       source: vectorSourceRef.current,
-      style: FeatureStyle,
+      style: getFeatureStyle,
       updateWhileAnimating: true,
       updateWhileInteracting: true,
       zIndex: Layers.BASES.zIndex
@@ -52,15 +51,15 @@ export function BaseLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   }, [base.selectedBaseFeatureId, global.overlayCoordinates])
 
   useEffect(() => {
-    if (map) {
-      map.getLayers().push(vectorLayerRef.current)
-
-      const scopedVectorLayer = vectorLayerRef.current
-
-      return () => map.removeLayer(scopedVectorLayer)
+    if (!map) {
+      return noop
     }
 
-    return () => {}
+    map.getLayers().push(vectorLayerRef.current)
+
+    const scopedVectorLayer = vectorLayerRef.current
+
+    return () => map.removeLayer(scopedVectorLayer)
   }, [map])
 
   useEffect(() => {
@@ -98,10 +97,3 @@ export function BaseLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
 
   return null
 }
-
-export const FeatureStyle = new Style({
-  image: new Icon({
-    color: THEME.color.charcoal,
-    src: 'control-unit.svg'
-  })
-})
