@@ -99,6 +99,7 @@ export function DrawModal() {
     }
   }, [feature])
 
+  // Close modal when selected mission form is hidden
   useEffect(() => {
     if (
       previousMissionId &&
@@ -111,6 +112,7 @@ export function DrawModal() {
     }
   }, [listener, dispatch, previousMissionId, routeParams])
 
+  // Close DrawModal when closing reporting form
   useEffect(() => {
     if (
       sideWindow.status === SideWindowStatus.CLOSED &&

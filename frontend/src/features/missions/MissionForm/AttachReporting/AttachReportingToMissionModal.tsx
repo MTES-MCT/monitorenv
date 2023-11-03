@@ -1,3 +1,5 @@
+import { usePrevious } from '@mtes-mct/monitor-ui'
+import { useEffect } from 'react'
 import styled from 'styled-components'
 
 import { attachReportingToMissionSliceActions } from './slice'
@@ -7,6 +9,7 @@ import {
 } from '../../../../domain/use_cases/map/updateMapInteractionListeners'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { getMissionPageRoute } from '../../../../utils/routes'
 import { MapInteraction } from '../../../commonComponents/Modals/MapInteraction'
 
 export function AttachReportingToMissionModal() {
@@ -17,6 +20,11 @@ export function AttachReportingToMissionModal() {
   const initialAttachedReportingIds = useAppSelector(
     state => state.attachReportingToMission.initialAttachedReportingIds
   )
+  const sideWindow = useAppSelector(state => state.sideWindow)
+
+  const routeParams = getMissionPageRoute(sideWindow.currentPath)
+
+  const previousMissionId = usePrevious(routeParams?.params?.id)
 
   const resetReportingToAttach = () => {
     dispatch(attachReportingToMissionSliceActions.setAttachedReportingIds(initialAttachedReportingIds))
@@ -26,6 +34,13 @@ export function AttachReportingToMissionModal() {
   const validateReportingToAttach = () => {
     dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
   }
+
+  // Close modal when selected mission form is hidden
+  useEffect(() => {
+    if (previousMissionId && previousMissionId !== routeParams?.params?.id && attachReportingListener) {
+      dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
+    }
+  }, [attachReportingListener, dispatch, previousMissionId, routeParams])
 
   if (!attachReportingListener) {
     return null
