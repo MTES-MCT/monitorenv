@@ -3,6 +3,7 @@ import { useField, useFormikContext } from 'formik'
 import { useEffect, useState } from 'react'
 import { Toggle } from 'rsuite'
 
+import { AttachMission } from './AttachMission'
 import { CancelEditDialog } from './FormComponents/Dialog/CancelEditDialog'
 import { Footer } from './FormComponents/Footer'
 import { Position } from './FormComponents/Position'
@@ -211,6 +212,8 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
           />
           <span>Le signalement nécessite un contrôle</span>
         </StyledToggle>
+        {values.isControlRequired && <AttachMission />}
+
         <Separator />
         <StyledFormikTextInput label="Saisi par" name="openBy" />
       </StyledForm>

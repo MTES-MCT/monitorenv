@@ -22,6 +22,7 @@ import { controlUnitListDialogPersistedReducer } from '../features/ControlUnit/c
 import { controlUnitTablePersistedReducer } from '../features/ControlUnit/components/ControlUnitTable/slice'
 import { layerSearchSliceReducer } from '../features/layersSelector/search/slice'
 import { mainWindowReducer } from '../features/MainWindow/slice'
+import { attachMissionToReportingSliceReducer } from '../features/Reportings/ReportingForm/AttachMission/slice'
 import { sideWindowReducer } from '../features/SideWindow/slice'
 import { stationTablePersistedReducer } from '../features/Station/components/StationTable/slice'
 import { stationReducer } from '../features/Station/slice'
@@ -31,9 +32,9 @@ export const homeReducers = {
   [geoserverApi.reducerPath]: geoserverApi.reducer,
   [monitorenvPrivateApi.reducerPath]: monitorenvPrivateApi.reducer,
   [monitorenvPublicApi.reducerPath]: monitorenvPublicApi.reducer,
-
   administrationTable: administrationTablePersistedReducer,
   administrative: administrativeSlicePersistedReducer,
+  attachReportingToMission: attachMissionToReportingSliceReducer,
   backOffice: backOfficeReducer,
   controlUnitTable: controlUnitTablePersistedReducer,
   draw: drawReducer,
@@ -50,8 +51,8 @@ export const homeReducers = {
   multiMissions: multiMissionsSliceReducer,
   regulatory: regulatorySlicePersistedReducer,
   regulatoryMetadata: regulatoryMetadataSliceReducer,
-  reporting: reportingSliceReducer,
   [layerSidebarSlice.name]: layerSidebarSlice.reducer,
+  reporting: reportingSliceReducer,
   reportingFilters: reportingFiltersPersistedReducer,
   selectedAmp: selectedAmpSlicePersistedReducer,
   semaphoresSlice: semaphoresPersistedReducer,

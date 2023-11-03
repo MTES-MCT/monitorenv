@@ -1,4 +1,4 @@
-import { Button, type Coordinates, CoordinatesInput } from '@mtes-mct/monitor-ui'
+import { type Coordinates, CoordinatesInput } from '@mtes-mct/monitor-ui'
 import Feature from 'ol/Feature'
 import GeoJSON from 'ol/format/GeoJSON'
 import Point from 'ol/geom/Point'
@@ -29,6 +29,7 @@ import { ReactComponent as PolygonSVG } from '../../../uiMonitor/icons/Polygone.
 import { ReactComponent as RectangleSVG } from '../../../uiMonitor/icons/Rectangle.svg'
 import { ReactComponent as SelectorSVG } from '../../../uiMonitor/icons/Selector.svg'
 import { getMissionPageRoute } from '../../../utils/routes'
+import { MapInteraction } from '../../commonComponents/Modals/MapInteraction'
 import { SideWindowStatus } from '../../SideWindow/slice'
 
 import type { MultiPoint, MultiPolygon } from 'ol/geom'
@@ -156,71 +157,59 @@ export function DrawModal() {
   )
 
   return (
-    <Wrapper>
-      <Panel>
-        <Header>
-          <Title>Vous êtes en train d&apos;ajouter {listener && titlePlaceholder[listener]}</Title>
-        </Header>
-
-        <Body>
-          {(listener === InteractionListener.CONTROL_POINT || listener === InteractionListener.REPORTING_POINT) && (
-            <CoordinatesInputWrapper>
-              <CoordinatesInput
-                coordinatesFormat={coordinatesFormat}
-                defaultValue={undefined}
-                isLabelHidden
-                isLight
-                label="Coordonées"
-                onChange={handleSelectCoordinates}
-              />
-            </CoordinatesInputWrapper>
-          )}
-          <ButtonRow
-            $withTools={
-              listener === InteractionListener.MISSION_ZONE || listener === InteractionListener.REPORTING_ZONE
-            }
-          >
-            {(listener === InteractionListener.MISSION_ZONE || listener === InteractionListener.REPORTING_ZONE) && (
-              <IconGroup>
-                <IconButton
-                  active={interactionType === InteractionType.POLYGON}
-                  appearance="primary"
-                  icon={<PolygonIcon className="rs-icon" />}
-                  onClick={handleSelectInteraction(InteractionType.POLYGON)}
-                  size="md"
-                />
-                <IconButton
-                  active={interactionType === InteractionType.SQUARE}
-                  appearance="primary"
-                  icon={<RectangleIcon className="rs-icon" />}
-                  onClick={handleSelectInteraction(InteractionType.SQUARE)}
-                  size="md"
-                />
-                <IconButton
-                  active={interactionType === InteractionType.CIRCLE}
-                  appearance="primary"
-                  icon={<CircleIcon className="rs-icon" />}
-                  onClick={handleSelectInteraction(InteractionType.CIRCLE)}
-                  size="md"
-                />
-                <IconButton
-                  active={interactionType === InteractionType.SELECTION}
-                  appearance="primary"
-                  icon={<SelectorIcon className="rs-icon" />}
-                  size="md"
-                />
-              </IconGroup>
-            )}
-            <ButtonGroup>
-              <ResetButton onClick={handleReset}>Réinitialiser</ResetButton>
-              <ValidateButton disabled={!isGeometryValid} onClick={handleValidate}>
-                {`Valider ${listener && validateButtonPlaceholder[listener]}`}
-              </ValidateButton>
-            </ButtonGroup>
-          </ButtonRow>
-        </Body>
-      </Panel>
-    </Wrapper>
+    <MapInteraction
+      customTools={
+        (listener === InteractionListener.MISSION_ZONE || listener === InteractionListener.REPORTING_ZONE) && (
+          <IconGroup>
+            <IconButton
+              active={interactionType === InteractionType.POLYGON}
+              appearance="primary"
+              icon={<PolygonIcon className="rs-icon" />}
+              onClick={handleSelectInteraction(InteractionType.POLYGON)}
+              size="md"
+            />
+            <IconButton
+              active={interactionType === InteractionType.SQUARE}
+              appearance="primary"
+              icon={<RectangleIcon className="rs-icon" />}
+              onClick={handleSelectInteraction(InteractionType.SQUARE)}
+              size="md"
+            />
+            <IconButton
+              active={interactionType === InteractionType.CIRCLE}
+              appearance="primary"
+              icon={<CircleIcon className="rs-icon" />}
+              onClick={handleSelectInteraction(InteractionType.CIRCLE)}
+              size="md"
+            />
+            <IconButton
+              active={interactionType === InteractionType.SELECTION}
+              appearance="primary"
+              icon={<SelectorIcon className="rs-icon" />}
+              size="md"
+            />
+          </IconGroup>
+        )
+      }
+      isValidatedButtonDisabled={!isGeometryValid}
+      onReset={handleReset}
+      onValidate={handleValidate}
+      title={`Vous êtes en train d'ajouter ${listener && titlePlaceholder[listener]}`}
+      validateButtonText={`Valider ${listener && validateButtonPlaceholder[listener]}`}
+    >
+      {(listener === InteractionListener.CONTROL_POINT || listener === InteractionListener.REPORTING_POINT) && (
+        <CoordinatesInputWrapper>
+          <CoordinatesInput
+            coordinatesFormat={coordinatesFormat}
+            defaultValue={undefined}
+            isLabelHidden
+            isLight
+            label="Coordonées"
+            onChange={handleSelectCoordinates}
+          />
+        </CoordinatesInputWrapper>
+      )}
+    </MapInteraction>
   )
 }
 
@@ -231,31 +220,6 @@ const CoordinatesInputWrapper = styled.div`
   margin-bottom: 8px;
 `
 
-const Wrapper = styled.div`
-  position: absolute;
-  top: 0;
-  z-index: 10;
-  width: 580px;
-  margin-left: calc(50% - 290px);
-  margin-right: calc(50% - 290px);
-`
-const Panel = styled.div`
-  box-shadow: 0px 3px 6px #00000029;
-`
-const Header = styled.div`
-  display: flex;
-  background: ${p => p.theme.color.charcoal};
-  width: 580px;
-  justify-content: space-around;
-  padding: 12px;
-`
-
-const Title = styled.h1`
-  color: ${p => p.theme.color.white};
-  font-size: 16px;
-  font-weight: normal;
-  line-height: 22px;
-`
 const IconGroup = styled.div`
   display: inline-block;
   & > :not(:last-child) {
@@ -278,31 +242,4 @@ const RectangleIcon = styled(RectangleSVG)`
 const SelectorIcon = styled(SelectorSVG)`
   width: 16px;
   height: 16px;
-`
-
-const ButtonGroup = styled.div`
-  display: inline-block;
-  & > :not(:last-child) {
-    margin-right: 16px;
-  }
-`
-
-const ResetButton = styled(Button)``
-const ValidateButton = styled(Button)`
-  background: ${p => p.theme.color.mediumSeaGreen};
-  border: 1px ${p => p.theme.color.mediumSeaGreen} solid;
-  color: ${p => p.theme.color.white};
-  &:hover {
-    background: ${p => p.theme.color.mediumSeaGreen};
-    border: 1px ${p => p.theme.color.mediumSeaGreen} solid;
-  }
-`
-const ButtonRow = styled.div<{ $withTools?: boolean }>`
-  display: flex;
-  justify-content: ${p => (p.$withTools ? 'space-between' : 'flex-end')};
-`
-const Body = styled.div`
-  padding: 24px;
-
-  background-color: ${p => p.theme.color.white};
 `

@@ -26,6 +26,9 @@ import { MissionOverlays } from './overlays/missions'
 import { ReportingOverlay } from './overlays/reportings'
 import { SemaphoreOverlay } from './overlays/semaphores'
 import { ShowRegulatoryMetadata } from './ShowRegulatoryMetadata'
+import { MissionToAttachLayer } from '../Reportings/Layers/missionToAttach'
+import { SelectedMissionToAttachLayer } from '../Reportings/Layers/selectedMissionToAttach'
+import { MissionToAttachOverlays } from '../Reportings/Overlays/missionToAttach'
 import { StationLayer } from '../Station/components/StationLayer'
 import { StationOverlay } from '../Station/components/StationOverlay'
 
@@ -98,6 +101,12 @@ export function Map() {
       <StationLayer />
       {/* @ts-ignore */}
       <StationOverlay />
+      {/* @ts-ignore */}
+      <MissionToAttachLayer />
+      {/* @ts-ignore */}
+      <SelectedMissionToAttachLayer />
+      {/* @ts-ignore */}
+      <MissionToAttachOverlays />
     </BaseMap>
   )
 }

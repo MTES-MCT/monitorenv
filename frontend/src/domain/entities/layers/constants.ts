@@ -100,6 +100,14 @@ export const Layers = {
     code: 'mission_selected',
     zIndex: 1100
   },
+  MISSION_TO_ATTACH_ON_REPORTING: {
+    code: 'mission_to_attach_on_reporting',
+    zIndex: 1000
+  },
+  MISSION_TO_ATTACH_ON_REPORTING_SELECTED: {
+    code: 'mission_to_attach_on_reporting_selected',
+    zIndex: 1000
+  },
   MISSIONS: {
     code: 'missions',
     zIndex: 1000
@@ -205,12 +213,14 @@ export const SelectableLayers = [
   Layers.AMP.code,
   Layers.STATIONS.code,
   Layers.SEMAPHORES.code,
-  Layers.REPORTINGS.code
+  Layers.REPORTINGS.code,
+  Layers.MISSION_TO_ATTACH_ON_REPORTING.code
 ]
 export const HoverableLayers = [
   Layers.MISSIONS.code,
   Layers.ACTIONS.code,
   Layers.STATIONS.code,
   Layers.SEMAPHORES.code,
-  Layers.REPORTINGS.code
+  Layers.REPORTINGS.code,
+  Layers.MISSION_TO_ATTACH_ON_REPORTING.code
 ]

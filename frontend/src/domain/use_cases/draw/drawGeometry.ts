@@ -1,3 +1,4 @@
+import { attachMissionToReportingSliceActions } from '../../../features/Reportings/ReportingForm/AttachMission/slice'
 import { InteractionListener, InteractionType } from '../../entities/map/constants'
 import { setGeometry, setInitialGeometry, setInteractionTypeAndListener } from '../../shared_slices/Draw'
 import { setDisplayedItems } from '../../shared_slices/Global'
@@ -11,6 +12,8 @@ export const drawPolygon =
       dispatch(setInitialGeometry(geometry))
     }
 
+    // we want to close the other MapIntercation Modal
+    dispatch(attachMissionToReportingSliceActions.setAttachMissionListener(false))
     dispatch(openDrawLayerModal)
     dispatch(
       setInteractionTypeAndListener({
@@ -27,6 +30,8 @@ export const drawPoint =
       dispatch(setInitialGeometry(geometry))
     }
 
+    // we want to close the other MapIntercation Modal
+    dispatch(attachMissionToReportingSliceActions.setAttachMissionListener(false))
     dispatch(openDrawLayerModal)
     dispatch(
       setInteractionTypeAndListener({

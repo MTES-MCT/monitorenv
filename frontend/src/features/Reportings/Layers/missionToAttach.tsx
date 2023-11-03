@@ -1,27 +1,28 @@
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useDispatch } from 'react-redux'
 
-import { getMissionZoneFeature } from './missionGeometryHelpers'
-import { missionWithCentroidStyleFn } from './missions.style'
-import { Layers } from '../../../../domain/entities/layers/constants'
-import { selectMissionOnMap } from '../../../../domain/use_cases/missions/selectMissionOnMap'
-import { useAppDispatch } from '../../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useGetFilteredMissionsQuery } from '../../../../hooks/useGetFilteredMissionsQuery'
+import { useGetMissionsQuery } from '../../../api/missionsAPI'
+import { Layers } from '../../../domain/entities/layers/constants'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+import { getMissionZoneFeature } from '../../map/layers/Missions/missionGeometryHelpers'
+import { missionWithCentroidStyleFn } from '../../map/layers/Missions/missions.style'
+import { attachMissionToReportingSliceActions } from '../ReportingForm/AttachMission/slice'
 
-import type { BaseMapChildrenProps } from '../../BaseMap'
+import type { BaseMapChildrenProps } from '../../map/BaseMap'
 import type { Geometry } from 'ol/geom'
 
-export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
-  const dispatch = useAppDispatch()
-  const { displayMissionsLayer } = useAppSelector(state => state.global)
-  const { missions } = useGetFilteredMissionsQuery()
-  const listener = useAppSelector(state => state.draw.listener)
+export function MissionToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
+  const dispatch = useDispatch()
   const attachMissionListener = useAppSelector(state => state.attachReportingToMission.attachMissionListener)
+  const { data: missions } = useGetMissionsQuery({
+    missionStatus: ['PENDING']
+  })
 
   const missionsMultiPolygons = useMemo(
-    () => missions?.filter(f => !!f.geom).map(f => getMissionZoneFeature(f, Layers.MISSIONS.code)),
+    () =>
+      missions?.filter(f => !!f.geom).map(f => getMissionZoneFeature(f, Layers.MISSION_TO_ATTACH_ON_REPORTING.code)),
     [missions]
   )
 
@@ -43,9 +44,9 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
         style: missionWithCentroidStyleFn,
         updateWhileAnimating: true,
         updateWhileInteracting: true,
-        zIndex: Layers.MISSIONS.zIndex
+        zIndex: Layers.MISSION_TO_ATTACH_ON_REPORTING.zIndex
       })
-      vectorLayerRef.current.name = Layers.MISSIONS.code
+      vectorLayerRef.current.name = Layers.MISSION_TO_ATTACH_ON_REPORTING.code
     }
 
     return vectorLayerRef.current
@@ -69,17 +70,16 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   }, [missionsMultiPolygons])
 
   useEffect(() => {
-    // we don't want to display missions on the map if the user so decides (displayMissionsLayer variable)
-    // or if user edits a surveillance zone or a control point (listener variable)
-    GetVectorLayer()?.setVisible(displayMissionsLayer && !listener && !attachMissionListener)
-  }, [displayMissionsLayer, GetVectorLayer, listener, attachMissionListener])
+    GetVectorLayer()?.setVisible(attachMissionListener)
+  }, [attachMissionListener, GetVectorLayer])
 
   useEffect(() => {
     if (mapClickEvent?.feature) {
       const feature = mapClickEvent?.feature
-      if (feature.getId()?.toString()?.includes(Layers.MISSIONS.code)) {
+      if (feature.getId()?.toString()?.includes(Layers.MISSION_TO_ATTACH_ON_REPORTING.code)) {
         const { missionId } = feature.getProperties()
-        dispatch(selectMissionOnMap(missionId))
+
+        dispatch(attachMissionToReportingSliceActions.setAttachedMissionId(missionId))
       }
     }
   }, [dispatch, mapClickEvent])
