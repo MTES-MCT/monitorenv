@@ -1,6 +1,6 @@
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useCallback, useEffect, useRef, type MutableRefObject } from 'react'
+import { type MutableRefObject, useCallback, useEffect, useRef } from 'react'
 
 import { attachedMissionStyle } from './style'
 import { useGetMissionsQuery } from '../../../api/missionsAPI'

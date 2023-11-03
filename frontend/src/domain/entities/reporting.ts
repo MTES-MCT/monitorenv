@@ -1,14 +1,18 @@
 /* eslint-disable typescript-sort-keys/string-enum */
 import { customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 
+import type { ActionTypeEnum } from './missions'
 import type { ReportingTargetTypeEnum } from './targetType'
 
 export type Reporting = {
   actionTaken?: string
+  attachedEnvActionId?: number
   attachedMissionId?: number
+  attachedToMissionAtUtc?: string
   controlUnitId?: number
   createdAt: string
   description?: string
+  detachedFromMissionAtUtc?: string
   geom: Record<string, any>[]
   id: number | string
   isArchived?: boolean
@@ -20,7 +24,7 @@ export type Reporting = {
   sourceName?: string
   sourceType: ReportingSourceEnum
   subThemes?: string[]
-  targetDetails?: TargetDetails
+  targetDetails?: TargetDetails[]
   targetType?: ReportingTargetTypeEnum
   theme?: string
   validityTime?: number
@@ -38,6 +42,11 @@ type TargetDetails = {
   operatorName?: string
   size?: number
   vesselName?: string
+}
+
+export type ReportingForTimeline = Partial<Reporting> & {
+  actionType: ActionTypeEnum.REPORTING
+  timelineDate: string
 }
 
 export enum ReportingSourceEnum {
@@ -81,8 +90,13 @@ export enum StatusFilterLabels {
   ARCHIVED = 'Archivés'
 }
 
-export const getFormattedReportingId = (reportingId: number) =>
-  `${String(reportingId).slice(0, 2)}-${String(reportingId).slice(2)}`
+export const getFormattedReportingId = (reportingId: number | undefined) => {
+  if (!reportingId) {
+    return ''
+  }
+
+  return `${String(reportingId).slice(0, 2)}-${String(reportingId).slice(2)}`
+}
 
 export const getReportingStatus = ({
   createdAt,

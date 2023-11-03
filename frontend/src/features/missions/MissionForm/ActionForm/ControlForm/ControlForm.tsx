@@ -32,8 +32,8 @@ export function ControlForm({
   setCurrentActionIndex
 }: {
   currentActionIndex: number
-  removeControlAction: Function
-  setCurrentActionIndex: Function
+  removeControlAction: () => void
+  setCurrentActionIndex: (number) => void
 }) {
   const { newWindowContainerRef } = useNewWindow()
 
@@ -42,39 +42,41 @@ export function ControlForm({
     setValues,
     values: { envActions }
   } = useFormikContext<Mission<EnvActionControl>>()
-  const currentAction = envActions[currentActionIndex]
+
+  const envActionIndex = envActions.findIndex(envAction => envAction.id === String(currentActionIndex))
+  const currentAction = envActions[envActionIndex]
 
   const targetTypeOptions = getOptionsFromLabelledEnum(TargetTypeLabels)
 
   const { actionNumberOfControls, actionTargetType, vehicleType } = currentAction || {}
 
   const actionTargetTypeErrorMessage = useMemo(
-    () => getIn(errors, `envActions[${currentActionIndex}].actionTargetType`) || '',
-    [errors, currentActionIndex]
+    () => getIn(errors, `envActions[${envActionIndex}].actionTargetType`) || '',
+    [errors, envActionIndex]
   )
   const actionVehicleTypeErrorMessage = useMemo(
-    () => getIn(errors, `envActions[${currentActionIndex}].vehicleType`) || '',
-    [errors, currentActionIndex]
+    () => getIn(errors, `envActions[${envActionIndex}].vehicleType`) || '',
+    [errors, envActionIndex]
   )
   const canAddInfraction =
     actionNumberOfControls &&
     actionNumberOfControls > 0 &&
     ((actionTargetType === TargetTypeEnum.VEHICLE && vehicleType !== undefined) ||
       (actionTargetType !== undefined && actionTargetType !== TargetTypeEnum.VEHICLE)) &&
-    actionNumberOfControls > (envActions[currentActionIndex]?.infractions?.length || 0)
+    actionNumberOfControls > (envActions[envActionIndex]?.infractions?.length || 0)
 
   const onVehicleTypeChange = selectedVehicleType => {
     if (
-      envActions[currentActionIndex]?.vehicleType === selectedVehicleType ||
-      (envActions[currentActionIndex]?.vehicleType === null && selectedVehicleType === undefined)
+      envActions[envActionIndex]?.vehicleType === selectedVehicleType ||
+      (envActions[envActionIndex]?.vehicleType === null && selectedVehicleType === undefined)
     ) {
       return
     }
     setValues(v => {
       const w = _.cloneDeep(v)
-      _.set(w, `envActions[${currentActionIndex}].vehicleType`, selectedVehicleType)
+      _.set(w, `envActions[${envActionIndex}].vehicleType`, selectedVehicleType)
       if (selectedVehicleType !== VehicleTypeEnum.VESSEL) {
-        _.update(w, `envActions[${currentActionIndex}].infractions`, inf =>
+        _.update(w, `envActions[${envActionIndex}].infractions`, inf =>
           inf?.map(i => ({ ...i, vesselSize: null, vesselType: null }))
         )
       }
@@ -84,18 +86,18 @@ export function ControlForm({
   }
   const onTargetTypeChange = selectedTargetType => {
     if (
-      envActions[currentActionIndex]?.actionTargetType === selectedTargetType ||
-      (envActions[currentActionIndex]?.actionTargetType === null && selectedTargetType === undefined)
+      envActions[envActionIndex]?.actionTargetType === selectedTargetType ||
+      (envActions[envActionIndex]?.actionTargetType === null && selectedTargetType === undefined)
     ) {
       return
     }
     setValues(v => {
       const w = _.cloneDeep(v)
-      _.set(w, `envActions[${currentActionIndex}].actionTargetType`, selectedTargetType)
+      _.set(w, `envActions[${envActionIndex}].actionTargetType`, selectedTargetType)
 
       if (selectedTargetType !== TargetTypeEnum.VEHICLE) {
-        _.set(w, `envActions[${currentActionIndex}].vehicleType`, null)
-        _.update(w, `envActions[${currentActionIndex}].infractions`, inf =>
+        _.set(w, `envActions[${envActionIndex}].vehicleType`, null)
+        _.update(w, `envActions[${envActionIndex}].infractions`, inf =>
           inf?.map(i => ({ ...i, vesselSize: null, vesselType: null }))
         )
       }
@@ -106,7 +108,7 @@ export function ControlForm({
 
   const handleRemoveAction = () => {
     setCurrentActionIndex(undefined)
-    removeControlAction(currentActionIndex)
+    removeControlAction()
   }
 
   return (
@@ -131,7 +133,7 @@ export function ControlForm({
       </Header>
       <FormBody>
         <ActionTheme
-          actionIndex={currentActionIndex}
+          actionIndex={envActionIndex}
           labelSubTheme="Sous-thématiques de contrôle"
           labelTheme="Thématique de contrôle"
           themeIndex={0}
@@ -142,7 +144,7 @@ export function ControlForm({
             isLight
             isStringDate
             label="Date et heure du contrôle (UTC)"
-            name={`envActions[${currentActionIndex}].actionStartDateTimeUtc`}
+            name={`envActions[${envActionIndex}].actionStartDateTimeUtc`}
             withTime
           />
         </Form.Group>
@@ -150,27 +152,27 @@ export function ControlForm({
         <MultiPointPicker
           addButtonLabel="Ajouter un point de contrôle"
           label="Lieu du contrôle"
-          name={`envActions[${currentActionIndex}].geom`}
+          name={`envActions[${envActionIndex}].geom`}
         />
 
         <Separator />
 
         <ActionSummary>
           <ActionFieldWrapper>
-            <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.actionNumberOfControls`} />
+            <Form.ControlLabel htmlFor={`envActions.${envActionIndex}.actionNumberOfControls`} />
             <FormikNumberInput
               data-cy="control-form-number-controls"
               isErrorMessageHidden
               isLight
               label="Nombre total de contrôles"
               min={1}
-              name={`envActions.${currentActionIndex}.actionNumberOfControls`}
+              name={`envActions.${envActionIndex}.actionNumberOfControls`}
             />
           </ActionFieldWrapper>
           <ActionFieldWrapper>
             <TargetSelector
               error={actionTargetTypeErrorMessage}
-              name={`envActions.${currentActionIndex}.actionTargetType`}
+              name={`envActions.${envActionIndex}.actionTargetType`}
               onChange={onTargetTypeChange}
               options={targetTypeOptions}
               value={actionTargetType}
@@ -180,7 +182,7 @@ export function ControlForm({
             <VehicleTypeSelector
               disabled={actionTargetType !== TargetTypeEnum.VEHICLE}
               error={actionVehicleTypeErrorMessage}
-              name={`envActions.${currentActionIndex}.vehicleType`}
+              name={`envActions.${envActionIndex}.vehicleType`}
               onChange={onVehicleTypeChange}
               value={vehicleType}
             />
@@ -188,11 +190,11 @@ export function ControlForm({
         </ActionSummary>
 
         <FieldArray
-          name={`envActions[${currentActionIndex}].infractions`}
+          name={`envActions[${envActionIndex}].infractions`}
           render={({ form, push, remove }) => (
             <InfractionsForm
               canAddInfraction={canAddInfraction}
-              currentActionIndex={currentActionIndex}
+              envActionIndex={envActionIndex}
               form={form}
               push={push}
               remove={remove}
