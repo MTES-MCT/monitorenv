@@ -36,6 +36,7 @@ export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
   }, [activeControlUnits, mapControlUnitListDialog.filtersState])
 
   const toggleBaseLayer = useCallback(() => {
+    dispatch(baseActions.hightlightFeatureIds([]))
     dispatch(baseActions.selectBaseFeatureId(undefined))
     dispatch(
       globalActions.setDisplayedItems({

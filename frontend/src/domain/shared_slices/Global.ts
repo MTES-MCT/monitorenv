@@ -65,7 +65,6 @@ type GlobalStateType = {
   displayReportingSelectedLayer: boolean
 
   displayBaseLayer: boolean
-  displayBaseOverlay: boolean
 
   isLayersSidebarVisible: boolean
 
@@ -118,8 +117,6 @@ const initialState: GlobalStateType = {
   displayReportingSelectedLayer: true,
 
   displayBaseLayer: false,
-  // TODO Is it useful?
-  displayBaseOverlay: true,
 
   isMapToolVisible: undefined,
 

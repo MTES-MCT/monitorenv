@@ -9,7 +9,6 @@ import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 
 export function BaseOverlay({ currentFeatureOver: hoveredFeature, map }: BaseMapChildrenProps) {
   const base = useAppSelector(state => state.base)
-  const global = useAppSelector(state => state.global)
 
   const selectedFeature = base.selectedBaseFeatureId
     ? map
@@ -24,9 +23,7 @@ export function BaseOverlay({ currentFeatureOver: hoveredFeature, map }: BaseMap
     : undefined
   const hoveredFeatureId = hoveredFeature?.getId()?.toString()
   const canDisplayHoveredFeature =
-    global.displayBaseOverlay &&
-    hoveredFeatureId?.startsWith(Layers.BASES.code) &&
-    hoveredFeatureId !== base.selectedBaseFeatureId
+    hoveredFeatureId?.startsWith(Layers.BASES.code) && hoveredFeatureId !== base.selectedBaseFeatureId
 
   return (
     <>
@@ -41,7 +38,7 @@ export function BaseOverlay({ currentFeatureOver: hoveredFeature, map }: BaseMap
 
       <OverlayPositionOnCentroid
         appClassName="overlay-base-selected"
-        feature={global.displayBaseOverlay ? selectedFeature : undefined}
+        feature={selectedFeature}
         featureIsShowed
         map={map}
         options={{ margins: OVERLAY_MARGINS }}

@@ -5,6 +5,25 @@ import { ControlUnit } from '../../../../domain/entities/controlUnit'
 import { isNotArchived } from '../../../../utils/isNotArchived'
 
 import type { FiltersState } from './types'
+import type { Extent } from 'ol/extent'
+
+export function addBufferToExtent(extent: Extent, bufferRatio: number) {
+  const typedExtent = extent as [number, number, number, number]
+
+  const width = typedExtent[2] - typedExtent[0]
+  const height = typedExtent[3] - typedExtent[1]
+  const bufferWidth = width * bufferRatio
+  const bufferHeight = height * bufferRatio
+
+  const bufferedExtent = [
+    typedExtent[0] - bufferWidth,
+    typedExtent[1] - bufferHeight,
+    typedExtent[2] + bufferWidth,
+    typedExtent[3] + bufferHeight
+  ]
+
+  return bufferedExtent
+}
 
 export function displayBaseNamesFromControlUnit(controlUnit: ControlUnit.ControlUnit): string {
   const baseNames = controlUnit.controlUnitResources.map(({ base }) => base.name).filter(isDefined)
