@@ -1,43 +1,43 @@
 plugins {
-  `java-library`
-  `maven-publish`
-  id("org.springframework.boot") version "3.1.4"
-  id("org.jetbrains.kotlin.plugin.spring") version "1.9.10"
-  kotlin("jvm") version "1.9.10"
-  id("org.jetbrains.kotlin.plugin.allopen") version "1.9.10"
-  kotlin("plugin.noarg") version "1.9.10"
-  kotlin("plugin.jpa") version "1.9.10"
-  id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
-  kotlin("plugin.serialization") version "1.9.10"
+    `java-library`
+    `maven-publish`
+    id("org.springframework.boot") version "3.1.4"
+    id("org.jetbrains.kotlin.plugin.spring") version "1.9.10"
+    kotlin("jvm") version "1.9.10"
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.9.10"
+    kotlin("plugin.noarg") version "1.9.10"
+    kotlin("plugin.jpa") version "1.9.10"
+    id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
+    kotlin("plugin.serialization") version "1.9.10"
 }
 
 repositories {
-  mavenCentral()
+    mavenCentral()
 }
 
 kotlin {
-  jvmToolchain(17)
+    jvmToolchain(17)
 }
 
 java {
-  withJavadocJar()
-  withSourcesJar()
+    withJavadocJar()
+    withSourcesJar()
 }
 
 noArg {
-  invokeInitializers = true
+    invokeInitializers = true
 }
 
 configurations.all {
-  exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
+    exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
 }
 
 tasks.named("compileKotlin", org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask::class.java) {
-  compilerOptions {
-    freeCompilerArgs.add("-Xjsr305=strict")
-    // jvmTarget.set(JvmTarget.JVM_17)
-    // javaParameters.set(true)
-  }
+    compilerOptions {
+        freeCompilerArgs.add("-Xjsr305=strict")
+        // jvmTarget.set(JvmTarget.JVM_17)
+        // javaParameters.set(true)
+    }
 }
 
 dependencies {
@@ -124,36 +124,36 @@ publishing {
  */
 
 springBoot {
-  mainClass.set("fr.gouv.cacem.monitorenv.MonitorenvApplicationKt")
+    mainClass.set("fr.gouv.cacem.monitorenv.MonitorenvApplicationKt")
 
-  buildInfo {
-    properties {
-      additional = mapOf(
-        "commit.hash" to "COMMIT_TO_CHANGE"
-      )
+    buildInfo {
+        properties {
+            additional = mapOf(
+                "commit.hash" to "COMMIT_TO_CHANGE",
+            )
+        }
     }
-  }
 }
 
 tasks.withType<JavaCompile>() {
-  options.encoding = "UTF-8"
+    options.encoding = "UTF-8"
 }
 
 tasks.withType<Javadoc>() {
-  options.encoding = "UTF-8"
+    options.encoding = "UTF-8"
 }
 
 configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
-  verbose.set(true)
-  android.set(false)
-  outputToConsole.set(true)
-  ignoreFailures.set(true)
+    verbose.set(true)
+    android.set(false)
+    outputToConsole.set(true)
+    ignoreFailures.set(true)
 }
 
 tasks.named<Test>("test") {
-  useJUnitPlatform()
+    useJUnitPlatform()
 
-  testLogging {
-    events("passed")
-  }
+    testLogging {
+        events("passed")
+    }
 }

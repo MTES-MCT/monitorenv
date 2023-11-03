@@ -19,13 +19,13 @@ data class ReportingDTO(
             when {
                 this.reporting.attachedEnvActionId != null &&
                     this.attachedMission?.envActions
-                        ?.find { it.id == this.reporting.attachedEnvActionId }
-                        ?.actionType == ActionTypeEnum.SURVEILLANCE ->
+                    ?.find { it.id == this.reporting.attachedEnvActionId }
+                    ?.actionType == ActionTypeEnum.SURVEILLANCE ->
                     ControlStatusEnum.SURVEILLANCE_DONE
                 this.reporting.attachedEnvActionId != null &&
                     this.attachedMission?.envActions
-                        ?.find { it.id == this.reporting.attachedEnvActionId }
-                        ?.actionType == ActionTypeEnum.CONTROL ->
+                    ?.find { it.id == this.reporting.attachedEnvActionId }
+                    ?.actionType == ActionTypeEnum.CONTROL ->
                     ControlStatusEnum.CONTROL_DONE
                 this.reporting.attachedEnvActionId == null &&
                     this.reporting.isControlRequired == true ->

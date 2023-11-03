@@ -49,7 +49,9 @@ data class EnvActionModel(
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
     val geom: Geometry? = null,
-    @Column(name = "action_type") @Enumerated(EnumType.STRING) val actionType: ActionTypeEnum,
+    @Column(name = "action_type")
+    @Enumerated(EnumType.STRING)
+    val actionType: ActionTypeEnum,
     @Type(JsonBinaryType::class)
     @Column(name = "value", columnDefinition = "jsonb")
     val value: String,

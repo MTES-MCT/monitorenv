@@ -31,7 +31,9 @@ class ApiMissionsController(
         @Parameter(description = "page number")
         @RequestParam(name = "pageNumber")
         pageNumber: Int?,
-        @Parameter(description = "page size") @RequestParam(name = "pageSize") pageSize: Int?,
+        @Parameter(description = "page size")
+        @RequestParam(name = "pageSize")
+        pageSize: Int?,
         @Parameter(description = "Mission started after date")
         @RequestParam(name = "startedAfterDateTime", required = false)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -91,7 +93,9 @@ class ApiMissionsController(
     @GetMapping("/{missionId}")
     @Operation(summary = "Get mission by Id")
     fun getMissionByIdController(
-        @PathParam("Mission id") @PathVariable(name = "missionId") missionId: Int,
+        @PathParam("Mission id")
+        @PathVariable(name = "missionId")
+        missionId: Int,
     ): MissionDataOutput {
         val mission = getMissionById.execute(missionId = missionId)
 
@@ -101,7 +105,9 @@ class ApiMissionsController(
     @PostMapping(value = ["/{missionId}"], consumes = ["application/json"])
     @Operation(summary = "Update a mission")
     fun updateOperationController(
-        @PathParam("Mission Id") @PathVariable(name = "missionId") missionId: Int,
+        @PathParam("Mission Id")
+        @PathVariable(name = "missionId")
+        missionId: Int,
         @RequestBody updateMissionDataInput: CreateOrUpdateMissionDataInput,
     ): MissionDataOutput {
         if ((updateMissionDataInput.id == null) || (missionId != updateMissionDataInput.id)) {
@@ -116,7 +122,9 @@ class ApiMissionsController(
     @DeleteMapping(value = ["/{missionId}"])
     @Operation(summary = "Delete a mission")
     fun deleteOperationController(
-        @PathParam("Mission Id") @PathVariable(name = "missionId") missionId: Int,
+        @PathParam("Mission Id")
+        @PathVariable(name = "missionId")
+        missionId: Int,
     ) {
         deleteMission.execute(missionId = missionId)
     }

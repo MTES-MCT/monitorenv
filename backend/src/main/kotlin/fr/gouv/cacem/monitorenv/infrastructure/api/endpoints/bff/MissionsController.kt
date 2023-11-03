@@ -19,7 +19,7 @@ import java.time.ZonedDateTime
 @Tag(description = "API Missions", name = "Missions")
 class MissionsController(
     private val createOrUpdateMissionWithAttachedReporting:
-    CreateOrUpdateMissionWithAttachedReporting,
+        CreateOrUpdateMissionWithAttachedReporting,
     private val getFullMissions: GetFullMissions,
     private val getFullMissionById: GetFullMissionById,
     private val deleteMission: DeleteMission,
@@ -32,7 +32,9 @@ class MissionsController(
         @Parameter(description = "page number")
         @RequestParam(name = "pageNumber")
         pageNumber: Int?,
-        @Parameter(description = "page size") @RequestParam(name = "pageSize") pageSize: Int?,
+        @Parameter(description = "page size")
+        @RequestParam(name = "pageSize")
+        pageSize: Int?,
         @Parameter(description = "Mission started after date")
         @RequestParam(name = "startedAfterDateTime", required = false)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -86,7 +88,9 @@ class MissionsController(
     @GetMapping("/{missionId}")
     @Operation(summary = "Get mission by Id")
     fun getMissionByIdController(
-        @PathParam("Mission id") @PathVariable(name = "missionId") missionId: Int,
+        @PathParam("Mission id")
+        @PathVariable(name = "missionId")
+        missionId: Int,
     ): MissionDataOutput {
         val mission = getFullMissionById.execute(missionId = missionId)
 
@@ -96,7 +100,9 @@ class MissionsController(
     @PutMapping(value = ["/{missionId}"], consumes = ["application/json"])
     @Operation(summary = "Update a mission")
     fun updateMissionController(
-        @PathParam("Mission Id") @PathVariable(name = "missionId") missionId: Int,
+        @PathParam("Mission Id")
+        @PathVariable(name = "missionId")
+        missionId: Int,
         @RequestBody updateMissionDataInput: CreateOrUpdateMissionDataInput,
     ): MissionDataOutput {
         if ((updateMissionDataInput.id != null) && (missionId != updateMissionDataInput.id)) {
@@ -114,7 +120,9 @@ class MissionsController(
     @DeleteMapping(value = ["/{missionId}"])
     @Operation(summary = "Delete a mission")
     fun deleteMissionController(
-        @PathParam("Mission Id") @PathVariable(name = "missionId") missionId: Int,
+        @PathParam("Mission Id")
+        @PathVariable(name = "missionId")
+        missionId: Int,
     ) {
         deleteMission.execute(missionId = missionId)
     }
