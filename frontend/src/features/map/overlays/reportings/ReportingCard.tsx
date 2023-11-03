@@ -68,9 +68,7 @@ export function ReportingCard({
   updateMargins
 }: ReportingCardProps) {
   const dispatch = useAppDispatch()
-  const {
-    global: { displayReportingsLayer }
-  } = useAppSelector(state => state)
+  const displayReportingsLayer = useAppSelector(state => state.global.displayReportingsLayer)
   const listener = useAppSelector(state => state.draw.listener)
   const attachMissionListener = useAppSelector(state => state.attachMissionToReporting.attachMissionListener)
 

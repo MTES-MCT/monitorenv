@@ -36,10 +36,8 @@ export function HomePage() {
     displaySearchSemaphoreButton,
     isControlUnitDialogVisible
   } = useAppSelector(state => state.global)
-  const {
-    missionState: { isFormDirty, missionState },
-    multiMissions: { selectedMissions }
-  } = useAppSelector(state => state)
+  const { isFormDirty, missionState } = useAppSelector(state => state.missionState)
+  const selectedMissions = useAppSelector(state => state.multiMissions.selectedMissions)
 
   const hasAtLeastOneMissionFormDirty = useMemo(
     () => selectedMissions.find(mission => mission.isFormDirty),

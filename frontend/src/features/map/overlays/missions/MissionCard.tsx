@@ -17,9 +17,7 @@ type MissionCardProps = {
 }
 export function MissionCard({ feature, isOnlyHoverable = false, selected = false }: MissionCardProps) {
   const dispatch = useAppDispatch()
-  const {
-    global: { displayMissionsLayer }
-  } = useAppSelector(state => state)
+  const displayMissionsLayer = useAppSelector(state => state.global.displayMissionsLayer)
   const listener = useAppSelector(state => state.draw.listener)
   const attachReportingListener = useAppSelector(state => state.attachReportingToMission.attachReportingListener)
 

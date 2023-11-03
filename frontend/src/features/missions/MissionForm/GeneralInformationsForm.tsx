@@ -30,6 +30,7 @@ import { MultiZonePicker } from '../MultiZonePicker'
 
 export function GeneralInformationsForm() {
   const { newWindowContainerRef } = useNewWindow()
+  const currentPath = useAppSelector(state => state.sideWindow.currentPath)
 
   const [hasMissionOrderField] = useField<boolean>('hasMissionOrder')
   const [missionSourceField] = useField<MissionSourceEnum>('missionSource')
@@ -38,7 +39,6 @@ export function GeneralInformationsForm() {
 
   const hasMissionOrderOptions = Object.values(hasMissionOrderLabels)
 
-  const currentPath = useAppSelector(state => state.sideWindow.currentPath)
   const routeParams = getMissionPageRoute(currentPath)
   const missionIsNewMission = isNewMission(routeParams?.params?.id)
 

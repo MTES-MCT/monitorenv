@@ -27,7 +27,7 @@ import { missionFactory } from '../Missions.helpers'
 
 export function MissionForm({ id, isNewMission, selectedMission, setShouldValidateOnChange }) {
   const dispatch = useAppDispatch()
-  const { sideWindow } = useAppSelector(state => state)
+  const sideWindow = useAppSelector(state => state.sideWindow)
   const attachedReportingIds = useAppSelector(state => state.attachReportingToMission.attachedReportingIds)
   const attachedReportings = useAppSelector(state => state.attachReportingToMission.attachedReportings)
   const { dirty, setFieldValue, setValues, validateForm, values } = useFormikContext<Partial<Mission | NewMission>>()

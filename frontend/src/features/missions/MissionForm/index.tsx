@@ -15,10 +15,8 @@ import { getMissionPageRoute } from '../../../utils/routes'
 import { missionFactory } from '../Missions.helpers'
 
 export function Mission() {
-  const {
-    multiMissions: { selectedMissions },
-    sideWindow
-  } = useAppSelector(state => state)
+  const selectedMissions = useAppSelector(state => state.multiMissions.selectedMissions)
+  const sideWindow = useAppSelector(state => state.sideWindow)
   const [shouldValidateOnChange, setShouldValidateOnChange] = useState(false)
 
   const routeParams = getMissionPageRoute(sideWindow.currentPath)
