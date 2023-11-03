@@ -1,16 +1,17 @@
 import { customDayjs as dayjs, pluralize } from '@mtes-mct/monitor-ui'
-import { skipToken } from '@reduxjs/toolkit/dist/query'
 import styled from 'styled-components'
 
-import { useGetMissionQuery } from '../../../../api/missionsAPI'
-import { getMissionStatus, getTotalOfControls, getTotalOfSurveillances } from '../../../../domain/entities/missions'
+import {
+  getMissionStatus,
+  getTotalOfControls,
+  getTotalOfSurveillances,
+  type Mission
+} from '../../../../domain/entities/missions'
 import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
 import { missionTypesToString } from '../../../../utils/missionTypes'
 
-export function AttachedMissionCard({ id }: { id: number | undefined }) {
-  const { data: attachedMission } = useGetMissionQuery(id || skipToken)
-
-  if (!attachedMission || !id) {
+export function AttachedMissionCard({ attachedMission }: { attachedMission: Mission | undefined }) {
+  if (!attachedMission) {
     return null
   }
 

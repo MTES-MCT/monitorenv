@@ -1,15 +1,13 @@
-import { Accent, Icon, IconButton, customDayjs as dayjs, pluralize } from '@mtes-mct/monitor-ui'
-import { useCallback } from 'react'
+import { customDayjs as dayjs, pluralize } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { clearSelectedMissionOnMap } from '../../../../domain/use_cases/missions/selectMissionOnMap'
-import { useAppDispatch } from '../../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { MissionSourceTag } from '../../../../ui/MissionSourceTag'
 import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
 import { missionTypesToString } from '../../../../utils/missionTypes'
 
-export function MissionCard({ feature, selected = false }: { feature: any; selected?: boolean }) {
-  const dispatch = useAppDispatch()
+export function MissionCard({ feature }: { feature: any }) {
+  const { attachMissionListener } = useAppSelector(state => state.attachReportingToMission)
   const {
     controlUnits,
     endDateTimeUtc,
@@ -32,9 +30,9 @@ export function MissionCard({ feature, selected = false }: { feature: any; selec
     ? formattedStartDate
     : `du ${formattedStartDate} au ${formattedEndDate}`
 
-  const handleCloseOverlay = useCallback(() => {
-    dispatch(clearSelectedMissionOnMap())
-  }, [dispatch])
+  if (!attachMissionListener) {
+    return null
+  }
 
   return (
     <Wrapper data-cy="attach-mission-to-reporting-overlay">
@@ -60,15 +58,6 @@ export function MissionCard({ feature, selected = false }: { feature: any; selec
             </>
           )}
         </Title>
-
-        <CloseButton
-          $isVisible={selected}
-          accent={Accent.TERTIARY}
-          data-cy="mission-overlay-close"
-          Icon={Icon.Close}
-          iconSize={14}
-          onClick={handleCloseOverlay}
-        />
       </Header>
 
       <MissionSourceTag source={missionSource} styleProps={{ alignSelf: 'start' }} />
@@ -110,12 +99,6 @@ const NoContact = styled.div`
   color: ${p => p.theme.color.slateGray};
   font-weight: 400;
   font-style: italic;
-`
-
-const CloseButton = styled(IconButton)<{ $isVisible: boolean }>`
-  padding: 0px;
-  margin-left: 5px;
-  ${p => !p.$isVisible && 'visibility: hidden;'};
 `
 
 const Details = styled.div`

@@ -1,12 +1,13 @@
 /* eslint-disable typescript-sort-keys/string-enum */
 import { customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 
-import type { ActionTypeEnum } from './missions'
+import type { ActionTypeEnum, Mission } from './missions'
 import type { ReportingTargetTypeEnum } from './targetType'
 
 export type Reporting = {
   actionTaken?: string
   attachedEnvActionId?: string
+  attachedMission?: Mission
   attachedMissionId?: number
   attachedToMissionAtUtc?: string
   controlUnitId?: number

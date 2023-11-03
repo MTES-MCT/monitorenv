@@ -33,7 +33,7 @@ export function MissionToAttachOverlays({ currentFeatureOver, map }: BaseMapChil
         feature={displayMissionToAttachLayer && feature}
         map={map}
       >
-        <MissionCard feature={feature} selected />
+        <MissionCard feature={feature} />
       </OverlayPositionOnExtent>
       <OverlayPositionOnExtent
         appClassName="overlay-mission-to-attach-hover"

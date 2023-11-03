@@ -78,7 +78,6 @@ export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
 
   useEffect(() => {
     GetEditingReportingVectorSource()?.clear(true)
-    GetEditingReportingVectorSource()?.clear(true)
     if (editingReporting) {
       GetEditingReportingVectorSource()?.addFeature(
         getEditingReportingZoneFeature(editingReporting, Layers.REPORTING_SELECTED.code)

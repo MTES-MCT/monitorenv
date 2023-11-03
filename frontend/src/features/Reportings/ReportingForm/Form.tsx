@@ -78,9 +78,7 @@ export function ReportingForm({
 
   const changeReportType = reportType => {
     setFieldValue('reportType', reportType)
-    if (reportType === ReportingTypeEnum.OBSERVATION) {
-      setFieldValue('isControlRequired', undefined)
-    }
+    setFieldValue('isControlRequired', reportType === ReportingTypeEnum.INFRACTION_SUSPICION)
   }
 
   const changeNeedControlValue = checked => {
@@ -218,7 +216,7 @@ export function ReportingForm({
           />
           <span>Le signalement nécessite un contrôle</span>
         </StyledToggle>
-        {values.isControlRequired && <AttachMission setIsAttachNewMission={setIsAttachNewMission} />}
+        <AttachMission setIsAttachNewMission={setIsAttachNewMission} />
       </StyledForm>
       <Footer
         onCancel={cancelNewReporting}

@@ -78,7 +78,6 @@ export function MissionToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProp
       const feature = mapClickEvent?.feature
       if (feature.getId()?.toString()?.includes(Layers.MISSION_TO_ATTACH_ON_REPORTING.code)) {
         const { missionId } = feature.getProperties()
-
         dispatch(attachMissionToReportingSliceActions.setAttachedMissionId(missionId))
       }
     }

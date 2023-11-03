@@ -102,15 +102,15 @@ export const Layers = {
   },
   MISSION_TO_ATTACH_ON_REPORTING: {
     code: 'mission_to_attach_on_reporting',
-    zIndex: 1000
+    zIndex: 1100
   },
   MISSION_TO_ATTACH_ON_REPORTING_SELECTED: {
     code: 'mission_to_attach_on_reporting_selected',
-    zIndex: 1000
+    zIndex: 1100
   },
   MISSIONS: {
     code: 'missions',
-    zIndex: 1000
+    zIndex: 1050
   },
   REGULATORY_ENV: {
     code: 'REGULATORY_ENV',
@@ -136,7 +136,7 @@ export const Layers = {
   },
   REPORTING_SELECTED: {
     code: 'reporting_selected',
-    zIndex: 1125
+    zIndex: 1025
   },
   REPORTINGS: {
     code: 'reportings',

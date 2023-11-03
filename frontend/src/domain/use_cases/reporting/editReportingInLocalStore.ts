@@ -1,9 +1,11 @@
 import { reportingsAPI } from '../../../api/reportingsAPI'
+import { attachMissionToReportingSliceActions } from '../../../features/Reportings/ReportingForm/AttachMission/slice'
 import { setReportingFormVisibility, setToast, ReportingContext, VisibilityState } from '../../shared_slices/Global'
 import { reportingActions } from '../../shared_slices/reporting'
 
 export const editReportingInLocalStore =
   (reportingId: number, reportingContext: ReportingContext) => async (dispatch, getState) => {
+    dispatch(attachMissionToReportingSliceActions.resetAttachMissionState())
     const reportingToEdit = reportingsAPI.endpoints.getReporting
 
     const { reportings } = getState().reporting

@@ -50,6 +50,8 @@ export const getEditingReportingZoneFeature = (reporting: Reporting, layername: 
   feature.setId(`${layername}:${reporting.id}`)
   feature.setProperties({
     actionTaken: reporting.actionTaken,
+    attachedMission: reporting.attachedMission,
+    attachedMissionId: reporting.attachedMissionId,
     controlUnitId: reporting.controlUnitId,
     createdAt: reporting.createdAt,
     description: reporting.description,
