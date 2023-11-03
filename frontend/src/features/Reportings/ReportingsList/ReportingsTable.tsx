@@ -51,7 +51,7 @@ export function ReportingsTable({
     estimateSize: () => 2,
     getItemKey: useCallback((index: number) => `${rows[index]?.id}`, [rows]),
     getScrollElement: () => tableContainerRef.current,
-    overscan: 10
+    overscan: 40
   })
 
   const virtualRows = rowVirtualizer.getVirtualItems()

@@ -3,7 +3,9 @@ import styled from 'styled-components'
 
 import { getFormattedReportingId } from '../../../../domain/entities/reporting'
 import { ButtonsGroupRow } from '../Cells/ButtonsRowGroup'
+import { CellActionStatus } from '../Cells/CellActionStatus'
 import { CellActionThemes } from '../Cells/CellActionThemes'
+import { CellAttachedtoMission } from '../Cells/CellAttachedToMission'
 import { CellLocalizeReporting } from '../Cells/CellLocalizeReporting'
 import { CellStatus } from '../Cells/CellStatus'
 import { CellValidityTime } from '../Cells/CellValidityTime'
@@ -66,8 +68,8 @@ export const Columns = [
     enableSorting: true,
     header: () => 'Source',
     id: 'displayedSource',
-    maxSize: 280,
-    minSize: 230
+    maxSize: 260,
+    minSize: 210
   },
   {
     accessorFn: row => row.reportType,
@@ -100,7 +102,7 @@ export const Columns = [
     enableSorting: true,
     header: () => 'Statut',
     id: 'isArchived',
-    size: 100,
+    size: 80,
     sortingFn: (rowA: Row<any>, rowB: Row<any>, columnId: string) => {
       if (rowA.original[columnId] > rowB.original[columnId]) {
         return -1
@@ -113,13 +115,33 @@ export const Columns = [
     }
   },
   {
+    accessorFn: row => row.attachedMissionId,
+    cell: info => <CellAttachedtoMission attachedMissionId={info.getValue()} />,
+    enableSorting: false,
+    header: () => '',
+    id: 'attachedMissionId',
+    size: 155
+  },
+  {
+    accessorFn: row => row.geom,
+    cell: ({ row }) => (
+      <CellActionStatus
+        attachedEnvActionId={row.original.attachedEnvActionId}
+        attachedMissionId={row.original.attachedMissionId}
+        isControlRequired={row.original.isControlRequired}
+      />
+    ),
+    enableSorting: false,
+    header: () => '',
+    id: 'actionStatus',
+    size: 140
+  },
+  {
     accessorFn: row => row.geom,
     cell: info => <CellLocalizeReporting geom={info.getValue()} />,
     enableSorting: false,
     header: () => '',
     id: 'geom',
-    maxSize: 55,
-    minSize: 55,
     size: 55
   },
   {
