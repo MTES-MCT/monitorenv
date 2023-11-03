@@ -1,17 +1,19 @@
 import { THEME, Tag, TagBullet } from '@mtes-mct/monitor-ui'
 
-export function StatusActionTag({ attachedEnvActionId }: { attachedEnvActionId: string | undefined }) {
-  if (!attachedEnvActionId) {
+import { ControlStatusLabels, ControlStatusEnum } from '../../../domain/entities/reporting'
+
+export function StatusActionTag({ controlStatus }: { controlStatus: ControlStatusEnum }) {
+  if (controlStatus === ControlStatusEnum.CONTROL_TO_BE_DONE) {
     return (
       <Tag backgroundColor={THEME.color.gainsboro} bullet={TagBullet.DISK} bulletColor={THEME.color.goldenPoppy}>
-        Contrôle à faire
+        {ControlStatusLabels[controlStatus]}
       </Tag>
     )
   }
 
   return (
     <Tag backgroundColor={THEME.color.gainsboro} bullet={TagBullet.DISK} bulletColor={THEME.color.mediumSeaGreen}>
-      Contrôle fait
+      {ControlStatusLabels[controlStatus]}
     </Tag>
   )
 }

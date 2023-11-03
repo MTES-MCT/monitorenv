@@ -6,12 +6,14 @@ import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
 import { missionTypesToString } from '../../../../utils/missionTypes'
 import { StatusActionTag } from '../../components/StatusActionTag'
 
+import type { ControlStatusEnum } from '../../../../domain/entities/reporting'
+
 export function AttachedMissionCard({
-  attachedEnvActionId,
-  attachedMission
+  attachedMission,
+  controlStatus
 }: {
-  attachedEnvActionId: string | undefined
   attachedMission: Mission | undefined
+  controlStatus: ControlStatusEnum
 }) {
   if (!attachedMission) {
     return null
@@ -67,7 +69,7 @@ export function AttachedMissionCard({
           <MissionStatusLabel missionStatus={missionStatus} />
         </Details>
         <div>
-          <StatusActionTag attachedEnvActionId={attachedEnvActionId} />
+          <StatusActionTag controlStatus={controlStatus} />
         </div>
       </Body>
     </Wrapper>

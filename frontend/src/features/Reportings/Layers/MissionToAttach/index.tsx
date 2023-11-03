@@ -4,11 +4,11 @@ import { useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { useGetMissionsQuery } from '../../../../api/missionsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
+import { attachMission } from '../../../../domain/use_cases/reporting/attachMission'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { getMissionZoneFeature } from '../../../map/layers/Missions/missionGeometryHelpers'
 import { missionWithCentroidStyleFn } from '../../../map/layers/Missions/missions.style'
-import { attachMissionToReportingSliceActions } from '../../ReportingForm/AttachMission/slice'
 
 import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 import type { Geometry } from 'ol/geom'
@@ -78,7 +78,7 @@ export function MissionToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProp
       const feature = mapClickEvent?.feature
       if (feature.getId()?.toString()?.includes(Layers.MISSION_TO_ATTACH_ON_REPORTING.code)) {
         const { missionId } = feature.getProperties()
-        dispatch(attachMissionToReportingSliceActions.setMissionId(missionId))
+        dispatch(attachMission(missionId))
       }
     }
   }, [dispatch, mapClickEvent])

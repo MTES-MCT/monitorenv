@@ -1,12 +1,10 @@
 import { Accent, Button, FormikCheckbox, Icon } from '@mtes-mct/monitor-ui'
-import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { useFormikContext } from 'formik'
 import { useEffect } from 'react'
 import styled from 'styled-components'
 
 import { AttachedMissionCard } from './AttachedMissionCard'
 import { attachMissionToReportingSliceActions } from './slice'
-import { useGetMissionQuery } from '../../../../api/missionsAPI'
 import {
   MapInteractionListenerEnum,
   updateMapInteractionListeners
@@ -20,9 +18,7 @@ export function AttachMission({ setIsAttachNewMission }) {
   const { handleSubmit, setFieldValue, values } = useFormikContext<Reporting>()
   const dispatch = useAppDispatch()
   const missionId = useAppSelector(state => state.attachMissionToReporting.missionId)
-
-  const hasMissionAttached = !!values.missionId && !!values.attachedMission && values.attachedMission.id === missionId
-  const { data: missionToAttach } = useGetMissionQuery(!hasMissionAttached && missionId ? missionId : skipToken)
+  const attachedMission = useAppSelector(state => state.attachMissionToReporting.attachedMission)
 
   const attachMission = () => {
     dispatch(attachMissionToReportingSliceActions.setInitialAttachedMission(values.attachedMission))
@@ -40,11 +36,11 @@ export function AttachMission({ setIsAttachNewMission }) {
   }
 
   useEffect(() => {
-    if (missionId !== values.missionId && missionToAttach) {
+    if (missionId !== values.missionId) {
       setFieldValue('missionId', missionId)
-      setFieldValue('attachedMission', missionId ? missionToAttach : undefined)
+      setFieldValue('attachedMission', attachedMission)
     }
-  }, [missionId, setFieldValue, dispatch, missionToAttach, values.missionId])
+  }, [missionId, setFieldValue, dispatch, values.missionId, attachedMission])
 
   return !values.missionId ? (
     <ButtonsContainer>
@@ -75,7 +71,7 @@ export function AttachMission({ setIsAttachNewMission }) {
         <span>Signalement lié à une mission</span>
       </AttachedMissionText>
 
-      <AttachedMissionCard attachedEnvActionId={values?.attachedEnvActionId} attachedMission={values.attachedMission} />
+      <AttachedMissionCard attachedMission={values.attachedMission} controlStatus={values?.controlStatus} />
 
       <UnattachButtonContainer>
         <Button accent={Accent.SECONDARY} Icon={Icon.Unlink} isFullWidth={false} onClick={unattachMission}>

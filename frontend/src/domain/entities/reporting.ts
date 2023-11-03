@@ -9,6 +9,7 @@ export type Reporting = {
   attachedEnvActionId?: string
   attachedMission?: Mission
   attachedToMissionAtUtc?: string
+  controlStatus: ControlStatusEnum
   controlUnitId?: number
   createdAt: string
   description?: string
@@ -35,6 +36,18 @@ export type Reporting = {
 
 export type ReportingDetailed = Reporting & {
   displayedSource: string
+}
+
+export enum ControlStatusEnum {
+  CONTROL_TO_BE_DONE = 'CONTROL_TO_BE_DONE',
+  CONTROL_DONE = 'CONTROL_DONE',
+  SURVEILLANCE_DONE = 'SURVEILLANCE_DONE'
+}
+
+export enum ControlStatusLabels {
+  CONTROL_TO_BE_DONE = 'Contrôle à faire',
+  CONTROL_DONE = 'Contrôle fait',
+  SURVEILLANCE_DONE = 'Surveillance faite'
 }
 
 type TargetDetails = {

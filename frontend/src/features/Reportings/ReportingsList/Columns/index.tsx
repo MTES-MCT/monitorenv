@@ -126,7 +126,7 @@ export const Columns = [
     accessorFn: row => row.geom,
     cell: ({ row }) => (
       <CellActionStatus
-        attachedEnvActionId={row.original.attachedEnvActionId}
+        controlStatus={row.original.controlStatus}
         isControlRequired={row.original.isControlRequired}
         missionId={row.original.missionId}
       />

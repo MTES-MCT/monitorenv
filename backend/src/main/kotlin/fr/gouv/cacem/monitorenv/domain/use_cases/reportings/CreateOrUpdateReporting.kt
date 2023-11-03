@@ -4,16 +4,17 @@ import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import java.time.ZonedDateTime
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 @UseCase
 class CreateOrUpdateReporting(
-    private val reportingRepository: IReportingRepository,
-    private val controlUnitRepository: IControlUnitRepository,
-    private val semaphoreRepository: ISemaphoreRepository,
-    private val facadeRepository: IFacadeAreasRepository,
-    private val missionRepository: IMissionRepository,
+        private val reportingRepository: IReportingRepository,
+        private val controlUnitRepository: IControlUnitRepository,
+        private val semaphoreRepository: ISemaphoreRepository,
+        private val facadeRepository: IFacadeAreasRepository,
+        private val missionRepository: IMissionRepository,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(CreateOrUpdateReporting::class.java)
 
@@ -28,7 +29,25 @@ class CreateOrUpdateReporting(
             seaFront = facadeRepository.findFacadeFromGeometry(reporting.geom)
         }
 
-        val savedReport = reportingRepository.save(reporting.copy(seaFront = seaFront))
+        var attachedToMissionAtUtc: ZonedDateTime? = null
+        var detachedFromMissionAtUtc: ZonedDateTime? = null
+        if (reporting.missionId != null) {
+            attachedToMissionAtUtc = ZonedDateTime.now()
+            detachedFromMissionAtUtc = null
+        }
+
+        if (reporting.missionId == null && reporting.attachedToMissionAtUtc != null) {
+            detachedFromMissionAtUtc = ZonedDateTime.now()
+        }
+
+        val savedReport =
+                reportingRepository.save(
+                        reporting.copy(
+                                seaFront = seaFront,
+                                attachedToMissionAtUtc = attachedToMissionAtUtc,
+                                detachedFromMissionAtUtc = detachedFromMissionAtUtc
+                        )
+                )
 
         return savedReport
     }
