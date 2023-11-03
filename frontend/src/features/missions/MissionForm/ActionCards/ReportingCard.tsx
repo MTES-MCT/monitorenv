@@ -27,7 +27,7 @@ export function ReportingCard({
       ...(action.theme && {
         themes: [
           {
-            subThemes: action.subThemes,
+            subThemes: action.subThemes || [],
             theme: action.theme
           }
         ]

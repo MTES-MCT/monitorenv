@@ -33,8 +33,8 @@ export function AttachMission({ setIsAttachNewMission }) {
   }
 
   const unattachMission = () => {
-    setFieldValue('attachedMissionId', undefined)
-    setFieldValue('attachedMission', undefined)
+    dispatch(attachMissionToReportingSliceActions.setAttachedMissionId(undefined))
+    dispatch(attachMissionToReportingSliceActions.setAttachedMission(undefined))
   }
 
   const createMission = async () => {

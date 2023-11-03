@@ -187,7 +187,7 @@ export const reportingPinStyleFn = feature => {
 
   if (feature.get('attachedMissionId')) {
     if (status === ReportingStatusEnum.ARCHIVED) {
-      return reportingStyleFactory(THEME.color.mediumSeaGreen, 'archived_reporting_observation.svg')
+      return reportingStyleFactory(THEME.color.white, 'archived_reporting_with_mission_attached.svg')
     }
 
     return reportingStyleFactory(THEME.color.mediumSeaGreen)

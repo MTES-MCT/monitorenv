@@ -61,7 +61,9 @@ export function AttachedMissionCard({
 
       <Body>
         <Details>
-          Mission {missionTypesToString(missionTypes)} – {missionDurationText}
+          <div>
+            Mission {missionTypesToString(missionTypes)} – {missionDurationText}
+          </div>
           <MissionStatusLabel missionStatus={missionStatus} />
         </Details>
         <div>
@@ -97,7 +99,9 @@ const NoContact = styled.div`
 `
 const Details = styled.div`
   color: ${p => p.theme.color.slateGray};
-  white-space: nowrap;
+  display: flex;
+  flex: 2;
+  flex-direction: column;
 `
 
 const Title = styled.div`
