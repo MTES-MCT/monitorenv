@@ -26,6 +26,7 @@ export function BaseCard({ feature, selected = false }: { feature: Feature; sele
   }
 
   const close = useCallback(() => {
+    dispatch(baseActions.hightlightFeatureIds([]))
     dispatch(baseActions.selectBaseFeatureId(undefined))
   }, [dispatch])
 
