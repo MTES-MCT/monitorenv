@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 
+import { attachReportingToMissionSliceActions } from './slice'
 import {
   MapInteractionListenerEnum,
   updateMapInteractionListeners
@@ -10,10 +11,16 @@ import { MapInteraction } from '../../../commonComponents/Modals/MapInteraction'
 
 export function AttachReportingToMissionModal() {
   const dispatch = useAppDispatch()
+
   const attachReportingListener = useAppSelector(state => state.attachReportingToMission.attachReportingListener)
+  const initialAttachedReportings = useAppSelector(state => state.attachReportingToMission.initialAttachedReportings)
+  const initialAttachedReportingIds = useAppSelector(
+    state => state.attachReportingToMission.initialAttachedReportingIds
+  )
 
   const resetReportingToAttach = () => {
-    // TODO: reset reporting to attach
+    dispatch(attachReportingToMissionSliceActions.setAttachedReportingIds(initialAttachedReportingIds))
+    dispatch(attachReportingToMissionSliceActions.setAttachedReportings(initialAttachedReportings))
   }
 
   const validateReportingToAttach = () => {
@@ -31,7 +38,7 @@ export function AttachReportingToMissionModal() {
       title="Vous êtes en train de lier un signalement"
       validateButtonText="Lier à la mission"
     >
-      <Text>Cliquez sur un signalement pour le sélectionner</Text>
+      <Text>Cliquez sur un/ des signalement(s) pour le(s) sélectionner</Text>
     </MapInteraction>
   )
 }

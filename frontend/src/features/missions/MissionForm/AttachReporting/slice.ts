@@ -6,12 +6,16 @@ type AttachedReportingToMissionSliceState = {
   attachReportingListener: boolean
   attachedReportingIds: number[]
   attachedReportings: Reporting[]
+  initialAttachedReportingIds: number[]
+  initialAttachedReportings: Reporting[]
 }
 
 const initialState: AttachedReportingToMissionSliceState = {
   attachedReportingIds: [],
   attachedReportings: [],
-  attachReportingListener: false
+  attachReportingListener: false,
+  initialAttachedReportingIds: [],
+  initialAttachedReportings: []
 }
 
 const attachReportingToMissionSlice = createSlice({
@@ -32,6 +36,10 @@ const attachReportingToMissionSlice = createSlice({
     },
     setAttachReportingListener(state, action) {
       state.attachReportingListener = action.payload
+    },
+    setInitialAttachedReportings(state, action) {
+      state.initialAttachedReportingIds = action.payload?.ids
+      state.initialAttachedReportings = action.payload.reportings
     }
   }
 })

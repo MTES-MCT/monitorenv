@@ -8,9 +8,9 @@ import { reportingToAttachStyle } from './style'
 import { useGetReportingsQuery } from '../../../../api/reportingsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { StatusFilterEnum } from '../../../../domain/entities/reporting'
+import { attachReportingFromMap } from '../../../../domain/use_cases/missions/attachReportingFromMap'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { getReportingZoneFeature } from '../../../map/layers/Reportings/reportingsGeometryHelpers'
-import { attachReportingToMissionSliceActions } from '../../MissionForm/AttachReporting/slice'
 
 import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 import type { Feature } from 'ol'
@@ -39,7 +39,6 @@ export function ReportingToAttachLayer({ map, mapClickEvent }: BaseMapChildrenPr
     [reportings]
   )
 
-  // console.log('reportings', reportingsPointOrZone)
   const vectorSourceRef = useRef() as React.MutableRefObject<VectorSource<Geometry>>
   const GetVectorSource = () => {
     if (vectorSourceRef.current === undefined) {
@@ -92,7 +91,7 @@ export function ReportingToAttachLayer({ map, mapClickEvent }: BaseMapChildrenPr
       const feature = mapClickEvent?.feature
       if (feature.getId()?.toString()?.includes(Layers.REPORTING_TO_ATTACH_ON_MISSION.code)) {
         const { id } = feature.getProperties()
-        dispatch(attachReportingToMissionSliceActions.addAttachedReportingId(id))
+        dispatch(attachReportingFromMap(id))
       }
     }
   }, [dispatch, mapClickEvent])
