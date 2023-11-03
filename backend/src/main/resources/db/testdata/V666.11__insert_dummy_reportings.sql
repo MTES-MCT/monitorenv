@@ -130,7 +130,7 @@ VALUES
     'COMPANY',
     NULL,
     '[{"operatorName": "Ma société", "vesselName": "Mr le gérant" }]',
-    ST_GeomFromText('MULTIPOINT((-4.18759766312331 47.11281269827924))', 4326),
+    ST_GeomFromText('MULTIPOINT((0.37083333 49.76777778))', 4326),
     'Guadeloupe',
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     'OBSERVATION',
@@ -172,7 +172,8 @@ INSERT INTO reportings (
     mission_id,
     attached_to_mission_at_utc,
     detached_from_mission_at_utc,
-    attached_env_action_id)
+    attached_env_action_id,
+    open_by)
 VALUES
     (6,
    2300006,
@@ -183,7 +184,7 @@ VALUES
    'COMPANY',
    NULL,
    '[{"operatorName": "La sociéter", "vesselName": "Héron" }]',
-   ST_GeomFromText('MULTIPOINT((-4.18759766312331 47.11281269827924))', 4326),
+   ST_GeomFromText('MULTIPOINT((-1.59695455 43.6569585))', 4326),
    'Guadeloupe',
    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
    'OBSERVATION',
@@ -198,7 +199,8 @@ VALUES
     34,
     now() - INTERVAL '15 minutes',
     null,
-    'b8007c8a-5135-4bc3-816f-c69c7b75d807'
+    'b8007c8a-5135-4bc3-816f-c69c7b75d807',
+    'ABC'
     ),
     (7,
    2300007,
@@ -209,7 +211,7 @@ VALUES
    'COMPANY',
    NULL,
    '[{"operatorName": "Good Company", "vesselName": "Mr le gérant" }]',
-   ST_GeomFromText('MULTIPOINT((-4.18759766312331 47.11281269827924))', 4326),
+     ST_GeomFromText('MULTIPOINT((-4.18759766312331 47.11281269827924))', 4326),
    'NAMO',
    'Lorem LoremLorem ipsum dolor sit amet, consectetur adipiscing elit.',
    'OBSERVATION',
@@ -224,7 +226,8 @@ VALUES
     34,
     now() - INTERVAL '25 minutes',
     null,
-    null
+    null,
+    'DEF'
     ),
     (8,
      2300008,
@@ -235,7 +238,7 @@ VALUES
      'COMPANY',
      NULL,
      '[{"operatorName": "Good Company", "vesselName": "Mr le gérant" }]',
-     ST_GeomFromText('MULTIPOINT((-4.18759766312331 47.11281269827924))', 4326),
+     ST_GeomFromText('MULTIPOINT((-1.35943753 46.02911873))', 4326),
      'NAMO',
      'Lorem LoremLorem ipsum dolor sit amet, consectetur adipiscing elit.',
      'OBSERVATION',
@@ -250,7 +253,8 @@ VALUES
      38,
      now() - INTERVAL '25 minutes',
      null,
-     null
+     null,
+     'GHI'
     );
 
 SELECT setval('reportings_id_seq', (SELECT max(id) FROM reportings), true);

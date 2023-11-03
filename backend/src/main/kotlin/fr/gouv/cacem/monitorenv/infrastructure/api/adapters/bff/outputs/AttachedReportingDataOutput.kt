@@ -9,7 +9,6 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.ControlUnitDataOutput
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.UUID
 
 data class AttachedReportingDataOutput(
     val id: Int,
@@ -39,7 +38,6 @@ data class AttachedReportingDataOutput(
     val missionId: Int? = null,
     val attachedToMissionAtUtc: ZonedDateTime? = null,
     val detachedFromMissionAtUtc: ZonedDateTime? = null,
-    val attachedEnvActionId: UUID? = null,
 ) {
     companion object {
         fun fromReportingDTO(
@@ -51,7 +49,8 @@ data class AttachedReportingDataOutput(
                 reportingId = dto.reporting.reportingId,
                 sourceType = dto.reporting.sourceType,
                 semaphoreId = dto.reporting.semaphoreId,
-                semaphore = if (dto.semaphore != null) {
+                semaphore =
+                if (dto.semaphore != null) {
                     SemaphoreDataOutput.fromSemaphoreEntity(
                         dto.semaphore,
                     )
@@ -61,10 +60,9 @@ data class AttachedReportingDataOutput(
                 controlUnitId = dto.reporting.controlUnitId,
                 controlUnit =
                 if (dto.controlUnit != null) {
-                    ControlUnitDataOutput
-                        .fromFullControlUnit(
-                            dto.controlUnit,
-                        )
+                    ControlUnitDataOutput.fromFullControlUnit(
+                        dto.controlUnit,
+                    )
                 } else {
                     null
                 },

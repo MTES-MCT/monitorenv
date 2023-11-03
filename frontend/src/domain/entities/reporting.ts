@@ -38,6 +38,13 @@ export type ReportingDetailed = Reporting & {
   displayedSource: string
 }
 
+export type DetachedReporting = {
+  attachedToMissionAtUtc?: string
+  detachedFromMissionAtUtc?: string
+  missionId?: number
+  reportingId?: number
+}
+
 export enum ControlStatusEnum {
   CONTROL_TO_BE_DONE = 'CONTROL_TO_BE_DONE',
   CONTROL_DONE = 'CONTROL_DONE',
@@ -61,6 +68,12 @@ type TargetDetails = {
 
 export type ReportingForTimeline = Partial<ReportingDetailed> & {
   actionType: ActionTypeEnum.REPORTING
+  timelineDate: string
+}
+
+export type DetachedReportingForTimeline = DetachedReporting & {
+  action: string
+  actionType: ActionTypeEnum.DETACHED_REPORTING
   timelineDate: string
 }
 

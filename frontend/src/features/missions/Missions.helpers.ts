@@ -15,9 +15,11 @@ import {
 } from '../../domain/entities/missions'
 import {
   getFormattedReportingId,
+  type DetachedReporting,
   type Reporting,
   type ReportingDetailed,
-  type ReportingForTimeline
+  type ReportingForTimeline,
+  type DetachedReportingForTimeline
 } from '../../domain/entities/reporting'
 
 import type { LegacyControlUnit } from '../../domain/entities/legacyControlUnit'
@@ -205,12 +207,33 @@ const formattedReportingsForTimeline = reportings =>
     {} as ReportingForTimeline
   )
 
+const formattedDetachedReportingsForTimeline = detachedReportings =>
+  detachedReportings?.reduce(
+    (newDetachedReportingsCollection, detachedReporting) => ({
+      ...newDetachedReportingsCollection,
+      [`attach-${detachedReporting.reportingId}`]: {
+        ...detachedReporting,
+        action: 'attach',
+        actionType: ActionTypeEnum.DETACHED_REPORTING,
+        timelineDate: detachedReporting?.attachedToMissionAtUtc
+      },
+      [`detach-${detachedReporting.reportingId}`]: {
+        ...detachedReporting,
+        action: 'detach',
+        actionType: ActionTypeEnum.DETACHED_REPORTING,
+        timelineDate: detachedReporting?.detachedFromMissionAtUtc
+      }
+    }),
+    {} as DetachedReportingForTimeline
+  )
 export const getEnvActionsAndReportingsForTimeline = (
   envActions: EnvAction[] | undefined,
-  reportings: Reporting[] | undefined
+  reportings: Reporting[] | undefined,
+  detachedReportings: DetachedReporting[] | undefined
 ): ActionsForTimeLine => {
   const formattedEnvActions = formattedEnvActionsForTimeline(envActions, reportings)
   const formattedReportings = formattedReportingsForTimeline(reportings)
+  const formattedDetachedReportings = formattedDetachedReportingsForTimeline(detachedReportings)
 
-  return { ...formattedEnvActions, ...formattedReportings }
+  return { ...formattedEnvActions, ...formattedReportings, ...formattedDetachedReportings }
 }
