@@ -20,6 +20,7 @@ export function ReportingToAttachLayer({ map, mapClickEvent }: BaseMapChildrenPr
   const dispatch = useDispatch()
   const attachReportingListener = useAppSelector(state => state.attachReportingToMission.attachReportingListener)
   const attachedReportings = useAppSelector(state => state.attachReportingToMission.attachedReportings)
+
   const { data: reportings } = useGetReportingsQuery({
     status: [StatusFilterEnum.IN_PROGRESS]
   })

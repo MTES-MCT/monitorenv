@@ -22,7 +22,7 @@ export const saveReporting =
             visibility: VisibilityState.NONE
           })
         )
-        await dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
+        dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
         dispatch(reportingActions.deleteSelectedReporting(values.id))
       } else {
         throw Error('Erreur à la création ou à la modification du signalement')

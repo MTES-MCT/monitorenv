@@ -5,6 +5,7 @@ import { getMissionPageRoute } from '../../../utils/routes'
 import { sideWindowPaths } from '../../entities/sideWindow'
 import { setToast } from '../../shared_slices/Global'
 import { multiMissionsActions } from '../../shared_slices/MultiMissions'
+import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../map/updateMapInteractionListeners'
 
 export const saveMission =
   (values, reopen = false) =>
@@ -26,6 +27,7 @@ export const saveMission =
           return
         }
         dispatch(multiMissionsActions.deleteSelectedMission(values.id))
+        dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
         dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSIONS))
       } else {
         throw Error('Erreur à la création ou à la modification de la mission')

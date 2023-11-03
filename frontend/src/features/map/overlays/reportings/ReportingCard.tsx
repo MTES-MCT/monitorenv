@@ -19,10 +19,15 @@ import { reportingActions } from '../../../../domain/shared_slices/reporting'
 import { editReportingInLocalStore } from '../../../../domain/use_cases/reporting/editReportingInLocalStore'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useHasMapListener } from '../../../../hooks/useHasMapListener'
 import { LinkToMissionTag } from '../../../Reportings/components/LinkToMissionTag'
 import { StatusActionTag } from '../../../Reportings/components/StatusActionTag'
 
+type ReportingCardProps = {
+  feature: any
+  isOnlyHoverable?: boolean
+  selected?: boolean
+  updateMargins: (margin: number) => void
+}
 function StatusTag({
   attachedEnvActionId,
   isArchived,
@@ -52,18 +57,16 @@ function StatusTag({
 
 export function ReportingCard({
   feature,
+  isOnlyHoverable = false,
   selected = false,
   updateMargins
-}: {
-  feature: any
-  selected?: boolean
-  updateMargins: (margin: number) => void
-}) {
+}: ReportingCardProps) {
   const dispatch = useAppDispatch()
-  const hasMapListener = useHasMapListener()
   const {
     global: { displayReportingsLayer }
   } = useAppSelector(state => state)
+  const listener = useAppSelector(state => state.draw.listener)
+  const attachMissionListener = useAppSelector(state => state.attachMissionToReporting.attachMissionListener)
 
   const ref = useRef<HTMLDivElement>(null)
 
@@ -116,7 +119,7 @@ export function ReportingCard({
     }
   }, [feature, updateMargins])
 
-  if (!displayReportingsLayer || hasMapListener) {
+  if (!displayReportingsLayer || listener || attachMissionListener) {
     return null
   }
 
@@ -167,9 +170,11 @@ export function ReportingCard({
         isArchived={timeLeft < 0 || isArchived}
         isAttachToMission={!!attachedMissionId}
       />
-      <StyledButton Icon={Icon.Edit} onClick={editReporting} size={Size.SMALL}>
-        Editer le signalement
-      </StyledButton>
+      {!isOnlyHoverable && (
+        <StyledButton Icon={Icon.Edit} onClick={editReporting} size={Size.SMALL}>
+          Editer le signalement
+        </StyledButton>
+      )}
     </Wrapper>
   )
 }
