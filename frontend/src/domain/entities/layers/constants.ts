@@ -106,7 +106,7 @@ export const Layers = {
   },
   MISSIONS: {
     code: 'missions',
-    zIndex: 1050
+    zIndex: 1150
   },
   REGULATORY_ENV: {
     code: 'REGULATORY_ENV',

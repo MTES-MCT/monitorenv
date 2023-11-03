@@ -38,7 +38,6 @@ export function AttachMission({ setIsAttachNewMission }) {
   }
 
   const createMission = async () => {
-    await setFieldValue('attachedToMissionAtUtc', new Date().toISOString())
     setIsAttachNewMission(true)
     handleSubmit()
   }
@@ -47,7 +46,6 @@ export function AttachMission({ setIsAttachNewMission }) {
     if (attachedMissionId !== values.attachedMissionId && missionToAttach) {
       setFieldValue('attachedMissionId', attachedMissionId)
       setFieldValue('attachedMission', attachedMissionId ? missionToAttach : undefined)
-      setFieldValue('attachedToMissionAtUtc', new Date().toISOString())
     }
   }, [attachedMissionId, setFieldValue, dispatch, missionToAttach, values.attachedMissionId])
 

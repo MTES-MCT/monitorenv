@@ -142,39 +142,31 @@ const missionToReportingsLinkStyle = feature => {
   )
 }
 
-const attachedMissionCircleStyle = feature => {
+const missionCircleStyle = feature => {
   if (!feature.get('attachedReportings') || feature.get('attachedReportings').length === 0) {
-    return [new Style({})]
+    return new Style({})
   }
 
-  return feature.get('attachedReportings').map(
-    reporting =>
-      new Style({
-        geometry: () => {
-          const reportingGeom = reporting?.geom
-          const geoJSON = new GeoJSON()
-          const formattedReportingGeometry = geoJSON.readGeometry(reportingGeom, {
-            dataProjection: WSG84_PROJECTION,
-            featureProjection: OPENLAYERS_PROJECTION
-          })
+  return new Style({
+    geometry: () => {
+      const extent = feature?.getGeometry()?.getExtent()
+      const center = extent && getCenter(extent)
 
-          const reportingExtent = formattedReportingGeometry?.getExtent()
-          const reportingCenter = reportingExtent && getCenter(reportingExtent)
-
-          return reportingCenter && new Point(reportingCenter)
-        },
-        image: new Circle({
-          radius: 20,
-          stroke: new Stroke({
-            color: THEME.color.charcoal,
-            width: 2
-          })
-        })
+      return center && new Point(center)
+    },
+    image: new Circle({
+      radius: 20,
+      stroke: new Stroke({
+        color: THEME.color.charcoal,
+        width: 2
       })
-  )
+    })
+  })
 }
+
 export const selectedMissionStyle = feature => [
   selectedMissionZoneStyle,
+  missionWithCentroidStyleFn(feature),
   ...missionToReportingsLinkStyle(feature),
-  ...attachedMissionCircleStyle(feature)
+  missionCircleStyle(feature)
 ]

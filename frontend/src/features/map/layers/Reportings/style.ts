@@ -111,6 +111,17 @@ export const hoveredReportingStyleFn = feature => {
     validityTime: feature.get('validityTime')
   })
 
+  if (feature.get('attachedMissionId')) {
+    if (status === ReportingStatusEnum.ARCHIVED) {
+      return hoveredReportingZoneStyleFactory(THEME.color.mediumSeaGreen, getColorWithAlpha(THEME.color.white, 0.2))
+    }
+
+    return hoveredReportingZoneStyleFactory(
+      THEME.color.mediumSeaGreen,
+      getColorWithAlpha(THEME.color.mediumSeaGreen, 0.2)
+    )
+  }
+
   switch (status) {
     case ReportingStatusEnum.OBSERVATION:
       return hoveredReportingZoneStyleFactory(THEME.color.blueGray, getColorWithAlpha(THEME.color.blueGray, 0.2))
@@ -135,6 +146,17 @@ export const selectedReportingStyleFn = feature => {
     reportType: feature.get('reportType') as ReportingTypeEnum,
     validityTime: feature.get('validityTime')
   })
+
+  if (feature.get('attachedMissionId')) {
+    if (status === ReportingStatusEnum.ARCHIVED) {
+      return selectedReportingStyleFactory(THEME.color.mediumSeaGreen, getColorWithAlpha(THEME.color.white, 0.25))
+    }
+
+    return selectedReportingStyleFactory(
+      THEME.color.mediumSeaGreen,
+      getColorWithAlpha(THEME.color.mediumSeaGreen, 0.25)
+    )
+  }
 
   switch (status) {
     case ReportingStatusEnum.OBSERVATION:
@@ -164,6 +186,10 @@ export const reportingPinStyleFn = feature => {
   })
 
   if (feature.get('attachedMissionId')) {
+    if (status === ReportingStatusEnum.ARCHIVED) {
+      return reportingStyleFactory(THEME.color.mediumSeaGreen, 'archived_reporting_observation.svg')
+    }
+
     return reportingStyleFactory(THEME.color.mediumSeaGreen)
   }
 
