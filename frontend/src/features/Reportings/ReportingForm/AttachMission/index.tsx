@@ -19,13 +19,10 @@ import type { Reporting } from '../../../../domain/entities/reporting'
 export function AttachMission({ setIsAttachNewMission }) {
   const { handleSubmit, setFieldValue, values } = useFormikContext<Reporting>()
   const dispatch = useAppDispatch()
-  const attachedMissionId = useAppSelector(state => state.attachMissionToReporting.attachedMissionId)
+  const missionId = useAppSelector(state => state.attachMissionToReporting.missionId)
 
-  const hasMissionAttached =
-    !!values.attachedMissionId && !!values.attachedMission && values.attachedMission.id === attachedMissionId
-  const { data: missionToAttach } = useGetMissionQuery(
-    !hasMissionAttached && attachedMissionId ? attachedMissionId : skipToken
-  )
+  const hasMissionAttached = !!values.missionId && !!values.attachedMission && values.attachedMission.id === missionId
+  const { data: missionToAttach } = useGetMissionQuery(!hasMissionAttached && missionId ? missionId : skipToken)
 
   const attachMission = () => {
     dispatch(attachMissionToReportingSliceActions.setInitialAttachedMission(values.attachedMission))
@@ -33,7 +30,7 @@ export function AttachMission({ setIsAttachNewMission }) {
   }
 
   const unattachMission = () => {
-    dispatch(attachMissionToReportingSliceActions.setAttachedMissionId(undefined))
+    dispatch(attachMissionToReportingSliceActions.setMissionId(undefined))
     dispatch(attachMissionToReportingSliceActions.setAttachedMission(undefined))
   }
 
@@ -43,13 +40,13 @@ export function AttachMission({ setIsAttachNewMission }) {
   }
 
   useEffect(() => {
-    if (attachedMissionId !== values.attachedMissionId && missionToAttach) {
-      setFieldValue('attachedMissionId', attachedMissionId)
-      setFieldValue('attachedMission', attachedMissionId ? missionToAttach : undefined)
+    if (missionId !== values.missionId && missionToAttach) {
+      setFieldValue('missionId', missionId)
+      setFieldValue('attachedMission', missionId ? missionToAttach : undefined)
     }
-  }, [attachedMissionId, setFieldValue, dispatch, missionToAttach, values.attachedMissionId])
+  }, [missionId, setFieldValue, dispatch, missionToAttach, values.missionId])
 
-  return !values.attachedMissionId ? (
+  return !values.missionId ? (
     <ButtonsContainer>
       <Button
         accent={Accent.SECONDARY}
@@ -69,7 +66,7 @@ export function AttachMission({ setIsAttachNewMission }) {
       >
         Créer une mission pour ce signalement
       </Button>
-      <FormikCheckbox disabled={!values.isControlRequired} label="Aucune unité disponible" name="isUnitAvailable" />
+      <FormikCheckbox disabled={!values.isControlRequired} label="Aucune unité disponible" name="hasNoUnitAvailable" />
     </ButtonsContainer>
   ) : (
     <div>

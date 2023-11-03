@@ -8,17 +8,17 @@ export type Reporting = {
   actionTaken?: string
   attachedEnvActionId?: string
   attachedMission?: Mission
-  attachedMissionId?: number
   attachedToMissionAtUtc?: string
   controlUnitId?: number
   createdAt: string
   description?: string
   detachedFromMissionAtUtc?: string
   geom: Record<string, any>[]
+  hasNoUnitAvailable?: boolean | undefined
   id: number | string
   isArchived?: boolean
   isControlRequired?: boolean | undefined
-  isUnitAvailable?: boolean | undefined
+  missionId?: number
   openBy: string
   reportType: ReportingTypeEnum
   reportingId?: number

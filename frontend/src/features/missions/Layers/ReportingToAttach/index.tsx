@@ -2,12 +2,12 @@ import { reduce } from 'lodash'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { useDispatch } from 'react-redux'
 
 import { useGetReportingsQuery } from '../../../../api/reportingsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { StatusFilterEnum } from '../../../../domain/entities/reporting'
 import { attachReportingFromMap } from '../../../../domain/use_cases/missions/attachReportingFromMap'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { getReportingZoneFeature } from '../../../map/layers/Reportings/reportingsGeometryHelpers'
 import { reportingPinStyleFn } from '../../../map/layers/Reportings/style'
@@ -17,7 +17,7 @@ import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
 export function ReportingToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const attachReportingListener = useAppSelector(state => state.attachReportingToMission.attachReportingListener)
   const attachedReportings = useAppSelector(state => state.attachReportingToMission.attachedReportings)
 

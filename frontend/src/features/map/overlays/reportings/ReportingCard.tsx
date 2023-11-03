@@ -72,12 +72,12 @@ export function ReportingCard({
 
   const {
     attachedEnvActionId,
-    attachedMissionId,
     createdAt,
     description,
     displayedSource,
     id,
     isArchived,
+    missionId,
     reportingId,
     reportType,
     subThemes,
@@ -168,7 +168,7 @@ export function ReportingCard({
       <StatusTag
         attachedEnvActionId={attachedEnvActionId}
         isArchived={timeLeft < 0 || isArchived}
-        isAttachToMission={!!attachedMissionId}
+        isAttachToMission={!!missionId}
       />
       {!isOnlyHoverable && (
         <StyledButton Icon={Icon.Edit} onClick={editReporting} size={Size.SMALL}>

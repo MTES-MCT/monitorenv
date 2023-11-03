@@ -20,8 +20,8 @@ export const useSyncFormValuesWithRedux = () => {
       }
       dispatch(reportingActions.setReportingState(newValues))
       dispatch(reportingActions.setIsDirty(newValues ? dirty : false))
-      dispatch(attachMissionToReportingSliceActions.setAttachedMissionId(newValues?.attachedMissionId))
-      dispatch(attachMissionToReportingSliceActions.setAttachedMission(newValues?.attachedMission))
+      dispatch(attachMissionToReportingSliceActions.setMissionId(newValues?.missionId))
+      dispatch(attachMissionToReportingSliceActions.setAttachedMission(newValues?.missionId))
     }
 
     return _.throttle(throttled, 500)

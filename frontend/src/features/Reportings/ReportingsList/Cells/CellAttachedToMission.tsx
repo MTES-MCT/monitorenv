@@ -1,7 +1,7 @@
 import { LinkToMissionTag } from '../../components/LinkToMissionTag'
 
-export function CellAttachedtoMission({ attachedMissionId }: { attachedMissionId: number }) {
-  if (!attachedMissionId) {
+export function CellAttachedtoMission({ missionId }: { missionId: number }) {
+  if (!missionId) {
     return null
   }
 

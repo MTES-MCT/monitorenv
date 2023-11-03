@@ -123,6 +123,7 @@ class JpaReportingRepository(
                             missionReference = missionReference,
                             envActionReference = envActionReference,
                     )
+
             dbReportingRepository.saveAndFlush(reportingModel).toReportingDTO(mapper)
         } catch (e: JpaObjectRetrievalFailureException) {
             throw NotFoundException(

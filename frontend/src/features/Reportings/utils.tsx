@@ -45,7 +45,7 @@ export const getReportingTitle = reporting => {
       return <StyledArchivedTag accent={Accent.PRIMARY}>Archivé</StyledArchivedTag>
     }
 
-    if (reporting.attachedMissionId) {
+    if (reporting.missionId) {
       return <LinkToMissionTag />
     }
 

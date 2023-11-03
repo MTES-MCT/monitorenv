@@ -31,7 +31,10 @@ export const reportingsAPI = monitorenvPrivateApi.injectEndpoints({
       })
     }),
     createReporting: build.mutation<Partial<Reporting>, Partial<Reporting>>({
-      invalidatesTags: [{ id: 'LIST', type: 'Reportings' }],
+      invalidatesTags: [
+        { id: 'LIST', type: 'Reportings' },
+        { id: 'LIST', type: 'Missions' }
+      ],
       query: reporting => ({
         body: reporting,
         method: 'PUT',

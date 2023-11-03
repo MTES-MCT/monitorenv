@@ -5,17 +5,17 @@ import type { Mission } from '../../../../domain/entities/missions'
 type AttachMissionToReportingSliceState = {
   attachMissionListener: boolean
   attachedMission: Mission | undefined
-  attachedMissionId: number | undefined
   initialAttachedMission: Mission | undefined
-  initialAttachedMissionId: number | undefined
+  initialMissionId: number | undefined
+  missionId: number | undefined
 }
 
 const initialState: AttachMissionToReportingSliceState = {
   attachedMission: undefined,
-  attachedMissionId: undefined,
   attachMissionListener: false,
   initialAttachedMission: undefined,
-  initialAttachedMissionId: undefined
+  initialMissionId: undefined,
+  missionId: undefined
 }
 
 const attachMissionToReportingSlice = createSlice({
@@ -28,15 +28,15 @@ const attachMissionToReportingSlice = createSlice({
     setAttachedMission(state, action) {
       state.attachedMission = action.payload
     },
-    setAttachedMissionId(state, action) {
-      state.attachedMissionId = action.payload
-    },
     setAttachMissionListener(state, action) {
       state.attachMissionListener = action.payload
     },
     setInitialAttachedMission(state, action: PayloadAction<Mission | undefined>) {
-      state.initialAttachedMissionId = action.payload?.id
+      state.initialMissionId = action.payload?.id
       state.initialAttachedMission = action.payload
+    },
+    setMissionId(state, action) {
+      state.missionId = action.payload
     }
   }
 })

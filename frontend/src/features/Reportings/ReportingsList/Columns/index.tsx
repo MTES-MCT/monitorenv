@@ -115,11 +115,11 @@ export const Columns = [
     }
   },
   {
-    accessorFn: row => row.attachedMissionId,
-    cell: info => <CellAttachedtoMission attachedMissionId={info.getValue()} />,
+    accessorFn: row => row.missionId,
+    cell: info => <CellAttachedtoMission missionId={info.getValue()} />,
     enableSorting: false,
     header: () => '',
-    id: 'attachedMissionId',
+    id: 'missionId',
     size: 155
   },
   {
@@ -127,8 +127,8 @@ export const Columns = [
     cell: ({ row }) => (
       <CellActionStatus
         attachedEnvActionId={row.original.attachedEnvActionId}
-        attachedMissionId={row.original.attachedMissionId}
         isControlRequired={row.original.isControlRequired}
+        missionId={row.original.missionId}
       />
     ),
     enableSorting: false,

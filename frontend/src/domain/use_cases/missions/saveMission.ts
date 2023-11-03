@@ -1,3 +1,5 @@
+import omit from 'lodash/omit'
+
 import { missionsAPI } from '../../../api/missionsAPI'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { isNewMission } from '../../../utils/isNewMission'
@@ -13,10 +15,11 @@ export const saveMission =
     const {
       sideWindow: { currentPath }
     } = getState()
+    const valuesToSave = omit(values, ['attachedReportings'])
     const routeParams = getMissionPageRoute(currentPath)
     const missionIsNewMission = isNewMission(routeParams?.params?.id)
 
-    const cleanValues = missionIsNewMission ? { ...values, id: undefined } : values
+    const cleanValues = missionIsNewMission ? { ...valuesToSave, id: undefined } : valuesToSave
     const upsertMission = missionIsNewMission
       ? missionsAPI.endpoints.createMission
       : missionsAPI.endpoints.updateMission

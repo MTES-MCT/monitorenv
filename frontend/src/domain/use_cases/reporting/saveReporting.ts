@@ -1,3 +1,5 @@
+import omit from 'lodash/omit'
+
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { isNewReporting } from '../../../features/Reportings/utils'
 import { setReportingFormVisibility, setToast, ReportingContext, VisibilityState } from '../../shared_slices/Global'
@@ -8,7 +10,8 @@ import type { Reporting } from '../../entities/reporting'
 
 export const saveReporting =
   (values: Reporting | Partial<Reporting>, reportingContext: ReportingContext) => async dispatch => {
-    const cleanValues = isNewReporting(values.id) ? { ...values, id: undefined } : values
+    const valuesToSave = omit(values, ['attachedMission'])
+    const cleanValues = isNewReporting(valuesToSave.id) ? { ...valuesToSave, id: undefined } : valuesToSave
     const endpoint = isNewReporting(values.id)
       ? reportingsAPI.endpoints.createReporting
       : reportingsAPI.endpoints.updateReporting
