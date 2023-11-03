@@ -54,10 +54,7 @@ class CreateOrUpdateReportingUTests {
             Assertions.catchThrowable {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
-                    controlUnitRepository = controlUnitRepository,
-                    semaphoreRepository = semaphoreRepository,
                     facadeRepository = facadeRepository,
-                    missionRepository = missionRepository,
                 )
                     .execute(null)
             }
@@ -203,10 +200,7 @@ class CreateOrUpdateReportingUTests {
         val createdReportingWithSemaphore =
             CreateOrUpdateReporting(
                 reportingRepository = reportingRepository,
-                controlUnitRepository = controlUnitRepository,
-                semaphoreRepository = semaphoreRepository,
                 facadeRepository = facadeRepository,
-                missionRepository = missionRepository,
             )
                 .execute(reportingWithSemaphore)
 
@@ -219,10 +213,7 @@ class CreateOrUpdateReportingUTests {
         val createdReportingWithControlUnit =
             CreateOrUpdateReporting(
                 reportingRepository = reportingRepository,
-                controlUnitRepository = controlUnitRepository,
-                semaphoreRepository = semaphoreRepository,
                 facadeRepository = facadeRepository,
-                missionRepository = missionRepository,
             )
                 .execute(reportingWithControlUnit)
 
@@ -267,10 +258,7 @@ class CreateOrUpdateReportingUTests {
             Assertions.catchThrowable {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
-                    controlUnitRepository = controlUnitRepository,
-                    semaphoreRepository = semaphoreRepository,
                     facadeRepository = facadeRepository,
-                    missionRepository = missionRepository,
                 )
                     .execute(reporting)
             }
@@ -316,10 +304,7 @@ class CreateOrUpdateReportingUTests {
             Assertions.catchThrowable {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
-                    controlUnitRepository = controlUnitRepository,
-                    semaphoreRepository = semaphoreRepository,
                     facadeRepository = facadeRepository,
-                    missionRepository = missionRepository,
                 )
                     .execute(reporting)
             }
@@ -405,10 +390,7 @@ class CreateOrUpdateReportingUTests {
             Assertions.catchThrowable {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
-                    controlUnitRepository = controlUnitRepository,
-                    semaphoreRepository = semaphoreRepository,
                     facadeRepository = facadeRepository,
-                    missionRepository = missionRepository,
                 ).execute(reportingWithControlUnitId)
             }
 
@@ -422,10 +404,7 @@ class CreateOrUpdateReportingUTests {
             Assertions.catchThrowable {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
-                    controlUnitRepository = controlUnitRepository,
-                    semaphoreRepository = semaphoreRepository,
                     facadeRepository = facadeRepository,
-                    missionRepository = missionRepository,
                 ).execute(reportingWithSemaphoreId)
             }
 
@@ -439,10 +418,7 @@ class CreateOrUpdateReportingUTests {
             Assertions.catchThrowable {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
-                    controlUnitRepository = controlUnitRepository,
-                    semaphoreRepository = semaphoreRepository,
                     facadeRepository = facadeRepository,
-                    missionRepository = missionRepository,
                 ).execute(reportingWithoutSourceName)
             }
 

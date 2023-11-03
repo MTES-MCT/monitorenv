@@ -82,10 +82,13 @@ context('Reportings', () => {
 
     cy.get('*[data-cy="edit-reporting-6"]').click({ force: true })
     cy.clickButton('Délier la mission')
+    cy.wait(100)
     cy.clickButton('Enregistrer et quitter')
 
-    cy.wait('@updateReporting').then(({ response }) => {
+    cy.wait('@updateReporting').then(({ request, response }) => {
       expect(response && response.statusCode).equal(200)
+
+      expect(request.body.attachedEnvActionId).equal(null)
       expect(response && response.body?.attachedEnvActionId).equal(null)
     })
   })
