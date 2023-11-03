@@ -1,3 +1,5 @@
+import omit from 'lodash/omit'
+
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { isNewReporting } from '../../../features/Reportings/utils'
 import { setReportingFormVisibility, setToast, VisibilityState } from '../../shared_slices/Global'
@@ -12,7 +14,8 @@ export const createMissionFromReporting = (values: Reporting | Partial<Reporting
     reportingFormVisibility: { context: reportingContext }
   } = getState().global
 
-  const cleanValues = isNewReporting(values.id) ? { ...values, id: undefined } : values
+  const valuesToSave = omit(values, ['attachedMission'])
+  const cleanValues = isNewReporting(valuesToSave.id) ? { ...valuesToSave, id: undefined } : valuesToSave
   const endpoint = reportingsAPI.endpoints.createReporting
 
   try {
