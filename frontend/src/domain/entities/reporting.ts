@@ -18,6 +18,7 @@ export type Reporting = {
   id: number | string
   isArchived?: boolean
   isControlRequired?: boolean | undefined
+  isUnitAvailable?: boolean | undefined
   openBy: string
   reportType: ReportingTypeEnum
   reportingId?: number

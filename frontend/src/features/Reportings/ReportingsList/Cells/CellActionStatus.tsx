@@ -1,11 +1,11 @@
-import { THEME, Tag, TagBullet } from '@mtes-mct/monitor-ui'
+import { StatusActionTag } from '../../components/StatusActionTag'
 
 export function CellActionStatus({
   attachedEnvActionId,
   attachedMissionId,
   isControlRequired
 }: {
-  attachedEnvActionId: number
+  attachedEnvActionId: string
   attachedMissionId: string
   isControlRequired: boolean
 }) {
@@ -13,17 +13,5 @@ export function CellActionStatus({
     return null
   }
 
-  if (attachedMissionId && isControlRequired && !attachedEnvActionId) {
-    return (
-      <Tag backgroundColor={THEME.color.gainsboro} bullet={TagBullet.DISK} bulletColor={THEME.color.goldenPoppy}>
-        Contrôle à faire
-      </Tag>
-    )
-  }
-
-  return (
-    <Tag backgroundColor={THEME.color.gainsboro} bullet={TagBullet.DISK} bulletColor={THEME.color.mediumSeaGreen}>
-      Contrôle fait
-    </Tag>
-  )
+  return <StatusActionTag attachedEnvActionId={attachedEnvActionId} />
 }

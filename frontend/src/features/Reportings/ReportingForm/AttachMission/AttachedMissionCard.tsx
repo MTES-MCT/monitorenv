@@ -1,23 +1,23 @@
 import { customDayjs as dayjs, pluralize } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import {
-  getMissionStatus,
-  getTotalOfControls,
-  getTotalOfSurveillances,
-  type Mission
-} from '../../../../domain/entities/missions'
+import { getMissionStatus, type Mission } from '../../../../domain/entities/missions'
 import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
 import { missionTypesToString } from '../../../../utils/missionTypes'
+import { StatusActionTag } from '../../components/StatusActionTag'
 
-export function AttachedMissionCard({ attachedMission }: { attachedMission: Mission | undefined }) {
+export function AttachedMissionCard({
+  attachedEnvActionId,
+  attachedMission
+}: {
+  attachedEnvActionId: string | undefined
+  attachedMission: Mission | undefined
+}) {
   if (!attachedMission) {
     return null
   }
 
   const { controlUnits, endDateTimeUtc, missionTypes, startDateTimeUtc } = attachedMission || {}
-  const numberOfControls = getTotalOfControls(attachedMission) || 0
-  const numberOfSurveillance = getTotalOfSurveillances(attachedMission) || 0
 
   const firstControlUnit = controlUnits[0]
   const missionStatus = getMissionStatus(attachedMission)
@@ -59,17 +59,15 @@ export function AttachedMissionCard({ attachedMission }: { attachedMission: Miss
         </Title>
       </Header>
 
-      <Details>
-        <div>
-          {' '}
+      <Body>
+        <Details>
           Mission {missionTypesToString(missionTypes)} – {missionDurationText}
-        </div>
+          <MissionStatusLabel missionStatus={missionStatus} />
+        </Details>
         <div>
-          {numberOfControls} {pluralize('contrôle', numberOfControls)} et {numberOfSurveillance}{' '}
-          {pluralize('surveillance', numberOfSurveillance)}
+          <StatusActionTag attachedEnvActionId={attachedEnvActionId} />
         </div>
-      </Details>
-      <MissionStatusLabel missionStatus={missionStatus} />
+      </Body>
     </Wrapper>
   )
 }
@@ -98,14 +96,19 @@ const NoContact = styled.div`
   font-style: italic;
 `
 const Details = styled.div`
-  > div {
-    color: ${p => p.theme.color.slateGray};
-    white-space: nowrap;
-  }
+  color: ${p => p.theme.color.slateGray};
+  white-space: nowrap;
 `
 
 const Title = styled.div`
   white-space: nowrap;
   font: normal normal bold 13px/18px Marianne;
   color: ${p => p.theme.color.gunMetal};
+`
+
+const Body = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
 `

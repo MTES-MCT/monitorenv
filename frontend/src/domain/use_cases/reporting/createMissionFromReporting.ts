@@ -11,10 +11,9 @@ export const createMissionFromReporting = (values: Reporting | Partial<Reporting
   const {
     reportingFormVisibility: { context: reportingContext }
   } = getState().global
+
   const cleanValues = isNewReporting(values.id) ? { ...values, id: undefined } : values
-  const endpoint = isNewReporting(values.id)
-    ? reportingsAPI.endpoints.createReporting
-    : reportingsAPI.endpoints.updateReporting
+  const endpoint = reportingsAPI.endpoints.createReporting
 
   try {
     const response = await dispatch(endpoint.initiate(cleanValues))
