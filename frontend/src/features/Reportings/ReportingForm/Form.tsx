@@ -42,7 +42,12 @@ import {
 } from '../style'
 import { getReportingTitle } from '../utils'
 
-export function ReportingForm({ reducedReportingsOnContext, selectedReporting, setShouldValidateOnChange }) {
+export function ReportingForm({
+  reducedReportingsOnContext,
+  selectedReporting,
+  setIsAttachNewMission,
+  setShouldValidateOnChange
+}) {
   const dispatch = useAppDispatch()
   const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
 
@@ -212,7 +217,7 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
           />
           <span>Le signalement nécessite un contrôle</span>
         </StyledToggle>
-        {values.isControlRequired && <AttachMission />}
+        {values.isControlRequired && <AttachMission setIsAttachNewMission={setIsAttachNewMission} />}
 
         <Separator />
         <StyledFormikTextInput label="Saisi par" name="openBy" />

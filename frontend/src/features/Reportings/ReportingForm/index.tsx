@@ -8,6 +8,7 @@ import { ReportingForm } from './Form'
 import { ReportingSchema } from './Schema'
 import { useGetReportingQuery } from '../../../api/reportingsAPI'
 import { ReportingContext, VisibilityState } from '../../../domain/shared_slices/Global'
+import { createMissionFromReporting } from '../../../domain/use_cases/reporting/createMissionFromReporting'
 import { saveReporting } from '../../../domain/use_cases/reporting/saveReporting'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
@@ -24,6 +25,8 @@ export function ReportingFormWithContext({ context, totalReportings }) {
 
   const dispatch = useAppDispatch()
 
+  const [isAttachNewMission, setIsAttachNewMission] = useState(false)
+
   const isReportingNew = useMemo(() => isNewReporting(activeReportingId), [activeReportingId])
 
   const { data: reportingToEdit } = useGetReportingQuery(
@@ -32,7 +35,11 @@ export function ReportingFormWithContext({ context, totalReportings }) {
 
   const [shouldValidateOnChange, setShouldValidateOnChange] = useState(false)
 
-  const submitReportForm = values => {
+  const submitReportForm = async values => {
+    if (isAttachNewMission) {
+      await dispatch(createMissionFromReporting(values))
+      setIsAttachNewMission(false)
+    }
     dispatch(saveReporting(values, context))
   }
 
@@ -79,6 +86,7 @@ export function ReportingFormWithContext({ context, totalReportings }) {
                 <ReportingForm
                   reducedReportingsOnContext={totalReportings}
                   selectedReporting={selectedReporting}
+                  setIsAttachNewMission={setIsAttachNewMission}
                   setShouldValidateOnChange={setShouldValidateOnChange}
                 />
               </StyledForm>

@@ -80,7 +80,8 @@ export const actionFactory = ({
 
 export const missionFactory = (
   mission?: Mission | undefined,
-  id?: number | string | undefined
+  id?: number | string | undefined,
+  attachedReporting?: Reporting | undefined
 ): Mission | NewMission => {
   const startDate = new Date()
   startDate.setSeconds(0, 0)
@@ -98,6 +99,7 @@ export const missionFactory = (
     observationsCacem: '',
     observationsCnsp: '',
     openBy: '',
+    reportings: attachedReporting ? [attachedReporting] : [],
     startDateTimeUtc: startDate.toISOString(),
     ...mission
   }
@@ -110,18 +112,23 @@ export const missionFactory = (
   }
 
   const { envActions } = mission
-  const surveillances = envActions.filter(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
+  const surveillances = envActions?.filter(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
 
   const surveillanceWithSamePeriodIndex =
     surveillances?.length === 1
-      ? envActions.findIndex(
+      ? envActions?.findIndex(
           action =>
             action.actionType === ActionTypeEnum.SURVEILLANCE &&
             action.actionEndDateTimeUtc === mission?.endDateTimeUtc &&
             action.actionStartDateTimeUtc === mission?.startDateTimeUtc
         )
       : -1
-  if (surveillanceWithSamePeriodIndex !== -1 && envActions.length > 0) {
+  if (
+    surveillanceWithSamePeriodIndex &&
+    surveillanceWithSamePeriodIndex !== -1 &&
+    envActions &&
+    envActions?.length > 0
+  ) {
     const envActionsUpdated: EnvAction[] = [...envActions]
     const surveillance: EnvActionSurveillance = {
       ...(envActionsUpdated[surveillanceWithSamePeriodIndex] as EnvActionSurveillance),

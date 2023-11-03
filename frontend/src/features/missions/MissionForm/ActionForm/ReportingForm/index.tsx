@@ -82,7 +82,7 @@ export function ReportingForm({ reportingActionIndex }) {
           label="Description du signalement"
           name="description"
           plaintext
-          value={reporting.description || 'Aucune Description'}
+          value={reporting.description || 'Aucune description'}
         />
       </FirstPartContainer>
       <div>

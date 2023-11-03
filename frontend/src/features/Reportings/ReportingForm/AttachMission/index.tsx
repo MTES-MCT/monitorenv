@@ -6,14 +6,13 @@ import styled from 'styled-components'
 import { AttachedMissionCard } from './AttachedMissionCard'
 import { attachMissionToReportingSliceActions } from './slice'
 import { resetInteraction } from '../../../../domain/shared_slices/Draw'
-import { addMission } from '../../../../domain/use_cases/missions/addMission'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 import type { Reporting } from '../../../../domain/entities/reporting'
 
-export function AttachMission() {
-  const { setFieldValue, values } = useFormikContext<Reporting>()
+export function AttachMission({ setIsAttachNewMission }) {
+  const { handleSubmit, setFieldValue, values } = useFormikContext<Reporting>()
   const dispatch = useAppDispatch()
   const attachedMissionId = useAppSelector(state => state.attachReportingToMission.attachedMissionId)
 
@@ -26,8 +25,10 @@ export function AttachMission() {
   const unattachMission = () => {
     dispatch(attachMissionToReportingSliceActions.setAttachedMissionId(undefined))
   }
-  const createMission = () => {
-    dispatch(addMission())
+  const createMission = async () => {
+    await setFieldValue('attachedToMissionAtUtc', new Date().toISOString())
+    setIsAttachNewMission(true)
+    handleSubmit()
   }
 
   useEffect(() => {
