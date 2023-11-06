@@ -1,10 +1,11 @@
 import { Accent, Button } from '@mtes-mct/monitor-ui'
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { INITIAL_CONTROL_UNIT_CONTACT_FORM_VALUES } from './constants'
 import { Form } from './Form'
 import { Item } from './Item'
+import { sortControlUnitContactsByQualifiedName } from './utils'
 import {
   useCreateControlUnitContactMutation,
   useUpdateControlUnitContactMutation
@@ -26,11 +27,20 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
   const [editedControlUnitContactId, setEditedControlUnitContactId] = useState<number | undefined>(undefined)
   const [isNewControlUnitContactFormOpen, setIsNewControlUnitContactFormOpen] = useState(false)
 
-  const { controlUnitContacts } = controlUnit
-  const editedControlUnitContact = controlUnitContacts.find(({ id }) => id === editedControlUnitContactId) || {
-    ...INITIAL_CONTROL_UNIT_CONTACT_FORM_VALUES,
-    controlUnitId: controlUnit.id
-  }
+  const sortedControlUnitContacts = useMemo(
+    () => sortControlUnitContactsByQualifiedName(controlUnit.controlUnitContacts),
+    [controlUnit.controlUnitContacts]
+  )
+
+  const editedControlUnitContact = useMemo(
+    () =>
+      sortedControlUnitContacts.find(({ id }) => id === editedControlUnitContactId) || {
+        ...INITIAL_CONTROL_UNIT_CONTACT_FORM_VALUES,
+        controlUnitId: controlUnit.id
+      },
+    [controlUnit.id, editedControlUnitContactId, sortedControlUnitContacts]
+  )
+
   const isFormOpen = isNewControlUnitContactFormOpen || !!editedControlUnitContactId
 
   const closeForm = useCallback(() => {
@@ -66,7 +76,7 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
           onSubmit={onSubmit}
         />
 
-        {controlUnitContacts.map(controlUnitContact => (
+        {sortedControlUnitContacts.map(controlUnitContact => (
           <Item
             key={controlUnitContact.id}
             controlUnitContact={controlUnitContact}
