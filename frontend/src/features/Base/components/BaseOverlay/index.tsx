@@ -1,29 +1,28 @@
+import { useMemo } from 'react'
+
 import { BaseCard } from './BaseCard'
 import { OVERLAY_MARGINS } from './constants'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { findMapFeatureById } from '../../../../utils/findMapFeatureById'
 import { OverlayPositionOnCentroid } from '../../../map/overlays/OverlayPositionOnCentroid'
 
-import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 
 export function BaseOverlay({ currentFeatureOver: hoveredFeature, map }: BaseMapChildrenProps) {
   const base = useAppSelector(state => state.base)
 
-  const selectedFeature = base.selectedBaseFeatureId
-    ? map
-        ?.getLayers()
-        ?.getArray()
-        ?.find(
-          (l): l is VectorLayerWithName =>
-            Object.prototype.hasOwnProperty.call(l, 'name') && (l as VectorLayerWithName).name === Layers.BASES.code
-        )
-        ?.getSource()
-        ?.getFeatureById(base.selectedBaseFeatureId)
-    : undefined
+  const selectedFeature = useMemo(
+    () => findMapFeatureById(map, Layers.BASES.code, base.selectedBaseFeatureId),
+
+    // We ignore `map` dependency because it's an instance and it's not supposed to change.
+    // Moreover, it will be refactored into a non-React instance later on.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [base.selectedBaseFeatureId]
+  )
   const hoveredFeatureId = hoveredFeature?.getId()?.toString()
   const canDisplayHoveredFeature =
-    hoveredFeatureId?.startsWith(Layers.BASES.code) && hoveredFeatureId !== base.selectedBaseFeatureId
+    !!hoveredFeatureId?.startsWith(Layers.BASES.code) && hoveredFeatureId !== base.selectedBaseFeatureId
 
   return (
     <>

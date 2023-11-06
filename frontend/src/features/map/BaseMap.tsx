@@ -22,6 +22,7 @@ import type { MapClickEvent } from '../../types'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
+// TODO Are all these props really optional?
 export type BaseMapChildrenProps = Partial<{
   currentFeatureOver: Feature<Geometry>
   map: OpenLayerMap
