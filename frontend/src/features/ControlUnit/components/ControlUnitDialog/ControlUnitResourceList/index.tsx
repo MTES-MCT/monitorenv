@@ -1,6 +1,6 @@
 // import styled from 'styled-components'
 
-import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, THEME } from '@mtes-mct/monitor-ui'
 import { useCallback, useState } from 'react'
 import styled from 'styled-components'
 
@@ -8,10 +8,16 @@ import { INITIAL_CONTROL_UNIT_RESOURCE_FORM_VALUES } from './constants'
 import { Form } from './Form'
 import { Item } from './Item'
 import {
+  DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE,
+  controlUnitResourcesAPI,
   useCreateControlUnitResourceMutation,
   useUpdateControlUnitResourceMutation
 } from '../../../../../api/controlUnitResourcesAPI'
+import { ConfirmationModal } from '../../../../../components/ConfirmationModal'
+import { Dialog } from '../../../../../components/Dialog'
 import { ControlUnit } from '../../../../../domain/entities/controlUnit'
+import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
+import { FrontendError } from '../../../../../libs/FrontendError'
 import { isEmptyish } from '../../../../../utils/isEmptyish'
 import { isNotArchived } from '../../../../../utils/isNotArchived'
 import { Section } from '../shared/Section'
@@ -22,23 +28,77 @@ type ControlUnitResourceListProps = {
   controlUnit: ControlUnit.ControlUnit
 }
 export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceListProps) {
+  const dispatch = useAppDispatch()
   const [createControlUnitResource] = useCreateControlUnitResourceMutation()
   const [updateControlUnitResource] = useUpdateControlUnitResourceMutation()
 
   const [editedControlUnitResourceId, setEditedControlUnitResourceId] = useState<number | undefined>(undefined)
+  const [isArchivingConfirnationModalOpen, setIsArchivingConfirnationModalOpen] = useState(false)
+  const [isDeletionConfirnationModalOpen, setIsDeletionConfirnationModalOpen] = useState(false)
+  const [isImpossibleDeletionDialogOpen, setIsImpossibleDeletionDialogOpen] = useState(false)
   const [isNewControlUnitResourceFormOpen, setIsNewControlUnitResourceFormOpen] = useState(false)
 
-  const { controlUnitResources } = controlUnit
-  const activeControlUnitResources = controlUnitResources.filter(isNotArchived)
+  const activeControlUnitResources = controlUnit.controlUnitResources.filter(isNotArchived)
   const editedControlUnitResource = activeControlUnitResources.find(({ id }) => id === editedControlUnitResourceId) || {
     ...INITIAL_CONTROL_UNIT_RESOURCE_FORM_VALUES,
     controlUnitId: controlUnit.id
   }
 
+  const askForArchivingConfirmation = useCallback(async () => {
+    setIsArchivingConfirnationModalOpen(true)
+  }, [])
+
+  const askForDeletionConfirmation = useCallback(async () => {
+    if (!editedControlUnitResourceId) {
+      throw new FrontendError('`editedControlUnitResourceId` is undefined.')
+    }
+
+    const { data: canDeleteControlUnit } = await dispatch(
+      controlUnitResourcesAPI.endpoints.canDeleteControlUnitResource.initiate(editedControlUnitResourceId, {
+        forceRefetch: true
+      })
+    )
+    if (!canDeleteControlUnit) {
+      setIsImpossibleDeletionDialogOpen(true)
+
+      return
+    }
+
+    setIsDeletionConfirnationModalOpen(true)
+  }, [dispatch, editedControlUnitResourceId])
+
+  const closeDialogsAndModals = useCallback(() => {
+    setIsArchivingConfirnationModalOpen(false)
+    setIsDeletionConfirnationModalOpen(false)
+    setIsImpossibleDeletionDialogOpen(false)
+  }, [])
+
   const closeForm = useCallback(() => {
     setEditedControlUnitResourceId(undefined)
     setIsNewControlUnitResourceFormOpen(false)
   }, [])
+
+  const confirmArchiving = useCallback(async () => {
+    if (!editedControlUnitResourceId) {
+      throw new FrontendError('`editedControlUnitResourceId` is undefined.')
+    }
+
+    await dispatch(controlUnitResourcesAPI.endpoints.archiveControlUnitResource.initiate(editedControlUnitResourceId))
+
+    closeDialogsAndModals()
+    closeForm()
+  }, [closeDialogsAndModals, closeForm, dispatch, editedControlUnitResourceId])
+
+  const confirmDeletion = useCallback(async () => {
+    if (!editedControlUnitResourceId) {
+      throw new FrontendError('`editedControlUnitResourceId` is undefined.')
+    }
+
+    await dispatch(controlUnitResourcesAPI.endpoints.deleteControlUnitResource.initiate(editedControlUnitResourceId))
+
+    closeDialogsAndModals()
+    closeForm()
+  }, [closeDialogsAndModals, closeForm, dispatch, editedControlUnitResourceId])
 
   const createOrUpdateControlUnitResource = useCallback(
     async (controlUnitResourceFormValues: ControlUnitResourceFormValues) => {
@@ -82,7 +142,9 @@ export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceList
             <Form
               initialValues={editedControlUnitResource}
               marginTop={index > 0 ? 8 : undefined}
+              onArchive={askForArchivingConfirmation}
               onCancel={closeForm}
+              onDelete={askForDeletionConfirmation}
               onSubmit={createOrUpdateControlUnitResource}
             />
           ) : (
@@ -93,7 +155,6 @@ export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceList
         {isNewControlUnitResourceFormOpen ? (
           <Form
             initialValues={editedControlUnitResource}
-            isNew
             marginTop={16}
             onCancel={closeForm}
             onSubmit={createOrUpdateControlUnitResource}
@@ -106,6 +167,36 @@ export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceList
           </div>
         )}
       </StyledSectionBody>
+
+      {isArchivingConfirnationModalOpen && editedControlUnitResource && (
+        <ConfirmationModal
+          confirmationButtonLabel="Archiver"
+          message={`Êtes-vous sûr de vouloir archiver le moyen "${editedControlUnitResource.name}" ?`}
+          onCancel={closeDialogsAndModals}
+          onConfirm={confirmArchiving}
+          title="Archivage du moyen"
+        />
+      )}
+
+      {isDeletionConfirnationModalOpen && editedControlUnitResource && (
+        <ConfirmationModal
+          confirmationButtonLabel="Supprimer"
+          message={`Êtes-vous sûr de vouloir supprimer le moyen "${editedControlUnitResource.name}" ?`}
+          onCancel={closeDialogsAndModals}
+          onConfirm={confirmDeletion}
+          title="Suppression du moyen"
+        />
+      )}
+
+      {isImpossibleDeletionDialogOpen && (
+        <Dialog
+          color={THEME.color.maximumRed}
+          message={DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE}
+          onClose={closeDialogsAndModals}
+          title="Suppression impossible"
+          titleBackgroundColor={THEME.color.maximumRed}
+        />
+      )}
     </Section>
   )
 }

@@ -1,45 +1,22 @@
 import { Accent, Button, FormikTextInput, Icon, IconButton, THEME, useKey } from '@mtes-mct/monitor-ui'
 import { Formik } from 'formik'
-import { useCallback } from 'react'
 import styled from 'styled-components'
 
 import { CONTROL_UNIT_CONTACT_FORM_SCHEMA } from './constants'
 import { FormikNameSelect } from './FormikNameSelect'
-import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
-import { mainWindowActions } from '../../../../MainWindow/slice'
-import { MainWindowConfirmationModalActionType } from '../../../../MainWindow/types'
 
 import type { ControlUnitContactFormValues } from './types'
+import type { Promisable } from 'type-fest'
 
 export type FormProps = {
   initialValues: ControlUnitContactFormValues
-  isNew: boolean
-  onCancel: () => void
+  onCancel: () => Promisable<void>
+  onDelete?: () => Promisable<void>
   onSubmit: (controlUnitContactFormValues: ControlUnitContactFormValues) => void
 }
-export function Form({ initialValues, isNew, onCancel, onSubmit }: FormProps) {
-  const dispatch = useAppDispatch()
+export function Form({ initialValues, onCancel, onDelete, onSubmit }: FormProps) {
   const key = useKey([initialValues])
-
-  const askForDeletionConfirmation = useCallback(async () => {
-    if (!initialValues.id) {
-      return
-    }
-
-    dispatch(
-      mainWindowActions.openConfirmationModal({
-        actionType: MainWindowConfirmationModalActionType.DELETE_CONTROL_UNIT_CONTACT,
-        entityId: initialValues.id,
-        modalProps: {
-          color: THEME.color.maximumRed,
-          confirmationButtonLabel: 'Supprimer',
-          iconName: 'Delete',
-          message: `Êtes-vous sûr de vouloir supprimer ce contact ?`,
-          title: `Suppression du contact`
-        }
-      })
-    )
-  }, [initialValues.id, dispatch])
+  const isNew = !initialValues.id
 
   return (
     <Formik
@@ -65,12 +42,12 @@ export function Form({ initialValues, isNew, onCancel, onSubmit }: FormProps) {
                   Annuler
                 </Button>
               </div>
-              {!isNew && (
+              {onDelete && (
                 <IconButton
                   accent={Accent.SECONDARY}
                   color={THEME.color.maximumRed}
                   Icon={Icon.Delete}
-                  onClick={askForDeletionConfirmation}
+                  onClick={onDelete}
                   // TODO Add `borderColor` in Monitor UI.
                   style={{ borderColor: THEME.color.maximumRed }}
                   title="Supprimer ce contact"

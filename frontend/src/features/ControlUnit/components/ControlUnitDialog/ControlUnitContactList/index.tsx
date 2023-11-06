@@ -7,9 +7,13 @@ import { Form } from './Form'
 import { Item } from './Item'
 import { sortControlUnitContactsByQualifiedName } from './utils'
 import {
+  controlUnitContactsAPI,
   useCreateControlUnitContactMutation,
   useUpdateControlUnitContactMutation
 } from '../../../../../api/controlUnitContactsAPI'
+import { ConfirmationModal } from '../../../../../components/ConfirmationModal'
+import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
+import { FrontendError } from '../../../../../libs/FrontendError'
 import { Section } from '../shared/Section'
 import { TextareaForm } from '../shared/TextareaForm'
 
@@ -21,10 +25,12 @@ type ControlUnitContactListProps = {
   onSubmit: (nextControlUnit: ControlUnit.ControlUnit) => any
 }
 export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitContactListProps) {
+  const dispatch = useAppDispatch()
   const [createControlUnitContact] = useCreateControlUnitContactMutation()
   const [updateControlUnitContact] = useUpdateControlUnitContactMutation()
 
   const [editedControlUnitContactId, setEditedControlUnitContactId] = useState<number | undefined>(undefined)
+  const [isDeletionConfirnationModalOpen, setIsDeletionConfirnationModalOpen] = useState(false)
   const [isNewControlUnitContactFormOpen, setIsNewControlUnitContactFormOpen] = useState(false)
 
   const sortedControlUnitContacts = useMemo(
@@ -43,10 +49,29 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
 
   const isFormOpen = isNewControlUnitContactFormOpen || !!editedControlUnitContactId
 
+  const askForDeletionConfirmation = useCallback(async () => {
+    setIsDeletionConfirnationModalOpen(true)
+  }, [])
+
+  const closeDialogsAndModals = useCallback(() => {
+    setIsDeletionConfirnationModalOpen(false)
+  }, [])
+
   const closeForm = useCallback(() => {
     setEditedControlUnitContactId(undefined)
     setIsNewControlUnitContactFormOpen(false)
   }, [])
+
+  const confirmDeletion = useCallback(async () => {
+    if (!editedControlUnitContactId) {
+      throw new FrontendError('`editedControlUnitContactId` is undefined.')
+    }
+
+    await dispatch(controlUnitContactsAPI.endpoints.deleteControlUnitContact.initiate(editedControlUnitContactId))
+
+    closeDialogsAndModals()
+    closeForm()
+  }, [closeDialogsAndModals, closeForm, dispatch, editedControlUnitContactId])
 
   const createOrUpdateControlUnitContact = useCallback(
     async (controlUnitContactFormValues: ControlUnitContactFormValues) => {
@@ -87,8 +112,8 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
         {isFormOpen ? (
           <Form
             initialValues={editedControlUnitContact}
-            isNew={isNewControlUnitContactFormOpen}
             onCancel={closeForm}
+            onDelete={askForDeletionConfirmation}
             onSubmit={createOrUpdateControlUnitContact}
           />
         ) : (
@@ -99,6 +124,16 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
           </div>
         )}
       </StyledSectionBody>
+
+      {isDeletionConfirnationModalOpen && editedControlUnitContact && (
+        <ConfirmationModal
+          confirmationButtonLabel="Supprimer"
+          message={`Êtes-vous sûr de vouloir supprimer le contact "${editedControlUnitContact.name}" ?`}
+          onCancel={closeDialogsAndModals}
+          onConfirm={confirmDeletion}
+          title="Suppression du contact"
+        />
+      )}
     </Section>
   )
 }
