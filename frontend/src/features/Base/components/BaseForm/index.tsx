@@ -83,6 +83,7 @@ export function BaseForm() {
                 coordinatesFormat={CoordinatesFormat.DECIMAL_DEGREES}
                 label="Coordonnées"
                 name="coordinates"
+                style={{ marginTop: 16 }}
               />
 
               <ActionGroup>
