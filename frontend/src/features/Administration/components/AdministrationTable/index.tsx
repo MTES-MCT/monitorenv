@@ -13,6 +13,7 @@ import {
 } from '../../../../api/administrationsAPI'
 import { ConfirmationModal } from '../../../../components/ConfirmationModal'
 import { Dialog } from '../../../../components/Dialog'
+import { globalActions } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { NavButton } from '../../../../ui/NavButton'
@@ -83,6 +84,7 @@ export function AdministrationTable() {
   )
 
   const close = useCallback(() => {
+    setIsArchivingConfirnationModalOpen(false)
     setIsDeletionConfirnationModalOpen(false)
     setIsImpossibleArchivingDialogOpen(false)
     setIsImpossibleDeletionDialogOpen(false)
@@ -90,8 +92,14 @@ export function AdministrationTable() {
   }, [])
 
   const confirmArchiving = useCallback(
-    async (administrationId: number) => {
-      await dispatch(administrationsAPI.endpoints.archiveAdministration.initiate(administrationId))
+    async (administrationToArchive: Administration.Administration) => {
+      await dispatch(administrationsAPI.endpoints.archiveAdministration.initiate(administrationToArchive.id))
+      dispatch(
+        globalActions.setToast({
+          message: `Administration "${administrationToArchive.name}" archivée.`,
+          type: 'success'
+        })
+      )
 
       close()
     },
@@ -99,8 +107,14 @@ export function AdministrationTable() {
   )
 
   const confirmDeletion = useCallback(
-    async (administrationId: number) => {
-      await dispatch(administrationsAPI.endpoints.deleteAdministration.initiate(administrationId))
+    async (administrationToDelete: Administration.Administration) => {
+      await dispatch(administrationsAPI.endpoints.deleteAdministration.initiate(administrationToDelete.id))
+      dispatch(
+        globalActions.setToast({
+          message: `Administration "${administrationToDelete.name}" supprimée.`,
+          type: 'success'
+        })
+      )
 
       close()
     },
@@ -145,7 +159,7 @@ export function AdministrationTable() {
             `Elle n'apparaîtra plus dans MonitorFish et dans MonitorEnv, elle ne sera utilisée que pour les statistiques.`
           ].join(' ')}
           onCancel={close}
-          onConfirm={() => confirmArchiving(targetedAdministration.id)}
+          onConfirm={() => confirmArchiving(targetedAdministration)}
           title="Archivage de l'administration"
         />
       )}
@@ -155,7 +169,7 @@ export function AdministrationTable() {
           confirmationButtonLabel="Supprimer"
           message={`Êtes-vous sûr de vouloir supprimer l'administration "${targetedAdministration.name}" ?`}
           onCancel={close}
-          onConfirm={() => confirmDeletion(targetedAdministration.id)}
+          onConfirm={() => confirmDeletion(targetedAdministration)}
           title="Suppression de l'administration"
         />
       )}

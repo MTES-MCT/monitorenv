@@ -8,6 +8,7 @@ import { DELETE_BASE_ERROR_MESSAGE, basesAPI, useGetBasesQuery } from '../../../
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { ConfirmationModal } from '../../../../components/ConfirmationModal'
 import { Dialog } from '../../../../components/Dialog'
+import { globalActions } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { NavButton } from '../../../../ui/NavButton'
@@ -58,8 +59,14 @@ export function BaseTable() {
   }, [])
 
   const confirmDeletion = useCallback(
-    async (baseId: number) => {
-      await dispatch(basesAPI.endpoints.deleteBase.initiate(baseId))
+    async (baseToDelete: Base.Base) => {
+      await dispatch(basesAPI.endpoints.deleteBase.initiate(baseToDelete.id))
+      dispatch(
+        globalActions.setToast({
+          message: `Base "${baseToDelete.name}" supprimée.`,
+          type: 'success'
+        })
+      )
 
       close()
     },
@@ -85,7 +92,7 @@ export function BaseTable() {
           confirmationButtonLabel="Supprimer"
           message={`Êtes-vous sûr de vouloir supprimer la base "${targetedBase.name}" ?`}
           onCancel={close}
-          onConfirm={() => confirmDeletion(targetedBase.id)}
+          onConfirm={() => confirmDeletion(targetedBase)}
           title="Suppression de la base"
         />
       )}

@@ -7,6 +7,7 @@ import styled from 'styled-components'
 
 import { ADMINISTRATION_FORM_SCHEMA, CONTROL_UNIT_TABLE_COLUMNS, INITIAL_ADMINISTRATION_FORM_VALUES } from './constants'
 import { administrationsAPI, useGetAdministrationQuery } from '../../../../api/administrationsAPI'
+import { globalActions } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../../libs/FrontendError'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../../BackOffice/components/BackofficeMenu/constants'
@@ -38,11 +39,16 @@ export function AdministrationForm() {
 
   const submit = useCallback(
     async (administrationFormValues: AdministrationFormValues) => {
-      // Type-enforced by `ADMINISTRATION_FORM_SCHEMA`
       const administrationData = administrationFormValues as Administration.NewAdministrationData
 
       if (isNew) {
         await dispatch(administrationsAPI.endpoints.createAdministration.initiate(administrationData))
+        dispatch(
+          globalActions.setToast({
+            message: `Administration "${administrationData.name}" créée.`,
+            type: 'success'
+          })
+        )
 
         goBackToList()
 
@@ -53,6 +59,12 @@ export function AdministrationForm() {
         administrationsAPI.endpoints.updateAdministration.initiate({
           id: Number(administrationId),
           ...administrationData
+        })
+      )
+      dispatch(
+        globalActions.setToast({
+          message: `Administration "${administrationData.name}" mise à jour.`,
+          type: 'success'
         })
       )
 

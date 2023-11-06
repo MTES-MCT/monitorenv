@@ -24,6 +24,7 @@ import { useGetAdministrationsQuery } from '../../../../api/administrationsAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { controlUnitsAPI, useGetControlUnitQuery } from '../../../../api/controlUnitsAPI'
 import { useGetDepartmentAreasQuery } from '../../../../api/departmentAreasAPI'
+import { globalActions } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../../libs/FrontendError'
 import { isNotArchived } from '../../../../utils/isNotArchived'
@@ -81,6 +82,12 @@ export function ControlUnitForm() {
 
       if (isNew) {
         await dispatch(controlUnitsAPI.endpoints.createControlUnit.initiate(controlUnitData))
+        dispatch(
+          globalActions.setToast({
+            message: `Unité "${controlUnitData.name}" créée.`,
+            type: 'success'
+          })
+        )
 
         goBackToList()
 
@@ -91,6 +98,12 @@ export function ControlUnitForm() {
         controlUnitsAPI.endpoints.updateControlUnit.initiate({
           id: Number(controlUnitId),
           ...controlUnitData
+        })
+      )
+      dispatch(
+        globalActions.setToast({
+          message: `Unité "${controlUnitData.name}" mise à jour.`,
+          type: 'success'
         })
       )
 

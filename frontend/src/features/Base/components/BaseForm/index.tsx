@@ -15,6 +15,7 @@ import styled from 'styled-components'
 import { INITIAL_BASE_FORM_VALUES, BASE_FORM_SCHEMA } from './constants'
 import { getBaseFormValuesFromBase, getBaseDataFromBaseFormValues, isBase } from './utils'
 import { basesAPI, useGetBaseQuery } from '../../../../api/basesAPI'
+import { globalActions } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../../libs/FrontendError'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../../BackOffice/components/BackofficeMenu/constants'
@@ -52,6 +53,12 @@ export function BaseForm() {
 
       if (isNew) {
         await dispatch(basesAPI.endpoints.createBase.initiate(baseData))
+        dispatch(
+          globalActions.setToast({
+            message: `Base "${baseData.name}" créée.`,
+            type: 'success'
+          })
+        )
 
         goBackToList()
 
@@ -63,6 +70,12 @@ export function BaseForm() {
       }
 
       await dispatch(basesAPI.endpoints.updateBase.initiate(baseData))
+      dispatch(
+        globalActions.setToast({
+          message: `Base "${baseData.name}" mise à jour.`,
+          type: 'success'
+        })
+      )
 
       goBackToList()
     },
