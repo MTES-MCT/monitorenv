@@ -32,11 +32,12 @@ import type { ControlUnitResourceFormValues } from './types'
 
 export type FormProps = {
   initialValues: ControlUnitResourceFormValues
-  isNew: boolean
+  isNew?: boolean
+  marginTop?: number
   onCancel: () => void
   onSubmit: (controlUnitResourceFormValues: ControlUnitResourceFormValues) => void
 }
-export function Form({ initialValues, isNew, onCancel, onSubmit }: FormProps) {
+export function Form({ initialValues, isNew = false, marginTop, onCancel, onSubmit }: FormProps) {
   const [isArchivingConfirnationModalOpen, setIsArchivingConfirnationModalOpen] = useState(false)
   const [isImpossibleDeletionDialogOpen, setIsImpossibleDeletionDialogOpen] = useState(false)
 
@@ -110,7 +111,7 @@ export function Form({ initialValues, isNew, onCancel, onSubmit }: FormProps) {
     >
       {({ handleSubmit }) => (
         <>
-          <Title>{isNew ? 'Ajouter un moyen' : 'Éditer un moyen'}</Title>
+          <Title style={{ marginTop }}>{isNew ? 'Ajouter un moyen' : 'Éditer un moyen'}</Title>
           <StyledForm onSubmit={handleSubmit}>
             <FormikSelect isLight label="Type de moyen" name="type" options={CONTROL_UNIT_RESOURCE_TYPES_AS_OPTIONS} />
             <FormikTextInput isLight label="Nom du moyen" name="name" />
@@ -130,6 +131,7 @@ export function Form({ initialValues, isNew, onCancel, onSubmit }: FormProps) {
                     accent={Accent.SECONDARY}
                     Icon={Icon.Archive}
                     onClick={askForArchivingConfirmation}
+                    style={{ padding: '0 4px' }}
                     title="Archiver ce moyen"
                   />
                   <IconButton
@@ -138,7 +140,7 @@ export function Form({ initialValues, isNew, onCancel, onSubmit }: FormProps) {
                     Icon={Icon.Delete}
                     onClick={askForDeletionConfirmation}
                     // TODO Add `borderColor` in Monitor UI.
-                    style={{ borderColor: THEME.color.maximumRed }}
+                    style={{ borderColor: THEME.color.maximumRed, padding: '0 4px' }}
                     title="Supprimer ce moyen"
                   />
                 </>
@@ -173,7 +175,7 @@ export function Form({ initialValues, isNew, onCancel, onSubmit }: FormProps) {
 
 const Title = styled.p`
   background-color: ${p => p.theme.color.gainsboro};
-  margin: 16px 0 2px;
+  margin: 0 0 2px;
   padding: 8px 16px;
   line-height: 1.3846;
 `

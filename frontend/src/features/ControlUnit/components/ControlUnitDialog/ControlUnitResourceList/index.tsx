@@ -34,7 +34,6 @@ export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceList
     ...INITIAL_CONTROL_UNIT_RESOURCE_FORM_VALUES,
     controlUnitId: controlUnit.id
   }
-  const isFormOpen = isNewControlUnitResourceFormOpen || !!editedControlUnitResourceId
 
   const closeForm = useCallback(() => {
     setEditedControlUnitResourceId(undefined)
@@ -64,32 +63,44 @@ export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceList
     [closeForm, createControlUnitResource, isNewControlUnitResourceFormOpen, updateControlUnitResource]
   )
 
-  const openForm = useCallback(() => {
+  const openCreationForm = useCallback(() => {
+    setEditedControlUnitResourceId(undefined)
     setIsNewControlUnitResourceFormOpen(true)
+  }, [])
+
+  const openEditionForm = useCallback((nextEditedControlUnitResourceId: number) => {
+    setEditedControlUnitResourceId(nextEditedControlUnitResourceId)
+    setIsNewControlUnitResourceFormOpen(false)
   }, [])
 
   return (
     <Section>
       <Section.Title>Moyens</Section.Title>
       <StyledSectionBody $isEmpty={!activeControlUnitResources.length}>
-        {activeControlUnitResources.map(controlUnitResource => (
-          <Item
-            key={controlUnitResource.id}
-            controlUnitResource={controlUnitResource}
-            onEdit={setEditedControlUnitResourceId}
-          />
-        ))}
+        {activeControlUnitResources.map((controlUnitResource, index) =>
+          controlUnitResource.id === editedControlUnitResourceId ? (
+            <Form
+              initialValues={editedControlUnitResource}
+              marginTop={index > 0 ? 8 : undefined}
+              onCancel={closeForm}
+              onSubmit={createOrUpdateControlUnitResource}
+            />
+          ) : (
+            <Item key={controlUnitResource.id} controlUnitResource={controlUnitResource} onEdit={openEditionForm} />
+          )
+        )}
 
-        {isFormOpen ? (
+        {isNewControlUnitResourceFormOpen ? (
           <Form
             initialValues={editedControlUnitResource}
-            isNew={isNewControlUnitResourceFormOpen}
+            isNew
+            marginTop={16}
             onCancel={closeForm}
             onSubmit={createOrUpdateControlUnitResource}
           />
         ) : (
           <div>
-            <Button accent={Accent.SECONDARY} Icon={Icon.Plus} onClick={openForm}>
+            <Button accent={Accent.SECONDARY} Icon={Icon.Plus} onClick={openCreationForm}>
               Ajouter un moyen
             </Button>
           </div>
