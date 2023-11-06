@@ -65,7 +65,7 @@ export function BaseCard({ feature, selected = false }: { feature: Feature; sele
 
   return (
     <OverlayCard
-      data-cy="base-overlay"
+      data-cy="BaseOverlay-card"
       isCloseButtonHidden={!selected}
       onClose={close}
       title={featureProperties.base.name}

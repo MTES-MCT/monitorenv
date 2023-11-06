@@ -9,9 +9,9 @@ export type DialogProps = HtmlHTMLAttributes<HTMLDivElement> & {
   onClose: () => Promisable<void>
   title: string
 }
-export function OverlayCard({ children, isCloseButtonHidden = false, onClose, title }: DialogProps) {
+export function OverlayCard({ children, isCloseButtonHidden = false, onClose, title, ...props }: DialogProps) {
   return (
-    <StyledMapMenuDialogContainer>
+    <StyledMapMenuDialogContainer {...props}>
       <MapMenuDialog.Header>
         <StyledMapMenuDialogTitle>{title}</StyledMapMenuDialogTitle>
         <MapMenuDialog.CloseButton

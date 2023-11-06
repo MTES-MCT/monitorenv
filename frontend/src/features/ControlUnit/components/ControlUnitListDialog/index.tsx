@@ -54,6 +54,7 @@ export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
           accent={Accent.SECONDARY}
           Icon={global.displayBaseLayer ? Icon.Display : Icon.Hide}
           onClick={toggleBaseLayer}
+          title={global.displayBaseLayer ? 'Masquer les bases' : 'Afficher les bases'}
         />
       </MapMenuDialog.Header>
       <MapMenuDialog.Body>
