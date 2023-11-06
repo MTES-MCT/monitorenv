@@ -40,16 +40,12 @@ context('Missions', () => {
 
     cy.log('Units should be filtered')
     cy.get('*[data-cy="edit-mission-38"]').should('exist')
-    cy.get('*[data-cy="select-units-filter"]').click()
-    cy.get('div[role="option"]').find('label').contains('PAM Themis').click({ force: true })
+    cy.fill('Unité', ['PAM Themis'])
     cy.get('*[data-cy="edit-mission-48"]').should('exist')
     cy.get('*[data-cy="edit-mission-38"]').should('not.exist')
 
     cy.log('Units filter should be clear')
-    cy.get('*[data-cy="Missions-numberOfDisplayedMissions"]').click('topLeft')
-    cy.get('*[data-cy="select-units-filter"]').get('[title="Clear"]').click({
-      force: true
-    })
+    cy.fill('Unité', undefined)
     cy.get('*[data-cy="edit-mission-38"]').should('exist')
   })
 
@@ -57,8 +53,7 @@ context('Missions', () => {
     cy.visit(`/side_window`).wait(1000)
 
     cy.log('Should filter by theme')
-    cy.get('*[data-cy="select-theme-filter"]').click()
-    cy.get('div[role="option"]').find('label').contains('Police des épaves').click({ force: true })
+    cy.fill('Thématique', ['Police des épaves'])
     cy.get('*[data-cy="cell-envactions-themes"]')
       .eq(0)
       .contains(

@@ -54,6 +54,8 @@ context('Side Window > Mission List > Filter Bar', () => {
 
       cy.wrap(row).should('contain', 'CACEM')
     })
+
+    cy.fill('Administration', undefined)
   })
 
   it('Should filter missions by administrations', () => {
@@ -67,6 +69,7 @@ context('Side Window > Mission List > Filter Bar', () => {
 
       cy.wrap(row).should('contain', 'DDTM')
     })
+    cy.fill('Administration', undefined)
   })
 
   it('Should filter missions by units', () => {
@@ -80,6 +83,8 @@ context('Side Window > Mission List > Filter Bar', () => {
 
       cy.wrap(row).should('contain', 'BSN Ste Maxime')
     })
+
+    cy.fill('Unité', undefined)
   })
 
   it('Should filter missions by types', () => {
@@ -93,6 +98,8 @@ context('Side Window > Mission List > Filter Bar', () => {
 
       cy.wrap(row).should('contain', 'Mer')
     })
+
+    cy.fill('Type de mission', undefined)
   })
 
   it('Should filter missions by sea fronts', () => {
@@ -106,6 +113,8 @@ context('Side Window > Mission List > Filter Bar', () => {
 
       cy.wrap(row).should('contain', 'MED')
     })
+
+    cy.fill('Facade', undefined)
   })
 
   it('Should filter missions by statuses', () => {
@@ -119,6 +128,8 @@ context('Side Window > Mission List > Filter Bar', () => {
 
       cy.wrap(row).should('contain', 'En cours')
     })
+
+    cy.fill('Statut', undefined)
   })
 
   it('Should filter missions by themes', () => {
@@ -132,5 +143,7 @@ context('Side Window > Mission List > Filter Bar', () => {
 
       cy.wrap(row).should('contain', 'Police des activités de cultures marines')
     })
+
+    cy.fill('Thématique', undefined)
   })
 })

@@ -82,12 +82,12 @@ const missionFiltersSlice = createSlice({
         hasFilters:
           (action.payload.value && action.payload.value.length > 0) ||
           state.selectedPeriod !== DATE_RANGE_LABEL.WEEK.value ||
-          state.selectedAdministrationNames.length > 0 ||
-          state.selectedControlUnitIds.length > 0 ||
-          state.selectedMissionTypes.length > 0 ||
-          state.selectedSeaFronts.length > 0 ||
-          state.selectedStatuses.length > 0 ||
-          state.selectedThemes.length > 0
+          state.selectedAdministrationNames?.length > 0 ||
+          state.selectedControlUnitIds?.length > 0 ||
+          state.selectedMissionTypes?.length > 0 ||
+          state.selectedSeaFronts?.length > 0 ||
+          state.selectedStatuses?.length > 0 ||
+          state.selectedThemes?.length > 0
       }
     }
   }

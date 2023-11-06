@@ -43,7 +43,7 @@ export function FilterTags() {
 
   return (
     <StyledContainer>
-      {selectedAdministrationNames.length > 0 &&
+      {selectedAdministrationNames?.length > 0 &&
         selectedAdministrationNames.map(admin => (
           <SingleTag
             key={admin}
@@ -52,7 +52,7 @@ export function FilterTags() {
             {String(`Admin. ${admin}`)}
           </SingleTag>
         ))}
-      {selectedControlUnitIds.length > 0 &&
+      {selectedControlUnitIds?.length > 0 &&
         selectedControlUnitIds.map(unit => (
           <SingleTag
             key={unit}
@@ -61,7 +61,7 @@ export function FilterTags() {
             {String(`Unité ${controlUnits.currentData?.find(controlUnit => controlUnit.id === unit)?.name || unit}`)}
           </SingleTag>
         ))}
-      {selectedMissionTypes.length > 0 &&
+      {selectedMissionTypes?.length > 0 &&
         selectedMissionTypes.map(type => (
           <SingleTag
             key={type}
@@ -70,7 +70,7 @@ export function FilterTags() {
             {String(`Type ${missionTypeEnum[type].libelle}`)}
           </SingleTag>
         ))}
-      {selectedSeaFronts.length > 0 &&
+      {selectedSeaFronts?.length > 0 &&
         selectedSeaFronts.map(seaFront => (
           <SingleTag
             key={seaFront}
@@ -79,7 +79,7 @@ export function FilterTags() {
             {String(`Facade ${seaFront}`)}
           </SingleTag>
         ))}
-      {selectedStatuses.length > 0 &&
+      {selectedStatuses?.length > 0 &&
         selectedStatuses.map(status => (
           <SingleTag
             key={status}
@@ -88,7 +88,7 @@ export function FilterTags() {
             {String(`Mission ${missionStatusLabels[status].libelle.toLowerCase()}`)}
           </SingleTag>
         ))}
-      {selectedThemes.length > 0 &&
+      {selectedThemes?.length > 0 &&
         selectedThemes.map(theme => (
           <SingleTag key={theme} onDelete={() => onDeleteTag(theme, MissionFiltersEnum.THEME_FILTER, selectedThemes)}>
             {String(`Thème ${theme}`)}
