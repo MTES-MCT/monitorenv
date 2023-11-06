@@ -1,5 +1,13 @@
-import { CheckPicker, DateRangePicker, useNewWindow, Checkbox, Icon } from '@mtes-mct/monitor-ui'
-import { forwardRef } from 'react'
+import {
+  CheckPicker,
+  DateRangePicker,
+  useNewWindow,
+  Checkbox,
+  Icon,
+  CustomSearch,
+  type Option
+} from '@mtes-mct/monitor-ui'
+import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { FilterTags } from './FilterTags'
@@ -53,6 +61,32 @@ export function TableReportingsFiltersWithRef(
     typeOptions
   } = optionsList
 
+  const sourceCustomSearch = useMemo(
+    () =>
+      new CustomSearch(sourceOptions as Option[], ['label'], {
+        cacheKey: 'REPORTINGS_LIST',
+        withCacheInvalidation: true
+      }),
+    [sourceOptions]
+  )
+  const themeCustomSearch = useMemo(
+    () =>
+      new CustomSearch(themesListAsOptions as Option[], ['label'], {
+        cacheKey: 'REPORTINGS_LIST',
+        withCacheInvalidation: true
+      }),
+    [themesListAsOptions]
+  )
+
+  const subThemeCustomSearch = useMemo(
+    () =>
+      new CustomSearch(subThemesListAsOptions as Option[], ['label'], {
+        cacheKey: 'REPORTINGS_LIST',
+        withCacheInvalidation: true
+      }),
+    [subThemesListAsOptions]
+  )
+
   return (
     <>
       <FilterWrapper ref={ref}>
@@ -96,22 +130,25 @@ export function TableReportingsFiltersWithRef(
             options={sourceTypeOptions}
             placeholder="Type de source"
             renderValue={() => sourceTypeFilter && <OptionValue>{`Type (${sourceTypeFilter.length})`}</OptionValue>}
-            searchable={false}
             style={tagPickerStyle}
             value={sourceTypeFilter}
           />
 
           <CheckPicker
+            key={sourceOptions.length}
+            customSearch={sourceCustomSearch}
             data-cy="select-source-filter"
             isLabelHidden
             label="Source"
+            menuStyle={{ maxWidth: '200%' }}
             name="source"
             onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SOURCE_FILTER)}
             options={sourceOptions}
+            optionValueKey={'label' as any}
             placeholder="Source"
             renderValue={() => sourceFilter && <OptionValue>{`Source (${sourceFilter.length})`}</OptionValue>}
             style={tagPickerStyle}
-            value={sourceFilter}
+            value={sourceFilter as any}
           />
 
           <StyledSelect
@@ -127,8 +164,11 @@ export function TableReportingsFiltersWithRef(
             value={typeFilter}
           />
           <CheckPicker
+            key={themesListAsOptions.length}
+            customSearch={themeCustomSearch}
             isLabelHidden
             label="Thématiques"
+            menuStyle={{ maxWidth: '200%' }}
             name="themes"
             onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.THEME_FILTER)}
             options={themesListAsOptions}
@@ -138,13 +178,17 @@ export function TableReportingsFiltersWithRef(
             value={themeFilter}
           />
           <CheckPicker
+            key={subThemesListAsOptions.length}
+            customSearch={subThemeCustomSearch}
             isLabelHidden
             label="Sous-thématiques"
+            menuStyle={{ maxWidth: '200%' }}
             name="subThemes"
             onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SUB_THEMES_FILTER)}
             options={subThemesListAsOptions}
             placeholder="Sous-thématiques"
             renderValue={() => subThemesFilter && <OptionValue>{`Sous-thème (${subThemesFilter.length})`}</OptionValue>}
+            searchable
             style={{ width: 311 }}
             value={subThemesFilter}
           />
@@ -156,7 +200,6 @@ export function TableReportingsFiltersWithRef(
             options={seaFrontsOptions}
             placeholder="Facade"
             renderValue={() => seaFrontFilter && <OptionValue>{`Facade (${seaFrontFilter.length})`}</OptionValue>}
-            searchable={false}
             size="sm"
             style={tagPickerStyle}
             value={seaFrontFilter}

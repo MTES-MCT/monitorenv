@@ -17,10 +17,15 @@ export function FilterTags() {
     dispatch(reportingsFiltersActions.updateFilters({ key: filterKey, value: updatedFilter }))
   }
   const hasNoFilterTags =
+    sourceTypeFilter &&
     sourceTypeFilter.length === 0 &&
+    sourceFilter &&
     sourceFilter.length === 0 &&
-    themeFilter.length === 0 &&
-    subThemesFilter.length === 0 &&
+    themeFilter &&
+    themeFilter?.length === 0 &&
+    subThemesFilter &&
+    subThemesFilter?.length === 0 &&
+    seaFrontFilter &&
     seaFrontFilter.length === 0
 
   if (hasNoFilterTags) {
@@ -28,8 +33,9 @@ export function FilterTags() {
   }
 
   return (
-    <StyledContainer>
-      {sourceTypeFilter.length > 0 &&
+    <StyledContainer data-cy="reportings-filter-tags">
+      {sourceTypeFilter &&
+        sourceTypeFilter.length > 0 &&
         sourceTypeFilter.map(sourceType => (
           <SingleTag
             key={sourceType}
@@ -39,7 +45,8 @@ export function FilterTags() {
             {String(`Type ${ReportingSourceLabels[sourceType]}`)}
           </SingleTag>
         ))}
-      {sourceFilter.length > 0 &&
+      {sourceFilter &&
+        sourceFilter.length > 0 &&
         sourceFilter.map(source => (
           <SingleTag
             key={`${source.id}-${source.label}`}
@@ -49,7 +56,8 @@ export function FilterTags() {
             {String(`Source ${source.label}`)}
           </SingleTag>
         ))}
-      {themeFilter.length > 0 &&
+      {themeFilter &&
+        themeFilter.length > 0 &&
         themeFilter.map(theme => (
           <SingleTag
             key={theme}
@@ -59,7 +67,8 @@ export function FilterTags() {
             {String(`Thème ${theme}`)}
           </SingleTag>
         ))}
-      {subThemesFilter.length > 0 &&
+      {subThemesFilter &&
+        subThemesFilter?.length > 0 &&
         subThemesFilter.map(subTheme => (
           <SingleTag
             key={subTheme}
@@ -69,7 +78,8 @@ export function FilterTags() {
             {String(`Sous-thème ${subTheme}`)}
           </SingleTag>
         ))}
-      {seaFrontFilter.length > 0 &&
+      {seaFrontFilter &&
+        seaFrontFilter.length > 0 &&
         seaFrontFilter.map(seaFront => (
           <SingleTag
             key={seaFront}

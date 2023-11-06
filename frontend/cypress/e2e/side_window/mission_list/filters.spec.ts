@@ -57,9 +57,7 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   it('Should filter missions by administrations', () => {
-    cy.getDataCy('select-administration-filter').click().wait(100)
-    cy.get('.rs-picker-search-bar-input').type('DDTM').wait(100)
-    cy.get('[data-key="DDTM"]').click().wait(100).clickOutside()
+    cy.fill('Administration', ['DDTM'])
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
     cy.get('.Table-SimpleTable tr').each((row, index) => {
@@ -72,9 +70,7 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   it('Should filter missions by units', () => {
-    cy.getDataCy('select-units-filter').click().wait(100)
-    cy.get('.rs-picker-search-bar-input').type('BSN').wait(100)
-    cy.get('[data-key="10015"]').click().wait(100).clickOutside()
+    cy.fill('Unité', ['BSN'])
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
     cy.get('.Table-SimpleTable tr').each((row, index) => {
@@ -87,8 +83,7 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   it('Should filter missions by types', () => {
-    cy.getDataCy('select-types-filter').click().wait(100)
-    cy.get('[data-key="SEA"]').click().wait(100).clickOutside()
+    cy.fill('Type de mission', ['Mer'])
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
     cy.get('.Table-SimpleTable tr').each((row, index) => {
@@ -101,8 +96,7 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   it('Should filter missions by sea fronts', () => {
-    cy.getDataCy('select-seaFronts-filter').click().wait(100)
-    cy.get('[data-key="MED"]').click().wait(100).clickOutside()
+    cy.fill('Facade', ['MED'])
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
     cy.get('.Table-SimpleTable tr').each((row, index) => {
@@ -115,8 +109,7 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   it('Should filter missions by statuses', () => {
-    cy.getDataCy('select-statuses-filter').click().wait(100)
-    cy.get('[data-key="PENDING"]').click().wait(100).clickOutside()
+    cy.fill('Statut', ['En cours'])
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
     cy.get('.Table-SimpleTable tr').each((row, index) => {
@@ -129,9 +122,7 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   it('Should filter missions by themes', () => {
-    cy.getDataCy('select-theme-filter').click().wait(100)
-    cy.get('.rs-picker-search-bar-input').type('Police').wait(100)
-    cy.get('[data-key="Police des activités de cultures marines"]').click().wait(100).clickOutside()
+    cy.fill('Thématique', ['Police des activités de cultures marines'])
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
     cy.get('.Table-SimpleTable tr').each((row, index) => {

@@ -48,7 +48,7 @@ export const missionTypeEnum = {
 export enum MissionTypeLabel {
   AIR = 'Air',
   LAND = 'Terre',
-  SEA = 'Merre'
+  SEA = 'Mer'
 }
 
 export enum InfractionTypeEnum {

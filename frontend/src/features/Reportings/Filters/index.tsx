@@ -80,10 +80,10 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
   )
 
   const sourceOptions = useMemo(() => {
-    if (sourceTypeFilter.length === 1 && sourceTypeFilter[0] === ReportingSourceEnum.SEMAPHORE) {
+    if (sourceTypeFilter && sourceTypeFilter.length === 1 && sourceTypeFilter[0] === ReportingSourceEnum.SEMAPHORE) {
       return semaphoresAsOptions
     }
-    if (sourceTypeFilter.length === 1 && sourceTypeFilter[0] === ReportingSourceEnum.CONTROL_UNIT) {
+    if (sourceTypeFilter && sourceTypeFilter.length === 1 && sourceTypeFilter[0] === ReportingSourceEnum.CONTROL_UNIT) {
       return unitListAsOptions
     }
 

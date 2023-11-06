@@ -62,6 +62,8 @@ export function MissionsTableFilters() {
 
   const themesAsOptions = useMemo(() => getThemesAsListOptions(controlThemes), [controlThemes])
 
+  const themeCustomSearch = useMemo(() => new CustomSearch(themesAsOptions, ['label']), [themesAsOptions])
+
   const controlUnitsAsOptions = useMemo(() => {
     const activeControlUnits = (legacyControlUnits || []).filter(isNotArchived)
     const selectableControlUnits = activeControlUnits.filter(activeControlUnit =>
@@ -204,6 +206,7 @@ export function MissionsTableFilters() {
               <OptionValue>{`Administration (${selectedAdministrationNames.length})`}</OptionValue>
             )
           }
+          searchable
           style={tagPickerStyle}
           value={selectedAdministrationNames}
         />
@@ -220,7 +223,6 @@ export function MissionsTableFilters() {
           renderValue={() =>
             selectedControlUnitIds && <OptionValue>{`Unité (${selectedControlUnitIds.length})`}</OptionValue>
           }
-          searchable
           size="sm"
           style={tagPickerStyle}
           value={selectedControlUnitIds as any}
@@ -236,7 +238,6 @@ export function MissionsTableFilters() {
           renderValue={() =>
             selectedMissionTypes && <OptionValue>{`Type (${selectedMissionTypes.length})`}</OptionValue>
           }
-          searchable={false}
           size="sm"
           style={tagPickerStyle}
           value={selectedMissionTypes}
@@ -245,12 +246,12 @@ export function MissionsTableFilters() {
           data-cy="select-seaFronts-filter"
           isLabelHidden
           label="Facade"
+          menuStyle={{ maxWidth: '150%' }}
           name="seaFront"
           onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.SEA_FRONT_FILTER)}
           options={seaFrontsAsOptions}
           placeholder="Facade"
           renderValue={() => selectedSeaFronts && <OptionValue>{`Facade (${selectedSeaFronts.length})`}</OptionValue>}
-          searchable={false}
           size="sm"
           style={tagPickerStyle}
           value={selectedSeaFronts}
@@ -264,15 +265,16 @@ export function MissionsTableFilters() {
           options={missionStatusesAsOptions}
           placeholder="Statut"
           renderValue={() => selectedStatuses && <OptionValue>{`Statut (${selectedStatuses.length})`}</OptionValue>}
-          searchable={false}
           size="sm"
           style={tagPickerStyle}
           value={selectedStatuses}
         />
         <CheckPicker
+          customSearch={themeCustomSearch}
           data-cy="select-theme-filter"
           isLabelHidden
           label="Thématique"
+          menuStyle={{ maxWidth: '200%' }}
           name="theme"
           onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.THEME_FILTER)}
           options={themesAsOptions}

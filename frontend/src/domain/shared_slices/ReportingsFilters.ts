@@ -32,13 +32,13 @@ type ReportingsFiltersSliceType = {
   hasFilters: boolean
   periodFilter: string
   seaFrontFilter: string[]
-  sourceFilter: SourceFilterProps[]
-  sourceTypeFilter: string[]
+  sourceFilter: SourceFilterProps[] | undefined
+  sourceTypeFilter: string[] | undefined
   startedAfter: string
   startedBefore?: string
   statusFilter: string[]
-  subThemesFilter: string[]
-  themeFilter: string[]
+  subThemesFilter: string[] | undefined
+  themeFilter: string[] | undefined
   typeFilter?: string | undefined
 }
 
@@ -47,13 +47,13 @@ const initialState: ReportingsFiltersSliceType = {
   hasFilters: false,
   periodFilter: ReportingDateRangeEnum.DAY,
   seaFrontFilter: [],
-  sourceFilter: [],
-  sourceTypeFilter: [],
+  sourceFilter: undefined,
+  sourceTypeFilter: undefined,
   startedAfter: LAST_24_HOURS,
   startedBefore: undefined,
   statusFilter: [StatusFilterEnum.IN_PROGRESS],
-  subThemesFilter: [],
-  themeFilter: [],
+  subThemesFilter: undefined,
+  themeFilter: undefined,
   typeFilter: undefined
 }
 

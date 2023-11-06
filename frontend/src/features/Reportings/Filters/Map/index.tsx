@@ -23,13 +23,13 @@ export function MapReportingsFiltersWithRef(
   const dispatch = useAppDispatch()
   const {
     periodFilter,
-    sourceTypeFilter = [],
+    sourceTypeFilter,
     startedAfter,
     startedBefore,
-    statusFilter = [],
-    subThemesFilter = [],
-    themeFilter = [],
-    typeFilter = []
+    statusFilter,
+    subThemesFilter,
+    themeFilter,
+    typeFilter
   } = useAppSelector(state => state.reportingFilters)
 
   const {
@@ -111,7 +111,7 @@ export function MapReportingsFiltersWithRef(
           value={sourceTypeFilter}
         />
 
-        {sourceTypeFilter.length > 0 && (
+        {sourceTypeFilter && sourceTypeFilter.length > 0 && (
           <StyledTagsContainer>
             {sourceTypeFilter.map(sourceType => (
               <SingleTag
@@ -146,10 +146,11 @@ export function MapReportingsFiltersWithRef(
           options={themesListAsOptions}
           placeholder="Thématiques"
           renderValue={() => themeFilter && <OptionValue>{`Thème (${themeFilter.length})`}</OptionValue>}
+          searchable
           value={themeFilter}
         />
 
-        {themeFilter.length > 0 && (
+        {themeFilter && themeFilter.length > 0 && (
           <StyledTagsContainer>
             {themeFilter.map(theme => (
               <SingleTag
@@ -165,16 +166,18 @@ export function MapReportingsFiltersWithRef(
         )}
 
         <CheckPicker
+          isLabelHidden
           label="Sous-thématiques"
           name="subThemes"
           onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SUB_THEMES_FILTER)}
           options={subThemesListAsOptions}
           placeholder="Sous-thématiques"
           renderValue={() => subThemesFilter && <OptionValue>{`Sous-thème (${subThemesFilter.length})`}</OptionValue>}
+          searchable
           value={subThemesFilter}
         />
 
-        {subThemesFilter.length > 0 && (
+        {subThemesFilter && subThemesFilter.length > 0 && (
           <StyledTagsContainer>
             {subThemesFilter.map(subTheme => (
               <SingleTag
