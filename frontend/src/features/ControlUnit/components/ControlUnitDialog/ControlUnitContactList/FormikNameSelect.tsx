@@ -59,6 +59,7 @@ export function FormikNameSelect() {
       name="name"
       onChange={handleChange}
       options={CONTROL_UNIT_CONTACT_NAMES_AS_OPTIONS}
+      searchable
       value={field.value}
     />
   )
