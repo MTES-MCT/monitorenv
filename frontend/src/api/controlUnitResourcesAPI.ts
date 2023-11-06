@@ -9,9 +9,9 @@ import type { ControlUnit } from '../domain/entities/controlUnit'
 export const ARCHIVE_CONTROL_UNITE_RESOURCE_ERROR_MESSAGE = "Nous n'avons pas pu archiver ce moyen."
 const CAN_DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE = "Nous n'avons pas pu vérifier si ce moyen est supprimable."
 export const DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE =
-  "Ce moyen est rattaché à des missions. Veuillez l'en détacher avant de la supprimer."
+  "Ce moyen est rattaché à des missions. Veuillez l'en détacher avant de le supprimer."
 const GET_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE = "Nous n'avons pas pu récupérer ce moyen."
-const GET_CONTROL_UNIT_RESOURCES_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la liste des resources."
+const GET_CONTROL_UNIT_RESOURCES_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la liste des moyens."
 
 export const controlUnitResourcesAPI = monitorenvPublicApi.injectEndpoints({
   endpoints: builder => ({
