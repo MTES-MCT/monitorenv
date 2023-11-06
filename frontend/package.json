@@ -48,7 +48,7 @@
     "jsts": "2.11.0",
     "lodash": "4.17.21",
     "ol": "6.15.1",
-    "ol-mapbox-style": "6.9.0",
+    "ol-mapbox-style": "12.1.0",
     "ramda": "0.29.0",
     "react": "18.2.0",
     "react-coordinate-input": "^1.0.0-rc.2",
