@@ -9,8 +9,6 @@ import { ControlUnitDialog } from '../features/ControlUnit/components/ControlUni
 import Healthcheck from '../features/healthcheck/Healthcheck'
 import { LayersSidebar } from '../features/layersSelector'
 import { LocateOnMap } from '../features/LocateOnMap'
-import { MainWindowConfirmationModal } from '../features/MainWindow/components/MainWindowConfirmationModal'
-import { MainWindowDialog } from '../features/MainWindow/components/MainWindowDialog'
 import { ControlUnitListButton } from '../features/MainWindow/components/RightMenu/ControlUnitListButton'
 import { Map } from '../features/map'
 import { DrawModal } from '../features/map/draw/DrawModal'
@@ -36,7 +34,6 @@ export function HomePage() {
     displaySearchSemaphoreButton,
     isControlUnitDialogVisible
   } = useAppSelector(state => state.global)
-  const { isConfirmationModalOpen, isDialogOpen } = useAppSelector(state => state.mainWindow)
   const {
     missionState: { isFormDirty, missionState },
     multiMissions: { selectedMissions }
@@ -85,9 +82,6 @@ export function HomePage() {
         <Reportings key="reportings-on-map" context={ReportingContext.MAP} />
 
         <SideWindowLauncher />
-
-        {isConfirmationModalOpen && <MainWindowConfirmationModal />}
-        {isDialogOpen && <MainWindowDialog />}
 
         <ToastContainer containerId="map" enableMultiContainer />
       </Wrapper>

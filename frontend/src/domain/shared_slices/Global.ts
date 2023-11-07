@@ -168,7 +168,7 @@ const globalSlice = createSlice({
       state.reportingFormVisibility = action.payload
     },
 
-    setToast(state, action) {
+    setToast(state, action: PayloadAction<Toast>) {
       state.toast = action.payload
     }
   }

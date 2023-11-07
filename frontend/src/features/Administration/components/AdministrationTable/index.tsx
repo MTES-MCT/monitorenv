@@ -13,6 +13,7 @@ import {
 } from '../../../../api/administrationsAPI'
 import { ConfirmationModal } from '../../../../components/ConfirmationModal'
 import { Dialog } from '../../../../components/Dialog'
+import { globalActions } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { NavButton } from '../../../../ui/NavButton'
@@ -22,8 +23,8 @@ import type { Administration } from '../../../../domain/entities/administration'
 import type { CellContext } from '@tanstack/react-table'
 
 export function AdministrationTable() {
-  const [isArchivingConfirnationModalOpen, setIsArchivingConfirnationModalOpen] = useState(false)
-  const [isDeletionConfirnationModalOpen, setIsDeletionConfirnationModalOpen] = useState(false)
+  const [isArchivingConfirmationModalOpen, setIsArchivingConfirmationModalOpen] = useState(false)
+  const [isDeletionConfirmationModalOpen, setIsDeletionConfirmationModalOpen] = useState(false)
   const [isImpossibleArchivingDialogOpen, setIsImpossibleArchivingDialogOpen] = useState(false)
   const [isImpossibleDeletionDialogOpen, setIsImpossibleDeletionDialogOpen] = useState(false)
   const [targetedAdministration, setTargettedAdministration] = useState<Administration.Administration | undefined>(
@@ -58,7 +59,7 @@ export function AdministrationTable() {
       }
 
       setTargettedAdministration(administration)
-      setIsArchivingConfirnationModalOpen(true)
+      setIsArchivingConfirmationModalOpen(true)
     },
     [dispatch]
   )
@@ -77,21 +78,28 @@ export function AdministrationTable() {
       }
 
       setTargettedAdministration(administration)
-      setIsDeletionConfirnationModalOpen(true)
+      setIsDeletionConfirmationModalOpen(true)
     },
     [dispatch]
   )
 
   const close = useCallback(() => {
-    setIsDeletionConfirnationModalOpen(false)
+    setIsArchivingConfirmationModalOpen(false)
+    setIsDeletionConfirmationModalOpen(false)
     setIsImpossibleArchivingDialogOpen(false)
     setIsImpossibleDeletionDialogOpen(false)
     setTargettedAdministration(undefined)
   }, [])
 
   const confirmArchiving = useCallback(
-    async (administrationId: number) => {
-      await dispatch(administrationsAPI.endpoints.archiveAdministration.initiate(administrationId))
+    async (administrationToArchive: Administration.Administration) => {
+      await dispatch(administrationsAPI.endpoints.archiveAdministration.initiate(administrationToArchive.id))
+      dispatch(
+        globalActions.setToast({
+          message: `Administration "${administrationToArchive.name}" archivée.`,
+          type: 'success'
+        })
+      )
 
       close()
     },
@@ -99,8 +107,14 @@ export function AdministrationTable() {
   )
 
   const confirmDeletion = useCallback(
-    async (administrationId: number) => {
-      await dispatch(administrationsAPI.endpoints.deleteAdministration.initiate(administrationId))
+    async (administrationToDelete: Administration.Administration) => {
+      await dispatch(administrationsAPI.endpoints.deleteAdministration.initiate(administrationToDelete.id))
+      dispatch(
+        globalActions.setToast({
+          message: `Administration "${administrationToDelete.name}" supprimée.`,
+          type: 'success'
+        })
+      )
 
       close()
     },
@@ -137,25 +151,25 @@ export function AdministrationTable() {
         initialSorting={[{ desc: false, id: 'name' }]}
       />
 
-      {isArchivingConfirnationModalOpen && targetedAdministration && (
+      {isArchivingConfirmationModalOpen && targetedAdministration && (
         <ConfirmationModal
           confirmationButtonLabel="Archiver"
           message={[
             `Êtes-vous sûr de vouloir archiver l'administration "${targetedAdministration.name}" ?`,
-            `Elle n'apparaîtra plus dans MonitorEnv, elle ne sera utilisée que pour les statistiques.`
+            `Elle n'apparaîtra plus dans MonitorFish et dans MonitorEnv, elle ne sera utilisée que pour les statistiques.`
           ].join(' ')}
           onCancel={close}
-          onConfirm={() => confirmArchiving(targetedAdministration.id)}
+          onConfirm={() => confirmArchiving(targetedAdministration)}
           title="Archivage de l'administration"
         />
       )}
 
-      {isDeletionConfirnationModalOpen && targetedAdministration && (
+      {isDeletionConfirmationModalOpen && targetedAdministration && (
         <ConfirmationModal
           confirmationButtonLabel="Supprimer"
           message={`Êtes-vous sûr de vouloir supprimer l'administration "${targetedAdministration.name}" ?`}
           onCancel={close}
-          onConfirm={() => confirmDeletion(targetedAdministration.id)}
+          onConfirm={() => confirmDeletion(targetedAdministration)}
           title="Suppression de l'administration"
         />
       )}

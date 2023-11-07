@@ -11,89 +11,32 @@ import {
   useKey
 } from '@mtes-mct/monitor-ui'
 import { Formik } from 'formik'
-import { useCallback, useState } from 'react'
 import styled from 'styled-components'
 
 import { CONTROL_UNIT_RESOURCE_FORM_SCHEMA, CONTROL_UNIT_RESOURCE_TYPES_AS_OPTIONS } from './constants'
 import { useGetBasesQuery } from '../../../../../api/basesAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../../api/constants'
-import {
-  DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE,
-  controlUnitResourcesAPI
-} from '../../../../../api/controlUnitResourcesAPI'
-import { ConfirmationModal } from '../../../../../components/ConfirmationModal'
-import { Dialog } from '../../../../../components/Dialog'
-import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
-import { FrontendError } from '../../../../../libs/FrontendError'
-import { mainWindowActions } from '../../../../MainWindow/slice'
-import { MainWindowConfirmationModalActionType } from '../../../../MainWindow/types'
 
 import type { ControlUnitResourceFormValues } from './types'
+import type { CSSProperties } from 'react'
+import type { Promisable } from 'type-fest'
 
 export type FormProps = {
+  className?: string
   initialValues: ControlUnitResourceFormValues
-  isNew: boolean
-  onCancel: () => void
+  onArchive?: () => Promisable<void>
+  onCancel: () => Promisable<void>
+  onDelete?: () => Promisable<void>
   onSubmit: (controlUnitResourceFormValues: ControlUnitResourceFormValues) => void
+  style?: CSSProperties
 }
-export function Form({ initialValues, isNew, onCancel, onSubmit }: FormProps) {
-  const [isArchivingConfirnationModalOpen, setIsArchivingConfirnationModalOpen] = useState(false)
-  const [isImpossibleDeletionDialogOpen, setIsImpossibleDeletionDialogOpen] = useState(false)
-
-  const dispatch = useAppDispatch()
+export function Form({ className, initialValues, onArchive, onCancel, onDelete, onSubmit, style }: FormProps) {
   const key = useKey([initialValues])
+  const isNew = !initialValues.id
 
   const { data: bases } = useGetBasesQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const basesAsOptions = getOptionsFromIdAndName(bases)?.filter(baseAsOption => baseAsOption.value !== 0)
-
-  const askForArchivingConfirmation = useCallback(async () => {
-    setIsArchivingConfirnationModalOpen(true)
-  }, [])
-
-  const askForDeletionConfirmation = useCallback(async () => {
-    if (!initialValues.id) {
-      throw new FrontendError('`initialValues.id` is undefined.')
-    }
-
-    const { data: canDeleteControlUnit } = await dispatch(
-      controlUnitResourcesAPI.endpoints.canDeleteControlUnitResource.initiate(initialValues.id, { forceRefetch: true })
-    )
-    if (!canDeleteControlUnit) {
-      setIsImpossibleDeletionDialogOpen(true)
-
-      return
-    }
-
-    dispatch(
-      mainWindowActions.openConfirmationModal({
-        actionType: MainWindowConfirmationModalActionType.DELETE_CONTROL_UNIT_RESOURCE,
-        entityId: initialValues.id,
-        modalProps: {
-          color: THEME.color.maximumRed,
-          confirmationButtonLabel: 'Supprimer',
-          iconName: 'Delete',
-          message: `Êtes-vous sûr de vouloir supprimer ce moyen ?`,
-          title: `Suppression du moyen`
-        }
-      })
-    )
-  }, [initialValues.id, dispatch])
-
-  const close = useCallback(() => {
-    setIsArchivingConfirnationModalOpen(false)
-    setIsImpossibleDeletionDialogOpen(false)
-  }, [])
-
-  const confirmArchiving = useCallback(async () => {
-    if (!initialValues.id) {
-      throw new FrontendError('`initialValues.id` is undefined.')
-    }
-
-    await dispatch(controlUnitResourcesAPI.endpoints.archiveControlUnitResource.initiate(initialValues.id))
-
-    onCancel()
-  }, [dispatch, initialValues.id, onCancel])
 
   if (!basesAsOptions) {
     return <div>Chargement en cours...</div>
@@ -109,7 +52,7 @@ export function Form({ initialValues, isNew, onCancel, onSubmit }: FormProps) {
       validationSchema={CONTROL_UNIT_RESOURCE_FORM_SCHEMA}
     >
       {({ handleSubmit }) => (
-        <>
+        <div className={className} style={style}>
           <Title>{isNew ? 'Ajouter un moyen' : 'Éditer un moyen'}</Title>
           <StyledForm onSubmit={handleSubmit}>
             <FormikSelect isLight label="Type de moyen" name="type" options={CONTROL_UNIT_RESOURCE_TYPES_AS_OPTIONS} />
@@ -124,48 +67,26 @@ export function Form({ initialValues, isNew, onCancel, onSubmit }: FormProps) {
                   Annuler
                 </Button>
               </div>
-              {!isNew && (
-                <>
-                  <IconButton
-                    accent={Accent.SECONDARY}
-                    Icon={Icon.Archive}
-                    onClick={askForArchivingConfirmation}
-                    title="Archiver ce moyen"
-                  />
-                  <IconButton
-                    accent={Accent.SECONDARY}
-                    color={THEME.color.maximumRed}
-                    Icon={Icon.Delete}
-                    onClick={askForDeletionConfirmation}
-                    // TODO Add `borderColor` in Monitor UI.
-                    style={{ borderColor: THEME.color.maximumRed }}
-                    title="Supprimer ce moyen"
-                  />
-                </>
+              {onArchive && (
+                <ArchiveButton
+                  accent={Accent.SECONDARY}
+                  Icon={Icon.Archive}
+                  onClick={onArchive}
+                  title="Archiver ce moyen"
+                />
+              )}
+              {onDelete && (
+                <DeleteButton
+                  accent={Accent.SECONDARY}
+                  color={THEME.color.maximumRed}
+                  Icon={Icon.Delete}
+                  onClick={onDelete}
+                  title="Supprimer ce moyen"
+                />
               )}
             </ActionBar>
           </StyledForm>
-
-          {isArchivingConfirnationModalOpen && initialValues && (
-            <ConfirmationModal
-              confirmationButtonLabel="Archiver"
-              message={`Êtes-vous sûr de vouloir archiver le moyen "${initialValues.name}" ?`}
-              onCancel={close}
-              onConfirm={confirmArchiving}
-              title="Archivage du moyen"
-            />
-          )}
-
-          {isImpossibleDeletionDialogOpen && (
-            <Dialog
-              color={THEME.color.maximumRed}
-              message={DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE}
-              onClose={close}
-              title="Suppression impossible"
-              titleBackgroundColor={THEME.color.maximumRed}
-            />
-          )}
-        </>
+        </div>
       )}
     </Formik>
   )
@@ -173,7 +94,7 @@ export function Form({ initialValues, isNew, onCancel, onSubmit }: FormProps) {
 
 const Title = styled.p`
   background-color: ${p => p.theme.color.gainsboro};
-  margin: 16px 0 2px;
+  margin: 0 0 2px;
   padding: 8px 16px;
   line-height: 1.3846;
 `
@@ -201,4 +122,13 @@ const ActionBar = styled.div`
       margin-left: 8px;
     }
   }
+`
+
+const ArchiveButton = styled(IconButton)`
+  padding: 0 4px;
+`
+// TODO Add `borderColor` in Monitor UI.
+const DeleteButton = styled(IconButton)`
+  border-color: ${p => p.theme.color.maximumRed};
+  padding: 0 4px;
 `

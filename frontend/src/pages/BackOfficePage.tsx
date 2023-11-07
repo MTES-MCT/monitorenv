@@ -1,21 +1,18 @@
 import { Notifier } from '@mtes-mct/monitor-ui'
 import { Route, Routes } from 'react-router'
+import { ToastContainer } from 'react-toastify'
 import styled from 'styled-components'
 
 import { AdministrationForm } from '../features/Administration/components/AdministrationForm'
 import { AdministrationTable } from '../features/Administration/components/AdministrationTable'
-import { BackOfficeDialog } from '../features/BackOffice/components/BackOfficeDialog'
 import { BackOfficeMenu } from '../features/BackOffice/components/BackofficeMenu'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../features/BackOffice/components/BackofficeMenu/constants'
 import { BaseForm } from '../features/Base/components/BaseForm'
 import { BaseTable } from '../features/Base/components/BaseTable'
 import { ControlUnitForm } from '../features/ControlUnit/components/ControlUnitForm'
 import { ControlUnitTable } from '../features/ControlUnit/components/ControlUnitTable'
-import { useAppSelector } from '../hooks/useAppSelector'
 
 export function BackOfficePage() {
-  const backOffice = useAppSelector(store => store.backOffice)
-
   return (
     <Wrapper>
       <BackOfficeMenu />
@@ -44,8 +41,7 @@ export function BackOfficePage() {
         </Routes>
       </Body>
 
-      {backOffice.isDialogOpen && <BackOfficeDialog />}
-
+      <ToastContainer />
       <Notifier />
     </Wrapper>
   )

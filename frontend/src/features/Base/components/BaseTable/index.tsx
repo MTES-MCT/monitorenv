@@ -8,6 +8,7 @@ import { DELETE_BASE_ERROR_MESSAGE, basesAPI, useGetBasesQuery } from '../../../
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { ConfirmationModal } from '../../../../components/ConfirmationModal'
 import { Dialog } from '../../../../components/Dialog'
+import { globalActions } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { NavButton } from '../../../../ui/NavButton'
@@ -17,7 +18,7 @@ import type { Base } from '../../../../domain/entities/base'
 import type { CellContext } from '@tanstack/react-table'
 
 export function BaseTable() {
-  const [isDeletionConfirnationModalOpen, setIsDeletionConfirnationModalOpen] = useState(false)
+  const [isDeletionConfirmationModalOpen, setIsDeletionConfirmationModalOpen] = useState(false)
   const [isImpossibleDeletionDialogOpen, setIsImpossibleDeletionDialogOpen] = useState(false)
   const [targetedBase, setTargettedBase] = useState<Base.Base | undefined>(undefined)
 
@@ -47,19 +48,25 @@ export function BaseTable() {
       }
 
       setTargettedBase(base)
-      setIsDeletionConfirnationModalOpen(true)
+      setIsDeletionConfirmationModalOpen(true)
     },
     [dispatch]
   )
 
   const close = useCallback(() => {
-    setIsDeletionConfirnationModalOpen(false)
+    setIsDeletionConfirmationModalOpen(false)
     setIsImpossibleDeletionDialogOpen(false)
   }, [])
 
   const confirmDeletion = useCallback(
-    async (baseId: number) => {
-      await dispatch(basesAPI.endpoints.deleteBase.initiate(baseId))
+    async (baseToDelete: Base.Base) => {
+      await dispatch(basesAPI.endpoints.deleteBase.initiate(baseToDelete.id))
+      dispatch(
+        globalActions.setToast({
+          message: `Base "${baseToDelete.name}" supprimée.`,
+          type: 'success'
+        })
+      )
 
       close()
     },
@@ -80,12 +87,12 @@ export function BaseTable() {
 
       <DataTable columns={baseTableColumns} data={filteredBases} initialSorting={[{ desc: false, id: 'name' }]} />
 
-      {isDeletionConfirnationModalOpen && targetedBase && (
+      {isDeletionConfirmationModalOpen && targetedBase && (
         <ConfirmationModal
           confirmationButtonLabel="Supprimer"
           message={`Êtes-vous sûr de vouloir supprimer la base "${targetedBase.name}" ?`}
           onCancel={close}
-          onConfirm={() => confirmDeletion(targetedBase.id)}
+          onConfirm={() => confirmDeletion(targetedBase)}
           title="Suppression de la base"
         />
       )}

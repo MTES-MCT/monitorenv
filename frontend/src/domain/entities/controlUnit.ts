@@ -63,7 +63,7 @@ export namespace ControlUnit {
     LAND = 'Terre',
     LAND_ON_CALL = 'Permanence terre',
     NEAR_COAST = 'Proche côte',
-    OFFICE = 'Bureau',
+    OFFICE = 'Bureau de l’unité',
     ONBOARD_PHONE = 'Téléphone de bord',
     ON_CALL = 'Permanence',
     SEA = 'Mer',

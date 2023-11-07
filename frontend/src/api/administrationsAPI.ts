@@ -13,8 +13,8 @@ export const ARCHIVE_ADMINISTRATION_ERROR_MESSAGE = [
 const CAN_ARCHIVE_ADMINISTRATION_ERROR_MESSAGE = "Nous n'avons pas pu vérifier si cette administration est archivable."
 const CAN_DELETE_ADMINISTRATION_ERROR_MESSAGE = "Nous n'avons pas pu vérifier si cette administration est supprimable."
 export const DELETE_ADMINISTRATION_ERROR_MESSAGE = [
-  'Cette administration est rattachée à des missions ou des signalements.',
-  "Veuillez l'en détacher avant de la supprimer ou bien l'archiver."
+  'Des unités sont encore rattachées à cette administration.',
+  'Veuillez les supprimer avant de pouvoir supprimer cette administration.'
 ].join(' ')
 const GET_ADMINISTRATION_ERROR_MESSAGE = "Nous n'avons pas pu récupérer cette administration."
 const GET_ADMINISTRATIONS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la liste des administrations."

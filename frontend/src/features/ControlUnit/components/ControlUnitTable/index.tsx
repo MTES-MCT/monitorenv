@@ -13,6 +13,7 @@ import {
 } from '../../../../api/controlUnitsAPI'
 import { ConfirmationModal } from '../../../../components/ConfirmationModal'
 import { Dialog } from '../../../../components/Dialog'
+import { globalActions } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { NavButton } from '../../../../ui/NavButton'
@@ -22,8 +23,8 @@ import type { ControlUnit } from '../../../../domain/entities/controlUnit'
 import type { CellContext } from '@tanstack/react-table'
 
 export function ControlUnitTable() {
-  const [isArchivingConfirnationModalOpen, setIsArchivingConfirnationModalOpen] = useState(false)
-  const [isDeletionConfirnationModalOpen, setIsDeletionConfirnationModalOpen] = useState(false)
+  const [isArchivingConfirmationModalOpen, setIsArchivingConfirmationModalOpen] = useState(false)
+  const [isDeletionConfirmationModalOpen, setIsDeletionConfirmationModalOpen] = useState(false)
   const [isImpossibleDeletionDialogOpen, setIsImpossibleDeletionDialogOpen] = useState(false)
   const [targetedControlUnit, setTargettedControlUnit] = useState<ControlUnit.ControlUnit | undefined>(undefined)
 
@@ -46,7 +47,7 @@ export function ControlUnitTable() {
       const controlUnit = cellContext.getValue<ControlUnit.ControlUnit>()
 
       setTargettedControlUnit(controlUnit)
-      setIsArchivingConfirnationModalOpen(true)
+      setIsArchivingConfirmationModalOpen(true)
     },
     []
   )
@@ -65,20 +66,27 @@ export function ControlUnitTable() {
       }
 
       setTargettedControlUnit(controlUnit)
-      setIsDeletionConfirnationModalOpen(true)
+      setIsDeletionConfirmationModalOpen(true)
     },
     [dispatch]
   )
 
   const close = useCallback(() => {
-    setIsDeletionConfirnationModalOpen(false)
+    setIsArchivingConfirmationModalOpen(false)
+    setIsDeletionConfirmationModalOpen(false)
     setIsImpossibleDeletionDialogOpen(false)
     setTargettedControlUnit(undefined)
   }, [])
 
   const confirmArchiving = useCallback(
-    async (controlUnitId: number) => {
-      await dispatch(controlUnitsAPI.endpoints.archiveControlUnit.initiate(controlUnitId))
+    async (controlUnitToArchive: ControlUnit.ControlUnit) => {
+      await dispatch(controlUnitsAPI.endpoints.archiveControlUnit.initiate(controlUnitToArchive.id))
+      dispatch(
+        globalActions.setToast({
+          message: `Unité "${controlUnitToArchive.name}" archivée.`,
+          type: 'success'
+        })
+      )
 
       close()
     },
@@ -86,8 +94,14 @@ export function ControlUnitTable() {
   )
 
   const confirmDeletion = useCallback(
-    async (controlUnitId: number) => {
-      await dispatch(controlUnitsAPI.endpoints.deleteControlUnit.initiate(controlUnitId))
+    async (controlUnitToDelete: ControlUnit.ControlUnit) => {
+      await dispatch(controlUnitsAPI.endpoints.deleteControlUnit.initiate(controlUnitToDelete.id))
+      dispatch(
+        globalActions.setToast({
+          message: `Unité "${controlUnitToDelete.name}" supprimée.`,
+          type: 'success'
+        })
+      )
 
       close()
     },
@@ -124,20 +138,20 @@ export function ControlUnitTable() {
         initialSorting={[{ desc: false, id: 'name' }]}
       />
 
-      {isArchivingConfirnationModalOpen && targetedControlUnit && (
+      {isArchivingConfirmationModalOpen && targetedControlUnit && (
         <ConfirmationModal
           confirmationButtonLabel="Archiver"
           message={[
             `Êtes-vous sûr de vouloir archiver l'unité "${targetedControlUnit.name}" ?`,
-            `Elle n'apparaîtra plus dans MonitorEnv, elle ne sera plus utilisée pour les statistiques.`
+            `Elle n'apparaîtra plus dans MonitorFish et dans MonitorEnv, elle ne sera plus utilisée pour les statistiques.`
           ].join(' ')}
           onCancel={close}
-          onConfirm={() => confirmArchiving(targetedControlUnit.id)}
+          onConfirm={() => confirmArchiving(targetedControlUnit)}
           title="Archivage de l'unité"
         />
       )}
 
-      {isDeletionConfirnationModalOpen && targetedControlUnit && (
+      {isDeletionConfirmationModalOpen && targetedControlUnit && (
         <ConfirmationModal
           confirmationButtonLabel="Supprimer"
           message={[
@@ -145,7 +159,7 @@ export function ControlUnitTable() {
             `Ceci entraînera la suppression de toutes ses informations (moyens, contacts...).`
           ].join(' ')}
           onCancel={close}
-          onConfirm={() => confirmDeletion(targetedControlUnit.id)}
+          onConfirm={() => confirmDeletion(targetedControlUnit)}
           title="Suppression de l'unité"
         />
       )}

@@ -1,3 +1,4 @@
+// TODO Rename and move this enum.
 export enum ErrorType {
   ERROR = 'error',
   INFO = 'info',

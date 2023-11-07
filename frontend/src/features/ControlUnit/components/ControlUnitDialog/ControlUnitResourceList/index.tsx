@@ -1,6 +1,6 @@
 // import styled from 'styled-components'
 
-import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, THEME } from '@mtes-mct/monitor-ui'
 import { useCallback, useState } from 'react'
 import styled from 'styled-components'
 
@@ -8,10 +8,16 @@ import { INITIAL_CONTROL_UNIT_RESOURCE_FORM_VALUES } from './constants'
 import { Form } from './Form'
 import { Item } from './Item'
 import {
+  DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE,
+  controlUnitResourcesAPI,
   useCreateControlUnitResourceMutation,
   useUpdateControlUnitResourceMutation
 } from '../../../../../api/controlUnitResourcesAPI'
+import { ConfirmationModal } from '../../../../../components/ConfirmationModal'
+import { Dialog } from '../../../../../components/Dialog'
 import { ControlUnit } from '../../../../../domain/entities/controlUnit'
+import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
+import { FrontendError } from '../../../../../libs/FrontendError'
 import { isEmptyish } from '../../../../../utils/isEmptyish'
 import { isNotArchived } from '../../../../../utils/isNotArchived'
 import { Section } from '../shared/Section'
@@ -22,24 +28,77 @@ type ControlUnitResourceListProps = {
   controlUnit: ControlUnit.ControlUnit
 }
 export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceListProps) {
+  const dispatch = useAppDispatch()
   const [createControlUnitResource] = useCreateControlUnitResourceMutation()
   const [updateControlUnitResource] = useUpdateControlUnitResourceMutation()
 
   const [editedControlUnitResourceId, setEditedControlUnitResourceId] = useState<number | undefined>(undefined)
+  const [isArchivingConfirmationModalOpen, setIsArchivingConfirmationModalOpen] = useState(false)
+  const [isDeletionConfirmationModalOpen, setIsDeletionConfirmationModalOpen] = useState(false)
+  const [isImpossibleDeletionDialogOpen, setIsImpossibleDeletionDialogOpen] = useState(false)
   const [isNewControlUnitResourceFormOpen, setIsNewControlUnitResourceFormOpen] = useState(false)
 
-  const { controlUnitResources } = controlUnit
-  const activeControlUnitResources = controlUnitResources.filter(isNotArchived)
+  const activeControlUnitResources = controlUnit.controlUnitResources.filter(isNotArchived)
   const editedControlUnitResource = activeControlUnitResources.find(({ id }) => id === editedControlUnitResourceId) || {
     ...INITIAL_CONTROL_UNIT_RESOURCE_FORM_VALUES,
     controlUnitId: controlUnit.id
   }
-  const isFormOpen = isNewControlUnitResourceFormOpen || !!editedControlUnitResourceId
+
+  const askForArchivingConfirmation = useCallback(() => {
+    setIsArchivingConfirmationModalOpen(true)
+  }, [])
+
+  const askForDeletionConfirmation = useCallback(async () => {
+    if (!editedControlUnitResourceId) {
+      throw new FrontendError('`editedControlUnitResourceId` is undefined.')
+    }
+
+    const { data: canDeleteControlUnit } = await dispatch(
+      controlUnitResourcesAPI.endpoints.canDeleteControlUnitResource.initiate(editedControlUnitResourceId, {
+        forceRefetch: true
+      })
+    )
+    if (!canDeleteControlUnit) {
+      setIsImpossibleDeletionDialogOpen(true)
+
+      return
+    }
+
+    setIsDeletionConfirmationModalOpen(true)
+  }, [dispatch, editedControlUnitResourceId])
+
+  const closeDialogsAndModals = useCallback(() => {
+    setIsArchivingConfirmationModalOpen(false)
+    setIsDeletionConfirmationModalOpen(false)
+    setIsImpossibleDeletionDialogOpen(false)
+  }, [])
 
   const closeForm = useCallback(() => {
     setEditedControlUnitResourceId(undefined)
     setIsNewControlUnitResourceFormOpen(false)
   }, [])
+
+  const confirmArchiving = useCallback(async () => {
+    if (!editedControlUnitResourceId) {
+      throw new FrontendError('`editedControlUnitResourceId` is undefined.')
+    }
+
+    await dispatch(controlUnitResourcesAPI.endpoints.archiveControlUnitResource.initiate(editedControlUnitResourceId))
+
+    closeDialogsAndModals()
+    closeForm()
+  }, [closeDialogsAndModals, closeForm, dispatch, editedControlUnitResourceId])
+
+  const confirmDeletion = useCallback(async () => {
+    if (!editedControlUnitResourceId) {
+      throw new FrontendError('`editedControlUnitResourceId` is undefined.')
+    }
+
+    await dispatch(controlUnitResourcesAPI.endpoints.deleteControlUnitResource.initiate(editedControlUnitResourceId))
+
+    closeDialogsAndModals()
+    closeForm()
+  }, [closeDialogsAndModals, closeForm, dispatch, editedControlUnitResourceId])
 
   const createOrUpdateControlUnitResource = useCallback(
     async (controlUnitResourceFormValues: ControlUnitResourceFormValues) => {
@@ -64,37 +123,79 @@ export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceList
     [closeForm, createControlUnitResource, isNewControlUnitResourceFormOpen, updateControlUnitResource]
   )
 
-  const openForm = useCallback(() => {
+  const openCreationForm = useCallback(() => {
+    setEditedControlUnitResourceId(undefined)
     setIsNewControlUnitResourceFormOpen(true)
+  }, [])
+
+  const openEditionForm = useCallback((nextEditedControlUnitResourceId: number) => {
+    setEditedControlUnitResourceId(nextEditedControlUnitResourceId)
+    setIsNewControlUnitResourceFormOpen(false)
   }, [])
 
   return (
     <Section>
       <Section.Title>Moyens</Section.Title>
       <StyledSectionBody $isEmpty={!activeControlUnitResources.length}>
-        {activeControlUnitResources.map(controlUnitResource => (
-          <Item
-            key={controlUnitResource.id}
-            controlUnitResource={controlUnitResource}
-            onEdit={setEditedControlUnitResourceId}
-          />
-        ))}
+        {activeControlUnitResources.map((controlUnitResource, index) =>
+          controlUnitResource.id === editedControlUnitResourceId ? (
+            <StyledEditionForm
+              $isFirst={index === 0}
+              initialValues={editedControlUnitResource}
+              onArchive={askForArchivingConfirmation}
+              onCancel={closeForm}
+              onDelete={askForDeletionConfirmation}
+              onSubmit={createOrUpdateControlUnitResource}
+            />
+          ) : (
+            <Item key={controlUnitResource.id} controlUnitResource={controlUnitResource} onEdit={openEditionForm} />
+          )
+        )}
 
-        {isFormOpen ? (
-          <Form
+        {isNewControlUnitResourceFormOpen ? (
+          <StyledCreationForm
             initialValues={editedControlUnitResource}
-            isNew={isNewControlUnitResourceFormOpen}
             onCancel={closeForm}
             onSubmit={createOrUpdateControlUnitResource}
           />
         ) : (
           <div>
-            <Button accent={Accent.SECONDARY} Icon={Icon.Plus} onClick={openForm}>
+            <Button accent={Accent.SECONDARY} Icon={Icon.Plus} onClick={openCreationForm}>
               Ajouter un moyen
             </Button>
           </div>
         )}
       </StyledSectionBody>
+
+      {isArchivingConfirmationModalOpen && editedControlUnitResource && (
+        <ConfirmationModal
+          confirmationButtonLabel="Archiver"
+          message={`Êtes-vous sûr de vouloir archiver le moyen "${editedControlUnitResource.name}" ?`}
+          onCancel={closeDialogsAndModals}
+          onConfirm={confirmArchiving}
+          title="Archivage du moyen"
+        />
+      )}
+
+      {isDeletionConfirmationModalOpen && editedControlUnitResource && (
+        <ConfirmationModal
+          confirmationButtonLabel="Supprimer"
+          message={`Êtes-vous sûr de vouloir supprimer le moyen "${editedControlUnitResource.name}" ?`}
+          onCancel={closeDialogsAndModals}
+          onConfirm={confirmDeletion}
+          title="Suppression du moyen"
+        />
+      )}
+
+      {isImpossibleDeletionDialogOpen && (
+        <Dialog
+          color={THEME.color.maximumRed}
+          message={DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE}
+          onClose={closeDialogsAndModals}
+          title="Suppression impossible"
+          titleBackgroundColor={THEME.color.maximumRed}
+        />
+      )}
     </Section>
   )
 }
@@ -110,4 +211,14 @@ const StyledSectionBody = styled(Section.Body)<{
   > div:last-child {
     margin-top: ${p => (!p.$isEmpty ? 16 : 0)}px;
   }
+`
+
+const StyledEditionForm = styled(Form)<{
+  $isFirst: boolean
+}>`
+  margin-top: ${p => (p.$isFirst ? 0 : 8)}px;
+`
+
+const StyledCreationForm = styled(Form)`
+  margin-top: 16px;
 `
