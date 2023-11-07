@@ -80,10 +80,10 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
   )
 
   const sourceOptions = useMemo(() => {
-    if (sourceTypeFilter.length === 1 && sourceTypeFilter[0] === ReportingSourceEnum.SEMAPHORE) {
+    if (sourceTypeFilter && sourceTypeFilter.length === 1 && sourceTypeFilter[0] === ReportingSourceEnum.SEMAPHORE) {
       return semaphoresAsOptions
     }
-    if (sourceTypeFilter.length === 1 && sourceTypeFilter[0] === ReportingSourceEnum.CONTROL_UNIT) {
+    if (sourceTypeFilter && sourceTypeFilter.length === 1 && sourceTypeFilter[0] === ReportingSourceEnum.CONTROL_UNIT) {
       return unitListAsOptions
     }
 
@@ -213,7 +213,7 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
 
   const updateSourceTypeFilter = types => {
     dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SOURCE_TYPE_FILTER, value: types }))
-    dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SOURCE_FILTER, value: [] }))
+    dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SOURCE_FILTER, value: undefined }))
   }
 
   const resetFilters = () => {

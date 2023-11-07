@@ -43,9 +43,9 @@ export const useGetFilteredMissionsQuery = () => {
     }
 
     if (
-      selectedAdministrationNames.length === 0 &&
-      selectedControlUnitIds.length === 0 &&
-      selectedThemes.length === 0
+      selectedAdministrationNames?.length === 0 &&
+      selectedControlUnitIds?.length === 0 &&
+      selectedThemes?.length === 0
     ) {
       return missions
     }

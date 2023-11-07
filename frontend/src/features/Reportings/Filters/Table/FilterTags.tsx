@@ -8,28 +8,28 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 export function FilterTags() {
   const dispatch = useAppDispatch()
-  const { seaFrontFilter, sourceFilter, sourceTypeFilter, subThemesFilter, themeFilter } = useAppSelector(
+  const { hasFilters, seaFrontFilter, sourceFilter, sourceTypeFilter, subThemesFilter, themeFilter } = useAppSelector(
     state => state.reportingFilters
   )
 
   const onDeleteTag = (valueToDelete: string | any, filterKey: ReportingsFiltersEnum, reportingFilter) => {
     const updatedFilter = reportingFilter.filter(unit => unit !== valueToDelete)
-    dispatch(reportingsFiltersActions.updateFilters({ key: filterKey, value: updatedFilter }))
+    dispatch(
+      reportingsFiltersActions.updateFilters({
+        key: filterKey,
+        value: updatedFilter.length === 0 ? undefined : updatedFilter
+      })
+    )
   }
-  const hasNoFilterTags =
-    sourceTypeFilter.length === 0 &&
-    sourceFilter.length === 0 &&
-    themeFilter.length === 0 &&
-    subThemesFilter.length === 0 &&
-    seaFrontFilter.length === 0
 
-  if (hasNoFilterTags) {
+  if (!hasFilters) {
     return null
   }
 
   return (
-    <StyledContainer>
-      {sourceTypeFilter.length > 0 &&
+    <StyledContainer data-cy="reportings-filter-tags">
+      {sourceTypeFilter &&
+        sourceTypeFilter.length > 0 &&
         sourceTypeFilter.map(sourceType => (
           <SingleTag
             key={sourceType}
@@ -39,7 +39,8 @@ export function FilterTags() {
             {String(`Type ${ReportingSourceLabels[sourceType]}`)}
           </SingleTag>
         ))}
-      {sourceFilter.length > 0 &&
+      {sourceFilter &&
+        sourceFilter.length > 0 &&
         sourceFilter.map(source => (
           <SingleTag
             key={`${source.id}-${source.label}`}
@@ -49,7 +50,8 @@ export function FilterTags() {
             {String(`Source ${source.label}`)}
           </SingleTag>
         ))}
-      {themeFilter.length > 0 &&
+      {themeFilter &&
+        themeFilter.length > 0 &&
         themeFilter.map(theme => (
           <SingleTag
             key={theme}
@@ -59,7 +61,8 @@ export function FilterTags() {
             {String(`Thème ${theme}`)}
           </SingleTag>
         ))}
-      {subThemesFilter.length > 0 &&
+      {subThemesFilter &&
+        subThemesFilter?.length > 0 &&
         subThemesFilter.map(subTheme => (
           <SingleTag
             key={subTheme}
@@ -69,7 +72,8 @@ export function FilterTags() {
             {String(`Sous-thème ${subTheme}`)}
           </SingleTag>
         ))}
-      {seaFrontFilter.length > 0 &&
+      {seaFrontFilter &&
+        seaFrontFilter.length > 0 &&
         seaFrontFilter.map(seaFront => (
           <SingleTag
             key={seaFront}

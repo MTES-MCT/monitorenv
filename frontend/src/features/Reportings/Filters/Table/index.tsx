@@ -1,5 +1,13 @@
-import { DateRangePicker, useNewWindow, Checkbox, Icon } from '@mtes-mct/monitor-ui'
-import { forwardRef } from 'react'
+import {
+  CheckPicker,
+  DateRangePicker,
+  useNewWindow,
+  Checkbox,
+  Icon,
+  CustomSearch,
+  type Option
+} from '@mtes-mct/monitor-ui'
+import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { FilterTags } from './FilterTags'
@@ -7,7 +15,6 @@ import { ReportingsFiltersEnum } from '../../../../domain/shared_slices/Reportin
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import {
   OptionValue,
-  StyledCheckPicker,
   StyledCustomPeriodContainer,
   StyledCutomPeriodLabel,
   StyledSelect,
@@ -33,15 +40,15 @@ export function TableReportingsFiltersWithRef(
   const {
     hasFilters,
     periodFilter,
-    seaFrontFilter,
-    sourceFilter,
-    sourceTypeFilter,
+    seaFrontFilter = [],
+    sourceFilter = [],
+    sourceTypeFilter = [],
     startedAfter,
     startedBefore,
-    statusFilter,
-    subThemesFilter,
-    themeFilter,
-    typeFilter
+    statusFilter = [],
+    subThemesFilter = [],
+    themeFilter = [],
+    typeFilter = []
   } = useAppSelector(state => state.reportingFilters)
   const {
     dateRangeOptions,
@@ -53,6 +60,32 @@ export function TableReportingsFiltersWithRef(
     themesListAsOptions,
     typeOptions
   } = optionsList
+
+  const sourceCustomSearch = useMemo(
+    () =>
+      new CustomSearch(sourceOptions as Option[], ['label'], {
+        cacheKey: 'REPORTINGS_LIST',
+        withCacheInvalidation: true
+      }),
+    [sourceOptions]
+  )
+  const themeCustomSearch = useMemo(
+    () =>
+      new CustomSearch(themesListAsOptions as Option[], ['label'], {
+        cacheKey: 'REPORTINGS_LIST',
+        withCacheInvalidation: true
+      }),
+    [themesListAsOptions]
+  )
+
+  const subThemeCustomSearch = useMemo(
+    () =>
+      new CustomSearch(subThemesListAsOptions as Option[], ['label'], {
+        cacheKey: 'REPORTINGS_LIST',
+        withCacheInvalidation: true
+      }),
+    [subThemesListAsOptions]
+  )
 
   return (
     <>
@@ -88,33 +121,34 @@ export function TableReportingsFiltersWithRef(
             value={periodFilter}
           />
 
-          <StyledCheckPicker
-            container={newWindowContainerRef.current}
-            data={sourceTypeOptions}
+          <CheckPicker
             data-cy="select-source-type-filter"
-            labelKey="label"
+            isLabelHidden
+            label="Type de source"
+            name="sourceType"
             onChange={value => updateSourceTypeFilter(value)}
+            options={sourceTypeOptions}
             placeholder="Type de source"
             renderValue={() => sourceTypeFilter && <OptionValue>{`Type (${sourceTypeFilter.length})`}</OptionValue>}
-            searchable={false}
-            size="sm"
             style={tagPickerStyle}
             value={sourceTypeFilter}
-            valueKey="value"
           />
 
-          <StyledCheckPicker
-            container={newWindowContainerRef.current}
-            data={sourceOptions}
+          <CheckPicker
+            key={sourceOptions.length}
+            customSearch={sourceCustomSearch}
             data-cy="select-source-filter"
-            labelKey="label"
+            isLabelHidden
+            label="Source"
+            menuStyle={{ maxWidth: '200%' }}
+            name="source"
             onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SOURCE_FILTER)}
+            options={sourceOptions}
+            optionValueKey={'label' as any}
             placeholder="Source"
             renderValue={() => sourceFilter && <OptionValue>{`Source (${sourceFilter.length})`}</OptionValue>}
-            size="sm"
             style={tagPickerStyle}
-            value={sourceFilter}
-            valueKey="value"
+            value={sourceFilter as any}
           />
 
           <StyledSelect
@@ -129,42 +163,46 @@ export function TableReportingsFiltersWithRef(
             style={tagPickerStyle}
             value={typeFilter}
           />
-          <StyledCheckPicker
-            container={newWindowContainerRef.current}
-            data={themesListAsOptions}
-            labelKey="label"
+          <CheckPicker
+            key={themesListAsOptions.length}
+            customSearch={themeCustomSearch}
+            isLabelHidden
+            label="Thématiques"
+            menuStyle={{ maxWidth: '200%' }}
+            name="themes"
             onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.THEME_FILTER)}
+            options={themesListAsOptions}
             placeholder="Thématiques"
             renderValue={() => themeFilter && <OptionValue>{`Thème (${themeFilter.length})`}</OptionValue>}
-            size="sm"
             style={{ width: 311 }}
             value={themeFilter}
-            valueKey="value"
           />
-          <StyledCheckPicker
-            container={newWindowContainerRef.current}
-            data={subThemesListAsOptions}
-            labelKey="label"
+          <CheckPicker
+            key={subThemesListAsOptions.length}
+            customSearch={subThemeCustomSearch}
+            isLabelHidden
+            label="Sous-thématiques"
+            menuStyle={{ maxWidth: '200%' }}
+            name="subThemes"
             onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SUB_THEMES_FILTER)}
+            options={subThemesListAsOptions}
             placeholder="Sous-thématiques"
             renderValue={() => subThemesFilter && <OptionValue>{`Sous-thème (${subThemesFilter.length})`}</OptionValue>}
-            size="sm"
+            searchable
             style={{ width: 311 }}
             value={subThemesFilter}
-            valueKey="value"
           />
-          <StyledCheckPicker
-            container={newWindowContainerRef.current}
-            data={seaFrontsOptions}
-            labelKey="label"
+          <CheckPicker
+            isLabelHidden
+            label="Facade"
+            name="seaFront"
             onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SEA_FRONT_FILTER)}
+            options={seaFrontsOptions}
             placeholder="Facade"
             renderValue={() => seaFrontFilter && <OptionValue>{`Facade (${seaFrontFilter.length})`}</OptionValue>}
-            searchable={false}
             size="sm"
             style={tagPickerStyle}
             value={seaFrontFilter}
-            valueKey="value"
           />
         </StyledFiltersSecondLine>
       </FilterWrapper>

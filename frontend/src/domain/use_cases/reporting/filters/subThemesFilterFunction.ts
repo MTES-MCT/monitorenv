@@ -1,7 +1,7 @@
 import type { ReportingDetailed } from '../../../entities/reporting'
 
-export function subThemesFilterFunction(reporting: ReportingDetailed, subThemesFilter: string[]) {
-  if (subThemesFilter.length === 0) {
+export function subThemesFilterFunction(reporting: ReportingDetailed, subThemesFilter: string[] | undefined) {
+  if (!subThemesFilter || subThemesFilter.length === 0) {
     return true
   }
 

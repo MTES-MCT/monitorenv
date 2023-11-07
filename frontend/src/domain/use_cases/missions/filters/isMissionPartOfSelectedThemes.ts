@@ -1,7 +1,7 @@
 import type { Mission } from '../../../entities/missions'
 
-export function isMissionPartOfSelectedThemes(mission: Mission, selectedThemes: string[]) {
-  if (selectedThemes.length === 0) {
+export function isMissionPartOfSelectedThemes(mission: Mission, selectedThemes: string[] | undefined) {
+  if (!selectedThemes || selectedThemes.length === 0) {
     return true
   }
   if (mission.envActions.length === 0) {

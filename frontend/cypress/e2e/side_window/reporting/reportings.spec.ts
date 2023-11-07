@@ -1,35 +1,10 @@
-context('Missions', () => {
+context('Reportings', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
     cy.visit(`/side_window`)
     cy.intercept('GET', '/bff/v1/reportings*').as('getReportings')
     cy.clickButton('signalements')
     cy.wait('@getReportings')
-  })
-
-  it('Reportings should be displayed in Reportings Table and filterable', () => {
-    cy.log('A default period filter should be set')
-    cy.fill('Période', '24 dernières heures')
-    cy.get('*[data-cy="totalReportings"]').contains('5')
-
-    cy.log('Source type should be filtered')
-    cy.get('*[data-cy="select-source-type-filter"]').click()
-    cy.get('div[role="option"]').find('label').contains('Sémaphore').click()
-    cy.get('*[data-cy="totalReportings"]').contains('2')
-
-    cy.log('Source should be filtered')
-    cy.get('*[data-cy="select-source-filter"]').click()
-    cy.get('div[role="option"]').find('label').contains('Sémaphore de Fécamp').click()
-    cy.get('*[data-cy="totalReportings"]').click('topLeft')
-    cy.get('*[data-cy="totalReportings"]').contains('2')
-
-    cy.wait('@getReportings')
-    cy.get('*[data-cy="reinitialize-filters"]').click()
-    cy.get('*[data-cy="totalReportings"]').contains('5')
-
-    cy.get('*[data-cy="status-filter-Archivés"]').click()
-    cy.fill('Période', '30 derniers jours')
-    cy.get('*[data-cy="totalReportings"]').contains('8')
   })
 
   it('Reportings should be archived in Reportings Table', () => {

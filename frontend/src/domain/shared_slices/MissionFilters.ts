@@ -1,5 +1,6 @@
 import { customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { isEqual, omit } from 'lodash'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
@@ -22,14 +23,14 @@ export enum MissionFiltersEnum {
 
 type MissionFilterValues = {
   hasFilters: boolean
-  selectedAdministrationNames: string[]
-  selectedControlUnitIds: number[]
+  selectedAdministrationNames: string[] | undefined
+  selectedControlUnitIds: number[] | undefined
   selectedMissionSource: string | undefined
-  selectedMissionTypes: string[]
+  selectedMissionTypes: string[] | undefined
   selectedPeriod: string
-  selectedSeaFronts: string[]
-  selectedStatuses: string[]
-  selectedThemes: string[]
+  selectedSeaFronts: string[] | undefined
+  selectedStatuses: string[] | undefined
+  selectedThemes: string[] | undefined
   startedAfter?: string
   startedBefore?: string
 }
@@ -42,14 +43,14 @@ export type MissionFiltersState = {
 
 const INITIAL_STATE: MissionFiltersState = {
   hasFilters: false,
-  selectedAdministrationNames: [],
-  selectedControlUnitIds: [],
+  selectedAdministrationNames: undefined,
+  selectedControlUnitIds: undefined,
   selectedMissionSource: undefined,
-  selectedMissionTypes: [],
+  selectedMissionTypes: undefined,
   selectedPeriod: DATE_RANGE_LABEL.WEEK.value,
-  selectedSeaFronts: [],
-  selectedStatuses: [],
-  selectedThemes: [],
+  selectedSeaFronts: undefined,
+  selectedStatuses: undefined,
+  selectedThemes: undefined,
   startedAfter: SEVEN_DAYS_AGO,
   startedBefore: undefined
 }
@@ -79,15 +80,14 @@ const missionFiltersSlice = createSlice({
       return {
         ...state,
         [action.payload.key]: action.payload.value,
-        hasFilters:
-          (action.payload.value && action.payload.value.length > 0) ||
-          state.selectedPeriod !== DATE_RANGE_LABEL.WEEK.value ||
-          state.selectedAdministrationNames.length > 0 ||
-          state.selectedControlUnitIds.length > 0 ||
-          state.selectedMissionTypes.length > 0 ||
-          state.selectedSeaFronts.length > 0 ||
-          state.selectedStatuses.length > 0 ||
-          state.selectedThemes.length > 0
+        hasFilters: !isEqual(
+          omit(INITIAL_STATE, ['hasFilters', 'startedAfter', 'startedBefore']),
+          omit({ ...state, [action.payload.key]: action.payload.value }, [
+            'hasFilters',
+            'startedAfter',
+            'startedBefore'
+          ])
+        )
       }
     }
   }

@@ -7,7 +7,7 @@ import type { Reporting, ReportingDetailed } from '../domain/entities/reporting'
 
 type ReportingsFilter = {
   reportingType: string | undefined
-  seaFronts: string[]
+  seaFronts?: string[]
   sourcesType?: string[]
   startedAfterDateTime?: string
   startedBeforeDateTime?: string
