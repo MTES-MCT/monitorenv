@@ -18,7 +18,7 @@ import type { Base } from '../../../../domain/entities/base'
 import type { CellContext } from '@tanstack/react-table'
 
 export function BaseTable() {
-  const [isDeletionConfirnationModalOpen, setIsDeletionConfirnationModalOpen] = useState(false)
+  const [isDeletionConfirmationModalOpen, setIsDeletionConfirmationModalOpen] = useState(false)
   const [isImpossibleDeletionDialogOpen, setIsImpossibleDeletionDialogOpen] = useState(false)
   const [targetedBase, setTargettedBase] = useState<Base.Base | undefined>(undefined)
 
@@ -48,13 +48,13 @@ export function BaseTable() {
       }
 
       setTargettedBase(base)
-      setIsDeletionConfirnationModalOpen(true)
+      setIsDeletionConfirmationModalOpen(true)
     },
     [dispatch]
   )
 
   const close = useCallback(() => {
-    setIsDeletionConfirnationModalOpen(false)
+    setIsDeletionConfirmationModalOpen(false)
     setIsImpossibleDeletionDialogOpen(false)
   }, [])
 
@@ -87,7 +87,7 @@ export function BaseTable() {
 
       <DataTable columns={baseTableColumns} data={filteredBases} initialSorting={[{ desc: false, id: 'name' }]} />
 
-      {isDeletionConfirnationModalOpen && targetedBase && (
+      {isDeletionConfirmationModalOpen && targetedBase && (
         <ConfirmationModal
           confirmationButtonLabel="Supprimer"
           message={`Êtes-vous sûr de vouloir supprimer la base "${targetedBase.name}" ?`}

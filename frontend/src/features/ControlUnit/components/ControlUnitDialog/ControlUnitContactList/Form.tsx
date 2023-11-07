@@ -43,13 +43,11 @@ export function Form({ initialValues, onCancel, onDelete, onSubmit }: FormProps)
                 </Button>
               </div>
               {onDelete && (
-                <IconButton
+                <DeleteButton
                   accent={Accent.SECONDARY}
                   color={THEME.color.maximumRed}
                   Icon={Icon.Delete}
                   onClick={onDelete}
-                  // TODO Add `borderColor` in Monitor UI.
-                  style={{ borderColor: THEME.color.maximumRed }}
                   title="Supprimer ce contact"
                 />
               )}
@@ -88,4 +86,10 @@ const ActionBar = styled.div`
       margin-left: 8px;
     }
   }
+`
+
+// TODO Add `borderColor` in Monitor UI.
+const DeleteButton = styled(IconButton)`
+  border-color: ${p => p.theme.color.maximumRed};
+  padding: 0 4px;
 `

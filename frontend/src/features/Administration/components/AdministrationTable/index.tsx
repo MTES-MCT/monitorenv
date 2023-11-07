@@ -23,8 +23,8 @@ import type { Administration } from '../../../../domain/entities/administration'
 import type { CellContext } from '@tanstack/react-table'
 
 export function AdministrationTable() {
-  const [isArchivingConfirnationModalOpen, setIsArchivingConfirnationModalOpen] = useState(false)
-  const [isDeletionConfirnationModalOpen, setIsDeletionConfirnationModalOpen] = useState(false)
+  const [isArchivingConfirmationModalOpen, setIsArchivingConfirmationModalOpen] = useState(false)
+  const [isDeletionConfirmationModalOpen, setIsDeletionConfirmationModalOpen] = useState(false)
   const [isImpossibleArchivingDialogOpen, setIsImpossibleArchivingDialogOpen] = useState(false)
   const [isImpossibleDeletionDialogOpen, setIsImpossibleDeletionDialogOpen] = useState(false)
   const [targetedAdministration, setTargettedAdministration] = useState<Administration.Administration | undefined>(
@@ -59,7 +59,7 @@ export function AdministrationTable() {
       }
 
       setTargettedAdministration(administration)
-      setIsArchivingConfirnationModalOpen(true)
+      setIsArchivingConfirmationModalOpen(true)
     },
     [dispatch]
   )
@@ -78,14 +78,14 @@ export function AdministrationTable() {
       }
 
       setTargettedAdministration(administration)
-      setIsDeletionConfirnationModalOpen(true)
+      setIsDeletionConfirmationModalOpen(true)
     },
     [dispatch]
   )
 
   const close = useCallback(() => {
-    setIsArchivingConfirnationModalOpen(false)
-    setIsDeletionConfirnationModalOpen(false)
+    setIsArchivingConfirmationModalOpen(false)
+    setIsDeletionConfirmationModalOpen(false)
     setIsImpossibleArchivingDialogOpen(false)
     setIsImpossibleDeletionDialogOpen(false)
     setTargettedAdministration(undefined)
@@ -151,7 +151,7 @@ export function AdministrationTable() {
         initialSorting={[{ desc: false, id: 'name' }]}
       />
 
-      {isArchivingConfirnationModalOpen && targetedAdministration && (
+      {isArchivingConfirmationModalOpen && targetedAdministration && (
         <ConfirmationModal
           confirmationButtonLabel="Archiver"
           message={[
@@ -164,7 +164,7 @@ export function AdministrationTable() {
         />
       )}
 
-      {isDeletionConfirnationModalOpen && targetedAdministration && (
+      {isDeletionConfirmationModalOpen && targetedAdministration && (
         <ConfirmationModal
           confirmationButtonLabel="Supprimer"
           message={`Êtes-vous sûr de vouloir supprimer l'administration "${targetedAdministration.name}" ?`}

@@ -21,14 +21,15 @@ import type { ControlUnitResourceFormValues } from './types'
 import type { Promisable } from 'type-fest'
 
 export type FormProps = {
+  className?: string
   initialValues: ControlUnitResourceFormValues
-  marginTop?: number
   onArchive?: () => Promisable<void>
   onCancel: () => Promisable<void>
   onDelete?: () => Promisable<void>
   onSubmit: (controlUnitResourceFormValues: ControlUnitResourceFormValues) => void
+  style?: React.CSSProperties
 }
-export function Form({ initialValues, marginTop, onArchive, onCancel, onDelete, onSubmit }: FormProps) {
+export function Form({ className, initialValues, onArchive, onCancel, onDelete, onSubmit, style }: FormProps) {
   const key = useKey([initialValues])
   const isNew = !initialValues.id
 
@@ -50,8 +51,8 @@ export function Form({ initialValues, marginTop, onArchive, onCancel, onDelete, 
       validationSchema={CONTROL_UNIT_RESOURCE_FORM_SCHEMA}
     >
       {({ handleSubmit }) => (
-        <>
-          <Title style={{ marginTop }}>{isNew ? 'Ajouter un moyen' : 'Éditer un moyen'}</Title>
+        <div className={className} style={style}>
+          <Title>{isNew ? 'Ajouter un moyen' : 'Éditer un moyen'}</Title>
           <StyledForm onSubmit={handleSubmit}>
             <FormikSelect isLight label="Type de moyen" name="type" options={CONTROL_UNIT_RESOURCE_TYPES_AS_OPTIONS} />
             <FormikTextInput isLight label="Nom du moyen" name="name" />
@@ -66,28 +67,25 @@ export function Form({ initialValues, marginTop, onArchive, onCancel, onDelete, 
                 </Button>
               </div>
               {onArchive && (
-                <IconButton
+                <ArchiveButton
                   accent={Accent.SECONDARY}
                   Icon={Icon.Archive}
                   onClick={onArchive}
-                  style={{ padding: '0 4px' }}
                   title="Archiver ce moyen"
                 />
               )}
               {onDelete && (
-                <IconButton
+                <DeleteButton
                   accent={Accent.SECONDARY}
                   color={THEME.color.maximumRed}
                   Icon={Icon.Delete}
                   onClick={onDelete}
-                  // TODO Add `borderColor` in Monitor UI.
-                  style={{ borderColor: THEME.color.maximumRed, padding: '0 4px' }}
                   title="Supprimer ce moyen"
                 />
               )}
             </ActionBar>
           </StyledForm>
-        </>
+        </div>
       )}
     </Formik>
   )
@@ -123,4 +121,13 @@ const ActionBar = styled.div`
       margin-left: 8px;
     }
   }
+`
+
+const ArchiveButton = styled(IconButton)`
+  padding: 0 4px;
+`
+// TODO Add `borderColor` in Monitor UI.
+const DeleteButton = styled(IconButton)`
+  border-color: ${p => p.theme.color.maximumRed};
+  padding: 0 4px;
 `

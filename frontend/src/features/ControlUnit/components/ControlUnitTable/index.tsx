@@ -23,8 +23,8 @@ import type { ControlUnit } from '../../../../domain/entities/controlUnit'
 import type { CellContext } from '@tanstack/react-table'
 
 export function ControlUnitTable() {
-  const [isArchivingConfirnationModalOpen, setIsArchivingConfirnationModalOpen] = useState(false)
-  const [isDeletionConfirnationModalOpen, setIsDeletionConfirnationModalOpen] = useState(false)
+  const [isArchivingConfirmationModalOpen, setIsArchivingConfirmationModalOpen] = useState(false)
+  const [isDeletionConfirmationModalOpen, setIsDeletionConfirmationModalOpen] = useState(false)
   const [isImpossibleDeletionDialogOpen, setIsImpossibleDeletionDialogOpen] = useState(false)
   const [targetedControlUnit, setTargettedControlUnit] = useState<ControlUnit.ControlUnit | undefined>(undefined)
 
@@ -47,7 +47,7 @@ export function ControlUnitTable() {
       const controlUnit = cellContext.getValue<ControlUnit.ControlUnit>()
 
       setTargettedControlUnit(controlUnit)
-      setIsArchivingConfirnationModalOpen(true)
+      setIsArchivingConfirmationModalOpen(true)
     },
     []
   )
@@ -66,14 +66,14 @@ export function ControlUnitTable() {
       }
 
       setTargettedControlUnit(controlUnit)
-      setIsDeletionConfirnationModalOpen(true)
+      setIsDeletionConfirmationModalOpen(true)
     },
     [dispatch]
   )
 
   const close = useCallback(() => {
-    setIsArchivingConfirnationModalOpen(false)
-    setIsDeletionConfirnationModalOpen(false)
+    setIsArchivingConfirmationModalOpen(false)
+    setIsDeletionConfirmationModalOpen(false)
     setIsImpossibleDeletionDialogOpen(false)
     setTargettedControlUnit(undefined)
   }, [])
@@ -138,7 +138,7 @@ export function ControlUnitTable() {
         initialSorting={[{ desc: false, id: 'name' }]}
       />
 
-      {isArchivingConfirnationModalOpen && targetedControlUnit && (
+      {isArchivingConfirmationModalOpen && targetedControlUnit && (
         <ConfirmationModal
           confirmationButtonLabel="Archiver"
           message={[
@@ -151,7 +151,7 @@ export function ControlUnitTable() {
         />
       )}
 
-      {isDeletionConfirnationModalOpen && targetedControlUnit && (
+      {isDeletionConfirmationModalOpen && targetedControlUnit && (
         <ConfirmationModal
           confirmationButtonLabel="Supprimer"
           message={[

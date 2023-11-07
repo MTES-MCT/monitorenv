@@ -30,7 +30,7 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
   const [updateControlUnitContact] = useUpdateControlUnitContactMutation()
 
   const [editedControlUnitContactId, setEditedControlUnitContactId] = useState<number | undefined>(undefined)
-  const [isDeletionConfirnationModalOpen, setIsDeletionConfirnationModalOpen] = useState(false)
+  const [isDeletionConfirmationModalOpen, setIsDeletionConfirmationModalOpen] = useState(false)
   const [isNewControlUnitContactFormOpen, setIsNewControlUnitContactFormOpen] = useState(false)
 
   const sortedControlUnitContacts = useMemo(
@@ -49,12 +49,12 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
 
   const isFormOpen = isNewControlUnitContactFormOpen || !!editedControlUnitContactId
 
-  const askForDeletionConfirmation = useCallback(async () => {
-    setIsDeletionConfirnationModalOpen(true)
+  const askForDeletionConfirmation = useCallback(() => {
+    setIsDeletionConfirmationModalOpen(true)
   }, [])
 
   const closeDialogsAndModals = useCallback(() => {
-    setIsDeletionConfirnationModalOpen(false)
+    setIsDeletionConfirmationModalOpen(false)
   }, [])
 
   const closeForm = useCallback(() => {
@@ -125,7 +125,7 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
         )}
       </StyledSectionBody>
 
-      {isDeletionConfirnationModalOpen && editedControlUnitContact && (
+      {isDeletionConfirmationModalOpen && editedControlUnitContact && (
         <ConfirmationModal
           confirmationButtonLabel="Supprimer"
           message={`Êtes-vous sûr de vouloir supprimer le contact "${editedControlUnitContact.name}" ?`}

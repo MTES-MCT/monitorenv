@@ -33,8 +33,8 @@ export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceList
   const [updateControlUnitResource] = useUpdateControlUnitResourceMutation()
 
   const [editedControlUnitResourceId, setEditedControlUnitResourceId] = useState<number | undefined>(undefined)
-  const [isArchivingConfirnationModalOpen, setIsArchivingConfirnationModalOpen] = useState(false)
-  const [isDeletionConfirnationModalOpen, setIsDeletionConfirnationModalOpen] = useState(false)
+  const [isArchivingConfirmationModalOpen, setIsArchivingConfirmationModalOpen] = useState(false)
+  const [isDeletionConfirmationModalOpen, setIsDeletionConfirmationModalOpen] = useState(false)
   const [isImpossibleDeletionDialogOpen, setIsImpossibleDeletionDialogOpen] = useState(false)
   const [isNewControlUnitResourceFormOpen, setIsNewControlUnitResourceFormOpen] = useState(false)
 
@@ -44,8 +44,8 @@ export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceList
     controlUnitId: controlUnit.id
   }
 
-  const askForArchivingConfirmation = useCallback(async () => {
-    setIsArchivingConfirnationModalOpen(true)
+  const askForArchivingConfirmation = useCallback(() => {
+    setIsArchivingConfirmationModalOpen(true)
   }, [])
 
   const askForDeletionConfirmation = useCallback(async () => {
@@ -64,12 +64,12 @@ export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceList
       return
     }
 
-    setIsDeletionConfirnationModalOpen(true)
+    setIsDeletionConfirmationModalOpen(true)
   }, [dispatch, editedControlUnitResourceId])
 
   const closeDialogsAndModals = useCallback(() => {
-    setIsArchivingConfirnationModalOpen(false)
-    setIsDeletionConfirnationModalOpen(false)
+    setIsArchivingConfirmationModalOpen(false)
+    setIsDeletionConfirmationModalOpen(false)
     setIsImpossibleDeletionDialogOpen(false)
   }, [])
 
@@ -139,9 +139,9 @@ export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceList
       <StyledSectionBody $isEmpty={!activeControlUnitResources.length}>
         {activeControlUnitResources.map((controlUnitResource, index) =>
           controlUnitResource.id === editedControlUnitResourceId ? (
-            <Form
+            <StyledEditionForm
+              $isFirst={index === 0}
               initialValues={editedControlUnitResource}
-              marginTop={index > 0 ? 8 : undefined}
               onArchive={askForArchivingConfirmation}
               onCancel={closeForm}
               onDelete={askForDeletionConfirmation}
@@ -153,9 +153,8 @@ export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceList
         )}
 
         {isNewControlUnitResourceFormOpen ? (
-          <Form
+          <StyledCreationForm
             initialValues={editedControlUnitResource}
-            marginTop={16}
             onCancel={closeForm}
             onSubmit={createOrUpdateControlUnitResource}
           />
@@ -168,7 +167,7 @@ export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceList
         )}
       </StyledSectionBody>
 
-      {isArchivingConfirnationModalOpen && editedControlUnitResource && (
+      {isArchivingConfirmationModalOpen && editedControlUnitResource && (
         <ConfirmationModal
           confirmationButtonLabel="Archiver"
           message={`Êtes-vous sûr de vouloir archiver le moyen "${editedControlUnitResource.name}" ?`}
@@ -178,7 +177,7 @@ export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceList
         />
       )}
 
-      {isDeletionConfirnationModalOpen && editedControlUnitResource && (
+      {isDeletionConfirmationModalOpen && editedControlUnitResource && (
         <ConfirmationModal
           confirmationButtonLabel="Supprimer"
           message={`Êtes-vous sûr de vouloir supprimer le moyen "${editedControlUnitResource.name}" ?`}
@@ -212,4 +211,14 @@ const StyledSectionBody = styled(Section.Body)<{
   > div:last-child {
     margin-top: ${p => (!p.$isEmpty ? 16 : 0)}px;
   }
+`
+
+const StyledEditionForm = styled(Form)<{
+  $isFirst: boolean
+}>`
+  margin-top: ${p => (p.$isFirst ? 0 : 8)}px;
+`
+
+const StyledCreationForm = styled(Form)`
+  margin-top: 16px;
 `
