@@ -32,7 +32,6 @@ class GetEngagedControlUnits(private val getFullMissions: GetFullMissions) {
             }.groupBy { it.first }
             .map { Pair(it.key, it.value.map { missionSource -> missionSource.second }) }
 
-
         logger.info("Found ${controlUnitsAndSource.size} engaged control unit(s).")
 
         return controlUnitsAndSource

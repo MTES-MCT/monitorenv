@@ -1,8 +1,7 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.LegacyControlUnitDataOutput
 
 data class LegacyControlUnitAndMissionSourcesDataOutput(
     val controlUnit: LegacyControlUnitDataOutput,
@@ -10,9 +9,9 @@ data class LegacyControlUnitAndMissionSourcesDataOutput(
 ) {
     companion object {
         fun fromLegacyControlUnitAndMissionSources(pair: Pair<LegacyControlUnitEntity, List<MissionSourceEnum>>) =
-            LegacyControlUnitAndMissionSourcesDataOutput (
+            LegacyControlUnitAndMissionSourcesDataOutput(
                 controlUnit = LegacyControlUnitDataOutput.fromLegacyControlUnit(pair.first),
-                missionSources = pair.second
+                missionSources = pair.second,
             )
     }
 }

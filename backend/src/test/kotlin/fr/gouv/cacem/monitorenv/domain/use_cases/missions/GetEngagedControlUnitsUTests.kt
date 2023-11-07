@@ -63,8 +63,13 @@ class GetEngagedControlUnitsUTests {
                 anyOrNull(),
             ),
         )
-            .willReturn(listOf(expectedMission, expectedMission
-                .copy(mission = expectedMission.mission.copy(missionSource = MissionSourceEnum.MONITORFISH))))
+            .willReturn(
+                listOf(
+                    expectedMission,
+                    expectedMission
+                        .copy(mission = expectedMission.mission.copy(missionSource = MissionSourceEnum.MONITORFISH)),
+                ),
+            )
 
         val controlUnits = GetEngagedControlUnits(getFullMissions).execute()
 

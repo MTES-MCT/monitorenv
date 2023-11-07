@@ -838,14 +838,16 @@ class MissionsControllerITests {
         // Given
         given(getEngagedControlUnits.execute()).willReturn(
             listOf(
-                Pair(LegacyControlUnitEntity(
-                    id = 123,
-                    administration = "Admin",
-                    resources = listOf(),
-                    isArchived = false,
-                    name = "Control Unit Name",
+                Pair(
+                    LegacyControlUnitEntity(
+                        id = 123,
+                        administration = "Admin",
+                        resources = listOf(),
+                        isArchived = false,
+                        name = "Control Unit Name",
+                    ),
+                    listOf(MissionSourceEnum.MONITORFISH),
                 ),
-                    listOf(MissionSourceEnum.MONITORFISH)),
             ),
         )
 
