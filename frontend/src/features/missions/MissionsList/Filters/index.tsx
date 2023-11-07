@@ -195,6 +195,7 @@ export function MissionsTableFilters() {
           value={selectedMissionSource}
         />
         <CheckPicker
+          key={activeAdministrations.length}
           data-cy="select-administration-filter"
           isLabelHidden
           label="Administration"
@@ -213,6 +214,7 @@ export function MissionsTableFilters() {
           value={selectedAdministrationNames}
         />
         <CheckPicker
+          key={controlUnitsAsOptions.length}
           customSearch={controlUnitCustomSearch}
           data-cy="select-units-filter"
           isLabelHidden
@@ -227,7 +229,7 @@ export function MissionsTableFilters() {
           }
           size="sm"
           style={tagPickerStyle}
-          value={selectedControlUnitIds as any}
+          value={selectedControlUnitIds}
         />
         <CheckPicker
           data-cy="select-types-filter"

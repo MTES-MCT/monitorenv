@@ -1,8 +1,8 @@
 import type { ReportingDetailed } from '../../../entities/reporting'
 import type { SourceFilterProps } from '../../../shared_slices/ReportingsFilters'
 
-export function sourceFilterFunction(reporting: ReportingDetailed, sourceFilter: SourceFilterProps[]) {
-  if (sourceFilter.length === 0) {
+export function sourceFilterFunction(reporting: ReportingDetailed, sourceFilter: SourceFilterProps[] | undefined) {
+  if (!sourceFilter || sourceFilter.length === 0) {
     return true
   }
 

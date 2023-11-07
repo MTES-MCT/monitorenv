@@ -10,13 +10,13 @@ const TWO_MINUTES = 2 * 60 * 1000
 
 export const useGetFilteredMissionsQuery = () => {
   const {
-    selectedAdministrationNames = [],
-    selectedControlUnitIds = [],
+    selectedAdministrationNames,
+    selectedControlUnitIds,
     selectedMissionSource,
     selectedMissionTypes,
     selectedSeaFronts,
     selectedStatuses,
-    selectedThemes = [],
+    selectedThemes,
     startedAfter,
     startedBefore
   } = useAppSelector(state => state.missionFilters)

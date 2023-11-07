@@ -8,7 +8,7 @@ type MissionsFilter = {
   missionSource?: string
   missionStatus?: string[]
   missionTypes?: string[]
-  seaFronts: string[]
+  seaFronts?: string[]
   startedAfterDateTime?: string
   startedBeforeDateTime?: string
 }

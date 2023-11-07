@@ -213,7 +213,7 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
 
   const updateSourceTypeFilter = types => {
     dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SOURCE_TYPE_FILTER, value: types }))
-    dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SOURCE_FILTER, value: [] }))
+    dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SOURCE_FILTER, value: undefined }))
   }
 
   const resetFilters = () => {

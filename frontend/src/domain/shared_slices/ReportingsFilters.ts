@@ -31,7 +31,7 @@ type ReportingsFiltersSliceType = {
   actionsFilter?: string[]
   hasFilters: boolean
   periodFilter: string
-  seaFrontFilter: string[]
+  seaFrontFilter: string[] | undefined
   sourceFilter: SourceFilterProps[] | undefined
   sourceTypeFilter: string[] | undefined
   startedAfter: string
@@ -46,7 +46,7 @@ const initialState: ReportingsFiltersSliceType = {
   actionsFilter: [],
   hasFilters: false,
   periodFilter: ReportingDateRangeEnum.DAY,
-  seaFrontFilter: [],
+  seaFrontFilter: undefined,
   sourceFilter: undefined,
   sourceTypeFilter: undefined,
   startedAfter: LAST_24_HOURS,

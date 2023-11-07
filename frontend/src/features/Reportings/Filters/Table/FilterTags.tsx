@@ -8,27 +8,21 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 export function FilterTags() {
   const dispatch = useAppDispatch()
-  const { seaFrontFilter, sourceFilter, sourceTypeFilter, subThemesFilter, themeFilter } = useAppSelector(
+  const { hasFilters, seaFrontFilter, sourceFilter, sourceTypeFilter, subThemesFilter, themeFilter } = useAppSelector(
     state => state.reportingFilters
   )
 
   const onDeleteTag = (valueToDelete: string | any, filterKey: ReportingsFiltersEnum, reportingFilter) => {
     const updatedFilter = reportingFilter.filter(unit => unit !== valueToDelete)
-    dispatch(reportingsFiltersActions.updateFilters({ key: filterKey, value: updatedFilter }))
+    dispatch(
+      reportingsFiltersActions.updateFilters({
+        key: filterKey,
+        value: updatedFilter.length === 0 ? undefined : updatedFilter
+      })
+    )
   }
-  const hasNoFilterTags =
-    sourceTypeFilter &&
-    sourceTypeFilter.length === 0 &&
-    sourceFilter &&
-    sourceFilter.length === 0 &&
-    themeFilter &&
-    themeFilter?.length === 0 &&
-    subThemesFilter &&
-    subThemesFilter?.length === 0 &&
-    seaFrontFilter &&
-    seaFrontFilter.length === 0
 
-  if (hasNoFilterTags) {
+  if (!hasFilters) {
     return null
   }
 

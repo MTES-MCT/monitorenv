@@ -11,14 +11,14 @@ const TWO_MINUTES = 2 * 60 * 1000
 
 export const useGetFilteredReportingsQuery = () => {
   const {
-    seaFrontFilter = [],
-    sourceFilter = [],
-    sourceTypeFilter = [],
+    seaFrontFilter,
+    sourceFilter,
+    sourceTypeFilter,
     startedAfter,
     startedBefore,
     statusFilter,
-    subThemesFilter = [],
-    themeFilter = [],
+    subThemesFilter,
+    themeFilter,
     typeFilter
   } = useAppSelector(state => state.reportingFilters)
   const { data, isError, isFetching, isLoading } = useGetReportingsQuery(
