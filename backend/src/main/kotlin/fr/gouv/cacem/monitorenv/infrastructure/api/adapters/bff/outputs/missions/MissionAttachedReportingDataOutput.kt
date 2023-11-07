@@ -99,6 +99,7 @@ data class MissionAttachedReportingDataOutput(
                 openBy = dto.reporting.openBy,
                 attachedToMissionAtUtc = dto.reporting.attachedToMissionAtUtc,
                 detachedFromMissionAtUtc = dto.reporting.detachedFromMissionAtUtc,
+                attachedEnvActionId = dto.reporting.attachedEnvActionId,
             )
         }
     }

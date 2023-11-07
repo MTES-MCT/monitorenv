@@ -177,10 +177,10 @@ export const getControlInfractionsTags = (actionNumberOfControls, infractions) =
 
 type ActionsForTimeLine = Record<string, ReportingForTimeline | EnvActionForTimeline>
 
-const formattedEnvActionsForTimeline = (envActions, reportings) =>
+const formattedEnvActionsForTimeline = (envActions, attachedReportings) =>
   envActions?.reduce((newEnvActionsCollection, action) => {
     if (action.actionType === ActionTypeEnum.CONTROL && action.reportingIds.length === 1) {
-      const attachedReporting = reportings?.find(reporting => reporting.id === action.reportingIds[0])
+      const attachedReporting = attachedReportings?.find(reporting => reporting.id === action.reportingIds[0])
 
       return {
         ...newEnvActionsCollection,
@@ -202,8 +202,8 @@ const formattedEnvActionsForTimeline = (envActions, reportings) =>
     }
   }, {} as EnvActionForTimeline)
 
-const formattedReportingsForTimeline = reportings =>
-  reportings.reduce(
+const formattedReportingsForTimeline = attachedReportings =>
+  attachedReportings.reduce(
     (newReportingsCollection, reporting) => ({
       ...newReportingsCollection,
       [reporting.id]: {
@@ -215,8 +215,12 @@ const formattedReportingsForTimeline = reportings =>
     {} as ReportingForTimeline
   )
 
-const formattedDetachedReportingsForTimeline = detachedReportings =>
-  detachedReportings?.reduce(
+const formattedDetachedReportingsForTimeline = (detachedReportings, attachedReportingIds) => {
+  const filteredDetachedReportings = detachedReportings?.filter(
+    detachedreporting => !attachedReportingIds?.includes(detachedreporting.id)
+  )
+
+  return filteredDetachedReportings?.reduce(
     (newDetachedReportingsCollection, detachedReporting) => ({
       ...newDetachedReportingsCollection,
       [`attach-${detachedReporting.reportingId}`]: {
@@ -234,14 +238,17 @@ const formattedDetachedReportingsForTimeline = detachedReportings =>
     }),
     {} as DetachedReportingForTimeline
   )
+}
+
 export const getEnvActionsAndReportingsForTimeline = (
   envActions: EnvAction[] | undefined,
-  reportings: Reporting[] | undefined,
-  detachedReportings: DetachedReporting[] | undefined
+  attachedReportings: Reporting[] | undefined,
+  detachedReportings: DetachedReporting[] | undefined,
+  attachedReportingIds: number[] | undefined
 ): ActionsForTimeLine => {
-  const formattedEnvActions = formattedEnvActionsForTimeline(envActions, reportings)
-  const formattedReportings = formattedReportingsForTimeline(reportings)
-  const formattedDetachedReportings = formattedDetachedReportingsForTimeline(detachedReportings)
+  const formattedEnvActions = formattedEnvActionsForTimeline(envActions, attachedReportings)
+  const formattedReportings = formattedReportingsForTimeline(attachedReportings)
+  const formattedDetachedReportings = formattedDetachedReportingsForTimeline(detachedReportings, attachedReportingIds)
 
   return { ...formattedEnvActions, ...formattedReportings, ...formattedDetachedReportings }
 }

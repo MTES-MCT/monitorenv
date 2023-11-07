@@ -28,6 +28,7 @@ export function AttachMission({ setIsAttachNewMission }) {
   const unattachMission = () => {
     setFieldValue('detachedFromMissionAtUtc', new Date().toISOString())
     setFieldValue('attachedEnvActionId', null)
+    setFieldValue('hasNoUnitAvailable', false)
   }
 
   const createMission = async () => {
@@ -43,14 +44,17 @@ export function AttachMission({ setIsAttachNewMission }) {
       setFieldValue('attachedMission', attachedMission)
       setFieldValue('attachedToMissionAtUtc', new Date().toISOString())
       setFieldValue('detachedFromMissionAtUtc', undefined)
+      setFieldValue('hasNoUnitAvailable', false)
     }
   }, [missionId, setFieldValue, dispatch, values.missionId, attachedMission])
+
+  const isButtonDisabled = !values.isControlRequired || values.isArchived
 
   return !values.missionId || (values.missionId && values.detachedFromMissionAtUtc) ? (
     <ButtonsContainer>
       <Button
         accent={Accent.SECONDARY}
-        disabled={!values.isControlRequired}
+        disabled={isButtonDisabled}
         Icon={Icon.Link}
         isFullWidth
         onClick={attachMission}
@@ -59,14 +63,14 @@ export function AttachMission({ setIsAttachNewMission }) {
       </Button>
       <Button
         accent={Accent.SECONDARY}
-        disabled={!values.isControlRequired}
+        disabled={isButtonDisabled}
         Icon={Icon.Plus}
         isFullWidth
         onClick={createMission}
       >
         Créer une mission pour ce signalement
       </Button>
-      <FormikCheckbox disabled={!values.isControlRequired} label="Aucune unité disponible" name="hasNoUnitAvailable" />
+      <FormikCheckbox disabled={isButtonDisabled} label="Aucune unité disponible" name="hasNoUnitAvailable" />
     </ButtonsContainer>
   ) : (
     <div>
@@ -79,7 +83,7 @@ export function AttachMission({ setIsAttachNewMission }) {
 
       <UnattachButtonContainer>
         <Button accent={Accent.SECONDARY} Icon={Icon.Unlink} isFullWidth={false} onClick={unattachMission}>
-          Délier la mission
+          Détacher la mission
         </Button>
       </UnattachButtonContainer>
     </div>

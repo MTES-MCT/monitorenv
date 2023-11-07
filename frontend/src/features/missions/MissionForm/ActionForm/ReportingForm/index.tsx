@@ -88,8 +88,13 @@ export function ReportingForm({
     <>
       <Header>
         <Title>{`Signalement ${getFormattedReportingId(reporting.reportingId)}`}</Title>
-        <Button accent={Accent.SECONDARY} Icon={Icon.Unlink} onClick={unattachReporting}>
-          Délier de la mission
+        <Button
+          accent={Accent.SECONDARY}
+          disabled={reporting.isArchived}
+          Icon={Icon.Unlink}
+          onClick={unattachReporting}
+        >
+          Détacher de la mission
         </Button>
       </Header>
       <FirstPartContainer>

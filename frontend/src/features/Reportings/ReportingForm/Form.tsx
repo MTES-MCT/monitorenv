@@ -218,6 +218,7 @@ export function ReportingForm({
           <Toggle
             checked={values.isControlRequired || false}
             data-cy="reporting-is-control-required"
+            disabled={values.isArchived}
             onChange={changeNeedControlValue}
           />
           <span>Le signalement nécessite un contrôle</span>

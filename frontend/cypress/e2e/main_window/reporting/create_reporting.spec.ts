@@ -102,7 +102,7 @@ context('Reporting', () => {
     cy.clickButton('Editer le signalement')
 
     // When
-    cy.clickButton('Délier la mission')
+    cy.clickButton('Détacher la mission')
     cy.clickButton('Enregistrer et quitter')
     cy.wait(1000)
 

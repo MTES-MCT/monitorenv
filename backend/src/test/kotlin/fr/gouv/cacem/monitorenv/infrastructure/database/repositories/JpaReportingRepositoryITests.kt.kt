@@ -199,7 +199,6 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         assertThat(otherReportingDTO.reporting.attachedEnvActionId).isNull()
     }
 
-
     @Test
     fun `findAll should return all reportings`() {
         val reportings =

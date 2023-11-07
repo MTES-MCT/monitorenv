@@ -48,7 +48,9 @@ class ReportingsController(
         @Parameter(description = "page number")
         @RequestParam(name = "pageNumber")
         pageNumber: Int?,
-        @Parameter(description = "page size") @RequestParam(name = "pageSize") pageSize: Int?,
+        @Parameter(description = "page size")
+        @RequestParam(name = "pageSize")
+        pageSize: Int?,
         @Parameter(description = "Reporting created after date")
         @RequestParam(name = "startedAfterDateTime", required = false)
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -97,7 +99,9 @@ class ReportingsController(
     @GetMapping("/{id}")
     @Operation(summary = "Get reporting by id")
     fun getReportingByIdController(
-        @PathParam("reporting id") @PathVariable(name = "id") id: Int,
+        @PathParam("reporting id")
+        @PathVariable(name = "id")
+        id: Int,
     ): ReportingDataOutput {
         return getReportingById.execute(id).let { ReportingDataOutput.fromReportingDTO(it) }
     }
@@ -105,7 +109,9 @@ class ReportingsController(
     @PutMapping(value = ["/{id}"], consumes = ["application/json"])
     @Operation(summary = "update a reporting")
     fun updateReportingController(
-        @PathParam("reporting id") @PathVariable(name = "id") id: Int,
+        @PathParam("reporting id")
+        @PathVariable(name = "id")
+        id: Int,
         @RequestBody reporting: CreateOrUpdateReportingDataInput,
     ): ReportingDataOutput {
         require(id == reporting.id) { "id in path and body must be the same" }
@@ -119,7 +125,9 @@ class ReportingsController(
     @Operation(summary = "Delete a reporting")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteController(
-        @PathParam("Id") @PathVariable(name = "id") id: Int,
+        @PathParam("Id")
+        @PathVariable(name = "id")
+        id: Int,
     ) {
         deleteReporting.execute(id = id)
     }

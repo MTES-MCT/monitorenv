@@ -179,7 +179,10 @@ class CreateOrUpdateMissionWithAttachedReportingUTests {
                 )
 
         // Then
-        verify(reportingRepository,times(1)).detachDanglingEnvActions(missionId = 100, envActionIds = listOf(envActionControl.id))
+        verify(reportingRepository, times(1)).detachDanglingEnvActions(
+            missionId = 100,
+            envActionIds = listOf(envActionControl.id),
+        )
         verify(reportingRepository, times(1)).attachReportingsToMission(attachedReportingIds, 100)
         verify(
             reportingRepository,

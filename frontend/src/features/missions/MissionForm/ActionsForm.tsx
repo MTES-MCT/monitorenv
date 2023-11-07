@@ -20,12 +20,14 @@ export function ActionsForm({ currentActionIndex, setCurrentActionIndex }) {
 
   const envActions = values?.envActions as EnvAction[]
   const attachedReportings = values?.attachedReportings as Reporting[]
+  const attachedReportingIds = values?.attachedReportingIds as number[]
   const detachedReportings = values?.detachedReportings as DetachedReporting[]
   const isFirstSurveillanceAction = !envActions?.find(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
 
   const actions = useMemo(
-    () => getEnvActionsAndReportingsForTimeline(envActions, attachedReportings, detachedReportings),
-    [envActions, attachedReportings, detachedReportings]
+    () =>
+      getEnvActionsAndReportingsForTimeline(envActions, attachedReportings, detachedReportings, attachedReportingIds),
+    [envActions, attachedReportings, detachedReportings, attachedReportingIds]
   )
 
   const sortedActions = useMemo(

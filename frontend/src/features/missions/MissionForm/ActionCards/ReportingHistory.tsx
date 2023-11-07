@@ -16,7 +16,7 @@ export function ReportingHistory({ action }: { action: DetachedReportingForTimel
   return (
     <>
       <Icon.Unlink color={THEME.color.charcoal} />
-      <ReportingHistoryContainer>Signalement {action.reportingId} désaffecté de la mission</ReportingHistoryContainer>
+      <ReportingHistoryContainer>Signalement {action.reportingId} détaché de la mission</ReportingHistoryContainer>
     </>
   )
 }

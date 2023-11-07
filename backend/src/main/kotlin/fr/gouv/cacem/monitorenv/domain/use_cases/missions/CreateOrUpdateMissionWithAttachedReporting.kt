@@ -25,9 +25,14 @@ class CreateOrUpdateMissionWithAttachedReporting(
         attachedReportingIds: List<Int>,
         envActionsAttachedToReportingIds: List<EnvActionAttachedToReportingIds>,
     ): MissionDTO {
-        logger.info("Create or update mission: ${mission.id} with attached reporting ids: $attachedReportingIds and env actions attached to reporting ids: $envActionsAttachedToReportingIds")
+        logger.info(
+            "Create or update mission: ${mission.id} with attached reporting ids: $attachedReportingIds and env actions attached to reporting ids: $envActionsAttachedToReportingIds",
+        )
         if (mission.id != null) {
-            reportingRepository.detachDanglingEnvActions(mission.id, getListOfEnvActionIds(envActionsAttachedToReportingIds))
+            reportingRepository.detachDanglingEnvActions(
+                mission.id,
+                getListOfEnvActionIds(envActionsAttachedToReportingIds),
+            )
         }
 
         val savedMission = createOrUpdateMission.execute(mission)
@@ -42,7 +47,7 @@ class CreateOrUpdateMissionWithAttachedReporting(
         return missionRepository.findFullMissionById(savedMission.id)
     }
 
-    private fun getListOfEnvActionIds(envActionsAttachedToReportingIds: List<EnvActionAttachedToReportingIds>?) : List<UUID>{
-        return envActionsAttachedToReportingIds?.filter{it.second.isNotEmpty()}?.map { it.first } ?: emptyList()
+    private fun getListOfEnvActionIds(envActionsAttachedToReportingIds: List<EnvActionAttachedToReportingIds>?): List<UUID> {
+        return envActionsAttachedToReportingIds?.filter { it.second.isNotEmpty() }?.map { it.first } ?: emptyList()
     }
 }

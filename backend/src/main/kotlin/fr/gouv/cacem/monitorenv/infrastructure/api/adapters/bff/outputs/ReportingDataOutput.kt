@@ -112,6 +112,7 @@ data class ReportingDataOutput(
                 } else {
                     null
                 },
+                controlStatus = dto.controlStatus,
             )
         }
     }

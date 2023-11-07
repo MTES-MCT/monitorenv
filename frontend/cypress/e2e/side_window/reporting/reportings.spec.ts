@@ -81,7 +81,7 @@ context('Reportings', () => {
     cy.get('*[data-cy="status-filter-Archivés"]').click()
 
     cy.get('*[data-cy="edit-reporting-6"]').click({ force: true })
-    cy.clickButton('Délier la mission')
+    cy.clickButton('Détacher la mission')
     cy.wait(100)
     cy.clickButton('Enregistrer et quitter')
 
