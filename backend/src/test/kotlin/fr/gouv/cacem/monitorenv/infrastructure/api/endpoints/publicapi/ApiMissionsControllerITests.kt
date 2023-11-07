@@ -284,23 +284,24 @@ class ApiMissionsControllerITests {
     @Test
     fun `Should get all engaged control units`() {
         // Given
-        given(getEngagedControlUnits.execute())
-            .willReturn(
-                listOf(
-                    LegacyControlUnitEntity(
-                        id = 123,
-                        administration = "Admin",
-                        resources = listOf(),
-                        isArchived = false,
-                        name = "Control Unit Name",
-                    ),
+        given(getEngagedControlUnits.execute()).willReturn(
+            listOf(
+                Pair(LegacyControlUnitEntity(
+                    id = 123,
+                    administration = "Admin",
+                    resources = listOf(),
+                    isArchived = false,
+                    name = "Control Unit Name",
                 ),
-            )
+                    listOf(MissionSourceEnum.MONITORFISH)),
+            ),
+        )
 
         // When
         mockMvc.perform(get("/api/v1/missions/engaged_control_units"))
             // Then
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$[0].name", equalTo("Control Unit Name")))
+            .andExpect(jsonPath("$[0].controlUnit.name", equalTo("Control Unit Name")))
+            .andExpect(jsonPath("$[0].missionSources[0]", equalTo("MONITORFISH")))
     }
 }

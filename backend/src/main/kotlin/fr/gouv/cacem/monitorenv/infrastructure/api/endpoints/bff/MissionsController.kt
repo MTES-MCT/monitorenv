@@ -1,8 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.LegacyControlUnitAndMissionSourcesDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions.MissionDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions.MissionsDataOutput
@@ -131,7 +131,8 @@ class MissionsController(
     // migration is done
     @GetMapping("/engaged_control_units")
     @Operation(summary = "Get engaged control units")
-    fun getEngagedControlUnitsController(): List<LegacyControlUnitEntity> {
+    fun getEngagedControlUnitsController(): List<LegacyControlUnitAndMissionSourcesDataOutput> {
         return getEngagedControlUnits.execute()
+            .map { LegacyControlUnitAndMissionSourcesDataOutput.fromLegacyControlUnitAndMissionSources(it) }
     }
 }

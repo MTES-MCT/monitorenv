@@ -63,11 +63,14 @@ class GetEngagedControlUnitsUTests {
                 anyOrNull(),
             ),
         )
-            .willReturn(listOf(expectedMission, expectedMission))
+            .willReturn(listOf(expectedMission, expectedMission
+                .copy(mission = expectedMission.mission.copy(missionSource = MissionSourceEnum.MONITORFISH))))
 
         val controlUnits = GetEngagedControlUnits(getFullMissions).execute()
 
         assertThat(controlUnits).hasSize(1)
-        assertThat(controlUnits.first().name).isEqualTo("Control Unit Name")
+        assertThat(controlUnits.first().first.name).isEqualTo("Control Unit Name")
+        assertThat(controlUnits.first().second.first()).isEqualTo(MissionSourceEnum.MONITORENV)
+        assertThat(controlUnits.first().second.last()).isEqualTo(MissionSourceEnum.MONITORFISH)
     }
 }
