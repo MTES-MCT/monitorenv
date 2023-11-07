@@ -18,6 +18,7 @@ import { useGetBasesQuery } from '../../../../../api/basesAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../../api/constants'
 
 import type { ControlUnitResourceFormValues } from './types'
+import type { CSSProperties } from 'react'
 import type { Promisable } from 'type-fest'
 
 export type FormProps = {
@@ -27,7 +28,7 @@ export type FormProps = {
   onCancel: () => Promisable<void>
   onDelete?: () => Promisable<void>
   onSubmit: (controlUnitResourceFormValues: ControlUnitResourceFormValues) => void
-  style?: React.CSSProperties
+  style?: CSSProperties
 }
 export function Form({ className, initialValues, onArchive, onCancel, onDelete, onSubmit, style }: FormProps) {
   const key = useKey([initialValues])

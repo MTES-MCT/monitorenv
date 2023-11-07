@@ -47,8 +47,6 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
     [controlUnit.id, editedControlUnitContactId, sortedControlUnitContacts]
   )
 
-  const isFormOpen = isNewControlUnitContactFormOpen || !!editedControlUnitContactId
-
   const askForDeletionConfirmation = useCallback(() => {
     setIsDeletionConfirmationModalOpen(true)
   }, [])
@@ -86,8 +84,14 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
     [closeForm, createControlUnitContact, isNewControlUnitContactFormOpen, updateControlUnitContact]
   )
 
-  const openForm = useCallback(() => {
+  const openCreationForm = useCallback(() => {
+    setEditedControlUnitContactId(undefined)
     setIsNewControlUnitContactFormOpen(true)
+  }, [])
+
+  const openEditionForm = useCallback((nextEditedControlUnitResourceId: number) => {
+    setEditedControlUnitContactId(nextEditedControlUnitResourceId)
+    setIsNewControlUnitContactFormOpen(false)
   }, [])
 
   return (
@@ -101,24 +105,28 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
           onSubmit={onSubmit}
         />
 
-        {sortedControlUnitContacts.map(controlUnitContact => (
-          <Item
-            key={controlUnitContact.id}
-            controlUnitContact={controlUnitContact}
-            onEdit={setEditedControlUnitContactId}
-          />
-        ))}
+        {sortedControlUnitContacts.map(controlUnitContact =>
+          controlUnitContact.id === editedControlUnitContactId ? (
+            <StyledEditionForm
+              initialValues={editedControlUnitContact}
+              onCancel={closeForm}
+              onDelete={askForDeletionConfirmation}
+              onSubmit={createOrUpdateControlUnitContact}
+            />
+          ) : (
+            <Item key={controlUnitContact.id} controlUnitContact={controlUnitContact} onEdit={openEditionForm} />
+          )
+        )}
 
-        {isFormOpen ? (
-          <Form
+        {isNewControlUnitContactFormOpen ? (
+          <StyledCreationForm
             initialValues={editedControlUnitContact}
             onCancel={closeForm}
-            onDelete={askForDeletionConfirmation}
             onSubmit={createOrUpdateControlUnitContact}
           />
         ) : (
           <div>
-            <Button accent={Accent.SECONDARY} onClick={openForm}>
+            <Button accent={Accent.SECONDARY} onClick={openCreationForm}>
               Ajouter un contact
             </Button>
           </div>
@@ -147,4 +155,12 @@ const StyledSectionBody = styled(Section.Body)`
   > div:last-child {
     margin-top: 16px;
   }
+`
+
+const StyledEditionForm = styled(Form)`
+  margin-top: 8px;
+`
+
+const StyledCreationForm = styled(Form)`
+  margin-top: 16px;
 `

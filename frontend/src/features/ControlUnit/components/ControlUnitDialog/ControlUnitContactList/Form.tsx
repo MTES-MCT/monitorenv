@@ -6,15 +6,18 @@ import { CONTROL_UNIT_CONTACT_FORM_SCHEMA } from './constants'
 import { FormikNameSelect } from './FormikNameSelect'
 
 import type { ControlUnitContactFormValues } from './types'
+import type { CSSProperties } from 'react'
 import type { Promisable } from 'type-fest'
 
 export type FormProps = {
+  className?: string
   initialValues: ControlUnitContactFormValues
   onCancel: () => Promisable<void>
   onDelete?: () => Promisable<void>
   onSubmit: (controlUnitContactFormValues: ControlUnitContactFormValues) => void
+  style?: CSSProperties
 }
-export function Form({ initialValues, onCancel, onDelete, onSubmit }: FormProps) {
+export function Form({ className, initialValues, onCancel, onDelete, onSubmit, style }: FormProps) {
   const key = useKey([initialValues])
   const isNew = !initialValues.id
 
@@ -28,7 +31,7 @@ export function Form({ initialValues, onCancel, onDelete, onSubmit }: FormProps)
       validationSchema={CONTROL_UNIT_CONTACT_FORM_SCHEMA}
     >
       {({ handleSubmit }) => (
-        <>
+        <div className={className} style={style}>
           <Title>{isNew ? 'Ajouter un contact' : 'Éditer un contact'}</Title>
           <StyledForm onSubmit={handleSubmit}>
             <FormikNameSelect />
@@ -53,7 +56,7 @@ export function Form({ initialValues, onCancel, onDelete, onSubmit }: FormProps)
               )}
             </ActionBar>
           </StyledForm>
-        </>
+        </div>
       )}
     </Formik>
   )
@@ -61,7 +64,7 @@ export function Form({ initialValues, onCancel, onDelete, onSubmit }: FormProps)
 
 const Title = styled.p`
   background-color: ${p => p.theme.color.gainsboro};
-  margin: 16px 0 2px;
+  margin: 0 0 2px;
   padding: 8px 16px;
   /* TODO This should be the default height everywhere to have a consistent and exact height of 18px. */
   /* Monitor UI provides that value: https://github.com/MTES-MCT/monitor-ui/blob/main/src/GlobalStyle.ts#L76. */
