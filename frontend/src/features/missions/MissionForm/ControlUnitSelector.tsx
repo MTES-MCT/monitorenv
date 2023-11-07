@@ -139,6 +139,29 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
     resourcesHelpers.setValue(resourceObjects)
   }
 
+  const engagedControlUnit = engagedControlUnits.find(engaged => engaged.controlUnit.id === unitField.value)
+  const resourceUnitIndexDisplayed = controlUnitIndex + 1
+
+  const controlUnitWarningMessage = useMemo(() => {
+    if (!engagedControlUnit) {
+      return ''
+    }
+
+    if (engagedControlUnit.missionSources.length === 1) {
+      return `Cette unité est actuellement sélectionnée dans une autre mission en cours ouverte par le ${
+        missionSourceEnum[engagedControlUnit.missionSources[0]].label
+      }.`
+    }
+
+    if (engagedControlUnit.missionSources.length > 1) {
+      return `Cette unité est actuellement sélectionnée dans plusieurs autres missions en cours, ouvertes par le ${engagedControlUnit.missionSources
+        .map(source => missionSourceEnum[source].label)
+        .join(' et le ')}.`
+    }
+
+    return ''
+  }, [engagedControlUnit])
+
   if (isError) {
     return <div>Erreur</div>
   }
@@ -146,9 +169,6 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
   if (isLoading) {
     return <div>Chargement</div>
   }
-
-  const engagedControlUnit = engagedControlUnits.find(engaged => engaged.controlUnit.id === unitField.value)
-  const resourceUnitIndexDisplayed = controlUnitIndex + 1
 
   return (
     <RessourceUnitWrapper>
@@ -184,16 +204,7 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
           value={unitField.value}
         />
         {missionIsNewMission && !!engagedControlUnit && (
-          <StyledMessage level={Level.WARNING}>
-            {engagedControlUnit.missionSources.length === 1 &&
-            `Cette unité est actuellement sélectionnée dans une autre mission en cours ouverte par le ${
-              missionSourceEnum[engagedControlUnit.missionSources[0]].label
-            }.`}
-            {engagedControlUnit.missionSources.length > 1 &&
-            `Cette unité est actuellement sélectionnée dans plusieurs autres missions en cours, ouvertes par le ${engagedControlUnit.missionSources
-              .map(source => missionSourceEnum[source].label)
-              .join(' et le ')}.`}
-          </StyledMessage>
+          <StyledMessage level={Level.WARNING}>{controlUnitWarningMessage}</StyledMessage>
         )}
       </div>
 
