@@ -152,19 +152,6 @@ context('Mission', () => {
     })
   })
 
-  it('A warning should be displayed When a control unit is already engaged in a mission ', () => {
-    // Given
-    cy.wait(200)
-    cy.intercept('GET', '/api/v1/missions/engaged_control_units').as('getEngagedControlUnits')
-
-    // When
-    cy.get('*[data-cy="edit-mission-43"]').click({ force: true })
-    cy.wait('@getEngagedControlUnits')
-
-    // Then
-    cy.get('body').contains('Cette unité est actuellement sélectionnée dans une autre mission en cours.')
-  })
-
   it('A mission from monitorFish cannot be deleted', () => {
     // Given
     cy.wait(200)
@@ -178,7 +165,7 @@ context('Mission', () => {
     cy.get('*[data-cy="delete-mission"]').should('be.disabled')
   })
 
-  it('A warning should be displayed When a control unit is already engaged in a mission ', () => {
+  it('A warning should be displayed When a control unit is already engaged in a mission', () => {
     // Given
     cy.wait(200)
     cy.intercept('GET', '/api/v1/missions/engaged_control_units').as('getEngagedControlUnits')
@@ -188,6 +175,6 @@ context('Mission', () => {
     cy.wait('@getEngagedControlUnits')
 
     // Then
-    cy.get('body').contains('Cette unité est actuellement sélectionnée dans une autre mission en cours.')
+    cy.get('body').contains('Cette unité est actuellement sélectionnée dans une autre mission en cours ouverte par le CACEM.')
   })
 })

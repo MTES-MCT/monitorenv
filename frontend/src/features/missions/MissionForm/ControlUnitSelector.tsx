@@ -1,28 +1,32 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import {
+  Accent,
   CustomSearch,
   FormikTextInput,
-  Level,
-  Message,
-  Select,
-  IconButton,
   getOptionsFromIdAndName,
   Icon,
-  Accent,
+  IconButton,
+  Level,
+  Message,
   MultiSelect,
+  Select,
   useNewWindow
 } from '@mtes-mct/monitor-ui'
-import { useField } from 'formik'
-import { uniq, uniqBy } from 'lodash'
-import { useMemo } from 'react'
+import {useField} from 'formik'
+import {uniq, uniqBy} from 'lodash'
+import {useMemo} from 'react'
 import styled from 'styled-components'
 
-import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../api/constants'
-import { useGetLegacyControlUnitsQuery } from '../../../api/legacyControlUnitsAPI'
-import { useGetEngagedControlUnitsQuery } from '../../../api/missionsAPI'
-import { isNotArchived } from '../../../utils/isNotArchived'
+import {RTK_DEFAULT_QUERY_OPTIONS} from '../../../api/constants'
+import {useGetLegacyControlUnitsQuery} from '../../../api/legacyControlUnitsAPI'
+import {useGetEngagedControlUnitsQuery} from '../../../api/missionsAPI'
+import {missionSourceEnum} from '../../../domain/entities/missions'
+import {useAppSelector} from '../../../hooks/useAppSelector'
+import {isNewMission} from '../../../utils/isNewMission'
+import {isNotArchived} from '../../../utils/isNotArchived'
+import {getMissionPageRoute} from '../../../utils/routes'
 
-import type { ControlUnit } from '../../../domain/entities/controlUnit'
+import type {ControlUnit} from '../../../domain/entities/controlUnit'
 
 export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
   const { newWindowContainerRef } = useNewWindow()
@@ -34,6 +38,10 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
   const [resourcesField, , resourcesHelpers] = useField<ControlUnit.ControlUnitResource[]>(
     `controlUnits.${controlUnitIndex}.resources`
   )
+
+  const currentPath = useAppSelector(state => state.sideWindow.currentPath)
+  const routeParams = getMissionPageRoute(currentPath)
+  const missionIsNewMission = isNewMission(routeParams?.params?.id)
 
   const {
     data: controlUnitsData,
@@ -139,7 +147,7 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
     return <div>Chargement</div>
   }
 
-  const isEngaged = !!engagedControlUnits.find(engaged => engaged.id === unitField.value)
+  const engagedControlUnit = engagedControlUnits.find(engaged => engaged.controlUnit.id === unitField.value)
   const resourceUnitIndexDisplayed = controlUnitIndex + 1
 
   return (
@@ -175,9 +183,16 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
           searchable={unitList.length > 10}
           value={unitField.value}
         />
-        {isEngaged && (
+        {missionIsNewMission && !!engagedControlUnit && (
           <StyledMessage level={Level.WARNING}>
-            Cette unité est actuellement sélectionnée dans une autre mission en cours.
+            {engagedControlUnit.missionSources.length === 1 &&
+            `Cette unité est actuellement sélectionnée dans une autre mission en cours ouverte par le ${
+              missionSourceEnum[engagedControlUnit.missionSources[0]].label
+            }.`}
+            {engagedControlUnit.missionSources.length > 1 &&
+            `Cette unité est actuellement sélectionnée dans plusieurs autres missions en cours, ouvertes par le ${engagedControlUnit.missionSources
+              .map(source => missionSourceEnum[source].label)
+              .join(' et le ')}.`}
           </StyledMessage>
         )}
       </div>

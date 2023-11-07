@@ -1,3 +1,5 @@
+import { MissionSourceEnum } from './missions'
+
 import type { Administration } from './administration'
 import type { DepartmentArea } from './departmentArea'
 import type { Station } from './station'
@@ -156,4 +158,9 @@ export namespace ControlUnit {
 
   export type ControlUnitResourceData = Omit<ControlUnitResource, 'controlUnit' | 'station'>
   export type NewControlUnitResourceData = Omit<ControlUnitResourceData, 'id'>
+
+  export type EngagedControlUnits = {
+    controlUnit: ControlUnit
+    missionSources: MissionSourceEnum[]
+  }[]
 }

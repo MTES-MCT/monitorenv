@@ -20,7 +20,7 @@ class GetEngagedControlUnitsUTests {
 
     @Test
     fun `execute() should return engaged control units`() {
-        val expectedControlUnit =
+        val firstControlUnit =
             LegacyControlUnitEntity(
                 id = 123,
                 administration = "Admin",
@@ -28,12 +28,20 @@ class GetEngagedControlUnitsUTests {
                 isArchived = false,
                 name = "Control Unit Name",
             )
-        val expectedMission =
+        val secondControlUnit =
+            LegacyControlUnitEntity(
+                id = 123,
+                administration = "Admin",
+                resources = listOf(),
+                isArchived = false,
+                name = "Control Unit Name",
+            )
+        val firstMission =
             MissionDTO(
                 mission =
                 MissionEntity(
                     id = 10,
-                    controlUnits = listOf(expectedControlUnit),
+                    controlUnits = listOf(firstControlUnit),
                     missionTypes = listOf(MissionTypeEnum.LAND),
                     facade = "Outre-Mer",
                     geom = null,
@@ -45,6 +53,28 @@ class GetEngagedControlUnitsUTests {
                     isDeleted = false,
                     isClosed = false,
                     missionSource = MissionSourceEnum.MONITORENV,
+                    hasMissionOrder = false,
+                    isUnderJdp = false,
+                    isGeometryComputedFromControls = false,
+                ),
+            )
+        val secondMission =
+            MissionDTO(
+                mission =
+                MissionEntity(
+                    id = 10,
+                    controlUnits = listOf(secondControlUnit),
+                    missionTypes = listOf(MissionTypeEnum.LAND),
+                    facade = "Outre-Mer",
+                    geom = null,
+                    observationsCacem = null,
+                    startDateTimeUtc =
+                    ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                    endDateTimeUtc =
+                    ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                    isDeleted = false,
+                    isClosed = false,
+                    missionSource = MissionSourceEnum.MONITORFISH,
                     hasMissionOrder = false,
                     isUnderJdp = false,
                     isGeometryComputedFromControls = false,
@@ -65,9 +95,8 @@ class GetEngagedControlUnitsUTests {
         )
             .willReturn(
                 listOf(
-                    expectedMission,
-                    expectedMission
-                        .copy(mission = expectedMission.mission.copy(missionSource = MissionSourceEnum.MONITORFISH)),
+                    firstMission,
+                    secondMission
                 ),
             )
 
