@@ -13,14 +13,13 @@ import type { BaseMapChildrenProps } from '../../BaseMap'
 export function EditingMissionLayer({ map }: BaseMapChildrenProps) {
   const { missionState } = useAppSelector(state => state.missionState)
   const { displayMissionEditingLayer } = useAppSelector(state => state.global)
-  const listener = useAppSelector(state => state.draw.listener)
   const attachMissionListener = useAppSelector(state => state.attachMissionToReporting.attachMissionListener)
 
   // we don't want to display missions on the map if the user so decides (displayMissionEditingLayer variable)
   // or if user have interaction on map (edit mission zone, attach mission to reporting)
   const isLayerVisible = useMemo(
-    () => displayMissionEditingLayer && !listener && !attachMissionListener,
-    [displayMissionEditingLayer, listener, attachMissionListener]
+    () => displayMissionEditingLayer && !attachMissionListener,
+    [displayMissionEditingLayer, attachMissionListener]
   )
 
   const editingMissionVectorSourceRef = useRef() as MutableRefObject<VectorSource>
