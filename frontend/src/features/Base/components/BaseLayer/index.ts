@@ -1,4 +1,3 @@
-import { noop } from 'lodash/fp'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useMemo, useRef } from 'react'
@@ -13,6 +12,7 @@ import { FrontendError } from '../../../../libs/FrontendError'
 import { controlUnitListDialogActions } from '../../../ControlUnit/components/ControlUnitListDialog/slice'
 import { baseActions } from '../../slice'
 
+import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 
 export function BaseLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
@@ -27,7 +27,7 @@ export function BaseLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       zIndex: Layers.BASES.zIndex
     })
   )
-  ;(vectorLayerRef.current as any).name = Layers.BASES.code
+  ;(vectorLayerRef.current as VectorLayerWithName).name = Layers.BASES.code
 
   const dispatch = useAppDispatch()
   const global = useAppSelector(state => state.global)
@@ -103,15 +103,12 @@ export function BaseLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   // Layer Attachment
 
   useEffect(() => {
-    if (!map) {
-      return noop
-    }
-
     map.getLayers().push(vectorLayerRef.current)
 
-    const scopedVectorLayer = vectorLayerRef.current
-
-    return () => map.removeLayer(scopedVectorLayer)
+    return () => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      map.removeLayer(vectorLayerRef.current)
+    }
   }, [map])
 
   return null

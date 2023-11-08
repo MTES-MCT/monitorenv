@@ -25,10 +25,10 @@ export function BaseCard({ feature, selected = false }: { feature: Feature; sele
     base: Base.Base
   }
 
-  const close = useCallback(() => {
+  const close = () => {
     dispatch(baseActions.hightlightFeatureIds([]))
     dispatch(baseActions.selectBaseFeatureId(undefined))
-  }, [dispatch])
+  }
 
   const updateControlUnits = useCallback(async () => {
     if (!featureProperties.base || !featureProperties.base.controlUnitResources) {

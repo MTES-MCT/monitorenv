@@ -29,6 +29,8 @@ import { ShowRegulatoryMetadata } from './ShowRegulatoryMetadata'
 import { BaseLayer } from '../Base/components/BaseLayer'
 import { BaseOverlay } from '../Base/components/BaseOverlay'
 
+// TODO Either use HOC to get proprer typings inference or migrate to vanilla JS.
+// https://legacy.reactjs.org/docs/higher-order-components.html#convention-pass-unrelated-props-through-to-the-wrapped-component
 export function Map() {
   return (
     <BaseMap
@@ -38,34 +40,63 @@ export function Map() {
     //
     // -> only add child to BaseMap if it requires map or mapClickEvent
     >
+      {/* @ts-ignore */}
       <MapAttributionsBox />
+      {/* @ts-ignore */}
       <MapCoordinatesBox />
+      {/* @ts-ignore */}
       <MapLayer />
+      {/* @ts-ignore */}
       <AMPLayers />
+      {/* @ts-ignore */}
       <AMPPreviewLayer />
+      {/* @ts-ignore */}
       <RegulatoryLayers />
+      {/* @ts-ignore */}
       <RegulatoryPreviewLayer />
+      {/* @ts-ignore */}
       <ShowRegulatoryMetadata />
+      {/* @ts-ignore */}
       <AdministrativeLayers />
+      {/* @ts-ignore */}
       <MeasurementLayer />
+      {/* @ts-ignore */}
       <InterestPointLayer />
+      {/* @ts-ignore */}
       <MapExtentController />
+      {/* @ts-ignore */}
       <MapHistory />
+      {/* @ts-ignore */}
       <DrawLayer />
+      {/* @ts-ignore */}
       <MissionsLayer />
+      {/* @ts-ignore */}
       <SelectedMissionLayer />
+      {/* @ts-ignore */}
       <EditingMissionLayer />
+      {/* @ts-ignore */}
       <HoveredMissionLayer />
+      {/* @ts-ignore */}
       <MissionOverlays />
+      {/* @ts-ignore */}
       <ActionOverlay />
+      {/* @ts-ignore */}
       <SemaphoresLayer />
+      {/* @ts-ignore */}
       <SemaphoreOverlay />
+      {/* @ts-ignore */}
       <EditingReportingLayer />
+      {/* @ts-ignore */}
       <SelectedReportingLayer />
+      {/* @ts-ignore */}
       <HoveredReportingLayer />
+      {/* @ts-ignore */}
       <ReportingsLayer />
+      {/* @ts-ignore */}
       <ReportingOverlay />
+      {/* @ts-ignore */}
       <BaseLayer />
+      {/* @ts-ignore */}
       <BaseOverlay />
     </BaseMap>
   )

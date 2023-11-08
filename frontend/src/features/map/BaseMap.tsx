@@ -6,7 +6,17 @@ import { platformModifierKeyOnly } from 'ol/events/condition'
 import OpenLayerMap from 'ol/Map'
 import { transform } from 'ol/proj'
 import View from 'ol/View'
-import { Children, cloneElement, useCallback, useMemo, useEffect, useRef, useState, type MutableRefObject } from 'react'
+import {
+  cloneElement,
+  useCallback,
+  useMemo,
+  useEffect,
+  useRef,
+  useState,
+  type MutableRefObject,
+  Children,
+  type ReactElement
+} from 'react'
 import styled from 'styled-components'
 
 import { HIT_PIXEL_TO_TOLERANCE } from '../../constants'
@@ -18,24 +28,26 @@ import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { useClickOutsideWhenOpened } from '../../hooks/useClickOutsideWhenOpened'
 
+import type { VectorLayerWithName } from '../../domain/types/layer'
 import type { MapClickEvent } from '../../types'
-import type { Feature } from 'ol'
+import type { Feature, MapBrowserEvent } from 'ol'
 import type { Geometry } from 'ol/geom'
 
-// TODO Are all these props really optional?
-export type BaseMapChildrenProps = Partial<{
-  currentFeatureOver: Feature<Geometry>
+export type BaseMapChildrenProps = {
+  currentFeatureOver: Feature<Geometry> | undefined
   map: OpenLayerMap
   mapClickEvent: MapClickEvent
-}>
+}
 
-export function BaseMap({ children }) {
+export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChildrenProps> | null> }) {
   const dispatch = useAppDispatch()
-  const [currentMap, setCurrentMap] = useState<OpenLayerMap>()
-  const [mapClickEvent, setMapClickEvent] = useState({ ctrlKeyPressed: false, feature: undefined })
+  const [currentMap, setCurrentMap] = useState<OpenLayerMap | undefined>(undefined)
+  const [mapClickEvent, setMapClickEvent] = useState<{
+    ctrlKeyPressed: boolean
+    feature: Feature<Geometry> | undefined
+  }>({ ctrlKeyPressed: false, feature: undefined })
 
-  /** @type {currentFeatureOver} feature */
-  const [currentFeatureOver, setCurrentFeatureOver] = useState(null)
+  const [currentFeatureOver, setCurrentFeatureOver] = useState<Feature<Geometry> | undefined>(undefined)
 
   const mapElement = useRef() as MutableRefObject<HTMLDivElement>
 
@@ -45,16 +57,20 @@ export function BaseMap({ children }) {
   const clickedOutsideComponent = useClickOutsideWhenOpened(wrapperRef, unitsSelectionIsOpen)
 
   const handleMapClick = useCallback(
-    (event, current_map) => {
+    (event: MapBrowserEvent<any>, current_map: OpenLayerMap) => {
       if (event && current_map) {
-        const feature = current_map.forEachFeatureAtPixel(event.pixel, f => f, {
-          hitTolerance: HIT_PIXEL_TO_TOLERANCE,
-          layerFilter: l => {
-            const name = l.name || l.get('name')
+        const feature = current_map.forEachFeatureAtPixel<Feature<Geometry>>(
+          event.pixel,
+          featureAtPixel => featureAtPixel as Feature<Geometry>,
+          {
+            hitTolerance: HIT_PIXEL_TO_TOLERANCE,
+            layerFilter: layer => {
+              const typedLayer = layer as VectorLayerWithName
 
-            return SelectableLayers.includes(name)
+              return !!typedLayer.name && SelectableLayers.includes(typedLayer.name)
+            }
           }
-        })
+        )
         const isCtrl = platformModifierKeyOnly(event)
         setMapClickEvent({ ctrlKeyPressed: isCtrl, feature })
       }
@@ -64,12 +80,20 @@ export function BaseMap({ children }) {
 
   const handleMouseOverFeature = useMemo(
     () =>
-      _.throttle((event, current_map) => {
+      _.throttle((event: MapBrowserEvent<any>, current_map: OpenLayerMap) => {
         if (event && current_map) {
-          const feature = current_map.forEachFeatureAtPixel(event.pixel, f => f, {
-            hitTolerance: HIT_PIXEL_TO_TOLERANCE,
-            layerFilter: l => HoverableLayers.includes(l.name)
-          })
+          const feature = current_map.forEachFeatureAtPixel<Feature<Geometry>>(
+            event.pixel,
+            featureAtPixel => featureAtPixel as Feature<Geometry>,
+            {
+              hitTolerance: HIT_PIXEL_TO_TOLERANCE,
+              layerFilter: layer => {
+                const typedLayer = layer as VectorLayerWithName
+
+                return !!typedLayer.name && HoverableLayers.includes(typedLayer.name)
+              }
+            }
+          )
           setCurrentFeatureOver(feature)
         }
       }, 50),
@@ -138,7 +162,13 @@ export function BaseMap({ children }) {
       {currentMap &&
         Children.map(
           children,
-          child => child && cloneElement(child, { currentFeatureOver, map: currentMap, mapClickEvent })
+          child =>
+            child &&
+            cloneElement(child, {
+              currentFeatureOver,
+              map: currentMap,
+              mapClickEvent
+            })
         )}
       <StyledDistanceUnitContainer ref={wrapperRef}>
         <DistanceUnitsTypeSelection isOpen={unitsSelectionIsOpen}>

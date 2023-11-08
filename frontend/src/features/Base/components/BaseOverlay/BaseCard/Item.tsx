@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import styled from 'styled-components'
 
 import { displayControlUnitResourcesFromControlUnit } from './utils'
@@ -14,7 +13,7 @@ type ItemProps = {
 export function Item({ controlUnit }: ItemProps) {
   const dispatch = useAppDispatch()
 
-  const edit = useCallback(() => {
+  const edit = () => {
     dispatch(controlUnitDialogActions.setControlUnitId(controlUnit.id))
     dispatch(
       globalActions.setDisplayedItems({
@@ -22,7 +21,7 @@ export function Item({ controlUnit }: ItemProps) {
         isControlUnitListDialogVisible: false
       })
     )
-  }, [controlUnit.id, dispatch])
+  }
 
   return (
     <Wrapper onClick={edit}>

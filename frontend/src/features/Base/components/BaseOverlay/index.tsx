@@ -10,19 +10,19 @@ import { OverlayPositionOnCentroid } from '../../../map/overlays/OverlayPosition
 import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 
 export function BaseOverlay({ currentFeatureOver: hoveredFeature, map }: BaseMapChildrenProps) {
-  const base = useAppSelector(state => state.base)
+  const selectedBaseFeatureId = useAppSelector(state => state.base.selectedBaseFeatureId)
 
   const selectedFeature = useMemo(
-    () => findMapFeatureById(map, Layers.BASES.code, base.selectedBaseFeatureId),
+    () => findMapFeatureById(map, Layers.BASES.code, selectedBaseFeatureId),
 
     // We ignore `map` dependency because it's an instance and it's not supposed to change.
     // Moreover, it will be refactored into a non-React instance later on.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [base.selectedBaseFeatureId]
+    [selectedBaseFeatureId]
   )
   const hoveredFeatureId = hoveredFeature?.getId()?.toString()
   const canDisplayHoveredFeature =
-    !!hoveredFeatureId?.startsWith(Layers.BASES.code) && hoveredFeatureId !== base.selectedBaseFeatureId
+    !!hoveredFeatureId?.startsWith(Layers.BASES.code) && hoveredFeatureId !== selectedBaseFeatureId
 
   return (
     <>

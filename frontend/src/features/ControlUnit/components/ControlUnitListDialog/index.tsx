@@ -19,7 +19,7 @@ type ControlUnitListDialogProps = {
 }
 export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
   const dispatch = useAppDispatch()
-  const global = useAppSelector(store => store.global)
+  const displayBaseLayer = useAppSelector(store => store.global.displayBaseLayer)
   const mapControlUnitListDialog = useAppSelector(store => store.mapControlUnitListDialog)
   const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
@@ -40,10 +40,10 @@ export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
     dispatch(baseActions.selectBaseFeatureId(undefined))
     dispatch(
       globalActions.setDisplayedItems({
-        displayBaseLayer: !global.displayBaseLayer
+        displayBaseLayer: !displayBaseLayer
       })
     )
-  }, [dispatch, global.displayBaseLayer])
+  }, [dispatch, displayBaseLayer])
 
   return (
     <MapMenuDialog.Container style={{ height: 480 }}>

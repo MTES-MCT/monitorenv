@@ -2,7 +2,6 @@ import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { property, uniqBy } from 'lodash/fp'
 import { createEmpty, extend } from 'ol/extent'
 import { fromLonLat } from 'ol/proj'
-import { useCallback } from 'react'
 import styled from 'styled-components'
 
 import { displayControlUnitResourcesFromControlUnit, displayBaseNamesFromControlUnit, addBufferToExtent } from './utils'
@@ -22,9 +21,9 @@ export type ItemProps = {
 }
 export function Item({ controlUnit }: ItemProps) {
   const dispatch = useAppDispatch()
-  const global = useAppSelector(store => store.global)
+  const displayBaseLayer = useAppSelector(store => store.global.displayBaseLayer)
 
-  const center = useCallback(() => {
+  const center = () => {
     const highlightedBases = uniqBy(
       property('id'),
       controlUnit.controlUnitResources.map(({ base }) => base)
@@ -56,9 +55,9 @@ export function Item({ controlUnit }: ItemProps) {
     }
 
     dispatch(baseActions.hightlightFeatureIds(highlightedBaseFeatureIds))
-  }, [controlUnit.controlUnitResources, dispatch])
+  }
 
-  const edit = useCallback(() => {
+  const edit = () => {
     dispatch(controlUnitDialogActions.setControlUnitId(controlUnit.id))
     dispatch(
       globalActions.setDisplayedItems({
@@ -66,13 +65,13 @@ export function Item({ controlUnit }: ItemProps) {
         isControlUnitListDialogVisible: false
       })
     )
-  }, [controlUnit.id, dispatch])
+  }
 
   return (
     <Wrapper data-cy="ControlUnitListDialog-control-unit" data-id={controlUnit.id} onClick={edit}>
       <Head>
         <NameText>{controlUnit.name}</NameText>
-        {global.displayBaseLayer && (
+        {displayBaseLayer && (
           <IconButton
             accent={Accent.TERTIARY}
             disabled={!controlUnit.controlUnitResources.length}
