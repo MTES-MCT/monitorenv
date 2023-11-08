@@ -28,7 +28,6 @@ import { SemaphoreOverlay } from './overlays/semaphores'
 import { ShowRegulatoryMetadata } from './ShowRegulatoryMetadata'
 import { ReportingToAttachLayer } from '../missions/Layers/ReportingToAttach'
 import { HoveredReportingToAttachLayer } from '../missions/Layers/ReportingToAttach/HoveredReportingToAttachLayer'
-import { SelectedReportingToAttachLayer } from '../missions/Layers/ReportingToAttach/SelectedReportingToAttachLayer'
 import { ReportingToAttachOverlays } from '../missions/Overlays/ReportingToAttach'
 import { MissionToAttachLayer } from '../Reportings/Layers/MissionToAttach'
 import { HoveredMissionToAttachLayer } from '../Reportings/Layers/MissionToAttach/HoveredMissionToAttachLayer'
@@ -94,8 +93,6 @@ export function Map() {
       <ActionOverlay />
       {/* @ts-ignore */}
       <ReportingToAttachLayer />
-      {/* @ts-ignore */}
-      <SelectedReportingToAttachLayer />
       {/* @ts-ignore */}
       <HoveredReportingToAttachLayer />
       {/* @ts-ignore */}

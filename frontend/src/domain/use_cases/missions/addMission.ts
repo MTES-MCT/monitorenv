@@ -48,9 +48,6 @@ export const addMission = (attachedReporting?: Reporting) => async (dispatch, ge
   await dispatch(
     attachReportingToMissionSliceActions.setAttachedReportings(attachedReporting ? [attachedReporting] : [])
   )
-  await dispatch(
-    attachReportingToMissionSliceActions.setAttachedReportingIds(attachedReporting ? [attachedReporting?.id] : [])
-  )
 
   dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.MISSION, { id })))
 }

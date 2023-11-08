@@ -42,9 +42,4 @@ export const switchTab = path => async (dispatch, getState) => {
       missionsUpdated[nextMissionIndex]?.mission?.attachedReportings || []
     )
   )
-  await dispatch(
-    attachReportingToMissionSliceActions.setAttachedReportingIds(
-      missionsUpdated[nextMissionIndex]?.mission?.attachedReportingIds || []
-    )
-  )
 }

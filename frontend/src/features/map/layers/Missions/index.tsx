@@ -9,7 +9,7 @@ import { selectMissionOnMap } from '../../../../domain/use_cases/missions/select
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useGetFilteredMissionsQuery } from '../../../../hooks/useGetFilteredMissionsQuery'
-import { useHasMapListener } from '../../../../hooks/useHasMapListener'
+import { useHasMapInteraction } from '../../../../hooks/useHasMapInteraction'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { Geometry } from 'ol/geom'
@@ -21,8 +21,11 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
 
   // we don't want to display missions on the map if the user so decides (displayMissionsLayer variable)
   // or if user have interaction on map (edit mission zone, attach reporting or mission)
-  const hasMapListener = useHasMapListener()
-  const isLayerVisible = useMemo(() => displayMissionsLayer && !hasMapListener, [displayMissionsLayer, hasMapListener])
+  const hasMapInteraction = useHasMapInteraction()
+  const isLayerVisible = useMemo(
+    () => displayMissionsLayer && !hasMapInteraction,
+    [displayMissionsLayer, hasMapInteraction]
+  )
 
   // mission attached to active reporting
   const reportings = useAppSelector(state => state.reporting.reportings)

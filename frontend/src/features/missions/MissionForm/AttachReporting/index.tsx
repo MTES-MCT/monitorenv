@@ -1,4 +1,4 @@
-import { Accent, Button, Icon, Size } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 
 import { attachReportingToMissionSliceActions } from './slice'
@@ -25,7 +25,7 @@ export function AttachReporting() {
   }
 
   return (
-    <Button accent={Accent.SECONDARY} Icon={Icon.Link} onClick={attachReporting} size={Size.SMALL}>
+    <Button accent={Accent.SECONDARY} Icon={Icon.Link} onClick={attachReporting}>
       Lier un signalement
     </Button>
   )

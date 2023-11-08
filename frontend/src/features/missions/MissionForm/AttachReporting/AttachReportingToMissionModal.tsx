@@ -17,9 +17,7 @@ export function AttachReportingToMissionModal() {
 
   const attachReportingListener = useAppSelector(state => state.attachReportingToMission.attachReportingListener)
   const initialAttachedReportings = useAppSelector(state => state.attachReportingToMission.initialAttachedReportings)
-  const initialAttachedReportingIds = useAppSelector(
-    state => state.attachReportingToMission.initialAttachedReportingIds
-  )
+
   const sideWindow = useAppSelector(state => state.sideWindow)
 
   const routeParams = getMissionPageRoute(sideWindow.currentPath)
@@ -27,7 +25,6 @@ export function AttachReportingToMissionModal() {
   const previousMissionId = usePrevious(routeParams?.params?.id)
 
   const resetReportingToAttach = () => {
-    dispatch(attachReportingToMissionSliceActions.setAttachedReportingIds(initialAttachedReportingIds))
     dispatch(attachReportingToMissionSliceActions.setAttachedReportings(initialAttachedReportings))
   }
 

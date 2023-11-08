@@ -3,7 +3,7 @@ import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useRef } from 'react'
 
 import { Layers } from '../../../../domain/entities/layers/constants'
-import { reportingPinStyleFn } from '../../../map/layers/Reportings/style'
+import { hoveredReportingStyleFn } from '../../../map/layers/Reportings/style'
 
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../../map/BaseMap'
@@ -26,7 +26,7 @@ export function HoveredReportingToAttachLayer({ currentFeatureOver, map }: BaseM
         vectorLayerRef.current = new VectorLayer({
           renderBuffer: 7,
           source: GetVectorSource(),
-          style: reportingPinStyleFn,
+          style: hoveredReportingStyleFn,
           updateWhileAnimating: true,
           updateWhileInteracting: true,
           zIndex: Layers.REPORTING_TO_ATTACH_ON_MISSION.zIndex

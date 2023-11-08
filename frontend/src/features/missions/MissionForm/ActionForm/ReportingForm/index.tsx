@@ -35,7 +35,6 @@ export function ReportingForm({
   const reporting = values?.attachedReportings && values.attachedReportings[reportingActionIndex]
 
   const attachedReportings = useAppSelector(state => state.attachReportingToMission.attachedReportings)
-  const attachedReportingIds = useAppSelector(state => state.attachReportingToMission.attachedReportingIds)
 
   const sourceOptions = getOptionsFromLabelledEnum(ReportingSourceLabels)
   const reportTypeOptions = getOptionsFromLabelledEnum(ReportingTypeLabels)
@@ -63,11 +62,6 @@ export function ReportingForm({
     const reportingToDeleteIndex = reportings.findIndex(r => r.id === reporting.id)
     reportings.splice(reportingToDeleteIndex, 1)
     dispatch(attachReportingToMissionSliceActions.setAttachedReportings(reportings))
-
-    const reportingIds = [...attachedReportingIds]
-    const reportingIdToDeleteIndex = reportingIds.findIndex(id => id === reporting.id)
-    reportingIds.splice(reportingIdToDeleteIndex, 1)
-    dispatch(attachReportingToMissionSliceActions.setAttachedReportingIds(reportingIds))
 
     const envActionsToUpdate = values.envActions?.map(action => {
       if (

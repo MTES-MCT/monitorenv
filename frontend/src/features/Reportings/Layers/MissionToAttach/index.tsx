@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { useGetMissionsQuery } from '../../../../api/missionsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
+import { MissionStatusEnum } from '../../../../domain/entities/missions'
 import { attachMission } from '../../../../domain/use_cases/reporting/attachMission'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -17,7 +18,7 @@ export function MissionToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProp
   const dispatch = useAppDispatch()
   const attachMissionListener = useAppSelector(state => state.attachMissionToReporting.attachMissionListener)
   const { data: missions } = useGetMissionsQuery({
-    missionStatus: ['PENDING']
+    missionStatus: [MissionStatusEnum.PENDING]
   })
 
   const missionsMultiPolygons = useMemo(

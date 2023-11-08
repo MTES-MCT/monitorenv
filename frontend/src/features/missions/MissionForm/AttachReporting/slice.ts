@@ -28,11 +28,12 @@ const attachReportingToMissionSlice = createSlice({
     resetAttachReportingState() {
       return initialState
     },
-    setAttachedReportingIds(state, action) {
-      state.attachedReportingIds = action.payload
-    },
     setAttachedReportings(state, action) {
-      state.attachedReportings = action.payload
+      const attachedReportings = action.payload
+      state.attachedReportings = attachedReportings
+
+      const attachedReportingIds = attachedReportings.map(reporting => reporting.id)
+      state.attachedReportingIds = attachedReportingIds
     },
     setAttachReportingListener(state, action) {
       state.attachReportingListener = action.payload

@@ -1,16 +1,11 @@
-import { customDayjs as dayjs } from '@mtes-mct/monitor-ui'
+import { customDayjs as dayjs, Dropdown, Icon } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import { useMemo } from 'react'
-import { Dropdown } from 'rsuite'
 import styled from 'styled-components'
 
 import { ActionCards } from './ActionCards'
 import { AttachReporting } from './AttachReporting'
 import { ActionTypeEnum, type EnvAction, type Mission, type NewMission } from '../../../domain/entities/missions'
-import { ReactComponent as ControlSVG } from '../../../uiMonitor/icons/Control.svg'
-import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/Note_libre.svg'
-import { ReactComponent as SurveillanceSVG } from '../../../uiMonitor/icons/Observation.svg'
-import { ReactComponent as PlusSVG } from '../../../uiMonitor/icons/Plus.svg'
 import { actionFactory, getEnvActionsAndReportingsForTimeline } from '../Missions.helpers'
 
 import type { DetachedReporting, Reporting } from '../../../domain/entities/reporting'
@@ -103,14 +98,14 @@ export function ActionsForm({ currentActionIndex, setCurrentActionIndex }) {
       <TitleWrapper>
         <div>
           <Title>Actions réalisées en mission</Title>
-          <Dropdown appearance="primary" icon={<PlusSVG className="rs-icon" />} noCaret title="Ajouter">
-            <Dropdown.Item icon={<ControlSVG />} onClick={handleAddControlAction}>
+          <Dropdown Icon={Icon.Plus} noCaret title="Ajouter">
+            <Dropdown.Item Icon={Icon.ControlUnit} onClick={handleAddControlAction}>
               Ajouter des contrôles
             </Dropdown.Item>
-            <Dropdown.Item icon={<SurveillanceSVG />} onClick={handleAddSurveillanceAction}>
+            <Dropdown.Item Icon={Icon.Observation} onClick={handleAddSurveillanceAction}>
               Ajouter une surveillance
             </Dropdown.Item>
-            <Dropdown.Item icon={<NoteSVG />} onClick={handleAddNoteAction}>
+            <Dropdown.Item Icon={Icon.Note} onClick={handleAddNoteAction}>
               Ajouter une note libre
             </Dropdown.Item>
           </Dropdown>

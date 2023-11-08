@@ -52,11 +52,7 @@ export const editMissionInLocalStore = missionId => async (dispatch, getState) =
         await dispatch(
           attachReportingToMissionSliceActions.setAttachedReportings(missionToSave.attachedReportings || [])
         )
-        await dispatch(
-          attachReportingToMissionSliceActions.setAttachedReportingIds(missionToSave.attachedReportingIds || [])
-        )
         await dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.MISSION, { id: missionId })))
-
         response.unsubscribe()
       } else {
         throw Error('Erreur à la création ou à la modification de la mission')

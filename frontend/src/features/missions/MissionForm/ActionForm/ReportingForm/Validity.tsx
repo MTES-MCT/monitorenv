@@ -21,7 +21,7 @@ export function Validity({ reporting }) {
   return (
     <StyledValidityContainer>
       <TextInput
-        label="Validité (h)"
+        label="Validité&nbsp;(h)"
         name="validityTime"
         plaintext
         value={reporting.validityTime ? `${reporting.validityTime} h` : '--'}

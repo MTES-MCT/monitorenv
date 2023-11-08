@@ -24,9 +24,6 @@ export const attachReportingFromMap = (id: number) => async (dispatch, getState)
           }
         ])
       )
-      dispatch(
-        attachReportingToMissionSliceActions.setAttachedReportingIds([...attachedReportingIds, response.data.id])
-      )
     }
   } catch (error) {
     dispatch(setToast({ containerId: 'sideWindow', message: error }))

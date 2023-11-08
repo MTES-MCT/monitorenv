@@ -10,13 +10,7 @@ export enum MapInteractionListenerEnum {
   NONE = 'NONE'
 }
 
-type MapInteractionListener =
-  | MapInteractionListenerEnum.ATTACH_MISSION
-  | MapInteractionListenerEnum.ATTACH_REPORTING
-  | MapInteractionListenerEnum.DRAW_ZONE_OR_POINT
-  | MapInteractionListenerEnum.NONE
-
-export const updateMapInteractionListeners = (listener: MapInteractionListener) => dispatch => {
+export const updateMapInteractionListeners = (listener: MapInteractionListenerEnum) => dispatch => {
   switch (listener) {
     case MapInteractionListenerEnum.DRAW_ZONE_OR_POINT:
       openDrawLayerModal(dispatch)

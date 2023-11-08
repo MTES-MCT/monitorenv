@@ -12,7 +12,7 @@ import { removeOverlayCoordinatesByName } from '../../../../domain/shared_slices
 import { setSelectedSemaphore } from '../../../../domain/shared_slices/SemaphoresSlice'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useHasMapListener } from '../../../../hooks/useHasMapListener'
+import { useHasMapInteraction } from '../../../../hooks/useHasMapInteraction'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { Feature } from 'ol'
@@ -27,10 +27,10 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   // we don't want to display sempahores on the map if the user so decides (displaySemaphoresLayer variable)
   // or if user have interaction on map (edit mission zone, attach reporting or mission)
 
-  const hasMapListener = useHasMapListener()
+  const hasMapInteraction = useHasMapInteraction()
   const isLayerVisible = useMemo(
-    () => displaySemaphoresLayer && !hasMapListener,
-    [displaySemaphoresLayer, hasMapListener]
+    () => displaySemaphoresLayer && !hasMapInteraction,
+    [displaySemaphoresLayer, hasMapInteraction]
   )
 
   const { data: semaphores } = useGetSemaphoresQuery()

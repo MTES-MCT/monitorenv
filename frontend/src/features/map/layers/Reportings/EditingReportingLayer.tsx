@@ -11,15 +11,16 @@ import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../BaseMap'
 
 export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
-  const {
-    activeReportingId,
-    reportings = { reporting: {} },
-    selectedReportingIdOnMap
-  } = useAppSelector(state => state.reporting)
+  const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
+  const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
+
   const displayReportingEditingLayer = useAppSelector(state => state.global.displayReportingEditingLayer)
+
+  const editingReporting = useAppSelector(state =>
+    activeReportingId ? state.reporting.reportings[activeReportingId]?.reporting : undefined
+  )
   const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
 
-  const editingReporting = activeReportingId ? reportings[activeReportingId].reporting : undefined
   const listener = useAppSelector(state => state.draw.listener)
   const attachReportingListener = useAppSelector(state => state.attachReportingToMission.attachReportingListener)
   // we don't want to display reportings on the map if the user so decides (displayMissionEditingLayer variable)
