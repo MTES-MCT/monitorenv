@@ -171,10 +171,25 @@ context('Mission', () => {
     cy.intercept('GET', '/api/v1/missions/engaged_control_units').as('getEngagedControlUnits')
 
     // When
+    cy.get('*[data-cy="add-mission"]').click()
+    cy.get('*[data-cy="add-control-unit"]').click()
+    cy.get('.rs-picker-search-bar-input').type('DREAL{enter}')
+    cy.wait('@getEngagedControlUnits')
+
+    // Then
+    cy.get('body').contains( 'Cette unité est actuellement sélectionnée dans une autre mission en cours ouverte par le CACEM.')
+  })
+
+  it('A warning should not be displayed When it is an edited mission', () => {
+    // Given
+    cy.wait(200)
+    cy.intercept('GET', '/api/v1/missions/engaged_control_units').as('getEngagedControlUnits')
+
+    // When
     cy.get('*[data-cy="edit-mission-43"]').click({ force: true })
     cy.wait('@getEngagedControlUnits')
 
     // Then
-    cy.get('body').contains('Cette unité est actuellement sélectionnée dans une autre mission en cours ouverte par le CACEM.')
+    cy.get('body').should('not.contain', 'Cette unité est actuellement sélectionnée dans une autre mission en cours ouverte par le CACEM.')
   })
 })
