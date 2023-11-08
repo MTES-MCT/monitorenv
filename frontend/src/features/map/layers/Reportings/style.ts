@@ -231,6 +231,10 @@ const reportingToMissionLinkStyle = feature =>
       const missionExtent = formattedMissionGeometry?.getExtent()
       const missionCenter = missionExtent && getCenter(missionExtent)
 
+      if (!reportingCenter || !missionCenter) {
+        return undefined
+      }
+
       return new LineString([reportingCenter, missionCenter])
     },
     stroke: new Stroke({

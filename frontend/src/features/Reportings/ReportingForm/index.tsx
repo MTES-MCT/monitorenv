@@ -47,7 +47,7 @@ export function ReportingFormWithContext({ context, totalReportings }) {
   const selectedReporting = useMemo(
     () => (activeReportingId && reportings ? reportings[activeReportingId]?.reporting : undefined),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [activeReportingId]
+    [activeReportingId, activeReportingId ? reportings[activeReportingId]?.reporting.missionId : undefined]
   )
 
   const reportingInitialValues = useMemo(() => {

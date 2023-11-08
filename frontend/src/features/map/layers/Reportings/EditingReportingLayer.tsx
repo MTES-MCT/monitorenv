@@ -22,7 +22,6 @@ export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
   const editingReporting = activeReportingId ? reportings[activeReportingId].reporting : undefined
   const listener = useAppSelector(state => state.draw.listener)
   const attachReportingListener = useAppSelector(state => state.attachReportingToMission.attachReportingListener)
-
   // we don't want to display reportings on the map if the user so decides (displayMissionEditingLayer variable)
   // or if user have interaction on map (edit mission zone, attach reporting to mission)
   const isLayerVisible = useMemo(
@@ -90,9 +89,8 @@ export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
   useEffect(() => {
     GetEditingReportingVectorSource()?.clear(true)
     if (editingReporting) {
-      GetEditingReportingVectorSource()?.addFeature(
-        getEditingReportingZoneFeature(editingReporting, Layers.REPORTING_SELECTED.code)
-      )
+      const reportingFeature = getEditingReportingZoneFeature(editingReporting, Layers.REPORTING_SELECTED.code)
+      GetEditingReportingVectorSource()?.addFeature(reportingFeature)
     }
   }, [editingReporting])
 

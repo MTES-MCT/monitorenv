@@ -41,6 +41,7 @@ data class MissionAttachedReportingDataOutput(
     val attachedToMissionAtUtc: ZonedDateTime? = null,
     val detachedFromMissionAtUtc: ZonedDateTime? = null,
     val attachedEnvActionId: UUID? = null,
+    val missionId: Int? = null,
 ) {
     companion object {
         fun fromReportingDTO(
@@ -100,6 +101,7 @@ data class MissionAttachedReportingDataOutput(
                 attachedToMissionAtUtc = dto.reporting.attachedToMissionAtUtc,
                 detachedFromMissionAtUtc = dto.reporting.detachedFromMissionAtUtc,
                 attachedEnvActionId = dto.reporting.attachedEnvActionId,
+                missionId = dto.reporting.missionId,
             )
         }
     }
