@@ -148,9 +148,12 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
     }
 
     if (engagedControlUnit.missionSources.length === 1) {
-      return `Cette unité est actuellement sélectionnée dans une autre mission en cours ouverte par le ${
-        missionSourceEnum[engagedControlUnit.missionSources[0]].label
-      }.`
+      const source = engagedControlUnit.missionSources[0]
+      if (!source) {
+        return ''
+      }
+
+      return `Cette unité est actuellement sélectionnée dans une autre mission en cours ouverte par le ${missionSourceEnum[source].label}.`
     }
 
     if (engagedControlUnit.missionSources.length > 1) {
