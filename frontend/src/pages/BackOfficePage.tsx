@@ -7,10 +7,10 @@ import { AdministrationForm } from '../features/Administration/components/Admini
 import { AdministrationTable } from '../features/Administration/components/AdministrationTable'
 import { BackOfficeMenu } from '../features/BackOffice/components/BackofficeMenu'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../features/BackOffice/components/BackofficeMenu/constants'
-import { BaseForm } from '../features/Base/components/BaseForm'
-import { BaseTable } from '../features/Base/components/BaseTable'
 import { ControlUnitForm } from '../features/ControlUnit/components/ControlUnitForm'
 import { ControlUnitTable } from '../features/ControlUnit/components/ControlUnitTable'
+import { StationForm } from '../features/Station/components/StationForm'
+import { BaseTable } from '../features/Station/components/StationTable'
 
 export function BackOfficePage() {
   return (
@@ -21,8 +21,11 @@ export function BackOfficePage() {
         <Routes>
           <Route element={<AdministrationTable />} path="/" />
 
-          <Route element={<BaseTable />} path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.BASE_LIST]} />
-          <Route element={<BaseForm />} path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.BASE_LIST]}/:baseId`} />
+          <Route element={<BaseTable />} path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.STATION_LIST]} />
+          <Route
+            element={<StationForm />}
+            path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.STATION_LIST]}/:stationId`}
+          />
 
           <Route
             element={<AdministrationTable />}

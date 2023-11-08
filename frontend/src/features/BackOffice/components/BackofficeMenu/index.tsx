@@ -12,8 +12,8 @@ export function BackOfficeMenu() {
       <StyledNavLink to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_LIST]}`}>
         {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.CONTROL_UNIT_LIST]}
       </StyledNavLink>
-      <StyledNavLink to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.BASE_LIST]}`}>
-        {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.BASE_LIST]}
+      <StyledNavLink to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.STATION_LIST]}`}>
+        {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.STATION_LIST]}
       </StyledNavLink>
     </Wrapper>
   )

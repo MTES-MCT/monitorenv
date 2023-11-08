@@ -1,6 +1,6 @@
 export type FiltersState = {
   administrationId?: number
-  baseId?: number
   query?: string
+  stationId?: number
   type?: string
 }

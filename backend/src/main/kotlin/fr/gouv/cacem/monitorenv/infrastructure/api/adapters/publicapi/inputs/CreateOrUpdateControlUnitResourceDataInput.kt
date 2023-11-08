@@ -5,23 +5,23 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceT
 
 data class CreateOrUpdateControlUnitResourceDataInput(
     val id: Int? = null,
-    val baseId: Int,
     val controlUnitId: Int,
     val isArchived: Boolean,
     val name: String,
     val note: String? = null,
     val photo: ByteArray? = byteArrayOf(),
+    val stationId: Int,
     val type: ControlUnitResourceType,
 ) {
     fun toControlUnitResource(): ControlUnitResourceEntity {
         return ControlUnitResourceEntity(
             id = this.id,
-            baseId = this.baseId,
             controlUnitId = this.controlUnitId,
             isArchived = this.isArchived,
             name = this.name,
             note = this.note,
             photo = this.photo,
+            stationId = this.stationId,
             type = this.type,
         )
     }

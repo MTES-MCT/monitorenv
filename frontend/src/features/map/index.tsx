@@ -26,8 +26,8 @@ import { MissionOverlays } from './overlays/missions'
 import { ReportingOverlay } from './overlays/reportings'
 import { SemaphoreOverlay } from './overlays/semaphores'
 import { ShowRegulatoryMetadata } from './ShowRegulatoryMetadata'
-import { BaseLayer } from '../Base/components/BaseLayer'
-import { BaseOverlay } from '../Base/components/BaseOverlay'
+import { StationLayer } from '../Station/components/StationLayer'
+import { StationOverlay } from '../Station/components/StationOverlay'
 
 // TODO Either use HOC to get proprer typings inference or migrate to vanilla JS.
 // https://legacy.reactjs.org/docs/higher-order-components.html#convention-pass-unrelated-props-through-to-the-wrapped-component
@@ -95,9 +95,9 @@ export function Map() {
       {/* @ts-ignore */}
       <ReportingOverlay />
       {/* @ts-ignore */}
-      <BaseLayer />
+      <StationLayer />
       {/* @ts-ignore */}
-      <BaseOverlay />
+      <StationOverlay />
     </BaseMap>
   )
 }

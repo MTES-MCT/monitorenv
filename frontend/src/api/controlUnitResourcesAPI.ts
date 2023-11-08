@@ -16,7 +16,7 @@ const GET_CONTROL_UNIT_RESOURCES_ERROR_MESSAGE = "Nous n'avons pas pu récupére
 export const controlUnitResourcesAPI = monitorenvPublicApi.injectEndpoints({
   endpoints: builder => ({
     archiveControlUnitResource: builder.mutation<void, number>({
-      invalidatesTags: () => [{ type: 'Bases' }, { type: 'ControlUnits' }],
+      invalidatesTags: () => [{ type: 'ControlUnits' }, { type: 'Stations' }],
       query: controlUnitResourceId => ({
         method: 'PUT',
         url: `/v1/control_unit_resources/${controlUnitResourceId}/archive`
@@ -38,7 +38,7 @@ export const controlUnitResourcesAPI = monitorenvPublicApi.injectEndpoints({
     }),
 
     createControlUnitResource: builder.mutation<void, ControlUnit.NewControlUnitResourceData>({
-      invalidatesTags: () => [{ type: 'Bases' }, { type: 'ControlUnits' }],
+      invalidatesTags: () => [{ type: 'ControlUnits' }, { type: 'Stations' }],
       query: newControlUnitResourceData => ({
         body: newControlUnitResourceData,
         method: 'POST',
@@ -47,7 +47,7 @@ export const controlUnitResourcesAPI = monitorenvPublicApi.injectEndpoints({
     }),
 
     deleteControlUnitResource: builder.mutation<void, number>({
-      invalidatesTags: () => [{ type: 'Bases' }, { type: 'ControlUnits' }],
+      invalidatesTags: () => [{ type: 'ControlUnits' }, { type: 'Stations' }],
       query: controlUnitResourceId => ({
         method: 'DELETE',
         url: `/v1/control_unit_resources/${controlUnitResourceId}`
@@ -74,7 +74,7 @@ export const controlUnitResourcesAPI = monitorenvPublicApi.injectEndpoints({
     }),
 
     updateControlUnitResource: builder.mutation<void, ControlUnit.ControlUnitResourceData>({
-      invalidatesTags: () => [{ type: 'Bases' }, { type: 'ControlUnits' }],
+      invalidatesTags: () => [{ type: 'ControlUnits' }, { type: 'Stations' }],
       query: nextControlUnitResourceData => ({
         body: nextControlUnitResourceData,
         method: 'PUT',

@@ -1,10 +1,10 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit
 
 import com.nhaarman.mockitokotlin2.given
-import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
+import fr.gouv.cacem.monitorenv.domain.entities.station.StationEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitResourceRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 import org.assertj.core.api.Assertions.assertThat
@@ -22,12 +22,6 @@ class GetControlUnitResourceByIdUTests {
     fun `execute should return a control unit resource by its ID`() {
         val controlUnitResourceId = 1
         val fullControlUnitResource = FullControlUnitResourceDTO(
-            base = BaseEntity(
-                id = 0,
-                latitude = 0.0,
-                longitude = 0.0,
-                name = "Base Name",
-            ),
             controlUnit = ControlUnitEntity(
                 id = 0,
                 administrationId = 0,
@@ -39,13 +33,19 @@ class GetControlUnitResourceByIdUTests {
             ),
             controlUnitResource = ControlUnitResourceEntity(
                 id = 1,
-                baseId = 0,
                 controlUnitId = 0,
                 isArchived = false,
                 name = "Control Unit Resource Name",
                 note = null,
                 photo = null,
+                stationId = 0,
                 type = ControlUnitResourceType.BARGE,
+            ),
+            station = StationEntity(
+                id = 0,
+                latitude = 0.0,
+                longitude = 0.0,
+                name = "Station Name",
             ),
         )
 

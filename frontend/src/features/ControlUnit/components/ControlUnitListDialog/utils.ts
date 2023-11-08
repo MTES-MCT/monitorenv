@@ -26,7 +26,7 @@ export function addBufferToExtent(extent: Extent, bufferRatio: number) {
 }
 
 export function displayBaseNamesFromControlUnit(controlUnit: ControlUnit.ControlUnit): string {
-  const baseNames = controlUnit.controlUnitResources.map(({ base }) => base.name).filter(isDefined)
+  const baseNames = controlUnit.controlUnitResources.map(({ station: base }) => base.name).filter(isDefined)
 
   return baseNames.length > 0 ? uniq(baseNames).sort().join(', ') : 'Aucune base'
 }
@@ -91,10 +91,10 @@ export function getFilters(
   }
 
   // Base
-  if (filtersState.baseId) {
+  if (filtersState.stationId) {
     const filter: Filter<ControlUnit.ControlUnit> = controlUnits =>
       controlUnits.reduce<ControlUnit.ControlUnit[]>((previousControlUnits, controlUnit) => {
-        const matches = controlUnit.controlUnitResources.filter(({ baseId }) => baseId === filtersState.baseId)
+        const matches = controlUnit.controlUnitResources.filter(({ stationId }) => stationId === filtersState.stationId)
 
         return matches.length > 0 ? [...previousControlUnits, controlUnit] : previousControlUnits
       }, [])

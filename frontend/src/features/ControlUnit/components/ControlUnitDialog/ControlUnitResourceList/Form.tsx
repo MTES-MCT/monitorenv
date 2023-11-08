@@ -14,8 +14,8 @@ import { Formik } from 'formik'
 import styled from 'styled-components'
 
 import { CONTROL_UNIT_RESOURCE_FORM_SCHEMA, CONTROL_UNIT_RESOURCE_TYPES_AS_OPTIONS } from './constants'
-import { useGetBasesQuery } from '../../../../../api/basesAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../../api/constants'
+import { useGetStationsQuery } from '../../../../../api/stationsAPI'
 
 import type { ControlUnitResourceFormValues } from './types'
 import type { CSSProperties } from 'react'
@@ -34,11 +34,11 @@ export function Form({ className, initialValues, onArchive, onCancel, onDelete, 
   const key = useKey([initialValues])
   const isNew = !initialValues.id
 
-  const { data: bases } = useGetBasesQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
+  const { data: stations } = useGetStationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
-  const basesAsOptions = getOptionsFromIdAndName(bases)?.filter(baseAsOption => baseAsOption.value !== 0)
+  const stationsAsOptions = getOptionsFromIdAndName(stations)?.filter(stationAsOption => stationAsOption.value !== 0)
 
-  if (!basesAsOptions) {
+  if (!stationsAsOptions) {
     return <div>Chargement en cours...</div>
   }
 
@@ -57,7 +57,7 @@ export function Form({ className, initialValues, onArchive, onCancel, onDelete, 
           <StyledForm onSubmit={handleSubmit}>
             <FormikSelect isLight label="Type de moyen" name="type" options={CONTROL_UNIT_RESOURCE_TYPES_AS_OPTIONS} />
             <FormikTextInput isLight label="Nom du moyen" name="name" />
-            <FormikSelect isLight label="Base du moyen" name="baseId" options={basesAsOptions} />
+            <FormikSelect isLight label="Base du moyen" name="stationId" options={stationsAsOptions} />
             <FormikTextarea isLight label="Commentaire" name="note" />
 
             <ActionBar>

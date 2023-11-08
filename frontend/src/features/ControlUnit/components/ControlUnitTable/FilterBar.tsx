@@ -10,7 +10,7 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 export function FilterBar() {
   const dispatch = useAppDispatch()
-  const backOfficeControlUnitList = useAppSelector(store => store.backOfficeControlUnitList)
+  const controlUnitTable = useAppSelector(store => store.controlUnitTable)
   const { data: administrations } = useGetAdministrationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const administrationsAsOptions = useMemo(() => getOptionsFromIdAndName(administrations), [administrations])
@@ -38,7 +38,7 @@ export function FilterBar() {
         name="query"
         onChange={updateQuery}
         placeholder="Rechercher..."
-        value={backOfficeControlUnitList.filtersState.query}
+        value={controlUnitTable.filtersState.query}
       />
       {administrationsAsOptions && (
         <Select
@@ -49,7 +49,7 @@ export function FilterBar() {
           options={administrationsAsOptions}
           placeholder="Administration"
           searchable
-          value={backOfficeControlUnitList.filtersState.administrationId}
+          value={controlUnitTable.filtersState.administrationId}
         />
       )}
     </Wrapper>

@@ -11,8 +11,8 @@ import styled from 'styled-components'
 
 import { controlUnitListDialogActions } from './slice'
 import { useGetAdministrationsQuery } from '../../../../api/administrationsAPI'
-import { useGetBasesQuery } from '../../../../api/basesAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
+import { useGetStationsQuery } from '../../../../api/stationsAPI'
 import { ControlUnit } from '../../../../domain/entities/controlUnit'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -22,7 +22,7 @@ export function FilterBar() {
   const dispatch = useAppDispatch()
   const mapControlUnitListDialog = useAppSelector(store => store.mapControlUnitListDialog)
   const { data: administrations } = useGetAdministrationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
-  const { data: bases } = useGetBasesQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
+  const { data: bases } = useGetStationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const administrationsAsOptions = useMemo(
     () => getOptionsFromIdAndName((administrations || []).filter(isNotArchived)),
@@ -40,7 +40,7 @@ export function FilterBar() {
 
   const updateBaseId = useCallback(
     (nextValue: number | undefined) => {
-      dispatch(controlUnitListDialogActions.setFilter({ key: 'baseId', value: nextValue }))
+      dispatch(controlUnitListDialogActions.setFilter({ key: 'stationId', value: nextValue }))
     },
     [dispatch]
   )
@@ -102,12 +102,12 @@ export function FilterBar() {
         isLabelHidden
         isLight
         label="Base du moyen"
-        name="baseId"
+        name="stationId"
         onChange={updateBaseId}
         options={basesAsOptions}
         placeholder="Base du moyen"
         searchable
-        value={mapControlUnitListDialog.filtersState.baseId}
+        value={mapControlUnitListDialog.filtersState.stationId}
       />
     </Wrapper>
   )

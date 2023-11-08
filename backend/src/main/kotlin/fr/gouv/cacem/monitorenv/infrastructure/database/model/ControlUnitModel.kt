@@ -80,28 +80,6 @@ data class ControlUnitModel(
                 termsNote = controlUnit.termsNote,
             )
         }
-
-        /**
-         * @param controlUnitContactModels Return control unit contacts relations when provided.
-         * @param controlUnitResourceModels Return control unit resources relations when provided.
-         */
-        fun fromFullControlUnit(
-            fullControlUnit: FullControlUnitDTO,
-            controlUnitContactModels: List<ControlUnitContactModel>? = null,
-            controlUnitResourceModels: List<ControlUnitResourceModel>? = null,
-        ): ControlUnitModel {
-            return ControlUnitModel(
-                id = fullControlUnit.controlUnit.id,
-                areaNote = fullControlUnit.controlUnit.areaNote,
-                administration = AdministrationModel.fromAdministration(fullControlUnit.administration),
-                controlUnitContacts = controlUnitContactModels,
-                controlUnitResources = controlUnitResourceModels,
-                departmentArea = fullControlUnit.departmentArea?.let { DepartmentAreaModel.fromDepartmentArea(it) },
-                isArchived = fullControlUnit.controlUnit.isArchived,
-                name = fullControlUnit.controlUnit.name,
-                termsNote = fullControlUnit.controlUnit.termsNote,
-            )
-        }
     }
 
     fun toControlUnit(): ControlUnitEntity {

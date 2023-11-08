@@ -8,7 +8,7 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 export function FilterBar() {
   const dispatch = useAppDispatch()
-  const backOfficeAdministrationList = useAppSelector(store => store.backOfficeAdministrationList)
+  const administrationTable = useAppSelector(store => store.administrationTable)
 
   const updateQuery = useCallback(
     (nextValue: string | undefined) => {
@@ -26,7 +26,7 @@ export function FilterBar() {
         name="query"
         onChange={updateQuery}
         placeholder="Rechercher..."
-        value={backOfficeAdministrationList.filtersState.query}
+        value={administrationTable.filtersState.query}
       />
     </Wrapper>
   )

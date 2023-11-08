@@ -1,6 +1,6 @@
 import type { Administration } from './administration'
-import type { Base } from './base'
 import type { DepartmentArea } from './departmentArea'
+import type { Station } from './station'
 
 export namespace ControlUnit {
   export interface ControlUnit {
@@ -33,8 +33,6 @@ export namespace ControlUnit {
   }
 
   export interface ControlUnitResource {
-    base: Base.BaseData
-    baseId: number | undefined
     controlUnit: ControlUnitData
     controlUnitId: number
     id: number
@@ -43,6 +41,8 @@ export namespace ControlUnit {
     note: string | undefined
     /** Base64 Data URI. */
     photo: string | undefined
+    station: Station.StationData
+    stationId: number | undefined
     type: ControlUnitResourceType
   }
 
@@ -154,6 +154,6 @@ export namespace ControlUnit {
   export type ControlUnitContactData = Omit<ControlUnitContact, 'controlUnit'>
   export type NewControlUnitContactData = Omit<ControlUnitContactData, 'id'>
 
-  export type ControlUnitResourceData = Omit<ControlUnitResource, 'base' | 'controlUnit'>
+  export type ControlUnitResourceData = Omit<ControlUnitResource, 'controlUnit' | 'station'>
   export type NewControlUnitResourceData = Omit<ControlUnitResourceData, 'id'>
 }

@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
-import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
+import fr.gouv.cacem.monitorenv.domain.entities.station.StationEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitResourceDataInput
@@ -82,22 +82,22 @@ class ApiControlUnitResourcesControllerITests {
     fun `create should create a control unit resource`() {
         val expectedCreatedControlUnitResource = ControlUnitResourceEntity(
             id = 1,
-            baseId = 0,
             controlUnitId = 0,
             isArchived = false,
             name = "Resource Name",
             note = null,
             photo = null,
+            stationId = 0,
             type = ControlUnitResourceType.BARGE,
         )
 
         val newControlUnitData = CreateOrUpdateControlUnitResourceDataInput(
-            baseId = 0,
             controlUnitId = 0,
             isArchived = false,
             name = "Resource Name",
             note = null,
             photo = null,
+            stationId = 0,
             type = ControlUnitResourceType.BARGE,
         )
         val requestBody = objectMapper.writeValueAsString(newControlUnitData)
@@ -130,12 +130,6 @@ class ApiControlUnitResourcesControllerITests {
     @Test
     fun `get should get a control unit resource by its ID`() {
         val expectedFullControlUnitResource = FullControlUnitResourceDTO(
-            base = BaseEntity(
-                id = 0,
-                latitude = 0.0,
-                longitude = 0.0,
-                name = "Control Unit Name",
-            ),
             controlUnit = ControlUnitEntity(
                 id = 0,
                 administrationId = 0,
@@ -147,13 +141,19 @@ class ApiControlUnitResourcesControllerITests {
             ),
             controlUnitResource = ControlUnitResourceEntity(
                 id = 1,
-                baseId = 0,
                 controlUnitId = 0,
                 isArchived = false,
                 name = "Resource Name",
                 note = null,
                 photo = null,
+                stationId = 0,
                 type = ControlUnitResourceType.BARGE,
+            ),
+            station = StationEntity(
+                id = 0,
+                latitude = 0.0,
+                longitude = 0.0,
+                name = "Control Unit Name",
             ),
         )
 
@@ -171,12 +171,6 @@ class ApiControlUnitResourcesControllerITests {
     fun `getAll should get all control unit resources`() {
         val expectedFullControlUnitResources = listOf(
             FullControlUnitResourceDTO(
-                base = BaseEntity(
-                    id = 0,
-                    latitude = 0.0,
-                    longitude = 0.0,
-                    name = "Base Name",
-                ),
                 controlUnit = ControlUnitEntity(
                     id = 0,
                     administrationId = 0,
@@ -188,23 +182,23 @@ class ApiControlUnitResourcesControllerITests {
                 ),
                 controlUnitResource = ControlUnitResourceEntity(
                     id = 1,
-                    baseId = 0,
                     controlUnitId = 3,
                     isArchived = false,
                     name = "Resource Name",
                     note = null,
                     photo = null,
+                    stationId = 0,
                     type = ControlUnitResourceType.BARGE,
+                ),
+                station = StationEntity(
+                    id = 0,
+                    latitude = 0.0,
+                    longitude = 0.0,
+                    name = "Station Name",
                 ),
             ),
 
             FullControlUnitResourceDTO(
-                base = BaseEntity(
-                    id = 0,
-                    latitude = 0.0,
-                    longitude = 0.0,
-                    name = "Base Name",
-                ),
                 controlUnit = ControlUnitEntity(
                     id = 0,
                     administrationId = 0,
@@ -216,13 +210,19 @@ class ApiControlUnitResourcesControllerITests {
                 ),
                 controlUnitResource = ControlUnitResourceEntity(
                     id = 2,
-                    baseId = 0,
                     controlUnitId = 0,
                     isArchived = false,
                     name = "Resource Name 2",
                     note = null,
                     photo = null,
+                    stationId = 0,
                     type = ControlUnitResourceType.BARGE,
+                ),
+                station = StationEntity(
+                    id = 0,
+                    latitude = 0.0,
+                    longitude = 0.0,
+                    name = "Station Name",
                 ),
             ),
         )
@@ -240,23 +240,23 @@ class ApiControlUnitResourcesControllerITests {
     fun `update should update a control unit resource`() {
         val expectedUpdatedControlUnitResource = ControlUnitResourceEntity(
             id = 1,
-            baseId = 0,
             controlUnitId = 0,
             isArchived = false,
             name = "Updated Resource Name",
             note = null,
             photo = null,
+            stationId = 0,
             type = ControlUnitResourceType.BARGE,
         )
 
         val nextControlUnitData = CreateOrUpdateControlUnitResourceDataInput(
             id = 1,
-            baseId = 0,
             controlUnitId = 0,
             isArchived = false,
             name = "Updated Resource Name",
             note = null,
             photo = null,
+            stationId = 0,
             type = ControlUnitResourceType.BARGE,
         )
         val requestBody = objectMapper.writeValueAsString(nextControlUnitData)
