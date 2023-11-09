@@ -76,6 +76,9 @@ const mapSlice = createSlice({
   }
 })
 
+export const mapActions = mapSlice.actions
+export const mapSliceReducer = mapSlice.reducer
+
 export const {
   selectBaseLayer,
   setCoordinatesFormat,
@@ -83,6 +86,4 @@ export const {
   setDistanceUnit,
   setFitToExtent,
   setZoomToCenter
-} = mapSlice.actions
-
-export const mapSliceReducer = mapSlice.reducer
+} = mapActions

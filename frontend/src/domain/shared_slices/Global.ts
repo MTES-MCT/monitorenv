@@ -1,4 +1,5 @@
-// TODO This slice should disappear in favor of `features/MainWindow/slice.ts`.
+// TODO This slice should disappear in favor of `features/MainWindow/slice.ts` and "Map" feature should have its own slice.
+// TODO "Map" feature should have its own slice where we would transfer the related `display...` props.
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
@@ -63,6 +64,8 @@ type GlobalStateType = {
   displayReportingEditingLayer: boolean
   displayReportingSelectedLayer: boolean
 
+  displayBaseLayer: boolean
+
   isLayersSidebarVisible: boolean
 
   isMapToolVisible: MapToolType | undefined
@@ -113,6 +116,8 @@ const initialState: GlobalStateType = {
   displayReportingEditingLayer: true,
   displayReportingSelectedLayer: true,
 
+  displayBaseLayer: false,
+
   isMapToolVisible: undefined,
 
   healthcheckTextWarning: undefined,
@@ -127,6 +132,7 @@ const globalSlice = createSlice({
   initialState,
   name: 'global',
   reducers: {
+    // TODO Rename to `hideAllDialogs`.
     hideSideButtons(state) {
       state.isControlUnitDialogVisible = false
       state.isControlUnitListDialogVisible = false

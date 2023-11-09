@@ -126,7 +126,7 @@ module.exports = {
 
     // UI
     {
-      files: ['src/ui/**/*.tsx'],
+      files: ['src/components/**/*.tsx', 'src/ui/**/*.tsx'],
       rules: {
         'react/jsx-props-no-spreading': 'off'
       }

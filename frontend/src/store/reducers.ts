@@ -26,6 +26,7 @@ import { semaphoresPersistedReducer } from '../domain/shared_slices/SemaphoresSl
 import { administrationTablePersistedReducer } from '../features/Administration/components/AdministrationTable/slice'
 import { backOfficeReducer } from '../features/BackOffice/slice'
 import { baseTablePersistedReducer } from '../features/Base/components/BaseTable/slice'
+import { baseReducer } from '../features/Base/slice'
 import { controlUnitDialogReducer } from '../features/ControlUnit/components/ControlUnitDialog/slice'
 import { controlUnitListDialogPersistedReducer } from '../features/ControlUnit/components/ControlUnitListDialog/slice'
 import { controlUnitTablePersistedReducer } from '../features/ControlUnit/components/ControlUnitTable/slice'
@@ -44,6 +45,7 @@ export const homeReducers = {
   backOfficeAdministrationList: administrationTablePersistedReducer,
   backOfficeBaseList: baseTablePersistedReducer,
   backOfficeControlUnitList: controlUnitTablePersistedReducer,
+  base: baseReducer,
   draw: drawReducer,
   global: globalReducer,
   interestPoint: interestPointSlicePersistedReducer,
