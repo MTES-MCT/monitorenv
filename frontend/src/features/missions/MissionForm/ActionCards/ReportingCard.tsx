@@ -1,4 +1,4 @@
-import { Accent, Button, Icon, THEME, Tag, TagBullet } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, THEME, Tag } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import styled from 'styled-components'
 
@@ -47,7 +47,7 @@ export function ReportingCard({
         <Accented>{action.theme}</Accented> {action.theme && '-'} {action.description || 'Aucune description'}
         <ControlContainer $isEndAlign={!action.attachedEnvActionId}>
           {action.attachedEnvActionId && (
-            <Tag bullet={TagBullet.DISK} bulletColor={THEME.color.mediumSeaGreen} isLight>
+            <Tag data-cy="reporting-control-done" iconColor={THEME.color.mediumSeaGreen} isLight withBullet>
               Contrôle fait
             </Tag>
           )}

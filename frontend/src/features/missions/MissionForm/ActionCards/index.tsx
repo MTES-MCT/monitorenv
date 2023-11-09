@@ -66,7 +66,10 @@ export function ActionCards({
                   />
                 </ActionButtons>
                 {action.actionType === ActionTypeEnum.CONTROL && action.formattedReportingId && (
-                  <StyledTag Icon={Icon.Link}>{`Signalement ${action.formattedReportingId}`}</StyledTag>
+                  <StyledTag
+                    data-cy="control-attached-reporting-tag"
+                    Icon={Icon.Link}
+                  >{`Signalement ${action.formattedReportingId}`}</StyledTag>
                 )}
               </ButtonsWrapper>
             )}

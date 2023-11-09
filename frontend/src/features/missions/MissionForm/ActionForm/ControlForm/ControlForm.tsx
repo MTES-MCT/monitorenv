@@ -187,6 +187,7 @@ export function ControlForm({
           <StyledToggle>
             <Toggle
               checked={isReportingListVisible}
+              data-cy="control-form-toggle-reporting"
               onChange={updateIsContralAttachedToReporting}
               readOnly={areAllReportingsAttachedToAControl && currentAction?.reportingIds?.length === 0}
             />
