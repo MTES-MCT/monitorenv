@@ -8,7 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.EnvActionAttachedToReportingIds
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.DuplicateAttachedReporting
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ReportingAlreadyAttachedException
 import org.slf4j.LoggerFactory
 import java.util.UUID
 
@@ -42,13 +42,12 @@ class CreateOrUpdateMissionWithAttachedReporting(
 
         attachedReportingIds.forEach {
             val reporting = reportingRepository.findById(it)
-
             if (reporting.reporting.missionId != null &&
                 reporting.reporting.attachedToMissionAtUtc != null &&
                 reporting.reporting.detachedFromMissionAtUtc == null &&
                 reporting.reporting.missionId != savedMission.id
             ) {
-                throw DuplicateAttachedReporting(
+                throw ReportingAlreadyAttachedException(
                     "Reporting ${reporting.reporting.id} is already attached to a mission",
                 )
             }

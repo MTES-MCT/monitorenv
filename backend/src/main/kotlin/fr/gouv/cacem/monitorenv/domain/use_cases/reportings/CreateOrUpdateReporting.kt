@@ -4,7 +4,7 @@ import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.DuplicateAttachedMission
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ReportingAlreadyAttachedException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -36,7 +36,7 @@ class CreateOrUpdateReporting(
                 existingReporting.reporting.detachedFromMissionAtUtc == null &&
                 existingReporting.reporting.missionId != reporting.missionId
             ) {
-                throw DuplicateAttachedMission(
+                throw ReportingAlreadyAttachedException(
                     "Reporting ${reporting.id} is already attached to a mission",
                 )
             }

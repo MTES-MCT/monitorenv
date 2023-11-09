@@ -2,9 +2,8 @@ package fr.gouv.cacem.monitorenv.infrastructure.api
 
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ApiError
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.MissingParameterApiError
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.DuplicateAttachedMission
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.DuplicateAttachedReporting
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ForeignKeyConstraintException
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ReportingAlreadyAttachedException
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.UnarchivedChildException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -63,14 +62,8 @@ class ControllersExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(DuplicateAttachedMission::class)
-    fun handleDuplicateAttachedMissionOnReporting(e: DuplicateAttachedMission): ApiError {
-        return ApiError(ErrorCode.DUPLICATE_ATTACHED_MISSION.name)
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(DuplicateAttachedReporting::class)
-    fun handleDuplicateAttachedReportingToMission(e: DuplicateAttachedReporting): ApiError {
-        return ApiError(ErrorCode.DUPLICATE_ATTACHED_REPORTING.name)
+    @ExceptionHandler(ReportingAlreadyAttachedException::class)
+    fun handleReportingAlreadyAttachedToAMission(e: ReportingAlreadyAttachedException): ApiError {
+        return ApiError(ErrorCode.REPORTING_ALREADY_ATTACHED.name)
     }
 }

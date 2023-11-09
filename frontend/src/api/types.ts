@@ -1,10 +1,8 @@
 // Don't forget to mirror any update here in the backend enum.
 export enum ApiErrorCode {
-  /** Thrown when attempting to attach a mission to a reporting that has already a mission attached. */
-  DUPLICATE_ATTACHED_MISSION = 'DUPLICATE_ATTACHED_MISSION',
-  /** Thrown when attempting to attach a reporting to a mission that has already a mission attached. */
-  DUPLICATE_ATTACHED_REPORTING = 'DUPLICATE_ATTACHED_REPORTING',
   FOREIGN_KEY_CONSTRAINT = 'FOREIGN_KEY_CONSTRAINT',
+  /** Thrown when attempting to attach a mission to a reporting that has already a mission attached. */
+  REPORTING_ALREADY_ATTACHED = 'REPORTING_ALREADY_ATTACHED',
 
   /** Thrown when attempting to archive an entity linked to non-archived child(ren). */
   UNARCHIVED_CHILD = 'UNARCHIVED_CHILD'

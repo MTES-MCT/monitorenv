@@ -22,7 +22,11 @@ INSERT INTO reportings (
     created_at,
     validity_time,
     is_deleted,
-    is_archived)
+    is_archived,
+    mission_id,
+    attached_to_mission_at_utc,
+    detached_from_mission_at_utc
+    )
 VALUES
 (
     1,
@@ -46,7 +50,10 @@ VALUES
     now() - INTERVAL '3 days',
     24,
     false,
-    false
+    false,
+    null,
+    null,
+    null
     ),
 (
     2,
@@ -70,7 +77,10 @@ VALUES
     now() - INTERVAL '2 days',
     2,
     false,
-    false
+    false,
+    null,
+    null,
+    null
 ),
 (
     3,
@@ -94,7 +104,10 @@ VALUES
     now() - INTERVAL '1 hour',
     1,
     false,
-    false
+    false,
+    null,
+    null,
+    null
 ),
 (
     4,
@@ -118,7 +131,10 @@ VALUES
     now() - INTERVAL '3 hour',
     4,
     false,
-    false
+    false,
+    null,
+    null,
+    null
 ),
 (
     5,
@@ -142,7 +158,10 @@ VALUES
     now() - INTERVAL '1 hour',
     6,
     false,
-    false
+    false,
+    null,
+    null,
+    null
 );
 
 

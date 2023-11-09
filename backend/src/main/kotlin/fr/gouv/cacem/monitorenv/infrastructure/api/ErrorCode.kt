@@ -11,8 +11,5 @@ enum class ErrorCode {
      * Thrown when attempting to attach a mission to a reporting that has already a mission
      * attached.
      */
-    DUPLICATE_ATTACHED_MISSION,
-
-    /** Thrown when attempting to attach a reporting that has already a mission attahced. */
-    DUPLICATE_ATTACHED_REPORTING,
+    REPORTING_ALREADY_ATTACHED
 }

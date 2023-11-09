@@ -19,8 +19,10 @@ import fr.gouv.cacem.monitorenv.domain.repositories.ISemaphoreRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.CreateOrUpdateReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ReportingAlreadyAttachedException
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.locationtech.jts.geom.MultiPolygon
@@ -32,20 +34,15 @@ import java.time.ZonedDateTime
 
 @ExtendWith(SpringExtension::class)
 class CreateOrUpdateReportingUTests {
-    @MockBean
-    private lateinit var reportingRepository: IReportingRepository
+    @MockBean private lateinit var reportingRepository: IReportingRepository
 
-    @MockBean
-    private lateinit var controlUnitRepository: IControlUnitRepository
+    @MockBean private lateinit var controlUnitRepository: IControlUnitRepository
 
-    @MockBean
-    private lateinit var semaphoreRepository: ISemaphoreRepository
+    @MockBean private lateinit var semaphoreRepository: ISemaphoreRepository
 
-    @MockBean
-    private lateinit var facadeRepository: IFacadeAreasRepository
+    @MockBean private lateinit var facadeRepository: IFacadeAreasRepository
 
-    @MockBean
-    private lateinit var missionRepository: IMissionRepository
+    @MockBean private lateinit var missionRepository: IMissionRepository
 
     @Test
     fun `Should throw an exception when input is null`() {
@@ -97,7 +94,8 @@ class CreateOrUpdateReportingUTests {
             )
         val reportingWithSemaphoreDTO =
             ReportingDTO(
-                reporting = ReportingEntity(
+                reporting =
+                ReportingEntity(
                     sourceType = SourceTypeEnum.SEMAPHORE,
                     semaphoreId = 1,
                     targetType = TargetTypeEnum.VEHICLE,
@@ -139,28 +137,30 @@ class CreateOrUpdateReportingUTests {
                 isDeleted = false,
                 openBy = "CDA",
             )
-        val reportingWithControlUnitDTO = ReportingDTO(
-            reporting = ReportingEntity(
-                sourceType = SourceTypeEnum.CONTROL_UNIT,
-                controlUnitId = 1,
-                targetType = TargetTypeEnum.VEHICLE,
-                vehicleType = VehicleTypeEnum.VESSEL,
-                geom = polygon,
-                seaFront = "Facade 1",
-                description = "description",
-                reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                theme = "theme",
-                subThemes = listOf("subTheme1", "subTheme2"),
-                actionTaken = "actions effectuées blabal ",
-                isControlRequired = true,
-                hasNoUnitAvailable = true,
-                createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                validityTime = 10,
-                isArchived = false,
-                isDeleted = false,
-                openBy = "CDA",
-            ),
-        )
+        val reportingWithControlUnitDTO =
+            ReportingDTO(
+                reporting =
+                ReportingEntity(
+                    sourceType = SourceTypeEnum.CONTROL_UNIT,
+                    controlUnitId = 1,
+                    targetType = TargetTypeEnum.VEHICLE,
+                    vehicleType = VehicleTypeEnum.VESSEL,
+                    geom = polygon,
+                    seaFront = "Facade 1",
+                    description = "description",
+                    reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                    theme = "theme",
+                    subThemes = listOf("subTheme1", "subTheme2"),
+                    actionTaken = "actions effectuées blabal ",
+                    isControlRequired = true,
+                    hasNoUnitAvailable = true,
+                    createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                    validityTime = 10,
+                    isArchived = false,
+                    isDeleted = false,
+                    openBy = "CDA",
+                ),
+            )
 
         val semaphore =
             SemaphoreEntity(
@@ -170,12 +170,14 @@ class CreateOrUpdateReportingUTests {
             )
         val fullControlUnit =
             FullControlUnitDTO(
-                administration = AdministrationEntity(
+                administration =
+                AdministrationEntity(
                     id = 1,
                     isArchived = false,
                     name = "administration 1",
                 ),
-                controlUnit = ControlUnitEntity(
+                controlUnit =
+                ControlUnitEntity(
                     id = 1,
                     administrationId = 2,
                     areaNote = null,
@@ -206,8 +208,7 @@ class CreateOrUpdateReportingUTests {
 
         // Then
         verify(reportingRepository, times(1)).save(reportingWithSemaphore)
-        assertThat(createdReportingWithSemaphore)
-            .isEqualTo(reportingWithSemaphoreDTO)
+        assertThat(createdReportingWithSemaphore).isEqualTo(reportingWithSemaphoreDTO)
 
         // When
         val createdReportingWithControlUnit =
@@ -219,8 +220,7 @@ class CreateOrUpdateReportingUTests {
 
         // Then
         verify(reportingRepository, times(1)).save(reportingWithControlUnit)
-        assertThat(createdReportingWithControlUnit)
-            .isEqualTo(reportingWithControlUnitDTO)
+        assertThat(createdReportingWithControlUnit).isEqualTo(reportingWithControlUnitDTO)
     }
 
     @Test
@@ -391,7 +391,8 @@ class CreateOrUpdateReportingUTests {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
                     facadeRepository = facadeRepository,
-                ).execute(reportingWithControlUnitId)
+                )
+                    .execute(reportingWithControlUnitId)
             }
 
         // Then
@@ -405,7 +406,8 @@ class CreateOrUpdateReportingUTests {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
                     facadeRepository = facadeRepository,
-                ).execute(reportingWithSemaphoreId)
+                )
+                    .execute(reportingWithSemaphoreId)
             }
 
         // Then
@@ -419,7 +421,8 @@ class CreateOrUpdateReportingUTests {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
                     facadeRepository = facadeRepository,
-                ).execute(reportingWithoutSourceName)
+                )
+                    .execute(reportingWithoutSourceName)
             }
 
         // Then
@@ -427,5 +430,81 @@ class CreateOrUpdateReportingUTests {
             .isInstanceOf(IllegalArgumentException::class.java)
         assertThat(throwableReportingWithoutSourceName.message)
             .contains("SourceName must be set and semaphoreId and controlUnitId must be null")
+    }
+
+    @Test
+    fun `execute should throw ReportingAlreadyAttachedException when try to attach reporting that has already be attached`() {
+        val wktReader = WKTReader()
+        val multipolygonString =
+            "MULTIPOLYGON(((-2.7335 47.6078, -2.7335 47.8452, -3.6297 47.8452, -3.6297 47.6078, -2.7335 47.6078)))"
+        val polygon = wktReader.read(multipolygonString) as MultiPolygon
+
+        val reportingWithNewAttachedMission =
+            ReportingEntity(
+                id = 1,
+                sourceType = SourceTypeEnum.OTHER,
+                targetType = TargetTypeEnum.VEHICLE,
+                vehicleType = VehicleTypeEnum.VESSEL,
+                sourceName = "test",
+                geom = polygon,
+                description = "description",
+                reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                theme = "theme",
+                subThemes = listOf("subTheme1", "subTheme2"),
+                actionTaken = "actions effectuées blabal ",
+                isControlRequired = true,
+                hasNoUnitAvailable = true,
+                createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                validityTime = 10,
+                isArchived = false,
+                isDeleted = false,
+                openBy = "CDA",
+                missionId = 10,
+                attachedToMissionAtUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                detachedFromMissionAtUtc = null,
+            )
+
+        // given(reportingRepository.save(reportingWithNewAttachedMission))
+        given(reportingRepository.findById(1))
+            .willReturn(
+                ReportingDTO(
+                    reporting =
+                    ReportingEntity(
+                        id = 1,
+                        sourceType = SourceTypeEnum.OTHER,
+                        targetType = TargetTypeEnum.VEHICLE,
+                        vehicleType = VehicleTypeEnum.VESSEL,
+                        sourceName = "test",
+                        geom = polygon,
+                        description = "description",
+                        reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                        theme = "theme",
+                        subThemes = listOf("subTheme1", "subTheme2"),
+                        actionTaken = "actions effectuées blabal ",
+                        isControlRequired = true,
+                        hasNoUnitAvailable = true,
+                        createdAt =
+                        ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        validityTime = 10,
+                        isArchived = false,
+                        isDeleted = false,
+                        openBy = "CDA",
+                        missionId = 8,
+                        attachedToMissionAtUtc =
+                        ZonedDateTime.parse("2023-08-15T04:50:09Z"),
+                        detachedFromMissionAtUtc = null,
+                    ),
+                ),
+            )
+
+        // Then
+        assertThatThrownBy {
+            CreateOrUpdateReporting(
+                reportingRepository = reportingRepository,
+                facadeRepository = facadeRepository,
+            )
+                .execute(reportingWithNewAttachedMission)
+        }
+            .isInstanceOf(ReportingAlreadyAttachedException::class.java)
     }
 }
