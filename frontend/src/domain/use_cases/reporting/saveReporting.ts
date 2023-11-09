@@ -1,6 +1,7 @@
 import omit from 'lodash/omit'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
+import { ApiErrorCode } from '../../../api/types'
 import { isNewReporting } from '../../../features/Reportings/utils'
 import { setReportingFormVisibility, setToast, ReportingContext, VisibilityState } from '../../shared_slices/Global'
 import { reportingActions } from '../../shared_slices/reporting'
@@ -28,6 +29,9 @@ export const saveReporting =
         dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
         dispatch(reportingActions.deleteSelectedReporting(values.id))
       } else {
+        if (response.error.data.type === ApiErrorCode.DUPLICATE_ATTACHED_MISSION) {
+          throw Error('Le signalement est déjà rattaché à une mission')
+        }
         throw Error('Erreur à la création ou à la modification du signalement')
       }
     } catch (error) {

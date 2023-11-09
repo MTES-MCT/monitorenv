@@ -32,25 +32,32 @@ export function ReportingToAttachLayer({ map, mapClickEvent }: BaseMapChildrenPr
       ),
     [attachedReportings]
   )
-  const reportingsPointOrZone = useMemo(() => {
-    const filteredReportings = reduce(
-      reportings?.entities,
-      (features, reporting) => {
-        if (
-          reporting &&
-          reporting.geom &&
-          (!reporting.missionId || (reporting.missionId && reporting.detachedFromMissionAtUtc))
-        ) {
-          features.push(getReportingZoneFeature(reporting, Layers.REPORTING_TO_ATTACH_ON_MISSION.code))
-        }
 
-        return features
-      },
-      [] as Feature[]
-    )
+  const filteredReportings = useMemo(
+    () =>
+      reduce(
+        reportings?.entities,
+        (features, reporting) => {
+          if (
+            reporting &&
+            reporting.geom &&
+            reporting.isControlRequired &&
+            (!reporting.missionId || (reporting.missionId && reporting.detachedFromMissionAtUtc))
+          ) {
+            features.push(getReportingZoneFeature(reporting, Layers.REPORTING_TO_ATTACH_ON_MISSION.code))
+          }
 
-    return [...filteredReportings, ...attachedReportingsFeatures]
-  }, [reportings, attachedReportingsFeatures])
+          return features
+        },
+        [] as Feature[]
+      ),
+    [reportings?.entities]
+  )
+
+  const reportingsPointOrZone = useMemo(
+    () => [...filteredReportings, ...attachedReportingsFeatures],
+    [filteredReportings, attachedReportingsFeatures]
+  )
 
   const vectorSourceRef = useRef() as React.MutableRefObject<VectorSource<Geometry>>
   const GetVectorSource = () => {

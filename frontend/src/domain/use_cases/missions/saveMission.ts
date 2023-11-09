@@ -1,6 +1,7 @@
 import omit from 'lodash/omit'
 
 import { missionsAPI } from '../../../api/missionsAPI'
+import { ApiErrorCode } from '../../../api/types'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { isNewMission } from '../../../utils/isNewMission'
 import { getMissionPageRoute } from '../../../utils/routes'
@@ -35,33 +36,46 @@ export const saveMission =
         dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
         dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSIONS))
 
+        const missionUpdated = response.data
         // we want to update openings reportings with new attached or detached mission
-        values.attachedReportingIds.map(async id => {
-          if (reportings[id]) {
-            const reportingUpdatedIndex = response.data.attachedReportings.findIndex(reporting => reporting.id === id)
-
-            const { attachedToMissionAtUtc, detachedFromMissionAtUtc } =
-              response.data.attachedReportings[reportingUpdatedIndex]
-            await dispatch(
-              reportingActions.setReporting({
-                ...reportings[id],
-                reporting: {
-                  ...reportings[id].reporting,
-                  attachedMission: !detachedFromMissionAtUtc ? response.data : undefined,
-                  attachedToMissionAtUtc,
-                  detachedFromMissionAtUtc,
-                  missionId: response.data.id
-                }
-              })
-            )
-          }
-
-          return undefined
+        await updateReportingsWithAttachedMission({
+          attachedReportingIds: values.attachedReportingIds,
+          dispatch,
+          missionUpdated,
+          reportings
         })
       } else {
+        if (response.error.data.type === ApiErrorCode.DUPLICATE_ATTACHED_REPORTING) {
+          throw Error('Le signalement est déjà rattaché à une mission')
+        }
         throw Error('Erreur à la création ou à la modification de la mission')
       }
     } catch (error) {
       dispatch(setToast({ containerId: 'sideWindow', message: error }))
     }
   }
+
+async function updateReportingsWithAttachedMission({ attachedReportingIds, dispatch, missionUpdated, reportings }) {
+  await attachedReportingIds.map(async id => {
+    if (reportings[id]) {
+      const reportingUpdatedIndex = missionUpdated.attachedReportings.findIndex(reporting => reporting.id === id)
+
+      const { attachedToMissionAtUtc, detachedFromMissionAtUtc } =
+        missionUpdated.attachedReportings[reportingUpdatedIndex]
+      await dispatch(
+        reportingActions.setReporting({
+          ...reportings[id],
+          reporting: {
+            ...reportings[id].reporting,
+            attachedMission: !detachedFromMissionAtUtc ? missionUpdated : undefined,
+            attachedToMissionAtUtc,
+            detachedFromMissionAtUtc,
+            missionId: missionUpdated.id
+          }
+        })
+      )
+    }
+
+    return undefined
+  })
+}

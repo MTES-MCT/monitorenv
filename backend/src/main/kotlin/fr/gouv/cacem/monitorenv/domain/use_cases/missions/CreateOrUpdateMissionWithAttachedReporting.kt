@@ -8,6 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.EnvActionAttachedToReportingIds
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.DuplicateAttachedReporting
 import org.slf4j.LoggerFactory
 import java.util.UUID
 
@@ -17,7 +18,8 @@ class CreateOrUpdateMissionWithAttachedReporting(
     private val missionRepository: IMissionRepository,
     private val reportingRepository: IReportingRepository,
 ) {
-    private val logger = LoggerFactory.getLogger(CreateOrUpdateMissionWithAttachedReporting::class.java)
+    private val logger =
+        LoggerFactory.getLogger(CreateOrUpdateMissionWithAttachedReporting::class.java)
 
     @Throws(IllegalArgumentException::class)
     fun execute(
@@ -38,6 +40,20 @@ class CreateOrUpdateMissionWithAttachedReporting(
         val savedMission = createOrUpdateMission.execute(mission)
         require(savedMission.id != null) { "The mission id is null" }
 
+        attachedReportingIds.forEach {
+            val reporting = reportingRepository.findById(it)
+
+            if (reporting.reporting.missionId != null &&
+                reporting.reporting.attachedToMissionAtUtc != null &&
+                reporting.reporting.detachedFromMissionAtUtc == null &&
+                reporting.reporting.missionId != savedMission.id
+            ) {
+                throw DuplicateAttachedReporting(
+                    "Reporting ${reporting.reporting.id} is already attached to a mission",
+                )
+            }
+        }
+
         reportingRepository.attachReportingsToMission(attachedReportingIds, savedMission.id)
 
         envActionsAttachedToReportingIds.forEach {
@@ -47,7 +63,10 @@ class CreateOrUpdateMissionWithAttachedReporting(
         return missionRepository.findFullMissionById(savedMission.id)
     }
 
-    private fun getListOfEnvActionIds(envActionsAttachedToReportingIds: List<EnvActionAttachedToReportingIds>?): List<UUID> {
-        return envActionsAttachedToReportingIds?.filter { it.second.isNotEmpty() }?.map { it.first } ?: emptyList()
+    private fun getListOfEnvActionIds(
+        envActionsAttachedToReportingIds: List<EnvActionAttachedToReportingIds>?,
+    ): List<UUID> {
+        return envActionsAttachedToReportingIds?.filter { it.second.isNotEmpty() }?.map { it.first }
+            ?: emptyList()
     }
 }
