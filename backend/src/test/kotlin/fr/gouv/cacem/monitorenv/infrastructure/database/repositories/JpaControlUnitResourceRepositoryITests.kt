@@ -2,10 +2,10 @@
 
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
+import fr.gouv.cacem.monitorenv.domain.entities.station.StationEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -40,7 +40,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
 
         assertThat(foundFullControlUnitResources[0]).isEqualTo(
             FullControlUnitResourceDTO(
-                base = BaseEntity(
+                station = StationEntity(
                     id = 1,
                     latitude = 43.295765,
                     longitude = 5.375486,
@@ -57,7 +57,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                 ),
                 controlUnitResource = ControlUnitResourceEntity(
                     id = 1,
-                    baseId = 1,
+                    stationId = 1,
                     controlUnitId = 10000,
                     isArchived = false,
                     name = "Semi-rigide 1",
@@ -70,7 +70,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
 
         assertThat(foundFullControlUnitResources[11]).isEqualTo(
             FullControlUnitResourceDTO(
-                base = BaseEntity(
+                station = StationEntity(
                     id = 3,
                     latitude = 51.035534,
                     longitude = 2.372845,
@@ -87,7 +87,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                 ),
                 controlUnitResource = ControlUnitResourceEntity(
                     id = 12,
-                    baseId = 3,
+                    stationId = 3,
                     controlUnitId = 10018,
                     isArchived = false,
                     name = "ARIOLA",
@@ -106,7 +106,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
 
         assertThat(foundFullControlUnitResource).isEqualTo(
             FullControlUnitResourceDTO(
-                base = BaseEntity(
+                station = StationEntity(
                     id = 1,
                     latitude = 43.295765,
                     longitude = 5.375486,
@@ -123,7 +123,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                 ),
                 controlUnitResource = ControlUnitResourceEntity(
                     id = 1,
-                    baseId = 1,
+                    stationId = 1,
                     controlUnitId = 10000,
                     isArchived = false,
                     name = "Semi-rigide 1",
@@ -142,7 +142,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
         // Create
 
         val newControlUnitResource = ControlUnitResourceEntity(
-            baseId = 1,
+            stationId = 1,
             controlUnitId = 10000,
             isArchived = false,
             name = "Resource Name",
@@ -160,7 +160,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
 
         val nextControlUnitResource = ControlUnitResourceEntity(
             id = 13,
-            baseId = 2,
+            stationId = 2,
             controlUnitId = 10001,
             isArchived = false,
             name = "Updated Resource Name",

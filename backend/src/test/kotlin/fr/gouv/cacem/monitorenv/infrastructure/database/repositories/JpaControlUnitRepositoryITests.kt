@@ -1,11 +1,11 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
-import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
+import fr.gouv.cacem.monitorenv.domain.entities.station.StationEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 import org.assertj.core.api.Assertions.assertThat
@@ -72,7 +72,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                 ),
                 controlUnitResources = listOf(
                     FullControlUnitResourceDTO(
-                        base = BaseEntity(
+                        station = StationEntity(
                             id = 1,
                             latitude = 43.295765,
                             longitude = 5.375486,
@@ -89,7 +89,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                         ),
                         controlUnitResource = ControlUnitResourceEntity(
                             id = 1,
-                            baseId = 1,
+                            stationId = 1,
                             controlUnitId = 10000,
                             isArchived = false,
                             name = "Semi-rigide 1",
@@ -99,7 +99,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                         ),
                     ),
                     FullControlUnitResourceDTO(
-                        base = BaseEntity(
+                        station = StationEntity(
                             id = 1,
                             latitude = 43.295765,
                             longitude = 5.375486,
@@ -116,7 +116,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                         ),
                         controlUnitResource = ControlUnitResourceEntity(
                             id = 2,
-                            baseId = 1,
+                            stationId = 1,
                             controlUnitId = 10000,
                             isArchived = false,
                             name = "Semi-rigide 2",
@@ -148,7 +148,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                 controlUnitContacts = listOf(),
                 controlUnitResources = listOf(
                     FullControlUnitResourceDTO(
-                        base = BaseEntity(
+                        station = StationEntity(
                             id = 3,
                             name = "Dunkerque",
                             latitude = 51.035534,
@@ -164,7 +164,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                         ),
                         controlUnitResource = ControlUnitResourceEntity(
                             id = 8,
-                            baseId = 3,
+                            stationId = 3,
                             controlUnitId = 10121,
                             isArchived = false,
                             name = "PAM Jeanne Barret",
@@ -217,7 +217,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                 ),
                 controlUnitResources = listOf(
                     FullControlUnitResourceDTO(
-                        base = BaseEntity(
+                        station = StationEntity(
                             id = 1,
                             latitude = 43.295765,
                             longitude = 5.375486,
@@ -234,7 +234,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                         ),
                         controlUnitResource = ControlUnitResourceEntity(
                             id = 1,
-                            baseId = 1,
+                            stationId = 1,
                             controlUnitId = 10000,
                             isArchived = false,
                             name = "Semi-rigide 1",
@@ -244,7 +244,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                         ),
                     ),
                     FullControlUnitResourceDTO(
-                        base = BaseEntity(
+                        station = StationEntity(
                             id = 1,
                             latitude = 43.295765,
                             longitude = 5.375486,
@@ -261,7 +261,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                         ),
                         controlUnitResource = ControlUnitResourceEntity(
                             id = 2,
-                            baseId = 1,
+                            stationId = 1,
                             controlUnitId = 10000,
                             isArchived = false,
                             name = "Semi-rigide 2",

@@ -5,7 +5,7 @@ import { BackOfficeTabBar } from '../../../BackOffice/components/BackOfficeTabBa
 
 export function TabMenu() {
   const dispatch = useAppDispatch()
-  const backOfficeControlUnitList = useAppSelector(store => store.backOfficeControlUnitList)
+  const controlUnitTable = useAppSelector(store => store.controlUnitTable)
 
   const filterArchivedControlUnits = (isArchived: boolean) => {
     dispatch(controlUnitTableActions.setFilter({ key: 'isArchived', value: isArchived }))
@@ -14,13 +14,13 @@ export function TabMenu() {
   return (
     <BackOfficeTabBar>
       <BackOfficeTabBar.Tab
-        $isActive={!backOfficeControlUnitList.filtersState.isArchived}
+        $isActive={!controlUnitTable.filtersState.isArchived}
         onClick={() => filterArchivedControlUnits(false)}
       >
         Unités actives
       </BackOfficeTabBar.Tab>
       <BackOfficeTabBar.Tab
-        $isActive={backOfficeControlUnitList.filtersState.isArchived}
+        $isActive={controlUnitTable.filtersState.isArchived}
         onClick={() => filterArchivedControlUnits(true)}
       >
         Unités archivées

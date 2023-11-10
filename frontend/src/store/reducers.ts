@@ -25,14 +25,14 @@ import { selectedAmpSlicePersistedReducer } from '../domain/shared_slices/Select
 import { semaphoresPersistedReducer } from '../domain/shared_slices/SemaphoresSlice'
 import { administrationTablePersistedReducer } from '../features/Administration/components/AdministrationTable/slice'
 import { backOfficeReducer } from '../features/BackOffice/slice'
-import { baseTablePersistedReducer } from '../features/Base/components/BaseTable/slice'
-import { baseReducer } from '../features/Base/slice'
 import { controlUnitDialogReducer } from '../features/ControlUnit/components/ControlUnitDialog/slice'
 import { controlUnitListDialogPersistedReducer } from '../features/ControlUnit/components/ControlUnitListDialog/slice'
 import { controlUnitTablePersistedReducer } from '../features/ControlUnit/components/ControlUnitTable/slice'
 import { layerSearchSliceReducer } from '../features/layersSelector/search/slice'
 import { mainWindowReducer } from '../features/MainWindow/slice'
 import { sideWindowReducer } from '../features/SideWindow/slice'
+import { stationTablePersistedReducer } from '../features/Station/components/StationTable/slice'
+import { stationReducer } from '../features/Station/slice'
 
 // TODO Maybe add a specifc store for the backoffice (to make it lighter)?
 export const homeReducers = {
@@ -40,12 +40,10 @@ export const homeReducers = {
   [monitorenvPrivateApi.reducerPath]: monitorenvPrivateApi.reducer,
   [monitorenvPublicApi.reducerPath]: monitorenvPublicApi.reducer,
 
+  administrationTable: administrationTablePersistedReducer,
   administrative: administrativeSlicePersistedReducer,
   backOffice: backOfficeReducer,
-  backOfficeAdministrationList: administrationTablePersistedReducer,
-  backOfficeBaseList: baseTablePersistedReducer,
-  backOfficeControlUnitList: controlUnitTablePersistedReducer,
-  base: baseReducer,
+  controlUnitTable: controlUnitTablePersistedReducer,
   draw: drawReducer,
   global: globalReducer,
   interestPoint: interestPointSlicePersistedReducer,
@@ -73,5 +71,7 @@ export const homeReducers = {
   [reportingsAPI.reducerPath]: reportingsAPI.reducer,
   selectedAmp: selectedAmpSlicePersistedReducer,
   semaphoresSlice: semaphoresPersistedReducer,
-  sideWindow: sideWindowReducer
+  sideWindow: sideWindowReducer,
+  station: stationReducer,
+  stationTable: stationTablePersistedReducer
 }

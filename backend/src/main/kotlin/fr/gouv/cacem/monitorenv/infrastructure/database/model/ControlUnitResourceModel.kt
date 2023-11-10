@@ -21,11 +21,6 @@ data class ControlUnitResourceModel(
     val id: Int? = null,
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "base_id", nullable = false)
-    @JsonBackReference
-    val base: BaseModel,
-
-    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "control_unit_id", nullable = false)
     @JsonBackReference
     val controlUnit: ControlUnitModel,
@@ -41,6 +36,11 @@ data class ControlUnitResourceModel(
 
     @Column(name = "photo")
     val photo: ByteArray? = byteArrayOf(),
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "base_id", nullable = false)
+    @JsonBackReference
+    val station: StationModel,
 
     @Column(name = "type", nullable = false, columnDefinition = "control_unit_resource_type")
     @Enumerated(EnumType.STRING)
@@ -62,7 +62,6 @@ data class ControlUnitResourceModel(
         other as ControlUnitResourceModel
 
         if (id != other.id) return false
-        if (base != other.base) return false
         if (controlUnit != other.controlUnit) return false
         if (isArchived != other.isArchived) return false
         if (name != other.name) return false
@@ -71,6 +70,7 @@ data class ControlUnitResourceModel(
             if (other.photo == null) return false
             if (!photo.contentEquals(other.photo)) return false
         } else if (other.photo != null) return false
+        if (station != other.station) return false
         if (type != other.type) return false
         if (createdAtUtc != other.createdAtUtc) return false
         if (updatedAtUtc != other.updatedAtUtc) return false
@@ -81,17 +81,17 @@ data class ControlUnitResourceModel(
     companion object {
         fun fromControlUnitResource(
             controlUnitResource: ControlUnitResourceEntity,
-            baseModel: BaseModel,
             controlUnitModel: ControlUnitModel,
+            stationModel: StationModel,
         ): ControlUnitResourceModel {
             return ControlUnitResourceModel(
                 id = controlUnitResource.id,
-                base = baseModel,
                 controlUnit = controlUnitModel,
                 isArchived = controlUnitResource.isArchived,
                 name = controlUnitResource.name,
                 note = controlUnitResource.note,
                 photo = controlUnitResource.photo,
+                station = stationModel,
                 type = controlUnitResource.type,
             )
         }
@@ -99,12 +99,12 @@ data class ControlUnitResourceModel(
 
     override fun hashCode(): Int {
         var result = id ?: 0
-        result = 31 * result + base.hashCode()
         result = 31 * result + controlUnit.hashCode()
         result = 31 * result + isArchived.hashCode()
         result = 31 * result + name.hashCode()
         result = 31 * result + (note?.hashCode() ?: 0)
         result = 31 * result + (photo?.contentHashCode() ?: 0)
+        result = 31 * result + station.hashCode()
         result = 31 * result + type.hashCode()
         result = 31 * result + (createdAtUtc?.hashCode() ?: 0)
         result = 31 * result + (updatedAtUtc?.hashCode() ?: 0)
@@ -115,19 +115,19 @@ data class ControlUnitResourceModel(
     fun toControlUnitResource(): ControlUnitResourceEntity {
         return ControlUnitResourceEntity(
             id,
-            baseId = requireNotNull(base.id),
             controlUnitId = requireNotNull(controlUnit.id),
             isArchived,
             name,
             note,
             photo,
+            stationId = requireNotNull(station.id),
             type,
         )
     }
 
     fun toFullControlUnitResource(): FullControlUnitResourceDTO {
         return FullControlUnitResourceDTO(
-            base = base.toBase(),
+            station = station.toStation(),
             controlUnit = controlUnit.toControlUnit(),
             controlUnitResource = toControlUnitResource(),
         )

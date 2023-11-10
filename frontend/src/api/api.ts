@@ -18,12 +18,12 @@ export const geoserverApi = createApi({
 // Monitorenv Private API
 
 // We'll need that later on for authentication.
-const monitorenvPrivateApiBaseQuery = fetchBaseQuery({
+const monitorenvPrivateApiStationQuery = fetchBaseQuery({
   baseUrl: '/bff'
 })
 export const monitorenvPrivateApi = createApi({
   baseQuery: async (args, api, extraOptions) => {
-    const result = await normalizeRtkBaseQuery(monitorenvPrivateApiBaseQuery)(args, api, extraOptions)
+    const result = await normalizeRtkBaseQuery(monitorenvPrivateApiStationQuery)(args, api, extraOptions)
     if (result.error) {
       return {
         error: {
@@ -44,12 +44,12 @@ export const monitorenvPrivateApi = createApi({
 // Monitorenv Public API
 
 // We'll need that later on for authentication.
-const monitorenvPublicApiBaseQuery = fetchBaseQuery({
+const monitorenvPublicApiStationQuery = fetchBaseQuery({
   baseUrl: '/api'
 })
 export const monitorenvPublicApi = createApi({
   baseQuery: async (args, api, extraOptions) => {
-    const result = await normalizeRtkBaseQuery(monitorenvPublicApiBaseQuery)(args, api, extraOptions)
+    const result = await normalizeRtkBaseQuery(monitorenvPublicApiStationQuery)(args, api, extraOptions)
     if (result.error) {
       return {
         error: {
@@ -63,5 +63,5 @@ export const monitorenvPublicApi = createApi({
   },
   endpoints: () => ({}),
   reducerPath: 'monitorenvPublicApi',
-  tagTypes: ['Administrations', 'Bases', 'ControlUnits']
+  tagTypes: ['Administrations', 'ControlUnits', 'Stations']
 })

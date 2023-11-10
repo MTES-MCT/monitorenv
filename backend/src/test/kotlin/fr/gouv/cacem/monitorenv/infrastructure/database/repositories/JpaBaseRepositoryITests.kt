@@ -1,9 +1,9 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import fr.gouv.cacem.monitorenv.domain.entities.base.BaseEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
-import fr.gouv.cacem.monitorenv.domain.use_cases.base.dtos.FullBaseDTO
+import fr.gouv.cacem.monitorenv.domain.entities.station.StationEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.station.dtos.FullStationDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,18 +11,18 @@ import org.springframework.transaction.annotation.Transactional
 
 class JpaBaseRepositoryITests : AbstractDBTests() {
     @Autowired
-    private lateinit var jpaBaseRepository: JpaBaseRepository
+    private lateinit var jpaBaseRepository: JpaStationRepository
 
     @Test
     @Transactional
     fun `findAll() should find all bases`() {
-        val foundFullBases = jpaBaseRepository.findAll().sortedBy { requireNotNull(it.base.id) }
+        val foundFullStations = jpaBaseRepository.findAll().sortedBy { requireNotNull(it.station.id) }
 
-        assertThat(foundFullBases).hasSize(3)
+        assertThat(foundFullStations).hasSize(3)
 
-        assertThat(foundFullBases[0]).isEqualTo(
-            FullBaseDTO(
-                base = BaseEntity(
+        assertThat(foundFullStations[0]).isEqualTo(
+            FullStationDTO(
+                station = StationEntity(
                     id = 1,
                     latitude = 43.295765,
                     longitude = 5.375486,
@@ -31,7 +31,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                 controlUnitResources = listOf(
                     ControlUnitResourceEntity(
                         id = 1,
-                        baseId = 1,
+                        stationId = 1,
                         controlUnitId = 10000,
                         isArchived = false,
                         name = "Semi-rigide 1",
@@ -41,7 +41,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ),
                     ControlUnitResourceEntity(
                         id = 2,
-                        baseId = 1,
+                        stationId = 1,
                         controlUnitId = 10000,
                         isArchived = false,
                         name = "Semi-rigide 2",
@@ -53,9 +53,9 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
             ),
         )
 
-        assertThat(foundFullBases[2]).isEqualTo(
-            FullBaseDTO(
-                base = BaseEntity(
+        assertThat(foundFullStations[2]).isEqualTo(
+            FullStationDTO(
+                station = StationEntity(
                     id = 3,
                     latitude = 51.035534,
                     longitude = 2.372845,
@@ -64,7 +64,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                 controlUnitResources = listOf(
                     ControlUnitResourceEntity(
                         id = 5,
-                        baseId = 3,
+                        stationId = 3,
                         controlUnitId = 10002,
                         isArchived = false,
                         name = "Voiture",
@@ -74,7 +74,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ),
                     ControlUnitResourceEntity(
                         id = 7,
-                        baseId = 3,
+                        stationId = 3,
                         controlUnitId = 10003,
                         isArchived = false,
                         name = "Semi-rigide",
@@ -84,7 +84,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ),
                     ControlUnitResourceEntity(
                         id = 8,
-                        baseId = 3,
+                        stationId = 3,
                         controlUnitId = 10121,
                         isArchived = false,
                         name = "PAM Jeanne Barret",
@@ -94,7 +94,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ),
                     ControlUnitResourceEntity(
                         id = 9,
-                        baseId = 3,
+                        stationId = 3,
                         controlUnitId = 10080,
                         isArchived = false,
                         name = "PAM Themis",
@@ -104,7 +104,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ),
                     ControlUnitResourceEntity(
                         id = 10,
-                        baseId = 3,
+                        stationId = 3,
                         controlUnitId = 10018,
                         isArchived = false,
                         name = "ALTAIR",
@@ -114,7 +114,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ),
                     ControlUnitResourceEntity(
                         id = 11,
-                        baseId = 3,
+                        stationId = 3,
                         controlUnitId = 10018,
                         isArchived = false,
                         name = "PHEROUSA",
@@ -124,7 +124,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ),
                     ControlUnitResourceEntity(
                         id = 12,
-                        baseId = 3,
+                        stationId = 3,
                         controlUnitId = 10018,
                         isArchived = false,
                         name = "ARIOLA",
@@ -140,11 +140,11 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `findById() should find a base by its ID`() {
-        val foundFullBase = jpaBaseRepository.findById(2)
+        val foundFullStation = jpaBaseRepository.findById(2)
 
-        assertThat(foundFullBase).isEqualTo(
-            FullBaseDTO(
-                base = BaseEntity(
+        assertThat(foundFullStation).isEqualTo(
+            FullStationDTO(
+                station = StationEntity(
                     id = 2,
                     latitude = 48.648105,
                     longitude = -2.013144,
@@ -153,7 +153,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                 controlUnitResources = listOf(
                     ControlUnitResourceEntity(
                         id = 3,
-                        baseId = 2,
+                        stationId = 2,
                         controlUnitId = 10002,
                         isArchived = false,
                         name = "Semi-rigide 1",
@@ -163,7 +163,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ),
                     ControlUnitResourceEntity(
                         id = 4,
-                        baseId = 2,
+                        stationId = 2,
                         controlUnitId = 10002,
                         isArchived = false,
                         name = "Semi-rigide 2",
@@ -173,7 +173,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                     ),
                     ControlUnitResourceEntity(
                         id = 6,
-                        baseId = 2,
+                        stationId = 2,
                         controlUnitId = 10003,
                         isArchived = false,
                         name = "AR VECHEN",
@@ -192,37 +192,37 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
         // ---------------------------------------------------------------------
         // Create
 
-        val newBase = BaseEntity(
+        val newStation = StationEntity(
             latitude = 1.2,
             longitude = 3.4,
-            name = "Base Name",
+            name = "Station Name",
         )
 
-        val createdBase = jpaBaseRepository.save(newBase)
+        val createdBase = jpaBaseRepository.save(newStation)
 
-        assertThat(createdBase).isEqualTo(newBase.copy(id = 4))
+        assertThat(createdBase).isEqualTo(newStation.copy(id = 4))
 
         // ---------------------------------------------------------------------
         // Update
 
-        val nextBase = BaseEntity(
+        val nextStation = StationEntity(
             id = 4,
             latitude = 5.6,
             longitude = 7.8,
-            name = "Updated Base Name",
+            name = "Updated Station Name",
         )
 
-        val updatedBase = jpaBaseRepository.save(nextBase)
+        val updatedStation = jpaBaseRepository.save(nextStation)
 
-        assertThat(updatedBase).isEqualTo(nextBase)
+        assertThat(updatedStation).isEqualTo(nextStation)
 
         // ---------------------------------------------------------------------
         // Delete
 
         jpaBaseRepository.deleteById(4)
 
-        val baseIds = jpaBaseRepository.findAll().map { requireNotNull(it.base.id) }.sorted()
+        val stationIds = jpaBaseRepository.findAll().map { requireNotNull(it.station.id) }.sorted()
 
-        assertThat(baseIds).doesNotContain(4)
+        assertThat(stationIds).doesNotContain(4)
     }
 }

@@ -27,11 +27,11 @@ export function AdministrationTable() {
   const [isDeletionConfirmationModalOpen, setIsDeletionConfirmationModalOpen] = useState(false)
   const [isImpossibleArchivingDialogOpen, setIsImpossibleArchivingDialogOpen] = useState(false)
   const [isImpossibleDeletionDialogOpen, setIsImpossibleDeletionDialogOpen] = useState(false)
-  const [targetedAdministration, setTargettedAdministration] = useState<Administration.Administration | undefined>(
+  const [targetedAdministration, setTargetedAdministration] = useState<Administration.Administration | undefined>(
     undefined
   )
 
-  const backOfficeAdministrationList = useAppSelector(store => store.backOfficeAdministrationList)
+  const administrationTable = useAppSelector(store => store.administrationTable)
   const dispatch = useAppDispatch()
   const { data: administrations } = useGetAdministrationsQuery()
 
@@ -40,10 +40,10 @@ export function AdministrationTable() {
       return undefined
     }
 
-    const filters = getFilters(administrations, backOfficeAdministrationList.filtersState)
+    const filters = getFilters(administrations, administrationTable.filtersState)
 
     return filters.reduce((previousAdministrations, filter) => filter(previousAdministrations), administrations)
-  }, [backOfficeAdministrationList.filtersState, administrations])
+  }, [administrationTable.filtersState, administrations])
 
   const askForArchivingConfirmation = useCallback(
     async (cellContext: CellContext<Administration.Administration, unknown>) => {
@@ -58,7 +58,7 @@ export function AdministrationTable() {
         return
       }
 
-      setTargettedAdministration(administration)
+      setTargetedAdministration(administration)
       setIsArchivingConfirmationModalOpen(true)
     },
     [dispatch]
@@ -77,7 +77,7 @@ export function AdministrationTable() {
         return
       }
 
-      setTargettedAdministration(administration)
+      setTargetedAdministration(administration)
       setIsDeletionConfirmationModalOpen(true)
     },
     [dispatch]
@@ -88,7 +88,7 @@ export function AdministrationTable() {
     setIsDeletionConfirmationModalOpen(false)
     setIsImpossibleArchivingDialogOpen(false)
     setIsImpossibleDeletionDialogOpen(false)
-    setTargettedAdministration(undefined)
+    setTargetedAdministration(undefined)
   }, [])
 
   const confirmArchiving = useCallback(
@@ -126,9 +126,9 @@ export function AdministrationTable() {
       getAdministrationTableColumns(
         askForArchivingConfirmation,
         askForDeletionConfirmation,
-        backOfficeAdministrationList.filtersState.isArchived
+        administrationTable.filtersState.isArchived
       ),
-    [askForArchivingConfirmation, askForDeletionConfirmation, backOfficeAdministrationList.filtersState.isArchived]
+    [askForArchivingConfirmation, askForDeletionConfirmation, administrationTable.filtersState.isArchived]
   )
 
   return (

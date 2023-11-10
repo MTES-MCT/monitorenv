@@ -6,7 +6,7 @@ import { ControlUnit } from '../../../../../domain/entities/controlUnit'
 import type { ControlUnitResourceFormValues } from './types'
 
 export const CONTROL_UNIT_RESOURCE_FORM_SCHEMA = object().shape({
-  baseId: string().required('Veuillez choisir une base.'),
+  stationId: string().required('Veuillez choisir une base.'),
   type: string().required('Veuillez choisir un type.')
 })
 
@@ -16,11 +16,11 @@ export const CONTROL_UNIT_RESOURCE_TYPES_AS_OPTIONS = getOptionsFromLabelledEnum
 )
 
 export const INITIAL_CONTROL_UNIT_RESOURCE_FORM_VALUES: ControlUnitResourceFormValues = {
-  baseId: undefined,
   controlUnitId: undefined,
   isArchived: false,
   name: undefined,
   note: undefined,
   photo: undefined,
+  stationId: undefined,
   type: undefined
 }

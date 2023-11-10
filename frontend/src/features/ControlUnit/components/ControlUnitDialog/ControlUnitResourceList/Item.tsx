@@ -25,7 +25,7 @@ export function Item({ controlUnitResource, onEdit }: ItemProps) {
             <Name>
               {ControlUnit.ControlUnitResourceTypeLabel[controlUnitResource.type]} – {controlUnitResource.name}
             </Name>
-            <p>{controlUnitResource.base.name}</p>
+            <p>{controlUnitResource.station.name}</p>
           </div>
           <div>
             <IconButton accent={Accent.TERTIARY} Icon={Icon.Edit} onClick={handleEdit} title="Éditer ce moyen" />

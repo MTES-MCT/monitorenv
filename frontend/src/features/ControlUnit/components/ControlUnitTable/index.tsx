@@ -26,9 +26,9 @@ export function ControlUnitTable() {
   const [isArchivingConfirmationModalOpen, setIsArchivingConfirmationModalOpen] = useState(false)
   const [isDeletionConfirmationModalOpen, setIsDeletionConfirmationModalOpen] = useState(false)
   const [isImpossibleDeletionDialogOpen, setIsImpossibleDeletionDialogOpen] = useState(false)
-  const [targetedControlUnit, setTargettedControlUnit] = useState<ControlUnit.ControlUnit | undefined>(undefined)
+  const [targetedControlUnit, setTargetedControlUnit] = useState<ControlUnit.ControlUnit | undefined>(undefined)
 
-  const backOfficeControlUnitList = useAppSelector(store => store.backOfficeControlUnitList)
+  const controlUnitTable = useAppSelector(store => store.controlUnitTable)
   const dispatch = useAppDispatch()
   const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
@@ -37,16 +37,16 @@ export function ControlUnitTable() {
       return undefined
     }
 
-    const filters = getFilters(controlUnits, backOfficeControlUnitList.filtersState)
+    const filters = getFilters(controlUnits, controlUnitTable.filtersState)
 
     return filters.reduce((previousControlUnits, filter) => filter(previousControlUnits), controlUnits)
-  }, [controlUnits, backOfficeControlUnitList.filtersState])
+  }, [controlUnits, controlUnitTable.filtersState])
 
   const askForArchivingConfirmation = useCallback(
     async (cellContext: CellContext<ControlUnit.ControlUnit, unknown>) => {
       const controlUnit = cellContext.getValue<ControlUnit.ControlUnit>()
 
-      setTargettedControlUnit(controlUnit)
+      setTargetedControlUnit(controlUnit)
       setIsArchivingConfirmationModalOpen(true)
     },
     []
@@ -65,7 +65,7 @@ export function ControlUnitTable() {
         return
       }
 
-      setTargettedControlUnit(controlUnit)
+      setTargetedControlUnit(controlUnit)
       setIsDeletionConfirmationModalOpen(true)
     },
     [dispatch]
@@ -75,7 +75,7 @@ export function ControlUnitTable() {
     setIsArchivingConfirmationModalOpen(false)
     setIsDeletionConfirmationModalOpen(false)
     setIsImpossibleDeletionDialogOpen(false)
-    setTargettedControlUnit(undefined)
+    setTargetedControlUnit(undefined)
   }, [])
 
   const confirmArchiving = useCallback(
@@ -113,9 +113,9 @@ export function ControlUnitTable() {
       getControlUnitTableColumns(
         askForArchivingConfirmation,
         askForDeletionConfirmation,
-        backOfficeControlUnitList.filtersState.isArchived
+        controlUnitTable.filtersState.isArchived
       ),
-    [askForArchivingConfirmation, askForDeletionConfirmation, backOfficeControlUnitList.filtersState.isArchived]
+    [askForArchivingConfirmation, askForDeletionConfirmation, controlUnitTable.filtersState.isArchived]
   )
 
   return (

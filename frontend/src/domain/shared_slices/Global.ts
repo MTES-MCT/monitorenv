@@ -64,7 +64,7 @@ type GlobalStateType = {
   displayReportingEditingLayer: boolean
   displayReportingSelectedLayer: boolean
 
-  displayBaseLayer: boolean
+  displayStationLayer: boolean
 
   isLayersSidebarVisible: boolean
 
@@ -116,7 +116,7 @@ const initialState: GlobalStateType = {
   displayReportingEditingLayer: true,
   displayReportingSelectedLayer: true,
 
-  displayBaseLayer: false,
+  displayStationLayer: false,
 
   isMapToolVisible: undefined,
 

@@ -10,7 +10,7 @@ import { globalActions } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { isNotArchived } from '../../../../utils/isNotArchived'
-import { baseActions } from '../../../Base/slice'
+import { stationActions } from '../../../Station/slice'
 
 import type { Promisable } from 'type-fest'
 
@@ -19,7 +19,7 @@ type ControlUnitListDialogProps = {
 }
 export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
   const dispatch = useAppDispatch()
-  const displayBaseLayer = useAppSelector(store => store.global.displayBaseLayer)
+  const displayBaseLayer = useAppSelector(store => store.global.displayStationLayer)
   const mapControlUnitListDialog = useAppSelector(store => store.mapControlUnitListDialog)
   const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
@@ -36,11 +36,11 @@ export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
   }, [activeControlUnits, mapControlUnitListDialog.filtersState])
 
   const toggleBaseLayer = useCallback(() => {
-    dispatch(baseActions.hightlightFeatureIds([]))
-    dispatch(baseActions.selectBaseFeatureId(undefined))
+    dispatch(stationActions.hightlightFeatureIds([]))
+    dispatch(stationActions.selectFeatureId(undefined))
     dispatch(
       globalActions.setDisplayedItems({
-        displayBaseLayer: !displayBaseLayer
+        displayStationLayer: !displayBaseLayer
       })
     )
   }, [dispatch, displayBaseLayer])

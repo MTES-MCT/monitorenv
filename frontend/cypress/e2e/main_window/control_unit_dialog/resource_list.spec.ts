@@ -62,7 +62,7 @@ context('Main Window > Control Unit Dialog > Resource List', () => {
       }
 
       assert.deepInclude(interception.request.body, {
-        baseId: 3,
+        stationId: 3,
         name: createdResourceName,
         note: 'Un commentaire sur le moyen.',
         type: 'DRONE'
@@ -95,7 +95,7 @@ context('Main Window > Control Unit Dialog > Resource List', () => {
       }
 
       assert.deepInclude(interception.request.body, {
-        baseId: 2,
+        stationId: 2,
         name: editedResourceName,
         note: 'Un autre commentaire sur le moyen.',
         type: 'CAR'
@@ -146,7 +146,7 @@ context('Main Window > Control Unit Dialog > Resource List', () => {
       }
 
       assert.deepInclude(interception.request.body, {
-        baseId: 3,
+        stationId: 3,
         name: newResourceName,
         note: 'Un commentaire sur le moyen.',
         type: 'CAR'

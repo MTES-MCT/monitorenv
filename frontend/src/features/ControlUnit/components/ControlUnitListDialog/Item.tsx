@@ -11,7 +11,7 @@ import { mapActions } from '../../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { FrontendError } from '../../../../libs/FrontendError'
-import { baseActions } from '../../../Base/slice'
+import { stationActions } from '../../../Station/slice'
 import { controlUnitDialogActions } from '../ControlUnitDialog/slice'
 
 import type { ControlUnit } from '../../../../domain/entities/controlUnit'
@@ -21,40 +21,45 @@ export type ItemProps = {
 }
 export function Item({ controlUnit }: ItemProps) {
   const dispatch = useAppDispatch()
-  const displayBaseLayer = useAppSelector(store => store.global.displayBaseLayer)
+  const displayBaseLayer = useAppSelector(store => store.global.displayStationLayer)
 
   const center = () => {
-    const highlightedBases = uniqBy(
+    const highlightedStations = uniqBy(
       property('id'),
-      controlUnit.controlUnitResources.map(({ base }) => base)
+      controlUnit.controlUnitResources.map(({ station }) => station)
     )
 
-    const highlightedBaseFeatureIds = highlightedBases.map(base => `${Layers.BASES.code}:${base.id}`)
+    const highlightedStationFeatureIds = highlightedStations.map(station => `${Layers.STATIONS.code}:${station.id}`)
 
-    if (highlightedBases.length === 1) {
-      const base = highlightedBases[0]
-      if (!base) {
-        throw new FrontendError('`base` is undefined.')
+    if (highlightedStations.length === 1) {
+      const station = highlightedStations[0]
+      if (!station) {
+        throw new FrontendError('`station` is undefined.')
       }
 
-      const baseCoordinate = fromLonLat([base.longitude, base.latitude])
+      const baseCoordinate = fromLonLat([station.longitude, station.latitude])
 
       dispatch(mapActions.setZoomToCenter(baseCoordinate))
     } else {
-      const highlightedBasesExtent = createEmpty()
-      highlightedBases.forEach(base => {
-        const baseCoordinate = fromLonLat([base.longitude, base.latitude])
-        const baseExtent = [baseCoordinate[0], baseCoordinate[1], baseCoordinate[0], baseCoordinate[1]] as number[]
+      const highlightedStationsExtent = createEmpty()
+      highlightedStations.forEach(station => {
+        const stationCoordinate = fromLonLat([station.longitude, station.latitude])
+        const stationExtent = [
+          stationCoordinate[0],
+          stationCoordinate[1],
+          stationCoordinate[0],
+          stationCoordinate[1]
+        ] as number[]
 
-        extend(highlightedBasesExtent, baseExtent)
+        extend(highlightedStationsExtent, stationExtent)
       })
 
-      const bufferedHighlightedBasesExtent = addBufferToExtent(highlightedBasesExtent, 0.5)
+      const bufferedHighlightedStationsExtent = addBufferToExtent(highlightedStationsExtent, 0.5)
 
-      dispatch(mapActions.setFitToExtent(bufferedHighlightedBasesExtent))
+      dispatch(mapActions.setFitToExtent(bufferedHighlightedStationsExtent))
     }
 
-    dispatch(baseActions.hightlightFeatureIds(highlightedBaseFeatureIds))
+    dispatch(stationActions.hightlightFeatureIds(highlightedStationFeatureIds))
   }
 
   const edit = () => {
