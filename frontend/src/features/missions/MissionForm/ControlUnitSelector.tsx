@@ -1,22 +1,31 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { FieldError, FormikTextInput, Level, Message } from '@mtes-mct/monitor-ui'
+import {
+  CustomSearch,
+  FormikTextInput,
+  Level,
+  Message,
+  Select,
+  IconButton,
+  getOptionsFromIdAndName,
+  Icon,
+  Accent,
+  MultiSelect,
+  useNewWindow
+} from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
-import _ from 'lodash'
-import { type MutableRefObject, useMemo, useRef } from 'react'
-import { Form, IconButton, TagPicker } from 'rsuite'
+import { uniq, uniqBy } from 'lodash'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../api/constants'
 import { useGetLegacyControlUnitsQuery } from '../../../api/legacyControlUnitsAPI'
 import { useGetEngagedControlUnitsQuery } from '../../../api/missionsAPI'
-import { FormikErrorWrapper } from '../../../uiMonitor/CustomFormikFields/FormikErrorWrapper'
-import { SelectPicker } from '../../../uiMonitor/CustomRsuite/SelectPicker'
-import { ReactComponent as DeleteSVG } from '../../../uiMonitor/icons/Delete.svg'
 import { isNotArchived } from '../../../utils/isNotArchived'
 
 import type { ControlUnit } from '../../../domain/entities/controlUnit'
 
-export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeControlUnit, ...props }) {
+export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
+  const { newWindowContainerRef } = useNewWindow()
   const [administrationField, administrationMeta, administrationHelpers] = useField<string>(
     `controlUnits.${controlUnitIndex}.administration`
   )
@@ -26,7 +35,6 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
     `controlUnits.${controlUnitIndex}.resources`
   )
 
-  const resourcesRef = useRef() as MutableRefObject<HTMLDivElement>
   const {
     data: controlUnitsData,
     isError,
@@ -45,35 +53,49 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
     return engagedControlUnitsData
   }, [engagedControlUnitsData])
 
-  const administrationList = _.chain(filteredControlUnits)
-    .map(unit => unit.administration)
-    .uniq()
-    .sort((a, b) => a?.localeCompare(b))
-    .map(administration => ({ administration }))
-    .value()
+  const administrationsAsOption = useMemo(() => {
+    const formattedAdministrations = uniq(filteredControlUnits.map(({ administration }) => administration)).sort()
+
+    return formattedAdministrations.map(administration => ({
+      label: administration,
+      value: administration
+    }))
+  }, [filteredControlUnits])
 
   const unitList = filteredControlUnits
     .filter(unit => (administrationField.value ? administrationField.value === unit.administration : true))
-    .sort((a, b) => a?.name?.localeCompare(b?.name))
+    .sort()
 
-  const resourcesList = (
+  const unitListAsOption = useMemo(() => getOptionsFromIdAndName(unitList), [unitList])
+  const controlUnitCustomSearch = useMemo(
+    () =>
+      new CustomSearch(unitListAsOption || [], ['label'], {
+        cacheKey: 'MISSION',
+        isStrict: true,
+        withCacheInvalidation: true
+      }),
+    [unitListAsOption]
+  )
+
+  const resourcesList =
     filteredControlUnits?.find(unit => unit.administration === administrationField.value && unit.id === unitField.value)
-      ?.resources || []
-  ).filter(isNotArchived)
+      ?.resources || [].filter(isNotArchived)
 
   // Add any resource from Mission not present in list from API (as the resource might be historized)
   // See: https://github.com/MTES-MCT/monitorenv/issues/103
   // eslint-disable-next-line no-unsafe-optional-chaining
-  const combinedResourceList = _.chain([...resourcesList, ...resourcesField?.value])
-    .uniqBy('id')
-    .sort((a, b) => a?.name?.localeCompare(b?.name))
-    .value()
+  const combinedResourceList = useMemo(() => {
+    const resources = [...resourcesList, ...resourcesField.value]
+
+    return uniqBy(resources, 'id').sort()
+  }, [resourcesList, resourcesField.value])
+  const resourcesAsOption = useMemo(() => getOptionsFromIdAndName(combinedResourceList), [combinedResourceList])
 
   const handleAdministrationChange = value => {
     if (value !== administrationField.value) {
       administrationHelpers.setValue(value)
-      const newUnitList = _.uniqBy(
-        _.filter(filteredControlUnits, r => r.administration === value),
+      const newUnitList = uniqBy(
+        filteredControlUnits.filter(controlUnit => controlUnit.administration === value),
         'name'
       )
       if (newUnitList.length === 1 && newUnitList[0]?.id) {
@@ -90,18 +112,23 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
     if (value !== unitField.value) {
       unitHelpers.setValue(value)
       resourcesHelpers.setValue([])
-
       const foundUnit = unitList.find(unit => unit.id === value)
       if (!foundUnit) {
         return
       }
+
       unitNameHelpers.setValue(foundUnit.name)
       administrationHelpers.setValue(foundUnit.administration)
     }
   }
   const handleResourceChange = values => {
+    if (!values) {
+      resourcesHelpers.setValue([])
+
+      return
+    }
     const resourceObjects = values
-      .filter(value => typeof value === 'number')
+      // ?.filter(value => typeof value === 'number')
       .map(id => resourcesList.find(resource => resource.id === id))
     resourcesHelpers.setValue(resourceObjects)
   }
@@ -119,78 +146,61 @@ export function ControlUnitSelector({ controlUnitIndex, controlUnitPath, removeC
 
   return (
     <RessourceUnitWrapper>
-      <FormGroupFixed>
-        <FormikErrorWrapper name={`controlUnits.${controlUnitIndex}.administration`} noMessage>
-          <Form.ControlLabel htmlFor="administration">Administration {resourceUnitIndexDisplayed}</Form.ControlLabel>
-          <StyledAdministartionContainer>
-            <SelectPicker
-              block
-              data={administrationList}
-              dataCy="add-control-administration"
-              labelKey="administration"
-              onChange={handleAdministrationChange}
-              searchable={administrationList.length > 10}
-              size="sm"
-              value={administrationField.value}
-              valueKey="administration"
-            />
-            {controlUnitIndex > 0 && (
-              <DeleteButton appearance="ghost" icon={<DeleteSVG className="rs-icon" />} onClick={removeControlUnit} />
-            )}
-          </StyledAdministartionContainer>
-        </FormikErrorWrapper>
-        {administrationMeta.error && <FieldError>{administrationMeta.error}</FieldError>}
-      </FormGroupFixed>
-      <FormGroupFixed>
-        <FormikErrorWrapper name={`controlUnits.${controlUnitIndex}.id`} noMessage>
-          <Form.ControlLabel htmlFor="unit">Unité {resourceUnitIndexDisplayed}</Form.ControlLabel>
-          <SelectPicker
-            block
-            data={unitList}
-            dataCy="add-control-unit"
-            labelKey="name"
-            onChange={handleUnitChange}
-            searchable={unitList.length > 10}
-            size="sm"
-            value={unitField.value}
-            valueKey="id"
-            {...props}
-            key={unitField.value}
-          />
-        </FormikErrorWrapper>
-        {unitNameMeta.error && <FieldError>{unitNameMeta.error}</FieldError>}
+      <AdministrationContainer>
+        <Select
+          baseContainer={newWindowContainerRef.current}
+          data-cy="add-control-administration"
+          error={administrationMeta.error}
+          label={`Administration ${resourceUnitIndexDisplayed}`}
+          name={administrationField.name}
+          onChange={handleAdministrationChange}
+          options={administrationsAsOption}
+          searchable={administrationsAsOption.length > 10}
+          value={administrationField.value}
+        />
+        {controlUnitIndex > 0 && (
+          <DeleteButton accent={Accent.SECONDARY} Icon={Icon.Delete} onClick={removeControlUnit} />
+        )}
+      </AdministrationContainer>
+
+      <div>
+        <Select
+          key={unitList.length}
+          baseContainer={newWindowContainerRef.current}
+          customSearch={unitList.length > 10 ? controlUnitCustomSearch : undefined}
+          data-cy="add-control-unit"
+          error={unitNameMeta.error}
+          label={`Unité ${resourceUnitIndexDisplayed}`}
+          name={unitField.name}
+          onChange={handleUnitChange}
+          options={unitListAsOption || []}
+          searchable={unitList.length > 10}
+          value={unitField.value}
+        />
         {isEngaged && (
           <StyledMessage level={Level.WARNING}>
             Cette unité est actuellement sélectionnée dans une autre mission en cours.
           </StyledMessage>
         )}
-      </FormGroupFixed>
-      <FormGroupFixed>
-        <RefWrapper ref={resourcesRef} data-cy="unit-tag-picker">
-          <Form.ControlLabel htmlFor="resources">Moyen(s) {resourceUnitIndexDisplayed}</Form.ControlLabel>
-          <TagPicker
-            block
-            cleanable={false}
-            container={() => resourcesRef.current}
-            data={combinedResourceList}
-            disabled={!_.isNumber(unitField.value)}
-            labelKey="name"
-            onChange={handleResourceChange}
-            size="sm"
-            value={resourcesField.value.map(resource => resource.id)}
-            valueKey="id"
-            {...props}
-          />
-        </RefWrapper>
-      </FormGroupFixed>
-      <FormGroupFixed>
-        <FormikTextInput
-          data-cy="control-unit-contact"
-          isErrorMessageHidden
-          label={`Contact de l'unité ${resourceUnitIndexDisplayed}`}
-          name={`controlUnits.${controlUnitIndex}.contact`}
-        />
-      </FormGroupFixed>
+      </div>
+
+      <MultiSelect
+        baseContainer={newWindowContainerRef.current}
+        cleanable={false}
+        disabled={!unitField.value}
+        label={`Moyen(s) ${resourceUnitIndexDisplayed}`}
+        name={resourcesField.name}
+        onChange={handleResourceChange}
+        options={resourcesAsOption || []}
+        value={resourcesField.value.map(resource => resource.id)}
+      />
+
+      <FormikTextInput
+        data-cy="control-unit-contact"
+        isErrorMessageHidden
+        label={`Contact de l'unité ${resourceUnitIndexDisplayed}`}
+        name={`controlUnits.${controlUnitIndex}.contact`}
+      />
     </RessourceUnitWrapper>
   )
 }
@@ -204,37 +214,15 @@ const RessourceUnitWrapper = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
+  gap: 4px;
 `
 
-const FormGroupFixed = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-
-  :not(:last-child) {
-    margin-bottom: 4px;
-  }
-  .Field-TextInput {
-    flex: 1;
-  }
-`
-
-const RefWrapper = styled.div`
-  width: 100%;
-  .rs-picker {
-    margin-top: 4px;
-  }
-  .rs-picker-menu {
-    position: relative;
-    margin-top: -50px;
-  }
-`
-const StyledAdministartionContainer = styled.div`
+const AdministrationContainer = styled.div`
   position: relative;
 `
 
 const DeleteButton = styled(IconButton)`
   position: absolute;
-  top: 0px;
+  top: 21px;
   left: calc(100% + 4px);
 `

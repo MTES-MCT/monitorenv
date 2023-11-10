@@ -111,10 +111,10 @@ export function LayerSearch({ isVisible }) {
           dispatch(setAMPsSearchResult([]))
         }
 
-        if (searchedText.length > 2 || regulatoryThemes.length > 0 || geofilter) {
+        if (searchedText.length > 2 || regulatoryThemes?.length > 0 || geofilter) {
           let searchedRegulatory
           let itemSchema
-          if (searchedText.length > 2 || regulatoryThemes.length > 0) {
+          if (searchedText.length > 2 || regulatoryThemes?.length > 0) {
             const filterWithTextExpression =
               searchedText.length > 0
                 ? {
@@ -128,7 +128,7 @@ export function LayerSearch({ isVisible }) {
                 : undefined
 
             const filterWithTheme =
-              regulatoryThemes.length > 0
+              regulatoryThemes?.length > 0
                 ? { $or: regulatoryThemes.map(theme => ({ $path: ['properties', 'thematique'], $val: theme })) }
                 : undefined
 

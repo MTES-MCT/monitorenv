@@ -21,7 +21,6 @@ export function ControlUnitsForm({ form, push, remove }) {
               // eslint-disable-next-line react/no-array-index-key
               key={index}
               controlUnitIndex={index}
-              controlUnitPath={`controlUnits[${index}]`}
               removeControlUnit={handleRemoveControlUnit(index)}
             />
           ))}
