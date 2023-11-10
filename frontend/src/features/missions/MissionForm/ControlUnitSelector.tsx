@@ -70,9 +70,8 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
   const controlUnitCustomSearch = useMemo(
     () =>
       new CustomSearch(unitListAsOption || [], ['label'], {
-        cacheKey: 'MISSION',
         isStrict: true,
-        withCacheInvalidation: true
+        threshold: 0.2
       }),
     [unitListAsOption]
   )
