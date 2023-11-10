@@ -310,4 +310,12 @@ class ApiMissionsControllerITests {
             .andExpect(jsonPath("$[0].controlUnit.name", equalTo("Control Unit Name")))
             .andExpect(jsonPath("$[0].missionSources[0]", equalTo("MONITORFISH")))
     }
+
+    @Test
+    fun `Should listen to SSE events`() {
+        // When
+        mockMvc.perform(get("/api/v1/missions/132/sse"))
+            // Then
+            .andExpect(status().isOk)
+    }
 }
