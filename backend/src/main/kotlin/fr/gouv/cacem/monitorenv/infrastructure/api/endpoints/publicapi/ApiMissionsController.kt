@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.MissionEvent
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.LegacyControlUnitAndMissionSourcesDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.MissionDataOutput
@@ -9,9 +10,14 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
+import org.springframework.context.event.EventListener
 import org.springframework.format.annotation.DateTimeFormat
+import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import java.time.ZonedDateTime
+import java.util.*
+import kotlin.collections.HashMap
 
 @RestController
 @RequestMapping("/api/v1/missions")
@@ -24,6 +30,12 @@ class ApiMissionsController(
     private val getEngagedControlUnits: GetEngagedControlUnits,
     private val getMissionsByIds: GetMissionsByIds,
 ) {
+    companion object {
+        /**
+         * This is used to stream missions to the listeners of a given missionId
+         */
+        private val sseStore = HashMap<Int, List<SseEmitter>>()
+    }
 
     @GetMapping("")
     @Operation(summary = "Get missions")
@@ -136,5 +148,56 @@ class ApiMissionsController(
     fun getEngagedControlUnitsController(): List<LegacyControlUnitAndMissionSourcesDataOutput> {
         return getEngagedControlUnits.execute()
             .map { LegacyControlUnitAndMissionSourcesDataOutput.fromLegacyControlUnitAndMissionSources(it) }
+    }
+
+    /**
+     * This method:
+     * - Create the connexion to the frontend (with EventSource)
+     * - Listen for `MissionEvent` to send to the frontend
+     */
+    @EventListener(MissionEvent::class)
+    @GetMapping(value = ["/{id}/sse"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
+    fun handleMissionEvent(mission: MissionEvent): SseEmitter? {
+        /**
+         * When creating the initial connexion, only the `id` property of
+         * `MissionEvent` parameter is filled.
+         */
+        if (mission.mission == null) {
+            val sseEmitter = SseEmitter(24 * 60 * 60 * 1000)
+
+            val previousSseEmitters = sseStore[mission.id] ?: listOf()
+            sseStore[mission.id] = previousSseEmitters + sseEmitter
+
+            return sseEmitter
+        }
+
+        /**
+         * Get the frontend connexions to stream to updated mission
+         */
+        val sseEmitters = sseStore[mission.id] ?: return null
+
+        sseEmitters.forEach {
+            try {
+                it.send(MissionDataOutput.fromMissionEntity(mission.mission))
+
+                /* TODO ?
+                SseEmitter.event()
+                    .id(UUID.randomUUID().toString())
+                    .name("MISSION_EVENT")
+                    .data(MissionDataOutput.fromMissionEntity(mission.mission))
+                    .build()
+                 */
+
+                it.complete()
+            } catch (e: Exception) {
+                // Remove the emitter from the stored emitters to prevent memory leak
+                sseStore[mission.id] = sseEmitters
+                    .filter { storedEmitter -> storedEmitter.hashCode() != it.hashCode() }
+
+                it.completeWithError(e)
+            }
+        }
+
+        return null
     }
 }
