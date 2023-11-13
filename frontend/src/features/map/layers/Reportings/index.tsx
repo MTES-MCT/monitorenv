@@ -18,7 +18,7 @@ import type { Geometry } from 'ol/geom'
 
 export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
-  const { displayReportingsLayer, overlayCoordinates } = useAppSelector(state => state.global)
+  const { displayReportingsLayer } = useAppSelector(state => state.global)
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
 
   // we don't want to display reportings on the map if the user so decides (displayReportingsLayer variable)
@@ -106,11 +106,10 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
     GetVectorSource().forEachFeature(feature => {
       const selectedReportingId = `${Layers.REPORTINGS.code}:${activeReportingId}`
       feature.setProperties({
-        isSelected: feature.getId() === selectedReportingId,
-        overlayCoordinates: feature.getId() === selectedReportingId ? overlayCoordinates : undefined
+        isSelected: feature.getId() === selectedReportingId
       })
     })
-  }, [overlayCoordinates, activeReportingId])
+  }, [activeReportingId])
 
   useEffect(() => {
     if (map) {

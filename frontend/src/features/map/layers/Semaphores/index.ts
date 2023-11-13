@@ -21,8 +21,10 @@ import type { Geometry } from 'ol/geom'
 export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const { displaySemaphoresLayer } = useAppSelector(state => state.global)
-  const { isSemaphoreHighlighted, selectedSemaphoreId } = useAppSelector(state => state.semaphoresSlice)
-  const { overlayCoordinates } = useAppSelector(state => state.global)
+  const isSemaphoreHighlighted = useAppSelector(state => state.semaphoresSlice.isSemaphoreHighlighted)
+  const selectedSemaphoreId = useAppSelector(state => state.semaphoresSlice.selectedSemaphoreId)
+
+  const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
 
   // we don't want to display sempahores on the map if the user so decides (displaySemaphoresLayer variable)
   // or if user have interaction on map (edit mission zone, attach reporting or mission)
