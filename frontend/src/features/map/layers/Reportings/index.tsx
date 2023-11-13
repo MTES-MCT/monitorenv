@@ -53,16 +53,20 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   }, [attachedReportingsToActiveMission])
 
   const { reportings } = useGetFilteredReportingsQuery()
-  const reportingsFromApiFeatures = reduce(
-    reportings,
-    (features, reporting) => {
-      if (reporting && reporting.geom && reporting.id !== activeReportingId) {
-        features.push(getReportingZoneFeature(reporting, Layers.REPORTINGS.code))
-      }
+  const reportingsFromApiFeatures = useMemo(
+    () =>
+      reduce(
+        reportings,
+        (features, reporting) => {
+          if (reporting && reporting.geom && reporting.id !== activeReportingId) {
+            features.push(getReportingZoneFeature(reporting, Layers.REPORTINGS.code))
+          }
 
-      return features
-    },
-    [] as Feature[]
+          return features
+        },
+        [] as Feature[]
+      ) || [],
+    [reportings, activeReportingId]
   )
 
   const reportingsPointOrZone = useMemo(() => {
