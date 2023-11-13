@@ -76,7 +76,7 @@ export function MissionsTableFilters() {
   }, [legacyControlUnits, selectedAdministrationNames])
 
   const controlUnitCustomSearch = useMemo(
-    () => new CustomSearch(controlUnitsAsOptions, ['label']),
+    () => new CustomSearch(controlUnitsAsOptions, ['label'], { threshold: 0.2 }),
     [controlUnitsAsOptions]
   )
 
