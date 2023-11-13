@@ -70,7 +70,6 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
   const controlUnitCustomSearch = useMemo(
     () =>
       new CustomSearch(unitListAsOption || [], ['label'], {
-        isStrict: true,
         threshold: 0.2
       }),
     [unitListAsOption]
