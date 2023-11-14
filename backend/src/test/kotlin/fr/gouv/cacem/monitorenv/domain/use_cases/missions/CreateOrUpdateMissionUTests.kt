@@ -156,7 +156,6 @@ class CreateOrUpdateMissionUTests {
         given(departmentRepository.findDepartmentFromGeometry(anyOrNull())).willReturn("Quequ'part")
         given(missionRepository.save(anyOrNull()))
             .willReturn(MissionDTO(mission = expectedCreatedMission))
-        given(missionRepository.findById(100)).willReturn(expectedCreatedMission)
 
         // When
         val createdMission =
@@ -201,7 +200,6 @@ class CreateOrUpdateMissionUTests {
                         )
                 },
             )
-        verify(missionRepository, times(1)).findById(100)
         assertThat(createdMission).isEqualTo(expectedCreatedMission)
     }
 }
