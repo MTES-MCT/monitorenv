@@ -12,7 +12,8 @@ import type { BaseMapChildrenProps } from '../../BaseMap'
 
 export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
   const { activeReportingId, reportings = { reporting: {} } } = useAppSelector(state => state.reporting)
-  const { displayReportingEditingLayer } = useAppSelector(state => state.global)
+  const displayReportingEditingLayer = useAppSelector(state => state.global.displayReportingEditingLayer)
+  const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
 
   const editingReporting = activeReportingId ? reportings[activeReportingId].reporting : undefined
 
@@ -23,15 +24,6 @@ export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
     }
 
     return editingReportingVectorSourceRef.current
-  }
-
-  const editingReportingActionsVectorSourceRef = useRef() as MutableRefObject<VectorSource>
-  const GetEditingReportingActionsVectorSource = () => {
-    if (editingReportingActionsVectorSourceRef.current === undefined) {
-      editingReportingActionsVectorSourceRef.current = new VectorSource()
-    }
-
-    return editingReportingActionsVectorSourceRef.current
   }
 
   const editingReportingVectorLayerRef = useRef() as MutableRefObject<VectorLayerWithName>
@@ -53,6 +45,16 @@ export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
   }, [])
 
   useEffect(() => {
+    const feature = GetEditingReportingVectorSource().getFeatureById(
+      `${Layers.REPORTING_SELECTED.code}:${activeReportingId}`
+    )
+
+    return feature?.setProperties({
+      overlayCoordinates: overlayCoordinates.reportings
+    })
+  }, [overlayCoordinates, activeReportingId])
+
+  useEffect(() => {
     if (map) {
       const layersCollection = map.getLayers()
       layersCollection.push(GetSelectedReportingVectorLayer())
@@ -71,7 +73,7 @@ export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
 
   useEffect(() => {
     GetEditingReportingVectorSource()?.clear(true)
-    GetEditingReportingActionsVectorSource()?.clear(true)
+    GetEditingReportingVectorSource()?.clear(true)
     if (editingReporting) {
       GetEditingReportingVectorSource()?.addFeature(
         getEditingReportingZoneFeature(editingReporting, Layers.REPORTING_SELECTED.code)

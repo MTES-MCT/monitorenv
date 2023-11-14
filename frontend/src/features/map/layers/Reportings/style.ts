@@ -1,6 +1,7 @@
 import { THEME } from '@mtes-mct/monitor-ui'
+import { isEmpty } from 'lodash'
 import { getCenter } from 'ol/extent'
-import { Point } from 'ol/geom'
+import { LineString, Point } from 'ol/geom'
 import { Fill, Icon, Stroke, Style } from 'ol/style'
 
 import { OLGeometryType } from '../../../../domain/entities/map/constants'
@@ -76,6 +77,27 @@ const selectedReportingStyleFactory = (color, fillColor) => [
       color,
       scale: 0.6,
       src: 'Close.svg'
+    })
+  }),
+  new Style({
+    geometry: feature => {
+      const overlayPostion = feature.get('overlayCoordinates')
+      if (isEmpty(overlayPostion)) {
+        return undefined
+      }
+
+      const extent = feature?.getGeometry()?.getExtent()
+      const center = extent && getCenter(extent)
+      if (!center) {
+        return undefined
+      }
+
+      return new LineString([overlayPostion.coordinates, center])
+    },
+    stroke: new Stroke({
+      color: THEME.color.slateGray,
+      lineDash: [4, 4],
+      width: 2
     })
   })
 ]
@@ -159,4 +181,28 @@ export const reportingPinStyleFn = feature => {
   }
 }
 
-export const editingReportingStyleFn = feature => [reportingPinStyleFn(feature), ...selectedReportingStyleFn(feature)]
+export const editingReportingStyleFn = feature => [
+  reportingPinStyleFn(feature),
+  ...selectedReportingStyleFn(feature)
+  /*  new Style({
+    geometry: () => {
+      const overlayPostion = feature.get('overlayCoordinates')
+      if (isEmpty(overlayPostion)) {
+        return undefined
+      }
+
+      const extent = feature?.getGeometry()?.getExtent()
+      const center = extent && getCenter(extent)
+      if (!center) {
+        return undefined
+      }
+
+      return new LineString([overlayPostion.coordinates, center])
+    },
+    stroke: new Stroke({
+      color: THEME.color.slateGray,
+      lineDash: [4, 4],
+      width: 2
+    })
+  }) */
+]

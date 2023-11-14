@@ -3,12 +3,12 @@ import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 
-import { semaphoresStyleFn } from './semaphores.style'
 import { getSemaphoreZoneFeature } from './semaphoresGeometryHelpers'
+import { semaphoresStyleFn } from './style'
 import { useGetReportingsQuery } from '../../../../api/reportingsAPI'
 import { useGetSemaphoresQuery } from '../../../../api/semaphoresAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
-import { setOverlayCoordinates } from '../../../../domain/shared_slices/Global'
+import { removeOverlayCoordinates } from '../../../../domain/shared_slices/Global'
 import { setSelectedSemaphore } from '../../../../domain/shared_slices/SemaphoresSlice'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -96,10 +96,11 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   useEffect(() => {
     GetVectorSource().forEachFeature(feature => {
       const selectedSemaphore = `${Layers.SEMAPHORES.code}:${selectedSemaphoreId}`
+
       feature.setProperties({
         isHighlighted: feature.getId() === selectedSemaphore && isSemaphoreHighlighted,
         isSelected: feature.getId() === selectedSemaphore,
-        overlayCoordinates: feature.getId() === selectedSemaphore ? overlayCoordinates : undefined
+        overlayCoordinates: feature.getId() === selectedSemaphore ? overlayCoordinates.semaphores : undefined
       })
     })
   }, [overlayCoordinates, selectedSemaphoreId, isSemaphoreHighlighted])
@@ -133,7 +134,7 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       if (feature.getId()?.toString()?.includes(Layers.SEMAPHORES.code)) {
         const { id } = feature.getProperties()
         dispatch(setSelectedSemaphore(id))
-        dispatch(setOverlayCoordinates(undefined))
+        dispatch(removeOverlayCoordinates(feature.getId()))
       }
     }
   }, [dispatch, mapClickEvent])

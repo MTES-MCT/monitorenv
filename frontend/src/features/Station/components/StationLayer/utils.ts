@@ -1,8 +1,10 @@
 import { THEME } from '@mtes-mct/monitor-ui'
+import { isEmpty } from 'lodash'
 import { uniq } from 'lodash/fp'
 import { Feature } from 'ol'
 import { GeoJSON } from 'ol/format'
-import { Fill, Icon, Style, Text } from 'ol/style'
+import { LineString, Point } from 'ol/geom'
+import { Fill, Icon, Stroke, Style, Text } from 'ol/style'
 import CircleStyle from 'ol/style/Circle'
 
 import { Layers } from '../../../../domain/entities/layers/constants'
@@ -43,7 +45,24 @@ export const getFeatureStyle = ((feature: Feature) => {
     })
   })
 
-  return [iconStyle, badgeStyle, counterStyle]
+  const lineStyle = new Style({
+    geometry: () => {
+      const overlayPostion = feature.get('overlayCoordinates')
+      if (isEmpty(overlayPostion)) {
+        return undefined
+      }
+      const featureGeometry = (feature?.getGeometry() as Point)?.getCoordinates()
+
+      return new LineString([overlayPostion.coordinates, featureGeometry])
+    },
+    stroke: new Stroke({
+      color: THEME.color.slateGray,
+      lineDash: [4, 4],
+      width: 2
+    })
+  })
+
+  return [iconStyle, badgeStyle, counterStyle, lineStyle]
 }) as StyleFunction
 
 export function getStationPointFeature(station: Station.Station) {

@@ -27,6 +27,14 @@ type Toast = {
   type?: string
 }
 
+type OverlayCoordinates = {
+  context: string
+  coordinates: [number, number]
+}
+type GlobalOverlayCoordinates = {
+  [key: string]: OverlayCoordinates
+}
+
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 type GlobalStateType = {
   // state entry for every component /menu displayed on map whose visibility should be controlled
@@ -72,7 +80,7 @@ type GlobalStateType = {
 
   healthcheckTextWarning?: string
 
-  overlayCoordinates: [number, number] | undefined
+  overlayCoordinates: GlobalOverlayCoordinates
 
   toast: Toast | undefined
 }
@@ -122,7 +130,7 @@ const initialState: GlobalStateType = {
 
   healthcheckTextWarning: undefined,
 
-  overlayCoordinates: undefined,
+  overlayCoordinates: {},
 
   toast: undefined
 }
@@ -140,6 +148,17 @@ const globalSlice = createSlice({
       state.isSearchSemaphoreVisible = false
       state.isSearchMissionsVisible = false
       state.isMapToolVisible = undefined
+    },
+
+    removeAllOverlayCoordinates(state) {
+      state.overlayCoordinates = {}
+    },
+
+    removeOverlayCoordinates(state, action) {
+      const overlayToRemove = action.payload.split(':')[0]
+      if (state.overlayCoordinates) {
+        delete state.overlayCoordinates[overlayToRemove]
+      }
     },
 
     removeToast(state) {
@@ -165,9 +184,19 @@ const globalSlice = createSlice({
     setIsMapToolVisible(state, action: PayloadAction<MapToolType | undefined>) {
       state.isMapToolVisible = action.payload
     },
-
     setOverlayCoordinates(state, action) {
-      state.overlayCoordinates = action.payload
+      const { featureId } = action.payload
+      const overlayToUpdate = featureId.split(':')[0]
+      if (!overlayToUpdate) {
+        return
+      }
+
+      const overlayCoordinatesToUpdate = state.overlayCoordinates[overlayToUpdate]
+      if (overlayCoordinatesToUpdate) {
+        state.overlayCoordinates[overlayToUpdate] = action.payload
+      } else {
+        state.overlayCoordinates = { ...state.overlayCoordinates, [overlayToUpdate]: action.payload }
+      }
     },
 
     setReportingFormVisibility(state, action) {
@@ -182,6 +211,8 @@ const globalSlice = createSlice({
 
 export const {
   hideSideButtons,
+  removeAllOverlayCoordinates,
+  removeOverlayCoordinates,
   removeToast,
   setDisplayedItems,
   setHealthcheckTextWarning,

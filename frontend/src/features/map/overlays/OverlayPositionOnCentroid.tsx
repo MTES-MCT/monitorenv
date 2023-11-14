@@ -63,7 +63,7 @@ export function OverlayPositionOnCentroid({
       olOverlayObjectRef.current.setOffset(INITIAL_OFFSET_VALUE)
     }
     if (feature) {
-      currentCoordinates.current = feature?.getGeometry()?.getCoordinates()
+      currentCoordinates.current = feature.getGeometry().getExtent()
     } else {
       currentCoordinates.current = undefined
     }
@@ -73,7 +73,7 @@ export function OverlayPositionOnCentroid({
     const view = map.getView()
     view.on('change:resolution', () => {
       if (overlayCoordinates) {
-        dispatch(setOverlayCoordinates(undefined))
+        dispatch(removeAllOverlayCoordinates(undefined))
       }
     })
   }, [dispatch, map, overlayCoordinates])
@@ -109,13 +109,13 @@ export function OverlayPositionOnCentroid({
           const nextYPixelCenter = pixel[1] + offset[1] + overlayTopLeftMargin[0]
 
           const nextCoordinates = map.getCoordinateFromPixel([nextXPixelCenter, nextYPixelCenter])
-          dispatch(setOverlayCoordinates(nextCoordinates))
+          dispatch(setOverlayCoordinates({ coordinates: nextCoordinates, featureId: feature.getId() }))
 
           isThrottled.current = false
         }
       }, delay)
     },
-    [dispatch, map, overlayTopLeftMargin]
+    [dispatch, map, overlayTopLeftMargin, feature]
   )
 
   useEffect(() => {
