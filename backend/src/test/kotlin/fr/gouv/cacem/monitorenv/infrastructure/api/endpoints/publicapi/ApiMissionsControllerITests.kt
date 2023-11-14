@@ -6,12 +6,18 @@ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.*
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.MissionEvent
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.catchThrowable
 import org.hamcrest.Matchers.equalTo
+import org.hamcrest.Matchers.nullValue
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
@@ -21,18 +27,18 @@ import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.time.ZonedDateTime
 import java.util.*
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
-@WebMvcTest(value = [(ApiMissionsController::class)])
+@WebMvcTest(value = [ApiMissionsController::class, SSEController::class])
 class ApiMissionsControllerITests {
     @Autowired private lateinit var mockMvc: MockMvc
 
@@ -49,6 +55,10 @@ class ApiMissionsControllerITests {
     @MockBean private lateinit var getEngagedControlUnits: GetEngagedControlUnits
 
     @Autowired private lateinit var objectMapper: ObjectMapper
+
+    @Autowired private lateinit var applicationEventPublisher: ApplicationEventPublisher
+
+    @Autowired private lateinit var sseController: SSEController
 
     @Test
     fun `Should create a new mission`() {
@@ -308,10 +318,110 @@ class ApiMissionsControllerITests {
     }
 
     @Test
-    fun `Should listen to SSE events`() {
-        // When
-        mockMvc.perform(get("/api/v1/missions/132/sse"))
-            // Then
+    fun `Should receive an event When listening to a given mission id`() {
+        // Given
+        val wktReader = WKTReader()
+        val multipolygonString =
+            "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))"
+        val polygon = wktReader.read(multipolygonString) as MultiPolygon
+        val missionEvent = MissionEvent(
+            mission = MissionEntity(
+                id = 132,
+                missionTypes = listOf(MissionTypeEnum.SEA),
+                facade = "Outre-Mer",
+                geom = polygon,
+                observationsCnsp = null,
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                isDeleted = false,
+                missionSource = MissionSourceEnum.MONITORFISH,
+                isClosed = false,
+                hasMissionOrder = false,
+                isUnderJdp = false,
+                isGeometryComputedFromControls = false,
+            ),
+        )
+
+        // When we send an event from another thread
+        object : Thread() {
+            override fun run() {
+                try {
+                    sleep(250)
+                    applicationEventPublisher.publishEvent(missionEvent)
+                } catch (ex: InterruptedException) {
+                    println(ex)
+                }
+            }
+        }.start()
+
+        // Then
+        val missionUpdateEvent = mockMvc.perform(get("/api/v1/missions/132/sse"))
             .andExpect(status().isOk)
+            .andExpect(request().asyncStarted())
+            .andExpect(request().asyncResult(nullValue()))
+            .andExpect(header().string("Content-Type", "text/event-stream"))
+            .andDo(MockMvcResultHandlers.log())
+            .andReturn()
+            .response
+            .contentAsString
+
+        assertThat(missionUpdateEvent).contains("event:MISSION_UPDATE")
+        assertThat(missionUpdateEvent).contains(
+            "data:{\"id\":132,\"missionTypes\":[\"SEA\"],\"controlUnits\":[],\"openBy\":null,\"closedBy\":null,\"observationsCacem\":null,\"observationsCnsp\":null,\"facade\":\"Outre-Mer\",\"geom\":{\"type\":\"MultiPolygon\",\"coordinates\":[[[[-4.54877817,48.30555988],[-4.54997332,48.30597601],[-4.54998501,48.30718823],[-4.5487929,48.30677461],[-4.54877817,48.30555988]]]]},\"startDateTimeUtc\":\"2022-01-15T04:50:09Z\",\"endDateTimeUtc\":\"2022-01-23T20:29:03Z\",\"envActions\":[],\"missionSource\":\"MONITORFISH\",\"isClosed\":false,\"hasMissionOrder\":false,\"isUnderJdp\":false,\"isGeometryComputedFromControls\":false}",
+        )
+    }
+
+    @Test
+    fun `Should not receive an event When listening to another mission id`() {
+        // Given
+        val wktReader = WKTReader()
+        val multipolygonString =
+            "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))"
+        val polygon = wktReader.read(multipolygonString) as MultiPolygon
+        val missionEvent = MissionEvent(
+            mission = MissionEntity(
+                id = 666,
+                missionTypes = listOf(MissionTypeEnum.SEA),
+                facade = "Outre-Mer",
+                geom = polygon,
+                observationsCnsp = null,
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                isDeleted = false,
+                missionSource = MissionSourceEnum.MONITORFISH,
+                isClosed = false,
+                hasMissionOrder = false,
+                isUnderJdp = false,
+                isGeometryComputedFromControls = false,
+            ),
+        )
+
+        // When we send an event from another thread
+        object : Thread() {
+            override fun run() {
+                try {
+                    sleep(250)
+                    applicationEventPublisher.publishEvent(missionEvent)
+                } catch (ex: InterruptedException) {
+                    println(ex)
+                }
+            }
+        }.start()
+
+        // Then
+        val throwable = catchThrowable {
+            val result = mockMvc.perform(get("/api/v1/missions/132/sse"))
+                .andExpect(status().isOk)
+                .andExpect(request().asyncStarted())
+                .andReturn()
+
+            // We reduce the timeout to not wait too much in the test
+            result.request.asyncContext?.timeout = 1000
+
+            mockMvc.perform(asyncDispatch(result))
+                .andExpect(request().asyncResult(nullValue()))
+        }
+
+        assertThat(throwable).isNotNull()
     }
 }

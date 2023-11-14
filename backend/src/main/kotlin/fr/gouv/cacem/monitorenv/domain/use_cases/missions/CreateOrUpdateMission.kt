@@ -100,7 +100,7 @@ class CreateOrUpdateMission(
 
         logger.info("Sending CREATE/UPDATE event for mission id ${savedMission.mission.id}.")
         eventPublisher.publishEvent(
-            MissionEvent(savedMission.mission.id, savedMission.mission),
+            MissionEvent(savedMission.mission),
         )
 
         return savedMission.mission
