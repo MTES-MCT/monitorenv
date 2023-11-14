@@ -1,9 +1,10 @@
+import { logSoftError } from '@mtes-mct/monitor-ui'
+import ReconnectingEventSource from 'reconnecting-eventsource'
+
 import { monitorenvPrivateApi, monitorenvPublicApi } from './api'
 import { ControlUnit } from '../domain/entities/controlUnit'
 
 import type { Mission } from '../domain/entities/missions'
-import {logSoftError} from "@mtes-mct/monitor-ui";
-import ReconnectingEventSource from "reconnecting-eventsource";
 
 type MissionsResponse = Mission[]
 type MissionsFilter = {
@@ -45,16 +46,12 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
       })
     }),
     getMission: build.query<Mission, number>({
-      providesTags: (_, __, id) => [{ id, type: 'Missions' }],
-      query: id => `/v1/missions/${id}`,
-      async onCacheEntryAdded(
-        id,
-        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
-      ) {
+      async onCacheEntryAdded(id, { cacheDataLoaded, cacheEntryRemoved, updateCachedData }) {
         const url = `/api/v1/missions/${id}/sse`
 
         try {
           const eventSource = new ReconnectingEventSource(url)
+          // eslint-disable-next-line no-console
           console.log(`SSE: listening for updates of mission id ${id}...`)
 
           // wait for the initial query to resolve before proceeding
@@ -62,14 +59,15 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
 
           const listener = (event: MessageEvent) => {
             const mission = JSON.parse(event.data) as Mission
+            // eslint-disable-next-line no-console
             console.log(`SSE: received an update for mission id ${mission.id}.`)
 
             updateCachedData(draft => {
-              const envActions = draft.envActions
+              const { envActions } = draft
 
               return {
                 ...mission,
-                envActions: envActions
+                envActions
               }
             })
           }
@@ -82,10 +80,9 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
           // perform cleanup steps once the `cacheEntryRemoved` promise resolves
           eventSource.close()
         } catch (e) {
-          console.error(e)
           logSoftError({
             context: {
-              url: url
+              url
             },
             isSideWindowError: true,
             message: "SSE: Can't connect or receive messages",
@@ -93,6 +90,8 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
           })
         }
       },
+      providesTags: (_, __, id) => [{ id, type: 'Missions' }],
+      query: id => `/v1/missions/${id}`
     }),
     getMissions: build.query<MissionsResponse, MissionsFilter | void>({
       providesTags: result =>
