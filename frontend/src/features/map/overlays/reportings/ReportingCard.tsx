@@ -14,7 +14,7 @@ import styled from 'styled-components'
 
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { ReportingTypeEnum, getFormattedReportingId, ReportingTypeLabels } from '../../../../domain/entities/reporting'
-import { ReportingContext, removeOverlayCoordinates } from '../../../../domain/shared_slices/Global'
+import { ReportingContext, removeOverlayCoordinatesByName } from '../../../../domain/shared_slices/Global'
 import { reportingActions } from '../../../../domain/shared_slices/reporting'
 import { editReportingInLocalStore } from '../../../../domain/use_cases/reporting/editReportingInLocalStore'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
@@ -73,8 +73,8 @@ export function ReportingCard({
 
   const closeReportingCard = useCallback(() => {
     dispatch(reportingActions.setSelectedReportingIdOnMap(undefined))
-    dispatch(removeOverlayCoordinates(`${Layers.REPORTING_SELECTED}:${id}`))
-  }, [dispatch, id])
+    dispatch(removeOverlayCoordinatesByName(Layers.REPORTING_SELECTED.code))
+  }, [dispatch])
 
   useEffect(() => {
     if (feature && ref.current) {

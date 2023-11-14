@@ -28,8 +28,8 @@ type Toast = {
 }
 
 type OverlayCoordinates = {
-  context: string
   coordinates: [number, number]
+  name: string
 }
 type GlobalOverlayCoordinates = {
   [key: string]: OverlayCoordinates
@@ -154,8 +154,8 @@ const globalSlice = createSlice({
       state.overlayCoordinates = {}
     },
 
-    removeOverlayCoordinates(state, action) {
-      const overlayToRemove = action.payload.split(':')[0]
+    removeOverlayCoordinatesByName(state, action: PayloadAction<string>) {
+      const overlayToRemove = action.payload
       if (state.overlayCoordinates) {
         delete state.overlayCoordinates[overlayToRemove]
       }
@@ -184,18 +184,17 @@ const globalSlice = createSlice({
     setIsMapToolVisible(state, action: PayloadAction<MapToolType | undefined>) {
       state.isMapToolVisible = action.payload
     },
-    setOverlayCoordinates(state, action) {
-      const { featureId } = action.payload
-      const overlayToUpdate = featureId.split(':')[0]
-      if (!overlayToUpdate) {
+    setOverlayCoordinatesByName(state, action: PayloadAction<OverlayCoordinates>) {
+      const overlayNameToUpdate = action.payload.name
+      if (!overlayNameToUpdate) {
         return
       }
 
-      const overlayCoordinatesToUpdate = state.overlayCoordinates[overlayToUpdate]
+      const overlayCoordinatesToUpdate = state.overlayCoordinates[overlayNameToUpdate]
       if (overlayCoordinatesToUpdate) {
-        state.overlayCoordinates[overlayToUpdate] = action.payload
+        state.overlayCoordinates[overlayNameToUpdate] = action.payload
       } else {
-        state.overlayCoordinates = { ...state.overlayCoordinates, [overlayToUpdate]: action.payload }
+        state.overlayCoordinates = { ...state.overlayCoordinates, [overlayNameToUpdate]: action.payload }
       }
     },
 
@@ -212,12 +211,12 @@ const globalSlice = createSlice({
 export const {
   hideSideButtons,
   removeAllOverlayCoordinates,
-  removeOverlayCoordinates,
+  removeOverlayCoordinatesByName,
   removeToast,
   setDisplayedItems,
   setHealthcheckTextWarning,
   setIsMapToolVisible,
-  setOverlayCoordinates,
+  setOverlayCoordinatesByName,
   setReportingFormVisibility,
   setToast
 } = globalSlice.actions

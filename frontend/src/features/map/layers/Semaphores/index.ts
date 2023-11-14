@@ -8,7 +8,7 @@ import { semaphoresStyleFn } from './style'
 import { useGetReportingsQuery } from '../../../../api/reportingsAPI'
 import { useGetSemaphoresQuery } from '../../../../api/semaphoresAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
-import { removeOverlayCoordinates } from '../../../../domain/shared_slices/Global'
+import { removeOverlayCoordinatesByName } from '../../../../domain/shared_slices/Global'
 import { setSelectedSemaphore } from '../../../../domain/shared_slices/SemaphoresSlice'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -134,7 +134,7 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       if (feature.getId()?.toString()?.includes(Layers.SEMAPHORES.code)) {
         const { id } = feature.getProperties()
         dispatch(setSelectedSemaphore(id))
-        dispatch(removeOverlayCoordinates(feature.getId()))
+        dispatch(removeOverlayCoordinatesByName(Layers.SEMAPHORES.code))
       }
     }
   }, [dispatch, mapClickEvent])

@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { getReportingZoneFeature } from './reportingsGeometryHelpers'
 import { reportingPinStyleFn } from './style'
 import { Layers } from '../../../../domain/entities/layers/constants'
-import { removeOverlayCoordinates } from '../../../../domain/shared_slices/Global'
+import { removeOverlayCoordinatesByName } from '../../../../domain/shared_slices/Global'
 import { reportingActions } from '../../../../domain/shared_slices/reporting'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -90,7 +90,7 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       if (feature.getId()?.toString()?.includes(Layers.REPORTINGS.code)) {
         const { id } = feature.getProperties()
         dispatch(reportingActions.setSelectedReportingIdOnMap(id))
-        dispatch(removeOverlayCoordinates(feature.getId()))
+        dispatch(removeOverlayCoordinatesByName(Layers.REPORTINGS.code))
       }
     }
   }, [dispatch, mapClickEvent])

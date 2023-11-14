@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import { getStationPointFeature, getFeatureStyle } from './utils'
 import { useGetStationsQuery } from '../../../../api/stationsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
-import { removeOverlayCoordinates } from '../../../../domain/shared_slices/Global'
+import { removeOverlayCoordinatesByName } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { FrontendError } from '../../../../libs/FrontendError'
@@ -63,7 +63,7 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
         value: featureProps.station.id
       })
     )
-    dispatch(removeOverlayCoordinates(feature.getId()))
+    dispatch(removeOverlayCoordinatesByName(Layers.STATIONS.code))
   }, [dispatch, mapClickEvent])
 
   // ---------------------------------------------------------------------------

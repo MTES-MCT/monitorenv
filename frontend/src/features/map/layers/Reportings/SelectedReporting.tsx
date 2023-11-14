@@ -54,7 +54,7 @@ export function SelectedReportingLayer({ map }: BaseMapChildrenProps) {
       `${Layers.REPORTING_SELECTED.code}:${selectedReportingIdOnMap}`
     )
 
-    return feature?.setProperties({
+    feature?.setProperties({
       overlayCoordinates: overlayCoordinates.reportings
     })
   }, [overlayCoordinates, selectedReportingIdOnMap])
