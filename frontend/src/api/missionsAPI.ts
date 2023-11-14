@@ -2,6 +2,8 @@ import { monitorenvPrivateApi, monitorenvPublicApi } from './api'
 import { ControlUnit } from '../domain/entities/controlUnit'
 
 import type { Mission, MissionForApi } from '../domain/entities/missions'
+import {logSoftError} from "@mtes-mct/monitor-ui";
+import ReconnectingEventSource from "reconnecting-eventsource";
 
 type MissionsResponse = Mission[]
 type MissionsFilter = {
@@ -48,7 +50,53 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
     }),
     getMission: builder.query<Mission, number>({
       providesTags: (_, __, id) => [{ id, type: 'Missions' }],
-      query: id => `/v1/missions/${id}`
+      query: id => `/v1/missions/${id}`,
+      async onCacheEntryAdded(
+        id,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+      ) {
+        const url = `/api/v1/missions/${id}/sse`
+
+        try {
+          const eventSource = new ReconnectingEventSource(url)
+          console.log(`SSE: listening for updates of mission id ${id}...`)
+
+          // wait for the initial query to resolve before proceeding
+          await cacheDataLoaded
+
+          const listener = (event: MessageEvent) => {
+            const mission = JSON.parse(event.data) as Mission
+            console.log(`SSE: received an update for mission id ${mission.id}.`)
+
+            updateCachedData(draft => {
+              const envActions = draft.envActions
+
+              return {
+                ...mission,
+                envActions: envActions
+              }
+            })
+          }
+
+          eventSource.addEventListener('MISSION_UPDATE', listener)
+
+          // cacheEntryRemoved will resolve when the cache subscription is no longer active
+          await cacheEntryRemoved
+
+          // perform cleanup steps once the `cacheEntryRemoved` promise resolves
+          eventSource.close()
+        } catch (e) {
+          console.error(e)
+          logSoftError({
+            context: {
+              url: url
+            },
+            isSideWindowError: true,
+            message: "SSE: Can't connect or receive messages",
+            originalError: e
+          })
+        }
+      },
     }),
     getMissions: builder.query<MissionsResponse, MissionsFilter | void>({
       providesTags: result =>

@@ -27,6 +27,7 @@ export function Mission() {
   const { data: missionToEdit, isLoading } = useGetMissionQuery(
     !missionIsNewMission && idTyped ? Number(idTyped) : skipToken
   )
+
   const selectedMission = useMemo(
     () => selectedMissions.find(mis => mis.mission.id === idTyped),
     [idTyped, selectedMissions]
@@ -39,6 +40,7 @@ export function Mission() {
 
     return missionFactory(missionToEdit)
   }, [idTyped, missionIsNewMission, missionToEdit])
+
   if (isLoading) {
     return <div>Chargement en cours</div>
   }
