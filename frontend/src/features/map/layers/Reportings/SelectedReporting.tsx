@@ -19,6 +19,7 @@ export function SelectedReportingLayer({ map }: BaseMapChildrenProps) {
       selectedReporting: selectedReportingIdOnMap && data?.entities[selectedReportingIdOnMap]
     })
   })
+
   const displaySelectedReporting = displayReportingSelectedLayer && selectedReportingIdOnMap !== activeReportingId
 
   const selectedReportingVectorSourceRef = useRef() as MutableRefObject<VectorSource>
