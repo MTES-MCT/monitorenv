@@ -140,4 +140,9 @@ data class ControlUnitResourceModel(
             name,
         )
     }
+
+    @Override
+    override fun toString(): String {
+        return this::class.simpleName + "(id = $id , controlUnitId = ${controlUnit.id} , isArchived = $isArchived , name = $name , note = $note, name = $name , photo = $photo; stationId = ${station.id}, type = $type)"
+    }
 }

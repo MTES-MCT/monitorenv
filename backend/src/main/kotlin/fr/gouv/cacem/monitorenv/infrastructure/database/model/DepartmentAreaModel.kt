@@ -39,4 +39,9 @@ data class DepartmentAreaModel(
             name,
         )
     }
+
+    @Override
+    override fun toString(): String {
+        return this::class.simpleName + "(inseeCode = $inseeCode , geometry = geometry , name = $name)"
+    }
 }
