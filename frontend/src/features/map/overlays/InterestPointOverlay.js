@@ -56,7 +56,7 @@ function InterestPointOverlay({
       }
 
       isThrottled.current = true
-      setTimeout(() => {
+      window.setTimeout(() => {
         if (interestPointCoordinates.current) {
           const offset = target.getOffset()
           const pixel = map.getPixelFromCoordinate(interestPointCoordinates.current)

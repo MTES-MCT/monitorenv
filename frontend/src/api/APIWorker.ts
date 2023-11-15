@@ -15,12 +15,12 @@ export function APIWorker() {
       dispatch(loadRegulatoryData())
     })
 
-    const interval = setInterval(() => {
+    const interval = window.setInterval(() => {
       batch(() => {})
     }, FIVE_MINUTES)
 
     return () => {
-      clearInterval(interval)
+      window.clearInterval(interval)
     }
   }, [dispatch])
 
