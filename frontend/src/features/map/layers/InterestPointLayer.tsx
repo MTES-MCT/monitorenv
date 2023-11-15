@@ -30,7 +30,7 @@ import { saveInterestPointFeature } from '../../../domain/use_cases/interestPoin
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { usePrevious } from '../../../hooks/usePrevious'
-import InterestPointOverlay from '../overlays/InterestPointOverlay'
+import { InterestPointOverlay } from '../overlays/InterestPointOverlay'
 
 import type { BaseMapChildrenProps } from '../BaseMap'
 

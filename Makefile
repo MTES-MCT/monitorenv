@@ -24,7 +24,7 @@ dev-run-storybook:
 .PHONY: test-front dev-lint-frontend test-back
 
 dev-lint-frontend:
-	cd frontend && npm run test:lint:partial
+	cd frontend && npm run test:lint
 
 test-back:
 	cd backend && ./gradlew clean test

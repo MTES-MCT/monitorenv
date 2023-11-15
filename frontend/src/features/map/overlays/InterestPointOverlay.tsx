@@ -16,7 +16,7 @@ const X = 0
 const Y = 1
 export const initialOffsetValue = [-90, 10]
 
-function InterestPointOverlay({
+export function InterestPointOverlay({
   coordinates,
   deleteInterestPoint,
   featureIsShowed,
@@ -213,5 +213,3 @@ const Name = styled.span`
   white-space: nowrap;
   flex: 1 1 0;
 `
-
-export default InterestPointOverlay

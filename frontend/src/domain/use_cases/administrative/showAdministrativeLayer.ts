@@ -64,6 +64,7 @@ function getAdministrativeVectorSourceBBOXStrategy(code, subZone) {
   })
 
   vectorSource.once(IRRETRIEVABLE_FEATURES_EVENT, event => {
+    // eslint-disable-next-line no-console
     console.warn(event.error)
   })
 

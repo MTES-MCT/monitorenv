@@ -54,7 +54,7 @@ Le navigateur s'ouvre par défaut sur l'url <http://localhost:3000>
 
 ### Linting
 
-Avant de pousser un commit, vérifier le linting avec `npm run test:lint:partial`
+Installer les hooks Git via Husky: `npm run prepare`.
 
 ### Variables d'environnement
 

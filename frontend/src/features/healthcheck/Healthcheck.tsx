@@ -1,10 +1,9 @@
-import React from 'react'
 import styled from 'styled-components'
 
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { ReactComponent as WarningSVG } from '../../uiMonitor/icons/Alert.svg'
 
-function Healthcheck() {
+export function Healthcheck() {
   const { healthcheckTextWarning } = useAppSelector(state => state.global)
 
   return (
@@ -40,5 +39,3 @@ const HealthcheckWarnings = styled.div`
   padding: 13px;
   border-bottom: 2px solid #E3BE05;
 `
-
-export default Healthcheck

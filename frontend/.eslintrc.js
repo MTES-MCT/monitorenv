@@ -8,7 +8,8 @@ module.exports = {
     ecmaVersion: 2022,
     project: path.join(__dirname, 'tsconfig.json')
   },
-  ignorePatterns: ['.eslintrc.js', '.eslintrc.partial.js'],
+  // TODO Remove `src/uiMonitor/**/*.stories.jsx` once `src/uiMonitor` is deleted.
+  ignorePatterns: ['.eslintrc.js', 'src/uiMonitor/**/*.stories.jsx'],
   env: {
     browser: true
   },
@@ -126,7 +127,7 @@ module.exports = {
 
     // UI
     {
-      files: ['src/components/**/*.tsx', 'src/ui/**/*.tsx'],
+      files: ['src/components/**/*.tsx', 'src/ui/**/*.tsx', 'src/uiMonitor/**/*.tsx'],
       rules: {
         'react/jsx-props-no-spreading': 'off'
       }

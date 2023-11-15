@@ -5,7 +5,14 @@ import { useEffect } from 'react'
 const X = 0
 const Y = 1
 
-export const useMoveOverlayWhenDragging = (overlay, map, currentOffset, moveLineWithThrottle, showed) => {
+// TODO Type these params.
+export const useMoveOverlayWhenDragging = (
+  overlay: any,
+  map: any,
+  currentOffset: any,
+  moveLineWithThrottle: any,
+  showed: any
+) => {
   useEffect(() => {
     let eventKey
 
@@ -23,7 +30,7 @@ export const useMoveOverlayWhenDragging = (overlay, map, currentOffset, moveLine
   }, [overlay, map, moveLineWithThrottle])
 
   useEffect(() => {
-    let hammer
+    let hammer: HammerManager
     if (showed && overlay && overlay.getElement()) {
       hammer = new Hammer(overlay.getElement())
       hammer.on('pan', ({ deltaX, deltaY }) => {
@@ -31,6 +38,7 @@ export const useMoveOverlayWhenDragging = (overlay, map, currentOffset, moveLine
       })
 
       hammer.on('panend', ({ deltaX, deltaY }) => {
+        // eslint-disable-next-line no-param-reassign
         currentOffset.current = [currentOffset.current[X] + deltaX, currentOffset.current[Y] + deltaY]
       })
     }
