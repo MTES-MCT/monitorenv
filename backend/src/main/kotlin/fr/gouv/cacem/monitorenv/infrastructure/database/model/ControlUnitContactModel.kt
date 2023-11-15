@@ -69,4 +69,9 @@ data class ControlUnitContactModel(
             controlUnitContact = toControlUnitContact(),
         )
     }
+
+    @Override
+    override fun toString(): String {
+        return this::class.simpleName + "(id = $id , controlUnitId = ${controlUnit.id} , email = $email , name = $name , phone = $phone)"
+    }
 }

@@ -114,4 +114,9 @@ data class ControlUnitModel(
             contact = "",
         )
     }
+
+    @Override
+    override fun toString(): String {
+        return this::class.simpleName + "(id = $id , administrationId = ${administration.id} , areaNote = $areaNote , departmentAreaInseeCode = ${departmentArea?.inseeCode} , isArchived = $isArchived, name = $name , termsNote = $termsNote)"
+    }
 }

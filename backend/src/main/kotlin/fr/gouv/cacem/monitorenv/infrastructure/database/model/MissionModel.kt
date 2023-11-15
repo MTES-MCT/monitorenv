@@ -208,7 +208,6 @@ data class MissionModel(
                     val controlUnitResourceModel = requireNotNull(controlUnitResourceModelMap[controlUnitResource.id])
 
                     MissionControlResourceModel(
-                        id = mission.id,
                         resource = controlUnitResourceModel,
                         mission = missionModel,
                     )

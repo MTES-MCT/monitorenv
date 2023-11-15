@@ -66,4 +66,9 @@ data class AdministrationModel(
             controlUnits = requireNotNullList(controlUnits).map { it.toControlUnit() },
         )
     }
+
+    @Override
+    override fun toString(): String {
+        return this::class.simpleName + "(id = $id , isArchived = $isArchived , name = $name)"
+    }
 }

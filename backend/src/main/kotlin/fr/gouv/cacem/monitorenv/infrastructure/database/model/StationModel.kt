@@ -72,4 +72,9 @@ data class StationModel(
             controlUnitResources = controlUnitResourceModels.map { it.toControlUnitResource() },
         )
     }
+
+    @Override
+    override fun toString(): String {
+        return this::class.simpleName + "(id = $id , latitude = $latitude , longitude = $longitude , name = $name)"
+    }
 }

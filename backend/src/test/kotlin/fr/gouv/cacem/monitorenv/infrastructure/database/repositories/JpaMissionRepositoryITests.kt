@@ -31,6 +31,10 @@ import java.util.*
 class JpaMissionRepositoryITests : AbstractDBTests() {
     @Autowired private lateinit var jpaMissionRepository: JpaMissionRepository
 
+    @Autowired private lateinit var jpaControlUnitRepository: JpaControlUnitRepository
+
+    @Autowired private lateinit var jpaControlUnitResourceRepository: JpaControlUnitResourceRepository
+
     @Test
     @Transactional
     fun `findByControlUnitId should find the matching missions`() {
@@ -250,6 +254,40 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(newMissionUpdated.mission.controlUnits.first().resources.last().id).isEqualTo(5)
         assertThat(newMissionUpdated.mission.controlUnits.first().resources.last().controlUnitId).isEqualTo(10002)
         assertThat(newMissionUpdated.mission.controlUnits.first().resources.last().name).isEqualTo("Voiture")
+    }
+
+    @Test
+    @Transactional
+    fun `save should update existing mission with existing resources`() {
+        // Given
+        val mission = jpaMissionRepository.findById(25)
+        val newControlUnitResource = jpaControlUnitResourceRepository.findById(10)
+        val newControlUnit = jpaControlUnitRepository.findById(requireNotNull(newControlUnitResource.controlUnit.id))
+
+        val nextMission = mission.copy(
+            controlUnits = mission.controlUnits.plus(
+                LegacyControlUnitEntity(
+                    id = requireNotNull(newControlUnit.controlUnit.id),
+                    administration = newControlUnit.administration.name,
+                    isArchived = newControlUnit.controlUnit.isArchived,
+                    name = newControlUnit.controlUnit.name,
+                    resources = listOf(newControlUnitResource.toLegacyControlUnitResource()),
+                    contact = null,
+                ),
+            ),
+        )
+
+        val updatedMission = jpaMissionRepository.save(nextMission)
+
+        assertThat(updatedMission.mission.controlUnits).hasSize(2)
+        assertThat(updatedMission.mission.controlUnits.first().id).isEqualTo(10002)
+        assertThat(updatedMission.mission.controlUnits.first().resources).hasSize(1)
+        assertThat(updatedMission.mission.controlUnits.first().resources.first().id).isEqualTo(3)
+        assertThat(updatedMission.mission.controlUnits.first().resources.first().controlUnitId).isEqualTo(10002)
+        assertThat(updatedMission.mission.controlUnits.last().id).isEqualTo(10018)
+        assertThat(updatedMission.mission.controlUnits.last().resources).hasSize(1)
+        assertThat(updatedMission.mission.controlUnits.last().resources.first().id).isEqualTo(10)
+        assertThat(updatedMission.mission.controlUnits.last().resources.first().controlUnitId).isEqualTo(10018)
     }
 
     @Test
