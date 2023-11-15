@@ -9,8 +9,11 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
+import org.slf4j.LoggerFactory
 import org.springframework.format.annotation.DateTimeFormat
+import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import java.time.ZonedDateTime
 
 @RestController
@@ -23,7 +26,9 @@ class ApiMissionsController(
     private val deleteMission: DeleteMission,
     private val getEngagedControlUnits: GetEngagedControlUnits,
     private val getMissionsByIds: GetMissionsByIds,
+    private val sseMissionController: SSEMissionController,
 ) {
+    private val logger = LoggerFactory.getLogger(ApiMissionsController::class.java)
 
     @GetMapping("")
     @Operation(summary = "Get missions")
@@ -136,5 +141,17 @@ class ApiMissionsController(
     fun getEngagedControlUnitsController(): List<LegacyControlUnitAndMissionSourcesDataOutput> {
         return getEngagedControlUnits.execute()
             .map { LegacyControlUnitAndMissionSourcesDataOutput.fromLegacyControlUnitAndMissionSources(it) }
+    }
+
+    /**
+     * This method create the connexion to the frontend (with EventSource)
+     */
+    @GetMapping(value = ["/{missionId}/sse"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
+    fun createMissionSSE(
+        @PathParam("Mission Id")
+        @PathVariable(name = "missionId")
+        missionId: Int,
+    ): SseEmitter {
+        return sseMissionController.registerListener(missionId)
     }
 }

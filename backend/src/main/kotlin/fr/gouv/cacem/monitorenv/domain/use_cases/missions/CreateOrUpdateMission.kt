@@ -11,18 +11,25 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionContr
 import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreaRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateMissionEvent
+import org.slf4j.LoggerFactory
+import org.springframework.context.ApplicationEventPublisher
 
 @UseCase
 class CreateOrUpdateMission(
     private val departmentRepository: IDepartmentAreaRepository,
     private val facadeRepository: IFacadeAreasRepository,
     private val missionRepository: IMissionRepository,
+    private val eventPublisher: ApplicationEventPublisher,
 ) {
+    private val logger = LoggerFactory.getLogger(CreateOrUpdateMission::class.java)
+
     @Throws(IllegalArgumentException::class)
     fun execute(
         mission: MissionEntity?,
     ): MissionEntity {
         require(mission != null) { "No mission to create or update" }
+
         val envActions =
             mission.envActions?.map {
                 when (it.actionType) {
@@ -91,6 +98,11 @@ class CreateOrUpdateMission(
             throw IllegalArgumentException("Mission id is null")
         }
 
-        return missionRepository.findById(savedMission.mission.id)
+        logger.info("Sending CREATE/UPDATE event for mission id ${savedMission.mission.id}.")
+        eventPublisher.publishEvent(
+            UpdateMissionEvent(savedMission.mission),
+        )
+
+        return savedMission.mission
     }
 }
