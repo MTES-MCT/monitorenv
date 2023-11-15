@@ -12,21 +12,21 @@ import {
   Select,
   useNewWindow
 } from '@mtes-mct/monitor-ui'
-import {useField} from 'formik'
-import {uniq, uniqBy} from 'lodash'
-import {useMemo} from 'react'
+import { useField } from 'formik'
+import { uniq, uniqBy } from 'lodash'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import {RTK_DEFAULT_QUERY_OPTIONS} from '../../../api/constants'
-import {useGetLegacyControlUnitsQuery} from '../../../api/legacyControlUnitsAPI'
-import {useGetEngagedControlUnitsQuery} from '../../../api/missionsAPI'
-import {missionSourceEnum} from '../../../domain/entities/missions'
-import {useAppSelector} from '../../../hooks/useAppSelector'
-import {isNewMission} from '../../../utils/isNewMission'
-import {isNotArchived} from '../../../utils/isNotArchived'
-import {getMissionPageRoute} from '../../../utils/routes'
+import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../api/constants'
+import { useGetLegacyControlUnitsQuery } from '../../../api/legacyControlUnitsAPI'
+import { useGetEngagedControlUnitsQuery } from '../../../api/missionsAPI'
+import { missionSourceEnum } from '../../../domain/entities/missions'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+import { isNewMission } from '../../../utils/isNewMission'
+import { isNotArchived } from '../../../utils/isNotArchived'
+import { getMissionPageRoute } from '../../../utils/routes'
 
-import type {ControlUnit} from '../../../domain/entities/controlUnit'
+import type { ControlUnit } from '../../../domain/entities/controlUnit'
 
 export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
   const { newWindowContainerRef } = useNewWindow()
