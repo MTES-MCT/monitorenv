@@ -50,7 +50,7 @@ export class ReconnectingEventSource implements EventSource {
 
   _eventSource: EventSource | null
   _lastEventId: string | null
-  _timer: NodeJS.Timer | null
+  _timer: number | null
   _listeners: Listeners
   _onevent_wrapped: (this: EventSource, ev: Event) => any
 
@@ -159,7 +159,7 @@ export class ReconnectingEventSource implements EventSource {
 
         // reconnect after random timeout < max_retry_time
         const timeout = Math.round(this.max_retry_time * Math.random())
-        this._timer = setTimeout(() => this._start(), timeout)
+        this._timer = window.setTimeout(() => this._start(), timeout)
       }
     }
   }
@@ -199,7 +199,7 @@ export class ReconnectingEventSource implements EventSource {
 
   close() {
     if (this._timer) {
-      clearTimeout(this._timer)
+      window.clearTimeout(this._timer)
       this._timer = null
     }
 

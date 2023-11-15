@@ -121,7 +121,7 @@ export function Source() {
 
     // we want to highlight the semaphore for 5 seconds
     dispatch(setIsSemaphoreHighlighted(true))
-    setTimeout(() => {
+    window.setTimeout(() => {
       dispatch(setIsSemaphoreHighlighted(false))
     }, 5000)
   }

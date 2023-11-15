@@ -98,7 +98,7 @@ export function OverlayPositionOnCentroid({
         return
       }
       isThrottled.current = true
-      setTimeout(() => {
+      window.setTimeout(() => {
         if (currentCoordinates.current) {
           const offset = target.getOffset()
           const pixel = map.getPixelFromCoordinate(currentCoordinates.current)

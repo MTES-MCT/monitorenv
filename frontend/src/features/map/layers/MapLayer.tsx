@@ -72,7 +72,7 @@ function UnmemoizedMapLayer({ map }: MapLayerProps) {
         return
       }
 
-      setTimeout(() => {
+      window.setTimeout(() => {
         olLayers.remove(layerToRemove)
       }, 300)
     }
