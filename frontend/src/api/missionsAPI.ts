@@ -1,8 +1,8 @@
 import { logSoftError } from '@mtes-mct/monitor-ui'
-import ReconnectingEventSource from 'reconnecting-eventsource'
 
 import { monitorenvPrivateApi, monitorenvPublicApi } from './api'
 import { ControlUnit } from '../domain/entities/controlUnit'
+import { ReconnectingEventSource } from '../libs/ReconnectingEventSource'
 
 import type { Mission } from '../domain/entities/missions'
 
