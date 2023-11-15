@@ -836,9 +836,9 @@ class MissionsControllerITests {
     @Test
     fun `Should get all engaged control units`() {
         // Given
-        given(getEngagedControlUnits.execute())
-            .willReturn(
-                listOf(
+        given(getEngagedControlUnits.execute()).willReturn(
+            listOf(
+                Pair(
                     LegacyControlUnitEntity(
                         id = 123,
                         administration = "Admin",
@@ -846,13 +846,16 @@ class MissionsControllerITests {
                         isArchived = false,
                         name = "Control Unit Name",
                     ),
+                    listOf(MissionSourceEnum.MONITORFISH),
                 ),
-            )
+            ),
+        )
 
         // When
         mockMvc.perform(get("/bff/v1/missions/engaged_control_units"))
             // Then
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$[0].name", equalTo("Control Unit Name")))
+            .andExpect(jsonPath("$[0].controlUnit.name", equalTo("Control Unit Name")))
+            .andExpect(jsonPath("$[0].missionSources[0]", equalTo("MONITORFISH")))
     }
 }

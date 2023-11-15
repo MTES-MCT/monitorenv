@@ -38,9 +38,8 @@ export function GeneralInformationsForm() {
 
   const hasMissionOrderOptions = Object.values(hasMissionOrderLabels)
 
-  const { sideWindow } = useAppSelector(state => state)
-  const routeParams = getMissionPageRoute(sideWindow.currentPath)
-
+  const currentPath = useAppSelector(state => state.sideWindow.currentPath)
+  const routeParams = getMissionPageRoute(currentPath)
   const missionIsNewMission = isNewMission(routeParams?.params?.id)
 
   const title = getMissionTitle(missionIsNewMission, values)

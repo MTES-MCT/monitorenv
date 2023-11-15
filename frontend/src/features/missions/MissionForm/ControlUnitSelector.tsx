@@ -1,15 +1,15 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import {
+  Accent,
   CustomSearch,
   FormikTextInput,
-  Level,
-  Message,
-  Select,
-  IconButton,
   getOptionsFromIdAndName,
   Icon,
-  Accent,
+  IconButton,
+  Level,
+  Message,
   MultiSelect,
+  Select,
   useNewWindow
 } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
@@ -20,7 +20,11 @@ import styled from 'styled-components'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../api/constants'
 import { useGetLegacyControlUnitsQuery } from '../../../api/legacyControlUnitsAPI'
 import { useGetEngagedControlUnitsQuery } from '../../../api/missionsAPI'
+import { missionSourceEnum } from '../../../domain/entities/missions'
+import { useAppSelector } from '../../../hooks/useAppSelector'
+import { isNewMission } from '../../../utils/isNewMission'
 import { isNotArchived } from '../../../utils/isNotArchived'
+import { getMissionPageRoute } from '../../../utils/routes'
 
 import type { ControlUnit } from '../../../domain/entities/controlUnit'
 
@@ -34,6 +38,10 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
   const [resourcesField, , resourcesHelpers] = useField<ControlUnit.ControlUnitResource[]>(
     `controlUnits.${controlUnitIndex}.resources`
   )
+
+  const currentPath = useAppSelector(state => state.sideWindow.currentPath)
+  const routeParams = getMissionPageRoute(currentPath)
+  const missionIsNewMission = isNewMission(routeParams?.params?.id)
 
   const {
     data: controlUnitsData,
@@ -131,6 +139,32 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
     resourcesHelpers.setValue(resourceObjects)
   }
 
+  const engagedControlUnit = engagedControlUnits.find(engaged => engaged.controlUnit.id === unitField.value)
+  const resourceUnitIndexDisplayed = controlUnitIndex + 1
+
+  const controlUnitWarningMessage = useMemo(() => {
+    if (!engagedControlUnit) {
+      return ''
+    }
+
+    if (engagedControlUnit.missionSources.length === 1) {
+      const source = engagedControlUnit.missionSources[0]
+      if (!source) {
+        return ''
+      }
+
+      return `Cette unité est actuellement sélectionnée dans une autre mission en cours ouverte par le ${missionSourceEnum[source].label}.`
+    }
+
+    if (engagedControlUnit.missionSources.length > 1) {
+      return `Cette unité est actuellement sélectionnée dans plusieurs autres missions en cours, ouvertes par le ${engagedControlUnit.missionSources
+        .map(source => missionSourceEnum[source].label)
+        .join(' et le ')}.`
+    }
+
+    return ''
+  }, [engagedControlUnit])
+
   if (isError) {
     return <div>Erreur</div>
   }
@@ -138,9 +172,6 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
   if (isLoading) {
     return <div>Chargement</div>
   }
-
-  const isEngaged = !!engagedControlUnits.find(engaged => engaged.id === unitField.value)
-  const resourceUnitIndexDisplayed = controlUnitIndex + 1
 
   return (
     <RessourceUnitWrapper>
@@ -175,10 +206,8 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
           searchable={unitList.length > 10}
           value={unitField.value}
         />
-        {isEngaged && (
-          <StyledMessage level={Level.WARNING}>
-            Cette unité est actuellement sélectionnée dans une autre mission en cours.
-          </StyledMessage>
+        {missionIsNewMission && !!engagedControlUnit && (
+          <StyledMessage level={Level.WARNING}>{controlUnitWarningMessage}</StyledMessage>
         )}
       </div>
 
