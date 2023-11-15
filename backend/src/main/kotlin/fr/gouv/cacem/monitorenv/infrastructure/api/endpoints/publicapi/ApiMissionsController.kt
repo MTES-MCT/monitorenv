@@ -26,7 +26,7 @@ class ApiMissionsController(
     private val deleteMission: DeleteMission,
     private val getEngagedControlUnits: GetEngagedControlUnits,
     private val getMissionsByIds: GetMissionsByIds,
-    private val sseController: SSEController,
+    private val sseMissionController: SSEMissionController,
 ) {
     private val logger = LoggerFactory.getLogger(ApiMissionsController::class.java)
 
@@ -152,6 +152,6 @@ class ApiMissionsController(
         @PathVariable(name = "missionId")
         missionId: Int,
     ): SseEmitter {
-        return sseController.registerListener(missionId)
+        return sseMissionController.registerListener(missionId)
     }
 }

@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.MissionEvent
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateMissionEvent
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.MissionDataOutput
 import org.slf4j.LoggerFactory
 import org.springframework.context.event.EventListener
@@ -10,9 +10,9 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event
 import java.util.*
 
 @Component
-class SSEController {
+class SSEMissionController {
 
-    private val logger = LoggerFactory.getLogger(SSEController::class.java)
+    private val logger = LoggerFactory.getLogger(SSEMissionController::class.java)
 
     private val MISSION_UPDATE_EVENT_NAME = "MISSION_UPDATE"
 
@@ -57,8 +57,8 @@ class SSEController {
     /**
      * This method listen for `MissionEvent` to send to the frontend listeners
      */
-    @EventListener(MissionEvent::class)
-    fun handleMissionEvent(event: MissionEvent) {
+    @EventListener(UpdateMissionEvent::class)
+    fun handleUpdateMissionEvent(event: UpdateMissionEvent) {
         logger.info("Received mission event for mission ${event.mission.id}")
         val missionId = event.mission.id
 

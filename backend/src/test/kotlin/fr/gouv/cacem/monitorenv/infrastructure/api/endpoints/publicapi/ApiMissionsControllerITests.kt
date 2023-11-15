@@ -12,7 +12,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.MissionEvent
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateMissionEvent
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
@@ -38,7 +38,7 @@ import java.time.ZonedDateTime
 import java.util.*
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
-@WebMvcTest(value = [ApiMissionsController::class, SSEController::class])
+@WebMvcTest(value = [ApiMissionsController::class, SSEMissionController::class])
 class ApiMissionsControllerITests {
     @Autowired private lateinit var mockMvc: MockMvc
 
@@ -58,7 +58,7 @@ class ApiMissionsControllerITests {
 
     @Autowired private lateinit var applicationEventPublisher: ApplicationEventPublisher
 
-    @Autowired private lateinit var sseController: SSEController
+    @Autowired private lateinit var sseMissionController: SSEMissionController
 
     @Test
     fun `Should create a new mission`() {
@@ -328,7 +328,7 @@ class ApiMissionsControllerITests {
         val multipolygonString =
             "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))"
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
-        val missionEvent = MissionEvent(
+        val updateMissionEvent = UpdateMissionEvent(
             mission = MissionEntity(
                 id = 132,
                 missionTypes = listOf(MissionTypeEnum.SEA),
@@ -351,7 +351,7 @@ class ApiMissionsControllerITests {
             override fun run() {
                 try {
                     sleep(250)
-                    applicationEventPublisher.publishEvent(missionEvent)
+                    applicationEventPublisher.publishEvent(updateMissionEvent)
                 } catch (ex: InterruptedException) {
                     println(ex)
                 }
@@ -382,7 +382,7 @@ class ApiMissionsControllerITests {
         val multipolygonString =
             "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))"
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
-        val missionEvent = MissionEvent(
+        val updateMissionEvent = UpdateMissionEvent(
             mission = MissionEntity(
                 id = 666,
                 missionTypes = listOf(MissionTypeEnum.SEA),
@@ -405,7 +405,7 @@ class ApiMissionsControllerITests {
             override fun run() {
                 try {
                     sleep(250)
-                    applicationEventPublisher.publishEvent(missionEvent)
+                    applicationEventPublisher.publishEvent(updateMissionEvent)
                 } catch (ex: InterruptedException) {
                     println(ex)
                 }

@@ -11,7 +11,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionContr
 import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreaRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.MissionEvent
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateMissionEvent
 import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationEventPublisher
 
@@ -100,7 +100,7 @@ class CreateOrUpdateMission(
 
         logger.info("Sending CREATE/UPDATE event for mission id ${savedMission.mission.id}.")
         eventPublisher.publishEvent(
-            MissionEvent(savedMission.mission),
+            UpdateMissionEvent(savedMission.mission),
         )
 
         return savedMission.mission
