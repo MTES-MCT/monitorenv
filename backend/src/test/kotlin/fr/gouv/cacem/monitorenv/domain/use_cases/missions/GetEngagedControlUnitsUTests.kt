@@ -96,7 +96,7 @@ class GetEngagedControlUnitsUTests {
             .willReturn(
                 listOf(
                     firstMission,
-                    secondMission
+                    secondMission,
                 ),
             )
 

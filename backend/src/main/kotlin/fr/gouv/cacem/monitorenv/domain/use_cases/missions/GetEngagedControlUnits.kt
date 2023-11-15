@@ -3,6 +3,8 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.config.UseCase
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.ControlUnitToMissionSources
 import org.slf4j.LoggerFactory
 import java.time.ZonedDateTime
@@ -23,31 +25,23 @@ class GetEngagedControlUnits(private val getFullMissions: GetFullMissions) {
             seaFronts = null,
         )
 
-        val controlUnitsIdsAndMissionSources = openedMissions
-            .flatMap {
-                // We flatten (and duplicate) the control unit key
-                it.mission.controlUnits.map { controlUnit ->
-                    logger.info("DBG ${controlUnit.id} - ${controlUnit.name}")
-                    Pair(controlUnit, it.mission.missionSource)
-                }
+        val controlUnitToMissionSources = openedMissions.flatMap { mission ->
+            mission.mission.controlUnits.map { controlUnit ->
+                Pair(controlUnit, mission.mission.missionSource)
             }
-
-        val groupedControlUnitsIdsAndMissionSources = controlUnitsIdsAndMissionSources
-            // We group by control unit id, to de-duplicate
-            .groupBy { it.first.id }
-            .map { entry ->
-                Pair(entry.key, entry.value.map { it.second }.distinct())
-            }
-
-        val groupedControlUnitsAndMissionSources = groupedControlUnitsIdsAndMissionSources.map { entry ->
-            val controlUnit = controlUnitsIdsAndMissionSources
-                .first { controlUnit -> controlUnit.first.id == entry.first }.first
-
-            Pair(controlUnit, entry.second)
         }
+            .groupBy { it.first.id }
+            .map { entry: Map.Entry<Int, List<Pair<LegacyControlUnitEntity, MissionSourceEnum>>> ->
+                // As we grouped by controlUnit, all control units in Pair<LegacyControlUnitEntity, MissionSourceEnum> are equals
+                val controlUnit = entry.value.first().first
 
-        logger.info("Found ${groupedControlUnitsAndMissionSources.size} engaged control unit(s).")
+                val missionSources = entry.value.map { it.second }.distinct()
 
-        return groupedControlUnitsAndMissionSources
+                Pair(controlUnit, missionSources)
+            }
+
+        logger.info("Found ${controlUnitToMissionSources.size} engaged control unit(s).")
+
+        return controlUnitToMissionSources
     }
 }
