@@ -27,7 +27,8 @@
 // IN THE SOFTWARE.
 
 import { EventSourceNotAvailableError } from './ReconnectingEventSourceError'
-import { ReconnectingEventSourceInit } from './ReconnectingEventSourceInit'
+
+import type { ReconnectingEventSourceInit } from './ReconnectingEventSourceInit'
 
 type EventType<T extends string> = T extends keyof EventSourceEventMap ? EventSourceEventMap[T] : MessageEvent<any>
 type EventListenerType<T extends string> = (this: EventSource, event: EventType<T>) => any
@@ -102,6 +103,7 @@ export class ReconnectingEventSource implements EventSource {
     this._start()
   }
 
+  // @ts-ignore
   dispatchEvent(event: Event): boolean {
     throw new Error('Method not implemented.')
   }
@@ -180,14 +182,17 @@ export class ReconnectingEventSource implements EventSource {
     }
   }
 
+  // @ts-ignore
   onopen(event: Event) {
     // may be overridden
   }
 
+  // @ts-ignore
   onerror(event: Event) {
     // may be overridden
   }
 
+  // @ts-ignore
   onmessage(event: MessageEvent) {
     // may be overridden
   }
@@ -219,6 +224,7 @@ export class ReconnectingEventSource implements EventSource {
   addEventListener<K extends string>(
     type: K,
     listener: EventListenerType<K>,
+    // @ts-ignore
     options?: boolean | AddEventListenerOptions
   ): void {
     // We don't support the options arg at the moment
@@ -249,6 +255,7 @@ export class ReconnectingEventSource implements EventSource {
   removeEventListener<K extends string>(
     type: K,
     listener: EventListenerType<K>,
+    // @ts-ignore
     options?: boolean | EventListenerOptions
   ): void {
     // We don't support the options arg at the moment
