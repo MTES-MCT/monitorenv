@@ -58,7 +58,7 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       reduce(
         reportings,
         (features, reporting) => {
-          if (reporting && reporting.geom && reporting.id !== activeReportingId) {
+          if (reporting && reporting.geom) {
             features.push(getReportingZoneFeature(reporting, Layers.REPORTINGS.code))
           }
 
@@ -66,7 +66,7 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
         },
         [] as Feature[]
       ) || [],
-    [reportings, activeReportingId]
+    [reportings]
   )
 
   const reportingsPointOrZone = useMemo(() => {

@@ -23,16 +23,23 @@ export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
 
   const listener = useAppSelector(state => state.draw.listener)
   const attachReportingListener = useAppSelector(state => state.attachReportingToMission.attachReportingListener)
+
+  const hasNoReportingConflict = useMemo(() => {
+    if (!selectedReportingIdOnMap && !!activeReportingId) {
+      return true
+    }
+
+    return !!selectedReportingIdOnMap && activeReportingId === selectedReportingIdOnMap
+  }, [activeReportingId, selectedReportingIdOnMap])
+
   // we don't want to display reportings on the map if the user so decides (displayMissionEditingLayer variable)
   // or if user have interaction on map (edit mission zone, attach reporting to mission)
+  // or if user selected on map an other reporting (to avoid conflict)
   const isLayerVisible = useMemo(
-    () =>
-      displayReportingEditingLayer &&
-      !listener &&
-      !attachReportingListener &&
-      selectedReportingIdOnMap === activeReportingId,
-    [displayReportingEditingLayer, listener, attachReportingListener, activeReportingId, selectedReportingIdOnMap]
+    () => displayReportingEditingLayer && !listener && !attachReportingListener && hasNoReportingConflict,
+    [displayReportingEditingLayer, listener, attachReportingListener, hasNoReportingConflict]
   )
+
   const editingReportingVectorSourceRef = useRef() as MutableRefObject<VectorSource>
   const GetEditingReportingVectorSource = () => {
     if (editingReportingVectorSourceRef.current === undefined) {
