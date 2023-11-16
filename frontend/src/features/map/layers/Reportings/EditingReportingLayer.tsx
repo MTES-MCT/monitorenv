@@ -11,10 +11,16 @@ import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../BaseMap'
 
 export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
-  const { activeReportingId, reportings = { reporting: {} } } = useAppSelector(state => state.reporting)
-  const { displayReportingEditingLayer } = useAppSelector(state => state.global)
+  const {
+    activeReportingId,
+    reportings = { reporting: {} },
+    selectedReportingIdOnMap
+  } = useAppSelector(state => state.reporting)
+  const displayReportingEditingLayer = useAppSelector(state => state.global.displayReportingEditingLayer)
+  const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
 
   const editingReporting = activeReportingId ? reportings[activeReportingId].reporting : undefined
+  const displayEditingLayer = displayReportingEditingLayer && selectedReportingIdOnMap === activeReportingId
 
   const editingReportingVectorSourceRef = useRef() as MutableRefObject<VectorSource>
   const GetEditingReportingVectorSource = () => {
@@ -23,15 +29,6 @@ export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
     }
 
     return editingReportingVectorSourceRef.current
-  }
-
-  const editingReportingActionsVectorSourceRef = useRef() as MutableRefObject<VectorSource>
-  const GetEditingReportingActionsVectorSource = () => {
-    if (editingReportingActionsVectorSourceRef.current === undefined) {
-      editingReportingActionsVectorSourceRef.current = new VectorSource()
-    }
-
-    return editingReportingActionsVectorSourceRef.current
   }
 
   const editingReportingVectorLayerRef = useRef() as MutableRefObject<VectorLayerWithName>
@@ -53,6 +50,16 @@ export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
   }, [])
 
   useEffect(() => {
+    const feature = GetEditingReportingVectorSource().getFeatureById(
+      `${Layers.REPORTING_SELECTED.code}:${activeReportingId}`
+    )
+
+    feature?.setProperties({
+      overlayCoordinates: overlayCoordinates.reportings
+    })
+  }, [overlayCoordinates, activeReportingId])
+
+  useEffect(() => {
     if (map) {
       const layersCollection = map.getLayers()
       layersCollection.push(GetSelectedReportingVectorLayer())
@@ -66,12 +73,12 @@ export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
   }, [map, GetSelectedReportingVectorLayer])
 
   useEffect(() => {
-    GetSelectedReportingVectorLayer()?.setVisible(displayReportingEditingLayer)
-  }, [displayReportingEditingLayer, GetSelectedReportingVectorLayer])
+    GetSelectedReportingVectorLayer()?.setVisible(displayEditingLayer)
+  }, [displayEditingLayer, GetSelectedReportingVectorLayer])
 
   useEffect(() => {
     GetEditingReportingVectorSource()?.clear(true)
-    GetEditingReportingActionsVectorSource()?.clear(true)
+    GetEditingReportingVectorSource()?.clear(true)
     if (editingReporting) {
       GetEditingReportingVectorSource()?.addFeature(
         getEditingReportingZoneFeature(editingReporting, Layers.REPORTING_SELECTED.code)

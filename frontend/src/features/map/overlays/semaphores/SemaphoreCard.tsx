@@ -3,8 +3,9 @@ import { useCallback, useState } from 'react'
 import { Tooltip, Whisper } from 'rsuite'
 import styled from 'styled-components'
 
+import { Layers } from '../../../../domain/entities/layers/constants'
 import { ReportingSourceEnum } from '../../../../domain/entities/reporting'
-import { setOverlayCoordinates, ReportingContext } from '../../../../domain/shared_slices/Global'
+import { ReportingContext, removeOverlayCoordinatesByName } from '../../../../domain/shared_slices/Global'
 import { resetSelectedSemaphore } from '../../../../domain/shared_slices/SemaphoresSlice'
 import { addReporting } from '../../../../domain/use_cases/reporting/addReporting'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
@@ -52,7 +53,7 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
 
   const handleCloseOverlay = useCallback(() => {
     dispatch(resetSelectedSemaphore())
-    dispatch(setOverlayCoordinates(undefined))
+    dispatch(removeOverlayCoordinatesByName(Layers.SEMAPHORES.code))
   }, [dispatch])
 
   // TODO refacto to clean state when one tooltip was click and the other is hover

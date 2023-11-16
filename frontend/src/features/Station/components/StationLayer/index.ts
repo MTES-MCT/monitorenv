@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import { getStationPointFeature, getFeatureStyle } from './utils'
 import { useGetStationsQuery } from '../../../../api/stationsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
-import { setOverlayCoordinates } from '../../../../domain/shared_slices/Global'
+import { removeOverlayCoordinatesByName } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { FrontendError } from '../../../../libs/FrontendError'
@@ -30,7 +30,8 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   ;(vectorLayerRef.current as VectorLayerWithName).name = Layers.STATIONS.code
 
   const dispatch = useAppDispatch()
-  const global = useAppSelector(state => state.global)
+  const displayStationLayer = useAppSelector(state => state.global.displayStationLayer)
+  const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
   const station = useAppSelector(state => state.station)
   const listener = useAppSelector(state => state.draw.listener)
 
@@ -56,13 +57,13 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
 
     dispatch(stationActions.selectFeatureId(featureId))
     dispatch(stationActions.hightlightFeatureIds([featureId]))
-    dispatch(setOverlayCoordinates(undefined))
     dispatch(
       controlUnitListDialogActions.setFilter({
         key: 'stationId',
         value: featureProps.station.id
       })
     )
+    dispatch(removeOverlayCoordinatesByName(Layers.STATIONS.code))
   }, [dispatch, mapClickEvent])
 
   // ---------------------------------------------------------------------------
@@ -82,17 +83,17 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       feature.setProperties({
         isHighlighted: station.highlightedFeatureIds.includes(featureId),
         isSelected: featureId === station.selectedFeatureId,
-        overlayCoordinates: featureId === station.selectedFeatureId ? global.overlayCoordinates : undefined
+        overlayCoordinates: featureId === station.selectedFeatureId ? overlayCoordinates.stations : undefined
       })
     })
-  }, [station.highlightedFeatureIds, station.selectedFeatureId, global.overlayCoordinates])
+  }, [station.highlightedFeatureIds, station.selectedFeatureId, overlayCoordinates])
 
   // ---------------------------------------------------------------------------
   // Features Visibility
 
   useEffect(() => {
-    vectorLayerRef.current?.setVisible(global.displayStationLayer && !listener)
-  }, [global.displayStationLayer, listener])
+    vectorLayerRef.current?.setVisible(displayStationLayer && !listener)
+  }, [displayStationLayer, listener])
 
   useEffect(() => {
     vectorSourceRef.current.clear(true)

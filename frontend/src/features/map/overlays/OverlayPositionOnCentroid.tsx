@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { getOverlayPositionForCentroid, getTopLeftMargin } from './position'
-import { setOverlayCoordinates } from '../../../domain/shared_slices/Global'
+import { removeAllOverlayCoordinates, setOverlayCoordinatesByName } from '../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useMoveOverlayWhenDragging } from '../../../hooks/useMoveOverlayWhenDragging'
@@ -63,7 +63,7 @@ export function OverlayPositionOnCentroid({
       olOverlayObjectRef.current.setOffset(INITIAL_OFFSET_VALUE)
     }
     if (feature) {
-      currentCoordinates.current = feature?.getGeometry()?.getCoordinates()
+      currentCoordinates.current = feature.getGeometry().getExtent()
     } else {
       currentCoordinates.current = undefined
     }
@@ -73,7 +73,7 @@ export function OverlayPositionOnCentroid({
     const view = map.getView()
     view.on('change:resolution', () => {
       if (overlayCoordinates) {
-        dispatch(setOverlayCoordinates(undefined))
+        dispatch(removeAllOverlayCoordinates())
       }
     })
   }, [dispatch, map, overlayCoordinates])
@@ -109,13 +109,14 @@ export function OverlayPositionOnCentroid({
           const nextYPixelCenter = pixel[1] + offset[1] + overlayTopLeftMargin[0]
 
           const nextCoordinates = map.getCoordinateFromPixel([nextXPixelCenter, nextYPixelCenter])
-          dispatch(setOverlayCoordinates(nextCoordinates))
+          const featureContext = feature.getId().split(':')[0]
+          dispatch(setOverlayCoordinatesByName({ coordinates: nextCoordinates, name: featureContext }))
 
           isThrottled.current = false
         }
       }, delay)
     },
-    [dispatch, map, overlayTopLeftMargin]
+    [dispatch, map, overlayTopLeftMargin, feature]
   )
 
   useEffect(() => {

@@ -13,11 +13,13 @@ import type { BaseMapChildrenProps } from '../../BaseMap'
 export function SelectedReportingLayer({ map }: BaseMapChildrenProps) {
   const { activeReportingId, selectedReportingIdOnMap } = useAppSelector(state => state.reporting)
   const { displayReportingSelectedLayer } = useAppSelector(state => state.global)
+  const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
   const { selectedReporting } = useGetReportingsQuery(undefined, {
     selectFromResult: ({ data }) => ({
       selectedReporting: selectedReportingIdOnMap && data?.entities[selectedReportingIdOnMap]
     })
   })
+
   const displaySelectedReporting = displayReportingSelectedLayer && selectedReportingIdOnMap !== activeReportingId
 
   const selectedReportingVectorSourceRef = useRef() as MutableRefObject<VectorSource>
@@ -46,6 +48,16 @@ export function SelectedReportingLayer({ map }: BaseMapChildrenProps) {
 
     return selectedReportingVectorLayerRef.current
   }, [])
+
+  useEffect(() => {
+    const feature = GetSelectedReportingVectorSource().getFeatureById(
+      `${Layers.REPORTING_SELECTED.code}:${selectedReportingIdOnMap}`
+    )
+
+    feature?.setProperties({
+      overlayCoordinates: overlayCoordinates.reportings
+    })
+  }, [overlayCoordinates, selectedReportingIdOnMap])
 
   useEffect(() => {
     if (map) {

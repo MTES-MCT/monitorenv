@@ -3,18 +3,19 @@ import { isEmpty } from 'lodash'
 import { getCenter } from 'ol/extent'
 import { GeoJSON } from 'ol/format' */
 import { THEME } from '@mtes-mct/monitor-ui'
+import { isEmpty } from 'lodash'
 import { LineString, /* MultiLineString, */ Point } from 'ol/geom'
 import { Icon, Stroke, Style } from 'ol/style'
 
 const lineStyle = new Style({
   geometry: feature => {
     const overlayPostion = feature.get('overlayCoordinates')
-    if (!overlayPostion) {
+    if (isEmpty(overlayPostion)) {
       return undefined
     }
     const featureGeometry = (feature?.getGeometry() as Point)?.getCoordinates()
 
-    return new LineString([overlayPostion, featureGeometry])
+    return new LineString([overlayPostion.coordinates, featureGeometry])
   },
   stroke: new Stroke({
     color: THEME.color.slateGray,

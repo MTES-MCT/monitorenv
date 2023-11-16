@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { getReportingZoneFeature } from './reportingsGeometryHelpers'
 import { reportingPinStyleFn } from './style'
 import { Layers } from '../../../../domain/entities/layers/constants'
+import { removeOverlayCoordinatesByName } from '../../../../domain/shared_slices/Global'
 import { reportingActions } from '../../../../domain/shared_slices/reporting'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -17,8 +18,7 @@ import type { Geometry } from 'ol/geom'
 
 export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
-  const { displayReportingsLayer, overlayCoordinates } = useAppSelector(state => state.global)
-  const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
+  const displayReportingsLayer = useAppSelector(state => state.global.displayReportingsLayer)
   const listener = useAppSelector(state => state.draw.listener)
 
   const { reportings } = useGetFilteredReportingsQuery()
@@ -64,16 +64,6 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   }, [])
 
   useEffect(() => {
-    GetVectorSource().forEachFeature(feature => {
-      const selectedReporting = `${Layers.REPORTINGS.code}:${activeReportingId}`
-      feature.setProperties({
-        isSelected: feature.getId() === selectedReporting,
-        overlayCoordinates: feature.getId() === selectedReporting ? overlayCoordinates : undefined
-      })
-    })
-  }, [overlayCoordinates, activeReportingId])
-
-  useEffect(() => {
     if (map) {
       map.getLayers().push(GetVectorLayer())
 
@@ -100,6 +90,7 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       if (feature.getId()?.toString()?.includes(Layers.REPORTINGS.code)) {
         const { id } = feature.getProperties()
         dispatch(reportingActions.setSelectedReportingIdOnMap(id))
+        dispatch(removeOverlayCoordinatesByName(Layers.REPORTINGS.code))
       }
     }
   }, [dispatch, mapClickEvent])
