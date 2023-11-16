@@ -1,6 +1,6 @@
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { type MutableRefObject, useCallback, useEffect, useRef } from 'react'
+import { type MutableRefObject, useCallback, useEffect, useRef, useMemo } from 'react'
 
 import { getReportingZoneFeature } from './reportingsGeometryHelpers'
 import { selectedReportingStyleFn } from './style'
@@ -20,7 +20,15 @@ export function SelectedReportingLayer({ map }: BaseMapChildrenProps) {
     })
   })
 
-  const displaySelectedReporting = displayReportingSelectedLayer && selectedReportingIdOnMap !== activeReportingId
+  const hasNoReportingConflict = useMemo(() => {
+    if (!activeReportingId && !!selectedReportingIdOnMap) {
+      return true
+    }
+
+    return !!activeReportingId && activeReportingId !== selectedReportingIdOnMap
+  }, [activeReportingId, selectedReportingIdOnMap])
+
+  const displaySelectedReporting = displayReportingSelectedLayer && hasNoReportingConflict
 
   const selectedReportingVectorSourceRef = useRef() as MutableRefObject<VectorSource>
   const GetSelectedReportingVectorSource = () => {

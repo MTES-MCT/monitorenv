@@ -17,7 +17,7 @@ type ReportingState = {
   activeReportingId: number | string | undefined
   isConfirmCancelDialogVisible: boolean
   reportings: SelectedReportingType
-  selectedReportingIdOnMap: number | undefined
+  selectedReportingIdOnMap: number | string | undefined
 }
 
 const initialState: ReportingState = {
@@ -39,6 +39,7 @@ const reportingSlice = createSlice({
     },
     setActiveReportingId(state, action: PayloadAction<number | string | undefined>) {
       state.activeReportingId = action.payload
+      state.selectedReportingIdOnMap = action.payload
     },
     setIsConfirmCancelDialogVisible(state, action: PayloadAction<boolean>) {
       state.isConfirmCancelDialogVisible = action.payload
