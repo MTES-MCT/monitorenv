@@ -13,7 +13,7 @@ export function OverlayCard({ children, isCloseButtonHidden = false, onClose, ti
   return (
     <StyledMapMenuDialogContainer {...props}>
       <MapMenuDialog.Header>
-        <StyledMapMenuDialogTitle>{title}</StyledMapMenuDialogTitle>
+        <StyledMapMenuDialogTitle title={title}>{title}</StyledMapMenuDialogTitle>
         <MapMenuDialog.CloseButton
           Icon={Icon.Close}
           onClick={onClose}
@@ -30,7 +30,10 @@ const StyledMapMenuDialogContainer = styled(MapMenuDialog.Container)`
 `
 
 const StyledMapMenuDialogTitle = styled(MapMenuDialog.Title)`
+  display: block;
   flex-grow: 1;
-  margin-left: 32px;
+  overflow: hidden;
   text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `
