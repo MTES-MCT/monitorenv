@@ -3,7 +3,7 @@ import { useField } from 'formik'
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-import { CONTROL_UNIT_CONTACT_NAMES, CONTROL_UNIT_CONTACT_NAMES_AS_OPTIONS } from './constants'
+import { CONTROL_UNIT_CONTACT_NAMES, SORTED_CONTROL_UNIT_CONTACT_NAMES_AS_OPTIONS } from './constants'
 import { ControlUnit } from '../../../../../domain/entities/controlUnit'
 
 export function FormikNameSelect() {
@@ -58,7 +58,7 @@ export function FormikNameSelect() {
       label="Nom du contact"
       name="name"
       onChange={handleChange}
-      options={CONTROL_UNIT_CONTACT_NAMES_AS_OPTIONS}
+      options={SORTED_CONTROL_UNIT_CONTACT_NAMES_AS_OPTIONS}
       searchable
       value={field.value}
     />

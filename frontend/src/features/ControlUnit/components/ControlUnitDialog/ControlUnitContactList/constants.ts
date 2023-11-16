@@ -2,6 +2,7 @@ import { getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import { object, string } from 'yup'
 
 import { ControlUnit } from '../../../../../domain/entities/controlUnit'
+import { sortCollectionByLocalizedProps } from '../../../../../utils/sortCollectionByLocalizedProps'
 
 import type { ControlUnitContactFormValues } from './types'
 
@@ -27,9 +28,9 @@ export const INITIAL_CONTROL_UNIT_CONTACT_FORM_VALUES: ControlUnitContactFormVal
   phone: undefined
 }
 
-export const CONTROL_UNIT_CONTACT_NAMES: string[] = Object.values(ControlUnit.ControlUnitContactName)
-export const CONTROL_UNIT_CONTACT_NAMES_AS_OPTIONS = [
-  ...getOptionsFromLabelledEnum(ControlUnit.ControlUnitContactName),
+export const CONTROL_UNIT_CONTACT_NAMES: string[] = Object.values(ControlUnit.ControlUnitContactName).sort()
+export const SORTED_CONTROL_UNIT_CONTACT_NAMES_AS_OPTIONS = [
+  ...sortCollectionByLocalizedProps(['label'], getOptionsFromLabelledEnum(ControlUnit.ControlUnitContactName)),
   {
     label: 'Créer un nom personnalisé',
     value: 'SWITCH_TO_CUSTOM_NAME'
