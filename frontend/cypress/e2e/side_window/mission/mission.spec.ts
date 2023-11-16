@@ -1,14 +1,7 @@
-import EventSource, { sources } from 'eventsourcemock';
-
 context('Mission', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
-    cy.visit(`/side_window`, {
-      onBeforeLoad (window) {
-        Object.defineProperty(window, 'EventSource', { value: EventSource });
-        Object.defineProperty(window, 'mockEventSources', { value: sources });
-      }
-    })
+    cy.visit(`/side_window`)
   })
 
   it('A mission should be created', () => {
@@ -184,7 +177,9 @@ context('Mission', () => {
     cy.wait('@getEngagedControlUnits')
 
     // Then
-    cy.get('body').contains( 'Cette unité est actuellement sélectionnée dans une autre mission en cours ouverte par le CACEM.')
+    cy.get('body').contains(
+      'Cette unité est actuellement sélectionnée dans une autre mission en cours ouverte par le CACEM.'
+    )
   })
 
   it('A warning should not be displayed When it is an edited mission', () => {
@@ -197,70 +192,9 @@ context('Mission', () => {
     cy.wait('@getEngagedControlUnits')
 
     // Then
-    cy.get('body').should('not.contain', 'Cette unité est actuellement sélectionnée dans une autre mission en cours ouverte par le CACEM.')
-  })
-
-  it('The mission form Should be updated When a mission update event is received', () => {
-    // Given
-    cy.wait(200)
-    cy.get('*[data-cy="edit-mission-43"]').click({force: true})
-
-    cy.wait(500)
-    cy.window().its('mockEventSources' as any).then(mockEventSources => {
-      mockEventSources["/api/v1/missions/43/sse"].emitOpen()
-      mockEventSources["/api/v1/missions/43/sse"].emit(
-        "MISSION_UPDATE",
-        new MessageEvent('MISSION_UPDATE', {
-          name: "MISSION_UPDATE",
-          bubbles: true,
-          data: JSON.stringify({
-            "id": 43,
-            "missionTypes": ["SEA"],
-            "controlUnits": [{
-              "id": 10018,
-              "administration": "DREAL / DEAL",
-              "isArchived": false,
-              "name": "DREAL Pays-de-La-Loire",
-              "resources": [],
-              "contact": "Full contact"
-            }],
-            // Changed field
-            "openBy": "LTH",
-            // Changed field
-            "closedBy": "LTH",
-            "observationsCacem": "Anything box film quality. Lot series agent out rule end young pressure.",
-            // Changed field
-            "observationsCnsp": "Encore une observation",
-            "facade": "NAMO",
-            "geom": {
-              "type": "MultiPolygon",
-              "coordinates": [[[[-4.14598393, 49.02650252], [-3.85722498, 48.52088004], [-3.54255983, 48.92233858], [-3.86251979, 49.15131242], [-4.09368042, 49.18079556], [-4.14598393, 49.02650252]]]]
-            },
-            "startDateTimeUtc": "2024-01-01T06:14:55.887549Z",
-            "endDateTimeUtc": "2024-01-08T16:55:41.314507Z",
-            "envActions": [],
-            "missionSource": "MONITORENV",
-            "isClosed": false,
-            "hasMissionOrder": false,
-            "isUnderJdp": false,
-            "attachedReportingIds": [],
-            "attachedReportings": [],
-            "detachedReportingIds": [],
-            "detachedReportings": []
-          })
-        }))
-    })
-
-    cy.intercept('PUT', '/bff/v1/missions/43').as('updateMission')
-    cy.clickButton('Enregistrer et quitter')
-
-    // Then
-    cy.wait('@updateMission').then(({ response }) => {
-      if (!response) return
-
-      expect(response.body.openBy).equal("LTH")
-      expect(response.body.closedBy).equal("LTH")
-      expect(response.body.observationsCnsp).equal("Encore une observation")
-    })
+    cy.get('body').should(
+      'not.contain',
+      'Cette unité est actuellement sélectionnée dans une autre mission en cours ouverte par le CACEM.'
+    )
   })
 })

@@ -1,8 +1,5 @@
-import { logSoftError } from '@mtes-mct/monitor-ui'
-
 import { monitorenvPrivateApi, monitorenvPublicApi } from './api'
 import { ControlUnit } from '../domain/entities/controlUnit'
-import { ReconnectingEventSource } from '../libs/ReconnectingEventSource'
 
 import type { Mission } from '../domain/entities/missions'
 
@@ -46,50 +43,6 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
       })
     }),
     getMission: build.query<Mission, number>({
-      async onCacheEntryAdded(id, { cacheDataLoaded, cacheEntryRemoved, updateCachedData }) {
-        const url = `/api/v1/missions/${id}/sse`
-
-        try {
-          const eventSource = new ReconnectingEventSource(url)
-          // eslint-disable-next-line no-console
-          console.log(`SSE: listening for updates of mission id ${id}...`)
-
-          // wait for the initial query to resolve before proceeding
-          await cacheDataLoaded
-
-          const listener = (event: MessageEvent) => {
-            const mission = JSON.parse(event.data) as Mission
-            // eslint-disable-next-line no-console
-            console.log(`SSE: received an update for mission id ${mission.id}.`)
-
-            updateCachedData(draft => {
-              const { envActions } = draft
-
-              return {
-                ...mission,
-                envActions
-              }
-            })
-          }
-
-          eventSource.addEventListener('MISSION_UPDATE', listener)
-
-          // cacheEntryRemoved will resolve when the cache subscription is no longer active
-          await cacheEntryRemoved
-
-          // perform cleanup steps once the `cacheEntryRemoved` promise resolves
-          eventSource.close()
-        } catch (e) {
-          logSoftError({
-            context: {
-              url
-            },
-            isSideWindowError: true,
-            message: "SSE: Can't connect or receive messages",
-            originalError: e
-          })
-        }
-      },
       providesTags: (_, __, id) => [{ id, type: 'Missions' }],
       query: id => `/v1/missions/${id}`
     }),
