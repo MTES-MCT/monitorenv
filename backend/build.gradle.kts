@@ -64,10 +64,10 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-cache:3.1.4")
     api("com.github.ben-manes.caffeine:caffeine:3.1.5")
     api("org.springframework.security:spring-security-test:6.0.2")
-    api("org.testcontainers:testcontainers:1.19.0")
+    api("org.testcontainers:testcontainers:1.19.2")
     api("io.hypersistence:hypersistence-utils-hibernate-62:3.5.2")
     api("org.assertj:assertj-core:3.24.2")
-    api("org.testcontainers:postgresql:1.19.0")
+    api("org.testcontainers:postgresql:1.19.2")
     api("org.springframework.boot:spring-boot-starter-log4j2:3.1.4")
     api("io.sentry:sentry:6.21.0")
     runtimeOnly("org.springframework.boot:spring-boot-devtools:3.1.4")
@@ -76,7 +76,7 @@ dependencies {
     testImplementation("com.squareup.okhttp3:mockwebserver:4.10.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test:3.1.4")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc:3.0.0")
-    testImplementation("org.testcontainers:junit-jupiter:1.19.0")
+    testImplementation("org.testcontainers:junit-jupiter:1.19.2")
     testImplementation("net.java.dev.jna:jna:5.13.0")
 }
 
