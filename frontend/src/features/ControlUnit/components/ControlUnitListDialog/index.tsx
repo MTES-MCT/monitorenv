@@ -52,9 +52,9 @@ export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
         <MapMenuDialog.Title>Unités de contrôle</MapMenuDialog.Title>
         <MapMenuDialog.VisibilityButton
           accent={Accent.SECONDARY}
-          Icon={global.displayBaseLayer ? Icon.Display : Icon.Hide}
+          Icon={displayBaseLayer ? Icon.Display : Icon.Hide}
           onClick={toggleBaseLayer}
-          title={global.displayBaseLayer ? 'Masquer les bases' : 'Afficher les bases'}
+          title={displayBaseLayer ? 'Masquer les bases' : 'Afficher les bases'}
         />
       </MapMenuDialog.Header>
       <MapMenuDialog.Body>
