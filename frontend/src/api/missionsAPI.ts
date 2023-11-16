@@ -50,11 +50,12 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
       })
     }),
     getMission: builder.query<Mission, number>({
+      keepUnusedDataFor: 0,
       async onCacheEntryAdded(id, { cacheDataLoaded, cacheEntryRemoved, updateCachedData }) {
         const url = `/api/v1/missions/${id}/sse`
 
         try {
-          const eventSource = new ReconnectingEventSource(url)
+          const eventSource = new ReconnectingEventSource(url, { max_retry_time: 10000 })
           // eslint-disable-next-line no-console
           console.log(`SSE: listening for updates of mission id ${id}...`)
 
