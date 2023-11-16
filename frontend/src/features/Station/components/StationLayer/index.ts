@@ -9,7 +9,6 @@ import { removeOverlayCoordinatesByName } from '../../../../domain/shared_slices
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { FrontendError } from '../../../../libs/FrontendError'
-import { controlUnitListDialogActions } from '../../../ControlUnit/components/ControlUnitListDialog/slice'
 import { stationActions } from '../../slice'
 
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
@@ -53,16 +52,8 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       return
     }
 
-    const featureProps = feature.getProperties()
-
     dispatch(stationActions.selectFeatureId(featureId))
     dispatch(stationActions.hightlightFeatureIds([featureId]))
-    dispatch(
-      controlUnitListDialogActions.setFilter({
-        key: 'stationId',
-        value: featureProps.station.id
-      })
-    )
     dispatch(removeOverlayCoordinatesByName(Layers.STATIONS.code))
   }, [dispatch, mapClickEvent])
 
