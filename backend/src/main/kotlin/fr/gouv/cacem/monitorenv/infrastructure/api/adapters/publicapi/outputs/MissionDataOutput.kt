@@ -28,6 +28,30 @@ data class MissionDataOutput(
     val isGeometryComputedFromControls: Boolean,
 ) {
     companion object {
+        fun fromMissionDTO(mission: MissionEntity): MissionDataOutput {
+            requireNotNull(mission.id) { "a mission must have an id" }
+
+            return MissionDataOutput(
+                id = mission.id,
+                missionTypes = mission.missionTypes,
+                controlUnits = mission.controlUnits,
+                openBy = mission.openBy,
+                closedBy = mission.closedBy,
+                observationsCacem = mission.observationsCacem,
+                observationsCnsp = mission.observationsCnsp,
+                facade = mission.facade,
+                geom = mission.geom,
+                startDateTimeUtc = mission.startDateTimeUtc,
+                endDateTimeUtc = mission.endDateTimeUtc,
+                envActions = mission.envActions,
+                missionSource = mission.missionSource,
+                isClosed = mission.isClosed,
+                hasMissionOrder = mission.hasMissionOrder,
+                isUnderJdp = mission.isUnderJdp,
+                isGeometryComputedFromControls = mission.isGeometryComputedFromControls,
+            )
+        }
+
         fun fromMissionEntity(mission: MissionEntity): MissionDataOutput {
             requireNotNull(mission.id) { "a mission must have an id" }
 
