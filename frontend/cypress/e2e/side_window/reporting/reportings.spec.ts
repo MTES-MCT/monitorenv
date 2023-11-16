@@ -82,7 +82,8 @@ context('Reportings', () => {
 
     cy.get('*[data-cy="edit-reporting-6"]').click({ force: true })
     cy.clickButton('Détacher la mission')
-    cy.wait(100)
+
+    cy.wait(500)
     cy.clickButton('Enregistrer et quitter')
 
     cy.wait('@updateReporting').then(({ request, response }) => {
