@@ -15,6 +15,7 @@ class SSEMissionController {
     private val logger = LoggerFactory.getLogger(SSEMissionController::class.java)
 
     private val MISSION_UPDATE_EVENT_NAME = "MISSION_UPDATE"
+    private val TWENTY_FOUR_HOURS = (24 * 60 * 60 * 1000).toLong()
 
     companion object {
         /**
@@ -28,7 +29,7 @@ class SSEMissionController {
      */
     fun registerListener(missionId: Int): SseEmitter {
         logger.info("New listener of mission updates for mission id $missionId.")
-        val sseEmitter = SseEmitter()
+        val sseEmitter = SseEmitter(TWENTY_FOUR_HOURS)
 
         val previousSseEmitters = sseStore[missionId] ?: listOf()
         sseStore[missionId] = previousSseEmitters + sseEmitter
@@ -42,6 +43,7 @@ class SSEMissionController {
 
     fun removeClient(sseEmitter: SseEmitter, missionId: Int) {
         logger.info("Removing a listener (for mission id $missionId)")
+        sseEmitter.complete()
         val sseEmitters = sseStore[missionId]
 
         if (sseEmitters == null) {
