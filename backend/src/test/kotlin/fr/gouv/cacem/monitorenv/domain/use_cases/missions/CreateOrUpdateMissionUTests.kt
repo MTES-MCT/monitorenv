@@ -38,14 +38,14 @@ class CreateOrUpdateMissionUTests {
     fun `execute Should throw an exception when input mission is null`() {
         // When
         val throwable =
-            Assertions.catchThrowable {
-                CreateOrUpdateMission(
-                    departmentRepository = departmentRepository,
-                    missionRepository = missionRepository,
-                    facadeRepository = facadeAreasRepository,
-                )
-                    .execute(null)
-            }
+                Assertions.catchThrowable {
+                    CreateOrUpdateMission(
+                                    departmentRepository = departmentRepository,
+                                    missionRepository = missionRepository,
+                                    facadeRepository = facadeAreasRepository,
+                            )
+                            .execute(null)
+                }
 
         // Then
         assertThat(throwable).isInstanceOf(IllegalArgumentException::class.java)
@@ -151,19 +151,19 @@ class CreateOrUpdateMissionUTests {
         given(facadeAreasRepository.findFacadeFromGeometry(anyOrNull())).willReturn("La Face Ade")
         given(departmentRepository.findDepartmentFromGeometry(anyOrNull())).willReturn("Quequ'part")
         given(missionRepository.save(anyOrNull()))
-            .willReturn(MissionDTO(mission = expectedCreatedMission))
+                .willReturn(MissionDTO(mission = expectedCreatedMission))
         given(missionRepository.findById(100)).willReturn(expectedCreatedMission)
 
         // When
         val createdMission =
-            CreateOrUpdateMission(
-                departmentRepository = departmentRepository,
-                missionRepository = missionRepository,
-                facadeRepository = facadeAreasRepository,
-            )
-                .execute(
-                    missionToCreate,
-                )
+                CreateOrUpdateMission(
+                                departmentRepository = departmentRepository,
+                                missionRepository = missionRepository,
+                                facadeRepository = facadeAreasRepository,
+                        )
+                        .execute(
+                                missionToCreate,
+                        )
 
         // Then
         verify(facadeAreasRepository, times(2)).findFacadeFromGeometry(argThat { this == polygon })
@@ -175,21 +175,27 @@ class CreateOrUpdateMissionUTests {
                             this ==
                                     missionToCreate.copy(
                                             facade = "La Face Ade",
-                                            department =
-                                            "Quequ'part",
-                                        )
-                                    is EnvActionSurveillanceEntity ->
-                                        it.copy(
-                                            facade = "La Face Ade",
-                                            department =
-                                            "Quequ'part",
-                                        )
-                                    else -> it
-                                }
-                            },
-                        )
-                },
-            )
+                                            envActions =
+                                                    missionToCreate.envActions?.map {
+                                                        when (it) {
+                                                            is EnvActionControlEntity ->
+                                                                    it.copy(
+                                                                            facade = "La Face Ade",
+                                                                            department =
+                                                                                    "Quequ'part",
+                                                                    )
+                                                            is EnvActionSurveillanceEntity ->
+                                                                    it.copy(
+                                                                            facade = "La Face Ade",
+                                                                            department =
+                                                                                    "Quequ'part",
+                                                                    )
+                                                            else -> it
+                                                        }
+                                                    },
+                                    )
+                        },
+                )
         verify(missionRepository, times(1)).findById(100)
         assertThat(createdMission).isEqualTo(expectedCreatedMission)
     }
