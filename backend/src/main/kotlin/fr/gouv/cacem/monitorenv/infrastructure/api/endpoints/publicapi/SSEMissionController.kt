@@ -13,47 +13,41 @@ import java.util.*
 class SSEMissionController {
 
     private val logger = LoggerFactory.getLogger(SSEMissionController::class.java)
+    val mutexLock = Any()
 
     private val MISSION_UPDATE_EVENT_NAME = "MISSION_UPDATE"
     private val TWENTY_FOUR_HOURS = (24 * 60 * 60 * 1000).toLong()
 
     companion object {
         /**
-         * This is used to stream missions to the listeners of a given missionId
+         * This is used to store the SSE listeners
          */
-        private val sseStore = HashMap<Int, List<SseEmitter>>()
+        private val sseStore = mutableListOf<SseEmitter>()
     }
 
     /**
      * This method register a listener for a given mission id
      */
-    fun registerListener(missionId: Int): SseEmitter {
-        logger.info("New listener of mission updates for mission id $missionId.")
+    fun registerListener(): SseEmitter {
+        logger.info("Adding new SSE listener of mission updates.")
         val sseEmitter = SseEmitter(TWENTY_FOUR_HOURS)
 
-        val previousSseEmitters = sseStore[missionId] ?: listOf()
-        sseStore[missionId] = previousSseEmitters + sseEmitter
+        synchronized(mutexLock) {
+            sseStore.add(sseEmitter)
+        }
 
-        sseEmitter.onCompletion { removeClient(sseEmitter, missionId) }
-        sseEmitter.onError { removeClient(sseEmitter, missionId) }
-        sseEmitter.onTimeout { removeClient(sseEmitter, missionId) }
+        sseEmitter.onTimeout { removeClient(sseEmitter) }
 
         return sseEmitter
     }
 
-    fun removeClient(sseEmitter: SseEmitter, missionId: Int) {
-        logger.info("Removing a listener (for mission id $missionId)")
-        sseEmitter.complete()
-        val sseEmitters = sseStore[missionId]
-
-        if (sseEmitters == null) {
-            logger.info("The listener could not be found in the map.")
-
-            return
+    fun removeClient(sseEmitter: SseEmitter) {
+        logger.info("Removing a SSE listener of mission updates.")
+        synchronized(mutexLock) {
+            sseStore.remove(sseEmitter)
         }
 
-        sseStore[missionId] = sseEmitters
-            .filter { storedEmitter -> storedEmitter.hashCode() != sseEmitter.hashCode() }
+        sseEmitter.complete()
     }
 
     /**
@@ -61,31 +55,34 @@ class SSEMissionController {
      */
     @EventListener(UpdateMissionEvent::class)
     fun handleUpdateMissionEvent(event: UpdateMissionEvent) {
-        logger.info("Received mission event for mission ${event.mission.id}")
+        logger.info("Received mission event for mission ${event.mission.id}.")
         val missionId = event.mission.id
 
-        /**
-         * Get the frontend connexions to stream to updated mission
-         */
-        val sseEmitters = sseStore[missionId] ?: return
-
-        logger.info("Sending update of mission $missionId to ${sseEmitters.size} listener(s)")
-        sseEmitters.forEach {
+        logger.info("Sending update of mission $missionId to ${sseStore.size} listener(s).")
+        val sseEmittersToRemove = sseStore.map { sseEmitter ->
             try {
                 val data = MissionDataOutput.fromMissionEntity(event.mission)
-                logger.info(data.toString())
                 val sseEvent = event()
                     .id(UUID.randomUUID().toString())
                     .name(MISSION_UPDATE_EVENT_NAME)
                     .data(data)
                     .build()
 
-                it.send(sseEvent)
+                sseEmitter.send(sseEvent)
 
-                it.complete()
+                sseEmitter.complete()
+
+                return@map null
             } catch (e: Exception) {
-                it.completeWithError(e)
+                sseEmitter.completeWithError(e)
+
+                return@map sseEmitter
             }
+        }.filterNotNull()
+
+        synchronized(mutexLock) {
+            sseStore.removeAll(sseEmittersToRemove)
         }
+        logger.info("Removed ${sseEmittersToRemove.size} SSE listeners of mission updates.")
     }
 }

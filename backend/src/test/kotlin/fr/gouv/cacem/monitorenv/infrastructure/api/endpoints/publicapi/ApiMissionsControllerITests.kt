@@ -15,7 +15,6 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateMissionEvent
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.catchThrowable
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.nullValue
 import org.junit.jupiter.api.Test
@@ -322,7 +321,7 @@ class ApiMissionsControllerITests {
     }
 
     @Test
-    fun `Should receive an event When listening to a given mission id`() {
+    fun `Should receive an event When listening to mission updates`() {
         // Given
         val wktReader = WKTReader()
         val multipolygonString =
@@ -359,7 +358,7 @@ class ApiMissionsControllerITests {
         }.start()
 
         // Then
-        val missionUpdateEvent = mockMvc.perform(get("/api/v1/missions/132/sse"))
+        val missionUpdateEvent = mockMvc.perform(get("/api/v1/missions/sse"))
             .andExpect(status().isOk)
             .andExpect(request().asyncStarted())
             .andExpect(request().asyncResult(nullValue()))
@@ -373,59 +372,5 @@ class ApiMissionsControllerITests {
         assertThat(missionUpdateEvent).contains(
             "data:{\"id\":132,\"missionTypes\":[\"SEA\"],\"controlUnits\":[],\"openBy\":null,\"closedBy\":null,\"observationsCacem\":null,\"observationsCnsp\":null,\"facade\":\"Outre-Mer\",\"geom\":{\"type\":\"MultiPolygon\",\"coordinates\":[[[[-4.54877817,48.30555988],[-4.54997332,48.30597601],[-4.54998501,48.30718823],[-4.5487929,48.30677461],[-4.54877817,48.30555988]]]]},\"startDateTimeUtc\":\"2022-01-15T04:50:09Z\",\"endDateTimeUtc\":\"2022-01-23T20:29:03Z\",\"envActions\":[],\"missionSource\":\"MONITORFISH\",\"isClosed\":false,\"hasMissionOrder\":false,\"isUnderJdp\":false,\"isGeometryComputedFromControls\":false}",
         )
-    }
-
-    @Test
-    fun `Should not receive an event When listening to another mission id`() {
-        // Given
-        val wktReader = WKTReader()
-        val multipolygonString =
-            "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))"
-        val polygon = wktReader.read(multipolygonString) as MultiPolygon
-        val updateMissionEvent = UpdateMissionEvent(
-            mission = MissionEntity(
-                id = 666,
-                missionTypes = listOf(MissionTypeEnum.SEA),
-                facade = "Outre-Mer",
-                geom = polygon,
-                observationsCnsp = null,
-                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                isDeleted = false,
-                missionSource = MissionSourceEnum.MONITORFISH,
-                isClosed = false,
-                hasMissionOrder = false,
-                isUnderJdp = false,
-                isGeometryComputedFromControls = false,
-            ),
-        )
-
-        // When we send an event from another thread
-        object : Thread() {
-            override fun run() {
-                try {
-                    sleep(250)
-                    applicationEventPublisher.publishEvent(updateMissionEvent)
-                } catch (ex: InterruptedException) {
-                    println(ex)
-                }
-            }
-        }.start()
-
-        // Then
-        val throwable = catchThrowable {
-            val result = mockMvc.perform(get("/api/v1/missions/132/sse"))
-                .andExpect(status().isOk)
-                .andExpect(request().asyncStarted())
-                .andReturn()
-
-            // We reduce the timeout to not wait too much in the test
-            result.request.asyncContext?.timeout = 1000
-
-            mockMvc.perform(asyncDispatch(result))
-                .andExpect(request().asyncResult(nullValue()))
-        }
-
-        assertThat(throwable).isNotNull()
     }
 }

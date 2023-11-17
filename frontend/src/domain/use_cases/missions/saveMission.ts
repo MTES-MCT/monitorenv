@@ -1,6 +1,7 @@
 import omit from 'lodash/omit'
 
 import { missionsAPI } from '../../../api/missionsAPI'
+import { disableMissionListener, enableMissionListener } from '../../../features/missions/MissionForm/sse'
 import { ApiErrorCode } from '../../../api/types'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { isNewMission } from '../../../utils/isNewMission'
@@ -27,9 +28,12 @@ export const saveMission =
       ? missionsAPI.endpoints.createMission
       : missionsAPI.endpoints.updateMission
     try {
+      disableMissionListener(values.id)
       const response = await dispatch(upsertMission.initiate(newOrNextMissionData))
       if ('data' in response) {
         if (reopen) {
+          enableMissionListener(values.id)
+
           return
         }
         dispatch(multiMissionsActions.deleteSelectedMission(values.id))

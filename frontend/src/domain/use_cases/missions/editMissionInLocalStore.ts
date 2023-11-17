@@ -1,6 +1,7 @@
 import { generatePath } from 'react-router'
 
 import { missionsAPI } from '../../../api/missionsAPI'
+import { enableMissionListener } from '../../../features/missions/MissionForm/sse'
 import { attachReportingToMissionSliceActions } from '../../../features/missions/slice'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { sideWindowPaths } from '../../entities/sideWindow'
@@ -16,6 +17,7 @@ export const editMissionInLocalStore = missionId => async (dispatch, getState) =
   const missionToEdit = missionsAPI.endpoints.getMission
   const response = dispatch(missionToEdit.initiate(missionId))
 
+  enableMissionListener(missionId)
   response
     .then(async result => {
       if (result.data) {

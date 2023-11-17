@@ -2,7 +2,11 @@ import { logSoftError } from '@mtes-mct/monitor-ui'
 
 import { monitorenvPrivateApi, monitorenvPublicApi } from './api'
 import { ControlUnit } from '../domain/entities/controlUnit'
-import { ReconnectingEventSource } from '../libs/ReconnectingEventSource'
+import {
+  addNewMissionListener,
+  missionEventListener,
+  removeMissionListener
+} from '../features/missions/MissionForm/sse'
 
 import type { Mission } from '../domain/entities/missions'
 
@@ -52,43 +56,21 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
     getMission: builder.query<Mission, number>({
       keepUnusedDataFor: 0,
       async onCacheEntryAdded(id, { cacheDataLoaded, cacheEntryRemoved, updateCachedData }) {
-        const url = `/api/v1/missions/${id}/sse`
-
         try {
-          const eventSource = new ReconnectingEventSource(url, { max_retry_time: 10000 })
-          // eslint-disable-next-line no-console
-          console.log(`SSE: listening for updates of mission id ${id}...`)
-
           // wait for the initial query to resolve before proceeding
           await cacheDataLoaded
 
-          const listener = (event: MessageEvent) => {
-            const mission = JSON.parse(event.data) as Mission
-            // eslint-disable-next-line no-console
-            console.log(`SSE: received an update for mission id ${mission.id}.`)
-
-            updateCachedData(draft => {
-              const { envActions } = draft
-
-              return {
-                ...mission,
-                envActions
-              }
-            })
-          }
-
-          eventSource.addEventListener('MISSION_UPDATE', listener)
+          const listener = missionEventListener(id, updateCachedData)
+          addNewMissionListener(id, listener)
 
           // cacheEntryRemoved will resolve when the cache subscription is no longer active
+          // TODO Investigate why this await is never resolved - even if `invalidateTags()` is called
           await cacheEntryRemoved
 
           // perform cleanup steps once the `cacheEntryRemoved` promise resolves
-          eventSource.close()
+          removeMissionListener(id)
         } catch (e) {
           logSoftError({
-            context: {
-              url
-            },
             isSideWindowError: true,
             message: "SSE: Can't connect or receive messages",
             originalError: e
