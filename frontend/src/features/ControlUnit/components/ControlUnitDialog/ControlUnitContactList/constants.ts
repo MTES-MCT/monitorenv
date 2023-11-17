@@ -28,9 +28,14 @@ export const INITIAL_CONTROL_UNIT_CONTACT_FORM_VALUES: ControlUnitContactFormVal
   phone: undefined
 }
 
-export const CONTROL_UNIT_CONTACT_NAMES: string[] = Object.values(ControlUnit.ControlUnitContactName).sort()
-export const SORTED_CONTROL_UNIT_CONTACT_NAMES_AS_OPTIONS = [
-  ...sortCollectionByLocalizedProps(['label'], getOptionsFromLabelledEnum(ControlUnit.ControlUnitContactName)),
+export const CONTROL_UNIT_CONTACT_PREDEFINED_NAMES: string[] = Object.values(
+  ControlUnit.ControlUnitContactPredefinedName
+).sort()
+export const SORTED_CONTROL_UNIT_CONTACT_PREDEFINED_NAMES_AS_OPTIONS = [
+  ...sortCollectionByLocalizedProps(
+    ['label'],
+    getOptionsFromLabelledEnum(ControlUnit.ControlUnitContactPredefinedName)
+  ),
   {
     label: 'Créer un nom personnalisé',
     value: 'SWITCH_TO_CUSTOM_NAME'

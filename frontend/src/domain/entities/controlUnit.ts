@@ -51,10 +51,9 @@ export namespace ControlUnit {
   // ---------------------------------------------------------------------------
   // Constants
 
-  export enum ControlUnitContactName {
+  export enum ControlUnitContactPredefinedName {
     ADJUNCT = 'Adjoint',
     BRIDGE = 'Passerelle',
-    CHIEF = 'Chef',
     COMMANDER = 'Commandant',
     COMMANDER_A = 'Commandant bordée A',
     COMMANDER_B = 'Commandant bordée B',
@@ -68,11 +67,15 @@ export namespace ControlUnit {
     OFFICE = 'Bureau de l’unité',
     ONBOARD_PHONE = 'Téléphone de bord',
     ON_CALL = 'Permanence',
+    OPERATIONAL_CENTER = 'Centre opérationnel',
+    OPERATIONAL_CENTER_HNO = 'Centre opérationnel - HNO', // Heures Non-Ouvrées
+    OPERATIONAL_CENTER_HO = 'Centre opérationnel - HO', // Heures Ouvrées
+    PERMANENT_CONTACT_ONBOARD = 'Contact permanent à bord',
     SEA = 'Mer',
     SECRETARIAT = 'Secrétariat',
     SERVICE_CHIEF = 'Chef de service',
     UNIT_CHIEF = 'Chef d’unité',
-    UNKNOWN = 'Nom de contact non renseigné'
+    UNKNOWN = 'Nom de contact à renseigner'
   }
 
   // Don't forget to mirror any update here in both Postgre & Backend enums.
