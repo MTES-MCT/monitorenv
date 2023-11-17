@@ -67,7 +67,9 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
             layerFilter: layer => {
               const typedLayer = layer as VectorLayerWithName
 
-              return !!typedLayer.name && SelectableLayers.includes(typedLayer.name)
+              const layerName = typedLayer.name || typedLayer.get('name')
+
+              return !!layerName && SelectableLayers.includes(layerName)
             }
           }
         )
