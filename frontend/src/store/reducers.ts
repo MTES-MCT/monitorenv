@@ -1,12 +1,4 @@
-import { ampsAPI } from '../api/ampsAPI'
 import { geoserverApi, monitorenvPrivateApi, monitorenvPublicApi } from '../api/api'
-import { controlThemesAPI } from '../api/controlThemesAPI'
-import { infractionsAPI } from '../api/infractionsAPI'
-import { legacyControlUnitsAPI } from '../api/legacyControlUnitsAPI'
-import { missionsAPI } from '../api/missionsAPI'
-import { regulatoryLayersAPI } from '../api/regulatoryLayersAPI'
-import { reportingsAPI } from '../api/reportingsAPI'
-import { semaphoresAPI } from '../api/semaphoresAPI'
 import { administrativeSlicePersistedReducer } from '../domain/shared_slices/Administrative'
 import { drawReducer } from '../domain/shared_slices/Draw'
 import { globalReducer } from '../domain/shared_slices/Global'
@@ -60,15 +52,7 @@ export const homeReducers = {
   regulatoryMetadata: regulatoryMetadataSliceReducer,
   reporting: reportingSliceReducer,
   [layerSidebarSlice.name]: layerSidebarSlice.reducer,
-  [ampsAPI.reducerPath]: ampsAPI.reducer,
-  [regulatoryLayersAPI.reducerPath]: regulatoryLayersAPI.reducer,
-  [missionsAPI.reducerPath]: missionsAPI.reducer,
-  [controlThemesAPI.reducerPath]: controlThemesAPI.reducer,
-  [legacyControlUnitsAPI.reducerPath]: legacyControlUnitsAPI.reducer,
-  [infractionsAPI.reducerPath]: infractionsAPI.reducer,
-  [semaphoresAPI.reducerPath]: semaphoresAPI.reducer,
   reportingFilters: reportingFiltersPersistedReducer,
-  [reportingsAPI.reducerPath]: reportingsAPI.reducer,
   selectedAmp: selectedAmpSlicePersistedReducer,
   semaphoresSlice: semaphoresPersistedReducer,
   sideWindow: sideWindowReducer,

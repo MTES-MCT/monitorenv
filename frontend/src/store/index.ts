@@ -3,7 +3,7 @@ import { setupListeners } from '@reduxjs/toolkit/query'
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist'
 
 import { homeReducers } from './reducers'
-import { monitorenvPrivateApi, monitorenvPublicApi } from '../api/api'
+import { monitorenvPrivateApi, monitorenvPublicApi, geoserverApi } from '../api/api'
 import { regulatoryActionSanitizer } from '../domain/shared_slices/Regulatory'
 
 const homeStore = configureStore({
@@ -20,7 +20,7 @@ const homeStore = configureStore({
         isSerializable: (value: any) => isPlain(value) || value instanceof Date || value instanceof Error,
         serializableCheck: false
       }
-    }).concat(monitorenvPrivateApi.middleware, monitorenvPublicApi.middleware),
+    }).concat(monitorenvPrivateApi.middleware, monitorenvPublicApi.middleware, geoserverApi.middleware),
   reducer: combineReducers(homeReducers) as unknown as typeof homeReducers
 })
 
