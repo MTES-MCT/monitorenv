@@ -80,7 +80,7 @@ export function StationCard({ feature, selected = false }: { feature: Feature; s
 }
 
 const StyledMapMenuDialogBody = styled(MapMenuDialog.Body)`
-  height: 480px;
+  height: 294px;
 
   > div:not(:first-child) {
     margin-top: 8px;

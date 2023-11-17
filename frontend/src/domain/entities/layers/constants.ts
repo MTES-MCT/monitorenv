@@ -6,6 +6,7 @@ export enum LayerType {
   REGULATORY = 'REGULATORY'
 }
 
+// TODO Generate `zIndex` from order of declaration rather than manually setting it.
 export const Layers = {
   ACTIONS: {
     code: 'actions',
@@ -149,7 +150,8 @@ export const Layers = {
   },
   STATIONS: {
     code: 'stations',
-    zIndex: 1200
+    // Station layer should always appear above all other layers
+    zIndex: 2000
   },
   THREE_MILES: {
     code: '3_miles_areas',

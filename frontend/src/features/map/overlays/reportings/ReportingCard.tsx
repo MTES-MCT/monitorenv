@@ -73,7 +73,7 @@ export function ReportingCard({
 
   const closeReportingCard = useCallback(() => {
     dispatch(reportingActions.setSelectedReportingIdOnMap(undefined))
-    dispatch(removeOverlayCoordinatesByName(Layers.REPORTING_SELECTED.code))
+    dispatch(removeOverlayCoordinatesByName(Layers.REPORTINGS.code))
   }, [dispatch])
 
   useEffect(() => {
