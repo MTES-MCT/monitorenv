@@ -1,4 +1,5 @@
 import { missionsAPI } from '../../../api/missionsAPI'
+import { disableMissionListener, enableMissionListener } from '../../../features/missions/MissionForm/sse'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { isNewMission } from '../../../utils/isNewMission'
 import { getMissionPageRoute } from '../../../utils/routes'
@@ -20,9 +21,12 @@ export const saveMission =
       ? missionsAPI.endpoints.createMission
       : missionsAPI.endpoints.updateMission
     try {
+      disableMissionListener(values.id)
       const response = await dispatch(upsertMission.initiate(cleanValues))
       if ('data' in response) {
         if (reopen) {
+          enableMissionListener(values.id)
+
           return
         }
         dispatch(multiMissionsActions.deleteSelectedMission(values.id))

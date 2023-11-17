@@ -1,6 +1,7 @@
 import { generatePath } from 'react-router'
 
 import { missionsAPI } from '../../../api/missionsAPI'
+import { enableMissionListener } from '../../../features/missions/MissionForm/sse'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { sideWindowPaths } from '../../entities/sideWindow'
 import { setToast } from '../../shared_slices/Global'
@@ -14,7 +15,8 @@ export const editMissionInLocalStore = missionId => async (dispatch, getState) =
 
   const missionToEdit = missionsAPI.endpoints.getMission
   try {
-    const response = await dispatch(missionToEdit.initiate(missionId))
+    enableMissionListener(missionId)
+    const response = await dispatch(missionToEdit.initiate(missionId, { forceRefetch: true }))
     if ('data' in response) {
       const missions = [...selectedMissions]
       // first we want to save the active mission in multiMissions state

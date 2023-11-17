@@ -146,12 +146,8 @@ class ApiMissionsController(
     /**
      * This method create the connexion to the frontend (with EventSource)
      */
-    @GetMapping(value = ["/{missionId}/sse"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
-    fun createMissionSSE(
-        @PathParam("Mission Id")
-        @PathVariable(name = "missionId")
-        missionId: Int,
-    ): SseEmitter {
-        return sseMissionController.registerListener(missionId)
+    @GetMapping(value = ["/sse"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
+    fun createMissionSSE(): SseEmitter {
+        return sseMissionController.registerListener()
     }
 }
