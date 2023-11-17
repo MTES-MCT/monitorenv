@@ -28,15 +28,12 @@ export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
 
     return vectorSourceRef.current
   }
-  const layerRef = useRef() as MutableRefObject<Vector<VectorSource>>
+  const layerRef = useRef() as MutableRefObject<Vector<VectorSource> & { name?: string }>
 
   useEffect(() => {
     function getLayer() {
       if (!layerRef.current) {
         layerRef.current = new Vector({
-          properties: {
-            name: Layers.REGULATORY_ENV_PREVIEW.code
-          },
           renderBuffer: 4,
           renderOrder: (a, b) => b.get('area') - a.get('area'),
           source: getVectorSource(),
@@ -44,6 +41,7 @@ export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
           updateWhileAnimating: true,
           updateWhileInteracting: true
         })
+        layerRef.current.name = Layers.AMP.code
       }
 
       return layerRef.current
