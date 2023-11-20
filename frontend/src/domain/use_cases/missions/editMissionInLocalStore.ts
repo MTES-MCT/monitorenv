@@ -49,6 +49,8 @@ export const editMissionInLocalStore = missionId => async (dispatch, getState) =
 
         await dispatch(multiMissionsActions.setSelectedMissions(missions))
         await dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.MISSION, { id: missionId })))
+
+        response.unsubscribe()
       } else {
         throw Error('Erreur à la création ou à la modification de la mission')
       }
@@ -56,5 +58,4 @@ export const editMissionInLocalStore = missionId => async (dispatch, getState) =
     .catch(error => {
       dispatch(setToast({ containerId: 'sideWindow', message: error }))
     })
-  response.unsubscribe()
 }
