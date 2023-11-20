@@ -2,11 +2,7 @@ import { logSoftError } from '@mtes-mct/monitor-ui'
 
 import { monitorenvPrivateApi, monitorenvPublicApi } from './api'
 import { ControlUnit } from '../domain/entities/controlUnit'
-import {
-  addNewMissionListener,
-  missionEventListener,
-  removeMissionListener
-} from '../features/missions/MissionForm/sse'
+import { addNewMissionListener, missionEventListener } from '../features/missions/MissionForm/sse'
 
 import type { Mission } from '../domain/entities/missions'
 
@@ -54,21 +50,11 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
       })
     }),
     getMission: builder.query<Mission, number>({
-      keepUnusedDataFor: 0,
-      async onCacheEntryAdded(id, { cacheDataLoaded, cacheEntryRemoved, updateCachedData }) {
+      keepUnusedDataFor: 10,
+      async onQueryStarted(id, { updateCachedData }) {
         try {
-          // wait for the initial query to resolve before proceeding
-          await cacheDataLoaded
-
           const listener = missionEventListener(id, updateCachedData)
           addNewMissionListener(id, listener)
-
-          // cacheEntryRemoved will resolve when the cache subscription is no longer active
-          // TODO Investigate why this await is never resolved - even if `invalidateTags()` is called
-          await cacheEntryRemoved
-
-          // perform cleanup steps once the `cacheEntryRemoved` promise resolves
-          removeMissionListener(id)
         } catch (e) {
           logSoftError({
             isSideWindowError: true,
@@ -132,5 +118,7 @@ export const {
   useGetMissionsQuery,
   useUpdateMissionMutation
 } = missionsAPI
+
+export const useGetMissionState = missionsAPI.endpoints.getMission.useQueryState
 
 export const { useGetEngagedControlUnitsQuery } = publicMissionsAPI

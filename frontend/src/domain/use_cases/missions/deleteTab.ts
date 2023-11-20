@@ -1,6 +1,6 @@
 import { generatePath } from 'react-router'
 
-import { disableMissionListener } from '../../../features/missions/MissionForm/sse'
+import { removeMissionListener } from '../../../features/missions/MissionForm/sse'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { getIdTyped } from '../../../utils/getIdTyped'
 import { getMissionPageRoute } from '../../../utils/routes'
@@ -17,7 +17,6 @@ export const deleteTab = (nextPath: string) => async (dispatch, getState) => {
   const id = getIdTyped(routeParams?.params.id)
 
   const indexToDelete = selectedMissions.findIndex(mission => mission.mission.id === id)
-  disableMissionListener(selectedMissions[indexToDelete]?.mission.id)
 
   // if we want to close the tab with a form that has changes
   if (
@@ -42,6 +41,7 @@ export const deleteTab = (nextPath: string) => async (dispatch, getState) => {
   }
 
   await dispatch(multiMissionsActions.deleteSelectedMission(id))
+  removeMissionListener(selectedMissions[indexToDelete]?.mission.id)
 
   if (indexToDelete === 0) {
     dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.MISSIONS)))

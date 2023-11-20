@@ -6,8 +6,9 @@ import styled from 'styled-components'
 
 import { MissionForm } from './MissionForm'
 import { MissionSchema } from './Schemas'
-import { useGetMissionQuery } from '../../../api/missionsAPI'
+import { useGetMissionState } from '../../../api/missionsAPI'
 import { useAppSelector } from '../../../hooks/useAppSelector'
+import { usePreviousNotNull } from '../../../hooks/usePreviousNotNull'
 import { FormikForm } from '../../../uiMonitor/CustomFormikFields/FormikForm'
 import { getIdTyped } from '../../../utils/getIdTyped'
 import { isNewMission } from '../../../utils/isNewMission'
@@ -21,25 +22,32 @@ export function Mission() {
 
   const routeParams = getMissionPageRoute(sideWindow.currentPath)
 
-  const idTyped = useMemo(() => getIdTyped(routeParams?.params?.id), [routeParams?.params?.id])
+  const missionId = useMemo(() => getIdTyped(routeParams?.params?.id), [routeParams?.params?.id])
   const missionIsNewMission = useMemo(() => isNewMission(routeParams?.params?.id), [routeParams?.params?.id])
 
-  const { data: missionToEdit, isLoading } = useGetMissionQuery(
-    !missionIsNewMission && idTyped ? Number(idTyped) : skipToken
+  const { data: missionToEdit, isLoading } = useGetMissionState(
+    !missionIsNewMission && missionId ? Number(missionId) : skipToken
   )
+  const previousMissionToEdit = usePreviousNotNull(missionToEdit)
 
   const selectedMission = useMemo(
-    () => selectedMissions.find(mis => mis.mission.id === idTyped),
-    [idTyped, selectedMissions]
+    () => selectedMissions.find(mis => mis.mission.id === missionId),
+    [missionId, selectedMissions]
   )
 
   const missionFormikValues = useMemo(() => {
     if (missionIsNewMission) {
-      return missionFactory(undefined, idTyped)
+      return missionFactory(undefined, missionId)
+    }
+
+    // The cache has been invalidated so it is set as `undefined`
+    // We must be the previous non-undefined value in memory
+    if (previousMissionToEdit && !missionToEdit) {
+      return missionFactory(previousMissionToEdit)
     }
 
     return missionFactory(missionToEdit)
-  }, [idTyped, missionIsNewMission, missionToEdit])
+  }, [missionId, missionIsNewMission, missionToEdit, previousMissionToEdit])
 
   if (isLoading) {
     return <div>Chargement en cours</div>
@@ -48,7 +56,7 @@ export function Mission() {
   return (
     <EditMissionWrapper data-cy="editMissionWrapper">
       <Formik
-        key={idTyped}
+        key={missionId}
         enableReinitialize
         initialValues={missionFormikValues}
         onSubmit={noop}
@@ -59,7 +67,7 @@ export function Mission() {
       >
         <FormikForm>
           <MissionForm
-            id={idTyped}
+            id={missionId}
             isNewMission={missionIsNewMission}
             selectedMission={selectedMission?.mission}
             setShouldValidateOnChange={setShouldValidateOnChange}

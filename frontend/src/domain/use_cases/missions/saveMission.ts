@@ -1,6 +1,11 @@
 import omit from 'lodash/omit'
 
 import { missionsAPI } from '../../../api/missionsAPI'
+import {
+  disableMissionListener,
+  enableMissionListener,
+  removeMissionListener
+} from '../../../features/missions/MissionForm/sse'
 import { disableMissionListener, enableMissionListener } from '../../../features/missions/MissionForm/sse'
 import { ApiErrorCode } from '../../../api/types'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
@@ -39,6 +44,8 @@ export const saveMission =
         dispatch(multiMissionsActions.deleteSelectedMission(values.id))
         dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
         dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSIONS))
+
+        removeMissionListener(values.id)
 
         const missionUpdated = response.data
         // we want to update openings reportings with new attached or detached mission
