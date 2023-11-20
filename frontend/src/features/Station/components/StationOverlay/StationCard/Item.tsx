@@ -9,8 +9,9 @@ import type { ControlUnit } from '../../../../../domain/entities/controlUnit'
 
 type ItemProps = {
   controlUnit: ControlUnit.ControlUnit
+  stationId: number
 }
-export function Item({ controlUnit }: ItemProps) {
+export function Item({ controlUnit, stationId }: ItemProps) {
   const dispatch = useAppDispatch()
 
   const edit = () => {
@@ -27,7 +28,7 @@ export function Item({ controlUnit }: ItemProps) {
     <Wrapper onClick={edit}>
       <NameText title={controlUnit.administration.name}>{controlUnit.name}</NameText>
       <AdministrationText title={controlUnit.administration.name}>{controlUnit.administration.name}</AdministrationText>
-      <ResourcesBar>{displayControlUnitResourcesFromControlUnit(controlUnit)}</ResourcesBar>
+      <ResourcesBar>{displayControlUnitResourcesFromControlUnit(controlUnit, stationId)}</ResourcesBar>
     </Wrapper>
   )
 }

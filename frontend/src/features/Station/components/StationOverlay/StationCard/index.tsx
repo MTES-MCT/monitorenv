@@ -72,7 +72,7 @@ export function StationCard({ feature, selected = false }: { feature: Feature; s
     >
       <StyledMapMenuDialogBody>
         {controlUnitsRef.current.map(controlUnit => (
-          <Item key={controlUnit.id} controlUnit={controlUnit} />
+          <Item key={controlUnit.id} controlUnit={controlUnit} stationId={featureProperties.station.id} />
         ))}
       </StyledMapMenuDialogBody>
     </OverlayCard>

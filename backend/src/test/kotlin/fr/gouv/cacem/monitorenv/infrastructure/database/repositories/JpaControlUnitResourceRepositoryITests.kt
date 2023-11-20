@@ -36,7 +36,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
         val foundFullControlUnitResources =
             jpaControlUnitResourceRepository.findAll().sortedBy { requireNotNull(it.controlUnitResource.id) }
 
-        assertThat(foundFullControlUnitResources).hasSize(12)
+        assertThat(foundFullControlUnitResources).hasSize(14)
 
         assertThat(foundFullControlUnitResources[0]).isEqualTo(
             FullControlUnitResourceDTO(
@@ -153,13 +153,13 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
 
         val createdControlUnitResource = jpaControlUnitResourceRepository.save(newControlUnitResource)
 
-        assertThat(createdControlUnitResource).isEqualTo(newControlUnitResource.copy(id = 13))
+        assertThat(createdControlUnitResource).isEqualTo(newControlUnitResource.copy(id = 15))
 
         // ---------------------------------------------------------------------
         // Update
 
         val nextControlUnitResource = ControlUnitResourceEntity(
-            id = 13,
+            id = 15,
             stationId = 2,
             controlUnitId = 10001,
             isArchived = false,
@@ -176,11 +176,11 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
         // ---------------------------------------------------------------------
         // Delete
 
-        jpaControlUnitResourceRepository.deleteById(13)
+        jpaControlUnitResourceRepository.deleteById(15)
 
         val controlUnitResourceIds =
             jpaControlUnitResourceRepository.findAll().map { requireNotNull(it.controlUnitResource.id) }.sorted()
 
-        assertThat(controlUnitResourceIds).doesNotContain(13)
+        assertThat(controlUnitResourceIds).doesNotContain(15)
     }
 }
