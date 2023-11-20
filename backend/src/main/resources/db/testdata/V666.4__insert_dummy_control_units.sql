@@ -53,19 +53,21 @@ VALUES
 SELECT setval('control_unit_contacts_id_seq', 3, true);
 
 INSERT INTO public.control_unit_resources
-    (   id,   control_unit_id,                    name, base_id,              type)
+    (   id,   control_unit_id,                    name, base_id,              type, is_archived)
 VALUES
-    (    1,             10000,         'Semi-rigide 1',       1,           'BARGE'),
-    (    2,             10000,         'Semi-rigide 2',       1,           'BARGE'),
-    (    3,             10002,         'Semi-rigide 1',       2,           'BARGE'),
-    (    4,             10002,         'Semi-rigide 2',       2,           'BARGE'),
-    (    5,             10002,               'Voiture',       3,             'CAR'),
-    (    6,             10003,             'AR VECHEN',       2,         'FRIGATE'),
-    (    7,             10003,           'Semi-rigide',       3,           'BARGE'),
-    (    8,             10121,     'PAM Jeanne Barret',       3,         'FRIGATE'),
-    (    9,             10080,            'PAM Themis',       3,         'FRIGATE'),
-    (   10,             10018,                'ALTAIR',       3,         'FRIGATE'),
-    (   11,             10018,              'PHEROUSA',       3,         'FRIGATE'),
-    (   12,             10018,                'ARIOLA',       3,         'FRIGATE');
+    (    1,             10000,         'Semi-rigide 1',       1,           'BARGE',       false),
+    (    2,             10000,         'Semi-rigide 2',       1,           'BARGE',       false),
+    (    3,             10002,         'Semi-rigide 1',       2,           'BARGE',       false),
+    (    4,             10002,         'Semi-rigide 2',       2,           'BARGE',       false),
+    (    5,             10002,               'Voiture',       3,             'CAR',       false),
+    (    6,             10003,             'AR VECHEN',       2,         'FRIGATE',       false),
+    (    7,             10003,           'Semi-rigide',       3,           'BARGE',       false),
+    (    8,             10121,     'PAM Jeanne Barret',       3,         'FRIGATE',       false),
+    (    9,             10080,            'PAM Themis',       3,         'FRIGATE',       false),
+    (   10,             10018,                'ALTAIR',       3,         'FRIGATE',       false),
+    (   11,             10018,              'PHEROUSA',       3,         'FRIGATE',       false),
+    (   12,             10018,                'ARIOLA',       3,         'FRIGATE',       false),
+    (   13,             10000,               'Voiture',       1,             'CAR',        true),
+    (   14,             10000,                 'Drône',       2,           'DRONE',       false);
 
-SELECT setval('control_unit_resources_id_seq', 12, true);
+SELECT setval('control_unit_resources_id_seq', 14, true);

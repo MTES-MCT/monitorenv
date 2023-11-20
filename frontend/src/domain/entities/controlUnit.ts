@@ -44,7 +44,7 @@ export namespace ControlUnit {
     /** Base64 Data URI. */
     photo: string | undefined
     station: Station.StationData
-    stationId: number | undefined
+    stationId: number
     type: ControlUnitResourceType
   }
 
