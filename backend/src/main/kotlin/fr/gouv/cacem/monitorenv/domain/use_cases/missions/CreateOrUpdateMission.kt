@@ -14,34 +14,34 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 
 @UseCase
 class CreateOrUpdateMission(
-        private val departmentRepository: IDepartmentAreaRepository,
-        private val facadeRepository: IFacadeAreasRepository,
-        private val missionRepository: IMissionRepository,
+    private val departmentRepository: IDepartmentAreaRepository,
+    private val facadeRepository: IFacadeAreasRepository,
+    private val missionRepository: IMissionRepository,
 ) {
     @Throws(IllegalArgumentException::class)
     fun execute(
-            mission: MissionEntity?,
+        mission: MissionEntity?,
     ): MissionEntity {
         require(mission != null) { "No mission to create or update" }
         val envActions =
-                mission.envActions?.map {
-                    when (it.actionType) {
-                        ActionTypeEnum.CONTROL -> {
-                            (it as EnvActionControlEntity).copy(
-                                    facade =
-                                            (it.geom ?: mission.geom)?.let { geom ->
-                                                facadeRepository.findFacadeFromGeometry(geom)
-                                            },
-                                    department =
-                                            (it.geom ?: mission.geom)?.let { geom ->
-                                                departmentRepository.findDepartmentFromGeometry(
-                                                        geom,
-                                                )
-                                            },
-                            )
-                        }
-                        ActionTypeEnum.SURVEILLANCE -> {
-                            val surveillance = it as EnvActionSurveillanceEntity
+            mission.envActions?.map {
+                when (it.actionType) {
+                    ActionTypeEnum.CONTROL -> {
+                        (it as EnvActionControlEntity).copy(
+                            facade =
+                            (it.geom ?: mission.geom)?.let { geom ->
+                                facadeRepository.findFacadeFromGeometry(geom)
+                            },
+                            department =
+                            (it.geom ?: mission.geom)?.let { geom ->
+                                departmentRepository.findDepartmentFromGeometry(
+                                    geom,
+                                )
+                            },
+                        )
+                    }
+                    ActionTypeEnum.SURVEILLANCE -> {
+                        val surveillance = it as EnvActionSurveillanceEntity
                             /*
                             When coverMissionZone is true, use mission geometry in priority, fall back to action geometry.
                             When coverMissionZone is not true, prioritize the other way around.
@@ -49,30 +49,30 @@ class CreateOrUpdateMission(
                             is null, or if coverMissionZone is false and the action geom is null, then rather that nothing,
                             better use the geometry that is available, if any.
                              */
-                            val geometry =
-                                    if (surveillance.coverMissionZone == true) {
-                                        (mission.geom ?: surveillance.geom)
-                                    } else {
-                                        (surveillance.geom ?: mission.geom)
-                                    }
-                            surveillance.copy(
-                                    facade =
-                                            geometry?.let { geom ->
-                                                facadeRepository.findFacadeFromGeometry(geom)
-                                            },
-                                    department =
-                                            geometry?.let { geom ->
-                                                departmentRepository.findDepartmentFromGeometry(
-                                                        geom,
-                                                )
-                                            },
-                            )
-                        }
-                        ActionTypeEnum.NOTE -> {
-                            (it as EnvActionNoteEntity).copy()
-                        }
+                        val geometry =
+                            if (surveillance.coverMissionZone == true) {
+                                (mission.geom ?: surveillance.geom)
+                            } else {
+                                (surveillance.geom ?: mission.geom)
+                            }
+                        surveillance.copy(
+                            facade =
+                            geometry?.let { geom ->
+                                facadeRepository.findFacadeFromGeometry(geom)
+                            },
+                            department =
+                            geometry?.let { geom ->
+                                departmentRepository.findDepartmentFromGeometry(
+                                    geom,
+                                )
+                            },
+                        )
+                    }
+                    ActionTypeEnum.NOTE -> {
+                        (it as EnvActionNoteEntity).copy()
                     }
                 }
+            }
 
         var facade: String? = null
 
@@ -81,10 +81,10 @@ class CreateOrUpdateMission(
         }
 
         val missionToSave =
-                mission.copy(
-                        facade = facade,
-                        envActions = envActions,
-                )
+            mission.copy(
+                facade = facade,
+                envActions = envActions,
+            )
         val savedMission = missionRepository.save(missionToSave)
 
         if (savedMission.mission.id == null) {
