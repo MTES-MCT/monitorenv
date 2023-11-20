@@ -212,8 +212,8 @@ context('Mission', () => {
 
     cy.wait(500)
     cy.window().its('mockEventSources' as any).then(mockEventSources => {
-      mockEventSources["/api/v1/missions/43/sse"].emitOpen()
-      mockEventSources["/api/v1/missions/43/sse"].emit(
+      mockEventSources["/api/v1/missions/sse"].emitOpen()
+      mockEventSources["/api/v1/missions/sse"].emit(
         "MISSION_UPDATE",
         new MessageEvent('MISSION_UPDATE', {
           name: "MISSION_UPDATE",
