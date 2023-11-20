@@ -19,7 +19,11 @@ import type { Geometry } from 'ol/geom'
 export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const { displayReportingsLayer } = useAppSelector(state => state.global)
+
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
+  const editingReporting = useAppSelector(state =>
+    activeReportingId ? state.reporting.reportings[activeReportingId]?.reporting : undefined
+  )
 
   // we don't want to display reportings on the map if the user so decides (displayReportingsLayer variable)
   // or if user have interaction on map (attach mission or reporting)
@@ -59,14 +63,18 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
         reportings,
         (features, reporting) => {
           if (reporting && reporting.geom) {
-            features.push(getReportingZoneFeature(reporting, Layers.REPORTINGS.code))
+            if (reporting.id === activeReportingId && editingReporting) {
+              features.push(getReportingZoneFeature(editingReporting, Layers.REPORTINGS.code))
+            } else {
+              features.push(getReportingZoneFeature(reporting, Layers.REPORTINGS.code))
+            }
           }
 
           return features
         },
         [] as Feature[]
       ) || [],
-    [reportings]
+    [reportings, activeReportingId, editingReporting]
   )
 
   const reportingsPointOrZone = useMemo(() => {
@@ -105,15 +113,6 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
 
     return vectorLayerRef.current
   }, [])
-
-  useEffect(() => {
-    GetVectorSource().forEachFeature(feature => {
-      const selectedReportingId = `${Layers.REPORTINGS.code}:${activeReportingId}`
-      feature.setProperties({
-        isSelected: feature.getId() === selectedReportingId
-      })
-    })
-  }, [activeReportingId])
 
   useEffect(() => {
     if (map) {

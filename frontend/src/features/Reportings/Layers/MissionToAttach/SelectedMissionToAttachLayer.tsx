@@ -12,11 +12,15 @@ import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 
 export function SelectedMissionToAttachLayer({ map }: BaseMapChildrenProps) {
   const attachMissionListener = useAppSelector(state => state.attachMissionToReporting.attachMissionListener)
+  const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
 
+  const editingReporting = useAppSelector(state =>
+    activeReportingId ? state.reporting.reportings[activeReportingId]?.reporting : undefined
+  )
   const missionId = useAppSelector(state => state.attachMissionToReporting.missionId)
   const { selectedMission: attachedMission } = useGetMissionsQuery(undefined, {
     selectFromResult: ({ data }) => ({
-      selectedMission: data?.find(op => op.id === missionId)
+      selectedMission: data?.find(mission => mission.id === missionId && !editingReporting?.detachedFromMissionAtUtc)
     })
   })
   const selectedAttachedMissionVectorSourceRef = useRef() as MutableRefObject<VectorSource>

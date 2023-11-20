@@ -71,7 +71,8 @@ export function ReportingForm({
       setValues(selectedReporting)
       dispatch(reportingActions.setReportingContext(reportingContext))
     }
-  }, [selectedReporting, dispatch, setValues, reportingContext])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useSyncFormValuesWithRedux()
 

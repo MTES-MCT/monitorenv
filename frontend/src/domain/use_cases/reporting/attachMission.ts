@@ -5,19 +5,23 @@ import { setToast } from '../../shared_slices/Global'
 export const attachMission = (id: number) => async (dispatch, getState) => {
   const { missionId } = getState().attachMissionToReporting
 
-  try {
-    if (missionId === id) {
-      return
-    }
-
-    const response = await dispatch(missionsAPI.endpoints.getMission.initiate(id))
-    if ('error' in response) {
-      throw Error("Erreur à l'ajout du signalement")
-    } else {
-      dispatch(attachMissionToReportingSliceActions.setAttachedMission(response.data))
-      dispatch(attachMissionToReportingSliceActions.setMissionId(id))
-    }
-  } catch (error) {
-    dispatch(setToast({ containerId: 'sideWindow', message: error }))
+  if (missionId === id) {
+    return
   }
+
+  const response = dispatch(missionsAPI.endpoints.getMission.initiate(id))
+
+  response
+    .then(async result => {
+      if (result.data) {
+        await dispatch(attachMissionToReportingSliceActions.setAttachedMission(result.data))
+        await dispatch(attachMissionToReportingSliceActions.setMissionId(id))
+        response.unsubscribe()
+      } else {
+        throw Error("Erreur à l'ajout du signalement")
+      }
+    })
+    .catch(error => {
+      dispatch(setToast({ containerId: 'sideWindow', message: error }))
+    })
 }

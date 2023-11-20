@@ -31,11 +31,15 @@ const reportingSlice = createSlice({
   name: 'reporting',
   reducers: {
     deleteSelectedReporting(state, action) {
+      const reportingIdToDelete = action.payload
       if (state.reportings) {
-        delete state.reportings[action.payload]
+        delete state.reportings[reportingIdToDelete]
       }
 
       state.activeReportingId = undefined
+      if (reportingIdToDelete === state.selectedReportingIdOnMap) {
+        state.selectedReportingIdOnMap = undefined
+      }
     },
     setActiveReportingId(state, action: PayloadAction<number | string | undefined>) {
       state.activeReportingId = action.payload

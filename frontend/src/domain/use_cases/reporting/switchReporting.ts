@@ -7,6 +7,7 @@ export const switchReporting =
     const { reportings } = getState().reporting
 
     await dispatch(reportingActions.setActiveReportingId(nextReportingId))
+
     const nextReporting = reportings[nextReportingId]
     const hasAttachedMission =
       !!nextReporting.reporting.attachedMission && !nextReporting.reporting.detachedFromMissionAtUtc
@@ -21,7 +22,7 @@ export const switchReporting =
       )
     )
 
-    dispatch(
+    await dispatch(
       setReportingFormVisibility({
         context: reportingContext,
         visibility: VisibilityState.VISIBLE
