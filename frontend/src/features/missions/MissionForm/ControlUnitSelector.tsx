@@ -78,6 +78,7 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
   const controlUnitCustomSearch = useMemo(
     () =>
       new CustomSearch(unitListAsOption || [], ['label'], {
+        isStrict: true,
         threshold: 0.2
       }),
     [unitListAsOption]
@@ -133,9 +134,7 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
 
       return
     }
-    const resourceObjects = values
-      // ?.filter(value => typeof value === 'number')
-      .map(id => resourcesList.find(resource => resource.id === id))
+    const resourceObjects = values.map(id => resourcesList.find(resource => resource.id === id))
     resourcesHelpers.setValue(resourceObjects)
   }
 
