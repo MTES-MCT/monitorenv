@@ -25,7 +25,7 @@ context('Mission actions', () => {
     // Then
     cy.wait('@updateMission').then(({ request, response }) => {
       expect(response && response.statusCode).equal(200)
-      const { infractions } = request.body.envActions.find(a => a.id === 'c52c6f20-e495-4b29-b3df-d7edfb67fdd7')
+      const { infractions } = request.body.envActions.find(a => a.id === 'b8007c8a-5135-4bc3-816f-c69c7b75d807')
       expect(infractions.length).equal(2)
       const duplicatedInfraction = infractions[1]
 
@@ -39,7 +39,7 @@ context('Mission actions', () => {
       expect(duplicatedInfraction.toProcess).equal(false)
       expect(duplicatedInfraction.vesselSize).equal('FROM_24_TO_46m')
       expect(duplicatedInfraction.vesselType).equal('COMMERCIAL')
-      expect(duplicatedInfraction.id).not.equal('c52c6f20-e495-4b29-b3df-d7edfb67fdd7')
+      expect(duplicatedInfraction.id).not.equal('b8007c8a-5135-4bc3-816f-c69c7b75d807')
     })
   })
 
@@ -76,7 +76,7 @@ context('Mission actions', () => {
     cy.wait('@updateMission').then(({ request, response }) => {
       expect(response && response.statusCode).equal(200)
 
-      const { themes } = request.body.envActions.find(a => a.id === 'c52c6f20-e495-4b29-b3df-d7edfb67fdd7')
+      const { themes } = request.body.envActions.find(a => a.id === 'b8007c8a-5135-4bc3-816f-c69c7b75d807')
       expect(themes.length).equal(1)
       expect(themes[0].theme).equal('Police des espèces protégées et de leurs habitats (faune et flore)')
       expect(themes[0].subThemes.length).equal(2)
@@ -104,10 +104,13 @@ context('Mission actions', () => {
 
     // Then
     cy.wait('@updateMission').then(({ request, response }) => {
-      expect(response && response.statusCode).equal(200)
-
-      const { observations } = request.body.envActions.find(a => a.id === 'c52c6f20-e495-4b29-b3df-d7edfb67fdd7')
+      const { observations } = request.body.envActions.find(a => a.id === 'b8007c8a-5135-4bc3-816f-c69c7b75d807')
       expect(observations).equal('RUne observation importante')
+
+      expect(response && response.statusCode).equal(200)
+      expect(
+        response && response.body.envActions.find(a => a.id === 'b8007c8a-5135-4bc3-816f-c69c7b75d807')?.observations
+      ).equal('RUne observation importante')
     })
   })
 
@@ -144,7 +147,7 @@ context('Mission actions', () => {
     cy.wait('@updateMission').then(({ response }) => {
       expect(response && response.statusCode).equal(200)
 
-      const { themes } = response && response.body.envActions.find(a => a.id === 'b8007c8a-5135-4bc3-816f-c69c7b75d807')
+      const { themes } = response && response.body.envActions.find(a => a.id === 'c52c6f20-e495-4b29-b3df-d7edfb67fdd7')
       expect(themes.length).equal(3)
       expect(themes[0].theme).equal('Police des réserves naturelles')
       expect(themes[0].subThemes.length).equal(0)
@@ -158,6 +161,24 @@ context('Mission actions', () => {
       expect(themes[2].subThemes.length).equal(1)
       expect(themes[2].subThemes[0]).equal('Jet de déchet')
       expect(themes[2].protectedSpecies.length).equal(0)
+    })
+  })
+
+  it(`Should be able to delete action with linked reporting`, () => {
+    // Given
+    cy.get('*[data-cy="edit-mission-34"]').click({ force: true })
+    cy.get('*[data-cy="action-card"]').eq(0).click()
+    // TODO
+    cy.get('*[data-cy="actioncard-delete-button-b8007c8a-5135-4bc3-816f-c69c7b75d807"]').click()
+
+    cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
+    cy.clickButton('Enregistrer et quitter')
+    // Then
+    cy.wait('@updateMission').then(({ response }) => {
+      expect(response && response.statusCode).equal(200)
+
+      const { envActions } = response && response.body
+      expect(envActions.length).equal(1)
     })
   })
 })

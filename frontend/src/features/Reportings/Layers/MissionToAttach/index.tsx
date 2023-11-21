@@ -1,0 +1,76 @@
+import VectorLayer from 'ol/layer/Vector'
+import VectorSource from 'ol/source/Vector'
+import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
+
+import { useGetMissionsQuery } from '../../../../api/missionsAPI'
+import { Layers } from '../../../../domain/entities/layers/constants'
+import { MissionStatusEnum } from '../../../../domain/entities/missions'
+import { attachMission } from '../../../../domain/use_cases/reporting/attachMission'
+import { useAppDispatch } from '../../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { getMissionZoneFeature } from '../../../map/layers/Missions/missionGeometryHelpers'
+import { missionWithCentroidStyleFn } from '../../../map/layers/Missions/missions.style'
+
+import type { VectorLayerWithName } from '../../../../domain/types/layer'
+import type { BaseMapChildrenProps } from '../../../map/BaseMap'
+import type { Geometry } from 'ol/geom'
+
+export function MissionToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
+  const dispatch = useAppDispatch()
+  const isMissionAttachmentInProgress = useAppSelector(
+    state => state.attachMissionToReporting.isMissionAttachmentInProgress
+  )
+  const { data: missions } = useGetMissionsQuery({
+    missionStatus: [MissionStatusEnum.PENDING]
+  })
+
+  const missionsMultiPolygons = useMemo(
+    () =>
+      missions?.filter(f => !!f.geom).map(f => getMissionZoneFeature(f, Layers.MISSION_TO_ATTACH_ON_REPORTING.code)),
+    [missions]
+  )
+
+  const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Geometry>>
+
+  const vectorLayerRef = useRef(
+    new VectorLayer({
+      renderBuffer: 7,
+      source: vectorSourceRef.current,
+      style: missionWithCentroidStyleFn,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
+      zIndex: Layers.MISSION_TO_ATTACH_ON_REPORTING.zIndex
+    })
+  ) as MutableRefObject<VectorLayerWithName>
+  ;(vectorLayerRef.current as VectorLayerWithName).name = Layers.MISSION_TO_ATTACH_ON_REPORTING.code
+
+  useEffect(() => {
+    map.getLayers().push(vectorLayerRef.current)
+
+    return () => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      map.removeLayer(vectorLayerRef.current)
+    }
+  }, [map])
+
+  useEffect(() => {
+    vectorSourceRef.current?.clear(true)
+    if (missionsMultiPolygons) {
+      vectorSourceRef.current?.addFeatures(missionsMultiPolygons)
+    }
+  }, [missionsMultiPolygons])
+
+  useEffect(() => {
+    vectorLayerRef.current?.setVisible(isMissionAttachmentInProgress)
+  }, [isMissionAttachmentInProgress])
+
+  useEffect(() => {
+    const feature = mapClickEvent?.feature
+    if (feature && feature.getId()?.toString()?.includes(Layers.MISSION_TO_ATTACH_ON_REPORTING.code)) {
+      const { missionId } = feature.getProperties()
+      dispatch(attachMission(missionId))
+    }
+  }, [dispatch, mapClickEvent])
+
+  return null
+}

@@ -26,6 +26,13 @@ import { MissionOverlays } from './overlays/missions'
 import { ReportingOverlay } from './overlays/reportings'
 import { SemaphoreOverlay } from './overlays/semaphores'
 import { ShowRegulatoryMetadata } from './ShowRegulatoryMetadata'
+import { ReportingToAttachLayer } from '../missions/Layers/ReportingToAttach'
+import { HoveredReportingToAttachLayer } from '../missions/Layers/ReportingToAttach/HoveredReportingToAttachLayer'
+import { ReportingToAttachOverlays } from '../missions/Overlays/ReportingToAttach'
+import { MissionToAttachLayer } from '../Reportings/Layers/MissionToAttach'
+import { HoveredMissionToAttachLayer } from '../Reportings/Layers/MissionToAttach/HoveredMissionToAttachLayer'
+import { SelectedMissionToAttachLayer } from '../Reportings/Layers/MissionToAttach/SelectedMissionToAttachLayer'
+import { MissionToAttachOverlays } from '../Reportings/Overlays/MissionToAttach'
 import { StationLayer } from '../Station/components/StationLayer'
 import { StationOverlay } from '../Station/components/StationOverlay'
 
@@ -46,6 +53,8 @@ export function Map() {
       <MapCoordinatesBox />
       {/* @ts-ignore */}
       <MapLayer />
+
+      {/* ZONE */}
       {/* @ts-ignore */}
       <AMPLayers />
       {/* @ts-ignore */}
@@ -68,6 +77,8 @@ export function Map() {
       <MapHistory />
       {/* @ts-ignore */}
       <DrawLayer />
+
+      {/* MISSION */}
       {/* @ts-ignore */}
       <MissionsLayer />
       {/* @ts-ignore */}
@@ -81,9 +92,19 @@ export function Map() {
       {/* @ts-ignore */}
       <ActionOverlay />
       {/* @ts-ignore */}
+      <ReportingToAttachLayer />
+      {/* @ts-ignore */}
+      <HoveredReportingToAttachLayer />
+      {/* @ts-ignore */}
+      <ReportingToAttachOverlays />
+
+      {/* SEMAPHORE */}
+      {/* @ts-ignore */}
       <SemaphoresLayer />
       {/* @ts-ignore */}
       <SemaphoreOverlay />
+
+      {/* REPORTING */}
       {/* @ts-ignore */}
       <EditingReportingLayer />
       {/* @ts-ignore */}
@@ -98,6 +119,14 @@ export function Map() {
       <StationLayer />
       {/* @ts-ignore */}
       <StationOverlay />
+      {/* @ts-ignore */}
+      <MissionToAttachLayer />
+      {/* @ts-ignore */}
+      <HoveredMissionToAttachLayer />
+      {/* @ts-ignore */}
+      <SelectedMissionToAttachLayer />
+      {/* @ts-ignore */}
+      <MissionToAttachOverlays />
     </BaseMap>
   )
 }

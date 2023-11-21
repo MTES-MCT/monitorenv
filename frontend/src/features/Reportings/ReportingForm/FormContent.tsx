@@ -3,6 +3,7 @@ import { useField, useFormikContext } from 'formik'
 import { useEffect, useState } from 'react'
 import { Toggle } from 'rsuite'
 
+import { AttachMission } from './AttachMission'
 import { CancelEditDialog } from './FormComponents/Dialog/CancelEditDialog'
 import { Footer } from './FormComponents/Footer'
 import { Position } from './FormComponents/Position'
@@ -11,7 +12,12 @@ import { Target } from './FormComponents/Target'
 import { ThemeSelector } from './FormComponents/ThemeSelector'
 import { SubThemesSelector } from './FormComponents/ThemeSelector/SubThemesSelector'
 import { Validity } from './FormComponents/Validity'
-import { type Reporting, ReportingTypeEnum, ReportingTypeLabels } from '../../../domain/entities/reporting'
+import {
+  type Reporting,
+  ReportingTypeEnum,
+  ReportingTypeLabels,
+  type ReportingDetailed
+} from '../../../domain/entities/reporting'
 import {
   hideSideButtons,
   setReportingFormVisibility,
@@ -26,6 +32,7 @@ import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { DeleteModal } from '../../commonComponents/Modals/Delete'
 import { useSyncFormValuesWithRedux } from '../hooks/useSyncFormValuesWithRedux'
+import { attachMissionToReportingSliceActions } from '../slice'
 import {
   Separator,
   StyledForm,
@@ -41,7 +48,21 @@ import {
 } from '../style'
 import { getReportingTitle } from '../utils'
 
-export function ReportingForm({ reducedReportingsOnContext, selectedReporting, setShouldValidateOnChange }) {
+import type { AtLeast } from '../../../types'
+
+type FormContentProps = {
+  onAttachMission: (value: boolean) => void
+  reducedReportingsOnContext: number
+  selectedReporting: AtLeast<ReportingDetailed, 'id'> | undefined
+  setShouldValidateOnChange: (value: boolean) => void
+}
+
+export function FormContent({
+  onAttachMission,
+  reducedReportingsOnContext,
+  selectedReporting,
+  setShouldValidateOnChange
+}: FormContentProps) {
   const dispatch = useAppDispatch()
   const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
 
@@ -64,7 +85,8 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
       setValues(selectedReporting)
       dispatch(reportingActions.setReportingContext(reportingContext))
     }
-  }, [selectedReporting, dispatch, setValues, reportingContext])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useSyncFormValuesWithRedux()
 
@@ -72,13 +94,15 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
 
   const changeReportType = reportType => {
     setFieldValue('reportType', reportType)
-    if (reportType === ReportingTypeEnum.OBSERVATION) {
-      setFieldValue('isControlRequired', undefined)
-    }
+    setFieldValue('isControlRequired', reportType === ReportingTypeEnum.INFRACTION_SUSPICION)
   }
 
-  const changeNeedControlValue = checked => {
+  const changeNeedControlValue = async checked => {
     setFieldValue('isControlRequired', checked)
+    if (!checked) {
+      setFieldValue('hasNoUnitAvailable', false)
+      await dispatch(attachMissionToReportingSliceActions.resetAttachMissionState())
+    }
   }
 
   const reduceOrExpandReporting = () => {
@@ -94,7 +118,8 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
 
   const confirmCloseReporting = () => {
     dispatch(reportingActions.setIsConfirmCancelDialogVisible(false))
-    dispatch(reportingActions.deleteSelectedReporting(selectedReporting.id))
+    dispatch(reportingActions.deleteSelectedReporting(selectedReporting?.id))
+    dispatch(attachMissionToReportingSliceActions.setIsMissionAttachmentInProgress(false))
     dispatch(
       setReportingFormVisibility({
         context: reportingContext,
@@ -111,7 +136,7 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
     if (dirty) {
       dispatch(reportingActions.setIsConfirmCancelDialogVisible(true))
     } else {
-      await dispatch(reportingActions.deleteSelectedReporting(selectedReporting.id))
+      await dispatch(reportingActions.deleteSelectedReporting(selectedReporting?.id))
       dispatch(
         setReportingFormVisibility({
           context: reportingContext,
@@ -129,16 +154,20 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
     dispatch(deleteReporting(values.id))
   }
 
+  if (!selectedReporting) {
+    return null
+  }
+
   return (
     <StyledFormContainer>
       <CancelEditDialog
-        key={`cancel-edit-modal-${selectedReporting?.id}`}
+        key={`cancel-edit-modal-${selectedReporting.id}`}
         onCancel={returnToEdition}
         onConfirm={confirmCloseReporting}
         open={isConfirmCancelDialogVisible}
       />
       <DeleteModal
-        key={`delete-modal-${selectedReporting?.id}`}
+        key={`delete-modal-${selectedReporting.id}`}
         context="reporting"
         isAbsolute={false}
         onCancel={cancelDeleteReporting}
@@ -200,6 +229,7 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
           />
         </StyledThemeContainer>
         <Validity mustIncreaseValidity={mustIncreaseValidity} />
+        <StyledFormikTextInput label="Saisi par" name="openBy" />
         <Separator />
         <FormikTextarea label="Actions effectuées" name="actionTaken" />
 
@@ -207,12 +237,12 @@ export function ReportingForm({ reducedReportingsOnContext, selectedReporting, s
           <Toggle
             checked={values.isControlRequired || false}
             data-cy="reporting-is-control-required"
+            disabled={values.isArchived}
             onChange={changeNeedControlValue}
           />
           <span>Le signalement nécessite un contrôle</span>
         </StyledToggle>
-        <Separator />
-        <StyledFormikTextInput label="Saisi par" name="openBy" />
+        <AttachMission onAttachMission={onAttachMission} />
       </StyledForm>
       <Footer
         onCancel={cancelNewReporting}

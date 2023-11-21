@@ -9,6 +9,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
@@ -24,6 +25,7 @@ class JpaMissionRepository(
     }
 
     @Transactional
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     override fun delete(missionId: Int) {
         dbMissionRepository.delete(missionId)
     }
@@ -97,6 +99,7 @@ class JpaMissionRepository(
     }
 
     @Transactional
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     override fun save(mission: MissionEntity): MissionDTO {
         // Extract all control units resources unique control unit resource IDs
         val uniqueControlUnitResourceIds = mission.controlUnits
@@ -109,7 +112,7 @@ class JpaMissionRepository(
 
         val missionModel = MissionModel.fromMissionEntity(mission, mapper, controlUnitResourceModelMap)
 
-        return dbMissionRepository.save(missionModel).toMissionDTO(mapper)
+        return dbMissionRepository.saveAndFlush(missionModel).toMissionDTO(mapper)
     }
 
     private fun convertToPGArray(array: List<String>?): String {

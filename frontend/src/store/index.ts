@@ -17,8 +17,7 @@ const homeStore = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER, 'regulatory/setRegulatoryLayers'],
         ignoredPaths: ['regulatory', 'layerSearch'],
         // TODO Replace all Redux state Dates by strings & Error by a strict-typed POJO.
-        isSerializable: (value: any) => isPlain(value) || value instanceof Date || value instanceof Error,
-        serializableCheck: false
+        isSerializable: (value: any) => isPlain(value) || value instanceof Date || value instanceof Error
       }
     }).concat(monitorenvPrivateApi.middleware, monitorenvPublicApi.middleware, geoserverApi.middleware),
   reducer: combineReducers(homeReducers) as unknown as typeof homeReducers

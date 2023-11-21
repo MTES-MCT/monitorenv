@@ -1,10 +1,10 @@
-import { FieldArray, useFormikContext } from 'formik'
+import { useFormikContext } from 'formik'
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
 import { generatePath } from 'react-router'
 import styled from 'styled-components'
 
-import { ActionForm } from './ActionForm/ActionForm'
+import { ActionForm } from './ActionForm'
 import { ActionsForm } from './ActionsForm'
 import { GeneralInformationsForm } from './GeneralInformationsForm'
 import { useSyncFormValuesWithRedux } from './hooks/useSyncFormValuesWithRedux'
@@ -27,7 +27,9 @@ import { missionFactory } from '../Missions.helpers'
 
 export function MissionForm({ id, isNewMission, selectedMission, setShouldValidateOnChange }) {
   const dispatch = useAppDispatch()
-  const { sideWindow } = useAppSelector(state => state)
+  const sideWindow = useAppSelector(state => state.sideWindow)
+  const attachedReportingIds = useAppSelector(state => state.attachReportingToMission.attachedReportingIds)
+  const attachedReportings = useAppSelector(state => state.attachReportingToMission.attachedReportings)
   const { dirty, setFieldValue, setValues, validateForm, values } = useFormikContext<Partial<Mission | NewMission>>()
 
   useSyncFormValuesWithRedux()
@@ -40,7 +42,7 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
     }
   }, [setValues, selectedMission])
 
-  const [currentActionIndex, setCurrentActionIndex] = useState(undefined)
+  const [currentActionIndex, setCurrentActionIndex] = useState<string | undefined>(undefined)
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
   const [isReopenModalOpen, setIsReopenModalOpen] = useState(false)
 
@@ -50,6 +52,15 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
     selectedMission?.missionSource === MissionSourceEnum.MONITORFISH
   const allowDeleteMission = !isNewMission && allowEditMission
   const allowCloseMission = !selectedMission?.isClosed || !values?.isClosed
+
+  // the form listens to the redux store to update the attached reportings
+  // because of the map interaction to attach reportings
+  useEffect(() => {
+    if (attachedReportingIds.length !== values?.attachedReportingIds?.length) {
+      setFieldValue('attachedReportingIds', attachedReportingIds)
+      setFieldValue('attachedReportings', attachedReportings)
+    }
+  }, [attachedReportingIds, values?.attachedReportingIds?.length, setFieldValue, attachedReportings])
 
   const handleSetCurrentActionIndex = index => {
     setCurrentActionIndex(index)
@@ -147,32 +158,10 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
           <GeneralInformationsForm />
         </FirstColumn>
         <SecondColumn>
-          <FieldArray
-            name="envActions"
-            render={({ form, remove, unshift }) => (
-              <ActionsForm
-                currentActionIndex={currentActionIndex}
-                form={form}
-                remove={remove}
-                setCurrentActionIndex={handleSetCurrentActionIndex}
-                unshift={unshift}
-              />
-            )}
-            validateOnChange={false}
-          />
+          <ActionsForm currentActionIndex={currentActionIndex} setCurrentActionIndex={handleSetCurrentActionIndex} />
         </SecondColumn>
         <ThirdColumn>
-          <FieldArray
-            name="envActions"
-            render={({ remove }) => (
-              <ActionForm
-                currentActionIndex={currentActionIndex}
-                remove={remove}
-                setCurrentActionIndex={handleSetCurrentActionIndex}
-              />
-            )}
-            validateOnChange={false}
-          />
+          <ActionForm currentActionIndex={currentActionIndex} setCurrentActionIndex={handleSetCurrentActionIndex} />
         </ThirdColumn>
       </Wrapper>
 
@@ -214,7 +203,5 @@ const SecondColumn = styled.div`
   flex: 1;
 `
 const ThirdColumn = styled.div`
-  background: ${p => p.theme.color.gainsboro};
   flex: 1;
-  overflow-y: auto;
 `

@@ -13,35 +13,74 @@ import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
 import { Layers } from '../../../../domain/entities/layers/constants'
-import { ReportingTypeEnum, getFormattedReportingId, ReportingTypeLabels } from '../../../../domain/entities/reporting'
+import { ReportingTypeEnum, ReportingTypeLabels, ControlStatusEnum } from '../../../../domain/entities/reporting'
 import { ReportingContext, removeOverlayCoordinatesByName } from '../../../../domain/shared_slices/Global'
 import { reportingActions } from '../../../../domain/shared_slices/reporting'
 import { editReportingInLocalStore } from '../../../../domain/use_cases/reporting/editReportingInLocalStore'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { LinkToMissionTag } from '../../../Reportings/components/LinkToMissionTag'
+import { StatusActionTag } from '../../../Reportings/components/StatusActionTag'
+import { getFormattedReportingId } from '../../../Reportings/utils'
+
+type ReportingCardProps = {
+  feature: any
+  isOnlyHoverable?: boolean
+  selected?: boolean
+  updateMargins: (margin: number) => void
+}
+function StatusTag({
+  controlStatus,
+  isArchived,
+  isAttachToMission
+}: {
+  controlStatus: ControlStatusEnum
+  isArchived: boolean
+  isAttachToMission: boolean
+}) {
+  if (isArchived) {
+    return (
+      <Tag borderColor={THEME.color.slateGray} color={THEME.color.slateGray}>
+        Archivé
+      </Tag>
+    )
+  }
+  if (isAttachToMission) {
+    return (
+      <AttachedMissionContainer>
+        <LinkToMissionTag />
+        <StatusActionTag controlStatus={controlStatus} />
+      </AttachedMissionContainer>
+    )
+  }
+
+  return null
+}
 
 export function ReportingCard({
   feature,
+  isOnlyHoverable = false,
   selected = false,
   updateMargins
-}: {
-  feature: any
-  selected?: boolean
-  updateMargins: (margin: number) => void
-}) {
+}: ReportingCardProps) {
   const dispatch = useAppDispatch()
-  const {
-    global: { displayReportingsLayer }
-  } = useAppSelector(state => state)
+  const displayReportingsLayer = useAppSelector(state => state.global.displayReportingsLayer)
+  const listener = useAppSelector(state => state.draw.listener)
+  const isMissionAttachmentInProgress = useAppSelector(
+    state => state.attachMissionToReporting.isMissionAttachmentInProgress
+  )
 
   const ref = useRef<HTMLDivElement>(null)
 
   const {
+    controlStatus,
     createdAt,
     description,
+    detachedFromMissionAtUtc,
     displayedSource,
     id,
     isArchived,
+    missionId,
     reportingId,
     reportType,
     subThemes,
@@ -83,7 +122,7 @@ export function ReportingCard({
     }
   }, [feature, updateMargins])
 
-  if (!displayReportingsLayer) {
+  if (!displayReportingsLayer || listener || isMissionAttachmentInProgress) {
     return null
   }
 
@@ -122,7 +161,6 @@ export function ReportingCard({
           />
         </StyledHeaderSecondLine>
       </StyledHeader>
-
       <div>
         <StyledThemeContainer>
           {theme && <StyledBoldText>{theme}</StyledBoldText>}
@@ -130,10 +168,16 @@ export function ReportingCard({
         </StyledThemeContainer>
         {description && <StyledDescription title={description}>{description}</StyledDescription>}
       </div>
-      {(timeLeft < 0 || isArchived) && <StyledTag isLight>Archivé</StyledTag>}
-      <StyledButton Icon={Icon.Edit} onClick={editReporting} size={Size.SMALL}>
-        Editer le signalement
-      </StyledButton>
+      <StatusTag
+        controlStatus={controlStatus}
+        isArchived={timeLeft < 0 || isArchived}
+        isAttachToMission={missionId && !detachedFromMissionAtUtc}
+      />
+      {!isOnlyHoverable && (
+        <StyledButton Icon={Icon.Edit} onClick={editReporting} size={Size.SMALL}>
+          Editer le signalement
+        </StyledButton>
+      )}
     </Wrapper>
   )
 }
@@ -217,15 +261,16 @@ const StyledThemeContainer = styled.div`
   overflow: hidden;
   padding-right: 32px;
 `
-const StyledTag = styled(Tag)`
-  align-self: start;
-  color: ${p => p.theme.color.slateGray};
-  border: 1px solid ${p => p.theme.color.slateGray};
-`
 
 // TODO delete when Monitor-ui component have good padding
 const StyledButton = styled(Button)`
   padding: 4px 12px;
   align-self: start;
   width: inherit;
+`
+
+const AttachedMissionContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
 `

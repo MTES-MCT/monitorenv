@@ -1,13 +1,31 @@
+import { attachMissionToReportingSliceActions } from '../../../features/Reportings/slice'
 import { setReportingFormVisibility, ReportingContext, VisibilityState } from '../../shared_slices/Global'
 import { reportingActions } from '../../shared_slices/reporting'
 
-export const switchReporting = (nextReportingId: number, reportingContext: ReportingContext) => async dispatch => {
-  dispatch(reportingActions.setActiveReportingId(nextReportingId))
+export const switchReporting =
+  (nextReportingId: number, reportingContext: ReportingContext) => async (dispatch, getState) => {
+    const { reportings } = getState().reporting
 
-  dispatch(
-    setReportingFormVisibility({
-      context: reportingContext,
-      visibility: VisibilityState.VISIBLE
-    })
-  )
-}
+    await dispatch(reportingActions.setActiveReportingId(nextReportingId))
+
+    const nextReporting = reportings[nextReportingId]
+    const hasAttachedMission =
+      !!nextReporting.reporting.attachedMission && !nextReporting.reporting.detachedFromMissionAtUtc
+    await dispatch(
+      attachMissionToReportingSliceActions.setAttachedMission(
+        hasAttachedMission ? nextReporting.reporting.attachedMission : undefined
+      )
+    )
+    await dispatch(
+      attachMissionToReportingSliceActions.setMissionId(
+        hasAttachedMission ? nextReporting.reporting.missionId : undefined
+      )
+    )
+
+    await dispatch(
+      setReportingFormVisibility({
+        context: reportingContext,
+        visibility: VisibilityState.VISIBLE
+      })
+    )
+  }

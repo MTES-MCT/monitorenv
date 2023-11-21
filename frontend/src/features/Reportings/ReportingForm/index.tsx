@@ -3,17 +3,24 @@ import { Form, Formik } from 'formik'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { ReportingForm } from './Form'
+import { FormContent } from './FormContent'
 import { ReportingSchema } from './Schema'
 import { useGetReportingQuery } from '../../../api/reportingsAPI'
 import { ReportingContext, VisibilityState } from '../../../domain/shared_slices/Global'
+import { createMissionFromReporting } from '../../../domain/use_cases/reporting/createMissionFromReporting'
 import { saveReporting } from '../../../domain/use_cases/reporting/saveReporting'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { SideWindowBackground, FormContainer } from '../style'
 import { getReportingInitialValues, isNewReporting } from '../utils'
 
-export function ReportingFormWithContext({ context, totalReportings }) {
+type ReportingFormProps = {
+  context: ReportingContext
+  totalReportings: number
+}
+export function ReportingFormWithContext({ context, totalReportings }: ReportingFormProps) {
+  const dispatch = useAppDispatch()
+
   const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
   const reportings = useAppSelector(state => state.reporting.reportings)
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
@@ -21,7 +28,7 @@ export function ReportingFormWithContext({ context, totalReportings }) {
     activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined
   )
 
-  const dispatch = useAppDispatch()
+  const [isAttachNewMission, setIsAttachNewMission] = useState(false)
 
   const isReportingNew = useMemo(() => isNewReporting(activeReportingId), [activeReportingId])
 
@@ -31,14 +38,20 @@ export function ReportingFormWithContext({ context, totalReportings }) {
 
   const [shouldValidateOnChange, setShouldValidateOnChange] = useState(false)
 
-  const submitReportForm = values => {
+  const submitReportForm = async values => {
+    if (isAttachNewMission) {
+      await dispatch(createMissionFromReporting(values))
+      setIsAttachNewMission(false)
+
+      return
+    }
     dispatch(saveReporting(values, context))
   }
 
   const selectedReporting = useMemo(
     () => (activeReportingId && reportings ? reportings[activeReportingId]?.reporting : undefined),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [activeReportingId]
+    [activeReportingId, activeReportingId ? reportings[activeReportingId]?.reporting.missionId : undefined]
   )
 
   const reportingInitialValues = useMemo(() => {
@@ -75,7 +88,8 @@ export function ReportingFormWithContext({ context, totalReportings }) {
               validationSchema={ReportingSchema}
             >
               <StyledForm>
-                <ReportingForm
+                <FormContent
+                  onAttachMission={setIsAttachNewMission}
                   reducedReportingsOnContext={totalReportings}
                   selectedReporting={selectedReporting}
                   setShouldValidateOnChange={setShouldValidateOnChange}

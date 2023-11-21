@@ -12,6 +12,7 @@ import { removeOverlayCoordinatesByName } from '../../../../domain/shared_slices
 import { setSelectedSemaphore } from '../../../../domain/shared_slices/SemaphoresSlice'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { useHasMapInteraction } from '../../../../hooks/useHasMapInteraction'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { Feature } from 'ol'
@@ -20,9 +21,19 @@ import type { Geometry } from 'ol/geom'
 export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const { displaySemaphoresLayer } = useAppSelector(state => state.global)
-  const { isSemaphoreHighlighted, selectedSemaphoreId } = useAppSelector(state => state.semaphoresSlice)
-  const { overlayCoordinates } = useAppSelector(state => state.global)
-  const listener = useAppSelector(state => state.draw.listener)
+  const isSemaphoreHighlighted = useAppSelector(state => state.semaphoresSlice.isSemaphoreHighlighted)
+  const selectedSemaphoreId = useAppSelector(state => state.semaphoresSlice.selectedSemaphoreId)
+
+  const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
+
+  // we don't want to display sempahores on the map if the user so decides (displaySemaphoresLayer variable)
+  // or if user have interaction on map (edit mission zone, attach reporting or mission)
+
+  const hasMapInteraction = useHasMapInteraction()
+  const isLayerVisible = useMemo(
+    () => displaySemaphoresLayer && !hasMapInteraction,
+    [displaySemaphoresLayer, hasMapInteraction]
+  )
 
   const { data: semaphores } = useGetSemaphoresQuery()
 
@@ -123,10 +134,8 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   }, [semaphoresPoint])
 
   useEffect(() => {
-    // we don't want to display semaphores on the map if the user so decides (displaySemaphoresLayer variable)
-    // or if user edits a zone or a point (listener variable)
-    GetVectorLayer()?.setVisible(displaySemaphoresLayer && !listener)
-  }, [displaySemaphoresLayer, GetVectorLayer, listener])
+    GetVectorLayer()?.setVisible(isLayerVisible)
+  }, [isLayerVisible, GetVectorLayer])
 
   useEffect(() => {
     if (mapClickEvent?.feature) {

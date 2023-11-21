@@ -1,6 +1,6 @@
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { type MutableRefObject, useCallback, useEffect, useRef } from 'react'
+import { type MutableRefObject, useEffect, useRef, useMemo } from 'react'
 
 import { getEditingReportingZoneFeature } from './reportingsGeometryHelpers'
 import { editingReportingStyleFn } from './style'
@@ -11,46 +11,53 @@ import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../BaseMap'
 
 export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
-  const {
-    activeReportingId,
-    reportings = { reporting: {} },
-    selectedReportingIdOnMap
-  } = useAppSelector(state => state.reporting)
+  const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
+  const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
+
   const displayReportingEditingLayer = useAppSelector(state => state.global.displayReportingEditingLayer)
+
+  const editingReporting = useAppSelector(state =>
+    activeReportingId ? state.reporting.reportings[activeReportingId]?.reporting : undefined
+  )
   const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
 
-  const editingReporting = activeReportingId ? reportings[activeReportingId].reporting : undefined
-  const displayEditingLayer = displayReportingEditingLayer && selectedReportingIdOnMap === activeReportingId
+  const listener = useAppSelector(state => state.draw.listener)
+  const isReportingAttachmentInProgress = useAppSelector(
+    state => state.attachReportingToMission.isReportingAttachmentInProgress
+  )
 
-  const editingReportingVectorSourceRef = useRef() as MutableRefObject<VectorSource>
-  const GetEditingReportingVectorSource = () => {
-    if (editingReportingVectorSourceRef.current === undefined) {
-      editingReportingVectorSourceRef.current = new VectorSource()
+  const hasNoReportingConflict = useMemo(() => {
+    if (!selectedReportingIdOnMap && !!activeReportingId) {
+      return true
     }
 
-    return editingReportingVectorSourceRef.current
-  }
+    return !!selectedReportingIdOnMap && activeReportingId === selectedReportingIdOnMap
+  }, [activeReportingId, selectedReportingIdOnMap])
 
-  const editingReportingVectorLayerRef = useRef() as MutableRefObject<VectorLayerWithName>
+  // we don't want to display reportings on the map if the user so decides (displayMissionEditingLayer variable)
+  // or if user have interaction on map (edit mission zone, attach reporting to mission)
+  // or if user selected on map an other reporting (to avoid conflict)
+  const isLayerVisible = useMemo(
+    () => displayReportingEditingLayer && !listener && !isReportingAttachmentInProgress && hasNoReportingConflict,
+    [displayReportingEditingLayer, listener, isReportingAttachmentInProgress, hasNoReportingConflict]
+  )
 
-  const GetSelectedReportingVectorLayer = useCallback(() => {
-    if (editingReportingVectorLayerRef.current === undefined) {
-      editingReportingVectorLayerRef.current = new VectorLayer({
-        renderBuffer: 7,
-        source: GetEditingReportingVectorSource(),
-        style: editingReportingStyleFn,
-        updateWhileAnimating: true,
-        updateWhileInteracting: true,
-        zIndex: Layers.REPORTING_SELECTED.zIndex
-      })
-      editingReportingVectorLayerRef.current.name = Layers.REPORTING_SELECTED.code
-    }
+  const editingReportingVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource>
 
-    return editingReportingVectorLayerRef.current
-  }, [])
+  const editingReportingVectorLayerRef = useRef(
+    new VectorLayer({
+      renderBuffer: 7,
+      source: editingReportingVectorSourceRef.current,
+      style: editingReportingStyleFn,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
+      zIndex: Layers.REPORTING_SELECTED.zIndex
+    })
+  ) as MutableRefObject<VectorLayerWithName>
+  ;(editingReportingVectorLayerRef.current as VectorLayerWithName).name = Layers.REPORTING_SELECTED.code
 
   useEffect(() => {
-    const feature = GetEditingReportingVectorSource().getFeatureById(
+    const feature = editingReportingVectorSourceRef.current.getFeatureById(
       `${Layers.REPORTING_SELECTED.code}:${activeReportingId}`
     )
 
@@ -60,29 +67,23 @@ export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
   }, [overlayCoordinates, activeReportingId])
 
   useEffect(() => {
-    if (map) {
-      const layersCollection = map.getLayers()
-      layersCollection.push(GetSelectedReportingVectorLayer())
-    }
+    map.getLayers().push(editingReportingVectorLayerRef.current)
 
     return () => {
-      if (map) {
-        map.removeLayer(GetSelectedReportingVectorLayer())
-      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      map.removeLayer(editingReportingVectorLayerRef.current)
     }
-  }, [map, GetSelectedReportingVectorLayer])
+  }, [map])
 
   useEffect(() => {
-    GetSelectedReportingVectorLayer()?.setVisible(displayEditingLayer)
-  }, [displayEditingLayer, GetSelectedReportingVectorLayer])
+    editingReportingVectorLayerRef.current?.setVisible(isLayerVisible)
+  }, [isLayerVisible])
 
   useEffect(() => {
-    GetEditingReportingVectorSource()?.clear(true)
-    GetEditingReportingVectorSource()?.clear(true)
+    editingReportingVectorSourceRef.current?.clear(true)
     if (editingReporting) {
-      GetEditingReportingVectorSource()?.addFeature(
-        getEditingReportingZoneFeature(editingReporting, Layers.REPORTING_SELECTED.code)
-      )
+      const reportingFeature = getEditingReportingZoneFeature(editingReporting, Layers.REPORTING_SELECTED.code)
+      editingReportingVectorSourceRef.current?.addFeature(reportingFeature)
     }
   }, [editingReporting])
 

@@ -50,7 +50,7 @@ export function Reportings({ context }: { context: ReportingContext }) {
       {reportingFormVisibility.context === context && (
         <ReportingFormWithContext
           key={reportingContext}
-          context={reportingContext}
+          context={reportingContext || ReportingContext.MAP}
           totalReportings={reportingsTabs.length}
         />
       )}
@@ -80,6 +80,7 @@ export function Reportings({ context }: { context: ReportingContext }) {
                 <StyledChevronIcon
                   $isOpen
                   accent={Accent.TERTIARY}
+                  data-cy={`reporting-reduce-or-expand-button-${reducedReporting?.id}`}
                   Icon={Icon.Chevron}
                   onClick={() => reduceOrExpandReporting(reporting)}
                 />

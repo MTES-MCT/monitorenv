@@ -18,7 +18,7 @@ export function MissionsMenu() {
   const { displayMissionsLayer, isSearchMissionsVisible, reportingFormVisibility } = useAppSelector(
     state => state.global
   )
-  const { sideWindow } = useAppSelector(state => state)
+  const sideWindow = useAppSelector(state => state.sideWindow)
 
   const isMissionButtonIsActive = useMemo(
     () => isMissionOrMissionsPage(sideWindow.currentPath) && sideWindow.status !== SideWindowStatus.CLOSED,

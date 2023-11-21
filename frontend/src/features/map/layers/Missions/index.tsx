@@ -9,6 +9,7 @@ import { selectMissionOnMap } from '../../../../domain/use_cases/missions/select
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useGetFilteredMissionsQuery } from '../../../../hooks/useGetFilteredMissionsQuery'
+import { useHasMapInteraction } from '../../../../hooks/useHasMapInteraction'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { Geometry } from 'ol/geom'
@@ -17,12 +18,66 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const { displayMissionsLayer } = useAppSelector(state => state.global)
   const { missions } = useGetFilteredMissionsQuery()
-  const listener = useAppSelector(state => state.draw.listener)
 
-  const missionsMultiPolygons = useMemo(
-    () => missions?.filter(f => !!f.geom).map(f => getMissionZoneFeature(f, Layers.MISSIONS.code)),
-    [missions]
+  // we don't want to display missions on the map if the user so decides (displayMissionsLayer variable)
+  // or if user have interaction on map (edit mission zone, attach reporting or mission)
+  const hasMapInteraction = useHasMapInteraction()
+  const isLayerVisible = useMemo(
+    () => displayMissionsLayer && !hasMapInteraction,
+    [displayMissionsLayer, hasMapInteraction]
   )
+
+  // mission attached to active reporting
+  const reportings = useAppSelector(state => state.reporting.reportings)
+  const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
+  const missionAttachedToReporting = useMemo(() => {
+    if (
+      reportings === undefined ||
+      !activeReportingId ||
+      !reportings[activeReportingId] ||
+      reportings[activeReportingId]?.reporting.detachedFromMissionAtUtc
+    ) {
+      return undefined
+    }
+
+    return reportings[activeReportingId]?.reporting.attachedMission
+  }, [activeReportingId, reportings])
+
+  const missionAttachedToReportingFeature = useMemo(() => {
+    if (!missionAttachedToReporting) {
+      return []
+    }
+
+    return [getMissionZoneFeature(missionAttachedToReporting, Layers.MISSIONS.code)]
+  }, [missionAttachedToReporting])
+
+  // active mission
+  const activeMission = useAppSelector(state => state.missionState.missionState)
+  const activeMissionFeature = useMemo(() => {
+    if (!activeMission) {
+      return []
+    }
+
+    return [getMissionZoneFeature(activeMission, Layers.MISSIONS.code)]
+  }, [activeMission])
+
+  // we want to display missions from API (with active filters), active mission
+  // and mission attached to active reporting
+  const missionsMultiPolygons = useMemo(() => {
+    const missionFromApi = missions
+      ?.filter(
+        mission => !!mission.geom && mission.id !== activeMission?.id && mission.id !== missionAttachedToReporting?.id
+      )
+      .map(filteredMission => getMissionZoneFeature(filteredMission, Layers.MISSIONS.code))
+
+    return [...missionFromApi, ...activeMissionFeature, ...missionAttachedToReportingFeature]
+  }, [
+    missions,
+    activeMissionFeature,
+    missionAttachedToReportingFeature,
+    activeMission?.id,
+    missionAttachedToReporting?.id
+  ])
 
   const vectorSourceRef = useRef() as React.MutableRefObject<VectorSource<Geometry>>
   const GetVectorSource = () => {
@@ -68,10 +123,8 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   }, [missionsMultiPolygons])
 
   useEffect(() => {
-    // we don't want to display missions on the map if the user so decides (displayMissionsLayer variable)
-    // or if user edits a surveillance zone or a control point (listener variable)
-    GetVectorLayer()?.setVisible(displayMissionsLayer && !listener)
-  }, [displayMissionsLayer, GetVectorLayer, listener])
+    GetVectorLayer()?.setVisible(isLayerVisible)
+  }, [GetVectorLayer, isLayerVisible])
 
   useEffect(() => {
     if (mapClickEvent?.feature) {

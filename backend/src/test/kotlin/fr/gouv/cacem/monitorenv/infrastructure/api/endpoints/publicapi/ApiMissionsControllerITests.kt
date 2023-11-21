@@ -163,7 +163,11 @@ class ApiMissionsControllerITests {
             MissionEntity(
                 id = 10,
                 missionTypes = listOf(MissionTypeEnum.SEA),
+                facade = "Outre-Mer",
+                geom = polygon,
+                observationsCnsp = null,
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                 isDeleted = false,
                 missionSource = MissionSourceEnum.MONITORFISH,
                 isClosed = false,

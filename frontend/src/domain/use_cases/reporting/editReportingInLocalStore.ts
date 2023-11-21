@@ -1,4 +1,5 @@
 import { reportingsAPI } from '../../../api/reportingsAPI'
+import { attachMissionToReportingSliceActions } from '../../../features/Reportings/slice'
 import { setReportingFormVisibility, setToast, ReportingContext, VisibilityState } from '../../shared_slices/Global'
 import { reportingActions } from '../../shared_slices/reporting'
 
@@ -51,4 +52,14 @@ async function setReporting(dispatch, reportingId, reportingContext, newReportin
 
   await dispatch(reportingActions.setReporting(newReporting))
   await dispatch(reportingActions.setActiveReportingId(reportingId))
+  const hasAttachedMission =
+    !!newReporting.reporting.attachedMission && !newReporting.reporting.detachedFromMissionAtUtc
+  await dispatch(
+    attachMissionToReportingSliceActions.setAttachedMission(
+      hasAttachedMission ? newReporting.reporting.attachedMission : undefined
+    )
+  )
+  await dispatch(
+    attachMissionToReportingSliceActions.setMissionId(hasAttachedMission ? newReporting.reporting.missionId : undefined)
+  )
 }

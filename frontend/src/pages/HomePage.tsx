@@ -15,8 +15,10 @@ import { DrawModal } from '../features/map/draw/DrawModal'
 import { RightMenuOnHoverArea } from '../features/map/shared/RightMenuOnHoverArea'
 import { InterestPointMapButton } from '../features/map/tools/interestPoint/InterestPointMapButton'
 import { MeasurementMapButton } from '../features/map/tools/measurements/MeasurementMapButton'
+import { AttachReportingToMissionModal } from '../features/missions/MissionForm/AttachReporting/AttachReportingToMissionModal'
 import { MissionsMenu } from '../features/missions/MissionsButton'
 import { Reportings } from '../features/Reportings'
+import { AttachMissionToReportingModal } from '../features/Reportings/ReportingForm/AttachMission/AttachMissionToReportingModal'
 import { ReportingsButton } from '../features/Reportings/ReportingsButton'
 import { SearchSemaphoreButton } from '../features/Semaphores/SearchSemaphoreButton'
 import { SideWindowLauncher } from '../features/SideWindow/SideWindowLauncher'
@@ -34,10 +36,8 @@ export function HomePage() {
     displaySearchSemaphoreButton,
     isControlUnitDialogVisible
   } = useAppSelector(state => state.global)
-  const {
-    missionState: { isFormDirty, missionState },
-    multiMissions: { selectedMissions }
-  } = useAppSelector(state => state)
+  const { isFormDirty, missionState } = useAppSelector(state => state.missionState)
+  const selectedMissions = useAppSelector(state => state.multiMissions.selectedMissions)
 
   const hasAtLeastOneMissionFormDirty = useMemo(
     () => selectedMissions.find(mission => mission.isFormDirty),
@@ -68,6 +68,8 @@ export function HomePage() {
         <LayersSidebar />
         <RightMenuOnHoverArea />
         {displayDrawModal && <DrawModal />}
+        <AttachMissionToReportingModal />
+        <AttachReportingToMissionModal />
         {displayLocateOnMap && <LocateOnMap />}
         {isControlUnitDialogVisible && <ControlUnitDialog />}
 

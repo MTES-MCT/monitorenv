@@ -1,6 +1,7 @@
 import { generatePath } from 'react-router'
 
 import { missionsAPI } from '../../../api/missionsAPI'
+import { attachReportingToMissionSliceActions } from '../../../features/missions/slice'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { sideWindowPaths } from '../../entities/sideWindow'
 import { setToast } from '../../shared_slices/Global'
@@ -48,8 +49,10 @@ export const editMissionInLocalStore = missionId => async (dispatch, getState) =
         }
 
         await dispatch(multiMissionsActions.setSelectedMissions(missions))
+        await dispatch(
+          attachReportingToMissionSliceActions.setAttachedReportings(missionToSave.attachedReportings || [])
+        )
         await dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.MISSION, { id: missionId })))
-
         response.unsubscribe()
       } else {
         throw Error('Erreur à la création ou à la modification de la mission')

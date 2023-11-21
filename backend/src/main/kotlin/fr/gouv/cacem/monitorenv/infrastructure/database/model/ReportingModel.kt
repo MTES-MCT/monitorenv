@@ -152,7 +152,8 @@ data class ReportingModel(
             controlUnit = controlUnit?.toFullControlUnit(),
             semaphore = semaphore?.toSemaphore(),
             attachedMission =
-            if (detachedFromMissionAtUtc != null) {
+            if (detachedFromMissionAtUtc == null && attachedToMissionAtUtc != null
+            ) {
                 mission?.toMissionEntity(
                     objectMapper,
                 )
@@ -160,7 +161,7 @@ data class ReportingModel(
                 null
             },
             detachedMission =
-            if (detachedFromMissionAtUtc == null) {
+            if (detachedFromMissionAtUtc != null) {
                 mission?.toMissionEntity(
                     objectMapper,
                 )

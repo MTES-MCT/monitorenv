@@ -103,9 +103,7 @@ class ReportingsController(
         @PathVariable(name = "id")
         id: Int,
     ): ReportingDataOutput {
-        return getReportingById.execute(id).let {
-            ReportingDataOutput.fromReportingDTO(it)
-        }
+        return getReportingById.execute(id).let { ReportingDataOutput.fromReportingDTO(it) }
     }
 
     @PutMapping(value = ["/{id}"], consumes = ["application/json"])
@@ -120,9 +118,7 @@ class ReportingsController(
         return createOrUpdateReporting.execute(
             reporting.toReportingEntity(),
         )
-            .let {
-                ReportingDataOutput.fromReportingDTO(it)
-            }
+            .let { ReportingDataOutput.fromReportingDTO(it) }
     }
 
     @DeleteMapping(value = ["/{id}"])

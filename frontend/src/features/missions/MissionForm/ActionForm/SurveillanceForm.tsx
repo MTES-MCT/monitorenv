@@ -23,14 +23,16 @@ import { MultiZonePicker } from '../../MultiZonePicker'
 export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionIndex }) {
   const { newWindowContainerRef } = useNewWindow()
 
-  const [, actionStartDateMeta] = useField(`envActions[${currentActionIndex}].actionStartDateTimeUtc`)
-  const [, actionEndDateMeta] = useField(`envActions[${currentActionIndex}].actionEndDateTimeUtc`)
-
   const [actionsFields] = useField<EnvAction[]>('envActions')
-  const [geomField, ,] = useField(`envActions[${currentActionIndex}].geom`)
+  const envActionIndex = actionsFields.value.findIndex(envAction => envAction.id === String(currentActionIndex))
 
-  const [durationMatchMissionField] = useField(`envActions[${currentActionIndex}].durationMatchesMission`)
-  const [envActionField] = useField(`envActions[${currentActionIndex}]`)
+  const [, actionStartDateMeta] = useField(`envActions[${envActionIndex}].actionStartDateTimeUtc`)
+  const [, actionEndDateMeta] = useField(`envActions[${envActionIndex}].actionEndDateTimeUtc`)
+
+  const [geomField, ,] = useField(`envActions[${envActionIndex}].geom`)
+
+  const [durationMatchMissionField] = useField(`envActions[${envActionIndex}].durationMatchesMission`)
+  const [envActionField] = useField(`envActions[${envActionIndex}]`)
 
   const hasCustomZone = geomField.value && geomField.value.coordinates.length > 0
   const surveillances = actionsFields.value.filter(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
@@ -45,7 +47,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
 
   const handleRemoveAction = () => {
     setCurrentActionIndex(undefined)
-    remove(currentActionIndex)
+    remove(envActionIndex)
   }
 
   return (
@@ -63,7 +65,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
           Supprimer
         </IconButtonRight>
       </Header>
-      <SurveillanceThemes currentActionIndex={currentActionIndex} />
+      <SurveillanceThemes envActionIndex={envActionIndex} />
       <FlexSelectorWrapper>
         <Form.Group>
           <Form.ControlLabel>Début et fin de surveillance (UTC)</Form.ControlLabel>
@@ -80,7 +82,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
               isStringDate
               isUndefinedWhenDisabled={false}
               label="Date et heure de début de surveillance (UTC)"
-              name={`envActions[${currentActionIndex}].actionStartDateTimeUtc`}
+              name={`envActions[${envActionIndex}].actionStartDateTimeUtc`}
               withTime
             />
             <StyledFormikDatePicker
@@ -95,7 +97,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
               isStringDate
               isUndefinedWhenDisabled={false}
               label="Date et heure de fin de surveillance (UTC)"
-              name={`envActions[${currentActionIndex}].actionEndDateTimeUtc`}
+              name={`envActions[${envActionIndex}].actionEndDateTimeUtc`}
               withTime
             />
             {envActionField.value.actionStartDateTimeUtc && envActionField.value.actionEndDateTimeUtc && (
@@ -111,30 +113,30 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
             disabled={surveillances.length > 1}
             inline
             label="Dates et heures de surveillance équivalentes à celles de la mission"
-            name={`envActions[${currentActionIndex}].durationMatchesMission`}
+            name={`envActions[${envActionIndex}].durationMatchesMission`}
           />
         </Form.Group>
       </FlexSelectorWrapper>
       <FlexSelectorWrapper>
         <MultiZonePicker
           addButtonLabel="Ajouter une zone de surveillance"
-          currentActionIndex={currentActionIndex}
+          envActionIndex={envActionIndex}
           interactionListener={InteractionListener.SURVEILLANCE_ZONE}
           isLight
           label="Zone de surveillance"
-          name={`envActions[${currentActionIndex}].geom`}
+          name={`envActions[${envActionIndex}].geom`}
         />
         <StyledFormikCheckbox
           data-cy="surveillance-zone-matches-mission"
           disabled={hasCustomZone || isEditingZone}
           inline
           label="Zone de surveillance équivalente à la zone de mission"
-          name={`envActions[${currentActionIndex}].coverMissionZone`}
+          name={`envActions[${envActionIndex}].coverMissionZone`}
         />
       </FlexSelectorWrapper>
       <Form.Group>
-        <Form.ControlLabel htmlFor={`envActions.${currentActionIndex}.observations`}> </Form.ControlLabel>
-        <FormikTextarea isLight label="Observations" name={`envActions.${currentActionIndex}.observations`} />
+        <Form.ControlLabel htmlFor={`envActions.${envActionIndex}.observations`}> </Form.ControlLabel>
+        <FormikTextarea isLight label="Observations" name={`envActions.${envActionIndex}.observations`} />
       </Form.Group>
     </>
   )

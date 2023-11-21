@@ -199,7 +199,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                         note = null,
                         photo = null,
                         stationId = 2,
-                        type = ControlUnitResourceType.DRONE
+                        type = ControlUnitResourceType.DRONE,
                     ),
                 ),
             ),

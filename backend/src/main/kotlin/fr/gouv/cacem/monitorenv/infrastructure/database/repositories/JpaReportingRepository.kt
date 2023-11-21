@@ -33,15 +33,18 @@ class JpaReportingRepository(
 ) : IReportingRepository {
 
     @Transactional
-    @Modifying(clearAutomatically = true, flushAutomatically = true)
     override fun attachEnvActionsToReportings(envActionId: UUID, reportingIds: List<Int>) {
         dbReportingRepository.attachEnvActionsToReportings(envActionId, reportingIds)
     }
 
     @Transactional
-    @Modifying(clearAutomatically = true, flushAutomatically = true)
     override fun attachReportingsToMission(reportingIds: List<Int>, missionId: Int) {
         dbReportingRepository.attachReportingsToMission(reportingIds, missionId)
+    }
+
+    @Transactional
+    override fun detachDanglingEnvActions(missionId: Int, envActionIds: List<UUID>) {
+        dbReportingRepository.detachDanglingEnvActions(missionId, envActionIds)
     }
 
     override fun findById(reportingId: Int): ReportingDTO {
@@ -123,6 +126,7 @@ class JpaReportingRepository(
                     missionReference = missionReference,
                     envActionReference = envActionReference,
                 )
+
             dbReportingRepository.saveAndFlush(reportingModel).toReportingDTO(mapper)
         } catch (e: JpaObjectRetrievalFailureException) {
             throw NotFoundException(

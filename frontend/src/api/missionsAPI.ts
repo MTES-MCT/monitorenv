@@ -1,7 +1,7 @@
 import { monitorenvPrivateApi, monitorenvPublicApi } from './api'
 import { ControlUnit } from '../domain/entities/controlUnit'
 
-import type { Mission } from '../domain/entities/missions'
+import type { Mission, MissionForApi } from '../domain/entities/missions'
 
 type MissionsResponse = Mission[]
 type MissionsFilter = {
@@ -26,27 +26,31 @@ const getSeaFrontsFilter = seaFronts =>
   seaFronts && seaFronts?.length > 0 && `seaFronts=${encodeURIComponent(seaFronts)}`
 
 export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
-  endpoints: build => ({
-    createMission: build.mutation<Mission, Partial<Mission>>({
-      invalidatesTags: [{ id: 'LIST', type: 'Missions' }],
+  endpoints: builder => ({
+    createMission: builder.mutation<Mission, MissionForApi>({
+      invalidatesTags: (_, __, { attachedReportingIds = [] }) => [
+        { id: 'LIST', type: 'Missions' },
+        { id: 'LIST', type: 'Reportings' },
+        ...attachedReportingIds.map(reportingId => ({ id: reportingId, type: 'Reportings' as const }))
+      ],
       query: mission => ({
         body: mission,
         method: 'PUT',
         url: `/v1/missions`
       })
     }),
-    deleteMission: build.mutation({
+    deleteMission: builder.mutation({
       invalidatesTags: [{ id: 'LIST', type: 'Missions' }],
       query: ({ id }) => ({
         method: 'DELETE',
         url: `/v1/missions/${id}`
       })
     }),
-    getMission: build.query<Mission, number>({
+    getMission: builder.query<Mission, number>({
       providesTags: (_, __, id) => [{ id, type: 'Missions' }],
       query: id => `/v1/missions/${id}`
     }),
-    getMissions: build.query<MissionsResponse, MissionsFilter | void>({
+    getMissions: builder.query<MissionsResponse, MissionsFilter | void>({
       providesTags: result =>
         result
           ? // successful query
@@ -66,12 +70,13 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
           .filter(v => v)
           .join('&')
     }),
-    updateMission: build.mutation<Mission, Mission>({
-      invalidatesTags: (_, __, { id }) => [
+    updateMission: builder.mutation<Mission, MissionForApi>({
+      invalidatesTags: (_, __, { attachedReportingIds = [], id }) => [
         { id, type: 'Missions' },
-        { id: 'LIST', type: 'Missions' }
+        { id: 'LIST', type: 'Missions' },
+        { id: 'LIST', type: 'Reportings' },
+        ...attachedReportingIds.map(reportingId => ({ id: reportingId, type: 'Reportings' as const }))
       ],
-
       query: ({ id, ...patch }) => ({
         body: { id, ...patch },
         method: 'PUT',

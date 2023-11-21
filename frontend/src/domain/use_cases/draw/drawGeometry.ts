@@ -1,6 +1,6 @@
 import { InteractionListener, InteractionType } from '../../entities/map/constants'
 import { setGeometry, setInitialGeometry, setInteractionTypeAndListener } from '../../shared_slices/Draw'
-import { setDisplayedItems } from '../../shared_slices/Global'
+import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../map/updateMapInteractionListeners'
 
 import type { GeoJSON as GeoJSONNamespace } from '../../types/GeoJSON'
 
@@ -11,7 +11,7 @@ export const drawPolygon =
       dispatch(setInitialGeometry(geometry))
     }
 
-    dispatch(openDrawLayerModal)
+    dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.DRAW_ZONE_OR_POINT))
     dispatch(
       setInteractionTypeAndListener({
         listener,
@@ -27,7 +27,7 @@ export const drawPoint =
       dispatch(setInitialGeometry(geometry))
     }
 
-    dispatch(openDrawLayerModal)
+    dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.DRAW_ZONE_OR_POINT))
     dispatch(
       setInteractionTypeAndListener({
         listener: listener || InteractionListener.CONTROL_POINT,
@@ -35,33 +35,3 @@ export const drawPoint =
       })
     )
   }
-
-const openDrawLayerModal = dispatch => {
-  dispatch(
-    setDisplayedItems({
-      displayDrawModal: true,
-      displayInterestPoint: false,
-      displayLayersSidebar: false,
-      displayLocateOnMap: true,
-      displayMeasurement: false,
-      displayMissionMenuButton: false,
-      displayReportingsOverlay: false,
-      displaySearchSemaphoreButton: false
-    })
-  )
-}
-
-export const closeDrawLayerModal = dispatch => {
-  dispatch(
-    setDisplayedItems({
-      displayDrawModal: false,
-      displayInterestPoint: true,
-      displayLayersSidebar: true,
-      displayLocateOnMap: true,
-      displayMeasurement: true,
-      displayMissionMenuButton: true,
-      displayReportingsOverlay: true,
-      displaySearchSemaphoreButton: true
-    })
-  )
-}

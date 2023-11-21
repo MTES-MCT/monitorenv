@@ -2,12 +2,12 @@ import { FieldArray } from 'formik'
 
 import { MultipleThemeElement } from './MultipleThemeElement'
 
-export function SurveillanceThemes({ currentActionIndex }) {
+export function SurveillanceThemes({ envActionIndex }) {
   return (
     <FieldArray
-      name={`envActions.${currentActionIndex}.themes`}
+      name={`envActions.${envActionIndex}.themes`}
       render={({ form, push, remove }) => (
-        <MultipleThemeElement currentActionIndex={currentActionIndex} form={form} push={push} remove={remove} />
+        <MultipleThemeElement envActionIndex={envActionIndex} form={form} push={push} remove={remove} />
       )}
       validateOnChange={false}
     />

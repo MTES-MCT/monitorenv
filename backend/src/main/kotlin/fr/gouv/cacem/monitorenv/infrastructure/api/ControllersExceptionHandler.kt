@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ApiError
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.MissingParameterApiError
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ForeignKeyConstraintException
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ReportingAlreadyAttachedException
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.UnarchivedChildException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -58,5 +59,11 @@ class ControllersExceptionHandler {
     @ExceptionHandler(UnarchivedChildException::class)
     fun handleUnarchivedChildException(e: UnarchivedChildException): ApiError {
         return ApiError(ErrorCode.UNARCHIVED_CHILD.name)
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ReportingAlreadyAttachedException::class)
+    fun handleReportingAlreadyAttachedToAMission(e: ReportingAlreadyAttachedException): ApiError {
+        return ApiError(ErrorCode.CHILD_ALREADY_ATTACHED.name)
     }
 }
