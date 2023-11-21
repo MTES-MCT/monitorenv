@@ -73,7 +73,10 @@ export function ControlForm({
   const reportingAsOptions = useMemo(
     () =>
       attachedReportings?.map(reporting => ({
-        isDisabled: reporting.isControlRequired && currentAction?.id !== reporting.attachedEnvActionId,
+        isDisabled:
+          reporting.isControlRequired &&
+          currentAction?.id !== reporting.attachedEnvActionId &&
+          !!reporting.attachedEnvActionId,
         label: `Signalement ${getFormattedReportingId(reporting.reportingId)}`,
         value: reporting.id
       })) || [],
