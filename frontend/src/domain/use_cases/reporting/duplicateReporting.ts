@@ -1,4 +1,5 @@
 import { reportingsAPI } from '../../../api/reportingsAPI'
+import { attachMissionToReportingSliceActions } from '../../../features/Reportings/slice'
 import { getReportingInitialValues, createIdForNewReporting } from '../../../features/Reportings/utils'
 import { setReportingFormVisibility, setToast, ReportingContext, VisibilityState } from '../../shared_slices/Global'
 import { reportingActions } from '../../shared_slices/reporting'
@@ -22,6 +23,15 @@ export const duplicateReporting = (reportingId: number) => async (dispatch, getS
 
         await dispatch(reportingActions.setReporting(duplicatedReporting))
         await dispatch(reportingActions.setActiveReportingId(id))
+
+        await dispatch(
+          attachMissionToReportingSliceActions.setAttachedMission(
+            duplicatedReporting.reporting.attachedMission ?? undefined
+          )
+        )
+        await dispatch(
+          attachMissionToReportingSliceActions.setMissionId(duplicatedReporting.reporting.missionId ?? undefined)
+        )
 
         await dispatch(
           setReportingFormVisibility({
