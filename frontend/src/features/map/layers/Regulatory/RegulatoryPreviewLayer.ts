@@ -96,7 +96,7 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
 
       isThrottled.current = true
 
-      setTimeout(() => {
+      window.setTimeout(() => {
         isThrottled.current = false
         refreshPreviewLayer()
       }, 300)

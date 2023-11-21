@@ -4,8 +4,8 @@
   "license": "AGPL-3.0",
   "private": true,
   "engines": {
-    "node": "18",
-    "npm": "9"
+    "node": "20",
+    "npm": "10"
   },
   "scripts": {
     "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
@@ -90,7 +90,7 @@
     "@tsconfig/create-react-app": "1.0.3",
     "@types/google.maps": "3.54.1",
     "@types/jest": "29.5.4",
-    "@types/node": "18.15.11",
+    "@types/node": "20.9.0",
     "@types/react": "18.2.18",
     "@types/react-dom": "18.2.7",
     "@types/react-router-dom": "5.3.3",

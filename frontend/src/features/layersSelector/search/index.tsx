@@ -83,7 +83,7 @@ export function LayerSearch({ isVisible }) {
       }
       isSearchThrottled.current = true
 
-      setTimeout(() => {
+      window.setTimeout(() => {
         isSearchThrottled.current = false
 
         if (searchedText.length > 2 || ampTypes?.length > 0 || geofilter) {
