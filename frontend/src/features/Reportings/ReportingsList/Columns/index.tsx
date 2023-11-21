@@ -1,7 +1,7 @@
 import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { getFormattedReportingId } from '../../../../domain/entities/reporting'
+import { getFormattedReportingId } from '../../utils/getFormattedReportingId'
 import { ButtonsGroupRow } from '../Cells/ButtonsRowGroup'
 import { CellActionStatus } from '../Cells/CellActionStatus'
 import { CellActionThemes } from '../Cells/CellActionThemes'

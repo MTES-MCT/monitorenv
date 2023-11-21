@@ -1,7 +1,7 @@
 import { attachReportingToMissionSliceActions } from '../../../features/missions/MissionForm/AttachReporting/slice'
 import { attachMissionToReportingSliceActions } from '../../../features/Reportings/ReportingForm/AttachMission/slice'
 import { resetInteraction } from '../../shared_slices/Draw'
-import { setDisplayedItems } from '../../shared_slices/Global'
+import { setDisplayedItems, resetLayoutToDefault } from '../../shared_slices/Global'
 
 export enum MapInteractionListenerEnum {
   ATTACH_MISSION = 'ATTACH_MISSION',
@@ -21,14 +21,14 @@ export const updateMapInteractionListeners = (listener: MapInteractionListenerEn
     case MapInteractionListenerEnum.ATTACH_MISSION:
       dispatch(attachMissionToReportingSliceActions.setAttachMissionListener(true))
       dispatch(attachReportingToMissionSliceActions.setAttachReportingListener(false))
-      closeDrawLayerModal(dispatch)
+      dispatch(resetLayoutToDefault())
       dispatch(resetInteraction())
       break
 
     case MapInteractionListenerEnum.ATTACH_REPORTING:
       dispatch(attachReportingToMissionSliceActions.setAttachReportingListener(true))
       dispatch(attachMissionToReportingSliceActions.setAttachMissionListener(false))
-      closeDrawLayerModal(dispatch)
+      dispatch(resetLayoutToDefault())
       dispatch(resetInteraction())
       break
 
@@ -36,7 +36,7 @@ export const updateMapInteractionListeners = (listener: MapInteractionListenerEn
     default:
       dispatch(attachMissionToReportingSliceActions.setAttachMissionListener(false))
       dispatch(attachReportingToMissionSliceActions.setAttachReportingListener(false))
-      closeDrawLayerModal(dispatch)
+      dispatch(resetLayoutToDefault())
       dispatch(resetInteraction())
       break
   }
@@ -55,23 +55,6 @@ const openDrawLayerModal = dispatch => {
       displayReportingsOverlay: false,
       displayRightMenuControlUnitListButton: false,
       displaySearchSemaphoreButton: false
-    })
-  )
-}
-
-export const closeDrawLayerModal = dispatch => {
-  dispatch(
-    setDisplayedItems({
-      displayDrawModal: false,
-      displayInterestPoint: true,
-      displayLayersSidebar: true,
-      displayLocateOnMap: true,
-      displayMeasurement: true,
-      displayMissionMenuButton: true,
-      displayReportingsButton: true,
-      displayReportingsOverlay: true,
-      displayRightMenuControlUnitListButton: true,
-      displaySearchSemaphoreButton: true
     })
   )
 }

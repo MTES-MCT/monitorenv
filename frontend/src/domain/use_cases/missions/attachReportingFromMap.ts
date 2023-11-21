@@ -14,20 +14,18 @@ export const attachReportingFromMap = (id: number) => async (dispatch, getState)
   const response = dispatch(reportingsAPI.endpoints.getReporting.initiate(id))
   response
     .then(result => {
-      if (result.data) {
-        dispatch(
-          attachReportingToMissionSliceActions.setAttachedReportings([
-            ...attachedReportings,
-            {
-              ...result.data,
-              missionId
-            }
-          ])
-        )
-        response.unsubscribe()
-      } else {
+      if (!result.data) {
         throw Error("Erreur à l'ajout du signalement")
       }
+      dispatch(
+        attachReportingToMissionSliceActions.setAttachedReportings([
+          ...attachedReportings,
+          {
+            ...result.data,
+            missionId
+          }
+        ])
+      )
       response.unsubscribe()
     })
     .catch(error => {

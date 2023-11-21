@@ -14,13 +14,13 @@ import {
   type EnvActionForTimeline
 } from '../../domain/entities/missions'
 import {
-  getFormattedReportingId,
   type DetachedReporting,
   type Reporting,
   type ReportingDetailed,
   type ReportingForTimeline,
   type DetachedReportingForTimeline
 } from '../../domain/entities/reporting'
+import { getFormattedReportingId } from '../Reportings/utils/getFormattedReportingId'
 
 import type { LegacyControlUnit } from '../../domain/entities/legacyControlUnit'
 

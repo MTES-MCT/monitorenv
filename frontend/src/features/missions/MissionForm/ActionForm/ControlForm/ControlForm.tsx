@@ -16,7 +16,6 @@ import styled from 'styled-components'
 
 import { InfractionsForm } from './InfractionsForm'
 import { OtherControlTypesForm } from './OtherControlTypesForm'
-import { getFormattedReportingId } from '../../../../../domain/entities/reporting'
 import { TargetTypeEnum, TargetTypeLabels } from '../../../../../domain/entities/targetType'
 import { VehicleTypeEnum } from '../../../../../domain/entities/vehicleType'
 import { ReactComponent as ControlIconSVG } from '../../../../../uiMonitor/icons/Control.svg'
@@ -24,6 +23,7 @@ import { ReactComponent as DeleteSVG } from '../../../../../uiMonitor/icons/Dele
 import { getDateAsLocalizedStringCompact } from '../../../../../utils/getDateAsLocalizedString'
 import { TargetSelector } from '../../../../commonComponents/TargetSelector'
 import { VehicleTypeSelector } from '../../../../commonComponents/VehicleTypeSelector'
+import { getFormattedReportingId } from '../../../../Reportings/utils/getFormattedReportingId'
 import { MultiPointPicker } from '../../../MultiPointPicker'
 import { ActionTheme } from '../Themes/ActionTheme'
 

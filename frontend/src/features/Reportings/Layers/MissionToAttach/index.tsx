@@ -1,6 +1,6 @@
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
 
 import { useGetMissionsQuery } from '../../../../api/missionsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
@@ -11,6 +11,7 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { getMissionZoneFeature } from '../../../map/layers/Missions/missionGeometryHelpers'
 import { missionWithCentroidStyleFn } from '../../../map/layers/Missions/missions.style'
 
+import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 import type { Geometry } from 'ol/geom'
 
@@ -27,60 +28,45 @@ export function MissionToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProp
     [missions]
   )
 
-  const vectorSourceRef = useRef() as React.MutableRefObject<VectorSource<Geometry>>
-  const GetVectorSource = () => {
-    if (vectorSourceRef.current === undefined) {
-      vectorSourceRef.current = new VectorSource()
-    }
+  const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Geometry>>
 
-    return vectorSourceRef.current
-  }
-
-  const vectorLayerRef = useRef() as React.MutableRefObject<VectorLayer<VectorSource> & { name?: string }>
-  const GetVectorLayer = useCallback(() => {
-    if (vectorLayerRef.current === undefined) {
-      vectorLayerRef.current = new VectorLayer({
-        renderBuffer: 7,
-        source: GetVectorSource(),
-        style: missionWithCentroidStyleFn,
-        updateWhileAnimating: true,
-        updateWhileInteracting: true,
-        zIndex: Layers.MISSION_TO_ATTACH_ON_REPORTING.zIndex
-      })
-      vectorLayerRef.current.name = Layers.MISSION_TO_ATTACH_ON_REPORTING.code
-    }
-
-    return vectorLayerRef.current
-  }, [])
+  const vectorLayerRef = useRef(
+    new VectorLayer({
+      renderBuffer: 7,
+      source: vectorSourceRef.current,
+      style: missionWithCentroidStyleFn,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
+      zIndex: Layers.MISSION_TO_ATTACH_ON_REPORTING.zIndex
+    })
+  ) as MutableRefObject<VectorLayerWithName>
+  ;(vectorLayerRef.current as VectorLayerWithName).name = Layers.MISSION_TO_ATTACH_ON_REPORTING.code
 
   useEffect(() => {
-    if (map) {
-      map.getLayers().push(GetVectorLayer())
+    map.getLayers().push(vectorLayerRef.current)
 
-      return () => map.removeLayer(GetVectorLayer())
+    return () => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      map.removeLayer(vectorLayerRef.current)
     }
-
-    return () => {}
-  }, [map, GetVectorLayer])
+  }, [map])
 
   useEffect(() => {
-    GetVectorSource()?.clear(true)
+    vectorSourceRef.current?.clear(true)
     if (missionsMultiPolygons) {
-      GetVectorSource()?.addFeatures(missionsMultiPolygons)
+      vectorSourceRef.current?.addFeatures(missionsMultiPolygons)
     }
   }, [missionsMultiPolygons])
 
   useEffect(() => {
-    GetVectorLayer()?.setVisible(attachMissionListener)
-  }, [attachMissionListener, GetVectorLayer])
+    vectorLayerRef.current?.setVisible(attachMissionListener)
+  }, [attachMissionListener])
 
   useEffect(() => {
-    if (mapClickEvent?.feature) {
-      const feature = mapClickEvent?.feature
-      if (feature.getId()?.toString()?.includes(Layers.MISSION_TO_ATTACH_ON_REPORTING.code)) {
-        const { missionId } = feature.getProperties()
-        dispatch(attachMission(missionId))
-      }
+    const feature = mapClickEvent?.feature
+    if (feature && feature.getId()?.toString()?.includes(Layers.MISSION_TO_ATTACH_ON_REPORTING.code)) {
+      const { missionId } = feature.getProperties()
+      dispatch(attachMission(missionId))
     }
   }, [dispatch, mapClickEvent])
 

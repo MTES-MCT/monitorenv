@@ -15,11 +15,11 @@ export const createMissionFromReporting = (values: Reporting | Partial<Reporting
   } = getState().global
 
   const valuesToSave = omit(values, ['attachedMission'])
-  const cleanValues = isNewReporting(valuesToSave.id) ? { ...valuesToSave, id: undefined } : valuesToSave
+  const newOrNextReportingData = isNewReporting(valuesToSave.id) ? { ...valuesToSave, id: undefined } : valuesToSave
   const endpoint = reportingsAPI.endpoints.createReporting
 
   try {
-    const response = await dispatch(endpoint.initiate(cleanValues))
+    const response = await dispatch(endpoint.initiate(newOrNextReportingData))
 
     if ('data' in response) {
       await dispatch(

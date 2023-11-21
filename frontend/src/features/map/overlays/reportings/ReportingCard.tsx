@@ -13,12 +13,7 @@ import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
 import { Layers } from '../../../../domain/entities/layers/constants'
-import {
-  ReportingTypeEnum,
-  getFormattedReportingId,
-  ReportingTypeLabels,
-  ControlStatusEnum
-} from '../../../../domain/entities/reporting'
+import { ReportingTypeEnum, ReportingTypeLabels, ControlStatusEnum } from '../../../../domain/entities/reporting'
 import { ReportingContext, removeOverlayCoordinatesByName } from '../../../../domain/shared_slices/Global'
 import { reportingActions } from '../../../../domain/shared_slices/reporting'
 import { editReportingInLocalStore } from '../../../../domain/use_cases/reporting/editReportingInLocalStore'
@@ -26,6 +21,7 @@ import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { LinkToMissionTag } from '../../../Reportings/components/LinkToMissionTag'
 import { StatusActionTag } from '../../../Reportings/components/StatusActionTag'
+import { getFormattedReportingId } from '../../../Reportings/utils/getFormattedReportingId'
 
 type ReportingCardProps = {
   feature: any

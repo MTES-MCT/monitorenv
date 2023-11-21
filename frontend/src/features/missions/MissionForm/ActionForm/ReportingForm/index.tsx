@@ -10,13 +10,13 @@ import { ActionTypeEnum, type Mission, type NewMission } from '../../../../../do
 import {
   ReportingSourceEnum,
   ReportingTypeLabels,
-  ReportingSourceLabels,
-  getFormattedReportingId
+  ReportingSourceLabels
 } from '../../../../../domain/entities/reporting'
 import { ReportingTargetTypeLabels } from '../../../../../domain/entities/targetType'
 import { vehicleTypeLabels } from '../../../../../domain/entities/vehicleType'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
+import { getFormattedReportingId } from '../../../../Reportings/utils/getFormattedReportingId'
 import { attachReportingToMissionSliceActions } from '../../AttachReporting/slice'
 
 const EMPTY_VALUE = '--'

@@ -10,10 +10,9 @@ import {
   type EnvActionControl,
   type EnvActionSurveillance,
   getMissionStatus,
-  getTotalOfControls,
-  getTotalOfSurveillances,
   type Mission
 } from '../../../../domain/entities/missions'
+import { getTotalOfControls, getTotalOfSurveillances } from '../../../missions/utils/getTotalOfActions'
 
 import type { Geometry } from 'ol/geom'
 

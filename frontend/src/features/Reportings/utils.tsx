@@ -3,10 +3,10 @@ import _ from 'lodash'
 
 import { LinkToMissionTag } from './components/LinkToMissionTag'
 import { StyledArchivedTag } from './style'
+import { getFormattedReportingId } from './utils/getFormattedReportingId'
 import {
   ReportingSourceEnum,
   type Reporting,
-  getFormattedReportingId,
   ReportingStatusEnum,
   getReportingStatus
 } from '../../domain/entities/reporting'

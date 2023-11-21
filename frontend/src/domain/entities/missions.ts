@@ -399,11 +399,3 @@ export const getMissionStatus = ({
 
   return MissionStatusEnum.PENDING
 }
-
-export const getTotalOfControls = (mission: Partial<Mission>) =>
-  mission.envActions
-    ?.map(control => (control.actionType === ActionTypeEnum.CONTROL && control.actionNumberOfControls) || 0)
-    .reduce((acc, curr) => acc + curr, 0)
-
-export const getTotalOfSurveillances = (mission: Partial<Mission>) =>
-  mission.envActions?.filter(action => action.actionType === ActionTypeEnum.SURVEILLANCE).length

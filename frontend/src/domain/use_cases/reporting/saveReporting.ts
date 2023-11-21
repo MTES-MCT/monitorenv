@@ -12,13 +12,13 @@ import type { Reporting } from '../../entities/reporting'
 export const saveReporting =
   (values: Reporting | Partial<Reporting>, reportingContext: ReportingContext) => async dispatch => {
     const valuesToSave = omit(values, ['attachedMission'])
-    const cleanValues = isNewReporting(valuesToSave.id) ? { ...valuesToSave, id: undefined } : valuesToSave
+    const newOrNextReportingData = isNewReporting(valuesToSave.id) ? { ...valuesToSave, id: undefined } : valuesToSave
     const endpoint = isNewReporting(values.id)
       ? reportingsAPI.endpoints.createReporting
       : reportingsAPI.endpoints.updateReporting
 
     try {
-      const response = await dispatch(endpoint.initiate(cleanValues))
+      const response = await dispatch(endpoint.initiate(newOrNextReportingData))
       if ('data' in response) {
         dispatch(
           setReportingFormVisibility({

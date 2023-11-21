@@ -4,8 +4,9 @@ import styled from 'styled-components'
 
 import { Accented, ReportingDate, SummaryContent } from './style'
 import { ActionTypeEnum, type Mission, type NewMission } from '../../../../domain/entities/missions'
-import { getFormattedReportingId, type ReportingForTimeline } from '../../../../domain/entities/reporting'
+import { type ReportingForTimeline } from '../../../../domain/entities/reporting'
 import { getDateAsLocalizedStringCompact } from '../../../../utils/getDateAsLocalizedString'
+import { getFormattedReportingId } from '../../../Reportings/utils/getFormattedReportingId'
 import { actionFactory } from '../../Missions.helpers'
 
 export function ReportingCard({

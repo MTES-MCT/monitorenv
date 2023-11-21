@@ -9,52 +9,36 @@ import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 
 export function HoveredReportingToAttachLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
-  const vectorSourceRef = useRef() as MutableRefObject<VectorSource>
-  const GetVectorSource = () => {
-    if (vectorSourceRef.current === undefined) {
-      vectorSourceRef.current = new VectorSource()
-    }
+  const vectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource>
 
-    return vectorSourceRef.current
-  }
-
-  const vectorLayerRef = useRef() as MutableRefObject<VectorLayerWithName>
+  const vectorLayerRef = useRef(
+    new VectorLayer({
+      renderBuffer: 7,
+      source: vectorSourceRef.current,
+      style: hoveredReportingStyleFn,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
+      zIndex: Layers.REPORTING_TO_ATTACH_ON_MISSION.zIndex
+    })
+  ) as MutableRefObject<VectorLayerWithName>
+  ;(vectorLayerRef.current as VectorLayerWithName).name = Layers.SELECTED_REPORTING_TO_ATTACH_ON_MISSION.code
 
   useEffect(() => {
-    const GetVectorLayer = () => {
-      if (vectorLayerRef.current === undefined) {
-        vectorLayerRef.current = new VectorLayer({
-          renderBuffer: 7,
-          source: GetVectorSource(),
-          style: hoveredReportingStyleFn,
-          updateWhileAnimating: true,
-          updateWhileInteracting: true,
-          zIndex: Layers.REPORTING_TO_ATTACH_ON_MISSION.zIndex
-        }) as VectorLayerWithName
-        vectorLayerRef.current.name = Layers.SELECTED_REPORTING_TO_ATTACH_ON_MISSION.code
-      }
-
-      return vectorLayerRef.current
-    }
-
-    if (map) {
-      map.getLayers().push(GetVectorLayer())
-    }
+    map.getLayers().push(vectorLayerRef.current)
 
     return () => {
-      if (map) {
-        map.removeLayer(GetVectorLayer())
-      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      map.removeLayer(vectorLayerRef.current)
     }
   }, [map])
 
   useEffect(() => {
-    GetVectorSource()?.clear(true)
+    vectorSourceRef.current?.clear(true)
     if (
       currentFeatureOver &&
       currentFeatureOver.getId()?.toString()?.includes(Layers.REPORTING_TO_ATTACH_ON_MISSION.code)
     ) {
-      GetVectorSource()?.addFeature(currentFeatureOver)
+      vectorSourceRef.current?.addFeature(currentFeatureOver)
     }
   }, [currentFeatureOver])
 

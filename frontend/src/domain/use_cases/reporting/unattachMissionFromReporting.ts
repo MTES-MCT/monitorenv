@@ -10,11 +10,11 @@ import type { Reporting } from '../../entities/reporting'
 
 export const unattachMissionFromReporting =
   (values: Reporting | Partial<Reporting>, reportingContext: ReportingContext) => async dispatch => {
-    const valuesToSave = omit(values, ['attachedMission'])
+    const newOrNextReportingData = omit(values, ['attachedMission'])
     const endpoint = reportingsAPI.endpoints.updateReporting
 
     try {
-      const response = await dispatch(endpoint.initiate(valuesToSave))
+      const response = await dispatch(endpoint.initiate(newOrNextReportingData))
       if ('data' in response) {
         const updatedReporting = {
           context: reportingContext,

@@ -118,14 +118,6 @@ export enum StatusFilterLabels {
   ARCHIVED = 'Archivés'
 }
 
-export const getFormattedReportingId = (reportingId: number | undefined) => {
-  if (!reportingId) {
-    return ''
-  }
-
-  return `${String(reportingId).slice(0, 2)}-${String(reportingId).slice(2)}`
-}
-
 export const getReportingStatus = ({
   createdAt,
   isArchived,

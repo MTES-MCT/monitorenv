@@ -22,12 +22,12 @@ export const saveMission =
     const routeParams = getMissionPageRoute(currentPath)
     const missionIsNewMission = isNewMission(routeParams?.params?.id)
 
-    const cleanValues = missionIsNewMission ? { ...valuesToSave, id: undefined } : valuesToSave
+    const newOrNextMissionData = missionIsNewMission ? { ...valuesToSave, id: undefined } : valuesToSave
     const upsertMission = missionIsNewMission
       ? missionsAPI.endpoints.createMission
       : missionsAPI.endpoints.updateMission
     try {
-      const response = await dispatch(upsertMission.initiate(cleanValues))
+      const response = await dispatch(upsertMission.initiate(newOrNextMissionData))
       if ('data' in response) {
         if (reopen) {
           return

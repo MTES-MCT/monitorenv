@@ -10,7 +10,11 @@ export const selectedMissionToAttachStyle = new Style({
     const extent = feature?.getGeometry()?.getExtent()
     const center = extent && getCenter(extent)
 
-    return center && new Point(center)
+    if (!center) {
+      throw new Error('No center found')
+    }
+
+    return new Point(center)
   },
   image: new Circle({
     radius: 20,

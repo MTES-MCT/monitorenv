@@ -5,7 +5,8 @@ import styled from 'styled-components'
 
 import { AttachedMissionCard } from './AttachedMissionCard'
 import { attachMissionToReportingSliceActions } from './slice'
-import { ReportingContext } from '../../../../domain/shared_slices/Global'
+import { Layers } from '../../../../domain/entities/layers/constants'
+import { ReportingContext, removeOverlayCoordinatesByName } from '../../../../domain/shared_slices/Global'
 import {
   MapInteractionListenerEnum,
   updateMapInteractionListeners
@@ -27,6 +28,7 @@ export function AttachMission({ setIsAttachNewMission }) {
   )
 
   const attachMission = () => {
+    dispatch(removeOverlayCoordinatesByName(Layers.REPORTINGS.code))
     dispatch(attachMissionToReportingSliceActions.setInitialAttachedMission(values.attachedMission))
     dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.ATTACH_MISSION))
   }

@@ -13,13 +13,12 @@ export const attachMission = (id: number) => async (dispatch, getState) => {
 
   response
     .then(async result => {
-      if (result.data) {
-        await dispatch(attachMissionToReportingSliceActions.setAttachedMission(result.data))
-        await dispatch(attachMissionToReportingSliceActions.setMissionId(id))
-        response.unsubscribe()
-      } else {
+      if (!result.data) {
         throw Error("Erreur à l'ajout du signalement")
       }
+      await dispatch(attachMissionToReportingSliceActions.setAttachedMission(result.data))
+      await dispatch(attachMissionToReportingSliceActions.setMissionId(id))
+      response.unsubscribe()
     })
     .catch(error => {
       dispatch(setToast({ containerId: 'sideWindow', message: error }))
