@@ -1,14 +1,15 @@
 import { TextInput, customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { ReportingStatusEnum, getReportingStatus } from '../../../../../domain/entities/reporting'
+import { ReportingStatusEnum, getReportingStatus, type Reporting } from '../../../../../domain/entities/reporting'
 
-export function Validity({ reporting }) {
+export function Validity({ reporting }: { reporting: Reporting }) {
   const reportingStatus = getReportingStatus(reporting)
 
-  const formattedCreatedAt = getLocalizedDayjs(reporting?.createdAt).format('DD/MM/YYYY à HH:mm')
+  const localizedCreatedAt = getLocalizedDayjs(reporting.createdAt)
+  const formattedCreatedAt = localizedCreatedAt.format('DD/MM/YYYY à HH:mm')
 
-  const endOfValidity = getLocalizedDayjs(reporting?.createdAt).add(reporting?.validityTime || 0, 'hour')
+  const endOfValidity = localizedCreatedAt.add(reporting.validityTime || 0, 'hour')
   const formattedEndOfValidity = endOfValidity.format('DD/MM/YYYY à HH:mm')
 
   const timeLeft = endOfValidity.diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour', true)

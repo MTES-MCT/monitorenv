@@ -19,7 +19,9 @@ import type { Geometry } from 'ol/geom'
 
 export function ReportingToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
-  const attachReportingListener = useAppSelector(state => state.attachReportingToMission.attachReportingListener)
+  const isReportingAttachmentInProgress = useAppSelector(
+    state => state.attachReportingToMission.isReportingAttachmentInProgress
+  )
   const attachedReportings = useAppSelector(state => state.attachReportingToMission.attachedReportings)
 
   const { data: reportings } = useGetReportingsQuery({
@@ -91,8 +93,8 @@ export function ReportingToAttachLayer({ map, mapClickEvent }: BaseMapChildrenPr
   }, [reportingsPointOrZone])
 
   useEffect(() => {
-    vectorLayerRef.current?.setVisible(attachReportingListener)
-  }, [attachReportingListener])
+    vectorLayerRef.current?.setVisible(isReportingAttachmentInProgress)
+  }, [isReportingAttachmentInProgress])
 
   useEffect(() => {
     const feature = mapClickEvent?.feature

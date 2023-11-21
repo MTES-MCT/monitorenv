@@ -6,7 +6,7 @@ import { Accented, ReportingDate, SummaryContent } from './style'
 import { ActionTypeEnum, type Mission, type NewMission } from '../../../../domain/entities/missions'
 import { type ReportingForTimeline } from '../../../../domain/entities/reporting'
 import { getDateAsLocalizedStringCompact } from '../../../../utils/getDateAsLocalizedString'
-import { getFormattedReportingId } from '../../../Reportings/utils/getFormattedReportingId'
+import { getFormattedReportingId } from '../../../Reportings/utils'
 import { actionFactory } from '../../Missions.helpers'
 
 export function ReportingCard({

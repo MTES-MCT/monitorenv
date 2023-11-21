@@ -1,8 +1,8 @@
 import _ from 'lodash'
 import { generatePath } from 'react-router'
 
-import { attachReportingToMissionSliceActions } from '../../../features/missions/MissionForm/AttachReporting/slice'
 import { missionFactory } from '../../../features/missions/Missions.helpers'
+import { attachReportingToMissionSliceActions } from '../../../features/missions/slice'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { isNewMission } from '../../../utils/isNewMission'
 import { sideWindowPaths } from '../../entities/sideWindow'

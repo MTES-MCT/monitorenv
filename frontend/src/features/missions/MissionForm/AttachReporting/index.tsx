@@ -1,12 +1,12 @@
 import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 
-import { attachReportingToMissionSliceActions } from './slice'
 import {
   MapInteractionListenerEnum,
   updateMapInteractionListeners
 } from '../../../../domain/use_cases/map/updateMapInteractionListeners'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
+import { attachReportingToMissionSliceActions } from '../../slice'
 
 import type { Mission } from '../../../../domain/entities/missions'
 

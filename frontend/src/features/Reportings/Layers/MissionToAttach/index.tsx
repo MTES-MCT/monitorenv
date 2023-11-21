@@ -17,7 +17,9 @@ import type { Geometry } from 'ol/geom'
 
 export function MissionToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
-  const attachMissionListener = useAppSelector(state => state.attachMissionToReporting.attachMissionListener)
+  const isMissionAttachmentInProgress = useAppSelector(
+    state => state.attachMissionToReporting.isMissionAttachmentInProgress
+  )
   const { data: missions } = useGetMissionsQuery({
     missionStatus: [MissionStatusEnum.PENDING]
   })
@@ -59,8 +61,8 @@ export function MissionToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProp
   }, [missionsMultiPolygons])
 
   useEffect(() => {
-    vectorLayerRef.current?.setVisible(attachMissionListener)
-  }, [attachMissionListener])
+    vectorLayerRef.current?.setVisible(isMissionAttachmentInProgress)
+  }, [isMissionAttachmentInProgress])
 
   useEffect(() => {
     const feature = mapClickEvent?.feature

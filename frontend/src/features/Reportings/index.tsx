@@ -50,7 +50,7 @@ export function Reportings({ context }: { context: ReportingContext }) {
       {reportingFormVisibility.context === context && (
         <ReportingFormWithContext
           key={reportingContext}
-          context={reportingContext}
+          context={reportingContext || ReportingContext.MAP}
           totalReportings={reportingsTabs.length}
         />
       )}

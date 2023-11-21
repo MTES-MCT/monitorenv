@@ -23,7 +23,7 @@ import { ReactComponent as DeleteSVG } from '../../../../../uiMonitor/icons/Dele
 import { getDateAsLocalizedStringCompact } from '../../../../../utils/getDateAsLocalizedString'
 import { TargetSelector } from '../../../../commonComponents/TargetSelector'
 import { VehicleTypeSelector } from '../../../../commonComponents/VehicleTypeSelector'
-import { getFormattedReportingId } from '../../../../Reportings/utils/getFormattedReportingId'
+import { getFormattedReportingId } from '../../../../Reportings/utils'
 import { MultiPointPicker } from '../../../MultiPointPicker'
 import { ActionTheme } from '../Themes/ActionTheme'
 
@@ -73,11 +73,7 @@ export function ControlForm({
   const reportingAsOptions = useMemo(
     () =>
       attachedReportings?.map(reporting => ({
-        isDisabled:
-          reporting.isControlRequired &&
-          !!reporting.attachedEnvActionId &&
-          !!currentAction &&
-          currentAction?.id !== reporting.attachedEnvActionId,
+        isDisabled: reporting.isControlRequired && currentAction?.id !== reporting.attachedEnvActionId,
         label: `Signalement ${getFormattedReportingId(reporting.reportingId)}`,
         value: reporting.id
       })) || [],

@@ -1,6 +1,6 @@
 import { customDayjs as dayjs, Dropdown, Icon } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { ActionCards } from './ActionCards'
@@ -41,7 +41,7 @@ export function ActionsForm({ currentActionIndex, setCurrentActionIndex }) {
     [actions]
   )
 
-  const handleAddSurveillanceAction = () => {
+  const handleAddSurveillanceAction = useCallback(() => {
     const newSurveillance = actionFactory({
       actionType: ActionTypeEnum.SURVEILLANCE,
       durationMatchesMission: isFirstSurveillanceAction,
@@ -52,46 +52,64 @@ export function ActionsForm({ currentActionIndex, setCurrentActionIndex }) {
     })
     setFieldValue('envActions', [newSurveillance, ...(envActions || [])])
     setCurrentActionIndex(newSurveillance.id)
-  }
+  }, [
+    envActions,
+    isFirstSurveillanceAction,
+    setCurrentActionIndex,
+    setFieldValue,
+    values?.endDateTimeUtc,
+    values?.startDateTimeUtc
+  ])
 
-  const handleAddControlAction = () => {
+  const handleAddControlAction = useCallback(() => {
     const newControl = actionFactory({ actionType: ActionTypeEnum.CONTROL })
     setFieldValue('envActions', [newControl, ...(envActions || [])])
     setCurrentActionIndex(newControl.id)
-  }
-  const handleAddNoteAction = () => {
+  }, [envActions, setCurrentActionIndex, setFieldValue])
+
+  const handleAddNoteAction = useCallback(() => {
     const newNote = actionFactory({ actionType: ActionTypeEnum.NOTE })
     setFieldValue('envActions', [newNote, ...(envActions || [])])
     setCurrentActionIndex(newNote.id)
-  }
-  const handleSelectAction = id => {
-    setCurrentActionIndex(actions && Object.keys(actions).find(key => key === String(id)))
-  }
+  }, [envActions, setCurrentActionIndex, setFieldValue])
 
-  const handleRemoveAction = id => {
-    if (!envActions) {
-      return
-    }
+  const handleSelectAction = useCallback(
+    id => {
+      setCurrentActionIndex(actions && Object.keys(actions).find(key => key === String(id)))
+    },
+    [actions, setCurrentActionIndex]
+  )
 
-    const actionToDeleteIndex = envActions.findIndex(action => action.id === String(id))
-    if (actionToDeleteIndex !== -1) {
-      const actionsToUpdate = [...(envActions || [])]
-      actionsToUpdate.splice(actionToDeleteIndex, 1)
-      setFieldValue('envActions', actionsToUpdate)
-    }
-    setCurrentActionIndex(undefined)
-  }
+  const handleRemoveAction = useCallback(
+    id => {
+      if (!envActions) {
+        return
+      }
 
-  const handleDuplicateAction = id => {
-    const envAction = envActions && envActions.find(action => action.id === id)
+      const actionToDeleteIndex = envActions.findIndex(action => action.id === String(id))
+      if (actionToDeleteIndex !== -1) {
+        const actionsToUpdate = [...(envActions || [])]
+        actionsToUpdate.splice(actionToDeleteIndex, 1)
+        setFieldValue('envActions', actionsToUpdate)
+      }
+      setCurrentActionIndex(undefined)
+    },
+    [envActions, setCurrentActionIndex, setFieldValue]
+  )
 
-    if (envAction) {
-      const duplicatedAction = actionFactory(envAction)
-      setFieldValue('envActions', [duplicatedAction, ...(envActions || [])])
+  const handleDuplicateAction = useCallback(
+    id => {
+      const envAction = envActions && envActions.find(action => action.id === id)
 
-      setCurrentActionIndex(0)
-    }
-  }
+      if (envAction) {
+        const duplicatedAction = actionFactory(envAction)
+        setFieldValue('envActions', [duplicatedAction, ...(envActions || [])])
+
+        setCurrentActionIndex(0)
+      }
+    },
+    [envActions, setFieldValue, setCurrentActionIndex]
+  )
 
   return (
     <FormWrapper>

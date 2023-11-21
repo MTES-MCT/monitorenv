@@ -20,7 +20,7 @@ import { formatCoordinates } from '../../../../../utils/coordinates'
 
 import type { Coordinate } from 'ol/coordinate'
 
-export function Localization({ geom }) {
+export function Location({ geom }) {
   const { coordinatesFormat } = useAppSelector(state => state.map)
   const dispatch = useAppDispatch()
   const localizationText =

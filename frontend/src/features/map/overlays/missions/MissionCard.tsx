@@ -8,7 +8,7 @@ import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { MissionSourceTag } from '../../../../ui/MissionSourceTag'
 import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
-import { missionTypesToString } from '../../../../utils/missionTypes'
+import { humanizeMissionTypes } from '../../../../utils/humanizeMissionTypes'
 
 type MissionCardProps = {
   feature: any
@@ -19,7 +19,9 @@ export function MissionCard({ feature, isOnlyHoverable = false, selected = false
   const dispatch = useAppDispatch()
   const displayMissionsLayer = useAppSelector(state => state.global.displayMissionsLayer)
   const listener = useAppSelector(state => state.draw.listener)
-  const attachReportingListener = useAppSelector(state => state.attachReportingToMission.attachReportingListener)
+  const isReportingAttachmentInProgress = useAppSelector(
+    state => state.attachReportingToMission.isReportingAttachmentInProgress
+  )
 
   const {
     controlUnits,
@@ -52,7 +54,7 @@ export function MissionCard({ feature, isOnlyHoverable = false, selected = false
     dispatch(clearSelectedMissionOnMap())
   }, [dispatch])
 
-  if (!displayMissionsLayer || listener || attachReportingListener) {
+  if (!displayMissionsLayer || listener || isReportingAttachmentInProgress) {
     return null
   }
 
@@ -95,7 +97,7 @@ export function MissionCard({ feature, isOnlyHoverable = false, selected = false
       <Details>
         <div>
           {' '}
-          Mission {missionTypesToString(missionTypes)} – {missionDurationText}
+          Mission {humanizeMissionTypes(missionTypes)} – {missionDurationText}
         </div>
         <div>
           {numberOfControls} {pluralize('contrôle', numberOfControls)} et {numberOfSurveillance}{' '}

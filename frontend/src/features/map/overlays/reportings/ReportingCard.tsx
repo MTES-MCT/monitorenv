@@ -21,7 +21,7 @@ import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { LinkToMissionTag } from '../../../Reportings/components/LinkToMissionTag'
 import { StatusActionTag } from '../../../Reportings/components/StatusActionTag'
-import { getFormattedReportingId } from '../../../Reportings/utils/getFormattedReportingId'
+import { getFormattedReportingId } from '../../../Reportings/utils'
 
 type ReportingCardProps = {
   feature: any
@@ -66,7 +66,9 @@ export function ReportingCard({
   const dispatch = useAppDispatch()
   const displayReportingsLayer = useAppSelector(state => state.global.displayReportingsLayer)
   const listener = useAppSelector(state => state.draw.listener)
-  const attachMissionListener = useAppSelector(state => state.attachMissionToReporting.attachMissionListener)
+  const isMissionAttachmentInProgress = useAppSelector(
+    state => state.attachMissionToReporting.isMissionAttachmentInProgress
+  )
 
   const ref = useRef<HTMLDivElement>(null)
 
@@ -120,7 +122,7 @@ export function ReportingCard({
     }
   }, [feature, updateMargins])
 
-  if (!displayReportingsLayer || listener || attachMissionListener) {
+  if (!displayReportingsLayer || listener || isMissionAttachmentInProgress) {
     return null
   }
 

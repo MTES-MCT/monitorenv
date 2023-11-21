@@ -1,32 +1,32 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import type { Reporting, ReportingDetailed } from '../../../../domain/entities/reporting'
+import type { Reporting, ReportingDetailed } from '../../domain/entities/reporting'
 
 type AttachedReportingToMissionSliceState = {
-  attachReportingListener: boolean
   attachedReportingIds: number[]
   attachedReportings: ReportingDetailed[]
   initialAttachedReportingIds: number[]
   initialAttachedReportings: Reporting[]
+  isReportingAttachmentInProgress: boolean
 }
 
-const initialState: AttachedReportingToMissionSliceState = {
+const INITIAL_STATE: AttachedReportingToMissionSliceState = {
   attachedReportingIds: [],
   attachedReportings: [],
-  attachReportingListener: false,
   initialAttachedReportingIds: [],
-  initialAttachedReportings: []
+  initialAttachedReportings: [],
+  isReportingAttachmentInProgress: false
 }
 
 const attachReportingToMissionSlice = createSlice({
-  initialState,
+  initialState: INITIAL_STATE,
   name: 'attachReportingToMissionSlice',
   reducers: {
     addAttachedReportingId(state, action) {
       state.attachedReportingIds = [...state.attachedReportingIds, action.payload]
     },
     resetAttachReportingState() {
-      return initialState
+      return INITIAL_STATE
     },
     setAttachedReportings(state, action) {
       const attachedReportings = action.payload
@@ -35,12 +35,12 @@ const attachReportingToMissionSlice = createSlice({
       const attachedReportingIds = attachedReportings.map(reporting => reporting.id)
       state.attachedReportingIds = attachedReportingIds
     },
-    setAttachReportingListener(state, action) {
-      state.attachReportingListener = action.payload
-    },
     setInitialAttachedReportings(state, action) {
       state.initialAttachedReportingIds = action.payload?.ids
       state.initialAttachedReportings = action.payload.reportings
+    },
+    setIsReportingAttachmentInProgress(state, action) {
+      state.isReportingAttachmentInProgress = action.payload
     }
   }
 })

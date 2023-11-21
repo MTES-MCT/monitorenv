@@ -1,4 +1,4 @@
-import { Icon } from '@mtes-mct/monitor-ui'
+import { Icon, Tag } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { ActionTypeEnum } from '../../../../domain/entities/missions'
@@ -42,7 +42,6 @@ export const ActionSummaryWrapper = styled.div<{ $hasError: boolean; $selected: 
       case ActionTypeEnum.NOTE:
         return p.theme.color.blueYonder25
       case ActionTypeEnum.REPORTING:
-        // TODO : add color in monitor-ui
         return p.theme.color.maximumRed15
       default:
         return p.theme.color.white
@@ -112,4 +111,7 @@ export const DurationWrapper = styled.div`
 export const ReportingDate = styled.p`
   color: ${p => p.theme.color.slateGray};
   padding-bottom: 8px;
+`
+export const StyledTag = styled(Tag)`
+  background-color: ${p => p.theme.color.maximumRed15};
 `

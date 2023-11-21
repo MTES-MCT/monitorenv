@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { getMissionStatus, type Mission } from '../../../../domain/entities/missions'
 import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
-import { missionTypesToString } from '../../../../utils/missionTypes'
+import { humanizeMissionTypes } from '../../../../utils/humanizeMissionTypes'
 import { StatusActionTag } from '../../components/StatusActionTag'
 
 import type { ControlStatusEnum } from '../../../../domain/entities/reporting'
@@ -64,7 +64,7 @@ export function AttachedMissionCard({
       <Body>
         <Details>
           <div>
-            Mission {missionTypesToString(missionTypes)} – {missionDurationText}
+            Mission {humanizeMissionTypes(missionTypes)} – {missionDurationText}
           </div>
           <MissionStatusLabel missionStatus={missionStatus} />
         </Details>

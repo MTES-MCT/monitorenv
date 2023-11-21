@@ -4,7 +4,6 @@ import { useEffect } from 'react'
 import styled from 'styled-components'
 
 import { AttachedMissionCard } from './AttachedMissionCard'
-import { attachMissionToReportingSliceActions } from './slice'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { ReportingContext, removeOverlayCoordinatesByName } from '../../../../domain/shared_slices/Global'
 import {
@@ -14,10 +13,11 @@ import {
 import { unattachMissionFromReporting } from '../../../../domain/use_cases/reporting/unattachMissionFromReporting'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { attachMissionToReportingSliceActions } from '../../slice'
 
 import type { Reporting } from '../../../../domain/entities/reporting'
 
-export function AttachMission({ setIsAttachNewMission }) {
+export function AttachMission({ onAttachMission }) {
   const { handleSubmit, setFieldValue, values } = useFormikContext<Reporting>()
   const dispatch = useAppDispatch()
   const missionId = useAppSelector(state => state.attachMissionToReporting.missionId)
@@ -49,7 +49,7 @@ export function AttachMission({ setIsAttachNewMission }) {
   }
 
   const createMission = async () => {
-    setIsAttachNewMission(true)
+    onAttachMission(true)
     handleSubmit()
   }
 

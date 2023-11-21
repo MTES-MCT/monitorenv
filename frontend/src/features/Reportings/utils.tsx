@@ -3,7 +3,6 @@ import _ from 'lodash'
 
 import { LinkToMissionTag } from './components/LinkToMissionTag'
 import { StyledArchivedTag } from './style'
-import { getFormattedReportingId } from './utils/getFormattedReportingId'
 import {
   ReportingSourceEnum,
   type Reporting,
@@ -72,4 +71,12 @@ export const createIdForNewReporting = reportings => {
       : 'new-1'
 
   return id
+}
+
+export const getFormattedReportingId = (reportingId: number | undefined) => {
+  if (!reportingId) {
+    return ''
+  }
+
+  return `${String(reportingId).slice(0, 2)}-${String(reportingId).slice(2)}`
 }

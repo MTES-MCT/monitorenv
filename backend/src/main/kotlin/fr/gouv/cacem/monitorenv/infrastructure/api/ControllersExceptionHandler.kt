@@ -64,6 +64,6 @@ class ControllersExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ReportingAlreadyAttachedException::class)
     fun handleReportingAlreadyAttachedToAMission(e: ReportingAlreadyAttachedException): ApiError {
-        return ApiError(ErrorCode.REPORTING_ALREADY_ATTACHED.name)
+        return ApiError(ErrorCode.CHILD_ALREADY_ATTACHED.name)
     }
 }

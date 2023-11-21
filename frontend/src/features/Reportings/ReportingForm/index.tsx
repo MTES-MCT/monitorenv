@@ -3,7 +3,7 @@ import { Form, Formik } from 'formik'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { ReportingForm } from './Form'
+import { FormContent } from './FormContent'
 import { ReportingSchema } from './Schema'
 import { useGetReportingQuery } from '../../../api/reportingsAPI'
 import { ReportingContext, VisibilityState } from '../../../domain/shared_slices/Global'
@@ -14,7 +14,11 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { SideWindowBackground, FormContainer } from '../style'
 import { getReportingInitialValues, isNewReporting } from '../utils'
 
-export function ReportingFormWithContext({ context, totalReportings }) {
+type ReportingFormProps = {
+  context: ReportingContext
+  totalReportings: number
+}
+export function ReportingFormWithContext({ context, totalReportings }: ReportingFormProps) {
   const dispatch = useAppDispatch()
 
   const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
@@ -84,10 +88,10 @@ export function ReportingFormWithContext({ context, totalReportings }) {
               validationSchema={ReportingSchema}
             >
               <StyledForm>
-                <ReportingForm
+                <FormContent
+                  onAttachMission={setIsAttachNewMission}
                   reducedReportingsOnContext={totalReportings}
                   selectedReporting={selectedReporting}
-                  setIsAttachNewMission={setIsAttachNewMission}
                   setShouldValidateOnChange={setShouldValidateOnChange}
                 />
               </StyledForm>

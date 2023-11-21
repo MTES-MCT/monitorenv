@@ -12,7 +12,9 @@ import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 
 export function SelectedMissionToAttachLayer({ map }: BaseMapChildrenProps) {
-  const attachMissionListener = useAppSelector(state => state.attachMissionToReporting.attachMissionListener)
+  const isMissionAttachmentInProgress = useAppSelector(
+    state => state.attachMissionToReporting.isMissionAttachmentInProgress
+  )
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
 
   const editedReporting = useAppSelector(state =>
@@ -50,8 +52,8 @@ export function SelectedMissionToAttachLayer({ map }: BaseMapChildrenProps) {
   }, [map])
 
   useEffect(() => {
-    selectedAttachedMissionVectorLayerRef.current.setVisible(!!missionId && attachMissionListener)
-  }, [missionId, attachMissionListener])
+    selectedAttachedMissionVectorLayerRef.current.setVisible(!!missionId && isMissionAttachmentInProgress)
+  }, [missionId, isMissionAttachmentInProgress])
 
   useEffect(() => {
     selectedAttachedMissionVectorSourceRef.current?.clear(true)

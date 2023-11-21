@@ -45,7 +45,7 @@ export const saveMission =
           reportings
         })
       } else {
-        if (response.error.data.type === ApiErrorCode.REPORTING_ALREADY_ATTACHED) {
+        if (response.error.data.type === ApiErrorCode.CHILD_ALREADY_ATTACHED) {
           throw Error('Le signalement est déjà rattaché à une mission')
         }
         throw Error('Erreur à la création ou à la modification de la mission')

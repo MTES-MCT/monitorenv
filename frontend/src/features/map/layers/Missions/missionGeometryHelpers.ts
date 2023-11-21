@@ -12,7 +12,7 @@ import {
   getMissionStatus,
   type Mission
 } from '../../../../domain/entities/missions'
-import { getTotalOfControls, getTotalOfSurveillances } from '../../../missions/utils/getTotalOfActions'
+import { getTotalOfControls, getTotalOfSurveillances } from '../../../missions/utils'
 
 import type { Geometry } from 'ol/geom'
 

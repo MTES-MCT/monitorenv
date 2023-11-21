@@ -1,4 +1,5 @@
 import { useField } from 'formik'
+import { useCallback } from 'react'
 import styled from 'styled-components'
 
 import { ControlForm } from './ControlForm/ControlForm'
@@ -25,13 +26,13 @@ export function ActionForm({ currentActionIndex, setCurrentActionIndex }: Action
   const [actionTypeField] = useField<ActionTypeEnum>(`envActions.${envActionIndex}.actionType`)
   const [actionIdField] = useField<EnvAction['id']>(`envActions.${envActionIndex}.id`)
 
-  const removeAction = () => {
+  const removeAction = useCallback(() => {
     const actionsToUpdate = [...(envActionsField.value || [])]
     actionsToUpdate.splice(envActionIndex, 1)
     envActionsHelper.setValue(actionsToUpdate)
 
     setCurrentActionIndex(undefined)
-  }
+  }, [envActionIndex, envActionsField, envActionsHelper, setCurrentActionIndex])
 
   if (currentActionIndex === undefined) {
     return (

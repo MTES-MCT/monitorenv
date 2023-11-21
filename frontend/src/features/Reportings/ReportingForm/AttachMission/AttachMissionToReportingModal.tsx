@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 
-import { attachMissionToReportingSliceActions } from './slice'
 import {
   MapInteractionListenerEnum,
   updateMapInteractionListeners
@@ -8,10 +7,13 @@ import {
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { MapInteraction } from '../../../commonComponents/Modals/MapInteraction'
+import { attachMissionToReportingSliceActions } from '../../slice'
 
 export function AttachMissionToReportingModal() {
   const dispatch = useAppDispatch()
-  const attachMissionListener = useAppSelector(state => state.attachMissionToReporting.attachMissionListener)
+  const isMissionAttachmentInProgress = useAppSelector(
+    state => state.attachMissionToReporting.isMissionAttachmentInProgress
+  )
 
   const initialAttachedMission = useAppSelector(state => state.attachMissionToReporting.initialAttachedMission)
   const initialMissionId = useAppSelector(state => state.attachMissionToReporting.initialMissionId)
@@ -25,7 +27,7 @@ export function AttachMissionToReportingModal() {
     dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
   }
 
-  if (!attachMissionListener) {
+  if (!isMissionAttachmentInProgress) {
     return null
   }
 

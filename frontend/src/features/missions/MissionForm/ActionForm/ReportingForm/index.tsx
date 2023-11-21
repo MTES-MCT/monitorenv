@@ -3,7 +3,7 @@ import { useFormikContext } from 'formik'
 import { Toggle } from 'rsuite'
 import styled from 'styled-components'
 
-import { Localization } from './Localization'
+import { Location } from './Location'
 import { TargetDetails } from './TargetDetails'
 import { Validity } from './Validity'
 import { ActionTypeEnum, type Mission, type NewMission } from '../../../../../domain/entities/missions'
@@ -16,8 +16,8 @@ import { ReportingTargetTypeLabels } from '../../../../../domain/entities/target
 import { vehicleTypeLabels } from '../../../../../domain/entities/vehicleType'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
-import { getFormattedReportingId } from '../../../../Reportings/utils/getFormattedReportingId'
-import { attachReportingToMissionSliceActions } from '../../AttachReporting/slice'
+import { getFormattedReportingId } from '../../../../Reportings/utils'
+import { attachReportingToMissionSliceActions } from '../../../slice'
 
 const EMPTY_VALUE = '--'
 
@@ -119,7 +119,7 @@ export function ReportingForm({
         </TargetContainer>
 
         <TargetDetails reporting={reporting} />
-        <Localization geom={reporting.geom} />
+        <Location geom={reporting.geom} />
 
         <TextInput
           isLight

@@ -1,11 +1,10 @@
-import { Accent, FieldError, Icon, IconButton, THEME, Tag } from '@mtes-mct/monitor-ui'
-import styled from 'styled-components'
+import { Accent, FieldError, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 
 import { ControlCard } from './ControlCard'
 import { NoteCard } from './NoteCard'
 import { ReportingCard } from './ReportingCard'
 import { ReportingHistory } from './ReportingHistory'
-import { Action, ActionButtons, ActionSummaryWrapper, ButtonsWrapper, Card, TimeLine } from './style'
+import { Action, ActionButtons, ActionSummaryWrapper, ButtonsWrapper, Card, StyledTag, TimeLine } from './style'
 import { SurveillanceCard } from './SurveillanceCard'
 import { ActionTypeEnum, type EnvActionForTimeline } from '../../../../domain/entities/missions'
 import { getDateAsLocalizedStringExpanded } from '../../../../utils/getDateAsLocalizedString'
@@ -80,7 +79,3 @@ export function ActionCards({
     </Action>
   )
 }
-
-const StyledTag = styled(Tag)`
-  background-color: ${p => p.theme.color.maximumRed15};
-`

@@ -1,39 +1,39 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
-import type { Mission } from '../../../../domain/entities/missions'
+import type { Mission } from '../../domain/entities/missions'
 
 type AttachMissionToReportingSliceState = {
-  attachMissionListener: boolean
   attachedMission: Mission | undefined
   initialAttachedMission: Mission | undefined
   initialMissionId: number | undefined
+  isMissionAttachmentInProgress: boolean
   missionId: number | undefined
 }
 
-const initialState: AttachMissionToReportingSliceState = {
+const INITIAL_STATE: AttachMissionToReportingSliceState = {
   attachedMission: undefined,
-  attachMissionListener: false,
   initialAttachedMission: undefined,
   initialMissionId: undefined,
+  isMissionAttachmentInProgress: false,
   missionId: undefined
 }
 
 const attachMissionToReportingSlice = createSlice({
-  initialState,
+  initialState: INITIAL_STATE,
   name: 'attachMissionToReportingSlice',
   reducers: {
     resetAttachMissionState() {
-      return initialState
+      return INITIAL_STATE
     },
     setAttachedMission(state, action) {
       state.attachedMission = action.payload
     },
-    setAttachMissionListener(state, action) {
-      state.attachMissionListener = action.payload
-    },
     setInitialAttachedMission(state, action: PayloadAction<Mission | undefined>) {
       state.initialMissionId = action.payload?.id
       state.initialAttachedMission = action.payload
+    },
+    setIsMissionAttachmentInProgress(state, action) {
+      state.isMissionAttachmentInProgress = action.payload
     },
     setMissionId(state, action) {
       state.missionId = action.payload

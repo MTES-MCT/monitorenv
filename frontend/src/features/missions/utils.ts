@@ -1,6 +1,6 @@
 import { sum } from 'lodash'
 
-import { ActionTypeEnum, type Mission } from '../../../domain/entities/missions'
+import { ActionTypeEnum, type Mission } from '../../domain/entities/missions'
 
 export const getTotalOfControls = (mission: Partial<Mission>) =>
   sum(

@@ -20,7 +20,7 @@ import {
   type ReportingForTimeline,
   type DetachedReportingForTimeline
 } from '../../domain/entities/reporting'
-import { getFormattedReportingId } from '../Reportings/utils/getFormattedReportingId'
+import { getFormattedReportingId } from '../Reportings/utils'
 
 import type { LegacyControlUnit } from '../../domain/entities/legacyControlUnit'
 
