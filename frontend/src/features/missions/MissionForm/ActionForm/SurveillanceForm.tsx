@@ -3,39 +3,106 @@ import {
   FormikCheckbox,
   FormikDatePicker,
   FormikTextarea,
+  MultiCheckbox,
   pluralize,
-  useNewWindow
+  useNewWindow,
+  type OptionValueType
 } from '@mtes-mct/monitor-ui'
-import { useField } from 'formik'
-import { useMemo } from 'react'
-import { Form, IconButton } from 'rsuite'
+import { useField, useFormikContext } from 'formik'
+import { useMemo, useState } from 'react'
+import { Form, IconButton, Toggle } from 'rsuite'
 import styled from 'styled-components'
 
 import { SurveillanceThemes } from './Themes/SurveillanceThemes'
 import { InteractionListener } from '../../../../domain/entities/map/constants'
-import { ActionTypeEnum, type EnvAction } from '../../../../domain/entities/missions'
+import {
+  ActionTypeEnum,
+  type EnvAction,
+  type EnvActionSurveillance,
+  type Mission
+} from '../../../../domain/entities/missions'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReactComponent as DeleteSVG } from '../../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as SurveillanceIconSVG } from '../../../../uiMonitor/icons/Observation.svg'
 import { dateDifferenceInHours } from '../../../../utils/dateDifferenceInHours'
+import { getFormattedReportingId } from '../../../Reportings/utils'
 import { MultiZonePicker } from '../../MultiZonePicker'
 
 export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionIndex }) {
   const { newWindowContainerRef } = useNewWindow()
 
+  const {
+    setFieldValue,
+    values: { attachedReportings, envActions }
+  } = useFormikContext<Mission<EnvActionSurveillance>>()
+
   const [actionsFields] = useField<EnvAction[]>('envActions')
   const envActionIndex = actionsFields.value.findIndex(envAction => envAction.id === String(currentActionIndex))
+  const currentAction = envActions[envActionIndex]
 
+  const { reportingIds } = currentAction || {}
   const [, actionStartDateMeta] = useField(`envActions[${envActionIndex}].actionStartDateTimeUtc`)
   const [, actionEndDateMeta] = useField(`envActions[${envActionIndex}].actionEndDateTimeUtc`)
 
   const [geomField, ,] = useField(`envActions[${envActionIndex}].geom`)
 
   const [durationMatchMissionField] = useField(`envActions[${envActionIndex}].durationMatchesMission`)
+
   const [envActionField] = useField(`envActions[${envActionIndex}]`)
 
   const hasCustomZone = geomField.value && geomField.value.coordinates.length > 0
   const surveillances = actionsFields.value.filter(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
+
+  const [isReportingListVisible, setIsReportingListVisible] = useState<boolean>(reportingIds?.length === 1)
+
+  const reportingAsOptions = useMemo(
+    () =>
+      attachedReportings?.map(reporting => ({
+        isDisabled:
+          reporting.isControlRequired &&
+          currentAction?.id !== reporting.attachedEnvActionId &&
+          !!reporting.attachedEnvActionId,
+        label: `Signalement ${getFormattedReportingId(reporting.reportingId)}`,
+        value: reporting.id
+      })) || [],
+    [attachedReportings, currentAction]
+  )
+
+  const areAllReportingsAttachedToAControl = useMemo(
+    () =>
+      attachedReportings &&
+      attachedReportings.every(reporting => reporting.isControlRequired && reporting.attachedEnvActionId),
+    [attachedReportings]
+  )
+
+  const updateIsContralAttachedToReporting = (checked: boolean) => {
+    setIsReportingListVisible(checked)
+    if (!checked) {
+      const reportingToDetachIndex = attachedReportings?.findIndex(
+        reporting => reporting.attachedEnvActionId === currentAction?.id
+      )
+
+      if (reportingToDetachIndex !== -1) {
+        setFieldValue(`attachedReportings[${reportingToDetachIndex}].attachedEnvActionId`, undefined)
+      }
+      setFieldValue(`envActions[${envActionIndex}].reportingIds`, [])
+    }
+  }
+
+  const selectReportings = (nextReportingIds: OptionValueType[] | undefined) => {
+    if (!nextReportingIds) {
+      return
+    }
+    setFieldValue(`envActions[${envActionIndex}].reportingIds`, nextReportingIds)
+
+    attachedReportings.map((reporting, index) => {
+      if (nextReportingIds.includes(reporting.id)) {
+        return setFieldValue(`attachedReportings[${index}].attachedEnvActionId`, currentAction?.id)
+      }
+
+      return reporting
+    })
+  }
 
   const { listener } = useAppSelector(state => state.draw)
   const isEditingZone = useMemo(() => listener === InteractionListener.SURVEILLANCE_ZONE, [listener])
@@ -65,6 +132,26 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
           Supprimer
         </IconButtonRight>
       </Header>
+      <ReportingsContainer>
+        <StyledToggle>
+          <Toggle
+            checked={isReportingListVisible}
+            data-cy="control-form-toggle-reporting"
+            onChange={updateIsContralAttachedToReporting}
+            readOnly={areAllReportingsAttachedToAControl && currentAction?.reportingIds?.length === 0}
+          />
+          <span>Le contrôle est rattaché à un signalement</span>
+        </StyledToggle>
+        {isReportingListVisible && (
+          <MultiCheckbox
+            label="Signalements"
+            name={`envActions[${envActionIndex}].reportingIds`}
+            onChange={selectReportings}
+            options={reportingAsOptions}
+            value={currentAction?.reportingIds}
+          />
+        )}
+      </ReportingsContainer>
       <SurveillanceThemes envActionIndex={envActionIndex} />
       <FlexSelectorWrapper>
         <Form.Group>
@@ -152,6 +239,23 @@ const Title = styled.h2`
   line-height: 22px;
   display: inline-block;
   color: ${p => p.theme.color.charcoal};
+`
+const ReportingsContainer = styled.div`
+  padding-bottom: 32px;
+  gap: 16px;
+`
+const StyledToggle = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  gap: 8px;
+  > .rs-toggle-checked .rs-toggle-presentation {
+    background-color: ${p => p.theme.color.gunMetal};
+  }
+  > span {
+    color: ${p => p.theme.color.gunMetal};
+    font-weight: bold;
+  }
 `
 
 const FlexSelectorWrapper = styled.div`

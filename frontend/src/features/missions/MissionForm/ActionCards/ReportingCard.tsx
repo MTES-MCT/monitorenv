@@ -1,11 +1,12 @@
-import { Accent, Button, Icon, THEME, Tag } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, THEME } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import styled from 'styled-components'
 
 import { Accented, ReportingDate, SummaryContent } from './style'
 import { ActionTypeEnum, type Mission, type NewMission } from '../../../../domain/entities/missions'
-import { type ReportingForTimeline } from '../../../../domain/entities/reporting'
+import { ControlStatusEnum, type ReportingForTimeline } from '../../../../domain/entities/reporting'
 import { getDateAsLocalizedStringCompact } from '../../../../utils/getDateAsLocalizedString'
+import { StatusActionTag } from '../../../Reportings/components/StatusActionTag'
 import { getFormattedReportingId } from '../../../Reportings/utils'
 import { actionFactory } from '../../Missions.helpers'
 
@@ -39,6 +40,16 @@ export function ReportingCard({
     setCurrentActionIndex(newControl.id)
   }
 
+  const getControlStatus = () => {
+    const attachedAction = values?.envActions?.find(a => a.id === action.attachedEnvActionId)
+
+    if (action.attachedEnvActionId && attachedAction?.actionType === ActionTypeEnum.CONTROL) {
+      return ControlStatusEnum.CONTROL_DONE
+    }
+
+    return ControlStatusEnum.SURVEILLANCE_DONE
+  }
+
   return (
     <>
       <Icon.Report color={THEME.color.charcoal} size={20} />
@@ -48,10 +59,9 @@ export function ReportingCard({
         <Accented>{action.theme}</Accented> {action.theme && '-'} {action.description || 'Aucune description'}
         <ControlContainer $isEndAlign={!action.attachedEnvActionId}>
           {action.attachedEnvActionId && (
-            <Tag data-cy="reporting-control-done" iconColor={THEME.color.mediumSeaGreen} isLight withBullet>
-              Contrôle fait
-            </Tag>
+            <StatusActionTag backgroundColor={THEME.color.white} controlStatus={getControlStatus()} />
           )}
+
           {!action.attachedEnvActionId && (
             <Button accent={Accent.SECONDARY} Icon={Icon.ControlUnit} onClick={addAttachedControl}>
               Ajouter un contrôle

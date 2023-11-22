@@ -193,6 +193,25 @@ const formattedEnvActionsForTimeline = (envActions, attachedReportings) =>
       }
     }
 
+    if (action.actionType === ActionTypeEnum.SURVEILLANCE) {
+      const reportingsAttachedToSurveillances = attachedReportings?.filter(reporting =>
+        action.reportingIds.includes(reporting.id)
+      )
+
+      const formattedReportingIds = reportingsAttachedToSurveillances.map(attachedReporting =>
+        getFormattedReportingId(attachedReporting.reportingId)
+      )
+
+      return {
+        ...newEnvActionsCollection,
+        [action.id]: {
+          ...action,
+          formattedReportingIds,
+          timelineDate: action?.actionStartDateTimeUtc
+        }
+      }
+    }
+
     return {
       ...newEnvActionsCollection,
       [action.id]: {

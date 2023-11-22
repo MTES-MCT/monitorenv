@@ -4,7 +4,17 @@ import { ControlCard } from './ControlCard'
 import { NoteCard } from './NoteCard'
 import { ReportingCard } from './ReportingCard'
 import { ReportingHistory } from './ReportingHistory'
-import { Action, ActionButtons, ActionSummaryWrapper, ButtonsWrapper, Card, StyledTag, TimeLine } from './style'
+import {
+  Action,
+  ActionButtons,
+  ActionSummaryWrapper,
+  ButtonsWrapper,
+  Card,
+  ContentContainer,
+  StyledTag,
+  TagsContainer,
+  TimeLine
+} from './style'
 import { SurveillanceCard } from './SurveillanceCard'
 import { ActionTypeEnum, type EnvActionForTimeline } from '../../../../domain/entities/missions'
 import { getDateAsLocalizedStringExpanded } from '../../../../utils/getDateAsLocalizedString'
@@ -39,40 +49,58 @@ export function ActionCards({
       ) : (
         <Card>
           <ActionSummaryWrapper $hasError={hasError} $selected={selected} $type={action.actionType}>
-            {action.actionType === ActionTypeEnum.CONTROL && <ControlCard action={action} />}
-            {action.actionType === ActionTypeEnum.SURVEILLANCE && <SurveillanceCard action={action} />}
-            {action.actionType === ActionTypeEnum.NOTE && <NoteCard action={action} />}
-            {action.actionType === ActionTypeEnum.REPORTING && (
-              <ReportingCard action={action} setCurrentActionIndex={setCurrentActionIndex} />
-            )}
+            <ContentContainer>
+              {action.actionType === ActionTypeEnum.CONTROL && <ControlCard action={action} />}
+              {action.actionType === ActionTypeEnum.SURVEILLANCE && <SurveillanceCard action={action} />}
+              {action.actionType === ActionTypeEnum.NOTE && <NoteCard action={action} />}
+              {action.actionType === ActionTypeEnum.REPORTING && (
+                <ReportingCard action={action} setCurrentActionIndex={setCurrentActionIndex} />
+              )}
 
-            {action.actionType !== ActionTypeEnum.REPORTING && (
-              <ButtonsWrapper>
-                <ActionButtons>
-                  <IconButton
-                    accent={Accent.TERTIARY}
-                    Icon={Icon.Duplicate}
-                    onClick={duplicateAction}
-                    title="dupliquer"
-                  />
-                  <IconButton
-                    accent={Accent.TERTIARY}
-                    color={THEME.color.maximumRed}
-                    data-cy={`actioncard-delete-button-${action.id}`}
-                    Icon={Icon.Delete}
-                    onClick={removeAction}
-                    title="supprimer"
-                  />
-                </ActionButtons>
-                {action.actionType === ActionTypeEnum.CONTROL && action.formattedReportingId && (
-                  <StyledTag
-                    data-cy="control-attached-reporting-tag"
-                    Icon={Icon.Link}
-                  >{`Signalement ${action.formattedReportingId}`}</StyledTag>
-                )}
-              </ButtonsWrapper>
-            )}
+              {action.actionType !== ActionTypeEnum.REPORTING && (
+                <>
+                  <ButtonsWrapper>
+                    <ActionButtons>
+                      <IconButton
+                        accent={Accent.TERTIARY}
+                        Icon={Icon.Duplicate}
+                        onClick={duplicateAction}
+                        title="dupliquer"
+                      />
+                      <IconButton
+                        accent={Accent.TERTIARY}
+                        color={THEME.color.maximumRed}
+                        data-cy={`actioncard-delete-button-${action.id}`}
+                        Icon={Icon.Delete}
+                        onClick={removeAction}
+                        title="supprimer"
+                      />
+                    </ActionButtons>
+                    {action.actionType === ActionTypeEnum.CONTROL && action.formattedReportingId && (
+                      <StyledTag
+                        data-cy="control-attached-reporting-tag"
+                        Icon={Icon.Link}
+                      >{`Signalement ${action.formattedReportingId}`}</StyledTag>
+                    )}
+                  </ButtonsWrapper>
+                </>
+              )}
+            </ContentContainer>
+
+            {action.actionType === ActionTypeEnum.SURVEILLANCE &&
+              action.formattedReportingIds &&
+              action.formattedReportingIds?.length > 0 && (
+                <TagsContainer>
+                  {action.formattedReportingIds.map(reportingId => (
+                    <StyledTag
+                      data-cy="surveillance-attached-reportings-tags"
+                      Icon={Icon.Link}
+                    >{`Signalement ${reportingId}`}</StyledTag>
+                  ))}
+                </TagsContainer>
+              )}
           </ActionSummaryWrapper>
+
           {hasError && <FieldError>Veuillez compléter les champs manquants dans cette action</FieldError>}
         </Card>
       )}
