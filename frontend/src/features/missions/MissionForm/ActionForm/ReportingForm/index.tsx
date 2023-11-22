@@ -199,7 +199,7 @@ export const StyledVesselForm = styled.div`
     flex: 1;
   }
 `
-const AdditionnalInformations = styled.h4`
+const AdditionnalInformations = styled.h6`
   padding-top: 58px;
   color: ${p => p.theme.color.slateGray};
 `

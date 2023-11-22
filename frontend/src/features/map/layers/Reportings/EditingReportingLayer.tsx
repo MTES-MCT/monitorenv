@@ -5,6 +5,7 @@ import { type MutableRefObject, useEffect, useRef, useMemo } from 'react'
 import { getEditingReportingZoneFeature } from './reportingsGeometryHelpers'
 import { editingReportingStyleFn } from './style'
 import { Layers } from '../../../../domain/entities/layers/constants'
+import { VisibilityState } from '../../../../domain/shared_slices/Global'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
@@ -15,6 +16,7 @@ export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
   const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
 
   const displayReportingEditingLayer = useAppSelector(state => state.global.displayReportingEditingLayer)
+  const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
 
   const editingReporting = useAppSelector(state =>
     activeReportingId ? state.reporting.reportings[activeReportingId]?.reporting : undefined
@@ -37,9 +39,21 @@ export function EditingReportingLayer({ map }: BaseMapChildrenProps) {
   // we don't want to display reportings on the map if the user so decides (displayMissionEditingLayer variable)
   // or if user have interaction on map (edit mission zone, attach reporting to mission)
   // or if user selected on map an other reporting (to avoid conflict)
+  // or if user reduced the reporting form
   const isLayerVisible = useMemo(
-    () => displayReportingEditingLayer && !listener && !isReportingAttachmentInProgress && hasNoReportingConflict,
-    [displayReportingEditingLayer, listener, isReportingAttachmentInProgress, hasNoReportingConflict]
+    () =>
+      displayReportingEditingLayer &&
+      !listener &&
+      !isReportingAttachmentInProgress &&
+      hasNoReportingConflict &&
+      reportingFormVisibility.visibility !== VisibilityState.REDUCED,
+    [
+      displayReportingEditingLayer,
+      listener,
+      isReportingAttachmentInProgress,
+      hasNoReportingConflict,
+      reportingFormVisibility.visibility
+    ]
   )
 
   const editingReportingVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource>

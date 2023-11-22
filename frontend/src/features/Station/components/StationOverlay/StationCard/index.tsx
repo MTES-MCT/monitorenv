@@ -8,6 +8,7 @@ import { controlUnitsAPI } from '../../../../../api/controlUnitsAPI'
 import { OverlayCard } from '../../../../../components/OverlayCard'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
+import { useHasMapInteraction } from '../../../../../hooks/useHasMapInteraction'
 import { FrontendError } from '../../../../../libs/FrontendError'
 import { stationActions } from '../../../slice'
 
@@ -20,6 +21,7 @@ export function StationCard({ feature, selected = false }: { feature: Feature; s
 
   const dispatch = useAppDispatch()
   const global = useAppSelector(state => state.global)
+  const hasMapInteraction = useHasMapInteraction()
 
   const featureProperties = feature.getProperties() as {
     station: Station.Station
@@ -60,7 +62,7 @@ export function StationCard({ feature, selected = false }: { feature: Feature; s
     updateControlUnits()
   }, [updateControlUnits])
 
-  if (!global.displayStationLayer || !featureProperties.station) {
+  if (!global.displayStationLayer || !featureProperties.station || hasMapInteraction) {
     return null
   }
 

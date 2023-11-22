@@ -8,6 +8,7 @@ import { Layers } from '../../../../domain/entities/layers/constants'
 import { removeOverlayCoordinatesByName } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { useHasMapInteraction } from '../../../../hooks/useHasMapInteraction'
 import { FrontendError } from '../../../../libs/FrontendError'
 import { stationActions } from '../../slice'
 
@@ -33,7 +34,14 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
   const highlightedFeatureIds = useAppSelector(state => state.station.highlightedFeatureIds)
   const selectedFeatureId = useAppSelector(state => state.station.selectedFeatureId)
-  const listener = useAppSelector(state => state.draw.listener)
+
+  // we don't want to display stations on the map if the user so decides (displayStationLayer variable)
+  // or if user have interaction on map (edit mission zone, attach reporting or mission)
+  const hasMapInteraction = useHasMapInteraction()
+  const isLayerVisible = useMemo(
+    () => displayStationLayer && !hasMapInteraction,
+    [displayStationLayer, hasMapInteraction]
+  )
 
   const { data: stations } = useGetStationsQuery()
 
@@ -87,8 +95,8 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   // Features Visibility
 
   useEffect(() => {
-    vectorLayerRef.current?.setVisible(displayStationLayer && !listener)
-  }, [displayStationLayer, listener])
+    vectorLayerRef.current?.setVisible(isLayerVisible)
+  }, [isLayerVisible])
 
   useEffect(() => {
     vectorSourceRef.current.clear(true)

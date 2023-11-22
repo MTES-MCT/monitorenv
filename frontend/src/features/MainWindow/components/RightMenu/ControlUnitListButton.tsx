@@ -1,7 +1,7 @@
 import { Icon, Size } from '@mtes-mct/monitor-ui'
 import { useCallback } from 'react'
-import styled from 'styled-components'
 
+import { ButtonWrapper } from './ButtonWrapper'
 import { globalActions } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -18,7 +18,7 @@ export function ControlUnitListButton() {
   }, [dispatch, isControlUnitListDialogVisible])
 
   return (
-    <Wrapper>
+    <ButtonWrapper topPosition={226}>
       {/* TODO The right menu should be a full `MainWindow` feature component by itself. */}
       {/* We should positition related dialogs independantly, not include them here. */}
       {isControlUnitListDialogVisible && <ControlUnitListDialog onClose={toggleDialog} />}
@@ -30,15 +30,6 @@ export function ControlUnitListButton() {
         size={Size.LARGE}
         title="Liste des unités de contrôle"
       />
-    </Wrapper>
+    </ButtonWrapper>
   )
 }
-
-const Wrapper = styled.div`
-  position: absolute;
-  top: 226px;
-  right: 10px;
-  display: flex;
-  justify-content: flex-end;
-  transition: right 0.3s ease-out;
-`

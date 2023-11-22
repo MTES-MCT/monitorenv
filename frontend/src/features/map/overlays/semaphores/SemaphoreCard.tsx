@@ -10,6 +10,7 @@ import { resetSelectedSemaphore } from '../../../../domain/shared_slices/Semapho
 import { addReporting } from '../../../../domain/use_cases/reporting/addReporting'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { useHasMapInteraction } from '../../../../hooks/useHasMapInteraction'
 
 import type { OverlayTriggerType } from 'rsuite/esm/Overlay/OverlayTrigger'
 
@@ -43,6 +44,7 @@ const hoverTooltip = (text, className) => <StyledTooltip className={className}>{
 export function SemaphoreCard({ feature, selected = false }: { feature: any; selected?: boolean }) {
   const dispatch = useAppDispatch()
   const displaySemaphoresLayer = useAppSelector(state => state.global.displaySemaphoresLayer)
+  const hasMapInteraction = useHasMapInteraction()
 
   const { email, id, name, phoneNumber, unit } = feature.getProperties()
   const [tooltipPhoneState, setTooltipPhoneState] = useState(PHONE_TOOLTIP_STATE.hover)
@@ -71,7 +73,7 @@ export function SemaphoreCard({ feature, selected = false }: { feature: any; sel
     dispatch(addReporting(ReportingContext.MAP, { semaphoreId: id, sourceType: ReportingSourceEnum.SEMAPHORE }))
   }
 
-  if (!displaySemaphoresLayer) {
+  if (!displaySemaphoresLayer || hasMapInteraction) {
     return null
   }
 
