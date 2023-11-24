@@ -108,6 +108,7 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
         {sortedControlUnitContacts.map(controlUnitContact =>
           controlUnitContact.id === editedControlUnitContactId ? (
             <StyledEditionForm
+              key={controlUnitContact.id}
               initialValues={editedControlUnitContact}
               onCancel={closeForm}
               onDelete={askForDeletionConfirmation}
