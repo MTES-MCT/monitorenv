@@ -1,11 +1,11 @@
 /**
- * User error thrown or returned for expected errors coming from an impossible human action.
+ * Usage error thrown or returned for expected errors coming from a user action that's impossible to process.
  *
  * @example
  * - Attempting to delete a DB entity that has existing uncascaded relations with other entities.
  */
-export type UserError = {
-  name: 'UserError'
+export type UsageError = {
+  name: 'UsageError'
   /** User-friendly message explaining why the operation couldn't be processed. */
   userMessage: string
 }
@@ -13,13 +13,13 @@ export type UserError = {
 /**
  * @param userMessage - User-friendly message explaining why the operation couldn't be processed.
  */
-export function newUserError(userMessage: string): UserError {
+export function newUsageError(userMessage: string): UsageError {
   return {
-    name: 'UserError',
+    name: 'UsageError',
     userMessage
   }
 }
 
-export function isUserError(error: any): error is UserError {
+export function isUsageError(error: any): error is UsageError {
   return error && error.name === 'UserError'
 }

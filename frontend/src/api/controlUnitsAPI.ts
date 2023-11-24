@@ -1,7 +1,7 @@
 import { monitorenvPublicApi } from './api'
 import { ApiErrorCode, type BackendApiBooleanResponse } from './types'
 import { FrontendApiError } from '../libs/FrontendApiError'
-import { newUserError } from '../libs/UserError'
+import { newUsageError } from '../libs/UsageError'
 
 import type { ControlUnit } from '../domain/entities/controlUnit'
 
@@ -46,7 +46,7 @@ export const controlUnitsAPI = monitorenvPublicApi.injectEndpoints({
       }),
       transformErrorResponse: response => {
         if (response.data.type === ApiErrorCode.FOREIGN_KEY_CONSTRAINT) {
-          return newUserError(DELETE_CONTROL_UNIT_ERROR_MESSAGE)
+          return newUsageError(DELETE_CONTROL_UNIT_ERROR_MESSAGE)
         }
 
         return new FrontendApiError(DELETE_CONTROL_UNIT_ERROR_MESSAGE, response)

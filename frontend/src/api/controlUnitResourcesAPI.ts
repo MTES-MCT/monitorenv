@@ -2,7 +2,7 @@ import { monitorenvPublicApi } from './api'
 import { ARCHIVE_GENERIC_ERROR_MESSAGE } from './constants'
 import { ApiErrorCode, type BackendApiBooleanResponse } from './types'
 import { FrontendApiError } from '../libs/FrontendApiError'
-import { newUserError } from '../libs/UserError'
+import { newUsageError } from '../libs/UsageError'
 
 import type { ControlUnit } from '../domain/entities/controlUnit'
 
@@ -23,7 +23,7 @@ export const controlUnitResourcesAPI = monitorenvPublicApi.injectEndpoints({
       }),
       transformErrorResponse: response => {
         if (response.data.type === ApiErrorCode.UNARCHIVED_CHILD) {
-          return newUserError(ARCHIVE_CONTROL_UNITE_RESOURCE_ERROR_MESSAGE)
+          return newUsageError(ARCHIVE_CONTROL_UNITE_RESOURCE_ERROR_MESSAGE)
         }
 
         return new FrontendApiError(ARCHIVE_GENERIC_ERROR_MESSAGE, response)
@@ -54,7 +54,7 @@ export const controlUnitResourcesAPI = monitorenvPublicApi.injectEndpoints({
       }),
       transformErrorResponse: response => {
         if (response.data.type === ApiErrorCode.FOREIGN_KEY_CONSTRAINT) {
-          return newUserError(DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE)
+          return newUsageError(DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE)
         }
 
         return new FrontendApiError(DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE, response)
