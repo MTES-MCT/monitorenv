@@ -28,7 +28,6 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
 
   // we don't want to display sempahores on the map if the user so decides (displaySemaphoresLayer variable)
   // or if user have interaction on map (edit mission zone, attach reporting or mission)
-
   const hasMapInteraction = useHasMapInteraction()
   const isLayerVisible = useMemo(
     () => displaySemaphoresLayer && !hasMapInteraction,

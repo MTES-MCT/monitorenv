@@ -1,5 +1,6 @@
 import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
+import styled from 'styled-components'
 
 import {
   MapInteractionListenerEnum,
@@ -25,8 +26,15 @@ export function AttachReporting() {
   }
 
   return (
-    <Button accent={Accent.SECONDARY} Icon={Icon.Link} onClick={attachReporting}>
+    <StyledButton accent={Accent.SECONDARY} Icon={Icon.Link} onClick={attachReporting}>
       Lier un signalement
-    </Button>
+    </StyledButton>
   )
 }
+// TODO delete padding when Monitor-ui component have good padding
+const StyledButton = styled(Button)`
+  padding: 4px 12px;
+  > span {
+    line-height: 1.5846;
+  }
+`

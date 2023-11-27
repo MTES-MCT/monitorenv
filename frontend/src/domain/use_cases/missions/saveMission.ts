@@ -39,7 +39,6 @@ export const saveMission =
         const missionUpdated = response.data
         // we want to update openings reportings with new attached or detached mission
         await updateReportingsWithAttachedMission({
-          attachedReportingIds: values.attachedReportingIds,
           dispatch,
           missionUpdated,
           reportings
@@ -55,19 +54,15 @@ export const saveMission =
     }
   }
 
-async function updateReportingsWithAttachedMission({ attachedReportingIds, dispatch, missionUpdated, reportings }) {
-  await attachedReportingIds.map(async id => {
+async function updateReportingsWithAttachedMission({ dispatch, missionUpdated, reportings }) {
+  missionUpdated.attachedReportings.forEach(async ({ attachedToMissionAtUtc, detachedFromMissionAtUtc, id }) => {
     if (reportings[id]) {
-      const reportingUpdatedIndex = missionUpdated.attachedReportings.findIndex(reporting => reporting.id === id)
-
-      const { attachedToMissionAtUtc, detachedFromMissionAtUtc } =
-        missionUpdated.attachedReportings[reportingUpdatedIndex]
       await dispatch(
         reportingActions.setReporting({
           ...reportings[id],
           reporting: {
             ...reportings[id].reporting,
-            attachedMission: !detachedFromMissionAtUtc ? missionUpdated : undefined,
+            attachedMission: missionUpdated,
             attachedToMissionAtUtc,
             detachedFromMissionAtUtc,
             missionId: missionUpdated.id
@@ -75,7 +70,22 @@ async function updateReportingsWithAttachedMission({ attachedReportingIds, dispa
         })
       )
     }
+  })
 
-    return undefined
+  missionUpdated.detachedReportings.forEach(async ({ attachedToMissionAtUtc, detachedFromMissionAtUtc, id }) => {
+    if (reportings[id]) {
+      await dispatch(
+        reportingActions.setReporting({
+          ...reportings[id],
+          reporting: {
+            ...reportings[id].reporting,
+            attachedMission: undefined,
+            attachedToMissionAtUtc,
+            detachedFromMissionAtUtc,
+            missionId: missionUpdated.id
+          }
+        })
+      )
+    }
   })
 }

@@ -1,5 +1,6 @@
 import { Accent, FieldError, FormikTextarea, Icon, IconButton, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
+import { isEmpty } from 'lodash'
 import { useEffect, useState } from 'react'
 import { Toggle } from 'rsuite'
 
@@ -154,7 +155,7 @@ export function FormContent({
     dispatch(deleteReporting(values.id))
   }
 
-  if (!selectedReporting) {
+  if (!selectedReporting || isEmpty(values)) {
     return null
   }
 

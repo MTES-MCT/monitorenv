@@ -1,3 +1,4 @@
+import { customDayjs } from '@mtes-mct/monitor-ui'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
@@ -20,8 +21,10 @@ export function MissionToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProp
   const isMissionAttachmentInProgress = useAppSelector(
     state => state.attachMissionToReporting.isMissionAttachmentInProgress
   )
+
   const { data: missions } = useGetMissionsQuery({
-    missionStatus: [MissionStatusEnum.PENDING]
+    missionStatus: [MissionStatusEnum.PENDING],
+    startedAfterDateTime: customDayjs.utc().startOf('day').utc().subtract(90, 'day').toISOString()
   })
 
   const missionsMultiPolygons = useMemo(

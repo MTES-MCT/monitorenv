@@ -56,7 +56,7 @@ export function AttachMission({ onAttachMission }) {
   // the form listens to the redux store to update the attached mission
   // because of the map interaction to attach mission
   useEffect(() => {
-    if (missionId !== values.missionId) {
+    if (missionId && missionId !== values.missionId) {
       setFieldValue('missionId', missionId)
       setFieldValue('attachedMission', attachedMission)
       setFieldValue('attachedToMissionAtUtc', new Date().toISOString())
@@ -99,7 +99,13 @@ export function AttachMission({ onAttachMission }) {
       <AttachedMissionCard attachedMission={values.attachedMission} controlStatus={values?.controlStatus} />
 
       <UnattachButtonContainer>
-        <Button accent={Accent.SECONDARY} Icon={Icon.Unlink} isFullWidth={false} onClick={unattachMission}>
+        <Button
+          accent={Accent.SECONDARY}
+          disabled={values.isArchived}
+          Icon={Icon.Unlink}
+          isFullWidth={false}
+          onClick={unattachMission}
+        >
           Détacher la mission
         </Button>
       </UnattachButtonContainer>

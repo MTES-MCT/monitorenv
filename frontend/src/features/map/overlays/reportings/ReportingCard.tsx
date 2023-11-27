@@ -65,6 +65,7 @@ export function ReportingCard({
 }: ReportingCardProps) {
   const dispatch = useAppDispatch()
   const displayReportingsLayer = useAppSelector(state => state.global.displayReportingsLayer)
+
   const listener = useAppSelector(state => state.draw.listener)
   const isMissionAttachmentInProgress = useAppSelector(
     state => state.attachMissionToReporting.isMissionAttachmentInProgress
@@ -106,6 +107,11 @@ export function ReportingCard({
     return `Fin dans ${Math.round(timeLeft)} h`
   }, [timeLeft, isArchived])
 
+  const isCardVisible = useMemo(
+    () => displayReportingsLayer && !listener && !isMissionAttachmentInProgress,
+    [displayReportingsLayer, listener, isMissionAttachmentInProgress]
+  )
+
   const editReporting = () => {
     dispatch(editReportingInLocalStore(id, ReportingContext.MAP))
   }
@@ -122,7 +128,7 @@ export function ReportingCard({
     }
   }, [feature, updateMargins])
 
-  if (!displayReportingsLayer || listener || isMissionAttachmentInProgress) {
+  if (!isCardVisible) {
     return null
   }
 

@@ -1,16 +1,16 @@
 import { Icon, Size } from '@mtes-mct/monitor-ui'
-import styled from 'styled-components'
 
 import { SearchReportings } from './SearchReportings'
-import { globalActions, ReportingContext, VisibilityState } from '../../../domain/shared_slices/Global'
+import { globalActions } from '../../../domain/shared_slices/Global'
 import { reduceReportingFormOnMap } from '../../../domain/use_cases/reporting/reduceReportingFormOnMap'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
+import { ButtonWrapper } from '../../MainWindow/components/RightMenu/ButtonWrapper'
 
 export function ReportingsButton() {
   const dispatch = useAppDispatch()
-  const { isSearchReportingsVisible, reportingFormVisibility } = useAppSelector(state => state.global)
+  const isSearchReportingsVisible = useAppSelector(state => state.global.isSearchReportingsVisible)
 
   const toggleSearchReportings = () => {
     dispatch(globalActions.hideSideButtons())
@@ -19,13 +19,7 @@ export function ReportingsButton() {
   }
 
   return (
-    <Wrapper
-      reportingFormVisibility={
-        reportingFormVisibility.context === ReportingContext.MAP
-          ? reportingFormVisibility.visibility
-          : VisibilityState.NONE
-      }
-    >
+    <ButtonWrapper topPosition={130}>
       {isSearchReportingsVisible && <SearchReportings />}
       <MenuWithCloseButton.ButtonOnMap
         className={isSearchReportingsVisible ? '_active' : undefined}
@@ -35,15 +29,6 @@ export function ReportingsButton() {
         size={Size.LARGE}
         title="Chercher des signalements"
       />
-    </Wrapper>
+    </ButtonWrapper>
   )
 }
-
-const Wrapper = styled.div<{ reportingFormVisibility: VisibilityState }>`
-  position: absolute;
-  top: 130px;
-  right: ${p => (p.reportingFormVisibility === VisibilityState.VISIBLE ? '0' : '10')}px;
-  display: flex;
-  justify-content: flex-end;
-  transition: right 0.3s ease-out;
-`
