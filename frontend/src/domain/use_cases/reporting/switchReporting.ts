@@ -16,11 +16,6 @@ export const switchReporting =
         hasAttachedMission ? nextReporting.reporting.attachedMission : undefined
       )
     )
-    await dispatch(
-      attachMissionToReportingSliceActions.setMissionId(
-        hasAttachedMission ? nextReporting.reporting.missionId : undefined
-      )
-    )
 
     await dispatch(
       setReportingFormVisibility({

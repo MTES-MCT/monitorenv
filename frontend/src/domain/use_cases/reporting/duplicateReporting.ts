@@ -29,9 +29,6 @@ export const duplicateReporting = (reportingId: number) => async (dispatch, getS
             duplicatedReporting.reporting.attachedMission ?? undefined
           )
         )
-        await dispatch(
-          attachMissionToReportingSliceActions.setMissionId(duplicatedReporting.reporting.missionId ?? undefined)
-        )
 
         await dispatch(
           setReportingFormVisibility({

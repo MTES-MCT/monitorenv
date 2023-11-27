@@ -18,7 +18,7 @@ export const saveMission =
       reporting: { reportings },
       sideWindow: { currentPath }
     } = getState()
-    const valuesToSave = omit(values, ['attachedReportings', 'detachedReportings', 'detachedReportingIds'])
+    const valuesToSave = omit(values, ['attachedReportings', 'detachedReportings'])
     const routeParams = getMissionPageRoute(currentPath)
     const missionIsNewMission = isNewMission(routeParams?.params?.id)
 

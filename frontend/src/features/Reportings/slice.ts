@@ -27,6 +27,7 @@ const attachMissionToReportingSlice = createSlice({
     },
     setAttachedMission(state, action) {
       state.attachedMission = action.payload
+      state.missionId = action.payload?.id
     },
     setInitialAttachedMission(state, action: PayloadAction<Mission | undefined>) {
       state.initialMissionId = action.payload?.id
@@ -34,9 +35,6 @@ const attachMissionToReportingSlice = createSlice({
     },
     setIsMissionAttachmentInProgress(state, action) {
       state.isMissionAttachmentInProgress = action.payload
-    },
-    setMissionId(state, action) {
-      state.missionId = action.payload
     }
   }
 })

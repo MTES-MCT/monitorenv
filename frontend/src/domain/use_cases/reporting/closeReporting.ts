@@ -22,11 +22,7 @@ export const closeReporting =
           hasAttachedMission ? reportings[reportingIdToClose].reporting.attachedMission : undefined
         )
       )
-      await dispatch(
-        attachMissionToReportingSliceActions.setMissionId(
-          hasAttachedMission ? reportings[reportingIdToClose].reporting.missionId : undefined
-        )
-      )
+
       await dispatch(reportingActions.setIsConfirmCancelDialogVisible(true))
       await dispatch(
         setReportingFormVisibility({

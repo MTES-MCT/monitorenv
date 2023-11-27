@@ -22,10 +22,13 @@ export function ReportingFormWithContext({ context, totalReportings }: Reporting
   const dispatch = useAppDispatch()
 
   const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
-  const reportings = useAppSelector(state => state.reporting.reportings)
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const reportingContext = useAppSelector(state =>
     activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined
+  )
+
+  const selectedReporting = useAppSelector(state =>
+    activeReportingId ? state.reporting.reportings[activeReportingId]?.reporting : undefined
   )
 
   const [isAttachNewMission, setIsAttachNewMission] = useState(false)
@@ -47,12 +50,6 @@ export function ReportingFormWithContext({ context, totalReportings }: Reporting
     }
     dispatch(saveReporting(values, context))
   }
-
-  const selectedReporting = useMemo(
-    () => (activeReportingId && reportings ? reportings[activeReportingId]?.reporting : undefined),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [activeReportingId, activeReportingId ? reportings[activeReportingId]?.reporting.missionId : undefined]
-  )
 
   const reportingInitialValues = useMemo(() => {
     if (isReportingNew && activeReportingId) {
