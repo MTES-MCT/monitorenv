@@ -14,22 +14,22 @@ export function ButtonWrapperWithRef({ children, topPosition }: ButtonWrapperPro
   return (
     <Wrapper
       ref={ref}
-      reportingFormVisibility={
+      $reportingFormVisibility={
         reportingFormVisibility.context === ReportingContext.MAP
           ? reportingFormVisibility.visibility
           : VisibilityState.NONE
       }
-      topPosition={topPosition}
+      $topPosition={topPosition}
     >
       {children}
     </Wrapper>
   )
 }
 
-const Wrapper = styled.div<{ reportingFormVisibility: VisibilityState; topPosition: number }>`
+const Wrapper = styled.div<{ $reportingFormVisibility: VisibilityState; $topPosition: number }>`
   position: absolute;
-  top: ${p => p.topPosition}px;
-  right: ${p => (p.reportingFormVisibility === VisibilityState.VISIBLE ? '0' : '10')}px;
+  top: ${p => p.$topPosition}px;
+  right: ${p => (p.$reportingFormVisibility === VisibilityState.VISIBLE ? '0' : '10')}px;
   display: flex;
   justify-content: flex-end;
   transition: right 0.3s ease-out;

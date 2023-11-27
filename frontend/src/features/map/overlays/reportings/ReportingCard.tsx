@@ -107,8 +107,8 @@ export function ReportingCard({
     return `Fin dans ${Math.round(timeLeft)} h`
   }, [timeLeft, isArchived])
 
-  const isCardNotVisible = useMemo(
-    () => !displayReportingsLayer || listener || isMissionAttachmentInProgress,
+  const isCardVisible = useMemo(
+    () => displayReportingsLayer && !listener && !isMissionAttachmentInProgress,
     [displayReportingsLayer, listener, isMissionAttachmentInProgress]
   )
 
@@ -128,7 +128,7 @@ export function ReportingCard({
     }
   }, [feature, updateMargins])
 
-  if (isCardNotVisible) {
+  if (!isCardVisible) {
     return null
   }
 
