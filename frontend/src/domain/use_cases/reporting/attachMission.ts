@@ -17,7 +17,7 @@ export const attachMission = (id: number) => async (dispatch, getState) => {
         throw Error("Erreur à l'ajout du signalement")
       }
       await dispatch(attachMissionToReportingSliceActions.setAttachedMission(result.data))
-      await dispatch(attachMissionToReportingSliceActions.setMissionId(id))
+
       response.unsubscribe()
     })
     .catch(error => {

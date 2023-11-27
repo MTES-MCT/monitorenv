@@ -16,11 +16,9 @@ export function AttachMissionToReportingModal() {
   )
 
   const initialAttachedMission = useAppSelector(state => state.attachMissionToReporting.initialAttachedMission)
-  const initialMissionId = useAppSelector(state => state.attachMissionToReporting.initialMissionId)
 
   const resetMissionToAttach = () => {
     dispatch(attachMissionToReportingSliceActions.setAttachedMission(initialAttachedMission))
-    dispatch(attachMissionToReportingSliceActions.setMissionId(initialMissionId))
   }
 
   const validateMissionToAttach = () => {

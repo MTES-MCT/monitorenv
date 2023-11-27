@@ -98,6 +98,7 @@ export const missionFactory = (
     attachedReportings: attachedReporting ? [attachedReporting] : [],
     closedBy: '',
     controlUnits: [controlUnitFactory()],
+    detachedReportingIds: [],
     endDateTimeUtc: '',
     envActions: [],
     isClosed: false,

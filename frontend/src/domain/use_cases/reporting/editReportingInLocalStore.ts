@@ -43,13 +43,6 @@ export const editReportingInLocalStore =
   }
 
 async function setReporting(dispatch, reportingId, reportingContext, newReporting) {
-  await dispatch(
-    setReportingFormVisibility({
-      context: reportingContext,
-      visibility: VisibilityState.VISIBLE
-    })
-  )
-
   await dispatch(reportingActions.setReporting(newReporting))
   await dispatch(reportingActions.setActiveReportingId(reportingId))
   const hasAttachedMission =
@@ -59,7 +52,11 @@ async function setReporting(dispatch, reportingId, reportingContext, newReportin
       hasAttachedMission ? newReporting.reporting.attachedMission : undefined
     )
   )
+
   await dispatch(
-    attachMissionToReportingSliceActions.setMissionId(hasAttachedMission ? newReporting.reporting.missionId : undefined)
+    setReportingFormVisibility({
+      context: reportingContext,
+      visibility: VisibilityState.VISIBLE
+    })
   )
 }

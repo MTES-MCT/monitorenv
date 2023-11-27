@@ -276,7 +276,7 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
   attachedReportings: ReportingDetailed[]
   closedBy: string
   controlUnits: LegacyControlUnit[]
-  detachedReportingIds?: number[]
+  detachedReportingIds: number[]
   detachedReportings?: []
   endDateTimeUtc?: string
   envActions: EnvAction[]

@@ -74,6 +74,7 @@ export function ReportingForm({
       return action
     })
     setFieldValue('envActions', envActionsToUpdate)
+    setFieldValue('detachedReportingIds', [...(values.detachedReportingIds || []), reporting.id])
 
     setCurrentActionIndex(undefined)
   }

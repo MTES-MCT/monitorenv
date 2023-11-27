@@ -24,7 +24,6 @@ export const unattachMissionFromReporting =
         await dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
         await dispatch(reportingActions.setReporting(updatedReporting))
         await dispatch(attachMissionToReportingSliceActions.setAttachedMission(response.data.attachedMission))
-        await dispatch(attachMissionToReportingSliceActions.setMissionId(response.data.missionId))
       } else {
         throw Error('Erreur au détachement de la mission')
       }
