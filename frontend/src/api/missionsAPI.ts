@@ -4,7 +4,7 @@ import { monitorenvPrivateApi, monitorenvPublicApi } from './api'
 import { ControlUnit } from '../domain/entities/controlUnit'
 import { addNewMissionListener, missionEventListener } from '../features/missions/MissionForm/sse'
 
-import type { Mission } from '../domain/entities/missions'
+import type { Mission, MissionForApi } from '../domain/entities/missions'
 
 type MissionsResponse = Mission[]
 type MissionsFilter = {

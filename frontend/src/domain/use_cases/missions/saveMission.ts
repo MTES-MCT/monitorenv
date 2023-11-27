@@ -1,13 +1,12 @@
 import omit from 'lodash/omit'
 
 import { missionsAPI } from '../../../api/missionsAPI'
+import { ApiErrorCode } from '../../../api/types'
 import {
   disableMissionListener,
   enableMissionListener,
   removeMissionListener
 } from '../../../features/missions/MissionForm/sse'
-import { disableMissionListener, enableMissionListener } from '../../../features/missions/MissionForm/sse'
-import { ApiErrorCode } from '../../../api/types'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { isNewMission } from '../../../utils/isNewMission'
 import { getMissionPageRoute } from '../../../utils/routes'

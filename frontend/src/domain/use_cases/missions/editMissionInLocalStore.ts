@@ -53,9 +53,7 @@ export const editMissionInLocalStore = missionId => async (dispatch, getState) =
       }
 
       await dispatch(multiMissionsActions.setSelectedMissions(missions))
-      await dispatch(
-        attachReportingToMissionSliceActions.setAttachedReportings(missionToSave.attachedReportings || [])
-      )
+      await dispatch(attachReportingToMissionSliceActions.setAttachedReportings(missionToSave.attachedReportings || []))
       await dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.MISSION, { id: missionId })))
 
       response.unsubscribe()
