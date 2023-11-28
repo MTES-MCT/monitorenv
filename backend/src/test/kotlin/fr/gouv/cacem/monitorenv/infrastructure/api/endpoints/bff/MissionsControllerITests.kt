@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
+import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
@@ -44,7 +45,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.ZonedDateTime
 import java.util.*
 
-@Import(WebSecurityConfig::class, MapperConfiguration::class)
+@Import(WebSecurityConfig::class, MapperConfiguration::class, SentryConfig::class)
 @WebMvcTest(value = [(MissionsController::class)])
 class MissionsControllerITests {
 
