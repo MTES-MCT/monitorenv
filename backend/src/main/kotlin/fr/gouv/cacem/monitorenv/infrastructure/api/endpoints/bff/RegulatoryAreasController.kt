@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/bff/v1/regulatory")
-@Tag(name = "Regulatory", description = "API regulatory layers")
+@Tag(name = "BFF.Regulatory", description = "API regulatory layers")
 class RegulatoryAreasController(
     private val getAllRegulatoryAreas: GetAllRegulatoryAreas,
     private val getRegulatoryAreaById: GetRegulatoryAreaById,

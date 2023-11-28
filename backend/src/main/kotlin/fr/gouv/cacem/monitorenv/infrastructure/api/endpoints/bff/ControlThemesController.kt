@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/bff/v1/controlthemes")
-@Tag(name = "Control Themes", description = "API control themes")
+@Tag(name = "BFF.Control Themes", description = "API control themes")
 class ControlThemesController(
     private val getAllControlThemes: GetAllControlThemes,
     private val getControlThemeById: GetControlThemeById,

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/bff/v1/department_areas")
-@Tag(name = "DepartmentAreas")
+@Tag(name = "BFF.DepartmentAreas")
 class DepartmentAreasController(
     private val getDepartmentAreas: GetDepartmentAreas,
     private val getDepartmentAreaById: GetDepartmentAreaByInseeCode,

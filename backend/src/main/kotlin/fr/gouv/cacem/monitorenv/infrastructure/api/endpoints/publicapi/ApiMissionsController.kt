@@ -15,7 +15,7 @@ import java.time.ZonedDateTime
 
 @RestController
 @RequestMapping("/api/v1/missions")
-@Tag(description = "API Missions", name = "Missions")
+@Tag(description = "API Missions", name = "Public.Missions")
 class ApiMissionsController(
     private val createOrUpdateMission: CreateOrUpdateMission,
     private val getMissions: GetMissions,
