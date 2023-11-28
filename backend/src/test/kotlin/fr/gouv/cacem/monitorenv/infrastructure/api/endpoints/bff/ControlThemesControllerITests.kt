@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
-import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.controlTheme.ControlThemeEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlThemes.GetAllControlThemes
@@ -17,7 +16,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@Import(WebSecurityConfig::class, SentryConfig::class)
+@Import(WebSecurityConfig::class)
 @WebMvcTest(value = [(ControlThemesController::class)])
 class ControlThemesControllerITests {
 
