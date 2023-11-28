@@ -1,10 +1,12 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api
 
+import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ApiError
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.MissingParameterApiError
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ForeignKeyConstraintException
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ReportingAlreadyAttachedException
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.UnarchivedChildException
+import io.sentry.Sentry
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.Ordered.HIGHEST_PRECEDENCE
@@ -18,12 +20,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
 @Order(HIGHEST_PRECEDENCE)
-class ControllersExceptionHandler {
+class ControllersExceptionHandler(val sentryConfig: SentryConfig) {
     private val logger: Logger = LoggerFactory.getLogger(ControllersExceptionHandler::class.java)
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ForeignKeyConstraintException::class)
     fun handleForeignKeyConstraintException(e: ForeignKeyConstraintException): ApiError {
+        logger.error(e.message, e.cause)
+
+        if (sentryConfig.enabled == true) {
+            Sentry.captureException(e)
+        }
         return ApiError(ErrorCode.FOREIGN_KEY_CONSTRAINT.name)
     }
 
@@ -31,6 +38,11 @@ class ControllersExceptionHandler {
     @ExceptionHandler(IllegalArgumentException::class)
     fun handleIllegalArgumentException(e: Exception): ApiError {
         logger.error(e.message, e.cause)
+
+        if (sentryConfig.enabled == true) {
+            Sentry.captureException(e)
+        }
+
         return ApiError(IllegalArgumentException(e.message.toString(), e))
     }
 
@@ -45,6 +57,11 @@ class ControllersExceptionHandler {
     @ExceptionHandler(MissingServletRequestParameterException::class)
     fun handleNoParameter(e: MissingServletRequestParameterException): MissingParameterApiError {
         logger.error(e.message, e.cause)
+
+        if (sentryConfig.enabled == true) {
+            Sentry.captureException(e)
+        }
+
         return MissingParameterApiError("Parameter \"${e.parameterName}\" is missing.")
     }
 
@@ -52,12 +69,23 @@ class ControllersExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException::class)
     fun handleNoParameter(e: HttpMessageNotReadableException): ApiError {
         logger.error(e.message, e.cause)
+
+        if (sentryConfig.enabled == true) {
+            Sentry.captureException(e)
+        }
+
         return ApiError(e)
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(UnarchivedChildException::class)
     fun handleUnarchivedChildException(e: UnarchivedChildException): ApiError {
+        logger.error(e.message, e.cause)
+
+        if (sentryConfig.enabled == true) {
+            Sentry.captureException(e)
+        }
+
         return ApiError(ErrorCode.UNARCHIVED_CHILD.name)
     }
 

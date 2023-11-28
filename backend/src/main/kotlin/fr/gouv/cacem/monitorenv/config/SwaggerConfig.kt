@@ -18,18 +18,18 @@ class SwaggerConfig {
     fun api(): OpenAPI {
         return OpenAPI()
             .info(
-                Info().title("API Documentation")
-                    .description("This is a public API")
+                Info().title("MonitorEnv public & BFF API")
+                    .description("MonitorEnv")
                     .version("v0.0.1")
                     .license(
                         License().name("Apache 2.0")
-                            .url("https://github.com/MTES-MCT/monitorenv/blob/master/LICENCE"),
+                            .url("https://github.com/MTES-MCT/monitorenv/blob/main/LICENSE"),
                     ),
             )
             .externalDocs(
                 ExternalDocumentation()
-                    .description("SpringShop Wiki Documentation")
-                    .url("https://springshop.wiki.github.org/docs"),
+                    .description("MonitorEnv is part of the beta.gouv.fr program")
+                    .url("https://beta.gouv.fr/startups/monitorfish.html"),
             )
     }
 }
