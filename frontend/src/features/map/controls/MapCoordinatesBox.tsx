@@ -28,7 +28,7 @@ export function MapCoordinatesBox({ map }: BaseMapChildrenProps) {
         return
       }
 
-      timeoutForPointerMove = setTimeout(() => {
+      timeoutForPointerMove = window.setTimeout(() => {
         timeoutForPointerMove = null
 
         saveCoordinates(lastEventForPointerMove)

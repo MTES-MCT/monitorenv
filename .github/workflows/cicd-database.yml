@@ -13,7 +13,7 @@ jobs:
     steps:
     
     - name: Checkout
-      uses: actions/checkout@v2    
+      uses: actions/checkout@v4    
 
     - name: Set IMAGE_TAG
       run: echo "IMAGE_TAG=ghcr.io/mtes-mct/monitorenv/monitorenv-database:pg11-ts1.7.4-postgis3.3.2" >> $GITHUB_ENV
@@ -23,7 +23,7 @@ jobs:
       uses: docker/setup-buildx-action@master
 
     - name: Cache Docker layers
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: /tmp/.buildx-cache-database
         key: ${{ runner.os }}-single-buildx-${{ github.sha }}

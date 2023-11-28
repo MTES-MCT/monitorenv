@@ -1,7 +1,7 @@
 import { reduce } from 'lodash'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 
 import { getReportingZoneFeature } from './reportingsGeometryHelpers'
 import { reportingPinStyleFn } from './style'
@@ -12,86 +12,129 @@ import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useGetFilteredReportingsQuery } from '../../../Reportings/hooks/useGetFilteredReportingsQuery'
 
+import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
 export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
-  const displayReportingsLayer = useAppSelector(state => state.global.displayReportingsLayer)
-  const listener = useAppSelector(state => state.draw.listener)
+  const { displayReportingsLayer } = useAppSelector(state => state.global)
+
+  const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
+  const editingReporting = useAppSelector(state =>
+    activeReportingId ? state.reporting.reportings[activeReportingId]?.reporting : undefined
+  )
+
+  // we don't want to display reportings on the map if the user so decides (displayReportingsLayer variable)
+  // or if user have interaction on map (attach mission or reporting)
+  const isMissionAttachmentInProgress = useAppSelector(
+    state => state.attachMissionToReporting.isMissionAttachmentInProgress
+  )
+  const isReportingAttachmentInProgress = useAppSelector(
+    state => state.attachReportingToMission.isReportingAttachmentInProgress
+  )
+  const hasMapListener = isMissionAttachmentInProgress || isReportingAttachmentInProgress
+  const isLayerVisible = useMemo(
+    () => displayReportingsLayer && !hasMapListener,
+    [displayReportingsLayer, hasMapListener]
+  )
+
+  const missionListener = useAppSelector(state => state.draw.listener)
+  // Attached reportings to active mission
+  const attachedReportingsToActiveMission = useAppSelector(state => state.missionState.missionState?.attachedReportings)
+  const attachedReportingsToActiveMissionFeature = useMemo(() => {
+    if (!attachedReportingsToActiveMission || attachedReportingsToActiveMission?.length === 0) {
+      return []
+    }
+
+    return reduce(
+      attachedReportingsToActiveMission,
+      (features, reporting) => {
+        if (reporting && reporting.geom) {
+          features.push(getReportingZoneFeature(reporting, Layers.REPORTINGS.code))
+        }
+
+        return features
+      },
+      [] as Feature[]
+    )
+  }, [attachedReportingsToActiveMission])
 
   const { reportings } = useGetFilteredReportingsQuery()
-
-  const reportingsPointOrZone = useMemo(
+  const reportingsFromApiFeatures = useMemo(
     () =>
       reduce(
         reportings,
         (features, reporting) => {
           if (reporting && reporting.geom) {
-            features.push(getReportingZoneFeature(reporting, Layers.REPORTINGS.code))
+            if (reporting.id === activeReportingId && editingReporting) {
+              features.push(getReportingZoneFeature(editingReporting, Layers.REPORTINGS.code))
+            } else {
+              features.push(getReportingZoneFeature(reporting, Layers.REPORTINGS.code))
+            }
           }
 
           return features
         },
         [] as Feature[]
-      ),
-    [reportings]
+      ) || [],
+    [reportings, activeReportingId, editingReporting]
   )
-  const vectorSourceRef = useRef() as React.MutableRefObject<VectorSource<Geometry>>
-  const GetVectorSource = () => {
-    if (vectorSourceRef.current === undefined) {
-      vectorSourceRef.current = new VectorSource()
+
+  const reportingsPointOrZone = useMemo(() => {
+    // if user edits a mission with attached reportings and draw a zone or a point on map
+    // we want to display only the attached reportings
+    if (missionListener) {
+      return [...attachedReportingsToActiveMissionFeature]
     }
 
-    return vectorSourceRef.current
-  }
-  const vectorLayerRef = useRef() as React.MutableRefObject<VectorLayer<VectorSource> & { name?: string }>
-  const GetVectorLayer = useCallback(() => {
-    if (vectorLayerRef.current === undefined) {
-      vectorLayerRef.current = new VectorLayer({
-        renderBuffer: 7,
-        source: GetVectorSource(),
-        style: reportingPinStyleFn,
-        updateWhileAnimating: true,
-        updateWhileInteracting: true,
-        zIndex: Layers.REPORTING_SELECTED.zIndex
-      })
-      vectorLayerRef.current.name = Layers.REPORTINGS.code
-    }
+    // we want to display reportings from API (with active filters), active reporting
+    // and reportings attached to active mission
+    return [...reportingsFromApiFeatures, ...attachedReportingsToActiveMissionFeature]
+  }, [attachedReportingsToActiveMissionFeature, reportingsFromApiFeatures, missionListener])
 
-    return vectorLayerRef.current
-  }, [])
+  const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Geometry>>
+
+  const vectorLayerRef = useRef(
+    new VectorLayer({
+      renderBuffer: 7,
+      source: vectorSourceRef.current,
+      style: reportingPinStyleFn,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
+      zIndex: Layers.REPORTINGS.zIndex
+    })
+  ) as React.MutableRefObject<VectorLayerWithName>
+
+  ;(vectorLayerRef.current as VectorLayerWithName).name = Layers.REPORTINGS.code
 
   useEffect(() => {
-    if (map) {
-      map.getLayers().push(GetVectorLayer())
+    map.getLayers().push(vectorLayerRef.current)
 
-      return () => map.removeLayer(GetVectorLayer())
+    return () => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      map.removeLayer(vectorLayerRef.current)
     }
-
-    return () => {}
-  }, [map, GetVectorLayer])
+  }, [map])
 
   useEffect(() => {
-    GetVectorSource()?.clear(true)
+    vectorSourceRef.current?.clear(true)
     if (reportingsPointOrZone) {
-      GetVectorSource()?.addFeatures(reportingsPointOrZone)
+      vectorSourceRef.current?.addFeatures(reportingsPointOrZone)
     }
   }, [reportingsPointOrZone])
 
   useEffect(() => {
-    GetVectorLayer()?.setVisible(displayReportingsLayer)
-  }, [displayReportingsLayer, GetVectorLayer, listener])
+    vectorLayerRef.current?.setVisible(isLayerVisible)
+  }, [isLayerVisible])
 
   useEffect(() => {
-    if (mapClickEvent?.feature) {
-      const feature = mapClickEvent?.feature
-      if (feature.getId()?.toString()?.includes(Layers.REPORTINGS.code)) {
-        const { id } = feature.getProperties()
-        dispatch(reportingActions.setSelectedReportingIdOnMap(id))
-        dispatch(removeOverlayCoordinatesByName(Layers.REPORTINGS.code))
-      }
+    const feature = mapClickEvent?.feature
+    if (feature && feature.getId()?.toString()?.includes(Layers.REPORTINGS.code)) {
+      const { id } = feature.getProperties()
+      dispatch(reportingActions.setSelectedReportingIdOnMap(id))
+      dispatch(removeOverlayCoordinatesByName(Layers.REPORTINGS.code))
     }
   }, [dispatch, mapClickEvent])
 

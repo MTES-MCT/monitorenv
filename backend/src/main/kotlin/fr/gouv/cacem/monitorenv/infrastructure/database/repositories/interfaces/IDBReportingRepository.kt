@@ -9,7 +9,7 @@ import java.time.Instant
 import java.util.UUID
 
 interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
         value =
         """
@@ -21,7 +21,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     )
     fun archiveOutdatedReportings(): Int
 
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
         value =
         """
@@ -33,17 +33,17 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     )
     fun archiveReportings(ids: List<Int>)
 
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
         value =
         """
         UPDATE reportings
         SET
-            mission_id =  :missionId,
-            attached_to_mission_at_utc = CASE WHEN mission_id is null AND id in (:reportingIds) THEN NOW() ELSE attached_to_mission_at_utc END,
-            detached_from_mission_at_utc = CASE WHEN id not in (:reportingIds) THEN NOW() ELSE CAST(null as timestamp ) END
-        WHERE id in (:reportingIds) or mission_id = :missionId
-        """,
+            mission_id = :missionId,
+            attached_to_mission_at_utc = CASE WHEN (mission_id IS NULL OR mission_id = (:missionId)) AND id IN (:reportingIds) THEN NOW() ELSE attached_to_mission_at_utc END,
+            detached_from_mission_at_utc = CASE WHEN (id NOT IN (:reportingIds) OR (:reportingIds) IS NULL ) THEN NOW() ELSE NULL END
+            WHERE id IN (:reportingIds) OR (mission_id = :missionId AND detached_from_mission_at_utc IS NULL)
+            """,
         nativeQuery = true,
     )
     fun attachReportingsToMission(reportingIds: List<Int>, missionId: Int)
@@ -60,7 +60,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     )
     fun attachEnvActionsToReportings(envActionId: UUID, reportingIds: List<Int>)
 
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
         value =
         """
@@ -72,7 +72,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     )
     fun delete(id: Int)
 
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
         value =
         """
@@ -83,6 +83,18 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         nativeQuery = true,
     )
     fun deleteReportings(ids: List<Int>)
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query(
+        value =
+        """
+        UPDATE reportings
+        SET attached_env_action_id = NULL
+        WHERE mission_id = :missionId AND (:envActionIds IS NULL OR attached_env_action_id NOT IN (:envActionIds))
+        """,
+        nativeQuery = true,
+    )
+    fun detachDanglingEnvActions(missionId: Int, envActionIds: List<UUID>)
 
     @Query(
         value =

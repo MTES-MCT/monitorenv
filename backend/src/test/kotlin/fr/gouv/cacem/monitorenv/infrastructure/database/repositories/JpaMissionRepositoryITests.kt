@@ -31,9 +31,12 @@ import java.util.*
 class JpaMissionRepositoryITests : AbstractDBTests() {
     @Autowired private lateinit var jpaMissionRepository: JpaMissionRepository
 
+    @Autowired private lateinit var jpaReportingRepository: JpaReportingRepository
+
     @Autowired private lateinit var jpaControlUnitRepository: JpaControlUnitRepository
 
-    @Autowired private lateinit var jpaControlUnitResourceRepository: JpaControlUnitResourceRepository
+    @Autowired
+    private lateinit var jpaControlUnitResourceRepository: JpaControlUnitResourceRepository
 
     @Test
     @Transactional
@@ -128,7 +131,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                         name = "PAM Jeanne Barret",
                         administration = "DIRM / DM",
                         isArchived = false,
-                        resources = listOf(
+                        resources =
+                        listOf(
                             LegacyControlUnitResourceEntity(
                                 id = 8,
                                 controlUnitId = 10121,
@@ -146,11 +150,14 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         // Then
         assertThat(newMissionCreated.mission.controlUnits).hasSize(1)
         assertThat(newMissionCreated.mission.controlUnits.first().id).isEqualTo(10121)
-        assertThat(newMissionCreated.mission.controlUnits.first().name).isEqualTo("PAM Jeanne Barret")
-        assertThat(newMissionCreated.mission.controlUnits.first().administration).isEqualTo("DIRM / DM")
+        assertThat(newMissionCreated.mission.controlUnits.first().name)
+            .isEqualTo("PAM Jeanne Barret")
+        assertThat(newMissionCreated.mission.controlUnits.first().administration)
+            .isEqualTo("DIRM / DM")
         assertThat(newMissionCreated.mission.controlUnits.first().resources).hasSize(1)
         assertThat(newMissionCreated.mission.controlUnits.first().resources.first().id).isEqualTo(8)
-        assertThat(newMissionCreated.mission.controlUnits.first().resources.first().controlUnitId).isEqualTo(10121)
+        assertThat(newMissionCreated.mission.controlUnits.first().resources.first().controlUnitId)
+            .isEqualTo(10121)
         assertThat(newMissionCreated.mission.controlUnits.first().resources.first().name)
             .isEqualTo("PAM Jeanne Barret")
         assertThat(newMissionCreated.mission.envActions).hasSize(3)
@@ -201,7 +208,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                         name = "DPM – DDTM 35",
                         administration = "DDTM",
                         isArchived = false,
-                        resources = listOf(
+                        resources =
+                        listOf(
                             LegacyControlUnitResourceEntity(
                                 id = 8,
                                 controlUnitId = 10004,
@@ -225,15 +233,19 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                             name = "DML 2A",
                             administration = "DIRM / DM",
                             isArchived = false,
-                            resources = listOf(
+                            resources =
+                            listOf(
                                 LegacyControlUnitResourceEntity(
                                     id = 3,
-                                    controlUnitId = 10002,
-                                    name = "Semi-rigide 1",
+                                    controlUnitId =
+                                    10002,
+                                    name =
+                                    "Semi-rigide 1",
                                 ),
                                 LegacyControlUnitResourceEntity(
                                     id = 5,
-                                    controlUnitId = 10002,
+                                    controlUnitId =
+                                    10002,
                                     name = "Voiture",
                                 ),
                             ),
@@ -246,14 +258,19 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(newMissionUpdated.mission.controlUnits).hasSize(1)
         assertThat(newMissionUpdated.mission.controlUnits.first().id).isEqualTo(10002)
         assertThat(newMissionUpdated.mission.controlUnits.first().name).isEqualTo("DML 2A")
-        assertThat(newMissionUpdated.mission.controlUnits.first().administration).isEqualTo("DIRM / DM")
+        assertThat(newMissionUpdated.mission.controlUnits.first().administration)
+            .isEqualTo("DIRM / DM")
         assertThat(newMissionUpdated.mission.controlUnits.first().resources).hasSize(2)
         assertThat(newMissionUpdated.mission.controlUnits.first().resources.first().id).isEqualTo(3)
-        assertThat(newMissionUpdated.mission.controlUnits.first().resources.first().controlUnitId).isEqualTo(10002)
-        assertThat(newMissionUpdated.mission.controlUnits.first().resources.first().name).isEqualTo("Semi-rigide 1")
+        assertThat(newMissionUpdated.mission.controlUnits.first().resources.first().controlUnitId)
+            .isEqualTo(10002)
+        assertThat(newMissionUpdated.mission.controlUnits.first().resources.first().name)
+            .isEqualTo("Semi-rigide 1")
         assertThat(newMissionUpdated.mission.controlUnits.first().resources.last().id).isEqualTo(5)
-        assertThat(newMissionUpdated.mission.controlUnits.first().resources.last().controlUnitId).isEqualTo(10002)
-        assertThat(newMissionUpdated.mission.controlUnits.first().resources.last().name).isEqualTo("Voiture")
+        assertThat(newMissionUpdated.mission.controlUnits.first().resources.last().controlUnitId)
+            .isEqualTo(10002)
+        assertThat(newMissionUpdated.mission.controlUnits.first().resources.last().name)
+            .isEqualTo("Voiture")
     }
 
     @Test
@@ -262,20 +279,29 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         // Given
         val mission = jpaMissionRepository.findById(25)
         val newControlUnitResource = jpaControlUnitResourceRepository.findById(10)
-        val newControlUnit = jpaControlUnitRepository.findById(requireNotNull(newControlUnitResource.controlUnit.id))
+        val newControlUnit =
+            jpaControlUnitRepository.findById(
+                requireNotNull(newControlUnitResource.controlUnit.id),
+            )
 
-        val nextMission = mission.copy(
-            controlUnits = mission.controlUnits.plus(
-                LegacyControlUnitEntity(
-                    id = requireNotNull(newControlUnit.controlUnit.id),
-                    administration = newControlUnit.administration.name,
-                    isArchived = newControlUnit.controlUnit.isArchived,
-                    name = newControlUnit.controlUnit.name,
-                    resources = listOf(newControlUnitResource.toLegacyControlUnitResource()),
-                    contact = null,
+        val nextMission =
+            mission.copy(
+                controlUnits =
+                mission.controlUnits.plus(
+                    LegacyControlUnitEntity(
+                        id = requireNotNull(newControlUnit.controlUnit.id),
+                        administration = newControlUnit.administration.name,
+                        isArchived = newControlUnit.controlUnit.isArchived,
+                        name = newControlUnit.controlUnit.name,
+                        resources =
+                        listOf(
+                            newControlUnitResource
+                                .toLegacyControlUnitResource(),
+                        ),
+                        contact = null,
+                    ),
                 ),
-            ),
-        )
+            )
 
         val updatedMission = jpaMissionRepository.save(nextMission)
 
@@ -283,11 +309,13 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(updatedMission.mission.controlUnits.first().id).isEqualTo(10002)
         assertThat(updatedMission.mission.controlUnits.first().resources).hasSize(1)
         assertThat(updatedMission.mission.controlUnits.first().resources.first().id).isEqualTo(3)
-        assertThat(updatedMission.mission.controlUnits.first().resources.first().controlUnitId).isEqualTo(10002)
+        assertThat(updatedMission.mission.controlUnits.first().resources.first().controlUnitId)
+            .isEqualTo(10002)
         assertThat(updatedMission.mission.controlUnits.last().id).isEqualTo(10018)
         assertThat(updatedMission.mission.controlUnits.last().resources).hasSize(1)
         assertThat(updatedMission.mission.controlUnits.last().resources.first().id).isEqualTo(10)
-        assertThat(updatedMission.mission.controlUnits.last().resources.first().controlUnitId).isEqualTo(10018)
+        assertThat(updatedMission.mission.controlUnits.last().resources.first().controlUnitId)
+            .isEqualTo(10018)
     }
 
     @Test
@@ -310,7 +338,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                         name = "DPM – DDTM 35",
                         administration = "DDTM",
                         isArchived = false,
-                        resources = listOf(
+                        resources =
+                        listOf(
                             LegacyControlUnitResourceEntity(
                                 id = 123456,
                                 controlUnitId = 5,
@@ -342,7 +371,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionSource = MissionSourceEnum.MONITORENV,
                 hasMissionOrder = false,
                 isUnderJdp = false,
-                controlUnits = listOf(
+                controlUnits =
+                listOf(
                     LegacyControlUnitEntity(
                         id = 123456,
                         name = "PAM Jeanne Barret",
@@ -615,18 +645,24 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                             listOf(
                                 LegacyControlUnitResourceEntity(
                                     id = 3,
-                                    controlUnitId = 10002,
-                                    name = "Semi-rigide 1",
+                                    controlUnitId =
+                                    10002,
+                                    name =
+                                    "Semi-rigide 1",
                                 ),
                                 LegacyControlUnitResourceEntity(
                                     id = 4,
-                                    controlUnitId = 10002,
-                                    name = "Semi-rigide 2",
+                                    controlUnitId =
+                                    10002,
+                                    name =
+                                    "Semi-rigide 2",
                                 ),
                                 LegacyControlUnitResourceEntity(
                                     id = 5,
-                                    controlUnitId = 10002,
-                                    name = "Voiture",
+                                    controlUnitId =
+                                    10002,
+                                    name =
+                                    "Voiture",
                                 ),
                             ),
                         ),
@@ -641,11 +677,16 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `findById Should return specified mission and associated env actions`() {
+    fun `findById Should return specified mission and associated env actions and associated envActionReportingIds`() {
         // When
         val missionDTO = jpaMissionRepository.findFullMissionById(34)
         assertThat(missionDTO.mission.id).isEqualTo(34)
         assertThat(missionDTO.mission.envActions).hasSize(2)
+        assertThat(
+            missionDTO.envActionsAttachedToReportingIds?.get(0)?.first,
+        )
+            .isEqualTo(UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807"))
+        assertThat(missionDTO.envActionsAttachedToReportingIds?.get(0)?.second).isEqualTo(listOf(6))
     }
 
     @Test

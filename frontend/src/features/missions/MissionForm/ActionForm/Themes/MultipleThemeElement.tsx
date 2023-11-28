@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { ActionTheme } from './ActionTheme'
 
-export function MultipleThemeElement({ currentActionIndex, form, push, remove }) {
+export function MultipleThemeElement({ envActionIndex, form, push, remove }) {
   const handleRemoveTheme = (index: number) => {
     remove(index)
   }
@@ -13,9 +13,7 @@ export function MultipleThemeElement({ currentActionIndex, form, push, remove })
   }
 
   const currentThemes =
-    (form?.values?.envActions &&
-      form.values.envActions.length > 0 &&
-      form.values.envActions[currentActionIndex]?.themes) ||
+    (form?.values?.envActions && form.values.envActions.length > 0 && form.values.envActions[envActionIndex]?.themes) ||
     []
 
   return (
@@ -23,7 +21,7 @@ export function MultipleThemeElement({ currentActionIndex, form, push, remove })
       {isEmpty(compact(currentThemes)) && (
         <ThemeBloc key={0}>
           <ActionTheme
-            actionIndex={currentActionIndex}
+            actionIndex={envActionIndex}
             labelSubTheme="Sous-thématiques de surveillance"
             labelTheme="Thématique de surveillance"
             themeIndex={0}
@@ -34,7 +32,7 @@ export function MultipleThemeElement({ currentActionIndex, form, push, remove })
         // eslint-disable-next-line react/no-array-index-key
         <ThemeBloc key={index}>
           <ActionTheme
-            actionIndex={currentActionIndex}
+            actionIndex={envActionIndex}
             labelSubTheme="Sous-thématiques de surveillance"
             labelTheme="Thématique de surveillance"
             themeIndex={index}

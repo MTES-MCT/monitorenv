@@ -1,11 +1,11 @@
 import { Accent } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 
+import { LinkToMissionTag } from './components/LinkToMissionTag'
 import { StyledArchivedTag } from './style'
 import {
   ReportingSourceEnum,
   type Reporting,
-  getFormattedReportingId,
   ReportingStatusEnum,
   getReportingStatus
 } from '../../domain/entities/reporting'
@@ -39,12 +39,22 @@ export const getReportingTitle = reporting => {
     return `NOUVEAU SIGNALEMENT (${String(id).slice(4)})`
   }
 
+  const statusTag = () => {
+    if (reportingStatus === ReportingStatusEnum.ARCHIVED) {
+      return <StyledArchivedTag accent={Accent.PRIMARY}>Archivé</StyledArchivedTag>
+    }
+
+    if (reporting.missionId && !reporting.detachedFromMissionAtUtc) {
+      return <LinkToMissionTag />
+    }
+
+    return null
+  }
+
   return (
     <>
       {`SIGNALEMENT ${getFormattedReportingId(reportingId)}`}
-      {reportingStatus === ReportingStatusEnum.ARCHIVED && (
-        <StyledArchivedTag accent={Accent.PRIMARY}>Archivé</StyledArchivedTag>
-      )}
+      {statusTag()}
     </>
   )
 }
@@ -61,4 +71,12 @@ export const createIdForNewReporting = reportings => {
       : 'new-1'
 
   return id
+}
+
+export const getFormattedReportingId = (reportingId: number | undefined) => {
+  if (!reportingId) {
+    return ''
+  }
+
+  return `${String(reportingId).slice(0, 2)}-${String(reportingId).slice(2)}`
 }

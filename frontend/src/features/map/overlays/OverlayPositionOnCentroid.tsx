@@ -36,7 +36,7 @@ export function OverlayPositionOnCentroid({
   const isThrottled = useRef(false)
   const [showed, setShowed] = useState(false)
   const currentCoordinates = useRef([])
-  const { overlayCoordinates } = useAppSelector(state => state.global)
+  const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
 
   const [overlayTopLeftMargin, setOverlayTopLeftMargin] = useState([margins.yBottom, margins.xMiddle])
   const currentOffset = useRef(INITIAL_OFFSET_VALUE)
@@ -98,7 +98,7 @@ export function OverlayPositionOnCentroid({
         return
       }
       isThrottled.current = true
-      setTimeout(() => {
+      window.setTimeout(() => {
         if (currentCoordinates.current) {
           const offset = target.getOffset()
           const pixel = map.getPixelFromCoordinate(currentCoordinates.current)

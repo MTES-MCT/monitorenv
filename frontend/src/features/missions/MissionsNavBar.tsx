@@ -24,10 +24,8 @@ function MissionStatus({ mission }) {
 }
 
 export function MissionsNavBar() {
-  const {
-    multiMissions: { selectedMissions },
-    sideWindow: { currentPath }
-  } = useAppSelector(state => state)
+  const currentPath = useAppSelector(state => state.sideWindow.currentPath)
+  const selectedMissions = useAppSelector(state => state.multiMissions.selectedMissions)
 
   const dispatch = useAppDispatch()
 

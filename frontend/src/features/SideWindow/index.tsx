@@ -23,9 +23,7 @@ import type { ForwardedRef, MutableRefObject } from 'react'
 
 function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
   const wrapperRef = useRef<HTMLDivElement | null>(null)
-  const {
-    sideWindow: { currentPath }
-  } = useAppSelector(state => state)
+  const currentPath = useAppSelector(state => state.sideWindow.currentPath)
 
   const [isFirstRender, setIsFirstRender] = useState(true)
 

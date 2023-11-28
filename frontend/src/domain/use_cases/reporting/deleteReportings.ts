@@ -1,4 +1,5 @@
 import { reportingsAPI } from '../../../api/reportingsAPI'
+import { attachMissionToReportingSliceActions } from '../../../features/Reportings/slice'
 import { setReportingFormVisibility, setToast, VisibilityState } from '../../shared_slices/Global'
 import { reportingActions } from '../../shared_slices/reporting'
 
@@ -15,7 +16,9 @@ export const deleteReportings = (ids: number[], resetSelectionFn: () => void) =>
       }
 
       if (ids.includes(activeReportingId)) {
-        dispatch(reportingActions.setActiveReportingId(undefined))
+        await dispatch(reportingActions.setActiveReportingId(undefined))
+
+        await dispatch(attachMissionToReportingSliceActions.resetAttachMissionState())
         dispatch(
           setReportingFormVisibility({
             context,

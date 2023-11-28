@@ -20,18 +20,18 @@ import { ReactComponent as EditIconSVG } from '../../../../../uiMonitor/icons/Ed
 
 export function InfractionCard({
   canAddInfraction,
-  currentActionIndex,
   currentInfractionIndex,
   duplicateInfraction,
+  envActionIndex,
   removeInfraction,
   setCurrentInfractionIndex
 }) {
-  const infractionPath = `envActions.${currentActionIndex}.infractions.${currentInfractionIndex}`
+  const infractionPath = `envActions.${envActionIndex}.infractions.${currentInfractionIndex}`
   const [, meta] = useField<Infraction>(infractionPath)
   const [targetTypeField] = useField<EnvActionControl['actionTargetType']>(
-    `envActions.${currentActionIndex}.actionTargetType`
+    `envActions.${envActionIndex}.actionTargetType`
   )
-  const [vehicleTypeField] = useField<VehicleTypeEnum>(`envActions.${currentActionIndex}.vehicleType`)
+  const [vehicleTypeField] = useField<VehicleTypeEnum>(`envActions.${envActionIndex}.vehicleType`)
   const [vesselType] = useField<VesselTypeEnum>(`${infractionPath}.vesselType`)
   const [registrationNumber] = useField<Infraction['registrationNumber']>(`${infractionPath}.registrationNumber`)
   const [controlledPersonIdentity] = useField<Infraction['controlledPersonIdentity']>(

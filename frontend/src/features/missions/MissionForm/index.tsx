@@ -15,10 +15,8 @@ import { getMissionPageRoute } from '../../../utils/routes'
 import { missionFactory } from '../Missions.helpers'
 
 export function Mission() {
-  const {
-    multiMissions: { selectedMissions },
-    sideWindow
-  } = useAppSelector(state => state)
+  const selectedMissions = useAppSelector(state => state.multiMissions.selectedMissions)
+  const sideWindow = useAppSelector(state => state.sideWindow)
   const [shouldValidateOnChange, setShouldValidateOnChange] = useState(false)
 
   const routeParams = getMissionPageRoute(sideWindow.currentPath)
@@ -29,7 +27,6 @@ export function Mission() {
   const { data: missionToEdit, isLoading } = useGetMissionQuery(
     !missionIsNewMission && idTyped ? Number(idTyped) : skipToken
   )
-
   const selectedMission = useMemo(
     () => selectedMissions.find(mis => mis.mission.id === idTyped),
     [idTyped, selectedMissions]
@@ -42,7 +39,6 @@ export function Mission() {
 
     return missionFactory(missionToEdit)
   }, [idTyped, missionIsNewMission, missionToEdit])
-
   if (isLoading) {
     return <div>Chargement en cours</div>
   }

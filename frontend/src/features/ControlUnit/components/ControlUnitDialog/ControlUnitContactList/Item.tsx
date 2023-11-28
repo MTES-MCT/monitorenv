@@ -19,7 +19,9 @@ export function Item({ controlUnitContact, onEdit }: ItemProps) {
     <Wrapper data-cy="ControlUnitDialog-control-unit-contact" data-id={controlUnitContact.id}>
       <Left>
         <p>
-          <Name>{ControlUnit.ControlUnitContactName[controlUnitContact.name] || controlUnitContact.name}</Name>
+          <Name>
+            {ControlUnit.ControlUnitContactPredefinedName[controlUnitContact.name] || controlUnitContact.name}
+          </Name>
           <Phone>{controlUnitContact.phone}</Phone>
         </p>
         <p>

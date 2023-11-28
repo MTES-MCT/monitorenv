@@ -85,7 +85,7 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
 
       isThrottled.current = true
 
-      setTimeout(() => {
+      window.setTimeout(() => {
         isThrottled.current = false
         refreshPreviewLayer()
       }, 300)

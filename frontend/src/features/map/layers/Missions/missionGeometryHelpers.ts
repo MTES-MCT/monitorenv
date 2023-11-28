@@ -12,10 +12,11 @@ import {
   getMissionStatus,
   type Mission
 } from '../../../../domain/entities/missions'
+import { getTotalOfControls, getTotalOfSurveillances } from '../../../missions/utils'
 
 import type { Geometry } from 'ol/geom'
 
-export const getMissionCentroid = (mission: Partial<Mission>, layername: string) => {
+export const getMissionCentroid = (mission: Partial<Mission> | Mission, layername: string) => {
   const geoJSON = new GeoJSON()
   const { geom } = mission
   const geometry = geoJSON.readGeometry(geom, {
@@ -28,6 +29,8 @@ export const getMissionCentroid = (mission: Partial<Mission>, layername: string)
   })
   pointFeature.setId(`${layername}:${mission.id}`)
   pointFeature.setProperties({
+    attachedReportingIds: mission.attachedReportingIds,
+    attachedReportings: mission.attachedReportings,
     controlUnits: mission.controlUnits,
     endDateTimeUtc: mission.endDateTimeUtc,
     missionId: mission.id,
@@ -47,19 +50,13 @@ export const getMissionZoneFeature = (mission: Partial<Mission>, layername: stri
     featureProjection: OPENLAYERS_PROJECTION
   })
 
-  const numberOfControls = mission.envActions
-    ?.map(control => (control.actionType === ActionTypeEnum.CONTROL && control.actionNumberOfControls) || 0)
-    .reduce((acc, curr) => acc + curr, 0)
-
-  const numberOfSurveillance = mission.envActions?.filter(
-    action => action.actionType === ActionTypeEnum.SURVEILLANCE
-  ).length
-
   const feature = new Feature({
     geometry
   })
   feature.setId(`${layername}:${mission.id}`)
   feature.setProperties({
+    attachedReportingIds: mission.attachedReportingIds,
+    attachedReportings: mission.attachedReportings,
     controlUnits: mission.controlUnits,
     endDateTimeUtc: mission.endDateTimeUtc,
     envActions: mission.envActions,
@@ -68,8 +65,8 @@ export const getMissionZoneFeature = (mission: Partial<Mission>, layername: stri
     missionStatus: getMissionStatus(mission),
     missionTypes: mission.missionTypes,
     numberOfActions: mission.envActions?.length || 0,
-    numberOfControls,
-    numberOfSurveillance,
+    numberOfControls: getTotalOfControls(mission),
+    numberOfSurveillance: getTotalOfSurveillances(mission),
     startDateTimeUtc: mission.startDateTimeUtc
   })
 

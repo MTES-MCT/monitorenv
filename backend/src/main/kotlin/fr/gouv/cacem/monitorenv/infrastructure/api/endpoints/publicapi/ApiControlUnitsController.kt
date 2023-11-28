@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/v2/control_units")
-@Tag(name = "Control Units")
+@Tag(name = "Public.Control Units")
 class ApiControlUnitsController(
     private val archiveControlUnit: ArchiveControlUnit,
     private val createOrUpdateControlUnit: CreateOrUpdateControlUnit,

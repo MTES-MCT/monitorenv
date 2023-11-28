@@ -17,6 +17,8 @@ interface IReportingRepository {
 
     fun attachReportingsToMission(reportingIds: List<Int>, missionId: Int)
 
+    fun detachDanglingEnvActions(missionId: Int, envActionIds: List<UUID>)
+
     fun count(): Long
 
     fun delete(reportingId: Int)

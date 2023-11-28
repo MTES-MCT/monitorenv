@@ -50,7 +50,7 @@ export function HoveredMissionLayer({ currentFeatureOver, map }: BaseMapChildren
 
   useEffect(() => {
     GetVectorSource()?.clear(true)
-    if (currentFeatureOver) {
+    if (currentFeatureOver && currentFeatureOver.getId()?.toString()?.includes(Layers.MISSIONS.code)) {
       GetVectorSource()?.addFeature(currentFeatureOver)
     }
   }, [currentFeatureOver])

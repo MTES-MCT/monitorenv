@@ -1,10 +1,7 @@
-import { logSoftError } from '@mtes-mct/monitor-ui'
-
 import { monitorenvPrivateApi, monitorenvPublicApi } from './api'
 import { ControlUnit } from '../domain/entities/controlUnit'
-import { ReconnectingEventSource } from '../libs/ReconnectingEventSource'
 
-import type { Mission } from '../domain/entities/missions'
+import type { Mission, MissionForApi } from '../domain/entities/missions'
 
 type MissionsResponse = Mission[]
 type MissionsFilter = {
@@ -29,71 +26,31 @@ const getSeaFrontsFilter = seaFronts =>
   seaFronts && seaFronts?.length > 0 && `seaFronts=${encodeURIComponent(seaFronts)}`
 
 export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
-  endpoints: build => ({
-    createMission: build.mutation<Mission, Partial<Mission>>({
-      invalidatesTags: [{ id: 'LIST', type: 'Missions' }],
+  endpoints: builder => ({
+    createMission: builder.mutation<Mission, MissionForApi>({
+      invalidatesTags: (_, __, { attachedReportingIds = [] }) => [
+        { id: 'LIST', type: 'Missions' },
+        { id: 'LIST', type: 'Reportings' },
+        ...attachedReportingIds.map(reportingId => ({ id: reportingId, type: 'Reportings' as const }))
+      ],
       query: mission => ({
         body: mission,
         method: 'PUT',
         url: `/v1/missions`
       })
     }),
-    deleteMission: build.mutation({
+    deleteMission: builder.mutation({
       invalidatesTags: [{ id: 'LIST', type: 'Missions' }],
       query: ({ id }) => ({
         method: 'DELETE',
         url: `/v1/missions/${id}`
       })
     }),
-    getMission: build.query<Mission, number>({
-      async onCacheEntryAdded(id, { cacheDataLoaded, cacheEntryRemoved, updateCachedData }) {
-        const url = `/api/v1/missions/${id}/sse`
-
-        try {
-          const eventSource = new ReconnectingEventSource(url)
-          // eslint-disable-next-line no-console
-          console.log(`SSE: listening for updates of mission id ${id}...`)
-
-          // wait for the initial query to resolve before proceeding
-          await cacheDataLoaded
-
-          const listener = (event: MessageEvent) => {
-            const mission = JSON.parse(event.data) as Mission
-            // eslint-disable-next-line no-console
-            console.log(`SSE: received an update for mission id ${mission.id}.`)
-
-            updateCachedData(draft => {
-              const { envActions } = draft
-
-              return {
-                ...mission,
-                envActions
-              }
-            })
-          }
-
-          eventSource.addEventListener('MISSION_UPDATE', listener)
-
-          // cacheEntryRemoved will resolve when the cache subscription is no longer active
-          await cacheEntryRemoved
-
-          // perform cleanup steps once the `cacheEntryRemoved` promise resolves
-          eventSource.close()
-        } catch (e) {
-          logSoftError({
-            context: {
-              url
-            },
-            isSideWindowError: true,
-            message: "SSE: Can't connect or receive messages",
-            originalError: e
-          })
-        }
-      },
+    getMission: builder.query<Mission, number>({
       providesTags: (_, __, id) => [{ id, type: 'Missions' }],
       query: id => `/v1/missions/${id}`
     }),
-    getMissions: build.query<MissionsResponse, MissionsFilter | void>({
+    getMissions: builder.query<MissionsResponse, MissionsFilter | void>({
       providesTags: result =>
         result
           ? // successful query
@@ -113,12 +70,14 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
           .filter(v => v)
           .join('&')
     }),
-    updateMission: build.mutation<Mission, Mission>({
-      invalidatesTags: (_, __, { id }) => [
+    updateMission: builder.mutation<Mission, MissionForApi>({
+      invalidatesTags: (_, __, { attachedReportingIds = [], detachedReportingIds = [], id }) => [
         { id, type: 'Missions' },
-        { id: 'LIST', type: 'Missions' }
+        { id: 'LIST', type: 'Missions' },
+        { id: 'LIST', type: 'Reportings' },
+        ...attachedReportingIds.map(reportingId => ({ id: reportingId, type: 'Reportings' as const })),
+        ...detachedReportingIds.map(reportingId => ({ id: reportingId, type: 'Reportings' as const }))
       ],
-
       query: ({ id, ...patch }) => ({
         body: { id, ...patch },
         method: 'PUT',

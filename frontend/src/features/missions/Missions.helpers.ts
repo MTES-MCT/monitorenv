@@ -10,8 +10,17 @@ import {
   type NewMission,
   InfractionTypeEnum,
   type EnvAction,
-  type EnvActionSurveillance
+  type EnvActionSurveillance,
+  type EnvActionForTimeline
 } from '../../domain/entities/missions'
+import {
+  type DetachedReporting,
+  type Reporting,
+  type ReportingDetailed,
+  type ReportingForTimeline,
+  type DetachedReportingForTimeline
+} from '../../domain/entities/reporting'
+import { getFormattedReportingId } from '../Reportings/utils'
 
 import type { LegacyControlUnit } from '../../domain/entities/legacyControlUnit'
 
@@ -78,15 +87,18 @@ export const actionFactory = ({
 
 export const missionFactory = (
   mission?: Mission | undefined,
-  id?: number | string | undefined
+  id?: number | string | undefined,
+  attachedReporting?: ReportingDetailed | undefined
 ): Mission | NewMission => {
   const startDate = new Date()
   startDate.setSeconds(0, 0)
 
   let formattedMission: NewMission = {
-    attachedReportingIds: [],
+    attachedReportingIds: attachedReporting ? [attachedReporting.id as number] : [],
+    attachedReportings: attachedReporting ? [attachedReporting] : [],
     closedBy: '',
     controlUnits: [controlUnitFactory()],
+    detachedReportingIds: [],
     endDateTimeUtc: '',
     envActions: [],
     isClosed: false,
@@ -108,18 +120,23 @@ export const missionFactory = (
   }
 
   const { envActions } = mission
-  const surveillances = envActions.filter(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
+  const surveillances = envActions?.filter(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
 
   const surveillanceWithSamePeriodIndex =
     surveillances?.length === 1
-      ? envActions.findIndex(
+      ? envActions?.findIndex(
           action =>
             action.actionType === ActionTypeEnum.SURVEILLANCE &&
             action.actionEndDateTimeUtc === mission?.endDateTimeUtc &&
             action.actionStartDateTimeUtc === mission?.startDateTimeUtc
         )
       : -1
-  if (surveillanceWithSamePeriodIndex !== -1 && envActions.length > 0) {
+  if (
+    surveillanceWithSamePeriodIndex &&
+    surveillanceWithSamePeriodIndex !== -1 &&
+    envActions &&
+    envActions?.length > 0
+  ) {
     const envActionsUpdated: EnvAction[] = [...envActions]
     const surveillance: EnvActionSurveillance = {
       ...(envActionsUpdated[surveillanceWithSamePeriodIndex] as EnvActionSurveillance),
@@ -157,4 +174,82 @@ export const getControlInfractionsTags = (actionNumberOfControls, infractions) =
   const med = infractions?.filter(inf => inf.formalNotice === FormalNoticeEnum.YES)?.length || 0
 
   return { infractionsWithoutReport, infractionsWithReport, infractionsWithWaitingReport, med, ras, totalInfractions }
+}
+
+type ActionsForTimeLine = Record<string, ReportingForTimeline | EnvActionForTimeline>
+
+const formattedEnvActionsForTimeline = (envActions, attachedReportings) =>
+  envActions?.reduce((newEnvActionsCollection, action) => {
+    if (action.actionType === ActionTypeEnum.CONTROL && action.reportingIds.length === 1) {
+      const attachedReporting = attachedReportings?.find(reporting => reporting.id === action.reportingIds[0])
+
+      return {
+        ...newEnvActionsCollection,
+        [action.id]: {
+          ...action,
+          formattedReportingId: getFormattedReportingId(attachedReporting?.reportingId),
+          timelineDate: action?.actionStartDateTimeUtc
+        }
+      }
+    }
+
+    return {
+      ...newEnvActionsCollection,
+      [action.id]: {
+        ...action,
+        formattedReportingId: undefined,
+        timelineDate: action?.actionStartDateTimeUtc
+      }
+    }
+  }, {} as EnvActionForTimeline)
+
+const formattedReportingsForTimeline = attachedReportings =>
+  attachedReportings.reduce(
+    (newReportingsCollection, reporting) => ({
+      ...newReportingsCollection,
+      [reporting.id]: {
+        ...reporting,
+        actionType: ActionTypeEnum.REPORTING,
+        timelineDate: reporting?.attachedToMissionAtUtc
+      }
+    }),
+    {} as ReportingForTimeline
+  )
+
+const formattedDetachedReportingsForTimeline = (detachedReportings, attachedReportingIds) => {
+  const filteredDetachedReportings = detachedReportings?.filter(
+    detachedreporting => !attachedReportingIds?.includes(detachedreporting.id)
+  )
+
+  return filteredDetachedReportings?.reduce(
+    (newDetachedReportingsCollection, detachedReporting) => ({
+      ...newDetachedReportingsCollection,
+      [`attach-${detachedReporting.reportingId}`]: {
+        ...detachedReporting,
+        action: 'attach',
+        actionType: ActionTypeEnum.DETACHED_REPORTING,
+        timelineDate: detachedReporting?.attachedToMissionAtUtc
+      },
+      [`detach-${detachedReporting.reportingId}`]: {
+        ...detachedReporting,
+        action: 'detach',
+        actionType: ActionTypeEnum.DETACHED_REPORTING,
+        timelineDate: detachedReporting?.detachedFromMissionAtUtc
+      }
+    }),
+    {} as DetachedReportingForTimeline
+  )
+}
+
+export const getEnvActionsAndReportingsForTimeline = (
+  envActions: EnvAction[] | undefined,
+  attachedReportings: Reporting[] | undefined,
+  detachedReportings: DetachedReporting[] | undefined,
+  attachedReportingIds: number[] | undefined
+): ActionsForTimeLine => {
+  const formattedEnvActions = formattedEnvActionsForTimeline(envActions, attachedReportings)
+  const formattedReportings = formattedReportingsForTimeline(attachedReportings)
+  const formattedDetachedReportings = formattedDetachedReportingsForTimeline(detachedReportings, attachedReportingIds)
+
+  return { ...formattedEnvActions, ...formattedReportings, ...formattedDetachedReportings }
 }

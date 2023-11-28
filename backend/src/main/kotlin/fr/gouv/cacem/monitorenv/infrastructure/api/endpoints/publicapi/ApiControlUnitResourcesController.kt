@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/v1/control_unit_resources")
-@Tag(name = "Control Unit Resources")
+@Tag(name = "Public.Control Unit Resources")
 class ApiControlUnitResourcesController(
     private val archiveControlUnitResource: ArchiveControlUnitResource,
     private val canDeleteControlUnitResource: CanDeleteControlUnitResource,

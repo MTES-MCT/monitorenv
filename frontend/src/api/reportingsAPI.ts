@@ -6,7 +6,7 @@ import { getQueryString } from '../utils/getQueryStringFormatted'
 import type { Reporting, ReportingDetailed } from '../domain/entities/reporting'
 
 type ReportingsFilter = {
-  reportingType: string | undefined
+  reportingType?: string | undefined
   seaFronts?: string[]
   sourcesType?: string[]
   startedAfterDateTime?: string
@@ -31,7 +31,11 @@ export const reportingsAPI = monitorenvPrivateApi.injectEndpoints({
       })
     }),
     createReporting: build.mutation<Partial<Reporting>, Partial<Reporting>>({
-      invalidatesTags: [{ id: 'LIST', type: 'Reportings' }],
+      invalidatesTags: (_, __, { missionId }) => [
+        { id: 'LIST', type: 'Reportings' },
+        { id: 'LIST', type: 'Missions' },
+        { id: missionId, type: 'Missions' }
+      ],
       query: reporting => ({
         body: reporting,
         method: 'PUT',
@@ -69,9 +73,11 @@ export const reportingsAPI = monitorenvPrivateApi.injectEndpoints({
       transformResponse: (response: ReportingDetailed[]) => ReportingAdapter.setAll(initialState, response)
     }),
     updateReporting: build.mutation<Reporting, Partial<Reporting>>({
-      invalidatesTags: (_, __, { id }) => [
+      invalidatesTags: (_, __, { id, missionId }) => [
         { id, type: 'Reportings' },
-        { id: 'LIST', type: 'Reportings' }
+        { id: 'LIST', type: 'Reportings' },
+        { id: 'LIST', type: 'Missions' },
+        { id: missionId, type: 'Missions' }
       ],
       query: ({ id, ...patch }) => ({
         body: { id, ...patch },

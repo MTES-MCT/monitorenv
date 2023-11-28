@@ -3,14 +3,17 @@ import { useField } from 'formik'
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-import { CONTROL_UNIT_CONTACT_NAMES, CONTROL_UNIT_CONTACT_NAMES_AS_OPTIONS } from './constants'
+import {
+  CONTROL_UNIT_CONTACT_PREDEFINED_NAMES,
+  SORTED_CONTROL_UNIT_CONTACT_PREDEFINED_NAMES_AS_OPTIONS
+} from './constants'
 import { ControlUnit } from '../../../../../domain/entities/controlUnit'
 
 export function FormikNameSelect() {
   const [field, meta, helpers] = useField<string | undefined>('name')
 
   const [isCustomName, setIsCustomName] = useState<boolean>(
-    !!field.value && !ControlUnit.ControlUnitContactName[field.value]
+    !!field.value && !ControlUnit.ControlUnitContactPredefinedName[field.value]
   )
 
   const cancelCustomName = useCallback(
@@ -41,7 +44,7 @@ export function FormikNameSelect() {
   )
 
   useEffect(() => {
-    if (!isCustomName && field.value && CONTROL_UNIT_CONTACT_NAMES.includes(field.value)) {
+    if (!isCustomName && field.value && CONTROL_UNIT_CONTACT_PREDEFINED_NAMES.includes(field.value)) {
       setIsCustomName(false)
     }
   }, [field.value, isCustomName])
@@ -58,7 +61,7 @@ export function FormikNameSelect() {
       label="Nom du contact"
       name="name"
       onChange={handleChange}
-      options={CONTROL_UNIT_CONTACT_NAMES_AS_OPTIONS}
+      options={SORTED_CONTROL_UNIT_CONTACT_PREDEFINED_NAMES_AS_OPTIONS}
       searchable
       value={field.value}
     />

@@ -3,6 +3,6 @@ export const OVERLAY_MARGINS = {
   xMiddle: -75,
   xRight: -260,
   yBottom: 0,
-  yMiddle: -280,
-  yTop: -580
+  yMiddle: -215,
+  yTop: -404
 }

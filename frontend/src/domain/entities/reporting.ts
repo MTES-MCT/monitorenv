@@ -1,17 +1,25 @@
 /* eslint-disable typescript-sort-keys/string-enum */
 import { customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 
+import type { ActionTypeEnum, Mission } from './missions'
 import type { ReportingTargetTypeEnum } from './targetType'
 
 export type Reporting = {
   actionTaken?: string
+  attachedEnvActionId?: string
+  attachedMission?: Mission
+  attachedToMissionAtUtc?: string
+  controlStatus: ControlStatusEnum
   controlUnitId?: number
   createdAt: string
   description?: string
+  detachedFromMissionAtUtc?: string
   geom: Record<string, any>[]
+  hasNoUnitAvailable?: boolean | undefined
   id: number | string
   isArchived?: boolean
   isControlRequired?: boolean | undefined
+  missionId?: number
   openBy: string
   reportType: ReportingTypeEnum
   reportingId?: number
@@ -19,7 +27,7 @@ export type Reporting = {
   sourceName?: string
   sourceType: ReportingSourceEnum
   subThemes?: string[]
-  targetDetails?: TargetDetails
+  targetDetails?: TargetDetails[]
   targetType?: ReportingTargetTypeEnum
   theme?: string
   validityTime?: number
@@ -30,6 +38,25 @@ export type ReportingDetailed = Reporting & {
   displayedSource: string
 }
 
+export type DetachedReporting = {
+  attachedToMissionAtUtc?: string
+  detachedFromMissionAtUtc?: string
+  missionId?: number
+  reportingId?: number
+}
+
+export enum ControlStatusEnum {
+  CONTROL_TO_BE_DONE = 'CONTROL_TO_BE_DONE',
+  CONTROL_DONE = 'CONTROL_DONE',
+  SURVEILLANCE_DONE = 'SURVEILLANCE_DONE'
+}
+
+export enum ControlStatusLabels {
+  CONTROL_TO_BE_DONE = 'Contrôle à faire',
+  CONTROL_DONE = 'Contrôle fait',
+  SURVEILLANCE_DONE = 'Surveillance faite'
+}
+
 type TargetDetails = {
   externalReferenceNumber?: string
   imo?: string
@@ -37,6 +64,17 @@ type TargetDetails = {
   operatorName?: string
   size?: number
   vesselName?: string
+}
+
+export type ReportingForTimeline = Partial<ReportingDetailed> & {
+  actionType: ActionTypeEnum.REPORTING
+  timelineDate: string
+}
+
+export type DetachedReportingForTimeline = DetachedReporting & {
+  action: string
+  actionType: ActionTypeEnum.DETACHED_REPORTING
+  timelineDate: string
 }
 
 export enum ReportingSourceEnum {
@@ -79,9 +117,6 @@ export enum StatusFilterLabels {
   IN_PROGRESS = 'En cours',
   ARCHIVED = 'Archivés'
 }
-
-export const getFormattedReportingId = (reportingId: number) =>
-  `${String(reportingId).slice(0, 2)}-${String(reportingId).slice(2)}`
 
 export const getReportingStatus = ({
   createdAt,

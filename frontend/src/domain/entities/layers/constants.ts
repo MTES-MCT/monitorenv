@@ -6,6 +6,7 @@ export enum LayerType {
   REGULATORY = 'REGULATORY'
 }
 
+// TODO Generate `zIndex` from order of declaration rather than manually setting it.
 export const Layers = {
   ACTIONS: {
     code: 'actions',
@@ -97,11 +98,15 @@ export const Layers = {
   },
   MISSION_SELECTED: {
     code: 'mission_selected',
-    zIndex: 1100
+    zIndex: 1050
+  },
+  MISSION_TO_ATTACH_ON_REPORTING: {
+    code: 'mission_to_attach_on_reporting',
+    zIndex: 1050
   },
   MISSIONS: {
     code: 'missions',
-    zIndex: 1000
+    zIndex: 1050
   },
   REGULATORY_ENV: {
     code: 'REGULATORY_ENV',
@@ -127,11 +132,23 @@ export const Layers = {
   },
   REPORTING_SELECTED: {
     code: 'reporting_selected',
-    zIndex: 1125
+    zIndex: 1025
+  },
+  REPORTING_TO_ATTACH_ON_MISSION: {
+    code: 'reporting_to_attach_on_mission',
+    zIndex: 1025
   },
   REPORTINGS: {
     code: 'reportings',
-    zIndex: 1025
+    zIndex: 1050
+  },
+  SELECTED_MISSION_TO_ATTACH_ON_REPORTING: {
+    code: 'SELECTED_MISSION_TO_ATTACH_ON_REPORTING',
+    zIndex: 1000
+  },
+  SELECTED_REPORTING_TO_ATTACH_ON_MISSION: {
+    code: 'SELECTED_REPORTING_TO_ATTACH_ON_MISSION',
+    zIndex: 1000
   },
   SEMAPHORES: {
     code: 'semaphores',
@@ -149,7 +166,8 @@ export const Layers = {
   },
   STATIONS: {
     code: 'stations',
-    zIndex: 1200
+    // Station layer should always appear above all other layers
+    zIndex: 2000
   },
   THREE_MILES: {
     code: '3_miles_areas',
@@ -203,12 +221,16 @@ export const SelectableLayers = [
   Layers.AMP.code,
   Layers.STATIONS.code,
   Layers.SEMAPHORES.code,
-  Layers.REPORTINGS.code
+  Layers.REPORTINGS.code,
+  Layers.MISSION_TO_ATTACH_ON_REPORTING.code,
+  Layers.REPORTING_TO_ATTACH_ON_MISSION.code
 ]
 export const HoverableLayers = [
   Layers.MISSIONS.code,
   Layers.ACTIONS.code,
   Layers.STATIONS.code,
   Layers.SEMAPHORES.code,
-  Layers.REPORTINGS.code
+  Layers.REPORTINGS.code,
+  Layers.MISSION_TO_ATTACH_ON_REPORTING.code,
+  Layers.REPORTING_TO_ATTACH_ON_MISSION.code
 ]

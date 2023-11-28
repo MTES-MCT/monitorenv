@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/v1/stations")
-@Tag(name = "Stations", description = "API stations")
+@Tag(name = "Public.Stations", description = "API stations")
 class ApiStationsController(
     private val canDeleteStation: CanDeleteStation,
     private val createOrUpdateStation: CreateOrUpdateStation,

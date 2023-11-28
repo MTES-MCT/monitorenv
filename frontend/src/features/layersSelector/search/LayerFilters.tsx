@@ -59,6 +59,7 @@ export function LayerFilters({
       </TagWrapper>
 
       <CheckPicker
+        isLabelHidden
         label="Type d'AMP"
         name="ampTypes"
         onChange={handleSetFilteredAmpTypes}

@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { CustomCircleRange } from './CustomCircleRange'
 import { MapToolType, MeasurementType } from '../../../../domain/entities/map/constants'
-import { ReportingContext, VisibilityState, globalActions } from '../../../../domain/shared_slices/Global'
+import { globalActions } from '../../../../domain/shared_slices/Global'
 import { setMeasurementTypeToAdd } from '../../../../domain/shared_slices/Measurement'
 import { reduceReportingFormOnMap } from '../../../../domain/use_cases/reporting/reduceReportingFormOnMap'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
@@ -12,14 +12,13 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useClickOutsideWhenOpenedAndExecute } from '../../../../hooks/useClickOutsideWhenOpenedAndExecute'
 import { useEscapeFromKeyboardAndExecute } from '../../../../hooks/useEscapeFromKeyboardAndExecute'
 import { MapComponentStyle } from '../../../commonStyles/MapComponent.style'
+import { ButtonWrapper } from '../../../MainWindow/components/RightMenu/ButtonWrapper'
 import { MapToolButton } from '../MapToolButton'
 
 export function MeasurementMapButton() {
   const dispatch = useAppDispatch()
   const { measurementTypeToAdd } = useAppSelector(state => state.measurement)
-  const { displayMeasurement, healthcheckTextWarning, isMapToolVisible, reportingFormVisibility } = useAppSelector(
-    state => state.global
-  )
+  const { displayMeasurement, healthcheckTextWarning, isMapToolVisible } = useAppSelector(state => state.global)
 
   const isOpen = useMemo(() => isMapToolVisible === MapToolType.MEASUREMENT_MENU, [isMapToolVisible])
   const isMeasurementToolOpen = useMemo(() => isMapToolVisible === MapToolType.MEASUREMENT, [isMapToolVisible])
@@ -69,14 +68,7 @@ export function MeasurementMapButton() {
   }, [dispatch, measurementTypeToAdd])
 
   return (
-    <Wrapper
-      ref={wrapperRef}
-      reportingFormVisibility={
-        reportingFormVisibility.context === ReportingContext.MAP
-          ? reportingFormVisibility.visibility
-          : VisibilityState.NONE
-      }
-    >
+    <ButtonWrapper ref={wrapperRef} topPosition={298}>
       <MapToolButton
         dataCy="measurement"
         icon={measurementIcon}
@@ -104,7 +96,7 @@ export function MeasurementMapButton() {
         </MeasurementItem>
       </MeasurementOptions>
       <CustomCircleRange />
-    </Wrapper>
+    </ButtonWrapper>
   )
 }
 
@@ -118,13 +110,6 @@ const MeasurementItem = styled.div`
   position: relative;
   width: 40px;
   padding: 8px;
-`
-
-const Wrapper = styled.div<{ reportingFormVisibility: VisibilityState }>`
-  position: absolute;
-  right: ${p => (p.reportingFormVisibility === VisibilityState.VISIBLE ? '0' : '10')}px;
-  top: 298px;
-  transition: right 0.3s ease-out;
 `
 
 const MeasurementOptions = styled(MapComponentStyle)<{
