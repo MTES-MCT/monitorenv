@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/bff/v1/natinfs")
-@Tag(description = "API Natinf", name = "Natinf")
+@Tag(description = "API Natinf", name = "BFF.Natinf")
 class NatinfsController(
     private val getAllNatinfs: GetAllNatinfs,
 ) {

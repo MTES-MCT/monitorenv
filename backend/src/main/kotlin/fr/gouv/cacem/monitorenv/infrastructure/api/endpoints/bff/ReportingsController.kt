@@ -31,7 +31,7 @@ import java.time.ZonedDateTime
 
 @RestController
 @RequestMapping("/bff/v1/reportings")
-@Tag(description = "API des Signalements", name = "Reportings")
+@Tag(description = "API des Signalements", name = "BFF.Reportings")
 class ReportingsController(
     private val createOrUpdateReporting: CreateOrUpdateReporting,
     private val getReportingById: GetReportingById,

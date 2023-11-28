@@ -16,7 +16,7 @@ import java.time.ZonedDateTime
 
 @RestController
 @RequestMapping("/bff/v1/missions")
-@Tag(description = "API Missions", name = "Missions")
+@Tag(description = "API Missions", name = "BFF.Missions")
 class MissionsController(
     private val createOrUpdateMissionWithAttachedReporting:
         CreateOrUpdateMissionWithAttachedReporting,
