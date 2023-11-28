@@ -1,11 +1,14 @@
 import { THEME, customDayjs } from '@mtes-mct/monitor-ui'
 
 import type { LegacyControlUnit } from './legacyControlUnit'
+import type { ReportingDetailed } from './reporting'
 import type { SeaFrontEnum } from './seaFrontType'
 
 export enum ActionTypeEnum {
   CONTROL = 'CONTROL',
+  DETACHED_REPORTING = 'DETACHED_REPORTING',
   NOTE = 'NOTE',
+  REPORTING = 'REPORTING',
   SURVEILLANCE = 'SURVEILLANCE'
 }
 export const actionTypeLabels = {
@@ -269,9 +272,12 @@ export type ResourceUnit = {
 }
 
 export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote> = {
-  attachedReportingIds?: number[]
+  attachedReportingIds: number[]
+  attachedReportings: ReportingDetailed[]
   closedBy: string
   controlUnits: LegacyControlUnit[]
+  detachedReportingIds: number[]
+  detachedReportings?: []
   endDateTimeUtc?: string
   envActions: EnvAction[]
   facade: SeaFrontEnum
@@ -288,10 +294,11 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
   startDateTimeUtc: string
 }
 
-export type NewMission = Omit<Mission, 'controlUnits' | 'facade' | 'id' | 'missionSource'> & {
+export type NewMission = Omit<Mission<NewEnvAction>, 'controlUnits' | 'facade' | 'id'> & {
   controlUnits: Array<Omit<LegacyControlUnit, 'administrationId' | 'id'>>
 }
 
+export type MissionForApi = Omit<Partial<Mission>, 'attachedReportings'>
 export type EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote
 export type NewEnvAction = NewEnvActionControl | EnvActionSurveillance | EnvActionNote
 
@@ -317,7 +324,7 @@ export type NewEnvActionControl = EnvActionCommonProperties & {
   isSafetyEquipmentAndStandardsComplianceControl?: boolean
   isSeafarersControl?: boolean
   observations: string | null
-  reportingIds?: number[]
+  reportingIds: number[]
   themes: EnvActionTheme[]
   vehicleType?: string
 }
@@ -330,7 +337,7 @@ export type EnvActionSurveillance = EnvActionCommonProperties & {
   coverMissionZone?: boolean
   durationMatchesMission?: boolean
   observations: string | null
-  reportingIds?: number[]
+  reportingIds: number[]
   themes: EnvActionTheme[]
 }
 
@@ -356,6 +363,11 @@ export type NewInfraction = {
 export type Infraction = NewInfraction & {
   formalNotice: FormalNoticeEnum
   infractionType: InfractionTypeEnum
+}
+
+export type EnvActionForTimeline = Partial<EnvAction> & {
+  formattedReportingId?: string
+  timelineDate?: string
 }
 
 export const getMissionStatus = ({

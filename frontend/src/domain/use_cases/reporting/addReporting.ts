@@ -1,3 +1,4 @@
+import { attachMissionToReportingSliceActions } from '../../../features/Reportings/slice'
 import { getReportingInitialValues, createIdForNewReporting } from '../../../features/Reportings/utils'
 import { setReportingFormVisibility, ReportingContext, VisibilityState } from '../../shared_slices/Global'
 import { reportingActions } from '../../shared_slices/reporting'
@@ -26,4 +27,6 @@ export const addReporting =
 
     await dispatch(reportingActions.setReporting(newReporting))
     await dispatch(reportingActions.setActiveReportingId(id))
+
+    await dispatch(attachMissionToReportingSliceActions.resetAttachMissionState())
   }

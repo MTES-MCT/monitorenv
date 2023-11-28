@@ -1,6 +1,7 @@
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { setReportingFormVisibility, setToast, VisibilityState } from '../../shared_slices/Global'
 import { reportingActions } from '../../shared_slices/reporting'
+import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../map/updateMapInteractionListeners'
 
 export const deleteReporting = (id: number | string | undefined) => async (dispatch, getState) => {
   const { reportings, selectedReportingIdOnMap } = getState().reporting
@@ -17,6 +18,7 @@ export const deleteReporting = (id: number | string | undefined) => async (dispa
       }
 
       await dispatch(reportingActions.deleteSelectedReporting(id))
+      dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
       dispatch(
         setReportingFormVisibility({
           context: reportings[id].context,

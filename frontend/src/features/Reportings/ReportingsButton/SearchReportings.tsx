@@ -12,9 +12,7 @@ import { ReportingFilterContext, ReportingsFilters } from '../Filters'
 
 export function SearchReportings() {
   const dispatch = useAppDispatch()
-  const {
-    global: { displayReportingsLayer }
-  } = useAppSelector(state => state)
+  const displayReportingsLayer = useAppSelector(state => state.global.displayReportingsLayer)
 
   const closeSearchReportings = () => {
     dispatch(setDisplayedItems({ isSearchReportingsVisible: false }))

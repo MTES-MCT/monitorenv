@@ -12,8 +12,12 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMissionWithAttachedReporting
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.TestUtils.getReportingDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.TestUtils.getReportingDTOWithAttachedMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ReportingAlreadyAttachedException
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.locationtech.jts.geom.MultiPolygon
@@ -82,7 +86,9 @@ class CreateOrUpdateMissionWithAttachedReportingUTests {
         given(missionRepository.save(anyOrNull()))
             .willReturn(MissionDTO(mission = missionToCreate.copy(id = 100)))
         given(missionRepository.findFullMissionById(100)).willReturn(expectedCreatedMission)
-
+        given(reportingRepository.findById(1)).willReturn(getReportingDTO(1))
+        given(reportingRepository.findById(2)).willReturn(getReportingDTO(2))
+        given(reportingRepository.findById(3)).willReturn(getReportingDTO(3))
         // When
         val createdMissionDTO =
             CreateOrUpdateMissionWithAttachedReporting(
@@ -97,10 +103,51 @@ class CreateOrUpdateMissionWithAttachedReportingUTests {
                 )
 
         // Then
-
         verify(reportingRepository, times(1)).attachReportingsToMission(attachedReportingIds, 100)
         verify(missionRepository, times(1)).findFullMissionById(100)
         assertThat(createdMissionDTO).isEqualTo(expectedCreatedMission)
+    }
+
+    @Test
+    fun `execute should throw ReportingAlreadyAttachedException when try to attach reporting that has already be attached`() {
+        val wktReader = WKTReader()
+
+        val multipolygonString =
+            "MULTIPOLYGON(((-2.7335 47.6078, -2.7335 47.8452, -3.6297 47.8452, -3.6297 47.6078, -2.7335 47.6078)))"
+        val polygon = wktReader.read(multipolygonString) as MultiPolygon
+
+        val missionToCreate =
+            MissionEntity(
+                missionTypes = listOf(MissionTypeEnum.LAND),
+                facade = "Outre-Mer",
+                geom = polygon,
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                isClosed = false,
+                isDeleted = false,
+                missionSource = MissionSourceEnum.MONITORENV,
+                hasMissionOrder = false,
+                isUnderJdp = false,
+                isGeometryComputedFromControls = false,
+            )
+        val attachedReportingIds = listOf(5)
+        given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate.copy(id = 100))
+        given(reportingRepository.findById(5)).willReturn(getReportingDTOWithAttachedMission(5))
+
+        // Then
+        assertThatThrownBy {
+            CreateOrUpdateMissionWithAttachedReporting(
+                createOrUpdateMission = createOrUpdateMission,
+                missionRepository = missionRepository,
+                reportingRepository = reportingRepository,
+            )
+                .execute(
+                    mission = missionToCreate,
+                    attachedReportingIds = attachedReportingIds,
+                    envActionsAttachedToReportingIds = listOf(),
+                )
+        }
+            .isInstanceOf(ReportingAlreadyAttachedException::class.java)
     }
 
     @Test
@@ -119,6 +166,7 @@ class CreateOrUpdateMissionWithAttachedReportingUTests {
 
         val missionToCreate =
             MissionEntity(
+                id = 100,
                 missionTypes = listOf(MissionTypeEnum.LAND),
                 facade = "Outre-Mer",
                 geom = polygon,
@@ -156,10 +204,13 @@ class CreateOrUpdateMissionWithAttachedReportingUTests {
             )
         val envActionAttachedToReportingIds = Pair(envActionControl.id, listOf(1))
 
-        given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate.copy(id = 100))
+        given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate)
         given(missionRepository.save(anyOrNull()))
             .willReturn(MissionDTO(mission = missionToCreate.copy(id = 100)))
         given(missionRepository.findFullMissionById(100)).willReturn(expectedCreatedMission)
+        given(reportingRepository.findById(1)).willReturn(getReportingDTO(1))
+        given(reportingRepository.findById(2)).willReturn(getReportingDTO(2))
+        given(reportingRepository.findById(3)).willReturn(getReportingDTO(3))
 
         // When
         val createdMissionDTO =
@@ -178,7 +229,11 @@ class CreateOrUpdateMissionWithAttachedReportingUTests {
                 )
 
         // Then
-
+        verify(reportingRepository, times(1))
+            .detachDanglingEnvActions(
+                missionId = 100,
+                envActionIds = listOf(envActionControl.id),
+            )
         verify(reportingRepository, times(1)).attachReportingsToMission(attachedReportingIds, 100)
         verify(
             reportingRepository,

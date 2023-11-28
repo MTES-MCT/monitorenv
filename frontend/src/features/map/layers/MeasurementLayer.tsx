@@ -220,7 +220,7 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
     if (!measurementTypeToAdd) {
       setMeasurementInProgress(null)
 
-      setTimeout(() => {
+      window.setTimeout(() => {
         if (currentInteraction.current) {
           map?.removeInteraction(currentInteraction.current)
         }

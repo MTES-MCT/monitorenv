@@ -4,16 +4,14 @@ import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ReportingAlreadyAttachedException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 @UseCase
 class CreateOrUpdateReporting(
     private val reportingRepository: IReportingRepository,
-    private val controlUnitRepository: IControlUnitRepository,
-    private val semaphoreRepository: ISemaphoreRepository,
     private val facadeRepository: IFacadeAreasRepository,
-    private val missionRepository: IMissionRepository,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(CreateOrUpdateReporting::class.java)
 
@@ -28,8 +26,26 @@ class CreateOrUpdateReporting(
             seaFront = facadeRepository.findFacadeFromGeometry(reporting.geom)
         }
 
-        val savedReport = reportingRepository.save(reporting.copy(seaFront = seaFront))
+        if (reporting.id != null &&
+            reporting.attachedToMissionAtUtc != null &&
+            reporting.missionId != null &&
+            reporting.detachedFromMissionAtUtc == null
+        ) {
+            val existingReporting = reportingRepository.findById(reporting.id)
+            if (existingReporting.reporting.missionId != null &&
+                existingReporting.reporting.detachedFromMissionAtUtc == null &&
+                existingReporting.reporting.missionId != reporting.missionId
+            ) {
+                throw ReportingAlreadyAttachedException(
+                    "Reporting ${reporting.id} is already attached to a mission",
+                )
+            }
+        }
 
-        return savedReport
+        return reportingRepository.save(
+            reporting.copy(
+                seaFront = seaFront,
+            ),
+        )
     }
 }

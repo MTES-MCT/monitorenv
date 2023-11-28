@@ -60,9 +60,7 @@ export function RegulatoryLayer({ layerId, searchedText }: { layerId: number; se
 
   useEffect(() => {
     if (layerId === regulatoryMetadataLayerId && ref?.current) {
-      ref.current.scrollIntoView({
-        behavior: 'smooth'
-      })
+      ref.current.scrollIntoView(false)
     }
   }, [layerId, regulatoryMetadataLayerId, ref])
 

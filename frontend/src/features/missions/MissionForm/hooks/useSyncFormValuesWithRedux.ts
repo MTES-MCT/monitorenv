@@ -5,8 +5,10 @@ import { useEffect, useMemo } from 'react'
 import { setIsFormDirty, setMissionState } from '../../../../domain/shared_slices/MissionsState'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 
+import type { Mission } from '../../../../domain/entities/missions'
+
 export const useSyncFormValuesWithRedux = () => {
-  const { dirty, values } = useFormikContext()
+  const { dirty, values } = useFormikContext<Mission>()
 
   const dispatch = useAppDispatch()
   const dispatchFormUpdate = useMemo(() => {

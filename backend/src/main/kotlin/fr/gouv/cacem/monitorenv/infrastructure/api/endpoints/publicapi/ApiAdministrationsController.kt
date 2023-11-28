@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/v1/administrations")
-@Tag(name = "Administrations")
+@Tag(name = "Public.Administrations")
 class ApiAdministrationsController(
     private val archiveAdministration: ArchiveAdministration,
     private val canArchiveAdministration: CanArchiveAdministration,

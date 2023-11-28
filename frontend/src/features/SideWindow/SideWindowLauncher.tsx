@@ -13,11 +13,9 @@ export function SideWindowLauncher() {
   const newWindowRef = useRef() as MutableRefObject<HTMLDivElement>
   const { forceUpdate } = useForceUpdate()
 
-  const {
-    missionState,
-    multiMissions: { selectedMissions },
-    sideWindow
-  } = useAppSelector(state => state)
+  const missionState = useAppSelector(state => state.missionState)
+  const selectedMissions = useAppSelector(state => state.multiMissions.selectedMissions)
+  const sideWindow = useAppSelector(state => state.sideWindow)
 
   useEffect(() => {
     forceUpdate()

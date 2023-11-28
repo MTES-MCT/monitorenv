@@ -1,3 +1,4 @@
+import { attachReportingToMissionSliceActions } from '../../../features/missions/slice'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { getIdTyped } from '../../../utils/getIdTyped'
 import { getMissionPageRoute } from '../../../utils/routes'
@@ -32,4 +33,13 @@ export const switchTab = path => async (dispatch, getState) => {
 
   await dispatch(multiMissionsActions.setSelectedMissions(missionsUpdated))
   await dispatch(sideWindowActions.setCurrentPath(path))
+
+  // since we are switching to another mission, we need to update the attached reportings store
+  // because it's the form who listen to this store
+  const nextMissionIndex = missionsUpdated.findIndex(mission => mission.mission.id === id)
+  await dispatch(
+    attachReportingToMissionSliceActions.setAttachedReportings(
+      missionsUpdated[nextMissionIndex]?.mission?.attachedReportings || []
+    )
+  )
 }

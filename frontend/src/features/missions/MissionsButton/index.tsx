@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
-import { setDisplayedItems, ReportingContext, VisibilityState } from '../../../domain/shared_slices/Global'
+import { setDisplayedItems } from '../../../domain/shared_slices/Global'
 import { addMission } from '../../../domain/use_cases/missions/addMission'
 import { saveMissionInLocalStore } from '../../../domain/use_cases/missions/saveMissionInLocalStore'
 import { reduceReportingFormOnMap } from '../../../domain/use_cases/reporting/reduceReportingFormOnMap'
@@ -11,14 +11,13 @@ import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { isMissionOrMissionsPage } from '../../../utils/routes'
 import { MenuWithCloseButton } from '../../commonStyles/map/MenuWithCloseButton'
+import { ButtonWrapper } from '../../MainWindow/components/RightMenu/ButtonWrapper'
 import { sideWindowActions, SideWindowStatus } from '../../SideWindow/slice'
 
 export function MissionsMenu() {
   const dispatch = useAppDispatch()
-  const { displayMissionsLayer, isSearchMissionsVisible, reportingFormVisibility } = useAppSelector(
-    state => state.global
-  )
-  const { sideWindow } = useAppSelector(state => state)
+  const { displayMissionsLayer, isSearchMissionsVisible } = useAppSelector(state => state.global)
+  const sideWindow = useAppSelector(state => state.sideWindow)
 
   const isMissionButtonIsActive = useMemo(
     () => isMissionOrMissionsPage(sideWindow.currentPath) && sideWindow.status !== SideWindowStatus.CLOSED,
@@ -52,13 +51,7 @@ export function MissionsMenu() {
   }
 
   return (
-    <Wrapper
-      reportingFormVisibility={
-        reportingFormVisibility.context === ReportingContext.MAP
-          ? reportingFormVisibility.visibility
-          : VisibilityState.NONE
-      }
-    >
+    <ButtonWrapper topPosition={82}>
       {isSearchMissionsVisible && (
         <MenuWithCloseButton.Container>
           <MenuWithCloseButton.Header>
@@ -89,18 +82,9 @@ export function MissionsMenu() {
         size={Size.LARGE}
         title="voir les missions"
       />
-    </Wrapper>
+    </ButtonWrapper>
   )
 }
-
-const Wrapper = styled.div<{ reportingFormVisibility: VisibilityState }>`
-  position: absolute;
-  top: 82px;
-  right: ${p => (p.reportingFormVisibility === VisibilityState.VISIBLE ? '0' : '10')}px;
-  display: flex;
-  justify-content: flex-end;
-  transition: right 0.3s ease-out;
-`
 
 // TODO delete when Monitor-ui component have good padding
 const StyledButton = styled(Button)`

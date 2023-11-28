@@ -1,112 +1,156 @@
-import { customDayjs as dayjs } from '@mtes-mct/monitor-ui'
-import { useMemo } from 'react'
-import { Dropdown } from 'rsuite'
+import { customDayjs as dayjs, Dropdown, Icon } from '@mtes-mct/monitor-ui'
+import { useFormikContext } from 'formik'
+import { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { ActionCard } from './ActionCard'
-import { ActionTypeEnum, type EnvAction } from '../../../domain/entities/missions'
-import { ReactComponent as ControlSVG } from '../../../uiMonitor/icons/Control.svg'
-import { ReactComponent as NoteSVG } from '../../../uiMonitor/icons/Note_libre.svg'
-import { ReactComponent as SurveillanceSVG } from '../../../uiMonitor/icons/Observation.svg'
-import { ReactComponent as PlusSVG } from '../../../uiMonitor/icons/Plus.svg'
-import { actionFactory } from '../Missions.helpers'
+import { ActionCards } from './ActionCards'
+import { AttachReporting } from './AttachReporting'
+import { ActionTypeEnum, type EnvAction, type Mission, type NewMission } from '../../../domain/entities/missions'
+import { actionFactory, getEnvActionsAndReportingsForTimeline } from '../Missions.helpers'
 
-export function ActionsForm({ currentActionIndex, form, remove, setCurrentActionIndex, unshift }) {
-  const envActions = form?.values?.envActions as EnvAction[] | undefined
+import type { DetachedReporting, Reporting } from '../../../domain/entities/reporting'
+
+export function ActionsForm({ currentActionIndex, setCurrentActionIndex }) {
+  const { errors, setFieldValue, values } = useFormikContext<Partial<Mission | NewMission>>()
+
+  const envActions = values?.envActions as EnvAction[]
+  const attachedReportings = values?.attachedReportings as Reporting[]
+  const attachedReportingIds = values?.attachedReportingIds as number[]
+  const detachedReportings = values?.detachedReportings as DetachedReporting[]
   const isFirstSurveillanceAction = !envActions?.find(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
-  const currentActionId = envActions && envActions[currentActionIndex]?.id
 
-  const sortedEnvActions = useMemo(
+  const actions = useMemo(
     () =>
-      envActions &&
-      [...envActions].sort((a, b) => {
-        if (a.actionStartDateTimeUtc === undefined) {
+      getEnvActionsAndReportingsForTimeline(envActions, attachedReportings, detachedReportings, attachedReportingIds),
+    [envActions, attachedReportings, detachedReportings, attachedReportingIds]
+  )
+
+  const sortedActions = useMemo(
+    () =>
+      actions &&
+      Object.values(actions).sort((a: any, b: any) => {
+        if (a.timelineDate === undefined) {
           return -1
         }
-        if (b.actionStartDateTimeUtc === undefined) {
+        if (b.timelineDate === undefined) {
           return +1
         }
 
-        return a.actionStartDateTimeUtc &&
-          b.actionStartDateTimeUtc &&
-          dayjs(a.actionStartDateTimeUtc).isBefore(dayjs(b.actionStartDateTimeUtc))
-          ? +1
-          : -1
+        return a.timelineDate && b.timelineDate && dayjs(a.timelineDate).isBefore(dayjs(b.timelineDate)) ? +1 : -1
       }),
-    [envActions]
+    [actions]
   )
-  const handleAddSurveillanceAction = () => {
-    unshift(
-      actionFactory({
-        actionType: ActionTypeEnum.SURVEILLANCE,
-        durationMatchesMission: isFirstSurveillanceAction,
-        ...(isFirstSurveillanceAction && {
-          actionEndDateTimeUtc: form?.values?.endDateTimeUtc,
-          actionStartDateTimeUtc: form?.values?.startDateTimeUtc
-        })
+
+  const handleAddSurveillanceAction = useCallback(() => {
+    const newSurveillance = actionFactory({
+      actionType: ActionTypeEnum.SURVEILLANCE,
+      durationMatchesMission: isFirstSurveillanceAction,
+      ...(isFirstSurveillanceAction && {
+        actionEndDateTimeUtc: values?.endDateTimeUtc,
+        actionStartDateTimeUtc: values?.startDateTimeUtc
       })
-    )
+    })
+    setFieldValue('envActions', [newSurveillance, ...(envActions || [])])
+    setCurrentActionIndex(newSurveillance.id)
+  }, [
+    envActions,
+    isFirstSurveillanceAction,
+    setCurrentActionIndex,
+    setFieldValue,
+    values?.endDateTimeUtc,
+    values?.startDateTimeUtc
+  ])
 
-    setCurrentActionIndex(0)
-  }
+  const handleAddControlAction = useCallback(() => {
+    const newControl = actionFactory({ actionType: ActionTypeEnum.CONTROL })
+    setFieldValue('envActions', [newControl, ...(envActions || [])])
+    setCurrentActionIndex(newControl.id)
+  }, [envActions, setCurrentActionIndex, setFieldValue])
 
-  const handleAddControlAction = () => {
-    unshift(actionFactory({ actionType: ActionTypeEnum.CONTROL }))
+  const handleAddNoteAction = useCallback(() => {
+    const newNote = actionFactory({ actionType: ActionTypeEnum.NOTE })
+    setFieldValue('envActions', [newNote, ...(envActions || [])])
+    setCurrentActionIndex(newNote.id)
+  }, [envActions, setCurrentActionIndex, setFieldValue])
 
-    setCurrentActionIndex(0)
-  }
-  const handleAddNoteAction = () => {
-    unshift(actionFactory({ actionType: ActionTypeEnum.NOTE }))
+  const handleSelectAction = useCallback(
+    id => {
+      setCurrentActionIndex(actions && Object.keys(actions).find(key => key === String(id)))
+    },
+    [actions, setCurrentActionIndex]
+  )
 
-    setCurrentActionIndex(0)
-  }
-  const handleSelectAction = id => () => setCurrentActionIndex(envActions && envActions.findIndex(a => a.id === id))
-  const handleRemoveAction = id => e => {
-    e.stopPropagation()
-    remove(envActions && envActions.findIndex(a => a.id === id))
-    setCurrentActionIndex(undefined)
-  }
+  const handleRemoveAction = useCallback(
+    id => {
+      if (!envActions) {
+        return
+      }
 
-  const handleDuplicateAction = id => () => {
-    const envAction = envActions && envActions.find(a => a.id === id)
-    if (envAction) {
-      unshift(actionFactory(envAction))
-      setCurrentActionIndex(0)
-    }
-  }
+      const actionToDeleteIndex = envActions.findIndex(action => action.id === String(id))
+      if (actionToDeleteIndex !== -1) {
+        const actionsToUpdate = [...(envActions || [])]
+        actionsToUpdate.splice(actionToDeleteIndex, 1)
+        setFieldValue('envActions', actionsToUpdate)
+      }
+      setCurrentActionIndex(undefined)
+    },
+    [envActions, setCurrentActionIndex, setFieldValue]
+  )
+
+  const handleDuplicateAction = useCallback(
+    id => {
+      const envAction = envActions && envActions.find(action => action.id === id)
+
+      if (envAction) {
+        const duplicatedAction = actionFactory(envAction)
+        setFieldValue('envActions', [duplicatedAction, ...(envActions || [])])
+
+        setCurrentActionIndex(0)
+      }
+    },
+    [envActions, setFieldValue, setCurrentActionIndex]
+  )
 
   return (
     <FormWrapper>
       <TitleWrapper>
-        <Title>Actions réalisées en mission</Title>
-        <Dropdown appearance="primary" icon={<PlusSVG className="rs-icon" />} noCaret title="Ajouter">
-          <Dropdown.Item icon={<ControlSVG />} onClick={handleAddControlAction}>
-            Ajouter des contrôles
-          </Dropdown.Item>
-          <Dropdown.Item icon={<SurveillanceSVG />} onClick={handleAddSurveillanceAction}>
-            Ajouter une surveillance
-          </Dropdown.Item>
-          <Dropdown.Item icon={<NoteSVG />} onClick={handleAddNoteAction}>
-            Ajouter une note libre
-          </Dropdown.Item>
-        </Dropdown>
+        <div>
+          <Title>Actions réalisées en mission</Title>
+          <Dropdown Icon={Icon.Plus} noCaret title="Ajouter">
+            <Dropdown.Item Icon={Icon.ControlUnit} onClick={handleAddControlAction}>
+              Ajouter des contrôles
+            </Dropdown.Item>
+            <Dropdown.Item Icon={Icon.Observation} onClick={handleAddSurveillanceAction}>
+              Ajouter une surveillance
+            </Dropdown.Item>
+            <Dropdown.Item Icon={Icon.Note} onClick={handleAddNoteAction}>
+              Ajouter une note libre
+            </Dropdown.Item>
+          </Dropdown>
+        </div>
+        <AttachReporting />
       </TitleWrapper>
       <ActionsTimeline>
-        {sortedEnvActions && sortedEnvActions.length > 0 ? (
-          sortedEnvActions.map(action => {
-            const index = envActions?.findIndex(a => a.id === action.id)
-            const errors =
-              form?.errors?.envActions && index !== undefined && index >= 0 && form?.errors?.envActions[index]
+        {sortedActions ? (
+          sortedActions.map((action, index) => {
+            const envActionsIndex = envActions?.findIndex(a => a.id === action.id)
+            const envActionsErrors =
+              errors?.envActions &&
+              envActionsIndex !== undefined &&
+              envActionsIndex >= 0 &&
+              errors?.envActions[envActionsIndex]
 
             return (
-              <ActionCard
-                key={action.id}
+              <ActionCards
+                // eslint-disable-next-line react/no-array-index-key
+                key={index}
                 action={action}
-                duplicateAction={handleDuplicateAction(action.id)}
-                hasError={!!errors}
-                removeAction={handleRemoveAction(action.id)}
-                selectAction={handleSelectAction(action.id)}
-                selected={action.id === currentActionId}
+                duplicateAction={() => handleDuplicateAction(action.id)}
+                hasError={!!envActionsErrors}
+                removeAction={() => handleRemoveAction(action.id)}
+                selectAction={() => handleSelectAction(action.id)}
+                selected={String(action.id) === String(currentActionIndex)}
+                setCurrentActionIndex={setCurrentActionIndex}
               />
             )
           })
@@ -131,6 +175,8 @@ const FormWrapper = styled.div`
 `
 const TitleWrapper = styled.div`
   margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
 `
 const Title = styled.h2`
   font-size: 16px;
@@ -144,6 +190,7 @@ const ActionsTimeline = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+  gap: 16px;
 `
 
 const NoActionWrapper = styled.div`

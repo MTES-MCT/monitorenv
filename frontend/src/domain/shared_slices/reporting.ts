@@ -2,12 +2,12 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 import type { ReportingContext } from './Global'
 import type { AtLeast } from '../../types'
-import type { Reporting } from '../entities/reporting'
+import type { Reporting, ReportingDetailed } from '../entities/reporting'
 
 export type ReportingType = {
   context: ReportingContext
   isFormDirty: boolean
-  reporting: AtLeast<Reporting, 'id'>
+  reporting: AtLeast<ReportingDetailed, 'id'>
 }
 
 export type SelectedReportingType = {
@@ -17,7 +17,7 @@ type ReportingState = {
   activeReportingId: number | string | undefined
   isConfirmCancelDialogVisible: boolean
   reportings: SelectedReportingType
-  selectedReportingIdOnMap: number | undefined
+  selectedReportingIdOnMap: number | string | undefined
 }
 
 const initialState: ReportingState = {
@@ -31,14 +31,19 @@ const reportingSlice = createSlice({
   name: 'reporting',
   reducers: {
     deleteSelectedReporting(state, action) {
+      const reportingIdToDelete = action.payload
       if (state.reportings) {
-        delete state.reportings[action.payload]
+        delete state.reportings[reportingIdToDelete]
       }
 
       state.activeReportingId = undefined
+      if (reportingIdToDelete === state.selectedReportingIdOnMap) {
+        state.selectedReportingIdOnMap = undefined
+      }
     },
     setActiveReportingId(state, action: PayloadAction<number | string | undefined>) {
       state.activeReportingId = action.payload
+      state.selectedReportingIdOnMap = action.payload
     },
     setIsConfirmCancelDialogVisible(state, action: PayloadAction<boolean>) {
       state.isConfirmCancelDialogVisible = action.payload

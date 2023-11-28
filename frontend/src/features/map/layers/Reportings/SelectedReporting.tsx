@@ -1,6 +1,6 @@
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { type MutableRefObject, useCallback, useEffect, useRef } from 'react'
+import { type MutableRefObject, useEffect, useRef, useMemo } from 'react'
 
 import { getReportingZoneFeature } from './reportingsGeometryHelpers'
 import { selectedReportingStyleFn } from './style'
@@ -8,6 +8,7 @@ import { useGetReportingsQuery } from '../../../../api/reportingsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
+import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../BaseMap'
 
 export function SelectedReportingLayer({ map }: BaseMapChildrenProps) {
@@ -20,37 +21,32 @@ export function SelectedReportingLayer({ map }: BaseMapChildrenProps) {
     })
   })
 
-  const displaySelectedReporting = displayReportingSelectedLayer && selectedReportingIdOnMap !== activeReportingId
-
-  const selectedReportingVectorSourceRef = useRef() as MutableRefObject<VectorSource>
-  const GetSelectedReportingVectorSource = () => {
-    if (selectedReportingVectorSourceRef.current === undefined) {
-      selectedReportingVectorSourceRef.current = new VectorSource()
+  const hasNoReportingConflict = useMemo(() => {
+    if (!activeReportingId && !!selectedReportingIdOnMap) {
+      return true
     }
 
-    return selectedReportingVectorSourceRef.current
-  }
+    return !!activeReportingId && activeReportingId !== selectedReportingIdOnMap
+  }, [activeReportingId, selectedReportingIdOnMap])
 
-  const selectedReportingVectorLayerRef = useRef() as MutableRefObject<VectorLayer<VectorSource> & { name?: string }>
+  const displaySelectedReporting = displayReportingSelectedLayer && hasNoReportingConflict
 
-  const GetSelectedReportingVectorLayer = useCallback(() => {
-    if (selectedReportingVectorLayerRef.current === undefined) {
-      selectedReportingVectorLayerRef.current = new VectorLayer({
-        renderBuffer: 7,
-        source: GetSelectedReportingVectorSource(),
-        style: selectedReportingStyleFn,
-        updateWhileAnimating: true,
-        updateWhileInteracting: true,
-        zIndex: Layers.REPORTING_SELECTED.zIndex
-      })
-      selectedReportingVectorLayerRef.current.name = Layers.REPORTING_SELECTED.code
-    }
+  const selectedReportingVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource>
 
-    return selectedReportingVectorLayerRef.current
-  }, [])
+  const selectedReportingVectorLayerRef = useRef(
+    new VectorLayer({
+      renderBuffer: 7,
+      source: selectedReportingVectorSourceRef.current,
+      style: selectedReportingStyleFn,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
+      zIndex: Layers.REPORTING_SELECTED.zIndex
+    })
+  ) as MutableRefObject<VectorLayerWithName>
+  ;(selectedReportingVectorLayerRef.current as VectorLayerWithName).name = Layers.REPORTING_SELECTED.code
 
   useEffect(() => {
-    const feature = GetSelectedReportingVectorSource().getFeatureById(
+    const feature = selectedReportingVectorSourceRef.current.getFeatureById(
       `${Layers.REPORTING_SELECTED.code}:${selectedReportingIdOnMap}`
     )
 
@@ -60,26 +56,22 @@ export function SelectedReportingLayer({ map }: BaseMapChildrenProps) {
   }, [overlayCoordinates, selectedReportingIdOnMap])
 
   useEffect(() => {
-    if (map) {
-      const layersCollection = map.getLayers()
-      layersCollection.push(GetSelectedReportingVectorLayer())
-    }
+    map.getLayers().push(selectedReportingVectorLayerRef.current)
 
     return () => {
-      if (map) {
-        map.removeLayer(GetSelectedReportingVectorLayer())
-      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      map.removeLayer(selectedReportingVectorLayerRef.current)
     }
-  }, [map, GetSelectedReportingVectorLayer])
+  }, [map])
 
   useEffect(() => {
-    GetSelectedReportingVectorLayer()?.setVisible(displaySelectedReporting)
-  }, [displaySelectedReporting, GetSelectedReportingVectorLayer])
+    selectedReportingVectorLayerRef.current?.setVisible(displaySelectedReporting)
+  }, [displaySelectedReporting])
 
   useEffect(() => {
-    GetSelectedReportingVectorSource()?.clear(true)
+    selectedReportingVectorSourceRef.current?.clear(true)
     if (selectedReporting) {
-      GetSelectedReportingVectorSource()?.addFeature(
+      selectedReportingVectorSourceRef.current?.addFeature(
         getReportingZoneFeature(selectedReporting, Layers.REPORTING_SELECTED.code)
       )
     }

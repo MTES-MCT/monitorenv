@@ -22,7 +22,11 @@ INSERT INTO reportings (
     created_at,
     validity_time,
     is_deleted,
-    is_archived)
+    is_archived,
+    mission_id,
+    attached_to_mission_at_utc,
+    detached_from_mission_at_utc
+    )
 VALUES
 (
     1,
@@ -46,7 +50,10 @@ VALUES
     now() - INTERVAL '3 days',
     24,
     false,
-    false
+    false,
+    null,
+    null,
+    null
     ),
 (
     2,
@@ -70,7 +77,10 @@ VALUES
     now() - INTERVAL '2 days',
     2,
     false,
-    false
+    false,
+    null,
+    null,
+    null
 ),
 (
     3,
@@ -94,7 +104,10 @@ VALUES
     now() - INTERVAL '1 hour',
     1,
     false,
-    false
+    false,
+    null,
+    null,
+    null
 ),
 (
     4,
@@ -118,7 +131,10 @@ VALUES
     now() - INTERVAL '3 hour',
     4,
     false,
-    false
+    false,
+    null,
+    null,
+    null
 ),
 (
     5,
@@ -130,7 +146,7 @@ VALUES
     'COMPANY',
     NULL,
     '[{"operatorName": "Ma société", "vesselName": "Mr le gérant" }]',
-    ST_GeomFromText('MULTIPOINT((-4.18759766312331 47.11281269827924))', 4326),
+    ST_GeomFromText('MULTIPOINT((0.37083333 49.76777778))', 4326),
     'Guadeloupe',
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     'OBSERVATION',
@@ -142,7 +158,10 @@ VALUES
     now() - INTERVAL '1 hour',
     6,
     false,
-    false
+    false,
+    null,
+    null,
+    null
 );
 
 
@@ -172,7 +191,8 @@ INSERT INTO reportings (
     mission_id,
     attached_to_mission_at_utc,
     detached_from_mission_at_utc,
-    attached_env_action_id)
+    attached_env_action_id,
+    open_by)
 VALUES
     (6,
    2300006,
@@ -183,12 +203,12 @@ VALUES
    'COMPANY',
    NULL,
    '[{"operatorName": "La sociéter", "vesselName": "Héron" }]',
-   ST_GeomFromText('MULTIPOINT((-4.18759766312331 47.11281269827924))', 4326),
+   ST_GeomFromText('MULTIPOINT((-1.59695455 43.6569585))', 4326),
    'Guadeloupe',
    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
    'OBSERVATION',
-   NULL,
-   NULL,
+   'Police des mouillages',
+   '{"ZMEL"}',
    NULL,
    true,
    true,
@@ -198,7 +218,8 @@ VALUES
     34,
     now() - INTERVAL '15 minutes',
     null,
-    'b8007c8a-5135-4bc3-816f-c69c7b75d807'
+    'b8007c8a-5135-4bc3-816f-c69c7b75d807',
+    'ABC'
     ),
     (7,
    2300007,
@@ -209,7 +230,7 @@ VALUES
    'COMPANY',
    NULL,
    '[{"operatorName": "Good Company", "vesselName": "Mr le gérant" }]',
-   ST_GeomFromText('MULTIPOINT((-4.18759766312331 47.11281269827924))', 4326),
+     ST_GeomFromText('MULTIPOINT((-4.18759766312331 47.11281269827924))', 4326),
    'NAMO',
    'Lorem LoremLorem ipsum dolor sit amet, consectetur adipiscing elit.',
    'OBSERVATION',
@@ -224,7 +245,8 @@ VALUES
     34,
     now() - INTERVAL '25 minutes',
     null,
-    null
+    null,
+    'DEF'
     ),
     (8,
      2300008,
@@ -235,7 +257,7 @@ VALUES
      'COMPANY',
      NULL,
      '[{"operatorName": "Good Company", "vesselName": "Mr le gérant" }]',
-     ST_GeomFromText('MULTIPOINT((-4.18759766312331 47.11281269827924))', 4326),
+     ST_GeomFromText('MULTIPOINT((-1.35943753 46.02911873))', 4326),
      'NAMO',
      'Lorem LoremLorem ipsum dolor sit amet, consectetur adipiscing elit.',
      'OBSERVATION',
@@ -250,7 +272,8 @@ VALUES
      38,
      now() - INTERVAL '25 minutes',
      null,
-     null
+     null,
+     'GHI'
     );
 
 SELECT setval('reportings_id_seq', (SELECT max(id) FROM reportings), true);

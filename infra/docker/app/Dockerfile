@@ -30,7 +30,7 @@ RUN gradle assemble
 ###########################
 # Build frontend with npm #
 ###########################
-FROM node:18-alpine as buildFront
+FROM node:20-alpine as buildFront
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV DISABLE_ESLINT_PLUGIN=true
@@ -45,7 +45,7 @@ COPY infra/ /tmp/infra/
 WORKDIR /tmp/frontend
 
 # Files are expected to be in /tmp/frontend/dist/monitorenv-frontend
-# TODO Remove `--legacy-peer-deps` option as soon as we replace `react-scripts` by something else.
+# TODO Remove `--legacy-peer-deps` option as soon as CRA is migrate to Vite.
 RUN npm ci --legacy-peer-deps
 RUN npm run build
 

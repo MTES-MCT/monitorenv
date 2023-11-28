@@ -53,9 +53,7 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
 
   useEffect(() => {
     if (selectedAmpLayerId === layerId && ref?.current) {
-      ref.current.scrollIntoView({
-        behavior: 'smooth'
-      })
+      ref.current.scrollIntoView(false)
     }
   }, [selectedAmpLayerId, ref, layerId])
 

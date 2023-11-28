@@ -5,12 +5,24 @@ import styled from 'styled-components'
 import { editMissionInLocalStore } from '../../../../domain/use_cases/missions/editMissionInLocalStore'
 import { clearSelectedMissionOnMap } from '../../../../domain/use_cases/missions/selectMissionOnMap'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
+import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { MissionSourceTag } from '../../../../ui/MissionSourceTag'
 import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
-import { missionTypesToString } from '../../../../utils/missionTypes'
+import { humanizeMissionTypes } from '../../../../utils/humanizeMissionTypes'
 
-export function MissionCard({ feature, selected = false }: { feature: any; selected?: boolean }) {
+type MissionCardProps = {
+  feature: any
+  isOnlyHoverable?: boolean
+  selected?: boolean
+}
+export function MissionCard({ feature, isOnlyHoverable = false, selected = false }: MissionCardProps) {
   const dispatch = useAppDispatch()
+  const displayMissionsLayer = useAppSelector(state => state.global.displayMissionsLayer)
+  const listener = useAppSelector(state => state.draw.listener)
+  const isReportingAttachmentInProgress = useAppSelector(
+    state => state.attachReportingToMission.isReportingAttachmentInProgress
+  )
+
   const {
     controlUnits,
     endDateTimeUtc,
@@ -42,13 +54,17 @@ export function MissionCard({ feature, selected = false }: { feature: any; selec
     dispatch(clearSelectedMissionOnMap())
   }, [dispatch])
 
+  if (!displayMissionsLayer || listener || isReportingAttachmentInProgress) {
+    return null
+  }
+
   return (
     <Wrapper data-cy="mission-overlay">
       <Header>
         <Title>
-          {controlUnits.length === 1 && (
+          {controlUnits?.length === 1 && (
             <>
-              <div>{controlUnits[0].name.toUpperCase()}</div>
+              <div>{controlUnits[0].name?.toUpperCase()}</div>
               {controlUnits[0].contact ? (
                 <div>{controlUnits[0].contact}</div>
               ) : (
@@ -56,7 +72,7 @@ export function MissionCard({ feature, selected = false }: { feature: any; selec
               )}
             </>
           )}
-          {controlUnits.length > 1 && controlUnits[0] && (
+          {controlUnits?.length > 1 && controlUnits[0] && (
             <>
               <div>{controlUnits[0].name.toUpperCase()}</div>
               <MultipleControlUnits>
@@ -81,7 +97,7 @@ export function MissionCard({ feature, selected = false }: { feature: any; selec
       <Details>
         <div>
           {' '}
-          Mission {missionTypesToString(missionTypes)} – {missionDurationText}
+          Mission {humanizeMissionTypes(missionTypes)} – {missionDurationText}
         </div>
         <div>
           {numberOfControls} {pluralize('contrôle', numberOfControls)} et {numberOfSurveillance}{' '}
@@ -90,15 +106,17 @@ export function MissionCard({ feature, selected = false }: { feature: any; selec
       </Details>
       <MissionStatusLabel missionStatus={missionStatus} />
 
-      <EditButton
-        accent={Accent.PRIMARY}
-        disabled={!selected}
-        Icon={Icon.Edit}
-        onClick={handleEditMission}
-        size={Size.SMALL}
-      >
-        Editer la mission
-      </EditButton>
+      {!isOnlyHoverable && (
+        <EditButton
+          accent={Accent.PRIMARY}
+          disabled={!selected}
+          Icon={Icon.Edit}
+          onClick={handleEditMission}
+          size={Size.SMALL}
+        >
+          Editer la mission
+        </EditButton>
+      )}
     </Wrapper>
   )
 }

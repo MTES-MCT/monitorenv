@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ControlStatusEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
@@ -42,6 +43,7 @@ data class ReportingDataOutput(
     val detachedFromMissionAtUtc: ZonedDateTime? = null,
     val attachedEnvActionId: UUID? = null,
     val attachedMission: ReportingMissionDataOutput? = null,
+    val controlStatus: ControlStatusEnum? = null,
 ) {
     companion object {
         fun fromReportingDTO(
@@ -110,6 +112,7 @@ data class ReportingDataOutput(
                 } else {
                     null
                 },
+                controlStatus = dto.controlStatus,
             )
         }
     }

@@ -10,6 +10,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.Semaphor
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.ControlUnitDataOutput
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
+import java.util.UUID
 
 data class MissionAttachedReportingDataOutput(
     val id: Int,
@@ -37,6 +38,10 @@ data class MissionAttachedReportingDataOutput(
     val validityTime: Int? = null,
     val isArchived: Boolean,
     val openBy: String? = null,
+    val attachedToMissionAtUtc: ZonedDateTime? = null,
+    val detachedFromMissionAtUtc: ZonedDateTime? = null,
+    val attachedEnvActionId: UUID? = null,
+    val missionId: Int? = null,
 ) {
     companion object {
         fun fromReportingDTO(
@@ -93,6 +98,10 @@ data class MissionAttachedReportingDataOutput(
                 validityTime = dto.reporting.validityTime,
                 isArchived = dto.reporting.isArchived,
                 openBy = dto.reporting.openBy,
+                attachedToMissionAtUtc = dto.reporting.attachedToMissionAtUtc,
+                detachedFromMissionAtUtc = dto.reporting.detachedFromMissionAtUtc,
+                attachedEnvActionId = dto.reporting.attachedEnvActionId,
+                missionId = dto.reporting.missionId,
             )
         }
     }

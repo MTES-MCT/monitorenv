@@ -8,8 +8,8 @@ import { VehicleTypeEnum } from '../../../../../../domain/entities/vehicleType'
 
 import type { EnvActionControl, Infraction } from '../../../../../../domain/entities/missions'
 
-export function InfractionFormHeaderVehicle({ currentActionIndex, infractionPath }) {
-  const [vehicleTypeField] = useField<EnvActionControl['vehicleType']>(`envActions.${currentActionIndex}.vehicleType`)
+export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath }) {
+  const [vehicleTypeField] = useField<EnvActionControl['vehicleType']>(`envActions.${envActionIndex}.vehicleType`)
   const [vesselTypeField, , vesselTypeHelpers] = useField<Infraction['vesselType']>(`${infractionPath}.vesselType`)
   const [vesselSizeField, , vesselSizeHelpers] = useField<Infraction['vesselSize']>(`${infractionPath}.vesselSize`)
 

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping
  * This controller redirects all unhandled routes by the backend to our SPA frontend
  */
 @Controller
-class FrontController : ErrorController {
+class SpaController : ErrorController {
     @RequestMapping("/error")
     fun error(request: HttpServletRequest, response: HttpServletResponse): Any {
         response.status = HttpStatus.OK.value()

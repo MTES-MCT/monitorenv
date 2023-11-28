@@ -67,7 +67,10 @@ data class EnvActionModel(
     @Column(name = "is_safety_equipment_and_standards_compliance_control")
     val isSafetyEquipmentAndStandardsComplianceControl: Boolean? = null,
     @Column(name = "is_seafarers_control") val isSeafarersControl: Boolean? = null,
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "attachedEnvAction")
+    @OneToMany(
+        fetch = FetchType.EAGER,
+        mappedBy = "attachedEnvAction",
+    )
     @JsonManagedReference
     val attachedReporting: List<ReportingModel>? = listOf(),
 ) {

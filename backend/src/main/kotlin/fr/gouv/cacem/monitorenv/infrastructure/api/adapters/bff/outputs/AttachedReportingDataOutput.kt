@@ -51,7 +51,8 @@ data class AttachedReportingDataOutput(
                 reportingId = dto.reporting.reportingId,
                 sourceType = dto.reporting.sourceType,
                 semaphoreId = dto.reporting.semaphoreId,
-                semaphore = if (dto.semaphore != null) {
+                semaphore =
+                if (dto.semaphore != null) {
                     SemaphoreDataOutput.fromSemaphoreEntity(
                         dto.semaphore,
                     )
@@ -61,10 +62,9 @@ data class AttachedReportingDataOutput(
                 controlUnitId = dto.reporting.controlUnitId,
                 controlUnit =
                 if (dto.controlUnit != null) {
-                    ControlUnitDataOutput
-                        .fromFullControlUnit(
-                            dto.controlUnit,
-                        )
+                    ControlUnitDataOutput.fromFullControlUnit(
+                        dto.controlUnit,
+                    )
                 } else {
                     null
                 },

@@ -10,9 +10,9 @@ export function Validity({ mustIncreaseValidity }: { mustIncreaseValidity: boole
 
   const reportingStatus = getReportingStatus(values)
 
-  const formattedCreatedAt = getLocalizedDayjs(values?.createdAt).format('DD/MM/YYYY à HH:mm')
+  const formattedCreatedAt = getLocalizedDayjs(values.createdAt).format('DD/MM/YYYY à HH:mm')
 
-  const endOfValidity = getLocalizedDayjs(values?.createdAt).add(values?.validityTime || 0, 'hour')
+  const endOfValidity = getLocalizedDayjs(values.createdAt).add(values?.validityTime || 0, 'hour')
   const formattedEndOfValidity = endOfValidity.format('DD/MM/YYYY à HH:mm')
 
   const timeLeft = endOfValidity.diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour', true)

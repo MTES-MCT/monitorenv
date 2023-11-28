@@ -3,6 +3,7 @@ import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { sideWindowPaths } from '../../entities/sideWindow'
 import { setToast } from '../../shared_slices/Global'
 import { multiMissionsActions } from '../../shared_slices/MultiMissions'
+import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../map/updateMapInteractionListeners'
 
 export const deleteMissionAndGoToMissionsList = id => async dispatch => {
   try {
@@ -11,6 +12,7 @@ export const deleteMissionAndGoToMissionsList = id => async dispatch => {
       throw Error('Erreur à la suppression de la mission')
     } else {
       dispatch(multiMissionsActions.deleteSelectedMission(id))
+      dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
       dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSIONS))
     }
   } catch (error) {

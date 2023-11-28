@@ -1,8 +1,9 @@
-import { THEME } from '@mtes-mct/monitor-ui'
+import { OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { isEmpty } from 'lodash'
 import { getCenter } from 'ol/extent'
+import { GeoJSON } from 'ol/format'
 import { LineString, Point } from 'ol/geom'
-import { Fill, Icon, Stroke, Style } from 'ol/style'
+import { Fill, Icon, Stroke, Style, Circle } from 'ol/style'
 
 import { OLGeometryType } from '../../../../domain/entities/map/constants'
 import { ReportingStatusEnum, ReportingTypeEnum, getReportingStatus } from '../../../../domain/entities/reporting'
@@ -110,6 +111,17 @@ export const hoveredReportingStyleFn = feature => {
     validityTime: feature.get('validityTime')
   })
 
+  if (feature.get('missionId') && !feature.get('detachedFromMissionAtUtc')) {
+    if (status === ReportingStatusEnum.ARCHIVED) {
+      return hoveredReportingZoneStyleFactory(THEME.color.mediumSeaGreen, getColorWithAlpha(THEME.color.white, 0.2))
+    }
+
+    return hoveredReportingZoneStyleFactory(
+      THEME.color.mediumSeaGreen,
+      getColorWithAlpha(THEME.color.mediumSeaGreen, 0.2)
+    )
+  }
+
   switch (status) {
     case ReportingStatusEnum.OBSERVATION:
       return hoveredReportingZoneStyleFactory(THEME.color.blueGray, getColorWithAlpha(THEME.color.blueGray, 0.2))
@@ -135,6 +147,17 @@ export const selectedReportingStyleFn = feature => {
     validityTime: feature.get('validityTime')
   })
 
+  if (feature.get('missionId') && !feature.get('detachedFromMissionAtUtc')) {
+    if (status === ReportingStatusEnum.ARCHIVED) {
+      return selectedReportingStyleFactory(THEME.color.mediumSeaGreen, getColorWithAlpha(THEME.color.white, 0.25))
+    }
+
+    return selectedReportingStyleFactory(
+      THEME.color.mediumSeaGreen,
+      getColorWithAlpha(THEME.color.mediumSeaGreen, 0.25)
+    )
+  }
+
   switch (status) {
     case ReportingStatusEnum.OBSERVATION:
       return selectedReportingStyleFactory(THEME.color.blueGray, getColorWithAlpha(THEME.color.blueGray, 0.25))
@@ -154,7 +177,6 @@ export const selectedReportingStyleFn = feature => {
   }
 }
 
-// TODO handle case when reporting is attach to a mission
 export const reportingPinStyleFn = feature => {
   const status = getReportingStatus({
     createdAt: feature.get('createdAt'),
@@ -162,6 +184,14 @@ export const reportingPinStyleFn = feature => {
     reportType: feature.get('reportType') as ReportingTypeEnum,
     validityTime: feature.get('validityTime')
   })
+
+  if (!!feature.get('missionId') && !feature.get('detachedFromMissionAtUtc')) {
+    if (status === ReportingStatusEnum.ARCHIVED) {
+      return reportingStyleFactory(THEME.color.white, 'archived_reporting_with_mission_attached.svg')
+    }
+
+    return reportingStyleFactory(THEME.color.mediumSeaGreen)
+  }
 
   switch (status) {
     case ReportingStatusEnum.OBSERVATION:
@@ -181,4 +211,70 @@ export const reportingPinStyleFn = feature => {
   }
 }
 
-export const editingReportingStyleFn = feature => [reportingPinStyleFn(feature), ...selectedReportingStyleFn(feature)]
+const reportingToMissionLinkStyle = feature =>
+  new Style({
+    geometry: () => {
+      const missionId = feature.get('missionId')
+      if (!missionId || (missionId && feature.get('detachedFromMissionAtUtc'))) {
+        return undefined
+      }
+      const reportingExtent = feature?.getGeometry()?.getExtent()
+      const reportingCenter = reportingExtent && getCenter(reportingExtent)
+
+      const missionGeom = feature.get('attachedMission')?.geom
+      const geoJSON = new GeoJSON()
+      const formattedMissionGeometry = geoJSON.readGeometry(missionGeom, {
+        dataProjection: WSG84_PROJECTION,
+        featureProjection: OPENLAYERS_PROJECTION
+      })
+
+      const missionExtent = formattedMissionGeometry?.getExtent()
+      const missionCenter = missionExtent && getCenter(missionExtent)
+
+      if (!reportingCenter || !missionCenter) {
+        return undefined
+      }
+
+      return new LineString([reportingCenter, missionCenter])
+    },
+    stroke: new Stroke({
+      color: THEME.color.charcoal,
+      width: 1
+    })
+  })
+
+const attachedMissionCircleStyle = feature =>
+  new Style({
+    geometry: () => {
+      const missionId = feature.get('missionId')
+      if (!missionId || (missionId && feature.get('detachedFromMissionAtUtc'))) {
+        return undefined
+      }
+
+      const missionGeom = feature.get('attachedMission')?.geom
+      const geoJSON = new GeoJSON()
+      const formattedMissionGeometry = geoJSON.readGeometry(missionGeom, {
+        dataProjection: WSG84_PROJECTION,
+        featureProjection: OPENLAYERS_PROJECTION
+      })
+
+      const missionExtent = formattedMissionGeometry?.getExtent()
+      const missionCenter = missionExtent && getCenter(missionExtent)
+
+      return missionCenter && new Point(missionCenter)
+    },
+    image: new Circle({
+      radius: 20,
+      stroke: new Stroke({
+        color: THEME.color.charcoal,
+        width: 2
+      })
+    })
+  })
+
+export const editingReportingStyleFn = feature => [
+  reportingPinStyleFn(feature),
+  ...selectedReportingStyleFn(feature),
+  reportingToMissionLinkStyle(feature),
+  attachedMissionCircleStyle(feature)
+]

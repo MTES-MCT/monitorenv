@@ -60,7 +60,7 @@ export function OverlayPositionOnExtent({
 
   useEffect(() => {
     if (overlayRef.current && olOverlayObjectRef.current) {
-      if (feature) {
+      if (feature && feature.getGeometry()) {
         const featureExtent = feature.getGeometry().getExtent()
         const featureCenter = getCenter(featureExtent)
         const resolution = map.getView().getResolution()

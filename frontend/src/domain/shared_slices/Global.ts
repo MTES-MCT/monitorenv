@@ -54,6 +54,8 @@ type GlobalStateType = {
   displayMissionEditingLayer: boolean
   displayMissionsLayer: boolean
   displayMissionSelectedLayer: boolean
+  displayMissionToAttachLayer: boolean
+  displayReportingToAttachLayer: boolean
 
   // state entry for other children components whom visibility is already handled by parent components
 
@@ -102,6 +104,8 @@ const initialState: GlobalStateType = {
   displayMissionsOverlay: true,
   displayMissionEditingLayer: true,
   displayMissionSelectedLayer: true,
+  displayMissionToAttachLayer: true,
+  displayReportingToAttachLayer: true,
 
   // state entry for other children components whom visibility is already handled by parent components
   isLayersSidebarVisible: false,
@@ -165,6 +169,19 @@ const globalSlice = createSlice({
       state.toast = undefined
     },
 
+    resetLayoutToDefault(state) {
+      state.displayDrawModal = false
+      state.displayInterestPoint = true
+      state.displayLayersSidebar = true
+      state.displayLocateOnMap = true
+      state.displayMeasurement = true
+      state.displayMissionMenuButton = true
+      state.displayReportingsButton = true
+      state.displayReportingsOverlay = true
+      state.displayRightMenuControlUnitListButton = true
+      state.displaySearchSemaphoreButton = true
+    },
+
     setDisplayedItems(state, action: PayloadAction<Partial<GlobalStateType>>) {
       return { ...state, ...action.payload }
     },
@@ -213,6 +230,7 @@ export const {
   removeAllOverlayCoordinates,
   removeOverlayCoordinatesByName,
   removeToast,
+  resetLayoutToDefault,
   setDisplayedItems,
   setHealthcheckTextWarning,
   setIsMapToolVisible,

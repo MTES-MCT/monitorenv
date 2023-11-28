@@ -1,9 +1,11 @@
 import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { getFormattedReportingId } from '../../../../domain/entities/reporting'
+import { getFormattedReportingId } from '../../utils'
 import { ButtonsGroupRow } from '../Cells/ButtonsRowGroup'
+import { CellActionStatus } from '../Cells/CellActionStatus'
 import { CellActionThemes } from '../Cells/CellActionThemes'
+import { CellAttachedtoMission } from '../Cells/CellAttachedToMission'
 import { CellLocalizeReporting } from '../Cells/CellLocalizeReporting'
 import { CellStatus } from '../Cells/CellStatus'
 import { CellValidityTime } from '../Cells/CellValidityTime'
@@ -66,8 +68,8 @@ export const Columns = [
     enableSorting: true,
     header: () => 'Source',
     id: 'displayedSource',
-    maxSize: 280,
-    minSize: 230
+    maxSize: 260,
+    minSize: 210
   },
   {
     accessorFn: row => row.reportType,
@@ -100,7 +102,7 @@ export const Columns = [
     enableSorting: true,
     header: () => 'Statut',
     id: 'isArchived',
-    size: 100,
+    size: 90,
     sortingFn: (rowA: Row<any>, rowB: Row<any>, columnId: string) => {
       if (rowA.original[columnId] > rowB.original[columnId]) {
         return -1
@@ -113,13 +115,39 @@ export const Columns = [
     }
   },
   {
+    accessorFn: row => row.missionId,
+    cell: ({ row }) => (
+      <CellAttachedtoMission
+        detachedFromMissionAtUtc={row.original.detachedFromMissionAtUtc}
+        missionId={row.original.missionId}
+      />
+    ),
+    enableSorting: false,
+    header: () => '',
+    id: 'missionId',
+    size: 155
+  },
+  {
+    accessorFn: row => row.geom,
+    cell: ({ row }) => (
+      <CellActionStatus
+        controlStatus={row.original.controlStatus}
+        detachedFromMissionAtUtc={row.original.detachedFromMissionAtUtc}
+        isControlRequired={row.original.isControlRequired}
+        missionId={row.original.missionId}
+      />
+    ),
+    enableSorting: false,
+    header: () => '',
+    id: 'actionStatus',
+    size: 140
+  },
+  {
     accessorFn: row => row.geom,
     cell: info => <CellLocalizeReporting geom={info.getValue()} />,
     enableSorting: false,
     header: () => '',
     id: 'geom',
-    maxSize: 55,
-    minSize: 55,
     size: 55
   },
   {

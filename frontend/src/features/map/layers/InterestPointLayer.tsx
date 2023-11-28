@@ -199,7 +199,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
 
   useEffect(() => {
     function waitForUnwantedZoomAndQuitInteraction() {
-      setTimeout(() => {
+      window.setTimeout(() => {
         if (map && drawObject) {
           map.removeInteraction(drawObject)
         }

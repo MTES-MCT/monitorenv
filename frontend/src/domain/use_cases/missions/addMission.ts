@@ -2,12 +2,15 @@ import _ from 'lodash'
 import { generatePath } from 'react-router'
 
 import { missionFactory } from '../../../features/missions/Missions.helpers'
+import { attachReportingToMissionSliceActions } from '../../../features/missions/slice'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { isNewMission } from '../../../utils/isNewMission'
 import { sideWindowPaths } from '../../entities/sideWindow'
 import { multiMissionsActions } from '../../shared_slices/MultiMissions'
 
-export const addMission = () => async (dispatch, getState) => {
+import type { Reporting } from '../../entities/reporting'
+
+export const addMission = (attachedReporting?: Reporting) => async (dispatch, getState) => {
   const {
     missionState: { isFormDirty, missionState },
     multiMissions: { selectedMissions }
@@ -41,6 +44,10 @@ export const addMission = () => async (dispatch, getState) => {
   const missionsUpdated = [...missions, { isFormDirty: false, mission: missionFactory(undefined, id) }]
 
   await dispatch(multiMissionsActions.setSelectedMissions(missionsUpdated))
+
+  await dispatch(
+    attachReportingToMissionSliceActions.setAttachedReportings(attachedReporting ? [attachedReporting] : [])
+  )
 
   dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.MISSION, { id })))
 }
