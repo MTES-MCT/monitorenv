@@ -87,18 +87,16 @@ export function ActionCards({
               )}
             </ContentContainer>
 
-            {action.actionType === ActionTypeEnum.SURVEILLANCE &&
-              action.formattedReportingIds &&
-              action.formattedReportingIds?.length > 0 && (
-                <TagsContainer>
-                  {action.formattedReportingIds.map(reportingId => (
-                    <StyledTag
-                      data-cy="surveillance-attached-reportings-tags"
-                      Icon={Icon.Link}
-                    >{`Signalement ${reportingId}`}</StyledTag>
-                  ))}
-                </TagsContainer>
-              )}
+            {action.actionType === ActionTypeEnum.SURVEILLANCE && action.formattedReportingIds.length > 0 && (
+              <TagsContainer>
+                {action.formattedReportingIds.map(reportingId => (
+                  <StyledTag
+                    data-cy="surveillance-attached-reportings-tags"
+                    Icon={Icon.Link}
+                  >{`Signalement ${reportingId}`}</StyledTag>
+                ))}
+              </TagsContainer>
+            )}
           </ActionSummaryWrapper>
 
           {hasError && <FieldError>Veuillez compléter les champs manquants dans cette action</FieldError>}

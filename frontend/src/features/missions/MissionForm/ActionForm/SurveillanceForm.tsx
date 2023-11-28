@@ -40,7 +40,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
   const envActionIndex = actionsFields.value.findIndex(envAction => envAction.id === String(currentActionIndex))
   const currentAction = envActions[envActionIndex]
 
-  const { reportingIds } = currentAction || {}
+  const { reportingIds = [] } = currentAction || {}
   const [, actionStartDateMeta] = useField(`envActions[${envActionIndex}].actionStartDateTimeUtc`)
   const [, actionEndDateMeta] = useField(`envActions[${envActionIndex}].actionEndDateTimeUtc`)
 
@@ -53,7 +53,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
   const hasCustomZone = geomField.value && geomField.value.coordinates.length > 0
   const surveillances = actionsFields.value.filter(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
 
-  const [isReportingListVisible, setIsReportingListVisible] = useState<boolean>(reportingIds?.length === 1)
+  const [isReportingListVisible, setIsReportingListVisible] = useState<boolean>(reportingIds?.length >= 1)
 
   const reportingAsOptions = useMemo(
     () =>
@@ -78,26 +78,32 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
   const updateIsContralAttachedToReporting = (checked: boolean) => {
     setIsReportingListVisible(checked)
     if (!checked) {
-      const reportingToDetachIndex = attachedReportings?.findIndex(
-        reporting => reporting.attachedEnvActionId === currentAction?.id
-      )
+      attachedReportings.map((reporting, index) => {
+        if (reporting.attachedEnvActionId === currentAction?.id) {
+          return setFieldValue(`attachedReportings[${index}].attachedEnvActionId`, undefined)
+        }
 
-      if (reportingToDetachIndex !== -1) {
-        setFieldValue(`attachedReportings[${reportingToDetachIndex}].attachedEnvActionId`, undefined)
-      }
+        return reporting
+      })
       setFieldValue(`envActions[${envActionIndex}].reportingIds`, [])
     }
   }
 
   const selectReportings = (nextReportingIds: OptionValueType[] | undefined) => {
-    if (!nextReportingIds) {
-      return
-    }
-    setFieldValue(`envActions[${envActionIndex}].reportingIds`, nextReportingIds)
+    setFieldValue(`envActions[${envActionIndex}].reportingIds`, nextReportingIds || [])
 
     attachedReportings.map((reporting, index) => {
-      if (nextReportingIds.includes(reporting.id)) {
+      if (nextReportingIds && nextReportingIds.includes(reporting.id)) {
         return setFieldValue(`attachedReportings[${index}].attachedEnvActionId`, currentAction?.id)
+      }
+
+      if (
+        !nextReportingIds ||
+        (!nextReportingIds?.includes(reporting.id) &&
+          attachedReportings &&
+          attachedReportings[index]?.attachedEnvActionId === currentAction?.id)
+      ) {
+        return setFieldValue(`attachedReportings[${index}].attachedEnvActionId`, undefined)
       }
 
       return reporting
@@ -143,7 +149,8 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
           <span>Le contrôle est rattaché à un signalement</span>
         </StyledToggle>
         {isReportingListVisible && (
-          <MultiCheckbox
+          <StyledMultiCheckbox
+            isLabelHidden
             label="Signalements"
             name={`envActions[${envActionIndex}].reportingIds`}
             onChange={selectReportings}
@@ -256,6 +263,9 @@ const StyledToggle = styled.div`
     color: ${p => p.theme.color.gunMetal};
     font-weight: bold;
   }
+`
+const StyledMultiCheckbox = styled(MultiCheckbox)`
+  margin-left: 48px;
 `
 
 const FlexSelectorWrapper = styled.div`

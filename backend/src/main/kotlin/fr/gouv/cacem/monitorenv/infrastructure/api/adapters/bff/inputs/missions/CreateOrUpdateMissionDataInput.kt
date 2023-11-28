@@ -55,9 +55,13 @@ data class CreateOrUpdateMissionDataInput(
     }
 
     fun getEnvActionsAttachedToReportings(): List<EnvActionAttachedToReportingIds> {
-        return this.envActions?.filter {
-            it.actionType == ActionTypeEnum.SURVEILLANCE || it.actionType == ActionTypeEnum.CONTROL
-        }?.map { Pair(it.id, it.reportingIds.get()) } ?: listOf()
+        return this.envActions
+            ?.filter {
+                it.actionType == ActionTypeEnum.SURVEILLANCE ||
+                    it.actionType == ActionTypeEnum.CONTROL
+            }
+            ?.map { Pair(it.id, it.reportingIds.get()) }
+            ?: listOf()
     }
 }
 

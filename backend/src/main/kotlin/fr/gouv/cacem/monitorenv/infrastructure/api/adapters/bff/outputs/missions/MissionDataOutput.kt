@@ -33,6 +33,7 @@ data class MissionDataOutput(
     val detachedReportingIds: List<Int>? = listOf(),
     val detachedReportings: List<MissionDetachedReportingDataOutput>? = listOf(),
 ) {
+
     companion object {
         fun fromMissionDTO(dto: MissionDTO): MissionDataOutput {
             requireNotNull(dto.mission.id) { "a mission must have an id" }
@@ -50,30 +51,44 @@ data class MissionDataOutput(
                 startDateTimeUtc = dto.mission.startDateTimeUtc,
                 endDateTimeUtc = dto.mission.endDateTimeUtc,
                 envActions =
-                dto.mission.envActions?.map {
-                    when (it.actionType) {
-                        ActionTypeEnum.CONTROL ->
-                            MissionEnvActionControlDataOutput
-                                .fromEnvActionControlEntity(
-                                    envActionControlEntity = it as EnvActionControlEntity,
-                                    reportingIds = dto.envActionsAttachedToReportingIds?.find { id ->
-                                        id.first == it.id
-                                    }?.second ?: listOf(),
+                (
+                    dto.mission.envActions?.map {
+                        when (it.actionType) {
+                            ActionTypeEnum.CONTROL ->
+                                MissionEnvActionControlDataOutput
+                                    .fromEnvActionControlEntity(
+                                        envActionControlEntity =
+                                        it as EnvActionControlEntity,
+                                        reportingIds =
+                                        dto.envActionsAttachedToReportingIds
+                                            ?.find { action ->
+                                                action.first ==
+                                                    it.id
+                                            }
+                                            ?.second
+                                            ?: listOf(),
+                                    )
+                            ActionTypeEnum.SURVEILLANCE -> {
+                                MissionEnvActionSurveillanceDataOutput
+                                    .fromEnvActionSurveillanceEntity(
+                                        envActionSurveillanceEntity =
+                                        it as EnvActionSurveillanceEntity,
+                                        reportingIds =
+                                        dto.envActionsAttachedToReportingIds
+                                            ?.find { action ->
+                                                action.first == it.id
+                                            }
+                                            ?.second
+                                            ?: listOf(),
+                                    )
+                            }
+                            ActionTypeEnum.NOTE ->
+                                MissionEnvActionNoteDataOutput.fromEnvActionNoteEntity(
+                                    it as EnvActionNoteEntity,
                                 )
-                        ActionTypeEnum.SURVEILLANCE ->
-                            MissionEnvActionSurveillanceDataOutput
-                                .fromEnvActionSurveillanceEntity(
-                                    envActionSurveillanceEntity = it as EnvActionSurveillanceEntity,
-                                    reportingIds = dto.envActionsAttachedToReportingIds?.find { id ->
-                                        id.first == it.id
-                                    }?.second ?: listOf(),
-                                )
-                        ActionTypeEnum.NOTE ->
-                            MissionEnvActionNoteDataOutput.fromEnvActionNoteEntity(
-                                it as EnvActionNoteEntity,
-                            )
+                        }
                     }
-                },
+                    ),
                 missionSource = dto.mission.missionSource,
                 isClosed = dto.mission.isClosed,
                 hasMissionOrder = dto.mission.hasMissionOrder,

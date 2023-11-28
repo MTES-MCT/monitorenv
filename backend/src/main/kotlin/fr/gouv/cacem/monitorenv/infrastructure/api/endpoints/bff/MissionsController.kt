@@ -132,7 +132,8 @@ class MissionsController(
     @GetMapping("/engaged_control_units")
     @Operation(summary = "Get engaged control units")
     fun getEngagedControlUnitsController(): List<LegacyControlUnitAndMissionSourcesDataOutput> {
-        return getEngagedControlUnits.execute()
-            .map { LegacyControlUnitAndMissionSourcesDataOutput.fromLegacyControlUnitAndMissionSources(it) }
+        return getEngagedControlUnits.execute().map {
+            LegacyControlUnitAndMissionSourcesDataOutput.fromLegacyControlUnitAndMissionSources(it)
+        }
     }
 }

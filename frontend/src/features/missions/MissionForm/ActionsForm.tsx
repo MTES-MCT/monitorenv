@@ -143,7 +143,7 @@ export function ActionsForm({ currentActionIndex, setCurrentActionIndex }) {
             return (
               <ActionCards
                 // eslint-disable-next-line react/no-array-index-key
-                key={index}
+                key={`${action.timelineDate}-${index}`}
                 action={action}
                 duplicateAction={() => handleDuplicateAction(action.id)}
                 hasError={!!envActionsErrors}

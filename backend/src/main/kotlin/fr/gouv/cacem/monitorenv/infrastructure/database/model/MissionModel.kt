@@ -141,26 +141,39 @@ data class MissionModel(
         val envActionsAttachedToReportingIds =
             attachedReportings?.filter { it.attachedEnvAction != null }?.fold(
                 mutableListOf<EnvActionAttachedToReportingIds>(),
-            ) { acc, reduced ->
-                if (reduced.attachedEnvAction?.id != null &&
-                    reduced.id != null &&
-                    acc.find { it.first == reduced.attachedEnvAction.id } != null
-                ) {
-                    acc.map {
-                        if (it.first == reduced.attachedEnvAction?.id && reduced.id != null) {
-                            it.copy(second = it.second.plus(reduced.id))
-                        } else {
-                            it
-                        }
-                    }
-                } else {
-                    if (reduced.attachedEnvAction?.id != null && reduced.id != null) {
-                        val newPair =
-                            Pair(reduced.attachedEnvAction.id, mutableListOf(reduced.id))
-                        acc.add(newPair)
-                    }
+            ) { listOfActionsAttached, attachedReporting ->
+                require(attachedReporting.id != null)
+
+                val actionId = attachedReporting.attachedEnvAction?.id
+                if (actionId == null) {
+                    return@fold listOfActionsAttached
                 }
-                acc
+
+                val hasActionAlreadyAttachedToReporting =
+                    listOfActionsAttached.find { it.first == actionId } != null
+
+                if (!hasActionAlreadyAttachedToReporting) {
+                    val newPair = Pair(actionId, mutableListOf(attachedReporting.id))
+                    listOfActionsAttached.add(newPair)
+                } else {
+                    return@fold listOfActionsAttached
+                        .map { actionWithReportings ->
+                            if (actionWithReportings.first == actionId) {
+                                val updatedReportingIds =
+                                    actionWithReportings.second.plus(
+                                        attachedReporting.id,
+                                    )
+                                val updatedAction = Pair(actionId, updatedReportingIds)
+
+                                return@map updatedAction
+                            } else {
+                                return@map actionWithReportings
+                            }
+                        }
+                        .toMutableList()
+                }
+
+                return@fold listOfActionsAttached
             }
                 ?: listOf()
         return MissionDTO(
