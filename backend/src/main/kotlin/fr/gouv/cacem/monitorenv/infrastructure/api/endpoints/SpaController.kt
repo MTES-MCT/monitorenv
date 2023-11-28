@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints
 
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.exceptions.ForeignKeyConstraintException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.boot.web.servlet.error.ErrorController
@@ -17,15 +16,6 @@ class SpaController : ErrorController {
     fun error(request: HttpServletRequest, response: HttpServletResponse): Any {
         response.status = HttpStatus.OK.value()
         return "forward:/index.html"
-    }
-
-    // This route is for testing purpose only
-    // Used to test that errors are correctly sent to sentry
-    @RequestMapping("/test/trigger_error")
-    fun triggerError() {
-        throw ForeignKeyConstraintException(
-            "ForeignKeyConstraintException triggered from get request",
-        )
     }
 
     val errorPath: String
