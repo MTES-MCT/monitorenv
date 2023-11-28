@@ -50,7 +50,7 @@ export class ReconnectingEventSource implements EventSource {
 
   _eventSource: EventSource | null
   _lastEventId: string | null
-  _timer: NodeJS.Timer | null
+  _timer: NodeJS.Timeout | null
   _listeners: Listeners
   _onevent_wrapped: (this: EventSource, ev: Event) => any
 
