@@ -73,6 +73,7 @@ jobs:
         uses: actions/setup-java@v3.13.0
         with:
           java-version: 17
+          distribution: 'dragonwell'
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
