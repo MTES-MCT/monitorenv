@@ -32,7 +32,7 @@ export const deleteTab = (nextPath: string) => async (dispatch, getState) => {
     dispatch(
       sideWindowActions.setCurrentPath(
         generatePath(sideWindowPaths.MISSION, {
-          id: selectedMissions[indexToDelete]?.mission.id
+          id: String(id)
         })
       )
     )
@@ -41,7 +41,9 @@ export const deleteTab = (nextPath: string) => async (dispatch, getState) => {
   }
 
   await dispatch(multiMissionsActions.deleteSelectedMission(id))
-  removeMissionListener(selectedMissions[indexToDelete]?.mission.id)
+  if (typeof id === 'number') {
+    removeMissionListener(Number(id))
+  }
 
   if (indexToDelete === 0) {
     dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.MISSIONS)))

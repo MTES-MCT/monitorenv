@@ -40,8 +40,8 @@ export function Mission() {
       return missionFactory(undefined, missionId)
     }
 
-    // The cache has been invalidated so it is set as `undefined`
-    // We must be the previous non-undefined value in memory
+    // The RTK-Query cache has been invalidated so `missionToEdit` is set as `undefined`
+    // We must save the previous non-undefined value in memory
     if (previousMissionToEdit && !missionToEdit) {
       return missionFactory(previousMissionToEdit)
     }

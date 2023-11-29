@@ -50,6 +50,8 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
       })
     }),
     getMission: builder.query<Mission, number>({
+      // The `useGetMissionState` hook is used in `MissionForm/index.tsx` right after the opening of a mission,
+      // we prevent the re-fetch of the mission with the cache setting of 10 seconds
       keepUnusedDataFor: 10,
       async onQueryStarted(id, { updateCachedData }) {
         try {
