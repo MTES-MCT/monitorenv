@@ -1,25 +1,25 @@
 -- Création des tables
 
-CREATE TABLE themes_control_plan (
+CREATE TABLE control_plan_themes (
     id serial PRIMARY KEY,
     theme text UNIQUE NOT NULL
 );
 
-CREATE TABLE subthemes_control_plan (
+CREATE TABLE control_plan_subthemes (
     id serial PRIMARY KEY,
     subtheme text,
     allowed_tags text[],
-    theme_id int REFERENCES themes_control_plan(id),
+    theme_id int REFERENCES control_plan_themes(id),
     year int
 );
-CREATE INDEX idx_subthemes_control_plan_year ON subthemes_control_plan USING btree(year);
+CREATE INDEX idx_control_plan_subthemes_year ON control_plan_subthemes USING btree(year);
 
 CREATE TABLE env_actions_subthemes (
   env_action_id uuid,
   subtheme_id integer,
   tags text[],
   foreign key (env_action_id) references env_actions(id),
-  foreign key (subtheme_id) references subthemes_control_plan(id),
+  foreign key (subtheme_id) references control_plan_subthemes(id),
   primary key (env_action_id, subtheme_id)
 );
 -- TODO: Décider s'il faut ajouter une contrainte sur les tags de env_actions_subthemes
@@ -27,29 +27,29 @@ CREATE TABLE env_actions_subthemes (
 -- (pas possible avec postgres de faire une contrainte "classique")
 
 
-COMMENT ON TABLE themes_control_plan IS 'Table des thèmes du plan de contrôle';
-COMMENT ON TABLE subthemes_control_plan IS 'Table des sous-thèmes du plan de contrôle versionnés par année';
+COMMENT ON TABLE control_plan_themes IS 'Table des thèmes du plan de contrôle';
+COMMENT ON TABLE control_plan_subthemes IS 'Table des sous-thèmes du plan de contrôle versionnés par année';
 COMMENT ON TABLE env_actions_subthemes IS 'Table de jointure entre les actions et les sous-thèmes du plan de contrôle';
 
 -- Insertion des themes et sous-themes à partir de la table control_themes
-INSERT INTO themes_control_plan (theme)
+INSERT INTO control_plan_themes (theme)
     SELECT distinct theme_level_1 FROM control_themes ORDER BY theme_level_1
     ;
 
-INSERT INTO subthemes_control_plan (subtheme, theme_id, year)
+INSERT INTO control_plan_subthemes (subtheme, theme_id, year)
     SELECT distinct theme_level_2, t.id, 2023
-        FROM control_themes c JOIN themes_control_plan t ON t.theme = theme_level_1
+        FROM control_themes c JOIN control_plan_themes t ON t.theme = theme_level_1
         WHERE theme_level_2 IS NOT NULL ORDER BY theme_level_2
     ;
 
-UPDATE subthemes_control_plan
+UPDATE control_plan_subthemes
     SET allowed_tags = '{"Oiseaux", "Habitat", "Flore", "Autres espèces protégées", "Reptiles", "Mammifères marins"}'
-    FROM themes_control_plan t
+    FROM control_plan_themes t
     WHERE
-        t.id = subthemes_control_plan.theme_id
+        t.id = control_plan_subthemes.theme_id
         AND t.theme = 'Police des espèces protégées et de leurs habitats (faune et flore)';
 
--- Insertion des données dans la table env_actions_subthemes
+-- Insertion des données depuis les env actions dans la table env_actions_subthemes
 INSERT INTO env_actions_subthemes (env_action_id, subtheme_id, tags)
     WITH themes AS (
         SELECT
@@ -75,8 +75,8 @@ INSERT INTO env_actions_subthemes (env_action_id, subtheme_id, tags)
                         FROM (SELECT jsonb_array_elements_text(protectedspecies) species) t
                         )
                 ) d(tags),
-         subthemes_control_plan sbt,
-         themes_control_plan t
+         control_plan_subthemes sbt,
+         control_plan_themes t
     WHERE sbt.subtheme = themes.subtheme
       AND  sbt.theme_id = t.id
       AND t.theme = themes.theme
