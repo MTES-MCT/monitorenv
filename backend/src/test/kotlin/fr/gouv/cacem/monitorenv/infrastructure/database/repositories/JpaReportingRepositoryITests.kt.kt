@@ -149,14 +149,14 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     fun `delete should soft delete reporting`() {
         // Given
         val numberOfExistingReportings = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportings).isEqualTo(8)
+        assertThat(numberOfExistingReportings).isEqualTo(11)
 
         // When
         jpaReportingRepository.delete(1)
 
         // Then
         val numberOfExistingReportingsAfterSave = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(8)
+        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(11)
 
         val deletedReportingDTO = jpaReportingRepository.findById(1)
         assertThat(deletedReportingDTO.reporting.isDeleted).isEqualTo(true)
@@ -189,7 +189,10 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         val existingReportingDTO = jpaReportingRepository.findById(6)
         assertThat(existingReportingDTO.reporting.attachedEnvActionId).isEqualTo(envActionId)
         // When
-        jpaReportingRepository.detachDanglingEnvActions(missionId = 34, envActionIds = listOf(otherEnvActionId))
+        jpaReportingRepository.detachDanglingEnvActions(
+            missionId = 34,
+            envActionIds = listOf(otherEnvActionId),
+        )
         // Then
         val detachedReportingDTO = jpaReportingRepository.findById(6)
         val otherReportingDTO = jpaReportingRepository.findById(7)
@@ -211,7 +214,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 sourcesType = null,
                 status = null,
             )
-        assertThat(reportings.size).isEqualTo(8)
+        assertThat(reportings.size).isEqualTo(11)
     }
 
     @Test
@@ -240,7 +243,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     fun `save should create a new Reporting`() {
         // Given
         val numberOfExistingReportings = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportings).isEqualTo(8)
+        assertThat(numberOfExistingReportings).isEqualTo(11)
 
         // When
         val wktReader = WKTReader()
@@ -272,11 +275,11 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
 
         jpaReportingRepository.save(newReporting)
 
-        val reportingDTO = jpaReportingRepository.findById(9)
+        val reportingDTO = jpaReportingRepository.findById(12)
 
         // Then
-        assertThat(reportingDTO.reporting.id).isEqualTo(9)
-        assertThat(reportingDTO.reporting.reportingId).isEqualTo(2300009)
+        assertThat(reportingDTO.reporting.id).isEqualTo(12)
+        assertThat(reportingDTO.reporting.reportingId).isEqualTo(2300012)
         assertThat(reportingDTO.reporting.sourceType).isEqualTo(SourceTypeEnum.SEMAPHORE)
         assertThat(reportingDTO.reporting.semaphoreId).isEqualTo(21)
         assertThat(reportingDTO.reporting.targetType).isEqualTo(TargetTypeEnum.VEHICLE)
@@ -298,7 +301,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         assertThat(reportingDTO.reporting.openBy).isEqualTo("CDA")
 
         val numberOfExistingReportingsAfterSave = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(9)
+        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(12)
     }
 
     @Test
@@ -306,7 +309,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     fun `save should update an existing Reporting`() {
         // Given
         val numberOfExistingReportings = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportings).isEqualTo(8)
+        assertThat(numberOfExistingReportings).isEqualTo(11)
 
         // When
         val existingReportingDTO = jpaReportingRepository.findById(1)
@@ -325,7 +328,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         assertThat(savedReportingDTO.reporting.semaphoreId).isEqualTo(23)
 
         val numberOfExistingReportingsAfterSave = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(8)
+        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(11)
     }
 
     // Test of db constraints, not specific to repository implementations

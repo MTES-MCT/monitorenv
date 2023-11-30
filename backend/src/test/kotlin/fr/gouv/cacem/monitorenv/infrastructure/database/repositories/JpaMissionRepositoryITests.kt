@@ -51,7 +51,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     fun `findByControlUnitResourceId should find the matching missions`() {
         val foundMissions = jpaMissionRepository.findByControlUnitResourceId(8)
 
-        assertThat(foundMissions).hasSize(3)
+        assertThat(foundMissions).hasSize(4)
     }
 
     @Test
@@ -404,7 +404,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 seaFronts = null,
                 pageable = Pageable.unpaged(),
             )
-        assertThat(missions).hasSize(53)
+        assertThat(missions).hasSize(54)
     }
 
     @Test
@@ -436,7 +436,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 seaFronts = null,
                 pageable = Pageable.unpaged(),
             )
-        assertThat(missions).hasSize(21)
+        assertThat(missions).hasSize(22)
     }
 
     @Test
@@ -452,7 +452,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 seaFronts = null,
                 pageable = Pageable.unpaged(),
             )
-        assertThat(missions).hasSize(44)
+        assertThat(missions).hasSize(45)
     }
 
     @Test
@@ -484,7 +484,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 seaFronts = listOf("MEMN", "NAMO"),
                 pageable = Pageable.unpaged(),
             )
-        assertThat(missions).hasSize(26)
+        assertThat(missions).hasSize(27)
     }
 
     @Test
@@ -500,7 +500,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionStatuses = listOf("UPCOMING"),
                 pageable = Pageable.unpaged(),
             )
-        assertThat(missions).hasSize(6)
+        assertThat(missions).hasSize(7)
     }
 
     @Test
@@ -564,7 +564,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionStatuses = listOf("CLOSED", "UPCOMING"),
                 pageable = Pageable.unpaged(),
             )
-        assertThat(missions).hasSize(24)
+        assertThat(missions).hasSize(25)
     }
 
     @Test

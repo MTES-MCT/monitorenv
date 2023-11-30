@@ -29,7 +29,7 @@ export const saveReporting =
         dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
         dispatch(reportingActions.deleteSelectedReporting(values.id))
       } else {
-        if (response.error.data.type === ApiErrorCode.CHILD_ALREADY_ATTACHED) {
+        if (response.error.data?.type === ApiErrorCode.CHILD_ALREADY_ATTACHED) {
           throw Error('Le signalement est déjà rattaché à une mission')
         }
         throw Error('Erreur à la création ou à la modification du signalement')

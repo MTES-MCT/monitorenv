@@ -68,14 +68,14 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
     [attachedReportings, currentAction]
   )
 
-  const areAllReportingsAttachedToAControl = useMemo(
+  const areAllReportingsAttachedToAnAction = useMemo(
     () =>
       attachedReportings &&
       attachedReportings.every(reporting => reporting.isControlRequired && reporting.attachedEnvActionId),
     [attachedReportings]
   )
 
-  const updateIsContralAttachedToReporting = (checked: boolean) => {
+  const updateIsSurveillanceAttachedToReporting = (checked: boolean) => {
     setIsReportingListVisible(checked)
     if (!checked) {
       attachedReportings.map((reporting, index) => {
@@ -142,8 +142,8 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
           <Toggle
             checked={isReportingListVisible}
             data-cy="surveillance-form-toggle-reporting"
-            onChange={updateIsContralAttachedToReporting}
-            readOnly={areAllReportingsAttachedToAControl && currentAction?.reportingIds?.length === 0}
+            onChange={updateIsSurveillanceAttachedToReporting}
+            readOnly={areAllReportingsAttachedToAnAction && currentAction?.reportingIds?.length === 0}
           />
           <span>Le contrôle est rattaché à un signalement</span>
         </StyledToggle>

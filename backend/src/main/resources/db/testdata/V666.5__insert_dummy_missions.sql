@@ -110,7 +110,6 @@ VALUES
     (        49,           10002),
     (        50,           10002),
     (        51,           10002),
-    (        52,           10002),
     (        52,           10002);
 
 INSERT INTO missions_control_units

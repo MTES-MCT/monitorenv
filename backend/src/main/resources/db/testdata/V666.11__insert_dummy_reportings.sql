@@ -220,7 +220,7 @@ VALUES
     null,
     'b8007c8a-5135-4bc3-816f-c69c7b75d807',
     'ABC'
-    ),      
+    ),
     (7,
    2300007,
     'CONTROL_UNIT',
@@ -356,3 +356,7 @@ VALUES
      NULL,
      'GHI'
     );
+
+SELECT setval('reportings_id_seq', (SELECT max(id) FROM reportings), true);
+CREATE SEQUENCE IF NOT EXISTS reportings_2023_seq;
+SELECT setval('reportings_2023_seq', (SELECT max(id) FROM reportings), true);
