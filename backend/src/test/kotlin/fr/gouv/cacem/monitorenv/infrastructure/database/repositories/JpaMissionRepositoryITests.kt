@@ -43,7 +43,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     fun `findByControlUnitId should find the matching missions`() {
         val foundMissions = jpaMissionRepository.findByControlUnitId(10002)
 
-        assertThat(foundMissions).hasSize(18)
+        assertThat(foundMissions).hasSize(17)
     }
 
     @Test

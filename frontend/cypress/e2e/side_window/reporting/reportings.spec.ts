@@ -32,8 +32,10 @@ context('Reportings', () => {
     cy.clickButton('Valider le signalement')
 
     cy.wait('@createReporting').then(({ response }) => {
-      expect(response && response.body.id).equal(9)
       expect(response && response.body.sourceName).equal('Reporting dupliqué')
+      expect(response && response.body.description).equal('Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
+      expect(response && response.body.reportType).equal('OBSERVATION')
+      expect(response && response.body.openBy).equal('CDA')
     })
   })
 
