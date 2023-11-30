@@ -20,7 +20,7 @@ import { isNotArchived } from '../../../../utils/isNotArchived'
 
 export function FilterBar() {
   const dispatch = useAppDispatch()
-  const mapControlUnitListDialog = useAppSelector(store => store.mapControlUnitListDialog)
+  const filtersState = useAppSelector(store => store.controlUnitListDialog.filtersState)
   const { data: administrations } = useGetAdministrationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
   const { data: bases } = useGetStationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
@@ -74,7 +74,7 @@ export function FilterBar() {
         onChange={updateQuery}
         placeholder="Rechercher une unité"
         size={Size.LARGE}
-        value={mapControlUnitListDialog.filtersState.query}
+        value={filtersState.query}
       />
       <Select
         isLabelHidden
@@ -85,7 +85,7 @@ export function FilterBar() {
         options={administrationsAsOptions}
         placeholder="Administration"
         searchable
-        value={mapControlUnitListDialog.filtersState.administrationId}
+        value={filtersState.administrationId}
       />
       <Select
         isLabelHidden
@@ -96,7 +96,7 @@ export function FilterBar() {
         options={typesAsOptions}
         placeholder="Type de moyen"
         searchable
-        value={mapControlUnitListDialog.filtersState.type}
+        value={filtersState.type}
       />
       <Select
         isLabelHidden
@@ -107,7 +107,7 @@ export function FilterBar() {
         options={basesAsOptions}
         placeholder="Base du moyen"
         searchable
-        value={mapControlUnitListDialog.filtersState.stationId}
+        value={filtersState.stationId}
       />
     </Wrapper>
   )

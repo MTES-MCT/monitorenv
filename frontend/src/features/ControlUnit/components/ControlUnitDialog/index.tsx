@@ -16,12 +16,12 @@ import { FrontendError } from '../../../../libs/FrontendError'
 
 export function ControlUnitDialog() {
   const dispatch = useAppDispatch()
-  const mapControlUnitDialog = useAppSelector(store => store.mapControlUnitDialog)
-  if (!mapControlUnitDialog.controlUnitId) {
-    throw new FrontendError('`mapControlUnitDialog.controlUnitId` is undefined.')
+  const controlUnitId = useAppSelector(store => store.controlUnitDialog.controlUnitId)
+  if (!controlUnitId) {
+    throw new FrontendError('`controlUnitDialog.controlUnitId` is undefined.')
   }
 
-  const { data: controlUnit } = useGetControlUnitQuery(mapControlUnitDialog.controlUnitId, RTK_DEFAULT_QUERY_OPTIONS)
+  const { data: controlUnit } = useGetControlUnitQuery(controlUnitId, RTK_DEFAULT_QUERY_OPTIONS)
   const [updateControlUnit] = useUpdateControlUnitMutation()
 
   const close = useCallback(() => {
@@ -34,28 +34,17 @@ export function ControlUnitDialog() {
 
   if (!controlUnit) {
     return (
-      <MapMenuDialog.Container>
+      <StyledMapMenuDialogContainer>
         <MapMenuDialog.Header>
           <MapMenuDialog.Title>Chargement en cours...</MapMenuDialog.Title>
           <MapMenuDialog.CloseButton Icon={Icon.Close} onClick={close} />
         </MapMenuDialog.Header>
-      </MapMenuDialog.Container>
-    )
-  }
-
-  if (!controlUnit) {
-    return (
-      <MapMenuDialog.Container>
-        <MapMenuDialog.Header>
-          <MapMenuDialog.Title>Chargement en cours...</MapMenuDialog.Title>
-          <MapMenuDialog.CloseButton Icon={Icon.Close} onClick={close} />
-        </MapMenuDialog.Header>
-      </MapMenuDialog.Container>
+      </StyledMapMenuDialogContainer>
     )
   }
 
   return (
-    <Wrapper>
+    <StyledMapMenuDialogContainer>
       <MapMenuDialog.Header>
         <MapMenuDialog.Title>
           <b>{controlUnit.name}</b> ({controlUnit.administration.name})
@@ -69,11 +58,11 @@ export function ControlUnitDialog() {
           <AreaNote controlUnit={controlUnit} onSubmit={updateControlUnit} />
         </StyledMapMenuDialogBody>
       </Formik>
-    </Wrapper>
+    </StyledMapMenuDialogContainer>
   )
 }
 
-const Wrapper = styled(MapMenuDialog.Container)`
+const StyledMapMenuDialogContainer = styled(MapMenuDialog.Container)`
   bottom: 10px;
   max-height: none;
   position: absolute;

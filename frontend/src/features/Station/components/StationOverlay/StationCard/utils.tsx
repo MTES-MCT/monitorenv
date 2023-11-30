@@ -28,5 +28,5 @@ export function displayControlUnitResourcesFromControlUnit(controlUnit: ControlU
           {`${count} ${pluralize(ControlUnit.ControlUnitResourceTypeLabel[type], count)}`}
         </Tag>
       ))
-    : [<Tag>Aucun moyen</Tag>]
+    : [<Tag key="none">Aucun moyen</Tag>]
 }

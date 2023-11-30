@@ -19,8 +19,8 @@ type ControlUnitListDialogProps = {
 }
 export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
   const dispatch = useAppDispatch()
-  const displayBaseLayer = useAppSelector(store => store.global.displayStationLayer)
-  const mapControlUnitListDialog = useAppSelector(store => store.mapControlUnitListDialog)
+  const displayStationLayer = useAppSelector(store => store.global.displayStationLayer)
+  const filtersState = useAppSelector(store => store.controlUnitListDialog.filtersState)
   const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const activeControlUnits = useMemo(() => controlUnits?.filter(isNotArchived), [controlUnits])
@@ -30,20 +30,20 @@ export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
       return undefined
     }
 
-    const filters = getFilters(activeControlUnits, mapControlUnitListDialog.filtersState)
+    const filters = getFilters(activeControlUnits, filtersState)
 
     return filters.reduce((previousControlUnits, filter) => filter(previousControlUnits), activeControlUnits)
-  }, [activeControlUnits, mapControlUnitListDialog.filtersState])
+  }, [activeControlUnits, filtersState])
 
-  const toggleBaseLayer = useCallback(() => {
+  const toggleStationLayer = useCallback(() => {
     dispatch(stationActions.hightlightFeatureIds([]))
     dispatch(stationActions.selectFeatureId(undefined))
     dispatch(
       globalActions.setDisplayedItems({
-        displayStationLayer: !displayBaseLayer
+        displayStationLayer: !displayStationLayer
       })
     )
-  }, [dispatch, displayBaseLayer])
+  }, [dispatch, displayStationLayer])
 
   return (
     <MapMenuDialog.Container style={{ height: 480 }}>
@@ -52,9 +52,9 @@ export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
         <MapMenuDialog.Title>Unités de contrôle</MapMenuDialog.Title>
         <MapMenuDialog.VisibilityButton
           accent={Accent.SECONDARY}
-          Icon={displayBaseLayer ? Icon.Display : Icon.Hide}
-          onClick={toggleBaseLayer}
-          title={displayBaseLayer ? 'Masquer les bases' : 'Afficher les bases'}
+          Icon={displayStationLayer ? Icon.Display : Icon.Hide}
+          onClick={toggleStationLayer}
+          title={displayStationLayer ? 'Masquer les bases' : 'Afficher les bases'}
         />
       </MapMenuDialog.Header>
       <MapMenuDialog.Body>
@@ -63,11 +63,6 @@ export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
         {filteredControlUnits &&
           filteredControlUnits.map(controlUnit => <Item key={controlUnit.id} controlUnit={controlUnit} />)}
       </MapMenuDialog.Body>
-      {/* <MapMenuDialog.Footer>
-        <Button accent={Accent.SECONDARY} Icon={Icon.Expand} isFullWidth onClick={noop}>
-          Voir la vue détaillée des unités
-        </Button>
-      </MapMenuDialog.Footer> */}
     </MapMenuDialog.Container>
   )
 }
