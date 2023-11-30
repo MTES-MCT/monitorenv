@@ -84,19 +84,23 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
     [unitListAsOption]
   )
 
-  const resourcesList =
+  const activeControlUnitResources = (
     filteredControlUnits?.find(unit => unit.administration === administrationField.value && unit.id === unitField.value)
-      ?.resources || [].filter(isNotArchived)
+      ?.resources || []
+  ).filter(isNotArchived)
 
   // Add any resource from Mission not present in list from API (as the resource might be historized)
   // See: https://github.com/MTES-MCT/monitorenv/issues/103
   // eslint-disable-next-line no-unsafe-optional-chaining
-  const combinedResourceList = useMemo(() => {
-    const resources = [...resourcesList, ...resourcesField.value]
+  const activeAndSelectedControlUnitResources = useMemo(() => {
+    const resources = [...activeControlUnitResources, ...resourcesField.value]
 
     return uniqBy(resources, 'id').sort()
-  }, [resourcesList, resourcesField.value])
-  const resourcesAsOption = useMemo(() => getOptionsFromIdAndName(combinedResourceList), [combinedResourceList])
+  }, [activeControlUnitResources, resourcesField.value])
+  const resourcesAsOption = useMemo(
+    () => getOptionsFromIdAndName(activeAndSelectedControlUnitResources),
+    [activeAndSelectedControlUnitResources]
+  )
 
   const handleAdministrationChange = value => {
     if (value !== administrationField.value) {
@@ -128,14 +132,18 @@ export function ControlUnitSelector({ controlUnitIndex, removeControlUnit }) {
       administrationHelpers.setValue(foundUnit.administration)
     }
   }
-  const handleResourceChange = values => {
-    if (!values) {
+  const handleResourceChange = (nextControlUnitResourceIds: number[] | undefined) => {
+    if (!nextControlUnitResourceIds) {
       resourcesHelpers.setValue([])
 
       return
     }
-    const resourceObjects = values.map(id => resourcesList.find(resource => resource.id === id))
-    resourcesHelpers.setValue(resourceObjects)
+
+    const nextControlUnitResources = activeAndSelectedControlUnitResources.filter(controlUnitResource =>
+      nextControlUnitResourceIds.includes(controlUnitResource.id)
+    )
+
+    resourcesHelpers.setValue(nextControlUnitResources)
   }
 
   const engagedControlUnit = engagedControlUnits.find(engaged => engaged.controlUnit.id === unitField.value)
