@@ -1,5 +1,8 @@
+import { logSoftError } from '@mtes-mct/monitor-ui'
+
 import { monitorenvPrivateApi, monitorenvPublicApi } from './api'
 import { ControlUnit } from '../domain/entities/controlUnit'
+import { addNewMissionListener, missionEventListener } from '../features/missions/MissionForm/sse'
 
 import type { Mission, MissionForApi } from '../domain/entities/missions'
 
@@ -47,6 +50,21 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
       })
     }),
     getMission: builder.query<Mission, number>({
+      // The `useGetMissionState` hook is used in `MissionForm/index.tsx` right after the opening of a mission,
+      // we prevent the re-fetch of the mission with the cache setting of 10 seconds
+      keepUnusedDataFor: 10,
+      async onQueryStarted(id, { updateCachedData }) {
+        try {
+          const listener = missionEventListener(id, updateCachedData)
+          addNewMissionListener(id, listener)
+        } catch (e) {
+          logSoftError({
+            isSideWindowError: true,
+            message: "SSE: Can't connect or receive messages",
+            originalError: e
+          })
+        }
+      },
       providesTags: (_, __, id) => [{ id, type: 'Missions' }],
       query: id => `/v1/missions/${id}`
     }),
@@ -102,5 +120,7 @@ export const {
   useGetMissionsQuery,
   useUpdateMissionMutation
 } = missionsAPI
+
+export const useGetMissionState = missionsAPI.endpoints.getMission.useQueryState
 
 export const { useGetEngagedControlUnitsQuery } = publicMissionsAPI

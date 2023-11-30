@@ -14,6 +14,7 @@ import { MissionFormBottomBar } from './MissionFormBottomBar'
 import { CancelEditModal } from './modals/CancelEditModal'
 import { DeleteModal } from './modals/DeleteModal'
 import { ReopenModal } from './modals/ReopenModal'
+import { removeMissionListener } from './sse'
 import { type Mission, MissionSourceEnum, type NewMission } from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setToast } from '../../../domain/shared_slices/Global'
@@ -83,6 +84,7 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
     await dispatch(multiMissionsActions.deleteSelectedMission(id))
     dispatch(sideWindowActions.setShowConfirmCancelModal(false))
     dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.MISSIONS)))
+    removeMissionListener(id)
   }
 
   const submitMission = () => {

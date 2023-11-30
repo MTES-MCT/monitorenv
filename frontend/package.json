@@ -125,6 +125,7 @@
     "eslint-plugin-sort-keys-fix": "1.1.2",
     "eslint-plugin-storybook": "0.6.13",
     "eslint-plugin-typescript-sort-keys": "2.3.0",
+    "eventsourcemock": "^2.0.0",
     "husky": "8.0.3",
     "lint-staged": "13.0.3",
     "prettier": "2.7.1",

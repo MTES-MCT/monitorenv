@@ -1,5 +1,6 @@
 import { generatePath } from 'react-router'
 
+import { removeMissionListener } from '../../../features/missions/MissionForm/sse'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { getIdTyped } from '../../../utils/getIdTyped'
 import { getMissionPageRoute } from '../../../utils/routes'
@@ -31,7 +32,7 @@ export const deleteTab = (nextPath: string) => async (dispatch, getState) => {
     dispatch(
       sideWindowActions.setCurrentPath(
         generatePath(sideWindowPaths.MISSION, {
-          id: selectedMissions[indexToDelete]?.mission.id
+          id: String(id)
         })
       )
     )
@@ -40,6 +41,9 @@ export const deleteTab = (nextPath: string) => async (dispatch, getState) => {
   }
 
   await dispatch(multiMissionsActions.deleteSelectedMission(id))
+  if (typeof id === 'number') {
+    removeMissionListener(Number(id))
+  }
 
   if (indexToDelete === 0) {
     dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.MISSIONS)))

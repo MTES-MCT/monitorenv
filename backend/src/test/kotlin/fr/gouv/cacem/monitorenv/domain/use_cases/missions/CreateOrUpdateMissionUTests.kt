@@ -22,6 +22,7 @@ import org.locationtech.jts.geom.MultiPoint
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
 import java.util.*
@@ -34,6 +35,8 @@ class CreateOrUpdateMissionUTests {
 
     @MockBean private lateinit var facadeAreasRepository: IFacadeAreasRepository
 
+    @MockBean private lateinit var applicationEventPublisher: ApplicationEventPublisher
+
     @Test
     fun `execute Should throw an exception when input mission is null`() {
         // When
@@ -43,6 +46,7 @@ class CreateOrUpdateMissionUTests {
                     departmentRepository = departmentRepository,
                     missionRepository = missionRepository,
                     facadeRepository = facadeAreasRepository,
+                    eventPublisher = applicationEventPublisher,
                 )
                     .execute(null)
             }
@@ -152,7 +156,6 @@ class CreateOrUpdateMissionUTests {
         given(departmentRepository.findDepartmentFromGeometry(anyOrNull())).willReturn("Quequ'part")
         given(missionRepository.save(anyOrNull()))
             .willReturn(MissionDTO(mission = expectedCreatedMission))
-        given(missionRepository.findById(100)).willReturn(expectedCreatedMission)
 
         // When
         val createdMission =
@@ -160,6 +163,7 @@ class CreateOrUpdateMissionUTests {
                 departmentRepository = departmentRepository,
                 missionRepository = missionRepository,
                 facadeRepository = facadeAreasRepository,
+                eventPublisher = applicationEventPublisher,
             )
                 .execute(
                     missionToCreate,
@@ -196,7 +200,6 @@ class CreateOrUpdateMissionUTests {
                         )
                 },
             )
-        verify(missionRepository, times(1)).findById(100)
         assertThat(createdMission).isEqualTo(expectedCreatedMission)
     }
 }

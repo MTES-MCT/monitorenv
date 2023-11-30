@@ -1,7 +1,14 @@
+import EventSource, { sources } from 'eventsourcemock'
+
 context('Mission', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
-    cy.visit(`/side_window`)
+    cy.visit(`/side_window`, {
+      onBeforeLoad(window) {
+        Object.defineProperty(window, 'EventSource', { value: EventSource })
+        Object.defineProperty(window, 'mockEventSources', { value: sources })
+      }
+    })
   })
 
   it('A mission should be created', () => {
@@ -196,5 +203,87 @@ context('Mission', () => {
       'not.contain',
       'Cette unité est actuellement sélectionnée dans une autre mission en cours ouverte par le CACEM.'
     )
+  })
+
+  it('The mission form Should be updated When a mission update event is received', () => {
+    // Given
+    cy.wait(200)
+    cy.get('*[data-cy="edit-mission-43"]').click({ force: true })
+
+    cy.wait(500)
+    cy.window()
+      .its('mockEventSources' as any)
+      .then(mockEventSources => {
+        mockEventSources['/api/v1/missions/sse'].emitOpen()
+        mockEventSources['/api/v1/missions/sse'].emit(
+          'MISSION_UPDATE',
+          new MessageEvent('MISSION_UPDATE', {
+            bubbles: true,
+            data: JSON.stringify({
+              attachedReportingIds: [],
+              attachedReportings: [],
+              // Changed field
+              closedBy: 'LTH',
+              controlUnits: [
+                {
+                  administration: 'DREAL / DEAL',
+                  contact: 'Full contact',
+                  id: 10018,
+                  isArchived: false,
+                  name: 'DREAL Pays-de-La-Loire',
+                  resources: []
+                }
+              ],
+              detachedReportingIds: [],
+              detachedReportings: [],
+              endDateTimeUtc: '2024-01-08T16:55:41.314507Z',
+              envActions: [],
+              facade: 'NAMO',
+              geom: {
+                coordinates: [
+                  [
+                    [
+                      [-4.14598393, 49.02650252],
+                      [-3.85722498, 48.52088004],
+                      [-3.54255983, 48.92233858],
+                      [-3.86251979, 49.15131242],
+                      [-4.09368042, 49.18079556],
+                      [-4.14598393, 49.02650252]
+                    ]
+                  ]
+                ],
+                type: 'MultiPolygon'
+              },
+              hasMissionOrder: false,
+              id: 43,
+              isClosed: false,
+              isUnderJdp: false,
+              missionSource: 'MONITORENV',
+              missionTypes: ['SEA'],
+              observationsCacem: 'Anything box film quality. Lot series agent out rule end young pressure.',
+              // Changed field
+              observationsCnsp: 'Encore une observation',
+              // Changed field
+              openBy: 'LTH',
+              startDateTimeUtc: '2024-01-01T06:14:55.887549Z'
+            }),
+            name: 'MISSION_UPDATE'
+          })
+        )
+      })
+
+    cy.intercept('PUT', '/bff/v1/missions/43').as('updateMission')
+    cy.clickButton('Enregistrer et quitter')
+
+    // Then
+    cy.wait('@updateMission').then(({ response }) => {
+      if (!response) {
+        return
+      }
+
+      expect(response.body.openBy).equal('LTH')
+      expect(response.body.closedBy).equal('LTH')
+      expect(response.body.observationsCnsp).equal('Encore une observation')
+    })
   })
 })
