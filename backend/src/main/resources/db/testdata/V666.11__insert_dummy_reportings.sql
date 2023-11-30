@@ -298,8 +298,8 @@ VALUES
      false,
      53,
      now() - INTERVAL '25 minutes',
-     null,
-     null,
+     NULL,
+     '9969413b-b394-4db4-985f-b00743ffb833', /* a surveillance */
      'GHI'
     ),
      (10,
@@ -353,7 +353,7 @@ VALUES
      53,
      now() - INTERVAL '25 minutes',
      NULL,
-     NULL,
+     '9969413b-b394-4db4-985f-b00743ffb833', /* a surveillance */
      'GHI'
     );
 

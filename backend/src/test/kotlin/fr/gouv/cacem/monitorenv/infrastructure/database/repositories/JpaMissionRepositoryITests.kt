@@ -677,6 +677,27 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
+    fun `findFullMissionById Should return specified mission and envActionReportingIds with multiple reportings attached`() {
+        // When
+        val missionDTO = jpaMissionRepository.findFullMissionById(53)
+        assertThat(missionDTO.mission.id).isEqualTo(53)
+        assertThat(missionDTO.mission.envActions).hasSize(3)
+        assertThat(
+            missionDTO.envActionsAttachedToReportingIds?.get(0)?.first,
+        )
+            .isEqualTo(UUID.fromString("9969413b-b394-4db4-985f-b00743ffb833"))
+        assertThat(missionDTO.envActionsAttachedToReportingIds?.get(0)?.second)
+            .isEqualTo(listOf(11, 9))
+        assertThat(
+            missionDTO.envActionsAttachedToReportingIds?.get(1)?.first,
+        )
+            .isEqualTo(UUID.fromString("3480657f-7845-4eb4-aa06-07b174b1da45"))
+        assertThat(missionDTO.envActionsAttachedToReportingIds?.get(1)?.second)
+            .isEqualTo(listOf(10))
+    }
+
+    @Test
+    @Transactional
     fun `findById Should return specified mission and associated env actions and associated envActionReportingIds`() {
         // When
         val missionDTO = jpaMissionRepository.findFullMissionById(34)
