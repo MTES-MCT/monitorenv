@@ -12,6 +12,7 @@ export function StatusActionTag({
   return (
     <Tag
       backgroundColor={backgroundColor}
+      data-cy="reporting-status-action-tag"
       iconColor={
         controlStatus === ControlStatusEnum.CONTROL_TO_BE_DONE ? THEME.color.goldenPoppy : THEME.color.mediumSeaGreen
       }

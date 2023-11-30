@@ -15,6 +15,12 @@ INSERT INTO public.env_actions VALUES ('b8007c8a-5135-4bc3-816f-c69c7b75d807', 3
 
 INSERT INTO public.env_actions VALUES ('4d9a3139-6c60-49a5-b443-0e6238a6a120', 41, 'CONTROL', '{"themes": [{"theme": "Police des mouillages", "subThemes": ["Contrôle administratif"], "protectedSpecies": []}], "infractions": [], "vehicleType": null, "observations": "", "actionTargetType": null, "actionNumberOfControls": null}','2022-07-01 02:44:16.588693', NULL, NULL, NULL, NULL, TRUE, TRUE, TRUE, TRUE);
 
+
+INSERT INTO public.env_actions VALUES ('2cdcd429-19ab-45ed-a892-7c695bd256e2', 53, 'SURVEILLANCE', '{"themes": [{"theme": "Pêche de loisir", "subThemes": ["Pêche embarquée"], "protectedSpecies": []}], "duration": 0.0, "observations": "RAS", "coverMissionZone": true, "protectedSpecies": []}', '2022-11-21 14:29:55.588693', NULL, NULL, NULL,  '2022-11-22 12:14:48.588693');
+INSERT INTO public.env_actions VALUES ('3480657f-7845-4eb4-aa06-07b174b1da45', 53, 'CONTROL', '{"themes": [{"theme": "Police des mouillages", "subThemes": ["Mouillage individuel", "ZMEL"], "protectedSpecies": []}], "observations": "RAS", "infractions": [], "vehicleType": "VESSEL", "actionTargetType": "VEHICLE", "actionNumberOfControls": 0}', '2022-11-22 10:14:48.588693', '0104000020E610000001000000010100000047A07E6651E3DEBF044620AB65C54840', NULL, NULL,  NULL);
+INSERT INTO public.env_actions VALUES ('9969413b-b394-4db4-985f-b00743ffb833', 53, 'SURVEILLANCE', '{"themes": [{"theme": "Police des espèces protégées et de leurs habitats (faune et flore)", "subThemes": ["Destruction, capture, arrachage", "Atteinte aux habitats d''espèces protégées"], "protectedSpecies": ["FLORA", "BIRDS"]}, {"theme": "Police des mouillages", "subThemes": ["Mouillage individuel", "ZMEL"], "protectedSpecies": []}], "duration": 0.0, "observations": "RAS", "coverMissionZone": true, "protectedSpecies": []}', '2022-11-21 15:29:55.588693', NULL, NULL, NULL, '2022-11-22 13:14:48.588693');
+
+
 UPDATE public.env_actions SET
   action_start_datetime_utc = action_start_datetime_utc + (now() - '2022-06-01 23:00:00'),
   action_end_datetime_utc = action_end_datetime_utc + (now() - '2022-06-01 23:00:00')

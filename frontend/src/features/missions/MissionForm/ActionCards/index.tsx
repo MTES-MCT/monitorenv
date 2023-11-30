@@ -91,6 +91,7 @@ export function ActionCards({
               <TagsContainer>
                 {action.formattedReportingIds.map(reportingId => (
                   <StyledTag
+                    key={reportingId}
                     data-cy="surveillance-attached-reportings-tags"
                     Icon={Icon.Link}
                   >{`Signalement ${reportingId}`}</StyledTag>

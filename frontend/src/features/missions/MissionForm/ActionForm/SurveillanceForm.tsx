@@ -98,10 +98,9 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
       }
 
       if (
-        !nextReportingIds ||
-        (!nextReportingIds?.includes(reporting.id) &&
-          attachedReportings &&
-          attachedReportings[index]?.attachedEnvActionId === currentAction?.id)
+        !nextReportingIds?.includes(reporting.id) &&
+        attachedReportings &&
+        attachedReportings[index]?.attachedEnvActionId === currentAction?.id
       ) {
         return setFieldValue(`attachedReportings[${index}].attachedEnvActionId`, undefined)
       }
@@ -142,7 +141,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
         <StyledToggle>
           <Toggle
             checked={isReportingListVisible}
-            data-cy="control-form-toggle-reporting"
+            data-cy="surveillance-form-toggle-reporting"
             onChange={updateIsContralAttachedToReporting}
             readOnly={areAllReportingsAttachedToAControl && currentAction?.reportingIds?.length === 0}
           />
