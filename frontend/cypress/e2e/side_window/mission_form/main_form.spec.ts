@@ -1,6 +1,6 @@
 import EventSource, { sources } from 'eventsourcemock'
 
-context('Mission', () => {
+context('Side Window > Mission Form > Main Form', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
     cy.visit(`/side_window`, {
@@ -285,5 +285,91 @@ context('Mission', () => {
       expect(response.body.closedBy).equal('LTH')
       expect(response.body.observationsCnsp).equal('Encore une observation')
     })
+  })
+
+  it('Should keep the exisisting archived resources when appending new resources', () => {
+    // -------------------------------------------------------------------------
+    // Open
+
+    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=*`).as('getMissions')
+
+    // TODO There seems to be an issue here with the dates. This should be investigated.
+    // The dummy data date doesn't match this period at all:
+    // https://github.com/MTES-MCT/monitorenv/blob/main/backend/src/main/resources/db/testdata/V666.5__insert_dummy_missions.sql#L20
+    // > '2022-01-12 14:00:08.588693', '2022-01-16 00:27:04.588693'
+    // Screenshot: https://pasteboard.co/skc3aRIYv6b7.png (highlighted mission at the bottom)
+    cy.fill('Période', 'Période spécifique')
+    cy.fill('Période spécifique', [
+      [2023, 7, 13],
+      [2023, 7, 17]
+    ])
+
+    cy.wait('@getMissions')
+
+    cy.intercept('GET', '/bff/v1/missions/30').as('getMission')
+
+    cy.get('*[data-cy="edit-mission-30"]').click({ force: true }).wait(500)
+
+    cy.wait('@getMission')
+
+    // -------------------------------------------------------------------------
+    // Update
+
+    // We do that manually to keep the existing "Voiture" resource which is an archived one.
+    cy.contains('Moyen(s) 1').parent().find('.rs-picker-toggle-caret').forceClick().wait(250)
+    cy.get('span[title="Semi-rigide 1"]').forceClick().wait(250)
+    cy.clickOutside()
+    cy.wait(250)
+
+    cy.fill("Contact de l'unité 1", 'Un contact')
+    cy.fill("Contact de l'unité 2", 'Un autre contact')
+
+    cy.intercept('PUT', '/bff/v1/missions/30').as('updateMission')
+
+    cy.clickButton('Enregistrer et quitter')
+
+    cy.wait('@updateMission').then(({ response }) => {
+      if (!response) {
+        return
+      }
+
+      assert.deepEqual(response.body.controlUnits, [
+        {
+          administration: 'DDTM',
+          contact: 'Un contact',
+          id: 10000,
+          isArchived: false,
+          name: 'Cultures marines – DDTM 40',
+          resources: [
+            { controlUnitId: 10000, id: 1, name: 'Semi-rigide 1' },
+            { controlUnitId: 10000, id: 13, name: 'Voiture' }
+          ]
+        },
+        {
+          administration: 'DDTM',
+          contact: 'Un autre contact',
+          id: 10002,
+          isArchived: false,
+          name: 'DML 2A',
+          resources: []
+        }
+      ])
+    })
+
+    // -------------------------------------------------------------------------
+    // Reset
+
+    cy.get('*[data-cy="edit-mission-30"]').click({ force: true }).wait(500)
+
+    cy.wait('@getMission')
+
+    cy.contains('Moyen(s) 1').parent().find('.rs-picker-toggle-caret').forceClick().wait(250)
+    cy.get('span[title="Semi-rigide 1"]').forceClick().wait(250) // Uncheck this resource
+    cy.clickOutside()
+    cy.wait(250)
+
+    cy.clickButton('Enregistrer et quitter')
+
+    cy.wait('@updateMission')
   })
 })
