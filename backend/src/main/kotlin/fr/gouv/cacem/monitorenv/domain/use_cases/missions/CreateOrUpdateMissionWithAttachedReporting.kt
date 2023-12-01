@@ -54,7 +54,6 @@ class CreateOrUpdateMissionWithAttachedReporting(
         }
 
         reportingRepository.attachReportingsToMission(attachedReportingIds, savedMission.id)
-
         envActionsAttachedToReportingIds.forEach {
             reportingRepository.attachEnvActionsToReportings(it.first, it.second)
         }

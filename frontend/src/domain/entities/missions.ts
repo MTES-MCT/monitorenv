@@ -366,7 +366,8 @@ export type Infraction = NewInfraction & {
 }
 
 export type EnvActionForTimeline = Partial<EnvAction> & {
-  formattedReportingId?: string
+  formattedReportingId: string
+  formattedReportingIds: string[]
   timelineDate?: string
 }
 

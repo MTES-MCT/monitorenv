@@ -22,6 +22,7 @@ export const TimeLine = styled.div`
 export const ActionSummaryWrapper = styled.div<{ $hasError: boolean; $selected: boolean; $type?: string }>`
   display: flex;
   justify-content: space-between;
+  flex-direction: column;
   gap: 8px;
   border-color: ${p =>
     // eslint-disable-next-line no-nested-ternary
@@ -47,6 +48,13 @@ export const ActionSummaryWrapper = styled.div<{ $hasError: boolean; $selected: 
         return p.theme.color.white
     }
   }};
+`
+
+export const ContentContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  gap: 8px;
 `
 
 export const TitleAndButtonsContainer = styled.div`
@@ -114,4 +122,11 @@ export const ReportingDate = styled.p`
 `
 export const StyledTag = styled(Tag)`
   background-color: ${p => p.theme.color.maximumRed15};
+`
+export const TagsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
 `

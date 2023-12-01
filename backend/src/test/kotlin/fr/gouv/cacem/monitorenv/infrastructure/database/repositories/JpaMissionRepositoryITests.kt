@@ -43,7 +43,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     fun `findByControlUnitId should find the matching missions`() {
         val foundMissions = jpaMissionRepository.findByControlUnitId(10002)
 
-        assertThat(foundMissions).hasSize(18)
+        assertThat(foundMissions).hasSize(17)
     }
 
     @Test
@@ -51,7 +51,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     fun `findByControlUnitResourceId should find the matching missions`() {
         val foundMissions = jpaMissionRepository.findByControlUnitResourceId(8)
 
-        assertThat(foundMissions).hasSize(3)
+        assertThat(foundMissions).hasSize(4)
     }
 
     @Test
@@ -404,7 +404,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 seaFronts = null,
                 pageable = Pageable.unpaged(),
             )
-        assertThat(missions).hasSize(53)
+        assertThat(missions).hasSize(54)
     }
 
     @Test
@@ -436,7 +436,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 seaFronts = null,
                 pageable = Pageable.unpaged(),
             )
-        assertThat(missions).hasSize(21)
+        assertThat(missions).hasSize(22)
     }
 
     @Test
@@ -452,7 +452,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 seaFronts = null,
                 pageable = Pageable.unpaged(),
             )
-        assertThat(missions).hasSize(44)
+        assertThat(missions).hasSize(45)
     }
 
     @Test
@@ -484,7 +484,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 seaFronts = listOf("MEMN", "NAMO"),
                 pageable = Pageable.unpaged(),
             )
-        assertThat(missions).hasSize(26)
+        assertThat(missions).hasSize(27)
     }
 
     @Test
@@ -500,7 +500,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionStatuses = listOf("UPCOMING"),
                 pageable = Pageable.unpaged(),
             )
-        assertThat(missions).hasSize(6)
+        assertThat(missions).hasSize(7)
     }
 
     @Test
@@ -564,7 +564,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 missionStatuses = listOf("CLOSED", "UPCOMING"),
                 pageable = Pageable.unpaged(),
             )
-        assertThat(missions).hasSize(24)
+        assertThat(missions).hasSize(25)
     }
 
     @Test
@@ -673,6 +673,27 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val mission = jpaMissionRepository.findFullMissionById(10)
 
         assertThat(mission).isEqualTo(firstMission)
+    }
+
+    @Test
+    @Transactional
+    fun `findFullMissionById Should return specified mission and envActionReportingIds with multiple reportings attached`() {
+        // When
+        val missionDTO = jpaMissionRepository.findFullMissionById(53)
+        assertThat(missionDTO.mission.id).isEqualTo(53)
+        assertThat(missionDTO.mission.envActions).hasSize(3)
+        assertThat(
+            missionDTO.envActionsAttachedToReportingIds?.get(0)?.first,
+        )
+            .isEqualTo(UUID.fromString("9969413b-b394-4db4-985f-b00743ffb833"))
+        assertThat(missionDTO.envActionsAttachedToReportingIds?.get(0)?.second)
+            .isEqualTo(listOf(11, 9))
+        assertThat(
+            missionDTO.envActionsAttachedToReportingIds?.get(1)?.first,
+        )
+            .isEqualTo(UUID.fromString("3480657f-7845-4eb4-aa06-07b174b1da45"))
+        assertThat(missionDTO.envActionsAttachedToReportingIds?.get(1)?.second)
+            .isEqualTo(listOf(10))
     }
 
     @Test

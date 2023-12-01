@@ -3,13 +3,16 @@ import { THEME, Tag } from '@mtes-mct/monitor-ui'
 import { ControlStatusLabels, ControlStatusEnum } from '../../../domain/entities/reporting'
 
 export function StatusActionTag({
+  backgroundColor = THEME.color.gainsboro,
   controlStatus = ControlStatusEnum.CONTROL_TO_BE_DONE
 }: {
+  backgroundColor?: string
   controlStatus: ControlStatusEnum
 }) {
   return (
     <Tag
-      backgroundColor={THEME.color.gainsboro}
+      backgroundColor={backgroundColor}
+      data-cy="reporting-status-action-tag"
       iconColor={
         controlStatus === ControlStatusEnum.CONTROL_TO_BE_DONE ? THEME.color.goldenPoppy : THEME.color.mediumSeaGreen
       }
