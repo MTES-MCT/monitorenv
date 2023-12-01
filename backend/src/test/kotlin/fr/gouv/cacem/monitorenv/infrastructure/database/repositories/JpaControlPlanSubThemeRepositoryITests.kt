@@ -17,9 +17,9 @@ class JpaControlPlanSubThemeRepositoryITests : AbstractDBTests() {
         assertThat(requestedControlPlanSubThemes[5].id).isEqualTo(6)
         assertThat(requestedControlPlanSubThemes[5].themeId).isEqualTo(4)
         assertThat(requestedControlPlanSubThemes[5].subTheme)
-            .isEqualTo(
-                "Atteinte aux biens culturels",
-            )
+                .isEqualTo(
+                        "Atteinte aux biens culturels",
+                )
 
         assertThat(requestedControlPlanSubThemes[5].year).isEqualTo(2023)
     }
@@ -34,9 +34,9 @@ class JpaControlPlanSubThemeRepositoryITests : AbstractDBTests() {
         assertThat(requestedControlPlanSubThemesFor2024[5].id).isEqualTo(6)
         assertThat(requestedControlPlanSubThemesFor2024[5].themeId).isEqualTo(11)
         assertThat(requestedControlPlanSubThemesFor2024[5].subTheme)
-            .isEqualTo(
-                "Destruction, capture, arrachage",
-            )
+                .isEqualTo(
+                        "Destruction, capture, arrachage",
+                )
 
         assertThat(requestedControlPlanSubThemesFor2024[5].year).isEqualTo(2024)
     }

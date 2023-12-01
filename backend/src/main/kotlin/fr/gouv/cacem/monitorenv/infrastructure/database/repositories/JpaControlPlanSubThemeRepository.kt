@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class JpaControlPlanSubThemeRepository(
-    private val dbControlPlanSubThemeRepository: IDBControlPlanSubThemeRepository,
+        private val dbControlPlanSubThemeRepository: IDBControlPlanSubThemeRepository,
 ) : IControlPlanSubThemeRepository {
     override fun findAll(): List<ControlPlanSubThemeEntity> {
         return dbControlPlanSubThemeRepository.findAll().map { it.toControlPlanSubThemeEntity() }

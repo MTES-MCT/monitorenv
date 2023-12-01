@@ -2,8 +2,8 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
 import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
-import fr.gouv.cacem.monitorenv.domain.entities.controlPlanTheme.ControlPlanThemeEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlPlanThemes.GetControlPlanThemesByYear
+import fr.gouv.cacem.monitorenv.domain.entities.ControlPlanSubTheme.ControlPlanSubThemeEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.ControlPlanSubThemes.GetControlPlanSubThemesByYear
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,36 +16,36 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @Import(WebSecurityConfig::class)
-@WebMvcTest(value = [(ControlPlanThemesController::class)])
-class ControlPlanThemesControllerITests {
+@WebMvcTest(value = [(ControlPlanSubThemesController::class)])
+class ControlPlanSubThemesControllerITests {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
     @MockBean
-    private lateinit var getControlPlanThemesByYear: GetControlPlanThemesByYear
+    private lateinit var getControlPlanSubThemesByYear: GetControlPlanSubThemesByYear
 
     @Test
     fun `Should get all control plan themes`() {
         // Given
-        val controlPlanTheme = ControlPlanThemeEntity(
+        val ControlPlanSubTheme = ControlPlanSubThemeEntity(
             id = 1,
             theme = "Theme Police des mouillages",
             subTheme = "Sous Theme Mouillage individuel",
             allowedTags = listOf("tag1", "tag2"),
             year = 2024,
         )
-        BDDMockito.given(getControlPlanThemesByYear.execute(2024)).willReturn(listOf(controlPlanTheme))
+        BDDMockito.given(getControlPlanSubThemesByYear.execute(2024)).willReturn(listOf(ControlPlanSubTheme))
         // When
-        mockMvc.perform(get("/bff/v1/controlplanthemes/2024"))
+        mockMvc.perform(get("/bff/v1/controlPlanSubThemes/2024"))
             // Then
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$[0].id").value(controlPlanTheme.id))
-            .andExpect(jsonPath("$[0].theme").value(controlPlanTheme.theme))
-            .andExpect(jsonPath("$[0].subTheme").value(controlPlanTheme.subTheme))
-            .andExpect(jsonPath("$[0].year").value(controlPlanTheme.year))
-            .andExpect(jsonPath("$[0].allowedTags[0]").value(controlPlanTheme.allowedTags?.get(0)))
-            .andExpect(jsonPath("$[0].allowedTags[1]").value(controlPlanTheme.allowedTags?.get(1)))
+            .andExpect(jsonPath("$[0].id").value(ControlPlanSubTheme.id))
+            .andExpect(jsonPath("$[0].theme").value(ControlPlanSubTheme.theme))
+            .andExpect(jsonPath("$[0].subTheme").value(ControlPlanSubTheme.subTheme))
+            .andExpect(jsonPath("$[0].year").value(ControlPlanSubTheme.year))
+            .andExpect(jsonPath("$[0].allowedTags[0]").value(ControlPlanSubTheme.allowedTags?.get(0)))
+            .andExpect(jsonPath("$[0].allowedTags[1]").value(ControlPlanSubTheme.allowedTags?.get(1)))
 
-        verify(getControlPlanThemesByYear).execute(2024)
+        verify(getControlPlanSubThemesByYear).execute(2024)
     }
 }
