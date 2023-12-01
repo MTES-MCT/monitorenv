@@ -48,7 +48,7 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-json:3.1.5")
     api("org.springframework.boot:spring-boot-starter-security:3.1.4")
     api("org.springframework.boot:spring-boot-starter-data-jpa:3.1.4")
-    api("org.hibernate.orm:hibernate-spatial:6.2.9.Final")
+    api("org.hibernate.orm:hibernate-spatial:6.4.0.Final")
     api("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.0")
     api("org.n52.jackson:jackson-datatype-jts:1.2.10")
     api("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
