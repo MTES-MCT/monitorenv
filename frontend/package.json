@@ -130,7 +130,7 @@
     "lint-staged": "13.0.3",
     "prettier": "2.7.1",
     "ramda": "0.29.0",
-    "storybook": "7.1.1",
+    "storybook": "7.6.3",
     "type-fest": "4.4.0",
     "typescript": "5.2.2",
     "webpack": "5.88.2"
