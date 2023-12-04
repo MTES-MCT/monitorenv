@@ -41,7 +41,7 @@
     "@tanstack/react-table": "8.9.7",
     "@tanstack/react-virtual": "beta",
     "classnames": "2.3.2",
-    "formik": "2.4.2",
+    "formik": "2.4.5",
     "fuse.js": "^6.6.2",
     "hammerjs": "2.0.8",
     "imask": "^6.6.1",
