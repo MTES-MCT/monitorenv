@@ -195,7 +195,6 @@ export function MissionsTableFilters() {
           value={selectedMissionSource}
         />
         <CheckPicker
-          key={activeAdministrations.length}
           data-cy="select-administration-filter"
           isLabelHidden
           label="Administration"
