@@ -87,6 +87,57 @@ context('Side Window > Mission List > Filter Bar', () => {
     cy.fill('Unité', undefined)
   })
 
+  it('Should filter missions by administration, and units filter accordingly.', () => {
+    // selected an administration that does not correspond to the selected unit
+    cy.fill('Unité', ['DPM – DDTM 14'])
+    cy.getDataCy('missions-filter-tags').find('.Component-SingleTag > span').contains('Unité DPM – DDTM 14')
+    cy.get('.Table-SimpleTable tr').each((row, index) => {
+      if (index === 0) {
+        return
+      }
+
+      cy.wrap(row).should('contain', 'DPM – DDTM 14')
+    })
+    cy.fill('Administration', ['DREAL / DEAL'])
+    cy.getDataCy('missions-filter-tags').find('.Component-SingleTag > span').contains('Admin. DREAL / DEAL')
+    cy.getDataCy('missions-filter-tags')
+      .find('.Component-SingleTag > span')
+      .should('not.contain', 'Unité DPM - DDTM 14')
+    cy.get('.Table-SimpleTable tr').each((row, index) => {
+      if (index === 0) {
+        return
+      }
+
+      cy.wrap(row).should('contain', 'DREAL / DEAL')
+    })
+
+    // selected an administration corresponding to the selected unit
+    cy.fill('Administration', undefined)
+    cy.fill('Unité', ['DREAL Pays-de-La-Loire'])
+    cy.getDataCy('missions-filter-tags').find('.Component-SingleTag > span').contains('Unité DREAL Pays-de-La-Loire')
+    cy.get('.Table-SimpleTable tr').each((row, index) => {
+      if (index === 0) {
+        return
+      }
+
+      cy.wrap(row).should('contain', 'DREAL Pays-de-La-Loire')
+    })
+    cy.fill('Administration', ['DREAL / DEAL'])
+    cy.getDataCy('missions-filter-tags').find('.Component-SingleTag > span').contains('Admin. DREAL / DEAL')
+    cy.getDataCy('missions-filter-tags').find('.Component-SingleTag > span').contains('Unité DREAL Pays-de-La-Loire')
+    cy.get('.Table-SimpleTable tr').each((row, index) => {
+      if (index === 0) {
+        return
+      }
+
+      cy.wrap(row).should('contain', 'DREAL Pays-de-La-Loire (DREAL / DEAL)')
+    })
+
+    // clear filters
+    cy.fill('Administration', undefined)
+    cy.fill('Unité', undefined)
+  })
+
   it('Should filter missions by types', () => {
     cy.fill('Type de mission', ['Mer'])
 
