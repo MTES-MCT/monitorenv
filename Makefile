@@ -10,16 +10,13 @@ endif
 # DEV commands
 
 # Frontend
-.PHONY: dev-install dev-run-front dev-run-storybook
+.PHONY: dev-install dev-run-front
 dev-install:
 	# TODO Remove `--legacy-peer-deps` option as soon as CRA is migrate to Vite.
 	cd frontend && npm install --legacy-peer-deps
 
 dev-run-front:
 	cd frontend && npm start
-
-dev-run-storybook:
-	cd frontend && npm run storybook
 
 .PHONY: test-front dev-lint-frontend test-back
 
