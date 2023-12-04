@@ -1,7 +1,8 @@
 import { Icon, SideMenu, type NewWindowContextValue, NewWindowContext } from '@mtes-mct/monitor-ui'
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useState, useRef } from 'react'
+import { useEffect, useMemo, useState, useRef, type MutableRefObject } from 'react'
 import { generatePath } from 'react-router'
 import { ToastContainer } from 'react-toastify'
+import { StyleSheetManager } from 'styled-components'
 
 import { Route } from './Route'
 import { sideWindowActions } from './slice'
@@ -19,9 +20,7 @@ import { MissionsNavBar } from '../missions/MissionsNavBar'
 import { Reportings } from '../Reportings'
 import { ReportingsList } from '../Reportings/ReportingsList'
 
-import type { ForwardedRef, MutableRefObject } from 'react'
-
-function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
+export function SideWindow() {
   const wrapperRef = useRef<HTMLDivElement | null>(null)
   const currentPath = useAppSelector(state => state.sideWindow.currentPath)
 
@@ -54,47 +53,48 @@ function SideWindowWithRef(_, ref: ForwardedRef<HTMLDivElement | null>) {
     [isFirstRender]
   )
 
-  useImperativeHandle<HTMLDivElement | null, HTMLDivElement | null>(ref, () => wrapperRef.current)
-
   useEffect(() => {
     setIsFirstRender(false)
   }, [])
 
   return (
-    <ErrorBoundary>
-      <Wrapper ref={wrapperRef}>
-        {!isFirstRender && (
-          <NewWindowContext.Provider value={newWindowContextProviderValue}>
-            <SideMenu>
-              <SideMenu.Button
-                Icon={Icon.MissionAction}
-                isActive={isMissionButtonIsActive}
-                onClick={() => navigate(generatePath(sideWindowPaths.MISSIONS))}
-                title="missions"
-              />
-              <SideMenu.Button
-                Icon={Icon.Report}
-                isActive={isReportingsButtonIsActive}
-                onClick={() => navigate(generatePath(sideWindowPaths.REPORTINGS))}
-                title="signalements"
-              />
-            </SideMenu>
+    <StyleSheetManager target={wrapperRef.current || undefined}>
+      <ErrorBoundary>
+        <Wrapper ref={wrapperRef}>
+          {wrapperRef.current && (
+            <>
+              <NewWindowContext.Provider value={newWindowContextProviderValue}>
+                <SideMenu>
+                  <SideMenu.Button
+                    Icon={Icon.MissionAction}
+                    isActive={isMissionButtonIsActive}
+                    onClick={() => navigate(generatePath(sideWindowPaths.MISSIONS))}
+                    title="missions"
+                  />
+                  <SideMenu.Button
+                    Icon={Icon.Report}
+                    isActive={isReportingsButtonIsActive}
+                    onClick={() => navigate(generatePath(sideWindowPaths.REPORTINGS))}
+                    title="signalements"
+                  />
+                </SideMenu>
 
-            <StyledRouteContainer>
-              <Route element={<ReportingsList />} path={sideWindowPaths.REPORTINGS} />
-              <Route element={<MissionsNavBar />} path={[sideWindowPaths.MISSIONS, sideWindowPaths.MISSION]} />
-              <Route element={<Missions />} path={sideWindowPaths.MISSIONS} />
-              <Route element={<Mission />} path={sideWindowPaths.MISSION} />
-            </StyledRouteContainer>
-          </NewWindowContext.Provider>
-        )}
-        {isReportingsButtonIsActive && (
-          <Reportings key="reportings-on-side-window" context={ReportingContext.SIDE_WINDOW} />
-        )}
-        <ToastContainer containerId="sideWindow" enableMultiContainer />
-      </Wrapper>
-    </ErrorBoundary>
+                <StyledRouteContainer>
+                  <Route element={<ReportingsList />} path={sideWindowPaths.REPORTINGS} />
+                  <Route element={<MissionsNavBar />} path={[sideWindowPaths.MISSIONS, sideWindowPaths.MISSION]} />
+                  <Route element={<Missions />} path={sideWindowPaths.MISSIONS} />
+                  <Route element={<Mission />} path={sideWindowPaths.MISSION} />
+                </StyledRouteContainer>
+              </NewWindowContext.Provider>
+              {isReportingsButtonIsActive && (
+                <Reportings key="reportings-on-side-window" context={ReportingContext.SIDE_WINDOW} />
+              )}
+
+              <ToastContainer containerId="sideWindow" enableMultiContainer />
+            </>
+          )}
+        </Wrapper>
+      </ErrorBoundary>
+    </StyleSheetManager>
   )
 }
-
-export const SideWindow = forwardRef(SideWindowWithRef)
