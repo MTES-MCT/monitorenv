@@ -64,6 +64,7 @@ export function AMPLayerGroup({
           <IconButton
             accent={Accent.TERTIARY}
             color={allTopicZonesAreChecked ? THEME.color.blueGray : THEME.color.gunMetal}
+            data-cy="amp-layer-topic-pin-button"
             Icon={allTopicZonesAreChecked ? Icon.PinFilled : Icon.Pin}
             onClick={handleCheckAllZones}
             size={Size.NORMAL}

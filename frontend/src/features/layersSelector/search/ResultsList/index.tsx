@@ -95,11 +95,11 @@ export function ResultList({ searchedText }) {
               name="isAmpSearchResultsVisible"
               onChange={toggleAMPVisibility}
             />
-            <Title onClick={toggleAMPs}>
+            <Title data-cy="amp-results-list-button" onClick={toggleAMPs}>
               ZONES AMP &nbsp;<NumberOfResults> ({ampsSearchResult?.length || '0'} résultats)</NumberOfResults>
             </Title>
           </HeaderAMP>
-          <SubListAMP $isExpanded={isAmpSearchResultsExpanded}>
+          <SubListAMP $isExpanded={isAmpSearchResultsExpanded} data-cy="amp-result-list">
             {Object.entries(ampResulstsByAMPName).map(([ampName, ampIdsInGroup]) => (
               <AMPLayerGroup
                 key={ampName}

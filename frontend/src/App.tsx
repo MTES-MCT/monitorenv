@@ -26,6 +26,11 @@ export function App() {
 
   const persistor = persistStore(homeStore)
 
+  // expose store when run in Cypress
+  if (window.Cypress) {
+    window.store = homeStore
+  }
+
   return (
     <ThemeProvider theme={THEME}>
       <OnlyFontGlobalStyle />

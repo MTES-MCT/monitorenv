@@ -49,6 +49,7 @@ export function SearchInput({
           Icon={Icon.FilterBis}
           onClick={toggleRegFilters}
           size={Size.LARGE}
+          title="Filtrer par type de zones"
         />
       </FilterIcon>
     </SearchHeader>

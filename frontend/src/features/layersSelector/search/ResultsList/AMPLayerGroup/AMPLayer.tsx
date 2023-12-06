@@ -60,7 +60,7 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
   return (
     <LayerSelector.Layer ref={ref} $selected={selectedAmpLayerId === layerId}>
       <AMPLayerLegend name={layer?.name} type={layer?.type} />
-      <LayerSelector.Name onClick={fitToRegulatoryLayer} title={layer?.type}>
+      <LayerSelector.Name data-cy="amp-layer-type" onClick={fitToRegulatoryLayer} title={layer?.type}>
         <Highlighter
           autoEscape
           highlightClassName="highlight"

@@ -32,7 +32,7 @@ export function AMPLayersList() {
   }
 
   return (
-    <LayerSelector.LayerList>
+    <LayerSelector.LayerList data-cy="amp-my-zones-list">
       {layersByLayersName &&
         Object.entries(layersByLayersName).map(([layerName, layers]) => (
           <AMPLayerGroup key={layerName} groupName={layerName} layers={layers} showedAmpLayerIds={showedAmpLayerIds} />
