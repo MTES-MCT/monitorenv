@@ -3,7 +3,7 @@
         <!-- This property is user to select the right <Console> -->
         <Property name="ENV">${env:SPRING_PROFILES_ACTIVE:-integration}</Property>
         <!-- This property is used to activate Sentry only in prod env> -->
-        <Property name="SENTRY_DSN">${env:MONITORFISH_SENTRY_DSN:-none}</Property>
+        <Property name="SENTRY_DSN">${env:SENTRY_DSN:-none}</Property>
     </Properties>
     <Appenders>
         <Console name="dev" target="SYSTEM_OUT">
