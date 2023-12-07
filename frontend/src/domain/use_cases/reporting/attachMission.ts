@@ -16,9 +16,9 @@ export const attachMission = (id: number) => async (dispatch, getState) => {
       throw Error()
     }
 
-    await dispatch(attachMissionToReportingSliceActions.setAttachedMission(missionResponse.data))
+    await dispatch(attachMissionToReportingSliceActions.setAttachedMission(missionResponse))
 
-    missionRequest.unsubscribe()
+    await missionRequest.unsubscribe()
   } catch (error) {
     dispatch(setToast({ containerId: 'sideWindow', message: "Erreur à l'ajout du signalement" }))
   }

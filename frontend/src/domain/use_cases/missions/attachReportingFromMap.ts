@@ -22,13 +22,13 @@ export const attachReportingFromMap = (id: number) => async (dispatch, getState)
       attachReportingToMissionSliceActions.setAttachedReportings([
         ...attachedReportings,
         {
-          ...reportingResponse.data,
+          ...reportingResponse,
           missionId
         }
       ])
     )
 
-    reportingRequest.unsubscribe()
+    await reportingRequest.unsubscribe()
   } catch (error) {
     dispatch(setToast({ containerId: 'sideWindow', message: "Erreur à l'ajout du signalement" }))
   }

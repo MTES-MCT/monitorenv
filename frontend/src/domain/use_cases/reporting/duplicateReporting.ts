@@ -40,7 +40,7 @@ export const duplicateReporting = (reportingId: number) => async (dispatch, getS
         visibility: VisibilityState.VISIBLE
       })
     )
-    reportingRequest.unsubscribe()
+    await reportingRequest.unsubscribe()
   } catch (error) {
     dispatch(setToast({ containerId: 'sideWindow', message: 'Erreur à la duplication du signalement' }))
   }

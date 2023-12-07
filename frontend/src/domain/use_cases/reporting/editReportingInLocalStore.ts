@@ -34,7 +34,7 @@ export const editReportingInLocalStore =
         }
 
         setReporting(dispatch, reportingId, reportingContext, newReporting)
-        reportingRequest.unsubscribe()
+        await reportingRequest.unsubscribe()
       } catch (error) {
         dispatch(setToast({ message: 'Erreur à la récupération du signalement' }))
       }

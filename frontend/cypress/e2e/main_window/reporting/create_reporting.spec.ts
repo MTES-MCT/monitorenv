@@ -6,6 +6,7 @@ context('Reporting', () => {
 
     cy.viewport(1580, 1024)
     cy.visit(`/`)
+    cy.wait(500)
   })
 
   it('A reporting can be created', () => {
