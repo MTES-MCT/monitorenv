@@ -11,24 +11,25 @@ export const attachReportingFromMap = (id: number) => async (dispatch, getState)
     return
   }
 
-  const response = dispatch(reportingsAPI.endpoints.getReporting.initiate(id))
-  response
-    .then(result => {
-      if (!result.data) {
-        throw Error("Erreur à l'ajout du signalement")
-      }
-      dispatch(
-        attachReportingToMissionSliceActions.setAttachedReportings([
-          ...attachedReportings,
-          {
-            ...result.data,
-            missionId
-          }
-        ])
-      )
-      response.unsubscribe()
-    })
-    .catch(error => {
-      dispatch(setToast({ containerId: 'sideWindow', message: error }))
-    })
+  try {
+    const reportingRequest = dispatch(reportingsAPI.endpoints.getReporting.initiate(id))
+    const reportingResponse = await reportingRequest.unwrap()
+    if (!reportingResponse) {
+      throw Error()
+    }
+
+    dispatch(
+      attachReportingToMissionSliceActions.setAttachedReportings([
+        ...attachedReportings,
+        {
+          ...reportingResponse.data,
+          missionId
+        }
+      ])
+    )
+
+    reportingRequest.unsubscribe()
+  } catch (error) {
+    dispatch(setToast({ containerId: 'sideWindow', message: "Erreur à l'ajout du signalement" }))
+  }
 }
