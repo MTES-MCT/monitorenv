@@ -1,5 +1,5 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
-import { Formik } from 'formik'
+import { Formik, Form } from 'formik'
 import { noop } from 'lodash'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
@@ -9,7 +9,6 @@ import { MissionSchema } from './Schemas'
 import { useGetMissionState } from '../../../api/missionsAPI'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { usePreviousNotNull } from '../../../hooks/usePreviousNotNull'
-import { FormikForm } from '../../../uiMonitor/CustomFormikFields/FormikForm'
 import { getIdTyped } from '../../../utils/getIdTyped'
 import { isNewMission } from '../../../utils/isNewMission'
 import { getMissionPageRoute } from '../../../utils/routes'
@@ -65,14 +64,14 @@ export function Mission() {
         validateOnMount={false}
         validationSchema={MissionSchema}
       >
-        <FormikForm>
+        <Form className="rs-form rs-form-vertical rs-form-fixed-width">
           <MissionForm
             id={missionId}
             isNewMission={missionIsNewMission}
             selectedMission={selectedMission?.mission}
             setShouldValidateOnChange={setShouldValidateOnChange}
           />
-        </FormikForm>
+        </Form>
       </Formik>
     </EditMissionWrapper>
   )
