@@ -12,14 +12,14 @@ import java.util.UUID
 
 data class MissionEnvActionControlDataOutput(
     override val id: UUID,
-    override val actionEndDateTimeUtc: ZonedDateTime? = null,
+    val actionEndDateTimeUtc: ZonedDateTime? = null,
     val actionNumberOfControls: Int? = null,
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
     val actionTargetType: ActionTargetTypeEnum? = null,
     override val actionType: ActionTypeEnum = ActionTypeEnum.CONTROL,
-    override val department: String? = null,
-    override val facade: String? = null,
-    override val geom: Geometry? = null,
+    val department: String? = null,
+    val facade: String? = null,
+    val geom: Geometry? = null,
     val infractions: List<InfractionEntity>? = listOf(),
     val isAdministrativeControl: Boolean? = null,
     val isComplianceWithWaterRegulationsControl: Boolean? = null,
@@ -32,12 +32,8 @@ data class MissionEnvActionControlDataOutput(
 ) :
     MissionEnvActionDataOutput(
         id = id,
-        actionEndDateTimeUtc = actionEndDateTimeUtc,
         actionStartDateTimeUtc = actionStartDateTimeUtc,
         actionType = ActionTypeEnum.CONTROL,
-        department = department,
-        facade = facade,
-        geom = geom,
     ) {
     companion object {
         fun fromEnvActionControlEntity(
