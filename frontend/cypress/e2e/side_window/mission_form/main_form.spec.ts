@@ -266,7 +266,8 @@ context('Side Window > Mission Form > Main Form', () => {
               // Changed field
               openBy: 'LTH',
               startDateTimeUtc: '2024-01-01T06:14:55.887549Z'
-            })
+            }),
+            name: 'MISSION_UPDATE'
           })
         )
       })
@@ -292,11 +293,15 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=*`).as('getMissions')
 
+    // TODO There seems to be an issue here with the dates. This should be investigated.
+    // The dummy data date doesn't match this period at all:
+    // https://github.com/MTES-MCT/monitorenv/blob/main/backend/src/main/resources/db/testdata/V666.5__insert_dummy_missions.sql#L20
+    // > '2022-01-12 14:00:08.588693', '2022-01-16 00:27:04.588693'
+    // Screenshot: https://pasteboard.co/skc3aRIYv6b7.png (highlighted mission at the bottom)
     cy.fill('Période', 'Période spécifique')
-    const month = new Date().getMonth()
     cy.fill('Période spécifique', [
-      [2023, month - 4, 1],
-      [2023, month - 4, 31]
+      [2023, 7, 13],
+      [2023, 7, 17]
     ])
 
     cy.wait('@getMissions')

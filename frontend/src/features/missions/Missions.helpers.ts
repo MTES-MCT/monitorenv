@@ -216,6 +216,7 @@ const formattedEnvActionsForTimeline = (envActions, attachedReportings) =>
       ...newEnvActionsCollection,
       [action.id]: {
         ...action,
+        formattedReportingId: undefined,
         timelineDate: action?.actionStartDateTimeUtc
       }
     }

@@ -228,8 +228,8 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
         />
       </FlexSelectorWrapper>
       <Form.Group>
-        <Form.ControlLabel htmlFor={`envActions[${envActionIndex}].observations`}> </Form.ControlLabel>
-        <FormikTextarea isLight label="Observations" name={`envActions[${envActionIndex}].observations`} />
+        <Form.ControlLabel htmlFor={`envActions.${envActionIndex}.observations`}> </Form.ControlLabel>
+        <FormikTextarea isLight label="Observations" name={`envActions.${envActionIndex}.observations`} />
       </Form.Group>
     </>
   )
