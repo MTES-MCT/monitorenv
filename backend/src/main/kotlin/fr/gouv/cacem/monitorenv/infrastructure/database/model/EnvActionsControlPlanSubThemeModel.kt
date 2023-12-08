@@ -9,39 +9,37 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.MapsId
 import jakarta.persistence.Table
-import org.hibernate.Hibernate
 import java.io.Serializable
 import java.util.UUID
+import org.hibernate.Hibernate
 
 @Entity
 @Table(name = "env_actions_control_plan_sub_themes")
 class EnvActionsControlPlanSubThemeModel(
-    @EmbeddedId
-    val id: EnvActionsSubThemePk,
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("envActionId")
-    @JoinColumn(name = "env_action_id")
-    val envAction: EnvActionModel? = null,
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("subthemeId")
-    @JoinColumn(name = "subtheme_id")
-    val controlPlanSubTheme: ControlPlanSubThemeModel? = null,
-
+        @EmbeddedId val id: EnvActionsSubThemePk,
+        @ManyToOne(fetch = FetchType.LAZY)
+        @MapsId("envActionId")
+        @JoinColumn(name = "env_action_id")
+        val envAction: EnvActionModel? = null,
+        @ManyToOne(fetch = FetchType.LAZY)
+        @MapsId("subthemeId")
+        @JoinColumn(name = "subtheme_id")
+        val controlPlanSubTheme: ControlPlanSubThemeModel? = null,
 ) {
     companion object {
         fun fromEnvActionControlPlanSubThemeEntity(
-            envAction: EnvActionModel,
-            controlPlanSubTheme: ControlPlanSubThemeModel,
-        ) = EnvActionsControlPlanSubThemeModel(
-            id = EnvActionsSubThemePk(
-                envActionId = envAction.id,
-                subthemeId = controlPlanSubTheme.id,
-            ),
-            envAction = envAction,
-            controlPlanSubTheme = controlPlanSubTheme,
-        )
+                envAction: EnvActionModel,
+                controlPlanSubTheme: ControlPlanSubThemeModel,
+        ) =
+                EnvActionsControlPlanSubThemeModel(
+                        id =
+                                EnvActionsSubThemePk(
+                                        envActionId = envAction.id,
+                                        subthemeId = controlPlanSubTheme.id,
+                                ),
+                        envAction = envAction,
+                        controlPlanSubTheme = controlPlanSubTheme,
+                )
     }
 
     override fun equals(other: Any?): Boolean {
@@ -57,18 +55,14 @@ class EnvActionsControlPlanSubThemeModel(
 
 @Embeddable
 data class EnvActionsSubThemePk(
-    @Column(name = "env_action_id")
-    val envActionId: UUID,
-
-    @Column(name = "subtheme_id")
-    val subthemeId: Int,
+        @Column(name = "env_action_id") val envActionId: UUID,
+        @Column(name = "subtheme_id") val subthemeId: Int,
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is EnvActionsSubThemePk) return false
 
-        return envActionId == other.envActionId &&
-            subthemeId == other.subthemeId
+        return envActionId == other.envActionId && subthemeId == other.subthemeId
     }
 
     override fun hashCode(): Int {

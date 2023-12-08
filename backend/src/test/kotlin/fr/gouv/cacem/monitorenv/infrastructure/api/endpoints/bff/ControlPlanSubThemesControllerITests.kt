@@ -3,7 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.controlPlanSubTheme.ControlPlanSubThemeEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlPlanSubThemes.GetControlPlanSubThemesByYear
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlPlan.GetControlPlansByYear
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,7 +22,7 @@ class ControlPlanSubThemesControllerITests {
     private lateinit var mockMvc: MockMvc
 
     @MockBean
-    private lateinit var getControlPlanSubThemesByYear: GetControlPlanSubThemesByYear
+    private lateinit var getControlPlansByYear: GetControlPlansByYear
 
     @Test
     fun `Should get all control plan themes`() {
@@ -34,7 +34,7 @@ class ControlPlanSubThemesControllerITests {
             allowedTags = listOf("tag1", "tag2"),
             year = 2024,
         )
-        BDDMockito.given(getControlPlanSubThemesByYear.execute(2024)).willReturn(listOf(ControlPlanSubTheme))
+        BDDMockito.given(getControlPlansByYear.execute(2024)).willReturn(listOf(ControlPlanSubTheme))
         // When
         mockMvc.perform(get("/bff/v1/controlPlanSubThemes/2024"))
             // Then
@@ -46,6 +46,6 @@ class ControlPlanSubThemesControllerITests {
             .andExpect(jsonPath("$[0].allowedTags[0]").value(ControlPlanSubTheme.allowedTags?.get(0)))
             .andExpect(jsonPath("$[0].allowedTags[1]").value(ControlPlanSubTheme.allowedTags?.get(1)))
 
-        verify(getControlPlanSubThemesByYear).execute(2024)
+        verify(getControlPlansByYear).execute(2024)
     }
 }

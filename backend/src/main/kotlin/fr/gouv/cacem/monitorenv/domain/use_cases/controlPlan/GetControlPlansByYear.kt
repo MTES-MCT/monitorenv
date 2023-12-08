@@ -11,9 +11,9 @@ import org.slf4j.LoggerFactory
 
 @UseCase
 class GetControlPlansByYear(
-    private val controlPlanThemeRepository: IControlPlanThemeRepository,
-    private val controlPlanSubThemeRepository: IControlPlanSubThemeRepository,
-    private val controlPlanTagRepository: IControlPlanTagRepository,
+        private val controlPlanThemeRepository: IControlPlanThemeRepository,
+        private val controlPlanSubThemeRepository: IControlPlanSubThemeRepository,
+        private val controlPlanTagRepository: IControlPlanTagRepository,
 ) {
     private val logger = LoggerFactory.getLogger(GetControlPlansByYear::class.java)
     fun execute(year: Int): ControlPlanByYear {
@@ -26,8 +26,8 @@ class GetControlPlansByYear(
 }
 
 typealias ControlPlanByYear =
-    Triple<
-        List<ControlPlanThemeEntity>,
-        List<ControlPlanSubThemeEntity>,
-        List<ControlPlanTagEntity>,
+        Triple<
+                List<ControlPlanThemeEntity>,
+                List<ControlPlanSubThemeEntity>,
+                List<ControlPlanTagEntity>,
         >
