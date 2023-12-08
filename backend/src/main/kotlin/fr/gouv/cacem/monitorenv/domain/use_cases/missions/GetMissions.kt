@@ -54,7 +54,7 @@ class GetMissions(private val missionRepository: IMissionRepository) {
             missions = missions.filter { mission ->
                 controlUnits.any { unitId ->
                     mission.controlUnits.any { controlUnit ->
-                        controlUnit.id == unit
+                        controlUnit.id == unitId
                     }
                 }
             }.toList()
