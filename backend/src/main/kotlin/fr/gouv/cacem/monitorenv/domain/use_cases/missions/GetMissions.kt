@@ -52,7 +52,7 @@ class GetMissions(private val missionRepository: IMissionRepository) {
 
         if (controlUnits != null) {
             missions = missions.filter { mission ->
-                controlUnits.any { unit ->
+                controlUnits.any { unitId ->
                     mission.controlUnits.any { controlUnit ->
                         controlUnit.id == unit
                     }
