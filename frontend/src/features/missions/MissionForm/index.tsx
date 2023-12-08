@@ -6,9 +6,8 @@ import styled from 'styled-components'
 
 import { MissionForm } from './MissionForm'
 import { MissionSchema } from './Schemas'
-import { useGetMissionState } from '../../../api/missionsAPI'
+import { useGetMissionQuery } from '../../../api/missionsAPI'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { usePreviousNotNull } from '../../../hooks/usePreviousNotNull'
 import { getIdTyped } from '../../../utils/getIdTyped'
 import { isNewMission } from '../../../utils/isNewMission'
 import { getMissionPageRoute } from '../../../utils/routes'
@@ -24,10 +23,9 @@ export function Mission() {
   const missionId = useMemo(() => getIdTyped(routeParams?.params?.id), [routeParams?.params?.id])
   const missionIsNewMission = useMemo(() => isNewMission(routeParams?.params?.id), [routeParams?.params?.id])
 
-  const { data: missionToEdit, isLoading } = useGetMissionState(
+  const { data: missionToEdit, isLoading } = useGetMissionQuery(
     !missionIsNewMission && missionId ? Number(missionId) : skipToken
   )
-  const previousMissionToEdit = usePreviousNotNull(missionToEdit)
 
   const selectedMission = useMemo(
     () => selectedMissions.find(mis => mis.mission.id === missionId),
@@ -39,14 +37,8 @@ export function Mission() {
       return missionFactory(undefined, missionId)
     }
 
-    // The RTK-Query cache has been invalidated so `missionToEdit` is set as `undefined`
-    // We must save the previous non-undefined value in memory
-    if (previousMissionToEdit && !missionToEdit) {
-      return missionFactory(previousMissionToEdit)
-    }
-
     return missionFactory(missionToEdit)
-  }, [missionId, missionIsNewMission, missionToEdit, previousMissionToEdit])
+  }, [missionId, missionIsNewMission, missionToEdit])
 
   if (isLoading) {
     return <div>Chargement en cours</div>

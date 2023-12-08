@@ -9,18 +9,17 @@ export const attachMission = (id: number) => async (dispatch, getState) => {
     return
   }
 
-  const response = dispatch(missionsAPI.endpoints.getMission.initiate(id))
+  try {
+    const missionRequest = dispatch(missionsAPI.endpoints.getMission.initiate(id))
+    const missionResponse = await missionRequest.unwrap()
+    if (!missionResponse) {
+      throw Error()
+    }
 
-  response
-    .then(async result => {
-      if (!result.data) {
-        throw Error("Erreur à l'ajout du signalement")
-      }
-      await dispatch(attachMissionToReportingSliceActions.setAttachedMission(result.data))
+    await dispatch(attachMissionToReportingSliceActions.setAttachedMission(missionResponse))
 
-      response.unsubscribe()
-    })
-    .catch(error => {
-      dispatch(setToast({ containerId: 'sideWindow', message: error }))
-    })
+    await missionRequest.unsubscribe()
+  } catch (error) {
+    dispatch(setToast({ containerId: 'sideWindow', message: "Erreur à l'ajout du signalement" }))
+  }
 }

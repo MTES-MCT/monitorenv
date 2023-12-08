@@ -18,27 +18,26 @@ export const editReportingInLocalStore =
       setReporting(dispatch, reportingId, reportingContext, newReporting)
     } else {
       // if the reporting not already in reporting state
-      const response = dispatch(reportingToEdit.initiate(reportingId))
-      response
-        .then(result => {
-          if (result.data) {
-            const reportingToSave = result.data
+      try {
+        const reportingRequest = dispatch(reportingToEdit.initiate(reportingId))
+        const reportingResponse = await reportingRequest.unwrap()
+        if (!reportingResponse) {
+          throw Error()
+        }
 
-            const newReporting = {
-              context: reportingContext,
-              isFormDirty: false,
-              reporting: reportingToSave
-            }
-            response.unsubscribe()
+        const reportingToSave = reportingResponse
 
-            setReporting(dispatch, reportingId, reportingContext, newReporting)
-          } else {
-            throw Error('Erreur à la récupération du signalement')
-          }
-        })
-        .catch(error => {
-          dispatch(setToast({ message: error }))
-        })
+        const newReporting = {
+          context: reportingContext,
+          isFormDirty: false,
+          reporting: reportingToSave
+        }
+
+        setReporting(dispatch, reportingId, reportingContext, newReporting)
+        await reportingRequest.unsubscribe()
+      } catch (error) {
+        dispatch(setToast({ message: 'Erreur à la récupération du signalement' }))
+      }
     }
   }
 
