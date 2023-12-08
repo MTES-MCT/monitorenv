@@ -1,7 +1,16 @@
-import { Accent, FieldError, FormikTextarea, Icon, IconButton, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
+import {
+  Accent,
+  FieldError,
+  FormikDatePicker,
+  FormikTextarea,
+  Icon,
+  IconButton,
+  getOptionsFromLabelledEnum,
+  useNewWindow
+} from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Toggle } from 'rsuite'
 
 import { AttachMission } from './AttachMission'
@@ -45,7 +54,8 @@ import {
   StyledTitle,
   StyledChevronIcon,
   StyledFormikTextInput,
-  ReportTypeMultiRadio
+  ReportTypeMultiRadio,
+  DateAndNameContainer
 } from '../style'
 import { getReportingTitle } from '../utils'
 
@@ -65,6 +75,8 @@ export function FormContent({
   setShouldValidateOnChange
 }: FormContentProps) {
   const dispatch = useAppDispatch()
+  const { newWindowContainerRef } = useNewWindow()
+  const ref = useRef<HTMLDivElement>(null)
   const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
 
   const isConfirmCancelDialogVisible = useAppSelector(state => state.reporting.isConfirmCancelDialogVisible)
@@ -223,14 +235,27 @@ export function FormContent({
         <StyledThemeContainer>
           <ThemeSelector isLight={false} label="Thématique du signalement" name="themeId" />
           <SubThemesSelector
+            context={reportingContext}
             isLight={false}
             label="Sous-thématique du signalement"
             name="subThemeIds"
             theme={themeField?.value}
           />
         </StyledThemeContainer>
+
         <Validity mustIncreaseValidity={mustIncreaseValidity} />
-        <StyledFormikTextInput label="Saisi par" name="openBy" />
+        <DateAndNameContainer>
+          <FormikDatePicker
+            baseContainer={reportingContext === ReportingContext.MAP ? ref.current : newWindowContainerRef.current}
+            isCompact
+            isStringDate
+            label="Date du signalement"
+            name="createdAt"
+            withTime
+          />
+          <StyledFormikTextInput label="Saisi par" name="openBy" />
+        </DateAndNameContainer>
+
         <Separator />
         <FormikTextarea label="Actions effectuées" name="actionTaken" />
 

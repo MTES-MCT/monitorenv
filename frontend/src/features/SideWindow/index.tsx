@@ -85,10 +85,10 @@ export function SideWindow() {
                   <Route element={<Missions />} path={sideWindowPaths.MISSIONS} />
                   <Route element={<Mission />} path={sideWindowPaths.MISSION} />
                 </StyledRouteContainer>
+                {isReportingsButtonIsActive && (
+                  <Reportings key="reportings-on-side-window" context={ReportingContext.SIDE_WINDOW} />
+                )}
               </NewWindowContext.Provider>
-              {isReportingsButtonIsActive && (
-                <Reportings key="reportings-on-side-window" context={ReportingContext.SIDE_WINDOW} />
-              )}
 
               <ToastContainer containerId="sideWindow" enableMultiContainer />
             </>
