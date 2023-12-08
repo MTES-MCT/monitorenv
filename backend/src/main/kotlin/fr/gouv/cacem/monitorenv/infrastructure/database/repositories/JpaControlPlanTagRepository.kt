@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class JpaControlPlanTagRepository(
-    private val dbControlPlanTagRepository: IDBControlPlanTagRepository,
+        private val dbControlPlanTagRepository: IDBControlPlanTagRepository,
 ) : IControlPlanTagRepository {
     override fun findAll(): List<ControlPlanTagEntity> {
         return dbControlPlanTagRepository.findAll().map { it.toControlPlanTagEntity() }
