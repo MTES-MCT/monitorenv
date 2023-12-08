@@ -147,6 +147,7 @@ class ApiMissionsControllerITests {
                 missionTypes = any(),
                 missionStatuses = any(),
                 seaFronts = any(),
+                controlUnits = any(),
                 pageNumber = any(),
                 pageSize = any(),
             ),
