@@ -15,51 +15,53 @@ export const editMissionInLocalStore = missionId => async (dispatch, getState) =
   } = getState()
 
   const missionToEdit = missionsAPI.endpoints.getMission
-  const response = dispatch(missionToEdit.initiate(missionId))
 
-  response
-    .then(async result => {
-      if (!result.data) {
-        throw Error('Erreur à la création ou à la modification de la mission')
-      }
+  try {
+    const missionRequest = dispatch(missionToEdit.initiate(missionId))
+    const missionResponse = await missionRequest.unwrap()
 
-      const missions = [...selectedMissions]
-      // first we want to save the active mission in multiMissions state
-      if (missionState) {
-        const selectedMissionIndex = missions.findIndex(mission => mission.mission.id === missionState.id)
+    if (!missionResponse) {
+      throw Error()
+    }
 
-        const missionFormatted = {
-          isFormDirty,
-          mission: missionState
-        }
+    const missions = [...selectedMissions]
+    // first we want to save the active mission in multiMissions state
+    if (missionState) {
+      const selectedMissionIndex = missions.findIndex(mission => mission.mission.id === missionState.id)
 
-        if (selectedMissionIndex !== -1) {
-          missions[selectedMissionIndex] = missionFormatted
-        } else {
-          missions.push(missionFormatted)
-        }
-      }
-
-      // now we want to save in multiMissions state the mission we want to edit
-      const missionToSave = result.data
-      const newSelectedMissionIndex = missions.findIndex(mission => mission.mission.id === missionToSave?.id)
       const missionFormatted = {
-        isFormDirty: false,
-        mission: missionToSave
+        isFormDirty,
+        mission: missionState
       }
 
-      if (newSelectedMissionIndex === -1) {
+      if (selectedMissionIndex !== -1) {
+        missions[selectedMissionIndex] = missionFormatted
+      } else {
         missions.push(missionFormatted)
       }
+    }
 
-      await dispatch(multiMissionsActions.setSelectedMissions(missions))
-      await dispatch(attachReportingToMissionSliceActions.setAttachedReportings(missionToSave.attachedReportings || []))
-      await dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.MISSION, { id: missionId })))
+    // now we want to save in multiMissions state the mission we want to edit
+    const missionToSave = missionResponse
+    const newSelectedMissionIndex = missions.findIndex(mission => mission.mission.id === missionToSave?.id)
+    const missionFormatted = {
+      isFormDirty: false,
+      mission: missionToSave
+    }
 
-      response.unsubscribe()
-    })
-    .catch(error => {
-      removeMissionListener(missionId)
-      dispatch(setToast({ containerId: 'sideWindow', message: error }))
-    })
+    if (newSelectedMissionIndex === -1) {
+      missions.push(missionFormatted)
+    }
+
+    await dispatch(multiMissionsActions.setSelectedMissions(missions))
+    await dispatch(attachReportingToMissionSliceActions.setAttachedReportings(missionToSave.attachedReportings || []))
+    await dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.MISSION, { id: missionId })))
+
+    await missionRequest.unsubscribe()
+  } catch (error) {
+    removeMissionListener(missionId)
+    dispatch(
+      setToast({ containerId: 'sideWindow', message: 'Erreur à la création ou à la modification de la mission' })
+    )
+  }
 }
