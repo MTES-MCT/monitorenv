@@ -5,6 +5,8 @@ import styled from 'styled-components'
 import { ActionTheme } from './ActionTheme'
 
 export function MultipleThemeElement({ envActionIndex, form, push, remove }) {
+  const actionStartDateTimeUtc =
+    form?.values?.envActions[envActionIndex]?.actionStartDateTimeUtc || new Date().toISOString()
   const handleRemoveTheme = (index: number) => {
     remove(index)
   }
@@ -21,6 +23,7 @@ export function MultipleThemeElement({ envActionIndex, form, push, remove }) {
       {isEmpty(compact(currentThemes)) && (
         <ThemeBloc key={0}>
           <ActionTheme
+            actionDate={actionStartDateTimeUtc}
             actionIndex={envActionIndex}
             labelSubTheme="Sous-thématiques de surveillance"
             labelTheme="Thématique de surveillance"
@@ -32,6 +35,7 @@ export function MultipleThemeElement({ envActionIndex, form, push, remove }) {
         // eslint-disable-next-line react/no-array-index-key
         <ThemeBloc key={index}>
           <ActionTheme
+            actionDate={actionStartDateTimeUtc}
             actionIndex={envActionIndex}
             labelSubTheme="Sous-thématiques de surveillance"
             labelTheme="Thématique de surveillance"

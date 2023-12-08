@@ -1,31 +1,33 @@
-import { MultiSelect, useNewWindow } from '@mtes-mct/monitor-ui'
+import { MultiSelect, useNewWindow, type Option } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
-import _ from 'lodash'
-import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { useGetControlThemesQuery } from '../../../../../../api/controlThemesAPI'
 import { updateSubThemes } from '../../../formikUseCases/updateActionThemes'
 
-import type { ControlTheme } from '../../../../../../domain/entities/controlThemes'
 import type { Mission } from '../../../../../../domain/entities/missions'
 
-export function SubThemesSelector({ actionIndex, label, theme, themeIndex }) {
-  const { data: controlThemes, isError, isLoading } = useGetControlThemesQuery()
+type SubThemesSelectorProps = {
+  actionIndex: number
+  isError: boolean
+  isLoading: boolean
+  label: string
+  subThemes: Option[]
+  themeId: number
+  themeIndex: number
+}
+export function SubThemesSelector({
+  actionIndex,
+  isError,
+  isLoading,
+  label,
+  subThemes,
+  themeId,
+  themeIndex
+}: SubThemesSelectorProps) {
   const { newWindowContainerRef } = useNewWindow()
   const { setFieldValue } = useFormikContext<Mission>()
-  const [currentSubThemesField, currentSubThemesProps] = useField<string[]>(
-    `envActions[${actionIndex}].themes[${themeIndex}].subThemes`
-  )
-
-  const availableThemes = useMemo(
-    () =>
-      _.chain(controlThemes)
-        .filter((t): t is ControlTheme & { themeLevel2: string } => t.themeLevel1 === theme && !!t.themeLevel2)
-        .uniqBy('themeLevel2')
-        .map(t => ({ label: t.themeLevel2, value: t.themeLevel2 }))
-        .value(),
-    [controlThemes, theme]
+  const [currentSubThemesField, currentSubThemesProps] = useField<number[]>(
+    `envActions[${actionIndex}].controlPlans[${themeIndex}].subThemeIds`
   )
 
   const handleUpdateSubTheme = subTheme => {
@@ -39,17 +41,17 @@ export function SubThemesSelector({ actionIndex, label, theme, themeIndex }) {
       {!isError && !isLoading && (
         <MultiSelect
           // force update when name or theme changes
-          key={`${actionIndex}-${themeIndex}-${theme}`}
+          key={`${themeId}-${subThemes.length}`}
           baseContainer={newWindowContainerRef.current}
           data-cy="envaction-subtheme-selector"
-          disabled={!theme}
+          disabled={!themeId}
           error={currentSubThemesProps.error}
           isLight
           label={label}
           name={`${actionIndex}-${themeIndex}`}
           onChange={handleUpdateSubTheme}
-          options={availableThemes}
-          value={currentSubThemesField.value}
+          options={subThemes}
+          value={currentSubThemesField.value?.map(value => value) as any[]}
         />
       )}
     </>

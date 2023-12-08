@@ -204,6 +204,7 @@ export function ControlForm({
           )}
         </ReportingsContainer>
         <ActionTheme
+          actionDate={currentAction?.actionStartDateTimeUtc || new Date().toISOString()}
           actionIndex={envActionIndex}
           labelSubTheme="Sous-thématiques de contrôle"
           labelTheme="Thématique de contrôle"

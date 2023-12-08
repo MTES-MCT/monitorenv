@@ -22,6 +22,7 @@ import {
 } from '../../domain/entities/reporting'
 import { getFormattedReportingId } from '../Reportings/utils'
 
+// import type { ControlPlansData } from '../../domain/entities/controlPlan'
 import type { LegacyControlUnit } from '../../domain/entities/legacyControlUnit'
 
 export const infractionFactory = ({ id, ...infraction } = { id: '' }) => ({
@@ -37,12 +38,19 @@ export const actionFactory = ({
   id,
   ...action
 }: Partial<EnvAction> & { actionType: ActionTypeEnum }): NewEnvAction => {
+  /* const formattedControlPlanSubThemes = action.controlPlans?.map(({ subThemes, tags, theme }) => ({
+    subThemes: subThemes?.map(subTheme => subTheme.id) || [],
+    tags: tags?.map(tag => tag.value) || [],
+    theme
+  })) */
+
   switch (actionType) {
     case ActionTypeEnum.CONTROL:
       return {
         actionNumberOfControls: undefined,
         actionTargetType: undefined,
         actionType: ActionTypeEnum.CONTROL,
+        controlPlans: [],
         id: uuidv4(),
         infractions: [],
         observations: '',
@@ -68,6 +76,7 @@ export const actionFactory = ({
     default:
       return {
         actionType: ActionTypeEnum.SURVEILLANCE,
+        controlPlans: [],
         coverMissionZone: true,
         durationMatchesMission: true,
         id: uuidv4(),
@@ -144,6 +153,34 @@ export const missionFactory = (
     }
 
     envActionsUpdated.splice(surveillanceWithSamePeriodIndex, 1, surveillance)
+
+    /*     const formattedActionsWithControlPlanSubThemes = envActionsUpdated.map(action => {
+      if (action.actionType === ActionTypeEnum.CONTROL) {
+        action.controlPlans.reduce((newControlsCollection, controlPlan) => {
+          const themeIndex = newControlsCollection.findIndex(({ theme }) => theme === controlPlan.theme)
+          if (themeIndex !== -1) {
+            const updatedSubThemes = {
+              ...newControlPlanSubThemesCollection[themeIndex],
+              subThemes: newControlPlanSubThemesCollection[themeIndex].push(controlPlanSubTheme.subTheme)
+            }
+            newControlPlanSubThemesCollection[themeIndex] = [...newControlPlanSubThemesCollection[themeIndex]]
+          }
+        }, [] as ControlPlanSubThemeData[])
+
+               const formattedControlPlanSubThemes = action.controlPlanSubThemes?.map(({ subThemes, tags, theme }) => ({
+          subThemes: subThemes?.map(subTheme => subTheme.id) || [],
+          tags: tags?.map(tag => tag) || [],
+          theme
+        })) 
+
+        return {
+          ...action,
+          controlPlanSubThemes: formattedControlPlanSubThemes
+        }
+      }
+
+      return action
+    }) */
 
     formattedMission = {
       ...formattedMission,

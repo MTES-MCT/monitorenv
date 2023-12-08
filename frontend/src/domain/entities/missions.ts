@@ -1,5 +1,6 @@
 import { THEME, customDayjs } from '@mtes-mct/monitor-ui'
 
+import type { ControlPlansData } from './controlPlan'
 import type { LegacyControlUnit } from './legacyControlUnit'
 import type { ReportingDetailed } from './reporting'
 import type { SeaFrontEnum } from './seaFrontType'
@@ -158,33 +159,6 @@ export const vesselSizeEnum = {
   }
 }
 
-export const protectedSpeciesEnum = {
-  BIRDS: {
-    label: 'Oiseaux',
-    value: 'BIRDS'
-  },
-  FLORA: {
-    label: 'Flore',
-    value: 'FLORA'
-  },
-  HABITAT: {
-    label: 'Habitat',
-    value: 'HABITAT'
-  },
-  MARINE_MAMMALS: {
-    label: 'Mammifères marins',
-    value: 'MARINE_MAMMALS'
-  },
-  OTHER: {
-    label: 'Autres espèces protégées',
-    value: 'OTHER'
-  },
-  REPTILES: {
-    label: 'Reptiles',
-    value: 'REPTILES'
-  }
-}
-
 export enum MissionStatusEnum {
   CLOSED = 'CLOSED',
   ENDED = 'ENDED',
@@ -246,8 +220,6 @@ export enum MissionSourceLabel {
   MONITORFISH = 'CNSP'
 }
 
-export const THEME_REQUIRE_PROTECTED_SPECIES = ['Police des espèces protégées et de leurs habitats (faune et flore)']
-
 export const relevantCourtEnum = {
   JULIS: {
     code: 'JULIS',
@@ -271,6 +243,7 @@ export type ResourceUnit = {
   administration: string
 }
 
+// Mission from API
 export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote> = {
   attachedReportingIds: number[]
   attachedReportings: ReportingDetailed[]
@@ -297,10 +270,12 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
 export type NewMission = Omit<Mission<NewEnvAction>, 'controlUnits' | 'facade' | 'id'> & {
   controlUnits: Array<Omit<LegacyControlUnit, 'administrationId' | 'id'>>
 }
+// Mission for API
+export type MissionData = Omit<Partial<Mission<EnvActionData>>, 'attachedReportings'>
 
-export type MissionForApi = Omit<Partial<Mission>, 'attachedReportings'>
 export type EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote
 export type NewEnvAction = NewEnvActionControl | EnvActionSurveillance | EnvActionNote
+export type EnvActionData = EnvActionControlData | EnvActionSurveillanceData | EnvActionNote
 
 export type EnvActionCommonProperties = {
   actionStartDateTimeUtc?: string | null
@@ -317,7 +292,7 @@ export type NewEnvActionControl = EnvActionCommonProperties & {
   actionNumberOfControls?: number
   actionTargetType?: string
   actionType: ActionTypeEnum.CONTROL
-  geom?: Record<string, any>[]
+  controlPlans: ControlPlansData[]
   infractions: Infraction[]
   isAdministrativeControl?: boolean
   isComplianceWithWaterRegulationsControl?: boolean
@@ -332,15 +307,48 @@ export type EnvActionControl = NewEnvActionControl & {
   actionTargetType: string
 }
 
+export type EnvActionControlData = {
+  actionEndDateTimeUtc?: string | null
+  actionNumberOfControls?: number
+  actionStartDateTimeUtc?: string | null
+  actionTargetType?: string
+  actionType: ActionTypeEnum.CONTROL
+  controlPlans: ControlPlansData[]
+  geom?: Record<string, any>[]
+  id: string
+  infractions: Infraction[]
+  isAdministrativeControl?: boolean
+  isComplianceWithWaterRegulationsControl?: boolean
+  isSafetyEquipmentAndStandardsComplianceControl?: boolean
+  isSeafarersControl?: boolean
+  observations: string | null
+  reportingIds: number[]
+  vehicleType?: string
+}
+
 export type EnvActionSurveillance = EnvActionCommonProperties & {
   actionEndDateTimeUtc?: string | null
   actionType: ActionTypeEnum.SURVEILLANCE
+  controlPlans: ControlPlansData[]
   coverMissionZone?: boolean
   durationMatchesMission?: boolean
   geom?: Record<string, any>[]
   observations: string | null
   reportingIds: number[]
   themes: EnvActionTheme[]
+}
+
+export type EnvActionSurveillanceData = {
+  actionEndDateTimeUtc?: string | null
+  actionStartDateTimeUtc?: string | null
+  actionType: ActionTypeEnum.SURVEILLANCE
+  controlPlans: ControlPlansData[]
+  coverMissionZone?: boolean
+  durationMatchesMission?: boolean
+  geom?: Record<string, any>[]
+  id: string
+  observations: string | null
+  reportingIds: number[]
 }
 
 export type EnvActionNote = EnvActionCommonProperties & {

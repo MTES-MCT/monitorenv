@@ -51,7 +51,7 @@ context('Mission actions', () => {
     cy.get('*[data-cy="envaction-theme-selector"]').contains('Police des mouillages')
     cy.get('*[data-cy="envaction-theme-element"]').contains('Mouillage individuel')
     cy.get('*[data-cy="envaction-theme-element"]').contains('ZMEL')
-    cy.get('*[data-cy="envaction-protected-species-selector"]').should('not.exist')
+    cy.get('*[data-cy="envaction-tags-selector"]').should('not.exist')
     // When
     cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').contains('Police des espèces protégées').click()
@@ -61,11 +61,11 @@ context('Mission actions', () => {
     cy.get('*[data-cy="envaction-theme-element"]').contains('Atteinte aux habitats').click({ force: true })
     cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
 
-    cy.get('*[data-cy="envaction-protected-species-selector"]').should('exist')
-    cy.get('*[data-cy="envaction-protected-species-selector"]').click({ force: true })
+    cy.get('*[data-cy="envaction-tags-selector"]').should('exist')
+    cy.get('*[data-cy="envaction-tags-selector"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').contains('Habitat').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').contains('Oiseaux').click({ force: true })
-    cy.get('*[data-cy="envaction-protected-species-selector"]').click({ force: true })
+    cy.get('*[data-cy="envaction-tags-selector"]').click({ force: true })
 
     cy.get('*[data-cy="envaction-add-theme"]').should('not.exist')
 
@@ -123,7 +123,7 @@ context('Mission actions', () => {
       .eq(0)
       .contains('Police des espèces protégées et de leurs habitats (faune et flore)')
     cy.get('*[data-cy="envaction-theme-element"]').contains('Destruction, capture, arrachage')
-    cy.get('*[data-cy="envaction-protected-species-selector"]').should('exist')
+    cy.get('*[data-cy="envaction-tags-selector"]').should('exist')
     cy.get('*[data-cy="envaction-theme-element"]').contains('Flore')
     cy.get('*[data-cy="envaction-theme-element"]').contains('Oiseaux')
 
@@ -138,7 +138,7 @@ context('Mission actions', () => {
     cy.get('*[data-cy="envaction-subtheme-selector"]').eq(2).click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').eq(2).contains('Jet de déchet').click({ force: true })
 
-    cy.get('*[data-cy="envaction-protected-species-selector"]').should('have.length', 0)
+    cy.get('*[data-cy="envaction-tags-selector"]').should('have.length', 0)
 
     cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
     cy.clickButton('Enregistrer et quitter')
