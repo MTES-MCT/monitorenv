@@ -72,7 +72,7 @@ export const missionEventListener =
     if (!MISSION_FORM_AUTO_UPDATE) {
       // eslint-disable-next-line no-console
       console.log(
-        'Skipping automatic update of mission form.' +
+        'Skipping automatic update of mission form. ' +
           "Set 'REACT_APP_MISSION_FORM_AUTO_UPDATE=true' feature flag to activate this feature."
       )
 
