@@ -18,8 +18,7 @@ import java.util.UUID
 
 @ExtendWith(SpringExtension::class)
 class CreateOrUpdateMissionDataInputUTests {
-    @MockBean
-    private lateinit var missionEnvActionDataInput: MissionEnvActionDataInput
+    @MockBean private lateinit var missionEnvActionDataInput: MissionEnvActionDataInput
 
     @Test
     fun `getEnvActionsAttachedToReportings should return reportingIds pairs`() {
@@ -58,7 +57,6 @@ class CreateOrUpdateMissionDataInputUTests {
                 id = UUID.randomUUID(),
                 actionType = ActionTypeEnum.NOTE,
                 actionStartDateTimeUtc = ZonedDateTime.now(),
-                actionEndDateTimeUtc = ZonedDateTime.now().plusHours(1),
                 observations = "Observations",
                 reportingIds = Optional.empty(),
             )
@@ -79,6 +77,12 @@ class CreateOrUpdateMissionDataInputUTests {
         val result = missionDataInput.getEnvActionsAttachedToReportings()
         assertThat(
             result,
-        ).isEqualTo(listOf(Pair(envActionControl.id, listOf(1)), Pair(envActionSurveillance.id, listOf(2, 3))))
+        )
+            .isEqualTo(
+                listOf(
+                    Pair(envActionControl.id, listOf(1)),
+                    Pair(envActionSurveillance.id, listOf(2, 3)),
+                ),
+            )
     }
 }

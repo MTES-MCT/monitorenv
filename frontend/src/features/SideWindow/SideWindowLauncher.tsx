@@ -1,6 +1,5 @@
-import { NewWindow, useForceUpdate } from '@mtes-mct/monitor-ui'
-import { type MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react'
-import { StyleSheetManager } from 'styled-components'
+import { useForceUpdate, NewWindow } from '@mtes-mct/monitor-ui'
+import { useCallback, useEffect, useMemo } from 'react'
 
 import { SideWindow } from '.'
 import { SideWindowStatus, sideWindowActions } from './slice'
@@ -10,7 +9,6 @@ import { useAppSelector } from '../../hooks/useAppSelector'
 
 export function SideWindowLauncher() {
   const dispatch = useAppDispatch()
-  const newWindowRef = useRef() as MutableRefObject<HTMLDivElement>
   const { forceUpdate } = useForceUpdate()
 
   const missionState = useAppSelector(state => state.missionState)
@@ -39,23 +37,21 @@ export function SideWindowLauncher() {
   }
 
   return (
-    <StyleSheetManager target={newWindowRef.current}>
-      <NewWindow
-        closeOnUnmount
-        copyStyles
-        features={{ height: 1200, width: window.innerWidth }}
-        name="MonitorEnv"
-        onChangeFocus={onChangeFocus}
-        onUnload={() => {
-          dispatch(sideWindowActions.close())
-          dispatch(multiMissionsActions.setSelectedMissions([]))
-        }}
-        shouldHaveFocus={sideWindow.status === SideWindowStatus.VISIBLE}
-        showPrompt={hasAtLeastOneMissionFormDirty || missionState.isFormDirty}
-        title="MonitorEnv"
-      >
-        <SideWindow ref={newWindowRef} />
-      </NewWindow>
-    </StyleSheetManager>
+    <NewWindow
+      closeOnUnmount
+      copyStyles
+      features={{ height: 1200, width: window.innerWidth }}
+      name="MonitorEnv"
+      onChangeFocus={onChangeFocus}
+      onUnload={() => {
+        dispatch(sideWindowActions.close())
+        dispatch(multiMissionsActions.setSelectedMissions([]))
+      }}
+      shouldHaveFocus={sideWindow.status === SideWindowStatus.VISIBLE}
+      showPrompt={hasAtLeastOneMissionFormDirty || missionState.isFormDirty}
+      title="MonitorEnv"
+    >
+      <SideWindow />
+    </NewWindow>
   )
 }

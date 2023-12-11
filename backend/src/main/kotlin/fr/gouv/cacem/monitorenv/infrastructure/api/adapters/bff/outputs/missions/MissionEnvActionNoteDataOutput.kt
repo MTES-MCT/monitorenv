@@ -7,23 +7,20 @@ import java.util.UUID
 
 data class MissionEnvActionNoteDataOutput(
     override val id: UUID,
-    override val actionEndDateTimeUtc: ZonedDateTime? = null,
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
     override val actionType: ActionTypeEnum = ActionTypeEnum.NOTE,
     val observations: String? = null,
 ) :
     MissionEnvActionDataOutput(
         id = id,
-        actionEndDateTimeUtc = actionEndDateTimeUtc,
         actionStartDateTimeUtc = actionStartDateTimeUtc,
-        actionType = ActionTypeEnum.CONTROL,
+        actionType = ActionTypeEnum.NOTE,
     ) {
     companion object {
         fun fromEnvActionNoteEntity(envActionNoteEntity: EnvActionNoteEntity) =
             MissionEnvActionNoteDataOutput(
                 id = envActionNoteEntity.id,
                 actionStartDateTimeUtc = envActionNoteEntity.actionStartDateTimeUtc,
-                actionEndDateTimeUtc = envActionNoteEntity.actionEndDateTimeUtc,
                 observations = envActionNoteEntity.observations,
             )
     }

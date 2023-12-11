@@ -59,6 +59,9 @@ class ApiMissionsController(
         @Parameter(description = "Facades")
         @RequestParam(name = "seaFronts", required = false)
         seaFronts: List<String>?,
+        @Parameter(description = "Unités de contrôle")
+        @RequestParam(name = "controlUnits", required = false)
+        controlUnits: List<Int>? = null,
     ): List<MissionDataOutput> {
         val missions =
             getMissions.execute(
@@ -68,6 +71,7 @@ class ApiMissionsController(
                 missionStatuses = missionStatuses,
                 missionTypes = missionTypes,
                 seaFronts = seaFronts,
+                controlUnits = controlUnits,
                 pageNumber = pageNumber,
                 pageSize = pageSize,
             )
