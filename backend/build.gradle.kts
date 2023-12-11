@@ -55,7 +55,7 @@ dependencies {
     api("org.flywaydb:flyway-core:9.22.0")
     api("org.jetbrains.kotlin:kotlin-reflect:1.9.10")
     api("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.10")
-    api("org.springframework.boot:spring-boot-configuration-processor:3.1.4")
+    api("org.springframework.boot:spring-boot-configuration-processor:3.2.0")
     api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     api("com.neovisionaries:nv-i18n:1.29")
     api("org.http4k:http4k-client-apache:5.10.4.0")
