@@ -17,16 +17,16 @@ data class MissionEnvActionDataInput(
     val id: UUID,
     val actionType: ActionTypeEnum,
     val actionStartDateTimeUtc: ZonedDateTime? = null,
-    val actionEndDateTimeUtc: ZonedDateTime? = null,
-    val department: String? = null,
-    val facade: String? = null,
-    val geom: Geometry? = null,
 
     // Common to all action Types
     val observations: String? = null,
 
     // EnvActionControl + EnvSurveillance Properties
+    val actionEndDateTimeUtc: ZonedDateTime? = null,
     val themes: List<ThemeEntity>? = null,
+    val department: String? = null,
+    val facade: String? = null,
+    val geom: Geometry? = null,
 
     // EnvActionControl Properties
     val actionNumberOfControls: Int? = null,
@@ -102,7 +102,6 @@ data class MissionEnvActionDataInput(
                 return EnvActionNoteEntity(
                     id = this.id,
                     actionStartDateTimeUtc = this.actionStartDateTimeUtc,
-                    actionEndDateTimeUtc = this.actionEndDateTimeUtc,
                     observations = this.observations,
                 )
             else -> throw Exception("Action type not supported")

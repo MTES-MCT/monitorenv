@@ -75,7 +75,6 @@ object EnvActionMapper {
                             .toEnvActionNoteEntity(
                                 id,
                                 actionStartDateTimeUtc,
-                                actionEndDateTimeUtc,
                             )
                 }
             } else {

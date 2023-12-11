@@ -9,12 +9,10 @@ data class EnvActionNoteProperties(
     fun toEnvActionNoteEntity(
         id: UUID,
         actionStartDateTimeUtc: ZonedDateTime?,
-        actionEndDateTimeUtc: ZonedDateTime?,
     ) =
         EnvActionNoteEntity(
             id = id,
             actionStartDateTimeUtc = actionStartDateTimeUtc,
-            actionEndDateTimeUtc = actionEndDateTimeUtc,
             observations = observations,
         )
     companion object {

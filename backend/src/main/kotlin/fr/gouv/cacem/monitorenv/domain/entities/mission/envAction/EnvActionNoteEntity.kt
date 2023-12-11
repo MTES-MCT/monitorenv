@@ -6,7 +6,6 @@ import java.util.UUID
 data class EnvActionNoteEntity(
     override val id: UUID,
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
-    override val actionEndDateTimeUtc: ZonedDateTime? = null,
     val observations: String? = null,
 ) :
     EnvActionEntity(

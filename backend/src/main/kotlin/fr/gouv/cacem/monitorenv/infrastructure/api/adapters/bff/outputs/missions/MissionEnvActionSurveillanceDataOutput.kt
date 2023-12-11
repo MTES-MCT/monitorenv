@@ -9,25 +9,21 @@ import java.util.UUID
 
 data class MissionEnvActionSurveillanceDataOutput(
     override val id: UUID,
-    override val actionEndDateTimeUtc: ZonedDateTime? = null,
+    val actionEndDateTimeUtc: ZonedDateTime? = null,
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
     override val actionType: ActionTypeEnum = ActionTypeEnum.SURVEILLANCE,
     val coverMissionZone: Boolean? = null,
-    override val department: String? = null,
-    override val facade: String? = null,
-    override val geom: Geometry? = null,
+    val department: String? = null,
+    val facade: String? = null,
+    val geom: Geometry? = null,
     val observations: String? = null,
     val reportingIds: List<Int>,
     val themes: List<ThemeEntity>? = listOf(),
 ) :
     MissionEnvActionDataOutput(
         id = id,
-        actionEndDateTimeUtc = actionEndDateTimeUtc,
         actionStartDateTimeUtc = actionStartDateTimeUtc,
         actionType = ActionTypeEnum.SURVEILLANCE,
-        department = department,
-        facade = facade,
-        geom = geom,
     ) {
     companion object {
         fun fromEnvActionSurveillanceEntity(

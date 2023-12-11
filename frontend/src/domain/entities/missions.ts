@@ -303,9 +303,7 @@ export type EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote
 export type NewEnvAction = NewEnvActionControl | EnvActionSurveillance | EnvActionNote
 
 export type EnvActionCommonProperties = {
-  actionEndDateTimeUtc?: string | null
   actionStartDateTimeUtc?: string | null
-  geom?: Record<string, any>[]
   id: string
 }
 
@@ -315,9 +313,11 @@ export type EnvActionTheme = {
   theme: string
 }
 export type NewEnvActionControl = EnvActionCommonProperties & {
+  actionEndDateTimeUtc?: string | null
   actionNumberOfControls?: number
   actionTargetType?: string
   actionType: ActionTypeEnum.CONTROL
+  geom?: Record<string, any>[]
   infractions: Infraction[]
   isAdministrativeControl?: boolean
   isComplianceWithWaterRegulationsControl?: boolean
@@ -333,9 +333,11 @@ export type EnvActionControl = NewEnvActionControl & {
 }
 
 export type EnvActionSurveillance = EnvActionCommonProperties & {
+  actionEndDateTimeUtc?: string | null
   actionType: ActionTypeEnum.SURVEILLANCE
   coverMissionZone?: boolean
   durationMatchesMission?: boolean
+  geom?: Record<string, any>[]
   observations: string | null
   reportingIds: number[]
   themes: EnvActionTheme[]
