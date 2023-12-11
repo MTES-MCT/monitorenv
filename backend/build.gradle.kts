@@ -58,7 +58,7 @@ dependencies {
     api("org.springframework.boot:spring-boot-configuration-processor:3.1.4")
     api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     api("com.neovisionaries:nv-i18n:1.29")
-    api("org.http4k:http4k-client-apache:4.45.0.0")
+    api("org.http4k:http4k-client-apache:5.10.4.0")
     api("com.google.code.gson:gson:2.10.1")
     api("org.springframework.boot:spring-boot-starter-cache:3.1.4")
     api("com.github.ben-manes.caffeine:caffeine:3.1.5")
