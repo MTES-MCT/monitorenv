@@ -138,6 +138,15 @@ export function MissionsTableFilters() {
   }
 
   const onUpdateAdministrationFilter = (nextSelectedAdministrationIds: string[] | undefined) => {
+    const administrationsUpdatedWithUnits = administrations?.filter(admin =>
+      nextSelectedAdministrationIds?.includes(admin.name)
+    )
+
+    const unitsFiltered = selectedControlUnitIds?.filter(unitId =>
+      administrationsUpdatedWithUnits?.find(control => control.controlUnitIds.includes(unitId))
+    )
+
+    dispatch(updateFilters({ key: MissionFiltersEnum.UNIT_FILTER, value: unitsFiltered }))
     dispatch(updateFilters({ key: MissionFiltersEnum.ADMINISTRATION_FILTER, value: nextSelectedAdministrationIds }))
   }
 
@@ -195,7 +204,6 @@ export function MissionsTableFilters() {
           value={selectedMissionSource}
         />
         <CheckPicker
-          key={activeAdministrations.length}
           data-cy="select-administration-filter"
           isLabelHidden
           label="Administration"

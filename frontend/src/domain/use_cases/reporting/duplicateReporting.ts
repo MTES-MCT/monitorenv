@@ -9,39 +9,39 @@ export const duplicateReporting = (reportingId: number) => async (dispatch, getS
 
   const reportingToDuplicate = reportingsAPI.endpoints.getReporting
 
-  const response = dispatch(reportingToDuplicate.initiate(reportingId))
-  response
-    .then(async result => {
-      if (result.data) {
-        const id = createIdForNewReporting(reportings)
+  try {
+    const reportingRequest = dispatch(reportingToDuplicate.initiate(reportingId))
+    const reportingResponse = await reportingRequest.unwrap()
 
-        const duplicatedReporting = {
-          context: ReportingContext.SIDE_WINDOW,
-          isFormDirty: false,
-          reporting: getReportingInitialValues({ ...result.data, createdAt: new Date().toISOString(), id })
-        }
+    if (!reportingResponse) {
+      throw Error()
+    }
 
-        await dispatch(reportingActions.setReporting(duplicatedReporting))
-        await dispatch(reportingActions.setActiveReportingId(id))
+    const id = createIdForNewReporting(reportings)
 
-        await dispatch(
-          attachMissionToReportingSliceActions.setAttachedMission(
-            duplicatedReporting.reporting.attachedMission ?? undefined
-          )
-        )
+    const duplicatedReporting = {
+      context: ReportingContext.SIDE_WINDOW,
+      isFormDirty: false,
+      reporting: getReportingInitialValues({ ...reportingResponse, createdAt: new Date().toISOString(), id })
+    }
 
-        await dispatch(
-          setReportingFormVisibility({
-            context: ReportingContext.SIDE_WINDOW,
-            visibility: VisibilityState.VISIBLE
-          })
-        )
-        response.unsubscribe()
-      } else {
-        throw Error('Erreur à la duplication du signalement')
-      }
-    })
-    .catch(error => {
-      dispatch(setToast({ containerId: 'sideWindow', message: error }))
-    })
+    await dispatch(reportingActions.setReporting(duplicatedReporting))
+    await dispatch(reportingActions.setActiveReportingId(id))
+
+    await dispatch(
+      attachMissionToReportingSliceActions.setAttachedMission(
+        duplicatedReporting.reporting.attachedMission ?? undefined
+      )
+    )
+
+    await dispatch(
+      setReportingFormVisibility({
+        context: ReportingContext.SIDE_WINDOW,
+        visibility: VisibilityState.VISIBLE
+      })
+    )
+    await reportingRequest.unsubscribe()
+  } catch (error) {
+    dispatch(setToast({ containerId: 'sideWindow', message: 'Erreur à la duplication du signalement' }))
+  }
 }

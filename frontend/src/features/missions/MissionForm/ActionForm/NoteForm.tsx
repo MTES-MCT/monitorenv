@@ -3,12 +3,13 @@ import { useField } from 'formik'
 import { Form, IconButton } from 'rsuite'
 import styled from 'styled-components'
 
-import { ActionTypeEnum, actionTypeLabels } from '../../../../domain/entities/missions'
+import { type EnvAction } from '../../../../domain/entities/missions'
 import { ReactComponent as DeleteSVG } from '../../../../uiMonitor/icons/Delete.svg'
 import { ReactComponent as NoteSVG } from '../../../../uiMonitor/icons/Note_libre.svg'
 
 export function NoteForm({ currentActionIndex, remove, setCurrentActionIndex }) {
-  const [actionTypeField] = useField<ActionTypeEnum>(`envActions.${currentActionIndex}.actionType`)
+  const [actionsFields] = useField<EnvAction[]>('envActions')
+  const envActionIndex = actionsFields.value.findIndex(envAction => envAction.id === String(currentActionIndex))
 
   const handleRemoveAction = () => {
     setCurrentActionIndex(undefined)
@@ -19,7 +20,7 @@ export function NoteForm({ currentActionIndex, remove, setCurrentActionIndex }) 
     <>
       <Header>
         <NoteIcon />
-        <Title>{actionTypeLabels[actionTypeField.value]?.libelle}</Title>
+        <Title>Note</Title>
         <IconButtonRight
           appearance="ghost"
           icon={<DeleteIcon className="rs-icon" />}
@@ -32,7 +33,7 @@ export function NoteForm({ currentActionIndex, remove, setCurrentActionIndex }) 
       </Header>
 
       <Form.Group>
-        <FormikTextarea isLight label="Observations" name={`envActions.${currentActionIndex}.observations`} />
+        <FormikTextarea isLight label="Observations" name={`envActions[${envActionIndex}].observations`} />
       </Form.Group>
     </>
   )

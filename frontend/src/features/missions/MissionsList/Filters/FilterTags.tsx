@@ -42,7 +42,7 @@ export function FilterTags() {
   }
 
   return (
-    <StyledContainer>
+    <StyledContainer data-cy="missions-filter-tags">
       {selectedAdministrationNames &&
         selectedAdministrationNames?.length > 0 &&
         selectedAdministrationNames.map(admin => (
