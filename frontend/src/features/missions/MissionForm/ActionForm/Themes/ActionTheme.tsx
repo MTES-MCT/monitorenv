@@ -1,5 +1,5 @@
 import { customDayjs } from '@mtes-mct/monitor-ui'
-import { useField } from 'formik'
+import { useField, useFormikContext } from 'formik'
 import styled from 'styled-components'
 
 import { TagsSelector } from './TagsSelector'
@@ -7,14 +7,18 @@ import { ThemeSelector } from './ThemeSelector'
 import { SubThemesSelector } from './ThemeSelector/SubThemesSelector'
 import { useGetPlanThemesAndSubThemesAsOptions } from '../../../../../hooks/useGetPlanThemesAndSubThemesAsOptions'
 
+import type { Mission } from '../../../../../domain/entities/missions'
+
 type ActionThemeProps = {
-  actionDate: string
   actionIndex: number
   labelSubTheme: string
   labelTheme: string
   themeIndex: number
 }
-export function ActionTheme({ actionDate, actionIndex, labelSubTheme, labelTheme, themeIndex }: ActionThemeProps) {
+export function ActionTheme({ actionIndex, labelSubTheme, labelTheme, themeIndex }: ActionThemeProps) {
+  const { values } = useFormikContext<Mission>()
+  const actionDate =
+    values?.envActions[actionIndex]?.actionStartDateTimeUtc || values.startDateTimeUtc || new Date().toISOString()
   const year = customDayjs(actionDate).year()
   const [currentThemeField] = useField<number>(`envActions[${actionIndex}].controlPlans[${themeIndex}].themeId`)
 

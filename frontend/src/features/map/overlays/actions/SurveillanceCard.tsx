@@ -2,12 +2,13 @@ import { getLocalizedDayjs, customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { useGetPlanThemesAndSubThemesAsOptions } from '../../../../hooks/useGetPlanThemesAndSubThemesAsOptions'
 import { dateDifferenceInHours } from '../../../../utils/dateDifferenceInHours'
 import { extractThemesAsText } from '../../../../utils/extractThemesAsText'
 
 export function SurveillanceCard({ feature }) {
   const listener = useAppSelector(state => state.draw.listener)
-  const { actionEndDateTimeUtc, actionStartDateTimeUtc, themes } = feature.getProperties()
+  const { actionEndDateTimeUtc, actionStartDateTimeUtc, controlPlans } = feature.getProperties()
 
   const duration = dateDifferenceInHours(actionStartDateTimeUtc, actionEndDateTimeUtc)
 
@@ -17,6 +18,11 @@ export function SurveillanceCard({ feature }) {
 
   const simpleDate = startDate?.isValid() && startDate?.format('DD MMMM YYYY')
 
+  const year = dayjs(feature.actionStartDateTimeUtc || feature.startDateTimeUtc || new Date().toISOString()).year()
+  const { themesAsOptions } = useGetPlanThemesAndSubThemesAsOptions({
+    year
+  })
+
   if (listener) {
     return null
   }
@@ -24,7 +30,7 @@ export function SurveillanceCard({ feature }) {
   return (
     <StyledSurveillanceCard>
       <div>
-        <StyledThemes>{extractThemesAsText(themes)}</StyledThemes>
+        <StyledThemes>{extractThemesAsText(controlPlans, themesAsOptions)}</StyledThemes>
         <StyledDuration>{duration > 0 ? `1 surveillance (${duration}h)` : '1 surveillance'}</StyledDuration>
       </div>
 

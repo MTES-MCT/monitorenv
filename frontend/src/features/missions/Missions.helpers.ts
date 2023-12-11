@@ -38,12 +38,6 @@ export const actionFactory = ({
   id,
   ...action
 }: Partial<EnvAction> & { actionType: ActionTypeEnum }): NewEnvAction => {
-  /* const formattedControlPlanSubThemes = action.controlPlans?.map(({ subThemes, tags, theme }) => ({
-    subThemes: subThemes?.map(subTheme => subTheme.id) || [],
-    tags: tags?.map(tag => tag.value) || [],
-    theme
-  })) */
-
   switch (actionType) {
     case ActionTypeEnum.CONTROL:
       return {

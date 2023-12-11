@@ -1,10 +1,20 @@
-import { Icon, THEME } from '@mtes-mct/monitor-ui'
+import { Icon, THEME, customDayjs } from '@mtes-mct/monitor-ui'
+import { useFormikContext } from 'formik'
 
 import { Accented, DurationWrapper, SummaryContent, Title, TitleAndButtonsContainer } from './style'
+import { useGetPlanThemesAndSubThemesAsOptions } from '../../../../hooks/useGetPlanThemesAndSubThemesAsOptions'
 import { dateDifferenceInHours } from '../../../../utils/dateDifferenceInHours'
 import { extractThemesAsText } from '../../../../utils/extractThemesAsText'
 
+import type { Mission } from '../../../../domain/entities/missions'
+
 export function SurveillanceCard({ action }) {
+  const { values } = useFormikContext<Mission>()
+  const year = customDayjs(action.actionStartDateTimeUtc || values.startDateTimeUtc || new Date().toISOString()).year()
+  const { themesAsOptions } = useGetPlanThemesAndSubThemesAsOptions({
+    year
+  })
+
   return (
     <>
       <Icon.Observation color={THEME.color.charcoal} size={20} />
@@ -12,8 +22,8 @@ export function SurveillanceCard({ action }) {
         <TitleAndButtonsContainer>
           <Title>
             Surveillance{' '}
-            {action.themes && action.themes?.length > 0 ? (
-              <Accented>{extractThemesAsText(action.themes)}</Accented>
+            {action.controlPlans && action.controlPlans?.length > 0 ? (
+              <Accented>{extractThemesAsText(action.controlPlans, themesAsOptions)}</Accented>
             ) : (
               'à renseigner'
             )}

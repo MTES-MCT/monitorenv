@@ -12,7 +12,7 @@ type ActionThemeProps = {
   isLoading: boolean
   label: string
   themeIndex: number
-  themes: Option[]
+  themes: Array<Option<number>>
 }
 export function ThemeSelector({ actionIndex, isError, isLoading, label, themeIndex, themes }: ActionThemeProps) {
   const { newWindowContainerRef } = useNewWindow()

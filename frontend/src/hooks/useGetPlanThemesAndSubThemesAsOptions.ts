@@ -11,21 +11,21 @@ export function useGetPlanThemesAndSubThemesAsOptions({
 }) {
   const { data, isError, isLoading } = useGetControlPlansQuery(year)
 
-  const themesAsOptions: Array<Option> =
+  const themesAsOptions: Array<Option<number>> =
     Object.values(data?.themes || {}).map(({ id, theme }) => ({
       label: theme,
-      value: id as any
+      value: id
     })) || []
 
-  const subThemesAsOptions: Array<Option> =
+  const subThemesAsOptions: Array<Option<number>> =
     Object.values(data?.subThemes || {})
       ?.filter(({ themeId }) => themeId === selectedTheme)
-      .map(({ id, subTheme }) => ({ label: subTheme, value: id as any })) || []
+      .map(({ id, subTheme }) => ({ label: subTheme, value: id })) || []
 
-  const tagsAsOptions: Array<Option> =
+  const tagsAsOptions: Array<Option<number>> =
     Object.values(data?.tags || {})
       ?.filter(({ themeId }) => themeId === selectedTheme)
-      .map(({ id, tag }) => ({ label: tag, value: id as any })) || []
+      .map(({ id, tag }) => ({ label: tag, value: id })) || []
 
   return {
     isError,

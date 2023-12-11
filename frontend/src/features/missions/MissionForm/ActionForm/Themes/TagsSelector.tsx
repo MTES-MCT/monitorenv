@@ -6,7 +6,7 @@ import { updateTags } from '../../formikUseCases/updateActionThemes'
 
 type TagsSelectorProps = {
   actionIndex: number
-  tags: Option[]
+  tags: Array<Option<number>>
   themeIndex: number
 }
 export function TagsSelector({ actionIndex, tags, themeIndex }: TagsSelectorProps) {

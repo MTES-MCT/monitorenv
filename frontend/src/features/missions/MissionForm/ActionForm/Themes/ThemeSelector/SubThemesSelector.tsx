@@ -11,7 +11,7 @@ type SubThemesSelectorProps = {
   isError: boolean
   isLoading: boolean
   label: string
-  subThemes: Option[]
+  subThemes: Array<Option<number>>
   themeId: number
   themeIndex: number
 }
