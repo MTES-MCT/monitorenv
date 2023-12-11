@@ -16,14 +16,14 @@ class GetMissions(private val missionRepository: IMissionRepository) {
     private val logger = LoggerFactory.getLogger(GetMissions::class.java)
 
     fun execute(
-        startedAfterDateTime: ZonedDateTime?,
-        startedBeforeDateTime: ZonedDateTime?,
-        missionSources: List<MissionSourceEnum>?,
-        missionTypes: List<String>?,
-        missionStatuses: List<String>?,
-        pageNumber: Int?,
-        pageSize: Int?,
-        seaFronts: List<String>?,
+        startedAfterDateTime: ZonedDateTime? = null,
+        startedBeforeDateTime: ZonedDateTime? = null,
+        missionSources: List<MissionSourceEnum>? = null,
+        missionTypes: List<String>? = null,
+        missionStatuses: List<String>? = null,
+        pageNumber: Int? = null,
+        pageSize: Int? = null,
+        seaFronts: List<String>? = null,
         controlUnits: List<Int>? = null,
     ): List<MissionEntity> {
         var missions: List<MissionEntity> =
@@ -50,7 +50,7 @@ class GetMissions(private val missionRepository: IMissionRepository) {
                 },
             )
 
-        if (controlUnits != null) {
+        if (!controlUnits.isNullOrEmpty()) {
             missions = missions.filter { mission ->
                 controlUnits.any { unitId ->
                     mission.controlUnits.any { controlUnit ->
