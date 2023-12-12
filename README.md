@@ -46,6 +46,12 @@ Le code source de monitorenv est fortement inspiré de [MonitorFish](https://git
 Créer un fichier `./infra/.env` à partir de `./infra/.env.template`
 Modifier éventuellement `./infra/configurations/backend/application-dev.properties`
 
+### Sentry
+
+SENTRY_DSN est une variable d'environnement utilisée par Sentry pour identifier l'application. Elle est utilisée par le frontend et le backend. Elle est définie dans le fichier `./infra/.env` et injectée dans l'application frontend via le fichier `./public/env.js`.
+
+Si `SENTRY_DSN` est définie, les logs du backend seront automatiquement envoyés.
+
 ## Frontend
 
 `make dev-install` : installation des dépendances du Frontend
