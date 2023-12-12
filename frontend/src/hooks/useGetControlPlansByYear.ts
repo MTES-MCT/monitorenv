@@ -1,15 +1,15 @@
-import { useGetControlPlansQuery } from '../api/controlPlans'
+import { useGetControlPlansByYearQuery } from '../api/controlPlans'
 
 import type { Option } from '@mtes-mct/monitor-ui'
 
-export function useGetPlanThemesAndSubThemesAsOptions({
+export function useGetControlPlansByYear({
   selectedTheme = undefined,
   year
 }: {
   selectedTheme?: number | undefined
   year: number
 }) {
-  const { data, isError, isLoading } = useGetControlPlansQuery(year)
+  const { data, isError, isLoading } = useGetControlPlansByYearQuery(year)
 
   const themesAsOptions: Array<Option<number>> =
     Object.values(data?.themes || {}).map(({ id, theme }) => ({

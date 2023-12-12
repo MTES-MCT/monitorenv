@@ -3,7 +3,7 @@ import { useFormikContext } from 'formik'
 
 import { Accented, ControlSummary, SummaryContent, Title } from './style'
 import { TargetTypeLabels } from '../../../../domain/entities/targetType'
-import { useGetPlanThemesAndSubThemesAsOptions } from '../../../../hooks/useGetPlanThemesAndSubThemesAsOptions'
+import { useGetControlPlansByYear } from '../../../../hooks/useGetControlPlansByYear'
 import { ControlInfractionsTags } from '../../../../ui/ControlInfractionsTags'
 import { extractThemesAsText } from '../../../../utils/extractThemesAsText'
 
@@ -12,7 +12,7 @@ import type { Mission } from '../../../../domain/entities/missions'
 export function ControlCard({ action }) {
   const { values } = useFormikContext<Mission>()
   const year = customDayjs(action.actionStartDateTimeUtc || values.startDateTimeUtc || new Date().toISOString()).year()
-  const { themesAsOptions } = useGetPlanThemesAndSubThemesAsOptions({
+  const { themesAsOptions } = useGetControlPlansByYear({
     year
   })
 

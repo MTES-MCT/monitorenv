@@ -8,22 +8,30 @@ import {
   type EnvActionSurveillance
 } from '../../../domain/entities/missions'
 
-const getAllThemesAndSubThemesAsString = (envactions: EnvAction[]) => {
-  const uniqueThemesAndSubthemes = envactions
+import type { ControlPlansSubTheme, ControlPlansTheme } from '../../../domain/entities/controlPlan'
+
+const getAllThemesAndSubThemesAsString = (
+  envActions: EnvAction[],
+  subThemes: Array<ControlPlansSubTheme>,
+  themes: Array<ControlPlansTheme>
+) => {
+  const uniqueThemesAndSubthemes = envActions
     .filter(
       (a): a is EnvActionControl | EnvActionSurveillance =>
         a.actionType === ActionTypeEnum.CONTROL || a.actionType === ActionTypeEnum.SURVEILLANCE
     )
-    .reduce((acc, { themes }) => {
-      if (themes) {
-        themes.forEach(t => {
-          if (!!t.theme && !acc[t.theme]) {
-            acc[t.theme] = []
+    .reduce((acc, { controlPlans }) => {
+      if (controlPlans) {
+        controlPlans.forEach(controlPlan => {
+          const controlPlanTheme = themes.find(theme => theme.id === controlPlan.themeId)?.theme
+          if (controlPlanTheme && !acc[controlPlanTheme]) {
+            acc[controlPlanTheme] = []
           }
-          if (t.subThemes) {
-            t.subThemes.forEach(st => {
-              if (!!st && !acc[t.theme].includes(st)) {
-                acc[t.theme].push(st)
+          if (controlPlan.subThemeIds) {
+            controlPlan.subThemeIds.forEach(subThemeId => {
+              const controlPlanSubTheme = subThemes.find(subTheme => subTheme.id === subThemeId)?.subTheme
+              if (controlPlanTheme && controlPlanSubTheme && !acc[controlPlanTheme].includes(controlPlanSubTheme)) {
+                acc[controlPlanTheme].push(controlPlanSubTheme)
               }
             })
           }
@@ -33,16 +41,27 @@ const getAllThemesAndSubThemesAsString = (envactions: EnvAction[]) => {
       return acc
     }, {})
 
-  const getThemeAndSubThemesString = ([theme, subThemes]) => `${theme} : ${subThemes.join(' / ')}`
+  const getThemeAndSubThemesString = ([theme, subThemesAsString]) => `${theme} : ${subThemesAsString?.join(' / ')}`
 
   return Object.entries(uniqueThemesAndSubthemes).map(getThemeAndSubThemesString).join(' ; ')
 }
 
-export function CellActionThemes({ envActions }: { envActions: EnvAction[] }) {
-  const cellContent = useMemo(() => getAllThemesAndSubThemesAsString(envActions), [envActions])
+export function CellActionThemes({
+  envActions,
+  subThemes,
+  themes
+}: {
+  envActions: EnvAction[]
+  subThemes: Array<ControlPlansSubTheme>
+  themes: Array<ControlPlansTheme>
+}) {
+  const cellContent = useMemo(
+    () => getAllThemesAndSubThemesAsString(envActions, subThemes, themes),
+    [envActions, subThemes, themes]
+  )
 
   return cellContent !== '' ? (
-    <span data-cy="cell-envactions-themes" title={cellContent}>
+    <span data-cy="cell-envActions-themes" title={cellContent}>
       {cellContent}
     </span>
   ) : null

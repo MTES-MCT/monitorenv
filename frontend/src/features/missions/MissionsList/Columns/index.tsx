@@ -8,7 +8,12 @@ import { getMissionTypeCell } from '../getMissionTypeCell'
 import { getNumberOfControlsCell } from '../getNumberOfControlsCell'
 import { getResourcesCell } from '../getResourcesCell'
 
-export const Columns = [
+import type { ControlPlansSubTheme, ControlPlansTheme } from '../../../../domain/entities/controlPlan'
+
+export const Columns = (
+  themes?: Array<ControlPlansTheme> | undefined,
+  subThemes?: Array<ControlPlansSubTheme> | undefined
+) => [
   {
     accessorFn: row => row.startDateTimeUtc,
     cell: info => getDateCell(info.getValue()),
@@ -60,7 +65,7 @@ export const Columns = [
   },
   {
     accessorFn: row => row.envActions,
-    cell: info => <CellActionThemes envActions={info.getValue()} />,
+    cell: info => <CellActionThemes envActions={info.getValue()} subThemes={subThemes || []} themes={themes || []} />,
     enableSorting: false,
     header: () => 'Thématiques',
     id: 'themes',

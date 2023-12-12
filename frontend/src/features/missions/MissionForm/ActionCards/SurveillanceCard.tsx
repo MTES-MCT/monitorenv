@@ -2,7 +2,7 @@ import { Icon, THEME, customDayjs } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 
 import { Accented, DurationWrapper, SummaryContent, Title, TitleAndButtonsContainer } from './style'
-import { useGetPlanThemesAndSubThemesAsOptions } from '../../../../hooks/useGetPlanThemesAndSubThemesAsOptions'
+import { useGetControlPlansByYear } from '../../../../hooks/useGetControlPlansByYear'
 import { dateDifferenceInHours } from '../../../../utils/dateDifferenceInHours'
 import { extractThemesAsText } from '../../../../utils/extractThemesAsText'
 
@@ -11,7 +11,7 @@ import type { Mission } from '../../../../domain/entities/missions'
 export function SurveillanceCard({ action }) {
   const { values } = useFormikContext<Mission>()
   const year = customDayjs(action.actionStartDateTimeUtc || values.startDateTimeUtc || new Date().toISOString()).year()
-  const { themesAsOptions } = useGetPlanThemesAndSubThemesAsOptions({
+  const { themesAsOptions } = useGetControlPlansByYear({
     year
   })
 

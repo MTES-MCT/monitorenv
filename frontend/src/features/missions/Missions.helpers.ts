@@ -49,13 +49,6 @@ export const actionFactory = ({
         infractions: [],
         observations: '',
         reportingIds: [],
-        themes: [
-          {
-            protectedSpecies: undefined,
-            subThemes: [],
-            theme: ''
-          }
-        ],
         ...action
       }
     case ActionTypeEnum.NOTE:
@@ -76,13 +69,6 @@ export const actionFactory = ({
         id: uuidv4(),
         observations: '',
         reportingIds: [],
-        themes: [
-          {
-            protectedSpecies: undefined,
-            subThemes: [],
-            theme: ''
-          }
-        ],
         ...action
       }
   }
@@ -147,34 +133,6 @@ export const missionFactory = (
     }
 
     envActionsUpdated.splice(surveillanceWithSamePeriodIndex, 1, surveillance)
-
-    /*     const formattedActionsWithControlPlanSubThemes = envActionsUpdated.map(action => {
-      if (action.actionType === ActionTypeEnum.CONTROL) {
-        action.controlPlans.reduce((newControlsCollection, controlPlan) => {
-          const themeIndex = newControlsCollection.findIndex(({ theme }) => theme === controlPlan.theme)
-          if (themeIndex !== -1) {
-            const updatedSubThemes = {
-              ...newControlPlanSubThemesCollection[themeIndex],
-              subThemes: newControlPlanSubThemesCollection[themeIndex].push(controlPlanSubTheme.subTheme)
-            }
-            newControlPlanSubThemesCollection[themeIndex] = [...newControlPlanSubThemesCollection[themeIndex]]
-          }
-        }, [] as ControlPlanSubThemeData[])
-
-               const formattedControlPlanSubThemes = action.controlPlanSubThemes?.map(({ subThemes, tags, theme }) => ({
-          subThemes: subThemes?.map(subTheme => subTheme.id) || [],
-          tags: tags?.map(tag => tag) || [],
-          theme
-        })) 
-
-        return {
-          ...action,
-          controlPlanSubThemes: formattedControlPlanSubThemes
-        }
-      }
-
-      return action
-    }) */
 
     formattedMission = {
       ...formattedMission,

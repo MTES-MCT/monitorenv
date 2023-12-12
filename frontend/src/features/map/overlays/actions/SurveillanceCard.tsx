@@ -2,7 +2,7 @@ import { getLocalizedDayjs, customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useGetPlanThemesAndSubThemesAsOptions } from '../../../../hooks/useGetPlanThemesAndSubThemesAsOptions'
+import { useGetControlPlansByYear } from '../../../../hooks/useGetControlPlansByYear'
 import { dateDifferenceInHours } from '../../../../utils/dateDifferenceInHours'
 import { extractThemesAsText } from '../../../../utils/extractThemesAsText'
 
@@ -19,7 +19,7 @@ export function SurveillanceCard({ feature }) {
   const simpleDate = startDate?.isValid() && startDate?.format('DD MMMM YYYY')
 
   const year = dayjs(feature.actionStartDateTimeUtc || feature.startDateTimeUtc || new Date().toISOString()).year()
-  const { themesAsOptions } = useGetPlanThemesAndSubThemesAsOptions({
+  const { themesAsOptions } = useGetControlPlansByYear({
     year
   })
 

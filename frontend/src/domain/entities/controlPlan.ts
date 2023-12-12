@@ -1,18 +1,25 @@
 export type ControlPlans = {
-  subThemes: {
-    id: number
-    subTheme: string
-    themeId: number
-  }[]
-  tags: {
-    id: number
-    tag: string
-    themeId: number
-  }[]
-  themes: {
-    id: number
-    theme: string
-  }[]
+  subThemes: Array<ControlPlansSubTheme>
+  tags: Array<ControlPlansTag>
+  themes: Array<ControlPlansTheme>
+}
+
+export type ControlPlansTheme = {
+  id: number
+  theme: string
+}
+
+export type ControlPlansSubTheme = {
+  id: number
+  subTheme: string
+  themeId: number
+  year: number
+}
+
+export type ControlPlansTag = {
+  id: number
+  tag: string
+  themeId: number
 }
 
 export type ControlPlansData = {

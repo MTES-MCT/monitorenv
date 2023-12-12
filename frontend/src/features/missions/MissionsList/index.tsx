@@ -5,12 +5,14 @@ import { MissionsTableFilters } from './Filters'
 import { MissionsTable } from './MissionsTable'
 import { addMission } from '../../../domain/use_cases/missions/addMission'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
+import { useGetControlPlans } from '../../../hooks/useGetControlPlans'
 import { useGetFilteredMissionsQuery } from '../../../hooks/useGetFilteredMissionsQuery'
 
 export function Missions() {
   const dispatch = useAppDispatch()
 
   const { isError, isFetching, isLoading, missions } = useGetFilteredMissionsQuery()
+  const { subThemes, themes, themesAsOptions } = useGetControlPlans()
 
   const createMission = () => {
     dispatch(addMission())
@@ -24,7 +26,7 @@ export function Missions() {
           Ajouter une nouvelle mission
         </StyledButton>
       </StyledHeader>
-      <MissionsTableFilters />
+      <MissionsTableFilters themes={themesAsOptions} />
       <NumberOfDisplayedMissions data-cy="Missions-numberOfDisplayedMissions">
         {missions?.length || '0'} Mission{missions && missions.length > 1 ? 's' : ''}
       </NumberOfDisplayedMissions>
@@ -32,7 +34,7 @@ export function Missions() {
       {isError ? (
         <p data-cy="listMissionWrapper">Erreur au chargement des données</p>
       ) : (
-        <MissionsTable isLoading={isLoading || isFetching} missions={missions} />
+        <MissionsTable isLoading={isLoading || isFetching} missions={missions} subThemes={subThemes} themes={themes} />
       )}
     </StyledMissionsContainer>
   )

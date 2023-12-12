@@ -271,28 +271,23 @@ export type NewMission = Omit<Mission<NewEnvAction>, 'controlUnits' | 'facade' |
   controlUnits: Array<Omit<LegacyControlUnit, 'administrationId' | 'id'>>
 }
 // Mission for API
-export type MissionData = Omit<Partial<Mission<EnvActionData>>, 'attachedReportings'>
+export type MissionData = Omit<Partial<Mission<EnvAction>>, 'attachedReportings'>
 
 export type EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote
 export type NewEnvAction = NewEnvActionControl | EnvActionSurveillance | EnvActionNote
-export type EnvActionData = EnvActionControlData | EnvActionSurveillanceData | EnvActionNote
 
 export type EnvActionCommonProperties = {
   actionStartDateTimeUtc?: string | null
   id: string
 }
 
-export type EnvActionTheme = {
-  protectedSpecies?: string[]
-  subThemes: string[]
-  theme: string
-}
 export type NewEnvActionControl = EnvActionCommonProperties & {
   actionEndDateTimeUtc?: string | null
   actionNumberOfControls?: number
   actionTargetType?: string
   actionType: ActionTypeEnum.CONTROL
   controlPlans: ControlPlansData[]
+  geom?: Record<string, any>[]
   infractions: Infraction[]
   isAdministrativeControl?: boolean
   isComplianceWithWaterRegulationsControl?: boolean
@@ -300,30 +295,10 @@ export type NewEnvActionControl = EnvActionCommonProperties & {
   isSeafarersControl?: boolean
   observations: string | null
   reportingIds: number[]
-  themes: EnvActionTheme[]
   vehicleType?: string
 }
 export type EnvActionControl = NewEnvActionControl & {
   actionTargetType: string
-}
-
-export type EnvActionControlData = {
-  actionEndDateTimeUtc?: string | null
-  actionNumberOfControls?: number
-  actionStartDateTimeUtc?: string | null
-  actionTargetType?: string
-  actionType: ActionTypeEnum.CONTROL
-  controlPlans: ControlPlansData[]
-  geom?: Record<string, any>[]
-  id: string
-  infractions: Infraction[]
-  isAdministrativeControl?: boolean
-  isComplianceWithWaterRegulationsControl?: boolean
-  isSafetyEquipmentAndStandardsComplianceControl?: boolean
-  isSeafarersControl?: boolean
-  observations: string | null
-  reportingIds: number[]
-  vehicleType?: string
 }
 
 export type EnvActionSurveillance = EnvActionCommonProperties & {
@@ -333,20 +308,6 @@ export type EnvActionSurveillance = EnvActionCommonProperties & {
   coverMissionZone?: boolean
   durationMatchesMission?: boolean
   geom?: Record<string, any>[]
-  observations: string | null
-  reportingIds: number[]
-  themes: EnvActionTheme[]
-}
-
-export type EnvActionSurveillanceData = {
-  actionEndDateTimeUtc?: string | null
-  actionStartDateTimeUtc?: string | null
-  actionType: ActionTypeEnum.SURVEILLANCE
-  controlPlans: ControlPlansData[]
-  coverMissionZone?: boolean
-  durationMatchesMission?: boolean
-  geom?: Record<string, any>[]
-  id: string
   observations: string | null
   reportingIds: number[]
 }

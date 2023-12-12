@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { TargetTypeLabels } from '../../../../domain/entities/targetType'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useGetPlanThemesAndSubThemesAsOptions } from '../../../../hooks/useGetPlanThemesAndSubThemesAsOptions'
+import { useGetControlPlansByYear } from '../../../../hooks/useGetControlPlansByYear'
 import { ControlInfractionsTags } from '../../../../ui/ControlInfractionsTags'
 import { extractThemesAsText } from '../../../../utils/extractThemesAsText'
 
@@ -16,7 +16,7 @@ export function ControlCard({ feature }: { feature: any }) {
 
   const year = customDayjs(parsedActionStartDateTimeUtc || new Date().toISOString()).year()
 
-  const { isLoading, themesAsOptions } = useGetPlanThemesAndSubThemesAsOptions({
+  const { isLoading, themesAsOptions } = useGetControlPlansByYear({
     year
   })
   if (listener || isLoading) {

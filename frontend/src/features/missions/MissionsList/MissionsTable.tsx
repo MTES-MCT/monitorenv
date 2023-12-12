@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unstable-nested-components */
 import { Icon, SimpleTable } from '@mtes-mct/monitor-ui'
 import { flexRender, getCoreRowModel, getSortedRowModel, type SortingState, useReactTable } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
@@ -9,16 +8,27 @@ import { Columns } from './Columns'
 import { StyledSkeletonRow } from '../../commonComponents/Skeleton'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 
+import type { ControlPlansSubTheme, ControlPlansTheme } from '../../../domain/entities/controlPlan'
 import type { Mission } from '../../../domain/entities/missions'
 
-export function MissionsTable({ isLoading, missions }: { isLoading: boolean; missions: Mission[] }) {
+export function MissionsTable({
+  isLoading,
+  missions,
+  subThemes,
+  themes
+}: {
+  isLoading: boolean
+  missions: Mission[]
+  subThemes: Array<ControlPlansSubTheme>
+  themes: Array<ControlPlansTheme>
+}) {
   const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'startDate' }])
 
   const tableData = useMemo(() => (isLoading ? Array(5).fill({}) : missions), [isLoading, missions])
 
   const columns = useMemo(
-    () => (isLoading ? Columns.map(column => ({ ...column, cell: StyledSkeletonRow })) : Columns),
-    [isLoading]
+    () => (isLoading ? Columns().map(column => ({ ...column, cell: StyledSkeletonRow })) : Columns(themes, subThemes)),
+    [isLoading, themes, subThemes]
   )
 
   const table = useReactTable({

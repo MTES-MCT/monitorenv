@@ -22,7 +22,7 @@ class ControlPlansController(
         private val getControlPlansByYear: GetControlPlansByYear,
 ) {
 
-    @GetMapping("/")
+    @GetMapping("")
     @Operation(summary = "Get control plan themes, subthemes and tags and allowed tags")
     fun getAll(): ControlPlanDataOutput {
         val controlPlan = getControlPlans.execute()

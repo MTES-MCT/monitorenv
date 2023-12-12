@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { TagsSelector } from './TagsSelector'
 import { ThemeSelector } from './ThemeSelector'
 import { SubThemesSelector } from './ThemeSelector/SubThemesSelector'
-import { useGetPlanThemesAndSubThemesAsOptions } from '../../../../../hooks/useGetPlanThemesAndSubThemesAsOptions'
+import { useGetControlPlansByYear } from '../../../../../hooks/useGetControlPlansByYear'
 
 import type { Mission } from '../../../../../domain/entities/missions'
 
@@ -22,11 +22,10 @@ export function ActionTheme({ actionIndex, labelSubTheme, labelTheme, themeIndex
   const year = customDayjs(actionDate).year()
   const [currentThemeField] = useField<number>(`envActions[${actionIndex}].controlPlans[${themeIndex}].themeId`)
 
-  const { isError, isLoading, subThemesAsOptions, tagsAsOptions, themesAsOptions } =
-    useGetPlanThemesAndSubThemesAsOptions({
-      selectedTheme: currentThemeField?.value,
-      year
-    })
+  const { isError, isLoading, subThemesAsOptions, tagsAsOptions, themesAsOptions } = useGetControlPlansByYear({
+    selectedTheme: currentThemeField?.value,
+    year
+  })
 
   return (
     <ActionThemeWrapper data-cy="envaction-theme-element">

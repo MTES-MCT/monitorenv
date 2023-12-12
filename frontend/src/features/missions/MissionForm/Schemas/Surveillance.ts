@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import * as Yup from 'yup'
 
-import { ControlPlansSchema, ThemeSchema } from './Theme'
+import { ControlPlansSchema } from './ControlPlans'
 import { ActionTypeEnum, type EnvActionSurveillance } from '../../../../domain/entities/missions'
 import { REACT_APP_CYPRESS_TEST } from '../../../../env'
 
@@ -105,7 +105,6 @@ export const getClosedEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<Env
 
         then: () => Yup.object().nullable()
       }),
-      id: Yup.string().required(),
-      themes: Yup.array().of(ThemeSchema).ensure().required()
+      id: Yup.string().required()
     })
     .required()

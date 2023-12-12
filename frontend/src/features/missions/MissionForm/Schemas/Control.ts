@@ -1,8 +1,8 @@
 import _ from 'lodash'
 import * as Yup from 'yup'
 
+import { ControlPlansSchema } from './ControlPlans'
 import { ClosedInfractionSchema, NewInfractionSchema } from './Infraction'
-import { ControlPlansSchema, ThemeSchema } from './Theme'
 import { ActionTypeEnum, type EnvActionControl } from '../../../../domain/entities/missions'
 import { TargetTypeEnum } from '../../../../domain/entities/targetType'
 import { REACT_APP_CYPRESS_TEST } from '../../../../env'
@@ -70,7 +70,6 @@ export const getClosedEnvActionControlSchema = (ctx: any): Yup.SchemaOf<EnvActio
         : Yup.array().of(ControlPointSchema).ensure().min(1, 'Point de contrôle requis'),
       id: Yup.string().required(),
       infractions: Yup.array().of(ClosedInfractionSchema).ensure().required(),
-      themes: Yup.array().of(ThemeSchema).ensure().required().min(1),
       vehicleType: Yup.string().when('actionTargetType', (actionTargetType, schema) => {
         if (!actionTargetType || actionTargetType === TargetTypeEnum.VEHICLE) {
           return schema.nullable().required('Requis')
