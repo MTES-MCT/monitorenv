@@ -2,7 +2,7 @@ import { useGetControlPlansQuery } from '../api/controlPlans'
 
 import type { Option } from '@mtes-mct/monitor-ui'
 
-export function useGetControlPlans(/* { selectedTheme = undefined }: { selectedTheme?: number | undefined } */) {
+export function useGetControlPlans() {
   const { data, isError, isLoading } = useGetControlPlansQuery()
 
   const themesAsOptions: Array<Option<number>> =

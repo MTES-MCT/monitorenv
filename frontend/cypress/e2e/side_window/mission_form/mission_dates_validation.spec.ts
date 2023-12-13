@@ -39,7 +39,7 @@ context('Mission dates', () => {
     cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').contains('Police des espèces protégées').click()
     cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Perturbation').click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Destruction').click({ force: true })
     cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
 
     cy.getDataCy('surveillance-duration-matches-mission').should('have.class', 'rs-checkbox-checked')
@@ -94,9 +94,9 @@ context('Mission dates', () => {
     cy.clickButton('Ajouter une surveillance')
 
     cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Police des mouillages').click()
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Mouillage Individuel').click()
     cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').contains('ZMEL').click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Autre').click({ force: true })
     cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
 
     cy.getDataCy('action-card').eq(0).click()
@@ -171,7 +171,7 @@ context('Mission dates', () => {
     cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').contains('Police des espèces protégées').click()
     cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Perturbation').click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Détention').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').click('topLeft')
     cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
 

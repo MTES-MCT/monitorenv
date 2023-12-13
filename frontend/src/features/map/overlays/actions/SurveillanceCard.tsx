@@ -2,7 +2,7 @@ import { getLocalizedDayjs, customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useGetControlPlansByYear } from '../../../../hooks/useGetControlPlansByYear'
+import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
 import { dateDifferenceInHours } from '../../../../utils/dateDifferenceInHours'
 import { extractThemesAsText } from '../../../../utils/extractThemesAsText'
 
@@ -18,10 +18,7 @@ export function SurveillanceCard({ feature }) {
 
   const simpleDate = startDate?.isValid() && startDate?.format('DD MMMM YYYY')
 
-  const year = dayjs(feature.actionStartDateTimeUtc || feature.startDateTimeUtc || new Date().toISOString()).year()
-  const { themesAsOptions } = useGetControlPlansByYear({
-    year
-  })
+  const { themes } = useGetControlPlans()
 
   if (listener) {
     return null
@@ -30,7 +27,7 @@ export function SurveillanceCard({ feature }) {
   return (
     <StyledSurveillanceCard>
       <div>
-        <StyledThemes>{extractThemesAsText(controlPlans, themesAsOptions)}</StyledThemes>
+        <StyledThemes>{extractThemesAsText(controlPlans, themes)}</StyledThemes>
         <StyledDuration>{duration > 0 ? `1 surveillance (${duration}h)` : '1 surveillance'}</StyledDuration>
       </div>
 

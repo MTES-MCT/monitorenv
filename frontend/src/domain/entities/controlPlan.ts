@@ -25,5 +25,5 @@ export type ControlPlansTag = {
 export type ControlPlansData = {
   subThemeIds: number[]
   tagIds: number[]
-  themeId: number
+  themeId: number | undefined
 }

@@ -22,7 +22,6 @@ import {
 } from '../../domain/entities/reporting'
 import { getFormattedReportingId } from '../Reportings/utils'
 
-// import type { ControlPlansData } from '../../domain/entities/controlPlan'
 import type { LegacyControlUnit } from '../../domain/entities/legacyControlUnit'
 
 export const infractionFactory = ({ id, ...infraction } = { id: '' }) => ({
@@ -44,7 +43,14 @@ export const actionFactory = ({
         actionNumberOfControls: undefined,
         actionTargetType: undefined,
         actionType: ActionTypeEnum.CONTROL,
-        controlPlans: [],
+        controlPlans: [
+          {
+            subThemeIds: [],
+            tagIds: [],
+            themeId: undefined
+          }
+        ],
+
         id: uuidv4(),
         infractions: [],
         observations: '',
@@ -63,7 +69,14 @@ export const actionFactory = ({
     default:
       return {
         actionType: ActionTypeEnum.SURVEILLANCE,
-        controlPlans: [],
+        controlPlans: [
+          {
+            subThemeIds: [],
+            tagIds: [],
+            themeId: undefined
+          }
+        ],
+
         coverMissionZone: true,
         durationMatchesMission: true,
         id: uuidv4(),

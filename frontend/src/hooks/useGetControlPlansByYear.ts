@@ -32,6 +32,7 @@ export function useGetControlPlansByYear({
     isLoading,
     subThemesAsOptions,
     tagsAsOptions,
+    themes: Object.values(data?.themes || {}) || [],
     themesAsOptions
   }
 }

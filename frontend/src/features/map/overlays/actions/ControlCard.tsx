@@ -1,9 +1,9 @@
-import { THEME, getLocalizedDayjs, pluralize, customDayjs } from '@mtes-mct/monitor-ui'
+import { THEME, getLocalizedDayjs, pluralize } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { TargetTypeLabels } from '../../../../domain/entities/targetType'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useGetControlPlansByYear } from '../../../../hooks/useGetControlPlansByYear'
+import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
 import { ControlInfractionsTags } from '../../../../ui/ControlInfractionsTags'
 import { extractThemesAsText } from '../../../../utils/extractThemesAsText'
 
@@ -14,11 +14,7 @@ export function ControlCard({ feature }: { feature: any }) {
   const parsedActionStartDateTimeUtc = new Date(actionStartDateTimeUtc)
   const actionDate = getLocalizedDayjs(parsedActionStartDateTimeUtc).format('DD MMM à HH:mm')
 
-  const year = customDayjs(parsedActionStartDateTimeUtc || new Date().toISOString()).year()
-
-  const { isLoading, themesAsOptions } = useGetControlPlansByYear({
-    year
-  })
+  const { isLoading, themes } = useGetControlPlans()
   if (listener || isLoading) {
     return null
   }
@@ -27,7 +23,7 @@ export function ControlCard({ feature }: { feature: any }) {
     <StyledControlCardHeader>
       <StyledControlThemes>
         {controlPlans?.length > 0 ? (
-          <StyledThemes>{extractThemesAsText(controlPlans, themesAsOptions)}</StyledThemes>
+          <StyledThemes>{extractThemesAsText(controlPlans, themes)}</StyledThemes>
         ) : (
           <StyledGrayText>Thématique à renseigner</StyledGrayText>
         )}{' '}
