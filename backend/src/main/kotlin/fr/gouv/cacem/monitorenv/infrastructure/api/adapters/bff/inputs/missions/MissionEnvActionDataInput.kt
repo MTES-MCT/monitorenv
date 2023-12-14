@@ -23,6 +23,8 @@ data class MissionEnvActionDataInput(
 
     // EnvActionControl + EnvSurveillance Properties
     val actionEndDateTimeUtc: ZonedDateTime? = null,
+    val controlPlanSubThemes: List<ControlPlanSubThemeDataInput>? = null,
+    @Deprecated("Use controlPlanSubThemes instead")
     val themes: List<ThemeEntity>? = null,
     val department: String? = null,
     val facade: String? = null,
@@ -108,3 +110,5 @@ data class MissionEnvActionDataInput(
         }
     }
 }
+
+typealias ControlPlanSubThemeDataInput = Pair<Int, List<String>>

@@ -5,35 +5,38 @@ import java.time.ZonedDateTime
 import java.util.*
 
 data class EnvActionSurveillanceProperties(
-    val themes: List<ThemeEntity>? = listOf(),
-    val observations: String? = null,
     val coverMissionZone: Boolean? = null,
+    val observations: String? = null,
+    @Deprecated("Use ControlPlanSubThemes instead")
+    val themes: List<ThemeEntity>? = listOf(),
 ) {
     fun toEnvActionSurveillanceEntity(
         id: UUID,
         actionStartDateTimeUtc: ZonedDateTime?,
         actionEndDateTimeUtc: ZonedDateTime?,
-        facade: String?,
+        controlPlanSubThemes: List<EnvActionControlPlanSubThemeEntity>?,
         department: String?,
+        facade: String?,
         geom: Geometry?,
     ) =
         EnvActionSurveillanceEntity(
             id = id,
             actionStartDateTimeUtc = actionStartDateTimeUtc,
             actionEndDateTimeUtc = actionEndDateTimeUtc,
-            facade = facade,
-            department = department,
-            geom = geom,
-            themes = themes,
-            observations = observations,
+            controlPlanSubThemes = controlPlanSubThemes,
             coverMissionZone = coverMissionZone,
+            department = department,
+            facade = facade,
+            geom = geom,
+            observations = observations,
+            themes = themes,
         )
     companion object {
         fun fromEnvActionSurveillanceEntity(envAction: EnvActionSurveillanceEntity) =
             EnvActionSurveillanceProperties(
-                themes = envAction.themes,
-                observations = envAction.observations,
                 coverMissionZone = envAction.coverMissionZone,
+                observations = envAction.observations,
+                themes = envAction.themes,
             )
     }
 }

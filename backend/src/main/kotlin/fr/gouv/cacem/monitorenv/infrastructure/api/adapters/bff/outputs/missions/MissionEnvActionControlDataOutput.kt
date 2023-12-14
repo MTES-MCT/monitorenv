@@ -17,6 +17,7 @@ data class MissionEnvActionControlDataOutput(
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
     val actionTargetType: ActionTargetTypeEnum? = null,
     override val actionType: ActionTypeEnum = ActionTypeEnum.CONTROL,
+    val controlPlans: List<MissionEnvActionControlPlanDataOutput>? = listOf(),
     val department: String? = null,
     val facade: String? = null,
     val geom: Geometry? = null,
@@ -27,7 +28,9 @@ data class MissionEnvActionControlDataOutput(
     val isSeafarersControl: Boolean? = null,
     val observations: String? = null,
     val reportingIds: List<Int>,
+    @Deprecated("Use ControlPlanSubThemes instead")
     val themes: List<ThemeEntity>? = listOf(),
+    val controlPlanSubThemes: List<MissionEnvActionSubThemeDataOutput>? = listOf(),
     val vehicleType: VehicleTypeEnum? = null,
 ) :
     MissionEnvActionDataOutput(
@@ -46,6 +49,9 @@ data class MissionEnvActionControlDataOutput(
                 actionStartDateTimeUtc = envActionControlEntity.actionStartDateTimeUtc,
                 actionEndDateTimeUtc = envActionControlEntity.actionEndDateTimeUtc,
                 actionTargetType = envActionControlEntity.actionTargetType,
+                controlPlanSubThemes = envActionControlEntity.controlPlanSubThemes?.map {
+                    MissionEnvActionSubThemeDataOutput.fromEnvActionControlPlanSubThemeEntity(it)
+                },
                 department = envActionControlEntity.department,
                 facade = envActionControlEntity.facade,
                 geom = envActionControlEntity.geom,

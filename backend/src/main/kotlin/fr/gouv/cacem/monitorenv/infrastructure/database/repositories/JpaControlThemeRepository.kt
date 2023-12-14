@@ -5,7 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IControlThemeRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlThemeRepository
 import org.springframework.stereotype.Repository
 
-@Deprecated("Use JpaControlPlanThemeRepository instead")
+@Deprecated("Use JpaControlPlanSubThemeRepository instead")
 @Repository
 class JpaControlThemeRepository(private val dbControlThemeRepository: IDBControlThemeRepository) :
     IControlThemeRepository {

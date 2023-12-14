@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlPlanThemes.GetControlPlanThemesByYear
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ControlPlanThemeDataOutput
+import fr.gouv.cacem.monitorenv.domain.use_cases.ControlPlanSubThemes.GetControlPlanSubThemesByYear
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ControlPlanSubThemeDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/bff/v1/controlplanthemes")
-@Tag(name = "Control Plan Themes", description = "API thématiques du plan de contrôle")
-class ControlPlanThemesController(
-    private val getControlPlanThemesByYear: GetControlPlanThemesByYear,
+@RequestMapping("/bff/v1/controlPlanSubThemes")
+@Tag(name = "Control Plan Sub Themes", description = "API des sous thématiques des plan de contrôle")
+class ControlPlanSubThemesController(
+    private val getControlPlanSubThemesByYear: GetControlPlanSubThemesByYear,
 ) {
 
     @GetMapping("/{year}")
@@ -23,8 +23,8 @@ class ControlPlanThemesController(
         @PathParam("validity year of the control plan themes")
         @PathVariable(name = "year")
         year: Int,
-    ): List<ControlPlanThemeDataOutput> {
-        val controlPlanThemes = getControlPlanThemesByYear.execute(year)
-        return controlPlanThemes.map { ControlPlanThemeDataOutput.fromControlPlanThemeEntity(it) }
+    ): List<ControlPlanSubThemeDataOutput> {
+        val ControlPlanSubThemes = getControlPlanSubThemesByYear.execute(year)
+        return ControlPlanSubThemes.map { ControlPlanSubThemeDataOutput.fromControlPlanSubThemeEntity(it) }
     }
 }

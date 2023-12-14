@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlPlanTheme.ControlPlanThemeEntity
+import fr.gouv.cacem.monitorenv.domain.entities.ControlPlanSubTheme.ControlPlanSubThemeEntity
 import io.hypersistence.utils.hibernate.type.array.ListArrayType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -23,7 +23,7 @@ data class ControlPlanSubThemeModel(
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "theme_id")
-    val controlPlanTheme: ControlPlanThemeModel,
+    val ControlPlanTheme: ControlPlanThemeModel,
 
     @Column(name = "year")
     val year: Int,
@@ -32,10 +32,10 @@ data class ControlPlanSubThemeModel(
     @Type(ListArrayType::class)
     val allowedTags: List<String>? = null,
 ) {
-    fun toControlPlanTheme() = ControlPlanThemeEntity(
+    fun toControlPlanSubTheme() = ControlPlanSubThemeEntity(
         id = id,
         subTheme = subTheme,
-        theme = controlPlanTheme.theme,
+        theme = ControlPlanTheme.theme,
         year = year,
         allowedTags = allowedTags,
     )

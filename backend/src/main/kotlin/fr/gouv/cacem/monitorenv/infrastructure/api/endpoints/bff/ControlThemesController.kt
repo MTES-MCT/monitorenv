@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@Deprecated("Use ControlPlanThemesController instead")
+@Deprecated("Use ControlPlanSubThemesController instead")
 @RestController
 @RequestMapping("/bff/v1/controlthemes")
 @Tag(name = "BFF.Control Themes", description = "API control themes")
