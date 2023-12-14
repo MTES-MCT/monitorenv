@@ -12,4 +12,9 @@ class JpaControlPlanSubThemeRepository(
     override fun findAll(): List<ControlPlanSubThemeEntity> {
         return dbControlPlanSubThemeRepository.findAll().map { it.toControlPlanSubThemeEntity() }
     }
+    override fun findByYear(year: Int): List<ControlPlanSubThemeEntity> {
+        return dbControlPlanSubThemeRepository.findByYearOrderById(year).map {
+            it.toControlPlanSubThemeEntity()
+        }
+    }
 }
