@@ -244,8 +244,8 @@ class MissionsControllerITests {
                             reportType =
                             ReportingTypeEnum
                                 .INFRACTION_SUSPICION,
-                            theme = "Theme",
-                            subThemes = listOf("SubTheme"),
+                            themeId = 12,
+                            subThemeIds = listOf(82),
                             actionTaken = "ActionTaken",
                             isControlRequired = true,
                             hasNoUnitAvailable = true,
@@ -573,8 +573,8 @@ class MissionsControllerITests {
                             reportType =
                             ReportingTypeEnum
                                 .INFRACTION_SUSPICION,
-                            theme = "Theme",
-                            subThemes = listOf("SubTheme"),
+                            themeId = 12,
+                            subThemeIds = listOf(82),
                             actionTaken = "ActionTaken",
                             isControlRequired = true,
                             hasNoUnitAvailable = true,

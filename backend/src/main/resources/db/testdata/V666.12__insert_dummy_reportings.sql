@@ -1,168 +1,13 @@
 DELETE FROM reportings;
 
-INSERT INTO reportings (
-    id,
-    reporting_id,
-    source_type ,
-    semaphore_id ,
-    control_unit_id ,
-    source_name ,
-    target_type ,
-    vehicle_type,
-    target_details,
-    geom,
-    sea_front,
-    description,
-    report_type,
-    theme,
-    sub_themes,
-    action_taken,
-    is_control_required,
-    has_no_unit_available,
-    created_at,
-    validity_time,
-    is_deleted,
-    is_archived,
-    mission_id,
-    attached_to_mission_at_utc,
-    detached_from_mission_at_utc
-    )
-VALUES
-(
-    1,
-    2300001,
-    'SEMAPHORE',
-    21,
-    null,
-    null,
-    'VEHICLE',
-    'VESSEL',
-    '[{"vesselName": "Vessel 1", "mmsi": "012314231343" }]',
-    ST_GeomFromText('MULTIPOINT((-4.938881879556736 48.4149566883917))', 4326),
-    'NAMO',
-    'Description 1',
-    'INFRACTION_SUSPICION',
-    'Rejets illicites',
-    '{"Jet de déchet","Carénage sauvage"}',
-    'ACTION TAKEN',
-    true,
-    true,
-    now() - INTERVAL '3 days',
-    24,
-    false,
-    false,
-    null,
-    null,
-    null
-    ),
-(
-    2,
-    2300002,
-    'SEMAPHORE',
-    23,
-    null,
-    null,
-    'VEHICLE',
-    'VESSEL',
-    '[{"vesselName": "Vessel 2", "mmsi": "012314231344" }]',
-    ST_GeomFromText('MULTIPOINT((-4.779484119719514 48.619074487031526))', 4326),
-    'NAMO',
-    'Description 2',
-    'INFRACTION_SUSPICION',
-    'Police des mouillages',
-    '{"ZMEL"}',
-    'ACTION TAKEN',
-    true,
-    true,
-    now() - INTERVAL '2 days',
-    2,
-    false,
-    false,
-    null,
-    null,
-    null
-),
-(
-    3,
-    2300003,
-    'CONTROL_UNIT',
-    null,
-    10000,
-    null,
-    'VEHICLE',
-    'VESSEL',
-    '[{"vesselName": "Vessel 3", "mmsi": "012314231345" }]',
-    ST_GeomFromText('MULTIPOLYGON(((-3.504632038765229 48.938606793539606,-3.24829506967698 48.956239351532986,-3.484446288370139 48.996964545159244,-3.504632038765229 48.938606793539606)))', 4326),
-    'NAMO',
-    'Description 3',
-    'INFRACTION_SUSPICION',
-    'Police des mouillages',
-    '{"ZMEL"}',
-    'ACTION TAKEN',
-    true,
-    true,
-    now() - INTERVAL '1 hour',
-    1,
-    false,
-    false,
-    null,
-    null,
-    null
-),
-(
-    4,
-    2300004,
-    'OTHER',
-    null,
-    null,
-    'MA SUPER SOCIETE',
-    'INDIVIDUAL',
-    NULL,
-    '[{"operatorName": "Mr le dirigeant" }]',
-    ST_GeomFromText('MULTIPOLYGON(((-2.81383107 49.49805557, -2.63290938 49.59886363, -2.80213877 49.69953506, -2.91683355 49.52263623, -2.81383107 49.49805557)))', 4326),
-    'MED',
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ultrices risus ac arcu pellentesque, et tempor justo tempor. Pellentesque sem nisl, tempor id augue non, interdum sollicitudin felis.',
-    'OBSERVATION',
-    'Pêche à pied',
-    '{"Braconnage"}',
-    NULL,
-    true,
-    true,
-    now() - INTERVAL '3 hour',
-    4,
-    false,
-    false,
-    null,
-    null,
-    null
-),
-(
-    5,
-    2300005,
-    'SEMAPHORE',
-    36,
-    NULL,
-    NULL,
-    'COMPANY',
-    NULL,
-    '[{"operatorName": "Ma société", "vesselName": "Mr le gérant" }]',
-    ST_GeomFromText('MULTIPOINT((0.37083333 49.76777778))', 4326),
-    'Guadeloupe',
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    'OBSERVATION',
-    NULL,
-    NULL,
-    NULL,
-    true,
-    true,
-    now() - INTERVAL '1 hour',
-    6,
-    false,
-    false,
-    null,
-    null,
-    null
-);
+INSERT INTO public.reportings VALUES (1, 2300001, 'SEMAPHORE', 21, NULL, NULL, 'VEHICLE', 'VESSEL', '[{"mmsi": "012314231343", "vesselName": "Vessel 1"}]', '0104000020E610000001000000010100000045035E406AC113C00CF3FE4C1D354840', 'NAMO', 'Description 1', 'INFRACTION_SUSPICION', 'Rejets illicites', '{"Jet de déchet","Carénage sauvage"}', 'ACTION TAKEN', true, true, '2023-12-05 18:27:58.191835', 24, false, false, NULL, NULL, NULL, NULL, NULL, 19);
+INSERT INTO public.reportings VALUES (2, 2300002, 'SEMAPHORE', 23, NULL, NULL, 'VEHICLE', 'VESSEL', '[{"mmsi": "012314231344", "vesselName": "Vessel 2"}]', '0104000020E610000001000000010100000062C9C715311E13C050CB31D53D4F4840', 'NAMO', 'Description 2', 'INFRACTION_SUSPICION', 'Police des mouillages', '{ZMEL}', 'ACTION TAKEN', true, true, '2023-12-06 18:27:58.191835', 2, false, false, NULL, NULL, NULL, NULL, NULL, 12);
+INSERT INTO public.reportings VALUES (3, 2300003, 'CONTROL_UNIT', NULL, 10000, NULL, 'VEHICLE', 'VESSEL', '[{"mmsi": "012314231345", "vesselName": "Vessel 3"}]', '0106000020E610000001000000010300000001000000040000006E15B8857C090CC02C07754424784840552A202082FC09C0C0FD120D667A484025BF296025E00BC0805DC2889C7F48406E15B8857C090CC02C07754424784840', 'NAMO', 'Description 3', 'INFRACTION_SUSPICION', 'Police des mouillages', '{ZMEL}', 'ACTION TAKEN', true, true, '2023-12-08 17:27:58.191835', 1, false, false, NULL, NULL, NULL, NULL, NULL, 12);
+INSERT INTO public.reportings VALUES (4, 2300004, 'OTHER', NULL, NULL, 'MA SUPER SOCIETE', 'INDIVIDUAL', NULL, '[{"operatorName": "Mr le dirigeant"}]', '0106000020E6100000010000000103000000010000000500000012F330DDB98206C0CD5EF048C0BF4840FE7303CB321005C092CE3C90A7CC4840820740BBC76A06C07E8D665D8AD94840310109D4AC5507C002C775BEE5C2484012F330DDB98206C0CD5EF048C0BF4840', 'MED', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ultrices risus ac arcu pellentesque, et tempor justo tempor. Pellentesque sem nisl, tempor id augue non, interdum sollicitudin felis.', 'OBSERVATION', 'Pêche à pied', '{Braconnage}', NULL, true, true, '2023-12-08 15:27:58.191835', 4, false, false, NULL, NULL, NULL, NULL, NULL, 18);
+INSERT INTO public.reportings VALUES (5, 2300005, 'SEMAPHORE', 36, NULL, NULL, 'COMPANY', NULL, '[{"vesselName": "Mr le gérant", "operatorName": "Ma société"}]', '0104000020E6100000010000000101000000417927B8BBBBD73F06D9D38A46E24840', 'Guadeloupe', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 'OBSERVATION', NULL, NULL, NULL, true, true, '2023-12-08 17:27:58.191835', 6, false, false, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO public.reportings VALUES (6, 2300006, 'SEMAPHORE', 36, NULL, NULL, 'COMPANY', NULL, '[{"vesselName": "Héron", "operatorName": "La sociéter"}]', '0104000020E6100000010000000101000000A22CD736208DF9BF242A543717D44540', 'Guadeloupe', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 'OBSERVATION', 'Police des mouillages', '{ZMEL}', NULL, true, true, '2023-12-08 17:12:58.191835', 6, false, false, 'ABC', 34, '2023-12-08 18:12:58.191835', NULL, 'b8007c8a-5135-4bc3-816f-c69c7b75d807', 12);
+INSERT INTO public.reportings VALUES (7, 2300007, 'CONTROL_UNIT', NULL, 10001, NULL, 'COMPANY', NULL, '[{"vesselName": "Mr le gérant", "operatorName": "Good Company"}]', '0104000020E6100000010000000101000000BDAE0F9A19C010C068D780A5708E4740', 'NAMO', 'Lorem LoremLorem ipsum dolor sit amet, consectetur adipiscing elit.', 'OBSERVATION', NULL, NULL, NULL, true, true, '2023-12-08 16:57:58.191835', 6, false, false, 'DEF', 34, '2023-12-08 18:02:58.191835', NULL, NULL, NULL);
+INSERT INTO public.reportings VALUES (8, 2300008, 'CONTROL_UNIT', NULL, 10001, NULL, 'COMPANY', NULL, '[{"vesselName": "Mr le gérant", "operatorName": "Good Company"}]', '0104000020E61000000100000001010000005BE1449141C0F5BF89869C29BA034740', 'NAMO', 'Lorem LoremLorem ipsum dolor sit amet, consectetur adipiscing elit.', 'OBSERVATION', NULL, NULL, NULL, true, true, '2023-12-08 16:57:58.191835', 6, false, false, 'GHI', 38, '2023-12-08 18:02:58.191835', NULL, NULL, NULL);
 
 /* reporting linked to a surveillance */
 
@@ -178,3 +23,10 @@ INSERT INTO reportings (id, reporting_id, source_type, semaphore_id, control_uni
 SELECT setval('reportings_id_seq', (SELECT max(id) FROM reportings), true);
 CREATE SEQUENCE IF NOT EXISTS reportings_2023_seq;
 SELECT setval('reportings_2023_seq', (SELECT max(id) FROM reportings), true);
+
+INSERT INTO public.reportings_control_plan_sub_themes VALUES (1, 62);
+INSERT INTO public.reportings_control_plan_sub_themes VALUES (1, 27);
+INSERT INTO public.reportings_control_plan_sub_themes VALUES (2, 82);
+INSERT INTO public.reportings_control_plan_sub_themes VALUES (3, 82);
+INSERT INTO public.reportings_control_plan_sub_themes VALUES (4, 25);
+INSERT INTO public.reportings_control_plan_sub_themes VALUES (6, 82);

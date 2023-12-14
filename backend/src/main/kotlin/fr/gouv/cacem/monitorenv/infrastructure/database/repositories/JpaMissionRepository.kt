@@ -145,11 +145,11 @@ class JpaMissionRepository(
 
         val missionModel = MissionModel.fromMissionEntity(
             mission = mission,
-            mapper = mapper,
             controlUnitResourceModelMap = controlUnitResourceModelMap,
             controlPlanThemesReferenceModelMap = controlPlanThemesReferenceModelMap ?: emptyMap(),
             controlPlanSubThemesReferenceModelMap = controlPlanSubThemesReferenceModelMap ?: emptyMap(),
             controlPlanTagsReferenceModelMap = controlPlanTagsReferenceModelMap ?: emptyMap(),
+            mapper = mapper,
         )
         return dbMissionRepository.saveAndFlush(missionModel).toMissionDTO(mapper)
     }
