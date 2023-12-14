@@ -139,16 +139,29 @@ class JpaReportingRepository(
             // to simplify the understandability of the code, we do the same steps for creation and update
             // even if it is not necessary for update
             // first save (ensure id is set)
-            val reportingModel = dbReportingRepository.save(
-                ReportingModel.fromReportingEntity(
+            var reportingModel: ReportingModel
+
+            if (reporting.id == null) {
+                reportingModel = dbReportingRepository.save(
+                    ReportingModel.fromReportingEntity(
+                        reporting = reporting,
+                        semaphoreReference = semaphoreReference,
+                        controlUnitReference = controlUnitReference,
+                        missionReference = missionReference,
+                        envActionReference = envActionReference,
+                        controlPlanThemeReference = controlPlanThemeReference,
+                    ),
+                )
+            } else {
+                reportingModel = ReportingModel.fromReportingEntity(
                     reporting = reporting,
                     semaphoreReference = semaphoreReference,
                     controlUnitReference = controlUnitReference,
                     missionReference = missionReference,
                     envActionReference = envActionReference,
                     controlPlanThemeReference = controlPlanThemeReference,
-                ),
-            )
+                )
+            }
 
             // set controlPlanSubThemes and save again (and flush)
             controlPlanSubThemesReferenceList?.forEach { it ->
