@@ -23,8 +23,12 @@ class ControlPlansController(
         @PathParam("validity year of the control plan themes")
         @PathVariable(name = "year")
         year: Int,
-    ): List<ControlPlanDataOutput> {
-        val controlPlanSubThemes = getControlPlansByYear.execute(year)
-        return controlPlanSubThemes.map { ControlPlanDataOutput.fromControlPlanEntity(it) }
+    ): ControlPlanDataOutput {
+        val controlPlan = getControlPlansByYear.execute(year)
+        return ControlPlanDataOutput.fromControlPlanEntities(
+            themes = controlPlan.first,
+            subThemes = controlPlan.second,
+            tags = controlPlan.third,
+        )
     }
 }

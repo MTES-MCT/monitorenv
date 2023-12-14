@@ -10,7 +10,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanSubThemeEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
@@ -67,12 +67,13 @@ class MissionsControllerITests {
 
     @Autowired private lateinit var objectMapper: ObjectMapper
 
+    private val polygon = WKTReader().read(
+        "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))",
+    ) as MultiPolygon
+    private val point = WKTReader().read("POINT (-4.54877816747593 48.305559876971)") as Point
+
     @Test
     fun `Should create a new mission`() {
-        val wktReader = WKTReader()
-        val multipolygonString =
-            "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))"
-        val polygon = wktReader.read(multipolygonString) as MultiPolygon
         // Given
         val expectedNewMission =
             MissionDTO(
@@ -130,24 +131,17 @@ class MissionsControllerITests {
     @Test
     fun `Should get all missions`() {
         // Given
-        val wktReader = WKTReader()
-        val multipolygonString =
-            "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))"
-        val polygon = wktReader.read(multipolygonString) as MultiPolygon
-
-        val point = wktReader.read("POINT (-4.54877816747593 48.305559876971)") as Point
 
         val controlEnvAction =
             EnvActionControlEntity(
                 id = UUID.fromString("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b"),
                 actionStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 actionEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                controlPlanSubThemes = listOf(
-                    EnvActionControlPlanSubThemeEntity(
-                        subThemeId = 1,
-                        subTheme = "sous theme 1",
-                        tags = listOf("tag 1", "tag 2"),
-                        theme = "Theme 1",
+                controlPlans = listOf(
+                    EnvActionControlPlanEntity(
+                        subThemeIds = listOf(1),
+                        tagIds = listOf(1, 2),
+                        themeId = 1,
                     ),
                 ),
                 geom = point,
@@ -344,11 +338,10 @@ class MissionsControllerITests {
                     equalTo("2022-01-23T20:29:03Z"),
                 ),
             )
-            .andExpect(jsonPath("$[0].envActions[0].controlPlan[0].id", equalTo(1)))
-            .andExpect(jsonPath("$[0].envActions[0].controlPlan[0].theme", equalTo("Theme 1")))
-            .andExpect(jsonPath("$[0].envActions[0].controlPlan[0].subTheme", equalTo("sous theme 1")))
-            .andExpect(jsonPath("$[0].envActions[0].controlPlan[0].tags[0]", equalTo("tag 1")))
-            .andExpect(jsonPath("$[0].envActions[0].controlPlan[0].tags[1]", equalTo("tag 2")))
+            .andExpect(jsonPath("$[0].envActions[0].controlPlans[0].themeId", equalTo(1)))
+            .andExpect(jsonPath("$[0].envActions[0].controlPlans[0].subThemeIds[0]", equalTo(1)))
+            .andExpect(jsonPath("$[0].envActions[0].controlPlans[0].tagIds[0]", equalTo(1)))
+            .andExpect(jsonPath("$[0].envActions[0].controlPlans[0].tagIds[1]", equalTo(2)))
             .andExpect(jsonPath("$[0].envActions[0].geom.type", equalTo("Point")))
             .andExpect(jsonPath("$[0].envActions[0].facade", equalTo("Outre-Mer")))
             .andExpect(jsonPath("$[0].envActions[0].department", equalTo("29")))
@@ -469,23 +462,16 @@ class MissionsControllerITests {
         // Given
         val requestedId = 0
 
-        val wktReader = WKTReader()
-        val multipolygonString =
-            "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))"
-        val polygon = wktReader.read(multipolygonString) as MultiPolygon
-        val point = wktReader.read("POINT (-4.54877816747593 48.305559876971)") as Point
-
         val controlEnvAction =
             EnvActionControlEntity(
                 id = UUID.fromString("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b"),
                 actionStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 actionEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                controlPlanSubThemes = listOf(
-                    EnvActionControlPlanSubThemeEntity(
-                        subThemeId = 1,
-                        subTheme = "sous theme 1",
-                        tags = listOf("tag 1", "tag 2"),
-                        theme = "Theme 1",
+                controlPlans = listOf(
+                    EnvActionControlPlanEntity(
+                        subThemeIds = listOf(1),
+                        tagIds = listOf(1, 2),
+                        themeId = 1,
                     ),
                 ),
                 geom = point,
@@ -668,11 +654,10 @@ class MissionsControllerITests {
                     equalTo("2022-01-23T20:29:03Z"),
                 ),
             )
-            .andExpect(jsonPath("$.envActions[0].controlPlan[0].id", equalTo(1)))
-            .andExpect(jsonPath("$.envActions[0].controlPlan[0].subTheme", equalTo("sous theme 1")))
-            .andExpect(jsonPath("$.envActions[0].controlPlan[0].tags[0]", equalTo("tag 1")))
-            .andExpect(jsonPath("$.envActions[0].controlPlan[0].tags[1]", equalTo("tag 2")))
-            .andExpect(jsonPath("$.envActions[0].controlPlan[0].theme", equalTo("Theme 1")))
+            .andExpect(jsonPath("$.envActions[0].controlPlans[0].themeId", equalTo(1)))
+            .andExpect(jsonPath("$.envActions[0].controlPlans[0].subThemeIds[0]", equalTo(1)))
+            .andExpect(jsonPath("$.envActions[0].controlPlans[0].tagIds[0]", equalTo(1)))
+            .andExpect(jsonPath("$.envActions[0].controlPlans[0].tagIds[1]", equalTo(2)))
             .andExpect(jsonPath("$.envActions[0].geom.type", equalTo("Point")))
             .andExpect(jsonPath("$.envActions[0].facade", equalTo("Outre-Mer")))
             .andExpect(jsonPath("$.envActions[0].department", equalTo("29")))

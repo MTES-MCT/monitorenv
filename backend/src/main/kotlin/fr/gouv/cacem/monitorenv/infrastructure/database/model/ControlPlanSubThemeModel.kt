@@ -36,10 +36,10 @@ class ControlPlanSubThemeModel(
     val year: Int,
 
 ) {
-    fun toControlPlanSubTheme() = ControlPlanSubThemeEntity(
+    fun toControlPlanSubThemeEntity() = ControlPlanSubThemeEntity(
         id = id,
+        themeId = controlPlanTheme.id,
         subTheme = subTheme,
-        theme = controlPlanTheme.theme,
         year = year,
     )
 
