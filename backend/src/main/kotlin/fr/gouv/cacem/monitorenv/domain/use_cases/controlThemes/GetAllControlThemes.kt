@@ -7,6 +7,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlTheme.ControlThemeEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlThemeRepository
 import org.slf4j.LoggerFactory
 
+@Deprecated("Use GetControlPlanThemesByYear instead")
 @UseCase
 class GetAllControlThemes(private val controlThemeRepository: IControlThemeRepository) {
     private val logger = LoggerFactory.getLogger(GetAllControlThemes::class.java)
