@@ -40,68 +40,10 @@ class MissionModel(
     @Column(name = "id", unique = true, nullable = false)
     val id: Int? = null,
 
-    @Type(
-        ListArrayType::class,
-        parameters = [Parameter(name = SQL_ARRAY_TYPE, value = "text")],
-    )
-    @Column(name = "mission_types", columnDefinition = "text[]")
-    val missionTypes: List<MissionTypeEnum>,
-
-    @Column(name = "open_by")
-    val openBy: String? = null,
-
-    @Column(name = "closed_by")
-    val closedBy: String? = null,
-
-    @Column(name = "observations_cacem")
-    val observationsCacem: String? = null,
-
-    @Column(name = "observations_cnsp")
-    val observationsCnsp: String? = null,
-
-    @Column(name = "facade")
-    val facade: String? = null,
-
-    @JsonSerialize(using = GeometrySerializer::class)
-    @JsonDeserialize(contentUsing = GeometryDeserializer::class)
-    @Column(name = "geom")
-    val geom: MultiPolygon? = null,
-
-    @Column(name = "start_datetime_utc")
-    val startDateTimeUtc: Instant,
-
-    @Column(name = "end_datetime_utc")
-    val endDateTimeUtc: Instant? = null,
-
-    @Column(name = "closed", nullable = false)
-    val isClosed: Boolean,
-
-    @Column(name = "deleted", nullable = false)
-    val isDeleted: Boolean,
-
-    @Column(name = "mission_source", nullable = false, columnDefinition = "mission_source_type")
-    @Enumerated(EnumType.STRING)
-    @Type(PostgreSQLEnumType::class)
-    val missionSource: MissionSourceEnum,
-
-    @Column(name = "has_mission_order", nullable = false)
-    val hasMissionOrder: Boolean,
-
-    @Column(name = "is_geometry_computed_from_controls", nullable = false)
-    val isGeometryComputedFromControls: Boolean,
-
-    @Column(name = "is_under_jdp", nullable = false)
-    val isUnderJdp: Boolean,
-
-    @OneToMany(
-        mappedBy = "mission",
-        cascade = [CascadeType.ALL],
-        orphanRemoval = true,
-        fetch = FetchType.EAGER,
-    )
+    @OneToMany(mappedBy = "mission")
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
-    val envActions: MutableList<EnvActionModel>? = ArrayList(),
+    val attachedReportings: List<ReportingModel>? = listOf(),
 
     @OneToMany(
         mappedBy = "mission",
@@ -123,10 +65,69 @@ class MissionModel(
     @Fetch(value = FetchMode.SUBSELECT)
     val controlUnits: MutableList<MissionControlUnitModel>? = ArrayList(),
 
-    @OneToMany(mappedBy = "mission")
+    @Column(name = "closed_by")
+    val closedBy: String? = null,
+
+    @OneToMany(
+        mappedBy = "mission",
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
+        fetch = FetchType.EAGER,
+    )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
-    val attachedReportings: List<ReportingModel>? = listOf(),
+    val envActions: MutableList<EnvActionModel>? = ArrayList(),
+
+    @Column(name = "end_datetime_utc")
+    val endDateTimeUtc: Instant? = null,
+
+    @Column(name = "facade")
+    val facade: String? = null,
+
+    @JsonSerialize(using = GeometrySerializer::class)
+    @JsonDeserialize(contentUsing = GeometryDeserializer::class)
+    @Column(name = "geom")
+    val geom: MultiPolygon? = null,
+
+    @Column(name = "has_mission_order", nullable = false)
+    val hasMissionOrder: Boolean,
+
+    @Column(name = "closed", nullable = false)
+    val isClosed: Boolean,
+
+    @Column(name = "deleted", nullable = false)
+    val isDeleted: Boolean,
+
+    @Column(name = "is_geometry_computed_from_controls", nullable = false)
+    val isGeometryComputedFromControls: Boolean,
+
+    @Column(name = "is_under_jdp", nullable = false)
+    val isUnderJdp: Boolean,
+
+    @Column(name = "mission_source", nullable = false, columnDefinition = "mission_source_type")
+    @Enumerated(EnumType.STRING)
+    @Type(PostgreSQLEnumType::class)
+    val missionSource: MissionSourceEnum,
+
+    @Type(
+        ListArrayType::class,
+        parameters = [Parameter(name = SQL_ARRAY_TYPE, value = "text")],
+    )
+    @Column(name = "mission_types", columnDefinition = "text[]")
+    val missionTypes: List<MissionTypeEnum>,
+
+    @Column(name = "observations_cacem")
+    val observationsCacem: String? = null,
+
+    @Column(name = "observations_cnsp")
+    val observationsCnsp: String? = null,
+
+    @Column(name = "open_by")
+    val openBy: String? = null,
+
+    @Column(name = "start_datetime_utc")
+    val startDateTimeUtc: Instant,
+
 ) {
     fun toMissionEntity(objectMapper: ObjectMapper): MissionEntity {
         val controlUnits =
@@ -242,21 +243,21 @@ class MissionModel(
             val missionModel =
                 MissionModel(
                     id = mission.id,
-                    missionTypes = mission.missionTypes,
-                    openBy = mission.openBy,
                     closedBy = mission.closedBy,
-                    observationsCacem = mission.observationsCacem,
-                    observationsCnsp = mission.observationsCnsp,
+                    endDateTimeUtc = mission.endDateTimeUtc?.toInstant(),
                     facade = mission.facade,
                     geom = mission.geom,
-                    startDateTimeUtc = mission.startDateTimeUtc.toInstant(),
-                    endDateTimeUtc = mission.endDateTimeUtc?.toInstant(),
+                    hasMissionOrder = mission.hasMissionOrder,
                     isClosed = mission.isClosed,
                     isDeleted = false,
-                    missionSource = mission.missionSource,
-                    hasMissionOrder = mission.hasMissionOrder,
-                    isUnderJdp = mission.isUnderJdp,
                     isGeometryComputedFromControls = mission.isGeometryComputedFromControls,
+                    isUnderJdp = mission.isUnderJdp,
+                    missionSource = mission.missionSource,
+                    missionTypes = mission.missionTypes,
+                    observationsCacem = mission.observationsCacem,
+                    observationsCnsp = mission.observationsCnsp,
+                    openBy = mission.openBy,
+                    startDateTimeUtc = mission.startDateTimeUtc.toInstant(),
                 )
 
             mission.envActions?.map {
@@ -311,10 +312,4 @@ class MissionModel(
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
-
-    @Override
-    override fun toString(): String {
-        return this::class.simpleName +
-            "(id = $id , missionTypes = $missionTypes , openBy = $openBy , closedBy = $closedBy , observationsCacem = $observationsCacem, observationsCnsp = $observationsCnsp , facade = $facade , geom = $geom , startDateTimeUtc = $startDateTimeUtc , endDateTimeUtc = $endDateTimeUtc, isClosed = $isClosed, isDeleted = $isDeleted, missionSource = $missionSource )"
-    }
 }
