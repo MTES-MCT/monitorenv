@@ -38,7 +38,7 @@ class ControlPlansController(
         summary =
         "Get control plan themes, subthemes and tags and allowed tags for a given year",
     )
-    fun getAll(
+    fun getControlPlansByYear(
         @PathParam("validity year of the control plan themes")
         @PathVariable(name = "year")
         year: Int,
