@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.mappers
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanSubThemeEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteProperties
@@ -22,17 +23,18 @@ object EnvActionMapper {
     fun getEnvActionEntityFromJSON(
         mapper: ObjectMapper,
         id: UUID,
-        actionStartDateTimeUtc: ZonedDateTime?,
         actionEndDateTimeUtc: ZonedDateTime?,
-        geom: Geometry?,
         actionType: ActionTypeEnum,
-        facade: String?,
+        actionStartDateTimeUtc: ZonedDateTime?,
+        controlPlanSubThemes: List<EnvActionControlPlanSubThemeEntity>?,
         department: String?,
-        value: String?,
+        facade: String?,
+        geom: Geometry?,
         isAdministrativeControl: Boolean?,
         isComplianceWithWaterRegulationsControl: Boolean?,
         isSafetyEquipmentAndStandardsComplianceControl: Boolean?,
         isSeafarersControl: Boolean?,
+        value: String?,
     ): EnvActionEntity {
         return try {
             if (!value.isNullOrEmpty() && value != jsonbNullString) {
@@ -43,12 +45,13 @@ object EnvActionMapper {
                             EnvActionSurveillanceProperties::class.java,
                         )
                             .toEnvActionSurveillanceEntity(
-                                id,
-                                actionStartDateTimeUtc,
-                                actionEndDateTimeUtc,
-                                facade,
-                                department,
-                                geom,
+                                id = id,
+                                actionEndDateTimeUtc = actionEndDateTimeUtc,
+                                actionStartDateTimeUtc = actionStartDateTimeUtc,
+                                controlPlanSubThemes = controlPlanSubThemes,
+                                department = department,
+                                facade = facade,
+                                geom = geom,
                             )
                     ActionTypeEnum.CONTROL ->
                         mapper.readValue(
@@ -56,16 +59,17 @@ object EnvActionMapper {
                             EnvActionControlProperties::class.java,
                         )
                             .toEnvActionControlEntity(
-                                id,
-                                actionStartDateTimeUtc,
-                                actionEndDateTimeUtc,
-                                facade,
-                                department,
-                                geom,
-                                isAdministrativeControl,
-                                isComplianceWithWaterRegulationsControl,
-                                isSafetyEquipmentAndStandardsComplianceControl,
-                                isSeafarersControl,
+                                id = id,
+                                actionEndDateTimeUtc = actionEndDateTimeUtc,
+                                actionStartDateTimeUtc = actionStartDateTimeUtc,
+                                controlPlanSubThemes = controlPlanSubThemes,
+                                department = department,
+                                facade = facade,
+                                geom = geom,
+                                isAdministrativeControl = isAdministrativeControl,
+                                isComplianceWithWaterRegulationsControl = isComplianceWithWaterRegulationsControl,
+                                isSafetyEquipmentAndStandardsComplianceControl = isSafetyEquipmentAndStandardsComplianceControl,
+                                isSeafarersControl = isSeafarersControl,
                             )
                     ActionTypeEnum.NOTE ->
                         mapper.readValue(
@@ -73,8 +77,8 @@ object EnvActionMapper {
                             EnvActionNoteProperties::class.java,
                         )
                             .toEnvActionNoteEntity(
-                                id,
-                                actionStartDateTimeUtc,
+                                id = id,
+                                actionStartDateTimeUtc = actionStartDateTimeUtc,
                             )
                 }
             } else {
