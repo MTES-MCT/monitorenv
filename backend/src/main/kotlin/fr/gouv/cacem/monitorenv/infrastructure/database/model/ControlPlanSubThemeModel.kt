@@ -15,7 +15,7 @@ import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
 
 @Entity
-@Table(name = "control_plan_subthemes")
+@Table(name = "control_plan_sub_themes")
 @Cache(
     usage = CacheConcurrencyStrategy.READ_WRITE,
 )
