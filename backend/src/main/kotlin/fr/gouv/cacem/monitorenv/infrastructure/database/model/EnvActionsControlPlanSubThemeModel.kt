@@ -6,27 +6,28 @@ import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
 import jakarta.persistence.EmbeddedId
 import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.MapsId
 import jakarta.persistence.Table
+import org.hibernate.Hibernate
 import org.hibernate.annotations.Type
 import java.io.Serializable
 import java.util.UUID
 
 @Entity
-@Table(name = "env_actions_subthemes")
-data class EnvActionsSubThemeModel(
-
+@Table(name = "env_actions_control_plan_sub_themes")
+class EnvActionsControlPlanSubThemeModel(
     @EmbeddedId
     val id: EnvActionsSubThemePk,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("envActionId")
     @JoinColumn(name = "env_action_id")
     val envAction: EnvActionModel? = null,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("subthemeId")
     @JoinColumn(name = "subtheme_id")
     val controlPlanSubTheme: ControlPlanSubThemeModel? = null,
@@ -35,27 +36,41 @@ data class EnvActionsSubThemeModel(
     @Type(ListArrayType::class)
     val tags: List<String>? = null,
 ) {
+    companion object {
+        fun fromEnvActionControlPlanSubThemeEntity(
+            envAction: EnvActionModel,
+            controlPlanSubTheme: ControlPlanSubThemeModel,
+            tags: List<String>? = null,
+        ) = EnvActionsControlPlanSubThemeModel(
+            id = EnvActionsSubThemePk(
+                envActionId = envAction.id!!,
+                subthemeId = controlPlanSubTheme.id!!,
+            ),
+            envAction = envAction,
+            controlPlanSubTheme = controlPlanSubTheme,
+            tags = tags,
+        )
+    }
+
     fun toEnvActionControlPlanSubThemeEntity(): EnvActionControlPlanSubThemeEntity {
         require(controlPlanSubTheme != null) { "controlPlanSubTheme must not be null when converting to Entity" }
         return EnvActionControlPlanSubThemeEntity(
             subThemeId = controlPlanSubTheme.id,
-            theme = controlPlanSubTheme.ControlPlanTheme.theme,
+            theme = controlPlanSubTheme.controlPlanTheme.theme,
             subTheme = controlPlanSubTheme.subTheme,
             tags = tags ?: emptyList(),
         )
     }
-    companion object {
-        fun fromEnvActionControlPlanSubThemeEntity(
-            envActionId: UUID,
-            envActionControlPlanSubTheme: EnvActionControlPlanSubThemeEntity,
-        ) = EnvActionsSubThemeModel(
-            id = EnvActionsSubThemePk(
-                envActionId = envActionId,
-                subthemeId = envActionControlPlanSubTheme.subThemeId,
-            ),
-            tags = envActionControlPlanSubTheme.tags,
-        )
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as EnvActionsControlPlanSubThemeModel
+
+        return id == other.id
     }
+
+    override fun hashCode(): Int = javaClass.hashCode()
 }
 
 @Embeddable
@@ -65,4 +80,16 @@ data class EnvActionsSubThemePk(
 
     @Column(name = "subtheme_id")
     val subthemeId: Int,
-) : Serializable
+) : Serializable {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is EnvActionsSubThemePk) return false
+
+        return envActionId == other.envActionId &&
+            subthemeId == other.subthemeId
+    }
+
+    override fun hashCode(): Int {
+        return listOf(envActionId, subthemeId).hashCode()
+    }
+}

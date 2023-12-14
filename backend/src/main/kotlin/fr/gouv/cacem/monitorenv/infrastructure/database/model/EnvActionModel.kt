@@ -11,6 +11,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.mappers.EnvActionMapper
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -38,7 +39,7 @@ import java.util.UUID
 )
 @Entity
 @Table(name = "env_actions")
-data class EnvActionModel(
+class EnvActionModel(
     @Id
     @JdbcType(UUIDJdbcType::class)
     @Column(name = "id", nullable = false, updatable = false, columnDefinition = "uuid")
@@ -63,8 +64,12 @@ data class EnvActionModel(
     @Column(name = "value", columnDefinition = "jsonb")
     val value: String,
 
-    @Column(name = "facade") val facade: String? = null,
-    @Column(name = "department") val department: String? = null,
+    @Column(name = "facade")
+    val facade: String? = null,
+
+    @Column(name = "department")
+    val department: String? = null,
+
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "mission_id")
     @JsonBackReference
@@ -91,9 +96,11 @@ data class EnvActionModel(
 
     @OneToMany(
         fetch = FetchType.EAGER,
-        mappedBy = "envAction",
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
     )
-    val controlPlanSubThemes: List<EnvActionsSubThemeModel>? = listOf(),
+    @JoinColumn(name = "env_action_id")
+    val controlPlanSubThemes: MutableList<EnvActionsControlPlanSubThemeModel>? = ArrayList(),
 ) {
 
     fun toActionEntity(mapper: ObjectMapper): EnvActionEntity {
@@ -119,19 +126,15 @@ data class EnvActionModel(
         fun fromEnvActionEntity(
             action: EnvActionEntity,
             mission: MissionModel,
+            controlPlanSubThemesReferenceModelMap: Map<Int, ControlPlanSubThemeModel>,
             mapper: ObjectMapper,
-        ) =
-            EnvActionModel(
+        ): EnvActionModel {
+            var envActionModel = EnvActionModel(
                 id = action.id,
                 actionEndDateTime = action.actionEndDateTimeUtc?.toInstant(),
                 actionType = action.actionType,
                 actionStartDateTime = action.actionStartDateTimeUtc?.toInstant(),
-                controlPlanSubThemes = action.controlPlanSubThemes?.map {
-                    EnvActionsSubThemeModel.fromEnvActionControlPlanSubThemeEntity(
-                        envActionId = action.id,
-                        envActionControlPlanSubTheme = it,
-                    )
-                },
+
                 department = action.department,
                 facade = action.facade,
                 isAdministrativeControl = action.isAdministrativeControl,
@@ -144,6 +147,18 @@ data class EnvActionModel(
                 geom = action.geom,
                 value = EnvActionMapper.envActionEntityToJSON(mapper, action),
             )
+            action.controlPlanSubThemes?.map {
+                val envActionControlPlanSubThemeModel = EnvActionsControlPlanSubThemeModel.fromEnvActionControlPlanSubThemeEntity(
+                    envAction = envActionModel,
+                    controlPlanSubTheme = controlPlanSubThemesReferenceModelMap[it.subThemeId]!!,
+                    tags = it.tags,
+                )
+                envActionModel.controlPlanSubThemes?.add(
+                    envActionControlPlanSubThemeModel,
+                )
+            }
+            return envActionModel
+        }
     }
 
     override fun equals(other: Any?): Boolean {
@@ -155,10 +170,4 @@ data class EnvActionModel(
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
-
-    @Override
-    override fun toString(): String {
-        return this::class.simpleName +
-            "(id = $id , geom = $geom , actionStartDateTime = $actionStartDateTime, actionEndDateTime = $actionEndDateTime, actionType = $actionType , value = $value, facade = $facade, department = $department, isAdministrativeControl = $isAdministrativeControl, isComplianceWithWaterRegulationsControl = $isComplianceWithWaterRegulationsControl, isSeafarersControl = $isSeafarersControl, isSafetyEquipmentAndStandardsComplianceControl = $isSafetyEquipmentAndStandardsComplianceControl )"
-    }
 }

@@ -33,39 +33,66 @@ import java.time.ZoneOffset.UTC
 )
 @Entity
 @Table(name = "missions")
-data class MissionModel(
+class MissionModel(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", unique = true, nullable = false)
     val id: Int? = null,
+
     @Type(
         ListArrayType::class,
         parameters = [Parameter(name = SQL_ARRAY_TYPE, value = "text")],
     )
     @Column(name = "mission_types", columnDefinition = "text[]")
     val missionTypes: List<MissionTypeEnum>,
-    @Column(name = "open_by") val openBy: String? = null,
-    @Column(name = "closed_by") val closedBy: String? = null,
-    @Column(name = "observations_cacem") val observationsCacem: String? = null,
-    @Column(name = "observations_cnsp") val observationsCnsp: String? = null,
-    @Column(name = "facade") val facade: String? = null,
+
+    @Column(name = "open_by")
+    val openBy: String? = null,
+
+    @Column(name = "closed_by")
+    val closedBy: String? = null,
+
+    @Column(name = "observations_cacem")
+    val observationsCacem: String? = null,
+
+    @Column(name = "observations_cnsp")
+    val observationsCnsp: String? = null,
+
+    @Column(name = "facade")
+    val facade: String? = null,
+
     @JsonSerialize(using = GeometrySerializer::class)
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
     val geom: MultiPolygon? = null,
-    @Column(name = "start_datetime_utc") val startDateTimeUtc: Instant,
-    @Column(name = "end_datetime_utc") val endDateTimeUtc: Instant? = null,
-    @Column(name = "closed", nullable = false) val isClosed: Boolean,
-    @Column(name = "deleted", nullable = false) val isDeleted: Boolean,
+
+    @Column(name = "start_datetime_utc")
+    val startDateTimeUtc: Instant,
+
+    @Column(name = "end_datetime_utc")
+    val endDateTimeUtc: Instant? = null,
+
+    @Column(name = "closed", nullable = false)
+    val isClosed: Boolean,
+
+    @Column(name = "deleted", nullable = false)
+    val isDeleted: Boolean,
+
     @Column(name = "mission_source", nullable = false, columnDefinition = "mission_source_type")
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
     val missionSource: MissionSourceEnum,
-    @Column(name = "has_mission_order", nullable = false) val hasMissionOrder: Boolean,
+
+    @Column(name = "has_mission_order", nullable = false)
+    val hasMissionOrder: Boolean,
+
     @Column(name = "is_geometry_computed_from_controls", nullable = false)
     val isGeometryComputedFromControls: Boolean,
-    @Column(name = "is_under_jdp", nullable = false) val isUnderJdp: Boolean,
+
+    @Column(name = "is_under_jdp", nullable = false)
+    val isUnderJdp: Boolean,
+
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
@@ -75,6 +102,7 @@ data class MissionModel(
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
     val envActions: MutableList<EnvActionModel>? = ArrayList(),
+
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
@@ -84,6 +112,7 @@ data class MissionModel(
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
     val controlResources: MutableList<MissionControlResourceModel>? = ArrayList(),
+
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
@@ -93,6 +122,7 @@ data class MissionModel(
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
     val controlUnits: MutableList<MissionControlUnitModel>? = ArrayList(),
+
     @OneToMany(mappedBy = "mission")
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
@@ -205,8 +235,9 @@ data class MissionModel(
     companion object {
         fun fromMissionEntity(
             mission: MissionEntity,
-            mapper: ObjectMapper,
             controlUnitResourceModelMap: Map<Int, ControlUnitResourceModel>,
+            controlPlanSubThemesReferenceModelMap: Map<Int, ControlPlanSubThemeModel>,
+            mapper: ObjectMapper,
         ): MissionModel {
             val missionModel =
                 MissionModel(
@@ -230,7 +261,12 @@ data class MissionModel(
 
             mission.envActions?.map {
                 missionModel.envActions?.add(
-                    EnvActionModel.fromEnvActionEntity(it, missionModel, mapper),
+                    EnvActionModel.fromEnvActionEntity(
+                        action = it,
+                        mission = missionModel,
+                        controlPlanSubThemesReferenceModelMap = controlPlanSubThemesReferenceModelMap,
+                        mapper = mapper,
+                    ),
                 )
             }
 

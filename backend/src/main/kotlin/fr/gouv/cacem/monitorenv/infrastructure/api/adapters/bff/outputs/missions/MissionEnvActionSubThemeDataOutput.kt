@@ -4,9 +4,9 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionContr
 
 data class MissionEnvActionSubThemeDataOutput(
     val id: Int,
-    val subTheme: String,
-    val theme: String,
-    val tags: List<String>,
+    val subTheme: String? = null,
+    val theme: String? = null,
+    val tags: List<String>? = null,
 ) {
     companion object {
         fun fromEnvActionControlPlanSubThemeEntity(
