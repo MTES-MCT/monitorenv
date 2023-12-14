@@ -10,22 +10,22 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IControlPlanThemeRepository
 import org.slf4j.LoggerFactory
 
 @UseCase
-class GetControlPlansByYear(
+class GetControlPlans(
     private val controlPlanThemeRepository: IControlPlanThemeRepository,
     private val controlPlanSubThemeRepository: IControlPlanSubThemeRepository,
     private val controlPlanTagRepository: IControlPlanTagRepository,
 ) {
-    private val logger = LoggerFactory.getLogger(GetControlPlansByYear::class.java)
-    fun execute(year: Int): ControlPlanByYear {
-        val controlPlanThemes = controlPlanThemeRepository.findByYear(year)
-        val controlPlanSubThemes = controlPlanSubThemeRepository.findByYear(year)
-        val controlPlanTags = controlPlanTagRepository.findByYear(year)
-        logger.info("Found ${controlPlanSubThemes.size} control plan subthemes for year $year")
+    private val logger = LoggerFactory.getLogger(GetControlPlans::class.java)
+    fun execute(): ControlPlanThemes {
+        val controlPlanThemes = controlPlanThemeRepository.findAll()
+        val controlPlanSubThemes = controlPlanSubThemeRepository.findAll()
+        val controlPlanTags = controlPlanTagRepository.findAll()
+        logger.info("Found ${controlPlanThemes.size} control plan themes, ${controlPlanSubThemes.size} subthemes, and ${controlPlanTags.size} tags ")
         return Triple(controlPlanThemes, controlPlanSubThemes, controlPlanTags)
     }
 }
 
-typealias ControlPlanByYear = Triple<
+typealias ControlPlanThemes = Triple<
     List<ControlPlanThemeEntity>,
     List<ControlPlanSubThemeEntity>,
     List<ControlPlanTagEntity>,>
