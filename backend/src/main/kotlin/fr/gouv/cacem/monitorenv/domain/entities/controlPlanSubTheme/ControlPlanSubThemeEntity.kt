@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.entities.ControlPlanSubTheme
+package fr.gouv.cacem.monitorenv.domain.entities.controlPlanSubTheme
 
 data class ControlPlanSubThemeEntity(
     val id: Int,

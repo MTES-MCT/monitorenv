@@ -2,8 +2,8 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
 import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
-import fr.gouv.cacem.monitorenv.domain.entities.ControlPlanSubTheme.ControlPlanSubThemeEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.ControlPlanSubThemes.GetControlPlanSubThemesByYear
+import fr.gouv.cacem.monitorenv.domain.entities.controlPlanSubTheme.ControlPlanSubThemeEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlPlanSubThemes.GetControlPlanSubThemesByYear
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito
 import org.springframework.beans.factory.annotation.Autowired

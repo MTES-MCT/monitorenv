@@ -5,9 +5,9 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
-import java.util.UUID
 
 data class CreateOrUpdateMissionDataInput(
     val id: Int? = null,
@@ -64,5 +64,3 @@ data class CreateOrUpdateMissionDataInput(
             ?: listOf()
     }
 }
-
-typealias EnvActionAttachedToReportingIds = Pair<UUID, List<Int>>
