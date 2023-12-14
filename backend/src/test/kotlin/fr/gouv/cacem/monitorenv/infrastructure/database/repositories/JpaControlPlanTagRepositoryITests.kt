@@ -9,17 +9,15 @@ class JpaControlPlanTagRepositoryITests : AbstractDBTests() {
     private lateinit var jpaControlPlanTagRepository: JpaControlPlanTagRepository
 
     @Test
-    fun `findByYear Should return all control plan tags for a specific year`() {
+    fun `findAll Should return all control plan tags`() {
         // When
-        val requestedControlPlanTagsFor2023 = jpaControlPlanTagRepository.findByYear(2023)
-        val requestedControlPlanTagsFor2024 = jpaControlPlanTagRepository.findByYear(2024)
+        val requestedControlPlanTags = jpaControlPlanTagRepository.findAll()
         // Then
-        assertThat(requestedControlPlanTagsFor2023.size).isEqualTo(48)
-        assertThat(requestedControlPlanTagsFor2024.size).isEqualTo(6)
-        assertThat(requestedControlPlanTagsFor2024[5].id).isEqualTo(6)
-        assertThat(requestedControlPlanTagsFor2024[5].themeId).isEqualTo(11)
-        assertThat(requestedControlPlanTagsFor2024[5].tag).isEqualTo(
-            "Reptiles",
+        assertThat(requestedControlPlanTags.size).isEqualTo(6)
+        assertThat(requestedControlPlanTags[5].id).isEqualTo(6)
+        assertThat(requestedControlPlanTags[5].themeId).isEqualTo(11)
+        assertThat(requestedControlPlanTags[5].tag).isEqualTo(
+            "Mammifères marins",
         )
     }
 }

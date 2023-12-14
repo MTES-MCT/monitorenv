@@ -9,14 +9,12 @@ class JpaControlPlanThemeRepositoryITests : AbstractDBTests() {
     private lateinit var jpaControlPlanThemeRepository: JpaControlPlanThemeRepository
 
     @Test
-    fun `findByYear Should return all control plan theme for a specific year`() {
+    fun `findAll Should return all control plan themes`() {
         // When
-        val requestedControlPlanThemesFor2023 = jpaControlPlanThemeRepository.findByYear(2023)
-        val requestedControlPlanThemesFor2024 = jpaControlPlanThemeRepository.findByYear(2024)
+        val requestedControlPlanThemes = jpaControlPlanThemeRepository.findAll()
         // Then
-        assertThat(requestedControlPlanThemesFor2023.size).isEqualTo(83)
-        assertThat(requestedControlPlanThemesFor2024.size).isEqualTo(6)
-        assertThat(requestedControlPlanThemesFor2024[5].id).isEqualTo(100002)
-        assertThat(requestedControlPlanThemesFor2024[5].theme).isEqualTo("Rejet")
+        assertThat(requestedControlPlanThemes.size).isEqualTo(22)
+        assertThat(requestedControlPlanThemes[5].id).isEqualTo(6)
+        assertThat(requestedControlPlanThemes[5].theme).isEqualTo("Divers")
     }
 }

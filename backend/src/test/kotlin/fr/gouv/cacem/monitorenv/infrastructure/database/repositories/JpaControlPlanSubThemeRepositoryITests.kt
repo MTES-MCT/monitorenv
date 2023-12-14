@@ -9,19 +9,17 @@ class JpaControlPlanSubThemeRepositoryITests : AbstractDBTests() {
     private lateinit var jpaControlPlanSubThemeRepository: JpaControlPlanSubThemeRepository
 
     @Test
-    fun `findByYear Should return all control plan theme for a specific year`() {
+    fun `findAll Should return all control plan subthemes `() {
         // When
-        val requestedControlPlanSubThemesFor2023 = jpaControlPlanSubThemeRepository.findByYear(2023)
-        val requestedControlPlanSubThemesFor2024 = jpaControlPlanSubThemeRepository.findByYear(2024)
+        val requestedControlPlanSubThemes = jpaControlPlanSubThemeRepository.findAll()
         // Then
-        assertThat(requestedControlPlanSubThemesFor2023.size).isEqualTo(83)
-        assertThat(requestedControlPlanSubThemesFor2024.size).isEqualTo(6)
-        assertThat(requestedControlPlanSubThemesFor2024[5].id).isEqualTo(89)
-        assertThat(requestedControlPlanSubThemesFor2024[5].themeId).isEqualTo(11)
-        assertThat(requestedControlPlanSubThemesFor2024[5].subTheme).isEqualTo(
+        assertThat(requestedControlPlanSubThemes.size).isEqualTo(6)
+        assertThat(requestedControlPlanSubThemes[5].id).isEqualTo(6)
+        assertThat(requestedControlPlanSubThemes[5].themeId).isEqualTo(11)
+        assertThat(requestedControlPlanSubThemes[5].subTheme).isEqualTo(
             "Destruction, capture, arrachage",
         )
 
-        assertThat(requestedControlPlanSubThemesFor2024[5].year).isEqualTo(2024)
+        assertThat(requestedControlPlanSubThemes[5].year).isEqualTo(2024)
     }
 }

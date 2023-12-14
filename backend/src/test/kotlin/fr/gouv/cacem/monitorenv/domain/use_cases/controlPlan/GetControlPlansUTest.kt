@@ -13,13 +13,13 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
-class GetControlPlansByYearUTest {
+class GetControlPlansUTest {
     @MockBean
     private lateinit var controlPlanSubThemeRepository: IControlPlanSubThemeRepository
     private lateinit var controlPlanThemeRepository: IControlPlanThemeRepository
     private lateinit var controlPlanTagRepository: IControlPlanTagRepository
 
-    fun `execute should return all ControlPlanThemes, ControlPlanSubThemes and ControlPlanTags for the given year`() {
+    fun `execute should return all ControlPlanThemes, ControlPlanSubThemes and ControlPlanTags`() {
         val controlPlanThemes = listOf(
             ControlPlanThemeEntity(
                 id = 1,
@@ -57,15 +57,15 @@ class GetControlPlansByYearUTest {
             ),
         )
 
-        given(controlPlanThemeRepository.findByYear(2023)).willReturn(controlPlanThemes)
-        given(controlPlanSubThemeRepository.findByYear(2023)).willReturn(controlPlanSubThemes)
-        given(controlPlanTagRepository.findByYear(2023)).willReturn(controlPlanTags)
+        given(controlPlanThemeRepository.findAll()).willReturn(controlPlanThemes)
+        given(controlPlanSubThemeRepository.findAll()).willReturn(controlPlanSubThemes)
+        given(controlPlanTagRepository.findAll()).willReturn(controlPlanTags)
 
-        val result = GetControlPlansByYear(
+        val result = GetControlPlans(
             controlPlanThemeRepository = controlPlanThemeRepository,
             controlPlanSubThemeRepository = controlPlanSubThemeRepository,
             controlPlanTagRepository = controlPlanTagRepository,
-        ).execute(2023)
+        ).execute()
 
         assertThat(result.first.size).isEqualTo(2)
         assertThat(result).isEqualTo(controlPlanSubThemes)
