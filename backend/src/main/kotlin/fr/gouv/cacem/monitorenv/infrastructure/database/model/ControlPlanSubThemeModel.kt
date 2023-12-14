@@ -5,38 +5,53 @@ import io.hypersistence.utils.hibernate.type.array.ListArrayType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import org.hibernate.Hibernate
 import org.hibernate.annotations.Type
 
 @Entity
 @Table(name = "control_plan_subthemes")
-data class ControlPlanSubThemeModel(
+class ControlPlanSubThemeModel(
     @Id
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, updatable = false)
     val id: Int,
-
-    @Column(name = "subtheme")
-    val subTheme: String,
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "theme_id")
-    val ControlPlanTheme: ControlPlanThemeModel,
-
-    @Column(name = "year")
-    val year: Int,
 
     @Column(name = "allowed_tags")
     @Type(ListArrayType::class)
     val allowedTags: List<String>? = null,
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "theme_id")
+    val controlPlanTheme: ControlPlanThemeModel,
+
+    @Column(name = "subtheme")
+    val subTheme: String,
+
+    @Column(name = "year")
+    val year: Int,
+
 ) {
     fun toControlPlanSubTheme() = ControlPlanSubThemeEntity(
         id = id,
         subTheme = subTheme,
-        theme = ControlPlanTheme.theme,
+        theme = controlPlanTheme.theme,
         year = year,
         allowedTags = allowedTags,
     )
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as ControlPlanSubThemeModel
+
+        return id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
 }

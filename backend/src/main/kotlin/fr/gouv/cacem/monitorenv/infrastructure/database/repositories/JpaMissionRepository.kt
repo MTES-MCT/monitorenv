@@ -6,6 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanSubThemeRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
 import org.springframework.data.domain.Pageable
@@ -16,6 +17,7 @@ import java.time.Instant
 
 @Repository
 class JpaMissionRepository(
+    private val dbControlPlanSubThemeRepository: IDBControlPlanSubThemeRepository,
     private val dbControlUnitResourceRepository: IDBControlUnitResourceRepository,
     private val dbMissionRepository: IDBMissionRepository,
     private val mapper: ObjectMapper,
@@ -110,8 +112,21 @@ class JpaMissionRepository(
         // Create an `[id] → ControlUnitResourceModel` map
         val controlUnitResourceModelMap = controlUnitResourceModels.associateBy { requireNotNull(it.id) }
 
-        val missionModel = MissionModel.fromMissionEntity(mission, mapper, controlUnitResourceModelMap)
+        // get a list of all controlPlanSubThemes ids used in the mission
+        val controlPlanSubThemes = mission.envActions?.flatMap { it.controlPlanSubThemes?.map { id -> id.subThemeId } ?: emptyList() }?.distinct()
+        // Create a map from controlPlanSubThemes maping each id to a reference to the model
+        val controlPlanSubThemesReferenceModelMap = controlPlanSubThemes?.associateWith { id ->
+            dbControlPlanSubThemeRepository.getReferenceById(
+                id,
+            )
+        }
 
+        val missionModel = MissionModel.fromMissionEntity(
+            mission = mission,
+            mapper = mapper,
+            controlUnitResourceModelMap = controlUnitResourceModelMap,
+            controlPlanSubThemesReferenceModelMap = controlPlanSubThemesReferenceModelMap ?: emptyMap(),
+        )
         return dbMissionRepository.saveAndFlush(missionModel).toMissionDTO(mapper)
     }
 

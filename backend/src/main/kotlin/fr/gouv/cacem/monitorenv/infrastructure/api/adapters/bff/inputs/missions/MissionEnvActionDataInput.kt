@@ -70,23 +70,24 @@ data class MissionEnvActionDataInput(
             ActionTypeEnum.CONTROL ->
                 return EnvActionControlEntity(
                     id = this.id,
-                    actionStartDateTimeUtc = this.actionStartDateTimeUtc,
                     actionEndDateTimeUtc = this.actionEndDateTimeUtc,
+                    actionNumberOfControls = this.actionNumberOfControls,
+                    actionTargetType = this.actionTargetType,
+                    actionStartDateTimeUtc = this.actionStartDateTimeUtc,
+                    controlPlanSubThemes = this.controlPlanSubThemes?.map { it.toEnvActionControlPlanSubThemeEntity() },
                     department = this.department,
                     facade = this.facade,
                     geom = this.geom,
-                    themes = this.themes,
-                    actionNumberOfControls = this.actionNumberOfControls,
-                    actionTargetType = this.actionTargetType,
-                    vehicleType = this.vehicleType,
                     infractions = this.infractions?.map { it.toInfractionEntity() },
-                    observations = this.observations,
                     isAdministrativeControl = this.isAdministrativeControl,
                     isComplianceWithWaterRegulationsControl =
                     this.isComplianceWithWaterRegulationsControl,
                     isSafetyEquipmentAndStandardsComplianceControl =
                     this.isSafetyEquipmentAndStandardsComplianceControl,
                     isSeafarersControl = this.isSeafarersControl,
+                    observations = this.observations,
+                    themes = this.themes,
+                    vehicleType = this.vehicleType,
                 )
             ActionTypeEnum.SURVEILLANCE ->
                 return EnvActionSurveillanceEntity(
@@ -110,5 +111,3 @@ data class MissionEnvActionDataInput(
         }
     }
 }
-
-typealias ControlPlanSubThemeDataInput = Pair<Int, List<String>>

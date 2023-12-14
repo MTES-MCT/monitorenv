@@ -14,7 +14,7 @@ CREATE TABLE control_plan_subthemes (
 );
 CREATE INDEX idx_control_plan_subthemes_year ON control_plan_subthemes USING btree(year);
 
-CREATE TABLE env_actions_subthemes (
+CREATE TABLE env_actions_control_plan_sub_themes (
   env_action_id uuid,
   subtheme_id integer,
   tags text[],
@@ -22,14 +22,14 @@ CREATE TABLE env_actions_subthemes (
   foreign key (subtheme_id) references control_plan_subthemes(id),
   primary key (env_action_id, subtheme_id)
 );
--- TODO: Décider s'il faut ajouter une contrainte sur les tags de env_actions_subthemes
+-- TODO: Décider s'il faut ajouter une contrainte sur les tags de env_actions_control_plan_sub_themes
 -- Si oui, il faudra probablement passer par un trigger
 -- (pas possible avec postgres de faire une contrainte "classique")
 
 
 COMMENT ON TABLE control_plan_themes IS 'Table des thèmes du plan de contrôle';
 COMMENT ON TABLE control_plan_subthemes IS 'Table des sous-thèmes du plan de contrôle versionnés par année';
-COMMENT ON TABLE env_actions_subthemes IS 'Table de jointure entre les actions et les sous-thèmes du plan de contrôle';
+COMMENT ON TABLE env_actions_control_plan_sub_themes IS 'Table de jointure entre les actions et les sous-thèmes du plan de contrôle';
 
 -- Insertion des themes et sous-themes à partir de la table control_themes
 INSERT INTO control_plan_themes (theme)
@@ -49,8 +49,8 @@ UPDATE control_plan_subthemes
         t.id = control_plan_subthemes.theme_id
         AND t.theme = 'Police des espèces protégées et de leurs habitats (faune et flore)';
 
--- Insertion des données depuis les env actions dans la table env_actions_subthemes
-INSERT INTO env_actions_subthemes (env_action_id, subtheme_id, tags)
+-- Insertion des données depuis les env actions dans la table env_actions_control_plan_sub_themes
+INSERT INTO env_actions_control_plan_sub_themes (env_action_id, subtheme_id, tags)
     WITH themes AS (
         SELECT
             id as env_action_id,
