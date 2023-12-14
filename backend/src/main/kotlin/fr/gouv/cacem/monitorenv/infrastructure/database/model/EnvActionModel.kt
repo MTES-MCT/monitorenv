@@ -94,12 +94,13 @@ class EnvActionModel(
     @JsonManagedReference
     val attachedReporting: List<ReportingModel>? = listOf(),
 
+    // @JoinColumn(name = "env_action_id")
     @OneToMany(
         fetch = FetchType.EAGER,
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
+        mappedBy = "envAction",
     )
-    @JoinColumn(name = "env_action_id")
     val controlPlanSubThemes: MutableList<EnvActionsControlPlanSubThemeModel>? = ArrayList(),
 ) {
 
