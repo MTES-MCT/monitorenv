@@ -6,6 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitRes
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanSubThemeEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ThemeEntity
@@ -98,6 +99,14 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                             "33310163-4e22-4d3d-b585-dac4431eb4b5",
                         ),
                         facade = "Facade 1",
+                        controlPlanSubThemes = listOf(
+                            EnvActionControlPlanSubThemeEntity(
+                                subThemeId = 1,
+                                subTheme = "Sub theme 1",
+                                theme = "Theme 1",
+                                tags = listOf("Tag 1", "Tag 2"),
+                            ),
+                        ),
                         department = "Department 1",
                         geom = point,
                         vehicleType = VehicleTypeEnum.VEHICLE_LAND,
