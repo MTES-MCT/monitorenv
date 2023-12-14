@@ -20,15 +20,20 @@ CREATE TABLE control_plan_tags (
     theme_id int REFERENCES control_plan_themes(id)
 );
 
+CREATE TABLE env_actions_control_plan_themes (
+     env_action_id uuid,
+     theme_id integer NOT NULL,
+     foreign key (env_action_id) references env_actions(id),
+     foreign key (theme_id) references control_plan_themes(id),
+     primary key (env_action_id, theme_id)
+);
+
 CREATE TABLE env_actions_control_plan_sub_themes (
-    id serial PRIMARY KEY,
     env_action_id uuid,
-    theme_id integer NOT NULL,
     subtheme_id integer,
     foreign key (env_action_id) references env_actions(id),
-    foreign key (theme_id) references control_plan_themes(id),
     foreign key (subtheme_id) references control_plan_subthemes(id),
-    unique (env_action_id, theme_id, subtheme_id)
+    primary key (env_action_id, subtheme_id)
 );
 
 CREATE TABLE env_actions_control_plan_tags (
@@ -41,7 +46,7 @@ CREATE TABLE env_actions_control_plan_tags (
 
 CREATE TABLE reportings_control_plan_sub_themes (
     id serial PRIMARY KEY,
-    reporting_id id,
+    reporting_id integer,
     theme_id integer NOT NULL,
     subtheme_id integer,
     foreign key (reporting_id) references reportings(id),
@@ -74,7 +79,20 @@ INSERT INTO control_plan_tags (theme_id, tag)
         WHERE t.theme = 'Police des espèces protégées et de leurs habitats (faune et flore)'
 ;
 
--- Insertion des données depuis les env actions dans la table env_actions_control_plan_sub_themes
+-- EnvActions: Insertion des données depuis les env actions dans la table env_actions_control_plan_themes
+INSERT INTO env_actions_control_plan_themes (env_action_id, theme_id)
+WITH themes AS (
+    SELECT
+        id as env_action_id,
+        jsonb_array_elements(value->'themes')->>'theme' as theme
+FROM env_actions
+    )
+SELECT themes.env_action_id,  th.id
+FROM themes,
+     control_plan_themes th
+WHERE  th.theme = themes.theme
+;
+-- EnvActions: Insertion des données depuis les env actions dans la table env_actions_control_plan_sub_themes
 INSERT INTO env_actions_control_plan_sub_themes (env_action_id, subtheme_id)
     WITH themes AS (
         SELECT
@@ -92,7 +110,7 @@ INSERT INTO env_actions_control_plan_sub_themes (env_action_id, subtheme_id)
       AND th.theme = themes.theme
       AND sbt.year = 2023;
 
--- tags
+-- EnvActions: Insertion des données depuis les env actions dans la table env_actions_control_plan_tags
 INSERT INTO env_actions_control_plan_tags (env_action_id, tag_id)
 WITH themes AS (
     SELECT

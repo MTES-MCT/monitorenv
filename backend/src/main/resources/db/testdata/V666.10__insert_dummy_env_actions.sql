@@ -27,17 +27,29 @@ UPDATE public.env_actions SET
   WHERE mission_id > 20;
   ;
 
-INSERT INTO public.env_actions_control_plan_sub_themes(env_action_id, subtheme_id, tags) VALUES
-('e2257638-ddef-4611-960c-7675a3254c38', 51, NULL),
-('f3e90d3a-6ba4-4bb3-805e-d391508aa46d', 83, NULL),
-('f3e90d3a-6ba4-4bb3-805e-d391508aa46d', 43, NULL),
-('475d2887-5344-46cd-903b-8cb5e42f9a9c', 79, NULL),
-('6d4b7d0a-79ce-47cf-ac26-2024d2b27f28', 48, NULL),
-('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 52, '{"Flore, Oiseaux"}'),
-('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 7, '{"Flore, Oiseaux"}'),
-('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 64, NULL),
-('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 82, NULL),
-('b8007c8a-5135-4bc3-816f-c69c7b75d807', 64, NULL),
-('b8007c8a-5135-4bc3-816f-c69c7b75d807', 82, NULL),
-('4d9a3139-6c60-49a5-b443-0e6238a6a120', 42, NULL)
+INSERT INTO public.env_actions_control_plan_themes (env_action_id, theme_id) VALUES
+('b8007c8a-5135-4bc3-816f-c69c7b75d807', 12),
+('475d2887-5344-46cd-903b-8cb5e42f9a9c', 16),
+('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 12),
+('f3e90d3a-6ba4-4bb3-805e-d391508aa46d', 15),
+('e2257638-ddef-4611-960c-7675a3254c38', 9),
+('4d9a3139-6c60-49a5-b443-0e6238a6a120', 12),
+('6d4b7d0a-79ce-47cf-ac26-2024d2b27f28', 1)
 ;
+
+INSERT INTO public.env_actions_control_plan_sub_themes(env_action_id, subtheme_id) VALUES
+('e2257638-ddef-4611-960c-7675a3254c38', 51),
+('f3e90d3a-6ba4-4bb3-805e-d391508aa46d', 83),
+('f3e90d3a-6ba4-4bb3-805e-d391508aa46d', 43),
+('475d2887-5344-46cd-903b-8cb5e42f9a9c', 79),
+('6d4b7d0a-79ce-47cf-ac26-2024d2b27f28', 48),
+('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 64),
+('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 82),
+('b8007c8a-5135-4bc3-816f-c69c7b75d807', 64),
+('b8007c8a-5135-4bc3-816f-c69c7b75d807', 82),
+('4d9a3139-6c60-49a5-b443-0e6238a6a120', 42)
+;
+
+INSERT INTO public.env_actions_control_plan_tags(env_action_id, tag_id) VALUES
+('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 1),
+('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 2);

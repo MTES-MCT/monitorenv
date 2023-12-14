@@ -14,10 +14,10 @@ import java.io.Serializable
 import java.util.UUID
 
 @Entity
-@Table(name = "env_actions_control_plan_tags")
-class EnvActionsControlPlanTagModel(
+@Table(name = "env_actions_control_plan_themes")
+class EnvActionsControlPlanThemeModel(
     @EmbeddedId
-    val id: EnvActionsTagPk,
+    val id: EnvActionsThemePk,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("envActionId")
@@ -25,29 +25,29 @@ class EnvActionsControlPlanTagModel(
     val envAction: EnvActionModel? = null,
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @MapsId("tagId")
-    @JoinColumn(name = "tag_id")
-    val controlPlanTag: ControlPlanTagModel? = null,
+    @MapsId("themeId")
+    @JoinColumn(name = "theme_id")
+    val controlPlanTheme: ControlPlanThemeModel? = null,
 
 ) {
     companion object {
-        fun fromEnvActionControlPlanTagEntity(
+        fun fromEnvActionControlPlanThemeEntity(
             envAction: EnvActionModel,
-            controlPlanTag: ControlPlanTagModel,
-        ) = EnvActionsControlPlanTagModel(
-            id = EnvActionsTagPk(
+            controlPlanTheme: ControlPlanThemeModel,
+        ) = EnvActionsControlPlanThemeModel(
+            id = EnvActionsThemePk(
                 envActionId = envAction.id!!,
-                tagId = controlPlanTag.id!!,
+                themeId = controlPlanTheme.id!!,
             ),
             envAction = envAction,
-            controlPlanTag = controlPlanTag,
+            controlPlanTheme = controlPlanTheme,
         )
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
-        other as EnvActionsControlPlanTagModel
+        other as EnvActionsControlPlanThemeModel
 
         return id == other.id
     }
@@ -56,22 +56,22 @@ class EnvActionsControlPlanTagModel(
 }
 
 @Embeddable
-data class EnvActionsTagPk(
+data class EnvActionsThemePk(
     @Column(name = "env_action_id")
     val envActionId: UUID,
 
-    @Column(name = "tag_id")
-    val tagId: Int,
+    @Column(name = "theme_id")
+    val themeId: Int,
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is EnvActionsTagPk) return false
+        if (other !is EnvActionsThemePk) return false
 
         return envActionId == other.envActionId &&
-            tagId == other.tagId
+            themeId == other.themeId
     }
 
     override fun hashCode(): Int {
-        return listOf(envActionId, tagId).hashCode()
+        return listOf(envActionId, themeId).hashCode()
     }
 }

@@ -15,17 +15,13 @@ class JpaControlPlanSubThemeRepositoryITests : AbstractDBTests() {
         val requestedControlPlanSubThemesFor2024 = jpaControlPlanSubThemeRepository.findByYear(2024)
         // Then
         assertThat(requestedControlPlanSubThemesFor2023.size).isEqualTo(83)
-        assertThat(requestedControlPlanSubThemesFor2024.size).isEqualTo(7)
-        assertThat(requestedControlPlanSubThemesFor2024[6].id).isEqualTo(90)
-        assertThat(requestedControlPlanSubThemesFor2024[6].theme).isEqualTo(
-            "Police des espèces protégées et de leurs habitats (faune et flore)",
+        assertThat(requestedControlPlanSubThemesFor2024.size).isEqualTo(6)
+        assertThat(requestedControlPlanSubThemesFor2024[5].id).isEqualTo(89)
+        assertThat(requestedControlPlanSubThemesFor2024[5].themeId).isEqualTo(11)
+        assertThat(requestedControlPlanSubThemesFor2024[5].subTheme).isEqualTo(
+            "Destruction, capture, arrachage",
         )
-        assertThat(requestedControlPlanSubThemesFor2024[6].subTheme).isEqualTo(
-            "Atteinte aux habitats d’espèces protégées",
-        )
-        assertThat(requestedControlPlanSubThemesFor2024[6].allowedTags).isEqualTo(
-            listOf("Oiseaux", "Faune", "Flore", "Autres espèces protégées", "Reptiles", "Mammifères marins"),
-        )
-        assertThat(requestedControlPlanSubThemesFor2024[6].year).isEqualTo(2024)
+
+        assertThat(requestedControlPlanSubThemesFor2024[5].year).isEqualTo(2024)
     }
 }

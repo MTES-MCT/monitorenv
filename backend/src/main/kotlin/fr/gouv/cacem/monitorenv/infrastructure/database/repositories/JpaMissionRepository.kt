@@ -8,6 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanSubThemeRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanTagRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanThemeRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
 import org.springframework.data.domain.Pageable
@@ -18,6 +19,7 @@ import java.time.Instant
 
 @Repository
 class JpaMissionRepository(
+    private val dbControlPlanThemeRepository: IDBControlPlanThemeRepository,
     private val dbControlPlanSubThemeRepository: IDBControlPlanSubThemeRepository,
     private val dbControlPlanTagRepository: IDBControlPlanTagRepository,
     private val dbControlUnitResourceRepository: IDBControlUnitResourceRepository,
@@ -114,9 +116,9 @@ class JpaMissionRepository(
         // Create an `[id] → ControlUnitResourceModel` map
         val controlUnitResourceModelMap = controlUnitResourceModels.associateBy { requireNotNull(it.id) }
 
-        val controlPlanThemes = MutableList<Int>()
-        val controlPlanSubThemes = MutableList<Int>()
-        val controlPlanTags = MutableList<Int>()
+        val controlPlanThemes = ArrayList<Int>()
+        val controlPlanSubThemes = ArrayList<Int>()
+        val controlPlanTags = ArrayList<Int>()
         for (envAction in mission.envActions ?: emptyList()) {
             for (controlPlan in envAction.controlPlans ?: emptyList()) {
                 // get a list of all controlPlanTheme ids used in the mission's envActions

@@ -33,9 +33,10 @@ class ControlPlanTagModel(
     val tag: String,
 
 ) {
-    fun toControlPlanTag() = ControlPlanTagEntity(
-        id = id,
-        tag = tag,
+    fun toControlPlanTagEntity() = ControlPlanTagEntity(
+        id = this.id,
+        tag = this.tag,
+        themeId = this.controlPlanTheme.id,
     )
 
     override fun equals(other: Any?): Boolean {

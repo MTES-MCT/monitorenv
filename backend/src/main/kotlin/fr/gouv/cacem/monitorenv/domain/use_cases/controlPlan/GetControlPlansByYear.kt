@@ -5,6 +5,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlPlan.ControlPlanSubThemeE
 import fr.gouv.cacem.monitorenv.domain.entities.controlPlan.ControlPlanTagEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlPlan.ControlPlanThemeEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlPlanSubThemeRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IControlPlanTagRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IControlPlanThemeRepository
 import org.slf4j.LoggerFactory
 
 @UseCase
@@ -15,11 +17,11 @@ class GetControlPlansByYear(
 ) {
     private val logger = LoggerFactory.getLogger(GetControlPlansByYear::class.java)
     fun execute(year: Int): ControlPlanByYear {
-        val controlPlanThemes = getControlPlanThemes(year)
+        val controlPlanThemes = controlPlanThemeRepository.findByYear(year)
         val controlPlanSubThemes = controlPlanSubThemeRepository.findByYear(year)
-        val controlPlanTags = controlPlanSubThemes.map { it.allowedTags }.flatten().toSet()
+        val controlPlanTags = controlPlanTagRepository.findByYear(year)
         logger.info("Found ${controlPlanSubThemes.size} control plan subthemes for year $year")
-        return Triple(controlPlanSubThemes, controlPlanTags, controlPlanThemes)
+        return Triple(controlPlanThemes, controlPlanSubThemes, controlPlanTags)
     }
 }
 

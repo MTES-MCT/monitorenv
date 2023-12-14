@@ -10,6 +10,6 @@ class JpaControlPlanSubThemeRepository(
     private val dbControlPlanSubThemeRepository: IDBControlPlanSubThemeRepository,
 ) : IControlPlanSubThemeRepository {
     override fun findByYear(year: Int): List<ControlPlanSubThemeEntity> {
-        return dbControlPlanSubThemeRepository.findByYearOrderById(year).map { it.toControlPlanSubTheme() }
+        return dbControlPlanSubThemeRepository.findByYearOrderById(year).map { it.toControlPlanSubThemeEntity() }
     }
 }
