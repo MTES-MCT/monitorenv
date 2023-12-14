@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.EnvActionAttachedToReportingIds
 import java.util.UUID
 
 data class MissionDTO(

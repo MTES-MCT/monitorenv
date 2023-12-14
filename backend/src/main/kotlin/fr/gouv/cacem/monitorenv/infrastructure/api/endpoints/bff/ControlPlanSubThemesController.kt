@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
-import fr.gouv.cacem.monitorenv.domain.use_cases.ControlPlanSubThemes.GetControlPlanSubThemesByYear
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlPlanSubThemes.GetControlPlanSubThemesByYear
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ControlPlanSubThemeDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag

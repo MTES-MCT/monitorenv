@@ -10,6 +10,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanSubThemeEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
@@ -20,10 +21,10 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.MissionEnvActionDataInput
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
@@ -141,6 +142,14 @@ class MissionsControllerITests {
                 id = UUID.fromString("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b"),
                 actionStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 actionEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                controlPlanSubThemes = listOf(
+                    EnvActionControlPlanSubThemeEntity(
+                        subThemeId = 1,
+                        subTheme = "sous theme 1",
+                        tags = listOf("tag 1", "tag 2"),
+                        theme = "Theme 1",
+                    ),
+                ),
                 geom = point,
                 facade = "Outre-Mer",
                 department = "29",
@@ -289,6 +298,7 @@ class MissionsControllerITests {
         mockMvc.perform(get("/bff/v1/missions"))
             // Then
             .andExpect(status().isOk)
+            .andDo(MockMvcResultHandlers.print())
             .andExpect(jsonPath("$.length()", equalTo(1)))
             .andExpect(jsonPath("$[0].id", equalTo(10)))
             .andExpect(
@@ -334,6 +344,11 @@ class MissionsControllerITests {
                     equalTo("2022-01-23T20:29:03Z"),
                 ),
             )
+            .andExpect(jsonPath("$[0].envActions[0].controlPlanSubThemes[0].id", equalTo(1)))
+            .andExpect(jsonPath("$[0].envActions[0].controlPlanSubThemes[0].theme", equalTo("Theme 1")))
+            .andExpect(jsonPath("$[0].envActions[0].controlPlanSubThemes[0].subTheme", equalTo("sous theme 1")))
+            .andExpect(jsonPath("$[0].envActions[0].controlPlanSubThemes[0].tags[0]", equalTo("tag 1")))
+            .andExpect(jsonPath("$[0].envActions[0].controlPlanSubThemes[0].tags[1]", equalTo("tag 2")))
             .andExpect(jsonPath("$[0].envActions[0].geom.type", equalTo("Point")))
             .andExpect(jsonPath("$[0].envActions[0].facade", equalTo("Outre-Mer")))
             .andExpect(jsonPath("$[0].envActions[0].department", equalTo("29")))
@@ -465,6 +480,14 @@ class MissionsControllerITests {
                 id = UUID.fromString("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b"),
                 actionStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 actionEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                controlPlanSubThemes = listOf(
+                    EnvActionControlPlanSubThemeEntity(
+                        subThemeId = 1,
+                        subTheme = "sous theme 1",
+                        tags = listOf("tag 1", "tag 2"),
+                        theme = "Theme 1",
+                    ),
+                ),
                 geom = point,
                 facade = "Outre-Mer",
                 department = "29",
@@ -601,6 +624,7 @@ class MissionsControllerITests {
         // When
         mockMvc.perform(get("/bff/v1/missions/$requestedId"))
             // Then
+            .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.missionTypes[0]", equalTo(MissionTypeEnum.SEA.toString())))
             .andExpect(jsonPath("$.id", equalTo(10)))
@@ -644,6 +668,11 @@ class MissionsControllerITests {
                     equalTo("2022-01-23T20:29:03Z"),
                 ),
             )
+            .andExpect(jsonPath("$.envActions[0].controlPlanSubThemes[0].id", equalTo(1)))
+            .andExpect(jsonPath("$.envActions[0].controlPlanSubThemes[0].subTheme", equalTo("sous theme 1")))
+            .andExpect(jsonPath("$.envActions[0].controlPlanSubThemes[0].tags[0]", equalTo("tag 1")))
+            .andExpect(jsonPath("$.envActions[0].controlPlanSubThemes[0].tags[1]", equalTo("tag 2")))
+            .andExpect(jsonPath("$.envActions[0].controlPlanSubThemes[0].theme", equalTo("Theme 1")))
             .andExpect(jsonPath("$.envActions[0].geom.type", equalTo("Point")))
             .andExpect(jsonPath("$.envActions[0].facade", equalTo("Outre-Mer")))
             .andExpect(jsonPath("$.envActions[0].department", equalTo("29")))
