@@ -12,10 +12,15 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import org.hibernate.Hibernate
+import org.hibernate.annotations.Cache
+import org.hibernate.annotations.CacheConcurrencyStrategy
 import org.hibernate.annotations.Type
 
 @Entity
 @Table(name = "control_plan_subthemes")
+@Cache(
+    usage = CacheConcurrencyStrategy.READ_WRITE,
+)
 class ControlPlanSubThemeModel(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

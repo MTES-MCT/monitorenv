@@ -70,7 +70,7 @@ class EnvActionModel(
     @Column(name = "department")
     val department: String? = null,
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "mission_id")
     @JsonBackReference
     val mission: MissionModel,
@@ -88,13 +88,12 @@ class EnvActionModel(
     val isSeafarersControl: Boolean? = null,
 
     @OneToMany(
-        fetch = FetchType.EAGER,
+        fetch = FetchType.LAZY,
         mappedBy = "attachedEnvAction",
     )
     @JsonManagedReference
     val attachedReporting: List<ReportingModel>? = listOf(),
 
-    // @JoinColumn(name = "env_action_id")
     @OneToMany(
         fetch = FetchType.EAGER,
         cascade = [CascadeType.ALL],
