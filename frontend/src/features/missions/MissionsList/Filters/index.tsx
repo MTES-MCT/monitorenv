@@ -7,8 +7,7 @@ import {
   getOptionsFromIdAndName,
   CheckPicker,
   getOptionsFromLabelledEnum,
-  CustomSearch,
-  type Option
+  CustomSearch
 } from '@mtes-mct/monitor-ui'
 import { type MutableRefObject, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
@@ -23,10 +22,11 @@ import { seaFrontLabels } from '../../../../domain/entities/seaFrontType'
 import { MissionFiltersEnum, resetMissionFilters, updateFilters } from '../../../../domain/shared_slices/MissionFilters'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
 import { ReactComponent as ReloadSVG } from '../../../../uiMonitor/icons/Reload.svg'
 import { isNotArchived } from '../../../../utils/isNotArchived'
 
-export function MissionsTableFilters({ themes }: { themes: Array<Option<number>> }) {
+export function MissionsTableFilters() {
   const dispatch = useAppDispatch()
   const { newWindowContainerRef } = useNewWindow()
   const {
@@ -47,6 +47,7 @@ export function MissionsTableFilters({ themes }: { themes: Array<Option<number>>
 
   const { data: administrations } = useGetAdministrationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
   const { data: legacyControlUnits, isLoading } = useGetLegacyControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
+  const { themesAsOptions } = useGetControlPlans()
 
   const activeAdministrations = useMemo(
     () =>
@@ -57,7 +58,7 @@ export function MissionsTableFilters({ themes }: { themes: Array<Option<number>>
     [administrations]
   )
 
-  const themeCustomSearch = useMemo(() => new CustomSearch(themes, ['label']), [themes])
+  const themeCustomSearch = useMemo(() => new CustomSearch(themesAsOptions, ['label']), [themesAsOptions])
 
   const controlUnitsAsOptions = useMemo(() => {
     const activeControlUnits = (legacyControlUnits || []).filter(isNotArchived)
@@ -281,7 +282,7 @@ export function MissionsTableFilters({ themes }: { themes: Array<Option<number>>
           menuStyle={{ maxWidth: '200%' }}
           name="theme"
           onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.THEME_FILTER)}
-          options={themes}
+          options={themesAsOptions}
           placeholder="Thématique"
           renderValue={() => selectedThemes && <OptionValue>{`Theme (${selectedThemes.length})`}</OptionValue>}
           size="sm"

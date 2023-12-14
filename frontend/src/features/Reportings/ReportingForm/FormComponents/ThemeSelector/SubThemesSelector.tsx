@@ -1,24 +1,18 @@
-import { FormikMultiSelect } from '@mtes-mct/monitor-ui'
-import _ from 'lodash'
-import { useMemo } from 'react'
+import { customDayjs, FormikMultiSelect } from '@mtes-mct/monitor-ui'
+import { useFormikContext } from 'formik'
 import styled from 'styled-components'
 
-import { useGetControlThemesQuery } from '../../../../../api/controlThemesAPI'
+import { useGetControlPlansByYear } from '../../../../../hooks/useGetControlPlansByYear'
 
-import type { ControlTheme } from '../../../../../domain/entities/controlThemes'
+import type { Reporting } from '../../../../../domain/entities/reporting'
 
 export function SubThemesSelector({ isLight = false, label, name, theme }) {
-  const { data: controlThemes, isError, isLoading } = useGetControlThemesQuery()
-
-  const availableThemes = useMemo(
-    () =>
-      _.chain(controlThemes)
-        .filter((t): t is ControlTheme & { themeLevel2: string } => t.themeLevel1 === theme && !!t.themeLevel2)
-        .uniqBy('themeLevel2')
-        .map(t => ({ label: t.themeLevel2, value: t.themeLevel2 }))
-        .value(),
-    [controlThemes, theme]
-  )
+  const { values } = useFormikContext<Reporting>()
+  const year = customDayjs(values.createdAt || new Date().toISOString()).year()
+  const { isError, isLoading, subThemesAsOptions } = useGetControlPlansByYear({
+    selectedTheme: theme,
+    year
+  })
 
   return (
     <>
@@ -27,14 +21,14 @@ export function SubThemesSelector({ isLight = false, label, name, theme }) {
       {!isError && !isLoading && (
         <FormikMultiSelect
           // force update when name or theme changes
-          key={`${theme}`}
+          key={theme}
           data-cy="reporting-subtheme-selector"
           disabled={!theme}
           isErrorMessageHidden
           isLight={isLight}
           label={label}
           name={name}
-          options={availableThemes}
+          options={subThemesAsOptions}
         />
       )}
     </>

@@ -5,7 +5,6 @@ import { type MutableRefObject, useMemo, useRef, useState } from 'react'
 import { MapReportingsFilters } from './Map'
 import { TableReportingsFilters } from './Table'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../api/constants'
-import { useGetControlThemesQuery } from '../../../api/controlThemesAPI'
 import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
 import { useGetSemaphoresQuery } from '../../../api/semaphoresAPI'
 import { DateRangeEnum, ReportingDateRangeEnum, ReportingDateRangeLabels } from '../../../domain/entities/dateRange'
@@ -19,8 +18,7 @@ import { seaFrontLabels } from '../../../domain/entities/seaFrontType'
 import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../domain/shared_slices/ReportingsFilters'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { getSubThemesAsListOptions } from '../../../utils/getSubThemesAsListOptions'
-import { getThemesAsListOptions } from '../../../utils/getThemesAsListOptions'
+import { useGetControlPlans } from '../../../hooks/useGetControlPlans'
 
 export enum ReportingFilterContext {
   MAP = 'MAP',
@@ -32,13 +30,10 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
   const wrapperRef = useRef() as MutableRefObject<HTMLDivElement>
   const [isCustomPeriodVisible, setIsCustomPeriodVisible] = useState(periodFilter === DateRangeEnum.CUSTOM)
 
-  const { data: themes } = useGetControlThemesQuery()
   const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
+  const { subThemesAsOptions, themesAsOptions } = useGetControlPlans()
   const { data: semaphores } = useGetSemaphoresQuery()
   const controlUnitsOptions = useMemo(() => (controlUnits ? Array.from(controlUnits) : []), [controlUnits])
-
-  const themesListAsOptions = getThemesAsListOptions(themes)
-  const subThemesListAsOptions = getSubThemesAsListOptions(themes)
 
   const unitListAsOptions = controlUnitsOptions
     .filter(unit => !unit.isArchived && !unit.name.includes('Sémaphore'))
@@ -105,8 +100,8 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
     sourceOptions,
     sourceTypeOptions,
     statusOptions,
-    subThemesListAsOptions,
-    themesListAsOptions,
+    subThemesOptions: subThemesAsOptions,
+    themesOptions: themesAsOptions,
     typeOptions
   }
 

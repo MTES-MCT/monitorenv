@@ -56,14 +56,14 @@ export function TableReportingsFiltersWithRef(
     sourceOptions,
     sourceTypeOptions,
     statusOptions,
-    subThemesListAsOptions,
-    themesListAsOptions,
+    subThemesOptions,
+    themesOptions,
     typeOptions
   } = optionsList
 
   const sourceCustomSearch = useMemo(
     () =>
-      new CustomSearch(sourceOptions as Option[], ['label'], {
+      new CustomSearch(sourceOptions as Array<Option>, ['label'], {
         cacheKey: 'REPORTINGS_LIST',
         withCacheInvalidation: true
       }),
@@ -71,20 +71,20 @@ export function TableReportingsFiltersWithRef(
   )
   const themeCustomSearch = useMemo(
     () =>
-      new CustomSearch(themesListAsOptions as Option[], ['label'], {
+      new CustomSearch(subThemesOptions as Array<Option<number>>, ['label'], {
         cacheKey: 'REPORTINGS_LIST',
         withCacheInvalidation: true
       }),
-    [themesListAsOptions]
+    [subThemesOptions]
   )
 
   const subThemeCustomSearch = useMemo(
     () =>
-      new CustomSearch(subThemesListAsOptions as Option[], ['label'], {
+      new CustomSearch(subThemesOptions as Array<Option<number>>, ['label'], {
         cacheKey: 'REPORTINGS_LIST',
         withCacheInvalidation: true
       }),
-    [subThemesListAsOptions]
+    [subThemesOptions]
   )
 
   return (
@@ -164,28 +164,28 @@ export function TableReportingsFiltersWithRef(
             value={typeFilter}
           />
           <CheckPicker
-            key={themesListAsOptions.length}
+            key={themesOptions.length}
             customSearch={themeCustomSearch}
             isLabelHidden
             label="Thématiques"
             menuStyle={{ maxWidth: '200%' }}
             name="themes"
             onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.THEME_FILTER)}
-            options={themesListAsOptions}
+            options={themesOptions}
             placeholder="Thématiques"
             renderValue={() => themeFilter && <OptionValue>{`Thème (${themeFilter.length})`}</OptionValue>}
             style={{ width: 311 }}
             value={themeFilter}
           />
           <CheckPicker
-            key={subThemesListAsOptions.length}
+            key={subThemesOptions.length}
             customSearch={subThemeCustomSearch}
             isLabelHidden
             label="Sous-thématiques"
             menuStyle={{ maxWidth: '200%' }}
             name="subThemes"
             onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SUB_THEMES_FILTER)}
-            options={subThemesListAsOptions}
+            options={subThemesOptions}
             placeholder="Sous-thématiques"
             renderValue={() => subThemesFilter && <OptionValue>{`Sous-thème (${subThemesFilter.length})`}</OptionValue>}
             searchable

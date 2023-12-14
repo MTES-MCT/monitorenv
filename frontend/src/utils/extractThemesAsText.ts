@@ -1,16 +1,16 @@
-import type { ControlPlansData, ControlPlansTheme } from '../domain/entities/controlPlan'
+import type { ControlPlansData, ControlPlansThemeCollection } from '../domain/entities/controlPlan'
 
-export function extractThemesAsText(controlPlans: ControlPlansData[], themes: Array<ControlPlansTheme>) {
+export function extractThemesAsText(controlPlans: ControlPlansData[], themes: ControlPlansThemeCollection) {
   if (controlPlans?.length === 0) {
     return ''
   }
 
   return controlPlans
     .reduce((controlPlansCollection, currentControlPlan) => {
-      const actionTheme = themes.find(theme => theme.id === currentControlPlan.themeId)
-      if (currentControlPlan?.themeId && actionTheme) {
-        const controlPLanLabel = actionTheme.theme
-        controlPlansCollection.push(controlPLanLabel || '')
+      if (currentControlPlan?.themeId) {
+        const themeLabel = currentControlPlan.themeId ? themes[currentControlPlan.themeId]?.theme : undefined
+
+        controlPlansCollection.push(themeLabel || '')
       }
 
       return controlPlansCollection

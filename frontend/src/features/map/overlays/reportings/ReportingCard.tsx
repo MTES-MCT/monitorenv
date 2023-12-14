@@ -19,6 +19,7 @@ import { reportingActions } from '../../../../domain/shared_slices/reporting'
 import { editReportingInLocalStore } from '../../../../domain/use_cases/reporting/editReportingInLocalStore'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
 import { LinkToMissionTag } from '../../../Reportings/components/LinkToMissionTag'
 import { StatusActionTag } from '../../../Reportings/components/StatusActionTag'
 import { getFormattedReportingId } from '../../../Reportings/utils'
@@ -63,6 +64,7 @@ export function ReportingCard({
   selected = false,
   updateMargins
 }: ReportingCardProps) {
+  const { isLoading, subThemes, themes } = useGetControlPlans()
   const dispatch = useAppDispatch()
   const displayReportingsLayer = useAppSelector(state => state.global.displayReportingsLayer)
 
@@ -84,8 +86,8 @@ export function ReportingCard({
     missionId,
     reportingId,
     reportType,
-    subThemes,
-    theme,
+    subThemeIds,
+    themeId,
     validityTime
   } = feature.getProperties()
 
@@ -93,7 +95,7 @@ export function ReportingCard({
   const endOfValidity = getLocalizedDayjs(createdAt).add(validityTime || 0, 'hour')
   const timeLeft = customDayjs(endOfValidity).diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour', true)
 
-  const subThemesFormatted = subThemes?.map(subTheme => subTheme).join(', ')
+  const subThemesFormatted = subThemeIds?.map(subThemeId => subThemes[subThemeId]?.subTheme).join(', ')
 
   const timeLeftText = useMemo(() => {
     if (timeLeft < 0 || isArchived) {
@@ -128,7 +130,7 @@ export function ReportingCard({
     }
   }, [feature, updateMargins])
 
-  if (!isCardVisible) {
+  if (!isCardVisible || isLoading) {
     return null
   }
 
@@ -169,8 +171,8 @@ export function ReportingCard({
       </StyledHeader>
       <div>
         <StyledThemeContainer>
-          {theme && <StyledBoldText>{theme}</StyledBoldText>}
-          {subThemes?.length > 0 && <StyledMediumText>&nbsp;/&nbsp;{subThemesFormatted}</StyledMediumText>}
+          {themeId && themes[themeId] && <StyledBoldText>{themes[themeId]?.theme}</StyledBoldText>}
+          {subThemeIds?.length > 0 && <StyledMediumText>&nbsp;/&nbsp;{subThemesFormatted}</StyledMediumText>}
         </StyledThemeContainer>
         {description && <StyledDescription title={description}>{description}</StyledDescription>}
       </div>

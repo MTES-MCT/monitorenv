@@ -17,9 +17,9 @@ export function useGetControlPlans() {
   return {
     isError,
     isLoading,
-    subThemes: Object.values(data?.subThemes || {}) || [],
+    subThemes: data?.subThemes || {},
     subThemesAsOptions,
-    themes: Object.values(data?.themes || {}) || [],
+    themes: data?.themes || {},
     themesAsOptions
   }
 }

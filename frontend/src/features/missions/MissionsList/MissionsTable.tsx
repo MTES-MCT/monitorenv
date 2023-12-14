@@ -8,27 +8,16 @@ import { Columns } from './Columns'
 import { StyledSkeletonRow } from '../../commonComponents/Skeleton'
 import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 
-import type { ControlPlansSubTheme, ControlPlansTheme } from '../../../domain/entities/controlPlan'
 import type { Mission } from '../../../domain/entities/missions'
 
-export function MissionsTable({
-  isLoading,
-  missions,
-  subThemes,
-  themes
-}: {
-  isLoading: boolean
-  missions: Mission[]
-  subThemes: Array<ControlPlansSubTheme>
-  themes: Array<ControlPlansTheme>
-}) {
+export function MissionsTable({ isLoading, missions }: { isLoading: boolean; missions: Mission[] }) {
   const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'startDate' }])
 
   const tableData = useMemo(() => (isLoading ? Array(5).fill({}) : missions), [isLoading, missions])
 
   const columns = useMemo(
-    () => (isLoading ? Columns().map(column => ({ ...column, cell: StyledSkeletonRow })) : Columns(themes, subThemes)),
-    [isLoading, themes, subThemes]
+    () => (isLoading ? Columns.map(column => ({ ...column, cell: StyledSkeletonRow })) : Columns),
+    [isLoading]
   )
 
   const table = useReactTable({

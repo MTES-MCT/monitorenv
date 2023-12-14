@@ -81,7 +81,7 @@ export const Columns = [
   },
   {
     accessorFn: row => row.theme,
-    cell: ({ row }) => <CellActionThemes subThemes={row.original.subThemes} theme={row.original.theme} />,
+    cell: ({ row }) => <CellActionThemes subThemeIds={row.original.subThemeIds} themeId={row.original.themeId} />,
     enableSorting: true,
     header: () => 'Thématique',
     id: 'theme',

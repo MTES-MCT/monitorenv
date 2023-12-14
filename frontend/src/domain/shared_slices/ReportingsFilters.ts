@@ -37,8 +37,8 @@ type ReportingsFiltersSliceType = {
   startedAfter: string
   startedBefore?: string
   statusFilter: string[]
-  subThemesFilter: string[] | undefined
-  themeFilter: string[] | undefined
+  subThemesFilter: number[] | undefined
+  themeFilter: number[] | undefined
   typeFilter?: string | undefined
 }
 

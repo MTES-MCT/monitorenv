@@ -1,7 +1,11 @@
 export type ControlPlans = {
-  subThemes: Array<ControlPlansSubTheme>
-  tags: Array<ControlPlansTag>
-  themes: Array<ControlPlansTheme>
+  subThemes: ControlPlansSubThemeCollection
+  tags: ControlPlansTagCollection
+  themes: ControlPlansThemeCollection
+}
+
+export type ControlPlansThemeCollection = {
+  [key: number]: ControlPlansTheme
 }
 
 export type ControlPlansTheme = {
@@ -9,11 +13,19 @@ export type ControlPlansTheme = {
   theme: string
 }
 
+export type ControlPlansSubThemeCollection = {
+  [key: number]: ControlPlansSubTheme
+}
+
 export type ControlPlansSubTheme = {
   id: number
   subTheme: string
   themeId: number
   year: number
+}
+
+export type ControlPlansTagCollection = {
+  [key: number]: ControlPlansTag
 }
 
 export type ControlPlansTag = {
