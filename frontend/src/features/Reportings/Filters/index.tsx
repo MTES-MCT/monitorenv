@@ -26,12 +26,12 @@ export enum ReportingFilterContext {
 }
 export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { context?: string }) {
   const dispatch = useAppDispatch()
-  const { periodFilter, sourceTypeFilter } = useAppSelector(state => state.reportingFilters)
+  const { periodFilter, sourceTypeFilter, subThemesFilter } = useAppSelector(state => state.reportingFilters)
   const wrapperRef = useRef() as MutableRefObject<HTMLDivElement>
   const [isCustomPeriodVisible, setIsCustomPeriodVisible] = useState(periodFilter === DateRangeEnum.CUSTOM)
 
   const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
-  const { subThemesAsOptions, themesAsOptions } = useGetControlPlans()
+  const { subThemes, subThemesAsOptions, themesAsOptions } = useGetControlPlans()
   const { data: semaphores } = useGetSemaphoresQuery()
   const controlUnitsOptions = useMemo(() => (controlUnits ? Array.from(controlUnits) : []), [controlUnits])
 
@@ -211,6 +211,25 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
     dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SOURCE_FILTER, value: undefined }))
   }
 
+  const updateThemeFilter = (themesIds: number[] | undefined) => {
+    dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.THEME_FILTER, value: themesIds }))
+
+    if (themesIds) {
+      const availableSubThemes = Object.values(subThemes)
+        .filter(subTheme => themesIds.includes(subTheme.themeId))
+        .map(subTheme => subTheme.id)
+      dispatch(
+        reportingsFiltersActions.updateFilters({
+          key: ReportingsFiltersEnum.SUB_THEMES_FILTER,
+          value: subThemesFilter?.filter(subThemeId => availableSubThemes.includes(subThemeId))
+        })
+      )
+    } else {
+      dispatch(
+        reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SUB_THEMES_FILTER, value: undefined })
+      )
+    }
+  }
   const resetFilters = () => {
     setIsCustomPeriodVisible(false)
     dispatch(reportingsFiltersActions.resetReportingsFilters())
@@ -227,6 +246,7 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
       updatePeriodFilter={updatePeriodFilter}
       updateSimpleFilter={updateSimpleFilter}
       updateSourceTypeFilter={updateSourceTypeFilter}
+      updateThemeFilter={updateThemeFilter}
     />
   ) : (
     <MapReportingsFilters

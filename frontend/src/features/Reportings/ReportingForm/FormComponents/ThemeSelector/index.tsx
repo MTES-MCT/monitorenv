@@ -13,7 +13,7 @@ export function ThemeSelector({ isInNewWindow = false, isLight = true, label, na
   const { setFieldValue, values } = useFormikContext<Reporting>()
 
   const year = customDayjs(values.createdAt || new Date().toISOString()).year()
-  const { isError, isLoading, themesAsOptions } = useGetControlPlansByYear({
+  const { isError, isLoading, themesByYearAsOptions } = useGetControlPlansByYear({
     year
   })
   const handleUpdateTheme = theme => {
@@ -34,8 +34,8 @@ export function ThemeSelector({ isInNewWindow = false, isLight = true, label, na
           label={label}
           name={name}
           onChange={handleUpdateTheme}
-          options={themesAsOptions}
-          searchable={themesAsOptions.length > 10}
+          options={themesByYearAsOptions}
+          searchable={themesByYearAsOptions.length > 10}
           value={currentThemeField.value}
         />
       )}

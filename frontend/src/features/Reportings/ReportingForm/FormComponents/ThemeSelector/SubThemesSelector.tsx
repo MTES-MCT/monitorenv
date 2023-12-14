@@ -9,7 +9,7 @@ import type { Reporting } from '../../../../../domain/entities/reporting'
 export function SubThemesSelector({ isLight = false, label, name, theme }) {
   const { values } = useFormikContext<Reporting>()
   const year = customDayjs(values.createdAt || new Date().toISOString()).year()
-  const { isError, isLoading, subThemesAsOptions } = useGetControlPlansByYear({
+  const { isError, isLoading, subThemesByYearAsOptions } = useGetControlPlansByYear({
     selectedTheme: theme,
     year
   })
@@ -28,7 +28,7 @@ export function SubThemesSelector({ isLight = false, label, name, theme }) {
           isLight={isLight}
           label={label}
           name={name}
-          options={subThemesAsOptions}
+          options={subThemesByYearAsOptions}
         />
       )}
     </>

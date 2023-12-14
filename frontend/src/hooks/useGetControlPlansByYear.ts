@@ -1,3 +1,5 @@
+import { useMemo } from 'react'
+
 import { useGetControlPlansByYearQuery } from '../api/controlPlans'
 
 import type { Option } from '@mtes-mct/monitor-ui'
@@ -11,28 +13,39 @@ export function useGetControlPlansByYear({
 }) {
   const { data, isError, isLoading } = useGetControlPlansByYearQuery(year)
 
-  const themesAsOptions: Array<Option<number>> =
-    Object.values(data?.themes || {}).map(({ id, theme }) => ({
-      label: theme,
-      value: id
-    })) || []
+  const themesByYearAsOptions: Array<Option<number>> = useMemo(
+    () =>
+      Object.values(data?.themes || {}).map(({ id, theme }) => ({
+        label: theme,
+        value: id
+      })) || [],
+    [data?.themes]
+  )
 
-  const subThemesAsOptions: Array<Option<number>> =
-    Object.values(data?.subThemes || {})
-      ?.filter(({ themeId }) => themeId === selectedTheme)
-      .map(({ id, subTheme }) => ({ label: subTheme, value: id })) || []
+  const subThemesByYearAsOptions: Array<Option<number>> = useMemo(
+    () =>
+      Object.values(data?.subThemes || {})
+        ?.filter(({ themeId }) => themeId === selectedTheme)
+        .map(({ id, subTheme }) => ({ label: subTheme, value: id })) || [],
+    [data?.subThemes, selectedTheme]
+  )
 
-  const tagsAsOptions: Array<Option<number>> =
-    Object.values(data?.tags || {})
-      ?.filter(({ themeId }) => themeId === selectedTheme)
-      .map(({ id, tag }) => ({ label: tag, value: id })) || []
+  const tagsByYearAsOptions: Array<Option<number>> = useMemo(
+    () =>
+      Object.values(data?.tags || {})
+        ?.filter(({ themeId }) => themeId === selectedTheme)
+        .map(({ id, tag }) => ({ label: tag, value: id })) || [],
+    [data?.tags, selectedTheme]
+  )
+
+  const themesByYear = useMemo(() => data?.themes || {}, [data?.themes])
 
   return {
     isError,
     isLoading,
-    subThemesAsOptions,
-    tagsAsOptions,
-    themes: Object.values(data?.themes || {}) || [],
-    themesAsOptions
+    subThemesByYearAsOptions,
+    tagsByYearAsOptions,
+    themesByYear,
+    themesByYearAsOptions
   }
 }

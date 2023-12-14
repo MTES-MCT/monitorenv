@@ -94,4 +94,5 @@ const StyledContainer = styled.div`
   flex-direction: row;
   gap: 16px;
   margin-bottom: 2px;
+  flex-wrap: wrap;
 `

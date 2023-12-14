@@ -12,7 +12,7 @@ import type { Mission } from '../../../../domain/entities/missions'
 export function ControlCard({ action }) {
   const { values } = useFormikContext<Mission>()
   const year = customDayjs(action.actionStartDateTimeUtc || values.startDateTimeUtc || new Date().toISOString()).year()
-  const { themes } = useGetControlPlansByYear({
+  const { themesByYear } = useGetControlPlansByYear({
     year
   })
 
@@ -23,7 +23,7 @@ export function ControlCard({ action }) {
         <Title>
           Contrôle{!!action.actionNumberOfControls && action.actionNumberOfControls > 1 ? 's ' : ' '}
           {action.controlPlans?.length > 0 && action.controlPlans[0]?.themeId ? (
-            <Accented>{extractThemesAsText(action.controlPlans, themes)}</Accented>
+            <Accented>{extractThemesAsText(action.controlPlans, themesByYear)}</Accented>
           ) : (
             'à renseigner'
           )}

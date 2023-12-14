@@ -22,10 +22,11 @@ export function ActionTheme({ actionIndex, labelSubTheme, labelTheme, themeIndex
   const year = customDayjs(actionDate).year()
   const [currentThemeField] = useField<number>(`envActions[${actionIndex}].controlPlans[${themeIndex}].themeId`)
 
-  const { isError, isLoading, subThemesAsOptions, tagsAsOptions, themesAsOptions } = useGetControlPlansByYear({
-    selectedTheme: currentThemeField?.value,
-    year
-  })
+  const { isError, isLoading, subThemesByYearAsOptions, tagsByYearAsOptions, themesByYearAsOptions } =
+    useGetControlPlansByYear({
+      selectedTheme: currentThemeField?.value,
+      year
+    })
 
   return (
     <ActionThemeWrapper data-cy="envaction-theme-element">
@@ -35,19 +36,19 @@ export function ActionTheme({ actionIndex, labelSubTheme, labelTheme, themeIndex
         isLoading={isLoading}
         label={labelTheme}
         themeIndex={themeIndex}
-        themes={themesAsOptions}
+        themes={themesByYearAsOptions}
       />
       <SubThemesSelector
         actionIndex={actionIndex}
         isError={isError}
         isLoading={isLoading}
         label={labelSubTheme}
-        subThemes={subThemesAsOptions}
+        subThemes={subThemesByYearAsOptions}
         themeId={currentThemeField?.value}
         themeIndex={themeIndex}
       />
-      {tagsAsOptions && tagsAsOptions.length > 0 && (
-        <TagsSelector actionIndex={actionIndex} tags={tagsAsOptions} themeIndex={themeIndex} />
+      {tagsByYearAsOptions && tagsByYearAsOptions.length > 0 && (
+        <TagsSelector actionIndex={actionIndex} tags={tagsByYearAsOptions} themeIndex={themeIndex} />
       )}
     </ActionThemeWrapper>
   )

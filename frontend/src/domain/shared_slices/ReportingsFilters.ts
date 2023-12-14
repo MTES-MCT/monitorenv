@@ -58,13 +58,13 @@ const initialState: ReportingsFiltersSliceType = {
 }
 
 const persistConfig = {
-  key: 'reportingsFilters',
+  key: 'reportingFilters',
   storage
 }
 
 const reportingFiltersSlice = createSlice({
   initialState,
-  name: 'reportingsFilters',
+  name: 'reportingFilters',
   reducers: {
     resetReportingsFilters() {
       return { ...initialState }

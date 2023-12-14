@@ -31,7 +31,8 @@ export function TableReportingsFiltersWithRef(
     updateDateRangeFilter,
     updatePeriodFilter,
     updateSimpleFilter,
-    updateSourceTypeFilter
+    updateSourceTypeFilter,
+    updateThemeFilter
   },
   ref
 ) {
@@ -170,7 +171,7 @@ export function TableReportingsFiltersWithRef(
             label="Thématiques"
             menuStyle={{ maxWidth: '200%' }}
             name="themes"
-            onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.THEME_FILTER)}
+            onChange={value => updateThemeFilter(value)}
             options={themesOptions}
             placeholder="Thématiques"
             renderValue={() => themeFilter && <OptionValue>{`Thème (${themeFilter.length})`}</OptionValue>}
