@@ -101,6 +101,14 @@ class EnvActionModel(
         mappedBy = "envAction",
     )
     val controlPlanSubThemes: MutableList<EnvActionsControlPlanSubThemeModel>? = ArrayList(),
+
+    @OneToMany(
+        fetch = FetchType.EAGER,
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
+        mappedBy = "envAction",
+    )
+    val controlPlanTags: MutableList<EnvActionsControlPlanTagModel>? = ArrayList(),
 ) {
 
     fun toActionEntity(mapper: ObjectMapper): EnvActionEntity {
@@ -111,6 +119,7 @@ class EnvActionModel(
             actionType = actionType,
             actionStartDateTimeUtc = actionStartDateTime?.atZone(UTC),
             controlPlanSubThemes = controlPlanSubThemes?.map { it.toEnvActionControlPlanSubThemeEntity() },
+            controlPlanTags = controlPlanTags?.map { it.toEnvActionControlPlanTagEntity() },
             department = department,
             facade = facade,
             geom = geom,
@@ -126,7 +135,9 @@ class EnvActionModel(
         fun fromEnvActionEntity(
             action: EnvActionEntity,
             mission: MissionModel,
+            controlPlanThemesReferenceModelMap: Map<Int, ControlPlanThemeModel>,
             controlPlanSubThemesReferenceModelMap: Map<Int, ControlPlanSubThemeModel>,
+            controlPlanTagsReferenceModelMap: Map<Int, ControlPlanTagModel>,
             mapper: ObjectMapper,
         ): EnvActionModel {
             var envActionModel = EnvActionModel(
@@ -134,7 +145,6 @@ class EnvActionModel(
                 actionEndDateTime = action.actionEndDateTimeUtc?.toInstant(),
                 actionType = action.actionType,
                 actionStartDateTime = action.actionStartDateTimeUtc?.toInstant(),
-
                 department = action.department,
                 facade = action.facade,
                 isAdministrativeControl = action.isAdministrativeControl,
@@ -147,14 +157,20 @@ class EnvActionModel(
                 geom = action.geom,
                 value = EnvActionMapper.envActionEntityToJSON(mapper, action),
             )
-            action.controlPlanSubThemes?.map {
+            action.controlPlans?.map {
                 val envActionControlPlanSubThemeModel = EnvActionsControlPlanSubThemeModel.fromEnvActionControlPlanSubThemeEntity(
                     envAction = envActionModel,
                     controlPlanSubTheme = controlPlanSubThemesReferenceModelMap[it.subThemeId]!!,
-                    tags = it.tags,
                 )
                 envActionModel.controlPlanSubThemes?.add(
                     envActionControlPlanSubThemeModel,
+                )
+                val envActionControlPlanTagModel = EnvActionsControlPlanTagModel.fromEnvActionControlPlanTagEntity(
+                    envAction = envActionModel,
+                    controlPlanTag = controlPlanTagsReferenceModelMap[it.subThemeId]!!,
+                )
+                envActionModel.controlPlanTags?.add(
+                    envActionControlPlanTagModel,
                 )
             }
             return envActionModel

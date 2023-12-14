@@ -344,11 +344,11 @@ class MissionsControllerITests {
                     equalTo("2022-01-23T20:29:03Z"),
                 ),
             )
-            .andExpect(jsonPath("$[0].envActions[0].controlPlanSubThemes[0].id", equalTo(1)))
-            .andExpect(jsonPath("$[0].envActions[0].controlPlanSubThemes[0].theme", equalTo("Theme 1")))
-            .andExpect(jsonPath("$[0].envActions[0].controlPlanSubThemes[0].subTheme", equalTo("sous theme 1")))
-            .andExpect(jsonPath("$[0].envActions[0].controlPlanSubThemes[0].tags[0]", equalTo("tag 1")))
-            .andExpect(jsonPath("$[0].envActions[0].controlPlanSubThemes[0].tags[1]", equalTo("tag 2")))
+            .andExpect(jsonPath("$[0].envActions[0].controlPlan[0].id", equalTo(1)))
+            .andExpect(jsonPath("$[0].envActions[0].controlPlan[0].theme", equalTo("Theme 1")))
+            .andExpect(jsonPath("$[0].envActions[0].controlPlan[0].subTheme", equalTo("sous theme 1")))
+            .andExpect(jsonPath("$[0].envActions[0].controlPlan[0].tags[0]", equalTo("tag 1")))
+            .andExpect(jsonPath("$[0].envActions[0].controlPlan[0].tags[1]", equalTo("tag 2")))
             .andExpect(jsonPath("$[0].envActions[0].geom.type", equalTo("Point")))
             .andExpect(jsonPath("$[0].envActions[0].facade", equalTo("Outre-Mer")))
             .andExpect(jsonPath("$[0].envActions[0].department", equalTo("29")))
@@ -668,11 +668,11 @@ class MissionsControllerITests {
                     equalTo("2022-01-23T20:29:03Z"),
                 ),
             )
-            .andExpect(jsonPath("$.envActions[0].controlPlanSubThemes[0].id", equalTo(1)))
-            .andExpect(jsonPath("$.envActions[0].controlPlanSubThemes[0].subTheme", equalTo("sous theme 1")))
-            .andExpect(jsonPath("$.envActions[0].controlPlanSubThemes[0].tags[0]", equalTo("tag 1")))
-            .andExpect(jsonPath("$.envActions[0].controlPlanSubThemes[0].tags[1]", equalTo("tag 2")))
-            .andExpect(jsonPath("$.envActions[0].controlPlanSubThemes[0].theme", equalTo("Theme 1")))
+            .andExpect(jsonPath("$.envActions[0].controlPlan[0].id", equalTo(1)))
+            .andExpect(jsonPath("$.envActions[0].controlPlan[0].subTheme", equalTo("sous theme 1")))
+            .andExpect(jsonPath("$.envActions[0].controlPlan[0].tags[0]", equalTo("tag 1")))
+            .andExpect(jsonPath("$.envActions[0].controlPlan[0].tags[1]", equalTo("tag 2")))
+            .andExpect(jsonPath("$.envActions[0].controlPlan[0].theme", equalTo("Theme 1")))
             .andExpect(jsonPath("$.envActions[0].geom.type", equalTo("Point")))
             .andExpect(jsonPath("$.envActions[0].facade", equalTo("Outre-Mer")))
             .andExpect(jsonPath("$.envActions[0].department", equalTo("29")))

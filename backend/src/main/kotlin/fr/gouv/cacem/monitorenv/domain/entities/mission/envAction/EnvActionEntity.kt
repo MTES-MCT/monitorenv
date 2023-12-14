@@ -23,7 +23,7 @@ abstract class EnvActionEntity(
     open val actionType: ActionTypeEnum,
     open val actionEndDateTimeUtc: ZonedDateTime? = null,
     open val actionStartDateTimeUtc: ZonedDateTime? = null,
-    open val controlPlanSubThemes: List<EnvActionControlPlanSubThemeEntity>? = listOf(),
+    open val controlPlans: List<EnvActionControlPlanEntity>? = listOf(),
     open val department: String? = null,
     open val facade: String? = null,
     open val geom: Geometry? = null,

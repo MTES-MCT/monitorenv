@@ -7,14 +7,14 @@ import java.util.*
 data class EnvActionSurveillanceProperties(
     val coverMissionZone: Boolean? = null,
     val observations: String? = null,
-    @Deprecated("Use ControlPlanSubThemes instead")
+    @Deprecated("Use controlPlans instead")
     val themes: List<ThemeEntity>? = listOf(),
 ) {
     fun toEnvActionSurveillanceEntity(
         id: UUID,
         actionStartDateTimeUtc: ZonedDateTime?,
         actionEndDateTimeUtc: ZonedDateTime?,
-        controlPlanSubThemes: List<EnvActionControlPlanSubThemeEntity>?,
+        controlPlans: List<EnvActionControlPlanEntity>?,
         department: String?,
         facade: String?,
         geom: Geometry?,
@@ -23,7 +23,7 @@ data class EnvActionSurveillanceProperties(
             id = id,
             actionStartDateTimeUtc = actionStartDateTimeUtc,
             actionEndDateTimeUtc = actionEndDateTimeUtc,
-            controlPlanSubThemes = controlPlanSubThemes,
+            controlPlans = controlPlans,
             coverMissionZone = coverMissionZone,
             department = department,
             facade = facade,

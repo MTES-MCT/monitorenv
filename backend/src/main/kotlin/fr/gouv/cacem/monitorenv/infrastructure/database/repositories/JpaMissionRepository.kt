@@ -7,6 +7,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanSubThemeRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanTagRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
 import org.springframework.data.domain.Pageable
@@ -18,6 +19,7 @@ import java.time.Instant
 @Repository
 class JpaMissionRepository(
     private val dbControlPlanSubThemeRepository: IDBControlPlanSubThemeRepository,
+    private val dbControlPlanTagRepository: IDBControlPlanTagRepository,
     private val dbControlUnitResourceRepository: IDBControlUnitResourceRepository,
     private val dbMissionRepository: IDBMissionRepository,
     private val mapper: ObjectMapper,
@@ -112,20 +114,40 @@ class JpaMissionRepository(
         // Create an `[id] → ControlUnitResourceModel` map
         val controlUnitResourceModelMap = controlUnitResourceModels.associateBy { requireNotNull(it.id) }
 
-        // get a list of all controlPlanSubThemes ids used in the mission
-        val controlPlanSubThemes = mission.envActions?.flatMap { it.controlPlanSubThemes?.map { id -> id.subThemeId } ?: emptyList() }?.distinct()
-        // Create a map from controlPlanSubThemes maping each id to a reference to the model
-        val controlPlanSubThemesReferenceModelMap = controlPlanSubThemes?.associateWith { id ->
-            dbControlPlanSubThemeRepository.getReferenceById(
-                id,
-            )
+        val controlPlanThemes = MutableList<Int>()
+        val controlPlanSubThemes = MutableList<Int>()
+        val controlPlanTags = MutableList<Int>()
+        for (envAction in mission.envActions ?: emptyList()) {
+            for (controlPlan in envAction.controlPlans ?: emptyList()) {
+                // get a list of all controlPlanTheme ids used in the mission's envActions
+                controlPlanThemes.add(controlPlan.themeId ?: continue)
+                // get a list of all controlPlanSubThemes ids used in the mission's envActions
+                controlPlanSubThemes.addAll(controlPlan.subThemeIds ?: emptyList())
+                // get a list of all controlPlanTags ids used in the mission's envActions
+                controlPlanTags.addAll(controlPlan.tagIds ?: emptyList())
+            }
+        }
+
+        // Create a map from controlPlanThemes mapping each id to a reference to the model
+        val controlPlanThemesReferenceModelMap = controlPlanThemes?.distinct()?.associateWith { id ->
+            dbControlPlanThemeRepository.getReferenceById(id)
+        }
+        // Create a map from controlPlanSubThemes mapping each id to a reference to the model
+        val controlPlanSubThemesReferenceModelMap = controlPlanSubThemes?.distinct()?.associateWith { id ->
+            dbControlPlanSubThemeRepository.getReferenceById(id)
+        }
+        // Create a map from controlPlanTags mapping each id to a reference to the model
+        val controlPlanTagsReferenceModelMap = controlPlanTags?.distinct()?.associateWith { id ->
+            dbControlPlanTagRepository.getReferenceById(id)
         }
 
         val missionModel = MissionModel.fromMissionEntity(
             mission = mission,
             mapper = mapper,
             controlUnitResourceModelMap = controlUnitResourceModelMap,
+            controlPlanThemesReferenceModelMap = controlPlanThemesReferenceModelMap ?: emptyMap(),
             controlPlanSubThemesReferenceModelMap = controlPlanSubThemesReferenceModelMap ?: emptyMap(),
+            controlPlanTagsReferenceModelMap = controlPlanTagsReferenceModelMap ?: emptyMap(),
         )
         return dbMissionRepository.saveAndFlush(missionModel).toMissionDTO(mapper)
     }

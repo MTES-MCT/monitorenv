@@ -1,22 +1,18 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlPlanSubTheme.ControlPlanSubThemeEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlPlan.ControlPlanSubThemeEntity
 
 data class ControlPlanSubThemeDataOutput(
     val id: Int,
-    val theme: String,
+    val themeId: Int,
     val subTheme: String,
-    val allowedTags: List<String>? = null,
-    val year: Int,
 ) {
     companion object {
-        fun fromControlPlanSubThemeEntity(ControlPlanSubTheme: ControlPlanSubThemeEntity) =
+        fun fromControlPlanSubThemeEntity(controlPlanSubTheme: ControlPlanSubThemeEntity) =
             ControlPlanSubThemeDataOutput(
-                id = ControlPlanSubTheme.id,
-                theme = ControlPlanSubTheme.theme,
-                subTheme = ControlPlanSubTheme.subTheme,
-                allowedTags = ControlPlanSubTheme.allowedTags,
-                year = ControlPlanSubTheme.year,
+                id = controlPlanSubTheme.id,
+                themeId = controlPlanSubTheme.themeId,
+                subTheme = controlPlanSubTheme.subTheme,
             )
     }
 }
