@@ -11,67 +11,63 @@ import jakarta.persistence.MapsId
 import jakarta.persistence.Table
 import org.hibernate.Hibernate
 import java.io.Serializable
-import java.util.UUID
 
 @Entity
-@Table(name = "env_actions_control_plan_sub_themes")
-class EnvActionsControlPlanSubThemeModel(
+@Table(name = "reportings_control_plan_sub_themes")
+class ReportingsControlPlanSubThemeModel(
     @EmbeddedId
-    val id: EnvActionsSubThemePk,
+    val id: ReportingsSubThemePk,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("envActionId")
-    @JoinColumn(name = "env_action_id")
-    val envAction: EnvActionModel? = null,
+    @MapsId("reportingId")
+    @JoinColumn(name = "reporting_id")
+    val reporting: ReportingModel? = null,
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("subthemeId")
     @JoinColumn(name = "subtheme_id")
     val controlPlanSubTheme: ControlPlanSubThemeModel? = null,
-
 ) {
     companion object {
-        fun fromEnvActionControlPlanSubThemeEntity(
-            envAction: EnvActionModel,
+        fun fromModels(
+            reporting: ReportingModel,
             controlPlanSubTheme: ControlPlanSubThemeModel,
-        ) = EnvActionsControlPlanSubThemeModel(
-            id = EnvActionsSubThemePk(
-                envActionId = envAction.id,
+        ) = ReportingsControlPlanSubThemeModel(
+            id = ReportingsSubThemePk(
+                reportingId = reporting.id!!,
                 subthemeId = controlPlanSubTheme.id,
             ),
-            envAction = envAction,
+            reporting = reporting,
             controlPlanSubTheme = controlPlanSubTheme,
         )
     }
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
-        other as EnvActionsControlPlanSubThemeModel
+        other as ReportingsControlPlanSubThemeModel
 
-        return id == other.id
+        return id != null && id == other.id
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
 }
 
 @Embeddable
-data class EnvActionsSubThemePk(
-    @Column(name = "env_action_id")
-    val envActionId: UUID,
-
+data class ReportingsSubThemePk(
+    @Column(name = "reporting_id")
+    val reportingId: Int,
     @Column(name = "subtheme_id")
     val subthemeId: Int,
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is EnvActionsSubThemePk) return false
+        if (other !is ReportingsSubThemePk) return false
 
-        return envActionId == other.envActionId &&
+        return reportingId == other.reportingId &&
             subthemeId == other.subthemeId
     }
 
     override fun hashCode(): Int {
-        return listOf(envActionId, subthemeId).hashCode()
+        return listOf(reportingId, subthemeId).hashCode()
     }
 }

@@ -45,14 +45,11 @@ CREATE TABLE env_actions_control_plan_tags (
 );
 
 CREATE TABLE reportings_control_plan_sub_themes (
-    id serial PRIMARY KEY,
     reporting_id integer,
-    theme_id integer NOT NULL,
     subtheme_id integer,
     foreign key (reporting_id) references reportings(id),
-    foreign key (theme_id) references control_plan_themes(id),
     foreign key (subtheme_id) references control_plan_subthemes(id),
-    unique (reporting_id, theme_id, subtheme_id)
+    primary key (reporting_id, subtheme_id)
 );
 
 COMMENT ON TABLE reportings_control_plan_sub_themes IS 'Table de jointure entre les signalements et les sous-thèmes du plan de contrôle';
@@ -61,6 +58,9 @@ COMMENT ON TABLE control_plan_subthemes IS 'Table des sous-thèmes du plan de co
 COMMENT ON TABLE control_plan_tags IS 'Table des tags du plan de contrôle reliés aux thématiques';
 COMMENT ON TABLE env_actions_control_plan_sub_themes IS 'Table de jointure entre les actions et les sous-thèmes du plan de contrôle';
 COMMENT ON TABLE env_actions_control_plan_tags IS 'Table de jointure entre les actions et les tags reliées aux thématiques du plan de contrôle';
+
+ALTER TABLE reportings add column control_plan_theme_id integer;
+ALTER TABLE reportings ADD CONSTRAINT fk_reportings_control_plan_themes FOREIGN KEY (control_plan_theme_id) REFERENCES control_plan_themes(id);
 
 -- Insertion des themes et sous-themes à partir de la table control_themes
 INSERT INTO control_plan_themes (theme)
@@ -147,7 +147,7 @@ INSERT INTO reportings_control_plan_sub_themes (reporting_id, subtheme_id)
         FROM public.reportings r
         WHERE r.sub_themes is not null
     )
-    SELECT rt.id, th.id
+    SELECT rt.id, sbt.id
         FROM reportingthemes rt,
              public.control_plan_themes as th,
              public.control_plan_subthemes as sbt
@@ -156,3 +156,8 @@ INSERT INTO reportings_control_plan_sub_themes (reporting_id, subtheme_id)
             AND rt.subtheme = sbt.subtheme
             AND sbt.year = 2023
 ;
+
+UPDATE reportings
+    SET control_plan_theme_id = th.id
+    FROM control_plan_themes as th
+    WHERE  th.theme = reportings.theme;

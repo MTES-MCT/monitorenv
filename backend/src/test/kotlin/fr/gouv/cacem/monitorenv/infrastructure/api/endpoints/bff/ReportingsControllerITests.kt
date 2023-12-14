@@ -82,8 +82,8 @@ class ReportingsControllerITests {
                     seaFront = "Facade 1",
                     description = "description",
                     reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                    theme = "theme",
-                    subThemes = listOf("subTheme1", "subTheme2"),
+                    themeId = 12,
+                    subThemeIds = listOf(64, 82),
                     actionTaken = "actions effectuées blabla",
                     isControlRequired = true,
                     hasNoUnitAvailable = true,
@@ -117,8 +117,8 @@ class ReportingsControllerITests {
                 geom = polygon,
                 description = "description",
                 reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                theme = "theme",
-                subThemes = listOf("subTheme1", "subTheme2"),
+                themeId = 12,
+                subThemeIds = listOf(64, 82),
                 actionTaken = "actions effectuées blabla",
                 isControlRequired = true,
                 hasNoUnitAvailable = true,
@@ -155,9 +155,9 @@ class ReportingsControllerITests {
             .andExpect(jsonPath("$.seaFront").value("Facade 1"))
             .andExpect(jsonPath("$.description").value("description"))
             .andExpect(jsonPath("$.reportType").value("INFRACTION_SUSPICION"))
-            .andExpect(jsonPath("$.theme").value("theme"))
-            .andExpect(jsonPath("$.subThemes[0]").value("subTheme1"))
-            .andExpect(jsonPath("$.subThemes[1]").value("subTheme2"))
+            .andExpect(jsonPath("$.themeId").value(12))
+            .andExpect(jsonPath("$.subThemeIds[0]").value(64))
+            .andExpect(jsonPath("$.subThemeIds[1]").value(82))
             .andExpect(
                 jsonPath("$.actionTaken").value("actions effectuées blabla"),
             )
@@ -188,8 +188,8 @@ class ReportingsControllerITests {
                     seaFront = "Facade 1",
                     description = "description",
                     reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                    theme = "theme",
-                    subThemes = listOf("subTheme1", "subTheme2"),
+                    themeId = 12,
+                    subThemeIds = listOf(64, 82),
                     actionTaken = "actions effectuées blabla",
                     isControlRequired = true,
                     hasNoUnitAvailable = true,
@@ -234,9 +234,9 @@ class ReportingsControllerITests {
             .andExpect(jsonPath("$.seaFront").value("Facade 1"))
             .andExpect(jsonPath("$.description").value("description"))
             .andExpect(jsonPath("$.reportType").value("INFRACTION_SUSPICION"))
-            .andExpect(jsonPath("$.theme").value("theme"))
-            .andExpect(jsonPath("$.subThemes[0]").value("subTheme1"))
-            .andExpect(jsonPath("$.subThemes[1]").value("subTheme2"))
+            .andExpect(jsonPath("$.themeId").value(12))
+            .andExpect(jsonPath("$.subThemeIds[0]").value(64))
+            .andExpect(jsonPath("$.subThemeIds[1]").value(82))
             .andExpect(
                 jsonPath("$.actionTaken").value("actions effectuées blabla"),
             )
@@ -266,8 +266,8 @@ class ReportingsControllerITests {
                     seaFront = "Facade 1",
                     description = "description",
                     reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                    theme = "theme",
-                    subThemes = listOf("subTheme1", "subTheme2"),
+                    themeId = 12,
+                    subThemeIds = listOf(64, 82),
                     actionTaken = "actions effectuées blabla",
                     isControlRequired = true,
                     hasNoUnitAvailable = true,
@@ -324,8 +324,8 @@ class ReportingsControllerITests {
                     seaFront = "Facade 1",
                     description = "description",
                     reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                    theme = "theme",
-                    subThemes = listOf("subTheme1", "subTheme2"),
+                    themeId = 12,
+                    subThemeIds = listOf(64, 82),
                     actionTaken = "actions effectuées blabla",
                     isControlRequired = true,
                     hasNoUnitAvailable = true,
@@ -359,12 +359,8 @@ class ReportingsControllerITests {
                     geom = polygon,
                     description = "description",
                     reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                    theme = "theme",
-                    subThemes =
-                    listOf(
-                        "subTheme1",
-                        "subTheme2",
-                    ),
+                    themeId = 12,
+                    subThemeIds = listOf(64, 82),
                     actionTaken = "actions effectuées blabla",
                     isControlRequired = true,
                     hasNoUnitAvailable = true,
@@ -400,9 +396,9 @@ class ReportingsControllerITests {
             .andExpect(jsonPath("$.seaFront").value("Facade 1"))
             .andExpect(jsonPath("$.description").value("description"))
             .andExpect(jsonPath("$.reportType").value("INFRACTION_SUSPICION"))
-            .andExpect(jsonPath("$.theme").value("theme"))
-            .andExpect(jsonPath("$.subThemes[0]").value("subTheme1"))
-            .andExpect(jsonPath("$.subThemes[1]").value("subTheme2"))
+            .andExpect(jsonPath("$.themeId").value(12))
+            .andExpect(jsonPath("$.subThemeIds[0]").value(64))
+            .andExpect(jsonPath("$.subThemeIds[1]").value(82))
             .andExpect(
                 jsonPath("$.actionTaken").value("actions effectuées blabla"),
             )
