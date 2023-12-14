@@ -8,13 +8,13 @@ data class EnvActionSurveillanceEntity(
     override val id: UUID,
     override val actionEndDateTimeUtc: ZonedDateTime? = null,
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
-    override val controlPlanSubThemes: List<EnvActionControlPlanSubThemeEntity>? = listOf(),
+    override val controlPlans: List<EnvActionControlPlanEntity>? = listOf(),
     override val geom: Geometry? = null,
     override val facade: String? = null,
     override val department: String? = null,
     val coverMissionZone: Boolean? = null,
     val observations: String? = null,
-    @Deprecated("Use ControlPlanSubThemes instead")
+    @Deprecated("Use controlPlan instead")
     val themes: List<ThemeEntity>? = listOf(),
 ) :
     EnvActionEntity(

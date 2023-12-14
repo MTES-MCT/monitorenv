@@ -56,9 +56,9 @@ class EnvActionsControlPlanSubThemeModel(
         require(controlPlanSubTheme != null) { "controlPlanSubTheme must not be null when converting to Entity" }
         return EnvActionControlPlanSubThemeEntity(
             subThemeId = controlPlanSubTheme.id,
-            theme = controlPlanSubTheme.controlPlanTheme.theme,
             subTheme = controlPlanSubTheme.subTheme,
-            tags = tags ?: emptyList(),
+            theme = controlPlanSubTheme.controlPlanTheme.theme,
+            themeId = controlPlanSubTheme.controlPlanTheme.id,
         )
     }
 

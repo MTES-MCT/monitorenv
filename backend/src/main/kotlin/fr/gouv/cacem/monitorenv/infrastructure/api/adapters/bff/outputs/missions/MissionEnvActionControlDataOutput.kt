@@ -28,9 +28,8 @@ data class MissionEnvActionControlDataOutput(
     val isSeafarersControl: Boolean? = null,
     val observations: String? = null,
     val reportingIds: List<Int>,
-    @Deprecated("Use ControlPlanSubThemes instead")
+    @Deprecated("Use controlPlans instead")
     val themes: List<ThemeEntity>? = listOf(),
-    val controlPlanSubThemes: List<MissionEnvActionSubThemeDataOutput>? = listOf(),
     val vehicleType: VehicleTypeEnum? = null,
 ) :
     MissionEnvActionDataOutput(
@@ -49,8 +48,8 @@ data class MissionEnvActionControlDataOutput(
                 actionStartDateTimeUtc = envActionControlEntity.actionStartDateTimeUtc,
                 actionEndDateTimeUtc = envActionControlEntity.actionEndDateTimeUtc,
                 actionTargetType = envActionControlEntity.actionTargetType,
-                controlPlanSubThemes = envActionControlEntity.controlPlanSubThemes?.map {
-                    MissionEnvActionSubThemeDataOutput.fromEnvActionControlPlanSubThemeEntity(it)
+                controlPlans = envActionControlEntity.controlPlans?.map {
+                    MissionEnvActionControlPlanDataOutput.fromEnvActionControlPlanEntity(it)
                 },
                 department = envActionControlEntity.department,
                 facade = envActionControlEntity.facade,

@@ -147,24 +147,24 @@ class MissionModel(
             }
 
         return MissionEntity(
-            id,
-            missionTypes,
-            controlUnits,
-            openBy,
-            closedBy,
-            observationsCacem,
-            observationsCnsp,
-            facade,
-            geom,
-            startDateTimeUtc = startDateTimeUtc.atZone(UTC),
+            id = id,
+            closedBy = closedBy,
+            controlUnits = controlUnits,
             endDateTimeUtc = endDateTimeUtc?.atZone(UTC),
             envActions = envActions!!.map { it.toActionEntity(objectMapper) },
-            isClosed,
-            isDeleted,
-            isGeometryComputedFromControls,
-            missionSource,
-            hasMissionOrder,
-            isUnderJdp,
+            facade = facade,
+            geom = geom,
+            hasMissionOrder = hasMissionOrder,
+            isClosed = isClosed,
+            isDeleted = isDeleted,
+            isGeometryComputedFromControls = isGeometryComputedFromControls,
+            isUnderJdp = isUnderJdp,
+            missionSource = missionSource,
+            missionTypes = missionTypes,
+            observationsCacem = observationsCacem,
+            observationsCnsp = observationsCnsp,
+            openBy = openBy,
+            startDateTimeUtc = startDateTimeUtc.atZone(UTC),
         )
     }
 
@@ -237,7 +237,9 @@ class MissionModel(
         fun fromMissionEntity(
             mission: MissionEntity,
             controlUnitResourceModelMap: Map<Int, ControlUnitResourceModel>,
+            controlPlanThemesReferenceModelMap: Map<Int, ControlPlanThemeModel>,
             controlPlanSubThemesReferenceModelMap: Map<Int, ControlPlanSubThemeModel>,
+            controlPlanTagsReferenceModelMap: Map<Int, ControlPlanTagModel>,
             mapper: ObjectMapper,
         ): MissionModel {
             val missionModel =
@@ -265,7 +267,9 @@ class MissionModel(
                     EnvActionModel.fromEnvActionEntity(
                         action = it,
                         mission = missionModel,
+                        controlPlanThemesReferenceModelMap = controlPlanThemesReferenceModelMap,
                         controlPlanSubThemesReferenceModelMap = controlPlanSubThemesReferenceModelMap,
+                        controlPlanTagsReferenceModelMap = controlPlanTagsReferenceModelMap,
                         mapper = mapper,
                     ),
                 )

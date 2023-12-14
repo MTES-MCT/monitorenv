@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.mappers
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanSubThemeEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteProperties
@@ -26,7 +26,7 @@ object EnvActionMapper {
         actionEndDateTimeUtc: ZonedDateTime?,
         actionType: ActionTypeEnum,
         actionStartDateTimeUtc: ZonedDateTime?,
-        controlPlanSubThemes: List<EnvActionControlPlanSubThemeEntity>?,
+        controlPlans: List<EnvActionControlPlanEntity>?,
         department: String?,
         facade: String?,
         geom: Geometry?,
@@ -48,7 +48,7 @@ object EnvActionMapper {
                                 id = id,
                                 actionEndDateTimeUtc = actionEndDateTimeUtc,
                                 actionStartDateTimeUtc = actionStartDateTimeUtc,
-                                controlPlanSubThemes = controlPlanSubThemes,
+                                controlPlans = controlPlans,
                                 department = department,
                                 facade = facade,
                                 geom = geom,
@@ -62,7 +62,7 @@ object EnvActionMapper {
                                 id = id,
                                 actionEndDateTimeUtc = actionEndDateTimeUtc,
                                 actionStartDateTimeUtc = actionStartDateTimeUtc,
-                                controlPlanSubThemes = controlPlanSubThemes,
+                                controlPlans = controlPlans,
                                 department = department,
                                 facade = facade,
                                 geom = geom,

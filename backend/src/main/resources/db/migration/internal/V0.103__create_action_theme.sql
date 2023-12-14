@@ -21,11 +21,14 @@ CREATE TABLE control_plan_tags (
 );
 
 CREATE TABLE env_actions_control_plan_sub_themes (
-  env_action_id uuid,
-  subtheme_id integer,
-  foreign key (env_action_id) references env_actions(id),
-  foreign key (subtheme_id) references control_plan_subthemes(id),
-  primary key (env_action_id, subtheme_id)
+    id serial PRIMARY KEY,
+    env_action_id uuid,
+    theme_id integer NOT NULL,
+    subtheme_id integer,
+    foreign key (env_action_id) references env_actions(id),
+    foreign key (theme_id) references control_plan_themes(id),
+    foreign key (subtheme_id) references control_plan_subthemes(id),
+    unique (env_action_id, theme_id, subtheme_id)
 );
 
 CREATE TABLE env_actions_control_plan_tags (
@@ -36,7 +39,18 @@ CREATE TABLE env_actions_control_plan_tags (
   primary key (env_action_id, tag_id)
 );
 
+CREATE TABLE reportings_control_plan_sub_themes (
+    id serial PRIMARY KEY,
+    reporting_id id,
+    theme_id integer NOT NULL,
+    subtheme_id integer,
+    foreign key (reporting_id) references reportings(id),
+    foreign key (theme_id) references control_plan_themes(id),
+    foreign key (subtheme_id) references control_plan_subthemes(id),
+    unique (reporting_id, theme_id, subtheme_id)
+);
 
+COMMENT ON TABLE reportings_control_plan_sub_themes IS 'Table de jointure entre les signalements et les sous-thèmes du plan de contrôle';
 COMMENT ON TABLE control_plan_themes IS 'Table des thèmes du plan de contrôle';
 COMMENT ON TABLE control_plan_subthemes IS 'Table des sous-thèmes du plan de contrôle versionnés par année';
 COMMENT ON TABLE control_plan_tags IS 'Table des tags du plan de contrôle reliés aux thématiques';
@@ -107,14 +121,6 @@ WITH themes AS (
 
 
 --- Signalements
-CREATE TABLE reportings_control_plan_sub_themes (
-     reporting_id uuid,
-     subtheme_id integer,
-     foreign key (reporting_id) references reportings(id),
-     foreign key (subtheme_id) references control_plan_subthemes(id),
-     primary key (reporting_id, subtheme_id)
-);
-COMMENT ON TABLE reportings_control_plan_sub_themes IS 'Table de jointure entre les signalements et les sous-thèmes du plan de contrôle';
 INSERT INTO reportings_control_plan_sub_themes (reporting_id, subtheme_id)
     WITH reportingthemes AS (
         SELECT id,

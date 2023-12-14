@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlPlan.ControlPlanSubThemeEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlPlan.ControlPlanTagEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -15,11 +15,11 @@ import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
 
 @Entity
-@Table(name = "control_plan_subthemes")
+@Table(name = "control_plan_tags")
 @Cache(
     usage = CacheConcurrencyStrategy.READ_WRITE,
 )
-class ControlPlanSubThemeModel(
+class ControlPlanTagModel(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
@@ -29,24 +29,19 @@ class ControlPlanSubThemeModel(
     @JoinColumn(name = "theme_id")
     val controlPlanTheme: ControlPlanThemeModel,
 
-    @Column(name = "subtheme")
-    val subTheme: String,
-
-    @Column(name = "year")
-    val year: Int,
+    @Column(name = "tag")
+    val tag: String,
 
 ) {
-    fun toControlPlanSubTheme() = ControlPlanSubThemeEntity(
+    fun toControlPlanTag() = ControlPlanTagEntity(
         id = id,
-        subTheme = subTheme,
-        theme = controlPlanTheme.theme,
-        year = year,
+        tag = tag,
     )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
-        other as ControlPlanSubThemeModel
+        other as ControlPlanTagModel
 
         return id == other.id
     }

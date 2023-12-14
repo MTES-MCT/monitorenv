@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.controlPlanSubThemes
+package fr.gouv.cacem.monitorenv.domain.use_cases.controlPlan
 
 import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.domain.entities.controlPlanSubTheme.ControlPlanSubThemeEntity
@@ -17,14 +17,14 @@ class GetControlPlanSubThemesByYearUTest {
         val controlPlanSubThemes = listOf(
             ControlPlanSubThemeEntity(
                 id = 1,
-                theme = "ControlPlanTheme Name",
+                theme = "ControlPlanThemeEntity Name",
                 subTheme = "ControlPlanSubTheme Name",
                 allowedTags = listOf("tag1", "tag2"),
                 year = 2023,
             ),
             ControlPlanSubThemeEntity(
                 id = 2,
-                theme = "ControlPlanTheme Name 2",
+                theme = "ControlPlanThemeEntity Name 2",
                 subTheme = "ControlPlanSubTheme Name 2",
                 allowedTags = null,
                 year = 2023,
@@ -33,7 +33,7 @@ class GetControlPlanSubThemesByYearUTest {
 
         given(controlPlanSubThemeRepository.findByYear(2023)).willReturn(controlPlanSubThemes)
 
-        val result = GetControlPlanSubThemesByYear(controlPlanSubThemeRepository).execute(2023)
+        val result = GetControlPlansByYear(controlPlanSubThemeRepository).execute(2023)
 
         assertThat(result.size).isEqualTo(2)
         assertThat(result).isEqualTo(controlPlanSubThemes)

@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanSubThemeEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
 import org.locationtech.jts.geom.Geometry
@@ -13,7 +13,7 @@ data class EnvActionControlProperties(
     val actionTargetType: ActionTargetTypeEnum? = null,
     val infractions: List<InfractionEntity>? = listOf(),
     val observations: String? = null,
-    @Deprecated("Use ControlPlanSubThemes instead")
+    @Deprecated("Use controlPlans instead")
     val themes: List<ThemeEntity>? = listOf(),
     val vehicleType: VehicleTypeEnum? = null,
 ) {
@@ -21,7 +21,7 @@ data class EnvActionControlProperties(
         id: UUID,
         actionEndDateTimeUtc: ZonedDateTime?,
         actionStartDateTimeUtc: ZonedDateTime?,
-        controlPlanSubThemes: List<EnvActionControlPlanSubThemeEntity>?,
+        controlPlans: List<EnvActionControlPlanEntity>?,
         department: String?,
         facade: String?,
         geom: Geometry?,
@@ -36,7 +36,7 @@ data class EnvActionControlProperties(
             actionNumberOfControls = actionNumberOfControls,
             actionStartDateTimeUtc = actionStartDateTimeUtc,
             actionTargetType = actionTargetType,
-            controlPlanSubThemes = controlPlanSubThemes,
+            controlPlans = controlPlans,
             department = department,
             facade = facade,
             geom = geom,
