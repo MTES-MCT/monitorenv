@@ -49,15 +49,15 @@ context('Mission actions', () => {
     cy.get('*[data-cy="action-card"]').eq(1).click()
     cy.get('*[data-cy="envaction-theme-element"]').should('have.length', 1)
     cy.get('*[data-cy="envaction-theme-selector"]').contains('Mouillage Individuel') // id 100
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Mouillage avec AOT individuelle') // id 86
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Mouillage avec AOT individuelle') // id 102
     cy.get('*[data-cy="envaction-tags-selector"]').should('not.exist')
     // When
     cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').contains('Police des espèces protégées').click() // id 11
 
     cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Destruction, capture, arrachage').click({ force: true }) // id 89
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Détention des espèces protégées').click({ force: true }) // id 91
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Destruction, capture, arrachage').click({ force: true }) // id 117
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Détention des espèces protégées').click({ force: true }) // id 120
     cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
 
     cy.get('*[data-cy="envaction-tags-selector"]').should('exist')
@@ -123,7 +123,7 @@ context('Mission actions', () => {
     cy.get('*[data-cy="envaction-theme-selector"]')
       .eq(0)
       .contains('Police des espèces protégées et de leurs habitats (faune et flore)') // id 11
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Destruction, capture, arrachage') // id 93
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Destruction, capture, arrachage') // id 117
     cy.get('*[data-cy="envaction-tags-selector"]').should('exist')
     cy.get('*[data-cy="envaction-theme-element"]').contains('Habitat') // id 2
     cy.get('*[data-cy="envaction-theme-element"]').contains('Oiseaux') // id 1
@@ -137,7 +137,7 @@ context('Mission actions', () => {
     cy.get('*[data-cy="envaction-theme-element"]').eq(2).contains('Rejet').click() // id 102
 
     cy.get('*[data-cy="envaction-subtheme-selector"]').eq(2).click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').eq(2).contains('Rejet d’hydrocarbure').click({ force: true }) // id 88
+    cy.get('*[data-cy="envaction-theme-element"]').eq(2).contains('Rejet d’hydrocarbure').click({ force: true }) // id 74
 
     cy.get('*[data-cy="envaction-tags-selector"]').should('have.length', 0)
 
