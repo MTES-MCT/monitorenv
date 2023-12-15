@@ -5,21 +5,22 @@ INSERT INTO control_plan_themes (id, theme) VALUES
 (103,'Espèce protégée et leur habitat (faune et flore)'),
 (104,'Bien culturel maritime'),
 (105,'Épave'),
-(107,'Domanialité publique (circulation et dégradation)'),
-(108,'Culture marine'),
-(111,'Parc national'),
-(112,'Réserve naturelle'),
-(113,'Arrêté de protection'),
-(114,'Autres'),
-(116,'Pêche de loisir (autre que PAP)'),
-(117,'Surveillance générale');
+(106,'Domanialité publique (circulation et dégradation)'),
+(107,'Culture marine'),
+(108,'Parc national'),
+(109,'Réserve naturelle'),
+(110,'Arrêté de protection'),
+(111,'Autres'),
+(112,'Pêche de loisir (autre que PAP)'),
+(113,'Surveillance générale');
 
--- (106,'Activité et manifestation soumises à évaluation d’incidence Natura 2000'),
--- (109,'Travaux en milieu marin'),
--- (110,'Arrêté à visa environnemental'),
--- (115,'Pêche à pied'),
+-- Thématiques existantes pour lesquels une recherche doit être faite pour récupérer l'identifiant
+-- Activité et manifestation soumises à évaluation d’incidence Natura 2000
+-- Travaux en milieu marin
+-- Arrêté à visa environnemental
+-- Pêche à pied
 
-SELECT setval('control_plans_themes_id_seq', (SELECT max(id) FROM control_plan_themes), true);
+SELECT setval('control_plan_themes_id_seq', (SELECT max(id) FROM control_plan_themes), true);
 
 INSERT INTO control_plan_tags (id,theme_id,tag) VALUES 
 (10,103,'Mammifères marins'),
@@ -76,32 +77,32 @@ INSERT INTO control_plan_sub_themes (id,theme_id,subtheme,year) VALUES
 (129,105,'Recel ou détournement d''une épave maritime',2024),
 (130,105,'Épave / Navire abandonné',2024),
 (131,105,'Autre (Épave)',2024),
-(137,107,'Circulation des VTM sur le DPM',2024),
-(138,107,'Respect des espaces balisés',2024),
-(139,107,'Dégradation du DPM',2024),
-(140,107,'Autre (DPM)',2024),
-(141,108,'Prescriptions réglementaires des concessions d''exploitation de culture marine',2024),
-(142,108,'Remise en état après occupation du DPM',2024),
-(143,108,'Implantation',2024),
-(144,108,'Autre (Culture marine)',2024),
-(156,111,'Réglementation du parc national',2024),
-(157,111,'Autre (Parc national)',2024),
-(158,112,'Réglementation de la réserve naturelle',2024),
-(159,112,'Autre (Réserve naturelle)',2024),
-(160,113,'Réglementation de l''arrêté de protection',2024),
-(161,113,'Autre (Arrêté de protection)',2024),
-(162,114,'Drone',2024),
-(163,114,'Introduction d''espèce dans le milieu naturel ',2024),
-(164,114,'Dérogation d''introduction d''espèce',2024),
-(165,114,'Campagnes scientifiques',2024),
-(166,114,'Manifestation sur le DPM avec prescriptions environnementales',2024),
-(167,114,'Chasse sur le DPM',2024),
-(168,114,'Autre',2024),
-(173,116,'Pêche embarquée',2024),
-(174,116,'Pêche sous-marine',2024),
-(175,116,'Engin non-marqué',2024),
-(176,116,'Autre (Pêche de loisir hors PAP)',2024),
-(177,117,'Surveillance générale',2024)
+(137,106,'Circulation des VTM sur le DPM',2024),
+(138,106,'Respect des espaces balisés',2024),
+(139,106,'Dégradation du DPM',2024),
+(140,106,'Autre (DPM)',2024),
+(141,107,'Prescriptions réglementaires des concessions d''exploitation de culture marine',2024),
+(142,107,'Remise en état après occupation du DPM',2024),
+(143,107,'Implantation',2024),
+(144,107,'Autre (Culture marine)',2024),
+(156,108,'Réglementation du parc national',2024),
+(157,108,'Autre (Parc national)',2024),
+(158,109,'Réglementation de la réserve naturelle',2024),
+(159,109,'Autre (Réserve naturelle)',2024),
+(160,110,'Réglementation de l''arrêté de protection',2024),
+(161,110,'Autre (Arrêté de protection)',2024),
+(162,111,'Drone',2024),
+(163,111,'Introduction d''espèce dans le milieu naturel ',2024),
+(164,111,'Dérogation d''introduction d''espèce',2024),
+(165,111,'Campagnes scientifiques',2024),
+(166,111,'Manifestation sur le DPM avec prescriptions environnementales',2024),
+(167,111,'Chasse sur le DPM',2024),
+(168,111,'Autre',2024),
+(173,112,'Pêche embarquée',2024),
+(174,112,'Pêche sous-marine',2024),
+(175,112,'Engin non-marqué',2024),
+(176,112,'Autre (Pêche de loisir hors PAP)',2024),
+(177,113,'Surveillance générale',2024)
 ;
 
 
