@@ -9,37 +9,37 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.MapsId
 import jakarta.persistence.Table
+import org.hibernate.Hibernate
 import java.io.Serializable
 import java.util.UUID
-import org.hibernate.Hibernate
 
 @Entity
 @Table(name = "env_actions_control_plan_tags")
 class EnvActionsControlPlanTagModel(
-        @EmbeddedId val id: EnvActionsTagPk,
-        @ManyToOne(fetch = FetchType.LAZY)
-        @MapsId("envActionId")
-        @JoinColumn(name = "env_action_id")
-        val envAction: EnvActionModel? = null,
-        @ManyToOne(fetch = FetchType.EAGER)
-        @MapsId("tagId")
-        @JoinColumn(name = "tag_id")
-        val controlPlanTag: ControlPlanTagModel? = null,
+    @EmbeddedId val id: EnvActionsTagPk,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("envActionId")
+    @JoinColumn(name = "env_action_id")
+    val envAction: EnvActionModel? = null,
+    @ManyToOne(fetch = FetchType.EAGER)
+    @MapsId("tagId")
+    @JoinColumn(name = "tag_id")
+    val controlPlanTag: ControlPlanTagModel? = null,
 ) {
     companion object {
         fun fromEnvActionControlPlanTagEntity(
-                envAction: EnvActionModel,
-                controlPlanTag: ControlPlanTagModel,
+            envAction: EnvActionModel,
+            controlPlanTag: ControlPlanTagModel,
         ) =
-                EnvActionsControlPlanTagModel(
-                        id =
-                                EnvActionsTagPk(
-                                        envActionId = envAction.id!!,
-                                        tagId = controlPlanTag.id!!,
-                                ),
-                        envAction = envAction,
-                        controlPlanTag = controlPlanTag,
-                )
+            EnvActionsControlPlanTagModel(
+                id =
+                EnvActionsTagPk(
+                    envActionId = envAction.id!!,
+                    tagId = controlPlanTag.id!!,
+                ),
+                envAction = envAction,
+                controlPlanTag = controlPlanTag,
+            )
     }
 
     override fun equals(other: Any?): Boolean {
@@ -55,8 +55,8 @@ class EnvActionsControlPlanTagModel(
 
 @Embeddable
 data class EnvActionsTagPk(
-        @Column(name = "env_action_id") val envActionId: UUID,
-        @Column(name = "tag_id") val tagId: Int,
+    @Column(name = "env_action_id") val envActionId: UUID,
+    @Column(name = "tag_id") val tagId: Int,
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

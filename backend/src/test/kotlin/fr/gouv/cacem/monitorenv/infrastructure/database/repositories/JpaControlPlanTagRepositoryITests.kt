@@ -28,12 +28,12 @@ class JpaControlPlanTagRepositoryITests : AbstractDBTests() {
         val requestedControlPlanTagsFor2024 = jpaControlPlanTagRepository.findByYear(2024)
         // Then
         assertThat(requestedControlPlanTagsFor2023.size).isEqualTo(48)
-        assertThat(requestedControlPlanTagsFor2024.size).isEqualTo(6)
-        assertThat(requestedControlPlanTagsFor2024[5].id).isEqualTo(6)
+        assertThat(requestedControlPlanTagsFor2024.size).isEqualTo(18)
+        assertThat(requestedControlPlanTagsFor2024[5].id).isEqualTo(2)
         assertThat(requestedControlPlanTagsFor2024[5].themeId).isEqualTo(11)
         assertThat(requestedControlPlanTagsFor2024[5].tag)
             .isEqualTo(
-                "Mammifères marins",
+                "Habitat",
             )
     }
 }

@@ -11,20 +11,20 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanThemeRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
-import java.time.Instant
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import java.time.Instant
 
 @Repository
 class JpaMissionRepository(
-        private val dbControlPlanThemeRepository: IDBControlPlanThemeRepository,
-        private val dbControlPlanSubThemeRepository: IDBControlPlanSubThemeRepository,
-        private val dbControlPlanTagRepository: IDBControlPlanTagRepository,
-        private val dbControlUnitResourceRepository: IDBControlUnitResourceRepository,
-        private val dbMissionRepository: IDBMissionRepository,
-        private val mapper: ObjectMapper,
+    private val dbControlPlanThemeRepository: IDBControlPlanThemeRepository,
+    private val dbControlPlanSubThemeRepository: IDBControlPlanSubThemeRepository,
+    private val dbControlPlanTagRepository: IDBControlPlanTagRepository,
+    private val dbControlUnitResourceRepository: IDBControlUnitResourceRepository,
+    private val dbMissionRepository: IDBMissionRepository,
+    private val mapper: ObjectMapper,
 ) : IMissionRepository {
     override fun count(): Long {
         return dbMissionRepository.count()
@@ -37,25 +37,25 @@ class JpaMissionRepository(
     }
 
     override fun findAllFullMissions(
-            startedAfter: Instant,
-            startedBefore: Instant?,
-            missionTypes: List<String>?,
-            missionStatuses: List<String>?,
-            missionSources: List<MissionSourceEnum>?,
-            seaFronts: List<String>?,
-            pageable: Pageable,
+        startedAfter: Instant,
+        startedBefore: Instant?,
+        missionTypes: List<String>?,
+        missionStatuses: List<String>?,
+        missionSources: List<MissionSourceEnum>?,
+        seaFronts: List<String>?,
+        pageable: Pageable,
     ): List<MissionDTO> {
         val missionSourcesAsStringArray = missionSources?.map { it.name }
         return dbMissionRepository.findAll(
-                        startedAfter = startedAfter,
-                        startedBefore = startedBefore,
-                        missionTypes = convertToPGArray(missionTypes),
-                        missionStatuses = convertToPGArray(missionStatuses),
-                        missionSources = convertToPGArray(missionSourcesAsStringArray),
-                        seaFronts = convertToPGArray(seaFronts),
-                        pageable = pageable,
-                )
-                .map { it.toMissionDTO(mapper) }
+            startedAfter = startedAfter,
+            startedBefore = startedBefore,
+            missionTypes = convertToPGArray(missionTypes),
+            missionStatuses = convertToPGArray(missionStatuses),
+            missionSources = convertToPGArray(missionSourcesAsStringArray),
+            seaFronts = convertToPGArray(seaFronts),
+            pageable = pageable,
+        )
+            .map { it.toMissionDTO(mapper) }
     }
 
     override fun findByIds(ids: List<Int>): List<MissionEntity> {
@@ -75,25 +75,25 @@ class JpaMissionRepository(
     }
 
     override fun findAll(
-            startedAfter: Instant,
-            startedBefore: Instant?,
-            missionTypes: List<String>?,
-            missionStatuses: List<String>?,
-            missionSources: List<MissionSourceEnum>?,
-            seaFronts: List<String>?,
-            pageable: Pageable,
+        startedAfter: Instant,
+        startedBefore: Instant?,
+        missionTypes: List<String>?,
+        missionStatuses: List<String>?,
+        missionSources: List<MissionSourceEnum>?,
+        seaFronts: List<String>?,
+        pageable: Pageable,
     ): List<MissionEntity> {
         val missionSourcesAsStringArray = missionSources?.map { it.name }
         return dbMissionRepository.findAll(
-                        startedAfter = startedAfter,
-                        startedBefore = startedBefore,
-                        missionTypes = convertToPGArray(missionTypes),
-                        missionStatuses = convertToPGArray(missionStatuses),
-                        missionSources = convertToPGArray(missionSourcesAsStringArray),
-                        seaFronts = convertToPGArray(seaFronts),
-                        pageable = pageable,
-                )
-                .map { it.toMissionEntity(mapper) }
+            startedAfter = startedAfter,
+            startedBefore = startedBefore,
+            missionTypes = convertToPGArray(missionTypes),
+            missionStatuses = convertToPGArray(missionStatuses),
+            missionSources = convertToPGArray(missionSourcesAsStringArray),
+            seaFronts = convertToPGArray(seaFronts),
+            pageable = pageable,
+        )
+            .map { it.toMissionEntity(mapper) }
     }
 
     override fun findFullMissionById(missionId: Int): MissionDTO {
@@ -109,15 +109,15 @@ class JpaMissionRepository(
     override fun save(mission: MissionEntity): MissionDTO {
         // Extract all control units resources unique control unit resource IDs
         val uniqueControlUnitResourceIds =
-                mission.controlUnits
-                        .flatMap { controlUnit -> controlUnit.resources.map { it.id } }
-                        .distinct()
+            mission.controlUnits
+                .flatMap { controlUnit -> controlUnit.resources.map { it.id } }
+                .distinct()
         // Fetch all of them as models
         val controlUnitResourceModels =
-                dbControlUnitResourceRepository.findAllById(uniqueControlUnitResourceIds)
+            dbControlUnitResourceRepository.findAllById(uniqueControlUnitResourceIds)
         // Create an `[id] → ControlUnitResourceModel` map
         val controlUnitResourceModelMap =
-                controlUnitResourceModels.associateBy { requireNotNull(it.id) }
+            controlUnitResourceModels.associateBy { requireNotNull(it.id) }
 
         val controlPlanThemes = ArrayList<Int>()
         val controlPlanSubThemes = ArrayList<Int>()
@@ -135,32 +135,32 @@ class JpaMissionRepository(
 
         // Create a map from controlPlanThemes mapping each id to a reference to the model
         val controlPlanThemesReferenceModelMap =
-                controlPlanThemes?.distinct()?.associateWith { id ->
-                    dbControlPlanThemeRepository.getReferenceById(id)
-                }
+            controlPlanThemes?.distinct()?.associateWith { id ->
+                dbControlPlanThemeRepository.getReferenceById(id)
+            }
         // Create a map from controlPlanSubThemes mapping each id to a reference to the model
         val controlPlanSubThemesReferenceModelMap =
-                controlPlanSubThemes?.distinct()?.associateWith { id ->
-                    dbControlPlanSubThemeRepository.getReferenceById(id)
-                }
+            controlPlanSubThemes?.distinct()?.associateWith { id ->
+                dbControlPlanSubThemeRepository.getReferenceById(id)
+            }
         // Create a map from controlPlanTags mapping each id to a reference to the model
         val controlPlanTagsReferenceModelMap =
-                controlPlanTags?.distinct()?.associateWith { id ->
-                    dbControlPlanTagRepository.getReferenceById(id)
-                }
+            controlPlanTags?.distinct()?.associateWith { id ->
+                dbControlPlanTagRepository.getReferenceById(id)
+            }
 
         val missionModel =
-                MissionModel.fromMissionEntity(
-                        mission = mission,
-                        controlUnitResourceModelMap = controlUnitResourceModelMap,
-                        controlPlanThemesReferenceModelMap = controlPlanThemesReferenceModelMap
-                                        ?: emptyMap(),
-                        controlPlanSubThemesReferenceModelMap =
-                                controlPlanSubThemesReferenceModelMap ?: emptyMap(),
-                        controlPlanTagsReferenceModelMap = controlPlanTagsReferenceModelMap
-                                        ?: emptyMap(),
-                        mapper = mapper,
-                )
+            MissionModel.fromMissionEntity(
+                mission = mission,
+                controlUnitResourceModelMap = controlUnitResourceModelMap,
+                controlPlanThemesReferenceModelMap = controlPlanThemesReferenceModelMap
+                    ?: emptyMap(),
+                controlPlanSubThemesReferenceModelMap =
+                controlPlanSubThemesReferenceModelMap ?: emptyMap(),
+                controlPlanTagsReferenceModelMap = controlPlanTagsReferenceModelMap
+                    ?: emptyMap(),
+                mapper = mapper,
+            )
         return dbMissionRepository.saveAndFlush(missionModel).toMissionDTO(mapper)
     }
 

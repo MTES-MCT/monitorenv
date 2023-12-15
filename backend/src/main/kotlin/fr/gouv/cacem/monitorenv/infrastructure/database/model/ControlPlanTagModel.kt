@@ -17,24 +17,24 @@ import org.hibernate.annotations.CacheConcurrencyStrategy
 @Entity
 @Table(name = "control_plan_tags")
 @Cache(
-        usage = CacheConcurrencyStrategy.READ_WRITE,
+    usage = CacheConcurrencyStrategy.READ_WRITE,
 )
 class ControlPlanTagModel(
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @Column(name = "id", nullable = false, updatable = false)
-        val id: Int,
-        @ManyToOne(fetch = FetchType.EAGER)
-        @JoinColumn(name = "theme_id")
-        val controlPlanTheme: ControlPlanThemeModel,
-        @Column(name = "tag") val tag: String,
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, updatable = false)
+    val id: Int,
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "theme_id")
+    val controlPlanTheme: ControlPlanThemeModel,
+    @Column(name = "tag") val tag: String,
 ) {
     fun toControlPlanTagEntity() =
-            ControlPlanTagEntity(
-                    id = this.id,
-                    tag = this.tag,
-                    themeId = this.controlPlanTheme.id,
-            )
+        ControlPlanTagEntity(
+            id = this.id,
+            tag = this.tag,
+            themeId = this.controlPlanTheme.id,
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

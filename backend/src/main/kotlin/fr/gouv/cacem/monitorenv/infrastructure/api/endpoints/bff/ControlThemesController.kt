@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/bff/v1/controlthemes")
 @Tag(name = "BFF.Control Themes", description = "API control themes")
 class ControlThemesController(
-        private val getAllControlThemes: GetAllControlThemes,
-        private val getControlThemeById: GetControlThemeById,
+    private val getAllControlThemes: GetAllControlThemes,
+    private val getControlThemeById: GetControlThemeById,
 ) {
 
     @GetMapping("")
@@ -30,9 +30,9 @@ class ControlThemesController(
     @GetMapping("/{controlThemeId}")
     @Operation(summary = "Get regulatory area by Id")
     fun getControlThemeByIdController(
-            @PathParam("controlTheme id")
-            @PathVariable(name = "controlThemeId")
-            controlThemeId: Int,
+        @PathParam("controlTheme id")
+        @PathVariable(name = "controlThemeId")
+        controlThemeId: Int,
     ): ControlThemeDataOutput {
         val controlTheme = getControlThemeById.execute(controlThemeId = controlThemeId)
         return ControlThemeDataOutput.fromControlThemeEntity(controlTheme)

@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.Query
 interface IDBControlPlanTagRepository : JpaRepository<ControlPlanTagModel, Int> {
 
     @Query(
-            value =
-                    """
+        value =
+        """
             SELECT tags.*
             FROM control_plan_tags tags, control_plan_sub_themes s, control_plan_themes th
             WHERE tags.theme_id = th.id
@@ -16,7 +16,7 @@ interface IDBControlPlanTagRepository : JpaRepository<ControlPlanTagModel, Int> 
                 AND s.year = :year
             ORDER BY tags.id ASC
             """,
-            nativeQuery = true,
+        nativeQuery = true,
     )
     fun findByYearOrderById(year: Int): List<ControlPlanTagModel>
 }
