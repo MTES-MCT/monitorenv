@@ -48,7 +48,7 @@ context('Mission actions', () => {
     cy.get('*[data-cy="edit-mission-34"]').click({ force: true })
     cy.get('*[data-cy="action-card"]').eq(1).click()
     cy.get('*[data-cy="envaction-theme-element"]').should('have.length', 1)
-    cy.get('*[data-cy="envaction-theme-selector"]').contains('Mouillage Individuel') // id 100001
+    cy.get('*[data-cy="envaction-theme-selector"]').contains('Mouillage Individuel') // id 100
     cy.get('*[data-cy="envaction-theme-element"]').contains('Mouillage avec AOT individuelle') // id 86
     cy.get('*[data-cy="envaction-tags-selector"]').should('not.exist')
     // When
@@ -130,11 +130,11 @@ context('Mission actions', () => {
 
     // When
     cy.get('*[data-cy="envaction-theme-selector"]').eq(0).click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').eq(0).contains('Épave').click() // id 100003
+    cy.get('*[data-cy="envaction-theme-element"]').eq(0).contains('Épave').click() // id 105
 
     cy.get('*[data-cy="envaction-add-theme"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-selector"]').eq(2).click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').eq(2).contains('Rejet').click() // id 100002
+    cy.get('*[data-cy="envaction-theme-element"]').eq(2).contains('Rejet').click() // id 102
 
     cy.get('*[data-cy="envaction-subtheme-selector"]').eq(2).click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').eq(2).contains('Rejet d’hydrocarbure').click({ force: true }) // id 88
@@ -151,17 +151,17 @@ context('Mission actions', () => {
       const { controlPlans } =
         response && response.body.envActions.find(a => a.id === 'c52c6f20-e495-4b29-b3df-d7edfb67fdd7')
       expect(controlPlans.length).equal(3)
-      expect(controlPlans[0].themeId).equal(100001)
+      expect(controlPlans[0].themeId).equal(100)
       expect(controlPlans[0].subThemeIds.length).equal(2)
       expect(controlPlans[0].subThemeIds[0]).equal(84)
       expect(controlPlans[0].subThemeIds[1]).equal(85)
       expect(controlPlans[0].tagIds.length).equal(0)
 
-      expect(controlPlans[1].themeId).equal(100003)
+      expect(controlPlans[1].themeId).equal(105)
       expect(controlPlans[1].subThemeIds.length).equal(0)
       expect(controlPlans[1].tagIds.length).equal(0)
 
-      expect(controlPlans[2].themeId).equal(100002)
+      expect(controlPlans[2].themeId).equal(102)
       expect(controlPlans[2].subThemeIds.length).equal(1)
       expect(controlPlans[2].subThemeIds[0]).equal(88)
       expect(controlPlans[2].tagIds.length).equal(0)
