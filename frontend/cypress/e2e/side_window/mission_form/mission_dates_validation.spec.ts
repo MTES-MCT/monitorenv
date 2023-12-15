@@ -94,7 +94,7 @@ context('Mission dates', () => {
     cy.clickButton('Ajouter une surveillance')
 
     cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Mouillage Individuel').click()
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Mouillage individuel').click()
     cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').contains('Autre').click({ force: true })
     cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
