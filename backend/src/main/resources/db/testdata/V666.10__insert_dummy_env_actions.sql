@@ -53,5 +53,5 @@ INSERT INTO public.env_actions_control_plan_sub_themes(env_action_id, subtheme_i
 ;
 
 INSERT INTO public.env_actions_control_plan_tags(env_action_id, tag_id) VALUES
-('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 1),
-('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 2);
+('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 11),
+('c52c6f20-e495-4b29-b3df-d7edfb67fdd7', 15);

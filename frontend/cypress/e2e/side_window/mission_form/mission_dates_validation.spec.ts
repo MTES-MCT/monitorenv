@@ -37,7 +37,7 @@ context('Mission dates', () => {
     cy.clickButton('Ajouter une surveillance')
 
     cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Police des espèces protégées').click()
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Espèce protégée').click()
     cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').contains('Destruction').click({ force: true })
     cy.get('*[data-cy="envaction-subtheme-selector"]').click('topLeft', { force: true })
@@ -169,7 +169,7 @@ context('Mission dates', () => {
     cy.clickButton('Ajouter des contrôles')
 
     cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Police des espèces protégées').click()
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Espèce protégée').click()
     cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').contains('Détention').click({ force: true })
     cy.get('*[data-cy="envaction-theme-element"]').click('topLeft')
