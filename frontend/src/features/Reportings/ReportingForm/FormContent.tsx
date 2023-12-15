@@ -1,16 +1,7 @@
-import {
-  Accent,
-  FieldError,
-  FormikDatePicker,
-  FormikTextarea,
-  Icon,
-  IconButton,
-  getOptionsFromLabelledEnum,
-  useNewWindow
-} from '@mtes-mct/monitor-ui'
+import { Accent, FieldError, FormikTextarea, Icon, IconButton, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Toggle } from 'rsuite'
 
 import { AttachMission } from './AttachMission'
@@ -54,8 +45,7 @@ import {
   StyledTitle,
   StyledChevronIcon,
   StyledFormikTextInput,
-  ReportTypeMultiRadio,
-  DateAndNameContainer
+  ReportTypeMultiRadio
 } from '../style'
 import { getReportingTitle } from '../utils'
 
@@ -75,8 +65,7 @@ export function FormContent({
   setShouldValidateOnChange
 }: FormContentProps) {
   const dispatch = useAppDispatch()
-  const { newWindowContainerRef } = useNewWindow()
-  const ref = useRef<HTMLDivElement>(null)
+
   const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
 
   const isConfirmCancelDialogVisible = useAppSelector(state => state.reporting.isConfirmCancelDialogVisible)
@@ -243,18 +232,9 @@ export function FormContent({
           />
         </StyledThemeContainer>
 
-        <Validity mustIncreaseValidity={mustIncreaseValidity} />
-        <DateAndNameContainer>
-          <FormikDatePicker
-            baseContainer={reportingContext === ReportingContext.MAP ? ref.current : newWindowContainerRef.current}
-            isCompact
-            isStringDate
-            label="Date du signalement"
-            name="createdAt"
-            withTime
-          />
-          <StyledFormikTextInput label="Saisi par" name="openBy" />
-        </DateAndNameContainer>
+        <Validity mustIncreaseValidity={mustIncreaseValidity} reportingContext={reportingContext} />
+
+        <StyledFormikTextInput label="Saisi par" name="openBy" />
 
         <Separator />
         <FormikTextarea label="Actions effectuées" name="actionTaken" />

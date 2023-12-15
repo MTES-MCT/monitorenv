@@ -137,16 +137,6 @@ export const StyledThemeContainer = styled.div`
   flex: 1;
   gap: 8px;
 `
-
-export const DateAndNameContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex: 1;
-  gap: 40px;
-  .Element-FieldError {
-    max-width: 130px;
-  }
-`
 export const StyledToggle = styled.div`
   display: flex;
   flex-direction: row;

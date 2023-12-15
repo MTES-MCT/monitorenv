@@ -1,16 +1,24 @@
-import { FormikNumberInput, customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
+import { FormikDatePicker, FormikNumberInput, customDayjs, getLocalizedDayjs, useNewWindow } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
 import { ReportingStatusEnum, type Reporting, getReportingStatus } from '../../../../domain/entities/reporting'
+import { ReportingContext } from '../../../../domain/shared_slices/Global'
 
-export function Validity({ mustIncreaseValidity }: { mustIncreaseValidity: boolean }) {
+export function Validity({
+  mustIncreaseValidity,
+  reportingContext
+}: {
+  mustIncreaseValidity: boolean
+  reportingContext: ReportingContext
+}) {
+  const { newWindowContainerRef } = useNewWindow()
+  const ref = useRef<HTMLDivElement>(null)
   const { values } = useFormikContext<Reporting>()
 
   const reportingStatus = getReportingStatus(values)
   const createdAt = values.createdAt || customDayjs().toISOString()
-  const formattedCreatedAt = getLocalizedDayjs(createdAt).format('DD/MM/YYYY à HH:mm')
 
   const endOfValidity = getLocalizedDayjs(createdAt).add(values?.validityTime || 0, 'hour')
   const formattedEndOfValidity = endOfValidity.format('DD/MM/YYYY à HH:mm')
@@ -29,22 +37,35 @@ export function Validity({ mustIncreaseValidity }: { mustIncreaseValidity: boole
 
   return (
     <StyledValidityContainer>
-      <StyledFormikNumberInput label="Validité (h)" min={1} name="validityTime" />
+      <div>
+        <FormikDatePicker
+          baseContainer={reportingContext === ReportingContext.MAP ? ref.current : newWindowContainerRef.current}
+          isCompact
+          isStringDate
+          label="Date et heure du signalement (UTC)"
+          name="createdAt"
+          withTime
+        />
+        <StyledFormikNumberInput label="Validité (h)" min={1} name="validityTime" />
+      </div>
+
       {reportingStatus === ReportingStatusEnum.ARCHIVED && !mustIncreaseValidity && (
-        <GrayText>{`Le signalement ouvert le ${formattedCreatedAt} (UTC) a été archivé.`}</GrayText>
+        <GrayText>Le signalement a été archivé.</GrayText>
       )}
       {reportingStatus === ReportingStatusEnum.ARCHIVED && mustIncreaseValidity && !canReopenReporting && (
-        <RedText>{`La date de validité du signalement, ouvert le ${formattedCreatedAt} (UTC), est dépassée. Pour le rouvrir, veuillez augmenter sa durée de validité.`}</RedText>
+        <RedText>
+          La date de validité du signalement est dépassée. Pour le rouvrir, veuillez augmenter sa durée de validité.
+        </RedText>
       )}
 
       {((reportingStatus !== ReportingStatusEnum.ARCHIVED && timeLeft > 0 && timeLeft < 1) ||
         (canReopenReporting && timeLeft > 0 && timeLeft < 1)) && (
-        <GrayText>{`Le signalement ouvert le ${formattedCreatedAt} (UTC) sera archivé le ${formattedEndOfValidity} (UTC) (dans ${remainingMinutes}min)`}</GrayText>
+        <GrayText>{`Le signalement sera archivé le ${formattedEndOfValidity} (UTC) (dans ${remainingMinutes}min)`}</GrayText>
       )}
 
       {((reportingStatus !== ReportingStatusEnum.ARCHIVED && timeLeft >= 1) ||
         (canReopenReporting && timeLeft >= 1)) && (
-        <GrayText>{`Le signalement ouvert le ${formattedCreatedAt} (UTC) sera archivé le ${formattedEndOfValidity} (UTC) (dans ${Math.round(
+        <GrayText>{`Le signalement sera archivé le ${formattedEndOfValidity} (UTC) (dans ${Math.round(
           timeLeft
         )}h)`}</GrayText>
       )}
@@ -58,9 +79,12 @@ const StyledFormikNumberInput = styled(FormikNumberInput)`
 `
 const StyledValidityContainer = styled.div`
   display: flex;
-  flex-direction: row;
-  align-items: end;
+  flex-direction: column;
   gap: 8px;
+  > div {
+    display: flex;
+    gap: 40px;
+  }
 `
 
 const GrayText = styled.span`
