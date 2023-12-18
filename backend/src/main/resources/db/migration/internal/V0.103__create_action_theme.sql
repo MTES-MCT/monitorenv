@@ -118,6 +118,7 @@ WITH themes AS (
         jsonb_array_elements(value->'themes')->>'theme' as theme,
         jsonb_array_elements(value->'themes')->'protectedSpecies' as protectedspecies
     FROM env_actions
+    WHERE  jsonb_typeof(value->'themes') = 'array' 
 )
     SELECT themes.env_action_id,  control_plan_tags.id
         FROM themes,
