@@ -142,6 +142,55 @@ context('Mission dates', () => {
     })
   })
 
+  it('A mission should be created with same surveillance and mission dates', () => {
+    // Given
+    cy.wait(200)
+    cy.get('*[data-cy="add-mission"]').click()
+
+    // When
+    cy.fill('Début de mission (UTC)', [2024, 5, 26, 12, 0])
+    cy.fill('Fin de mission (UTC)', [2024, 5, 28, 14, 15])
+
+    cy.get('[name="missionTypes0"]').click({ force: true })
+    cy.get('[name="missionTypes1"]').click({ force: true })
+
+    cy.get('*[data-cy="add-control-unit"]').click()
+    cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
+    cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
+    cy.wait(200)
+    cy.get('*[data-cy="add-control-administration"]').contains('DIRM / DM')
+    cy.get('*[data-cy="add-control-unit"]').contains('Cross Etel')
+
+    cy.get('[name="openBy"]').scrollIntoView().type('PCF')
+
+    // Add a second surveillance
+    cy.clickButton('Ajouter')
+    cy.clickButton('Ajouter une surveillance')
+
+    cy.getDataCy('surveillance-duration-matches-mission').should('have.class', 'rs-checkbox-checked')
+
+    cy.intercept('PUT', `/bff/v1/missions`).as('createMission')
+    cy.clickButton('Enregistrer et quitter')
+
+    // Then
+    cy.wait('@createMission').then(({ response }) => {
+      expect(response && response.statusCode).equal(200)
+
+      const surveillance = response?.body.envActions[0]
+      expect(surveillance.actionStartDateTimeUtc).equal(response?.body.startDateTimeUtc)
+      expect(surveillance.actionEndDateTimeUtc).equal(response?.body.endDateTimeUtc)
+
+      const id = response?.body.id
+
+      // clean
+      cy.getDataCy(`edit-mission-${id}`).click({ force: true })
+      cy.getDataCy('action-card').eq(0).click()
+      cy.getDataCy('surveillance-duration-matches-mission').should('have.class', 'rs-checkbox-checked')
+      cy.clickButton('Supprimer la mission')
+      cy.clickButton('Confirmer la suppression')
+    })
+  })
+
   it('A mission should be created with valid dates for control action', () => {
     // Given
     cy.wait(200)
