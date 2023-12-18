@@ -168,6 +168,7 @@ class EnvActionModel(
                     value = EnvActionMapper.envActionEntityToJSON(mapper, action),
                 )
             action.controlPlans?.forEach {
+                if (it.themeId == null) return@forEach
                 envActionModel.controlPlanThemes?.add(
                     EnvActionsControlPlanThemeModel.fromEnvActionControlPlanThemeEntity(
                         envAction = envActionModel,

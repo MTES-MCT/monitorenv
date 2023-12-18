@@ -48,22 +48,22 @@ context('Mission actions', () => {
     cy.get('*[data-cy="edit-mission-34"]').click({ force: true })
     cy.get('*[data-cy="action-card"]').eq(1).click()
     cy.get('*[data-cy="envaction-theme-element"]').should('have.length', 1)
-    cy.get('*[data-cy="envaction-theme-selector"]').contains('Mouillage Individuel') // id 100001
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Mouillage avec AOT individuelle') // id 86
+    cy.get('*[data-cy="envaction-theme-selector"]').contains('Mouillage individuel') // id 100
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Mouillage avec AOT individuelle') // id 102
     cy.get('*[data-cy="envaction-tags-selector"]').should('not.exist')
     // When
     cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Police des espèces protégées').click() // id 11
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Espèce protégée').click() // id 103
 
     cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Destruction, capture, arrachage').click({ force: true }) // id 89
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Détention des espèces protégées').click({ force: true }) // id 91
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Destruction, capture, arrachage').click({ force: true }) // id 117
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Détention des espèces protégées').click({ force: true }) // id 120
     cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
 
     cy.get('*[data-cy="envaction-tags-selector"]').should('exist')
     cy.get('*[data-cy="envaction-tags-selector"]').click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Habitat').click({ force: true }) // id 2
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Oiseaux').click({ force: true }) // id 1
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Habitat').click({ force: true }) // id 15
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Oiseaux').click({ force: true }) // id 11
     cy.get('*[data-cy="envaction-tags-selector"]').click({ force: true })
 
     cy.get('*[data-cy="envaction-add-theme"]').should('not.exist')
@@ -78,14 +78,14 @@ context('Mission actions', () => {
       const { controlPlans } = request.body.envActions.find(a => a.id === 'b8007c8a-5135-4bc3-816f-c69c7b75d807')
 
       expect(controlPlans.length).equal(1)
-      expect(controlPlans[0].themeId).equal(11)
+      expect(controlPlans[0].themeId).equal(103)
 
       expect(controlPlans[0].subThemeIds.length).equal(2)
-      expect(controlPlans[0].subThemeIds[0]).equal(89)
-      expect(controlPlans[0].subThemeIds[1]).equal(91)
+      expect(controlPlans[0].subThemeIds[0]).equal(117)
+      expect(controlPlans[0].subThemeIds[1]).equal(120)
       expect(controlPlans[0].tagIds.length).equal(2)
-      expect(controlPlans[0].tagIds[0]).equal(1)
-      expect(controlPlans[0].tagIds[1]).equal(2)
+      expect(controlPlans[0].tagIds[0]).equal(11)
+      expect(controlPlans[0].tagIds[1]).equal(15)
     })
   })
 
@@ -120,24 +120,22 @@ context('Mission actions', () => {
     cy.get('*[data-cy="edit-mission-34"]').click({ force: true })
     cy.get('*[data-cy="action-card"]').eq(0).click()
     cy.get('*[data-cy="envaction-theme-element"]').should('have.length', 2)
-    cy.get('*[data-cy="envaction-theme-selector"]')
-      .eq(0)
-      .contains('Police des espèces protégées et de leurs habitats (faune et flore)') // id 11
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Destruction, capture, arrachage') // id 93
+    cy.get('*[data-cy="envaction-theme-selector"]').eq(0).contains('Espèce protégée et leur habitat (faune et flore)') // id 103
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Destruction, capture, arrachage') // id 117
     cy.get('*[data-cy="envaction-tags-selector"]').should('exist')
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Habitat') // id 2
-    cy.get('*[data-cy="envaction-theme-element"]').contains('Oiseaux') // id 1
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Habitat') // id 15
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Oiseaux') // id 11
 
     // When
     cy.get('*[data-cy="envaction-theme-selector"]').eq(0).click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').eq(0).contains('Épave').click() // id 100003
+    cy.get('*[data-cy="envaction-theme-element"]').eq(0).contains('Épave').click({ force: true }) // id 105
 
     cy.get('*[data-cy="envaction-add-theme"]').click({ force: true })
     cy.get('*[data-cy="envaction-theme-selector"]').eq(2).click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').eq(2).contains('Rejet').click() // id 100002
+    cy.get('*[data-cy="envaction-theme-element"]').eq(2).contains('Rejet').click() // id 102
 
     cy.get('*[data-cy="envaction-subtheme-selector"]').eq(2).click({ force: true })
-    cy.get('*[data-cy="envaction-theme-element"]').eq(2).contains('Rejet d’hydrocarbure').click({ force: true }) // id 88
+    cy.get('*[data-cy="envaction-theme-element"]').eq(2).contains("Rejet d'hydrocarbure").click({ force: true }) // id 74
 
     cy.get('*[data-cy="envaction-tags-selector"]').should('have.length', 0)
 
@@ -151,19 +149,20 @@ context('Mission actions', () => {
       const { controlPlans } =
         response && response.body.envActions.find(a => a.id === 'c52c6f20-e495-4b29-b3df-d7edfb67fdd7')
       expect(controlPlans.length).equal(3)
-      expect(controlPlans[0].themeId).equal(100001)
-      expect(controlPlans[0].subThemeIds.length).equal(2)
-      expect(controlPlans[0].subThemeIds[0]).equal(84)
-      expect(controlPlans[0].subThemeIds[1]).equal(85)
-      expect(controlPlans[0].tagIds.length).equal(0)
 
-      expect(controlPlans[1].themeId).equal(100003)
+      expect(controlPlans[0].themeId).equal(100)
+      expect(controlPlans[0].subThemeIds.length).equal(2)
+      expect(controlPlans[0].subThemeIds[0]).equal(100)
+      expect(controlPlans[0].subThemeIds[1]).equal(102)
+      expect(controlPlans[0].tagIds.length).equal(0)
+      0
+      expect(controlPlans[1].themeId).equal(105)
       expect(controlPlans[1].subThemeIds.length).equal(0)
       expect(controlPlans[1].tagIds.length).equal(0)
 
-      expect(controlPlans[2].themeId).equal(100002)
+      expect(controlPlans[2].themeId).equal(102)
       expect(controlPlans[2].subThemeIds.length).equal(1)
-      expect(controlPlans[2].subThemeIds[0]).equal(88)
+      expect(controlPlans[2].subThemeIds[0]).equal(110)
       expect(controlPlans[2].tagIds.length).equal(0)
     })
   })

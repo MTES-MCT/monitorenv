@@ -12,7 +12,7 @@ class JpaControlPlanThemeRepositoryITests : AbstractDBTests() {
         // When
         val requestedControlPlanThemes = jpaControlPlanThemeRepository.findAll()
         // Then
-        assertThat(requestedControlPlanThemes.size).isEqualTo(23)
+        assertThat(requestedControlPlanThemes.size).isEqualTo(34)
         assertThat(requestedControlPlanThemes[5].id).isEqualTo(6)
         assertThat(requestedControlPlanThemes[5].theme).isEqualTo("Divers")
     }
@@ -24,8 +24,9 @@ class JpaControlPlanThemeRepositoryITests : AbstractDBTests() {
         val requestedControlPlanThemesFor2024 = jpaControlPlanThemeRepository.findByYear(2024)
         // Then
         assertThat(requestedControlPlanThemesFor2023.size).isEqualTo(83)
-        assertThat(requestedControlPlanThemesFor2024.size).isEqualTo(12)
-        assertThat(requestedControlPlanThemesFor2024[5].id).isEqualTo(100001)
-        assertThat(requestedControlPlanThemesFor2024[5].theme).isEqualTo("Mouillage Individuel")
+        assertThat(requestedControlPlanThemesFor2024.size).isEqualTo(78)
+        assertThat(requestedControlPlanThemesFor2024[5].id).isEqualTo(3)
+        assertThat(requestedControlPlanThemesFor2024[5].theme)
+            .isEqualTo("Arrêté à visa environnemental")
     }
 }

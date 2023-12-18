@@ -95,7 +95,6 @@ export const getClosedEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<Env
         }),
       actionType: Yup.mixed().oneOf([ActionTypeEnum.SURVEILLANCE]),
       controlPlans: Yup.array().of(ControlPlansSchema).ensure().required(),
-
       geom: Yup.object().when('coverMissionZone', {
         is: true,
         otherwise: () =>

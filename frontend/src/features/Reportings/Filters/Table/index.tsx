@@ -72,11 +72,11 @@ export function TableReportingsFiltersWithRef(
   )
   const themeCustomSearch = useMemo(
     () =>
-      new CustomSearch(subThemesOptions as Array<Option<number>>, ['label'], {
+      new CustomSearch(themesOptions as Array<Option<number>>, ['label'], {
         cacheKey: 'REPORTINGS_LIST',
         withCacheInvalidation: true
       }),
-    [subThemesOptions]
+    [themesOptions]
   )
 
   const subThemeCustomSearch = useMemo(

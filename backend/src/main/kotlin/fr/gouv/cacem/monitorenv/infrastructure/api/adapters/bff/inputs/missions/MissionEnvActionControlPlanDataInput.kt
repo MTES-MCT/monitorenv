@@ -5,7 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionContr
 data class MissionEnvActionControlPlanDataInput(
     val subThemeIds: List<Int>? = emptyList(),
     val tagIds: List<Int>? = emptyList(),
-    val themeId: Int,
+    val themeId: Int? = null,
 ) {
     fun toEnvActionControlPlanEntity(): EnvActionControlPlanEntity {
         return EnvActionControlPlanEntity(

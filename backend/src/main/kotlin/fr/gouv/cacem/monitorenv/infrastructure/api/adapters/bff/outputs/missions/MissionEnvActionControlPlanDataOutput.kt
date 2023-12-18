@@ -3,7 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.mission
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 
 data class MissionEnvActionControlPlanDataOutput(
-    val themeId: Int,
+    val themeId: Int? = null,
     val subThemeIds: List<Int>? = emptyList(),
     val tagIds: List<Int>? = emptyList(),
 ) {
