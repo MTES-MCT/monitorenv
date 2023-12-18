@@ -67,9 +67,12 @@ class MissionsControllerITests {
 
     @Autowired private lateinit var objectMapper: ObjectMapper
 
-    private val polygon = WKTReader().read(
-        "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))",
-    ) as MultiPolygon
+    private val polygon =
+        WKTReader()
+            .read(
+                "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))",
+            ) as
+            MultiPolygon
     private val point = WKTReader().read("POINT (-4.54877816747593 48.305559876971)") as Point
 
     @Test
@@ -137,7 +140,8 @@ class MissionsControllerITests {
                 id = UUID.fromString("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b"),
                 actionStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 actionEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                controlPlans = listOf(
+                controlPlans =
+                listOf(
                     EnvActionControlPlanEntity(
                         subThemeIds = listOf(1),
                         tagIds = listOf(1, 2),
@@ -197,7 +201,8 @@ class MissionsControllerITests {
                             listOf(
                                 LegacyControlUnitResourceEntity(
                                     id = 2,
-                                    controlUnitId = 1,
+                                    controlUnitId =
+                                    1,
                                     name =
                                     "Ressource 2",
                                 ),
@@ -339,7 +344,9 @@ class MissionsControllerITests {
                 ),
             )
             .andExpect(jsonPath("$[0].envActions[0].controlPlans[0].themeId", equalTo(1)))
-            .andExpect(jsonPath("$[0].envActions[0].controlPlans[0].subThemeIds[0]", equalTo(1)))
+            .andExpect(
+                jsonPath("$[0].envActions[0].controlPlans[0].subThemeIds[0]", equalTo(1)),
+            )
             .andExpect(jsonPath("$[0].envActions[0].controlPlans[0].tagIds[0]", equalTo(1)))
             .andExpect(jsonPath("$[0].envActions[0].controlPlans[0].tagIds[1]", equalTo(2)))
             .andExpect(jsonPath("$[0].envActions[0].geom.type", equalTo("Point")))
@@ -467,7 +474,8 @@ class MissionsControllerITests {
                 id = UUID.fromString("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b"),
                 actionStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 actionEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                controlPlans = listOf(
+                controlPlans =
+                listOf(
                     EnvActionControlPlanEntity(
                         subThemeIds = listOf(1),
                         tagIds = listOf(1, 2),
@@ -527,8 +535,10 @@ class MissionsControllerITests {
                             listOf(
                                 LegacyControlUnitResourceEntity(
                                     id = 2,
-                                    controlUnitId = 1,
-                                    name = "Ressource 2",
+                                    controlUnitId =
+                                    1,
+                                    name =
+                                    "Ressource 2",
                                 ),
                             ),
                             isArchived = false,
@@ -852,20 +862,21 @@ class MissionsControllerITests {
     @Test
     fun `Should get all engaged control units`() {
         // Given
-        given(getEngagedControlUnits.execute()).willReturn(
-            listOf(
-                Pair(
-                    LegacyControlUnitEntity(
-                        id = 123,
-                        administration = "Admin",
-                        resources = listOf(),
-                        isArchived = false,
-                        name = "Control Unit Name",
+        given(getEngagedControlUnits.execute())
+            .willReturn(
+                listOf(
+                    Pair(
+                        LegacyControlUnitEntity(
+                            id = 123,
+                            administration = "Admin",
+                            resources = listOf(),
+                            isArchived = false,
+                            name = "Control Unit Name",
+                        ),
+                        listOf(MissionSourceEnum.MONITORFISH),
                     ),
-                    listOf(MissionSourceEnum.MONITORFISH),
                 ),
-            ),
-        )
+            )
 
         // When
         mockMvc.perform(get("/bff/v1/missions/engaged_control_units"))

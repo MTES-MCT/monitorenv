@@ -21,21 +21,24 @@ abstract class MissionEnvActionDataOutput(
         ): MissionEnvActionDataOutput {
             return when (envActionEntity.actionType) {
                 ActionTypeEnum.CONTROL ->
-                    MissionEnvActionControlDataOutput
-                        .fromEnvActionControlEntity(
-                            envActionControlEntity = envActionEntity as EnvActionControlEntity,
-                            reportingIds = envActionsAttachedToReportingIds?.find { id ->
-                                id.first == envActionEntity.id
-                            }?.second ?: listOf(),
-                        )
+                    MissionEnvActionControlDataOutput.fromEnvActionControlEntity(
+                        envActionControlEntity = envActionEntity as EnvActionControlEntity,
+                        reportingIds =
+                        envActionsAttachedToReportingIds
+                            ?.find { id -> id.first == envActionEntity.id }
+                            ?.second
+                            ?: listOf(),
+                    )
                 ActionTypeEnum.SURVEILLANCE ->
-                    MissionEnvActionSurveillanceDataOutput
-                        .fromEnvActionSurveillanceEntity(
-                            envActionSurveillanceEntity = envActionEntity as EnvActionSurveillanceEntity,
-                            reportingIds = envActionsAttachedToReportingIds?.find { id ->
-                                id.first == envActionEntity.id
-                            }?.second ?: listOf(),
-                        )
+                    MissionEnvActionSurveillanceDataOutput.fromEnvActionSurveillanceEntity(
+                        envActionSurveillanceEntity =
+                        envActionEntity as EnvActionSurveillanceEntity,
+                        reportingIds =
+                        envActionsAttachedToReportingIds
+                            ?.find { id -> id.first == envActionEntity.id }
+                            ?.second
+                            ?: listOf(),
+                    )
                 ActionTypeEnum.NOTE ->
                     MissionEnvActionNoteDataOutput.fromEnvActionNoteEntity(
                         envActionEntity as EnvActionNoteEntity,

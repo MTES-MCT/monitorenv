@@ -5,7 +5,7 @@ import { MultipleThemeElement } from './MultipleThemeElement'
 export function SurveillanceThemes({ envActionIndex }) {
   return (
     <FieldArray
-      name={`envActions.${envActionIndex}.themes`}
+      name={`envActions[${envActionIndex}].controlPlans`}
       render={({ form, push, remove }) => (
         <MultipleThemeElement envActionIndex={envActionIndex} form={form} push={push} remove={remove} />
       )}

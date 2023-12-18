@@ -6,8 +6,7 @@ import org.springframework.data.jpa.repository.Query
 
 interface IDBControlPlanThemeRepository : JpaRepository<ControlPlanThemeModel, Int> {
     @Query(
-        value =
-        """
+        value = """
         SELECT th.*
         FROM control_plan_themes th, control_plan_sub_themes s
         WHERE th.id = s.theme_id

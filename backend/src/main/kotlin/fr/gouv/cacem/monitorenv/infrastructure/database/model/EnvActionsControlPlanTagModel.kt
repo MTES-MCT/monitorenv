@@ -16,32 +16,30 @@ import java.util.UUID
 @Entity
 @Table(name = "env_actions_control_plan_tags")
 class EnvActionsControlPlanTagModel(
-    @EmbeddedId
-    val id: EnvActionsTagPk,
-
+    @EmbeddedId val id: EnvActionsTagPk,
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("envActionId")
     @JoinColumn(name = "env_action_id")
     val envAction: EnvActionModel? = null,
-
     @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("tagId")
     @JoinColumn(name = "tag_id")
     val controlPlanTag: ControlPlanTagModel? = null,
-
 ) {
     companion object {
         fun fromEnvActionControlPlanTagEntity(
             envAction: EnvActionModel,
             controlPlanTag: ControlPlanTagModel,
-        ) = EnvActionsControlPlanTagModel(
-            id = EnvActionsTagPk(
-                envActionId = envAction.id!!,
-                tagId = controlPlanTag.id!!,
-            ),
-            envAction = envAction,
-            controlPlanTag = controlPlanTag,
-        )
+        ) =
+            EnvActionsControlPlanTagModel(
+                id =
+                EnvActionsTagPk(
+                    envActionId = envAction.id!!,
+                    tagId = controlPlanTag.id!!,
+                ),
+                envAction = envAction,
+                controlPlanTag = controlPlanTag,
+            )
     }
 
     override fun equals(other: Any?): Boolean {
@@ -57,18 +55,14 @@ class EnvActionsControlPlanTagModel(
 
 @Embeddable
 data class EnvActionsTagPk(
-    @Column(name = "env_action_id")
-    val envActionId: UUID,
-
-    @Column(name = "tag_id")
-    val tagId: Int,
+    @Column(name = "env_action_id") val envActionId: UUID,
+    @Column(name = "tag_id") val tagId: Int,
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is EnvActionsTagPk) return false
 
-        return envActionId == other.envActionId &&
-            tagId == other.tagId
+        return envActionId == other.envActionId && tagId == other.tagId
     }
 
     override fun hashCode(): Int {

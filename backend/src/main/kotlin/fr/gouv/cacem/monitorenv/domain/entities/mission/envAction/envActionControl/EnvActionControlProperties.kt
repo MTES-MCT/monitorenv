@@ -13,8 +13,7 @@ data class EnvActionControlProperties(
     val actionTargetType: ActionTargetTypeEnum? = null,
     val infractions: List<InfractionEntity>? = listOf(),
     val observations: String? = null,
-    @Deprecated("Use controlPlans instead")
-    val themes: List<ThemeEntity>? = listOf(),
+    @Deprecated("Use controlPlans instead") val themes: List<ThemeEntity>? = listOf(),
     val vehicleType: VehicleTypeEnum? = null,
 ) {
     fun toEnvActionControlEntity(
@@ -42,8 +41,10 @@ data class EnvActionControlProperties(
             geom = geom,
             infractions = infractions,
             isAdministrativeControl = isAdministrativeControl,
-            isComplianceWithWaterRegulationsControl = isComplianceWithWaterRegulationsControl,
-            isSafetyEquipmentAndStandardsComplianceControl = isSafetyEquipmentAndStandardsComplianceControl,
+            isComplianceWithWaterRegulationsControl =
+            isComplianceWithWaterRegulationsControl,
+            isSafetyEquipmentAndStandardsComplianceControl =
+            isSafetyEquipmentAndStandardsComplianceControl,
             isSeafarersControl = isSeafarersControl,
             observations = observations,
             themes = themes,

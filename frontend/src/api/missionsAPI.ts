@@ -4,7 +4,7 @@ import { monitorenvPrivateApi, monitorenvPublicApi } from './api'
 import { ControlUnit } from '../domain/entities/controlUnit'
 import { addNewMissionListener, missionEventListener } from '../features/missions/MissionForm/sse'
 
-import type { Mission, MissionForApi } from '../domain/entities/missions'
+import type { Mission, MissionData } from '../domain/entities/missions'
 
 type MissionsResponse = Mission[]
 type MissionsFilter = {
@@ -30,7 +30,7 @@ const getSeaFrontsFilter = seaFronts =>
 
 export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: builder => ({
-    createMission: builder.mutation<Mission, MissionForApi>({
+    createMission: builder.mutation<Mission, MissionData>({
       invalidatesTags: (_, __, { attachedReportingIds = [] }) => [
         { id: 'LIST', type: 'Missions' },
         { id: 'LIST', type: 'Reportings' },
@@ -88,7 +88,7 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
           .filter(v => v)
           .join('&')
     }),
-    updateMission: builder.mutation<Mission, MissionForApi>({
+    updateMission: builder.mutation<Mission, MissionData>({
       invalidatesTags: (_, __, { attachedReportingIds = [], detachedReportingIds = [], id }) => [
         { id, type: 'Missions' },
         { id: 'LIST', type: 'Missions' },

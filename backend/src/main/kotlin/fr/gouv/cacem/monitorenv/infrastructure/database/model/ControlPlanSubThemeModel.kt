@@ -24,24 +24,19 @@ class ControlPlanSubThemeModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
     val id: Int,
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "theme_id")
     val controlPlanTheme: ControlPlanThemeModel,
-
-    @Column(name = "subtheme")
-    val subTheme: String,
-
-    @Column(name = "year")
-    val year: Int,
-
+    @Column(name = "subtheme") val subTheme: String,
+    @Column(name = "year") val year: Int,
 ) {
-    fun toControlPlanSubThemeEntity() = ControlPlanSubThemeEntity(
-        id = id,
-        themeId = controlPlanTheme.id,
-        subTheme = subTheme,
-        year = year,
-    )
+    fun toControlPlanSubThemeEntity() =
+        ControlPlanSubThemeEntity(
+            id = id,
+            themeId = controlPlanTheme.id,
+            subTheme = subTheme,
+            year = year,
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

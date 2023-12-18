@@ -67,8 +67,10 @@ object EnvActionMapper {
                                 facade = facade,
                                 geom = geom,
                                 isAdministrativeControl = isAdministrativeControl,
-                                isComplianceWithWaterRegulationsControl = isComplianceWithWaterRegulationsControl,
-                                isSafetyEquipmentAndStandardsComplianceControl = isSafetyEquipmentAndStandardsComplianceControl,
+                                isComplianceWithWaterRegulationsControl =
+                                isComplianceWithWaterRegulationsControl,
+                                isSafetyEquipmentAndStandardsComplianceControl =
+                                isSafetyEquipmentAndStandardsComplianceControl,
                                 isSeafarersControl = isSeafarersControl,
                             )
                     ActionTypeEnum.NOTE ->

@@ -26,8 +26,7 @@ data class EnvActionControlEntity(
     val actionTargetType: ActionTargetTypeEnum? = null,
     val infractions: List<InfractionEntity>? = listOf(),
     val observations: String? = null,
-    @Deprecated("Use controlPlan instead")
-    val themes: List<ThemeEntity>? = listOf(),
+    @Deprecated("Use controlPlan instead") val themes: List<ThemeEntity>? = listOf(),
     val vehicleType: VehicleTypeEnum? = null,
 ) :
     EnvActionEntity(

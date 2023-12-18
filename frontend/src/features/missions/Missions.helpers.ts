@@ -43,17 +43,18 @@ export const actionFactory = ({
         actionNumberOfControls: undefined,
         actionTargetType: undefined,
         actionType: ActionTypeEnum.CONTROL,
+        controlPlans: [
+          {
+            subThemeIds: [],
+            tagIds: [],
+            themeId: undefined
+          }
+        ],
+
         id: uuidv4(),
         infractions: [],
         observations: '',
         reportingIds: [],
-        themes: [
-          {
-            protectedSpecies: undefined,
-            subThemes: [],
-            theme: ''
-          }
-        ],
         ...action
       }
     case ActionTypeEnum.NOTE:
@@ -68,18 +69,19 @@ export const actionFactory = ({
     default:
       return {
         actionType: ActionTypeEnum.SURVEILLANCE,
+        controlPlans: [
+          {
+            subThemeIds: [],
+            tagIds: [],
+            themeId: undefined
+          }
+        ],
+
         coverMissionZone: true,
         durationMatchesMission: true,
         id: uuidv4(),
         observations: '',
         reportingIds: [],
-        themes: [
-          {
-            protectedSpecies: undefined,
-            subThemes: [],
-            theme: ''
-          }
-        ],
         ...action
       }
   }

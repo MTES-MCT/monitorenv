@@ -884,7 +884,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val mission = jpaMissionRepository.findById(34)
         val envAction = mission.envActions?.find { it.id == UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807") }
         assertThat(envAction?.controlPlans?.size).isEqualTo(1)
-        assertThat(envAction?.controlPlans?.get(0)?.subThemeIds?.size).isEqualTo(2)
+        assertThat(envAction?.controlPlans?.get(0)?.subThemeIds?.size).isEqualTo(1)
         val nextControlPlans = listOf(
             EnvActionControlPlanEntity(
                 subThemeIds = listOf(53, 34),

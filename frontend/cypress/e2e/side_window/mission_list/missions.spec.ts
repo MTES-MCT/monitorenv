@@ -54,10 +54,10 @@ context('Missions', () => {
 
     cy.log('Should filter by theme')
     cy.fill('Thématique', ['Police des épaves'])
-    cy.get('*[data-cy="cell-envactions-themes"]')
+    cy.get('*[data-cy="cell-envActions-themes"]')
       .eq(0)
       .contains(
-        'Police des activités de cultures marines : Contrôle du schéma des structures ; Police des épaves : Épave/navire abandonné / Contrôle administratif'
+        'Police des activités de cultures marines : Contrôle du schéma des structures ; Police des épaves : Contrôle administratif / Épave/navire abandonné'
       )
   })
 })

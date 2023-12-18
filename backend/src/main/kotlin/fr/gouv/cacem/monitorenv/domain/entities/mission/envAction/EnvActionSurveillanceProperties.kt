@@ -7,8 +7,7 @@ import java.util.*
 data class EnvActionSurveillanceProperties(
     val coverMissionZone: Boolean? = null,
     val observations: String? = null,
-    @Deprecated("Use controlPlans instead")
-    val themes: List<ThemeEntity>? = listOf(),
+    @Deprecated("Use controlPlans instead") val themes: List<ThemeEntity>? = listOf(),
 ) {
     fun toEnvActionSurveillanceEntity(
         id: UUID,

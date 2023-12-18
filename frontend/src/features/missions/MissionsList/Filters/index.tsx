@@ -15,7 +15,6 @@ import styled from 'styled-components'
 import { FilterTags } from './FilterTags'
 import { useGetAdministrationsQuery } from '../../../../api/administrationsAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
-import { useGetControlThemesQuery } from '../../../../api/controlThemesAPI'
 import { useGetLegacyControlUnitsQuery } from '../../../../api/legacyControlUnitsAPI'
 import { DateRangeEnum, DATE_RANGE_LABEL } from '../../../../domain/entities/dateRange'
 import { MissionSourceLabel, MissionTypeLabel, MissionStatusLabel } from '../../../../domain/entities/missions'
@@ -23,8 +22,8 @@ import { seaFrontLabels } from '../../../../domain/entities/seaFrontType'
 import { MissionFiltersEnum, resetMissionFilters, updateFilters } from '../../../../domain/shared_slices/MissionFilters'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
 import { ReactComponent as ReloadSVG } from '../../../../uiMonitor/icons/Reload.svg'
-import { getThemesAsListOptions } from '../../../../utils/getThemesAsListOptions'
 import { isNotArchived } from '../../../../utils/isNotArchived'
 
 export function MissionsTableFilters() {
@@ -44,12 +43,11 @@ export function MissionsTableFilters() {
     startedBefore
   } = useAppSelector(state => state.missionFilters)
   const [isCustomPeriodVisible, setIsCustomPeriodVisible] = useState(selectedPeriod === DateRangeEnum.CUSTOM)
-
   const unitPickerRef = useRef() as MutableRefObject<HTMLDivElement>
 
   const { data: administrations } = useGetAdministrationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
   const { data: legacyControlUnits, isLoading } = useGetLegacyControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
-  const { data: controlThemes } = useGetControlThemesQuery()
+  const { themesAsOptions } = useGetControlPlans()
 
   const activeAdministrations = useMemo(
     () =>
@@ -59,8 +57,6 @@ export function MissionsTableFilters() {
       })),
     [administrations]
   )
-
-  const themesAsOptions = useMemo(() => getThemesAsListOptions(controlThemes), [controlThemes])
 
   const themeCustomSearch = useMemo(() => new CustomSearch(themesAsOptions, ['label']), [themesAsOptions])
 
@@ -159,10 +155,7 @@ export function MissionsTableFilters() {
     )
   }
 
-  const onUpdateSimpleFilter = (
-    nextSelectedValues: string | number[] | string[] | undefined,
-    filterKey: MissionFiltersEnum
-  ) => {
+  const onUpdateSimpleFilter = (nextSelectedValues: number[] | undefined, filterKey: MissionFiltersEnum) => {
     dispatch(updateFilters({ key: filterKey, value: nextSelectedValues }))
   }
 

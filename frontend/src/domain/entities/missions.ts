@@ -1,5 +1,6 @@
 import { THEME, customDayjs } from '@mtes-mct/monitor-ui'
 
+import type { ControlPlansData } from './controlPlan'
 import type { LegacyControlUnit } from './legacyControlUnit'
 import type { ReportingDetailed } from './reporting'
 import type { SeaFrontEnum } from './seaFrontType'
@@ -158,33 +159,6 @@ export const vesselSizeEnum = {
   }
 }
 
-export const protectedSpeciesEnum = {
-  BIRDS: {
-    label: 'Oiseaux',
-    value: 'BIRDS'
-  },
-  FLORA: {
-    label: 'Flore',
-    value: 'FLORA'
-  },
-  HABITAT: {
-    label: 'Habitat',
-    value: 'HABITAT'
-  },
-  MARINE_MAMMALS: {
-    label: 'Mammifères marins',
-    value: 'MARINE_MAMMALS'
-  },
-  OTHER: {
-    label: 'Autres espèces protégées',
-    value: 'OTHER'
-  },
-  REPTILES: {
-    label: 'Reptiles',
-    value: 'REPTILES'
-  }
-}
-
 export enum MissionStatusEnum {
   CLOSED = 'CLOSED',
   ENDED = 'ENDED',
@@ -246,8 +220,6 @@ export enum MissionSourceLabel {
   MONITORFISH = 'CNSP'
 }
 
-export const THEME_REQUIRE_PROTECTED_SPECIES = ['Police des espèces protégées et de leurs habitats (faune et flore)']
-
 export const relevantCourtEnum = {
   JULIS: {
     code: 'JULIS',
@@ -271,6 +243,7 @@ export type ResourceUnit = {
   administration: string
 }
 
+// Mission from API
 export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote> = {
   attachedReportingIds: number[]
   attachedReportings: ReportingDetailed[]
@@ -297,8 +270,9 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
 export type NewMission = Omit<Mission<NewEnvAction>, 'controlUnits' | 'facade' | 'id'> & {
   controlUnits: Array<Omit<LegacyControlUnit, 'administrationId' | 'id'>>
 }
+// Mission for API
+export type MissionData = Omit<Partial<Mission<EnvAction>>, 'attachedReportings'>
 
-export type MissionForApi = Omit<Partial<Mission>, 'attachedReportings'>
 export type EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote
 export type NewEnvAction = NewEnvActionControl | EnvActionSurveillance | EnvActionNote
 
@@ -307,16 +281,12 @@ export type EnvActionCommonProperties = {
   id: string
 }
 
-export type EnvActionTheme = {
-  protectedSpecies?: string[]
-  subThemes: string[]
-  theme: string
-}
 export type NewEnvActionControl = EnvActionCommonProperties & {
   actionEndDateTimeUtc?: string | null
   actionNumberOfControls?: number
   actionTargetType?: string
   actionType: ActionTypeEnum.CONTROL
+  controlPlans: ControlPlansData[]
   geom?: Record<string, any>[]
   infractions: Infraction[]
   isAdministrativeControl?: boolean
@@ -325,7 +295,6 @@ export type NewEnvActionControl = EnvActionCommonProperties & {
   isSeafarersControl?: boolean
   observations: string | null
   reportingIds: number[]
-  themes: EnvActionTheme[]
   vehicleType?: string
 }
 export type EnvActionControl = NewEnvActionControl & {
@@ -335,12 +304,12 @@ export type EnvActionControl = NewEnvActionControl & {
 export type EnvActionSurveillance = EnvActionCommonProperties & {
   actionEndDateTimeUtc?: string | null
   actionType: ActionTypeEnum.SURVEILLANCE
+  controlPlans: ControlPlansData[]
   coverMissionZone?: boolean
   durationMatchesMission?: boolean
   geom?: Record<string, any>[]
   observations: string | null
   reportingIds: number[]
-  themes: EnvActionTheme[]
 }
 
 export type EnvActionNote = EnvActionCommonProperties & {

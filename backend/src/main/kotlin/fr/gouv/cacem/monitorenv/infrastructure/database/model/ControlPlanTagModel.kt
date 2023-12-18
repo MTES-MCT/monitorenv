@@ -24,20 +24,17 @@ class ControlPlanTagModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
     val id: Int,
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "theme_id")
     val controlPlanTheme: ControlPlanThemeModel,
-
-    @Column(name = "tag")
-    val tag: String,
-
+    @Column(name = "tag") val tag: String,
 ) {
-    fun toControlPlanTagEntity() = ControlPlanTagEntity(
-        id = this.id,
-        tag = this.tag,
-        themeId = this.controlPlanTheme.id,
-    )
+    fun toControlPlanTagEntity() =
+        ControlPlanTagEntity(
+            id = this.id,
+            tag = this.tag,
+            themeId = this.controlPlanTheme.id,
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

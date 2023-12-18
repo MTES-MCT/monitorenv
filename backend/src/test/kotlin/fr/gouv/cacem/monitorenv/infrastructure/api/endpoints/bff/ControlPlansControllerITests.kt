@@ -61,7 +61,7 @@ class ControlPlansControllerITests {
             )
         BDDMockito.given(getControlPlans.execute()).willReturn(controlPlan)
         // When
-        mockMvc.perform(get("/bff/v1/control_plans/"))
+        mockMvc.perform(get("/bff/v1/control_plans"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.themes[\"1\"].id").value(controlPlanTheme1.id))

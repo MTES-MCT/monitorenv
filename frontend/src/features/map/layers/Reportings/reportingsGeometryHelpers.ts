@@ -40,8 +40,8 @@ export const getReportingZoneFeature = (
     reportType: reporting.reportType,
     semaphoreId: reporting.semaphoreId,
     sourceName: reporting.sourceName,
-    subThemes: reporting.subThemes,
-    theme: reporting.theme,
+    subThemeIds: reporting.subThemeIds,
+    themeId: reporting.themeId,
     validityTime: reporting.validityTime
   })
 
@@ -77,8 +77,8 @@ export const getEditingReportingZoneFeature = (reporting: AtLeast<ReportingDetai
     reportType: reporting.reportType,
     semaphoreId: reporting.semaphoreId,
     sourceName: reporting.sourceName,
-    subThemes: reporting.subThemes,
-    theme: reporting.theme,
+    subThemeIds: reporting.subThemeIds,
+    themeId: reporting.themeId,
     validityTime: reporting.validityTime
   })
 

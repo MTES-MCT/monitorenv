@@ -24,9 +24,7 @@ data class MissionEnvActionDataInput(
     // EnvActionControl + EnvSurveillance Properties
     val actionEndDateTimeUtc: ZonedDateTime? = null,
     val controlPlans: List<MissionEnvActionControlPlanDataInput>? = null,
-
-    @Deprecated("Use controlPlans instead")
-    val themes: List<ThemeEntity>? = null,
+    @Deprecated("Use controlPlans instead") val themes: List<ThemeEntity>? = null,
     val department: String? = null,
     val facade: String? = null,
     val geom: Geometry? = null,
@@ -75,7 +73,8 @@ data class MissionEnvActionDataInput(
                     actionNumberOfControls = this.actionNumberOfControls,
                     actionTargetType = this.actionTargetType,
                     actionStartDateTimeUtc = this.actionStartDateTimeUtc,
-                    controlPlans = this.controlPlans?.map { it.toEnvActionControlPlanEntity() },
+                    controlPlans =
+                    this.controlPlans?.map { it.toEnvActionControlPlanEntity() },
                     department = this.department,
                     facade = this.facade,
                     geom = this.geom,
@@ -95,7 +94,8 @@ data class MissionEnvActionDataInput(
                     id = this.id,
                     actionStartDateTimeUtc = this.actionStartDateTimeUtc,
                     actionEndDateTimeUtc = this.actionEndDateTimeUtc,
-                    controlPlans = this.controlPlans?.map { it.toEnvActionControlPlanEntity() },
+                    controlPlans =
+                    this.controlPlans?.map { it.toEnvActionControlPlanEntity() },
                     department = this.department,
                     facade = this.facade,
                     geom = this.geom,
@@ -113,3 +113,5 @@ data class MissionEnvActionDataInput(
         }
     }
 }
+
+typealias ControlPlanSubThemeDataInput = Pair<Int, List<String>>

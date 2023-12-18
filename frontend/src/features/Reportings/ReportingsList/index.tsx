@@ -5,6 +5,7 @@ import { ReportingsTable } from './ReportingsTable'
 import { ReportingContext } from '../../../domain/shared_slices/Global'
 import { addReporting } from '../../../domain/use_cases/reporting/addReporting'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
+import { useGetControlPlans } from '../../../hooks/useGetControlPlans'
 import { ReportingsFilters } from '../Filters'
 import { useGetFilteredReportingsQuery } from '../hooks/useGetFilteredReportingsQuery'
 
@@ -12,6 +13,7 @@ export function ReportingsList() {
   const dispatch = useAppDispatch()
 
   const { isError, isFetching, isLoading, reportings } = useGetFilteredReportingsQuery()
+  const { isLoading: isControlPlansLoading } = useGetControlPlans()
 
   const createReporting = () => {
     dispatch(addReporting(ReportingContext.SIDE_WINDOW))
@@ -25,7 +27,7 @@ export function ReportingsList() {
           Ajouter un nouveau signalement
         </StyledButton>
       </StyledHeader>
-      <ReportingsFilters />
+      {isControlPlansLoading ? <div>Chargement</div> : <ReportingsFilters />}
 
       {isError ? (
         <p data-cy="listReportingWrapper">Erreur au chargement des données</p>

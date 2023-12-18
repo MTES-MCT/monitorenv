@@ -1,25 +1,54 @@
-import { useField } from 'formik'
+import { customDayjs } from '@mtes-mct/monitor-ui'
+import { useField, useFormikContext } from 'formik'
 import styled from 'styled-components'
 
-import { ProtectedSpeciesSelector } from './ProtectedSpeciesSelector'
+import { TagsSelector } from './TagsSelector'
 import { ThemeSelector } from './ThemeSelector'
 import { SubThemesSelector } from './ThemeSelector/SubThemesSelector'
-import { THEME_REQUIRE_PROTECTED_SPECIES } from '../../../../../domain/entities/missions'
+import { useGetControlPlansByYear } from '../../../../../hooks/useGetControlPlansByYear'
 
-export function ActionTheme({ actionIndex, labelSubTheme, labelTheme, themeIndex }) {
-  const [currentThemeField] = useField<string>(`envActions[${actionIndex}].themes[${themeIndex}].theme`)
+import type { Mission } from '../../../../../domain/entities/missions'
+
+type ActionThemeProps = {
+  actionIndex: number
+  labelSubTheme: string
+  labelTheme: string
+  themeIndex: number
+}
+export function ActionTheme({ actionIndex, labelSubTheme, labelTheme, themeIndex }: ActionThemeProps) {
+  const { values } = useFormikContext<Mission>()
+  const actionDate =
+    values?.envActions[actionIndex]?.actionStartDateTimeUtc || values.startDateTimeUtc || new Date().toISOString()
+  const year = customDayjs(actionDate).year()
+  const [currentThemeField] = useField<number>(`envActions[${actionIndex}].controlPlans[${themeIndex}].themeId`)
+
+  const { isError, isLoading, subThemesByYearAsOptions, tagsByYearAsOptions, themesByYearAsOptions } =
+    useGetControlPlansByYear({
+      selectedTheme: currentThemeField?.value,
+      year
+    })
 
   return (
     <ActionThemeWrapper data-cy="envaction-theme-element">
-      <ThemeSelector actionIndex={actionIndex} label={labelTheme} themeIndex={themeIndex} />
+      <ThemeSelector
+        actionIndex={actionIndex}
+        isError={isError}
+        isLoading={isLoading}
+        label={labelTheme}
+        themeIndex={themeIndex}
+        themes={themesByYearAsOptions}
+      />
       <SubThemesSelector
         actionIndex={actionIndex}
+        isError={isError}
+        isLoading={isLoading}
         label={labelSubTheme}
-        theme={currentThemeField?.value}
+        subThemes={subThemesByYearAsOptions}
+        themeId={currentThemeField?.value}
         themeIndex={themeIndex}
       />
-      {THEME_REQUIRE_PROTECTED_SPECIES.includes(currentThemeField.value) && (
-        <ProtectedSpeciesSelector actionIndex={actionIndex} themeIndex={themeIndex} />
+      {tagsByYearAsOptions && tagsByYearAsOptions.length > 0 && (
+        <TagsSelector actionIndex={actionIndex} tags={tagsByYearAsOptions} themeIndex={themeIndex} />
       )}
     </ActionThemeWrapper>
   )

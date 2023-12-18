@@ -1,18 +1,23 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import { useMemo } from 'react'
 
-export function CellActionThemes({ subThemes, theme }: { subThemes: any[]; theme: string }) {
+import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
+
+export function CellActionThemes({ subThemeIds, themeId }: { subThemeIds: number[]; themeId: number }) {
+  const { subThemes, themes } = useGetControlPlans()
   const cellContent = useMemo(() => {
-    if (theme) {
-      if (subThemes.length > 0) {
-        return `${theme}: ${subThemes.join(', ')}`
+    if (themeId) {
+      const themeAsString = themes[themeId]?.theme ?? ''
+      if (subThemeIds.length > 0) {
+        const subThemesAsString = subThemeIds.map(subThemeId => subThemes[subThemeId]?.subTheme)
+
+        return `${themeAsString}: ${subThemesAsString.join(', ')}`
       }
 
-      return theme
+      return themeAsString
     }
 
     return ''
-  }, [theme, subThemes])
+  }, [themeId, subThemeIds, subThemes, themes])
 
   return cellContent !== '' ? (
     <span data-cy="cell-theme" title={cellContent}>
