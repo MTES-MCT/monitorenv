@@ -74,26 +74,27 @@ export const getMissionZoneFeature = (mission: Partial<Mission>, layername: stri
 }
 
 const getActionControlProperties = (action: EnvActionControl) => {
-  const { actionNumberOfControls, actionStartDateTimeUtc, actionTargetType, actionType, infractions, themes } = action
+  const { actionNumberOfControls, actionStartDateTimeUtc, actionTargetType, actionType, controlPlans, infractions } =
+    action
 
   return {
     actionNumberOfControls,
     actionStartDateTimeUtc,
     actionTargetType,
     actionType,
-    infractions,
-    themes
+    controlPlans,
+    infractions
   }
 }
 
 const getActionSurveillanceProperties = (action: EnvActionSurveillance) => {
-  const { actionEndDateTimeUtc, actionStartDateTimeUtc, actionType, themes } = action
+  const { actionEndDateTimeUtc, actionStartDateTimeUtc, actionType, controlPlans } = action
 
   return {
     actionEndDateTimeUtc,
     actionStartDateTimeUtc,
     actionType,
-    themes
+    controlPlans
   }
 }
 

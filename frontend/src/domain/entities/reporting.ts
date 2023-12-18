@@ -26,10 +26,10 @@ export type Reporting = {
   semaphoreId?: number
   sourceName?: string
   sourceType: ReportingSourceEnum
-  subThemes?: string[]
+  subThemeIds?: number[]
   targetDetails?: TargetDetails[]
   targetType?: ReportingTargetTypeEnum
-  theme?: string
+  themeId?: number
   validityTime?: number
   vehicleType?: string
 }

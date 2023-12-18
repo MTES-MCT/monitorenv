@@ -11,6 +11,7 @@ import {
 } from '../../../../domain/shared_slices/MissionFilters'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
 import { FrontendError } from '../../../../libs/FrontendError'
 
 export function FilterTags() {
@@ -25,6 +26,7 @@ export function FilterTags() {
   } = useAppSelector(state => state.missionFilters)
 
   const controlUnits = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
+  const { themesAsOptions } = useGetControlPlans()
 
   const onDeleteTag = <K extends MissionFiltersEnum>(
     valueToDelete: number | string,
@@ -97,7 +99,7 @@ export function FilterTags() {
         selectedThemes?.length > 0 &&
         selectedThemes.map(theme => (
           <SingleTag key={theme} onDelete={() => onDeleteTag(theme, MissionFiltersEnum.THEME_FILTER, selectedThemes)}>
-            {String(`Thème ${theme}`)}
+            {String(`Thème ${themesAsOptions.find(t => t.value === theme)?.label || theme}`)}
           </SingleTag>
         ))}
     </StyledContainer>

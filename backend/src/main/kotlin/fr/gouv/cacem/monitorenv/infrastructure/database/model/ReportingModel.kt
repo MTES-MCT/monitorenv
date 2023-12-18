@@ -11,9 +11,9 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
-import io.hypersistence.utils.hibernate.type.array.ListArrayType
 import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -24,12 +24,13 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Generated
-import org.hibernate.annotations.GenerationTime
 import org.hibernate.annotations.JdbcType
 import org.hibernate.annotations.Type
+import org.hibernate.generator.EventType
 import org.hibernate.type.descriptor.jdbc.UUIDJdbcType
 import org.locationtech.jts.geom.Geometry
 import org.n52.jackson.datatype.jts.GeometryDeserializer
@@ -39,12 +40,13 @@ import java.time.ZoneOffset.UTC
 
 @Entity
 @Table(name = "reportings")
-data class ReportingModel(
+class ReportingModel(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     val id: Int? = null,
-    @Generated(GenerationTime.INSERT)
+
+    @Generated(event = [EventType.INSERT])
     @Column(
         name = "reporting_id",
         unique = true,
@@ -57,55 +59,97 @@ data class ReportingModel(
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
     val sourceType: SourceTypeEnum? = null,
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "semaphore_id", nullable = true)
     @JsonBackReference
     val semaphore: SemaphoreModel? = null,
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "control_unit_id", nullable = true)
     @JsonBackReference
     val controlUnit: ControlUnitModel? = null,
-    @Column(name = "source_name") val sourceName: String? = null,
+
+    @Column(name = "source_name")
+    val sourceName: String? = null,
+
     @Column(name = "target_type", columnDefinition = "reportings_target_type")
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
     val targetType: TargetTypeEnum? = null,
+
     @Column(name = "vehicle_type", columnDefinition = "reportings_vehicle_type")
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
     val vehicleType: VehicleTypeEnum? = null,
+
     @Column(name = "target_details", columnDefinition = "jsonb")
     @Type(JsonBinaryType::class)
     val targetDetails: List<TargetDetailsEntity>? = listOf(),
+
     @JsonSerialize(using = GeometrySerializer::class)
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
     val geom: Geometry? = null,
-    @Column(name = "sea_front") val seaFront: String? = null,
-    @Column(name = "description") val description: String? = null,
+
+    @Column(name = "sea_front")
+    val seaFront: String? = null,
+
+    @Column(name = "description")
+    val description: String? = null,
+
     @Column(name = "report_type", columnDefinition = "reportings_report_type")
     @Enumerated(EnumType.STRING)
     @Type(PostgreSQLEnumType::class)
     val reportType: ReportingTypeEnum? = null,
-    @Column(name = "theme") val theme: String? = null,
-    @Column(name = "sub_themes")
-    @Type(ListArrayType::class)
-    val subThemes: List<String>? = listOf(),
-    @Column(name = "action_taken") val actionTaken: String? = null,
-    @Column(name = "is_control_required") val isControlRequired: Boolean? = null,
-    @Column(name = "has_no_unit_available") val hasNoUnitAvailable: Boolean? = null,
-    @Column(name = "created_at") val createdAt: Instant,
-    @Column(name = "validity_time") val validityTime: Int? = null,
-    @Column(name = "is_archived", nullable = false) val isArchived: Boolean,
-    @Column(name = "is_deleted", nullable = false) val isDeleted: Boolean,
-    @Column(name = "open_by") val openBy: String? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "control_plan_theme_id", nullable = true)
+    val controlPlanTheme: ControlPlanThemeModel? = null,
+
+    @OneToMany(
+        fetch = FetchType.EAGER,
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
+        mappedBy = "reporting",
+    )
+    val controlPlanSubThemes: MutableList<ReportingsControlPlanSubThemeModel>? = ArrayList(),
+
+    @Column(name = "action_taken")
+    val actionTaken: String? = null,
+
+    @Column(name = "is_control_required")
+    val isControlRequired: Boolean? = null,
+
+    @Column(name = "has_no_unit_available")
+    val hasNoUnitAvailable: Boolean? = null,
+
+    @Column(name = "created_at")
+    val createdAt: Instant,
+
+    @Column(name = "validity_time")
+    val validityTime: Int? = null,
+
+    @Column(name = "is_archived", nullable = false)
+    val isArchived: Boolean,
+
+    @Column(name = "is_deleted", nullable = false)
+    val isDeleted: Boolean,
+
+    @Column(name = "open_by")
+    val openBy: String? = null,
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "mission_id", nullable = true)
     @JsonBackReference
     val mission: MissionModel? = null,
-    @Column(name = "attached_to_mission_at_utc") val attachedToMissionAtUtc: Instant? = null,
+
+    @Column(name = "attached_to_mission_at_utc")
+    val attachedToMissionAtUtc: Instant? = null,
+
     @Column(name = "detached_from_mission_at_utc")
     val detachedFromMissionAtUtc: Instant? = null,
+
     @JdbcType(UUIDJdbcType::class)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
@@ -131,8 +175,8 @@ data class ReportingModel(
             seaFront = seaFront,
             description = description,
             reportType = reportType,
-            theme = theme,
-            subThemes = subThemes,
+            themeId = controlPlanTheme?.id,
+            subThemeIds = controlPlanSubThemes?.map { it.id.subthemeId },
             actionTaken = actionTaken,
             isControlRequired = isControlRequired,
             hasNoUnitAvailable = hasNoUnitAvailable,
@@ -187,35 +231,34 @@ data class ReportingModel(
             controlUnitReference: ControlUnitModel?,
             missionReference: MissionModel?,
             envActionReference: EnvActionModel?,
-        ) =
-            ReportingModel(
-                id = reporting.id,
-                reportingId = reporting.reportingId,
-                sourceType = reporting.sourceType,
-                semaphore = semaphoreReference,
-                controlUnit = controlUnitReference,
-                sourceName = reporting.sourceName,
-                targetType = reporting.targetType,
-                vehicleType = reporting.vehicleType,
-                targetDetails = reporting.targetDetails,
-                geom = reporting.geom,
-                seaFront = reporting.seaFront,
-                description = reporting.description,
-                reportType = reporting.reportType,
-                theme = reporting.theme,
-                subThemes = reporting.subThemes,
-                actionTaken = reporting.actionTaken,
-                isControlRequired = reporting.isControlRequired,
-                hasNoUnitAvailable = reporting.hasNoUnitAvailable,
-                createdAt = reporting.createdAt.toInstant(),
-                validityTime = reporting.validityTime,
-                isArchived = reporting.isArchived,
-                isDeleted = reporting.isDeleted,
-                openBy = reporting.openBy,
-                mission = missionReference,
-                attachedToMissionAtUtc = reporting.attachedToMissionAtUtc?.toInstant(),
-                detachedFromMissionAtUtc = reporting.detachedFromMissionAtUtc?.toInstant(),
-                attachedEnvAction = envActionReference,
-            )
+            controlPlanThemeReference: ControlPlanThemeModel?,
+        ) = ReportingModel(
+            id = reporting.id,
+            reportingId = reporting.reportingId,
+            sourceType = reporting.sourceType,
+            semaphore = semaphoreReference,
+            controlUnit = controlUnitReference,
+            sourceName = reporting.sourceName,
+            targetType = reporting.targetType,
+            vehicleType = reporting.vehicleType,
+            targetDetails = reporting.targetDetails,
+            geom = reporting.geom,
+            seaFront = reporting.seaFront,
+            description = reporting.description,
+            reportType = reporting.reportType,
+            controlPlanTheme = controlPlanThemeReference,
+            actionTaken = reporting.actionTaken,
+            isControlRequired = reporting.isControlRequired,
+            hasNoUnitAvailable = reporting.hasNoUnitAvailable,
+            createdAt = reporting.createdAt.toInstant(),
+            validityTime = reporting.validityTime,
+            isArchived = reporting.isArchived,
+            isDeleted = reporting.isDeleted,
+            openBy = reporting.openBy,
+            mission = missionReference,
+            attachedToMissionAtUtc = reporting.attachedToMissionAtUtc?.toInstant(),
+            detachedFromMissionAtUtc = reporting.detachedFromMissionAtUtc?.toInstant(),
+            attachedEnvAction = envActionReference,
+        )
     }
 }

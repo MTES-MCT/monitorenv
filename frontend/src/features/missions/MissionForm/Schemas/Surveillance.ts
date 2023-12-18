@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import * as Yup from 'yup'
 
-import { ThemeSchema } from './Theme'
+import { ControlPlansSchema } from './ControlPlans'
 import { ActionTypeEnum, type EnvActionSurveillance } from '../../../../domain/entities/missions'
 import { REACT_APP_CYPRESS_TEST } from '../../../../env'
 
@@ -94,6 +94,7 @@ export const getClosedEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<Env
           }
         }),
       actionType: Yup.mixed().oneOf([ActionTypeEnum.SURVEILLANCE]),
+      controlPlans: Yup.array().of(ControlPlansSchema).ensure().required(),
       geom: Yup.object().when('coverMissionZone', {
         is: true,
         otherwise: () =>
@@ -103,8 +104,6 @@ export const getClosedEnvActionSurveillanceSchema = (ctx: any): Yup.SchemaOf<Env
 
         then: () => Yup.object().nullable()
       }),
-
-      id: Yup.string().required(),
-      themes: Yup.array().of(ThemeSchema).ensure().required()
+      id: Yup.string().required()
     })
     .required()

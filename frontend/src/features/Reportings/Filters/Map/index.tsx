@@ -6,6 +6,7 @@ import { ReportingSourceLabels } from '../../../../domain/entities/reporting'
 import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../../domain/shared_slices/ReportingsFilters'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
 import { OptionValue, StyledSelect, StyledStatusFilter } from '../style'
 
 export function MapReportingsFiltersWithRef(
@@ -31,15 +32,9 @@ export function MapReportingsFiltersWithRef(
     themeFilter,
     typeFilter
   } = useAppSelector(state => state.reportingFilters)
-
-  const {
-    dateRangeOptions,
-    sourceTypeOptions,
-    statusOptions,
-    subThemesListAsOptions,
-    themesListAsOptions,
-    typeOptions
-  } = optionsList
+  const { subThemes, themes } = useGetControlPlans()
+  const { dateRangeOptions, sourceTypeOptions, statusOptions, subThemesOptions, themesOptions, typeOptions } =
+    optionsList
 
   const onDeleteTag = (valueToDelete: string | any, filterKey: ReportingsFiltersEnum, reportingFilter) => {
     const updatedFilter = reportingFilter.filter(unit => unit !== valueToDelete)
@@ -143,7 +138,7 @@ export function MapReportingsFiltersWithRef(
           label="Thématiques"
           name="themes"
           onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.THEME_FILTER)}
-          options={themesListAsOptions}
+          options={themesOptions}
           placeholder="Thématiques"
           renderValue={() => themeFilter && <OptionValue>{`Thème (${themeFilter.length})`}</OptionValue>}
           searchable
@@ -152,14 +147,14 @@ export function MapReportingsFiltersWithRef(
 
         {themeFilter && themeFilter.length > 0 && (
           <StyledTagsContainer>
-            {themeFilter.map(theme => (
+            {themeFilter.map(themeId => (
               <SingleTag
-                key={theme}
+                key={themeId}
                 accent={Accent.SECONDARY}
-                onDelete={() => onDeleteTag(theme, ReportingsFiltersEnum.THEME_FILTER, themeFilter)}
-                title={String(theme)}
+                onDelete={() => onDeleteTag(themeId, ReportingsFiltersEnum.THEME_FILTER, themeFilter)}
+                title={themes[themeId]?.theme}
               >
-                {String(theme)}
+                {String(themes[themeId]?.theme)}
               </SingleTag>
             ))}
           </StyledTagsContainer>
@@ -170,7 +165,7 @@ export function MapReportingsFiltersWithRef(
           label="Sous-thématiques"
           name="subThemes"
           onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SUB_THEMES_FILTER)}
-          options={subThemesListAsOptions}
+          options={subThemesOptions}
           placeholder="Sous-thématiques"
           renderValue={() => subThemesFilter && <OptionValue>{`Sous-thème (${subThemesFilter.length})`}</OptionValue>}
           searchable
@@ -179,14 +174,14 @@ export function MapReportingsFiltersWithRef(
 
         {subThemesFilter && subThemesFilter.length > 0 && (
           <StyledTagsContainer>
-            {subThemesFilter.map(subTheme => (
+            {subThemesFilter.map(subThemeId => (
               <SingleTag
-                key={subTheme}
+                key={subThemeId}
                 accent={Accent.SECONDARY}
-                onDelete={() => onDeleteTag(subTheme, ReportingsFiltersEnum.SUB_THEMES_FILTER, subThemesFilter)}
-                title={String(subTheme)}
+                onDelete={() => onDeleteTag(subThemeId, ReportingsFiltersEnum.SUB_THEMES_FILTER, subThemesFilter)}
+                title={subThemes[subThemeId]?.subTheme}
               >
-                {String(subTheme)}
+                {String(subThemes[subThemeId]?.subTheme)}
               </SingleTag>
             ))}
           </StyledTagsContainer>

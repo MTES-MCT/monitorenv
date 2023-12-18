@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import { useMemo } from 'react'
 
 import {
@@ -7,23 +6,32 @@ import {
   type EnvActionControl,
   type EnvActionSurveillance
 } from '../../../domain/entities/missions'
+import { useGetControlPlans } from '../../../hooks/useGetControlPlans'
 
-const getAllThemesAndSubThemesAsString = (envactions: EnvAction[]) => {
-  const uniqueThemesAndSubthemes = envactions
+import type { ControlPlansSubThemeCollection, ControlPlansThemeCollection } from '../../../domain/entities/controlPlan'
+
+const getAllThemesAndSubThemesAsString = (
+  envActions: EnvAction[],
+  subThemes: ControlPlansSubThemeCollection,
+  themes: ControlPlansThemeCollection
+) => {
+  const uniqueThemesAndSubthemes = envActions
     .filter(
       (a): a is EnvActionControl | EnvActionSurveillance =>
         a.actionType === ActionTypeEnum.CONTROL || a.actionType === ActionTypeEnum.SURVEILLANCE
     )
-    .reduce((acc, { themes }) => {
-      if (themes) {
-        themes.forEach(t => {
-          if (!!t.theme && !acc[t.theme]) {
-            acc[t.theme] = []
+    .reduce((acc, { controlPlans }) => {
+      if (controlPlans) {
+        controlPlans.forEach(controlPlan => {
+          const controlPlanTheme = controlPlan.themeId ? themes[controlPlan.themeId]?.theme : undefined
+          if (controlPlanTheme && !acc[controlPlanTheme]) {
+            acc[controlPlanTheme] = []
           }
-          if (t.subThemes) {
-            t.subThemes.forEach(st => {
-              if (!!st && !acc[t.theme].includes(st)) {
-                acc[t.theme].push(st)
+          if (controlPlan.subThemeIds) {
+            controlPlan.subThemeIds.forEach(subThemeId => {
+              const controlPlanSubTheme = subThemes[subThemeId]?.subTheme
+              if (controlPlanTheme && controlPlanSubTheme && !acc[controlPlanTheme].includes(controlPlanSubTheme)) {
+                acc[controlPlanTheme].push(controlPlanSubTheme)
               }
             })
           }
@@ -33,16 +41,20 @@ const getAllThemesAndSubThemesAsString = (envactions: EnvAction[]) => {
       return acc
     }, {})
 
-  const getThemeAndSubThemesString = ([theme, subThemes]) => `${theme} : ${subThemes.join(' / ')}`
+  const getThemeAndSubThemesString = ([theme, subThemesAsString]) => `${theme} : ${subThemesAsString?.join(' / ')}`
 
   return Object.entries(uniqueThemesAndSubthemes).map(getThemeAndSubThemesString).join(' ; ')
 }
 
 export function CellActionThemes({ envActions }: { envActions: EnvAction[] }) {
-  const cellContent = useMemo(() => getAllThemesAndSubThemesAsString(envActions), [envActions])
+  const { subThemes, themes } = useGetControlPlans()
+  const cellContent = useMemo(
+    () => getAllThemesAndSubThemesAsString(envActions, subThemes, themes),
+    [envActions, subThemes, themes]
+  )
 
   return cellContent !== '' ? (
-    <span data-cy="cell-envactions-themes" title={cellContent}>
+    <span data-cy="cell-envActions-themes" title={cellContent}>
       {cellContent}
     </span>
   ) : null

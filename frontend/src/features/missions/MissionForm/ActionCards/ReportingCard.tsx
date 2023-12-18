@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { Accented, ReportingDate, SummaryContent } from './style'
 import { ActionTypeEnum, type Mission, type NewMission } from '../../../../domain/entities/missions'
 import { ControlStatusEnum, type ReportingForTimeline } from '../../../../domain/entities/reporting'
+import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
 import { getDateAsLocalizedStringCompact } from '../../../../utils/getDateAsLocalizedString'
 import { StatusActionTag } from '../../../Reportings/components/StatusActionTag'
 import { getFormattedReportingId } from '../../../Reportings/utils'
@@ -17,6 +18,7 @@ export function ReportingCard({
   action: ReportingForTimeline
   setCurrentActionIndex: (string) => void
 }) {
+  const { themes } = useGetControlPlans()
   const { setFieldValue, values } = useFormikContext<Partial<Mission | NewMission>>()
 
   const addAttachedControl = e => {
@@ -26,11 +28,12 @@ export function ReportingCard({
       actionType: ActionTypeEnum.CONTROL,
       reportingIds: [Number(action.id)],
       vehicleType: action.vehicleType,
-      ...(action.theme && {
-        themes: [
+      ...(action.themeId && {
+        controlPlans: [
           {
-            subThemes: action.subThemes || [],
-            theme: action.theme
+            subThemeIds: action.subThemeIds || [],
+            tagIds: [],
+            themeId: action.themeId
           }
         ]
       })
@@ -56,7 +59,13 @@ export function ReportingCard({
       <SummaryContent>
         <Accented>{`Signalement ${getFormattedReportingId(action.reportingId)} ${action.displayedSource}`}</Accented>
         <ReportingDate>{getDateAsLocalizedStringCompact(action.createdAt)}</ReportingDate>
-        <Accented>{action.theme}</Accented> {action.theme && '-'} {action.description || 'Aucune description'}
+        {action.themeId && (
+          <>
+            <Accented>{themes[action.themeId]?.theme}</Accented>
+            {action.themeId && ' -'}{' '}
+          </>
+        )}
+        {action.description || 'Aucune description'}
         <ControlContainer $isEndAlign={!action.attachedEnvActionId}>
           {action.attachedEnvActionId && (
             <StatusActionTag backgroundColor={THEME.color.white} controlStatus={getControlStatus()} />

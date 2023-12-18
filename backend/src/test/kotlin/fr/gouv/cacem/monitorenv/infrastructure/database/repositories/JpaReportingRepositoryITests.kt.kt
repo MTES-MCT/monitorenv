@@ -261,8 +261,8 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 seaFront = "NAMO",
                 description = "Test reporting",
                 reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                theme = "Police des mouillages",
-                subThemes = listOf("ZMEL"),
+                themeId = 12,
+                subThemeIds = listOf(82),
                 actionTaken = "Aucune",
                 isControlRequired = false,
                 hasNoUnitAvailable = false,
@@ -289,8 +289,8 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         assertThat(reportingDTO.reporting.description).isEqualTo("Test reporting")
         assertThat(reportingDTO.reporting.reportType)
             .isEqualTo(ReportingTypeEnum.INFRACTION_SUSPICION)
-        assertThat(reportingDTO.reporting.theme).isEqualTo("Police des mouillages")
-        assertThat(reportingDTO.reporting.subThemes).isEqualTo(listOf("ZMEL"))
+        assertThat(reportingDTO.reporting.themeId).isEqualTo(12)
+        assertThat(reportingDTO.reporting.subThemeIds).isEqualTo(listOf(82))
         assertThat(reportingDTO.reporting.actionTaken).isEqualTo("Aucune")
         assertThat(reportingDTO.reporting.isControlRequired).isEqualTo(false)
         assertThat(reportingDTO.reporting.hasNoUnitAvailable).isEqualTo(false)

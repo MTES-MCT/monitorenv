@@ -3,7 +3,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.mission
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
@@ -20,7 +19,7 @@ data class MissionsDataOutput(
     val geom: MultiPolygon? = null,
     val startDateTimeUtc: ZonedDateTime,
     val endDateTimeUtc: ZonedDateTime? = null,
-    val envActions: List<EnvActionEntity>? = null,
+    val envActions: List<MissionEnvActionDataOutput>? = null,
     val missionSource: MissionSourceEnum,
     val isClosed: Boolean,
     val hasMissionOrder: Boolean,
@@ -43,7 +42,12 @@ data class MissionsDataOutput(
                 geom = dto.mission.geom,
                 startDateTimeUtc = dto.mission.startDateTimeUtc,
                 endDateTimeUtc = dto.mission.endDateTimeUtc,
-                envActions = dto.mission.envActions,
+                envActions = dto.mission.envActions?.map {
+                    MissionEnvActionDataOutput.fromEnvActionEntity(
+                        envActionEntity = it,
+                        envActionsAttachedToReportingIds = dto.envActionsAttachedToReportingIds,
+                    )
+                },
                 missionSource = dto.mission.missionSource,
                 isClosed = dto.mission.isClosed,
                 hasMissionOrder = dto.mission.hasMissionOrder,

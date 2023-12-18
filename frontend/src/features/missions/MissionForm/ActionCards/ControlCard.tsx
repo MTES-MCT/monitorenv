@@ -1,19 +1,29 @@
-import { Icon, THEME } from '@mtes-mct/monitor-ui'
+import { Icon, THEME, customDayjs } from '@mtes-mct/monitor-ui'
+import { useFormikContext } from 'formik'
 
 import { Accented, ControlSummary, SummaryContent, Title } from './style'
 import { TargetTypeLabels } from '../../../../domain/entities/targetType'
+import { useGetControlPlansByYear } from '../../../../hooks/useGetControlPlansByYear'
 import { ControlInfractionsTags } from '../../../../ui/ControlInfractionsTags'
 import { extractThemesAsText } from '../../../../utils/extractThemesAsText'
 
+import type { Mission } from '../../../../domain/entities/missions'
+
 export function ControlCard({ action }) {
+  const { values } = useFormikContext<Mission>()
+  const year = customDayjs(action.actionStartDateTimeUtc || values.startDateTimeUtc || new Date().toISOString()).year()
+  const { themesByYear } = useGetControlPlansByYear({
+    year
+  })
+
   return (
     <>
       <Icon.ControlUnit color={THEME.color.charcoal} size={20} />
       <SummaryContent>
         <Title>
           Contrôle{!!action.actionNumberOfControls && action.actionNumberOfControls > 1 ? 's ' : ' '}
-          {action.themes?.length > 0 && action.themes[0]?.theme ? (
-            <Accented>{extractThemesAsText(action.themes)}</Accented>
+          {action.controlPlans?.length > 0 && action.controlPlans[0]?.themeId ? (
+            <Accented>{extractThemesAsText(action.controlPlans, themesByYear)}</Accented>
           ) : (
             'à renseigner'
           )}

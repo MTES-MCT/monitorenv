@@ -8,6 +8,9 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingsControlPlanSubThemeModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanSubThemeRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanThemeRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBEnvActionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
@@ -27,6 +30,8 @@ class JpaReportingRepository(
     private val dbReportingRepository: IDBReportingRepository,
     private val dbMissionRepository: IDBMissionRepository,
     private val dbSemaphoreRepository: IDBSemaphoreRepository,
+    private val dbControlPlanThemeRepository: IDBControlPlanThemeRepository,
+    private val dbControlPlanSubThemeRepository: IDBControlPlanSubThemeRepository,
     private val dbControlUnitRepository: IDBControlUnitRepository,
     private val dbEnvActionRepository: IDBEnvActionRepository,
     private val mapper: ObjectMapper,
@@ -118,15 +123,56 @@ class JpaReportingRepository(
                 } else {
                     null
                 }
-            val reportingModel =
-                ReportingModel.fromReportingEntity(
-                    reporting = reporting,
-                    semaphoreReference = semaphoreReference,
-                    controlUnitReference = controlUnitReference,
-                    missionReference = missionReference,
-                    envActionReference = envActionReference,
-                )
+            val controlPlanThemeReference =
+                if (reporting.themeId != null) {
+                    dbControlPlanThemeRepository.getReferenceById(
+                        reporting.themeId,
+                    )
+                } else {
+                    null
+                }
+            val controlPlanSubThemesReferenceList =
+                reporting.subThemeIds?.map {
+                    dbControlPlanSubThemeRepository.getReferenceById(it)
+                }
 
+            // To save controlPlanSubThemes we must ensure that reportingId is set
+            // to simplify the understandability of the code, we do the same steps for creation and
+            // update
+            // even if it is not necessary for update
+            // first save (ensure id is set)
+            val reportingModel: ReportingModel
+
+            if (reporting.id == null) {
+                reportingModel =
+                    dbReportingRepository.save(
+                        ReportingModel.fromReportingEntity(
+                            reporting = reporting,
+                            semaphoreReference = semaphoreReference,
+                            controlUnitReference = controlUnitReference,
+                            missionReference = missionReference,
+                            envActionReference = envActionReference,
+                            controlPlanThemeReference = controlPlanThemeReference,
+                        ),
+                    )
+            } else {
+                reportingModel =
+                    ReportingModel.fromReportingEntity(
+                        reporting = reporting,
+                        semaphoreReference = semaphoreReference,
+                        controlUnitReference = controlUnitReference,
+                        missionReference = missionReference,
+                        envActionReference = envActionReference,
+                        controlPlanThemeReference = controlPlanThemeReference,
+                    )
+            }
+
+            // set controlPlanSubThemes and save again (and flush)
+            controlPlanSubThemesReferenceList?.forEach { it ->
+                reportingModel.controlPlanSubThemes?.add(
+                    ReportingsControlPlanSubThemeModel.fromModels(reportingModel, it),
+                )
+            }
             dbReportingRepository.saveAndFlush(reportingModel).toReportingDTO(mapper)
         } catch (e: JpaObjectRetrievalFailureException) {
             throw NotFoundException(

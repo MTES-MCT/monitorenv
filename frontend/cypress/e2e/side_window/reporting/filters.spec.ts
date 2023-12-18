@@ -40,8 +40,9 @@ context('Reportings', () => {
   })
 
   it('Should filter reportings by source', () => {
+    cy.wait(1000)
     cy.fill('Source', ['Sémaphore de Fécamp'])
-
+    cy.wait(500)
     cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Source Sémaphore de Fécamp')
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
@@ -59,6 +60,7 @@ context('Reportings', () => {
 
   it('Should filter reportings by type', () => {
     cy.fill('Type de signalement', 'Observation')
+    cy.wait(500)
     cy.wait('@getReportings')
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
