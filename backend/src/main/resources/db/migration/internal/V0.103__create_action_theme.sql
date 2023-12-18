@@ -87,7 +87,7 @@ WITH themes AS (
         jsonb_array_elements(value->'themes')->>'theme' as theme
 FROM env_actions
     )
-SELECT themes.env_action_id,  th.id
+SELECT DISTINCT themes.env_action_id,  th.id
 FROM themes,
      control_plan_themes th
 WHERE  th.theme = themes.theme
@@ -101,7 +101,7 @@ INSERT INTO env_actions_control_plan_sub_themes (env_action_id, subtheme_id)
             jsonb_array_elements_text(jsonb_array_elements(value->'themes')->'subThemes') as subtheme
         FROM env_actions
     )
-    SELECT themes.env_action_id,  sbt.id
+    SELECT DISTINCT themes.env_action_id,  sbt.id
     FROM themes,
          control_plan_sub_themes sbt,
          control_plan_themes th
