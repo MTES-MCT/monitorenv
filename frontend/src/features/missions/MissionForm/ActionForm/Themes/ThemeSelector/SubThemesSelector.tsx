@@ -41,7 +41,7 @@ export function SubThemesSelector({
       {!isError && !isLoading && (
         <MultiSelect
           // force update when name or theme changes
-          key={`${themeId}-${subThemes.length}`}
+          key={`${actionIndex}-${themeId}-${subThemes.length}`}
           baseContainer={newWindowContainerRef.current}
           data-cy="envaction-subtheme-selector"
           disabled={!themeId}

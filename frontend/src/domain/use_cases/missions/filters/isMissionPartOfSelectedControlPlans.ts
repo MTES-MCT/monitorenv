@@ -11,7 +11,6 @@ export function isMissionPartOfSelectedControlPlans(mission: Mission, selectedTh
   const missionControlPlans = mission.envActions.flatMap((action: any) =>
     action.controlPlans?.flatMap(controlPlan => controlPlan.themeId)
   )
-  const controlPlansFiltered = missionControlPlans.filter(controlPlan => selectedThemes.includes(controlPlan))
 
-  return controlPlansFiltered.length > 0
+  return missionControlPlans.some(controlPlan => selectedThemes.includes(controlPlan))
 }

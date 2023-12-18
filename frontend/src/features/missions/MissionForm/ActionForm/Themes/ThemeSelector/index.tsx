@@ -31,7 +31,7 @@ export function ThemeSelector({ actionIndex, isError, isLoading, label, themeInd
       {isLoading && <Msg>Chargement</Msg>}
       {!isError && !isLoading && (
         <Select
-          key={themes.length}
+          key={`${actionIndex}-${themes.length}`}
           baseContainer={newWindowContainerRef.current}
           data-cy="envaction-theme-selector"
           error={currentThemeProps.error}
