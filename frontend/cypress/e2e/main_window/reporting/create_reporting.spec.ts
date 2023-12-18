@@ -14,6 +14,7 @@ context('Reporting', () => {
     cy.clickButton('Chercher des signalements')
     cy.clickButton('Ajouter un signalement')
     cy.intercept('PUT', '/bff/v1/reportings', FAKE_API_PUT_RESPONSE).as('createReporting')
+    cy.wait(1000)
 
     // When
     cy.getDataCy('add-semaphore-source').click({ force: true })
@@ -29,7 +30,7 @@ context('Reporting', () => {
     cy.get('.rs-radio').find('label').contains('Observation').click()
 
     cy.fill('Saisi par', 'XYZ')
-    cy.fill('Date du signalement', [2024, 5, 26, 23, 35])
+    cy.fill('Date et heure (UTC)', [2024, 5, 26, 23, 35])
 
     cy.clickButton('Valider le signalement')
 
@@ -58,7 +59,7 @@ context('Reporting', () => {
     cy.clickButton('Ajouter un signalement')
 
     // When
-    cy.fill('Date du signalement', undefined)
+    cy.fill('Date et heure (UTC)', undefined)
     cy.clickButton('Valider le signalement')
 
     // Then

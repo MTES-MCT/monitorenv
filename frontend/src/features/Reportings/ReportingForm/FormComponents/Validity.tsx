@@ -42,7 +42,7 @@ export function Validity({
           baseContainer={reportingContext === ReportingContext.MAP ? ref.current : newWindowContainerRef.current}
           isCompact
           isStringDate
-          label="Date et heure du signalement (UTC)"
+          label="Date et heure (UTC)"
           name="createdAt"
           withTime
         />
