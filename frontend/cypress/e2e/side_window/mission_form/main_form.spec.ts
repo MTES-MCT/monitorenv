@@ -286,7 +286,7 @@ context('Side Window > Mission Form > Main Form', () => {
     })
   })
 
-  it('Should keep the exisisting archived resources when appending new resources', () => {
+  it('Should keep the existing archived resources when appending new resources', () => {
     // -------------------------------------------------------------------------
     // Open
 

@@ -68,7 +68,7 @@ class MissionModel(
     @Column(name = "closed_by")
     val closedBy: String? = null,
 
-    @Column(name = "created_at_utc", nullable = false, updatable = false)
+    @Column(name = "created_at_utc", updatable = false)
     @CreationTimestamp
     val createdAtUtc: Instant? = null,
 
@@ -132,7 +132,7 @@ class MissionModel(
     @Column(name = "start_datetime_utc")
     val startDateTimeUtc: Instant,
 
-    @Column(name = "updated_at_utc", nullable = false)
+    @Column(name = "updated_at_utc")
     @UpdateTimestamp
     val updatedAtUtc: Instant? = null,
 
