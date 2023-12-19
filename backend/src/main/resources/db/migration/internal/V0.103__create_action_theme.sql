@@ -81,16 +81,16 @@ INSERT INTO control_plan_tags (theme_id, tag)
 
 -- EnvActions: Insertion des données depuis les env actions dans la table env_actions_control_plan_themes
 INSERT INTO env_actions_control_plan_themes (env_action_id, theme_id)
-WITH themes AS (
-    SELECT
-        id as env_action_id,
-        jsonb_array_elements(value->'themes')->>'theme' as theme
-FROM env_actions
-    )
-SELECT DISTINCT themes.env_action_id,  th.id
-FROM themes,
-     control_plan_themes th
-WHERE  th.theme = themes.theme
+    WITH themes AS (
+        SELECT
+            id as env_action_id,
+            jsonb_array_elements(value->'themes')->>'theme' as theme
+        FROM env_actions
+        )
+        SELECT DISTINCT themes.env_action_id,  th.id
+            FROM themes,
+                control_plan_themes th
+            WHERE  th.theme = themes.theme
 ;
 -- EnvActions: Insertion des données depuis les env actions dans la table env_actions_control_plan_sub_themes
 INSERT INTO env_actions_control_plan_sub_themes (env_action_id, subtheme_id)
@@ -113,14 +113,14 @@ INSERT INTO env_actions_control_plan_sub_themes (env_action_id, subtheme_id)
 -- EnvActions: Insertion des données depuis les env actions dans la table env_actions_control_plan_tags
 INSERT INTO env_actions_control_plan_tags (env_action_id, tag_id)
 WITH themes AS (
-    SELECT
+     SELECT
         id as env_action_id,
         jsonb_array_elements(value->'themes')->>'theme' as theme,
+        jsonb_array_elements(value->'themes')->>'protectedSpecies' as protectedspeciestext,
         jsonb_array_elements(value->'themes')->'protectedSpecies' as protectedspecies
     FROM env_actions
-    WHERE  jsonb_typeof(value->'themes') = 'array' 
 )
-    SELECT themes.env_action_id,  control_plan_tags.id
+    SELECT DISTINCT themes.env_action_id,  control_plan_tags.id
         FROM themes,
             LATERAL (
                 SELECT
@@ -136,7 +136,9 @@ WITH themes AS (
                 FROM (SELECT jsonb_array_elements_text(protectedspecies) species) t
                     ) d(tags),
              control_plan_tags
-        WHERE control_plan_tags.tag = d.tags;
+        WHERE control_plan_tags.tag = d.tags 
+            AND  protectedspeciestext IS NOT NULL 
+            AND  protectedspeciestext !='[]';
 
 
 --- Signalements
