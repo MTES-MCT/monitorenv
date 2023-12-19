@@ -86,6 +86,7 @@ INSERT INTO env_actions_control_plan_themes (env_action_id, theme_id)
             id as env_action_id,
             jsonb_array_elements(value->'themes')->>'theme' as theme
         FROM env_actions
+        WHERE value->>'themes' is not null
         )
         SELECT DISTINCT themes.env_action_id,  th.id
             FROM themes,
@@ -100,6 +101,7 @@ INSERT INTO env_actions_control_plan_sub_themes (env_action_id, subtheme_id)
             jsonb_array_elements(value->'themes')->>'theme' as theme,
             jsonb_array_elements_text(jsonb_array_elements(value->'themes')->'subThemes') as subtheme
         FROM env_actions
+        WHERE value->>'themes' is not null
     )
     SELECT DISTINCT themes.env_action_id,  sbt.id
     FROM themes,
@@ -119,6 +121,7 @@ WITH themes AS (
         jsonb_array_elements(value->'themes')->>'protectedSpecies' as protectedspeciestext,
         jsonb_array_elements(value->'themes')->'protectedSpecies' as protectedspecies
     FROM env_actions
+    WHERE value->>'themes' is not null
 )
     SELECT DISTINCT themes.env_action_id,  control_plan_tags.id
         FROM themes,
