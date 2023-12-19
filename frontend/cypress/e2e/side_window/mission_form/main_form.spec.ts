@@ -296,7 +296,7 @@ context('Side Window > Mission Form > Main Form', () => {
     const month = new Date().getMonth()
     cy.fill('Période spécifique', [
       [2023, month - 4, 1],
-      [2023, month - 4, 31]
+      [2023, month - 3, 31]
     ])
 
     cy.wait('@getMissions')
