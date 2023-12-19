@@ -76,6 +76,8 @@ class ApiMissionsControllerITests {
                 observationsCnsp = null,
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                createdAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                updatedAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                 isClosed = false,
                 isDeleted = false,
                 missionSource = MissionSourceEnum.MONITORFISH,
@@ -113,6 +115,8 @@ class ApiMissionsControllerITests {
             // Then
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
+            .andExpect(jsonPath("$.createdAtUtc", equalTo("2022-01-23T20:29:03Z")))
+            .andExpect(jsonPath("$.updatedAtUtc", equalTo("2022-01-23T20:29:03Z")))
     }
 
     @Test
