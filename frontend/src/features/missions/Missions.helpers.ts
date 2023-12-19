@@ -131,12 +131,7 @@ export const missionFactory = (
             action.actionStartDateTimeUtc === mission?.startDateTimeUtc
         )
       : -1
-  if (
-    surveillanceWithSamePeriodIndex &&
-    surveillanceWithSamePeriodIndex !== -1 &&
-    envActions &&
-    envActions?.length > 0
-  ) {
+  if (surveillanceWithSamePeriodIndex !== -1 && envActions?.length > 0) {
     const envActionsUpdated: EnvAction[] = [...envActions]
     const surveillance: EnvActionSurveillance = {
       ...(envActionsUpdated[surveillanceWithSamePeriodIndex] as EnvActionSurveillance),
