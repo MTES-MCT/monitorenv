@@ -23,6 +23,8 @@ data class MissionDataOutput(
     val geom: MultiPolygon? = null,
     val startDateTimeUtc: ZonedDateTime,
     val endDateTimeUtc: ZonedDateTime? = null,
+    val createdAtUtc: ZonedDateTime? = null,
+    val updatedAtUtc: ZonedDateTime? = null,
     val envActions: List<MissionEnvActionDataOutput>? = null,
     val missionSource: MissionSourceEnum,
     val isClosed: Boolean,
@@ -50,6 +52,8 @@ data class MissionDataOutput(
                 geom = dto.mission.geom,
                 startDateTimeUtc = dto.mission.startDateTimeUtc,
                 endDateTimeUtc = dto.mission.endDateTimeUtc,
+                createdAtUtc = dto.mission.createdAtUtc,
+                updatedAtUtc = dto.mission.updatedAtUtc,
                 envActions =
                 (
                     dto.mission.envActions?.map {

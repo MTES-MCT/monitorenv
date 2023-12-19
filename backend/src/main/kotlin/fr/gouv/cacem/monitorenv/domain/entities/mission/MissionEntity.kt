@@ -17,6 +17,8 @@ data class MissionEntity(
     val geom: MultiPolygon? = null,
     val startDateTimeUtc: ZonedDateTime,
     val endDateTimeUtc: ZonedDateTime? = null,
+    val createdAtUtc: ZonedDateTime? = null,
+    val updatedAtUtc: ZonedDateTime? = null,
     val envActions: List<EnvActionEntity>? = listOf(),
     val isClosed: Boolean,
     val isDeleted: Boolean,

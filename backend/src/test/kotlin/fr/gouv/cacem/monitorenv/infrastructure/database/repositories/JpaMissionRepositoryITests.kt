@@ -482,6 +482,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val newMissionCreated = jpaMissionRepository.save(newMission)
 
         // Then
+        assertThat(newMissionCreated.mission.createdAtUtc).isAfter(ZonedDateTime.now().minusMinutes(1))
+        assertThat(newMissionCreated.mission.updatedAtUtc).isAfter(ZonedDateTime.now().minusMinutes(1))
         assertThat(newMissionCreated.mission.controlUnits).hasSize(1)
         assertThat(newMissionCreated.mission.controlUnits.first().id).isEqualTo(10121)
         assertThat(newMissionCreated.mission.controlUnits.first().name)
@@ -639,6 +641,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
         val updatedMission = jpaMissionRepository.save(nextMission)
 
+        assertThat(updatedMission.mission.createdAtUtc).isNull()
+        assertThat(updatedMission.mission.updatedAtUtc).isAfter(ZonedDateTime.now().minusMinutes(1))
         assertThat(updatedMission.mission.controlUnits).hasSize(2)
         assertThat(updatedMission.mission.controlUnits.first().id).isEqualTo(10002)
         assertThat(updatedMission.mission.controlUnits.first().resources).hasSize(1)
@@ -816,7 +820,15 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             )
         // When
         jpaMissionRepository.save(missionToUpdate)
-        assertThat(jpaMissionRepository.findFullMissionById(10)).isEqualTo(expectedUpdatedMission)
+        val updatedMission = jpaMissionRepository.findFullMissionById(10)
+        assertThat(
+            updatedMission.copy(
+                mission = updatedMission.mission.copy(
+                    createdAtUtc = null,
+                    updatedAtUtc = null,
+                ),
+            ),
+        ).isEqualTo(expectedUpdatedMission)
     }
 
     @Test
@@ -863,6 +875,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                     endDateTimeUtc =
                     ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                    createdAtUtc = null,
+                    updatedAtUtc = null,
                     isClosed = false,
                     isDeleted = false,
                     envActions = listOf(envAction),
@@ -875,7 +889,14 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         // When
         jpaMissionRepository.save(missionToUpdate)
         val updatedMission = jpaMissionRepository.findFullMissionById(10)
-        assertThat(updatedMission).isEqualTo(expectedUpdatedMission)
+        assertThat(
+            updatedMission.copy(
+                mission = updatedMission.mission.copy(
+                    createdAtUtc = null,
+                    updatedAtUtc = null,
+                ),
+            ),
+        ).isEqualTo(expectedUpdatedMission)
     }
 
     @Test
