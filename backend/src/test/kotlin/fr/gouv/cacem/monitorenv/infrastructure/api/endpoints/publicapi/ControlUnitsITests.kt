@@ -9,7 +9,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v2.ApiControlUnitsController
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v2.ControlUnits
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito
@@ -26,8 +26,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
-@WebMvcTest(value = [(ApiControlUnitsController::class)])
-class ApiControlUnitsControllerITests {
+@WebMvcTest(value = [(ControlUnits::class)])
+class ControlUnitsITests {
     @Autowired
     private lateinit var mockMvc: MockMvc
 

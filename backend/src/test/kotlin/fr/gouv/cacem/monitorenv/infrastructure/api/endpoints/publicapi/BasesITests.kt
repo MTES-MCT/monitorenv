@@ -25,7 +25,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
 @WebMvcTest(value = [(ApiStationsController::class)])
-class ApiStationsControllerITests {
+class BasesITests {
     @Autowired
     private lateinit var mockMvc: MockMvc
 

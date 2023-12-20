@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/bff/v1/healthcheck")
 @Tag(description = "API for Healthcheck", name = "BFF.Healthcheck")
-class HealthcheckController(
+class Healthcheck(
     private val getHealthcheck: GetHealthcheck,
 ) {
 

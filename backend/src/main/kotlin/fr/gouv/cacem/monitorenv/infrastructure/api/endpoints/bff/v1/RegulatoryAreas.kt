@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/bff/v1/regulatory")
 @Tag(name = "BFF.Regulatory", description = "API regulatory layers")
-class RegulatoryAreasController(
+class RegulatoryAreas(
     private val getAllRegulatoryAreas: GetAllRegulatoryAreas,
     private val getRegulatoryAreaById: GetRegulatoryAreaById,
 ) {

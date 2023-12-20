@@ -3,7 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.natinf.NatinfEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.natinfs.GetAllNatinfs
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.NatinfsController
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.Natinfs
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
@@ -17,8 +17,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @Import(WebSecurityConfig::class)
-@WebMvcTest(value = [(NatinfsController::class)])
-class NatinfsControllerITests {
+@WebMvcTest(value = [(Natinfs::class)])
+class NatinfsITests {
 
     @Autowired
     private lateinit var mockMvc: MockMvc

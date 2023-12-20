@@ -17,7 +17,7 @@ import java.time.ZonedDateTime
 @RestController
 @RequestMapping("/bff/v1/missions")
 @Tag(description = "API Missions", name = "BFF.Missions")
-class MissionsController(
+class Missions(
     private val createOrUpdateMissionWithAttachedReporting:
         CreateOrUpdateMissionWithAttachedReporting,
     private val getFullMissions: GetFullMissions,
@@ -100,7 +100,7 @@ class MissionsController(
 
     @PutMapping(value = ["/{missionId}"], consumes = ["application/json"])
     @Operation(summary = "Update a mission")
-    fun edit(
+    fun update(
         @PathParam("Mission Id")
         @PathVariable(name = "missionId")
         missionId: Int,

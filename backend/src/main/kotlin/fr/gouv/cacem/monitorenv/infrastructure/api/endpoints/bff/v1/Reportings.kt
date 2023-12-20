@@ -32,7 +32,7 @@ import java.time.ZonedDateTime
 @RestController
 @RequestMapping("/bff/v1/reportings")
 @Tag(description = "API des Signalements", name = "BFF.Reportings")
-class ReportingsController(
+class Reportings(
     private val createOrUpdateReporting: CreateOrUpdateReporting,
     private val getReportingById: GetReportingById,
     private val getReportings: GetReportings,
@@ -99,7 +99,7 @@ class ReportingsController(
     @GetMapping("/{id}")
     @Operation(summary = "Get reporting by id")
     fun get(
-        @PathParam("reporting id") 
+        @PathParam("reporting id")
         @PathVariable(name = "id") id: Int,
     ): ReportingDataOutput {
         return getReportingById.execute(id).let { ReportingDataOutput.fromReportingDTO(it) }

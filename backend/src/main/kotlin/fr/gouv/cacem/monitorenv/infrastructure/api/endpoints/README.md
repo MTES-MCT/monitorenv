@@ -2,8 +2,10 @@
 
 Convention de nommage des routes pour une API RESTful
 
-- nom du chemin en minuscule
+- nom du chemin (request path) en snake_case
 - nom du chemin au pluriel si possible, correspondant au nom de l'entité principale métier
+- nom du chemin au singulier si la ressource est unique (`/preview`, `/search`, `/missions/:id/archive`)
+- pas d'écriture en base à partir des requêtes GET (archiver se fait sur une requête PUT)
 
 ## Définition des ressources
 
@@ -12,9 +14,9 @@ Donc 5 définitions de méthode par fichier de ressource au maximum
 
 Verbe HTTP| Request Path       | Controller Name   | Usage
 
+GET       | /missions/:id      | get               | display a specific mission
 GET       | /missions          | getAll            | list all missions
 POST      | /missions          | create            | create a new mission
-GET       | /missions/:id      | get               | display a specific mission
 PATCH/PUT | /missions/:id      | update            | update a specific mission
 DELETE    | /missions/:id      | delete            | delete a specific mission
 
@@ -24,8 +26,10 @@ Possibilité de définir un scope pour les ressources
 
 ## Autres propositions
 
+L'arborescence reprend le chemin des urls
+
 Arborescence:
-  
+
 ```
 - endpoints
   - bff

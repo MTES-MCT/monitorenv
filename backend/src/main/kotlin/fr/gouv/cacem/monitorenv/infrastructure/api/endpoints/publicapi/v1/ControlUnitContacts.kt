@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/v1/control_unit_contacts")
 @Tag(name = "Public.Control Unit Contacts")
-class ApiControlUnitContactsController(
+class ControlUnitContacts(
     private val createOrUpdateControlUnitContact: CreateOrUpdateControlUnitContact,
     private val deleteControlUnitContact: DeleteControlUnitContact,
     private val getControlUnitContacts: GetControlUnitContacts,

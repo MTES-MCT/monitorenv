@@ -11,7 +11,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.station.StationEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitResourceDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.ApiControlUnitResourcesController
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.ControlUnitResources
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito
@@ -28,8 +28,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
-@WebMvcTest(value = [(ApiControlUnitResourcesController::class)])
-class ApiControlUnitResourcesControllerITests {
+@WebMvcTest(value = [(ControlUnitResources::class)])
+class ControlUnitResourcesITests {
     @Autowired
     private lateinit var mockMvc: MockMvc
 

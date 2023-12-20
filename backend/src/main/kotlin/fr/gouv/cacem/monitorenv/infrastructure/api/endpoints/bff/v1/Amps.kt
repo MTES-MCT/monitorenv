@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/bff/v1/amps")
 @Tag(name = "BFF.AMP", description = "API des Aires Marines Protégées (AMP)")
-class AMPsController(
+class Amps(
     private val getAllAMPs: GetAllAMPs,
     private val objectMapper: ObjectMapper,
 ) {

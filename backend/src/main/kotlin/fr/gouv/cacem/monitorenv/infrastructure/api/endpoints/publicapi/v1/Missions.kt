@@ -20,7 +20,7 @@ import java.time.ZonedDateTime
 @RestController
 @RequestMapping("/api/v1/missions")
 @Tag(description = "API Missions", name = "Public.Missions")
-class ApiMissionsController(
+class Missions(
     private val createOrUpdateMission: CreateOrUpdateMission,
     private val getMissions: GetMissions,
     private val getMissionById: GetMissionById,
@@ -115,7 +115,7 @@ class ApiMissionsController(
 
     @PostMapping(value = ["/{missionId}"], consumes = ["application/json"])
     @Operation(summary = "Update a mission")
-    fun edit(
+    fun update(
         @PathParam("Mission Id")
         @PathVariable(name = "missionId")
         missionId: Int,

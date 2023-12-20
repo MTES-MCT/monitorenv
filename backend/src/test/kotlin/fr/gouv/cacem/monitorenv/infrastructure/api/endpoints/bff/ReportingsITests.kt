@@ -19,7 +19,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingById
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateReportingDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.ReportingsController
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.Reportings
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.Point
 import org.locationtech.jts.io.WKTReader
@@ -39,8 +39,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.ZonedDateTime
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
-@WebMvcTest(value = [(ReportingsController::class)])
-class ReportingsControllerITests {
+@WebMvcTest(value = [(Reportings::class)])
+class ReportingsITests {
     @Autowired
     private lateinit var mockedApi: MockMvc
 

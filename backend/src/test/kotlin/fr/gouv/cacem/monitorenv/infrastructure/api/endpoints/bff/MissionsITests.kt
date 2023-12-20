@@ -26,7 +26,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.MissionEnvActionDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.MissionsController
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.Missions
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
@@ -49,8 +49,8 @@ import java.time.ZonedDateTime
 import java.util.*
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
-@WebMvcTest(value = [(MissionsController::class)])
-class MissionsControllerITests {
+@WebMvcTest(value = [(Missions::class)])
+class MissionsITests {
 
     @Autowired private lateinit var mockMvc: MockMvc
 

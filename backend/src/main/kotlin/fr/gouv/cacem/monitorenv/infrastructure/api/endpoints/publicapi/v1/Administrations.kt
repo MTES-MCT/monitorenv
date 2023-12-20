@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/v1/administrations")
 @Tag(name = "Public.Administrations")
-class ApiAdministrationsController(
+class Administrations(
     private val archiveAdministration: ArchiveAdministration,
     private val canArchiveAdministration: CanArchiveAdministration,
     private val canDeleteAdministration: CanDeleteAdministration,

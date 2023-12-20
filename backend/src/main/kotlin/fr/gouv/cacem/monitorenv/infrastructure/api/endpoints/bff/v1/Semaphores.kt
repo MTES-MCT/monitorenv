@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/bff/v1/semaphores")
 @Tag(description = "API Semaphores", name = "BFF.Semaphores")
-class SemaphoresController(
+class Semaphores(
     private val getAllSemaphores: GetAllSemaphores,
     private val getSemaphoreById: GetSemaphoreById,
 ) {

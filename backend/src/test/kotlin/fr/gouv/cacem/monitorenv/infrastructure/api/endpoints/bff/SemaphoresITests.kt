@@ -5,7 +5,7 @@ import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.semaphores.GetAllSemaphores
 import fr.gouv.cacem.monitorenv.domain.use_cases.semaphores.GetSemaphoreById
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.SemaphoresController
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.Semaphores
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.Point
@@ -21,8 +21,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
-@WebMvcTest(value = [(SemaphoresController::class)])
-class SemaphoresControllerITests {
+@WebMvcTest(value = [(Semaphores::class)])
+class SemaphoresITests {
     @Autowired
     private lateinit var mockMvc: MockMvc
 

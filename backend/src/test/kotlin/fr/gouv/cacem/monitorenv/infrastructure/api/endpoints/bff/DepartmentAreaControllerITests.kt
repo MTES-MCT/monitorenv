@@ -5,7 +5,7 @@ import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.departmentArea.DepartmentAreaEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.departmentArea.GetDepartmentAreaByInseeCode
 import fr.gouv.cacem.monitorenv.domain.use_cases.departmentArea.GetDepartmentAreas
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.DepartmentAreasController
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.DepartmentAreas
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito
@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
-@WebMvcTest(value = [(DepartmentAreasController::class)])
+@WebMvcTest(value = [(DepartmentAreas::class)])
 class DepartmentAreaControllerITests {
     @Autowired
     private lateinit var mockMvc: MockMvc

@@ -12,7 +12,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitConta
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitContacts
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitContactDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitContactDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.ApiControlUnitContactsController
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.ControlUnitContacts
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito
@@ -29,8 +29,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
-@WebMvcTest(value = [(ApiControlUnitContactsController::class)])
-class ApiControlUnitContactsControllerITests {
+@WebMvcTest(value = [(ControlUnitContacts::class)])
+class ControlUnitContactsITests {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
