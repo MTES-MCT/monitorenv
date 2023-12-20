@@ -3,25 +3,27 @@ import styled from 'styled-components'
 
 import { TargetTypeLabels } from '../../../../domain/entities/targetType'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
 import { ControlInfractionsTags } from '../../../../ui/ControlInfractionsTags'
 import { extractThemesAsText } from '../../../../utils/extractThemesAsText'
 
 export function ControlCard({ feature }: { feature: any }) {
   const listener = useAppSelector(state => state.draw.listener)
-  const { actionNumberOfControls, actionStartDateTimeUtc, actionTargetType, infractions, themes } =
+  const { actionNumberOfControls, actionStartDateTimeUtc, actionTargetType, controlPlans, infractions } =
     feature.getProperties()
   const parsedActionStartDateTimeUtc = new Date(actionStartDateTimeUtc)
   const actionDate = getLocalizedDayjs(parsedActionStartDateTimeUtc).format('DD MMM à HH:mm')
 
-  if (listener) {
+  const { isLoading, themes } = useGetControlPlans()
+  if (listener || isLoading) {
     return null
   }
 
   return (
     <StyledControlCardHeader>
       <StyledControlThemes>
-        {themes?.length > 0 && themes[0]?.theme ? (
-          <StyledThemes>{extractThemesAsText(themes)}</StyledThemes>
+        {controlPlans?.length > 0 ? (
+          <StyledThemes>{extractThemesAsText(controlPlans, themes)}</StyledThemes>
         ) : (
           <StyledGrayText>Thématique à renseigner</StyledGrayText>
         )}{' '}

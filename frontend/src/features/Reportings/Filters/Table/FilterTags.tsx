@@ -5,8 +5,10 @@ import { ReportingSourceLabels } from '../../../../domain/entities/reporting'
 import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../../domain/shared_slices/ReportingsFilters'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
 
 export function FilterTags() {
+  const { subThemes, themes } = useGetControlPlans()
   const dispatch = useAppDispatch()
   const { hasFilters, seaFrontFilter, sourceFilter, sourceTypeFilter, subThemesFilter, themeFilter } = useAppSelector(
     state => state.reportingFilters
@@ -52,24 +54,24 @@ export function FilterTags() {
         ))}
       {themeFilter &&
         themeFilter.length > 0 &&
-        themeFilter.map(theme => (
+        themeFilter.map(themeId => (
           <SingleTag
-            key={theme}
+            key={themeId}
             accent={Accent.SECONDARY}
-            onDelete={() => onDeleteTag(theme, ReportingsFiltersEnum.THEME_FILTER, themeFilter)}
+            onDelete={() => onDeleteTag(themeId, ReportingsFiltersEnum.THEME_FILTER, themeFilter)}
           >
-            {String(`Thème ${theme}`)}
+            {String(`Thème ${themes[themeId]?.theme}`)}
           </SingleTag>
         ))}
       {subThemesFilter &&
         subThemesFilter?.length > 0 &&
-        subThemesFilter.map(subTheme => (
+        subThemesFilter.map(subThemeId => (
           <SingleTag
-            key={subTheme}
+            key={subThemeId}
             accent={Accent.SECONDARY}
-            onDelete={() => onDeleteTag(subTheme, ReportingsFiltersEnum.SUB_THEMES_FILTER, subThemesFilter)}
+            onDelete={() => onDeleteTag(subThemeId, ReportingsFiltersEnum.SUB_THEMES_FILTER, subThemesFilter)}
           >
-            {String(`Sous-thème ${subTheme}`)}
+            {String(`Sous-thème ${subThemes[subThemeId]?.subTheme}`)}
           </SingleTag>
         ))}
       {seaFrontFilter &&
@@ -92,4 +94,5 @@ const StyledContainer = styled.div`
   flex-direction: row;
   gap: 16px;
   margin-bottom: 2px;
+  flex-wrap: wrap;
 `

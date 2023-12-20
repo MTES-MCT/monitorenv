@@ -8,9 +8,11 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.mappers.EnvActionMapper
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -38,7 +40,7 @@ import java.util.UUID
 )
 @Entity
 @Table(name = "env_actions")
-data class EnvActionModel(
+class EnvActionModel(
     @Id
     @JdbcType(UUIDJdbcType::class)
     @Column(name = "id", nullable = false, updatable = false, columnDefinition = "uuid")
@@ -57,7 +59,7 @@ data class EnvActionModel(
     val value: String,
     @Column(name = "facade") val facade: String? = null,
     @Column(name = "department") val department: String? = null,
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "mission_id")
     @JsonBackReference
     val mission: MissionModel,
@@ -68,54 +70,134 @@ data class EnvActionModel(
     val isSafetyEquipmentAndStandardsComplianceControl: Boolean? = null,
     @Column(name = "is_seafarers_control") val isSeafarersControl: Boolean? = null,
     @OneToMany(
-        fetch = FetchType.EAGER,
+        fetch = FetchType.LAZY,
         mappedBy = "attachedEnvAction",
     )
     @JsonManagedReference
     val attachedReporting: List<ReportingModel>? = listOf(),
+    @OneToMany(
+        fetch = FetchType.EAGER,
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
+        mappedBy = "envAction",
+    )
+    val controlPlanThemes: MutableList<EnvActionsControlPlanThemeModel>? = ArrayList(),
+    @OneToMany(
+        fetch = FetchType.EAGER,
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
+        mappedBy = "envAction",
+    )
+    val controlPlanSubThemes: MutableList<EnvActionsControlPlanSubThemeModel>? = ArrayList(),
+    @OneToMany(
+        fetch = FetchType.EAGER,
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
+        mappedBy = "envAction",
+    )
+    val controlPlanTags: MutableList<EnvActionsControlPlanTagModel>? = ArrayList(),
 ) {
 
     fun toActionEntity(mapper: ObjectMapper): EnvActionEntity {
+        val controlPlans =
+            controlPlanThemes?.map { it ->
+                EnvActionControlPlanEntity(
+                    themeId = it.id.themeId,
+                    subThemeIds =
+                    controlPlanSubThemes
+                        ?.filter { subTheme ->
+                            it.id.themeId ==
+                                subTheme.controlPlanSubTheme
+                                    ?.controlPlanTheme
+                                    ?.id
+                        }
+                        ?.map { it.id.subthemeId },
+                    tagIds =
+                    controlPlanTags
+                        ?.filter { tag ->
+                            it.id.themeId ==
+                                tag.controlPlanTag?.controlPlanTheme?.id
+                        }
+                        ?.map { it.id.tagId },
+                )
+            }
+
         return EnvActionMapper.getEnvActionEntityFromJSON(
             mapper = mapper,
             id = id,
-            actionStartDateTimeUtc = actionStartDateTime?.atZone(UTC),
             actionEndDateTimeUtc = actionEndDateTime?.atZone(UTC),
-            geom = geom,
             actionType = actionType,
-            facade = facade,
+            actionStartDateTimeUtc = actionStartDateTime?.atZone(UTC),
+            controlPlans = controlPlans,
             department = department,
-            value = value,
+            facade = facade,
+            geom = geom,
             isAdministrativeControl = isAdministrativeControl,
             isComplianceWithWaterRegulationsControl = isComplianceWithWaterRegulationsControl,
             isSafetyEquipmentAndStandardsComplianceControl =
             isSafetyEquipmentAndStandardsComplianceControl,
             isSeafarersControl = isSeafarersControl,
+            value = value,
         )
     }
     companion object {
         fun fromEnvActionEntity(
             action: EnvActionEntity,
             mission: MissionModel,
+            controlPlanThemesReferenceModelMap: Map<Int, ControlPlanThemeModel>,
+            controlPlanSubThemesReferenceModelMap: Map<Int, ControlPlanSubThemeModel>,
+            controlPlanTagsReferenceModelMap: Map<Int, ControlPlanTagModel>,
             mapper: ObjectMapper,
-        ) =
-            EnvActionModel(
-                id = action.id,
-                actionType = action.actionType,
-                actionStartDateTime = action.actionStartDateTimeUtc?.toInstant(),
-                actionEndDateTime = action.actionEndDateTimeUtc?.toInstant(),
-                facade = action.facade,
-                department = action.department,
-                value = EnvActionMapper.envActionEntityToJSON(mapper, action),
-                mission = mission,
-                geom = action.geom,
-                isAdministrativeControl = action.isAdministrativeControl,
-                isComplianceWithWaterRegulationsControl =
-                action.isComplianceWithWaterRegulationsControl,
-                isSafetyEquipmentAndStandardsComplianceControl =
-                action.isSafetyEquipmentAndStandardsComplianceControl,
-                isSeafarersControl = action.isSeafarersControl,
-            )
+        ): EnvActionModel {
+            val envActionModel =
+                EnvActionModel(
+                    id = action.id,
+                    actionEndDateTime = action.actionEndDateTimeUtc?.toInstant(),
+                    actionType = action.actionType,
+                    actionStartDateTime = action.actionStartDateTimeUtc?.toInstant(),
+                    department = action.department,
+                    facade = action.facade,
+                    isAdministrativeControl = action.isAdministrativeControl,
+                    isComplianceWithWaterRegulationsControl =
+                    action.isComplianceWithWaterRegulationsControl,
+                    isSafetyEquipmentAndStandardsComplianceControl =
+                    action.isSafetyEquipmentAndStandardsComplianceControl,
+                    isSeafarersControl = action.isSeafarersControl,
+                    mission = mission,
+                    geom = action.geom,
+                    value = EnvActionMapper.envActionEntityToJSON(mapper, action),
+                )
+            action.controlPlans?.forEach {
+                if (it.themeId == null) return@forEach
+                envActionModel.controlPlanThemes?.add(
+                    EnvActionsControlPlanThemeModel.fromEnvActionControlPlanThemeEntity(
+                        envAction = envActionModel,
+                        controlPlanTheme = controlPlanThemesReferenceModelMap[it.themeId]!!,
+                    ),
+                )
+                it.subThemeIds?.forEach { subThemeId ->
+                    envActionModel.controlPlanSubThemes?.add(
+                        EnvActionsControlPlanSubThemeModel
+                            .fromEnvActionControlPlanSubThemeEntity(
+                                envAction = envActionModel,
+                                controlPlanSubTheme =
+                                controlPlanSubThemesReferenceModelMap[
+                                    subThemeId,
+                                ]!!,
+                            ),
+                    )
+                }
+                it.tagIds?.forEach { tagId ->
+                    envActionModel.controlPlanTags?.add(
+                        EnvActionsControlPlanTagModel.fromEnvActionControlPlanTagEntity(
+                            envAction = envActionModel,
+                            controlPlanTag = controlPlanTagsReferenceModelMap[tagId]!!,
+                        ),
+                    )
+                }
+            }
+            return envActionModel
+        }
     }
 
     override fun equals(other: Any?): Boolean {
@@ -127,10 +209,4 @@ data class EnvActionModel(
     }
 
     override fun hashCode(): Int = javaClass.hashCode()
-
-    @Override
-    override fun toString(): String {
-        return this::class.simpleName +
-            "(id = $id , geom = $geom , actionStartDateTime = $actionStartDateTime, actionEndDateTime = $actionEndDateTime, actionType = $actionType , value = $value, facade = $facade, department = $department, isAdministrativeControl = $isAdministrativeControl, isComplianceWithWaterRegulationsControl = $isComplianceWithWaterRegulationsControl, isSeafarersControl = $isSeafarersControl, isSafetyEquipmentAndStandardsComplianceControl = $isSafetyEquipmentAndStandardsComplianceControl )"
-    }
 }

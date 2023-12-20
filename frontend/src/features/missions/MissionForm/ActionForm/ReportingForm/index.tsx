@@ -16,6 +16,7 @@ import { ReportingTargetTypeLabels } from '../../../../../domain/entities/target
 import { vehicleTypeLabels } from '../../../../../domain/entities/vehicleType'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
+import { useGetControlPlans } from '../../../../../hooks/useGetControlPlans'
 import { getFormattedReportingId } from '../../../../Reportings/utils'
 import { attachReportingToMissionSliceActions } from '../../../slice'
 
@@ -29,6 +30,7 @@ export function ReportingForm({
   setCurrentActionIndex: (string) => void
 }) {
   const dispatch = useAppDispatch()
+  const { subThemes, themes } = useGetControlPlans()
 
   const { setFieldValue, values } = useFormikContext<Partial<Mission | NewMission>>()
 
@@ -43,8 +45,8 @@ export function ReportingForm({
     return null
   }
 
-  const subThemes =
-    reporting.subThemes && reporting.subThemes?.length > 0 ? reporting.subThemes.join(', ') : EMPTY_VALUE
+  const subThemesAsString =
+    reporting.subThemeIds?.map(subThemeId => subThemes[subThemeId]?.subTheme).join(', ') || EMPTY_VALUE
 
   const sourceTypeText = (() => {
     if (reporting.sourceType === ReportingSourceEnum.SEMAPHORE) {
@@ -142,8 +144,13 @@ export function ReportingForm({
             options={reportTypeOptions}
             value={reporting.reportType}
           />
-          <TextInput label="Thématique du signalement" name="theme" plaintext value={reporting.theme || EMPTY_VALUE} />
-          <TextInput label="Sous-thématique du signalement" name="subThemes" plaintext value={subThemes} />
+          <TextInput
+            label="Thématique du signalement"
+            name="themeId"
+            plaintext
+            value={reporting.themeId ? String(themes[reporting.themeId]?.theme) : EMPTY_VALUE}
+          />
+          <TextInput label="Sous-thématique du signalement" name="subThemeIds" plaintext value={subThemesAsString} />
           <Validity reporting={reporting} />
           <TextInput
             label="Actions effectuées"

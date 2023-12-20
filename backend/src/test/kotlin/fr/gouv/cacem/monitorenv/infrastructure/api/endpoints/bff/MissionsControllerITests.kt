@@ -10,6 +10,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
@@ -20,10 +21,10 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.MissionEnvActionDataInput
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
@@ -66,12 +67,16 @@ class MissionsControllerITests {
 
     @Autowired private lateinit var objectMapper: ObjectMapper
 
+    private val polygon =
+        WKTReader()
+            .read(
+                "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))",
+            ) as
+            MultiPolygon
+    private val point = WKTReader().read("POINT (-4.54877816747593 48.305559876971)") as Point
+
     @Test
     fun `Should create a new mission`() {
-        val wktReader = WKTReader()
-        val multipolygonString =
-            "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))"
-        val polygon = wktReader.read(multipolygonString) as MultiPolygon
         // Given
         val expectedNewMission =
             MissionDTO(
@@ -129,18 +134,20 @@ class MissionsControllerITests {
     @Test
     fun `Should get all missions`() {
         // Given
-        val wktReader = WKTReader()
-        val multipolygonString =
-            "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))"
-        val polygon = wktReader.read(multipolygonString) as MultiPolygon
-
-        val point = wktReader.read("POINT (-4.54877816747593 48.305559876971)") as Point
 
         val controlEnvAction =
             EnvActionControlEntity(
                 id = UUID.fromString("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b"),
                 actionStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 actionEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                controlPlans =
+                listOf(
+                    EnvActionControlPlanEntity(
+                        subThemeIds = listOf(1),
+                        tagIds = listOf(1, 2),
+                        themeId = 1,
+                    ),
+                ),
                 geom = point,
                 facade = "Outre-Mer",
                 department = "29",
@@ -194,7 +201,8 @@ class MissionsControllerITests {
                             listOf(
                                 LegacyControlUnitResourceEntity(
                                     id = 2,
-                                    controlUnitId = 1,
+                                    controlUnitId =
+                                    1,
                                     name =
                                     "Ressource 2",
                                 ),
@@ -241,8 +249,8 @@ class MissionsControllerITests {
                             reportType =
                             ReportingTypeEnum
                                 .INFRACTION_SUSPICION,
-                            theme = "Theme",
-                            subThemes = listOf("SubTheme"),
+                            themeId = 12,
+                            subThemeIds = listOf(82),
                             actionTaken = "ActionTaken",
                             isControlRequired = true,
                             hasNoUnitAvailable = true,
@@ -289,6 +297,7 @@ class MissionsControllerITests {
         mockMvc.perform(get("/bff/v1/missions"))
             // Then
             .andExpect(status().isOk)
+            .andDo(MockMvcResultHandlers.print())
             .andExpect(jsonPath("$.length()", equalTo(1)))
             .andExpect(jsonPath("$[0].id", equalTo(10)))
             .andExpect(
@@ -334,6 +343,12 @@ class MissionsControllerITests {
                     equalTo("2022-01-23T20:29:03Z"),
                 ),
             )
+            .andExpect(jsonPath("$[0].envActions[0].controlPlans[0].themeId", equalTo(1)))
+            .andExpect(
+                jsonPath("$[0].envActions[0].controlPlans[0].subThemeIds[0]", equalTo(1)),
+            )
+            .andExpect(jsonPath("$[0].envActions[0].controlPlans[0].tagIds[0]", equalTo(1)))
+            .andExpect(jsonPath("$[0].envActions[0].controlPlans[0].tagIds[1]", equalTo(2)))
             .andExpect(jsonPath("$[0].envActions[0].geom.type", equalTo("Point")))
             .andExpect(jsonPath("$[0].envActions[0].facade", equalTo("Outre-Mer")))
             .andExpect(jsonPath("$[0].envActions[0].department", equalTo("29")))
@@ -454,17 +469,19 @@ class MissionsControllerITests {
         // Given
         val requestedId = 0
 
-        val wktReader = WKTReader()
-        val multipolygonString =
-            "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))"
-        val polygon = wktReader.read(multipolygonString) as MultiPolygon
-        val point = wktReader.read("POINT (-4.54877816747593 48.305559876971)") as Point
-
         val controlEnvAction =
             EnvActionControlEntity(
                 id = UUID.fromString("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b"),
                 actionStartDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 actionEndDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                controlPlans =
+                listOf(
+                    EnvActionControlPlanEntity(
+                        subThemeIds = listOf(1),
+                        tagIds = listOf(1, 2),
+                        themeId = 1,
+                    ),
+                ),
                 geom = point,
                 facade = "Outre-Mer",
                 department = "29",
@@ -518,8 +535,10 @@ class MissionsControllerITests {
                             listOf(
                                 LegacyControlUnitResourceEntity(
                                     id = 2,
-                                    controlUnitId = 1,
-                                    name = "Ressource 2",
+                                    controlUnitId =
+                                    1,
+                                    name =
+                                    "Ressource 2",
                                 ),
                             ),
                             isArchived = false,
@@ -564,8 +583,8 @@ class MissionsControllerITests {
                             reportType =
                             ReportingTypeEnum
                                 .INFRACTION_SUSPICION,
-                            theme = "Theme",
-                            subThemes = listOf("SubTheme"),
+                            themeId = 12,
+                            subThemeIds = listOf(82),
                             actionTaken = "ActionTaken",
                             isControlRequired = true,
                             hasNoUnitAvailable = true,
@@ -601,6 +620,7 @@ class MissionsControllerITests {
         // When
         mockMvc.perform(get("/bff/v1/missions/$requestedId"))
             // Then
+            .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.missionTypes[0]", equalTo(MissionTypeEnum.SEA.toString())))
             .andExpect(jsonPath("$.id", equalTo(10)))
@@ -644,6 +664,10 @@ class MissionsControllerITests {
                     equalTo("2022-01-23T20:29:03Z"),
                 ),
             )
+            .andExpect(jsonPath("$.envActions[0].controlPlans[0].themeId", equalTo(1)))
+            .andExpect(jsonPath("$.envActions[0].controlPlans[0].subThemeIds[0]", equalTo(1)))
+            .andExpect(jsonPath("$.envActions[0].controlPlans[0].tagIds[0]", equalTo(1)))
+            .andExpect(jsonPath("$.envActions[0].controlPlans[0].tagIds[1]", equalTo(2)))
             .andExpect(jsonPath("$.envActions[0].geom.type", equalTo("Point")))
             .andExpect(jsonPath("$.envActions[0].facade", equalTo("Outre-Mer")))
             .andExpect(jsonPath("$.envActions[0].department", equalTo("29")))
@@ -838,20 +862,21 @@ class MissionsControllerITests {
     @Test
     fun `Should get all engaged control units`() {
         // Given
-        given(getEngagedControlUnits.execute()).willReturn(
-            listOf(
-                Pair(
-                    LegacyControlUnitEntity(
-                        id = 123,
-                        administration = "Admin",
-                        resources = listOf(),
-                        isArchived = false,
-                        name = "Control Unit Name",
+        given(getEngagedControlUnits.execute())
+            .willReturn(
+                listOf(
+                    Pair(
+                        LegacyControlUnitEntity(
+                            id = 123,
+                            administration = "Admin",
+                            resources = listOf(),
+                            isArchived = false,
+                            name = "Control Unit Name",
+                        ),
+                        listOf(MissionSourceEnum.MONITORFISH),
                     ),
-                    listOf(MissionSourceEnum.MONITORFISH),
                 ),
-            ),
-        )
+            )
 
         // When
         mockMvc.perform(get("/bff/v1/missions/engaged_control_units"))

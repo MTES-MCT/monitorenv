@@ -9,11 +9,13 @@ export function MultipleThemeElement({ envActionIndex, form, push, remove }) {
     remove(index)
   }
   const handleAddTheme = () => {
-    push({ subThemes: [], theme: '' })
+    push({ subThemeIds: [], themeId: undefined })
   }
 
   const currentThemes =
-    (form?.values?.envActions && form.values.envActions.length > 0 && form.values.envActions[envActionIndex]?.themes) ||
+    (form?.values?.envActions &&
+      form.values.envActions.length > 0 &&
+      form.values.envActions[envActionIndex]?.controlPlans) ||
     []
 
   return (

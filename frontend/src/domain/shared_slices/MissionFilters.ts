@@ -30,7 +30,7 @@ type MissionFilterValues = {
   selectedPeriod: string
   selectedSeaFronts: string[] | undefined
   selectedStatuses: string[] | undefined
-  selectedThemes: string[] | undefined
+  selectedThemes: number[] | undefined
   startedAfter?: string
   startedBefore?: string
 }

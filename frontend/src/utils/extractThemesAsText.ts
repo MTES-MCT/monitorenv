@@ -1,17 +1,19 @@
-import type { EnvActionTheme } from '../domain/entities/missions'
+import type { ControlPlansData, ControlPlansThemeCollection } from '../domain/entities/controlPlan'
 
-export function extractThemesAsText(themes: EnvActionTheme[]) {
-  if (!(themes?.length > 0)) {
+export function extractThemesAsText(controlPlans: ControlPlansData[], themes: ControlPlansThemeCollection) {
+  if (controlPlans?.length === 0) {
     return ''
   }
 
-  return themes
-    .reduce((acc, t) => {
-      if (t?.theme) {
-        acc.push(t.theme)
+  return controlPlans
+    .reduce((controlPlansCollection, currentControlPlan) => {
+      if (currentControlPlan?.themeId) {
+        const themeLabel = currentControlPlan.themeId ? themes[currentControlPlan.themeId]?.theme : undefined
+
+        controlPlansCollection.push(themeLabel || '')
       }
 
-      return acc
+      return controlPlansCollection
     }, [] as string[])
     .join(' - ')
 }

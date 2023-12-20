@@ -5,28 +5,28 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
-import java.util.UUID
 
 data class CreateOrUpdateMissionDataInput(
     val id: Int? = null,
-    val missionTypes: List<MissionTypeEnum>,
+    val attachedReportingIds: List<Int>,
     val controlUnits: List<LegacyControlUnitEntity> = listOf(),
-    val openBy: String? = null,
     val closedBy: String? = null,
-    val observationsCacem: String? = null,
-    val observationsCnsp: String? = null,
+    val envActions: List<MissionEnvActionDataInput>? = null,
     val facade: String? = null,
     val geom: MultiPolygon? = null,
+    val hasMissionOrder: Boolean? = false,
+    val isClosed: Boolean,
+    val isUnderJdp: Boolean? = false,
+    val missionSource: MissionSourceEnum,
+    val missionTypes: List<MissionTypeEnum>,
+    val observationsCacem: String? = null,
+    val observationsCnsp: String? = null,
+    val openBy: String? = null,
     val startDateTimeUtc: ZonedDateTime,
     val endDateTimeUtc: ZonedDateTime? = null,
-    val missionSource: MissionSourceEnum,
-    val isClosed: Boolean,
-    val envActions: List<MissionEnvActionDataInput>? = null,
-    val hasMissionOrder: Boolean? = false,
-    val isUnderJdp: Boolean? = false,
-    val attachedReportingIds: List<Int>,
 ) {
     fun toMissionEntity(): MissionEntity {
         val hasMissionOrder = this.hasMissionOrder ?: false
@@ -34,23 +34,23 @@ data class CreateOrUpdateMissionDataInput(
 
         return MissionEntity(
             id = this.id,
-            missionTypes = this.missionTypes,
-            controlUnits = this.controlUnits,
-            openBy = this.openBy,
             closedBy = this.closedBy,
-            observationsCacem = this.observationsCacem,
-            observationsCnsp = this.observationsCnsp,
+            controlUnits = this.controlUnits,
+            endDateTimeUtc = this.endDateTimeUtc,
+            envActions = this.envActions?.map { it.toEnvActionEntity() },
             facade = this.facade,
             geom = this.geom,
-            startDateTimeUtc = this.startDateTimeUtc,
-            endDateTimeUtc = this.endDateTimeUtc,
+            hasMissionOrder = hasMissionOrder,
             isClosed = this.isClosed,
             isDeleted = false,
-            missionSource = this.missionSource,
-            envActions = this.envActions?.map { it.toEnvActionEntity() },
-            hasMissionOrder = hasMissionOrder,
-            isUnderJdp = isUnderJdp,
             isGeometryComputedFromControls = false,
+            isUnderJdp = isUnderJdp,
+            missionSource = this.missionSource,
+            missionTypes = this.missionTypes,
+            observationsCacem = this.observationsCacem,
+            observationsCnsp = this.observationsCnsp,
+            openBy = this.openBy,
+            startDateTimeUtc = this.startDateTimeUtc,
         )
     }
 
@@ -64,5 +64,3 @@ data class CreateOrUpdateMissionDataInput(
             ?: listOf()
     }
 }
-
-typealias EnvActionAttachedToReportingIds = Pair<UUID, List<Int>>

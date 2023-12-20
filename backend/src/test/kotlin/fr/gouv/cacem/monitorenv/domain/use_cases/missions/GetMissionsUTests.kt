@@ -1,18 +1,18 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.given
-import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
-import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
-import java.time.ZonedDateTime
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import com.nhaarman.mockitokotlin2.anyOrNull
+import java.time.ZonedDateTime
 
 @ExtendWith(SpringExtension::class)
 class GetMissionsUTests {
@@ -20,27 +20,27 @@ class GetMissionsUTests {
     private lateinit var missionRepository: IMissionRepository
 
     private val controlUnit1: LegacyControlUnitEntity = LegacyControlUnitEntity(
-        id =  1,
-        administration =  "whatever",
-        isArchived =  false,
-        name =  "whatever",
-        resources =  listOf(),
+        id = 1,
+        administration = "whatever",
+        isArchived = false,
+        name = "whatever",
+        resources = listOf(),
     )
 
     private val controlUnit2: LegacyControlUnitEntity = LegacyControlUnitEntity(
-        id =  2,
-        administration =  "whatever",
-        isArchived =  false,
-        name =  "whatever",
-        resources =  listOf(),
+        id = 2,
+        administration = "whatever",
+        isArchived = false,
+        name = "whatever",
+        resources = listOf(),
     )
 
     private val controlUnit3: LegacyControlUnitEntity = LegacyControlUnitEntity(
-        id =  3,
-        administration =  "whatever",
-        isArchived =  false,
-        name =  "whatever",
-        resources =  listOf(),
+        id = 3,
+        administration = "whatever",
+        isArchived = false,
+        name = "whatever",
+        resources = listOf(),
     )
 
     private val mission1 =
@@ -54,7 +54,7 @@ class GetMissionsUTests {
             hasMissionOrder = false,
             isUnderJdp = false,
             isGeometryComputedFromControls = false,
-            controlUnits = listOf(controlUnit1, controlUnit2)
+            controlUnits = listOf(controlUnit1, controlUnit2),
         )
 
     private val mission2 =
@@ -68,23 +68,25 @@ class GetMissionsUTests {
             hasMissionOrder = false,
             isUnderJdp = false,
             isGeometryComputedFromControls = false,
-            controlUnits = listOf(controlUnit1, controlUnit3)
+            controlUnits = listOf(controlUnit1, controlUnit3),
         )
 
     @Test
     fun `execute should return all missions when filter for controlUnits is null`() {
-        given(missionRepository.findAll(
-            startedAfter = anyOrNull(),
-            startedBefore = anyOrNull(),
-            missionSources = anyOrNull(),
-            missionTypes = anyOrNull(),
-            missionStatuses = anyOrNull(),
-            seaFronts = anyOrNull(),
-            pageable = anyOrNull(),
-        )).willReturn(listOf(mission1, mission2))
+        given(
+            missionRepository.findAll(
+                startedAfter = anyOrNull(),
+                startedBefore = anyOrNull(),
+                missionSources = anyOrNull(),
+                missionTypes = anyOrNull(),
+                missionStatuses = anyOrNull(),
+                seaFronts = anyOrNull(),
+                pageable = anyOrNull(),
+            ),
+        ).willReturn(listOf(mission1, mission2))
 
         val result = GetMissions(missionRepository).execute(
-            controlUnits = null
+            controlUnits = null,
         )
 
         assertThat(result.size).isEqualTo(2)
@@ -92,18 +94,20 @@ class GetMissionsUTests {
 
     @Test
     fun `execute should return all missions when filter for controlUnits is an empty list`() {
-        given(missionRepository.findAll(
-            startedAfter = anyOrNull(),
-            startedBefore = anyOrNull(),
-            missionSources = anyOrNull(),
-            missionTypes = anyOrNull(),
-            missionStatuses = anyOrNull(),
-            seaFronts = anyOrNull(),
-            pageable = anyOrNull(),
-        )).willReturn(listOf(mission1, mission2))
+        given(
+            missionRepository.findAll(
+                startedAfter = anyOrNull(),
+                startedBefore = anyOrNull(),
+                missionSources = anyOrNull(),
+                missionTypes = anyOrNull(),
+                missionStatuses = anyOrNull(),
+                seaFronts = anyOrNull(),
+                pageable = anyOrNull(),
+            ),
+        ).willReturn(listOf(mission1, mission2))
 
         val result = GetMissions(missionRepository).execute(
-            controlUnits = listOf()
+            controlUnits = listOf(),
         )
 
         assertThat(result.size).isEqualTo(2)
@@ -111,18 +115,20 @@ class GetMissionsUTests {
 
     @Test
     fun `execute should only one missions when the controlUnits input matches 1 mission`() {
-        given(missionRepository.findAll(
-            startedAfter = anyOrNull(),
-            startedBefore = anyOrNull(),
-            missionSources = anyOrNull(),
-            missionTypes = anyOrNull(),
-            missionStatuses = anyOrNull(),
-            seaFronts = anyOrNull(),
-            pageable = anyOrNull(),
-        )).willReturn(listOf(mission1, mission2))
+        given(
+            missionRepository.findAll(
+                startedAfter = anyOrNull(),
+                startedBefore = anyOrNull(),
+                missionSources = anyOrNull(),
+                missionTypes = anyOrNull(),
+                missionStatuses = anyOrNull(),
+                seaFronts = anyOrNull(),
+                pageable = anyOrNull(),
+            ),
+        ).willReturn(listOf(mission1, mission2))
 
         val result = GetMissions(missionRepository).execute(
-            controlUnits = listOf(controlUnit2.id)
+            controlUnits = listOf(controlUnit2.id),
         )
 
         assertThat(result.size).isEqualTo(1)
@@ -131,18 +137,20 @@ class GetMissionsUTests {
 
     @Test
     fun `execute should only two missions when the same controlUnits input matches 2 missions`() {
-        given(missionRepository.findAll(
-            startedAfter = anyOrNull(),
-            startedBefore = anyOrNull(),
-            missionSources = anyOrNull(),
-            missionTypes = anyOrNull(),
-            missionStatuses = anyOrNull(),
-            seaFronts = anyOrNull(),
-            pageable = anyOrNull(),
-        )).willReturn(listOf(mission1, mission2))
+        given(
+            missionRepository.findAll(
+                startedAfter = anyOrNull(),
+                startedBefore = anyOrNull(),
+                missionSources = anyOrNull(),
+                missionTypes = anyOrNull(),
+                missionStatuses = anyOrNull(),
+                seaFronts = anyOrNull(),
+                pageable = anyOrNull(),
+            ),
+        ).willReturn(listOf(mission1, mission2))
 
         val result = GetMissions(missionRepository).execute(
-            controlUnits = listOf(controlUnit1.id)
+            controlUnits = listOf(controlUnit1.id),
         )
 
         assertThat(result.size).isEqualTo(2)
@@ -150,21 +158,22 @@ class GetMissionsUTests {
 
     @Test
     fun `execute should return filtered missions matching multiple controlUnits input`() {
-        given(missionRepository.findAll(
-            startedAfter = anyOrNull(),
-            startedBefore = anyOrNull(),
-            missionSources = anyOrNull(),
-            missionTypes = anyOrNull(),
-            missionStatuses = anyOrNull(),
-            seaFronts = anyOrNull(),
-            pageable = anyOrNull(),
-        )).willReturn(listOf(mission1, mission2))
+        given(
+            missionRepository.findAll(
+                startedAfter = anyOrNull(),
+                startedBefore = anyOrNull(),
+                missionSources = anyOrNull(),
+                missionTypes = anyOrNull(),
+                missionStatuses = anyOrNull(),
+                seaFronts = anyOrNull(),
+                pageable = anyOrNull(),
+            ),
+        ).willReturn(listOf(mission1, mission2))
 
         val result = GetMissions(missionRepository).execute(
-            controlUnits = listOf(controlUnit2.id, controlUnit3.id)
+            controlUnits = listOf(controlUnit2.id, controlUnit3.id),
         )
 
         assertThat(result.size).isEqualTo(2)
     }
-
 }

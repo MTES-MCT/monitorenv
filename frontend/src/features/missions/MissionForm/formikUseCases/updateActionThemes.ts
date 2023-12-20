@@ -1,30 +1,30 @@
 import { get } from 'lodash'
 
-import type { EnvActionTheme, Mission } from '../../../../domain/entities/missions'
+import type { ControlPlansData } from '../../../../domain/entities/controlPlan'
+import type { Mission } from '../../../../domain/entities/missions'
 
 export const updateTheme =
   (setFieldValue: (field: string, value: any) => void, mission: Mission) =>
-  (value: string, actionIndex: number, themeIndex: number) => {
-    const themesPath = `envActions[${actionIndex}].themes`
-    const currentThemeValue = get(mission, themesPath) as EnvActionTheme[]
-
+  (value: number, actionIndex: number, themeIndex: number) => {
+    const themesPath = `envActions[${actionIndex}].controlPlans`
+    const currentThemeValue = get(mission, themesPath) as ControlPlansData[]
     const newValue = [...currentThemeValue]
-    newValue.splice(themeIndex, 1, { protectedSpecies: [], subThemes: [], theme: value })
+    newValue.splice(themeIndex, 1, { subThemeIds: [], tagIds: [], themeId: value })
 
     setFieldValue(themesPath, newValue)
   }
 export const updateSubThemes =
   (setFieldValue: (field: string, value: any) => void) => (value: string, actionIndex: number, themeIndex: number) => {
-    const subThemesPath = `envActions[${actionIndex}].themes.${themeIndex}.subThemes`
-    const protectedSpeciesPath = `envActions[${actionIndex}].themes.${themeIndex}.protectedSpecies`
+    const subThemesPath = `envActions[${actionIndex}].controlPlans[${themeIndex}].subThemeIds`
+    const tagsPath = `envActions[${actionIndex}].controlPlans[${themeIndex}].tagIds`
     setFieldValue(subThemesPath, value)
     if (!value || value?.length === 0) {
-      setFieldValue(protectedSpeciesPath, value)
+      setFieldValue(tagsPath, value)
     }
   }
-export const updateProtectedSpecies =
+export const updateTags =
   (setFieldValue: (field: string, value: any) => void) => (value: string, actionIndex: number, themeIndex: number) => {
-    const protectedSpeciesPath = `envActions[${actionIndex}].themes.${themeIndex}.protectedSpecies`
+    const tagsPath = `envActions[${actionIndex}].controlPlans[${themeIndex}].tagIds`
 
-    setFieldValue(protectedSpeciesPath, value)
+    setFieldValue(tagsPath, value)
   }

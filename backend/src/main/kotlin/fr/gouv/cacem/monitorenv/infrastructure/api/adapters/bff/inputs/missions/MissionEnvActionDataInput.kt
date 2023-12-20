@@ -23,7 +23,8 @@ data class MissionEnvActionDataInput(
 
     // EnvActionControl + EnvSurveillance Properties
     val actionEndDateTimeUtc: ZonedDateTime? = null,
-    val themes: List<ThemeEntity>? = null,
+    val controlPlans: List<MissionEnvActionControlPlanDataInput>? = null,
+    @Deprecated("Use controlPlans instead") val themes: List<ThemeEntity>? = null,
     val department: String? = null,
     val facade: String? = null,
     val geom: Geometry? = null,
@@ -68,29 +69,33 @@ data class MissionEnvActionDataInput(
             ActionTypeEnum.CONTROL ->
                 return EnvActionControlEntity(
                     id = this.id,
-                    actionStartDateTimeUtc = this.actionStartDateTimeUtc,
                     actionEndDateTimeUtc = this.actionEndDateTimeUtc,
+                    actionNumberOfControls = this.actionNumberOfControls,
+                    actionTargetType = this.actionTargetType,
+                    actionStartDateTimeUtc = this.actionStartDateTimeUtc,
+                    controlPlans =
+                    this.controlPlans?.map { it.toEnvActionControlPlanEntity() },
                     department = this.department,
                     facade = this.facade,
                     geom = this.geom,
-                    themes = this.themes,
-                    actionNumberOfControls = this.actionNumberOfControls,
-                    actionTargetType = this.actionTargetType,
-                    vehicleType = this.vehicleType,
                     infractions = this.infractions?.map { it.toInfractionEntity() },
-                    observations = this.observations,
                     isAdministrativeControl = this.isAdministrativeControl,
                     isComplianceWithWaterRegulationsControl =
                     this.isComplianceWithWaterRegulationsControl,
                     isSafetyEquipmentAndStandardsComplianceControl =
                     this.isSafetyEquipmentAndStandardsComplianceControl,
                     isSeafarersControl = this.isSeafarersControl,
+                    observations = this.observations,
+                    themes = this.themes,
+                    vehicleType = this.vehicleType,
                 )
             ActionTypeEnum.SURVEILLANCE ->
                 return EnvActionSurveillanceEntity(
                     id = this.id,
                     actionStartDateTimeUtc = this.actionStartDateTimeUtc,
                     actionEndDateTimeUtc = this.actionEndDateTimeUtc,
+                    controlPlans =
+                    this.controlPlans?.map { it.toEnvActionControlPlanEntity() },
                     department = this.department,
                     facade = this.facade,
                     geom = this.geom,
@@ -108,3 +113,5 @@ data class MissionEnvActionDataInput(
         }
     }
 }
+
+typealias ControlPlanSubThemeDataInput = Pair<Int, List<String>>

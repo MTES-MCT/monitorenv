@@ -5,7 +5,6 @@ import { type MutableRefObject, useMemo, useRef, useState } from 'react'
 import { MapReportingsFilters } from './Map'
 import { TableReportingsFilters } from './Table'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../api/constants'
-import { useGetControlThemesQuery } from '../../../api/controlThemesAPI'
 import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
 import { useGetSemaphoresQuery } from '../../../api/semaphoresAPI'
 import { DateRangeEnum, ReportingDateRangeEnum, ReportingDateRangeLabels } from '../../../domain/entities/dateRange'
@@ -19,8 +18,7 @@ import { seaFrontLabels } from '../../../domain/entities/seaFrontType'
 import { ReportingsFiltersEnum, reportingsFiltersActions } from '../../../domain/shared_slices/ReportingsFilters'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { getSubThemesAsListOptions } from '../../../utils/getSubThemesAsListOptions'
-import { getThemesAsListOptions } from '../../../utils/getThemesAsListOptions'
+import { useGetControlPlans } from '../../../hooks/useGetControlPlans'
 
 export enum ReportingFilterContext {
   MAP = 'MAP',
@@ -28,17 +26,14 @@ export enum ReportingFilterContext {
 }
 export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { context?: string }) {
   const dispatch = useAppDispatch()
-  const { periodFilter, sourceTypeFilter } = useAppSelector(state => state.reportingFilters)
+  const { periodFilter, sourceTypeFilter, subThemesFilter } = useAppSelector(state => state.reportingFilters)
   const wrapperRef = useRef() as MutableRefObject<HTMLDivElement>
   const [isCustomPeriodVisible, setIsCustomPeriodVisible] = useState(periodFilter === DateRangeEnum.CUSTOM)
 
-  const { data: themes } = useGetControlThemesQuery()
   const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
+  const { subThemes, subThemesAsOptions, themesAsOptions } = useGetControlPlans()
   const { data: semaphores } = useGetSemaphoresQuery()
   const controlUnitsOptions = useMemo(() => (controlUnits ? Array.from(controlUnits) : []), [controlUnits])
-
-  const themesListAsOptions = getThemesAsListOptions(themes)
-  const subThemesListAsOptions = getSubThemesAsListOptions(themes)
 
   const unitListAsOptions = controlUnitsOptions
     .filter(unit => !unit.isArchived && !unit.name.includes('Sémaphore'))
@@ -105,8 +100,8 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
     sourceOptions,
     sourceTypeOptions,
     statusOptions,
-    subThemesListAsOptions,
-    themesListAsOptions,
+    subThemesOptions: subThemesAsOptions,
+    themesOptions: themesAsOptions,
     typeOptions
   }
 
@@ -216,6 +211,25 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
     dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SOURCE_FILTER, value: undefined }))
   }
 
+  const updateThemeFilter = (themesIds: number[] | undefined) => {
+    dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.THEME_FILTER, value: themesIds }))
+
+    if (themesIds) {
+      const availableSubThemes = Object.values(subThemes)
+        .filter(subTheme => themesIds.includes(subTheme.themeId))
+        .map(subTheme => subTheme.id)
+      dispatch(
+        reportingsFiltersActions.updateFilters({
+          key: ReportingsFiltersEnum.SUB_THEMES_FILTER,
+          value: subThemesFilter?.filter(subThemeId => availableSubThemes.includes(subThemeId))
+        })
+      )
+    } else {
+      dispatch(
+        reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SUB_THEMES_FILTER, value: undefined })
+      )
+    }
+  }
   const resetFilters = () => {
     setIsCustomPeriodVisible(false)
     dispatch(reportingsFiltersActions.resetReportingsFilters())
@@ -232,6 +246,7 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
       updatePeriodFilter={updatePeriodFilter}
       updateSimpleFilter={updateSimpleFilter}
       updateSourceTypeFilter={updateSourceTypeFilter}
+      updateThemeFilter={updateThemeFilter}
     />
   ) : (
     <MapReportingsFilters

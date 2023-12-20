@@ -74,7 +74,7 @@ export function FormContent({
     ReportingContext.MAP
 
   const { dirty, errors, setFieldValue, setValues, values } = useFormikContext<Partial<Reporting>>()
-  const [themeField] = useField('theme')
+  const [themeField] = useField('themeId')
 
   const [isDeleteModalOpen, setIsDeletModalOpen] = useState(false)
   const [mustIncreaseValidity, setMustIncreaseValidity] = useState(false)
@@ -221,11 +221,11 @@ export function FormContent({
           {errors.reportType && <FieldError>{errors.reportType}</FieldError>}
         </div>
         <StyledThemeContainer>
-          <ThemeSelector isLight={false} label="Thématique du signalement" name="theme" />
+          <ThemeSelector isLight={false} label="Thématique du signalement" name="themeId" />
           <SubThemesSelector
             isLight={false}
             label="Sous-thématique du signalement"
-            name="subThemes"
+            name="subThemeIds"
             theme={themeField?.value}
           />
         </StyledThemeContainer>

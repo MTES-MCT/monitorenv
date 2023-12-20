@@ -37,8 +37,8 @@ type ReportingsFiltersSliceType = {
   startedAfter: string
   startedBefore?: string
   statusFilter: string[]
-  subThemesFilter: string[] | undefined
-  themeFilter: string[] | undefined
+  subThemesFilter: number[] | undefined
+  themeFilter: number[] | undefined
   typeFilter?: string | undefined
 }
 
@@ -58,13 +58,13 @@ const initialState: ReportingsFiltersSliceType = {
 }
 
 const persistConfig = {
-  key: 'reportingsFilters',
+  key: 'reportingFilters',
   storage
 }
 
 const reportingFiltersSlice = createSlice({
   initialState,
-  name: 'reportingsFilters',
+  name: 'reportingFilters',
   reducers: {
     resetReportingsFilters() {
       return { ...initialState }
