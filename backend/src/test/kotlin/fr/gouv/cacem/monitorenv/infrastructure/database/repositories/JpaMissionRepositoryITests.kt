@@ -365,7 +365,14 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             )
         val mission = jpaMissionRepository.findFullMissionById(10)
 
-        assertThat(mission).isEqualTo(firstMission)
+        assertThat(
+            mission.copy(
+                mission = mission.mission.copy(
+                    createdAtUtc = null,
+                    updatedAtUtc = null,
+                ),
+            ),
+        ).isEqualTo(firstMission)
     }
 
     @Test
