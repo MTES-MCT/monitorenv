@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
@@ -28,7 +28,7 @@ class MissionsController(
 
     @GetMapping("")
     @Operation(summary = "Get missions")
-    fun getMissionsController(
+    fun getAll(
         @Parameter(description = "page number")
         @RequestParam(name = "pageNumber")
         pageNumber: Int?,
@@ -72,8 +72,9 @@ class MissionsController(
 
     @PutMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a new mission")
-    fun createMissionController(
-        @RequestBody createMissionDataInput: CreateOrUpdateMissionDataInput,
+    fun new(
+        @RequestBody
+        createMissionDataInput: CreateOrUpdateMissionDataInput,
     ): MissionDataOutput {
         val createdMission =
             createOrUpdateMissionWithAttachedReporting.execute(
@@ -87,7 +88,7 @@ class MissionsController(
 
     @GetMapping("/{missionId}")
     @Operation(summary = "Get mission by Id")
-    fun getMissionByIdController(
+    fun get(
         @PathParam("Mission id")
         @PathVariable(name = "missionId")
         missionId: Int,
@@ -99,7 +100,7 @@ class MissionsController(
 
     @PutMapping(value = ["/{missionId}"], consumes = ["application/json"])
     @Operation(summary = "Update a mission")
-    fun updateMissionController(
+    fun edit(
         @PathParam("Mission Id")
         @PathVariable(name = "missionId")
         missionId: Int,
@@ -119,7 +120,7 @@ class MissionsController(
 
     @DeleteMapping(value = ["/{missionId}"])
     @Operation(summary = "Delete a mission")
-    fun deleteMissionController(
+    fun delete(
         @PathParam("Mission Id")
         @PathVariable(name = "missionId")
         missionId: Int,
@@ -131,7 +132,7 @@ class MissionsController(
     // migration is done
     @GetMapping("/engaged_control_units")
     @Operation(summary = "Get engaged control units")
-    fun getEngagedControlUnitsController(): List<LegacyControlUnitAndMissionSourcesDataOutput> {
+    fun getEngagedControlUnits(): List<LegacyControlUnitAndMissionSourcesDataOutput> {
         return getEngagedControlUnits.execute().map {
             LegacyControlUnitAndMissionSourcesDataOutput.fromLegacyControlUnitAndMissionSources(it)
         }

@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.health.Health
 import fr.gouv.cacem.monitorenv.domain.use_cases.healthcheck.GetHealthcheck
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.ApiHealthcheckController
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given

@@ -8,6 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEnt
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateAdministrationDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.ApiAdministrationsController
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito

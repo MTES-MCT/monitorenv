@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.departmentArea.GetDepartmentAreaByInseeCode
 import fr.gouv.cacem.monitorenv.domain.use_cases.departmentArea.GetDepartmentAreas

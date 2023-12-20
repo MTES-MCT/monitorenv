@@ -15,6 +15,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateMissionEvent
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
 import org.assertj.core.api.Assertions.assertThat
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.ApiMissionsController
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.nullValue
 import org.junit.jupiter.api.Test

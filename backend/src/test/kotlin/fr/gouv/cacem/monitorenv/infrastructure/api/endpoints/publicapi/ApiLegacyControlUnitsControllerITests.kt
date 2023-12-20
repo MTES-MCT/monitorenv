@@ -4,6 +4,7 @@ import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetLegacyControlUnits
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.ApiLegacyControlUnitsController
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given

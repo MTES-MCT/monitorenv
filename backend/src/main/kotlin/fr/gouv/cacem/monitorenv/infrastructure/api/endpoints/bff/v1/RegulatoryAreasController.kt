@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreas
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaById
@@ -21,14 +21,14 @@ class RegulatoryAreasController(
 
     @GetMapping("")
     @Operation(summary = "Get regulatory Areas")
-    fun getRegulatoryAreasController(): List<RegulatoryAreaDataOutput> {
+    fun getAll(): List<RegulatoryAreaDataOutput> {
         val regulatoryAreas = getAllRegulatoryAreas.execute()
         return regulatoryAreas.map { RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(it) }
     }
 
     @GetMapping("/{regulatoryAreaId}")
     @Operation(summary = "Get regulatory area by Id")
-    fun getRegulatoryAreaByIdController(
+    fun get(
         @PathParam("regulatoryArea id")
         @PathVariable(name = "regulatoryAreaId")
         regulatoryAreaId: Int,

@@ -9,6 +9,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v2.ApiControlUnitsController
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito

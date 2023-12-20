@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.use_cases.amps.GetAllAMPs
@@ -19,7 +19,7 @@ class AMPsController(
 
     @GetMapping("")
     @Operation(summary = "Get AMPs")
-    fun getAMPsController(): List<AMPDataOutput> {
+    fun getAll(): List<AMPDataOutput> {
         val amps = getAllAMPs.execute()
         return amps.map { AMPDataOutput.fromAMPEntity(it) }
     }

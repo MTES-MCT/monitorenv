@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.semaphores.GetAllSemaphores
 import fr.gouv.cacem.monitorenv.domain.use_cases.semaphores.GetSemaphoreById
@@ -20,14 +20,14 @@ class SemaphoresController(
 ) {
     @GetMapping("")
     @Operation(summary = "Get all semaphores")
-    fun getSemaphoresController(): List<SemaphoreDataOutput> {
+    fun getAll(): List<SemaphoreDataOutput> {
         val semaphores = getAllSemaphores.execute()
         return semaphores.map { SemaphoreDataOutput.fromSemaphoreEntity(it) }
     }
 
     @GetMapping("/{semaphoreId}")
     @Operation(summary = "Get semaphore by Id")
-    fun getSemaphoreByIdController(
+    fun get(
         @PathParam("semaphore id")
         @PathVariable(name = "semaphoreId")
         semaphoreId: Int,

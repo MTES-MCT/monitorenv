@@ -19,6 +19,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingById
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateReportingDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.ReportingsController
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.Point
 import org.locationtech.jts.io.WKTReader

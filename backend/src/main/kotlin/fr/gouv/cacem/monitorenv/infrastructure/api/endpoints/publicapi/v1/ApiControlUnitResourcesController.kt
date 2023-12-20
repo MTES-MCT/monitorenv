@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitResourceDataInput

@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.natinfs.GetAllNatinfs
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.NatinfDataOutput
@@ -17,7 +17,7 @@ class NatinfsController(
 
     @GetMapping("")
     @Operation(summary = "Get all natinfs")
-    fun getNatinfsController(): List<NatinfDataOutput> {
+    fun getAll(): List<NatinfDataOutput> {
         val natinfs = getAllNatinfs.execute()
 
         return natinfs.map { NatinfDataOutput.fromNatinfEntity(it) }

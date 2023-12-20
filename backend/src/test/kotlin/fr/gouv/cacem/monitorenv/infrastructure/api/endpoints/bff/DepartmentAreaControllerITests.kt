@@ -5,6 +5,7 @@ import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.departmentArea.DepartmentAreaEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.departmentArea.GetDepartmentAreaByInseeCode
 import fr.gouv.cacem.monitorenv.domain.use_cases.departmentArea.GetDepartmentAreas
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.DepartmentAreasController
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito

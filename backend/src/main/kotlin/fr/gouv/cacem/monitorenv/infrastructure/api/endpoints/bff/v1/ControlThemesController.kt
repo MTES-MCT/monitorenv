@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlThemes.GetAllControlThemes
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlThemes.GetControlThemeById
@@ -20,21 +20,21 @@ class ControlThemesController(
     private val getControlThemeById: GetControlThemeById,
 ) {
 
-    @GetMapping("")
-    @Operation(summary = "Get control themes")
-    fun getControlThemesController(): List<ControlThemeDataOutput> {
-        val controlThemes = getAllControlThemes.execute()
-        return controlThemes.map { ControlThemeDataOutput.fromControlThemeEntity(it) }
-    }
-
     @GetMapping("/{controlThemeId}")
     @Operation(summary = "Get regulatory area by Id")
-    fun getControlThemeByIdController(
+    fun get(
         @PathParam("controlTheme id")
         @PathVariable(name = "controlThemeId")
         controlThemeId: Int,
     ): ControlThemeDataOutput {
         val controlTheme = getControlThemeById.execute(controlThemeId = controlThemeId)
         return ControlThemeDataOutput.fromControlThemeEntity(controlTheme)
+    }
+
+    @GetMapping("")
+    @Operation(summary = "Get control themes")
+    fun getAll(): List<ControlThemeDataOutput> {
+        val controlThemes = getAllControlThemes.execute()
+        return controlThemes.map { ControlThemeDataOutput.fromControlThemeEntity(it) }
     }
 }

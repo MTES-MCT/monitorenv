@@ -4,6 +4,7 @@ import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.controlTheme.ControlThemeEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlThemes.GetAllControlThemes
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlThemes.GetControlThemeById
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.ControlThemesController
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given

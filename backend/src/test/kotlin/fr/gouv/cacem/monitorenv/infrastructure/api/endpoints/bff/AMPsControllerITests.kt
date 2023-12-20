@@ -5,6 +5,7 @@ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.WebSecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.amp.AMPEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.amps.GetAllAMPs
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.AMPsController
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon

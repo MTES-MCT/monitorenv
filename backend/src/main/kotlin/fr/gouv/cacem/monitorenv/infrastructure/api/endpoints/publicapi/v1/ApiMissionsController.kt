@@ -1,10 +1,11 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.LegacyControlUnitAndMissionSourcesDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.MissionDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.SSEMissionController
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -32,7 +33,7 @@ class ApiMissionsController(
 
     @GetMapping("")
     @Operation(summary = "Get missions")
-    fun getMissionsController(
+    fun getAll(
         @Parameter(description = "page number")
         @RequestParam(name = "pageNumber")
         pageNumber: Int?,
@@ -91,8 +92,9 @@ class ApiMissionsController(
 
     @PostMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a new mission")
-    fun createMissionController(
-        @RequestBody createMissionDataInput: CreateOrUpdateMissionDataInput,
+    fun new(
+        @RequestBody
+        createMissionDataInput: CreateOrUpdateMissionDataInput,
     ): MissionDataOutput {
         val newMission = createMissionDataInput.toMissionEntity()
         val createdMission = createOrUpdateMission.execute(mission = newMission)
@@ -101,7 +103,7 @@ class ApiMissionsController(
 
     @GetMapping("/{missionId}")
     @Operation(summary = "Get mission by Id")
-    fun getMissionByIdController(
+    fun get(
         @PathParam("Mission id")
         @PathVariable(name = "missionId")
         missionId: Int,
@@ -113,7 +115,7 @@ class ApiMissionsController(
 
     @PostMapping(value = ["/{missionId}"], consumes = ["application/json"])
     @Operation(summary = "Update a mission")
-    fun updateOperationController(
+    fun edit(
         @PathParam("Mission Id")
         @PathVariable(name = "missionId")
         missionId: Int,
@@ -130,7 +132,7 @@ class ApiMissionsController(
 
     @DeleteMapping(value = ["/{missionId}"])
     @Operation(summary = "Delete a mission")
-    fun deleteOperationController(
+    fun delete(
         @PathParam("Mission Id")
         @PathVariable(name = "missionId")
         missionId: Int,
@@ -142,7 +144,7 @@ class ApiMissionsController(
     // migration is done
     @GetMapping("/engaged_control_units")
     @Operation(summary = "Get engaged control units")
-    fun getEngagedControlUnitsController(): List<LegacyControlUnitAndMissionSourcesDataOutput> {
+    fun getEngagedControlUnits(): List<LegacyControlUnitAndMissionSourcesDataOutput> {
         return getEngagedControlUnits.execute()
             .map { LegacyControlUnitAndMissionSourcesDataOutput.fromLegacyControlUnitAndMissionSources(it) }
     }

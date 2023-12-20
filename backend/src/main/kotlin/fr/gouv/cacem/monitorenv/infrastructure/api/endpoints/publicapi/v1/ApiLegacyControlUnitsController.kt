@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetLegacyControlUnits
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.LegacyControlUnitDataOutput
@@ -16,9 +16,7 @@ class ApiLegacyControlUnitsController(
 ) {
     @GetMapping("")
     @Operation(summary = "Get legacy control units")
-    fun getControlResourcesController(): List<LegacyControlUnitDataOutput> {
-        return getLegacyControlUnits.execute().map {
-            LegacyControlUnitDataOutput.fromLegacyControlUnit(it)
-        }
+    fun getAll(): List<LegacyControlUnitDataOutput> {
+        return getLegacyControlUnits.execute().map { LegacyControlUnitDataOutput.fromLegacyControlUnit(it) }
     }
 }

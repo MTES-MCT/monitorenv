@@ -11,6 +11,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.station.StationEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitResourceDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.ApiControlUnitResourcesController
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito
