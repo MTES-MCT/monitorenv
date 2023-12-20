@@ -8,37 +8,36 @@ import { MissionForm } from './MissionForm'
 import { MissionSchema } from './Schemas'
 import { useGetMissionQuery } from '../../../api/missionsAPI'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { getIdTyped } from '../../../utils/getIdTyped'
 import { isNewMission } from '../../../utils/isNewMission'
-import { getMissionPageRoute } from '../../../utils/routes'
 import { missionFactory } from '../Missions.helpers'
 
+import type { NewMission } from '../../../domain/entities/missions'
+
 export function Mission() {
-  const selectedMissions = useAppSelector(state => state.multiMissions.selectedMissions)
-  const sideWindow = useAppSelector(state => state.sideWindow)
+  const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
+  const selectedMission = useAppSelector(state =>
+    activeMissionId ? state.missionForms.missions[activeMissionId] : undefined
+  )
   const [shouldValidateOnChange, setShouldValidateOnChange] = useState(false)
 
-  const routeParams = getMissionPageRoute(sideWindow.currentPath)
-
-  const missionId = useMemo(() => getIdTyped(routeParams?.params?.id), [routeParams?.params?.id])
-  const missionIsNewMission = useMemo(() => isNewMission(routeParams?.params?.id), [routeParams?.params?.id])
+  const missionIsNewMission = useMemo(() => isNewMission(activeMissionId), [activeMissionId])
 
   const { data: missionToEdit, isLoading } = useGetMissionQuery(
-    !missionIsNewMission && missionId ? Number(missionId) : skipToken
-  )
-
-  const selectedMission = useMemo(
-    () => selectedMissions.find(mis => mis.mission.id === missionId),
-    [missionId, selectedMissions]
+    !missionIsNewMission && activeMissionId ? Number(activeMissionId) : skipToken
   )
 
   const missionFormikValues = useMemo(() => {
-    if (missionIsNewMission) {
-      return missionFactory(undefined, missionId)
+    if (missionIsNewMission && activeMissionId) {
+      return missionFactory({ id: activeMissionId } as Partial<NewMission>, true)
     }
 
-    return missionFactory(missionToEdit)
-  }, [missionId, missionIsNewMission, missionToEdit])
+    if (missionToEdit) {
+      return missionFactory(missionToEdit, false)
+    }
+
+    return {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [missionIsNewMission, missionToEdit])
 
   if (isLoading) {
     return <div>Chargement en cours</div>
@@ -47,7 +46,7 @@ export function Mission() {
   return (
     <EditMissionWrapper data-cy="editMissionWrapper">
       <Formik
-        key={missionId}
+        key={activeMissionId}
         enableReinitialize
         initialValues={missionFormikValues}
         onSubmit={noop}
@@ -58,9 +57,9 @@ export function Mission() {
       >
         <Form className="rs-form rs-form-vertical rs-form-fixed-width">
           <MissionForm
-            id={missionId}
+            id={activeMissionId}
             isNewMission={missionIsNewMission}
-            selectedMission={selectedMission?.mission}
+            selectedMission={selectedMission?.missionForm}
             setShouldValidateOnChange={setShouldValidateOnChange}
           />
         </Form>

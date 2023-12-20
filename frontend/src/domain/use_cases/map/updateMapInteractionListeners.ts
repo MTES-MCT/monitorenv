@@ -1,4 +1,4 @@
-import { attachReportingToMissionSliceActions } from '../../../features/missions/slice'
+import { attachReportingToMissionSliceActions } from '../../../features/missions/MissionForm/AttachReporting/slice'
 import { attachMissionToReportingSliceActions } from '../../../features/Reportings/slice'
 import { resetInteraction } from '../../shared_slices/Draw'
 import { setDisplayedItems, resetLayoutToDefault } from '../../shared_slices/Global'

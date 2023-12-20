@@ -5,11 +5,11 @@ import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { getMissionZoneFeature } from './missionGeometryHelpers'
 import { missionWithCentroidStyleFn } from './missions.style'
 import { Layers } from '../../../../domain/entities/layers/constants'
-import { selectMissionOnMap } from '../../../../domain/use_cases/missions/selectMissionOnMap'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useGetFilteredMissionsQuery } from '../../../../hooks/useGetFilteredMissionsQuery'
 import { useHasMapInteraction } from '../../../../hooks/useHasMapInteraction'
+import { missionActions } from '../../../missions/slice'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { Geometry } from 'ol/geom'
@@ -52,7 +52,10 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   }, [missionAttachedToReporting])
 
   // active mission
-  const activeMission = useAppSelector(state => state.missionState.missionState)
+  const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
+  const activeMission = useAppSelector(state =>
+    activeMissionId ? state.missionForms.missions[activeMissionId]?.missionForm : undefined
+  )
   const activeMissionFeature = useMemo(() => {
     if (!activeMission) {
       return []
@@ -131,7 +134,7 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       const feature = mapClickEvent?.feature
       if (feature.getId()?.toString()?.includes(Layers.MISSIONS.code)) {
         const { missionId } = feature.getProperties()
-        dispatch(selectMissionOnMap(missionId))
+        dispatch(missionActions.setSelectedMissionIdOnMap(missionId))
       }
     }
   }, [dispatch, mapClickEvent])

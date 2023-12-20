@@ -1,6 +1,6 @@
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { type MutableRefObject, useCallback, useEffect, useRef } from 'react'
+import { type MutableRefObject, useCallback, useEffect, useRef, useMemo } from 'react'
 
 import { getMissionZoneFeature, getActionsFeatures } from './missionGeometryHelpers'
 import { selectedMissionStyle, selectedMissionActionsStyle } from './missions.style'
@@ -11,15 +11,24 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 import type { BaseMapChildrenProps } from '../../BaseMap'
 
 export function SelectedMissionLayer({ map }: BaseMapChildrenProps) {
-  const { missionState: selectedMissionEditedState, selectedMissionId } = useAppSelector(state => state.missionState)
+  const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
+  const selectedMissionIdOnMap = useAppSelector(state => state.mission.selectedMissionIdOnMap)
   const { displayMissionSelectedLayer } = useAppSelector(state => state.global)
   const { selectedMission } = useGetMissionsQuery(undefined, {
     selectFromResult: ({ data }) => ({
-      selectedMission: data?.find(op => op.id === selectedMissionId)
+      selectedMission: data?.find(op => op.id === activeMissionId)
     })
   })
 
-  const displaySelectedMission = displayMissionSelectedLayer && selectedMissionId !== selectedMissionEditedState?.id
+  const hasNoMissionConflict = useMemo(() => {
+    if (!activeMissionId && !!selectedMissionIdOnMap) {
+      return true
+    }
+
+    return !!activeMissionId && activeMissionId !== selectedMissionIdOnMap
+  }, [activeMissionId, selectedMissionIdOnMap])
+
+  const displaySelectedMission = displayMissionSelectedLayer && hasNoMissionConflict
 
   const selectedMissionVectorSourceRef = useRef() as MutableRefObject<VectorSource>
   const GetSelectedMissionVectorSource = () => {

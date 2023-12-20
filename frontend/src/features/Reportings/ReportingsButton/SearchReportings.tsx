@@ -3,7 +3,6 @@ import styled from 'styled-components'
 
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setDisplayedItems, ReportingContext } from '../../../domain/shared_slices/Global'
-import { saveMissionInLocalStore } from '../../../domain/use_cases/missions/saveMissionInLocalStore'
 import { addReporting } from '../../../domain/use_cases/reporting/addReporting'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
@@ -28,7 +27,6 @@ export function SearchReportings() {
   }
 
   const toggleReportingsWindow = async () => {
-    await dispatch(saveMissionInLocalStore())
     dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.REPORTINGS))
   }
 

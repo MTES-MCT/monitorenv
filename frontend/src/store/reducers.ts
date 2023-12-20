@@ -8,7 +8,6 @@ import { mapSliceReducer } from '../domain/shared_slices/Map'
 import { measurementSlicePersistedReducer } from '../domain/shared_slices/Measurement'
 import { missionFiltersPersistedReducer } from '../domain/shared_slices/MissionFilters'
 import { missionStateSliceReducer } from '../domain/shared_slices/MissionsState'
-import { multiMissionsSliceReducer } from '../domain/shared_slices/MultiMissions'
 import { regulatorySlicePersistedReducer } from '../domain/shared_slices/Regulatory'
 import { regulatoryMetadataSliceReducer } from '../domain/shared_slices/RegulatoryMetadata'
 import { reportingSliceReducer } from '../domain/shared_slices/reporting'
@@ -22,7 +21,9 @@ import { controlUnitListDialogPersistedReducer } from '../features/ControlUnit/c
 import { controlUnitTablePersistedReducer } from '../features/ControlUnit/components/ControlUnitTable/slice'
 import { layerSearchSliceReducer } from '../features/layersSelector/search/slice'
 import { mainWindowReducer } from '../features/MainWindow/slice'
-import { attachReportingToMissionsSliceReducer } from '../features/missions/slice'
+import { attachReportingToMissionsSliceReducer } from '../features/missions/MissionForm/AttachReporting/slice'
+import { missionFormsSliceReducer } from '../features/missions/MissionForm/slice'
+import { missionSliceReducer } from '../features/missions/slice'
 import { attachMissionToReportingSliceReducer } from '../features/Reportings/slice'
 import { sideWindowReducer } from '../features/SideWindow/slice'
 import { stationTablePersistedReducer } from '../features/Station/components/StationTable/slice'
@@ -48,9 +49,10 @@ export const homeReducers = {
   mapControlUnitDialog: controlUnitDialogReducer,
   mapControlUnitListDialog: controlUnitListDialogPersistedReducer,
   measurement: measurementSlicePersistedReducer,
+  mission: missionSliceReducer,
   missionFilters: missionFiltersPersistedReducer,
+  missionForms: missionFormsSliceReducer,
   missionState: missionStateSliceReducer,
-  multiMissions: multiMissionsSliceReducer,
   regulatory: regulatorySlicePersistedReducer,
   regulatoryMetadata: regulatoryMetadataSliceReducer,
   [layerSidebarSlice.name]: layerSidebarSlice.reducer,

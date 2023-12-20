@@ -1,38 +1,29 @@
 import { generatePath } from 'react-router'
 
+import { missionFormsActions, type MissionInStateType } from '../../../features/missions/MissionForm/slice'
 import { removeMissionListener } from '../../../features/missions/MissionForm/sse'
+import { missionActions } from '../../../features/missions/slice'
 import { sideWindowActions } from '../../../features/SideWindow/slice'
 import { getIdTyped } from '../../../utils/getIdTyped'
 import { getMissionPageRoute } from '../../../utils/routes'
 import { sideWindowPaths } from '../../entities/sideWindow'
-import { multiMissionsActions } from '../../shared_slices/MultiMissions'
 
-export const deleteTab = (nextPath: string) => async (dispatch, getState) => {
-  const {
-    missionState: { isFormDirty, missionState },
-    multiMissions: { selectedMissions }
-  } = getState()
+export const deleteTab = (path: string) => async (dispatch, getState) => {
+  const { missions } = getState().missionForms
 
-  const routeParams = getMissionPageRoute(nextPath)
-  const id = getIdTyped(routeParams?.params.id)
+  const routeParams = getMissionPageRoute(path)
+  const indexToDelete = getIdTyped(routeParams?.params.id)
 
-  const indexToDelete = selectedMissions.findIndex(mission => mission.mission.id === id)
+  if (indexToDelete && missions[indexToDelete]?.isFormDirty) {
+    const missionToClose = missions[indexToDelete]
+    await dispatch(missionFormsActions.setMission(missionToClose))
+    await dispatch(missionActions.setSelectedMissionIdOnMap(missionToClose.id))
 
-  // if we want to close the tab with a form that has changes
-  if (
-    selectedMissions[indexToDelete]?.isFormDirty ||
-    (selectedMissions.length === 1 && isFormDirty) ||
-    (selectedMissions[indexToDelete].mission?.id === missionState?.id && isFormDirty)
-  ) {
-    if (missionState) {
-      await saveCurrentMissionInMultiMissionsState(missionState, selectedMissions, isFormDirty, dispatch)
-    }
-
-    dispatch(sideWindowActions.setShowConfirmCancelModal(true))
-    dispatch(
+    await dispatch(sideWindowActions.setShowConfirmCancelModal(true))
+    await dispatch(
       sideWindowActions.setCurrentPath(
         generatePath(sideWindowPaths.MISSION, {
-          id: String(id)
+          id: String(indexToDelete)
         })
       )
     )
@@ -40,36 +31,24 @@ export const deleteTab = (nextPath: string) => async (dispatch, getState) => {
     return
   }
 
-  await dispatch(multiMissionsActions.deleteSelectedMission(id))
-  if (typeof id === 'number') {
-    removeMissionListener(Number(id))
+  await dispatch(missionFormsActions.deleteSelectedMission(indexToDelete))
+  if (typeof indexToDelete === 'number') {
+    removeMissionListener(Number(indexToDelete))
   }
 
-  if (indexToDelete === 0) {
+  const arrayOfMissions: MissionInStateType[] = Object.values(missions)
+  const missionIndexToDelete = arrayOfMissions.findIndex(mission => mission?.missionForm?.id === indexToDelete)
+
+  if (missionIndexToDelete === 0) {
     dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.MISSIONS)))
   } else {
-    const previousMission = selectedMissions[indexToDelete - 1]
+    const previousMission = arrayOfMissions[missionIndexToDelete - 1]
     dispatch(
       sideWindowActions.setCurrentPath(
         generatePath(sideWindowPaths.MISSION, {
-          id: previousMission?.mission.id
+          id: previousMission?.missionForm.id
         })
       )
     )
   }
-}
-
-async function saveCurrentMissionInMultiMissionsState(missionState, selectedMissions, isFormDirty, dispatch) {
-  const updatedMissions = [...selectedMissions]
-  const missionIndex = updatedMissions.findIndex(mission => mission.mission.id === missionState?.id)
-  const missionFormatted = {
-    isFormDirty,
-    mission: missionState
-  }
-  if (missionIndex !== -1) {
-    updatedMissions[missionIndex] = missionFormatted
-  } else {
-    updatedMissions.push(missionFormatted)
-  }
-  await dispatch(multiMissionsActions.setSelectedMissions(updatedMissions))
 }

@@ -1,7 +1,5 @@
-import { getCenter } from 'ol/extent'
 import Feature from 'ol/Feature'
 import GeoJSON from 'ol/format/GeoJSON'
-import Point from 'ol/geom/Point'
 
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '../../../../domain/entities/map/constants'
@@ -10,40 +8,15 @@ import {
   type EnvActionControl,
   type EnvActionSurveillance,
   getMissionStatus,
-  type Mission
+  type Mission,
+  type NewMission,
+  type NewEnvActionControl
 } from '../../../../domain/entities/missions'
 import { getTotalOfControls, getTotalOfSurveillances } from '../../../missions/utils'
 
 import type { Geometry } from 'ol/geom'
 
-export const getMissionCentroid = (mission: Partial<Mission> | Mission, layername: string) => {
-  const geoJSON = new GeoJSON()
-  const { geom } = mission
-  const geometry = geoJSON.readGeometry(geom, {
-    dataProjection: WSG84_PROJECTION,
-    featureProjection: OPENLAYERS_PROJECTION
-  })
-  const center = getCenter(geometry?.getExtent())
-  const pointFeature = new Feature({
-    geometry: new Point(center)
-  })
-  pointFeature.setId(`${layername}:${mission.id}`)
-  pointFeature.setProperties({
-    attachedReportingIds: mission.attachedReportingIds,
-    attachedReportings: mission.attachedReportings,
-    controlUnits: mission.controlUnits,
-    endDateTimeUtc: mission.endDateTimeUtc,
-    missionId: mission.id,
-    missionStatus: getMissionStatus(mission),
-    missionTypes: mission.missionTypes,
-    numberOfActions: mission.envActions?.length || 0,
-    startDateTimeUtc: mission.startDateTimeUtc
-  })
-
-  return pointFeature
-}
-
-export const getMissionZoneFeature = (mission: Partial<Mission>, layername: string) => {
+export const getMissionZoneFeature = (mission: Partial<Mission | NewMission>, layername: string) => {
   const geoJSON = new GeoJSON()
   const geometry = geoJSON.readGeometry(mission.geom, {
     dataProjection: WSG84_PROJECTION,
@@ -73,7 +46,7 @@ export const getMissionZoneFeature = (mission: Partial<Mission>, layername: stri
   return feature
 }
 
-const getActionControlProperties = (action: EnvActionControl) => {
+const getActionControlProperties = (action: EnvActionControl | NewEnvActionControl) => {
   const { actionNumberOfControls, actionStartDateTimeUtc, actionTargetType, actionType, controlPlans, infractions } =
     action
 
@@ -98,7 +71,7 @@ const getActionSurveillanceProperties = (action: EnvActionSurveillance) => {
   }
 }
 
-const getActionProperties = (action: EnvActionControl | EnvActionSurveillance) => {
+const getActionProperties = (action: EnvActionControl | EnvActionSurveillance | NewEnvActionControl) => {
   switch (action.actionType) {
     case ActionTypeEnum.CONTROL:
       return getActionControlProperties(action)
@@ -108,7 +81,7 @@ const getActionProperties = (action: EnvActionControl | EnvActionSurveillance) =
   }
 }
 
-const getActionFeature = (action: EnvActionControl | EnvActionSurveillance) => {
+const getActionFeature = (action: EnvActionControl | EnvActionSurveillance | NewEnvActionControl) => {
   const geoJSON = new GeoJSON()
   const actionProperties = getActionProperties(action)
   if (!action.geom) {
@@ -127,10 +100,10 @@ const getActionFeature = (action: EnvActionControl | EnvActionSurveillance) => {
   return feature
 }
 
-const isActionControlOrActionSurveillance = (f): f is EnvActionControl | EnvActionSurveillance =>
+const isActionControlOrActionSurveillance = (f): f is EnvActionControl | EnvActionSurveillance | NewEnvActionControl =>
   f.actionType === ActionTypeEnum.CONTROL || f.actionType === ActionTypeEnum.SURVEILLANCE
 
-export const getActionsFeatures = (mission: Partial<Mission>) => {
+export const getActionsFeatures = mission => {
   const { envActions } = mission
   if (envActions?.length && envActions?.length > 0) {
     return envActions

@@ -42,7 +42,10 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
 
   const missionListener = useAppSelector(state => state.draw.listener)
   // Attached reportings to active mission
-  const attachedReportingsToActiveMission = useAppSelector(state => state.missionState.missionState?.attachedReportings)
+  const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
+  const attachedReportingsToActiveMission = useAppSelector(state =>
+    activeMissionId ? state.missionForms[activeMissionId]?.missionForm.attachedReportings : undefined
+  )
   const attachedReportingsToActiveMissionFeature = useMemo(() => {
     if (!attachedReportingsToActiveMission || attachedReportingsToActiveMission?.length === 0) {
       return []

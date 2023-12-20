@@ -18,7 +18,7 @@ import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
 import { useGetControlPlans } from '../../../../../hooks/useGetControlPlans'
 import { getFormattedReportingId } from '../../../../Reportings/utils'
-import { attachReportingToMissionSliceActions } from '../../../slice'
+import { attachReportingToMissionSliceActions } from '../../AttachReporting/slice'
 
 const EMPTY_VALUE = '--'
 

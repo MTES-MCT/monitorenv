@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 
 import {
@@ -23,6 +22,7 @@ import {
 import { getFormattedReportingId } from '../Reportings/utils'
 
 import type { LegacyControlUnit } from '../../domain/entities/legacyControlUnit'
+import type { AtLeast } from '../../types'
 
 export const infractionFactory = ({ id, ...infraction } = { id: '' }) => ({
   id: uuidv4(),
@@ -88,14 +88,14 @@ export const actionFactory = ({
 }
 
 export const missionFactory = (
-  mission?: Mission | undefined,
-  id?: number | string | undefined,
+  mission: AtLeast<Partial<Mission>, 'id'> | Partial<NewMission>,
+  isNewMission: boolean,
   attachedReporting?: ReportingDetailed | undefined
 ): Mission | NewMission => {
   const startDate = new Date()
   startDate.setSeconds(0, 0)
 
-  let formattedMission: NewMission = {
+  let formattedMission = {
     attachedReportingIds: attachedReporting ? [attachedReporting.id as number] : [],
     attachedReportings: attachedReporting ? [attachedReporting] : [],
     closedBy: '',
@@ -114,14 +114,11 @@ export const missionFactory = (
     ...mission
   }
 
-  if (_.isEmpty(mission)) {
-    return {
-      ...formattedMission,
-      id
-    } as NewMission
+  if (isNewMission) {
+    return formattedMission as NewMission
   }
 
-  const { envActions } = mission
+  const { envActions } = mission as Mission
   const surveillances = envActions?.filter(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
 
   const surveillanceWithSamePeriodIndex =
