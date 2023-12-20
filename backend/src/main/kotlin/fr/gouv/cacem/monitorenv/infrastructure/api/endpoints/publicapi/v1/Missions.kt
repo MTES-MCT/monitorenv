@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import java.time.ZonedDateTime
 
-@RestController
+@RestController("PublicApiV1Missions")
 @RequestMapping("/api/v1/missions")
 @Tag(description = "API Missions", name = "Public.Missions")
 class Missions(

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@RestController
+@RestController("PublicApiV1Healthcheck")
 @RequestMapping("/api/v1/healthcheck")
 @Tag(description = "API for Healthcheck", name = "Public.Healthcheck")
 class Healthcheck(
