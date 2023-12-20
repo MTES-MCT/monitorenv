@@ -24,7 +24,7 @@ export function TagsSelector({ actionIndex, tags, themeIndex }: TagsSelectorProp
       baseContainer={newWindowContainerRef.current}
       data-cy="envaction-tags-selector"
       isLight
-      label="Tags"
+      label="Précisions sur la thématique"
       name={`${actionIndex}-${themeIndex}`}
       onChange={handleUpdateTags}
       options={tags}

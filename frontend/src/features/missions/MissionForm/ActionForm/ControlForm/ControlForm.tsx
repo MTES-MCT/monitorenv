@@ -18,6 +18,7 @@ import styled from 'styled-components'
 import { InfractionsForm } from './InfractionsForm'
 import { OtherControlTypesForm } from './OtherControlTypesForm'
 import { CONTROL_PLAN_INIT, UNIQ_CONTROL_PLAN_INDEX } from '../../../../../domain/entities/controlPlan'
+import { type Mission, type EnvActionControl, ActionTypeEnum } from '../../../../../domain/entities/missions'
 import { TargetTypeEnum, TargetTypeLabels } from '../../../../../domain/entities/targetType'
 import { VehicleTypeEnum } from '../../../../../domain/entities/vehicleType'
 import { ReactComponent as ControlIconSVG } from '../../../../../uiMonitor/icons/Control.svg'
@@ -28,8 +29,6 @@ import { VehicleTypeSelector } from '../../../../commonComponents/VehicleTypeSel
 import { getFormattedReportingId } from '../../../../Reportings/utils'
 import { MultiPointPicker } from '../../../MultiPointPicker'
 import { ActionTheme } from '../Themes/ActionTheme'
-
-import type { Mission, EnvActionControl } from '../../../../../domain/entities/missions'
 
 export function ControlForm({
   currentActionIndex,
@@ -229,6 +228,7 @@ export function ControlForm({
         </ReportingsContainer>
         <ActionTheme
           actionIndex={envActionIndex}
+          actionType={ActionTypeEnum.CONTROL}
           labelSubTheme="Sous-thématiques de contrôle"
           labelTheme="Thématique de contrôle"
           themeIndex={0}
