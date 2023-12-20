@@ -16,11 +16,11 @@ import io.hypersistence.utils.hibernate.type.array.ListArrayType
 import io.hypersistence.utils.hibernate.type.array.internal.AbstractArrayType.SQL_ARRAY_TYPE
 import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType
 import jakarta.persistence.*
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Table
 import org.hibernate.Hibernate
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
+import org.hibernate.annotations.*
 import org.hibernate.annotations.Parameter
-import org.hibernate.annotations.Type
 import org.locationtech.jts.geom.MultiPolygon
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
@@ -67,6 +67,10 @@ class MissionModel(
 
     @Column(name = "closed_by")
     val closedBy: String? = null,
+
+    @Column(name = "created_at_utc", updatable = false)
+    @CreationTimestamp
+    val createdAtUtc: Instant? = null,
 
     @OneToMany(
         mappedBy = "mission",
@@ -128,6 +132,10 @@ class MissionModel(
     @Column(name = "start_datetime_utc")
     val startDateTimeUtc: Instant,
 
+    @Column(name = "updated_at_utc")
+    @UpdateTimestamp
+    val updatedAtUtc: Instant? = null,
+
 ) {
     fun toMissionEntity(objectMapper: ObjectMapper): MissionEntity {
         val controlUnits =
@@ -151,6 +159,8 @@ class MissionModel(
             closedBy = closedBy,
             controlUnits = controlUnits,
             endDateTimeUtc = endDateTimeUtc?.atZone(UTC),
+            createdAtUtc = createdAtUtc?.atZone(UTC),
+            updatedAtUtc = updatedAtUtc?.atZone(UTC),
             envActions = envActions!!.map { it.toActionEntity(objectMapper) },
             facade = facade,
             geom = geom,

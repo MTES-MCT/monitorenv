@@ -76,6 +76,8 @@ class ApiMissionsControllerITests {
                 observationsCnsp = null,
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                createdAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                updatedAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                 isClosed = false,
                 isDeleted = false,
                 missionSource = MissionSourceEnum.MONITORFISH,
@@ -113,6 +115,8 @@ class ApiMissionsControllerITests {
             // Then
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
+            .andExpect(jsonPath("$.createdAtUtc", equalTo("2022-01-23T20:29:03Z")))
+            .andExpect(jsonPath("$.updatedAtUtc", equalTo("2022-01-23T20:29:03Z")))
     }
 
     @Test
@@ -371,7 +375,7 @@ class ApiMissionsControllerITests {
 
         assertThat(missionUpdateEvent).contains("event:MISSION_UPDATE")
         assertThat(missionUpdateEvent).contains(
-            "data:{\"id\":132,\"missionTypes\":[\"SEA\"],\"controlUnits\":[],\"openBy\":null,\"closedBy\":null,\"observationsCacem\":null,\"observationsCnsp\":null,\"facade\":\"Outre-Mer\",\"geom\":{\"type\":\"MultiPolygon\",\"coordinates\":[[[[-4.54877817,48.30555988],[-4.54997332,48.30597601],[-4.54998501,48.30718823],[-4.5487929,48.30677461],[-4.54877817,48.30555988]]]]},\"startDateTimeUtc\":\"2022-01-15T04:50:09Z\",\"endDateTimeUtc\":\"2022-01-23T20:29:03Z\",\"envActions\":[],\"missionSource\":\"MONITORFISH\",\"isClosed\":false,\"hasMissionOrder\":false,\"isUnderJdp\":false,\"isGeometryComputedFromControls\":false}",
+            "data:{\"id\":132,\"missionTypes\":[\"SEA\"],\"controlUnits\":[],\"openBy\":null,\"closedBy\":null,\"observationsCacem\":null,\"observationsCnsp\":null,\"facade\":\"Outre-Mer\",\"geom\":{\"type\":\"MultiPolygon\",\"coordinates\":[[[[-4.54877817,48.30555988],[-4.54997332,48.30597601],[-4.54998501,48.30718823],[-4.5487929,48.30677461],[-4.54877817,48.30555988]]]]},\"startDateTimeUtc\":\"2022-01-15T04:50:09Z\",\"endDateTimeUtc\":\"2022-01-23T20:29:03Z\",\"createdAtUtc\":null,\"updatedAtUtc\":null,\"envActions\":[],\"missionSource\":\"MONITORFISH\",\"isClosed\":false,\"hasMissionOrder\":false,\"isUnderJdp\":false,\"isGeometryComputedFromControls\":false}",
         )
     }
 }
