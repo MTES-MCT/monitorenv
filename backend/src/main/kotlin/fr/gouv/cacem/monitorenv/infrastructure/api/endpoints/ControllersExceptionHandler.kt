@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints
 
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ApiError
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.MissingParameterApiError

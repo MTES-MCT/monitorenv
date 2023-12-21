@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
 @WebMvcTest(value = [(DepartmentAreas::class)])
-class DepartmentAreaControllerITests {
+class DepartmentAreaITests {
     @Autowired
     private lateinit var mockMvc: MockMvc
 

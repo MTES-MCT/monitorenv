@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class VersionController(val buildProperties: BuildProperties) {
+class Version(val buildProperties: BuildProperties) {
 
     @GetMapping("/version")
     fun version(): Map<String, String> {

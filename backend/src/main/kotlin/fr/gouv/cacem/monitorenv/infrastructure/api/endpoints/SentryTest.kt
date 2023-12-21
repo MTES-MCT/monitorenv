@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class SentryTestController(val sentryConfig: SentryConfig) {
-    private val logger: Logger = LoggerFactory.getLogger(SentryTestController::class.java)
+class SentryTest(val sentryConfig: SentryConfig) {
+    private val logger: Logger = LoggerFactory.getLogger(SentryTest::class.java)
 
     // This route is for testing purpose only
     // Used to test that errors are correctly sent to sentry

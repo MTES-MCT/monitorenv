@@ -25,6 +25,43 @@ class Missions(
     private val deleteMission: DeleteMission,
     private val getEngagedControlUnits: GetEngagedControlUnits,
 ) {
+    @PutMapping("", consumes = ["application/json"])
+    @Operation(summary = "Create a new mission")
+    fun create(
+        @RequestBody
+        createMissionDataInput: CreateOrUpdateMissionDataInput,
+    ): MissionDataOutput {
+        val createdMission =
+            createOrUpdateMissionWithAttachedReporting.execute(
+                mission = createMissionDataInput.toMissionEntity(),
+                attachedReportingIds = createMissionDataInput.attachedReportingIds,
+                envActionsAttachedToReportingIds =
+                createMissionDataInput.getEnvActionsAttachedToReportings(),
+            )
+        return MissionDataOutput.fromMissionDTO(createdMission)
+    }
+
+    @DeleteMapping(value = ["/{missionId}"])
+    @Operation(summary = "Delete a mission")
+    fun delete(
+        @PathParam("Mission Id")
+        @PathVariable(name = "missionId")
+        missionId: Int,
+    ) {
+        deleteMission.execute(missionId = missionId)
+    }
+
+    @GetMapping("/{missionId}")
+    @Operation(summary = "Get mission by Id")
+    fun get(
+        @PathParam("Mission id")
+        @PathVariable(name = "missionId")
+        missionId: Int,
+    ): MissionDataOutput {
+        val mission = getFullMissionById.execute(missionId = missionId)
+
+        return MissionDataOutput.fromMissionDTO(mission)
+    }
 
     @GetMapping("")
     @Operation(summary = "Get missions")
@@ -70,32 +107,14 @@ class Missions(
         return missions.map { MissionsDataOutput.fromMissionDTO(it) }
     }
 
-    @PutMapping("", consumes = ["application/json"])
-    @Operation(summary = "Create a new mission")
-    fun new(
-        @RequestBody
-        createMissionDataInput: CreateOrUpdateMissionDataInput,
-    ): MissionDataOutput {
-        val createdMission =
-            createOrUpdateMissionWithAttachedReporting.execute(
-                mission = createMissionDataInput.toMissionEntity(),
-                attachedReportingIds = createMissionDataInput.attachedReportingIds,
-                envActionsAttachedToReportingIds =
-                createMissionDataInput.getEnvActionsAttachedToReportings(),
-            )
-        return MissionDataOutput.fromMissionDTO(createdMission)
-    }
-
-    @GetMapping("/{missionId}")
-    @Operation(summary = "Get mission by Id")
-    fun get(
-        @PathParam("Mission id")
-        @PathVariable(name = "missionId")
-        missionId: Int,
-    ): MissionDataOutput {
-        val mission = getFullMissionById.execute(missionId = missionId)
-
-        return MissionDataOutput.fromMissionDTO(mission)
+    // TODO Return a ControlUnitDataOutput once the LegacyControlUnitEntity to ControlUnitEntity
+    // migration is done
+    @GetMapping("/engaged_control_units")
+    @Operation(summary = "Get engaged control units")
+    fun getEngagedControlUnits(): List<LegacyControlUnitAndMissionSourcesDataOutput> {
+        return getEngagedControlUnits.execute().map {
+            LegacyControlUnitAndMissionSourcesDataOutput.fromLegacyControlUnitAndMissionSources(it)
+        }
     }
 
     @PutMapping(value = ["/{missionId}"], consumes = ["application/json"])
@@ -116,25 +135,5 @@ class Missions(
             updateMissionDataInput.getEnvActionsAttachedToReportings(),
         )
             .let { MissionDataOutput.fromMissionDTO(it) }
-    }
-
-    @DeleteMapping(value = ["/{missionId}"])
-    @Operation(summary = "Delete a mission")
-    fun delete(
-        @PathParam("Mission Id")
-        @PathVariable(name = "missionId")
-        missionId: Int,
-    ) {
-        deleteMission.execute(missionId = missionId)
-    }
-
-    // TODO Return a ControlUnitDataOutput once the LegacyControlUnitEntity to ControlUnitEntity
-    // migration is done
-    @GetMapping("/engaged_control_units")
-    @Operation(summary = "Get engaged control units")
-    fun getEngagedControlUnits(): List<LegacyControlUnitAndMissionSourcesDataOutput> {
-        return getEngagedControlUnits.execute().map {
-            LegacyControlUnitAndMissionSourcesDataOutput.fromLegacyControlUnitAndMissionSources(it)
-        }
     }
 }

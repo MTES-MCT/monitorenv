@@ -1,8 +1,8 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlPlan.GetControlPlans
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlPlan.GetControlPlansByYear
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ControlPlanDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.controlPlans.ControlPlanDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam

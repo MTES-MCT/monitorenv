@@ -19,13 +19,6 @@ class RegulatoryAreas(
     private val getRegulatoryAreaById: GetRegulatoryAreaById,
 ) {
 
-    @GetMapping("")
-    @Operation(summary = "Get regulatory Areas")
-    fun getAll(): List<RegulatoryAreaDataOutput> {
-        val regulatoryAreas = getAllRegulatoryAreas.execute()
-        return regulatoryAreas.map { RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(it) }
-    }
-
     @GetMapping("/{regulatoryAreaId}")
     @Operation(summary = "Get regulatory area by Id")
     fun get(
@@ -36,5 +29,12 @@ class RegulatoryAreas(
         return RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(
             getRegulatoryAreaById.execute(regulatoryAreaId = regulatoryAreaId),
         )
+    }
+
+    @GetMapping("")
+    @Operation(summary = "Get regulatory Areas")
+    fun getAll(): List<RegulatoryAreaDataOutput> {
+        val regulatoryAreas = getAllRegulatoryAreas.execute()
+        return regulatoryAreas.map { RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(it) }
     }
 }

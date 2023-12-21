@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.ArchiveReportings
@@ -10,8 +9,8 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingById
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportings
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.CreateOrUpdateReportingDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ReportingDataOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ReportingsDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingsDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -39,8 +38,53 @@ class Reportings(
     private val deleteReporting: DeleteReporting,
     private val deleteReportings: DeleteReportings,
     private val archiveReportings: ArchiveReportings,
-    private val mapper: ObjectMapper,
 ) {
+
+    @PutMapping(value = ["/archive"])
+    @Operation(summary = "Archive multiple reportings")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun archiveReportings(@RequestBody ids: List<Int>) {
+        archiveReportings.execute(ids)
+    }
+
+    @PutMapping("", consumes = ["application/json"])
+    @Operation(summary = "Create a new reporting")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun create(
+        @RequestBody createReporting: CreateOrUpdateReportingDataInput,
+    ): ReportingDataOutput {
+        val newReporting = createReporting.toReportingEntity()
+        val createdReporting = createOrUpdateReporting.execute(newReporting)
+        return ReportingDataOutput.fromReportingDTO(createdReporting)
+    }
+
+    @DeleteMapping(value = ["/{id}"])
+    @Operation(summary = "Delete a reporting")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun delete(
+        @PathParam("Id")
+        @PathVariable(name = "id")
+        id: Int,
+    ) {
+        deleteReporting.execute(id = id)
+    }
+
+    @PutMapping(value = ["/delete"])
+    @Operation(summary = "Delete multiple reportings")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteReportings(@RequestBody ids: List<Int>) {
+        deleteReportings.execute(ids)
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get reporting by id")
+    fun get(
+        @PathParam("reporting id")
+        @PathVariable(name = "id")
+        id: Int,
+    ): ReportingDataOutput {
+        return getReportingById.execute(id).let { ReportingDataOutput.fromReportingDTO(it) }
+    }
 
     @GetMapping("")
     @Operation(summary = "Get reportings")
@@ -85,31 +129,12 @@ class Reportings(
             .map { ReportingsDataOutput.fromReportingDTO(it) }
     }
 
-    @PutMapping("", consumes = ["application/json"])
-    @Operation(summary = "Create a new reporting")
-    @ResponseStatus(HttpStatus.CREATED)
-    fun new(
-        @RequestBody createReporting: CreateOrUpdateReportingDataInput,
-    ): ReportingDataOutput {
-        val newReporting = createReporting.toReportingEntity()
-        val createdReporting = createOrUpdateReporting.execute(newReporting)
-        return ReportingDataOutput.fromReportingDTO(createdReporting)
-    }
-
-    @GetMapping("/{id}")
-    @Operation(summary = "Get reporting by id")
-    fun get(
-        @PathParam("reporting id")
-        @PathVariable(name = "id") id: Int,
-    ): ReportingDataOutput {
-        return getReportingById.execute(id).let { ReportingDataOutput.fromReportingDTO(it) }
-    }
-
     @PutMapping(value = ["/{id}"], consumes = ["application/json"])
     @Operation(summary = "update a reporting")
     fun update(
         @PathParam("reporting id")
-        @PathVariable(name = "id") id: Int,
+        @PathVariable(name = "id")
+        id: Int,
         @RequestBody reporting: CreateOrUpdateReportingDataInput,
     ): ReportingDataOutput {
         require(id == reporting.id) { "id in path and body must be the same" }
@@ -117,29 +142,5 @@ class Reportings(
             reporting.toReportingEntity(),
         )
             .let { ReportingDataOutput.fromReportingDTO(it) }
-    }
-
-    @DeleteMapping(value = ["/{id}"])
-    @Operation(summary = "Delete a reporting")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun delete(
-        @PathParam("Id")
-        @PathVariable(name = "id") id: Int,
-    ) {
-        deleteReporting.execute(id = id)
-    }
-
-    @PutMapping(value = ["/delete"])
-    @Operation(summary = "Delete multiple reportings")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteReportings(@RequestBody ids: List<Int>) {
-        deleteReportings.execute(ids)
-    }
-
-    @PutMapping(value = ["/archive"])
-    @Operation(summary = "Archive multiple reportings")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun archiveReportings(@RequestBody ids: List<Int>) {
-        archiveReportings.execute(ids)
     }
 }

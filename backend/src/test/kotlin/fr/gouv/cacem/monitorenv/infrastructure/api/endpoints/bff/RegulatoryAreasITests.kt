@@ -26,7 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
 @ExtendWith(SpringExtension::class)
 @WebMvcTest(value = [(RegulatoryAreas::class)])
-class RegulatoryAreasControllerITests {
+class RegulatoryAreasITests {
 
     @Autowired
     private lateinit var mockMvc: MockMvc

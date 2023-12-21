@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints
 
 // Don't forget to mirror any update here in the frontend enum.
 enum class ErrorCode {

@@ -1,11 +1,10 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.Missions
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.LegacyControlUnitAndMissionSourcesDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.MissionDataOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.SSEMissionController
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -27,9 +26,9 @@ class Missions(
     private val deleteMission: DeleteMission,
     private val getEngagedControlUnits: GetEngagedControlUnits,
     private val getMissionsByIds: GetMissionsByIds,
-    private val sseMissionController: SSEMissionController,
+    private val sseMission: SSEMission,
 ) {
-    private val logger = LoggerFactory.getLogger(ApiMissionsController::class.java)
+    private val logger = LoggerFactory.getLogger(Missions::class.java)
 
     @GetMapping("")
     @Operation(summary = "Get missions")
@@ -81,7 +80,7 @@ class Missions(
 
     @GetMapping("/find")
     @Operation(summary = "Get missions of specified identifiers")
-    fun getMissionsOfIdsController(
+    fun getMissionsOfIds(
         @Parameter(description = "Requested identifiers")
         @RequestParam(name = "ids")
         ids: List<Int>,
@@ -92,7 +91,7 @@ class Missions(
 
     @PostMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a new mission")
-    fun new(
+    fun create(
         @RequestBody
         createMissionDataInput: CreateOrUpdateMissionDataInput,
     ): MissionDataOutput {
@@ -154,6 +153,6 @@ class Missions(
      */
     @GetMapping(value = ["/sse"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
     fun createMissionSSE(): SseEmitter {
-        return sseMissionController.registerListener()
+        return sseMission.registerListener()
     }
 }

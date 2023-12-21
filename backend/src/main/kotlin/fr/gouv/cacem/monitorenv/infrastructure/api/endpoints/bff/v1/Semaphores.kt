@@ -18,13 +18,6 @@ class Semaphores(
     private val getAllSemaphores: GetAllSemaphores,
     private val getSemaphoreById: GetSemaphoreById,
 ) {
-    @GetMapping("")
-    @Operation(summary = "Get all semaphores")
-    fun getAll(): List<SemaphoreDataOutput> {
-        val semaphores = getAllSemaphores.execute()
-        return semaphores.map { SemaphoreDataOutput.fromSemaphoreEntity(it) }
-    }
-
     @GetMapping("/{semaphoreId}")
     @Operation(summary = "Get semaphore by Id")
     fun get(
@@ -34,5 +27,12 @@ class Semaphores(
     ): SemaphoreDataOutput {
         val semaphore = getSemaphoreById.execute(semaphoreId)
         return SemaphoreDataOutput.fromSemaphoreEntity(semaphore)
+    }
+
+    @GetMapping("")
+    @Operation(summary = "Get all semaphores")
+    fun getAll(): List<SemaphoreDataOutput> {
+        val semaphores = getAllSemaphores.execute()
+        return semaphores.map { SemaphoreDataOutput.fromSemaphoreEntity(it) }
     }
 }

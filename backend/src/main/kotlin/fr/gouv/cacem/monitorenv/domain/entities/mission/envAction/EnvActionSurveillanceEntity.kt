@@ -14,7 +14,7 @@ data class EnvActionSurveillanceEntity(
     override val department: String? = null,
     val coverMissionZone: Boolean? = null,
     val observations: String? = null,
-    @Deprecated("Use controlPlan instead") val themes: List<ThemeEntity>? = listOf(),
+    @Deprecated("Use controlPlans instead") val themes: List<ThemeEntity>? = listOf(),
 ) :
     EnvActionEntity(
         actionType = ActionTypeEnum.SURVEILLANCE,

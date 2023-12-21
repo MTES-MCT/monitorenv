@@ -14,7 +14,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionContr
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateMissionEvent
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.Missions
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.Missions.Missions
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.Missions.SSEMission
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.nullValue
@@ -38,7 +39,7 @@ import java.time.ZonedDateTime
 import java.util.*
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
-@WebMvcTest(value = [Missions::class, SSEMissionController::class])
+@WebMvcTest(value = [Missions::class, SSEMission::class])
 class ApiMissionsITests {
     @Autowired private lateinit var mockMvc: MockMvc
 
@@ -58,7 +59,7 @@ class ApiMissionsITests {
 
     @Autowired private lateinit var applicationEventPublisher: ApplicationEventPublisher
 
-    @Autowired private lateinit var sseMissionController: SSEMissionController
+    @Autowired private lateinit var sseMissionController: SSEMission
 
     @Test
     fun `Should create a new mission`() {

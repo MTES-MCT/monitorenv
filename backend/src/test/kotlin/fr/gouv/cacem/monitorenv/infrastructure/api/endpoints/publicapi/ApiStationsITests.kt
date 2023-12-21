@@ -8,6 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.station.StationEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.station.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.station.dtos.FullStationDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateStationDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.ApiStationsController
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito
@@ -25,7 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @Import(WebSecurityConfig::class, MapperConfiguration::class)
 @WebMvcTest(value = [(ApiStationsController::class)])
-class ApiStationsControllerITests {
+class ApiStationsITests {
     @Autowired
     private lateinit var mockMvc: MockMvc
 

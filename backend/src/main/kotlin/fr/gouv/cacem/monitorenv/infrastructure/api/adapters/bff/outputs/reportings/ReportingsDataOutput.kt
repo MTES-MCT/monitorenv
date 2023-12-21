@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ControlStatusEnum
@@ -7,21 +7,18 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDTO
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.ControlUnitDataOutput
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.UUID
 
-data class ReportingDataOutput(
+data class ReportingsDataOutput(
     val id: Int,
     val reportingId: Long? = null,
     val sourceType: SourceTypeEnum? = null,
     val semaphoreId: Int? = null,
-    val semaphore: SemaphoreDataOutput? = null,
     val controlUnitId: Int? = null,
-    val controlUnit: ControlUnitDataOutput? = null,
-    val displayedSource: String? = null,
     val sourceName: String? = null,
+    val displayedSource: String? = null,
     val targetType: TargetTypeEnum? = null,
     val vehicleType: VehicleTypeEnum? = null,
     val targetDetails: List<TargetDetailsEntity>? = listOf(),
@@ -42,48 +39,28 @@ data class ReportingDataOutput(
     val attachedToMissionAtUtc: ZonedDateTime? = null,
     val detachedFromMissionAtUtc: ZonedDateTime? = null,
     val attachedEnvActionId: UUID? = null,
-    val attachedMission: ReportingMissionDataOutput? = null,
     val controlStatus: ControlStatusEnum? = null,
 ) {
     companion object {
         fun fromReportingDTO(
             dto: ReportingDTO,
-        ): ReportingDataOutput {
+        ): ReportingsDataOutput {
             requireNotNull(dto.reporting.id) { "ReportingEntity.id cannot be null" }
-            return ReportingDataOutput(
+            return ReportingsDataOutput(
                 id = dto.reporting.id,
                 reportingId = dto.reporting.reportingId,
                 sourceType = dto.reporting.sourceType,
                 semaphoreId = dto.reporting.semaphoreId,
-                semaphore =
-                if (dto.semaphore != null) {
-                    SemaphoreDataOutput.fromSemaphoreEntity(
-                        dto.semaphore,
-                    )
-                } else {
-                    null
-                },
                 controlUnitId = dto.reporting.controlUnitId,
-                controlUnit =
-                if (dto.controlUnit != null) {
-                    ControlUnitDataOutput.fromFullControlUnit(
-                        dto.controlUnit,
-                    )
-                } else {
-                    null
-                },
+                sourceName = dto.reporting.sourceName,
                 displayedSource =
                 when (dto.reporting.sourceType) {
-                    SourceTypeEnum.SEMAPHORE ->
-                        dto.semaphore?.unit
-                            ?: dto.semaphore?.name
-                    // TODO This is really strange : `fullControlUnit?.controlUnit`
-                    // can't be null and I have to add another `?`...
-                    SourceTypeEnum.CONTROL_UNIT -> dto.controlUnit?.controlUnit?.name
+                    SourceTypeEnum.SEMAPHORE -> dto?.semaphore?.unit ?: dto?.semaphore?.name
+                    // TODO This is really strange : `fullControlUnit?.controlUnit` can't be null and I have to add another `?`...
+                    SourceTypeEnum.CONTROL_UNIT -> dto?.controlUnit?.controlUnit?.name
                     SourceTypeEnum.OTHER -> dto.reporting.sourceName
                     else -> ""
                 },
-                sourceName = dto.reporting.sourceName,
                 targetType = dto.reporting.targetType,
                 vehicleType = dto.reporting.vehicleType,
                 targetDetails = dto.reporting.targetDetails,
@@ -104,14 +81,6 @@ data class ReportingDataOutput(
                 attachedToMissionAtUtc = dto.reporting.attachedToMissionAtUtc,
                 detachedFromMissionAtUtc = dto.reporting.detachedFromMissionAtUtc,
                 attachedEnvActionId = dto.reporting.attachedEnvActionId,
-                attachedMission =
-                if (dto.attachedMission != null) {
-                    ReportingMissionDataOutput.fromMission(
-                        dto.attachedMission,
-                    )
-                } else {
-                    null
-                },
                 controlStatus = dto.controlStatus,
             )
         }

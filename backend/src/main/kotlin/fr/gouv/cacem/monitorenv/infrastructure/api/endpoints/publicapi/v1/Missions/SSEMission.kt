@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.Missions
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateMissionEvent
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.MissionDataOutput
@@ -10,9 +10,9 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event
 import java.util.*
 
 @Component
-class SSEMissionController {
+class SSEMission {
 
-    private val logger = LoggerFactory.getLogger(SSEMissionController::class.java)
+    private val logger = LoggerFactory.getLogger(SSEMission::class.java)
     val mutexLock = Any()
 
     private val MISSION_UPDATE_EVENT_NAME = "MISSION_UPDATE"
