@@ -13,7 +13,7 @@ type SubThemesSelectorProps = {
   isLight?: boolean
   label: string
   name: string
-  theme: string
+  theme: number
 }
 export function SubThemesSelector({ context, isLight = false, label, name, theme }: SubThemesSelectorProps) {
   const { newWindowContainerRef } = useNewWindow()
@@ -32,7 +32,7 @@ export function SubThemesSelector({ context, isLight = false, label, name, theme
       {!isError && !isLoading && (
         <FormikMultiSelect
           // force update when name or theme changes
-          key={theme}
+          key={`${year}-${theme}`}
           baseContainer={context === ReportingContext.MAP ? ref.current : newWindowContainerRef.current}
           data-cy="reporting-subtheme-selector"
           disabled={!theme}
