@@ -19,6 +19,11 @@ export function App() {
     return <AlertUnsupportedBrowser />
   }
 
+  // expose store when run in Cypress
+  if (window.Cypress) {
+    window.store = homeStore
+  }
+
   const persistor = persistStore(homeStore)
 
   return (
