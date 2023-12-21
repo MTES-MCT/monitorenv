@@ -1,12 +1,13 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import {
-  FormikDatePicker,
+  customDayjs,
   FormikNumberInput,
   FormikTextarea,
   MultiRadio,
   getOptionsFromLabelledEnum,
   useNewWindow,
-  type OptionValueType
+  type OptionValueType,
+  DatePicker,
+  FieldError
 } from '@mtes-mct/monitor-ui'
 import { FieldArray, useFormikContext, getIn } from 'formik'
 import _ from 'lodash'
@@ -44,11 +45,13 @@ export function ControlForm({
     errors,
     setFieldValue,
     setValues,
-    values: { attachedReportings, envActions }
+    values: { attachedReportings, envActions, startDateTimeUtc }
   } = useFormikContext<Mission<EnvActionControl>>()
 
   const envActionIndex = envActions.findIndex(envAction => envAction.id === String(currentActionIndex))
   const currentAction = envActions[envActionIndex]
+  const actionDate = envActions[envActionIndex]?.actionStartDateTimeUtc || startDateTimeUtc || new Date().toISOString()
+  const actualYearForThemes = customDayjs(actionDate).year()
 
   const targetTypeOptions = getOptionsFromLabelledEnum(TargetTypeLabels)
 
@@ -61,6 +64,10 @@ export function ControlForm({
   )
   const actionVehicleTypeErrorMessage = useMemo(
     () => getIn(errors, `envActions[${envActionIndex}].vehicleType`) || '',
+    [errors, envActionIndex]
+  )
+  const actionStartDateTimeUtcErrorMessage = useMemo(
+    () => getIn(errors, `envActions[${envActionIndex}].actionStartDateTimeUtc`) || '',
     [errors, envActionIndex]
   )
   const canAddInfraction =
@@ -129,6 +136,19 @@ export function ControlForm({
 
       return w
     })
+  }
+
+  const updateControlDate = (date: string | undefined) => {
+    const newControlDateYear = date ? customDayjs(date).year() : undefined
+    if (newControlDateYear && actualYearForThemes !== newControlDateYear) {
+      setFieldValue(`envActions[${envActionIndex}].controlPlans[0]`, {
+        subThemeIds: [],
+        tagIds: [],
+        themeId: undefined
+      })
+    }
+
+    setFieldValue(`envActions[${envActionIndex}].actionStartDateTimeUtc`, date)
   }
 
   const handleRemoveAction = () => {
@@ -208,16 +228,19 @@ export function ControlForm({
           labelSubTheme="Sous-thématiques de contrôle"
           labelTheme="Thématique de contrôle"
           themeIndex={0}
+          themesYear={actualYearForThemes}
         />
         <Form.Group>
-          <FormikDatePicker
+          <DatePicker
             baseContainer={newWindowContainerRef.current}
+            defaultValue={currentAction?.actionStartDateTimeUtc || undefined}
             isLight
             isStringDate
             label="Date et heure du contrôle (UTC)"
-            name={`envActions[${envActionIndex}].actionStartDateTimeUtc`}
+            onChange={updateControlDate}
             withTime
           />
+          {actionStartDateTimeUtcErrorMessage && <FieldError>{actionStartDateTimeUtcErrorMessage}</FieldError>}
         </Form.Group>
 
         <MultiPointPicker

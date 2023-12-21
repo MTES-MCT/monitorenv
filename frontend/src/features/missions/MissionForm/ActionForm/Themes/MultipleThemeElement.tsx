@@ -4,12 +4,12 @@ import styled from 'styled-components'
 
 import { ActionTheme } from './ActionTheme'
 
-export function MultipleThemeElement({ envActionIndex, form, push, remove }) {
+export function MultipleThemeElement({ envActionIndex, form, push, remove, themesYear }) {
   const handleRemoveTheme = (index: number) => {
     remove(index)
   }
   const handleAddTheme = () => {
-    push({ subThemeIds: [], themeId: undefined })
+    push({ subThemeIds: [], tagIds: [], themeId: undefined })
   }
 
   const currentThemes =
@@ -27,6 +27,7 @@ export function MultipleThemeElement({ envActionIndex, form, push, remove }) {
             labelSubTheme="Sous-thématiques de surveillance"
             labelTheme="Thématique de surveillance"
             themeIndex={0}
+            themesYear={themesYear}
           />
         </ThemeBloc>
       )}
@@ -38,6 +39,7 @@ export function MultipleThemeElement({ envActionIndex, form, push, remove }) {
             labelSubTheme="Sous-thématiques de surveillance"
             labelTheme="Thématique de surveillance"
             themeIndex={index}
+            themesYear={themesYear}
           />
 
           {index > 0 && (
