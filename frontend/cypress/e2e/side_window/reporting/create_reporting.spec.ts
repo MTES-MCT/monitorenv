@@ -15,16 +15,14 @@ context('Reportings', () => {
   })
 
   it('Reporting should be created with no themes and sub-themes when year of date change', () => {
+    cy.wait(1000)
     cy.clickButton('Ajouter un nouveau signalement')
     cy.intercept('PUT', '/bff/v1/reportings', FAKE_API_PUT_RESPONSE).as('createReporting')
     cy.wait(1000)
 
     // When
-    cy.getDataCy('add-semaphore-source').click({ force: true })
-    cy.get('div[role="option"]').contains('Sémaphore de Dieppe').click()
-
-    cy.getDataCy('reporting-target-type').click({ force: true })
-    cy.get('div[role="option"]').contains('Personne morale').click()
+    cy.fill('Nom du Sémaphore', 'Sémaphore de Dieppe')
+    cy.fill('Type de cible', 'Personne morale')
 
     cy.clickButton('Ajouter un point')
 
@@ -68,16 +66,14 @@ context('Reportings', () => {
     })
   })
   it('Reporting should be created with available themes and sub-themes when year of date change', () => {
+    cy.wait(1000)
     cy.clickButton('Ajouter un nouveau signalement')
     cy.intercept('PUT', '/bff/v1/reportings', FAKE_API_PUT_RESPONSE).as('createReporting')
     cy.wait(1000)
 
     // When
-    cy.getDataCy('add-semaphore-source').click({ force: true })
-    cy.get('div[role="option"]').contains('Sémaphore de Dieppe').click()
-
-    cy.getDataCy('reporting-target-type').click({ force: true })
-    cy.get('div[role="option"]').contains('Personne morale').click()
+    cy.fill('Nom du Sémaphore', 'Sémaphore de Dieppe')
+    cy.fill('Type de cible', 'Personne morale')
 
     cy.clickButton('Ajouter un point')
 
