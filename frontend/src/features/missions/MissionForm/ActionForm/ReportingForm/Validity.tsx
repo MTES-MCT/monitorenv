@@ -21,23 +21,25 @@ export function Validity({ reporting }: { reporting: Reporting }) {
 
   return (
     <StyledValidityContainer>
-      <TextInput
-        label="Validité&nbsp;(h)"
-        name="validityTime"
-        plaintext
-        value={reporting.validityTime ? `${reporting.validityTime} h` : '--'}
-      />
-      {reportingStatus === ReportingStatusEnum.ARCHIVED && (
-        <GrayText>{`Le signalement ouvert le ${formattedCreatedAt} (UTC) a été archivé.`}</GrayText>
-      )}
+      <div>
+        <TextInput label="Date et heure (UTC)" name="createdAt" plaintext value={formattedCreatedAt} />
+        <TextInput
+          label="Validité&nbsp;(h)"
+          name="validityTime"
+          plaintext
+          value={reporting.validityTime ? `${reporting.validityTime} h` : '--'}
+        />{' '}
+      </div>
+
+      {reportingStatus === ReportingStatusEnum.ARCHIVED && <GrayText>Le signalement a été archivé.</GrayText>}
 
       {((reportingStatus !== ReportingStatusEnum.ARCHIVED && timeLeft > 0 && timeLeft < 1) ||
         (timeLeft > 0 && timeLeft < 1)) && (
-        <GrayText>{`Le signalement ouvert le ${formattedCreatedAt} (UTC) sera archivé le ${formattedEndOfValidity} (UTC) (dans ${remainingMinutes}min)`}</GrayText>
+        <GrayText>{`Le signalement sera archivé le ${formattedEndOfValidity} (UTC) (dans ${remainingMinutes}min)`}</GrayText>
       )}
 
       {((reportingStatus !== ReportingStatusEnum.ARCHIVED && timeLeft >= 1) || timeLeft >= 1) && (
-        <GrayText>{`Le signalement ouvert le ${formattedCreatedAt} (UTC) sera archivé le ${formattedEndOfValidity} (UTC) (dans ${Math.round(
+        <GrayText>{`Le signalement sera archivé le ${formattedEndOfValidity} (UTC) (dans ${Math.round(
           timeLeft
         )}h)`}</GrayText>
       )}
@@ -47,9 +49,12 @@ export function Validity({ reporting }: { reporting: Reporting }) {
 
 const StyledValidityContainer = styled.div`
   display: flex;
-  flex-direction: row;
-  align-items: end;
+  flex-direction: column;
   gap: 8px;
+  > div {
+    display: flex;
+    gap: 40px;
+  }
 `
 
 const GrayText = styled.span`
