@@ -14,6 +14,7 @@ import { FieldArray, useField, useFormikContext } from 'formik'
 import styled from 'styled-components'
 
 import { ControlUnitsForm } from './ControlUnitsForm'
+import { CONTROL_PLAN_INIT, UNIQ_CONTROL_PLAN_INDEX } from '../../../domain/entities/controlPlan'
 import { InteractionListener } from '../../../domain/entities/map/constants'
 import {
   type Mission,
@@ -52,22 +53,14 @@ export function GeneralInformationsForm() {
     if (actualYearForThemes && actualYearForThemes !== customDayjs(date).year()) {
       values?.envActions?.forEach((action, actionIndex) => {
         if (action.actionType === ActionTypeEnum.CONTROL && !action.actionStartDateTimeUtc) {
-          setFieldValue(`envActions[${actionIndex}].controlPlans[0]`, {
-            subThemeIds: [],
-            tagIds: [],
-            themeId: undefined
-          })
+          setFieldValue(`envActions[${actionIndex}].controlPlans[${UNIQ_CONTROL_PLAN_INDEX}]`, CONTROL_PLAN_INIT)
         }
         if (
           action.actionType === ActionTypeEnum.SURVEILLANCE &&
           (!action.actionStartDateTimeUtc || (action.actionStartDateTimeUtc && action.durationMatchesMission))
         ) {
           action?.controlPlans?.forEach((_, index) => {
-            setFieldValue(`envActions[${actionIndex}].controlPlans[${index}]`, {
-              subThemeIds: [],
-              tagIds: [],
-              themeId: undefined
-            })
+            setFieldValue(`envActions[${actionIndex}].controlPlans[${index}]`, CONTROL_PLAN_INIT)
           })
         }
       })

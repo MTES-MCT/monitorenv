@@ -15,6 +15,7 @@ import { Form, IconButton, Toggle } from 'rsuite'
 import styled from 'styled-components'
 
 import { SurveillanceThemes } from './Themes/SurveillanceThemes'
+import { CONTROL_PLAN_INIT } from '../../../../domain/entities/controlPlan'
 import { InteractionListener } from '../../../../domain/entities/map/constants'
 import {
   ActionTypeEnum,
@@ -130,11 +131,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
     const newSurveillanceDateYear = date ? customDayjs(date).year() : undefined
     if (newSurveillanceDateYear && actualYearForThemes !== newSurveillanceDateYear) {
       currentAction?.controlPlans?.forEach((_, index) => {
-        setFieldValue(`envActions[${envActionIndex}].controlPlans[${index}]`, {
-          subThemeIds: [],
-          tagIds: [],
-          themeId: undefined
-        })
+        setFieldValue(`envActions[${envActionIndex}].controlPlans[${index}]`, CONTROL_PLAN_INIT)
       })
     }
 

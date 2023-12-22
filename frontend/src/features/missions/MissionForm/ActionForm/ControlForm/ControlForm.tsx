@@ -17,6 +17,7 @@ import styled from 'styled-components'
 
 import { InfractionsForm } from './InfractionsForm'
 import { OtherControlTypesForm } from './OtherControlTypesForm'
+import { CONTROL_PLAN_INIT, UNIQ_CONTROL_PLAN_INDEX } from '../../../../../domain/entities/controlPlan'
 import { TargetTypeEnum, TargetTypeLabels } from '../../../../../domain/entities/targetType'
 import { VehicleTypeEnum } from '../../../../../domain/entities/vehicleType'
 import { ReactComponent as ControlIconSVG } from '../../../../../uiMonitor/icons/Control.svg'
@@ -141,11 +142,7 @@ export function ControlForm({
   const updateControlDate = (date: string | undefined) => {
     const newControlDateYear = date ? customDayjs(date).year() : undefined
     if (newControlDateYear && actualYearForThemes !== newControlDateYear) {
-      setFieldValue(`envActions[${envActionIndex}].controlPlans[0]`, {
-        subThemeIds: [],
-        tagIds: [],
-        themeId: undefined
-      })
+      setFieldValue(`envActions[${envActionIndex}].controlPlans[${UNIQ_CONTROL_PLAN_INDEX}]`, CONTROL_PLAN_INIT)
     }
 
     setFieldValue(`envActions[${envActionIndex}].actionStartDateTimeUtc`, date)
