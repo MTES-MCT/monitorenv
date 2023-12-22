@@ -6,7 +6,7 @@ import { ReportingStatusEnum, getReportingStatus, type Reporting } from '../../.
 export function Validity({ reporting }: { reporting: Reporting }) {
   const reportingStatus = getReportingStatus(reporting)
 
-  const localizedCreatedAt = getLocalizedDayjs(reporting.createdAt)
+  const localizedCreatedAt = getLocalizedDayjs(reporting.createdAt || customDayjs().toISOString())
   const formattedCreatedAt = localizedCreatedAt.format('DD/MM/YYYY à HH:mm')
 
   const endOfValidity = localizedCreatedAt.add(reporting.validityTime || 0, 'hour')

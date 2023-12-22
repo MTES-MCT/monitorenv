@@ -22,7 +22,10 @@ export function Footer({ onCancel, onDelete, setMustIncreaseValidity, setShouldV
   const reportingStatus = getReportingStatus(values)
 
   const handleReopen = () => {
-    const endOfValidity = getLocalizedDayjs(values?.createdAt).add(values?.validityTime || 0, 'hour')
+    const endOfValidity = getLocalizedDayjs(values?.createdAt || customDayjs().toISOString()).add(
+      values?.validityTime || 0,
+      'hour'
+    )
     const timeLeft = customDayjs(endOfValidity).diff(getLocalizedDayjs(customDayjs().toISOString()), 'hour', true)
 
     if (timeLeft < 0) {

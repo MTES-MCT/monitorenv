@@ -11,7 +11,7 @@ export type Reporting = {
   attachedToMissionAtUtc?: string
   controlStatus: ControlStatusEnum
   controlUnitId?: number
-  createdAt: string
+  createdAt: string | undefined
   description?: string
   detachedFromMissionAtUtc?: string
   geom: Record<string, any>[]
