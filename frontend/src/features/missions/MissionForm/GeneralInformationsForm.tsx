@@ -1,4 +1,6 @@
 import {
+  customDayjs,
+  DatePicker,
   FieldError,
   FormikCheckbox,
   FormikDatePicker,
@@ -12,13 +14,15 @@ import { FieldArray, useField, useFormikContext } from 'formik'
 import styled from 'styled-components'
 
 import { ControlUnitsForm } from './ControlUnitsForm'
+import { CONTROL_PLAN_INIT, UNIQ_CONTROL_PLAN_INDEX } from '../../../domain/entities/controlPlan'
 import { InteractionListener } from '../../../domain/entities/map/constants'
 import {
   type Mission,
   MissionSourceEnum,
   getMissionStatus,
   hasMissionOrderLabels,
-  missionTypeEnum
+  missionTypeEnum,
+  ActionTypeEnum
 } from '../../../domain/entities/missions'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { MissionSourceTag } from '../../../ui/MissionSourceTag'
@@ -34,7 +38,7 @@ export function GeneralInformationsForm() {
 
   const [hasMissionOrderField] = useField<boolean>('hasMissionOrder')
   const [missionSourceField] = useField<MissionSourceEnum>('missionSource')
-  const { errors, values } = useFormikContext<Mission>()
+  const { errors, setFieldValue, values } = useFormikContext<Mission>()
   const missionTypeOptions = Object.entries(missionTypeEnum).map(([key, val]) => ({ label: val.libelle, value: key }))
 
   const hasMissionOrderOptions = Object.values(hasMissionOrderLabels)
@@ -43,6 +47,26 @@ export function GeneralInformationsForm() {
   const missionIsNewMission = isNewMission(routeParams?.params?.id)
 
   const title = getMissionTitle(missionIsNewMission, values)
+
+  const actualYearForThemes = customDayjs(values?.startDateTimeUtc).year()
+  const updateMissionDateTime = (date: string | undefined) => {
+    if (actualYearForThemes && actualYearForThemes !== customDayjs(date).year()) {
+      values?.envActions?.forEach((action, actionIndex) => {
+        if (action.actionType === ActionTypeEnum.CONTROL && !action.actionStartDateTimeUtc) {
+          setFieldValue(`envActions[${actionIndex}].controlPlans[${UNIQ_CONTROL_PLAN_INDEX}]`, CONTROL_PLAN_INIT)
+        }
+        if (
+          action.actionType === ActionTypeEnum.SURVEILLANCE &&
+          (!action.actionStartDateTimeUtc || (action.actionStartDateTimeUtc && action.durationMatchesMission))
+        ) {
+          action?.controlPlans?.forEach((_, index) => {
+            setFieldValue(`envActions[${actionIndex}].controlPlans[${index}]`, CONTROL_PLAN_INIT)
+          })
+        }
+      })
+    }
+    setFieldValue('startDateTimeUtc', date)
+  }
 
   return (
     <StyledContainer>
@@ -58,14 +82,15 @@ export function GeneralInformationsForm() {
       <StyledFormWrapper>
         <div>
           <StyledDatePickerContainer>
-            <FormikDatePicker
+            <DatePicker
               baseContainer={newWindowContainerRef.current}
               data-cy="mission-start-date-time"
+              defaultValue={values?.startDateTimeUtc || undefined}
               isCompact
               isErrorMessageHidden
               isStringDate
               label="Début de mission (UTC)"
-              name="startDateTimeUtc"
+              onChange={updateMissionDateTime}
               withTime
             />
 

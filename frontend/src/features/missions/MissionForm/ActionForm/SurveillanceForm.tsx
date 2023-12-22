@@ -1,12 +1,13 @@
 import {
+  customDayjs,
   FieldError,
   FormikCheckbox,
-  FormikDatePicker,
   FormikTextarea,
   MultiCheckbox,
   pluralize,
   useNewWindow,
-  type OptionValueType
+  type OptionValueType,
+  DatePicker
 } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import { useMemo, useState } from 'react'
@@ -14,6 +15,7 @@ import { Form, IconButton, Toggle } from 'rsuite'
 import styled from 'styled-components'
 
 import { SurveillanceThemes } from './Themes/SurveillanceThemes'
+import { CONTROL_PLAN_INIT } from '../../../../domain/entities/controlPlan'
 import { InteractionListener } from '../../../../domain/entities/map/constants'
 import {
   ActionTypeEnum,
@@ -33,12 +35,15 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
 
   const {
     setFieldValue,
-    values: { attachedReportings, envActions }
+    values: { attachedReportings, envActions, startDateTimeUtc }
   } = useFormikContext<Mission<EnvActionSurveillance>>()
 
   const [actionsFields] = useField<EnvAction[]>('envActions')
   const envActionIndex = actionsFields.value.findIndex(envAction => envAction.id === String(currentActionIndex))
   const currentAction = envActions[envActionIndex]
+
+  const actionDate = envActions[envActionIndex]?.actionStartDateTimeUtc || startDateTimeUtc || new Date().toISOString()
+  const actualYearForThemes = customDayjs(actionDate).year()
 
   const { reportingIds = [] } = currentAction || {}
   const [, actionStartDateMeta] = useField(`envActions[${envActionIndex}].actionStartDateTimeUtc`)
@@ -122,6 +127,20 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
     remove(envActionIndex)
   }
 
+  const updateStartDateTime = (date: string | undefined) => {
+    const newSurveillanceDateYear = date ? customDayjs(date).year() : undefined
+    if (newSurveillanceDateYear && actualYearForThemes !== newSurveillanceDateYear) {
+      currentAction?.controlPlans?.forEach((_, index) => {
+        setFieldValue(`envActions[${envActionIndex}].controlPlans[${index}]`, CONTROL_PLAN_INIT)
+      })
+    }
+
+    setFieldValue(`envActions[${envActionIndex}].actionStartDateTimeUtc`, date)
+  }
+  const updateEndDateTime = (date: string | undefined) => {
+    setFieldValue(`envActions[${envActionIndex}].actionEndDateTimeUtc`, date)
+  }
+
   return (
     <>
       <Header>
@@ -158,15 +177,16 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
           />
         )}
       </ReportingsContainer>
-      <SurveillanceThemes envActionIndex={envActionIndex} />
+      <SurveillanceThemes envActionIndex={envActionIndex} themesYear={actualYearForThemes} />
       <FlexSelectorWrapper>
         <Form.Group>
           <Form.ControlLabel>Début et fin de surveillance (UTC)</Form.ControlLabel>
           <StyledDatePickerContainer>
-            <StyledFormikDatePicker
+            <StyledDatePicker
               key={`start-date-${durationMatchMissionField.value}`}
               baseContainer={newWindowContainerRef.current}
               data-cy="surveillance-start-date-time"
+              defaultValue={currentAction?.actionStartDateTimeUtc || undefined}
               disabled={!!durationMatchMissionField.value}
               isCompact
               isErrorMessageHidden
@@ -175,13 +195,14 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
               isStringDate
               isUndefinedWhenDisabled={false}
               label="Date et heure de début de surveillance (UTC)"
-              name={`envActions[${envActionIndex}].actionStartDateTimeUtc`}
+              onChange={updateStartDateTime}
               withTime
             />
-            <StyledFormikDatePicker
+            <StyledDatePicker
               key={`end-date-${durationMatchMissionField.value}`}
               baseContainer={newWindowContainerRef.current}
               data-cy="surveillance-end-date-time"
+              defaultValue={currentAction?.actionEndDateTimeUtc || undefined}
               disabled={!!durationMatchMissionField.value}
               isCompact
               isErrorMessageHidden
@@ -190,7 +211,7 @@ export function SurveillanceForm({ currentActionIndex, remove, setCurrentActionI
               isStringDate
               isUndefinedWhenDisabled={false}
               label="Date et heure de fin de surveillance (UTC)"
-              name={`envActions[${envActionIndex}].actionEndDateTimeUtc`}
+              onChange={updateEndDateTime}
               withTime
             />
             {envActionField.value.actionStartDateTimeUtc && envActionField.value.actionEndDateTimeUtc && (
@@ -281,7 +302,7 @@ const StyledDatePickerContainer = styled.div`
   align-items: baseline;
   margin-bottom: 8px;
 `
-const StyledFormikDatePicker = styled(FormikDatePicker)`
+const StyledDatePicker = styled(DatePicker)`
   p {
     max-width: 200px;
   }

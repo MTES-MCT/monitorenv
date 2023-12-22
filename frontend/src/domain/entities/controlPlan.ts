@@ -39,3 +39,11 @@ export type ControlPlansData = {
   tagIds: number[]
   themeId: number | undefined
 }
+
+export const CONTROL_PLAN_INIT = {
+  subThemeIds: [],
+  tagIds: [],
+  themeId: undefined
+}
+
+export const UNIQ_CONTROL_PLAN_INDEX = 0

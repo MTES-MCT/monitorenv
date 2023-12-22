@@ -259,4 +259,86 @@ context('Mission actions', () => {
       cy.clickButton('Confirmer la suppression')
     })
   })
+
+  it('Sould create control and surveillance actions with valids themes and subthemes depending on mission year', () => {
+    // Given
+    cy.wait(400)
+    cy.intercept('PUT', '/bff/v1/missions').as('createMission')
+
+    cy.clickButton('Ajouter une nouvelle mission')
+
+    // When
+    cy.fill('Début de mission (UTC)', [2024, 5, 26, 12, 0])
+    cy.fill('Fin de mission (UTC)', [2024, 5, 28, 14, 15])
+    cy.get('[name="missionTypes0"]').click({ force: true })
+
+    cy.get('*[data-cy="add-control-unit"]').click()
+    cy.get('.rs-picker-search-bar-input').type('Cross{enter}')
+    cy.get('*[data-cy="control-unit-contact"]').type('Contact 012345')
+    cy.get('[name="openBy"]').scrollIntoView().type('PCF')
+
+    // Add a surveillance
+    cy.clickButton('Ajouter')
+    cy.clickButton('Ajouter une surveillance')
+    cy.get('*[data-cy="envaction-theme-selector"]').eq(0).click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').eq(0).contains('Épave').click({ force: true }) // id 105
+    cy.get('*[data-cy="envaction-subtheme-selector"]').eq(0).click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]')
+      .eq(0)
+      .contains("Découverte d'une épave maritime")
+      .click({ force: true }) // id 128
+    cy.get('*[data-cy="envaction-theme-element"]').eq(0).contains('Autre (Épave)').click({ force: true }) // id 131
+
+    // Add a control
+    cy.clickButton('Ajouter')
+    cy.clickButton('Ajouter des contrôles')
+    cy.get('*[data-cy="envaction-theme-selector"]').click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Pêche de loisir (autre que PAP)').click({ force: true }) // id 112
+    cy.get('*[data-cy="envaction-subtheme-selector"]').click({ force: true })
+    cy.get('*[data-cy="envaction-theme-element"]').contains('Pêche embarquée').click({ force: true }) // id 173
+
+    // Then
+    cy.clickButton('Enregistrer et quitter')
+    cy.wait('@createMission').then(({ response }) => {
+      expect(response && response.statusCode).equal(200)
+      const { envActions } = response && response.body
+      expect(envActions.length).equal(2)
+
+      // control
+      const control = envActions[0]
+      const controlPlans = control.controlPlans[0]
+      expect(controlPlans.themeId).equal(112)
+      expect(controlPlans.subThemeIds.length).equal(1)
+      expect(controlPlans.subThemeIds[0]).equal(173)
+
+      // surveillance
+      const surveillance = envActions[1]
+      const surveillanceControlPlans = surveillance.controlPlans[0]
+      expect(surveillanceControlPlans.themeId).equal(105)
+      expect(surveillanceControlPlans.subThemeIds.length).equal(2)
+      expect(surveillanceControlPlans.subThemeIds[0]).equal(128)
+      expect(surveillanceControlPlans.subThemeIds[1]).equal(131)
+
+      const id = response && response.body.id
+      cy.intercept('PUT', `/bff/v1/missions/${id}`).as('updateMission')
+      cy.getDataCy(`edit-mission-${id}`).click({ force: true })
+
+      // update mission date to 2023
+      cy.fill('Début de mission (UTC)', [2023, 5, 26, 12, 0])
+      cy.fill('Fin de mission (UTC)', [2023, 5, 28, 14, 15])
+      cy.clickButton('Enregistrer et quitter')
+      cy.wait('@updateMission').then(({ response: newResponse }) => {
+        const { envActions: updatedEnvActions } = newResponse && newResponse.body
+        expect(updatedEnvActions.length).equal(2)
+
+        // control
+        const updatedControl = updatedEnvActions[0]
+        expect(updatedControl.controlPlans.length).equal(0)
+
+        // surveillance
+        const updatedSurveillance = updatedEnvActions[1]
+        expect(updatedSurveillance.controlPlans.length).equal(0)
+      })
+    })
+  })
 })

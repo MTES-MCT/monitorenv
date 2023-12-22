@@ -5,7 +5,7 @@ import type { Mission } from '../../../../domain/entities/missions'
 
 export const updateTheme =
   (setFieldValue: (field: string, value: any) => void, mission: Mission) =>
-  (value: number, actionIndex: number, themeIndex: number) => {
+  (value: number | undefined, actionIndex: number, themeIndex: number) => {
     const themesPath = `envActions[${actionIndex}].controlPlans`
     const currentThemeValue = get(mission, themesPath) as ControlPlansData[]
     const newValue = [...currentThemeValue]
