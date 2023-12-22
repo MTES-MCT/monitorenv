@@ -12,6 +12,7 @@ import type { BaseMapChildrenProps } from '../../BaseMap'
 
 export function EditingMissionLayer({ map }: BaseMapChildrenProps) {
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
+  const selectedMissionIdOnMap = useAppSelector(state => state.mission.selectedMissionIdOnMap)
   const editingMission = useAppSelector(state =>
     activeMissionId ? state.missionForms.missions[activeMissionId]?.missionForm : undefined
   )
@@ -20,11 +21,19 @@ export function EditingMissionLayer({ map }: BaseMapChildrenProps) {
     state => state.attachMissionToReporting.isMissionAttachmentInProgress
   )
 
+  const hasNoMissionConflict = useMemo(() => {
+    if (!selectedMissionIdOnMap && !!activeMissionId) {
+      return true
+    }
+
+    return !!selectedMissionIdOnMap && activeMissionId === selectedMissionIdOnMap
+  }, [activeMissionId, selectedMissionIdOnMap])
+
   // we don't want to display missions on the map if the user so decides (displayMissionEditingLayer variable)
   // or if user have interaction on map (edit mission zone, attach mission to reporting)
   const isLayerVisible = useMemo(
-    () => displayMissionEditingLayer && !isMissionAttachmentInProgress,
-    [displayMissionEditingLayer, isMissionAttachmentInProgress]
+    () => displayMissionEditingLayer && !isMissionAttachmentInProgress && hasNoMissionConflict,
+    [displayMissionEditingLayer, isMissionAttachmentInProgress, hasNoMissionConflict]
   )
 
   const editingMissionVectorSourceRef = useRef() as MutableRefObject<VectorSource>

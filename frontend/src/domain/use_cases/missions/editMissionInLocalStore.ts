@@ -15,7 +15,7 @@ export const editMissionInLocalStore = (missionId: number) => async (dispatch, g
   const missionToEdit = missionsAPI.endpoints.getMission
 
   if (missions[missionId]) {
-    setMission(dispatch, missions[missionId].missionForm)
+    setMission(dispatch, missions[missionId])
   } else {
     try {
       const missionRequest = dispatch(missionToEdit.initiate(missionId))

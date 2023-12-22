@@ -16,7 +16,7 @@ export function SelectedMissionLayer({ map }: BaseMapChildrenProps) {
   const { displayMissionSelectedLayer } = useAppSelector(state => state.global)
   const { selectedMission } = useGetMissionsQuery(undefined, {
     selectFromResult: ({ data }) => ({
-      selectedMission: data?.find(op => op.id === activeMissionId)
+      selectedMission: data?.find(op => op.id === selectedMissionIdOnMap)
     })
   })
 

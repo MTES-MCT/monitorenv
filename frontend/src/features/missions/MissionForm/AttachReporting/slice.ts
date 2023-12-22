@@ -22,6 +22,9 @@ const attachReportingToMissionSlice = createSlice({
   initialState: INITIAL_STATE,
   name: 'attachReportingToMissionSlice',
   reducers: {
+    resetAttachReportingState() {
+      return INITIAL_STATE
+    },
     setAttachedReportings(state, action) {
       const attachedReportings = action.payload
       state.attachedReportings = attachedReportings

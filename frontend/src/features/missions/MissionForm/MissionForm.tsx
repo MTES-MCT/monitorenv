@@ -82,9 +82,9 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
   }
 
   const cancelForm = async () => {
+    await dispatch(sideWindowActions.setShowConfirmCancelModal(false))
+    await dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.MISSIONS)))
     await dispatch(missionFormsActions.deleteSelectedMission(id))
-    dispatch(sideWindowActions.setShowConfirmCancelModal(false))
-    dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.MISSIONS)))
     removeMissionListener(id)
   }
 

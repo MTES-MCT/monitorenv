@@ -20,11 +20,12 @@ export const switchTab = path => async (dispatch, getState) => {
 
   await dispatch(missionFormsActions.setMission(missions[id]))
   await dispatch(missionActions.setSelectedMissionIdOnMap(id))
-  await dispatch(sideWindowActions.setCurrentPath(path))
 
   // since we are switching to another mission, we need to update the attached reportings store
   // because it's the form who listen to this store
   await dispatch(
     attachReportingToMissionSliceActions.setAttachedReportings(missions[id]?.missionForm?.attachedReportings || [])
   )
+
+  await dispatch(sideWindowActions.setCurrentPath(path))
 }

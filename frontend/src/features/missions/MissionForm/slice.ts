@@ -31,6 +31,9 @@ const missionFormsSlice = createSlice({
       if (state.missions) {
         delete state.missions[missionIdToDelete]
       }
+      if (state.activeMissionId === missionIdToDelete) {
+        state.activeMissionId = undefined
+      }
     },
     resetMissions() {
       return INITIAL_STATE
