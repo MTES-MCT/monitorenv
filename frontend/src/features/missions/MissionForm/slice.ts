@@ -12,12 +12,12 @@ type SelectedMissionType = {
   [key: string]: MissionInStateType
 }
 
-type MissionState = {
+type MissionForms = {
   activeMissionId: number | string | undefined
   missions: SelectedMissionType
 }
 
-const INITIAL_STATE: MissionState = {
+const INITIAL_STATE: MissionForms = {
   activeMissionId: undefined,
   missions: {}
 }

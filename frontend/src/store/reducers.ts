@@ -7,7 +7,6 @@ import { layerSidebarSlice } from '../domain/shared_slices/LayerSidebar'
 import { mapSliceReducer } from '../domain/shared_slices/Map'
 import { measurementSlicePersistedReducer } from '../domain/shared_slices/Measurement'
 import { missionFiltersPersistedReducer } from '../domain/shared_slices/MissionFilters'
-import { missionStateSliceReducer } from '../domain/shared_slices/MissionsState'
 import { regulatorySlicePersistedReducer } from '../domain/shared_slices/Regulatory'
 import { regulatoryMetadataSliceReducer } from '../domain/shared_slices/RegulatoryMetadata'
 import { reportingSliceReducer } from '../domain/shared_slices/reporting'
@@ -52,7 +51,6 @@ export const homeReducers = {
   mission: missionSliceReducer,
   missionFilters: missionFiltersPersistedReducer,
   missionForms: missionFormsSliceReducer,
-  missionState: missionStateSliceReducer,
   regulatory: regulatorySlicePersistedReducer,
   regulatoryMetadata: regulatoryMetadataSliceReducer,
   [layerSidebarSlice.name]: layerSidebarSlice.reducer,
