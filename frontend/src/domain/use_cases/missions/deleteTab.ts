@@ -12,7 +12,7 @@ import { sideWindowPaths } from '../../entities/sideWindow'
 
 export const deleteTab = (path: string) => async (dispatch, getState) => {
   const { missions } = getState().missionForms
-  const { activeMissionId } = getState().mission
+  const { activeMissionId } = getState().missionForms
   const { selectedMissionIdOnMap } = getState().mission
 
   const routeParams = getMissionPageRoute(path)
@@ -45,7 +45,7 @@ export const deleteTab = (path: string) => async (dispatch, getState) => {
     await dispatch(missionActions.resetSelectedMissionIdOnMap())
   }
 
-  if (activeMissionId === idToDelete) {
+  if (idToDelete === activeMissionId) {
     await dispatch(attachReportingToMissionSliceActions.resetAttachReportingState())
   }
 

@@ -10,7 +10,7 @@ export const useUpdateOtherControlTypes = () => {
     values: { controlUnits, envActions }
   } = useFormikContext<Mission>()
 
-  const currentControlUnitIsPAM = controlUnits.some(controlUnit =>
+  const currentControlUnitIsPAM = controlUnits?.some(controlUnit =>
     ControlUnit.PAMControlUnitIds.includes(controlUnit.id)
   )
   const previousControlUnitIsPAM = usePrevious(currentControlUnitIsPAM)

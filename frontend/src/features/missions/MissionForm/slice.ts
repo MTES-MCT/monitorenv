@@ -35,6 +35,9 @@ const missionFormsSlice = createSlice({
         state.activeMissionId = undefined
       }
     },
+    resetActiveMissionId(state) {
+      state.activeMissionId = undefined
+    },
     resetMissions() {
       return INITIAL_STATE
     },

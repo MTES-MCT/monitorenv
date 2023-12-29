@@ -1,5 +1,6 @@
 import { Accent, Button, Icon, THEME } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { Accented, ReportingDate, SummaryContent } from './style'
@@ -49,15 +50,19 @@ export function ReportingCard({
     }
   }
 
-  const getControlStatus = () => {
+  const controlStatus = useMemo(() => {
     const attachedAction = values?.envActions?.find(a => a.id === action.attachedEnvActionId)
 
     if (action.attachedEnvActionId && attachedAction?.actionType === ActionTypeEnum.CONTROL) {
       return ControlStatusEnum.CONTROL_DONE
     }
 
-    return ControlStatusEnum.SURVEILLANCE_DONE
-  }
+    if (action.attachedEnvActionId && attachedAction?.actionType === ActionTypeEnum.SURVEILLANCE) {
+      return ControlStatusEnum.SURVEILLANCE_DONE
+    }
+
+    return ControlStatusEnum.CONTROL_TO_BE_DONE
+  }, [action.attachedEnvActionId, values?.envActions])
 
   return (
     <>
@@ -73,11 +78,11 @@ export function ReportingCard({
         )}
         {action.description || 'Aucune description'}
         <ControlContainer $isEndAlign={!action.attachedEnvActionId}>
-          {action.attachedEnvActionId && (
-            <StatusActionTag backgroundColor={THEME.color.white} controlStatus={getControlStatus()} />
+          {action.attachedEnvActionId && controlStatus !== ControlStatusEnum.CONTROL_TO_BE_DONE && (
+            <StatusActionTag backgroundColor={THEME.color.white} controlStatus={controlStatus} />
           )}
 
-          {!action.attachedEnvActionId && (
+          {(!action.attachedEnvActionId || controlStatus === ControlStatusEnum.CONTROL_TO_BE_DONE) && (
             <Button accent={Accent.SECONDARY} Icon={Icon.ControlUnit} onClick={addAttachedControl}>
               Ajouter un contrôle
             </Button>

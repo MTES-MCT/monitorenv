@@ -94,7 +94,7 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
 
     // we want to display reportings from API (with active filters), active reporting
     // and reportings attached to active mission
-    return [...reportingsFromApiFeatures, ...attachedReportingsToActiveMissionFeature]
+    return [...attachedReportingsToActiveMissionFeature, ...reportingsFromApiFeatures]
   }, [
     displayReportingsLayer,
     attachedReportingsToActiveMission,
