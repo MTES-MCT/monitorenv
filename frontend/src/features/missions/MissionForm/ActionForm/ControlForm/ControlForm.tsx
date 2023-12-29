@@ -176,6 +176,13 @@ export function ControlForm({
     if (reportingToAttachIndex !== -1) {
       setFieldValue(`attachedReportings[${reportingToAttachIndex}].attachedEnvActionId`, currentAction?.id)
     }
+
+    const reportingToDetachIndex = attachedReportings?.findIndex(
+      reporting => reporting.attachedEnvActionId === currentAction?.id && reporting.id !== reportingId
+    )
+    if (reportingToDetachIndex !== -1) {
+      setFieldValue(`attachedReportings[${reportingToDetachIndex}].attachedEnvActionId`, undefined)
+    }
   }
 
   return (

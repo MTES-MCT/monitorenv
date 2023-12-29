@@ -19,14 +19,6 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const { displayMissionsLayer } = useAppSelector(state => state.global)
   const { missions } = useGetFilteredMissionsQuery()
 
-  // we don't want to display missions on the map if the user so decides (displayMissionsLayer variable)
-  // or if user have interaction on map (edit mission zone, attach reporting or mission)
-  const hasMapInteraction = useHasMapInteraction()
-  const isLayerVisible = useMemo(
-    () => displayMissionsLayer && !hasMapInteraction,
-    [displayMissionsLayer, hasMapInteraction]
-  )
-
   // mission attached to active reporting
   const reportings = useAppSelector(state => state.reporting.reportings)
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
@@ -73,14 +65,27 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       )
       .map(filteredMission => getMissionZoneFeature(filteredMission, Layers.MISSIONS.code))
 
+    if (!displayMissionsLayer && missionAttachedToReporting) {
+      return missionAttachedToReportingFeature
+    }
+
     return [...missionFromApi, ...activeMissionFeature, ...missionAttachedToReportingFeature]
   }, [
+    activeMission?.id,
+    displayMissionsLayer,
     missions,
     activeMissionFeature,
-    missionAttachedToReportingFeature,
-    activeMission?.id,
-    missionAttachedToReporting?.id
+    missionAttachedToReporting,
+    missionAttachedToReportingFeature
   ])
+
+  // we don't want to display missions on the map if the user so decides (displayMissionsLayer variable)
+  // or if user have interaction on map (edit mission zone, attach reporting or mission)
+  const hasMapInteraction = useHasMapInteraction()
+  const isLayerVisible = useMemo(
+    () => (displayMissionsLayer && !hasMapInteraction) || !!missionAttachedToReporting,
+    [displayMissionsLayer, hasMapInteraction, missionAttachedToReporting]
+  )
 
   const vectorSourceRef = useRef() as React.MutableRefObject<VectorSource<Geometry>>
   const GetVectorSource = () => {

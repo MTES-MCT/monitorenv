@@ -41,6 +41,12 @@ export function ReportingCard({
 
     setFieldValue('envActions', [newControl, ...(values?.envActions || [])])
     setCurrentActionIndex(newControl.id)
+    const reportingToUpdateIndex = values?.attachedReportings
+      ? values?.attachedReportings?.findIndex(reporting => Number(reporting.id) === Number(action.id))
+      : -1
+    if (reportingToUpdateIndex !== -1) {
+      setFieldValue(`attachedReportings[${reportingToUpdateIndex}].attachedEnvActionId`, newControl.id)
+    }
   }
 
   const getControlStatus = () => {

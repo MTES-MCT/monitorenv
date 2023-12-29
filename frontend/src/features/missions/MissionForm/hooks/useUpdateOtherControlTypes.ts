@@ -18,20 +18,26 @@ export const useUpdateOtherControlTypes = () => {
   if (previousControlUnitIsPAM && !currentControlUnitIsPAM) {
     envActions.forEach((action, index) => {
       if (action.actionType === ActionTypeEnum.CONTROL) {
-        setFieldValue(`envActions[${index}].isAdministrativeControl`, null, false)
-        setFieldValue(`envActions[${index}].isComplianceWithWaterRegulationsControl`, null, false)
-        setFieldValue(`envActions[${index}].isSafetyEquipmentAndStandardsComplianceControl`, null, false)
-        setFieldValue(`envActions[${index}].isSeafarersControl`, null, false)
+        // to prevent multiple form update (control Unit and envActions)
+        setTimeout(() => {
+          setFieldValue(`envActions[${index}].isAdministrativeControl`, null, false)
+          setFieldValue(`envActions[${index}].isComplianceWithWaterRegulationsControl`, null, false)
+          setFieldValue(`envActions[${index}].isSafetyEquipmentAndStandardsComplianceControl`, null, false)
+          setFieldValue(`envActions[${index}].isSeafarersControl`, null, false)
+        }, 100)
       }
     })
   }
   if (!previousControlUnitIsPAM && currentControlUnitIsPAM) {
     envActions.forEach((action, index) => {
       if (action.actionType === ActionTypeEnum.CONTROL) {
-        setFieldValue(`envActions[${index}].isAdministrativeControl`, false, false)
-        setFieldValue(`envActions[${index}].isComplianceWithWaterRegulationsControl`, false, false)
-        setFieldValue(`envActions[${index}].isSafetyEquipmentAndStandardsComplianceControl`, false, false)
-        setFieldValue(`envActions[${index}].isSeafarersControl`, false, false)
+        // to prevent multiple form update (control Unit and envActions)
+        setTimeout(() => {
+          setFieldValue(`envActions[${index}].isAdministrativeControl`, false, false)
+          setFieldValue(`envActions[${index}].isComplianceWithWaterRegulationsControl`, false, false)
+          setFieldValue(`envActions[${index}].isSafetyEquipmentAndStandardsComplianceControl`, false, false)
+          setFieldValue(`envActions[${index}].isSeafarersControl`, false, false)
+        }, 100)
       }
     })
   }

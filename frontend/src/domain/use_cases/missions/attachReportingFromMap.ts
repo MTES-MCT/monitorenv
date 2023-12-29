@@ -18,7 +18,7 @@ export const attachReportingFromMap = (reportingId: number) => async (dispatch, 
       throw Error()
     }
 
-    dispatch(
+    await dispatch(
       attachReportingToMissionSliceActions.setAttachedReportings([
         ...attachedReportings,
         {
