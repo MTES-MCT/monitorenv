@@ -15,31 +15,32 @@ export const editMissionInLocalStore = (missionId: number) => async (dispatch, g
   const missionToEdit = missionsAPI.endpoints.getMission
 
   if (missions[missionId]) {
-    setMission(dispatch, missions[missionId])
-  } else {
-    try {
-      const missionRequest = dispatch(missionToEdit.initiate(missionId))
-      const missionResponse = await missionRequest.unwrap()
+    await setMission(dispatch, missions[missionId])
 
-      if (!missionResponse) {
-        throw Error()
-      }
+    return
+  }
+  try {
+    const missionRequest = dispatch(missionToEdit.initiate(missionId))
+    const missionResponse = await missionRequest.unwrap()
 
-      const missionToSave = missionResponse
-      const missionFormatted = {
-        isFormDirty: false,
-        missionForm: missionToSave
-      }
-
-      setMission(dispatch, missionFormatted)
-
-      await missionRequest.unsubscribe()
-    } catch (error) {
-      removeMissionListener(missionId)
-      dispatch(
-        setToast({ containerId: 'sideWindow', message: 'Erreur à la création ou à la modification de la mission' })
-      )
+    if (!missionResponse) {
+      throw Error()
     }
+
+    const missionToSave = missionResponse
+    const missionFormatted = {
+      isFormDirty: false,
+      missionForm: missionToSave
+    }
+
+    setMission(dispatch, missionFormatted)
+
+    await missionRequest.unsubscribe()
+  } catch (error) {
+    removeMissionListener(missionId)
+    dispatch(
+      setToast({ containerId: 'sideWindow', message: 'Erreur à la création ou à la modification de la mission' })
+    )
   }
 }
 

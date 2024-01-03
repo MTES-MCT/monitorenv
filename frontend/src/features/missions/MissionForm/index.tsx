@@ -11,7 +11,7 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { isNewMission } from '../../../utils/isNewMission'
 import { missionFactory } from '../Missions.helpers'
 
-import type { NewMission } from '../../../domain/entities/missions'
+import type { Mission as MissionType, NewMission } from '../../../domain/entities/missions'
 
 export function Mission() {
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
@@ -26,7 +26,7 @@ export function Mission() {
     !missionIsNewMission && activeMissionId ? Number(activeMissionId) : skipToken
   )
 
-  const missionFormikValues = useMemo(() => {
+  const missionFormikValues: Partial<MissionType> = useMemo(() => {
     if (missionIsNewMission && activeMissionId) {
       return missionFactory({ id: activeMissionId } as Partial<NewMission>, true)
     }
@@ -39,7 +39,7 @@ export function Mission() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [missionIsNewMission, missionToEdit])
 
-  if (isLoading) {
+  if (isLoading || missionFormikValues?.id !== activeMissionId) {
     return <div>Chargement en cours</div>
   }
 

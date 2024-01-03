@@ -21,7 +21,7 @@ export function EditingMissionLayer({ map }: BaseMapChildrenProps) {
     state => state.attachMissionToReporting.isMissionAttachmentInProgress
   )
 
-  const hasNoMissionConflict = useMemo(() => {
+  const hasNoMissionDuplication = useMemo(() => {
     if (!selectedMissionIdOnMap && !!activeMissionId) {
       return true
     }
@@ -32,8 +32,8 @@ export function EditingMissionLayer({ map }: BaseMapChildrenProps) {
   // we don't want to display missions on the map if the user so decides (displayMissionEditingLayer variable)
   // or if user have interaction on map (edit mission zone, attach mission to reporting)
   const isLayerVisible = useMemo(
-    () => displayMissionEditingLayer && !isMissionAttachmentInProgress && hasNoMissionConflict,
-    [displayMissionEditingLayer, isMissionAttachmentInProgress, hasNoMissionConflict]
+    () => displayMissionEditingLayer && !isMissionAttachmentInProgress && hasNoMissionDuplication,
+    [displayMissionEditingLayer, isMissionAttachmentInProgress, hasNoMissionDuplication]
   )
 
   const editingMissionVectorSourceRef = useRef() as MutableRefObject<VectorSource>

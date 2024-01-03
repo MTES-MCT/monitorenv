@@ -11,7 +11,7 @@ export const switchTab = path => async (dispatch, getState) => {
   const routeParams = getMissionPageRoute(path)
   const id = getIdTyped(routeParams?.params.id)
 
-  // if we want to sitwh to mission list
+  // if we want to switch to mission list
   if (!id) {
     await dispatch(sideWindowActions.setCurrentPath(path))
     await dispatch(missionActions.resetSelectedMissionIdOnMap())

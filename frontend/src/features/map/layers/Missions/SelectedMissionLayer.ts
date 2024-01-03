@@ -20,7 +20,7 @@ export function SelectedMissionLayer({ map }: BaseMapChildrenProps) {
     })
   })
 
-  const hasNoMissionConflict = useMemo(() => {
+  const hasNoMissionDuplication = useMemo(() => {
     if (!activeMissionId && !!selectedMissionIdOnMap) {
       return true
     }
@@ -28,7 +28,7 @@ export function SelectedMissionLayer({ map }: BaseMapChildrenProps) {
     return !!activeMissionId && activeMissionId !== selectedMissionIdOnMap
   }, [activeMissionId, selectedMissionIdOnMap])
 
-  const displaySelectedMission = displayMissionSelectedLayer && hasNoMissionConflict
+  const displaySelectedMission = displayMissionSelectedLayer && hasNoMissionDuplication
 
   const selectedMissionVectorSourceRef = useRef() as MutableRefObject<VectorSource>
   const GetSelectedMissionVectorSource = () => {
