@@ -25,18 +25,8 @@ export const deleteTab = (path: string) => async (dispatch, getState) => {
       return
     }
     const missionToClose = missions[idToDelete]
-    await dispatch(missionFormsActions.setMission(missionToClose))
-    await dispatch(missionActions.setSelectedMissionIdOnMap(missionToClose.id))
-
+    await setMission(dispatch, missionToClose)
     await dispatch(sideWindowActions.setShowConfirmCancelModal(true))
-
-    await dispatch(
-      sideWindowActions.setCurrentPath(
-        generatePath(sideWindowPaths.MISSION, {
-          id: String(idToDelete)
-        })
-      )
-    )
 
     return
   }
@@ -56,18 +46,21 @@ export const deleteTab = (path: string) => async (dispatch, getState) => {
   }
 
   const arrayOfMissions: MissionInStateType[] = Object.values(missions)
-  const missionIdToDelete = arrayOfMissions.findIndex(mission => mission?.missionForm?.id === idToDelete)
+  const missionToDeleteIndex = arrayOfMissions.findIndex(mission => mission?.missionForm?.id === idToDelete)
 
-  if (missionIdToDelete === 0) {
+  if (missionToDeleteIndex === 0) {
     dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.MISSIONS)))
   } else {
-    const previousMission = arrayOfMissions[missionIdToDelete - 1]
-    dispatch(
-      sideWindowActions.setCurrentPath(
-        generatePath(sideWindowPaths.MISSION, {
-          id: previousMission?.missionForm.id
-        })
-      )
-    )
+    const previousMission = arrayOfMissions[missionToDeleteIndex - 1]
+    await setMission(dispatch, previousMission)
   }
+}
+
+async function setMission(dispatch, mission) {
+  await dispatch(missionFormsActions.setMission(mission))
+  await dispatch(missionActions.setSelectedMissionIdOnMap(mission.missionForm.id))
+  await dispatch(
+    attachReportingToMissionSliceActions.setAttachedReportings(mission.missionForm.attachedReportings || [])
+  )
+  await dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.MISSION, { id: mission.missionForm.id })))
 }

@@ -37,9 +37,9 @@ export function Mission() {
 
     return {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [missionIsNewMission, missionToEdit])
+  }, [missionToEdit, activeMissionId])
 
-  if (isLoading || missionFormikValues?.id !== activeMissionId) {
+  if (isLoading || missionFormikValues?.id !== activeMissionId || !activeMissionId) {
     return <div>Chargement en cours</div>
   }
 
