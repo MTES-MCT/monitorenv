@@ -1,5 +1,7 @@
 import EventSource, { sources } from 'eventsourcemock'
 
+import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
+
 context('Side Window > Mission Form > Main Form', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
@@ -293,11 +295,11 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=*`).as('getMissions')
 
     cy.fill('Période', 'Période spécifique')
-    const month = new Date().getMonth()
-    cy.fill('Période spécifique', [
-      [2023, month - 4, 1],
-      [2023, month - 3, 31]
-    ])
+    const startDateInString = getUtcDateInMultipleFormats().utcDateAsDayjs.subtract(6, 'month').toISOString()
+    const endDateInString = getUtcDateInMultipleFormats().utcDateAsDayjs.subtract(3, 'month').toISOString()
+    const startDate = getUtcDateInMultipleFormats(startDateInString).utcDateTuple
+    const endDate = getUtcDateInMultipleFormats(endDateInString).utcDateTuple
+    cy.fill('Période spécifique', [startDate, endDate])
 
     cy.wait('@getMissions')
 

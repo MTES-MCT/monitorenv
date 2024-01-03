@@ -279,7 +279,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
 
         // Then
         assertThat(reportingDTO.reporting.id).isEqualTo(12)
-        assertThat(reportingDTO.reporting.reportingId).isEqualTo(2300012)
+        assertThat(reportingDTO.reporting.reportingId).isEqualTo(2400001)
         assertThat(reportingDTO.reporting.sourceType).isEqualTo(SourceTypeEnum.SEMAPHORE)
         assertThat(reportingDTO.reporting.semaphoreId).isEqualTo(21)
         assertThat(reportingDTO.reporting.targetType).isEqualTo(TargetTypeEnum.VEHICLE)
