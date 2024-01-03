@@ -11,17 +11,29 @@ import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '../../BaseMap'
 
 export function EditingMissionLayer({ map }: BaseMapChildrenProps) {
-  const { missionState } = useAppSelector(state => state.missionState)
+  const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
+  const selectedMissionIdOnMap = useAppSelector(state => state.mission.selectedMissionIdOnMap)
+  const editingMission = useAppSelector(state =>
+    activeMissionId ? state.missionForms.missions[activeMissionId]?.missionForm : undefined
+  )
   const { displayMissionEditingLayer } = useAppSelector(state => state.global)
   const isMissionAttachmentInProgress = useAppSelector(
     state => state.attachMissionToReporting.isMissionAttachmentInProgress
   )
 
+  const hasNoMissionDuplication = useMemo(() => {
+    if (!selectedMissionIdOnMap && !!activeMissionId) {
+      return true
+    }
+
+    return !!selectedMissionIdOnMap && activeMissionId === selectedMissionIdOnMap
+  }, [activeMissionId, selectedMissionIdOnMap])
+
   // we don't want to display missions on the map if the user so decides (displayMissionEditingLayer variable)
   // or if user have interaction on map (edit mission zone, attach mission to reporting)
   const isLayerVisible = useMemo(
-    () => displayMissionEditingLayer && !isMissionAttachmentInProgress,
-    [displayMissionEditingLayer, isMissionAttachmentInProgress]
+    () => displayMissionEditingLayer && !isMissionAttachmentInProgress && hasNoMissionDuplication,
+    [displayMissionEditingLayer, isMissionAttachmentInProgress, hasNoMissionDuplication]
   )
 
   const editingMissionVectorSourceRef = useRef() as MutableRefObject<VectorSource>
@@ -100,11 +112,11 @@ export function EditingMissionLayer({ map }: BaseMapChildrenProps) {
   useEffect(() => {
     GetEditingMissionVectorSource()?.clear(true)
     GetEditingMissionActionsVectorSource()?.clear(true)
-    if (missionState) {
-      GetEditingMissionVectorSource()?.addFeature(getMissionZoneFeature(missionState, Layers.MISSION_SELECTED.code))
-      GetEditingMissionActionsVectorSource()?.addFeatures(getActionsFeatures(missionState))
+    if (editingMission) {
+      GetEditingMissionVectorSource()?.addFeature(getMissionZoneFeature(editingMission, Layers.MISSION_SELECTED.code))
+      GetEditingMissionActionsVectorSource()?.addFeatures(getActionsFeatures(editingMission))
     }
-  }, [missionState])
+  }, [editingMission])
 
   return null
 }

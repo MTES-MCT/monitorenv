@@ -1,6 +1,6 @@
-import { missionTypeEnum, type Mission } from '../domain/entities/missions'
+import { missionTypeEnum, type Mission, type NewMission } from '../domain/entities/missions'
 
-export function getMissionTitle(isNewMission: boolean, values?: Partial<Mission>) {
+export function getMissionTitle(isNewMission: boolean, values?: Partial<Mission> | Partial<NewMission>) {
   return isNewMission
     ? `Nouvelle mission ${
         values?.controlUnits && values?.controlUnits.length > 0 && values?.controlUnits[0]?.name ? '-' : ''

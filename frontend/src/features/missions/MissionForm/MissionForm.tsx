@@ -14,11 +14,11 @@ import { MissionFormBottomBar } from './MissionFormBottomBar'
 import { CancelEditModal } from './modals/CancelEditModal'
 import { DeleteModal } from './modals/DeleteModal'
 import { ReopenModal } from './modals/ReopenModal'
+import { missionFormsActions } from './slice'
 import { removeMissionListener } from './sse'
 import { type Mission, MissionSourceEnum, type NewMission } from '../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setToast } from '../../../domain/shared_slices/Global'
-import { multiMissionsActions } from '../../../domain/shared_slices/MultiMissions'
 import { deleteMissionAndGoToMissionsList } from '../../../domain/use_cases/missions/deleteMission'
 import { saveMission } from '../../../domain/use_cases/missions/saveMission'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
@@ -33,15 +33,16 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
   const attachedReportings = useAppSelector(state => state.attachReportingToMission.attachedReportings)
   const { dirty, setFieldValue, setValues, validateForm, values } = useFormikContext<Partial<Mission | NewMission>>()
 
+  useEffect(() => {
+    if (selectedMission) {
+      setValues(missionFactory(selectedMission, false))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   useSyncFormValuesWithRedux()
   useUpdateSurveillance()
   useUpdateOtherControlTypes()
-
-  useEffect(() => {
-    if (selectedMission) {
-      setValues(missionFactory(selectedMission))
-    }
-  }, [setValues, selectedMission])
 
   const [currentActionIndex, setCurrentActionIndex] = useState<string | undefined>(undefined)
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
@@ -81,9 +82,9 @@ export function MissionForm({ id, isNewMission, selectedMission, setShouldValida
   }
 
   const cancelForm = async () => {
-    await dispatch(multiMissionsActions.deleteSelectedMission(id))
-    dispatch(sideWindowActions.setShowConfirmCancelModal(false))
-    dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.MISSIONS)))
+    await dispatch(sideWindowActions.setShowConfirmCancelModal(false))
+    await dispatch(sideWindowActions.setCurrentPath(generatePath(sideWindowPaths.MISSIONS)))
+    await dispatch(missionFormsActions.deleteSelectedMission(id))
     removeMissionListener(id)
   }
 

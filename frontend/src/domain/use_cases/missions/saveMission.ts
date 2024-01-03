@@ -2,6 +2,7 @@ import omit from 'lodash/omit'
 
 import { missionsAPI } from '../../../api/missionsAPI'
 import { ApiErrorCode } from '../../../api/types'
+import { missionFormsActions } from '../../../features/missions/MissionForm/slice'
 import {
   disableMissionListener,
   enableMissionListener,
@@ -12,7 +13,6 @@ import { isNewMission } from '../../../utils/isNewMission'
 import { getMissionPageRoute } from '../../../utils/routes'
 import { sideWindowPaths } from '../../entities/sideWindow'
 import { setToast } from '../../shared_slices/Global'
-import { multiMissionsActions } from '../../shared_slices/MultiMissions'
 import { reportingActions } from '../../shared_slices/reporting'
 import { MapInteractionListenerEnum, updateMapInteractionListeners } from '../map/updateMapInteractionListeners'
 
@@ -40,7 +40,7 @@ export const saveMission =
 
           return
         }
-        dispatch(multiMissionsActions.deleteSelectedMission(values.id))
+        await dispatch(missionFormsActions.deleteSelectedMission(values.id))
         dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
         dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSIONS))
 

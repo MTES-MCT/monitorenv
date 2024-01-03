@@ -3,16 +3,15 @@ import { useCallback, useEffect, useMemo } from 'react'
 
 import { SideWindow } from '.'
 import { SideWindowStatus, sideWindowActions } from './slice'
-import { multiMissionsActions } from '../../domain/shared_slices/MultiMissions'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
+import { missionFormsActions } from '../missions/MissionForm/slice'
 
 export function SideWindowLauncher() {
   const dispatch = useAppDispatch()
   const { forceUpdate } = useForceUpdate()
 
-  const missionState = useAppSelector(state => state.missionState)
-  const selectedMissions = useAppSelector(state => state.multiMissions.selectedMissions)
+  const selectedMissions = useAppSelector(state => state.missionForms.missions)
   const sideWindow = useAppSelector(state => state.sideWindow)
 
   useEffect(() => {
@@ -28,7 +27,7 @@ export function SideWindowLauncher() {
   )
 
   const hasAtLeastOneMissionFormDirty = useMemo(
-    () => !!selectedMissions.find(mission => mission.isFormDirty),
+    () => !!Object.values(selectedMissions).find(mission => mission.isFormDirty),
     [selectedMissions]
   )
 
@@ -45,10 +44,10 @@ export function SideWindowLauncher() {
       onChangeFocus={onChangeFocus}
       onUnload={() => {
         dispatch(sideWindowActions.close())
-        dispatch(multiMissionsActions.setSelectedMissions([]))
+        dispatch(missionFormsActions.resetMissions())
       }}
       shouldHaveFocus={sideWindow.status === SideWindowStatus.VISIBLE}
-      showPrompt={hasAtLeastOneMissionFormDirty || missionState.isFormDirty}
+      showPrompt={hasAtLeastOneMissionFormDirty}
       title="MonitorEnv"
     >
       <SideWindow />

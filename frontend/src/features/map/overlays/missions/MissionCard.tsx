@@ -3,12 +3,12 @@ import { useCallback } from 'react'
 import styled from 'styled-components'
 
 import { editMissionInLocalStore } from '../../../../domain/use_cases/missions/editMissionInLocalStore'
-import { clearSelectedMissionOnMap } from '../../../../domain/use_cases/missions/selectMissionOnMap'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { MissionSourceTag } from '../../../../ui/MissionSourceTag'
 import { MissionStatusLabel } from '../../../../ui/MissionStatusLabel'
 import { humanizeMissionTypes } from '../../../../utils/humanizeMissionTypes'
+import { missionActions } from '../../../missions/slice'
 
 type MissionCardProps = {
   feature: any
@@ -51,7 +51,7 @@ export function MissionCard({ feature, isOnlyHoverable = false, selected = false
   }, [dispatch, missionId])
 
   const handleCloseOverlay = useCallback(() => {
-    dispatch(clearSelectedMissionOnMap())
+    dispatch(missionActions.resetSelectedMissionIdOnMap())
   }, [dispatch])
 
   if (!displayMissionsLayer || listener || isReportingAttachmentInProgress) {

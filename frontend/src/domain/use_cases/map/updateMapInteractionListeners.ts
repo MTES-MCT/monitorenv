@@ -1,4 +1,4 @@
-import { attachReportingToMissionSliceActions } from '../../../features/missions/slice'
+import { attachReportingToMissionSliceActions } from '../../../features/missions/MissionForm/AttachReporting/slice'
 import { attachMissionToReportingSliceActions } from '../../../features/Reportings/slice'
 import { resetInteraction } from '../../shared_slices/Draw'
 import { setDisplayedItems, resetLayoutToDefault } from '../../shared_slices/Global'
@@ -19,16 +19,16 @@ export const updateMapInteractionListeners = (listener: MapInteractionListenerEn
       break
 
     case MapInteractionListenerEnum.ATTACH_MISSION:
+      openDrawLayerModal(dispatch)
       dispatch(attachMissionToReportingSliceActions.setIsMissionAttachmentInProgress(true))
       dispatch(attachReportingToMissionSliceActions.setIsReportingAttachmentInProgress(false))
-      dispatch(resetLayoutToDefault())
       dispatch(resetInteraction())
       break
 
     case MapInteractionListenerEnum.ATTACH_REPORTING:
+      openDrawLayerModal(dispatch)
       dispatch(attachReportingToMissionSliceActions.setIsReportingAttachmentInProgress(true))
       dispatch(attachMissionToReportingSliceActions.setIsMissionAttachmentInProgress(false))
-      dispatch(resetLayoutToDefault())
       dispatch(resetInteraction())
       break
 

@@ -1,24 +1,24 @@
 import { reportingsAPI } from '../../../api/reportingsAPI'
-import { attachReportingToMissionSliceActions } from '../../../features/missions/slice'
+import { attachReportingToMissionSliceActions } from '../../../features/missions/MissionForm/AttachReporting/slice'
 import { setToast } from '../../shared_slices/Global'
 
-export const attachReportingFromMap = (id: number) => async (dispatch, getState) => {
+export const attachReportingFromMap = (reportingId: number) => async (dispatch, getState) => {
   const { attachedReportings } = getState().attachReportingToMission
   const { attachedReportingIds } = getState().attachReportingToMission
-  const missionId = getState().missionState.missionState.id
+  const missionId = getState().missionForms.activeMissionId
 
-  if (attachedReportingIds.includes(id)) {
+  if (attachedReportingIds.includes(reportingId)) {
     return
   }
 
   try {
-    const reportingRequest = dispatch(reportingsAPI.endpoints.getReporting.initiate(id))
+    const reportingRequest = dispatch(reportingsAPI.endpoints.getReporting.initiate(reportingId))
     const reportingResponse = await reportingRequest.unwrap()
     if (!reportingResponse) {
       throw Error()
     }
 
-    dispatch(
+    await dispatch(
       attachReportingToMissionSliceActions.setAttachedReportings([
         ...attachedReportings,
         {

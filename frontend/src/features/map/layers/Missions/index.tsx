@@ -5,11 +5,11 @@ import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { getMissionZoneFeature } from './missionGeometryHelpers'
 import { missionWithCentroidStyleFn } from './missions.style'
 import { Layers } from '../../../../domain/entities/layers/constants'
-import { selectMissionOnMap } from '../../../../domain/use_cases/missions/selectMissionOnMap'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useGetFilteredMissionsQuery } from '../../../../hooks/useGetFilteredMissionsQuery'
 import { useHasMapInteraction } from '../../../../hooks/useHasMapInteraction'
+import { missionActions } from '../../../missions/slice'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { Geometry } from 'ol/geom'
@@ -18,14 +18,6 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const { displayMissionsLayer } = useAppSelector(state => state.global)
   const { missions } = useGetFilteredMissionsQuery()
-
-  // we don't want to display missions on the map if the user so decides (displayMissionsLayer variable)
-  // or if user have interaction on map (edit mission zone, attach reporting or mission)
-  const hasMapInteraction = useHasMapInteraction()
-  const isLayerVisible = useMemo(
-    () => displayMissionsLayer && !hasMapInteraction,
-    [displayMissionsLayer, hasMapInteraction]
-  )
 
   // mission attached to active reporting
   const reportings = useAppSelector(state => state.reporting.reportings)
@@ -52,7 +44,10 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   }, [missionAttachedToReporting])
 
   // active mission
-  const activeMission = useAppSelector(state => state.missionState.missionState)
+  const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
+  const activeMission = useAppSelector(state =>
+    activeMissionId ? state.missionForms.missions[activeMissionId]?.missionForm : undefined
+  )
   const activeMissionFeature = useMemo(() => {
     if (!activeMission) {
       return []
@@ -70,14 +65,27 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       )
       .map(filteredMission => getMissionZoneFeature(filteredMission, Layers.MISSIONS.code))
 
+    if (!displayMissionsLayer && missionAttachedToReporting) {
+      return missionAttachedToReportingFeature
+    }
+
     return [...missionFromApi, ...activeMissionFeature, ...missionAttachedToReportingFeature]
   }, [
+    activeMission?.id,
+    displayMissionsLayer,
     missions,
     activeMissionFeature,
-    missionAttachedToReportingFeature,
-    activeMission?.id,
-    missionAttachedToReporting?.id
+    missionAttachedToReporting,
+    missionAttachedToReportingFeature
   ])
+
+  // we don't want to display missions on the map if the user so decides (displayMissionsLayer variable)
+  // or if user have interaction on map (edit mission zone, attach reporting or mission)
+  const hasMapInteraction = useHasMapInteraction()
+  const isLayerVisible = useMemo(
+    () => (displayMissionsLayer && !hasMapInteraction) || !!missionAttachedToReporting,
+    [displayMissionsLayer, hasMapInteraction, missionAttachedToReporting]
+  )
 
   const vectorSourceRef = useRef() as React.MutableRefObject<VectorSource<Geometry>>
   const GetVectorSource = () => {
@@ -131,7 +139,7 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       const feature = mapClickEvent?.feature
       if (feature.getId()?.toString()?.includes(Layers.MISSIONS.code)) {
         const { missionId } = feature.getProperties()
-        dispatch(selectMissionOnMap(missionId))
+        dispatch(missionActions.setSelectedMissionIdOnMap(missionId))
       }
     }
   }, [dispatch, mapClickEvent])

@@ -269,6 +269,7 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
 
 export type NewMission = Omit<Mission<NewEnvAction>, 'controlUnits' | 'facade' | 'id'> & {
   controlUnits: Array<Omit<LegacyControlUnit, 'administrationId' | 'id'>>
+  id: string
 }
 // Mission for API
 export type MissionData = Omit<Partial<Mission<EnvAction>>, 'attachedReportings'>

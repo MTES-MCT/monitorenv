@@ -34,15 +34,14 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const isReportingAttachmentInProgress = useAppSelector(
     state => state.attachReportingToMission.isReportingAttachmentInProgress
   )
-  const hasMapListener = isMissionAttachmentInProgress || isReportingAttachmentInProgress
-  const isLayerVisible = useMemo(
-    () => displayReportingsLayer && !hasMapListener,
-    [displayReportingsLayer, hasMapListener]
-  )
 
   const missionListener = useAppSelector(state => state.draw.listener)
   // Attached reportings to active mission
-  const attachedReportingsToActiveMission = useAppSelector(state => state.missionState.missionState?.attachedReportings)
+  const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
+  const attachedReportingsToActiveMission = useAppSelector(state =>
+    activeMissionId ? state.missionForms.missions[activeMissionId]?.missionForm.attachedReportings : undefined
+  )
+
   const attachedReportingsToActiveMissionFeature = useMemo(() => {
     if (!attachedReportingsToActiveMission || attachedReportingsToActiveMission?.length === 0) {
       return []
@@ -89,10 +88,28 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
       return [...attachedReportingsToActiveMissionFeature]
     }
 
+    if (!displayReportingsLayer && attachedReportingsToActiveMission && attachedReportingsToActiveMission?.length > 0) {
+      return attachedReportingsToActiveMissionFeature
+    }
+
     // we want to display reportings from API (with active filters), active reporting
     // and reportings attached to active mission
-    return [...reportingsFromApiFeatures, ...attachedReportingsToActiveMissionFeature]
-  }, [attachedReportingsToActiveMissionFeature, reportingsFromApiFeatures, missionListener])
+    return [...attachedReportingsToActiveMissionFeature, ...reportingsFromApiFeatures]
+  }, [
+    displayReportingsLayer,
+    attachedReportingsToActiveMission,
+    attachedReportingsToActiveMissionFeature,
+    reportingsFromApiFeatures,
+    missionListener
+  ])
+
+  const hasMapListener = isMissionAttachmentInProgress || isReportingAttachmentInProgress
+  const isLayerVisible = useMemo(
+    () =>
+      (displayReportingsLayer && !hasMapListener) ||
+      !!(attachedReportingsToActiveMission && attachedReportingsToActiveMission?.length > 0),
+    [displayReportingsLayer, hasMapListener, attachedReportingsToActiveMission]
+  )
 
   const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Geometry>>
 

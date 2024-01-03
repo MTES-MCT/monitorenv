@@ -25,7 +25,7 @@ function MissionStatus({ mission }) {
 
 export function MissionsNavBar() {
   const currentPath = useAppSelector(state => state.sideWindow.currentPath)
-  const selectedMissions = useAppSelector(state => state.multiMissions.selectedMissions)
+  const selectedMissions = useAppSelector(state => state.missionForms.missions)
 
   const dispatch = useAppDispatch()
 
@@ -36,14 +36,14 @@ export function MissionsNavBar() {
       nextPath: sideWindowPaths.MISSIONS
     }
 
-    const openMissions = selectedMissions.map(selectedMission => {
-      const { mission } = selectedMission
-      const missionIsNewMission = isNewMission(mission?.id)
+    const openMissions = Object.values(selectedMissions)?.map(selectedMission => {
+      const { missionForm } = selectedMission
+      const missionIsNewMission = isNewMission(missionForm?.id)
 
       return {
-        icon: !missionIsNewMission ? <MissionStatus mission={mission} /> : undefined,
-        label: <span>{getMissionTitle(missionIsNewMission, mission)}</span>,
-        nextPath: generatePath(sideWindowPaths.MISSION, { id: mission.id })
+        icon: !missionIsNewMission ? <MissionStatus mission={missionForm} /> : undefined,
+        label: <span>{getMissionTitle(missionIsNewMission, missionForm)}</span>,
+        nextPath: generatePath(sideWindowPaths.MISSION, { id: missionForm.id })
       }
     })
 

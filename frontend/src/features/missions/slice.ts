@@ -1,50 +1,25 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
-import type { Reporting, ReportingDetailed } from '../../domain/entities/reporting'
-
-type AttachedReportingToMissionSliceState = {
-  attachedReportingIds: number[]
-  attachedReportings: ReportingDetailed[]
-  initialAttachedReportingIds: number[]
-  initialAttachedReportings: Reporting[]
-  isReportingAttachmentInProgress: boolean
+type MissionSliceType = {
+  selectedMissionIdOnMap: number | string | undefined
 }
 
-const INITIAL_STATE: AttachedReportingToMissionSliceState = {
-  attachedReportingIds: [],
-  attachedReportings: [],
-  initialAttachedReportingIds: [],
-  initialAttachedReportings: [],
-  isReportingAttachmentInProgress: false
+const INITIAL_STATE: MissionSliceType = {
+  selectedMissionIdOnMap: undefined
 }
 
-const attachReportingToMissionSlice = createSlice({
+const missionSlice = createSlice({
   initialState: INITIAL_STATE,
-  name: 'attachReportingToMissionSlice',
+  name: 'mission',
   reducers: {
-    addAttachedReportingId(state, action) {
-      state.attachedReportingIds = [...state.attachedReportingIds, action.payload]
-    },
-    resetAttachReportingState() {
+    resetSelectedMissionIdOnMap() {
       return INITIAL_STATE
     },
-    setAttachedReportings(state, action) {
-      const attachedReportings = action.payload
-      state.attachedReportings = attachedReportings
-
-      const attachedReportingIds = attachedReportings.map(reporting => reporting.id)
-      state.attachedReportingIds = attachedReportingIds
-    },
-    setInitialAttachedReportings(state, action) {
-      state.initialAttachedReportingIds = action.payload?.ids
-      state.initialAttachedReportings = action.payload.reportings
-    },
-    setIsReportingAttachmentInProgress(state, action) {
-      state.isReportingAttachmentInProgress = action.payload
+    setSelectedMissionIdOnMap(state, action: PayloadAction<number | string>) {
+      state.selectedMissionIdOnMap = action.payload
     }
   }
 })
+export const missionActions = missionSlice.actions
 
-export const attachReportingToMissionSliceActions = attachReportingToMissionSlice.actions
-
-export const attachReportingToMissionsSliceReducer = attachReportingToMissionSlice.reducer
+export const missionSliceReducer = missionSlice.reducer

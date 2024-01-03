@@ -5,7 +5,6 @@ import styled from 'styled-components'
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
 import { setDisplayedItems } from '../../../domain/shared_slices/Global'
 import { addMission } from '../../../domain/use_cases/missions/addMission'
-import { saveMissionInLocalStore } from '../../../domain/use_cases/missions/saveMissionInLocalStore'
 import { reduceReportingFormOnMap } from '../../../domain/use_cases/reporting/reduceReportingFormOnMap'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
@@ -25,7 +24,6 @@ export function MissionsMenu() {
   )
 
   const toggleMissionsWindow = async () => {
-    await dispatch(saveMissionInLocalStore())
     await dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSIONS))
   }
 
