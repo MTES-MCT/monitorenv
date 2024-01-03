@@ -17,6 +17,7 @@ export const ReportingSchema: Yup.SchemaOf<Reporting> = Yup.object()
 
       return schema.nullable()
     }),
+    createdAt: Yup.date().nullable().required('Veuillez définir la date de signalement'),
     geom: ReportingZoneSchema,
     openBy: Yup.string().nullable().required('Requis'),
     reportType: Yup.string().nullable().required('Veuillez définir le type de signalement'),

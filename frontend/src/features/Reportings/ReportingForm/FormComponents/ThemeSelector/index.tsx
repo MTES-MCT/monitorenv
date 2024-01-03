@@ -1,5 +1,6 @@
 import { customDayjs, Select, useNewWindow } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
+import { useEffect } from 'react'
 import styled from 'styled-components'
 
 import { useGetControlPlansByYear } from '../../../../../hooks/useGetControlPlansByYear'
@@ -19,6 +20,12 @@ export function ThemeSelector({ isInNewWindow = false, isLight = true, label, na
   const handleUpdateTheme = theme => {
     updateTheme(setFieldValue)(theme)
   }
+
+  useEffect(() => {
+    updateTheme(setFieldValue)(undefined)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [year])
 
   return (
     <>

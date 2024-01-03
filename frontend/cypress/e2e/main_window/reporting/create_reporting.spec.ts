@@ -14,12 +14,13 @@ context('Reporting', () => {
     cy.clickButton('Chercher des signalements')
     cy.clickButton('Ajouter un signalement')
     cy.intercept('PUT', '/bff/v1/reportings', FAKE_API_PUT_RESPONSE).as('createReporting')
+    cy.wait(1000)
 
     // When
-    cy.get('*[data-cy="add-semaphore-source"]').click({ force: true })
+    cy.getDataCy('add-semaphore-source').click({ force: true })
     cy.get('div[role="option"]').contains('Sémaphore de Dieppe').click()
 
-    cy.get('*[data-cy="reporting-target-type"]').click({ force: true })
+    cy.getDataCy('reporting-target-type').click({ force: true })
     cy.get('div[role="option"]').contains('Personne morale').click()
 
     cy.clickButton('Ajouter un point')
@@ -29,6 +30,7 @@ context('Reporting', () => {
     cy.get('.rs-radio').find('label').contains('Observation').click()
 
     cy.fill('Saisi par', 'XYZ')
+    cy.fill('Date et heure (UTC)', [2024, 5, 26, 23, 35])
 
     cy.clickButton('Valider le signalement')
 
@@ -39,6 +41,7 @@ context('Reporting', () => {
       }
 
       assert.deepInclude(interception.request.body, {
+        createdAt: '2024-05-26T23:35:00.000Z',
         openBy: 'XYZ',
         reportType: 'OBSERVATION',
         semaphoreId: 35,
@@ -49,6 +52,20 @@ context('Reporting', () => {
       })
     })
   })
+
+  it('A reporting cannot be created without required values', () => {
+    // Given
+    cy.clickButton('Chercher des signalements')
+    cy.clickButton('Ajouter un signalement')
+
+    // When
+    cy.fill('Date et heure (UTC)', undefined)
+    cy.clickButton('Valider le signalement')
+
+    // Then
+    cy.get('.Element-FieldError').should('have.length', 5)
+  })
+
   it('A mission can be attached to a reporting', () => {
     // Given
     cy.clickButton('Chercher des signalements')

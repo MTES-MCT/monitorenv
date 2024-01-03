@@ -147,7 +147,7 @@ export const StyledToggle = styled.div`
   }
 `
 export const StyledFormikTextInput = styled(FormikTextInput)`
-  width: 120px;
+  width: 90px;
 `
 export const StyledFooter = styled.div<{ $justify?: string | undefined }>`
   background-color: ${p => p.theme.color.charcoal};

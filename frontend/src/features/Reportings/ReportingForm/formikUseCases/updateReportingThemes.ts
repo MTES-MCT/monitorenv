@@ -1,4 +1,4 @@
-export const updateTheme = (setFieldValue: (field: string, value: any) => void) => (value: string) => {
+export const updateTheme = (setFieldValue: (field: string, value: any) => void) => (value: number | undefined) => {
   const themesPath = `themeId`
   const subThemesPath = `subThemeIds`
 

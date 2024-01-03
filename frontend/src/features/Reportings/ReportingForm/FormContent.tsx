@@ -65,6 +65,7 @@ export function FormContent({
   setShouldValidateOnChange
 }: FormContentProps) {
   const dispatch = useAppDispatch()
+
   const reportingFormVisibility = useAppSelector(state => state.global.reportingFormVisibility)
 
   const isConfirmCancelDialogVisible = useAppSelector(state => state.reporting.isConfirmCancelDialogVisible)
@@ -223,14 +224,18 @@ export function FormContent({
         <StyledThemeContainer>
           <ThemeSelector isLight={false} label="Thématique du signalement" name="themeId" />
           <SubThemesSelector
+            context={reportingContext}
             isLight={false}
             label="Sous-thématique du signalement"
             name="subThemeIds"
             theme={themeField?.value}
           />
         </StyledThemeContainer>
-        <Validity mustIncreaseValidity={mustIncreaseValidity} />
+
+        <Validity mustIncreaseValidity={mustIncreaseValidity} reportingContext={reportingContext} />
+
         <StyledFormikTextInput label="Saisi par" name="openBy" />
+
         <Separator />
         <FormikTextarea label="Actions effectuées" name="actionTaken" />
 
